@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE mapper
+    PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+    "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="org.apache.ibatis.submitted.map_class_name_conflict.mapper.PersonMapper">
+
+  <select id="get" resultType="Person" parameterType="long">
+    SELECT id, firstName, lastName
+    FROM Person
+    WHERE id = #{id}
+  </select>
+
+  <insert id="insert" parameterType="Person" useGeneratedKeys="true" keyProperty="id">
+    INSERT INTO Person(firstName, lastName)
+    VALUES(#{firstName}, #{lastName})
+  </insert>
+</mapper>

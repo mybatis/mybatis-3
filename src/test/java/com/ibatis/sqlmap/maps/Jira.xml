@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap>
+
+  <resultMap id="jira260GroupedResult" class="com.testdomain.ArticleIndex" groupBy="categoryTitle">
+    <result property="categoryTitle" column="category_title"/>
+    <result property="topics" resultMap="topicResult"/>
+  </resultMap>
+
+  <resultMap id="topicResult" class="com.testdomain.Topic" groupBy="topicTitle">
+    <result property="topicTitle" column="topic_title"/>
+    <result property="descriptionList" resultMap="descriptionResult"/>
+  </resultMap>
+
+  <resultMap id="descriptionResult" class="com.testdomain.TopicDescription">
+    <result property="description" column="topic_description"/>
+  </resultMap>
+
+  <resultMap id="jira260FlatResult" class="com.testdomain.ArticleIndexDenorm">
+    <result property="categoryTitle" column="category_title"/>
+    <result property="topicTitle" column="topic_title"/>
+    <result property="description" column="topic_description"/>
+  </resultMap>
+
+  <sql id="Jira260Query">
+    SELECT CATEGORY_TITLE,
+    TOPIC_TITLE,
+    TOPIC_DESCRIPTION
+    FROM ARTICLE_INDEX
+    ORDER BY CATEGORY_TITLE, TOPIC_TITLE
+  </sql>
+
+  <!--
+      The error actually described in JIRA-260
+  -->
+  <select id="getJira260GroupedResult" resultMap="jira260GroupedResult">
+    <include refid="Jira260Query"/>
+  </select>
+
+  <select id="getJira260FlatResult" resultMap="jira260FlatResult">
+    <include refid="Jira260Query"/>
+  </select>
+
+</sqlMap>

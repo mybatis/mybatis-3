@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMapConfig
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map Config 2.0//EN"
+    "http://ibatis.apache.org/dtd/sql-map-config-2.dtd">
+
+<sqlMapConfig>
+
+  <properties resource="com/ibatis/sqlmap/maps/DerbySqlMapConfig.properties"/>
+
+  <!-- settings
+	add these to test bug 976614
+	enhancementEnabled="false"
+    lazyLoadingEnabled="false"
+  -->
+
+  <settings
+      cacheModelsEnabled="true"
+      enhancementEnabled="false"
+      lazyLoadingEnabled="true"
+      useStatementNamespaces="false"
+      />
+
+  <typeAlias alias="order" type="com.testdomain.Order"/>
+  <typeAlias alias="OuiNonBool" type="com.ibatis.sqlmap.extensions.PirateTypeHandlerCallback"/>
+
+  <typeHandler javaType="boolean" jdbcType="VARCHAR" callback="OuiNonBool"/>
+
+  <transactionManager type="JDBC" commitRequired="false">
+    <dataSource type="${dataSourceType}">
+      <property name="JDBC.Driver" value="${driver}"/>
+      <property name="JDBC.ConnectionURL" value="${url}"/>
+      <property name="JDBC.Username" value="${username}"/>
+      <property name="JDBC.Password" value="${password}"/>
+      <property name="JDBC.DefaultAutoCommit" value="true"/>
+      <property name="Pool.MaximumActiveConnections" value="10"/>
+      <property name="Pool.MaximumIdleConnections" value="5"/>
+      <property name="Pool.MaximumCheckoutTime" value="120000"/>
+      <property name="Pool.TimeToWait" value="500"/>
+      <property name="Pool.PingQuery" value="select 1 from ACCOUNT"/>
+      <property name="Pool.PingEnabled" value="false"/>
+      <property name="Pool.PingConnectionsNotUsedFor" value="1"/>
+      <property name="Pool.QuietMode" value="true"/>
+    </dataSource>
+  </transactionManager>
+
+  <sqlMap resource="${SqlMapPath}/DerbyProc.xml"/>
+
+</sqlMapConfig>
+

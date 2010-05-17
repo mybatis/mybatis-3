@@ -1,0 +1,442 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="NestedIterateStatements">
+
+  <resultMap id="personResult" class="com.testdomain.Person">
+    <result property="id" column="id"/>
+    <result property="firstName" column="first_name"/>
+    <result property="lastName" column="last_name"/>
+  </resultMap>
+
+  <select id="NestedIterateTest1" resultMap="personResult" parameterClass="com.testdomain.NestedIterateParameterObject">
+    select id, first_name, last_name
+    from person
+    <dynamic prepend="where">
+      <iterate property="idList" conjunction="or">
+        id = #idList[]#
+      </iterate>
+    </dynamic>
+    order by id
+  </select>
+
+  <select id="NestedIterateTest2" resultMap="personResult" parameterClass="com.testdomain.NestedIterateParameterObject">
+    select id, first_name, last_name
+    from person
+    <dynamic prepend="where">
+      <iterate property="idList" conjunction="or">
+        <isEqual property="idList[]" compareValue="4">
+          id = #idList[]#
+        </isEqual>
+      </iterate>
+    </dynamic>
+    order by id
+  </select>
+
+  <select id="NestedIterateTest3" resultMap="personResult" parameterClass="com.testdomain.NestedIterateParameterObject">
+    select id, first_name, last_name
+    from person
+    <dynamic prepend="where">
+      <iterate property="idList" conjunction="or">
+        <isNotEqual property="idList[]" compareValue="4">
+          id = #idList[]#
+        </isNotEqual>
+      </iterate>
+    </dynamic>
+    order by id
+  </select>
+
+  <select id="NestedIterateTest4" resultMap="personResult" parameterClass="com.testdomain.NestedIterateParameterObject">
+    select id, first_name, last_name
+    from person
+    <dynamic prepend="where">
+      <iterate property="idList" conjunction="or">
+        <isGreaterThan property="idList[]" compareValue="4">
+          id = #idList[]#
+        </isGreaterThan>
+      </iterate>
+    </dynamic>
+    order by id
+  </select>
+
+  <select id="NestedIterateTest5" resultMap="personResult" parameterClass="com.testdomain.NestedIterateParameterObject">
+    select id, first_name, last_name
+    from person
+    <dynamic prepend="where">
+      <iterate property="idList" conjunction="or">
+        <isGreaterEqual property="idList[]" compareValue="4">
+          id = #idList[]#
+        </isGreaterEqual>
+      </iterate>
+    </dynamic>
+    order by id
+  </select>
+
+  <select id="NestedIterateTest6" resultMap="personResult" parameterClass="com.testdomain.NestedIterateParameterObject">
+    select id, first_name, last_name
+    from person
+    <dynamic prepend="where">
+      <iterate property="idList" conjunction="or">
+        <isLessThan property="idList[]" compareValue="4">
+          id = #idList[]#
+        </isLessThan>
+      </iterate>
+    </dynamic>
+    order by id
+  </select>
+
+  <select id="NestedIterateTest7" resultMap="personResult" parameterClass="com.testdomain.NestedIterateParameterObject">
+    select id, first_name, last_name
+    from person
+    <dynamic prepend="where">
+      <iterate property="idList" conjunction="or">
+        <isLessEqual property="idList[]" compareValue="4">
+          id = #idList[]#
+        </isLessEqual>
+      </iterate>
+    </dynamic>
+    order by id
+  </select>
+
+  <!-- try iterating over two properties -->
+  <select id="NestedIterateTest8" resultMap="personResult" parameterClass="com.testdomain.NestedIterateParameterObject">
+    select id, first_name, last_name
+    from person
+    <dynamic prepend="where">
+      <iterate property="lastNames" conjunction="or">
+        <iterate property="firstNames" conjunction="or">
+          first_name = #firstNames[]# and last_name = #lastNames[]#
+        </iterate>
+      </iterate>
+    </dynamic>
+    order by id
+  </select>
+
+  <!-- try nested iterates -->
+  <select id="NestedIterateTest9" resultMap="personResult" parameterClass="com.testdomain.NestedIterateParameterObject">
+    select id, first_name, last_name
+    from person
+    <dynamic prepend="where">
+      <iterate property="orConditions" conjunction="or">
+        (
+        <iterate property="orConditions[].conditions" conjunction="and">
+          $orConditions[].conditions[].condition$ #orConditions[].conditions[].value#
+        </iterate>
+        )
+      </iterate>
+    </dynamic>
+    order by id
+  </select>
+
+  <!-- This test makes sure that removeFirstPrepend works for every iteration -->
+  <select id="NestedIterateTest9a" resultMap="personResult" parameterClass="com.testdomain.NestedIterateParameterObject">
+    select id, first_name, last_name
+    from person
+    <dynamic prepend="where">
+      <iterate property="orConditions" conjunction="or" removeFirstPrepend="iterate">
+        (
+        <iterate prepend="and" property="orConditions[].conditions" conjunction="and">
+          $orConditions[].conditions[].condition$ #orConditions[].conditions[].value#
+        </iterate>
+        )
+      </iterate>
+    </dynamic>
+    order by id
+  </select>
+
+  <select id="NestedIterateTest10" resultMap="personResult" parameterClass="com.testdomain.NestedIterateParameterObject">
+    select id, first_name, last_name
+    from person
+    <dynamic prepend="where">
+      <iterate property="idList" open="(" close=")" removeFirstPrepend="true">
+        <isEqual property="idList[]" compareValue="4" prepend="or">
+          id = #idList[]#
+        </isEqual>
+      </iterate>
+    </dynamic>
+    order by id
+  </select>
+
+  <select id="NestedIterateTest11" resultMap="personResult" parameterClass="com.testdomain.NestedIterateParameterObject">
+    select id, first_name, last_name
+    from person
+    <dynamic prepend="where">
+      <iterate property="idList" removeFirstPrepend="true">
+        <isNotEqual property="idList[]" compareValue="4" prepend="or">
+          id = #idList[]#
+        </isNotEqual>
+      </iterate>
+    </dynamic>
+    order by id
+  </select>
+
+  <select id="NestedIterateTest12" resultMap="personResult" parameterClass="com.testdomain.NestedIterateParameterObject">
+    select id, first_name, last_name
+    from person
+    <dynamic prepend="where">
+      <iterate property="idList" removeFirstPrepend="true">
+        <isGreaterThan property="idList[]" compareValue="4" prepend="or">
+          id = #idList[]#
+        </isGreaterThan>
+      </iterate>
+    </dynamic>
+    order by id
+  </select>
+
+  <select id="NestedIterateTest13" resultMap="personResult" parameterClass="com.testdomain.NestedIterateParameterObject">
+    select id, first_name, last_name
+    from person
+    <dynamic prepend="where">
+      <iterate property="idList" removeFirstPrepend="true">
+        <isGreaterEqual property="idList[]" compareValue="4" prepend="or">
+          id = #idList[]#
+        </isGreaterEqual>
+      </iterate>
+    </dynamic>
+    order by id
+  </select>
+
+  <select id="NestedIterateTest14" resultMap="personResult" parameterClass="com.testdomain.NestedIterateParameterObject">
+    select id, first_name, last_name
+    from person
+    <dynamic prepend="where">
+      <iterate property="idList" removeFirstPrepend="true">
+        <isLessThan property="idList[]" compareValue="4" prepend="or">
+          id = #idList[]#
+        </isLessThan>
+      </iterate>
+    </dynamic>
+    order by id
+  </select>
+
+  <select id="NestedIterateTest15" resultMap="personResult" parameterClass="com.testdomain.NestedIterateParameterObject">
+    select id, first_name, last_name
+    from person
+    <dynamic prepend="where">
+      <iterate property="idList" removeFirstPrepend="true">
+        <isLessEqual property="idList[]" compareValue="4" prepend="or">
+          id = #idList[]#
+        </isLessEqual>
+      </iterate>
+    </dynamic>
+    order by id
+  </select>
+
+  <!-- test for IBATIS-293 written in the form of 2-7 above -->
+  <select id="NestedIterateTest16" resultMap="personResult" parameterClass="com.testdomain.NestedIterateParameterObject">
+    select id, first_name, last_name
+    from person
+    <dynamic prepend="where">
+      <iterate property="orConditions" conjunction="or">
+        (
+        <iterate property="orConditions[].conditions" conjunction="and">
+          <isEqual property="orConditions[].conditions[].include" compareValue="true">
+            $orConditions[].conditions[].condition$ #orConditions[].conditions[].value#
+          </isEqual>
+        </iterate>
+        )
+      </iterate>
+    </dynamic>
+    order by id
+  </select>
+
+  <!-- test for IBATIS-293 written in the form of 9-15 above -->
+  <select id="NestedIterateTest17" resultMap="personResult" parameterClass="com.testdomain.NestedIterateParameterObject">
+    select id, first_name, last_name
+    from person
+    <dynamic prepend="where">
+      <iterate property="orConditions" conjunction="or">
+        (
+        <iterate property="orConditions[].conditions" removeFirstPrepend="true">
+          <isEqual property="orConditions[].conditions[].include" compareValue="true" prepend="and">
+            $orConditions[].conditions[].condition$ #orConditions[].conditions[].value#
+          </isEqual>
+        </iterate>
+        )
+      </iterate>
+    </dynamic>
+    order by id
+  </select>
+
+  <!-- test for IBATIS-293 written in the form of 9-15 above -->
+  <select id="NestedIterateTest18" resultMap="personResult" parameterClass="com.testdomain.NestedIterateParameterObject">
+    select id, first_name, last_name
+    from person
+    <dynamic prepend="where">
+      <iterate property="orConditions" conjunction="or">
+        (
+        <iterate property="orConditions[].conditions" removeFirstPrepend="true">
+          <isNotPropertyAvailable property="orConditions[].conditions[].fred" prepend="and">
+            $orConditions[].conditions[].condition$ #orConditions[].conditions[].value#
+          </isNotPropertyAvailable>
+        </iterate>
+        )
+      </iterate>
+    </dynamic>
+    order by id
+  </select>
+
+  <!-- test for IBATIS-293 written in the form of 9-15 above -->
+  <select id="NestedIterateTest19" resultMap="personResult" parameterClass="com.testdomain.NestedIterateParameterObject">
+    select id, first_name, last_name
+    from person
+    <dynamic prepend="where">
+      <iterate property="orConditions" conjunction="or">
+        (
+        <iterate property="orConditions[].conditions" removeFirstPrepend="true">
+          <isNotNull property="orConditions[].conditions[].include" prepend="and">
+            $orConditions[].conditions[].condition$ #orConditions[].conditions[].value#
+          </isNotNull>
+        </iterate>
+        )
+      </iterate>
+    </dynamic>
+    order by id
+  </select>
+
+  <!-- test for IBATIS-293 written in the form of 9-15 above -->
+  <select id="NestedIterateTest20" resultMap="personResult" parameterClass="com.testdomain.NestedIterateParameterObject">
+    select id, first_name, last_name
+    from person
+    <dynamic prepend="where">
+      <iterate property="orConditions" conjunction="or">
+        (
+        <iterate property="orConditions[].conditions" removeFirstPrepend="true">
+          <isNotEmpty property="orConditions[].conditions[].include" prepend="and">
+            $orConditions[].conditions[].condition$ #orConditions[].conditions[].value#
+          </isNotEmpty>
+        </iterate>
+        )
+      </iterate>
+    </dynamic>
+    order by id
+  </select>
+
+  <!-- test the open, close, prepend attributes when no elements satisfy -->
+  <select id="NestedIterateTest21" resultMap="personResult" parameterClass="com.testdomain.NestedIterateParameterObject">
+    select id, first_name, last_name
+    from person
+    <iterate property="idList" conjunction="or" prepend="where" open="(" close=")">
+      <isEqual property="idList[]" compareValue="55">
+        id = #idList[]#
+      </isEqual>
+    </iterate>
+    order by id
+  </select>
+
+  <!-- test the open, close, prepend attributes when the first element doesn't satisfy -->
+  <select id="NestedIterateTest22" resultMap="personResult" parameterClass="com.testdomain.NestedIterateParameterObject">
+    select id, first_name, last_name
+    from person
+    <iterate property="idList" conjunction="or" prepend="where" open="(" close=")">
+      <isEqual property="idList[]" compareValue="4">
+        id = #idList[]#
+      </isEqual>
+    </iterate>
+    order by id
+  </select>
+
+  <!-- test the open, close, prepend attributes when only the first element satisfies -->
+  <select id="NestedIterateTest23" resultMap="personResult" parameterClass="com.testdomain.NestedIterateParameterObject">
+    select id, first_name, last_name
+    from person
+    <iterate property="idList" conjunction="or" prepend="where" open="(" close=")">
+      <isEqual property="idList[]" compareValue="1">
+        id = #idList[]#
+      </isEqual>
+    </iterate>
+    order by id
+  </select>
+
+  <!-- test the open, close, prepend attributes when only the last element satisfies -->
+  <select id="NestedIterateTest24" resultMap="personResult" parameterClass="com.testdomain.NestedIterateParameterObject">
+    select id, first_name, last_name
+    from person
+    <iterate property="idList" conjunction="or" prepend="where" open="(" close=")">
+      <isEqual property="idList[]" compareValue="9">
+        id = #idList[]#
+      </isEqual>
+    </iterate>
+    order by id
+  </select>
+
+
+  <!-- test the open, close, prepend attributes when more than one element satisfies -->
+  <select id="NestedIterateTest25" resultMap="personResult" parameterClass="com.testdomain.NestedIterateParameterObject">
+    select id, first_name, last_name
+    from person
+    <iterate property="idList" conjunction="or" prepend="where" open="(" close=")">
+      <isLessThan property="idList[]" compareValue="4">
+        id = #idList[]#
+      </isLessThan>
+    </iterate>
+    order by id
+  </select>
+
+  <!-- test nested map -->
+  <select id="NestedIterateTest26" resultMap="personResult" parameterClass="map">
+    select id, first_name, last_name
+    from person
+    <iterate property="po.idList" conjunction="or" prepend="where" open="(" close=")">
+      <isLessThan property="po.idList[]" compareValue="4">
+        id = #po.idList[]#
+      </isLessThan>
+    </iterate>
+    order by id
+  </select>
+
+  <!-- test deeper combo of list maps nesting -->
+  <select id="NestedIterateTest27" resultMap="personResult" parameterClass="map">
+    select id, first_name, last_name
+    from person
+    <iterate property="firstList">
+      <iterate property="firstList[].po.idList" conjunction="or" prepend="where" open="(" close=")">
+        <isLessThan property="firstList[].po.idList[]" compareValue="4">
+          id = #firstList[].po.idList[]#
+        </isLessThan>
+      </iterate>
+    </iterate>
+    order by id
+  </select>
+
+  <!-- test nested object -->
+  <select id="NestedIterateTest28" resultMap="personResult" parameterClass="com.testdomain.SimpleNestedParameterObject">
+    select id, first_name, last_name
+    from person
+    <iterate property="nestedIterateParameterObject.idList" conjunction="or" prepend="where" open="(" close=")">
+      <isLessThan property="nestedIterateParameterObject.idList[]" compareValue="4">
+        id = #nestedIterateParameterObject.idList[]#
+      </isLessThan>
+    </iterate>
+    order by id
+  </select>
+
+  <!-- test deeper combo of list bean nesting -->
+  <select id="NestedIterateTest29" resultMap="personResult" parameterClass="com.testdomain.SimpleNestedParameterObject">
+    select id, first_name, last_name
+    from person
+    <iterate property="nestedList">
+      <iterate property="nestedList[].nestedIterateParameterObject.idList" conjunction="or" prepend="where" open="("
+               close=")">
+        <isLessThan property="nestedList[].nestedIterateParameterObject.idList[]" compareValue="4">
+          id = #nestedList[].nestedIterateParameterObject.idList[]#
+        </isLessThan>
+      </iterate>
+    </iterate>
+    order by id
+  </select>
+
+  <select id="NestedIterateTest30" parameterClass="com.testdomain.Category" resultClass="com.testdomain.Product">
+    SELECT * FROM product WHERE productId=
+    <iterate property="parentCategory.productList">
+      <isEqual property="parentCategory.productList[].productId" compareValue="FI-SW-01">
+        #parentCategory.productList[].productId#
+      </isEqual>
+      <isEqual property="parentCategory.productList[].productId" compareValue="NOTHING">
+        #parentCategory.productList[].productId#
+      </isEqual>
+      <isEqual property="parentCategory.productList[].productId" compareValue="NOTHINGAGAIN">
+        #parentCategory.productList[].productId#
+      </isEqual>
+    </iterate>
+  </select>
+</sqlMap>

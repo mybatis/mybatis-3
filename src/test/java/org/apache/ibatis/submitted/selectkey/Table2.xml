@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="org.apache.ibatis.submitted.selectkey.Table2">
+  <insert id="insert" parameterType="map">
+    insert into table2 (name) values (#{name})
+    <selectKey resultType="java.lang.Integer" keyProperty="id">
+      CALL IDENTITY()
+    </selectKey>
+  </insert>
+</mapper>

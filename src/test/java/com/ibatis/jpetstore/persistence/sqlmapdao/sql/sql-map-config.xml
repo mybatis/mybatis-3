@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMapConfig PUBLIC "-//ibatis.apache.org//DTD SQL Map Config 2.0//EN"
+    "http://ibatis.apache.org/dtd/sql-map-config-2.dtd">
+
+<sqlMapConfig>
+
+  <properties resource="com/properties/database.properties"/>
+
+  <transactionManager type="JDBC">
+    <dataSource type="SIMPLE">
+      <property value="${driver}" name="JDBC.Driver"/>
+      <property value="${url}" name="JDBC.ConnectionURL"/>
+      <property value="${username}" name="JDBC.Username"/>
+      <property value="${password}" name="JDBC.Password"/>
+    </dataSource>
+  </transactionManager>
+
+  <sqlMap resource="com/ibatis/jpetstore/persistence/sqlmapdao/sql/Account.xml"/>
+  <sqlMap resource="com/ibatis/jpetstore/persistence/sqlmapdao/sql/Category.xml"/>
+  <sqlMap resource="com/ibatis/jpetstore/persistence/sqlmapdao/sql/Product.xml"/>
+  <sqlMap resource="com/ibatis/jpetstore/persistence/sqlmapdao/sql/Sequence.xml"/>
+  <sqlMap resource="com/ibatis/jpetstore/persistence/sqlmapdao/sql/LineItem.xml"/>
+  <sqlMap resource="com/ibatis/jpetstore/persistence/sqlmapdao/sql/Order.xml"/>
+  <sqlMap resource="com/ibatis/jpetstore/persistence/sqlmapdao/sql/Item.xml"/>
+
+</sqlMapConfig>

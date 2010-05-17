@@ -1,0 +1,27 @@
+<assembly xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.1"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.1 http://maven.apache.org/xsd/assembly-1.1.1.xsd">
+  <id>migrations</id>
+  <baseDirectory>ibatis-migrations-${project.version}</baseDirectory>
+  <formats>
+    <format>zip</format>
+  </formats>
+  <files>
+    <file>
+      <source>target/${project.artifactId}-${project.version}.${project.packaging}</source>    
+      <outputDirectory>lib</outputDirectory>
+    </file>
+    <file>
+      <source>LICENSE</source>
+    </file>
+    <file>
+      <source>NOTICE</source>
+    </file>
+  </files>
+  <fileSets>
+    <fileSet>
+      <directory>src/main/scripts</directory>
+      <outputDirectory></outputDirectory>
+    </fileSet>
+  </fileSets>
+</assembly>

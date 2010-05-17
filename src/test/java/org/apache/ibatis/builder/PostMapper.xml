@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper
+    PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+    "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="domain.blog.mappers.PostMapper">
+
+  <sql id="byBlogId">
+    <if test="blog_id != null">blog_id = #{blog_id}</if>
+  </sql>
+
+  <select id="findPost" resultType="domain.blog.Post">
+    SELECT *
+    FROM POST P
+    <where>
+      <choose>
+        <when test="id != null">id = #{id}</when>
+        <when test="author_id != null">AND author_id = #{author_id}</when>
+        <otherwise>
+          <if test="ids != null">
+            AND id IN
+            <foreach item="item_id" index="index" open="(" close=")" separator="," collection="ids">#{ids[${index}]}
+            </foreach>
+          </if>
+          <trim prefix="AND">
+            <include refid="byBlogId"/>
+          </trim>
+        </otherwise>
+      </choose>
+    </where>
+  </select>
+
+  <select id="selectPostIn" resultType="domain.blog.Post">
+    SELECT *
+    FROM POST P
+    WHERE ID in
+    <foreach item="item" index="index" collection="list"
+             open="(" close=")">
+      <if test="index != 0">,</if> #{item}
+    </foreach>
+  </select>
+
+  <select id="selectOddPostsIn" resultType="domain.blog.Post">
+    SELECT *
+    FROM POST P
+    WHERE ID in
+    <foreach item="item" index="index" collection="list"
+             open="(" separator="," close=")">
+      <if test="index / 2 != 0">
+        #{item}
+      </if>
+    </foreach>
+  </select>
+
+  <select id="selectOddPostsInKeysList" resultType="domain.blog.Post">
+    SELECT *
+    FROM POST P
+    WHERE ID in
+    <foreach item="item" index="index" collection="keys"
+             open="(" separator="," close=")">
+      <if test="index / 2 != 0">
+        #{item}
+      </if>
+    </foreach>
+  </select>
+</mapper>

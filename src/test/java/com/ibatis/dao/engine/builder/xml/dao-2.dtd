@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!ELEMENT daoConfig (properties? , context+)>
+
+<!ELEMENT context (transactionManager, dao*)+>
+<!ATTLIST context
+id CDATA #IMPLIED
+>
+
+<!ELEMENT properties EMPTY>
+<!ATTLIST properties
+resource CDATA #IMPLIED
+url CDATA #IMPLIED
+>
+
+<!ELEMENT transactionManager (property*)>
+<!ATTLIST transactionManager
+type CDATA #REQUIRED
+>
+
+<!ELEMENT property EMPTY>
+<!ATTLIST property
+name CDATA #REQUIRED
+value CDATA #REQUIRED
+>
+
+<!ELEMENT dao EMPTY>
+<!ATTLIST dao
+interface CDATA #REQUIRED
+implementation CDATA #REQUIRED
+>

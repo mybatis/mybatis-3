@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="Account">
+
+  <typeAlias alias="account" type="com.ibatis.jpetstore.domain.Account"/>
+
+  <select id="getAccountByUsername" resultClass="account" parameterClass="string">
+    SELECT
+    SIGNON.USERNAME,
+    ACCOUNT.EMAIL,
+    ACCOUNT.FIRSTNAME,
+    ACCOUNT.LASTNAME,
+    ACCOUNT.STATUS,
+    ACCOUNT.ADDR1 AS address1,
+    ACCOUNT.ADDR2 AS address2,
+    ACCOUNT.CITY,
+    ACCOUNT.STATE,
+    ACCOUNT.ZIP,
+    ACCOUNT.COUNTRY,
+    ACCOUNT.PHONE,
+    PROFILE.LANGPREF AS languagePreference,
+    PROFILE.FAVCATEGORY AS favouriteCategoryId,
+    PROFILE.MYLISTOPT AS listOption,
+    PROFILE.BANNEROPT AS bannerOption,
+    BANNERDATA.BANNERNAME
+    FROM ACCOUNT, PROFILE, SIGNON, BANNERDATA
+    WHERE ACCOUNT.USERID = #username#
+    AND SIGNON.USERNAME = ACCOUNT.USERID
+    AND PROFILE.USERID = ACCOUNT.USERID
+    AND PROFILE.FAVCATEGORY = BANNERDATA.FAVCATEGORY
+  </select>
+
+  <select id="getAccountByUsernameAndPassword" resultClass="account" parameterClass="account">
+    SELECT
+    SIGNON.USERNAME,
+    ACCOUNT.EMAIL,
+    ACCOUNT.FIRSTNAME,
+    ACCOUNT.LASTNAME,
+    ACCOUNT.STATUS,
+    ACCOUNT.ADDR1 AS address1,
+    ACCOUNT.ADDR2 AS address2,
+    ACCOUNT.CITY,
+    ACCOUNT.STATE,
+    ACCOUNT.ZIP,
+    ACCOUNT.COUNTRY,
+    ACCOUNT.PHONE,
+    PROFILE.LANGPREF AS languagePreference,
+    PROFILE.FAVCATEGORY AS favouriteCategoryId,
+    PROFILE.MYLISTOPT AS listOption,
+    PROFILE.BANNEROPT AS bannerOption,
+    BANNERDATA.BANNERNAME
+    FROM ACCOUNT, PROFILE, SIGNON, BANNERDATA
+    WHERE ACCOUNT.USERID = #username#
+    AND SIGNON.PASSWORD = #password#
+    AND SIGNON.USERNAME = ACCOUNT.USERID
+    AND PROFILE.USERID = ACCOUNT.USERID
+    AND PROFILE.FAVCATEGORY = BANNERDATA.FAVCATEGORY
+  </select>
+
+  <update id="updateAccount" parameterClass="account">
+    UPDATE ACCOUNT SET
+    EMAIL = #email#,
+    FIRSTNAME = #firstName#,
+    LASTNAME = #lastName#,
+    STATUS = #status#,
+    ADDR1 = #address1#,
+    ADDR2 = #address2:VARCHAR#,
+    CITY = #city#,
+    STATE = #state#,
+    ZIP = #zip#,
+    COUNTRY = #country#,
+    PHONE = #phone#
+    WHERE USERID = #username#
+  </update>
+
+  <insert id="insertAccount" parameterClass="account">
+    INSERT INTO ACCOUNT
+    (EMAIL, FIRSTNAME, LASTNAME, STATUS, ADDR1, ADDR2, CITY, STATE, ZIP, COUNTRY, PHONE, USERID)
+    VALUES
+    (#email#, #firstName#, #lastName#, #status#, #address1#, #address2:VARCHAR#, #city#, #state#, #zip#, #country#,
+    #phone#, #username#)
+  </insert>
+
+  <update id="updateProfile" parameterClass="account">
+    UPDATE PROFILE SET
+    LANGPREF = #languagePreference#,
+    FAVCATEGORY = #favouriteCategoryId#,
+    MYLISTOPT = #listOption#,
+    BANNEROPT = #bannerOption#
+    WHERE USERID = #username#
+  </update>
+
+  <insert id="insertProfile" parameterClass="account">
+    INSERT INTO PROFILE (LANGPREF, FAVCATEGORY, MYLISTOPT, BANNEROPT, USERID)
+    VALUES (#languagePreference#, #favouriteCategoryId#, #listOption#, #bannerOption#, #username#)
+  </insert>
+
+  <update id="updateSignon" parameterClass="account">
+    UPDATE SIGNON SET PASSWORD = #password#
+    WHERE USERNAME = #username#
+  </update>
+
+  <insert id="insertSignon" parameterClass="account">
+    INSERT INTO SIGNON (PASSWORD,USERNAME)
+    VALUES (#password#, #username#)
+  </insert>
+
+</sqlMap>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!ELEMENT configuration (properties?, settings?, typeAliases?, typeHandlers?, objectFactory?, plugins?, environments?, mappers?)>
+
+<!ELEMENT properties (property*)>
+<!ATTLIST properties
+resource CDATA #IMPLIED
+url CDATA #IMPLIED
+>
+
+<!ELEMENT property EMPTY>
+<!ATTLIST property
+name CDATA #REQUIRED
+value CDATA #REQUIRED
+>
+
+<!ELEMENT settings (setting+)>
+
+<!ELEMENT setting EMPTY>
+<!ATTLIST setting
+name CDATA #REQUIRED
+value CDATA #REQUIRED
+>
+
+<!ELEMENT typeAliases (typeAlias+)>
+
+<!ELEMENT typeAlias EMPTY>
+<!ATTLIST typeAlias
+type CDATA #REQUIRED
+alias CDATA #IMPLIED
+>
+
+<!ELEMENT typeHandlers (typeHandler+)>
+
+<!ELEMENT typeHandler EMPTY>
+<!ATTLIST typeHandler
+javaType CDATA #REQUIRED
+jdbcType CDATA #IMPLIED
+handler CDATA #REQUIRED
+>
+
+<!ELEMENT objectFactory (property*)>
+<!ATTLIST objectFactory
+type CDATA #REQUIRED
+>
+
+<!ELEMENT objectWrapperFactory (property*)>
+<!ATTLIST objectWrapperFactory
+type CDATA #REQUIRED
+>
+
+<!ELEMENT plugins (plugin+)>
+
+<!ELEMENT plugin (property*)>
+<!ATTLIST plugin
+interceptor CDATA #REQUIRED
+>
+
+<!ELEMENT environments (environment+)>
+<!ATTLIST environments
+default CDATA #REQUIRED
+>
+
+<!ELEMENT environment (transactionManager,dataSource)>
+<!ATTLIST environment
+id CDATA #REQUIRED
+>
+
+<!ELEMENT transactionManager (property*)>
+<!ATTLIST transactionManager
+type CDATA #REQUIRED
+>
+
+<!ELEMENT dataSource (property*)>
+<!ATTLIST dataSource
+type CDATA #REQUIRED
+>
+
+<!ELEMENT mappers (mapper+)>
+
+<!ELEMENT mapper EMPTY>
+<!ATTLIST mapper
+resource CDATA #IMPLIED
+url CDATA #IMPLIED
+>

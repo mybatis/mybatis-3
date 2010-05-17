@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!ELEMENT sqlMapConfig (properties?, settings?, resultObjectFactory?, typeAlias*, typeHandler*, transactionManager?, sqlMap+)+>
+<!ATTLIST sqlMapConfig
+xmlns:fo CDATA #IMPLIED
+>
+
+<!ELEMENT properties EMPTY>
+<!ATTLIST properties
+resource CDATA #IMPLIED
+url CDATA #IMPLIED
+>
+
+<!ELEMENT settings EMPTY>
+<!ATTLIST settings
+classInfoCacheEnabled (true | false) #IMPLIED
+lazyLoadingEnabled (true | false) #IMPLIED
+statementCachingEnabled (true | false) #IMPLIED
+cacheModelsEnabled (true | false) #IMPLIED
+enhancementEnabled (true | false) #IMPLIED
+errorTracingEnabled (true | false) #IMPLIED
+useStatementNamespaces (true | false) #IMPLIED
+defaultStatementTimeout CDATA #IMPLIED
+>
+
+<!ELEMENT transactionManager (property*,dataSource)>
+<!ATTLIST transactionManager
+type CDATA #REQUIRED
+commitRequired (true | false) #IMPLIED
+>
+
+<!ELEMENT dataSource (property*)>
+<!ATTLIST dataSource
+type CDATA #REQUIRED
+>
+
+<!ELEMENT property EMPTY>
+<!ATTLIST property
+name CDATA #REQUIRED
+value CDATA #REQUIRED
+>
+
+<!ELEMENT sqlMap EMPTY>
+<!ATTLIST sqlMap
+resource CDATA #IMPLIED
+url CDATA #IMPLIED
+>
+
+<!ELEMENT typeAlias EMPTY>
+<!ATTLIST typeAlias
+alias CDATA #REQUIRED
+type CDATA #REQUIRED
+>
+
+<!ELEMENT typeHandler EMPTY>
+<!ATTLIST typeHandler
+javaType CDATA #REQUIRED
+jdbcType CDATA #IMPLIED
+callback CDATA #REQUIRED
+>
+
+<!ELEMENT resultObjectFactory (property*)>
+<!ATTLIST resultObjectFactory
+type CDATA #REQUIRED
+>

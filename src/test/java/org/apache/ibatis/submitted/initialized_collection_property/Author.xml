@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+    "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="Author">
+
+  <resultMap id="authorResultMap" type="Author">
+    <id column="author_id" property="id"/>
+    <result column="author_name" property="name"/>
+    <collection property="posts" ofType="Post">
+      <id property="id" column="post_id"/>
+      <result column="post_id" property="id"/>
+      <result column="post_content" property="content"/>
+    </collection>
+  </resultMap>
+
+  <select id="getAllAuthors" resultMap="authorResultMap">
+    SELECT
+    a.author_id as author_id,
+    a.name as author_name,
+    p.post_id as post_id,
+    p.content as post_content
+    FROM author a
+    LEFT JOIN post p ON a.author_id = p.author_id
+  </select>
+
+</mapper>

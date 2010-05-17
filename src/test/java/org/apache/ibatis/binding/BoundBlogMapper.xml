@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper
+    PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+    "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper>
+
+  <select id="selectRandom" resultType="int">
+    select CAST(RANDOM()*1000000 as INTEGER) a from SYSIBM.SYSDUMMY1
+  </select>
+
+  <select id="selectBlogsFromXML" resultType="domain.blog.Blog">
+    SELECT * FROM blog
+  </select>
+
+  <resultMap id="blogWithPosts" type="Blog">
+    <id property="id" column="id"/>
+    <result property="title" column="title"/>
+    <association property="author" column="author_id"
+                 select="selectAuthorWithInlineParams"/>
+    <collection property="posts" column="id" select="selectPostsForBlog"/>
+  </resultMap>
+
+  <select id="selectBlogWithPostsUsingSubSelect" parameterType="int" resultMap="blogWithPosts">
+    select * from Blog where id = #{id}
+  </select>
+
+  <select id="selectAuthorWithInlineParams"
+          parameterType="int"
+          resultType="domain.blog.Author">
+    select * from author where id = #{id}
+  </select>
+
+  <select id="selectPostsForBlog" parameterType="int" resultType="Post">
+    select * from Post where blog_id = #{blog_id}
+  </select>
+
+
+</mapper>

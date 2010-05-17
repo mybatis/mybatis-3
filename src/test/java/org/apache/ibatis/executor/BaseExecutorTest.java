@@ -1,0 +1,437 @@
+package org.apache.ibatis.executor;
+
+import domain.blog.Author;
+import domain.blog.Blog;
+import domain.blog.Post;
+import domain.blog.Section;
+import org.apache.ibatis.BaseDataTest;
+import org.apache.ibatis.logging.jdbc.ConnectionLogger;
+import org.apache.ibatis.mapping.MappedStatement;
+import org.apache.ibatis.session.Configuration;
+import org.apache.ibatis.session.RowBounds;
+import org.apache.ibatis.transaction.Transaction;
+import org.apache.ibatis.transaction.jdbc.JdbcTransaction;
+import static org.junit.Assert.*;
+import org.junit.Test;
+
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+public class BaseExecutorTest extends BaseDataTest {
+  protected final Configuration config;
+
+  public BaseExecutorTest() {
+    config = new Configuration();
+    config.setLazyLoadingEnabled(true);
+    config.setUseGeneratedKeys(false);
+    config.setMultipleResultSetsEnabled(true);
+    config.setUseColumnLabel(true);
+    config.setDefaultStatementTimeout(5000);
+  }
+
+  @Test
+  public void shouldInsertNewAuthorWithBeforeAutoKey() throws Exception {
+    DataSource ds = createBlogDataSource();
+    Connection connection = ds.getConnection();
+    Executor executor = createExecutor(new JdbcTransaction(connection, false));
+    try {
+      Author author = new Author(-1, "someone", "******", "someone@apache.org", null, Section.NEWS);
+      MappedStatement insertStatement = ExecutorTestHelper.prepareInsertAuthorMappedStatementWithBeforeAutoKey(config);
+      MappedStatement selectStatement = ExecutorTestHelper.prepareSelectOneAuthorMappedStatement(config);
+      int rows = executor.update(insertStatement, author);
+      assertTrue(rows > 0 || rows == BatchExecutor.BATCH_UPDATE_RETURN_VALUE);
+      if (rows == BatchExecutor.BATCH_UPDATE_RETURN_VALUE) {
+        executor.flushStatements();
+      }
+      assertEquals(123456, author.getId());
+      if (author.getId() != BatchExecutor.BATCH_UPDATE_RETURN_VALUE) {
+        List<Author> authors = executor.query(selectStatement, author.getId(), RowBounds.DEFAULT, Executor.NO_RESULT_HANDLER);
+        executor.rollback(true);
+        assertEquals(1, authors.size());
+        assertEquals(author.toString(), authors.get(0).toString());
+        assertTrue(author.getId() >= 10000);
+      }
+    } finally {
+      executor.rollback(true);
+      executor.close(false);
+    }
+  }
+
+  @Test
+  public void shouldInsertNewAuthor() throws Exception {
+    DataSource ds = createBlogDataSource();
+    Connection connection = ds.getConnection();
+    Executor executor = createExecutor(new JdbcTransaction(connection, false));
+    try {
+      Author author = new Author(99, "someone", "******", "someone@apache.org", null, Section.NEWS);
+      MappedStatement insertStatement = ExecutorTestHelper.prepareInsertAuthorMappedStatement(config);
+      MappedStatement selectStatement = ExecutorTestHelper.prepareSelectOneAuthorMappedStatement(config);
+      int rows = executor.update(insertStatement, author);
+      List<Author> authors = executor.query(selectStatement, 99, RowBounds.DEFAULT, Executor.NO_RESULT_HANDLER);
+      executor.flushStatements();
+      executor.rollback(true);
+      assertEquals(1, authors.size());
+      assertEquals(author.toString(), authors.get(0).toString());
+      assertTrue(1 == rows || BatchExecutor.BATCH_UPDATE_RETURN_VALUE == rows);
+    } finally {
+      executor.rollback(true);
+      executor.close(false);
+    }
+  }
+
+  @Test
+  public void shouldSelectAllAuthorsAutoMapped() throws Exception {
+    DataSource ds = createBlogDataSource();
+    Connection connection = ds.getConnection();
+    Executor executor = createExecutor(new JdbcTransaction(connection, false));
+    try {
+      MappedStatement selectStatement = ExecutorTestHelper.prepareSelectAllAuthorsAutoMappedStatement(config);
+      List<Author> authors = executor.query(selectStatement, null, RowBounds.DEFAULT, Executor.NO_RESULT_HANDLER);
+      assertEquals(2, authors.size());
+      Author author = authors.get(0);
+      // id,username, password, email, bio, favourite_section
+      // (101,'jim','********','jim@ibatis.apache.org','','NEWS');
+      assertEquals(101, author.getId());
+      assertEquals("jim", author.getUsername());
+      assertEquals("jim@ibatis.apache.org", author.getEmail());
+      assertEquals("", author.getBio());
+      assertEquals(Section.NEWS, author.getFavouriteSection());
+    } finally {
+      executor.rollback(true);
+      executor.close(false);
+    }
+  }
+
+  @Test
+  public void shouldInsertNewAuthorWithAutoKey() throws Exception {
+    DataSource ds = createBlogDataSource();
+    Connection connection = ds.getConnection();
+    Executor executor = createExecutor(new JdbcTransaction(connection, false));
+    try {
+      Author author = new Author(-1, "someone", "******", "someone@apache.org", null, Section.NEWS);
+      MappedStatement insertStatement = ExecutorTestHelper.prepareInsertAuthorMappedStatementWithAutoKey(config);
+      MappedStatement selectStatement = ExecutorTestHelper.prepareSelectOneAuthorMappedStatement(config);
+      int rows = executor.update(insertStatement, author);
+      assertTrue(rows > 0 || rows == BatchExecutor.BATCH_UPDATE_RETURN_VALUE);
+      if (rows == BatchExecutor.BATCH_UPDATE_RETURN_VALUE) {
+        executor.flushStatements();
+      }
+      assertTrue(-1 != author.getId());
+      if (author.getId() != BatchExecutor.BATCH_UPDATE_RETURN_VALUE) {
+        List<Author> authors = executor.query(selectStatement, author.getId(), RowBounds.DEFAULT, Executor.NO_RESULT_HANDLER);
+        executor.rollback(true);
+        assertEquals(1, authors.size());
+        assertEquals(author.toString(), authors.get(0).toString());
+        assertTrue(author.getId() >= 10000);
+      }
+    } finally {
+      executor.rollback(true);
+      executor.close(false);
+    }
+  }
+
+  @Test
+  public void shouldInsertNewAuthorByProc() throws Exception {
+    DataSource ds = createBlogDataSource();
+    Connection connection = ds.getConnection();
+    Executor executor = createExecutor(new JdbcTransaction(connection, false));
+    try {
+      Author author = new Author(97, "someone", "******", "someone@apache.org", null, null);
+      MappedStatement insertStatement = ExecutorTestHelper.prepareInsertAuthorProc(config);
+      MappedStatement selectStatement = ExecutorTestHelper.prepareSelectOneAuthorMappedStatement(config);
+      int rows = executor.update(insertStatement, author);
+      List<Author> authors = executor.query(selectStatement, 97, RowBounds.DEFAULT, Executor.NO_RESULT_HANDLER);
+      executor.flushStatements();
+      executor.rollback(true);
+      assertEquals(1, authors.size());
+      assertEquals(author.toString(), authors.get(0).toString());
+    } finally {
+      executor.rollback(true);
+      executor.close(false);
+    }
+  }
+
+  @Test
+  public void shouldInsertNewAuthorUsingSimpleNonPreparedStatements() throws Exception {
+    DataSource ds = createBlogDataSource();
+    Connection connection = ds.getConnection();
+    Executor executor = createExecutor(new JdbcTransaction(connection, false));
+    try {
+      Author author = new Author(99, "someone", "******", "someone@apache.org", null, null);
+      MappedStatement insertStatement = ExecutorTestHelper.createInsertAuthorWithIDof99MappedStatement(config);
+      MappedStatement selectStatement = ExecutorTestHelper.createSelectAuthorWithIDof99MappedStatement(config);
+      int rows = executor.update(insertStatement, null);
+      List<Author> authors = executor.query(selectStatement, 99, RowBounds.DEFAULT, Executor.NO_RESULT_HANDLER);
+      executor.flushStatements();
+      executor.rollback(true);
+      assertEquals(1, authors.size());
+      assertEquals(author.toString(), authors.get(0).toString());
+      assertTrue(1 == rows || BatchExecutor.BATCH_UPDATE_RETURN_VALUE == rows);
+    } finally {
+      executor.rollback(true);
+      executor.close(false);
+    }
+  }
+
+  @Test
+  public void shouldUpdateAuthor() throws Exception {
+    DataSource ds = createBlogDataSource();
+    Connection connection = ds.getConnection();
+    Executor executor = createExecutor(new JdbcTransaction(connection, false));
+    try {
+      Author author = new Author(101, "someone", "******", "someone@apache.org", null, Section.NEWS);
+      MappedStatement updateStatement = ExecutorTestHelper.prepareUpdateAuthorMappedStatement(config);
+      MappedStatement selectStatement = ExecutorTestHelper.prepareSelectOneAuthorMappedStatement(config);
+      int rows = executor.update(updateStatement, author);
+      List<Author> authors = executor.query(selectStatement, 101, RowBounds.DEFAULT, Executor.NO_RESULT_HANDLER);
+      executor.flushStatements();
+      executor.rollback(true);
+      assertEquals(1, authors.size());
+      assertEquals(author.toString(), authors.get(0).toString());
+      assertTrue(1 == rows || BatchExecutor.BATCH_UPDATE_RETURN_VALUE == rows);
+    } finally {
+      executor.rollback(true);
+      executor.close(false);
+    }
+  }
+
+  @Test
+  public void shouldDeleteAuthor() throws Exception {
+    DataSource ds = createBlogDataSource();
+    Connection connection = ds.getConnection();
+    Executor executor = createExecutor(new JdbcTransaction(connection, false));
+    try {
+      Author author = new Author(101, null, null, null, null, null);
+      MappedStatement deleteStatement = ExecutorTestHelper.prepareDeleteAuthorMappedStatement(config);
+      MappedStatement selectStatement = ExecutorTestHelper.prepareSelectOneAuthorMappedStatement(config);
+      int rows = executor.update(deleteStatement, author);
+      List<Author> authors = executor.query(selectStatement, 101, RowBounds.DEFAULT, Executor.NO_RESULT_HANDLER);
+      executor.flushStatements();
+      executor.rollback(true);
+      assertEquals(0, authors.size());
+      assertTrue(1 == rows || BatchExecutor.BATCH_UPDATE_RETURN_VALUE == rows);
+    } finally {
+      executor.rollback(true);
+      executor.close(false);
+    }
+  }
+
+  @Test
+  public void shouldSelectDiscriminatedProduct() throws Exception {
+    DataSource ds = createJPetstoreDataSource();
+    Connection connection = ds.getConnection();
+    Executor executor = createExecutor(new JdbcTransaction(connection, false));
+    try {
+      MappedStatement selectStatement = ExecutorTestHelper.prepareSelectDiscriminatedProduct(config);
+      List<Map> products = executor.query(selectStatement, null, RowBounds.DEFAULT, Executor.NO_RESULT_HANDLER);
+      connection.rollback();
+      assertEquals(16, products.size());
+      for (Map m : products) {
+        if ("REPTILES".equals(m.get("category"))) {
+          assertNull(m.get("name"));
+        } else {
+          assertNotNull(m.get("name"));
+        }
+      }
+    } finally {
+      executor.rollback(true);
+      executor.close(false);
+    }
+  }
+
+  @Test
+  public void shouldSelect10DiscriminatedProducts() throws Exception {
+    DataSource ds = createJPetstoreDataSource();
+    Connection connection = ds.getConnection();
+    Executor executor = createExecutor(new JdbcTransaction(connection, false));
+    try {
+      MappedStatement selectStatement = ExecutorTestHelper.prepareSelectDiscriminatedProduct(config);
+      List<Map> products = executor.query(selectStatement, null, new RowBounds(4, 10), Executor.NO_RESULT_HANDLER);
+      connection.rollback();
+      assertEquals(10, products.size());
+      for (Map m : products) {
+        if ("REPTILES".equals(m.get("category"))) {
+          assertNull(m.get("name"));
+        } else {
+          assertNotNull(m.get("name"));
+        }
+      }
+    } finally {
+      executor.rollback(true);
+      executor.close(false);
+    }
+
+  }
+
+  @Test
+  public void shouldSelectTwoSetsOfAuthorsViaProc() throws Exception {
+    DataSource ds = createBlogDataSource();
+    Connection connection = ds.getConnection();
+    connection.setAutoCommit(false);
+    Executor executor = createExecutor(new JdbcTransaction(connection, false));
+    try {
+      MappedStatement selectStatement = ExecutorTestHelper.prepareSelectTwoSetsOfAuthorsProc(config);
+      List<List> authorSets = executor.query(selectStatement, new HashMap() {
+        {
+          put("id1", 101);
+          put("id2", 102);
+        }
+      }, RowBounds.DEFAULT, Executor.NO_RESULT_HANDLER);
+      connection.rollback();
+      assertEquals(2, authorSets.size());
+      for (List authors : authorSets) {
+        assertEquals(2, authors.size());
+        for (Object author : authors) {
+          assertTrue(author instanceof Author);
+        }
+      }
+    } finally {
+      executor.rollback(true);
+      executor.close(false);
+    }
+  }
+
+  @Test
+  public void shouldSelectAuthorViaOutParams() throws Exception {
+    DataSource ds = createBlogDataSource();
+    Connection connection = ds.getConnection();
+    connection.setAutoCommit(false);
+    Executor executor = createExecutor(new JdbcTransaction(connection, false));
+    try {
+      MappedStatement selectStatement = ExecutorTestHelper.prepareSelectAuthorViaOutParams(config);
+      Author author = new Author(102, null, null, null, null, null);
+      executor.query(selectStatement, author, RowBounds.DEFAULT, Executor.NO_RESULT_HANDLER);
+      connection.rollback();
+
+      assertEquals("sally", author.getUsername());
+      assertEquals("********", author.getPassword());
+      assertEquals("sally@ibatis.apache.org", author.getEmail());
+      assertEquals(null, author.getBio());
+    } finally {
+      executor.rollback(true);
+      executor.close(false);
+    }
+  }
+
+  @Test
+  public void shouldFetchPostsForBlog() throws Exception {
+    DataSource ds = createBlogDataSource();
+    Connection connection = ds.getConnection();
+    connection = ConnectionLogger.newInstance(connection);
+    Executor executor = createExecutor(new JdbcTransaction(connection, false));
+    try {
+      MappedStatement selectBlog = ExecutorTestHelper.prepareComplexSelectBlogMappedStatement(config);
+      MappedStatement selectPosts = ExecutorTestHelper.prepareSelectPostsForBlogMappedStatement(config);
+      config.addMappedStatement(selectBlog);
+      config.addMappedStatement(selectPosts);
+      List<Post> posts = executor.query(selectPosts, 1, RowBounds.DEFAULT, Executor.NO_RESULT_HANDLER);
+      executor.flushStatements();
+      assertEquals(2, posts.size());
+      assertNotNull(posts.get(1).getBlog());
+      assertEquals(1, posts.get(1).getBlog().getId());
+      executor.rollback(true);
+    } finally {
+      executor.rollback(true);
+      executor.close(false);
+    }
+  }
+
+  @Test
+  public void shouldFetchOneOrphanedPostWithNoBlog() throws Exception {
+    DataSource ds = createBlogDataSource();
+    Connection connection = ds.getConnection();
+    Executor executor = createExecutor(new JdbcTransaction(connection, false));
+    try {
+      MappedStatement selectBlog = ExecutorTestHelper.prepareComplexSelectBlogMappedStatement(config);
+      MappedStatement selectPost = ExecutorTestHelper.prepareSelectPostMappedStatement(config);
+      config.addMappedStatement(selectBlog);
+      config.addMappedStatement(selectPost);
+      List<Post> posts = executor.query(selectPost, 5, RowBounds.DEFAULT, Executor.NO_RESULT_HANDLER);
+      executor.flushStatements();
+      executor.rollback(true);
+      assertEquals(1, posts.size());
+      Post post = posts.get(0);
+      assertNull(post.getBlog());
+    } finally {
+      executor.rollback(true);
+      executor.close(false);
+    }
+  }
+
+  @Test
+  public void shouldFetchPostWithBlogWithCompositeKey() throws Exception {
+    DataSource ds = createBlogDataSource();
+    Connection connection = ds.getConnection();
+    Executor executor = createExecutor(new JdbcTransaction(connection, false));
+    try {
+      MappedStatement selectBlog = ExecutorTestHelper.prepareSelectBlogByIdAndAuthor(config);
+      MappedStatement selectPost = ExecutorTestHelper.prepareSelectPostWithBlogByAuthorMappedStatement(config);
+      config.addMappedStatement(selectBlog);
+      config.addMappedStatement(selectPost);
+      List<Post> posts = executor.query(selectPost, 2, RowBounds.DEFAULT, Executor.NO_RESULT_HANDLER);
+      executor.flushStatements();
+      assertEquals(1, posts.size());
+      Post post = posts.get(0);
+      assertNotNull(post.getBlog());
+      assertEquals(101, post.getBlog().getAuthor().getId());
+      executor.rollback(true);
+    } finally {
+      executor.rollback(true);
+      executor.close(false);
+    }
+  }
+
+
+  @Test
+  public void shouldFetchComplexBlogs() throws Exception {
+    DataSource ds = createBlogDataSource();
+    Connection connection = ds.getConnection();
+    Executor executor = createExecutor(new JdbcTransaction(connection, false));
+    try {
+      MappedStatement selectBlog = ExecutorTestHelper.prepareComplexSelectBlogMappedStatement(config);
+      MappedStatement selectPosts = ExecutorTestHelper.prepareSelectPostsForBlogMappedStatement(config);
+      config.addMappedStatement(selectBlog);
+      config.addMappedStatement(selectPosts);
+      config.setLazyLoadingEnabled(true);
+      List<Blog> blogs = executor.query(selectBlog, 1, RowBounds.DEFAULT, Executor.NO_RESULT_HANDLER);
+      executor.flushStatements();
+      assertEquals(1, blogs.size());
+      assertNotNull(blogs.get(0).getPosts());
+      assertEquals(2, blogs.get(0).getPosts().size());
+      assertEquals(1, blogs.get(0).getPosts().get(1).getBlog().getPosts().get(1).getBlog().getId());
+      executor.rollback(true);
+    } finally {
+      config.setLazyLoadingEnabled(true);
+      executor.rollback(true);
+      executor.close(false);
+    }
+  }
+
+  @Test
+  public void shouldMapConstructorResults() throws Exception {
+    DataSource ds = createBlogDataSource();
+    Connection connection = ds.getConnection();
+    Executor executor = createExecutor(new JdbcTransaction(connection, false));
+    try {
+      MappedStatement selectStatement = ExecutorTestHelper.prepareSelectOneAuthorMappedStatementWithConstructorResults(config);
+      List<Author> authors = executor.query(selectStatement, 102, RowBounds.DEFAULT, Executor.NO_RESULT_HANDLER);
+      executor.flushStatements();
+      executor.rollback(true);
+      assertEquals(1, authors.size());
+
+      Author author = authors.get(0);
+      assertEquals(102, author.getId());
+    } finally {
+      executor.rollback(true);
+      executor.close(false);
+    }
+  }
+
+  protected Executor createExecutor(Transaction transaction) {
+    return new SimpleExecutor(config,transaction);
+  }
+
+}

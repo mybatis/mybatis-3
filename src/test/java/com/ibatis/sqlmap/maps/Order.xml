@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap>
+
+  <cacheModel id="order-cache" type="MEMORY">
+    <flushInterval hours="24"/>
+  </cacheModel>
+
+  <typeAlias alias="order" type="com.testdomain.Order"/>
+
+  <resultMap id="credit-card-result" class="java.lang.String">
+    <result property="value" column="ORD_CARD_NUMBER"/>
+  </resultMap>
+
+  <resultMap id="lite-order-map-result" class="java.util.HashMap">
+    <result property="id" column="ORD_ID"/>
+    <result property="date" column="ORD_DATE"/>
+    <result property="cardExpiry" column="ORD_CARD_EXPIRY"/>
+    <result property="cardType" column="ORD_CARD_TYPE"/>
+    <result property="cardNumber" column="ORD_CARD_NUMBER"/>
+    <result property="street" column="ORD_STREET"/>
+    <result property="city" column="ORD_CITY"/>
+    <result property="province" column="ORD_PROVINCE"/>
+    <result property="postalCode" column="ORD_POSTAL_CODE"/>
+  </resultMap>
+
+  <resultMap id="lite-order-result-by-name" class="order">
+    <result property="id" column="ORD_ID"/>
+    <result property="date" column="ORD_DATE"/>
+    <result property="cardExpiry" column="ORD_CARD_EXPIRY"/>
+    <result property="cardType" column="ORD_CARD_TYPE"/>
+    <result property="cardNumber" column="ORD_CARD_NUMBER"/>
+    <result property="street" column="ORD_STREET"/>
+    <result property="city" column="ORD_CITY"/>
+    <result property="province" column="ORD_PROVINCE"/>
+    <result property="postalCode" column="ORD_POSTAL_CODE"/>
+  </resultMap>
+
+  <resultMap id="lite-order-result-by-index" class="order">
+    <result property="id" column="ORD_ID"/>
+    <result property="date" column="ORD_DATE"/>
+    <result property="cardExpiry" column="ORD_CARD_EXPIRY"/>
+    <result property="cardType" column="ORD_CARD_TYPE"/>
+    <result property="cardNumber" column="ORD_CARD_NUMBER"/>
+    <result property="street" column="ORD_STREET"/>
+    <result property="city" column="ORD_CITY"/>
+    <result property="province" column="ORD_PROVINCE"/>
+    <result property="postalCode" column="ORD_POSTAL_CODE"/>
+  </resultMap>
+
+  <resultMap id="order-with-account-result" class="order">
+    <result property="id" column="ORD_ID"/>
+    <result property="date" column="ORD_DATE"/>
+    <result property="cardExpiry" column="ORD_CARD_EXPIRY"/>
+    <result property="cardType" column="ORD_CARD_TYPE"/>
+    <result property="cardNumber" column="ORD_CARD_NUMBER"/>
+    <result property="street" column="ORD_STREET"/>
+    <result property="city" column="ORD_CITY"/>
+    <result property="province" column="ORD_PROVINCE"/>
+    <result property="postalCode" column="ORD_POSTAL_CODE"/>
+    <result property="account" column="ORD_ACC_ID" select="getAccountViaColumnName"/>
+  </resultMap>
+
+  <resultMap id="order-with-lines-result" class="order"
+             extends="lite-order-result-by-name">
+    <result property="lineItems" column="ORD_ID" select="getLineItemsForOrder"/>
+  </resultMap>
+
+  <resultMap id="lineItemNestedResult" class="com.testdomain.LineItem">
+    <result column="LIN_ID" property="id"/>
+    <result column="LIN_ORD_ID" property="orderId"/>
+    <result column="LIN_ITM_CODE" property="itemCode"/>
+    <result column="LIN_QUANTITY" property="quantity"/>
+    <result column="LIN_PRICE" property="price"/>
+  </resultMap>
+
+  <resultMap id="orderResultWithNestedMaps" class="order"
+             extends="lite-order-result-by-name" groupBy="id">
+    <result property="account" resultMap="Account.account-result"/>
+    <result property="lineItems" resultMap="lineItemNestedResult"/>
+  </resultMap>
+
+  <resultMap id="order-with-lines-array" class="order"
+             extends="lite-order-result-by-name">
+    <result property="lineItemArray" column="ORD_ID" select="getLineItemsForOrder"/>
+  </resultMap>
+
+  <resultMap id="order-with-collection-result" class="order">
+    <result property="id" column="ORD_ID"/>
+    <result property="date" column="ORD_DATE"/>
+    <result property="cardExpiry" column="ORD_CARD_EXPIRY"/>
+    <result property="cardType" column="ORD_CARD_TYPE"/>
+    <result property="cardNumber" column="ORD_CARD_NUMBER"/>
+    <result property="street" column="ORD_STREET"/>
+    <result property="city" column="ORD_CITY"/>
+    <result property="province" column="ORD_PROVINCE"/>
+    <result property="postalCode" column="ORD_POSTAL_CODE"/>
+    <result property="lineItems" column="ORD_ID" select="getLineItemsForOrder"/>
+  </resultMap>
+
+  <resultMap id="order-with-types-result" class="order">
+    <result property="id" jdbcType="NUMERIC" column="ORD_ID"/>
+    <result property="date" jdbcType="TIMESTAMP" column="ORD_DATE"/>
+    <result property="cardExpiry" jdbcType="VARCHAR" column="ORD_CARD_EXPIRY"/>
+    <result property="cardType" jdbcType="VARCHAR" column="ORD_CARD_TYPE"/>
+    <result property="cardNumber" jdbcType="VARCHAR" column="ORD_CARD_NUMBER"/>
+    <result property="street" jdbcType="VARCHAR" column="ORD_STREET"/>
+    <result property="city" jdbcType="VARCHAR" column="ORD_CITY"/>
+    <result property="province" jdbcType="VARCHAR" column="ORD_PROVINCE"/>
+    <result property="postalCode" jdbcType="VARCHAR" column="ORD_POSTAL_CODE"/>
+  </resultMap>
+
+  <resultMap id="order-with-favourite-line-item" class="order">
+    <result property="id" jdbcType="NUMERIC" column="ORD_ID"/>
+    <result property="date" jdbcType="TIMESTAMP" column="ORD_DATE"/>
+    <result property="cardExpiry" jdbcType="VARCHAR" column="ORD_CARD_EXPIRY"/>
+    <result property="cardType" jdbcType="VARCHAR" column="ORD_CARD_TYPE"/>
+    <result property="cardNumber" jdbcType="VARCHAR" column="ORD_CARD_NUMBER"/>
+    <result property="street" jdbcType="VARCHAR" column="ORD_STREET"/>
+    <result property="city" jdbcType="VARCHAR" column="ORD_CITY"/>
+    <result property="province" jdbcType="VARCHAR" column="ORD_PROVINCE"/>
+    <result property="postalCode" jdbcType="VARCHAR" column="ORD_POSTAL_CODE"/>
+    <result property="favouriteLineItem"
+            column="{orderId=ORD_ID,lineId=ORD_FAVOURITE_LINE}"
+            select="getSpecificLineItem"/>
+  </resultMap>
+
+  <resultMap id="order-with-dyn-favourite-line-item" class="order">
+    <result property="id" jdbcType="NUMERIC" column="ORD_ID"/>
+    <result property="date" jdbcType="TIMESTAMP" column="ORD_DATE"/>
+    <result property="cardExpiry" jdbcType="VARCHAR" column="ORD_CARD_EXPIRY"/>
+    <result property="cardType" jdbcType="VARCHAR" column="ORD_CARD_TYPE"/>
+    <result property="cardNumber" jdbcType="VARCHAR" column="ORD_CARD_NUMBER"/>
+    <result property="street" jdbcType="VARCHAR" column="ORD_STREET"/>
+    <result property="city" jdbcType="VARCHAR" column="ORD_CITY"/>
+    <result property="province" jdbcType="VARCHAR" column="ORD_PROVINCE"/>
+    <result property="postalCode" jdbcType="VARCHAR" column="ORD_POSTAL_CODE"/>
+    <result property="favouriteLineItem"
+            column="{orderId=ORD_ID,lineId=ORD_FAVOURITE_LINE}"
+            select="getDynSpecificLineItem"/>
+  </resultMap>
+
+  <resultMap id="order-joined-favourite" class="order">
+    <result property="id" column="ORD_ID"/>
+    <result property="date" column="ORD_DATE"/>
+    <result property="cardExpiry" column="ORD_CARD_EXPIRY"/>
+    <result property="cardType" column="ORD_CARD_TYPE"/>
+    <result property="cardNumber" column="ORD_CARD_NUMBER"/>
+    <result property="street" column="ORD_STREET"/>
+    <result property="city" column="ORD_CITY"/>
+    <result property="province" column="ORD_PROVINCE"/>
+    <result property="postalCode" column="ORD_POSTAL_CODE"/>
+    <result property="favouriteLineItem.id" column="LIN_ID"/>
+    <result property="favouriteLineItem.orderId" column="LIN_ORD_ID"/>
+    <result property="favouriteLineItem.itemCode" column="LIN_ITM_CODE"/>
+    <result property="favouriteLineItem.quantity" column="LIN_QUANTITY"/>
+    <result property="favouriteLineItem.price" column="LIN_PRICE"/>
+  </resultMap>
+
+  <select id="getOrderJoinedFavourite"
+          parameterClass="java.lang.Integer"
+          resultMap="order-joined-favourite">
+    select * from ORDERS, LINE_ITEM
+    where ORD_ID = LIN_ORD_ID
+    and ORD_FAVOURITE_LINE = LIN_ID
+    and ORD_ID = #value#
+  </select>
+
+  <select id="getOrderLiteByColumnName"
+          parameterClass="java.lang.Integer"
+          resultMap="lite-order-result-by-name">
+    select * from ORDERS where ORD_ID = #value#
+  </select>
+
+  <select id="getOrderWithFavouriteLineItem"
+          parameterClass="java.lang.Integer"
+          resultMap="order-with-favourite-line-item">
+    select * from ORDERS where ORD_ID = #value#
+  </select>
+
+  <select id="getOrderWithDynFavouriteLineItem"
+          parameterClass="java.lang.Integer"
+          resultMap="order-with-dyn-favourite-line-item">
+    select * from ORDERS where ORD_ID = #value#
+  </select>
+
+  <select id="getOrderAsMap"
+          parameterClass="java.lang.Integer"
+          resultMap="lite-order-map-result">
+    select * from ORDERS where ORD_ID = #value#
+  </select>
+
+  <select id="getOrderLiteByColumnIndex"
+          parameterClass="java.lang.Integer"
+          resultMap="lite-order-result-by-index">
+    select
+    ORD_ID,
+    ORD_DATE,
+    ORD_CARD_EXPIRY,
+    ORD_CARD_TYPE,
+    ORD_CARD_NUMBER,
+    ORD_STREET,
+    ORD_CITY,
+    ORD_PROVINCE,
+    ORD_POSTAL_CODE
+    from ORDERS where ORD_ID = #value#
+  </select>
+
+  <select id="getOrderWithAccount"
+          parameterClass="java.lang.Integer"
+          resultMap="order-with-account-result">
+    select * from ORDERS where ORD_ID = #value#
+  </select>
+
+  <select id="getOrderWithTypes"
+          parameterClass="java.lang.Integer"
+          resultMap="order-with-types-result" cacheModel="order-cache">
+    select * from ORDERS where ORD_ID = #value#
+  </select>
+
+  <select id="getOrderWithLineItems"
+          parameterClass="java.lang.Integer"
+          resultMap="order-with-lines-result">
+    select * from ORDERS where ORD_ID = #value#
+  </select>
+
+  <select id="getOrderWithLineItemArray"
+          parameterClass="java.lang.Integer"
+          resultMap="order-with-lines-array">
+    select * from ORDERS where ORD_ID = #value#
+  </select>
+
+  <select id="getOrderWithLineItemsCollection"
+          parameterClass="java.lang.Integer"
+          resultMap="order-with-collection-result">
+    select * from ORDERS where ORD_ID = #value#
+  </select>
+
+
+  <select id="getAllCreditCardNumbersFromOrders"
+          resultMap="credit-card-result">
+    select distinct ORD_CARD_NUMBER from ORDERS
+    order by ORD_CARD_NUMBER
+  </select>
+
+  <select id="getAllOrdersWithNestedResultMaps" resultMap="orderResultWithNestedMaps">
+    select o.*, a.*, l.*
+    from Orders o join Account a on o.ord_acc_id = a.acc_id
+    join Line_Item l on l.lin_ord_id = o.ord_id
+    order by o.ord_id
+  </select>
+
+</sqlMap>

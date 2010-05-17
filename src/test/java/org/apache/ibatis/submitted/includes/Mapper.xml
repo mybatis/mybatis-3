@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="org.apache.ibatis.submitted.includes.mapper">
+  <sql id="sometable">
+    SomeTable
+  </sql>
+
+  <select id="select" resultType="map">
+    <include refid="org.apache.ibatis.submitted.includes.fragments.select"/>
+    field1, field2, field3
+    from
+    <include refid="sometable"/>
+  </select>
+
+  <update id="update" parameterType="map">
+    <include refid="org.apache.ibatis.submitted.includes.fragments.update"/>
+    <include refid="org.apache.ibatis.submitted.includes.mapper.sometable"/>
+    set Field2 = #{field2,jdbcType=INTEGER},
+    Field3 = #{field3,jdbcType=VARCHAR},
+    where field1 = #{field1,jdbcType=INTEGER}
+  </update>
+</mapper>

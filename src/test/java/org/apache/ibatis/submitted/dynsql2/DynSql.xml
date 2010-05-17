@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="org.apache.ibatis.submitted.dynsql2">
+  <select id="simpleSelect" parameterType="java.lang.Integer" resultType="map">
+    select * from ibtest.names where id = #{value}
+  </select>
+
+  <select id="dynamicSelectWithTypeHandler" parameterType="org.apache.ibatis.submitted.dynsql2.Parameter"
+          resultType="map">
+    select *
+    from ibtest.names
+    <where>
+      <foreach collection="names" item="name" separator="or">
+        (firstName = #{name,typeHandler=org.apache.ibatis.submitted.dynsql2.FirstNameTypeHandler}) and
+        (lastName = #{name,typeHandler=org.apache.ibatis.submitted.dynsql2.LastNameTypeHandler})
+      </foreach>
+    </where>
+  </select>
+</mapper>

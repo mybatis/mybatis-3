@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="Category">
+
+  <typeAlias alias="category" type="com.ibatis.jpetstore.domain.Category"/>
+
+  <cacheModel id="categoryCache" type="LRU">
+    <flushInterval hours="24"/>
+    <property name="size" value="100"/>
+  </cacheModel>
+
+  <select id="getCategory" resultClass="category" parameterClass="string" cacheModel="categoryCache">
+    SELECT
+    CATID AS categoryId,
+    NAME,
+    DESCN AS description
+    FROM CATEGORY
+    WHERE CATID = #categoryId#
+  </select>
+
+  <select id="getCategoryList" resultClass="category" cacheModel="categoryCache">
+    SELECT
+    CATID AS categoryId,
+    NAME,
+    DESCN AS description
+    FROM CATEGORY
+  </select>
+
+</sqlMap>

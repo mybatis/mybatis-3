@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE configuration
+    PUBLIC "-//ibatis.apache.org//DTD Config 3.0//EN"
+    "http://ibatis.apache.org/dtd/ibatis-3-config.dtd">
+<configuration>
+
+  <environments default="development">
+    <environment id="development">
+      <transactionManager type="JDBC">
+        <property name="" value=""/>
+      </transactionManager>
+      <dataSource type="UNPOOLED">
+        <property name="driver" value="org.hsqldb.jdbcDriver"/>
+        <property name="url" value="jdbc:hsqldb:mem:lname"/>
+        <property name="username" value="sa"/>
+      </dataSource>
+    </environment>
+  </environments>
+
+  <mappers>
+    <mapper resource="org/apache/ibatis/submitted/selectkey/Table1.xml"/>
+    <mapper resource="org/apache/ibatis/submitted/selectkey/Table2.xml"/>
+  </mappers>
+
+</configuration>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="Book">
+
+  <select id="getPrivateBooks" resultClass="com.testdomain.PrivateBook">
+    select
+    DOCUMENT_ID as id,
+    DOCUMENT_TITLE as title,
+    DOCUMENT_TYPE as type,
+    DOCUMENT_PAGENUMBER as pages
+    from DOCUMENTS
+    where DOCUMENT_TYPE = 'BOOK'
+  </select>
+
+</sqlMap>

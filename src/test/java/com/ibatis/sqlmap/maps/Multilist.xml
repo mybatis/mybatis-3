@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap>
+
+  <resultMap id="categoryResultMap" class="com.testdomain.Category" groupBy="categoryId">
+    <result property="categoryId" column="catid"/>
+    <result property="name" column="catname"/>
+    <result property="description" column="catdescn"/>
+    <result property="productList" resultMap="productResultMap"/>
+    <result property="itemList" resultMap="itemResultMap"/>
+  </resultMap>
+
+
+  <resultMap id="productResultMap" class="com.testdomain.Product">
+    <result property="productId" column="productid"/>
+    <result property="categoryId" column="category"/>
+    <result property="name" column="prodname"/>
+    <result property="description" column="proddescn"/>
+  </resultMap>
+
+  <resultMap id="itemResultMap" class="com.testdomain.Item">
+    <result property="itemId" column="itemid"/>
+    <result property="productId" column="productid"/>
+    <result property="listPrice" column="listprice"/>
+    <result property="unitCost" column="unitcost"/>
+    <result property="supplierId" column="supplier"/>
+    <result property="status" column="status"/>
+    <result property="attribute1" column="attr1"/>
+    <result property="quantity" column="qty"/>
+  </resultMap>
+
+  <select id="getAllCategoriesMap" resultMap="categoryResultMap">
+    select
+    c.catid, c.name as catname, c.descn as catdescn,
+    p.productid, p.category, p.name as prodname,
+    p.descn as proddescn, i.itemid, i.productid,
+    i.listprice, i.unitcost, i.supplier, i.status,
+    i.attr1, i.attr2, i.attr3, i.attr4, i.attr5,
+    v.itemid, v.qty
+    from category c, product p, item i, inventory v
+    where c.catid = p.category
+    and p.productid = i.productid
+    and i.itemid = v.itemid
+  </select>
+
+</sqlMap>

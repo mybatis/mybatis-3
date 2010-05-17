@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="DerbyProc">
+
+  <typeAlias alias="account" type="com.testdomain.Account"/>
+
+  <resultMap id="account-result" class="account">
+    <result property="id" column="id"/>
+    <result property="firstName" column="ACC_FIRST_NAME"/>
+    <result property="lastName" column="ACC_LAST_NAME"/>
+    <result property="emailAddress" column="ACC_EMAIL"/>
+  </resultMap>
+  <!-- <parameter property="accountList" javaType="list" mode="OUT"/> -->
+  <!-- <parameter property="accountList" javaType="list" mode="OUT"/> -->
+
+  <procedure id="getMultiListsRm" parameterClass="hashmap" resultMap="account-result, account-result">
+    {call MRESULTSET(#1#,#2#,#3#,#4#)}
+  </procedure>
+
+  <procedure id="getMultiListsRc" parameterClass="hashmap" resultClass="account, account">
+    {call MRESULTSET(#1#,#2#,#3#,#4#)}
+  </procedure>
+</sqlMap>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="org.apache.ibatis.submitted.dynsql">
+  <select id="select" parameterType="org.apache.ibatis.submitted.dynsql.Parameter" resultType="map">
+    <if test="enabled">
+      <foreach collection="ids" item="id" separator="union">
+        <if test="schema != null">
+          select * from ${schema}.names where id = #{id}
+        </if>
+      </foreach>
+    </if>
+  </select>
+
+  <select id="select_simple" parameterType="org.apache.ibatis.submitted.dynsql.Parameter" resultType="map">
+    <foreach collection="ids" index="index" item="id" separator="union">
+      select * from ${schema}.names where id = #{id}
+    </foreach>
+  </select>
+</mapper>

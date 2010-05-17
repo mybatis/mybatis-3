@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!ELEMENT mapper (cache-ref | cache | resultMap* | parameterMap* | sql* | insert* | update* | delete* | select* )+>
+<!ATTLIST mapper
+xmlns:fo CDATA #IMPLIED
+namespace CDATA #IMPLIED
+>
+
+<!ELEMENT cache-ref EMPTY>
+<!ATTLIST cache-ref
+namespace CDATA #REQUIRED
+>
+
+<!ELEMENT cache (property*)>
+<!ATTLIST cache
+type CDATA #IMPLIED
+eviction CDATA #IMPLIED
+flushInterval CDATA #IMPLIED
+size CDATA #IMPLIED
+readOnly CDATA #IMPLIED
+>
+
+<!ELEMENT parameterMap (parameter+)?>
+<!ATTLIST parameterMap
+id CDATA #REQUIRED
+type CDATA #REQUIRED
+>
+
+<!ELEMENT parameter EMPTY>
+<!ATTLIST parameter
+property CDATA #REQUIRED
+javaType CDATA #IMPLIED
+jdbcType CDATA #IMPLIED
+mode (IN | OUT | INOUT) #IMPLIED
+resultMap CDATA #IMPLIED
+scale CDATA #IMPLIED
+typeHandler CDATA #IMPLIED
+>
+
+<!ELEMENT resultMap (constructor?,id*,result*,association*,collection*, discriminator?)>
+<!ATTLIST resultMap
+id CDATA #REQUIRED
+type CDATA #REQUIRED
+extends CDATA #IMPLIED
+>
+
+<!ELEMENT constructor (idArg*,arg*)>
+
+<!ELEMENT id EMPTY>
+<!ATTLIST id
+property CDATA #IMPLIED
+javaType CDATA #IMPLIED
+column CDATA #IMPLIED
+jdbcType CDATA #IMPLIED
+typeHandler CDATA #IMPLIED
+>
+
+<!ELEMENT result EMPTY>
+<!ATTLIST result
+property CDATA #IMPLIED
+javaType CDATA #IMPLIED
+column CDATA #IMPLIED
+jdbcType CDATA #IMPLIED
+typeHandler CDATA #IMPLIED
+>
+
+<!ELEMENT idArg EMPTY>
+<!ATTLIST idArg
+javaType CDATA #IMPLIED
+column CDATA #IMPLIED
+jdbcType CDATA #IMPLIED
+typeHandler CDATA #IMPLIED
+>
+
+<!ELEMENT arg EMPTY>
+<!ATTLIST arg
+javaType CDATA #IMPLIED
+column CDATA #IMPLIED
+jdbcType CDATA #IMPLIED
+typeHandler CDATA #IMPLIED
+>
+
+<!ELEMENT collection (constructor?,id*,result*,association*,collection*, discriminator?)>
+<!ATTLIST collection
+property CDATA #REQUIRED
+column CDATA #IMPLIED
+javaType CDATA #IMPLIED
+ofType CDATA #IMPLIED
+jdbcType CDATA #IMPLIED
+select CDATA #IMPLIED
+resultMap CDATA #IMPLIED
+typeHandler CDATA #IMPLIED
+>
+
+<!ELEMENT association (constructor?,id*,result*,association*,collection*, discriminator?)>
+<!ATTLIST association
+property CDATA #REQUIRED
+column CDATA #IMPLIED
+javaType CDATA #IMPLIED
+jdbcType CDATA #IMPLIED
+select CDATA #IMPLIED
+resultMap CDATA #IMPLIED
+typeHandler CDATA #IMPLIED
+>
+
+<!ELEMENT discriminator (case+)>
+<!ATTLIST discriminator
+column CDATA #IMPLIED
+javaType CDATA #REQUIRED
+jdbcType CDATA #IMPLIED
+typeHandler CDATA #IMPLIED
+>
+
+<!ELEMENT case (constructor?,id*,result*,association*,collection*, discriminator?)>
+<!ATTLIST case
+value CDATA #REQUIRED
+resultMap CDATA #IMPLIED 
+resultType CDATA #IMPLIED
+>
+
+<!ELEMENT property EMPTY>
+<!ATTLIST property
+name CDATA #REQUIRED
+value CDATA #REQUIRED
+>
+
+<!ELEMENT typeAlias EMPTY>
+<!ATTLIST typeAlias
+alias CDATA #REQUIRED
+type CDATA #REQUIRED
+>
+
+<!ELEMENT select (#PCDATA | include | trim | where | set | foreach | choose | if)*>
+<!ATTLIST select
+id CDATA #REQUIRED
+parameterMap CDATA #IMPLIED
+parameterType CDATA #IMPLIED
+resultMap CDATA #IMPLIED
+resultType CDATA #IMPLIED
+resultSetType (FORWARD_ONLY | SCROLL_INSENSITIVE | SCROLL_SENSITIVE) #IMPLIED
+statementType (STATEMENT|PREPARED|CALLABLE) #IMPLIED
+fetchSize CDATA #IMPLIED
+timeout CDATA #IMPLIED
+flushCache (true|false) #IMPLIED
+useCache (true|false) #IMPLIED
+>
+
+<!ELEMENT insert (#PCDATA | selectKey | include | trim | where | set | foreach | choose | if)*>
+<!ATTLIST insert
+id CDATA #REQUIRED
+parameterMap CDATA #IMPLIED
+parameterType CDATA #IMPLIED
+timeout CDATA #IMPLIED
+flushCache (true|false) #IMPLIED
+statementType (STATEMENT|PREPARED|CALLABLE) #IMPLIED
+keyProperty CDATA #IMPLIED
+useGeneratedKeys (true|false) #IMPLIED
+>
+
+<!ELEMENT selectKey (#PCDATA | include | trim | where | set | foreach | choose | if)*>
+<!ATTLIST selectKey
+resultType CDATA #IMPLIED
+statementType (STATEMENT|PREPARED|CALLABLE) #IMPLIED
+keyProperty CDATA #IMPLIED
+order (BEFORE|AFTER) #IMPLIED
+>
+
+<!ELEMENT update (#PCDATA | include | trim | where | set | foreach | choose | if)*>
+<!ATTLIST update
+id CDATA #REQUIRED
+parameterMap CDATA #IMPLIED
+parameterType CDATA #IMPLIED
+timeout CDATA #IMPLIED
+flushCache (true|false) #IMPLIED
+statementType (STATEMENT|PREPARED|CALLABLE) #IMPLIED
+>
+
+<!ELEMENT delete (#PCDATA | include | trim | where | set | foreach | choose | if)*>
+<!ATTLIST delete
+id CDATA #REQUIRED
+parameterMap CDATA #IMPLIED
+parameterType CDATA #IMPLIED
+timeout CDATA #IMPLIED
+flushCache (true|false) #IMPLIED
+statementType (STATEMENT|PREPARED|CALLABLE) #IMPLIED
+>
+
+<!-- Dynamic -->
+
+<!ELEMENT include EMPTY>
+<!ATTLIST include
+refid CDATA #REQUIRED
+>
+
+<!ELEMENT sql (#PCDATA | include | trim | where | set | foreach | choose | if)*>
+<!ATTLIST sql
+id CDATA #REQUIRED
+>
+
+<!ELEMENT trim (#PCDATA | include | trim | where | set | foreach | choose | if)*>
+<!ATTLIST trim
+prefix CDATA #IMPLIED
+prefixOverrides CDATA #IMPLIED
+suffix CDATA #IMPLIED
+suffixOverrides CDATA #IMPLIED
+>
+<!ELEMENT where (#PCDATA | include | trim | where | set | foreach | choose | if)*>
+<!ELEMENT set (#PCDATA | include | trim | where | set | foreach | choose | if)*>
+
+<!ELEMENT foreach (#PCDATA | include | trim | where | set | foreach | choose | if)*>
+<!ATTLIST foreach
+collection CDATA #REQUIRED
+item CDATA #IMPLIED
+index CDATA #IMPLIED
+open CDATA #IMPLIED
+close CDATA #IMPLIED
+separator CDATA #IMPLIED
+>
+
+<!ELEMENT choose (when* , otherwise?)>
+<!ELEMENT when (#PCDATA | include | trim | where | set | foreach | choose | if)*>
+<!ATTLIST when
+test CDATA #REQUIRED
+>
+<!ELEMENT otherwise (#PCDATA | include | trim | where | set | foreach | choose | if)*>
+
+<!ELEMENT if (#PCDATA | include | trim | where | set | foreach | choose | if)*>
+<!ATTLIST if
+test CDATA #REQUIRED
+>
+
+

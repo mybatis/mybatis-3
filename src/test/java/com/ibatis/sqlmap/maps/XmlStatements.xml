@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap>
+
+  <parameterMap id="xml-parameter-map" class="map">
+    <parameter property="id"/>
+  </parameterMap>
+
+  <resultMap id="xml-account-result" class="hashmap">
+    <result property="id" column="ACC_ID"/>
+    <result property="firstName" column="ACC_FIRST_NAME"/>
+    <result property="lastName" column="ACC_LAST_NAME"/>
+    <result property="emailAddress" column="ACC_EMAIL"/>
+    <result property="account" column="{id=ACC_ID}" select="getAccountXml"/>
+  </resultMap>
+
+  <resultMap id="xml-order-with-lines-result" class="hashmap" extends="lite-order-result-by-name">
+    <result property="lineItems" javaType="map" column="{value=ORD_ID}" select="getLineItemsForOrderXml"/>
+  </resultMap>
+
+  <select id="getAccountXmlExternalMaps"
+          parameterMap="xml-parameter-map"
+          resultMap="xml-account-result">
+    select
+    ACC_ID,
+    ACC_FIRST_NAME,
+    ACC_LAST_NAME,
+    ACC_EMAIL
+    from ACCOUNT
+    where ACC_ID = ?
+  </select>
+
+  <select id="getAccountXml"
+          parameterClass="map"
+          resultClass="hashmap">
+    select
+    ACC_ID as id,
+    ACC_FIRST_NAME as firstName,
+    ACC_LAST_NAME as lastName,
+    ACC_EMAIL as emailAddress
+    from ACCOUNT
+    where ACC_ID = #id#
+  </select>
+
+  <select id="getLineItemsForOrderXml"
+          parameterClass="map"
+          resultClass="hashmap">
+    select
+    LIN_ID as id,
+    LIN_ORD_ID as orderId,
+    LIN_ITM_CODE as itemCode,
+    LIN_QUANTITY as quantity,
+    LIN_PRICE as price
+    from LINE_ITEM where LIN_ORD_ID = #value#
+  </select>
+
+  <select id="getOrderXml"
+          parameterClass="map"
+          resultMap="xml-order-with-lines-result">
+    select * from ORDERS where ORD_ID = #id#
+  </select>
+
+
+</sqlMap>

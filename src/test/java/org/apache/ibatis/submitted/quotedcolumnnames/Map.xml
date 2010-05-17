@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="org.apache.ibatis.submitted.quotedcolumnnames.Map">
+
+	<select id="doSelect" resultType="java.util.HashMap">
+		select
+			ID as "id",
+			FIRST_NAME as "firstName",
+			LAST_NAME as "lastName"
+		from names
+	</select>
+
+
+	<resultMap id="myResultMap" type="java.util.HashMap">
+		<result column="id" property="ID" javaType="java.lang.String"/>
+		<result column="FIRST_NAME" property="firstName" javaType="java.lang.String" />
+		<result column="LAST_NAME" property="lastName" javaType="java.lang.String"/>
+	</resultMap>
+
+	<select id="doSelectWithResultMap" resultMap="myResultMap">
+		select *
+		from names
+	</select>
+</mapper>

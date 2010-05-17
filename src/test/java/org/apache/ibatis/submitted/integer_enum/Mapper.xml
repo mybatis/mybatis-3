@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="testcase">
+
+  <resultMap id="tastCaseResultMap" type="org.apache.ibatis.submitted.integer_enum.Record">
+    <result jdbcType="INTEGER" column="FIELD1" property="field1"/>
+    <result jdbcType="INTEGER" column="FIELD2" property="field2"/>
+    <result jdbcType="VARCHAR" column="FIELD3" property="field3"/>
+  </resultMap>
+
+  <select id="select" resultMap="tastCaseResultMap">
+    select field1, field2, field3
+    from SomeTable
+  </select>
+
+  <update id="update" parameterType="org.apache.ibatis.submitted.integer_enum.Record">
+    update SomeTable
+    set Field2 = #{field2,jdbcType=INTEGER},
+    Field3 = #{field3,jdbcType=VARCHAR},
+    where field1 = #{field1,jdbcType=INTEGER}
+  </update>
+</mapper>

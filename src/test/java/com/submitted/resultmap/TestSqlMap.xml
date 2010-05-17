@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="TestSqlMap">
+
+  <resultMap id="addressResult" class="com.submitted.resultmap.Address">
+    <result property="id" column="addressId"/>
+    <result property="address" column="address"/>
+  </resultMap>
+
+  <resultMap id="phoneResult" class="com.submitted.resultmap.PhoneNumber">
+    <result property="id" column="phoneId"/>
+    <result property="number" column="phoneNumber"/>
+  </resultMap>
+
+  <resultMap id="personResult" class="com.submitted.resultmap.Person" groupBy="id">
+    <result property="id" column="personId"/>
+    <result property="name" column="name"/>
+    <result property="addresses" resultMap="TestSqlMap.addressResult"/>
+    <result property="phoneNumbers" resultMap="TestSqlMap.phoneResult"/>
+  </resultMap>
+
+  <select id="test01" resultMap="personResult">
+    select personId, name, addressId, address, phoneId, phoneNumber
+    from Person join PhoneNumber on Person.personId = PhoneNumber.personId
+    join Address on Person.personId = Address.personId
+    order by personId
+  </select>
+
+</sqlMap>

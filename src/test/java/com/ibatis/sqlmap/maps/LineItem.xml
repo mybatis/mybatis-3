@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap>
+
+  <resultMap id="missingParamCheckA" class="com.testdomain.LineItem">
+    <result property="id" column="id"/>
+    <result property="orderId" column="orderId"/>
+    <result property="itemCode" column="itemCode"/>
+  </resultMap>
+
+  <resultMap id="missingParamCheckB" class="com.testdomain.LineItem" extends="missingParamCheckA">
+    <result property="quantity" column="quantity"/>
+    <result property="price" column="price"/>
+  </resultMap>
+
+  <select id="getAllLineItemProps" parameterClass="int" resultMap="missingParamCheckA">
+    select
+    LIN_ID as id,
+    LIN_ORD_ID as orderId,
+    LIN_ITM_CODE as itemCode
+    from LINE_ITEM where LIN_ORD_ID = #value#
+  </select>
+
+  <select id="getSomeLineItemProps" parameterClass="int" resultMap="missingParamCheckB">
+    select
+    LIN_ID as id,
+    LIN_ORD_ID as orderId,
+
+    LIN_QUANTITY as quantity,
+    LIN_PRICE as price
+    from LINE_ITEM where LIN_ORD_ID = #value#
+  </select>
+
+
+  <select id="getLineItemsForOrder"
+          parameterClass="java.lang.Integer"
+          resultClass="com.testdomain.LineItem">
+    select
+    LIN_ID as id,
+    LIN_ORD_ID as orderId,
+    LIN_ITM_CODE as itemCode,
+    LIN_QUANTITY as quantity,
+    LIN_PRICE as price
+    from LINE_ITEM where LIN_ORD_ID = #value#
+  </select>
+
+  <insert id="insertLineItem" parameterClass="com.testdomain.LineItem">
+    <selectKey resultClass="int" keyProperty="id" type="post">
+      select 99 from LINE_ITEM where LIN_ID = 1 and LIN_ORD_ID=1
+    </selectKey>
+    insert into LINE_ITEM
+    (LIN_ID, LIN_ORD_ID, LIN_ITM_CODE, LIN_QUANTITY, LIN_PRICE)
+    values
+    (#id#, #orderId#, #itemCode#, #quantity#, #price#)
+  </insert>
+
+  <insert id="insertLineItemOrDie" parameterClass="com.testdomain.LineItem">
+    <selectKey resultClass="int" keyProperty="id" type="post">
+      select 99 from LINE_ITEM where LIN_ID = 1 and LIN_ORD_ID=1
+    </selectKey>
+    insert into LINE_ITEM_LOL
+    (LIN_ID, LIN_ORD_ID, LIN_ITM_CODE, LIN_QUANTITY, LIN_PRICE)
+    values
+    (#id#, #orderId#, #itemCode#, #quantity#, #price#)
+  </insert>
+
+  <insert id="insertLineItemPreKey" parameterClass="com.testdomain.LineItem">
+    <selectKey resultClass="int" keyProperty="id">
+      select 99 from LINE_ITEM where LIN_ID = 1 and LIN_ORD_ID=1
+    </selectKey>
+    insert into LINE_ITEM
+    (LIN_ID, LIN_ORD_ID, LIN_ITM_CODE, LIN_QUANTITY, LIN_PRICE)
+    values
+    (#id#, #orderId#, #itemCode#, #quantity#, #price#)
+  </insert>
+
+  <insert id="insertLineItemNoKey" parameterClass="com.testdomain.LineItem">
+    insert into LINE_ITEM
+    (LIN_ID, LIN_ORD_ID, LIN_ITM_CODE, LIN_QUANTITY, LIN_PRICE)
+    values
+    (#id#, #orderId#, #itemCode#, #quantity#, #price#)
+  </insert>
+
+  <select id="getSpecificLineItem"
+          parameterClass="java.util.HashMap"
+          resultClass="com.testdomain.LineItem">
+    select
+    LIN_ID as id,
+    LIN_ORD_ID as orderId,
+    LIN_ITM_CODE as itemCode,
+    LIN_QUANTITY as quantity,
+    LIN_PRICE as price
+    from LINE_ITEM
+    where LIN_ORD_ID = #orderId#
+    and LIN_ID = #lineId#
+  </select>
+
+  <select id="getDynSpecificLineItem"
+          parameterClass="java.util.HashMap"
+          resultClass="com.testdomain.LineItem">
+    select
+    LIN_ID as id,
+    LIN_ORD_ID as orderId,
+    LIN_ITM_CODE as itemCode,
+    LIN_QUANTITY as quantity,
+    LIN_PRICE as price
+    from LINE_ITEM
+    where LIN_ORD_ID = #orderId#
+    <dynamic>
+      <isNotNull property="lineId">
+        and LIN_ID = #lineId#
+      </isNotNull>
+    </dynamic>
+  </select>
+
+</sqlMap>

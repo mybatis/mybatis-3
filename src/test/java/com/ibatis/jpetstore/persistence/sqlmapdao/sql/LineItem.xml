@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="LineItem">
+
+  <typeAlias alias="lineItem" type="com.ibatis.jpetstore.domain.LineItem"/>
+
+  <select id="getLineItemsByOrderId" resultClass="lineItem" parameterClass="int">
+    SELECT
+    ORDERID,
+    LINENUM AS lineNumber,
+    ITEMID,
+    QUANTITY,
+    UNITPRICE
+    FROM LINEITEM
+    WHERE ORDERID = #orderId#
+  </select>
+
+  <insert id="insertLineItem" parameterClass="lineItem">
+    INSERT INTO LINEITEM (ORDERID, LINENUM, ITEMID, QUANTITY, UNITPRICE)
+    VALUES (#orderId#, #lineNumber#, #itemId#, #quantity#, #unitPrice#)
+  </insert>
+
+</sqlMap>

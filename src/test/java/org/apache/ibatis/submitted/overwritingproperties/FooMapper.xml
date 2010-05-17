@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="org.apache.ibatis.submitted.overwritingproperties.FooMapper">
+
+  <resultMap type="Foo" id="fooResult">
+    <result property="field1" column="field1" jdbcType="INTEGER"/>
+    <result property="field4" column="field3" jdbcType="INTEGER"/>
+    <result property="field3" column="field4" jdbcType="INTEGER"/>
+    <association property="field2" javaType="Bar">
+      <result property="field1" column="bar_field1" jdbcType="INTEGER"/>
+    </association>
+  </resultMap>
+
+  <insert id="insertFoo" parameterType="Foo">
+    insert into FOO
+    (
+    field1,
+    field2,
+    field3,
+    field4
+    )
+    values
+    (
+    #{field1,jdbcType=INTEGER},
+    #{field2.field1,jdbcType=INTEGER},
+    #{field3,jdbcType=INTEGER},
+    #{field4,jdbcType=INTEGER}
+    )
+  </insert>
+
+  <select id="selectFoo" resultMap="fooResult">
+    select
+    field1,
+    field2 as bar_field1,
+    field3,
+    field4
+    from FOO;
+  </select>
+
+  <delete id="deleteAllFoo">
+    delete from FOO;
+  </delete>
+
+</mapper>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="User">
+
+  <resultMap type="UserAlias" id="UserResult">
+    <id column="id" jdbcType="BIGINT" property="id"/>
+    <result column="username" jdbcType="VARCHAR" property="username"/>
+    <result column="password" jdbcType="VARCHAR" property="password.encrypted"/>
+    <result column="administrator" jdbcType="BIT" property="administrator"/>
+  </resultMap>
+
+  <select id="find" parameterType="long" resultMap="UserResult">
+    SELECT * FROM user WHERE id = #{id:BIGINT}
+  </select>
+
+  <select id="version" parameterType="long" resultType="int">
+    SELECT version FROM user WHERE id = #{id,jdbcType=BIGINT}
+  </select>
+
+  <delete id="delete" parameterType="UserAlias">
+    DELETE FROM user WHERE id = #{id:BIGINT}
+  </delete>
+
+  <insert id="insert" parameterType="UserAlias" useGeneratedKeys="false">
+    INSERT INTO user
+    ( id,
+    username,
+    password,
+    administrator
+    )
+    VALUES
+    ( #{id},
+    #{username,jdbcType=VARCHAR},
+    #{password.encrypted:VARCHAR},
+    #{administrator,jdbcType=BIT}
+    )
+  </insert>
+
+  <update id="update" parameterType="UserAlias">
+    UPDATE user SET
+    username = #{username,jdbcType=VARCHAR},
+    password = #{password.encrypted,jdbcType=VARCHAR},
+    administrator = #{administrator,jdbcType=BIT}
+    WHERE
+    id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <!--   Unique constraint check -->
+  <select id="isUniqueUsername" parameterType="map" resultType="boolean">
+    SELECT (count(*) = 0)
+    FROM user
+    WHERE ((#{userId,jdbcType=BIGINT} IS NOT NULL AND id != #{userId,jdbcType=BIGINT}) OR #{userId,jdbcType=BIGINT} IS
+    NULL)  <!-- other than me -->
+    AND (username = #{username,jdbcType=VARCHAR})
+  </select>
+</mapper>

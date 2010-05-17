@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="org.apache.ibatis.submitted.null_associations.FooMapper">
+
+  <resultMap type="Bar" id="barResult">
+    <result property="field1" column="F_FIELD2_FIELD1" javaType="long" jdbcType="BIGINT"/>
+    <result property="field2" column="F_FIELD2_FIELD2" javaType="long" jdbcType="BIGINT"/>
+    <result property="field3" column="F_FIELD2_FIELD3" javaType="long" jdbcType="BIGINT"/>
+  </resultMap>
+
+  <resultMap type="Foo" id="fooResult">
+    <result property="field1" column="F_FIELD1" javaType="long" jdbcType="BIGINT"/>
+    <result property="field3" column="F_FIELD3" javaType="boolean" jdbcType="BOOLEAN"/>
+    <association property="field2" resultMap="barResult"/>
+  </resultMap>
+
+  <insert id="insertFoo" parameterType="Foo">
+    insert into FOO (
+    F_FIELD1,
+    F_FIELD2_FIELD1,
+    F_FIELD2_FIELD2,
+    F_FIELD2_FIELD3,
+    F_FIELD3
+    ) values (
+    #{field1,jdbcType=BIGINT},
+    #{field2.field1,jdbcType=BIGINT},
+    #{field2.field2,jdbcType=BIGINT},
+    #{field2.field3,jdbcType=BIGINT},
+    #{field3,jdbcType=BOOLEAN}
+    )
+  </insert>
+
+  <select id="selectFoo" resultMap="fooResult">
+    select * from FOO;
+  </select>
+
+  <delete id="deleteAllFoo">
+    delete from FOO;
+  </delete>
+
+</mapper>

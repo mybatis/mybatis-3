@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper
+    PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+    "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper>
+
+  <insert id="insertAuthor" parameterType="domain.blog.Author">
+    <selectKey keyProperty="id" resultType="int" order="BEFORE">
+      select CAST(RANDOM()*1000000 as INTEGER) a from SYSIBM.SYSDUMMY1
+    </selectKey>
+    insert into Author (id,username,password,email,bio,favourite_section)
+    values(
+    #{id}, #{username}, #{password}, #{email}, #{bio}, #{favouriteSection:VARCHAR}
+    )
+  </insert>
+
+  <select id="findPostsInList" parameterType="list" resultType="domain.blog.Post">
+    select * from post
+    where id in (#{list[0]},#{list[1]},#{list[2]})
+  </select>
+
+  <select id="findPostsInArray" parameterType="list" resultType="domain.blog.Post">
+    select * from post
+    where id in (#{array[0]},#{array[1]},#{array[2]})
+  </select>
+
+  <select id="findThreeSpecificPosts" parameterType="map" resultType="domain.blog.Post">
+    select * from post
+    where id in (#{one},#{two},#{2})
+  </select>
+
+
+</mapper>

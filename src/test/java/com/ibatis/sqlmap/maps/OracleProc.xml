@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap>
+
+  <parameterMap id="swapParameters" class="map">
+    <parameter property="email1" jdbcType="VARCHAR" javaType="java.lang.String" mode="INOUT"/>
+    <parameter property="email2" jdbcType="VARCHAR" javaType="java.lang.String" mode="INOUT"/>
+    <parameter property="status" jdbcType="VARCHAR" javaType="java.lang.String" mode="OUT"/>
+  </parameterMap>
+
+  <procedure id="swapEmailAddresses" parameterMap="swapParameters">
+    {call swap_email_address (?, ?, ?)}
+  </procedure>
+
+  <parameterMap id="swapParametersUsingBean" class="com.testdomain.ProcBean">
+    <parameter property="email1" jdbcType="VARCHAR" javaType="java.lang.String" mode="INOUT"/>
+    <parameter property="email2" jdbcType="VARCHAR" javaType="java.lang.String" mode="INOUT"/>
+    <parameter property="status" jdbcType="VARCHAR" javaType="java.lang.String" mode="OUT"/>
+  </parameterMap>
+
+  <procedure id="swapEmailAddressesUsingBean" parameterMap="swapParametersUsingBean">
+    {call swap_email_address (?, ?, ?)}
+  </procedure>
+
+  <procedure id="noParamProc" resultClass="string">
+    {call no_param_proc ()}
+  </procedure>
+
+</sqlMap>

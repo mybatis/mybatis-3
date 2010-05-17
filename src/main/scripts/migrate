@@ -1,0 +1,13 @@
+#!/bin/sh
+
+WORKING_DIR=`pwd -P`
+SCRIPT_PATH=$(dirname $0)
+
+cd $SCRIPT_PATH
+SCRIPT_PATH=`pwd -P`
+cd $WORKING_DIR
+
+LIB=$SCRIPT_PATH/lib/
+MIGRATOR_CP=$(ls $LIB/ | sed "s#^#$LIB&#" | sed "s/$/:/" | xargs echo | sed 's/: */:/')
+
+java -cp $MIGRATOR_CP org.apache.ibatis.migration.Migrator $*

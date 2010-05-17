@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE mapper
+    PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+    "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="org.apache.ibatis.submitted.complex_column.PersonMapper">
+    
+    <resultMap id="personMap" type="Person">
+        <id property="id" column="id"/>
+        <result property="firstName" column="firstName"/>
+        <result property="lastName" column="lastName"/>
+        <association property="parent" column="parent_id" select="getParentWithoutComplex"/>
+    </resultMap>
+    <resultMap id="personMapComplex" type="Person">
+        <id property="id" column="id"/>
+        <result property="firstName" column="firstName"/>
+        <result property="lastName" column="lastName"/>
+        <association property="parent" column="{firstName=parent_firstName,lastName=parent_lastName}" select="getParentWithComplex"/>
+    </resultMap>
+    
+    
+    <select id="getWithoutComplex" resultMap="personMap" parameterType="long">
+        SELECT id, firstName, lastName, parent_id, parent_firstName, parent_lastName
+        FROM Person
+        WHERE id = #{id,jdbcType=INTEGER}
+    </select>
+    <select id="getParentWithoutComplex" resultMap="personMap" parameterType="Person">
+        SELECT id, firstName, lastName, parent_id, parent_firstName, parent_lastName
+        FROM Person
+        WHERE id = #{id,jdbcType=INTEGER}
+    </select>
+    <select id="getWithComplex" resultMap="personMapComplex" parameterType="long">
+        SELECT id, firstName, lastName, parent_id, parent_firstName, parent_lastName
+        FROM Person
+        WHERE id = #{id,jdbcType=INTEGER}
+    </select>
+    <select id="getParentWithComplex" resultMap="personMapComplex" parameterType="Person">
+        SELECT id, firstName, lastName, parent_id, parent_firstName, parent_lastName
+        FROM Person
+        WHERE firstName = #{firstName,jdbcType=VARCHAR}
+        AND lastName = #{lastName,jdbcType=VARCHAR}
+        LIMIT 1
+    </select>
+    
+</mapper>

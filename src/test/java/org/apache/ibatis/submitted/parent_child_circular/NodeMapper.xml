@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="testcase">
+
+  <resultMap id="nodeResult" type="org.apache.ibatis.submitted.parent_child_circular.Node">
+    <id property="id" column="id"/>
+    <association property="parent" column="parent_id" resultMap="nodeResult"/>
+  </resultMap>
+
+  <select id="selectNode" resultMap="nodeResult">
+    select id
+    from node
+    where id = #{id}
+  </select>
+
+
+</mapper>
+
