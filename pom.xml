@@ -200,10 +200,10 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>javax.transaction</groupId>
-      <artifactId>jta</artifactId>
-      <version>1.0.1B</version>
-      <scope>test</scope>
+        <groupId>geronimo-spec</groupId>
+        <artifactId>geronimo-spec-jta</artifactId>
+        <version>1.0.1B-rc4</version>
+        <scope>test</scope>
     </dependency>
   </dependencies>
 </project>
