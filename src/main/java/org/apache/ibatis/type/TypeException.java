@@ -1,8 +1,8 @@
 package org.apache.ibatis.type;
 
-import org.apache.ibatis.exceptions.IbatisException;
+import org.apache.ibatis.exceptions.PersistenceException;
 
-public class TypeException extends IbatisException {
+public class TypeException extends PersistenceException {
 
   public TypeException() {
     super();

@@ -1,8 +1,8 @@
 package org.apache.ibatis.datasource;
 
-import org.apache.ibatis.exceptions.IbatisException;
+import org.apache.ibatis.exceptions.PersistenceException;
 
-public class DataSourceException extends IbatisException {
+public class DataSourceException extends PersistenceException {
 
   public DataSourceException() {
     super();

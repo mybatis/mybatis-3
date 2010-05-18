@@ -1,8 +1,8 @@
 package org.apache.ibatis.parsing;
 
-import org.apache.ibatis.exceptions.IbatisException;
+import org.apache.ibatis.exceptions.PersistenceException;
 
-public class ParsingException extends IbatisException {
+public class ParsingException extends PersistenceException {
   public ParsingException() {
     super();
   }

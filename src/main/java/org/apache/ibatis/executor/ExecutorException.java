@@ -1,8 +1,8 @@
 package org.apache.ibatis.executor;
 
-import org.apache.ibatis.exceptions.IbatisException;
+import org.apache.ibatis.exceptions.PersistenceException;
 
-public class ExecutorException extends IbatisException {
+public class ExecutorException extends PersistenceException {
 
   public ExecutorException() {
     super();

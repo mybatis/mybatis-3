@@ -1,8 +1,8 @@
 package org.apache.ibatis.reflection;
 
-import org.apache.ibatis.exceptions.IbatisException;
+import org.apache.ibatis.exceptions.PersistenceException;
 
-public class ReflectionException extends IbatisException {
+public class ReflectionException extends PersistenceException {
 
   public ReflectionException() {
     super();

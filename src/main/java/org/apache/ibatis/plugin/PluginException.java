@@ -1,8 +1,8 @@
 package org.apache.ibatis.plugin;
 
-import org.apache.ibatis.exceptions.IbatisException;
+import org.apache.ibatis.exceptions.PersistenceException;
 
-public class PluginException extends IbatisException {
+public class PluginException extends PersistenceException {
 
   public PluginException() {
     super();

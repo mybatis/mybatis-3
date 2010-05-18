@@ -1,8 +1,8 @@
 package org.apache.ibatis.session;
 
-import org.apache.ibatis.exceptions.IbatisException;
+import org.apache.ibatis.exceptions.PersistenceException;
 
-public class SessionException extends IbatisException {
+public class SessionException extends PersistenceException {
 
   public SessionException() {
     super();

@@ -1,8 +1,8 @@
 package org.apache.ibatis.logging;
 
-import org.apache.ibatis.exceptions.IbatisException;
+import org.apache.ibatis.exceptions.PersistenceException;
 
-public class LogException extends IbatisException {
+public class LogException extends PersistenceException {
 
   public LogException() {
     super();

@@ -1,8 +1,8 @@
 package org.apache.ibatis.builder;
 
-import org.apache.ibatis.exceptions.IbatisException;
+import org.apache.ibatis.exceptions.PersistenceException;
 
-public class BuilderException extends IbatisException {
+public class BuilderException extends PersistenceException {
 
   public BuilderException() {
     super();

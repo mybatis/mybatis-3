@@ -14,7 +14,7 @@
 --// Purpose
 
 -- The purpose of this file is to provide a facility
--- to initialize the database to a state before iBATIS
+-- to initialize the database to a state before MyBatis
 -- SQL migrations were applied.  If you already have
 -- a database in production, then you probably have
 -- a script that you run on your developer machine

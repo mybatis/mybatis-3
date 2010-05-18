@@ -1,8 +1,8 @@
 package org.apache.ibatis.migration;
 
-import org.apache.ibatis.exceptions.IbatisException;
+import org.apache.ibatis.exceptions.PersistenceException;
 
-public class MigrationException extends IbatisException {
+public class MigrationException extends PersistenceException {
 
   public MigrationException() {
     super();

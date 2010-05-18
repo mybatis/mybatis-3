@@ -1,8 +1,8 @@
 package org.apache.ibatis.binding;
 
-import org.apache.ibatis.exceptions.IbatisException;
+import org.apache.ibatis.exceptions.PersistenceException;
 
-public class BindingException extends IbatisException {
+public class BindingException extends PersistenceException {
 
   public BindingException() {
     super();

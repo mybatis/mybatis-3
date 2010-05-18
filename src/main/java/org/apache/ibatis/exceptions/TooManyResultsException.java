@@ -1,6 +1,6 @@
 package org.apache.ibatis.exceptions;
 
-public class TooManyResultsException extends IbatisException {
+public class TooManyResultsException extends PersistenceException {
 
   public TooManyResultsException() {
     super();

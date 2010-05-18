@@ -28,7 +28,7 @@ public class GeneralExceptionsTest {
   @Test
   public void should() {
     RuntimeException thrown = ExceptionFactory.wrapException(EXPECTED_MESSAGE, EXPECTED_CAUSE);
-    assertTrue("Exception should be wrapped in RuntimeSqlException.", thrown instanceof IbatisException);
+    assertTrue("Exception should be wrapped in RuntimeSqlException.", thrown instanceof PersistenceException);
     testThrowException(thrown);
   }
 
@@ -45,7 +45,7 @@ public class GeneralExceptionsTest {
         BuilderException.class,
         PluginException.class,
         ReflectionException.class,
-        IbatisException.class,
+        PersistenceException.class,
         SessionException.class,
         SqlMapperException.class,
         TransactionException.class,

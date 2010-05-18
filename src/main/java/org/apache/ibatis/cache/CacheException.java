@@ -1,8 +1,8 @@
 package org.apache.ibatis.cache;
 
-import org.apache.ibatis.exceptions.IbatisException;
+import org.apache.ibatis.exceptions.PersistenceException;
 
-public class CacheException extends IbatisException {
+public class CacheException extends PersistenceException {
 
   public CacheException() {
     super();
