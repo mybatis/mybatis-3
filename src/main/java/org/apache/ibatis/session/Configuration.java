@@ -19,6 +19,7 @@ import org.apache.ibatis.executor.resultset.ResultSetHandler;
 import org.apache.ibatis.executor.resultset.FastResultSetHandler;
 import org.apache.ibatis.executor.statement.RoutingStatementHandler;
 import org.apache.ibatis.executor.statement.StatementHandler;
+import org.apache.ibatis.io.ResolverUtil;
 import org.apache.ibatis.mapping.*;
 import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.plugin.InterceptorChain;
@@ -195,7 +196,7 @@ public class Configuration {
   public void setObjectFactory(ObjectFactory objectFactory) {
     this.objectFactory = objectFactory;
   }
-  
+
   public ObjectWrapperFactory getObjectWrapperFactory() {
     return objectWrapperFactory;
   }
@@ -350,6 +351,20 @@ public class Configuration {
 
   public void addInterceptor(Interceptor interceptor) {
     interceptorChain.addInterceptor(interceptor);
+  }
+
+  @SuppressWarnings({"unchecked"})
+  public void addMappers(String packageName, Class superType){
+    ResolverUtil<Class> resolverUtil = new ResolverUtil<Class>();
+    resolverUtil.find(new ResolverUtil.IsA(superType), packageName);
+    Set<Class<? extends Class>> mapperSet = resolverUtil.getClasses();
+    for(Class mapperClass : mapperSet){
+      addMapper(mapperClass);
+    }
+  }
+
+  public void addMappers(String packageName){
+    addMappers(packageName, Object.class);
   }
 
   public <T> void addMapper(Class<T> type) {

@@ -1,9 +1,13 @@
 package org.apache.ibatis.type;
 
+import org.apache.ibatis.io.ResolverUtil;
+
+import java.lang.annotation.Annotation;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class TypeHandlerRegistry {
 
@@ -146,6 +150,29 @@ public class TypeHandlerRegistry {
     map.put(jdbcType, handler);
     if (reversePrimitiveMap.containsKey(type)) {
       register(reversePrimitiveMap.get(type), jdbcType, handler);
+    }
+  }
+
+  public void register(String packageName) {
+    ResolverUtil<Class> resolverUtil = new ResolverUtil<Class>();
+    resolverUtil.find(new ResolverUtil.IsA(TypeHandler.class), packageName);
+    Set<Class<? extends Class>> handlerSet = resolverUtil.getClasses();
+
+    TypeHandler handler;
+    for (Class type : handlerSet) {
+      @SuppressWarnings({"unchecked"})
+      Annotation annotation = type.getAnnotation(MappedTypes.class);
+      try {
+        handler = (TypeHandler) type.getConstructor().newInstance();
+      } catch (Exception e) {
+        throw new RuntimeException("Unable to find a usable constructor for " + type, e);
+      }
+      if (null != annotation) {
+        MappedTypes mappedType = (MappedTypes) annotation;
+        for (Class handledType : mappedType.value()) {
+          register(handledType, handler);
+        }
+      }
     }
   }
 

@@ -1,5 +1,6 @@
 package org.apache.ibatis.type;
 
+import org.apache.ibatis.io.ResolverUtil;
 import org.apache.ibatis.io.Resources;
 
 import java.math.BigDecimal;
@@ -82,6 +83,19 @@ public class TypeAliasRegistry {
       return value;
     } catch (ClassNotFoundException e) {
       throw new TypeException("Could not resolve type alias '" +string+ "'.  Cause: " + e, e);
+    }
+  }
+
+  public void registerAliases(String packageName){
+    registerAliases(packageName, Object.class);
+  }
+
+  public void registerAliases(String packageName, Class superType){
+    ResolverUtil<Class> resolverUtil = new ResolverUtil<Class>();
+    resolverUtil.find(new ResolverUtil.IsA(superType), packageName);
+    Set<Class<? extends Class>> typeSet = resolverUtil.getClasses();
+    for(Class type : typeSet){
+      registerAlias(type.getSimpleName(), type);
     }
   }
 
