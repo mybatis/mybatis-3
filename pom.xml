@@ -9,7 +9,7 @@
     annotations. Simplicity is the biggest advantage of the mybatis data mapper over object relational mapping
     tools.
   </description>
-  <version>3.0.1-SNAPSHOT</version>
+  <version>3.0.1</version>
   <packaging>jar</packaging>
   <url>http://www.mybatis.org/</url>
   <licenses>
@@ -45,8 +45,8 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
   <scm>
-    <connection>scm:svn:https://mybatis.googlecode.com/svn/</connection>
-    <developerConnection>scm:svn:https://mybatis.googlecode.com/svn/</developerConnection>
+    <connection>scm:svn:https://mybatis.googlecode.com/svn/mybatis-3.0.1</connection>
+    <developerConnection>scm:svn:https://mybatis.googlecode.com/svn/tags/mybatis-3.0.1</developerConnection>
   </scm>
   <reporting>
     <plugins>
