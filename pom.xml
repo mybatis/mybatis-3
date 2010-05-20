@@ -45,6 +45,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
   <scm>
+    <url>scm:svn:https://mybatis.googlecode.com/svn/</url>
     <connection>scm:svn:https://mybatis.googlecode.com/svn/</connection>
     <developerConnection>scm:svn:https://mybatis.googlecode.com/svn/</developerConnection>
   </scm>
