@@ -12,9 +12,11 @@ public class ManagedTransaction implements Transaction {
   private static final Log log = LogFactory.getLog(ManagedTransaction.class);
 
   private Connection connection;
+  private boolean closeConnection;
 
-  public ManagedTransaction(Connection connection) {
+  public ManagedTransaction(Connection connection, boolean closeConnection) {
     this.connection = connection;
+    this.closeConnection = closeConnection;
   }
 
   public Connection getConnection() {
@@ -30,11 +32,13 @@ public class ManagedTransaction implements Transaction {
   }
 
   public void close() throws SQLException {
-    try {
-      if (connection != null) connection.close();
-    } catch (SQLException e) {
-      // Log and ignore.  Nothing more that should be done here.
-      log.error(e.getMessage(), e);
+    if (closeConnection) {
+      try {
+        if (connection != null) connection.close();
+      } catch (SQLException e) {
+        // Log and ignore.  Nothing more that should be done here.
+        log.error(e.getMessage(), e);
+      }
     }
   }
 

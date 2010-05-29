@@ -40,4 +40,24 @@ public class ManagedTransactionFactoryTest extends BaseDataTest {
     mockery.assertIsSatisfied();
   }
 
+
+  @Test
+  public void shouldEnsureThatCallsToManagedTransactionAPIDoNotForwardToManagedConnectionsAndDoesNotCloseConnection() throws Exception {
+    mockery.checking(new Expectations() {
+      {
+      }
+    });
+
+    TransactionFactory tf = new ManagedTransactionFactory();
+    Properties props = new Properties();
+    props.setProperty("closeConnection","false");
+    tf.setProperties(props);
+    Transaction tx = tf.newTransaction(conn, false);
+    assertEquals(conn, tx.getConnection());
+    tx.commit();
+    tx.rollback();
+    tx.close();
+    mockery.assertIsSatisfied();
+  }
+
 }
