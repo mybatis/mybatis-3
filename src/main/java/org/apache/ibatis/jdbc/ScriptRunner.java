@@ -202,7 +202,7 @@ public class ScriptRunner {
     } catch (Exception e) {
       // Ignore to workaround a bug in some connection pools
     }
-    commitConnection();
+    commitConnection(); //TODO:  Bug... this should not be here. 
   }
 
   private void printResults(Statement statement, boolean hasResults) {
