@@ -20,7 +20,6 @@ import org.apache.ibatis.type.TypeHandler;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.*;
 
 public class NestedResultSetHandler extends FastResultSetHandler {
