@@ -68,6 +68,10 @@ public class DefaultSqlSession implements SqlSession {
     select(statement, parameter, RowBounds.DEFAULT, handler);
   }
 
+  public void select(String statement, ResultHandler handler) {
+    select(statement, null, RowBounds.DEFAULT, handler);
+  }
+
   public void select(String statement, Object parameter, RowBounds rowBounds, ResultHandler handler) {
     try {
       MappedStatement ms = configuration.getMappedStatement(statement);

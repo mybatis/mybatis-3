@@ -17,6 +17,8 @@ public interface SqlSession {
 
   void select(String statement, Object parameter, ResultHandler handler);
 
+  void select(String statement, ResultHandler handler);
+
   void select(String statement, Object parameter, RowBounds rowBounds, ResultHandler handler);
 
   int insert(String statement);

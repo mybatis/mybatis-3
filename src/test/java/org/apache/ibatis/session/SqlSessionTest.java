@@ -543,6 +543,26 @@ public class SqlSessionTest extends BaseDataTest {
     int count = 0;
     public void handleResult(ResultContext context) {
       count++;
+    }
+  }
+
+  @Test
+  public void shouldHandleZeroParameters() throws Exception {
+    SqlSession session = sqlMapper.openSession();
+
+    try {
+      final TestResultHandler resultHandler = new TestResultHandler();
+      session.select("domain.blog.mappers.BlogMapper.selectAllPosts", resultHandler);
+      assertEquals(5, resultHandler.count);
+    } finally {
+      session.close();
+    }
+  }
+
+  private static class TestResultStopHandler implements ResultHandler {
+    int count = 0;
+    public void handleResult(ResultContext context) {
+      count++;
       if (count == 2) context.stop();
     }
   }
@@ -552,7 +572,7 @@ public class SqlSessionTest extends BaseDataTest {
     SqlSession session = sqlMapper.openSession();
 
     try {
-      final TestResultHandler resultHandler = new TestResultHandler();
+      final TestResultStopHandler resultHandler = new TestResultStopHandler();
       session.select("domain.blog.mappers.BlogMapper.selectAllPosts", null, resultHandler);
       assertEquals(2, resultHandler.count);
     } finally {
