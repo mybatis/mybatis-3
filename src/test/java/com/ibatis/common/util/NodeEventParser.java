@@ -51,7 +51,7 @@ public class NodeEventParser {
   public void parse(Reader reader) throws ParsingException {
     try {
       Document doc = createDocument(reader);
-      xpathParser = new XPathParser(doc,validation,entityResolver,variables);
+      xpathParser = new XPathParser(doc,validation, variables, entityResolver);
       parse(doc.getLastChild());
     } catch (Exception e) {
       throw new ParsingException("Error parsing XML.  Cause: " + e, e);

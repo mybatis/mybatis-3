@@ -13,7 +13,11 @@ public class XPathParserTest {
     String resource = "resources/nodelet_test.xml";
     Reader reader = Resources.getResourceAsReader(resource);
     XPathParser parser = new XPathParser(reader, false, null, null);
-    assertEquals((Double) 5.8d, parser.evalDouble("/employee/height"));
+    assertEquals((long)1970, parser.evalLong("/employee/birth_date/year"));
+    assertEquals((short)6, parser.evalShort("/employee/birth_date/month"));
+    assertEquals(15, parser.evalInteger("/employee/birth_date/day"));
+    assertEquals(5.8f, parser.evalFloat("/employee/height"));
+    assertEquals(5.8d, parser.evalDouble("/employee/height"));
     assertEquals("${id_var}", parser.evalString("/employee/@id"));
     assertEquals(Boolean.TRUE, parser.evalBoolean("/employee/active"));
     assertEquals("<id>${id_var}</id>", parser.evalNode("/employee/@id").toString().trim());

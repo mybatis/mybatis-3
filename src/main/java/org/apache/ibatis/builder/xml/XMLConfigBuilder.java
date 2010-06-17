@@ -44,7 +44,7 @@ public class XMLConfigBuilder extends BaseBuilder {
     this.configuration.setVariables(props);
     this.parsed = false;
     this.environment = environment;
-    this.parser = new XPathParser(reader, true, new XMLMapperEntityResolver(), props);
+    this.parser = new XPathParser(reader, true, props, new XMLMapperEntityResolver());
   }
 
   public Configuration parse() {

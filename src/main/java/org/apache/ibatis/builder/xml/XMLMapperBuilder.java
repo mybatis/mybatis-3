@@ -28,7 +28,7 @@ public class XMLMapperBuilder extends BaseBuilder {
   public XMLMapperBuilder(Reader reader, Configuration configuration, String resource, Map<String, XNode> sqlFragments) {
     super(configuration);
     this.builderAssistant = new MapperBuilderAssistant(configuration, resource);
-    this.parser = new XPathParser(reader, true, new XMLMapperEntityResolver(), configuration.getVariables());
+    this.parser = new XPathParser(reader, true, configuration.getVariables(), new XMLMapperEntityResolver());
     this.sqlFragments = sqlFragments;
     this.resource = resource;
   }

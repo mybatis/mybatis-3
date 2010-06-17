@@ -13,6 +13,7 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 import java.io.Reader;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -25,22 +26,52 @@ public class XPathParser {
   private Properties variables;
   private XPath xpath;
 
-  public XPathParser(Reader reader, boolean validation, EntityResolver entityResolver, Properties variables) {
-    this.validation = validation;
-    this.entityResolver = entityResolver;
-    this.variables = variables;
-    this.document = createDocument(reader);
-    XPathFactory factory = XPathFactory.newInstance();
-    this.xpath = factory.newXPath();
+  public XPathParser(String xml) {
+    commonConstructor(createDocument(new StringReader(xml)), false, null, null);
   }
 
-  public XPathParser(Document document, boolean validation, EntityResolver entityResolver, Properties variables) {
-    this.validation = validation;
-    this.entityResolver = entityResolver;
-    this.variables = variables;
-    this.document = document;
-    XPathFactory factory = XPathFactory.newInstance();
-    this.xpath = factory.newXPath();
+  public XPathParser(Reader reader) {
+    commonConstructor(createDocument(reader), false, null, null);
+  }
+
+  public XPathParser(Document document) {
+    commonConstructor(document, false, null, null);
+  }
+
+  public XPathParser(String xml, boolean validation) {
+    commonConstructor(createDocument(new StringReader(xml)), validation, null, null);
+  }
+
+  public XPathParser(Reader reader, boolean validation) {
+    commonConstructor(createDocument(reader), validation, null, null);
+  }
+
+  public XPathParser(Document document, boolean validation) {
+    commonConstructor(document, validation, null, null);
+  }
+
+  public XPathParser(String xml, boolean validation, Properties variables) {
+    commonConstructor(createDocument(new StringReader(xml)), validation, variables, null);
+  }
+
+  public XPathParser(Reader reader, boolean validation, Properties variables) {
+    commonConstructor(createDocument(reader), validation, variables, null);
+  }
+
+  public XPathParser(Document document, boolean validation, Properties variables) {
+    commonConstructor(document, validation, variables, null);
+  }
+
+  public XPathParser(String xml, boolean validation, Properties variables, EntityResolver entityResolver) {
+    commonConstructor(createDocument(new StringReader(xml)), validation, variables, entityResolver);
+  }
+
+  public XPathParser(Reader reader, boolean validation, Properties variables, EntityResolver entityResolver) {
+    commonConstructor(createDocument(reader), validation, variables, entityResolver);
+  }
+
+  public XPathParser(Document document, boolean validation, Properties variables, EntityResolver entityResolver) {
+    commonConstructor(document, validation, variables, entityResolver);
   }
 
   public void setVariables(Properties variables) {
@@ -63,6 +94,38 @@ public class XPathParser {
 
   public Boolean evalBoolean(Object root, String expression) {
     return (Boolean) evaluate(expression, root, XPathConstants.BOOLEAN);
+  }
+
+  public Short evalShort(String expression) {
+    return evalShort(document, expression);
+  }
+
+  public Short evalShort(Object root, String expression) {
+    return Short.valueOf(evalString(root, expression));
+  }
+
+  public Integer evalInteger(String expression) {
+    return evalInteger(document, expression);
+  }
+
+  public Integer evalInteger(Object root, String expression) {
+    return Integer.valueOf(evalString(root, expression));
+  }
+
+  public Long evalLong(String expression) {
+    return evalLong(document, expression);
+  }
+
+  public Long evalLong(Object root, String expression) {
+    return Long.valueOf(evalString(root, expression));
+  }
+
+  public Float evalFloat(String expression) {
+    return evalFloat(document, expression);
+  }
+
+  public Float evalFloat(Object root, String expression) {
+    return Float.valueOf(evalString(root, expression));
   }
 
   public Double evalDouble(String expression) {
@@ -135,6 +198,15 @@ public class XPathParser {
     } catch (Exception e) {
       throw new BuilderException("Error creating document instance.  Cause: " + e, e);
     }
+  }
+
+  private void commonConstructor(Document document, boolean validation, Properties variables, EntityResolver entityResolver) {
+    this.validation = validation;
+    this.entityResolver = entityResolver;
+    this.variables = variables;
+    this.document = document;
+    XPathFactory factory = XPathFactory.newInstance();
+    this.xpath = factory.newXPath();
   }
 
 }
