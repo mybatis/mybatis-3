@@ -12,7 +12,6 @@ public class SqlSessionManager implements SqlSessionFactory, SqlSession {
 
   private final SqlSessionFactory sqlSessionFactory;
   private final SqlSession sqlSessionProxy;
-  private final InvocationHandler sqlSessionInterceptor;
 
   private ThreadLocal<SqlSession> localSqlSession = new ThreadLocal<SqlSession>();
 
@@ -30,8 +29,10 @@ public class SqlSessionManager implements SqlSessionFactory, SqlSession {
 
   public SqlSessionManager(SqlSessionFactory sqlSessionFactory) {
     this.sqlSessionFactory = sqlSessionFactory;
-    this.sqlSessionInterceptor = new SqlSessionInterceptor();
-    this.sqlSessionProxy = (SqlSession) Proxy.newProxyInstance(SqlSessionFactory.class.getClassLoader(), new Class[]{SqlSession.class}, sqlSessionInterceptor);
+    this.sqlSessionProxy = (SqlSession) Proxy.newProxyInstance(
+        SqlSessionFactory.class.getClassLoader(),
+        new Class[]{SqlSession.class},
+        new SqlSessionInterceptor());
   }
 
   public void startManagedSession() {
