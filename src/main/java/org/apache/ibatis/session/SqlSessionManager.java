@@ -14,7 +14,7 @@ public class SqlSessionManager implements SqlSessionFactory, SqlSession {
   private final SqlSession sqlSessionProxy;
   private final InvocationHandler sqlSessionInterceptor;
 
-  private SqlSession currentSqlSession;
+  private ThreadLocal<SqlSession> localSqlSession = new ThreadLocal<SqlSession>();
 
   public SqlSessionManager(Reader reader) {
     this(new SqlSessionFactoryBuilder().build(reader, null, null));
@@ -35,35 +35,35 @@ public class SqlSessionManager implements SqlSessionFactory, SqlSession {
   }
 
   public void startManagedSession() {
-    this.currentSqlSession = openSession();
+    this.localSqlSession.set(openSession());
   }
 
   public void startManagedSession(boolean autoCommit) {
-    this.currentSqlSession = openSession(autoCommit);
+    this.localSqlSession.set(openSession(autoCommit));
   }
 
   public void startManagedSession(Connection connection) {
-    this.currentSqlSession = openSession(connection);
+    this.localSqlSession.set(openSession(connection));
   }
 
   public void startManagedSession(TransactionIsolationLevel level) {
-    this.currentSqlSession = openSession(level);
+    this.localSqlSession.set(openSession(level));
   }
 
   public void startManagedSession(ExecutorType execType) {
-    this.currentSqlSession = openSession(execType);
+    this.localSqlSession.set(openSession(execType));
   }
 
   public void startManagedSession(ExecutorType execType, boolean autoCommit) {
-    this.currentSqlSession = openSession(execType, autoCommit);
+    this.localSqlSession.set(openSession(execType, autoCommit));
   }
 
   public void startManagedSession(ExecutorType execType, TransactionIsolationLevel level) {
-    this.currentSqlSession = openSession(execType, level);
+    this.localSqlSession.set(openSession(execType, level));
   }
 
   public void startManagedSession(ExecutorType execType, Connection connection) {
-    this.currentSqlSession = openSession(execType, connection);
+    this.localSqlSession.set(openSession(execType, connection));
   }
 
   public SqlSession openSession() {
@@ -163,63 +163,67 @@ public class SqlSessionManager implements SqlSessionFactory, SqlSession {
   }
 
   public Connection getConnection() {
-    if (currentSqlSession == null) throw new SqlSessionException("Error:  Cannot get connection.  No managed session is started.");
-    return currentSqlSession.getConnection();
+    final SqlSession sqlSession = localSqlSession.get();
+    if (sqlSession == null) throw new SqlSessionException("Error:  Cannot get connection.  No managed session is started.");
+    return sqlSession.getConnection();
   }
 
   public void clearCache() {
-    if (currentSqlSession == null) throw new SqlSessionException("Error:  Cannot clear the cache.  No managed session is started.");
-    currentSqlSession.clearCache();
+    final SqlSession sqlSession = localSqlSession.get();
+    if (sqlSession == null) throw new SqlSessionException("Error:  Cannot clear the cache.  No managed session is started.");
+    sqlSession.clearCache();
   }
 
   public void commit() {
-    if (currentSqlSession == null) throw new SqlSessionException("Error:  Cannot commit.  No managed session is started.");
-    currentSqlSession.commit();
+    final SqlSession sqlSession = localSqlSession.get();
+    if (sqlSession == null) throw new SqlSessionException("Error:  Cannot commit.  No managed session is started.");
+    sqlSession.commit();
   }
 
   public void commit(boolean force) {
-    if (currentSqlSession == null) throw new SqlSessionException("Error:  Cannot commit.  No managed session is started.");
-    currentSqlSession.commit(force);
+    final SqlSession sqlSession = localSqlSession.get();
+    if (sqlSession == null) throw new SqlSessionException("Error:  Cannot commit.  No managed session is started.");
+    sqlSession.commit(force);
   }
 
   public void rollback() {
-    if (currentSqlSession == null) throw new SqlSessionException("Error:  Cannot rollback.  No managed session is started.");
-    currentSqlSession.rollback();
+    final SqlSession sqlSession = localSqlSession.get();
+    if (sqlSession == null) throw new SqlSessionException("Error:  Cannot rollback.  No managed session is started.");
+    sqlSession.rollback();
   }
 
   public void rollback(boolean force) {
-    if (currentSqlSession == null) throw new SqlSessionException("Error:  Cannot rollback.  No managed session is started.");
-    currentSqlSession.rollback(force);
+    final SqlSession sqlSession = localSqlSession.get();
+    if (sqlSession == null) throw new SqlSessionException("Error:  Cannot rollback.  No managed session is started.");
+    sqlSession.rollback(force);
   }
 
   public void close() {
-    if (currentSqlSession == null) throw new SqlSessionException("Error:  Cannot close.  No managed session is started.");
+    final SqlSession sqlSession = localSqlSession.get();
+    if (sqlSession == null) throw new SqlSessionException("Error:  Cannot close.  No managed session is started.");
     try {
-      currentSqlSession.close();
+      sqlSession.close();
     } finally {
-      currentSqlSession = null;
+      localSqlSession.set(null);
     }
   }
 
   private class SqlSessionInterceptor implements InvocationHandler {
       public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        boolean autoCreatedSession = false;
-        try {
-          if (currentSqlSession == null) {
-            currentSqlSession = openSession();
-            autoCreatedSession = true;
-          }
-          final Object result = method.invoke(sqlSessionProxy, args);
-          if (autoCreatedSession) {
-            currentSqlSession.commit();
-          }
-          return result;
-        } catch (Throwable t) {
-          currentSqlSession.rollback();
-          throw t;
-        } finally {
-          if (autoCreatedSession) {
-            currentSqlSession.close();
+        final SqlSession sqlSesson = SqlSessionManager.this.localSqlSession.get();
+        if (sqlSesson != null) {
+          return method.invoke(sqlSesson, args);
+        } else {
+          final SqlSession autoSqlSession = openSession();
+          try {
+            final Object result = method.invoke(autoSqlSession, args);
+            autoSqlSession.commit();
+            return result;
+          } catch (Throwable t) {
+            autoSqlSession.rollback();
+            throw t;
+          } finally {
+            autoSqlSession.close();
           }
         }
       }
