@@ -11,7 +11,7 @@ import org.apache.ibatis.migration.MigrationException;
 import org.apache.ibatis.parsing.ParsingException;
 import org.apache.ibatis.plugin.PluginException;
 import org.apache.ibatis.reflection.ReflectionException;
-import org.apache.ibatis.session.SessionException;
+import org.apache.ibatis.session.SqlSessionException;
 import org.apache.ibatis.transaction.TransactionException;
 import org.apache.ibatis.type.TypeException;
 import static org.junit.Assert.assertEquals;
@@ -46,7 +46,7 @@ public class GeneralExceptionsTest {
         PluginException.class,
         ReflectionException.class,
         PersistenceException.class,
-        SessionException.class,
+        SqlSessionException.class,
         SqlMapperException.class,
         TransactionException.class,
         TypeException.class
