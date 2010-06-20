@@ -15,16 +15,20 @@ public class SqlSessionManager implements SqlSessionFactory, SqlSession {
 
   private ThreadLocal<SqlSession> localSqlSession = new ThreadLocal<SqlSession>();
 
-  public SqlSessionManager(Reader reader) {
-    this(new SqlSessionFactoryBuilder().build(reader, null, null));
-  }
-
-  public SqlSessionManager(Reader reader, String environment) {
-    this(new SqlSessionFactoryBuilder().build(reader, environment, null));
-  }
-
-  public SqlSessionManager(Reader reader, Properties properties) {
+  private SqlSessionManager(Reader reader, Properties properties) {
     this(new SqlSessionFactoryBuilder().build(reader, null, properties));
+  }
+
+  public static SqlSessionManager newInstance(Reader reader) {
+    return new SqlSessionManager(new SqlSessionFactoryBuilder().build(reader, null, null));
+  }
+
+  public static SqlSessionManager newInstance(Reader reader, String environment) {
+    return new SqlSessionManager(new SqlSessionFactoryBuilder().build(reader, environment, null));
+  }
+
+  public static SqlSessionManager newInstance(Reader reader, Properties properties) {
+    return new SqlSessionManager(new SqlSessionFactoryBuilder().build(reader, null, properties));
   }
 
   public SqlSessionManager(SqlSessionFactory sqlSessionFactory) {
