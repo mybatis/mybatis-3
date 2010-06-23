@@ -1,5 +1,7 @@
 package org.apache.ibatis.session;
 
+import org.apache.ibatis.reflection.ExceptionUtil;
+
 import java.io.Reader;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -15,10 +17,6 @@ public class SqlSessionManager implements SqlSessionFactory, SqlSession {
 
   private ThreadLocal<SqlSession> localSqlSession = new ThreadLocal<SqlSession>();
 
-  private SqlSessionManager(Reader reader, Properties properties) {
-    this(new SqlSessionFactoryBuilder().build(reader, null, properties));
-  }
-
   public static SqlSessionManager newInstance(Reader reader) {
     return new SqlSessionManager(new SqlSessionFactoryBuilder().build(reader, null, null));
   }
@@ -31,7 +29,11 @@ public class SqlSessionManager implements SqlSessionFactory, SqlSession {
     return new SqlSessionManager(new SqlSessionFactoryBuilder().build(reader, null, properties));
   }
 
-  public SqlSessionManager(SqlSessionFactory sqlSessionFactory) {
+  public static SqlSessionManager newInstance(SqlSessionFactory sqlSessionFactory) {
+    return new SqlSessionManager(sqlSessionFactory);
+  }
+
+  private SqlSessionManager(SqlSessionFactory sqlSessionFactory) {
     this.sqlSessionFactory = sqlSessionFactory;
     this.sqlSessionProxy = (SqlSession) Proxy.newProxyInstance(
         SqlSessionFactory.class.getClassLoader(),
@@ -164,7 +166,7 @@ public class SqlSessionManager implements SqlSessionFactory, SqlSession {
   }
 
   public <T> T getMapper(Class<T> type) {
-    return sqlSessionProxy.getMapper(type);
+    return getConfiguration().getMapper(type, this);
   }
 
   public Connection getConnection() {
@@ -226,7 +228,7 @@ public class SqlSessionManager implements SqlSessionFactory, SqlSession {
             return result;
           } catch (Throwable t) {
             autoSqlSession.rollback();
-            throw t;
+            throw ExceptionUtil.unwrapThrowable(t);
           } finally {
             autoSqlSession.close();
           }
