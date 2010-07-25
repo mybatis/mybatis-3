@@ -73,6 +73,10 @@ public class SqlSessionManager implements SqlSessionFactory, SqlSession {
     this.localSqlSession.set(openSession(execType, connection));
   }
 
+  public boolean isManagedSessionStarted() {
+    return this.localSqlSession.get() != null;
+  }
+
   public SqlSession openSession() {
     return sqlSessionFactory.openSession();
   }
