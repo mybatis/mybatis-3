@@ -46,6 +46,11 @@
       <name>Nathan Maves</name>
       <email>nathan.maves@gmail.com</email>
     </developer>
+    <developer>
+      <id>simone.tripodi</id>
+      <name>Simone Tripodi</name>
+      <email>simone.tripodi@gmail.com</email>
+    </developer>
   </developers>
   <scm>
     <url>scm:svn:https://mybatis.googlecode.com/svn/</url>
