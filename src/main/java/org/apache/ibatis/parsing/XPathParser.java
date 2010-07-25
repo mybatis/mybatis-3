@@ -27,51 +27,63 @@ public class XPathParser {
   private XPath xpath;
 
   public XPathParser(String xml) {
-    commonConstructor(createDocument(new StringReader(xml)), false, null, null);
+    commonConstructor(false, null, null);
+    this.document = createDocument(new StringReader(xml));
   }
 
   public XPathParser(Reader reader) {
-    commonConstructor(createDocument(reader), false, null, null);
+    commonConstructor(false, null, null);
+    this.document = createDocument(reader);
   }
 
   public XPathParser(Document document) {
-    commonConstructor(document, false, null, null);
+    commonConstructor(false, null, null);
+    this.document = document;
   }
 
   public XPathParser(String xml, boolean validation) {
-    commonConstructor(createDocument(new StringReader(xml)), validation, null, null);
+    commonConstructor(validation, null, null);
+    this.document = createDocument(new StringReader(xml));
   }
 
   public XPathParser(Reader reader, boolean validation) {
-    commonConstructor(createDocument(reader), validation, null, null);
+    commonConstructor(validation, null, null);
+    this.document = createDocument(reader);
   }
 
   public XPathParser(Document document, boolean validation) {
-    commonConstructor(document, validation, null, null);
+    commonConstructor(validation, null, null);
+    this.document = document;
   }
 
   public XPathParser(String xml, boolean validation, Properties variables) {
-    commonConstructor(createDocument(new StringReader(xml)), validation, variables, null);
+    commonConstructor(validation, variables, null);
+    this.document = createDocument(new StringReader(xml));
   }
 
   public XPathParser(Reader reader, boolean validation, Properties variables) {
-    commonConstructor(createDocument(reader), validation, variables, null);
+    commonConstructor(validation, variables, null);
+    this.document = createDocument(reader);
   }
 
   public XPathParser(Document document, boolean validation, Properties variables) {
-    commonConstructor(document, validation, variables, null);
+    commonConstructor(validation, variables, null);
+    this.document = document;
   }
 
   public XPathParser(String xml, boolean validation, Properties variables, EntityResolver entityResolver) {
-    commonConstructor(createDocument(new StringReader(xml)), validation, variables, entityResolver);
+    commonConstructor(validation, variables, entityResolver);
+    this.document = createDocument(new StringReader(xml));
   }
 
   public XPathParser(Reader reader, boolean validation, Properties variables, EntityResolver entityResolver) {
-    commonConstructor(createDocument(reader), validation, variables, entityResolver);
+    commonConstructor(validation, variables, entityResolver);
+    this.document = createDocument(reader);
   }
 
   public XPathParser(Document document, boolean validation, Properties variables, EntityResolver entityResolver) {
-    commonConstructor(document, validation, variables, entityResolver);
+    commonConstructor(validation, variables, entityResolver);
+    this.document = document;
   }
 
   public void setVariables(Properties variables) {
@@ -170,6 +182,7 @@ public class XPathParser {
   }
 
   private Document createDocument(Reader reader) {
+    // important: this must only be called AFTER common constructor
     try {
       DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
       factory.setValidating(validation);
@@ -200,11 +213,10 @@ public class XPathParser {
     }
   }
 
-  private void commonConstructor(Document document, boolean validation, Properties variables, EntityResolver entityResolver) {
+  private void commonConstructor(boolean validation, Properties variables, EntityResolver entityResolver) {
     this.validation = validation;
     this.entityResolver = entityResolver;
     this.variables = variables;
-    this.document = document;
     XPathFactory factory = XPathFactory.newInstance();
     this.xpath = factory.newXPath();
   }
