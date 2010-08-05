@@ -276,13 +276,23 @@ public abstract class BaseCommand implements Command {
   }
 
   protected Properties environmentProperties() {
+    FileInputStream fileInputStream = null;
     try {
       File file = existingEnvironmentFile();
       Properties props = new Properties();
-      props.load(new FileInputStream(file));
+      fileInputStream = new FileInputStream(file);
+      props.load(fileInputStream);
       return props;
     } catch (IOException e) {
       throw new MigrationException("Error loading environment properties.  Cause: " + e, e);
+    } finally {
+      if (fileInputStream != null) {
+        try {
+          fileInputStream.close();
+        } catch (IOException e) {
+          //Nothing to do here
+        }
+      }
     }
   }
 
