@@ -16,12 +16,13 @@ import org.apache.ibatis.type.TypeHandlerRegistry;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.*;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public abstract class BaseExecutor implements Executor {
 
   protected Transaction transaction;
 
-  protected List<DeferredLoad> deferredLoads;
+  protected ConcurrentLinkedQueue<DeferredLoad> deferredLoads;
   protected PerpetualCache localCache;
   protected Configuration configuration;
 
@@ -32,7 +33,7 @@ public abstract class BaseExecutor implements Executor {
 
   protected BaseExecutor(Configuration configuration, Transaction transaction) {
     this.transaction = transaction;
-    this.deferredLoads = new ArrayList<DeferredLoad>();
+    this.deferredLoads = new ConcurrentLinkedQueue<DeferredLoad>();
     this.localCache = new PerpetualCache("LocalCache");
     this.closed = false;
     this.configuration = configuration;

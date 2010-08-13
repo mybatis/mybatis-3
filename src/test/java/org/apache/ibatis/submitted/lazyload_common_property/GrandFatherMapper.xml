@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.apache.ibatis.submitted.lazyload_common_property.GrandFatherMapper">
+    
+    <resultMap id="GrandFatherMap" type="GrandFather">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+    </resultMap>
+    
+    
+    <select id="selectById" resultMap="GrandFatherMap" parameterType="int">
+    	SELECT id, name
+    	FROM GrandFather
+    	WHERE id = #{id}
+    </select>
+</mapper>
