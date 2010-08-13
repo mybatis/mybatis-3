@@ -14,7 +14,8 @@
  */
 package org.apache.ibatis.io;
 
-import org.apache.log4j.Logger;
+import org.apache.ibatis.logging.Log;
+import org.apache.ibatis.logging.LogFactory;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -72,7 +73,7 @@ public class ResolverUtil<T> {
 	/**
 	 * An instance of Log to use for logging in this class.
 	 */
-	private static final Logger log = Logger.getLogger(ResolverUtil.class);
+	private static final Log log = LogFactory.getLog(ResolverUtil.class);
 
 	/**
 	 * The magic header that indicates a JAR (ZIP) file.
@@ -295,7 +296,7 @@ public class ResolverUtil<T> {
 						is = url.openStream();
 						JarInputStream jarInput = new JarInputStream(is);
 						for (JarEntry entry; (entry = jarInput.getNextJarEntry()) != null;) {
-							log.trace("Jar entry: " + entry.getName());
+							log.debug("Jar entry: " + entry.getName());
 							if (isRelevantResource(entry.getName())) {
 								children.add(entry.getName());
 							}
@@ -306,7 +307,7 @@ public class ResolverUtil<T> {
 						is = url.openStream();
 						BufferedReader reader = new BufferedReader(new InputStreamReader(is));
 						for (String line; (line = reader.readLine()) != null;) {
-							log.trace("Reader entry: " + line);
+							log.debug("Reader entry: " + line);
 							if (isRelevantResource(line)) {
 								children.add(line);
 							}
@@ -321,7 +322,7 @@ public class ResolverUtil<T> {
 										 */
 					if ("file".equals(url.getProtocol())) {
 						File file = new File(url.getFile());
-						log.trace("Listing directory " + file.getAbsolutePath());
+						log.debug("Listing directory " + file.getAbsolutePath());
 						if (file.isDirectory()) {
 							children = Arrays.asList(file.list(new FilenameFilter() {
 								public boolean accept(File dir, String name) {
@@ -344,7 +345,7 @@ public class ResolverUtil<T> {
 				for (String child : children) {
 					String resourcePath = path + "/" + child;
 					if (child.endsWith(".class")) {
-						log.trace("Found class file: " + resourcePath);
+						log.debug("Found class file: " + resourcePath);
 						resources.add(resourcePath);
 					} else {
 						URL childUrl = new URL(prefix + child);
@@ -391,7 +392,7 @@ public class ResolverUtil<T> {
 
 				// Check file name
 				if (name.endsWith(".class") && name.startsWith(path)) {
-					log.trace("Found class file: " + name);
+					log.debug("Found class file: " + name);
 					resources.add(name.substring(1)); // Trim leading slash
 				}
 			}
@@ -411,13 +412,13 @@ public class ResolverUtil<T> {
 	 * @throws MalformedURLException
 	 */
 	protected URL findJarForResource(URL url, String path) throws MalformedURLException {
-		log.trace("Find JAR URL: " + url);
+		log.debug("Find JAR URL: " + url);
 
 		// If the file part of the URL is itself a URL, then that URL probably points to the JAR
 		try {
 			for (; ;) {
 				url = new URL(url.getFile());
-				log.trace("Inner URL: " + url);
+				log.debug("Inner URL: " + url);
 			}
 		}
 		catch (MalformedURLException e) {
@@ -429,9 +430,9 @@ public class ResolverUtil<T> {
 		int index = jarUrl.lastIndexOf(".jar");
 		if (index >= 0) {
 			jarUrl.setLength(index + 4);
-			log.trace("Extracted JAR URL: " + jarUrl);
+			log.debug("Extracted JAR URL: " + jarUrl);
 		} else {
-			log.trace("Not a JAR: " + jarUrl);
+			log.debug("Not a JAR: " + jarUrl);
 			return null;
 		}
 
@@ -442,7 +443,7 @@ public class ResolverUtil<T> {
 				return testUrl;
 			} else {
 				// WebLogic fix: check if the URL's file exists in the filesystem.
-				log.trace("Not a JAR: " + jarUrl);
+				log.debug("Not a JAR: " + jarUrl);
 				jarUrl.replace(0, jarUrl.length(), testUrl.getFile());
 				File file = new File(jarUrl.toString());
 
@@ -452,7 +453,7 @@ public class ResolverUtil<T> {
 //				}
 
 				if (file.exists()) {
-					log.trace("Trying real file: " + file.getAbsolutePath());
+					log.debug("Trying real file: " + file.getAbsolutePath());
 					testUrl = file.toURI().toURL();
 					if (isJar(testUrl)) {
 						return testUrl;
@@ -464,7 +465,7 @@ public class ResolverUtil<T> {
 			log.warn("Invalid JAR URL: " + jarUrl);
 		}
 
-		log.trace("Not a JAR: " + jarUrl);
+		log.debug("Not a JAR: " + jarUrl);
 		return null;
 	}
 
@@ -544,7 +545,7 @@ public class ResolverUtil<T> {
 		try {
 			String externalName = fqn.substring(0, fqn.indexOf('.')).replace('/', '.');
 			ClassLoader loader = getClassLoader();
-			log.trace("Checking to see if class " + externalName + " matches criteria [" + test + "]");
+			log.debug("Checking to see if class " + externalName + " matches criteria [" + test + "]");
 
 			Class type = loader.loadClass(externalName);
 			if (test.matches(type)) {
