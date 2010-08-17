@@ -3,7 +3,7 @@
   <parent>
     <groupId>org.sonatype.oss</groupId>
     <artifactId>oss-parent</artifactId>
-    <version>3</version>
+    <version>4</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.mybatis</groupId>
