@@ -179,10 +179,9 @@ public class MigratorTest extends BaseDataTest {
     File scriptPath = new File(basePath.getCanonicalPath() + File.separator + "scripts");
     assertEquals(3, scriptPath.list().length);
 
-    File templatePath = new File("/tmp/customTemplate.sql");
+    File templatePath = File.createTempFile("customTemplate","sql");
     templatePath.createNewFile();
-    safeMigratorMain(args("--path=" + basePath.getAbsolutePath(), "new", "test new migration",
-            "--template=" + templatePath.getAbsolutePath()));
+    safeMigratorMain(args("--path=" + basePath.getAbsolutePath(), "new", "test new migration", "--template=" + templatePath.getAbsolutePath()));
     assertEquals(4, scriptPath.list().length);
 
     templatePath.delete();
@@ -197,10 +196,9 @@ public class MigratorTest extends BaseDataTest {
     File scriptPath = new File(basePath.getCanonicalPath() + File.separator + "scripts");
     assertEquals(3, scriptPath.list().length);
 
-    File templatePath = new File("/tmp/customTemplate.sql");
+    File templatePath = File.createTempFile("customTemplate", "sql");
     templatePath.createNewFile();
-    safeMigratorMain(args("--path=" + basePath.getAbsolutePath(), "new", "test new migration",
-            "--template="));
+    safeMigratorMain(args("--path=" + basePath.getAbsolutePath(), "new", "test new migration", "--template="));
     assertEquals(4, scriptPath.list().length);
 
     templatePath.delete();

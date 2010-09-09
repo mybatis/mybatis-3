@@ -1,13 +1,15 @@
 package org.apache.ibatis.io;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
+import org.junit.Before;
+import org.junit.After;
+
+import static org.junit.Assert.*;
 
 public class ExternalResourcesTest {
 
@@ -44,7 +46,7 @@ public class ExternalResourcesTest {
       badFile = new File("/tmp/nofile.sql");
       ExternalResources.copyExternalResource(badFile, destFile);
     } catch (IOException e) {
-      Assert.assertEquals("/tmp/nofile.sql (No such file or directory)", e.getMessage());
+      assertTrue(e instanceof FileNotFoundException);
     }
 
   }
@@ -56,7 +58,7 @@ public class ExternalResourcesTest {
       badFile = new File(" ");
       ExternalResources.copyExternalResource(badFile, destFile);
     } catch (Exception e) {
-      Assert.assertEquals("(No such file or directory)", e.getMessage().trim());
+      assertTrue(e instanceof FileNotFoundException);
     }
 
   }
@@ -70,9 +72,9 @@ public class ExternalResourcesTest {
       fileWriter.append("new_command.template=templates/col_new_template_migration.sql");
       fileWriter.flush();
       templateName = ExternalResources.getConfiguredTemplate(tempFile.getAbsolutePath(), "new_command.template");
-      Assert.assertEquals("templates/col_new_template_migration.sql", templateName);
+      assertEquals("templates/col_new_template_migration.sql", templateName);
     } catch (Exception e) {
-      Assert.fail("Test failed with execption: " + e.getMessage());
+      fail("Test failed with execption: " + e.getMessage());
     }
   }
 
