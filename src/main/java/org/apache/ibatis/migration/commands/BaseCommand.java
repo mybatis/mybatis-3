@@ -1,6 +1,27 @@
 package org.apache.ibatis.migration.commands;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.LineNumberReader;
+import java.io.PrintStream;
+import java.io.PrintWriter;
+import java.math.BigDecimal;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.TimeZone;
+
 import org.apache.ibatis.datasource.unpooled.UnpooledDataSource;
+import org.apache.ibatis.io.ExternalResources;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.jdbc.SqlRunner;
@@ -8,26 +29,16 @@ import org.apache.ibatis.migration.Change;
 import org.apache.ibatis.migration.MigrationException;
 import org.apache.ibatis.parsing.PropertyParser;
 
-import java.io.*;
-import java.math.BigDecimal;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.sql.*;
-import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.Date;
-
 public abstract class BaseCommand implements Command {
 
   private static final String DATE_FORMAT = "yyyyMMddHHmmss";
-
   protected PrintStream printStream = System.out;
-
   protected File basePath;
   protected File envPath;
   protected File scriptPath;
   protected File driverPath;
   protected String environment;
+  protected String template;
   protected boolean force;
   private ClassLoader driverClassLoader;
 
@@ -37,6 +48,16 @@ public abstract class BaseCommand implements Command {
     this.scriptPath = subdirectory(repository, "scripts");
     this.driverPath = subdirectory(repository, "drivers");
     this.environment = environment;
+    this.force = force;
+  }
+
+  protected BaseCommand(File repository, String environment, String template, boolean force) {
+    this.basePath = repository;
+    this.envPath = subdirectory(repository, "environments");
+    this.scriptPath = subdirectory(repository, "scripts");
+    this.driverPath = subdirectory(repository, "drivers");
+    this.environment = environment;
+    this.template = template;
     this.force = force;
   }
 
@@ -62,7 +83,9 @@ public abstract class BaseCommand implements Command {
 
   protected List<Change> getMigrations() {
     String[] filenames = scriptPath.list();
-    if (filenames == null) throw new MigrationException(scriptPath + " does not exist.");
+    if (filenames == null) {
+      throw new MigrationException(scriptPath + " does not exist.");
+    }
     Arrays.sort(filenames);
     List<Change> migrations = new ArrayList<Change>();
     for (String filename : filenames) {
@@ -171,6 +194,16 @@ public abstract class BaseCommand implements Command {
         reader.close();
       }
     } catch (IOException e) {
+      throw new MigrationException("Error copying " + resource + " to " + toFile.getAbsolutePath() + ".  Cause: " + e, e);
+    }
+  }
+
+  protected void copyExternalResourceTo(String resource, File toFile, Properties variables) {
+    printStream.println("Creating: " + toFile.getName());
+    try {
+      File sourceFile = new File(resource);
+      ExternalResources.copyExternalResource(sourceFile, toFile);
+    } catch (Exception e) {
       throw new MigrationException("Error copying " + resource + " to " + toFile.getAbsolutePath() + ".  Cause: " + e, e);
     }
   }
@@ -345,7 +378,9 @@ public abstract class BaseCommand implements Command {
       change.setId(new BigDecimal(parts[0]));
       StringBuilder builder = new StringBuilder();
       for (int i = 1; i < parts.length; i++) {
-        if (i > 1) builder.append(" ");
+        if (i > 1) {
+          builder.append(" ");
+        }
         builder.append(parts[i]);
       }
       change.setDescription(builder.toString());
@@ -355,5 +390,4 @@ public abstract class BaseCommand implements Command {
       throw new MigrationException("Error parsing change from file.  Cause: " + e, e);
     }
   }
-
 }

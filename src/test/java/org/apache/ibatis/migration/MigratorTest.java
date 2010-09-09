@@ -1,14 +1,10 @@
 package org.apache.ibatis.migration;
 
-import org.apache.ibatis.BaseDataTest;
-import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.jdbc.SqlRunner;
-import org.junit.AfterClass;
-import static org.junit.Assert.*;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
-import javax.sql.DataSource;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -17,6 +13,15 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.security.Permission;
 import java.sql.Connection;
+
+import javax.sql.DataSource;
+
+import org.apache.ibatis.BaseDataTest;
+import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.jdbc.SqlRunner;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 public class MigratorTest extends BaseDataTest {
 
@@ -46,17 +51,20 @@ public class MigratorTest extends BaseDataTest {
     conn.commit();
     conn.close();
 
-    System.setSecurityManager(new SecurityManager(){
+    System.setSecurityManager(new SecurityManager() {
+
       @Override
       public void checkPermission(Permission perm) {
       }
+
       @Override
       public void checkPermission(Permission perm, Object context) {
       }
+
       @Override
       public void checkExit(int status) {
         //super.checkExit(status);
-        throw new RuntimeException ("System exited with error code: " + status);
+        throw new RuntimeException("System exited with error code: " + status);
       }
     });
   }
@@ -66,8 +74,6 @@ public class MigratorTest extends BaseDataTest {
     System.setOut(out);
     System.setSecurityManager(null);
   }
-
-
 
   @Test
   public void shouldRunThroughFullMigrationUseCaseInOneTestToEnsureOrder() throws Exception {
@@ -151,7 +157,6 @@ public class MigratorTest extends BaseDataTest {
     }
   }
 
-
   @Test
   public void shouldInitTempDirectory() throws Exception {
     File basePath = getTempDir();
@@ -162,6 +167,43 @@ public class MigratorTest extends BaseDataTest {
     assertEquals(3, scriptPath.list().length);
     safeMigratorMain(args("--path=" + basePath.getAbsolutePath(), "new", "test new migration"));
     assertEquals(4, scriptPath.list().length);
+
+  }
+
+  @Test
+  public void useCustomTemplate() throws Exception {
+    File basePath = getTempDir();
+    safeMigratorMain(args("--path=" + basePath.getAbsolutePath(), "init"));
+    assertNotNull(basePath.list());
+    assertEquals(4, basePath.list().length);
+    File scriptPath = new File(basePath.getCanonicalPath() + File.separator + "scripts");
+    assertEquals(3, scriptPath.list().length);
+
+    File templatePath = new File("/tmp/customTemplate.sql");
+    templatePath.createNewFile();
+    safeMigratorMain(args("--path=" + basePath.getAbsolutePath(), "new", "test new migration",
+            "--template=" + templatePath.getAbsolutePath()));
+    assertEquals(4, scriptPath.list().length);
+
+    templatePath.delete();
+  }
+
+  @Test
+  public void useCustomTemplateWithNoValue() throws Exception {
+    File basePath = getTempDir();
+    safeMigratorMain(args("--path=" + basePath.getAbsolutePath(), "init"));
+    assertNotNull(basePath.list());
+    assertEquals(4, basePath.list().length);
+    File scriptPath = new File(basePath.getCanonicalPath() + File.separator + "scripts");
+    assertEquals(3, scriptPath.list().length);
+
+    File templatePath = new File("/tmp/customTemplate.sql");
+    templatePath.createNewFile();
+    safeMigratorMain(args("--path=" + basePath.getAbsolutePath(), "new", "test new migration",
+            "--template="));
+    assertEquals(4, scriptPath.list().length);
+
+    templatePath.delete();
   }
 
   private String[] args(String... args) {
@@ -187,6 +229,7 @@ public class MigratorTest extends BaseDataTest {
   }
 
   private static class StringOutputStream extends OutputStream {
+
     private StringBuilder builder = new StringBuilder();
 
     public void write(int b) throws IOException {

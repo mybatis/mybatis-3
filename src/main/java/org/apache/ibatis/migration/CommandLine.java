@@ -1,13 +1,21 @@
 package org.apache.ibatis.migration;
 
-import org.apache.ibatis.migration.commands.*;
-
 import java.io.File;
 import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+
+import org.apache.ibatis.migration.commands.BootstrapCommand;
+import org.apache.ibatis.migration.commands.DownCommand;
+import org.apache.ibatis.migration.commands.InitializeCommand;
+import org.apache.ibatis.migration.commands.NewCommand;
+import org.apache.ibatis.migration.commands.PendingCommand;
+import org.apache.ibatis.migration.commands.ScriptCommand;
+import org.apache.ibatis.migration.commands.StatusCommand;
+import org.apache.ibatis.migration.commands.UpCommand;
+import org.apache.ibatis.migration.commands.VersionCommand;
 
 public class CommandLine {
 
@@ -16,7 +24,7 @@ public class CommandLine {
   private static final String FORCE = "--force";
   private static final String TRACE = "--trace";
   private static final String HELP = "--help";
-
+  private static final String TEMPLATE_PREFIX = "--template=";
   private static final String INIT = "init";
   private static final String BOOTSTRAP = "bootstrap";
   private static final String NEW = "new";
@@ -26,20 +34,16 @@ public class CommandLine {
   private static final String SCRIPT = "script";
   private static final String VERSION = "version";
   private static final String STATUS = "status";
-
   private static final Set<String> KNOWN_COMMANDS = Collections.unmodifiableSet(
-      new HashSet<String>(Arrays.asList(INIT, NEW, UP, VERSION, DOWN, PENDING, STATUS, BOOTSTRAP, SCRIPT)));
-
+          new HashSet<String>(Arrays.asList(INIT, NEW, UP, VERSION, DOWN, PENDING, STATUS, BOOTSTRAP, SCRIPT)));
   private PrintStream printStream;
-
   private File repository;
   private String environment;
+  private String template;
   private boolean force;
   private boolean trace;
-
   private String command;
   private String params;
-
   private String parseError;
   private boolean help;
 
@@ -91,7 +95,7 @@ public class CommandLine {
     } else if (BOOTSTRAP.equals(command)) {
       new BootstrapCommand(repository, environment, force).execute(params);
     } else if (NEW.equals(command)) {
-      new NewCommand(repository, environment, force).execute(params);
+      new NewCommand(repository, environment, template, force).execute(params);
     } else if (STATUS.equals(command)) {
       new StatusCommand(repository, environment, force).execute(params);
     } else if (UP.equals(command)) {
@@ -129,6 +133,8 @@ public class CommandLine {
         repository = new File(arg.split("=")[1]);
       } else if (arg.startsWith(ENV_PREFIX) && arg.length() > ENV_PREFIX.length()) {
         environment = arg.split("=")[1];
+      } else if (arg.startsWith(TEMPLATE_PREFIX) && arg.length() > TEMPLATE_PREFIX.length()) {
+        template = arg.split("=")[1];
       } else if (arg.startsWith(TRACE)) {
         trace = true;
       } else if (arg.startsWith(FORCE)) {
@@ -159,7 +165,7 @@ public class CommandLine {
       repository = new File(repository.getAbsolutePath());
       if (command == null) {
         parseError = "No command specified.";
-      } 
+      }
     }
   }
 
@@ -170,10 +176,11 @@ public class CommandLine {
 
   private void printUsage() {
     printStream.println();
-    printStream.println("Usage: migrate command [parameter] [--path=<directory>] [--env=<environment>]");
+    printStream.println("Usage: migrate command [parameter] [--path=<directory>] [--env=<environment>] [--template=<path to custom template>]");
     printStream.println();
     printStream.println("--path=<directory>   Path to repository.  Default current working directory.");
     printStream.println("--env=<environment>  Environment to configure. Default environment is 'development'.");
+    printStream.println("--template=<template>  Path to custom template for creating new sql scripts.");
     printStream.println("--force              Forces script to continue even if SQL errors are encountered.");
     printStream.println("--help               Displays this usage message.");
     printStream.println("--trace              Shows additional error details (if any).");
@@ -193,5 +200,4 @@ public class CommandLine {
     printStream.println();
     printStream.flush();
   }
-
 }
