@@ -86,11 +86,46 @@
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
         <version>2.2-beta-5</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>assembly</goal>
+            </goals>
+            <phase>package</phase>
+            <configuration>
+              <attach>false</attach>
+              <descriptors>
+                <descriptor>bundle.xml</descriptor>
+                <descriptor>migrations.xml</descriptor>
+              </descriptors>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>com.googlecode.maven-gcu-plugin</groupId>
+        <artifactId>maven-gcu-plugin</artifactId>
+        <version>1.0</version>
         <configuration>
-          <descriptors>
-            <descriptor>bundle.xml</descriptor>
-            <descriptor>migrations.xml</descriptor>
-          </descriptors>
+          <failsOnError>true</failsOnError>
+          <uploads>
+            <upload>
+              <file>${project.build.directory}/${project.artifactId}-${project.version}-bundle.zip</file>
+              <summary>MyBatis Persistence Framework ${pom.version} GA</summary>
+              <labels>
+                <label>Featured</label>
+                <label>Type-Archive</label>
+              </labels>
+            </upload>
+            <upload>
+              <file>${project.build.directory}/${project.artifactId}-${project.version}-migrations.zip</file>
+              <summary>MyBatis Schema Migrations ${pom.version} GA</summary>
+              <labels>
+                <label>Featured</label>
+                <label>Type-Archive</label>
+              </labels>
+            </upload>
+          </uploads>
         </configuration>
       </plugin>
       <plugin>
