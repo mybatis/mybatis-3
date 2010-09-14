@@ -14,8 +14,9 @@ import java.util.*;
 
 public class ResultObjectProxy {
 
-  private static final Set<String> objectMethods = new HashSet<String>(Arrays.asList(new String[]{"equals","hashCode","toString"}));
+  private static final Set<String> objectMethods = new HashSet<String>(Arrays.asList(new String[]{"equals","clone","hashCode","toString"}));
   private static final TypeHandlerRegistry registry = new TypeHandlerRegistry();
+  private static final String FINALIZE_METHOD = "finalize";
 
   public static Object createProxy(Object target, ResultLoaderMap lazyLoader, boolean aggressive) {
     return EnhancedResultObjectProxyImpl.createProxy(target, lazyLoader, aggressive);
@@ -47,12 +48,14 @@ public class ResultObjectProxy {
         final String methodName = method.getName();
         synchronized (lazyLoader) {
           if (lazyLoader.size() > 0) {
-            if (aggressive || objectMethods.contains(methodName)) {
-              lazyLoader.loadAll();
-            } else if (PropertyNamer.isProperty(methodName)) {
-              final String property = PropertyNamer.methodToProperty(methodName);
-              if (lazyLoader.hasLoader(property)) {
-                lazyLoader.load(property);
+            if (!FINALIZE_METHOD.equals(methodName)) {
+              if (aggressive || objectMethods.contains(methodName)) {
+                lazyLoader.loadAll();
+              } else if (PropertyNamer.isProperty(methodName)) {
+                final String property = PropertyNamer.methodToProperty(methodName);
+                if (lazyLoader.hasLoader(property)) {
+                  lazyLoader.load(property);
+                }
               }
             }
           }
