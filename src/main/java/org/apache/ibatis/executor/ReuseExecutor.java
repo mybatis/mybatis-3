@@ -44,6 +44,7 @@ public class ReuseExecutor extends BaseExecutor {
     for (Statement stmt : statementMap.values()) {
       closeStatement(stmt);
     }
+    statementMap.clear();
     return Collections.EMPTY_LIST;
   }
 
