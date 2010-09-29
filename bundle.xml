@@ -13,6 +13,9 @@
       <source>target/${project.artifactId}-${project.version}-sources.${project.packaging}</source>
     </file>
     <file>
+      <source>target/${project.artifactId}-${project.version}-javadoc.${project.packaging}</source>
+    </file>
+    <file>
       <source>LICENSE</source>
     </file>
     <file>
