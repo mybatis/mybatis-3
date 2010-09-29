@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <parent>
-    <groupId>org.sonatype.oss</groupId>
-    <artifactId>oss-parent</artifactId>
-    <version>4</version>
+    <groupId>org.mybatis</groupId>
+    <artifactId>mybatis-parent</artifactId>
+    <version>1.0.0</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-  <groupId>org.mybatis</groupId>
   <artifactId>mybatis</artifactId>
   <name>mybatis</name>
   <description>
@@ -17,46 +16,6 @@
   </description>
   <version>3.0.3-SNAPSHOT</version>
   <packaging>jar</packaging>
-  <url>http://www.mybatis.org/</url>
-  <licenses>
-    <license>
-      <name>The Apache Software License, Version 2.0</name>
-      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-      <distribution>repo</distribution>
-    </license>
-  </licenses>
-  <developers>
-    <developer>
-      <id>clinton.begin</id>
-      <name>Clinton Begin</name>
-      <email>clinton.begin@gmail.com</email>
-    </developer>
-    <developer>
-      <id>brandon.goodin</id>
-      <name>Brandon Goodin</name>
-      <email>brandon.goodin@gmail.com</email>
-    </developer>
-    <developer>
-      <id>larry.meadors</id>
-      <name>Larry Meadors</name>
-      <email>larry.meadors@gmail.com</email>
-    </developer>
-    <developer>
-      <id>nathan.maves</id>
-      <name>Nathan Maves</name>
-      <email>nathan.maves@gmail.com</email>
-    </developer>
-    <developer>
-      <id>simone.tripodi</id>
-      <name>Simone Tripodi</name>
-      <email>simone.tripodi@gmail.com</email>
-    </developer>
-    <developer>
-      <id>christian.poitras</id>
-      <name>Christian Poitras</name>
-      <email>christian.poitras@ircm.qc.ca</email>
-    </developer>
-  </developers>
   <scm>
     <url>scm:svn:https://mybatis.googlecode.com/svn/trunk</url>
     <connection>scm:svn:https://mybatis.googlecode.com/svn/trunk</connection>
@@ -65,13 +24,9 @@
   <reporting>
     <plugins>
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-report-plugin</artifactId>
-        <version>2.5</version>
-      </plugin>
-      <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>cobertura-maven-plugin</artifactId>
+        <version>2.2</version>
         <configuration>
           <formats>
             <format>html</format>
@@ -84,8 +39,8 @@
   <build>
     <plugins>
       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-assembly-plugin</artifactId>
-        <version>2.2-beta-5</version>
         <executions>
           <execution>
             <goals>
@@ -93,7 +48,6 @@
             </goals>
             <phase>package</phase>
             <configuration>
-              <attach>false</attach>
               <descriptors>
                 <descriptor>bundle.xml</descriptor>
                 <descriptor>migrations.xml</descriptor>
@@ -105,66 +59,39 @@
       <plugin>
         <groupId>com.googlecode.maven-gcu-plugin</groupId>
         <artifactId>maven-gcu-plugin</artifactId>
-        <version>1.0</version>
-        <configuration>
-          <failsOnError>true</failsOnError>
-          <uploads>
-            <upload>
-              <file>${project.build.directory}/${project.artifactId}-${project.version}-bundle.zip</file>
-              <summary>MyBatis Persistence Framework ${project.version} GA</summary>
-              <labels>
-                <label>Featured</label>
-                <label>Type-Archive</label>
-              </labels>
-            </upload>
-            <upload>
-              <file>${project.build.directory}/${project.artifactId}-${project.version}-migrations.zip</file>
-              <summary>MyBatis Schema Migrations ${project.version} GA</summary>
-              <labels>
-                <label>Featured</label>
-                <label>Type-Archive</label>
-              </labels>
-            </upload>
-          </uploads>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <configuration>
-          <source>1.5</source>
-          <target>1.5</target>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-source-plugin</artifactId>
-        <version>2.1.2</version>
         <executions>
           <execution>
-            <id>attach-sources</id>
+            <phase>deploy</phase>
             <goals>
-              <goal>jar-no-fork</goal>
+              <goal>upload</goal>
             </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        <version>2.7</version>
-        <executions>
-          <execution>
-            <id>attach-javadocs</id>
-            <goals>
-              <goal>jar</goal>
-            </goals>
+            <configuration>
+              <uploads>
+                <upload>
+                  <file>${project.build.directory}/${project.artifactId}-${project.version}-bundle.zip</file>
+                  <summary>MyBatis Persistence Framework ${project.version} GA</summary>
+                  <labels>
+                    <label>Featured</label>
+                    <label>Type-Archive</label>
+                  </labels>
+                </upload>
+                <upload>
+                  <file>${project.build.directory}/${project.artifactId}-${project.version}-migrations.zip</file>
+                  <summary>MyBatis Schema Migrations ${project.version} GA</summary>
+                  <labels>
+                    <label>Featured</label>
+                    <label>Type-Archive</label>
+                  </labels>
+                </upload>
+              </uploads>
+            </configuration>
           </execution>
         </executions>
       </plugin>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>cobertura-maven-plugin</artifactId>
+        <version>2.2</version>
         <configuration>
           <instrumentation>
             <ignores>
@@ -183,10 +110,22 @@
           </execution>
         </executions>
       </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-release-plugin</artifactId>
+      </plugin>
     </plugins>
     <resources>
       <resource>
-        <directory>src/main/java</directory>
+        <directory>.</directory>
+        <targetPath>META-INF</targetPath>
+        <includes>
+          <include>LICENSE</include>
+          <include>NOTICE</include>
+        </includes>
+      </resource>
+      <resource>
+        <directory>${project.build.sourceDirectory}</directory>
         <excludes>
           <exclude>**/*.java</exclude>
         </excludes>
@@ -194,7 +133,7 @@
     </resources>
     <testResources>
       <testResource>
-        <directory>src/test/java</directory>
+        <directory>${project.build.testSourceDirectory}</directory>
         <excludes>
           <exclude>**/*.java</exclude>
         </excludes>
