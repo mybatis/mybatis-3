@@ -33,6 +33,8 @@ public class TrimSqlNode implements SqlNode {
     if (overrides != null) {
       final StringTokenizer parser = new StringTokenizer(overrides, "|", false);
       return new ArrayList<String>() {
+        private static final long serialVersionUID = -2504816393625384165L;
+
         {
           while (parser.hasMoreTokens()) {
             add(parser.nextToken().toUpperCase(Locale.ENGLISH));

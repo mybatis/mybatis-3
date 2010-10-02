@@ -53,6 +53,8 @@ public class DynamicContext {
   }
 
   static class ContextMap extends HashMap<String, Object> {
+    private static final long serialVersionUID = 2977601501966151582L;
+
     private MetaObject parameterMetaObject;
     public ContextMap(MetaObject parameterMetaObject) {
       this.parameterMetaObject = parameterMetaObject;
@@ -63,7 +65,7 @@ public class DynamicContext {
       if (super.containsKey(key)) {
         return super.get(key);
       }
-        
+
       if (parameterMetaObject != null) {
         Object object = parameterMetaObject.getValue(key.toString());
         if (object != null) {
@@ -86,7 +88,7 @@ public class DynamicContext {
       Object result = map.get(name);
       if (result != null) {
         return result;
-      }      
+      }
 
       Object parameterObject = map.get(PARAMETER_OBJECT_KEY);
       if (parameterObject instanceof Map) {

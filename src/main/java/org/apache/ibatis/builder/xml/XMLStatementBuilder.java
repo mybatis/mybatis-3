@@ -33,11 +33,11 @@ public class XMLStatementBuilder extends BaseBuilder {
     Integer timeout = context.getIntAttribute("timeout", null);
     String parameterMap = context.getStringAttribute("parameterMap");
     String parameterType = context.getStringAttribute("parameterType");
-    Class parameterTypeClass = resolveClass(parameterType);
+    Class<?> parameterTypeClass = resolveClass(parameterType);
     String resultMap = context.getStringAttribute("resultMap");
     String resultType = context.getStringAttribute("resultType");
 
-    Class resultTypeClass = resolveClass(resultType);
+    Class<?> resultTypeClass = resolveClass(resultType);
     String resultSetType = context.getStringAttribute("resultSetType");
     StatementType statementType = StatementType.valueOf(context.getStringAttribute("statementType", StatementType.PREPARED.toString()));
     ResultSetType resultSetTypeEnum = resolveResultSetType(resultSetType);
@@ -92,6 +92,8 @@ public class XMLStatementBuilder extends BaseBuilder {
   }
 
   private Map<String, NodeHandler> nodeHandlers = new HashMap<String, NodeHandler>() {
+    private static final long serialVersionUID = 7123056019193266281L;
+
     {
       put("include", new IncludeNodeHandler());
       put("trim", new TrimHandler());
@@ -115,12 +117,12 @@ public class XMLStatementBuilder extends BaseBuilder {
       XNode parent = nodeToHandle.getParent();
       String id = parent.getStringAttribute("id") + SelectKeyGenerator.SELECT_KEY_SUFFIX;
       String resultType = nodeToHandle.getStringAttribute("resultType");
-      Class resultTypeClass = resolveClass(resultType);
+      Class<?> resultTypeClass = resolveClass(resultType);
       StatementType statementType = StatementType.valueOf(nodeToHandle.getStringAttribute("statementType", StatementType.PREPARED.toString()));
       String keyProperty = nodeToHandle.getStringAttribute("keyProperty");
       String parameterType = parent.getStringAttribute("parameterType");
       boolean executeBefore = "BEFORE".equals(nodeToHandle.getStringAttribute("order", "AFTER"));
-      Class parameterTypeClass = resolveClass(parameterType);
+      Class<?> parameterTypeClass = resolveClass(parameterType);
 
       //defaults
       boolean useCache = false;
@@ -243,7 +245,7 @@ public class XMLStatementBuilder extends BaseBuilder {
       targetContents.add(chooseSqlNode);
     }
 
-    private void handleWhenOtherwiseNodes(XNode chooseSqlNode, List ifSqlNodes, List<SqlNode> defaultSqlNodes) {
+    private void handleWhenOtherwiseNodes(XNode chooseSqlNode, List<SqlNode> ifSqlNodes, List<SqlNode> defaultSqlNodes) {
       List<XNode> children = chooseSqlNode.getChildren();
       for (XNode child : children) {
         String nodeName = child.getNode().getNodeName();

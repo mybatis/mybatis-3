@@ -78,7 +78,7 @@ public class XMLConfigBuilder extends BaseBuilder {
         String alias = child.getStringAttribute("alias");
         String type = child.getStringAttribute("type");
         try {
-          Class clazz = Resources.classForName(type);
+          Class<?> clazz = Resources.classForName(type);
           if (alias == null) {
             typeAliasRegistry.registerAlias(clazz);
           } else {
@@ -148,10 +148,10 @@ public class XMLConfigBuilder extends BaseBuilder {
     if (context != null) {
       Properties props = context.getChildrenAsProperties();
       // Check that all settings are known to the configuration class
-      for (Map.Entry entry : props.entrySet()) {
-        MetaClass metaConfig = MetaClass.forClass(Configuration.class);
-        if (!metaConfig.hasSetter((String) entry.getKey())) {
-          throw new BuilderException("The setting " + entry.getKey() + " is not known.  Make sure you spelled it correctly (case sensitive).");
+      MetaClass metaConfig = MetaClass.forClass(Configuration.class);
+      for (Object key : props.keySet()) {
+        if (!metaConfig.hasSetter(String.valueOf(key))) {
+          throw new BuilderException("The setting " + key + " is not known.  Make sure you spelled it correctly (case sensitive).");
         }
       }
       configuration.setAutoMappingBehavior(AutoMappingBehavior.valueOf(stringValueOf(props.getProperty("autoMappingBehavior"), "PARTIAL")));
@@ -221,7 +221,7 @@ public class XMLConfigBuilder extends BaseBuilder {
         String jdbcType = child.getStringAttribute("jdbcType");
         String handler = child.getStringAttribute("handler");
 
-        Class javaTypeClass = resolveClass(javaType);
+        Class<?> javaTypeClass = resolveClass(javaType);
         TypeHandler typeHandlerInstance = (TypeHandler) resolveClass(handler).newInstance();
 
         if (jdbcType == null) {
