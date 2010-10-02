@@ -4,6 +4,8 @@ import org.apache.ibatis.exceptions.PersistenceException;
 
 public class BuilderException extends PersistenceException {
 
+  private static final long serialVersionUID = -3885164021020443281L;
+
   public BuilderException() {
     super();
   }

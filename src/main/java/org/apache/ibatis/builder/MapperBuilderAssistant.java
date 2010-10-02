@@ -56,8 +56,8 @@ public class MapperBuilderAssistant extends BaseBuilder {
     return cache;
   }
 
-  public Cache useNewCache(Class typeClass,
-                           Class evictionClass,
+  public Cache useNewCache(Class<? extends Cache> typeClass,
+                           Class<? extends Cache> evictionClass,
                            Long flushInterval,
                            Integer size,
                            boolean readWrite,
@@ -77,7 +77,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
     return cache;
   }
 
-  public ParameterMap addParameterMap(String id, Class parameterClass, List<ParameterMapping> parameterMappings) {
+  public ParameterMap addParameterMap(String id, Class<?> parameterClass, List<ParameterMapping> parameterMappings) {
     id = applyCurrentNamespace(id);
     ParameterMap.Builder parameterMapBuilder = new ParameterMap.Builder(configuration, id, parameterClass, parameterMappings);
     ParameterMap parameterMap = parameterMapBuilder.build();
@@ -86,18 +86,18 @@ public class MapperBuilderAssistant extends BaseBuilder {
   }
 
   public ParameterMapping buildParameterMapping(
-      Class parameterType,
+      Class<?> parameterType,
       String property,
-      Class javaType,
+      Class<?> javaType,
       JdbcType jdbcType,
       String resultMap,
       ParameterMode parameterMode,
-      Class typeHandler,
+      Class<? extends TypeHandler> typeHandler,
       Integer numericScale) {
     resultMap = applyCurrentNamespace(resultMap);
 
     // Class parameterType = parameterMapBuilder.type();
-    Class javaTypeClass = resolveParameterJavaType(parameterType, property, javaType, jdbcType);
+    Class<?> javaTypeClass = resolveParameterJavaType(parameterType, property, javaType, jdbcType);
     TypeHandler typeHandlerInstance = (TypeHandler) resolveInstance(typeHandler);
 
     ParameterMapping.Builder builder = new ParameterMapping.Builder(configuration, property, javaTypeClass);
@@ -111,7 +111,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
 
   public ResultMap addResultMap(
       String id,
-      Class type,
+      Class<?> type,
       String extend,
       Discriminator discriminator,
       List<ResultMapping> resultMappings) {
@@ -130,14 +130,14 @@ public class MapperBuilderAssistant extends BaseBuilder {
   }
 
   public ResultMapping buildResultMapping(
-      Class resultType,
+      Class<?> resultType,
       String property,
       String column,
-      Class javaType,
+      Class<?> javaType,
       JdbcType jdbcType,
       String nestedSelect,
       String nestedResultMap,
-      Class typeHandler,
+      Class<? extends TypeHandler> typeHandler,
       List<ResultFlag> flags) {
     ResultMapping resultMapping = assembleResultMapping(
         resultType,
@@ -154,11 +154,11 @@ public class MapperBuilderAssistant extends BaseBuilder {
 
 
   public Discriminator buildDiscriminator(
-      Class resultType,
+      Class<?> resultType,
       String column,
-      Class javaType,
+      Class<?> javaType,
       JdbcType jdbcType,
-      Class typeHandler,
+      Class<? extends TypeHandler> typeHandler,
       Map<String, String> discriminatorMap) {
     ResultMapping resultMapping = assembleResultMapping(
         resultType,
@@ -188,9 +188,9 @@ public class MapperBuilderAssistant extends BaseBuilder {
       Integer fetchSize,
       Integer timeout,
       String parameterMap,
-      Class parameterType,
+      Class<?> parameterType,
       String resultMap,
-      Class resultType,
+      Class<?> resultType,
       ResultSetType resultSetType,
       boolean flushCache,
       boolean useCache,
@@ -235,7 +235,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
 
   private void setStatementParameterMap(
       String parameterMap,
-      Class parameterTypeClass,
+      Class<?> parameterTypeClass,
       MappedStatement.Builder statementBuilder) {
     parameterMap = applyCurrentNamespace(parameterMap);
 
@@ -254,7 +254,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
 
   private void setStatementResultMap(
       String resultMap,
-      Class resultType,
+      Class<?> resultType,
       ResultSetType resultSetType,
       MappedStatement.Builder statementBuilder) {
     resultMap = applyCurrentNamespace(resultMap);
@@ -286,18 +286,18 @@ public class MapperBuilderAssistant extends BaseBuilder {
   }
 
   private ResultMapping assembleResultMapping(
-      Class resultType,
+      Class<?> resultType,
       String property,
       String column,
-      Class javaType,
+      Class<?> javaType,
       JdbcType jdbcType,
       String nestedSelect,
       String nestedResultMap,
-      Class typeHandler,
+      Class<? extends TypeHandler> typeHandler,
       List<ResultFlag> flags) {
     // Class resultType = resultMapBuilder.type();
     nestedResultMap = applyCurrentNamespace(nestedResultMap);
-    Class javaTypeClass = resolveResultJavaType(resultType, property, javaType);
+    Class<?> javaTypeClass = resolveResultJavaType(resultType, property, javaType);
     TypeHandler typeHandlerInstance = (TypeHandler) resolveInstance(typeHandler);
 
     List<ResultMapping> composites = parseCompositeColumnName(column);
@@ -334,7 +334,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
     return composites;
   }
 
-  private Class resolveResultJavaType(Class resultType, String property, Class javaType) {
+  private Class<?> resolveResultJavaType(Class<?> resultType, String property, Class<?> javaType) {
     if (javaType == null && property != null) {
       try {
         MetaClass metaResultType = MetaClass.forClass(resultType);
@@ -349,7 +349,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
     return javaType;
   }
 
-  private Class resolveParameterJavaType(Class resultType, String property, Class javaType, JdbcType jdbcType) {
+  private Class<?> resolveParameterJavaType(Class<?> resultType, String property, Class<?> javaType, JdbcType jdbcType) {
     if (javaType == null) {
       if (JdbcType.CURSOR.equals(jdbcType)) {
         javaType = java.sql.ResultSet.class;

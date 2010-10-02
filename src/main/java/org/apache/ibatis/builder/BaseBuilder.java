@@ -61,7 +61,7 @@ public abstract class BaseBuilder {
     }
   }
 
-  protected Class resolveClass(String alias) {
+  protected Class<?> resolveClass(String alias) {
     if (alias == null) return null;
     try {
       return resolveAlias(alias);
@@ -73,14 +73,14 @@ public abstract class BaseBuilder {
   protected Object resolveInstance(String alias) {
     if (alias == null) return null;
     try {
-      Class type = resolveClass(alias);
+      Class<?> type = resolveClass(alias);
       return type.newInstance();
     } catch (Exception e) {
       throw new BuilderException("Error instantiating class. Cause: " + e, e);
     }
   }
 
-  protected Object resolveInstance(Class type) {
+  protected Object resolveInstance(Class<?> type) {
     if (type == null) return null;
     try {
       return type.newInstance();
@@ -89,7 +89,7 @@ public abstract class BaseBuilder {
     }
   }
 
-  protected Class resolveAlias(String alias) {
+  protected Class<?> resolveAlias(String alias) {
     return typeAliasRegistry.resolveAlias(alias);
   }
 }

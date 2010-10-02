@@ -18,7 +18,7 @@ public class SqlSourceBuilder extends BaseBuilder {
     super(configuration);
   }
 
-  public SqlSource parse(String originalSql, Class parameterType) {
+  public SqlSource parse(String originalSql, Class<?> parameterType) {
     ParameterMappingTokenHandler handler = new ParameterMappingTokenHandler(configuration, parameterType);
     GenericTokenParser parser = new GenericTokenParser("#{", "}", handler);
     String sql = parser.parse(originalSql);
@@ -28,9 +28,9 @@ public class SqlSourceBuilder extends BaseBuilder {
   private static class ParameterMappingTokenHandler extends BaseBuilder implements TokenHandler {
 
     private List<ParameterMapping> parameterMappings = new ArrayList<ParameterMapping>();
-    private Class parameterType;
+    private Class<?> parameterType;
 
-    public ParameterMappingTokenHandler(Configuration configuration, Class parameterType) {
+    public ParameterMappingTokenHandler(Configuration configuration, Class<?> parameterType) {
       super(configuration);
       this.parameterType = parameterType;
     }
@@ -49,7 +49,7 @@ public class SqlSourceBuilder extends BaseBuilder {
       String propertyWithJdbcType = parameterMappingParts.nextToken();
       String property = extractPropertyName(propertyWithJdbcType);
       String jdbcType = extractJdbcType(propertyWithJdbcType);
-      Class propertyType;
+      Class<?> propertyType;
       MetaClass metaClass = MetaClass.forClass(parameterType);
       if (typeHandlerRegistry.hasTypeHandler(parameterType)) {
         propertyType = parameterType;
