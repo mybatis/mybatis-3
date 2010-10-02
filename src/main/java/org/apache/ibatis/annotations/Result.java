@@ -1,6 +1,7 @@
 package org.apache.ibatis.annotations;
 
 import org.apache.ibatis.type.JdbcType;
+import org.apache.ibatis.type.TypeHandler;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -16,11 +17,11 @@ public @interface Result {
 
   public abstract String property() default "";
 
-  public abstract Class javaType() default void.class;
+  public abstract Class<?> javaType() default void.class;
 
   public abstract JdbcType jdbcType() default JdbcType.UNDEFINED;
 
-  public abstract Class typeHandler() default void.class;
+  public abstract Class<? extends TypeHandler> typeHandler() default TypeHandler.class;
 
   public abstract One one() default @One;
 

@@ -11,14 +11,14 @@ import java.lang.reflect.Method;
 public class ProviderSqlSource implements SqlSource {
 
   private SqlSourceBuilder sqlSourceParser;
-  private Class providerType;
+  private Class<?> providerType;
   private Method providerMethod;
   private boolean providerTakesParameterObject;
 
   public ProviderSqlSource(Configuration config, Object provider) {
     try {
       this.sqlSourceParser = new SqlSourceBuilder(config);
-      this.providerType = (Class) provider.getClass().getMethod("type").invoke(provider);
+      this.providerType = (Class<?>) provider.getClass().getMethod("type").invoke(provider);
       String providerMethod = (String) provider.getClass().getMethod("method").invoke(provider);
 
       for (Method m : providerType.getMethods()) {
@@ -48,7 +48,7 @@ public class ProviderSqlSource implements SqlSource {
       } else {
         sql = (String) providerMethod.invoke(providerType.newInstance());
       }
-      Class parameterType = parameterObject == null ? Object.class : parameterObject.getClass();
+      Class<?> parameterType = parameterObject == null ? Object.class : parameterObject.getClass();
       return sqlSourceParser.parse(sql, parameterType);
     } catch (Exception e) {
       throw new BuilderException("Error invoking SqlProvider method ("

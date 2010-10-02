@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
 public @interface Case {
   public abstract String value();
 
-  public abstract Class type();
+  public abstract Class<?> type();
 
   public abstract Result[] results() default {};
 }

@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface SelectProvider {
-  public abstract Class type();
+  public abstract Class<?> type();
 
   public abstract String method();
 }

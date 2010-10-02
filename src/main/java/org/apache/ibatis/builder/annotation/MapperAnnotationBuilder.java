@@ -1,10 +1,40 @@
 package org.apache.ibatis.builder.annotation;
 
-import org.apache.ibatis.annotations.*;
+import java.io.IOException;
+import java.io.Reader;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+
+import org.apache.ibatis.annotations.Arg;
+import org.apache.ibatis.annotations.CacheNamespace;
+import org.apache.ibatis.annotations.CacheNamespaceRef;
+import org.apache.ibatis.annotations.Case;
+import org.apache.ibatis.annotations.ConstructorArgs;
+import org.apache.ibatis.annotations.Delete;
+import org.apache.ibatis.annotations.DeleteProvider;
+import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.InsertProvider;
+import org.apache.ibatis.annotations.Options;
+import org.apache.ibatis.annotations.Result;
+import org.apache.ibatis.annotations.Results;
+import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.SelectProvider;
+import org.apache.ibatis.annotations.TypeDiscriminator;
+import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.UpdateProvider;
 import org.apache.ibatis.binding.BindingException;
 import org.apache.ibatis.builder.BuilderException;
 import org.apache.ibatis.builder.MapperBuilderAssistant;
-import org.apache.ibatis.builder.SqlSourceBuilder;
 import org.apache.ibatis.builder.xml.XMLMapperBuilder;
 import org.apache.ibatis.builder.xml.dynamic.DynamicSqlSource;
 import org.apache.ibatis.builder.xml.dynamic.MixedSqlNode;
@@ -14,32 +44,45 @@ import org.apache.ibatis.executor.keygen.Jdbc3KeyGenerator;
 import org.apache.ibatis.executor.keygen.KeyGenerator;
 import org.apache.ibatis.executor.keygen.NoKeyGenerator;
 import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.mapping.*;
+import org.apache.ibatis.mapping.Discriminator;
+import org.apache.ibatis.mapping.ResultFlag;
+import org.apache.ibatis.mapping.ResultMapping;
+import org.apache.ibatis.mapping.ResultSetType;
+import org.apache.ibatis.mapping.SqlCommandType;
+import org.apache.ibatis.mapping.SqlSource;
+import org.apache.ibatis.mapping.StatementType;
+import org.apache.ibatis.parsing.XNode;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.type.JdbcType;
-
-import java.io.IOException;
-import java.io.Reader;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.util.*;
+import org.apache.ibatis.type.TypeHandler;
 
 public class MapperAnnotationBuilder {
 
+  private final Set<Class<? extends Annotation>> sqlAnnotationTypes = new HashSet<Class<? extends Annotation>>();
+  private final Set<Class<? extends Annotation>> sqlProviderAnnotationTypes = new HashSet<Class<? extends Annotation>>();
+
   private Configuration configuration;
   private MapperBuilderAssistant assistant;
-  private Class type;
-  private HashMap sqlFragments;
+  private Class<?> type;
+  private Map<String, XNode> sqlFragments;
 
-  public MapperAnnotationBuilder(Configuration configuration, Class type) {
+  public MapperAnnotationBuilder(Configuration configuration, Class<?> type) {
     String resource = type.getName().replace('.', '/') + ".java (best guess)";
     this.assistant = new MapperBuilderAssistant(configuration, resource);
     this.configuration = configuration;
     this.type = type;
-    this.sqlFragments = new HashMap();    
+    this.sqlFragments = new HashMap<String, XNode>();
+
+    sqlAnnotationTypes.add(Select.class);
+    sqlAnnotationTypes.add(Insert.class);
+    sqlAnnotationTypes.add(Update.class);
+    sqlAnnotationTypes.add(Delete.class);
+
+    sqlProviderAnnotationTypes.add(SelectProvider.class);
+    sqlProviderAnnotationTypes.add(InsertProvider.class);
+    sqlProviderAnnotationTypes.add(UpdateProvider.class);
+    sqlProviderAnnotationTypes.add(DeleteProvider.class);
   }
 
   public void parse() {
@@ -87,7 +130,7 @@ public class MapperAnnotationBuilder {
   }
 
   private void parseResultsAndConstructorArgs(Method method) {
-    Class returnType = getReturnType(method);
+    Class<?> returnType = getReturnType(method);
     if (returnType != null) {
       ConstructorArgs args = method.getAnnotation(ConstructorArgs.class);
       Results results = method.getAnnotation(Results.class);
@@ -99,7 +142,7 @@ public class MapperAnnotationBuilder {
 
   private String generateResultMapName(Method method) {
     StringBuilder suffix = new StringBuilder();
-    for (Class c : method.getParameterTypes()) {
+    for (Class<?> c : method.getParameterTypes()) {
       suffix.append("-");
       suffix.append(c.getSimpleName());
     }
@@ -109,7 +152,7 @@ public class MapperAnnotationBuilder {
     return type.getName() + "." + method.getName() + suffix;
   }
 
-  private void applyResultMap(String resultMapId, Class returnType, Arg[] args, Result[] results, TypeDiscriminator discriminator) {
+  private void applyResultMap(String resultMapId, Class<?> returnType, Arg[] args, Result[] results, TypeDiscriminator discriminator) {
     List<ResultMapping> resultMappings = new ArrayList<ResultMapping>();
     applyConstructorArgs(args, returnType, resultMappings);
     applyResults(results, returnType, resultMappings);
@@ -118,11 +161,11 @@ public class MapperAnnotationBuilder {
     createDiscriminatorResultMaps(resultMapId, returnType, discriminator);
   }
 
-  private void createDiscriminatorResultMaps(String resultMapId, Class resultType, TypeDiscriminator discriminator) {
+  private void createDiscriminatorResultMaps(String resultMapId, Class<?> resultType, TypeDiscriminator discriminator) {
     if (discriminator != null) {
       for (Case c : discriminator.cases()) {
         String value = c.value();
-        Class type = c.type();
+        Class<?> type = c.type();
         String caseResultMapId = resultMapId + "-" + value;
         List<ResultMapping> resultMappings = new ArrayList<ResultMapping>();
         for (Result result : c.results()) {
@@ -138,7 +181,7 @@ public class MapperAnnotationBuilder {
               result.jdbcType() == JdbcType.UNDEFINED ? null : result.jdbcType(),
               hasNestedSelect(result) ? nestedSelectId(result) : null,
               null,
-              result.typeHandler() == void.class ? null : result.typeHandler(),
+              result.typeHandler() == TypeHandler.class ? null : result.typeHandler(),
               flags);
           resultMappings.add(resultMapping);
         }
@@ -147,12 +190,12 @@ public class MapperAnnotationBuilder {
     }
   }
 
-  private Discriminator applyDiscriminator(String resultMapId, Class resultType, TypeDiscriminator discriminator) {
+  private Discriminator applyDiscriminator(String resultMapId, Class<?> resultType, TypeDiscriminator discriminator) {
     if (discriminator != null) {
       String column = discriminator.column();
-      Class javaType = discriminator.javaType() == void.class ? String.class : discriminator.javaType();
+      Class<?> javaType = discriminator.javaType() == void.class ? String.class : discriminator.javaType();
       JdbcType jdbcType = discriminator.jdbcType() == JdbcType.UNDEFINED ? null : discriminator.jdbcType();
-      Class typeHandler = discriminator.typeHandler() == void.class ? null : discriminator.typeHandler();
+      Class<? extends TypeHandler> typeHandler = discriminator.typeHandler() == TypeHandler.class ? null : discriminator.typeHandler();
       Case[] cases = discriminator.cases();
       Map<String, String> discriminatorMap = new HashMap<String, String>();
       for (Case c : cases) {
@@ -210,9 +253,9 @@ public class MapperAnnotationBuilder {
     }
   }
 
-  private Class getParameterType(Method method) {
-    Class parameterType = null;
-    Class[] parameterTypes = method.getParameterTypes();
+  private Class<?> getParameterType(Method method) {
+    Class<?> parameterType = null;
+    Class<?>[] parameterTypes = method.getParameterTypes();
     for(int i=0; i<parameterTypes.length;i++) {
       if (!RowBounds.class.isAssignableFrom(parameterTypes[i])) {
         if (parameterType == null) {
@@ -225,8 +268,8 @@ public class MapperAnnotationBuilder {
     return parameterType;
   }
 
-  private Class getReturnType(Method method) {
-    Class returnType = method.getReturnType();
+  private Class<?> getReturnType(Method method) {
+    Class<?> returnType = method.getReturnType();
     if (Collection.class.isAssignableFrom(returnType)) {
       Type returnTypeParameter = method.getGenericReturnType();
       if (returnTypeParameter instanceof ParameterizedType) {
@@ -234,7 +277,7 @@ public class MapperAnnotationBuilder {
         if (actualTypeArguments != null && actualTypeArguments.length == 1) {
           returnTypeParameter = actualTypeArguments[0];
           if (returnTypeParameter instanceof Class) {
-            returnType = (Class) returnTypeParameter;
+            returnType = (Class<?>) returnTypeParameter;
           }
         }
       }
@@ -244,8 +287,8 @@ public class MapperAnnotationBuilder {
 
   private SqlSource getSqlSourceFromAnnotations(Method method) {
     try {
-      Class sqlAnnotationType = getSqlAnnotationType(method);
-      Class sqlProviderAnnotationType = getSqlProviderAnnotationType(method);
+      Class<? extends Annotation> sqlAnnotationType = getSqlAnnotationType(method);
+      Class<? extends Annotation> sqlProviderAnnotationType = getSqlProviderAnnotationType(method);
       if (sqlAnnotationType != null) {
         if (sqlProviderAnnotationType != null) {
           throw new BindingException("You cannot supply both a static SQL and SqlProvider to method named " + method.getName());
@@ -272,10 +315,15 @@ public class MapperAnnotationBuilder {
   }
 
   private SqlCommandType getSqlCommandType(Method method) {
-    Class[] types = {Select.class, Insert.class, Update.class, Delete.class,
-        SelectProvider.class, InsertProvider.class, UpdateProvider.class, DeleteProvider.class};
-    Class type = chooseAnnotationType(method, types);
-    if (type != null) {
+    Class<? extends Annotation> type = getSqlAnnotationType(method);
+
+    if (type == null) {
+      type = getSqlProviderAnnotationType(method);
+
+      if (type == null) {
+          return SqlCommandType.UNKNOWN;
+      }
+
       if (type == SelectProvider.class) {
         type = Select.class;
       } else if (type == InsertProvider.class) {
@@ -285,23 +333,21 @@ public class MapperAnnotationBuilder {
       } else if (type == DeleteProvider.class) {
         type = Delete.class;
       }
-      return SqlCommandType.valueOf(type.getSimpleName().toUpperCase(Locale.ENGLISH));
     }
-    return SqlCommandType.UNKNOWN;
+
+    return SqlCommandType.valueOf(type.getSimpleName().toUpperCase(Locale.ENGLISH));
   }
 
-  private Class getSqlAnnotationType(Method method) {
-    Class[] types = {Select.class, Insert.class, Update.class, Delete.class};
-    return chooseAnnotationType(method, types);
+  private Class<? extends Annotation> getSqlAnnotationType(Method method) {
+    return chooseAnnotationType(method, sqlAnnotationTypes);
   }
 
-  private Class getSqlProviderAnnotationType(Method method) {
-    Class[] types = {SelectProvider.class, InsertProvider.class, UpdateProvider.class, DeleteProvider.class};
-    return chooseAnnotationType(method, types);
+  private Class<? extends Annotation> getSqlProviderAnnotationType(Method method) {
+    return chooseAnnotationType(method, sqlProviderAnnotationTypes);
   }
 
-  private Class chooseAnnotationType(Method method, Class[] types) {
-    for (Class type : types) {
+  private Class<? extends Annotation> chooseAnnotationType(Method method, Set<Class<? extends Annotation>> types) {
+    for (Class<? extends Annotation> type : types) {
       Annotation annotation = method.getAnnotation(type);
       if (annotation != null) {
         return type;
@@ -310,7 +356,7 @@ public class MapperAnnotationBuilder {
     return null;
   }
 
-  private void applyResults(Result[] results, Class resultType, List<ResultMapping> resultMappings) {
+  private void applyResults(Result[] results, Class<?> resultType, List<ResultMapping> resultMappings) {
     if (results.length > 0) {
       for (Result result : results) {
         ArrayList<ResultFlag> flags = new ArrayList<ResultFlag>();
@@ -324,7 +370,7 @@ public class MapperAnnotationBuilder {
             result.jdbcType() == JdbcType.UNDEFINED ? null : result.jdbcType(),
             hasNestedSelect(result) ? nestedSelectId(result) : null,
             null,
-            result.typeHandler() == void.class ? null : result.typeHandler(),
+            result.typeHandler() == TypeHandler.class ? null : result.typeHandler(),
             flags);
         resultMappings.add(resultMapping);
       }
@@ -347,7 +393,7 @@ public class MapperAnnotationBuilder {
         || result.many().select().length() > 0;
   }
 
-  private void applyConstructorArgs(Arg[] args, Class resultType, List<ResultMapping> resultMappings) {
+  private void applyConstructorArgs(Arg[] args, Class<?> resultType, List<ResultMapping> resultMappings) {
     if (args.length > 0) {
       for (Arg arg : args) {
         ArrayList<ResultFlag> flags = new ArrayList<ResultFlag>();
@@ -361,7 +407,7 @@ public class MapperAnnotationBuilder {
             arg.jdbcType() == JdbcType.UNDEFINED ? null : arg.jdbcType(),
             null,
             null,
-            arg.typeHandler() == void.class ? null : arg.typeHandler(),
+            arg.typeHandler() == TypeHandler.class ? null : arg.typeHandler(),
             flags);
         resultMappings.add(resultMapping);
       }
