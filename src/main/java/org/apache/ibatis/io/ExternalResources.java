@@ -1,5 +1,6 @@
 package org.apache.ibatis.io;
 
+import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -9,7 +10,8 @@ import java.util.Properties;
 
 public class ExternalResources {
 
-    ExternalResources() {
+    private ExternalResources() {
+        // do nothing
     }
 
     public static void copyExternalResource(File sourceFile, File destFile) throws IOException {
@@ -24,27 +26,33 @@ public class ExternalResources {
             destination = new FileOutputStream(destFile).getChannel();
             destination.transferFrom(source, 0, source.size());
         } finally {
-            if (source != null) {
-                source.close();
-            }
-            if (destination != null) {
-                destination.close();
-            }
+            closeQuietly(source);
+            closeQuietly(destination);
         }
 
     }
-    
+
+    private static void closeQuietly(Closeable closeable) {
+        if (closeable != null) {
+            try {
+                closeable.close();
+            } catch (IOException e) {
+                // do nothing, close quietly
+            }
+        }
+    }
+
     public static String getConfiguredTemplate(String templatePath, String templateProperty) {
         String templateName = "";
         Properties migrationProperties = new Properties();
-        
+
         try {
            migrationProperties.load(new FileInputStream(templatePath));
            templateName = migrationProperties.getProperty(templateProperty);
         } catch (Exception e) {
              e.printStackTrace();
         }
-         
+
         return templateName;
      }
 
