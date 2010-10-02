@@ -11,7 +11,9 @@ import java.util.Set;
 
 public class MapperProxy implements InvocationHandler {
 
-  private static final Set<String> OBJECT_METHODS = new HashSet<String>() {{
+  private static final Set<String> OBJECT_METHODS = new HashSet<String>() {
+    private static final long serialVersionUID = -1782950882770203582L;
+  {
     add("toString");
     add("getClass");
     add("hashCode");
@@ -30,7 +32,7 @@ public class MapperProxy implements InvocationHandler {
   public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
     try {
       if (!OBJECT_METHODS.contains(method.getName())) {
-        final Class declaringInterface = findDeclaringInterface(proxy, method);
+        final Class<?> declaringInterface = findDeclaringInterface(proxy, method);
         final MapperMethod mapperMethod = new MapperMethod(declaringInterface, method, sqlSession);
         final Object result = mapperMethod.execute(args);
         if (result == null && method.getReturnType().isPrimitive()) {
@@ -44,9 +46,9 @@ public class MapperProxy implements InvocationHandler {
     return null;
   }
 
-  private Class findDeclaringInterface(Object proxy, Method method) {
-    Class declaringInterface = null;
-    for (Class iface : proxy.getClass().getInterfaces()) {
+  private Class<?> findDeclaringInterface(Object proxy, Method method) {
+    Class<?> declaringInterface = null;
+    for (Class<?> iface : proxy.getClass().getInterfaces()) {
       try {
         Method m = iface.getMethod(method.getName(), method.getParameterTypes());
         if (declaringInterface != null) {
@@ -66,9 +68,10 @@ public class MapperProxy implements InvocationHandler {
     return declaringInterface;
   }
 
-  public static <T> T newMapperProxy(Class<T> mapperInterface, SqlSession sqlSession) {
+  @SuppressWarnings("unchecked")
+public static <T> T newMapperProxy(Class<T> mapperInterface, SqlSession sqlSession) {
     ClassLoader classLoader = mapperInterface.getClassLoader();
-    Class[] interfaces = new Class[]{mapperInterface};
+    Class<?>[] interfaces = new Class[]{mapperInterface};
     MapperProxy proxy = new MapperProxy(sqlSession);
     return (T) Proxy.newProxyInstance(classLoader, interfaces, proxy);
   }

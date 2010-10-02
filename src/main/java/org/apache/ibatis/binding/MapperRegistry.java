@@ -10,7 +10,7 @@ import java.util.Set;
 public class MapperRegistry {
 
   private Configuration config;
-  private Set<Class> knownMappers = new HashSet<Class>();
+  private Set<Class<?>> knownMappers = new HashSet<Class<?>>();
 
   public MapperRegistry(Configuration config) {
     this.config = config;
@@ -26,11 +26,11 @@ public class MapperRegistry {
     }
   }
 
-  public boolean hasMapper(Class type) {
+  public boolean hasMapper(Class<?> type) {
     return knownMappers.contains(type);
   }
 
-  public void addMapper(Class type) {
+  public void addMapper(Class<?> type) {
     if (type.isInterface()) {
       if (knownMappers.contains(type)) {
         throw new BindingException("Type " + type + " is already known to the MapperRegistry.");

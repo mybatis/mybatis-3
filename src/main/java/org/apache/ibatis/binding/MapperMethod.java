@@ -1,18 +1,18 @@
 package org.apache.ibatis.binding;
 
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.mapping.MappedStatement;
-import org.apache.ibatis.mapping.SqlCommandType;
-import org.apache.ibatis.session.Configuration;
-import org.apache.ibatis.session.RowBounds;
-import org.apache.ibatis.session.SqlSession;
-
 import java.lang.reflect.Method;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.mapping.MappedStatement;
+import org.apache.ibatis.mapping.SqlCommandType;
+import org.apache.ibatis.session.Configuration;
+import org.apache.ibatis.session.RowBounds;
+import org.apache.ibatis.session.SqlSession;
 
 public class MapperMethod {
 
@@ -22,7 +22,7 @@ public class MapperMethod {
   private SqlCommandType type;
   private String commandName;
 
-  private Class declaringInterface;
+  private Class<?> declaringInterface;
   private Method method;
 
   private boolean returnsList;
@@ -33,7 +33,7 @@ public class MapperMethod {
 
   private boolean hasNamedParameters;
 
-  public MapperMethod(Class declaringInterface, Method method, SqlSession sqlSession) {
+  public MapperMethod(Class<?> declaringInterface, Method method, SqlSession sqlSession) {
     paramNames = new ArrayList<String>();
     paramPositions = new ArrayList<Integer>();
     this.sqlSession = sqlSession;
@@ -91,7 +91,7 @@ public class MapperMethod {
     } else if (!hasNamedParameters && paramCount == 1) {
       return args[paramPositions.get(0)];
     } else {
-      Map param = new HashMap();
+      Map<String, Object> param = new HashMap<String, Object>();
       for (int i = 0; i < paramCount; i++) {
         param.put(paramNames.get(i), args[paramPositions.get(i)]);
       }
@@ -109,7 +109,7 @@ public class MapperMethod {
     if (List.class.isAssignableFrom(method.getReturnType())) {
       returnsList = true;
     }
-    final Class[] argTypes = method.getParameterTypes();
+    final Class<?>[] argTypes = method.getParameterTypes();
     for (int i = 0; i < argTypes.length; i++) {
       if (RowBounds.class.isAssignableFrom(argTypes[i])) {
         rowBoundsIndex = i;
