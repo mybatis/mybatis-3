@@ -1,8 +1,5 @@
 package org.apache.ibatis.io;
 
-import org.apache.ibatis.logging.Log;
-import org.apache.ibatis.logging.LogFactory;
-
 import java.io.InputStream;
 import java.net.URL;
 
@@ -87,7 +84,7 @@ public class ClassLoaderWrapper {
    * @return - the class
    * @throws ClassNotFoundException Duh.
    */
-  public Class classForName(String name) throws ClassNotFoundException {
+  public Class<?> classForName(String name) throws ClassNotFoundException {
     return classForName(name, new ClassLoader[]{
         defaultClassLoader,
         Thread.currentThread().getContextClassLoader(),
@@ -104,7 +101,7 @@ public class ClassLoaderWrapper {
    * @return - the class
    * @throws ClassNotFoundException Duh.
    */
-  public Class classForName(String name, ClassLoader classLoader) throws ClassNotFoundException {
+  public Class<?> classForName(String name, ClassLoader classLoader) throws ClassNotFoundException {
     return classForName(name, new ClassLoader[]{
         classLoader,
         defaultClassLoader,
@@ -180,7 +177,7 @@ public class ClassLoaderWrapper {
    * @return the class
    * @throws ClassNotFoundException - Remember the wisdom of Judge Smails: Well, the world needs ditch diggers, too.
    */
-  Class classForName(String name, ClassLoader[] classLoader) throws ClassNotFoundException {
+  Class<?> classForName(String name, ClassLoader[] classLoader) throws ClassNotFoundException {
 
     for (ClassLoader cl : classLoader) {
 
@@ -188,7 +185,7 @@ public class ClassLoaderWrapper {
 
         try {
 
-          Class c = Class.forName(name, true, cl);
+          Class<?> c = Class.forName(name, true, cl);
 
           if (null != c) return c;
 
