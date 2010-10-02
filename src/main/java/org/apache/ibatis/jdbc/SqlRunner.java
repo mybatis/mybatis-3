@@ -86,7 +86,7 @@ public class SqlRunner {
         List<Map<String, Object>> keys = getResults(ps.getGeneratedKeys());
         if (keys.size() == 1) {
           Map<String, Object> key = keys.get(0);
-          Iterator i = key.values().iterator();
+          Iterator<Object> i = key.values().iterator();
           if (i.hasNext()) {
             Object genkey = i.next();
             if (genkey != null) {
@@ -197,7 +197,7 @@ public class SqlRunner {
       for (int i = 0, n = rsmd.getColumnCount(); i < n; i++) {
         columns.add(rsmd.getColumnLabel(i + 1));
         try {
-          Class type = Resources.classForName(rsmd.getColumnClassName(i + 1));
+          Class<?> type = Resources.classForName(rsmd.getColumnClassName(i + 1));
           TypeHandler typeHandler = typeHandlerRegistry.getTypeHandler(type);
           if (typeHandler == null) {
             typeHandler = typeHandlerRegistry.getTypeHandler(Object.class);
