@@ -12,7 +12,7 @@ import java.util.concurrent.locks.ReadWriteLock;
 public class LruCache implements Cache {
 
   private final Cache delegate;
-  private Map keyMap;
+  private Map<Object, Object> keyMap;
   private Object eldestKey;
 
   public LruCache(Cache delegate) {
@@ -29,8 +29,10 @@ public class LruCache implements Cache {
   }
 
   public void setSize(final int size) {
-    keyMap = new LinkedHashMap(size, .75F, true) {
-      protected boolean removeEldestEntry(Map.Entry eldest) {
+    keyMap = new LinkedHashMap<Object, Object>(size, .75F, true) {
+      private static final long serialVersionUID = 4267176411845948333L;
+
+      protected boolean removeEldestEntry(Map.Entry<Object, Object> eldest) {
         boolean tooBig = size() > size;
         if (tooBig) {
           eldestKey = eldest.getKey();

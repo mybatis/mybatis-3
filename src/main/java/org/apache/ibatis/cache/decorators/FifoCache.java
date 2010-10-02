@@ -11,12 +11,12 @@ import java.util.concurrent.locks.ReadWriteLock;
 public class FifoCache implements Cache {
 
   private final Cache delegate;
-  private final LinkedList keyList;
+  private final LinkedList<Object> keyList;
   private int size;
 
   public FifoCache(Cache delegate) {
     this.delegate = delegate;
-    this.keyList = new LinkedList();
+    this.keyList = new LinkedList<Object>();
     this.size = 1024;
   }
 

@@ -13,7 +13,7 @@ public class PerpetualCache implements Cache {
 
   private String id;
 
-  private Map cache = new HashMap();
+  private Map<Object, Object> cache = new HashMap<Object, Object>();
 
   private ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
 

@@ -14,13 +14,13 @@ public class CacheKey {
   private int hashcode;
   private long checksum;
   private int count;
-  private List updateList;
+  private List<Object> updateList;
 
   public CacheKey() {
     this.hashcode = DEFAULT_HASHCODE;
     this.multiplier = DEFAULT_MULTIPLYER;
     this.count = 0;
-    this.updateList = new ArrayList();
+    this.updateList = new ArrayList<Object>();
   }
 
   public CacheKey(Object[] objects) {
