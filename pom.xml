@@ -21,6 +21,9 @@
     <connection>scm:svn:https://mybatis.googlecode.com/svn/trunk</connection>
     <developerConnection>scm:svn:https://mybatis.googlecode.com/svn/trunk</developerConnection>
   </scm>
+  <properties>
+    <findbugs.onlyAnalyze>org.apache.ibatis.*</findbugs.onlyAnalyze>
+  </properties>
   <reporting>
     <plugins>
       <plugin>
