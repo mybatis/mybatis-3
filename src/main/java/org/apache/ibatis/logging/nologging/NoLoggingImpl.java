@@ -4,7 +4,7 @@ import org.apache.ibatis.logging.Log;
 
 public class NoLoggingImpl implements Log {
 
-  public NoLoggingImpl(Class clazz) {
+  public NoLoggingImpl(Class<?> clazz) {
   }
 
   public boolean isDebugEnabled() {

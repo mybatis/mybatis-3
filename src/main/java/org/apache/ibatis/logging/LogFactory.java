@@ -1,12 +1,12 @@
 package org.apache.ibatis.logging;
 
-import org.apache.ibatis.io.Resources;
-
 import java.lang.reflect.Constructor;
+
+import org.apache.ibatis.io.Resources;
 
 public class LogFactory {
 
-  private static Constructor logConstructor;
+  private static Constructor<? extends Log> logConstructor;
 
   static {
     tryImplementation(new Runnable() {
@@ -36,9 +36,9 @@ public class LogFactory {
     });
   }
 
-  public static Log getLog(Class aClass) {
+  public static Log getLog(Class<?> aClass) {
     try {
-      return (Log) logConstructor.newInstance(new Object[]{aClass});
+      return logConstructor.newInstance(new Object[]{aClass});
     } catch (Throwable t) {
       throw new LogException("Error creating logger for class " + aClass + ".  Cause: " + t, t);
     }
@@ -85,7 +85,8 @@ public class LogFactory {
   private static void setImplementation(String testClassName, String implClassName) {
     try {
       Resources.classForName(testClassName);
-      Class implClass = Resources.classForName(implClassName);
+      @SuppressWarnings("unchecked")
+      Class<? extends Log> implClass = (Class<Log>) Resources.classForName(implClassName);
       logConstructor = implClass.getConstructor(new Class[]{Class.class});
     } catch (Throwable t) {
       throw new LogException("Error setting Log implementation.  Cause: " + t, t);

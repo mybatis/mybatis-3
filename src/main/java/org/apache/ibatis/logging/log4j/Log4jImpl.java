@@ -7,7 +7,7 @@ public class Log4jImpl implements Log {
 
   private Logger log;
 
-  public Log4jImpl(Class clazz) {
+  public Log4jImpl(Class<?> clazz) {
     log = Logger.getLogger(clazz);
   }
 

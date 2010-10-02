@@ -7,7 +7,7 @@ public class JakartaCommonsLoggingImpl implements org.apache.ibatis.logging.Log 
 
   private Log log;
 
-  public JakartaCommonsLoggingImpl(Class clazz) {
+  public JakartaCommonsLoggingImpl(Class<?> clazz) {
     log = LogFactory.getLog(clazz);
   }
 

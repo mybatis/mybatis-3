@@ -8,7 +8,7 @@ public class Slf4jImpl implements Log {
 
   private Logger log;
 
-  public Slf4jImpl(Class clazz) {
+  public Slf4jImpl(Class<?> clazz) {
     log = LoggerFactory.getLogger(clazz);
   }
 

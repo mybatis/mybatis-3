@@ -4,7 +4,7 @@ import org.apache.ibatis.logging.Log;
 
 public class StdOutImpl implements Log {
 
-  public StdOutImpl(Class clazz) {
+  public StdOutImpl(Class<?> clazz) {
   }
 
   public boolean isDebugEnabled() {

@@ -9,7 +9,7 @@ public class Jdk14LoggingImpl implements Log {
 
   private Logger log;
 
-  public Jdk14LoggingImpl(Class clazz) {
+  public Jdk14LoggingImpl(Class<?> clazz) {
     log = Logger.getLogger(clazz.getName());
   }
 
