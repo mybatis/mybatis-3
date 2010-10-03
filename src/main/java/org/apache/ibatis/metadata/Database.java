@@ -6,10 +6,10 @@ import java.util.Map;
 
 public class Database {
 
-  private String catalog;
-  private String schema;
+  private final String catalog;
+  private final String schema;
 
-  private Map tables = new HashMap();
+  private final Map<String, Table> tables = new HashMap<String, Table>();
 
   public Database(String catalog, String schema) {
     this.catalog = catalog;
@@ -29,11 +29,11 @@ public class Database {
   }
 
   public Table getTable(String name) {
-    return (Table) tables.get(name.toUpperCase(Locale.ENGLISH));
+    return tables.get(name.toUpperCase(Locale.ENGLISH));
   }
 
   public String[] getTableNames() {
-    return (String[]) tables.keySet().toArray(new String[tables.size()]);
+    return tables.keySet().toArray(new String[tables.size()]);
   }
 
   public boolean equals(Object o) {

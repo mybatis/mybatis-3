@@ -5,10 +5,10 @@ import java.util.Locale;
 import java.util.Map;
 
 public class Table {
-  private String name;
+  private final String name;
   private String catalog;
   private String schema;
-  private Map columns = new HashMap();
+  private final Map<String, Column> columns = new HashMap<String, Column>();
   private Column primaryKey;
 
   public Table(String name) {
@@ -40,11 +40,11 @@ public class Table {
   }
 
   public Column getColumn(String name) {
-    return (Column) columns.get(name.toUpperCase(Locale.ENGLISH));
+    return columns.get(name.toUpperCase(Locale.ENGLISH));
   }
 
   public String[] getColumnNames() {
-    return (String[]) columns.keySet().toArray(new String[columns.size()]);
+    return columns.keySet().toArray(new String[columns.size()]);
   }
 
   public void setPrimaryKey(Column column) {
