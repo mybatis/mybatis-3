@@ -2,7 +2,7 @@ package org.apache.ibatis.migration;
 
 import java.math.BigDecimal;
 
-public class Change implements Comparable {
+public class Change implements Comparable<Change> {
 
   private BigDecimal id;
   private String description;
@@ -64,16 +64,14 @@ public class Change implements Comparable {
 
     Change change = (Change) o;
 
-    if (!id.equals(change.id)) return false;
-
-    return true;
+    return (id.equals(change.getId()));
   }
 
   public int hashCode() {
     return id.hashCode();
   }
 
-  public int compareTo(Object o) {
-    return id.compareTo(((Change) o).getId());
+  public int compareTo(Change change) {
+    return id.compareTo(change.getId());
   }
 }
