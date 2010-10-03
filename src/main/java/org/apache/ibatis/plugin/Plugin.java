@@ -1,7 +1,5 @@
 package org.apache.ibatis.plugin;
 
-import org.apache.ibatis.reflection.ExceptionUtil;
-
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
@@ -10,22 +8,24 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.ibatis.reflection.ExceptionUtil;
+
 public class Plugin implements InvocationHandler {
 
   private Object target;
   private Interceptor interceptor;
-  private Map<Class, Set<Method>> signatureMap;
+  private Map<Class<?>, Set<Method>> signatureMap;
 
-  private Plugin(Object target, Interceptor interceptor, Map<Class, Set<Method>> signatureMap) {
+  private Plugin(Object target, Interceptor interceptor, Map<Class<?>, Set<Method>> signatureMap) {
     this.target = target;
     this.interceptor = interceptor;
     this.signatureMap = signatureMap;
   }
 
   public static Object wrap(Object target, Interceptor interceptor) {
-    Map<Class, Set<Method>> signatureMap = getSignatureMap(interceptor);
-    Class type = target.getClass();
-    Class[] interfaces = getAllInterfaces(type, signatureMap);
+    Map<Class<?>, Set<Method>> signatureMap = getSignatureMap(interceptor);
+    Class<?> type = target.getClass();
+    Class<?>[] interfaces = getAllInterfaces(type, signatureMap);
     if (interfaces.length > 0) {
       return Proxy.newProxyInstance(
           type.getClassLoader(),
@@ -47,9 +47,9 @@ public class Plugin implements InvocationHandler {
     }
   }
 
-  private static Map<Class, Set<Method>> getSignatureMap(Interceptor interceptor) {
+  private static Map<Class<?>, Set<Method>> getSignatureMap(Interceptor interceptor) {
     Signature[] sigs = interceptor.getClass().getAnnotation(Intercepts.class).value();
-    Map<Class, Set<Method>> signatureMap = new HashMap<Class, Set<Method>>();
+    Map<Class<?>, Set<Method>> signatureMap = new HashMap<Class<?>, Set<Method>>();
     for (Signature sig : sigs) {
       Set<Method> methods = signatureMap.get(sig.type());
       if (methods == null) {
@@ -66,17 +66,17 @@ public class Plugin implements InvocationHandler {
     return signatureMap;
   }
 
-  private static Class[] getAllInterfaces(Class type, Map<Class, Set<Method>> signatureMap) {
-    Set<Class> interfaces = new HashSet<Class>();
+  private static Class<?>[] getAllInterfaces(Class<?> type, Map<Class<?>, Set<Method>> signatureMap) {
+    Set<Class<?>> interfaces = new HashSet<Class<?>>();
     while (type != null) {
-      for (Class c : type.getInterfaces()) {
+      for (Class<?> c : type.getInterfaces()) {
         if (signatureMap.containsKey(c)) {
           interfaces.add(c);
         }
       }
       type = type.getSuperclass();
     }
-    return interfaces.toArray(new Class[interfaces.size()]);
+    return interfaces.toArray(new Class<?>[interfaces.size()]);
   }
 
 }
