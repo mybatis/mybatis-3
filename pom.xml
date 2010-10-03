@@ -52,8 +52,8 @@
             <phase>package</phase>
             <configuration>
               <descriptors>
-                <descriptor>bundle.xml</descriptor>
-                <descriptor>migrations.xml</descriptor>
+                <descriptor>${basedir}/src/main/assembly/bundle.xml</descriptor>
+                <descriptor>${basedir}/src/main/assembly/migrations.xml</descriptor>
               </descriptors>
             </configuration>
           </execution>
