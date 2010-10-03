@@ -1,13 +1,12 @@
 package org.apache.ibatis.binding;
 
-import org.apache.ibatis.session.SqlSession;
-
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Set;
+
+import org.apache.ibatis.session.SqlSession;
 
 public class MapperProxy implements InvocationHandler {
 
@@ -30,18 +29,14 @@ public class MapperProxy implements InvocationHandler {
   }
 
   public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-    try {
-      if (!OBJECT_METHODS.contains(method.getName())) {
-        final Class<?> declaringInterface = findDeclaringInterface(proxy, method);
-        final MapperMethod mapperMethod = new MapperMethod(declaringInterface, method, sqlSession);
-        final Object result = mapperMethod.execute(args);
-        if (result == null && method.getReturnType().isPrimitive()) {
-          throw new BindingException("Mapper method '" + method.getName() + "' (" + method.getDeclaringClass() + ") attempted to return null from a method with a primitive return type (" + method.getReturnType() + ").");
-        }
-        return result;
+    if (!OBJECT_METHODS.contains(method.getName())) {
+      final Class<?> declaringInterface = findDeclaringInterface(proxy, method);
+      final MapperMethod mapperMethod = new MapperMethod(declaringInterface, method, sqlSession);
+      final Object result = mapperMethod.execute(args);
+      if (result == null && method.getReturnType().isPrimitive()) {
+        throw new BindingException("Mapper method '" + method.getName() + "' (" + method.getDeclaringClass() + ") attempted to return null from a method with a primitive return type (" + method.getReturnType() + ").");
       }
-    } catch (SQLException e) {
-      e.printStackTrace();
+      return result;
     }
     return null;
   }

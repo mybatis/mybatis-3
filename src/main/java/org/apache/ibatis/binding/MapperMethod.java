@@ -1,7 +1,6 @@
 package org.apache.ibatis.binding;
 
 import java.lang.reflect.Method;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -47,7 +46,7 @@ public class MapperMethod {
     validateStatement();
   }
 
-  public Object execute(Object[] args) throws SQLException {
+  public Object execute(Object[] args) {
     Object result;
     if (SqlCommandType.INSERT == type) {
       Object param = getParam(args);
@@ -71,7 +70,7 @@ public class MapperMethod {
     return result;
   }
 
-  private Object executeForList(Object[] args) throws SQLException {
+  private Object executeForList(Object[] args) {
     Object result;
     if (rowBoundsIndex != null) {
       Object param = getParam(args);
