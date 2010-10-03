@@ -1,18 +1,16 @@
 package org.apache.ibatis.migration.commands;
 
+import java.io.File;
+import java.io.FileReader;
+import java.sql.SQLException;
+import java.util.Collections;
+import java.util.List;
+
 import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.jdbc.SqlRunner;
 import org.apache.ibatis.migration.Change;
 import org.apache.ibatis.migration.MigrationException;
 import org.apache.ibatis.migration.MigrationReader;
-
-import java.io.File;
-import java.io.FileReader;
-import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
 
 public class DownCommand extends BaseCommand {
 
@@ -63,15 +61,6 @@ public class DownCommand extends BaseCommand {
     } finally {
       runner.closeConnection();
     }
-  }
-
-
-  protected void reverse(Comparable[] comparable) {
-    Arrays.sort(comparable, new Comparator() {
-      public int compare(Object o1, Object o2) {
-        return ((Comparable) o2).compareTo(o1);
-      }
-    });
   }
 
 }
