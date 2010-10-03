@@ -281,7 +281,7 @@ public class XNode {
     StringBuilder builder = new StringBuilder();
     builder.append("<");
     builder.append(name);
-    for (Map.Entry entry : attributes.entrySet()) {
+    for (Map.Entry<Object, Object> entry : attributes.entrySet()) {
       builder.append(" ");
       builder.append(entry.getKey());
       builder.append("=\"");
