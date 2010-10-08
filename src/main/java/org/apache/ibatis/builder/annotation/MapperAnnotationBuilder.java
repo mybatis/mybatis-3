@@ -51,7 +51,6 @@ import org.apache.ibatis.mapping.ResultSetType;
 import org.apache.ibatis.mapping.SqlCommandType;
 import org.apache.ibatis.mapping.SqlSource;
 import org.apache.ibatis.mapping.StatementType;
-import org.apache.ibatis.parsing.XNode;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.type.JdbcType;
@@ -65,14 +64,12 @@ public class MapperAnnotationBuilder {
   private Configuration configuration;
   private MapperBuilderAssistant assistant;
   private Class<?> type;
-  private Map<String, XNode> sqlFragments;
 
   public MapperAnnotationBuilder(Configuration configuration, Class<?> type) {
     String resource = type.getName().replace('.', '/') + ".java (best guess)";
     this.assistant = new MapperBuilderAssistant(configuration, resource);
     this.configuration = configuration;
     this.type = type;
-    this.sqlFragments = new HashMap<String, XNode>();
 
     sqlAnnotationTypes.add(Select.class);
     sqlAnnotationTypes.add(Insert.class);
@@ -110,7 +107,7 @@ public class MapperAnnotationBuilder {
       // ignore, resource is not required
     }
     if (xmlReader != null) {
-      XMLMapperBuilder xmlParser = new XMLMapperBuilder(xmlReader, assistant.getConfiguration(), xmlResource, sqlFragments, type.getName());
+      XMLMapperBuilder xmlParser = new XMLMapperBuilder(xmlReader, assistant.getConfiguration(), xmlResource, configuration.getSqlFragments(), type.getName());
       xmlParser.parse();
     }
   }

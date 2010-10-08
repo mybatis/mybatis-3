@@ -21,6 +21,7 @@ import org.apache.ibatis.executor.statement.RoutingStatementHandler;
 import org.apache.ibatis.executor.statement.StatementHandler;
 import org.apache.ibatis.io.ResolverUtil;
 import org.apache.ibatis.mapping.*;
+import org.apache.ibatis.parsing.XNode;
 import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.plugin.InterceptorChain;
 import org.apache.ibatis.reflection.factory.DefaultObjectFactory;
@@ -65,6 +66,7 @@ public class Configuration {
   protected final Map<String, KeyGenerator> keyGenerators = new StrictMap<String, KeyGenerator>("Key Generators collection");
 
   protected final Set<String> loadedResources = new HashSet<String>();
+  protected final Map<String, XNode> sqlFragments = new StrictMap<String, XNode>("XML fragments parsed from previous mappers");
 
   public Configuration(Environment environment) {
     this();
@@ -347,6 +349,10 @@ public class Configuration {
 
   public MappedStatement getMappedStatement(String id) {
     return mappedStatements.get(id);
+  }
+
+  public Map<String, XNode> getSqlFragments() {
+    return sqlFragments;
   }
 
   public void addInterceptor(Interceptor interceptor) {
