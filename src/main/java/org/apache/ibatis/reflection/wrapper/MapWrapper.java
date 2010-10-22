@@ -40,9 +40,9 @@ public class MapWrapper extends BaseWrapper {
     updateKeyArray();
   }
 
+  @SuppressWarnings("unchecked")
   public String findProperty(String name) {
     updateKeyArray();
-    final int index = -1;
     if (name != null) {
       Arrays.binarySearch(keyArray, name, new Comparator() {
         public int compare(Object o1, Object o2) {
@@ -58,9 +58,6 @@ public class MapWrapper extends BaseWrapper {
           return ((String) o1).toLowerCase().compareTo(((String) o2).toLowerCase());
         }
       });
-    }
-    if (index > -1) {
-      return (String) keyArray[index];
     }
     return name;
   }
