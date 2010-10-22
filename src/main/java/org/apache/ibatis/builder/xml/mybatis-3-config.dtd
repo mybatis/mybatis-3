@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<!ELEMENT configuration (properties?, settings?, typeAliases?, typeHandlers?, objectFactory?, plugins?, environments?, mappers?)>
+<!ELEMENT configuration (properties?, settings?, typeAliases?, typeHandlers?, objectFactory?, objectWrapperFactory?, plugins?, environments?, mappers?)>
 
 <!ELEMENT properties (property*)>
 <!ATTLIST properties
