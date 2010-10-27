@@ -3,7 +3,7 @@
   <parent>
     <groupId>org.mybatis</groupId>
     <artifactId>mybatis-parent</artifactId>
-    <version>4</version>
+    <version>5</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>mybatis</artifactId>
