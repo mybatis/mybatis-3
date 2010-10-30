@@ -30,8 +30,8 @@ public class DynSqlTest {
 
       Reader scriptReader = Resources.getResourceAsReader("org/apache/ibatis/submitted/dynsql/CreateDB.sql");
       ScriptRunner runner = new ScriptRunner(conn);
-//      runner.setLogWriter(null);
-//      runner.setErrorLogWriter(null);
+      runner.setLogWriter(null);
+      runner.setErrorLogWriter(null);
       runner.runScript(scriptReader);
       conn.commit();
       scriptReader.close();

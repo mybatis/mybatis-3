@@ -31,7 +31,7 @@ public class CglibNPETest {
 
       ScriptRunner runner = new ScriptRunner(conn);
       runner.setLogWriter(null);
-      runner.setErrorLogWriter(new PrintWriter(System.err));
+      runner.setErrorLogWriter(null);
       runner.runScript(reader);
       conn.commit();
       reader.close();

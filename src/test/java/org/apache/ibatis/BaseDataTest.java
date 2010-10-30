@@ -50,6 +50,7 @@ public class BaseDataTest {
       runner.setAutoCommit(true);
       runner.setStopOnError(false);
       runner.setLogWriter(null);
+      runner.setErrorLogWriter(null);
       runScript(runner, resource);
     } finally {
       connection.close();

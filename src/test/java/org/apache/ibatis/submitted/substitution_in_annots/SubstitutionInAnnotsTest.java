@@ -31,7 +31,7 @@ public class SubstitutionInAnnotsTest {
    	Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/substitution_in_annots/CreateDB.sql");
     ScriptRunner runner = new ScriptRunner(c);
     runner.setLogWriter(null);
-    runner.setErrorLogWriter(new PrintWriter(System.err));
+    runner.setErrorLogWriter(null);
     runner.runScript(reader);
     c.commit();
     reader.close();

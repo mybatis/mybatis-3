@@ -13,9 +13,9 @@ public class RepeatingGroupMappingTest extends BaseSqlMapTest {
     initScript("com/scripts/jpetstore-hsqldb-dataload.sql");
   }
 
-  public void testShouldRetrieveTwoPeerLists() throws Exception {
+  public void testShouldRetrieveFiveCategories() throws Exception {
     List categories = sqlMap.queryForList("getAllCategoriesMap");
-    System.out.println(categories);
+    assertEquals(5,categories.size());
   }
 
   public void testGroupBy() throws Exception {

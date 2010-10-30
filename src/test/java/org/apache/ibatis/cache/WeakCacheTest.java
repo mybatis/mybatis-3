@@ -16,7 +16,7 @@ public class WeakCacheTest {
     for (int i = 0; i < N; i++) {
       cache.putObject(i, i);
       if (cache.getSize() < i + 1) {
-        System.out.println("Cache exceeded with " + (i + 1) + " entries.");
+        //System.out.println("Cache exceeded with " + (i + 1) + " entries.");
         break;
       }
     }

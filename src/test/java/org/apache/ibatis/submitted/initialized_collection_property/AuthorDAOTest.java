@@ -27,6 +27,8 @@ public class AuthorDAOTest {
 
     Connection conn = session.getConnection();
     ScriptRunner runner = new ScriptRunner(conn);
+    runner.setLogWriter(null);
+    runner.setErrorLogWriter(null);
     reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/initialized_collection_property/db/create.sql");
     runner.runScript(reader);
     session.close();

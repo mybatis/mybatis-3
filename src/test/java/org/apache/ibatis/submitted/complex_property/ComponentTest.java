@@ -52,6 +52,8 @@ public class ComponentTest {
   private static void runDBScript() throws SQLException, IOException {
     Connection conn = sqlSessionFactory.getConfiguration().getEnvironment().getDataSource().getConnection();
     ScriptRunner runner = new ScriptRunner(conn);
+    runner.setLogWriter(null);
+    runner.setErrorLogWriter(null);
     String resource = "org/apache/ibatis/submitted/complex_property/db/db.sql";
     Reader reader = Resources.getResourceAsReader(resource);
     runner.runScript(reader);

@@ -30,7 +30,7 @@ public class QuotedColumnNamesTest {
 			Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/quotedcolumnnames/CreateDB.sql");
 			ScriptRunner runner = new ScriptRunner(conn);
 			runner.setLogWriter(null);
-			runner.setErrorLogWriter(new PrintWriter(System.err));
+			runner.setErrorLogWriter(null);
 			runner.runScript(reader);
 			conn.commit();
 			reader.close();
@@ -84,7 +84,7 @@ public class QuotedColumnNamesTest {
 
 	private void printList(List<Map<String, Object>> list) {
 		for (Map<String, Object> map : list) {
-			System.out.println(map);
+			Assert.assertNotNull(map);
 		}
 	}
 }

@@ -19,6 +19,8 @@ public class PrimitiveResultTypeTest {
     SqlSession session = IbatisConfig.getSession();
     Connection conn = session.getConnection();
     ScriptRunner runner = new ScriptRunner(conn);
+    runner.setLogWriter(null);
+    runner.setErrorLogWriter(null);
     Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/primitive_result_type/create.sql");
     runner.runScript(reader);
   }
@@ -31,11 +33,11 @@ public class PrimitiveResultTypeTest {
     }
     List lcodes = ProductDAO.selectProductCodesL();
     for (Object lcode : lcodes) {
-      System.out.println(lcode instanceof Integer);
+      assertTrue(!(lcode instanceof Integer));
     }
     List bcodes = ProductDAO.selectProductCodesB();
     for (Object bcode : bcodes) {
-      System.out.println(bcode instanceof BigDecimal);
+      assertTrue(bcode instanceof BigDecimal);
     }
   }
 

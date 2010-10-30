@@ -100,8 +100,6 @@ public class PeerListResultTest extends TestCase {
     try {
       List list = sqlMapClient.queryForList("TestSqlMap.test01", null);
 
-      System.out.println(list);
-
       assertEquals(2, list.size());
       Person person = (Person) list.get(0);
       assertEquals("Fred", person.getName());
