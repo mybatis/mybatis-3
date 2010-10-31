@@ -4,6 +4,7 @@ import org.apache.ibatis.exceptions.ExceptionFactory;
 import org.apache.ibatis.exceptions.TooManyResultsException;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.executor.ErrorContext;
+import org.apache.ibatis.executor.result.DefaultMapResultHandler;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.ResultHandler;
@@ -13,6 +14,7 @@ import org.apache.ibatis.session.SqlSession;
 import java.sql.Connection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class DefaultSqlSession implements SqlSession {
 
@@ -43,6 +45,20 @@ public class DefaultSqlSession implements SqlSession {
     } else {
       return null;
     }
+  }
+
+  public Map selectMap(String statement, String mapKey) {
+    return selectMap(statement, null, mapKey, RowBounds.DEFAULT);
+  }
+
+  public Map selectMap(String statement, Object parameter, String mapKey) {
+    return selectMap(statement, parameter, mapKey, RowBounds.DEFAULT);
+  }
+
+  public Map selectMap(String statement, Object parameter, String mapKey, RowBounds rowBounds) {
+    final DefaultMapResultHandler mapResultHandler = new DefaultMapResultHandler(mapKey);
+    select(statement, parameter, rowBounds, mapResultHandler);
+    return mapResultHandler.getMappedResults();
   }
 
   public List selectList(String statement) {

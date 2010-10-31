@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.SqlCommandType;
@@ -25,6 +26,8 @@ public class MapperMethod {
   private Method method;
 
   private boolean returnsList;
+  private boolean returnsMap;
+  private String mapKey;
 
   private Integer rowBoundsIndex;
   private List<String> paramNames;
@@ -60,6 +63,8 @@ public class MapperMethod {
     } else if (SqlCommandType.SELECT == type) {
       if (returnsList) {
         result = executeForList(args);
+      } else if (returnsMap) {
+        result = executeForMap(args);
       } else {
         Object param = getParam(args);
         result = sqlSession.selectOne(commandName, param);
@@ -70,15 +75,26 @@ public class MapperMethod {
     return result;
   }
 
-  private Object executeForList(Object[] args) {
-    Object result;
+  private List executeForList(Object[] args) {
+    List result;
+    Object param = getParam(args);
     if (rowBoundsIndex != null) {
-      Object param = getParam(args);
       RowBounds rowBounds = (RowBounds) args[rowBoundsIndex];
       result = sqlSession.selectList(commandName, param, rowBounds);
     } else {
-      Object param = getParam(args);
       result = sqlSession.selectList(commandName, param);
+    }
+    return result;
+  }
+
+  private Map executeForMap(Object[] args) {
+    Map result;
+    Object param = getParam(args);
+    if (rowBoundsIndex != null) {
+      RowBounds rowBounds = (RowBounds) args[rowBoundsIndex];
+      result = sqlSession.selectMap(commandName, param, mapKey, rowBounds);
+    } else {
+      result = sqlSession.selectMap(commandName, param, mapKey);
     }
     return result;
   }
@@ -108,6 +124,14 @@ public class MapperMethod {
     if (List.class.isAssignableFrom(method.getReturnType())) {
       returnsList = true;
     }
+    if (Map.class.isAssignableFrom(method.getReturnType())) { 
+      final MapKey mapKeyAnnotation = method.getAnnotation(MapKey.class);
+      if (mapKeyAnnotation != null) {
+        mapKey = mapKeyAnnotation.value();
+        returnsMap = true;
+      }
+    }
+
     final Class<?>[] argTypes = method.getParameterTypes();
     for (int i = 0; i < argTypes.length; i++) {
       if (RowBounds.class.isAssignableFrom(argTypes[i])) {

@@ -2,6 +2,7 @@ package org.apache.ibatis.session;
 
 import java.sql.Connection;
 import java.util.List;
+import java.util.Map;
 
 public interface SqlSession {
 
@@ -15,6 +16,12 @@ public interface SqlSession {
 
   List selectList(String statement, Object parameter, RowBounds rowBounds);
 
+  Map selectMap(String statement, String mapKey);
+
+  Map selectMap(String statement, Object parameter, String mapKey);
+
+  Map selectMap(String statement, Object parameter, String mapKey, RowBounds rowBounds);
+  
   void select(String statement, Object parameter, ResultHandler handler);
 
   void select(String statement, ResultHandler handler);

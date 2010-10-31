@@ -22,6 +22,12 @@ public interface BoundBlogMapper {
 
   //======================================================
 
+  @Select({ "SELECT * FROM blog"})
+  @MapKey("id")
+  Map<Integer,Blog> selectBlogsAsMapById();
+
+  //======================================================
+
   @Select({
       "SELECT *",
       "FROM blog"

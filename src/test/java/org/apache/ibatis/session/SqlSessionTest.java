@@ -11,10 +11,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.Reader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class SqlSessionTest extends BaseDataTest {
   private static SqlSessionFactory sqlMapper;
@@ -95,6 +92,20 @@ public class SqlSessionTest extends BaseDataTest {
     try {
       List<Author> authors = session.selectList("domain.blog.mappers.AuthorMapper.selectAllAuthors");
       assertEquals(2, authors.size());
+    } finally {
+      session.close();
+    }
+  }
+
+  @Test
+  public void shouldSelectAllAuthorsAsMap() throws Exception {
+    SqlSession session = sqlMapper.openSession(TransactionIsolationLevel.SERIALIZABLE);
+    try {
+      final Map<Integer,Author> authors = session.selectMap("domain.blog.mappers.AuthorMapper.selectAllAuthors", "id");
+      assertEquals(2, authors.size());
+      for(Map.Entry<Integer,Author> authorEntry : authors.entrySet()) {
+        assertEquals(authorEntry.getKey(), authorEntry.getValue().getId());
+      }
     } finally {
       session.close();
     }

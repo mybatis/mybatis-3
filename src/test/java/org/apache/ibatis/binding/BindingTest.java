@@ -8,10 +8,7 @@ import static org.junit.Assert.*;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class BindingTest {
   private static SqlSessionFactory sqlSessionFactory;
@@ -117,6 +114,21 @@ public class BindingTest {
       BoundBlogMapper mapper = session.getMapper(BoundBlogMapper.class);
       List<Blog> blogs = mapper.selectBlogs();
       assertEquals(2, blogs.size());
+    } finally {
+      session.close();
+    }
+  }
+
+  @Test
+  public void shouldExecuteBoundSelectMapOfBlogsById() {
+    SqlSession session = sqlSessionFactory.openSession();
+    try {
+      BoundBlogMapper mapper = session.getMapper(BoundBlogMapper.class);
+      Map<Integer,Blog> blogs = mapper.selectBlogsAsMapById();
+      assertEquals(2, blogs.size());
+      for(Map.Entry<Integer,Blog> blogEntry : blogs.entrySet()) {
+        assertEquals(blogEntry.getKey(), blogEntry.getValue().getId());
+      }
     } finally {
       session.close();
     }

@@ -278,7 +278,19 @@ public class MapperAnnotationBuilder {
           }
         }
       }
+    } else if (Map.class.isAssignableFrom(returnType)) {
+      Type returnTypeParameter = method.getGenericReturnType();
+      if (returnTypeParameter instanceof ParameterizedType) {
+        Type[] actualTypeArguments = ((ParameterizedType) returnTypeParameter).getActualTypeArguments();
+        if (actualTypeArguments != null && actualTypeArguments.length == 2) {
+          returnTypeParameter = actualTypeArguments[1];
+          if (returnTypeParameter instanceof Class) {
+            returnType = (Class<?>) returnTypeParameter;
+          }
+        }
+      }
     }
+
     return returnType;
   }
 

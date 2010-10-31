@@ -8,6 +8,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.sql.Connection;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 public class SqlSessionManager implements SqlSessionFactory, SqlSession {
@@ -119,6 +120,18 @@ public class SqlSessionManager implements SqlSessionFactory, SqlSession {
 
   public Object selectOne(String statement, Object parameter) {
     return sqlSessionProxy.selectOne(statement, parameter);
+  }
+
+  public Map selectMap(String statement, String mapKey) {
+    return sqlSessionProxy.selectMap(statement, mapKey);
+  }
+
+  public Map selectMap(String statement, Object parameter, String mapKey) {
+    return sqlSessionProxy.selectMap(statement, parameter, mapKey);
+  }
+
+  public Map selectMap(String statement, Object parameter, String mapKey, RowBounds rowBounds) {
+    return sqlSessionProxy.selectMap(statement, parameter, mapKey, rowBounds);
   }
 
   public List selectList(String statement) {
