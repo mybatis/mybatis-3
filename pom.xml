@@ -78,6 +78,8 @@
                   <labels>
                     <label>Featured</label>
                     <label>Type-Archive</label>
+                    <label>${project.name}</label>
+                    <label>${project.version}</label>
                   </labels>
                 </upload>
                 <upload>
@@ -86,6 +88,8 @@
                   <labels>
                     <label>Featured</label>
                     <label>Type-Archive</label>
+                    <label>${project.name}</label>
+                    <label>${project.version}</label>
                   </labels>
                 </upload>
                 <!-- Manuals -->
@@ -95,6 +99,8 @@
                   <labels>
                     <label>Featured</label>
                     <label>Type-Docs</label>
+                    <label>${project.name}</label>
+                    <label>${project.version}</label>
                   </labels>
                 </upload>
                 <upload>
@@ -103,6 +109,8 @@
                   <labels>
                     <label>Featured</label>
                     <label>Type-Docs</label>
+                    <label>${project.name}</label>
+                    <label>${project.version}</label>
                   </labels>
                 </upload>
                 <upload>
