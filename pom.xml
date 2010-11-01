@@ -78,7 +78,7 @@
                   <labels>
                     <label>Featured</label>
                     <label>Type-Archive</label>
-                    <label>Project-${project.artifactId}</label>
+                    <label>Project-${project.artifactId}-core</label>
                     <label>Version-${project.version}</label>
                   </labels>
                 </upload>
@@ -88,7 +88,7 @@
                   <labels>
                     <label>Featured</label>
                     <label>Type-Archive</label>
-                    <label>Project-${project.artifactId}</label>
+                    <label>Project-${project.artifactId}-migrations</label>
                     <label>Version-${project.version}</label>
                   </labels>
                 </upload>
@@ -99,7 +99,7 @@
                   <labels>
                     <label>Featured</label>
                     <label>Type-Docs</label>
-                    <label>Project-${project.artifactId}</label>
+                    <label>Project-${project.artifactId}-core</label>
                     <label>Version-${project.version}</label>
                   </labels>
                 </upload>
@@ -109,7 +109,7 @@
                   <labels>
                     <label>Featured</label>
                     <label>Type-Docs</label>
-                    <label>Project-${project.artifactId}</label>
+                    <label>Project-${project.artifactId}-core</label>
                     <label>Version-${project.version}</label>
                   </labels>
                 </upload>
@@ -119,7 +119,7 @@
                   <labels>
                     <label>Featured</label>
                     <label>Type-Docs</label>
-                    <label>Project-${project.artifactId}</label>
+                    <label>Project-${project.artifactId}-migrations</label>
                     <label>Version-${project.version}</label>
                   </labels>
                 </upload>
