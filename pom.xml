@@ -78,8 +78,8 @@
                   <labels>
                     <label>Featured</label>
                     <label>Type-Archive</label>
-                    <label>${project.name}</label>
-                    <label>${project.version}</label>
+                    <label>Project-${project.artifactId}</label>
+                    <label>Version-${project.version}</label>
                   </labels>
                 </upload>
                 <upload>
@@ -88,19 +88,19 @@
                   <labels>
                     <label>Featured</label>
                     <label>Type-Archive</label>
-                    <label>${project.name}</label>
-                    <label>${project.version}</label>
+                    <label>Project-${project.artifactId}</label>
+                    <label>Version-${project.version}</label>
                   </labels>
                 </upload>
                 <!-- Manuals -->
                 <upload>
                   <file>${project.build.directory}/doc/en/MyBatis-3-User-Guide.pdf</file>
-                  <summary>MyBatis Persistence Framework ${project.version} - User Guide</summary>
+                  <summary>MyBatis Persistence Framework ${project.version} - User Guide (English)</summary>
                   <labels>
                     <label>Featured</label>
                     <label>Type-Docs</label>
-                    <label>${project.name}</label>
-                    <label>${project.version}</label>
+                    <label>Project-${project.artifactId}</label>
+                    <label>Version-${project.version}</label>
                   </labels>
                 </upload>
                 <upload>
@@ -109,8 +109,8 @@
                   <labels>
                     <label>Featured</label>
                     <label>Type-Docs</label>
-                    <label>${project.name}</label>
-                    <label>${project.version}</label>
+                    <label>Project-${project.artifactId}</label>
+                    <label>Version-${project.version}</label>
                   </labels>
                 </upload>
                 <upload>
@@ -119,6 +119,8 @@
                   <labels>
                     <label>Featured</label>
                     <label>Type-Docs</label>
+                    <label>Project-${project.artifactId}</label>
+                    <label>Version-${project.version}</label>
                   </labels>
                 </upload>
               </uploads>
