@@ -91,7 +91,7 @@
                 <!-- Manuals -->
                 <upload>
                   <file>${project.build.directory}/doc/en/MyBatis-3-User-Guide.pdf</file>
-                  <summary>MyBatis Persistence Framework ${project.version} GA - User Guide</summary>
+                  <summary>MyBatis Persistence Framework ${project.version} - User Guide</summary>
                   <labels>
                     <label>Featured</label>
                     <label>Type-Docs</label>
@@ -99,7 +99,7 @@
                 </upload>
                 <upload>
                   <file>${project.build.directory}/doc/zh_cn/MyBatis 3 User Guide Simplified Chinese.pdf</file>
-                  <summary>MyBatis Persistence Framework ${project.version} GA - User Guide (Simplified Chinese)</summary>
+                  <summary>MyBatis Persistence Framework ${project.version} - User Guide (Simplified Chinese)</summary>
                   <labels>
                     <label>Featured</label>
                     <label>Type-Docs</label>
@@ -107,7 +107,7 @@
                 </upload>
                 <upload>
                   <file>${project.build.directory}/${project.artifactId}-${project.version}-migrations.zip</file>
-                  <summary>MyBatis Schema Migrations ${project.version} GA - User Guide</summary>
+                  <summary>MyBatis Schema Migrations ${project.version} - User Guide</summary>
                   <labels>
                     <label>Featured</label>
                     <label>Type-Docs</label>
