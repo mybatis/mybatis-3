@@ -73,7 +73,7 @@
               <uploads>
                 <upload>
                   <file>${project.build.directory}/${project.artifactId}-${project.version}-bundle.zip</file>
-                  <summary>MyBatis Persistence Framework ${project.version} GA</summary>
+                  <summary>MyBatis Persistence Framework ${project.version}</summary>
                   <labels>
                     <label>Featured</label>
                     <label>Type-Archive</label>
@@ -81,7 +81,7 @@
                 </upload>
                 <upload>
                   <file>${project.build.directory}/${project.artifactId}-${project.version}-migrations.zip</file>
-                  <summary>MyBatis Schema Migrations ${project.version} GA</summary>
+                  <summary>MyBatis Schema Migrations ${project.version}</summary>
                   <labels>
                     <label>Featured</label>
                     <label>Type-Archive</label>
