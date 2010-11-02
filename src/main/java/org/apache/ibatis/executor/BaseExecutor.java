@@ -160,6 +160,7 @@ public abstract class BaseExecutor implements Executor {
   public void rollback(boolean required) throws SQLException {
     if (!closed) {
       clearLocalCache();
+      flushStatements();
       if (required) {
         transaction.rollback();
       }
