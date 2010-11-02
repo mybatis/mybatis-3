@@ -13,7 +13,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Properties;
 
-public class BaseDataTest {
+public abstract class BaseDataTest {
 
   public static final String BLOG_PROPERTIES = "databases/blog/blog-derby.properties";
   public static final String BLOG_DDL = "databases/blog/blog-derby-schema.sql";
@@ -79,9 +79,4 @@ public class BaseDataTest {
     runScript(ds, JPETSTORE_DATA);
     return ds;
   }
-
-  @Test
-  public void dummy() {
-  }
-
 }
