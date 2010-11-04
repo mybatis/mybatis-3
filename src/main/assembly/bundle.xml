@@ -25,6 +25,7 @@
   <dependencySets>
     <dependencySet>
       <outputDirectory>optional</outputDirectory>
+      <useProjectArtifact>false</useProjectArtifact>
     </dependencySet>
   </dependencySets>
 </assembly>
