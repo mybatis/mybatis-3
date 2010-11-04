@@ -8,7 +8,7 @@
   </formats>
   <files>
     <file>
-      <source>target/${project.artifactId}-${project.version}.${project.packaging}</source>    
+      <source>${project.build.directory}/${project.artifactId}-${project.version}.${project.packaging}</source>
       <outputDirectory>lib</outputDirectory>
     </file>
     <file>
