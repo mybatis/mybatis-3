@@ -7,22 +7,22 @@
 <mapper namespace="User">
 
   <resultMap type="UserAlias" id="UserResult">
-    <id column="id" jdbcType="BIGINT" property="id"/>
+    <id column="id" jdbcType="INTEGER" property="id"/>
     <result column="username" jdbcType="VARCHAR" property="username"/>
     <result column="password" jdbcType="VARCHAR" property="password.encrypted"/>
-    <result column="administrator" jdbcType="BIT" property="administrator"/>
+    <result column="administrator" jdbcType="BOOLEAN" property="administrator"/>
   </resultMap>
 
   <select id="find" parameterType="long" resultMap="UserResult">
-    SELECT * FROM user WHERE id = #{id:BIGINT}
+    SELECT * FROM user WHERE id = #{id:INTEGER}
   </select>
 
   <select id="version" parameterType="long" resultType="int">
-    SELECT version FROM user WHERE id = #{id,jdbcType=BIGINT}
+    SELECT version FROM user WHERE id = #{id,jdbcType=INTEGER}
   </select>
 
   <delete id="delete" parameterType="UserAlias">
-    DELETE FROM user WHERE id = #{id:BIGINT}
+    DELETE FROM user WHERE id = #{id:INTEGER}
   </delete>
 
   <insert id="insert" parameterType="UserAlias" useGeneratedKeys="false">
@@ -36,7 +36,7 @@
     ( #{id},
     #{username,jdbcType=VARCHAR},
     #{password.encrypted:VARCHAR},
-    #{administrator,jdbcType=BIT}
+    #{administrator,jdbcType=BOOLEAN}
     )
   </insert>
 
@@ -44,9 +44,9 @@
     UPDATE user SET
     username = #{username,jdbcType=VARCHAR},
     password = #{password.encrypted,jdbcType=VARCHAR},
-    administrator = #{administrator,jdbcType=BIT}
+    administrator = #{administrator,jdbcType=BOOLEAN}
     WHERE
-    id = #{id,jdbcType=BIGINT}
+    id = #{id,jdbcType=INTEGER}
   </update>
 
   <!--   Unique constraint check -->

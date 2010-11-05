@@ -96,8 +96,10 @@
   <select id="getAllProductCategoriesJIRA250" resultMap="categoryResultJIRA250">
     select
     c.catid, c.name as catname, c.descn as catdescn,
-    null as productid, null as category, null as prodname,
-    null as proddescn
+    cast(null as varchar(1)) as productid,
+    cast(null as varchar(1)) as category,
+    cast(null as varchar(1)) as prodname,
+    cast(null as varchar(1)) as proddescn
     from category c
   </select>
 

@@ -104,7 +104,7 @@ public class SqlSessionTest extends BaseDataTest {
       final Map<Integer,Author> authors = session.selectMap("domain.blog.mappers.AuthorMapper.selectAllAuthors", "id");
       assertEquals(2, authors.size());
       for(Map.Entry<Integer,Author> authorEntry : authors.entrySet()) {
-        assertEquals(authorEntry.getKey(), authorEntry.getValue().getId());
+        assertEquals(authorEntry.getKey(), (Integer) authorEntry.getValue().getId());
       }
     } finally {
       session.close();

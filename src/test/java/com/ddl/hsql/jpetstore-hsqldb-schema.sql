@@ -55,8 +55,8 @@ create table profile (
     userid varchar(80) not null,
     langpref varchar(80) not null,
     favcategory varchar(30),
-    mylistopt int,
-    banneropt int,
+    mylistopt boolean,
+    banneropt boolean,
     constraint pk_profile primary key (userid)
 );
 

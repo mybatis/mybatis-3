@@ -127,7 +127,7 @@ public class BindingTest {
       Map<Integer,Blog> blogs = mapper.selectBlogsAsMapById();
       assertEquals(2, blogs.size());
       for(Map.Entry<Integer,Blog> blogEntry : blogs.entrySet()) {
-        assertEquals(blogEntry.getKey(), blogEntry.getValue().getId());
+        assertEquals(blogEntry.getKey(), (Integer) blogEntry.getValue().getId());
       }
     } finally {
       session.close();
