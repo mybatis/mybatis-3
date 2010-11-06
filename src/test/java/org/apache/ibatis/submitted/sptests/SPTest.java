@@ -98,8 +98,8 @@ public class SPTest {
             spMapper.adder(parameter);
             assertEquals((Integer) 5, parameter.getSum());
             
-            // clear cache is required in this instance.
-            sqlSession.clearCache();
+            // Resolved Output Parameter Caching Issue for Callable statements
+            // sqlSession.clearCache();
             
             parameter = new Parameter();
             parameter.setAddend1(2);
@@ -276,8 +276,8 @@ public class SPTest {
             assertEquals(2, parms.get("totalRows"));
             assertEquals(2, names.size());
             
-            // clear cache is required in this instance.
-            sqlSession.clearCache();
+            // Resolved Output Parameter Caching Issue for Callable statements
+            // sqlSession.clearCache();
             
             parms = new HashMap<String, Object>();
             parms.put("lowestId", 2);

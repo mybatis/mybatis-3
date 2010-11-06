@@ -3,9 +3,8 @@ package org.apache.ibatis.executor;
 import org.apache.ibatis.cache.CacheKey;
 import org.apache.ibatis.cache.impl.PerpetualCache;
 import static org.apache.ibatis.executor.ExecutionPlaceholder.EXECUTION_PLACEHOLDER;
-import org.apache.ibatis.mapping.BoundSql;
-import org.apache.ibatis.mapping.MappedStatement;
-import org.apache.ibatis.mapping.ParameterMapping;
+
+import org.apache.ibatis.mapping.*;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
@@ -24,6 +23,7 @@ public abstract class BaseExecutor implements Executor {
 
   protected ConcurrentLinkedQueue<DeferredLoad> deferredLoads;
   protected PerpetualCache localCache;
+  protected PerpetualCache localOutputParameterCache;
   protected Configuration configuration;
 
   protected int queryStack = 0;
@@ -35,6 +35,7 @@ public abstract class BaseExecutor implements Executor {
     this.transaction = transaction;
     this.deferredLoads = new ConcurrentLinkedQueue<DeferredLoad>();
     this.localCache = new PerpetualCache("LocalCache");
+    this.localOutputParameterCache = new PerpetualCache("LocalOutputParameterCache");
     this.closed = false;
     this.configuration = configuration;
   }
@@ -57,6 +58,7 @@ public abstract class BaseExecutor implements Executor {
       transaction = null;
       deferredLoads = null;
       localCache = null;
+      localOutputParameterCache = null;
       batchResults = null;
       closed = true;
     }
@@ -86,17 +88,11 @@ public abstract class BaseExecutor implements Executor {
     try {
       queryStack++;
       CacheKey key = createCacheKey(ms, parameter, rowBounds);
-      final List cachedList = (List) localCache.getObject(key);
-      if (cachedList != null) {
-        list = cachedList;
+      list = (List) localCache.getObject(key);
+      if (list != null) {
+        handleLocallyCachedOutputParameters(ms, key, parameter);
       } else {
-        localCache.putObject(key, EXECUTION_PLACEHOLDER);
-        try {
-          list = doQuery(ms, parameter, rowBounds, resultHandler);
-        } finally {
-          localCache.removeObject(key);
-        }
-        localCache.putObject(key, list);
+        list = queryFromDatabase(ms, parameter, rowBounds, resultHandler, key);
       }
     } finally {
       queryStack--;
@@ -173,6 +169,7 @@ public abstract class BaseExecutor implements Executor {
   public void clearLocalCache() {
     if (!closed) {
       localCache.clear();
+      localOutputParameterCache.clear();
     }
   }
 
@@ -195,6 +192,38 @@ public abstract class BaseExecutor implements Executor {
     }
   }
 
+  private void handleLocallyCachedOutputParameters(MappedStatement ms, CacheKey key, Object parameter) {
+    if (ms.getStatementType() == StatementType.CALLABLE) {
+      final Object cachedParameter = localOutputParameterCache.getObject(key);
+      if (cachedParameter != null && parameter != null) {
+        final MetaObject metaCachedParameter = MetaObject.forObject(cachedParameter);
+        final MetaObject metaParameter = MetaObject.forObject(parameter);
+        for (ParameterMapping parameterMapping : ms.getBoundSql(parameter).getParameterMappings()) {
+          if (parameterMapping.getMode() != ParameterMode.IN) {
+            final String parameterName = parameterMapping.getProperty();
+            final Object cachedValue = metaCachedParameter.getValue(parameterName);
+            metaParameter.setValue(parameterName, cachedValue);
+          }
+        }
+      }
+    }
+  }
+
+  private List queryFromDatabase(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, CacheKey key) throws SQLException {
+    List list;
+    localCache.putObject(key, EXECUTION_PLACEHOLDER);
+    try {
+      list = doQuery(ms, parameter, rowBounds, resultHandler);
+    } finally {
+      localCache.removeObject(key);
+    }
+    localCache.putObject(key, list);
+    if (ms.getStatementType() == StatementType.CALLABLE) {
+      localOutputParameterCache.putObject(key, parameter);
+    }
+    return list;
+  }
+  
   private class DeferredLoad {
 
     MappedStatement mappedStatement;
