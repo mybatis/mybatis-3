@@ -71,35 +71,24 @@
             </goals>
             <configuration>
               <uploads>
-                <!-- Bundles -->
+                <!-- Core -->
                 <upload>
                   <file>${project.build.directory}/${project.artifactId}-${project.version}-bundle.zip</file>
                   <summary>MyBatis Persistence Framework ${project.version}</summary>
                   <labels>
                     <label>Featured</label>
                     <label>Type-Archive</label>
-                    <label>Project-${project.artifactId}-core</label>
+                    <label>Product-MyBatis</label>
                     <label>Version-${project.version}</label>
                   </labels>
                 </upload>
-                <upload>
-                  <file>${project.build.directory}/${project.artifactId}-${project.version}-migrations.zip</file>
-                  <summary>MyBatis Schema Migrations ${project.version}</summary>
-                  <labels>
-                    <label>Featured</label>
-                    <label>Type-Archive</label>
-                    <label>Project-${project.artifactId}-migrations</label>
-                    <label>Version-${project.version}</label>
-                  </labels>
-                </upload>
-                <!-- Manuals -->
                 <upload>
                   <file>${project.build.directory}/doc/en/MyBatis-3-User-Guide.pdf</file>
                   <summary>MyBatis Persistence Framework ${project.version} - User Guide (English)</summary>
                   <labels>
                     <label>Featured</label>
                     <label>Type-Docs</label>
-                    <label>Project-${project.artifactId}-core</label>
+                    <label>Product-MyBatis</label>
                     <label>Version-${project.version}</label>
                   </labels>
                 </upload>
@@ -109,7 +98,18 @@
                   <labels>
                     <label>Featured</label>
                     <label>Type-Docs</label>
-                    <label>Project-${project.artifactId}-core</label>
+                    <label>Product-MyBatis</label>
+                    <label>Version-${project.version}</label>
+                  </labels>
+                </upload>
+                <!-- Migrations -->
+                <upload>
+                  <file>${project.build.directory}/${project.artifactId}-${project.version}-migrations.zip</file>
+                  <summary>MyBatis Schema Migrations ${project.version}</summary>
+                  <labels>
+                    <label>Featured</label>
+                    <label>Type-Archive</label>
+                    <label>Product-Migrations</label>
                     <label>Version-${project.version}</label>
                   </labels>
                 </upload>
@@ -119,7 +119,7 @@
                   <labels>
                     <label>Featured</label>
                     <label>Type-Docs</label>
-                    <label>Project-${project.artifactId}-migrations</label>
+                    <label>Product-Migrations</label>
                     <label>Version-${project.version}</label>
                   </labels>
                 </upload>
