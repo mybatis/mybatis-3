@@ -80,12 +80,12 @@ public class SPTest {
      * in a stored procedure.
      * This procedure does not return a result set.
      * 
-     * Currently this test will fail because of a MyBatis cache issue.
+     * Currently this test will fail without clearing the cache because
+     * of a MyBatis cache issue.
      * 
      * This test shows using a multi-property parameter.
      */
     @Test
-    @Ignore("until MyBatis cache issue fixed")
     public void testAdderAsSelectDoubleCall1() {
         SqlSession sqlSession = sqlSessionFactory.openSession();
         try {
@@ -98,8 +98,9 @@ public class SPTest {
             spMapper.adder(parameter);
             assertEquals((Integer) 5, parameter.getSum());
             
-            // this fails because there are two calls to the same SP with the same
-            // parms in the same session.
+            // clear cache is required in this instance.
+            sqlSession.clearCache();
+            
             parameter = new Parameter();
             parameter.setAddend1(2);
             parameter.setAddend2(3);
@@ -259,10 +260,11 @@ public class SPTest {
      * 
      * This test shows using a Map parameter.
      * 
-     * The cache problem is in effect with this test.
+     * Currently this test will fail without clearing the cache because
+     * of a MyBatis cache issue.
      */
     @Test
-    @Ignore("until hsqldb 2.0.1 is released, and MyBatis cache issue fixed")
+    @Ignore("until hsqldb 2.0.1 is released")
     public void testCallWithResultSet4() {
         SqlSession sqlSession = sqlSessionFactory.openSession();
         try {
@@ -274,11 +276,13 @@ public class SPTest {
             assertEquals(2, parms.get("totalRows"));
             assertEquals(2, names.size());
             
+            // clear cache is required in this instance.
+            sqlSession.clearCache();
+            
             parms = new HashMap<String, Object>();
             parms.put("lowestId", 2);
             names = spMapper.getNames(parms);
             assertEquals(2, names.size());
-            // fails because of cache problem
             assertEquals(2, parms.get("totalRows"));
         } finally {
             sqlSession.close();
