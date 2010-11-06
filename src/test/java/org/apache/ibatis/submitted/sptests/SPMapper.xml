@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.apache.ibatis.submitted.sptests.SPMapper">
+  <resultMap type="org.apache.ibatis.submitted.sptests.Name" id="nameResult">
+    <result column="ID" property="id"/>
+    <result column="FIRST_NAME" property="firstName"/>
+    <result column="LAST_NAME" property="lastName"/>
+  </resultMap>
+
+  <!-- Important things for stored procedures:
+    1. Must set the statement type to CALLABLE
+    2. Must use the JDBC standard escape sequence for stored procedures:
+       {call xxx (parm1, parm2)}
+    3. Must set the MODE of all parameters (IN, OUT, INOUT)
+    4. All IN, OUT, and INOUT parameters must be a part of the
+       parameterType or parameterMap (discouraged).
+    5. resultType or resultMap (more typically) is only used if
+       the procedure returns a result set. IMPORTANT: Oracle ref
+       cursors are usually returned as parameters, NOT directly
+       from the stored proc.  So with ref cursors, resultMap
+       and/or resultType is usually not used.  
+   -->
+   
+  <select id="adder" parameterType="org.apache.ibatis.submitted.sptests.Parameter" statementType="CALLABLE">
+    {call sptest.adder(
+      #{addend1,jdbcType=INTEGER,mode=IN},
+      #{addend2,jdbcType=INTEGER,mode=IN},
+      #{sum,jdbcType=INTEGER,mode=OUT}
+    )}
+  </select>
+
+  <update id="adder2" parameterType="org.apache.ibatis.submitted.sptests.Parameter" statementType="CALLABLE">
+    {call sptest.adder(
+      #{addend1,jdbcType=INTEGER,mode=IN},
+      #{addend2,jdbcType=INTEGER,mode=IN},
+      #{sum,jdbcType=INTEGER,mode=OUT}
+    )}
+  </update>
+  
+  <select id="getName" parameterType="java.lang.Integer" statementType="CALLABLE"
+    resultMap="nameResult">
+    {call sptest.getname(
+      #{id,jdbcType=INTEGER,mode=IN})}
+  </select>
+
+  <select id="getNames" parameterType="java.util.Map" statementType="CALLABLE"
+    resultMap="nameResult">
+    {call sptest.getnames(
+      #{lowestId,jdbcType=INTEGER,mode=IN},
+      #{totalRows,jdbcType=INTEGER,mode=OUT})}
+  </select>
+</mapper>
