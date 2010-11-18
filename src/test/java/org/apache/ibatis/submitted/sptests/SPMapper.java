@@ -8,4 +8,5 @@ public interface SPMapper {
     void adder2(Parameter parameter);
     Name getName(Integer id);
     List<Name> getNames(Map<String, Object> parms);
+    List<Name> getNamesWithArray(Map<String, Object> parms);
 }

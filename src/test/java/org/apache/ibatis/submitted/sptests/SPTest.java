@@ -4,8 +4,10 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 
 import java.io.Reader;
+import java.sql.Array;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,7 +36,7 @@ public class SPTest {
             Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/sptests/CreateDB.sql");
 
             ScriptRunner runner = new ScriptRunner(conn);
-            runner.setDelimiter("]");
+            runner.setDelimiter("go");
             runner.setLogWriter(null);
             runner.setErrorLogWriter(null);
             runner.runScript(reader);
@@ -284,6 +286,28 @@ public class SPTest {
             names = spMapper.getNames(parms);
             assertEquals(2, names.size());
             assertEquals(2, parms.get("totalRows"));
+        } finally {
+            sqlSession.close();
+        }
+    }
+
+    @Test
+    @Ignore("until hsqldb 2.0.1 is released")
+    public void testGetNamesWithArray() throws SQLException {
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        try {
+            SPMapper spMapper = sqlSession.getMapper(SPMapper.class);
+            
+            Array array = sqlSession.getConnection().createArrayOf("int",
+                    new Integer[] {1, 2, 5});
+            
+            Map<String, Object> parms = new HashMap<String, Object>();
+            parms.put("ids", array);
+            List<Name> names = spMapper.getNamesWithArray(parms);
+            Object[] returnedIds = (Object[])parms.get("returnedIds");
+            assertEquals(4, returnedIds.length);
+            assertEquals(3, parms.get("requestedRows"));
+            assertEquals(2, names.size());
         } finally {
             sqlSession.close();
         }

@@ -4,7 +4,11 @@ import java.sql.Types;
 import java.util.*;
 
 public enum JdbcType {
-
+  /**
+   * This is added to enable basic support for the
+   * ARRAY data type - but a custom type handler is still required
+   */
+  ARRAY(Types.ARRAY),
   BIT(Types.BIT),
   TINYINT(Types.TINYINT),
   SMALLINT(Types.SMALLINT),

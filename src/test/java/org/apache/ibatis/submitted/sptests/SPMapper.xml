@@ -49,4 +49,12 @@
       #{lowestId,jdbcType=INTEGER,mode=IN},
       #{totalRows,jdbcType=INTEGER,mode=OUT})}
   </select>
+
+  <select id="getNamesWithArray" parameterType="java.util.Map" statementType="CALLABLE"
+    resultMap="nameResult">
+    {call sptest.arraytest(
+      #{ids,mode=IN,jdbcType=ARRAY,typeHandler=org.apache.ibatis.submitted.sptests.ArrayTypeHandler},
+      #{requestedRows,jdbcType=INTEGER,mode=OUT},
+      #{returnedIds,mode=OUT,jdbcType=ARRAY,typeHandler=org.apache.ibatis.submitted.sptests.ArrayTypeHandler})}
+  </select>
 </mapper>
