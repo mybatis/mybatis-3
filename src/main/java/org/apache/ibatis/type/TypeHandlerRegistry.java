@@ -6,12 +6,13 @@ import java.lang.annotation.Annotation;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.Map;
 import java.util.Set;
 
-public class TypeHandlerRegistry {
+public final class TypeHandlerRegistry {
 
-  private static final Map<Class, Class> reversePrimitiveMap = new HashMap<Class, Class>() {
+  private static final Map<Class<?>, Class<?>> reversePrimitiveMap = new HashMap<Class<?>, Class<?>>() {
     {
       put(Byte.class, byte.class);
       put(Short.class, short.class);
@@ -23,8 +24,8 @@ public class TypeHandlerRegistry {
     }
   };
 
-  private final Map<JdbcType, TypeHandler> JDBC_TYPE_HANDLER_MAP = new HashMap<JdbcType, TypeHandler>();
-  private final Map<Class, Map<JdbcType, TypeHandler>> TYPE_HANDLER_MAP = new HashMap<Class, Map<JdbcType, TypeHandler>>();
+  private final Map<JdbcType, TypeHandler> JDBC_TYPE_HANDLER_MAP = new EnumMap<JdbcType, TypeHandler>(JdbcType.class);
+  private final Map<Class<?>, Map<JdbcType, TypeHandler>> TYPE_HANDLER_MAP = new HashMap<Class<?>, Map<JdbcType, TypeHandler>>();
   private final TypeHandler UNKNOWN_TYPE_HANDLER = new UnknownTypeHandler(this);
 
   public TypeHandlerRegistry() {
@@ -98,15 +99,15 @@ public class TypeHandlerRegistry {
     register(java.sql.Timestamp.class, new SqlTimestampTypeHandler());
   }
 
-  public boolean hasTypeHandler(Class javaType) {
+  public boolean hasTypeHandler(Class<?> javaType) {
     return hasTypeHandler(javaType, null);
   }
 
-  public boolean hasTypeHandler(Class javaType, JdbcType jdbcType) {
+  public boolean hasTypeHandler(Class<?> javaType, JdbcType jdbcType) {
     return javaType != null && getTypeHandler(javaType, jdbcType) != null;
   }
 
-  public TypeHandler getTypeHandler(Class type) {
+  public TypeHandler getTypeHandler(Class<?> type) {
     return getTypeHandler(type, null);
   }
 
@@ -114,13 +115,13 @@ public class TypeHandlerRegistry {
     return JDBC_TYPE_HANDLER_MAP.get(jdbcType);
   }
 
-  public TypeHandler getTypeHandler(Class type, JdbcType jdbcType) {
-    Map jdbcHandlerMap = TYPE_HANDLER_MAP.get(type);
+  public TypeHandler getTypeHandler(Class<?> type, JdbcType jdbcType) {
+    Map<JdbcType, TypeHandler> jdbcHandlerMap = TYPE_HANDLER_MAP.get(type);
     TypeHandler handler = null;
     if (jdbcHandlerMap != null) {
-      handler = (TypeHandler) jdbcHandlerMap.get(jdbcType);
+      handler = jdbcHandlerMap.get(jdbcType);
       if (handler == null) {
-        handler = (TypeHandler) jdbcHandlerMap.get(null);
+        handler = jdbcHandlerMap.get(null);
       }
     }
     if (handler == null && type != null && Enum.class.isAssignableFrom(type)) {
@@ -137,11 +138,11 @@ public class TypeHandlerRegistry {
     JDBC_TYPE_HANDLER_MAP.put(jdbcType, handler);
   }
 
-  public void register(Class type, TypeHandler handler) {
+  public void register(Class<?> type, TypeHandler handler) {
     register(type, null, handler);
   }
 
-  public void register(Class type, JdbcType jdbcType, TypeHandler handler) {
+  public void register(Class<?> type, JdbcType jdbcType, TypeHandler handler) {
     Map<JdbcType, TypeHandler> map = TYPE_HANDLER_MAP.get(type);
     if (map == null) {
       map = new HashMap<JdbcType, TypeHandler>();
@@ -154,12 +155,12 @@ public class TypeHandlerRegistry {
   }
 
   public void register(String packageName) {
-    ResolverUtil<Class> resolverUtil = new ResolverUtil<Class>();
+    ResolverUtil<Class<?>> resolverUtil = new ResolverUtil<Class<?>>();
     resolverUtil.find(new ResolverUtil.IsA(TypeHandler.class), packageName);
-    Set<Class<? extends Class>> handlerSet = resolverUtil.getClasses();
+    Set<Class<? extends Class<?>>> handlerSet = resolverUtil.getClasses();
 
     TypeHandler handler;
-    for (Class type : handlerSet) {
+    for (Class<?> type : handlerSet) {
       @SuppressWarnings({"unchecked"})
       Annotation annotation = type.getAnnotation(MappedTypes.class);
       try {
@@ -169,7 +170,7 @@ public class TypeHandlerRegistry {
       }
       if (null != annotation) {
         MappedTypes mappedType = (MappedTypes) annotation;
-        for (Class handledType : mappedType.value()) {
+        for (Class<?> handledType : mappedType.value()) {
           register(handledType, handler);
         }
       }
