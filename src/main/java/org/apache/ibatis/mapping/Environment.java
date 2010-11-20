@@ -4,59 +4,65 @@ import org.apache.ibatis.transaction.TransactionFactory;
 
 import javax.sql.DataSource;
 
-public class Environment {
-  private String id;
-  private TransactionFactory transactionFactory;
-  private DataSource dataSource;
+public final class Environment {
+  private final String id;
+  private final TransactionFactory transactionFactory;
+  private final DataSource dataSource;
 
   public Environment(String id, TransactionFactory transactionFactory, DataSource dataSource) {
+    if (id == null) {
+      throw new IllegalArgumentException("Parameter 'id' must not be null");
+    }
+    if (transactionFactory == null) {
+        throw new IllegalArgumentException("Parameter 'transactionFactory' must not be null");
+    }
     this.id = id;
+    if (dataSource == null) {
+      throw new IllegalArgumentException("Parameter 'dataSource' must not be null");
+    }
     this.transactionFactory = transactionFactory;
     this.dataSource = dataSource;
   }
 
-  private Environment() {
-  }
-
   public static class Builder {
-    private Environment environment = new Environment();
+      private String id;
+      private TransactionFactory transactionFactory;
+      private DataSource dataSource;
 
-    public Builder(String id, TransactionFactory transactionManager, DataSource dataSource) {
-      environment.id = id;
-      environment.transactionFactory = transactionManager;
-      environment.dataSource = dataSource;
+    public Builder(String id) {
+      this.id = id;
     }
 
     public Builder transactionFactory(TransactionFactory transactionFactory) {
-      environment.transactionFactory = transactionFactory;
+      this.transactionFactory = transactionFactory;
       return this;
     }
 
     public Builder dataSource(DataSource dataSource) {
-      environment.dataSource = dataSource;
+      this.dataSource = dataSource;
       return this;
     }
 
     public String id() {
-      return environment.id;
+      return this.id;
     }
 
     public Environment build() {
-      return environment;
+      return new Environment(this.id, this.transactionFactory, this.dataSource);
     }
 
   }
 
   public String getId() {
-    return id;
+    return this.id;
   }
 
   public TransactionFactory getTransactionFactory() {
-    return transactionFactory;
+    return this.transactionFactory;
   }
 
   public DataSource getDataSource() {
-    return dataSource;
+    return this.dataSource;
   }
 
 }

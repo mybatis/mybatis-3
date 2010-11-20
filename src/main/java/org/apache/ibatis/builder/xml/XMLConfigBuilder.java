@@ -181,7 +181,9 @@ public class XMLConfigBuilder extends BaseBuilder {
         if (isSpecifiedEnvironment(id)) {
           TransactionFactory txFactory = transactionManagerElement(child.evalNode("transactionManager"));
           DataSourceFactory dsFactory = dataSourceElement(child.evalNode("dataSource"));
-          Environment.Builder environmentBuilder = new Environment.Builder(id, txFactory, dsFactory.getDataSource());
+          Environment.Builder environmentBuilder = new Environment.Builder(id)
+              .transactionFactory(txFactory)
+              .dataSource(dsFactory.getDataSource());
           configuration.setEnvironment(environmentBuilder.build());
         }
       }
