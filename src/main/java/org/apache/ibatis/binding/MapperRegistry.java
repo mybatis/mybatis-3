@@ -35,12 +35,20 @@ public class MapperRegistry {
       if (knownMappers.contains(type)) {
         throw new BindingException("Type " + type + " is already known to the MapperRegistry.");
       }
-      knownMappers.add(type);
-      // It's important that the type is added before the parser is run
-      // otherwise the binding may automatically be attempted by the
-      // mapper parser.  If the type is already known, it won't try.
-      MapperAnnotationBuilder parser = new MapperAnnotationBuilder(config, type);
-      parser.parse();
+      boolean loadCompleted = false;
+      try {
+        knownMappers.add(type);
+        // It's important that the type is added before the parser is run
+        // otherwise the binding may automatically be attempted by the
+        // mapper parser.  If the type is already known, it won't try.
+        MapperAnnotationBuilder parser = new MapperAnnotationBuilder(config, type);
+        parser.parse();
+        loadCompleted = true;
+      } finally {
+        if (!loadCompleted) {
+          knownMappers.remove(type);
+        }
+      }
     }
   }
 }

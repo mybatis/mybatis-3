@@ -85,8 +85,8 @@ public class MapperAnnotationBuilder {
   public void parse() {
     String resource = type.toString();
     if (!configuration.isResourceLoaded(resource)) {
-      configuration.addLoadedResource(resource);
       loadXmlResource();
+      configuration.addLoadedResource(resource);
       assistant.setCurrentNamespace(type.getName());
       parseCache();
       parseCacheRef();
