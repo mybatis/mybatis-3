@@ -4,7 +4,7 @@
     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="testcase">
+<mapper namespace="org.apache.ibatis.submitted.parent_child_circular.NodeMapper">
 
   <resultMap id="nodeResult" type="org.apache.ibatis.submitted.parent_child_circular.Node">
     <id property="id" column="id"/>

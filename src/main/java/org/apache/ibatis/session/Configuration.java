@@ -1,6 +1,8 @@
 package org.apache.ibatis.session;
 
 import org.apache.ibatis.binding.MapperRegistry;
+import org.apache.ibatis.builder.MapperBuilderAssistant;
+import org.apache.ibatis.builder.xml.XMLStatementBuilder;
 import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.cache.decorators.FifoCache;
 import org.apache.ibatis.cache.decorators.LruCache;
@@ -36,6 +38,8 @@ import org.apache.ibatis.type.TypeAliasRegistry;
 import org.apache.ibatis.type.TypeHandlerRegistry;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Configuration {
 
@@ -67,6 +71,15 @@ public class Configuration {
 
   protected final Set<String> loadedResources = new HashSet<String>();
   protected final Map<String, XNode> sqlFragments = new StrictMap<String, XNode>("XML fragments parsed from previous mappers");
+
+  /** A map holds statement nodes for a namespace. */
+  protected final ConcurrentMap<String, List<XNode>> statementNodesToParse = new ConcurrentHashMap<String, List<XNode>>();
+  /**
+   * A map holds cache-ref relationship. The key is the namespace that
+   * references a cache bound to another namespace and the value is the
+   * namespace which the actual cache is bound to.
+   */
+  protected final Map<String, String> cacheRefMap = new HashMap<String, String>();
 
   public Configuration(Environment environment) {
     this();
@@ -340,14 +353,19 @@ public class Configuration {
   }
 
   public Collection<String> getMappedStatementNames() {
+    buildAllStatements();
     return mappedStatements.keySet();
   }
 
   public Collection<MappedStatement> getMappedStatements() {
+    buildAllStatements();
     return mappedStatements.values();
   }
 
   public MappedStatement getMappedStatement(String id) {
+    if (!mappedStatements.containsKey(id)) {
+      buildStatementsFromId(id);
+    }
     return mappedStatements.get(id);
   }
 
@@ -386,7 +404,80 @@ public class Configuration {
   }
 
   public boolean hasStatement(String statementName) {
+    buildStatementsFromId(statementName);
     return mappedStatements.containsKey(statementName);
+  }
+
+  public void addStatementNodes(String namespace, List<XNode> nodes) {
+    statementNodesToParse.put(namespace, nodes);
+  }
+
+  public void addCacheRef(String namespace, String referencedNamespace) {
+    cacheRefMap.put(namespace, referencedNamespace);
+  }
+
+  /**
+   * Parses all the unprocessed statement nodes in the cache. It is recommended
+   * to call this method once all the mappers are added as it provides fail-fast
+   * statement validation.
+   */
+  public void buildAllStatements() {
+    if (!statementNodesToParse.isEmpty()) {
+      Set<String> keySet = statementNodesToParse.keySet();
+      for (String namespace : keySet) {
+        buildStatementsForNamespace(namespace);
+      }
+    }
+  }
+
+  protected void buildStatementsFromId(String id) {
+    final String namespace = extractNamespace(id);
+    buildStatementsForNamespace(namespace);
+  }
+
+  /**
+   * Extracts namespace from fully qualified statement id.
+   * 
+   * @param statementId
+   * @return namespace or null when id does not contain period.
+   */
+  protected String extractNamespace(String statementId) {
+    int lastPeriod = statementId.lastIndexOf('.');
+    return lastPeriod > 0 ? statementId.substring(0, lastPeriod) : null;
+  }
+
+  /**
+   * Parses cached statement nodes for the specified namespace and stores the
+   * generated mapped statements.
+   * 
+   * @param namespace
+   */
+  protected void buildStatementsForNamespace(String namespace) {
+    if (namespace != null) {
+      final List<XNode> list = statementNodesToParse.get(namespace);
+      if (list != null) {
+        final String resource = namespace.replace('.', '/') + ".xml";
+        final MapperBuilderAssistant builderAssistant = new MapperBuilderAssistant(this, resource);
+        builderAssistant.setCurrentNamespace(namespace);
+        // Set a cache reference if one is bound to this namespace.
+        if (caches.containsKey(namespace)) {
+          builderAssistant.useCacheRef(namespace);
+        }
+        else if(cacheRefMap.containsKey(namespace)) {
+          builderAssistant.useCacheRef(cacheRefMap.get(namespace));
+        }
+        parseStatementNodes(builderAssistant, list);
+        // Remove the processed nodes and resource from the cache.
+        statementNodesToParse.remove(namespace);
+      }
+    }
+  }
+
+  protected void parseStatementNodes(final MapperBuilderAssistant builderAssistant, final List<XNode> list) {
+    for (XNode context : list) {
+      final XMLStatementBuilder statementParser = new XMLStatementBuilder(this, builderAssistant);
+      statementParser.parseStatementNode(context);
+    }
   }
 
   //Slow but a one time cost.  A better solution is welcome.

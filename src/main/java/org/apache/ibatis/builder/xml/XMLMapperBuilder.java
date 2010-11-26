@@ -66,7 +66,7 @@ public class XMLMapperBuilder extends BaseBuilder {
       parameterMapElement(context.evalNodes("/mapper/parameterMap"));
       resultMapElements(context.evalNodes("/mapper/resultMap"));
       sqlElement(context.evalNodes("/mapper/sql"));
-      buildStatementFromContext(context.evalNodes("select|insert|update|delete"));
+      bufferStatementNodes(context.evalNodes("select|insert|update|delete"));
     } catch (Exception e) {
       throw new RuntimeException("Error parsing Mapper XML. Cause: " + e, e);
     }
@@ -75,7 +75,7 @@ public class XMLMapperBuilder extends BaseBuilder {
 
   private void cacheRefElement(XNode context) {
     if (context != null) {
-      builderAssistant.useCacheRef(context.getStringAttribute("namespace"));
+      configuration.addCacheRef(builderAssistant.getCurrentNamespace(), context.getStringAttribute("namespace"));
     }
   }
 
@@ -198,11 +198,17 @@ public class XMLMapperBuilder extends BaseBuilder {
     }
   }
 
-  private void buildStatementFromContext(List<XNode> list) {
-    for (XNode context : list) {
-      final XMLStatementBuilder statementParser = new XMLStatementBuilder(configuration, builderAssistant, this);
-      statementParser.parseStatementNode(context);
-    }
+  /**
+   * To achieve mapper-order-independent parsing, stores the statement nodes
+   * into the temporary map without actually parsing them.
+   * 
+   * @param list
+   * @see Configuration#getMappedStatement(String)
+   * @see Configuration#buildAllStatements()
+   */
+  private void bufferStatementNodes(List<XNode> list) {
+    String currentNamespace = builderAssistant.getCurrentNamespace();
+    configuration.addStatementNodes(currentNamespace, list);
   }
 
   private ResultMapping buildResultMappingFromContext(XNode context, Class<?> resultType, ArrayList<ResultFlag> flags) throws Exception {

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.apache.ibatis.submitted.xml_external_ref.ReverseIncludePersonMapper">
+	<resultMap type="org.apache.ibatis.submitted.xml_external_ref.Person"
+		id="personResult">
+		<id property="id" column="person_id" />
+		<result property="name" column="person_name" />
+	</resultMap>
+	<!-- Referencing a sql fragment farther in same file -->
+	<select id="select" parameterType="java.lang.Integer" resultMap="personResult">
+		SELECT
+		<include refid="personColumnList" />
+		FROM person
+		WHERE person_id = #{id}
+	</select>
+	<sql id="personColumnList">
+		person_id, person_name
+	</sql>
+</mapper>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.apache.ibatis.submitted.xml_external_ref.MultipleCrossIncludePersonMapper">
+	<cache-ref namespace="org.apache.ibatis.submitted.xml_external_ref.MultipleCrossIncludePetMapper" />
+	<resultMap type="org.apache.ibatis.submitted.xml_external_ref.Person"
+		id="personResult">
+		<id property="id" column="person_id" />
+		<result property="name" column="person_name" />
+	</resultMap>
+	<resultMap type="org.apache.ibatis.submitted.xml_external_ref.Person"
+		id="resultWithPets" extends="personResult">
+		<collection property="pets"
+			ofType="org.apache.ibatis.submitted.xml_external_ref.Pet"
+			resultMap="org.apache.ibatis.submitted.xml_external_ref.MultipleCrossIncludePetMapper.petResult" />
+	</resultMap>
+	<sql id="petIdColumnList">
+		pet_id
+	</sql>
+	<sql id="personColumnList">
+		<include refid="org.apache.ibatis.submitted.xml_external_ref.MultipleCrossIncludePetMapper.personIdColumnList"/>,
+		person_name
+	</sql>
+	<!-- Referencing a sql fragment in another file -->
+	<select id="select" parameterType="java.lang.Integer" resultMap="resultWithPets">
+		SELECT
+		<include refid="personColumnList" />
+		,
+		<include
+			refid="org.apache.ibatis.submitted.xml_external_ref.MultipleCrossIncludePetMapper.petColumnList" />
+		FROM person, pet
+		WHERE person_id = #{id}
+		AND person_id = owner_id
+		ORDER BY pet_id
+	</select>
+	<!-- Referencing a sql fragment and a result map in another file -->
+	<select id="selectPet" parameterType="java.lang.Integer"
+		resultMap="org.apache.ibatis.submitted.xml_external_ref.MultipleCrossIncludePetMapper.petResult">
+		SELECT
+		<include
+			refid="org.apache.ibatis.submitted.xml_external_ref.MultipleCrossIncludePetMapper.petColumnList" />
+		FROM pet
+		WHERE pet_id = #{id}
+	</select>
+</mapper>

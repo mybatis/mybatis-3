@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.apache.ibatis.submitted.xml_external_ref.MultipleReverseIncludePersonMapper">
+	<resultMap type="org.apache.ibatis.submitted.xml_external_ref.Person"
+		id="personResult">
+		<id property="id" column="person_id" />
+		<result property="name" column="person_name" />
+	</resultMap>
+	<!-- fragment includes another fragment form farther in the same file -->
+	<sql id="personColumnList">
+		<include refid="personIdColumnList"/>,
+		person_name
+	</sql>
+	<!-- Referencing a sql fragment in same file -->
+	<select id="select" parameterType="java.lang.Integer" resultMap="personResult">
+		SELECT
+		<include refid="personColumnList" />
+		FROM person
+		WHERE person_id = #{id}
+	</select>
+	<sql id="personIdColumnList">
+		person_id
+	</sql>
+</mapper>

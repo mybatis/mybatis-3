@@ -19,12 +19,10 @@ import java.util.*;
 public class XMLStatementBuilder extends BaseBuilder {
 
   private MapperBuilderAssistant builderAssistant;
-  private XMLMapperBuilder xmlMapperParser;
 
-  public XMLStatementBuilder(Configuration configuration, MapperBuilderAssistant builderAssistant, XMLMapperBuilder xmlMapperParser) {
+  public XMLStatementBuilder(Configuration configuration, MapperBuilderAssistant builderAssistant) {
     super(configuration);
     this.builderAssistant = builderAssistant;
-    this.xmlMapperParser = xmlMapperParser;
   }
 
   public void parseStatementNode(XNode context) {
@@ -154,10 +152,10 @@ public class XMLStatementBuilder extends BaseBuilder {
     public void handleNode(XNode nodeToHandle, List<SqlNode> targetContents) {
       String refid = nodeToHandle.getStringAttribute("refid");
       refid = builderAssistant.applyCurrentNamespace(refid);
-      XNode includeNode = xmlMapperParser.getSqlFragment(refid);
+      XNode includeNode = configuration.getSqlFragments().get(refid);
       if (includeNode == null) {
         String nsrefid = builderAssistant.applyCurrentNamespace(refid);
-        includeNode = xmlMapperParser.getSqlFragment(nsrefid);
+        includeNode = configuration.getSqlFragments().get(nsrefid);
         if (includeNode == null) {
           throw new BuilderException("Could not find SQL statement to include with refid '" + refid + "'");
         }
