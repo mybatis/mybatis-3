@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.apache.ibatis.submitted.blobtest.BlobMapper">
+  <resultMap type="org.apache.ibatis.submitted.blobtest.BlobRecord" id="blobRecordResult">
+    <constructor>
+      <idArg column="id" javaType="int"/>
+      <arg column="blob" javaType="byte[]"/>
+    </constructor>
+  </resultMap>
+  
+  <insert id="insert" parameterType="org.apache.ibatis.submitted.blobtest.BlobRecord">
+    insert into blobtest.blobs values (#{id}, #{blob})
+  </insert>
+  
+  <select id="selectAll" resultMap="blobRecordResult">
+    select * from blobtest.blobs
+  </select>
+</mapper>
