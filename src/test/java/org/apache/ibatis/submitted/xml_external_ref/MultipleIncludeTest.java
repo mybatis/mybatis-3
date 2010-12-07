@@ -36,7 +36,7 @@ public class MultipleIncludeTest {
     try {
       MultipleIncludePersonMapper personMapper = sqlSession.getMapper(MultipleIncludePersonMapper.class);
       Person person = personMapper.select(1);
-      assertEquals(1, person.getId());
+      assertEquals((Integer)1, person.getId());
       assertEquals("John", person.getName());
 
     } finally {

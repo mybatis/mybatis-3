@@ -28,9 +28,9 @@ public class NodeletParserTest {
     assertEquals("Jim", emp.getFirstName());
     assertEquals("Smith", emp.getLastName());
     assertEquals(new Date(1970 - 1900, 6 - 1, 15), emp.getBirthDate());
-    assertEquals(5.8, emp.getHeight());
+    assertEquals(5.8, emp.getHeight(), 0.0001);
     assertEquals("ft", emp.getHeightUnits());
-    assertEquals(200, emp.getWeight());
+    assertEquals(200, emp.getWeight(), 0.0001);
     assertEquals("lbs", emp.getWeightUnits());
   }
 

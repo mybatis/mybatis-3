@@ -36,7 +36,7 @@ public class MultipleReverseIncludeTest {
     try {
       MultipleReverseIncludePersonMapper personMapper = sqlSession.getMapper(MultipleReverseIncludePersonMapper.class);
       Person person = personMapper.select(1);
-      assertEquals(1, person.getId());
+      assertEquals((Integer)1, person.getId());
       assertEquals("John", person.getName());
 
     } finally {

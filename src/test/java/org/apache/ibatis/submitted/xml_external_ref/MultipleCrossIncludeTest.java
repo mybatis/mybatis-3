@@ -55,17 +55,17 @@ public class MultipleCrossIncludeTest {
     try {
       MultipleCrossIncludePersonMapper personMapper = sqlSession.getMapper(MultipleCrossIncludePersonMapper.class);
       Person person = personMapper.select(1);
-      assertEquals(1, person.getId());
+      assertEquals((Integer)1, person.getId());
       assertEquals(2, person.getPets().size());
-      assertEquals(2, person.getPets().get(1).getId());
+      assertEquals((Integer)2, person.getPets().get(1).getId());
 
       Pet pet = personMapper.selectPet(1);
       assertEquals(Integer.valueOf(1), pet.getId());
 
       MultipleCrossIncludePetMapper petMapper = sqlSession.getMapper(MultipleCrossIncludePetMapper.class);
       Pet pet2 = petMapper.select(3);
-      assertEquals(3, pet2.getId());
-      assertEquals(2, pet2.getOwner().getId());
+      assertEquals((Integer)3, pet2.getId());
+      assertEquals((Integer)2, pet2.getOwner().getId());
     } finally {
       sqlSession.close();
     }
