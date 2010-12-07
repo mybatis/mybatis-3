@@ -1,6 +1,7 @@
 package org.apache.ibatis.submitted.blobtest;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
 
 import java.io.Reader;
 import java.sql.Connection;
@@ -13,7 +14,6 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class BlobTest {
@@ -48,7 +48,10 @@ public class BlobTest {
     }
 
     @Test
-    @Ignore("Breaks the build currently due to NPE at selectAll")
+    /**
+     * This test demonstrates the use of type aliases for primitive types
+     * in constructor based result maps
+     */
     public void testInsertBlobThenSelectAll() {
         SqlSession sqlSession = sqlSessionFactory.openSession();
         try {
@@ -65,9 +68,32 @@ public class BlobTest {
             assertEquals(1, results.size());
             BlobRecord result = results.get(0);
             assertEquals (blobRecord.getId(), result.getId());
-            assertEquals (blobRecord.getBlob(), result.getBlob());
+            assertTrue (blobsAreEqual(blobRecord.getBlob(), result.getBlob()));
         } finally {
             sqlSession.close();
         }
+    }
+
+    public static boolean blobsAreEqual(byte[] blob1, byte[] blob2) {
+        if (blob1 == null) {
+            return blob2 == null;
+        }
+
+        if (blob2 == null) {
+            return blob1 == null;
+        }
+
+        boolean rc = blob1.length == blob2.length;
+
+        if (rc) {
+            for (int i = 0; i < blob1.length; i++) {
+                if (blob1[i] != blob2[i]) {
+                    rc = false;
+                    break;
+                }
+            }
+        }
+
+        return rc;
     }
 }

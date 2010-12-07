@@ -3,8 +3,8 @@
 <mapper namespace="org.apache.ibatis.submitted.blobtest.BlobMapper">
   <resultMap type="org.apache.ibatis.submitted.blobtest.BlobRecord" id="blobRecordResult">
     <constructor>
-      <idArg column="id" javaType="int"/>
-      <arg column="blob" javaType="byte[]"/>
+      <idArg column="id" javaType="_int"/>
+      <arg column="blob" javaType="_byte[]"/>
     </constructor>
   </resultMap>
   
