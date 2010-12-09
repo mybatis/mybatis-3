@@ -24,7 +24,7 @@
   <properties>
     <findbugs.onlyAnalyze>org.apache.ibatis.*</findbugs.onlyAnalyze>
     <clirr.comparisonVersion>3.0.2</clirr.comparisonVersion>
-    <osgi.import>!net.sf.cglib.proxy,!org.apache.commons.logging,!org.apache.log4j,!org.slf4j,*</osgi.import>
+    <osgi.import>net.sf.cglib.proxy;resolution:=optional,org.apache.commons.logging;resolution:=optional,org.apache.log4j;resolution:=optional,org.slf4j;resolution:=optional,javax.naming,javax.sql,javax.xml.namespace,javax.xml.parsers,javax.xml.xpath,org.w3c.dom,org.xml.sax</osgi.import>
   </properties>
   <reporting>
     <plugins>
@@ -43,81 +43,6 @@
   </reporting>
   <build>
     <plugins>
-      <plugin>
-        <groupId>org.sonatype.plugins</groupId>
-        <artifactId>jarjar-maven-plugin</artifactId>
-        <version>1.3</version>
-        <configuration>
-          <includes>
-            <include>*:asm</include>
-            <include>*:cglib</include>
-          </includes>
-          <rules>
-            <!--
-             | relocate CGLIB + ASM as internal stuff
-            -->
-            <rule>
-              <pattern>net.sf.cglib.*</pattern>
-              <result>org.apache.ibatis.internal.cglib.$@1</result>
-            </rule>
-            <rule>
-              <pattern>net.sf.cglib.**.*</pattern>
-              <result>org.apache.ibatis.internal.cglib.@1.$@2</result>
-            </rule>
-            <rule>
-              <pattern>org.objectweb.asm.*</pattern>
-              <result>org.apache.ibatis.internal.asm.$@1</result>
-            </rule>
-            <rule>
-              <pattern>org.objectweb.asm.**.*</pattern>
-              <result>org.apache.ibatis.internal.asm.@1.$@2</result>
-            </rule>
-            <!--
-             | keep original source
-            -->
-            <keep>
-              <pattern>org.apache.ibatis.**</pattern>
-            </keep>
-            <!--
-             | keep test source
-            -->
-            <keep>
-              <pattern>com.**</pattern>
-            </keep>
-            <keep>
-              <pattern>databases.**</pattern>
-            </keep>
-            <keep>
-              <pattern>domain.**</pattern>
-            </keep>
-          </rules>
-        </configuration>
-        <!--
-         | JarJar all classes before running tests
-        -->
-        <executions>
-          <execution>
-            <id>jarjar-classes</id>
-            <phase>process-test-classes</phase>
-            <goals>
-              <goal>jarjar</goal>
-            </goals>
-            <configuration>
-              <input>{classes}</input>
-            </configuration>
-          </execution>
-          <execution>
-            <id>jarjar-test-classes</id>
-            <phase>process-test-classes</phase>
-            <goals>
-              <goal>jarjar</goal>
-            </goals>
-            <configuration>
-              <input>{test-classes}</input>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-assembly-plugin</artifactId>
@@ -282,16 +207,16 @@
       <optional>true</optional>
     </dependency>
     <dependency>
-      <groupId>org.sonatype.sisu.inject</groupId>
+      <groupId>cglib</groupId>
       <artifactId>cglib</artifactId>
-      <version>2.2.1</version>
-      <scope>provided</scope>
+      <version>2.1_3</version>
+      <optional>true</optional>
     </dependency>
     <!-- Test dependencies -->
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>4.3.1</version>
+      <version>4.8.2</version>
       <scope>test</scope>
     </dependency>
     <dependency>

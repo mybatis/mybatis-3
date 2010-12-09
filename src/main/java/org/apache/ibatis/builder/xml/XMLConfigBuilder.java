@@ -153,13 +153,21 @@ public class XMLConfigBuilder extends BaseBuilder {
       }
       configuration.setAutoMappingBehavior(AutoMappingBehavior.valueOf(stringValueOf(props.getProperty("autoMappingBehavior"), "PARTIAL")));
       configuration.setCacheEnabled(booleanValueOf(props.getProperty("cacheEnabled"), true));
-      configuration.setLazyLoadingEnabled(booleanValueOf(props.getProperty("lazyLoadingEnabled"), false));
+      configuration.setLazyLoadingEnabled(booleanValueOf(props.getProperty("lazyLoadingEnabled"), safeCglibCheck()));
       configuration.setAggressiveLazyLoading(booleanValueOf(props.getProperty("aggressiveLazyLoading"), true));
       configuration.setMultipleResultSetsEnabled(booleanValueOf(props.getProperty("multipleResultSetsEnabled"), true));
       configuration.setUseColumnLabel(booleanValueOf(props.getProperty("useColumnLabel"), true));
       configuration.setUseGeneratedKeys(booleanValueOf(props.getProperty("useGeneratedKeys"), false));
       configuration.setDefaultExecutorType(ExecutorType.valueOf(stringValueOf(props.getProperty("defaultExecutorType"), "SIMPLE")));
       configuration.setDefaultStatementTimeout(integerValueOf(props.getProperty("defaultStatementTimeout"), null));
+    }
+  }
+
+  private boolean safeCglibCheck() {
+    try {
+      return Resources.classForName("net.sf.cglib.proxy.Enhancer") != null;
+    } catch (Exception e) {
+      return false;
     }
   }
 
