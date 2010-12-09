@@ -24,7 +24,7 @@
   <properties>
     <findbugs.onlyAnalyze>org.apache.ibatis.*</findbugs.onlyAnalyze>
     <clirr.comparisonVersion>3.0.2</clirr.comparisonVersion>
-    <osgi.import>net.sf.cglib.proxy;resolution:=optional,org.apache.commons.logging;resolution:=optional,org.apache.log4j;resolution:=optional,org.slf4j;resolution:=optional,javax.naming,javax.sql,javax.xml.namespace,javax.xml.parsers,javax.xml.xpath,org.w3c.dom,org.xml.sax</osgi.import>
+    <osgi.import>net.sf.cglib.proxy;resolution:=optional,org.apache.commons.logging;resolution:=optional,org.apache.log4j;resolution:=optional,org.slf4j;resolution:=optional,*</osgi.import>
   </properties>
   <reporting>
     <plugins>
