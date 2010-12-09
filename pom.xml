@@ -21,6 +21,16 @@
     <connection>scm:svn:https://mybatis.googlecode.com/svn/trunk</connection>
     <developerConnection>scm:svn:https://mybatis.googlecode.com/svn/trunk</developerConnection>
   </scm>
+  <contributors>
+    <contributor>
+        <name>Andrea Selva</name>
+        <email>selva.andre@gmail.com</email>
+    </contributor>
+    <contributor>
+        <name>Riccardo Cossu</name>
+        <email>riccardo.cossu@gmail.com</email>
+    </contributor>
+  </contributors>
   <properties>
     <findbugs.onlyAnalyze>org.apache.ibatis.*</findbugs.onlyAnalyze>
     <clirr.comparisonVersion>3.0.2</clirr.comparisonVersion>
