@@ -209,6 +209,7 @@ public class XMLMapperBuilder extends BaseBuilder {
   private void bufferStatementNodes(List<XNode> list) {
     String currentNamespace = builderAssistant.getCurrentNamespace();
     configuration.addStatementNodes(currentNamespace, list);
+    configuration.addResource(currentNamespace, resource);
   }
 
   private ResultMapping buildResultMappingFromContext(XNode context, Class<?> resultType, ArrayList<ResultFlag> flags) throws Exception {

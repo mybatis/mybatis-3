@@ -74,6 +74,8 @@ public class Configuration {
 
   /** A map holds statement nodes for a namespace. */
   protected final ConcurrentMap<String, List<XNode>> statementNodesToParse = new ConcurrentHashMap<String, List<XNode>>();
+  /** A map holds a resource for a namespace. */
+  protected final Map<String, String> resourceMap = new HashMap<String, String>();
   /**
    * A map holds cache-ref relationship. The key is the namespace that
    * references a cache bound to another namespace and the value is the
@@ -412,6 +414,10 @@ public class Configuration {
     statementNodesToParse.put(namespace, nodes);
   }
 
+  public void addResource(String namespace, String resource) {
+      resourceMap.put(namespace, resource);
+  }
+
   public void addCacheRef(String namespace, String referencedNamespace) {
     cacheRefMap.put(namespace, referencedNamespace);
   }
@@ -432,7 +438,12 @@ public class Configuration {
 
   protected void buildStatementsFromId(String id) {
     final String namespace = extractNamespace(id);
-    buildStatementsForNamespace(namespace);
+    if (namespace == null) {
+      // the id is a short name. process all statements.
+      buildAllStatements();
+    } else {
+      buildStatementsForNamespace(namespace);
+    }
   }
 
   /**
@@ -456,7 +467,7 @@ public class Configuration {
     if (namespace != null) {
       final List<XNode> list = statementNodesToParse.get(namespace);
       if (list != null) {
-        final String resource = namespace.replace('.', '/') + ".xml";
+        final String resource = resourceMap.get(namespace);
         final MapperBuilderAssistant builderAssistant = new MapperBuilderAssistant(this, resource);
         builderAssistant.setCurrentNamespace(namespace);
         // Set a cache reference if one is bound to this namespace.
@@ -469,6 +480,7 @@ public class Configuration {
         parseStatementNodes(builderAssistant, list);
         // Remove the processed nodes and resource from the cache.
         statementNodesToParse.remove(namespace);
+        resourceMap.remove(namespace);
       }
     }
   }
