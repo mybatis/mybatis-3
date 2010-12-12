@@ -1,15 +1,14 @@
 package org.apache.ibatis.executor.loader;
 
-import org.apache.ibatis.reflection.MetaObject;
-
-import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-public class ResultLoaderMap implements Serializable {
+import org.apache.ibatis.reflection.MetaObject;
+
+public class ResultLoaderMap {
 
   private final Map<String, LoadPair> loaderMap = new HashMap<String, LoadPair>();
 
@@ -18,14 +17,14 @@ public class ResultLoaderMap implements Serializable {
     loaderMap.put(upperFirst, new LoadPair(property, metaResultObject, resultLoader));
   }
 
-  public int size() throws SQLException {
+  public int size() {
     return loaderMap.size();
   }
 
-  public boolean hasLoader(String methodName) throws SQLException {
+  public boolean hasLoader(String methodName) {
     return loaderMap.containsKey(methodName.toUpperCase(Locale.ENGLISH));
   }
-
+  
   public boolean load(String property) throws SQLException {
     LoadPair pair = loaderMap.remove(property.toUpperCase(Locale.ENGLISH));
     if (pair != null) {

@@ -1,5 +1,6 @@
 package org.apache.ibatis.binding;
 
+import java.io.Serializable;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
@@ -8,7 +9,9 @@ import java.util.Set;
 
 import org.apache.ibatis.session.SqlSession;
 
-public class MapperProxy implements InvocationHandler {
+public class MapperProxy implements InvocationHandler, Serializable {
+
+  private static final long serialVersionUID = -6424540398559729838L;
 
   private static final Set<String> OBJECT_METHODS = new HashSet<String>() {
     private static final long serialVersionUID = -1782950882770203582L;

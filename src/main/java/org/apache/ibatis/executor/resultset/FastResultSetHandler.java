@@ -285,7 +285,7 @@ public class FastResultSetHandler implements ResultSetHandler {
   protected Object createResultObject(ResultSet rs, ResultMap resultMap, ResultLoaderMap lazyLoader) throws SQLException {
     final Object resultObject = createResultObject(rs, resultMap);
     if (resultObject != null && configuration.isLazyLoadingEnabled()) {
-      return ResultObjectProxy.createProxy(resultObject, lazyLoader, configuration.isAggressiveLazyLoading());
+      return ResultObjectProxy.createProxy(resultObject, lazyLoader, configuration.isAggressiveLazyLoading(), objectFactory);
     }
     return resultObject;
   }
