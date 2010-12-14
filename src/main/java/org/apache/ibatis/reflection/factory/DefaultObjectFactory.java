@@ -2,10 +2,13 @@ package org.apache.ibatis.reflection.factory;
 
 import org.apache.ibatis.reflection.ReflectionException;
 
+import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.util.*;
 
-public class DefaultObjectFactory implements ObjectFactory {
+public class DefaultObjectFactory implements ObjectFactory, Serializable {
+
+  private static final long serialVersionUID = -8855120656740914948L;
 
   public Object create(Class type) {
     return create(type, null, null);

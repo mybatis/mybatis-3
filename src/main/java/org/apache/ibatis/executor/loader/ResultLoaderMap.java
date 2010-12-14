@@ -16,13 +16,17 @@ public class ResultLoaderMap {
     String upperFirst = getUppercaseFirstProperty(property);
     loaderMap.put(upperFirst, new LoadPair(property, metaResultObject, resultLoader));
   }
+  
+  public Set<String> getPropertyNames() {
+    return loaderMap.keySet();
+  }
 
   public int size() {
     return loaderMap.size();
   }
 
-  public boolean hasLoader(String methodName) {
-    return loaderMap.containsKey(methodName.toUpperCase(Locale.ENGLISH));
+  public boolean hasLoader(String property) {
+    return loaderMap.containsKey(property.toUpperCase(Locale.ENGLISH));
   }
   
   public boolean load(String property) throws SQLException {
