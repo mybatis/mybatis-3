@@ -7,10 +7,10 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import org.junit.BeforeClass;
+
+import org.junit.Before;
 import org.junit.Test;
 
-import java.io.PrintWriter;
 import java.io.Reader;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -21,8 +21,8 @@ public class SelectKeyTest {
 
   protected static SqlSessionFactory sqlSessionFactory;
 
-  @BeforeClass
-  public static void setUp() throws Exception {
+  @Before
+  public void setUp() throws Exception {
     Connection conn = null;
 
     try {
@@ -42,6 +42,7 @@ public class SelectKeyTest {
       reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/selectkey/MapperConfig.xml");
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
       reader.close();
+      sqlSessionFactory.getConfiguration().addMapper(AnnotatedMapper.class);
     } finally {
       if (conn != null) {
         conn.close();
@@ -65,7 +66,7 @@ public class SelectKeyTest {
     SqlSession sqlSession = sqlSessionFactory.openSession();
 
     try {
-      Map parms = new HashMap();
+      Map<String, String> parms = new HashMap<String, String>();
       parms.put("name", "Fred");
       int rows = sqlSession.insert("org.apache.ibatis.submitted.selectkey.Table1.insert", parms);
       assertEquals(1, rows);
@@ -81,7 +82,7 @@ public class SelectKeyTest {
     SqlSession sqlSession = sqlSessionFactory.openSession();
 
     try {
-      Map parms = new HashMap();
+      Map<String, String> parms = new HashMap<String, String>();
       parms.put("name", "Fred");
       int rows = sqlSession.insert("org.apache.ibatis.submitted.selectkey.Table2.insert", parms);
       assertEquals(1, rows);
@@ -91,5 +92,36 @@ public class SelectKeyTest {
       sqlSession.close();
     }
   }
+  
+  @Test
+  public void testAnnotatedInsertTable2() {
+      SqlSession sqlSession = sqlSessionFactory.openSession();
 
+      try {
+        Name name = new Name();
+        name.setName("barney");
+        AnnotatedMapper mapper = sqlSession.getMapper(AnnotatedMapper.class);
+        int rows = mapper.insertTable2(name);
+        assertEquals(1, rows);
+        assertEquals(22, name.getNameId());
+      } finally {
+        sqlSession.close();
+      }
+  }
+
+  @Test
+  public void testAnnotatedInsertTable3() {
+      SqlSession sqlSession = sqlSessionFactory.openSession();
+
+      try {
+        Name name = new Name();
+        name.setName("barney");
+        AnnotatedMapper mapper = sqlSession.getMapper(AnnotatedMapper.class);
+        int rows = mapper.insertTable3(name);
+        assertEquals(1, rows);
+        assertEquals(33, name.getNameId());
+      } finally {
+        sqlSession.close();
+      }
+  }
 }

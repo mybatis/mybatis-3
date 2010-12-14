@@ -1,0 +1,15 @@
+package org.apache.ibatis.submitted.selectkey;
+
+import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.SelectKey;
+
+public interface AnnotatedMapper {
+
+    @Insert("insert into table2 (name) values(#{name})")
+    @SelectKey(statement="call identity()", keyProperty="nameId", before=false, resultType=int.class)
+    int insertTable2(Name name);
+    
+    @Insert("insert into table3 (id, name) values(#{nameId}, #{name})")
+    @SelectKey(statement="call next value for TestSequence", keyProperty="nameId", before=true, resultType=int.class)
+    int insertTable3(Name name);
+}

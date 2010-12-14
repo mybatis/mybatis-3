@@ -28,6 +28,7 @@ import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.SelectKey;
 import org.apache.ibatis.annotations.SelectProvider;
 import org.apache.ibatis.annotations.TypeDiscriminator;
 import org.apache.ibatis.annotations.Update;
@@ -43,8 +44,10 @@ import org.apache.ibatis.builder.xml.dynamic.TextSqlNode;
 import org.apache.ibatis.executor.keygen.Jdbc3KeyGenerator;
 import org.apache.ibatis.executor.keygen.KeyGenerator;
 import org.apache.ibatis.executor.keygen.NoKeyGenerator;
+import org.apache.ibatis.executor.keygen.SelectKeyGenerator;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.mapping.Discriminator;
+import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.ResultFlag;
 import org.apache.ibatis.mapping.ResultMapping;
 import org.apache.ibatis.mapping.ResultSetType;
@@ -113,14 +116,14 @@ public class MapperAnnotationBuilder {
   }
 
   private void parseCache() {
-    CacheNamespace cacheDomain = (CacheNamespace) type.getAnnotation(CacheNamespace.class);
+    CacheNamespace cacheDomain = type.getAnnotation(CacheNamespace.class);
     if (cacheDomain != null) {
       assistant.useNewCache(cacheDomain.implementation(), cacheDomain.eviction(), cacheDomain.flushInterval(), cacheDomain.size(), cacheDomain.readWrite(), null);
     }
   }
 
   private void parseCacheRef() {
-    CacheNamespaceRef cacheDomainRef = (CacheNamespaceRef) type.getAnnotation(CacheNamespaceRef.class);
+    CacheNamespaceRef cacheDomainRef = type.getAnnotation(CacheNamespaceRef.class);
     if (cacheDomainRef != null) {
       assistant.useCacheRef(cacheDomainRef.value().getName());
     }
@@ -218,9 +221,31 @@ public class MapperAnnotationBuilder {
       StatementType statementType = StatementType.PREPARED;
       ResultSetType resultSetType = ResultSetType.FORWARD_ONLY;
       SqlCommandType sqlCommandType = getSqlCommandType(method);
-      KeyGenerator keyGenerator = configuration.isUseGeneratedKeys()
-          && SqlCommandType.INSERT.equals(sqlCommandType) ? new Jdbc3KeyGenerator() : new NoKeyGenerator();
+      
+      KeyGenerator keyGenerator;
       String keyProperty = "id";
+      if (SqlCommandType.INSERT.equals(sqlCommandType)) {
+        // first check for SelectKey annotation - that overrides everything else
+        SelectKey selectKey = method.getAnnotation(SelectKey.class);
+        if (selectKey != null) {
+            keyGenerator = handleSelectKeyAnnotation(selectKey, mappedStatementId, getParameterType(method));
+            keyProperty = selectKey.keyProperty();
+        } else {
+          if (configuration.isUseGeneratedKeys()) {
+            if (options == null) {
+              keyGenerator = new Jdbc3KeyGenerator();
+            } else {
+              keyProperty = options.keyProperty();
+              keyGenerator = options.useGeneratedKeys() ? new Jdbc3KeyGenerator() : new NoKeyGenerator();
+            }
+          } else {
+            keyGenerator = new NoKeyGenerator();
+          }
+        }
+      } else {
+        keyGenerator = new NoKeyGenerator();
+      }
+      
       if (options != null) {
         flushCache = options.flushCache();
         useCache = options.useCache();
@@ -228,9 +253,8 @@ public class MapperAnnotationBuilder {
         timeout = options.timeout() > -1 ? options.timeout() : null;
         statementType = options.statementType();
         resultSetType = options.resultSetType();
-        keyGenerator = options.useGeneratedKeys() ? new Jdbc3KeyGenerator() : new NoKeyGenerator();
-        keyProperty = options.keyProperty();
       }
+      
       assistant.addMappedStatement(
           mappedStatementId,
           sqlSource,
@@ -304,15 +328,7 @@ public class MapperAnnotationBuilder {
         }
         Annotation sqlAnnotation = method.getAnnotation(sqlAnnotationType);
         final String[] strings = (String[]) sqlAnnotation.getClass().getMethod("value").invoke(sqlAnnotation);
-        final StringBuilder sql = new StringBuilder();
-        for (String fragment : strings) {
-          sql.append(fragment);
-          sql.append(" ");
-        }
-        ArrayList<SqlNode> contents = new ArrayList<SqlNode>();
-        contents.add(new TextSqlNode(sql.toString()));
-        MixedSqlNode rootSqlNode = new MixedSqlNode(contents);
-        return new DynamicSqlSource(configuration, rootSqlNode);
+        return buildSqlSourceFromStrings(strings);
       } else if (sqlProviderAnnotationType != null) {
         Annotation sqlProviderAnnotation = method.getAnnotation(sqlProviderAnnotationType);
         return new ProviderSqlSource(assistant.getConfiguration(), sqlProviderAnnotation);
@@ -323,6 +339,18 @@ public class MapperAnnotationBuilder {
     }
   }
 
+  private SqlSource buildSqlSourceFromStrings(String[] strings) {
+    final StringBuilder sql = new StringBuilder();
+    for (String fragment : strings) {
+      sql.append(fragment);
+      sql.append(" ");
+    }
+    ArrayList<SqlNode> contents = new ArrayList<SqlNode>();
+    contents.add(new TextSqlNode(sql.toString()));
+    MixedSqlNode rootSqlNode = new MixedSqlNode(contents);
+    return new DynamicSqlSource(configuration, rootSqlNode);
+  }
+  
   private SqlCommandType getSqlCommandType(Method method) {
     Class<? extends Annotation> type = getSqlAnnotationType(method);
 
@@ -431,4 +459,35 @@ public class MapperAnnotationBuilder {
     return args == null ? new Arg[0] : args.value();
   }
 
+  private KeyGenerator handleSelectKeyAnnotation(SelectKey selectKeyAnnotation, String baseStatementId, Class<?> parameterTypeClass) {
+    String id = baseStatementId + SelectKeyGenerator.SELECT_KEY_SUFFIX;
+    Class<?> resultTypeClass = selectKeyAnnotation.resultType();
+    StatementType statementType = selectKeyAnnotation.statementType();
+    String keyProperty = selectKeyAnnotation.keyProperty();
+    boolean executeBefore = selectKeyAnnotation.before();
+
+    // defaults
+    boolean useCache = false;
+    KeyGenerator keyGenerator = new NoKeyGenerator();
+    Integer fetchSize = null;
+    Integer timeout = null;
+    boolean flushCache = false;
+    String parameterMap = null;
+    String resultMap = null;
+    ResultSetType resultSetTypeEnum = null;
+
+    SqlSource sqlSource = buildSqlSourceFromStrings(selectKeyAnnotation.statement());
+    SqlCommandType sqlCommandType = SqlCommandType.SELECT;
+
+    assistant.addMappedStatement(id, sqlSource, statementType, sqlCommandType,
+          fetchSize, timeout, parameterMap, parameterTypeClass, resultMap, resultTypeClass,
+          resultSetTypeEnum, flushCache, useCache, keyGenerator, keyProperty);
+
+    id = assistant.applyCurrentNamespace(id);
+
+    MappedStatement keyStatement = configuration.getMappedStatement(id);
+    SelectKeyGenerator answer = new SelectKeyGenerator(keyStatement, executeBefore); 
+    configuration.addKeyGenerator(id, answer);
+    return answer;
+  }
 }
