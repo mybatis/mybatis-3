@@ -353,6 +353,8 @@ public class MapperBuilderAssistant extends BaseBuilder {
     if (javaType == null) {
       if (JdbcType.CURSOR.equals(jdbcType)) {
         javaType = java.sql.ResultSet.class;
+      } else if (Map.class.isAssignableFrom(resultType)) {
+        javaType = Object.class;
       } else {
         MetaClass metaResultType = MetaClass.forClass(resultType);
         javaType = metaResultType.getGetterType(property);

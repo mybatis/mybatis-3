@@ -82,9 +82,6 @@ public class SPTest {
      * in a stored procedure.
      * This procedure does not return a result set.
      * 
-     * Currently this test will fail without clearing the cache because
-     * of a MyBatis cache issue.
-     * 
      * This test shows using a multi-property parameter.
      */
     @Test
@@ -99,9 +96,6 @@ public class SPTest {
             
             spMapper.adder(parameter);
             assertEquals((Integer) 5, parameter.getSum());
-            
-            // Resolved Output Parameter Caching Issue for Callable statements
-            // sqlSession.clearCache();
             
             parameter = new Parameter();
             parameter.setAddend1(2);
@@ -119,10 +113,10 @@ public class SPTest {
      * in a stored procedure.
      * This procedure does not return a result set.
      * 
-     * This test shows using a multi-property parameter.
+     * This test also demonstrates session level cache for
+     * output parameters.
      * 
-     * This test shows that the cache problem does not manifest if
-     * the input parameters are different.
+     * This test shows using a multi-property parameter.
      */
     @Test
     public void testAdderAsSelectDoubleCall2() {
@@ -149,8 +143,7 @@ public class SPTest {
     }
 
     /**
-     * This test shows that the cache problem is not in effect if
-     * stored procedures with out parms are defined as <update> rather
+     * This test shows how to call a stored procedure defined as <update> rather
      * then <select>.  Of course, this only works if you are not returning
      * a result set.
      * 
@@ -174,6 +167,36 @@ public class SPTest {
             parameter.setAddend2(3);
             spMapper.adder2(parameter);
             assertEquals((Integer) 5, parameter.getSum());
+            
+        } finally {
+            sqlSession.close();
+        }
+    }
+    
+    /**
+     * This test shows the use of a declared parameter map.
+     * We generally prefer inline parameters, because the syntax
+     * is more intuitive (no pesky question marks), but a parameter map
+     * will work.
+     */
+    @Test
+    public void testAdderAsUpdateWithParameterMap() {
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        try {
+            Map<String, Object> parms = new HashMap<String, Object>();
+            parms.put("addend1", 3);
+            parms.put("addend2", 4);
+            
+            SPMapper spMapper = sqlSession.getMapper(SPMapper.class);
+            
+            spMapper.adder3(parms);
+            assertEquals(7, parms.get("sum"));
+            
+            parms = new HashMap<String, Object>();
+            parms.put("addend1", 2);
+            parms.put("addend2", 3);
+            spMapper.adder3(parms);
+            assertEquals(5, parms.get("sum"));
             
         } finally {
             sqlSession.close();
@@ -229,9 +252,6 @@ public class SPTest {
      * return a result set from a stored procedure.
      * 
      * This test shows using a Map parameter.
-     * 
-     * This test shows that the cache problem does not manifest if
-     * the input parameters are different.
      */
     @Test
     @Ignore("until hsqldb 2.0.1 is released")
@@ -261,9 +281,6 @@ public class SPTest {
      * return a result set from a stored procedure.
      * 
      * This test shows using a Map parameter.
-     * 
-     * Currently this test will fail without clearing the cache because
-     * of a MyBatis cache issue.
      */
     @Test
     @Ignore("until hsqldb 2.0.1 is released")
@@ -278,9 +295,6 @@ public class SPTest {
             assertEquals(2, parms.get("totalRows"));
             assertEquals(2, names.size());
             
-            // Resolved Output Parameter Caching Issue for Callable statements
-            // sqlSession.clearCache();
-            
             parms = new HashMap<String, Object>();
             parms.put("lowestId", 2);
             names = spMapper.getNames(parms);
@@ -291,6 +305,12 @@ public class SPTest {
         }
     }
 
+    /**
+     * This test shows how to use the ARRAY JDBC type
+     * with MyBatis.
+     * 
+     * @throws SQLException
+     */
     @Test
     @Ignore("until hsqldb 2.0.1 is released")
     public void testGetNamesWithArray() throws SQLException {

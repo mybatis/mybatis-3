@@ -7,6 +7,12 @@
     <result column="LAST_NAME" property="lastName"/>
   </resultMap>
 
+  <parameterMap type="map" id="testParameterMap">
+    <parameter property="addend1" jdbcType="INTEGER" mode="IN"/>
+    <parameter property="addend2" jdbcType="INTEGER" mode="IN"/>
+    <parameter property="sum" jdbcType="INTEGER" mode="OUT"/>
+  </parameterMap>
+
   <!-- Important things for stored procedures:
     1. Must set the statement type to CALLABLE
     2. Must use the JDBC standard escape sequence for stored procedures:
@@ -35,6 +41,10 @@
       #{addend2,jdbcType=INTEGER,mode=IN},
       #{sum,jdbcType=INTEGER,mode=OUT}
     )}
+  </update>
+  
+  <update id="adder3" parameterMap="testParameterMap" statementType="CALLABLE">
+    {call sptest.adder(?, ?, ?)}
   </update>
   
   <select id="getName" parameterType="java.lang.Integer" statementType="CALLABLE"
