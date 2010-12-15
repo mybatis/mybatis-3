@@ -4,6 +4,7 @@ import java.io.ObjectStreamException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import net.sf.cglib.core.Signature;
@@ -25,13 +26,15 @@ public class ResultObjectProxy {
 
   private static final Log log = LogFactory.getLog(ResultObjectProxy.class);
 
-  private static final Set<String> objectMethods = new HashSet<String>(Arrays.asList(new String[]{"equals","clone","hashCode","toString"}));
+  private static final Set<String> objectMethods = new HashSet<String>(Arrays.asList(new String[] { "equals", "clone", "hashCode", "toString" }));
   private static final TypeHandlerRegistry registry = new TypeHandlerRegistry();
   private static final String FINALIZE_METHOD = "finalize";
   private static final String WRITE_REPLACE_METHOD = "writeReplace";
 
-  public static Object createProxy(Object target, ResultLoaderMap lazyLoader, boolean aggressive, ObjectFactory objectFactory) {
-    return EnhancedResultObjectProxyImpl.createProxy(target, lazyLoader, aggressive, objectFactory);
+  public static Object createProxy(Object target, ResultLoaderMap lazyLoader, boolean aggressive,
+      ObjectFactory objectFactory, List<Class> constructorArgTypes, List<Object> constructorArgs) {
+    return EnhancedResultObjectProxyImpl.createProxy(target, lazyLoader, aggressive, objectFactory,
+        constructorArgTypes, constructorArgs);
   }
 
   private static class EnhancedResultObjectProxyImpl implements MethodInterceptor {
@@ -40,20 +43,27 @@ public class ResultObjectProxy {
     private ResultLoaderMap lazyLoader;
     private boolean aggressive;
     private ObjectFactory objectFactory;
+    private List<Class> constructorArgTypes;
+    private List<Object> constructorArgs;
 
-    private EnhancedResultObjectProxyImpl(Class type, ResultLoaderMap lazyLoader, boolean aggressive, ObjectFactory objectFactory) {
+    private EnhancedResultObjectProxyImpl(Class type, ResultLoaderMap lazyLoader, boolean aggressive,
+        ObjectFactory objectFactory, List<Class> constructorArgTypes, List<Object> constructorArgs) {
       this.type = type;
       this.lazyLoader = lazyLoader;
       this.aggressive = aggressive;
       this.objectFactory = objectFactory;
+      this.constructorArgTypes = constructorArgTypes;
+      this.constructorArgs = constructorArgs;
     }
 
-    public static Object createProxy(Object target, ResultLoaderMap lazyLoader, boolean aggressive, ObjectFactory objectFactory) {
+    public static Object createProxy(Object target, ResultLoaderMap lazyLoader, boolean aggressive,
+        ObjectFactory objectFactory, List<Class> constructorArgTypes, List<Object> constructorArgs) {
       final Class type = target.getClass();
       if (registry.hasTypeHandler(type)) {
         return target;
       } else {
-        EnhancedResultObjectProxyImpl proxy = new EnhancedResultObjectProxyImpl(type, lazyLoader, aggressive, objectFactory);
+        EnhancedResultObjectProxyImpl proxy = new EnhancedResultObjectProxyImpl(type, lazyLoader, aggressive,
+            objectFactory, constructorArgTypes, constructorArgs);
         Enhancer enhancer = new Enhancer();
         enhancer.setCallback(proxy);
         enhancer.setSuperclass(type);
@@ -71,24 +81,34 @@ public class ResultObjectProxy {
           // nothing to do here
         }
 
-        final Object enhanced = enhancer.create();
+        Object enhanced = null;
+        if (constructorArgTypes.isEmpty()) {
+          enhanced = enhancer.create();
+        } else {
+          Class[] typesArray = constructorArgTypes.toArray(new Class[constructorArgTypes.size()]);
+          Object[] valuesArray = constructorArgs.toArray(new Object[constructorArgs.size()]);
+          enhanced = enhancer.create(typesArray, valuesArray);
+        }
         PropertyCopier.copyBeanProperties(type, target, enhanced);
         return enhanced;
       }
     }
-    
+
     public Object intercept(Object enhanced, Method method, Object[] args, MethodProxy methodProxy) throws Throwable {
       final String methodName = method.getName();
       try {
         synchronized (lazyLoader) {
           if (WRITE_REPLACE_METHOD.equals(methodName)) {
-            Object original = objectFactory.create(type);
+            Object original = null;
+            if (constructorArgTypes.isEmpty()) {
+              original = objectFactory.create(type);
+            } else {
+              original = objectFactory.create(type, constructorArgTypes, constructorArgs);
+            }
             PropertyCopier.copyBeanProperties(type, enhanced, original);
             if (lazyLoader.size() > 0) {
-              Set<String> unloadedProperties = lazyLoader.getPropertyNames();
-              return new SerialStatusHolder(original, 
-                  unloadedProperties.toArray(new String[unloadedProperties.size()]), 
-                  objectFactory);
+              return new SerialStateHolder(original, lazyLoader.getPropertyNames(), objectFactory,
+                  constructorArgTypes, constructorArgs);
             } else {
               return original;
             }

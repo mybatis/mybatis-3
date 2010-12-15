@@ -283,39 +283,41 @@ public class FastResultSetHandler implements ResultSetHandler {
   //
 
   protected Object createResultObject(ResultSet rs, ResultMap resultMap, ResultLoaderMap lazyLoader) throws SQLException {
-    final Object resultObject = createResultObject(rs, resultMap);
+    final List<Class> constructorArgTypes = new ArrayList<Class>();
+    final List<Object> constructorArgs = new ArrayList<Object>();
+    final Object resultObject = createResultObject(rs, resultMap, constructorArgTypes, constructorArgs);
     if (resultObject != null && configuration.isLazyLoadingEnabled()) {
-      return ResultObjectProxy.createProxy(resultObject, lazyLoader, configuration.isAggressiveLazyLoading(), objectFactory);
+      return ResultObjectProxy.createProxy(resultObject, lazyLoader, configuration.isAggressiveLazyLoading(), objectFactory, constructorArgTypes, constructorArgs);
     }
     return resultObject;
   }
 
-  protected Object createResultObject(ResultSet rs, ResultMap resultMap) throws SQLException {
+  protected Object createResultObject(ResultSet rs, ResultMap resultMap, List<Class> constructorArgTypes, List<Object> constructorArgs)
+      throws SQLException {
     final Class resultType = resultMap.getType();
     final List<ResultMapping> constructorMappings = resultMap.getConstructorResultMappings();
     if (typeHandlerRegistry.hasTypeHandler(resultType)) {
       return createPrimitiveResultObject(rs, resultMap);
     } else if (constructorMappings.size() > 0) {
-      return createParameterizedResultObject(rs, resultType, constructorMappings);
+      return createParameterizedResultObject(rs, resultType, constructorMappings, constructorArgTypes, constructorArgs);
     } else {
       return objectFactory.create(resultType);
     }
   }
 
-  protected Object createParameterizedResultObject(ResultSet rs, Class resultType, List<ResultMapping> constructorMappings) throws SQLException {
+  protected Object createParameterizedResultObject(ResultSet rs, Class resultType,
+      List<ResultMapping> constructorMappings, List<Class> constructorArgTypes, List<Object> constructorArgs) throws SQLException {
     boolean foundValues = false;
-    final List<Class> parameterTypes = new ArrayList<Class>();
-    final List<Object> parameterValues = new ArrayList<Object>();
     for (ResultMapping constructorMapping : constructorMappings) {
       final Class parameterType = constructorMapping.getJavaType();
       final TypeHandler typeHandler = constructorMapping.getTypeHandler();
       final String column = constructorMapping.getColumn();
       final Object value = typeHandler.getResult(rs, column);
-      parameterTypes.add(parameterType);
-      parameterValues.add(value);
+      constructorArgTypes.add(parameterType);
+      constructorArgs.add(value);
       foundValues = value != null || foundValues;
     }
-    return foundValues ? objectFactory.create(resultType, parameterTypes, parameterValues) : null;
+    return foundValues ? objectFactory.create(resultType, constructorArgTypes, constructorArgs) : null;
   }
 
   protected Object createPrimitiveResultObject(ResultSet rs, ResultMap resultMap) throws SQLException {

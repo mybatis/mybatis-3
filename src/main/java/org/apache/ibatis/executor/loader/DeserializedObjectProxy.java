@@ -2,7 +2,7 @@ package org.apache.ibatis.executor.loader;
 
 import java.io.ObjectStreamException;
 import java.lang.reflect.Method;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
@@ -13,8 +13,6 @@ import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;
 
 import org.apache.ibatis.executor.ExecutorException;
-import org.apache.ibatis.logging.Log;
-import org.apache.ibatis.logging.LogFactory;
 import org.apache.ibatis.reflection.ExceptionUtil;
 import org.apache.ibatis.reflection.factory.ObjectFactory;
 import org.apache.ibatis.reflection.property.PropertyCopier;
@@ -23,13 +21,13 @@ import org.objectweb.asm.Type;
 
 public class DeserializedObjectProxy {
 
-  private static final Log log = LogFactory.getLog(DeserializedObjectProxy.class);
-
   private static final String FINALIZE_METHOD = "finalize";
   private static final String WRITE_REPLACE_METHOD = "writeReplace";
 
-  public static Object createProxy(Object target, String[] unloadedProperties, ObjectFactory objectFactory) {
-    return DeserializationProxyImpl.createProxy(target, unloadedProperties, objectFactory);
+  public static Object createProxy(Object target, Set<String> unloadedProperties, ObjectFactory objectFactory,
+      List<Class> constructorArgTypes, List<Object> constructorArgs) {
+    return DeserializationProxyImpl.createProxy(target, unloadedProperties, objectFactory, constructorArgTypes,
+        constructorArgs);
   }
 
   private static class DeserializationProxyImpl implements MethodInterceptor {
@@ -37,19 +35,23 @@ public class DeserializedObjectProxy {
     private Class type;
     private Set<String> unloadedProperties;
     private ObjectFactory objectFactory;
+    private List<Class> constructorArgTypes;
+    private List<Object> constructorArgs;
 
-    private DeserializationProxyImpl(Class type, String[] unloadedProperties, ObjectFactory objectFactory) {
+    private DeserializationProxyImpl(Class type, Set<String> unloadedProperties, ObjectFactory objectFactory,
+        List<Class> constructorArgTypes, List<Object> constructorArgs) {
       this.type = type;
-      this.unloadedProperties = new HashSet<String>();
-      for (String s : unloadedProperties) {
-        this.unloadedProperties.add(s);
-      }
+      this.unloadedProperties = unloadedProperties;
       this.objectFactory = objectFactory;
+      this.constructorArgTypes = constructorArgTypes;
+      this.constructorArgs = constructorArgs;
     }
 
-    public static Object createProxy(Object target, String[] unloadedProperties, ObjectFactory objectFactory) {
+    public static Object createProxy(Object target, Set<String> unloadedProperties, ObjectFactory objectFactory,
+        List<Class> constructorArgTypes, List<Object> constructorArgs) {
       final Class type = target.getClass();
-      DeserializationProxyImpl proxy = new DeserializationProxyImpl(type, unloadedProperties, objectFactory);
+      DeserializationProxyImpl proxy = new DeserializationProxyImpl(type, unloadedProperties, objectFactory,
+          constructorArgTypes, constructorArgs);
       Enhancer enhancer = new Enhancer();
       enhancer.setCallback(proxy);
       enhancer.setSuperclass(type);
@@ -66,28 +68,41 @@ public class DeserializedObjectProxy {
         // nothing to do here
       }
 
-      final Object enhanced = enhancer.create();
+      Object enhanced = null;
+      if (constructorArgTypes.isEmpty()) {
+        enhanced = enhancer.create();
+      } else {
+        Class[] typesArray = constructorArgTypes.toArray(new Class[constructorArgTypes.size()]);
+        Object[] valuesArray = constructorArgs.toArray(new Object[constructorArgs.size()]);
+        enhanced = enhancer.create(typesArray, valuesArray);
+      }
       PropertyCopier.copyBeanProperties(type, target, enhanced);
       return enhanced;
     }
-    
+
     public Object intercept(Object enhanced, Method method, Object[] args, MethodProxy methodProxy) throws Throwable {
       final String methodName = method.getName();
       try {
         if (WRITE_REPLACE_METHOD.equals(methodName)) {
-          Object original = objectFactory.create(type);
+          Object original = null;
+          if (constructorArgTypes.isEmpty()) {
+            original = objectFactory.create(type);
+          } else {
+            original = objectFactory.create(type, constructorArgTypes, constructorArgs);
+          }
           PropertyCopier.copyBeanProperties(type, enhanced, original);
-          return new SerialStatusHolder(original, unloadedProperties.toArray(new String[unloadedProperties.size()]), objectFactory);
+          return new SerialStateHolder(original, unloadedProperties, objectFactory, constructorArgTypes,
+              constructorArgs);
         } else {
           if (!FINALIZE_METHOD.equals(methodName) && PropertyNamer.isProperty(methodName)) {
             final String property = PropertyNamer.methodToProperty(methodName);
             if (unloadedProperties.contains(property.toUpperCase(Locale.ENGLISH))) {
-              throw new ExecutorException("An attempt has been made to read a not loaded lazy property '" 
-                  + property + "' of a disconnected object");
+              throw new ExecutorException("An attempt has been made to read a not loaded lazy property '" + property
+                  + "' of a disconnected object");
             }
           }
           return methodProxy.invokeSuper(enhanced, args);
-        }       
+        }
       } catch (Throwable t) {
         throw ExceptionUtil.unwrapThrowable(t);
       }
