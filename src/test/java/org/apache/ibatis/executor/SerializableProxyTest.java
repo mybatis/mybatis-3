@@ -15,9 +15,9 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-import org.apache.ibatis.executor.loader.DeserializedObjectProxy;
 import org.apache.ibatis.executor.loader.ResultLoaderMap;
 import org.apache.ibatis.executor.loader.ResultObjectProxy;
+import org.apache.ibatis.executor.loader.WriteReplaceInterface;
 import org.apache.ibatis.reflection.factory.DefaultObjectFactory;
 import org.junit.Test;
 
@@ -93,19 +93,19 @@ public class SerializableProxyTest {
     // yes, it must go in uppercase
     HashSet<String> unloadedProperties = new HashSet<String>();
     unloadedProperties.add("ID");
-    Author author2 = (Author) DeserializedObjectProxy.createProxy(author, unloadedProperties, new DefaultObjectFactory(), new ArrayList<Class>(), new ArrayList<Object>());
+    Author author2 = (Author) ResultObjectProxy.createDeserializationProxy(author, unloadedProperties, new DefaultObjectFactory(), new ArrayList<Class>(), new ArrayList<Object>());
     author2.getId();
   }
 
   @Test
   public void shouldLetCallALoadedProperty() throws Exception {
-    Author author2 = (Author) DeserializedObjectProxy.createProxy(author, new HashSet<String>(), new DefaultObjectFactory(), new ArrayList<Class>(), new ArrayList<Object>());
+    Author author2 = (Author) ResultObjectProxy.createDeserializationProxy(author, new HashSet<String>(), new DefaultObjectFactory(), new ArrayList<Class>(), new ArrayList<Object>());
     assertEquals(999, author2.getId());
   }
 
   @Test
   public void shouldSerizalizeADeserlizaliedProxy() throws Exception {
-    Object proxy = DeserializedObjectProxy.createProxy(author, new HashSet<String>(), new DefaultObjectFactory(), new ArrayList<Class>(), new ArrayList<Object>());
+    Object proxy = ResultObjectProxy.createDeserializationProxy(author, new HashSet<String>(), new DefaultObjectFactory(), new ArrayList<Class>(), new ArrayList<Object>());
     Author author2 = (Author) deserialize(serialize((Serializable) proxy));
     assertEquals(author, author2);
     assertFalse(author.getClass().equals(author2.getClass()));
@@ -120,20 +120,27 @@ public class SerializableProxyTest {
       // ok
     }
     Object proxy = ResultObjectProxy.createProxy(author, new ResultLoaderMap(), true, new DefaultObjectFactory(), new ArrayList<Class>(), new ArrayList<Object>());
-    proxy.getClass().getDeclaredMethod("writeReplace");
+    Method m = proxy.getClass().getDeclaredMethod("writeReplace");
   }
   
   @Test
   public void shouldNotGenerateWriteReplaceItThereIsAlreadyOne() throws Exception {
     AuthorWithWriteReplaceMethod beanWithWriteReplace = new AuthorWithWriteReplaceMethod(999, "someone", "!@#@!#!@#", "someone@somewhere.com", "blah", Section.NEWS);
-    Object proxy = ResultObjectProxy.createProxy(author, new ResultLoaderMap(), true, new DefaultObjectFactory(), new ArrayList<Class>(), new ArrayList<Object>());
     try {
       beanWithWriteReplace.getClass().getDeclaredMethod("writeReplace");
     } catch (NoSuchMethodException e) {
       fail("Bean should declare a writeReplace method");
     }
-    Method m = proxy.getClass().getDeclaredMethod("writeReplace");
-    assertFalse(m.isAccessible()); //generated method is public so this one should be protected
+    Object proxy = ResultObjectProxy.createProxy(beanWithWriteReplace, new ResultLoaderMap(), true, new DefaultObjectFactory(), new ArrayList<Class>(), new ArrayList<Object>());
+    Class[] interfaces = proxy.getClass().getInterfaces();
+    boolean ownInterfaceFound = false;
+    for (Class i : interfaces) {
+      if (i.equals(WriteReplaceInterface.class)) {
+        ownInterfaceFound = true;
+        break;
+      }
+    }
+    assertFalse(ownInterfaceFound);
   }
 
   @Test

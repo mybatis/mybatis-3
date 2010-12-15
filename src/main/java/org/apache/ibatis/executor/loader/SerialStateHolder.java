@@ -31,7 +31,7 @@ class SerialStateHolder implements Serializable {
     Set<String> arrayProps = new HashSet<String>(Arrays.asList(this.unloadedProperties));
     List<Class> arrayTypes = Arrays.asList(this.constructorArgTypes);
     List<Object> arrayValues = Arrays.asList(this.constructorArgs);
-    return DeserializedObjectProxy.createProxy(userBean, arrayProps, objectFactory, arrayTypes, arrayValues);
+    return ResultObjectProxy.createDeserializationProxy(userBean, arrayProps, objectFactory, arrayTypes, arrayValues);
   }
 
 }
