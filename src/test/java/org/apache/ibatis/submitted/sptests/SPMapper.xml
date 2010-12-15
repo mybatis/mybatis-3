@@ -19,7 +19,10 @@
        {call xxx (parm1, parm2)}
     3. Must set the MODE of all parameters (IN, OUT, INOUT)
     4. All IN, OUT, and INOUT parameters must be a part of the
-       parameterType or parameterMap (discouraged).
+       parameterType or parameterMap (discouraged).  The only exception
+       is if you are using a Map as a parameter object.  In that case you
+       do not need to add OUT parameters to the map before calling, MyBatis
+       will add them for you automatically.
     5. resultType or resultMap (more typically) is only used if
        the procedure returns a result set. IMPORTANT: Oracle ref
        cursors are usually returned as parameters, NOT directly
