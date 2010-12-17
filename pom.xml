@@ -3,7 +3,7 @@
   <parent>
     <groupId>org.mybatis</groupId>
     <artifactId>mybatis-parent</artifactId>
-    <version>7-SNAPSHOT</version>
+    <version>7</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>mybatis</artifactId>
@@ -33,7 +33,7 @@
   </contributors>
   <properties>
     <findbugs.onlyAnalyze>org.apache.ibatis.*</findbugs.onlyAnalyze>
-    <clirr.comparisonVersion>3.0.2</clirr.comparisonVersion>
+    <clirr.comparisonVersion>3.0.3</clirr.comparisonVersion>
     <osgi.export>org.apache.ibatis.*;version=${project.version};-noimport:=true</osgi.export>
     <osgi.import>net.sf.cglib.proxy;resolution:=optional,org.apache.commons.logging;resolution:=optional,org.apache.log4j;resolution:=optional,org.slf4j;resolution:=optional,*</osgi.import>
   </properties>
