@@ -29,9 +29,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-/**
- * @author Franta Mejta
- */
 public final class ImmutablePOJOTest {
 
     private static final Integer POJO_ID = 1;

@@ -18,9 +18,6 @@ package org.apache.ibatis.submitted.lazy_immutable;
 
 import java.io.Serializable;
 
-/**
- * @author Franta Mejta
- */
 public class ImmutablePOJO implements Serializable {
 
     private static final long serialVersionUID = -7086198701202598455L;
