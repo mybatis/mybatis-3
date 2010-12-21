@@ -233,24 +233,28 @@ public class SqlSessionManager implements SqlSessionFactory, SqlSession {
   }
 
   private class SqlSessionInterceptor implements InvocationHandler {
-      public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        final SqlSession sqlSesson = SqlSessionManager.this.localSqlSession.get();
-        if (sqlSesson != null) {
-          return method.invoke(sqlSesson, args);
-        } else {
-          final SqlSession autoSqlSession = openSession();
-          try {
-            final Object result = method.invoke(autoSqlSession, args);
-            autoSqlSession.commit();
-            return result;
-          } catch (Throwable t) {
-            autoSqlSession.rollback();
-            throw ExceptionUtil.unwrapThrowable(t);
-          } finally {
-            autoSqlSession.close();
-          }
+    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+      final SqlSession sqlSession = SqlSessionManager.this.localSqlSession.get();
+      if (sqlSession != null) {
+        try {
+          return method.invoke(sqlSession, args);
+        } catch (Throwable t) {
+          throw ExceptionUtil.unwrapThrowable(t);
+        }
+      } else {
+        final SqlSession autoSqlSession = openSession();
+        try {
+          final Object result = method.invoke(autoSqlSession, args);
+          autoSqlSession.commit();
+          return result;
+        } catch (Throwable t) {
+          autoSqlSession.rollback();
+          throw ExceptionUtil.unwrapThrowable(t);
+        } finally {
+          autoSqlSession.close();
         }
       }
     }
+  }
 
 }

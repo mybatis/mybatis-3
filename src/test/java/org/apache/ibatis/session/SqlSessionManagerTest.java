@@ -5,6 +5,7 @@ import domain.blog.mappers.AuthorMapper;
 import domain.blog.mappers.BlogMapper;
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.cache.impl.PerpetualCache;
+import org.apache.ibatis.exceptions.PersistenceException;
 import org.apache.ibatis.io.Resources;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -17,8 +18,6 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 
 public class SqlSessionManagerTest extends BaseDataTest {
 
@@ -250,8 +249,21 @@ public class SqlSessionManagerTest extends BaseDataTest {
     try {
       manager.selectList("ThisStatementDoesNotExist");
       fail("Expected exception to be thrown due to statement that does not exist.");
-    } catch (Exception e) {
+    } catch (PersistenceException e) {
       assertTrue(e.getMessage().contains("does not contain value for ThisStatementDoesNotExist"));
+    }
+  }
+
+  @Test
+  public void shouldThrowExceptionIfMappedStatementDoesNotExistAndSqlSessionIsOpen() throws Exception {
+    try {
+      manager.startManagedSession();
+      manager.selectList("ThisStatementDoesNotExist");
+      fail("Expected exception to be thrown due to statement that does not exist.");
+    } catch (PersistenceException e) {
+      assertTrue(e.getMessage().contains("does not contain value for ThisStatementDoesNotExist"));
+    } finally {
+      manager.close();
     }
   }
 
