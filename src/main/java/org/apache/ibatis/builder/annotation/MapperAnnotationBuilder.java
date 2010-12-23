@@ -231,15 +231,11 @@ public class MapperAnnotationBuilder {
             keyGenerator = handleSelectKeyAnnotation(selectKey, mappedStatementId, getParameterType(method));
             keyProperty = selectKey.keyProperty();
         } else {
-          if (configuration.isUseGeneratedKeys()) {
-            if (options == null) {
-              keyGenerator = new Jdbc3KeyGenerator();
-            } else {
-              keyProperty = options.keyProperty();
-              keyGenerator = options.useGeneratedKeys() ? new Jdbc3KeyGenerator() : new NoKeyGenerator();
-            }
+          if (options == null) {
+              keyGenerator = configuration.isUseGeneratedKeys() ? new Jdbc3KeyGenerator() : new NoKeyGenerator();
           } else {
-            keyGenerator = new NoKeyGenerator();
+              keyGenerator = options.useGeneratedKeys() ? new Jdbc3KeyGenerator() : new NoKeyGenerator();
+              keyProperty = options.keyProperty();
           }
         }
       } else {
