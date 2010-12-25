@@ -22,6 +22,7 @@ import org.apache.ibatis.executor.resultset.FastResultSetHandler;
 import org.apache.ibatis.executor.statement.RoutingStatementHandler;
 import org.apache.ibatis.executor.statement.StatementHandler;
 import org.apache.ibatis.io.ResolverUtil;
+import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.mapping.*;
 import org.apache.ibatis.parsing.XNode;
 import org.apache.ibatis.plugin.Interceptor;
@@ -131,6 +132,13 @@ public class Configuration {
   }
 
   public void setLazyLoadingEnabled(boolean lazyLoadingEnabled) {
+    if (lazyLoadingEnabled) {
+      try {
+        Resources.classForName("net.sf.cglib.proxy.Enhancer");
+      } catch (Throwable e) {
+        throw new IllegalArgumentException("Cannot enable lazy loading because CGLIB is not available. Add CGLIB to your classpath.", e);
+      }
+    }
     this.lazyLoadingEnabled = lazyLoadingEnabled;
   }
 
@@ -525,7 +533,7 @@ public class Configuration {
       }
     }
   }
-
+  
   protected static class StrictMap<J extends String, K extends Object> extends HashMap<J, K> {
 
     private String name;
