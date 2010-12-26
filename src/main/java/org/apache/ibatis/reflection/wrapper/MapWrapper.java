@@ -4,21 +4,16 @@ import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.factory.ObjectFactory;
 import org.apache.ibatis.reflection.property.PropertyTokenizer;
 
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
 public class MapWrapper extends BaseWrapper {
 
   private Map map;
-  private Object[] keyArray;
-
 
   public MapWrapper(MetaObject metaObject, Map map) {
     super(metaObject);
     this.map = map;
-    updateKeyArray();
   }
 
   public Object get(PropertyTokenizer prop) {
@@ -37,28 +32,9 @@ public class MapWrapper extends BaseWrapper {
     } else {
       map.put(prop.getName(), value);
     }
-    updateKeyArray();
   }
 
-  @SuppressWarnings("unchecked")
   public String findProperty(String name) {
-    updateKeyArray();
-    if (name != null) {
-      Arrays.binarySearch(keyArray, name, new Comparator() {
-        public int compare(Object o1, Object o2) {
-          if (o1 == o2) {
-            return 0;
-          } else if (o1 == null && o2 == null) {
-            return 0;
-          } else if (o1 == null) {
-            return -1;
-          } else if (o2 == null) {
-            return 1;
-          }
-          return ((String) o1).toLowerCase().compareTo(((String) o2).toLowerCase());
-        }
-      });
-    }
     return name;
   }
 
@@ -132,11 +108,6 @@ public class MapWrapper extends BaseWrapper {
     HashMap map = new HashMap();
     set(prop, map);
     return MetaObject.forObject(map, metaObject.getObjectFactory(), metaObject.getObjectWrapperFactory());
-  }
-
-  private void updateKeyArray() {
-    keyArray = map.keySet().toArray();
-    Arrays.sort(keyArray);
   }
 
 }

@@ -16,9 +16,9 @@ public interface ObjectWrapper {
 
   String[] getSetterNames();
 
-  Class getSetterType(String name);
+  Class<?> getSetterType(String name);
 
-  Class getGetterType(String name);
+  Class<?> getGetterType(String name);
 
   boolean hasSetter(String name);
 
