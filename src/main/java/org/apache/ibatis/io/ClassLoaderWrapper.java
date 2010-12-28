@@ -9,10 +9,16 @@ import java.net.URL;
 public class ClassLoaderWrapper {
 
   ClassLoader defaultClassLoader;
+  ClassLoader systemClassLoader;
 
   ClassLoaderWrapper() {
+    try {
+      systemClassLoader = ClassLoader.getSystemClassLoader();
+    } catch (Exception ignored) {
+      // AccessControlException on Google App Engine   
+    }
   }
-
+  
   /**
    * Get a resource as a URL using the current class path
    *
@@ -20,12 +26,7 @@ public class ClassLoaderWrapper {
    * @return the resource or null
    */
   public URL getResourceAsURL(String resource) {
-    return getResourceAsURL(resource, new ClassLoader[]{
-        defaultClassLoader,
-        Thread.currentThread().getContextClassLoader(),
-        getClass().getClassLoader(),
-        ClassLoader.getSystemClassLoader()
-    });
+    return getResourceAsURL(resource, getClassLoaders(null));
   }
 
   /**
@@ -36,13 +37,7 @@ public class ClassLoaderWrapper {
    * @return the stream or null
    */
   public URL getResourceAsURL(String resource, ClassLoader classLoader) {
-    return getResourceAsURL(resource, new ClassLoader[]{
-        classLoader,
-        defaultClassLoader,
-        Thread.currentThread().getContextClassLoader(),
-        getClass().getClassLoader(),
-        ClassLoader.getSystemClassLoader()
-    });
+    return getResourceAsURL(resource, getClassLoaders(classLoader));
   }
 
   /**
@@ -52,12 +47,7 @@ public class ClassLoaderWrapper {
    * @return the stream or null
    */
   public InputStream getResourceAsStream(String resource) {
-    return getResourceAsStream(resource, new ClassLoader[]{
-        defaultClassLoader,
-        Thread.currentThread().getContextClassLoader(),
-        getClass().getClassLoader(),
-        ClassLoader.getSystemClassLoader()
-    });
+    return getResourceAsStream(resource, getClassLoaders(null));
   }
 
   /**
@@ -68,13 +58,7 @@ public class ClassLoaderWrapper {
    * @return the stream or null
    */
   public InputStream getResourceAsStream(String resource, ClassLoader classLoader) {
-    return getResourceAsStream(resource, new ClassLoader[]{
-        classLoader,
-        defaultClassLoader,
-        Thread.currentThread().getContextClassLoader(),
-        getClass().getClassLoader(),
-        ClassLoader.getSystemClassLoader()
-    });
+    return getResourceAsStream(resource, getClassLoaders(classLoader));
   }
 
   /**
@@ -85,12 +69,7 @@ public class ClassLoaderWrapper {
    * @throws ClassNotFoundException Duh.
    */
   public Class<?> classForName(String name) throws ClassNotFoundException {
-    return classForName(name, new ClassLoader[]{
-        defaultClassLoader,
-        Thread.currentThread().getContextClassLoader(),
-        getClass().getClassLoader(),
-        ClassLoader.getSystemClassLoader()
-    });
+    return classForName(name, getClassLoaders(null));
   }
 
   /**
@@ -102,13 +81,7 @@ public class ClassLoaderWrapper {
    * @throws ClassNotFoundException Duh.
    */
   public Class<?> classForName(String name, ClassLoader classLoader) throws ClassNotFoundException {
-    return classForName(name, new ClassLoader[]{
-        classLoader,
-        defaultClassLoader,
-        Thread.currentThread().getContextClassLoader(),
-        getClass().getClassLoader(),
-        ClassLoader.getSystemClassLoader()
-    });
+    return classForName(name, getClassLoaders(classLoader));
   }
 
   /**
@@ -199,6 +172,15 @@ public class ClassLoaderWrapper {
 
     throw new ClassNotFoundException("Cannot find class: " + name);
 
+  }
+
+  ClassLoader[] getClassLoaders(ClassLoader classLoader) {
+    return new ClassLoader[]{
+        classLoader, 
+        defaultClassLoader, 
+        Thread.currentThread().getContextClassLoader(), 
+        getClass().getClassLoader(), 
+        systemClassLoader}; 
   }
 
 }
