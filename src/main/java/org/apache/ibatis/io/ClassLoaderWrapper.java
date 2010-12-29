@@ -14,7 +14,7 @@ public class ClassLoaderWrapper {
   ClassLoaderWrapper() {
     try {
       systemClassLoader = ClassLoader.getSystemClassLoader();
-    } catch (Exception ignored) {
+    } catch (SecurityException ignored) {
       // AccessControlException on Google App Engine   
     }
   }
