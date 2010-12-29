@@ -61,11 +61,44 @@ public class ComplexColumnTest {
         Assert.assertEquals("Smith", parent.getLastName());
       sqlSession.close();
     }
+    
     @Test
     public void testWithComplex() {
         SqlSession sqlSession = sqlSessionFactory.openSession();
         PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
         Person person = personMapper.getWithComplex(2l);
+        Assert.assertNotNull("person must not be null", person);
+        Assert.assertEquals("Christian", person.getFirstName());
+        Assert.assertEquals("Poitras", person.getLastName());
+        Person parent = person.getParent();
+        Assert.assertNotNull("parent must not be null", parent);
+        Assert.assertEquals("John", parent.getFirstName());
+        Assert.assertEquals("Smith", parent.getLastName());
+      sqlSession.close();
+
+    }
+
+    @Test
+    public void testWithComplex2() {
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
+        Person person = personMapper.getWithComplex2(2l);
+        Assert.assertNotNull("person must not be null", person);
+        Assert.assertEquals("Christian", person.getFirstName());
+        Assert.assertEquals("Poitras", person.getLastName());
+        Person parent = person.getParent();
+        Assert.assertNotNull("parent must not be null", parent);
+        Assert.assertEquals("John", parent.getFirstName());
+        Assert.assertEquals("Smith", parent.getLastName());
+      sqlSession.close();
+
+    }
+
+    @Test
+    public void testWithComplex3() {
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
+        Person person = personMapper.getWithComplex3(2l);
         Assert.assertNotNull("person must not be null", person);
         Assert.assertEquals("Christian", person.getFirstName());
         Assert.assertEquals("Poitras", person.getLastName());

@@ -26,6 +26,7 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.InsertProvider;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Result;
+import org.apache.ibatis.annotations.ResultMap;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.SelectKey;
@@ -251,6 +252,14 @@ public class MapperAnnotationBuilder {
         resultSetType = options.resultSetType();
       }
       
+      ResultMap resultMapAnnotation = method.getAnnotation(ResultMap.class);
+      String resultMapId;
+      if (resultMapAnnotation == null) {
+          resultMapId = generateResultMapName(method);
+      } else {
+          resultMapId = resultMapAnnotation.value();
+      }
+      
       assistant.addMappedStatement(
           mappedStatementId,
           sqlSource,
@@ -260,7 +269,7 @@ public class MapperAnnotationBuilder {
           timeout,
           null,                             // ParameterMapID
           getParameterType(method),
-          generateResultMapName(method),    // ResultMapID
+          resultMapId,    // ResultMapID
           getReturnType(method),
           resultSetType,
           flushCache,
