@@ -1,15 +1,19 @@
 package org.apache.ibatis.submitted.dynsql;
 
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
+
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import static org.junit.Assert.assertTrue;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.Reader;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
@@ -80,6 +84,31 @@ public class DynSqlTest {
       List<Map<String, Object>> answer = sqlSession.selectList("org.apache.ibatis.submitted.dynsql.select_simple", parameter);
 
       assertTrue(answer.size() == 3);
+    } finally {
+      sqlSession.close();
+    }
+  }
+
+  @Test
+  public void testNumerics() {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      List<NumericRow> answer = sqlSession.selectList("org.apache.ibatis.submitted.dynsql.selectNumerics");
+
+      assertTrue(answer.size() == 1);
+      
+      NumericRow row = answer.get(0);
+      assertEquals(1, (int) row.getId());
+      assertEquals(2, (int) row.getTinynumber());
+      assertEquals(3, (int) row.getSmallnumber());
+      assertEquals(4l, (long) row.getLonginteger());
+      assertEquals(new BigInteger("5"), row.getBiginteger());
+      assertEquals(new BigDecimal("6.00"), row.getNumericnumber());
+      assertEquals(new BigDecimal("7.00"), row.getDecimalnumber());
+      assertEquals((Float) 8.0f, row.getRealnumber());
+      assertEquals((Float) 9.0f, row.getFloatnumber());
+      assertEquals((Double) 10.0, row.getDoublenumber());
+      
     } finally {
       sqlSession.close();
     }

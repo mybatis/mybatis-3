@@ -4,6 +4,7 @@ import org.apache.ibatis.io.ResolverUtil;
 
 import java.lang.annotation.Annotation;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.EnumMap;
@@ -73,9 +74,13 @@ public final class TypeHandlerRegistry {
     register(JdbcType.NCHAR, new NStringTypeHandler());
     register(JdbcType.NCLOB, new NClobTypeHandler());
 
+    register(BigInteger.class, new BigIntegerTypeHandler());
+    register(JdbcType.BIGINT, new LongTypeHandler());
+    
     register(BigDecimal.class, new BigDecimalTypeHandler());
-    register(JdbcType.BIGINT, new BigDecimalTypeHandler());
     register(JdbcType.REAL, new BigDecimalTypeHandler());
+    register(JdbcType.DECIMAL, new BigDecimalTypeHandler());
+    register(JdbcType.NUMERIC, new BigDecimalTypeHandler());
 
     register(byte[].class, new ByteArrayTypeHandler());
     register(byte[].class, JdbcType.BLOB, new BlobTypeHandler());

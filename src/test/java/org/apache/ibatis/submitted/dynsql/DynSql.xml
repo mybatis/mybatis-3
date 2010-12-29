@@ -5,6 +5,19 @@
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="org.apache.ibatis.submitted.dynsql">
+  <resultMap type="org.apache.ibatis.submitted.dynsql.NumericRow" id="numericRow">
+    <result column="id" property="id" jdbcType="INTEGER"/>
+    <result column="tinynumber" property="tinynumber" jdbcType="TINYINT"/>
+    <result column="smallnumber" property="smallnumber" jdbcType="SMALLINT"/>
+    <result column="longinteger" property="longinteger" jdbcType="BIGINT"/>
+    <result column="biginteger" property="biginteger" jdbcType="BIGINT"/>
+    <result column="numericnumber" property="numericnumber" jdbcType="NUMERIC"/>
+    <result column="decimalnumber" property="decimalnumber" jdbcType="DECIMAL"/>
+    <result column="realnumber" property="realnumber" jdbcType="REAL"/>
+    <result column="floatnumber" property="floatnumber" jdbcType="FLOAT"/>
+    <result column="doublenumber" property="doublenumber" jdbcType="DOUBLE"/>
+  </resultMap>
+  
   <select id="select" parameterType="org.apache.ibatis.submitted.dynsql.Parameter" resultType="map">
     <if test="enabled">
       <foreach collection="ids" item="id" separator="union">
@@ -19,5 +32,9 @@
     <foreach collection="ids" index="index" item="id" separator="union">
       select * from ${schema}.names where id = #{id}
     </foreach>
+  </select>
+  
+  <select id="selectNumerics" resultMap="numericRow">
+    select * from ibtest.numerics
   </select>
 </mapper>
