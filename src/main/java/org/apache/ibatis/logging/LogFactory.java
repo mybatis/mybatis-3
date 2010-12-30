@@ -45,19 +45,19 @@ public class LogFactory {
   }
 
   public static synchronized void useSlf4jLogging() {
-    setImplementation("org.slf4j.LoggerFactory", "org.apache.ibatis.logging.slf4j.Slf4jImpl");
+    setImplementation("org.apache.ibatis.logging.slf4j.Slf4jImpl");
   }
 
   public static synchronized void useCommonsLogging() {
-    setImplementation("org.apache.commons.logging.LogFactory", "org.apache.ibatis.logging.commons.JakartaCommonsLoggingImpl");
+    setImplementation("org.apache.ibatis.logging.commons.JakartaCommonsLoggingImpl");
   }
 
   public static synchronized void useLog4JLogging() {
-    setImplementation("org.apache.log4j.Logger", "org.apache.ibatis.logging.log4j.Log4jImpl");
+    setImplementation("org.apache.ibatis.logging.log4j.Log4jImpl");
   }
 
   public static synchronized void useJdkLogging() {
-    setImplementation("java.util.logging.Logger", "org.apache.ibatis.logging.jdk14.Jdk14LoggingImpl");
+    setImplementation("org.apache.ibatis.logging.jdk14.Jdk14LoggingImpl");
   }
 
   public static synchronized void useStdOutLogging() {
@@ -79,15 +79,13 @@ public class LogFactory {
   }
 
   private static void setImplementation(String implClassName) {
-    setImplementation(implClassName, implClassName);
-  }
-
-  private static void setImplementation(String testClassName, String implClassName) {
     try {
-      Resources.classForName(testClassName);
       @SuppressWarnings("unchecked")
-      Class<? extends Log> implClass = (Class<Log>) Resources.classForName(implClassName);
-      logConstructor = implClass.getConstructor(new Class[]{Class.class});
+      Class<? extends Log> implClass = (Class<? extends Log>) Resources.classForName(implClassName);
+      Constructor<? extends Log> candidate = implClass.getConstructor(new Class[]{Class.class});
+      Log log = candidate.newInstance(new Object[]{LogFactory.class});
+      log.debug("Logging initialized using '" + implClassName + "' adapter.");
+      logConstructor = candidate;
     } catch (Throwable t) {
       throw new LogException("Error setting Log implementation.  Cause: " + t, t);
     }
