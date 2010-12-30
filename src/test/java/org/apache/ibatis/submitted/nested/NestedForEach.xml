@@ -26,4 +26,14 @@
       </foreach>
     </where>
   </select>
+
+  <select id="simpleSelectWithPrimitives" parameterType="map" resultType="map">
+    select *
+    from names
+    <where>
+      <foreach collection="ids" item="id" separator="," open="id in (" close=")">
+        ${id}
+      </foreach>
+    </where>
+  </select>
 </mapper>

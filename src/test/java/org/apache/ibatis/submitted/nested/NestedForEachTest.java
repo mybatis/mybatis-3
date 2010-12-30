@@ -13,6 +13,7 @@ import java.io.PrintWriter;
 import java.io.Reader;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -67,6 +68,24 @@ public class NestedForEachTest {
     }
   }
 
+  @Test
+  @SuppressWarnings("unchecked")
+  public void testSimpleSelectWithPrimitives() {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      Map<String, Object> parameter = new HashMap<String, Object>();
+      int[] array = new int[] {1, 3, 5};
+      parameter.put("ids", array);
+
+      List<Map<String, Object>> answer =
+          sqlSession.selectList("org.apache.ibatis.submitted.nested.simpleSelectWithPrimitives", parameter);
+
+      assertEquals(3, answer.size());
+    } finally {
+      sqlSession.close();
+    }
+  }
+  
   @Test
   @SuppressWarnings("unchecked")
   public void testNestedSelect() {
