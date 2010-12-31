@@ -45,17 +45,17 @@ public class EncodingTest {
     }
   }
 
-  @Test
-  public void testEncoding1() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
-      EncodingMapper mapper = sqlSession.getMapper(EncodingMapper.class);
-      String answer = mapper.select1();
-      assertEquals("Marañón", answer);
-    } finally {
-      sqlSession.close();
-    }
-  }
+//  @Test
+//  public void testEncoding1() {
+//    SqlSession sqlSession = sqlSessionFactory.openSession();
+//    try {
+//      EncodingMapper mapper = sqlSession.getMapper(EncodingMapper.class);
+//      String answer = mapper.select1();
+//      assertEquals("Marañón", answer);
+//    } finally {
+//      sqlSession.close();
+//    }
+//  }
 
   @Test
   public void testEncoding2() {
