@@ -51,7 +51,7 @@ public class EncodingTest {
 //    try {
 //      EncodingMapper mapper = sqlSession.getMapper(EncodingMapper.class);
 //      String answer = mapper.select1();
-//      assertEquals("Marañón", answer);
+//      assertEquals("Maraï¿½ï¿½n", answer);
 //    } finally {
 //      sqlSession.close();
 //    }
@@ -63,7 +63,7 @@ public class EncodingTest {
     try {
       EncodingMapper mapper = sqlSession.getMapper(EncodingMapper.class);
       String answer = mapper.select2();
-      assertEquals("Marañón", answer);
+      assertEquals("MaraÃ±Ã³n", answer);
     } finally {
       sqlSession.close();
     }
