@@ -34,10 +34,12 @@ public class XMLMapperBuilder extends BaseBuilder {
   private Map<String, XNode> sqlFragments;
   private String resource;
 
+  @Deprecated
   public XMLMapperBuilder(Reader reader, Configuration configuration, String resource, Map<String, XNode> sqlFragments, String namespace) {
     this(new ReaderInputStream(reader), configuration, resource, sqlFragments, namespace);
   }
 
+  @Deprecated
   public XMLMapperBuilder(Reader reader, Configuration configuration, String resource, Map<String, XNode> sqlFragments) {
     this(new ReaderInputStream(reader), configuration, resource, sqlFragments);
   }

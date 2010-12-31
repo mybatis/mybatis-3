@@ -29,14 +29,17 @@ public class XMLConfigBuilder extends BaseBuilder {
   private XPathParser parser;
   private String environment;
 
+  @Deprecated
   public XMLConfigBuilder(Reader reader) {
     this(reader, null, null);
   }
   
+  @Deprecated
   public XMLConfigBuilder(Reader reader, String environment) {
     this(reader, environment, null);
   }
 
+  @Deprecated
   public XMLConfigBuilder(Reader reader, String environment, Properties props) {
     this(new ReaderInputStream(reader), environment, props);
   }
