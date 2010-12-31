@@ -53,16 +53,17 @@ public class BatchExecutor extends BaseExecutor {
 
   public List doQuery(MappedStatement ms, Object parameterObject, RowBounds rowBounds, ResultHandler resultHandler)
       throws SQLException {
+    Statement stmt = null;
     try {
       flushStatements();
       Configuration configuration = ms.getConfiguration();
       StatementHandler handler = configuration.newStatementHandler(this, ms, parameterObject, rowBounds, resultHandler);
       Connection connection = transaction.getConnection();
-      Statement stmt = handler.prepare(connection);
+      stmt = handler.prepare(connection);
       handler.parameterize(stmt);
       return handler.query(stmt, resultHandler);
     } finally {
-      flushStatements();
+      closeStatement(stmt);
     }
   }
 
