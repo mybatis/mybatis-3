@@ -70,7 +70,7 @@ public final class ImmutablePOJOTest {
 
             assertEquals(POJO_ID, pojo.getId());
             assertNotNull("Description should not be null.", pojo.getDescription());
-            assertFalse("Description should not be empty.", pojo.getDescription().isEmpty());
+            assertFalse("Description should not be empty.", pojo.getDescription().length() == 0);
         } finally {
             session.close();
         }
