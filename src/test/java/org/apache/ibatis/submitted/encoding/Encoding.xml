@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.apache.ibatis.submitted.encoding.EncodingMapper">
+  <select id="select1" resultType="string">
+    select lastName from names
+  </select>
+
+  <select id="select2" resultType="string">
+    select 'Marañón' from names
+  </select>
+</mapper>

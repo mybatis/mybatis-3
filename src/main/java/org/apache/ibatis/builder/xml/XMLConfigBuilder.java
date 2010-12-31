@@ -1,9 +1,14 @@
 package org.apache.ibatis.builder.xml;
 
+import java.io.InputStream;
+import java.io.Reader;
+import java.util.Properties;
+
 import org.apache.ibatis.builder.BaseBuilder;
 import org.apache.ibatis.builder.BuilderException;
 import org.apache.ibatis.datasource.DataSourceFactory;
 import org.apache.ibatis.executor.ErrorContext;
+import org.apache.ibatis.io.ReaderInputStream;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.mapping.Environment;
 import org.apache.ibatis.parsing.XNode;
@@ -12,14 +17,11 @@ import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.reflection.MetaClass;
 import org.apache.ibatis.reflection.factory.ObjectFactory;
 import org.apache.ibatis.reflection.wrapper.ObjectWrapperFactory;
+import org.apache.ibatis.session.AutoMappingBehavior;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.ExecutorType;
-import org.apache.ibatis.session.AutoMappingBehavior;
 import org.apache.ibatis.transaction.TransactionFactory;
 import org.apache.ibatis.type.TypeHandler;
-
-import java.io.Reader;
-import java.util.Properties;
 
 public class XMLConfigBuilder extends BaseBuilder {
 
@@ -30,18 +32,30 @@ public class XMLConfigBuilder extends BaseBuilder {
   public XMLConfigBuilder(Reader reader) {
     this(reader, null, null);
   }
-
+  
   public XMLConfigBuilder(Reader reader, String environment) {
     this(reader, environment, null);
   }
 
   public XMLConfigBuilder(Reader reader, String environment, Properties props) {
+    this(new ReaderInputStream(reader), environment, props);
+  }
+  
+  public XMLConfigBuilder(InputStream inputStream) {
+    this(inputStream, null, null);
+  }
+
+  public XMLConfigBuilder(InputStream inputStream, String environment) {
+    this(inputStream, environment, null);
+  }
+
+  public XMLConfigBuilder(InputStream inputStream, String environment, Properties props) {
     super(new Configuration());
     ErrorContext.instance().resource("SQL Mapper Configuration");
     this.configuration.setVariables(props);
     this.parsed = false;
     this.environment = environment;
-    this.parser = new XPathParser(reader, true, props, new XMLMapperEntityResolver());
+    this.parser = new XPathParser(inputStream, true, props, new XMLMapperEntityResolver());
   }
 
   public Configuration parse() {
@@ -230,16 +244,16 @@ public class XMLConfigBuilder extends BaseBuilder {
       for (XNode child : parent.getChildren()) {
         String resource = child.getStringAttribute("resource");
         String url = child.getStringAttribute("url");
-        Reader reader;
+        InputStream inputStream;
         if (resource != null && url == null) {
           ErrorContext.instance().resource(resource);
-          reader = Resources.getResourceAsReader(resource);
-          XMLMapperBuilder mapperParser = new XMLMapperBuilder(reader, configuration, resource, configuration.getSqlFragments());
+          inputStream = Resources.getResourceAsStream(resource);
+          XMLMapperBuilder mapperParser = new XMLMapperBuilder(inputStream, configuration, resource, configuration.getSqlFragments());
           mapperParser.parse();
         } else if (url != null && resource == null) {
           ErrorContext.instance().resource(url);
-          reader = Resources.getUrlAsReader(url);
-          XMLMapperBuilder mapperParser = new XMLMapperBuilder(reader, configuration, url, configuration.getSqlFragments());
+          inputStream = Resources.getUrlAsStream(url);
+          XMLMapperBuilder mapperParser = new XMLMapperBuilder(inputStream, configuration, url, configuration.getSqlFragments());
           mapperParser.parse();
         } else {
           throw new BuilderException("A mapper element may only specify a url or resource, but not both.");

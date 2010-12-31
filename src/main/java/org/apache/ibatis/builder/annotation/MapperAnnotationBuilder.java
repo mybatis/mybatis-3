@@ -1,7 +1,7 @@
 package org.apache.ibatis.builder.annotation;
 
 import java.io.IOException;
-import java.io.Reader;
+import java.io.InputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
@@ -104,14 +104,14 @@ public class MapperAnnotationBuilder {
 
   private void loadXmlResource() {
     String xmlResource = type.getName().replace('.', '/') + ".xml";
-    Reader xmlReader = null;
+    InputStream inputStream = null;
     try {
-      xmlReader = Resources.getResourceAsReader(type.getClassLoader(), xmlResource);
+      inputStream = Resources.getResourceAsStream(type.getClassLoader(), xmlResource);
     } catch (IOException e) {
       // ignore, resource is not required
     }
-    if (xmlReader != null) {
-      XMLMapperBuilder xmlParser = new XMLMapperBuilder(xmlReader, assistant.getConfiguration(), xmlResource, configuration.getSqlFragments(), type.getName());
+    if (inputStream != null) {
+      XMLMapperBuilder xmlParser = new XMLMapperBuilder(inputStream, assistant.getConfiguration(), xmlResource, configuration.getSqlFragments(), type.getName());
       xmlParser.parse();
     }
   }

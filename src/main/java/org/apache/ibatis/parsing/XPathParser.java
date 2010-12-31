@@ -1,10 +1,10 @@
 package org.apache.ibatis.parsing;
 
-import org.apache.ibatis.builder.BuilderException;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.*;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
 
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
@@ -12,11 +12,16 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
-import java.io.Reader;
-import java.io.StringReader;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
+
+import org.apache.ibatis.builder.BuilderException;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.EntityResolver;
+import org.xml.sax.ErrorHandler;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 public class XPathParser {
 
@@ -28,12 +33,12 @@ public class XPathParser {
 
   public XPathParser(String xml) {
     commonConstructor(false, null, null);
-    this.document = createDocument(new StringReader(xml));
+    this.document = createDocument(new ByteArrayInputStream(xml.getBytes()));
   }
 
-  public XPathParser(Reader reader) {
+  public XPathParser(InputStream inputStream) {
     commonConstructor(false, null, null);
-    this.document = createDocument(reader);
+    this.document = createDocument(inputStream);
   }
 
   public XPathParser(Document document) {
@@ -43,12 +48,12 @@ public class XPathParser {
 
   public XPathParser(String xml, boolean validation) {
     commonConstructor(validation, null, null);
-    this.document = createDocument(new StringReader(xml));
+    this.document = createDocument(new ByteArrayInputStream(xml.getBytes()));
   }
 
-  public XPathParser(Reader reader, boolean validation) {
+  public XPathParser(InputStream inputStream, boolean validation) {
     commonConstructor(validation, null, null);
-    this.document = createDocument(reader);
+    this.document = createDocument(inputStream);
   }
 
   public XPathParser(Document document, boolean validation) {
@@ -58,12 +63,12 @@ public class XPathParser {
 
   public XPathParser(String xml, boolean validation, Properties variables) {
     commonConstructor(validation, variables, null);
-    this.document = createDocument(new StringReader(xml));
+    this.document = createDocument(new ByteArrayInputStream(xml.getBytes()));
   }
 
-  public XPathParser(Reader reader, boolean validation, Properties variables) {
+  public XPathParser(InputStream inputStream, boolean validation, Properties variables) {
     commonConstructor(validation, variables, null);
-    this.document = createDocument(reader);
+    this.document = createDocument(inputStream);
   }
 
   public XPathParser(Document document, boolean validation, Properties variables) {
@@ -73,12 +78,12 @@ public class XPathParser {
 
   public XPathParser(String xml, boolean validation, Properties variables, EntityResolver entityResolver) {
     commonConstructor(validation, variables, entityResolver);
-    this.document = createDocument(new StringReader(xml));
+    this.document = createDocument(new ByteArrayInputStream(xml.getBytes()));
   }
 
-  public XPathParser(Reader reader, boolean validation, Properties variables, EntityResolver entityResolver) {
+  public XPathParser(InputStream inputStream, boolean validation, Properties variables, EntityResolver entityResolver) {
     commonConstructor(validation, variables, entityResolver);
-    this.document = createDocument(reader);
+    this.document = createDocument(inputStream);
   }
 
   public XPathParser(Document document, boolean validation, Properties variables, EntityResolver entityResolver) {
@@ -181,7 +186,7 @@ public class XPathParser {
     }
   }
 
-  private Document createDocument(Reader reader) {
+  private Document createDocument(InputStream inputStream) {
     // important: this must only be called AFTER common constructor
     try {
       DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -207,7 +212,7 @@ public class XPathParser {
         public void warning(SAXParseException exception) throws SAXException {
         }
       });
-      return builder.parse(new InputSource(reader));
+      return builder.parse(new InputSource(inputStream));
     } catch (Exception e) {
       throw new BuilderException("Error creating document instance.  Cause: " + e, e);
     }

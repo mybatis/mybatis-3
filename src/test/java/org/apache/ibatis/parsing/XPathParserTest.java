@@ -1,18 +1,19 @@
 package org.apache.ibatis.parsing;
 
-import org.apache.ibatis.io.Resources;
 import static org.junit.Assert.assertEquals;
-import org.junit.Test;
 
-import java.io.Reader;
+import java.io.InputStream;
+
+import org.apache.ibatis.io.Resources;
+import org.junit.Test;
 
 public class XPathParserTest {
 
   @Test
   public void shouldTestXPathParserMethods() throws Exception {
     String resource = "resources/nodelet_test.xml";
-    Reader reader = Resources.getResourceAsReader(resource);
-    XPathParser parser = new XPathParser(reader, false, null, null);
+    InputStream inputStream = Resources.getResourceAsStream(resource);
+    XPathParser parser = new XPathParser(inputStream, false, null, null);
     assertEquals((Long)1970l, parser.evalLong("/employee/birth_date/year"));
     assertEquals((short) 6, (short) parser.evalShort("/employee/birth_date/month"));
     assertEquals((Integer) 15, parser.evalInteger("/employee/birth_date/day"));

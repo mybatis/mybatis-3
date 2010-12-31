@@ -1,5 +1,6 @@
 package org.apache.ibatis.builder.xml;
 
+import java.io.InputStream;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -12,6 +13,7 @@ import org.apache.ibatis.builder.BaseBuilder;
 import org.apache.ibatis.builder.MapperBuilderAssistant;
 import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.executor.ErrorContext;
+import org.apache.ibatis.io.ReaderInputStream;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.mapping.Discriminator;
 import org.apache.ibatis.mapping.ParameterMapping;
@@ -33,14 +35,22 @@ public class XMLMapperBuilder extends BaseBuilder {
   private String resource;
 
   public XMLMapperBuilder(Reader reader, Configuration configuration, String resource, Map<String, XNode> sqlFragments, String namespace) {
-    this(reader, configuration, resource, sqlFragments);
-    this.builderAssistant.setCurrentNamespace(namespace);
+    this(new ReaderInputStream(reader), configuration, resource, sqlFragments, namespace);
   }
 
   public XMLMapperBuilder(Reader reader, Configuration configuration, String resource, Map<String, XNode> sqlFragments) {
+    this(new ReaderInputStream(reader), configuration, resource, sqlFragments);
+  }
+    
+  public XMLMapperBuilder(InputStream inputStream, Configuration configuration, String resource, Map<String, XNode> sqlFragments, String namespace) {
+    this(inputStream, configuration, resource, sqlFragments);
+    this.builderAssistant.setCurrentNamespace(namespace);
+  }
+
+  public XMLMapperBuilder(InputStream inputStream, Configuration configuration, String resource, Map<String, XNode> sqlFragments) {
     super(configuration);
     this.builderAssistant = new MapperBuilderAssistant(configuration, resource);
-    this.parser = new XPathParser(reader, true, configuration.getVariables(), new XMLMapperEntityResolver());
+    this.parser = new XPathParser(inputStream, true, configuration.getVariables(), new XMLMapperEntityResolver());
     this.sqlFragments = sqlFragments;
     this.resource = resource;
   }

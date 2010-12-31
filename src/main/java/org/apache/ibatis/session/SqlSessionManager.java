@@ -2,6 +2,7 @@ package org.apache.ibatis.session;
 
 import org.apache.ibatis.reflection.ExceptionUtil;
 
+import java.io.InputStream;
 import java.io.Reader;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -28,6 +29,18 @@ public class SqlSessionManager implements SqlSessionFactory, SqlSession {
 
   public static SqlSessionManager newInstance(Reader reader, Properties properties) {
     return new SqlSessionManager(new SqlSessionFactoryBuilder().build(reader, null, properties));
+  }
+
+  public static SqlSessionManager newInstance(InputStream inputStream) {
+    return new SqlSessionManager(new SqlSessionFactoryBuilder().build(inputStream, null, null));
+  }
+
+  public static SqlSessionManager newInstance(InputStream inputStream, String environment) {
+    return new SqlSessionManager(new SqlSessionFactoryBuilder().build(inputStream, environment, null));
+  }
+
+  public static SqlSessionManager newInstance(InputStream inputStream, Properties properties) {
+    return new SqlSessionManager(new SqlSessionFactoryBuilder().build(inputStream, null, properties));
   }
 
   public static SqlSessionManager newInstance(SqlSessionFactory sqlSessionFactory) {

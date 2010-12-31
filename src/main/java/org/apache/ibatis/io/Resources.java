@@ -200,7 +200,13 @@ public class Resources {
    * @throws java.io.IOException If the resource cannot be found or read
    */
   public static Reader getUrlAsReader(String urlString) throws IOException {
-    return new InputStreamReader(getUrlAsStream(urlString));
+    Reader reader;
+    if (charset == null) {
+      reader = new InputStreamReader(getUrlAsStream(urlString));
+    } else {
+      reader = new InputStreamReader(getUrlAsStream(urlString), charset);
+    }
+    return reader;
   }
 
   /**
