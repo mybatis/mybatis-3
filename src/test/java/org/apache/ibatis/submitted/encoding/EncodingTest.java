@@ -51,10 +51,11 @@ public class EncodingTest {
   @Test
   public void testEncoding1() {
     SqlSession sqlSession = sqlSessionFactory.openSession();
+    System.out.println("Default Charset=" + Charset.defaultCharset());
     try {
       EncodingMapper mapper = sqlSession.getMapper(EncodingMapper.class);
       String answer = mapper.select1();
-      assertEquals("Marañón", answer);
+      assertEquals("Mara\u00f1\u00f3n", answer);
     } finally {
       sqlSession.close();
     }
@@ -66,7 +67,7 @@ public class EncodingTest {
     try {
       EncodingMapper mapper = sqlSession.getMapper(EncodingMapper.class);
       String answer = mapper.select2();
-      assertEquals("Marañón", answer);
+      assertEquals("Mara\u00f1\u00f3n", answer);
     } finally {
       sqlSession.close();
     }

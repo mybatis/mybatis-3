@@ -1,6 +1,7 @@
 package org.apache.ibatis.parsing;
 
 import java.io.InputStream;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -32,7 +33,7 @@ public class XPathParser {
 
   public XPathParser(String xml) {
     commonConstructor(false, null, null);
-    this.document = createDocument(new InputSource(xml));
+    this.document = createDocument(new InputSource(new StringReader(xml)));
   }
 
   public XPathParser(InputStream inputStream) {
@@ -47,7 +48,7 @@ public class XPathParser {
 
   public XPathParser(String xml, boolean validation) {
     commonConstructor(validation, null, null);
-    this.document = createDocument(new InputSource(xml));
+    this.document = createDocument(new InputSource(new StringReader(xml)));
   }
 
   public XPathParser(InputStream inputStream, boolean validation) {
@@ -62,7 +63,7 @@ public class XPathParser {
 
   public XPathParser(String xml, boolean validation, Properties variables) {
     commonConstructor(validation, variables, null);
-    this.document = createDocument(new InputSource(xml));
+    this.document = createDocument(new InputSource(new StringReader(xml)));
   }
 
   public XPathParser(InputStream inputStream, boolean validation, Properties variables) {
@@ -77,7 +78,7 @@ public class XPathParser {
 
   public XPathParser(String xml, boolean validation, Properties variables, EntityResolver entityResolver) {
     commonConstructor(validation, variables, entityResolver);
-    this.document = createDocument(new InputSource(xml));
+    this.document = createDocument(new InputSource(new StringReader(xml)));
   }
 
   public XPathParser(InputStream inputStream, boolean validation, Properties variables, EntityResolver entityResolver) {
