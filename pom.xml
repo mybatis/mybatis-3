@@ -306,5 +306,12 @@
       <version>1.0.1B-rc4</version>
       <scope>test</scope>
     </dependency>
+    <!-- postgresql driver is required to run the refcursor tests -->
+    <dependency>
+      <groupId>postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+      <version>9.0-801.jdbc3</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 </project>
