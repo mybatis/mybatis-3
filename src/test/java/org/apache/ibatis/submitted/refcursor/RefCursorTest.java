@@ -19,16 +19,19 @@ import org.junit.Test;
 /**
  * This class contains tests for refcursors.  The tests require a
  * local install of PostgreSQL and cannot be run as a part of the normal
- * MyBatis build.  They must be run manually on a box with PostgreSQL
- * setup as described in setupdb.txt
+ * MyBatis build unless PostreSQL is setup on the build machine as 
+ * described in setupdb.txt
  * 
- * @author Jeff
+ * If PostgreSQL is setup as described in setupdb.txt, then remove
+ * the @Ignore annotation to enable the tests.
+ * 
+ * @author Jeff Butler
  *
  */
+@Ignore("See setupdb.txt for instructions on how to run the tests in this class")
 public class RefCursorTest {
     @SuppressWarnings("unchecked")
     @Test
-    @Ignore("See setupdb.txt for instructions on how to run this test")
     public void testRefCursor1() throws IOException {
         Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/refcursor/MapperConfig.xml");
         SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
@@ -51,7 +54,6 @@ public class RefCursorTest {
 
     @SuppressWarnings("unchecked")
     @Test
-    @Ignore("See setupdb.txt for instructions on how to run this test")
     public void testRefCursor2() throws IOException {
         Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/refcursor/MapperConfig.xml");
         SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
