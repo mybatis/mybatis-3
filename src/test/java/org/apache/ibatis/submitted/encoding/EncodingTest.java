@@ -3,6 +3,7 @@ package org.apache.ibatis.submitted.encoding;
 import static org.junit.Assert.assertEquals;
 
 import java.io.Reader;
+import java.nio.charset.Charset;
 import java.sql.Connection;
 import java.sql.DriverManager;
 
@@ -29,6 +30,8 @@ public class EncodingTest {
       Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/encoding/CreateDB.sql");
 
       ScriptRunner runner = new ScriptRunner(conn);
+      // make sure that the SQL file has been saved in UTF-8!
+      runner.setCharacterSetName("UTF-8");
       runner.setLogWriter(null);
       runner.setErrorLogWriter(null);
       runner.runScript(reader);
@@ -45,17 +48,17 @@ public class EncodingTest {
     }
   }
 
-//  @Test
-//  public void testEncoding1() {
-//    SqlSession sqlSession = sqlSessionFactory.openSession();
-//    try {
-//      EncodingMapper mapper = sqlSession.getMapper(EncodingMapper.class);
-//      String answer = mapper.select1();
-//      assertEquals("Mara��n", answer);
-//    } finally {
-//      sqlSession.close();
-//    }
-//  }
+  @Test
+  public void testEncoding1() {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      EncodingMapper mapper = sqlSession.getMapper(EncodingMapper.class);
+      String answer = mapper.select1();
+      assertEquals("Marañón", answer);
+    } finally {
+      sqlSession.close();
+    }
+  }
 
   @Test
   public void testEncoding2() {

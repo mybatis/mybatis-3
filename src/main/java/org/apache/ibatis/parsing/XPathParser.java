@@ -1,6 +1,5 @@
 package org.apache.ibatis.parsing;
 
-import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,12 +32,12 @@ public class XPathParser {
 
   public XPathParser(String xml) {
     commonConstructor(false, null, null);
-    this.document = createDocument(new ByteArrayInputStream(xml.getBytes()));
+    this.document = createDocument(new InputSource(xml));
   }
 
   public XPathParser(InputStream inputStream) {
     commonConstructor(false, null, null);
-    this.document = createDocument(inputStream);
+    this.document = createDocument(new InputSource(inputStream));
   }
 
   public XPathParser(Document document) {
@@ -48,12 +47,12 @@ public class XPathParser {
 
   public XPathParser(String xml, boolean validation) {
     commonConstructor(validation, null, null);
-    this.document = createDocument(new ByteArrayInputStream(xml.getBytes()));
+    this.document = createDocument(new InputSource(xml));
   }
 
   public XPathParser(InputStream inputStream, boolean validation) {
     commonConstructor(validation, null, null);
-    this.document = createDocument(inputStream);
+    this.document = createDocument(new InputSource(inputStream));
   }
 
   public XPathParser(Document document, boolean validation) {
@@ -63,12 +62,12 @@ public class XPathParser {
 
   public XPathParser(String xml, boolean validation, Properties variables) {
     commonConstructor(validation, variables, null);
-    this.document = createDocument(new ByteArrayInputStream(xml.getBytes()));
+    this.document = createDocument(new InputSource(xml));
   }
 
   public XPathParser(InputStream inputStream, boolean validation, Properties variables) {
     commonConstructor(validation, variables, null);
-    this.document = createDocument(inputStream);
+    this.document = createDocument(new InputSource(inputStream));
   }
 
   public XPathParser(Document document, boolean validation, Properties variables) {
@@ -78,12 +77,12 @@ public class XPathParser {
 
   public XPathParser(String xml, boolean validation, Properties variables, EntityResolver entityResolver) {
     commonConstructor(validation, variables, entityResolver);
-    this.document = createDocument(new ByteArrayInputStream(xml.getBytes()));
+    this.document = createDocument(new InputSource(xml));
   }
 
   public XPathParser(InputStream inputStream, boolean validation, Properties variables, EntityResolver entityResolver) {
     commonConstructor(validation, variables, entityResolver);
-    this.document = createDocument(inputStream);
+    this.document = createDocument(new InputSource(inputStream));
   }
 
   public XPathParser(Document document, boolean validation, Properties variables, EntityResolver entityResolver) {
@@ -186,7 +185,7 @@ public class XPathParser {
     }
   }
 
-  private Document createDocument(InputStream inputStream) {
+  private Document createDocument(InputSource inputSource) {
     // important: this must only be called AFTER common constructor
     try {
       DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -212,7 +211,7 @@ public class XPathParser {
         public void warning(SAXParseException exception) throws SAXException {
         }
       });
-      return builder.parse(new InputSource(inputStream));
+      return builder.parse(inputSource);
     } catch (Exception e) {
       throw new BuilderException("Error creating document instance.  Cause: " + e, e);
     }
