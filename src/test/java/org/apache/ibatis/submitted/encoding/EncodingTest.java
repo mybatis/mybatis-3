@@ -3,7 +3,6 @@ package org.apache.ibatis.submitted.encoding;
 import static org.junit.Assert.assertEquals;
 
 import java.io.Reader;
-import java.nio.charset.Charset;
 import java.sql.Connection;
 import java.sql.DriverManager;
 
@@ -51,7 +50,6 @@ public class EncodingTest {
   @Test
   public void testEncoding1() {
     SqlSession sqlSession = sqlSessionFactory.openSession();
-    System.out.println("Default Charset=" + Charset.defaultCharset());
     try {
       EncodingMapper mapper = sqlSession.getMapper(EncodingMapper.class);
       String answer = mapper.select1();
