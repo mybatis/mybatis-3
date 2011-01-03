@@ -26,7 +26,7 @@ public class SqlSessionFactoryBuilder {
   }
 
   public SqlSessionFactory build(Reader reader, String environment, Properties props) {
-    return build(reader, environment, props, null);
+    return build(reader, environment, props, new Configuration());
   }
 
   public SqlSessionFactory build(Reader reader, String environment, Properties props, Configuration configuration) {
