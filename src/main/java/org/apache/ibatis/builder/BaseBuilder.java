@@ -13,6 +13,9 @@ public abstract class BaseBuilder {
   protected final TypeHandlerRegistry typeHandlerRegistry;
 
   public BaseBuilder(Configuration configuration) {
+    if (configuration == null) {
+      throw new BuilderException("Configuration parameter cannot be null");
+    }
     this.configuration = configuration;
     this.typeAliasRegistry = this.configuration.getTypeAliasRegistry();
     this.typeHandlerRegistry = this.configuration.getTypeHandlerRegistry();

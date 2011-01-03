@@ -53,7 +53,11 @@ public class XMLConfigBuilder extends BaseBuilder {
   }
 
   public XMLConfigBuilder(InputStream inputStream, String environment, Properties props) {
-    super(new Configuration());
+    this(inputStream, environment, props, new Configuration());
+  }
+
+  public XMLConfigBuilder(InputStream inputStream, String environment, Properties props, Configuration configuration) {
+    super(configuration);
     ErrorContext.instance().resource("SQL Mapper Configuration");
     this.configuration.setVariables(props);
     this.parsed = false;
