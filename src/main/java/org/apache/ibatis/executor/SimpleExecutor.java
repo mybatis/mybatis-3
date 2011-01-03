@@ -44,7 +44,7 @@ public class SimpleExecutor extends BaseExecutor {
     }
   }
 
-  public List doFlushStatements()
+  public List doFlushStatements(boolean isRollback)
       throws SQLException {
     return Collections.EMPTY_LIST;
   }

@@ -75,9 +75,13 @@ public abstract class BaseExecutor implements Executor {
     return doUpdate(ms, parameter);
   }
 
-  public List flushStatements() throws SQLException {
+  public List<BatchResult> flushStatements() throws SQLException {
+    return flushStatements(false);
+  }
+
+  public List<BatchResult> flushStatements(boolean isRollBack) throws SQLException {
     if (closed) throw new ExecutorException("Executor was closed.");
-    batchResults.addAll(doFlushStatements());
+    batchResults.addAll(doFlushStatements(isRollBack));
     return batchResults;
   }
 
@@ -157,7 +161,7 @@ public abstract class BaseExecutor implements Executor {
     if (!closed) {
       try {
         clearLocalCache();
-        flushStatements();
+        flushStatements(false);
       } finally {
         if (required) {
           transaction.rollback();
@@ -176,7 +180,7 @@ public abstract class BaseExecutor implements Executor {
   protected abstract int doUpdate(MappedStatement ms, Object parameter)
       throws SQLException;
 
-  protected abstract List<BatchResult> doFlushStatements()
+  protected abstract List<BatchResult> doFlushStatements(boolean isRollback)
       throws SQLException;
 
   protected abstract List doQuery(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler)

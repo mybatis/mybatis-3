@@ -39,7 +39,7 @@ public class ReuseExecutor extends BaseExecutor {
     return handler.query(stmt, resultHandler);
   }
 
-  public List doFlushStatements()
+  public List doFlushStatements(boolean isRollback)
       throws SQLException {
     for (Statement stmt : statementMap.values()) {
       closeStatement(stmt);
