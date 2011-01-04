@@ -29,17 +29,14 @@ public class XMLConfigBuilder extends BaseBuilder {
   private XPathParser parser;
   private String environment;
 
-  @Deprecated
   public XMLConfigBuilder(Reader reader) {
     this(reader, null, null);
   }
   
-  @Deprecated
   public XMLConfigBuilder(Reader reader, String environment) {
     this(reader, environment, null);
   }
 
-  @Deprecated
   public XMLConfigBuilder(Reader reader, String environment, Properties props) {
     this(new ReaderInputStream(reader), environment, props);
   }
@@ -53,11 +50,7 @@ public class XMLConfigBuilder extends BaseBuilder {
   }
 
   public XMLConfigBuilder(InputStream inputStream, String environment, Properties props) {
-    this(inputStream, environment, props, new Configuration());
-  }
-
-  public XMLConfigBuilder(InputStream inputStream, String environment, Properties props, Configuration configuration) {
-    super(configuration);
+    super(new Configuration());
     ErrorContext.instance().resource("SQL Mapper Configuration");
     this.configuration.setVariables(props);
     this.parsed = false;

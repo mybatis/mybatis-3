@@ -26,11 +26,7 @@ public class SqlSessionFactoryBuilder {
   }
 
   public SqlSessionFactory build(Reader reader, String environment, Properties props) {
-    return build(reader, environment, props, new Configuration());
-  }
-
-  public SqlSessionFactory build(Reader reader, String environment, Properties props, Configuration configuration) {
-    return build(new ReaderInputStream(reader), environment, props, configuration);
+    return build(new ReaderInputStream(reader), environment, props);
   }
 
   public SqlSessionFactory build(InputStream inputStream) {
@@ -46,12 +42,8 @@ public class SqlSessionFactoryBuilder {
   }
 
   public SqlSessionFactory build(InputStream inputStream, String environment, Properties props) {
-    return build(inputStream, environment, props, new Configuration());
-  }
-    
-  public SqlSessionFactory build(InputStream inputStream, String environment, Properties props, Configuration configuration) {
     try {
-      XMLConfigBuilder parser = new XMLConfigBuilder(inputStream, environment, props, configuration);
+      XMLConfigBuilder parser = new XMLConfigBuilder(inputStream, environment, props);
       Configuration config = parser.parse();
       return build(config);
     } catch (Exception e) {
