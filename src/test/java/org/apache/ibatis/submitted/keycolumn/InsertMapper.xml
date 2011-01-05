@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd" >
+<mapper namespace="org.apache.ibatis.submitted.keycolumn.InsertMapper" >
+  <insert id="insertNameMapped" parameterType="org.apache.ibatis.submitted.keycolumn.Name" useGeneratedKeys="true" keyProperty="id" keyColumn="name_id">
+    insert into mbtest.test_identity
+      (first_name, last_name)
+    values(#{firstName,jdbcType=VARCHAR}, #{lastName,jdbcType=VARCHAR})
+  </insert>
+</mapper>

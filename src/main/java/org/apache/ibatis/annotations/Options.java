@@ -26,4 +26,6 @@ public @interface Options {
   public abstract boolean useGeneratedKeys() default false;
 
   public abstract String keyProperty() default "id";
+  
+  public abstract String keyColumn() default ""; 
 }

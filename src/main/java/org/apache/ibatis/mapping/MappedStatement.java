@@ -46,7 +46,7 @@ public class MappedStatement {
       mappedStatement.timeout = configuration.getDefaultStatementTimeout();
       mappedStatement.sqlCommandType = sqlCommandType;
       mappedStatement.keyGenerator = configuration.isUseGeneratedKeys()
-          && SqlCommandType.INSERT.equals(sqlCommandType) ? new Jdbc3KeyGenerator() : new NoKeyGenerator();
+          && SqlCommandType.INSERT.equals(sqlCommandType) ? new Jdbc3KeyGenerator(null) : new NoKeyGenerator();
     }
 
     public Builder resource(String resource) {

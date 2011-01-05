@@ -58,7 +58,7 @@ public class XMLStatementBuilder extends BaseBuilder {
     } else {
       keyGenerator = context.getBooleanAttribute("useGeneratedKeys",
           configuration.isUseGeneratedKeys() && SqlCommandType.INSERT.equals(sqlCommandType))
-          ? new Jdbc3KeyGenerator() : new NoKeyGenerator();
+          ? new Jdbc3KeyGenerator(context.getStringAttribute("keyColumn", null)) : new NoKeyGenerator();
     }
 
     builderAssistant.addMappedStatement(id, sqlSource, statementType, sqlCommandType,

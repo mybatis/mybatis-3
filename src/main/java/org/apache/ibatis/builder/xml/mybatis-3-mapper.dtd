@@ -155,6 +155,7 @@ flushCache (true|false) #IMPLIED
 statementType (STATEMENT|PREPARED|CALLABLE) #IMPLIED
 keyProperty CDATA #IMPLIED
 useGeneratedKeys (true|false) #IMPLIED
+keyColumn CDATA #IMPLIED
 >
 
 <!ELEMENT selectKey (#PCDATA | include | trim | where | set | foreach | choose | if)*>

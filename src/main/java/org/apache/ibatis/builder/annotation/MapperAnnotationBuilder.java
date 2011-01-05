@@ -233,9 +233,9 @@ public class MapperAnnotationBuilder {
             keyProperty = selectKey.keyProperty();
         } else {
           if (options == null) {
-              keyGenerator = configuration.isUseGeneratedKeys() ? new Jdbc3KeyGenerator() : new NoKeyGenerator();
+              keyGenerator = configuration.isUseGeneratedKeys() ? new Jdbc3KeyGenerator(null) : new NoKeyGenerator();
           } else {
-              keyGenerator = options.useGeneratedKeys() ? new Jdbc3KeyGenerator() : new NoKeyGenerator();
+              keyGenerator = options.useGeneratedKeys() ? new Jdbc3KeyGenerator(options.keyColumn()) : new NoKeyGenerator();
               keyProperty = options.keyProperty();
           }
         }
