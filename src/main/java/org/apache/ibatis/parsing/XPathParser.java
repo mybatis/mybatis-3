@@ -1,6 +1,7 @@
 package org.apache.ibatis.parsing;
 
 import java.io.InputStream;
+import java.io.Reader;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +37,11 @@ public class XPathParser {
     this.document = createDocument(new InputSource(new StringReader(xml)));
   }
 
+  public XPathParser(Reader reader) {
+    commonConstructor(false, null, null);
+    this.document = createDocument(new InputSource(reader));
+  }
+
   public XPathParser(InputStream inputStream) {
     commonConstructor(false, null, null);
     this.document = createDocument(new InputSource(inputStream));
@@ -49,6 +55,11 @@ public class XPathParser {
   public XPathParser(String xml, boolean validation) {
     commonConstructor(validation, null, null);
     this.document = createDocument(new InputSource(new StringReader(xml)));
+  }
+
+  public XPathParser(Reader reader, boolean validation) {
+    commonConstructor(validation, null, null);
+    this.document = createDocument(new InputSource(reader));
   }
 
   public XPathParser(InputStream inputStream, boolean validation) {
@@ -66,6 +77,11 @@ public class XPathParser {
     this.document = createDocument(new InputSource(new StringReader(xml)));
   }
 
+  public XPathParser(Reader reader, boolean validation, Properties variables) {
+    commonConstructor(validation, variables, null);
+    this.document = createDocument(new InputSource(reader));
+  }
+
   public XPathParser(InputStream inputStream, boolean validation, Properties variables) {
     commonConstructor(validation, variables, null);
     this.document = createDocument(new InputSource(inputStream));
@@ -79,6 +95,11 @@ public class XPathParser {
   public XPathParser(String xml, boolean validation, Properties variables, EntityResolver entityResolver) {
     commonConstructor(validation, variables, entityResolver);
     this.document = createDocument(new InputSource(new StringReader(xml)));
+  }
+
+  public XPathParser(Reader reader, boolean validation, Properties variables, EntityResolver entityResolver) {
+    commonConstructor(validation, variables, entityResolver);
+    this.document = createDocument(new InputSource(reader));
   }
 
   public XPathParser(InputStream inputStream, boolean validation, Properties variables, EntityResolver entityResolver) {

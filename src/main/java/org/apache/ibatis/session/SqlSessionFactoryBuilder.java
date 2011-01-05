@@ -1,15 +1,14 @@
 package org.apache.ibatis.session;
 
-import org.apache.ibatis.builder.xml.XMLConfigBuilder;
-import org.apache.ibatis.exceptions.ExceptionFactory;
-import org.apache.ibatis.session.defaults.DefaultSqlSessionFactory;
-import org.apache.ibatis.executor.ErrorContext;
-import org.apache.ibatis.io.ReaderInputStream;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.util.Properties;
+
+import org.apache.ibatis.builder.xml.XMLConfigBuilder;
+import org.apache.ibatis.exceptions.ExceptionFactory;
+import org.apache.ibatis.executor.ErrorContext;
+import org.apache.ibatis.session.defaults.DefaultSqlSessionFactory;
 
 public class SqlSessionFactoryBuilder {
 
@@ -25,8 +24,20 @@ public class SqlSessionFactoryBuilder {
     return build(reader, null, properties);
   }
 
-  public SqlSessionFactory build(Reader reader, String environment, Properties props) {
-    return build(new ReaderInputStream(reader), environment, props);
+  public SqlSessionFactory build(Reader reader, String environment, Properties properties) {
+    try {
+      XMLConfigBuilder parser = new XMLConfigBuilder(reader, environment, properties);
+      return build(parser.parse());
+    } catch (Exception e) {
+      throw ExceptionFactory.wrapException("Error building SqlSession.", e);
+    } finally {
+      ErrorContext.instance().reset();
+      try {
+        reader.close();
+      } catch (IOException e) {
+        // Intentionally ignore. Prefer previous error.
+      }
+    }
   }
 
   public SqlSessionFactory build(InputStream inputStream) {
@@ -41,11 +52,10 @@ public class SqlSessionFactoryBuilder {
     return build(inputStream, null, properties);
   }
 
-  public SqlSessionFactory build(InputStream inputStream, String environment, Properties props) {
+  public SqlSessionFactory build(InputStream inputStream, String environment, Properties properties) {
     try {
-      XMLConfigBuilder parser = new XMLConfigBuilder(inputStream, environment, props);
-      Configuration config = parser.parse();
-      return build(config);
+      XMLConfigBuilder parser = new XMLConfigBuilder(inputStream, environment, properties);
+      return build(parser.parse());
     } catch (Exception e) {
       throw ExceptionFactory.wrapException("Error building SqlSession.", e);
     } finally {
@@ -53,11 +63,11 @@ public class SqlSessionFactoryBuilder {
       try {
         inputStream.close();
       } catch (IOException e) {
-        // Intentionally ignore.  Prefer previous error.
+        // Intentionally ignore. Prefer previous error.
       }
     }
   }
-
+    
   public SqlSessionFactory build(Configuration config) {
     return new DefaultSqlSessionFactory(config);
   }

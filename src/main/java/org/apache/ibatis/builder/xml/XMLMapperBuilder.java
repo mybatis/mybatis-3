@@ -13,7 +13,6 @@ import org.apache.ibatis.builder.BaseBuilder;
 import org.apache.ibatis.builder.MapperBuilderAssistant;
 import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.executor.ErrorContext;
-import org.apache.ibatis.io.ReaderInputStream;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.mapping.Discriminator;
 import org.apache.ibatis.mapping.ParameterMapping;
@@ -36,12 +35,14 @@ public class XMLMapperBuilder extends BaseBuilder {
 
   @Deprecated
   public XMLMapperBuilder(Reader reader, Configuration configuration, String resource, Map<String, XNode> sqlFragments, String namespace) {
-    this(new ReaderInputStream(reader), configuration, resource, sqlFragments, namespace);
+    this(reader, configuration, resource, sqlFragments);
+    this.builderAssistant.setCurrentNamespace(namespace);
   }
 
   @Deprecated
   public XMLMapperBuilder(Reader reader, Configuration configuration, String resource, Map<String, XNode> sqlFragments) {
-    this(new ReaderInputStream(reader), configuration, resource, sqlFragments);
+    this(new XPathParser(reader, true, configuration.getVariables(), new XMLMapperEntityResolver()),
+        configuration, resource, sqlFragments);
   }
     
   public XMLMapperBuilder(InputStream inputStream, Configuration configuration, String resource, Map<String, XNode> sqlFragments, String namespace) {
@@ -50,13 +51,18 @@ public class XMLMapperBuilder extends BaseBuilder {
   }
 
   public XMLMapperBuilder(InputStream inputStream, Configuration configuration, String resource, Map<String, XNode> sqlFragments) {
+    this(new XPathParser(inputStream, true, configuration.getVariables(), new XMLMapperEntityResolver()),
+        configuration, resource, sqlFragments);
+  }
+
+  private XMLMapperBuilder(XPathParser parser, Configuration configuration, String resource, Map<String, XNode> sqlFragments) {
     super(configuration);
     this.builderAssistant = new MapperBuilderAssistant(configuration, resource);
-    this.parser = new XPathParser(inputStream, true, configuration.getVariables(), new XMLMapperEntityResolver());
+    this.parser = parser;
     this.sqlFragments = sqlFragments;
     this.resource = resource;
   }
-
+    
   public void parse() {
     if (!configuration.isResourceLoaded(resource)) {
       configurationElement(parser.evalNode("/mapper"));

@@ -8,7 +8,6 @@ import org.apache.ibatis.builder.BaseBuilder;
 import org.apache.ibatis.builder.BuilderException;
 import org.apache.ibatis.datasource.DataSourceFactory;
 import org.apache.ibatis.executor.ErrorContext;
-import org.apache.ibatis.io.ReaderInputStream;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.mapping.Environment;
 import org.apache.ibatis.parsing.XNode;
@@ -38,7 +37,7 @@ public class XMLConfigBuilder extends BaseBuilder {
   }
 
   public XMLConfigBuilder(Reader reader, String environment, Properties props) {
-    this(new ReaderInputStream(reader), environment, props);
+    this(new XPathParser(reader, true, props, new XMLMapperEntityResolver()), environment, props);
   }
   
   public XMLConfigBuilder(InputStream inputStream) {
@@ -50,14 +49,18 @@ public class XMLConfigBuilder extends BaseBuilder {
   }
 
   public XMLConfigBuilder(InputStream inputStream, String environment, Properties props) {
+    this(new XPathParser(inputStream, true, props, new XMLMapperEntityResolver()), environment, props);
+  }
+  
+  private XMLConfigBuilder(XPathParser parser, String environment, Properties props) {
     super(new Configuration());
     ErrorContext.instance().resource("SQL Mapper Configuration");
     this.configuration.setVariables(props);
     this.parsed = false;
     this.environment = environment;
-    this.parser = new XPathParser(inputStream, true, props, new XMLMapperEntityResolver());
+    this.parser = parser; 
   }
-
+  
   public Configuration parse() {
     if (parsed) {
       throw new BuilderException("Each MapperConfigParser can only be used once.");
