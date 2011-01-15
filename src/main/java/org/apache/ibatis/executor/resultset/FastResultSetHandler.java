@@ -92,7 +92,7 @@ public class FastResultSetHandler implements ResultSetHandler {
     int resultMapCount = resultMaps.size();
     int resultSetCount = 0;
     ResultSet rs = stmt.getResultSet();
-    validateResultMapsCount(rs,resultMapCount);
+    validateResultMapsCount(rs, resultMapCount);
     while (rs != null && resultMapCount > resultSetCount) {
       final ResultMap resultMap = resultMaps.get(resultSetCount);
       handleResultSet(rs, resultMap, multipleResults);
@@ -103,6 +103,16 @@ public class FastResultSetHandler implements ResultSetHandler {
     return collapseSingleResultList(multipleResults);
   }
 
+  protected void closeResultSet(ResultSet rs) {
+    try {
+      if (rs != null) {
+        rs.close();
+      }
+    } catch (SQLException e) {
+      // ignore
+    }
+  }
+  
   protected void cleanUpAfterHandlingResultSet() {
   }
 
@@ -116,12 +126,16 @@ public class FastResultSetHandler implements ResultSetHandler {
   }
 
   protected void handleResultSet(ResultSet rs, ResultMap resultMap, List multipleResults) throws SQLException {
-    if (resultHandler == null) {
-      DefaultResultHandler defaultResultHandler = new DefaultResultHandler();
-      handleRowValues(rs, resultMap, defaultResultHandler, rowBounds);
-      multipleResults.add(defaultResultHandler.getResultList());
-    } else {
-      handleRowValues(rs, resultMap, resultHandler, rowBounds);
+    try {
+      if (resultHandler == null) {
+        DefaultResultHandler defaultResultHandler = new DefaultResultHandler();
+        handleRowValues(rs, resultMap, defaultResultHandler, rowBounds);
+        multipleResults.add(defaultResultHandler.getResultList());
+      } else {
+        handleRowValues(rs, resultMap, resultHandler, rowBounds);
+      }
+    } finally {
+      closeResultSet(rs); // issue #228 (close resultsets)
     }
   }
 
