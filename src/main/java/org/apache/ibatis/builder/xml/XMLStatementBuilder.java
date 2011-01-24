@@ -19,13 +19,15 @@ import java.util.*;
 public class XMLStatementBuilder extends BaseBuilder {
 
   private MapperBuilderAssistant builderAssistant;
+  private XNode context;
 
-  public XMLStatementBuilder(Configuration configuration, MapperBuilderAssistant builderAssistant) {
+  public XMLStatementBuilder(Configuration configuration, MapperBuilderAssistant builderAssistant, XNode context) {
     super(configuration);
     this.builderAssistant = builderAssistant;
+    this.context = context;
   }
 
-  public void parseStatementNode(XNode context) {
+  public void parseStatementNode() {
     String id = context.getStringAttribute("id");
     Integer fetchSize = context.getIntAttribute("fetchSize", null);
     Integer timeout = context.getIntAttribute("timeout", null);
@@ -67,6 +69,9 @@ public class XMLStatementBuilder extends BaseBuilder {
   }
 
 
+  public String getStatementIdWithNameSpace() {
+	  return builderAssistant.applyCurrentNamespace(context.getStringAttribute("id"));
+  }
   private List<SqlNode> parseDynamicTags(XNode node) {
     List<SqlNode> contents = new ArrayList<SqlNode>();
     NodeList children = node.getNode().getChildNodes();
@@ -152,16 +157,20 @@ public class XMLStatementBuilder extends BaseBuilder {
     public void handleNode(XNode nodeToHandle, List<SqlNode> targetContents) {
       String refid = nodeToHandle.getStringAttribute("refid");
       refid = builderAssistant.applyCurrentNamespace(refid);
-      XNode includeNode = configuration.getSqlFragments().get(refid);
-      if (includeNode == null) {
-        String nsrefid = builderAssistant.applyCurrentNamespace(refid);
-        includeNode = configuration.getSqlFragments().get(nsrefid);
-        if (includeNode == null) {
-          throw new BuilderException("Could not find SQL statement to include with refid '" + refid + "'");
-        }
+      try {
+    	  XNode includeNode = configuration.getSqlFragments().get(refid);
+          if (includeNode == null) {
+            String nsrefid = builderAssistant.applyCurrentNamespace(refid);
+            includeNode = configuration.getSqlFragments().get(nsrefid);
+            if (includeNode == null) {
+              throw new IncompleteStatementException("Could not find SQL statement to include with refid '" + refid + "'");
+            }
+          }
+          MixedSqlNode mixedSqlNode = new MixedSqlNode(contents(includeNode));
+          targetContents.add(mixedSqlNode);
+      } catch (IllegalArgumentException e) {
+    	  throw new IncompleteStatementException("Could not find SQL statement to include with refid '" + refid + "'", e);
       }
-      MixedSqlNode mixedSqlNode = new MixedSqlNode(contents(includeNode));
-      targetContents.add(mixedSqlNode);
     }
 
     private List<SqlNode> contents(XNode includeNode) {

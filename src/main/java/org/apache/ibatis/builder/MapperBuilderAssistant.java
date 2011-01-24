@@ -48,12 +48,16 @@ public class MapperBuilderAssistant extends BaseBuilder {
     if (namespace == null) {
       throw new BuilderException("cache-ref element requires a namespace attribute.");
     }
-    Cache cache = configuration.getCache(namespace);
-    if (cache == null) {
-      throw new BuilderException("No cache for namespace '" + namespace + "' could be found.");
+    try {
+        Cache cache = configuration.getCache(namespace);
+        if (cache == null) {
+          throw new IncompleteCacheException("No cache for namespace '" + namespace + "' could be found.");
+        }
+        currentCache = cache;
+        return cache;
+    } catch (IllegalArgumentException e) {
+    	throw new IncompleteCacheException("No cache for namespace '" + namespace + "' could be found.", e);
     }
-    currentCache = cache;
-    return cache;
   }
 
   public Cache useNewCache(Class<? extends Cache> typeClass,

@@ -3,15 +3,13 @@ package org.apache.ibatis.session;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
 import org.apache.ibatis.binding.MapperRegistry;
-import org.apache.ibatis.builder.MapperBuilderAssistant;
+import org.apache.ibatis.builder.CacheRefResolver;
 import org.apache.ibatis.builder.xml.XMLStatementBuilder;
 import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.cache.decorators.FifoCache;
@@ -88,9 +86,8 @@ public class Configuration {
   protected final Map<String, XNode> sqlFragments = new StrictMap<String, XNode>("XML fragments parsed from previous mappers");
 
   /** A map holds statement nodes for a namespace. */
-  protected final ConcurrentMap<String, List<XNode>> statementNodesToParse = new ConcurrentHashMap<String, List<XNode>>();
-  /** A map holds a resource for a namespace. */
-  protected final Map<String, String> resourceMap = new HashMap<String, String>();
+  protected final Collection<XMLStatementBuilder> incompleteStatements = new LinkedList<XMLStatementBuilder>();
+  protected final Collection<CacheRefResolver> incompleteCacheRefs = new LinkedList<CacheRefResolver>();
   /**
    * A map holds cache-ref relationship. The key is the namespace that
    * references a cache bound to another namespace and the value is the
@@ -386,10 +383,21 @@ public class Configuration {
     return mappedStatements.values();
   }
 
+  public Collection<XMLStatementBuilder> getIncompleteStatements() {
+    return incompleteStatements;
+  }
+  public void addIncompleteStatement(XMLStatementBuilder incompleteStatement) {
+	  incompleteStatements.add(incompleteStatement);
+  }
+  public Collection<CacheRefResolver> getIncompleteCacheRefs() {
+	return incompleteCacheRefs;
+  }
+  public void addIncompleteCacheRef(CacheRefResolver incompleteCacheRef) {
+	incompleteCacheRefs.add(incompleteCacheRef);
+  }
+
   public MappedStatement getMappedStatement(String id) {
-    if (!mappedStatements.containsKey(id)) {
-      buildStatementsFromId(id);
-    }
+	buildAllStatements();
     return mappedStatements.get(id);
   }
 
@@ -428,16 +436,8 @@ public class Configuration {
   }
 
   public boolean hasStatement(String statementName) {
-    buildStatementsFromId(statementName);
+    buildAllStatements();
     return mappedStatements.containsKey(statementName);
-  }
-
-  public void addStatementNodes(String namespace, List<XNode> nodes) {
-    statementNodesToParse.put(namespace, nodes);
-  }
-
-  public void addResource(String namespace, String resource) {
-      resourceMap.put(namespace, resource);
   }
 
   public void addCacheRef(String namespace, String referencedNamespace) {
@@ -449,22 +449,18 @@ public class Configuration {
    * to call this method once all the mappers are added as it provides fail-fast
    * statement validation.
    */
-  public void buildAllStatements() {
-    if (!statementNodesToParse.isEmpty()) {
-      Set<String> keySet = statementNodesToParse.keySet();
-      for (String namespace : keySet) {
-        buildStatementsForNamespace(namespace);
-      }
+  protected void buildAllStatements() {
+    if (!incompleteCacheRefs.isEmpty()) {
+    	synchronized (incompleteCacheRefs) {
+    		// This always throws a BuilderException.
+    		incompleteCacheRefs.iterator().next().resolveCacheRef();
+    	}
     }
-  }
-
-  protected void buildStatementsFromId(String id) {
-    final String namespace = extractNamespace(id);
-    if (namespace == null) {
-      // the id is a short name. process all statements.
-      buildAllStatements();
-    } else {
-      buildStatementsForNamespace(namespace);
+    if (!incompleteStatements.isEmpty()) {
+    	synchronized (incompleteStatements) {
+    		// This always throws a BuilderException.
+    		incompleteStatements.iterator().next().parseStatementNode();
+    	}
     }
   }
 
@@ -477,41 +473,6 @@ public class Configuration {
   protected String extractNamespace(String statementId) {
     int lastPeriod = statementId.lastIndexOf('.');
     return lastPeriod > 0 ? statementId.substring(0, lastPeriod) : null;
-  }
-
-  /**
-   * Parses cached statement nodes for the specified namespace and stores the
-   * generated mapped statements.
-   * 
-   * @param namespace
-   */
-  protected void buildStatementsForNamespace(String namespace) {
-    if (namespace != null) {
-      final List<XNode> list = statementNodesToParse.get(namespace);
-      if (list != null) {
-        final String resource = resourceMap.get(namespace);
-        final MapperBuilderAssistant builderAssistant = new MapperBuilderAssistant(this, resource);
-        builderAssistant.setCurrentNamespace(namespace);
-        // Set a cache reference if one is bound to this namespace.
-        if (caches.containsKey(namespace)) {
-          builderAssistant.useCacheRef(namespace);
-        }
-        else if(cacheRefMap.containsKey(namespace)) {
-          builderAssistant.useCacheRef(cacheRefMap.get(namespace));
-        }
-        parseStatementNodes(builderAssistant, list);
-        // Remove the processed nodes and resource from the cache.
-        statementNodesToParse.remove(namespace);
-        resourceMap.remove(namespace);
-      }
-    }
-  }
-
-  protected void parseStatementNodes(final MapperBuilderAssistant builderAssistant, final List<XNode> list) {
-    for (XNode context : list) {
-      final XMLStatementBuilder statementParser = new XMLStatementBuilder(this, builderAssistant);
-      statementParser.parseStatementNode(context);
-    }
   }
 
   //Slow but a one time cost.  A better solution is welcome.

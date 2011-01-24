@@ -8,6 +8,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+import org.apache.ibatis.builder.BuilderException;
 import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.datasource.unpooled.UnpooledDataSource;
 import org.apache.ibatis.io.Resources;
@@ -33,7 +34,7 @@ public class XmlExternalRefTest {
     testCrossReference(getSqlSessionFactoryJavaConfig());
   }
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test(expected = BuilderException.class)
   public void testFailFastOnBuildAll() throws Exception {
     Configuration configuration = new Configuration();
     try {
@@ -41,7 +42,7 @@ public class XmlExternalRefTest {
     } catch (Exception e) {
       fail("No exception should be thrown before parsing statement nodes.");
     }
-    configuration.buildAllStatements();
+    configuration.getMappedStatementNames();
   }
 
   @Test
@@ -52,7 +53,7 @@ public class XmlExternalRefTest {
     configReader.close();
 
     Configuration configuration = sqlSessionFactory.getConfiguration();
-    configuration.buildAllStatements();
+    configuration.getMappedStatementNames();
     
     MappedStatement selectPetStatement = configuration.getMappedStatement("org.apache.ibatis.submitted.xml_external_ref.PetMapper.select");
     MappedStatement selectPersonStatement = configuration.getMappedStatement("org.apache.ibatis.submitted.xml_external_ref.PersonMapper.select");

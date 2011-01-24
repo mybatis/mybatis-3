@@ -3,13 +3,17 @@ package org.apache.ibatis.builder.xml;
 import java.io.InputStream;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
 import org.apache.ibatis.builder.BaseBuilder;
+import org.apache.ibatis.builder.CacheRefResolver;
+import org.apache.ibatis.builder.IncompleteCacheException;
 import org.apache.ibatis.builder.MapperBuilderAssistant;
 import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.executor.ErrorContext;
@@ -69,6 +73,11 @@ public class XMLMapperBuilder extends BaseBuilder {
       configuration.addLoadedResource(resource);
       bindMapperForNamespace();
     }
+    
+    // TODO skip current processed statements
+    // try with pending statements
+    parsePendingChacheRefs();
+    parsePendingStatements();
   }
 
   public XNode getSqlFragment(String refid) {
@@ -84,16 +93,63 @@ public class XMLMapperBuilder extends BaseBuilder {
       parameterMapElement(context.evalNodes("/mapper/parameterMap"));
       resultMapElements(context.evalNodes("/mapper/resultMap"));
       sqlElement(context.evalNodes("/mapper/sql"));
-      bufferStatementNodes(context.evalNodes("select|insert|update|delete"));
+      buildStatementFromContext(context.evalNodes("select|insert|update|delete"));
     } catch (Exception e) {
       throw new RuntimeException("Error parsing Mapper XML. Cause: " + e, e);
     }
 
   }
+  
+  private void buildStatementFromContext(List<XNode> list) {
+    for (XNode context : list) {
+      final XMLStatementBuilder statementParser = new XMLStatementBuilder(configuration, builderAssistant, context);
+      // TODO parse just one time!
+      try {
+    	  statementParser.parseStatementNode();
+      } catch (IncompleteStatementException e) {
+    	  configuration.addIncompleteStatement(statementParser);
+      }
+    }
+  }
+
+  private void parsePendingChacheRefs() {
+	  Collection<CacheRefResolver> incompleteCacheRefs = configuration.getIncompleteCacheRefs();
+	  synchronized (incompleteCacheRefs) {
+		  Iterator<CacheRefResolver> iter = incompleteCacheRefs.iterator();
+		  while (iter.hasNext()) {
+			  try {
+				  iter.next().resolveCacheRef();
+				  iter.remove();
+			  } catch (IncompleteCacheException e) {
+				  // Cache ref is still missing a resource...
+			  }
+		  }
+	  }
+  }
+  private void parsePendingStatements() {
+	  Collection<XMLStatementBuilder> incompleteStatements = configuration.getIncompleteStatements();
+	  synchronized (incompleteStatements) {
+		  Iterator<XMLStatementBuilder> iter = incompleteStatements.iterator();
+		  while (iter.hasNext()) {
+			  try {
+				  iter.next().parseStatementNode();
+				  iter.remove();
+			  } catch (IncompleteStatementException e) {
+				  // Statement is still missing a resource...
+			  }
+		  }
+	  }
+  }
 
   private void cacheRefElement(XNode context) {
     if (context != null) {
       configuration.addCacheRef(builderAssistant.getCurrentNamespace(), context.getStringAttribute("namespace"));
+      CacheRefResolver cacheRefResolver = new CacheRefResolver(builderAssistant, context.getStringAttribute("namespace"));
+      try {
+    	  cacheRefResolver.resolveCacheRef();
+      } catch (IncompleteCacheException e) {
+    	  configuration.addIncompleteCacheRef(cacheRefResolver);
+      }
     }
   }
 
@@ -214,20 +270,6 @@ public class XMLMapperBuilder extends BaseBuilder {
       id = builderAssistant.applyCurrentNamespace(id);
       sqlFragments.put(id, context);
     }
-  }
-
-  /**
-   * To achieve mapper-order-independent parsing, stores the statement nodes
-   * into the temporary map without actually parsing them.
-   * 
-   * @param list
-   * @see Configuration#getMappedStatement(String)
-   * @see Configuration#buildAllStatements()
-   */
-  private void bufferStatementNodes(List<XNode> list) {
-    String currentNamespace = builderAssistant.getCurrentNamespace();
-    configuration.addStatementNodes(currentNamespace, list);
-    configuration.addResource(currentNamespace, resource);
   }
 
   private ResultMapping buildResultMappingFromContext(XNode context, Class<?> resultType, ArrayList<ResultFlag> flags) throws Exception {
