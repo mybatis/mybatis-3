@@ -135,7 +135,7 @@ public final class TypeHandlerRegistry {
     return handler;
   }
 
-  public TypeHandler getUnkownTypeHandler() {
+  public TypeHandler getUnknownTypeHandler() {
     return UNKNOWN_TYPE_HANDLER;
   }
 

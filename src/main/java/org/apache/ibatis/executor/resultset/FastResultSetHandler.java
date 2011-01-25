@@ -389,7 +389,7 @@ public class FastResultSetHandler implements ResultSetHandler {
     if (typeHandlerRegistry.hasTypeHandler(parameterType)) {
       typeHandler = typeHandlerRegistry.getTypeHandler(parameterType);
     } else {
-      typeHandler = typeHandlerRegistry.getUnkownTypeHandler();
+      typeHandler = typeHandlerRegistry.getUnknownTypeHandler();
     }
     return typeHandler.getResult(rs, resultMapping.getColumn());
   }

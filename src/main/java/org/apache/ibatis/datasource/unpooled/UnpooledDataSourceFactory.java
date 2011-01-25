@@ -31,7 +31,7 @@ public class UnpooledDataSourceFactory implements DataSourceFactory {
         Object convertedValue = convertValue(metaDataSource, propertyName, value);
         metaDataSource.setValue(propertyName, convertedValue);
       } else {
-        throw new DataSourceException("Unkown DataSource property: " + propertyName);
+        throw new DataSourceException("Unknown DataSource property: " + propertyName);
       }
     }
     if (driverProperties.size() > 0) {

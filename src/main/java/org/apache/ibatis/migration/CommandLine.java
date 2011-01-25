@@ -122,7 +122,7 @@ public class CommandLine {
         command = match;
         runCommand();
       } else {
-        throw new MigrationException("Attempt to execute unkown command: " + command);
+        throw new MigrationException("Attempt to execute unknown command: " + command);
       }
     }
   }

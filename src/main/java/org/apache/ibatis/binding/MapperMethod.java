@@ -70,7 +70,7 @@ public class MapperMethod {
         result = sqlSession.selectOne(commandName, param);
       }
     } else {
-      throw new BindingException("Unkown execution method for: " + commandName);
+      throw new BindingException("Unknown execution method for: " + commandName);
     }
     return result;
   }

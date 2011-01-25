@@ -205,7 +205,7 @@ public class XmlSqlStatementParser {
 
     final boolean runStatementFirst = "post".equalsIgnoreCase(context.getStringAttribute("type", runStatementFirstParam ? "post" : "pre"));
     final String keyStatementId = SqlMapSessionImpl.selectKeyIdFor(parentId);
-    TypeHandler typeHandler = configuration.getTypeHandlerRegistry().getUnkownTypeHandler();
+    TypeHandler typeHandler = configuration.getTypeHandlerRegistry().getUnknownTypeHandler();
     if (resultClassName != null) {
       final Class resultClass = configuration.getTypeAliasRegistry().resolveAlias(resultClassName);
       typeHandler = configuration.getTypeHandlerRegistry().getTypeHandler(resultClass);

@@ -138,7 +138,7 @@ public class InlineParameterMapParser {
 
     if (typeHandler == null) {
       if (parameterClass == null) {
-        typeHandler = typeHandlerRegistry.getUnkownTypeHandler();
+        typeHandler = typeHandlerRegistry.getUnknownTypeHandler();
       } else {
         String javaTypeString = javaType == null ? null : javaType.getName();
         typeHandler = resolveTypeHandler(parameterClass, propertyName, javaTypeString, jdbcType);
@@ -168,7 +168,7 @@ public class InlineParameterMapParser {
         String type = paramParser.nextToken();
         TypeHandler handler;
         if (parameterClass == null) {
-          handler = typeHandlerRegistry.getUnkownTypeHandler();
+          handler = typeHandlerRegistry.getUnknownTypeHandler();
         } else {
           handler = resolveTypeHandler(parameterClass, name, null, JdbcType.valueOf(type));
         }
@@ -183,7 +183,7 @@ public class InlineParameterMapParser {
     } else {
       TypeHandler handler;
       if (parameterClass == null) {
-        handler = typeHandlerRegistry.getUnkownTypeHandler();
+        handler = typeHandlerRegistry.getUnknownTypeHandler();
       } else {
         handler = resolveTypeHandler(parameterClass, token, null, null);
       }
@@ -196,11 +196,11 @@ public class InlineParameterMapParser {
     TypeHandler handler;
     if (clazz == null) {
       // Unknown
-      handler = typeHandlerRegistry.getUnkownTypeHandler();
+      handler = typeHandlerRegistry.getUnknownTypeHandler();
     } else if (java.util.Map.class.isAssignableFrom(clazz)) {
       // Map
       if (javaType == null) {
-        handler = typeHandlerRegistry.getUnkownTypeHandler(); //BUG 1012591 - typeHandlerRegistry.getTypeHandler(java.lang.Object.class, jdbcType);
+        handler = typeHandlerRegistry.getUnknownTypeHandler(); //BUG 1012591 - typeHandlerRegistry.getTypeHandler(java.lang.Object.class, jdbcType);
       } else {
         try {
           Class javaClass = typeAliasRegistry.resolveAlias(javaType);

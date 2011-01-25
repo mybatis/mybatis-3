@@ -328,7 +328,7 @@ public class XmlSqlMapParser {
           typeHandler = config.getTypeHandlerRegistry().getTypeHandler(resultType);
         }
       } else {
-        typeHandler = config.getTypeHandlerRegistry().getUnkownTypeHandler();
+        typeHandler = config.getTypeHandlerRegistry().getUnknownTypeHandler();
       }
     }
 
@@ -360,7 +360,7 @@ public class XmlSqlMapParser {
         while (parser.hasMoreTokens()) {
           String property = parser.nextToken();
           String column = parser.nextToken();
-          ResultMapping.Builder complexBuilder = new ResultMapping.Builder(config, property, column, config.getTypeHandlerRegistry().getUnkownTypeHandler());
+          ResultMapping.Builder complexBuilder = new ResultMapping.Builder(config, property, column, config.getTypeHandlerRegistry().getUnknownTypeHandler());
           composites.add(complexBuilder.build());
         }
       }
@@ -438,7 +438,7 @@ public class XmlSqlMapParser {
           typeHandler = config.getTypeHandlerRegistry().getTypeHandler(paramType);
         }
       } else {
-        typeHandler = config.getTypeHandlerRegistry().getUnkownTypeHandler();
+        typeHandler = config.getTypeHandlerRegistry().getUnknownTypeHandler();
       }
     }
 
