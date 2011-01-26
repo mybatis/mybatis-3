@@ -68,16 +68,23 @@ public class XMLMapperBuilder extends BaseBuilder {
   }
     
   public void parse() {
-    if (!configuration.isResourceLoaded(resource)) {
-      configurationElement(parser.evalNode("/mapper"));
-      configuration.addLoadedResource(resource);
-      bindMapperForNamespace();
+    XNode context = parser.evalNode("/mapper");
+    // we may inherit a namespace from MapperAnnotationBuilder
+    String namespace = builderAssistant.getCurrentNamespace();
+    if (namespace == null) {
+      namespace = context.getStringAttribute("namespace");
+      builderAssistant.setCurrentNamespace(namespace);
     }
-    
-    // TODO skip current processed statements
-    // try with pending statements
-    parsePendingChacheRefs();
-    parsePendingStatements();
+    if (!configuration.isResourceLoaded(namespace)) {
+      configurationElement(context);
+      configuration.addLoadedResource(namespace);
+      bindMapperForNamespace();
+
+      // TODO skip current processed statements
+      // try with pending statements
+      parsePendingChacheRefs();
+      parsePendingStatements();
+    }
   }
 
   public XNode getSqlFragment(String refid) {
@@ -86,8 +93,6 @@ public class XMLMapperBuilder extends BaseBuilder {
 
   private void configurationElement(XNode context) {
     try {
-      String namespace = context.getStringAttribute("namespace");
-      builderAssistant.setCurrentNamespace(namespace);
       cacheRefElement(context.evalNode("cache-ref"));
       cacheElement(context.evalNode("cache"));
       parameterMapElement(context.evalNodes("/mapper/parameterMap"));

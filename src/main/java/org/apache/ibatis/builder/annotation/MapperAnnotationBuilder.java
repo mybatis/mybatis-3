@@ -87,18 +87,15 @@ public class MapperAnnotationBuilder {
   }
 
   public void parse() {
-    String resource = type.toString();
-    if (!configuration.isResourceLoaded(resource)) {
-      loadXmlResource();
-      configuration.addLoadedResource(resource);
-      assistant.setCurrentNamespace(type.getName());
-      parseCache();
-      parseCacheRef();
-      Method[] methods = type.getMethods();
-      for (Method method : methods) {
-        parseResultsAndConstructorArgs(method);
-        parseStatement(method);
-      }
+    String namespace = type.getName();
+    assistant.setCurrentNamespace(namespace);
+    loadXmlResource(); // will load if not already loaded
+    parseCache();
+    parseCacheRef();
+    Method[] methods = type.getMethods();
+    for (Method method : methods) {
+      parseResultsAndConstructorArgs(method);
+      parseStatement(method);
     }
   }
 
