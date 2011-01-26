@@ -89,7 +89,9 @@ public class MapperAnnotationBuilder {
   public void parse() {
     String namespace = type.getName();
     assistant.setCurrentNamespace(namespace);
-    loadXmlResource(); // will load if not already loaded
+    if (!configuration.isResourceLoaded(namespace)) {
+      loadXmlResource();
+    }
     parseCache();
     parseCacheRef();
     Method[] methods = type.getMethods();
