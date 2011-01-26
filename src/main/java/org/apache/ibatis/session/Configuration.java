@@ -85,7 +85,6 @@ public class Configuration {
   protected final Set<String> loadedResources = new HashSet<String>();
   protected final Map<String, XNode> sqlFragments = new StrictMap<String, XNode>("XML fragments parsed from previous mappers");
 
-  /** A map holds statement nodes for a namespace. */
   protected final Collection<XMLStatementBuilder> incompleteStatements = new LinkedList<XMLStatementBuilder>();
   protected final Collection<CacheRefResolver> incompleteCacheRefs = new LinkedList<CacheRefResolver>();
   /**
@@ -386,18 +385,21 @@ public class Configuration {
   public Collection<XMLStatementBuilder> getIncompleteStatements() {
     return incompleteStatements;
   }
+  
   public void addIncompleteStatement(XMLStatementBuilder incompleteStatement) {
-	  incompleteStatements.add(incompleteStatement);
+    incompleteStatements.add(incompleteStatement);
   }
+
   public Collection<CacheRefResolver> getIncompleteCacheRefs() {
-	return incompleteCacheRefs;
+    return incompleteCacheRefs;
   }
+
   public void addIncompleteCacheRef(CacheRefResolver incompleteCacheRef) {
-	incompleteCacheRefs.add(incompleteCacheRef);
+    incompleteCacheRefs.add(incompleteCacheRef);
   }
 
   public MappedStatement getMappedStatement(String id) {
-	buildAllStatements();
+    buildAllStatements();
     return mappedStatements.get(id);
   }
 

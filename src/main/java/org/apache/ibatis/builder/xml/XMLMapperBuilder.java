@@ -131,6 +131,7 @@ public class XMLMapperBuilder extends BaseBuilder {
 		  }
 	  }
   }
+  
   private void parsePendingStatements() {
 	  Collection<XMLStatementBuilder> incompleteStatements = configuration.getIncompleteStatements();
 	  synchronized (incompleteStatements) {
@@ -197,7 +198,6 @@ public class XMLMapperBuilder extends BaseBuilder {
       builderAssistant.addParameterMap(id, parameterClass, parameterMappings);
     }
   }
-
 
   private void resultMapElements(List<XNode> list) throws Exception {
     for (XNode resultMapNode : list) {
