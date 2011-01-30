@@ -165,8 +165,6 @@ public class DefaultSqlSession implements SqlSession {
     try {
       executor.close(isCommitOrRollbackRequired(false));
       dirty = false;
-    } catch (Exception e) {
-      throw ExceptionFactory.wrapException("Error closing transaction.  Cause: " + e, e);
     } finally {
       ErrorContext.instance().reset();
     }

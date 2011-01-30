@@ -1,23 +1,35 @@
 package org.apache.ibatis.executor;
 
-import org.apache.ibatis.cache.CacheKey;
-import org.apache.ibatis.cache.impl.PerpetualCache;
 import static org.apache.ibatis.executor.ExecutionPlaceholder.EXECUTION_PLACEHOLDER;
-
-import org.apache.ibatis.mapping.*;
-import org.apache.ibatis.reflection.MetaObject;
-import org.apache.ibatis.session.ResultHandler;
-import org.apache.ibatis.session.RowBounds;
-import org.apache.ibatis.session.Configuration;
-import org.apache.ibatis.transaction.Transaction;
-import org.apache.ibatis.type.TypeHandlerRegistry;
 
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import org.apache.ibatis.cache.CacheKey;
+import org.apache.ibatis.cache.impl.PerpetualCache;
+import org.apache.ibatis.logging.Log;
+import org.apache.ibatis.logging.LogFactory;
+import org.apache.ibatis.mapping.BoundSql;
+import org.apache.ibatis.mapping.MappedStatement;
+import org.apache.ibatis.mapping.ParameterMapping;
+import org.apache.ibatis.mapping.ParameterMode;
+import org.apache.ibatis.mapping.StatementType;
+import org.apache.ibatis.reflection.MetaObject;
+import org.apache.ibatis.session.Configuration;
+import org.apache.ibatis.session.ResultHandler;
+import org.apache.ibatis.session.RowBounds;
+import org.apache.ibatis.transaction.Transaction;
+import org.apache.ibatis.type.TypeHandlerRegistry;
+
 public abstract class BaseExecutor implements Executor {
+
+  private static final Log log = LogFactory.getLog(BaseExecutor.class);
 
   protected Transaction transaction;
 
@@ -54,6 +66,7 @@ public abstract class BaseExecutor implements Executor {
       }
     } catch (SQLException e) {
       // Ignore.  There's nothing that can be done at this point.
+      log.debug("Unexpected exception on closing transaction.  Cause: " + e);
     } finally {
       transaction = null;
       deferredLoads = null;
@@ -262,8 +275,6 @@ public abstract class BaseExecutor implements Executor {
       }
       resultObject.setValue(property, value);
     }
-
   }
-
 
 }
