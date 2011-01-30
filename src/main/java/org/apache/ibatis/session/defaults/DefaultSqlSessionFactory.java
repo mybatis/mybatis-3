@@ -78,7 +78,7 @@ public class DefaultSqlSessionFactory implements SqlSessionFactory {
       Transaction tx = transactionFactory.newTransaction(connection, autoCommit);
       Executor executor = configuration.newExecutor(tx, execType);
       return new DefaultSqlSession(configuration, executor, autoCommit);
-    } catch (SQLException e) {
+    } catch (Exception e) {
       closeConnection(connection);
       throw ExceptionFactory.wrapException("Error opening session.  Cause: " + e, e);
     } finally {
