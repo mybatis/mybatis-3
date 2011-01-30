@@ -1,8 +1,9 @@
 package org.apache.ibatis.builder.xml.dynamic;
 
+import ognl.Ognl;
+import ognl.OgnlException;
+
 import org.apache.ibatis.builder.BuilderException;
-import org.apache.ibatis.ognl.Ognl;
-import org.apache.ibatis.ognl.OgnlException;
 import org.apache.ibatis.parsing.GenericTokenParser;
 import org.apache.ibatis.parsing.TokenHandler;
 import org.apache.ibatis.type.SimpleTypeRegistry;

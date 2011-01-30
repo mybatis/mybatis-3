@@ -3,7 +3,7 @@
   <parent>
     <groupId>org.mybatis</groupId>
     <artifactId>mybatis-parent</artifactId>
-    <version>8</version>
+    <version>9</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>mybatis</artifactId>
@@ -63,30 +63,6 @@
   </reporting>
   <build>
     <plugins>
-      <!--
-       | Make sure we only use Java5 methods
-      -->
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>animal-sniffer-maven-plugin</artifactId>
-        <version>1.6</version>
-        <configuration>
-          <signature>
-            <groupId>org.codehaus.mojo.signature</groupId>
-            <artifactId>java15</artifactId>
-            <version>1.0</version>
-          </signature>
-        </configuration>
-        <executions>
-          <execution>
-            <id>check-java-1.5-compat</id>
-            <phase>process-classes</phase>
-            <goals>
-              <goal>check</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-assembly-plugin</artifactId>
@@ -232,7 +208,41 @@
       </testResource>
     </testResources>
   </build>
+  <profiles>
+    <profile>
+      <id>release</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.sonatype.plugins</groupId>
+            <artifactId>jarjar-maven-plugin</artifactId>
+            <configuration>
+              <includes>
+                <include>ognl:ognl</include>
+              </includes>
+              <rules>
+                <rule>
+                  <pattern>ognl.**</pattern>
+                  <result>org.apache.ibatis.ognl.@1</result>
+                </rule>
+                <keep>
+                  <pattern>org.apache.ibatis.**</pattern>
+                </keep>
+              </rules>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
   <dependencies>
+    <dependency>
+      <groupId>ognl</groupId>
+      <artifactId>ognl</artifactId>
+      <version>3.0.1</version>
+      <scope>provided</scope>
+      <optional>true</optional>
+    </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>

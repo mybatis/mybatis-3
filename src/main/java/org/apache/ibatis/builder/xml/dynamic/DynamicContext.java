@@ -1,13 +1,15 @@
 package org.apache.ibatis.builder.xml.dynamic;
 
-import org.apache.ibatis.ognl.OgnlException;
-import org.apache.ibatis.ognl.OgnlRuntime;
-import org.apache.ibatis.ognl.PropertyAccessor;
-import org.apache.ibatis.reflection.MetaObject;
-import org.apache.ibatis.session.Configuration;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import ognl.OgnlContext;
+import ognl.OgnlException;
+import ognl.OgnlRuntime;
+import ognl.PropertyAccessor;
+
+import org.apache.ibatis.reflection.MetaObject;
+import org.apache.ibatis.session.Configuration;
 
 public class DynamicContext {
 
@@ -102,6 +104,22 @@ public class DynamicContext {
         throws OgnlException {
       Map map = (Map) target;
       map.put(name, value);
+    }
+
+    /**
+     * @since 3.0.5
+     */
+    public String getSourceAccessor(OgnlContext context, Object target, Object index) {
+        // TODO verify if this method is needed
+        return null;
+    }
+
+    /**
+     * @since 3.0.5
+     */
+    public String getSourceSetter(OgnlContext context, Object target, Object index) {
+        // TODO verify if this method is needed
+        return null;
     }
   }
 }
