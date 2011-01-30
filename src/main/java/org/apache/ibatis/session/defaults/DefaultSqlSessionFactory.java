@@ -65,11 +65,12 @@ public class DefaultSqlSessionFactory implements SqlSessionFactory {
   }
 
   private SqlSession openSessionFromDataSource(ExecutorType execType, TransactionIsolationLevel level, boolean autoCommit) {
+    Connection connection = null;
     try {
       final Environment environment = configuration.getEnvironment();
       final DataSource dataSource = getDataSourceFromEnvironment(environment);
       TransactionFactory transactionFactory = getTransactionFactoryFromEnvironment(environment);
-      Connection connection = dataSource.getConnection();
+      connection = dataSource.getConnection();
       if (level != null) {
         connection.setTransactionIsolation(level.getLevel());
       }
@@ -78,6 +79,7 @@ public class DefaultSqlSessionFactory implements SqlSessionFactory {
       Executor executor = configuration.newExecutor(tx, execType);
       return new DefaultSqlSession(configuration, executor, autoCommit);
     } catch (SQLException e) {
+      closeConnection(connection);
       throw ExceptionFactory.wrapException("Error opening session.  Cause: " + e, e);
     } finally {
       ErrorContext.instance().reset();
@@ -126,6 +128,16 @@ public class DefaultSqlSessionFactory implements SqlSessionFactory {
       return ConnectionLogger.newInstance(connection);
     } else {
       return connection;
+    }
+  }
+
+  private void closeConnection(Connection connection) {
+    if (connection != null) {
+      try {
+        connection.close();
+      } catch (SQLException e1) {
+        // Intentionally ignore. Prefer previous error.
+      }
     }
   }
 
