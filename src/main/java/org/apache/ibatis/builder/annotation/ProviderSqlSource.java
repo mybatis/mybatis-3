@@ -16,13 +16,14 @@ public class ProviderSqlSource implements SqlSource {
   private boolean providerTakesParameterObject;
 
   public ProviderSqlSource(Configuration config, Object provider) {
+    String providerMethodName = null;
     try {
       this.sqlSourceParser = new SqlSourceBuilder(config);
       this.providerType = (Class<?>) provider.getClass().getMethod("type").invoke(provider);
-      String providerMethod = (String) provider.getClass().getMethod("method").invoke(provider);
+      providerMethodName = (String) provider.getClass().getMethod("method").invoke(provider);
 
-      for (Method m : providerType.getMethods()) {
-        if (providerMethod.equals(m.getName())) {
+      for (Method m : this.providerType.getMethods()) {
+        if (providerMethodName.equals(m.getName())) {
           if (m.getParameterTypes().length < 2
               && m.getReturnType() == String.class) {
             this.providerMethod = m;
@@ -32,6 +33,10 @@ public class ProviderSqlSource implements SqlSource {
       }
     } catch (Exception e) {
       throw new BuilderException("Error creating SqlSource for SqlProvider.  Cause: " + e, e);
+    }
+    if (this.providerMethod == null) {
+      throw new BuilderException("Error creating SqlSource for SqlProvider. Method '"
+          + providerMethodName + "' not found in SqlProvider '" + this.providerType.getName() + "'.");
     }
   }
 
