@@ -1,5 +1,6 @@
 package org.apache.ibatis.builder;
 
+import org.apache.ibatis.builder.xml.IncompleteStatementException;
 import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.cache.decorators.LruCache;
 import org.apache.ibatis.cache.impl.PerpetualCache;
@@ -244,7 +245,11 @@ public class MapperBuilderAssistant extends BaseBuilder {
     parameterMap = applyCurrentNamespace(parameterMap);
 
     if (parameterMap != null) {
-      statementBuilder.parameterMap(configuration.getParameterMap(parameterMap));
+      try {
+        statementBuilder.parameterMap(configuration.getParameterMap(parameterMap));
+      } catch (IllegalArgumentException e) {
+      	throw new IncompleteStatementException("Could not find parameter map " + parameterMap, e);
+      }
     } else if (parameterTypeClass != null) {
       List<ParameterMapping> parameterMappings = new ArrayList<ParameterMapping>();
       ParameterMap.Builder inlineParameterMapBuilder = new ParameterMap.Builder(
@@ -267,7 +272,11 @@ public class MapperBuilderAssistant extends BaseBuilder {
     if (resultMap != null) {
       String[] resultMapNames = resultMap.split(",");
       for (String resultMapName : resultMapNames) {
-        resultMaps.add(configuration.getResultMap(resultMapName.trim()));
+        try {
+          resultMaps.add(configuration.getResultMap(resultMapName.trim()));
+        } catch (IllegalArgumentException e) {
+          	throw new IncompleteStatementException("Could not find result map " + resultMapName, e);
+        }
       }
     } else if (resultType != null) {
       ResultMap.Builder inlineResultMapBuilder = new ResultMap.Builder(
