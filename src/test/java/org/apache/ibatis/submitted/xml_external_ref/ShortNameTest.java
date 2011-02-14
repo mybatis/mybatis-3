@@ -13,7 +13,7 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.Test;
 
 public class ShortNameTest {
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void getStatementByShortName() throws Exception {
         Configuration configuration = getConfiguration();
         // statement can be referenced by its short name.

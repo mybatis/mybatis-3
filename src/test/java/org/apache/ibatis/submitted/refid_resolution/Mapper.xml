@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.apache.ibatis.submitted.refid_resolution.Mapper">
+	<sql id="columnList">
+		field1, field2
+	</sql>
+	<select id="selectValid" resultType="map">
+		select
+		<include refid="columnList" />
+		from table1
+	</select>
+	<select id="selectInvalid" resultType="map">
+		select
+		<!-- Non-existent refid with the same short name -->
+		<include refid="noSuchMapper.columnList" />
+		from table1
+	</select>
+</mapper>
