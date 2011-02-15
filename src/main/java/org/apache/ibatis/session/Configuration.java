@@ -77,7 +77,7 @@ public class Configuration {
   protected final TypeHandlerRegistry typeHandlerRegistry = new TypeHandlerRegistry();
   protected final TypeAliasRegistry typeAliasRegistry = new TypeAliasRegistry();
   protected final Map<String, MappedStatement> mappedStatements = new StrictMap<String, MappedStatement>("Mapped Statements collection");
-  protected final Map<String, Cache> caches = new CacheMap<String, Cache>("Caches collection");
+  protected final Map<String, Cache> caches = new StrictMap<String, Cache>("Caches collection");
   protected final Map<String, ResultMap> resultMaps = new StrictMap<String, ResultMap>("Result Maps collection");
   protected final Map<String, ParameterMap> parameterMaps = new StrictMap<String, ParameterMap>("Parameter Maps collection");
   protected final Map<String, KeyGenerator> keyGenerators = new StrictMap<String, KeyGenerator>("Key Generators collection");
@@ -511,26 +511,26 @@ public class Configuration {
     }
   }
   
-  protected static class CacheMap<J extends String, K extends Object> extends HashMap<J, K> {
+  protected static class StrictMap<J extends String, K extends Object> extends HashMap<J, K> {
 
     private String name;
 
-    public CacheMap(String name, int initialCapacity, float loadFactor) {
+    public StrictMap(String name, int initialCapacity, float loadFactor) {
       super(initialCapacity, loadFactor);
       this.name = name;
     }
 
-    public CacheMap(String name, int initialCapacity) {
+    public StrictMap(String name, int initialCapacity) {
       super(initialCapacity);
       this.name = name;
     }
 
-    public CacheMap(String name) {
+    public StrictMap(String name) {
       super();
       this.name = name;
     }
 
-    public CacheMap(String name, Map<? extends J, ? extends K> m) {
+    public StrictMap(String name, Map<? extends J, ? extends K> m) {
       super(m);
       this.name = name;
     }
@@ -551,10 +551,7 @@ public class Configuration {
     public K get(Object key) {
       K value = super.get(key);
       if (value == null) {
-        value = super.get(getShortName((J)key));
-        if (value == null) {
-          throw new IllegalArgumentException(name + " does not contain value for " + key);
-        }
+        throw new IllegalArgumentException(name + " does not contain value for " + key);
       }
       if (value instanceof Ambiguity) {
         throw new IllegalArgumentException(((Ambiguity)value).getSubject()
@@ -579,43 +576,5 @@ public class Configuration {
       }
     }
   }
-  
-  protected static class StrictMap<J extends String, K extends Object> extends HashMap<J, K> {
 
-	  private String name;
-
-	  public StrictMap(String name, int initialCapacity, float loadFactor) {
-	    super(initialCapacity, loadFactor);
-	    this.name = name;
-	  }
-
-	  public StrictMap(String name, int initialCapacity) {
-	    super(initialCapacity);
-	    this.name = name;
-	  }
-
-	  public StrictMap(String name) {
-	    super();
-	    this.name = name;
-	  }
-
-	  public StrictMap(String name, Map<? extends J, ? extends K> m) {
-	    super(m);
-	    this.name = name;
-	  }
-
-	  public K put(J key, K value) {
-	    if (containsKey(key))
-	      throw new IllegalArgumentException(name + " already contains value for " + key);
-	    return super.put(key, value);
-	  }
-
-	  public K get(Object key) {
-	    K value = super.get(key);
-	    if (value == null) {
-	      throw new IllegalArgumentException(name + " does not contain value for " + key);
-	    }
-	    return value;
-	  }
-	}
 }

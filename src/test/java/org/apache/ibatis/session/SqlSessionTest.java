@@ -35,7 +35,7 @@ public class SqlSessionTest extends BaseDataTest {
     assertEquals(cache, c.getCache(shortName));
   }
 
-  @Test
+  @Test(expected=IllegalArgumentException.class)
   public void shouldFailOverToMostApplicableSimpleName() {
     Configuration c = new Configuration();
     final String fullName = "com.mycache.MyCache";
