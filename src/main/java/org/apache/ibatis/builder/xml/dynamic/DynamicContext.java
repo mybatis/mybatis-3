@@ -105,21 +105,5 @@ public class DynamicContext {
       Map map = (Map) target;
       map.put(name, value);
     }
-
-    /**
-     * @since 3.0.5
-     */
-    public String getSourceAccessor(OgnlContext context, Object target, Object index) {
-        // TODO verify if this method is needed
-        return null;
-    }
-
-    /**
-     * @since 3.0.5
-     */
-    public String getSourceSetter(OgnlContext context, Object target, Object index) {
-        // TODO verify if this method is needed
-        return null;
-    }
   }
 }
