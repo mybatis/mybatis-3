@@ -3,7 +3,7 @@
     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper>
+<mapper namespace="org.apache.ibatis.submitted.substitution_in_annots.SubstitutionInAnnotsMapper">
 	<select id="getPersonNameByIdWithXml" parameterType="int" resultType="String">
 		select firstName from ibtest.names where id=${value}
 	</select>

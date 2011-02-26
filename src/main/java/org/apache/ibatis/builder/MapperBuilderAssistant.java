@@ -31,20 +31,26 @@ public class MapperBuilderAssistant extends BaseBuilder {
   }
 
   public void setCurrentNamespace(String currentNamespace) {
-    if (currentNamespace != null) {
-      this.currentNamespace = currentNamespace;
+    if (currentNamespace == null) {
+      throw new BuilderException(
+          "The mapper element requires a namespace attribute to be specified.");
     }
-    if (this.currentNamespace == null) {
-      throw new BuilderException("The mapper element requires a namespace attribute to be specified.");
+
+    if (this.currentNamespace != null && !this.currentNamespace.equals(currentNamespace)) {
+      throw new BuilderException("Wrong namespace. Expected '"
+          + this.currentNamespace + "' but found '" + currentNamespace + "'");
     }
+
+    this.currentNamespace = currentNamespace;
   }
 
   public String applyCurrentNamespace(String base) {
     if (base == null) return null;
+    // is it qualified with this or other namespace yet?
     if (base.contains(".")) return base;
     return currentNamespace + "." + base;
   }
-
+  
   public Cache useCacheRef(String namespace) {
     if (namespace == null) {
       throw new BuilderException("cache-ref element requires a namespace attribute.");

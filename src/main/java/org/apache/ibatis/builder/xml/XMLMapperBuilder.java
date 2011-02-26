@@ -69,12 +69,8 @@ public class XMLMapperBuilder extends BaseBuilder {
     
   public void parse() {
     XNode context = parser.evalNode("/mapper");
-    // we may inherit a namespace from MapperAnnotationBuilder
-    String namespace = builderAssistant.getCurrentNamespace();
-    if (namespace == null) {
-      namespace = context.getStringAttribute("namespace");
-      builderAssistant.setCurrentNamespace(namespace);
-    }
+    String namespace = context.getStringAttribute("namespace");
+    builderAssistant.setCurrentNamespace(namespace);
     if (!configuration.isResourceLoaded(namespace)) {
       configurationElement(context);
       configuration.addLoadedResource(namespace);

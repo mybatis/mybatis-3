@@ -82,6 +82,7 @@ public class Configuration {
   protected final Map<String, ParameterMap> parameterMaps = new StrictMap<String, ParameterMap>("Parameter Maps collection");
   protected final Map<String, KeyGenerator> keyGenerators = new StrictMap<String, KeyGenerator>("Key Generators collection");
 
+  // list of namespaces loaded from xml files
   protected final Set<String> loadedResources = new HashSet<String>();
   protected final Map<String, XNode> sqlFragments = new StrictMap<String, XNode>("XML fragments parsed from previous mappers");
 
@@ -113,12 +114,12 @@ public class Configuration {
     typeAliasRegistry.registerAlias("WEAK", WeakCache.class.getName());
   }
 
-  public void addLoadedResource(String resource) {
-    loadedResources.add(resource);
+  public void addLoadedResource(String namespace) {
+    loadedResources.add(namespace);
   }
 
-  public boolean isResourceLoaded(String resource) {
-    return loadedResources.contains(resource);
+  public boolean isResourceLoaded(String namespace) {
+    return loadedResources.contains(namespace);
   }
 
   public Environment getEnvironment() {

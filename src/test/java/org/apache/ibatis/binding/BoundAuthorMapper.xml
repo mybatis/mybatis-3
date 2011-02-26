@@ -4,7 +4,7 @@
     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper>
+<mapper namespace="org.apache.ibatis.binding.BoundAuthorMapper">
 
   <insert id="insertAuthor" parameterType="domain.blog.Author">
     <selectKey keyProperty="id" resultType="int" order="BEFORE">
