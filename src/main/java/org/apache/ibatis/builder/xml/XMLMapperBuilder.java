@@ -35,7 +35,6 @@ public class XMLMapperBuilder extends BaseBuilder {
   private XPathParser parser;
   private MapperBuilderAssistant builderAssistant;
   private Map<String, XNode> sqlFragments;
-  private String resource;
 
   @Deprecated
   public XMLMapperBuilder(Reader reader, Configuration configuration, String resource, Map<String, XNode> sqlFragments, String namespace) {
@@ -64,7 +63,6 @@ public class XMLMapperBuilder extends BaseBuilder {
     this.builderAssistant = new MapperBuilderAssistant(configuration, resource);
     this.parser = parser;
     this.sqlFragments = sqlFragments;
-    this.resource = resource;
   }
     
   public void parse() {
@@ -75,9 +73,6 @@ public class XMLMapperBuilder extends BaseBuilder {
       configurationElement(context);
       configuration.addLoadedResource(namespace);
       bindMapperForNamespace();
-
-      // TODO skip current processed statements
-      // try with pending statements
       parsePendingChacheRefs();
       parsePendingStatements();
     }
@@ -104,7 +99,6 @@ public class XMLMapperBuilder extends BaseBuilder {
   private void buildStatementFromContext(List<XNode> list) {
     for (XNode context : list) {
       final XMLStatementBuilder statementParser = new XMLStatementBuilder(configuration, builderAssistant, context);
-      // TODO parse just one time!
       try {
     	  statementParser.parseStatementNode();
       } catch (IncompleteStatementException e) {

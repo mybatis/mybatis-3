@@ -12,7 +12,6 @@ import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.transaction.Transaction;
 import org.apache.ibatis.transaction.TransactionFactory;
-import org.apache.ibatis.transaction.jdbc.JdbcTransaction;
 
 import javax.sql.DataSource;
 import java.sql.Connection;

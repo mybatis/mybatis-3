@@ -1,9 +1,8 @@
 package org.apache.ibatis.io;
 
-import org.apache.ibatis.BaseDataTest;
-import static org.junit.Assert.*;
-import org.junit.Test;
-import sun.nio.cs.US_ASCII;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,6 +11,9 @@ import java.io.Reader;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.Properties;
+
+import org.apache.ibatis.BaseDataTest;
+import org.junit.Test;
 
 public class ResourcesTest extends BaseDataTest {
 
@@ -120,7 +122,7 @@ public class ResourcesTest extends BaseDataTest {
     Charset charset = Resources.getCharset();
 
     // charset
-    Resources.setCharset(new US_ASCII());
+    Resources.setCharset(Charset.forName("US-ASCII"));
     assertNotNull(Resources.getResourceAsReader(JPETSTORE_PROPERTIES));
 
     // no charset
@@ -139,7 +141,7 @@ public class ResourcesTest extends BaseDataTest {
     Charset charset = Resources.getCharset();
 
     // charset
-    Resources.setCharset(new US_ASCII());
+    Resources.setCharset(Charset.forName("US-ASCII"));
     assertNotNull(Resources.getResourceAsReader(getClass().getClassLoader(), JPETSTORE_PROPERTIES));
 
     // no charset
