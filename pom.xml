@@ -308,7 +308,7 @@
           <groupId>cglib</groupId>
           <artifactId>cglib-nodep</artifactId>
         </exclusion>
-      </exclusions>      
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>commons-dbcp</groupId>
