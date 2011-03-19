@@ -9,9 +9,9 @@ public class ExceptionUtil {
     Throwable unwrapped = wrapped;
     while (true) {
       if (unwrapped instanceof InvocationTargetException) {
-        unwrapped = ((InvocationTargetException) wrapped).getTargetException();
+        unwrapped = ((InvocationTargetException) unwrapped).getTargetException();
       } else if (unwrapped instanceof UndeclaredThrowableException) {
-        unwrapped = ((UndeclaredThrowableException) wrapped).getUndeclaredThrowable();
+        unwrapped = ((UndeclaredThrowableException) unwrapped).getUndeclaredThrowable();
       } else {
         return unwrapped;
       }
