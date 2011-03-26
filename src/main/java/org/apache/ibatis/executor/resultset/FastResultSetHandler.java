@@ -92,6 +92,20 @@ public class FastResultSetHandler implements ResultSetHandler {
     int resultMapCount = resultMaps.size();
     int resultSetCount = 0;
     ResultSet rs = stmt.getResultSet();
+
+    while (rs == null) {
+        // move forward to get the first resultset in case the driver
+        // doesn't return the resultset as the first result (HSQLDB 2.1)
+        if (stmt.getMoreResults()) {
+            rs = stmt.getResultSet();
+        } else {
+            if (stmt.getUpdateCount() == -1) {
+                // no more results.  Must be no resultset
+                break;
+            }
+        }
+    }
+    
     validateResultMapsCount(rs, resultMapCount);
     while (rs != null && resultMapCount > resultSetCount) {
       final ResultMap resultMap = resultMaps.get(resultSetCount);
