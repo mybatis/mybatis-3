@@ -122,9 +122,9 @@ public class ResultObjectProxy {
                 }
               }
             }
-            return methodProxy.invokeSuper(enhanced, args);
           }
         }
+        return methodProxy.invokeSuper(enhanced, args);
       } catch (Throwable t) {
         throw ExceptionUtil.unwrapThrowable(t);
       }
