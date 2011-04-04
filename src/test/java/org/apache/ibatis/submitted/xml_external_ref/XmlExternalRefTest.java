@@ -44,6 +44,18 @@ public class XmlExternalRefTest {
     }
     configuration.getMappedStatementNames();
   }
+  
+  @Test(expected = BuilderException.class)
+  public void testFailFastOnBuildAllWithInsert() throws Exception {
+    Configuration configuration = new Configuration();
+    try {
+      configuration.addMapper(InvalidWithInsertMapper.class);
+      configuration.addMapper(InvalidMapper.class);
+    } catch (Exception e) {
+      fail("No exception should be thrown before parsing statement nodes.");
+    }
+    configuration.getMappedStatementNames();
+  }
 
   @Test
   public void testMappedStatementCache() throws Exception {

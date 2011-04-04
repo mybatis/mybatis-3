@@ -148,7 +148,7 @@ public class XMLStatementBuilder extends BaseBuilder {
 
       id = builderAssistant.applyCurrentNamespace(id);
 
-      MappedStatement keyStatement = configuration.getMappedStatement(id);
+      MappedStatement keyStatement = configuration.getMappedStatement(id, false);
       configuration.addKeyGenerator(id, new SelectKeyGenerator(keyStatement, executeBefore));
     }
   }

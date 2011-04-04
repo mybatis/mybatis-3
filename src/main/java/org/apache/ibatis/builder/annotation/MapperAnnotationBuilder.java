@@ -489,7 +489,7 @@ public class MapperAnnotationBuilder {
 
     id = assistant.applyCurrentNamespace(id);
 
-    MappedStatement keyStatement = configuration.getMappedStatement(id);
+    MappedStatement keyStatement = configuration.getMappedStatement(id, false);
     SelectKeyGenerator answer = new SelectKeyGenerator(keyStatement, executeBefore); 
     configuration.addKeyGenerator(id, answer);
     return answer;

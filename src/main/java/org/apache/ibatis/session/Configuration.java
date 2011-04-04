@@ -400,7 +400,12 @@ public class Configuration {
   }
 
   public MappedStatement getMappedStatement(String id) {
-    buildAllStatements();
+	return this.getMappedStatement(id, true);
+  }
+  public MappedStatement getMappedStatement(String id, boolean validateIncompleteStatements) {
+	if (validateIncompleteStatements) {
+      buildAllStatements();
+	}
     return mappedStatements.get(id);
   }
 
