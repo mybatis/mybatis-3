@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.apache.ibatis.submitted.deferload_common_property.FatherMapper">
+    
+    <resultMap id="FatherMap" type="Father">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+    </resultMap>
+    
+    
+    <select id="selectById" resultMap="FatherMap" parameterType="int">
+    	SELECT id, name
+    	FROM Father
+    	WHERE id = #{id}
+    </select>
+</mapper>

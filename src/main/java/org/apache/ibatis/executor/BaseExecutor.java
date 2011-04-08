@@ -124,7 +124,12 @@ public abstract class BaseExecutor implements Executor {
 
   public void deferLoad(MappedStatement ms, MetaObject resultObject, String property, CacheKey key) {
     if (closed) throw new ExecutorException("Executor was closed.");
-    deferredLoads.add(new DeferredLoad(ms, resultObject, property, key));
+    DeferredLoad deferredLoad = new DeferredLoad(ms, resultObject, property, key);
+    if (deferredLoad.canLoad()) {
+    	deferredLoad.load();
+    } else {
+    	deferredLoads.add(new DeferredLoad(ms, resultObject, property, key));
+    }
   }
 
   public CacheKey createCacheKey(MappedStatement ms, Object parameterObject, RowBounds rowBounds) {
@@ -255,6 +260,9 @@ public abstract class BaseExecutor implements Executor {
       this.key = key;
     }
 
+    public boolean canLoad() {
+    	return localCache.getObject(key) != null && localCache.getObject(key) != EXECUTION_PLACEHOLDER;
+    }
     public void load() {
       Object value = null;
       List list = (List) localCache.getObject(key);
