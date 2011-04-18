@@ -7,6 +7,11 @@
     <result column="LAST_NAME" property="lastName"/>
   </resultMap>
 
+  <resultMap type="org.apache.ibatis.submitted.sptests.Item" id="itemResult">
+    <result column="ID" property="id"/>
+    <result column="ITEM" property="item"/>
+  </resultMap>
+  
   <parameterMap type="map" id="testParameterMap">
     <parameter property="addend1" jdbcType="INTEGER" mode="IN"/>
     <parameter property="addend2" jdbcType="INTEGER" mode="IN"/>
@@ -69,5 +74,10 @@
       #{ids,mode=IN,jdbcType=ARRAY,typeHandler=org.apache.ibatis.submitted.sptests.ArrayTypeHandler},
       #{requestedRows,jdbcType=INTEGER,mode=OUT},
       #{returnedIds,mode=OUT,jdbcType=ARRAY,typeHandler=org.apache.ibatis.submitted.sptests.ArrayTypeHandler})}
+  </select>
+
+  <select id="getNamesAndItems" statementType="CALLABLE"
+    resultMap="nameResult,itemResult">
+    {call sptest.getnamesanditems()}
   </select>
 </mapper>

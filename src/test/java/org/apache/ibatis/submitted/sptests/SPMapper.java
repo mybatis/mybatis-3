@@ -10,4 +10,5 @@ public interface SPMapper {
     Name getName(Integer id);
     List<Name> getNames(Map<String, Object> parms);
     List<Name> getNamesWithArray(Map<String, Object> parms);
+    List<List<?>> getNamesAndItems();
 }

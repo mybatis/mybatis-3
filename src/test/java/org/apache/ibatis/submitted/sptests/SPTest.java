@@ -332,4 +332,26 @@ public class SPTest {
             sqlSession.close();
         }
     }
+
+    /**
+     * This test shows how to call procedures that return
+     * multiple result sets
+     * 
+     * @throws SQLException
+     */
+    @Test
+    @Ignore("until hsqldb 2.0.1 is released")
+    public void testGetNamesAndItems() throws SQLException {
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        try {
+            SPMapper spMapper = sqlSession.getMapper(SPMapper.class);
+            
+            List<List<?>> results = spMapper.getNamesAndItems();
+            assertEquals(2, results.size());
+            assertEquals(4, results.get(0).size());
+            assertEquals(3, results.get(1).size());
+        } finally {
+            sqlSession.close();
+        }
+    }
 }
