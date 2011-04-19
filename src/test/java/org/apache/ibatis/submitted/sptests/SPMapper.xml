@@ -35,7 +35,7 @@
        and/or resultType is usually not used.  
    -->
    
-  <select id="adder" parameterType="org.apache.ibatis.submitted.sptests.Parameter" statementType="CALLABLE">
+  <select id="adderAsSelect" parameterType="org.apache.ibatis.submitted.sptests.Parameter" statementType="CALLABLE">
     {call sptest.adder(
       #{addend1,jdbcType=INTEGER,mode=IN},
       #{addend2,jdbcType=INTEGER,mode=IN},
@@ -43,7 +43,7 @@
     )}
   </select>
 
-  <update id="adder2" parameterType="org.apache.ibatis.submitted.sptests.Parameter" statementType="CALLABLE">
+  <update id="adderAsUpdate" parameterType="org.apache.ibatis.submitted.sptests.Parameter" statementType="CALLABLE">
     {call sptest.adder(
       #{addend1,jdbcType=INTEGER,mode=IN},
       #{addend2,jdbcType=INTEGER,mode=IN},
@@ -51,7 +51,7 @@
     )}
   </update>
   
-  <update id="adder3" parameterMap="testParameterMap" statementType="CALLABLE">
+  <update id="adderWithParameterMap" parameterMap="testParameterMap" statementType="CALLABLE">
     {call sptest.adder(?, ?, ?)}
   </update>
   
