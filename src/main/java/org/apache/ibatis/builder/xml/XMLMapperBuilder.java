@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import org.apache.ibatis.builder.BaseBuilder;
+import org.apache.ibatis.builder.BuilderException;
 import org.apache.ibatis.builder.CacheRefResolver;
 import org.apache.ibatis.builder.IncompleteCacheException;
 import org.apache.ibatis.builder.MapperBuilderAssistant;
@@ -35,6 +36,7 @@ public class XMLMapperBuilder extends BaseBuilder {
   private XPathParser parser;
   private MapperBuilderAssistant builderAssistant;
   private Map<String, XNode> sqlFragments;
+  private String resource;
 
   @Deprecated
   public XMLMapperBuilder(Reader reader, Configuration configuration, String resource, Map<String, XNode> sqlFragments, String namespace) {
@@ -63,27 +65,28 @@ public class XMLMapperBuilder extends BaseBuilder {
     this.builderAssistant = new MapperBuilderAssistant(configuration, resource);
     this.parser = parser;
     this.sqlFragments = sqlFragments;
+    this.resource = resource;
   }
-    
+  
   public void parse() {
-    XNode context = parser.evalNode("/mapper");
-    String namespace = context.getStringAttribute("namespace");
-    builderAssistant.setCurrentNamespace(namespace);
-    if (!configuration.isResourceLoaded(namespace)) {
-      configurationElement(context);
-      configuration.addLoadedResource(namespace);
+    if (!configuration.isResourceLoaded(resource)) {
+      configurationElement(parser.evalNode("/mapper"));
+      configuration.addLoadedResource(resource);
       bindMapperForNamespace();
-      parsePendingChacheRefs();
-      parsePendingStatements();
     }
+    
+    parsePendingChacheRefs();
+    parsePendingStatements();
   }
-
+      
   public XNode getSqlFragment(String refid) {
     return sqlFragments.get(refid);
   }
 
   private void configurationElement(XNode context) {
     try {
+      String namespace = context.getStringAttribute("namespace");
+      builderAssistant.setCurrentNamespace(namespace);
       cacheRefElement(context.evalNode("cache-ref"));
       cacheElement(context.evalNode("cache"));
       parameterMapElement(context.evalNodes("/mapper/parameterMap"));
@@ -93,7 +96,6 @@ public class XMLMapperBuilder extends BaseBuilder {
     } catch (Exception e) {
       throw new RuntimeException("Error parsing Mapper XML. Cause: " + e, e);
     }
-
   }
   
   private void buildStatementFromContext(List<XNode> list) {
@@ -305,6 +307,10 @@ public class XMLMapperBuilder extends BaseBuilder {
       }
       if (boundType != null) {
         if (!configuration.hasMapper(boundType)) {
+          // Spring may not know the real resource name so we set a flag
+          // to prevent loading again this resource from the mapper interface
+          // look at MapperAnnotationBuilder#loadXmlResource
+          configuration.addLoadedResource("namespace:" + namespace);
           configuration.addMapper(boundType);
         }
       }

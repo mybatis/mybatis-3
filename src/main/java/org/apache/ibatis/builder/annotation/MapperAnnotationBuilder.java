@@ -87,31 +87,37 @@ public class MapperAnnotationBuilder {
   }
 
   public void parse() {
-    String namespace = type.getName();
-    assistant.setCurrentNamespace(namespace);
-    if (!configuration.isResourceLoaded(namespace)) {
+    String resource = type.toString();
+    if (!configuration.isResourceLoaded(resource)) { 
       loadXmlResource();
-    }
-    parseCache();
-    parseCacheRef();
-    Method[] methods = type.getMethods();
-    for (Method method : methods) {
-      parseResultsAndConstructorArgs(method);
-      parseStatement(method);
+      configuration.addLoadedResource(resource);
+      assistant.setCurrentNamespace(type.getName());
+      parseCache();
+      parseCacheRef();
+      Method[] methods = type.getMethods();
+      for (Method method : methods) {
+        parseResultsAndConstructorArgs(method);
+        parseStatement(method);
+      }
     }
   }
 
   private void loadXmlResource() {
-    String xmlResource = type.getName().replace('.', '/') + ".xml";
-    InputStream inputStream = null;
-    try {
-      inputStream = Resources.getResourceAsStream(type.getClassLoader(), xmlResource);
-    } catch (IOException e) {
-      // ignore, resource is not required
-    }
-    if (inputStream != null) {
-      XMLMapperBuilder xmlParser = new XMLMapperBuilder(inputStream, assistant.getConfiguration(), xmlResource, configuration.getSqlFragments(), type.getName());
-      xmlParser.parse();
+    // Spring may not know the real resource name so we check a flag
+    // to prevent loading again a resource twice
+    // this flag is set at XMLMapperBuilder#bindMapperForNamespace
+    if (!configuration.isResourceLoaded("namespace:" + type.getName())) {
+      String xmlResource = type.getName().replace('.', '/') + ".xml";
+      InputStream inputStream = null;
+      try {
+        inputStream = Resources.getResourceAsStream(type.getClassLoader(), xmlResource);
+      } catch (IOException e) {
+        // ignore, resource is not required
+      }
+      if (inputStream != null) {
+        XMLMapperBuilder xmlParser = new XMLMapperBuilder(inputStream, assistant.getConfiguration(), xmlResource, configuration.getSqlFragments(), type.getName());
+        xmlParser.parse();
+      }
     }
   }
 

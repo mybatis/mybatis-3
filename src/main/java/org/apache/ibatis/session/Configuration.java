@@ -76,15 +76,20 @@ public class Configuration {
   protected final InterceptorChain interceptorChain = new InterceptorChain();
   protected final TypeHandlerRegistry typeHandlerRegistry = new TypeHandlerRegistry();
   protected final TypeAliasRegistry typeAliasRegistry = new TypeAliasRegistry();
-  protected final Map<String, MappedStatement> mappedStatements = new StrictMap<String, MappedStatement>("Mapped Statements collection");
-  protected final Map<String, Cache> caches = new StrictMap<String, Cache>("Caches collection");
-  protected final Map<String, ResultMap> resultMaps = new StrictMap<String, ResultMap>("Result Maps collection");
-  protected final Map<String, ParameterMap> parameterMaps = new StrictMap<String, ParameterMap>("Parameter Maps collection");
-  protected final Map<String, KeyGenerator> keyGenerators = new StrictMap<String, KeyGenerator>("Key Generators collection");
+  protected final Map<String, MappedStatement> mappedStatements = new StrictMap<String, MappedStatement>(
+      "Mapped Statements collection");
+  protected final Map<String, Cache> caches = new StrictMap<String, Cache>(
+      "Caches collection");
+  protected final Map<String, ResultMap> resultMaps = new StrictMap<String, ResultMap>(
+      "Result Maps collection");
+  protected final Map<String, ParameterMap> parameterMaps = new StrictMap<String, ParameterMap>(
+      "Parameter Maps collection");
+  protected final Map<String, KeyGenerator> keyGenerators = new StrictMap<String, KeyGenerator>(
+      "Key Generators collection");
 
-  // list of namespaces loaded from xml files
   protected final Set<String> loadedResources = new HashSet<String>();
-  protected final Map<String, XNode> sqlFragments = new StrictMap<String, XNode>("XML fragments parsed from previous mappers");
+  protected final Map<String, XNode> sqlFragments = new StrictMap<String, XNode>(
+      "XML fragments parsed from previous mappers");
 
   protected final Collection<XMLStatementBuilder> incompleteStatements = new LinkedList<XMLStatementBuilder>();
   protected final Collection<CacheRefResolver> incompleteCacheRefs = new LinkedList<CacheRefResolver>();
@@ -101,25 +106,31 @@ public class Configuration {
   }
 
   public Configuration() {
-    typeAliasRegistry.registerAlias("JDBC", JdbcTransactionFactory.class.getName());
-    typeAliasRegistry.registerAlias("MANAGED", ManagedTransactionFactory.class.getName());
-    typeAliasRegistry.registerAlias("JNDI", JndiDataSourceFactory.class.getName());
-    typeAliasRegistry.registerAlias("POOLED", PooledDataSourceFactory.class.getName());
-    typeAliasRegistry.registerAlias("UNPOOLED", UnpooledDataSourceFactory.class.getName());
+    typeAliasRegistry.registerAlias("JDBC",
+        JdbcTransactionFactory.class.getName());
+    typeAliasRegistry.registerAlias("MANAGED",
+        ManagedTransactionFactory.class.getName());
+    typeAliasRegistry.registerAlias("JNDI",
+        JndiDataSourceFactory.class.getName());
+    typeAliasRegistry.registerAlias("POOLED",
+        PooledDataSourceFactory.class.getName());
+    typeAliasRegistry.registerAlias("UNPOOLED",
+        UnpooledDataSourceFactory.class.getName());
 
-    typeAliasRegistry.registerAlias("PERPETUAL", PerpetualCache.class.getName());
+    typeAliasRegistry
+        .registerAlias("PERPETUAL", PerpetualCache.class.getName());
     typeAliasRegistry.registerAlias("FIFO", FifoCache.class.getName());
     typeAliasRegistry.registerAlias("LRU", LruCache.class.getName());
     typeAliasRegistry.registerAlias("SOFT", SoftCache.class.getName());
     typeAliasRegistry.registerAlias("WEAK", WeakCache.class.getName());
   }
 
-  public void addLoadedResource(String namespace) {
-    loadedResources.add(namespace);
+  public void addLoadedResource(String resource) {
+    loadedResources.add(resource);
   }
 
-  public boolean isResourceLoaded(String namespace) {
-    return loadedResources.contains(namespace);
+  public boolean isResourceLoaded(String resource) {
+    return loadedResources.contains(resource);
   }
 
   public Environment getEnvironment() {
@@ -147,7 +158,9 @@ public class Configuration {
       try {
         Resources.classForName("net.sf.cglib.proxy.Enhancer");
       } catch (Throwable e) {
-        throw new IllegalStateException("Cannot enable lazy loading because CGLIB is not available. Add CGLIB to your classpath.", e);
+        throw new IllegalStateException(
+            "Cannot enable lazy loading because CGLIB is not available. Add CGLIB to your classpath.",
+            e);
       }
     }
     this.lazyLoadingEnabled = lazyLoadingEnabled;
@@ -242,26 +255,38 @@ public class Configuration {
   }
 
   public MetaObject newMetaObject(Object object) {
-    return MetaObject.forObject(object,objectFactory,objectWrapperFactory);
+    return MetaObject.forObject(object, objectFactory, objectWrapperFactory);
   }
 
-  public ParameterHandler newParameterHandler(MappedStatement mappedStatement, Object parameterObject, BoundSql boundSql) {
-    ParameterHandler parameterHandler = new DefaultParameterHandler(mappedStatement, parameterObject, boundSql);
-    parameterHandler = (ParameterHandler) interceptorChain.pluginAll(parameterHandler);
+  public ParameterHandler newParameterHandler(MappedStatement mappedStatement,
+      Object parameterObject, BoundSql boundSql) {
+    ParameterHandler parameterHandler = new DefaultParameterHandler(
+        mappedStatement, parameterObject, boundSql);
+    parameterHandler = (ParameterHandler) interceptorChain
+        .pluginAll(parameterHandler);
     return parameterHandler;
   }
 
-  public ResultSetHandler newResultSetHandler(Executor executor, MappedStatement mappedStatement, RowBounds rowBounds, ParameterHandler parameterHandler, ResultHandler resultHandler, BoundSql boundSql) {
-    ResultSetHandler resultSetHandler = mappedStatement.hasNestedResultMaps() ?
-        new NestedResultSetHandler(executor, mappedStatement, parameterHandler, resultHandler, boundSql, rowBounds)
-        : new FastResultSetHandler(executor, mappedStatement, parameterHandler, resultHandler, boundSql, rowBounds);
-    resultSetHandler = (ResultSetHandler) interceptorChain.pluginAll(resultSetHandler);
+  public ResultSetHandler newResultSetHandler(Executor executor,
+      MappedStatement mappedStatement, RowBounds rowBounds,
+      ParameterHandler parameterHandler, ResultHandler resultHandler,
+      BoundSql boundSql) {
+    ResultSetHandler resultSetHandler = mappedStatement.hasNestedResultMaps() ? new NestedResultSetHandler(
+        executor, mappedStatement, parameterHandler, resultHandler, boundSql,
+        rowBounds) : new FastResultSetHandler(executor, mappedStatement,
+        parameterHandler, resultHandler, boundSql, rowBounds);
+    resultSetHandler = (ResultSetHandler) interceptorChain
+        .pluginAll(resultSetHandler);
     return resultSetHandler;
   }
 
-  public StatementHandler newStatementHandler(Executor executor, MappedStatement mappedStatement, Object parameterObject, RowBounds rowBounds, ResultHandler resultHandler) {
-    StatementHandler statementHandler = new RoutingStatementHandler(executor, mappedStatement, parameterObject, rowBounds, resultHandler);
-    statementHandler = (StatementHandler) interceptorChain.pluginAll(statementHandler);
+  public StatementHandler newStatementHandler(Executor executor,
+      MappedStatement mappedStatement, Object parameterObject,
+      RowBounds rowBounds, ResultHandler resultHandler) {
+    StatementHandler statementHandler = new RoutingStatementHandler(executor,
+        mappedStatement, parameterObject, rowBounds, resultHandler);
+    statementHandler = (StatementHandler) interceptorChain
+        .pluginAll(statementHandler);
     return statementHandler;
   }
 
@@ -274,11 +299,11 @@ public class Configuration {
     executorType = executorType == null ? ExecutorType.SIMPLE : executorType;
     Executor executor;
     if (ExecutorType.BATCH == executorType) {
-      executor = new BatchExecutor(this,transaction);
+      executor = new BatchExecutor(this, transaction);
     } else if (ExecutorType.REUSE == executorType) {
-      executor = new ReuseExecutor(this,transaction);
+      executor = new ReuseExecutor(this, transaction);
     } else {
-      executor = new SimpleExecutor(this,transaction);
+      executor = new SimpleExecutor(this, transaction);
     }
     if (cacheEnabled) {
       executor = new CachingExecutor(executor);
@@ -386,7 +411,7 @@ public class Configuration {
   public Collection<XMLStatementBuilder> getIncompleteStatements() {
     return incompleteStatements;
   }
-  
+
   public void addIncompleteStatement(XMLStatementBuilder incompleteStatement) {
     incompleteStatements.add(incompleteStatement);
   }
@@ -400,12 +425,14 @@ public class Configuration {
   }
 
   public MappedStatement getMappedStatement(String id) {
-	return this.getMappedStatement(id, true);
+    return this.getMappedStatement(id, true);
   }
-  public MappedStatement getMappedStatement(String id, boolean validateIncompleteStatements) {
-	if (validateIncompleteStatements) {
+
+  public MappedStatement getMappedStatement(String id,
+      boolean validateIncompleteStatements) {
+    if (validateIncompleteStatements) {
       buildAllStatements();
-	}
+    }
     return mappedStatements.get(id);
   }
 
@@ -417,17 +444,17 @@ public class Configuration {
     interceptorChain.addInterceptor(interceptor);
   }
 
-  @SuppressWarnings({"unchecked"})
-  public void addMappers(String packageName, Class superType){
+  @SuppressWarnings({ "unchecked" })
+  public void addMappers(String packageName, Class superType) {
     ResolverUtil<Class> resolverUtil = new ResolverUtil<Class>();
     resolverUtil.find(new ResolverUtil.IsA(superType), packageName);
     Set<Class<? extends Class>> mapperSet = resolverUtil.getClasses();
-    for(Class mapperClass : mapperSet){
+    for (Class mapperClass : mapperSet) {
       addMapper(mapperClass);
     }
   }
 
-  public void addMappers(String packageName){
+  public void addMappers(String packageName) {
     addMappers(packageName, Object.class);
   }
 
@@ -459,16 +486,16 @@ public class Configuration {
    */
   protected void buildAllStatements() {
     if (!incompleteCacheRefs.isEmpty()) {
-    	synchronized (incompleteCacheRefs) {
-    		// This always throws a BuilderException.
-    		incompleteCacheRefs.iterator().next().resolveCacheRef();
-    	}
+      synchronized (incompleteCacheRefs) {
+        // This always throws a BuilderException.
+        incompleteCacheRefs.iterator().next().resolveCacheRef();
+      }
     }
     if (!incompleteStatements.isEmpty()) {
-    	synchronized (incompleteStatements) {
-    		// This always throws a BuilderException.
-    		incompleteStatements.iterator().next().parseStatementNode();
-    	}
+      synchronized (incompleteStatements) {
+        // This always throws a BuilderException.
+        incompleteStatements.iterator().next().parseStatementNode();
+      }
     }
   }
 
@@ -483,15 +510,17 @@ public class Configuration {
     return lastPeriod > 0 ? statementId.substring(0, lastPeriod) : null;
   }
 
-  //Slow but a one time cost.  A better solution is welcome.
+  // Slow but a one time cost. A better solution is welcome.
   protected void checkGloballyForDiscriminatedNestedResultMaps(ResultMap rm) {
     if (rm.hasNestedResultMaps()) {
       for (Map.Entry entry : resultMaps.entrySet()) {
         Object value = entry.getValue();
         if (value instanceof ResultMap) {
           ResultMap entryResultMap = (ResultMap) value;
-          if (!entryResultMap.hasNestedResultMaps() && entryResultMap.getDiscriminator() != null) {
-            Collection<String> discriminatedResultMapNames = entryResultMap.getDiscriminator().getDiscriminatorMap().values();
+          if (!entryResultMap.hasNestedResultMaps()
+              && entryResultMap.getDiscriminator() != null) {
+            Collection<String> discriminatedResultMapNames = entryResultMap
+                .getDiscriminator().getDiscriminatorMap().values();
             if (discriminatedResultMapNames.contains(rm.getId())) {
               entryResultMap.forceNestedResultMaps();
             }
@@ -501,13 +530,15 @@ public class Configuration {
     }
   }
 
-  //Slow but a one time cost.  A better solution is welcome.
+  // Slow but a one time cost. A better solution is welcome.
   protected void checkLocallyForDiscriminatedNestedResultMaps(ResultMap rm) {
     if (!rm.hasNestedResultMaps() && rm.getDiscriminator() != null) {
-      for (Map.Entry entry : rm.getDiscriminator().getDiscriminatorMap().entrySet()) {
-        String discriminatedResultMapName = (String)entry.getValue();
-        if(hasResultMap(discriminatedResultMapName)) {
-          ResultMap discriminatedResultMap = resultMaps.get(discriminatedResultMapName);
+      for (Map.Entry entry : rm.getDiscriminator().getDiscriminatorMap()
+          .entrySet()) {
+        String discriminatedResultMapName = (String) entry.getValue();
+        if (hasResultMap(discriminatedResultMapName)) {
+          ResultMap discriminatedResultMap = resultMaps
+              .get(discriminatedResultMapName);
           if (discriminatedResultMap.hasNestedResultMaps()) {
             rm.forceNestedResultMaps();
             break;
@@ -516,8 +547,9 @@ public class Configuration {
       }
     }
   }
-  
-  protected static class StrictMap<J extends String, K extends Object> extends HashMap<J, K> {
+
+  protected static class StrictMap<J extends String, K extends Object> extends
+      HashMap<J, K> {
 
     private String name;
 
@@ -542,13 +574,15 @@ public class Configuration {
     }
 
     public K put(J key, K value) {
-      if (containsKey(key)) throw new IllegalArgumentException(name + " already contains value for " + key);
+      if (containsKey(key))
+        throw new IllegalArgumentException(name
+            + " already contains value for " + key);
       if (key.contains(".")) {
         final String shortKey = getShortName(key);
         if (super.get(shortKey) == null) {
-          super.put((J)shortKey, value);
+          super.put((J) shortKey, value);
         } else {
-          super.put((J)shortKey, (K)new Ambiguity(shortKey));
+          super.put((J) shortKey, (K) new Ambiguity(shortKey));
         }
       }
       return super.put(key, value);
@@ -557,26 +591,32 @@ public class Configuration {
     public K get(Object key) {
       K value = super.get(key);
       if (value == null) {
-        throw new IllegalArgumentException(name + " does not contain value for " + key);
+        throw new IllegalArgumentException(name
+            + " does not contain value for " + key);
       }
       if (value instanceof Ambiguity) {
-        throw new IllegalArgumentException(((Ambiguity)value).getSubject()
-          + " is ambiguous in " + name + " (try using the full name including the namespace, or rename one of the entries)");
+        throw new IllegalArgumentException(
+            ((Ambiguity) value).getSubject()
+                + " is ambiguous in "
+                + name
+                + " (try using the full name including the namespace, or rename one of the entries)");
       }
       return value;
     }
 
     private String getShortName(J key) {
       final String[] keyparts = key.split("\\.");
-      final String shortKey = keyparts[keyparts.length-1];
+      final String shortKey = keyparts[keyparts.length - 1];
       return shortKey;
     }
 
     protected static class Ambiguity {
       private String subject;
+
       public Ambiguity(String subject) {
         this.subject = subject;
       }
+
       public String getSubject() {
         return subject;
       }
