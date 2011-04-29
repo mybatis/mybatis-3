@@ -36,7 +36,7 @@ public class MapperProxy implements InvocationHandler, Serializable {
       final Class<?> declaringInterface = findDeclaringInterface(proxy, method);
       final MapperMethod mapperMethod = new MapperMethod(declaringInterface, method, sqlSession);
       final Object result = mapperMethod.execute(args);
-      if (result == null && method.getReturnType().isPrimitive()) {
+      if (result == null && method.getReturnType().isPrimitive() && !method.getReturnType().equals(Void.TYPE)) {
         throw new BindingException("Mapper method '" + method.getName() + "' (" + method.getDeclaringClass() + ") attempted to return null from a method with a primitive return type (" + method.getReturnType() + ").");
       }
       return result;

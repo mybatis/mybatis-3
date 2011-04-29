@@ -2,11 +2,20 @@ package org.apache.ibatis.session;
 
 import domain.blog.*;
 import domain.blog.mappers.AuthorMapper;
+import domain.blog.mappers.AuthorMapperWithMultipleHandlers;
+import domain.blog.mappers.AuthorMapperWithRowBounds;
 import domain.blog.mappers.BlogMapper;
 import org.apache.ibatis.BaseDataTest;
+import org.apache.ibatis.binding.BindingException;
 import org.apache.ibatis.cache.impl.PerpetualCache;
+import org.apache.ibatis.exceptions.PersistenceException;
+import org.apache.ibatis.executor.result.DefaultResultHandler;
 import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.mapping.Environment;
+import org.apache.ibatis.session.defaults.DefaultSqlSessionFactory;
+
 import static org.junit.Assert.*;
+
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -473,6 +482,65 @@ public class SqlSessionTest extends BaseDataTest {
       assertEquals(101, author.getId());
     } finally {
       session.close();
+    }
+  }
+
+  @Test
+  public void shouldExecuteSelectOneAuthorUsingMapperClassWithResultHandler() {
+    SqlSession session = sqlMapper.openSession();
+    try {
+      DefaultResultHandler handler = new DefaultResultHandler();
+      AuthorMapper mapper = session.getMapper(AuthorMapper.class);
+      mapper.selectAuthor(101, handler);
+      Author author = (Author) handler.getResultList().get(0);
+      assertEquals(101, author.getId());
+    } finally {
+      session.close();
+    }
+  }
+
+  @Test
+  public void shouldSelectAuthorsUsingMapperClassWithResultHandler() {
+    SqlSession session = sqlMapper.openSession();
+    try {
+      DefaultResultHandler handler = new DefaultResultHandler();
+      AuthorMapper mapper = session.getMapper(AuthorMapper.class);
+      mapper.selectAllAuthors(handler);
+      assertEquals(2, handler.getResultList().size());
+    } finally {
+      session.close();
+    }
+  }
+
+  @Test(expected = BindingException.class)
+  public void shouldFailSelectOneAuthorUsingMapperClassWithTwoResultHandlers() {
+    Configuration configuration = new Configuration(sqlMapper.getConfiguration().getEnvironment());
+    configuration.addMapper(AuthorMapperWithMultipleHandlers.class);
+    SqlSessionFactory sqlMapperWithMultipleHandlers = new DefaultSqlSessionFactory(configuration);
+    SqlSession sqlSession = sqlMapperWithMultipleHandlers.openSession();
+    try {
+      DefaultResultHandler handler1 = new DefaultResultHandler();
+      DefaultResultHandler handler2 = new DefaultResultHandler();
+      AuthorMapperWithMultipleHandlers mapper = sqlSession.getMapper(AuthorMapperWithMultipleHandlers.class);
+      mapper.selectAuthor(101, handler1, handler2);
+    } finally {
+      sqlSession.close();
+    }
+  }
+
+  @Test(expected = BindingException.class)
+  public void shouldFailSelectOneAuthorUsingMapperClassWithTwoRowBounds() {
+    Configuration configuration = new Configuration(sqlMapper.getConfiguration().getEnvironment());
+    configuration.addMapper(AuthorMapperWithRowBounds.class);
+    SqlSessionFactory sqlMapperWithMultipleHandlers = new DefaultSqlSessionFactory(configuration);
+    SqlSession sqlSession = sqlMapperWithMultipleHandlers.openSession();
+    try {
+      RowBounds bounds1 = new RowBounds(0, 1);
+      RowBounds bounds2 = new RowBounds(0, 1);
+      AuthorMapperWithRowBounds mapper = sqlSession.getMapper(AuthorMapperWithRowBounds.class);
+      mapper.selectAuthor(101, bounds1, bounds2);
+    } finally {
+      sqlSession.close();
     }
   }
 
