@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -90,40 +91,67 @@ public class CommandLine {
   }
 
   private void runCommand() {
-    if (INIT.equals(command)) {
-      new InitializeCommand(repository, environment, force).execute(params);
-    } else if (BOOTSTRAP.equals(command)) {
-      new BootstrapCommand(repository, environment, force).execute(params);
-    } else if (NEW.equals(command)) {
-      new NewCommand(repository, environment, template, force).execute(params);
-    } else if (STATUS.equals(command)) {
-      new StatusCommand(repository, environment, force).execute(params);
-    } else if (UP.equals(command)) {
-      new UpCommand(repository, environment, force).execute(params);
-    } else if (VERSION.equals(command)) {
-      new VersionCommand(repository, environment, force).execute(params);
-    } else if (PENDING.equals(command)) {
-      new PendingCommand(repository, environment, force).execute(params);
-    } else if (DOWN.equals(command)) {
-      new DownCommand(repository, environment, force).execute(params);
-    } else if (SCRIPT.equals(command)) {
-      new ScriptCommand(repository, environment, force).execute(params);
-    } else {
-      String match = null;
-      for (String knownCommand : KNOWN_COMMANDS) {
-        if (knownCommand.startsWith(command)) {
-          if (match != null) {
-            throw new MigrationException("Ambiguous command shortcut: " + command);
+    printStream.println("------------------------------------------------------------------------");
+    printStream.printf("MyBatis Migrations - %s%n", command);
+    printStream.println("------------------------------------------------------------------------");
+
+    long start = System.currentTimeMillis();
+    int exit = 0;
+
+    try {
+      if (INIT.equals(command)) {
+        new InitializeCommand(repository, environment, force).execute(params);
+      } else if (BOOTSTRAP.equals(command)) {
+        new BootstrapCommand(repository, environment, force).execute(params);
+      } else if (NEW.equals(command)) {
+        new NewCommand(repository, environment, template, force).execute(params);
+      } else if (STATUS.equals(command)) {
+        new StatusCommand(repository, environment, force).execute(params);
+      } else if (UP.equals(command)) {
+        new UpCommand(repository, environment, force).execute(params);
+      } else if (VERSION.equals(command)) {
+        new VersionCommand(repository, environment, force).execute(params);
+      } else if (PENDING.equals(command)) {
+        new PendingCommand(repository, environment, force).execute(params);
+      } else if (DOWN.equals(command)) {
+        new DownCommand(repository, environment, force).execute(params);
+      } else if (SCRIPT.equals(command)) {
+        new ScriptCommand(repository, environment, force).execute(params);
+      } else {
+        String match = null;
+        for (String knownCommand : KNOWN_COMMANDS) {
+          if (knownCommand.startsWith(command)) {
+            if (match != null) {
+              throw new MigrationException("Ambiguous command shortcut: " + command);
+            }
+            match = knownCommand;
           }
-          match = knownCommand;
+        }
+        if (match != null) {
+          command = match;
+          runCommand();
+        } else {
+          throw new MigrationException("Attempt to execute unknown command: " + command);
         }
       }
-      if (match != null) {
-        command = match;
-        runCommand();
-      } else {
-        throw new MigrationException("Attempt to execute unknown command: " + command);
-      }
+    } catch (Throwable t) {
+      exit = -1;
+      t.printStackTrace(printStream);
+    } finally {
+      printStream.println("------------------------------------------------------------------------");
+      printStream.printf("MyBatis Migrations %s%n", (exit < 0) ? "FAILURE" : "SUCCESS");
+      printStream.printf("Total time: %ss%n", ((System.currentTimeMillis() - start) / 1000));
+      printStream.printf("Finished at: %s%n", new Date());
+
+      final Runtime runtime = Runtime.getRuntime();
+      final int megaUnit = 1024 * 1024;
+      printStream.printf("Final Memory: %sM/%sM%n",
+                (runtime.totalMemory() - runtime.freeMemory()) / megaUnit,
+                runtime.totalMemory() / megaUnit);
+
+      printStream.println("------------------------------------------------------------------------");
+
+      System.exit(exit);
     }
   }
 
