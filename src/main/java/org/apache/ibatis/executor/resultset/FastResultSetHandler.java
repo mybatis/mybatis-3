@@ -222,6 +222,7 @@ public class FastResultSetHandler implements ResultSetHandler {
         foundValues = applyAutomaticMappings(rs, unmappedColumnNames, metaObject) || foundValues;
       }
       foundValues = applyPropertyMappings(rs, resultMap, mappedColumnNames, metaObject, lazyLoader) || foundValues;
+      foundValues = (lazyLoader != null && lazyLoader.size() > 0) || foundValues;
       resultObject = foundValues ? resultObject : null;
       return resultObject;
     }
