@@ -2,14 +2,14 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.1 http://maven.apache.org/xsd/assembly-1.1.1.xsd">
   <id>migrations</id>
-  <baseDirectory>ibatis-migrations-${project.version}</baseDirectory>
+  <baseDirectory>mybatis-migrations-${project.version}</baseDirectory>
   <formats>
     <format>zip</format>
   </formats>
   <files>
     <file>
       <source>${project.build.directory}/${project.artifactId}-${project.version}.${project.packaging}</source>
-      <outputDirectory>lib</outputDirectory>
+      <outputDirectory>/lib</outputDirectory>
     </file>
     <file>
       <source>LICENSE</source>
@@ -17,11 +17,22 @@
     <file>
       <source>NOTICE</source>
     </file>
+    <file>
+      <source>doc/en/MyBatis-3-Migrations.pdf</source>
+    </file>
+    <file>
+      <source>MIGRATIONS-README</source>
+      <filtered>true</filtered>
+    </file>
   </files>
   <fileSets>
+    <!--
+     | shell scripts are generated
+    -->
     <fileSet>
-      <directory>src/main/scripts</directory>
-      <outputDirectory></outputDirectory>
+      <directory>${project.build.directory}/appassembler/bin/</directory>
+      <outputDirectory>/bin</outputDirectory>
+      <fileMode>755</fileMode>
     </fileSet>
   </fileSets>
 </assembly>
