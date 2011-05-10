@@ -1,11 +1,18 @@
 package org.apache.ibatis.type;
 
+import java.math.BigDecimal;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import org.apache.ibatis.io.ResolverUtil;
 import org.apache.ibatis.io.Resources;
-
-import java.math.BigDecimal;
-import java.util.*;
-import java.sql.ResultSet;
 
 public class TypeAliasRegistry {
 
@@ -96,13 +103,19 @@ public class TypeAliasRegistry {
     Set<Class<? extends Class>> typeSet = resolverUtil.getClasses();
     for(Class type : typeSet){
       //Ignore inner classes
-      if (!type.isAnonymousClass())
-        registerAlias(type.getSimpleName(), type);
+      if (!type.isAnonymousClass()) {
+        registerAlias(type);
+      }
     }
   }
 
   public void registerAlias(Class type) {
-    registerAlias(type.getSimpleName(), type.getName());
+    String alias = type.getSimpleName();
+    Alias aliasAnnotation = (Alias) type.getAnnotation(Alias.class);
+    if (aliasAnnotation != null) {
+      alias = aliasAnnotation.value();
+    } 
+    registerAlias(alias, type);
   }
 
   public void registerAlias(String alias, Class value) {

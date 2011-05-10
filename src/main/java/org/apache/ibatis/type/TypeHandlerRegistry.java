@@ -144,9 +144,30 @@ public final class TypeHandlerRegistry {
   }
 
   public void register(Class<?> type, TypeHandler handler) {
-    register(type, null, handler);
+    MappedJdbcTypes mappedJdbcTypes = (MappedJdbcTypes) handler.getClass().getAnnotation(MappedJdbcTypes.class);
+    if (mappedJdbcTypes != null) {
+      for (JdbcType handledJdbcType : mappedJdbcTypes.value()) {
+        register(type, handledJdbcType, handler);
+      }
+    } else {
+      register(type, null, handler);
+    }
   }
 
+  public void register(TypeHandler handler) {
+    boolean mappedTypeFound = false;
+    MappedTypes mappedTypes = (MappedTypes) handler.getClass().getAnnotation(MappedTypes.class);
+    if (mappedTypes != null) {
+      for (Class<?> handledType : mappedTypes.value()) {
+          register(handledType, handler);
+          mappedTypeFound = true;
+      }
+    }
+    if (!mappedTypeFound) {
+      throw new RuntimeException("Unable to get mapped types, check @MappedTypes annotation for type handler " + handler);
+    }
+  }
+  
   public void register(Class<?> type, JdbcType jdbcType, TypeHandler handler) {
     Map<JdbcType, TypeHandler> map = TYPE_HANDLER_MAP.get(type);
     if (map == null) {
@@ -164,20 +185,12 @@ public final class TypeHandlerRegistry {
     resolverUtil.find(new ResolverUtil.IsA(TypeHandler.class), packageName);
     Set<Class<? extends Class<?>>> handlerSet = resolverUtil.getClasses();
 
-    TypeHandler handler;
     for (Class<?> type : handlerSet) {
-      @SuppressWarnings({"unchecked"})
-      Annotation annotation = type.getAnnotation(MappedTypes.class);
       try {
-        handler = (TypeHandler) type.getConstructor().newInstance();
+        TypeHandler handler = (TypeHandler) type.getConstructor().newInstance();
+        register(handler);
       } catch (Exception e) {
         throw new RuntimeException("Unable to find a usable constructor for " + type, e);
-      }
-      if (null != annotation) {
-        MappedTypes mappedType = (MappedTypes) annotation;
-        for (Class<?> handledType : mappedType.value()) {
-          register(handledType, handler);
-        }
       }
     }
   }
