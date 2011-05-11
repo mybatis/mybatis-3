@@ -172,7 +172,7 @@ public class SqlBuilder {
       }
 
       sqlClause(builder, "FROM", tables, "", "", ", ");
-      sqlClause(builder, "JOIN", join, "", "", "JOIN");
+      sqlClause(builder, "JOIN", join, "", "", "\nJOIN ");
       sqlClause(builder, "INNER JOIN", innerJoin, "", "", "\nINNER JOIN ");
       sqlClause(builder, "OUTER JOIN", outerJoin, "", "", "\nOUTER JOIN ");
       sqlClause(builder, "LEFT OUTER JOIN", leftOuterJoin, "", "", "\nLEFT OUTER JOIN ");

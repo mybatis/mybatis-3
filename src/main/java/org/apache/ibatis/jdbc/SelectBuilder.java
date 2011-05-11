@@ -87,7 +87,7 @@ public class SelectBuilder {
       }
       
       selectClause(builder, "FROM", sql().from, "", "", ", ");
-      selectClause(builder, "JOIN", sql().join, "", "", "JOIN");
+      selectClause(builder, "JOIN", sql().join, "", "", "\nJOIN ");
       selectClause(builder, "INNER JOIN", sql().innerJoin, "", "", "\nINNER JOIN ");
       selectClause(builder, "OUTER JOIN", sql().outerJoin, "", "", "\nOUTER JOIN ");
       selectClause(builder, "LEFT OUTER JOIN", sql().leftOuterJoin, "", "", "\nLEFT OUTER JOIN ");
