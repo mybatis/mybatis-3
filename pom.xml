@@ -64,6 +64,24 @@
   <build>
     <plugins>
       <plugin>
+        <groupId>org.sonatype.plugins</groupId>
+        <artifactId>jarjar-maven-plugin</artifactId>
+        <configuration>
+          <includes>
+            <include>ognl:ognl</include>
+          </includes>
+          <rules>
+            <rule>
+              <pattern>ognl.**</pattern>
+              <result>org.apache.ibatis.ognl.@1</result>
+            </rule>
+            <keep>
+              <pattern>org.apache.ibatis.**</pattern>
+            </keep>
+          </rules>
+        </configuration>
+      </plugin>
+      <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>appassembler-maven-plugin</artifactId>
         <version>1.1.1</version>
@@ -183,7 +201,7 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>cobertura-maven-plugin</artifactId>
-        <version>2.2</version>
+        <version>2.5</version>
         <configuration>
           <instrumentation>
             <ignores>
@@ -235,33 +253,6 @@
       </testResource>
     </testResources>
   </build>
-  <profiles>
-    <profile>
-      <id>release</id>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.sonatype.plugins</groupId>
-            <artifactId>jarjar-maven-plugin</artifactId>
-            <configuration>
-              <includes>
-                <include>ognl:ognl</include>
-              </includes>
-              <rules>
-                <rule>
-                  <pattern>ognl.**</pattern>
-                  <result>org.apache.ibatis.ognl.@1</result>
-                </rule>
-                <keep>
-                  <pattern>org.apache.ibatis.**</pattern>
-                </keep>
-              </rules>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-  </profiles>
   <dependencies>
     <dependency>
       <groupId>ognl</groupId>
