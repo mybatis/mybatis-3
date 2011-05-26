@@ -3,6 +3,7 @@ package org.apache.ibatis.type;
 import org.apache.ibatis.io.ResolverUtil;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Modifier;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Date;
@@ -184,13 +185,15 @@ public final class TypeHandlerRegistry {
     ResolverUtil<Class<?>> resolverUtil = new ResolverUtil<Class<?>>();
     resolverUtil.find(new ResolverUtil.IsA(TypeHandler.class), packageName);
     Set<Class<? extends Class<?>>> handlerSet = resolverUtil.getClasses();
-
     for (Class<?> type : handlerSet) {
-      try {
-        TypeHandler handler = (TypeHandler) type.getConstructor().newInstance();
-        register(handler);
-      } catch (Exception e) {
-        throw new RuntimeException("Unable to find a usable constructor for " + type, e);
+      //Ignore inner classes and interfaces (including package-info.java) and abstract classes      
+      if (!type.isAnonymousClass() && !type.isInterface() && !Modifier.isAbstract(type.getModifiers())) {
+        try {
+          TypeHandler handler = (TypeHandler) type.getConstructor().newInstance();
+          register(handler);
+        } catch (Exception e) {
+          throw new RuntimeException("Unable to find a usable constructor for " + type, e);
+        }
       }
     }
   }
