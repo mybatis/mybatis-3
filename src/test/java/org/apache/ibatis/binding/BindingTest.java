@@ -1,6 +1,7 @@
 package org.apache.ibatis.binding;
 
 import domain.blog.*;
+import org.apache.ibatis.executor.result.DefaultResultHandler;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -135,6 +136,46 @@ public class BindingTest {
     }
   }
   
+  @Test
+  public void shouldExecuteMultipleBoundSelectOfBlogsByIdInWithProvidedResultHandlerBetweenSessions() {
+    SqlSession session = sqlSessionFactory.openSession();
+    try {
+      final DefaultResultHandler handler = new DefaultResultHandler();
+      session.select("selectBlogsAsMapById", handler);
+
+      //new session
+      session.close();
+      session = sqlSessionFactory.openSession();
+
+      final DefaultResultHandler moreHandler = new DefaultResultHandler();
+      session.select("selectBlogsAsMapById", moreHandler);
+      
+      assertEquals(2, handler.getResultList().size());
+      assertEquals(2, moreHandler.getResultList().size());
+
+    } finally {
+      session.close();
+    }
+  }
+
+  @Test
+  public void shouldExecuteMultipleBoundSelectOfBlogsByIdInWithProvidedResultHandlerInSameSession() {
+    SqlSession session = sqlSessionFactory.openSession();
+    try {
+      final DefaultResultHandler handler = new DefaultResultHandler();
+      session.select("selectBlogsAsMapById", handler);
+
+      final DefaultResultHandler moreHandler = new DefaultResultHandler();
+      session.select("selectBlogsAsMapById", moreHandler);
+
+      assertEquals(2, handler.getResultList().size());
+      assertEquals(2, moreHandler.getResultList().size());
+
+    } finally {
+      session.close();
+    }
+  }
+
   @Test
   public void shouldExecuteMultipleBoundSelectMapOfBlogsByIdInSameSessionWithoutClearingLocalCache() {
     SqlSession session = sqlSessionFactory.openSession();

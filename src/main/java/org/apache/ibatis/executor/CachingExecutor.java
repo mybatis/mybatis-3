@@ -51,7 +51,7 @@ public class CachingExecutor implements Executor {
         flushCacheIfRequired(ms);
         cache.getReadWriteLock().readLock().lock();
         try {
-          if (ms.isUseCache()) {
+          if (ms.isUseCache() && resultHandler == null) {
             CacheKey key = createCacheKey(ms, parameterObject, rowBounds);
             final List cachedList = (List) cache.getObject(key);
             if (cachedList != null) {

@@ -105,7 +105,7 @@ public abstract class BaseExecutor implements Executor {
     try {
       queryStack++;
       CacheKey key = createCacheKey(ms, parameter, rowBounds);
-      list = (List) localCache.getObject(key);
+      list = resultHandler == null ? (List) localCache.getObject(key) : null;
       if (list != null) {
         handleLocallyCachedOutputParameters(ms, key, parameter);
       } else {
