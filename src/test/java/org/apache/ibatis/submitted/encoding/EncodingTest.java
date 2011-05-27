@@ -24,7 +24,7 @@ public class EncodingTest {
 
     try {
       Class.forName("org.hsqldb.jdbcDriver");
-      conn = DriverManager.getConnection("jdbc:hsqldb:mem:gname", "sa", "");
+      conn = DriverManager.getConnection("jdbc:hsqldb:mem:encoding", "sa", "");
 
       Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/encoding/CreateDB.sql");
 

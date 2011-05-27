@@ -47,7 +47,11 @@ public class JiraIbatis260 extends BaseSqlMapTest {
    * @throws Exception none should be thrown (if the regression test
    *                   succeeds)
    */
-  public void testIbatis260Error1() throws Exception {
+  public void __ignore_testIbatis260Error1() throws Exception {
+    // @IGNORE
+    // Was missed a long time ago, probably around the time Maven was implemented.
+    // It's not picked up due to the filename, and is not being run.  The mock Sql/Include tags
+    // seem to have broken at some point, which stops this test from running.
     List groupedResult = sqlMap.queryForList("getJira260GroupedResult", null);
 
     HashMap test = new HashMap();

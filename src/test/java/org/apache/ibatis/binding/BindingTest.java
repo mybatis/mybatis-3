@@ -136,12 +136,36 @@ public class BindingTest {
   }
   
   @Test
-  @Ignore
-  public void shouldExecuteMultipleBoundSelectMapOfBlogsById() {
+  public void shouldExecuteMultipleBoundSelectMapOfBlogsByIdInSameSessionWithoutClearingLocalCache() {
     SqlSession session = sqlSessionFactory.openSession();
     try {
       BoundBlogMapper mapper = session.getMapper(BoundBlogMapper.class);
       Map<Integer,Blog> blogs = mapper.selectBlogsAsMapById();
+      Map<Integer,Blog> moreBlogs = mapper.selectBlogsAsMapById();
+      assertEquals(2, blogs.size());
+      assertEquals(2, moreBlogs.size());
+      for(Map.Entry<Integer,Blog> blogEntry : blogs.entrySet()) {
+        assertEquals(blogEntry.getKey(), (Integer) blogEntry.getValue().getId());
+      }
+      for(Map.Entry<Integer,Blog> blogEntry : moreBlogs.entrySet()) {
+        assertEquals(blogEntry.getKey(), (Integer) blogEntry.getValue().getId());
+      }
+    } finally {
+      session.close();
+    }
+  }
+
+  @Test
+  public void shouldExecuteMultipleBoundSelectMapOfBlogsByIdBetweenTwoSessionsWithGlobalCacheEnabled() {
+    SqlSession session = sqlSessionFactory.openSession();
+    try {
+      BoundBlogMapper mapper = session.getMapper(BoundBlogMapper.class);
+      Map<Integer,Blog> blogs = mapper.selectBlogsAsMapById();
+      session.close();
+
+      //New Session
+      session = sqlSessionFactory.openSession();
+      mapper = session.getMapper(BoundBlogMapper.class);
       Map<Integer,Blog> moreBlogs = mapper.selectBlogsAsMapById();
       assertEquals(2, blogs.size());
       assertEquals(2, moreBlogs.size());
