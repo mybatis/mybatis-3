@@ -14,12 +14,12 @@
     annotations. Simplicity is the biggest advantage of the mybatis data mapper over object relational mapping
     tools.
   </description>
-  <version>3.0.5</version>
+  <version>3.0.6-SNAPSHOT</version>
   <packaging>jar</packaging>
   <scm>
-    <url>scm:svn:https://mybatis.googlecode.com/svn/tags/mybatis-3.0.5</url>
-    <connection>scm:svn:https://mybatis.googlecode.com/svn/tags/mybatis-3.0.5</connection>
-    <developerConnection>scm:svn:https://mybatis.googlecode.com/svn/tags/mybatis-3.0.5</developerConnection>
+    <url>scm:svn:https://mybatis.googlecode.com/svn/trunk</url>
+    <connection>scm:svn:https://mybatis.googlecode.com/svn/trunk</connection>
+    <developerConnection>scm:svn:https://mybatis.googlecode.com/svn/trunk</developerConnection>
   </scm>
   <contributors>
     <contributor>
