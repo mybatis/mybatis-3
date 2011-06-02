@@ -179,7 +179,7 @@ public abstract class BaseExecutor implements Executor {
     if (!closed) {
       try {
         clearLocalCache();
-        flushStatements(false);
+        flushStatements(true);
       } finally {
         if (required) {
           transaction.rollback();
