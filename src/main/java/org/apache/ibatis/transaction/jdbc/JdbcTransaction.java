@@ -14,17 +14,11 @@ public class JdbcTransaction implements Transaction {
 
   protected Connection connection;
 
-  public JdbcTransaction(Connection connection, boolean desiredAutoCommit, boolean allowAutoCommit) {
+  public JdbcTransaction(Connection connection, boolean desiredAutoCommit) {
     this.connection = connection;
-    if (allowAutoCommit) {
-        setDesiredAutoCommit(desiredAutoCommit);
-    }
+    setDesiredAutoCommit(desiredAutoCommit);
   }
 
-  public JdbcTransaction(Connection connection, boolean desiredAutoCommit) {
-    this(connection, desiredAutoCommit, true);
-  }
-  
   public Connection getConnection() {
     return connection;
   }
