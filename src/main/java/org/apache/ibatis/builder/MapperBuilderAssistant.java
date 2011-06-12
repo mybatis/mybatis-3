@@ -131,7 +131,9 @@ public class MapperBuilderAssistant extends BaseBuilder {
     ResultMap.Builder resultMapBuilder = new ResultMap.Builder(configuration, id, type, resultMappings);
     if (extend != null) {
       ResultMap resultMap = configuration.getResultMap(extend);
-      resultMappings.addAll(resultMap.getResultMappings());
+      List<ResultMapping> extendedResultMappings = new ArrayList<ResultMapping>(resultMap.getResultMappings());
+      extendedResultMappings.removeAll(resultMappings);
+      resultMappings.addAll(extendedResultMappings);
     }
     resultMapBuilder.discriminator(discriminator);
     ResultMap resultMap = resultMapBuilder.build();

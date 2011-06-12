@@ -152,4 +152,26 @@ public class ResultMapping {
     return this.composites != null && !this.composites.isEmpty();
   }
 
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    ResultMapping that = (ResultMapping) o;
+
+    if (!property.equals(that.property)) {
+      return false;
+    }
+
+    return true;
+  }
+
+  @Override
+  public int hashCode() {
+    return property.hashCode();
+  }
 }
