@@ -6,6 +6,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.ibatis.executor.ExecutorException;
 import org.apache.ibatis.reflection.MetaObject;
 
 public class ResultLoaderMap {
@@ -14,6 +15,11 @@ public class ResultLoaderMap {
 
   public void addLoader(String property, MetaObject metaResultObject, ResultLoader resultLoader) {
     String upperFirst = getUppercaseFirstProperty(property);
+    if (!upperFirst.equalsIgnoreCase(property) && loaderMap.containsKey(upperFirst)) {
+      throw new ExecutorException("Nested lazy loaded result property '" + property +
+              "' for query id '" + resultLoader.mappedStatement.getId() +
+              " already exists in the result map. The leftmost property of all lazy loaded properties must be unique within a result map.");
+    }
     loaderMap.put(upperFirst, new LoadPair(property, metaResultObject, resultLoader));
   }
   
