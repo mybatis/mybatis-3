@@ -124,6 +124,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
       Class<?> type,
       String extend,
       Discriminator discriminator,
+      String notNullColumn,
       List<ResultMapping> resultMappings) {
     id = applyCurrentNamespace(id);
     extend = applyCurrentNamespace(extend);
@@ -136,6 +137,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
       resultMappings.addAll(extendedResultMappings);
     }
     resultMapBuilder.discriminator(discriminator);
+    resultMapBuilder.notNullColumns(parseMultipleColumnNames(notNullColumn));
     ResultMap resultMap = resultMapBuilder.build();
     configuration.addResultMap(resultMap);
     return resultMap;
@@ -337,6 +339,21 @@ public class MapperBuilderAssistant extends BaseBuilder {
     return builder.build();
   }
 
+  private Set<String> parseMultipleColumnNames(String columnName) {
+	Set<String> columns = new HashSet<String>();
+    if (columnName != null) {
+      if (columnName.indexOf(',') > -1) {
+        StringTokenizer parser = new StringTokenizer(columnName, "{}, ", false);
+        while (parser.hasMoreTokens()) {
+          String column = parser.nextToken();
+          columns.add(column);
+        }
+      } else {
+    	columns.add(columnName);
+      }
+    }
+    return columns;
+  }
   private List<ResultMapping> parseCompositeColumnName(String columnName) {
     List<ResultMapping> composites = new ArrayList<ResultMapping>();
     if (columnName != null) {

@@ -209,6 +209,7 @@ public class XMLMapperBuilder extends BaseBuilder {
         resultMapNode.getStringAttribute("ofType",
             resultMapNode.getStringAttribute("resultType",
                 resultMapNode.getStringAttribute("javaType"))));
+    String notNullColumn = resultMapNode.getStringAttribute("notNullColumn");
     String extend = resultMapNode.getStringAttribute("extends");
     Class<?> typeClass = resolveClass(type);
     Discriminator discriminator = null;
@@ -228,7 +229,7 @@ public class XMLMapperBuilder extends BaseBuilder {
         resultMappings.add(buildResultMappingFromContext(resultChild, typeClass, flags));
       }
     }
-    return builderAssistant.addResultMap(id, typeClass, extend, discriminator, resultMappings);
+    return builderAssistant.addResultMap(id, typeClass, extend, discriminator, notNullColumn, resultMappings);
   }
 
   private void processConstructorElement(XNode resultChild, Class<?> resultType, List<ResultMapping> resultMappings) throws Exception {

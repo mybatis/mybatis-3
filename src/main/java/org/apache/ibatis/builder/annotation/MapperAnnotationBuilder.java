@@ -163,7 +163,7 @@ public class MapperAnnotationBuilder {
     applyConstructorArgs(args, returnType, resultMappings);
     applyResults(results, returnType, resultMappings);
     Discriminator disc = applyDiscriminator(resultMapId, returnType, discriminator);
-    assistant.addResultMap(resultMapId, returnType, null, disc, resultMappings);
+    assistant.addResultMap(resultMapId, returnType, null, disc, null, resultMappings);
     createDiscriminatorResultMaps(resultMapId, returnType, discriminator);
   }
 
@@ -191,7 +191,7 @@ public class MapperAnnotationBuilder {
               flags);
           resultMappings.add(resultMapping);
         }
-        assistant.addResultMap(caseResultMapId, type, resultMapId, null, resultMappings);
+        assistant.addResultMap(caseResultMapId, type, resultMapId, null, null, resultMappings);
       }
     }
   }

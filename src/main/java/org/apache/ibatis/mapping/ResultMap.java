@@ -14,6 +14,7 @@ public class ResultMap {
   private List<ResultMapping> propertyResultMappings;
   private Set<String> mappedColumns;
   private Discriminator discriminator;
+  private Set<String> notNullColumns;
   private boolean hasNestedResultMaps;
 
   private ResultMap() {
@@ -33,6 +34,11 @@ public class ResultMap {
       return this;
     }
 
+    public Builder notNullColumns(Set<String> notNullColumns) {
+        resultMap.notNullColumns = notNullColumns;
+        return this;
+      }
+    
     public Class type() {
       return resultMap.type;
     }
@@ -108,6 +114,10 @@ public class ResultMap {
 
   public Set<String> getMappedColumns() {
     return mappedColumns;
+  }
+  
+  public Set<String> getNotNullColumns() {
+    return notNullColumns;
   }
 
   public Discriminator getDiscriminator() {
