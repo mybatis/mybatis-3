@@ -1,0 +1,138 @@
+package org.apache.ibatis.submitted.not_cull_column;
+
+import static org.junit.Assert.*;
+
+import java.io.Reader;
+import java.sql.Connection;
+import java.sql.DriverManager;
+
+import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.jdbc.ScriptRunner;
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+public class NotNullColumnTest {
+    
+    private static SqlSessionFactory sqlSessionFactory;
+    
+    @BeforeClass
+    public static void initDatabase() throws Exception {
+        Connection conn = null;
+
+        try {
+            Class.forName("org.hsqldb.jdbcDriver");
+            conn = DriverManager.getConnection("jdbc:hsqldb:mem:not_cull_column", "sa",
+                    "");
+
+            Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/not_cull_column/CreateDB.sql");
+
+            ScriptRunner runner = new ScriptRunner(conn);
+            runner.setLogWriter(null);
+            runner.setErrorLogWriter(null);
+            runner.runScript(reader);
+            conn.commit();
+            reader.close();
+
+            reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/not_cull_column/ibatisConfig.xml");
+            sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+            reader.close();
+        } finally {
+            if (conn != null) {
+                conn.close();
+            }
+        }
+    }
+    
+    @Test
+    public void testNotNullColumnWithChildrenNoFid() {
+    	SqlSession sqlSession = sqlSessionFactory.openSession();
+    	try {
+        	FatherMapper fatherMapper = sqlSession.getMapper(FatherMapper.class);
+        	
+        	Father test = fatherMapper.selectByIdNoFid(1);
+        	assertNotNull(test);
+        	assertNotNull(test.getChildren());
+        	assertEquals(2, test.getChildren().size());
+    	} finally {
+    		sqlSession.close();
+    	}
+    }
+    
+    @Test
+    public void testNotNullColumnWithoutChildrenNoFid() {
+    	SqlSession sqlSession = sqlSessionFactory.openSession();
+    	try {
+        	FatherMapper fatherMapper = sqlSession.getMapper(FatherMapper.class);
+        	
+        	Father test = fatherMapper.selectByIdNoFid(2);
+        	assertNotNull(test);
+        	assertNotNull(test.getChildren());
+        	assertTrue(test.getChildren().isEmpty());
+    	} finally {
+    		sqlSession.close();
+    	}
+    }
+
+    @Test
+    public void testNotNullColumnWithoutChildrenFid() {
+    	SqlSession sqlSession = sqlSessionFactory.openSession();
+    	try {
+        	FatherMapper fatherMapper = sqlSession.getMapper(FatherMapper.class);
+
+        	Father test = fatherMapper.selectByIdFid(2);
+        	assertNotNull(test);
+        	assertNotNull(test.getChildren());
+        	assertTrue(test.getChildren().isEmpty());
+    	} finally {
+    		sqlSession.close();
+    	}
+    }
+
+    @Test
+    public void testNotNullColumnWithoutChildrenFidMultipleNullColumns() {
+    	SqlSession sqlSession = sqlSessionFactory.openSession();
+    	try {
+        	FatherMapper fatherMapper = sqlSession.getMapper(FatherMapper.class);
+
+        	Father test = fatherMapper.selectByIdFidMultipleNullColumns(2);
+        	assertNotNull(test);
+        	assertNotNull(test.getChildren());
+        	assertTrue(test.getChildren().isEmpty());
+    	} finally {
+    		sqlSession.close();
+    	}
+    }
+
+    @Test
+    public void testNotNullColumnWithoutChildrenFidMultipleNullColumnsAndBrackets() {
+    	SqlSession sqlSession = sqlSessionFactory.openSession();
+    	try {
+        	FatherMapper fatherMapper = sqlSession.getMapper(FatherMapper.class);
+
+        	Father test = fatherMapper.selectByIdFidMultipleNullColumnsAndBrackets(2);
+        	assertNotNull(test);
+        	assertNotNull(test.getChildren());
+        	assertTrue(test.getChildren().isEmpty());
+    	} finally {
+    		sqlSession.close();
+    	}
+    }
+
+    @Test
+    public void testNotNullColumnWithoutChildrenFidWorkaround() {
+    	SqlSession sqlSession = sqlSessionFactory.openSession();
+    	try {
+        	FatherMapper fatherMapper = sqlSession.getMapper(FatherMapper.class);
+
+        	Father test = fatherMapper.selectByIdFidWorkaround(2);
+        	assertNotNull(test);
+        	assertNotNull(test.getChildren());
+        	assertTrue(test.getChildren().isEmpty());
+    	} finally {
+    		sqlSession.close();
+    	}
+    }
+}
