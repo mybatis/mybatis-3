@@ -64,7 +64,7 @@ default CDATA #REQUIRED
 <!ELEMENT environment (transactionManager,dataSource)>
 <!ATTLIST environment
 id CDATA #REQUIRED
-database CDATA #IMPLIED
+databaseId CDATA #IMPLIED
 >
 
 <!ELEMENT transactionManager (property*)>
