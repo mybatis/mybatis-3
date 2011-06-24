@@ -166,7 +166,6 @@ public class MapperBuilderAssistant extends BaseBuilder {
     return resultMapping;
   }
 
-
   public Discriminator buildDiscriminator(
       Class<?> resultType,
       String column,
@@ -209,11 +208,12 @@ public class MapperBuilderAssistant extends BaseBuilder {
       boolean flushCache,
       boolean useCache,
       KeyGenerator keyGenerator,
-      String keyProperty) {
-    id = applyCurrentNamespace(id);
+      String keyProperty,
+      String databaseId) {
+    id = applyCurrentNamespace(id);    
     boolean isSelect = sqlCommandType == SqlCommandType.SELECT;
 
-    MappedStatement.Builder statementBuilder = new MappedStatement.Builder(configuration, id, sqlSource, sqlCommandType);
+    MappedStatement.Builder statementBuilder = new MappedStatement.Builder(configuration, id, sqlSource, sqlCommandType, databaseId);
     statementBuilder.resource(resource);
     statementBuilder.fetchSize(fetchSize);
     statementBuilder.statementType(statementType);
@@ -226,7 +226,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
     setStatementCache(isSelect, flushCache, useCache, currentCache, statementBuilder);
 
     MappedStatement statement = statementBuilder.build();
-    configuration.addMappedStatement(statement);
+    configuration.addMappedStatement(statement, databaseId);
     return statement;
   }
 

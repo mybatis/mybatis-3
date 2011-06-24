@@ -145,6 +145,7 @@ fetchSize CDATA #IMPLIED
 timeout CDATA #IMPLIED
 flushCache (true|false) #IMPLIED
 useCache (true|false) #IMPLIED
+databaseId CDATA #IMPLIED
 >
 
 <!ELEMENT insert (#PCDATA | selectKey | include | trim | where | set | foreach | choose | if)*>
@@ -158,6 +159,7 @@ statementType (STATEMENT|PREPARED|CALLABLE) #IMPLIED
 keyProperty CDATA #IMPLIED
 useGeneratedKeys (true|false) #IMPLIED
 keyColumn CDATA #IMPLIED
+databaseId CDATA #IMPLIED
 >
 
 <!ELEMENT selectKey (#PCDATA | include | trim | where | set | foreach | choose | if)*>
@@ -166,6 +168,7 @@ resultType CDATA #IMPLIED
 statementType (STATEMENT|PREPARED|CALLABLE) #IMPLIED
 keyProperty CDATA #IMPLIED
 order (BEFORE|AFTER) #IMPLIED
+databaseId CDATA #IMPLIED
 >
 
 <!ELEMENT update (#PCDATA | include | trim | where | set | foreach | choose | if)*>
@@ -176,6 +179,7 @@ parameterType CDATA #IMPLIED
 timeout CDATA #IMPLIED
 flushCache (true|false) #IMPLIED
 statementType (STATEMENT|PREPARED|CALLABLE) #IMPLIED
+databaseId CDATA #IMPLIED
 >
 
 <!ELEMENT delete (#PCDATA | include | trim | where | set | foreach | choose | if)*>
@@ -186,6 +190,7 @@ parameterType CDATA #IMPLIED
 timeout CDATA #IMPLIED
 flushCache (true|false) #IMPLIED
 statementType (STATEMENT|PREPARED|CALLABLE) #IMPLIED
+databaseId CDATA #IMPLIED
 >
 
 <!-- Dynamic -->

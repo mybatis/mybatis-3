@@ -394,8 +394,28 @@ public class Configuration {
     return parameterMaps.containsKey(id);
   }
 
+  public void addMappedStatement(MappedStatement ms, String databaseId) {
+    if (databaseId == null || databaseId.equals(this.environment.getDatabaseId())) {
+      if (this.mappedStatements.containsKey(ms.getId())) {
+        MappedStatement previous = this.mappedStatements.get(ms.getId());
+        if (databaseId != null) {
+          if (previous != null && previous.getDatabaseId() == null) {
+            mappedStatements.remove(ms.getId());
+          }
+          mappedStatements.put(ms.getId(), ms);
+        } else {
+          if (previous == null || previous.getDatabaseId() == null) {
+            mappedStatements.put(ms.getId(), ms);
+          }
+        }        
+      } else {
+        mappedStatements.put(ms.getId(), ms);      
+      }
+    }
+  }
+  
   public void addMappedStatement(MappedStatement ms) {
-    mappedStatements.put(ms.getId(), ms);
+    addMappedStatement(ms, null);
   }
 
   public Collection<String> getMappedStatementNames() {

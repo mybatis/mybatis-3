@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.apache.ibatis.submitted.multidb.MultiDbMapper">
+
+	<select id="select1" resultType="string" parameterType="int">
+		select name from common where id=#{value}
+	</select>
+
+	<select id="select1" databaseId="hsql" resultType="string" parameterType="int">
+		select name from hsql where id=#{value}
+  </select>
+
+  <select id="select2" resultType="string" parameterType="int">
+		select name from common where id=#{value}
+  </select>
+
+  <select id="select2" databaseId="oracle" resultType="string" parameterType="int">
+		select name from oracle where id=#{value}
+  </select>
+
+  <select id="select3" resultType="string" parameterType="int">
+		select name from
+		<if test="_environment.databaseId == 'hsql'">  		
+			hsql
+		</if> 
+		<if test="_environment.databaseId != 'hsql'">  
+			common
+		</if> 		
+		where id=#{value}
+  </select>
+
+  <insert id="insert" parameterType="org.apache.ibatis.submitted.multidb.User">
+		<selectKey keyProperty="id" resultType="int" order="BEFORE">
+			<if test="_environment.databaseId == 'hsql'">  		
+				select max(id) + 1 from hsql
+			</if> 
+			<if test="_environment.databaseId != 'hsql'">  
+				select max(id) + 1 from common
+			</if> 						
+		</selectKey>
+		<if test="_environment.databaseId == 'hsql'">		
+			insert into hsql values (#{id}, #{name})
+		</if> 
+		<if test="_environment.databaseId != 'hsql'">  
+			insert into common values (#{id}, #{name})
+		</if> 						
+  </insert>
+
+</mapper>
