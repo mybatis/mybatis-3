@@ -3,7 +3,7 @@
     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="org.apache.ibatis.submitted.not_cull_column.FatherMapper">
+<mapper namespace="org.apache.ibatis.submitted.not_null_column.FatherMapper">
 
     <resultMap id="FatherMapNoFid" type="Father">
         <id property="id" column="id"/>

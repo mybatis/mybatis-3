@@ -1,4 +1,4 @@
-package org.apache.ibatis.submitted.not_cull_column;
+package org.apache.ibatis.submitted.not_null_column;
 
 public interface FatherMapper
 {

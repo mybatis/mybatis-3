@@ -1,4 +1,4 @@
-package org.apache.ibatis.submitted.not_cull_column;
+package org.apache.ibatis.submitted.not_null_column;
 
 import static org.junit.Assert.*;
 
@@ -24,10 +24,10 @@ public class NotNullColumnTest {
 
         try {
             Class.forName("org.hsqldb.jdbcDriver");
-            conn = DriverManager.getConnection("jdbc:hsqldb:mem:not_cull_column", "sa",
+            conn = DriverManager.getConnection("jdbc:hsqldb:mem:not_null_column", "sa",
                     "");
 
-            Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/not_cull_column/CreateDB.sql");
+            Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/not_null_column/CreateDB.sql");
 
             ScriptRunner runner = new ScriptRunner(conn);
             runner.setLogWriter(null);
@@ -36,7 +36,7 @@ public class NotNullColumnTest {
             conn.commit();
             reader.close();
 
-            reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/not_cull_column/ibatisConfig.xml");
+            reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/not_null_column/ibatisConfig.xml");
             sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
             reader.close();
         } finally {

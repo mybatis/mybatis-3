@@ -10,8 +10,8 @@
     </settings>
 	
     <typeAliases>
-        <typeAlias alias="Child" type="org.apache.ibatis.submitted.not_cull_column.Child"/>
-        <typeAlias alias="Father" type="org.apache.ibatis.submitted.not_cull_column.Father"/>
+        <typeAlias alias="Child" type="org.apache.ibatis.submitted.not_null_column.Child"/>
+        <typeAlias alias="Father" type="org.apache.ibatis.submitted.not_null_column.Father"/>
     </typeAliases>
     
     <environments default="test">
@@ -19,13 +19,13 @@
             <transactionManager type="JDBC"></transactionManager>
             <dataSource type="UNPOOLED">
                 <property name="driver" value="org.hsqldb.jdbcDriver"/>
-                <property name="url" value="jdbc:hsqldb:mem:not_cull_column"/>
+                <property name="url" value="jdbc:hsqldb:mem:not_null_column"/>
                 <property name="username" value="sa"/>
             </dataSource>
         </environment>
     </environments>
     
     <mappers>
-        <mapper resource="org/apache/ibatis/submitted/not_cull_column/FatherMapper.xml"/>
+        <mapper resource="org/apache/ibatis/submitted/not_null_column/FatherMapper.xml"/>
     </mappers>
 </configuration>
