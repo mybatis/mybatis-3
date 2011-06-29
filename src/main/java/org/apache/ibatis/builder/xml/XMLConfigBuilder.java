@@ -216,6 +216,8 @@ public class XMLConfigBuilder extends BaseBuilder {
         builder.databaseId(id);
       } else if (type != null) {
         DatabaseIdProvider databaseIdProvider = (DatabaseIdProvider) resolveClass(type).newInstance();
+        Properties props = context.getChildrenAsProperties();
+        databaseIdProvider.setProperties(props);
         builder.databaseIdProvider(databaseIdProvider);
       }
     }

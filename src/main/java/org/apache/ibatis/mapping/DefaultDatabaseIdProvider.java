@@ -36,11 +36,10 @@ public class DefaultDatabaseIdProvider implements DatabaseIdProvider {
   
   private String getDatabaseName(DataSource dataSource) throws SQLException {
     String productName = getDatabaseProductName(dataSource);
-    String databaseName = null;
     if (this.properties != null) {
       return this.properties.getProperty(productName);
     }
-    return databaseName;
+    return productName;
   }
 
   private String getDatabaseProductName(DataSource dataSource) throws SQLException {

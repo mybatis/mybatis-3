@@ -17,7 +17,7 @@
         <property name="username" value="sa"/>
       </dataSource>
       <database provider="org.apache.ibatis.submitted.multidb.TestDatabaseIdProvider">
-        <property name="name" value="discovered"/>
+        <property name="name" value="translated"/>
       </database>
     </environment>
   </environments>
