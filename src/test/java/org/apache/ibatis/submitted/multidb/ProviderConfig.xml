@@ -7,21 +7,19 @@
 <configuration>
 
   <environments default="development">
-    <environment id="development">
+    <environment id="development" >
       <transactionManager type="JDBC">
         <property name="" value=""/>
       </transactionManager>
       <dataSource type="UNPOOLED">
         <property name="driver" value="org.hsqldb.jdbcDriver"/>
-        <property name="url" value="jdbc:hsqldb:mem:multidb"/>
+        <property name="url" value="jdbc:hsqldb:mem:gname"/>
         <property name="username" value="sa"/>
       </dataSource>
-      <database id="hsql" />
+      <database provider="org.apache.ibatis.submitted.multidb.TestDatabaseIdProvider">
+        <property name="name" value="discovered"/>
+      </database>
     </environment>
   </environments>
-
-  <mappers>
-    <mapper resource="org/apache/ibatis/submitted/multidb/MultiDbMapper.xml"/>
-  </mappers>
-
+  
 </configuration>

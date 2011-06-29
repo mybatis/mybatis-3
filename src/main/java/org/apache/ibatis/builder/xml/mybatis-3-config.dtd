@@ -61,10 +61,9 @@ interceptor CDATA #REQUIRED
 default CDATA #REQUIRED
 >
 
-<!ELEMENT environment (transactionManager,dataSource)>
+<!ELEMENT environment (transactionManager,dataSource,database?)>
 <!ATTLIST environment
 id CDATA #REQUIRED
-databaseId CDATA #IMPLIED
 >
 
 <!ELEMENT transactionManager (property*)>
@@ -75,6 +74,12 @@ type CDATA #REQUIRED
 <!ELEMENT dataSource (property*)>
 <!ATTLIST dataSource
 type CDATA #REQUIRED
+>
+
+<!ELEMENT database (property*)>
+<!ATTLIST database
+id CDATA #IMPLIED
+provider CDATA #IMPLIED
 >
 
 <!ELEMENT mappers (mapper+)>

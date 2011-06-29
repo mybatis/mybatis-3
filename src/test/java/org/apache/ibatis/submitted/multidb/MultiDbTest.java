@@ -25,7 +25,7 @@ public class MultiDbTest {
 
     try {
       Class.forName("org.hsqldb.jdbcDriver");
-      conn = DriverManager.getConnection("jdbc:hsqldb:mem:gname", "sa", "");
+      conn = DriverManager.getConnection("jdbc:hsqldb:mem:multidb", "sa", "");
 
       Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/multidb/CreateDB.sql");
 
