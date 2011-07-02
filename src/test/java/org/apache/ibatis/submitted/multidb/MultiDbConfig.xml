@@ -16,7 +16,6 @@
         <property name="url" value="jdbc:hsqldb:mem:multidb"/>
         <property name="username" value="sa"/>
       </dataSource>
-      <database id="hsql" />
     </environment>
   </environments>
 

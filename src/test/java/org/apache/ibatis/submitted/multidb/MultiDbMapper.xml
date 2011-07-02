@@ -10,7 +10,7 @@
 		select name from common where id=#{value}
 	</select>
 
-	<select id="select1" databaseId="hsql" resultType="string" parameterType="int">
+	<select id="select1" databaseId="HSQL Database Engine" resultType="string" parameterType="int">
 		select name from hsql where id=#{value}
   </select>
 
@@ -18,16 +18,16 @@
 		select name from common where id=#{value}
   </select>
 
-  <select id="select2" databaseId="oracle" resultType="string" parameterType="int">
+  <select id="select2" databaseId="OTHER" resultType="string" parameterType="int">
 		select name from oracle where id=#{value}
   </select>
 
   <select id="select3" resultType="string" parameterType="int">
 		select name from
-		<if test="_environment.databaseId == 'hsql'">  		
+		<if test="_environment.databaseId == 'HSQL Database Engine'">  		
 			hsql
 		</if> 
-		<if test="_environment.databaseId != 'hsql'">  
+		<if test="_environment.databaseId != 'HSQL Database Engine'">  
 			common
 		</if> 		
 		where id=#{value}
@@ -35,17 +35,17 @@
 
   <insert id="insert" parameterType="org.apache.ibatis.submitted.multidb.User">
 		<selectKey keyProperty="id" resultType="int" order="BEFORE">
-			<if test="_environment.databaseId == 'hsql'">  		
+			<if test="_environment.databaseId == 'HSQL Database Engine'">  		
 				select max(id) + 1 from hsql
 			</if> 
-			<if test="_environment.databaseId != 'hsql'">  
+			<if test="_environment.databaseId != 'HSQL Database Engine'">  
 				select max(id) + 1 from common
 			</if> 						
 		</selectKey>
-		<if test="_environment.databaseId == 'hsql'">		
+		<if test="_environment.databaseId == 'HSQL Database Engine'">		
 			insert into hsql values (#{id}, #{name})
 		</if> 
-		<if test="_environment.databaseId != 'hsql'">  
+		<if test="_environment.databaseId != 'HSQL Database Engine'">  
 			insert into common values (#{id}, #{name})
 		</if> 						
   </insert>

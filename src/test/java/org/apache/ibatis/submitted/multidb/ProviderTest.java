@@ -14,10 +14,10 @@ public class ProviderTest {
 
   @Test
   public void shouldUseDefaultId() throws Exception {
-    Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/multidb/MultiDBConfig.xml");
+    Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/multidb/MultiDbConfig.xml");
     DefaultSqlSessionFactory sqlSessionFactory = (DefaultSqlSessionFactory) new SqlSessionFactoryBuilder().build(reader);
     Configuration c = sqlSessionFactory.getConfiguration();
-    assertEquals("hsql", c.getEnvironment().getDatabaseId());
+    assertEquals("HSQL Database Engine", c.getEnvironment().getDatabaseId());
   }
 
   @Test
