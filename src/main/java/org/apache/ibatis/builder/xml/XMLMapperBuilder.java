@@ -15,7 +15,9 @@ import org.apache.ibatis.builder.BaseBuilder;
 import org.apache.ibatis.builder.BuilderException;
 import org.apache.ibatis.builder.CacheRefResolver;
 import org.apache.ibatis.builder.IncompleteCacheException;
+import org.apache.ibatis.builder.IncompleteResultMapException;
 import org.apache.ibatis.builder.MapperBuilderAssistant;
+import org.apache.ibatis.builder.ResultMapResolver;
 import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.executor.ErrorContext;
 import org.apache.ibatis.io.Resources;
@@ -75,6 +77,7 @@ public class XMLMapperBuilder extends BaseBuilder {
       bindMapperForNamespace();
     }
     
+    parsePendingResultMaps();
     parsePendingChacheRefs();
     parsePendingStatements();
   }
@@ -105,6 +108,21 @@ public class XMLMapperBuilder extends BaseBuilder {
     	  statementParser.parseStatementNode();
       } catch (IncompleteStatementException e) {
     	  configuration.addIncompleteStatement(statementParser);
+      }
+    }
+  }
+
+  private void parsePendingResultMaps() {
+    Collection<ResultMapResolver> incompleteResultMaps = configuration.getIncompleteResultMaps();
+    synchronized (incompleteResultMaps) {
+      Iterator<ResultMapResolver> iter = incompleteResultMaps.iterator();
+      while (iter.hasNext()) {
+        try {
+          iter.next().resolve();
+          iter.remove();
+        } catch (IncompleteResultMapException e) {
+          // ResultMap is still missing a resource...
+        }
       }
     }
   }
@@ -193,7 +211,11 @@ public class XMLMapperBuilder extends BaseBuilder {
 
   private void resultMapElements(List<XNode> list) throws Exception {
     for (XNode resultMapNode : list) {
-      resultMapElement(resultMapNode);
+      try {
+        resultMapElement(resultMapNode);
+      } catch (IncompleteResultMapException e) {
+        // ignore, it will be retried
+      }
     }
   }
 
@@ -229,7 +251,13 @@ public class XMLMapperBuilder extends BaseBuilder {
         resultMappings.add(buildResultMappingFromContext(resultChild, typeClass, flags));
       }
     }
-    return builderAssistant.addResultMap(id, typeClass, extend, discriminator, notNullColumn, resultMappings);
+    ResultMapResolver resultMapResolver = new ResultMapResolver(builderAssistant, id, typeClass, extend, discriminator, notNullColumn, resultMappings);
+    try {
+      return resultMapResolver.resolve();
+    } catch (IncompleteResultMapException e) {
+      configuration.addIncompleteResultMap(resultMapResolver);
+      throw e;
+    }
   }
 
   private void processConstructorElement(XNode resultChild, Class<?> resultType, List<ResultMapping> resultMappings) throws Exception {

@@ -20,8 +20,8 @@
   </environments>
 
   <mappers>
-    <mapper resource="org/apache/ibatis/submitted/xml_external_ref/ResultMapReferencePetMapper.xml"/>
-    <mapper resource="org/apache/ibatis/submitted/xml_external_ref/ResultMapReferencePersonMapper.xml"/>
+    <mapper resource="org/apache/ibatis/submitted/xml_external_ref/ResultMapExtendsPersonMapper.xml"/>
+    <mapper resource="org/apache/ibatis/submitted/xml_external_ref/ResultMapExtendsPetMapper.xml"/>
   </mappers>
 
 </configuration>
