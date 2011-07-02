@@ -6,7 +6,7 @@ import javax.sql.DataSource;
 
 import org.apache.ibatis.mapping.DatabaseIdProvider;
 
-public class TestDatabaseIdProvider implements DatabaseIdProvider {
+public class DummyDatabaseIdProvider implements DatabaseIdProvider {
 
   private Properties properties;
   

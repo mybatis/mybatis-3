@@ -16,7 +16,7 @@
         <property name="url" value="jdbc:hsqldb:mem:gname"/>
         <property name="username" value="sa"/>
       </dataSource>
-      <database provider="org.apache.ibatis.submitted.multidb.TestDatabaseIdProvider">
+      <database provider="org.apache.ibatis.submitted.multidb.DummyDatabaseIdProvider">
         <property name="name" value="translated"/>
       </database>
     </environment>
