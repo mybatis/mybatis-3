@@ -1,6 +1,6 @@
 package org.apache.ibatis.submitted.not_null_column;
 
-public class Child {
+public class Child extends Base {
     private Integer id;
     private Integer fatherId;
     private String name;

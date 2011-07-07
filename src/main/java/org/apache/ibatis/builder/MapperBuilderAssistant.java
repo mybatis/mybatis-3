@@ -124,7 +124,6 @@ public class MapperBuilderAssistant extends BaseBuilder {
       Class<?> type,
       String extend,
       Discriminator discriminator,
-      String notNullColumn,
       List<ResultMapping> resultMappings) {
     id = applyCurrentNamespace(id);
     extend = applyCurrentNamespace(extend);
@@ -140,7 +139,6 @@ public class MapperBuilderAssistant extends BaseBuilder {
       resultMappings.addAll(extendedResultMappings);
     }
     resultMapBuilder.discriminator(discriminator);
-    resultMapBuilder.notNullColumns(parseMultipleColumnNames(notNullColumn));
     ResultMap resultMap = resultMapBuilder.build();
     configuration.addResultMap(resultMap);
     return resultMap;
@@ -154,6 +152,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
       JdbcType jdbcType,
       String nestedSelect,
       String nestedResultMap,
+      String notNullColumn,
       Class<? extends TypeHandler> typeHandler,
       List<ResultFlag> flags) {
     ResultMapping resultMapping = assembleResultMapping(
@@ -164,6 +163,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
         jdbcType,
         nestedSelect,
         nestedResultMap,
+        notNullColumn,
         typeHandler,
         flags);
     return resultMapping;
@@ -182,6 +182,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
         column,
         javaType,
         jdbcType,
+        null,
         null,
         null,
         typeHandler,
@@ -318,6 +319,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
       JdbcType jdbcType,
       String nestedSelect,
       String nestedResultMap,
+      String notNullColumn,
       Class<? extends TypeHandler> typeHandler,
       List<ResultFlag> flags) {
     // Class resultType = resultMapBuilder.type();
@@ -338,6 +340,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
     builder.typeHandler(typeHandlerInstance);
     builder.flags(flags == null ? new ArrayList<ResultFlag>() : flags);
     builder.composites(composites);
+    builder.notNullColumns(parseMultipleColumnNames(notNullColumn));
     
     return builder.build();
   }

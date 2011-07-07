@@ -5,10 +5,15 @@
 
 <mapper namespace="org.apache.ibatis.submitted.not_null_column.FatherMapper">
 
+    <resultMap id="ChildMap" type="Child">
+        <result property="id" column="child_id"/>
+        <result property="name" column="child_name"/>
+    </resultMap>
+    
     <resultMap id="FatherMapNoFid" type="Father">
         <id property="id" column="id"/>
         <result property="name" column="name"/>
-        <collection property="children" ofType="Child" column="id" notNullColumn="child_id">
+        <collection property="children" ofType="Child" notNullColumn="child_id">
 	        <result property="id" column="child_id"/>
 	        <result property="name" column="child_name"/>
         </collection>
@@ -24,7 +29,7 @@
     <resultMap id="FatherMapFid" type="Father">
         <id property="id" column="id"/>
         <result property="name" column="name"/>
-        <collection property="children" ofType="Child" column="id" notNullColumn="child_id">
+        <collection property="children" ofType="Child" notNullColumn="child_id">
 	        <id property="id" column="child_id"/>
             <result property="fatherId" column="id"/>
 	        <result property="name" column="child_name"/>
@@ -38,10 +43,47 @@
     	WHERE id = #{id}
     </select>
 
+    <resultMap id="FatherMapWithInternalResultMap" type="Father">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="tempDateField" column="current"/>
+        <collection property="children" ofType="Child" notNullColumn="child_id">
+	        <result property="id" column="child_id"/>
+	        <result property="name" column="child_name"/>
+	        <result property="tempDateField" column="current"/>
+        </collection>
+    </resultMap>
+
+    <select id="selectByIdWithInternalResultMap" resultMap="FatherMapWithInternalResultMap" parameterType="int">
+    	SELECT id, name, sysdate as current, Child.id AS child_id, Child.name AS child_name
+    	FROM Father
+    	LEFT JOIN Child ON Father.id = Child.father_id
+    	WHERE id = #{id}
+    </select>
+    
+    <resultMap id="ChildMapWithRefResultMap" type="Child">
+        <result property="id" column="child_id"/>
+        <result property="name" column="child_name"/>
+        <result property="tempDateField" column="current"/>
+    </resultMap>
+    <resultMap id="FatherMapWithRefResultMap" type="Father">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="tempDateField" column="current"/>
+        <collection property="children" ofType="Child" notNullColumn="child_id" resultMap="ChildMapWithRefResultMap"/>
+    </resultMap>
+
+    <select id="selectByIdWithRefResultMap" resultMap="FatherMapWithRefResultMap" parameterType="int">
+    	SELECT id, name, sysdate as current, Child.id AS child_id, Child.name AS child_name
+    	FROM Father
+    	LEFT JOIN Child ON Father.id = Child.father_id
+    	WHERE id = #{id}
+    </select>
+
     <resultMap id="FatherMapFidMultipleNullColumns" type="Father">
         <id property="id" column="id"/>
         <result property="name" column="name"/>
-        <collection property="children" ofType="Child" column="id" notNullColumn="child_id, child_name">
+        <collection property="children" ofType="Child" notNullColumn="child_id, child_name">
 	        <id property="id" column="child_id"/>
             <result property="fatherId" column="id"/>
 	        <result property="name" column="child_name"/>
@@ -58,7 +100,7 @@
     <resultMap id="FatherMapFidMultipleNullColumnsAndBrackets" type="Father">
         <id property="id" column="id"/>
         <result property="name" column="name"/>
-        <collection property="children" ofType="Child" column="id" notNullColumn="{child_id, child_name}">
+        <collection property="children" ofType="Child" notNullColumn="{child_id, child_name}">
 	        <id property="id" column="child_id"/>
             <result property="fatherId" column="id"/>
 	        <result property="name" column="child_name"/>
@@ -75,7 +117,7 @@
     <resultMap id="FatherMapFidWorkaround" type="Father">
         <id property="id" column="id"/>
         <result property="name" column="name"/>
-        <collection property="children" ofType="Child" column="id">
+        <collection property="children" ofType="Child">
 	        <result property="id" column="child_id"/>
             <result property="fatherId" column="child_father_id"/>
 	        <result property="name" column="child_name"/>

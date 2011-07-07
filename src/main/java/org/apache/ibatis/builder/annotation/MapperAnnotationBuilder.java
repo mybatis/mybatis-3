@@ -163,7 +163,7 @@ public class MapperAnnotationBuilder {
     applyConstructorArgs(args, returnType, resultMappings);
     applyResults(results, returnType, resultMappings);
     Discriminator disc = applyDiscriminator(resultMapId, returnType, discriminator);
-    assistant.addResultMap(resultMapId, returnType, null, disc, null, resultMappings);
+    assistant.addResultMap(resultMapId, returnType, null, disc, resultMappings);
     createDiscriminatorResultMaps(resultMapId, returnType, discriminator);
   }
 
@@ -187,11 +187,12 @@ public class MapperAnnotationBuilder {
               result.jdbcType() == JdbcType.UNDEFINED ? null : result.jdbcType(),
               hasNestedSelect(result) ? nestedSelectId(result) : null,
               null,
+              null,
               result.typeHandler() == TypeHandler.class ? null : result.typeHandler(),
               flags);
           resultMappings.add(resultMapping);
         }
-        assistant.addResultMap(caseResultMapId, type, resultMapId, null, null, resultMappings);
+        assistant.addResultMap(caseResultMapId, type, resultMapId, null, resultMappings);
       }
     }
   }
@@ -418,6 +419,7 @@ public class MapperAnnotationBuilder {
             result.jdbcType() == JdbcType.UNDEFINED ? null : result.jdbcType(),
             hasNestedSelect(result) ? nestedSelectId(result) : null,
             null,
+            null,
             result.typeHandler() == TypeHandler.class ? null : result.typeHandler(),
             flags);
         resultMappings.add(resultMapping);
@@ -453,6 +455,7 @@ public class MapperAnnotationBuilder {
             arg.column(),
             arg.javaType() == void.class ? null : arg.javaType(),
             arg.jdbcType() == JdbcType.UNDEFINED ? null : arg.jdbcType(),
+            null,
             null,
             null,
             arg.typeHandler() == TypeHandler.class ? null : arg.typeHandler(),

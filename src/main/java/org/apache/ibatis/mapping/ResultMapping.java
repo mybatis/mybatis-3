@@ -8,6 +8,7 @@ import org.apache.ibatis.type.TypeHandlerRegistry;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 public class ResultMapping {
 
@@ -19,6 +20,7 @@ public class ResultMapping {
   private TypeHandler typeHandler;
   private String nestedResultMapId;
   private String nestedQueryId;
+  private Set<String> notNullColumns;
   private List<ResultFlag> flags;
   private List<ResultMapping> composites;
 
@@ -73,6 +75,11 @@ public class ResultMapping {
       return this;
     }
 
+    public Builder notNullColumns(Set<String> notNullColumns) {
+      resultMapping.notNullColumns = notNullColumns;
+      return this;
+    }
+      
     public Builder flags(List<ResultFlag> flags) {
       resultMapping.flags = flags;
       return this;
@@ -138,6 +145,10 @@ public class ResultMapping {
 
   public String getNestedQueryId() {
     return nestedQueryId;
+  }
+
+  public Set<String> getNotNullColumns() {
+	return notNullColumns;
   }
 
   public List<ResultFlag> getFlags() {

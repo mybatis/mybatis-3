@@ -123,7 +123,7 @@ public class NestedResultSetHandler extends FastResultSetHandler {
           final boolean knownValue = localRowValueCache.contains(rowKey);
           localRowValueCache.add(rowKey);
           Object rowValue = getRowValue(rs, nestedResultMap, rowKey);
-          Set<String> notNullColumns = nestedResultMap.getNotNullColumns();
+          Set<String> notNullColumns = resultMapping.getNotNullColumns();
           boolean anyNotNullColumnIsNotNull = true;
           if (notNullColumns != null && !notNullColumns.isEmpty()) {
         	  anyNotNullColumnIsNotNull = false;

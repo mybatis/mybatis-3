@@ -90,7 +90,37 @@ public class NotNullColumnTest {
     		sqlSession.close();
     	}
     }
+	
+    @Test
+    public void testNotNullColumnWithoutChildrenWithInternalResultMap() {
+    	SqlSession sqlSession = sqlSessionFactory.openSession();
+    	try {
+        	FatherMapper fatherMapper = sqlSession.getMapper(FatherMapper.class);
 
+        	Father test = fatherMapper.selectByIdWithInternalResultMap(2);
+        	assertNotNull(test);
+        	assertNotNull(test.getChildren());
+        	assertTrue(test.getChildren().isEmpty());
+    	} finally {
+    		sqlSession.close();
+    	}
+    }
+    
+    @Test
+    public void testNotNullColumnWithoutChildrenWithRefResultMap() {
+    	SqlSession sqlSession = sqlSessionFactory.openSession();
+    	try {
+        	FatherMapper fatherMapper = sqlSession.getMapper(FatherMapper.class);
+
+        	Father test = fatherMapper.selectByIdWithRefResultMap(2);
+        	assertNotNull(test);
+        	assertNotNull(test.getChildren());
+        	assertTrue(test.getChildren().isEmpty());
+    	} finally {
+    		sqlSession.close();
+    	}
+    }
+    
     @Test
     public void testNotNullColumnWithoutChildrenFidMultipleNullColumns() {
     	SqlSession sqlSession = sqlSessionFactory.openSession();

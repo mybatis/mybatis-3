@@ -231,7 +231,6 @@ public class XMLMapperBuilder extends BaseBuilder {
         resultMapNode.getStringAttribute("ofType",
             resultMapNode.getStringAttribute("resultType",
                 resultMapNode.getStringAttribute("javaType"))));
-    String notNullColumn = resultMapNode.getStringAttribute("notNullColumn");
     String extend = resultMapNode.getStringAttribute("extends");
     Class<?> typeClass = resolveClass(type);
     Discriminator discriminator = null;
@@ -251,7 +250,7 @@ public class XMLMapperBuilder extends BaseBuilder {
         resultMappings.add(buildResultMappingFromContext(resultChild, typeClass, flags));
       }
     }
-    ResultMapResolver resultMapResolver = new ResultMapResolver(builderAssistant, id, typeClass, extend, discriminator, notNullColumn, resultMappings);
+    ResultMapResolver resultMapResolver = new ResultMapResolver(builderAssistant, id, typeClass, extend, discriminator, resultMappings);
     try {
       return resultMapResolver.resolve();
     } catch (IncompleteResultMapException e) {
@@ -306,11 +305,12 @@ public class XMLMapperBuilder extends BaseBuilder {
     String nestedSelect = context.getStringAttribute("select");
     String nestedResultMap = context.getStringAttribute("resultMap",
         processNestedResultMappings(context, Collections.EMPTY_LIST));
+    String notNullColumn = context.getStringAttribute("notNullColumn");
     String typeHandler = context.getStringAttribute("typeHandler");
     Class<?> javaTypeClass = resolveClass(javaType);
     Class<? extends TypeHandler> typeHandlerClass = (Class<? extends TypeHandler>) resolveClass(typeHandler);
     JdbcType jdbcTypeEnum = resolveJdbcType(jdbcType);
-    return builderAssistant.buildResultMapping(resultType, property, column, javaTypeClass, jdbcTypeEnum, nestedSelect, nestedResultMap, typeHandlerClass, flags);
+    return builderAssistant.buildResultMapping(resultType, property, column, javaTypeClass, jdbcTypeEnum, nestedSelect, nestedResultMap, notNullColumn, typeHandlerClass, flags);
   }
 
   private String processNestedResultMappings(XNode context, List<ResultMapping> resultMappings) throws Exception {

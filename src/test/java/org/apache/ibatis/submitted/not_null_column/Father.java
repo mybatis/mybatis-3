@@ -2,7 +2,7 @@ package org.apache.ibatis.submitted.not_null_column;
 
 import java.util.List;
 
-public class Father {
+public class Father extends Base {
     private Integer id;
     private String name;
     private List<Child> children;
