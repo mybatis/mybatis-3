@@ -17,17 +17,16 @@ public class MapperProxy implements InvocationHandler, Serializable {
   }
 
   public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-    if (method.getDeclaringClass() != Object.class) {
-      final Class<?> declaringInterface = findDeclaringInterface(proxy, method);
-      final MapperMethod mapperMethod = new MapperMethod(declaringInterface, method, sqlSession);
-      final Object result = mapperMethod.execute(args);
-      if (result == null && method.getReturnType().isPrimitive() && !method.getReturnType().equals(Void.TYPE)) {
-        throw new BindingException("Mapper method '" + method.getName() + "' (" + method.getDeclaringClass() + ") attempted to return null from a method with a primitive return type (" + method.getReturnType() + ").");
-      }
-      return result;
-    } else {
+    if (method.getDeclaringClass() == Object.class) {
       return method.invoke(this, args);
     }
+    final Class<?> declaringInterface = findDeclaringInterface(proxy, method);
+    final MapperMethod mapperMethod = new MapperMethod(declaringInterface, method, sqlSession);
+    final Object result = mapperMethod.execute(args);
+    if (result == null && method.getReturnType().isPrimitive() && !method.getReturnType().equals(Void.TYPE)) {
+      throw new BindingException("Mapper method '" + method.getName() + "' (" + method.getDeclaringClass() + ") attempted to return null from a method with a primitive return type (" + method.getReturnType() + ").");
+    }
+    return result;
   }
 
   private Class<?> findDeclaringInterface(Object proxy, Method method) {

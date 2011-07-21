@@ -400,5 +400,38 @@ public class BindingTest {
     }
   }
 
+  @Test
+  public void shouldReturnANotNullToString() throws Exception {
+    SqlSession session = sqlSessionFactory.openSession();
+    try {
+      BoundBlogMapper mapper = session.getMapper(BoundBlogMapper.class);
+      assertNotNull(mapper.toString());
+    } finally {
+      session.close();
+    }
+  }
+
+  @Test
+  public void shouldReturnANotNullHashCode() throws Exception {
+    SqlSession session = sqlSessionFactory.openSession();
+    try {
+      BoundBlogMapper mapper = session.getMapper(BoundBlogMapper.class);
+      assertNotNull(mapper.hashCode());
+    } finally {
+      session.close();
+    }
+  }
+
+  @Test
+  public void shouldCompareToMappers() throws Exception {
+    SqlSession session = sqlSessionFactory.openSession();
+    try {
+      BoundBlogMapper mapper = session.getMapper(BoundBlogMapper.class);
+      BoundBlogMapper mapper2 = session.getMapper(BoundBlogMapper.class);
+      assertFalse(mapper.equals(mapper2));
+    } finally {
+      session.close();
+    }
+  }
 
 }
