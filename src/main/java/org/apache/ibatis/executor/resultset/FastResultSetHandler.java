@@ -105,7 +105,7 @@ public class FastResultSetHandler implements ResultSetHandler {
             }
         }
     }
-    
+
     validateResultMapsCount(rs, resultMapCount);
     while (rs != null && resultMapCount > resultSetCount) {
       final ResultMap resultMap = resultMaps.get(resultSetCount);
@@ -126,7 +126,7 @@ public class FastResultSetHandler implements ResultSetHandler {
       // ignore
     }
   }
-  
+
   protected void cleanUpAfterHandlingResultSet() {
   }
 
@@ -339,9 +339,20 @@ public class FastResultSetHandler implements ResultSetHandler {
     boolean foundValues = false;
     for (ResultMapping constructorMapping : constructorMappings) {
       final Class parameterType = constructorMapping.getJavaType();
-      final TypeHandler typeHandler = constructorMapping.getTypeHandler();
       final String column = constructorMapping.getColumn();
-      final Object value = typeHandler.getResult(rs, column);
+      final Object value;
+      // check for nested query
+      if (constructorMapping.getNestedQueryId() != null) {
+        value = getNestedQueryConstructorValue(rs, constructorMapping);
+      } else if(constructorMapping.getNestedResultMapId() != null) {
+          final ResultMap resultMap = configuration.getResultMap(constructorMapping.getNestedResultMapId());
+          final ResultLoaderMap lazyLoader = instantiateResultLoaderMap();
+          value = createResultObject(rs, resultMap, lazyLoader);
+      }else {
+        // get simple result
+        final TypeHandler typeHandler = constructorMapping.getTypeHandler();
+        value = typeHandler.getResult(rs, column);
+      }
       constructorArgTypes.add(parameterType);
       constructorArgs.add(value);
       foundValues = value != null || foundValues;
@@ -367,6 +378,19 @@ public class FastResultSetHandler implements ResultSetHandler {
   //
   // NESTED QUERY
   //
+
+  protected Object getNestedQueryConstructorValue(ResultSet rs, ResultMapping constructorMapping) throws SQLException {
+    final String nestedQueryId = constructorMapping.getNestedQueryId();
+    final MappedStatement nestedQuery = configuration.getMappedStatement(nestedQueryId);
+    final Class nestedQueryParameterType = nestedQuery.getParameterMap().getType();
+    final Object nestedQueryParameterObject = prepareParameterForNestedQuery(rs, constructorMapping, nestedQueryParameterType);
+    Object value = null;
+    if (nestedQueryParameterObject != null) {
+      final ResultLoader resultLoader = new ResultLoader(configuration, executor, nestedQuery, nestedQueryParameterObject, constructorMapping.getJavaType());
+      value = resultLoader.loadResult();
+    }
+    return value;
+  }
 
   protected Object getNestedQueryMappingValue(ResultSet rs, MetaObject metaResultObject, ResultMapping propertyMapping, ResultLoaderMap lazyLoader) throws SQLException {
     final String nestedQueryId = propertyMapping.getNestedQueryId();

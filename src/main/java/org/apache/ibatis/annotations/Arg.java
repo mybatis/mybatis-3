@@ -21,4 +21,8 @@ public @interface Arg {
   public abstract JdbcType jdbcType() default JdbcType.UNDEFINED;
 
   public abstract Class<? extends TypeHandler> typeHandler() default TypeHandler.class;
+
+  public abstract String select() default "";
+
+  public abstract String resultMap() default "";
 }

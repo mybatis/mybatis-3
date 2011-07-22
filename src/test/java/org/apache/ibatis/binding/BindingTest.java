@@ -10,7 +10,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.*;
-import org.junit.Ignore;
 
 public class BindingTest {
   private static SqlSessionFactory sqlSessionFactory;
@@ -289,6 +288,54 @@ public class BindingTest {
       Blog blog = mapper.selectBlog(1);
       assertEquals(1, blog.getId());
       assertEquals("Jim Business", blog.getTitle());
+    } finally {
+      session.close();
+    }
+  }
+
+  @Test
+  public void shouldExecuteBoundSelectOneBlogStatementWithConstructor() {
+    SqlSession session = sqlSessionFactory.openSession();
+    try {
+      BoundBlogMapper mapper = session.getMapper(BoundBlogMapper.class);
+      Blog blog = mapper.selectBlogUsingConstructor(1);
+      assertEquals(1, blog.getId());
+      assertEquals("Jim Business", blog.getTitle());
+      assertNotNull("author should not be null", blog.getAuthor());
+      List<Post> posts = blog.getPosts();
+      assertTrue("posts should not be empty", posts != null && !posts.isEmpty());
+    } finally {
+      session.close();
+    }
+  }
+
+  @Test
+  public void shouldExecuteBoundSelectBlogUsingConstructorWithResultMap() {
+    SqlSession session = sqlSessionFactory.openSession();
+    try {
+      BoundBlogMapper mapper = session.getMapper(BoundBlogMapper.class);
+      Blog blog = mapper.selectBlogUsingConstructorWithResultMap(1);
+      assertEquals(1, blog.getId());
+      assertEquals("Jim Business", blog.getTitle());
+      assertNotNull("author should not be null", blog.getAuthor());
+      List<Post> posts = blog.getPosts();
+      assertTrue("posts should not be empty", posts != null && !posts.isEmpty());
+    } finally {
+      session.close();
+    }
+  }
+
+  @Test
+  public void shouldExecuteBoundSelectOneBlogStatementWithConstructorUsingXMLConfig() {
+    SqlSession session = sqlSessionFactory.openSession();
+    try {
+      BoundBlogMapper mapper = session.getMapper(BoundBlogMapper.class);
+      Blog blog = mapper.selectBlogByIdUsingConstructor(1);
+      assertEquals(1, blog.getId());
+      assertEquals("Jim Business", blog.getTitle());
+      assertNotNull("author should not be null", blog.getAuthor());
+      List<Post> posts = blog.getPosts();
+      assertTrue("posts should not be empty", posts != null && !posts.isEmpty());
     } finally {
       session.close();
     }

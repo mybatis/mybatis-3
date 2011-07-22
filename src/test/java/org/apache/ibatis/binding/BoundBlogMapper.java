@@ -1,5 +1,6 @@
 package org.apache.ibatis.binding;
 
+import domain.blog.Author;
 import domain.blog.Blog;
 import domain.blog.DraftPost;
 import domain.blog.Post;
@@ -80,6 +81,22 @@ public interface BoundBlogMapper {
   @Select("SELECT * FROM " +
       "blog WHERE id = #{id}")
   Blog selectBlog(int id);
+
+  //======================================================
+
+  @Select("SELECT * FROM " +
+      "blog WHERE id = #{id}")
+  @ConstructorArgs({
+      @Arg(column = "id", javaType = int.class, id = true),
+      @Arg(column = "title", javaType = String.class),
+      @Arg(column = "author_id", javaType = Author.class, select = "org.apache.ibatis.binding.BoundAuthorMapper.selectAuthor"),
+      @Arg(column = "id", javaType = List.class, select = "selectPostsForBlog")
+  })
+  Blog selectBlogUsingConstructor(int id);
+
+  Blog selectBlogUsingConstructorWithResultMap(int i);
+
+  Blog selectBlogByIdUsingConstructor(int id);
 
   //======================================================
 

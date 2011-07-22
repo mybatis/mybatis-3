@@ -9,6 +9,17 @@ public class Blog {
   private Author author;
   private List<Post> posts;
 
+  public Blog() {
+  }
+
+  public Blog(int id, String title, Author author, List<Post> posts) {
+    this();
+    this.id = id;
+    this.title = title;
+    this.author = author;
+    this.posts = posts;
+  }
+
   public int getId() {
     return id;
   }

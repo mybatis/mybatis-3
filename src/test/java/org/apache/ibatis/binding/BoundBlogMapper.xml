@@ -1,40 +1,66 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
 <!DOCTYPE mapper
-    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="org.apache.ibatis.binding.BoundBlogMapper">
 
-  <select id="selectRandom" resultType="int">
+    <select id="selectRandom" resultType="int">
     select CAST(RANDOM()*1000000 as INTEGER) a from SYSIBM.SYSDUMMY1
   </select>
 
-  <select id="selectBlogsFromXML" resultType="domain.blog.Blog">
+    <select id="selectBlogsFromXML" resultType="domain.blog.Blog">
     SELECT * FROM blog
   </select>
 
-  <resultMap id="blogWithPosts" type="Blog">
-    <id property="id" column="id"/>
-    <result property="title" column="title"/>
-    <association property="author" column="author_id"
-                 select="selectAuthorWithInlineParams"/>
-    <collection property="posts" column="id" select="selectPostsForBlog"/>
-  </resultMap>
+    <resultMap id="blogWithPosts" type="Blog">
+        <id property="id" column="id"/>
+        <result property="title" column="title"/>
+        <association property="author" column="author_id"
+                     select="selectAuthorWithInlineParams"/>
+        <collection property="posts" column="id" select="selectPostsForBlog"/>
+    </resultMap>
 
-  <select id="selectBlogWithPostsUsingSubSelect" parameterType="int" resultMap="blogWithPosts">
+    <resultMap id="blogUsingConstructor" type="Blog">
+        <constructor>
+            <idArg column="id" javaType="_int"/>
+            <arg column="title" javaType="java.lang.String"/>
+            <arg column="author_id" javaType="domain.blog.Author"
+                 select="org.apache.ibatis.binding.BoundAuthorMapper.selectAuthor"/>
+            <arg column="id" javaType="java.util.List" select="selectPostsForBlog"/>
+        </constructor>
+    </resultMap>
+
+    <resultMap id="blogUsingConstructorWithResultMap" type="Blog">
+        <constructor>
+            <idArg column="id" javaType="_int"/>
+            <arg column="title" javaType="java.lang.String"/>
+            <arg javaType="domain.blog.Author" resultMap="org.apache.ibatis.binding.BoundAuthorMapper.authorResultMap"/>
+            <arg column="id" javaType="java.util.List" select="selectPostsForBlog"/>
+        </constructor>
+    </resultMap>
+
+    <select id="selectBlogWithPostsUsingSubSelect" parameterType="int" resultMap="blogWithPosts">
     select * from Blog where id = #{id}
   </select>
 
-  <select id="selectAuthorWithInlineParams"
-          parameterType="int"
-          resultType="domain.blog.Author">
+    <select id="selectAuthorWithInlineParams"
+            parameterType="int"
+            resultType="domain.blog.Author">
     select * from author where id = #{id}
   </select>
 
-  <select id="selectPostsForBlog" parameterType="int" resultType="Post">
+    <select id="selectPostsForBlog" parameterType="int" resultType="Post">
     select * from Post where blog_id = #{blog_id}
   </select>
 
+    <select id="selectBlogByIdUsingConstructor" parameterType="int" resultMap="blogUsingConstructor">
+    select * from Blog where id = #{id}
+  </select>
 
+    <select id="selectBlogUsingConstructorWithResultMap" parameterType="int"
+            resultMap="blogUsingConstructorWithResultMap">
+      select b.*, a.id as author_id, a.username as author_username, a.password as author_password, a.email as author_email, a.bio as author_bio, a.favourite_section from Blog b join Author a on b.author_id = a.id where b.id = #{id}
+    </select>
 </mapper>

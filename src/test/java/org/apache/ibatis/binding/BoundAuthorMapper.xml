@@ -6,6 +6,17 @@
 
 <mapper namespace="org.apache.ibatis.binding.BoundAuthorMapper">
 
+  <resultMap id="authorResultMap" type="domain.blog.Author">
+      <constructor>
+          <idArg column="author_id" javaType="java.lang.Integer"/>
+          <arg column="author_username" javaType="java.lang.String"/>
+          <arg column="author_password" javaType="java.lang.String"/>
+          <arg column="author_email" javaType="java.lang.String"/>
+          <arg column="author_bio" javaType="java.lang.String"/>
+          <arg column="favourite_section" javaType="domain.blog.Section"/>
+      </constructor>
+  </resultMap>
+
   <insert id="insertAuthor" parameterType="domain.blog.Author">
     <selectKey keyProperty="id" resultType="int" order="BEFORE">
       select CAST(RANDOM()*1000000 as INTEGER) a from SYSIBM.SYSDUMMY1

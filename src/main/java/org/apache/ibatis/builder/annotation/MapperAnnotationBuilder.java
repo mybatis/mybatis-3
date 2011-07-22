@@ -88,7 +88,7 @@ public class MapperAnnotationBuilder {
 
   public void parse() {
     String resource = type.toString();
-    if (!configuration.isResourceLoaded(resource)) { 
+    if (!configuration.isResourceLoaded(resource)) {
       loadXmlResource();
       configuration.addLoadedResource(resource);
       assistant.setCurrentNamespace(type.getName());
@@ -228,7 +228,7 @@ public class MapperAnnotationBuilder {
       StatementType statementType = StatementType.PREPARED;
       ResultSetType resultSetType = ResultSetType.FORWARD_ONLY;
       SqlCommandType sqlCommandType = getSqlCommandType(method);
-      
+
       KeyGenerator keyGenerator;
       String keyProperty = "id";
       if (SqlCommandType.INSERT.equals(sqlCommandType)) {
@@ -248,7 +248,7 @@ public class MapperAnnotationBuilder {
       } else {
         keyGenerator = new NoKeyGenerator();
       }
-      
+
       if (options != null) {
         flushCache = options.flushCache();
         useCache = options.useCache();
@@ -257,7 +257,7 @@ public class MapperAnnotationBuilder {
         statementType = options.statementType();
         resultSetType = options.resultSetType();
       }
-      
+
       ResultMap resultMapAnnotation = method.getAnnotation(ResultMap.class);
       String resultMapId;
       if (resultMapAnnotation == null) {
@@ -265,7 +265,7 @@ public class MapperAnnotationBuilder {
       } else {
           resultMapId = resultMapAnnotation.value();
       }
-      
+
       assistant.addMappedStatement(
           mappedStatementId,
           sqlSource,
@@ -362,7 +362,7 @@ public class MapperAnnotationBuilder {
     MixedSqlNode rootSqlNode = new MixedSqlNode(contents);
     return new DynamicSqlSource(configuration, rootSqlNode);
   }
-  
+
   private SqlCommandType getSqlCommandType(Method method) {
     Class<? extends Annotation> type = getSqlAnnotationType(method);
 
@@ -455,8 +455,8 @@ public class MapperAnnotationBuilder {
             arg.column(),
             arg.javaType() == void.class ? null : arg.javaType(),
             arg.jdbcType() == JdbcType.UNDEFINED ? null : arg.jdbcType(),
-            null,
-            null,
+            nullOrEmpty(arg.select()),
+            nullOrEmpty(arg.resultMap()),
             null,
             arg.typeHandler() == TypeHandler.class ? null : arg.typeHandler(),
             flags);
@@ -465,7 +465,11 @@ public class MapperAnnotationBuilder {
     }
   }
 
-  private Result[] resultsIf(Results results) {
+    private String nullOrEmpty(String value) {
+        return value == null || value.trim().length() == 0  ? null : value;
+    }
+
+    private Result[] resultsIf(Results results) {
     return results == null ? new Result[0] : results.value();
   }
 
@@ -500,7 +504,7 @@ public class MapperAnnotationBuilder {
     id = assistant.applyCurrentNamespace(id);
 
     MappedStatement keyStatement = configuration.getMappedStatement(id, false);
-    SelectKeyGenerator answer = new SelectKeyGenerator(keyStatement, executeBefore); 
+    SelectKeyGenerator answer = new SelectKeyGenerator(keyStatement, executeBefore);
     configuration.addKeyGenerator(id, answer);
     return answer;
   }
