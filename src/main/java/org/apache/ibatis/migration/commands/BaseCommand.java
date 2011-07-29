@@ -2,11 +2,16 @@ package org.apache.ibatis.migration.commands;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.io.PrintStream;
 import java.io.PrintWriter;
+import java.io.Reader;
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -235,12 +240,10 @@ public abstract class BaseCommand implements Command {
       String url = props.getProperty("url");
       String username = props.getProperty("username");
       String password = props.getProperty("password");
-      String charSetName = props.getProperty("script_char_set");
       PrintWriter outWriter = new PrintWriter(printStream);
       UnpooledDataSource dataSource = new UnpooledDataSource(driverClassLoader, driver, url, username, password);
       dataSource.setAutoCommit(false);
       ScriptRunner scriptRunner = new ScriptRunner(dataSource.getConnection());
-      scriptRunner.setCharacterSetName(charSetName);
       scriptRunner.setStopOnError(!force);
       scriptRunner.setLogWriter(outWriter);
       scriptRunner.setErrorLogWriter(outWriter);
@@ -388,6 +391,16 @@ public abstract class BaseCommand implements Command {
       return change;
     } catch (Exception e) {
       throw new MigrationException("Error parsing change from file.  Cause: " + e, e);
+    }
+  }
+
+  protected Reader scriptFileReader(File scriptFile) throws FileNotFoundException, UnsupportedEncodingException {
+    InputStream inputStream = new FileInputStream(scriptFile);
+    String charset = environmentProperties().getProperty("script_char_set");
+    if (charset == null || charset.length() == 0) {
+      return new InputStreamReader(inputStream);
+    } else {
+      return new InputStreamReader(inputStream, charset);
     }
   }
 }

@@ -5,7 +5,6 @@ import org.apache.ibatis.migration.MigrationException;
 import org.apache.ibatis.migration.MigrationReader;
 
 import java.io.File;
-import java.io.FileReader;
 
 public class BootstrapCommand extends BaseCommand {
 
@@ -23,7 +22,7 @@ public class BootstrapCommand extends BaseCommand {
           printStream.println(horizontalLine("Applying: bootstrap.sql", 80));
           ScriptRunner runner = getScriptRunner();
           try {
-            runner.runScript(new MigrationReader(new FileReader(bootstrap), false, environmentProperties()));
+            runner.runScript(new MigrationReader(scriptFileReader(bootstrap), false, environmentProperties()));
           } finally {
             runner.closeConnection();
           }

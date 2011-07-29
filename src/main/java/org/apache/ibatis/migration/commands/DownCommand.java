@@ -1,7 +1,6 @@
 package org.apache.ibatis.migration.commands;
 
 import java.io.File;
-import java.io.FileReader;
 import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
@@ -29,7 +28,7 @@ public class DownCommand extends BaseCommand {
           printStream.println(horizontalLine("Undoing: " + change.getFilename(), 80));
           ScriptRunner runner = getScriptRunner();
           try {
-            runner.runScript(new MigrationReader(new FileReader(scriptFile(change.getFilename())), true, environmentProperties()));
+            runner.runScript(new MigrationReader(scriptFileReader(scriptFile(change.getFilename())), true, environmentProperties()));
           } finally {
             runner.closeConnection();
           }

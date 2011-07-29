@@ -6,7 +6,6 @@ import org.apache.ibatis.migration.MigrationException;
 import org.apache.ibatis.migration.MigrationReader;
 
 import java.io.File;
-import java.io.FileReader;
 import java.util.List;
 
 public class UpCommand extends BaseCommand {
@@ -35,7 +34,7 @@ public class UpCommand extends BaseCommand {
           printStream.println(horizontalLine("Applying: " + change.getFilename(), 80));
           ScriptRunner runner = getScriptRunner();
           try {
-            runner.runScript(new MigrationReader(new FileReader(scriptFile(change.getFilename())), false, environmentProperties()));
+            runner.runScript(new MigrationReader(scriptFileReader(scriptFile(change.getFilename())), false, environmentProperties()));
           } finally {
             runner.closeConnection();
           }

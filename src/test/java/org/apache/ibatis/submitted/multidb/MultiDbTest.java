@@ -3,6 +3,7 @@ package org.apache.ibatis.submitted.multidb;
 import static org.junit.Assert.assertEquals;
 
 import java.io.Reader;
+import java.nio.charset.Charset;
 import java.sql.Connection;
 import java.sql.DriverManager;
 
@@ -30,8 +31,6 @@ public class MultiDbTest {
       Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/multidb/CreateDB.sql");
 
       ScriptRunner runner = new ScriptRunner(conn);
-      // make sure that the SQL file has been saved in UTF-8!
-      runner.setCharacterSetName("UTF-8");
       runner.setLogWriter(null);
       runner.setErrorLogWriter(null);
       runner.runScript(reader);

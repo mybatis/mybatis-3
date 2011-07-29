@@ -5,7 +5,6 @@ import org.apache.ibatis.migration.MigrationException;
 import org.apache.ibatis.migration.MigrationReader;
 
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Collections;
@@ -41,8 +40,7 @@ public class ScriptCommand extends BaseCommand {
         if (shouldRun(change, v1, v2)) {
           printStream.println("-- " + change.getFilename());
           File file = scriptFile(change.getFilename());
-          FileReader fileReader = new FileReader(file);
-          MigrationReader migrationReader = new MigrationReader(fileReader, undo, variables);
+          MigrationReader migrationReader = new MigrationReader(scriptFileReader(file), undo, variables);
           char[] cbuf = new char[1024];
           int l;
           while ((l = migrationReader.read(cbuf)) == cbuf.length) {

@@ -23,14 +23,9 @@ public class ScriptRunner {
 
   private String delimiter = DEFAULT_DELIMITER;
   private boolean fullLineDelimiter = false;
-  private String characterSetName;
 
   public ScriptRunner(Connection connection) {
     this.connection = connection;
-  }
-
-  public void setCharacterSetName(String characterSetName) {
-    this.characterSetName = characterSetName;
   }
 
   public void setStopOnError(boolean stopOnError) {
@@ -181,9 +176,6 @@ public class ScriptRunner {
   }
 
   private void executeStatement(String command) throws SQLException, UnsupportedEncodingException {
-    if(characterSetName != null){
-      command = new String(command.getBytes(), characterSetName);
-    }
     boolean hasResults = false;
     Statement statement = connection.createStatement();
     if (stopOnError) {
