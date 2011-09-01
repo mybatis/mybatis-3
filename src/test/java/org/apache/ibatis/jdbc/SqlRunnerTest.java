@@ -1,14 +1,16 @@
 package org.apache.ibatis.jdbc;
 
-import org.apache.ibatis.BaseDataTest;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import org.junit.Test;
 
-import javax.sql.DataSource;
 import java.sql.Connection;
 import java.util.List;
 import java.util.Map;
+
+import javax.sql.DataSource;
+
+import org.apache.ibatis.BaseDataTest;
+import org.junit.Test;
 
 public class SqlRunnerTest extends BaseDataTest {
 
@@ -20,6 +22,7 @@ public class SqlRunnerTest extends BaseDataTest {
     Connection connection = ds.getConnection();
     SqlRunner exec = new SqlRunner(connection);
     Map row = exec.selectOne("SELECT * FROM PRODUCT WHERE PRODUCTID = ?", "FI-SW-01");
+    connection.close();
     assertEquals("FI-SW-01", row.get("PRODUCTID"));
   }
 
@@ -31,6 +34,7 @@ public class SqlRunnerTest extends BaseDataTest {
     Connection connection = ds.getConnection();
     SqlRunner exec = new SqlRunner(connection);
     List rows = exec.selectAll("SELECT * FROM PRODUCT");
+    connection.close();
     assertEquals(16, rows.size());
   }
 
@@ -44,6 +48,7 @@ public class SqlRunnerTest extends BaseDataTest {
     int id = exec.insert("INSERT INTO author (username, password, email, bio) VALUES (?,?,?,?)", "someone", "******", "someone@apache.org", Null.LONGVARCHAR);
     Map row = exec.selectOne("SELECT * FROM author WHERE username = ?", "someone");
     connection.rollback();
+    connection.close();
     assertTrue(SqlRunner.NO_GENERATED_KEY != id);
     assertEquals("someone", row.get("USERNAME"));
   }
@@ -57,6 +62,7 @@ public class SqlRunnerTest extends BaseDataTest {
     SqlRunner exec = new SqlRunner(connection);
     int count = exec.update("update product set category = ? where productid = ?", "DOGS", "FI-SW-01");
     Map row = exec.selectOne("SELECT * FROM PRODUCT WHERE PRODUCTID = ?", "FI-SW-01");
+    connection.close();
     assertEquals("DOGS", row.get("CATEGORY"));
     assertEquals(1, count);
   }
@@ -70,6 +76,7 @@ public class SqlRunnerTest extends BaseDataTest {
     SqlRunner exec = new SqlRunner(connection);
     int count = exec.delete("delete from item");
     List rows = exec.selectAll("SELECT * FROM ITEM");
+    connection.close();
     assertEquals(28, count);
     assertEquals(0, rows.size());
   }
@@ -83,8 +90,7 @@ public class SqlRunnerTest extends BaseDataTest {
     exec.run("insert into BLAH values (1)");
     List rows = exec.selectAll("SELECT * FROM BLAH");
     exec.run("DROP TABLE BLAH");
+    connection.close();
     assertEquals(1, rows.size());
   }
-
-
 }

@@ -210,7 +210,6 @@ public class SPTest {
      * This test shows using a single value parameter.
      */
     @Test
-    @Ignore("until hsqldb 2.0.1 is released")
     public void testCallWithResultSet1() {
         SqlSession sqlSession = sqlSessionFactory.openSession();
         try {
@@ -231,7 +230,6 @@ public class SPTest {
      * This test shows using a single value parameter.
      */
     @Test
-    @Ignore("until hsqldb 2.0.1 is released")
     public void testCallWithResultSet2() {
         SqlSession sqlSession = sqlSessionFactory.openSession();
         try {
@@ -254,7 +252,6 @@ public class SPTest {
      * This test shows using a Map parameter.
      */
     @Test
-    @Ignore("until hsqldb 2.0.1 is released")
     public void testCallWithResultSet3() {
         SqlSession sqlSession = sqlSessionFactory.openSession();
         try {
@@ -283,7 +280,6 @@ public class SPTest {
      * This test shows using a Map parameter.
      */
     @Test
-    @Ignore("until hsqldb 2.0.1 is released")
     public void testCallWithResultSet4() {
         SqlSession sqlSession = sqlSessionFactory.openSession();
         try {
@@ -312,7 +308,6 @@ public class SPTest {
      * @throws SQLException
      */
     @Test
-    @Ignore("until hsqldb 2.0.1 is released")
     public void testGetNamesWithArray() throws SQLException {
         SqlSession sqlSession = sqlSessionFactory.openSession();
         try {
@@ -340,7 +335,6 @@ public class SPTest {
      * @throws SQLException
      */
     @Test
-    @Ignore("until hsqldb 2.0.1 is released")
     public void testGetNamesAndItems() throws SQLException {
         SqlSession sqlSession = sqlSessionFactory.openSession();
         try {
@@ -492,7 +486,6 @@ public class SPTest {
      * This test shows using annotations for stored procedures
      */
     @Test
-    @Ignore("until hsqldb 2.0.1 is released")
     public void testCallWithResultSet1Annotated() {
         SqlSession sqlSession = sqlSessionFactory.openSession();
         try {
@@ -516,7 +509,6 @@ public class SPTest {
      * and using a resultMap in XML
      */
     @Test
-    @Ignore("until hsqldb 2.0.1 is released")
     public void testCallWithResultSet1_a2() {
         SqlSession sqlSession = sqlSessionFactory.openSession();
         try {
@@ -539,7 +531,6 @@ public class SPTest {
      * This test shows using annotations for stored procedures
      */
     @Test
-    @Ignore("until hsqldb 2.0.1 is released")
     public void testCallWithResultSet2_a1() {
         SqlSession sqlSession = sqlSessionFactory.openSession();
         try {
@@ -565,7 +556,6 @@ public class SPTest {
      * and using a resultMap in XML
      */
     @Test
-    @Ignore("until hsqldb 2.0.1 is released")
     public void testCallWithResultSet2_a2() {
         SqlSession sqlSession = sqlSessionFactory.openSession();
         try {
@@ -590,7 +580,6 @@ public class SPTest {
      * This test shows using annotations for stored procedures
      */
     @Test
-    @Ignore("until hsqldb 2.0.1 is released")
     public void testCallWithResultSet3_a1() {
         SqlSession sqlSession = sqlSessionFactory.openSession();
         try {
@@ -622,7 +611,6 @@ public class SPTest {
      * and using a resultMap in XML
      */
     @Test
-    @Ignore("until hsqldb 2.0.1 is released")
     public void testCallWithResultSet3_a2() {
         SqlSession sqlSession = sqlSessionFactory.openSession();
         try {
@@ -653,7 +641,6 @@ public class SPTest {
      * This test shows using annotations for stored procedures
      */
     @Test
-    @Ignore("until hsqldb 2.0.1 is released")
     public void testCallWithResultSet4_a1() {
         SqlSession sqlSession = sqlSessionFactory.openSession();
         try {
@@ -685,7 +672,6 @@ public class SPTest {
      * and using a resultMap in XML
      */
     @Test
-    @Ignore("until hsqldb 2.0.1 is released")
     public void testCallWithResultSet4_a2() {
         SqlSession sqlSession = sqlSessionFactory.openSession();
         try {
@@ -716,7 +702,6 @@ public class SPTest {
      * @throws SQLException
      */
     @Test
-    @Ignore("until hsqldb 2.0.1 is released")
     public void testGetNamesWithArray_a1() throws SQLException {
         SqlSession sqlSession = sqlSessionFactory.openSession();
         try {
@@ -747,7 +732,6 @@ public class SPTest {
      * @throws SQLException
      */
     @Test
-    @Ignore("until hsqldb 2.0.1 is released")
     public void testGetNamesWithArray_a2() throws SQLException {
         SqlSession sqlSession = sqlSessionFactory.openSession();
         try {
@@ -778,7 +762,6 @@ public class SPTest {
      * @throws SQLException
      */
     @Test
-    @Ignore("until hsqldb 2.0.1 is released")
     public void testGetNamesAndItems_a2() throws SQLException {
         SqlSession sqlSession = sqlSessionFactory.openSession();
         try {

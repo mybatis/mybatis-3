@@ -235,6 +235,13 @@
           <forkMode>pertest</forkMode>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>buildnumber-maven-plugin</artifactId>
+        <configuration>
+          <revisionOnScmFailure>local-dev</revisionOnScmFailure>
+        </configuration>
+      </plugin>
     </plugins>
     <resources>
       <resource>
@@ -309,7 +316,7 @@
     <dependency>
       <groupId>org.hsqldb</groupId>
       <artifactId>hsqldb</artifactId>
-      <version>2.0.0</version>
+      <version>2.2.4</version>
       <scope>test</scope>
     </dependency>
     <dependency>
