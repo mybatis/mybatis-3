@@ -73,9 +73,9 @@ public interface SPMapper {
     List<Name> getNamesAnnotatedWithXMLResultMap(Map<String, Object> parms);
 
     @Select({"{call sptest.arraytest(",
-      "#{ids,mode=IN,jdbcType=ARRAY,typeHandler=org.apache.ibatis.submitted.sptests.ArrayTypeHandler},",
+      "#{ids,mode=IN,jdbcType=ARRAY},",
       "#{requestedRows,jdbcType=INTEGER,mode=OUT},",
-      "#{returnedIds,mode=OUT,jdbcType=ARRAY,typeHandler=org.apache.ibatis.submitted.sptests.ArrayTypeHandler})}"
+      "#{returnedIds,mode=OUT,jdbcType=ARRAY})}"
     })
     @Results({
       @Result(column="ID", property="id"),
@@ -86,9 +86,9 @@ public interface SPMapper {
     List<Name> getNamesWithArrayAnnotated(Map<String, Object> parms);
     
     @Select({"{call sptest.arraytest(",
-      "#{ids,mode=IN,jdbcType=ARRAY,typeHandler=org.apache.ibatis.submitted.sptests.ArrayTypeHandler},",
+      "#{ids,mode=IN,jdbcType=ARRAY},",
       "#{requestedRows,jdbcType=INTEGER,mode=OUT},",
-      "#{returnedIds,mode=OUT,jdbcType=ARRAY,typeHandler=org.apache.ibatis.submitted.sptests.ArrayTypeHandler})}"
+      "#{returnedIds,mode=OUT,jdbcType=ARRAY})}"
     })
     @ResultMap("nameResult")
     @Options(statementType=StatementType.CALLABLE)

@@ -36,6 +36,7 @@ public class XmlSqlMapConfigParser {
     this.reader = reader;
     this.parser.addNodeletHandler(this);
     this.useStatementNamespaces = false;
+    this.parser.setEntityResolver(new SqlMapEntityResolver());
   }
 
   public XmlSqlMapConfigParser(Reader reader, Properties props) {

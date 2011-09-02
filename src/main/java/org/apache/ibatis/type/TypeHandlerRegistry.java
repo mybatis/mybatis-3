@@ -2,7 +2,6 @@ package org.apache.ibatis.type;
 
 import org.apache.ibatis.io.ResolverUtil;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Modifier;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -74,7 +73,10 @@ public final class TypeHandlerRegistry {
     register(JdbcType.NVARCHAR, new NStringTypeHandler());
     register(JdbcType.NCHAR, new NStringTypeHandler());
     register(JdbcType.NCLOB, new NClobTypeHandler());
-
+    
+    register(Object.class, JdbcType.ARRAY, new ArrayTypeHandler());
+    register(JdbcType.ARRAY, new ArrayTypeHandler());
+   
     register(BigInteger.class, new BigIntegerTypeHandler());
     register(JdbcType.BIGINT, new LongTypeHandler());
     

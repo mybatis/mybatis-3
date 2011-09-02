@@ -71,9 +71,9 @@
   <select id="getNamesWithArray" parameterType="java.util.Map" statementType="CALLABLE"
     resultMap="nameResult">
     {call sptest.arraytest(
-      #{ids,mode=IN,jdbcType=ARRAY,typeHandler=org.apache.ibatis.submitted.sptests.ArrayTypeHandler},
+      #{ids,mode=IN,jdbcType=ARRAY},
       #{requestedRows,jdbcType=INTEGER,mode=OUT},
-      #{returnedIds,mode=OUT,jdbcType=ARRAY,typeHandler=org.apache.ibatis.submitted.sptests.ArrayTypeHandler})}
+      #{returnedIds,mode=OUT,jdbcType=ARRAY})}
   </select>
 
   <select id="getNamesAndItems" statementType="CALLABLE"
