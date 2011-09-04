@@ -101,6 +101,11 @@ public abstract class BaseExecutor implements Executor {
   public List query(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler) throws SQLException {
     ErrorContext.instance().resource(ms.getResource()).activity("executing a query").object(ms.getId());
     if (closed) throw new ExecutorException("Executor was closed.");
+
+    // Flush the internal cache is force is true
+    if (ms.isFlushCacheRequired()) {
+        clearLocalCache();
+    }
     List list;
     try {
       queryStack++;
