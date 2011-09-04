@@ -235,13 +235,6 @@
           <forkMode>pertest</forkMode>
         </configuration>
       </plugin>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>buildnumber-maven-plugin</artifactId>
-        <configuration>
-          <revisionOnScmFailure>local-dev</revisionOnScmFailure>
-        </configuration>
-      </plugin>
     </plugins>
     <resources>
       <resource>
