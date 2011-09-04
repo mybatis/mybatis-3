@@ -298,9 +298,17 @@ public class FastResultSetHandler implements ResultSetHandler {
       final String columnName = configuration.isUseColumnLabel() ? rsmd.getColumnLabel(i) : rsmd.getColumnName(i);
       final String upperColumnName = columnName.toUpperCase(Locale.ENGLISH);
       if (mappedColumns.contains(upperColumnName)) {
-        mappedColumnNames.add(columnName);
+          if (rsmd.isCaseSensitive(i)) {
+              mappedColumnNames.add(columnName);
+          } else {
+            mappedColumnNames.add(upperColumnName);
+          }
       } else {
-        unmappedColumnNames.add(columnName);
+          if (rsmd.isCaseSensitive(i)) {
+              unmappedColumnNames.add(columnName);
+          } else {
+              unmappedColumnNames.add(upperColumnName);
+          }
       }
     }
   }
