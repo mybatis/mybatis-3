@@ -94,16 +94,16 @@ public class FastResultSetHandler implements ResultSetHandler {
     ResultSet rs = stmt.getResultSet();
 
     while (rs == null) {
-        // move forward to get the first resultset in case the driver
-        // doesn't return the resultset as the first result (HSQLDB 2.1)
-        if (stmt.getMoreResults()) {
-            rs = stmt.getResultSet();
-        } else {
-            if (stmt.getUpdateCount() == -1) {
-                // no more results.  Must be no resultset
-                break;
-            }
+      // move forward to get the first resultset in case the driver
+      // doesn't return the resultset as the first result (HSQLDB 2.1)
+      if (stmt.getMoreResults()) {
+        rs = stmt.getResultSet();
+      } else {
+        if (stmt.getUpdateCount() == -1) {
+          // no more results.  Must be no resultset
+          break;
         }
+      }
     }
 
     validateResultMapsCount(rs, resultMapCount);
@@ -298,17 +298,9 @@ public class FastResultSetHandler implements ResultSetHandler {
       final String columnName = configuration.isUseColumnLabel() ? rsmd.getColumnLabel(i) : rsmd.getColumnName(i);
       final String upperColumnName = columnName.toUpperCase(Locale.ENGLISH);
       if (mappedColumns.contains(upperColumnName)) {
-          if (rsmd.isCaseSensitive(i)) {
-              mappedColumnNames.add(columnName);
-          } else {
-            mappedColumnNames.add(upperColumnName);
-          }
+        mappedColumnNames.add(upperColumnName);
       } else {
-          if (rsmd.isCaseSensitive(i)) {
-              unmappedColumnNames.add(columnName);
-          } else {
-              unmappedColumnNames.add(upperColumnName);
-          }
+        unmappedColumnNames.add(columnName);
       }
     }
   }
@@ -341,7 +333,7 @@ public class FastResultSetHandler implements ResultSetHandler {
   }
 
   protected Object createParameterizedResultObject(ResultSet rs, Class resultType,
-      List<ResultMapping> constructorMappings, List<Class> constructorArgTypes, List<Object> constructorArgs) throws SQLException {
+                                                   List<ResultMapping> constructorMappings, List<Class> constructorArgTypes, List<Object> constructorArgs) throws SQLException {
     boolean foundValues = false;
     for (ResultMapping constructorMapping : constructorMappings) {
       final Class parameterType = constructorMapping.getJavaType();
@@ -350,11 +342,11 @@ public class FastResultSetHandler implements ResultSetHandler {
       // check for nested query
       if (constructorMapping.getNestedQueryId() != null) {
         value = getNestedQueryConstructorValue(rs, constructorMapping);
-      } else if(constructorMapping.getNestedResultMapId() != null) {
-          final ResultMap resultMap = configuration.getResultMap(constructorMapping.getNestedResultMapId());
-          final ResultLoaderMap lazyLoader = instantiateResultLoaderMap();
-          value = createResultObject(rs, resultMap, lazyLoader);
-      }else {
+      } else if (constructorMapping.getNestedResultMapId() != null) {
+        final ResultMap resultMap = configuration.getResultMap(constructorMapping.getNestedResultMapId());
+        final ResultLoaderMap lazyLoader = instantiateResultLoaderMap();
+        value = createResultObject(rs, resultMap, lazyLoader);
+      } else {
         // get simple result
         final TypeHandler typeHandler = constructorMapping.getTypeHandler();
         value = typeHandler.getResult(rs, column);
