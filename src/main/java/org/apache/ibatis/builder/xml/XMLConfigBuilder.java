@@ -4,15 +4,11 @@ import java.io.InputStream;
 import java.io.Reader;
 import java.util.Properties;
 
-import javax.sql.DataSource;
-
 import org.apache.ibatis.builder.BaseBuilder;
 import org.apache.ibatis.builder.BuilderException;
 import org.apache.ibatis.datasource.DataSourceFactory;
 import org.apache.ibatis.executor.ErrorContext;
 import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.mapping.DatabaseIdProvider;
-import org.apache.ibatis.mapping.DefaultDatabaseIdProvider;
 import org.apache.ibatis.mapping.Environment;
 import org.apache.ibatis.parsing.XNode;
 import org.apache.ibatis.parsing.XPathParser;
@@ -194,35 +190,15 @@ public class XMLConfigBuilder extends BaseBuilder {
         if (isSpecifiedEnvironment(id)) {
           TransactionFactory txFactory = transactionManagerElement(child.evalNode("transactionManager"));
           DataSourceFactory dsFactory = dataSourceElement(child.evalNode("dataSource"));
-          DataSource dataSource = dsFactory.getDataSource();
           Environment.Builder environmentBuilder = new Environment.Builder(id)
-          .transactionFactory(txFactory)
-          .dataSource(dataSource);
-          databaseElement(child.evalNode("database"), environmentBuilder);
+              .transactionFactory(txFactory)
+              .dataSource(dsFactory.getDataSource());
           configuration.setEnvironment(environmentBuilder.build());
         }
       }
     }
   }
 
-  private void databaseElement(XNode context, Environment.Builder builder) throws Exception {
-    if (context != null) {
-      String id = context.getStringAttribute("id");
-      String type = context.getStringAttribute("provider");
-      if (id != null && type != null) {
-        throw new BuilderException("Database element may provide a database id or a provider, but not both.");    
-      }
-      if (id != null) {
-        builder.databaseId(id);
-      } else if (type != null) {
-        DatabaseIdProvider databaseIdProvider = (DatabaseIdProvider) resolveClass(type).newInstance();
-        Properties props = context.getChildrenAsProperties();
-        databaseIdProvider.setProperties(props);
-        builder.databaseIdProvider(databaseIdProvider);
-      }
-    }
-  }
-  
   private TransactionFactory transactionManagerElement(XNode context) throws Exception {
     if (context != null) {
       String type = context.getStringAttribute("type");
@@ -244,6 +220,7 @@ public class XMLConfigBuilder extends BaseBuilder {
     }
     throw new BuilderException("Environment declaration requires a DataSourceFactory.");
   }
+
 
   private void typeHandlerElement(XNode parent) throws Exception {
     if (parent != null) {

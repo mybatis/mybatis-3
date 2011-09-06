@@ -212,12 +212,11 @@ public class MapperBuilderAssistant extends BaseBuilder {
       boolean flushCache,
       boolean useCache,
       KeyGenerator keyGenerator,
-      String keyProperty,
-      String databaseId) {
+      String keyProperty) {
     id = applyCurrentNamespace(id);    
     boolean isSelect = sqlCommandType == SqlCommandType.SELECT;
 
-    MappedStatement.Builder statementBuilder = new MappedStatement.Builder(configuration, id, sqlSource, sqlCommandType, databaseId);
+    MappedStatement.Builder statementBuilder = new MappedStatement.Builder(configuration, id, sqlSource, sqlCommandType);
     statementBuilder.resource(resource);
     statementBuilder.fetchSize(fetchSize);
     statementBuilder.statementType(statementType);
@@ -230,7 +229,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
     setStatementCache(isSelect, flushCache, useCache, currentCache, statementBuilder);
 
     MappedStatement statement = statementBuilder.build();
-    configuration.addMappedStatement(statement, databaseId);
+    configuration.addMappedStatement(statement);
     return statement;
   }
 

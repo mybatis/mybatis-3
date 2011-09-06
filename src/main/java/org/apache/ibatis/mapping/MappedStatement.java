@@ -29,7 +29,6 @@ public class MappedStatement {
   private KeyGenerator keyGenerator;
   private String keyProperty;
   private boolean hasNestedResultMaps;
-  private String databaseId;
 
   private MappedStatement() {
   }
@@ -38,13 +37,8 @@ public class MappedStatement {
     private MappedStatement mappedStatement = new MappedStatement();
 
     public Builder(Configuration configuration, String id, SqlSource sqlSource, SqlCommandType sqlCommandType) {
-      this(configuration, id, sqlSource, sqlCommandType, null);
-    }
-      
-    public Builder(Configuration configuration, String id, SqlSource sqlSource, SqlCommandType sqlCommandType, String databaseId) {
       mappedStatement.configuration = configuration;
       mappedStatement.id = id;
-      mappedStatement.databaseId = databaseId;
       mappedStatement.sqlSource = sqlSource;
       mappedStatement.statementType = StatementType.PREPARED;
       mappedStatement.parameterMap = new ParameterMap.Builder(configuration, "defaultParameterMap", Object.class, new ArrayList<ParameterMapping>()).build();
@@ -200,10 +194,6 @@ public class MappedStatement {
     return useCache;
   }
 
-  public String getDatabaseId() {
-    return databaseId;
-  }
-
   public BoundSql getBoundSql(Object parameterObject) {
     BoundSql boundSql = sqlSource.getBoundSql(parameterObject);
     List<ParameterMapping> parameterMappings = boundSql.getParameterMappings();
@@ -224,5 +214,6 @@ public class MappedStatement {
     
     return boundSql;
   }
+
 
 }

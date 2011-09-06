@@ -281,8 +281,7 @@ public class MapperAnnotationBuilder {
           flushCache,
           useCache,
           keyGenerator,
-          keyProperty,
-          null);
+          keyProperty);
     }
   }
 
@@ -499,7 +498,7 @@ public class MapperAnnotationBuilder {
 
     assistant.addMappedStatement(id, sqlSource, statementType, sqlCommandType,
           fetchSize, timeout, parameterMap, parameterTypeClass, resultMap, resultTypeClass,
-          resultSetTypeEnum, flushCache, useCache, keyGenerator, keyProperty, null);
+          resultSetTypeEnum, flushCache, useCache, keyGenerator, keyProperty);
 
     id = assistant.applyCurrentNamespace(id);
 

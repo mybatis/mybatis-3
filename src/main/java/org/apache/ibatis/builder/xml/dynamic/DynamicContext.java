@@ -3,6 +3,7 @@ package org.apache.ibatis.builder.xml.dynamic;
 import java.util.HashMap;
 import java.util.Map;
 
+import ognl.OgnlContext;
 import ognl.OgnlException;
 import ognl.OgnlRuntime;
 import ognl.PropertyAccessor;
@@ -13,7 +14,6 @@ import org.apache.ibatis.session.Configuration;
 public class DynamicContext {
 
   public static final String PARAMETER_OBJECT_KEY = "_parameter";
-  public static final String ENVIRONMENT_KEY = "_environment";
 
   static {
     OgnlRuntime.setPropertyAccessor(ContextMap.class, new ContextAccessor());
@@ -31,7 +31,6 @@ public class DynamicContext {
       bindings = new ContextMap(null);
     }
     bindings.put(PARAMETER_OBJECT_KEY, parameterObject);
-    bindings.put(ENVIRONMENT_KEY, configuration.getEnvironment());
   }
 
   public Map<String, Object> getBindings() {
