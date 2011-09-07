@@ -59,6 +59,7 @@ public class Configuration {
 
   protected Environment environment;
 
+  protected boolean mapUnderscoreToCamelCase = false;
   protected boolean lazyLoadingEnabled = false;
   protected boolean aggressiveLazyLoading = true;
   protected boolean multipleResultSetsEnabled = true;
@@ -115,6 +116,14 @@ public class Configuration {
     typeAliasRegistry.registerAlias("WEAK", WeakCache.class.getName());
   }
 
+  public boolean isMapUnderscoreToCamelCase() {
+    return mapUnderscoreToCamelCase;
+  }
+
+  public void setMapUnderscoreToCamelCase(boolean mapUnderscoreToCamelCase) {
+    this.mapUnderscoreToCamelCase = mapUnderscoreToCamelCase;
+  }
+  
   public void addLoadedResource(String resource) {
     loadedResources.add(resource);
   }

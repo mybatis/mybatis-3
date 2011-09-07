@@ -90,7 +90,7 @@ public class NestedResultSetHandler extends FastResultSetHandler {
         loadMappedAndUnmappedColumnNames(rs, resultMap, mappedColumnNames, unmappedColumnNames);
         boolean foundValues = resultMap.getConstructorResultMappings().size() > 0;
         if (AutoMappingBehavior.FULL.equals(configuration.getAutoMappingBehavior())) {
-          foundValues = applyAutomaticMappings(rs, unmappedColumnNames, metaObject) || foundValues;
+          foundValues = applyAutomaticMappings(rs, unmappedColumnNames, metaObject, configuration.isMapUnderscoreToCamelCase()) || foundValues;
         }
         foundValues = applyPropertyMappings(rs, resultMap, mappedColumnNames, metaObject, lazyLoader) || foundValues;
         foundValues = applyNestedResultMappings(rs, resultMap, metaObject) || foundValues;

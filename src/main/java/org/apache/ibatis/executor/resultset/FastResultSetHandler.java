@@ -219,7 +219,7 @@ public class FastResultSetHandler implements ResultSetHandler {
       loadMappedAndUnmappedColumnNames(rs, resultMap, mappedColumnNames, unmappedColumnNames);
       boolean foundValues = resultMap.getConstructorResultMappings().size() > 0;
       if (!AutoMappingBehavior.NONE.equals(configuration.getAutoMappingBehavior())) {
-        foundValues = applyAutomaticMappings(rs, unmappedColumnNames, metaObject) || foundValues;
+        foundValues = applyAutomaticMappings(rs, unmappedColumnNames, metaObject, configuration.isMapUnderscoreToCamelCase()) || foundValues;
       }
       foundValues = applyPropertyMappings(rs, resultMap, mappedColumnNames, metaObject, lazyLoader) || foundValues;
       foundValues = (lazyLoader != null && lazyLoader.size() > 0) || foundValues;
@@ -269,10 +269,11 @@ public class FastResultSetHandler implements ResultSetHandler {
     return null;
   }
 
-  protected boolean applyAutomaticMappings(ResultSet rs, List<String> unmappedColumnNames, MetaObject metaObject) throws SQLException {
+  protected boolean applyAutomaticMappings(ResultSet rs, List<String> unmappedColumnNames, MetaObject metaObject, boolean useCamelCaseMapping) throws SQLException {
     boolean foundValues = false;
     for (String columnName : unmappedColumnNames) {
-      final String property = metaObject.findProperty(columnName);
+      final String propertyName = useCamelCaseMapping ? columnName.replace("_", "") : columnName;
+      final String property = metaObject.findProperty(propertyName);
       if (property != null) {
         final Class propertyType = metaObject.getSetterType(property);
         if (typeHandlerRegistry.hasTypeHandler(propertyType)) {
