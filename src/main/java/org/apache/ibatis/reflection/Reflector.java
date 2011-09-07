@@ -17,20 +17,20 @@ public class Reflector {
 
   private static boolean classCacheEnabled = true;
   private static final String[] EMPTY_STRING_ARRAY = new String[0];
-  private static final Map<Class, Reflector> REFLECTOR_MAP = Collections.synchronizedMap(new HashMap<Class, Reflector>());
+  private static final Map<Class<?>, Reflector> REFLECTOR_MAP = Collections.synchronizedMap(new HashMap<Class<?>, Reflector>());
 
-  private Class type;
+  private Class<?> type;
   private String[] readablePropertyNames = EMPTY_STRING_ARRAY;
   private String[] writeablePropertyNames = EMPTY_STRING_ARRAY;
   private Map<String, Invoker> setMethods = new HashMap<String, Invoker>();
   private Map<String, Invoker> getMethods = new HashMap<String, Invoker>();
-  private Map<String, Class> setTypes = new HashMap<String, Class>();
-  private Map<String, Class> getTypes = new HashMap<String, Class>();
-  private Constructor defaultConstructor;
+  private Map<String, Class<?>> setTypes = new HashMap<String, Class<?>>();
+  private Map<String, Class<?>> getTypes = new HashMap<String, Class<?>>();
+  private Constructor<?> defaultConstructor;
 
   private Map<String, String> caseInsensitivePropertyMap = new HashMap<String, String>();
 
-  private Reflector(Class clazz) {
+  private Reflector(Class<?> clazz) {
     type = clazz;
     addDefaultConstructor(clazz);
     addGetMethods(clazz);
@@ -46,9 +46,9 @@ public class Reflector {
     }
   }
 
-  private void addDefaultConstructor(Class clazz) {
-    Constructor[] consts = clazz.getDeclaredConstructors();
-    for (Constructor constructor : consts) {
+  private void addDefaultConstructor(Class<?> clazz) {
+    Constructor<?>[] consts = clazz.getDeclaredConstructors();
+    for (Constructor<?> constructor : consts) {
       if (constructor.getParameterTypes().length == 0) {
         if (canAccessPrivateMethods()) {
           try {
@@ -64,7 +64,7 @@ public class Reflector {
     }
   }
 
-  private void addGetMethods(Class cls) {
+  private void addGetMethods(Class<?> cls) {
     Method[] methods = getClassMethods(cls);
     for (Method method : methods) {
       String name = method.getName();
@@ -89,7 +89,7 @@ public class Reflector {
     }
   }
 
-  private void addSetMethods(Class cls) {
+  private void addSetMethods(Class<?> cls) {
     Map<String, List<Method>> conflictingSetters = new HashMap<String, List<Method>>();
     Method[] methods = getClassMethods(cls);
     for (Method method : methods) {
@@ -120,7 +120,7 @@ public class Reflector {
       if (setters.size() == 1) {
         addSetMethod(propName, firstMethod);
       } else {
-        Class expectedType = getTypes.get(propName);
+        Class<?> expectedType = getTypes.get(propName);
         if (expectedType == null) {
           throw new ReflectionException("Illegal overloaded setter method with ambiguous type for property "
               + propName + " in class " + firstMethod.getDeclaringClass() + ".  This breaks the JavaBeans " +
@@ -154,7 +154,7 @@ public class Reflector {
     }
   }
 
-  private void addFields(Class clazz) {
+  private void addFields(Class<?> clazz) {
     Field[] fields = clazz.getDeclaredFields();
     for (Field field : fields) {
       if (canAccessPrivateMethods()) {
@@ -166,9 +166,9 @@ public class Reflector {
       }
       if (field.isAccessible()) {
         if (!setMethods.containsKey(field.getName())) {
-          if (!Modifier.isFinal(field.getModifiers())) {
-            addSetField(field);
-          }
+          // issue 379 - removed the check for final because JDK 1.5 allows
+          // modification of final fields through reflection (JSR-133).  (JGB)
+          addSetField(field);
         }
         if (!getMethods.containsKey(field.getName())) {
           addGetField(field);
@@ -207,16 +207,16 @@ public class Reflector {
    * @param cls The class
    * @return An array containing all methods in this class
    */
-  private Method[] getClassMethods(Class cls) {
+  private Method[] getClassMethods(Class<?> cls) {
     HashMap<String, Method> uniqueMethods = new HashMap<String, Method>();
-    Class currentClass = cls;
+    Class<?> currentClass = cls;
     while (currentClass != null) {
       addUniqueMethods(uniqueMethods, currentClass.getDeclaredMethods());
 
       // we also need to look for interface methods - 
       // because the class may be abstract
-      Class[] interfaces = currentClass.getInterfaces();
-      for (Class anInterface : interfaces) {
+      Class<?>[] interfaces = currentClass.getInterfaces();
+      for (Class<?> anInterface : interfaces) {
         addUniqueMethods(uniqueMethods, anInterface.getMethods());
       }
 
@@ -253,7 +253,7 @@ public class Reflector {
   private String getSignature(Method method) {
     StringBuffer sb = new StringBuffer();
     sb.append(method.getName());
-    Class[] parameters = method.getParameterTypes();
+    Class<?>[] parameters = method.getParameterTypes();
     for (int i = 0; i < parameters.length; i++) {
       if (i == 0) {
         sb.append(':');
@@ -282,11 +282,11 @@ public class Reflector {
    *
    * @return The class name
    */
-  public Class getType() {
+  public Class<?> getType() {
     return type;
   }
 
-  public Constructor getDefaultConstructor() {
+  public Constructor<?> getDefaultConstructor() {
     if (defaultConstructor != null) {
       return defaultConstructor;
     } else {
@@ -316,8 +316,8 @@ public class Reflector {
    * @param propertyName - the name of the property
    * @return The Class of the propery setter
    */
-  public Class getSetterType(String propertyName) {
-    Class clazz = setTypes.get(propertyName);
+  public Class<?> getSetterType(String propertyName) {
+    Class<?> clazz = setTypes.get(propertyName);
     if (clazz == null) {
       throw new ReflectionException("There is no setter for property named '" + propertyName + "' in '" + type + "'");
     }
@@ -330,8 +330,8 @@ public class Reflector {
    * @param propertyName - the name of the property
    * @return The Class of the propery getter
    */
-  public Class getGetterType(String propertyName) {
-    Class clazz = getTypes.get(propertyName);
+  public Class<?> getGetterType(String propertyName) {
+    Class<?> clazz = getTypes.get(propertyName);
     if (clazz == null) {
       throw new ReflectionException("There is no getter for property named '" + propertyName + "' in '" + type + "'");
     }
@@ -386,7 +386,7 @@ public class Reflector {
    * @param clazz The class for which to lookup the method cache.
    * @return The method cache for the class
    */
-  public static Reflector forClass(Class clazz) {
+  public static Reflector forClass(Class<?> clazz) {
     if (classCacheEnabled) {
       synchronized (clazz) {
         Reflector cached = REFLECTOR_MAP.get(clazz);
@@ -408,8 +408,4 @@ public class Reflector {
   public static boolean isClassCacheEnabled() {
     return classCacheEnabled;
   }
-
 }
-
-
-
