@@ -34,7 +34,7 @@ public class MapWrapper extends BaseWrapper {
     }
   }
 
-  public String findProperty(String name) {
+  public String findProperty(String name, boolean useCamelCaseMapping) {
     return name;
   }
 

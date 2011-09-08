@@ -62,8 +62,8 @@ public class MetaObject {
     return originalObject;
   }
 
-  public String findProperty(String propName) {
-    return objectWrapper.findProperty(propName);
+  public String findProperty(String propName, boolean useCamelCaseMapping) {    
+    return objectWrapper.findProperty(propName, useCamelCaseMapping);
   }
 
   public String[] getGetterNames() {

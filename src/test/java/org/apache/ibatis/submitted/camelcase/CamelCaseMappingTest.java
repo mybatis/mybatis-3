@@ -47,7 +47,7 @@ public class CamelCaseMappingTest {
 
 	@SuppressWarnings("unchecked")
 	@Test
-	public void testIt() {
+	public void testList() {
 		SqlSession sqlSession = sqlSessionFactory.openSession();
 		try {
 			List<Camel> list = sqlSession.selectList("org.apache.ibatis.submitted.camel.doSelect");
@@ -59,4 +59,17 @@ public class CamelCaseMappingTest {
 		}
 	}
 
+  @SuppressWarnings("unchecked")
+  @Test
+  public void testMap() {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      List list = sqlSession.selectList("org.apache.ibatis.submitted.camel.doSelectMap");
+      Assert.assertTrue(list.size() > 0);
+      Assert.assertTrue(Map.class.cast(list.get(0)).containsKey("LAST_NAME"));
+    } finally {
+      sqlSession.close();
+    }
+  }
+	
 }

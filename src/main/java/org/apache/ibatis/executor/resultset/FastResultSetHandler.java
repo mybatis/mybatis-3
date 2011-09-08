@@ -269,11 +269,10 @@ public class FastResultSetHandler implements ResultSetHandler {
     return null;
   }
 
-  protected boolean applyAutomaticMappings(ResultSet rs, List<String> unmappedColumnNames, MetaObject metaObject, boolean useCamelCaseMapping) throws SQLException {
+  protected boolean applyAutomaticMappings(ResultSet rs, List<String> unmappedColumnNames, MetaObject metaObject, boolean mapUnderscoreToCamelCase ) throws SQLException {
     boolean foundValues = false;
     for (String columnName : unmappedColumnNames) {
-      final String propertyName = useCamelCaseMapping ? columnName.replace("_", "") : columnName;
-      final String property = metaObject.findProperty(propertyName);
+      final String property = metaObject.findProperty(columnName, mapUnderscoreToCamelCase );
       if (property != null) {
         final Class propertyType = metaObject.getSetterType(property);
         if (typeHandlerRegistry.hasTypeHandler(propertyType)) {

@@ -9,4 +9,8 @@
 		select * from names
 	</select>
 
+	<select id="doSelectMap" resultType="map">
+		select * from names
+	</select>
+
 </mapper>

@@ -10,7 +10,7 @@ public interface ObjectWrapper {
 
   void set(PropertyTokenizer prop, Object value);
 
-  String findProperty(String name);
+  String findProperty(String name, boolean useCamelCaseMapping);
 
   String[] getGetterNames();
 
