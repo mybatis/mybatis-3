@@ -31,7 +31,9 @@ public class NestedResultSetHandler extends FastResultSetHandler {
     super(executor, mappedStatement, parameterHandler, resultHandler, boundSql, rowBounds);
     localRowValueCaches = new HashMap<CacheKey, Set<CacheKey>>();
     globalRowValueCache = new HashMap<CacheKey, Object>();
-    ensureNoRowBounds(rowBounds);
+    if (configuration.isSafeRowBoundsEnabled()) {
+      ensureNoRowBounds(rowBounds);
+    }
   }
 
   private void ensureNoRowBounds(RowBounds rowBounds) {

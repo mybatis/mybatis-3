@@ -59,6 +59,7 @@ public class Configuration {
 
   protected Environment environment;
 
+  protected boolean safeRowBoundsEnabled = true;
   protected boolean mapUnderscoreToCamelCase = false;
   protected boolean lazyLoadingEnabled = false;
   protected boolean aggressiveLazyLoading = true;
@@ -114,6 +115,14 @@ public class Configuration {
     typeAliasRegistry.registerAlias("LRU", LruCache.class.getName());
     typeAliasRegistry.registerAlias("SOFT", SoftCache.class.getName());
     typeAliasRegistry.registerAlias("WEAK", WeakCache.class.getName());
+  }
+
+  public boolean isSafeRowBoundsEnabled() {
+    return safeRowBoundsEnabled;
+  }
+
+  public void setSafeRowBoundsEnabled(boolean safeRowBoundsEnabled) {
+    this.safeRowBoundsEnabled = safeRowBoundsEnabled;
   }
 
   public boolean isMapUnderscoreToCamelCase() {
