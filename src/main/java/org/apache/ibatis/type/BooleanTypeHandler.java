@@ -5,19 +5,19 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class BooleanTypeHandler extends BaseTypeHandler {
+public class BooleanTypeHandler extends BaseTypeHandler<Boolean> {
 
-  public void setNonNullParameter(PreparedStatement ps, int i, Object parameter, JdbcType jdbcType)
+  public void setNonNullParameter(PreparedStatement ps, int i, Boolean parameter, JdbcType jdbcType)
       throws SQLException {
-    ps.setBoolean(i, (Boolean) parameter);
+    ps.setBoolean(i, parameter);
   }
 
-  public Object getNullableResult(ResultSet rs, String columnName)
+  public Boolean getNullableResult(ResultSet rs, String columnName)
       throws SQLException {
     return rs.getBoolean(columnName);
   }
 
-  public Object getNullableResult(CallableStatement cs, int columnIndex)
+  public Boolean getNullableResult(CallableStatement cs, int columnIndex)
       throws SQLException {
     return cs.getBoolean(columnIndex);
   }

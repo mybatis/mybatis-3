@@ -5,7 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class ObjectTypeHandler extends BaseTypeHandler {
+public class ObjectTypeHandler extends BaseTypeHandler<Object> {
 
   public void setNonNullParameter(PreparedStatement ps, int i, Object parameter, JdbcType jdbcType)
       throws SQLException {

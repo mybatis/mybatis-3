@@ -6,19 +6,19 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class BigDecimalTypeHandler extends BaseTypeHandler {
+public class BigDecimalTypeHandler extends BaseTypeHandler<BigDecimal> {
 
-  public void setNonNullParameter(PreparedStatement ps, int i, Object parameter, JdbcType jdbcType)
+  public void setNonNullParameter(PreparedStatement ps, int i, BigDecimal parameter, JdbcType jdbcType)
       throws SQLException {
-    ps.setBigDecimal(i, ((BigDecimal) parameter));
+    ps.setBigDecimal(i, parameter);
   }
 
-  public Object getNullableResult(ResultSet rs, String columnName)
+  public BigDecimal getNullableResult(ResultSet rs, String columnName)
       throws SQLException {
     return rs.getBigDecimal(columnName);
   }
 
-  public Object getNullableResult(CallableStatement cs, int columnIndex)
+  public BigDecimal getNullableResult(CallableStatement cs, int columnIndex)
       throws SQLException {
     return cs.getBigDecimal(columnIndex);
   }

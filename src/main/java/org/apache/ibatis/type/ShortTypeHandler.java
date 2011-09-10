@@ -5,19 +5,19 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class ShortTypeHandler extends BaseTypeHandler {
+public class ShortTypeHandler extends BaseTypeHandler<Short> {
 
-  public void setNonNullParameter(PreparedStatement ps, int i, Object parameter, JdbcType jdbcType)
+  public void setNonNullParameter(PreparedStatement ps, int i, Short parameter, JdbcType jdbcType)
       throws SQLException {
-    ps.setShort(i, (Short) parameter);
+    ps.setShort(i, parameter);
   }
 
-  public Object getNullableResult(ResultSet rs, String columnName)
+  public Short getNullableResult(ResultSet rs, String columnName)
       throws SQLException {
     return rs.getShort(columnName);
   }
 
-  public Object getNullableResult(CallableStatement cs, int columnIndex)
+  public Short getNullableResult(CallableStatement cs, int columnIndex)
       throws SQLException {
     return cs.getShort(columnIndex);
   }

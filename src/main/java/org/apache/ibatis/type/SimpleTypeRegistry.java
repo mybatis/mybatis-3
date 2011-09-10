@@ -6,7 +6,7 @@ import java.util.*;
 
 public class SimpleTypeRegistry {
 
-  private static final Set SIMPLE_TYPE_SET = new HashSet();
+  private static final Set<Class<?>> SIMPLE_TYPE_SET = new HashSet<Class<?>>();
 
   static {
     SIMPLE_TYPE_SET.add(String.class);
@@ -44,7 +44,7 @@ public class SimpleTypeRegistry {
    * @param clazz The class to check
    * @return True if the class is known
    */
-  public static boolean isSimpleType(Class clazz) {
+  public static boolean isSimpleType(Class<?> clazz) {
     if (SIMPLE_TYPE_SET.contains(clazz)) {
       return true;
     } else if (Collection.class.isAssignableFrom(clazz)) {

@@ -4,20 +4,21 @@ import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 
-public class SqlTimestampTypeHandler extends BaseTypeHandler {
+public class SqlTimestampTypeHandler extends BaseTypeHandler<Timestamp> {
 
-  public void setNonNullParameter(PreparedStatement ps, int i, Object parameter, JdbcType jdbcType)
+  public void setNonNullParameter(PreparedStatement ps, int i, Timestamp parameter, JdbcType jdbcType)
       throws SQLException {
-    ps.setTimestamp(i, (java.sql.Timestamp) parameter);
+    ps.setTimestamp(i, parameter);
   }
 
-  public Object getNullableResult(ResultSet rs, String columnName)
+  public Timestamp getNullableResult(ResultSet rs, String columnName)
       throws SQLException {
     return rs.getTimestamp(columnName);
   }
 
-  public Object getNullableResult(CallableStatement cs, int columnIndex)
+  public Timestamp getNullableResult(CallableStatement cs, int columnIndex)
       throws SQLException {
     return cs.getTimestamp(columnIndex);
   }

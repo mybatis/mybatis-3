@@ -5,9 +5,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public abstract class BaseTypeHandler implements TypeHandler {
+public abstract class BaseTypeHandler<T> implements TypeHandler<T> {
 
-  public void setParameter(PreparedStatement ps, int i, Object parameter, JdbcType jdbcType)
+  public void setParameter(PreparedStatement ps, int i, T parameter, JdbcType jdbcType)
       throws SQLException {
     if (parameter == null) {
       if (jdbcType == null) {
@@ -24,9 +24,9 @@ public abstract class BaseTypeHandler implements TypeHandler {
     }
   }
 
-  public Object getResult(ResultSet rs, String columnName)
+  public T getResult(ResultSet rs, String columnName)
       throws SQLException {
-    Object result = getNullableResult(rs, columnName);
+    T result = getNullableResult(rs, columnName);
     if (rs.wasNull()) {
       return null;
     } else {
@@ -34,9 +34,9 @@ public abstract class BaseTypeHandler implements TypeHandler {
     }
   }
 
-  public Object getResult(CallableStatement cs, int columnIndex)
+  public T getResult(CallableStatement cs, int columnIndex)
       throws SQLException {
-    Object result = getNullableResult(cs, columnIndex);
+    T result = getNullableResult(cs, columnIndex);
     if (cs.wasNull()) {
       return null;
     } else {
@@ -44,13 +44,13 @@ public abstract class BaseTypeHandler implements TypeHandler {
     }
   }
 
-  public abstract void setNonNullParameter(PreparedStatement ps, int i, Object parameter, JdbcType jdbcType)
+  public abstract void setNonNullParameter(PreparedStatement ps, int i, T parameter, JdbcType jdbcType)
       throws SQLException;
 
-  public abstract Object getNullableResult(ResultSet rs, String columnName)
+  public abstract T getNullableResult(ResultSet rs, String columnName)
       throws SQLException;
 
-  public abstract Object getNullableResult(CallableStatement cs, int columnIndex)
+  public abstract T getNullableResult(CallableStatement cs, int columnIndex)
       throws SQLException;
 
 }

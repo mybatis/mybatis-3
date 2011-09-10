@@ -16,7 +16,7 @@ import org.apache.ibatis.io.Resources;
 
 public class TypeAliasRegistry {
 
-  private final HashMap<String, Class> TYPE_ALIASES = new HashMap<String, Class>();
+  private final HashMap<String, Class<?>> TYPE_ALIASES = new HashMap<String, Class<?>>();
 
   public TypeAliasRegistry() {
     registerAlias("string", String.class);
@@ -77,15 +77,16 @@ public class TypeAliasRegistry {
     registerAlias("ResultSet", ResultSet.class);
   }
 
-  public Class resolveAlias(String string) {
+@SuppressWarnings( "unchecked" ) // throws class cast exception as well if types cannot be assigned
+public <T> Class<T> resolveAlias(String string) {
     try {
       if (string == null) return null;
       String key = string.toLowerCase();
-      Class value;
+      Class<T> value;
       if (TYPE_ALIASES.containsKey(key)) {
-        value = TYPE_ALIASES.get(key);
+        value = (Class<T>) TYPE_ALIASES.get(key);
       } else {
-        value = Resources.classForName(string);
+        value = (Class<T>) Resources.classForName(string);
       }
       return value;
     } catch (ClassNotFoundException e) {
@@ -97,11 +98,11 @@ public class TypeAliasRegistry {
     registerAliases(packageName, Object.class);
   }
 
-  public void registerAliases(String packageName, Class superType){
-    ResolverUtil<Class> resolverUtil = new ResolverUtil<Class>();
+  public void registerAliases(String packageName, Class<?> superType){
+    ResolverUtil<Class<?>> resolverUtil = new ResolverUtil<Class<?>>();
     resolverUtil.find(new ResolverUtil.IsA(superType), packageName);
-    Set<Class<? extends Class>> typeSet = resolverUtil.getClasses();
-    for(Class type : typeSet){
+    Set<Class<? extends Class<?>>> typeSet = resolverUtil.getClasses();
+    for(Class<?> type : typeSet){
       //Ignore inner classes and interfaces (including package-info.java)
       if (!type.isAnonymousClass() && !type.isInterface()) {
         registerAlias(type);
@@ -109,16 +110,16 @@ public class TypeAliasRegistry {
     }
   }
 
-  public void registerAlias(Class type) {
+  public void registerAlias(Class<?> type) {
     String alias = type.getSimpleName();
-    Alias aliasAnnotation = (Alias) type.getAnnotation(Alias.class);
+    Alias aliasAnnotation = type.getAnnotation(Alias.class);
     if (aliasAnnotation != null) {
       alias = aliasAnnotation.value();
     } 
     registerAlias(alias, type);
   }
 
-  public void registerAlias(String alias, Class value) {
+  public void registerAlias(String alias, Class<?> value) {
     assert alias != null;
     String key = alias.toLowerCase();
     if (TYPE_ALIASES.containsKey(key) && !TYPE_ALIASES.get(key).equals(value.getName()) && TYPE_ALIASES.get(alias) != null) {

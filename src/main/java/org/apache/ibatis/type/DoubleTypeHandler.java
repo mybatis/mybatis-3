@@ -5,19 +5,19 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class DoubleTypeHandler extends BaseTypeHandler {
+public class DoubleTypeHandler extends BaseTypeHandler<Double> {
 
-  public void setNonNullParameter(PreparedStatement ps, int i, Object parameter, JdbcType jdbcType)
+  public void setNonNullParameter(PreparedStatement ps, int i, Double parameter, JdbcType jdbcType)
       throws SQLException {
-    ps.setDouble(i, (Double) parameter);
+    ps.setDouble(i, parameter);
   }
 
-  public Object getNullableResult(ResultSet rs, String columnName)
+  public Double getNullableResult(ResultSet rs, String columnName)
       throws SQLException {
     return rs.getDouble(columnName);
   }
 
-  public Object getNullableResult(CallableStatement cs, int columnIndex)
+  public Double getNullableResult(CallableStatement cs, int columnIndex)
       throws SQLException {
     return cs.getDouble(columnIndex);
   }

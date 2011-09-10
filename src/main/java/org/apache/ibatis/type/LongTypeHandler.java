@@ -5,19 +5,19 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class LongTypeHandler extends BaseTypeHandler {
+public class LongTypeHandler extends BaseTypeHandler<Long> {
 
-  public void setNonNullParameter(PreparedStatement ps, int i, Object parameter, JdbcType jdbcType)
+  public void setNonNullParameter(PreparedStatement ps, int i, Long parameter, JdbcType jdbcType)
       throws SQLException {
-    ps.setLong(i, (Long) parameter);
+    ps.setLong(i, parameter);
   }
 
-  public Object getNullableResult(ResultSet rs, String columnName)
+  public Long getNullableResult(ResultSet rs, String columnName)
       throws SQLException {
     return rs.getLong(columnName);
   }
 
-  public Object getNullableResult(CallableStatement cs, int columnIndex)
+  public Long getNullableResult(CallableStatement cs, int columnIndex)
       throws SQLException {
     return cs.getLong(columnIndex);
   }

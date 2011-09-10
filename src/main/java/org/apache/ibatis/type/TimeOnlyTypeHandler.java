@@ -6,14 +6,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
 
-public class TimeOnlyTypeHandler extends BaseTypeHandler {
+public class TimeOnlyTypeHandler extends BaseTypeHandler<Date> {
 
-  public void setNonNullParameter(PreparedStatement ps, int i, Object parameter, JdbcType jdbcType)
+  public void setNonNullParameter(PreparedStatement ps, int i, Date parameter, JdbcType jdbcType)
       throws SQLException {
-    ps.setTime(i, new java.sql.Time(((Date) parameter).getTime()));
+    ps.setTime(i, new java.sql.Time(parameter.getTime()));
   }
 
-  public Object getNullableResult(ResultSet rs, String columnName)
+  public Date getNullableResult(ResultSet rs, String columnName)
       throws SQLException {
     java.sql.Time sqlTime = rs.getTime(columnName);
     if (sqlTime != null) {
@@ -22,7 +22,7 @@ public class TimeOnlyTypeHandler extends BaseTypeHandler {
     return null;
   }
 
-  public Object getNullableResult(CallableStatement cs, int columnIndex)
+  public Date getNullableResult(CallableStatement cs, int columnIndex)
       throws SQLException {
     java.sql.Time sqlTime = cs.getTime(columnIndex);
     if (sqlTime != null) {

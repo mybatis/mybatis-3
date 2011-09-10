@@ -6,20 +6,19 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class BigIntegerTypeHandler extends BaseTypeHandler {
+public class BigIntegerTypeHandler extends BaseTypeHandler<BigInteger> {
 
-  public void setNonNullParameter(PreparedStatement ps, int i, Object parameter, JdbcType jdbcType)
+  public void setNonNullParameter(PreparedStatement ps, int i, BigInteger parameter, JdbcType jdbcType)
       throws SQLException {
-    BigInteger bigint = (BigInteger) parameter;
-    ps.setLong(i, bigint.longValue());
+    ps.setLong(i, parameter.longValue());
   }
 
-  public Object getNullableResult(ResultSet rs, String columnName)
+  public BigInteger getNullableResult(ResultSet rs, String columnName)
       throws SQLException {
     return BigInteger.valueOf(rs.getLong(columnName));
   }
 
-  public Object getNullableResult(CallableStatement cs, int columnIndex)
+  public BigInteger getNullableResult(CallableStatement cs, int columnIndex)
       throws SQLException {
     return BigInteger.valueOf(cs.getLong(columnIndex));
   }

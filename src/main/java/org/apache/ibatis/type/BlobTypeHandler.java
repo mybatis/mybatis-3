@@ -3,16 +3,15 @@ package org.apache.ibatis.type;
 import java.io.ByteArrayInputStream;
 import java.sql.*;
 
-public class BlobTypeHandler extends BaseTypeHandler {
+public class BlobTypeHandler extends BaseTypeHandler<byte[]> {
 
-  public void setNonNullParameter(PreparedStatement ps, int i, Object parameter, JdbcType jdbcType)
+  public void setNonNullParameter(PreparedStatement ps, int i, byte[] parameter, JdbcType jdbcType)
       throws SQLException {
-    byte[] bytes = (byte[]) parameter;
-    ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
-    ps.setBinaryStream(i, bis, bytes.length);
+    ByteArrayInputStream bis = new ByteArrayInputStream(parameter);
+    ps.setBinaryStream(i, bis, parameter.length);
   }
 
-  public Object getNullableResult(ResultSet rs, String columnName)
+  public byte[] getNullableResult(ResultSet rs, String columnName)
       throws SQLException {
     Blob blob = rs.getBlob(columnName);
     byte[] returnValue = null;
@@ -22,7 +21,7 @@ public class BlobTypeHandler extends BaseTypeHandler {
     return returnValue;
   }
 
-  public Object getNullableResult(CallableStatement cs, int columnIndex)
+  public byte[] getNullableResult(CallableStatement cs, int columnIndex)
       throws SQLException {
     Blob blob = cs.getBlob(columnIndex);
     byte[] returnValue = null;
