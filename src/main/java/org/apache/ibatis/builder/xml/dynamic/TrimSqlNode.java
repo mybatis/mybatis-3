@@ -93,7 +93,7 @@ public class TrimSqlNode implements SqlNode {
       if (!prefixApplied) {
         prefixApplied = true;
         for (String toRemove : prefixesToOverride) {
-          if (trimmedUppercaseSql.startsWith(toRemove) || trimmedUppercaseSql.startsWith(toRemove.trim())) {
+          if (trimmedUppercaseSql.startsWith(toRemove)) {
             sql.delete(0, toRemove.trim().length());
             break;
           }
