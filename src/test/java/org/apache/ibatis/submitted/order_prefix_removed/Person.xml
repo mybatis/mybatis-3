@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.apache.ibatis.submitted.order_prefix_removed.PersonMapper">
+
+    <resultMap id="personMap" type="Person">
+        <id property="id" column="id"/>
+        <result property="firstName" column="firstName"/>
+        <result property="lastName" column="lastName"/>
+    </resultMap>
+    
+    
+    <select id="select" resultMap="personMap">
+        SELECT id, firstName, lastName
+        FROM person
+        <where>
+            <if test="true">
+                ORDER_TYPE = #{value}
+            </if>
+        </where>
+    </select>
+</mapper>
