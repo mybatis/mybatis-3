@@ -2,6 +2,7 @@ package org.apache.ibatis.session.defaults;
 
 import org.apache.ibatis.exceptions.ExceptionFactory;
 import org.apache.ibatis.exceptions.TooManyResultsException;
+import org.apache.ibatis.executor.BatchResult;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.executor.ErrorContext;
 import org.apache.ibatis.executor.result.DefaultMapResultHandler;
@@ -159,6 +160,16 @@ public class DefaultSqlSession implements SqlSession {
       dirty = false;
     } catch (Exception e) {
       throw ExceptionFactory.wrapException("Error rolling back transaction.  Cause: " + e, e);
+    } finally {
+      ErrorContext.instance().reset();
+    }
+  }
+
+  public List<BatchResult> flushStatements() {
+    try {
+      return executor.flushStatements();
+    } catch (Exception e) {
+      throw ExceptionFactory.wrapException("Error flushing statements.  Cause: " + e, e);
     } finally {
       ErrorContext.instance().reset();
     }

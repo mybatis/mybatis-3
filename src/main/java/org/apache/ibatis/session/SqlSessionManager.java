@@ -1,5 +1,8 @@
 package org.apache.ibatis.session;
 
+import org.apache.ibatis.exceptions.ExceptionFactory;
+import org.apache.ibatis.executor.BatchResult;
+import org.apache.ibatis.executor.ErrorContext;
 import org.apache.ibatis.reflection.ExceptionUtil;
 
 import java.io.InputStream;
@@ -233,6 +236,12 @@ public class SqlSessionManager implements SqlSessionFactory, SqlSession {
     final SqlSession sqlSession = localSqlSession.get();
     if (sqlSession == null) throw new SqlSessionException("Error:  Cannot rollback.  No managed session is started.");
     sqlSession.rollback(force);
+  }
+
+  public List<BatchResult> flushStatements() {
+    final SqlSession sqlSession = localSqlSession.get();
+    if (sqlSession == null) throw new SqlSessionException("Error:  Cannot rollback.  No managed session is started.");
+    return sqlSession.flushStatements();
   }
 
   public void close() {

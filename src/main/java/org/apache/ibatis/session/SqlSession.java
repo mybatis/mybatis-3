@@ -1,5 +1,7 @@
 package org.apache.ibatis.session;
 
+import org.apache.ibatis.executor.BatchResult;
+
 import java.sql.Connection;
 import java.util.List;
 import java.util.Map;
@@ -47,6 +49,8 @@ public interface SqlSession {
   void rollback();
 
   void rollback(boolean force);
+
+  public List<BatchResult> flushStatements();
 
   void close();
 
