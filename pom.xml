@@ -46,6 +46,10 @@
         <name>Riccardo Cossu</name>
         <email>riccardo.cossu@gmail.com</email>
     </contributor>
+    <contributor>
+        <name>Tim Chen</name>
+        <email>chengt@gmail.com</email>
+    </contributor>
   </contributors>
   <properties>
     <findbugs.onlyAnalyze>org.apache.ibatis.*</findbugs.onlyAnalyze>

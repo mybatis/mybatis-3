@@ -104,6 +104,12 @@ public class SqlSessionManagerTest extends BaseDataTest {
   }
 
   @Test
+  public void shouldSelectAllComplexAuthors() throws Exception {
+    List<ComplexImmutableAuthor> authors = manager.selectList("domain.blog.mappers.AuthorMapper.selectComplexAuthors");
+    assertEquals(2, authors.size());
+  }
+
+  @Test
   public void shouldSelectCountOfPosts() throws Exception {
     Integer count = (Integer) manager.selectOne("domain.blog.mappers.BlogMapper.selectCountOfPosts");
     assertEquals(5, count.intValue());

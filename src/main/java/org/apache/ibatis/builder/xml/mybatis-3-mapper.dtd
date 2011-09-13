@@ -70,6 +70,8 @@ javaType CDATA #IMPLIED
 column CDATA #IMPLIED
 jdbcType CDATA #IMPLIED
 typeHandler CDATA #IMPLIED
+select CDATA #IMPLIED
+resultMap CDATA #IMPLIED
 >
 
 <!ELEMENT arg EMPTY>

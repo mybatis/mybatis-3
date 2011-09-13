@@ -31,10 +31,32 @@
     </constructor>
   </resultMap>
 
+    <resultMap id="complexAuthorId" type="domain.blog.ComplexImmutableAuthorId">
+      <constructor>
+        <idArg column="id" javaType="_int"/>
+        <idArg column="username" javaType="string"/>
+        <idArg column="password" javaType="string"/>
+        <idArg column="email" javaType="string"/>
+      </constructor>
+    </resultMap>
+
+    <resultMap id="selectComplexImmutableAuthor" type="domain.blog.ComplexImmutableAuthor">
+      <constructor>
+        <idArg javaType="domain.blog.ComplexImmutableAuthorId" resultMap="complexAuthorId"/>
+        <arg column="bio" javaType="string"/>
+        <arg column="favourite_section" javaType="domain.blog.Section"/>
+      </constructor>
+    </resultMap>
+
   <select id="selectAllAuthors"
           resultType="domain.blog.Author">
     select * from author
   </select>
+
+    <select id="selectComplexAuthors"
+            resultMap="selectComplexImmutableAuthor">
+      select * from author
+    </select>
 
   <select id="selectAuthor"
           parameterMap="selectAuthor"
