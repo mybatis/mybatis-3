@@ -19,6 +19,7 @@ import javax.sql.DataSource;
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.jdbc.SqlRunner;
+import org.apache.ibatis.migration.commands.NewCommand;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -202,6 +203,22 @@ public class MigratorTest extends BaseDataTest {
     assertEquals(4, scriptPath.list().length);
 
     templatePath.delete();
+  }
+
+  @Test
+  public void useCustomTemplateWithBadPath() throws Exception {
+    System.setProperty("migrationHome", "/tmp");
+    File basePath = getTempDir();
+    safeMigratorMain(args("--path=" + basePath.getAbsolutePath(), "init"));
+    assertNotNull(basePath.list());
+    assertEquals(4, basePath.list().length);
+    File scriptPath = new File(basePath.getCanonicalPath() + File.separator + "scripts");
+    assertEquals(3, scriptPath.list().length);
+
+    safeMigratorMain(args("--path=" + basePath.getAbsolutePath(), "new", "test new migration"));
+    assertEquals(4, scriptPath.list().length);
+
+    assertTrue(buffer.toString().contains("Your migrations configuration did not find your custom template.  Using the default template."));
   }
 
   private String[] args(String... args) {
