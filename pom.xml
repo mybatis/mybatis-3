@@ -276,13 +276,13 @@
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
-      <version>1.6.1</version>
+      <version>1.6.2</version>
       <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-log4j12</artifactId>
-      <version>1.6.1</version>
+      <version>1.6.2</version>
       <optional>true</optional>
     </dependency>
     <dependency>
@@ -307,7 +307,7 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>4.8.2</version>
+      <version>4.10</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -325,13 +325,13 @@
     <dependency>
       <groupId>org.jmock</groupId>
       <artifactId>jmock-junit4</artifactId>
-      <version>2.1.0</version>
+      <version>2.5.1</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.jmock</groupId>
       <artifactId>jmock-legacy</artifactId>
-      <version>2.1.0</version>
+      <version>2.5.1</version>
       <scope>test</scope>
       <exclusions>
         <exclusion>
@@ -343,13 +343,13 @@
     <dependency>
       <groupId>commons-dbcp</groupId>
       <artifactId>commons-dbcp</artifactId>
-      <version>1.2.1</version>
+      <version>1.4</version>
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>geronimo-spec</groupId>
-      <artifactId>geronimo-spec-jta</artifactId>
-      <version>1.0.1B-rc4</version>
+      <groupId>javax.transaction</groupId>
+      <artifactId>transaction-api</artifactId>
+      <version>1.1</version>
       <scope>test</scope>
     </dependency>
     <!-- postgresql driver is required to run the refcursor tests -->
