@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.apache.ibatis.submitted.extends_with_constructor.StudentMapper">
+    <resultMap id="StudentMap" type="org.apache.ibatis.submitted.extends_with_constructor.Student">
+       	<result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <association property="teacher" column="teacherId" select="org.apache.ibatis.submitted.extends_with_constructor.TeacherMapper.selectById"/>
+    </resultMap>
+    <resultMap id="StudentMapWithTeacherMap" type="org.apache.ibatis.submitted.extends_with_constructor.Student" extends="StudentMap">
+    	<association property="teacher" resultMap="org.apache.ibatis.submitted.extends_with_constructor.TeacherMapper.TeacherMap"/>
+    </resultMap>
+    
+    <select id="selectAllWithTeacher" resultMap="StudentMapWithTeacherMap">
+    	SELECT id, name, teacherId
+    	FROM student
+    </select>
+</mapper>

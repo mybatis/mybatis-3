@@ -136,6 +136,22 @@ public class MapperBuilderAssistant extends BaseBuilder {
       ResultMap resultMap = configuration.getResultMap(extend);
       List<ResultMapping> extendedResultMappings = new ArrayList<ResultMapping>(resultMap.getResultMappings());
       extendedResultMappings.removeAll(resultMappings);
+      // Remove parent constructor if this resultMap declares a constructor.
+      boolean declaresConstructor = false;
+      for (ResultMapping resultMapping: resultMappings) {
+    	  if (resultMapping.getFlags().contains(ResultFlag.CONSTRUCTOR)) {
+    		  declaresConstructor = true;
+    		  break;
+    	  }
+      }
+      if (declaresConstructor) {
+    	  Iterator<ResultMapping> extendedResultMappingsIter = extendedResultMappings.iterator();
+    	  while (extendedResultMappingsIter.hasNext()) {
+    		  if (extendedResultMappingsIter.next().getFlags().contains(ResultFlag.CONSTRUCTOR)) {
+    			  extendedResultMappingsIter.remove();
+    		  }
+    	  }
+      }
       resultMappings.addAll(extendedResultMappings);
     }
     resultMapBuilder.discriminator(discriminator);

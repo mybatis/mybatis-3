@@ -174,7 +174,7 @@ public class ResultMapping {
 
     ResultMapping that = (ResultMapping) o;
 
-    if (!property.equals(that.property)) {
+    if (property == null || !property.equals(that.property)) {
       return false;
     }
 
@@ -183,6 +183,12 @@ public class ResultMapping {
 
   @Override
   public int hashCode() {
-    return property.hashCode();
+	if (property != null) {
+		return property.hashCode();
+	} else if (column != null) {
+		return column.hashCode();
+	} else {
+		return 0;
+	}
   }
 }
