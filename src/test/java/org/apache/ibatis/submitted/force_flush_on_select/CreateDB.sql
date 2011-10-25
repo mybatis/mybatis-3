@@ -1,4 +1,6 @@
-create table person (
+ DROP TABLE person;
+
+ CREATE TABLE person (
   id int,
   firstName varchar(100),
   lastName varchar(100)

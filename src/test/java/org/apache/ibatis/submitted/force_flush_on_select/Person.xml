@@ -14,24 +14,28 @@
         <result property="lastName" column="lastName"/>
     </resultMap>
     
-    
-    <select id="selectById" resultMap="personMap" parameterType="int">
+    <select id="selectByIdFlush" resultMap="personMap" parameterType="int" flushCache="true">
         SELECT id, firstName, lastName
         FROM person
         WHERE id = #{id}
     </select>
 
-    <select id="selectAll" resultMap="personMap">
+    <select id="selectByIdNoFlush" resultMap="personMap" parameterType="int">
+        SELECT id, firstName, lastName
+        FROM person
+        WHERE id = #{id}
+    </select>
+    
+    <select id="selectAllFlush" resultMap="personMap" flushCache="true">
         SELECT id, firstName, lastName
         FROM person
         ORDER BY id
     </select>
 
-    <!-- normally this would be a stored procedure or a function -->
-    <select id="update" parameterType="Person" resultType="Person" flushCache="true">
-        UPDATE person
-        SET firstName = #{firstName},
-        lastName = #{lastName}
-        WHERE id = #{id}
+    <select id="selectAllNoFlush" resultMap="personMap">
+        SELECT id, firstName, lastName
+        FROM person
+        ORDER BY id
     </select>
+    
 </mapper>
