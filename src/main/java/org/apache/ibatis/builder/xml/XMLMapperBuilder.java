@@ -12,7 +12,6 @@ import java.util.Map;
 import java.util.Properties;
 
 import org.apache.ibatis.builder.BaseBuilder;
-import org.apache.ibatis.builder.BuilderException;
 import org.apache.ibatis.builder.CacheRefResolver;
 import org.apache.ibatis.builder.IncompleteCacheException;
 import org.apache.ibatis.builder.IncompleteResultMapException;
@@ -292,7 +291,7 @@ public class XMLMapperBuilder extends BaseBuilder {
   private void sqlElement(List<XNode> list) throws Exception {
     for (XNode context : list) {
       String id = context.getStringAttribute("id");
-      id = builderAssistant.applyCurrentNamespace(id);
+      id = builderAssistant.applyCurrentNamespace(id, false);
       sqlFragments.put(id, context);
     }
   }

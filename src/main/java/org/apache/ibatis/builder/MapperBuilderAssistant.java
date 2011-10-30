@@ -43,10 +43,16 @@ public class MapperBuilderAssistant extends BaseBuilder {
     this.currentNamespace = currentNamespace;
   }
 
-  public String applyCurrentNamespace(String base) {
+  public String applyCurrentNamespace(String base, boolean isReference) {
     if (base == null) return null;
-    // is it qualified with this or other namespace yet?
-    if (base.contains(".")) return base;
+    if (isReference) {
+        // is it qualified with any namespace yet?
+        if (base.contains(".")) return base;
+    } else {
+        // is it qualified with this namespace yet?
+        if (base.startsWith(currentNamespace + ".")) return base;        
+        if (base.contains(".")) throw new BuilderException("Dots are not allowed in element names, please remove it from " + base);
+    }
     return currentNamespace + "." + base;
   }
   
@@ -88,7 +94,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
   }
 
   public ParameterMap addParameterMap(String id, Class<?> parameterClass, List<ParameterMapping> parameterMappings) {
-    id = applyCurrentNamespace(id);
+    id = applyCurrentNamespace(id, false);
     ParameterMap.Builder parameterMapBuilder = new ParameterMap.Builder(configuration, id, parameterClass, parameterMappings);
     ParameterMap parameterMap = parameterMapBuilder.build();
     configuration.addParameterMap(parameterMap);
@@ -104,7 +110,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
       ParameterMode parameterMode,
       Class<? extends TypeHandler> typeHandler,
       Integer numericScale) {
-    resultMap = applyCurrentNamespace(resultMap);
+    resultMap = applyCurrentNamespace(resultMap, true);
 
     // Class parameterType = parameterMapBuilder.type();
     Class<?> javaTypeClass = resolveParameterJavaType(parameterType, property, javaType, jdbcType);
@@ -125,8 +131,8 @@ public class MapperBuilderAssistant extends BaseBuilder {
       String extend,
       Discriminator discriminator,
       List<ResultMapping> resultMappings) {
-    id = applyCurrentNamespace(id);
-    extend = applyCurrentNamespace(extend);
+    id = applyCurrentNamespace(id, false);
+    extend = applyCurrentNamespace(extend, true);
 
     ResultMap.Builder resultMapBuilder = new ResultMap.Builder(configuration, id, type, resultMappings);
     if (extend != null) {
@@ -206,7 +212,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
     Map<String, String> namespaceDiscriminatorMap = new HashMap<String, String>();
     for (Map.Entry<String, String> e : discriminatorMap.entrySet()) {
       String resultMap = e.getValue();
-      resultMap = applyCurrentNamespace(resultMap);
+      resultMap = applyCurrentNamespace(resultMap, true);
       namespaceDiscriminatorMap.put(e.getKey(), resultMap);
     }
     Discriminator.Builder discriminatorBuilder = new Discriminator.Builder(configuration, resultMapping, namespaceDiscriminatorMap);
@@ -229,7 +235,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
       boolean useCache,
       KeyGenerator keyGenerator,
       String keyProperty) {
-    id = applyCurrentNamespace(id);    
+    id = applyCurrentNamespace(id, false);    
     boolean isSelect = sqlCommandType == SqlCommandType.SELECT;
 
     MappedStatement.Builder statementBuilder = new MappedStatement.Builder(configuration, id, sqlSource, sqlCommandType);
@@ -270,7 +276,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
       String parameterMap,
       Class<?> parameterTypeClass,
       MappedStatement.Builder statementBuilder) {
-    parameterMap = applyCurrentNamespace(parameterMap);
+    parameterMap = applyCurrentNamespace(parameterMap, true);
 
     if (parameterMap != null) {
       try {
@@ -294,7 +300,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
       Class<?> resultType,
       ResultSetType resultSetType,
       MappedStatement.Builder statementBuilder) {
-    resultMap = applyCurrentNamespace(resultMap);
+    resultMap = applyCurrentNamespace(resultMap, true);
 
     List<ResultMap> resultMaps = new ArrayList<ResultMap>();
     if (resultMap != null) {
@@ -338,7 +344,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
       Class<? extends TypeHandler> typeHandler,
       List<ResultFlag> flags) {
     // Class resultType = resultMapBuilder.type();
-    nestedResultMap = applyCurrentNamespace(nestedResultMap);
+    nestedResultMap = applyCurrentNamespace(nestedResultMap, true);
     Class<?> javaTypeClass = resolveResultJavaType(resultType, property, javaType);
     TypeHandler typeHandlerInstance = (TypeHandler) resolveInstance(typeHandler);
 
@@ -350,8 +356,8 @@ public class MapperBuilderAssistant extends BaseBuilder {
 
     ResultMapping.Builder builder = new ResultMapping.Builder(configuration, property, column, javaTypeClass);
     builder.jdbcType(jdbcType);
-    builder.nestedQueryId(applyCurrentNamespace(nestedSelect));
-    builder.nestedResultMapId(applyCurrentNamespace(nestedResultMap));
+    builder.nestedQueryId(applyCurrentNamespace(nestedSelect, true));
+    builder.nestedResultMapId(applyCurrentNamespace(nestedResultMap, true));
     builder.typeHandler(typeHandlerInstance);
     builder.flags(flags == null ? new ArrayList<ResultFlag>() : flags);
     builder.composites(composites);

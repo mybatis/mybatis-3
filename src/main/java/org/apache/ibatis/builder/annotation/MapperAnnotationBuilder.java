@@ -500,7 +500,7 @@ public class MapperAnnotationBuilder {
           fetchSize, timeout, parameterMap, parameterTypeClass, resultMap, resultTypeClass,
           resultSetTypeEnum, flushCache, useCache, keyGenerator, keyProperty);
 
-    id = assistant.applyCurrentNamespace(id);
+    id = assistant.applyCurrentNamespace(id, false);
 
     MappedStatement keyStatement = configuration.getMappedStatement(id, false);
     SelectKeyGenerator answer = new SelectKeyGenerator(keyStatement, executeBefore);
