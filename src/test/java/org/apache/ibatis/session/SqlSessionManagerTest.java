@@ -459,6 +459,18 @@ public class SqlSessionManagerTest extends BaseDataTest {
   }
 
   @Test
+  public void shouldFindAllPostLites() throws Exception {
+    List<PostLite> posts = manager.selectList("domain.blog.mappers.PostMapper.selectPostLite");
+    assertEquals(4, posts.size());
+  }
+
+  @Test
+  public void shouldFindAllMutablePostLites() throws Exception {
+    List<PostLite> posts = manager.selectList("domain.blog.mappers.PostMapper.selectMutablePostLite");
+    assertEquals(4, posts.size());
+  }
+
+  @Test
   public void shouldFindPostByIDWithDynamicSql() throws Exception {
     List<Post> posts = manager.selectList("domain.blog.mappers.PostMapper.findPost",
         new HashMap() {{

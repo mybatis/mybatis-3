@@ -224,7 +224,10 @@ public class NestedResultSetHandler extends FastResultSetHandler {
 
   private void createRowKeyForMappedProperties(ResultSet rs, CacheKey cacheKey, List<ResultMapping> resultMappings) {
     for (ResultMapping resultMapping : resultMappings) {
-      if (resultMapping.getNestedQueryId() == null && resultMapping.getNestedResultMapId() == null) {
+      if (resultMapping.getNestedResultMapId() != null) {
+        final ResultMap myResultMap = configuration.getResultMap(resultMapping.getNestedResultMapId());
+        createRowKeyForMappedProperties(rs, cacheKey, myResultMap.getConstructorResultMappings());
+      } else if (resultMapping.getNestedQueryId() == null) {
         final String column = resultMapping.getColumn();
         final TypeHandler th = resultMapping.getTypeHandler();
         if (column != null) {

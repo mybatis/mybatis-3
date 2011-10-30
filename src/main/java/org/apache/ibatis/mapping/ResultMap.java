@@ -5,7 +5,6 @@ import org.apache.ibatis.session.Configuration;
 import java.util.*;
 
 public class ResultMap {
-
   private String id;
   private Class type;
   private List<ResultMapping> resultMappings;
@@ -15,6 +14,7 @@ public class ResultMap {
   private Set<String> mappedColumns;
   private Discriminator discriminator;
   private boolean hasNestedResultMaps;
+  private boolean hasNestedQueries;
 
   private ResultMap() {
   }
@@ -43,6 +43,7 @@ public class ResultMap {
       resultMap.constructorResultMappings = new ArrayList<ResultMapping>();
       resultMap.propertyResultMappings = new ArrayList<ResultMapping>();
       for (ResultMapping resultMapping : resultMap.resultMappings) {
+        resultMap.hasNestedQueries = resultMap.hasNestedQueries || resultMapping.getNestedQueryId() != null;
         resultMap.hasNestedResultMaps = resultMap.hasNestedResultMaps || resultMapping.getNestedResultMapId() != null;
         final String column = resultMapping.getColumn();
         if (column != null) {
@@ -85,10 +86,13 @@ public class ResultMap {
     return hasNestedResultMaps;
   }
 
+  public boolean hasNestedQueries() {
+    return hasNestedQueries;
+  }
+
   public Class getType() {
     return type;
   }
-
 
   public List<ResultMapping> getResultMappings() {
     return resultMappings;
