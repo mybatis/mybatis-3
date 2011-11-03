@@ -15,9 +15,9 @@ public class EnumTypeHandler<E extends Enum<E>> extends BaseTypeHandler<E> {
 
   public void setNonNullParameter(PreparedStatement ps, int i, E parameter, JdbcType jdbcType) throws SQLException {
     if (jdbcType == null) {
-        ps.setString(i, parameter.toString());
+        ps.setString(i, parameter.name());
     } else {
-        ps.setObject(i, parameter.toString(), jdbcType.TYPE_CODE);
+        ps.setObject(i, parameter.name(), jdbcType.TYPE_CODE);
     }
   }
 
