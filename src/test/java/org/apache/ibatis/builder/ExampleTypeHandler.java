@@ -18,6 +18,10 @@ public class ExampleTypeHandler implements TypeHandler {
     return rs.getString(columnName);
   }
 
+  public Object getResult(ResultSet rs, int columnIndex) throws SQLException {
+    return rs.getString(columnIndex);
+  }
+
   public Object getResult(CallableStatement cs, int columnIndex) throws SQLException {
     return cs.getString(columnIndex);
   }

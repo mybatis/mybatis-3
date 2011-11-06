@@ -13,6 +13,9 @@ public interface TypeHandler<T> {
   public T getResult(ResultSet rs, String columnName)
       throws SQLException;
 
+  public T getResult(ResultSet rs, int columnIndex)
+          throws SQLException;
+  
   public T getResult(CallableStatement cs, int columnIndex)
       throws SQLException;
 

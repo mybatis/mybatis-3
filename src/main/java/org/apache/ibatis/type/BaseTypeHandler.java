@@ -34,6 +34,16 @@ public abstract class BaseTypeHandler<T> implements TypeHandler<T> {
     }
   }
 
+  public T getResult(ResultSet rs, int columnIndex)
+      throws SQLException {
+    T result = getNullableResult(rs, columnIndex);
+    if (rs.wasNull()) {
+      return null;
+    } else {
+      return result;
+    }
+  }
+  
   public T getResult(CallableStatement cs, int columnIndex)
       throws SQLException {
     T result = getNullableResult(cs, columnIndex);
@@ -50,6 +60,9 @@ public abstract class BaseTypeHandler<T> implements TypeHandler<T> {
   public abstract T getNullableResult(ResultSet rs, String columnName)
       throws SQLException;
 
+  public abstract T getNullableResult(ResultSet rs, int columnIndex)
+      throws SQLException;
+  
   public abstract T getNullableResult(CallableStatement cs, int columnIndex)
       throws SQLException;
 

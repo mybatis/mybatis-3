@@ -33,6 +33,10 @@ public class TypeHandlerCallbackAdapter implements TypeHandler {
     return callback.getResult(new ResultGetterImpl(rs, columnName));
   }
 
+  public Object getResult(ResultSet rs, int columnIndex) throws SQLException {
+    return callback.getResult(new ResultGetterImpl(rs, columnIndex));
+  }
+
   public Object getResult(CallableStatement cs, int columnIndex) throws SQLException {
     return callback.getResult(new ResultGetterImpl(CallableStatementResultSet.newProxy(cs), columnIndex));
   }

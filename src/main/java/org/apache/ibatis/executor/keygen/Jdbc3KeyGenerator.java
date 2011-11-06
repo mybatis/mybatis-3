@@ -32,23 +32,23 @@ public class Jdbc3KeyGenerator implements KeyGenerator {
         final MetaObject metaParam = configuration.newMetaObject(parameter);
         if (keyProperty != null && metaParam.hasSetter(keyProperty)) {
           Class<?> keyPropertyType = metaParam.getSetterType(keyProperty);
-          TypeHandler th = typeHandlerRegistry.getTypeHandler(keyPropertyType);
+          TypeHandler<?> th = typeHandlerRegistry.getTypeHandler(keyPropertyType);
           if (th != null) {
             ResultSet rs = stmt.getGeneratedKeys();
             try {
               ResultSetMetaData rsmd = rs.getMetaData();
               int colCount = rsmd.getColumnCount();
               if (colCount > 0) {
-                String colName;
                 if (keyColumnName != null && keyColumnName.length() > 0) {
-                  colName = keyColumnName;
+                  while (rs.next()) {
+                    Object value = th.getResult(rs, keyColumnName);
+                    metaParam.setValue(keyProperty, value);
+                  }
                 } else {
-                  colName = rsmd.getColumnName(1);
-                }
-              
-                while (rs.next()) {
-                  Object value = th.getResult(rs, colName);
-                  metaParam.setValue(keyProperty, value);
+                  while (rs.next()) {
+                    Object value = th.getResult(rs, 1);
+                    metaParam.setValue(keyProperty, value);
+                  }
                 }
               }
             } finally {

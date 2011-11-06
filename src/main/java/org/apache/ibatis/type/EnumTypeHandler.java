@@ -13,6 +13,7 @@ public class EnumTypeHandler<E extends Enum<E>> extends BaseTypeHandler<E> {
     this.type = type;
   }
 
+  @Override
   public void setNonNullParameter(PreparedStatement ps, int i, E parameter, JdbcType jdbcType) throws SQLException {
     if (jdbcType == null) {
         ps.setString(i, parameter.name());
@@ -21,14 +22,21 @@ public class EnumTypeHandler<E extends Enum<E>> extends BaseTypeHandler<E> {
     }
   }
 
+  @Override
   public E getNullableResult(ResultSet rs, String columnName) throws SQLException {
     String s = rs.getString(columnName);
     return s == null ? null : Enum.valueOf(type, s);
   }
 
+  @Override
+  public E getNullableResult(ResultSet rs, int columnIndex) throws SQLException {
+    String s = rs.getString(columnIndex);
+    return s == null ? null : Enum.valueOf(type, s);
+  }
+
+  @Override
   public E getNullableResult(CallableStatement cs, int columnIndex) throws SQLException {
     String s = cs.getString(columnIndex);
     return s == null ? null : Enum.valueOf(type, s);
   }
-
 }

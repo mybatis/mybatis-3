@@ -26,6 +26,13 @@ public class ArrayTypeHandler extends BaseTypeHandler<Object> {
     }
 
     @Override
+    public Object getNullableResult(ResultSet rs, int columnIndex)
+            throws SQLException {
+        Array array = rs.getArray(columnIndex);
+        return array.getArray();
+    }
+
+    @Override
     public Object getNullableResult(CallableStatement cs, int columnIndex)
             throws SQLException {
         Array array = cs.getArray(columnIndex);

@@ -17,6 +17,11 @@ public class FirstNameTypeHandler implements TypeHandler {
     return rs.getString(columnName);
   }
 
+  public Object getResult(ResultSet rs, int columnIndex)
+      throws SQLException {
+    return rs.getString(columnIndex);
+  }
+
   public void setParameter(PreparedStatement ps, int i, Object parameter,
                            JdbcType jdbcType) throws SQLException {
     if (parameter == null) {
