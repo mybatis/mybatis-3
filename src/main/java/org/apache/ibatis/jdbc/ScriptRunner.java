@@ -94,7 +94,7 @@ public class ScriptRunner {
   }
 
   private void executeFullScript(Reader reader) {
-    StringBuffer script = new StringBuffer();
+    StringBuilder script = new StringBuilder();
     try {
       BufferedReader lineReader = new BufferedReader(reader);
       String line;
@@ -111,7 +111,7 @@ public class ScriptRunner {
   }
 
   private void executeLineByLine(Reader reader) {
-    StringBuffer command = new StringBuffer();
+    StringBuilder command = new StringBuilder();
     try {
       BufferedReader lineReader = new BufferedReader(reader);
       String line;
@@ -127,7 +127,7 @@ public class ScriptRunner {
   }
 
   private void executeOracleScript(Reader reader) {
-    StringBuffer command = new StringBuffer();
+    StringBuilder command = new StringBuilder();
     try {
       boolean plsqlMode = false;
       BufferedReader lineReader = new BufferedReader(reader);
@@ -236,13 +236,13 @@ public class ScriptRunner {
     }
   }
 
-  private void checkForMissingLineTerminator(StringBuffer command) {
+  private void checkForMissingLineTerminator(StringBuilder command) {
     if (command != null && command.toString().trim().length() > 0) {
       throw new RuntimeSqlException("Line missing end-of-line terminator (" + delimiter + ") => " + command);
     }
   }
 
-  private StringBuffer handleLine(StringBuffer command, String line) throws SQLException, UnsupportedEncodingException {
+  private StringBuilder handleLine(StringBuilder command, String line) throws SQLException, UnsupportedEncodingException {
     String trimmedLine = line.trim();
     if (commandReadyToExecute(trimmedLine)) {
       command.append(line.substring(0, line.lastIndexOf(delimiter)));
