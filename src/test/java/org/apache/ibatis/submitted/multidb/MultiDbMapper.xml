@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.apache.ibatis.submitted.multidb.MultiDbMapper">
+
+  <select id="select1" resultType="string">
+    select '1-common' from names
+  </select>
+
+  <select id="select1" databaseId="hsql" resultType="string">
+    select '1-hsql' from names
+  </select>
+
+  <select id="select2" resultType="string">
+    select '2-common' from names
+  </select>
+
+  <select id="select2" databaseId="oracle" resultType="string">
+    select '2-oracle' from names
+  </select>
+
+</mapper>

@@ -53,6 +53,7 @@ public class XMLStatementBuilder extends BaseBuilder {
     Class<?> parameterTypeClass = resolveClass(parameterType);
     String resultMap = context.getStringAttribute("resultMap");
     String resultType = context.getStringAttribute("resultType");
+    String databaseId = context.getStringAttribute("databaseId");
 
     Class<?> resultTypeClass = resolveClass(resultType);
     String resultSetType = context.getStringAttribute("resultSetType");
@@ -82,7 +83,7 @@ public class XMLStatementBuilder extends BaseBuilder {
 
     builderAssistant.addMappedStatement(id, sqlSource, statementType, sqlCommandType,
         fetchSize, timeout, parameterMap, parameterTypeClass, resultMap, resultTypeClass,
-        resultSetTypeEnum, flushCache, useCache, keyGenerator, keyProperty);
+        resultSetTypeEnum, flushCache, useCache, keyGenerator, keyProperty, databaseId);
   }
 
 //  public String getStatementIdWithNameSpace() {
@@ -141,6 +142,7 @@ public class XMLStatementBuilder extends BaseBuilder {
       StatementType statementType = StatementType.valueOf(nodeToHandle.getStringAttribute("statementType", StatementType.PREPARED.toString()));
       String keyProperty = nodeToHandle.getStringAttribute("keyProperty");
       String parameterType = parent.getStringAttribute("parameterType");
+      String databaseId = parent.getStringAttribute("databaseId");
       boolean executeBefore = "BEFORE".equals(nodeToHandle.getStringAttribute("order", "AFTER"));
       Class<?> parameterTypeClass = resolveClass(parameterType);
 
@@ -161,7 +163,7 @@ public class XMLStatementBuilder extends BaseBuilder {
 
       builderAssistant.addMappedStatement(id, sqlSource, statementType, sqlCommandType,
           fetchSize, timeout, parameterMap, parameterTypeClass, resultMap, resultTypeClass,
-          resultSetTypeEnum, flushCache, useCache, keyGenerator, keyProperty);
+          resultSetTypeEnum, flushCache, useCache, keyGenerator, keyProperty, databaseId);
 
       id = builderAssistant.applyCurrentNamespace(id, false);
 

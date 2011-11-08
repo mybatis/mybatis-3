@@ -190,11 +190,13 @@ public class XMLConfigBuilder extends BaseBuilder {
       for (XNode child : context.getChildren()) {
         String id = child.getStringAttribute("id");
         if (isSpecifiedEnvironment(id)) {
+          String databaseId = child.getStringAttribute("databaseId");
           TransactionFactory txFactory = transactionManagerElement(child.evalNode("transactionManager"));
           DataSourceFactory dsFactory = dataSourceElement(child.evalNode("dataSource"));
           Environment.Builder environmentBuilder = new Environment.Builder(id)
               .transactionFactory(txFactory)
-              .dataSource(dsFactory.getDataSource());
+              .dataSource(dsFactory.getDataSource())
+              .databaseId(databaseId);
           configuration.setEnvironment(environmentBuilder.build());
         }
       }
