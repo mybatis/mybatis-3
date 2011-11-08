@@ -11,6 +11,7 @@ import org.apache.ibatis.type.TypeHandlerRegistry;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.Statement;
+import java.util.StringTokenizer;
 
 public class Jdbc3KeyGenerator implements KeyGenerator {
 
@@ -39,16 +40,9 @@ public class Jdbc3KeyGenerator implements KeyGenerator {
               ResultSetMetaData rsmd = rs.getMetaData();
               int colCount = rsmd.getColumnCount();
               if (colCount > 0) {
-                if (keyColumnName != null && keyColumnName.length() > 0) {
-                  while (rs.next()) {
-                    Object value = th.getResult(rs, keyColumnName);
-                    metaParam.setValue(keyProperty, value);
-                  }
-                } else {
-                  while (rs.next()) {
-                    Object value = th.getResult(rs, 1);
-                    metaParam.setValue(keyProperty, value);
-                  }
+                while (rs.next()) {
+                  Object value = th.getResult(rs, 1);
+                  metaParam.setValue(keyProperty, value);
                 }
               }
             } finally {
@@ -64,5 +58,34 @@ public class Jdbc3KeyGenerator implements KeyGenerator {
     } catch (Exception e) {
       throw new ExecutorException("Error getting generated key or setting result to parameter object. Cause: " + e, e);
     }
+  }
+
+  /**
+   * Return a String array of key column names.  This is used for the
+   * case where the driver requires that the generated key column
+   * be called out (Oracle and PostgreSQL).  In these cases, the driver
+   * will not correctly return the generated key unless the field is named.
+   * 
+   * Currently, we only support one key column name.
+   * 
+   * @return
+   */
+  public String[] getKeyColumnNames() {
+    return delimitedStringtoArray(keyColumnName);
+  }
+  
+  private static String[] delimitedStringtoArray(String in) {
+    if (in == null || in.trim().length() == 0) {
+      return null;
+    } else {
+      StringTokenizer st = new StringTokenizer(in,", ",false);
+      String[] answer = new String[st.countTokens()];
+      int i = 0;
+      while (st.hasMoreTokens()) {
+        answer[i] = st.nextToken();
+        i++;
+      }
+      return answer;
+    }  
   }
 }

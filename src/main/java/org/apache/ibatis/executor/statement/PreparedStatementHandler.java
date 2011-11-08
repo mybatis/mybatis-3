@@ -43,7 +43,13 @@ public class PreparedStatementHandler extends BaseStatementHandler {
   protected Statement instantiateStatement(Connection connection) throws SQLException {
     String sql = boundSql.getSql();
     if (mappedStatement.getKeyGenerator() instanceof Jdbc3KeyGenerator) {
-      return connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
+      Jdbc3KeyGenerator keyGen = (Jdbc3KeyGenerator) mappedStatement.getKeyGenerator();
+      String[] keyColumnNames = keyGen.getKeyColumnNames();
+      if (keyColumnNames == null) {
+        return connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
+      } else {
+        return connection.prepareStatement(sql, keyColumnNames);
+      }
     } else if (mappedStatement.getResultSetType() != null) {
       return connection.prepareStatement(sql, mappedStatement.getResultSetType().getValue(), ResultSet.CONCUR_READ_ONLY);
     } else {
