@@ -6,20 +6,53 @@
 
 <mapper namespace="org.apache.ibatis.submitted.multidb.MultiDbMapper">
 
-  <select id="select1" resultType="string">
-    select '1-common' from names
-  </select>
+	<select id="select1" resultType="string" parameterType="int">
+		select
+		name from common where id=#{value}
+	</select>
 
-  <select id="select1" databaseId="hsql" resultType="string">
-    select '1-hsql' from names
-  </select>
+	<select id="select1" databaseId="HSQL Database Engine"
+		resultType="string" parameterType="int">
+		select name from hsql where
+		id=#{value}
+	</select>
 
-  <select id="select2" resultType="string">
-    select '2-common' from names
-  </select>
+	<select id="select2" resultType="string" parameterType="int">
+		select
+		name from common where id=#{value}
+	</select>
 
-  <select id="select2" databaseId="oracle" resultType="string">
-    select '2-oracle' from names
-  </select>
+	<select id="select2" databaseId="OTHER" resultType="string"
+		parameterType="int">
+		select name from oracle where id=#{value}
+	</select>
+
+	<select id="select3" resultType="string" parameterType="int">
+		select name from
+		<if test="_environment.databaseId == 'HSQL Database Engine'">
+			hsql
+		</if>
+		<if test="_environment.databaseId != 'HSQL Database Engine'">
+			common
+		</if>
+		where id=#{value}
+	</select>
+
+	<insert id="insert" parameterType="org.apache.ibatis.submitted.multidb.User">
+		<selectKey keyProperty="id" resultType="int" order="BEFORE">
+			<if test="_environment.databaseId == 'HSQL Database Engine'">
+				select max(id) + 1 from hsql
+			</if>
+			<if test="_environment.databaseId != 'HSQL Database Engine'">
+				select max(id) + 1 from common
+			</if>
+		</selectKey>
+		<if test="_environment.databaseId == 'HSQL Database Engine'">
+			insert into hsql values (#{id}, #{name})
+		</if>
+		<if test="_environment.databaseId != 'HSQL Database Engine'">
+			insert into common values (#{id}, #{name})
+		</if>
+	</insert>
 
 </mapper>

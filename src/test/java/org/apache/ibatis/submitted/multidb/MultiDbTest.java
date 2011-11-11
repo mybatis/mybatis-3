@@ -25,7 +25,7 @@ public class MultiDbTest {
 
     try {
       Class.forName("org.hsqldb.jdbcDriver");
-      conn = DriverManager.getConnection("jdbc:hsqldb:mem:gname", "sa", "");
+      conn = DriverManager.getConnection("jdbc:hsqldb:mem:multidb", "sa", "");
 
       Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/multidb/CreateDB.sql");
 
@@ -51,8 +51,8 @@ public class MultiDbTest {
     SqlSession sqlSession = sqlSessionFactory.openSession();
     try {
       MultiDbMapper mapper = sqlSession.getMapper(MultiDbMapper.class);
-      String answer = mapper.select1();
-      assertEquals("1-hsql", answer);
+      String answer = mapper.select1(1);
+      assertEquals("hsql", answer);
     } finally {
       sqlSession.close();
     }
@@ -63,10 +63,35 @@ public class MultiDbTest {
     SqlSession sqlSession = sqlSessionFactory.openSession();
     try {
       MultiDbMapper mapper = sqlSession.getMapper(MultiDbMapper.class);
-      String answer = mapper.select2();
-      assertEquals("2-common", answer);
+      String answer = mapper.select2(1);
+      assertEquals("common", answer);
     } finally {
       sqlSession.close();
     }
   }
+  
+  @Test
+  public void shouldExecuteHsqlQueryWithDynamicIf() {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      MultiDbMapper mapper = sqlSession.getMapper(MultiDbMapper.class);
+      String answer = mapper.select3(1);
+      assertEquals("hsql", answer);
+    } finally {
+      sqlSession.close();
+    }
+  }
+  
+  @Test
+  public void shouldInsertInCommonWithSelectKey() {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      MultiDbMapper mapper = sqlSession.getMapper(MultiDbMapper.class);
+      mapper.insert(new User(2, "test"));
+      String answer = mapper.select2(1);
+      assertEquals("common", answer);
+    } finally {
+      sqlSession.close();
+    }
+  }  
 }

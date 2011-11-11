@@ -1,7 +1,13 @@
-create table names (
+create table common (
 id int,
-firstName varchar(20),
-lastName varchar(20)
+name varchar(20)
 );
 
-insert into names (id, firstName, lastName) values(1, '1st', '2nd');
+create table hsql (
+id int,
+name varchar(20)
+);
+
+insert into common (id, name) values(1, 'common');
+
+insert into hsql (id, name) values(1, 'hsql');

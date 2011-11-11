@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE configuration
+    PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+
+  <environments default="development">
+    <environment id="development" >
+      <transactionManager type="JDBC">
+        <property name="" value=""/>
+      </transactionManager>
+      <dataSource type="UNPOOLED">
+        <property name="driver" value="org.hsqldb.jdbcDriver"/>
+        <property name="url" value="jdbc:hsqldb:mem:gname"/>
+        <property name="username" value="sa"/>
+      </dataSource>
+      <database provider="org.apache.ibatis.submitted.multidb.DummyDatabaseIdProvider">
+        <property name="name" value="translated"/>
+      </database>
+    </environment>
+  </environments>
+  
+</configuration>
