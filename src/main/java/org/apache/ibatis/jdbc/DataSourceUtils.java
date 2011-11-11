@@ -26,7 +26,6 @@ public class DataSourceUtils {
   private static Map<String, String> NAME_TYPE = new HashMap<String, String>();
 
   static {
-    // data kindly borrowed from DbVisualizer (http://www.dbvis.com/)
     register("cache", "Cache");
     register("db2", "DB2",
                     "DB2 (DataDirect)");
