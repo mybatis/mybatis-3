@@ -120,6 +120,7 @@ public class SelectKeyTest {
         int rows = mapper.insertTable2WithOptions(name);
         assertEquals(1, rows);
         assertEquals(22, name.getNameId());
+        assertEquals("barney_fred", name.getGeneratedName());
       } finally {
         sqlSession.close();
       }

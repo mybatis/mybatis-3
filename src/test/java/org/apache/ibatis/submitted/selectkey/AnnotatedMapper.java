@@ -12,7 +12,7 @@ public interface AnnotatedMapper {
     int insertTable2(Name name);
     
     @Insert("insert into table2 (name) values(#{name})")
-    @Options(useGeneratedKeys=true, keyProperty="nameId")
+    @Options(useGeneratedKeys=true, keyProperty="nameId,generatedName", keyColumn="ID,NAME_FRED")
     int insertTable2WithOptions(Name name);
     
     @Insert("insert into table3 (id, name) values(#{nameId}, #{name})")

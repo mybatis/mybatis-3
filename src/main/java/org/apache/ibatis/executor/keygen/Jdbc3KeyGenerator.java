@@ -11,7 +11,6 @@ import org.apache.ibatis.type.TypeHandlerRegistry;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.Statement;
-import java.util.StringTokenizer;
 
 public class Jdbc3KeyGenerator implements KeyGenerator {
 
@@ -29,27 +28,41 @@ public class Jdbc3KeyGenerator implements KeyGenerator {
       final Configuration configuration = ms.getConfiguration();
       final TypeHandlerRegistry typeHandlerRegistry = configuration.getTypeHandlerRegistry();
       if (parameter != null) {
-        String keyProperty = ms.getKeyProperty();
+        String[] keyProperties = delimitedStringtoArray(ms.getKeyProperty());
         final MetaObject metaParam = configuration.newMetaObject(parameter);
-        if (keyProperty != null && metaParam.hasSetter(keyProperty)) {
-          Class<?> keyPropertyType = metaParam.getSetterType(keyProperty);
-          TypeHandler<?> th = typeHandlerRegistry.getTypeHandler(keyPropertyType);
-          if (th != null) {
-            ResultSet rs = stmt.getGeneratedKeys();
-            try {
-              ResultSetMetaData rsmd = rs.getMetaData();
-              int colCount = rsmd.getColumnCount();
-              if (colCount > 0) {
-                while (rs.next()) {
-                  Object value = th.getResult(rs, 1);
-                  metaParam.setValue(keyProperty, value);
+        if (keyProperties != null) {
+          TypeHandler<?>[] typeHandlers = new TypeHandler<?>[keyProperties.length];
+          // calculate type handlers for the key properties
+          for (int i = 0; i < keyProperties.length; i++) {
+            if (metaParam.hasSetter(keyProperties[i])) {
+              Class<?> keyPropertyType = metaParam.getSetterType(keyProperties[i]);
+              TypeHandler<?> th = typeHandlerRegistry.getTypeHandler(keyPropertyType);
+              typeHandlers[i] = th;
+            }
+          }
+          
+          ResultSet rs = stmt.getGeneratedKeys();
+          try {
+            ResultSetMetaData rsmd = rs.getMetaData();
+            int colCount = rsmd.getColumnCount();
+            if (colCount >= keyProperties.length) {
+              while (rs.next()) {
+                for (int i = 0; i < keyProperties.length; i++) {
+                  TypeHandler<?> th = typeHandlers[i];
+                  if (th != null) {
+                    Object value = th.getResult(rs, i + 1);
+                    metaParam.setValue(keyProperties[i], value);
+                  }
                 }
               }
-            } finally {
+            }
+          } finally {
+            if (rs != null) {
               try {
-                if (rs != null) rs.close();
+                rs.close();
               } catch (Exception e) {
-                //ignore
+                // ignore
+                ;
               }
             }
           }
@@ -66,7 +79,8 @@ public class Jdbc3KeyGenerator implements KeyGenerator {
    * be called out (Oracle and PostgreSQL).  In these cases, the driver
    * will not correctly return the generated key unless the field is named.
    * 
-   * Currently, we only support one key column name.
+   * We allow more than one column name, and similarly we allow more then one
+   * key property, for the case where the table contains more than one generated value.
    * 
    * @return
    */
@@ -78,13 +92,7 @@ public class Jdbc3KeyGenerator implements KeyGenerator {
     if (in == null || in.trim().length() == 0) {
       return null;
     } else {
-      StringTokenizer st = new StringTokenizer(in,", ",false);
-      String[] answer = new String[st.countTokens()];
-      int i = 0;
-      while (st.hasMoreTokens()) {
-        answer[i] = st.nextToken();
-        i++;
-      }
+      String[] answer = in.split(",");
       return answer;
     }  
   }
