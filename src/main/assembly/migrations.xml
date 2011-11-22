@@ -18,9 +18,6 @@
       <source>NOTICE</source>
     </file>
     <file>
-      <source>doc/en/MyBatis-3-Migrations.pdf</source>
-    </file>
-    <file>
       <source>MIGRATIONS-README</source>
       <filtered>true</filtered>
     </file>
