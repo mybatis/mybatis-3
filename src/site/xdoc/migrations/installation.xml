@@ -111,6 +111,9 @@
           <li>NOTICE</li>
           <li>MIGRATIONS-README</li>
         </ul>
+        <p>The single MyBatis JAR file is the only dependency that MyBatis Migrations has. script files do the same
+  thing, but as you can see, one is for *nix shells and the other is for Windows (Note: cygwin users should still call
+  the .cmd version).</p>
       </subsection>
     </section>
   </body>
