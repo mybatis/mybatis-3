@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 2010-2011 The myBatis Team
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!--
+  version: $Id$
+-->
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+
+  <properties>
+    <title>MyBatis Migrations | Introduction</title>
+    <author email="mybatis-dev@googlegroups.com">The MyBatis Team</author>
+  </properties>
+
+  <body>
+    <section name="Introdution">
+      <p>The entire Migrations system can be accessed through this one simple command. You can access the built-in help by typing: <code>migrate --help</code>.</p>
+      <p>Calling the migrate command with no options or invalid options also produces the help message. Here's the output of the help command:</p>
+
+      <source><![CDATA[Usage: migrate command [parameter] [--path=<directory>] [--env=<environment>]
+               [--template=<path to template>]
+--path=<directory>   Path to repository.  Default current working directory.
+--env=<environment>  Environment to configure. Default environment is 'development'.
+--force              Forces script to continue even if SQL errors are encountered.
+--help               Displays this usage message.
+--trace              Shows additional error details (if any).
+--template           (Optional) Specify template to be used with ‘new'command
+Commands:
+  init               Creates (if necessary) and initializes a migration path.
+  bootstrap          Runs the bootstrap SQL script (see scripts/bootstrap.sql for more).
+  new <description>  Creates a new migration with the provided description.
+  up                 Run all unapplied migrations.
+  down               Undoes the last migration applied to the database.
+  version <version>  Migrates the database up or down to the specified version.
+pending
+status
+script <v1> <v2>
+Force executes pending migrations out of order (not recommended).
+Prints the changelog from the database if the changelog table exists.
+Generates a delta migration script from version v1 to v2 (undo if v1 > v2).]]></source>
+
+      <p>We'll go through each of these commands in detail, but first, let's talk about lifecycle.</p>
+    </section>
+
+    <section name="The MyBatis Migrations Lifecycle">
+      <p>Database change management is difficult at the best of times, so to make the situation better, it’s important to have a good database evolution strategy. That employed by MyBatis Migrations targets a few key goals:</p>
+      <ul>
+        <li>Consistent – The schema should be predictable on every machine it’s created on.</li>
+        <li>Repeatable – The schema can be destroyed and recreated a predictable way.</li>
+        <li>Reversible – Changes should be able to be rolled back, or undone.</li>
+        <li>Versioned – The version of the schema should be identifiable (via query or tool).</li>
+        <li>Auditable – The schema evolution should be auditable and the changes to it logged.</li>
+        <li>Automated – The evolution (or devolution) of the schema should be fully automated.</li>
+        <li>Serial – The evolution in the database should never branch or evolve conditionally.</li>
+        <li>Immutable Changes – No past applied alter or evolution of the database should be modified, instead a new change should be created.</li>
+        <li>Concurrently Modifiable – The schema should be safely modifiable by multiple people or teams in a way that encourages teamwork, communication and easy identification of conflicts, without depending on text comparisons (diff) or any particular source control feature (conflicts), but should work very well with source control systems.</li>
+      </ul>
+      <p>Thus, the lifecycle of a schema managed with MyBatis Migrations is as follows:</p>
+      <ol>
+        <li>Initialize Repository</li>
+        <li>Bootstrap database schema</li>
+        <li>Create a new migration (or many migrations)</li>
+        <li>Apply migrations</li>
+      </ol>
+      <p>Optional steps include:</p>
+      <ul>
+        <li>Revert migrations if necessary to resolve conflicts</li>
+        <li>Apply pending migrations out of order if it’s safe to do so</li>
+        <li>Generate migration scripts to be run “offline” in environments that are beyond your control</li>
+        <li>Get the status of the system at any time</li>
+      </ul>
+      <p>The following command discussions will provide more detail about how this lifecycle works.</p>
+    </section>
+  </body>
+
+</document>

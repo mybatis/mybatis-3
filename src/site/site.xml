@@ -30,6 +30,7 @@
     <menu name="Migrations">
       <item name="Introduction" href="migrations/index.html"/>
       <item name="Installation" href="migrations/installation.html"/>
+      <item name="The 'migrate' Command" href="migrations/migrate.html"/>
     </menu>
 
     <menu ref="reports"/>
