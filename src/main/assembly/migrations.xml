@@ -13,13 +13,16 @@
     </file>
     <file>
       <source>LICENSE</source>
+      <fileMode>666</fileMode>
     </file>
     <file>
       <source>NOTICE</source>
+      <fileMode>666</fileMode>
     </file>
     <file>
       <source>MIGRATIONS-README</source>
       <filtered>true</filtered>
+      <fileMode>666</fileMode>
     </file>
   </files>
   <fileSets>
