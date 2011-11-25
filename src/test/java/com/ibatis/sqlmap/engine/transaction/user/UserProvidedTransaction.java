@@ -14,7 +14,7 @@ public class UserProvidedTransaction extends BaseTransaction {
   private Executor executor;
 
   public UserProvidedTransaction(Configuration configuration, Connection connection) {
-    this.executor = configuration.newExecutor(new JdbcTransaction(connection, false));
+    this.executor = configuration.newExecutor(new JdbcTransaction(connection));
   }
 
   public void commit(boolean required) throws SQLException, TransactionException {

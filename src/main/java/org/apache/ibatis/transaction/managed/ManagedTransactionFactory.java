@@ -1,10 +1,13 @@
 package org.apache.ibatis.transaction.managed;
 
-import org.apache.ibatis.transaction.Transaction;
-import org.apache.ibatis.transaction.TransactionFactory;
-
 import java.sql.Connection;
 import java.util.Properties;
+
+import javax.sql.DataSource;
+
+import org.apache.ibatis.session.TransactionIsolationLevel;
+import org.apache.ibatis.transaction.Transaction;
+import org.apache.ibatis.transaction.TransactionFactory;
 
 public class ManagedTransactionFactory implements TransactionFactory {
 
@@ -19,10 +22,14 @@ public class ManagedTransactionFactory implements TransactionFactory {
     }
   }
 
-  public Transaction newTransaction(Connection conn, boolean autoCommit) {
-    // Silently ignores autocommit, as managed transactions are entirely
+  public Transaction newTransaction(Connection conn) {
+    return new ManagedTransaction(conn, closeConnection);
+  }
+
+  public Transaction newTransaction(DataSource ds, TransactionIsolationLevel level, boolean autoCommit) {
+    // Silently ignores autocommit and isolation level, as managed transactions are entirely
     // controlled by an external manager.  It's silently ignored so that
     // code remains portable between managed and unmanaged configurations.
-    return new ManagedTransaction(conn, closeConnection);
+    return new ManagedTransaction(ds, level, closeConnection);
   }
 }

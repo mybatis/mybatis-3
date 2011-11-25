@@ -57,6 +57,7 @@ public class ReuseExecutor extends BaseExecutor {
       stmt = getStatement(sql);
     } else {
       Connection connection = transaction.getConnection();
+      connection = wrapConnection(connection);
       stmt = handler.prepare(connection);
       putStatement(sql, stmt);
     }

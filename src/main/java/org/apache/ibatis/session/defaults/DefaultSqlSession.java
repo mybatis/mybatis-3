@@ -11,6 +11,7 @@ import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.session.*;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -193,7 +194,11 @@ public class DefaultSqlSession implements SqlSession {
   }
 
   public Connection getConnection() {
-    return executor.getTransaction().getConnection();
+    try {    
+      return executor.getTransaction().getConnection();
+    } catch (SQLException e) {
+      throw ExceptionFactory.wrapException("Error getting a new connection.  Cause: " + e, e);
+    }
   }
 
   public void clearCache() {

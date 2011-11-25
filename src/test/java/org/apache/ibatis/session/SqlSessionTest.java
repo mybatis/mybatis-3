@@ -1,26 +1,38 @@
 package org.apache.ibatis.session;
 
-import domain.blog.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
+import java.io.Reader;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.ibatis.BaseDataTest;
+import org.apache.ibatis.binding.BindingException;
+import org.apache.ibatis.cache.impl.PerpetualCache;
+import org.apache.ibatis.executor.result.DefaultResultHandler;
+import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.session.defaults.DefaultSqlSessionFactory;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import domain.blog.Author;
+import domain.blog.Blog;
+import domain.blog.Comment;
+import domain.blog.DraftPost;
+import domain.blog.ImmutableAuthor;
+import domain.blog.Post;
+import domain.blog.Section;
+import domain.blog.Tag;
 import domain.blog.mappers.AuthorMapper;
 import domain.blog.mappers.AuthorMapperWithMultipleHandlers;
 import domain.blog.mappers.AuthorMapperWithRowBounds;
 import domain.blog.mappers.BlogMapper;
-import org.apache.ibatis.BaseDataTest;
-import org.apache.ibatis.binding.BindingException;
-import org.apache.ibatis.cache.impl.PerpetualCache;
-import org.apache.ibatis.exceptions.PersistenceException;
-import org.apache.ibatis.executor.result.DefaultResultHandler;
-import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.mapping.Environment;
-import org.apache.ibatis.session.defaults.DefaultSqlSessionFactory;
-
-import static org.junit.Assert.*;
-
-import org.junit.BeforeClass;
-import org.junit.Test;
-
-import java.io.Reader;
-import java.util.*;
 
 public class SqlSessionTest extends BaseDataTest {
   private static SqlSessionFactory sqlMapper;
@@ -93,6 +105,26 @@ public class SqlSessionTest extends BaseDataTest {
     } catch (Exception e) {
       assertTrue(e.getMessage().contains("already contains value"));
     }
+  }
+
+  @Test
+  public void shouldOpenAndClose() throws Exception {
+    SqlSession session = sqlMapper.openSession(TransactionIsolationLevel.SERIALIZABLE);
+    session.close();
+  }
+
+  @Test
+  public void shouldCommitAnUnUsedSqlSession() throws Exception {
+    SqlSession session = sqlMapper.openSession(TransactionIsolationLevel.SERIALIZABLE);
+    session.commit(true);
+    session.close();
+  }
+
+  @Test
+  public void shouldRollbackAnUnUsedSqlSession() throws Exception {
+    SqlSession session = sqlMapper.openSession(TransactionIsolationLevel.SERIALIZABLE);
+    session.rollback(true);
+    session.close();
   }
 
   @Test

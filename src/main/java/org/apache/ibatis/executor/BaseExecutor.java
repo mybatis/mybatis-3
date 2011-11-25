@@ -2,6 +2,7 @@ package org.apache.ibatis.executor;
 
 import static org.apache.ibatis.executor.ExecutionPlaceholder.EXECUTION_PLACEHOLDER;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ import org.apache.ibatis.cache.CacheKey;
 import org.apache.ibatis.cache.impl.PerpetualCache;
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
+import org.apache.ibatis.logging.jdbc.ConnectionLogger;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.ParameterMapping;
@@ -290,4 +292,12 @@ public abstract class BaseExecutor implements Executor {
     }
   }
 
+  protected Connection wrapConnection(Connection connection) {
+    if (log.isDebugEnabled()) {
+      return ConnectionLogger.newInstance(connection);
+    } else {
+      return connection;
+    }
+  }
+  
 }

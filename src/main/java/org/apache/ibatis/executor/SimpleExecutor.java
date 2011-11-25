@@ -52,6 +52,7 @@ public class SimpleExecutor extends BaseExecutor {
   private Statement prepareStatement(StatementHandler handler) throws SQLException {
     Statement stmt;
     Connection connection = transaction.getConnection();
+    connection = wrapConnection(connection);
     stmt = handler.prepare(connection);
     handler.parameterize(stmt);
     return stmt;

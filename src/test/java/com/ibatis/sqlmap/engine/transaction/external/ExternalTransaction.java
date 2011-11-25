@@ -47,7 +47,7 @@ public class ExternalTransaction extends BaseTransaction {
         connection.setAutoCommit(defaultAutoCommit);
       }
     }
-    executor = configuration.newExecutor(new JdbcTransaction(connection, false));
+    executor = configuration.newExecutor(new JdbcTransaction(connection));
   }
 
   public void commit(boolean required) throws SQLException, TransactionException {

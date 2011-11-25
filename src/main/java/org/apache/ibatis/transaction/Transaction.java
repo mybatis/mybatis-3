@@ -5,7 +5,7 @@ import java.sql.SQLException;
 
 public interface Transaction {
 
-  Connection getConnection();
+  Connection getConnection() throws SQLException;
 
   void commit() throws SQLException;
 

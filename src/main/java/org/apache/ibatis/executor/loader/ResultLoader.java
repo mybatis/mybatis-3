@@ -83,10 +83,8 @@ public class ResultLoader {
       throw new ExecutorException("ResultLoader could not load lazily.  Environment was not configured.");
     DataSource ds = environment.getDataSource();
     if (ds == null) throw new ExecutorException("ResultLoader could not load lazily.  DataSource was not configured.");
-    Connection conn = ds.getConnection();
-    conn = wrapConnection(conn);
     final TransactionFactory transactionFactory = environment.getTransactionFactory();
-    Transaction tx = transactionFactory.newTransaction(conn, false);
+    Transaction tx = transactionFactory.newTransaction(ds, null, false);
     return configuration.newExecutor(tx, ExecutorType.SIMPLE);
   }
 

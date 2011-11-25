@@ -42,6 +42,7 @@ public class BatchExecutor extends BaseExecutor {
       stmt = statementList.get(last);
     } else {
       Connection connection = transaction.getConnection();
+      connection = wrapConnection(connection);
       stmt = handler.prepare(connection);
       currentSql = sql;
       statementList.add(stmt);
@@ -60,6 +61,7 @@ public class BatchExecutor extends BaseExecutor {
       Configuration configuration = ms.getConfiguration();
       StatementHandler handler = configuration.newStatementHandler(this, ms, parameterObject, rowBounds, resultHandler);
       Connection connection = transaction.getConnection();
+      connection = wrapConnection(connection);
       stmt = handler.prepare(connection);
       handler.parameterize(stmt);
       return handler.query(stmt, resultHandler);

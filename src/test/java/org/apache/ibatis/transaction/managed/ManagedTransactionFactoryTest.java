@@ -32,7 +32,7 @@ public class ManagedTransactionFactoryTest extends BaseDataTest {
 
     TransactionFactory tf = new ManagedTransactionFactory();
     tf.setProperties(new Properties());
-    Transaction tx = tf.newTransaction(conn, false);
+    Transaction tx = tf.newTransaction(conn);
     assertEquals(conn, tx.getConnection());
     tx.commit();
     tx.rollback();
@@ -45,14 +45,15 @@ public class ManagedTransactionFactoryTest extends BaseDataTest {
   public void shouldEnsureThatCallsToManagedTransactionAPIDoNotForwardToManagedConnectionsAndDoesNotCloseConnection() throws Exception {
     mockery.checking(new Expectations() {
       {
+        never(conn).close();
       }
-    });
+    }); 
 
     TransactionFactory tf = new ManagedTransactionFactory();
     Properties props = new Properties();
     props.setProperty("closeConnection","false");
     tf.setProperties(props);
-    Transaction tx = tf.newTransaction(conn, false);
+    Transaction tx = tf.newTransaction(conn);
     assertEquals(conn, tx.getConnection());
     tx.commit();
     tx.rollback();
