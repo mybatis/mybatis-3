@@ -25,7 +25,7 @@
     <!-- Cannot define in parent ATM, see COMMONSSITE-26 -->
     <site>
       <id>mybatis.site</id>
-      <url>ftp://${mybatis.host}/${project.artifactId}</url>
+      <url>ftp://${mybatis.host}/core</url>
     </site>
   </distributionManagement>
   <contributors>
