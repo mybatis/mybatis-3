@@ -3,7 +3,7 @@
   <parent>
     <groupId>org.mybatis</groupId>
     <artifactId>mybatis-parent</artifactId>
-    <version>11</version>
+    <version>12</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>mybatis</artifactId>
@@ -21,6 +21,13 @@
     <connection>scm:svn:https://mybatis.googlecode.com/svn/trunk</connection>
     <developerConnection>scm:svn:https://mybatis.googlecode.com/svn/trunk</developerConnection>
   </scm>
+  <distributionManagement>
+    <!-- Cannot define in parent ATM, see COMMONSSITE-26 -->
+    <site>
+      <id>mybatis.site</id>
+      <url>ftp://${mybatis.host}/${project.artifactId}</url>
+    </site>
+  </distributionManagement>
   <contributors>
     <contributor>
         <name>Andrea Selva</name>
