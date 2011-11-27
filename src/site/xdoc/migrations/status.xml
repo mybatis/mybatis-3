@@ -34,7 +34,7 @@
       <code>--path</code> option (as with all other commands).</p>
 
       <source>/home/cbegin/testdb$ migrate status
-ID Applied At Description
+ID             Applied At          Description
 ==================================================================
 20090802210445 ...pending... create changelog
 20090804225328 ...pending... create blog table</source>
@@ -44,7 +44,7 @@ ID Applied At Description
       command (discussed next), the status will report something like the following:</p>
 
       <source>/home/cbegin/testdb$ migrate status
-ID Applied At Description
+ID             Applied At          Description
 ==================================================================
 20090802210445  2009-08-04 22:51:16  create changelog
 20090804225328  2009-08-04 22:51:16  create blog table</source>
@@ -54,7 +54,7 @@ ID Applied At Description
       As we add migrations this status log will grow. For example:</p>
 
       <source>/home/cbegin/testdb$ migrate status
-ID Applied At Description
+ID             Applied At          Description
 ==================================================================
 20090802210445 2009-08-04 22:51:16 create changelog
 20090804225207 2009-08-04 22:52:51 create author table
