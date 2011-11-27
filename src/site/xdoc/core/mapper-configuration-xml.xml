@@ -40,8 +40,7 @@
 						<li>
 							environments
 							<ul>
-								<li>environment</li>
-								<li>
+								<li>environment
 									<ul>
 										<li>transactionManager</li>
 										<li>dataSource</li>
@@ -340,14 +339,14 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
 				An example of the settings element fully configured is as follows:
 			</p>
 			<source><![CDATA[<settings>
-<setting name="cacheEnabled" value="true"/>
-<setting name="lazyLoadingEnabled" value="true"/>
-<setting name="multipleResultSetsEnabled" value="true"/>
-<setting name="useColumnLabel" value="true"/>
-<setting name="useGeneratedKeys" value="false"/>
-<setting name="enhancementEnabled" value="false"/>
-<setting name="defaultExecutorType" value="SIMPLE"/>
-<setting name="defaultStatementTimeout" value="25000"/>
+	<setting name="cacheEnabled" value="true"/>
+	<setting name="lazyLoadingEnabled" value="true"/>
+	<setting name="multipleResultSetsEnabled" value="true"/>
+	<setting name="useColumnLabel" value="true"/>
+	<setting name="useGeneratedKeys" value="false"/>
+	<setting name="enhancementEnabled" value="false"/>
+	<setting name="defaultExecutorType" value="SIMPLE"/>
+	<setting name="defaultStatementTimeout" value="25000"/>
 </settings>]]></source>
 
 		</section>
@@ -896,7 +895,7 @@ public class ExampleTypeHandler implements TypeHandler {
 	}
 }]]></source>
 
-				<source><![CDATA[// MapperConfig.xml
+				<source><![CDATA[<!-- MapperConfig.xml -->
 <typeHandlers>
 	<typeHandler javaType="String" jdbcType="VARCHAR" handler="org.mybatis.example.ExampleTypeHandler"/>
 </typeHandlers>
@@ -935,7 +934,7 @@ public class ExampleObjectFactory extends DefaultObjectFactory {
 	}
 }]]></source>
 
-<source><![CDATA[// MapperConfig.xml
+<source><![CDATA[<!-- MapperConfig.xml -->
 <objectFactory type="org.mybatis.example.ExampleObjectFactory">
 	<property name="someProperty" value="100"/>
 </objectFactory>]]></source>
@@ -1007,7 +1006,7 @@ public class ExamplePlugin implements Interceptor {
 	}
 }]]></source>
 
-				<source><![CDATA[// MapperConfig.xml
+				<source><![CDATA[<!-- MapperConfig.xml -->
 <plugins>
 	<plugin interceptor="org.mybatis.example.ExamplePlugin">
 		<property name="someProperty" value="100"/>
@@ -1315,14 +1314,14 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader,properties);]]
 					resource references, or literal, fully qualified url references
 					(including file:/// URLs). For example:
 				</p>
-				<source><![CDATA[// Using classpath relative resources
+				<source><![CDATA[<!-- Using classpath relative resources -->
 <mappers>
 	<mapper resource="org/mybatis/builder/AuthorMapper.xml"/>
 	<mapper resource="org/mybatis/builder/BlogMapper.xml"/>
 	<mapper resource="org/mybatis/builder/PostMapper.xml"/>
 </mappers>]]></source>
 
-<source><![CDATA[// Using url fully qualified paths
+<source><![CDATA[<!-- Using url fully qualified paths -->
 <mappers>
 	<mapper url="file:///var/sqlmaps/AuthorMapper.xml"/>
 	<mapper url="file:///var/sqlmaps/BlogMapper.xml"/>
