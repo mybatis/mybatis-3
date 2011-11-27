@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 2010-2011 The myBatis Team
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!--
+  version: $Id$
+-->
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+
+  <properties>
+    <title>MyBatis Migrations | Migrate > bootstrap</title>
+    <author email="mybatis-dev@googlegroups.com">The MyBatis Team</author>
+  </properties>
+
+  <body>
+    <section name="The 'bootstrap' command">
+      <p>If you’re working from an existing database, you need to start from a known state. There’s no point in trying
+      to rewind time and shoehorn your existing database into a series of migration scripts. It’s more practical to just
+      accept the current state of your database schema and identify this as the starting point. The bootstrap script and
+      command exist for this reason.</p>
+
+      <p> In the scripts directory you’ll find <code>bootstrap.sql</code>. You can put your
+      existing DDLscript in this file. If you don’t have a DDL script, you can export your existing database schema and
+      put it in the bootstrap file. You’ll want to clean it up so that it doesn’t contain anything specific to any one
+      environment, but otherwise almost any script should work. Watch out for DDL that contains conditional elements or
+      branching logic that could generate multiple schemas. While this is sometimes necessary, it’s a really good idea
+      to try to eliminate this aspect of your database schema (put such conditional and branching logic in your code or
+      stored procedures instead). If you have multiple DDL files, you’ll have to merge them into the single bootstrap
+      file.</p>
+
+      <p>But worry not, it’s the last time you’ll ever modify it. One of the rules above was immutable change scripts...
+      the bootstrap is included in that rule.</p>
+
+      <p><span class="label warning">Note</span> The bootstrap.sql is a plain text file and is not a valid “migration”
+      that you’ll learn about later. It’s meant to be similar to the scripts you probably already use. Therefore you
+      cannot rollback the bootstrap file, nor is it tracked in the audit logs... without exception, whatever you put in
+      the bootstrap file cannot leverage the benefits of the other migration commands. But we have to start somewhere,
+      and it’s best to look forward.</p>
+
+      <p>To run the bootstrap file, you simply call the bootstrap command. You do this once to initialize your database
+      into a known working state. From then on, you’ll use migration scripts to evolve the database schema.</p>
+
+      <p>The bootstrap command has no parameters. So running it is as simple as:</p>
+
+      <source>/home/cbegin/testdb$ migrate bootstrap</source>
+
+      <p>As usual, you can use the <code>--path</code> option to specify the repository path, otherwise the current
+        working directory is assumed to be the root of your migration repository (aka migration path).</p>
+
+      <p>If there are environment specific elements in your bootstrap script, you’ll learn later that you can use
+      properties to deal with those.</p>
+    </section>
+  </body>
+
+</document>
