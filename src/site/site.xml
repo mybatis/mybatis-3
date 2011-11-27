@@ -25,6 +25,8 @@
   <body>
     <menu name="Core">
       <item name="Introduction" href="core/index.html"/>
+      <item name="Getting Started" href="core/getting-started.html"/>
+      <item name="Mapper Configuration XML" href="core/mapper-configuration-xml.html"/>   
     </menu>
 
     <menu name="Migrations">
