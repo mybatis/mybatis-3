@@ -39,6 +39,7 @@
         <item name="new" href="migrations/new.html"/>
         <item name="status" href="migrations/status.html"/>
         <item name="up, down" href="migrations/updown.html"/>
+        <item name="version" href="migrations/version.html"/>
       </item>
     </menu>
 
