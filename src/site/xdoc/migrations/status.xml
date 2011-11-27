@@ -36,8 +36,8 @@
       <source>/home/cbegin/testdb$ migrate status
 ID             Applied At          Description
 ==================================================================
-20090802210445 ...pending... create changelog
-20090804225328 ...pending... create blog table</source>
+20090802210445    ...pending...    create changelog
+20090804225328    ...pending...    create blog table</source>
 
       <p>Since we’ve never run a migration, the status of all of the existing migration scripts is <b>pending</b>,
       including the changelog table itself, which is where more detailed status logs are kept. Once we run the <b>up</b>
