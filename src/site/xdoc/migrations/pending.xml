@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 2010-2011 The myBatis Team
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!--
+  version: $Id$
+-->
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+
+  <properties>
+    <title>MyBatis Migrations | Migrate > pending</title>
+    <author email="mybatis-dev@googlegroups.com">The MyBatis Team</author>
+  </properties>
+
+  <body>
+    <section name="The 'pending' command">
+      <p>Sometimes when working with a team of people, or with multiple teams of people, it’s possible that more than one
+      change to the database can be made at a time. Past solutions to this problem have been to centralize the management
+      or responsibility for change to one person or team. But this creates bureaucracy and slows down the development process.
+      It also hurts automation and continuous integration. Therefore we need a better approach.</p>
+
+      <p>MyBatis Migrations simply allows this situation to occur, but makes it very obvious that it has happened.
+      Then the teams can review the situation, downgrade their schemas and re-run the migrations in order, and re-assess
+      the situation. It allows teams to work autonomously, while encouraging communication, team work and good source
+      control practices. When someone creates migration in another workspace before you, but commits to the source
+      control system later than you, you’ll end up with an orphaned pending migration. They’re easy to spot with the status command:</p>
+
+      <source>/home/cbegin/testdb$ migrate status
+ID             Applied At          Description
+==================================================================
+20090802210445 2009-08-04 22:51:17 create changelog
+20090804225207 2009-08-04 22:51:17 create author table
+20090804225328    ...pending...    create blog table
+20090804225333 2009-08-04 22:51:17 create post table</source>
+
+      <p>MyBatis Migrations will <b>not</b> run this orphaned migration simply by running the <b>up</b> command.
+      Instead, you’d have to downgrade to the point just before the orphaned migration, then run <b>up</b> to run all of
+      the migrations in order. This is the <b>safest</b> and recommended approach.</p>
+
+      <p>However, if you and the other team review the change, and decide it’s completely isolated and not a conflicting
+      change, then there is a way to run the pending migration(s) out of order. The <b>pending</b> command does just
+      that. It runs all pending migrations regardless of their order or position in the status log. So if we were to run
+      the pending command given the situation above, the results would be as we expect:</p>
+
+      <source>/home/cbegin/testdb$ migrate pending
+
+/home/cbegin/testdb$ migrate status
+ID             Applied At          Description
+==================================================================
+20090802210445 2009-08-04 22:51:17 create changelog
+20090804225207 2009-08-04 22:51:17 create author table
+20090804225328 2009-08-05 24:55:23 create blog table
+20090804225333 2009-08-04 22:51:17 create post table</source>
+
+      <p>Even after the fact, you’ll be able to identify any migrations run in this way, as the applied date will give
+      them away. An out-of-order applied date is clear indication that a migration was run out of order. No surprises!</p>
+
+      <p>Some commands like <b>pending</b> and <b>down</b> are highly unlikely to ever be needed in production. By the time you
+      promote migrations to production, you’ve hopefully decided on your final schema and tested and approved the schema
+      for release. While they won’t be used in production, they are highly valuable during the development process.
+      Once you get used to the idea, you won’t be able to work without it again.</p>
+    </section>
+  </body>
+
+</document>
