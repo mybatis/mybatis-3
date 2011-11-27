@@ -36,6 +36,7 @@
         <item name="init" href="migrations/init.html"/>
         <item name="bootstrap" href="migrations/bootstrap.html"/>
         <item name="new" href="migrations/new.html"/>
+        <item name="status" href="migrations/status.html"/>
       </item>
     </menu>
 
