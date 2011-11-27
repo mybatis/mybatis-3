@@ -35,6 +35,7 @@
       <item name="The 'migrate' Command" href="migrations/migrate.html">
         <item name="init" href="migrations/init.html"/>
         <item name="bootstrap" href="migrations/bootstrap.html"/>
+        <item name="new" href="migrations/new.html"/>
       </item>
     </menu>
 
