@@ -44,7 +44,7 @@
       For example, given the following:</p>
 
       <source>/home/cbegin/testdb$ migrate status
-ID Applied At Description
+ID             Applied At          Description
 ==================================================================
 20090802210445 2009-08-04 22:51:17 create changelog
 20090804225207 2009-08-04 22:51:17 create author table
