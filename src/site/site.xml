@@ -42,6 +42,7 @@
         <item name="version" href="migrations/version.html"/>
         <item name="pending" href="migrations/pending.html"/>
         <item name="script" href="migrations/script.html"/>
+        <item name="Command Shortcuts" href="migrations/shortcuts.html"/>
       </item>
     </menu>
 
