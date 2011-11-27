@@ -64,13 +64,13 @@
 				methods:
 			</p>
 			<source><![CDATA[org.apache.ibatis.logging.LogFactory.useSlf4jLogging();
-			org.apache.ibatis.logging.LogFactory.useLog4JLogging();
-			org.apache.ibatis.logging.LogFactory.useJdkLogging();
-			org.apache.ibatis.logging.LogFactory.useCommonsLogging();
-			org.apache.ibatis.logging.LogFactory.useStdOutLogging();]]></source>
+org.apache.ibatis.logging.LogFactory.useLog4JLogging();
+org.apache.ibatis.logging.LogFactory.useJdkLogging();
+org.apache.ibatis.logging.LogFactory.useCommonsLogging();
+org.apache.ibatis.logging.LogFactory.useStdOutLogging();]]></source>
 			<p>If you choose to call one of these methods, you should do so
 				before
-				calling any other MyBatis method. &#xa0;Also, these methods
+				calling any other MyBatis method. Also, these methods
 				will only
 				switch to the requested log implementation if that
 				implementation is
@@ -95,7 +95,7 @@
 				the
 				following locations:
 			</p>
-			<ol style="list-style-type: decimal">
+			<ol>
 				<li>
 					Jakarta Commons Logging:
 					http://jakarta.apache.org/commons/logging/index.html
@@ -125,7 +125,7 @@
 				2 steps.</p>
 			<p></p>
 			<p><strong>Step 1: Add the Log4J JAR file</strong></p>
-			<p>Because we&#x2019;re using Log4J, we&#x2019;ll need to ensure its
+			<p>Because we are using Log4J, we will need to ensure its
 				JAR file is available to our application. To use Log4J, you need to
 				add the JAR file to your application classpath. You can download
 				Log4J from the URL above.</p>
@@ -134,22 +134,20 @@
 				simply add it to the JVM -classpath startup parameter.</p>
 			<p></p>
 			<p><strong>Step 2: Configure Log4J</strong></p>
-			<p>Configuring Log4J is simple &#x2013; you create a file called
+			<p>Configuring Log4J is simple - you create a file called
 				log4j.properties and it looks like the following:</p>
-			<p></p>
-			<p># Global logging configuration</p>
-			<p>log4j.rootLogger=ERROR, stdout</p>
-			<p># MyBatis logging configuration...</p>
-			<p>#log4j.logger.org.apache.ibatis=DEBUG</p>
-			<p>#log4j.logger.java.sql.Connection=DEBUG</p>
-			<p>#log4j.logger.java.sql.Statement=DEBUG</p>
-			<p>#log4j.logger.java.sql.PreparedStatement=DEBUG</p>
-			<p>#log4j.logger.java.sql.ResultSet=DEBUG</p>
-			<p># Console output...</p>
-			<p>log4j.appender.stdout=org.apache.log4j.ConsoleAppender</p>
-			<p>log4j.appender.stdout.layout=org.apache.log4j.PatternLayout</p>
-			<p>log4j.appender.stdout.layout.ConversionPattern=%5p [%t] - %m%n</p>
-			<p></p>
+<source><![CDATA[# Global logging configuration
+log4j.rootLogger=ERROR, stdout
+# MyBatis logging configuration...
+#log4j.logger.org.apache.ibatis=DEBUG
+#log4j.logger.java.sql.Connection=DEBUG
+#log4j.logger.java.sql.Statement=DEBUG
+#log4j.logger.java.sql.PreparedStatement=DEBUG
+#log4j.logger.java.sql.ResultSet=DEBUG
+# Console output...
+log4j.appender.stdout=org.apache.log4j.ConsoleAppender
+log4j.appender.stdout.layout=org.apache.log4j.PatternLayout
+log4j.appender.stdout.layout.ConversionPattern=%5p [%t] - %m%n]]></source>			
 			<p>The above file is the minimal configuration that will cause
 				logging to only report on errors. Line 2 of the file is what is
 				shown to be configuring Log4J to only report errors to the stdout
@@ -157,7 +155,7 @@
 				console, file, database etc.). To maximize the level of reporting,
 				we could change line 2 as follows:</p>
 			<p></p>
-			<p>log4j.rootLogger=DEBUG, stdout</p>
+			<source>log4j.rootLogger=DEBUG, stdout</source>
 			<p></p>
 			<p>By changing line 2 as above, Log4J will now report on all logged
 				events to the &#x2018;stdout&#x2019; appender (console). If you want
@@ -169,7 +167,7 @@
 				would simply change line 7 to the following (notice it&#x2019;s not
 				#commented out anymore):</p>
 			<p></p>
-			<p>log4j.logger.java.sql.PreparedStatement=DEBUG</p>
+			<source>log4j.logger.java.sql.PreparedStatement=DEBUG</source>
 			<p></p>
 			<p>The remaining configuration in the log4j.properties file is used
 				to configure the appenders, which is beyond the scope of this
