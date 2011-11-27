@@ -28,7 +28,7 @@
   </properties>
 
   <body>
-    <section name="Introdution">
+    <section name="The 'init' command">
       <p>The <strong>init</strong> command initializes a new 'migration path', also called a 'repository' (of migration scripts). Regardless of whether your working with a new database or an existing one, you'll run init to create the workspace in which you'll place everything you need to manage database
 change. Running this command will create the directory specified by the <code>--path</code> option (which is the current working directory by default).
 Here's an example of running the init command:</p>
