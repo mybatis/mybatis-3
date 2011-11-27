@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2010-2011 The myBatis Team Licensed under the Apache License, 
+	Version 2.0 (the "License"); you may not use this file except in compliance 
+	with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+	Unless required by applicable law or agreed to in writing, software distributed 
+	under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES 
+	OR CONDITIONS OF ANY KIND, either express or implied. See the License for 
+	the specific language governing permissions and limitations under the License. -->
+
+<!-- version: $Id: getting-started.xml 4051 2011-11-25 21:47:24Z simone.tripodi 
+	$ -->
+<document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+
+	<properties>
+		<title>MyBatis Guice | Getting started</title>
+		<author email="mybatis-dev@googlegroups.com">The MyBatis Team</author>
+	</properties>
+
+	<body>
+		<section name="Logging">
+			<p></p>
+			<p>MyBatis provides logging information through the use of an
+				internal
+				log factory. The internal log factory will delegate logging
+				information to one of the following log implementations:
+			</p>
+			<ol style="list-style-type: decimal">
+				<li>
+					SLF4J
+				</li>
+				<li>
+					Jakarta Commons Logging (JCL &#x2013; NOT Job Control Language!)
+				</li>
+				<li>
+					Log4J
+				</li>
+				<li>
+					JDK logging
+				</li>
+			</ol>
+			<p>The logging solution chosen is based on runtime introspection by
+				the internal MyBatis log factory. The MyBatis log factory will use
+				the first logging implementation it finds (implementations are
+				searched in the above order). If MyBatis finds none of the above
+				implementations, then logging will be disabled.
+			</p>
+			<p>Many environments ship JCL as a part of the application server
+				classpath (good examples include Tomcat and WebSphere). It is
+				important to know that in such environments, MyBatis will use JCL as
+				the logging implementation. In an environment like WebSphere this
+				will mean that your Log4J configuration will be ignored because
+				WebSphere supplies its own proprietary implementation of JCL. This
+				can be very frustrating because it will appear that MyBatis is
+				ignoring your Log4J configuration (in fact, MyBatis is ignoring your
+				Log4J configuration because MyBatis will use JCL in such
+				environments). &#xa0;If your application is running in an
+				environment
+				where JCL is included in the classpath but you would
+				rather use one
+				of the other logging implementations you can select a
+				different
+				logging implementation by calling one of the following
+				methods:
+			</p>
+			<source><![CDATA[org.apache.ibatis.logging.LogFactory.useSlf4jLogging();
+			org.apache.ibatis.logging.LogFactory.useLog4JLogging();
+			org.apache.ibatis.logging.LogFactory.useJdkLogging();
+			org.apache.ibatis.logging.LogFactory.useCommonsLogging();
+			org.apache.ibatis.logging.LogFactory.useStdOutLogging();]]></source>
+			<p>If you choose to call one of these methods, you should do so
+				before
+				calling any other MyBatis method. &#xa0;Also, these methods
+				will only
+				switch to the requested log implementation if that
+				implementation is
+				available on the runtime classpath. For example, if
+				you try to
+				select
+				Log4J logging and Log4J is not available at runtime,
+				then MyBatis
+				will ignore the request to use Log4J and will use it's
+				normal
+				algorithm for discovering logging implementations.
+			</p>
+			<p></p>
+			<p>The specifics of Jakarta Commons Logging, Log4J and the JDK
+				Logging
+				API are beyond the scope of this document. However the
+				example
+				configuration below should get you started. If you would like
+				to
+				know
+				more about these frameworks, you can get more information from
+				the
+				following locations:
+			</p>
+			<ol style="list-style-type: decimal">
+				<li>
+					Jakarta Commons Logging:
+					http://jakarta.apache.org/commons/logging/index.html
+				</li>
+				<li>
+					Log4j: http://jakarta.apache.org/log4j/docs/index.html
+				</li>
+				<li>
+					JDK Logging API:
+					http://java.sun.com/j2se/1.4.1/docs/guide/util/logging/
+				</li>
+			</ol>
+		</section>
+		<section name="Logging Configuration">
+			<p>MyBatis logs most of its activity using log classes that are not
+				in the MyBatis packages. To see MyBatis logging statements, you
+				should enable logging on classes in the java.sql package &#x2013;
+				specifically the following classes:</p>
+			<p>java.sql.Connectionjava.sql.PreparedStatementjava.sql.Resultsetjava.sql.Statement
+			</p>
+			<p>Again, how you do this is dependent on the logging implementation
+				in use. We'll show how to do it with Log4J. &#xa0;Configuring the
+				logging services is simply a matter of including one or more extra
+				configuration files (e.g. log4j.properties) and sometimes a new JAR
+				file (e.g. log4j.jar). The following example configuration will
+				configure full logging services using Log4J as a provider. There are
+				2 steps.</p>
+			<p></p>
+			<p><strong>Step 1: Add the Log4J JAR file</strong></p>
+			<p>Because we&#x2019;re using Log4J, we&#x2019;ll need to ensure its
+				JAR file is available to our application. To use Log4J, you need to
+				add the JAR file to your application classpath. You can download
+				Log4J from the URL above.</p>
+			<p>For web or enterprise applications you can add the log4j.jar to
+				your WEB-INF/lib directory, or for a standalone application you can
+				simply add it to the JVM -classpath startup parameter.</p>
+			<p></p>
+			<p><strong>Step 2: Configure Log4J</strong></p>
+			<p>Configuring Log4J is simple &#x2013; you create a file called
+				log4j.properties and it looks like the following:</p>
+			<p></p>
+			<p># Global logging configuration</p>
+			<p>log4j.rootLogger=ERROR, stdout</p>
+			<p># MyBatis logging configuration...</p>
+			<p>#log4j.logger.org.apache.ibatis=DEBUG</p>
+			<p>#log4j.logger.java.sql.Connection=DEBUG</p>
+			<p>#log4j.logger.java.sql.Statement=DEBUG</p>
+			<p>#log4j.logger.java.sql.PreparedStatement=DEBUG</p>
+			<p>#log4j.logger.java.sql.ResultSet=DEBUG</p>
+			<p># Console output...</p>
+			<p>log4j.appender.stdout=org.apache.log4j.ConsoleAppender</p>
+			<p>log4j.appender.stdout.layout=org.apache.log4j.PatternLayout</p>
+			<p>log4j.appender.stdout.layout.ConversionPattern=%5p [%t] - %m%n</p>
+			<p></p>
+			<p>The above file is the minimal configuration that will cause
+				logging to only report on errors. Line 2 of the file is what is
+				shown to be configuring Log4J to only report errors to the stdout
+				appender. An appender is a component that collects output (e.g.
+				console, file, database etc.). To maximize the level of reporting,
+				we could change line 2 as follows:</p>
+			<p></p>
+			<p>log4j.rootLogger=DEBUG, stdout</p>
+			<p></p>
+			<p>By changing line 2 as above, Log4J will now report on all logged
+				events to the &#x2018;stdout&#x2019; appender (console). If you want
+				to tune the logging at a finer level, you can configure each class
+				that logs to the system using the &#x2018;SqlMap logging
+				configuration&#x2019; section of the file above (commented out in
+				lines 4 through 8 above). So if we wanted to log PreparedStatement
+				activity (SQL statements) to the console at the DEBUG level, we
+				would simply change line 7 to the following (notice it&#x2019;s not
+				#commented out anymore):</p>
+			<p></p>
+			<p>log4j.logger.java.sql.PreparedStatement=DEBUG</p>
+			<p></p>
+			<p>The remaining configuration in the log4j.properties file is used
+				to configure the appenders, which is beyond the scope of this
+				document. However, you can find more information at the Log4J
+				website (URL above). Or, you could simply experiment with it to see
+				what effects the different configuration options have. </p>
+		</section>
+	</body>
+</document>
