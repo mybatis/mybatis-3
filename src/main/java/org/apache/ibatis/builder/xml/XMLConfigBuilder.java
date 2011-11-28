@@ -260,12 +260,16 @@ public class XMLConfigBuilder extends BaseBuilder {
         String handler = child.getStringAttribute("handler");
         String typeHandlerPackage = child.getStringAttribute("package");
         if (handler != null && typeHandlerPackage == null) {
-          Class<?> javaTypeClass = resolveClass(javaType);
           TypeHandler typeHandlerInstance = (TypeHandler) resolveClass(handler).newInstance();
-          if (jdbcType == null) {
-            typeHandlerRegistry.register(javaTypeClass, typeHandlerInstance);
+          Class<?> javaTypeClass = resolveClass(javaType);
+          if (javaTypeClass != null) {
+            if (jdbcType == null) {
+              typeHandlerRegistry.register(javaTypeClass, typeHandlerInstance);
+            } else {
+              typeHandlerRegistry.register(javaTypeClass, resolveJdbcType(jdbcType), typeHandlerInstance);
+            }
           } else {
-            typeHandlerRegistry.register(javaTypeClass, resolveJdbcType(jdbcType), typeHandlerInstance);
+            typeHandlerRegistry.register(typeHandlerInstance);            
           }
         } else if (handler == null && typeHandlerPackage != null) {
           configuration.getTypeHandlerRegistry().register(typeHandlerPackage);
