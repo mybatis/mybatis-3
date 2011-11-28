@@ -28,15 +28,17 @@ value CDATA #REQUIRED
 <!ATTLIST typeAlias
 type CDATA #REQUIRED
 alias CDATA #IMPLIED
+package CDATA #IMPLIED
 >
 
 <!ELEMENT typeHandlers (typeHandler+)>
 
 <!ELEMENT typeHandler EMPTY>
 <!ATTLIST typeHandler
-javaType CDATA #REQUIRED
+javaType CDATA #IMPLIED
 jdbcType CDATA #IMPLIED
 handler CDATA #REQUIRED
+package CDATA #IMPLIED
 >
 
 <!ELEMENT objectFactory (property*)>
@@ -88,4 +90,5 @@ provider CDATA #IMPLIED
 <!ATTLIST mapper
 resource CDATA #IMPLIED
 url CDATA #IMPLIED
+package CDATA #IMPLIED
 >
