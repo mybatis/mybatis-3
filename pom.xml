@@ -43,8 +43,8 @@
         <email>mejta@rewor.org</email>
     </contributor>
     <contributor>
-        <name>Iwao AVE!</name>
-        <email>harawata@gmail.com</email>
+        <name>Jurriaan Pruys</name>
+        <email>jurriaan@pruys.com</email>
     </contributor>
     <contributor>
         <name>Patrick Savage</name>
@@ -54,14 +54,10 @@
         <name>Riccardo Cossu</name>
         <email>riccardo.cossu@gmail.com</email>
     </contributor>
-    <contributor>
-        <name>Tim Chen</name>
-        <email>chengt@gmail.com</email>
-    </contributor>
   </contributors>
   <properties>
     <findbugs.onlyAnalyze>org.apache.ibatis.*</findbugs.onlyAnalyze>
-    <clirr.comparisonVersion>3.0.3</clirr.comparisonVersion>
+    <clirr.comparisonVersion>3.0.6</clirr.comparisonVersion>
     <osgi.export>org.apache.ibatis.*;version=${project.version};-noimport:=true</osgi.export>
     <osgi.import>!ognl,net.sf.cglib.proxy;resolution:=optional,org.apache.commons.logging;resolution:=optional,org.apache.log4j;resolution:=optional,org.slf4j;resolution:=optional,*</osgi.import>
     <osgi.dynamicImport>*</osgi.dynamicImport>
