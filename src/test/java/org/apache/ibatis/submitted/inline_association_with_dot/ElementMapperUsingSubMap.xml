@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.apache.ibatis.submitted.inline_association_with_dot.ElementMapperUsingSubMap">
+
+ 	<resultMap id="selectElementValueInContainerUsingSubMap" type="org.apache.ibatis.submitted.inline_association_with_dot.Element">
+ 	    <association property="element" resultMap="selectElementValueInContainerUsingSubMap_submap"/>
+ 	</resultMap>
+
+ 	<resultMap id="selectElementValueInContainerUsingSubMap_submap" type="org.apache.ibatis.submitted.inline_association_with_dot.Element">
+ 	    <result property="element.value" column="VALUECOLUMN"/>
+ 	</resultMap>
+
+    <select id="selectElement" resultMap="selectElementValueInContainerUsingSubMap">
+        select VALUECOLUMN from VALUETABLE
+    </select>
+
+</mapper>
