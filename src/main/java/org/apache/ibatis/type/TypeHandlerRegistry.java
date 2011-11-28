@@ -73,13 +73,13 @@ public final class TypeHandlerRegistry {
     register(JdbcType.NVARCHAR, new NStringTypeHandler());
     register(JdbcType.NCHAR, new NStringTypeHandler());
     register(JdbcType.NCLOB, new NClobTypeHandler());
-    
+
     register(Object.class, JdbcType.ARRAY, new ArrayTypeHandler());
     register(JdbcType.ARRAY, new ArrayTypeHandler());
-   
+
     register(BigInteger.class, new BigIntegerTypeHandler());
     register(JdbcType.BIGINT, new LongTypeHandler());
-    
+
     register(BigDecimal.class, new BigDecimalTypeHandler());
     register(JdbcType.REAL, new BigDecimalTypeHandler());
     register(JdbcType.DECIMAL, new BigDecimalTypeHandler());
@@ -146,7 +146,7 @@ public final class TypeHandlerRegistry {
     JDBC_TYPE_HANDLER_MAP.put(jdbcType, handler);
   }
 
-  public void register(Class<?> type, TypeHandler<?> handler) {
+  public <T> void register(Class<T> type, TypeHandler<? extends T> handler) {
     MappedJdbcTypes mappedJdbcTypes = handler.getClass().getAnnotation(MappedJdbcTypes.class);
     if (mappedJdbcTypes != null) {
       for (JdbcType handledJdbcType : mappedJdbcTypes.value()) {
@@ -157,12 +157,13 @@ public final class TypeHandlerRegistry {
     }
   }
 
-  public void register(TypeHandler<?> handler) {
+  public <T> void register(TypeHandler<? extends T> handler) {
     boolean mappedTypeFound = false;
     MappedTypes mappedTypes = handler.getClass().getAnnotation(MappedTypes.class);
     if (mappedTypes != null) {
       for (Class<?> handledType : mappedTypes.value()) {
-          register(handledType, handler);
+          // FIXME is there any way to make sure types are assignable?
+          register((Class<T>) handledType, handler);
           mappedTypeFound = true;
       }
     }
@@ -170,7 +171,7 @@ public final class TypeHandlerRegistry {
       throw new RuntimeException("Unable to get mapped types, check @MappedTypes annotation for type handler " + handler);
     }
   }
-  
+
   public void register(Class<?> type, JdbcType jdbcType, TypeHandler<?> handler) {
     Map<JdbcType, TypeHandler<?>> map = TYPE_HANDLER_MAP.get(type);
     if (map == null) {
@@ -188,7 +189,7 @@ public final class TypeHandlerRegistry {
     resolverUtil.find(new ResolverUtil.IsA(TypeHandler.class), packageName);
     Set<Class<? extends Class<?>>> handlerSet = resolverUtil.getClasses();
     for (Class<?> type : handlerSet) {
-      //Ignore inner classes and interfaces (including package-info.java) and abstract classes      
+      //Ignore inner classes and interfaces (including package-info.java) and abstract classes
       if (!type.isAnonymousClass() && !type.isInterface() && !Modifier.isAbstract(type.getModifiers())) {
         try {
           TypeHandler<?> handler = (TypeHandler<?>) type.getConstructor().newInstance();
