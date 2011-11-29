@@ -30,22 +30,6 @@
       <item name="Logging" href="core/logging.html"/>   
     </menu>
 
-    <menu name="Migrations">
-      <item name="Introduction" href="migrations/index.html"/>
-      <item name="Installation" href="migrations/installation.html"/>
-      <item name="The 'migrate' Command" href="migrations/migrate.html">
-        <item name="init" href="migrations/init.html"/>
-        <item name="bootstrap" href="migrations/bootstrap.html"/>
-        <item name="new" href="migrations/new.html"/>
-        <item name="status" href="migrations/status.html"/>
-        <item name="up, down" href="migrations/updown.html"/>
-        <item name="version" href="migrations/version.html"/>
-        <item name="pending" href="migrations/pending.html"/>
-        <item name="script" href="migrations/script.html"/>
-        <item name="Command Shortcuts" href="migrations/shortcuts.html"/>
-      </item>
-    </menu>
-
     <menu ref="reports"/>
   </body>
 </project>

@@ -98,33 +98,6 @@
         </configuration>
       </plugin>
       <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>appassembler-maven-plugin</artifactId>
-        <version>1.1.1</version>
-        <executions>
-          <execution>
-            <phase>package</phase>
-            <goals>
-              <goal>assemble</goal>
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-          <repositoryLayout>flat</repositoryLayout>
-          <repositoryName>lib</repositoryName>
-          <extraJvmArguments>-Xms500m -Xmx500m -XX:PermSize=128m -XX:-UseGCOverheadLimit</extraJvmArguments>
-          <binFileExtensions>
-            <windows>.cmd</windows>
-          </binFileExtensions>
-          <programs>
-            <program>
-              <mainClass>org.apache.ibatis.migration.Migrator</mainClass>
-              <name>migrate</name>
-            </program>
-          </programs>
-        </configuration>
-      </plugin>
-      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-assembly-plugin</artifactId>
         <executions>
@@ -136,7 +109,6 @@
             <configuration>
               <descriptors>
                 <descriptor>${basedir}/src/main/assembly/bundle.xml</descriptor>
-                <descriptor>${basedir}/src/main/assembly/migrations.xml</descriptor>
               </descriptors>
             </configuration>
           </execution>
@@ -183,29 +155,6 @@
                     <label>Featured</label>
                     <label>Type-Docs</label>
                     <label>Product-MyBatis</label>
-                    <label>Version-${project.version}</label>
-                  </labels>
-                </upload>
-                <!--
-                 | Migrations
-                -->
-                <upload>
-                  <file>${project.build.directory}/${project.artifactId}-${project.version}-migrations.zip</file>
-                  <summary>MyBatis Schema Migrations ${project.version}</summary>
-                  <labels>
-                    <label>Featured</label>
-                    <label>Type-Archive</label>
-                    <label>Product-Migrations</label>
-                    <label>Version-${project.version}</label>
-                  </labels>
-                </upload>
-                <upload>
-                  <file>${project.build.directory}/${project.artifactId}-${project.version}-migrations.zip</file>
-                  <summary>MyBatis Schema Migrations ${project.version} - User Guide</summary>
-                  <labels>
-                    <label>Featured</label>
-                    <label>Type-Docs</label>
-                    <label>Product-Migrations</label>
                     <label>Version-${project.version}</label>
                   </labels>
                 </upload>

@@ -7,7 +7,6 @@ import org.apache.ibatis.datasource.DataSourceException;
 import org.apache.ibatis.executor.ExecutorException;
 import org.apache.ibatis.logging.LogException;
 import org.apache.ibatis.mapping.SqlMapperException;
-import org.apache.ibatis.migration.MigrationException;
 import org.apache.ibatis.parsing.ParsingException;
 import org.apache.ibatis.plugin.PluginException;
 import org.apache.ibatis.reflection.ReflectionException;
@@ -40,7 +39,6 @@ public class GeneralExceptionsTest {
         DataSourceException.class,
         ExecutorException.class,
         LogException.class,
-        MigrationException.class,
         ParsingException.class,
         BuilderException.class,
         PluginException.class,
