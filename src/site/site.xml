@@ -27,6 +27,9 @@
       <item name="Introduction" href="core/index.html"/>
       <item name="Getting Started" href="core/getting-started.html"/>
       <item name="Mapper Configuration XML" href="core/mapper-configuration-xml.html"/>   
+      <item name="Dynamic SQL" href="core/dinamyc-sql.html"/>   
+      <item name="Java API" href="core/java-api.html"/>   
+      <item name="Select Builder" href="core/select-builder.html"/>   
       <item name="Logging" href="core/logging.html"/>   
     </menu>
 
