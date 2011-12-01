@@ -22,23 +22,21 @@ name CDATA #REQUIRED
 value CDATA #REQUIRED
 >
 
-<!ELEMENT typeAliases (typeAlias+)>
+<!ELEMENT typeAliases (typeAlias*,package*)>
 
 <!ELEMENT typeAlias EMPTY>
 <!ATTLIST typeAlias
 type CDATA #REQUIRED
 alias CDATA #IMPLIED
-package CDATA #IMPLIED
 >
 
-<!ELEMENT typeHandlers (typeHandler+)>
+<!ELEMENT typeHandlers (typeHandler*,package*)>
 
 <!ELEMENT typeHandler EMPTY>
 <!ATTLIST typeHandler
 javaType CDATA #IMPLIED
 jdbcType CDATA #IMPLIED
 handler CDATA #REQUIRED
-package CDATA #IMPLIED
 >
 
 <!ELEMENT objectFactory (property*)>
@@ -84,11 +82,16 @@ id CDATA #IMPLIED
 provider CDATA #IMPLIED
 >
 
-<!ELEMENT mappers (mapper+)>
+<!ELEMENT mappers (mapper*,package*)>
 
 <!ELEMENT mapper EMPTY>
 <!ATTLIST mapper
 resource CDATA #IMPLIED
 url CDATA #IMPLIED
-package CDATA #IMPLIED
+class CDATA #IMPLIED
+>
+
+<!ELEMENT package EMPTY>
+<!ATTLIST package
+name CDATA #REQUIRED
 >

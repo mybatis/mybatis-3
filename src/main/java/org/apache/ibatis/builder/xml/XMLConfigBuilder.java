@@ -92,10 +92,12 @@ public class XMLConfigBuilder extends BaseBuilder {
   private void typeAliasesElement(XNode parent) {
     if (parent != null) {
       for (XNode child : parent.getChildren()) {
-        String alias = child.getStringAttribute("alias");
-        String type = child.getStringAttribute("type");
-        String typeAliasPackage = child.getStringAttribute("package");
-        if (type != null && typeAliasPackage == null) {
+        if ("package".equals(child.getName())) {
+          String typeAliasPackage = child.getStringAttribute("name");
+          configuration.getTypeAliasRegistry().registerAliases(typeAliasPackage);
+        } else {
+          String alias = child.getStringAttribute("alias");
+          String type = child.getStringAttribute("type");
           try {
             Class<?> clazz = Resources.classForName(type);
             if (alias == null) {
@@ -106,10 +108,6 @@ public class XMLConfigBuilder extends BaseBuilder {
           } catch (ClassNotFoundException e) {
             throw new BuilderException("Error registering typeAlias for '" + alias + "'. Cause: " + e, e);
           }
-        } else if (type == null && typeAliasPackage != null) {
-          configuration.getTypeAliasRegistry().registerAliases(typeAliasPackage);
-        } else {
-          throw new BuilderException("A typeAlias element may only specify a type or a package, but not both.");
         }
       }
     }
@@ -255,11 +253,13 @@ public class XMLConfigBuilder extends BaseBuilder {
   private void typeHandlerElement(XNode parent) throws Exception {
     if (parent != null) {
       for (XNode child : parent.getChildren()) {
-        String javaType = child.getStringAttribute("javaType");
-        String jdbcType = child.getStringAttribute("jdbcType");
-        String handler = child.getStringAttribute("handler");
-        String typeHandlerPackage = child.getStringAttribute("package");
-        if (handler != null && typeHandlerPackage == null) {
+        if ("package".equals(child.getName())) {
+          String typeHandlerPackage = child.getStringAttribute("name");
+          configuration.getTypeHandlerRegistry().register(typeHandlerPackage);
+        } else {
+          String javaType = child.getStringAttribute("javaType");
+          String jdbcType = child.getStringAttribute("jdbcType");
+          String handler = child.getStringAttribute("handler");
           TypeHandler typeHandlerInstance = (TypeHandler) resolveClass(handler).newInstance();
           Class<?> javaTypeClass = resolveClass(javaType);
           if (javaTypeClass != null) {
@@ -269,12 +269,8 @@ public class XMLConfigBuilder extends BaseBuilder {
               typeHandlerRegistry.register(javaTypeClass, resolveJdbcType(jdbcType), typeHandlerInstance);
             }
           } else {
-            typeHandlerRegistry.register(typeHandlerInstance);            
+            typeHandlerRegistry.register(typeHandlerInstance);
           }
-        } else if (handler == null && typeHandlerPackage != null) {
-          configuration.getTypeHandlerRegistry().register(typeHandlerPackage);
-        } else {
-          throw new BuilderException("A typeHandler element may only specify a handler or a package, but not both.");
         }
       }
     }
@@ -283,27 +279,29 @@ public class XMLConfigBuilder extends BaseBuilder {
   private void mapperElement(XNode parent) throws Exception {
     if (parent != null) {
       for (XNode child : parent.getChildren()) {
-        String resource = child.getStringAttribute("resource");
-        String url = child.getStringAttribute("url");
-        String mapperClass = child.getStringAttribute("class");
-        String mapperPackage = child.getStringAttribute("package");
-        if (resource != null && url == null && mapperClass == null && mapperPackage == null) {
-          ErrorContext.instance().resource(resource);
-          InputStream inputStream = Resources.getResourceAsStream(resource);
-          XMLMapperBuilder mapperParser = new XMLMapperBuilder(inputStream, configuration, resource, configuration.getSqlFragments());
-          mapperParser.parse();
-        } else if (resource == null && url != null && mapperClass == null && mapperPackage == null) {
-          ErrorContext.instance().resource(url);
-          InputStream inputStream = Resources.getUrlAsStream(url);
-          XMLMapperBuilder mapperParser = new XMLMapperBuilder(inputStream, configuration, url, configuration.getSqlFragments());
-          mapperParser.parse();
-        } else if (resource == null && url == null && mapperClass != null && mapperPackage == null) {
-          Class<?> mapperInterface = Resources.classForName(mapperClass);
-          configuration.addMapper(mapperInterface);
-        } else if (resource == null && url == null && mapperClass == null && mapperPackage != null) {
+        if ("package".equals(child.getName())) {
+          String mapperPackage = child.getStringAttribute("name");
           configuration.addMappers(mapperPackage);
         } else {
-          throw new BuilderException("A mapper element may only specify a url, resource, class or package, but not more than one.");
+          String resource = child.getStringAttribute("resource");
+          String url = child.getStringAttribute("url");
+          String mapperClass = child.getStringAttribute("class");
+          if (resource != null && url == null && mapperClass == null) {
+            ErrorContext.instance().resource(resource);
+            InputStream inputStream = Resources.getResourceAsStream(resource);
+            XMLMapperBuilder mapperParser = new XMLMapperBuilder(inputStream, configuration, resource, configuration.getSqlFragments());
+            mapperParser.parse();
+          } else if (resource == null && url != null && mapperClass == null) {
+            ErrorContext.instance().resource(url);
+            InputStream inputStream = Resources.getUrlAsStream(url);
+            XMLMapperBuilder mapperParser = new XMLMapperBuilder(inputStream, configuration, url, configuration.getSqlFragments());
+            mapperParser.parse();
+          } else if (resource == null && url == null && mapperClass != null) {
+            Class<?> mapperInterface = Resources.classForName(mapperClass);
+            configuration.addMapper(mapperInterface);
+          } else {
+            throw new BuilderException("A mapper element may only specify a url, resource or class, but not more than one.");
+          }
         }
       }
     }
