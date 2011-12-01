@@ -373,16 +373,39 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
 </typeAliases>
 ]]></source>
 			<p>
-				With this configuration, “Blog” can now be used anywhere that
-				“domain.blog.Blog” could be.
+				With this configuration, <code>Blog</code> can now be used anywhere that
+				<code>domain.blog.Blog</code> could be.
 			</p>
+			<p> You can also specify a package where MyBatis will search for
+				beans. For example:
+			</p>
+			<source><![CDATA[<typeAliases>
+	<package name="domain.blog"/>
+</typeAliases>
+]]></source>
+			<p>
+				Each bean found in
+				<code>domain.blog</code>
+				, if no annotation is found,
+				will be registered as an alias
+				using
+				uncapitalized non-qualified class name of the bean. Thas is
+				<code>domain.blog.Author</code>
+				will be registered as
+				<code>Author</code>
+				. If the <code>@Alias</code> annotation is found its value will
+				be used as an alias. See the example below:</p>
+			<source><![CDATA[@Alias("author")
+public class Author {
+    ...
+}
+]]></source>
 			<p>
 				There are many built-in type aliases for common Java types. They
 				are all
 				case insensitive, note the special handling of primitives
 				due
-				to
-				the overloaded names.
+				to the overloaded names.
 			</p>
 			<table>
 				<thead>
@@ -917,7 +940,7 @@ public class ExampleTypeHandler implements TypeHandler {
 
 			<p>
 				Using such a TypeHandler would override the existing type handler
-				for
+		 		for
 				Java String properties and VARCHAR parameters and results. Note
 				that MyBatis does not introspect upon the database metadata to
 				determine the type, so you must specify that it’s a VARCHAR field
@@ -927,6 +950,23 @@ public class ExampleTypeHandler implements TypeHandler {
 				data
 				type until the statement is executed.
 			</p>
+			
+			<p>You can also specify a package where MyBatis will search for TypeHandlers:</p>
+			<source><![CDATA[<!-- MapperConfig.xml -->
+<typeHandlers>
+	<package name="org.mybatis.example"/>
+</typeHandlers>
+]]></source>
+
+		<p>When using the autodiscovery feature, MyBatis will search for the annotation
+		<code>@MappedTypes</code> to get a list of java types associated with the type handler and
+		<code>@MappedJdbcTypes</code> to get the jdbc types. See the following example:
+		</p>
+			<source><![CDATA[@MappedTypes(BigInteger.class)
+public class BigIntegerHandler implements TypeHandler<BigInteger> {
+   ...
+}
+]]></source>
 
 		</section>
 		<section name="objectFactory">
@@ -1383,6 +1423,19 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader,properties);]]
 	<mapper url="file:///var/sqlmaps/BlogMapper.xml"/>
 	<mapper url="file:///var/sqlmaps/PostMapper.xml"/>
 </mappers>]]></source>
+
+			<source><![CDATA[<!-- Using mapper interface classes -->
+<mappers>
+	<mapper class="org.mybatis.builder.AuthorMapper"/>
+	<mapper class="org.mybatis.builder.BlogMapper"/>
+	<mapper class="org.mybatis.builder.PostMapper"/>
+</mappers>]]></source>
+
+			<source><![CDATA[<!-- Register all interfaces in a package as mappers -->
+<mappers>
+	<package name="org.mybatis.builder"/>
+</mappers>]]></source>
+
 			<p>
 				These statement simply tell MyBatis where to go from here. The
 				rest of
