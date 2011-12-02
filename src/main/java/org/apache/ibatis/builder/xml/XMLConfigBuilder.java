@@ -220,7 +220,9 @@ public class XMLConfigBuilder extends BaseBuilder {
       databaseIdProvider.setProperties(properties);
     }
     Environment environment = configuration.getEnvironment();
-    configuration.setDatabaseId(databaseIdProvider.getDatabaseId(environment.getDataSource()));    
+    if (environment != null) {
+      configuration.setDatabaseId(databaseIdProvider.getDatabaseId(environment.getDataSource()));    
+    }
   }
 
   private TransactionFactory transactionManagerElement(XNode context) throws Exception {
