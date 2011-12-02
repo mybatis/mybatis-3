@@ -75,7 +75,9 @@ public class Configuration {
   protected ObjectFactory objectFactory = new DefaultObjectFactory();
   protected ObjectWrapperFactory objectWrapperFactory = new DefaultObjectWrapperFactory();
   protected MapperRegistry mapperRegistry = new MapperRegistry(this);
-
+  
+  protected String databaseId;
+  
   protected final InterceptorChain interceptorChain = new InterceptorChain();
   protected final TypeHandlerRegistry typeHandlerRegistry = new TypeHandlerRegistry();
   protected final TypeAliasRegistry typeAliasRegistry = new TypeAliasRegistry();
@@ -115,6 +117,14 @@ public class Configuration {
     typeAliasRegistry.registerAlias("LRU", LruCache.class.getName());
     typeAliasRegistry.registerAlias("SOFT", SoftCache.class.getName());
     typeAliasRegistry.registerAlias("WEAK", WeakCache.class.getName());
+  }
+
+  public String getDatabaseId() {
+    return databaseId;
+  }
+
+  public void setDatabaseId(String databaseId) {
+    this.databaseId = databaseId;
   }
 
   public boolean isSafeRowBoundsEnabled() {
@@ -389,7 +399,7 @@ public class Configuration {
   }
 
   public void addMappedStatement(MappedStatement ms, String databaseId) {
-    if (databaseId == null || databaseId.equals(this.environment.getDatabaseId())) {
+    if (databaseId == null || databaseId.equals(this.databaseId)) {
       if (this.mappedStatements.containsKey(ms.getId())) {
         MappedStatement previous = this.mappedStatements.get(ms.getId());
         if (databaseId != null) {

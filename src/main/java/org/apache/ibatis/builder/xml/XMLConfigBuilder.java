@@ -12,6 +12,7 @@ import org.apache.ibatis.datasource.DataSourceFactory;
 import org.apache.ibatis.executor.ErrorContext;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.mapping.DatabaseIdProvider;
+import org.apache.ibatis.mapping.DefaultDatabaseIdProvider;
 import org.apache.ibatis.mapping.Environment;
 import org.apache.ibatis.parsing.XNode;
 import org.apache.ibatis.parsing.XPathParser;
@@ -82,13 +83,14 @@ public class XMLConfigBuilder extends BaseBuilder {
       propertiesElement(root.evalNode("properties"));
       settingsElement(root.evalNode("settings"));
       environmentsElement(root.evalNode("environments"));
+      databaseIdProviderElement(root.evalNode("databaseIdProvider"));
       typeHandlerElement(root.evalNode("typeHandlers"));
       mapperElement(root.evalNode("mappers"));
     } catch (Exception e) {
       throw new BuilderException("Error parsing SQL Mapper Configuration. Cause: " + e, e);
     }
   }
-
+ 
   private void typeAliasesElement(XNode parent) {
     if (parent != null) {
       for (XNode child : parent.getChildren()) {
@@ -203,29 +205,22 @@ public class XMLConfigBuilder extends BaseBuilder {
           Environment.Builder environmentBuilder = new Environment.Builder(id)
               .transactionFactory(txFactory)
               .dataSource(dataSource);
-          databaseElement(child.evalNode("database"), environmentBuilder);
           configuration.setEnvironment(environmentBuilder.build());
         }
       }
     }
   }
 
-  private void databaseElement(XNode context, Environment.Builder builder) throws Exception {
+  private void databaseIdProviderElement(XNode context) throws Exception {
+    DatabaseIdProvider databaseIdProvider = new DefaultDatabaseIdProvider();
     if (context != null) {
-      String id = context.getStringAttribute("id");
-      String type = context.getStringAttribute("provider");
-      if (id != null && type != null) {
-        throw new BuilderException("Database element may provide a database id or a provider, but not both.");
-      }
-      if (id != null) {
-        builder.databaseId(id);
-      } else if (type != null) {
-        DatabaseIdProvider databaseIdProvider = (DatabaseIdProvider) resolveClass(type).newInstance();
-        Properties props = context.getChildrenAsProperties();
-        databaseIdProvider.setProperties(props);
-        builder.databaseIdProvider(databaseIdProvider);
-      }
+      String type = context.getStringAttribute("type");
+      Properties properties = context.getChildrenAsProperties();
+      databaseIdProvider = (DatabaseIdProvider) resolveClass(type).newInstance();
+      databaseIdProvider.setProperties(properties);
     }
+    Environment environment = configuration.getEnvironment();
+    configuration.setDatabaseId(databaseIdProvider.getDatabaseId(environment.getDataSource()));    
   }
 
   private TransactionFactory transactionManagerElement(XNode context) throws Exception {

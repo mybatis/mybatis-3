@@ -13,7 +13,7 @@ import org.apache.ibatis.session.Configuration;
 public class DynamicContext {
 
   public static final String PARAMETER_OBJECT_KEY = "_parameter";
-  public static final String ENVIRONMENT_KEY = "_environment";
+  public static final String DATABASE_ID_KEY = "_databaseId";
 
   static {
     OgnlRuntime.setPropertyAccessor(ContextMap.class, new ContextAccessor());
@@ -31,7 +31,7 @@ public class DynamicContext {
       bindings = new ContextMap(null);
     }
     bindings.put(PARAMETER_OBJECT_KEY, parameterObject);
-    bindings.put(ENVIRONMENT_KEY, configuration.getEnvironment());
+    bindings.put(DATABASE_ID_KEY, configuration.getDatabaseId());
   }
 
   public Map<String, Object> getBindings() {
