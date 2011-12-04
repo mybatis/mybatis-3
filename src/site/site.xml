@@ -27,7 +27,7 @@
       <item name="Introduction" href="index.html"/>
       <item name="Getting Started" href="getting-started.html"/>
       <item name="Configuration XML" href="configuration-xml.html"/>         
-      <item name="SQL Map XML Files" href="mapper-xml.html"/>
+      <item name="SQL Map XML Files" href="sqlmap-xml.html"/>
       <item name="Dynamic SQL" href="dynamic-sql.html"/>   
       <item name="Java API" href="java-api.html"/>   
       <item name="Select Builder" href="select-builder.html"/>   
