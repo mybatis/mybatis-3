@@ -11,6 +11,14 @@ import org.apache.ibatis.session.TransactionIsolationLevel;
 import org.apache.ibatis.transaction.Transaction;
 import org.apache.ibatis.transaction.TransactionException;
 
+/**
+ * {@link Transaction} that makes use of the JDBC commit and rollback facilities directly. 
+ * It relies on the connection retrieved from the dataSource to manage the scope of the transaction.
+ * Delays connection retrieval until getConnection() is called.
+ * Ignores commit or rollback requests when autocommit is on.
+ *
+ * @see JdbcTransactionFactory
+ */
 public class JdbcTransaction implements Transaction {
 
   private static final Log log = LogFactory.getLog(JdbcTransaction.class);
@@ -20,10 +28,10 @@ public class JdbcTransaction implements Transaction {
   protected TransactionIsolationLevel level;
   protected boolean autoCommmit;
   
-  public JdbcTransaction(DataSource ds, TransactionIsolationLevel level, boolean autoCommit) {
-    this.dataSource = ds;
-    this.level = level;
-    this.autoCommmit = autoCommit;
+  public JdbcTransaction(DataSource ds, TransactionIsolationLevel desiredLevel, boolean desiredAutoCommit) {
+    dataSource = ds;
+    level = desiredLevel;
+    autoCommmit = desiredAutoCommit;
   }
 
   public JdbcTransaction(Connection connection) {    
@@ -31,35 +39,35 @@ public class JdbcTransaction implements Transaction {
   }
 
   public Connection getConnection() throws SQLException {
-    if (this.connection == null) {
+    if (connection == null) {
       openConnection();
     }
-    return this.connection;
+    return connection;
   }
 
   public void commit() throws SQLException {
-    if (this.connection != null && !this.connection.getAutoCommit()) {
-      this.connection.commit();
+    if (connection != null && !connection.getAutoCommit()) {
+      connection.commit();
     }
   }
 
   public void rollback() throws SQLException {
-    if (this.connection != null && !this.connection.getAutoCommit()) {
-      this.connection.rollback();
+    if (connection != null && !connection.getAutoCommit()) {
+      connection.rollback();
     }
   }
 
   public void close() throws SQLException {
-    if (this.connection != null) {
+    if (connection != null) {
       resetAutoCommit();
-      this.connection.close();
+      connection.close();
     }
   }
   
   protected void setDesiredAutoCommit(boolean desiredAutoCommit) {
     try {
-      if (this.connection.getAutoCommit() != desiredAutoCommit) {
-        this.connection.setAutoCommit(desiredAutoCommit);
+      if (connection.getAutoCommit() != desiredAutoCommit) {
+        connection.setAutoCommit(desiredAutoCommit);
       }
     } catch (SQLException e) {
       // Only a very poorly implemented driver would fail here,
@@ -72,12 +80,13 @@ public class JdbcTransaction implements Transaction {
 
   protected void resetAutoCommit() {
     try {
-      if (!this.connection.getAutoCommit()) {
+      if (!connection.getAutoCommit()) {
         // MyBatis does not call commit/rollback on a connection if just selects were performed.
         // Some databases start transactions with select statements 
         // and they mandate a commit/rollback before closing the connection. 
         // A workaround is setting the autocommit to true before closing the connection.
-        this.connection.setAutoCommit(true);
+        // Sybase does not like it but
+        connection.setAutoCommit(true);
       }
     } catch (SQLException e) {
       log.debug("Error resetting autocommit to true " +
@@ -86,11 +95,11 @@ public class JdbcTransaction implements Transaction {
   }
 
   protected void openConnection() throws SQLException {
-    this.connection = this.dataSource.getConnection();
-    if (this.level != null) {
-      this.connection.setTransactionIsolation(level.getLevel());
+    connection = dataSource.getConnection();
+    if (level != null) {
+      connection.setTransactionIsolation(level.getLevel());
     }
-    setDesiredAutoCommit(this.autoCommmit);
+    setDesiredAutoCommit(autoCommmit);
   }
     
 }

@@ -9,6 +9,11 @@ import org.apache.ibatis.session.TransactionIsolationLevel;
 import org.apache.ibatis.transaction.Transaction;
 import org.apache.ibatis.transaction.TransactionFactory;
 
+/**
+ * Creates {@link ManagedTransaction} instances.
+ *
+ * @see ManagedTransaction
+ */
 public class ManagedTransactionFactory implements TransactionFactory {
 
   private boolean closeConnection = true;

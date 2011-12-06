@@ -9,6 +9,11 @@ import org.apache.ibatis.session.TransactionIsolationLevel;
 import org.apache.ibatis.transaction.Transaction;
 import org.apache.ibatis.transaction.TransactionFactory;
 
+/**
+ * Creates {@link JdbcTransaction} instances.
+ *
+ * @see JdbcTransaction
+ */
 public class JdbcTransactionFactory implements TransactionFactory {
 
   public void setProperties(Properties props) {

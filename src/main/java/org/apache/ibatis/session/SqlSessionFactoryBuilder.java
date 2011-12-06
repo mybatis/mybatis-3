@@ -10,6 +10,10 @@ import org.apache.ibatis.exceptions.ExceptionFactory;
 import org.apache.ibatis.executor.ErrorContext;
 import org.apache.ibatis.session.defaults.DefaultSqlSessionFactory;
 
+/**
+ * Builds {@link SqlSession} instances.
+ *
+ */
 public class SqlSessionFactoryBuilder {
 
   public SqlSessionFactory build(Reader reader) {
