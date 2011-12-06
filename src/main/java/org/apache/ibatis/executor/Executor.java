@@ -16,7 +16,7 @@ public interface Executor {
 
   int update(MappedStatement ms, Object parameter) throws SQLException;
 
-  List query(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler) throws SQLException;
+  <E> List<E> query(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler) throws SQLException;
 
   List<BatchResult> flushStatements() throws SQLException;
 

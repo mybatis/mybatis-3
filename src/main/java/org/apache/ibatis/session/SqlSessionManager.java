@@ -1,10 +1,5 @@
 package org.apache.ibatis.session;
 
-import org.apache.ibatis.exceptions.ExceptionFactory;
-import org.apache.ibatis.executor.BatchResult;
-import org.apache.ibatis.executor.ErrorContext;
-import org.apache.ibatis.reflection.ExceptionUtil;
-
 import java.io.InputStream;
 import java.io.Reader;
 import java.lang.reflect.InvocationHandler;
@@ -14,6 +9,9 @@ import java.sql.Connection;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+
+import org.apache.ibatis.executor.BatchResult;
+import org.apache.ibatis.reflection.ExceptionUtil;
 
 public class SqlSessionManager implements SqlSessionFactory, SqlSession {
 
@@ -130,35 +128,35 @@ public class SqlSessionManager implements SqlSessionFactory, SqlSession {
     return sqlSessionFactory.getConfiguration();
   }
 
-  public Object selectOne(String statement) {
+  public <T> T selectOne(String statement) {
     return sqlSessionProxy.selectOne(statement);
   }
 
-  public Object selectOne(String statement, Object parameter) {
+  public <T> T selectOne(String statement, Object parameter) {
     return sqlSessionProxy.selectOne(statement, parameter);
   }
 
-  public Map selectMap(String statement, String mapKey) {
+  public <K, V> Map<K, V> selectMap(String statement, String mapKey) {
     return sqlSessionProxy.selectMap(statement, mapKey);
   }
 
-  public Map selectMap(String statement, Object parameter, String mapKey) {
+  public <K, V> Map<K, V> selectMap(String statement, Object parameter, String mapKey) {
     return sqlSessionProxy.selectMap(statement, parameter, mapKey);
   }
 
-  public Map selectMap(String statement, Object parameter, String mapKey, RowBounds rowBounds) {
+  public <K, V> Map<K, V> selectMap(String statement, Object parameter, String mapKey, RowBounds rowBounds) {
     return sqlSessionProxy.selectMap(statement, parameter, mapKey, rowBounds);
   }
 
-  public List selectList(String statement) {
+  public <E> List<E> selectList(String statement) {
     return sqlSessionProxy.selectList(statement);
   }
 
-  public List selectList(String statement, Object parameter) {
+  public <E> List<E> selectList(String statement, Object parameter) {
     return sqlSessionProxy.selectList(statement, parameter);
   }
 
-  public List selectList(String statement, Object parameter, RowBounds rowBounds) {
+  public <E> List<E> selectList(String statement, Object parameter, RowBounds rowBounds) {
     return sqlSessionProxy.selectList(statement, parameter, rowBounds);
   }
 

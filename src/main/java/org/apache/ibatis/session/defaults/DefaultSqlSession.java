@@ -27,20 +27,20 @@ public class DefaultSqlSession implements SqlSession {
   public DefaultSqlSession(Configuration configuration, Executor executor, boolean autoCommit) {
     this(configuration, executor);
   }
-  
+
   public DefaultSqlSession(Configuration configuration, Executor executor) {
     this.configuration = configuration;
     this.executor = executor;
     this.dirty = false;
   }
 
-  public Object selectOne(String statement) {
+  public <T> T selectOne(String statement) {
     return selectOne(statement, null);
   }
 
-  public Object selectOne(String statement, Object parameter) {
+  public <T> T selectOne(String statement, Object parameter) {
     // Popular vote was to return null on 0 results and throw exception on too many.
-    List<?> list = selectList(statement, parameter);
+    List<T> list = selectList(statement, parameter);
     if (list.size() == 1) {
       return list.get(0);
     } else if (list.size() > 1) {
@@ -50,15 +50,15 @@ public class DefaultSqlSession implements SqlSession {
     }
   }
 
-  public Map<?, ?> selectMap(String statement, String mapKey) {
+  public <K, V> Map<K, V> selectMap(String statement, String mapKey) {
     return selectMap(statement, null, mapKey, RowBounds.DEFAULT);
   }
 
-  public Map<?, ?> selectMap(String statement, Object parameter, String mapKey) {
+  public <K, V> Map<K, V> selectMap(String statement, Object parameter, String mapKey) {
     return selectMap(statement, parameter, mapKey, RowBounds.DEFAULT);
   }
 
-  public Map<?, ?> selectMap(String statement, Object parameter, String mapKey, RowBounds rowBounds) {
+  public <K, V> Map<K, V> selectMap(String statement, Object parameter, String mapKey, RowBounds rowBounds) {
     final List<?> list = selectList(statement, parameter, rowBounds);
     final DefaultMapResultHandler mapResultHandler = new DefaultMapResultHandler(mapKey);
     final DefaultResultContext context = new DefaultResultContext();
@@ -69,15 +69,15 @@ public class DefaultSqlSession implements SqlSession {
     return mapResultHandler.getMappedResults();
   }
 
-  public List selectList(String statement) {
+  public <E> List<E> selectList(String statement) {
     return selectList(statement, null);
   }
 
-  public List selectList(String statement, Object parameter) {
+  public <E> List<E> selectList(String statement, Object parameter) {
     return selectList(statement, parameter, RowBounds.DEFAULT);
   }
 
-  public List selectList(String statement, Object parameter, RowBounds rowBounds) {
+  public <E> List<E> selectList(String statement, Object parameter, RowBounds rowBounds) {
     try {
       MappedStatement ms = configuration.getMappedStatement(statement);
       return executor.query(ms, wrapCollection(parameter), rowBounds, Executor.NO_RESULT_HANDLER);
@@ -197,7 +197,7 @@ public class DefaultSqlSession implements SqlSession {
   }
 
   public Connection getConnection() {
-    try {    
+    try {
       return executor.getTransaction().getConnection();
     } catch (SQLException e) {
       throw ExceptionFactory.wrapException("Error getting a new connection.  Cause: " + e, e);
@@ -214,13 +214,19 @@ public class DefaultSqlSession implements SqlSession {
 
   private Object wrapCollection(final Object object) {
     if (object instanceof List) {
-      return new HashMap<String, Object>() {{
-        put("list", object);
-      }};
+      return new HashMap<String, Object>() {
+        private static final long serialVersionUID = -4705063447161282548L;
+        {
+          put("list", object);
+        }
+      };
     } else if (object != null && object.getClass().isArray()) {
-      return new HashMap<String, Object>() {{
-        put("array", object);
-      }};
+      return new HashMap<String, Object>() {
+        private static final long serialVersionUID = 5771791745814754233L;
+        {
+          put("array", object);
+        }
+      };
     }
     return object;
   }
