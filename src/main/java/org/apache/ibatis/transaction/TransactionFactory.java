@@ -23,16 +23,17 @@ public interface TransactionFactory {
    * Creates a {@link Transaction} out of an existing connection.
    * @param conn Existing database connection
    * @return Transaction
+   * @since 3.1.0
    */
   Transaction newTransaction(Connection conn);
   
   /**
    * Creates a {@link Transaction} out of a datasource.
-   * 
    * @param dataSource DataSource to take the connection from
    * @param level Desired isolation level
    * @param autoCommit Desired autocommit
    * @return Transaction
+   * @since 3.1.0
    */
   Transaction newTransaction(DataSource dataSource, TransactionIsolationLevel level, boolean autoCommit);
 

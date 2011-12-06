@@ -85,7 +85,7 @@ public class JdbcTransaction implements Transaction {
         // Some databases start transactions with select statements 
         // and they mandate a commit/rollback before closing the connection. 
         // A workaround is setting the autocommit to true before closing the connection.
-        // Sybase does not like it but
+        // Sybase throws an exception here.
         connection.setAutoCommit(true);
       }
     } catch (SQLException e) {
