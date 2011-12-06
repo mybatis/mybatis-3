@@ -18,7 +18,7 @@ public interface SqlSession {
     * @param statement
     * @return Mapped object
     */
-  Object selectOne(String statement);
+  <T> T selectOne(String statement);
 
   /**
     * Retrieve a single row mapped from the statement key and parameter.    
@@ -26,14 +26,14 @@ public interface SqlSession {
     * @param parameter A parameter object to pass to the statement.
     * @return Mapped object
     */
-  Object selectOne(String statement, Object parameter);
+  <T> T selectOne(String statement, Object parameter);
 
   /**
     * Retrieve a list of mapped objects from the statement key and parameter.    
     * @param statement Unique identifier matching the statement to use.
     * @return List of mapped object
     */
-  List selectList(String statement);
+  <E> List<E> selectList(String statement);
 
   /**
     * Retrieve a list of mapped objects from the statement key and parameter.    
@@ -41,17 +41,17 @@ public interface SqlSession {
     * @param parameter A parameter object to pass to the statement.
     * @return List of mapped object
     */
-  List selectList(String statement, Object parameter);
+  <E> List<E> selectList(String statement, Object parameter);
 
   /**
     * Retrieve a list of mapped objects from the statement key and parameter,
     * within the specified row bounds.
     * @param statement Unique identifier matching the statement to use.
     * @param parameter A parameter object to pass to the statement.
-    * @param  rowBounds  Bounds to limit object retrieval
+    * @param rowBounds  Bounds to limit object retrieval
     * @return List of mapped object
     */
-  List selectList(String statement, Object parameter, RowBounds rowBounds);
+  <E> List<E> selectList(String statement, Object parameter, RowBounds rowBounds);
 
   /**
     * The selectMap is a special case in that it is designed to convert a list 
@@ -59,10 +59,10 @@ public interface SqlSession {
     * objects.
     * Eg. Return a of Map[Integer,Author] for selectMap("selectAuthors","id")
     * @param statement Unique identifier matching the statement to use.
-    * @param  mapKey The property to use as key for each value in the list.
+    * @param mapKey The property to use as key for each value in the list.
     * @return Map containing key pair data.
     */
-  Map selectMap(String statement, String mapKey);
+  <K, V> Map<K, V> selectMap(String statement, String mapKey);
 
   /**
     * The selectMap is a special case in that it is designed to convert a list 
@@ -70,10 +70,10 @@ public interface SqlSession {
     * objects.
     * @param statement Unique identifier matching the statement to use.
     * @param parameter A parameter object to pass to the statement.
-    * @param  mapKey The property to use as key for each value in the list.
+    * @param mapKey The property to use as key for each value in the list.
     * @return Map containing key pair data.
     */
-  Map selectMap(String statement, Object parameter, String mapKey);
+  <K, V> Map<K, V> selectMap(String statement, Object parameter, String mapKey);
 
   /**
     * The selectMap is a special case in that it is designed to convert a list 
@@ -81,11 +81,11 @@ public interface SqlSession {
     * objects.
     * @param statement Unique identifier matching the statement to use.
     * @param parameter A parameter object to pass to the statement.
-    * @param  mapKey The property to use as key for each value in the list.
-    * @param  rowBounds  Bounds to limit object retrieval
+    * @param mapKey The property to use as key for each value in the list.
+    * @param rowBounds  Bounds to limit object retrieval
     * @return Map containing key pair data.
     */
-  Map selectMap(String statement, Object parameter, String mapKey, RowBounds rowBounds);
+  <K, V> Map<K, V> selectMap(String statement, Object parameter, String mapKey, RowBounds rowBounds);
 
   /**
    * Retrieve a single row mapped from the statement key and parameter 
@@ -220,7 +220,7 @@ public interface SqlSession {
   <T> T getMapper(Class<T> type);
 
   /**
-   * Restrives inner database connection
+   * Retrieves inner database connection
    * @return Connection
    */
   Connection getConnection();
