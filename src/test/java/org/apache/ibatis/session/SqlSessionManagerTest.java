@@ -111,7 +111,7 @@ public class SqlSessionManagerTest extends BaseDataTest {
 
   @Test
   public void shouldSelectCountOfPosts() throws Exception {
-    Integer count = (Integer) manager.selectOne("domain.blog.mappers.BlogMapper.selectCountOfPosts");
+    Integer count = manager.selectOne("domain.blog.mappers.BlogMapper.selectCountOfPosts");
     assertEquals(5, count.intValue());
   }
 
@@ -124,7 +124,7 @@ public class SqlSessionManagerTest extends BaseDataTest {
 
   @Test
   public void shouldSelectOneAuthor() throws Exception {
-    Author author = (Author) manager.selectOne(
+    Author author = manager.selectOne(
         "domain.blog.mappers.AuthorMapper.selectAuthor", new Author(101));
     assertEquals(101, author.getId());
     assertEquals(Section.NEWS, author.getFavouriteSection());
@@ -140,7 +140,7 @@ public class SqlSessionManagerTest extends BaseDataTest {
 
   @Test
   public void shouldSelectOneImmutableAuthor() throws Exception {
-    ImmutableAuthor author = (ImmutableAuthor) manager.selectOne(
+    ImmutableAuthor author = manager.selectOne(
         "domain.blog.mappers.AuthorMapper.selectImmutableAuthor", new Author(101));
     assertEquals(101, author.getId());
     assertEquals(Section.NEWS, author.getFavouriteSection());
@@ -148,7 +148,7 @@ public class SqlSessionManagerTest extends BaseDataTest {
 
   @Test
   public void shouldSelectOneAuthorWithInlineParams() throws Exception {
-    Author author = (Author) manager.selectOne(
+    Author author = manager.selectOne(
         "domain.blog.mappers.AuthorMapper.selectAuthorWithInlineParams", new Author(101));
     assertEquals(101, author.getId());
   }
@@ -157,7 +157,7 @@ public class SqlSessionManagerTest extends BaseDataTest {
   public void shouldInsertAuthor() throws Exception {
     Author expected = new Author(500, "cbegin", "******", "cbegin@somewhere.com", "Something...", null);
     manager.insert("domain.blog.mappers.AuthorMapper.insertAuthor", expected);
-    Author actual = (Author) manager.selectOne("domain.blog.mappers.AuthorMapper.selectAuthor", new Author(500));
+    Author actual = manager.selectOne("domain.blog.mappers.AuthorMapper.selectAuthor", new Author(500));
     assertNotNull(actual);
     assertEquals(expected.getId(), actual.getId());
     assertEquals(expected.getUsername(), actual.getUsername());
@@ -182,7 +182,7 @@ public class SqlSessionManagerTest extends BaseDataTest {
 
   @Test
   public void shouldSelectBlogWithPostsAndAuthorUsingSubSelects() throws Exception {
-    Blog blog = (Blog) manager.selectOne("domain.blog.mappers.BlogMapper.selectBlogWithPostsUsingSubSelect", 1);
+    Blog blog = manager.selectOne("domain.blog.mappers.BlogMapper.selectBlogWithPostsUsingSubSelect", 1);
     assertEquals("Jim Business", blog.getTitle());
     assertEquals(2, blog.getPosts().size());
     assertEquals("Corn nuts", blog.getPosts().get(0).getSubject());
@@ -192,7 +192,7 @@ public class SqlSessionManagerTest extends BaseDataTest {
 
   @Test
   public void shouldSelectBlogWithPostsAndAuthorUsingJoin() throws Exception {
-    Blog blog = (Blog) manager.selectOne("domain.blog.mappers.BlogMapper.selectBlogJoinedWithPostsAndAuthor", 1);
+    Blog blog = manager.selectOne("domain.blog.mappers.BlogMapper.selectBlogJoinedWithPostsAndAuthor", 1);
     assertEquals("Jim Business", blog.getTitle());
 
     final Author author = blog.getAuthor();
@@ -222,7 +222,7 @@ public class SqlSessionManagerTest extends BaseDataTest {
 
   @Test
   public void shouldSelectNestedBlogWithPostsAndAuthorUsingJoin() throws Exception {
-    Blog blog = (Blog) manager.selectOne("domain.blog.mappers.NestedBlogMapper.selectBlogJoinedWithPostsAndAuthor", 1);
+    Blog blog = manager.selectOne("domain.blog.mappers.NestedBlogMapper.selectBlogJoinedWithPostsAndAuthor", 1);
     assertEquals("Jim Business", blog.getTitle());
 
     final Author author = blog.getAuthor();
