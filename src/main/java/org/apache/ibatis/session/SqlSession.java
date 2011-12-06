@@ -33,7 +33,7 @@ public interface SqlSession {
     * @param statement Unique identifier matching the statement to use.
     * @return List of mapped object
     */
-  List<?> selectList(String statement);
+  List selectList(String statement);
 
   /**
     * Retrieve a list of mapped objects from the statement key and parameter.    
@@ -41,7 +41,7 @@ public interface SqlSession {
     * @param parameter A parameter object to pass to the statement.
     * @return List of mapped object
     */
-  List<?> selectList(String statement, Object parameter);
+  List selectList(String statement, Object parameter);
 
   /**
     * Retrieve a list of mapped objects from the statement key and parameter,
@@ -51,7 +51,7 @@ public interface SqlSession {
     * @param  rowBounds  Bounds to limit object retrieval
     * @return List of mapped object
     */
-  List<?> selectList(String statement, Object parameter, RowBounds rowBounds);
+  List selectList(String statement, Object parameter, RowBounds rowBounds);
 
   /**
     * The selectMap is a special case in that it is designed to convert a list 
@@ -62,7 +62,7 @@ public interface SqlSession {
     * @param  mapKey The property to use as key for each value in the list.
     * @return Map containing key pair data.
     */
-  Map<?, ?> selectMap(String statement, String mapKey);
+  Map selectMap(String statement, String mapKey);
 
   /**
     * The selectMap is a special case in that it is designed to convert a list 
@@ -73,7 +73,7 @@ public interface SqlSession {
     * @param  mapKey The property to use as key for each value in the list.
     * @return Map containing key pair data.
     */
-  Map<?, ?> selectMap(String statement, Object parameter, String mapKey);
+  Map selectMap(String statement, Object parameter, String mapKey);
 
   /**
     * The selectMap is a special case in that it is designed to convert a list 
@@ -85,7 +85,7 @@ public interface SqlSession {
     * @param  rowBounds  Bounds to limit object retrieval
     * @return Map containing key pair data.
     */
-  Map<?, ?> selectMap(String statement, Object parameter, String mapKey, RowBounds rowBounds);
+  Map selectMap(String statement, Object parameter, String mapKey, RowBounds rowBounds);
 
   /**
    * Retrieve a single row mapped from the statement key and parameter 
