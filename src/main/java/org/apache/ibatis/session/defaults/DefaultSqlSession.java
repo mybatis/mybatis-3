@@ -21,13 +21,16 @@ public class DefaultSqlSession implements SqlSession {
   private Configuration configuration;
   private Executor executor;
 
-  private boolean autoCommit;
   private boolean dirty;
 
+  @Deprecated
   public DefaultSqlSession(Configuration configuration, Executor executor, boolean autoCommit) {
+    this(configuration, executor);
+  }
+  
+  public DefaultSqlSession(Configuration configuration, Executor executor) {
     this.configuration = configuration;
     this.executor = executor;
-    this.autoCommit = autoCommit;
     this.dirty = false;
   }
 
@@ -37,7 +40,7 @@ public class DefaultSqlSession implements SqlSession {
 
   public Object selectOne(String statement, Object parameter) {
     // Popular vote was to return null on 0 results and throw exception on too many.
-    List list = selectList(statement, parameter);
+    List<?> list = selectList(statement, parameter);
     if (list.size() == 1) {
       return list.get(0);
     } else if (list.size() > 1) {
@@ -47,16 +50,16 @@ public class DefaultSqlSession implements SqlSession {
     }
   }
 
-  public Map selectMap(String statement, String mapKey) {
+  public Map<?, ?> selectMap(String statement, String mapKey) {
     return selectMap(statement, null, mapKey, RowBounds.DEFAULT);
   }
 
-  public Map selectMap(String statement, Object parameter, String mapKey) {
+  public Map<?, ?> selectMap(String statement, Object parameter, String mapKey) {
     return selectMap(statement, parameter, mapKey, RowBounds.DEFAULT);
   }
 
-  public Map selectMap(String statement, Object parameter, String mapKey, RowBounds rowBounds) {
-    final List list = selectList(statement, parameter, rowBounds);
+  public Map<?, ?> selectMap(String statement, Object parameter, String mapKey, RowBounds rowBounds) {
+    final List<?> list = selectList(statement, parameter, rowBounds);
     final DefaultMapResultHandler mapResultHandler = new DefaultMapResultHandler(mapKey);
     final DefaultResultContext context = new DefaultResultContext();
     for (Object o : list) {
@@ -206,16 +209,16 @@ public class DefaultSqlSession implements SqlSession {
   }
 
   private boolean isCommitOrRollbackRequired(boolean force) {
-    return (!autoCommit && dirty) || force;
+    return dirty || force;
   }
 
   private Object wrapCollection(final Object object) {
     if (object instanceof List) {
-      return new HashMap() {{
+      return new HashMap<String, Object>() {{
         put("list", object);
       }};
     } else if (object != null && object.getClass().isArray()) {
-      return new HashMap() {{
+      return new HashMap<String, Object>() {{
         put("array", object);
       }};
     }

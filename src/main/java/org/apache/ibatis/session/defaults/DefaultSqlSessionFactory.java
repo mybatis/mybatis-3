@@ -66,10 +66,10 @@ public class DefaultSqlSessionFactory implements SqlSessionFactory {
     Transaction tx = null;
     try {
       final Environment environment = configuration.getEnvironment();
-      TransactionFactory transactionFactory = getTransactionFactoryFromEnvironment(environment);
+      final TransactionFactory transactionFactory = getTransactionFactoryFromEnvironment(environment);
       tx = transactionFactory.newTransaction(environment.getDataSource(), level, autoCommit);
-      Executor executor = configuration.newExecutor(tx, execType);
-      return new DefaultSqlSession(configuration, executor, autoCommit);
+      final Executor executor = configuration.newExecutor(tx, execType);
+      return new DefaultSqlSession(configuration, executor);
     } catch (Exception e) {
       closeTransaction(tx); // may have fetched a connection so lets call close()
       throw ExceptionFactory.wrapException("Error opening session.  Cause: " + e, e);
@@ -80,19 +80,11 @@ public class DefaultSqlSessionFactory implements SqlSessionFactory {
 
   private SqlSession openSessionFromConnection(ExecutorType execType, Connection connection) {
     try {
-      boolean autoCommit;
-      try {
-        autoCommit = connection.getAutoCommit();
-      } catch (SQLException e) {
-        // Failover to true, as most poor drivers
-        // or databases won't support transactions
-        autoCommit = true;
-      }
       final Environment environment = configuration.getEnvironment();
       final TransactionFactory transactionFactory = getTransactionFactoryFromEnvironment(environment);
-      Transaction tx = transactionFactory.newTransaction(connection);
-      Executor executor = configuration.newExecutor(tx, execType);
-      return new DefaultSqlSession(configuration, executor, autoCommit);
+      final Transaction tx = transactionFactory.newTransaction(connection);
+      final Executor executor = configuration.newExecutor(tx, execType);
+      return new DefaultSqlSession(configuration, executor);
     } catch (Exception e) {
       throw ExceptionFactory.wrapException("Error opening session.  Cause: " + e, e);
     } finally {
