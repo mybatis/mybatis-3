@@ -129,35 +129,35 @@ public class SqlSessionManager implements SqlSessionFactory, SqlSession {
   }
 
   public <T> T selectOne(String statement) {
-    return sqlSessionProxy.selectOne(statement);
+    return sqlSessionProxy.<T> selectOne(statement);
   }
 
   public <T> T selectOne(String statement, Object parameter) {
-    return sqlSessionProxy.selectOne(statement, parameter);
+    return sqlSessionProxy.<T> selectOne(statement, parameter);
   }
 
   public <K, V> Map<K, V> selectMap(String statement, String mapKey) {
-    return sqlSessionProxy.selectMap(statement, mapKey);
+    return sqlSessionProxy.<K, V> selectMap(statement, mapKey);
   }
 
   public <K, V> Map<K, V> selectMap(String statement, Object parameter, String mapKey) {
-    return sqlSessionProxy.selectMap(statement, parameter, mapKey);
+    return sqlSessionProxy.<K, V> selectMap(statement, parameter, mapKey);
   }
 
   public <K, V> Map<K, V> selectMap(String statement, Object parameter, String mapKey, RowBounds rowBounds) {
-    return sqlSessionProxy.selectMap(statement, parameter, mapKey, rowBounds);
+    return sqlSessionProxy.<K, V> selectMap(statement, parameter, mapKey, rowBounds);
   }
 
   public <E> List<E> selectList(String statement) {
-    return sqlSessionProxy.selectList(statement);
+    return sqlSessionProxy.<E> selectList(statement);
   }
 
   public <E> List<E> selectList(String statement, Object parameter) {
-    return sqlSessionProxy.selectList(statement, parameter);
+    return sqlSessionProxy.<E> selectList(statement, parameter);
   }
 
   public <E> List<E> selectList(String statement, Object parameter, RowBounds rowBounds) {
-    return sqlSessionProxy.selectList(statement, parameter, rowBounds);
+    return sqlSessionProxy.<E> selectList(statement, parameter, rowBounds);
   }
 
   public void select(String statement, ResultHandler handler) {
