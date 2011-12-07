@@ -388,14 +388,13 @@ public class Reflector {
    */
   public static Reflector forClass(Class<?> clazz) {
     if (classCacheEnabled) {
-      synchronized (clazz) {
-        Reflector cached = REFLECTOR_MAP.get(clazz);
-        if (cached == null) {
-          cached = new Reflector(clazz);
-          REFLECTOR_MAP.put(clazz, cached);
-        }
-        return cached;
+      // synchronized (clazz) removed see issue #461
+      Reflector cached = REFLECTOR_MAP.get(clazz);
+      if (cached == null) {
+        cached = new Reflector(clazz);
+        REFLECTOR_MAP.put(clazz, cached);
       }
+      return cached;
     } else {
       return new Reflector(clazz);
     }
