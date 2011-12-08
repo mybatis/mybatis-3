@@ -193,6 +193,7 @@ int insert(String statement, Object parameter)
 int update(String statement, Object parameter)
 int delete(String statement, Object parameter)</source>
   <p>The difference between selectOne and selectList is only in that selectOne must return exactly one object or null (none). If any more than one, an exception will be thrown. If you don't' know how many objects are expected, use selectList. If you want to check for the existence of an object, you're better off returning a count (0 or 1). The selectMap is a special case in that it is designed to convert a list of results into a Map based on one of the properties in the resulting objects. Because not all statements require a parameter, these methods are overloaded with versions that do not require the parameter object.</p>
+  <p>The value returned by the insert, update and delete methods indicate the number of rows affected by the statement.</p>
   <source>Object selectOne(String statement)
 List selectList(String statement)
 Map selectMap(String statement, String mapKey)
