@@ -63,7 +63,8 @@
   </subsection>  
 
   <subsection name="SqlSessions" id="sqlSessions">
-  <p>The primary Java interface for working with MyBatis is the SqlSession.  Through this interface you can execute commands, get mappers and manage transactions.  We'll talk more about SqlSession itself shortly, but first we have to learn how to acquire an instance of SqlSession. SqlSessions are created by a SqlSessionFactory instance.  The SqlSessionFactory contains methods for creating instances of SqlSessions all different ways.  The SqlSessionFactory itself is created by the SqlSessionFactoryBuilder that can create the SqlSessonFactory from XML, Annotations or hand coded Java configuration.</p>
+  <p>The primary Java interface for working with MyBatis is the SqlSession. Through this interface you can execute commands, get mappers and manage transactions. We'll talk more about SqlSession itself shortly, but first we have to learn how to acquire an instance of SqlSession. SqlSessions are created by a SqlSessionFactory instance. The SqlSessionFactory contains methods for creating instances of SqlSessions all different ways. The SqlSessionFactory itself is created by the SqlSessionFactoryBuilder that can create the SqlSessonFactory from XML, Annotations or hand coded Java configuration.</p>
+  <p><span class="label important">NOTE</span> When using MyBatis with a dependency injection framework like Spring or Guice, SqlSessions are created and injected by the DI framework so you don't need to use the SqlSessionFactoryBuilder or SqlSessionFactory and can go directly to the SqlSession section. Please refer to the MyBatis-Spring or MyBatis-Guice manuals for further info.</p>
   <h4>SqlSessionFactoryBuilder</h4>
   <p>The SqlSessionFactoryBuilder has five build() methods, each which allows you to build a SqlSession from a different source.</p>
   <source>SqlSessionFactory build(Reader reader)
@@ -229,6 +230,7 @@ void commit(boolean force)
 void rollback()
 void rollback(boolean force)</source>
   <p>By default MyBatis does not actually commit unless it detects that the database has been changed by a call to insert, update or delete. If you've somehow made changes without calling these methods, then you can pass true into the commit and rollback methods to guarantee that it will be committed (note, you still can't force a session in auto-commit mode, or one that is using an external transaction manager). Most of the time you won't have to call rollback(), as MyBatis will do that for you if you don't call commit. However, if you need more fine grained control over a session where multiple commits and rollbacks are possible, you have the rollback option there to make that possible.</p>
+  <p><span class="label important">NOTE</span> MyBatis-Spring and MyBatis-Guice provide declarative transaction handling. So if you are using MyBatis with Spring or Guice please refer to their specific manuals.</p>
   
   <h5>Clearing the Session Level Cache</h5>
   <source>void clearCache()</source>
@@ -407,6 +409,14 @@ try {
 @SelectKey(statement="call identity()", keyProperty="nameId", before=<strong>false</strong>, resultType=<strong>int.class</strong>)
 <strong>int</strong> insertTable2(Name name);</source>
   </subsection>  
+  
+  <subsection name="Using MyBatis with Spring or Guice">
+  <p>Spring and Guice are dependency injection frameworks. You can integrate MyBatis with any of them using the corresponding sub-project: MyBatis-Spring or MyBatis-Guice.</p>
+  <p>The main purpose of these frameworks is to enable declarative transaction handing and inject ready-to-use SqlSesssions and mappers into your beans, so you just use them and forget about its creation, destruction and handling transactions. For that purpose both MyBatis-Spring and MyBatis-Guice are able to create thread safe singleton SqlSessions and mappers and inject them into your beans during application startup. </p>
+  <p>This has two implications. First: SqlSessions and mappers will live for the whole execution of your application. And second: you must not use SqlSessionFactoryBuilder or SqlSessionFactory because both frameworks have their specific configuration and API.</p>
+  <p>Please refer to MyBatis-Spring of MyBatis-Guice manuals for further information.</p>
+  </subsection>
+  
   </section>
   </body>
 </document>

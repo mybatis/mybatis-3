@@ -1100,7 +1100,7 @@ public class ExamplePlugin implements Interceptor {
 					the Executor instance, which is an internal object responsible for
 					the low level execution of mapped statements.
 				</p>
-				<p><span class="label warning">NOTE</span>
+				<p><span class="label important">NOTE</span>
 					<strong>Overriding the Configuration Class
 					</strong>
 				</p>
@@ -1220,21 +1220,25 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader,properties);]]
 						transaction.
 					</li>
 					<li>
-						<p>
-							MANAGED – This configuration simply does almost nothing. It
-							never
-							commits, or rolls back a connection. Instead, it lets the
-							container manage the full lifecycle of the transaction (e.g.
-							Spring or a JEE Application Server context). By default it does
-							close the connection. However, some containers don’t expect this,
-							and thus if you need to stop it from closing the connection, set
-							the “closeConnection” property to false. For example:
-						</p>
+						MANAGED – This configuration simply does almost nothing. It
+						never
+						commits, or rolls back a connection. Instead, it lets the
+						container manage the full lifecycle of the transaction (e.g.
+						a JEE Application Server context). By default it does
+						close the connection. However, some containers don’t expect this,
+						and thus if you need to stop it from closing the connection, set
+						the “closeConnection” property to false. For example:
 						<source><![CDATA[<transactionManager type="MANAGED">
 	<property name="closeConnection" value="false"/>
 </transactionManager>]]></source>
 					</li>
 				</ul>
+				<p>
+					<span class="label important">NOTE</span>
+					If you are planning to use MyBatis with Spring there is no need to configure
+					any TransactionManager because the Spring module will set its own one 
+					overriding any previously set configuration.  
+				</p>
 				<p>
 					Neither of these TransactionManager types require any properties.
 					However,
