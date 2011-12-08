@@ -92,7 +92,7 @@ SqlSessionFactory build(Configuration config)</source>
   <p>If you call a method that takes a properties instance, then MyBatis will load those properties and make them available to your configuration.  Those properties can be used in place of most values in the configuration using the syntax:  ${propName}</p>
   <p>Recall that properties can also be referenced from the SqlMapConfig.xml file, or specified directly within it.  Therefore it's important to understand the priority.  We mentioned it earlier in this document, but here it is again for easy reference:</p>
 
-  <p><span class="label warning">NOTE</span> If a property exists in more than one of these places, MyBatis loads them in the following order. <strong>1)</strong> Properties specified in the body of the properties element are read first; <strong>2)</strong> Properties loaded from the classpath resource or url attributes of the properties element are read second, and override any duplicate properties already specified; <strong>3) </strong> Properties passed as a method parameter are read last, and override any duplicate properties that may have been loaded from the properties body and the resource/url attributes. Thus, the highest priority properties are those passed in as a method parameter, followed by resource/url attributes and finally the properties specified in the body of the properties element.</p>
+  <p><span class="label important">NOTE</span> If a property exists in more than one of these places, MyBatis loads them in the following order. <strong>1)</strong> Properties specified in the body of the properties element are read first; <strong>2)</strong> Properties loaded from the classpath resource or url attributes of the properties element are read second, and override any duplicate properties already specified; <strong>3) </strong> Properties passed as a method parameter are read last, and override any duplicate properties that may have been loaded from the properties body and the resource/url attributes. Thus, the highest priority properties are those passed in as a method parameter, followed by resource/url attributes and finally the properties specified in the body of the properties element.</p>
   <p>So to summarize, the first four methods are largely the same, but with overrides to allow you to optionally specify the environment and/or properties.  Here is an example of building a SqlSessionFactory from an SqlMapConfig.xml file. </p>  
 
   <source>String <strong>resource</strong> = "org/mybatis/builder/MapperConfig.xml";
@@ -168,8 +168,8 @@ Configuration getConfiguration();</source>
     <li><strong>ExecutorType.REUSE</strong>: This type of executor will reuse PreparedStatements.</li>
     <li><strong>ExecutorType.BATCH</strong>: This executor will batch all update statements and demarcate them as necessary if SELECTs are executed between them, to ensure an easy-to-understand behavior.</li>
   </ul>
-  <p><span class="label warning">NOTE</span> There's one more method on the SqlSessionFactory that we didn't mention, and that is <em>getConfiguration()</em>. This method will return an instance of Configuration that you can use to introspect upon the MyBatis configuration at runtime.</p>
-  <p><span class="label warning">NOTE</span> If you've used a previous version of MyBatis, you'll recall that sessions, transactions and batches were all something separate. This is no longer the case. All three are neatly contained within the scope of a session. You need not deal with transactions or batches separately to get the full benefit of them.</p>
+  <p><span class="label important">NOTE</span> There's one more method on the SqlSessionFactory that we didn't mention, and that is <em>getConfiguration()</em>. This method will return an instance of Configuration that you can use to introspect upon the MyBatis configuration at runtime.</p>
+  <p><span class="label important">NOTE</span> If you've used a previous version of MyBatis, you'll recall that sessions, transactions and batches were all something separate. This is no longer the case. All three are neatly contained within the scope of a session. You need not deal with transactions or batches separately to get the full benefit of them.</p>
 
   <h4>SqlSession</h4>
   <p>As mentioned above, the SqlSession instance is the most powerful class in MyBatis. It is where you'll find all of the methods to execute statements, commit or rollback transactions and acquire mapper instances.</p>
@@ -237,7 +237,7 @@ try {
 } finally {
     session.close();
 }</source>
-  <p><span class="label warning">NOTE</span> Just like SqlSessionFactory, you can get the instance of Configuration that the SqlSession is using by calling the getConfiguration() method.</p>
+  <p><span class="label important">NOTE</span> Just like SqlSessionFactory, you can get the instance of Configuration that the SqlSession is using by calling the getConfiguration() method.</p>
   <source>Configuration getConfiguration()</source>
 
   <h5>Using Mappers</h5>
@@ -262,14 +262,14 @@ try {
 }]]></source>
   <p>In a nutshell, each Mapper method signature should match that of the SqlSession method that it's associated to, but without the String parameter ID. Instead, the method name must match the mapped statement ID.</p> 
   <p>In addition, the return type must match that of the expected result type. All of the usual types are supported, including: Primitives, Maps, POJOs and JavaBeans.</p>
-  <p><span class="label warning">NOTE</span> Mapper interfaces do not need to implement any interface or extend any class. As long as the method signature can be used to uniquely identify a corresponding mapped statement.</p>
-  <p><span class="label warning">NOTE</span> Mapper interfaces can extend other interfaces. Be sure that you have the statements in the appropriate namespace when using XML binding to Mapper interfaces. Also, the only limitation is that you cannot have the same method signature in two interfaces in a hierarchy (a bad idea anyway).</p>
+  <p><span class="label important">NOTE</span> Mapper interfaces do not need to implement any interface or extend any class. As long as the method signature can be used to uniquely identify a corresponding mapped statement.</p>
+  <p><span class="label important">NOTE</span> Mapper interfaces can extend other interfaces. Be sure that you have the statements in the appropriate namespace when using XML binding to Mapper interfaces. Also, the only limitation is that you cannot have the same method signature in two interfaces in a hierarchy (a bad idea anyway).</p>
   <p>You can pass multiple parameters to a mapper method. If you do, they will be named by their position in the parameter list by default, for example: #{1}, #{2} etc. If you wish to change the name of the parameters (multiple only), then you can use the @Param("paramName") annotation on the parameter.</p>
   <p>You can also pass a RowBounds instance to the method to limit query results.</p>
 
   <h5>Mapper Annotations</h5>
   <p>Since the very beginning, MyBatis has been an XML driven framework. The configuration is XML based, and the Mapped Statements are defined in XML. With MyBatis 3, there are new options available. MyBatis 3 builds on top of a comprehensive and powerful Java based Configuration API. This Configuration API is the foundation for the XML based MyBatis configuration, as well as the new Annotation based configuration. Annotations offer a simple way to implement simple mapped statements without introducing a lot of overhead.</p>
-  <p><span class="label warning">NOTE</span> Java Annotations are unfortunately limited in their expressiveness and flexibility. Despite a lot of time spent in investigation, design and trials, the most powerful MyBatis mappings simply cannot be built with Annotations – without getting ridiculous that is. C# Attributes (for example) do not suffer from these limitations, and thus MyBatis.NET will enjoy a much richer alternative to XML. That said, the Java Annotation based configuration is not without its benefits.</p>
+  <p><span class="label important">NOTE</span> Java Annotations are unfortunately limited in their expressiveness and flexibility. Despite a lot of time spent in investigation, design and trials, the most powerful MyBatis mappings simply cannot be built with Annotations – without getting ridiculous that is. C# Attributes (for example) do not suffer from these limitations, and thus MyBatis.NET will enjoy a much richer alternative to XML. That said, the Java Annotation based configuration is not without its benefits.</p>
   <p><strong>The Annotations are as follows:</strong></p>
   <table>
     <thead>
@@ -333,18 +333,18 @@ try {
         <td>@One</td>
         <td>Method</td>
         <td>&lt;association&gt;</td>
-        <td>A mapping to a single property value of a complex type. Attributes: <strong>select</strong>, which is the fully qualified name of a mapped statement (i.e. mapper method) that can load an instance of the appropriate type. <span class="label warning">NOTE</span> You will notice that join mapping is not supported via the Annotations API. This is due to the limitation in Java Annotations that does not allow for circular references.</td>
+        <td>A mapping to a single property value of a complex type. Attributes: <strong>select</strong>, which is the fully qualified name of a mapped statement (i.e. mapper method) that can load an instance of the appropriate type. <span class="label important">NOTE</span> You will notice that join mapping is not supported via the Annotations API. This is due to the limitation in Java Annotations that does not allow for circular references.</td>
       </tr>
       <tr>
         <td>@Many</td>
         <td>Method</td>
         <td>&lt;collection&gt;</td>
-        <td>A mapping to a collection property of a complex type. Attributes: <strong>select</strong>, which is the fully qualified name of a mapped statement (i.e. mapper method) that can load a collection of instances of the appropriate types. <span class="label warning">NOTE</span> You will notice that join mapping is not supported via the Annotations API. This is due to the limitation in Java Annotations that does not allow for circular references.</td>
+        <td>A mapping to a collection property of a complex type. Attributes: <strong>select</strong>, which is the fully qualified name of a mapped statement (i.e. mapper method) that can load a collection of instances of the appropriate types. <span class="label important">NOTE</span> You will notice that join mapping is not supported via the Annotations API. This is due to the limitation in Java Annotations that does not allow for circular references.</td>
       </tr>
       <tr>
         <td>@MapKey</td>
         <td>Method</td>
-        <td>&nbsp;</td>
+        <td> </td>
         <td>This is used on methods which return type is a Map. It is used to convert a List of result objects as a Map based on a property of those objects.</td>
       </tr>
       <tr>
@@ -363,7 +363,7 @@ try {
         <td>@InsertProvider<br/>@UpdateProvider<br/>@DeleteProvider<br/>@SelectProvider</td>
         <td>Method</td>
         <td>&lt;insert&gt;<br/>&lt;update&gt;<br/>&lt;delete&gt;<br/>&lt;select&gt;</td>
-        <td>Allows for creation of dynamic SQL.	These alternative SQL annotations allow you to specify a class name and a method that will return the SQL to run at execution time. Upon executing the mapped statement, MyBatis will instantiate the class, and execute the method, as specified by the provider. <u>The method can optionally accept the parameter object as its sole parameter, but must only specify that parameter, or no parameters</u>. Attributes: <strong>type, method</strong>. The type attribute is the fully qualified name of a class. The method is the name of the method on that class. <span class="label warning">NOTE</span> Following this section is a discussion about the SelectBuilder class, which can help build dynamic SQL in a cleaner, easier to read way.</td>
+        <td>Allows for creation of dynamic SQL.	These alternative SQL annotations allow you to specify a class name and a method that will return the SQL to run at execution time. Upon executing the mapped statement, MyBatis will instantiate the class, and execute the method, as specified by the provider. <u>The method can optionally accept the parameter object as its sole parameter, but must only specify that parameter, or no parameters</u>. Attributes: <strong>type, method</strong>. The type attribute is the fully qualified name of a class. The method is the name of the method on that class. <span class="label important">NOTE</span> Following this section is a discussion about the SelectBuilder class, which can help build dynamic SQL in a cleaner, easier to read way.</td>
       </tr>
       <tr>
         <td>@Param</td>
