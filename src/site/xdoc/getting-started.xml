@@ -250,7 +250,6 @@ Blog blog = mapper.selectBlog(101);]]></source>
 				once, and putting it in a proper Java package namespace will clean
 				up your code and improve the usability of MyBatis in the long term.
 			</p>
-			</blockquote>
 			<p>
 				<strong>Name Resolution:</strong> To reduce the amount of typing, MyBatis uses the
 				following name resolution rules for all named configuration
@@ -268,6 +267,7 @@ Blog blog = mapper.selectBlog(101);]]></source>
 					and therefore must be fully qualified.
 				</li>
 			</ul>
+			</blockquote>
 			<p>
 				There's one more trick to Mapper classes like BlogMapper. Their mapped
 				statements don't need to be mapped with XML at all. Instead they can
