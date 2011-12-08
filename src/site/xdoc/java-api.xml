@@ -92,7 +92,16 @@ SqlSessionFactory build(Configuration config)</source>
   <p>If you call a method that takes a properties instance, then MyBatis will load those properties and make them available to your configuration.  Those properties can be used in place of most values in the configuration using the syntax:  ${propName}</p>
   <p>Recall that properties can also be referenced from the SqlMapConfig.xml file, or specified directly within it.  Therefore it's important to understand the priority.  We mentioned it earlier in this document, but here it is again for easy reference:</p>
 
-  <p><span class="label important">NOTE</span> If a property exists in more than one of these places, MyBatis loads them in the following order. <strong>1)</strong> Properties specified in the body of the properties element are read first; <strong>2)</strong> Properties loaded from the classpath resource or url attributes of the properties element are read second, and override any duplicate properties already specified; <strong>3) </strong> Properties passed as a method parameter are read last, and override any duplicate properties that may have been loaded from the properties body and the resource/url attributes. Thus, the highest priority properties are those passed in as a method parameter, followed by resource/url attributes and finally the properties specified in the body of the properties element.</p>
+  <blockquote>
+  <p>If a property exists in more than one of these places, MyBatis loads them in the following order.</p>
+  <ul>
+  <li>Properties specified in the body of the properties element are read first,</li>
+  <li>Properties loaded from the classpath resource or url attributes of the properties element are read second, and override any duplicate properties already specified,</li>
+  <li>Properties passed as a method parameter are read last, and override any duplicate properties that may have been loaded from the properties body and the resource/url attributes.</li>
+  </ul>
+  <p>Thus, the highest priority properties are those passed in as a method parameter, followed by resource/url attributes and finally the properties specified in the body of the properties element.</p>
+  </blockquote>
+ 
   <p>So to summarize, the first four methods are largely the same, but with overrides to allow you to optionally specify the environment and/or properties.  Here is an example of building a SqlSessionFactory from an SqlMapConfig.xml file. </p>  
 
   <source>String <strong>resource</strong> = "org/mybatis/builder/MapperConfig.xml";

@@ -232,8 +232,12 @@ Blog blog = mapper.selectBlog(101);]]></source>
 				the BlogMapper interface can have clean, typesafe return types (and
 				a typesafe parameter).
 			</p>
+			<blockquote>
 			<p>
 				<span class="label important">NOTE</span>
+				<strong>A note about namespaces.</strong>
+			</p>
+			<p>
 				<strong>Namespaces</strong>
 				were optional in previous versions of MyBatis, which was confusing
 				and unhelpful. Namespaces are now required and have a purpose beyond
@@ -246,8 +250,8 @@ Blog blog = mapper.selectBlog(101);]]></source>
 				once, and putting it in a proper Java package namespace will clean
 				up your code and improve the usability of MyBatis in the long term.
 			</p>
+			</blockquote>
 			<p>
-				<span class="label important">NOTE</span>
 				<strong>Name Resolution:</strong> To reduce the amount of typing, MyBatis uses the
 				following name resolution rules for all named configuration
 				elements, including statements, result maps, caches, etc.

@@ -114,7 +114,7 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
 					</li>
 					<li>Properties loaded from the classpath resource or url attributes
 						of the properties element are read second, and override any
-						duplicate properties already specified ,
+						duplicate properties already specified,
 					</li>
 					<li>Properties passed as a method parameter are read last, and
 						override any duplicate properties that may have been loaded from
