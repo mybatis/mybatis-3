@@ -615,22 +615,22 @@ public class User {
     private String hashedPassword;
     
     public int getId() {
-    return id;
+	    return id;
     }
     public void setId(int id) {
-    this.id = id;
+        this.id = id;
     }
     public String getUsername() {
-    return username;
+        return username;
     }
     public void setUsername(String username) {
-    this.username = username;
+        this.username = username;
     }
     public String getHashedPassword() {
-    return hashedPassword;
+        return hashedPassword;
     }
     public void setHashedPassword(String hashedPassword) {
-    this.hashedPassword = hashedPassword;
+        this.hashedPassword = hashedPassword;
     }
 }]]></source>
 
@@ -1755,7 +1755,7 @@ public class User {
                     update statements that don’t need to flush the cache upon execution.
                 </p>
          
-         	    <h4>cache-ref"></h4>
+         	    <h4>cache-ref</h4>
                 <p>
                     Recall from the previous section that only the cache for this particular namespace will be used or
                     flushed for statements within the same namespace. There may come a time when you want to share the
