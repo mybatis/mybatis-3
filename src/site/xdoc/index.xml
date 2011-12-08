@@ -14,7 +14,7 @@
 	xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
 
 	<properties>
-		<title>MyBatis | Introduction</title>
+		<title>MyBatis 3 | Introduction</title>
 		<author email="mybatis-dev@googlegroups.com">The MyBatis Team</author>
 	</properties>
 
@@ -23,11 +23,11 @@
 			<p>
 				MyBatis is a first class persistence framework with support for
 				custom SQL,
-				stored procedures and advanced mappings.  MyBatis
+				stored procedures and advanced mappings. MyBatis
 				eliminates almost
 				all of the JDBC code and manual setting of
 				parameters and retrieval
-				of results.  MyBatis can use simple XML or
+				of results. MyBatis can use simple XML or
 				Annotations for
 				configuration and map primitives, Map interfaces and
 				Java POJOs
@@ -45,7 +45,7 @@
 				Sources of this manual are available in xdoc format at 
 				<a href="http://mybatis.googlecode.com/svn/trunk/src/site/">project's SVN </a>.
 				Check them out, update them and send your patch to the
-				<a href="http://code.google.com/p/mybatis/issues/entry">tracker</a>
+				<a href="http://code.google.com/p/mybatis/issues/entry">tracker</a>.
 			</p>
 			<p>
 				You’re the best author of this documentation, people like you have

@@ -27,10 +27,10 @@
 
   <body>
   <section name="Java API" id="javaApi">
-  <p>Now that you know how to configure MyBatis and create mappings, you're ready for the good stuff.  The MyBatis Java API is where you get to reap the rewards of your efforts.  As you'll see, compared to JDBC, MyBatis greatly simplifies your code and keeps it clean, easy to understand and maintain.  MyBatis 3 has introduced a number of significant improvements to make working with SQL Maps even better.</p>
+  <p>Now that you know how to configure MyBatis and create mappings, you're ready for the good stuff. The MyBatis Java API is where you get to reap the rewards of your efforts. As you'll see, compared to JDBC, MyBatis greatly simplifies your code and keeps it clean, easy to understand and maintain. MyBatis 3 has introduced a number of significant improvements to make working with SQL Maps even better.</p>
 
   <subsection name="Directory Structure" id="directoryStructure">
-  <p>Before we dive in to the Java API itself, it's important to understand the best practices surrounding directory structures.  MyBatis is very flexible, and you can do almost anything with your files.  But as with any framework, there's a preferred way.</p>
+  <p>Before we dive in to the Java API itself, it's important to understand the best practices surrounding directory structures. MyBatis is very flexible, and you can do almost anything with your files. But as with any framework, there's a preferred way.</p>
   <p>Let's look at a typical application directory structure:</p>
   <pre>/my_application
   /bin
@@ -73,7 +73,7 @@ SqlSessionFactory build(InputStream inputStream, Properties properties)
 SqlSessionFactory build(InputStream inputStream, String env, Properties props)
 SqlSessionFactory build(Configuration config)</source>  
 
-  <p>The first four methods are the most common, as they take an InputStream instance that refers to an XML document, or more specifically, the SqlMapConfig.xml file discussed above. The optional parameters are environment and properties.  Environment determines which environment to load, including the datasource and transaction manager. For example:</p>
+  <p>The first four methods are the most common, as they take an InputStream instance that refers to an XML document, or more specifically, the SqlMapConfig.xml file discussed above. The optional parameters are environment and properties. Environment determines which environment to load, including the datasource and transaction manager. For example:</p>
   
   <source><![CDATA[<environments default="development">
   <environment id="development">
@@ -89,9 +89,9 @@ SqlSessionFactory build(Configuration config)</source>
         ...
   </environment>
 </environments>]]></source>  
-  <p>If you call a build method that takes the environment parameter, then MyBatis will use the configuration for that environment.  Of course, if you specify an invalid environment, you will receive an error.  If you call one of the build methods that does not take the environment parameter, then the default environment is uses (which is specified as default="development" in the example above).</p>  
-  <p>If you call a method that takes a properties instance, then MyBatis will load those properties and make them available to your configuration.  Those properties can be used in place of most values in the configuration using the syntax:  ${propName}</p>
-  <p>Recall that properties can also be referenced from the SqlMapConfig.xml file, or specified directly within it.  Therefore it's important to understand the priority.  We mentioned it earlier in this document, but here it is again for easy reference:</p>
+  <p>If you call a build method that takes the environment parameter, then MyBatis will use the configuration for that environment. Of course, if you specify an invalid environment, you will receive an error. If you call one of the build methods that does not take the environment parameter, then the default environment is uses (which is specified as default="development" in the example above).</p>  
+  <p>If you call a method that takes a properties instance, then MyBatis will load those properties and make them available to your configuration. Those properties can be used in place of most values in the configuration using the syntax:  ${propName}</p>
+  <p>Recall that properties can also be referenced from the SqlMapConfig.xml file, or specified directly within it. Therefore it's important to understand the priority. We mentioned it earlier in this document, but here it is again for easy reference:</p>
 
   <hr/>
   <p>If a property exists in more than one of these places, MyBatis loads them in the following order.</p>
@@ -103,14 +103,14 @@ SqlSessionFactory build(Configuration config)</source>
   <p>Thus, the highest priority properties are those passed in as a method parameter, followed by resource/url attributes and finally the properties specified in the body of the properties element.</p>
   <hr/>
   
-  <p>So to summarize, the first four methods are largely the same, but with overrides to allow you to optionally specify the environment and/or properties.  Here is an example of building a SqlSessionFactory from an SqlMapConfig.xml file. </p>  
+  <p>So to summarize, the first four methods are largely the same, but with overrides to allow you to optionally specify the environment and/or properties. Here is an example of building a SqlSessionFactory from an SqlMapConfig.xml file. </p>  
 
   <source>String <strong>resource</strong> = "org/mybatis/builder/MapperConfig.xml";
 InputStream <strong>inputStream</strong> = Resources.getResourceAsStream(resource);
 SqlSessionFactoryBuilder <strong>builder</strong> = new SqlSessionFactoryBuilder();
 SqlSessionFactory <strong>factory</strong> = builder.build(inputStream);</source>  
   
-  <p>Notice that we're making use of the Resources utility class, which lives in the org.mybatis.io package.  The Resources class, as its name implies, helps you load resources from the classpath, filesystem or even a web URL.  A quick look at the class source code or inspection through your IDE will reveal its fairly obvious set of useful methods. Here's a quick list:</p>
+  <p>Notice that we're making use of the Resources utility class, which lives in the org.mybatis.io package. The Resources class, as its name implies, helps you load resources from the classpath, filesystem or even a web URL. A quick look at the class source code or inspection through your IDE will reveal its fairly obvious set of useful methods. Here's a quick list:</p>
   <source>URL getResourceURL(String resource)
 URL getResourceURL(ClassLoader loader, String resource)
 InputStream getResourceAsStream(String resource)
@@ -126,7 +126,7 @@ Reader getUrlAsReader(String urlString)
 Properties getUrlAsProperties(String urlString)
 Class classForName(String className)</source>
 
-  <p>The final build method takes an instance of Configuration.  The Configuration class contains everything you could possibly need to know about a SqlSessionFactory instance.  The Configuration class is useful for introspecting on the configuration, including finding and manipulating SQL maps (not recommended once the application is accepting requests).  The configuration class has every configuration switch that you've learned about already, only exposed as a Java API.  Here's a simple example of how to manually a Configuration instance and pass it to the build() method to create a SqlSessionFactory.</p>
+  <p>The final build method takes an instance of Configuration. The Configuration class contains everything you could possibly need to know about a SqlSessionFactory instance. The Configuration class is useful for introspecting on the configuration, including finding and manipulating SQL maps (not recommended once the application is accepting requests). The configuration class has every configuration switch that you've learned about already, only exposed as a Java API. Here's a simple example of how to manually a Configuration instance and pass it to the build() method to create a SqlSessionFactory.</p>
   <source>DataSource dataSource = BaseDataTest.createBlogDataSource();
 TransactionFactory transactionFactory = new JdbcTransactionFactory();
 
