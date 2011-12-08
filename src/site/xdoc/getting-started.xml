@@ -40,7 +40,7 @@
 				Building a SqlSessionFactory instance from an XML file is very
 				simple. It is recommended that you use a classpath resource for
 				this
-				configuration, but you could use any Reader instance, including
+				configuration, but you could use any InputStream instance, including
 				one
 				created from a literal file path or a file:// URL. MyBatis
 				includes
@@ -53,8 +53,8 @@
 			</p>
 			<source><![CDATA[
 String resource = "org/mybatis/example/Configuration.xml";
-Reader reader = Resources.getResourceAsReader(resource);
-sqlMapper = new SqlSessionFactoryBuilder().build(reader);]]></source>
+InputStream inputStream = Resources.getResourceAsStream(resource);
+sqlMapper = new SqlSessionFactoryBuilder().build(inputStream);]]></source>
 			<p>
 				The configuration XML file contains settings for the core of the
 				MyBatis system, including a DataSource for acquiring database

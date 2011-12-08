@@ -67,13 +67,13 @@
   <p><span class="label important">NOTE</span> When using MyBatis with a dependency injection framework like Spring or Guice, SqlSessions are created and injected by the DI framework so you don't need to use the SqlSessionFactoryBuilder or SqlSessionFactory and can go directly to the SqlSession section. Please refer to the MyBatis-Spring or MyBatis-Guice manuals for further info.</p>
   <h4>SqlSessionFactoryBuilder</h4>
   <p>The SqlSessionFactoryBuilder has five build() methods, each which allows you to build a SqlSession from a different source.</p>
-  <source>SqlSessionFactory build(Reader reader)
-SqlSessionFactory build(Reader reader, String environment)
-SqlSessionFactory build(Reader reader, Properties properties)
-SqlSessionFactory build(Reader reader, String env, Properties props)
+  <source>SqlSessionFactory build(InputStream inputStream)
+SqlSessionFactory build(InputStream inputStream, String environment)
+SqlSessionFactory build(InputStream inputStream, Properties properties)
+SqlSessionFactory build(InputStream inputStream, String env, Properties props)
 SqlSessionFactory build(Configuration config)</source>  
 
-  <p>The first four methods are the most common, as they take a Reader instance that refers to an XML document, or more specifically, the SqlMapConfig.xml file discussed above. The optional parameters are environment and properties.  Environment determines which environment to load, including the datasource and transaction manager. For example:</p>
+  <p>The first four methods are the most common, as they take an InputStream instance that refers to an XML document, or more specifically, the SqlMapConfig.xml file discussed above. The optional parameters are environment and properties.  Environment determines which environment to load, including the datasource and transaction manager. For example:</p>
   
   <source><![CDATA[<environments default="development">
   <environment id="development">
@@ -106,9 +106,9 @@ SqlSessionFactory build(Configuration config)</source>
   <p>So to summarize, the first four methods are largely the same, but with overrides to allow you to optionally specify the environment and/or properties.  Here is an example of building a SqlSessionFactory from an SqlMapConfig.xml file. </p>  
 
   <source>String <strong>resource</strong> = "org/mybatis/builder/MapperConfig.xml";
-Reader <strong>reader</strong> = Resources.getResourceAsReader(resource);
+InputStream <strong>inputStream</strong> = Resources.getResourceAsStream(resource);
 SqlSessionFactoryBuilder <strong>builder</strong> = new SqlSessionFactoryBuilder();
-SqlSessionFactory <strong>factory</strong> = builder.build(reader);</source>  
+SqlSessionFactory <strong>factory</strong> = builder.build(inputStream);</source>  
   
   <p>Notice that we're making use of the Resources utility class, which lives in the org.mybatis.io package.  The Resources class, as its name implies, helps you load resources from the classpath, filesystem or even a web URL.  A quick look at the class source code or inspection through your IDE will reveal its fairly obvious set of useful methods. Here's a quick list:</p>
   <source>URL getResourceURL(String resource)
