@@ -26,9 +26,8 @@
 				build a SqlSessionFactory instance from an XML configuration file,
 				of from a custom prepared instance of the Configuration class.
 			</p>
-		</section>
 
-		<section name="Building SqlSessionFactory from XML">
+		<subsection name="Building SqlSessionFactory from XML">
 			<p>
 				Building a SqlSessionFactory instance from an XML file is very
 				simple. It is recommended that you use a classpath resource for
@@ -93,8 +92,8 @@ sqlMapper = new SqlSessionFactoryBuilder().build(reader);]]></source>
 				and mapping
 				definitions.
 			</p>
-		</section>
-		<section name="Building SqlSessionFactory without XML">
+		</subsection>
+		<subsection name="Building SqlSessionFactory without XML">
 			<p>
 				If you prefer to directly build the configuration from Java, rather
 				than XML, or create your own
@@ -126,8 +125,8 @@ SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(confi
 				classpath and name of
 				BlogMapper.class). More on this later.
 			</p>
-		</section>
-		<section name="Acquiring a SqlSession from SqlSessionFactory">
+		</subsection>
+		<subsection name="Acquiring a SqlSession from SqlSessionFactory">
 			<p>
 				Now that you have a SqlSessionFactory, as the name suggests, you
 				can acquire an instance of
@@ -165,8 +164,8 @@ try {
 			<p>
 				Now let's explore what exactly is being executed here.
 			</p>
-		</section>
-		<section name="Exploring Mapped SQL Statements">
+		</subsection>
+		<subsection name="Exploring Mapped SQL Statements">
 			<p>
 				At this point you may be wondering what exactly is being executed by
 				the SqlSession or Mapper class. The topic of Mapped SQL Statements
@@ -225,7 +224,7 @@ Blog blog = mapper.selectBlog(101);]]></source>
 				the BlogMapper interface can have clean, typesafe return types (and
 				a typesafe parameter).
 			</p>
-			<p>
+			<p><span class="label warning">NOTE</span>
 				<strong>A Note about Namespaces:</strong>
 			</p>
 			<p>
@@ -282,14 +281,14 @@ public interface BlogMapper {
 				a single approach. You can very easily migrate Annotation based
 				Mapped Statements to XML and vice versa.
 			</p>
-		</section>
-		<section name="Scope and Lifecycle">
+		</subsection>
+		<subsection name="Scope and Lifecycle">
 			<p>
 				It's very important to understand the various scopes and lifecycles
 				classes we've discussed so far. Using them incorrectly can cause
 				severe concurrency problems.
 			</p>
-			<subsection name="SqlSessionFactoryBuilder">
+			<h4>SqlSessionFactoryBuilder</h4>
 				<p>
 					This class can be instantiated, used and thrown away. There is no need
 					to keep it around once you've created your SqlSessionFactory.
@@ -300,8 +299,7 @@ public interface BlogMapper {
 					all of the XML parsing resources are freed up for more important
 					things.
 				</p>
-			</subsection>
-			<subsection name="SqlSessionFactory">
+			<h4>SqlSessionFactory</h4>
 				<p>
 					Once created, the SqlSessionFactory should exist for the duration of
 					your application execution. There should be little or no reason to
@@ -316,8 +314,7 @@ public interface BlogMapper {
 					or Spring. Such frameworks will allow you to create providers that
 					will manage the singleton lifecycle of SqlSessionFactory for you.
 				</p>
-			</subsection>
-			<subsection name="SqlSession">
+			<h4>SqlSession</h4>
 				<p>
 					Each thread should have its own instance of SqlSession. Instances of
 					SqlSession are not to be shared and are not thread safe. Therefore
@@ -345,8 +342,7 @@ try {
 					pass in your own connection, which is an indication to MyBatis that
 					you wish to manage your own connection resources).
 				</p>
-			</subsection>
-			<subsection name="Mapper Instances">
+			<h4>Mapper Instances</h4>
 				<p>
 					Mappers are interfaces that you create to bind to your mapped statements.
 					Instances of the mapper interfaces are acquired from the

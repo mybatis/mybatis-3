@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Copyright 2010-2011 The myBatis Team
+  Copyright 2010-2011 The MyBatis Team
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -15,9 +15,8 @@
   limitations under the License.
 -->
 
-<!--
-  version: $Id$
--->
+<!-- version: $Id$ -->
+
 <project xmlns="http://maven.apache.org/DECORATION/1.1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/DECORATION/1.1.0 http://maven.apache.org/xsd/decoration-1.1.0.xsd"
   name="MyBatis">
@@ -30,7 +29,7 @@
       <item name="SQL Map XML Files" href="sqlmap-xml.html"/>
       <item name="Dynamic SQL" href="dynamic-sql.html"/>   
       <item name="Java API" href="java-api.html"/>   
-      <item name="Select Builder" href="select-builder.html"/>   
+      <item name="Statement Builders" href="statement-builders.html"/>   
       <item name="Logging" href="logging.html"/>   
     </menu>
 
