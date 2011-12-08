@@ -424,228 +424,228 @@ public class Author {
 					<thead>
 						<tr>
 							<th>
-								<p>Alias</p>
+								Alias
 							</th>
 							<th>
-								<p>Mapped Type</p>
+								Mapped Type
 							</th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr>
 							<td>
-								<p>_byte</p>
+								_byte
 							</td>
 							<td>
-								<p>Byte</p>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<p>_long</p>
-							</td>
-							<td>
-								<p>Long</p>
+								Byte
 							</td>
 						</tr>
 						<tr>
 							<td>
-								<p>_short</p>
+								_long
 							</td>
 							<td>
-								<p>Short</p>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<p>_int</p>
-							</td>
-							<td>
-								<p>Int</p>
+								Long
 							</td>
 						</tr>
 						<tr>
 							<td>
-								<p>_integer</p>
+								_short
 							</td>
 							<td>
-								<p>int</p>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<p>_double</p>
-							</td>
-							<td>
-								<p>double</p>
+								Short
 							</td>
 						</tr>
 						<tr>
 							<td>
-								<p>_float</p>
+								_int
 							</td>
 							<td>
-								<p>float</p>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<p>_boolean</p>
-							</td>
-							<td>
-								<p>boolean</p>
+								Int
 							</td>
 						</tr>
 						<tr>
 							<td>
-								<p>string</p>
+								_integer
 							</td>
 							<td>
-								<p>String</p>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<p>byte</p>
-							</td>
-							<td>
-								<p>Byte</p>
+								int
 							</td>
 						</tr>
 						<tr>
 							<td>
-								<p>long</p>
+								_double
 							</td>
 							<td>
-								<p>Long</p>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<p>short</p>
-							</td>
-							<td>
-								<p>Short</p>
+								double
 							</td>
 						</tr>
 						<tr>
 							<td>
-								<p>int</p>
+								_float
 							</td>
 							<td>
-								<p>Integer</p>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<p>integer</p>
-							</td>
-							<td>
-								<p>Integer</p>
+								float
 							</td>
 						</tr>
 						<tr>
 							<td>
-								<p>double</p>
+								_boolean
 							</td>
 							<td>
-								<p>Double</p>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<p>float</p>
-							</td>
-							<td>
-								<p>Float</p>
+								boolean
 							</td>
 						</tr>
 						<tr>
 							<td>
-								<p>boolean</p>
+								string
 							</td>
 							<td>
-								<p>Boolean</p>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<p>date</p>
-							</td>
-							<td>
-								<p>Date</p>
+								String
 							</td>
 						</tr>
 						<tr>
 							<td>
-								<p>decimal</p>
+								byte
 							</td>
 							<td>
-								<p>BigDecimal</p>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<p>bigdecimal</p>
-							</td>
-							<td>
-								<p>BigDecimal</p>
+								Byte
 							</td>
 						</tr>
 						<tr>
 							<td>
-								<p>object</p>
+								long
 							</td>
 							<td>
-								<p>Object</p>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<p>map</p>
-							</td>
-							<td>
-								<p>Map</p>
+								Long
 							</td>
 						</tr>
 						<tr>
 							<td>
-								<p>hashmap</p>
+								short
 							</td>
 							<td>
-								<p>HashMap</p>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<p>list</p>
-							</td>
-							<td>
-								<p>List</p>
+								Short
 							</td>
 						</tr>
 						<tr>
 							<td>
-								<p>arraylist</p>
+								int
 							</td>
 							<td>
-								<p>ArrayList</p>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<p>collection</p>
-							</td>
-							<td>
-								<p>Collection</p>
+								Integer
 							</td>
 						</tr>
 						<tr>
 							<td>
-								<p>iterator</p>
+								integer
 							</td>
 							<td>
-								<p>Iterator</p>
+								Integer
+							</td>
+						</tr>
+						<tr>
+							<td>
+								double
+							</td>
+							<td>
+								Double
+							</td>
+						</tr>
+						<tr>
+							<td>
+								float
+							</td>
+							<td>
+								Float
+							</td>
+						</tr>
+						<tr>
+							<td>
+								boolean
+							</td>
+							<td>
+								Boolean
+							</td>
+						</tr>
+						<tr>
+							<td>
+								date
+							</td>
+							<td>
+								Date
+							</td>
+						</tr>
+						<tr>
+							<td>
+								decimal
+							</td>
+							<td>
+								BigDecimal
+							</td>
+						</tr>
+						<tr>
+							<td>
+								bigdecimal
+							</td>
+							<td>
+								BigDecimal
+							</td>
+						</tr>
+						<tr>
+							<td>
+								object
+							</td>
+							<td>
+								Object
+							</td>
+						</tr>
+						<tr>
+							<td>
+								map
+							</td>
+							<td>
+								Map
+							</td>
+						</tr>
+						<tr>
+							<td>
+								hashmap
+							</td>
+							<td>
+								HashMap
+							</td>
+						</tr>
+						<tr>
+							<td>
+								list
+							</td>
+							<td>
+								List
+							</td>
+						</tr>
+						<tr>
+							<td>
+								arraylist
+							</td>
+							<td>
+								ArrayList
+							</td>
+						</tr>
+						<tr>
+							<td>
+								collection
+							</td>
+							<td>
+								Collection
+							</td>
+						</tr>
+						<tr>
+							<td>
+								iterator
+							</td>
+							<td>
+								Iterator
 							</td>
 						</tr>
 					</tbody>
@@ -665,260 +665,260 @@ public class Author {
 					<thead>
 						<tr>
 							<th>
-								<p>Type Handler</p>
+								Type Handler
 							</th>
 							<th>
-								<p>Java Types</p>
+								Java Types
 							</th>
 							<th>
-								<p>JDBC Types</p>
+								JDBC Types
 							</th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr>
 							<td>
-								<p>BooleanTypeHandler</p>
+								BooleanTypeHandler
 							</td>
 							<td>
-								<p>Boolean, boolean</p>
+								Boolean, boolean
 							</td>
 							<td>
-								<p>Any compatible BOOLEAN </p>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<p>ByteTypeHandler</p>
-							</td>
-							<td>
-								<p>Byte, byte</p>
-							</td>
-							<td>
-								<p>Any compatible NUMERIC or BYTE</p>
+								Any compatible BOOLEAN 
 							</td>
 						</tr>
 						<tr>
 							<td>
-								<p>ShortTypeHandler</p>
+								ByteTypeHandler
 							</td>
 							<td>
-								<p>Short, short</p>
+								Byte, byte
 							</td>
 							<td>
-								<p>Any compatible NUMERIC or SHORT INTEGER</p>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<p>IntegerTypeHandler</p>
-							</td>
-							<td>
-								<p>Integer, int</p>
-							</td>
-							<td>
-								<p>Any compatible NUMERIC or INTEGER</p>
+								Any compatible NUMERIC or BYTE
 							</td>
 						</tr>
 						<tr>
 							<td>
-								<p>LongTypeHandler</p>
+								ShortTypeHandler
 							</td>
 							<td>
-								<p>Long, long</p>
+								Short, short
 							</td>
 							<td>
-								<p>Any compatible NUMERIC or LONG INTEGER</p>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<p>FloatTypeHandler</p>
-							</td>
-							<td>
-								<p>Float, float</p>
-							</td>
-							<td>
-								<p>Any compatible NUMERIC or FLOAT</p>
+								Any compatible NUMERIC or SHORT INTEGER
 							</td>
 						</tr>
 						<tr>
 							<td>
-								<p>DoubleTypeHandler</p>
+								IntegerTypeHandler
 							</td>
 							<td>
-								<p>Double, double</p>
+								Integer, int
 							</td>
 							<td>
-								<p>Any compatible NUMERIC or DOUBLE</p>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<p>BigDecimalTypeHandler</p>
-							</td>
-							<td>
-								<p>BigDecimal</p>
-							</td>
-							<td>
-								<p>Any compatible NUMERIC or DECIMAL</p>
+								Any compatible NUMERIC or INTEGER
 							</td>
 						</tr>
 						<tr>
 							<td>
-								<p>StringTypeHandler</p>
+								LongTypeHandler
 							</td>
 							<td>
-								<p>String</p>
+								Long, long
 							</td>
 							<td>
-								<p>CHAR, VARCHAR</p>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<p>ClobTypeHandler</p>
-							</td>
-							<td>
-								<p>String</p>
-							</td>
-							<td>
-								<p>CLOB, LONGVARCHAR</p>
+								Any compatible NUMERIC or LONG INTEGER
 							</td>
 						</tr>
 						<tr>
 							<td>
-								<p>NStringTypeHandler</p>
+								FloatTypeHandler
 							</td>
 							<td>
-								<p>String</p>
+								Float, float
 							</td>
 							<td>
-								<p>NVARCHAR, NCHAR</p>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<p>NClobTypeHandler</p>
-							</td>
-							<td>
-								<p>String</p>
-							</td>
-							<td>
-								<p>NCLOB</p>
+								Any compatible NUMERIC or FLOAT
 							</td>
 						</tr>
 						<tr>
 							<td>
-								<p>ByteArrayTypeHandler</p>
+								DoubleTypeHandler
 							</td>
 							<td>
-								<p>byte[]</p>
+								Double, double
 							</td>
 							<td>
-								<p>Any compatible byte stream type</p>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<p>BlobTypeHandler</p>
-							</td>
-							<td>
-								<p>byte[]</p>
-							</td>
-							<td>
-								<p>BLOB, LONGVARBINARY</p>
+								Any compatible NUMERIC or DOUBLE
 							</td>
 						</tr>
 						<tr>
 							<td>
-								<p>DateTypeHandler</p>
+								BigDecimalTypeHandler
 							</td>
 							<td>
-								<p>Date (java.util)</p>
+								BigDecimal
 							</td>
 							<td>
-								<p>TIMESTAMP</p>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<p>DateOnlyTypeHandler</p>
-							</td>
-							<td>
-								<p>Date (java.util)</p>
-							</td>
-							<td>
-								<p>DATE</p>
+								Any compatible NUMERIC or DECIMAL
 							</td>
 						</tr>
 						<tr>
 							<td>
-								<p>TimeOnlyTypeHandler</p>
+								StringTypeHandler
 							</td>
 							<td>
-								<p>Date (java.util)</p>
+								String
 							</td>
 							<td>
-								<p>TIME</p>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<p>SqlTimestampTypeHandler</p>
-							</td>
-							<td>
-								<p>Timestamp (java.sql)</p>
-							</td>
-							<td>
-								<p>TIMESTAMP</p>
+								CHAR, VARCHAR
 							</td>
 						</tr>
 						<tr>
 							<td>
-								<p>SqlDateTypeHadler</p>
+								ClobTypeHandler
 							</td>
 							<td>
-								<p>Date (java.sql)</p>
+								String
 							</td>
 							<td>
-								<p>DATE</p>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<p>SqlTimeTypeHandler</p>
-							</td>
-							<td>
-								<p>Time (java.sql)</p>
-							</td>
-							<td>
-								<p>TIME</p>
+								CLOB, LONGVARCHAR
 							</td>
 						</tr>
 						<tr>
 							<td>
-								<p>ObjectTypeHandler</p>
+								NStringTypeHandler
 							</td>
 							<td>
-								<p>Any</p>
+								String
 							</td>
 							<td>
-								<p>OTHER, or unspecified</p>
+								NVARCHAR, NCHAR
 							</td>
 						</tr>
 						<tr>
 							<td>
-								<p>EnumTypeHandler</p>
+								NClobTypeHandler
 							</td>
 							<td>
-								<p>Enumeration Type</p>
+								String
 							</td>
 							<td>
-								<p>VARCHAR any string compatible type, as the code is
+								NCLOB
+							</td>
+						</tr>
+						<tr>
+							<td>
+								ByteArrayTypeHandler
+							</td>
+							<td>
+								byte[]
+							</td>
+							<td>
+								Any compatible byte stream type
+							</td>
+						</tr>
+						<tr>
+							<td>
+								BlobTypeHandler
+							</td>
+							<td>
+								byte[]
+							</td>
+							<td>
+								BLOB, LONGVARBINARY
+							</td>
+						</tr>
+						<tr>
+							<td>
+								DateTypeHandler
+							</td>
+							<td>
+								Date (java.util)
+							</td>
+							<td>
+								TIMESTAMP
+							</td>
+						</tr>
+						<tr>
+							<td>
+								DateOnlyTypeHandler
+							</td>
+							<td>
+								Date (java.util)
+							</td>
+							<td>
+								DATE
+							</td>
+						</tr>
+						<tr>
+							<td>
+								TimeOnlyTypeHandler
+							</td>
+							<td>
+								Date (java.util)
+							</td>
+							<td>
+								TIME
+							</td>
+						</tr>
+						<tr>
+							<td>
+								SqlTimestampTypeHandler
+							</td>
+							<td>
+								Timestamp (java.sql)
+							</td>
+							<td>
+								TIMESTAMP
+							</td>
+						</tr>
+						<tr>
+							<td>
+								SqlDateTypeHadler
+							</td>
+							<td>
+								Date (java.sql)
+							</td>
+							<td>
+								DATE
+							</td>
+						</tr>
+						<tr>
+							<td>
+								SqlTimeTypeHandler
+							</td>
+							<td>
+								Time (java.sql)
+							</td>
+							<td>
+								TIME
+							</td>
+						</tr>
+						<tr>
+							<td>
+								ObjectTypeHandler
+							</td>
+							<td>
+								Any
+							</td>
+							<td>
+								OTHER, or unspecified
+							</td>
+						</tr>
+						<tr>
+							<td>
+								EnumTypeHandler
+							</td>
+							<td>
+								Enumeration Type
+							</td>
+							<td>
+								VARCHAR any string compatible type, as the code is
 									stored (not
 									the index).
-								</p>
+								
 							</td>
 						</tr>
 					</tbody>
