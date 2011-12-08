@@ -35,12 +35,12 @@ public class DefaultSqlSession implements SqlSession {
   }
 
   public <T> T selectOne(String statement) {
-    return selectOne(statement, null);
+    return this.<T>selectOne(statement, null);
   }
 
   public <T> T selectOne(String statement, Object parameter) {
     // Popular vote was to return null on 0 results and throw exception on too many.
-    List<T> list = selectList(statement, parameter);
+    List<T> list = this.<T>selectList(statement, parameter);
     if (list.size() == 1) {
       return list.get(0);
     } else if (list.size() > 1) {
@@ -51,11 +51,11 @@ public class DefaultSqlSession implements SqlSession {
   }
 
   public <K, V> Map<K, V> selectMap(String statement, String mapKey) {
-    return selectMap(statement, null, mapKey, RowBounds.DEFAULT);
+    return this.<K, V>selectMap(statement, null, mapKey, RowBounds.DEFAULT);
   }
 
   public <K, V> Map<K, V> selectMap(String statement, Object parameter, String mapKey) {
-    return selectMap(statement, parameter, mapKey, RowBounds.DEFAULT);
+    return this.<K, V>selectMap(statement, parameter, mapKey, RowBounds.DEFAULT);
   }
 
   public <K, V> Map<K, V> selectMap(String statement, Object parameter, String mapKey, RowBounds rowBounds) {
@@ -66,21 +66,23 @@ public class DefaultSqlSession implements SqlSession {
       context.nextResultObject(o);
       mapResultHandler.handleResult(context);
     }
-    return mapResultHandler.getMappedResults();
+    @SuppressWarnings( "unchecked" ) // it would throw CCE in any case
+    Map<K, V> selectedMap = mapResultHandler.getMappedResults();
+    return selectedMap;
   }
 
   public <E> List<E> selectList(String statement) {
-    return selectList(statement, null);
+    return this.<E>selectList(statement, null);
   }
 
   public <E> List<E> selectList(String statement, Object parameter) {
-    return selectList(statement, parameter, RowBounds.DEFAULT);
+    return this.<E>selectList(statement, parameter, RowBounds.DEFAULT);
   }
 
   public <E> List<E> selectList(String statement, Object parameter, RowBounds rowBounds) {
     try {
       MappedStatement ms = configuration.getMappedStatement(statement);
-      return executor.query(ms, wrapCollection(parameter), rowBounds, Executor.NO_RESULT_HANDLER);
+      return executor.<E>query(ms, wrapCollection(parameter), rowBounds, Executor.NO_RESULT_HANDLER);
     } catch (Exception e) {
       throw ExceptionFactory.wrapException("Error querying database.  Cause: " + e, e);
     } finally {
@@ -193,7 +195,7 @@ public class DefaultSqlSession implements SqlSession {
   }
 
   public <T> T getMapper(Class<T> type) {
-    return configuration.getMapper(type, this);
+    return configuration.<T>getMapper(type, this);
   }
 
   public Connection getConnection() {
