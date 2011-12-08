@@ -50,28 +50,28 @@
   </distributionManagement>
   <contributors>
     <contributor>
-        <name>Andrea Selva</name>
-        <email>selva.andre@gmail.com</email>
+      <name>Andrea Selva</name>
+      <email>selva.andre@gmail.com</email>
     </contributor>
     <contributor>
-        <name>Arkadi Shishlov</name>
-        <email>arkadi.shishlov@gmail.com</email>
+      <name>Arkadi Shishlov</name>
+      <email>arkadi.shishlov@gmail.com</email>
     </contributor>
     <contributor>
-        <name>Franta Mejta</name>
-        <email>mejta@rewor.org</email>
+      <name>Franta Mejta</name>
+      <email>mejta@rewor.org</email>
     </contributor>
     <contributor>
-        <name>Jurriaan Pruys</name>
-        <email>jurriaan@pruys.com</email>
+      <name>Jurriaan Pruys</name>
+      <email>jurriaan@pruys.com</email>
     </contributor>
     <contributor>
-        <name>Patrick Savage</name>
-        <email>patrick.savage@threepillarglobal.com</email>
+      <name>Patrick Savage</name>
+      <email>patrick.savage@threepillarglobal.com</email>
     </contributor> 
     <contributor>
-        <name>Riccardo Cossu</name>
-        <email>riccardo.cossu@gmail.com</email>
+      <name>Riccardo Cossu</name>
+      <email>riccardo.cossu@gmail.com</email>
     </contributor>
   </contributors>
   <properties>
