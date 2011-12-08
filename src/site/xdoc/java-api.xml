@@ -92,7 +92,7 @@ SqlSessionFactory build(Configuration config)</source>
   <p>If you call a method that takes a properties instance, then MyBatis will load those properties and make them available to your configuration.  Those properties can be used in place of most values in the configuration using the syntax:  ${propName}</p>
   <p>Recall that properties can also be referenced from the SqlMapConfig.xml file, or specified directly within it.  Therefore it's important to understand the priority.  We mentioned it earlier in this document, but here it is again for easy reference:</p>
 
-  <blockquote>
+  <hr/>
   <p>If a property exists in more than one of these places, MyBatis loads them in the following order.</p>
   <ul>
   <li>Properties specified in the body of the properties element are read first,</li>
@@ -100,8 +100,8 @@ SqlSessionFactory build(Configuration config)</source>
   <li>Properties passed as a method parameter are read last, and override any duplicate properties that may have been loaded from the properties body and the resource/url attributes.</li>
   </ul>
   <p>Thus, the highest priority properties are those passed in as a method parameter, followed by resource/url attributes and finally the properties specified in the body of the properties element.</p>
-  </blockquote>
- 
+  <hr/>
+  
   <p>So to summarize, the first four methods are largely the same, but with overrides to allow you to optionally specify the environment and/or properties.  Here is an example of building a SqlSessionFactory from an SqlMapConfig.xml file. </p>  
 
   <source>String <strong>resource</strong> = "org/mybatis/builder/MapperConfig.xml";
@@ -186,26 +186,26 @@ Configuration getConfiguration();</source>
 
   <h5>Statement Execution Methods</h5>
   <p>These methods are used to execute SELECT, INSERT, UPDATE and DELETE statements that are defined in your SQL Mapping XML files. They are pretty self explanatory, each takes the ID of the statement and the Parameter Object, which can be a primitive (auto-boxed or wrapper), a JavaBean, a POJO or a Map.</p>
-  <source>Object selectOne(String statement, Object parameter)
-List selectList(String statement, Object parameter)
-Map selectMap(String statement, Object parameter, String mapKey)
+  <source><![CDATA[<T> T selectOne(String statement, Object parameter)
+<E> List<E> selectList(String statement, Object parameter)
+<K,V> Map<K,V> selectMap(String statement, Object parameter, String mapKey)
 int insert(String statement, Object parameter)
 int update(String statement, Object parameter)
-int delete(String statement, Object parameter)</source>
+int delete(String statement, Object parameter)]]></source>
   <p>The difference between selectOne and selectList is only in that selectOne must return exactly one object or null (none). If any more than one, an exception will be thrown. If you don't' know how many objects are expected, use selectList. If you want to check for the existence of an object, you're better off returning a count (0 or 1). The selectMap is a special case in that it is designed to convert a list of results into a Map based on one of the properties in the resulting objects. Because not all statements require a parameter, these methods are overloaded with versions that do not require the parameter object.</p>
   <p>The value returned by the insert, update and delete methods indicate the number of rows affected by the statement.</p>
-  <source>Object selectOne(String statement)
-List selectList(String statement)
-Map selectMap(String statement, String mapKey)
+  <source><![CDATA[<T> T selectOne(String statement)
+<E> List<E> selectList(String statement)
+<K,V> Map<K,V> selectMap(String statement, String mapKey)
 int insert(String statement)
 int update(String statement)
-int delete(String statement)</source>
+int delete(String statement)]]></source>
 
   <p>Finally, there are three advanced versions of the select methods that allow you to restrict the range of rows to return, or provide custom result handling logic, usually for very large data sets.</p>
-  <source>List selectList (String statement, Object parameter, RowBounds rowBounds)
-Map selectMap(String statement, Object parameter, String mapKey, RowBounds rowbounds)
+  <source><![CDATA[<E> List<E> selectList (String statement, Object parameter, RowBounds rowBounds)
+<K,V> Map<K,V> selectMap(String statement, Object parameter, String mapKey, RowBounds rowbounds)
 void select (String statement, Object parameter, ResultHandler handler)
-void select (String statement, Object parameter, RowBounds rowBounds, ResultHandler handler)</source>
+void select (String statement, Object parameter, RowBounds rowBounds, ResultHandler handler)]]></source>
 
   <p>The RowBounds parameter causes MyBatis to skip the number of records specified, as well as limit the number of results returned to some number. The RowBounds class has a constructor to take both the offset and limit, and is otherwise immutable.</p> 
   <source>int offset = 100;

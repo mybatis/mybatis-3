@@ -232,7 +232,7 @@ Blog blog = mapper.selectBlog(101);]]></source>
 				the BlogMapper interface can have clean, typesafe return types (and
 				a typesafe parameter).
 			</p>
-			<blockquote>
+			<hr/>
 			<p>
 				<span class="label important">NOTE</span>
 				<strong>A note about namespaces.</strong>
@@ -267,7 +267,7 @@ Blog blog = mapper.selectBlog(101);]]></source>
 					and therefore must be fully qualified.
 				</li>
 			</ul>
-			</blockquote>
+			<hr/>
 			<p>
 				There's one more trick to Mapper classes like BlogMapper. Their mapped
 				statements don't need to be mapped with XML at all. Instead they can
