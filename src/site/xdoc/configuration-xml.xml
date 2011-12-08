@@ -1245,8 +1245,9 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader,properties);]]
 					TransactionFactory interface.
 				</p>
 				<source><![CDATA[public interface TransactionFactory {
-	void setProperties(Properties props);
-	Transaction newTransaction(Connection conn, boolean autoCommit);
+	void setProperties(Properties props);	
+	Transaction newTransaction(Connection conn);
+	Transaction newTransaction(DataSource dataSource, TransactionIsolationLevel level, boolean autoCommit);	
 }]]></source>
 				<p>
 					Any properties configured in the XML will be passed to the
@@ -1255,7 +1256,7 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader,properties);]]
 					also a very simple interface:
 				</p>
 				<source><![CDATA[public interface Transaction {
-	Connection getConnection();
+	Connection getConnection() throws SQLException;
 	void commit() throws SQLException;
 	void rollback() throws SQLException;
 	void close() throws SQLException;
