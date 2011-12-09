@@ -1,6 +1,21 @@
+/*
+ *    Copyright 2009-2011 The MyBatis Team
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
 package com.ibatis.dao.client;
 
-/**
+/*
  * This interface describes the DaoManager interface.  It provides
  * access to all DAOs it manages and also allows transactions
  * to be committed and ended (possibly rolled back).
@@ -65,7 +80,7 @@ package com.ibatis.dao.client;
  */
 public interface DaoManager {
 
-  /**
+  /*
    * Gets a Dao instance for the requested interface type.
    *
    * @param type The interface or generic type for which an implementation
@@ -74,7 +89,7 @@ public interface DaoManager {
    */
   public Dao getDao(Class type);
 
-  /**
+  /*
    * Gets a Dao instance for the requested interface type registered
    * under the context with the specified id.
    *
@@ -86,7 +101,7 @@ public interface DaoManager {
    */
   public Dao getDao(Class iface, String contextId);
 
-  /**
+  /*
    * Gets the transaction that the provided Dao is currently working
    * under.  If there is no current transaction in scope, one will
    * be started.
@@ -97,20 +112,20 @@ public interface DaoManager {
    */
   public DaoTransaction getTransaction(Dao dao);
 
-  /**
+  /*
    * Starts a transaction scope managed by this  DaoManager.
    * If this method isn't called, then all DAO methods use
    * "autocommit" semantics.
    */
   public void startTransaction();
 
-  /**
+  /*
    * Commits all transactions currently started for all DAO contexts
    * managed by this  DaoManager.
    */
   public void commitTransaction();
 
-  /**
+  /*
    * Ends all transactions currently started for all DAO contexts
    * managed by this  DaoManager.  If any transactions have not been
    * successfully committed, then those remaining will be rolled back.

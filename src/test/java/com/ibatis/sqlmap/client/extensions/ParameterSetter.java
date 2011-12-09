@@ -1,3 +1,18 @@
+/*
+ *    Copyright 2009-2011 The MyBatis Team
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
 package com.ibatis.sqlmap.client.extensions;
 
 import java.io.InputStream;
@@ -7,7 +22,7 @@ import java.net.URL;
 import java.sql.*;
 import java.util.Calendar;
 
-/**
+/*
  * Allows parameters to be set on the underlying prepared statement.
  * TypeHandlerCallback implementations use this interface to
  * process values before they are set on the prepared statement.
@@ -21,7 +36,7 @@ import java.util.Calendar;
  */
 public interface ParameterSetter {
 
-  /**
+  /*
    * Set an array on the underlying prepared statement
    *
    * @param x - the array to set
@@ -29,7 +44,7 @@ public interface ParameterSetter {
    */
   public void setArray(Array x) throws SQLException;
 
-  /**
+  /*
    * Set an InputStream on the underlying prepared statement
    *
    * @param x      - the InputStream
@@ -38,7 +53,7 @@ public interface ParameterSetter {
    */
   public void setAsciiStream(InputStream x, int length) throws SQLException;
 
-  /**
+  /*
    * Set an on the underlying prepared statement
    *
    * @param x
@@ -46,7 +61,7 @@ public interface ParameterSetter {
    */
   public void setBigDecimal(BigDecimal x) throws SQLException;
 
-  /**
+  /*
    * Set an InputStream on the underlying prepared statement
    *
    * @param x      - the InputStream
@@ -55,7 +70,7 @@ public interface ParameterSetter {
    */
   public void setBinaryStream(InputStream x, int length) throws SQLException;
 
-  /**
+  /*
    * Set a blob on the underlying prepared statement
    *
    * @param x - the blob
@@ -63,7 +78,7 @@ public interface ParameterSetter {
    */
   public void setBlob(Blob x) throws SQLException;
 
-  /**
+  /*
    * Set a boolean on the underlying prepared statement
    *
    * @param x - the boolean
@@ -71,7 +86,7 @@ public interface ParameterSetter {
    */
   public void setBoolean(boolean x) throws SQLException;
 
-  /**
+  /*
    * Set a byte on the underlying prepared statement
    *
    * @param x - the byte
@@ -79,7 +94,7 @@ public interface ParameterSetter {
    */
   public void setByte(byte x) throws SQLException;
 
-  /**
+  /*
    * Set a byte array on the underlying prepared statement
    *
    * @param x - the byte[]
@@ -87,7 +102,7 @@ public interface ParameterSetter {
    */
   public void setBytes(byte x[]) throws SQLException;
 
-  /**
+  /*
    * Set a character stream on the underlying prepared statement
    *
    * @param reader - the reader
@@ -96,7 +111,7 @@ public interface ParameterSetter {
    */
   public void setCharacterStream(Reader reader, int length) throws SQLException;
 
-  /**
+  /*
    * Set a clob on the underlying prepared statement
    *
    * @param x - the clob
@@ -104,7 +119,7 @@ public interface ParameterSetter {
    */
   public void setClob(Clob x) throws SQLException;
 
-  /**
+  /*
    * Set a date on the underlying prepared statement
    *
    * @param x - the date
@@ -112,7 +127,7 @@ public interface ParameterSetter {
    */
   public void setDate(Date x) throws SQLException;
 
-  /**
+  /*
    * Set a date with a calendar on the underlying prepared statement
    *
    * @param x   - the date
@@ -121,7 +136,7 @@ public interface ParameterSetter {
    */
   public void setDate(Date x, Calendar cal) throws SQLException;
 
-  /**
+  /*
    * Set a double on the underlying prepared statement
    *
    * @param x - the double
@@ -129,7 +144,7 @@ public interface ParameterSetter {
    */
   public void setDouble(double x) throws SQLException;
 
-  /**
+  /*
    * Set a float on the underlying prepared statement
    *
    * @param x the float
@@ -137,7 +152,7 @@ public interface ParameterSetter {
    */
   public void setFloat(float x) throws SQLException;
 
-  /**
+  /*
    * Set an integer on the underlying prepared statement
    *
    * @param x - the int
@@ -145,7 +160,7 @@ public interface ParameterSetter {
    */
   public void setInt(int x) throws SQLException;
 
-  /**
+  /*
    * Set a long on the underlying prepared statement
    *
    * @param x - the long
@@ -153,7 +168,7 @@ public interface ParameterSetter {
    */
   public void setLong(long x) throws SQLException;
 
-  /**
+  /*
    * Set a null on the underlying prepared statement
    *
    * @param sqlType - the type for the null value
@@ -161,7 +176,7 @@ public interface ParameterSetter {
    */
   public void setNull(int sqlType) throws SQLException;
 
-  /**
+  /*
    * Set a null on the underlying prepared statement
    *
    * @param sqlType  -  the type for the null value
@@ -170,7 +185,7 @@ public interface ParameterSetter {
    */
   public void setNull(int sqlType, String typeName) throws SQLException;
 
-  /**
+  /*
    * Set an object on the underlying prepared statement
    *
    * @param x - the object to set
@@ -178,7 +193,7 @@ public interface ParameterSetter {
    */
   public void setObject(Object x) throws SQLException;
 
-  /**
+  /*
    * Set an object on the underlying prepared statement
    *
    * @param x             - the object to set
@@ -187,7 +202,7 @@ public interface ParameterSetter {
    */
   public void setObject(Object x, int targetSqlType) throws SQLException;
 
-  /**
+  /*
    * Set an object on the underlying prepared statement
    *
    * @param x             - the object to set
@@ -197,7 +212,7 @@ public interface ParameterSetter {
    */
   public void setObject(Object x, int targetSqlType, int scale) throws SQLException;
 
-  /**
+  /*
    * Set a reference on the underlying prepared statement
    *
    * @param x - the reference to set
@@ -205,7 +220,7 @@ public interface ParameterSetter {
    */
   public void setRef(Ref x) throws SQLException;
 
-  /**
+  /*
    * Set a short on the underlying prepared statement
    *
    * @param x - the short to set
@@ -213,7 +228,7 @@ public interface ParameterSetter {
    */
   public void setShort(short x) throws SQLException;
 
-  /**
+  /*
    * Set a string on the underlying prepared statement
    *
    * @param x - the string to set
@@ -221,7 +236,7 @@ public interface ParameterSetter {
    */
   public void setString(String x) throws SQLException;
 
-  /**
+  /*
    * Set a time on the underlying prepared statement
    *
    * @param x - the time to set
@@ -229,7 +244,7 @@ public interface ParameterSetter {
    */
   public void setTime(Time x) throws SQLException;
 
-  /**
+  /*
    * Set a time with a calendar on the underlying prepared statement
    *
    * @param x   - the time to set
@@ -238,7 +253,7 @@ public interface ParameterSetter {
    */
   public void setTime(Time x, Calendar cal) throws SQLException;
 
-  /**
+  /*
    * Set a timestamp on the underlying prepared statement
    *
    * @param x - the timestamp to set
@@ -246,7 +261,7 @@ public interface ParameterSetter {
    */
   public void setTimestamp(Timestamp x) throws SQLException;
 
-  /**
+  /*
    * Set a timestamp on the underlying prepared statement
    *
    * @param x   - the timestamp to set
@@ -255,7 +270,7 @@ public interface ParameterSetter {
    */
   public void setTimestamp(Timestamp x, Calendar cal) throws SQLException;
 
-  /**
+  /*
    * Set a URL on the underlying prepared statement
    *
    * @param x - the url to set
@@ -263,12 +278,12 @@ public interface ParameterSetter {
    */
   public void setURL(URL x) throws SQLException;
 
-  /**
+  /*
    * Returns the underlying prepared statement...be careful!
    */
   public PreparedStatement getPreparedStatement();
 
-  /**
+  /*
    * Returns the index of the parameter being set.
    *
    * @return the parameter index used to set the value in the underlying

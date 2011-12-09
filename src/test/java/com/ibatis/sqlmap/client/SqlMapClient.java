@@ -1,8 +1,23 @@
+/*
+ *    Copyright 2009-2011 The MyBatis Team
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
 package com.ibatis.sqlmap.client;
 
 import java.sql.Connection;
 
-/**
+/*
  * A thread safe client for working with your SQL Maps (Start Here).  This interface inherits transaction control
  * and execution methods from the SqlMapTransactionManager and SqlMapExecutor interfaces.
  * <p/>
@@ -95,7 +110,7 @@ import java.sql.Connection;
  */
 public interface SqlMapClient extends SqlMapExecutor, SqlMapTransactionManager {
 
-  /**
+  /*
    * Returns a single threaded SqlMapSession implementation for use by
    * one user.  Remember though, that SqlMapClient itself is a thread safe SqlMapSession
    * implementation, so you can also just work directly with it.  If you do get a session
@@ -107,7 +122,7 @@ public interface SqlMapClient extends SqlMapExecutor, SqlMapTransactionManager {
    */
   public SqlMapSession openSession();
 
-  /**
+  /*
    * Returns a single threaded SqlMapSession implementation for use by
    * one user.  Remember though, that SqlMapClient itself is a thread safe SqlMapSession
    * implementation, so you can also just work directly with it.  If you do get a session
@@ -149,12 +164,12 @@ public interface SqlMapClient extends SqlMapExecutor, SqlMapTransactionManager {
    */
   public SqlMapSession openSession(Connection conn);
 
-  /**
+  /*
    * Flushes all data caches.
    */
   public void flushDataCache();
 
-  /**
+  /*
    * Flushes the data cache that matches the cache model ID provided.
    * cacheId should include the namespace, even when
    * useStatementNamespaces="false".
@@ -163,7 +178,7 @@ public interface SqlMapClient extends SqlMapExecutor, SqlMapTransactionManager {
    */
   public void flushDataCache(String cacheId);
 
-  /**
+  /*
    * Returns a generated implementation of a cusom mapper class as specified by the method
    * parameter.  The generated implementation will run mapped statements by matching the method
    * name to the statement name.  The mapped statement elements determine how the statement is

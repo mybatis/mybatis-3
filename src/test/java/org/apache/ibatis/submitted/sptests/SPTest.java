@@ -1,3 +1,18 @@
+/*
+ *    Copyright 2009-2011 The MyBatis Team
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
 package org.apache.ibatis.submitted.sptests;
 
 import static junit.framework.Assert.assertEquals;
@@ -52,7 +67,7 @@ public class SPTest {
         }
     }
     
-    /**
+    /*
      * This test shows how to use input and output parameters
      * in a stored procedure.
      * This procedure does not return a result set.
@@ -76,7 +91,7 @@ public class SPTest {
         }
     }
 
-    /**
+    /*
      * This test shows how to use input and output parameters
      * in a stored procedure.
      * This procedure does not return a result set.
@@ -107,7 +122,7 @@ public class SPTest {
         }
     }
 
-    /**
+    /*
      * This test shows how to use input and output parameters
      * in a stored procedure.
      * This procedure does not return a result set.
@@ -141,7 +156,7 @@ public class SPTest {
         }
     }
 
-    /**
+    /*
      * This test shows how to call a stored procedure defined as <update> rather
      * then <select>.  Of course, this only works if you are not returning
      * a result set.
@@ -172,7 +187,7 @@ public class SPTest {
         }
     }
     
-    /**
+    /*
      * This test shows the use of a declared parameter map.
      * We generally prefer inline parameters, because the syntax
      * is more intuitive (no pesky question marks), but a parameter map
@@ -202,7 +217,7 @@ public class SPTest {
         }
     }
     
-    /**
+    /*
      * This test shows how to use an input parameter and return a result
      * set from a stored procedure.
      * 
@@ -222,7 +237,7 @@ public class SPTest {
         }
     }
 
-    /**
+    /*
      * This test shows how to use a input and output parameters and
      * return a result set from a stored procedure.
      * 
@@ -244,7 +259,7 @@ public class SPTest {
         }
     }
 
-    /**
+    /*
      * This test shows how to use a input and output parameters and
      * return a result set from a stored procedure.
      * 
@@ -272,7 +287,7 @@ public class SPTest {
         }
     }
 
-    /**
+    /*
      * This test shows how to use a input and output parameters and
      * return a result set from a stored procedure.
      * 
@@ -300,7 +315,7 @@ public class SPTest {
         }
     }
 
-    /**
+    /*
      * This test shows how to use the ARRAY JDBC type
      * with MyBatis.
      * 
@@ -327,7 +342,7 @@ public class SPTest {
         }
     }
 
-    /**
+    /*
      * This test shows how to call procedures that return
      * multiple result sets
      * 
@@ -348,7 +363,7 @@ public class SPTest {
         }
     }
 
-    /**
+    /*
      * This test shows how to use input and output parameters
      * in a stored procedure.
      * This procedure does not return a result set.
@@ -374,7 +389,7 @@ public class SPTest {
         }
     }
 
-    /**
+    /*
      * This test shows how to use input and output parameters
      * in a stored procedure.
      * This procedure does not return a result set.
@@ -407,7 +422,7 @@ public class SPTest {
         }
     }
 
-    /**
+    /*
      * This test shows how to use input and output parameters
      * in a stored procedure.
      * This procedure does not return a result set.
@@ -443,7 +458,7 @@ public class SPTest {
         }
     }
 
-    /**
+    /*
      * This test shows how to call a stored procedure defined as <update> rather
      * then <select>.  Of course, this only works if you are not returning
      * a result set.
@@ -476,7 +491,7 @@ public class SPTest {
         }
     }
     
-    /**
+    /*
      * This test shows how to use an input parameter and return a result
      * set from a stored procedure.
      * 
@@ -498,7 +513,7 @@ public class SPTest {
         }
     }
 
-    /**
+    /*
      * This test shows how to use an input parameter and return a result
      * set from a stored procedure.
      * 
@@ -521,7 +536,7 @@ public class SPTest {
         }
     }
 
-    /**
+    /*
      * This test shows how to use a input and output parameters and
      * return a result set from a stored procedure.
      * 
@@ -545,7 +560,7 @@ public class SPTest {
         }
     }
 
-    /**
+    /*
      * This test shows how to use a input and output parameters and
      * return a result set from a stored procedure.
      * 
@@ -570,7 +585,7 @@ public class SPTest {
         }
     }
 
-    /**
+    /*
      * This test shows how to use a input and output parameters and
      * return a result set from a stored procedure.
      * 
@@ -600,7 +615,7 @@ public class SPTest {
         }
     }
 
-    /**
+    /*
      * This test shows how to use a input and output parameters and
      * return a result set from a stored procedure.
      * 
@@ -631,7 +646,7 @@ public class SPTest {
         }
     }
     
-    /**
+    /*
      * This test shows how to use a input and output parameters and
      * return a result set from a stored procedure.
      * 
@@ -661,7 +676,7 @@ public class SPTest {
         }
     }
 
-    /**
+    /*
      * This test shows how to use a input and output parameters and
      * return a result set from a stored procedure.
      * 
@@ -692,7 +707,7 @@ public class SPTest {
         }
     }
 
-    /**
+    /*
      * This test shows how to use the ARRAY JDBC type
      * with MyBatis.
      * 
@@ -721,7 +736,7 @@ public class SPTest {
         }
     }
 
-    /**
+    /*
      * This test shows how to use the ARRAY JDBC type
      * with MyBatis.
      * 
@@ -751,7 +766,7 @@ public class SPTest {
         }
     }
     
-    /**
+    /*
      * This test shows how to call procedures that return
      * multiple result sets
      * 

@@ -1,3 +1,18 @@
+/*
+ *    Copyright 2009-2011 The MyBatis Team
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
 package com.ibatis.jpetstore.domain;
 
 import java.lang.reflect.InvocationTargetException;
@@ -8,7 +23,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.*;
 
-/**
+/*
  * This class represents a cached set of class definition information that
  * allows for easy mapping between property names and getter/setter methods.
  */
@@ -108,7 +123,7 @@ public class ClassIntrospector {
     }
   }
 
-  /**
+  /*
    * This method returns an array containing all methods
    * declared in this class and any superclass.
    * We use this method, instead of the simpler Class.getMethods(),
@@ -203,7 +218,7 @@ public class ClassIntrospector {
     return name;
   }
 
-  /**
+  /*
    * Gets the name of the class the instance provides information for
    *
    * @return The class name
@@ -212,7 +227,7 @@ public class ClassIntrospector {
     return className;
   }
 
-  /**
+  /*
    * Gets the setter for a property as a Method object
    *
    * @param propertyName - the property
@@ -226,7 +241,7 @@ public class ClassIntrospector {
     return method;
   }
 
-  /**
+  /*
    * Gets the getter for a property as a Method object
    *
    * @param propertyName - the property
@@ -240,7 +255,7 @@ public class ClassIntrospector {
     return method;
   }
 
-  /**
+  /*
    * Gets the type for a property setter
    *
    * @param propertyName - the name of the property
@@ -254,7 +269,7 @@ public class ClassIntrospector {
     return clazz;
   }
 
-  /**
+  /*
    * Gets the type for a property getter
    *
    * @param propertyName - the name of the property
@@ -268,7 +283,7 @@ public class ClassIntrospector {
     return clazz;
   }
 
-  /**
+  /*
    * Gets an array of the readable properties for an object
    *
    * @return The array
@@ -277,7 +292,7 @@ public class ClassIntrospector {
     return readablePropertyNames;
   }
 
-  /**
+  /*
    * Gets an array of the writeable properties for an object
    *
    * @return The array
@@ -286,7 +301,7 @@ public class ClassIntrospector {
     return writeablePropertyNames;
   }
 
-  /**
+  /*
    * Check to see if a class has a writeable property by name
    *
    * @param propertyName - the name of the property to check
@@ -296,7 +311,7 @@ public class ClassIntrospector {
     return setMethods.keySet().contains(propertyName);
   }
 
-  /**
+  /*
    * Check to see if a class has a readable property by name
    *
    * @param propertyName - the name of the property to check
@@ -306,7 +321,7 @@ public class ClassIntrospector {
     return getMethods.keySet().contains(propertyName);
   }
 
-  /**
+  /*
    * Tells us if the class passed in is a knwon common type
    *
    * @param clazz The class to check
@@ -330,7 +345,7 @@ public class ClassIntrospector {
     }
   }
 
-  /**
+  /*
    * Gets an instance of ClassInfo for the specified class.
    *
    * @param clazz The class for which to lookup the method cache.
@@ -355,7 +370,7 @@ public class ClassIntrospector {
     ClassIntrospector.cacheEnabled = cacheEnabled;
   }
 
-  /**
+  /*
    * Examines a Throwable object and gets it's root cause
    *
    * @param t - the exception to examine

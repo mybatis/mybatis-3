@@ -1,3 +1,18 @@
+/*
+ *    Copyright 2009-2011 The MyBatis Team
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
 package com.ibatis.sqlmap.client;
 
 import com.ibatis.common.util.PaginatedList;
@@ -8,7 +23,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
-/**
+/*
  * This interface declares all methods involved with executing statements
  * and batches for an SQL Map.
  *
@@ -17,7 +32,7 @@ import java.util.Map;
  */
 public interface SqlMapExecutor {
 
-  /**
+  /*
    * Executes a mapped SQL INSERT statement.
    * Insert is a bit different from other update methods, as it
    * provides facilities for returning the primary key of the
@@ -35,7 +50,7 @@ public interface SqlMapExecutor {
    */
   Object insert(String id, Object parameterObject) throws SQLException;
 
-  /**
+  /*
    * Executes a mapped SQL INSERT statement.
    * Insert is a bit different from other update methods, as it
    * provides facilities for returning the primary key of the
@@ -51,7 +66,7 @@ public interface SqlMapExecutor {
    */
   Object insert(String id) throws SQLException;
 
-  /**
+  /*
    * Executes a mapped SQL UPDATE statement.
    * Update can also be used for any other update statement type,
    * such as inserts and deletes.  Update returns the number of
@@ -67,7 +82,7 @@ public interface SqlMapExecutor {
    */
   int update(String id, Object parameterObject) throws SQLException;
 
-  /**
+  /*
    * Executes a mapped SQL UPDATE statement.
    * Update can also be used for any other update statement type,
    * such as inserts and deletes.  Update returns the number of
@@ -81,7 +96,7 @@ public interface SqlMapExecutor {
    */
   int update(String id) throws SQLException;
 
-  /**
+  /*
    * Executes a mapped SQL DELETE statement.
    * Delete returns the number of rows effected.
    * <p/>
@@ -95,7 +110,7 @@ public interface SqlMapExecutor {
    */
   int delete(String id, Object parameterObject) throws SQLException;
 
-  /**
+  /*
    * Executes a mapped SQL DELETE statement.
    * Delete returns the number of rows effected.
    * <p/>
@@ -107,7 +122,7 @@ public interface SqlMapExecutor {
    */
   int delete(String id) throws SQLException;
 
-  /**
+  /*
    * Executes a mapped SQL SELECT statement that returns data to populate
    * a single object instance.
    * <p/>
@@ -122,7 +137,7 @@ public interface SqlMapExecutor {
    */
   Object queryForObject(String id, Object parameterObject) throws SQLException;
 
-  /**
+  /*
    * Executes a mapped SQL SELECT statement that returns data to populate
    * a single object instance.
    * <p/>
@@ -135,7 +150,7 @@ public interface SqlMapExecutor {
    */
   Object queryForObject(String id) throws SQLException;
 
-  /**
+  /*
    * Executes a mapped SQL SELECT statement that returns data to populate
    * the supplied result object.
    * <p/>
@@ -151,7 +166,7 @@ public interface SqlMapExecutor {
    */
   Object queryForObject(String id, Object parameterObject, Object resultObject) throws SQLException;
 
-  /**
+  /*
    * Executes a mapped SQL SELECT statement that returns data to populate
    * a number of result objects.
    * <p/>
@@ -165,7 +180,7 @@ public interface SqlMapExecutor {
    */
   List queryForList(String id, Object parameterObject) throws SQLException;
 
-  /**
+  /*
    * Executes a mapped SQL SELECT statement that returns data to populate
    * a number of result objects.
    * <p/>
@@ -177,7 +192,7 @@ public interface SqlMapExecutor {
    */
   List queryForList(String id) throws SQLException;
 
-  /**
+  /*
    * Executes a mapped SQL SELECT statement that returns data to populate
    * a number of result objects within a certain range.
    * <p/>
@@ -193,7 +208,7 @@ public interface SqlMapExecutor {
    */
   List queryForList(String id, Object parameterObject, int skip, int max) throws SQLException;
 
-  /**
+  /*
    * Executes a mapped SQL SELECT statement that returns data to populate
    * a number of result objects within a certain range.
    * <p/>
@@ -207,7 +222,7 @@ public interface SqlMapExecutor {
    */
   List queryForList(String id, int skip, int max) throws SQLException;
 
-  /**
+  /*
    * Executes a mapped SQL SELECT statement that returns a number of
    * result objects that will be handled one at a time by a
    * RowHandler.
@@ -226,7 +241,7 @@ public interface SqlMapExecutor {
    */
   void queryWithRowHandler(String id, Object parameterObject, RowHandler rowHandler) throws SQLException;
 
-  /**
+  /*
    * Executes a mapped SQL SELECT statement that returns a number of
    * result objects that will be handled one at a time by a
    * RowHandler.
@@ -243,7 +258,7 @@ public interface SqlMapExecutor {
    */
   void queryWithRowHandler(String id, RowHandler rowHandler) throws SQLException;
 
-  /**
+  /*
    * Executes a mapped SQL SELECT statement that returns data to populate
    * a number of result objects that will be keyed into a Map.
    * <p/>
@@ -258,7 +273,7 @@ public interface SqlMapExecutor {
    */
   Map queryForMap(String id, Object parameterObject, String keyProp) throws SQLException;
 
-  /**
+  /*
    * Executes a mapped SQL SELECT statement that returns data to populate
    * a number of result objects from which one property will be keyed into a Map.
    * <p/>
@@ -274,7 +289,7 @@ public interface SqlMapExecutor {
    */
   Map queryForMap(String id, Object parameterObject, String keyProp, String valueProp) throws SQLException;
 
-  /**
+  /*
    * Starts a batch in which update statements will be cached before being sent to
    * the database all at once. This can improve overall performance of updates update
    * when dealing with numerous updates (e.g. inserting 1:M related data).
@@ -283,7 +298,7 @@ public interface SqlMapExecutor {
    */
   void startBatch() throws SQLException;
 
-  /**
+  /*
    * Executes (flushes) all statements currently batched.
    *
    * @return the number of rows updated in the batch
@@ -292,7 +307,7 @@ public interface SqlMapExecutor {
    */
   int executeBatch() throws SQLException;
 
-  /**
+  /*
    * Executes (flushes) all statements currently batched.
    *
    * @return a List of BatchResult objects.  There will be one element in the

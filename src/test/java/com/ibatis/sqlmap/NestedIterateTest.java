@@ -1,3 +1,18 @@
+/*
+ *    Copyright 2009-2011 The MyBatis Team
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
 package com.ibatis.sqlmap;
 
 import com.testdomain.*;
@@ -16,7 +31,7 @@ public class NestedIterateTest extends BaseSqlMapTest {
     initScript("com/scripts/jpetstore-hsqldb-dataload.sql");
   }
 
-  /**
+  /*
    * This test should return 9 rows: ids 1-9
    * <p/>
    * This method works as expected
@@ -50,7 +65,7 @@ public class NestedIterateTest extends BaseSqlMapTest {
     }
   }
 
-  /**
+  /*
    * This test shoud return 1 row: id 4
    */
   public void test02() {
@@ -73,7 +88,7 @@ public class NestedIterateTest extends BaseSqlMapTest {
     }
   }
 
-  /**
+  /*
    * This test should return 8 rows: ids 1-3, 5-9
    */
   public void test03() {
@@ -103,7 +118,7 @@ public class NestedIterateTest extends BaseSqlMapTest {
     }
   }
 
-  /**
+  /*
    * This test should return 5 rows: ids 5-9
    */
   public void test04() {
@@ -130,7 +145,7 @@ public class NestedIterateTest extends BaseSqlMapTest {
     }
   }
 
-  /**
+  /*
    * This test should return 6 rows: ids 4-9
    */
   public void test05() {
@@ -158,7 +173,7 @@ public class NestedIterateTest extends BaseSqlMapTest {
     }
   }
 
-  /**
+  /*
    * This test should return 3 rows: ids 1-3
    */
   public void test06() {
@@ -184,7 +199,7 @@ public class NestedIterateTest extends BaseSqlMapTest {
     }
   }
 
-  /**
+  /*
    * This test should return 4 rows: ids 1-4
    */
   public void test07() {
@@ -211,7 +226,7 @@ public class NestedIterateTest extends BaseSqlMapTest {
     }
   }
 
-  /**
+  /*
    * This method should return four rows: ids 1, 2, 7, 8
    */
   public void test08() {
@@ -233,7 +248,7 @@ public class NestedIterateTest extends BaseSqlMapTest {
     }
   }
 
-  /**
+  /*
    * This method should return two rows: ids 1, 2
    * <p/>
    * This method works when Christian's IBATIS-281 patches are applied
@@ -284,7 +299,7 @@ public class NestedIterateTest extends BaseSqlMapTest {
     }
   }
 
-  /**
+  /*
    * This test shoud return 1 row: id 4
    */
   public void test10() {
@@ -307,7 +322,7 @@ public class NestedIterateTest extends BaseSqlMapTest {
     }
   }
 
-  /**
+  /*
    * This test should return 8 rows: ids 1-3, 5-9
    */
   public void test11() {
@@ -337,7 +352,7 @@ public class NestedIterateTest extends BaseSqlMapTest {
     }
   }
 
-  /**
+  /*
    * This test should return 5 rows: ids 5-9
    */
   public void test12() {
@@ -364,7 +379,7 @@ public class NestedIterateTest extends BaseSqlMapTest {
     }
   }
 
-  /**
+  /*
    * This test should return 6 rows: ids 4-9
    */
   public void test13() {
@@ -392,7 +407,7 @@ public class NestedIterateTest extends BaseSqlMapTest {
     }
   }
 
-  /**
+  /*
    * This test should return 3 rows: ids 1-3
    */
   public void test14() {
@@ -418,7 +433,7 @@ public class NestedIterateTest extends BaseSqlMapTest {
     }
   }
 
-  /**
+  /*
    * This test should return 4 rows: ids 1-4
    */
   public void test15() {
@@ -445,7 +460,7 @@ public class NestedIterateTest extends BaseSqlMapTest {
     }
   }
 
-  /**
+  /*
    * This method should return six rows: ids 1-6
    * <p/>
    * This method works when Christian's IBATIS-281 patches are applied
@@ -477,7 +492,7 @@ public class NestedIterateTest extends BaseSqlMapTest {
     }
   }
 
-  /**
+  /*
    * This method should return six rows: ids 1-6
    * <p/>
    * This method works when Christian's IBATIS-281 patches are applied
@@ -509,7 +524,7 @@ public class NestedIterateTest extends BaseSqlMapTest {
     }
   }
 
-  /**
+  /*
    * This method should return two rows: ids 1, 2
    * <p/>
    * This method tests <isNotPropertyAvailable> inside in <iterate>
@@ -537,7 +552,7 @@ public class NestedIterateTest extends BaseSqlMapTest {
     }
   }
 
-  /**
+  /*
    * This method should return two rows: ids 1, 2
    * <p/>
    * This method tests <isNotNull> inside an <iterate>
@@ -565,7 +580,7 @@ public class NestedIterateTest extends BaseSqlMapTest {
     }
   }
 
-  /**
+  /*
    * This method should return two rows: ids 1, 2
    * <p/>
    * This method tests <isNotEmpty> inside an <iterate>
@@ -593,7 +608,7 @@ public class NestedIterateTest extends BaseSqlMapTest {
     }
   }
 
-  /**
+  /*
    * This method should return nine rows: ids 1-9
    * <p/>
    * This method tests the open, close, and prepend attributes
@@ -628,7 +643,7 @@ public class NestedIterateTest extends BaseSqlMapTest {
     }
   }
 
-  /**
+  /*
    * This method should return one rows: id 4
    * <p/>
    * This method tests the open, close, and prepend attributes
@@ -654,7 +669,7 @@ public class NestedIterateTest extends BaseSqlMapTest {
     }
   }
 
-  /**
+  /*
    * This method should return one rows: id 1
    */
   public void test23() {
@@ -677,7 +692,7 @@ public class NestedIterateTest extends BaseSqlMapTest {
     }
   }
 
-  /**
+  /*
    * This method should return one rows: id 9
    */
   public void test24() {
@@ -700,7 +715,7 @@ public class NestedIterateTest extends BaseSqlMapTest {
     }
   }
 
-  /**
+  /*
    * This method should return three rows: id 1-3
    */
   public void test25() {
@@ -725,7 +740,7 @@ public class NestedIterateTest extends BaseSqlMapTest {
     }
   }
 
-  /**
+  /*
    * This tests nesting when objects are maps and not a list nested in a list
    */
   public void test26() {
@@ -756,7 +771,7 @@ public class NestedIterateTest extends BaseSqlMapTest {
 
   }
 
-  /**
+  /*
    * This tests nesting when objects are maps and not a list nested in a list
    * same as test26 except deeper
    */
@@ -798,7 +813,7 @@ public class NestedIterateTest extends BaseSqlMapTest {
   }
 
 
-  /**
+  /*
    * This tests nesting when objects are maps and not a list nested in a list
    */
   public void test28() {
@@ -831,7 +846,7 @@ public class NestedIterateTest extends BaseSqlMapTest {
 
   }
 
-  /**
+  /*
    * This tests nesting when objects are maps and not a list nested in a list
    * same as test26 except deeper
    */
@@ -874,7 +889,7 @@ public class NestedIterateTest extends BaseSqlMapTest {
   }
 
 
-  /**
+  /*
    * This tests nesting when a list is initially nested in a bean. so it tests
    * [bean]->[list]->[property_of_object_on_exposed_index]
    */

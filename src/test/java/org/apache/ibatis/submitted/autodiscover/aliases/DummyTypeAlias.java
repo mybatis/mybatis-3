@@ -1,5 +1,5 @@
 /*
- *    Copyright 2010-2011 The myBatis Team
+ *    Copyright 2009-2011 The MyBatis Team
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -13,12 +13,11 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-
 package org.apache.ibatis.submitted.autodiscover.aliases;
 
 import org.apache.ibatis.type.Alias;
 
-/**
+/*
 * @version $Id: MyBatisSampleTest.java 2697 2010-10-14 13:04:41Z eduardo.macarron $
 */
 @Alias("testAlias")

@@ -1,3 +1,18 @@
+/*
+ *    Copyright 2009-2011 The MyBatis Team
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
 package com.ibatis.sqlmap.engine.mapping.sql.dynamic.elements;
 
 
@@ -22,7 +37,7 @@ public class IterateContext implements Iterator {
 
   private IterateContext parent;
 
-  /**
+  /*
    * This variable is true if some of the sub elements have
    * actually produced content.  This is used to test
    * whether to add the open and conjunction text to the
@@ -33,7 +48,7 @@ public class IterateContext implements Iterator {
    */
   private boolean someSubElementsHaveContent;
 
-  /**
+  /*
    * This variable is set by the doEndFragment method in IterateTagHandler
    * to specify that the first content producing sub element has happened.
    * The doPrepend method will test the value to know whether or not
@@ -76,7 +91,7 @@ public class IterateContext implements Iterator {
     return index;
   }
 
-  /**
+  /*
    * @return
    * @deprecated This method should not be used to decide whether or not to
    *             add prepend and open text to the generated statement.  Rather, use the
@@ -103,14 +118,14 @@ public class IterateContext implements Iterator {
     return list;
   }
 
-  /**
+  /*
    * @return Returns the property.
    */
   public String getProperty() {
     return property;
   }
 
-  /**
+  /*
    * This property specifies whether to increment the iterate in
    * the doEndFragment. The ConditionalTagHandler has the ability
    * to increment the IterateContext, so it is neccessary to avoid
@@ -122,42 +137,42 @@ public class IterateContext implements Iterator {
     this.property = property;
   }
 
-  /**
+  /*
    * @return Returns the allowNext.
    */
   public boolean isAllowNext() {
     return allowNext;
   }
 
-  /**
+  /*
    * @param performIterate The allowNext to set.
    */
   public void setAllowNext(boolean performIterate) {
     this.allowNext = performIterate;
   }
 
-  /**
+  /*
    * @return Returns the tag.
    */
   public SqlTag getTag() {
     return tag;
   }
 
-  /**
+  /*
    * @param tag The tag to set.
    */
   public void setTag(SqlTag tag) {
     this.tag = tag;
   }
 
-  /**
+  /*
    * @return
    */
   public boolean isFinal() {
     return isFinal;
   }
 
-  /**
+  /*
    * This attribute is used to mark whether an iterate tag is
    * in it's final iteration. Since the ConditionalTagHandler
    * can increment the iterate the final iterate in the doEndFragment
@@ -170,7 +185,7 @@ public class IterateContext implements Iterator {
   }
 
 
-  /**
+  /*
    * Returns the last property of any bean specified in this IterateContext.
    *
    * @return The last property of any bean specified in this IterateContext.
@@ -190,7 +205,7 @@ public class IterateContext implements Iterator {
     }
   }
 
-  /**
+  /*
    * Replaces value of a tag property to match it's value with current iteration and all other iterations.
    *
    * @param tagProperty the property of a TagHandler.
@@ -205,7 +220,7 @@ public class IterateContext implements Iterator {
     }
   }
 
-  /**
+  /*
    * Replaces value of a tag property to match it's value with current iteration and all other iterations.
    *
    * @param tagProperty the property of a TagHandler.
@@ -216,7 +231,7 @@ public class IterateContext implements Iterator {
     return (String) map.get(PROCESS_STRING);
   }
 
-  /**
+  /*
    * Adds index value to the first found property matching this Iteration starting at index startIndex.
    *
    * @param input      The input String.

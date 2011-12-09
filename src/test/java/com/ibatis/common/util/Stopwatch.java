@@ -1,3 +1,18 @@
+/*
+ *    Copyright 2009-2011 The MyBatis Team
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
 package com.ibatis.common.util;
 
 import org.apache.ibatis.logging.Log;
@@ -7,7 +22,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-/**
+/*
  * Stopwatch class used for testing.
  */
 public class Stopwatch {
@@ -19,7 +34,7 @@ public class Stopwatch {
   private String currentTaskName = null;
   private long currentTaskTime = 0;
 
-  /**
+  /*
    * Get an iterator of the tasks
    *
    * @return - the Iterator
@@ -28,7 +43,7 @@ public class Stopwatch {
     return taskMap.keySet().iterator();
   }
 
-  /**
+  /*
    * Get the number of times assigned to a task
    *
    * @param taskName - the name of the task
@@ -38,7 +53,7 @@ public class Stopwatch {
     return ((TaskStat) taskMap.get(taskName)).getCount();
   }
 
-  /**
+  /*
    * Get the total time added to a task
    *
    * @param taskName - the name of the task
@@ -48,7 +63,7 @@ public class Stopwatch {
     return ((TaskStat) taskMap.get(taskName)).getTotal();
   }
 
-  /**
+  /*
    * Get the maximum time added to a task
    *
    * @param taskName - the name of the task
@@ -58,7 +73,7 @@ public class Stopwatch {
     return ((TaskStat) taskMap.get(taskName)).getMax();
   }
 
-  /**
+  /*
    * Get the minimum time added to a task
    *
    * @param taskName - the name of the task
@@ -68,7 +83,7 @@ public class Stopwatch {
     return ((TaskStat) taskMap.get(taskName)).getMin();
   }
 
-  /**
+  /*
    * Get the average time added to a task
    *
    * @param taskName - the name of the task
@@ -78,7 +93,7 @@ public class Stopwatch {
     return ((TaskStat) taskMap.get(taskName)).getAverage();
   }
 
-  /**
+  /*
    * Start (create) a task
    *
    * @param taskName - the name of the task
@@ -91,7 +106,7 @@ public class Stopwatch {
     currentTaskTime = System.currentTimeMillis();
   }
 
-  /**
+  /*
    * Stop the timer on a task
    */
   public void stop() {
@@ -111,7 +126,7 @@ public class Stopwatch {
     stat.appendTaskTime(taskTime);
   }
 
-  /**
+  /*
    * Merge another StopWatch into this one
    *
    * @param watch - the StopWatch to merge into this one
@@ -125,7 +140,7 @@ public class Stopwatch {
     }
   }
 
-  /**
+  /*
    * Reset all of the timers in this StopWatch
    */
   public synchronized void reset() {
@@ -156,7 +171,7 @@ public class Stopwatch {
     private long min = UNSET;
     private long max = UNSET;
 
-    /**
+    /*
      * Add some time to a task
      *
      * @param taskTime - the time to add
@@ -172,7 +187,7 @@ public class Stopwatch {
       }
     }
 
-    /**
+    /*
      * Get the total time for the task
      *
      * @return - the total time
@@ -181,7 +196,7 @@ public class Stopwatch {
       return total;
     }
 
-    /**
+    /*
      * Get the maximum of the times added to the task
      *
      * @return - the max value
@@ -190,7 +205,7 @@ public class Stopwatch {
       return max;
     }
 
-    /**
+    /*
      * Get the minimum of the times added to the task
      *
      * @return - the minimum value
@@ -199,7 +214,7 @@ public class Stopwatch {
       return min;
     }
 
-    /**
+    /*
      * Get the number of times added to the task
      *
      * @return - the number of times
@@ -208,7 +223,7 @@ public class Stopwatch {
       return count;
     }
 
-    /**
+    /*
      * Get the average of the times added to the task
      *
      * @return - the average

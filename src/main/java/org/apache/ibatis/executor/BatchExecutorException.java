@@ -1,3 +1,18 @@
+/*
+ *    Copyright 2009-2011 The MyBatis Team
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
 package org.apache.ibatis.executor;
 
 import java.sql.BatchUpdateException;
@@ -17,7 +32,7 @@ public class BatchExecutorException extends ExecutorException {
     this.batchResult = batchResult;
   }
 
-  /**
+  /*
    * Returns the BatchUpdateException that caused the nested executor
    * to fail.  That exception contains an array of row counts
    * that can be used to determine exactly which statemtn of the
@@ -29,7 +44,7 @@ public class BatchExecutorException extends ExecutorException {
     return batchUpdateException;
   }
 
-  /**
+  /*
    * Returns a list of BatchResult objects.  There will be one entry
    * in the list for each successful sub-executor executed before the failing
    * executor.
@@ -41,7 +56,7 @@ public class BatchExecutorException extends ExecutorException {
     return successfulBatchResults;
   }
 
-  /**
+  /*
    * Returns the SQL statement that caused the failure
    * (not the parameterArray)
    *
@@ -51,7 +66,7 @@ public class BatchExecutorException extends ExecutorException {
     return batchResult.getSql();
   }
 
-  /**
+  /*
    * Returns the statement id of the statement that caused the failure
    *
    * @return the statement id

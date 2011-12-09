@@ -1,3 +1,18 @@
+/*
+ *    Copyright 2009-2011 The MyBatis Team
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
 package org.apache.ibatis.reflection;
 
 import org.apache.ibatis.reflection.invoker.GetFieldInvoker;
@@ -9,7 +24,7 @@ import org.apache.ibatis.reflection.property.PropertyNamer;
 import java.lang.reflect.*;
 import java.util.*;
 
-/**
+/*
  * This class represents a cached set of class definition information that
  * allows for easy mapping between property names and getter/setter methods.
  */
@@ -198,7 +213,7 @@ public class Reflector {
     return !(name.startsWith("$") || "serialVersionUID".equals(name) || "class".equals(name));
   }
 
-  /**
+  /*
    * This method returns an array containing all methods
    * declared in this class and any superclass.
    * We use this method, instead of the simpler Class.getMethods(),
@@ -277,7 +292,7 @@ public class Reflector {
     return true;
   }
 
-  /**
+  /*
    * Gets the name of the class the instance provides information for
    *
    * @return The class name
@@ -310,7 +325,7 @@ public class Reflector {
     return method;
   }
 
-  /**
+  /*
    * Gets the type for a property setter
    *
    * @param propertyName - the name of the property
@@ -324,7 +339,7 @@ public class Reflector {
     return clazz;
   }
 
-  /**
+  /*
    * Gets the type for a property getter
    *
    * @param propertyName - the name of the property
@@ -338,7 +353,7 @@ public class Reflector {
     return clazz;
   }
 
-  /**
+  /*
    * Gets an array of the readable properties for an object
    *
    * @return The array
@@ -347,7 +362,7 @@ public class Reflector {
     return readablePropertyNames;
   }
 
-  /**
+  /*
    * Gets an array of the writeable properties for an object
    *
    * @return The array
@@ -356,7 +371,7 @@ public class Reflector {
     return writeablePropertyNames;
   }
 
-  /**
+  /*
    * Check to see if a class has a writeable property by name
    *
    * @param propertyName - the name of the property to check
@@ -366,7 +381,7 @@ public class Reflector {
     return setMethods.keySet().contains(propertyName);
   }
 
-  /**
+  /*
    * Check to see if a class has a readable property by name
    *
    * @param propertyName - the name of the property to check
@@ -380,7 +395,7 @@ public class Reflector {
     return caseInsensitivePropertyMap.get(name.toUpperCase(Locale.ENGLISH));
   }
 
-  /**
+  /*
    * Gets an instance of ClassInfo for the specified class.
    *
    * @param clazz The class for which to lookup the method cache.

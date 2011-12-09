@@ -1,16 +1,17 @@
-/* Copyright 2005-2006 Tim Fennell
+/*
+ *    Copyright 2009-2011 The MyBatis Team
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *       http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
  */
 package org.apache.ibatis.io;
 
@@ -37,7 +38,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 import java.util.regex.Pattern;
 
-/**
+/*
  * <p>ResolverUtil is used to locate classes that are available in the/a class path and meet
  * arbitrary conditions. The two most common conditions are that a class implements/extends
  * another class, or that is it annotated with a specific annotation. However, through the use
@@ -70,49 +71,49 @@ import java.util.regex.Pattern;
  * @author Tim Fennell
  */
 public class ResolverUtil<T> {
-	/**
+	/*
 	 * An instance of Log to use for logging in this class.
 	 */
 	private static final Log log = LogFactory.getLog(ResolverUtil.class);
 
-	/**
+	/*
 	 * The magic header that indicates a JAR (ZIP) file.
 	 */
 	private static final byte[] JAR_MAGIC = {'P', 'K', 3, 4};
 
-	/**
+	/*
 	 * Regular expression that matches a Java identifier.
 	 */
 	private static final Pattern JAVA_IDENTIFIER_PATTERN = Pattern
 			.compile("\\p{javaJavaIdentifierStart}\\p{javaJavaIdentifierPart}*");
 
-	/**
+	/*
 	 * A simple interface that specifies how to test classes to determine if they
 	 * are to be included in the results produced by the ResolverUtil.
 	 */
 	public static interface Test {
-		/**
+		/*
 		 * Will be called repeatedly with candidate classes. Must return True if a class
 		 * is to be included in the results, false otherwise.
 		 */
 		boolean matches(Class<?> type);
 	}
 
-	/**
+	/*
 	 * A Test that checks to see if each class is assignable to the provided class. Note
 	 * that this test will match the parent type itself if it is presented for matching.
 	 */
 	public static class IsA implements Test {
 		private Class<?> parent;
 
-		/**
+		/*
 		 * Constructs an IsA test using the supplied Class as the parent class/interface.
 		 */
 		public IsA(Class<?> parentType) {
 			this.parent = parentType;
 		}
 
-		/**
+		/*
 		 * Returns true if type is assignable to the parent type supplied in the constructor.
 		 */
 		@SuppressWarnings("unchecked")
@@ -126,21 +127,21 @@ public class ResolverUtil<T> {
 		}
 	}
 
-	/**
+	/*
 	 * A Test that checks to see if each class is annotated with a specific annotation. If it
 	 * is, then the test returns true, otherwise false.
 	 */
 	public static class AnnotatedWith implements Test {
 		private Class<? extends Annotation> annotation;
 
-		/**
+		/*
 		 * Constructs an AnnotatedWith test for the specified annotation type.
 		 */
 		public AnnotatedWith(Class<? extends Annotation> annotation) {
 			this.annotation = annotation;
 		}
 
-		/**
+		/*
 		 * Returns true if the type is annotated with the class provided to the constructor.
 		 */
 		@SuppressWarnings("unchecked")
@@ -154,18 +155,18 @@ public class ResolverUtil<T> {
 		}
 	}
 
-	/**
+	/*
 	 * The set of matches being accumulated.
 	 */
 	private Set<Class<? extends T>> matches = new HashSet<Class<? extends T>>();
 
-	/**
+	/*
 	 * The ClassLoader to use when looking for classes. If null then the ClassLoader returned
 	 * by Thread.currentThread().getContextClassLoader() will be used.
 	 */
 	private ClassLoader classloader;
 
-	/**
+	/*
 	 * Provides access to the classes discovered so far. If no calls have been made to
 	 * any of the {@code find()} methods, this set will be empty.
 	 *
@@ -175,7 +176,7 @@ public class ResolverUtil<T> {
 		return matches;
 	}
 
-	/**
+	/*
 	 * Returns the classloader that will be used for scanning for classes. If no explicit
 	 * ClassLoader has been set by the calling, the context class loader will be used.
 	 *
@@ -185,7 +186,7 @@ public class ResolverUtil<T> {
 		return classloader == null ? Thread.currentThread().getContextClassLoader() : classloader;
 	}
 
-	/**
+	/*
 	 * Sets an explicit ClassLoader that should be used when scanning for classes. If none
 	 * is set then the context classloader will be used.
 	 *
@@ -195,7 +196,7 @@ public class ResolverUtil<T> {
 		this.classloader = classloader;
 	}
 
-	/**
+	/*
 	 * Attempts to discover classes that are assignable to the type provided. In the case
 	 * that an interface is provided this method will collect implementations. In the case
 	 * of a non-interface class, subclasses will be collected.  Accumulated classes can be
@@ -215,7 +216,7 @@ public class ResolverUtil<T> {
 		return this;
 	}
 
-	/**
+	/*
 	 * Attempts to discover classes that are annotated with the annotation. Accumulated
 	 * classes can be accessed by calling {@link #getClasses()}.
 	 *
@@ -233,7 +234,7 @@ public class ResolverUtil<T> {
 		return this;
 	}
 
-	/**
+	/*
 	 * Scans for classes starting at the package provided and descending into subpackages.
 	 * Each class is offered up to the Test as it is discovered, and if the Test returns
 	 * true the class is retained.  Accumulated classes can be fetched by calling
@@ -263,7 +264,7 @@ public class ResolverUtil<T> {
 		return this;
 	}
 
-	/**
+	/*
 	 * Recursively list all resources under the given URL that appear to define a Java class.
 	 * Matching resources will have a name that ends in ".class" and have a relative path such that
 	 * each segment of the path is a valid Java identifier. The resource paths returned will be
@@ -365,7 +366,7 @@ public class ResolverUtil<T> {
 		}
 	}
 
-	/**
+	/*
 	 * List the names of the entries in the given {@link JarInputStream} that begin with the
 	 * specified {@code path}. Entries will match with or without a leading slash.
 	 *
@@ -400,7 +401,7 @@ public class ResolverUtil<T> {
 		return resources;
 	}
 
-	/**
+	/*
 	 * Attempts to deconstruct the given URL to find a JAR file containing the resource referenced
 	 * by the URL. That is, assuming the URL references a JAR entry, this method will return a URL
 	 * that references the JAR file containing the entry. If the JAR cannot be located, then this
@@ -469,7 +470,7 @@ public class ResolverUtil<T> {
 		return null;
 	}
 
-	/**
+	/*
 	 * Converts a Java package name to a path that can be looked up with a call to
 	 * {@link ClassLoader#getResources(String)}.
 	 *
@@ -479,7 +480,7 @@ public class ResolverUtil<T> {
 		return packageName == null ? null : packageName.replace('.', '/');
 	}
 
-	/**
+	/*
 	 * Returns true if the name of a resource (file or directory) is one that matters in the search
 	 * for classes. Relevant resources would be class files themselves (file names that end with
 	 * ".class") and directories that might be a Java package name segment (java identifiers).
@@ -492,7 +493,7 @@ public class ResolverUtil<T> {
 				.matcher(resourceName).matches());
 	}
 
-	/**
+	/*
 	 * Returns true if the resource located at the given URL is a JAR file.
 	 *
 	 * @param url The URL of the resource to test.
@@ -501,7 +502,7 @@ public class ResolverUtil<T> {
 		return isJar(url, new byte[JAR_MAGIC.length]);
 	}
 
-	/**
+	/*
 	 * Returns true if the resource located at the given URL is a JAR file.
 	 *
 	 * @param url	The URL of the resource to test.
@@ -533,7 +534,7 @@ public class ResolverUtil<T> {
 		return false;
 	}
 
-	/**
+	/*
 	 * Add the class designated by the fully qualified class name provided to the set of
 	 * resolved classes if and only if it is approved by the Test supplied.
 	 *

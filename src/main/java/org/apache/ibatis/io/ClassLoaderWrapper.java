@@ -1,9 +1,24 @@
+/*
+ *    Copyright 2009-2011 The MyBatis Team
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
 package org.apache.ibatis.io;
 
 import java.io.InputStream;
 import java.net.URL;
 
-/**
+/*
  * A class to wrap access to multiple class loaders making them work as one
  */
 public class ClassLoaderWrapper {
@@ -19,7 +34,7 @@ public class ClassLoaderWrapper {
     }
   }
   
-  /**
+  /*
    * Get a resource as a URL using the current class path
    *
    * @param resource - the resource to locate
@@ -29,7 +44,7 @@ public class ClassLoaderWrapper {
     return getResourceAsURL(resource, getClassLoaders(null));
   }
 
-  /**
+  /*
    * Get a resource from the classpath, starting with a specific class loader
    *
    * @param resource    - the resource to find
@@ -40,7 +55,7 @@ public class ClassLoaderWrapper {
     return getResourceAsURL(resource, getClassLoaders(classLoader));
   }
 
-  /**
+  /*
    * Get a resource from the classpath
    *
    * @param resource - the resource to find
@@ -50,7 +65,7 @@ public class ClassLoaderWrapper {
     return getResourceAsStream(resource, getClassLoaders(null));
   }
 
-  /**
+  /*
    * Get a resource from the classpath, starting with a specific class loader
    *
    * @param resource    - the resource to find
@@ -61,7 +76,7 @@ public class ClassLoaderWrapper {
     return getResourceAsStream(resource, getClassLoaders(classLoader));
   }
 
-  /**
+  /*
    * Find a class on the classpath (or die trying)
    *
    * @param name - the class to look for
@@ -72,7 +87,7 @@ public class ClassLoaderWrapper {
     return classForName(name, getClassLoaders(null));
   }
 
-  /**
+  /*
    * Find a class on the classpath, starting with a specific classloader (or die trying)
    *
    * @param name        - the class to look for
@@ -84,7 +99,7 @@ public class ClassLoaderWrapper {
     return classForName(name, getClassLoaders(classLoader));
   }
 
-  /**
+  /*
    * Try to get a resource from a group of classloaders
    *
    * @param resource    - the resource to get
@@ -107,7 +122,7 @@ public class ClassLoaderWrapper {
     return null;
   }
 
-  /**
+  /*
    * Get a resource as a URL using the current class path
    *
    * @param resource    - the resource to locate
@@ -142,7 +157,7 @@ public class ClassLoaderWrapper {
 
   }
 
-  /**
+  /*
    * Attempt to load a class from a group of classloaders
    *
    * @param name        - the class to load

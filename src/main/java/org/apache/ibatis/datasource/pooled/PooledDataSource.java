@@ -1,3 +1,18 @@
+/*
+ *    Copyright 2009-2011 The MyBatis Team
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
 package org.apache.ibatis.datasource.pooled;
 
 import org.apache.ibatis.datasource.unpooled.UnpooledDataSource;
@@ -9,7 +24,7 @@ import java.io.PrintWriter;
 import java.sql.*;
 import java.util.Properties;
 
-/**
+/*
  * This is a simple, synchronous, thread-safe database connection pool.
  */
 public class PooledDataSource implements DataSource {
@@ -111,7 +126,7 @@ public class PooledDataSource implements DataSource {
     forceCloseAll();
   }
 
-  /**
+  /*
    * The maximum number of active connections
    *
    * @param poolMaximumActiveConnections The maximum number of active connections
@@ -121,7 +136,7 @@ public class PooledDataSource implements DataSource {
     forceCloseAll();
   }
 
-  /**
+  /*
    * The maximum number of idle connections
    *
    * @param poolMaximumIdleConnections The maximum number of idle connections
@@ -131,7 +146,7 @@ public class PooledDataSource implements DataSource {
     forceCloseAll();
   }
 
-  /**
+  /*
    * The maximum time a connection can be used before it *may* be
    * given away again.
    *
@@ -142,7 +157,7 @@ public class PooledDataSource implements DataSource {
     forceCloseAll();
   }
 
-  /**
+  /*
    * The time to wait before retrying to get a connection
    *
    * @param poolTimeToWait The time to wait
@@ -152,7 +167,7 @@ public class PooledDataSource implements DataSource {
     forceCloseAll();
   }
 
-  /**
+  /*
    * The query to be used to check a connection
    *
    * @param poolPingQuery The query
@@ -162,7 +177,7 @@ public class PooledDataSource implements DataSource {
     forceCloseAll();
   }
 
-  /**
+  /*
    * Determines if the ping query should be used.
    *
    * @param poolPingEnabled True if we need to check a connection before using it
@@ -172,7 +187,7 @@ public class PooledDataSource implements DataSource {
     forceCloseAll();
   }
 
-  /**
+  /*
    * If a connection has not been used in this many milliseconds, ping the
    * database to make sure the connection is still good.
    *
@@ -239,7 +254,7 @@ public class PooledDataSource implements DataSource {
     return poolPingConnectionsNotUsedFor;
   }
 
-  /**
+  /*
    * Closes all active and idle connections in the pool
    */
   public void forceCloseAll() {
@@ -428,7 +443,7 @@ public class PooledDataSource implements DataSource {
     return conn;
   }
 
-  /**
+  /*
    * Method to check to see if a connection is still usable
    *
    * @param conn - the connection to check
@@ -483,7 +498,7 @@ public class PooledDataSource implements DataSource {
     return result;
   }
 
-  /**
+  /*
    * Unwraps a pooled connection to get to the 'real' connection
    *
    * @param conn - the pooled connection to unwrap

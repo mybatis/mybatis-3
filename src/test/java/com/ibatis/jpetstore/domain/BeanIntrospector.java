@@ -1,3 +1,18 @@
+/*
+ *    Copyright 2009-2011 The MyBatis Team
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
 package com.ibatis.jpetstore.domain;
 
 import java.lang.reflect.Method;
@@ -5,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
-/**
+/*
  * Abstract class used to help development of Probe implementations
  */
 public class BeanIntrospector {
@@ -142,7 +157,7 @@ public class BeanIntrospector {
 
   private static final Object[] NO_ARGUMENTS = new Object[0];
 
-  /**
+  /*
    * Returns an array of the readable properties exposed by a bean
    *
    * @param object The bean
@@ -152,7 +167,7 @@ public class BeanIntrospector {
     return ClassIntrospector.getInstance(object.getClass()).getReadablePropertyNames();
   }
 
-  /**
+  /*
    * Returns an array of the writeable properties exposed by a bean
    *
    * @param object The bean
@@ -162,7 +177,7 @@ public class BeanIntrospector {
     return ClassIntrospector.getInstance(object.getClass()).getWriteablePropertyNames();
   }
 
-  /**
+  /*
    * Returns the class that the setter expects to receive as a parameter when
    * setting a property value.
    *
@@ -198,7 +213,7 @@ public class BeanIntrospector {
     return type;
   }
 
-  /**
+  /*
    * Returns the class that the getter will return when reading a property value.
    *
    * @param object The bean to check
@@ -233,7 +248,7 @@ public class BeanIntrospector {
     return type;
   }
 
-  /**
+  /*
    * Returns the class that the getter will return when reading a property value.
    *
    * @param type The class to check
@@ -255,7 +270,7 @@ public class BeanIntrospector {
     return type;
   }
 
-  /**
+  /*
    * Returns the class that the setter expects to receive as a parameter when
    * setting a property value.
    *
@@ -278,7 +293,7 @@ public class BeanIntrospector {
     return type;
   }
 
-  /**
+  /*
    * Gets an Object property from a bean
    *
    * @param object The bean
@@ -303,7 +318,7 @@ public class BeanIntrospector {
     }
   }
 
-  /**
+  /*
    * Sets the value of a bean property to an Object
    *
    * @param object The bean to change
@@ -340,7 +355,7 @@ public class BeanIntrospector {
   }
 
 
-  /**
+  /*
    * Checks to see if a bean has a writable property be a given name
    *
    * @param object       The bean to check
@@ -367,7 +382,7 @@ public class BeanIntrospector {
     return hasProperty;
   }
 
-  /**
+  /*
    * Checks to see if a bean has a readable property be a given name
    *
    * @param object       The bean to check

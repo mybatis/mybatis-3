@@ -1,3 +1,18 @@
+/*
+ *    Copyright 2009-2011 The MyBatis Team
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
 package com.ibatis.sqlmap.engine.mapping.sql.dynamic.elements;
 
 import org.apache.ibatis.mapping.ParameterMapping;
@@ -60,7 +75,7 @@ public class SqlTagContext {
     return removeFirstPrependStack.size() <= 0;
   }
 
-  /**
+  /*
    * examine the value of the top RemoveFirstPrependMarker object on the stack.
    *
    * @param sqlTag
@@ -74,7 +89,7 @@ public class SqlTagContext {
     return removeFirstPrepend.isRemoveFirstPrepend();
   }
 
-  /**
+  /*
    * pop the first RemoveFirstPrependMarker once the recursion is on it's way out
    * of the recursion loop and return it's internal value.
    *
@@ -90,7 +105,7 @@ public class SqlTagContext {
     }
   }
 
-  /**
+  /*
    * push a new RemoveFirstPrependMarker object with the specified internal state
    *
    * @param tag
@@ -131,7 +146,7 @@ public class SqlTagContext {
 
   }
 
-  /**
+  /*
    * set a new internal state for top RemoveFirstPrependMarker object
    */
   public void disableRemoveFirstPrependMarker() {
@@ -142,7 +157,7 @@ public class SqlTagContext {
     ((RemoveFirstPrependMarker) removeFirstPrependStack.get(0)).setRemoveFirstPrepend(true);
   }
 
-  /**
+  /*
    * iterate context is stored here for nested dynamic tags in
    * the body of the iterate tag
    *
@@ -152,7 +167,7 @@ public class SqlTagContext {
     iterateContextStack.addFirst(iterateContext);
   }
 
-  /**
+  /*
    * iterate context is removed here from the stack when iterate tag is finished being
    * processed
    *
@@ -166,7 +181,7 @@ public class SqlTagContext {
     return retVal;
   }
 
-  /**
+  /*
    * iterate context is removed here from the stack when iterate tag is finished being
    * processed
    *

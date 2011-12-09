@@ -1,3 +1,18 @@
+/*
+ *    Copyright 2009-2011 The MyBatis Team
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
 package com.ibatis.common.util;
 
 import org.w3c.dom.*;
@@ -24,7 +39,7 @@ public class NodeEventParser {
     setEntityResolver(null);
   }
 
-  /**
+  /*
    * Registers a nodelet for the specified XPath.  Current XPaths supported
    * are:
    * <ul>
@@ -45,7 +60,7 @@ public class NodeEventParser {
     }
   }
 
-  /**
+  /*
    * Begins parsing from the provided Reader.
    */
   public void parse(Reader reader) throws ParsingException {
@@ -80,7 +95,7 @@ public class NodeEventParser {
     }
   }
 
-  /**
+  /*
    * Begins parsing from the provided Node.
    */
   private void parse(Node node) {
@@ -89,7 +104,7 @@ public class NodeEventParser {
     process(node, path);
   }
 
-  /**
+  /*
    * A recursive method that walkes the DOM tree, registers XPaths and
    * calls Nodelets registered under those XPaths.
    */
@@ -124,7 +139,7 @@ public class NodeEventParser {
     }
   }
 
-  /**
+  /*
    * Creates a JAXP Document from a reader.
    */
   private Document createDocument(Reader reader) throws ParserConfigurationException, FactoryConfigurationError, SAXException, IOException {
@@ -155,7 +170,7 @@ public class NodeEventParser {
     return builder.parse(new InputSource(reader));
   }
 
-  /**
+  /*
    * Inner helper class that assists with building XPath paths.
    * <p/>
    * Note:  Currently this is a bit slow and could be optimized.

@@ -1,3 +1,18 @@
+/*
+ *    Copyright 2009-2011 The MyBatis Team
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
 package com.ibatis.sqlmap.client.extensions;
 
 import java.math.BigDecimal;
@@ -6,7 +21,7 @@ import java.sql.*;
 import java.util.Calendar;
 import java.util.Map;
 
-/**
+/*
  * Allows values to be retrieved from the underlying result set.
  * TypeHandlerCallback implementations use this interface to
  * get values that they can subsequently manipulate before
@@ -20,7 +35,7 @@ import java.util.Map;
  */
 public interface ResultGetter {
 
-  /**
+  /*
    * Gets an array from the underlying result set
    *
    * @return - the array
@@ -28,7 +43,7 @@ public interface ResultGetter {
    */
   public Array getArray() throws SQLException;
 
-  /**
+  /*
    * Gets a BigDecimal from the underlying result set
    *
    * @return - the BigDecimal
@@ -36,7 +51,7 @@ public interface ResultGetter {
    */
   public BigDecimal getBigDecimal() throws SQLException;
 
-  /**
+  /*
    * Gets a Blob from the underlying result set
    *
    * @return - the Blob
@@ -44,7 +59,7 @@ public interface ResultGetter {
    */
   public Blob getBlob() throws SQLException;
 
-  /**
+  /*
    * Gets a boolean from the underlying result set
    *
    * @return - the boolean
@@ -52,7 +67,7 @@ public interface ResultGetter {
    */
   public boolean getBoolean() throws SQLException;
 
-  /**
+  /*
    * Gets a byte from the underlying result set
    *
    * @return - the byte
@@ -60,7 +75,7 @@ public interface ResultGetter {
    */
   public byte getByte() throws SQLException;
 
-  /**
+  /*
    * Gets a byte[] from the underlying result set
    *
    * @return - the byte[]
@@ -68,7 +83,7 @@ public interface ResultGetter {
    */
   public byte[] getBytes() throws SQLException;
 
-  /**
+  /*
    * Gets a Clob from the underlying result set
    *
    * @return - the Clob
@@ -76,7 +91,7 @@ public interface ResultGetter {
    */
   public Clob getClob() throws SQLException;
 
-  /**
+  /*
    * Gets a Date from the underlying result set
    *
    * @return - the Date
@@ -84,7 +99,7 @@ public interface ResultGetter {
    */
   public Date getDate() throws SQLException;
 
-  /**
+  /*
    * Gets a Date from the underlying result set using a calendar
    *
    * @param cal - the Calendar
@@ -93,7 +108,7 @@ public interface ResultGetter {
    */
   public Date getDate(Calendar cal) throws SQLException;
 
-  /**
+  /*
    * Gets a double from the underlying result set
    *
    * @return - the double
@@ -101,7 +116,7 @@ public interface ResultGetter {
    */
   public double getDouble() throws SQLException;
 
-  /**
+  /*
    * Gets a float from the underlying result set
    *
    * @return - the float
@@ -109,7 +124,7 @@ public interface ResultGetter {
    */
   public float getFloat() throws SQLException;
 
-  /**
+  /*
    * Gets an int from the underlying result set
    *
    * @return - the int
@@ -117,7 +132,7 @@ public interface ResultGetter {
    */
   public int getInt() throws SQLException;
 
-  /**
+  /*
    * Gets a long from the underlying result set
    *
    * @return - the long
@@ -125,7 +140,7 @@ public interface ResultGetter {
    */
   public long getLong() throws SQLException;
 
-  /**
+  /*
    * Gets an Object from the underlying result set
    *
    * @return - the Object
@@ -133,7 +148,7 @@ public interface ResultGetter {
    */
   public Object getObject() throws SQLException;
 
-  /**
+  /*
    * Gets an Object from the underlying result set using a Map
    *
    * @param map - the Map
@@ -142,7 +157,7 @@ public interface ResultGetter {
    */
   public Object getObject(Map map) throws SQLException;
 
-  /**
+  /*
    * Gets a Ref from the underlying result set
    *
    * @return - the Ref
@@ -150,7 +165,7 @@ public interface ResultGetter {
    */
   public Ref getRef() throws SQLException;
 
-  /**
+  /*
    * Gets a short from the underlying result set
    *
    * @return - the short
@@ -158,7 +173,7 @@ public interface ResultGetter {
    */
   public short getShort() throws SQLException;
 
-  /**
+  /*
    * Gets a String from the underlying result set
    *
    * @return - the String
@@ -166,7 +181,7 @@ public interface ResultGetter {
    */
   public String getString() throws SQLException;
 
-  /**
+  /*
    * Gets a Time from the underlying result set
    *
    * @return - the Time
@@ -174,7 +189,7 @@ public interface ResultGetter {
    */
   public Time getTime() throws SQLException;
 
-  /**
+  /*
    * Gets a Time from the underlying result set using a Calendar
    *
    * @param cal - the Calendar
@@ -183,7 +198,7 @@ public interface ResultGetter {
    */
   public Time getTime(Calendar cal) throws SQLException;
 
-  /**
+  /*
    * Gets a Timestamp from the underlying result set
    *
    * @return - the Timestamp
@@ -191,7 +206,7 @@ public interface ResultGetter {
    */
   public Timestamp getTimestamp() throws SQLException;
 
-  /**
+  /*
    * Gets a Timestamp from the underlying result set
    *
    * @param cal - the Calendar
@@ -200,7 +215,7 @@ public interface ResultGetter {
    */
   public Timestamp getTimestamp(Calendar cal) throws SQLException;
 
-  /**
+  /*
    * Gets a URL from the underlying result set
    *
    * @return - the URL
@@ -208,7 +223,7 @@ public interface ResultGetter {
    */
   public URL getURL() throws SQLException;
 
-  /**
+  /*
    * Tells if the field was null
    *
    * @return - true if it was null
@@ -216,14 +231,14 @@ public interface ResultGetter {
    */
   public boolean wasNull() throws SQLException;
 
-  /**
+  /*
    * Returns the underlying ResultSet...be careful!
    *
    * @return a ResultSet instance.
    */
   public ResultSet getResultSet();
 
-  /**
+  /*
    * Returns the name of the column being got in the underlying ResultSet.
    * May be <code>null</code> in which case the <code>getColumnIndex</code>
    * method should be used.
@@ -232,7 +247,7 @@ public interface ResultGetter {
    */
   public String getColumnName();
 
-  /**
+  /*
    * Returns the index of the column being got in the underlying ResultSet.
    * Only use this method if the value returned from <code>getColumnName</code>
    * is null.
