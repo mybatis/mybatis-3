@@ -7,8 +7,7 @@
 	OR CONDITIONS OF ANY KIND, either express or implied. See the License for 
 	the specific language governing permissions and limitations under the License. -->
 
-<!-- version: $Id: getting-started.xml 4051 2011-11-25 21:47:24Z simone.tripodi 
-	$ -->
+<!-- version: $Id:$ -->
 
 <document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
@@ -19,38 +18,42 @@
 	</properties>
 
 	<body>
-		<section name="What is MyBatis?">
-			<p>
-				MyBatis is a first class persistence framework with support for
-				custom SQL,
-				stored procedures and advanced mappings. MyBatis
-				eliminates almost
-				all of the JDBC code and manual setting of
-				parameters and retrieval
-				of results. MyBatis can use simple XML or
-				Annotations for
-				configuration and map primitives, Map interfaces and
-				Java POJOs
-				(Plain Old Java Objects) to database records.
-			</p>
-		</section>
+		<section name="Introduction">
+			<subsection name="What is MyBatis?">
+				<p>
+					MyBatis is a first class persistence framework with support for
+					custom SQL,
+					stored procedures and advanced mappings. MyBatis
+					eliminates almost
+					all of the JDBC code and manual setting of
+					parameters and retrieval
+					of results. MyBatis can use simple XML or
+					Annotations for
+					configuration and map primitives, Map interfaces and
+					Java POJOs
+					(Plain Old Java Objects) to database records.
+				</p>
+			</subsection>
 
-		<section name="Help make this documentation better…">
-			<p>
-				If you find this documentation lacking in any way, or missing
-				documentation for a feature, then the best thing to do is learn
-				about it and then write the documentation yourself!
-			</p>
-			<p>
-				Sources of this manual are available in xdoc format at 
-				<a href="http://mybatis.googlecode.com/svn/trunk/src/site/">project's SVN </a>.
-				Check them out, update them and send your patch to the
-				<a href="http://code.google.com/p/mybatis/issues/entry">tracker</a>.
-			</p>
-			<p>
-				You’re the best author of this documentation, people like you have
-				to read it!
-			</p>
+			<subsection name="Help make this documentation better…">
+				<p>
+					If you find this documentation lacking in any way, or missing
+					documentation for a feature, then the best thing to do is learn
+					about it and then write the documentation yourself!
+				</p>
+				<p>
+					Sources of this manual are available in xdoc format at
+					<a href="http://mybatis.googlecode.com/svn/trunk/src/site/">project's SVN </a>
+					.
+					Check them out, update them and send your patch to the
+					<a href="http://code.google.com/p/mybatis/issues/entry">tracker</a>
+					.
+				</p>
+				<p>
+					You’re the best author of this documentation, people like you have
+					to read it!
+				</p>
+			</subsection>
 		</section>
 	</body>
 
