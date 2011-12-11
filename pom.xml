@@ -101,20 +101,30 @@
       <plugin>
         <groupId>org.sonatype.plugins</groupId>
         <artifactId>jarjar-maven-plugin</artifactId>
-        <configuration>
-          <includes>
-            <include>ognl:ognl</include>
-          </includes>
-          <rules>
-            <rule>
-              <pattern>ognl.**</pattern>
-              <result>org.apache.ibatis.ognl.@1</result>
-            </rule>
-            <keep>
-              <pattern>org.apache.ibatis.**</pattern>
-            </keep>
-          </rules>
-        </configuration>
+        <executions>
+          <execution>
+            <id>jarjar-classes</id>
+            <phase>compile</phase>
+            <goals>
+              <goal>jarjar</goal>
+            </goals>
+            <configuration>
+              <input>{classes}</input>
+              <includes>
+                <include>ognl:ognl</include>
+              </includes>
+              <rules>
+                <rule>
+                  <pattern>ognl.**</pattern>
+                  <result>org.apache.ibatis.ognl.@1</result>
+                </rule>
+                <keep>
+                  <pattern>org.apache.ibatis.**</pattern>
+                </keep>
+              </rules>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
