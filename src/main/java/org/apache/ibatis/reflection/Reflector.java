@@ -15,14 +15,24 @@
  */
 package org.apache.ibatis.reflection;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.ReflectPermission;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 import org.apache.ibatis.reflection.invoker.GetFieldInvoker;
 import org.apache.ibatis.reflection.invoker.Invoker;
 import org.apache.ibatis.reflection.invoker.MethodInvoker;
 import org.apache.ibatis.reflection.invoker.SetFieldInvoker;
 import org.apache.ibatis.reflection.property.PropertyNamer;
-
-import java.lang.reflect.*;
-import java.util.*;
 
 /*
  * This class represents a cached set of class definition information that
@@ -32,7 +42,7 @@ public class Reflector {
 
   private static boolean classCacheEnabled = true;
   private static final String[] EMPTY_STRING_ARRAY = new String[0];
-  private static final Map<Class<?>, Reflector> REFLECTOR_MAP = Collections.synchronizedMap(new HashMap<Class<?>, Reflector>());
+  private static final Map<Class<?>, Reflector> REFLECTOR_MAP = new ConcurrentHashMap<Class<?>, Reflector>();
 
   private Class<?> type;
   private String[] readablePropertyNames = EMPTY_STRING_ARRAY;
