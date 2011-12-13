@@ -87,21 +87,22 @@ public abstract class BaseBuilder {
 
   protected Object resolveInstance(String alias) {
     if (alias == null) return null;
-    try {
-      Class<?> type = resolveClass(alias);
-      return type.newInstance();
-    } catch (Exception e) {
-      throw new BuilderException("Error instantiating class. Cause: " + e, e);
-    }
+    Class<?> type = resolveClass(alias);
+    return resolveInstance(type);
   }
 
   protected Object resolveInstance(Class<?> type) {
     if (type == null) return null;
-    try {
-      return type.newInstance();
-    } catch (Exception e) {
-      throw new BuilderException("Error instantiating class. Cause: " + e, e);
+    Object handler = typeHandlerRegistry.getMappingTypeHandler(type);
+    if (handler == null) {
+      // not in registry, create a new one
+      try {
+        handler = type.newInstance();
+      } catch (Exception e) {
+        throw new BuilderException("Error instantiating class. Cause: " + e, e);
+      }
     }
+    return handler;
   }
 
   protected Class<?> resolveAlias(String alias) {

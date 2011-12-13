@@ -15,16 +15,16 @@
  */
 package org.apache.ibatis.type;
 
-import org.apache.ibatis.io.ResolverUtil;
-
 import java.lang.reflect.Modifier;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+
+import org.apache.ibatis.io.ResolverUtil;
 
 public final class TypeHandlerRegistry {
 
@@ -43,7 +43,8 @@ public final class TypeHandlerRegistry {
   private final Map<JdbcType, TypeHandler<?>> JDBC_TYPE_HANDLER_MAP = new EnumMap<JdbcType, TypeHandler<?>>(JdbcType.class);
   private final Map<Class<?>, Map<JdbcType, TypeHandler<?>>> TYPE_HANDLER_MAP = new HashMap<Class<?>, Map<JdbcType, TypeHandler<?>>>();
   private final TypeHandler<Object> UNKNOWN_TYPE_HANDLER = new UnknownTypeHandler(this);
-
+  private final Map<Class<?>, TypeHandler<?>> ALL_TYPE_HANDLERS_MAP = new HashMap<Class<?>, TypeHandler<?>>();
+  
   public TypeHandlerRegistry() {
     register(Boolean.class, new BooleanTypeHandler());
     register(boolean.class, new BooleanTypeHandler());
@@ -130,6 +131,10 @@ public final class TypeHandlerRegistry {
     return javaType != null && getTypeHandler(javaType, jdbcType) != null;
   }
 
+  public TypeHandler<?> getMappingTypeHandler(Class<?> handler) {
+    return ALL_TYPE_HANDLERS_MAP.get(handler);
+  }
+
   public TypeHandler<?> getTypeHandler(Class<?> type) {
     return getTypeHandler(type, null);
   }
@@ -183,20 +188,24 @@ public final class TypeHandlerRegistry {
       }
     }
     if (!mappedTypeFound) {
-      throw new RuntimeException("Unable to get mapped types, check @MappedTypes annotation for type handler " + handler);
+//      throw new RuntimeException("Unable to get mapped types, check @MappedTypes annotation for type handler " + handler);
+      register((Class<T>) null, handler);
     }
   }
 
   public void register(Class<?> type, JdbcType jdbcType, TypeHandler<?> handler) {
-    Map<JdbcType, TypeHandler<?>> map = TYPE_HANDLER_MAP.get(type);
-    if (map == null) {
-      map = new HashMap<JdbcType, TypeHandler<?>>();
-      TYPE_HANDLER_MAP.put(type, map);
+    if (type != null) {
+      Map<JdbcType, TypeHandler<?>> map = TYPE_HANDLER_MAP.get(type);
+      if (map == null) {
+        map = new HashMap<JdbcType, TypeHandler<?>>();
+        TYPE_HANDLER_MAP.put(type, map);
+      }
+      map.put(jdbcType, handler);
+      if (reversePrimitiveMap.containsKey(type)) {
+        register(reversePrimitiveMap.get(type), jdbcType, handler);
+      }
     }
-    map.put(jdbcType, handler);
-    if (reversePrimitiveMap.containsKey(type)) {
-      register(reversePrimitiveMap.get(type), jdbcType, handler);
-    }
+    ALL_TYPE_HANDLERS_MAP.put(handler.getClass(), handler);
   }
 
   public void register(String packageName) {
