@@ -54,7 +54,7 @@
       <source><![CDATA[
 String resource = "org/mybatis/example/MyBatisConfig.xml";
 InputStream inputStream = Resources.getResourceAsStream(resource);
-sqlMapper = new SqlSessionFactoryBuilder().build(inputStream);]]></source>
+sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);]]></source>
       <p>
         The configuration XML file contains settings for the core of the
         MyBatis system, including a DataSource for acquiring database
@@ -144,7 +144,7 @@ SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(confi
         the SqlSession instance. For
         exmaple:
       </p>
-      <source><![CDATA[SqlSession session = sqlMapper.openSession();
+      <source><![CDATA[SqlSession session = sqlSessionFactory.openSession();
 try {
   Blog blog = (Blog) session.selectOne("org.mybatis.example.BlogMapper.selectBlog", 101);
 } finally {

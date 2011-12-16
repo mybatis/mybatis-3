@@ -1457,9 +1457,9 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader,properties);]]
 
         <source><![CDATA[<!-- Using url fully qualified paths -->
 <mappers>
-  <mapper url="file:///var/sqlmaps/AuthorMapper.xml"/>
-  <mapper url="file:///var/sqlmaps/BlogMapper.xml"/>
-  <mapper url="file:///var/sqlmaps/PostMapper.xml"/>
+  <mapper url="file:///var/mappers/AuthorMapper.xml"/>
+  <mapper url="file:///var/mappers/BlogMapper.xml"/>
+  <mapper url="file:///var/mappers/PostMapper.xml"/>
 </mappers>]]></source>
 
         <source><![CDATA[<!-- Using mapper interface classes -->
