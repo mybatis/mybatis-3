@@ -39,14 +39,13 @@
         <li>
           configuration
           <ul>
-            <li>properties</li>
-            <li>settings</li>
-            <li>typeAliases</li>
-            <li>typeHandlers</li>
-            <li>objectFactory</li>
-            <li>plugins</li>
-            <li>
-              environments
+            <li><a href="#properties">properties</a></li>
+            <li><a href="#settings">settings</a></li>
+            <li><a href="#typeAliases">typeAliases</a></li>
+            <li><a href="#typeHandlers">typeHandlers</a></li>
+            <li><a href="#objectFactory">objectFactory</a></li>
+            <li><a href="#plugins">plugins</a></li>
+            <li><a href="#environments">environments</a>
               <ul>
                 <li>
                   environment
@@ -57,7 +56,7 @@
                 </li>
               </ul>
             </li>
-            <li>mappers</li>
+            <li><a href="#mappers">mappers</a></li>
           </ul>
         </li>
       </ul>
@@ -678,142 +677,142 @@ public class Author {
           <tbody>
             <tr>
               <td>
-                BooleanTypeHandler
+                <code>BooleanTypeHandler</code>
               </td>
               <td>
-                Boolean, boolean
+                <code>java.lang.Boolean</code>, <code>boolean</code>
               </td>
               <td>
-                Any compatible BOOLEAN 
-              </td>
-            </tr>
-            <tr>
-              <td>
-                ByteTypeHandler
-              </td>
-              <td>
-                Byte, byte
-              </td>
-              <td>
-                Any compatible NUMERIC or BYTE
+                Any compatible <code>BOOLEAN</code>
               </td>
             </tr>
             <tr>
               <td>
-                ShortTypeHandler
+                <code>ByteTypeHandler</code>
               </td>
               <td>
-                Short, short
+                <code>java.lang.Byte</code>, byte
               </td>
               <td>
-                Any compatible NUMERIC or SHORT INTEGER
-              </td>
-            </tr>
-            <tr>
-              <td>
-                IntegerTypeHandler
-              </td>
-              <td>
-                Integer, int
-              </td>
-              <td>
-                Any compatible NUMERIC or INTEGER
+                Any compatible <code>NUMERIC</code> or <code>BYTE</code>
               </td>
             </tr>
             <tr>
               <td>
-                LongTypeHandler
+                <code>ShortTypeHandler</code>
               </td>
               <td>
-                Long, long
+                <code>java.lang.Short</code>, <code>short</code>
               </td>
               <td>
-                Any compatible NUMERIC or LONG INTEGER
-              </td>
-            </tr>
-            <tr>
-              <td>
-                FloatTypeHandler
-              </td>
-              <td>
-                Float, float
-              </td>
-              <td>
-                Any compatible NUMERIC or FLOAT
+                Any compatible <code>NUMERIC</code> or <code>SHORT INTEGER</code>
               </td>
             </tr>
             <tr>
               <td>
-                DoubleTypeHandler
+                <code>IntegerTypeHandler</code>
               </td>
               <td>
-                Double, double
+                <code>java.lang.Integer</code>, <code>int</code>
               </td>
               <td>
-                Any compatible NUMERIC or DOUBLE
-              </td>
-            </tr>
-            <tr>
-              <td>
-                BigDecimalTypeHandler
-              </td>
-              <td>
-                BigDecimal
-              </td>
-              <td>
-                Any compatible NUMERIC or DECIMAL
+                Any compatible <code>NUMERIC</code> or <code>INTEGER</code>
               </td>
             </tr>
             <tr>
               <td>
-                StringTypeHandler
+                <code>LongTypeHandler</code>
               </td>
               <td>
-                String
+                <code>java.lang.Long</code>, <code>long</code>
               </td>
               <td>
-                CHAR, VARCHAR
-              </td>
-            </tr>
-            <tr>
-              <td>
-                ClobTypeHandler
-              </td>
-              <td>
-                String
-              </td>
-              <td>
-                CLOB, LONGVARCHAR
+                Any compatible <code>NUMERIC</code> or <code>LONG INTEGER</code>
               </td>
             </tr>
             <tr>
               <td>
-                NStringTypeHandler
+                <code>FloatTypeHandler</code>
               </td>
               <td>
-                String
+                <code>java.lang.Float</code>, float
               </td>
               <td>
-                NVARCHAR, NCHAR
-              </td>
-            </tr>
-            <tr>
-              <td>
-                NClobTypeHandler
-              </td>
-              <td>
-                String
-              </td>
-              <td>
-                NCLOB
+                Any compatible <code>NUMERIC</code> or <code>FLOAT</code>
               </td>
             </tr>
             <tr>
               <td>
-                ByteArrayTypeHandler
+                <code>DoubleTypeHandler</code>
               </td>
               <td>
-                byte[]
+                <code>java.lang.Double</code>, <code>double</code>
+              </td>
+              <td>
+                Any compatible <code>NUMERIC</code> or <code>DOUBLE</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>BigDecimalTypeHandler</code>
+              </td>
+              <td>
+                <code>java.math.BigDecimal</code>
+              </td>
+              <td>
+                Any compatible <code>NUMERIC</code> or <code>DECIMAL</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>StringTypeHandler</code>
+              </td>
+              <td>
+                <code>java.lang.String</code>
+              </td>
+              <td>
+                <code>CHAR</code>, <code>VARCHAR</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>ClobTypeHandler</code>
+              </td>
+              <td>
+                <code>java.lang.String</code>
+              </td>
+              <td>
+                <code>CLOB</code>, <code>LONGVARCHAR</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>NStringTypeHandler</code>
+              </td>
+              <td>
+                <code>java.lang.String</code>
+              </td>
+              <td>
+                <code>NVARCHAR</code>, <code>NCHAR</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>NClobTypeHandler</code>
+              </td>
+              <td>
+                <code>java.lang.String</code>
+              </td>
+              <td>
+                <code>NCLOB</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>ByteArrayTypeHandler</code>
+              </td>
+              <td>
+                <code>byte[]</code>
               </td>
               <td>
                 Any compatible byte stream type
@@ -821,101 +820,101 @@ public class Author {
             </tr>
             <tr>
               <td>
-                BlobTypeHandler
+                <code>BlobTypeHandler</code>
               </td>
               <td>
-                byte[]
+                <code>byte[]</code>
               </td>
               <td>
-                BLOB, LONGVARBINARY
-              </td>
-            </tr>
-            <tr>
-              <td>
-                DateTypeHandler
-              </td>
-              <td>
-                Date (java.util)
-              </td>
-              <td>
-                TIMESTAMP
+                <code>BLOB</code>, <code>LONGVARBINARY</code>
               </td>
             </tr>
             <tr>
               <td>
-                DateOnlyTypeHandler
+                <code>DateTypeHandler</code>
               </td>
               <td>
-                Date (java.util)
+                <code>java.util.Date</code>
               </td>
               <td>
-                DATE
-              </td>
-            </tr>
-            <tr>
-              <td>
-                TimeOnlyTypeHandler
-              </td>
-              <td>
-                Date (java.util)
-              </td>
-              <td>
-                TIME
+                <code>TIMESTAMP</code>
               </td>
             </tr>
             <tr>
               <td>
-                SqlTimestampTypeHandler
+                <code>DateOnlyTypeHandler</code>
               </td>
               <td>
-                Timestamp (java.sql)
+                <code>java.util.Date</code>
               </td>
               <td>
-                TIMESTAMP
-              </td>
-            </tr>
-            <tr>
-              <td>
-                SqlDateTypeHadler
-              </td>
-              <td>
-                Date (java.sql)
-              </td>
-              <td>
-                DATE
+                <code>DATE</code>
               </td>
             </tr>
             <tr>
               <td>
-                SqlTimeTypeHandler
+                <code>TimeOnlyTypeHandler</code>
               </td>
               <td>
-                Time (java.sql)
+                <code>java.util.Date</code>
               </td>
               <td>
-                TIME
+                <code>TIME</code>
               </td>
             </tr>
             <tr>
               <td>
-                ObjectTypeHandler
+                <code>SqlTimestampTypeHandler</code>
+              </td>
+              <td>
+                <code>java.sql.Timestamp</code>
+              </td>
+              <td>
+                <code>TIMESTAMP</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>SqlDateTypeHadler</code>
+              </td>
+              <td>
+                <code>java.sql.Date</code>
+              </td>
+              <td>
+                <code>DATE</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>SqlTimeTypeHandler</code>
+              </td>
+              <td>
+                <code>java.sql.Time</code>
+              </td>
+              <td>
+                <code>TIME</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>ObjectTypeHandler</code>
               </td>
               <td>
                 Any
               </td>
               <td>
-                OTHER, or unspecified
+                <code>OTHER</code>, or unspecified
               </td>
             </tr>
             <tr>
               <td>
-                EnumTypeHandler
+                <code>EnumTypeHandler</code>
               </td>
               <td>
                 Enumeration Type
               </td>
               <td>
-                VARCHAR any string compatible type, as the code is
+                <code>VARCHAR</code> any string compatible type, as the code is
                   stored (not
                   the index).
                 
@@ -927,8 +926,8 @@ public class Author {
           You can override the type handlers or create your own to deal with
           unsupported or non-standard types. To do so, simply extend
           the
-          BaseTypeHandler class (org.mybatis.type) and optionally map your new
-          TypeHandler class to a JDBC type. For example:
+          <code>org.mybatis.type.BaseTypeHandler</code> class and optionally map your new
+          <code>TypeHandler</code> class to a JDBC type. For example:
         </p>
 
         <source><![CDATA[// ExampleTypeHandler.java
@@ -978,20 +977,20 @@ public class ExampleTypeHandler extends BaseTypeHandler<String> {
           you can override this behavior by two means:
         </p>
         <ul>
-          <li>Adding an javaType attribute to the typeHandler element (for example: javaType="String")
+          <li>Adding a <code>javaType</code> attribute to the typeHandler element (for example: <code>javaType="String"</code>)
           </li> 
-          <li>Adding a <code>@MappedTypes</code> annotation to your TypeHandler class specifying 
+          <li>Adding a <code>@MappedTypes</code> annotation to your <code>TypeHandler</code> class specifying 
           the list of java types to associate it with. This annotation will be ignored if 
-          the javaType attribute as also been specified.
+          the <code>javaType</code> attribute as also been specified.
           </li>
-        </ul>  
-        
+        </ul>
+
         <p>Associated JDBC type can also be specified by adding a
-           jdbcType attribute to the typeHandler element (for example: jdbcType=VARCHAR). 
+           <code>jdbcType</code> attribute to the typeHandler element (for example: <code>jdbcType=VARCHAR</code>).
            If a jdbcType attribute is specified the <code>@MappedJdbcTypes</code> 
            will be ignored.
-        </p>       
-        
+        </p>
+
         <p>And finally you can let MyBatis search for your TypeHandlers:</p>
         <source><![CDATA[<!-- MapperConfig.xml -->
 <typeHandlers>
@@ -1004,7 +1003,7 @@ public class ExampleTypeHandler extends BaseTypeHandler<String> {
           specified with annotations.
         </p>
       </subsection>
-      
+
       <subsection name="objectFactory">
         <p>
           Each time MyBatis creates a new instance of a result object, it
@@ -1113,7 +1112,7 @@ public class ExamplePlugin implements Interceptor {
   </plugin>
 </plugins>]]></source>
         <p>
-          The plug-in above will intercept all calls to the “update” method
+          The plug-in above will intercept all calls to the "update" method
           on
           the Executor instance, which is an internal object responsible for
           the low level execution of mapped statements.
@@ -1201,17 +1200,17 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader,properties);]]
         </p>
         <ul>
           <li>
-            The default Environment ID (e.g. default=”development”).
+            The default Environment ID (e.g. default="development").
           </li>
           <li>
             The Environment ID for each environment defined (e.g.
-            id=”development”).
+            id="development").
           </li>
           <li>
-            The TransactionManager configuration (e.g. type=”JDBC”)
+            The TransactionManager configuration (e.g. type="JDBC")
           </li>
           <li>
-            The DataSource configuration (e.g. type=”POOLED”)
+            The DataSource configuration (e.g. type="POOLED")
           </li>
         </ul>
         <p>
@@ -1226,7 +1225,7 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader,properties);]]
         </p>
         <p>
           There are two TransactionManager types (i.e.
-          type=”[JDBC|MANAGED]”) that
+          type="[JDBC|MANAGED]") that
           are included with MyBatis:
         </p>
         <ul>
@@ -1245,7 +1244,7 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader,properties);]]
             a JEE Application Server context). By default it does
             close the connection. However, some containers don’t expect this,
             and thus if you need to stop it from closing the connection, set
-            the “closeConnection” property to false. For example:
+            the "closeConnection" property to false. For example:
             <source><![CDATA[<transactionManager type="MANAGED">
   <property name="closeConnection" value="false"/>
 </transactionManager>]]></source>
@@ -1301,7 +1300,7 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader,properties);]]
             facilitate Lazy Loading, this dataSource is required.
           </li>
         </ul>
-        <p>There are three build-in dataSource types (i.e. type=”????”):
+        <p>There are three build-in dataSource types (i.e. type="????"):
         </p>
         <p>
           <strong>UNPOOLED</strong>
@@ -1315,33 +1314,32 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader,properties);]]
           properties:
         </p>
         <ul>
-          <li>driver – This is the fully qualified Java class of the JDBC
+          <li><code>driver</code> – This is the fully qualified Java class of the JDBC
             driver (NOT of the DataSource class if your driver includes one).
           </li>
-          <li>url – This is the JDBC URL for your database instance.
+          <li><code>url</code> – This is the JDBC URL for your database instance.
           </li>
-          <li>username – The database username to log in with.
+          <li><code>username</code> – The database username to log in with.
           </li>
-          <li>password - The database password to log in with.
+          <li><code>password</code> - The database password to log in with.
           </li>
-          <li>defaultTransactionIsolationLevel – The default transaction
+          <li><code>defaultTransactionIsolationLevel</code> – The default transaction
             isolation level for connections.
           </li>
         </ul>
         <p>
           Optionally, you can pass properties to the database driver as
           well. To do
-          this, prefix the properties with “driver.”, for example:
+          this, prefix the properties with <code>driver.</code>, for example:
         </p>
         <ul>
-          <li>driver.encoding=UTF8
-          </li>
+          <li><code>driver.encoding=UTF8</code></li>
         </ul>
         <p>
-          This will pass the property “encoding”, with the value “UTF8”, to
+          This will pass the property <code>encoding</code>, with the value <code>UTF8</code>, to
           your
-          database driver via the DriverManager.getConnection(url,
-          driverProperties) method.
+          database driver via the <code>DriverManager.getConnection(url,
+          driverProperties)</code> method.
         </p>
         <p>
           <strong>POOLED</strong>
@@ -1357,19 +1355,19 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader,properties);]]
           properties that can be used to configure the POOLED datasource:
         </p>
         <ul>
-          <li>poolMaximumActiveConnections – This is the number of active
+          <li><code>poolMaximumActiveConnections</code> – This is the number of active
             (i.e. in use) connections that can exist at any given time.
             Default: 10
           </li>
-          <li>poolMaximumIdleConnections – The number of idle connections
+          <li><code>poolMaximumIdleConnections</code> – The number of idle connections
             that
             can exist at any given time.
           </li>
-          <li>poolMaximumCheckoutTime – This is the amount of time that a
-            Connection can be “checked out” of the pool before it will be
+          <li><code>poolMaximumCheckoutTime</code> – This is the amount of time that a
+            Connection can be "checked out" of the pool before it will be
             forcefully returned. Default: 20000ms (i.e. 20 seconds)
           </li>
-          <li>poolTimeToWait – This is a low level setting that gives the
+          <li><code>poolTimeToWait</code> – This is a low level setting that gives the
             pool
             a chance to print a log status and re-attempt the acquisition
             of a
@@ -1379,17 +1377,17 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader,properties);]]
             Default:
             20000ms (i.e. 20 seconds)
           </li>
-          <li>poolPingQuery – The Ping Query is sent to the database to
+          <li><code>poolPingQuery</code> – The Ping Query is sent to the database to
             validate that a connection is in good working order and is ready
             to
             accept requests. The default is "NO PING QUERY SET", which will
             cause most database drivers to fail with a decent error message.
           </li>
-          <li>poolPingEnabled – This enables or disables the ping query. If
+          <li><code>poolPingEnabled</code> – This enables or disables the ping query. If
             enabled, you must also set the poolPingQuery property with a valid
             SQL statement (preferably a very fast one). Default: false.
           </li>
-          <li>poolPingConnectionsNotUsedFor – This configures how often the
+          <li><code>poolPingConnectionsNotUsedFor</code> – This configures how often the
             poolPingQuery will be used. This can be set to match the typical
             timeout for a database connection, to avoid unnecessary pings.
             Default: 0 (i.e. all connections are pinged every time – but only
@@ -1407,7 +1405,7 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader,properties);]]
           properties:
         </p>
         <ul>
-          <li>initial_context – This property is used for the Context lookup
+          <li><code>initial_context</code> – This property is used for the Context lookup
             from the InitialContext (i.e.
             initialContext.lookup(initial_context)). This property is
             optional,
@@ -1415,7 +1413,7 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader,properties);]]
             looked up
             against the InitialContext directly.
           </li>
-          <li>data_source – This is the context path where the reference to
+          <li><code>data_source</code> – This is the context path where the reference to
             the instance of the DataSource can be found. It will be looked up
             against the context returned by the initial_context lookup, or
             against the InitialContext directly if no initial_context is
@@ -1424,21 +1422,20 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader,properties);]]
         </ul>
         <p>Similar to the other DataSource configurations, it’s possible to
           send properties directly to the InitialContext by prefixing those
-          properties with “env.”, for example:
+          properties with <code>env.</code>, for example:
         </p>
         <ul>
-          <li>env.encoding=UTF8
-          </li>
+          <li><code>env.encoding=UTF8</code></li>
         </ul>
         <p>
-          This would send the property “encoding” with the value of “UTF8”
+          This would send the property <code>encoding</code> with the value of <code>UTF8</code>
           to the
           constructor of the InitialContext upon instantiation.
         </p>
       </subsection>
       <subsection name="mappers">
         <p>
-          Now that the behaviour of MyBatis is configured with the above
+          Now that the behavior of MyBatis is configured with the above
           configuration elements, we’re ready to define our mapped SQL
           statements. But first, we need to tell MyBatis where to find them.
           Java doesn’t really provide any good means of auto-discovery in
@@ -1449,7 +1446,7 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader,properties);]]
           resource
           references, or literal, fully qualified url references
           (including
-          file:/// URLs). For example:
+          <code>file:///</code> URLs). For example:
         </p>
         <source><![CDATA[<!-- Using classpath relative resources -->
 <mappers>
