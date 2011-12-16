@@ -204,7 +204,7 @@ try {
       <p>
         While this looks like a lot of overhead for this simple example, it is
         actually very light. You can define as many mapped statements in a
-        single mapper XML file as you like, so you get a lot of milage out
+        single mapper XML file as you like, so you get a lot of mileage out
         of the XML header and doctype declaration. The rest of the file is
         pretty self explanatory. It defines a name for the mapped statement
         “selectBlog”, in the namespace “org.mybatis.example.BlogMapper”,
@@ -299,6 +299,9 @@ public interface BlogMapper {
         classes we've discussed so far. Using them incorrectly can cause
         severe concurrency problems.
       </p>
+      <p><span class="label important">NOTE</span>
+         This section describes the main MyBatis objects and their lifecycle 
+      </p>
       <h4>SqlSessionFactoryBuilder</h4>
         <p>
           This class can be instantiated, used and thrown away. There is no need
@@ -319,11 +322,7 @@ public interface BlogMapper {
           Doing so should be considered a “bad smell”. Therefore the best
           scope of SqlSessionFactory is application scope. This can be
           achieved a number of ways. The simplest is to use a Singleton
-          pattern or Static Singleton pattern. However, neither of those is
-          widely accepted as a best practice. Instead, you might prefer to
-          investigate a dependency injection container such as Google Guice
-          or Spring. Such frameworks will allow you to create providers that
-          will manage the singleton lifecycle of SqlSessionFactory for you.
+          pattern or Static Singleton pattern.
         </p>
       <h4>SqlSession</h4>
         <p>
@@ -335,7 +334,7 @@ public interface BlogMapper {
           managed scope, such as HttpSession of of the Servlet framework. If
           you're using a web framework of any sort, consider the SqlSession
           to follow a similar scope to that of an HTTP request. In other
-          words, upon recieving an HTTP request, you can open a SqlSession,
+          words, upon receiving an HTTP request, you can open a SqlSession,
           then upon returning the response, you can close it. Closing the
           session is very important. You should always ensure that it's
           closed within a finally block. The following is the standard
@@ -359,7 +358,7 @@ try {
           Instances of the mapper interfaces are acquired from the
           SqlSession. As such, technically the broadest scope of any mapper
           instance is the same as the SqlSession from which they were
-          requestsd. However, the best scope for mapper instances is method
+          requested. However, the best scope for mapper instances is method
           scope. That is, they should be requested within the method that
           they are used, and then be discarded. They do not need to be closed
           explicitly. While it's not a problem to keep them around throughout
@@ -376,6 +375,18 @@ try {
   session.close();
 }
 ]]></source>
+
+      <hr/>
+      <p><span class="label important">NOTE</span>
+        <strong>Object lifecycle and Dependency Injection Frameworks</strong>
+      </p>
+      <p>
+        Dependency Injection frameworks can create thread safe, transactional SqlSessions and mappers 
+        and inject them directly into your beans so you can just forget about their lifecycle. 
+        You may want to have a look at MyBatis-Spring or
+        MyBatis-Guice sub-projects to know more about using MyBatis with DI frameworks.
+      </p>
+      <hr/>
       </subsection>
     </section>
   </body>
