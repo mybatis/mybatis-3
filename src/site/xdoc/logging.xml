@@ -184,9 +184,9 @@ log4j.appender.stdout.layout.ConversionPattern=%5p [%t] - %m%n]]></source>
           would simply change line 7 to the following (notice it&#x2019;s not
           #commented out anymore):
         </p>
-        <p></p>
+
         <source>log4j.logger.java.sql.PreparedStatement=DEBUG</source>
-        <p></p>
+
         <p>The remaining configuration in the <code>log4j.properties</code> file is used
           to configure the appenders, which is beyond the scope of this
           document. However, you can find more information at the Log4J
