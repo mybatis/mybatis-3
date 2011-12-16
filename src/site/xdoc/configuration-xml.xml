@@ -933,7 +933,7 @@ public class Author {
 
         <source><![CDATA[// ExampleTypeHandler.java
 @MappedJdbcTypes(JdbcType.VARCHAR)
-public class StringTypeHandler extends BaseTypeHandler<String> {
+public class ExampleTypeHandler extends BaseTypeHandler<String> {
 
   @Override
   public void setNonNullParameter(PreparedStatement ps, int i, String parameter, JdbcType jdbcType) throws SQLException {
