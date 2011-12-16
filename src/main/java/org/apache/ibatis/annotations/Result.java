@@ -20,9 +20,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.apache.ibatis.type.DefaultTypeHandler;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
+import org.apache.ibatis.type.UnknownTypeHandler;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
@@ -37,7 +37,7 @@ public @interface Result {
 
   public abstract JdbcType jdbcType() default JdbcType.UNDEFINED;
 
-  public abstract Class<? extends TypeHandler<?>> typeHandler() default DefaultTypeHandler.class;
+  public abstract Class<? extends TypeHandler<?>> typeHandler() default UnknownTypeHandler.class;
 
   public abstract One one() default @One;
 

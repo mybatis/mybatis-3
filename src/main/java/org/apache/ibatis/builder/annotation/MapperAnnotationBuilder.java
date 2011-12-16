@@ -72,7 +72,7 @@ import org.apache.ibatis.mapping.SqlSource;
 import org.apache.ibatis.mapping.StatementType;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.RowBounds;
-import org.apache.ibatis.type.DefaultTypeHandler;
+import org.apache.ibatis.type.UnknownTypeHandler;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
 
@@ -204,7 +204,7 @@ public class MapperAnnotationBuilder {
               hasNestedSelect(result) ? nestedSelectId(result) : null,
               null,
               null,
-              result.typeHandler() == DefaultTypeHandler.class ? null : result.typeHandler(),
+              result.typeHandler() == UnknownTypeHandler.class ? null : result.typeHandler(),
               flags);
           resultMappings.add(resultMapping);
         }
@@ -218,7 +218,7 @@ public class MapperAnnotationBuilder {
       String column = discriminator.column();
       Class<?> javaType = discriminator.javaType() == void.class ? String.class : discriminator.javaType();
       JdbcType jdbcType = discriminator.jdbcType() == JdbcType.UNDEFINED ? null : discriminator.jdbcType();
-      Class<? extends TypeHandler<?>> typeHandler = discriminator.typeHandler() == DefaultTypeHandler.class ? null : discriminator.typeHandler();
+      Class<? extends TypeHandler<?>> typeHandler = discriminator.typeHandler() == UnknownTypeHandler.class ? null : discriminator.typeHandler();
       Case[] cases = discriminator.cases();
       Map<String, String> discriminatorMap = new HashMap<String, String>();
       for (Case c : cases) {
@@ -436,7 +436,7 @@ public class MapperAnnotationBuilder {
             hasNestedSelect(result) ? nestedSelectId(result) : null,
             null,
             null,
-            result.typeHandler() == DefaultTypeHandler.class ? null : result.typeHandler(),
+            result.typeHandler() == UnknownTypeHandler.class ? null : result.typeHandler(),
             flags);
         resultMappings.add(resultMapping);
       }
@@ -474,7 +474,7 @@ public class MapperAnnotationBuilder {
             nullOrEmpty(arg.select()),
             nullOrEmpty(arg.resultMap()),
             null,
-            arg.typeHandler() == DefaultTypeHandler.class ? null : arg.typeHandler(),
+            arg.typeHandler() == UnknownTypeHandler.class ? null : arg.typeHandler(),
             flags);
         resultMappings.add(resultMapping);
       }
