@@ -299,9 +299,6 @@ public interface BlogMapper {
         classes we've discussed so far. Using them incorrectly can cause
         severe concurrency problems.
       </p>
-      <p><span class="label important">NOTE</span>
-         This section describes the main MyBatis objects and their lifecycle 
-      </p>
       <h4>SqlSessionFactoryBuilder</h4>
         <p>
           This class can be instantiated, used and thrown away. There is no need
