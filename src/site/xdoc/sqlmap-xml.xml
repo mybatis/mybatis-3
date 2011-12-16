@@ -21,19 +21,19 @@
       xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
 
   <properties>
-    <title>MyBatis 3 | SqlMap XML Files</title>
+    <title>MyBatis 3 | Mapper XML Files</title>
     <author email="mybatis-dev@googlegroups.com">The MyBatis Team</author>
   </properties>
 
   <body>
-    <section name="SQL Map XML Files">
+    <section name="Mapper XML Files">
       <p>
         The true power of MyBatis is in the Mapped Statements. This is where the magic happens.
-        For all of their power, the SQL Map XML files are relatively simple. Certainly if you were
+        For all of their power, the Mapper XML files are relatively simple. Certainly if you were
         to compare them to the equivalent JDBC code, you would immediately see a savings of 95% of the code.
         MyBatis was built to focus on the SQL, and does its best to stay out of your way.
       </p>
-      <p>The SQL Map XML files have only a few first class elements (in the order that they should be defined):
+      <p>The Mapper XML files have only a few first class elements (in the order that they should be defined):
       </p>
       <ul>
         <li>
