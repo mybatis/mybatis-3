@@ -925,47 +925,74 @@ public class Author {
         </table>
         <p>
           You can override the type handlers or create your own to deal with
-          unsupported or non-standard types. To do so, simply implementing
+          unsupported or non-standard types. To do so, simply extend
           the
-          TypeHandler interface (org.mybatis.type) and map your new
-          TypeHandler class to a Java type, and optionally a JDBC type. For
-          example:
+          BaseTypeHandler class (org.mybatis.type) and optionally map your new
+          TypeHandler class to a JDBC type. For example:
         </p>
 
         <source><![CDATA[// ExampleTypeHandler.java
-public class ExampleTypeHandler implements TypeHandler {
-  public void setParameter(PreparedStatement ps, int i, Object parameter,JdbcType jdbcType) throws SQLException {
-    ps.setString(i, (String) parameter);
+@MappedJdbcTypes(JdbcType.VARCHAR)
+public class StringTypeHandler extends BaseTypeHandler<String> {
+
+  @Override
+  public void setNonNullParameter(PreparedStatement ps, int i, String parameter, JdbcType jdbcType) throws SQLException {
+    ps.setString(i, parameter);
   }
-  public Object getResult(ResultSet rs, String columnName) throws SQLException {
+
+  @Override
+  public String getNullableResult(ResultSet rs, String columnName) throws SQLException {
     return rs.getString(columnName);
   }
-  public Object getResult(CallableStatement cs, int columnIndex) throws SQLException {
+
+  @Override
+  public String getNullableResult(ResultSet rs, int columnIndex) throws SQLException {
+    return rs.getString(columnIndex);
+  }
+
+  @Override
+  public String getNullableResult(CallableStatement cs, int columnIndex) throws SQLException {
     return cs.getString(columnIndex);
   }
-}]]></source>
+}
+]]></source>
 
         <source><![CDATA[<!-- MapperConfig.xml -->
 <typeHandlers>
-  <typeHandler javaType="String" jdbcType="VARCHAR" handler="org.mybatis.example.ExampleTypeHandler"/>
+  <typeHandler handler="org.mybatis.example.ExampleTypeHandler"/>
 </typeHandlers>
 ]]></source>
 
         <p>
           Using such a TypeHandler would override the existing type handler
-          for
-          Java String properties and VARCHAR parameters and results. Note
+          for Java String properties and VARCHAR parameters and results. Note
           that MyBatis does not introspect upon the database metadata to
           determine the type, so you must specify that it’s a VARCHAR field
-          in
-          the parameter and result mappings to hook in the correct type
+          in the parameter and result mappings to hook in the correct type
           handler. This is due to the fact that MyBatis is unaware of the
-          data
-          type until the statement is executed.
+          data type until the statement is executed.
         </p>
-
-        <p>You can also specify a package where MyBatis will search for
-          TypeHandlers:</p>
+        <p>
+          MyBatis will know the the Java type that you want to handle with
+          this TypeHandler by introspecting its generic type, but 
+          you can override this behavior by two means:
+        </p>
+        <ul>
+          <li>Adding an javaType attribute to the typeHandler element (for example: javaType="String")
+          </li> 
+          <li>Adding a <code>@MappedTypes</code> annotation to your TypeHandler class specifying 
+          the list of java types to associate it with. This annotation will be ignored if 
+          the javaType attribute as also been specified.
+          </li>
+        </ul>  
+        
+        <p>Associated JDBC type can also be specified by adding a
+           jdbcType attribute to the typeHandler element (for example: jdbcType=VARCHAR). 
+           If a jdbcType attribute is specified the <code>@MappedJdbcTypes</code> 
+           will be ignored.
+        </p>       
+        
+        <p>And finally you can let MyBatis search for your TypeHandlers:</p>
         <source><![CDATA[<!-- MapperConfig.xml -->
 <typeHandlers>
   <package name="org.mybatis.example"/>
@@ -973,20 +1000,11 @@ public class ExampleTypeHandler implements TypeHandler {
 ]]></source>
 
         <p>
-          When using the autodiscovery feature, MyBatis will search for the
-          annotation
-          <code>@MappedTypes</code>
-          to get a list of java types associated with the type handler and
-          <code>@MappedJdbcTypes</code>
-          to get the jdbc types. See the following example:
+          Note that when using the autodiscovery feature JDBC types can only be
+          specified with annotations.
         </p>
-        <source><![CDATA[@MappedTypes(BigInteger.class)
-public class BigIntegerHandler implements TypeHandler<BigInteger> {
-   ...
-}
-]]></source>
-
       </subsection>
+      
       <subsection name="objectFactory">
         <p>
           Each time MyBatis creates a new instance of a result object, it

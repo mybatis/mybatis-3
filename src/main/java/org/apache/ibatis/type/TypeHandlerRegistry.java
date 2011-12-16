@@ -30,6 +30,7 @@ import org.apache.ibatis.io.ResolverUtil;
 public final class TypeHandlerRegistry {
 
   private static final Map<Class<?>, Class<?>> reversePrimitiveMap = new HashMap<Class<?>, Class<?>>() {
+    private static final long serialVersionUID = 1L;
     {
       put(Byte.class, byte.class);
       put(Short.class, short.class);
@@ -157,11 +158,11 @@ public final class TypeHandlerRegistry {
   }
 
   public <T> TypeHandler<T> getTypeHandler(Class<T> type, JdbcType jdbcType) {
-    return getTypeHandler( (Type) type, jdbcType );
+    return getTypeHandler((Type) type, jdbcType);
   }
 
   public <T> TypeHandler<T> getTypeHandler(TypeReference<T> javaTypeReference, JdbcType jdbcType) {
-    return getTypeHandler( javaTypeReference.getRawType(), jdbcType );
+    return getTypeHandler(javaTypeReference.getRawType(), jdbcType);
   }
 
   private <T> TypeHandler<T> getTypeHandler(Type type, JdbcType jdbcType) {
@@ -176,7 +177,8 @@ public final class TypeHandlerRegistry {
     if (handler == null && type != null && type instanceof Class && Enum.class.isAssignableFrom((Class<?>) type)) {
       handler = new EnumTypeHandler((Class<?>) type);
     }
-    @SuppressWarnings( "unchecked" ) // type drives generics here
+    @SuppressWarnings("unchecked")
+    // type drives generics here
     TypeHandler<T> returned = (TypeHandler<T>) handler;
     return returned;
   }
@@ -208,26 +210,24 @@ public final class TypeHandlerRegistry {
     }
   }
 
+  @SuppressWarnings("unchecked")
   public <T> void register(TypeHandler<T> handler) {
     boolean mappedTypeFound = false;
 
     MappedTypes mappedTypes = handler.getClass().getAnnotation(MappedTypes.class);
     if (mappedTypes != null) {
       for (Class<?> handledType : mappedTypes.value()) {
-          // FIXME is there any way to make sure types are assignable?
-          register((Class<T>) handledType, handler);
-          mappedTypeFound = true;
+        // FIXME is there any way to make sure types are assignable?
+        register((Class<T>) handledType, handler);
+        mappedTypeFound = true;
       }
     }
 
     // @since 3.1.0 - try to auto-discover the mapped type
-    if (!mappedTypeFound && handler instanceof TypeReference)
-    {
-      try
-      {
-        @SuppressWarnings( "unchecked" )
+    if (!mappedTypeFound && handler instanceof TypeReference) {
+      try {
         TypeReference<T> typeReference = (TypeReference<T>) handler;
-        register( typeReference, handler );
+        register(typeReference, handler);
         mappedTypeFound = true;
       } catch (Throwable t) {
         // maybe users define the TypeReference with a different type and are not assignable, so just ignore it
