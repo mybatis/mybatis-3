@@ -38,7 +38,7 @@
           SLF4J
         </li>
         <li>
-          Jakarta Commons Logging (JCL &#x2013; NOT Job Control Language!)
+          Apache Commons Logging (ACL &#x2013; NOT Access control list!)
         </li>
         <li>
           Log4J
@@ -53,18 +53,18 @@
         searched in the above order). If MyBatis finds none of the above
         implementations, then logging will be disabled.
       </p>
-      <p>Many environments ship JCL as a part of the application server
+      <p>Many environments ship ACL as a part of the application server
         classpath (good examples include Tomcat and WebSphere). It is
-        important to know that in such environments, MyBatis will use JCL as
+        important to know that in such environments, MyBatis will use ACL as
         the logging implementation. In an environment like WebSphere this
         will mean that your Log4J configuration will be ignored because
-        WebSphere supplies its own proprietary implementation of JCL. This
+        WebSphere supplies its own proprietary implementation of ACL. This
         can be very frustrating because it will appear that MyBatis is
         ignoring your Log4J configuration (in fact, MyBatis is ignoring your
-        Log4J configuration because MyBatis will use JCL in such
+        Log4J configuration because MyBatis will use ACL in such
         environments). &#xa0;If your application is running in an
         environment
-        where JCL is included in the classpath but you would
+        where ACL is included in the classpath but you would
         rather use one
         of the other logging implementations you can select a
         different
@@ -92,7 +92,7 @@ org.apache.ibatis.logging.LogFactory.useStdOutLogging();]]></source>
         algorithm for discovering logging implementations.
       </p>
       <p></p>
-      <p>The specifics of Jakarta Commons Logging, Log4J and the JDK
+      <p>The specifics of Apache Commons Logging, Apache Log4J and the JDK
         Logging
         API are beyond the scope of this document. However the
         example
@@ -105,25 +105,23 @@ org.apache.ibatis.logging.LogFactory.useStdOutLogging();]]></source>
       </p>
       <ul>
         <li>
-          Jakarta Commons Logging:
-          http://jakarta.apache.org/commons/logging/index.html
+          <a href="http://commons.apache.org/logging">Apache Commons Logging</a>
         </li>
         <li>
-          Log4j: http://jakarta.apache.org/log4j/docs/index.html
+          <a href="http://logging.apache.org/log4j/">Apache Log4j</a>
         </li>
         <li>
-          JDK Logging API:
-          http://java.sun.com/j2se/1.4.1/docs/guide/util/logging/
+          <a href="http://java.sun.com/j2se/1.4.1/docs/guide/util/logging/">JDK Logging API</a>
         </li>
       </ul>
       <subsection name="Logging Configuration">
         <p>MyBatis logs most of its activity using log classes that are not
           in the MyBatis packages. To see MyBatis logging statements, you
-          should enable logging on classes in the java.sql package &#x2013;
+          should enable logging on classes in the <code>java.sql</code> package &#x2013;
           specifically the following classes:
         </p>
-        <p>java.sql.Connectionjava.sql.PreparedStatementjava.sql.Resultsetjava.sql.Statement
-        </p>
+        <p><code>java.sql.Connection</code>, <code>java.sql.PreparedStatement</code> and
+        <code>java.sql.Resultsetjava.sql.Statement</code></p>
         <p>Again, how you do this is dependent on the logging implementation
           in use. We'll show how to do it with Log4J. &#xa0;Configuring the
           logging services is simply a matter of including one or more extra
@@ -142,16 +140,16 @@ org.apache.ibatis.logging.LogFactory.useStdOutLogging();]]></source>
           add the JAR file to your application classpath. You can download
           Log4J from the URL above.
         </p>
-        <p>For web or enterprise applications you can add the log4j.jar to
-          your WEB-INF/lib directory, or for a standalone application you can
-          simply add it to the JVM -classpath startup parameter.
+        <p>For web or enterprise applications you can add the <code>log4j.jar</code> to
+          your <code>WEB-INF/lib</code> directory, or for a standalone application you can
+          simply add it to the JVM <code>-classpath</code> startup parameter.
         </p>
         <p></p>
         <h4>
           Step 2: Configure Log4J
         </h4>
         <p>Configuring Log4J is simple - you create a file called
-          log4j.properties and it looks like the following:
+          <code>log4j.properties</code> and it looks like the following:
         </p>
         <source><![CDATA[# Global logging configuration
 log4j.rootLogger=ERROR, stdout
@@ -176,20 +174,20 @@ log4j.appender.stdout.layout.ConversionPattern=%5p [%t] - %m%n]]></source>
         <source>log4j.rootLogger=DEBUG, stdout</source>
         <p></p>
         <p>By changing line 2 as above, Log4J will now report on all logged
-          events to the &#x2018;stdout&#x2019; appender (console). If you
+          events to the <code>stdout</code> appender (console). If you
           want
           to tune the logging at a finer level, you can configure each class
           that logs to the system using the &#x2018;SqlMap logging
           configuration&#x2019; section of the file above (commented out in
-          lines 4 through 8 above). So if we wanted to log PreparedStatement
-          activity (SQL statements) to the console at the DEBUG level, we
+          lines 4 through 8 above). So if we wanted to log <code>PreparedStatement</code>
+          activity (SQL statements) to the console at the <code>DEBUG</code> level, we
           would simply change line 7 to the following (notice it&#x2019;s not
           #commented out anymore):
         </p>
         <p></p>
         <source>log4j.logger.java.sql.PreparedStatement=DEBUG</source>
         <p></p>
-        <p>The remaining configuration in the log4j.properties file is used
+        <p>The remaining configuration in the <code>log4j.properties</code> file is used
           to configure the appenders, which is beyond the scope of this
           document. However, you can find more information at the Log4J
           website (URL above). Or, you could simply experiment with it to see
