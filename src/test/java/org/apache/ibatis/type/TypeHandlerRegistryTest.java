@@ -15,6 +15,13 @@
  */
 package org.apache.ibatis.type;
 
+import java.net.URI;
+import java.sql.CallableStatement;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
+
 import domain.misc.RichType;
 import static org.junit.Assert.*;
 import org.junit.Test;
@@ -25,7 +32,7 @@ public class TypeHandlerRegistryTest {
 
   @Test
   public void shouldRegisterAndRetrieveTypeHandler() {
-    TypeHandler stringTypeHandler = typeHandlerRegistry.getTypeHandler(String.class);
+    TypeHandler<String> stringTypeHandler = typeHandlerRegistry.getTypeHandler(String.class);
     typeHandlerRegistry.register(String.class, JdbcType.LONGVARCHAR, stringTypeHandler);
     assertEquals(stringTypeHandler, typeHandlerRegistry.getTypeHandler(String.class, JdbcType.LONGVARCHAR));
 
@@ -34,6 +41,79 @@ public class TypeHandlerRegistryTest {
     assertTrue(typeHandlerRegistry.hasTypeHandler(String.class, JdbcType.LONGVARCHAR));
     assertTrue(typeHandlerRegistry.hasTypeHandler(String.class, JdbcType.INTEGER));
     assertTrue(typeHandlerRegistry.getUnknownTypeHandler() instanceof UnknownTypeHandler);
+  }
+
+  @Test
+  public void shouldRegisterAndRetrieveComplexTypeHandler() {
+    TypeHandler<List<URI>> fakeHandler = new TypeHandler<List<URI>>() {
+
+    public void setParameter( PreparedStatement ps, int i, List<URI> parameter, JdbcType jdbcType )
+      throws SQLException {
+      // do nothing, fake method
+    }
+
+    public List<URI> getResult( CallableStatement cs, int columnIndex )
+      throws SQLException {
+      // do nothing, fake method
+      return null;
+    }
+
+    public List<URI> getResult( ResultSet rs, int columnIndex )
+      throws SQLException {
+      // do nothing, fake method
+      return null;
+    }
+
+    public List<URI> getResult( ResultSet rs, String columnName )
+      throws SQLException {
+      // do nothing, fake method
+      return null;
+    }
+
+    };
+
+    TypeReference<List<URI>> type = new TypeReference<List<URI>>(){};
+
+    typeHandlerRegistry.register(type, fakeHandler);
+    assertSame(fakeHandler, typeHandlerRegistry.getTypeHandler(type));
+  }
+
+  @Test
+  public void shouldAutoRegisterAndRetrieveComplexTypeHandler() {
+    TypeHandler<List<URI>> fakeHandler = new BaseTypeHandler<List<URI>>() {
+
+      @Override
+      public void setNonNullParameter( PreparedStatement ps, int i, List<URI> parameter, JdbcType jdbcType )
+        throws SQLException {
+        // do nothing, fake method
+      }
+
+      @Override
+      public List<URI> getNullableResult( ResultSet rs, String columnName )
+        throws SQLException {
+        // do nothing, fake method
+        return null;
+      }
+
+      @Override
+      public List<URI> getNullableResult( ResultSet rs, int columnIndex )
+        throws SQLException {
+        // do nothing, fake method
+        return null;
+      }
+
+      @Override
+      public List<URI> getNullableResult( CallableStatement cs, int columnIndex )
+        throws SQLException {
+        // do nothing, fake method
+        return null;
+      }
+
+    };
+
+    typeHandlerRegistry.register(fakeHandler);
+
+    assertSame(fakeHandler, typeHandlerRegistry.getTypeHandler(new TypeReference<List<URI>>(){}));
   }
 
 }

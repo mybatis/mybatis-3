@@ -96,7 +96,7 @@ public class SqlSourceBuilder extends BaseBuilder {
           } else if ("resultMap".equals(name)) {
             builder.resultMapId(value);
           } else if ("typeHandler".equals(name)) {
-            builder.typeHandler((TypeHandler) resolveInstance(value));
+            builder.typeHandler((TypeHandler<?>) resolveInstance(value));
           } else if ("jdbcTypeName".equals(name)) {
             builder.jdbcTypeName(value);
           }

@@ -65,7 +65,7 @@ public class XMLMapperBuilder extends BaseBuilder {
     this(new XPathParser(reader, true, configuration.getVariables(), new XMLMapperEntityResolver()),
         configuration, resource, sqlFragments);
   }
-    
+
   public XMLMapperBuilder(InputStream inputStream, Configuration configuration, String resource, Map<String, XNode> sqlFragments, String namespace) {
     this(inputStream, configuration, resource, sqlFragments);
     this.builderAssistant.setCurrentNamespace(namespace);
@@ -83,19 +83,19 @@ public class XMLMapperBuilder extends BaseBuilder {
     this.sqlFragments = sqlFragments;
     this.resource = resource;
   }
-  
+
   public void parse() {
     if (!configuration.isResourceLoaded(resource)) {
       configurationElement(parser.evalNode("/mapper"));
       configuration.addLoadedResource(resource);
       bindMapperForNamespace();
     }
-    
+
     parsePendingResultMaps();
     parsePendingChacheRefs();
     parsePendingStatements();
   }
-      
+
   public XNode getSqlFragment(String refid) {
     return sqlFragments.get(refid);
   }
@@ -114,7 +114,7 @@ public class XMLMapperBuilder extends BaseBuilder {
       throw new RuntimeException("Error parsing Mapper XML. Cause: " + e, e);
     }
   }
-  
+
   private void buildStatementFromContext(List<XNode> list) {
     for (XNode context : list) {
       final XMLStatementBuilder statementParser = new XMLStatementBuilder(configuration, builderAssistant, context);
@@ -155,7 +155,7 @@ public class XMLMapperBuilder extends BaseBuilder {
 		  }
 	  }
   }
-  
+
   private void parsePendingStatements() {
 	  Collection<XMLStatementBuilder> incompleteStatements = configuration.getIncompleteStatements();
 	  synchronized (incompleteStatements) {
@@ -215,7 +215,7 @@ public class XMLMapperBuilder extends BaseBuilder {
         ParameterMode modeEnum = resolveParameterMode(mode);
         Class<?> javaTypeClass = resolveClass(javaType);
         JdbcType jdbcTypeEnum = resolveJdbcType(jdbcType);
-        Class<? extends TypeHandler> typeHandlerClass = (Class<? extends TypeHandler>) resolveClass(typeHandler);
+        Class<? extends TypeHandler<?>> typeHandlerClass = (Class<? extends TypeHandler<?>>) resolveClass(typeHandler);
         ParameterMapping parameterMapping = builderAssistant.buildParameterMapping(parameterClass, property, javaTypeClass, jdbcTypeEnum, resultMap, modeEnum, typeHandlerClass, numericScale);
         parameterMappings.add(parameterMapping);
       }
@@ -291,7 +291,7 @@ public class XMLMapperBuilder extends BaseBuilder {
     String jdbcType = context.getStringAttribute("jdbcType");
     String typeHandler = context.getStringAttribute("typeHandler");
     Class<?> javaTypeClass = resolveClass(javaType);
-    Class<? extends TypeHandler> typeHandlerClass = (Class<? extends TypeHandler>) resolveClass(typeHandler);
+    Class<? extends TypeHandler<?>> typeHandlerClass = (Class<? extends TypeHandler<?>>) resolveClass(typeHandler);
     JdbcType jdbcTypeEnum = resolveJdbcType(jdbcType);
     Map<String, String> discriminatorMap = new HashMap<String, String>();
     for (XNode caseChild : context.getChildren()) {
@@ -322,7 +322,7 @@ public class XMLMapperBuilder extends BaseBuilder {
     String notNullColumn = context.getStringAttribute("notNullColumn");
     String typeHandler = context.getStringAttribute("typeHandler");
     Class<?> javaTypeClass = resolveClass(javaType);
-    Class<? extends TypeHandler> typeHandlerClass = (Class<? extends TypeHandler>) resolveClass(typeHandler);
+    Class<? extends TypeHandler<?>> typeHandlerClass = (Class<? extends TypeHandler<?>>) resolveClass(typeHandler);
     JdbcType jdbcTypeEnum = resolveJdbcType(jdbcType);
     return builderAssistant.buildResultMapping(resultType, property, column, javaTypeClass, jdbcTypeEnum, nestedSelect, nestedResultMap, notNullColumn, typeHandlerClass, flags);
   }

@@ -123,13 +123,13 @@ public class MapperBuilderAssistant extends BaseBuilder {
       JdbcType jdbcType,
       String resultMap,
       ParameterMode parameterMode,
-      Class<? extends TypeHandler> typeHandler,
+      Class<? extends TypeHandler<?>> typeHandler,
       Integer numericScale) {
     resultMap = applyCurrentNamespace(resultMap, true);
 
     // Class parameterType = parameterMapBuilder.type();
     Class<?> javaTypeClass = resolveParameterJavaType(parameterType, property, javaType, jdbcType);
-    TypeHandler typeHandlerInstance = (TypeHandler) resolveInstance(typeHandler);
+    TypeHandler<?> typeHandlerInstance = resolveInstance(typeHandler);
 
     ParameterMapping.Builder builder = new ParameterMapping.Builder(configuration, property, javaTypeClass);
     builder.jdbcType(jdbcType);
@@ -190,7 +190,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
       String nestedSelect,
       String nestedResultMap,
       String notNullColumn,
-      Class<? extends TypeHandler> typeHandler,
+      Class<? extends TypeHandler<?>> typeHandler,
       List<ResultFlag> flags) {
     ResultMapping resultMapping = assembleResultMapping(
         resultType,
@@ -211,7 +211,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
       String column,
       Class<?> javaType,
       JdbcType jdbcType,
-      Class<? extends TypeHandler> typeHandler,
+      Class<? extends TypeHandler<?>> typeHandler,
       Map<String, String> discriminatorMap) {
     ResultMapping resultMapping = assembleResultMapping(
         resultType,
@@ -357,12 +357,12 @@ public class MapperBuilderAssistant extends BaseBuilder {
       String nestedSelect,
       String nestedResultMap,
       String notNullColumn,
-      Class<? extends TypeHandler> typeHandler,
+      Class<? extends TypeHandler<?>> typeHandler,
       List<ResultFlag> flags) {
     // Class resultType = resultMapBuilder.type();
     nestedResultMap = applyCurrentNamespace(nestedResultMap, true);
     Class<?> javaTypeClass = resolveResultJavaType(resultType, property, javaType);
-    TypeHandler typeHandlerInstance = (TypeHandler) resolveInstance(typeHandler);
+    TypeHandler<?> typeHandlerInstance = (TypeHandler<?>) resolveInstance(typeHandler);
 
     List<ResultMapping> composites = parseCompositeColumnName(column);
     if (composites.size() > 0) {

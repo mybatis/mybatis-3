@@ -20,6 +20,7 @@ import org.apache.ibatis.mapping.ResultSetType;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeAliasRegistry;
+import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.TypeHandlerRegistry;
 
 public abstract class BaseBuilder {
@@ -85,19 +86,25 @@ public abstract class BaseBuilder {
     }
   }
 
-  protected Object resolveInstance(String alias) {
+  protected TypeHandler<?> resolveInstance(String alias) {
     if (alias == null) return null;
     Class<?> type = resolveClass(alias);
-    return resolveInstance(type);
+    if (!TypeHandler.class.isAssignableFrom(type)) {
+      // TODO that was not managed!!!
+    }
+    @SuppressWarnings( "unchecked" ) // already verified it is a TypeHandler
+    Class<? extends TypeHandler<?>> handlerType = (Class<? extends TypeHandler<?>>) type;
+    TypeHandler<?> handler = resolveInstance(handlerType);
+    return handler;
   }
 
-  protected Object resolveInstance(Class<?> type) {
-    if (type == null) return null;
-    Object handler = typeHandlerRegistry.getMappingTypeHandler(type);
+  protected TypeHandler<?> resolveInstance(Class<? extends TypeHandler<?>> handlerType) {
+    if (handlerType == null) return null;
+    TypeHandler<?> handler = typeHandlerRegistry.getMappingTypeHandler(handlerType);
     if (handler == null) {
       // not in registry, create a new one
       try {
-        handler = type.newInstance();
+        handler = handlerType.newInstance();
       } catch (Exception e) {
         throw new BuilderException("Error instantiating class. Cause: " + e, e);
       }

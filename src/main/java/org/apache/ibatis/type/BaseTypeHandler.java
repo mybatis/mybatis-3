@@ -20,7 +20,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public abstract class BaseTypeHandler<T> implements TypeHandler<T> {
+public abstract class BaseTypeHandler<T> extends TypeReference<T> implements TypeHandler<T> {
 
   public void setParameter(PreparedStatement ps, int i, T parameter, JdbcType jdbcType)
       throws SQLException {
@@ -58,7 +58,7 @@ public abstract class BaseTypeHandler<T> implements TypeHandler<T> {
       return result;
     }
   }
-  
+
   public T getResult(CallableStatement cs, int columnIndex)
       throws SQLException {
     T result = getNullableResult(cs, columnIndex);
@@ -77,7 +77,7 @@ public abstract class BaseTypeHandler<T> implements TypeHandler<T> {
 
   public abstract T getNullableResult(ResultSet rs, int columnIndex)
       throws SQLException;
-  
+
   public abstract T getNullableResult(CallableStatement cs, int columnIndex)
       throws SQLException;
 

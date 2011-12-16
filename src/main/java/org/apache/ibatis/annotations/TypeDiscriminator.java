@@ -15,13 +15,14 @@
  */
 package org.apache.ibatis.annotations;
 
-import org.apache.ibatis.type.JdbcType;
-import org.apache.ibatis.type.TypeHandler;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+
+import org.apache.ibatis.type.DefaultTypeHandler;
+import org.apache.ibatis.type.JdbcType;
+import org.apache.ibatis.type.TypeHandler;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
@@ -32,7 +33,7 @@ public @interface TypeDiscriminator {
 
   public abstract JdbcType jdbcType() default JdbcType.UNDEFINED;
 
-  public abstract Class<? extends TypeHandler> typeHandler() default TypeHandler.class;
+  public abstract Class<? extends TypeHandler<?>> typeHandler() default DefaultTypeHandler.class;
 
   public abstract Case[] cases();
 }
