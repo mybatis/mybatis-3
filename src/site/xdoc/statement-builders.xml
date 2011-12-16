@@ -98,7 +98,103 @@ import static org.mybatis.jdbc.SelectBuilder.*;
     <table>
     <thead>
     <tr><th><p>Method</p></th><th><p>Description</p></th></tr></thead>
-    <tbody><tr><td><p>BEGIN() / RESET()</p></td><td><p>These methods clear the ThreadLocal state of the SelectBuilder class, and prepare it for a new statement to be built. &#xa0;BEGIN() reads best when starting a new statement. &#xa0;RESET() reads best when clearing a statement in the middle of execution for some reason (perhaps if the logic demands a completely different statement under some conditions).</p></td></tr><tr><td><p>SELECT(String)</p></td><td><p>Starts or appends to a SELECT clause. &#xa0;Can be called more than once, and parameters will be appended to the SELECT clause. &#xa0;The parameters are usually a comma separated list of columns and aliases, but can be anything acceptable to the driver.</p></td></tr><tr><td><p>SELECT_DISTINCT(String)</p></td><td><p>Starts or appends to a SELECT clause, also adds the &#x201c;DISTINCT&#x201d; keyword to the generated query. &#xa0;Can be called more than once, and parameters will be appended to the SELECT clause. &#xa0;The parameters are usually a comma separated list of columns and aliases, but can be anything acceptable to the driver.</p></td></tr><tr><td><p>FROM(String)</p></td><td><p>Starts or appends to a FROM clause. &#xa0;Can be called more than once, and parameters will be appended to the FROM clause. Parameters are usually a table name and an alias, or anything acceptable to the driver.</p></td></tr><tr><td><p>JOIN(String)</p><p>INNER_JOIN(String)</p><p>LEFT_OUTER_JOIN(String)</p><p>RIGHT_OUTER_JOIN(String)</p><p></p></td><td><p>Adds a new JOIN clause of the appropriate type, depending on the method called. &#xa0;The parameter can include a standard join consisting of the columns and the conditions to join on. &#xa0;</p></td></tr><tr><td><p>WHERE(String)</p></td><td><p>Appends a new WHERE clause condition, concatenated by AND. &#xa0;Can be called multiple times, which causes it to concatenate the new conditions each time with AND. &#xa0;Use OR() to split with an OR.</p></td></tr><tr><td><p>OR()</p></td><td><p>Splits the current WHERE clause conditions with an OR. &#xa0;Can be called more than once, but calling more than once in a row will generate erratic SQL. &#xa0;</p></td></tr><tr><td><p>AND()</p></td><td><p>Splits the current WHERE clause conditions with an AND. &#xa0;Can be called more than once, but calling more than once in a row will generate erratic SQL. &#xa0;Because WHERE and HAVING both automatically concatenate with AND, this is a very uncommon method to use and is only really included for completeness.</p></td></tr><tr><td><p>GROUP_BY(String)</p></td><td><p>Appends a new GROUP BY clause elements, concatenated by a comma. &#xa0;Can be called multiple times, which causes it to concatenate the new conditions each time with a comma.</p></td></tr><tr><td><p>HAVING(String)</p></td><td><p>Appends a new HAVING clause condition, concatenated by AND. &#xa0;Can be called multiple times, which causes it to concatenate the new conditions each time with AND. &#xa0;Use OR() to split with an OR.</p></td></tr><tr><td><p>ORDER_BY(String)</p></td><td><p>Appends a new ORDER BY clause elements, concatenated by a comma. &#xa0;Can be called multiple times, which causes it to concatenate the new conditions each time with a comma.</p></td></tr><tr><td><p>SQL()</p></td><td><p>This returns the generated SQL() and resets the SelectBuilder state (as if BEGIN() or RESET() were called). &#xa0;Thus, this method can only be called ONCE!</p></td></tr>
+    <tbody>
+  <tr>
+    <td>
+      <code>BEGIN()</code> / <code>RESET()</code>
+    </td>
+    <td>These methods clear the ThreadLocal state of the SelectBuilder class, and prepare it for a new statement to be
+        built. <code>BEGIN()</code> reads best when starting a new statement. <code>RESET()</code> reads best when clearing a
+        statement in the middle of execution for some reason (perhaps if the logic demands a completely different
+        statement under some conditions).</td>
+  </tr>
+  <tr>
+    <td>
+      <code>SELECT(String)</code>
+    </td>
+    <td>Starts or appends to a <code>SELECT</code> clause. &#xa0;Can be called more than once, and parameters will be appended to
+        the <code>SELECT</code> clause. &#xa0;The parameters are usually a comma separated list of columns and aliases, but can be
+        anything acceptable to the driver.</td>
+  </tr>
+  <tr>
+    <td>
+      <code>SELECT_DISTINCT(String)</code>
+    </td>
+    <td>Starts or appends to a <code>SELECT</code> clause, also adds the <code>DISTINCT</code> keyword to the generated query.
+        &#xa0;Can be called more than once, and parameters will be appended to the <code>SELECT</code> clause. &#xa0;The parameters
+        are usually a comma separated list of columns and aliases, but can be anything acceptable to the driver.</td>
+  </tr>
+  <tr>
+    <td>
+      <code>FROM(String)</code>
+    </td>
+    <td>Starts or appends to a <code>FROM</code> clause. &#xa0;Can be called more than once, and parameters will be appended to the
+        <code>FROM</code> clause. Parameters are usually a table name and an alias, or anything acceptable to the driver.</td>
+  </tr>
+  <tr>
+    <td>
+      <ul>
+        <li><code>JOIN(String)</code></li>
+        <li><code>INNER_JOIN(String)</code></li>
+        <li><code>LEFT_OUTER_JOIN(String)</code></li>
+        <li><code>RIGHT_OUTER_JOIN(String)</code></li>
+      </ul>
+    </td>
+    <td>Adds a new <code>JOIN</code> clause of the appropriate type, depending on the method called. &#xa0;The parameter can include
+        a standard join consisting of the columns and the conditions to join on. &#xa0;</td>
+  </tr>
+  <tr>
+    <td>
+      <code>WHERE(String)</code>
+    </td>
+    <td>Appends a new <code>WHERE</code> clause condition, concatenated by <code>AND</code>. &#xa0;Can be called multiple times, which causes it
+        to concatenate the new conditions each time with <code>AND</code>. &#xa0;Use <code>OR()</code> to split with an <code>OR</code>.</td>
+  </tr>
+  <tr>
+    <td>
+      <code>OR()</code>
+    </td>
+    <td>Splits the current <code>WHERE</code> clause conditions with an <code>OR</code>. &#xa0;Can be called more than once, but calling more
+        than once in a row will generate erratic <code>SQL</code>. &#xa0;</td>
+  </tr>
+  <tr>
+    <td>
+      <code>AND()</code>
+    </td>
+    <td>Splits the current <code>WHERE</code> clause conditions with an <code>AND</code>. &#xa0;Can be called more than once, but calling more
+        than once in a row will generate erratic <code>SQL</code>. &#xa0;Because <code>WHERE</code> and <code>HAVING</code> both automatically concatenate with
+        <code>AND</code>, this is a very uncommon method to use and is only really included for completeness.</td>
+  </tr>
+  <tr>
+    <td>
+      <code>GROUP_BY(String)</code>
+    </td>
+    <td>Appends a new <code>GROUP BY</code> clause elements, concatenated by a comma. &#xa0;Can be called multiple times, which
+        causes it to concatenate the new conditions each time with a comma.
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <code>HAVING(String)</code>
+    </td>
+    <td>Appends a new <code>HAVING</code> clause condition, concatenated by AND. &#xa0;Can be called multiple times, which causes it
+        to concatenate the new conditions each time with <code>AND</code>. &#xa0;Use <code>OR()</code> to split with an <code>OR</code>.</td>
+  </tr>
+  <tr>
+    <td>
+      <code>ORDER_BY(String)</code>
+    </td>
+    <td>Appends a new <code>ORDER BY</code> clause elements, concatenated by a comma. &#xa0;Can be called multiple times, which
+        causes it to concatenate the new conditions each time with a comma.</td>
+  </tr>
+  <tr>
+    <td>
+      <code>SQL()</code>
+    </td>
+    <td>This returns the generated <code>SQL()</code> and resets the <code>SelectBuilder</code> state (as if
+    <code>BEGIN()</code> or <code>RESET()</code> were called).
+        &#xa0;Thus, this method can only be called ONCE!</td>
+  </tr>
     </tbody></table>
 
     </section>
@@ -110,13 +206,48 @@ import static org.mybatis.jdbc.SelectBuilder.*;
     <p>SqlBuilder contains all methods from SelectBuilder, as well as these additional methods:</p>
       <table>
       <thead>
-      <tr><th><p>Method</p></th><th><p>Description</p></th></tr>
+      <tr><th>Method</th><th>Description</th></tr>
       </thead>
       <tbody>
-      <tr><td><p>DELETE_FROM(String)</p></td><td><p>Starts a delete statement and specifies the table to delete from. &#xa0;Generally this should be followed by a WHERE statement!</p></td></tr><tr><td><p>INSERT_INTO(String)</p></td><td><p>Starts an insert statement and specifies the table to insert into. &#xa0;This should be followed by one or more VALUES() calls.</p></td></tr><tr><td><p>SET(String)</p></td><td><p>Appends to the &#x201c;set&#x201d; list for an update statement.</p></td></tr><tr><td><p>UPDATE(String)</p></td><td><p>Starts an update statement and specifies the table to update. &#xa0;This should be followed by one or more SET() calls, and usually a WHERE() call.</p></td></tr><tr><td><p>VALUES(String, String)</p></td><td><p>Appends to an insert statement. &#xa0;The first parameter is the column(s) to insert, the second parameter is the value(s).</p></td></tr>
+      <tr>
+  <td>
+    <code>DELETE_FROM(String)</code>
+  </td>
+  <td>Starts a delete statement and specifies the table to delete from. &#xa0;Generally this should be followed by a
+      WHERE statement!
+  </td>
+</tr>
+  <tr>
+    <td>
+      <code>INSERT_INTO(String)</code>
+    </td>
+    <td>Starts an insert statement and specifies the table to insert into. &#xa0;This should be followed by one or more
+        VALUES() calls.
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <code>SET(String)</code>
+    </td>
+    <td>Appends to the &#x201c;set&#x201d; list for an update statement.</td>
+  </tr>
+  <tr>
+    <td>
+      <code>UPDATE(String)</code>
+    </td>
+    <td>Starts an update statement and specifies the table to update. &#xa0;This should be followed by one or more
+        SET() calls, and usually a WHERE() call.</td>
+  </tr>
+  <tr>
+    <td>
+      <code>VALUES(String, String)</code>
+    </td>
+    <td>Appends to an insert statement. &#xa0;The first parameter is the column(s) to insert, the second parameter is
+        the value(s).</td>
+  </tr>
       </tbody>
     </table>
-    <p></p>
+
     <p>Here are some examples:</p>
 
 <source><![CDATA[public String deletePersonSql() {
