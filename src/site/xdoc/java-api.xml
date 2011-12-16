@@ -74,7 +74,7 @@ SqlSessionFactory build(InputStream inputStream, String env, Properties props)
 SqlSessionFactory build(Configuration config)</source>  
 
   <p>The first four methods are the most common, as they take an InputStream instance that refers to an XML document, or more specifically, the SqlMapConfig.xml file discussed above. The optional parameters are environment and properties. Environment determines which environment to load, including the datasource and transaction manager. For example:</p>
-  
+
   <source><![CDATA[<environments default="development">
   <environment id="development">
     <transactionManager type="JDBC">
@@ -167,16 +167,23 @@ Configuration getConfiguration();</source>
   <p>The default openSession() method that takes no parameters will create a SqlSession with the following characteristics:</p>
   <ul>
     <li>A transaction scope <u>will</u> be started (i.e. NOT auto-commit).</li>
-    <li>A Connection object will be acquired from the DataSource instance configured by the active environment.</li>
+    <li>A <code>Connection</code> object will be acquired from the DataSource instance configured by the active environment.</li>
     <li>The transaction isolation level will be the default used by the driver or data source.</li>
     <li>No PreparedStatements will be reused, and no updates will be batched.</li>
   </ul>
-  <p>Most of the methods are pretty self explanatory. To enable auto-commit, pass a value of “true” to the optional <em>autoCommit</em> parameter. To provide your own connection, pass an instance of Connection to the <em>connection</em> parameter. Note that there's no override to set both the Connection and autoCommit, because MyBatis will use whatever setting the provided connection object is currently using. MyBatis uses a Java enumeration wrapper for transaction isolation levels called, TransactionIsolationLevel, but otherwise they work as expected and have the 5 levels supported by JDBC (NONE, READ_UNCOMMITTED, READ_COMMITTED, REPEATABLE_READ, SERIALIZABLE).</p>
-  <p>The one parameter that might be new to you is ExecutorType. This enumeration defines 3 values:</p>
+  <p>Most of the methods are pretty self explanatory. To enable auto-commit, pass a value of <code>true</code> to the
+  optional <code>autoCommit</code> parameter.
+  To provide your own connection, pass an instance of <code>Connection</code> to the <code>connection</code> parameter. Note that
+  there's no override to set both the <code>Connection</code> and <code>autoCommit</code>, because MyBatis will use whatever setting
+  the provided connection object is currently using. MyBatis uses a Java enumeration wrapper for transaction isolation
+  levels, called <code>TransactionIsolationLevel</code>, but otherwise they work as expected and have the 5 levels
+  supported by JDBC (<code>NONE</code>, <code>READ_UNCOMMITTED</code>, <code>READ_COMMITTED</code>,
+  <code>REPEATABLE_READ</code>, <code>SERIALIZABLE</code>).</p>
+  <p>The one parameter that might be new to you is <code>ExecutorType</code>. This enumeration defines 3 values:</p>
   <ul>
-    <li><strong>ExecutorType.SIMPLE</strong>: This type of executor does nothing special. It creates a new PreparedStatement for each execution of a statement.</li>
-    <li><strong>ExecutorType.REUSE</strong>: This type of executor will reuse PreparedStatements.</li>
-    <li><strong>ExecutorType.BATCH</strong>: This executor will batch all update statements and demarcate them as necessary if SELECTs are executed between them, to ensure an easy-to-understand behavior.</li>
+    <li><code>ExecutorType.SIMPLE</code>: This type of executor does nothing special. It creates a new PreparedStatement for each execution of a statement.</li>
+    <li><code>ExecutorType.REUSE</code>: This type of executor will reuse PreparedStatements.</li>
+    <li><code>ExecutorType.BATCH</code>: This executor will batch all update statements and demarcate them as necessary if SELECTs are executed between them, to ensure an easy-to-understand behavior.</li>
   </ul>
   <p><span class="label important">NOTE</span> There's one more method on the SqlSessionFactory that we didn't mention, and that is <em>getConfiguration()</em>. This method will return an instance of Configuration that you can use to introspect upon the MyBatis configuration at runtime.</p>
   <p><span class="label important">NOTE</span> If you've used a previous version of MyBatis, you'll recall that sessions, transactions and batches were all something separate. This is no longer the case. All three are neatly contained within the scope of a session. You need not deal with transactions or batches separately to get the full benefit of them.</p>
@@ -231,7 +238,7 @@ void rollback()
 void rollback(boolean force)</source>
   <p>By default MyBatis does not actually commit unless it detects that the database has been changed by a call to insert, update or delete. If you've somehow made changes without calling these methods, then you can pass true into the commit and rollback methods to guarantee that it will be committed (note, you still can't force a session in auto-commit mode, or one that is using an external transaction manager). Most of the time you won't have to call rollback(), as MyBatis will do that for you if you don't call commit. However, if you need more fine grained control over a session where multiple commits and rollbacks are possible, you have the rollback option there to make that possible.</p>
   <p><span class="label important">NOTE</span> MyBatis-Spring and MyBatis-Guice provide declarative transaction handling. So if you are using MyBatis with Spring or Guice please refer to their specific manuals.</p>
-  
+
   <h5>Clearing the Session Level Cache</h5>
   <source>void clearCache()</source>
   <p>The SqlSession instance has a local cache that is cleared upon update, commit, rollback and close. To clear it explicitly (perhaps with the intention to do more work), you can call clearCache().</p>
@@ -294,106 +301,198 @@ try {
     </thead>
     <tbody>
       <tr>
-        <td>@CacheNamespace</td>
-        <td>Class</td>
-        <td>&lt;cache&gt;</td>
-        <td>Configures the cache for the given namespace (i.e. class). Attributes: <strong>implementation, eviction, flushInterval, size, readWrite</strong>.</td>
+        <td><code>@CacheNamespace</code></td>
+        <td><code>Class</code></td>
+        <td><code>&lt;cache&gt;</code></td>
+        <td>Configures the cache for the given namespace (i.e. class). Attributes: <code>implementation</code>,
+        <code>eviction</code>, <code>flushInterval</code>, <code>size</code>, <code>readWrite</code>.</td>
       </tr>
       <tr>
-        <td>@CacheNamespaceRef</td>
-        <td>Class</td>
-        <td>&lt;cacheRef&gt;</td>
-        <td>References the cache of another namespace to use. Attributes: <strong>value</strong>, which should be the string value of a namespace (i.e. a fully qualified class name).</td>
+        <td><code>@CacheNamespaceRef</code></td>
+        <td><code>Class</code></td>
+        <td><code>&lt;cacheRef&gt;</code></td>
+        <td>References the cache of another namespace to use. Attributes: <code>value</code>, which should be the string value of a namespace (i.e. a fully qualified class name).</td>
       </tr>
       <tr>
-        <td>@ConstructorArgs</td>
-        <td>Method</td>
-        <td>&lt;constructor&gt;</td>
-        <td>Collects a group of results to be passed to a result object constructor. Attributes: <strong>value</strong>, which is an array of Args.</td>
+        <td><code>@ConstructorArgs</code></td>
+        <td><code>Method</code></td>
+        <td><code>&lt;constructor&gt;</code></td>
+        <td>Collects a group of results to be passed to a result object constructor. Attributes: <code>value</code>, which is an array of <code>Arg</code>s.</td>
       </tr>
       <tr>
-        <td>@Arg</td>
-        <td>Method</td>
-        <td>&lt;arg&gt;<br/>&lt;idArg&gt;</td>
-        <td>A single constructor argument that is part of a ConstructorArgs collection. Attributes: <strong>id, column, javaType, jdbcType, typeHandler, select, resultMap</strong>. The id attribute is a boolean value that identifies the property to be used for comparisons, similar to the &lt;idArg&gt; XML element.</td>
+        <td><code>@Arg</code></td>
+        <td><code>Method</code></td>
+        <td>
+          <ul>
+            <li><code>&lt;arg&gt;</code></li>
+            <li><code>&lt;idArg&gt;</code></li>
+          </ul>
+        </td>
+        <td>A single constructor argument that is part of a ConstructorArgs collection. Attributes: <code>id</code>,
+        <code>column</code>, <code>javaType</code>, <code>jdbcType</code>, <code>typeHandler</code>, <code>select</code>,
+        <code>resultMap</code>. The id attribute is a boolean value that identifies the property to be used for comparisons,
+        similar to the <code>&lt;idArg&gt;</code> XML element.</td>
       </tr>
       <tr>
-        <td>@TypeDiscriminator</td>
-        <td>Method</td>
-        <td>&lt;discriminator&gt;</td>
-        <td>A group of value cases that can be used to determine the result mapping to perform. Attributes: <strong>column, javaType, jdbcType, typeHandler, cases</strong>. The cases attribute is an array of Cases.</td>
+        <td><code>@TypeDiscriminator</code></td>
+        <td><code>Method</code></td>
+        <td><code>&lt;discriminator&gt;</code></td>
+        <td>A group of value cases that can be used to determine the result mapping to perform. Attributes: <code>column</code>,
+        <code>javaType</code>, <code>jdbcType</code>, <code>typeHandler</code>, <code>cases</code>. The cases attribute is an array of <code>Case</code>s.</td>
       </tr>
       <tr>
-        <td>@Case</td>
-        <td>Method</td>
-        <td>&lt;case&gt;</td>
-        <td>A single case of a value and its corresponding mappings. Attributes: <strong>value, type, results</strong>. The results attribute is an array of Results, thus this Case Annotation is similar to an actual ResultMap, specified by the Results annotation below.</td>
+        <td><code>@Case</code></td>
+        <td><code>Method</code></td>
+        <td><code>&lt;case&gt;</code></td>
+        <td>A single case of a value and its corresponding mappings. Attributes: <code>value</code>, <code>type</code>,
+        <code>results</code>. The results attribute is an array of Results, thus this <code>Case</code> Annotation is
+        similar to an actual <code>ResultMap</code>, specified by the <code>Results</code> annotation below.</td>
       </tr>
       <tr>
-        <td>@Results</td>
-        <td>Method</td>
-        <td>&lt;resultMap&gt;</td>
-        <td>A list of Result mappings that contain details of how a particular result column is mapped to a property or field. Attributes: <strong>value</strong>, which is an array of Result annotations.</td>
+        <td><code>@Results</code></td>
+        <td><code>Method</code></td>
+        <td><code>&lt;resultMap&gt;</code></td>
+        <td>A list of Result mappings that contain details of how a particular result column is mapped to a property or field.
+        Attributes: <code>value</code>, which is an array of <code>Result</code> annotations.</td>
       </tr>
       <tr>
-        <td>@Result</td>
-        <td>Method</td>
-        <td>&lt;result&gt;<br/>&lt;id&gt;</td>
-        <td>A single result mapping between a column and a property or field. Attributes: <strong>id, column, property, javaType, jdbcType, typeHandler, one, many</strong>. The id attribute is a boolean value that indicates that the property should be used for comparisons (similar to &lt;id&gt; in the XML mappings). The one attribute is for single associations, similar to &lt;association&gt;, and the many attribute is for collections, similar to &lt;collection&gt;. They are named as they are to avoid class naming conflicts.</td>
+        <td><code>@Result</code></td>
+        <td><code>Method</code></td>
+        <td>
+          <ul>
+            <li><code>&lt;result&gt;</code></li>
+            <li><code>&lt;id&gt;</code></li>
+          </ul>
+        </td>
+        <td>A single result mapping between a column and a property or field. Attributes: <code>id</code>, <code>column</code>,
+        <code>property</code>, <code>javaType</code>, <code>jdbcType</code>, <code>typeHandler</code>, <code>one</code>,
+        <code>many</code>. The id attribute is a boolean value that indicates that the property should be used for comparisons
+        (similar to <code>&lt;id&gt;</code> in the XML mappings).
+        The one attribute is for single associations, similar to <code>&lt;association&gt;</code>, and the many attribute
+        is for collections, similar to <code>&lt;collection&gt;</code>. They are named as they are to avoid class naming conflicts.</td>
       </tr>
       <tr>
-        <td>@One</td>
-        <td>Method</td>
-        <td>&lt;association&gt;</td>
-        <td>A mapping to a single property value of a complex type. Attributes: <strong>select</strong>, which is the fully qualified name of a mapped statement (i.e. mapper method) that can load an instance of the appropriate type. <span class="label important">NOTE</span> You will notice that join mapping is not supported via the Annotations API. This is due to the limitation in Java Annotations that does not allow for circular references.</td>
+        <td><code>@One</code></td>
+        <td><code>Method</code></td>
+        <td><code>&lt;association&gt;</code></td>
+        <td>A mapping to a single property value of a complex type. Attributes:<code>select</code>, which is the fully
+        qualified name of a mapped statement (i.e. mapper method) that can load an instance of the appropriate type.
+        <span class="label important">NOTE</span> You will notice that join mapping is not supported via the Annotations API.
+        This is due to the limitation in Java Annotations that does not allow for circular references.</td>
       </tr>
       <tr>
-        <td>@Many</td>
-        <td>Method</td>
-        <td>&lt;collection&gt;</td>
-        <td>A mapping to a collection property of a complex type. Attributes: <strong>select</strong>, which is the fully qualified name of a mapped statement (i.e. mapper method) that can load a collection of instances of the appropriate types. <span class="label important">NOTE</span> You will notice that join mapping is not supported via the Annotations API. This is due to the limitation in Java Annotations that does not allow for circular references.</td>
+        <td><code>@Many</code></td>
+        <td><code>Method</code></td>
+        <td><code>&lt;collection&gt;</code></td>
+        <td>A mapping to a collection property of a complex type. Attributes: <code>select</code>, which is the fully
+        qualified name of a mapped statement (i.e. mapper method) that can load a collection of instances of the appropriate
+        types. <span class="label important">NOTE</span> You will notice that join mapping is not supported via the
+        Annotations API. This is due to the limitation in Java Annotations that does not allow for circular references.</td>
       </tr>
       <tr>
-        <td>@MapKey</td>
-        <td>Method</td>
+        <td><code>@MapKey</code></td>
+        <td><code>Method</code></td>
         <td> </td>
-        <td>This is used on methods which return type is a Map. It is used to convert a List of result objects as a Map based on a property of those objects.</td>
+        <td>This is used on methods which return type is a Map. It is used to convert a List of result objects as a Map
+        based on a property of those objects.</td>
       </tr>
       <tr>
-        <td>@Options</td>
-        <td>Method</td>
+        <td><code>@Options</code></td>
+        <td><code>Method</code></td>
         <td>Attributes of mapped statements.</td>
-        <td>This annotation provides access to the wide range of switches and configuration options that are normally present on the mapped statement as attributes. Rather than complicate each statement annotation, the Options annotation provides a consistent and clear way to access these. Attributes: <strong>useCache=true, flushCache=false, resultSetType=FORWARD_ONLY, statementType=PREPARED, fetchSize=-1, timeout=-1, useGeneratedKeys=false, keyProperty="id", keyColumn=""</strong>. It's important to understand that with Java Annotations, there is no way to specify "null" as a value. Therefore, once you engage the Options annotation, your statement is subject to all of the default values. Pay attention to what the default values are to avoid unexpected behavior.<br/><br/>Note that keyColumn is only required in certain databases (like Oracle and PostgreSQL). See the discussion about keyColumn and keyProperty above in the discussion of the insert statement for more information about allowable values in these attributes.</td>
+        <td>This annotation provides access to the wide range of switches and configuration options that are normally
+        present on the mapped statement as attributes. Rather than complicate each statement annotation, the
+        <code>Options</code> annotation provides a consistent and clear way to access these. Attributes:
+        <code>useCache=true</code>, <code>flushCache=false</code>, <code>resultSetType=FORWARD_ONLY</code>,
+        <code>statementType=PREPARED</code>, <code>fetchSize=-1</code>, <code>timeout=-1</code>,
+        <code>useGeneratedKeys=false</code>, <code>keyProperty="id"</code>, <code>keyColumn=""</code>.
+        It's important to understand that with Java Annotations, there is no way to specify <code>null</code> as a value.
+        Therefore, once you engage the <code>Options</code> annotation, your statement is subject to all of the default
+        values. Pay attention to what the default values are to avoid unexpected behavior.<br/><br/>
+        Note that <code>keyColumn</code> is only required in certain databases (like Oracle and PostgreSQL).
+        See the discussion about <code>keyColumn</code> and <code>keyProperty</code> above in the discussion of the
+        insert statement for more information about allowable values in these attributes.</td>
       </tr>
       <tr>
-        <td>@Insert<br/>@Update<br/>@Delete<br/>@Select</td>
-        <td>Method</td>
-        <td>&lt;insert&gt;<br/>&lt;update&gt;<br/>&lt;delete&gt;<br/>&lt;select&gt;</td>
-        <td>Each of these annotations represents the actual SQL that is to be executed. They each take an array of strings (or a single string will do). If an array of strings is passed, they are concatenated with a single space between each to separate them. This helps avoid the "missing space" problem when building SQL in Java code. However, you're also welcome to concatenate together a single string if you like. Attributes: <strong>value</strong>, which is the array of Strings to form the single SQL statement.</td>
+        <td>
+          <ul>
+            <li><code>@Insert</code></li>
+            <li><code>@Update</code></li>
+            <li><code>@Delete</code></li>
+            <li><code>@Select</code></li>
+          </ul>
+        </td>
+        <td><code>Method</code></td>
+        <td>
+          <ul>
+            <li><code>&lt;insert&gt;</code></li>
+            <li><code>&lt;update&gt;</code></li>
+            <li><code>&lt;delete&gt;</code></li>
+            <li><code>&lt;select&gt;</code></li>
+          </ul>
+        </td>
+        <td>Each of these annotations represents the actual SQL that is to be executed. They each take an array of strings
+        (or a single string will do). If an array of strings is passed, they are concatenated with a single space between
+        each to separate them. This helps avoid the "missing space" problem when building SQL in Java code. However,
+        you're also welcome to concatenate together a single string if you like.
+        Attributes: <code>value</code>, which is the array of Strings to form the single SQL statement.</td>
       </tr>
       <tr>
-        <td>@InsertProvider<br/>@UpdateProvider<br/>@DeleteProvider<br/>@SelectProvider</td>
-        <td>Method</td>
-        <td>&lt;insert&gt;<br/>&lt;update&gt;<br/>&lt;delete&gt;<br/>&lt;select&gt;</td>
-        <td>Allows for creation of dynamic SQL.	These alternative SQL annotations allow you to specify a class name and a method that will return the SQL to run at execution time. Upon executing the mapped statement, MyBatis will instantiate the class, and execute the method, as specified by the provider. <u>The method can optionally accept the parameter object as its sole parameter, but must only specify that parameter, or no parameters</u>. Attributes: <strong>type, method</strong>. The type attribute is the fully qualified name of a class. The method is the name of the method on that class. <span class="label important">NOTE</span> Following this section is a discussion about the SelectBuilder class, which can help build dynamic SQL in a cleaner, easier to read way.</td>
+        <td>
+          <ul>
+            <li><code>@InsertProvider</code></li>
+            <li><code>@UpdateProvider</code></li>
+            <li><code>@DeleteProvider</code></li>
+            <li><code>@SelectProvider</code></li>
+          </ul>
+        </td>
+        <td><code>Method</code></td>
+        <td>
+          <ul>
+            <li><code>&lt;insert&gt;</code></li>
+            <li><code>&lt;update&gt;</code></li>
+            <li><code>&lt;delete&gt;</code></li>
+            <li><code>&lt;select&gt;</code></li>
+          </ul>
+        </td>
+        <td>Allows for creation of dynamic SQL.	These alternative SQL annotations allow you to specify a class name and
+        a method that will return the SQL to run at execution time. Upon executing the mapped statement, MyBatis will
+        instantiate the class, and execute the method, as specified by the provider.
+        <u>The method can optionally accept the parameter object as its sole parameter, but must only specify that parameter, or no parameters</u>.
+        Attributes: <code>type</code>, <code>method</code>. The type attribute is the fully qualified name of a class.
+        The method is the name of the method on that class. <span class="label important">NOTE</span>
+        Following this section is a discussion about the SelectBuilder class, which can help build dynamic SQL in a cleaner, easier to read way.</td>
       </tr>
       <tr>
-        <td>@Param</td>
-        <td>Parameter</td>
+        <td><code>@Param</code></td>
+        <td><code>Parameter</code></td>
         <td>N/A</td>
-        <td>If your mapper method takes multiple parameters, this annotation can be applied to a mapper method parameter to give each of them a name. Otherwise, multiple parameters will be named by their ordinal position (not including any RowBounds parameters). For example #{1}, #{2} etc. is the default. With @Param("person"), the parameter would be named #{person}.</td>
+        <td>If your mapper method takes multiple parameters, this annotation can be applied to a mapper method parameter
+        to give each of them a name. Otherwise, multiple parameters will be named by their ordinal position
+        (not including any <code>RowBounds</code> parameters). For example <code>#{1}</code>, <code>#{2}</code> etc. is the default.
+        With <code>@Param("person")</code>, the parameter would be named <code>#{person}</code>.</td>
       </tr>
       <tr>
-        <td>@SelectKey</td>
-        <td>Method</td>
-        <td>&lt;selectKey&gt;</td>
-        <td>This annotation duplicates the &lt;selectKey&gt; functionality for methods annotated with @Insert or @InsertProvider. It is ignored for other methods. If you specify a @SelectKey annotation, then MyBatis will ignore any generated key properties set via the @Options annotation, or configuration properties. Attributes: statement an array of strings which is the SQL statement to execute, keyProperty which is the property of the parameter object that will be updated with the new value, before which must be either true or false to denote if the SQL statement should be executed before or after the insert, resultType which is the Java type of the keyProperty, and statementType=PREPARED.</td>
+        <td><code>@SelectKey</code></td>
+        <td><code>Method</code></td>
+        <td><code>&lt;selectKey&gt;</code></td>
+        <td>This annotation duplicates the <code>&lt;selectKey&gt;</code> functionality for methods annotated with
+        <code>@Insert</code> or <code>@InsertProvider</code>. It is ignored for other methods. If you specify a
+        <code>@SelectKey</code> annotation, then MyBatis will ignore any generated key properties set via the
+        <code>@Options</code> annotation, or configuration properties.
+        Attributes: statement an array of strings which is the SQL statement to execute, <code>keyProperty</code> which
+        is the property of the parameter object that will be updated with the new value, before which must be either
+        <code>true</code> or <code>false</code> to denote if the SQL statement should be executed before or after the insert,
+        <code>resultType</code> which is the Java type of the <code>keyProperty</code>, and <code>statementType=PREPARED</code>.</td>
       </tr>
       <tr>
-        <td>@ResultMap</td>
-        <td>Method</td>
+        <td><code>@ResultMap</code></td>
+        <td><code>Method</code></td>
         <td>N/A</td>
-        <td>This annotation is used to provide the id of a &lt;resultMap&gt; element in an XML mapper to a @Select or @SelectProvider annotation. This allows annotated selects to reuse resultmaps that are defined in XML. This annotation will override any @Results or @ConstructorArgs annotation if both are specified on an annotated select.</td>
+        <td>This annotation is used to provide the id of a <code>&lt;resultMap&gt;</code> element in an XML mapper to a
+        <code>@Select</code> or <code>@SelectProvider</code> annotation. This allows annotated selects to reuse resultmaps
+        that are defined in XML. This annotation will override any <code>@Results</code> or <code>@ConstructorArgs</code>
+        annotation if both are specified on an annotated select.</td>
       </tr>
     </tbody>
   </table>
@@ -408,15 +507,15 @@ try {
   <source>@Insert("insert into table2 (name) values(#{name})")
 @SelectKey(statement="call identity()", keyProperty="nameId", before=<strong>false</strong>, resultType=<strong>int.class</strong>)
 <strong>int</strong> insertTable2(Name name);</source>
-  </subsection>  
-  
+  </subsection>
+
   <subsection name="Using MyBatis with Spring or Guice">
   <p>Spring and Guice are dependency injection frameworks. You can integrate MyBatis with any of them using the corresponding sub-project: MyBatis-Spring or MyBatis-Guice.</p>
   <p>The main purpose of these frameworks is to enable declarative transaction handing and inject ready-to-use SqlSesssions and mappers into your beans, so you just use them and forget about its creation, destruction and handling transactions. For that purpose both MyBatis-Spring and MyBatis-Guice are able to create thread safe singleton SqlSessions and mappers and inject them into your beans during application startup. </p>
   <p>This has two implications. First: SqlSessions and mappers will live for the whole execution of your application. And second: you must not use SqlSessionFactoryBuilder or SqlSessionFactory because both frameworks have their specific configuration and API.</p>
   <p>Please refer to MyBatis-Spring of MyBatis-Guice manuals for further information.</p>
   </subsection>
-  
+
   </section>
   </body>
 </document>
