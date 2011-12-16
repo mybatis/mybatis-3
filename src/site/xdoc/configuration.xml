@@ -21,14 +21,14 @@
   xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
 
   <properties>
-    <title>MyBatis 3 | Configuration XML</title>
+    <title>MyBatis 3 | Configuration</title>
     <author email="mybatis-dev@googlegroups.com">The MyBatis Team</author>
   </properties>
 
   <body>
-    <section name="Configuration XML">
+    <section name="Configuration">
       <p>
-        The MyBatis XML configuration file contains settings and
+        The MyBatis configuration contains settings and
         properties
         that have a dramatic effect on how MyBatis behaves. The
         high level

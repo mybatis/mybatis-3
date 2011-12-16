@@ -25,15 +25,15 @@
     <menu name="Core">
       <item name="Introduction" href="index.html"/>
       <item name="Getting Started" href="getting-started.html"/>
-      <item name="Configuration XML" href="configuration-xml.html" collapse="true">
-        <item href="configuration-xml.html#properties"name="properties" />
-        <item href="configuration-xml.html#settings"name="settings" />
-        <item href="configuration-xml.html#typeAliases"name="typeAliases" />
-        <item href="configuration-xml.html#typeHandlers"name="typeHandlers" />
-        <item href="configuration-xml.html#objectFactory"name="objectFactory" />
-        <item href="configuration-xml.html#plugins"name="plugins" />
-        <item href="configuration-xml.html#environments"name="environments" />
-        <item href="configuration-xml.html#mappers"name="mappers" />
+      <item name="Configuration XML" href="configuration.html" collapse="true">
+        <item href="configuration.html#properties"name="properties" />
+        <item href="configuration.html#settings"name="settings" />
+        <item href="configuration.html#typeAliases"name="typeAliases" />
+        <item href="configuration.html#typeHandlers"name="typeHandlers" />
+        <item href="configuration.html#objectFactory"name="objectFactory" />
+        <item href="configuration.html#plugins"name="plugins" />
+        <item href="configuration.html#environments"name="environments" />
+        <item href="configuration.html#mappers"name="mappers" />
       </item>
       <item name="SQL Map XML Files" href="sqlmap-xml.html"/>
       <item name="Dynamic SQL" href="dynamic-sql.html"/>
