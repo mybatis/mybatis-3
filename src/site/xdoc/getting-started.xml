@@ -52,7 +52,7 @@
         locations.
       </p>
       <source><![CDATA[
-String resource = "org/mybatis/example/Configuration.xml";
+String resource = "org/mybatis/example/MyBatisConfig.xml";
 InputStream inputStream = Resources.getResourceAsStream(resource);
 sqlMapper = new SqlSessionFactoryBuilder().build(inputStream);]]></source>
       <p>

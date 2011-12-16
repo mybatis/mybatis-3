@@ -956,7 +956,7 @@ public class ExampleTypeHandler extends BaseTypeHandler<String> {
 }
 ]]></source>
 
-        <source><![CDATA[<!-- MapperConfig.xml -->
+        <source><![CDATA[<!-- MyBatisConfig.xml -->
 <typeHandlers>
   <typeHandler handler="org.mybatis.example.ExampleTypeHandler"/>
 </typeHandlers>
@@ -992,7 +992,7 @@ public class ExampleTypeHandler extends BaseTypeHandler<String> {
         </p>
 
         <p>And finally you can let MyBatis search for your TypeHandlers:</p>
-        <source><![CDATA[<!-- MapperConfig.xml -->
+        <source><![CDATA[<!-- MyBatisConfig.xml -->
 <typeHandlers>
   <package name="org.mybatis.example"/>
 </typeHandlers>
@@ -1028,7 +1028,7 @@ public class ExampleObjectFactory extends DefaultObjectFactory {
   }
 }]]></source>
 
-        <source><![CDATA[<!-- MapperConfig.xml -->
+        <source><![CDATA[<!-- MyBatisConfig.xml -->
 <objectFactory type="org.mybatis.example.ExampleObjectFactory">
   <property name="someProperty" value="100"/>
 </objectFactory>]]></source>
@@ -1105,7 +1105,7 @@ public class ExamplePlugin implements Interceptor {
   }
 }]]></source>
 
-        <source><![CDATA[<!-- MapperConfig.xml -->
+        <source><![CDATA[<!-- MyBatisConfig.xml -->
 <plugins>
   <plugin interceptor="org.mybatis.example.ExamplePlugin">
     <property name="someProperty" value="100"/>
