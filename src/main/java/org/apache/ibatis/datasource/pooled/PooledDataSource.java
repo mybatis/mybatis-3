@@ -362,6 +362,7 @@ public class PooledDataSource implements DataSource {
           if (state.activeConnections.size() < poolMaximumActiveConnections) {
             // Can create new connection
             conn = new PooledConnection(dataSource.getConnection(), this);
+            @SuppressWarnings("unused") //used in logging, if enabled
             Connection realConn = conn.getRealConnection();
             if (log.isDebugEnabled()) {
               log.debug("Created connection " + conn.getRealHashCode() + ".");

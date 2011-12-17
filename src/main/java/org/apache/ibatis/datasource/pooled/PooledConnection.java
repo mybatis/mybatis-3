@@ -26,7 +26,7 @@ import java.sql.Connection;
 class PooledConnection implements InvocationHandler {
 
   private static final String CLOSE = "close";
-  private static final Class[] IFACES = new Class[]{Connection.class};
+  private static final Class<?>[] IFACES = new Class<?>[]{Connection.class};
 
   private int hashCode = 0;
   private PooledDataSource dataSource;

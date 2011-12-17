@@ -22,8 +22,8 @@ public class PoolState {
 
   protected PooledDataSource dataSource;
 
-  protected List idleConnections = new ArrayList();
-  protected List activeConnections = new ArrayList();
+  protected List<PooledConnection> idleConnections = new ArrayList<PooledConnection>();
+  protected List<PooledConnection> activeConnections = new ArrayList<PooledConnection>();
   protected long requestCount = 0;
   protected long accumulatedRequestTime = 0;
   protected long accumulatedCheckoutTime = 0;

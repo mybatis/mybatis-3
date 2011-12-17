@@ -182,7 +182,7 @@ public class UnpooledDataSource implements DataSource {
   private synchronized void initializeDriver() {
     if (!driverInitialized) {
       driverInitialized = true;
-      Class driverType;
+      Class<?> driverType;
       try {
         if (driverClassLoader != null) {
           driverType = Class.forName(driver, true, driverClassLoader);
