@@ -59,7 +59,7 @@ public class CachingExecutor implements Executor {
   }
 
 
-  public List query(MappedStatement ms, Object parameterObject, RowBounds rowBounds, ResultHandler resultHandler) throws SQLException {
+  public <E> List<E> query(MappedStatement ms, Object parameterObject, RowBounds rowBounds, ResultHandler resultHandler) throws SQLException {
     if (ms != null) {
       Cache cache = ms.getCache();
       if (cache != null) {
@@ -68,16 +68,17 @@ public class CachingExecutor implements Executor {
         try {
           if (ms.isUseCache() && resultHandler == null) {
             CacheKey key = createCacheKey(ms, parameterObject, rowBounds);
-            final List cachedList = (List) cache.getObject(key);
+            @SuppressWarnings( "unchecked" ) // type driven by the key?
+            final List<E> cachedList = (List<E>) cache.getObject(key);
             if (cachedList != null) {
               return cachedList;
             } else {
-              List list = delegate.query(ms, parameterObject, rowBounds, resultHandler);
+              List<E> list = delegate.<E>query(ms, parameterObject, rowBounds, resultHandler);
               tcm.putObject(cache, key, list);
               return list;
             }
           } else {
-            return delegate.query(ms, parameterObject, rowBounds, resultHandler);
+            return delegate.<E>query(ms, parameterObject, rowBounds, resultHandler);
           }
         } finally {
           cache.getReadWriteLock().readLock().unlock();
@@ -87,7 +88,7 @@ public class CachingExecutor implements Executor {
     return delegate.query(ms, parameterObject, rowBounds, resultHandler);
   }
 
-  public List flushStatements() throws SQLException {
+  public List<BatchResult> flushStatements() throws SQLException {
     return delegate.flushStatements();
   }
 
