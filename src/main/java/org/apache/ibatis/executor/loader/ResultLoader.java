@@ -15,11 +15,16 @@
  */
 package org.apache.ibatis.executor.loader;
 
+import java.sql.SQLException;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import javax.sql.DataSource;
+
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.executor.ExecutorException;
-import org.apache.ibatis.logging.Log;
-import org.apache.ibatis.logging.LogFactory;
-import org.apache.ibatis.logging.jdbc.ConnectionLogger;
 import org.apache.ibatis.mapping.Environment;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.session.Configuration;
@@ -28,31 +33,21 @@ import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.transaction.Transaction;
 import org.apache.ibatis.transaction.TransactionFactory;
 
-import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 public class ResultLoader {
 
-  private static final Log log = LogFactory.getLog(Connection.class);
-
-  protected static final Class[] LIST_INTERFACES = new Class[]{List.class};
-  protected static final Class[] SET_INTERFACES = new Class[]{Set.class};
+  protected static final Class<?>[] LIST_INTERFACES = new Class<?>[]{List.class};
+  protected static final Class<?>[] SET_INTERFACES = new Class<?>[]{Set.class};
 
   protected final Configuration configuration;
   protected final Executor executor;
   protected final MappedStatement mappedStatement;
   protected final Object parameterObject;
-  protected final Class targetType;
+  protected final Class<?> targetType;
 
   protected boolean loaded;
   protected Object resultObject;
 
-  public ResultLoader(Configuration config, Executor executor, MappedStatement mappedStatement, Object parameterObject, Class targetType) {
+  public ResultLoader(Configuration config, Executor executor, MappedStatement mappedStatement, Object parameterObject, Class<?> targetType) {
     this.configuration = config;
     this.executor = executor;
     this.mappedStatement = mappedStatement;
@@ -61,9 +56,9 @@ public class ResultLoader {
   }
 
   public Object loadResult() throws SQLException {
-    List list = selectList();
+    List<Object> list = selectList();
     if (targetType != null && Set.class.isAssignableFrom(targetType)) {
-      resultObject = new HashSet(list);
+      resultObject = new HashSet<Object>(list);
     } else if (targetType != null && Collection.class.isAssignableFrom(targetType)) {
       resultObject = list;
     } else if (targetType != null && targetType.isArray()) {
@@ -78,13 +73,13 @@ public class ResultLoader {
     return resultObject;
   }
 
-  private List selectList() throws SQLException {
+  private <E> List<E> selectList() throws SQLException {
     Executor localExecutor = executor;
     if (localExecutor.isClosed()) {
       localExecutor = newExecutor();
     }
     try {
-      return localExecutor.query(mappedStatement, parameterObject, RowBounds.DEFAULT, Executor.NO_RESULT_HANDLER);
+      return localExecutor.<E>query(mappedStatement, parameterObject, RowBounds.DEFAULT, Executor.NO_RESULT_HANDLER);
     } finally {
       if (localExecutor != executor) {
         localExecutor.close(false);
@@ -107,15 +102,7 @@ public class ResultLoader {
     return resultObject == null;
   }
 
-  private Connection wrapConnection(Connection connection) {
-    if (log.isDebugEnabled()) {
-      return ConnectionLogger.newInstance(connection);
-    } else {
-      return connection;
-    }
-  }
-
-  private Object[] listToArray(List list, Class type) {
+  private Object[] listToArray(List<Object> list, Class<?> type) {
     Object array = java.lang.reflect.Array.newInstance(type, list.size());
     array = list.toArray((Object[]) array);
     return (Object[]) array;
