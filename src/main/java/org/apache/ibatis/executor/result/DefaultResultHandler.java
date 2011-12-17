@@ -23,13 +23,13 @@ import java.util.List;
 
 public class DefaultResultHandler implements ResultHandler {
 
-  private final List list = new ArrayList();
+  private final List<Object> list = new ArrayList<Object>();
 
   public void handleResult(ResultContext context) {
     list.add(context.getResultObject());
   }
 
-  public List getResultList() {
+  public List<Object> getResultList() {
     return list;
   }
 

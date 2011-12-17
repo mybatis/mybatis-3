@@ -143,13 +143,13 @@ public class NestedResultSetHandler extends FastResultSetHandler {
           Set<String> notNullColumns = resultMapping.getNotNullColumns();
           boolean anyNotNullColumnIsNotNull = true;
           if (notNullColumns != null && !notNullColumns.isEmpty()) {
-        	  anyNotNullColumnIsNotNull = false;
-              for (String column: notNullColumns) {
-            	  rs.getObject(column);
-            	  if (!rs.wasNull()) {
-            		  anyNotNullColumnIsNotNull = true;
-	              }
-        	  }
+            anyNotNullColumnIsNotNull = false;
+            for (String column: notNullColumns) {
+              rs.getObject(column);
+              if (!rs.wasNull()) {
+                anyNotNullColumnIsNotNull = true;
+              }
+            }
           }
 
           if (rowValue != null && anyNotNullColumnIsNotNull) {
@@ -182,7 +182,7 @@ public class NestedResultSetHandler extends FastResultSetHandler {
 
   private Object instantiateCollectionPropertyIfAppropriate(ResultMapping resultMapping, MetaObject metaObject) {
     final String propertyName = resultMapping.getProperty();
-    Class type = resultMapping.getJavaType();
+    Class<?> type = resultMapping.getJavaType();
     Object propertyValue = metaObject.getValue(propertyName);
     if (propertyValue == null) {
       if (type == null) {
@@ -244,7 +244,7 @@ public class NestedResultSetHandler extends FastResultSetHandler {
         createRowKeyForMappedProperties(rs, cacheKey, myResultMap.getConstructorResultMappings());
       } else if (resultMapping.getNestedQueryId() == null) {
         final String column = resultMapping.getColumn();
-        final TypeHandler th = resultMapping.getTypeHandler();
+        final TypeHandler<?> th = resultMapping.getTypeHandler();
         if (column != null) {
           try {
             final Object value = th.getResult(rs, column);

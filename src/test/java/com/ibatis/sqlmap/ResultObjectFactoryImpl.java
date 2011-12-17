@@ -36,22 +36,23 @@ public class ResultObjectFactoryImpl implements ObjectFactory {
   /* (non-Javadoc)
    * @see com.ibatis.sqlmap.engine.mapping.result.ResultObjectFactory#createInstance(java.lang.String, java.lang.Class)
    */
-  public Object create(Class clazz) {
+  @SuppressWarnings( "unchecked" ) // types are always checked
+  public <T> T create(Class<T> clazz) {
 
-    Object obj = null;
+    T obj = null;
 
     if (clazz.equals(IItem.class)) {
-      obj = new IItemImpl();
+      obj = (T) new IItemImpl();
     } else if (clazz.equals((ISupplier.class))) {
-      obj = new ISupplierImpl();
+      obj = (T) new ISupplierImpl();
     } else if (clazz.equals((ISupplierKey.class))) {
-      obj = new ISupplierKeyImpl();
+      obj = (T) new ISupplierKeyImpl();
     }
 
     return obj;
   }
 
-  public Object create(Class type, List<Class> constructorArgTypes, List<Object> constructorArgs) {
+  public <T> T create(Class<T> type, List<Class<?>> constructorArgTypes, List<Object> constructorArgs) {
     return create(type);
   }
 

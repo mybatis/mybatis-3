@@ -20,9 +20,9 @@ import java.util.Properties;
 
 public interface ObjectFactory {
 
-  Object create(Class type);
+  <T> T create(Class<T> type);
 
-  Object create(Class type, List<Class> constructorArgTypes, List<Object> constructorArgs);
+  <T> T create(Class<T> type, List<Class<?>> constructorArgTypes, List<Object> constructorArgs);
 
   void setProperties(Properties properties);
 

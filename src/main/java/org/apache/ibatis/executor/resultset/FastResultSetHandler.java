@@ -72,7 +72,7 @@ public class FastResultSetHandler implements ResultSetHandler {
         if ("java.sql.ResultSet".equalsIgnoreCase(parameterMapping.getJavaType().getName())) {
           handleRefCursorOutputParameter(cs, parameterMapping, i, metaParam);
         } else {
-          final TypeHandler typeHandler = parameterMapping.getTypeHandler();
+          final TypeHandler<?> typeHandler = parameterMapping.getTypeHandler();
           if (typeHandler == null) {
             throw new ExecutorException("Type handler was null on parameter mapping for property " + parameterMapping.getProperty() + ".  " +
                 "It was either not specified and/or could not be found for the javaType / jdbcType combination specified.");
@@ -101,8 +101,8 @@ public class FastResultSetHandler implements ResultSetHandler {
   // HANDLE RESULT SETS
   //
 
-  public List handleResultSets(Statement stmt) throws SQLException {
-    final List multipleResults = new ArrayList();
+  public List<Object> handleResultSets(Statement stmt) throws SQLException {
+    final List<Object> multipleResults = new ArrayList<Object>();
     final List<ResultMap> resultMaps = mappedStatement.getResultMaps();
     int resultMapCount = resultMaps.size();
     int resultSetCount = 0;
@@ -154,7 +154,7 @@ public class FastResultSetHandler implements ResultSetHandler {
     }
   }
 
-  protected void handleResultSet(ResultSet rs, ResultMap resultMap, List multipleResults) throws SQLException {
+  protected void handleResultSet(ResultSet rs, ResultMap resultMap, List<Object> multipleResults) throws SQLException {
     try {
       if (resultHandler == null) {
         DefaultResultHandler defaultResultHandler = new DefaultResultHandler();
@@ -168,12 +168,13 @@ public class FastResultSetHandler implements ResultSetHandler {
     }
   }
 
-  protected List collapseSingleResultList(List multipleResults) {
+  protected List<Object> collapseSingleResultList(List<Object> multipleResults) {
     if (multipleResults.size() == 1) {
-      return (List) multipleResults.get(0);
-    } else {
-      return multipleResults;
+      @SuppressWarnings( "unchecked" )
+      List<Object> returned = (List<Object>) multipleResults.get(0);
+      return returned;
     }
+    return multipleResults;
   }
 
   //
@@ -274,7 +275,7 @@ public class FastResultSetHandler implements ResultSetHandler {
   }
 
   protected Object getPropertyMappingValue(ResultSet rs, MetaObject metaResultObject, ResultMapping propertyMapping, ResultLoaderMap lazyLoader) throws SQLException {
-    final TypeHandler typeHandler = propertyMapping.getTypeHandler();
+    final TypeHandler<?> typeHandler = propertyMapping.getTypeHandler();
     if (propertyMapping.getNestedQueryId() != null) {
       return getNestedQueryMappingValue(rs, metaResultObject, propertyMapping, lazyLoader);
     } else if (typeHandler != null) {
@@ -289,9 +290,9 @@ public class FastResultSetHandler implements ResultSetHandler {
     for (String columnName : unmappedColumnNames) {
       final String property = metaObject.findProperty(columnName, mapUnderscoreToCamelCase );
       if (property != null) {
-        final Class propertyType = metaObject.getSetterType(property);
+        final Class<?> propertyType = metaObject.getSetterType(property);
         if (typeHandlerRegistry.hasTypeHandler(propertyType)) {
-          final TypeHandler typeHandler = typeHandlerRegistry.getTypeHandler(propertyType);
+          final TypeHandler<?> typeHandler = typeHandlerRegistry.getTypeHandler(propertyType);
           final Object value = typeHandler.getResult(rs, columnName);
           if (value != null) {
             metaObject.setValue(property, value);
@@ -325,7 +326,7 @@ public class FastResultSetHandler implements ResultSetHandler {
   //
 
   protected Object createResultObject(ResultSet rs, ResultMap resultMap, ResultLoaderMap lazyLoader) throws SQLException {
-    final List<Class> constructorArgTypes = new ArrayList<Class>();
+    final List<Class<?>> constructorArgTypes = new ArrayList<Class<?>>();
     final List<Object> constructorArgs = new ArrayList<Object>();
     final Object resultObject = createResultObject(rs, resultMap, constructorArgTypes, constructorArgs);
     if (resultObject != null && configuration.isLazyLoadingEnabled()) {
@@ -334,9 +335,9 @@ public class FastResultSetHandler implements ResultSetHandler {
     return resultObject;
   }
 
-  protected Object createResultObject(ResultSet rs, ResultMap resultMap, List<Class> constructorArgTypes, List<Object> constructorArgs)
+  protected Object createResultObject(ResultSet rs, ResultMap resultMap, List<Class<?>> constructorArgTypes, List<Object> constructorArgs)
       throws SQLException {
-    final Class resultType = resultMap.getType();
+    final Class<?> resultType = resultMap.getType();
     final List<ResultMapping> constructorMappings = resultMap.getConstructorResultMappings();
     if (typeHandlerRegistry.hasTypeHandler(resultType)) {
       return createPrimitiveResultObject(rs, resultMap);
@@ -347,11 +348,11 @@ public class FastResultSetHandler implements ResultSetHandler {
     }
   }
 
-  protected Object createParameterizedResultObject(ResultSet rs, Class resultType,
-                                                   List<ResultMapping> constructorMappings, List<Class> constructorArgTypes, List<Object> constructorArgs) throws SQLException {
+  protected Object createParameterizedResultObject(ResultSet rs, Class<?> resultType,
+                                                   List<ResultMapping> constructorMappings, List<Class<?>> constructorArgTypes, List<Object> constructorArgs) throws SQLException {
     boolean foundValues = false;
     for (ResultMapping constructorMapping : constructorMappings) {
-      final Class parameterType = constructorMapping.getJavaType();
+      final Class<?> parameterType = constructorMapping.getJavaType();
       final String column = constructorMapping.getColumn();
       final Object value;
       // check for nested query
@@ -363,7 +364,7 @@ public class FastResultSetHandler implements ResultSetHandler {
         value = createResultObject(rs, resultMap, lazyLoader);
       } else {
         // get simple result
-        final TypeHandler typeHandler = constructorMapping.getTypeHandler();
+        final TypeHandler<?> typeHandler = constructorMapping.getTypeHandler();
         value = typeHandler.getResult(rs, column);
       }
       constructorArgTypes.add(parameterType);
@@ -374,7 +375,7 @@ public class FastResultSetHandler implements ResultSetHandler {
   }
 
   protected Object createPrimitiveResultObject(ResultSet rs, ResultMap resultMap) throws SQLException {
-    final Class resultType = resultMap.getType();
+    final Class<?> resultType = resultMap.getType();
     final String columnName;
     if (resultMap.getResultMappings().size() > 0) {
       final List<ResultMapping> resultMappingList = resultMap.getResultMappings();
@@ -384,7 +385,7 @@ public class FastResultSetHandler implements ResultSetHandler {
       final ResultSetMetaData rsmd = rs.getMetaData();
       columnName = configuration.isUseColumnLabel() ? rsmd.getColumnLabel(1) : rsmd.getColumnName(1);
     }
-    final TypeHandler typeHandler = typeHandlerRegistry.getTypeHandler(resultType);
+    final TypeHandler<?> typeHandler = typeHandlerRegistry.getTypeHandler(resultType);
     return typeHandler.getResult(rs, columnName);
   }
 
@@ -395,7 +396,7 @@ public class FastResultSetHandler implements ResultSetHandler {
   protected Object getNestedQueryConstructorValue(ResultSet rs, ResultMapping constructorMapping) throws SQLException {
     final String nestedQueryId = constructorMapping.getNestedQueryId();
     final MappedStatement nestedQuery = configuration.getMappedStatement(nestedQueryId);
-    final Class nestedQueryParameterType = nestedQuery.getParameterMap().getType();
+    final Class<?> nestedQueryParameterType = nestedQuery.getParameterMap().getType();
     final Object nestedQueryParameterObject = prepareParameterForNestedQuery(rs, constructorMapping, nestedQueryParameterType);
     Object value = null;
     if (nestedQueryParameterObject != null) {
@@ -409,7 +410,7 @@ public class FastResultSetHandler implements ResultSetHandler {
     final String nestedQueryId = propertyMapping.getNestedQueryId();
     final String property = propertyMapping.getProperty();
     final MappedStatement nestedQuery = configuration.getMappedStatement(nestedQueryId);
-    final Class nestedQueryParameterType = nestedQuery.getParameterMap().getType();
+    final Class<?> nestedQueryParameterType = nestedQuery.getParameterMap().getType();
     final Object nestedQueryParameterObject = prepareParameterForNestedQuery(rs, propertyMapping, nestedQueryParameterType);
     Object value = null;
     if (nestedQueryParameterObject != null) {
@@ -428,7 +429,7 @@ public class FastResultSetHandler implements ResultSetHandler {
     return value;
   }
 
-  protected Object prepareParameterForNestedQuery(ResultSet rs, ResultMapping resultMapping, Class parameterType) throws SQLException {
+  protected Object prepareParameterForNestedQuery(ResultSet rs, ResultMapping resultMapping, Class<?> parameterType) throws SQLException {
     if (resultMapping.isCompositeResult()) {
       return prepareCompositeKeyParameter(rs, resultMapping, parameterType);
     } else {
@@ -436,8 +437,8 @@ public class FastResultSetHandler implements ResultSetHandler {
     }
   }
 
-  protected Object prepareSimpleKeyParameter(ResultSet rs, ResultMapping resultMapping, Class parameterType) throws SQLException {
-    final TypeHandler typeHandler;
+  protected Object prepareSimpleKeyParameter(ResultSet rs, ResultMapping resultMapping, Class<?> parameterType) throws SQLException {
+    final TypeHandler<?> typeHandler;
     if (typeHandlerRegistry.hasTypeHandler(parameterType)) {
       typeHandler = typeHandlerRegistry.getTypeHandler(parameterType);
     } else {
@@ -446,21 +447,21 @@ public class FastResultSetHandler implements ResultSetHandler {
     return typeHandler.getResult(rs, resultMapping.getColumn());
   }
 
-  protected Object prepareCompositeKeyParameter(ResultSet rs, ResultMapping resultMapping, Class parameterType) throws SQLException {
+  protected Object prepareCompositeKeyParameter(ResultSet rs, ResultMapping resultMapping, Class<?> parameterType) throws SQLException {
     final Object parameterObject = instantiateParameterObject(parameterType);
     final MetaObject metaObject = configuration.newMetaObject(parameterObject);
     for (ResultMapping innerResultMapping : resultMapping.getComposites()) {
-      final Class propType = metaObject.getSetterType(innerResultMapping.getProperty());
-      final TypeHandler typeHandler = typeHandlerRegistry.getTypeHandler(propType);
+      final Class<?> propType = metaObject.getSetterType(innerResultMapping.getProperty());
+      final TypeHandler<?> typeHandler = typeHandlerRegistry.getTypeHandler(propType);
       final Object propValue = typeHandler.getResult(rs, innerResultMapping.getColumn());
       metaObject.setValue(innerResultMapping.getProperty(), propValue);
     }
     return parameterObject;
   }
 
-  protected Object instantiateParameterObject(Class parameterType) {
+  protected Object instantiateParameterObject(Class<?> parameterType) {
     if (parameterType == null) {
-      return new HashMap();
+      return new HashMap<Object, Object>();
     } else {
       return objectFactory.create(parameterType);
     }
@@ -492,7 +493,7 @@ public class FastResultSetHandler implements ResultSetHandler {
 
   protected Object getDiscriminatorValue(ResultSet rs, Discriminator discriminator) throws SQLException {
     final ResultMapping resultMapping = discriminator.getResultMapping();
-    final TypeHandler typeHandler = resultMapping.getTypeHandler();
+    final TypeHandler<?> typeHandler = resultMapping.getTypeHandler();
     if (typeHandler != null) {
       return typeHandler.getResult(rs, resultMapping.getColumn());
     } else {
