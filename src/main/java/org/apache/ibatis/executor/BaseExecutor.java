@@ -146,11 +146,11 @@ public abstract class BaseExecutor implements Executor {
 
   public void deferLoad(MappedStatement ms, MetaObject resultObject, String property, CacheKey key) {
     if (closed) throw new ExecutorException("Executor was closed.");
-    DeferredLoad deferredLoad = new DeferredLoad(ms, resultObject, property, key);
+    DeferredLoad deferredLoad = new DeferredLoad(ms, resultObject, property, key, localCache);
     if (deferredLoad.canLoad()) {
     	deferredLoad.load();
     } else {
-    	deferredLoads.add(new DeferredLoad(ms, resultObject, property, key));
+    	deferredLoads.add(new DeferredLoad(ms, resultObject, property, key, localCache));
     }
   }
 
@@ -268,16 +268,22 @@ public abstract class BaseExecutor implements Executor {
     return list;
   }
 
-  private class DeferredLoad {
+  private static class DeferredLoad {
 
-    private MetaObject resultObject;
-    private String property;
-    private CacheKey key;
+    private final MetaObject resultObject;
+    private final String property;
+    private final CacheKey key;
+    private final PerpetualCache localCache;
 
-    public DeferredLoad(@SuppressWarnings("unused") MappedStatement mappedStatement, MetaObject resultObject, String property, CacheKey key) {
+    public DeferredLoad(@SuppressWarnings("unused") MappedStatement mappedStatement,
+                        MetaObject resultObject,
+                        String property,
+                        CacheKey key,
+                        PerpetualCache localCache) {
       this.resultObject = resultObject;
       this.property = property;
       this.key = key;
+      this.localCache = localCache;
     }
 
     public boolean canLoad() {
