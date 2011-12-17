@@ -15,17 +15,16 @@
  */
 package org.apache.ibatis.datasource.jndi;
 
-import org.apache.ibatis.datasource.DataSourceException;
-import org.apache.ibatis.datasource.DataSourceFactory;
+import java.util.Map.Entry;
+import java.util.Properties;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Properties;
+
+import org.apache.ibatis.datasource.DataSourceException;
+import org.apache.ibatis.datasource.DataSourceFactory;
 
 public class JndiDataSourceFactory implements DataSourceFactory {
 
@@ -38,7 +37,7 @@ public class JndiDataSourceFactory implements DataSourceFactory {
   public void setProperties(Properties properties) {
     try {
       InitialContext initCtx = null;
-      Hashtable env = getEnvProperties(properties);
+      Properties env = getEnvProperties(properties);
       if (env == null) {
         initCtx = new InitialContext();
       } else {
@@ -62,13 +61,12 @@ public class JndiDataSourceFactory implements DataSourceFactory {
     return dataSource;
   }
 
-  private static Hashtable getEnvProperties(Map allProps) {
+  private static Properties getEnvProperties(Properties allProps) {
     final String PREFIX = ENV_PREFIX;
-    Hashtable contextProperties = null;
-    Iterator keys = allProps.keySet().iterator();
-    while (keys.hasNext()) {
-      String key = (String) keys.next();
-      String value = (String) allProps.get(key);
+    Properties contextProperties = null;
+    for (Entry<Object, Object> entry : allProps.entrySet()) {
+      String key = (String) entry.getKey();
+      String value = (String) entry.getValue();
       if (key.startsWith(PREFIX)) {
         if (contextProperties == null) {
           contextProperties = new Properties();
