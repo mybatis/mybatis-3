@@ -37,43 +37,43 @@
       </p>
       <ul>
         <li>
-          <b>cache</b>
+          <code>cache</code>
           – Configuration of the cache for a given namespace.
         </li>
         <li>
-          <b>cache-ref</b>
+          <code>cache-ref</code>
           – Reference to a cache configuration from another namespace.
         </li>
         <li>
-          <b>resultMap</b>
+          <code>resultMap</code>
           – The most complicated and powerful element that describes how to load your objects from the
           database result sets.
         </li>
         <li>
           <strike>
-            <b>parameterMap</b>
+            <code>parameterMap</code>
             – Deprecated! Old-school way to map parameters. Inline parameters are preferred and this element
             may be removed in the future. Not documented here.
           </strike>
         </li>
         <li>
-          <b>sql</b>
+          <code>sql</code>
           – A reusable chunk of SQL that can be referenced by other statements.
         </li>
         <li>
-          <b>insert</b>
+          <code>insert</code>
           – A mapped INSERT statement.
         </li>
         <li>
-          <b>update</b>
+          <code>update</code>
           – A mapped UPDATE statement.
         </li>
         <li>
-          <b>delete</b>
+          <code>delete</code>
           – A mapped DELETE statement.
         </li>
         <li>
-          <b>select</b>
+          <code>select</code>
           – A mapped SELECT statement.
         </li>
       </ul>
@@ -83,15 +83,15 @@
 
       <subsection name="select">
         <p>
-          The select statement is one of the most popular elements that you’ll use in MyBatis.
-          Putting data in a database isn’t terribly valuable until you get it back out, so most
+          The select statement is one of the most popular elements that you'll use in MyBatis.
+          Putting data in a database isn't terribly valuable until you get it back out, so most
           applications query far more than they modify the data. For every insert, update or delete,
           there is probably many selects. This is one of the founding principles of MyBatis, and is the
           reason so much focus and effort was placed on querying and result mapping. The select element is
           quite simple for simple cases. For example:
         </p>
 
-        <source><![CDATA[<select id=”selectPerson” parameterType=”int” resultType=”hashmap”>
+        <source><![CDATA[<select id="selectPerson" parameterType="int" resultType="hashmap">
   SELECT * FROM PERSON WHERE ID = #{id}
 </select>]]></source>
 
@@ -109,17 +109,17 @@
 
         <p>
           This tells MyBatis to create a PreparedStatement parameter. With JDBC, such a parameter would be
-          identified by a “?” in SQL passed to a new PreparedStatement, something like this:
+          identified by a "?" in SQL passed to a new PreparedStatement, something like this:
         </p>
 
         <source><![CDATA[// Similar JDBC code, NOT MyBatis…
-String selectPerson = “SELECT * FROM PERSON WHERE ID=?”;
+String selectPerson = "SELECT * FROM PERSON WHERE ID=?";
 PreparedStatement ps = conn.prepareStatement(selectPerson);
 ps.setInt(1,id);]]></source>
 
         <p>
-          Of course, there’s a lot more code required by JDBC alone to extract the results and map them to an
-          instance of an object, which is what MyBatis saves you from having to do. There’s a lot more to know
+          Of course, there's a lot more code required by JDBC alone to extract the results and map them to an
+          instance of an object, which is what MyBatis saves you from having to do. There's a lot more to know
           about parameter and result mapping. Those details warrant their own section, which follows later in
           this section.
         </p>
@@ -130,17 +130,17 @@ ps.setInt(1,id);]]></source>
         </p>
 
         <source><![CDATA[<select
-  id=”selectPerson”
-  parameterType=”int”
-  parameterMap=”deprecated”
-  resultType=”hashmap”
-  resultMap=”personResultMap”
-  flushCache=”false”
-  useCache=”true”
-  timeout=”10000”
-  fetchSize=”256”
-  statementType=”PREPARED”
-  resultSetType=”FORWARD_ONLY”>]]></source>
+  id="selectPerson"
+  parameterType="int"
+  parameterMap="deprecated"
+  resultType="hashmap"
+  resultMap="personResultMap"
+  flushCache="false"
+  useCache="true"
+  timeout="10000"
+  fetchSize="256"
+  statementType="PREPARED"
+  resultSetType="FORWARD_ONLY">]]></source>
 
         <table>
           <caption>Select Attributes</caption>
@@ -152,11 +152,11 @@ ps.setInt(1,id);]]></source>
           </thead>
           <tbody>
             <tr>
-              <td>id</td>
+              <td><code>id</code></td>
               <td>A unique identifier in this namespace that can be used to reference this statement.</td>
             </tr>
             <tr>
-              <td>parameterType</td>
+              <td><code>parameterType</code></td>
               <td>The fully qualified class name or alias for the parameter that will be passed into this
                 statement.
               </td>
@@ -166,60 +166,61 @@ ps.setInt(1,id);]]></source>
                 <strike>parameterMap</strike>
               </td>
               <td>
-                <strike>This is a deprecated approach to referencing an external parameterMap. Use
-                  inline parameter mappings and the parameterType attribute.
+                <strike>This is a deprecated approach to referencing an external <code>parameterMap</code>. Use
+                  inline parameter mappings and the <code>parameterType</code> attribute.
                 </strike>
               </td>
             </tr>
             <tr>
-              <td>resultType</td>
+              <td><code>resultType</code></td>
               <td>The fully qualified class name or alias for the expected type that will be returned from
                 this statement. Note that in the case of collections, this should be the type that the
-                collection contains, not the type of the collection itself. Use resultType OR resultMap,
-                not both.
+                collection contains, not the type of the collection itself. Use <code>resultType</code> OR
+                <code>resultMap</code>, not both.
               </td>
             </tr>
             <tr>
-              <td>resultMap</td>
-              <td>A named reference to an external resultMap. Result maps are the most powerful feature of
+              <td><code>resultMap</code></td>
+              <td>A named reference to an external <code>resultMap</code>. Result maps are the most powerful feature of
                 MyBatis, and with a good understanding of them, many difficult mapping cases can be
-                solved. Use resultMap OR resultType, not both.
+                solved. Use <code>resultMap</code> OR <code>resultType</code>, not both.
               </td>
             </tr>
             <tr>
-              <td>flushCache</td>
+              <td><code>flushCache</code></td>
               <td>Setting this to true will cause the cache to be flushed whenever this statement is
-                called. Default: false for select statements.
+                called. Default: <code>false</code> for select statements.
               </td>
             </tr>
             <tr>
-              <td>useCache</td>
+              <td><code>useCache</code></td>
               <td>Setting this to true will cause the results of this statement to be cached. Default:
-                true for select statements.
+                <code>true</code> for select statements.
               </td>
             </tr>
             <tr>
-              <td>timeout</td>
+              <td><code>timeout</code></td>
               <td>This sets the maximum time the driver will wait for the database to return from a
-                request, before throwing an exception. Default is unset (driver dependent).
+                request, before throwing an exception. Default is <code>unset</code> (driver dependent).
               </td>
             </tr>
             <tr>
-              <td>fetchSize</td>
+              <td><code>fetchSize</code></td>
               <td>This is a driver hint that will attempt to cause the driver to return results in batches
-                of rows numbering in size equal to this setting. Default is unset (driver dependent).
+                of rows numbering in size equal to this setting. Default is <code>unset</code> (driver dependent).
               </td>
             </tr>
             <tr>
-              <td>statementType</td>
-              <td>Any one of STATEMENT, PREPARED or CALLABLE. This causes MyBatis to use Statement,
-                PreparedStatement or CallableStatement respectively. Default: PREPARED.
+              <td><code>statementType</code></td>
+              <td>Any one of <code>STATEMENT</code>, <code>PREPARED</code> or <code>CALLABLE</code>.
+              This causes MyBatis to use <code>Statement</code>,
+                <code>PreparedStatement</code> or <code>CallableStatement</code> respectively. Default: <code>PREPARED</code>.
               </td>
             </tr>
             <tr>
               <td>resultSetType</td>
-              <td>Any one of FORWARD_ONLY|SCROLL_SENSITIVE|SCROLL_INSENSITIVE. Default is unset (driver
-                dependent).
+              <td>Any one of <code>FORWARD_ONLY</code>|<code>SCROLL_SENSITIVE</code>|<code>SCROLL_INSENSITIVE</code>.
+              Default is <code>unset</code> (driver dependent).
               </td>
             </tr>
           </tbody>
@@ -264,18 +265,18 @@ ps.setInt(1,id);]]></source>
           </thead>
           <tbody>
             <tr>
-              <td>id</td>
+              <td><code>id</code></td>
               <td>A unique identifier in this namespace that can be used to reference this statement.</td>
             </tr>
             <tr>
-              <td>parameterType</td>
+              <td><code>parameterType</code></td>
               <td>The fully qualified class name or alias for the parameter that will be passed into this
                 statement.
               </td>
             </tr>
             <tr>
               <td>
-                <strike>parameterMap</strike>
+                <strike><code>parameterMap</code></strike>
               </td>
               <td>
                 <strike>This is a deprecated approach to referencing an external parameterMap. Use
@@ -284,39 +285,40 @@ ps.setInt(1,id);]]></source>
               </td>
             </tr>
             <tr>
-              <td>flushCache</td>
+              <td><code>flushCache</code></td>
               <td>Setting this to true will cause the cache to be flushed whenever this statement is
-                called. Default: false for select statements.
+                called. Default: <code>false</code> for select statements.
               </td>
             </tr>
             <tr>
-              <td>timeout</td>
+              <td><code>timeout</code></td>
               <td>This sets the maximum time the driver will wait for the database to return from a
-                request, before throwing an exception. Default is unset (driver dependent).
+                request, before throwing an exception. Default is <code>unset</code> (driver dependent).
               </td>
             </tr>
             <tr>
-              <td>statementType</td>
-              <td>Any one of STATEMENT, PREPARED or CALLABLE. This causes MyBatis to use Statement,
-                PreparedStatement or CallableStatement respectively. Default: PREPARED.
+              <td><code>statementType</code></td>
+              <td>Any one of <code>STATEMENT</code>, <code>PREPARED</code> or <code>CALLABLE</code>.
+              This causes MyBatis to use <code>Statement</code>,
+                <code>PreparedStatement</code> or <code>CallableStatement</code> respectively. Default: <code>PREPARED</code>.
               </td>
             </tr>
             <tr>
-              <td>useGeneratedKeys</td>
-              <td>(insert only) This tells MyBatis to use the JDBC getGeneratedKeys method to retrieve
+              <td><code>useGeneratedKeys</code></td>
+              <td>(insert only) This tells MyBatis to use the JDBC <code>getGeneratedKeys</code> method to retrieve
                 keys generated internally by the database (e.g. auto increment fields in RDBMS like
-                MySQL or SQL Server). Default: false
+                MySQL or SQL Server). Default: <code>false</code>
               </td>
             </tr>
             <tr>
-              <td>keyProperty</td>
+              <td><code>keyProperty</code></td>
               <td>(insert only) Identifies a property into which MyBatis will set the key value returned
-                by getGeneratedKeys, or by a selectKey child element of the insert statement. Default:
-                unset.
+                by <code>getGeneratedKeys</code>, or by a <code>selectKey</code> child element of the insert statement.
+                Default: <code>unset</code>.
               </td>
             </tr>
             <tr>
-              <td>keyColumn</td>
+              <td><code>keyColumn</code></td>
               <td>(insert only) Sets the name of the column in the table with a generated key. This is
                 only required in certain databases (like PostgreSQL) when the key column is not the
                 first column in the table.
@@ -342,7 +344,7 @@ ps.setInt(1,id);]]></source>
   where id = #{id}
 </update>
 
-<delete id="deleteAuthor” parameterType="int">
+<delete id="deleteAuthor" parameterType="int">
   delete from Author where id = #{id}
 </delete>]]></source>
 
@@ -353,25 +355,25 @@ ps.setInt(1,id);]]></source>
 
         <p>
           First, if your database supports auto-generated key fields (e.g. MySQL and SQL Server),
-          then you can simply set useGeneratedKeys=”true” and set the keyProperty to the target property
-          and you’re done. For example, if the Author table above had used an auto-generated column type
+          then you can simply set <code>useGeneratedKeys="true"</code> and set the <code>keyProperty</code> to the target property
+          and you're done. For example, if the <code>Author</code> table above had used an auto-generated column type
           for the id, the statement would be modified as follows:
         </p>
 
-        <source><![CDATA[<insert id="insertAuthor" parameterType="domain.blog.Author" useGeneratedKeys=”true”
-    keyProperty=”id”>
+        <source><![CDATA[<insert id="insertAuthor" parameterType="domain.blog.Author" useGeneratedKeys="true"
+    keyProperty="id">
   insert into Author (username,password,email,bio)
   values (#{username},#{password},#{email},#{bio})
 </insert>]]></source>
 
         <p>
-          MyBatis has another way to deal with key generation for databases that don’t support auto-generated
-          column types, or perhaps don’t yet support the JDBC driver support for auto-generated keys.
+          MyBatis has another way to deal with key generation for databases that don't support auto-generated
+          column types, or perhaps don't yet support the JDBC driver support for auto-generated keys.
         </p>
 
         <p>
-          Here’s a simple (silly) example that would generate a random ID (something you’d likely never do,
-          but this demonstrates the flexibility and how MyBatis really doesn’t mind):
+          Here's a simple (silly) example that would generate a random ID (something you'd likely never do,
+          but this demonstrates the flexibility and how MyBatis really doesn't mind):
         </p>
         <source><![CDATA[<insert id="insertAuthor" parameterType="domain.blog.Author">
   <selectKey keyProperty="id" resultType="int" order="BEFORE">
@@ -383,8 +385,8 @@ ps.setInt(1,id);]]></source>
     (#{id}, #{username}, #{password}, #{email}, #{bio}, #{favouriteSection,jdbcType=VARCHAR})
 </insert>]]></source>
         <p>
-          In the example above, the selectKey statement would be run first, the Author id property would be
-          set, and then the insert statement would be called. This gives you a similar behaviour to an
+          In the example above, the selectKey statement would be run first, the <code>Author</code> id property would be
+          set, and then the insert statement would be called. This gives you a similar behavior to an
           auto-generated key in your database without complicating your Java code.
         </p>
         <p>
@@ -406,31 +408,31 @@ ps.setInt(1,id);]]></source>
           </thead>
           <tbody>
             <tr>
-              <td>keyProperty</td>
-              <td>The target property where the result of the selectKey statement should be set.</td>
+              <td><code>keyProperty</code></td>
+              <td>The target property where the result of the <code>selectKey</code> statement should be set.</td>
             </tr>
             <tr>
-              <td>resultType</td>
+              <td><code>resultType</code></td>
               <td>
-                The type of the result. MyBatis can usually figure this out, but it doesn’t hurt to
+                The type of the result. MyBatis can usually figure this out, but it doesn't hurt to
                 add it to be sure. MyBatis allows any simple type to be used as the key,
                 including Strings.
               </td>
             </tr>
             <tr>
-              <td>order</td>
+              <td><code>order</code></td>
               <td>
-                This can be set to BEFORE or AFTER. If set to BEFORE, then it will select the key
-                first, set the keyProperty and then execute the insert statement. If set to AFTER,
-                it runs the insert statement and then the selectKey statement – which is common with
+                This can be set to <code>BEFORE</code> or <code>AFTER</code>. If set to <code>BEFORE</code>, then it will select the key
+                first, set the <code>keyProperty</code> and then execute the insert statement. If set to <code>AFTER</code>,
+                it runs the insert statement and then the <code>selectKey</code> statement – which is common with
                 databases like Oracle that may have embedded sequence calls inside of insert statements.
               </td>
             </tr>
             <tr>
-              <td>statementType</td>
+              <td><code>statementType</code></td>
               <td>
-                Same as above, MyBatis supports STATEMENT, PREPARED and CALLABLE statement types that
-                map to Statement, PreparedStatement and CallableStatement respectively.
+                Same as above, MyBatis supports <code>STATEMENT</code>, <code>PREPARED</code> and <code>CALLABLE</code> statement types that
+                map to <code>Statement</code>, <code>PreparedStatement</code> and <code>CallableStatement</code> respectively.
               </td>
             </tr>
           </tbody>
@@ -443,14 +445,14 @@ ps.setInt(1,id);]]></source>
           included in other statements. For example:
         </p>
 
-        <source><![CDATA[<sql id=”userColumns”> id,username,password </sql>]]></source>
+        <source><![CDATA[<sql id="userColumns"> id,username,password </sql>]]></source>
 
         <p>
           The SQL fragment can then be included in another statement, for example:
         </p>
 
-        <source><![CDATA[<select id=”selectUsers” parameterType=”int” resultType=”hashmap”>
-  select <include refid=”userColumns”/>
+        <source><![CDATA[<select id="selectUsers" parameterType="int" resultType="hashmap">
+  select <include refid="userColumns"/>
   from some_table
   where id = #{id}
 </select>]]></source>
@@ -459,11 +461,11 @@ ps.setInt(1,id);]]></source>
       <subsection name="Parameters">
         <p>
           In all of the past statements, you've seen examples of simple parameters. Parameters are very
-          powerful elements in MyBatis. For simple situations, probably 90% of the cases, there’s not much
+          powerful elements in MyBatis. For simple situations, probably 90% of the cases, there's not much
           too them, for example:
         </p>
 
-        <source><![CDATA[<select id=”selectUsers” parameterType=”int” resultType=”User”>
+        <source><![CDATA[<select id="selectUsers" parameterType="int" resultType="User">
   select id, username, password
   from users
   where id = #{id}
@@ -471,24 +473,24 @@ ps.setInt(1,id);]]></source>
 
         <p>
           The example above demonstrates a very simple named parameter mapping. The parameterType is set to
-          "int", so therefore the parameter could be named anything. Primitive or simply data types such as
-          Integer and String have no relevant properties, and thus will replace the full value of the
-          parameter entirely. However, if you pass in a complex object, then the behaviour is a little
+          <code>int</code>, so therefore the parameter could be named anything. Primitive or simply data types such as
+          <code>Integer</code> and <code>String</code> have no relevant properties, and thus will replace the full value of the
+          parameter entirely. However, if you pass in a complex object, then the behavior is a little
           different. For example:
         </p>
 
-        <source><![CDATA[<insert id=”insertUser” parameterType=”User” >
+        <source><![CDATA[<insert id="insertUser" parameterType="User" >
   insert into users (id, username, password)
   values (#{id}, #{username}, #{password})
 </insert>]]></source>
 
         <p>
           If a parameter object of type User was passed into that statement, the id, username and password
-          property would be looked up and their values passed to a PreparedStatement parameter.
+          property would be looked up and their values passed to a <code>PreparedStatement</code> parameter.
         </p>
 
         <p>
-          That’s nice and simple for passing parameters into statements. But there are a lot of other
+          That's nice and simple for passing parameters into statements. But there are a lot of other
           features of parameter maps.
         </p>
 
@@ -500,55 +502,55 @@ ps.setInt(1,id);]]></source>
 
         <p>
           Like the rest of MyBatis, the javaType can almost always be determined from the parameter object,
-          unless that object is a HashMap. Then the javaType should be specified to ensure the correct
-          TypeHandler is used.
+          unless that object is a <code>HashMap</code>. Then the <code>javaType</code> should be specified to ensure the correct
+          <code>TypeHandler</code> is used.
         </p>
 
         <p>
           <span class="label important">NOTE</span> The JDBC Type is required by JDBC for all nullable
-          columns, if null is passed as a value. You can investigate this yourself by reading the JavaDocs
-          for the PreparedStatement.setNull() method.
+          columns, if <code>null</code> is passed as a value. You can investigate this yourself by reading the JavaDocs
+          for the <code>PreparedStatement.setNull()</code> method.
         </p>
 
         <p>
-          To further customize type handling, you can also specify a specific TypeHandler
+          To further customize type handling, you can also specify a specific <code>TypeHandler</code>
           class (or alias), for example:
         </p>
 
         <source><![CDATA[#{age,javaType=int,jdbcType=NUMERIC,typeHandler=MyTypeHandler}]]></source>
 
         <p>
-          So already it seems to be getting verbose, but the truth is that you’ll rarely set any of these.
+          So already it seems to be getting verbose, but the truth is that you'll rarely set any of these.
         </p>
 
         <p>
-          For numeric types there’s also a numericScale for determining how many decimal places are relevant.
+          For numeric types there's also a <code>numericScale</code> for determining how many decimal places are relevant.
         </p>
 
         <source><![CDATA[#{height,javaType=double,jdbcType=NUMERIC,numericScale=2}]]></source>
 
         <p>
-          Finally, the mode attribute allows you to specify IN, OUT or INOUT parameters. If a parameter is
-          OUT or INOUT, the actual value of the parameter object property will be changed, just as you would
-          expect if you were calling for an output parameter. If the mode=OUT (or INOUT) and the
-          jdbcType=CURSOR (i.e. Oracle REFCURSOR), you must specify a resultMap to map the ResultSet to the
-          type of the parameter. Note that the javaType attribute is optional here, it will be automatically
-          set to ResultSet if left blank with a CURSOR as the jdbcType.
+          Finally, the mode attribute allows you to specify <code>IN</code>, <code>OUT</code> or <code>INOUT</code> parameters. If a parameter is
+          <code>OUT</code> or <code>INOUT</code>, the actual value of the parameter object property will be changed, just as you would
+          expect if you were calling for an output parameter. If the <code>mode=OUT</code> (or <code>INOUT</code>) and the
+          <code>jdbcType=CURSOR</code> (i.e. Oracle REFCURSOR), you must specify a <code>resultMap</code> to map the <code>ResultSet</code> to the
+          type of the parameter. Note that the <code>javaType</code> attribute is optional here, it will be automatically
+          set to <code>ResultSet</code> if left blank with a <code>CURSOR</code> as the <code>jdbcType</code>.
         </p>
 
         <source><![CDATA[#{department, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=departmentResultMap}]]></source>
 
         <p>
           MyBatis also supports more advanced data types such as structs, but you must tell the statement
-          the type name when registering the out parameter. For example (again, don’t break lines like
+          the type name when registering the out parameter. For example (again, don't break lines like
           this in practice):
         </p>
 
         <source><![CDATA[#{middleInitial, mode=OUT, jdbcType=STRUCT, jdbcTypeName=MY_TYPE, resultMap=departmentResultMap}]]></source>
 
         <p>
-          Despite all of these powerful options, most of the time you’ll simply specify the property name,
-          and MyBatis will figure out the rest. At most, you’ll specify the jdbcType for nullable columns.
+          Despite all of these powerful options, most of the time you'll simply specify the property name,
+          and MyBatis will figure out the rest. At most, you'll specify the <code>jdbcType</code> for nullable columns.
         </p>
 
         <source><![CDATA[#{firstName}
@@ -560,8 +562,8 @@ ps.setInt(1,id);]]></source>
         </h4>
 
         <p>
-          By default, using the #{} syntax will cause MyBatis to generate PreparedStatement properties and
-          set the values safely against the PreparedStatement parameters (e.g. ?). While this is safer,
+          By default, using the <code>#{}</code> syntax will cause MyBatis to generate <code>PreparedStatement</code> properties and
+          set the values safely against the <code>PreparedStatement</code> parameters (e.g. ?). While this is safer,
           faster and almost always preferred, sometimes you just want to directly inject a string
           unmodified into the SQL Statement. For example, for ORDER BY, you might use something like this:
         </p>
@@ -569,11 +571,11 @@ ps.setInt(1,id);]]></source>
         <source><![CDATA[ORDER BY ${columnName}]]></source>
 
         <p>
-          Here MyBatis won’t modify or escape the string.
+          Here MyBatis won't modify or escape the string.
         </p>
 
         <p>
-          <span class="label important">NOTE</span> It’s not safe to accept input from a user and supply
+          <span class="label important">NOTE</span> It's not safe to accept input from a user and supply
           it to a statement unmodified in this way. This leads to potential SQL Injection attacks and
           therefore you should either disallow user input in these fields, or always perform your own escapes
           and checks.
@@ -582,30 +584,30 @@ ps.setInt(1,id);]]></source>
 
       <subsection name="Result Maps">
         <p>
-          The resultMap element is the most important and powerful element in MyBatis. It’s what allows you to
-          do away with 90% of the code that JDBC requires to retrieve data from ResultSets, and in some cases
+          The <code>resultMap</code> element is the most important and powerful element in MyBatis. It's what allows you to
+          do away with 90% of the code that JDBC requires to retrieve data from <code>ResultSet</code>s, and in some cases
           allows you to do things that JDBC does not even support. In fact, to write the equivalent code for
           something like a join mapping for a complex statement could probably span thousands of lines of
-          code. The design of the ResultMaps is such that simple statements don’t require explicit result
+          code. The design of the <code>ResultMap</code>s is such that simple statements don't require explicit result
           mappings at all, and more complex statements require no more than is absolutely necessary to
           describe the relationships.
         </p>
 
         <p>
-          You’ve already seen examples of simple mapped statements that don’t have an explicit resultMap. For
+          You've already seen examples of simple mapped statements that don't have an explicit <code>resultMap</code>. For
           example:
         </p>
 
-        <source><![CDATA[<select id=”selectUsers” parameterType=”int” resultType=”hashmap”>
+        <source><![CDATA[<select id="selectUsers" parameterType="int" resultType="hashmap">
   select id, username, hashedPassword
   from some_table
   where id = #{id}
 </select>]]></source>
 
         <p>
-          Such a statement simply results in all columns being automatically mapped to the keys of a HashMap,
-          as specified by the resultType attribute. While useful in many cases, a HashMap doesn’t make a very
-          good domain model. It’s more likely that your application will use JavaBeans or POJOs (Plain Old
+          Such a statement simply results in all columns being automatically mapped to the keys of a <code>HashMap</code>,
+          as specified by the <code>resultType</code> attribute. While useful in many cases, a <code>HashMap</code> doesn't make a very
+          good domain model. It's more likely that your application will use JavaBeans or POJOs (Plain Old
           Java Objects) for the domain model. MyBatis supports both. Consider the following JavaBean:
         </p>
         <source><![CDATA[package com.someapp.model;
@@ -640,50 +642,50 @@ public class User {
         </p>
 
         <p>
-          Such a JavaBean could be mapped to a ResultSet just as easily as the HashMap.
+          Such a JavaBean could be mapped to a <code>ResultSet</code> just as easily as the <code>HashMap</code>.
         </p>
 
-        <source><![CDATA[<select id=”selectUsers” parameterType=”int” resultType=”com.someapp.model.User”>
+        <source><![CDATA[<select id="selectUsers" parameterType="int" resultType="com.someapp.model.User">
   select id, username, hashedPassword
   from some_table
   where id = #{id}
 </select>]]></source>
 
         <p>
-          And remember that TypeAliases are your friend. Use them so that you don’t have to keep typing the
+          And remember that TypeAliases are your friend. Use them so that you don't have to keep typing the
           fully qualified path of your class out. For example:
         </p>
 
         <source><![CDATA[<!-- In Config XML file -->
-<typeAlias type=”com.someapp.model.User” alias=”User”/>
+<typeAlias type="com.someapp.model.User" alias="User"/>
 
 <!-- In SQL Mapping XML file -->
-<select id=”selectUsers” parameterType=”int” resultType=”User”>
+<select id="selectUsers" parameterType="int" resultType="User">
   select id, username, hashedPassword
   from some_table
   where id = #{id}
 </select>]]></source>
 
         <p>
-          In these cases MyBatis is automatically creating a ResultMap behind the scenes to map the columns to
+          In these cases MyBatis is automatically creating a <code>ResultMap</code> behind the scenes to map the columns to
           the JavaBean properties based on name. If the column names did not match exactly, you could employ
           select clause aliases (a standard SQL feature) on the column names to make the labels match. For
           example:
         </p>
 
-        <source><![CDATA[<select id=”selectUsers” parameterType=”int” resultType=”User”>
+        <source><![CDATA[<select id="selectUsers" parameterType="int" resultType="User">
   select
-    user_id 		as “id”,
-    user_name 		as “userName”,
-    hashed_password 	as “hashedPassword”
+    user_id             as "id",
+    user_name           as "userName",
+    hashed_password     as "hashedPassword"
   from some_table
   where id = #{id}
 </select>]]></source>
 
         <p>
-          The great thing about ResultMaps is that you’ve already learned a lot about them, but you haven’t
-          even seen one yet! These simple cases don’t require any more than you’ve seen here. Just for example
-          sake, let’s see what this last example would look like as an external resultMap, as that is another
+          The great thing about <code>ResultMap</code>s is that you've already learned a lot about them, but you haven't
+          even seen one yet! These simple cases don't require any more than you've seen here. Just for example
+          sake, let's see what this last example would look like as an external <code>resultMap</code>, as that is another
           way to solve column name mismatches.
         </p>
 
@@ -694,11 +696,11 @@ public class User {
 </resultMap>]]></source>
 
         <p>
-          And the statement that references it uses the resultMap attribute to do so (notice we removed the
-          resultType attribute). For example:
+          And the statement that references it uses the <code>resultMap</code> attribute to do so (notice we removed the
+          <code>resultType</code> attribute). For example:
         </p>
 
-        <source><![CDATA[<select id=”selectUsers” parameterType=”int” resultMap=”userResultMap”>
+        <source><![CDATA[<select id="selectUsers" parameterType="int" resultMap="userResultMap">
   select user_id, user_name, hashed_password
   from some_table
   where id = #{id}
@@ -711,10 +713,10 @@ public class User {
 	      <h4>Advanced Result Maps</h4>
 
         <p>
-          MyBatis was created with one idea in mind: Databases aren’t always what you want or need them to be.
-          While we’d love every database to be perfect 3rd normal form or BCNF, they aren’t. And it would be
+          MyBatis was created with one idea in mind: Databases aren't always what you want or need them to be.
+          While we'd love every database to be perfect 3rd normal form or BCNF, they aren't. And it would be
           great if it was possible to have a single database map perfectly to all of the applications that use
-          it, it’s not. Result Maps are the answer that MyBatis provides to this problem.
+          it, it's not. Result Maps are the answer that MyBatis provides to this problem.
         </p>
 
         <p>For example, how would we map this statement?</p>
@@ -755,11 +757,11 @@ public class User {
 </select>]]></source>
 
         <p>
-          You’d probably want to map it to an intelligent object model consisting of a Blog that was written
+          You'd probably want to map it to an intelligent object model consisting of a Blog that was written
           by an Author, and has many Posts, each of which may have zero or many Comments and Tags. The
           following is a complete example of a complex ResultMap (assume Author, Blog, Post, Comments and Tags
-          are all type aliases). Have a look at it, but don’t worry, we’re going to go through each step.
-          While it may look daunting at first, it’s actually very simple.
+          are all type aliases). Have a look at it, but don't worry, we're going to go through each step.
+          While it may look daunting at first, it's actually very simple.
         </p>
 
         <source><![CDATA[<!-- Very Complex Result Map -->
@@ -793,39 +795,39 @@ public class User {
 </resultMap>]]></source>
 
         <p>
-          The resultMap element has a number of sub-elements and a structure worthy of some discussion. The
-          following is a conceptual view of the resultMap element.
+          The <code>resultMap</code> element has a number of sub-elements and a structure worthy of some discussion. The
+          following is a conceptual view of the <code>resultMap</code> element.
         </p>
 
         <h4>resultMap</h4>
         <ul>
           <li>
-            constructor - used for injecting results into the constructor of a class upon instantiation
+            <code>constructor</code> - used for injecting results into the constructor of a class upon instantiation
             <ul>
-              <li>idArg - ID argument; flagging results as ID will help improve overall performance</li>
-              <li>arg - a normal result injected into the constructor</li>
+              <li><code>idArg</code> - ID argument; flagging results as ID will help improve overall performance</li>
+              <li><code>arg</code> - a normal result injected into the constructor</li>
             </ul>
           </li>
-          <li>id – an ID result; flagging results as ID will help improve overall performance</li>
-          <li>result – a normal result injected into a field or JavaBean property</li>
+          <li><code>id</code> – an ID result; flagging results as ID will help improve overall performance</li>
+          <li><code>result</code> – a normal result injected into a field or JavaBean property</li>
           <li>
-            association – a complex type association; many results will roll up into this type
+            <code>association</code> – a complex type association; many results will roll up into this type
             <ul>
               <li>nested result mappings – associations are resultMaps themselves, or can refer to one
               </li>
             </ul>
           </li>
           <li>
-            collection – a collection of complex types
+            <code>collection</code> – a collection of complex types
             <ul>
-              <li>nested result mappings – collections are resultMaps themselves, or can refer to one</li>
+              <li>nested result mappings – collections are <code>resultMap</code>s themselves, or can refer to one</li>
             </ul>
           </li>
           <li>
-            discriminator – uses a result value to determine which resultMap to use
+            <code>discriminator</code> – uses a result value to determine which <code>resultMap</code> to use
             <ul>
               <li>
-                case – a case is a result map based on some value
+                <code>case</code> – a case is a result map based on some value
                 <ul>
                   <li>nested result mappings – a case is also a result map itself, and thus can
                     contain many of these same elements, or it can refer to an external resultMap.
@@ -839,10 +841,10 @@ public class User {
         <p>
           <span class="label important">Best Practice</span> Always build ResultMaps incrementally. Unit
           tests really help out here. If you try to
-          build a gigantic resultMap like the one above all at once, it’s likely you’ll get it wrong and it
+          build a gigantic <code>resultMap</code> like the one above all at once, it's likely you'll get it wrong and it
           will be hard to work with. Start simple, and evolve it a step at a time. And unit test! The downside
           to using frameworks is that they are sometimes a bit of a black box (open source or not). Your best
-          bet to ensure that you’re achieving the behaviour that you intend, is to write unit tests. It also
+          bet to ensure that you're achieving the behaviour that you intend, is to write unit tests. It also
           helps to have them when submitting bugs.
         </p>
 
@@ -884,7 +886,7 @@ public class User {
           </thead>
           <tbody>
             <tr>
-              <td>property</td>
+              <td><code>property</code></td>
               <td>
                 The field or property to map the column result to. If a matching JavaBeans property
                 exists for
@@ -892,39 +894,39 @@ public class User {
                 given
                 name. In both cases you can use complex property navigation using the usual dot
                 notation. For
-                example, you can map to something simple like: “username”, or to something more
+                example, you can map to something simple like: <code>username</code>, or to something more
                 complicated
-                like: “address.street.number”.
+                like: <code>address.street.number</code>.
               </td>
             </tr>
             <tr>
-              <td>column</td>
+              <td><code>column</code></td>
               <td>
                 The column name from the database, or the aliased column label. This is the same string
                 that
-                would normally be passed to resultSet.getString(columnName).
+                would normally be passed to <code>resultSet.getString(columnName)</code>.
               </td>
             </tr>
             <tr>
-              <td>javaType</td>
+              <td><code>javaType</code></td>
               <td>
                 A fully qualified Java class name, or a type alias (see the table above for the list of
-                built-in type aliases). MyBatis can usually figure out the type if you’re mapping to a
+                built-in type aliases). MyBatis can usually figure out the type if you're mapping to a
                 JavaBean. However, if you are mapping to a HashMap, then you should specify the javaType
                 explicitly to ensure the desired behaviour.
               </td>
             </tr>
             <tr>
-              <td>jdbcType</td>
+              <td><code>jdbcType</code></td>
               <td>
                 The JDBC Type from the list of supported types that follows this table. The JDBC type is
                 only required for nullable columns upon insert, update or delete. This is a JDBC
-                requirement,not an MyBatis one. So even if you were coding JDBC directly, you’d need to
+                requirement, not a MyBatis one. So even if you were coding JDBC directly, you'd need to
                 specify this type – but only for nullable values.
               </td>
             </tr>
             <tr>
-              <td>typeHandler</td>
+              <td><code>typeHandler</code></td>
               <td>
                 We discussed default type handlers previously in this documentation. Using this property
                 you can override the default type handler on a mapping-by-mapping basis. The value is
@@ -943,44 +945,44 @@ public class User {
 
         <table>
           <tr>
-            <td>BIT</td>
-            <td>FLOAT</td>
-            <td>CHAR</td>
-            <td>TIMESTAMP</td>
-            <td>OTHER</td>
-            <td>UNDEFINED</td>
+            <td><code>BIT</code></td>
+            <td><code>FLOAT</code></td>
+            <td><code>CHAR</code></td>
+            <td><code>TIMESTAMP</code></td>
+            <td><code>OTHER</code></td>
+            <td><code>UNDEFINED</code></td>
           </tr>
           <tr>
-            <td>TINYINT</td>
-            <td>REAL</td>
-            <td>VARCHAR</td>
-            <td>BINARY</td>
-            <td>BLOG</td>
-            <td>NVARCHAR</td>
+            <td><code>TINYINT</code></td>
+            <td><code>REAL</code></td>
+            <td><code>VARCHAR</code></td>
+            <td><code>BINARY</code></td>
+            <td><code>BLOG</code></td>
+            <td><code>NVARCHAR</code></td>
           </tr>
           <tr>
-            <td>SMALLINT</td>
-            <td>DOUBLE</td>
-            <td>LONGVARCHAR</td>
-            <td>VARBINARY</td>
-            <td>CLOB</td>
-            <td>NCHAR</td>
+            <td><code>SMALLINT</code></td>
+            <td><code>DOUBLE</code></td>
+            <td><code>LONGVARCHAR</code></td>
+            <td><code>VARBINARY</code></td>
+            <td><code>CLOB</code></td>
+            <td><code>>NCHAR</code></td>
           </tr>
           <tr>
-            <td>INTEGER</td>
-            <td>NUMERIC</td>
-            <td>DATE</td>
-            <td>LONGVARBINARY</td>
-            <td>BOOLEAN</td>
-            <td>NCLOB</td>
+            <td><code>INTEGER</code></td>
+            <td><code>NUMERIC</code></td>
+            <td><code>DATE</code></td>
+            <td><code>LONGVARBINARY</code></td>
+            <td><code>BOOLEAN</code></td>
+            <td><code>NCLOB</code></td>
           </tr>
           <tr>
-            <td>BIGINT</td>
-            <td>DECIMAL</td>
-            <td>TIME</td>
-            <td>NULL</td>
-            <td>CURSOR</td>
-            <td>ARRAY</td>
+            <td><code>BIGINT</code></td>
+            <td><code>DECIMAL</code></td>
+            <td><code>TIME</code></td>
+            <td><code>NULL</code></td>
+            <td><code>CURSOR</code></td>
+            <td><code>ARRAY</code></td>
           </tr>
         </table>
 
@@ -988,7 +990,7 @@ public class User {
 
         <source><![CDATA[<constructor>
    <idArg column="id" javaType="int"/>
-   <arg column=”username” javaType=”String”/>
+   <arg column="username" javaType="String"/>
 </constructor>]]></source>
 
         <p>
@@ -1024,7 +1026,7 @@ public class User {
 
         <source><![CDATA[<constructor>
    <idArg column="id" javaType="int"/>
-   <arg column=”username” javaType=”String”/>
+   <arg column="username" javaType="String"/>
 </constructor>]]></source>
 
         <p>
@@ -1040,40 +1042,40 @@ public class User {
           </thead>
           <tbody>
             <tr>
-              <td>column</td>
+              <td><code>column</code></td>
               <td>
                 The column name from the database, or the aliased column label. This is the same string
-                that would normally be passed to resultSet.getString(columnName).
+                that would normally be passed to <code>resultSet.getString(columnName)</code>.
               </td>
             </tr>
             <tr>
-              <td>javaType</td>
+              <td><code>javaType</code></td>
               <td>
                 A fully qualified Java class name, or a type alias (see the table above for the list of
-                built- in type aliases). MyBatis can usually figure out the type if you’re mapping to a
+                built-in type aliases). MyBatis can usually figure out the type if you're mapping to a
                 JavaBean. However, if you are mapping to a HashMap, then you should specify the javaType
                 explicitly to ensure the desired behaviour.
               </td>
             </tr>
             <tr>
-              <td>jdbcType</td>
+              <td><code>jdbcType</code></td>
               <td>
                 The JDBC Type from the list of supported types that follows this table. The JDBC type is
                 only required for nullable columns upon insert, update or delete. This is a JDBC
-                requirement, not an MyBatis one. So even if you were coding JDBC directly, you’d need to
+                requirement, not an MyBatis one. So even if you were coding JDBC directly, you'd need to
                 specify this type – but only for nullable values.
               </td>
             </tr>
             <tr>
-              <td>typeHandler</td>
+              <td><code>typeHandler</code></td>
               <td>
                 We discussed default type handlers previously in this documentation. Using this property
                 you can override the default type handler on a mapping-by-mapping basis. The value is
-                either a fully qualified class name of a TypeHandler implementation, or a type alias.
+                either a fully qualified class name of a <code>TypeHandler</code> implementation, or a type alias.
               </td>
             </tr>
             <tr>
-              <td>select</td>
+              <td><code>select</code></td>
               <td>
                 The ID of another mapped statement that will load the complex type required by this
                 property mapping. The values retrieved from columns specified in the column attribute
@@ -1082,21 +1084,21 @@ public class User {
               </td>
             </tr>
             <tr>
-              <td>resultMap</td>
+              <td><code>resultMap</code></td>
               <td>
                 This is the ID of a ResultMap that can map the nested results of this argument into an
                 appropriate object graph. This is an alternative to using a call to another select
-                statement. It allows you to join multiple tables together into a single ResultSet. Such
-                a ResultSet will contain duplicated, repeating groups of data that needs to be
+                statement. It allows you to join multiple tables together into a single <code>ResultSet</code>. Such
+                a <code>ResultSet</code> will contain duplicated, repeating groups of data that needs to be
                 decomposed and mapped properly to a nested object graph. To facilitate this, MyBatis
-                lets you “chain” result maps together, to deal with the nested results. See the
+                lets you "chain" result maps together, to deal with the nested results. See the
                 Association element below for more.
               </td>
             </tr>
           </tbody>
         </table>
 
-        <h4>association</h4>
+        <h4><code>association</code></h4>
 
         <source><![CDATA[<association property="author" column="blog_author_id" javaType=" Author">
   <id property="id" column="author_id"/>
@@ -1104,9 +1106,9 @@ public class User {
 </association>]]></source>
 
         <p>
-          The association element deals with a “has-one” type relationship. For example, in our example, a
+          The association element deals with a "has-one" type relationship. For example, in our example, a
           Blog has one Author. An association mapping works mostly like any other result. You specify the
-          target property, the column to retrieve the value from, the javaType of the property (which MyBatis
+          target property, the column to retrieve the value from, the <code>javaType</code> of the property (which MyBatis
           can figure out most of the time), the jdbcType if necessary and a typeHandler if you want to
           override the retrieval of the result values.
         </p>
@@ -1127,7 +1129,7 @@ public class User {
         </ul>
 
         <p>
-          First, let’s examine the properties of the element. As you’ll see, it differs from a normal result
+          First, let's examine the properties of the element. As you'll see, it differs from a normal result
           mapping only by the select and resultMap attributes.
         </p>
 
@@ -1140,46 +1142,46 @@ public class User {
           </thead>
           <tbody>
             <tr>
-              <td>property</td>
+              <td><code>property</code></td>
               <td>
                 The field or property to map the column result to. If a matching JavaBeans property
                 exists for the given name, then that will be used. Otherwise, MyBatis will look for a
                 field of the given name. In both cases you can use complex property navigation using the
-                usual dot notation. For example, you can map to something simple like: “username”, or to
-                something more complicated like: “address.street.number”.
+                usual dot notation. For example, you can map to something simple like: <code>username</code>, or to
+                something more complicated like: <code>address.street.number</code>.
               </td>
             </tr>
             <tr>
-              <td>column</td>
+              <td><code>column</code></td>
               <td>
                 The column name from the database, or the aliased column label. This is the same string
-                that would normally be passed to resultSet.getString(columnName).
+                that would normally be passed to <code>resultSet.getString(columnName)</code>.
                 Note: To deal with composite keys, you can specify multiple column names to pass to the
-                nested select statement by using the syntax column=”{prop1=col1,prop2=col2}”. This will
-                cause prop1 and prop2 to be set against the parameter object for the target nested
+                nested select statement by using the syntax <code>column="{prop1=col1,prop2=col2}"</code>. This will
+                cause <code>prop1</code> and <code>prop2</code> to be set against the parameter object for the target nested
                 select statement.
               </td>
             </tr>
             <tr>
-              <td>javaType</td>
+              <td><code>javaType</code></td>
               <td>
                 A fully qualified Java class name, or a type alias (see the table above for the list of
-                built- in type aliases). MyBatis can usually figure out the type if you’re mapping to a
-                JavaBean. However, if you are mapping to a HashMap, then you should specify the javaType
+                built- in type aliases). MyBatis can usually figure out the type if you're mapping to a
+                JavaBean. However, if you are mapping to a <code>HashMap</code>, then you should specify the javaType
                 explicitly to ensure the desired behaviour.
               </td>
             </tr>
             <tr>
-              <td>jdbcType</td>
+              <td><code>jdbcType</code></td>
               <td>
                 The JDBC Type from the list of supported types that follows this table. The JDBC type is
                 only required for nullable columns upon insert, update or delete. This is a JDBC
-                requirement, not an MyBatis one. So even if you were coding JDBC directly, you’d need to
+                requirement, not an MyBatis one. So even if you were coding JDBC directly, you'd need to
                 specify this type – but only for nullable values.
               </td>
             </tr>
             <tr>
-              <td>typeHandler</td>
+              <td><code>typeHandler</code></td>
               <td>
                 We discussed default type handlers previously in this documentation. Using this property
                 you can override the default type handler on a mapping-by-mapping basis. The value is
@@ -1199,15 +1201,15 @@ public class User {
           </thead>
           <tbody>
             <tr>
-              <td>select</td>
+              <td><code>select</code></td>
               <td>
                 The ID of another mapped statement that will load the complex type required by this
                 property mapping. The values retrieved from columns specified in the column attribute
                 will be passed to the target select statement as parameters. A detailed example follows
                 this table.
                 Note: To deal with composite keys, you can specify multiple column names to pass to the
-                nested select statement by using the syntax column=”{prop1=col1,prop2=col2}”. This will
-                cause prop1 and prop2 to be set against the parameter object for the target nested
+                nested select statement by using the syntax <code>column="{prop1=col1,prop2=col2}"</code>. This will
+                cause <code>prop1</code> and <code>prop2</code> to be set against the parameter object for the target nested
                 select statement.
               </td>
             </tr>
@@ -1218,22 +1220,22 @@ public class User {
           For example:
         </p>
 
-        <source><![CDATA[<resultMap id=”blogResult” type=”Blog”>
-  <association property="author" column="blog_author_id" javaType="Author" select=”selectAuthor”/>
-  <select id=”selectBlog” parameterType=”int” resultMap=”blogResult”>
+        <source><![CDATA[<resultMap id="blogResult" type="Blog">
+  <association property="author" column="blog_author_id" javaType="Author" select="selectAuthor"/>
+  <select id="selectBlog" parameterType="int" resultMap="blogResult">
 </resultMap>
 
-<select id=”selectBlog” parameterType=”int” resultMap=”blogResult”>
+<select id="selectBlog" parameterType="int" resultMap="blogResult">
   SELECT * FROM BLOG WHERE ID = #{id}
 </select>
 
-<select id=”selectAuthor” parameterType=”int” resultType="Author">
+<select id="selectAuthor" parameterType="int" resultType="Author">
   SELECT * FROM AUTHOR WHERE ID = #{id}
 </select>]]></source>
 
         <p>
-          That’s it. We have two select statements: one to load the Blog, the other to load the Author, and
-          the Blog’s resultMap describes that the “selectAuthor” statement should be used to load its author
+          That's it. We have two select statements: one to load the Blog, the other to load the Author, and
+          the Blog's resultMap describes that the <code>selectAuthor</code> statement should be used to load its author
           property.
         </p>
 
@@ -1243,12 +1245,12 @@ public class User {
 
         <p>
           While this approach is simple, it will not perform well for large data sets or lists. This problem
-          is known as the “N+1 Selects Problem”. In a nutshell, the N+1 selects problem is caused like this:
+          is known as the "N+1 Selects Problem". In a nutshell, the N+1 selects problem is caused like this:
         </p>
 
         <ul>
-          <li>You execute a single SQL statement to retrieve a list of records (the “+1”).</li>
-          <li>For each record returned, you execute a select statement to load details for each (the “N”).
+          <li>You execute a single SQL statement to retrieve a list of records (the "+1").</li>
+          <li>For each record returned, you execute a select statement to load details for each (the "N").
           </li>
         </ul>
 
@@ -1278,14 +1280,14 @@ public class User {
           </thead>
           <tbody>
             <tr>
-              <td>resultMap</td>
+              <td><code>resultMap</code></td>
               <td>
                 This is the ID of a ResultMap that can map the nested results of this association into
                 an appropriate object graph. This is an alternative to using a call to another select
                 statement. It allows you to join multiple tables together into a single ResultSet. Such
                 a ResultSet will contain duplicated, repeating groups of data that needs to be
                 decomposed and mapped properly to a nested object graph. To facilitate this, MyBatis
-                lets you “chain” result maps together, to deal with the nested results. An example will
+                lets you "chain" result maps together, to deal with the nested results. An example will
                 be far easier to follow, and one follows this table.
               </td>
             </tr>
@@ -1293,21 +1295,21 @@ public class User {
         </table>
 
         <p>
-          You’ve already seen a very complicated example of nested associations above. The following is a far
-          simpler example to demonstrate how this works. Instead of executing a separate statement, we’ll join
+          You've already seen a very complicated example of nested associations above. The following is a far
+          simpler example to demonstrate how this works. Instead of executing a separate statement, we'll join
           the Blog and Author tables together, like so:
         </p>
 
         <source><![CDATA[<select id="selectBlog" parameterType="int" resultMap="blogResult">
   select
-    B.id 		  as blog_id,
-    B.title 		as blog_title,
-    B.author_id 	as blog_author_id,
-    A.id 	  	as author_id,
-    A.username  	as author_username,
-    A.password 	  as author_password,
-    A.email 		as author_email,
-    A.bio 	  	as author_bio
+    B.id            as blog_id,
+    B.title         as blog_title,
+    B.author_id     as blog_author_id,
+    A.id            as author_id,
+    A.username      as author_username,
+    A.password      as author_password,
+    A.email         as author_email,
+    A.bio           as author_bio
   from Blog B left outer join Author A on B.author_id = A.id
   where B.id = #{id}
 </select>]]></source>
@@ -1318,9 +1320,9 @@ public class User {
         </p>
 
         <source><![CDATA[<resultMap id="blogResult" type="Blog">
-  <id property=”blog_id” column="id" />
+  <id property="blog_id" column="id" />
   <result property="title" column="blog_title"/>
-  <association property="author" column="blog_author_id" javaType="Author" resultMap=”authorResult”/>
+  <association property="author" column="blog_author_id" javaType="Author" resultMap="authorResult"/>
 </resultMap>
 
 <resultMap id="authorResult" type="Author">
@@ -1332,7 +1334,7 @@ public class User {
 </resultMap>]]></source>
 
         <p>
-          In the example above you can see at the Blog’s “author” association delegates to the “authorResult”
+          In the example above you can see at the Blog's "author" association delegates to the "authorResult"
           resultMap to load the Author instance.
         </p>
 
@@ -1349,11 +1351,11 @@ public class User {
           Now, the above example used an external resultMap element to map the association. This makes the
           Author resultMap reusable. However, if you have no need to reuse it, or if you simply prefer to
           co-locate your result mappings into a single descriptive resultMap, you can nest the association
-          result mappings. Here’s the same example using this approach:
+          result mappings. Here's the same example using this approach:
         </p>
 
         <source><![CDATA[<resultMap id="blogResult" type="Blog">
-  <id property=”blog_id” column="id" />
+  <id property="blog_id" column="id" />
   <result property="title" column="blog_title"/>
   <association property="author" column="blog_author_id" javaType="Author">
     <id property="id" column="author_id"/>
@@ -1365,7 +1367,7 @@ public class User {
 </resultMap>]]></source>
 
         <p>
-          You’ve seen above how to deal with a “has one” type association. But what about “has many”? That’s
+          You've seen above how to deal with a "has one" type association. But what about "has many"? That's
           the subject of the next section.
         </p>
 
@@ -1378,8 +1380,8 @@ public class User {
 </collection>]]></source>
 
         <p>
-          The collection element works almost identically to the association. In fact, it’s so similar, to
-          document the similarities would be redundant. So let’s focus on the differences.
+          The collection element works almost identically to the association. In fact, it's so similar, to
+          document the similarities would be redundant. So let's focus on the differences.
         </p>
 
         <p>
@@ -1397,50 +1399,50 @@ public class User {
         <h4>Nested Select for Collection</h4>
 
         <p>
-          First, let’s look at using a nested select to load the Posts for the Blog.
+          First, let's look at using a nested select to load the Posts for the Blog.
         </p>
 
-        <source><![CDATA[<resultMap id=”blogResult” type=”Blog”>
-  <collection property="posts" javaType=”ArrayList” column="blog_id" ofType="Post" select=”selectPostsForBlog”/>
+        <source><![CDATA[<resultMap id="blogResult" type="Blog">
+  <collection property="posts" javaType="ArrayList" column="blog_id" ofType="Post" select="selectPostsForBlog"/>
 </resultMap>
 
-<select id=”selectBlog” parameterType=”int” resultMap=”blogResult”>
+<select id="selectBlog" parameterType="int" resultMap="blogResult">
   SELECT * FROM BLOG WHERE ID = #{id}
 </select>
 
-<select id=”selectPostsForBlog” parameterType=”int” resultType="Blog">
+<select id="selectPostsForBlog" parameterType="int" resultType="Blog">
   SELECT * FROM POST WHERE BLOG_ID = #{id}
 </select>]]></source>
 
         <p>
-          There are a number things you’ll notice immediately, but for the most part it looks very similar to
-          the association element we learned about above. First, you’ll notice that we’re using the collection
-          element. Then you’ll notice that there’s a new “ofType” attribute. This attribute is necessary to
+          There are a number things you'll notice immediately, but for the most part it looks very similar to
+          the association element we learned about above. First, you'll notice that we're using the collection
+          element. Then you'll notice that there's a new "ofType" attribute. This attribute is necessary to
           distinguish between the JavaBean (or field) property type and the type that the collection contains.
           So you could read the following mapping like this:
         </p>
 
-        <source><![CDATA[<collection property="posts" javaType=”ArrayList” column="blog_id" ofType="Post" select=”selectPostsForBlog”/>]]></source>
+        <source><![CDATA[<collection property="posts" javaType="ArrayList" column="blog_id" ofType="Post" select="selectPostsForBlog"/>]]></source>
 
         <p>
-          <span class="important">Read as</span>: “A collection of posts in an ArrayList of type Post.”
+          <span class="important">Read as</span>: "A collection of posts in an ArrayList of type Post."
         </p>
 
         <p>
-          The javaType attribute is really unnecessary, as MyBatis will figure this out for you in most cases.
+          The <code>javaType</code> attribute is really unnecessary, as MyBatis will figure this out for you in most cases.
           So you can often shorten this down to simply:
         </p>
 
-        <source><![CDATA[<collection property="posts" column="blog_id" ofType="Post" select=”selectPostsForBlog”/>]]></source>
+        <source><![CDATA[<collection property="posts" column="blog_id" ofType="Post" select="selectPostsForBlog"/>]]></source>
 
         <h4>Nested Results for Collection</h4>
 
         <p>
-          By this point, you can probably guess how nested results for a collection will work, because it’s
-          exactly the same as an association, but with the same addition of the “ofType” attribute applied.
+          By this point, you can probably guess how nested results for a collection will work, because it's
+          exactly the same as an association, but with the same addition of the <code>ofType</code> attribute applied.
         </p>
 
-        <p>First, let’s look at the SQL:</p>
+        <p>First, let's look at the SQL:</p>
 
         <source><![CDATA[<select id="selectBlog" parameterType="int" resultMap="blogResult">
   select
@@ -1456,12 +1458,12 @@ public class User {
 </select>]]></source>
 
         <p>
-          Again, we’ve joined the Blog and Post tables, and have taken care to ensure quality result column
+          Again, we've joined the Blog and Post tables, and have taken care to ensure quality result column
           labels for simple mapping. Now mapping a Blog with its collection of Post mappings is as simple as:
         </p>
 
         <source><![CDATA[<resultMap id="blogResult" type="Blog">
-  <id property=”id” column="blog_id" />
+  <id property="id" column="blog_id" />
   <result property="title" column="blog_title"/>
   <collection property="posts" ofType="Post">
     <id property="id" column="post_id"/>
@@ -1472,7 +1474,7 @@ public class User {
 
         <p>
           Again, remember the importance of the id elements here, or read the association section above if you
-          haven’t already.
+          haven't already.
         </p>
 
         <p>
@@ -1480,9 +1482,9 @@ public class User {
           use the following alternative mapping:
         </p>
         <source><![CDATA[<resultMap id="blogResult" type="Blog">
-  <id property=”id” column="blog_id" />
+  <id property="id" column="blog_id" />
   <result property="title" column="blog_title"/>
-  <collection property="posts" ofType="Post" resultMap=”blogPostResult”/>
+  <collection property="posts" ofType="Post" resultMap="blogPostResult"/>
 </resultMap>
 
 <resultMap id="blogPostResult" type="Post">
@@ -1492,7 +1494,7 @@ public class User {
 </resultMap>]]></source>
 
         <p>
-          <span class="label important">NOTE</span> There’s no limit to the depth, breadth or combinations of the
+          <span class="label important">NOTE</span> There's no limit to the depth, breadth or combinations of the
           associations and collections
           that you map. You should keep performance in mind when mapping them. Unit testing and performance
           testing of your application goes a long way toward discovering the best approach for your
@@ -1525,7 +1527,7 @@ public class User {
         </p>
 
         <source><![CDATA[<resultMap id="vehicleResult" type="Vehicle">
-  <id property=”id” column="id" />
+  <id property="id" column="id" />
   <result property="vin" column="vin"/>
   <result property="year" column="year"/>
   <result property="make" column="make"/>
@@ -1541,7 +1543,7 @@ public class User {
 
         <p>
           In this example, MyBatis would retrieve each record from the result set and compare its vehicle type
-          value. If it matches any of the discriminator cases, then it will use the resultMap specified by the
+          value. If it matches any of the discriminator cases, then it will use the <code>resultMap</code> specified by the
           case. This is done exclusively, so in other words, the rest of the resultMap is ignored (unless it
           is extended, which we talk about in a second). If none of the cases match, then MyBatis simply uses
           the resultMap as defined outside of the discriminator block. So, if the carResult was declared as
@@ -1550,19 +1552,19 @@ public class User {
 
 
         <source><![CDATA[<resultMap id="carResult" type="Car">
-  <result property=”doorCount” column="door_count" />
+  <result property="doorCount" column="door_count" />
 </resultMap>]]></source>
 
         <p>
           Then ONLY the doorCount property would be loaded. This is done to allow completely independent
           groups of discriminator cases, even ones that have no relationship to the parent resultMap. In this
-          case we do of course know that there’s a relationship between cars and vehicles, as a Car is-a
+          case we do of course know that there's a relationship between cars and vehicles, as a Car is-a
           Vehicle. Therefore, we want the rest of the properties loaded too. One simple change to the
-          resultMap and we’re set to go.
+          resultMap and we're set to go.
         </p>
 
-        <source><![CDATA[<resultMap id="carResult" type="Car" extends=”vehicleResult”>
-  <result property=”doorCount” column="door_count" />
+        <source><![CDATA[<resultMap id="carResult" type="Car" extends="vehicleResult">
+  <result property="doorCount" column="door_count" />
 </resultMap>]]></source>
 
         <p>
@@ -1571,11 +1573,11 @@ public class User {
 
         <p>
           Once again though, some may find this external definition of maps somewhat tedious. Therefore
-          there’s an alternative syntax for those that prefer a more concise mapping style. For example:
+          there's an alternative syntax for those that prefer a more concise mapping style. For example:
         </p>
 
         <source><![CDATA[<resultMap id="vehicleResult" type="Vehicle">
-  <id property=”id” column="id" />
+  <id property="id" column="id" />
   <result property="vin" column="vin"/>
   <result property="year" column="year"/>
   <result property="make" column="make"/>
@@ -1583,30 +1585,30 @@ public class User {
   <result property="color" column="color"/>
   <discriminator javaType="int" column="vehicle_type">
     <case value="1" resultType="carResult">
-      <result property=”doorCount” column="door_count" />
+      <result property="doorCount" column="door_count" />
     </case>
     <case value="2" resultType="truckResult">
-      <result property=”boxSize” column="box_size" />
-      <result property=”extendedCab” column="extended_cab" />
+      <result property="boxSize" column="box_size" />
+      <result property="extendedCab" column="extended_cab" />
     </case>
     <case value="3" resultType="vanResult">
-      <result property=”powerSlidingDoor” column="power_sliding_door" />
+      <result property="powerSlidingDoor" column="power_sliding_door" />
     </case>
     <case value="4" resultType="suvResult">
-      <result property=”allWheelDrive” column="all_wheel_drive" />
+      <result property="allWheelDrive" column="all_wheel_drive" />
     </case>
   </discriminator>
 </resultMap>]]></source>
 
         <p>
           <span class="label important">NOTE</span> Remember
-          that these are all Result Maps, and if you don’t specify any results at all, then MyBatis will
+          that these are all Result Maps, and if you don't specify any results at all, then MyBatis will
           automatically match up columns and properties for you. So most of these examples are more verbose
-          than they really need to be. That said, most databases are kind of complex and it’s unlikely that
-          we’ll be able to depend on that for all cases.
+          than they really need to be. That said, most databases are kind of complex and it's unlikely that
+          we'll be able to depend on that for all cases.
         </p>
-        
-			</subsection>   
+
+      </subsection>
       <subsection name="cache">
         <p>
           MyBatis has includes a powerful query caching feature which is very configurable and customizable. A
@@ -1623,7 +1625,7 @@ public class User {
         <source><![CDATA[<cache/>]]></source>
 
         <p>
-          Literally that’s it. The effect of this one simple statement is as follows:
+          Literally that's it. The effect of this one simple statement is as follows:
         </p>
 
         <ul>
@@ -1662,16 +1664,16 @@ public class User {
 
         <ul>
           <li>
-            LRU – Least Recently Used: Removes objects that haven’t been used for the longst period of
+            <code>LRU</code> – Least Recently Used: Removes objects that haven't been used for the longst period of
             time.
           </li>
-          <li>FIFO – First In First Out: Removes objects in the order that they entered the cache.</li>
+          <li><code>FIFO</code> – First In First Out: Removes objects in the order that they entered the cache.</li>
           <li>
-            SOFT – Soft Reference: Removes objects based on the garbage collector state and the rules of
+            <code>SOFT</code> – Soft Reference: Removes objects based on the garbage collector state and the rules of
             Soft References.
           </li>
           <li>
-            WEAK – Weak Reference: More aggressively removes objects based on the garbage collector state
+            <code>WEAK</code> – Weak Reference: More aggressively removes objects based on the garbage collector state
             and rules of Weak References.
           </li>
         </ul>
@@ -1704,7 +1706,7 @@ public class User {
           solutions.
         </p>
 
-        <source><![CDATA[<cache type=”com.domain.something.MyCustomCache”/>]]></source>
+        <source><![CDATA[<cache type="com.domain.something.MyCustomCache"/>]]></source>
 
         <p>
           This example demonstrates how to use a custom cache implementation. The class specified in the type
@@ -1725,34 +1727,34 @@ public class User {
         <p>
           To configure your cache, simply add public JavaBeans properties to your Cache implementation, and
           pass properties via the cache Element, for example, the following would call a method called
-          “setCacheFile(String file)” on your Cache implementation:
+          <code>setCacheFile(String file)</code> on your Cache implementation:
         </p>
 
-        <source><![CDATA[<cache type=”com.domain.something.MyCustomCache”>
-  <property name=”cacheFile” value=”/tmp/my-custom-cache.tmp”/>
+        <source><![CDATA[<cache type="com.domain.something.MyCustomCache">
+  <property name="cacheFile" value="/tmp/my-custom-cache.tmp"/>
 </cache>]]></source>
 
         <p>You can use JavaBeans properties of all simple types, MyBatis will do the conversion.</p>
 
         <p>
-          It’s important to remember that a cache configuration and the cache instance are bound to the
+          It's important to remember that a cache configuration and the cache instance are bound to the
           namespace of the SQL Map file. Thus, all statements in the same namespace as the cache are bound by
           it. Statements can modify how they interact with the cache, or exclude themselves completely by
           using two simple attributes on a statement-by-statement basis. By default, statements are configured
           like this:
         </p>
 
-        <source><![CDATA[<select ... flushCache=”false” useCache=”true”/>
-<insert ... flushCache=”true”/>
-<update ... flushCache=”true”/>
-<delete ... flushCache=”true”/>]]></source>
+        <source><![CDATA[<select ... flushCache="false" useCache="true"/>
+<insert ... flushCache="true"/>
+<update ... flushCache="true"/>
+<delete ... flushCache="true"/>]]></source>
 
         <p>
-          Since that’s the default, you obviously should never explicitly configure a statement that way.
+          Since that's the default, you obviously should never explicitly configure a statement that way.
           Instead, only set the flushCache and useCache attributes if you want to change the default behavior.
           For example, in some cases you may want to exclude the results of a particular select statement from
           the cache, or you might want a select statement to flush the cache. Similarly, you may have some
-          update statements that don’t need to flush the cache upon execution.
+          update statements that don't need to flush the cache upon execution.
         </p>
 
           <h4>cache-ref</h4>
@@ -1763,7 +1765,7 @@ public class User {
           cache by using the cache-ref element.
         </p>
 
-        <source><![CDATA[<cache-ref namespace=”com.someone.application.data.SomeMapper”/>]]></source>
+        <source><![CDATA[<cache-ref namespace="com.someone.application.data.SomeMapper"/>]]></source>
       </subsection>
     </section>
   </body>
