@@ -105,26 +105,26 @@ public class MapperMethod {
     }
   }
 
-  private List executeForList(Object[] args) {
-    List result;
+  private <E> List<E> executeForList(Object[] args) {
+    List<E> result;
     Object param = getParam(args);
     if (rowBoundsIndex != null) {
       RowBounds rowBounds = (RowBounds) args[rowBoundsIndex];
-      result = sqlSession.selectList(commandName, param, rowBounds);
+      result = sqlSession.<E>selectList(commandName, param, rowBounds);
     } else {
-      result = sqlSession.selectList(commandName, param);
+      result = sqlSession.<E>selectList(commandName, param);
     }
     return result;
   }
 
-  private Map executeForMap(Object[] args) {
-    Map result;
+  private <K, V> Map<K, V> executeForMap(Object[] args) {
+    Map<K, V> result;
     Object param = getParam(args);
     if (rowBoundsIndex != null) {
       RowBounds rowBounds = (RowBounds) args[rowBoundsIndex];
-      result = sqlSession.selectMap(commandName, param, mapKey, rowBounds);
+      result = sqlSession.<K, V>selectMap(commandName, param, mapKey, rowBounds);
     } else {
-      result = sqlSession.selectMap(commandName, param, mapKey);
+      result = sqlSession.<K, V>selectMap(commandName, param, mapKey);
     }
     return result;
   }
@@ -157,7 +157,7 @@ public class MapperMethod {
     if (List.class.isAssignableFrom(method.getReturnType())) {
       returnsList = true;
     }
-    if (Map.class.isAssignableFrom(method.getReturnType())) { 
+    if (Map.class.isAssignableFrom(method.getReturnType())) {
       final MapKey mapKeyAnnotation = method.getAnnotation(MapKey.class);
       if (mapKeyAnnotation != null) {
         mapKey = mapKeyAnnotation.value();
