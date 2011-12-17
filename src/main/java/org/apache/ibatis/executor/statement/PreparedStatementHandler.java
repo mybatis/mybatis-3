@@ -48,11 +48,11 @@ public class PreparedStatementHandler extends BaseStatementHandler {
     ps.addBatch();
   }
 
-  public List query(Statement statement, ResultHandler resultHandler)
+  public <E> List<E> query(Statement statement, ResultHandler resultHandler)
       throws SQLException {
     PreparedStatement ps = (PreparedStatement) statement;
     ps.execute();
-    return resultSetHandler.handleResultSets(ps);
+    return resultSetHandler.<E>handleResultSets(ps);
   }
 
   protected Statement instantiateStatement(Connection connection) throws SQLException {

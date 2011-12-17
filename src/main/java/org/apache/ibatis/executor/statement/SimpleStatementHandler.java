@@ -62,11 +62,11 @@ public class SimpleStatementHandler extends BaseStatementHandler {
     statement.addBatch(sql);
   }
 
-  public List query(Statement statement, ResultHandler resultHandler)
+  public <E> List<E> query(Statement statement, ResultHandler resultHandler)
       throws SQLException {
     String sql = boundSql.getSql();
     statement.execute(sql);
-    return resultSetHandler.handleResultSets(statement);
+    return resultSetHandler.<E>handleResultSets(statement);
   }
 
   protected Statement instantiateStatement(Connection connection) throws SQLException {
