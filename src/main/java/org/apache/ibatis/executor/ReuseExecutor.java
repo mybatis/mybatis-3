@@ -71,8 +71,7 @@ public class ReuseExecutor extends BaseExecutor {
     if (hasStatementFor(sql)) {
       stmt = getStatement(sql);
     } else {
-      Connection connection = transaction.getConnection();
-      connection = wrapConnection(connection);
+      Connection connection = getConnection();
       stmt = handler.prepare(connection);
       putStatement(sql, stmt);
     }

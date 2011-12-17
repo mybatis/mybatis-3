@@ -119,7 +119,7 @@ public abstract class BaseExecutor implements Executor {
     ErrorContext.instance().resource(ms.getResource()).activity("executing a query").object(ms.getId());
     if (closed) throw new ExecutorException("Executor was closed.");
 
-    // Flush the internal cache is force is true
+    // Flush the internal cache when force is true
     if (ms.isFlushCacheRequired()) {
         clearLocalCache();
     }
@@ -275,7 +275,7 @@ public abstract class BaseExecutor implements Executor {
     private final CacheKey key;
     private final PerpetualCache localCache;
 
-    public DeferredLoad(@SuppressWarnings("unused") MappedStatement mappedStatement,
+    public DeferredLoad(MappedStatement mappedStatement,
                         MetaObject resultObject,
                         String property,
                         CacheKey key,
@@ -292,7 +292,7 @@ public abstract class BaseExecutor implements Executor {
 
     public void load() {
       Object value = null;
-      @SuppressWarnings( "unchecked" ) // we suppose we get back a Lits
+      @SuppressWarnings( "unchecked" ) // we suppose we get back a List
       List<Object> list = (List<Object>) localCache.getObject(key);
       Class<?> targetType = resultObject.getSetterType(property);
       if (Set.class.isAssignableFrom(targetType)) {
@@ -312,13 +312,14 @@ public abstract class BaseExecutor implements Executor {
       resultObject.setValue(property, value);
     }
   }
-
-  protected Connection wrapConnection(Connection connection) {
+  
+  protected Connection getConnection() throws SQLException {
+    Connection connection = transaction.getConnection();
     if (log.isDebugEnabled()) {
-      return ConnectionLogger.newInstance(connection);
-    } else {
-      return connection;
+        return ConnectionLogger.newInstance(connection);
+      } else {
+        return connection;
+      }
     }
-  }
 
 }

@@ -45,8 +45,7 @@ public class BatchExecutor extends BaseExecutor {
     super(configuration, transaction);
   }
 
-  public int doUpdate(MappedStatement ms, Object parameterObject)
-      throws SQLException {
+  public int doUpdate(MappedStatement ms, Object parameterObject) throws SQLException {
     Configuration configuration = ms.getConfiguration();
     StatementHandler handler = configuration.newStatementHandler(this, ms, parameterObject, RowBounds.DEFAULT, null);
     BoundSql boundSql = handler.getBoundSql();
@@ -56,8 +55,7 @@ public class BatchExecutor extends BaseExecutor {
       int last = statementList.size() - 1;
       stmt = statementList.get(last);
     } else {
-      Connection connection = transaction.getConnection();
-      connection = wrapConnection(connection);
+      Connection connection = getConnection();
       stmt = handler.prepare(connection);
       currentSql = sql;
       statementList.add(stmt);
@@ -75,8 +73,7 @@ public class BatchExecutor extends BaseExecutor {
       flushStatements();
       Configuration configuration = ms.getConfiguration();
       StatementHandler handler = configuration.newStatementHandler(this, ms, parameterObject, rowBounds, resultHandler);
-      Connection connection = transaction.getConnection();
-      connection = wrapConnection(connection);
+      Connection connection = getConnection();
       stmt = handler.prepare(connection);
       handler.parameterize(stmt);
       return handler.<E>query(stmt, resultHandler);
