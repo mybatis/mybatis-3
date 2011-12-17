@@ -281,8 +281,9 @@ public abstract class BaseExecutor implements Executor {
     }
 
     public boolean canLoad() {
-    	return localCache.getObject(key) != null && localCache.getObject(key) != EXECUTION_PLACEHOLDER;
+      return localCache.getObject(key) != null && localCache.getObject(key) != EXECUTION_PLACEHOLDER;
     }
+
     public void load() {
       Object value = null;
       @SuppressWarnings( "unchecked" ) // we suppose we get back a Lits
