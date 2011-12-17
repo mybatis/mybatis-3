@@ -20,7 +20,7 @@ import java.lang.reflect.Method;
 
 public class MethodInvoker implements Invoker {
 
-  private Class type;
+  private Class<?> type;
   private Method method;
 
   public MethodInvoker(Method method) {
@@ -37,7 +37,7 @@ public class MethodInvoker implements Invoker {
     return method.invoke(target, args);
   }
 
-  public Class getType() {
+  public Class<?> getType() {
     return type;
   }
 }

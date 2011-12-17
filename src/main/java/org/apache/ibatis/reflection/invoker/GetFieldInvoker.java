@@ -29,7 +29,7 @@ public class GetFieldInvoker implements Invoker {
     return field.get(target);
   }
 
-  public Class getType() {
+  public Class<?> getType() {
     return field.getType();
   }
 }
