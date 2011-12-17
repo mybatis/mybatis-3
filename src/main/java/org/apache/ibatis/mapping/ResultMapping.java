@@ -30,9 +30,9 @@ public class ResultMapping {
   private Configuration configuration;
   private String property;
   private String column;
-  private Class javaType;
+  private Class<?> javaType;
   private JdbcType jdbcType;
-  private TypeHandler typeHandler;
+  private TypeHandler<?> typeHandler;
   private String nestedResultMapId;
   private String nestedQueryId;
   private Set<String> notNullColumns;
@@ -45,7 +45,7 @@ public class ResultMapping {
   public static class Builder {
     private ResultMapping resultMapping = new ResultMapping();
 
-    public Builder(Configuration configuration, String property, String column, TypeHandler typeHandler) {
+    public Builder(Configuration configuration, String property, String column, TypeHandler<?> typeHandler) {
       resultMapping.configuration = configuration;
       resultMapping.property = property;
       resultMapping.column = column;
@@ -54,7 +54,7 @@ public class ResultMapping {
       resultMapping.composites = new ArrayList<ResultMapping>();
     }
 
-    public Builder(Configuration configuration, String property, String column, Class javaType) {
+    public Builder(Configuration configuration, String property, String column, Class<?> javaType) {
       resultMapping.configuration = configuration;
       resultMapping.property = property;
       resultMapping.column = column;
@@ -70,7 +70,7 @@ public class ResultMapping {
       resultMapping.composites = new ArrayList<ResultMapping>();
     }
 
-    public Builder javaType(Class javaType) {
+    public Builder javaType(Class<?> javaType) {
       resultMapping.javaType = javaType;
       return this;
     }
@@ -94,13 +94,13 @@ public class ResultMapping {
       resultMapping.notNullColumns = notNullColumns;
       return this;
     }
-      
+
     public Builder flags(List<ResultFlag> flags) {
       resultMapping.flags = flags;
       return this;
     }
 
-    public Builder typeHandler(TypeHandler typeHandler) {
+    public Builder typeHandler(TypeHandler<?> typeHandler) {
       resultMapping.typeHandler = typeHandler;
       return this;
     }
@@ -142,7 +142,7 @@ public class ResultMapping {
     return column;
   }
 
-  public Class getJavaType() {
+  public Class<?> getJavaType() {
     return javaType;
   }
 
@@ -150,7 +150,7 @@ public class ResultMapping {
     return jdbcType;
   }
 
-  public TypeHandler getTypeHandler() {
+  public TypeHandler<?> getTypeHandler() {
     return typeHandler;
   }
 

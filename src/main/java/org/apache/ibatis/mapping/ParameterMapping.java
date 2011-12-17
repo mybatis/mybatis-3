@@ -26,10 +26,10 @@ public class ParameterMapping {
 
   private String property;
   private ParameterMode mode;
-  private Class javaType = Object.class;
+  private Class<?> javaType = Object.class;
   private JdbcType jdbcType;
   private Integer numericScale;
-  private TypeHandler typeHandler;
+  private TypeHandler<?> typeHandler;
   private String resultMapId;
   private String jdbcTypeName;
 
@@ -39,14 +39,14 @@ public class ParameterMapping {
   public static class Builder {
     private ParameterMapping parameterMapping = new ParameterMapping();
 
-    public Builder(Configuration configuration, String property, TypeHandler typeHandler) {
+    public Builder(Configuration configuration, String property, TypeHandler<?> typeHandler) {
       parameterMapping.configuration = configuration;
       parameterMapping.property = property;
       parameterMapping.typeHandler = typeHandler;
       parameterMapping.mode = ParameterMode.IN;
     }
 
-    public Builder(Configuration configuration, String property, Class javaType) {
+    public Builder(Configuration configuration, String property, Class<?> javaType) {
       parameterMapping.configuration = configuration;
       parameterMapping.property = property;
       parameterMapping.javaType = javaType;
@@ -58,7 +58,7 @@ public class ParameterMapping {
       return this;
     }
 
-    public Builder javaType(Class javaType) {
+    public Builder javaType(Class<?> javaType) {
       parameterMapping.javaType = javaType;
       return this;
     }
@@ -78,7 +78,7 @@ public class ParameterMapping {
       return this;
     }
 
-    public Builder typeHandler(TypeHandler typeHandler) {
+    public Builder typeHandler(TypeHandler<?> typeHandler) {
       parameterMapping.typeHandler = typeHandler;
       return this;
     }
@@ -114,7 +114,7 @@ public class ParameterMapping {
     return mode;
   }
 
-  public Class getJavaType() {
+  public Class<?> getJavaType() {
     return javaType;
   }
 
@@ -126,7 +126,7 @@ public class ParameterMapping {
     return numericScale;
   }
 
-  public TypeHandler getTypeHandler() {
+  public TypeHandler<?> getTypeHandler() {
     return typeHandler;
   }
 
@@ -137,5 +137,5 @@ public class ParameterMapping {
   public String getJdbcTypeName() {
     return jdbcTypeName;
   }
-	
+
 }

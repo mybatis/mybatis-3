@@ -120,11 +120,11 @@ public class CacheBuilder {
   private void setCacheProperties(Cache cache) {
     if (properties != null) {
       MetaObject metaCache = MetaObject.forObject(cache);
-      for (Map.Entry entry : properties.entrySet()) {
+      for (Map.Entry<Object, Object> entry : properties.entrySet()) {
         String name = (String) entry.getKey();
         String value = (String) entry.getValue();
         if (metaCache.hasSetter(name)) {
-          Class type = metaCache.getSetterType(name);
+          Class<?> type = metaCache.getSetterType(name);
           if (String.class == type) {
             metaCache.setValue(name, value);
           } else if (int.class == type

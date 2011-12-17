@@ -21,7 +21,7 @@ import java.util.*;
 
 public class ResultMap {
   private String id;
-  private Class type;
+  private Class<?> type;
   private List<ResultMapping> resultMappings;
   private List<ResultMapping> idResultMappings;
   private List<ResultMapping> constructorResultMappings;
@@ -37,7 +37,7 @@ public class ResultMap {
   public static class Builder {
     private ResultMap resultMap = new ResultMap();
 
-    public Builder(Configuration configuration, String id, Class type, List<ResultMapping> resultMappings) {
+    public Builder(Configuration configuration, String id, Class<?> type, List<ResultMapping> resultMappings) {
       resultMap.id = id;
       resultMap.type = type;
       resultMap.resultMappings = resultMappings;
@@ -48,7 +48,7 @@ public class ResultMap {
       return this;
     }
 
-    public Class type() {
+    public Class<?> type() {
       return resultMap.type;
     }
 
@@ -105,7 +105,7 @@ public class ResultMap {
     return hasNestedQueries;
   }
 
-  public Class getType() {
+  public Class<?> getType() {
     return type;
   }
 
