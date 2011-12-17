@@ -270,13 +270,11 @@ public abstract class BaseExecutor implements Executor {
 
   private class DeferredLoad {
 
-    MappedStatement mappedStatement;
     private MetaObject resultObject;
     private String property;
     private CacheKey key;
 
-    public DeferredLoad(MappedStatement mappedStatement, MetaObject resultObject, String property, CacheKey key) {
-      this.mappedStatement = mappedStatement;
+    public DeferredLoad(@SuppressWarnings("unused") MappedStatement mappedStatement, MetaObject resultObject, String property, CacheKey key) {
       this.resultObject = resultObject;
       this.property = property;
       this.key = key;
@@ -287,10 +285,11 @@ public abstract class BaseExecutor implements Executor {
     }
     public void load() {
       Object value = null;
-      List list = (List) localCache.getObject(key);
-      Class targetType = resultObject.getSetterType(property);
+      @SuppressWarnings( "unchecked" ) // we suppose we get back a Lits
+      List<Object> list = (List<Object>) localCache.getObject(key);
+      Class<?> targetType = resultObject.getSetterType(property);
       if (Set.class.isAssignableFrom(targetType)) {
-        value = new HashSet(list);
+        value = new HashSet<Object>(list);
       } else if (Collection.class.isAssignableFrom(targetType)) {
         value = list;
       } else if (targetType.isArray()) {
