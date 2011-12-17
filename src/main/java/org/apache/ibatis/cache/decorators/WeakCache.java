@@ -22,21 +22,21 @@ import java.lang.ref.WeakReference;
 import java.util.LinkedList;
 import java.util.concurrent.locks.ReadWriteLock;
 
-/*
- * Weak Reference cache decorator
+/**
+ * Weak Reference cache decorator.
  * Thanks to Dr. Heinz Kabutz for his guidance here.
  */
 public class WeakCache implements Cache {
-  private final LinkedList hardLinksToAvoidGarbageCollection;
-  private final ReferenceQueue queueOfGarbageCollectedEntries;
+  private final LinkedList<Object> hardLinksToAvoidGarbageCollection;
+  private final ReferenceQueue<Object> queueOfGarbageCollectedEntries;
   private final Cache delegate;
   private int numberOfHardLinks;
 
   public WeakCache(Cache delegate) {
     this.delegate = delegate;
     this.numberOfHardLinks = 256;
-    this.hardLinksToAvoidGarbageCollection = new LinkedList();
-    this.queueOfGarbageCollectedEntries = new ReferenceQueue();
+    this.hardLinksToAvoidGarbageCollection = new LinkedList<Object>();
+    this.queueOfGarbageCollectedEntries = new ReferenceQueue<Object>();
   }
 
   public String getId() {
@@ -59,7 +59,8 @@ public class WeakCache implements Cache {
 
   public Object getObject(Object key) {
     Object result = null;
-    WeakReference weakReference = (WeakReference) delegate.getObject(key);
+    @SuppressWarnings("unchecked") // assumed delegate cache is totally managed by this cache
+    WeakReference<Object> weakReference = (WeakReference<Object>) delegate.getObject(key);
     if (weakReference != null) {
       result = weakReference.get();
       if (result == null) {
@@ -96,10 +97,10 @@ public class WeakCache implements Cache {
     }
   }
 
-  private static class WeakEntry extends WeakReference {
+  private static class WeakEntry extends WeakReference<Object> {
     private final Object key;
 
-    private WeakEntry(Object key, Object value, ReferenceQueue garbageCollectionQueue) {
+    private WeakEntry(Object key, Object value, ReferenceQueue<Object> garbageCollectionQueue) {
       super(value, garbageCollectionQueue);
       this.key = key;
     }
