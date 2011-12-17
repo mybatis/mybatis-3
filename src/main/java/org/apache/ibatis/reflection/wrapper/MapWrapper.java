@@ -24,9 +24,9 @@ import java.util.Map;
 
 public class MapWrapper extends BaseWrapper {
 
-  private Map map;
+  private Map<String, Object> map;
 
-  public MapWrapper(MetaObject metaObject, Map map) {
+  public MapWrapper(MetaObject metaObject, Map<String, Object> map) {
     super(metaObject);
     this.map = map;
   }
@@ -61,7 +61,7 @@ public class MapWrapper extends BaseWrapper {
     return (String[]) map.keySet().toArray(new String[map.keySet().size()]);
   }
 
-  public Class getSetterType(String name) {
+  public Class<?> getSetterType(String name) {
     PropertyTokenizer prop = new PropertyTokenizer(name);
     if (prop.hasNext()) {
       MetaObject metaValue = metaObject.metaObjectForProperty(prop.getIndexedName());
@@ -79,7 +79,7 @@ public class MapWrapper extends BaseWrapper {
     }
   }
 
-  public Class getGetterType(String name) {
+  public Class<?> getGetterType(String name) {
     PropertyTokenizer prop = new PropertyTokenizer(name);
     if (prop.hasNext()) {
       MetaObject metaValue = metaObject.metaObjectForProperty(prop.getIndexedName());
@@ -120,7 +120,7 @@ public class MapWrapper extends BaseWrapper {
   }
 
   public MetaObject instantiatePropertyValue(String name, PropertyTokenizer prop, ObjectFactory objectFactory) {
-    HashMap map = new HashMap();
+    HashMap<String, Object> map = new HashMap<String, Object>();
     set(prop, map);
     return MetaObject.forObject(map, metaObject.getObjectFactory(), metaObject.getObjectWrapperFactory());
   }

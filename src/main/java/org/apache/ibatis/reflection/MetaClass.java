@@ -22,11 +22,11 @@ public class MetaClass {
 
   private Reflector reflector;
 
-  private MetaClass(Class type) {
+  private MetaClass(Class<?> type) {
     this.reflector = Reflector.forClass(type);
   }
 
-  public static MetaClass forClass(Class type) {
+  public static MetaClass forClass(Class<?> type) {
     return new MetaClass(type);
   }
 
@@ -39,7 +39,7 @@ public class MetaClass {
   }
 
   public MetaClass metaClassForProperty(String name) {
-    Class propType = reflector.getGetterType(name);
+    Class<?> propType = reflector.getGetterType(name);
     return MetaClass.forClass(propType);
   }
 
@@ -56,7 +56,7 @@ public class MetaClass {
     return reflector.getSetablePropertyNames();
   }
 
-  public Class getSetterType(String name) {
+  public Class<?> getSetterType(String name) {
     PropertyTokenizer prop = new PropertyTokenizer(name);
     if (prop.hasNext()) {
       MetaClass metaProp = metaClassForProperty(prop.getName());
@@ -66,7 +66,7 @@ public class MetaClass {
     }
   }
 
-  public Class getGetterType(String name) {
+  public Class<?> getGetterType(String name) {
     PropertyTokenizer prop = new PropertyTokenizer(name);
     if (prop.hasNext()) {
       MetaClass metaProp = metaClassForProperty(prop.getName());

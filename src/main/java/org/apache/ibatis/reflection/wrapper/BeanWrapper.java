@@ -67,7 +67,7 @@ public class BeanWrapper extends BaseWrapper {
     return metaClass.getSetterNames();
   }
 
-  public Class getSetterType(String name) {
+  public Class<?> getSetterType(String name) {
     PropertyTokenizer prop = new PropertyTokenizer(name);
     if (prop.hasNext()) {
       MetaObject metaValue = metaObject.metaObjectForProperty(prop.getIndexedName());
@@ -81,7 +81,7 @@ public class BeanWrapper extends BaseWrapper {
     }
   }
 
-  public Class getGetterType(String name) {
+  public Class<?> getGetterType(String name) {
     PropertyTokenizer prop = new PropertyTokenizer(name);
     if (prop.hasNext()) {
       MetaObject metaValue = metaObject.metaObjectForProperty(prop.getIndexedName());
@@ -133,7 +133,7 @@ public class BeanWrapper extends BaseWrapper {
 
   public MetaObject instantiatePropertyValue(String name, PropertyTokenizer prop, ObjectFactory objectFactory) {
     MetaObject metaValue;
-    Class type = getSetterType(prop.getName());
+    Class<?> type = getSetterType(prop.getName());
     try {
       Object newObject = objectFactory.create(type);
       metaValue = MetaObject.forObject(newObject, metaObject.getObjectFactory(), metaObject.getObjectWrapperFactory());

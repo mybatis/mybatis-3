@@ -41,7 +41,7 @@ public class MetaObject {
     this.originalObject = object;
     this.objectFactory = objectFactory;
     this.objectWrapperFactory = objectWrapperFactory;
-    
+
     if (object instanceof ObjectWrapper) {
       this.objectWrapper = (ObjectWrapper) object;
     } else if (objectWrapperFactory.hasWrapperFor(object)) {
@@ -52,7 +52,7 @@ public class MetaObject {
       this.objectWrapper = new BeanWrapper(this, object);
     }
   }
-  
+
   public static MetaObject forObject(Object object, ObjectFactory objectFactory, ObjectWrapperFactory objectWrapperFactory) {
     if (object == null) {
       return NULL_META_OBJECT;
@@ -77,7 +77,7 @@ public class MetaObject {
     return originalObject;
   }
 
-  public String findProperty(String propName, boolean useCamelCaseMapping) {    
+  public String findProperty(String propName, boolean useCamelCaseMapping) {
     return objectWrapper.findProperty(propName, useCamelCaseMapping);
   }
 
@@ -89,11 +89,11 @@ public class MetaObject {
     return objectWrapper.getSetterNames();
   }
 
-  public Class getSetterType(String name) {
+  public Class<?> getSetterType(String name) {
     return objectWrapper.getSetterType(name);
   }
 
-  public Class getGetterType(String name) {
+  public Class<?> getGetterType(String name) {
     return objectWrapper.getGetterType(name);
   }
 
