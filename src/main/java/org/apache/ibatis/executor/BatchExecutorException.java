@@ -20,11 +20,14 @@ import java.util.List;
 
 public class BatchExecutorException extends ExecutorException {
 
-  private final List successfulBatchResults;
+  private static final long serialVersionUID = 154049229650533990L;
+  private final List<BatchResult> successfulBatchResults;
   private final BatchUpdateException batchUpdateException;
   private final BatchResult batchResult;
 
-  public BatchExecutorException(String message, BatchUpdateException cause, List successfulBatchResults,
+  public BatchExecutorException(String message, 
+                                BatchUpdateException cause, 
+                                List<BatchResult> successfulBatchResults,
                                 BatchResult batchResult) {
     super(message + " Cause: " + cause, cause);
     this.batchUpdateException = cause;
@@ -52,7 +55,7 @@ public class BatchExecutorException extends ExecutorException {
    * @return the previously successful executor results (may be an empty list
    *         if no executor has executed successfully)
    */
-  public List getSuccessfulBatchResults() {
+  public List<BatchResult> getSuccessfulBatchResults() {
     return successfulBatchResults;
   }
 
