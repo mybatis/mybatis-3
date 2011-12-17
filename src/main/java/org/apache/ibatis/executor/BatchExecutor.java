@@ -68,7 +68,7 @@ public class BatchExecutor extends BaseExecutor {
     return BATCH_UPDATE_RETURN_VALUE;
   }
 
-  public List doQuery(MappedStatement ms, Object parameterObject, RowBounds rowBounds, ResultHandler resultHandler)
+  public <E> List<E> doQuery(MappedStatement ms, Object parameterObject, RowBounds rowBounds, ResultHandler resultHandler)
       throws SQLException {
     Statement stmt = null;
     try {
@@ -79,17 +79,17 @@ public class BatchExecutor extends BaseExecutor {
       connection = wrapConnection(connection);
       stmt = handler.prepare(connection);
       handler.parameterize(stmt);
-      return handler.query(stmt, resultHandler);
+      return handler.<E>query(stmt, resultHandler);
     } finally {
       closeStatement(stmt);
     }
   }
-  
+
   public List<BatchResult> doFlushStatements(boolean isRollback) throws SQLException {
     try {
       List<BatchResult> results = new ArrayList<BatchResult>();
       if (isRollback) {
-        return Collections.EMPTY_LIST;
+        return Collections.emptyList();
       } else {
         for (int i = 0, n = statementList.size(); i < n; i++) {
           Statement stmt = statementList.get(i);
@@ -131,8 +131,3 @@ public class BatchExecutor extends BaseExecutor {
   }
 
 }
-
-
-
-
-

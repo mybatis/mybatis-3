@@ -38,7 +38,7 @@ public interface StatementHandler {
   int update(Statement statement)
       throws SQLException;
 
-  List query(Statement statement, ResultHandler resultHandler)
+  <E> List<E> query(Statement statement, ResultHandler resultHandler)
       throws SQLException;
 
   BoundSql getBoundSql();

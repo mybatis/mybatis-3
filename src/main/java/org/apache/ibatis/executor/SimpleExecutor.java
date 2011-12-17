@@ -47,21 +47,21 @@ public class SimpleExecutor extends BaseExecutor {
     }
   }
 
-  public List doQuery(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler) throws SQLException {
+  public <E> List<E> doQuery(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler) throws SQLException {
     Statement stmt = null;
     try {
       Configuration configuration = ms.getConfiguration();
       StatementHandler handler = configuration.newStatementHandler(this, ms, parameter, rowBounds, resultHandler);
       stmt = prepareStatement(handler);
-      return handler.query(stmt, resultHandler);
+      return handler.<E>query(stmt, resultHandler);
     } finally {
       closeStatement(stmt);
     }
   }
 
-  public List doFlushStatements(boolean isRollback)
+  public List<BatchResult> doFlushStatements(boolean isRollback)
       throws SQLException {
-    return Collections.EMPTY_LIST;
+    return Collections.emptyList();
   }
 
   private Statement prepareStatement(StatementHandler handler) throws SQLException {

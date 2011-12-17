@@ -47,20 +47,20 @@ public class ReuseExecutor extends BaseExecutor {
     return handler.update(stmt);
   }
 
-  public List doQuery(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler) throws SQLException {
+  public <E> List<E> doQuery(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler) throws SQLException {
     Configuration configuration = ms.getConfiguration();
     StatementHandler handler = configuration.newStatementHandler(this, ms, parameter, rowBounds, resultHandler);
     Statement stmt = prepareStatement(handler);
-    return handler.query(stmt, resultHandler);
+    return handler.<E>query(stmt, resultHandler);
   }
 
-  public List doFlushStatements(boolean isRollback)
+  public List<BatchResult> doFlushStatements(boolean isRollback)
       throws SQLException {
     for (Statement stmt : statementMap.values()) {
       closeStatement(stmt);
     }
     statementMap.clear();
-    return Collections.EMPTY_LIST;
+    return Collections.emptyList();
   }
 
   private Statement prepareStatement(StatementHandler handler)

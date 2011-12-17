@@ -115,7 +115,7 @@ public abstract class BaseExecutor implements Executor {
     return batchResults;
   }
 
-  public List query(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler) throws SQLException {
+  public <E> List<E> query(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler) throws SQLException {
     ErrorContext.instance().resource(ms.getResource()).activity("executing a query").object(ms.getId());
     if (closed) throw new ExecutorException("Executor was closed.");
 
@@ -123,11 +123,11 @@ public abstract class BaseExecutor implements Executor {
     if (ms.isFlushCacheRequired()) {
         clearLocalCache();
     }
-    List list;
+    List<E> list;
     try {
       queryStack++;
       CacheKey key = createCacheKey(ms, parameter, rowBounds);
-      list = resultHandler == null ? (List) localCache.getObject(key) : null;
+      list = resultHandler == null ? (List<E>) localCache.getObject(key) : null;
       if (list != null) {
         handleLocallyCachedOutputParameters(ms, key, parameter);
       } else {
@@ -223,7 +223,7 @@ public abstract class BaseExecutor implements Executor {
   protected abstract List<BatchResult> doFlushStatements(boolean isRollback)
       throws SQLException;
 
-  protected abstract List doQuery(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler)
+  protected abstract <E> List<E> doQuery(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler)
       throws SQLException;
 
   protected void closeStatement(Statement statement) {
@@ -253,8 +253,8 @@ public abstract class BaseExecutor implements Executor {
     }
   }
 
-  private List queryFromDatabase(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, CacheKey key) throws SQLException {
-    List list;
+  private <E> List<E> queryFromDatabase(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, CacheKey key) throws SQLException {
+    List<E> list;
     localCache.putObject(key, EXECUTION_PLACEHOLDER);
     try {
       list = doQuery(ms, parameter, rowBounds, resultHandler);
@@ -267,7 +267,7 @@ public abstract class BaseExecutor implements Executor {
     }
     return list;
   }
-  
+
   private class DeferredLoad {
 
     MappedStatement mappedStatement;
@@ -314,5 +314,5 @@ public abstract class BaseExecutor implements Executor {
       return connection;
     }
   }
-  
+
 }

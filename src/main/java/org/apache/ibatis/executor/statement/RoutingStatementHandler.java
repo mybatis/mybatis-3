@@ -66,8 +66,8 @@ public class RoutingStatementHandler implements StatementHandler {
     return delegate.update(statement);
   }
 
-  public List query(Statement statement, ResultHandler resultHandler) throws SQLException {
-    return delegate.query(statement, resultHandler);
+  public <E> List<E> query(Statement statement, ResultHandler resultHandler) throws SQLException {
+    return delegate.<E>query(statement, resultHandler);
   }
 
   public BoundSql getBoundSql() {
