@@ -19,6 +19,8 @@ import org.apache.ibatis.exceptions.PersistenceException;
 
 public class DataSourceException extends PersistenceException {
 
+  private static final long serialVersionUID = -5251396250407091334L;
+
   public DataSourceException() {
     super();
   }
