@@ -436,7 +436,7 @@ public class Author {
                 _byte
               </td>
               <td>
-                Byte
+                byte
               </td>
             </tr>
             <tr>
@@ -444,7 +444,7 @@ public class Author {
                 _long
               </td>
               <td>
-                Long
+                long
               </td>
             </tr>
             <tr>
@@ -452,7 +452,7 @@ public class Author {
                 _short
               </td>
               <td>
-                Short
+                short
               </td>
             </tr>
             <tr>
@@ -460,7 +460,7 @@ public class Author {
                 _int
               </td>
               <td>
-                Int
+                int
               </td>
             </tr>
             <tr>
@@ -875,7 +875,7 @@ public class Author {
             </tr>
             <tr>
               <td>
-                <code>SqlDateTypeHadler</code>
+                <code>SqlDateTypeHandler</code>
               </td>
               <td>
                 <code>java.sql.Date</code>
@@ -926,7 +926,7 @@ public class Author {
           You can override the type handlers or create your own to deal with
           unsupported or non-standard types. To do so, simply extend
           the
-          <code>org.mybatis.type.BaseTypeHandler</code> class and optionally map your new
+          <code>org.apache.ibatis.type.BaseTypeHandler</code> class and optionally map your new
           <code>TypeHandler</code> class to a JDBC type. For example:
         </p>
 

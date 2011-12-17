@@ -399,7 +399,7 @@ ps.setInt(1,id);]]></source>
   statementType="PREPARED">]]></source>
 
         <table>
-          <caption>Insert, Update and Delete Attributes</caption>
+          <caption>selectKey Attributes</caption>
           <thead>
             <tr>
               <th>Attribute</th>
@@ -1710,7 +1710,7 @@ public class User {
 
         <p>
           This example demonstrates how to use a custom cache implementation. The class specified in the type
-          attribute must implement the org.mybatis.cache.Cache interface. This interface is one of the more
+          attribute must implement the org.apache.ibatis.cache.Cache interface. This interface is one of the more
           complex in the MyBatis framework, but simple given what it does.
         </p>
 
