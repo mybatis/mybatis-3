@@ -26,16 +26,22 @@
       <item name="Introduction" href="index.html"/>
       <item name="Getting Started" href="getting-started.html"/>
       <item name="Configuration XML" href="configuration.html" collapse="true">
-        <item href="configuration.html#properties"name="properties" />
-        <item href="configuration.html#settings"name="settings" />
-        <item href="configuration.html#typeAliases"name="typeAliases" />
-        <item href="configuration.html#typeHandlers"name="typeHandlers" />
-        <item href="configuration.html#objectFactory"name="objectFactory" />
-        <item href="configuration.html#plugins"name="plugins" />
-        <item href="configuration.html#environments"name="environments" />
-        <item href="configuration.html#mappers"name="mappers" />
+        <item href="configuration.html#properties" name="properties" />
+        <item href="configuration.html#settings" name="settings" />
+        <item href="configuration.html#typeAliases" name="typeAliases" />
+        <item href="configuration.html#typeHandlers" name="typeHandlers" />
+        <item href="configuration.html#objectFactory" name="objectFactory" />
+        <item href="configuration.html#plugins" name="plugins" />
+        <item href="configuration.html#environments" name="environments" />
+        <item href="configuration.html#mappers" name="mappers" />
       </item>
-      <item name="SQL Map XML Files" href="sqlmap-xml.html"/>
+      <item name="SQL Map XML Files" href="sqlmap-xml.html" collapse="true">
+        <item href="sqlmap-xml.html#select" name="select" />
+        <item href="sqlmap-xml.html#insert_update_and_delete" name="insert, update and delete" />
+        <item href="sqlmap-xml.html#Parameters" name="Parameters" />
+        <item href="sqlmap-xml.html#Result_Maps" name="Result Maps" />
+        <item href="sqlmap-xml.html#cache" name="cache" />
+      </item>
       <item name="Dynamic SQL" href="dynamic-sql.html"/>
       <item name="Java API" href="java-api.html" collapse="true">
         <item name="Directory Structure" href="java-api.html#directoryStructure" />
