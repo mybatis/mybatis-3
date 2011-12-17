@@ -22,7 +22,7 @@ import java.util.List;
 
 public interface ResultSetHandler {
 
-  List handleResultSets(Statement stmt) throws SQLException;
+  <E> List<E> handleResultSets(Statement stmt) throws SQLException;
 
   void handleOutputParameters(CallableStatement cs) throws SQLException;
 

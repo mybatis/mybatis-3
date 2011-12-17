@@ -51,11 +51,11 @@ public class CallableStatementHandler extends BaseStatementHandler {
     cs.addBatch();
   }
 
-  public List query(Statement statement, ResultHandler resultHandler)
+  public <E> List<E> query(Statement statement, ResultHandler resultHandler)
       throws SQLException {
     CallableStatement cs = (CallableStatement) statement;
     cs.execute();
-    List resultList = resultSetHandler.handleResultSets(cs);
+    List<E> resultList = resultSetHandler.<E>handleResultSets(cs);
     resultSetHandler.handleOutputParameters(cs);
     return resultList;
   }
