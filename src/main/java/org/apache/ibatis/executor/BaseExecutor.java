@@ -316,10 +316,10 @@ public abstract class BaseExecutor implements Executor {
   protected Connection getConnection() throws SQLException {
     Connection connection = transaction.getConnection();
     if (log.isDebugEnabled()) {
-        return ConnectionLogger.newInstance(connection);
-      } else {
-        return connection;
-      }
+      return ConnectionLogger.newInstance(connection);
+    } else {
+      return connection;
     }
+  }
 
 }
