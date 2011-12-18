@@ -158,6 +158,26 @@ AND title like ‘someTitle’]]></source>
   <p><span class="label important">NOTE</span> You can pass a List instance or an Array to MyBatis as a parameter object. When you do, MyBatis will automatically wrap it in a Map, and key it by name. List instances will be keyed to the name "list" and array instances will be keyed to the name "array".</p>
   <p>This wraps up the discussion regarding the XML configuration file and XML mapping files. The next section will discuss the Java API in detail, so that you can get the most out of the mappings that you’ve created.</p>
   </subsection>  
+  <subsection name="Multi db-vendor support">
+  <p>If a databaseIdProvider was configured a "_databaseId" variable is available for dynamic code, so you can build different statements depending on database vendor. Have a look at the following example:</p>
+  <source><![CDATA[<insert id="insert" parameterType="org.myapp.domain.User">
+		<selectKey keyProperty="id" resultType="int" order="BEFORE">
+			<if test="_databaseId == 'oracle'">
+				select seq_name.nextval from dual
+			</if>
+			<if test="_databaseId != 'db2'">
+				select nextval FOR seq_name from sysibm.sysdummy1"
+			</if>
+		</selectKey>
+		<if test="_databaseId == 'HSQL Database Engine'">
+			insert into hsql values (#{id}, #{name})
+		</if>
+		<if test="_databaseId != 'HSQL Database Engine'">
+			insert into common values (#{id}, #{name})
+		</if>
+	</insert>
+]]></source>
+  </subsection>
   </section>
   </body>
 </document>

@@ -509,13 +509,6 @@ try {
 <strong>int</strong> insertTable2(Name name);</source>
   </subsection>
 
-  <subsection name="Using MyBatis with Spring or Guice">
-  <p>Spring and Guice are dependency injection frameworks. You can integrate MyBatis with any of them using the corresponding sub-project: MyBatis-Spring or MyBatis-Guice.</p>
-  <p>The main purpose of these frameworks is to enable declarative transaction handing and inject ready-to-use SqlSesssions and mappers into your beans, so you just use them and forget about its creation, destruction and handling transactions. For that purpose both MyBatis-Spring and MyBatis-Guice are able to create thread safe singleton SqlSessions and mappers and inject them into your beans during application startup. </p>
-  <p>This has two implications. First: SqlSessions and mappers will live for the whole execution of your application. And second: you must not use SqlSessionFactoryBuilder or SqlSessionFactory because both frameworks have their specific configuration and API.</p>
-  <p>Please refer to MyBatis-Spring of MyBatis-Guice manuals for further information.</p>
-  </subsection>
-
   </section>
   </body>
 </document>

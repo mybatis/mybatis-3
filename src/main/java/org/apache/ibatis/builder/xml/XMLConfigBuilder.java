@@ -27,7 +27,6 @@ import org.apache.ibatis.datasource.DataSourceFactory;
 import org.apache.ibatis.executor.ErrorContext;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.mapping.DatabaseIdProvider;
-import org.apache.ibatis.mapping.DefaultDatabaseIdProvider;
 import org.apache.ibatis.mapping.Environment;
 import org.apache.ibatis.parsing.XNode;
 import org.apache.ibatis.parsing.XPathParser;
@@ -225,9 +224,9 @@ public class XMLConfigBuilder extends BaseBuilder {
       }
     }
   }
-
+  
   private void databaseIdProviderElement(XNode context) throws Exception {
-    DatabaseIdProvider databaseIdProvider = new DefaultDatabaseIdProvider();
+    DatabaseIdProvider databaseIdProvider = null;
     if (context != null) {
       String type = context.getStringAttribute("type");
       Properties properties = context.getChildrenAsProperties();
@@ -235,8 +234,9 @@ public class XMLConfigBuilder extends BaseBuilder {
       databaseIdProvider.setProperties(properties);
     }
     Environment environment = configuration.getEnvironment();
-    if (environment != null) {
-      configuration.setDatabaseId(databaseIdProvider.getDatabaseId(environment.getDataSource()));    
+    if (environment != null && databaseIdProvider != null) {
+      String databaseId = databaseIdProvider.getDatabaseId(environment.getDataSource());
+      configuration.setDatabaseId(databaseId);    
     }
   }
 

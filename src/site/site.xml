@@ -33,6 +33,7 @@
         <item href="configuration.html#objectFactory" name="objectFactory" />
         <item href="configuration.html#plugins" name="plugins" />
         <item href="configuration.html#environments" name="environments" />
+        <item href="configuration.html#databaseIdProvider" name="databaseIdProvider" />
         <item href="configuration.html#mappers" name="mappers" />
       </item>
       <item name="SQL Map XML Files" href="sqlmap-xml.html" collapse="true">

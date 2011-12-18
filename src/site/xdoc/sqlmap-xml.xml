@@ -129,7 +129,7 @@ ps.setInt(1,id);]]></source>
           should behave.
         </p>
 
-        <source><![CDATA[<select
+        <source><![CDATA[<selectString
   id="selectPerson"
   parameterType="int"
   parameterMap="deprecated"
@@ -221,6 +221,13 @@ ps.setInt(1,id);]]></source>
               <td>resultSetType</td>
               <td>Any one of <code>FORWARD_ONLY</code>|<code>SCROLL_SENSITIVE</code>|<code>SCROLL_INSENSITIVE</code>.
               Default is <code>unset</code> (driver dependent).
+              </td>
+            </tr>
+            <tr>
+              <td>databaseId</td>
+              <td>In case there is a configured databaseIdProvider, MyBatis will load all statements with no <code>databaseId</code> 
+              attribute or with a <code>databaseId</code> that matches the current one. If case the same statement
+              if found with and without the <code>databaseId</code> the latter will be discarded.
               </td>
             </tr>
           </tbody>
