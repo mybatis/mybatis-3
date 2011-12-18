@@ -23,7 +23,7 @@ import javax.sql.DataSource;
 import org.apache.ibatis.session.TransactionIsolationLevel;
 import org.apache.ibatis.transaction.Transaction;
 
-/*
+/**
  * {@link Transaction} that lets the container manage the full lifecycle of the transaction. 
  * Delays connection retrieval until getConnection() is called.
  * Ignores all commit or rollback requests.

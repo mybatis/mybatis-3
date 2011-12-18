@@ -90,11 +90,8 @@
     <p>What is so special about that example? &#xa0;Well, if you look closely, it doesn&#x2019;t have to worry about accidentally duplicating &#x201c;AND&#x201d; keywords, or choosing between &#x201c;WHERE&#x201d; and &#x201c;AND&#x201d; or neither! &#xa0;The statement above will generate a query by example for all PERSON records, ones with ID like the parameter, or the firstName like the parameter, or the lastName like the parameter &#x2013;or any combination of the three. The SelectBuilder takes care of understanding where &#x201c;WHERE&#x201d; needs to go, where an &#x201c;AND&#x201d; should be used and all of the String concatenation. &#xa0;Best of all, it does it almost regardless of which order you call these methods in (there&#x2019;s only one exception with the OR() method).</p>
     <p>The two methods that may catch your eye are: &#xa0;BEGIN() and SQL(). &#xa0;In a nutshell, every SelectBuilder method should start with a call to BEGIN() and end with a call to SQL(). &#xa0;Of course you can extract methods in the middle to break up your logic, but the scope of the SQL generation should always begin with BEGIN() and end with SQL(). &#xa0;The BEGIN() method clears the ThreadLocal variable, to make sure you don&#x2019;t accidentally carry any state forward, and the SQL() method assembles your SQL statement based on the calls you made since the last call to BEGIN(). &#xa0;Note that BEGIN() has a synonym called RESET(), which does exactly the same thing but reads better in certain contexts.</p>
     <p>To use the SelectBuilder as in the examples above, you simply need to import it statically as follows:</p>
-<source>    
-import static org.mybatis.jdbc.SelectBuilder.*;
-</source>
+<source>import static org.mybatis.jdbc.SelectBuilder.*;</source>
     <p>Once this is imported, the class you&#x2019;re working within will have all of the SelectBuilder methods available to it. &#xa0;The complete set of methods is as follows:</p>
-
     <table>
     <thead>
     <tr><th><p>Method</p></th><th><p>Description</p></th></tr></thead>
