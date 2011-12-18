@@ -75,13 +75,12 @@ public class DefaultSqlSession implements SqlSession {
 
   public <K, V> Map<K, V> selectMap(String statement, Object parameter, String mapKey, RowBounds rowBounds) {
     final List<?> list = selectList(statement, parameter, rowBounds);
-    final DefaultMapResultHandler mapResultHandler = new DefaultMapResultHandler(mapKey);
+    final DefaultMapResultHandler<K, V> mapResultHandler = new DefaultMapResultHandler<K, V>(mapKey);
     final DefaultResultContext context = new DefaultResultContext();
     for (Object o : list) {
       context.nextResultObject(o);
       mapResultHandler.handleResult(context);
     }
-    @SuppressWarnings( "unchecked" ) // it would throw CCE in any case
     Map<K, V> selectedMap = mapResultHandler.getMappedResults();
     return selectedMap;
   }

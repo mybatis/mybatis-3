@@ -22,9 +22,9 @@ import org.apache.ibatis.session.ResultHandler;
 import java.util.HashMap;
 import java.util.Map;
 
-public class DefaultMapResultHandler implements ResultHandler {
+public class DefaultMapResultHandler<K, V> implements ResultHandler {
 
-  private final Map mappedResults = new HashMap();
+  private final Map<K, V> mappedResults = new HashMap<K, V>();
   private final String mapKey;
 
   public DefaultMapResultHandler(String mapKey) {
@@ -32,13 +32,15 @@ public class DefaultMapResultHandler implements ResultHandler {
   }
 
   public void handleResult(ResultContext context) {
-    final Object value = context.getResultObject();
+    // TODO is that assignment always true?
+    final V value = (V) context.getResultObject();
     final MetaObject mo = MetaObject.forObject(value);
-    final Object key = mo.getValue(mapKey);
+    // TODO is that assignment always true?
+    final K key = (K) mo.getValue(mapKey);
     mappedResults.put(key, value);
   }
 
-  public Map getMappedResults() {
+  public Map<K, V> getMappedResults() {
     return mappedResults;
   }
 }
