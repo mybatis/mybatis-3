@@ -161,21 +161,16 @@ AND title like ‘someTitle’]]></source>
   <subsection name="Multi db-vendor support">
   <p>If a databaseIdProvider was configured a "_databaseId" variable is available for dynamic code, so you can build different statements depending on database vendor. Have a look at the following example:</p>
   <source><![CDATA[<insert id="insert" parameterType="org.myapp.domain.User">
-		<selectKey keyProperty="id" resultType="int" order="BEFORE">
-			<if test="_databaseId == 'oracle'">
-				select seq_name.nextval from dual
-			</if>
-			<if test="_databaseId != 'db2'">
-				select nextval FOR seq_name from sysibm.sysdummy1"
-			</if>
-		</selectKey>
-		<if test="_databaseId == 'HSQL Database Engine'">
-			insert into hsql values (#{id}, #{name})
-		</if>
-		<if test="_databaseId != 'HSQL Database Engine'">
-			insert into common values (#{id}, #{name})
-		</if>
-	</insert>
+  <selectKey keyProperty="id" resultType="int" order="BEFORE">
+    <if test="_databaseId == 'oracle'">
+	  select seq_users.nextval from dual
+    </if>
+    <if test="_databaseId == 'db2'">
+      select nextval for seq_users from sysibm.sysdummy1"
+    </if>
+  </selectKey>
+  insert into users values (#{id}, #{name})
+</insert>
 ]]></source>
   </subsection>
   </section>
