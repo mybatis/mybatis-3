@@ -18,6 +18,8 @@ package org.apache.ibatis.parsing;
 import org.apache.ibatis.exceptions.PersistenceException;
 
 public class ParsingException extends PersistenceException {
+  private static final long serialVersionUID = -176685891441325943L;
+
   public ParsingException() {
     super();
   }

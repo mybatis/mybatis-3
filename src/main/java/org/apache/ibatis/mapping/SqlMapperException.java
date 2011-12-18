@@ -19,6 +19,8 @@ import org.apache.ibatis.exceptions.PersistenceException;
 
 public class SqlMapperException extends PersistenceException {
 
+  private static final long serialVersionUID = 4428144475952469726L;
+
   public SqlMapperException() {
     super();
   }
