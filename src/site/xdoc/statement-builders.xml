@@ -26,7 +26,8 @@
   </properties>
 
   <body>
-  <section name="SelectBuilder">
+  <section name="Statement Builders">
+  <subsection name="SelectBuilder">
   <p>One of the nastiest things a Java developer will ever have to do is embed SQL in Java code. &#xa0;Usually this is done because the SQL has to be dynamically generated &#x2013; otherwise you could externalize it in a file or a stored proc. &#xa0;As you&#x2019;ve already seen, MyBatis has a powerful answer for dynamic SQL generation in its XML mapping features. &#xa0;However, sometimes it becomes necessary to build a SQL statement string inside of Java code. &#xa0;In that case, MyBatis has one more feature to help you out, before reducing yourself to the typical mess of plus signs, quotes, newlines, formatting problems and nested conditionals to deal with extra commas or AND conjunctions&#x2026; Indeed, dynamically generating SQL code in Java can be a real nightmare.</p>
     <p>MyBatis 3 introduces a somewhat different concept to deal with the problem. &#xa0;We could have just created an instance of a class that lets you call methods against it to build a SQL statement one step at a time. &#xa0;But then our SQL ends up looking more like Java and less like SQL. &#xa0;Instead, we&#x2019;re trying something a little different. &#xa0;The end result is about as close to a Domain Specific Language that Java will ever achieve in its current form&#x2026;</p>
     <p><strong>The Secrets of SelectBuilder</strong></p>
@@ -193,10 +194,9 @@
         &#xa0;Thus, this method can only be called ONCE!</td>
   </tr>
     </tbody></table>
+    </subsection>
 
-    </section>
-
-    <section name="SqlBuilder">
+    <subsection name="SqlBuilder">
     <p>Similarly to SelectBuilder, MyBatis also includes a generalized SqlBuilder. It includes all the methods for SelectBuilder, as well as methods for building inserts, updates, and deletes. &#xa0;This class can be useful when building SQL strings in a DeleteProvider, InsertProvider, or UpdateProvider (as well as a SelectProvider). &#xa0;</p>
     <p>To use the SqlBuilder as in the examples above, you simply need to import it statically as follows:</p>
     <p>import static org.mybatis.jdbc.SqlBuilder.*;</p>
@@ -269,7 +269,7 @@ public String updatePersonSql() {
   WHERE("ID = ${id}");
   return SQL();
 }]]></source>  
-  
+  </subsection>
   </section>
   </body>
 

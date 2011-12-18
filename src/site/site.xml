@@ -48,7 +48,10 @@
         <item name="Directory Structure" href="java-api.html#directoryStructure" />
         <item name="SqlSessions" href="java-api.html#sqlSessions" />
       </item>
-      <item name="Statement Builders" href="statement-builders.html"/>
+      <item name="Statement Builders" href="statement-builders.html" collapse="true">
+        <item name="SelectBuilder" href="statement-builders.html#SelectBuilder" />
+        <item name="SqlBuilder" href="statement-builders.html#SqlBuilder" />
+       </item>
       <item name="Logging" href="logging.html"/>
     </menu>
 
