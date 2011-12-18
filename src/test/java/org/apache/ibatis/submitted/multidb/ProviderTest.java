@@ -32,7 +32,7 @@ public class ProviderTest {
     Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/multidb/MultiDbConfig.xml");
     DefaultSqlSessionFactory sqlSessionFactory = (DefaultSqlSessionFactory) new SqlSessionFactoryBuilder().build(reader);
     Configuration c = sqlSessionFactory.getConfiguration();
-    assertEquals("HSQL Database Engine", c.getDatabaseId());
+    assertEquals("hsql", c.getDatabaseId());
   }
 
   @Test
