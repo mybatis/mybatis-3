@@ -30,6 +30,7 @@ import org.apache.ibatis.builder.BaseBuilder;
 import org.apache.ibatis.builder.CacheRefResolver;
 import org.apache.ibatis.builder.IncompleteCacheException;
 import org.apache.ibatis.builder.IncompleteResultMapException;
+import org.apache.ibatis.builder.IncompleteStatementException;
 import org.apache.ibatis.builder.MapperBuilderAssistant;
 import org.apache.ibatis.builder.ResultMapResolver;
 import org.apache.ibatis.cache.Cache;

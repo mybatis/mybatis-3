@@ -13,9 +13,8 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package org.apache.ibatis.builder.xml;
+package org.apache.ibatis.builder;
 
-import org.apache.ibatis.builder.BuilderException;
 
 public class IncompleteStatementException extends BuilderException {
 	private static final long serialVersionUID = 3329879670592089325L;

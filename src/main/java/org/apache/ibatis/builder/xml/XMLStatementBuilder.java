@@ -23,6 +23,7 @@ import java.util.Map;
 
 import org.apache.ibatis.builder.BaseBuilder;
 import org.apache.ibatis.builder.BuilderException;
+import org.apache.ibatis.builder.IncompleteStatementException;
 import org.apache.ibatis.builder.MapperBuilderAssistant;
 import org.apache.ibatis.builder.xml.dynamic.ChooseSqlNode;
 import org.apache.ibatis.builder.xml.dynamic.DynamicSqlSource;

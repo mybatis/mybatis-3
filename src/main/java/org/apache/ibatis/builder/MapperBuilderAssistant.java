@@ -15,7 +15,6 @@
  */
 package org.apache.ibatis.builder;
 
-import org.apache.ibatis.builder.xml.IncompleteStatementException;
 import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.cache.decorators.LruCache;
 import org.apache.ibatis.cache.impl.PerpetualCache;
