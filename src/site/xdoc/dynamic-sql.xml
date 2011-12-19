@@ -123,7 +123,7 @@ AND title like ‘someTitle’]]></source>
   <source><![CDATA[<trim prefix="WHERE" prefixOverrides="AND |OR ">
   ... 
 </trim>]]></source>  
-  <p>The <em>overrides</em> attribute takes a pipe delimited list of text to override, where whitespace <u>is</u> relevant. The result is the removal of anything specified in the <em>overrides</em> attribute, and the insertion of anything in the <em>with</em> attribute.</p>
+  <p>The <em>prefixOverrides</em> attribute takes a pipe delimited list of text to override, where whitespace <u>is</u> relevant. The result is the removal of anything specified in the <em>prefixOverrides</em> attribute, and the insertion of anything in the <em>prefix</em> attribute.</p>
   <p>There is a similar solution for dynamic update statements called <em>set</em>. The <em>set</em> element can be used to dynamically include columns to update, and leave out others. For example:</p>
   <source><![CDATA[<update id="updateAuthorIfNecessary"
        parameterType="domain.blog.Author">
