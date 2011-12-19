@@ -129,7 +129,7 @@ ps.setInt(1,id);]]></source>
           should behave.
         </p>
 
-        <source><![CDATA[<selectString
+        <source><![CDATA[<select
   id="selectPerson"
   parameterType="int"
   parameterMap="deprecated"
