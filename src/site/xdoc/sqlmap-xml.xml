@@ -15,7 +15,7 @@
   limitations under the License.
 -->
 
-<!--  version: $Id: getting-started.xml 4051 2011-11-25 21:47:24Z simone.tripodi $ -->
+<!-- version: $Id$ -->
 
 <document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
