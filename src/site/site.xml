@@ -36,7 +36,7 @@
         <item href="configuration.html#databaseIdProvider" name="databaseIdProvider" />
         <item href="configuration.html#mappers" name="mappers" />
       </item>
-      <item name="SQL Map XML Files" href="sqlmap-xml.html" collapse="true">
+      <item name="Mapper XML Files" href="sqlmap-xml.html" collapse="true">
         <item href="sqlmap-xml.html#select" name="select" />
         <item href="sqlmap-xml.html#insert_update_and_delete" name="insert, update and delete" />
         <item href="sqlmap-xml.html#Parameters" name="Parameters" />
