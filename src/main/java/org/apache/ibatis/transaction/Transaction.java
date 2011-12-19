@@ -20,7 +20,7 @@ import java.sql.SQLException;
 
 /**
  * Wraps a database connection.
- * Handles the connection livecycle that comprises: its creation, preparation, commit/rollback and close. 
+ * Handles the connection lifecycle that comprises: its creation, preparation, commit/rollback and close. 
  *
  */
 public interface Transaction {
