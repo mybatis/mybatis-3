@@ -62,7 +62,7 @@
         can be very frustrating because it will appear that MyBatis is
         ignoring your Log4J configuration (in fact, MyBatis is ignoring your
         Log4J configuration because MyBatis will use Commons Logging in such
-        environments). &#xa0;If your application is running in an
+        environments). If your application is running in an
         environment
         where Commons Logging is included in the classpath but you would
         rather use one
@@ -123,7 +123,7 @@ org.apache.ibatis.logging.LogFactory.useStdOutLogging();]]></source>
         <p><code>java.sql.Connection</code>, <code>java.sql.PreparedStatement</code> and
         <code>java.sql.Resultsetjava.sql.Statement</code></p>
         <p>Again, how you do this is dependent on the logging implementation
-          in use. We'll show how to do it with Log4J. &#xa0;Configuring the
+          in use. We'll show how to do it with Log4J. Configuring the
           logging services is simply a matter of including one or more extra
           configuration files (e.g. log4j.properties) and sometimes a new JAR
           file (e.g. log4j.jar). The following example configuration will
