@@ -38,7 +38,7 @@
           SLF4J
         </li>
         <li>
-          Apache Commons Logging (ACL &#x2013; NOT Access control list!)
+          Apache Commons Logging
         </li>
         <li>
           Log4J
@@ -53,18 +53,18 @@
         searched in the above order). If MyBatis finds none of the above
         implementations, then logging will be disabled.
       </p>
-      <p>Many environments ship ACL as a part of the application server
+      <p>Many environments ship Commons Logging as a part of the application server
         classpath (good examples include Tomcat and WebSphere). It is
-        important to know that in such environments, MyBatis will use ACL as
+        important to know that in such environments, MyBatis will use Commons Logging as
         the logging implementation. In an environment like WebSphere this
         will mean that your Log4J configuration will be ignored because
-        WebSphere supplies its own proprietary implementation of ACL. This
+        WebSphere supplies its own proprietary implementation of Commons Logging. This
         can be very frustrating because it will appear that MyBatis is
         ignoring your Log4J configuration (in fact, MyBatis is ignoring your
-        Log4J configuration because MyBatis will use ACL in such
+        Log4J configuration because MyBatis will use Commons Logging in such
         environments). &#xa0;If your application is running in an
         environment
-        where ACL is included in the classpath but you would
+        where Commons Logging is included in the classpath but you would
         rather use one
         of the other logging implementations you can select a
         different
