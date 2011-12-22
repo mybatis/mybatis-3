@@ -24,7 +24,7 @@ import org.apache.ibatis.session.ResultHandler;
 public interface AuthorMapper {
 
   List selectAllAuthors();
-  
+
   void selectAllAuthors(ResultHandler handler);
 
   Author selectAuthor(int id);
@@ -38,6 +38,3 @@ public interface AuthorMapper {
   int updateAuthor(Author author);
 
 }
-
-
-
