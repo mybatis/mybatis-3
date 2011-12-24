@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 2010-2011 The MyBatis Team
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!-- version: $Id$ -->
+
+<document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+
+  <properties>
+    <title>MyBatis 3 | 动态 SQL</title>
+    <author email="mybatis-dev@googlegroups.com">The MyBatis Team</author>
+  </properties>
+
+  <body>
+  <section name="动态 SQL">
+  <p>
+MyBatis 的一个强大的特性之一通常是它的动态 SQL 能力。
+如果你有使用 JDBC 或其他
+相似框架的经验,你就明白条件地串联 SQL 字符串在一起是多么的痛苦,确保不能忘了空
+格或在列表的最后省略逗号。动态 SQL 可以彻底处理这种痛苦。
+  </p>
+  <p>
+通常使用动态 SQL 不可能是独立的一部分,MyBatis 当然使用一种强大的动态 SQL 语
+言来改进这种情形,这种语言可以被用在任意映射的 SQL 语句中。
+  </p>
+  <p>
+动态 SQL 元素和使用 JSTL 或其他相似的基于 XML 的文本处理器相似。在 MyBatis 之
+前的版本中,有很多的元素需要来了解。MyBatis 3 大大提升了它们,现在用不到原先一半
+的元素就能工作了。MyBatis 采用功能强大的基于 OGNL 的表达式来消除其他元素。
+  </p>  
+  <ul>
+    <li>if</li>
+    <li>choose (when, otherwise)</li>
+    <li>trim (where, set)</li>
+    <li>foreach</li>
+  </ul>
+  <subsection name="if" id="if">
+  <p>
+在动态 SQL 中所做的最通用的事情是包含部分 where 字句的条件。比如:
+  </p>
+  <source><![CDATA[<select id="findActiveBlogWithTitleLike" 
+     parameterType="Blog" resultType="Blog">
+  SELECT * FROM BLOG 
+  WHERE state = ‘ACTIVE’ 
+  <if test="title != null">
+    AND title like #{title}
+  </if>
+</select>]]></source>  
+  <p>
+这条语句会提供一个可选的文本查找功能。如果你没有传递 title,那么所有激活的博客
+都会被返回。但是如果你传递了 title,那么就会查找相近的 title(对于敏锐的检索,这中情
+况下你的参数值需要包含任意的遮掩或通配符)的博客。
+  </p>
+  <p>
+假若我们想可选地搜索 title 和 author 呢?首先,要改变语句的名称让它有意义。然后
+简单加入另外的一个条件。
+  </p>
+  <source><![CDATA[<select id="findActiveBlogLike" 
+     parameterType="Blog" resultType="Blog">
+  SELECT * FROM BLOG WHERE state = ‘ACTIVE’ 
+  <if test="title != null">
+    AND title like #{title}
+  </if>
+  <if test="author != null and author.name != null">
+    AND author_name like #{author.name}
+  </if>
+</select>]]></source>
+  </subsection>
+  <subsection name="choose, when, otherwise" id="chooseWhenOtherwise">
+  <p>
+有时我们不想应用所有的条件,
+相反我们想选择很多情况下的一种。 Java 中的 switch
+和
+语句相似,MyBatis 提供 choose 元素。
+  </p>
+  <p>
+我们使用上面的示例,但是现在我们来搜索当 title 提供时仅有 title 条件,当 author 提
+供时仅有 author 条件。如果二者都没提供,只返回 featured blogs(也许是由管理员策略地选
+择的结果列表,而不是返回大量没有意义的随机博客结果列表)。
+  </p>
+  <source><![CDATA[<select id="findActiveBlogLike" 
+     parameterType="Blog" resultType="Blog">
+  SELECT * FROM BLOG WHERE state = ‘ACTIVE’
+  <choose>
+    <when test="title != null">
+      AND title like #{title}
+    </when>
+    <when test="author != null and author.name != null">
+      AND author_name like #{author.name}
+    </when>
+    <otherwise>
+      AND featured = 1
+    </otherwise>
+  </choose>
+</select>]]></source>
+  </subsection>
+  <subsection name="trim, where, set" id="trimWhereSet">
+  <p>
+前面的例子已经方便地处理了一个臭名昭著的动态 SQL 问题。要考虑我们回到“if”示
+例后会发生什么,但是这次我们将“ACTIVE = 1”也设置成动态的条件。
+  </p>
+  <source><![CDATA[<select id="findActiveBlogLike" 
+     parameterType="Blog" resultType="Blog">
+  SELECT * FROM BLOG 
+  WHERE 
+  <if test="state != null">
+    state = #{state}
+  </if> 
+  <if test="title != null">
+    AND title like #{title}
+  </if>
+  <if test="author != null and author.name != null">
+    AND author_name like #{author.name}
+  </if>
+</select>]]></source>
+  <p>
+如果这些条件都没有匹配上将会发生什么?这条 SQL 结束时就会成这样:
+  </p>
+  <source><![CDATA[SELECT * FROM BLOG 
+WHERE]]></source>
+  <p>
+这会导致查询失败。如果仅仅第二个条件匹配是什么样的?这条 SQL 结束时就会是这
+样:
+  </p>
+  <source><![CDATA[SELECT * FROM BLOG 
+WHERE 
+AND title like ‘someTitle’]]></source>
+  <p>
+这个查询也会失败。这个问题不能简单的用条件来解决,如果你从来没有这样写过,那
+么你以后也不会这样来写。
+  </p>
+  <p>
+MyBatis 有一个简单的处理,这在 90%的情况下都会有用。而在不能使用的地方,你可
+以自定义处理方式。加上一个简单的改变,所有事情都会顺利进行:
+  </p>
+  <source><![CDATA[<select id="findActiveBlogLike" 
+     parameterType="Blog" resultType="Blog">
+  SELECT * FROM BLOG 
+  <where> 
+    <if test="state != null">
+         state = #{state}
+    </if> 
+    <if test="title != null">
+        AND title like #{title}
+    </if>
+    <if test="author != null and author.name != null">
+        AND author_name like #{author.name}
+    </if>
+  </where>
+</select>]]></source> 
+  <p>
+where 元素知道如果由被包含的标记返回任意内容,就仅仅插入“WHERE”
+。而且,如
+果以“AND”或“OR”开头的内容,那么就会跳过 WHERE 不插入。
+  </p>  
+  <p>
+如果 where 元素没有做出你想要的,你可以使用 trim 元素来自定义。比如,和 where
+元素相等的 trim 元素是:
+  </p>
+  <source><![CDATA[<trim prefix="WHERE" prefixOverrides="AND |OR ">
+  ... 
+</trim>]]></source>  
+  <p>
+prefixOverrides 属性采用管道文本分隔符来覆盖,
+这里的空白也是重要的。
+它的结果就是移除
+在 prefixOverrides 属性中指定的内容,插入在 with 属性中的内容。
+  </p>
+  <p>
+和动态更新语句相似的解决方案是 set。set 元素可以被用于动态包含更新的列,而不包
+含不需更新的。比如:
+</p>
+  <source><![CDATA[<update id="updateAuthorIfNecessary"
+       parameterType="domain.blog.Author">
+  update Author
+    <set>
+      <if test="username != null">username=#{username},</if>
+      <if test="password != null">password=#{password},</if>
+      <if test="email != null">email=#{email},</if>
+      <if test="bio != null">bio=#{bio}</if>
+    </set>
+  where id=#{id}
+</update>]]></source>
+  <p>
+这里,set 元素会动态前置 SET 关键字,而且也会消除任意无关的逗号,那也许在应用
+条件之后来跟踪定义的值。
+  </p>  
+  <p>
+如果你对和这相等的 trim 元素好奇,它看起来就是这样的:
+  </p>
+  <source><![CDATA[<trim prefix="SET" suffixOverrides=",">
+  ...
+</trim>]]></source>
+  <p>
+注意这种情况下我们覆盖一个后缀,而同时也附加前缀。
+  </p>
+  </subsection>
+  <subsection name="foreach">
+  <p>
+另外一个动态 SQL 通用的必要操作是迭代一个集合,
+通常是构建在 IN 条件中的。
+比如:
+  </p>
+  <source><![CDATA[<select id="selectPostIn" resultType="domain.blog.Post">
+  SELECT *
+  FROM POST P
+  WHERE ID in
+  <foreach item="item" index="index" collection="list"
+      open="(" separator="," close=")">
+        #{item}
+  </foreach>
+</select>]]></source>
+  <p>
+foreach 元素是非常强大的,它允许你指定一个集合,声明集合项和索引变量,它们可
+以用在元素体内。它也允许你指定开放和关闭的字符串,在迭代之间放置分隔符。这个元素
+是很智能的,它不会偶然地附加多余的分隔符。
+  </p>
+  <p>
+  <span class="label important">注意</span> 你可以传递一个 List 实例或者数组作为参数对象传给 MyBatis。当你这么做的时
+候,MyBatis 会自动将它包装在一个 Map 中,用名称在作为键。List 实例将会以“list”
+作为键,而数组实例将会以“array”作为键。
+  </p>
+  <p>
+这个部分是对关于 XML 配置文件和 XML 映射文件的而讨论的。下一部分将详细讨论
+Java API,所以你可以得到你已经创建的最有效的映射。
+  </p>
+  </subsection>  
+  <subsection name="Multi-db vendor support">
+  <p>If a databaseIdProvider was configured a "_databaseId" variable is available for dynamic code, so you can build different statements depending on database vendor. Have a look at the following example:</p>
+  <source><![CDATA[<insert id="insert" parameterType="org.myapp.domain.User">
+  <selectKey keyProperty="id" resultType="int" order="BEFORE">
+    <if test="_databaseId == 'oracle'">
+	  select seq_users.nextval from dual
+    </if>
+    <if test="_databaseId == 'db2'">
+      select nextval for seq_users from sysibm.sysdummy1"
+    </if>
+  </selectKey>
+  insert into users values (#{id}, #{name})
+</insert>
+]]></source>
+  </subsection>
+  </section>
+  </body>
+</document>

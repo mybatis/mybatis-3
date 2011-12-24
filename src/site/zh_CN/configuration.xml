@@ -1,0 +1,1418 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 2010-2011 The MyBatis Team
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!-- version: $Id$ -->
+
+<document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+
+  <properties>
+    <title>MyBatis 3 | XML 映射配置文件</title>
+    <author email="mybatis-dev@googlegroups.com">The MyBatis Team</author>
+  </properties>
+
+  <body>
+    <section name="XML 映射配置文件">
+      <p>
+MyBatis 的 XML 配置文件包含了影响 MyBatis 行为甚深的设置和属性信息。
+XML 文档
+的高层级结构如下:
+      </p>
+
+      <ul>
+        <li>
+          configuration 配置
+          <ul>
+            <li><a href="#properties">properties 属性</a></li>
+            <li><a href="#settings">settings 设置</a></li>
+            <li><a href="#typeAliases">typeAliases 类型命名</a></li>
+            <li><a href="#typeHandlers">typeHandlers 类型处理器</a></li>
+            <li><a href="#objectFactory">objectFactory 对象工厂</a></li>
+            <li><a href="#plugins">plugins 插件</a></li>
+            <li><a href="#environments">environments 环境</a>
+              <ul>
+                <li>
+                  environment 环境变量
+                  <ul>
+                    <li>transactionManager 事务管理器</li>
+                    <li>dataSource 数据源</li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+            <li><a href="#databaseIdProvider">databaseIdProvider chinese?</a></li>
+            <li><a href="#mappers">mappers 映射器</a></li>
+          </ul>
+        </li>
+      </ul>
+      <subsection name="properties">
+        <p>
+这些是外部化的,
+可替代的属性,
+这些属性也可以配置在典型的 Java 属性配置文件中,
+或者通过 properties 元素的子元素来传递。例如:
+        </p>
+        <source><![CDATA[<properties resource="org/mybatis/example/config.properties">
+  <property name="username" value="dev_user"/>
+  <property name="password" value="F2Fa3!33TYyg"/>
+</properties>]]></source>
+        <p>
+其中的属性就可以在整个配置文件中使用,使用可替换的属性来实现动态配置。比如:
+        </p>
+        <source><![CDATA[<dataSource type="POOLED">
+  <property name="driver" value="${driver}"/>
+  <property name="url" value="${url}"/>
+  <property name="username" value="${username}"/>
+  <property name="password" value="${password}"/>
+</dataSource>]]></source>
+        <p>
+这个例子中的 username 和 password 将会由 properties 元素中设置的值来替换。
+driver 和
+url 属性将会从包含进来的 config.properties 文件中的值来替换。这里提供很多配置的选项。
+        </p>
+        <p>
+属性也可以被传递到 SqlSessionBuilder.build()方法中。例如:
+        </p>
+        <source><![CDATA[SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, props);
+
+// ... or ...
+
+SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, props);
+]]></source>
+        <p>
+如果在这些地方,属性多于一个的话,MyBatis 按照如下的顺序加载它们:
+        </p>
+        <ul>
+          <li>在 properties 元素体内指定的属性首先被读取。
+          </li>
+          <li>从类路径下资源或 properties 元素的 url 属性中加载的属性第二被读取,它会
+覆盖已经存在的完全一样的属性。
+          </li>
+          <li>作为方法参数传递的属性最后被读取,
+它也会覆盖任一已经存在的完全一样的
+属性,这些属性可能是从 properties 元素体内和资源/url 属性中加载的。
+          </li>
+        </ul>
+        <p>
+因此,
+最高优先级的属性是那些作为方法参数的,
+然后是资源/url 属性,
+最后是 properties
+元素中指定的属性。
+        </p>
+      </subsection>
+      <subsection name="settings">
+        <p>
+这些是极其重要的调整,
+它们会修改 MyBatis 在运行时的行为方式。
+下面这个表格描述
+了设置信息,它们的含义和默认值。
+        </p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>设置参数</th>
+              <th>描述</th>
+              <th>有效值</th>
+              <th>默认值</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                cacheEnabled
+              </td>
+              <td>
+              这个配置使全局的映射器启用或禁用 缓存。 
+              </td>
+              <td>
+                true | false
+              </td>
+              <td>
+                true
+              </td>
+            </tr>
+            <tr>
+              <td>
+                lazyLoadingEnabled
+              </td>
+              <td>
+                全局启用或禁用延迟加载。当禁用时, 所有关联对象都会即时加载。 
+              </td>
+              <td>
+                true | false
+              </td>
+              <td>
+                true
+              </td>
+            </tr>
+            <tr>
+              <td>
+                aggressiveLazyLoading
+              </td>
+              <td>
+              当启用时, 有延迟加载属性的对象在被 
+              调用时将会完全加载任意属性。否则, 
+              每种属性将会按需要加载。
+              </td>
+              <td>
+                true | false
+              </td>
+              <td>
+                true
+              </td>
+            </tr>
+            <tr>
+              <td>
+                multipleResultSetsEnabled
+              </td>
+              <td>
+                允许或不允许多种结果集从一个单独 
+                的语句中返回(需要适合的驱动) 
+              </td>
+              <td>
+                true | false
+              </td>
+              <td>
+                true
+              </td>
+            </tr>
+            <tr>
+              <td>
+                useColumnLabel
+              </td>
+              <td>
+                使用列标签代替列名。
+                不同的驱动在这 
+                方便表现不同。 
+                参考驱动文档或充分测 
+                试两种方法来决定所使用的驱动。
+              </td>
+              <td>
+                true | false
+              </td>
+              <td>
+                true
+              </td>
+            </tr>
+            <tr>
+              <td>
+                useGeneratedKeys
+              </td>
+              <td>
+                允许 JDBC 支持生成的键。 
+                需要适合的 
+                驱动。 
+                如果设置为 true 则这个设置强制 
+                生成的键被使用, 
+                尽管一些驱动拒绝兼 
+                容但仍然有效(比如 Derby) 
+              </td>
+              <td>
+                true | false
+              </td>
+              <td>
+                False
+              </td>
+            </tr>
+            <tr>
+              <td>
+                autoMappingBehavior
+              </td>
+              <td>
+                指定 MyBatis 如何自动映射列到字段/
+                属性。PARTIAL 只会自动映射简单, 
+                没有嵌套的结果。FULL 会自动映射任 
+                意复杂的结果(嵌套的或其他情况)                   。 
+              </td>
+              <td>
+                NONE, PARTIAL, FULL
+              </td>
+              <td>
+                PARTIAL
+              </td>
+            </tr>
+            <tr>
+              <td>
+                defaultExecutorType
+              </td>
+              <td>
+                配置默认的执行器。SIMPLE 执行器没 
+                有什么特别之处。REUSE 执行器重用 
+                预处理语句。BATCH 执行器重用语句 
+                和批量更新
+              </td>
+              <td>
+                SIMPLE
+                REUSE
+                BATCH
+              </td>
+              <td>
+                SIMPLE
+              </td>
+            </tr>
+            <tr>
+              <td>
+                defaultStatementTimeout
+              </td>
+              <td>
+                设置超时时间,
+                它决定驱动等待一个数
+                据库响应的时间。
+              </td>
+              <td>
+                Any positive integer
+              </td>
+              <td>
+                Not Set (null)
+              </td>
+            </tr>
+            <tr>
+              <td>
+                safeRowBoundsEnabled
+              </td>
+              <td>
+                Allows using RowBounds on nested
+                statements.
+              </td>
+              <td>
+                true | false
+              </td>
+              <td>
+                True
+              </td>
+            </tr>
+            <tr>
+              <td>
+                mapUnderscoreToCamelCase
+              </td>
+              <td>
+                Enables automatic mapping from
+                classic database column names
+                A_COLUMN to camel case classic Java
+                property names aColumn.
+              </td>
+              <td>
+                true | false
+              </td>
+              <td>
+                False
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <p>
+          一个设置信息元素的示例,完全的配置如下所示:
+        </p>
+        <source><![CDATA[<settings>
+  <setting name="cacheEnabled" value="true"/>
+  <setting name="lazyLoadingEnabled" value="true"/>
+  <setting name="multipleResultSetsEnabled" value="true"/>
+  <setting name="useColumnLabel" value="true"/>
+  <setting name="useGeneratedKeys" value="false"/>
+  <setting name="enhancementEnabled" value="false"/>
+  <setting name="defaultExecutorType" value="SIMPLE"/>
+  <setting name="defaultStatementTimeout" value="25000"/>
+</settings>]]></source>
+
+      </subsection>
+      <subsection name="typeAliases">
+        <p>
+          类型别名是为 Java 类型命名一个短的名字。
+它只和 XML 配置有关,
+只用来减少类完全
+限定名的多余部分。例如:
+        </p>
+        <source><![CDATA[<typeAliases>
+  <typeAlias alias="Author" type="domain.blog.Author"/>
+  <typeAlias alias="Blog" type="domain.blog.Blog"/>
+  <typeAlias alias="Comment" type="domain.blog.Comment"/>
+  <typeAlias alias="Post" type="domain.blog.Post"/>
+  <typeAlias alias="Section" type="domain.blog.Section"/>
+  <typeAlias alias="Tag" type="domain.blog.Tag"/>
+</typeAliases>
+]]></source>
+        <p>
+使用这个配置,
+“Blog”可以任意用来替代“domain.blog. Blog”所使用的地方。
+        </p>
+        <p> You can also specify a package where MyBatis will search for
+          beans. For example:
+        </p>
+        <source><![CDATA[<typeAliases>
+  <package name="domain.blog"/>
+</typeAliases>
+]]></source>
+        <p>
+          Each bean found in
+          <code>domain.blog</code>
+          , if no annotation is found,
+          will be registered as an alias
+          using
+          uncapitalized non-qualified class name of the bean. Thas is
+          <code>domain.blog.Author</code>
+          will be registered as
+          <code>Author</code>
+          . If the
+          <code>@Alias</code>
+          annotation is found its value will
+          be used as an alias. See the example below:
+        </p>
+        <source><![CDATA[@Alias("author")
+public class Author {
+    ...
+}
+]]></source>
+        <p>
+对于普通的 Java 类型,有许多内建的类型别名。它们都是大小写不敏感的,由于重载
+的名字,要注意原生类型的特殊处理。
+        </p>
+        <table>
+          <thead>
+            <tr>
+              <th>
+                别名
+              </th>
+              <th>
+                映射的类型
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                _byte
+              </td>
+              <td>
+                byte
+              </td>
+            </tr>
+            <tr>
+              <td>
+                _long
+              </td>
+              <td>
+                long
+              </td>
+            </tr>
+            <tr>
+              <td>
+                _short
+              </td>
+              <td>
+                short
+              </td>
+            </tr>
+            <tr>
+              <td>
+                _int
+              </td>
+              <td>
+                int
+              </td>
+            </tr>
+            <tr>
+              <td>
+                _integer
+              </td>
+              <td>
+                int
+              </td>
+            </tr>
+            <tr>
+              <td>
+                _double
+              </td>
+              <td>
+                double
+              </td>
+            </tr>
+            <tr>
+              <td>
+                _float
+              </td>
+              <td>
+                float
+              </td>
+            </tr>
+            <tr>
+              <td>
+                _boolean
+              </td>
+              <td>
+                boolean
+              </td>
+            </tr>
+            <tr>
+              <td>
+                string
+              </td>
+              <td>
+                String
+              </td>
+            </tr>
+            <tr>
+              <td>
+                byte
+              </td>
+              <td>
+                Byte
+              </td>
+            </tr>
+            <tr>
+              <td>
+                long
+              </td>
+              <td>
+                Long
+              </td>
+            </tr>
+            <tr>
+              <td>
+                short
+              </td>
+              <td>
+                Short
+              </td>
+            </tr>
+            <tr>
+              <td>
+                int
+              </td>
+              <td>
+                Integer
+              </td>
+            </tr>
+            <tr>
+              <td>
+                integer
+              </td>
+              <td>
+                Integer
+              </td>
+            </tr>
+            <tr>
+              <td>
+                double
+              </td>
+              <td>
+                Double
+              </td>
+            </tr>
+            <tr>
+              <td>
+                float
+              </td>
+              <td>
+                Float
+              </td>
+            </tr>
+            <tr>
+              <td>
+                boolean
+              </td>
+              <td>
+                Boolean
+              </td>
+            </tr>
+            <tr>
+              <td>
+                date
+              </td>
+              <td>
+                Date
+              </td>
+            </tr>
+            <tr>
+              <td>
+                decimal
+              </td>
+              <td>
+                BigDecimal
+              </td>
+            </tr>
+            <tr>
+              <td>
+                bigdecimal
+              </td>
+              <td>
+                BigDecimal
+              </td>
+            </tr>
+            <tr>
+              <td>
+                object
+              </td>
+              <td>
+                Object
+              </td>
+            </tr>
+            <tr>
+              <td>
+                map
+              </td>
+              <td>
+                Map
+              </td>
+            </tr>
+            <tr>
+              <td>
+                hashmap
+              </td>
+              <td>
+                HashMap
+              </td>
+            </tr>
+            <tr>
+              <td>
+                list
+              </td>
+              <td>
+                List
+              </td>
+            </tr>
+            <tr>
+              <td>
+                arraylist
+              </td>
+              <td>
+                ArrayList
+              </td>
+            </tr>
+            <tr>
+              <td>
+                collection
+              </td>
+              <td>
+                Collection
+              </td>
+            </tr>
+            <tr>
+              <td>
+                iterator
+              </td>
+              <td>
+                Iterator
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </subsection>
+      <subsection name="typeHandlers">
+        <p>
+无论是 MyBatis 在预处理语句中设置一个参数,
+还是从结果集中取出一个值时,
+类型处
+理器被用来将获取的值以合适的方式转换成 Java 类型。下面这个表格描述了默认的类型处
+理器。
+        </p>
+        <table>
+          <thead>
+            <tr>
+              <th>
+                类型处理器
+              </th>
+              <th>
+                Java 类型 
+              </th>
+              <th>
+                JDBC 类型
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <code>BooleanTypeHandler</code>
+              </td>
+              <td>
+                <code>java.lang.Boolean</code>, <code>boolean</code>
+              </td>
+              <td>
+                任何兼容的布尔值
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>ByteTypeHandler</code>
+              </td>
+              <td>
+                <code>java.lang.Byte</code>, byte
+              </td>
+              <td>
+                任何兼容的数字或字节类型
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>ShortTypeHandler</code>
+              </td>
+              <td>
+                <code>java.lang.Short</code>, <code>short</code>
+              </td>
+              <td>
+                任何兼容的数字或短整型
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>IntegerTypeHandler</code>
+              </td>
+              <td>
+                <code>java.lang.Integer</code>, <code>int</code>
+              </td>
+              <td>
+                任何兼容的数字和整型
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>LongTypeHandler</code>
+              </td>
+              <td>
+                <code>java.lang.Long</code>, <code>long</code>
+              </td>
+              <td>
+                任何兼容的数字或长整型
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>FloatTypeHandler</code>
+              </td>
+              <td>
+                <code>java.lang.Float</code>, float
+              </td>
+              <td>
+                任何兼容的数字或单精度浮点型
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>DoubleTypeHandler</code>
+              </td>
+              <td>
+                <code>java.lang.Double</code>, <code>double</code>
+              </td>
+              <td>
+                任何兼容的数字或双精度浮点型
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>BigDecimalTypeHandler</code>
+              </td>
+              <td>
+                <code>java.math.BigDecimal</code>
+              </td>
+              <td>
+                任何兼容的数字或十进制小数类型
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>StringTypeHandler</code>
+              </td>
+              <td>
+                <code>java.lang.String</code>
+              </td>
+              <td>
+                CHAR 和 VARCHAR 类型
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>ClobTypeHandler</code>
+              </td>
+              <td>
+                <code>java.lang.String</code>
+              </td>
+              <td>
+                CLOB 和 LONGVARCHAR 类型
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>NStringTypeHandler</code>
+              </td>
+              <td>
+                <code>java.lang.String</code>
+              </td>
+              <td>
+                NVARCHAR 和 NCHAR 类型
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>NClobTypeHandler</code>
+              </td>
+              <td>
+                <code>java.lang.String</code>
+              </td>
+              <td>
+                NCLOB 类型
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>ByteArrayTypeHandler</code>
+              </td>
+              <td>
+                <code>byte[]</code>
+              </td>
+              <td>
+                任何兼容的字节流类型
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>BlobTypeHandler</code>
+              </td>
+              <td>
+                <code>byte[]</code>
+              </td>
+              <td>
+                BLOB 和 LONGVARBINARY 类型
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>DateTypeHandler</code>
+              </td>
+              <td>
+                <code>java.util.Date</code>
+              </td>
+              <td>
+                TIMESTAMP 类型
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>DateOnlyTypeHandler</code>
+              </td>
+              <td>
+                <code>java.util.Date</code>
+              </td>
+              <td>
+                DATE 类型
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>TimeOnlyTypeHandler</code>
+              </td>
+              <td>
+                <code>java.util.Date</code>
+              </td>
+              <td>
+                TIME 类型
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>SqlTimestampTypeHandler</code>
+              </td>
+              <td>
+                <code>java.sql.Timestamp</code>
+              </td>
+              <td>
+                TIMESTAMP 类型
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>SqlDateTypeHandler</code>
+              </td>
+              <td>
+                <code>java.sql.Date</code>
+              </td>
+              <td>
+                DATE 类型
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>SqlTimeTypeHandler</code>
+              </td>
+              <td>
+                <code>java.sql.Time</code>
+              </td>
+              <td>
+                TIME 类型
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>ObjectTypeHandler</code>
+              </td>
+              <td>
+                Any
+              </td>
+              <td>
+                其他或未指定类型
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>EnumTypeHandler</code>
+              </td>
+              <td>
+                Enumeration Type
+              </td>
+              <td>
+                VARCHAR-任何兼容的字符串类型,
+                作为代码存储(而不是索引)
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <p>
+          你可以重写类型处理器或创建你自己的类型处理器来处理不支持的或非标准的类型。
+          //TODO translation needed
+          To do so, simply extend
+          the
+          <code>org.apache.ibatis.type.BaseTypeHandler</code> class and optionally map your new
+          <code>TypeHandler</code> class to a JDBC type. 例如:
+        </p>
+        <source><![CDATA[// ExampleTypeHandler.java
+@MappedJdbcTypes(JdbcType.VARCHAR)
+public class ExampleTypeHandler extends BaseTypeHandler<String> {
+
+  @Override
+  public void setNonNullParameter(PreparedStatement ps, int i, String parameter, JdbcType jdbcType) throws SQLException {
+    ps.setString(i, parameter);
+  }
+
+  @Override
+  public String getNullableResult(ResultSet rs, String columnName) throws SQLException {
+    return rs.getString(columnName);
+  }
+
+  @Override
+  public String getNullableResult(ResultSet rs, int columnIndex) throws SQLException {
+    return rs.getString(columnIndex);
+  }
+
+  @Override
+  public String getNullableResult(CallableStatement cs, int columnIndex) throws SQLException {
+    return cs.getString(columnIndex);
+  }
+}
+]]></source>
+
+        <source><![CDATA[<!-- mybatis-config.xml -->
+<typeHandlers>
+  <typeHandler handler="org.mybatis.example.ExampleTypeHandler"/>
+</typeHandlers>
+]]></source>
+
+        <p>
+        使用这样的类型处理器将会覆盖已经存在的处理 Java 的 String 类型属性和 VARCHAR
+参数及结果的类型处理器。
+要注意 MyBatis 不会审视数据库元信息来决定使用哪种类型,
+所
+以你必须在参数和结果映射中指定那是 VARCHAR 类型的字段,来绑定到正确的类型处理
+器上。这是因为 MyBatis 直到语句被执行都不知道数据类型的这个现实导致的。
+        </p>
+        <p>
+          // TODO translation needed
+          MyBatis will know the the Java type that you want to handle with
+          this TypeHandler by introspecting its generic type, but 
+          you can override this behavior by two means:
+        </p>
+        <ul>
+          <li>Adding a <code>javaType</code> attribute to the typeHandler element (for example: <code>javaType="String"</code>)
+          </li> 
+          <li>Adding a <code>@MappedTypes</code> annotation to your <code>TypeHandler</code> class specifying 
+          the list of java types to associate it with. This annotation will be ignored if 
+          the <code>javaType</code> attribute as also been specified.
+          </li>
+        </ul>
+
+        <p>Associated JDBC type can also be specified by adding a
+           <code>jdbcType</code> attribute to the typeHandler element (for example: <code>jdbcType=VARCHAR</code>).
+           If a jdbcType attribute is specified the <code>@MappedJdbcTypes</code> 
+           will be ignored.
+        </p>
+
+        <p>And finally you can let MyBatis search for your TypeHandlers:</p>
+        <source><![CDATA[<!-- mybatis-config.xml -->
+<typeHandlers>
+  <package name="org.mybatis.example"/>
+</typeHandlers>
+]]></source>
+
+        <p>
+          Note that when using the autodiscovery feature JDBC types can only be
+          specified with annotations.
+        </p>
+      </subsection>
+
+      <subsection name="objectFactory">
+        <p>
+          MyBatis 每次创建结果对象新的实例时,
+它使用一个 ObjectFactory 实例来完成。
+如果参
+数映射存在,默认的 ObjectFactory 不比使用默认构造方法或带参数的构造方法实例化目标
+类做的工作多。如果你想重写默认的 ObjectFactory,你可以创建你自己的。比如:
+        </p>
+        <source><![CDATA[// ExampleObjectFactory.java
+public class ExampleObjectFactory extends DefaultObjectFactory {
+  public Object create(Class type) {
+    return super.create(type);
+  }
+  public Object create(Class type, List<Class> constructorArgTypes, List<Object> constructorArgs) {
+    return super.create(type, constructorArgTypes, constructorArgs);
+  }
+  public void setProperties(Properties properties) {
+    super.setProperties(properties);
+  }
+}]]></source>
+
+        <source><![CDATA[<!-- mybatis-config.xml -->
+<objectFactory type="org.mybatis.example.ExampleObjectFactory">
+  <property name="someProperty" value="100"/>
+</objectFactory>]]></source>
+        <p>
+          ObjectFactory 接口很简单。它包含两个创建用的方法,一个是处理默认构造方法的,另
+外一个是处理带参数构造方法的。最终,setProperties 方法可以被用来配置 ObjectFactory。
+在 初 始化 你 的 ObjectFactory 实例 后 , objectFactory 元素 体 中定 义的 属 性会 被传 递 给
+setProperties 方法。
+        </p>
+
+      </subsection>
+      <subsection name="plugins">
+        <p>
+          MyBatis 允许你在某一点拦截已映射语句执行的调用。默认情况下,MyBatis 允许使用
+插件来拦截方法调用:
+        </p>
+        <ul>
+          <li>
+            Executor
+            (update, query, flushStatements, commit, rollback,
+            getTransaction, close,
+            isClosed)
+          </li>
+          <li>
+            ParameterHandler
+            (getParameterObject, setParameters)
+          </li>
+          <li>
+            ResultSetHandler
+            (handleResultSets, handleOutputParameters)
+          </li>
+          <li>
+            StatementHandler
+            (prepare, parameterize, batch, update, query)
+          </li>
+        </ul>
+        <p>
+这些类中方法的详情可以通过查看每个方法的签名来发现 ,而且它们的源代码在
+MyBatis 的发行包中有。你应该理解你覆盖方法的行为,假设你所做的要比监视调用要多。
+如果你尝试修改或覆盖一个给定的方法,
+你可能会打破 MyBatis 的核心。
+这是低层次的类和
+方法,要谨慎使用插件。
+        </p>
+        <p>
+使用插件是它们提供的非常简单的力量。
+简单实现拦截器接口,
+要确定你想拦截的指定
+签名。
+        </p>
+
+        <source><![CDATA[// ExamplePlugin.java
+@Intercepts({@Signature(
+  type= Executor.class,
+  method = "update",
+  args = {MappedStatement.class,Object.class})})
+public class ExamplePlugin implements Interceptor {
+  public Object intercept(Invocation invocation) throws Throwable {
+    return invocation.proceed();
+  }
+  public Object plugin(Object target) {
+    return Plugin.wrap(target, this);
+  }
+  public void setProperties(Properties properties) {
+  }
+}]]></source>
+
+        <source><![CDATA[<!-- mybatis-config.xml -->
+<plugins>
+  <plugin interceptor="org.mybatis.example.ExamplePlugin">
+    <property name="someProperty" value="100"/>
+  </plugin>
+</plugins>]]></source>
+        <p>
+上面的插件将会拦截在 Executor 实例中所有的“update”方法调用,它也是负责低层次
+映射语句执行的内部对象。
+        </p>
+        <p><span class="label important">NOTE</span>
+          <strong>覆盖配置类
+          </strong>
+        </p>
+        <p>
+除了用插件来修改 MyBatis 核心行为之外,
+你也可以完全覆盖配置类。
+简单扩展它,
+然后覆盖其中的任意方法,之后传递它到 sqlSessionFactoryBuilder.build(myConfig)方法
+的调用。这可能会严重影响 MyBatis 的行为,所以要小心。
+        </p>
+      </subsection>
+      <subsection name="environments">
+        <p>
+MyBatis 可以配置多种环境。这会帮助你将 SQL 映射应用于多种数据库之中。例如,
+你也许为开发要设置不同的配置,
+测试和生产环境。
+或者你可能有多种生产级数据库却共享
+相同的模式,所以你会想对不同数据库使用相同的 SQL 映射。这种用例是很多的。
+        </p>
+        <p>
+          <strong>一个很重要的问题要记得:你可以配置多种环境,但你只能为每个 SqlSessionFactory
+实例选择一个。</strong>
+        </p>
+        <p>
+          所以,如果你想连接两个数据库,你需要创建两个 SqlSessionFactory 实例,每个数据库
+对应一个。而如果是三个数据库,你就需要三个实例,以此类推。记忆起来很简单:
+        </p>
+        <ul>
+          <li>
+            <strong>每个数据库对应一个 SqlSessionFactory
+            </strong>
+          </li>
+        </ul>
+        <p>
+为了明确创建哪种环境,你可以将它作为可选的参数传递给 SqlSessionFactoryBuilder。
+可以接受环境配置的两个方法签名是:
+        </p>
+
+        <source><![CDATA[SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment);
+SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment,properties);]]></source>
+
+        <p>如果环境被忽略,那么默认环境将会被加载,如下进行:
+        </p>
+
+        <source><![CDATA[SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader);
+SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader,properties);]]></source>
+
+        <p>环境元素定义了如何配置环境。
+        </p>
+
+        <source><![CDATA[<environments default="development">
+  <environment id="development">
+    <transactionManager type="JDBC">
+      <property name="..." value="..."/>
+    </transactionManager>
+    <dataSource type="POOLED">
+      <property name="driver" value="${driver}"/>
+      <property name="url" value="${url}"/>
+      <property name="username" value="${username}"/>
+      <property name="password" value="${password}"/>
+    </dataSource>
+  </environment>
+</environments>]]></source>
+        <p>
+          注意这里的键:
+        </p>
+        <ul>
+          <li>
+            默认的环境 ID(比如:default=”development”)。
+          </li>
+          <li>
+            每个 environment 元素定义的环境 ID(比如:id=”development”)。
+          </li>
+          <li>
+            事务管理器的配置(比如:type=”JDBC”)。
+          </li>
+          <li>
+            数据源的配置(比如:type=”POOLED”)。
+          </li>
+        </ul>
+        <p>
+          默认的环境和环境 ID 是自我解释的。你可以使用你喜欢的名称来命名,只要确定默认
+的要匹配其中之一。
+        </p>
+        <p>
+          <strong>transactionManager</strong>
+        </p>
+        <p>
+在 MyBatis 中有两种事务管理器类型(也就是 type=”[JDBC|MANAGED]”):
+        </p>
+        <ul>
+          <li>
+JDBC – 这个配置直接简单使用了 JDBC 的提交和回滚设置。
+它依赖于从数据源得
+到的连接来管理事务范围。
+          </li>
+          <li>
+MANAGED – 这个配置几乎没做什么。它从来不提交或回滚一个连接。而它会让
+容器来管理事务的整个生命周期(比如 Spring 或 JEE 应用服务器的上下文)
+默认
+情况下它会关闭连接。
+然而一些容器并不希望这样,
+因此如果你需要从连接中停止
+它,将 closeConnection 属性设置为 false。例如:
+            <source><![CDATA[<transactionManager type="MANAGED">
+  <property name="closeConnection" value="false"/>
+</transactionManager>]]></source>
+          </li>
+        </ul>
+        <p>
+          <span class="label important">NOTE</span>
+          If you are planning to use MyBatis with Spring there is no need to configure
+          any TransactionManager because the Spring module will set its own one 
+          overriding any previously set configuration.  
+        </p>
+        <p>
+这两种事务管理器都不需要任何属性。然而它们都是类型别名,要替换使用它们,你需
+要放置将你自己的类的完全限定名或类型别名,它们引用了你对 TransactionFactory 接口的实现
+类。
+        </p>
+        <source><![CDATA[public interface TransactionFactory {
+  void setProperties(Properties props);  
+  Transaction newTransaction(Connection conn);
+  Transaction newTransaction(DataSource dataSource, TransactionIsolationLevel level, boolean autoCommit);  
+}]]></source>
+        <p>
+任何在 XML 中配置的属性在实例化之后将会被传递给 setProperties()方法。
+你的实现类
+需要创建一个事务接口的实现,这个接口也很简单:
+        </p>
+        <source><![CDATA[public interface Transaction {
+  Connection getConnection() throws SQLException;
+  void commit() throws SQLException;
+  void rollback() throws SQLException;
+  void close() throws SQLException;
+}]]></source>
+        <p>
+使用这两个接口,你可以完全自定义 MyBatis 对事务的处理。
+        </p>
+        <p>
+          <strong>dataSource</strong>
+        </p>
+        <p>
+dataSource 元素使用基本的 JDBC 数据源接口来配置 JDBC 连接对象的资源。
+        </p>
+        <ul>
+          <li>许多 MyBatis 的应用程序将会按示例中的例子来配置数据源。
+然而它并不是必须的。
+要知道为了方便使用延迟加载,数据源才是必须的。
+          </li>
+        </ul>
+        <p>有三种内建的数据源类型(也就是 type=”???”):
+        </p>
+        <p>
+          <strong>UNPOOLED</strong>
+– 这个数据源的实现是每次被请求时简单打开和关闭连接。它有一点慢,
+这是对简单应用程序的一个很好的选择,
+因为它不需要及时的可用连接。
+不同的数据库对这
+个的表现也是不一样的,
+所以对某些数据库来说配置数据源并不重要,
+这个配置也是闲置的。
+UNPOOLED 类型的数据源仅仅用来配置以下 5 种属性:
+        </p>
+        <ul>
+          <li><code>driver</code> – 这是 JDBC 驱动的 Java 类的完全限定名(如果你的驱动包含,它也不是
+              数据源类)。
+          </li>
+          <li><code>url</code> – 这是数据库的 JDBC URL 地址。
+          </li>
+          <li><code>username</code> – 登录数据库的用户名。
+          </li>
+          <li><code>password</code> – 登录数据库的密码。
+          </li>
+          <li><code>defaultTransactionIsolationLevel</code> – 默认的连接事务隔离级别。
+          </li>
+        </ul>
+        <p>
+作为可选项,你可以传递数据库驱动的属性。要这样做,属性的前缀是以“driver.”开
+头的,例如:
+        </p>
+        <ul>
+          <li><code>driver.encoding=UTF8</code></li>
+        </ul>
+        <p>
+这 样 就 会 传 递 以 值 “ UTF8 ” 来 传 递 属 性 “ encoding ”, 它 是 通 过
+DriverManager.getConnection(url,driverProperties)方法传递给数据库驱动。
+        </p>
+        <p>
+          <strong>POOLED</strong>
+          – 这是 JDBC 连接对象的数据源连接池的实现,用来避免创建新的连接实例
+时必要的初始连接和认证时间。这是一种当前 Web 应用程序用来快速响应请求很流行的方
+法。
+        </p>
+        <p>
+除了上述(UNPOOLED)的属性之外,还有很多属性可以用来配置 POOLED 数据源:
+        </p>
+        <ul>
+          <li><code>poolMaximumActiveConnections</code> – 在任意时间存在的活动(也就是正在使用)连
+接的数量。默认值:10
+          </li>
+          <li><code>poolMaximumIdleConnections</code> – 任意时间存在的空闲连接数。
+
+          </li>
+          <li><code>poolMaximumCheckoutTime</code> – 在被强制返回之前,池中连接被检查的时间。默认
+值:20000 毫秒(也就是 20 秒)
+          </li>
+          <li><code>poolTimeToWait</code> – 这是给连接池一个打印日志状态机会的低层次设置,还有重新
+尝试获得连接,
+这些情况下往往需要很长时间
+为了避免连接池没有配置时静默失
+败)。默认值:20000 毫秒(也就是 20 秒)
+          </li>
+          <li><code>poolPingQuery</code> – 发送到数据的侦测查询,用来验证连接是否正常工作,并且准备
+接受请求。默认是“NO PING QUERY SET”
+,这会引起许多数据库驱动连接由一
+个错误信息而导致失败。
+          </li>
+          <li><code>poolPingEnabled</code> – 这是开启或禁用侦测查询。如果开启,你必须用一个合法的
+SQL 语句(最好是很快速的)设置 poolPingQuery 属性。默认值:false。
+          </li>
+          <li><code>poolPingConnectionsNotUsedFor</code> – 这是用来配置 poolPingQuery 多次时间被用一次。
+这可以被设置匹配标准的数据库连接超时时间,
+来避免不必要的侦测。
+默认值:
+0(也就是所有连接每一时刻都被侦测-但仅仅当 poolPingEnabled 为 true 时适用)。
+          </li>
+        </ul>
+        <p>
+          <strong>JNDI</strong>
+          – 这个数据源的实现是为了使用如 Spring 或应用服务器这类的容器,
+容器可以集
+中或在外部配置数据源,然后放置一个 JNDI 上下文的引用。这个数据源配置只需要两个属
+性:
+        </p>
+        <ul>
+          <li><code>initial_context</code> – 这 个 属 性 用 来 从 初 始 上 下 文 中 寻 找 环 境 ( 也 就 是
+initialContext.lookup(initial——context) 。这是个可选属性,如果被忽略,那么
+data_source 属性将会直接以 initialContext 为背景再次寻找。
+          </li>
+          <li><code>data_source</code> – 这是引用数据源实例位置的上下文的路径。它会以由 initial_context
+查询返回的环境为背景来查找,如果 initial_context 没有返回结果时,直接以初始
+上下文为环境来查找。
+          </li>
+        </ul>
+        <p>和其他数据源配置相似,
+它也可以通过名为
+“env.”
+的前缀直接向初始上下文发送属性。
+比如:
+        </p>
+        <ul>
+          <li><code>env.encoding=UTF8</code></li>
+        </ul>
+        <p>
+在初始化之后,这就会以值“UTF8”向初始上下文的构造方法传递名为“encoding”
+的属性。
+        </p>
+      </subsection>
+      
+      <subsection name="databaseIdProvider">
+        <p>
+          MyBatis is able to execute different statements depending on your database vendor. 
+          The multi-db vendor support is based on the mapped statements <code>databaseId</code> attribute. 
+          MyBatis will load all statements with no <code>databaseId</code> attribute 
+          or with a <code>databaseId</code> that matches the current one. If case the same statement
+          if found with and without the <code>databaseId</code> the latter will be discarded.  
+          To enable the multi vendor support add a <code>databaseIdProvider</code>
+          to mybatis-config.xml file as follows:
+        </p>
+        
+        <source><![CDATA[<databaseIdProvider type="VENDOR" />
+]]></source>
+
+		<p> 
+		  The VENDOR implementation databaseIdProvider sets as a databaseId the String returned by 
+		  <code>DatabaseMetaData#getDatabaseProductName()</code>. 
+		  As usually that string is too long and also, different versions of the same product return different values, 
+		  so you may want to translate it to a shorter one by adding properties like follows:
+		</p>
+		
+        <source><![CDATA[<databaseIdProvider type="VENDOR">
+  <property name="SQL Server" value="sqlserver"/>
+  <property name="DB2" value="db2"/>        
+  <property name="Oracle" value="oracle" />
+</databaseIdProvider>]]></source>
+
+		<p> 
+		  When properties are provided, the VENDOR databaseIdProvider will search the property value corresponding to the 
+		  first key found in the returned database product name or "null" if there is not a matching property. 
+		  In this case, if <code>getDatabaseProductName()</code> returns "Oracle (DataDirect)" the databaseId will be set to "oracle".  
+		</p>
+		
+		<p>
+		  You can build your own database provider by implementing the interface <code>org.apache.ibatis.mapping.DatabaseIdProvider</code>
+		  and registerin it in mybatis-config.xml:
+		</p>
+
+        <source><![CDATA[public interface DatabaseIdProvider {
+
+  void setProperties(Properties p);
+  
+  String getDatabaseId(DataSource dataSource) throws SQLException;
+}]]></source>
+
+      </subsection>
+      
+      <subsection name="mappers">
+        <p>
+既然 MyBatis 的行为已经由上述元素配置完了,我们现在就要定义 SQL 映射语句了。
+但是,
+首先我们需要告诉 MyBatis 到哪里去找到这些语句。
+Java 在这方面没有提供一个很好
+的方法,
+所以最佳的方式是告诉 MyBatis 到哪里去找映射文件。
+你可以使用相对于类路径的
+资源引用,或者字符表示,或 url 引用的完全限定名(包括 file:///URLs)
+。例如:
+        </p>
+        <source><![CDATA[<!-- Using classpath relative resources -->
+<mappers>
+  <mapper resource="org/mybatis/builder/AuthorMapper.xml"/>
+  <mapper resource="org/mybatis/builder/BlogMapper.xml"/>
+  <mapper resource="org/mybatis/builder/PostMapper.xml"/>
+</mappers>]]></source>
+
+        <source><![CDATA[<!-- Using url fully qualified paths -->
+<mappers>
+  <mapper url="file:///var/mappers/AuthorMapper.xml"/>
+  <mapper url="file:///var/mappers/BlogMapper.xml"/>
+  <mapper url="file:///var/mappers/PostMapper.xml"/>
+</mappers>]]></source>
+
+        <source><![CDATA[<!-- Using mapper interface classes -->
+<mappers>
+  <mapper class="org.mybatis.builder.AuthorMapper"/>
+  <mapper class="org.mybatis.builder.BlogMapper"/>
+  <mapper class="org.mybatis.builder.PostMapper"/>
+</mappers>]]></source>
+
+        <source><![CDATA[<!-- Register all interfaces in a package as mappers -->
+<mappers>
+  <package name="org.mybatis.builder"/>
+</mappers>]]></source>
+
+        <p>
+这些语句简单告诉了 MyBatis 去哪里找映射文件。其余的细节就是在每个 SQL 映射文
+件中了,下面的部分我们来讨论 SQL 映射文件。
+        </p>
+      </subsection>
+    </section>
+  </body>
+</document>
