@@ -944,11 +944,16 @@ public class ExampleTypeHandler extends BaseTypeHandler<String> {
           </li>
         </ul>
 
-        <p>Associated JDBC type can also be specified by adding a
-           <code>jdbcType</code> attribute to the typeHandler element (for example: <code>jdbcType=VARCHAR</code>).
-           If a jdbcType attribute is specified the <code>@MappedJdbcTypes</code> 
-           will be ignored.
-        </p>
+        <p>Associated JDBC type can be specified by two means:</p>
+        <ul>
+          <li>
+           Adding a <code>jdbcType</code> attribute to the typeHandler element (for example: <code>jdbcType=VARCHAR</code>).
+          </li>
+          <li>Adding a <code>@MappedJdbcTypes</code> annotation to your TypeHandler class specifying 
+          the list of JDBC types to associate it with. This annotation will be ignored if 
+          the <code>jdbcType</code> attribute as also been specified.
+          </li>
+        </ul>
 
         <p>And finally you can let MyBatis search for your TypeHandlers:</p>
         <source><![CDATA[<!-- mybatis-config.xml -->
