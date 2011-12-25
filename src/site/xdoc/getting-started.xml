@@ -146,7 +146,7 @@ SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(confi
       </p>
       <source><![CDATA[SqlSession session = sqlSessionFactory.openSession();
 try {
-  Blog blog = (Blog) session.selectOne("org.mybatis.example.BlogMapper.selectBlog", 101);
+  Blog blog = session.selectOne("org.mybatis.example.BlogMapper.selectBlog", 101);
 } finally {
   session.close();
 }]]></source>
@@ -228,9 +228,7 @@ Blog blog = mapper.selectBlog(101);]]></source>
         The second approach has a lot of advantages. First, it doesn't depend
         on a string literal, so it's much safer. Second, if your IDE has
         code completion, you can leverage that when navigating your mapped
-        SQL statements. Third, you don't need to cast the return type, as
-        the BlogMapper interface can have clean, typesafe return types (and
-        a typesafe parameter).
+        SQL statements.
       </p>
       <hr/>
       <p>
@@ -345,9 +343,7 @@ try {
 }]]></source>
         <p>
           Using this pattern consistently throughout your code will ensure that
-          all database resources are properly closed (assuming you did not
-          pass in your own connection, which is an indication to MyBatis that
-          you wish to manage your own connection resources).
+          all database resources are properly closed.
         </p>
       <h4>Mapper Instances</h4>
         <p>

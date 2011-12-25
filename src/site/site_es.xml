@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 2010-2011 The MyBatis Team
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!-- version: $Id: site.xml 4405 2011-12-19 17:14:07Z eduardo.macarron $ -->
+
+<project xmlns="http://maven.apache.org/DECORATION/1.1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/DECORATION/1.1.0 http://maven.apache.org/xsd/decoration-1.1.0.xsd"
+  name="MyBatis">
+
+  <body>
+    <menu name="Core">
+      <item name="Introducción" href="index.html"/>
+      <item name="Primeros pasos" href="getting-started.html"/>
+      <item name="Configuración" href="configuration.html" collapse="true">
+        <item href="configuration.html#properties" name="properties" />
+        <item href="configuration.html#settings" name="settings" />
+        <item href="configuration.html#typeAliases" name="typeAliases" />
+        <item href="configuration.html#typeHandlers" name="typeHandlers" />
+        <item href="configuration.html#objectFactory" name="objectFactory" />
+        <item href="configuration.html#plugins" name="plugins" />
+        <item href="configuration.html#environments" name="environments" />
+        <item href="configuration.html#databaseIdProvider" name="databaseIdProvider" />
+        <item href="configuration.html#mappers" name="mappers" />
+      </item>
+      <item name="Ficheros XML de mapeo" href="sqlmap-xml.html" collapse="true">
+        <item href="sqlmap-xml.html#select" name="select" />
+        <item href="sqlmap-xml.html#insert_update_and_delete" name="insert, update and delete" />
+        <item href="sqlmap-xml.html#Parameters" name="Parameters" />
+        <item href="sqlmap-xml.html#Result_Maps" name="Result Maps" />
+        <item href="sqlmap-xml.html#cache" name="cache" />
+      </item>
+      <item name="SQL dinámico" href="dynamic-sql.html"/>
+      <item name="Java API" href="java-api.html" collapse="true">
+        <item name="Directory Structure" href="java-api.html#directoryStructure" />
+        <item name="SqlSessions" href="java-api.html#sqlSessions" />
+      </item>
+      <item name="Builders de sentencias" href="statement-builders.html" collapse="true">
+        <item name="SelectBuilder" href="statement-builders.html#SelectBuilder" />
+        <item name="SqlBuilder" href="statement-builders.html#SqlBuilder" />
+       </item>
+      <item name="Logging" href="logging.html"/>
+    </menu>
+
+    <menu ref="reports"/>
+  </body>
+</project>

@@ -820,7 +820,7 @@ public class User {
           <li>
             <code>association</code> – a complex type association; many results will roll up into this type
             <ul>
-              <li>nested result mappings – associations are resultMaps themselves, or can refer to one
+              <li>nested result mappings – associations are <code>resultMap</code>s themselves, or can refer to one
               </li>
             </ul>
           </li>

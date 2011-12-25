@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 2010-2011 The MyBatis Team
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!-- version: $Id$ -->
+
+<document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+
+  <properties>
+    <title>MyBatis 3 | Statement Builders</title>
+    <author email="mybatis-dev@googlegroups.com">The MyBatis Team</author>
+  </properties>
+
+  <body>
+  <section name="Statement Builders">
+  <subsection name="SelectBuilder">
+  <p>Una de las cosas más tediosas que un programador Java puede llegar a tener que hacer es incluir código SQL en código Java. Normalmente esto se hace cuando es necesario generar dinámicamente el SQL – de otra forma podrías externalizar el código en un fichero o un procedimiento almacenado. Como ya has visto, MyBatis tiene una respuesta potente a la generación dinámica de SQL mediante las capacidades del mapeo XML. Sin embargo, en ocasiones se hace necesario construir una sentencia SQL dentro del código Java. En este caso, MyBatis tiene una funcionalidad más para ayudarte en ello, antes de que comiences con el típico lío de signos de suma, comillas, líneas nuevas, problemas de formato y condicionales anidados para tratar con las comas extra y las conjunciones AND… Realmente, generar código dinámico en java, puede ser una verdadera pesadilla.</p>
+  <p>MyBatis 3 introduce un concepto un tanto distinto para tratar con el problema. Podríamos haber creado simplemente una clase que te permitiera invocar a métodos para crear una sentencia SQL paso a paso. En su lugar hemos intentado proporcionar algo distinto. El resultado está más próximo a un Domain Specific Languaje de lo que java jamás estará en su estado actual…</p>
+  <p><strong>Los secretos de SelectBuilder</strong></p>
+  <p>La clase SelectBuilder no es mágica, y tampoco pasa nada si no sabes cómo funciona internamente. Así que veamos sin más preámbulo qué es lo que hace. SelectBuilder usa una combinación de imports estáticos y una variable ThreadLocal para permitir una sintaxis más limpia que permite entrelazar condicionales y se encarga del formateo de SQL por ti. Te permite crear métodos como este:</p>
+<source><![CDATA[public String selectBlogsSql() {
+  BEGIN(); // Clears ThreadLocal variable
+  SELECT("*");
+  FROM("BLOG");
+  return SQL();
+}]]></source>  
+    <p>Este es un ejemplo bastante sencillo que posiblemente habrías preferido construir en estático. Aquí hay uno más complicado:</p>
+<source><![CDATA[private String selectPersonSql() {
+  BEGIN(); // Clears ThreadLocal variable
+  SELECT("P.ID, P.USERNAME, P.PASSWORD, P.FULL_NAME");
+  SELECT("P.LAST_NAME, P.CREATED_ON, P.UPDATED_ON");
+  FROM("PERSON P");
+  FROM("ACCOUNT A");
+  INNER_JOIN("DEPARTMENT D on D.ID = P.DEPARTMENT_ID");
+  INNER_JOIN("COMPANY C on D.COMPANY_ID = C.ID");
+  WHERE("P.ID = A.ID");
+  WHERE("P.FIRST_NAME like ?");
+  OR();
+  WHERE("P.LAST_NAME like ?");
+  GROUP_BY("P.ID");
+  HAVING("P.LAST_NAME like ?");
+  OR();
+  HAVING("P.FIRST_NAME like ?");
+  ORDER_BY("P.ID");
+  ORDER_BY("P.FULL_NAME");
+  return SQL();
+}]]></source>  
+    <p>Construir el SQL de arriba concatenando Strings sería complicado. Por ejemplo:</p>
+<source><![CDATA["SELECT P.ID, P.USERNAME, P.PASSWORD, P.FULL_NAME, "
+"P.LAST_NAME,P.CREATED_ON, P.UPDATED_ON " +
+"FROM PERSON P, ACCOUNT A " +
+"INNER JOIN DEPARTMENT D on D.ID = P.DEPARTMENT_ID " +
+"INNER JOIN COMPANY C on D.COMPANY_ID = C.ID " +
+"WHERE (P.ID = A.ID AND P.FIRST_NAME like ?) " +
+"OR (P.LAST_NAME like ?) " +
+"GROUP BY P.ID " +
+"HAVING (P.LAST_NAME like ?) " +
+"OR (P.FIRST_NAME like ?) " +
+"ORDER BY P.ID, P.FULL_NAME";]]></source>  
+    <p>Si prefieres esa sintaxis, no hay problema en que la uses. Sin embargo, es bastante propensa a errores. Fíjate la cuidadosa adición de un espacio en blanco al final de cada línea. Aun así, incluso si prefieres esta sintaxis, el siguiente ejemplo es decididamente más sencillo que la concatenación de Strings:</p>
+<source><![CDATA[private String selectPersonLike(Person p){
+  BEGIN(); // Clears ThreadLocal variable
+  SELECT("P.ID, P.USERNAME, P.PASSWORD, P.FIRST_NAME, P.LAST_NAME");
+  FROM("PERSON P");
+  if (p.id != null) {
+  WHERE("P.ID like #{id}");
+  }
+  if (p.firstName != null) {
+  WHERE("P.FIRST_NAME like #{firstName}");
+  }
+  if (p.lastName != null) {
+  WHERE("P.LAST_NAME like #{lastName}");
+  }
+  ORDER_BY("P.LAST_NAME");
+  return SQL();
+}]]></source>  
+    <p>¿Qué hay de especial en este ejemplo? Bien, si lo miras detenidamente, verás que no hay que preocuparse de duplicar “AND”s, o elegir entre “WHERE” o “AND”, o ninguno de ambos! La sentencia de arriba crea una “query by example” (query a partir de un ejemplo) para todos los registros de PERSON, algunos con un like por el parámetro ID, otros por el parámetro firstName o por lastName -  o cualquier combinación de ellos. La SelectBuilder se encarga de saber cuándo es necesario añadir un “WHERE”, cuando debes añadirse un “AND” y también de la concatenación de Strings. Y lo mejor de todo es que lo hace casi de forma independiente de cómo hayas llamado los métodos (la única excepción es el método OR()).</p>
+    <p>Los dos métodos que puede que te hayan llamado la atención son: BEGIN() y SQL(). Simplificando, siempre debe comenzarse a usar el SelectBuilder llamado a BEGIN() y finalizar llamando a SQL(). Por supuesto puedes incluir métodos entre medio como lo requiera tu lógica pero el ámbito de la generación siempre comienza con un BEGIN() y acaba con un SQL(). El método BEGIN() limpia la variable  ThreadLocal, para asegurar que no arrastras información de un estado anterior, y el método SQL() ensambla la sentencia SQL basándose en las llamadas que has ido haciendo desde la última llamada a BEGIN(). Debes saber que BEGIN() tiene un sinónimo llamado RESET() que hace exactamente lo mismo pero se lee mejor en ciertos contextos.</p>
+    <p>Para usar el SelectBuilder como en los ejemplos de arriba simplemente tienes que importarlo estáticamente de la siguiente forma:</p>
+<source>import static org.mybatis.jdbc.SelectBuilder.*;</source>
+    <p>Una vez que se ha importado, la clase en la que estés trabajando tendrá accesibles todos los métodos del SelectBuilder. La lista completa de métodos es la siguiente:</p>
+    <table>
+    <thead>
+    <tr><th><p>Method</p></th><th><p>Description</p></th></tr></thead>
+    <tbody>
+  <tr>
+    <td>
+      <code>BEGIN()</code> / <code>RESET()</code>
+    </td>
+    <td>Estos métodos limpian estado guardad en el ThreadLocal de la clase SelectBuilder, y la preparan para construir una nueva sentencia. BEGIN() se lee mejor cuando se está creando una sentencia. RESET() se lee mejor cuando se está borrando lo hecho anteriormente en medio de una ejecución (quizá porque la lógica necesita una sentencia completamente distinta según las condiciones).</td>
+  </tr>
+  <tr>
+    <td>
+      <code>SELECT(String)</code>
+    </td>
+    <td>Comienza o añade a una sentencia SELECT. Se puede invocar más de una vez y los parámetros se irán añadiendo a la sentencia SELECT. Los parámetros son normalmente una lista de columnas o alias separados por comas, pero puede ser cualquier cosa que acepte el driver de base de datos.</td>
+  </tr>
+  <tr>
+    <td>
+      <code>SELECT_DISTINCT(String)</code>
+    </td>
+    <td>Comienza o añade a una sentencia SELECT, también añade la palabra clave “DISTINCT” a la sentencia generada. Se puede invocar más de una vez y los parámetros se irán añadiendo a la sentencia SELECT. Los parámetros son normalmente una lista de columnas o alias separados por comas, pero puede ser cualquier cosa que acepte el driver de base de datos.</td>
+  </tr>
+  <tr>
+    <td>
+      <code>FROM(String)</code>
+    </td>
+    <td>Comienza o añade a una cláusula FROM. Se puede invocar más de una vez y los parámetros se irán añadiendo a la clausula FROM. Los parámetros son normalmente un nombre de tabla o alias o cualquier cosa que acepte el driver de base de datos.</td>
+  </tr>
+  <tr>
+    <td>
+      <ul>
+        <li><code>JOIN(String)</code></li>
+        <li><code>INNER_JOIN(String)</code></li>
+        <li><code>LEFT_OUTER_JOIN(String)</code></li>
+        <li><code>RIGHT_OUTER_JOIN(String)</code></li>
+      </ul>
+    </td>
+    <td>Añade una nueva clausula JOIN del tipo apropiado, dependiendo al método que se haya llamado. El parámetro puede incluir un join estándar que consiste en las columnas y las condiciones sobre las que hacer la join.</td>
+  </tr>
+  <tr>
+    <td>
+      <code>WHERE(String)</code>
+    </td>
+    <td>Añade una nueva condición a la clausula WHERE concatenada con un AND. Puede llamarse más de una vez, lo cual hará que se añadan más condiciones todas ellas concatenadas con un AND. O usa OR() para partirlas con un OR().</td>
+  </tr>
+  <tr>
+    <td>
+      <code>OR()</code>
+    </td>
+    <td>Parte las condiciones actuales de la WHERE con un OR. Puede llamarse más de una vez, pero llamarlas más de una vez en la misma línea puede producir sentencias incorrectas.</td>
+  </tr>
+  <tr>
+    <td>
+      <code>AND()</code>
+    </td>
+    <td>Parte las condiciones actuales de la WHERE con un AND. Puede llamarse más de una vez, pero llamarlas más de una vez en la misma línea puede producir sentencias incorrectas.  Dado que WHERE y HAVING concatenan automáticamente el AND, es muy infrecuente que sea necesario invocar a este método y se incluye realmente por completitud.</td>
+  </tr>
+  <tr>
+    <td>
+      <code>GROUP_BY(String)</code>
+    </td>
+    <td>Añade una nueva clausula GROUP BY grupo, concatenada con una coma. Se le puede llamar más de una vez, lo cual hará que se concatenen nuevas condiciones separadas también por coma.</td>
+  </tr>
+  <tr>
+    <td>
+      <code>HAVING(String)</code>
+    </td>
+    <td>Añade una nueva clausula HAVING, concatenada con un AND. Se le puede llamar más de una vez, lo cual hará que se concatenen nuevas condiciones separadas también por AND. Usa OR() para dividirlas por OR.</td>
+  </tr>
+  <tr>
+    <td>
+      <code>ORDER_BY(String)</code>
+    </td>
+    <td>Añade un Nuevo elemento a la clausula ORDER BY concatenado por coma. Se le puede llamar más de una vez, lo cual hará que se concatenen nuevas condiciones separadas también por coma.</td>
+  </tr>
+  <tr>
+    <td>
+      <code>SQL()</code>
+    </td>
+    <td>Devuelve la SQL generada y restablece el estado del SelectBuilder (como si se hubiera llamado a un BEGIN() o a un RESET()). Por tanto este método solo se puede llamar una vez!</td>
+  </tr>
+    </tbody></table>
+    </subsection>
+
+    <subsection name="SqlBuilder">
+    <p>De forma similar a la SelectBuilder, MyBatis también proporciona una SqlBuilder generalizada. Incluye los métodos de SelectBuilder y también métodos para crear inserts, updates y deletes. Esta clase puede ser de utilidad para usarla en la creación de SQLs en DeleteProvider, InsertProvider o UpdateProvider (y también la SelectProvider)</p>
+    <p>Para usar el SqlBuilder como en los ejemplos de arriba simplemente tienes que importarlo estáticamente de la siguiente forma:</p>
+    <p>import static org.mybatis.jdbc.SqlBuilder.*;</p>
+    <p>SqlBuilder contiene todos los métodos de SelectBuilder, y estos métodos adicionales:</p>
+      <table>
+      <thead>
+      <tr><th>Metodo</th><th>Descripción</th></tr>
+      </thead>
+      <tbody>
+      <tr>
+  <td>
+    <code>DELETE_FROM(String)</code>
+  </td>
+  <td>Comienza una sentencia delete y especifica la tabla donde borrar. Generalmente suele ir seguida de una clausula WHERE!
+  </td>
+</tr>
+  <tr>
+    <td>
+      <code>INSERT_INTO(String)</code>
+    </td>
+    <td>Comienza una sentencia insert y especifica al tabla en la que insertar. Suele ir seguida de una o más llamadas a VALUES().
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <code>SET(String)</code>
+    </td>
+    <td>Añade a la lista “set” de una update.</td>
+  </tr>
+  <tr>
+    <td>
+      <code>UPDATE(String)</code>
+    </td>
+    <td>Comienza una sentencia update y especifica la tabla que modificar Suele ir seguida de una o más llamadas a SET() y normalmente de una llamada a WHERE().</td>
+  </tr>
+  <tr>
+    <td>
+      <code>VALUES(String, String)</code>
+    </td>
+    <td>Añade a una sentencia insert. El primer parámetro es el nombre de columna y el Segundo el valor(es).</td>
+  </tr>
+      </tbody>
+    </table>
+
+    <p>Aquí hay algunos ejemplos:</p>
+
+<source><![CDATA[public String deletePersonSql() {
+  BEGIN(); // Clears ThreadLocal variable
+  DELETE_FROM("PERSON");
+  WHERE("ID = ${id}");
+  return SQL();
+}
+
+public String insertPersonSql() {
+  BEGIN(); // Clears ThreadLocal variable
+  INSERT_INTO("PERSON");
+  VALUES("ID, FIRST_NAME", "${id}, ${firstName}");
+  VALUES("LAST_NAME", "${lastName}");
+  return SQL();
+}
+
+public String updatePersonSql() {
+  BEGIN(); // Clears ThreadLocal variable
+  UPDATE("PERSON");
+  SET("FIRST_NAME = ${firstName}");
+  WHERE("ID = ${id}");
+  return SQL();
+}]]></source>  
+  </subsection>
+  </section>
+  </body>
+
+</document>

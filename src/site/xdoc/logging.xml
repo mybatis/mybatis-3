@@ -91,7 +91,6 @@ org.apache.ibatis.logging.LogFactory.useStdOutLogging();]]></source>
         normal
         algorithm for discovering logging implementations.
       </p>
-      <p></p>
       <p>The specifics of Apache Commons Logging, Apache Log4J and the JDK
         Logging
         API are beyond the scope of this document. However the
