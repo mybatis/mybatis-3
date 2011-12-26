@@ -91,7 +91,7 @@
     <p>¿Qué hay de especial en este ejemplo? Bien, si lo miras detenidamente, verás que no hay que preocuparse de duplicar “AND”s, o elegir entre “WHERE” o “AND”, o ninguno de ambos! La sentencia de arriba crea una “query by example” (query a partir de un ejemplo) para todos los registros de PERSON, algunos con un like por el parámetro ID, otros por el parámetro firstName o por lastName -  o cualquier combinación de ellos. La SelectBuilder se encarga de saber cuándo es necesario añadir un “WHERE”, cuando debes añadirse un “AND” y también de la concatenación de Strings. Y lo mejor de todo es que lo hace casi de forma independiente de cómo hayas llamado los métodos (la única excepción es el método OR()).</p>
     <p>Los dos métodos que puede que te hayan llamado la atención son: BEGIN() y SQL(). Simplificando, siempre debe comenzarse a usar el SelectBuilder llamado a BEGIN() y finalizar llamando a SQL(). Por supuesto puedes incluir métodos entre medio como lo requiera tu lógica pero el ámbito de la generación siempre comienza con un BEGIN() y acaba con un SQL(). El método BEGIN() limpia la variable  ThreadLocal, para asegurar que no arrastras información de un estado anterior, y el método SQL() ensambla la sentencia SQL basándose en las llamadas que has ido haciendo desde la última llamada a BEGIN(). Debes saber que BEGIN() tiene un sinónimo llamado RESET() que hace exactamente lo mismo pero se lee mejor en ciertos contextos.</p>
     <p>Para usar el SelectBuilder como en los ejemplos de arriba simplemente tienes que importarlo estáticamente de la siguiente forma:</p>
-<source>import static org.mybatis.jdbc.SelectBuilder.*;</source>
+<source>import static org.apache.ibatis.jdbc.SelectBuilder.*;</source>
     <p>Una vez que se ha importado, la clase en la que estés trabajando tendrá accesibles todos los métodos del SelectBuilder. La lista completa de métodos es la siguiente:</p>
     <table>
     <thead>
@@ -180,7 +180,7 @@
     <subsection name="SqlBuilder">
     <p>De forma similar a la SelectBuilder, MyBatis también proporciona una SqlBuilder generalizada. Incluye los métodos de SelectBuilder y también métodos para crear inserts, updates y deletes. Esta clase puede ser de utilidad para usarla en la creación de SQLs en DeleteProvider, InsertProvider o UpdateProvider (y también la SelectProvider)</p>
     <p>Para usar el SqlBuilder como en los ejemplos de arriba simplemente tienes que importarlo estáticamente de la siguiente forma:</p>
-    <p>import static org.mybatis.jdbc.SqlBuilder.*;</p>
+    <p>import static org.apache.ibatis.jdbc.SqlBuilder.*;</p>
     <p>SqlBuilder contiene todos los métodos de SelectBuilder, y estos métodos adicionales:</p>
       <table>
       <thead>

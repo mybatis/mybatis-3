@@ -351,7 +351,7 @@ Set
 那就是 MyBatis 内部创建结果集列表。
   </p>
   <p>它的接口很简单。</p>  
-  <source>package org.mybatis.executor.result;
+  <source>package org.apache.ibatis.session;
 public interface ResultHandler {
   void handleResult(ResultContext context);
 }</source>

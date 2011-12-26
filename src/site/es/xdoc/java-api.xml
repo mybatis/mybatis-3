@@ -216,7 +216,7 @@ RowBounds rowBounds = new RowBounds(offset, limit);</source>
   <p>El rendimiento de algunos drivers puede variar mucho en este aspecto. Para un rendimiento optimo, usa tipos de ResultSet SCROLL_SENSITIVE o SCROLL_INSENSITIVE (es decir, no FORWARD_ONLY)</p>
   <p>El parámetro ResultHandler te permite manejar cada fila como tú quieras. Puedes añadirla a una lista, crear un Map, un Set, o descartar cada resultado y guardar solo cálculos. Puedes hacer casi todo lo que quieras con un ResultHandler, de hecho, es lo que MyBatis usa internamente para construir listas de ResultSets.</p>
   <p>La interfaz es muy sencilla:</p>  
-  <source>package org.mybatis.executor.result;
+  <source>package org.apache.ibatis.session;
 public interface ResultHandler {
   void handleResult(ResultContext context);
 }</source>
