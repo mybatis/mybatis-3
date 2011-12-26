@@ -394,7 +394,7 @@ try {
         <td><code>Method</code></td>
         <td> </td>
         <td>This is used on methods which return type is a Map. It is used to convert a List of result objects as a Map
-        based on a property of those objects.</td>
+        based on a property of those objects. Attributes: <code>value</code>, which is a property used as the key of the map.</td>
       </tr>
       <tr>
         <td><code>@Options</code></td>
@@ -480,10 +480,10 @@ try {
         <code>@Insert</code> or <code>@InsertProvider</code>. It is ignored for other methods. If you specify a
         <code>@SelectKey</code> annotation, then MyBatis will ignore any generated key properties set via the
         <code>@Options</code> annotation, or configuration properties.
-        Attributes: statement an array of strings which is the SQL statement to execute, <code>keyProperty</code> which
-        is the property of the parameter object that will be updated with the new value, before which must be either
+        Attributes: <code>statement</code> an array of strings which is the SQL statement to execute, <code>keyProperty</code> which
+        is the property of the parameter object that will be updated with the new value, <code>before</code> which must be either
         <code>true</code> or <code>false</code> to denote if the SQL statement should be executed before or after the insert,
-        <code>resultType</code> which is the Java type of the <code>keyProperty</code>, and <code>statementType=PREPARED</code>.</td>
+        <code>resultType</code> which is the Java type of the <code>keyProperty</code>, and <code>statementType</code> is a type of the statement that is any one of <code>STATEMENT</code>, <code>PREPARED</code> or <code>CALLABLE</code> that is mapped to <code>Statement</code>, <code>PreparedStatement</code> and <code>CallableStatement</code> respectively. The default is <code>PREPARED</code>.</td>
       </tr>
       <tr>
         <td><code>@ResultMap</code></td>
