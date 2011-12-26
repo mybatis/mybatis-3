@@ -110,7 +110,7 @@ InputStream <strong>inputStream</strong> = Resources.getResourceAsStream(resourc
 SqlSessionFactoryBuilder <strong>builder</strong> = new SqlSessionFactoryBuilder();
 SqlSessionFactory <strong>factory</strong> = builder.build(inputStream);</source>  
   
-  <p>Notice that we're making use of the Resources utility class, which lives in the org.mybatis.io package. The Resources class, as its name implies, helps you load resources from the classpath, filesystem or even a web URL. A quick look at the class source code or inspection through your IDE will reveal its fairly obvious set of useful methods. Here's a quick list:</p>
+  <p>Notice that we're making use of the Resources utility class, which lives in the org.apache.ibatis.io package. The Resources class, as its name implies, helps you load resources from the classpath, filesystem or even a web URL. A quick look at the class source code or inspection through your IDE will reveal its fairly obvious set of useful methods. Here's a quick list:</p>
   <source>URL getResourceURL(String resource)
 URL getResourceURL(ClassLoader loader, String resource)
 InputStream getResourceAsStream(String resource)
