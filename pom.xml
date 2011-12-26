@@ -22,7 +22,7 @@
   <parent>
     <groupId>org.mybatis</groupId>
     <artifactId>mybatis-parent</artifactId>
-    <version>12</version>
+    <version>14-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>mybatis</artifactId>
@@ -99,6 +99,13 @@
   <build>
     <plugins>
       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-release-plugin</artifactId>
+        <configuration>
+          <arguments>-Prelease,bundle</arguments>
+        </configuration>
+      </plugin>
+      <plugin>
         <groupId>org.sonatype.plugins</groupId>
         <artifactId>jarjar-maven-plugin</artifactId>
         <executions>
@@ -128,20 +135,10 @@
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-assembly-plugin</artifactId>
-        <executions>
-          <execution>
-            <goals>
-              <goal>single</goal>
-            </goals>
-            <phase>package</phase>
-            <configuration>
-              <descriptors>
-                <descriptor>${basedir}/src/main/assembly/bundle.xml</descriptor>
-              </descriptors>
-            </configuration>
-          </execution>
-        </executions>
+        <artifactId>maven-site-plugin</artifactId>
+        <configuration>
+          <locales>en,es,ja,zh_CN</locales>
+        </configuration>
       </plugin>
       <plugin>
         <groupId>com.googlecode.maven-gcu-plugin</groupId>

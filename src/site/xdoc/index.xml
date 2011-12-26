@@ -62,6 +62,18 @@
           to read it!
         </p>
       </subsection>
+
+      <subsection name="Translations">
+        <p>Users can read about MyBatis in following translations:</p>
+        <ul class="i18n">
+          <li class="zh"><a href="./zh/index.html">Simplified Chinese</a></li>
+          <li class="en"><a href="./getting-started.html">English</a></li>
+          <li class="es"><a href="./es/index.html">Español</a></li>
+          <li class="ja"><a href="./ja/index.html">Japanese</a></li>
+        </ul>
+        <p>Do you want to read about MyBatis in your own native language? Fill an issue providing patches with your
+        mather tongue documentation!</p>
+      </subsection>
     </section>
   </body>
 
