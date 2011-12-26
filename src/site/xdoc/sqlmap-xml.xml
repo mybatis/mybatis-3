@@ -294,7 +294,7 @@ ps.setInt(1,id);]]></source>
             <tr>
               <td><code>flushCache</code></td>
               <td>Setting this to true will cause the cache to be flushed whenever this statement is
-                called. Default: <code>false</code> for select statements.
+                called. Default: <code>true</code> for insert, update and delete statements.
               </td>
             </tr>
             <tr>
