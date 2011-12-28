@@ -21,6 +21,13 @@
   xsi:schemaLocation="http://maven.apache.org/DECORATION/1.1.0 http://maven.apache.org/xsd/decoration-1.1.0.xsd"
   name="MyBatis">
 
+  <bannerLeft>
+    <name>MyBatis</name>
+    <src>../../images/logo.png</src>
+    <alt>MyBatis logo</alt>
+    <href>index.html</href>
+  </bannerLeft>
+
   <body>
     <menu name="Core">
       <item name="Introducción" href="index.html"/>
