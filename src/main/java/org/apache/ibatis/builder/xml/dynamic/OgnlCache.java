@@ -1,10 +1,3 @@
-package org.apache.ibatis.builder.xml.dynamic;
-
-import java.io.StringReader;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import ognl.*;
-
 /*
  *    Copyright 2009-2011 The MyBatis Team
  *
@@ -20,6 +13,20 @@ import ognl.*;
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
+
+package org.apache.ibatis.builder.xml.dynamic;
+
+import java.io.StringReader;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
+import ognl.ExpressionSyntaxException;
+import ognl.Node;
+import ognl.Ognl;
+import ognl.OgnlException;
+import ognl.OgnlParser;
+import ognl.ParseException;
+import ognl.TokenMgrError;
 
 /**
  * 
