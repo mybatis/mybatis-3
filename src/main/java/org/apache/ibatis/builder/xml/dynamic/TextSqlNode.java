@@ -15,7 +15,6 @@
  */
 package org.apache.ibatis.builder.xml.dynamic;
 
-import ognl.Ognl;
 import ognl.OgnlException;
 
 import org.apache.ibatis.builder.BuilderException;
@@ -52,7 +51,7 @@ public class TextSqlNode implements SqlNode {
         } else if (SimpleTypeRegistry.isSimpleType(parameter.getClass())) {
           context.getBindings().put("value", parameter);
         }
-        Object value = Ognl.getValue(content, context.getBindings());
+        Object value = OgnlCache.getValue(content, context.getBindings());
         return String.valueOf(value);
       } catch (OgnlException e) {
         throw new BuilderException("Error evaluating expression '" + content + "'. Cause: " + e, e);
@@ -60,6 +59,4 @@ public class TextSqlNode implements SqlNode {
     }
   }
 
-
 }
-

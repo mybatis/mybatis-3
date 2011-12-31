@@ -20,7 +20,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import ognl.Ognl;
 import ognl.OgnlException;
 
 import org.apache.ibatis.builder.BuilderException;
@@ -30,7 +29,7 @@ public class ExpressionEvaluator {
 
   public boolean evaluateBoolean(String expression, Object parameterObject) {
     try {
-      Object value = Ognl.getValue(expression, parameterObject);
+      Object value = OgnlCache.getValue(expression, parameterObject);
       if (value instanceof Boolean) return (Boolean) value;
       if (value instanceof Number) return !new BigDecimal(String.valueOf(value)).equals(BigDecimal.ZERO);
       return value != null;
@@ -41,7 +40,7 @@ public class ExpressionEvaluator {
 
   public Iterable<?> evaluateIterable(String expression, Object parameterObject) {
     try {
-      Object value = Ognl.getValue(expression, parameterObject);
+      Object value = OgnlCache.getValue(expression, parameterObject);
       if (value == null) throw new SqlMapperException("The expression '" + expression + "' evaluated to a null value.");
       if (value instanceof Iterable) return (Iterable<?>) value;
       if (value.getClass().isArray()) {
