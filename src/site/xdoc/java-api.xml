@@ -283,7 +283,7 @@ try {
   <p>In addition, the return type must match that of the expected result type. All of the usual types are supported, including: Primitives, Maps, POJOs and JavaBeans.</p>
   <p><span class="label important">NOTE</span> Mapper interfaces do not need to implement any interface or extend any class. As long as the method signature can be used to uniquely identify a corresponding mapped statement.</p>
   <p><span class="label important">NOTE</span> Mapper interfaces can extend other interfaces. Be sure that you have the statements in the appropriate namespace when using XML binding to Mapper interfaces. Also, the only limitation is that you cannot have the same method signature in two interfaces in a hierarchy (a bad idea anyway).</p>
-  <p>You can pass multiple parameters to a mapper method. If you do, they will be named by their position in the parameter list by default, for example: #{1}, #{2} etc. If you wish to change the name of the parameters (multiple only), then you can use the @Param("paramName") annotation on the parameter.</p>
+  <p>You can pass multiple parameters to a mapper method. If you do, they will be named by their position in the parameter list by default, for example: #{0}, #{1} etc. If you wish to change the name of the parameters (multiple only), then you can use the @Param("paramName") annotation on the parameter.</p>
   <p>You can also pass a RowBounds instance to the method to limit query results.</p>
 
   <h5>Mapper Annotations</h5>

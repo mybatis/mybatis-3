@@ -276,7 +276,7 @@ try {
   <p>Además, el tipo devuelto debe ser igual que el result type del mapped statement. Todos los tipos habituales se soportan, incluyendo primitivas, mapas, POJOs y JavaBeans.</p>
   <p><span class="label important">NOTA</span> Los mappers no necesitan implementar ninguna interfaz o extender ninguna clase. Sólo es necesario que la firma de método pueda usarse para identificar unívocamente el mapped statement correspondiente.</p>
   <p><span class="label important">NOTA</span> Los mappers pueden extender otras interfaces. Asegúrate que tienes tus statements en los namespaces adecuados en tu fichero XML. Además, la única limitación es que no puedes tener el mismo método, con la misma firma, en dos interfaces de la jerarquía (una mala idea en cualquier caso).</p>
-  <p>Puedes pasar más de un parámetro a un método de un mapper. Si lo haces, se usará como nombre su posición en la lista de parámetros, por ejemplo:  #{1}, #{2} etc.  Si quieres cambiar su nombre (solo en caso de parámetros múltiples) puedes usar la notación @Param(“paramName”).</p>
+  <p>Puedes pasar más de un parámetro a un método de un mapper. Si lo haces, se usará como nombre su posición en la lista de parámetros, por ejemplo:  #{0}, #{1} etc. Si quieres cambiar su nombre (solo en caso de parámetros múltiples) puedes usar la notación @Param(“paramName”).</p>
   <p>También puedes pasar una instancia de RowBounds al método para limitar los resultados.</p>
 
   <h5>Anotaciones de mappers</h5>
