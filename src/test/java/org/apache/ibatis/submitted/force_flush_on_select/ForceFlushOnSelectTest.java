@@ -15,7 +15,7 @@
  */
 package org.apache.ibatis.submitted.force_flush_on_select;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import java.io.Reader;
 import java.sql.Connection;
@@ -127,6 +127,23 @@ public class ForceFlushOnSelectTest {
         Statement stmt = conn.createStatement() ;
         stmt.executeUpdate( "UPDATE person SET firstName = 'Simone' WHERE id = 1" ) ;
         stmt.close() ;
+    }
+
+    @Test
+    public void testUpdateShouldFlushLocalCache() throws SQLException {
+        SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.SIMPLE);
+        try {
+            PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
+            Person person = personMapper.selectByIdNoFlush(1);
+            person.setLastName("Perez"); //it is ignored in update
+            personMapper.update(person);
+            Person updatedPerson = personMapper.selectByIdNoFlush(1);
+            assertEquals("Smith", updatedPerson.getLastName());
+            assertNotSame(person, updatedPerson);
+            sqlSession.commit();
+        } finally {
+            sqlSession.close();
+        }
     }
 
 }

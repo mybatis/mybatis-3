@@ -22,4 +22,5 @@ public interface PersonMapper {
     public Person selectByIdNoFlush(int id);
     public List<Person> selectAllFlush();
     public List<Person> selectAllNoFlush();
+    int update(Person p);
 }

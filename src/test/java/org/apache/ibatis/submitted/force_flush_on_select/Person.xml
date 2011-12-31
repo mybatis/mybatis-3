@@ -55,4 +55,8 @@
         ORDER BY id
     </select>
     
+    <update id="update" parameterType="org.apache.ibatis.submitted.force_flush_on_select.Person">
+        UPDATE person set firstname = #{firstName} where id = #{id} 
+    </update>
+    
 </mapper>
