@@ -277,7 +277,7 @@ BEGIN()或 RESET()方法被调用)。因此,这个方法只能被调
 UpdateProvider 中(还有 SelectProvider)构建 SQL 字符串时这个类就很有用。
     </p>
     <p>在上述示例中要使用 SqlBuilder,你只需简单静态引入如下内容:</p>
-    <p>import static org.apache.ibatis.jdbc.SqlBuilder.*;</p>
+    <source>import static org.apache.ibatis.jdbc.SqlBuilder.*;</source>
     <p>SqlBuilder 包含 SelectBuilder 中的所有方法,还有下面这些额外的方法:</p>
       <table>
       <thead>

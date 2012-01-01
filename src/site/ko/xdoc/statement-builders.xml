@@ -219,7 +219,7 @@ OR()메서드를 사용하면 된다.</td>
 InsertProvider, 또는 UpdateProvider 에서 SQL 문자열을 만들 때 유용하다.
 위 예제에서 SqlBuilder 를 사용하기 위해, 다음처럼 static 으로 import 할 필요가</p>
     <p>위 예제에서 SqlBuilder 를 사용하기 위해, 다음처럼 static 으로 import 할 필요가 있다.</p>
-    <p>import static org.apache.ibatis.jdbc.SqlBuilder.*;</p>
+    <source>import static org.apache.ibatis.jdbc.SqlBuilder.*;</source>
     <p>SqlBuilder 는 SelectBuilder 의 모든 메서드를 가지고 있으며 몇가지 추가로 메서드를 더 가지고 있다.</p>
       <table>
       <thead>

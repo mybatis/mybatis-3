@@ -199,7 +199,7 @@
     <subsection name="SqlBuilder">
     <p>Similarly to SelectBuilder, MyBatis also includes a generalized SqlBuilder. It includes all the methods for SelectBuilder, as well as methods for building inserts, updates, and deletes. &#xa0;This class can be useful when building SQL strings in a DeleteProvider, InsertProvider, or UpdateProvider (as well as a SelectProvider). &#xa0;</p>
     <p>To use the SqlBuilder as in the examples above, you simply need to import it statically as follows:</p>
-    <p>import static org.apache.ibatis.jdbc.SqlBuilder.*;</p>
+    <source>import static org.apache.ibatis.jdbc.SqlBuilder.*;</source>
     <p>SqlBuilder contains all methods from SelectBuilder, as well as these additional methods:</p>
       <table>
       <thead>
