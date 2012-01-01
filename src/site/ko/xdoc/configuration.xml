@@ -1,0 +1,1180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 2010-2012 The MyBatis Team
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!-- version: $Id$ -->
+
+<document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+
+  <properties>
+    <title>MyBatis 3 | 매퍼 설정 </title>
+    <author email="mybatis-dev@googlegroups.com">The MyBatis Team</author>
+  </properties>
+
+  <body>
+    <section name="매퍼 설정 ">
+      <p>MyBatis XML 설정파일은 다양한 셋팅과 프로퍼티를 가진다. 문서의 구조는 다음과 같다.:</p>
+
+      <ul>
+        <li>
+          configuration
+          <ul>
+            <li><a href="#properties">properties</a></li>
+            <li><a href="#settings">settings</a></li>
+            <li><a href="#typeAliases">typeAliases</a></li>
+            <li><a href="#typeHandlers">typeHandlers</a></li>
+            <li><a href="#objectFactory">objectFactory</a></li>
+            <li><a href="#plugins">plugins</a></li>
+            <li><a href="#environments">environments</a>
+              <ul>
+                <li>
+                  environment
+                  <ul>
+                    <li>transactionManager</li>
+                    <li>dataSource</li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+            <li><a href="#databaseIdProvider">databaseIdProvider</a></li>
+            <li><a href="#mappers">mappers</a></li>
+          </ul>
+        </li>
+      </ul>
+      <subsection name="properties">
+        <p>이 설정은 외부에 옮길 수 있다. 자바 프로퍼티 파일 인스턴스에 설정할 수도 있고, properties 요소의 하위 요소에 둘수도
+있다. 예를 들면:</p>
+        <source><![CDATA[<properties resource="org/mybatis/example/config.properties">
+  <property name="username" value="dev_user"/>
+  <property name="password" value="F2Fa3!33TYyg"/>
+</properties>]]></source>
+        <p>속성들은 파일 도처에 둘수도 있다. 예를 들면:</p>
+        <source><![CDATA[<dataSource type="POOLED">
+  <property name="driver" value="${driver}"/>
+  <property name="url" value="${url}"/>
+  <property name="username" value="${username}"/>
+  <property name="password" value="${password}"/>
+</dataSource>]]></source>
+        <p>이 에제에서 username 과 password 는 properties 요소의 설정된 값으로 대체될 수 있다. driver 와 url 속성은
+config.properties 파일에 포함된 값으로 대체될 수도 있다. 이것은 설정에 대한 다양한 옵션을 제공하는 셈이다.</p>
+        <p>속성은 SqlSessionBuilder.build() 메서드에 전달될 수 있다. 예를 들면:</p>
+        <source><![CDATA[SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, props);
+
+// ... or ...
+
+SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, props);
+]]></source>
+        <p>속성이 한개 이상 존재한다면, MyBatis 는 일정한 순서로 로드한다.:</p>
+        <ul>
+          <li>properties 요소에 명시된 속성을 가장 먼저 읽는다.</li>
+          <li>properties 요소의 클래스패스 자원이나 url 속성으로 부터 로드된 속성을 두번재로 읽는다. 그래서 이미 읽은 값이
+있다면 덮어쓴다.</li>
+          <li>마지막으로 메서드 파라미터로 전달된 속성을 읽는다. 앞서 로드된 값을 덮어쓴다.</li>
+        </ul>
+        <p>그래서 가장 우선순위가 높은 속성은 메서드의 파라미터로 전달된 값이고 그 다음은 자원및 url 속성이고 마지막은
+properties 요소에 명시된 값이다.</p>
+      </subsection>
+      <subsection name="settings">
+        <p>런타임시 MyBatis 의 행위를 조정하기 위한 중요한 값들이다. 다음표는 셋팅과 그 의미 그리고 디폴트 값을 설명한다.</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>셋팅 </th>
+              <th>설명 </th>
+              <th>사용가능한  값들 </th>
+              <th>디폴트</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                cacheEnabled
+              </td>
+              <td>설정에서 각 mapper 에 설정된 캐시를 전역적으로 
+                                  사용할지 말지에 대한 여부 </td>
+              <td>
+                true | false
+              </td>
+              <td>
+                true
+              </td>
+            </tr>
+            <tr>
+              <td>
+                lazyLoadingEnabled
+              </td>
+              <td>늦은 로딩을 사용할지에 대한 여부. 사용하지 않는다면 
+                                            모두 즉시 로딩할 것이다. </td>
+              <td>
+                true | false
+              </td>
+              <td>
+                true
+              </td>
+            </tr>
+            <tr>
+              <td>
+                aggressiveLazyLoading
+              </td>
+              <td>활성화 상태로 두게 되면 늦은(lazy) 로딩 프로퍼티를 
+                                      가진 객체는 호출에 따라 로드될 것이다. 반면에 개별 
+                                       프로퍼티는 요청할때 로드된다. </td>
+              <td>
+                true | false
+              </td>
+              <td>
+                true
+              </td>
+            </tr>
+            <tr>
+              <td>
+                multipleResultSetsEnabled
+              </td>
+              <td>한개의 구문에서 여러개의 ResultSet 을 허용할지의 
+                                  여부(드라이버가 해당 기능을 지원해야 함) </td>
+              <td>
+                true | false
+              </td>
+              <td>
+                true
+              </td>
+            </tr>
+            <tr>
+              <td>
+                useColumnLabel
+              </td>
+              <td>칼럼명 대신에 칼럼라벨을 사용. 드라이버마다 조금
+다르게 작동한다. 문서와 간단한 테스트를 통해 실제 
+기대하는 것처럼 작동하는지 확인해야 한다.</td>
+              <td>
+                true | false
+              </td>
+              <td>
+                true
+              </td>
+            </tr>
+            <tr>
+              <td>
+                useGeneratedKeys
+              </td>
+              <td>생성키에 대한 JDBC 지원을 허용. 지원하는
+드라이버가 필요하다. true 로 설정하면 생성키를
+강제로 생성한다. 일부 드라이버(예를들면,
+Derby)에서는 이 설정을 무시한다.</td>
+              <td>
+                true | false
+              </td>
+              <td>
+                False
+              </td>
+            </tr>
+            <tr>
+              <td>
+                autoMappingBehavior
+              </td>
+              <td>MyBatis 가 칼럼을 필드/프로퍼티에 자동으로
+매핑할지와 방법에 대해 명시. PARTIAL 은 간단한
+자동매핑만 할뿐, 내포된 결과에 대해서는 처리하지
+않는다. FULL 은 처리가능한 모든 자동매핑을
+처리한다.</td>
+              <td>
+                NONE, PARTIAL, FULL
+              </td>
+              <td>
+                PARTIAL
+              </td>
+            </tr>
+            <tr>
+              <td>
+                defaultExecutorType
+              </td>
+              <td>디폴트 실행자(executor) 설정. SIMPLE 실행자는
+특별히 하는 것이 없다. REUSE 실행자는
+PreparedStatement 를 재사용한다. BATCH 실행자는
+구문을 재사용하고 수정을 배치처리한다.</td>
+              <td>
+                SIMPLE
+                REUSE
+                BATCH
+              </td>
+              <td>
+                SIMPLE
+              </td>
+            </tr>
+            <tr>
+              <td>
+                defaultStatementTimeout
+              </td>
+              <td>데이터베이스로의 응답을 얼마나 오래 기다릴지를
+판단하는 타임아웃을 셋팅</td>
+              <td>
+                                              양수 
+              </td>
+              <td>셋팅되지
+않음(null)</td>
+            </tr>
+            <tr>
+              <td>
+                safeRowBoundsEnabled
+              </td>
+              <td>
+                Allows using RowBounds on nested
+                statements.
+              </td>
+              <td>
+                true | false
+              </td>
+              <td>
+                True
+              </td>
+            </tr>
+            <tr>
+              <td>
+                mapUnderscoreToCamelCase
+              </td>
+              <td>
+                Enables automatic mapping from
+                classic database column names
+                A_COLUMN to camel case classic Java
+                property names aColumn.
+              </td>
+              <td>
+                true | false
+              </td>
+              <td>
+                False
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <p>위 설정을 모두 사용한 setting 요소의 예제이다:</p>
+        <source><![CDATA[<settings>
+  <setting name="cacheEnabled" value="true"/>
+  <setting name="lazyLoadingEnabled" value="true"/>
+  <setting name="multipleResultSetsEnabled" value="true"/>
+  <setting name="useColumnLabel" value="true"/>
+  <setting name="useGeneratedKeys" value="false"/>
+  <setting name="enhancementEnabled" value="false"/>
+  <setting name="defaultExecutorType" value="SIMPLE"/>
+  <setting name="defaultStatementTimeout" value="25000"/>
+</settings>]]></source>
+
+      </subsection>
+      <subsection name="typeAliases">
+        <p>타입 별칭은 자바 타입에 대한 좀더 짧은 이름이다. 오직 XML 설정에서만 사용되며, 타이핑을 줄이기 위해 존재한다.
+예를들면:</p>
+        <source><![CDATA[<typeAliases>
+  <typeAlias alias="Author" type="domain.blog.Author"/>
+  <typeAlias alias="Blog" type="domain.blog.Blog"/>
+  <typeAlias alias="Comment" type="domain.blog.Comment"/>
+  <typeAlias alias="Post" type="domain.blog.Post"/>
+  <typeAlias alias="Section" type="domain.blog.Section"/>
+  <typeAlias alias="Tag" type="domain.blog.Tag"/>
+</typeAliases>
+]]></source>
+        <p>이 설정에서, “Blog” 는 도처에서 “domain.blog.Blog” 대신 사용될 수 있다.</p>
+        <p> You can also specify a package where MyBatis will search for
+          beans. For example:
+        </p>
+        <source><![CDATA[<typeAliases>
+  <package name="domain.blog"/>
+</typeAliases>
+]]></source>
+        <p>
+          Each bean found in
+          <code>domain.blog</code>
+          , if no annotation is found,
+          will be registered as an alias
+          using
+          uncapitalized non-qualified class name of the bean. Thas is
+          <code>domain.blog.Author</code>
+          will be registered as
+          <code>author</code>. If the
+          <code>@Alias</code>
+          annotation is found its value will
+          be used as an alias. See the example below:
+        </p>
+        <source><![CDATA[@Alias("author")
+public class Author {
+    ...
+}
+]]></source>
+        <p>공통의 자바타입에 대해서는 내장된 타입 별칭이 있다. 이 모두 대소문자를 가린다..</p>
+        <table>
+          <thead>
+            <tr>
+              <th>
+                별칭 
+              </th>
+              <th>
+                매핑된 타입
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                _byte
+              </td>
+              <td>
+                byte
+              </td>
+            </tr>
+            <tr>
+              <td>
+                _long
+              </td>
+              <td>
+                long
+              </td>
+            </tr>
+            <tr>
+              <td>
+                _short
+              </td>
+              <td>
+                short
+              </td>
+            </tr>
+            <tr>
+              <td>
+                _int
+              </td>
+              <td>
+                int
+              </td>
+            </tr>
+            <tr>
+              <td>
+                _integer
+              </td>
+              <td>
+                int
+              </td>
+            </tr>
+            <tr>
+              <td>
+                _double
+              </td>
+              <td>
+                double
+              </td>
+            </tr>
+            <tr>
+              <td>
+                _float
+              </td>
+              <td>
+                float
+              </td>
+            </tr>
+            <tr>
+              <td>
+                _boolean
+              </td>
+              <td>
+                boolean
+              </td>
+            </tr>
+            <tr>
+              <td>
+                string
+              </td>
+              <td>
+                String
+              </td>
+            </tr>
+            <tr>
+              <td>
+                byte
+              </td>
+              <td>
+                Byte
+              </td>
+            </tr>
+            <tr>
+              <td>
+                long
+              </td>
+              <td>
+                Long
+              </td>
+            </tr>
+            <tr>
+              <td>
+                short
+              </td>
+              <td>
+                Short
+              </td>
+            </tr>
+            <tr>
+              <td>
+                int
+              </td>
+              <td>
+                Integer
+              </td>
+            </tr>
+            <tr>
+              <td>
+                integer
+              </td>
+              <td>
+                Integer
+              </td>
+            </tr>
+            <tr>
+              <td>
+                double
+              </td>
+              <td>
+                Double
+              </td>
+            </tr>
+            <tr>
+              <td>
+                float
+              </td>
+              <td>
+                Float
+              </td>
+            </tr>
+            <tr>
+              <td>
+                boolean
+              </td>
+              <td>
+                Boolean
+              </td>
+            </tr>
+            <tr>
+              <td>
+                date
+              </td>
+              <td>
+                Date
+              </td>
+            </tr>
+            <tr>
+              <td>
+                decimal
+              </td>
+              <td>
+                BigDecimal
+              </td>
+            </tr>
+            <tr>
+              <td>
+                bigdecimal
+              </td>
+              <td>
+                BigDecimal
+              </td>
+            </tr>
+            <tr>
+              <td>
+                object
+              </td>
+              <td>
+                Object
+              </td>
+            </tr>
+            <tr>
+              <td>
+                map
+              </td>
+              <td>
+                Map
+              </td>
+            </tr>
+            <tr>
+              <td>
+                hashmap
+              </td>
+              <td>
+                HashMap
+              </td>
+            </tr>
+            <tr>
+              <td>
+                list
+              </td>
+              <td>
+                List
+              </td>
+            </tr>
+            <tr>
+              <td>
+                arraylist
+              </td>
+              <td>
+                ArrayList
+              </td>
+            </tr>
+            <tr>
+              <td>
+                collection
+              </td>
+              <td>
+                Collection
+              </td>
+            </tr>
+            <tr>
+              <td>
+                iterator
+              </td>
+              <td>
+                Iterator
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </subsection>
+      <subsection name="typeHandlers">
+        <p>MyBatis 가 PreparedStatement 에 파라미터를 셋팅하고 ResultSet 에서 값을 가져올때마다, TypeHandler 는 적절한 자바
+타입의 값을 가져오기 위해 사용된다. 다음의 표는 디폴트 TypeHandlers 를 설명한다..</p>
+        <table>
+          <thead>
+            <tr>
+              <th>
+                타입 핸들러 
+              </th>
+              <th>
+              자바 타입 
+              </th>
+              <th>
+              JDBC 타입
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <code>BooleanTypeHandler</code>
+              </td>
+              <td>
+                <code>java.lang.Boolean</code>, <code>boolean</code>
+              </td>
+              <td>어떤 호환가능한 BOOLEAN</td>
+            </tr>
+            <tr>
+              <td>
+                <code>ByteTypeHandler</code>
+              </td>
+              <td>
+                <code>java.lang.Byte</code>, byte
+              </td>
+              <td>어떤 호환가능한 NUMERIC 또는 BYTE</td>
+            </tr>
+            <tr>
+              <td>
+                <code>ShortTypeHandler</code>
+              </td>
+              <td>
+                <code>java.lang.Short</code>, <code>short</code>
+              </td>
+              <td>어떤 호환가능한 NUMERIC 또는 SHORT INTEGER</td>
+            </tr>
+            <tr>
+              <td>
+                <code>IntegerTypeHandler</code>
+              </td>
+              <td>
+                <code>java.lang.Integer</code>, <code>int</code>
+              </td>
+              <td>어떤 호환가능한 NUMERIC 또는 INTEGER</td>
+            </tr>
+            <tr>
+              <td>
+                <code>LongTypeHandler</code>
+              </td>
+              <td>
+                <code>java.lang.Long</code>, <code>long</code>
+              </td>
+              <td>어떤 호환가능한 NUMERIC 또는 LONG INTEGER</td>
+            </tr>
+            <tr>
+              <td>
+                <code>FloatTypeHandler</code>
+              </td>
+              <td>
+                <code>java.lang.Float</code>, float
+              </td>
+              <td>어떤 호환가능한 NUMERIC 또는 FLOAT</td>
+            </tr>
+            <tr>
+              <td>
+                <code>DoubleTypeHandler</code>
+              </td>
+              <td>
+                <code>java.lang.Double</code>, <code>double</code>
+              </td>
+              <td>어떤 호환가능한 NUMERIC 또는 DOUBLE</td>
+            </tr>
+            <tr>
+              <td>
+                <code>BigDecimalTypeHandler</code>
+              </td>
+              <td>
+                <code>java.math.BigDecimal</code>
+              </td>
+              <td>어떤 호환가능한 NUMERIC 또는 DECIMAL</td>
+            </tr>
+            <tr>
+              <td>
+                <code>StringTypeHandler</code>
+              </td>
+              <td>
+                <code>java.lang.String</code>
+              </td>
+              <td><code>CHAR</code>, <code>VARCHAR</code></td>
+            </tr>
+            <tr>
+              <td>
+                <code>ClobTypeHandler</code>
+              </td>
+              <td>
+                <code>java.lang.String</code>
+              </td>
+              <td><code>CLOB</code>, <code>LONGVARCHAR</code></td>
+            </tr>
+            <tr>
+              <td>
+                <code>NStringTypeHandler</code>
+              </td>
+              <td>
+                <code>java.lang.String</code>
+              </td>
+              <td><code>NVARCHAR</code>, <code>NCHAR</code></td>
+            </tr>
+            <tr>
+              <td>
+                <code>NClobTypeHandler</code>
+              </td>
+              <td>
+                <code>java.lang.String</code>
+              </td>
+              <td>NCLOB</td>
+            </tr>
+            <tr>
+              <td>
+                <code>ByteArrayTypeHandler</code>
+              </td>
+              <td>
+                <code>byte[]</code>
+              </td>
+              <td>어떤 호환가능한 byte 스트림 타입</td>
+            </tr>
+            <tr>
+              <td>
+                <code>BlobTypeHandler</code>
+              </td>
+              <td>
+                <code>byte[]</code>
+              </td>
+              <td>
+                <code>BLOB</code>, <code>LONGVARBINARY</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>DateTypeHandler</code>
+              </td>
+              <td>
+                <code>java.util.Date</code>
+              </td>
+              <td>
+                <code>TIMESTAMP</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>DateOnlyTypeHandler</code>
+              </td>
+              <td>
+                <code>java.util.Date</code>
+              </td>
+              <td>
+                <code>DATE</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>TimeOnlyTypeHandler</code>
+              </td>
+              <td>
+                <code>java.util.Date</code>
+              </td>
+              <td>
+                <code>TIME</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>SqlTimestampTypeHandler</code>
+              </td>
+              <td>
+                <code>java.sql.Timestamp</code>
+              </td>
+              <td>
+                <code>TIMESTAMP</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>SqlDateTypeHandler</code>
+              </td>
+              <td>
+                <code>java.sql.Date</code>
+              </td>
+              <td>
+                <code>DATE</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>SqlTimeTypeHandler</code>
+              </td>
+              <td>
+                <code>java.sql.Time</code>
+              </td>
+              <td>
+                <code>TIME</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>ObjectTypeHandler</code>
+              </td>
+              <td>
+                Any
+              </td>
+              <td>
+                <code>OTHER</code>, 또는 명시하지 않는
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>EnumTypeHandler</code>
+              </td>
+              <td>
+                Enumeration Type
+              </td>
+              <td>
+                <code>VARCHAR</code> – 문자열 호환타입.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <p>지원하지 않거나 비표준인 타입에 대해서는 당신 스스로 만들어서 타입핸들러를 오버라이드할 수 있다. 그러기 위해서는
+TypeHandler 인터페이스를 구현하고 자바 타입에 TypeHandler 를 매핑하면 된다. 예를 들면:</p>
+
+        <source><![CDATA[// ExampleTypeHandler.java
+@MappedJdbcTypes(JdbcType.VARCHAR)
+public class ExampleTypeHandler extends BaseTypeHandler<String> {
+
+  @Override
+  public void setNonNullParameter(PreparedStatement ps, int i, String parameter, JdbcType jdbcType) throws SQLException {
+    ps.setString(i, parameter);
+  }
+
+  @Override
+  public String getNullableResult(ResultSet rs, String columnName) throws SQLException {
+    return rs.getString(columnName);
+  }
+
+  @Override
+  public String getNullableResult(ResultSet rs, int columnIndex) throws SQLException {
+    return rs.getString(columnIndex);
+  }
+
+  @Override
+  public String getNullableResult(CallableStatement cs, int columnIndex) throws SQLException {
+    return cs.getString(columnIndex);
+  }
+}
+]]></source>
+
+        <source><![CDATA[<!-- mybatis-config.xml -->
+<typeHandlers>
+  <typeHandler handler="org.mybatis.example.ExampleTypeHandler"/>
+</typeHandlers>
+]]></source>
+
+        <p>이러한 TypeHandler 를 사용하는 것은 자바 String 프로퍼티와 VARCHAR 파라미터 및 결과를 위해 이미 존재하는
+핸들러를 오버라이드하게 될 것이다. MyBatis 는 타입을 판단하기 위해 데이터베이스의 메타데이터를 보지 않는다. 그래서
+파라미터와 결과에 정확한 타입 핸들러를 매핑해야 한다. MyBatis 가 구문이 실행될때까지는 데이터 타입에 대해 모르기
+때문이다..</p>
+        <p>
+          MyBatis will know the the Java type that you want to handle with
+          this TypeHandler by introspecting its generic type, but 
+          you can override this behavior by two means:
+        </p>
+        <ul>
+          <li>Adding a <code>javaType</code> attribute to the typeHandler element (for example: <code>javaType="String"</code>)
+          </li> 
+          <li>Adding a <code>@MappedTypes</code> annotation to your TypeHandler class specifying 
+          the list of java types to associate it with. This annotation will be ignored if 
+          the <code>javaType</code> attribute as also been specified.
+          </li>
+        </ul>
+
+        <p>Associated JDBC type can be specified by two means:</p>
+        <ul>
+          <li>
+           Adding a <code>jdbcType</code> attribute to the typeHandler element (for example: <code>jdbcType=VARCHAR</code>).
+          </li>
+          <li>Adding a <code>@MappedJdbcTypes</code> annotation to your TypeHandler class specifying 
+          the list of JDBC types to associate it with. This annotation will be ignored if 
+          the <code>jdbcType</code> attribute as also been specified.
+          </li>
+        </ul>
+
+        <p>And finally you can let MyBatis search for your TypeHandlers:</p>
+        <source><![CDATA[<!-- mybatis-config.xml -->
+<typeHandlers>
+  <package name="org.mybatis.example"/>
+</typeHandlers>
+]]></source>
+
+        <p>
+          Note that when using the autodiscovery feature JDBC types can only be
+          specified with annotations.
+        </p>
+      </subsection>
+
+      <subsection name="objectFactory">
+        <p>매번 MyBatis 는 결과 객체의 인스턴스를 만들기 위해 ObjectFactory 를 사용한다. 디폴트 ObjectFactory 는 디폴트
+생성자를 가진 대상 클래스를 인스턴스화하는 것보다 조금 더 많은 작업을 한다. ObjectFactory 의 디폴트 행위를
+오버라이드하고자 한다면, 만들 수 있다. 예를 들면:</p>
+        <source><![CDATA[// ExampleObjectFactory.java
+public class ExampleObjectFactory extends DefaultObjectFactory {
+  public Object create(Class type) {
+    return super.create(type);
+  }
+  public Object create(Class type, List<Class> constructorArgTypes, List<Object> constructorArgs) {
+    return super.create(type, constructorArgTypes, constructorArgs);
+  }
+  public void setProperties(Properties properties) {
+    super.setProperties(properties);
+  }
+}]]></source>
+
+        <source><![CDATA[<!-- mybatis-config.xml -->
+<objectFactory type="org.mybatis.example.ExampleObjectFactory">
+  <property name="someProperty" value="100"/>
+</objectFactory>]]></source>
+        <p>ObjectFactory 인터페이스는 매우 간단한다. 두개의 create 메서드를 가지고 있으며, 하나는 디폴트 생성자를 처리하고
+다른 하나는 파라미터를 가진 생성자를 처리한다. 마지막으로 setProperties 메서드는 ObjectFactory 를 설정하기 위해
+사용될 수 있다. objectFactory 요소에 정의된 프로퍼티는 ObjectFactory 인스턴스가 초기화된 후 setProperties 에 전달될
+것이다.</p>
+
+      </subsection>
+      <subsection name="plugins">
+        <p>MyBatis 는 매핑 구문을 실행하는 어떤 시점에 호출을 가로챈다. 기본적으로 MyBatis 는 메서드 호출을 가로채기 위한
+플러그인을 허용한다.</p>
+        <ul>
+          <li>
+            Executor
+            (update, query, flushStatements, commit, rollback,
+            getTransaction, close,
+            isClosed)
+          </li>
+          <li>
+            ParameterHandler
+            (getParameterObject, setParameters)
+          </li>
+          <li>
+            ResultSetHandler
+            (handleResultSets, handleOutputParameters)
+          </li>
+          <li>
+            StatementHandler
+            (prepare, parameterize, batch, update, query)
+          </li>
+        </ul>
+        <p>이 클래스들의 메서드는 각각 메서드 시그니처를 통해 찾을 수 있고 소스코드는 MyBatis 릴리즈 파일에서 찾을 수 있다.
+오버라이드할 메서드의 행위를 이해해야만 한다. 주어진 메서드의 행위를 변경하거나 오버라이드하고자 한다면, MyBatis 의
+핵심기능에 악영향을 줄수도 있다. 이러한 로우레벨 클래스와 메서드들은 주의를 해서 사용해야 한다.</p>
+        <p>플러그인을 사용하는 것을 제공하는 기능에 다소 간단하다. Interceptor 인터페이스를 간단히 구현해서,
+가로채고(intercept) 싶은 시그니처를 명시해야 한다.</p>
+
+        <source><![CDATA[// ExamplePlugin.java
+@Intercepts({@Signature(
+  type= Executor.class,
+  method = "update",
+  args = {MappedStatement.class,Object.class})})
+public class ExamplePlugin implements Interceptor {
+  public Object intercept(Invocation invocation) throws Throwable {
+    return invocation.proceed();
+  }
+  public Object plugin(Object target) {
+    return Plugin.wrap(target, this);
+  }
+  public void setProperties(Properties properties) {
+  }
+}]]></source>
+
+        <source><![CDATA[<!-- mybatis-config.xml -->
+<plugins>
+  <plugin interceptor="org.mybatis.example.ExamplePlugin">
+    <property name="someProperty" value="100"/>
+  </plugin>
+</plugins>]]></source>
+        <p>위 플러그인은 매핑된 구문의 로우레벨 실행을 책임지는 내부 객체인 Executor 인스턴스의 “update” 메서드 호출을 모두
+가로챌것이다.</p>
+        <p><span class="label important">참고</span>
+          <strong>설정파일 오버라이드하기</strong>
+        </p>
+        <p>플러그인을 사용해서 MyBatis 핵심 행위를 변경하기 위해, Configuration 클래스 전체를 오버라이드 할 수 있다. 이
+클래스를 확장하고 내부 메서드를 오버라이드하고, sqlSessionFactoryBuilder.build(myConfig) 메서드에 그 객체를
+넣어주면 된다. 다시 얘기하지만 이 작업은 MyBatis 에 큰 영향을 줄수 있으니 주의해서 해야 한다.</p>
+      </subsection>
+      <subsection name="environments">
+        <p>MyBatis 는 여러개의 환경으로 설정될 수 있다. 여러가지 이유로 여러개의 데이터베이스에 SQL Map 을 적용하는데 도움이
+된다. 예를들어, 개발, 테스트, 리얼 환경을 위해 별도의 설정을 가지거나, 같은 스키마를 여러개의 DBMS 제품을 사용할
+경우들이다. 그외에도 많은 경우가 있을 수 있다.</p>
+        <p>
+          <strong>중요하게 기억해야 할 것은, 다중 환경을 설정할 수는 있지만, SqlSessionFactory 인스턴스마다 한개만 사용할 수 있다는
+것이다.</strong>
+        </p>
+        <p>두개의 데이터베이스에 연결하고 싶다면, SqlSessionFactory 인스턴스를 두개 만들 필요가 있다. 세개의 데이터베이스를
+사용한다면, 역시 3 개의 인스턴스를 필요로 한다. 기억하기 쉽게</p>
+        <ul>
+          <li>
+            <strong>데이터베이스별로 하나의 SqlSessionFactory</strong>
+          </li>
+        </ul>
+        <p>환경을 명시하기 위해, SqlSessionFactoryBuilder 에 옵션으로 추가 파라미터를 주면 된다. 환경을 선택하는 두가지
+시그니처는</p>
+
+        <source><![CDATA[SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment);
+SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment,properties);]]></source>
+
+        <p>environment 파라미터가 없으면, 디폴트 환경이 로드된다.</p>
+
+        <source><![CDATA[SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader);
+SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader,properties);]]></source>
+
+        <p>environments 요소는 환경을 설정하는 방법을 정의한다.</p>
+
+        <source><![CDATA[<environments default="development">
+  <environment id="development">
+    <transactionManager type="JDBC">
+      <property name="..." value="..."/>
+    </transactionManager>
+    <dataSource type="POOLED">
+      <property name="driver" value="${driver}"/>
+      <property name="url" value="${url}"/>
+      <property name="username" value="${username}"/>
+      <property name="password" value="${password}"/>
+    </dataSource>
+  </environment>
+</environments>]]></source>
+        <p>중요한 부분을 살펴보면</p>
+        <ul>
+          <li>디폴트 환경(Environment) ID (예를 들면. default=”development”).</li>
+          <li>각각의 환경을 정의한 환경(Environment) ID (예를 들면. id=”development”).</li>
+          <li>TransactionManager 설정 (예를 들면. type=”JDBC”)</li>
+          <li>DataSource 설정 (예를 들면. type=”POOLED”)</li>
+        </ul>
+        <p>디폴트 환경(environment)과 환경(environment) ID 는 용어 자체가 역할을 설명한다.</p>
+        <p>
+          <strong>transactionManager</strong>
+        </p>
+        <p>MyBatis 는 두가지 타입의 TransactionManager 를 제공한다.</p>
+        <ul>
+          <li>JDBC – 이 설정은 간단하게 JDBC 커밋과 롤백을 처리하기 위해 사용된다. 트랜잭션의 스코프를 관리하기 위해
+dataSource 로 부터 커넥션을 가져온다. </li>
+          <li>MANAGED – 이 설정은 어떤것도 하지 않는다. 결코 커밋이나 롤백을 하지 않는다. 대신 컨테이너가 트랜잭션의
+모든 생명주기를 관리한다. 디플트로 커넥션을 닫긴 한다. 하지만 몇몇 컨테이너는 커넥션을 닫는 것 또한 기대하지
+않기 때문에, 커넥션 닫는 것으로 멈추고자 한다면, “closeConnection” 프로퍼티를 false 로 설정하라. 예를 들면:
+            <source><![CDATA[<transactionManager type="MANAGED">
+  <property name="closeConnection" value="false"/>
+</transactionManager>]]></source>
+          </li>
+        </ul>
+        <p>
+          <span class="label important">참고</span>당신은 스프링과 함께 MyBatis를 사용하여 계획하는 경우 구성할 필요가 없습니다
+          스프링 모듈 자체를 설정 때문에 어떤 TransactionManager
+           이전에 설정된 구성을 무시합니다.</p>
+        <p>TransactionManager 타입은 어떠한 프로퍼티도 필요하지 않다. 어쨌든 둘다 타입 별칭이 있다. 즉 TransactionFactory 를
+위한 클래스 명이나 타입 별칭 중 하나를 사용할 수 있다.</p>
+        <source><![CDATA[public interface TransactionFactory {
+  void setProperties(Properties props);  
+  Transaction newTransaction(Connection conn);
+  Transaction newTransaction(DataSource dataSource, TransactionIsolationLevel level, boolean autoCommit);  
+}]]></source>
+        <p>XML 에 설정된 프로퍼티는 인스턴스를 만든 뒤 setProperties() 메서드에 전달할 것이다. 당신의 구현체가 Transaction
+구현체를 만들 필요가 있을 것이다.:</p>
+        <source><![CDATA[public interface Transaction {
+  Connection getConnection() throws SQLException;
+  void commit() throws SQLException;
+  void rollback() throws SQLException;
+  void close() throws SQLException;
+}]]></source>
+        <p>이 두개의 인터페이스를 사용하여, MyBatis 가 트랜잭션을 처리하는 방법을 완벽하게 정의할 수 있다..</p>
+        <p>
+          <strong>dataSource</strong>
+        </p>
+        <p>dataSource 요소는 표준 JDBC DataSource 인터페이스를 사용하여 JDBC Connection 객체의 소스를 설정한다.</p>
+        <ul>
+          <li>대부분의 MyBatis 애플리케이션은 예제처럼 dataSource 를 설정할 것이다.</li>
+        </ul>
+        <p>여기엔 3 가지의 내장된 dataSource 타입이 있다.</p>
+        <p>
+          <strong>UNPOOLED</strong> – 이 구현체는 매번 요청에 대해 커넥션을 열고 닫는 간단한 DataSource 이다. 조금 늦긴 하지만 성능을 크게
+필요로 하지 않는 간단한 애플리케이션을 위해서는 괜찮은 선택이다. UNPOOLED DataSource 는 5 개의 프로퍼티만으로
+설정된다.</p>
+        <ul>
+          <li><code>driver</code> – JDBC 드라이버의 패키지 경로를 포함한 결제 자바 클래스명</li>
+          <li><code>url</code> – 데이터베이스 인스턴스에 대한 JDBC URL.</li>
+          <li><code>username</code> – 데이터베이스에 로그인 할 때 사용할 사용자명</li>
+          <li><code>password</code> - 데이터베이스에 로그인 할 때 사용할 패스워드</li>
+          <li><code>defaultTransactionIsolationLevel</code> – 커넥션에 대한 디폴트 트랜잭션 격리 레벨</li>
+        </ul>
+        <p>필수는 아니지만 선택적으로 데이터베이스 드라이버에 프로퍼티를 전달할 수 도 있다. 그러기 위해서는 다음 예제처럼
+“driver.” 로 시작하는 접두어로 프로퍼티를 명시하면 된다.</p>
+        <ul>
+          <li><code>driver.encoding=UTF8</code></li>
+        </ul>
+        <p>이 설정은 “encoding” 프로퍼티를 “UTF8”로 설정하게 된다. 이 방법외에도 DriverManager.getConnection(url,
+driverProperties) 메서드를 통해서도 프로퍼티를 설정할 수 있다.</p>
+        <p>
+          <strong>POOLED</strong>
+          – DataSource 에 풀링이 적용된 JDBC 커넥션을 위한 구현체이다. 이는 새로운 Connection 인스턴스를 생성하기
+위해 매번 초기화하는 것을 피하게 해준다. 그래서 빠른 응답을 요구하는 웹 애플리케이션에서는 가장 흔히 사용되고 있다.</p>
+        <p>UNPOOLED DataSource 에 비해, 많은 프로퍼티를 설정할 수 있다.</p>
+        <ul>
+          <li><code>poolMaximumActiveConnections</code> – 주어진 시간에 존재할 수 있는 활성화된(사용중인) 커넥션의 수. 디폴트는
+10 이다.</li>
+          <li><code>poolMaximumIdleConnections</code> – 주어진 시간에 존재할 수 있는 유휴 커넥션의 수</li>
+          <li>강제로 리턴되기 전에 풀에서 “체크아웃” 될 수 있는 커넥션의 시간. 디폴트는
+20000ms(20 초)</li>
+          <li><code>poolTimeToWait</code> – 풀이 로그 상태를 출력하고 비정상적으로 긴 경우 커넥션을 다시 얻을려고 시도하는 로우 레벨
+셋팅. 디폴트는 20000ms(20 초)</li>
+          <li><code>poolPingQuery</code> – 커넥션이 작업하기 좋은 상태이고 요청을 받아서 처리할 준비가 되었는지 체크하기 위해
+데이터베이스에 던지는 핑쿼리(Ping Query). 디폴트는 “핑 쿼리가 없음” 이다. 이 설정은 대부분의 데이터베이스로
+하여금 에러메시지를 보게 할수도 있다.</li>
+          <li><code>poolPingEnabled</code> – 핑쿼리를 사용할지 말지를 결정. 사용한다면, 오류가 없는(그리고 빠른) SQL 을 사용하여
+poolPingQuery 프로퍼티를 셋팅해야 한다. 디폴트는 false 이다.</li>
+          <li><code>poolPingConnectionsNotUsedFor</code> – poolPingQuery 가 얼마나 자주 사용될지 설정한다. 필요이상의 핑을
+피하기 위해 데이터베이스의 타임아웃 값과 같을 수 있다. 디폴트는 0 이다. 디폴트 값은 poolPingEnabled 가
+true 일 경우에만, 모든 커넥션이 매번 핑을 던지는 값이다.</li>
+        </ul>
+        <p>
+          <strong>JNDI</strong>
+          – 이 DataSource 구현체는 컨테이너에 따라 설정이 변경되며, JNDI 컨텍스트를 참조한다. 이 DataSource 는 오직
+두개의 프로퍼티만을 요구한다.</p>
+        <ul>
+          <li><code>initial_context</code> – 이 프로퍼티는 InitialContext 에서 컨텍스트를 찾기(예를 들어,
+initialContext.lookup(initial_context)) 위해 사용된다. 이 프로퍼티는 선택적인 값이다. 이 설정을 생략하면,
+data_source 프로퍼티가 InitialContext 에서 직접 찾을 것이다.</li>
+          <li><code>data_source</code> – DataSource 인스턴스의 참조를 찾을 수 있는 컨텍스트 경로이다. initial_context 룩업을 통해
+리턴된 컨텍스트에서 찾을 것이다. initial_context 가 지원되지 않는다면, InitialContext 에서 직접 찾을 것이다.</li>
+        </ul>
+        <p>다른 DataSource 설정과 유사하게, 다음처럼 “env.” 를 접두어로 프로퍼티를 전달할 수 있다.</p>
+        <ul>
+          <li><code>env.encoding=UTF8</code></li>
+        </ul>
+        <p>이 설정은 인스턴스화할 때 InitialContext 생성자에 “encoding” 프로퍼티를 “UTF8” 로 전달한다.</p>
+      </subsection>
+      
+      <subsection name="databaseIdProvider">
+        <p>
+          MyBatis is able to execute different statements depending on your database vendor. 
+          The multi-db vendor support is based on the mapped statements <code>databaseId</code> attribute. 
+          MyBatis will load all statements with no <code>databaseId</code> attribute 
+          or with a <code>databaseId</code> that matches the current one. If case the same statement
+          if found with and without the <code>databaseId</code> the latter will be discarded.  
+          To enable the multi vendor support add a <code>databaseIdProvider</code>
+          to mybatis-config.xml file as follows:
+        </p>
+        
+        <source><![CDATA[<databaseIdProvider type="VENDOR" />
+]]></source>
+
+		<p> 
+		  The VENDOR implementation databaseIdProvider sets as a databaseId the String returned by 
+		  <code>DatabaseMetaData#getDatabaseProductName()</code>. 
+		  As usually that string is too long and also, different versions of the same product return different values, 
+		  so you may want to translate it to a shorter one by adding properties like follows:
+		</p>
+		
+        <source><![CDATA[<databaseIdProvider type="VENDOR">
+  <property name="SQL Server" value="sqlserver"/>
+  <property name="DB2" value="db2"/>        
+  <property name="Oracle" value="oracle" />
+</databaseIdProvider>]]></source>
+
+		<p> 
+		  When properties are provided, the VENDOR databaseIdProvider will search the property value corresponding to the 
+		  first key found in the returned database product name or "null" if there is not a matching property. 
+		  In this case, if <code>getDatabaseProductName()</code> returns "Oracle (DataDirect)" the databaseId will be set to "oracle".  
+		</p>
+		
+		<p>
+		  You can build your own DatabaseIdProvider by implementing the interface <code>org.apache.ibatis.mapping.DatabaseIdProvider</code>
+		  and registering it in mybatis-config.xml:
+		</p>
+
+        <source><![CDATA[public interface DatabaseIdProvider {
+
+  void setProperties(Properties p);
+  
+  String getDatabaseId(DataSource dataSource) throws SQLException;
+}]]></source>
+
+      </subsection>
+      
+      <subsection name="mappers">
+        <p>이제 우리는 매핑된 SQL 구문을 정의할 시간이다. 하지만 먼저, 설정을 어디에 둘지 결정해야 한다. 자바는 자동으로
+리소스를 찾기 위한 좋은 방법을 제공하지 않는다. 그래서 가장 좋은 건 어디서 찾으라고 지정하는 것이다. 클래스패스에
+상대적으로 리소스를 지정할 수도 있고, url 을 통해서 지정할 수 도 있다. 예를 들면</p>
+        <source><![CDATA[<!-- Using classpath relative resources -->
+<mappers>
+  <mapper resource="org/mybatis/builder/AuthorMapper.xml"/>
+  <mapper resource="org/mybatis/builder/BlogMapper.xml"/>
+  <mapper resource="org/mybatis/builder/PostMapper.xml"/>
+</mappers>]]></source>
+
+        <source><![CDATA[<!-- Using url fully qualified paths -->
+<mappers>
+  <mapper url="file:///var/mappers/AuthorMapper.xml"/>
+  <mapper url="file:///var/mappers/BlogMapper.xml"/>
+  <mapper url="file:///var/mappers/PostMapper.xml"/>
+</mappers>]]></source>
+
+        <source><![CDATA[<!-- Using mapper interface classes -->
+<mappers>
+  <mapper class="org.mybatis.builder.AuthorMapper"/>
+  <mapper class="org.mybatis.builder.BlogMapper"/>
+  <mapper class="org.mybatis.builder.PostMapper"/>
+</mappers>]]></source>
+
+        <source><![CDATA[<!-- Register all interfaces in a package as mappers -->
+<mappers>
+  <package name="org.mybatis.builder"/>
+</mappers>]]></source>
+
+        <p>SQL 매핑 파일에 대해서 좀더 자세히 알아보자.</p>
+      </subsection>
+    </section>
+  </body>
+</document>

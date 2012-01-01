@@ -71,8 +71,12 @@ org.apache.ibatis.logging.LogFactory.useStdOutLogging();]]></source>
       <subsection name="Logging Configuration">
         <p>MyBatis はほとんどのアクティビティを MyBatis パッケージ以外のログクラスを使って出力します。実行されるステートメントのログを出力するためには、<code>java.sql</code> パッケージ以下のクラスのログ出力を有効にしてください。具体的には次の各クラスです。
         </p>
-        <p><code>java.sql.Connection</code>, <code>java.sql.PreparedStatement</code>,
-        <code>java.sql.Resultsetjava.sql.Statement</code></p>
+        <ul>
+        <li><code>java.sql.Connection</code></li>
+        <li><code>java.sql.PreparedStatement</code></li>
+        <li><code>java.sql.Resultset</code></li>
+        <li><code>java.sql.Statement</code></li>
+        </ul>
         <p>具体的な設定方法は使用するロギング実装によります。以下は Log4J での設定例です。ロギングサービスの設定は、単純にいくつかの設定ファイル（例えば log4j.properties）と、場合によっては新しい JAR（例えば log4j.jar）を追加するだけのことです。以下は、Log4J をプロバイダーとして完全なロギングサービスを設定する手順です。
         </p>
         <p></p>

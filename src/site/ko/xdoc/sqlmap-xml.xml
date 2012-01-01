@@ -1,0 +1,1349 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 2010-2012 The MyBatis Team
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!-- version: $Id$ -->
+
+<document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+
+  <properties>
+    <title>MyBatis 3 | Mapper XML 파일</title>
+    <author email="mybatis-dev@googlegroups.com">The MyBatis Team</author>
+  </properties>
+
+  <body>
+    <section name="Mapper XML 파일">
+      <p>MyBatis 의 가장 큰 장점은 매핑된 구문이다. 이건 간혹 마법을 부리는 것처럼 보일 수 있다. SQL Map XML 파일은
+상대적으로 간단하다. 더군다나 동일한 기능의 JDBC 코드와 비교하면 아마도 95% 이상 코드수가 감소하기도 한다.
+MyBatis 는 SQL 을 작성하는데 집중하도록 만들어졌다.</p>
+      <p>SQL Map XML 파일은 첫번째(first class)요소만을 가진다.</p>
+      <ul>
+        <li>
+          <code>cache</code> – 해당 명명공간을 위한 캐시 설정
+        </li>
+        <li>
+          <code>cache-ref</code> – 다른 명명공간의 캐시 설정에 대한 참조</li>
+        <li>
+          <code>resultMap</code>  – 데이터베이스 결과데이터를 객체에 로드하는 방법을 정의하는 요소</li>
+        <li>
+          <strike>
+            <code>parameterMap</code> –  비권장됨! 예전에 파라미터를 매핑하기 위해 사용되었으나 현재는 사용하지 않음</strike></li>
+        <li>
+          <code>sql</code> – 다른 구문에서 재사용하기 위한 SQL 조각</li>
+        <li>
+          <code>insert</code>
+          – 매핑된 INSERT 구문.
+        </li>
+        <li>
+          <code>update</code>
+          – 매핑된 UPDATE 구문.
+        </li>
+        <li>
+          <code>delete</code>
+          – 매핑된 DELEETE 구문.
+        </li>
+        <li>
+          <code>select</code>
+          – 매핑된 SELECT 구문.
+        </li>
+      </ul>
+      <p>다음 섹션에서는 각각에 대해 좀더 세부적으로 살펴볼 것이다.</p>
+
+      <subsection name="select">
+        <p>select 구문은 MyBatis 에서 가장 흔히 사용할 요소이다. 데이터베이스에서 데이터를 가져온다. 아마도 대부분의
+애플리케이션은 데이터를 수정하기보다는 조회하는 기능을 많이 가진다. 그래서 MyBatis 는 데이터를 조회하고 그 결과를
+매핑하는데 집중하고 있다. Select 는 다음 예처럼 단순한 경우에는 단순하게 설정된다.</p>
+
+        <source><![CDATA[<select id="selectPerson" parameterType="int" resultType="hashmap">
+  SELECT * FROM PERSON WHERE ID = #{id}
+</select>]]></source>
+
+        <p>이 구문의 이름은 selectPerson 이고 int 타입의 파라미터를 가진다. 그리고 결과 데이터는 HashMap 에 저장된다. 파라미터.</p>
+        <p>표기법을 보자.</p>
+
+        <source><![CDATA[#{id}]]></source>
+
+        <p>이 표기법은 MyBatis 에게 PreparedStatement 파라미터를 만들도록 지시한다. JDBC 를 사용할 때
+PreparedStatement 에는 “?” 형태로 파라미터가 전달된다. 즉 결과적으로 위 설정은 아래와 같이 작동하게 되는 셈이다.</p>
+
+        <source><![CDATA[// Similar JDBC code, NOT MyBatis…
+String selectPerson = "SELECT * FROM PERSON WHERE ID=?";
+PreparedStatement ps = conn.prepareStatement(selectPerson);
+ps.setInt(1,id);]]></source>
+
+        <p>물론 JDBC 를 사용하면, 결과를 가져와서 객체의 인스턴스에 매핑하기 위한 많은 코드가 필요하겠지만, MyBatis 는 그
+코드들을 작성하지 않아도 되게 해준다.</p>
+
+        <p>select 요소는 각각의 구문이 처리하는 방식에 대해 좀더 세부적으로 설정하도록 많은 속성을 설정할 수 있다.</p>
+
+        <source><![CDATA[<select
+  id="selectPerson"
+  parameterType="int"
+  parameterMap="deprecated"
+  resultType="hashmap"
+  resultMap="personResultMap"
+  flushCache="false"
+  useCache="true"
+  timeout="10000"
+  fetchSize="256"
+  statementType="PREPARED"
+  resultSetType="FORWARD_ONLY">]]></source>
+
+        <table>
+          <caption>Select Attributes</caption>
+          <thead>
+            <tr>
+              <th>속성 </th>
+              <th>설명</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>id</code></td>
+              <td>구문을 찾기 위해 사용될 수 있는 명명공간내 유일한 구분자</td>
+            </tr>
+            <tr>
+              <td><code>parameterType</code></td>
+              <td>구문에 전달될 파라미터의 패키지 경로를 포함한 전체 클래스명이나 별칭</td>
+            </tr>
+            <tr>
+              <td>
+                <strike>parameterMap</strike>
+              </td>
+              <td>
+                <strike>외부 parameterMap 을 찾기 위한 비권장된 접근방법. 인라인 파라미터 매핑과 parameterType 을
+                                                   대신 사용하라.</strike>
+              </td>
+            </tr>
+            <tr>
+              <td><code>resultType</code></td>
+              <td>이 구문에 의해 리턴되는 기대타입의 패키지 경로를 포함한 전체 클래스명이나 별칭. collection 이
+                                                                     경우, collection 타입 자체가 아닌 collection 이 포함된 타입이 될 수 있다. resultType 이나resultMap 을 사용하라.</td>
+            </tr>
+            <tr>
+              <td><code>resultMap</code></td>
+              <td>외부 resultMap 의 참조명. 결과맵은 MyBatis 의 가장 강력한 기능이다. resultType 이나
+                                           resultMap 을 사용하라.</td>
+            </tr>
+            <tr>
+              <td><code>flushCache</code></td>
+              <td>이 값을 true 로 셋팅하면, 구문이 호출될때마다 캐시가 지원질것이다(flush). 디폴트는 false 이다.</td>
+            </tr>
+            <tr>
+              <td><code>useCache</code></td>
+              <td>이 값을 true 로 셋팅하면, 구문의 결과가 캐시될 것이다. 디폴트는 true 이다.</td>
+            </tr>
+            <tr>
+              <td><code>timeout</code></td>
+              <td>예외가 던져지기 전에 데이터베이스의 요청 결과를 기다리는 최대시간을 설정한다. 디폴트는
+                                                                           셋팅하지 않는 것이고 드라이버에 따라 다소 지원되지 않을 수 있다.</td>
+            </tr>
+            <tr>
+              <td><code>fetchSize</code></td>
+              <td>지정된 수만큼의 결과를 리턴하도록 하는 드라이버 힌트 형태의 값이다. 디폴트는 셋팅하지 않는
+                                                                             것이고 드라이버에 따라 다소 지원되지 않을 수 있다.</td>
+            </tr>
+            <tr>
+              <td><code>statementType</code></td>
+              <td>STATEMENT, PREPARED 또는 CALLABLE 중 하나를 선택할 수 있다. MyBatis 에게 Statement,
+                           PreparedStatement 또는 CallableStatement 를 사용하게 한다. 디폴트는 PREPARED 이다.</td>
+            </tr>
+            <tr>
+              <td>resultSetType</td>
+              <td>FORWARD_ONLY|SCROLL_SENSITIVE|SCROLL_INSENSITIVE 중 하나를 선택할 수 있다.
+                   디폴트는 셋팅하지 않는 것이고 드라이버에 다라 다소 지원되지 않을 수 있다.</td>
+            </tr>
+            <tr>
+              <td>databaseId</td>
+              <td>In case there is a configured databaseIdProvider, MyBatis will load all statements with no <code>databaseId</code> 
+              attribute or with a <code>databaseId</code> that matches the current one. If case the same statement
+              if found with and without the <code>databaseId</code> the latter will be discarded.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </subsection>
+
+      <subsection name="insert, update and delete">
+        <p>데이터를 변경하는 구문인 insert, update, delete 는 매우 간단하다.</p>
+
+        <source><![CDATA[<insert
+  id="insertAuthor"
+  parameterType="domain.blog.Author"
+  flushCache="true"
+  statementType="PREPARED"
+  keyProperty=""
+  keyColumn=""
+  useGeneratedKeys=""
+  timeout="20000">
+
+<update
+  id="insertAuthor"
+  parameterType="domain.blog.Author"
+  flushCache="true"
+  statementType="PREPARED"
+  timeout="20000">
+
+<delete
+  id="insertAuthor"
+  parameterType="domain.blog.Author"
+  flushCache="true"
+  statementType="PREPARED"
+  timeout="20000">]]></source>
+
+        <table>
+          <caption>Insert, Update and Delete Attributes</caption>
+          <thead>
+            <tr>
+              <th>속성 </th>
+              <th>설명</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>id</code></td>
+              <td>구문을 찾기 위해 사용될 수 있는 명명공간내 유일한 구분자</td>
+            </tr>
+            <tr>
+              <td><code>parameterType</code></td>
+              <td>구문에 전달될 파라미터의 패키지 경로를 포함한 전체 클래스명이나 별칭</td>
+            </tr>
+            <tr>
+              <td>
+                <strike><code>parameterMap</code></strike>
+              </td>
+              <td>
+                <strike>외부 parameterMap 을 찾기 위한 비권장된 접근방법. 인라인 파라미터 매핑과 parameterType
+                                                 을 대신 사용하라.</strike>
+              </td>
+            </tr>
+            <tr>
+              <td><code>flushCache</code></td>
+              <td>이 값을 true 로 셋팅하면, 구문이 호출될때마다 캐시가 지원질것이다(flush). 디폴트는 false 이다.</td>
+            </tr>
+            <tr>
+              <td><code>timeout</code></td>
+              <td>예외가 던져지기 전에 데이터베이스의 요청 결과를 기다리는 최대시간을 설정한다. 디폴트는
+셋팅하지 않는 것이고 드라이버에 따라 다소 지원되지 않을 수 있다.</td>
+            </tr>
+            <tr>
+              <td><code>statementType</code></td>
+              <td>STATEMENT, PREPARED 또는 CALLABLE 중 하나를 선택할 수 있다. MyBatis 에게 Statement,
+                           PreparedStatement 또는 CallableStatement 를 사용하게 한다. 디폴트는 PREPARED 이다.</td>
+            </tr>
+            <tr>
+              <td><code>useGeneratedKeys</code></td>
+              <td>(입력(insert)에만 적용) 데이터베이스에서 내부적으로 생성한 키(예를 들어, MySQL 또는 SQL
+Server 와 같은 RDBMS 의 자동 증가 필드)를 받는 JDBC getGeneratedKeys 메서드를
+사용하도록 설정하다. 디폴트는 false 이다.</td>
+            </tr>
+            <tr>
+              <td><code>keyProperty</code></td>
+              <td>(입력(insert)에만 적용) getGeneratedKeys 메서드나 insert 구문의 selectKey 하위 요소에 의해
+리턴된 키를 셋팅할 프로퍼티를 지정. 디폴트는 셋팅하지 않는 것이다.</td>
+            </tr>
+            <tr>
+              <td><code>keyColumn</code></td>
+              <td>(입력(insert)에만 적용) 생성키를 가진 테이블의 칼럼명을 셋팅. 키 칼럼이 테이블이 첫번째 칼럼이
+아닌 데이터베이스(PostgreSQL 처럼)에서만 필요하다.</td>
+            </tr>
+
+          </tbody>
+        </table>
+
+        <p>Insert, update, delete 구문의 예제이다.</p>
+
+        <source><![CDATA[<insert id="insertAuthor" parameterType="domain.blog.Author">
+  insert into Author (id,username,password,email,bio)
+  values (#{id},#{username},#{password},#{email},#{bio})
+</insert>
+
+<update id="updateAuthor" parameterType="domain.blog.Author">
+  update Author set
+    username = #{username},
+    password = #{password},
+    email = #{email},
+    bio = #{bio}
+  where id = #{id}
+</update>
+
+<delete id="deleteAuthor" parameterType="int">
+  delete from Author where id = #{id}
+</delete>]]></source>
+
+        <p>앞서 설명했지만, insert 는 key 생성과 같은 기능을 위해 몇가지 추가 속성과 하위 요소를 가진다.</p>
+
+        <p>먼저, 사용하는 데이터베이스가 자동생성키(예를 들면, MySQL 과 SQL 서버)를 지원한다면, useGeneratedKeys=”true” 로
+설정하고 대상 프로퍼티에 keyProperty 를 셋팅할 수 있다. 예를 들어, Author 테이블이 id 칼럼에 자동생성키를 적용했다고
+하면, 구문은 아래와 같은 형태일 것이다.</p>
+
+        <source><![CDATA[<insert id="insertAuthor" parameterType="domain.blog.Author" useGeneratedKeys="true"
+    keyProperty="id">
+  insert into Author (username,password,email,bio)
+  values (#{username},#{password},#{email},#{bio})
+</insert>]]></source>
+
+        <p>MyBatis 는 자동생성키 칼럼을 지원하지 않는 다른 데이터베이스를 위해 다른 방법 또한 제공한다.</p>
+
+        <p>이 예제는 랜덤 ID 를 생성하고 있다.</p>
+        
+        <source><![CDATA[<insert id="insertAuthor" parameterType="domain.blog.Author">
+  <selectKey keyProperty="id" resultType="int" order="BEFORE">
+    select CAST(RANDOM()*1000000 as INTEGER) a from SYSIBM.SYSDUMMY1
+  </selectKey>
+  insert into Author
+    (id, username, password, email,bio, favourite_section)
+  values
+    (#{id}, #{username}, #{password}, #{email}, #{bio}, #{favouriteSection,jdbcType=VARCHAR})
+</insert>]]></source>
+        <p>위 예제에서, selectKey 구문이 먼저 실행되고, Author id 프로퍼티에 셋팅된다. 그리고 나서 insert 구문이 실행된다. 이건
+복잡한 자바코드 없이도 데이터베이스에 자동생성키의 행위와 비슷한 효과를 가지도록 해준다.</p>
+        <p>selectKey 요소는 다음처럼 설정가능하다.</p>
+        <source><![CDATA[<selectKey
+  keyProperty="id"
+  resultType="int"
+  order="BEFORE"
+  statementType="PREPARED">]]></source>
+
+        <table>
+          <caption>selectKey Attributes</caption>
+          <thead>
+            <tr>
+              <th>속성 </th>
+              <th>설명</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>keyProperty</code></td>
+              <td>selectKey 구문의 결과가 셋팅될 대상 프로퍼티</td>
+            </tr>
+            <tr>
+              <td><code>resultType</code></td>
+              <td>결과의 타입. MyBatis 는 이 기능을 제거할 수 있지만 추가하는게 문제가 되지는 않을것이다.
+MyBatis 는 String 을 포함하여 키로 사용될 수 있는 간단한 타입을 허용한다.</td>
+            </tr>
+            <tr>
+              <td><code>order</code></td>
+              <td>BEFORE 또는 AFTER 를 셋팅할 수 있다. BEFORE 로 셋팅하면, 키를 먼저 조회하고 그 값을
+keyProperty 에 셋팅한 뒤 insert 구문을 실행한다. AFTER 로 셋팅하면, insert 구문을 실행한 뒤
+selectKey 구문을 실행한다. Oracle 과 같은 데이터베이스에서는 insert 구문 내부에서 일관된 호출
+형태로 처리한다.</td>
+            </tr>
+            <tr>
+              <td><code>statementType</code></td>
+              <td>위 내용과 같다. MyBatis 는 Statement, PreparedStatement 그리고 CallableStatement 을
+매핑하기 위해 STATEMENT, PREPARED 그리고 CALLABLE 구문타입을 지원한다.</td>
+            </tr>
+          </tbody>
+        </table>
+      </subsection>
+
+      <subsection name="sql">
+        <p>이 요소는 다른 구문에서 재사용가능한 SQL 구문을 정의할 때 사용된다.</p>
+
+        <source><![CDATA[<sql id="userColumns"> id,username,password </sql>]]></source>
+
+        <p>SQL 조각은 다른 구문에 포함시킬수 있다.</p>
+
+        <source><![CDATA[<select id="selectUsers" parameterType="int" resultType="hashmap">
+  select <include refid="userColumns"/>
+  from some_table
+  where id = #{id}
+</select>]]></source>
+      </subsection>
+
+      <subsection name="Parameters">
+        <p>앞서 본 구문들에서, 간단한 파라미터들의 예를 보았을 것이다. Parameters 는 MyBatis 에서 매우 중요한 요소이다. 대략
+90% 정도의 간단한 경우, 이러한 형태로 설정할 것이다.</p>
+
+        <source><![CDATA[<select id="selectUsers" parameterType="int" resultType="User">
+  select id, username, password
+  from users
+  where id = #{id}
+</select>]]></source>
+
+        <p>위 예제는 매우 간단한 명명된 파라미터 매핑을 보여준다. parameterType 은 “int” 로 설정되어 있다. Integer 과 String 과
+같은 원시타입 이나 간단한 데이터 타입은 프로퍼티를 가지지 않는다. 그래서 파라미터 전체가 값을 대체하게 된다. 하지만
+복잡한 객체를 전달하고자 한다면, 다음의 예제처럼 상황은 조금 다르게 된다.</p>
+
+        <source><![CDATA[<insert id="insertUser" parameterType="User" >
+  insert into users (id, username, password)
+  values (#{id}, #{username}, #{password})
+</insert>]]></source>
+
+        <p>User 타입의 파라미터 객체가 구문으로 전달되면, id, username, password 프로퍼티는 찾아서 PreparedStatement
+파라미터로 전달된다.</p>
+
+        <p>비록 파라미터들을 구문에 전달하는 괜찮은 예제이지만, 파라미터 매핑을 위한 다른 기능 또한 더 있다.</p>
+
+        <p>먼저, 파라미터에 데이터 타입을 명시할 수 있다.</p>
+
+        <source><![CDATA[#{property,javaType=int,jdbcType=NUMERIC}]]></source>
+
+        <p>javaType 은 파라미터 객체의 타입을 판단하는 기준이 된다. javaType 은 TypeHandler 를 사용하여 정의할 수도 있다.</p>
+
+        <p>
+          <span class="label important">참고</span> 만약 특정 칼럼에 null 이 전달되면, JDBC Type 은 null 가능한 칼럼을 위해 필요하다. 처리 방법에 대해서는
+PreparedStatement.setNull() 메서드의 JavaDoc 을 보라.</p>
+
+        <p>좀더 다양하게 타입 핸들링하기 위해서는, TypeHandler 클래스를 명시할 수 있다.</p>
+
+        <source><![CDATA[#{age,javaType=int,jdbcType=NUMERIC,typeHandler=MyTypeHandler}]]></source>
+
+        <p>
+          So already it seems to be getting verbose, but the truth is that you'll rarely set any of these.
+        </p>
+
+        <p>숫자 타입을 위해서, 크기를 판단하기 위한 numericScale 속성도 있다.</p>
+
+        <source><![CDATA[#{height,javaType=double,jdbcType=NUMERIC,numericScale=2}]]></source>
+
+        <p>마지막으로, mode 속성은 IN, OUT 또는 INOUT 파라미터를 명시하기 위해 사용한다. 파라미터가 OUT 또는 INOUT 이라면,
+파라미터의 실제 값은 변경될 것이다. mode=OUT(또는 INOUT) 이고 jdbcType=CURSOR(예를 들어, Oracle
+REFCURSOR) 라면, 파라미터의 타입에 ResultSet 를 매핑하기 위해 resultMap 을 명시해야만 한다.</p>
+
+        <source><![CDATA[#{department, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=departmentResultMap}]]></source>
+
+        <p>MyBatis 는 structs 와 같은 좀더 향상된 데이터 타입을 지원하지만, 파라미터를 등록할 때, 타입명을 구문에 전달해야 한다.
+예를 들면,</p>
+
+        <source><![CDATA[#{middleInitial, mode=OUT, jdbcType=STRUCT, jdbcTypeName=MY_TYPE, resultMap=departmentResultMap}]]></source>
+
+        <p>이런 강력한 옵션들에도 불구하고, 대부분은 프로퍼티명만 명시하거나 null 가능한 칼럼을 위해 jdbcType 정도만 명시할
+것이다.</p>
+
+        <source><![CDATA[#{firstName}
+#{middleInitial,jdbcType=VARCHAR}
+#{lastName}]]></source>
+
+        <h4>
+          문자열 대체(String Substitution)
+        </h4>
+
+        <p><code>#{}</code> 문법은 MyBatis 로 하여금 PreparedStatement 프로퍼티를 만들어서 PreparedStatement 파라미터(예를 들면, ?)에
+값을 셋팅하도록 할 것이다. 이 방법이 안전하기는 하지만, 좀더 빠른 방법이 선호되기도 한다. 가끔은 SQL 구문에 변하지
+않는 값으로 삽입하길 원하기도 한다. 예를 들면, ORDER BY 와 같은 구문들이다.</p>
+
+        <source><![CDATA[ORDER BY ${columnName}]]></source>
+
+        <p>여기서 MyBatis 는 문자열을 변경하거나 이스케이프 처리하지 않는다.</p>
+
+        <p>
+          <span class="label important">참고</span> 사용자로부터 받은 값을 이 방법으로 변경하지 않고 구문에 전달하는 건 안전하지 않다. 이건 잠재적으로 SQL 주입
+공격에 노출된다. 그러므로 사용자 입력값에 대해서는 이 방법을 사용하면 안된다. 사용자 입력값에 대해서는 언제나
+자체적으로 이스케이프 처리하고 체크해야 한다.</p>
+      </subsection>
+
+      <subsection name="Result Maps">
+        <p>resultMap 요소는 MyBatis 에서 가장 중요하고 강력한 요소이다. ResultSet 에서 데이터를 가져올때 작성되는 JDBC
+코드를 대부분 줄여주는 역할을 담당한다. 사실 join 매핑과 같은 복잡한 코드는 굉장히 많은 코드가 필요하다. ResultMap
+은 간단한 구문에서는 매핑이 필요하지 않고, 좀더 복잡한 구문에서 관계를 서술하기 위해 필요하다.</p>
+
+        <p>이미 앞에서 명시적인 resultMap 을 가지지 않는 간단한 매핑 구문은 봤을 것이다.</p>
+
+        <source><![CDATA[<select id="selectUsers" parameterType="int" resultType="hashmap">
+  select id, username, hashedPassword
+  from some_table
+  where id = #{id}
+</select>]]></source>
+
+        <p>모든 칼럼의 값이 결과가 되는 간단한 구문에서는 HashMap 에서 키 형태로 자동으로 매핑된다. 하지만 대부분의 경우,
+HashMap 은 매우 좋은 도메인 모델이 되지는 못한다. 그래서 대부분 도메인 모델로는 자바빈이나 POJO 를 사용할 것이다.
+MyBatis 는 둘다 지원한다. 자바빈의 경우를 보자.</p>
+
+        <source><![CDATA[package com.someapp.model;
+public class User {
+  private int id;
+  private String username;
+  private String hashedPassword;
+  
+  public int getId() {
+	  return id;
+  }
+  public void setId(int id) {
+    this.id = id;
+  }
+  public String getUsername() {
+    return username;
+  }
+  public void setUsername(String username) {
+    this.username = username;
+  }
+  public String getHashedPassword() {
+    return hashedPassword;
+  }
+  public void setHashedPassword(String hashedPassword) {
+    this.hashedPassword = hashedPassword;
+  }
+}]]></source>
+
+        <p>자바빈 스펙에 기반하여, 위 클래스는 3 개의 프로퍼티(id, username, hashedPassword)를 가진다. 이 프로퍼티는 select
+구문에서 칼럼명과 정확히 일치한다.</p>
+
+        <p>그래서 자바빈은 HashMap 과 마찬가지로 매우 쉽게 ResultSet 에 매핑될 수 있다.</p>
+
+        <source><![CDATA[<select id="selectUsers" parameterType="int" resultType="com.someapp.model.User">
+  select id, username, hashedPassword
+  from some_table
+  where id = #{id}
+</select>]]></source>
+
+        <p>그리고 TypeAliases 가 편리한 기능임을 기억해두는게 좋다. TypeAliases 를 사용하면 타이핑 수를 줄일 수 있다. 예를 들면,</p>
+
+        <source><![CDATA[<!-- In Config XML file -->
+<typeAlias type="com.someapp.model.User" alias="User"/>
+
+<!-- In SQL Mapping XML file -->
+<select id="selectUsers" parameterType="int" resultType="User">
+  select id, username, hashedPassword
+  from some_table
+  where id = #{id}
+</select>]]></source>
+
+        <p>이 경우 MyBatis 는 칼럼을 자바빈에 이름 기준으로 매핑하여 ResultMap 을 자동으로 생성할 것이다. 만약 칼럼명이
+프로퍼티명과 다르다면, SQL 구문에 별칭을 지정할 수 있다. 예를 들면.</p>
+
+        <source><![CDATA[<select id="selectUsers" parameterType="int" resultType="User">
+  select
+    user_id             as "id",
+    user_name           as "userName",
+    hashed_password     as "hashedPassword"
+  from some_table
+  where id = #{id}
+</select>]]></source>
+
+        <p>ResultMap 에 대한 중요한 내용은 다 보았다. 하지만 다 본건 아니다. 칼럼명과 프로퍼티명이 다른 경우에 대해
+데이터베이스 별칭을 사용하는 것과 다른 방법으로 명시적인 resultMap 을 선언하는 방법이 있다.</p>
+
+        <source><![CDATA[<resultMap id="userResultMap" type="User">
+  <id property="id" column="user_id" />
+  <result property="username" column="username"/>
+  <result property="password" column="password"/>
+</resultMap>]]></source>
+
+        <p>구문에서는 resultMap 속성에 이를 지정하여 참조한다. 예를 들면.</p>
+
+        <source><![CDATA[<select id="selectUsers" parameterType="int" resultMap="userResultMap">
+  select user_id, user_name, hashed_password
+  from some_table
+  where id = #{id}
+</select>]]></source>
+
+        <p>
+          Now if only the world were always that simple.
+        </p>
+
+	      <h4>Advanced Result Maps</h4>
+
+        <p>
+          MyBatis was created with one idea in mind: Databases aren't always what you want or need them to be.
+          While we'd love every database to be perfect 3rd normal form or BCNF, they aren't. And it would be
+          great if it was possible to have a single database map perfectly to all of the applications that use
+          it, it's not. Result Maps are the answer that MyBatis provides to this problem.
+        </p>
+
+        <p>이런 복잡한 구문은 어떻게 매핑할까.?</p>
+
+        <source><![CDATA[<!-- Very Complex Statement -->
+<select id="selectBlogDetails" parameterType="int" resultMap="detailedBlogResultMap">
+  select
+       B.id as blog_id,
+       B.title as blog_title,
+       B.author_id as blog_author_id,
+       A.id as author_id,
+       A.username as author_username,
+       A.password as author_password,
+       A.email as author_email,
+       A.bio as author_bio,
+       A.favourite_section as author_favourite_section,
+       P.id as post_id,
+       P.blog_id as post_blog_id,
+       P.author_id as post_author_id,
+       P.created_on as post_created_on,
+       P.section as post_section,
+       P.subject as post_subject,
+       P.draft as draft,
+       P.body as post_body,
+       C.id as comment_id,
+       C.post_id as comment_post_id,
+       C.name as comment_name,
+       C.comment as comment_text,
+       T.id as tag_id,
+       T.name as tag_name
+  from Blog B
+       left outer join Author A on B.author_id = A.id
+       left outer join Post P on B.id = P.blog_id
+       left outer join Comment C on P.id = C.post_id
+       left outer join Post_Tag PT on PT.post_id = P.id
+       left outer join Tag T on PT.tag_id = T.id
+  where B.id = #{id}
+</select>]]></source>
+
+        <p>아마 Author 에 의해 작성되고 Comments 이나 태그를 가지는 많은 포스트를 가진 Blog 를 구성하는 괜찮은 객체 모델에
+매핑하고 싶을 것이다. 이건 복잡한 ResultMap 으로 충분한 예제이다. 복잡해보이지만 단계별로 살펴보면 지극히 간단하다.</p>
+
+        <source><![CDATA[<!-- Very Complex Result Map -->
+<resultMap id="detailedBlogResultMap" type="Blog">
+  <constructor>
+    <idArg column="blog_id" javaType="int"/>
+  </constructor>
+  <result property="title" column="blog_title"/>
+  <association property="author" column="blog_author_id" javaType=" Author">
+    <id property="id" column="author_id"/>
+    <result property="username" column="author_username"/>
+    <result property="password" column="author_password"/>
+    <result property="email" column="author_email"/>
+    <result property="bio" column="author_bio"/>
+    <result property="favouriteSection" column="author_favourite_section"/>
+  </association>
+  <collection property="posts" ofType="Post">
+    <id property="id" column="post_id"/>
+    <result property="subject" column="post_subject"/>
+    <association property="author" column="post_author_id" javaType="Author"/>
+    <collection property="comments" column="post_id" ofType=" Comment">
+      <id property="id" column="comment_id"/>
+    </collection>
+    <collection property="tags" column="post_id" ofType=" Tag" >
+      <id property="id" column="tag_id"/>
+    </collection>
+    <discriminator javaType="int" column="draft">
+      <case value="1" resultType="DraftPost"/>
+    </discriminator>
+  </collection>
+</resultMap>]]></source>
+
+        <p>resultMap 요소는 많은 하위 요소를 가진다. 다음은 resultMap 요소의 개념적인 뷰(conceptual view)이다.</p>
+
+        <h4>resultMap</h4>
+        <ul>
+          <li>
+            <code>constructor</code> - 인스턴스화되는 클래스의 생성자에 결과를 삽입하기 위해 사용됨
+            <ul>
+              <li><code>idArg</code> - ID 인자 ; ID 와 같은 결과는 전반적으로 성능을 향상시킨다.</li>
+              <li><code>arg</code> - 생성자에 삽입되는 일반적인 결과</li>
+            </ul>
+          </li>
+          <li><code>id</code> – ID 결과; ID 와 같은 결과는 전반적으로 성능을 향상시킨다.</li>
+          <li><code>result</code> – 필드나 자바빈 프로퍼티에 삽입되는 일반적인 결과</li>
+          <li>
+            <code>association</code> – 복잡한 타입의 연관관계; 많은 결과는 타입으로 나타난다.
+            <ul>
+              <li>nested result mappings – resultMap 스스로의 연관관계
+              </li>
+            </ul>
+          </li>
+          <li>
+            <code>collection</code> – 복잡한 타입의 컬렉션
+            <ul>
+              <li>nested result mappings – resultMap 스스로의 연관관계</li>
+            </ul>
+          </li>
+          <li>
+            <code>discriminator</code> – 사용할 resultMap 을 판단하기 위한 결과값을 사용
+            <ul>
+              <li>
+                <code>case</code> – 몇가지 값에 기초한 결과 매핑
+                <ul>
+                  <li>nested result mappings – a case is also a result map itself, and thus can
+                    contain many of these same elements, or it can refer to an external resultMap.
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+
+        <p>
+          <span class="label important">가장 좋은 형태: </span> 매번 ResultMap 을 추가해서 빌드한다. 이 경우 단위 테스트가 도움이 될 수 있다. 한번에 모든
+resultMap 을 빌드하면, 작업하기 어려울 것이다. 간단히 시작해서 단계별로 처리하는 것이 좋다. 프레임워크를
+사용하는 것은 종종 블랙박스와 같다. 가장 좋은 방법은 단위 테스트를 통해 기대하는 행위를 달성하는 것이다.
+이건 버그가 발견되었을때 디버깅을 위해서도 좋은 방법이다.</p>
+
+        <p>다음 섹션은 각각의 요소에 대해 좀더 상세하게 살펴볼 것이다.</p>
+
+        <h4>id, result</h4>
+
+        <source><![CDATA[<id property="id" column="post_id"/>
+<result property="subject" column="post_subject"/>]]></source>
+
+        <p>이건 결과 매핑의 가장 기본적인 형태이다. id 와 result 모두 한개의 칼럼을 한개의 프로퍼티나 간단한 데이터 타입의 필드에
+매핑한다.</p>
+
+        <p>둘 사이의 차이점은 id 값은 객체 인스턴스를 비교할 때 사용되는 구분자 프로퍼티로 처리되는 점이다. 이 점은 일반적으로
+성능을 향상시키지만 특히 캐시와 내포된(nested) 결과 매핑(조인 매핑)의 경우에 더 그렇다.</p>
+
+        <p>둘다 다수의 속성을 가진다.</p>
+
+        <table>
+          <caption>Id and Result Attributes</caption>
+          <thead>
+            <tr>
+              <th>속성 </th>
+              <th>설명</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>property</code></td>
+              <td>결과 칼럼에 매핑하기 위한 필드나 프로퍼티. 자바빈 프로퍼티가 해당 이름과 일치한다면, 그 프로퍼티가
+사용될 것이다. 반면에 MyBatis 는 해당 이름이 필드를 찾을 것이다. 점 표기를 사용하여 복잡한
+프로퍼티 검색을 사용할 수 있다. 예를 들어, “username”과 같이 간단하게 매핑될 수 있거나
+“address.street.number” 처럼 좀더 복잡하게 매핑될수도 있다.</td>
+            </tr>
+            <tr>
+              <td><code>column</code></td>
+              <td>데이터베이스의 칼럼명이나 별칭된 칼럼 라벨. resultSet.getString(columnName) 에 전달되는 같은
+문자열이다.</td>
+            </tr>
+            <tr>
+              <td><code>javaType</code></td>
+              <td>패키지 경로를 포함한 클래스 전체명이거나 타입 별칭. 자바빈을 사용한다면 MyBatis 는 타입을 찾아낼
+수 있다. 반면에 HashMap 으로 매핑한다면, 기대하는 처리를 명확히 하기 위해 javaType 을 명시해야
+한다.</td>
+            </tr>
+            <tr>
+              <td><code>jdbcType</code></td>
+              <td>지원되는 타입 목록에서 설명하는 JDBC 타입. JDBC 타입은 insert, update 또는 delete 하는 null
+입력이 가능한 칼럼에서만 필요하다. JDBC 의 요구사항이지 MyBatis 의 요구사항이 아니다. JDBC 로
+직접 코딩을 하다보면, null 이 가능한 값에 이 타입을 지정할 필요가 있을 것이다.</td>
+            </tr>
+            <tr>
+              <td><code>typeHandler</code></td>
+              <td>이 문서 앞에서 이미 타입 핸들러에 대해 설명했다. 이 프로퍼티를 사용하면, 디폴트 타입 핸들러를
+오버라이드 할 수 있다. 이 값은 TypeHandler 구현체의 패키지를 포함한 전체 클래스명이나 타입
+별칭이다.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h4>지원되는 JDBC 타입</h4>
+
+        <p>좀더 상세한 설명전에, MyBatis 는 jdbcType 열거를 통해 다음의 JDBC 타입들을 지원한다.</p>
+
+        <table>
+          <tr>
+            <td><code>BIT</code></td>
+            <td><code>FLOAT</code></td>
+            <td><code>CHAR</code></td>
+            <td><code>TIMESTAMP</code></td>
+            <td><code>OTHER</code></td>
+            <td><code>UNDEFINED</code></td>
+          </tr>
+          <tr>
+            <td><code>TINYINT</code></td>
+            <td><code>REAL</code></td>
+            <td><code>VARCHAR</code></td>
+            <td><code>BINARY</code></td>
+            <td><code>BLOG</code></td>
+            <td><code>NVARCHAR</code></td>
+          </tr>
+          <tr>
+            <td><code>SMALLINT</code></td>
+            <td><code>DOUBLE</code></td>
+            <td><code>LONGVARCHAR</code></td>
+            <td><code>VARBINARY</code></td>
+            <td><code>CLOB</code></td>
+            <td><code>>NCHAR</code></td>
+          </tr>
+          <tr>
+            <td><code>INTEGER</code></td>
+            <td><code>NUMERIC</code></td>
+            <td><code>DATE</code></td>
+            <td><code>LONGVARBINARY</code></td>
+            <td><code>BOOLEAN</code></td>
+            <td><code>NCLOB</code></td>
+          </tr>
+          <tr>
+            <td><code>BIGINT</code></td>
+            <td><code>DECIMAL</code></td>
+            <td><code>TIME</code></td>
+            <td><code>NULL</code></td>
+            <td><code>CURSOR</code></td>
+            <td><code>ARRAY</code></td>
+          </tr>
+        </table>
+
+        <h4>constructor</h4>
+
+        <source><![CDATA[<constructor>
+   <idArg column="id" javaType="int"/>
+   <arg column="username" javaType="String"/>
+</constructor>]]></source>
+
+        <p>프로퍼티가 데이터 전송 객체(DTO) 타입 클래스로 작동한다. 변하지 않는 클래스를 사용하고자 하는 경우가 있다. 거의
+변하지 않는 데이터를 가진 테이블은 종종 이 변하지 않는 클래스에 적합하다. 생성자 주입은 public 메서드가 없어도
+인스턴스화할 때 값을 셋팅하도록 해준다. MyBatis 는 private 프로퍼티와 private 자바빈 프로퍼티를 지원하지만 많은
+사람들은 생성자 주입을 선호한다. constructor 요소는 이러한 처리를 가능하게 한다.</p>
+
+        <p>다음의 생성자를 보자.</p>
+
+        <source><![CDATA[public class User {
+   //...
+   public User(int id, String username) {
+     //...
+  }
+//...
+}]]></source>
+
+        <p>결과를 생성자에 주입하기 위해, MyBatis 는 파라미터 타입에 일치하는 생성자를 찾을 필요가 있다. 자바는 파라미터
+이름에서 타입을 체크할 방법이 없다. 그래서 constructor 요소를 생성할 때, 인자의 순서에 주의하고 데이터 타입을
+명시해야 한다.</p>
+
+        <source><![CDATA[<constructor>
+   <idArg column="id" javaType="int"/>
+   <arg column="username" javaType="String"/>
+</constructor>]]></source>
+
+        <p>나머지 속성과 규칙은 id 와 result 요소와 동일하다.</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>속성 </th>
+              <th>설명</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>column</code></td>
+              <td>데이터베이스의 칼럼명이나 별칭된 칼럼 라벨. resultSet.getString(columnName) 에 전달되는 같은
+                                                   문자열이다.</td>
+            </tr>
+            <tr>
+              <td><code>javaType</code></td>
+              <td>패키지 경로를 포함한 클래스 전체명이거나 타입 별칭. 자바빈을 사용한다면 MyBatis 는 타입을 찾아낼
+수 있다. 반면에 HashMap 으로 매핑한다면, 기대하는 처리를 명확히 하기 위해 javaType 을 명시해야
+한다.</td>
+            </tr>
+            <tr>
+              <td><code>jdbcType</code></td>
+              <td>지원되는 타입 목록에서 설명하는 JDBC 타입. JDBC 타입은 insert, update 또는 delete 하는 null
+입력이 가능한 칼럼에서만 필요하다. JDBC 의 요구사항이지 MyBatis 의 요구사항이 아니다. JDBC 로
+직접 코딩을 하다보면, null 이 가능한 값에 이 타입을 지정할 필요가 있을 것이다.</td>
+            </tr>
+            <tr>
+              <td><code>typeHandler</code></td>
+              <td>이 문서 앞에서 이미 타입 핸들러에 대해 설명했다. 이 프로퍼티를 사용하면, 디폴트 타입 핸들러를
+오버라이드 할 수 있다. 이 값은 TypeHandler 구현체의 패키지를 포함한 전체 클래스명이나 타입
+별칭이다.</td>
+            </tr>
+            <tr>
+              <td><code>select</code></td>
+              <td>다른 매핑된 구문의 ID 는 이 프로퍼티 매핑이 필요로 하는 복잡한 타입을 로드할 것이다.
+column 속성의 칼럼으로 부터 가져온 값은 대상 select 구문에 파라미터로 전달될 것이다. 좀더
+세부적인 설명은 association 요소를 보라.</td>
+            </tr>
+            <tr>
+              <td><code>resultMap</code></td>
+              <td>이 인자의 내포된 결과를 적절한 객체로 매핑할 수 있는 ResultMap 의 ID 이다. 다른 select 구문을
+호출하기 위한 대체방법이다. 여러개의 테이블을 조인하는 것을 하나의 ResultSet 으로 매핑하도록
+해준다. ResultSet 은 사본을 포함할 수 있고, 데이터를 반복할 수도 있다. 가능하게 하기 위해서, 내포된
+결과를 다루도록 결과맵을 “연결”하자. 좀더 자세히 알기 위해서는 association 요소를 보라.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h4><code>association</code></h4>
+
+        <source><![CDATA[<association property="author" column="blog_author_id" javaType=" Author">
+  <id property="id" column="author_id"/>
+  <result property="username" column="author_username"/>
+</association>]]></source>
+
+        <p>association 요소는 “has-one” 타입의 관계를 다룬다. 예를 들어, Blog 는 하나의 Author 를 가진다. association 매핑은
+다른 결과와 작동한다. 값을 가져오기 위해 대상 프로퍼티를 명시한다.</p>
+
+        <p>MyBatis 는 관계를 정의하는 두가지 방법을 제공한다.</p>
+
+        <ul>
+          <li>내포된(Nested) Select: 복잡한 타입을 리턴하는 다른 매핑된 SQL 구문을 실행하는 방법.</li>
+          <li>내포된(Nested) Results: 조인된 결과물을 반복적으로 사용하여 내포된 결과 매핑을 사용하는 방법.</li>
+        </ul>
+
+        <p>먼저 요소내 프로퍼티들을 보자. 보이는 것처럼, select 와 resultMap 속성만을 사용하는 간단한 결과 매핑과는 다르다.</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>속성 </th>
+              <th>설명</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>property</code></td>
+              <td>결과 칼럼에 매핑하기 위한 필드나 프로퍼티. 자바빈 프로퍼티가 해당 이름과 일치한다면, 그 프로퍼티가
+사용될 것이다. 반면에 MyBatis 는 해당 이름이 필드를 찾을 것이다. 점 표기를 사용하여 복잡한
+프로퍼티 검색을 사용할 수 있다. 예를 들어, “username”과 같이 간단하게 매핑될 수 있거나
+“address.street.number” 처럼 좀더 복잡하게 매핑될수도 있다.</td>
+            </tr>
+            <tr>
+              <td><code>column</code></td>
+              <td>데이터베이스의 칼럼명이나 별칭된 칼럼 라벨. resultSet.getString(columnName) 에 전달되는 같은
+문자열이다.
+Note: 복합키를 다루기 위해서, column=”{prop1=col1,prop2=col2}” 문법을 사용해서 여러개의
+칼럼명을 내포된 select 구문에 명시할 수 있다. 이것은 대상의 내포된 select 구문의 파라미터 객체에
+prop1, prop2 형태로 셋팅하게 될 것이다.</td>
+            </tr>
+            <tr>
+              <td><code>javaType</code></td>
+              <td>패키지 경로를 포함한 클래스 전체명이거나 타입 별칭. 자바빈을 사용한다면 MyBatis 는 타입을 찾아낼
+수 있다. 반면에 HashMap 으로 매핑한다면, 기대하는 처리를 명확히 하기 위해 javaType 을 명시해야
+한다.</td>
+            </tr>
+            <tr>
+              <td><code>jdbcType</code></td>
+              <td>지원되는 타입 목록에서 설명하는 JDBC 타입. JDBC 타입은 insert, update 또는 delete 하는 null
+입력이 가능한 칼럼에서만 필요하다. JDBC 의 요구사항이지 MyBatis 의 요구사항이 아니다. JDBC 로
+직접 코딩을 하다보면, null 이 가능한 값에 이 타입을 지정할 필요가 있을 것이다.</td>
+            </tr>
+            <tr>
+              <td><code>typeHandler</code></td>
+              <td>이 문서 앞에서 이미 타입 핸들러에 대해 설명했다. 이 프로퍼티를 사용하면, 디폴트 타입 핸들러를
+오버라이드 할 수 있다. 이 값은 TypeHandler 구현체의 패키지를 포함한 전체 클래스명이나 타입
+별칭이다.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <table>
+          <caption>Nested Select for Association</caption>
+          <thead>
+            <tr>
+              <th>속성 </th>
+              <th>설명</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>select</code></td>
+              <td>다른 매핑된 구문의 ID 는 이 프로퍼티 매핑이 필요로 하는 복잡한 타입을 로드할 것이다.
+column 속성의 칼럼으로 부터 가져온 값은 대상 select 구문에 파라미터로 전달될 것이다.
+Note: 복합키를 다루기 위해서, column=”{prop1=col1,prop2=col2}” 문법을 사용해서 여러개의
+칼럼명을 내포된 select 구문에 명시할 수 있다. 이것은 대상의 내포된 select 구문의 파라미터 객체에
+prop1, prop2 형태로 셋팅하게 될 것이다.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p>예를 들면.</p>
+
+        <source><![CDATA[<resultMap id="blogResult" type="Blog">
+  <association property="author" column="blog_author_id" javaType="Author" select="selectAuthor"/>
+  <select id="selectBlog" parameterType="int" resultMap="blogResult">
+</resultMap>
+
+<select id="selectBlog" parameterType="int" resultMap="blogResult">
+  SELECT * FROM BLOG WHERE ID = #{id}
+</select>
+
+<select id="selectAuthor" parameterType="int" resultType="Author">
+  SELECT * FROM AUTHOR WHERE ID = #{id}
+</select>]]></source>
+
+        <p>여기엔 두개의 select 구문이 있다. 하나는 Blog 를 로드하고 다른 하나는 Author 를 로드한다. 그리고 Blog 의 resultMap
+은 author 프로퍼티를 로드하기 위해 “selectAuthor” 구문을 사용한다.</p>
+
+        <p>다른 프로퍼티들은 칼럼과 프로퍼티명에 일치하는 것들로 자동으로 로드 될 것이다.</p>
+
+        <p>이 방법은 간단한 반면에, 큰 데이터나 목록에는 제대로 작동하지 않을 것이다. 이 방법은 “N+1 Selects 문제” 으로 알려진
+문제점을 가진다. N+1 Selects 문제는 처리과정의 특이성으로 인해 야기된다.</p>
+
+        <ul>
+          <li>레코드의 목록을 가져오기 위해 하나의 SQL 구문을 실행한다. (“+1” 에 해당).</li>
+          <li>리턴된 레코드별로, 각각의 상세 데이터를 로드하기 위해 select 구문을 실행한다. (“N” 에 해당).</li>
+        </ul>
+
+        <p>이 문제는 수백 또는 수천의 SQL 구문 실행이라는 결과를 야기할 수 있다. 아마도 언제나 바라는 형태의 처리가 아닐 것이다.</p>
+
+        <p>목록을 로드하고 내포된 데이터에 접근하기 위해 즉시 반복적으로 처리한다면, 늦은 로딩으로 호출하고 게다가 성능은 많이
+나빠질 것이다.</p>
+
+        <p>그래서 다른 방법이 있다.</p>
+
+        <table>
+          <caption>관계를 위한 내포된 결과(Nested Results)</caption>
+          <thead>
+            <tr>
+              <th>속성 </th>
+              <th>설명</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>resultMap</code></td>
+              <td>이 인자의 내포된 결과를 적절한 객체로 매핑할 수 있는 ResultMap 의 ID 이다. 다른 select 구문을
+호출하기 위한 대체방법이다. 여러개의 테이블을 조인하는 것을 하나의 ResultSet 으로 매핑하도록
+해준다. ResultSet 은 사본을 포함할 수 있고, 데이터를 반복할 수도 있다. 가능하게 하기 위해서, 내포된
+결과를 다루도록 결과맵을 “연결”하자. 좀더 자세히 알기 위해서는 association 요소를 보라.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p>위에서 내포된 관계의 매우 복잡한 예제를 보았을 것이다. 다음은 작동하는 것을 보기 위한 좀더 간단한 예제이다. 개별
+구문을 실행하는 것 대신에, Blog 와 Author 테이블을 함께 조인했다.</p>
+
+        <source><![CDATA[<select id="selectBlog" parameterType="int" resultMap="blogResult">
+  select
+    B.id            as blog_id,
+    B.title         as blog_title,
+    B.author_id     as blog_author_id,
+    A.id            as author_id,
+    A.username      as author_username,
+    A.password      as author_password,
+    A.email         as author_email,
+    A.bio           as author_bio
+  from Blog B left outer join Author A on B.author_id = A.id
+  where B.id = #{id}
+</select>]]></source>
+
+        <p>조인을 사용할 때, 결과의 값들이 유일하거나 좀더 명확한 이름이 되도록 별칭을 사용하는 것이 좋다. 이제 결과를 매핑할 수
+있다.</p>
+
+        <source><![CDATA[<resultMap id="blogResult" type="Blog">
+  <id property="blog_id" column="id" />
+  <result property="title" column="blog_title"/>
+  <association property="author" column="blog_author_id" javaType="Author" resultMap="authorResult"/>
+</resultMap>
+
+<resultMap id="authorResult" type="Author">
+  <id property="id" column="author_id"/>
+  <result property="username" column="author_username"/>
+  <result property="password" column="author_password"/>
+  <result property="email" column="author_email"/>
+  <result property="bio" column="author_bio"/>
+</resultMap>]]></source>
+
+        <p>위 예제에서, Author 인스턴스를 로드하기 위한 “authorResult” resultMap 으로 위임된 Blog 의 “author” 관계를 볼 수
+있을 것이다.</p>
+
+        <p>매우 중요 : id 요소는 내포된 결과 매핑에서 매우 중요한 역할을 담당한다. 결과 중 유일한 것을 찾아내기 위한 한개 이상의
+프로퍼티를 명시해야만 한다. 가능하면 결과 중 유일한 것을 찾아낼 수 있는 프로퍼티들을 선택하라. 기본키가 가장 좋은
+선택이 될 수 있다.</p>
+
+        <p>이제, 위 예제는 관계를 매핑하기 위해 외부의 resultMap 요소를 사용했다. 이 외부 resultMap 은 Author resultMap 을
+재사용가능하도록 해준다. 어쨌든, 재사용할 필요가 있거나, 한개의 resultMap 에 결과 매핑을 함께 위치시키고자 한다면,
+association 결과 매핑을 내포시킬수 있다. 다음은 이 방법을 사용한 예제이다.</p>
+
+        <source><![CDATA[<resultMap id="blogResult" type="Blog">
+  <id property="blog_id" column="id" />
+  <result property="title" column="blog_title"/>
+  <association property="author" column="blog_author_id" javaType="Author">
+    <id property="id" column="author_id"/>
+    <result property="username" column="author_username"/>
+    <result property="password" column="author_password"/>
+    <result property="email" column="author_email"/>
+    <result property="bio" column="author_bio"/>
+  </association>
+</resultMap>]]></source>
+
+        <p>지금까지 “has one” 관계를 다루는 방법을 보았다. 하지만 “has many” 는 어떻게 처리할까? 그건 다음 섹션에서 다루어보자.</p>
+
+        <h4>collection</h4>
+
+        <source><![CDATA[<collection property="posts" ofType="domain.blog.Post">
+  <id property="id" column="post_id"/>
+  <result property="subject" column="post_subject"/>
+  <result property="body" column="post_body"/>
+</collection>]]></source>
+
+        <p>collection 요소는 관계를 파악하기 위해 작동한다. 사실 이 내용이 중복되는 내용으로, 차이점에 대해서만 주로 살펴보자.</p>
+
+        <p>위 예제를 계속 진행하기 위해, Blog 는 오직 하나의 Author 를 가진다. 하지만 Blog 는 많은 Post 를 가진다. Blog 클래스에
+다음처럼 처리될 것이다.</p>
+
+        <source><![CDATA[private List<Post> posts;]]></source>
+
+        <p>List 에 내포된 결과를 매핑하기 위해, collection 요소를 사용한다. association 요소와는 달리, 조인에서 내포된 select 나
+내포된 결과를 사용할 수 있다.</p>
+
+        <h4>Collection 을 위한 내포된(Nested) Select</h4>
+
+        <p>먼저, Blog 의 Post 를 로드하기 위한 내포된 select 를 사용해보자.</p>
+
+        <source><![CDATA[<resultMap id="blogResult" type="Blog">
+  <collection property="posts" javaType="ArrayList" column="blog_id" ofType="Post" select="selectPostsForBlog"/>
+</resultMap>
+
+<select id="selectBlog" parameterType="int" resultMap="blogResult">
+  SELECT * FROM BLOG WHERE ID = #{id}
+</select>
+
+<select id="selectPostsForBlog" parameterType="int" resultType="Blog">
+  SELECT * FROM POST WHERE BLOG_ID = #{id}
+</select>]]></source>
+
+        <p>바로 눈치챌 수 있는 몇가지가 있지만, 대부분 앞서 배운 association 요소와 매우 유사하다. 먼저, collection 요소를 사용한
+것이 보일 것이다. 그리고 나서 새로운 “ofType” 속성을 사용한 것을 알아차렸을 것이다. 이 속성은 자바빈 프로퍼티 타입과
+collection 의 타입을 구분하기 위해 필요하다.</p>
+
+        <source><![CDATA[<collection property="posts" javaType="ArrayList" column="blog_id" ofType="Post" select="selectPostsForBlog"/>]]></source>
+
+        <p>
+          <span class="important">독자 왈</span>: “Post 의 ArrayList 타입의 글 목록”
+        </p>
+
+        <p>javaType 속성은 그다지 필요하지 않다. MyBatis 는 대부분의 경우 이 속성을 사용하지 않을 것이다. 그래서 좀더 간단하게
+설정할 수 있다.</p>
+
+        <source><![CDATA[<collection property="posts" column="blog_id" ofType="Post" select="selectPostsForBlog"/>]]></source>
+
+        <h4>Collection 을 위한 내포된(Nested) Results</h4>
+
+        <p>이 시점에, collection 을 위한 내포된 결과가 어떻게 작동하는지 짐작할 수 있을 것이다. 왜냐하면 association 와 정확히
+일치하기 때문이다. 하지만 “ofType” 속성이 추가로 적용되었다.</p>
+
+        <p>먼저, SQL 을 보자.</p>
+
+        <source><![CDATA[<select id="selectBlog" parameterType="int" resultMap="blogResult">
+  select
+  B.id as blog_id,
+  B.title as blog_title,
+  B.author_id as blog_author_id,
+  P.id as post_id,
+  P.subject as post_subject,
+  P.body as post_body,
+  from Blog B
+  left outer join Post P on B.id = P.blog_id
+  where B.id = #{id}
+</select>]]></source>
+
+        <p>다시 보면, Blog 와 Post 테이블을 조인했고 간단한 매핑을 위해 칼럼명에 적절한 별칭을 주었다. 이제 Post 의 Collection 을
+가진 Blog 의 매핑은 다음처럼 간단해졌다.</p>
+
+        <source><![CDATA[<resultMap id="blogResult" type="Blog">
+  <id property="id" column="blog_id" />
+  <result property="title" column="blog_title"/>
+  <collection property="posts" ofType="Post">
+    <id property="id" column="post_id"/>
+    <result property="subject" column="post_subject"/>
+    <result property="body" column="post_body"/>
+  </collection>
+</resultMap>]]></source>
+
+        <p>다시, 여기서 id 요소의 중요성을 기억해두거나 기억이 나지 않으면 association 섹션에서 다시 읽어둬라.</p>
+
+        <p>혹시, 결과 매핑의 재사용성을 위해 좀더 긴 형태를 선호한다면, 다음과 같은 형태로도 가능하다.</p>
+        
+        <source><![CDATA[<resultMap id="blogResult" type="Blog">
+  <id property="id" column="blog_id" />
+  <result property="title" column="blog_title"/>
+  <collection property="posts" ofType="Post" resultMap="blogPostResult"/>
+</resultMap>
+
+<resultMap id="blogPostResult" type="Post">
+  <id property="id" column="post_id"/>
+  <result property="subject" column="post_subject"/>
+  <result property="body" column="post_body"/>
+</resultMap>]]></source>
+
+        <p><span class="label important">참고</span> associations 과 collections 에서 내포의 단계 혹은 조합에는 제한이 없다. 매핑할때는 성능을 생각해야 한다. 단위
+테스트와 성능 테스트는 애플리케이션에서 가장 좋은 방법을 찾도록 지속해야 한다. MyBatis 는 이에 수정비용을 최대한
+줄이도록 해줄 것이다.</p>
+
+        <p>
+          Advanced association and collection mapping is a deep subject. Documentation can only get you so
+          far. With a little practice, it will all become clear very quickly.
+        </p>
+
+        <h4>discriminator</h4>
+
+        <source><![CDATA[<discriminator javaType="int" column="draft">
+  <case value="1" resultType="DraftPost"/>
+</discriminator>]]></source>
+
+        <p>종종 하나의 데이터베이스 쿼리는 많고 다양한 데이터 타입의 결과를 리턴한다. discriminator 요소는 클래스 상속 관계를
+포함하여 이러한 상황을 위해 고안되었다. discriminator 는 자바의 switch 와 같이 작동하기 때문에 이해하기 쉽다.</p>
+
+        <p>discriminator 정의는 colume 과 javaType 속성을 명시한다. colume 은 MyBatis 로 하여금 비교할 값을 찾을 것이다.
+javaType 은 동일성 테스트와 같은 것을 실행하기 위해 필요하다. 예를 들어</p>
+
+        <source><![CDATA[<resultMap id="vehicleResult" type="Vehicle">
+  <id property="id" column="id" />
+  <result property="vin" column="vin"/>
+  <result property="year" column="year"/>
+  <result property="make" column="make"/>
+  <result property="model" column="model"/>
+  <result property="color" column="color"/>
+  <discriminator javaType="int" column="vehicle_type">
+    <case value="1" resultMap="carResult"/>
+    <case value="2" resultMap="truckResult"/>
+    <case value="3" resultMap="vanResult"/>
+    <case value="4" resultMap="suvResult"/>
+  </discriminator>
+</resultMap>]]></source>
+
+        <p>이 예제에서, MyBatis 는 결과데이터에서 각각의 레코드를 가져와서 vehicle_type 값과 비교한다. 만약 discriminator
+비교값과 같은 경우가 생기면, 이 경우에 명시된 resultMap 을 사용할 것이다. 해당되는 경우가 없다면 무시된다. 만약
+일치하는 경우가 하나도 없다면, MyBatis 는 discriminator 블럭 밖에 정의된 resultMap 을 사용한다. carResult 가
+다음처럼 정의된다면,</p>
+
+        <source><![CDATA[<resultMap id="carResult" type="Car">
+  <result property="doorCount" column="door_count" />
+</resultMap>]]></source>
+
+        <p>doorCount 프로퍼티만이 로드될 것이다. discriminator 경우들의 독립적인 결과를 만들어준다. 이 경우 우리는 물론 car 와
+vehicle 간의 관계를 알 수 있다. 그러므로, 나머지 프로퍼티들도 로드하길 원하게 된다. 그러기 위해서는 간단하게 하나만
+변경하면 된다.</p>
+
+        <source><![CDATA[<resultMap id="carResult" type="Car" extends="vehicleResult">
+  <result property="doorCount" column="door_count" />
+</resultMap>]]></source>
+
+        <p>vehicleResult 와 carResult 의 모든 프로퍼티들이 로드 될 것이다.</p>
+
+        <p>한가지 더, 도처에 설정된 외부 정의를 찾게 될지도 모른다. 그러므로 좀더 간결한 매핑 스타일의 문법이 있다. 예를 들면</p>
+
+        <source><![CDATA[<resultMap id="vehicleResult" type="Vehicle">
+  <id property="id" column="id" />
+  <result property="vin" column="vin"/>
+  <result property="year" column="year"/>
+  <result property="make" column="make"/>
+  <result property="model" column="model"/>
+  <result property="color" column="color"/>
+  <discriminator javaType="int" column="vehicle_type">
+    <case value="1" resultType="carResult">
+      <result property="doorCount" column="door_count" />
+    </case>
+    <case value="2" resultType="truckResult">
+      <result property="boxSize" column="box_size" />
+      <result property="extendedCab" column="extended_cab" />
+    </case>
+    <case value="3" resultType="vanResult">
+      <result property="powerSlidingDoor" column="power_sliding_door" />
+    </case>
+    <case value="4" resultType="suvResult">
+      <result property="allWheelDrive" column="all_wheel_drive" />
+    </case>
+  </discriminator>
+</resultMap>]]></source>
+
+        <p>
+          <span class="label important">참고</span> 모든 결과 매핑이 있고, 모두 명시하고 싶지 않다면, MyBatis 는 칼럼과 프로퍼티 명으로 자동으로 매핑할 것이다. 이
+예제는 실제로 필요한 내용보다 좀더 많이 서술되어 있다.</p>
+
+      </subsection>
+      <subsection name="cache">
+        <p>MyBatis 는 쉽게 설정가능하고 변경가능한 쿼리 캐싱 기능을 가지고 있다. MyBatis 3 캐시 구현체는 좀더 강력하고 쉽게
+설정할 수 있도록 많은 부분이 수정되었다.</p>
+
+        <p>성능을 개선하고 순환하는 의존성을 해결하기 위해 필요한 로컬 세션 캐싱을 제외하고 기본적으로 캐시가 작동하지 않는다.
+캐싱을 활성화하기 위해서, SQL 매핑 파일에 한줄을 추가하면 된다.</p>
+
+        <source><![CDATA[<cache/>]]></source>
+
+        <p>하나의 간단한 구문에 다음과 같은 순서로 영향을 준다.</p>
+
+        <ul>
+          <li>매핑 구문 파일내 select 구문의 모든 결과가 캐시 될 것이다.</li>
+          <li>매핑 구문 파일내 insert, update 그리고 delete 구문은 캐시를 지울(flush) 것이다.</li>
+          <li>캐시는 Least Recently Used (LRU) 알고리즘을 사용할 것이다.</li>
+          <li>캐시는 스케줄링 기반으로 시간순서대로 지워지지는 않는다. (예를 들면. no Flush Interval)</li>
+          <li>캐시는 리스트나 객체에 대해 1024 개의 참조를 저장할 것이다. (쿼리 메서드가 실행될때마다)</li>
+          <li>캐시는 읽기/쓰기 캐시처럼 처리될 것이다. 이것은 가져올 객체는 공유되지 않고 호출자에 의해 안전하게
+변경된다는 것을 의미한다.</li>
+        </ul>
+
+        <p>모든 프로퍼티는 cache 요소의 속성을 통해 변경가능하다. 예를 들면:</p>
+
+        <source><![CDATA[<cache
+  eviction="FIFO"
+  flushInterval="60000"
+  size="512"
+  readOnly="true"/>]]></source>
+
+        <p>좀더 많은 프로퍼티가 셋팅된 이 설정은 60 초마다 캐시를 지우는 FIFO 캐시를 생성한다. 이 캐시는 결과 객체 또는 결과
+리스트를 512 개까지 저장하고 각 객체는 읽기 전용이다. 캐시 데이터를 변경하는 것은 개별 쓰레드에서 호출자간의 충돌을
+야기할 수 있다.</p>
+
+        <p>사용가능한 캐시 전략은 4 가지이다.</p>
+
+        <ul>
+          <li>
+            <code>LRU</code> – Least Recently Used: 가장 오랜시간 사용하지 않는 객체를 제거</li>
+          <li><code>FIFO</code> – First In First Out: 캐시에 들어온 순서대로 객체를 제거</li>
+          <li>
+            <code>SOFT</code> – Soft Reference: 가비지 컬렉터의 상태와 강하지 않은 참조(Soft References )의 규칙에 기초하여 객체를 제거</li>
+          <li>
+            <code>WEAK</code> –  Weak Reference: 가비지 컬렉터의 상태와 약한 참조(Weak References)의 규칙에 기초하여 점진적으로 객체 제거</li>
+        </ul>
+
+        <p>디폴트 값은 LRU 이다.</p>
+
+        <p>flushInterval 은 양수로 셋팅할 수 있고, 밀리세컨드로 명시되어야 한다. 디폴트는 셋팅되지 않으나, 플러시(flush) 주기를
+사용하지 않으면, 캐시는 오직 구문이 호출될때마다 캐시를 지운다.</p>
+
+        <p>size 는 양수로 셋팅할 수 있고 캐시에 객체의 크기를 유지하지만 메모리 자원이 충분해야 한다. 디폴트 값은 1024 이다.</p>
+
+        <p>readOnly 속성은 true 또는 false 로 설정 할 수 있다. 읽기 전용 캐시는 모든 호출자에게 캐시된 객체의 같은 인스턴스를
+리턴 할 것이다. 게다가 그 객체는 변경할 수 없다. 이건 종종 성능에 잇점을 준다. 읽고 쓰는 캐시는 캐시된 객체의 복사본을
+리턴 할 것이다. 이건 조금 더 늦긴 하지만 안전하다. 디폴트는 false 이다..</p>
+
+        <h4>사용자 지정 캐시 사용하기</h4>
+
+        <p>앞서 본 다양한 설정방법에 더해, 자체적으로 개발하거나 써드파티 캐시 솔루션을 사용하여 캐시 처리를 할 수 있다.</p>
+
+        <source><![CDATA[<cache type="com.domain.something.MyCustomCache"/>]]></source>
+
+        <p>이 예제는 사용자 지정 캐시 구현체를 사용하는 방법을 보여준다. type 속성에 명시된 클래스는 org.mybatis.cache.Cache
+인터페이스를 반드시 구현해야 한다. 이 인터페이스는 MyBatis 프레임워크의 가장 복잡한 구성요소 중 하나이다. 하지만
+하는 일은 간단하다.</p>
+
+        <source><![CDATA[public interface Cache {
+  String getId();
+  int getSize();
+  void putObject(Object key, Object value);
+  Object getObject(Object key);
+  boolean hasKey(Object key);
+  Object removeObject(Object key);
+  void clear();
+  ReadWriteLock getReadWriteLock();
+}]]></source>
+
+        <p>캐시를 설정하기 위해, 캐시 구현체에 public 자바빈 프로퍼티를 추가하고 cache 요소를 통해 프로퍼티를 전달한다. 예를
+들어, 다음 예제는 캐시 구현체에서 “setCacheFile(String file)” 를 호출하여 메서드를 호출할 것이다.</p>
+
+        <source><![CDATA[<cache type="com.domain.something.MyCustomCache">
+  <property name="cacheFile" value="/tmp/my-custom-cache.tmp"/>
+</cache>]]></source>
+
+        <p>모든 간단한 타입의 자바빈 프로퍼티를 사용할 수 있다. MyBatis 는 변환할 것이다.</p>
+
+        <p>캐시 설정과 캐시 인스턴스가 SQL Map 파일의 명명공간에 묶여지는(bound) 것을 기억하는게 중요하다. 게다가, 같은
+명명공간내 모든 구문은 묶여진다. 구문별로 캐시와 상호작동하는 방법을 변경할 수 있거나 두개의 간단한 속성을 통해
+완전히 배제될 수 도 있다. 디폴트로 구문은 아래와 같이 설정된다.</p>
+
+        <source><![CDATA[<select ... flushCache="false" useCache="true"/>
+<insert ... flushCache="true"/>
+<update ... flushCache="true"/>
+<delete ... flushCache="true"/>]]></source>
+
+        <p>이러한 방법으로 구문을 설정하는 하는 방법은 굉장히 좋지 않다. 대신 디폴트 행위를 변경해야 할 경우에만 flushCache 와
+useCache 속성을 변경하는 것이 좋다. 예를 들어, 캐시에서 특정 select 구문의 결과를 제외하고 싶거나 캐시를 지우기 위한
+select 구문을 원할 것이다. 유사하게 실행할때마다 캐시를 지울 필요가 없는 update 구문도 있을 것이다.</p>
+
+        <h4>cache-ref</h4>
+        <p>이전 섹션 내용을 돌이켜보면서, 특정 명명공간을 위한 캐시는 오직 하나만 사용되거나 같은 명명공간내에서는 구문마다
+캐시를 지울수 있다. 명명공간간의 캐시 설정과 인스턴스를 공유하고자 할때가 있을 것이다. 이 경우 cache-ref 요소를
+사용해서 다른 캐시를 참조할 수 있다.</p>
+
+        <source><![CDATA[<cache-ref namespace="com.someone.application.data.SomeMapper"/>]]></source>
+      </subsection>
+    </section>
+  </body>
+</document>

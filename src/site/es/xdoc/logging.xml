@@ -71,8 +71,12 @@ org.apache.ibatis.logging.LogFactory.useStdOutLogging();]]></source>
       <subsection name="Logging Configuration">
         <p>MyBatis loguea la mayoría de su actividad usando clases de logging que no están en paquetes de MyBatis. Para ver el log de las sentencias debes activar el log en el paquete java.sql – específicamente en las siguientes clases:
         </p>
-        <p><code>java.sql.Connection</code>, <code>java.sql.PreparedStatement</code> and
-        <code>java.sql.Resultsetjava.sql.Statement</code></p>
+        <ul>
+        <li><code>java.sql.Connection</code></li>
+        <li><code>java.sql.PreparedStatement</code></li>
+        <li><code>java.sql.Resultset</code></li>
+        <li><code>java.sql.Statement</code></li>
+        </ul>
         <p>Nuevamente, como hagas esto es dependiente de la implementación de logging que se esté usando. Mostraremos cómo hacerlo con Log4j. Configurar los servicios de logging es simplemente cuestión de añadir uno o varios ficheros de configuración (por ejemplo log4j.properties) y a veces un nuevo JAR (por ejemplo log4j.jar). El ejemplo siguiente configura todos los servicios de logging para que usen log4j como proveedor. Sólo son dos pasos:
         </p>
         <h4>Paso 1: Añade el fichero Log4J JAR

@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 2010-2012 The MyBatis Team
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!-- version: $Id$ -->
+
+<document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+
+  <properties>
+    <title>MyBatis 3 | Logging</title>
+    <author email="mybatis-dev@googlegroups.com">The MyBatis Team</author>
+  </properties>
+
+  <body>
+    <section name="Logging">
+      <p></p>
+      <p>MyBatis 는 내부 로그 팩토리를 사용하여 로깅 정보를 제공한다. 내부 로그 팩토리는 로깅 정보를 다른 로그 구현체 중
+하나에 전달한다.</p>
+      <ul>
+        <li>
+          SLF4J
+        </li>
+        <li>
+          Apache Commons Logging
+        </li>
+        <li>
+          Log4J
+        </li>
+        <li>
+          JDK logging
+        </li>
+      </ul>
+      <p>로깅 솔루션은 내부 MyBatis 로그 팩토리의 런타임 체크를 통해 선택된다. MyBatis 로그 팩토리는 가능하면 첫번째
+구현체를 사용할 것이다(위 로깅 구현체의 나열 순서는 내부적으로 선택하는 우선순위이다). 만약 MyBatis 가 위 구현체중
+하나도 찾지 못한다면, 로깅을 하지 않을 것이다.</p>
+      <p>많은 환경은 애플리케이션 서버(좋은 예는 Tomcat 과 WebSphere)의 클래스패스의 일부로 JCL 을 사용한다. 이러한 환경을
+아는 것이 중요하다. MyBatis 는 로깅 구현체로 JCL 을 사용할 것이다. WebSphere 와 같은 환경에서 Log4J 설정은 무시될
+것이다. 왜냐하면 WebSphere 는 자체 JCL 구현체를 제공하기 때문이다. 이러한 사항은 불만스러울수 있다. 왜냐하면
+MyBatis 는 당신의 Log4J 설정을 무시하는 것처럼 보일수도 있기 때문이다. (사실 MyBatis 는 당신의 Log4J 설정을
+무시한다. 왜냐하면 MyBatis 는 이러한 환경에서 JCL 을 사용할 것이기 때문이다.) 만약 당신의 애플리케이션이
+클래스패스에 JCL 을 포함한 환경에서 돌아가지만 다른 로깅 구현체 중 하나를 더 선호한다면, 다음의 메서드 중 하나를
+호출하여 다른 로깅 구현체를 선택 할 수 있다.</p>
+      <source><![CDATA[org.apache.ibatis.logging.LogFactory.useSlf4jLogging();
+org.apache.ibatis.logging.LogFactory.useLog4JLogging();
+org.apache.ibatis.logging.LogFactory.useJdkLogging();
+org.apache.ibatis.logging.LogFactory.useCommonsLogging();
+org.apache.ibatis.logging.LogFactory.useStdOutLogging();]]></source>
+      <p>MyBatis 메서드를 호출하기 전에 위 메서드 중 하나를 호출해야 한다. 이 메서드들은 런타임 클래스패스에 구현체가
+존재하면 그 로그 구현체를 사용하게 한다. 예를 들어, Log4J 로깅을 선택했지만 런타임에 Log4J 구현체가 클래스패스에
+없다면, MyBatis 는 Log4J 구현체의 사용을 무시하고 로깅 구현체를 찾아 다시 사용할 것이다.</p>
+      <p>Jakarta Commons 로깅, Log4J 그리고 JDK 로깅 API 에 대한 설명은 이 문서의 범위를 벗어난다. 이러한 로깅 관련
+프레임워크에 대해 좀더 알고 싶다면, 개별 위치에서 좀더 많은 정보를 얻을 수 있을 것이다.</p>
+      <ul>
+        <li>
+          <a href="http://commons.apache.org/logging">Apache Commons Logging</a>
+        </li>
+        <li>
+          <a href="http://logging.apache.org/log4j/">Apache Log4j</a>
+        </li>
+        <li>
+          <a href="http://java.sun.com/j2se/1.4.1/docs/guide/util/logging/">JDK Logging API</a>
+        </li>
+      </ul>
+      <subsection name="Logging Configuration">
+        <p>MyBatis 가 실제로 사용하는 로그 클래스는 MyBatis 패키지에 포함되어 있지 않다. MyBatis 로깅 구문을 보기 위해서는,
+java.sql 패키지의 클래스에 대해 로깅을 활성화해야 할 것이다. 해당되는 클래스 목록들이다.</p>
+        <ul>
+        <li><code>java.sql.Connection</code></li>
+        <li><code>java.sql.PreparedStatement</code></li>
+        <li><code>java.sql.Resultset</code></li>
+        <li><code>java.sql.Statement</code></li>
+        </ul>
+        <p>Log4J 를 사용하는 방법을 보여줄 것이다. 로깅 서비스는 하나 이상이 설정파일(예를 들면, log4j.properties)과 새로운
+JAR 파일(예를 들면, log4j.jar)을 사용한다. 다음의 예제는 Log4J 를 사용하여 로깅 서비스를 설정할 것이다. 두가지 단계를
+거친다.</p>
+        <p></p>
+        <h4>첫번째 단계 : Log4J JAR 파일 추가하기</h4>
+        <p>Log4J 를 사용하기 때문에, 애플리케이션에 JAR 파일이 있어야 한다. Log4J 를 사용하기 위해, 애플리케이션의
+클래스패스에 JAR 파일을 추가할 필요가 있다. 위 URL 에서 Log4J 를 다운로드 할 수 있다.</p>
+        <p>웹이나 기업용 애플리케이션에서는 WEB-INF/lib 디렉터리에 log4j.jar 파일을 추가할 수 있다. 단독으로 실행되는
+애플리케이션에서는 JVM 의 –classpath 시작 파라미터에서 간단히 추가할 수 있다.</p>
+        <p></p>
+        <h4>두번째 단계 : Log4J 설정하기</h4>
+        <p>Log4J 를 설정하는 것은 간단하다. 먼저 log4j.properties 파일을 만들어서 다음처럼 설정하면 된다.</p>
+        <source><![CDATA[# Global logging configuration
+log4j.rootLogger=ERROR, stdout
+# MyBatis logging configuration...
+#log4j.logger.org.apache.ibatis=DEBUG
+#log4j.logger.java.sql.Connection=DEBUG
+#log4j.logger.java.sql.Statement=DEBUG
+#log4j.logger.java.sql.PreparedStatement=DEBUG
+#log4j.logger.java.sql.ResultSet=DEBUG
+# Console output...
+log4j.appender.stdout=org.apache.log4j.ConsoleAppender
+log4j.appender.stdout.layout=org.apache.log4j.PatternLayout
+log4j.appender.stdout.layout.ConversionPattern=%5p [%t] - %m%n]]></source>
+        <p>위 파일은 에러만을 리포트하는 최소한의 설정이다. 파일의 두번째 라인은 stdout appender 에 에러만을 출력한다.
+appender 는 출력(예를 들면, 콘솔, 파일, 데이터베이스 등)을 모으는 컴포넌트이다. 로그를 최대한 출력하기 위해서는
+다음처럼 설정을 변경해야 한다.</p>
+        <p></p>
+        <source>log4j.rootLogger=DEBUG, stdout</source>
+        <p></p>
+        <p>두번째 라인을 위처럼 변경하면, Log4J 는 ‘stdout’ appender 에 모든 로깅 이벤트를 출력한다. finer 레벨로 레벨을
+조정하고자 한다면, 위 파일에서 ‘SqlMap 로깅 설정’(4 번째라인에서 8 번째라인까지) 에서 각 클래스별로 설정할 수 있다.
+PreparedStatement 에 대해 콘솔에 DEBUG 레벨로 로깅(SQL 구문)을 하고 싶다면, 다음처럼 7 번째 라인을 수정하면 된다.</p>
+
+        <source>log4j.logger.java.sql.PreparedStatement=DEBUG</source>
+
+        <p>log4j.properties 파일에서 남은 설정은 appender 를 설정하기 위해 사용된다. 하지만 이 내용은 이 문서의 범위를 벗어난다.
+어쨌든 Log4J 웹사이트에서 좀더 많은 정보를 찾을 수 있다.</p>
+      </subsection>
+    </section>
+  </body>
+</document>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 2010-2012 The MyBatis Team
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!-- version: $Id$ -->
+
+<document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+
+  <properties>
+    <title>MyBatis 3 | 소개</title>
+    <author email="mybatis-dev@googlegroups.com">The MyBatis Team</author>
+  </properties>
+
+  <body>
+    <section name="소개">
+      <subsection name="MyBatis 는 무엇인가?">
+        <p>MyBatis 는 개발자가 지정한 SQL, 저장프로시저 그리고 몇가지 고급 매핑을 지원하는 퍼시스턴스 프레임워크이다.
+MyBatis 는 JDBC 코드와 수동으로 셋팅하는 파라미터와 결과 매핑을 제거한다. MyBatis 는 데이터베이스 레코드에
+원시타입과 Map 인터페이스 그리고 자바 POJO 를 설정하고 매핑하기 위해 XML 과 애노테이션을 사용할 수 있다.
+</p>
+      </subsection>
+
+      <subsection name="Help make this documentation better…">
+        <p>
+          If you find this documentation lacking in any way, or missing
+          documentation for a feature, then the best thing to do is learn
+          about it and then write the documentation yourself!
+        </p>
+        <p>
+          Sources of this manual are available in xdoc format at
+          <a href="http://mybatis.googlecode.com/svn/trunk/src/site/">project's SVN </a>
+          .
+          Check them out, update them and send your patch to the
+          <a href="http://code.google.com/p/mybatis/issues/entry">tracker</a>
+          .
+        </p>
+        <p>
+          You’re the best author of this documentation, people like you have
+          to read it!
+        </p>
+      </subsection>
+      
+      <subsection name="번역에 대하여">
+        <p>번역자 : 이동국(fromm0@gmail.com, http://openframework.or.kr)
+        </p>
+        <p>최신버전은 http://kldp.net/projects/fwko/
+        </p>
+      </subsection>
+    </section>
+  </body>
+
+</document>

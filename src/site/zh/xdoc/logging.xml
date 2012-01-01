@@ -120,8 +120,12 @@ org.apache.ibatis.logging.LogFactory.useStdOutLogging();]]></source>
           should enable logging on classes in the <code>java.sql</code> package &#x2013;
           specifically the following classes:
         </p>
-        <p><code>java.sql.Connection</code>, <code>java.sql.PreparedStatement</code> and
-        <code>java.sql.Resultsetjava.sql.Statement</code></p>
+        <ul>
+        <li><code>java.sql.Connection</code></li>
+        <li><code>java.sql.PreparedStatement</code></li>
+        <li><code>java.sql.Resultset</code></li>
+        <li><code>java.sql.Statement</code></li>
+        </ul>
         <p>Again, how you do this is dependent on the logging implementation
           in use. We'll show how to do it with Log4J. &#xa0;Configuring the
           logging services is simply a matter of including one or more extra
