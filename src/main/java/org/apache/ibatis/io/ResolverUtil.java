@@ -254,8 +254,8 @@ public class ResolverUtil<T> {
         matches.add((Class<T>) type);
       }
     } catch (Throwable t) {
-      log.error("Could not examine class '" + fqn + "'" + " due to a "
-          + t.getClass().getName() + " with message: " + t.getMessage(), t);
+      log.warn("Could not examine class '" + fqn + "'" + " due to a " +
+          t.getClass().getName() + " with message: " + t.getMessage());
     }
   }
 }
