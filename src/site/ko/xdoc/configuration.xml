@@ -1110,29 +1110,29 @@ data_source 프로퍼티가 InitialContext 에서 직접 찾을 것이다.</li>
         <source><![CDATA[<databaseIdProvider type="VENDOR" />
 ]]></source>
 
-		<p> 
-		  The VENDOR implementation databaseIdProvider sets as a databaseId the String returned by 
-		  <code>DatabaseMetaData#getDatabaseProductName()</code>. 
-		  As usually that string is too long and also, different versions of the same product return different values, 
-		  so you may want to translate it to a shorter one by adding properties like follows:
-		</p>
-		
+    <p> 
+      The VENDOR implementation databaseIdProvider sets as a databaseId the String returned by 
+      <code>DatabaseMetaData#getDatabaseProductName()</code>. 
+      As usually that string is too long and also, different versions of the same product return different values, 
+      so you may want to translate it to a shorter one by adding properties like follows:
+    </p>
+    
         <source><![CDATA[<databaseIdProvider type="VENDOR">
   <property name="SQL Server" value="sqlserver"/>
   <property name="DB2" value="db2"/>        
   <property name="Oracle" value="oracle" />
 </databaseIdProvider>]]></source>
 
-		<p> 
-		  When properties are provided, the VENDOR databaseIdProvider will search the property value corresponding to the 
-		  first key found in the returned database product name or "null" if there is not a matching property. 
-		  In this case, if <code>getDatabaseProductName()</code> returns "Oracle (DataDirect)" the databaseId will be set to "oracle".  
-		</p>
-		
-		<p>
-		  You can build your own DatabaseIdProvider by implementing the interface <code>org.apache.ibatis.mapping.DatabaseIdProvider</code>
-		  and registering it in mybatis-config.xml:
-		</p>
+    <p> 
+      When properties are provided, the VENDOR databaseIdProvider will search the property value corresponding to the 
+      first key found in the returned database product name or "null" if there is not a matching property. 
+      In this case, if <code>getDatabaseProductName()</code> returns "Oracle (DataDirect)" the databaseId will be set to "oracle".  
+    </p>
+    
+    <p>
+      You can build your own DatabaseIdProvider by implementing the interface <code>org.apache.ibatis.mapping.DatabaseIdProvider</code>
+      and registering it in mybatis-config.xml:
+    </p>
 
         <source><![CDATA[public interface DatabaseIdProvider {
 

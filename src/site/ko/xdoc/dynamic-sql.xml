@@ -18,31 +18,31 @@
 <!-- version: $Id$ -->
 
 <document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
 
-	<properties>
-		<title>MyBatis 3 | 동적 SQL</title>
-		<author email="mybatis-dev@googlegroups.com">The MyBatis Team</author>
-	</properties>
+  <properties>
+    <title>MyBatis 3 | 동적 SQL</title>
+    <author email="mybatis-dev@googlegroups.com">The MyBatis Team</author>
+  </properties>
 
-	<body>
-		<section name="동적 SQL">
-			<p>MyBatis 의 가장 강력한 기능 중 하나는 동적 SQL 기능이다. JDBC 나 다른 유사한 프레임워크를 사용해본 경험이 있다면,
+  <body>
+    <section name="동적 SQL">
+      <p>MyBatis 의 가장 강력한 기능 중 하나는 동적 SQL 기능이다. JDBC 나 다른 유사한 프레임워크를 사용해본 경험이 있다면,
 동적으로 SQL 을 구성하는 것이 얼마나 힘든 작업인지 이해할 것이다. 간혹 공백이나 콤마를 붙이는 것을 잊어본 적도 있을
 것이다. 동적 SQL 은 그만큼 어려운 것이다.</p>
-			<p>동적 SQL 을 사용하는 것은 결코 파티가 될 수 없을 것이다. MyBatis 는 강력한 동적 SQL 언어로 이 상황은 개선한다.</p>
-			<p>동적 SQL 요소들은 JSTL 이나 XML 기반의 텍스트 프로세서를 사용해 본 사람에게는 친숙할 것이다. MyBatis 의 이전
+      <p>동적 SQL 을 사용하는 것은 결코 파티가 될 수 없을 것이다. MyBatis 는 강력한 동적 SQL 언어로 이 상황은 개선한다.</p>
+      <p>동적 SQL 요소들은 JSTL 이나 XML 기반의 텍스트 프로세서를 사용해 본 사람에게는 친숙할 것이다. MyBatis 의 이전
 버전에서는, 알고 이해해야 할 요소가 많았다. MyBatis 3 에서는 이를 크게 개선했고 실제 사용해야 할 요소가 반 이하로
 줄었다. MyBatis 다른 요소의 사용을 최대한 제거하기 위해 OGNL 기반의 표현식을 가져왔다.</p>
-			<ul>
-				<li>if</li>
-				<li>choose (when, otherwise)</li>
-				<li>trim (where, set)</li>
-				<li>foreach</li>
-			</ul>
-			<subsection name="if" id="if">
-				<p>동적 SQL 에서 가장 공통적으로 사용되는 것으로 where 의 일부로 포함될 수 있다. 예를 들면:</p>
-				<source><![CDATA[<select id="findActiveBlogWithTitleLike" 
+      <ul>
+        <li>if</li>
+        <li>choose (when, otherwise)</li>
+        <li>trim (where, set)</li>
+        <li>foreach</li>
+      </ul>
+      <subsection name="if" id="if">
+        <p>동적 SQL 에서 가장 공통적으로 사용되는 것으로 where 의 일부로 포함될 수 있다. 예를 들면:</p>
+        <source><![CDATA[<select id="findActiveBlogWithTitleLike" 
      parameterType="Blog" resultType="Blog">
   SELECT * FROM BLOG 
   WHERE state = ‘ACTIVE’ 
@@ -50,11 +50,11 @@
     AND title like #{title}
   </if>
 </select>]]></source>
-				<p>이 구문은 선택적으로 문자열 검색 기능을 제공할 것이다. 만약에 title 값이 없다면, 모든 active 상태의 Blog 가 리턴될
+        <p>이 구문은 선택적으로 문자열 검색 기능을 제공할 것이다. 만약에 title 값이 없다면, 모든 active 상태의 Blog 가 리턴될
 것이다. 하지만 title 값이 있다면, 그 값과 비슷한 데이터를 찾게 될 것이다.</p>
-				<p>title 과 author 을 사용하여 검색하고 싶다면? 먼저, 의미가 좀더 잘 전달되도록 구문의 이름을 변경할 것이다. 그리고 다른
+        <p>title 과 author 을 사용하여 검색하고 싶다면? 먼저, 의미가 좀더 잘 전달되도록 구문의 이름을 변경할 것이다. 그리고 다른
 조건을 추가한다.</p>
-				<source><![CDATA[<select id="findActiveBlogLike" 
+        <source><![CDATA[<select id="findActiveBlogLike" 
      parameterType="Blog" resultType="Blog">
   SELECT * FROM BLOG WHERE state = ‘ACTIVE’ 
   <if test="title != null">
@@ -64,13 +64,13 @@
     AND author_name like #{author.name}
   </if>
 </select>]]></source>
-			</subsection>
-			<subsection name="choose, when, otherwise" id="chooseWhenOtherwise">
-				<p>우리는 종종 적용 할 모든 조건을 원하는 대신에 한가지 경우만을 원할 수 있다. 자바에서는 switch 구문과 유사하며,
+      </subsection>
+      <subsection name="choose, when, otherwise" id="chooseWhenOtherwise">
+        <p>우리는 종종 적용 할 모든 조건을 원하는 대신에 한가지 경우만을 원할 수 있다. 자바에서는 switch 구문과 유사하며,
 MyBatis 에서는 choose 요소를 제공한다.</p>
-				<p>위 예제를 다시 사용해보자. 지금은 title 만으로 검색하고 author 가 있다면 그 값으로 검색된다. 둘다 제공하지 않는다면,
+        <p>위 예제를 다시 사용해보자. 지금은 title 만으로 검색하고 author 가 있다면 그 값으로 검색된다. 둘다 제공하지 않는다면,
 featured 상태의 blog 가 리턴된다.</p>
-				<source><![CDATA[<select id="findActiveBlogLike" 
+        <source><![CDATA[<select id="findActiveBlogLike" 
      parameterType="Blog" resultType="Blog">
   SELECT * FROM BLOG WHERE state = ‘ACTIVE’
   <choose>
@@ -85,10 +85,10 @@ featured 상태의 blog 가 리턴된다.</p>
     </otherwise>
   </choose>
 </select>]]></source>
-			</subsection>
-			<subsection name="trim, where, set" id="trimWhereSet">
-				<p>앞서 예제는 악명높게 다양한 요소가 사용된 동적 SQL 이다. “if” 예제를 사용해보자.</p>
-				<source><![CDATA[<select id="findActiveBlogLike" 
+      </subsection>
+      <subsection name="trim, where, set" id="trimWhereSet">
+        <p>앞서 예제는 악명높게 다양한 요소가 사용된 동적 SQL 이다. “if” 예제를 사용해보자.</p>
+        <source><![CDATA[<select id="findActiveBlogLike" 
      parameterType="Blog" resultType="Blog">
   SELECT * FROM BLOG 
   WHERE 
@@ -102,17 +102,17 @@ featured 상태의 blog 가 리턴된다.</p>
     AND author_name like #{author.name}
   </if>
 </select>]]></source>
-				<p>어떤 조건에도 해당되지 않는다면 어떤 일이 벌어질까? 아마도 다음과 같은 SQL 이 만들어질 것이다.</p>
-				<source><![CDATA[SELECT * FROM BLOG 
+        <p>어떤 조건에도 해당되지 않는다면 어떤 일이 벌어질까? 아마도 다음과 같은 SQL 이 만들어질 것이다.</p>
+        <source><![CDATA[SELECT * FROM BLOG 
 WHERE]]></source>
-				<p>아마도 이건 실패할 것이다. 두번째 조건에만 해당된다면 무슨 일이 벌어질까? 아마도 다음과 같은 SQL 이 만들어질 것이다.</p>
-				<source><![CDATA[SELECT * FROM BLOG 
+        <p>아마도 이건 실패할 것이다. 두번째 조건에만 해당된다면 무슨 일이 벌어질까? 아마도 다음과 같은 SQL 이 만들어질 것이다.</p>
+        <source><![CDATA[SELECT * FROM BLOG 
 WHERE 
 AND title like ‘someTitle’]]></source>
-				<p>이것도 아마 실패할 것이다. 이 문제는 조건만 가지고는 해결되지 않았다. 이렇게 작성했다면, 다시는 이렇게 작성하지 않게
+        <p>이것도 아마 실패할 것이다. 이 문제는 조건만 가지고는 해결되지 않았다. 이렇게 작성했다면, 다시는 이렇게 작성하지 않게
 될 것이다.</p>
-				<p>실패하지 않기 위해서 조금 수정해야 한다. 조금 수정하면 아마도 다음과 같을 것이다:</p>
-				<source><![CDATA[<select id="findActiveBlogLike" 
+        <p>실패하지 않기 위해서 조금 수정해야 한다. 조금 수정하면 아마도 다음과 같을 것이다:</p>
+        <source><![CDATA[<select id="findActiveBlogLike" 
      parameterType="Blog" resultType="Blog">
   SELECT * FROM BLOG 
   <where> 
@@ -127,18 +127,18 @@ AND title like ‘someTitle’]]></source>
     </if>
   </where>
 </select>]]></source>
-				<p>where 요소는 태그에 의해 컨텐츠가 리턴되면 단순히 “WHERE” 만을 추가한다. 게다가, 컨텐츠가 “AND” 나 “OR” 로
+        <p>where 요소는 태그에 의해 컨텐츠가 리턴되면 단순히 “WHERE” 만을 추가한다. 게다가, 컨텐츠가 “AND” 나 “OR” 로
 시작한다면, 그 “AND” 나 “OR”를 지워버린다.</p>
-				<p>만약에 where 요소가 기대한 것처럼 작동하지 않는다면, trim 요소를 사용자 정의할 수도 있다. 예를 들어, 다음은 where
+        <p>만약에 where 요소가 기대한 것처럼 작동하지 않는다면, trim 요소를 사용자 정의할 수도 있다. 예를 들어, 다음은 where
 요소에 대한 trim 기능과 동일하다.:</p>
-				<source><![CDATA[<trim prefix="WHERE" prefixOverrides="AND |OR ">
+        <source><![CDATA[<trim prefix="WHERE" prefixOverrides="AND |OR ">
   ... 
 </trim>]]></source>
-				<p>override 속성은 오버라이드하는 텍스트의 목록을 제한한다. 결과는 override 속성에 명시된 것들을 지우고 with 속성에
+        <p>override 속성은 오버라이드하는 텍스트의 목록을 제한한다. 결과는 override 속성에 명시된 것들을 지우고 with 속성에
 명시된 것을 추가한다.</p>
-				<p>다음 예제는 동적인 update 구문의 유사한 경우이다. set 요소는 update 하고자 하는 칼럼을 동적으로 포함시키기 위해
+        <p>다음 예제는 동적인 update 구문의 유사한 경우이다. set 요소는 update 하고자 하는 칼럼을 동적으로 포함시키기 위해
 사용될 수 있다. 예를 들어:</p>
-				<source><![CDATA[<update id="updateAuthorIfNecessary"
+        <source><![CDATA[<update id="updateAuthorIfNecessary"
        parameterType="domain.blog.Author">
   update Author
     <set>
@@ -149,17 +149,17 @@ AND title like ‘someTitle’]]></source>
     </set>
   where id=#{id}
 </update>]]></source>
-				<p>여기서 set 요소는 동적으로 SET 키워드를 붙히고, 필요없는 콤마를 제거한다.</p>
-				<p>아마도 trim 요소로 처리한다면 아래와 같을 것이다.</p>
-				<source><![CDATA[<trim prefix="SET" suffixOverrides=",">
+        <p>여기서 set 요소는 동적으로 SET 키워드를 붙히고, 필요없는 콤마를 제거한다.</p>
+        <p>아마도 trim 요소로 처리한다면 아래와 같을 것이다.</p>
+        <source><![CDATA[<trim prefix="SET" suffixOverrides=",">
   ...
 </trim>]]></source>
-				<p>이 경우, 접두사는 추가하고, 접미사를 오버라이딩 한다.</p>
-			</subsection>
-			<subsection name="foreach">
-				<p>동적 SQL 에서 공통적으로 필요한 것은 collection 에 대해 반복처리를 하는 것이다. 종종 IN 조건을 사용하게 된다. 예를
+        <p>이 경우, 접두사는 추가하고, 접미사를 오버라이딩 한다.</p>
+      </subsection>
+      <subsection name="foreach">
+        <p>동적 SQL 에서 공통적으로 필요한 것은 collection 에 대해 반복처리를 하는 것이다. 종종 IN 조건을 사용하게 된다. 예를
 들면,</p>
-				<source><![CDATA[<select id="selectPostIn" resultType="domain.blog.Post">
+        <source><![CDATA[<select id="selectPostIn" resultType="domain.blog.Post">
   SELECT *
   FROM POST P
   WHERE ID in
@@ -168,25 +168,25 @@ AND title like ‘someTitle’]]></source>
         #{item}
   </foreach>
 </select>]]></source>
-				<p>foreach 요소는 매우 강력하고 collection 을 명시하는 것을 허용한다. 요소 내부에서 사용할 수 있는 item, index 두가지
+        <p>foreach 요소는 매우 강력하고 collection 을 명시하는 것을 허용한다. 요소 내부에서 사용할 수 있는 item, index 두가지
 변수를 선언한다. 이 요소는 또한 열고 닫는 문자열로 명시할 수 있고 반복간에 둘 수 있는 구분자도 추가할 수 있다.</p>
-				<p>
-					<span class="label important">참고</span> 파라미터 객체로 MyBatis 에 List 인스턴스나 배열을 전달 할 수 있다. 그렇게 하면 MyBatis 는 Map 으로
+        <p>
+          <span class="label important">참고</span> 파라미터 객체로 MyBatis 에 List 인스턴스나 배열을 전달 할 수 있다. 그렇게 하면 MyBatis 는 Map 으로
 자동으로 감싸고 이름을 키로 사용한다. List 인스턴스는 “list” 를 키로 사용하고, 배열 인스턴스는 “array” 를 키로
 사용한다.
 </p>
-				<p>XML 설정 파일과 XML 매핑 파일에 대해서는 이 정도에서 정리하고, 다음 섹션에서는 Java API 에 대해 좀더 상세하게
+        <p>XML 설정 파일과 XML 매핑 파일에 대해서는 이 정도에서 정리하고, 다음 섹션에서는 Java API 에 대해 좀더 상세하게
 살펴볼 것이다.</p>
-			</subsection>
-			<subsection name="Multi-db vendor support">
-				<p>If a databaseIdProvider was configured a "_databaseId" variable
-					is available for dynamic code, so you can build different
-					statements depending on database vendor. Have a look at the
-					following example:</p>
-				<source><![CDATA[<insert id="insert" parameterType="org.myapp.domain.User">
+      </subsection>
+      <subsection name="Multi-db vendor support">
+        <p>If a databaseIdProvider was configured a "_databaseId" variable
+          is available for dynamic code, so you can build different
+          statements depending on database vendor. Have a look at the
+          following example:</p>
+        <source><![CDATA[<insert id="insert" parameterType="org.myapp.domain.User">
   <selectKey keyProperty="id" resultType="int" order="BEFORE">
     <if test="_databaseId == 'oracle'">
-	  select seq_users.nextval from dual
+    select seq_users.nextval from dual
     </if>
     <if test="_databaseId == 'db2'">
       select nextval for seq_users from sysibm.sysdummy1"
@@ -195,7 +195,7 @@ AND title like ‘someTitle’]]></source>
   insert into users values (#{id}, #{name})
 </insert>
 ]]></source>
-			</subsection>
-		</section>
-	</body>
+      </subsection>
+    </section>
+  </body>
 </document>

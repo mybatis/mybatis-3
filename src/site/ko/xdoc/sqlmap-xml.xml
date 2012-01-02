@@ -473,7 +473,7 @@ public class User {
   private String hashedPassword;
   
   public int getId() {
-	  return id;
+    return id;
   }
   public void setId(int id) {
     this.id = id;
@@ -548,7 +548,7 @@ public class User {
           Now if only the world were always that simple.
         </p>
 
-	      <h4>Advanced Result Maps</h4>
+        <h4>Advanced Result Maps</h4>
 
         <p>
           MyBatis was created with one idea in mind: Databases aren't always what you want or need them to be.
