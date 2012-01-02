@@ -1,3 +1,11 @@
+/*
+ * when new flags are needed, take them from
+ *
+ * http://www.printableworldflags.com/flag-icon
+ *
+ * that are free for any kind of usage
+ */
+
 ul.i18n {list-style-type:none;line-height:2;}
 li.en {background: url('../images/en.png') left center no-repeat;padding-left: 32px;}
 li.es {background: url('../images/es.png') left center no-repeat;padding-left: 32px;}
