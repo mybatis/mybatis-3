@@ -15,6 +15,7 @@
  */
 package org.apache.ibatis.executor.result;
 
+import org.apache.ibatis.executor.ExecutorException;
 import org.apache.ibatis.session.ResultContext;
 import org.apache.ibatis.session.ResultHandler;
 
@@ -23,7 +24,24 @@ import java.util.List;
 
 public class DefaultResultHandler implements ResultHandler {
 
-  private final List<Object> list = new ArrayList<Object>();
+  private final List<Object> list;
+
+  public DefaultResultHandler() {
+    this(null);
+  }
+
+  @SuppressWarnings("unchecked")
+  public DefaultResultHandler(Class<?> clazz) {
+    if (clazz == null) {
+      list = new ArrayList<Object>();
+    } else {
+      try {
+        list = (List<Object>) clazz.newInstance();
+      } catch (Exception e) {
+        throw new ExecutorException("Failed to instantiate list result handler type.", e);
+      }
+    }
+  }
 
   public void handleResult(ResultContext context) {
     list.add(context.getResultObject());

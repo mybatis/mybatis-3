@@ -202,6 +202,8 @@ public class XMLConfigBuilder extends BaseBuilder {
       configuration.setDefaultStatementTimeout(integerValueOf(props.getProperty("defaultStatementTimeout"), null));
       configuration.setMapUnderscoreToCamelCase(booleanValueOf(props.getProperty("mapUnderscoreToCamelCase"), false));
       configuration.setSafeRowBoundsEnabled(booleanValueOf(props.getProperty("safeRowBoundsEnabled"), true));
+      configuration.setDefaultListResultHandlerType(resolveClass(props.getProperty("defaultListResultHandlerType")));
+      configuration.setDefaultMapResultHandlerType(resolveClass(props.getProperty("defaultMapResultHandlerType")));
     }
   }
 

@@ -260,6 +260,36 @@ PreparedStatement 를 재사용한다. BATCH 실행자는
                 False
               </td>
             </tr>
+            <tr>
+              <td>
+                defaultListResultHandlerType
+              </td>
+              <td>
+                Configures the default List implementation
+                type returned from MyBatis.
+              </td>
+              <td>
+                Any concrete List implementation
+              </td>
+              <td>
+                Not Set (java.util.ArrayList is used)
+              </td>
+            </tr>
+            <tr>
+              <td>
+                defaultMapResultHandlerType
+              </td>
+              <td>
+                Configures the default Map implementation
+                type returned from MyBatis.
+              </td>
+              <td>
+                Any concrete Map implementation
+              </td>
+              <td>
+                Not Set (java.util.HashMap is used)
+              </td>
+            </tr>
           </tbody>
         </table>
         <p>위 설정을 모두 사용한 setting 요소의 예제이다:</p>
@@ -272,6 +302,8 @@ PreparedStatement 를 재사용한다. BATCH 실행자는
   <setting name="enhancementEnabled" value="false"/>
   <setting name="defaultExecutorType" value="SIMPLE"/>
   <setting name="defaultStatementTimeout" value="25000"/>
+  <setting name="defaultListResultHandlerType" value="java.util.ArrayList"/>
+  <setting name="defaultMapResultHandlerType" value="java.util.HashMap"/>
 </settings>]]></source>
 
       </subsection>

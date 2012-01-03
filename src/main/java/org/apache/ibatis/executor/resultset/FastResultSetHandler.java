@@ -88,7 +88,8 @@ public class FastResultSetHandler implements ResultSetHandler {
     final String resultMapId = parameterMapping.getResultMapId();
     if (resultMapId != null) {
       final ResultMap resultMap = configuration.getResultMap(resultMapId);
-      final DefaultResultHandler resultHandler = new DefaultResultHandler();
+      final DefaultResultHandler resultHandler = new DefaultResultHandler(
+          configuration.getDefaultListResultHandlerType());
       handleRowValues(rs, resultMap, resultHandler, new RowBounds());
       metaParam.setValue(parameterMapping.getProperty(), resultHandler.getResultList());
     } else {
@@ -157,7 +158,8 @@ public class FastResultSetHandler implements ResultSetHandler {
   protected void handleResultSet(ResultSet rs, ResultMap resultMap, List<Object> multipleResults) throws SQLException {
     try {
       if (resultHandler == null) {
-        DefaultResultHandler defaultResultHandler = new DefaultResultHandler();
+        DefaultResultHandler defaultResultHandler = new DefaultResultHandler(
+            configuration.getDefaultListResultHandlerType());
         handleRowValues(rs, resultMap, defaultResultHandler, rowBounds);
         multipleResults.add(defaultResultHandler.getResultList());
       } else {

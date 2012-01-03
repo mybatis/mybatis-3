@@ -15,6 +15,7 @@
  */
 package org.apache.ibatis.executor.result;
 
+import org.apache.ibatis.executor.ExecutorException;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.session.ResultContext;
 import org.apache.ibatis.session.ResultHandler;
@@ -24,10 +25,24 @@ import java.util.Map;
 
 public class DefaultMapResultHandler<K, V> implements ResultHandler {
 
-  private final Map<K, V> mappedResults = new HashMap<K, V>();
+  private final Map<K, V> mappedResults;
   private final String mapKey;
 
   public DefaultMapResultHandler(String mapKey) {
+    this(mapKey, null);
+  }
+
+  @SuppressWarnings("unchecked")
+  public DefaultMapResultHandler(String mapKey, Class<?> clazz) {
+    if (clazz == null) {
+      mappedResults = new HashMap<K, V>();
+    } else {
+      try {
+        this.mappedResults = (Map<K, V>) clazz.newInstance();
+      } catch (Exception e) {
+        throw new ExecutorException("Failed to instantiate map result handler type.", e);
+      }
+    }
     this.mapKey = mapKey;
   }
 

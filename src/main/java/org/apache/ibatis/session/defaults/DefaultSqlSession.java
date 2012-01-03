@@ -75,7 +75,8 @@ public class DefaultSqlSession implements SqlSession {
 
   public <K, V> Map<K, V> selectMap(String statement, Object parameter, String mapKey, RowBounds rowBounds) {
     final List<?> list = selectList(statement, parameter, rowBounds);
-    final DefaultMapResultHandler<K, V> mapResultHandler = new DefaultMapResultHandler<K, V>(mapKey);
+    final DefaultMapResultHandler<K, V> mapResultHandler = new DefaultMapResultHandler<K, V>(mapKey,
+        configuration.getDefaultMapResultHandlerType());
     final DefaultResultContext context = new DefaultResultContext();
     for (Object o : list) {
       context.nextResultObject(o);
