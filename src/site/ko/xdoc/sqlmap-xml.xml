@@ -921,8 +921,9 @@ prop1, prop2 형태로 셋팅하게 될 것이다.</td>
           </tbody>
         </table>
 
+        <h4>관계를 위한 내포된 select</h4>
+
         <table>
-          <caption>Nested Select for Association</caption>
           <thead>
             <tr>
               <th>속성 </th>
@@ -975,8 +976,9 @@ prop1, prop2 형태로 셋팅하게 될 것이다.</td>
 
         <p>그래서 다른 방법이 있다.</p>
 
+        <h4>관계를 위한 내포된 결과(Nested Results)</h4>
+ 
         <table>
-          <caption>관계를 위한 내포된 결과(Nested Results)</caption>
           <thead>
             <tr>
               <th>속성 </th>

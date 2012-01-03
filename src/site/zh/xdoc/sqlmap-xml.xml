@@ -1252,8 +1252,9 @@ typeHandler
           </tbody>
         </table>
 
+        <h4>关联的嵌套查询</h4>
+
         <table>
-          <caption>关联的嵌套查询</caption>
           <thead>
             <tr>
               <th>属性</th>
@@ -1328,8 +1329,9 @@ MyBatis 能延迟加载这样的查询就是一个好处,因此你可以分散�
 所以还有另外一种方法。
         </p>
 
+        <h4>关联的嵌套结果</h4>
+
         <table>
-          <caption>关联的嵌套结果</caption>
           <thead>
             <tr>
               <th>属性</th>

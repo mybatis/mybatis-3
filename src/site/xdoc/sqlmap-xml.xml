@@ -1198,8 +1198,9 @@ public class User {
           </tbody>
         </table>
 
+        <h4>Nested Select for Association</h4>
+
         <table>
-          <caption>Nested Select for Association</caption>
           <thead>
             <tr>
               <th>Attribute</th>
@@ -1276,8 +1277,9 @@ public class User {
           And so, there is another way.
         </p>
 
+       <h4>Nested Results for Association</h4>
+
         <table>
-          <caption>Nested Results for Association</caption>
           <thead>
             <tr>
               <th>Attribute</th>

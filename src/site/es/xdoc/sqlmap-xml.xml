@@ -934,8 +934,9 @@ public class User {
           </tbody>
         </table>
 
+        <h4>Select anidada en Association</h4>
+
         <table>
-          <caption>Select anidada en Association</caption>
           <thead>
             <tr>
               <th>Atributo</th>
@@ -991,8 +992,9 @@ public class User {
         <p>Así que, hay otra forma de hacerlo.
         </p>
 
+        <h4>ResultMaps anidades en Association</h4>
+
         <table>
-          <caption>Nested Results for Association</caption>
           <thead>
             <tr>
               <th>Attribute</th>
