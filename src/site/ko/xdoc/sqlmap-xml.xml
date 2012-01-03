@@ -945,7 +945,6 @@ prop1, prop2 형태로 셋팅하게 될 것이다.</td>
 
         <source><![CDATA[<resultMap id="blogResult" type="Blog">
   <association property="author" column="blog_author_id" javaType="Author" select="selectAuthor"/>
-  <select id="selectBlog" parameterType="int" resultMap="blogResult">
 </resultMap>
 
 <select id="selectBlog" parameterType="int" resultMap="blogResult">

@@ -1282,7 +1282,6 @@ prop1 和 prop2 以参数对象形式来设置给目标嵌套查询语句。
 
         <source><![CDATA[<resultMap id="blogResult" type="Blog">
   <association property="author" column="blog_author_id" javaType="Author" select="selectAuthor"/>
-  <select id="selectBlog" parameterType="int" resultMap="blogResult">
 </resultMap>
 
 <select id="selectBlog" parameterType="int" resultMap="blogResult">
