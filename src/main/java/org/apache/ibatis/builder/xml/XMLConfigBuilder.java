@@ -204,6 +204,7 @@ public class XMLConfigBuilder extends BaseBuilder {
       configuration.setSafeRowBoundsEnabled(booleanValueOf(props.getProperty("safeRowBoundsEnabled"), true));
       configuration.setDefaultListResultHandlerType(resolveClass(props.getProperty("defaultListResultHandlerType")));
       configuration.setDefaultMapResultHandlerType(resolveClass(props.getProperty("defaultMapResultHandlerType")));
+      configuration.setClearLocalCacheAfterEachStatement(booleanValueOf(props.getProperty("flushLocalCacheAfterEachStatement"), false));
     }
   }
 

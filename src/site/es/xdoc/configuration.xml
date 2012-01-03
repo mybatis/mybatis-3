@@ -249,6 +249,21 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 False
               </td>
             </tr>
+           <tr>
+              <td>
+                clearLocalCacheAfterEachStatement
+              </td>
+              <td>
+                Por defecto la cache local se vacía en actualizaciones, commit, rollback y al cerrar la sesión.
+                Informando esta propiedad a true la sesión se vacía también en las consultas.
+              </td>
+              <td>
+                true | false
+              </td>
+              <td>
+                False
+              </td>
+            </tr>            
             <tr>
               <td>
                 defaultListResultHandlerType

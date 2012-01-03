@@ -85,6 +85,7 @@ public class Configuration {
   protected boolean useGeneratedKeys = false;
   protected boolean useColumnLabel = true;
   protected boolean cacheEnabled = true;
+  protected boolean clearLocalCacheAfterEachStatement = false;
   protected Integer defaultStatementTimeout;
   protected ExecutorType defaultExecutorType = ExecutorType.SIMPLE;
   protected AutoMappingBehavior autoMappingBehavior = AutoMappingBehavior.PARTIAL;
@@ -263,6 +264,14 @@ public class Configuration {
 
   public Class<?> getDefaultListResultHandlerType() {
     return defaultListResultHandlerType;
+  }
+
+  public boolean isClearLocalCacheAfterEachStatement() {
+    return clearLocalCacheAfterEachStatement;
+  }
+
+  public void setClearLocalCacheAfterEachStatement(boolean clearLocalCacheAfterEachStatement) {
+    this.clearLocalCacheAfterEachStatement = clearLocalCacheAfterEachStatement;
   }
 
   public void setDefaultListResultHandlerType(Class<?> defaultListResultHandlerType) {

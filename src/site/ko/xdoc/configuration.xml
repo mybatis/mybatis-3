@@ -262,6 +262,21 @@ PreparedStatement 를 재사용한다. BATCH 실행자는
             </tr>
             <tr>
               <td>
+                clearLocalCacheAfterEachStatement
+              </td>
+              <td>
+                By default local cache that is cleared upon update, commit, rollback and close. 
+                Setting this property to true will cause it to be cleared also upon queries.
+              </td>
+              <td>
+                true | false
+              </td>
+              <td>
+                False
+              </td>
+            </tr>
+            <tr>
+              <td>
                 defaultListResultHandlerType
               </td>
               <td>
