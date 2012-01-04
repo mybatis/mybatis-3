@@ -70,6 +70,7 @@ import org.apache.ibatis.reflection.wrapper.ObjectWrapperFactory;
 import org.apache.ibatis.transaction.Transaction;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
 import org.apache.ibatis.transaction.managed.ManagedTransactionFactory;
+import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeAliasRegistry;
 import org.apache.ibatis.type.TypeHandlerRegistry;
 
@@ -86,6 +87,7 @@ public class Configuration {
   protected boolean useColumnLabel = true;
   protected boolean cacheEnabled = true;
   protected boolean clearLocalCacheAfterEachStatement = false;
+  protected JdbcType jdbcTypeForNull = JdbcType.OTHER;
   protected Integer defaultStatementTimeout;
   protected ExecutorType defaultExecutorType = ExecutorType.SIMPLE;
   protected AutoMappingBehavior autoMappingBehavior = AutoMappingBehavior.PARTIAL;
@@ -272,6 +274,14 @@ public class Configuration {
 
   public void setClearLocalCacheAfterEachStatement(boolean clearLocalCacheAfterEachStatement) {
     this.clearLocalCacheAfterEachStatement = clearLocalCacheAfterEachStatement;
+  }
+
+  public JdbcType getJdbcTypeForNull() {
+    return jdbcTypeForNull;
+  }
+
+  public void setJdbcTypeForNull(JdbcType jdbcTypeForNull) {
+    this.jdbcTypeForNull = jdbcTypeForNull;
   }
 
   public void setDefaultListResultHandlerType(Class<?> defaultListResultHandlerType) {

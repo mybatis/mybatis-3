@@ -20,27 +20,32 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.apache.ibatis.session.Configuration;
+
 public abstract class BaseTypeHandler<T> extends TypeReference<T> implements TypeHandler<T> {
 
-  public void setParameter(PreparedStatement ps, int i, T parameter, JdbcType jdbcType)
-      throws SQLException {
+  protected Configuration configuration;
+
+  public void setConfiguration(Configuration c) {
+    this.configuration = c;
+  }
+
+  public void setParameter(PreparedStatement ps, int i, T parameter, JdbcType jdbcType) throws SQLException {
     if (parameter == null) {
       if (jdbcType == null) {
-        try {
-          ps.setNull(i, JdbcType.OTHER.TYPE_CODE);
-        } catch (SQLException e) {
-          throw new TypeException("Error setting null parameter.  Most JDBC drivers require that the JdbcType must be specified for all nullable parameters. Cause: " + e, e);
-        }
-      } else {
+        throw new TypeException("JDBC requires that the JdbcType must be specified for all nullable parameters.");
+      }
+      try {
         ps.setNull(i, jdbcType.TYPE_CODE);
+      } catch (SQLException e) {
+        throw new TypeException("Error setting null parameter with jdbc type " + jdbcType + ". Try setting a different jdbcTypeForNull configuration propertiy or provide an explicit JdbcType for this parameter. Cause: " + e, e);
       }
     } else {
       setNonNullParameter(ps, i, parameter, jdbcType);
     }
   }
 
-  public T getResult(ResultSet rs, String columnName)
-      throws SQLException {
+  public T getResult(ResultSet rs, String columnName) throws SQLException {
     T result = getNullableResult(rs, columnName);
     if (rs.wasNull()) {
       return null;
@@ -49,8 +54,7 @@ public abstract class BaseTypeHandler<T> extends TypeReference<T> implements Typ
     }
   }
 
-  public T getResult(ResultSet rs, int columnIndex)
-      throws SQLException {
+  public T getResult(ResultSet rs, int columnIndex) throws SQLException {
     T result = getNullableResult(rs, columnIndex);
     if (rs.wasNull()) {
       return null;
@@ -59,8 +63,7 @@ public abstract class BaseTypeHandler<T> extends TypeReference<T> implements Typ
     }
   }
 
-  public T getResult(CallableStatement cs, int columnIndex)
-      throws SQLException {
+  public T getResult(CallableStatement cs, int columnIndex) throws SQLException {
     T result = getNullableResult(cs, columnIndex);
     if (cs.wasNull()) {
       return null;
@@ -69,17 +72,12 @@ public abstract class BaseTypeHandler<T> extends TypeReference<T> implements Typ
     }
   }
 
-  public abstract void setNonNullParameter(PreparedStatement ps, int i, T parameter, JdbcType jdbcType)
-      throws SQLException;
+  public abstract void setNonNullParameter(PreparedStatement ps, int i, T parameter, JdbcType jdbcType) throws SQLException;
 
-  public abstract T getNullableResult(ResultSet rs, String columnName)
-      throws SQLException;
+  public abstract T getNullableResult(ResultSet rs, String columnName) throws SQLException;
 
-  public abstract T getNullableResult(ResultSet rs, int columnIndex)
-      throws SQLException;
+  public abstract T getNullableResult(ResultSet rs, int columnIndex) throws SQLException;
 
-  public abstract T getNullableResult(CallableStatement cs, int columnIndex)
-      throws SQLException;
+  public abstract T getNullableResult(CallableStatement cs, int columnIndex) throws SQLException;
 
 }
-

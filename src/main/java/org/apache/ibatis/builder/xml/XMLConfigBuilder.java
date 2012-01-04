@@ -38,6 +38,7 @@ import org.apache.ibatis.session.AutoMappingBehavior;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.transaction.TransactionFactory;
+import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
 
 public class XMLConfigBuilder extends BaseBuilder {
@@ -205,6 +206,7 @@ public class XMLConfigBuilder extends BaseBuilder {
       configuration.setDefaultListResultHandlerType(resolveClass(props.getProperty("defaultListResultHandlerType")));
       configuration.setDefaultMapResultHandlerType(resolveClass(props.getProperty("defaultMapResultHandlerType")));
       configuration.setClearLocalCacheAfterEachStatement(booleanValueOf(props.getProperty("flushLocalCacheAfterEachStatement"), false));
+      configuration.setJdbcTypeForNull(JdbcType.valueOf(stringValueOf(props.getProperty("jdbcTypeForNull"), "OTHER")));
     }
   }
 

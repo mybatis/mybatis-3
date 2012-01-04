@@ -24,6 +24,7 @@ import org.apache.ibatis.mapping.ParameterMapping;
 import org.apache.ibatis.mapping.ParameterMode;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.property.PropertyTokenizer;
+import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.TypeHandlerRegistry;
 import org.apache.ibatis.session.Configuration;
@@ -85,7 +86,9 @@ public class DefaultParameterHandler implements ParameterHandler {
           if (typeHandler == null) {
             throw new ExecutorException("There was no TypeHandler found for parameter " + propertyName + " of statement " + mappedStatement.getId());
           }
-          typeHandler.setParameter(ps, i + 1, value, parameterMapping.getJdbcType());
+          JdbcType jdbcType = parameterMapping.getJdbcType();
+          if (value == null && jdbcType == null) jdbcType = configuration.getJdbcTypeForNull();
+          typeHandler.setParameter(ps, i + 1, value, jdbcType);
         }
       }
     }
