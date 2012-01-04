@@ -56,8 +56,7 @@
         </li>
       </ul>
       <subsection name="properties">
-        <p>이 설정은 외부에 옮길 수 있다. 자바 프로퍼티 파일 인스턴스에 설정할 수도 있고, properties 요소의 하위 요소에 둘수도
-있다. 예를 들면:</p>
+        <p>이 설정은 외부에 옮길 수 있다. 자바 프로퍼티 파일 인스턴스에 설정할 수도 있고, properties 요소의 하위 요소에 둘수도 있다. 예를 들면:</p>
         <source><![CDATA[<properties resource="org/mybatis/example/config.properties">
   <property name="username" value="dev_user"/>
   <property name="password" value="F2Fa3!33TYyg"/>
@@ -69,8 +68,7 @@
   <property name="username" value="${username}"/>
   <property name="password" value="${password}"/>
 </dataSource>]]></source>
-        <p>이 에제에서 username 과 password 는 properties 요소의 설정된 값으로 대체될 수 있다. driver 와 url 속성은
-config.properties 파일에 포함된 값으로 대체될 수도 있다. 이것은 설정에 대한 다양한 옵션을 제공하는 셈이다.</p>
+        <p>이 에제에서 username 과 password 는 properties 요소의 설정된 값으로 대체될 수 있다. driver 와 url 속성은 config.properties 파일에 포함된 값으로 대체될 수도 있다. 이것은 설정에 대한 다양한 옵션을 제공하는 셈이다.</p>
         <p>속성은 SqlSessionBuilder.build() 메서드에 전달될 수 있다. 예를 들면:</p>
         <source><![CDATA[SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, props);
 
@@ -81,12 +79,10 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
         <p>속성이 한개 이상 존재한다면, MyBatis 는 일정한 순서로 로드한다.:</p>
         <ul>
           <li>properties 요소에 명시된 속성을 가장 먼저 읽는다.</li>
-          <li>properties 요소의 클래스패스 자원이나 url 속성으로 부터 로드된 속성을 두번재로 읽는다. 그래서 이미 읽은 값이
-있다면 덮어쓴다.</li>
+          <li>properties 요소의 클래스패스 자원이나 url 속성으로 부터 로드된 속성을 두번재로 읽는다. 그래서 이미 읽은 값이 있다면 덮어쓴다.</li>
           <li>마지막으로 메서드 파라미터로 전달된 속성을 읽는다. 앞서 로드된 값을 덮어쓴다.</li>
         </ul>
-        <p>그래서 가장 우선순위가 높은 속성은 메서드의 파라미터로 전달된 값이고 그 다음은 자원및 url 속성이고 마지막은
-properties 요소에 명시된 값이다.</p>
+        <p>그래서 가장 우선순위가 높은 속성은 메서드의 파라미터로 전달된 값이고 그 다음은 자원및 url 속성이고 마지막은 properties 요소에 명시된 값이다.</p>
       </subsection>
       <subsection name="settings">
         <p>런타임시 MyBatis 의 행위를 조정하기 위한 중요한 값들이다. 다음표는 셋팅과 그 의미 그리고 디폴트 값을 설명한다.</p>
@@ -105,8 +101,7 @@ properties 요소에 명시된 값이다.</p>
               <td>
                 cacheEnabled
               </td>
-              <td>설정에서 각 mapper 에 설정된 캐시를 전역적으로 
-                                  사용할지 말지에 대한 여부 </td>
+              <td>설정에서 각 mapper 에 설정된 캐시를 전역적으로 사용할지 말지에 대한 여부 </td>
               <td>
                 true | false
               </td>
@@ -118,8 +113,7 @@ properties 요소에 명시된 값이다.</p>
               <td>
                 lazyLoadingEnabled
               </td>
-              <td>늦은 로딩을 사용할지에 대한 여부. 사용하지 않는다면 
-                                            모두 즉시 로딩할 것이다. </td>
+              <td>늦은 로딩을 사용할지에 대한 여부. 사용하지 않는다면 모두 즉시 로딩할 것이다. </td>
               <td>
                 true | false
               </td>
@@ -131,9 +125,7 @@ properties 요소에 명시된 값이다.</p>
               <td>
                 aggressiveLazyLoading
               </td>
-              <td>활성화 상태로 두게 되면 늦은(lazy) 로딩 프로퍼티를 
-                                      가진 객체는 호출에 따라 로드될 것이다. 반면에 개별 
-                                       프로퍼티는 요청할때 로드된다. </td>
+              <td>활성화 상태로 두게 되면 늦은(lazy) 로딩 프로퍼티를 가진 객체는 호출에 따라 로드될 것이다. 반면에 개별 프로퍼티는 요청할때 로드된다. </td>
               <td>
                 true | false
               </td>
@@ -145,8 +137,7 @@ properties 요소에 명시된 값이다.</p>
               <td>
                 multipleResultSetsEnabled
               </td>
-              <td>한개의 구문에서 여러개의 ResultSet 을 허용할지의 
-                                  여부(드라이버가 해당 기능을 지원해야 함) </td>
+              <td>한개의 구문에서 여러개의 ResultSet 을 허용할지의 여부(드라이버가 해당 기능을 지원해야 함) </td>
               <td>
                 true | false
               </td>
@@ -158,9 +149,7 @@ properties 요소에 명시된 값이다.</p>
               <td>
                 useColumnLabel
               </td>
-              <td>칼럼명 대신에 칼럼라벨을 사용. 드라이버마다 조금
-다르게 작동한다. 문서와 간단한 테스트를 통해 실제 
-기대하는 것처럼 작동하는지 확인해야 한다.</td>
+              <td>칼럼명 대신에 칼럼라벨을 사용. 드라이버마다 조금 다르게 작동한다. 문서와 간단한 테스트를 통해 실제 기대하는 것처럼 작동하는지 확인해야 한다.</td>
               <td>
                 true | false
               </td>
@@ -172,10 +161,7 @@ properties 요소에 명시된 값이다.</p>
               <td>
                 useGeneratedKeys
               </td>
-              <td>생성키에 대한 JDBC 지원을 허용. 지원하는
-드라이버가 필요하다. true 로 설정하면 생성키를
-강제로 생성한다. 일부 드라이버(예를들면,
-Derby)에서는 이 설정을 무시한다.</td>
+              <td>생성키에 대한 JDBC 지원을 허용. 지원하는 드라이버가 필요하다. true 로 설정하면 생성키를 강제로 생성한다. 일부 드라이버(예를들면, Derby)에서는 이 설정을 무시한다.</td>
               <td>
                 true | false
               </td>
@@ -187,11 +173,7 @@ Derby)에서는 이 설정을 무시한다.</td>
               <td>
                 autoMappingBehavior
               </td>
-              <td>MyBatis 가 칼럼을 필드/프로퍼티에 자동으로
-매핑할지와 방법에 대해 명시. PARTIAL 은 간단한
-자동매핑만 할뿐, 내포된 결과에 대해서는 처리하지
-않는다. FULL 은 처리가능한 모든 자동매핑을
-처리한다.</td>
+              <td>MyBatis 가 칼럼을 필드/프로퍼티에 자동으로 매핑할지와 방법에 대해 명시. PARTIAL 은 간단한 자동매핑만 할뿐, 내포된 결과에 대해서는 처리하지 않는다. FULL 은 처리가능한 모든 자동매핑을 처리한다.</td>
               <td>
                 NONE, PARTIAL, FULL
               </td>
@@ -203,10 +185,7 @@ Derby)에서는 이 설정을 무시한다.</td>
               <td>
                 defaultExecutorType
               </td>
-              <td>디폴트 실행자(executor) 설정. SIMPLE 실행자는
-특별히 하는 것이 없다. REUSE 실행자는
-PreparedStatement 를 재사용한다. BATCH 실행자는
-구문을 재사용하고 수정을 배치처리한다.</td>
+              <td>디폴트 실행자(executor) 설정. SIMPLE 실행자는 특별히 하는 것이 없다. REUSE 실행자는 PreparedStatement 를 재사용한다. BATCH 실행자는 구문을 재사용하고 수정을 배치처리한다.</td>
               <td>
                 SIMPLE
                 REUSE
@@ -220,21 +199,18 @@ PreparedStatement 를 재사용한다. BATCH 실행자는
               <td>
                 defaultStatementTimeout
               </td>
-              <td>데이터베이스로의 응답을 얼마나 오래 기다릴지를
-판단하는 타임아웃을 셋팅</td>
+              <td>데이터베이스로의 응답을 얼마나 오래 기다릴지를 판단하는 타임아웃을 셋팅</td>
               <td>
-                                              양수 
+				양수 
               </td>
-              <td>셋팅되지
-않음(null)</td>
+              <td>셋팅되지 않음(null)</td>
             </tr>
             <tr>
               <td>
                 safeRowBoundsEnabled
               </td>
               <td>
-                Allows using RowBounds on nested
-                statements.
+                중첩구문내 RowBound 사용을 허용
               </td>
               <td>
                 true | false
@@ -248,10 +224,7 @@ PreparedStatement 를 재사용한다. BATCH 실행자는
                 mapUnderscoreToCamelCase
               </td>
               <td>
-                Enables automatic mapping from
-                classic database column names
-                A_COLUMN to camel case classic Java
-                property names aColumn.
+                전통적인 데이터베이스 칼럼명 형태인 A_COLUMN을 CamelCase형태의 자바 프로퍼티명 형태인 aColumn으로 자동으로 매핑하도록 함
               </td>
               <td>
                 true | false
@@ -304,7 +277,7 @@ PreparedStatement 를 재사용한다. BATCH 실행자는
               <td>
                 Not Set (java.util.HashMap is used)
               </td>
-            </tr>
+            </tr>            
           </tbody>
         </table>
         <p>위 설정을 모두 사용한 setting 요소의 예제이다:</p>
@@ -335,26 +308,16 @@ PreparedStatement 를 재사용한다. BATCH 실행자는
 </typeAliases>
 ]]></source>
         <p>이 설정에서, “Blog” 는 도처에서 “domain.blog.Blog” 대신 사용될 수 있다.</p>
-        <p> You can also specify a package where MyBatis will search for
-          beans. For example:
+        <p>MyBatis가 빈을 참도록 패키지를 명시할 수 있다. 예를 들면:
         </p>
         <source><![CDATA[<typeAliases>
   <package name="domain.blog"/>
 </typeAliases>
 ]]></source>
         <p>
-          Each bean found in
-          <code>domain.blog</code>
-          , if no annotation is found,
-          will be registered as an alias
-          using
-          uncapitalized non-qualified class name of the bean. Thas is
-          <code>domain.blog.Author</code>
-          will be registered as
-          <code>author</code>. If the
-          <code>@Alias</code>
-          annotation is found its value will
-          be used as an alias. See the example below:
+          <code>domain.blog</code> 에서 빈이 검색되고 애노테이션이 없을 경우, 빈의 이름이 소문자로 변환된 형태의 별칭으로 등록될 것이다. 이때 빈의 패키지정보도 제거하고 등록된다. 
+          이를테면, <code>domain.blog.Author</code>는 <code>author</code>로 등록될 것이다. 만약에 <code>@Alias</code> 애노테이션을 사용한다면, 이 애노테이션에서 지정한 값이 별칭으로 사용될 것이다. 
+          아래의 예를 보라:
         </p>
         <source><![CDATA[@Alias("author")
 public class Author {
@@ -594,8 +557,8 @@ public class Author {
         </table>
       </subsection>
       <subsection name="typeHandlers">
-        <p>MyBatis 가 PreparedStatement 에 파라미터를 셋팅하고 ResultSet 에서 값을 가져올때마다, TypeHandler 는 적절한 자바
-타입의 값을 가져오기 위해 사용된다. 다음의 표는 디폴트 TypeHandlers 를 설명한다..</p>
+        <p>MyBatis 가 PreparedStatement 에 파라미터를 셋팅하고 ResultSet 에서 값을 가져올때마다, TypeHandler 는 적절한 자바 타입의 값을 가져오기 위해 사용된다. 
+        다음의 표는 디폴트 TypeHandlers 를 설명한다..</p>
         <table>
           <thead>
             <tr>
@@ -829,8 +792,8 @@ public class Author {
             </tr>
           </tbody>
         </table>
-        <p>지원하지 않거나 비표준인 타입에 대해서는 당신 스스로 만들어서 타입핸들러를 오버라이드할 수 있다. 그러기 위해서는
-TypeHandler 인터페이스를 구현하고 자바 타입에 TypeHandler 를 매핑하면 된다. 예를 들면:</p>
+        <p>지원하지 않거나 비표준인 타입에 대해서는 당신 스스로 만들어서 타입핸들러를 오버라이드할 수 있다. 
+        그러기 위해서는 TypeHandler 인터페이스를 구현하고 자바 타입에 TypeHandler 를 매핑하면 된다. 예를 들면:</p>
 
         <source><![CDATA[// ExampleTypeHandler.java
 @MappedJdbcTypes(JdbcType.VARCHAR)
@@ -864,46 +827,34 @@ public class ExampleTypeHandler extends BaseTypeHandler<String> {
 </typeHandlers>
 ]]></source>
 
-        <p>이러한 TypeHandler 를 사용하는 것은 자바 String 프로퍼티와 VARCHAR 파라미터 및 결과를 위해 이미 존재하는
-핸들러를 오버라이드하게 될 것이다. MyBatis 는 타입을 판단하기 위해 데이터베이스의 메타데이터를 보지 않는다. 그래서
-파라미터와 결과에 정확한 타입 핸들러를 매핑해야 한다. MyBatis 가 구문이 실행될때까지는 데이터 타입에 대해 모르기
-때문이다..</p>
-        <p>
-          MyBatis will know the the Java type that you want to handle with
-          this TypeHandler by introspecting its generic type, but 
-          you can override this behavior by two means:
+        <p>이러한 TypeHandler 를 사용하는 것은 자바 String 프로퍼티와 VARCHAR 파라미터 및 결과를 위해 이미 존재하는 핸들러를 오버라이드하게 될 것이다. 
+        MyBatis 는 타입을 판단하기 위해 데이터베이스의 메타데이터를 보지 않는다. 그래서 파라미터와 결과에 정확한 타입 핸들러를 매핑해야 한다. 
+        MyBatis 가 구문이 실행될때까지는 데이터 타입에 대해 모르기 때문이다.</p>
+        <p>MyBatis는 제네릭타입을 체크해서 TypeHandler로 다루고자 하는 자바타입을 알것이다. 하지만 두가지 방법으로 이 행위를 재정의할 수 있다:
         </p>
         <ul>
-          <li>Adding a <code>javaType</code> attribute to the typeHandler element (for example: <code>javaType="String"</code>)
+          <li>typeHandler 요소의 <code>javaType</code> 속성 추가(예제: <code>javaType="String"</code>)          
           </li> 
-          <li>Adding a <code>@MappedTypes</code> annotation to your TypeHandler class specifying 
-          the list of java types to associate it with. This annotation will be ignored if 
-          the <code>javaType</code> attribute as also been specified.
-          </li>
+          <li>TypeHandler클래스에 관련된 자바타입의 목록을 정의하는 <code>@MappedTypes</code> 애노테이션 추가. 
+          <code>javaType</code> 속성도 함께 정의되어 있다면 <code>@MappedTypes</code>는 무시된다.</li>
         </ul>
 
-        <p>Associated JDBC type can be specified by two means:</p>
+        <p>관련된 JDBC타입은 두가지 방법으로 명시할 수 있다:</p>
         <ul>
-          <li>
-           Adding a <code>jdbcType</code> attribute to the typeHandler element (for example: <code>jdbcType=VARCHAR</code>).
+          <li>typeHandler 요소에 <code>jdbcType</code> 속성 추가(예제: <code>jdbcType=VARCHAR</code>).
           </li>
-          <li>Adding a <code>@MappedJdbcTypes</code> annotation to your TypeHandler class specifying 
-          the list of JDBC types to associate it with. This annotation will be ignored if 
-          the <code>jdbcType</code> attribute as also been specified.
-          </li>
+          <li>TypeHandler클래스에 관련된 JDBC타입의 목록을 정의하는 <code>@MappedJdbcTypes</code> 애노테이션 추가. 
+          <code>jdbcType</code> 속성도 함께 정의되어 있다면 <code>@MappedJdbcTypes</code>는 무시된다.</li>
         </ul>
 
-        <p>And finally you can let MyBatis search for your TypeHandlers:</p>
+        <p>마지막으로 MyBatis로 하여금 TypeHandler를 찾도록 할수 있다:</p>
         <source><![CDATA[<!-- mybatis-config.xml -->
 <typeHandlers>
   <package name="org.mybatis.example"/>
 </typeHandlers>
 ]]></source>
 
-        <p>
-          Note that when using the autodiscovery feature JDBC types can only be
-          specified with annotations.
-        </p>
+        <p>JDBC타입에 대한 자동검색 기능은 애노테이션을 명시한 경우에만 가능하다는 것을 알아둘 필요가 있다. </p>
       </subsection>
 
       <subsection name="objectFactory">
@@ -1144,24 +1095,17 @@ data_source 프로퍼티가 InitialContext 에서 직접 찾을 것이다.</li>
       </subsection>
       
       <subsection name="databaseIdProvider">
-        <p>
-          MyBatis is able to execute different statements depending on your database vendor. 
-          The multi-db vendor support is based on the mapped statements <code>databaseId</code> attribute. 
-          MyBatis will load all statements with no <code>databaseId</code> attribute 
-          or with a <code>databaseId</code> that matches the current one. If case the same statement
-          if found with and without the <code>databaseId</code> the latter will be discarded.  
-          To enable the multi vendor support add a <code>databaseIdProvider</code>
-          to mybatis-config.xml file as follows:
+        <p>Mybatis는 데이터베이스 제품마다 다른 구문을 실행할 수 있다. 여러개의 데이터베이스 제품을 가진 업체 제품은 <code>databaseId</code> 속성을 사용한 매핑된 구문을 기반으로 지원한다. 
+        MyBatis는 <code>databaseId</code> 속성이 없거나 <code>databaseId</code> 속성을 가진 모든 구문을 로드한다. 
+        같은 구문인데, 하나는 <code>databaseId</code> 속성이 있고 하나는 <code>databaseId</code> 속성이 없을때, 뒤에 나온 것이 무시된다. 
+        다중 지원을 사용하기 위해서는 mybatis-config.xmlo 파일에 다음처럼  <code>databaseIdProvider</code> 를 추가하라:
         </p>
         
         <source><![CDATA[<databaseIdProvider type="VENDOR" />
 ]]></source>
 
-    <p> 
-      The VENDOR implementation databaseIdProvider sets as a databaseId the String returned by 
-      <code>DatabaseMetaData#getDatabaseProductName()</code>. 
-      As usually that string is too long and also, different versions of the same product return different values, 
-      so you may want to translate it to a shorter one by adding properties like follows:
+    <p>VENDOR구현체 databaseIdProvider는 <code>DatabaseMetaData#getDatabaseProductName()</code>에 의해 리턴된 문자열로 databaseId를 셋팅한다. 
+    이때 리턴되는 문자열이 너무 길거나 같은 제품의 서로다른 버전으로 다른 값을 리턴하는 경우, 다음처럼 프로퍼티를 추가해서 짧게 처리할 수도 있다:
     </p>
     
         <source><![CDATA[<databaseIdProvider type="VENDOR">
@@ -1170,15 +1114,10 @@ data_source 프로퍼티가 InitialContext 에서 직접 찾을 것이다.</li>
   <property name="Oracle" value="oracle" />
 </databaseIdProvider>]]></source>
 
-    <p> 
-      When properties are provided, the VENDOR databaseIdProvider will search the property value corresponding to the 
-      first key found in the returned database product name or "null" if there is not a matching property. 
-      In this case, if <code>getDatabaseProductName()</code> returns "Oracle (DataDirect)" the databaseId will be set to "oracle".  
-    </p>
+    <p>프로퍼터가 제공되면, VENDOR databaseIdProvider는 리턴된 데이터베이스 제품명에서 찾은 첫번째 프로퍼티값이나 일치하는 프로퍼티가 없다면 "null" 을 찾을 것이다. 
+    이 경우, <code>getDatabaseProductName()</code>가 "Oracle (DataDirect)"를 리턴한다면, databaseId는 "oracle"로 셋팅될 것이다. </p>
     
-    <p>
-      You can build your own DatabaseIdProvider by implementing the interface <code>org.apache.ibatis.mapping.DatabaseIdProvider</code>
-      and registering it in mybatis-config.xml:
+    <p><code>org.apache.ibatis.mapping.DatabaseIdProvider</code> 인터페이스를 구현해서 자신만의 DatabaseIdProvider를 빌드하고 mybatis-config.xml파일에 등록할 수 있다:
     </p>
 
         <source><![CDATA[public interface DatabaseIdProvider {

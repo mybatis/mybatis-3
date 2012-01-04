@@ -164,12 +164,8 @@ public interface BlogMapper {
       <p>간단한 구문에서는 애노테이션이 좀더 깔끔하다. 어쨌든 자바 애노테이션은 좀더 복잡한 구문에서는 제한적이고 코드를
 엉망으로 만들 수 있다. 그러므로, 복잡하게 사용하고자 한다면, XML 매핑 구문을 사용하는 것이 좀더 나을 것이다.
 </p>
-      <p>
-        It will be up to you and your project team to determine which is right
-        for you, and how important it is to you that your mapped statements
-        be defined in a consistent way. That said, you're never locked into
-        a single approach. You can very easily migrate Annotation based
-        Mapped Statements to XML and vice versa.
+      <p>여기서 당신과 당신의 프로젝트 팀은 어떤 방법이 좋은지 결정해야 할 것이다. 매핑된 구문을 일관된 방식으로 정의하는 것이 중요하다. 
+      앞서 언급했지만, 반드시 한가지만 고집해야 하는 건 아니다. 애노테이션은 XML로 쉽게 변환할 수 있고 그 반대의 형태 역시 쉽게 처리할 수 있다. 
       </p>
     </subsection>
     <subsection name="스코프(Scope) 와 생명주기(Lifecycle)">
@@ -200,9 +196,7 @@ try {
 } finally {
   session.close();
 }]]></source>
-        <p>
-          Using this pattern consistently throughout your code will ensure that
-          all database resources are properly closed.
+        <p>코드전반에 이런 형태를 사용하는 것은 모든 데이터베이스 자원을 잘 닫는 것으로 보장하게 할 것이다. 
         </p>
       <h4>Mapper 인스턴스</h4>
         <p>Mapper 는 매핑된 구문을 바인딩 하기 위해 만들어야 할 인터페이스이다. mapper 인터페이스의 인스턴스는
@@ -220,13 +214,10 @@ try {
 
       <hr/>
       <p><span class="label important">참고</span>
-        <strong>Object lifecycle and Dependency Injection Frameworks</strong>
+        <strong>객체 생명주기와 의존성 삽입 프레임워크</strong>
       </p>
-      <p>
-        Dependency Injection frameworks can create thread safe, transactional SqlSessions and mappers 
-        and inject them directly into your beans so you can just forget about their lifecycle. 
-        You may want to have a look at MyBatis-Spring or
-        MyBatis-Guice sub-projects to know more about using MyBatis with DI frameworks.
+      <p>의존성 삽입 프레임워크는 쓰레드에 안전하도록 해준다. 트랜잭션 성질을 가지는 SqlSessions과 매퍼들 그리고 그것들을 직접 빈에 삽입하면 생명주기에 대해 기억하지 않아도 되게 해준다.
+      DI프레임워크와 MyBatis를 사용하기 위해 좀더 많은 정보를 보기 위해서는 MyBatis-Spring이나 MyBatis-Guice 하위 프로젝트를 찾아보면 된다. 
       </p>
       <hr/>
       </subsection>

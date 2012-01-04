@@ -169,9 +169,8 @@ ps.setInt(1,id);]]></source>
             </tr>
             <tr>
               <td>databaseId</td>
-              <td>In case there is a configured databaseIdProvider, MyBatis will load all statements with no <code>databaseId</code> 
-              attribute or with a <code>databaseId</code> that matches the current one. If case the same statement
-              if found with and without the <code>databaseId</code> the latter will be discarded.
+              <td>설정된 databaseIdProvider가 있는 경우, MyBatis는 <code>databaseId</code> 속성이 없는 모든 구문을 로드하거나 일치하는 <code>databaseId</code>와 함께 로드될 것이다. 
+              같은 구문에서 <code>databaseId</code>가 있거나 없는 경우 모두 있다면 뒤에 나온 것이 무시된다. 
               </td>
             </tr>
           </tbody>
@@ -227,8 +226,7 @@ ps.setInt(1,id);]]></source>
                 <strike><code>parameterMap</code></strike>
               </td>
               <td>
-                <strike>외부 parameterMap 을 찾기 위한 비권장된 접근방법. 인라인 파라미터 매핑과 parameterType
-                                                 을 대신 사용하라.</strike>
+                <strike>외부 parameterMap 을 찾기 위한 비권장된 접근방법. 인라인 파라미터 매핑과 parameterType을 대신 사용하라.</strike>
               </td>
             </tr>
             <tr>
@@ -237,13 +235,11 @@ ps.setInt(1,id);]]></source>
             </tr>
             <tr>
               <td><code>timeout</code></td>
-              <td>예외가 던져지기 전에 데이터베이스의 요청 결과를 기다리는 최대시간을 설정한다. 디폴트는
-셋팅하지 않는 것이고 드라이버에 따라 다소 지원되지 않을 수 있다.</td>
+              <td>예외가 던져지기 전에 데이터베이스의 요청 결과를 기다리는 최대시간을 설정한다. 디폴트는 셋팅하지 않는 것이고 드라이버에 따라 다소 지원되지 않을 수 있다.</td>
             </tr>
             <tr>
               <td><code>statementType</code></td>
-              <td>STATEMENT, PREPARED 또는 CALLABLE 중 하나를 선택할 수 있다. MyBatis 에게 Statement,
-                           PreparedStatement 또는 CallableStatement 를 사용하게 한다. 디폴트는 PREPARED 이다.</td>
+              <td>STATEMENT, PREPARED 또는 CALLABLE 중 하나를 선택할 수 있다. MyBatis 에게 Statement, PreparedStatement 또는 CallableStatement 를 사용하게 한다. 디폴트는 PREPARED 이다.</td>
             </tr>
             <tr>
               <td><code>useGeneratedKeys</code></td>
@@ -544,17 +540,14 @@ public class User {
   where id = #{id}
 </select>]]></source>
 
-        <p>
-          Now if only the world were always that simple.
-        </p>
+        <p>대부분 이런 유형이라면 지극히 간단할 것이다. </p>
 
-        <h4>Advanced Result Maps</h4>
+        <h4>좀더 복잡한 Result Maps</h4>
 
-        <p>
-          MyBatis was created with one idea in mind: Databases aren't always what you want or need them to be.
-          While we'd love every database to be perfect 3rd normal form or BCNF, they aren't. And it would be
-          great if it was possible to have a single database map perfectly to all of the applications that use
-          it, it's not. Result Maps are the answer that MyBatis provides to this problem.
+        <p>MyBatis는 한가지 기준으로 만들어졌다. 데이터베이스는 당신이 원하거나 필요로 하는 것이 아니다. 
+        정규화 개념 중 3NF나 BCNF가 완벽히 되도록 하는게 좋지만 실제로는 그렇지도 않다. 
+        그래서 하나의 데이터베이스를 모든 애플리케이션에 완벽히 매핑하는 것이 가능하다면 그것이 가장 좋겠지만, 그렇지도 않다. 
+        MyBatis가 이 문제를 해결하기 위해 제공하는 답은 Result Map이다. 
         </p>
 
         <p>이런 복잡한 구문은 어떻게 매핑할까.?</p>
@@ -643,14 +636,14 @@ public class User {
           <li>
             <code>association</code> – 복잡한 타입의 연관관계; 많은 결과는 타입으로 나타난다.
             <ul>
-              <li>nested result mappings – resultMap 스스로의 연관관계
+              <li>중첩된 결과 매핑 – resultMap 스스로의 연관관계
               </li>
             </ul>
           </li>
           <li>
             <code>collection</code> – 복잡한 타입의 컬렉션
             <ul>
-              <li>nested result mappings – resultMap 스스로의 연관관계</li>
+              <li>중첩된 결과 매핑 – resultMap 스스로의 연관관계</li>
             </ul>
           </li>
           <li>
@@ -659,8 +652,7 @@ public class User {
               <li>
                 <code>case</code> – 몇가지 값에 기초한 결과 매핑
                 <ul>
-                  <li>nested result mappings – a case is also a result map itself, and thus can
-                    contain many of these same elements, or it can refer to an external resultMap.
+                  <li>중첩된 결과 매핑 – 이 경우 또한 결과매핑 자체이고 이러한 동일한 요소를 많이 포함하거나 외부 resultMap을 참조할 수 있다. 
                   </li>
                 </ul>
               </li>
@@ -921,7 +913,7 @@ prop1, prop2 형태로 셋팅하게 될 것이다.</td>
           </tbody>
         </table>
 
-        <h4>관계를 위한 내포된 select</h4>
+        <h4>연관(Association)을 위한 중첩된 Select</h4>
 
         <table>
           <thead>
@@ -1157,9 +1149,7 @@ collection 의 타입을 구분하기 위해 필요하다.</p>
 테스트와 성능 테스트는 애플리케이션에서 가장 좋은 방법을 찾도록 지속해야 한다. MyBatis 는 이에 수정비용을 최대한
 줄이도록 해줄 것이다.</p>
 
-        <p>
-          Advanced association and collection mapping is a deep subject. Documentation can only get you so
-          far. With a little practice, it will all become clear very quickly.
+        <p>좀더 복잡한 association 과 collection 매핑은 어려운 주제다. 문서에서는 여기까지만 설명을 할수 있다. 연습을 조금더 하면, 좀더 명확하게 이해할 수 있을것이다.
         </p>
 
         <h4>discriminator</h4>

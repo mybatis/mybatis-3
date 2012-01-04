@@ -34,33 +34,19 @@ MyBatis 는 JDBC 코드와 수동으로 셋팅하는 파라미터와 결과 매�
 </p>
       </subsection>
 
-      <subsection name="Help make this documentation better…">
-        <p>
-          If you find this documentation lacking in any way, or missing
-          documentation for a feature, then the best thing to do is learn
-          about it and then write the documentation yourself!
+      <subsection name="이 문서가 좀더 좋아지도록 도와주세요…">
+        <p>이 문서에서 빈약하거나 기능 중 일부의 내용이 없는 경우, MyBatis에 대해 배우는 가장 좋은 방법은 당신 스스로 문서를 작성하는 것이다!
         </p>
-        <p>
-          Sources of this manual are available in xdoc format at
-          <a href="http://mybatis.googlecode.com/svn/trunk/src/site/">project's SVN </a>
-          .
-          Check them out, update them and send your patch to the
-          <a href="http://code.google.com/p/mybatis/issues/entry">tracker</a>
-          .
+        <p>이 문서는 xdoc포맷으로 되어 있으며, <a href="http://mybatis.googlecode.com/svn/trunk/src/site/">프로젝트 SVN </a> 에서 볼수 있다.
+        체크아웃 받아서, 수정하고 <a href="http://code.google.com/p/mybatis/issues/entry">tracker</a>로 패치를 보내달라.
         </p>
-        <p>
-          You’re the best author of this documentation, people like you have
-          to read it!
+        <p>당신은 이 문서의 가장 멋진 저자가 되는 셈이다. 많은 사람들이 이 문서를 읽을 것이다!
         </p>
       </subsection>
       
       <subsection name="번역에 대하여">
-        <p>번역자 : 이동국(fromm0@gmail.com, http://openframework.or.kr)
-        </p>
-        <p>최신버전은 http://kldp.net/projects/fwko/
-        </p>
+        <p>번역자 : 이동국(fromm0@gmail.com, http://ldg.pe.kr, http://me2day.net/fromm0)</p>
       </subsection>
     </section>
   </body>
-
 </document>

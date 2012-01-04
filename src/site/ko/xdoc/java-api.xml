@@ -62,7 +62,7 @@
   /web
     /WEB-INF
       /web.xml</pre>
-  <p>Remember, these are preferences, not requirements, but others will thank you for using a common directory structure.</p>
+  <p>이건 선호되는 형태이지 반드시 따라야 하는 요구사항이 아님을 기억해두라. 하지만 이러한 공통적인 형태를 사용하면 많은 사람들이 쉽게 이해할 것이다. </p>
   <p>이 섹션의 나머지 예제는 디렉터리 구조가 이렇게 되어 있다고 가정하고 설명한다.</p>
   </subsection>  
 
@@ -72,7 +72,10 @@
 만드는 방법을 배워보자. SqlSession 은 SqlSessionFactory 인스턴스를 사용해서 만든다. SqlSessionFactory 는 몇가지
 방법으로 SqlSession 인스턴스를 생성하기 위한 메서드를 포함하고 있다. SqlSessionFactory 자체는 XML, 애노테이션 또는
 자바 설정에서 SqlSessonFactory 를 생성할 수 있는 SqlSessionFactoryBuilder 를 통해 만들어진다.</p>
-  <p><span class="label important">참고</span> When using MyBatis with a dependency injection framework like Spring or Guice, SqlSessions are created and injected by the DI framework so you don't need to use the SqlSessionFactoryBuilder or SqlSessionFactory and can go directly to the SqlSession section. Please refer to the MyBatis-Spring or MyBatis-Guice manuals for further info.</p>
+  <p><span class="label important">참고</span> 
+  Spring이나 Guide와 같은 의존성 삽입 프레임워크와 함께 사용할때, SqlSessions은 DI프레임워크에 의해 생성되고 삽입된다. 
+  그래서 SqlSessionFactoryBuilder 나 SqlSessionFactory가 필요하지 않을 것이기 때문에 SqlSession 섹션으로 바로 넘어가도 무방하다. 
+  추가적인 정보는 MyBatis-Spring이나 MyBatis-Guice를 참고하길 바란다. </p>
   <h4>SqlSessionFactoryBuilder</h4>
   <p>SqlSessionFactoryBuilder 는 5 개의 build() 메서드를 가진다. 각각은 서로 다른 소스에서 SqlSession 을 빌드한다.</p>
   <source>SqlSessionFactory build(InputStream inputStream)
@@ -208,9 +211,10 @@ REPEATABLE_READ, SERIALIZABLE).</p>
     <li><code>ExecutorType.BATCH</code>: 이 실행자는 모든 update 구문을 배치처리하고 중간에 select 가 실행될 경우 필요하다면 경계를 표시한다. 이러한
 과정은 행위를 좀더 이해하기 쉽게 하기 위함이다.</li>
   </ul>
-  <p><span class="label important">참고</span> SqlSessionFactory 에서 언급하지 않는 한개 이상의 메서드가 있다. getConfiguration() 메서드인데, 이 메서드는
-런타임시 MyBatis 설정을 조사하는 Configuration 인스턴스를 리턴할것이다.</p>
-  <p><span class="label important">참고</span> If you've used a previous version of MyBatis, you'll recall that sessions, transactions and batches were all something separate. This is no longer the case. All three are neatly contained within the scope of a session. You need not deal with transactions or batches separately to get the full benefit of them.</p>
+  <p><span class="label important">참고</span> SqlSessionFactory 에서 언급하지 않는 한개 이상의 메서드가 있다. 
+  getConfiguration() 메서드인데, 이 메서드는런타임시 MyBatis 설정을 조사하는 Configuration 인스턴스를 리턴할것이다.</p>
+  <p><span class="label important">참고</span> MyBatis 이전저번을 사용했다면, 세션, 트랜잭션 그리고 배치들을 여기저기서 찾게 될 것이다.
+  이것들은 더이상 사용되지 않는다. 세가지 모두 세션의 범위에 모두 포함되었다. 이것들이 제공하던 모든 기능을 사용하기 위해 각각이 필요한 것 아니다.</p>
 
   <h4>SqlSession</h4>
   <p>앞서 언급한 것처럼, SqlSession 인스턴스는 MyBatis 에서 굉장히 강력한 클래스이다. 구문을 실행하고, 트랜잭션을
@@ -232,7 +236,7 @@ int delete(String statement, Object parameter)]]></source>
 사용하라. 객체의 존재여부를 체크하고 싶다면, 개수를 리턴하는 방법이 더 좋다. selectMap 은 결과 목록을 Map 을
 변환하기 위해 디자인된 특별한 경우이다. 이 경우 결과 객체의 프로퍼티 중 하나를 키로 사용하게 된다. 모든 구문이
 파라미터를 필요로 하지는 않기 때문에, 파라미터 객체를 요구하지 않는 형태로 오버로드되었다.</p>
-  <p>The value returned by the insert, update and delete methods indicate the number of rows affected by the statement.</p>
+  <p>insert, update 그리고 delete 메서드에 의해 리턴되는 값은 실행된 구문에 의해 영향을 받은 레코드수를 표시한다. </p>
   <source><![CDATA[<T> T selectOne(String statement)
 <E> List<E> selectList(String statement)
 <K,V> Map<K,V> selectMap(String statement, String mapKey)
@@ -277,7 +281,8 @@ void rollback(boolean force)</source>
   <p>기본적으로 MyBatis 는 insert, update 또는 delete 를 호출하여 데이터베이스가 변경된 것으로 감지하지 않는 한 실제로
 커밋하지 않는다. 이러한 메서드 호출없이 변경되면, 커밋된 것으로 보장하기 위해 commit 와 rollback 메서드에 true 값을
 전달한다.</p>
-  <p><span class="label important">참고</span> MyBatis-Spring and MyBatis-Guice provide declarative transaction handling. So if you are using MyBatis with Spring or Guice please refer to their specific manuals.</p>
+  <p><span class="label important">참고</span> MyBatis-Spring 과 MyBatis-Guice는 선언적인 트랜잭션 관리기법을 제공한다.
+  그래서 Spring이나 Guice와 함께 MyBatis를 사용한다면, 해당되는 메뉴얼을 꼭 참고하길 바란다. </p>
 
   <h5>세션 레벨의 캐시를 지우기</h5>
   <source>void clearCache()</source>

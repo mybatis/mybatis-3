@@ -179,10 +179,7 @@ AND title like ‘someTitle’]]></source>
 살펴볼 것이다.</p>
       </subsection>
       <subsection name="Multi-db vendor support">
-        <p>If a databaseIdProvider was configured a "_databaseId" variable
-          is available for dynamic code, so you can build different
-          statements depending on database vendor. Have a look at the
-          following example:</p>
+        <p>"_databaseId" 변수로 설정된 databaseIdProvider가 동적인 코드에도 사용가능하다면, 데이터베이스 제품별로 서로다른 구문을 사용할 수 있다. 다음의 예제를 보라:</p>
         <source><![CDATA[<insert id="insert" parameterType="org.myapp.domain.User">
   <selectKey keyProperty="id" resultType="int" order="BEFORE">
     <if test="_databaseId == 'oracle'">

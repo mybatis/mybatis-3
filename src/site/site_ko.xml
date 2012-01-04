@@ -55,11 +55,11 @@
         <item name="디렉터리 구조" href="java-api.html#directoryStructure" />
         <item name="SqlSessions" href="java-api.html#sqlSessions" />
       </item>
-      <item name="정책 빌더" href="statement-builders.html" collapse="true">
+      <item name="구문 빌더" href="statement-builders.html" collapse="true">
         <item name="SelectBuilder" href="statement-builders.html#SelectBuilder" />
         <item name="SqlBuilder" href="statement-builders.html#SqlBuilder" />
        </item>
-      <item name="Logging" href="logging.html"/>
+      <item name="로깅" href="logging.html"/>
     </menu>
 
     <menu ref="reports"/>
