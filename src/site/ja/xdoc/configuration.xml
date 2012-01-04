@@ -287,8 +287,8 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 clearLocalCacheAfterEachStatement
               </td>
               <td>
-                By default local cache that is cleared upon update, commit, rollback and close. 
-                Setting this property to true will cause it to be cleared also upon queries.
+                通常、ローカルキャッシュは update, commit, rollback, close 時にクリアされます。
+                このプロパティに true を設定すると、select でもローカルキャッシュがクリアされるようになります。
               </td>
               <td>
                 true | false
