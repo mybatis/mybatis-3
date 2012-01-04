@@ -20,24 +20,12 @@ import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.sql.*;
-import java.util.regex.Pattern;
 
 public class ScriptRunner {
 
   private static final String LINE_SEPARATOR = System.getProperty("line.separator","\n");
 
   private static final String DEFAULT_DELIMITER = ";";
-
-  private static final String S_N = "(\\s|\\n)+";
-  private static final String IDENTIFIER = "(\\S+|\"[^\"]+\")";
-  private static final String BLOCK_START = "(^|" + S_N + ")" +
-            "create" + S_N +
-            "(or" + S_N + "replace" + S_N + ")?" +
-            "(function|library|package(" + S_N + "body)?|procedure|trigger|type)" + S_N +
-            IDENTIFIER + S_N +
-            ".*";
-  
-  private final Pattern blockStart = Pattern.compile(BLOCK_START, Pattern.CASE_INSENSITIVE);
 
   private Connection connection;
 
@@ -48,7 +36,6 @@ public class ScriptRunner {
   private PrintWriter logWriter = new PrintWriter(System.out);
   private PrintWriter errorLogWriter = new PrintWriter(System.err);
 
-  private String DatabaseProductName;
   private String delimiter = DEFAULT_DELIMITER;
   private boolean fullLineDelimiter = false;
 
@@ -85,31 +72,21 @@ public class ScriptRunner {
   }
 
   public void runScript(Reader reader) {
+    setAutoCommit();
+
     try {
-      setAutoCommit();
-      DatabaseMetaData md = connection.getMetaData();
-        DatabaseProductName = md.getDatabaseProductName().toUpperCase().trim();
-      try {
-        if ("ORACLE".equals(DatabaseProductName)) {
-          executeOracleScript(reader);    
-        } else {
-          if (sendFullScript) {
-            executeFullScript(reader);
-          } else {
-            executeLineByLine(reader);
-          }
-         }
-      } finally {
-        rollbackConnection();
+      if (sendFullScript) {
+        executeFullScript(reader);
+      } else {
+        executeLineByLine(reader);
       }
-    } catch (SQLException e) {
-      String message = "\nError retrieving database metadata\nCause: " + e;
-      throw new RuntimeSqlException(message, e);
+    } finally {
+      rollbackConnection();
     }
   }
 
   private void executeFullScript(Reader reader) {
-    StringBuilder script = new StringBuilder();
+    StringBuffer script = new StringBuffer();
     try {
       BufferedReader lineReader = new BufferedReader(reader);
       String line;
@@ -120,13 +97,14 @@ public class ScriptRunner {
       executeStatement(script.toString());
       commitConnection();
     } catch (Exception e) {
-      String message = "\nError executing: \n" + script + "Cause: " + e;
+      String message = "Error executing: " + script + ".  Cause: " + e;
+      printlnError(message);
       throw new RuntimeSqlException(message, e);
     }
   }
 
   private void executeLineByLine(Reader reader) {
-    StringBuilder command = new StringBuilder();
+    StringBuffer command = new StringBuffer();
     try {
       BufferedReader lineReader = new BufferedReader(reader);
       String line;
@@ -136,80 +114,9 @@ public class ScriptRunner {
       commitConnection();
       checkForMissingLineTerminator(command);
     } catch (Exception e) {
-      String message = "\nError executing: \n" + command + "Cause: " + e;
+      String message = "Error executing: " + command + ".  Cause: " + e;
+      printlnError(message);
       throw new RuntimeSqlException(message, e);
-    }
-  }
-
-  private void executeOracleScript(Reader reader) {
-    StringBuilder command = new StringBuilder();
-    try {
-      boolean plsqlMode = false;
-      BufferedReader lineReader = new BufferedReader(reader);
-      String line;
-      while ((line = lineReader.readLine()) != null) {
-        String trimmedLine = line.trim();
-        if (trimmedLine.length() == 0) {
-          continue;
-        }
-        if (trimmedLine.matches("[/.]")) {
-          /*
-            Terminate PL/SQL subprograms by entering a period (.) by itself on
-            a new line. You can also terminate and execute a PL/SQL subprogram
-            by entering a slash (/) by itself on a new line.
-          */
-          println(command);
-          executeStatement(command.toString().trim());
-          plsqlMode = false;
-          command.setLength(0);
-        } else if (!plsqlMode &&
-                    (blockStart.matcher(command).find() ||
-                     "begin".equalsIgnoreCase(line) ||
-                     "declare".equalsIgnoreCase(line)
-                    )
-                  ) {
-          plsqlMode = true;
-          command.append(line);
-          command.append(LINE_SEPARATOR);
-        } else if (!plsqlMode &&
-                    ( ("exit" + delimiter).equalsIgnoreCase(line) ||
-                       "exit".equalsIgnoreCase(line)
-                    )
-                  ) {
-          return;
-        } else if (!plsqlMode && line.endsWith(delimiter)) {
-          command.append(line.substring(0, line.lastIndexOf(delimiter)));
-          println(command);
-          executeStatement(command.toString().trim());
-          command.setLength(0);
-        } else {
-          command.append(line);
-          command.append(LINE_SEPARATOR);
-        }
-      }
-      // Check to see if we have an unexecuted statement in command.
-      if (command.length() > 0) {
-        println(command);
-        executeStatement(command.toString().trim());
-      }
-      commitConnection();
-      checkForMissingLineTerminator(command);
-    } catch (Exception e) {
-      String message = "\nError executing: \n" + command + "Cause: " + e;
-      throw new RuntimeSqlException(message, e);
-    }
-  }
-
-  public void run(String sql) throws SQLException {
-    Statement stmt = connection.createStatement();
-    try {
-      stmt.execute(sql);
-    } finally {
-      try {
-        stmt.close();
-      } catch (SQLException e) {
-        //ignore
-      }
     }
   }
 
@@ -251,15 +158,17 @@ public class ScriptRunner {
     }
   }
 
-  private void checkForMissingLineTerminator(StringBuilder command) {
+  private void checkForMissingLineTerminator(StringBuffer command) {
     if (command != null && command.toString().trim().length() > 0) {
       throw new RuntimeSqlException("Line missing end-of-line terminator (" + delimiter + ") => " + command);
     }
   }
 
-  private StringBuilder handleLine(StringBuilder command, String line) throws SQLException, UnsupportedEncodingException {
+  private StringBuffer handleLine(StringBuffer command, String line) throws SQLException, UnsupportedEncodingException {
     String trimmedLine = line.trim();
-    if (commandReadyToExecute(trimmedLine)) {
+    if (lineIsComment(trimmedLine)) {
+      println(trimmedLine);
+    } else if (commandReadyToExecute(trimmedLine)) {
       command.append(line.substring(0, line.lastIndexOf(delimiter)));
       command.append(LINE_SEPARATOR);
       println(command);
@@ -270,6 +179,10 @@ public class ScriptRunner {
       command.append(LINE_SEPARATOR);
     }
     return command;
+  }
+
+  private boolean lineIsComment(String trimmedLine) {
+    return trimmedLine.startsWith("//") || trimmedLine.startsWith("--");
   }
 
   private boolean commandReadyToExecute(String trimmedLine) {
@@ -286,6 +199,8 @@ public class ScriptRunner {
       try {
         hasResults = statement.execute(command);
       } catch (SQLException e) {
+        String message = "Error executing: " + command + ".  Cause: " + e;
+        printlnError(message);
       }
     }
     printResults(statement, hasResults);
