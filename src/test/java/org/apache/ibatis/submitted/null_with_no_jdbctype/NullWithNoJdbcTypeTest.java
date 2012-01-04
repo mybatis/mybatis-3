@@ -85,7 +85,6 @@ public class NullWithNoJdbcTypeTest extends BaseDataTest {
       } catch (Exception e) {
         assertTrue(e.getMessage().contains("Error setting null parameter"));
       }
-      n = mapper.insertAuthor(new Author(99999, "barney", "******", "barney@iloveyou.com", null, Section.NEWS));
       session.rollback();
     } finally {
       if (session != null)
