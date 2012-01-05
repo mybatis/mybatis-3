@@ -19,11 +19,15 @@ import java.io.BufferedReader;
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 public class ScriptRunner {
 
-  private static final String LINE_SEPARATOR = System.getProperty("line.separator","\n");
+  private static final String LINE_SEPARATOR = System.getProperty("line.separator", "\n");
 
   private static final String DEFAULT_DELIMITER = ";";
 
@@ -32,6 +36,7 @@ public class ScriptRunner {
   private boolean stopOnError;
   private boolean autoCommit;
   private boolean sendFullScript;
+  private boolean removeCRs;
 
   private PrintWriter logWriter = new PrintWriter(System.out);
   private PrintWriter errorLogWriter = new PrintWriter(System.err);
@@ -53,6 +58,10 @@ public class ScriptRunner {
 
   public void setSendFullScript(boolean sendFullScript) {
     this.sendFullScript = sendFullScript;
+  }
+
+  public void setRemoveCRs(boolean removeCRs) {
+    this.removeCRs = removeCRs;
   }
 
   public void setLogWriter(PrintWriter logWriter) {
@@ -86,7 +95,7 @@ public class ScriptRunner {
   }
 
   private void executeFullScript(Reader reader) {
-    StringBuffer script = new StringBuffer();
+    StringBuilder script = new StringBuilder();
     try {
       BufferedReader lineReader = new BufferedReader(reader);
       String line;
@@ -104,7 +113,7 @@ public class ScriptRunner {
   }
 
   private void executeLineByLine(Reader reader) {
-    StringBuffer command = new StringBuffer();
+    StringBuilder command = new StringBuilder();
     try {
       BufferedReader lineReader = new BufferedReader(reader);
       String line;
@@ -158,13 +167,13 @@ public class ScriptRunner {
     }
   }
 
-  private void checkForMissingLineTerminator(StringBuffer command) {
+  private void checkForMissingLineTerminator(StringBuilder command) {
     if (command != null && command.toString().trim().length() > 0) {
       throw new RuntimeSqlException("Line missing end-of-line terminator (" + delimiter + ") => " + command);
     }
   }
 
-  private StringBuffer handleLine(StringBuffer command, String line) throws SQLException, UnsupportedEncodingException {
+  private StringBuilder handleLine(StringBuilder command, String line) throws SQLException, UnsupportedEncodingException {
     String trimmedLine = line.trim();
     if (lineIsComment(trimmedLine)) {
       println(trimmedLine);
@@ -186,18 +195,20 @@ public class ScriptRunner {
   }
 
   private boolean commandReadyToExecute(String trimmedLine) {
-    return !fullLineDelimiter && trimmedLine.endsWith(delimiter)
-        || fullLineDelimiter && trimmedLine.equals(delimiter);
+    return !fullLineDelimiter && trimmedLine.endsWith(delimiter) || fullLineDelimiter && trimmedLine.equals(delimiter);
   }
 
   private void executeStatement(String command) throws SQLException, UnsupportedEncodingException {
     boolean hasResults = false;
     Statement statement = connection.createStatement();
+    String sql = command;
+    if (removeCRs)
+      sql = sql.replaceAll("\r\n", "\n");
     if (stopOnError) {
-      hasResults = statement.execute(command);
+      hasResults = statement.execute(sql);
     } else {
       try {
-        hasResults = statement.execute(command);
+        hasResults = statement.execute(sql);
       } catch (SQLException e) {
         String message = "Error executing: " + command + ".  Cause: " + e;
         printlnError(message);
@@ -257,4 +268,5 @@ public class ScriptRunner {
       errorLogWriter.flush();
     }
   }
+
 }
