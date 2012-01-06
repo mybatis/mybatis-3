@@ -468,8 +468,8 @@ try {
         <td><code>Parameter</code></td>
         <td>N/A</td>
         <td>If your mapper method takes multiple parameters, this annotation can be applied to a mapper method parameter
-        to give each of them a name. Otherwise, multiple parameters will be named by their ordinal position
-        (not including any <code>RowBounds</code> parameters). For example <code>#{1}</code>, <code>#{2}</code> etc. is the default.
+        to give each of them a name. Otherwise, multiple parameters will be named by their position
+        (not including any <code>RowBounds</code> parameters). For example <code>#{0}</code>, <code>#{1}</code> etc. is the default.
         With <code>@Param("person")</code>, the parameter would be named <code>#{person}</code>.</td>
       </tr>
       <tr>

@@ -266,6 +266,22 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
             </tr>            
             <tr>
               <td>
+                jdbcTypeForNull
+              </td>
+              <td>
+                Permite especificar el tipo JDBC que 
+                Specifies the JDBC type for null values cuando no se ha especificado un tipo concreto para el parámetro.
+                Algunos drivers requieren que se indique el tipo JDBC de la columna pero otros permite valores genéricos como NULL, VARCHAR or OTHER.
+              </td>
+              <td>
+                JdbcType enumeration. Los más comunes son: NULL, VARCHAR and OTHER
+              </td>
+              <td>
+                OTHER
+              </td>
+            </tr>
+            <tr>
+              <td>
                 defaultListResultHandlerType
               </td>
               <td>

@@ -419,7 +419,7 @@ try {
         <td><code>@Param</code></td>
         <td><code>Parameter</code></td>
         <td>N/A</td>
-        <td>ISi tu mapper recibe parámetros múltiples, esta anotación puede aplicarse a cada parámetro para proporcionarle un nombre. En caso contrario, los parámetros múltiples se nombrarán según su posición ordinal (sin incluir el parámetro RowBounds). Por ejemplo:  #{1}, #{2} etc. es el defecto.  Con @Param(“persona”), el parámetro se llamará #{persona}.</td>
+        <td>ISi tu mapper recibe parámetros múltiples, esta anotación puede aplicarse a cada parámetro para proporcionarle un nombre. En caso contrario, los parámetros múltiples se nombrarán según su posición (sin incluir el parámetro RowBounds). Por ejemplo:  #{0}, #{1} etc. es el defecto.  Con @Param(“persona”), el parámetro se llamará #{persona}.</td>
       </tr>
       <tr>
         <td><code>@SelectKey</code></td>
