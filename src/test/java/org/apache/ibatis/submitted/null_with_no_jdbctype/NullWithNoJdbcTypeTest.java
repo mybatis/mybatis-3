@@ -83,7 +83,7 @@ public class NullWithNoJdbcTypeTest extends BaseDataTest {
         n = mapper.insertAuthor(new Author(99999, "barney", "******", "barney@iloveyou.com", null, Section.NEWS));
         fail("Expected exception.");
       } catch (Exception e) {
-        assertTrue(e.getMessage().contains("Error setting null parameter"));
+        assertTrue(e.getMessage().contains("Error setting null"));
       }
       session.rollback();
     } finally {
