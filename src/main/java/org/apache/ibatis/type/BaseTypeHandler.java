@@ -39,7 +39,7 @@ public abstract class BaseTypeHandler<T> extends TypeReference<T> implements Typ
         ps.setNull(i, jdbcType.TYPE_CODE);
       } catch (SQLException e) {
         throw new TypeException("Error setting null for parameter #" + i + " with JdbcType " + jdbcType + " . " +
-        		"Try setting a different jdbcTypeForNull configuration propertiy or provide an explicit JdbcType for this parameter. " +
+        		"Try setting a different JdbcType for this parameter or a different jdbcTypeForNull configuration property. " +
         		"Cause: " + e, e);
       }
     } else {
