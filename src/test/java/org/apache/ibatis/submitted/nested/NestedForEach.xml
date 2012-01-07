@@ -21,7 +21,7 @@
     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="org.apache.ibatis.submitted.nested">
+<mapper namespace="org.apache.ibatis.submitted.nested.Mapper">
   <select id="simpleSelect" parameterType="Parameter" resultType="map">
     select *
     from names
@@ -53,4 +53,15 @@
       </foreach>
     </where>
   </select>
+
+  <select id="simpleSelectWithMapperAndPrimitives" resultType="map">
+    select *
+    from names
+    <where>
+      <foreach collection="ids" item="id" separator="," open="id in (" close=")">
+        ${id}
+      </foreach>
+    </where>
+  </select>
+
 </mapper>

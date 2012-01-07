@@ -15,16 +15,8 @@
  */
 package org.apache.ibatis.submitted.nested;
 
-import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.jdbc.ScriptRunner;
-import org.apache.ibatis.session.SqlSession;
-import org.apache.ibatis.session.SqlSessionFactory;
-import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import static org.junit.Assert.assertEquals;
-import org.junit.BeforeClass;
-import org.junit.Test;
 
-import java.io.PrintWriter;
 import java.io.Reader;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -32,10 +24,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.jdbc.ScriptRunner;
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
 public class NestedForEachTest {
 
   protected static SqlSessionFactory sqlSessionFactory;
-
+  
   @BeforeClass
   public static void setUp() throws Exception {
     Connection conn = null;
@@ -75,7 +75,7 @@ public class NestedForEachTest {
       parameter.addName(name);
 
       List<Map<String, Object>> answer =
-          sqlSession.selectList("org.apache.ibatis.submitted.nested.simpleSelect", parameter);
+          sqlSession.selectList("org.apache.ibatis.submitted.nested.Mapper.simpleSelect", parameter);
 
       assertEquals(3, answer.size());
     } finally {
@@ -84,7 +84,6 @@ public class NestedForEachTest {
   }
 
   @Test
-  @SuppressWarnings("unchecked")
   public void testSimpleSelectWithPrimitives() {
     SqlSession sqlSession = sqlSessionFactory.openSession();
     try {
@@ -93,8 +92,20 @@ public class NestedForEachTest {
       parameter.put("ids", array);
 
       List<Map<String, Object>> answer =
-          sqlSession.selectList("org.apache.ibatis.submitted.nested.simpleSelectWithPrimitives", parameter);
+          sqlSession.selectList("org.apache.ibatis.submitted.nested.Mapper.simpleSelectWithPrimitives", parameter);
 
+      assertEquals(3, answer.size());
+    } finally {
+      sqlSession.close();
+    }
+  }
+
+  @Test
+  public void testSimpleSelectWithMapperAndPrimitives() {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      List<Map<String, Object>> answer = mapper.simpleSelectWithMapperAndPrimitives(1, 3, 5);
       assertEquals(3, answer.size());
     } finally {
       sqlSession.close();
@@ -102,7 +113,6 @@ public class NestedForEachTest {
   }
   
   @Test
-  @SuppressWarnings("unchecked")
   public void testNestedSelect() {
     SqlSession sqlSession = sqlSessionFactory.openSession();
     try {
@@ -115,7 +125,7 @@ public class NestedForEachTest {
       parameter.addName(name);
 
       List<Map<String, Object>> answer =
-          sqlSession.selectList("org.apache.ibatis.submitted.nested.nestedSelect", parameter);
+          sqlSession.selectList("org.apache.ibatis.submitted.nested.Mapper.nestedSelect", parameter);
 
       assertEquals(2, answer.size());
     } finally {
@@ -142,7 +152,7 @@ public class NestedForEachTest {
       parameter.addName(name);
 
       List<Map<String, Object>> answer =
-          sqlSession.selectList("org.apache.ibatis.submitted.nested.nestedSelect", parameter);
+          sqlSession.selectList("org.apache.ibatis.submitted.nested.Mapper.nestedSelect", parameter);
 
       assertEquals(3, answer.size());
     } finally {
