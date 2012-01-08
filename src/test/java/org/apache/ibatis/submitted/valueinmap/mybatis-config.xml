@@ -30,7 +30,7 @@
       </transactionManager>
       <dataSource type="UNPOOLED">
         <property name="driver" value="org.hsqldb.jdbcDriver"/>
-        <property name="url" value="jdbc:hsqldb:mem:encoding"/>
+        <property name="url" value="jdbc:hsqldb:mem:valueinmap"/>
         <property name="username" value="sa"/>
       </dataSource>
     </environment>

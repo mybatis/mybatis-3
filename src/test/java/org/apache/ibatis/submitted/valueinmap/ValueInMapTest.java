@@ -76,7 +76,7 @@ public class ValueInMapTest {
       map.put("column", "id");
       map.put("value", "1");
       
-      int count = sqlSession.selectOne("count", map);
+      Integer count = sqlSession.selectOne("count", map);
       assertTrue(count == 1);
       
     } finally {
