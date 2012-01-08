@@ -15,10 +15,9 @@
  */
 package org.apache.ibatis.submitted.valueinmap;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 import java.io.Reader;
-import java.nio.charset.Charset;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.HashMap;
@@ -43,7 +42,7 @@ public class ValueInMapTest {
 
     try {
       Class.forName("org.hsqldb.jdbcDriver");
-      conn = DriverManager.getConnection("jdbc:hsqldb:mem:valueinmaptest", "sa", "");
+      conn = DriverManager.getConnection("jdbc:hsqldb:mem:valueinmap", "sa", "");
 
       Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/valueinmap/CreateDB.sql");
 
@@ -65,7 +64,7 @@ public class ValueInMapTest {
     }
   }
 
-  @Ignore // see issue 165
+  @Ignore // see issue #165
   @Test
   public void testEncoding2() {
     SqlSession sqlSession = sqlSessionFactory.openSession();
