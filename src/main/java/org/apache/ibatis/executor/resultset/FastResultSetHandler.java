@@ -332,7 +332,12 @@ public class FastResultSetHandler implements ResultSetHandler {
     final List<Object> constructorArgs = new ArrayList<Object>();
     final Object resultObject = createResultObject(rs, resultMap, constructorArgTypes, constructorArgs);
     if (resultObject != null && configuration.isLazyLoadingEnabled()) {
-      return ResultObjectProxy.createProxy(resultObject, lazyLoader, configuration.isAggressiveLazyLoading(), objectFactory, constructorArgTypes, constructorArgs);
+      final List<ResultMapping> propertyMappings = resultMap.getPropertyResultMappings();
+      for (ResultMapping propertyMapping : propertyMappings) {
+        if (propertyMapping.getNestedQueryId() != null) { // issue #109 (avoid creating proxies for leaf objects)
+          return ResultObjectProxy.createProxy(resultObject, lazyLoader, configuration.isAggressiveLazyLoading(), objectFactory, constructorArgTypes, constructorArgs);
+        }
+      }
     }
     return resultObject;
   }
