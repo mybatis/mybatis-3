@@ -1105,7 +1105,7 @@ public class User {
           </tbody>
         </table>
 
-        <h4><code>association</code></h4>
+        <h4>association</h4>
 
         <source><![CDATA[<association property="author" column="blog_author_id" javaType=" Author">
   <id property="id" column="author_id"/>
@@ -1299,6 +1299,14 @@ public class User {
                 be far easier to follow, and one follows this table.
               </td>
             </tr>
+            <tr>
+              <td><code>columnPrefix</code></td>
+              <td>
+                When joining multiple tables, you would have to use column alias to avoid duplicated
+                column names in the ResultSet. Specifying columnPrefix allows you to map such columns
+                to an external resultMap. Please see the example explained later in this section.
+              </td>
+            </tr>
           </tbody>
         </table>
 
@@ -1372,6 +1380,58 @@ public class User {
     <result property="email" column="author_email"/>
     <result property="bio" column="author_bio"/>
   </association>
+</resultMap>]]></source>
+
+        <p>
+          What if the blog has a co-author?
+          The select statement would look like:
+        </p>
+
+        <source><![CDATA[<select id="selectBlog" parameterType="int" resultMap="blogResult">
+  select
+    B.id            as blog_id,
+    B.title         as blog_title,
+    A.id            as author_id,
+    A.username      as author_username,
+    A.password      as author_password,
+    A.email         as author_email,
+    A.bio           as author_bio,
+    CA.id           as co_author_id,
+    CA.username     as co_author_username,
+    CA.password     as co_author_password,
+    CA.email        as co_author_email,
+    CA.bio          as co_author_bio
+  from Blog B
+  left outer join Author A on B.author_id = A.id
+  left outer join Author CA on B.co_author_id = CA.id
+  where B.id = #{id}
+</select>]]></source>
+
+        <p>
+          Recall that the resultMap for Author is defined as follows.
+        </p>
+
+        <source><![CDATA[<resultMap id="authorResult" type="Author">
+  <id property="id" column="author_id"/>
+  <result property="username" column="author_username"/>
+  <result property="password" column="author_password"/>
+  <result property="email" column="author_email"/>
+  <result property="bio" column="author_bio"/>
+</resultMap>]]></source>
+
+        <p>
+          Because the column names in the results differ from the columns defined in the resultMap,
+          you need to specify <code>columnPrefix</code> to reuse the resultMap for mapping co-author results.
+        </p>
+
+        <source><![CDATA[<resultMap id="blogResult" type="Blog">
+  <id property="blog_id" column="id" />
+  <result property="title" column="blog_title"/>
+  <association property="author"
+    resultMap="authorResult" />
+  <association property="coAuthor"
+    resultMap="authorResult"
+    columnPrefix="co_" />
 </resultMap>]]></source>
 
         <p>
