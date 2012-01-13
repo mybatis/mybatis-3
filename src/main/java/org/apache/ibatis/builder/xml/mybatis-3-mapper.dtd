@@ -112,6 +112,7 @@ select CDATA #IMPLIED
 resultMap CDATA #IMPLIED
 typeHandler CDATA #IMPLIED
 notNullColumn CDATA #IMPLIED
+columnPrefix CDATA #IMPLIED
 >
 
 <!ELEMENT association (constructor?,id*,result*,association*,collection*, discriminator?)>
@@ -124,6 +125,7 @@ select CDATA #IMPLIED
 resultMap CDATA #IMPLIED
 typeHandler CDATA #IMPLIED
 notNullColumn CDATA #IMPLIED
+columnPrefix CDATA #IMPLIED
 >
 
 <!ELEMENT discriminator (case+)>

@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+
+       Copyright 2009-2012 The MyBatis Team
+
+       Licensed under the Apache License, Version 2.0 (the "License");
+       you may not use this file except in compliance with the License.
+       You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+       Unless required by applicable law or agreed to in writing, software
+       distributed under the License is distributed on an "AS IS" BASIS,
+       WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+       See the License for the specific language governing permissions and
+       limitations under the License.
+
+-->
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.apache.ibatis.submitted.column_prefix.Mapper">
+
+  <resultMap id="roomMapper"
+    type="org.apache.ibatis.submitted.column_prefix.Room">
+    <id property="roomId" column="room_id" />
+    <result property="roomName" column="room_name" />
+  </resultMap>
+
+  <resultMap id="petMapper"
+    type="org.apache.ibatis.submitted.column_prefix.Pet">
+    <id property="id" column="id" />
+    <result property="name" column="name" />
+    <association property="room" resultMap="roomMapper" />
+  </resultMap>
+
+  <resultMap id="phoneMapper"
+    type="org.apache.ibatis.submitted.column_prefix.Phone">
+    <id property="id" column="id" />
+    <result property="phone" column="phone" />
+    <result property="areaCode" column="area_code" />
+  </resultMap>
+
+  <resultMap id="zipMapper"
+    type="org.apache.ibatis.submitted.column_prefix.Zip">
+    <result property="state" column="state" />
+    <result property="city" column="city" />
+    <result property="zipCode" column="zip_code" />
+  </resultMap>
+
+  <resultMap id="addressMapper"
+    type="org.apache.ibatis.submitted.column_prefix.Address">
+    <constructor>
+      <idArg column="id" javaType="int" />
+      <arg column="state" javaType="string" />
+    </constructor>
+    <result property="city" column="city" />
+    <result property="hasPhone" column="has_phone" />
+    <association property="stateBird" javaType="string">
+      <result column="state_bird" />
+    </association>
+    <association property="zip" resultMap="zipMapper"
+      columnPrefix="zip_" />
+    <association property="phone1" resultMap="phoneMapper"
+      columnPrefix="p1_" />
+    <association property="phone2" resultMap="phoneMapper"
+      columnPrefix="p2_" />
+    <discriminator column="addr_type" javaType="int">
+      <case value="1" resultMap="addressWithCautionMapper" />
+    </discriminator>
+  </resultMap>
+
+  <resultMap id="addressWithCautionMapper" extends="addressMapper"
+    type="org.apache.ibatis.submitted.column_prefix.AddressWithCaution">
+    <result property="caution" column="caution" />
+  </resultMap>
+
+  <resultMap id="personMapper"
+    type="org.apache.ibatis.submitted.column_prefix.Person">
+    <id property="id" column="person_id" />
+    <result property="name" column="person_name" />
+    <association property="room" resultMap="roomMapper"
+      columnPrefix="person_" />
+    <association property="billingAddress" resultMap="addressMapper"
+      notNullColumn="id" columnPrefix="b_" />
+    <association property="shippingAddress" resultMap="addressMapper"
+      notNullColumn="id" columnPrefix="s_" />
+    <collection property="pets" resultMap="petMapper"
+      columnPrefix="pet_" />
+  </resultMap>
+
+  <select id="selectPets" resultMap="petMapper"><![CDATA[
+    select
+      pet.id,
+      pet.name,
+      room_id,
+      room_name
+    from pet
+    left join room on room.room_id = pet.room_id
+    order by pet.id
+  ]]></select>
+
+  <select id="selectPersons" resultMap="personMapper"><![CDATA[
+    select
+      person.id as person_id,
+      person.name as person_name,
+      billing_address.id as b_id,
+      billing_address.state as b_state,
+      billing_address.city as b_city,
+      billing_address.addr_type as b_addr_type,
+      billing_address.caution as b_caution,
+      case
+        when billing_address.phone1_id is null
+          and billing_address.phone2_id is null
+          then false
+        else true
+      end as b_has_phone,
+      billing_address_state_bird.bird as b_state_bird,
+      billing_address_zip.state as b_zip_state,
+      billing_address_zip.city as b_zip_city,
+      billing_address_zip.zip_code as b_zip_zip_code,
+      shipping_address.id as s_id,
+      shipping_address.state as s_state,
+      shipping_address.city as s_city,
+      shipping_address.addr_type as s_addr_type,
+      shipping_address.caution as s_caution,
+      case
+        when shipping_address.phone1_id is null
+          and shipping_address.phone2_id is null
+          then false
+        else true
+      end as s_has_phone,
+      shipping_address_state_bird.bird as s_state_bird,
+      shipping_address_zip.state as s_zip_state,
+      shipping_address_zip.city as s_zip_city,
+      shipping_address_zip.zip_code as s_zip_zip_code,
+      billing_address_phone1.id as b_p1_id,
+      billing_address_phone1.phone as b_p1_phone,
+      billing_address_phone1.area_code as b_p1_area_code,
+      billing_address_phone2.id as b_p2_id,
+      billing_address_phone2.phone as b_p2_phone,
+      billing_address_phone2.area_code as b_p2_area_code,
+      shipping_address_phone1.id as s_p1_id,
+      shipping_address_phone1.phone as s_p1_phone,
+      shipping_address_phone1.area_code as s_p1_area_code,
+      shipping_address_phone2.id as s_p2_id,
+      shipping_address_phone2.phone as s_p2_phone,
+      shipping_address_phone2.area_code as s_p2_area_code,
+      person_room.room_id as person_room_id,
+      person_room.room_name as person_room_name,
+      pet.id as pet_id,
+      pet.name as pet_name,
+      pet_room.room_id as pet_room_id,
+      pet_room.room_name as pet_room_name
+    from person
+    left join address billing_address
+      on billing_address.id = person.billing_address_id
+    left join address shipping_address
+      on shipping_address.id = person.shipping_address_id
+    left join state_bird billing_address_state_bird
+      on billing_address_state_bird.state = billing_address.state
+    left join state_bird shipping_address_state_bird
+      on shipping_address_state_bird.state = shipping_address.state
+    left join zip shipping_address_zip
+      on shipping_address_zip.state = shipping_address.state
+      and shipping_address_zip.city = shipping_address.city
+    left join zip billing_address_zip
+      on billing_address_zip.state = billing_address.state
+        and billing_address_zip.city = billing_address.city
+    left join phone billing_address_phone1
+      on billing_address_phone1.id = billing_address.phone1_id
+    left join phone billing_address_phone2
+      on billing_address_phone2.id = billing_address.phone2_id
+    left join phone shipping_address_phone1
+      on shipping_address_phone1.id = shipping_address.phone1_id
+    left join phone shipping_address_phone2
+      on shipping_address_phone2.id = shipping_address.phone2_id
+    left join room person_room on person_room.room_id = person.room_id
+    left join pet on pet.owner_id = person.id
+    left join room pet_room on pet_room.room_id = pet.room_id
+    order by person.id, pet.id
+  ]]></select>
+
+</mapper>

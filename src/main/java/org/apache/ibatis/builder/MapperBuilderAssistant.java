@@ -189,6 +189,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
       String nestedSelect,
       String nestedResultMap,
       String notNullColumn,
+      String columnPrefix,
       Class<? extends TypeHandler<?>> typeHandler,
       List<ResultFlag> flags) {
     ResultMapping resultMapping = assembleResultMapping(
@@ -200,6 +201,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
         nestedSelect,
         nestedResultMap,
         notNullColumn,
+        columnPrefix,
         typeHandler,
         flags);
     return resultMapping;
@@ -218,6 +220,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
         column,
         javaType,
         jdbcType,
+        null,
         null,
         null,
         null,
@@ -356,6 +359,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
       String nestedSelect,
       String nestedResultMap,
       String notNullColumn,
+      String columnPrefix,
       Class<? extends TypeHandler<?>> typeHandler,
       List<ResultFlag> flags) {
     // Class resultType = resultMapBuilder.type();
@@ -377,6 +381,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
     builder.flags(flags == null ? new ArrayList<ResultFlag>() : flags);
     builder.composites(composites);
     builder.notNullColumns(parseMultipleColumnNames(notNullColumn));
+    builder.columnPrefix(columnPrefix);
 
     return builder.build();
   }

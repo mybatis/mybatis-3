@@ -36,6 +36,7 @@ public class ResultMapping {
   private String nestedResultMapId;
   private String nestedQueryId;
   private Set<String> notNullColumns;
+  private String columnPrefix;
   private List<ResultFlag> flags;
   private List<ResultMapping> composites;
 
@@ -92,6 +93,11 @@ public class ResultMapping {
 
     public Builder notNullColumns(Set<String> notNullColumns) {
       resultMapping.notNullColumns = notNullColumns;
+      return this;
+    }
+
+    public Builder columnPrefix(String columnPrefix) {
+      resultMapping.columnPrefix = columnPrefix;
       return this;
     }
 
@@ -164,6 +170,10 @@ public class ResultMapping {
 
   public Set<String> getNotNullColumns() {
 	return notNullColumns;
+  }
+
+  public String getColumnPrefix() {
+    return columnPrefix;
   }
 
   public List<ResultFlag> getFlags() {

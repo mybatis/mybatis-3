@@ -204,6 +204,7 @@ public class MapperAnnotationBuilder {
               hasNestedSelect(result) ? nestedSelectId(result) : null,
               null,
               null,
+              null,
               result.typeHandler() == UnknownTypeHandler.class ? null : result.typeHandler(),
               flags);
           resultMappings.add(resultMapping);
@@ -436,6 +437,7 @@ public class MapperAnnotationBuilder {
             hasNestedSelect(result) ? nestedSelectId(result) : null,
             null,
             null,
+            null,
             result.typeHandler() == UnknownTypeHandler.class ? null : result.typeHandler(),
             flags);
         resultMappings.add(resultMapping);
@@ -473,6 +475,7 @@ public class MapperAnnotationBuilder {
             arg.jdbcType() == JdbcType.UNDEFINED ? null : arg.jdbcType(),
             nullOrEmpty(arg.select()),
             nullOrEmpty(arg.resultMap()),
+            null,
             null,
             arg.typeHandler() == UnknownTypeHandler.class ? null : arg.typeHandler(),
             flags);
