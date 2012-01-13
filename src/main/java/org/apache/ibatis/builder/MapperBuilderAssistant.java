@@ -269,7 +269,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
     setStatementCache(isSelect, flushCache, useCache, currentCache, statementBuilder);
 
     MappedStatement statement = statementBuilder.build();
-    configuration.addMappedStatement(statement, databaseId);
+    configuration.addMappedStatement(statement);
     return statement;
   }
 

@@ -53,15 +53,25 @@ public class XMLStatementBuilder extends BaseBuilder {
 
   private MapperBuilderAssistant builderAssistant;
   private XNode context;
+  private String requiredDatabaseId;
 
   public XMLStatementBuilder(Configuration configuration, MapperBuilderAssistant builderAssistant, XNode context) {
+    this(configuration, builderAssistant, context, null);
+  }
+
+  public XMLStatementBuilder(Configuration configuration, MapperBuilderAssistant builderAssistant, XNode context, String databaseId) {
     super(configuration);
     this.builderAssistant = builderAssistant;
     this.context = context;
+    this.requiredDatabaseId = databaseId;
   }
 
   public void parseStatementNode() {
     String id = context.getStringAttribute("id");
+    String databaseId = context.getStringAttribute("databaseId");
+    
+    if (!databaseIdMatchesCurrent(id, databaseId)) return;
+
     Integer fetchSize = context.getIntAttribute("fetchSize", null);
     Integer timeout = context.getIntAttribute("timeout", null);
     String parameterMap = context.getStringAttribute("parameterMap");
@@ -69,7 +79,6 @@ public class XMLStatementBuilder extends BaseBuilder {
     Class<?> parameterTypeClass = resolveClass(parameterType);
     String resultMap = context.getStringAttribute("resultMap");
     String resultType = context.getStringAttribute("resultType");
-    String databaseId = context.getStringAttribute("databaseId");
 
     Class<?> resultTypeClass = resolveClass(resultType);
     String resultSetType = context.getStringAttribute("resultSetType");
@@ -101,10 +110,27 @@ public class XMLStatementBuilder extends BaseBuilder {
         fetchSize, timeout, parameterMap, parameterTypeClass, resultMap, resultTypeClass,
         resultSetTypeEnum, flushCache, useCache, keyGenerator, keyProperty, databaseId);
   }
-
-//  public String getStatementIdWithNameSpace() {
-//	  return builderAssistant.applyCurrentNamespace(context.getStringAttribute("id"));
-//  }
+  
+  private boolean databaseIdMatchesCurrent(String id, String databaseId) {
+    if (requiredDatabaseId != null) {
+      if (!requiredDatabaseId.equals(databaseId)) { 
+        return false;
+      }
+    } else {
+      if (databaseId != null) {
+        return false;
+      }
+      // skip this statement if there is a previous one with a not null databaseId
+      id = builderAssistant.applyCurrentNamespace(id, false);
+      if (this.configuration.hasStatement(id, false)) {
+        MappedStatement previous = this.configuration.getMappedStatement(id);
+        if (previous.getDatabaseId() != null) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
   
   private List<SqlNode> parseDynamicTags(XNode node) {
     List<SqlNode> contents = new ArrayList<SqlNode>();

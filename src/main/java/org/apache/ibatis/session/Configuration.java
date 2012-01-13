@@ -464,28 +464,8 @@ public class Configuration {
     return parameterMaps.containsKey(id);
   }
 
-  public void addMappedStatement(MappedStatement ms, String databaseId) {
-    if (databaseId == null || databaseId.equals(this.databaseId)) {
-      if (this.mappedStatements.containsKey(ms.getId())) {
-        MappedStatement previous = this.mappedStatements.get(ms.getId());
-        if (databaseId != null) {
-          if (previous != null && previous.getDatabaseId() == null) {
-            mappedStatements.remove(ms.getId());
-          }
-          mappedStatements.put(ms.getId(), ms);
-        } else {
-          if (previous == null || previous.getDatabaseId() == null) {
-            mappedStatements.put(ms.getId(), ms);
-          }
-        }
-      } else {
-        mappedStatements.put(ms.getId(), ms);
-      }
-    }
-  }
-
   public void addMappedStatement(MappedStatement ms) {
-    addMappedStatement(ms, null);
+    mappedStatements.put(ms.getId(), ms);
   }
 
   public Collection<String> getMappedStatementNames() {
@@ -523,7 +503,7 @@ public class Configuration {
   }
 
   public MappedStatement getMappedStatement(String id) {
-    return this.getMappedStatement(id, true);
+    return this.getMappedStatement(id, false);
   }
 
   public MappedStatement getMappedStatement(String id, boolean validateIncompleteStatements) {
@@ -567,7 +547,13 @@ public class Configuration {
   }
 
   public boolean hasStatement(String statementName) {
-    buildAllStatements();
+    return hasStatement(statementName, false);
+  }
+  
+  public boolean hasStatement(String statementName, boolean validateIncompleteStatements) {
+    if (validateIncompleteStatements) {
+      buildAllStatements();
+    }
     return mappedStatements.containsKey(statementName);
   }
 
