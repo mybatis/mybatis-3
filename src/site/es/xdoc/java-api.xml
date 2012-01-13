@@ -276,7 +276,7 @@ try {
   <p>Además, el tipo devuelto debe ser igual que el result type del mapped statement. Todos los tipos habituales se soportan, incluyendo primitivas, mapas, POJOs y JavaBeans.</p>
   <p><span class="label important">NOTA</span> Los mappers no necesitan implementar ninguna interfaz o extender ninguna clase. Sólo es necesario que la firma de método pueda usarse para identificar unívocamente el mapped statement correspondiente.</p>
   <p><span class="label important">NOTA</span> Los mappers pueden extender otras interfaces. Asegúrate que tienes tus statements en los namespaces adecuados en tu fichero XML. Además, la única limitación es que no puedes tener el mismo método, con la misma firma, en dos interfaces de la jerarquía (una mala idea en cualquier caso).</p>
-  <p>Puedes pasar más de un parámetro a un método de un mapper. Si lo haces, se usará como nombre su posición en la lista de parámetros, por ejemplo:  #{0}, #{1} etc. Si quieres cambiar su nombre (solo en caso de parámetros múltiples) puedes usar la notación @Param(“paramName”).</p>
+  <p>Puedes pasar más de un parámetro a un método de un mapper. Si lo haces, se usará como nombre el literal "param" seguido de su posición en la lista de parámetros, por ejemplo:  #{param1}, #{param2} etc. Si quieres cambiar su nombre (solo en caso de parámetros múltiples) puedes usar la notación @Param(“paramName”).</p>
   <p>También puedes pasar una instancia de RowBounds al método para limitar los resultados.</p>
 
   <h5>Anotaciones de mappers</h5>
@@ -419,7 +419,7 @@ try {
         <td><code>@Param</code></td>
         <td><code>Parameter</code></td>
         <td>N/A</td>
-        <td>ISi tu mapper recibe parámetros múltiples, esta anotación puede aplicarse a cada parámetro para proporcionarle un nombre. En caso contrario, los parámetros múltiples se nombrarán según su posición (sin incluir el parámetro RowBounds). Por ejemplo:  #{0}, #{1} etc. es el defecto.  Con @Param(“persona”), el parámetro se llamará #{persona}.</td>
+        <td>Si tu mapper recibe parámetros múltiples, esta anotación puede aplicarse a cada parámetro para proporcionarle un nombre. En caso contrario, los parámetros múltiples se nombrarán según su posición (sin incluir el parámetro RowBounds), prefijados con "param". Por ejemplo:  #{param1}, #{param2} etc. es el defecto.  Con @Param(“persona”), el parámetro se llamará #{persona}.</td>
       </tr>
       <tr>
         <td><code>@SelectKey</code></td>
