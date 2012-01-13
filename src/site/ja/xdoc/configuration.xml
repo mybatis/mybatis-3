@@ -302,11 +302,11 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 jdbcTypeForNull
               </td>
               <td>
-                Specifies the JDBC type for null values when no specific JDBC type was provided for the parameter. 
-                Some drivers require specifying the column JDBC type but others work with generic values like NULL, VARCHAR or OTHER.
+                引数の JDBC タイプが未指定の場合、null 値に対して割り当てられる JDBC タイプを設定します。
+                ドライバによっては列に対する JDBC タイプの指定が必須な場合もありますが、NULL, VARCHAR, OTHER などの汎用の型を指定すれば動作するものもあります。
               </td>
               <td>
-                JdbcType enumeration. Most common are: NULL, VARCHAR and OTHER
+                JdbcType 列挙型。一般的には NULL, VARCHAR, OTHER のいずれかです。
               </td>
               <td>
                 OTHER
