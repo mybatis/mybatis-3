@@ -1552,13 +1552,13 @@ public class User {
         <source><![CDATA[<resultMap id="blogResult" type="Blog">
   <id property="id" column="blog_id" />
   <result property="title" column="blog_title"/>
-  <collection property="posts" ofType="Post" resultMap="blogPostResult"/>
+  <collection property="posts" ofType="Post" resultMap="blogPostResult" columnPrefix="post_"/>
 </resultMap>
 
 <resultMap id="blogPostResult" type="Post">
-  <id property="id" column="post_id"/>
-  <result property="subject" column="post_subject"/>
-  <result property="body" column="post_body"/>
+  <id property="id" column="id"/>
+  <result property="subject" column="subject"/>
+  <result property="body" column="body"/>
 </resultMap>]]></source>
 
         <p>

@@ -1196,13 +1196,13 @@ collection 의 타입을 구분하기 위해 필요하다.</p>
         <source><![CDATA[<resultMap id="blogResult" type="Blog">
   <id property="id" column="blog_id" />
   <result property="title" column="blog_title"/>
-  <collection property="posts" ofType="Post" resultMap="blogPostResult"/>
+  <collection property="posts" ofType="Post" resultMap="blogPostResult" columnPrefix="post_"/>
 </resultMap>
 
 <resultMap id="blogPostResult" type="Post">
-  <id property="id" column="post_id"/>
-  <result property="subject" column="post_subject"/>
-  <result property="body" column="post_body"/>
+  <id property="id" column="id"/>
+  <result property="subject" column="subject"/>
+  <result property="body" column="body"/>
 </resultMap>]]></source>
 
         <p><span class="label important">참고</span> associations 과 collections 에서 내포의 단계 혹은 조합에는 제한이 없다. 매핑할때는 성능을 생각해야 한다. 단위
