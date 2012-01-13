@@ -1010,9 +1010,8 @@ public class User {
             <tr>
               <td><code>columnPrefix</code></td>
               <td>
-                When joining multiple tables, you would have to use column alias to avoid duplicated
-                column names in the ResultSet. Specifying columnPrefix allows you to map such columns
-                to an external resultMap. Please see the example explained later in this section.
+                Cuando se hace una join de varias tablas, es posible que tengas que usar alias de columna para evitar nombres duplicados en el ResultSet.
+                El atributo columnPrefix te permite mapear dichas columnas a un Result Map externo. Más adelante se muestra un ejemplo de esta función.
               </td>
             </tr>
           </tbody>
@@ -1075,8 +1074,7 @@ public class User {
 </resultMap>]]></source>
 
         <p>
-          What if the blog has a co-author?
-          The select statement would look like:
+          Pero ¿y si el blog tiene un co-autor? La select sería algo así:
         </p>
 
         <source><![CDATA[<select id="selectBlog" parameterType="int" resultMap="blogResult">
@@ -1100,7 +1098,7 @@ public class User {
 </select>]]></source>
 
         <p>
-          Recall that the resultMap for Author is defined as follows.
+          Recuerda que el resultMap de Author está definido de la siguiente forma.
         </p>
 
         <source><![CDATA[<resultMap id="authorResult" type="Author">
@@ -1112,8 +1110,8 @@ public class User {
 </resultMap>]]></source>
 
         <p>
-          Because the column names in the results differ from the columns defined in the resultMap,
-          you need to specify <code>columnPrefix</code> to reuse the resultMap for mapping co-author results.
+          Dado que los nombres de columnas de los resultados difieren de los nombres especidficados en el resultMap, necesitas
+          especificar un atributo <code>columnPrefix</code> para poder reusar el result map de Author para los co-autores.
         </p>
 
         <source><![CDATA[<resultMap id="blogResult" type="Blog">

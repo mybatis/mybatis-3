@@ -27,39 +27,28 @@
 
 	<body>
 		<section name="Introducción">
-			<subsection name="Qué es MyBatis?">
+			<subsection name="¿Qué es MyBatis?">
 				<p>
 					MyBatis es un framework de persistencia que soporta SQL, procedimientos
-					almacenados y mapeos
-					avanzados. MyBatis elimina casi todo el código JDBC, el establecimiento
-					manual de los parámetros y la
-					obtención de resultados. MyBatis puede configurarse con XML o anotaciones y
-					permite mapear mapas y
-					POJOs (Plain Old Java Objects) con registros de base de datos.
+					almacenados y mapeos avanzados. MyBatis elimina casi todo el código JDBC, el establecimiento
+					manual de los parámetros y la obtención de resultados. MyBatis puede configurarse con XML o anotaciones y
+					permite mapear mapas y POJOs (Plain Old Java Objects) con registros de base de datos.
 				</p>
 			</subsection>
 
 			<subsection name="Colabora en mejorar esta documentación...">
 				<p>
 					Si ves que hay alguna carencia en esta documentación, o que falta
-					alguna característica
-					por documentar, te animamos a que lo
-					investigues y la documentes tu
-					mismo!
+					alguna característica por documentar, te animamos a que lo investigues y la documentes tu mismo!
 				</p>
 				<p>
 					Las fuentes de este manual están disponibles en formato xdoc en el
-					<a href="http://mybatis.googlecode.com/svn/trunk/src/site/">SVN del proyecto</a>
-					.
-					Extraelas, actualizalas y envía tu parche al
-					<a href="http://code.google.com/p/mybatis/issues/entry">tracker</a>
-					.
+					<a href="http://mybatis.googlecode.com/svn/trunk/src/site/">SVN del proyecto</a>.
+					Extráelas, actualízalas y envía tu parche al
+					<a href="http://code.google.com/p/mybatis/issues/entry">tracker</a>.
 				</p>
 				<p>
-					Eres el mejor candidato para documentar porque los lectores de
-					esta
-					documentación son gente como
-					tú!
+					Eres el mejor candidato para documentar porque los lectores de esta documentación son gente como tú!
 				</p>
 			</subsection>
 		</section>
