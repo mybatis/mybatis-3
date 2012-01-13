@@ -139,6 +139,7 @@ public class MapperMethod {
       Map<String, Object> param = new HashMap<String, Object>();
       for (int i = 0; i < paramCount; i++) {
         param.put(paramNames.get(i), args[paramPositions.get(i)]);
+        param.put(String.valueOf(i), args[paramPositions.get(i)]); // compatibility with 3.0.x (issue #71)
       }
       return param;
     }
@@ -180,7 +181,7 @@ public class MapperMethod {
           throw new BindingException(method.getName() + " cannot have multiple ResultHandler parameters");
         }
       } else {
-        String paramName = String.valueOf(paramPositions.size());
+        String paramName = "param" + String.valueOf(paramPositions.size() + 1);
         paramName = getParamNameFromAnnotation(i, paramName);
         paramNames.add(paramName);
         paramPositions.add(i);

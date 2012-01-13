@@ -13,15 +13,13 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package org.apache.ibatis.submitted.valueinmap;
+package org.apache.ibatis.submitted.mapperparams;
 
 import static org.junit.Assert.assertTrue;
 
 import java.io.Reader;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.jdbc.ScriptRunner;
@@ -32,7 +30,7 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
-public class ValueInMapTest {
+public class MapperParamsTest {
 
   protected static SqlSessionFactory sqlSessionFactory;
 
@@ -42,9 +40,9 @@ public class ValueInMapTest {
 
     try {
       Class.forName("org.hsqldb.jdbcDriver");
-      conn = DriverManager.getConnection("jdbc:hsqldb:mem:valueinmap", "sa", "");
+      conn = DriverManager.getConnection("jdbc:hsqldb:mem:mapperparams", "sa", "");
 
-      Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/valueinmap/CreateDB.sql");
+      Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/mapperparams/CreateDB.sql");
 
       ScriptRunner runner = new ScriptRunner(conn);
       runner.setLogWriter(null);
@@ -53,7 +51,7 @@ public class ValueInMapTest {
       conn.commit();
       reader.close();
 
-      reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/valueinmap/mybatis-config.xml");
+      reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/mapperparams/mybatis-config.xml");
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
       reader.close();
 
@@ -64,22 +62,54 @@ public class ValueInMapTest {
     }
   }
 
-  @Ignore // see issue #165
+  @Ignore // see issue #5
   @Test
-  public void testEncoding2() {
+  public void shouldFailWithNonExistentParam() {
     SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
-      
-      Map<String, String> map = new HashMap<String, String>();
-      map.put("table", "names");
-      map.put("column", "id");
-      map.put("value", "1");
-      
-      Integer count = sqlSession.selectOne("count", map);
+    try {      
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      Integer count = mapper.countFail(1, "John");
       assertTrue(count == 1);
-      
     } finally {
       sqlSession.close();
     }
   }
+
+  @Test
+  public void shouldUseOrdinalPositions() {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {      
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      Integer count = mapper.countOrdinalPositions(1, "John");
+      assertTrue(count == 1);
+    } finally {
+      sqlSession.close();
+    }
+  }
+  
+  @Test
+  public void shouldUseNew31Names() {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {      
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      Integer count = mapper.countNew31Names(1, "John");
+      assertTrue(count == 1);
+    } finally {
+      sqlSession.close();
+    }
+  }
+  
+  @Ignore // see issue 165
+  @Test
+  public void shouldNotFailWithValue() {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {      
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      Integer count = mapper.countWithValue("names", 1, "John");
+      assertTrue(count == 1);
+    } finally {
+      sqlSession.close();
+    }
+  }
+
 }

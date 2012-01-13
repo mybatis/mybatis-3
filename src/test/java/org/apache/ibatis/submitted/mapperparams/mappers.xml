@@ -21,8 +21,17 @@
     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="org.apache.ibatis.submitted.valueinmap">
-	<select id="count" resultType="int" parameterType="map">
-		select count(*) from ${table} where ${column}=#{value}
+<mapper namespace="org.apache.ibatis.submitted.mapperparams.Mapper">
+	<select id="countFail" resultType="int">
+		select count(*) from names where id=#{wrongid} and firstName=#{wrongname}
+	</select>
+	<select id="countOrdinalPositions" resultType="int">
+		select count(*) from names where id=#{0} and firstName=#{1}
+	</select>
+	<select id="countNew31Names" resultType="int">
+		select count(*) from names where id=#{param1} and firstName=#{param2}
+	</select>
+	<select id="countWithValue" resultType="int">
+		select count(*) from ${table} where id=#{id} and firstName=#{value}
 	</select>
 </mapper>

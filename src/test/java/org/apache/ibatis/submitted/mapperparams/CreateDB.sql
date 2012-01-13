@@ -22,3 +22,4 @@ lastName varchar(20)
 );
 
 insert into names (id, firstName, lastName) values(1, 'John', 'Smith');
+insert into names (id, firstName, lastName) values(2, 'Juan', 'Gomez');

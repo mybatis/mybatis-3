@@ -30,14 +30,14 @@
       </transactionManager>
       <dataSource type="UNPOOLED">
         <property name="driver" value="org.hsqldb.jdbcDriver"/>
-        <property name="url" value="jdbc:hsqldb:mem:valueinmap"/>
+        <property name="url" value="jdbc:hsqldb:mem:mapperparams"/>
         <property name="username" value="sa"/>
       </dataSource>
     </environment>
   </environments>
 
   <mappers>
-    <mapper resource="org/apache/ibatis/submitted/valueinmap/mappers.xml"/>
+    <mapper resource="org/apache/ibatis/submitted/mapperparams/mappers.xml"/>
   </mappers>
 
 </configuration>
