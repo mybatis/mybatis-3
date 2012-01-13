@@ -503,7 +503,7 @@ public class Configuration {
   }
 
   public MappedStatement getMappedStatement(String id) {
-    return this.getMappedStatement(id, false);
+    return this.getMappedStatement(id, true);
   }
 
   public MappedStatement getMappedStatement(String id, boolean validateIncompleteStatements) {
@@ -547,7 +547,7 @@ public class Configuration {
   }
 
   public boolean hasStatement(String statementName) {
-    return hasStatement(statementName, false);
+    return hasStatement(statementName, true);
   }
   
   public boolean hasStatement(String statementName, boolean validateIncompleteStatements) {
