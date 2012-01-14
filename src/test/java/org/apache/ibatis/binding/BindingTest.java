@@ -487,7 +487,7 @@ public class BindingTest {
   }
 
   @Test
-  public void shouldCompareToMappers() throws Exception {
+  public void shouldCompareTwoMappers() throws Exception {
     SqlSession session = sqlSessionFactory.openSession();
     try {
       BoundBlogMapper mapper = session.getMapper(BoundBlogMapper.class);
@@ -498,6 +498,7 @@ public class BindingTest {
     }
   }
 
+  
   @Ignore // TODO see issue #5
   @Test(expected = Exception.class)
   public void shouldFailWhenSelectingOneBlogWithNonExistentParam() {
@@ -510,6 +511,18 @@ public class BindingTest {
     }
   }
 
+  @Ignore // TODO see issue #5
+  @Test(expected = Exception.class)
+  public void shouldFailWhenSelectingOneBlogWithNullParam() {
+    SqlSession session = sqlSessionFactory.openSession();
+    try {
+      BoundBlogMapper mapper = session.getMapper(BoundBlogMapper.class);
+      mapper.selectBlogByNullParam(null);
+    } finally {
+      session.close();
+    }
+  }
+  
   @Ignore // TODO see issue #5
   @Test(expected = PersistenceException.class)
   public void shouldFailWhenSelectingOneBlogWithNonExistentNestedParam() {
@@ -546,7 +559,7 @@ public class BindingTest {
     }
   }
 
-  @Ignore // TODO see issue #165
+  @Ignore // TODO see issue #165 (using "value" fails if there is a dynamic variable)
   @Test
   public void shouldSelectBlogWithAParamNamedValue() {
     SqlSession session = sqlSessionFactory.openSession();

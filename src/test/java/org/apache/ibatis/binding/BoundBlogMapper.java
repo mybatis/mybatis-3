@@ -143,6 +143,9 @@ public interface BoundBlogMapper {
           "WHERE id = #{id} AND title = #{params.nonExistentParam,jdbcType=VARCHAR}")
   Blog selectBlogByNonExistentNestedParam(@Param("id") int id, @Param("params") Map<String, Object> params);
 
+  @Select("SELECT * FROM blog WHERE id = #{id}")
+  Blog selectBlogByNullParam(Integer id);
+
   //======================================================
 
   @Select("SELECT * FROM blog " +
