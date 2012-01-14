@@ -62,7 +62,7 @@ public class MappedStatement {
       mappedStatement.databaseId = databaseId;
       mappedStatement.sqlSource = sqlSource;
       mappedStatement.statementType = StatementType.PREPARED;
-      mappedStatement.parameterMap = new ParameterMap.Builder(configuration, "defaultParameterMap", Object.class, new ArrayList<ParameterMapping>()).build();
+      mappedStatement.parameterMap = new ParameterMap.Builder(configuration, "defaultParameterMap", null, new ArrayList<ParameterMapping>()).build();
       mappedStatement.resultMaps = new ArrayList<ResultMap>();
       mappedStatement.timeout = configuration.getDefaultStatementTimeout();
       mappedStatement.sqlCommandType = sqlCommandType;

@@ -124,4 +124,22 @@ public class ComplexColumnTest {
       sqlSession.close();
 
     }
+
+    @Test
+    public void testWithComplex4() {
+      SqlSession sqlSession = sqlSessionFactory.openSession();
+      PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
+      Person criteria = new Person();
+      criteria.setFirstName("Christian");
+      criteria.setLastName("Poitras");
+      Person person = personMapper.getParentWithComplex(criteria);
+      Assert.assertNotNull("person must not be null", person);
+      Assert.assertEquals("Christian", person.getFirstName());
+      Assert.assertEquals("Poitras", person.getLastName());
+      Person parent = person.getParent();
+      Assert.assertNotNull("parent must not be null", parent);
+      Assert.assertEquals("John", parent.getFirstName());
+      Assert.assertEquals("Smith", parent.getLastName());
+      sqlSession.close();
+    }
 }

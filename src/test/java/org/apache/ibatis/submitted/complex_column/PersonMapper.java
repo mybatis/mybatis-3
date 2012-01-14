@@ -22,6 +22,7 @@ public interface PersonMapper {
     
     public Person getWithoutComplex(Long id);
     public Person getWithComplex(Long id);
+    public Person getParentWithComplex(Person person);
     
     @Select({
       "SELECT id, firstName, lastName, parent_id, parent_firstName, parent_lastName",
