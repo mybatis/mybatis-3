@@ -92,8 +92,9 @@ public class TypeAliasRegistry {
     registerAlias("ResultSet", ResultSet.class);
   }
 
-@SuppressWarnings( "unchecked" ) // throws class cast exception as well if types cannot be assigned
-public <T> Class<T> resolveAlias(String string) {
+  @SuppressWarnings("unchecked")
+  // throws class cast exception as well if types cannot be assigned
+  public <T> Class<T> resolveAlias(String string) {
     try {
       if (string == null) return null;
       String key = string.toLowerCase();
@@ -105,7 +106,7 @@ public <T> Class<T> resolveAlias(String string) {
       }
       return value;
     } catch (ClassNotFoundException e) {
-      throw new TypeException("Could not resolve type alias '" +string+ "'.  Cause: " + e, e);
+      throw new TypeException("Could not resolve type alias '" + string + "'.  Cause: " + e, e);
     }
   }
 
