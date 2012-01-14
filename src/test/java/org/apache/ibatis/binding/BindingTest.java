@@ -16,12 +16,14 @@
 package org.apache.ibatis.binding;
 
 import domain.blog.*;
+import org.apache.ibatis.exceptions.PersistenceException;
 import org.apache.ibatis.executor.result.DefaultResultHandler;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import static org.junit.Assert.*;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.*;
@@ -491,6 +493,67 @@ public class BindingTest {
       BoundBlogMapper mapper = session.getMapper(BoundBlogMapper.class);
       BoundBlogMapper mapper2 = session.getMapper(BoundBlogMapper.class);
       assertFalse(mapper.equals(mapper2));
+    } finally {
+      session.close();
+    }
+  }
+
+  @Ignore // TODO see issue #5
+  @Test(expected = Exception.class)
+  public void shouldFailWhenSelectingOneBlogWithNonExistentParam() {
+    SqlSession session = sqlSessionFactory.openSession();
+    try {
+      BoundBlogMapper mapper = session.getMapper(BoundBlogMapper.class);
+      mapper.selectBlogByNonExistentParam(1);
+    } finally {
+      session.close();
+    }
+  }
+
+  @Ignore // TODO see issue #5
+  @Test(expected = PersistenceException.class)
+  public void shouldFailWhenSelectingOneBlogWithNonExistentNestedParam() {
+    SqlSession session = sqlSessionFactory.openSession();
+    try {
+      BoundBlogMapper mapper = session.getMapper(BoundBlogMapper.class);
+      mapper.selectBlogByNonExistentNestedParam(1, Collections.<String, Object>emptyMap());
+    } finally {
+      session.close();
+    }
+  }
+
+  @Test
+  public void shouldSelectBlogWithDefault30ParamNames() {
+    SqlSession session = sqlSessionFactory.openSession();
+    try {
+      BoundBlogMapper mapper = session.getMapper(BoundBlogMapper.class);
+      Blog blog = mapper.selectBlogByDefault30ParamNames(1, "Jim Business");
+      assertNotNull(blog);
+    } finally {
+      session.close();
+    }
+  }
+
+  @Test
+  public void shouldSelectBlogWithDefault31ParamNames() {
+    SqlSession session = sqlSessionFactory.openSession();
+    try {
+      BoundBlogMapper mapper = session.getMapper(BoundBlogMapper.class);
+      Blog blog = mapper.selectBlogByDefault31ParamNames(1, "Jim Business");
+      assertNotNull(blog);
+    } finally {
+      session.close();
+    }
+  }
+
+  @Ignore // TODO see issue #165
+  @Test
+  public void shouldSelectBlogWithAParamNamedValue() {
+    SqlSession session = sqlSessionFactory.openSession();
+    try {
+      BoundBlogMapper mapper = session.getMapper(BoundBlogMapper.class);
+      Blog blog = mapper.selectBlogWithAParamNamedValue("id", 1, "Jim Business");
+      assertNotNull(blog);
     } finally {
       session.close();
     }

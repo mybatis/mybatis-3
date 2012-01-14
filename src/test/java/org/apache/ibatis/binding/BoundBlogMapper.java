@@ -133,4 +133,31 @@ public interface BoundBlogMapper {
                              @Param("subjectQuery") String subjectQuery,
                              @Param("bodyQuery") String bodyQuery);
 
+  //======================================================
+
+  @Select("SELECT * FROM blog " +
+          "WHERE id = #{id} AND title = #{nonExistentParam,jdbcType=VARCHAR}")
+  Blog selectBlogByNonExistentParam(@Param("id") int id);
+
+  @Select("SELECT * FROM blog " +
+          "WHERE id = #{id} AND title = #{params.nonExistentParam,jdbcType=VARCHAR}")
+  Blog selectBlogByNonExistentNestedParam(@Param("id") int id, @Param("params") Map<String, Object> params);
+
+  //======================================================
+
+  @Select("SELECT * FROM blog " +
+      "WHERE id = #{0} AND title = #{1}")
+  Blog selectBlogByDefault30ParamNames(int id, String title);
+
+  @Select("SELECT * FROM blog " +
+      "WHERE id = #{param1} AND title = #{param2}")
+  Blog selectBlogByDefault31ParamNames(int id, String title);
+
+  //======================================================
+
+  @Select("SELECT * FROM blog " +
+      "WHERE ${column} = #{id} AND title = #{value}")
+  Blog selectBlogWithAParamNamedValue(@Param("column") String column, @Param("id") int id, @Param("value") String title);
+
+  
 }
