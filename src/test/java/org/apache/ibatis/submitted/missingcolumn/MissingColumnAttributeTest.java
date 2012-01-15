@@ -24,7 +24,7 @@ import org.junit.Test;
 
 public class MissingColumnAttributeTest {
 
-	@Test // (expected=PersistenceException.class)
+	@Test(expected=PersistenceException.class)
 	public void shouldFailWithAMissingColumnInNetstedSelect() throws Exception {
 			Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/missingcolumn/MapperConfig.xml");
 			new SqlSessionFactoryBuilder().build(reader);
