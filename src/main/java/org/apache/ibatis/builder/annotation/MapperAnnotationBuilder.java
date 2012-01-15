@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2011 The MyBatis Team
+ *    Copyright 2009-2012 The MyBatis Team
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -197,8 +197,8 @@ public class MapperAnnotationBuilder {
           }
           ResultMapping resultMapping = assistant.buildResultMapping(
               resultType,
-              result.property(),
-              result.column(),
+              nullOrEmpty(result.property()),
+              nullOrEmpty(result.column()),
               result.javaType() == void.class ? null : result.javaType(),
               result.jdbcType() == JdbcType.UNDEFINED ? null : result.jdbcType(),
               hasNestedSelect(result) ? nestedSelectId(result) : null,
@@ -233,7 +233,6 @@ public class MapperAnnotationBuilder {
   }
 
   private void parseStatement(Method method) {
-    Configuration configuration = assistant.getConfiguration();
     SqlSource sqlSource = getSqlSourceFromAnnotations(method);
     if (sqlSource != null) {
       Options options = method.getAnnotation(Options.class);
@@ -306,7 +305,7 @@ public class MapperAnnotationBuilder {
   private Class<?> getParameterType(Method method) {
     Class<?> parameterType = null;
     Class<?>[] parameterTypes = method.getParameterTypes();
-    for(int i=0; i<parameterTypes.length;i++) {
+    for (int i = 0; i < parameterTypes.length; i++) {
       if (!RowBounds.class.isAssignableFrom(parameterTypes[i])) {
         if (parameterType == null) {
           parameterType = parameterTypes[i];
@@ -430,8 +429,8 @@ public class MapperAnnotationBuilder {
 
         ResultMapping resultMapping = assistant.buildResultMapping(
             resultType,
-            result.property(),
-            result.column(),
+            nullOrEmpty(result.property()),
+            nullOrEmpty(result.column()),
             result.javaType() == void.class ? null : result.javaType(),
             result.jdbcType() == JdbcType.UNDEFINED ? null : result.jdbcType(),
             hasNestedSelect(result) ? nestedSelectId(result) : null,
@@ -470,7 +469,7 @@ public class MapperAnnotationBuilder {
         ResultMapping resultMapping = assistant.buildResultMapping(
             resultType,
             null,
-            arg.column(),
+            nullOrEmpty(arg.column()),
             arg.javaType() == void.class ? null : arg.javaType(),
             arg.jdbcType() == JdbcType.UNDEFINED ? null : arg.jdbcType(),
             nullOrEmpty(arg.select()),
@@ -484,11 +483,11 @@ public class MapperAnnotationBuilder {
     }
   }
 
-    private String nullOrEmpty(String value) {
-        return value == null || value.trim().length() == 0  ? null : value;
-    }
+  private String nullOrEmpty(String value) {
+    return value == null || value.trim().length() == 0 ? null : value;
+  }
 
-    private Result[] resultsIf(Results results) {
+  private Result[] resultsIf(Results results) {
     return results == null ? new Result[0] : results.value();
   }
 
@@ -527,4 +526,5 @@ public class MapperAnnotationBuilder {
     configuration.addKeyGenerator(id, answer);
     return answer;
   }
+
 }
