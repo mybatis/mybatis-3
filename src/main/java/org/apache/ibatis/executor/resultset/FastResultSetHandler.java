@@ -93,7 +93,7 @@ public class FastResultSetHandler implements ResultSetHandler {
         } else {
           final TypeHandler<?> typeHandler = parameterMapping.getTypeHandler();
           if (typeHandler == null) {
-            throw new ExecutorException("Type handler was null on parameter mapping for property " + parameterMapping.getProperty() + ".  " +
+            throw new ExecutorException("Type handler was null on parameter mapping for property '" + parameterMapping.getProperty() + "'.  " +
                 "It was either not specified and/or could not be found for the javaType / jdbcType combination specified.");
           }
           metaParam.setValue(parameterMapping.getProperty(), typeHandler.getResult(cs, i + 1));
@@ -400,6 +400,10 @@ public class FastResultSetHandler implements ResultSetHandler {
       } else {
         // get simple result
         final TypeHandler<?> typeHandler = constructorMapping.getTypeHandler();
+        if (typeHandler == null) { // avoid NPE issue #475
+          throw new ExecutorException("Type handler was null on constructor parameter for column '" + column + "'.  " +
+              "It was either not specified and/or could not be found for the javaType / jdbcType combination specified.");
+        }
         value = typeHandler.getResult(rs, prependPrefix(column, columnPrefix));
       }
       constructorArgTypes.add(parameterType);
