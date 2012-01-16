@@ -498,8 +498,6 @@ public class BindingTest {
     }
   }
 
-  
-  @Ignore // TODO see issue #5
   @Test(expected = Exception.class)
   public void shouldFailWhenSelectingOneBlogWithNonExistentParam() {
     SqlSession session = sqlSessionFactory.openSession();
@@ -511,7 +509,6 @@ public class BindingTest {
     }
   }
 
-  @Ignore // TODO see issue #5
   @Test(expected = Exception.class)
   public void shouldFailWhenSelectingOneBlogWithNullParam() {
     SqlSession session = sqlSessionFactory.openSession();
@@ -522,8 +519,8 @@ public class BindingTest {
       session.close();
     }
   }
-  
-  @Ignore // TODO see issue #5
+
+  @Ignore // Decided that maps are dynamic so no existent params do not fail
   @Test(expected = PersistenceException.class)
   public void shouldFailWhenSelectingOneBlogWithNonExistentNestedParam() {
     SqlSession session = sqlSessionFactory.openSession();

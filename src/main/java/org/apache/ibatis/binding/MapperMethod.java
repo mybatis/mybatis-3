@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2011 The MyBatis Team
+ *    Copyright 2009-2012 The MyBatis Team
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@ package org.apache.ibatis.binding;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -136,7 +135,7 @@ public class MapperMethod {
     } else if (!hasNamedParameters && paramCount == 1) {
       return args[paramPositions.get(0)];
     } else {
-      Map<String, Object> param = new HashMap<String, Object>();
+      Map<String, Object> param = new MapperParamMap<Object>();
       for (int i = 0; i < paramCount; i++) {
         param.put(paramNames.get(i), args[paramPositions.get(i)]);
       }
@@ -158,7 +157,7 @@ public class MapperMethod {
   }
 
   private void setupMethodSignature() {
-    if( method.getReturnType().equals(Void.TYPE)){
+    if (method.getReturnType().equals(Void.TYPE)) {
       returnsVoid = true;
     }
     if (List.class.isAssignableFrom(method.getReturnType())) {
