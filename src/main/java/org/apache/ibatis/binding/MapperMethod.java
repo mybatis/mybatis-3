@@ -17,6 +17,7 @@ package org.apache.ibatis.binding;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -219,6 +220,20 @@ public class MapperMethod {
     } catch (Exception e) {
       throw new BindingException("Invalid bound statement (not found): " + commandName, e);
     }
+  }
+
+  public static class MapperParamMap<V> extends HashMap<String, V> {
+
+    private static final long serialVersionUID = -2212268410512043556L;
+
+    @Override
+    public V get(Object key) {
+      if (!super.containsKey(key)) {
+        throw new BindingException("Parameter '" + key + "' not found. Available parameters are " + this.keySet());
+      }
+      return super.get(key);
+    }
+
   }
 
 }
