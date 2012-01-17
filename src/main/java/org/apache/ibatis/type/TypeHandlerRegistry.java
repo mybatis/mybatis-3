@@ -123,6 +123,8 @@ public final class TypeHandlerRegistry {
     register(java.sql.Date.class, new SqlDateTypeHandler());
     register(java.sql.Time.class, new SqlTimeTypeHandler());
     register(java.sql.Timestamp.class, new SqlTimestampTypeHandler());
+    
+    register(Character.class, new CharacterTypeHandler());
   }
 
   public boolean hasTypeHandler(Class<?> javaType) {
