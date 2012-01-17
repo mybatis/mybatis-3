@@ -396,7 +396,7 @@ Por ejemplo, si la columna id de la tabla Author del ejemplo siguiente fuera aut
   where id = #{id}
 </select>]]></source>
 
-        <p>El ejemplo anterior demuestra un mapeo muy simple de parámetro con nombre. El atributo parameterType se ha informado a “int”, por lo tanto el nombre del parámetro puede ser cualquiera. Los tipos primitivos y los tipos de datos simples como Integer o String no tienen propiedades relevantes y por tanto el parámetro será reemplazado por su valor. Sin embargo, si pasas un objeto complejo, entonces el comportamiento es distinto. Por ejemplo:
+        <p>El ejemplo anterior muestra un mapeo muy simple de parámetro con nombre. El atributo parameterType se ha informado a “int”, por lo tanto el nombre del parámetro puede ser cualquiera. Los tipos primitivos y los tipos de datos simples como Integer o String no tienen propiedades relevantes y por tanto el parámetro será reemplazado por su valor. Sin embargo, si pasas un objeto complejo, entonces el comportamiento es distinto. Por ejemplo:
         </p>
 
         <source><![CDATA[<insert id="insertUser" parameterType="User" >
@@ -1017,7 +1017,7 @@ public class User {
           </tbody>
         </table>
 
-        <p>Previamente has visto un ejemplo muy complejo de asociaciones anidadas. Lo que se muestra a continuación es un ejemplo más simple que demuestra cómo funciona esta característica. En lugar de ejecutar un statement separado, vamos a hacer una JOIN de las tablas Blog y Author de la siguiente forma:
+        <p>Previamente has visto un ejemplo muy complejo de asociaciones anidadas. Lo que se muestra a continuación es un ejemplo más simple que muestra cómo funciona esta característica. En lugar de ejecutar un statement separado, vamos a hacer una JOIN de las tablas Blog y Author de la siguiente forma:
         </p>
 
         <source><![CDATA[<select id="selectBlog" parameterType="int" resultMap="blogResult">
@@ -1378,7 +1378,7 @@ public class User {
 
         <source><![CDATA[<cache type="com.domain.something.MyCustomCache"/>]]></source>
 
-        <p>Este ejemplo demuestra cómo usar una caché personalizada. La clase especificada el atributo type debe implementar el interfaz org.mybatis.cache.Cache. Este es uno de los interfaces más complejos de MyBatis pero su funcionalidad es simple.
+        <p>Este ejemplo muestra cómo usar una caché personalizada. La clase especificada en el atributo type debe implementar el interfaz org.mybatis.cache.Cache y proporcionar un constructor que recibe como parámetro un String id. Este es uno de los interfaces más complejos de MyBatis pero su funcionalidad es simple.
         </p>
 
         <source><![CDATA[public interface Cache {

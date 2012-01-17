@@ -1778,8 +1778,8 @@ public class User {
 
         <p>
           This example demonstrates how to use a custom cache implementation. The class specified in the type
-          attribute must implement the org.apache.ibatis.cache.Cache interface. This interface is one of the more
-          complex in the MyBatis framework, but simple given what it does.
+          attribute must implement the org.apache.ibatis.cache.Cache interface and provide a constructor that gets 
+          an String id as an argument. This interface is one of the more complex in the MyBatis framework, but simple given what it does.
         </p>
 
         <source><![CDATA[public interface Cache {
@@ -1792,6 +1792,9 @@ public class User {
   void clear();
   ReadWriteLock getReadWriteLock();
 }]]></source>
+
+        <p>Follows below 
+        </p>
 
         <p>
           To configure your cache, simply add public JavaBeans properties to your Cache implementation, and
