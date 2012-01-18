@@ -66,7 +66,8 @@ public class UnknownTypeHandler extends BaseTypeHandler<Object> {
       handler = OBJECT_TYPE_HANDLER;
     } else {
       handler = typeHandlerRegistry.getTypeHandler(parameter.getClass(), jdbcType);
-      if (handler instanceof UnknownTypeHandler) {
+      // check if handler is null (issue #270)
+      if (handler == null || handler instanceof UnknownTypeHandler) {
         handler = OBJECT_TYPE_HANDLER;
       }
     }
