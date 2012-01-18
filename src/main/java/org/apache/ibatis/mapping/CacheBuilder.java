@@ -77,11 +77,14 @@ public class CacheBuilder {
     setDefaultImplementations();
     Cache cache = newBaseCacheInstance(implementation, id);
     setCacheProperties(cache);
-    for (Class<? extends Cache> decorator : decorators) {
-      cache = newCacheDecoratorInstance(decorator, cache);
-      setCacheProperties(cache);
+    // issue #352, do not apply decorators to custom caches
+    if (cache.getClass().getName().startsWith("org.apache.ibatis")) {
+      for (Class<? extends Cache> decorator : decorators) {
+        cache = newCacheDecoratorInstance(decorator, cache);
+        setCacheProperties(cache);
+      }
+      cache = setStandardDecorators(cache);
     }
-    cache = setStandardDecorators(cache);
     return cache;
   }
 
@@ -96,21 +99,19 @@ public class CacheBuilder {
 
   private Cache setStandardDecorators(Cache cache) {
     try {
-      if (cache.getClass().getName().startsWith("org.apache.ibatis")) {
-        MetaObject metaCache = MetaObject.forObject(cache);
-        if (size != null && metaCache.hasSetter("size")) {
-          metaCache.setValue("size", size);
-        }
-        if (clearInterval != null) {
-          cache = new ScheduledCache(cache);
-          ((ScheduledCache) cache).setClearInterval(clearInterval);
-        }
-        if (readWrite) {
-          cache = new SerializedCache(cache);
-        }
-        cache = new LoggingCache(cache);
-        cache = new SynchronizedCache(cache);
+      MetaObject metaCache = MetaObject.forObject(cache);
+      if (size != null && metaCache.hasSetter("size")) {
+        metaCache.setValue("size", size);
       }
+      if (clearInterval != null) {
+        cache = new ScheduledCache(cache);
+        ((ScheduledCache) cache).setClearInterval(clearInterval);
+      }
+      if (readWrite) {
+        cache = new SerializedCache(cache);
+      }
+      cache = new LoggingCache(cache);
+      cache = new SynchronizedCache(cache);
       return cache;
     } catch (Exception e) {
       throw new CacheException("Error building standard cache decorators.  Cause: " + e, e);
