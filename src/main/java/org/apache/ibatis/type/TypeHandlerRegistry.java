@@ -39,6 +39,7 @@ public final class TypeHandlerRegistry {
       put(Float.class, float.class);
       put(Double.class, double.class);
       put(Boolean.class, boolean.class);
+      put(Character.class, char.class);
     }
   };
 
@@ -124,7 +125,9 @@ public final class TypeHandlerRegistry {
     register(java.sql.Time.class, new SqlTimeTypeHandler());
     register(java.sql.Timestamp.class, new SqlTimestampTypeHandler());
     
+    // issue #273
     register(Character.class, new CharacterTypeHandler());
+    register(char.class, new CharacterTypeHandler());
   }
 
   public boolean hasTypeHandler(Class<?> javaType) {
