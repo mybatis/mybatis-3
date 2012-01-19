@@ -33,7 +33,6 @@ import org.apache.ibatis.parsing.XPathParser;
 import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.reflection.MetaClass;
 import org.apache.ibatis.reflection.factory.ObjectFactory;
-import org.apache.ibatis.reflection.wrapper.ObjectWrapperFactory;
 import org.apache.ibatis.session.AutoMappingBehavior;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.ExecutorType;
@@ -91,11 +90,10 @@ public class XMLConfigBuilder extends BaseBuilder {
 
   private void parseConfiguration(XNode root) {
     try {
+      propertiesElement(root.evalNode("properties")); //issue #117 read properties first
       typeAliasesElement(root.evalNode("typeAliases"));
       pluginElement(root.evalNode("plugins"));
       objectFactoryElement(root.evalNode("objectFactory"));
-      objectWrapperFactoryElement(root.evalNode("objectWrapperFactory"));
-      propertiesElement(root.evalNode("properties"));
       settingsElement(root.evalNode("settings"));
       environmentsElement(root.evalNode("environments"));
       databaseIdProviderElement(root.evalNode("databaseIdProvider"));
@@ -105,7 +103,7 @@ public class XMLConfigBuilder extends BaseBuilder {
       throw new BuilderException("Error parsing SQL Mapper Configuration. Cause: " + e, e);
     }
   }
- 
+
   private void typeAliasesElement(XNode parent) {
     if (parent != null) {
       for (XNode child : parent.getChildren()) {
@@ -149,14 +147,6 @@ public class XMLConfigBuilder extends BaseBuilder {
       ObjectFactory factory = (ObjectFactory) resolveClass(type).newInstance();
       factory.setProperties(properties);
       configuration.setObjectFactory(factory);
-    }
-  }
-
-  private void objectWrapperFactoryElement(XNode context) throws Exception {
-    if (context != null) {
-      String type = context.getStringAttribute("type");
-      ObjectWrapperFactory factory = (ObjectWrapperFactory) resolveClass(type).newInstance();
-      configuration.setObjectWrapperFactory(factory);
     }
   }
 
@@ -267,6 +257,7 @@ public class XMLConfigBuilder extends BaseBuilder {
     throw new BuilderException("Environment declaration requires a DataSourceFactory.");
   }
 
+  @SuppressWarnings("rawtypes")
   private void typeHandlerElement(XNode parent) throws Exception {
     if (parent != null) {
       for (XNode child : parent.getChildren()) {
@@ -334,4 +325,5 @@ public class XMLConfigBuilder extends BaseBuilder {
     }
     return false;
   }
+
 }
