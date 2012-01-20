@@ -17,6 +17,7 @@ package org.apache.ibatis.cache.decorators;
 
 import org.apache.ibatis.cache.Cache;
 
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.locks.ReadWriteLock;
@@ -44,7 +45,8 @@ public class LruCache implements Cache {
   }
 
   public void setSize(final int size) {
-    keyMap = new LinkedHashMap<Object, Object>(size, .75F, true) {
+    // TODO look for a better solution to this, see issue #335
+    keyMap = Collections.synchronizedMap(new LinkedHashMap<Object, Object>(size, .75F, true) {
       private static final long serialVersionUID = 4267176411845948333L;
 
       protected boolean removeEldestEntry(Map.Entry<Object, Object> eldest) {
@@ -54,7 +56,7 @@ public class LruCache implements Cache {
         }
         return tooBig;
       }
-    };
+    });
   }
 
   public void putObject(Object key, Object value) {
