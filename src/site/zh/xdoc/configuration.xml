@@ -941,6 +941,18 @@ public class Author {
                 作为代码存储(而不是索引)
               </td>
             </tr>
+            <tr>
+              <td>
+                <code>EnumOrdinalTypeHandler</code>
+              </td>
+              <td>
+                Enumeration Type
+              </td>
+              <td>
+                Any compatible <code>NUMERIC</code> or <code>DOUBLE</code>, as the position is stored
+                (not the code itself).
+              </td>
+            </tr>
           </tbody>
         </table>
         <p>

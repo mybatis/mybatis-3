@@ -855,6 +855,17 @@ public class Author {
                 <code>VARCHAR</code> Cualquiera compatible con string porque se guarda el código (no el índice).       
               </td>
             </tr>
+            <tr>
+              <td>
+                <code>EnumOrdinalTypeHandler</code>
+              </td>
+              <td>
+                Enumeration Type
+              </td>
+              <td>
+                Cualquiera compatible con <code>NUMERIC</code> o <code>DOUBLE</code> por que se guarda la posición (no el código).
+              </td>
+            </tr>
           </tbody>
         </table>
         <p>

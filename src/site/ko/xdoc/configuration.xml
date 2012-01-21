@@ -805,6 +805,18 @@ public class Author {
                 <code>VARCHAR</code> – 문자열 호환타입.
               </td>
             </tr>
+            <tr>
+              <td>
+                <code>EnumOrdinalTypeHandler</code>
+              </td>
+              <td>
+                Enumeration Type
+              </td>
+              <td>
+                Any compatible <code>NUMERIC</code> or <code>DOUBLE</code>, as the position is stored
+                (not the code itself).
+              </td>
+            </tr>
           </tbody>
         </table>
         <p>지원하지 않거나 비표준인 타입에 대해서는 당신 스스로 만들어서 타입핸들러를 오버라이드할 수 있다. 
