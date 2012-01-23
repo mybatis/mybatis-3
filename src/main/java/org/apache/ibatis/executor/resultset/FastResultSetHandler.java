@@ -114,7 +114,7 @@ public class FastResultSetHandler implements ResultSetHandler {
       final ResultMap resultMap = configuration.getResultMap(resultMapId);
       final DefaultResultHandler resultHandler = new DefaultResultHandler(configuration.getDefaultListResultHandlerType());
       ResultColumnCache resultColumnCache = new ResultColumnCache(cs.getMetaData(), configuration);
-      handleRowValues(rs, resultMap, resultHandler, new RowBounds(), resultColumnCache); // TODO check this regarding ResultColumnCache
+      handleRowValues(rs, resultMap, resultHandler, new RowBounds(), resultColumnCache);
       metaParam.setValue(parameterMapping.getProperty(), resultHandler.getResultList());
     } else {
       throw new ExecutorException("Parameter requires ResultMap for output types of java.sql.ResultSet");
