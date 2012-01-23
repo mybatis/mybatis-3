@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2011 The MyBatis Team
+ *    Copyright 2009-2012 The MyBatis Team
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,13 +15,20 @@
  */
 package org.apache.ibatis.datasource.unpooled;
 
-import org.apache.ibatis.datasource.DataSourceException;
-import org.apache.ibatis.io.Resources;
+import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.Driver;
+import java.sql.DriverManager;
+import java.sql.DriverPropertyInfo;
+import java.sql.SQLException;
+import java.sql.SQLFeatureNotSupportedException;
+import java.util.Properties;
+import java.util.logging.Logger;
 
 import javax.sql.DataSource;
-import java.io.PrintWriter;
-import java.sql.*;
-import java.util.Properties;
+
+import org.apache.ibatis.datasource.DataSourceException;
+import org.apache.ibatis.io.Resources;
 
 public class UnpooledDataSource implements DataSource {
 
@@ -226,13 +233,22 @@ public class UnpooledDataSource implements DataSource {
     public boolean jdbcCompliant() {
       return this.driver.jdbcCompliant();
     }
+
+    public Logger getParentLogger() throws SQLFeatureNotSupportedException {
+      throw new SQLFeatureNotSupportedException();
+    }
   }
 
   public <T> T unwrap(Class<T> iface) throws SQLException {
-    throw new UnsupportedOperationException();
+    return null;
   }
 
   public boolean isWrapperFor(Class<?> iface) throws SQLException {
-    throw new UnsupportedOperationException();
+    return false;
   }
+
+  public Logger getParentLogger() throws SQLFeatureNotSupportedException {
+    throw new SQLFeatureNotSupportedException();
+  }
+
 }
