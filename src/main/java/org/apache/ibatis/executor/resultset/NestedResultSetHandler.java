@@ -15,6 +15,18 @@
  */
 package org.apache.ibatis.executor.resultset;
 
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+
 import org.apache.ibatis.cache.CacheKey;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.executor.ExecutorException;
@@ -27,15 +39,10 @@ import org.apache.ibatis.mapping.ResultMap;
 import org.apache.ibatis.mapping.ResultMapping;
 import org.apache.ibatis.reflection.MetaClass;
 import org.apache.ibatis.reflection.MetaObject;
+import org.apache.ibatis.session.AutoMappingBehavior;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
-import org.apache.ibatis.session.AutoMappingBehavior;
 import org.apache.ibatis.type.TypeHandler;
-
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.util.*;
 
 public class NestedResultSetHandler extends FastResultSetHandler {
 
@@ -72,14 +79,14 @@ public class NestedResultSetHandler extends FastResultSetHandler {
   // HANDLE ROWS
   //
 
-  protected void handleRowValues(ResultSet rs, ResultMap resultMap, ResultHandler resultHandler, RowBounds rowBounds) throws SQLException {
+  protected void handleRowValues(ResultSet rs, ResultMap resultMap, ResultHandler resultHandler, RowBounds rowBounds, ResultColumnCache resultColumnCache) throws SQLException {
     final DefaultResultContext resultContext = new DefaultResultContext();
     skipRows(rs, rowBounds);
     while (shouldProcessMoreRows(rs, resultContext, rowBounds)) {
       final ResultMap discriminatedResultMap = resolveDiscriminatedResultMap(rs, resultMap, null);
-      final CacheKey rowKey = createRowKey(discriminatedResultMap, rs, null);
+      final CacheKey rowKey = createRowKey(discriminatedResultMap, rs, null, resultColumnCache);
       final boolean knownValue = globalRowValueCache.containsKey(rowKey);
-      Object rowValue = getRowValue(rs, discriminatedResultMap, rowKey);
+      Object rowValue = getRowValue(rs, discriminatedResultMap, rowKey, resultColumnCache);
       if (!knownValue) {
         resultContext.nextResultObject(rowValue);
         resultHandler.handleResult(resultContext);
@@ -91,30 +98,31 @@ public class NestedResultSetHandler extends FastResultSetHandler {
   // GET VALUE FROM ROW
   //
 
-  protected Object getRowValue(ResultSet rs, ResultMap resultMap, CacheKey rowKey) throws SQLException {
-    return getRowValue(rs, resultMap, rowKey, null);
+  protected Object getRowValue(ResultSet rs, ResultMap resultMap, CacheKey rowKey, ResultColumnCache resultColumnCache) throws SQLException {
+    return getRowValue(rs, resultMap, rowKey, null, resultColumnCache);
   }
 
-  protected Object getRowValue(ResultSet rs, ResultMap resultMap, CacheKey rowKey, String columnPrefix) throws SQLException {
+  protected Object getRowValue(ResultSet rs, ResultMap resultMap, CacheKey rowKey, String columnPrefix, ResultColumnCache resultColumnCache) throws SQLException {
     if (globalRowValueCache.containsKey(rowKey)) {
       final Object resultObject = globalRowValueCache.get(rowKey);
       final MetaObject metaObject = configuration.newMetaObject(resultObject);
-      applyNestedResultMappings(rs, resultMap, metaObject, columnPrefix);
+      applyNestedResultMappings(rs, resultMap, metaObject, columnPrefix, resultColumnCache);
       return resultObject;
     } else {
-      final List<String> mappedColumnNames = new ArrayList<String>();
-      final List<String> unmappedColumnNames = new ArrayList<String>();
+      List<String> mappedColumnNames = new ArrayList<String>();
+      List<String> unmappedColumnNames = new ArrayList<String>();
       final ResultLoaderMap lazyLoader = instantiateResultLoaderMap();
-      Object resultObject = createResultObject(rs, resultMap, lazyLoader, columnPrefix);
+      Object resultObject = createResultObject(rs, resultMap, lazyLoader, columnPrefix, resultColumnCache);
       if (resultObject != null && !typeHandlerRegistry.hasTypeHandler(resultMap.getType())) {
         final MetaObject metaObject = configuration.newMetaObject(resultObject);
-        loadMappedAndUnmappedColumnNames(rs, resultMap, mappedColumnNames, unmappedColumnNames, columnPrefix);
+        mappedColumnNames = resultColumnCache.getMappedColumnNames(resultMap, columnPrefix);
+        unmappedColumnNames = resultColumnCache.getUnmappedColumnNames(resultMap, columnPrefix);
         boolean foundValues = resultMap.getConstructorResultMappings().size() > 0;
         if (AutoMappingBehavior.FULL.equals(configuration.getAutoMappingBehavior())) {
-          foundValues = applyAutomaticMappings(rs, unmappedColumnNames, metaObject, configuration.isMapUnderscoreToCamelCase(), columnPrefix) || foundValues;
+          foundValues = applyAutomaticMappings(rs, unmappedColumnNames, metaObject, columnPrefix, resultColumnCache) || foundValues;
         }
         foundValues = applyPropertyMappings(rs, resultMap, mappedColumnNames, metaObject, lazyLoader, columnPrefix) || foundValues;
-        foundValues = applyNestedResultMappings(rs, resultMap, metaObject, columnPrefix) || foundValues;
+        foundValues = applyNestedResultMappings(rs, resultMap, metaObject, columnPrefix, resultColumnCache) || foundValues;
         resultObject = foundValues ? resultObject : null;
       }
       if (rowKey != CacheKey.NULL_CACHE_KEY) {
@@ -129,29 +137,27 @@ public class NestedResultSetHandler extends FastResultSetHandler {
   // NESTED RESULT MAP (JOIN MAPPING)
   //
 
-  private boolean applyNestedResultMappings(ResultSet rs, ResultMap resultMap, MetaObject metaObject, String parentPrefix) {
+  private boolean applyNestedResultMappings(ResultSet rs, ResultMap resultMap, MetaObject metaObject, String parentPrefix, ResultColumnCache resultColumnCache) {
     boolean foundValues = false;
     for (ResultMapping resultMapping : resultMap.getPropertyResultMappings()) {
       final String nestedResultMapId = resultMapping.getNestedResultMapId();
       if (nestedResultMapId != null) {
         try {
           final StringBuilder columnPrefixBuilder = new StringBuilder();
-          if (parentPrefix != null)
-            columnPrefixBuilder.append(parentPrefix);
-          if (resultMapping.getColumnPrefix()!= null)
-            columnPrefixBuilder.append(resultMapping.getColumnPrefix());
+          if (parentPrefix != null) columnPrefixBuilder.append(parentPrefix);
+          if (resultMapping.getColumnPrefix()!= null) columnPrefixBuilder.append(resultMapping.getColumnPrefix());
           final String columnPrefix = columnPrefixBuilder.length() == 0 ? null
               : columnPrefixBuilder.toString().toUpperCase(Locale.ENGLISH);
           
           final ResultMap nestedResultMap = getNestedResultMap(rs, nestedResultMapId, columnPrefix);
           final Object collectionProperty = instantiateCollectionPropertyIfAppropriate(resultMapping, metaObject);
 
-          final CacheKey parentRowKey = createRowKey(resultMap, rs, parentPrefix);
-          final CacheKey rowKey = createRowKey(nestedResultMap, rs, columnPrefix);
+          final CacheKey parentRowKey = createRowKey(resultMap, rs, parentPrefix, resultColumnCache);
+          final CacheKey rowKey = createRowKey(nestedResultMap, rs, columnPrefix, resultColumnCache);
           final Set<CacheKey> localRowValueCache = getRowValueCache(parentRowKey);
           final boolean knownValue = localRowValueCache.contains(rowKey);
           localRowValueCache.add(rowKey);
-          Object rowValue = getRowValue(rs, nestedResultMap, rowKey, columnPrefix);
+          Object rowValue = getRowValue(rs, nestedResultMap, rowKey, columnPrefix, resultColumnCache);
           Set<String> notNullColumns = resultMapping.getNotNullColumns();
           boolean anyNotNullColumnIsNotNull = true;
           if (notNullColumns != null && !notNullColumns.isEmpty()) {
@@ -222,7 +228,7 @@ public class NestedResultSetHandler extends FastResultSetHandler {
   // UNIQUE RESULT KEY
   //
 
-  private CacheKey createRowKey(ResultMap resultMap, ResultSet rs, String columnPrefix) throws SQLException {
+  private CacheKey createRowKey(ResultMap resultMap, ResultSet rs, String columnPrefix, ResultColumnCache resultColumnCache) throws SQLException {
     final CacheKey cacheKey = new CacheKey();
     List<ResultMapping> resultMappings = getResultMappingsForRowKey(resultMap);
     cacheKey.update(resultMap.getId());
@@ -230,7 +236,7 @@ public class NestedResultSetHandler extends FastResultSetHandler {
       if (Map.class.isAssignableFrom(resultMap.getType())) {
         createRowKeyForMap(rs, cacheKey);
       } else {
-        createRowKeyForUnmappedProperties(resultMap, rs, cacheKey, columnPrefix);
+        createRowKeyForUnmappedProperties(resultMap, rs, cacheKey, columnPrefix, resultColumnCache);
       }
     } else {
       createRowKeyForMappedProperties(rs, cacheKey, resultMappings, columnPrefix);
@@ -269,20 +275,19 @@ public class NestedResultSetHandler extends FastResultSetHandler {
     }
   }
 
-  private void createRowKeyForUnmappedProperties(ResultMap resultMap, ResultSet rs, CacheKey cacheKey, String columnPrefix) throws SQLException {
+  private void createRowKeyForUnmappedProperties(ResultMap resultMap, ResultSet rs, CacheKey cacheKey, String columnPrefix, ResultColumnCache resultColumnCache) throws SQLException {
     final MetaClass metaType = MetaClass.forClass(resultMap.getType());
-    final List<String> mappedColumnNames = new ArrayList<String>();
-    final List<String> unmappedColumnNames = new ArrayList<String>();
-    loadMappedAndUnmappedColumnNames(rs, resultMap, mappedColumnNames, unmappedColumnNames, columnPrefix);
+    List<String> unmappedColumnNames = resultColumnCache.getUnmappedColumnNames(resultMap, columnPrefix);
     for (String column : unmappedColumnNames) {
       String property = column;
       if (columnPrefix != null && columnPrefix.length() > 0) {
         // When columnPrefix is specified,
         // ignore columns without the prefix.
-        if (column.startsWith(columnPrefix))
+        if (column.startsWith(columnPrefix)) {
           property = column.substring(columnPrefix.length());
-        else
+        } else {
           continue;
+        }
       }
       if (metaType.findProperty(property) != null) {
         String value = rs.getString(column);

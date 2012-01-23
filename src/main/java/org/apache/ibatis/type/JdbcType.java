@@ -68,7 +68,7 @@ public enum JdbcType {
     this.TYPE_CODE = code;
   }
 
-  static JdbcType forCode(int code)  {
+  public static JdbcType forCode(int code)  {
     return codeLookup.get(code);
   }
 

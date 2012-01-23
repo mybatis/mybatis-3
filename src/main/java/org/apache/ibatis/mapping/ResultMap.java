@@ -53,6 +53,9 @@ public class ResultMap {
     }
 
     public ResultMap build() {
+      if (resultMap.id == null) {
+        throw new IllegalArgumentException("ResultMaps must have an id");
+      }
       resultMap.mappedColumns = new HashSet<String>();
       resultMap.idResultMappings = new ArrayList<ResultMapping>();
       resultMap.constructorResultMappings = new ArrayList<ResultMapping>();
