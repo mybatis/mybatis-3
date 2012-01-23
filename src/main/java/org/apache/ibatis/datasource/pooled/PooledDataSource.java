@@ -537,7 +537,7 @@ public class PooledDataSource implements DataSource {
   }
 
   public Logger getParentLogger() throws SQLFeatureNotSupportedException {
-    throw new SQLFeatureNotSupportedException();
+    return Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
   }
 
 }
