@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2011 The MyBatis Team
+ *    Copyright 2009-2012 The MyBatis Team
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package org.apache.ibatis.executor;
 import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.cache.CacheKey;
 import org.apache.ibatis.cache.TransactionalCacheManager;
+import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.session.ResultHandler;
@@ -48,7 +49,6 @@ public class CachingExecutor implements Executor {
     }
   }
 
-
   public boolean isClosed() {
     return delegate.isClosed();
   }
@@ -58,34 +58,36 @@ public class CachingExecutor implements Executor {
     return delegate.update(ms, parameterObject);
   }
 
-
   public <E> List<E> query(MappedStatement ms, Object parameterObject, RowBounds rowBounds, ResultHandler resultHandler) throws SQLException {
-    if (ms != null) {
-      Cache cache = ms.getCache();
-      if (cache != null) {
-        flushCacheIfRequired(ms);
-        cache.getReadWriteLock().readLock().lock();
-        try {
-          if (ms.isUseCache() && resultHandler == null) {
-            CacheKey key = createCacheKey(ms, parameterObject, rowBounds);
-            @SuppressWarnings( "unchecked" ) // type driven by the key?
-            final List<E> cachedList = (List<E>) cache.getObject(key);
-            if (cachedList != null) {
-              return cachedList;
-            } else {
-              List<E> list = delegate.<E>query(ms, parameterObject, rowBounds, resultHandler);
-              tcm.putObject(cache, key, list);
-              return list;
-            }
+    BoundSql boundSql = ms.getBoundSql(parameterObject);
+    CacheKey key = createCacheKey(ms, parameterObject, rowBounds, boundSql);
+    return query(ms, parameterObject, rowBounds, resultHandler, key, boundSql);
+  }
+
+  public <E> List<E> query(MappedStatement ms, Object parameterObject, RowBounds rowBounds, ResultHandler resultHandler, CacheKey key, BoundSql boundSql) throws SQLException {
+    Cache cache = ms.getCache();
+    if (cache != null) {
+      flushCacheIfRequired(ms);
+      cache.getReadWriteLock().readLock().lock();
+      try {
+        if (ms.isUseCache() && resultHandler == null) {
+          @SuppressWarnings("unchecked") // type driven by the key?
+          final List<E> cachedList = (List<E>) cache.getObject(key);
+          if (cachedList != null) {
+            return cachedList;
           } else {
-            return delegate.<E>query(ms, parameterObject, rowBounds, resultHandler);
+            List<E> list = delegate.<E> query(ms, parameterObject, rowBounds, resultHandler, key, boundSql);
+            tcm.putObject(cache, key, list);
+            return list;
           }
-        } finally {
-          cache.getReadWriteLock().readLock().unlock();
+        } else {
+          return delegate.<E> query(ms, parameterObject, rowBounds, resultHandler, key, boundSql);
         }
+      } finally {
+        cache.getReadWriteLock().readLock().unlock();
       }
     }
-    return delegate.query(ms, parameterObject, rowBounds, resultHandler);
+    return delegate.query(ms, parameterObject, rowBounds, resultHandler, key, boundSql);
   }
 
   public List<BatchResult> flushStatements() throws SQLException {
@@ -107,8 +109,8 @@ public class CachingExecutor implements Executor {
     }
   }
 
-  public CacheKey createCacheKey(MappedStatement ms, Object parameterObject, RowBounds rowBounds) {
-    return delegate.createCacheKey(ms, parameterObject, rowBounds);
+  public CacheKey createCacheKey(MappedStatement ms, Object parameterObject, RowBounds rowBounds, BoundSql boundSql) {
+    return delegate.createCacheKey(ms, parameterObject, rowBounds, boundSql);
   }
 
   public boolean isCached(MappedStatement ms, CacheKey key) {

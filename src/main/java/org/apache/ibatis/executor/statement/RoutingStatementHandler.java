@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2011 The MyBatis Team
+ *    Copyright 2009-2012 The MyBatis Team
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -32,17 +32,17 @@ public class RoutingStatementHandler implements StatementHandler {
 
   private final StatementHandler delegate;
 
-  public RoutingStatementHandler(Executor executor, MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler) {
+  public RoutingStatementHandler(Executor executor, MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql) {
 
     switch (ms.getStatementType()) {
       case STATEMENT:
-        delegate = new SimpleStatementHandler(executor, ms, parameter, rowBounds, resultHandler);
+        delegate = new SimpleStatementHandler(executor, ms, parameter, rowBounds, resultHandler, boundSql);
         break;
       case PREPARED:
-        delegate = new PreparedStatementHandler(executor, ms, parameter, rowBounds, resultHandler);
+        delegate = new PreparedStatementHandler(executor, ms, parameter, rowBounds, resultHandler, boundSql);
         break;
       case CALLABLE:
-        delegate = new CallableStatementHandler(executor, ms, parameter, rowBounds, resultHandler);
+        delegate = new CallableStatementHandler(executor, ms, parameter, rowBounds, resultHandler, boundSql);
         break;
       default:
         throw new ExecutorException("Unknown statement type: " + ms.getStatementType());

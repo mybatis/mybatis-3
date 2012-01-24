@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2011 The MyBatis Team
+ *    Copyright 2009-2012 The MyBatis Team
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.executor.keygen.Jdbc3KeyGenerator;
 import org.apache.ibatis.executor.keygen.KeyGenerator;
 import org.apache.ibatis.executor.keygen.SelectKeyGenerator;
+import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
@@ -31,8 +32,8 @@ import java.util.List;
 
 public class SimpleStatementHandler extends BaseStatementHandler {
 
-  public SimpleStatementHandler(Executor executor, MappedStatement mappedStatement, Object parameter, RowBounds rowBounds, ResultHandler resultHandler) {
-    super(executor, mappedStatement, parameter, rowBounds, resultHandler);
+  public SimpleStatementHandler(Executor executor, MappedStatement mappedStatement, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql) {
+    super(executor, mappedStatement, parameter, rowBounds, resultHandler, boundSql);
   }
 
   public int update(Statement statement)

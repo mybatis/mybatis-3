@@ -448,7 +448,8 @@ public class FastResultSetHandler implements ResultSetHandler {
     final Object nestedQueryParameterObject = prepareParameterForNestedQuery(rs, propertyMapping, nestedQueryParameterType, columnPrefix);
     Object value = null;
     if (nestedQueryParameterObject != null) {
-      final CacheKey key = executor.createCacheKey(nestedQuery, nestedQueryParameterObject, RowBounds.DEFAULT);
+      final BoundSql nestedBoundSql = nestedQuery.getBoundSql(nestedQueryParameterObject);
+      final CacheKey key = executor.createCacheKey(nestedQuery, nestedQueryParameterObject, RowBounds.DEFAULT, nestedBoundSql);
       if (executor.isCached(nestedQuery, key)) {
         executor.deferLoad(nestedQuery, metaResultObject, property, key);
       } else {

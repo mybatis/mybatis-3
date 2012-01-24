@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2011 The MyBatis Team
+ *    Copyright 2009-2012 The MyBatis Team
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -47,7 +47,7 @@ public class BatchExecutor extends BaseExecutor {
 
   public int doUpdate(MappedStatement ms, Object parameterObject) throws SQLException {
     Configuration configuration = ms.getConfiguration();
-    StatementHandler handler = configuration.newStatementHandler(this, ms, parameterObject, RowBounds.DEFAULT, null);
+    StatementHandler handler = configuration.newStatementHandler(this, ms, parameterObject, RowBounds.DEFAULT, null, null);
     BoundSql boundSql = handler.getBoundSql();
     String sql = boundSql.getSql();
     Statement stmt;
@@ -66,13 +66,13 @@ public class BatchExecutor extends BaseExecutor {
     return BATCH_UPDATE_RETURN_VALUE;
   }
 
-  public <E> List<E> doQuery(MappedStatement ms, Object parameterObject, RowBounds rowBounds, ResultHandler resultHandler)
+  public <E> List<E> doQuery(MappedStatement ms, Object parameterObject, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql)
       throws SQLException {
     Statement stmt = null;
     try {
       flushStatements();
       Configuration configuration = ms.getConfiguration();
-      StatementHandler handler = configuration.newStatementHandler(this, ms, parameterObject, rowBounds, resultHandler);
+      StatementHandler handler = configuration.newStatementHandler(this, ms, parameterObject, rowBounds, resultHandler, boundSql);
       Connection connection = getConnection();
       stmt = handler.prepare(connection);
       handler.parameterize(stmt);

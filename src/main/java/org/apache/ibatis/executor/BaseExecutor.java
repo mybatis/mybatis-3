@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2011 The MyBatis Team
+ *    Copyright 2009-2012 The MyBatis Team
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -116,22 +116,23 @@ public abstract class BaseExecutor implements Executor {
   }
 
   public <E> List<E> query(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler) throws SQLException {
+    BoundSql boundSql = ms.getBoundSql(parameter);
+    CacheKey key = createCacheKey(ms, parameter, rowBounds, boundSql);
+    return query(ms, parameter, rowBounds, resultHandler, key, boundSql);
+ }
+
+  public <E> List<E> query(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, CacheKey key, BoundSql boundSql) throws SQLException {
     ErrorContext.instance().resource(ms.getResource()).activity("executing a query").object(ms.getId());
     if (closed) throw new ExecutorException("Executor was closed.");
-
-    // Flush the internal cache when force is true
-    if (ms.isFlushCacheRequired()) {
-        clearLocalCache();
-    }
+    if (ms.isFlushCacheRequired()) clearLocalCache(); // Flush the internal cache when force is true
     List<E> list;
     try {
       queryStack++;
-      CacheKey key = createCacheKey(ms, parameter, rowBounds);
       list = resultHandler == null ? (List<E>) localCache.getObject(key) : null;
       if (list != null) {
         handleLocallyCachedOutputParameters(ms, key, parameter);
       } else {
-        list = queryFromDatabase(ms, parameter, rowBounds, resultHandler, key);
+        list = queryFromDatabase(ms, parameter, rowBounds, resultHandler, key, boundSql);
       }
     } finally {
       queryStack--;
@@ -154,9 +155,8 @@ public abstract class BaseExecutor implements Executor {
     }
   }
 
-  public CacheKey createCacheKey(MappedStatement ms, Object parameterObject, RowBounds rowBounds) {
+  public CacheKey createCacheKey(MappedStatement ms, Object parameterObject, RowBounds rowBounds, BoundSql boundSql) {
     if (closed) throw new ExecutorException("Executor was closed.");
-    BoundSql boundSql = ms.getBoundSql(parameterObject);
     CacheKey cacheKey = new CacheKey();
     cacheKey.update(ms.getId());
     cacheKey.update(rowBounds.getOffset());
@@ -187,9 +187,7 @@ public abstract class BaseExecutor implements Executor {
   }
 
   public void commit(boolean required) throws SQLException {
-    if (closed) {
-      throw new ExecutorException("Cannot commit, transaction is already closed");
-    }
+    if (closed) throw new ExecutorException("Cannot commit, transaction is already closed");
     clearLocalCache();
     flushStatements();
     if (required) {
@@ -223,7 +221,7 @@ public abstract class BaseExecutor implements Executor {
   protected abstract List<BatchResult> doFlushStatements(boolean isRollback)
       throws SQLException;
 
-  protected abstract <E> List<E> doQuery(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler)
+  protected abstract <E> List<E> doQuery(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql)
       throws SQLException;
 
   protected void closeStatement(Statement statement) {
@@ -253,11 +251,11 @@ public abstract class BaseExecutor implements Executor {
     }
   }
 
-  private <E> List<E> queryFromDatabase(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, CacheKey key) throws SQLException {
+  private <E> List<E> queryFromDatabase(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, CacheKey key, BoundSql boundSql) throws SQLException {
     List<E> list;
     localCache.putObject(key, EXECUTION_PLACEHOLDER);
     try {
-      list = doQuery(ms, parameter, rowBounds, resultHandler);
+      list = doQuery(ms, parameter, rowBounds, resultHandler, boundSql);
     } finally {
       localCache.removeObject(key);
     }
@@ -312,7 +310,7 @@ public abstract class BaseExecutor implements Executor {
       resultObject.setValue(property, value);
     }
   }
-  
+
   protected Connection getConnection() throws SQLException {
     Connection connection = transaction.getConnection();
     if (log.isDebugEnabled()) {

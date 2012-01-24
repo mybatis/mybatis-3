@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2011 The MyBatis Team
+ *    Copyright 2009-2012 The MyBatis Team
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 package org.apache.ibatis.executor;
 
 import org.apache.ibatis.cache.CacheKey;
+import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.session.ResultHandler;
@@ -31,6 +32,8 @@ public interface Executor {
 
   int update(MappedStatement ms, Object parameter) throws SQLException;
 
+  <E> List<E> query(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, CacheKey cacheKey, BoundSql boundSql) throws SQLException;
+
   <E> List<E> query(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler) throws SQLException;
 
   List<BatchResult> flushStatements() throws SQLException;
@@ -39,7 +42,7 @@ public interface Executor {
 
   void rollback(boolean required) throws SQLException;
 
-  CacheKey createCacheKey(MappedStatement ms, Object parameterObject, RowBounds rowBounds);
+  CacheKey createCacheKey(MappedStatement ms, Object parameterObject, RowBounds rowBounds, BoundSql boundSql);
 
   boolean isCached(MappedStatement ms, CacheKey key);
 
@@ -50,7 +53,7 @@ public interface Executor {
   Transaction getTransaction();
 
   void close(boolean forceRollback);
-  
+
   boolean isClosed();
 
 }

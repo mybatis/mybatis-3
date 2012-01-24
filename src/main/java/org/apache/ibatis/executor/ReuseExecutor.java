@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2011 The MyBatis Team
+ *    Copyright 2009-2012 The MyBatis Team
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -39,23 +39,21 @@ public class ReuseExecutor extends BaseExecutor {
     super(configuration, transaction);
   }
 
-  public int doUpdate(MappedStatement ms, Object parameter)
-      throws SQLException {
+  public int doUpdate(MappedStatement ms, Object parameter) throws SQLException {
     Configuration configuration = ms.getConfiguration();
-    StatementHandler handler = configuration.newStatementHandler(this, ms, parameter, RowBounds.DEFAULT, null);
+    StatementHandler handler = configuration.newStatementHandler(this, ms, parameter, RowBounds.DEFAULT, null, null);
     Statement stmt = prepareStatement(handler);
     return handler.update(stmt);
   }
 
-  public <E> List<E> doQuery(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler) throws SQLException {
+  public <E> List<E> doQuery(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql) throws SQLException {
     Configuration configuration = ms.getConfiguration();
-    StatementHandler handler = configuration.newStatementHandler(this, ms, parameter, rowBounds, resultHandler);
+    StatementHandler handler = configuration.newStatementHandler(this, ms, parameter, rowBounds, resultHandler, boundSql);
     Statement stmt = prepareStatement(handler);
     return handler.<E>query(stmt, resultHandler);
   }
 
-  public List<BatchResult> doFlushStatements(boolean isRollback)
-      throws SQLException {
+  public List<BatchResult> doFlushStatements(boolean isRollback) throws SQLException {
     for (Statement stmt : statementMap.values()) {
       closeStatement(stmt);
     }
@@ -63,8 +61,7 @@ public class ReuseExecutor extends BaseExecutor {
     return Collections.emptyList();
   }
 
-  private Statement prepareStatement(StatementHandler handler)
-      throws SQLException {
+  private Statement prepareStatement(StatementHandler handler) throws SQLException {
     Statement stmt;
     BoundSql boundSql = handler.getBoundSql();
     String sql = boundSql.getSql();

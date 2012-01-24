@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2011 The MyBatis Team
+ *    Copyright 2009-2012 The MyBatis Team
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 package org.apache.ibatis.executor;
 
 import org.apache.ibatis.executor.statement.StatementHandler;
+import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.ResultHandler;
@@ -34,12 +35,11 @@ public class SimpleExecutor extends BaseExecutor {
     super(configuration, transaction);
   }
 
-  public int doUpdate(MappedStatement ms, Object parameter)
-      throws SQLException {
+  public int doUpdate(MappedStatement ms, Object parameter) throws SQLException {
     Statement stmt = null;
     try {
       Configuration configuration = ms.getConfiguration();
-      StatementHandler handler = configuration.newStatementHandler(this, ms, parameter, RowBounds.DEFAULT, null);
+      StatementHandler handler = configuration.newStatementHandler(this, ms, parameter, RowBounds.DEFAULT, null, null);
       stmt = prepareStatement(handler);
       return handler.update(stmt);
     } finally {
@@ -47,11 +47,11 @@ public class SimpleExecutor extends BaseExecutor {
     }
   }
 
-  public <E> List<E> doQuery(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler) throws SQLException {
+  public <E> List<E> doQuery(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql) throws SQLException {
     Statement stmt = null;
     try {
       Configuration configuration = ms.getConfiguration();
-      StatementHandler handler = configuration.newStatementHandler(this, ms, parameter, rowBounds, resultHandler);
+      StatementHandler handler = configuration.newStatementHandler(this, ms, parameter, rowBounds, resultHandler, boundSql);
       stmt = prepareStatement(handler);
       return handler.<E>query(stmt, resultHandler);
     } finally {
@@ -59,8 +59,7 @@ public class SimpleExecutor extends BaseExecutor {
     }
   }
 
-  public List<BatchResult> doFlushStatements(boolean isRollback)
-      throws SQLException {
+  public List<BatchResult> doFlushStatements(boolean isRollback) throws SQLException {
     return Collections.emptyList();
   }
 

@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2011 The MyBatis Team
+ *    Copyright 2009-2012 The MyBatis Team
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -46,9 +46,9 @@ public abstract class BaseStatementHandler implements StatementHandler {
   protected final MappedStatement mappedStatement;
   protected final RowBounds rowBounds;
 
-  protected final BoundSql boundSql;
-
-  protected BaseStatementHandler(Executor executor, MappedStatement mappedStatement, Object parameterObject, RowBounds rowBounds, ResultHandler resultHandler) {
+  protected BoundSql boundSql;
+ 
+  protected BaseStatementHandler(Executor executor, MappedStatement mappedStatement, Object parameterObject, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql) {
     this.configuration = mappedStatement.getConfiguration();
     this.executor = executor;
     this.mappedStatement = mappedStatement;
@@ -57,7 +57,8 @@ public abstract class BaseStatementHandler implements StatementHandler {
     this.typeHandlerRegistry = configuration.getTypeHandlerRegistry();
     this.objectFactory = configuration.getObjectFactory();
 
-    this.boundSql = mappedStatement.getBoundSql(parameterObject);
+    if (boundSql == null) boundSql = mappedStatement.getBoundSql(parameterObject);    
+    this.boundSql = boundSql;
 
     this.parameterHandler = configuration.newParameterHandler(mappedStatement, parameterObject, boundSql);
     this.resultSetHandler = configuration.newResultSetHandler(executor, mappedStatement, rowBounds, parameterHandler, resultHandler, boundSql);
