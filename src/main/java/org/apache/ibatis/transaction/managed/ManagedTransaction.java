@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2011 The MyBatis Team
+ *    Copyright 2009-2012 The MyBatis Team
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -20,18 +20,22 @@ import java.sql.SQLException;
 
 import javax.sql.DataSource;
 
+import org.apache.ibatis.logging.Log;
+import org.apache.ibatis.logging.LogFactory;
 import org.apache.ibatis.session.TransactionIsolationLevel;
 import org.apache.ibatis.transaction.Transaction;
 
 /**
- * {@link Transaction} that lets the container manage the full lifecycle of the transaction. 
+ * {@link Transaction} that lets the container manage the full lifecycle of the transaction.
  * Delays connection retrieval until getConnection() is called.
  * Ignores all commit or rollback requests.
  * By default, it closes the connection but can be configured not to do it.
- * 
+ *
  * @see ManagedTransactionFactory
  */
 public class ManagedTransaction implements Transaction {
+
+  private static final Log log = LogFactory.getLog(ManagedTransaction.class);
 
   private DataSource dataSource;
   private TransactionIsolationLevel level;
@@ -42,7 +46,7 @@ public class ManagedTransaction implements Transaction {
     this.connection = connection;
     this.closeConnection = closeConnection;
   }
-  
+
   public ManagedTransaction(DataSource ds, TransactionIsolationLevel level, boolean closeConnection) {
     this.dataSource = ds;
     this.level = level;
@@ -66,15 +70,21 @@ public class ManagedTransaction implements Transaction {
 
   public void close() throws SQLException {
     if (this.closeConnection && this.connection != null) {
+      if (log.isDebugEnabled()) {
+        log.debug("Closing JDBC Connection [" + this.connection + "]");
+      }
       this.connection.close();
     }
   }
 
   protected void openConnection() throws SQLException {
+    if (log.isDebugEnabled()) {
+      log.debug("Openning JDBC Connection");
+    }
     this.connection = this.dataSource.getConnection();
     if (this.level != null) {
       this.connection.setTransactionIsolation(this.level.getLevel());
     }
   }
-  
+
 }
