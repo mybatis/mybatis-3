@@ -43,7 +43,12 @@ public class CachingExecutor implements Executor {
 
   public void close(boolean forceRollback) {
     try {
-      tcm.commit();
+      //issue #499. Rollback on dirty sessions and commit in clean sessions
+      if (forceRollback) {
+        tcm.rollback();
+      } else {
+        tcm.commit();
+      }
     } finally {
       delegate.close(forceRollback);
     }
