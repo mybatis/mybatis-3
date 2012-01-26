@@ -197,6 +197,7 @@ public class XMLConfigBuilder extends BaseBuilder {
       configuration.setDefaultMapResultHandlerType(resolveClass(props.getProperty("defaultMapResultHandlerType")));
       configuration.setClearLocalCacheAfterEachStatement(booleanValueOf(props.getProperty("flushLocalCacheAfterEachStatement"), false));
       configuration.setJdbcTypeForNull(JdbcType.valueOf(stringValueOf(props.getProperty("jdbcTypeForNull"), "OTHER")));
+      configuration.setLazyLoadTriggerMethods(stringSetValueOf(props.getProperty("lazyLoadTriggerMethods"), "equals,clone,hashCode,toString"));
     }
   }
 

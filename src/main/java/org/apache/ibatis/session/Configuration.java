@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2011 The MyBatis Team
+ *    Copyright 2009-2012 The MyBatis Team
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package org.apache.ibatis.session;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -88,6 +89,7 @@ public class Configuration {
   protected boolean cacheEnabled = true;
   protected boolean clearLocalCacheAfterEachStatement = false;
   protected JdbcType jdbcTypeForNull = JdbcType.OTHER;
+  protected Set<String> lazyLoadTriggerMethods = new HashSet<String>(Arrays.asList(new String[] { "equals", "clone", "hashCode", "toString" }));
   protected Integer defaultStatementTimeout;
   protected ExecutorType defaultExecutorType = ExecutorType.SIMPLE;
   protected AutoMappingBehavior autoMappingBehavior = AutoMappingBehavior.PARTIAL;
@@ -222,6 +224,14 @@ public class Configuration {
 
   public void setMultipleResultSetsEnabled(boolean multipleResultSetsEnabled) {
     this.multipleResultSetsEnabled = multipleResultSetsEnabled;
+  }
+
+  public Set<String> getLazyLoadTriggerMethods() {
+    return lazyLoadTriggerMethods;
+  }
+
+  public void setLazyLoadTriggerMethods(Set<String> lazyLoadTriggerMethods) {
+    this.lazyLoadTriggerMethods = lazyLoadTriggerMethods;
   }
 
   public boolean isUseGeneratedKeys() {

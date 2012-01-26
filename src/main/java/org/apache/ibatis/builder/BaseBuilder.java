@@ -15,6 +15,10 @@
  */
 package org.apache.ibatis.builder;
 
+import java.util.HashSet;
+import java.util.Set;
+import java.util.StringTokenizer;
+
 import org.apache.ibatis.mapping.ParameterMode;
 import org.apache.ibatis.mapping.ResultSetType;
 import org.apache.ibatis.session.Configuration;
@@ -48,6 +52,14 @@ public abstract class BaseBuilder {
 
   protected Integer integerValueOf(String value, Integer defaultValue) {
     return value == null ? defaultValue : Integer.valueOf(value);
+  }
+
+  protected Set<String> stringSetValueOf(String value, String defaultValue) {
+    value = (value == null ? defaultValue : value);
+    StringTokenizer stringTokenizer = new StringTokenizer(value, ",");
+    Set<String> result = new HashSet<String>();
+    while (stringTokenizer.hasMoreElements()) result.add(stringTokenizer.nextToken().trim());
+    return result;
   }
 
   protected JdbcType resolveJdbcType(String alias) {
