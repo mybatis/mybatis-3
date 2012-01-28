@@ -40,6 +40,7 @@ public class BatchExecutor extends BaseExecutor {
   private final List<Statement> statementList = new ArrayList<Statement>();
   private final List<BatchResult> batchResultList = new ArrayList<BatchResult>();
   private String currentSql;
+  private MappedStatement currentStatement;
 
   public BatchExecutor(Configuration configuration, Transaction transaction) {
     super(configuration, transaction);
@@ -51,7 +52,7 @@ public class BatchExecutor extends BaseExecutor {
     BoundSql boundSql = handler.getBoundSql();
     String sql = boundSql.getSql();
     Statement stmt;
-    if (currentSql != null && sql.hashCode() == currentSql.hashCode() && sql.length() == currentSql.length()) {
+    if (sql.equals(currentSql) && ms.equals(currentStatement)) {
       int last = statementList.size() - 1;
       stmt = statementList.get(last);
       BatchResult batchResult = batchResultList.get(last);
@@ -60,6 +61,7 @@ public class BatchExecutor extends BaseExecutor {
       Connection connection = getConnection();
       stmt = handler.prepare(connection);
       currentSql = sql;
+      currentStatement = ms;
       statementList.add(stmt);
       BatchResult batchResult = new BatchResult(ms, sql);
       batchResult.addParameterObject(parameterObject);
@@ -99,9 +101,14 @@ public class BatchExecutor extends BaseExecutor {
             batchResult.setUpdateCounts(stmt.executeBatch());
             MappedStatement ms = batchResult.getMappedStatement();
             List<Object> parameterObjects = batchResult.getParameterObjects();
-            for (Object parameter : parameterObjects) {
-              KeyGenerator keyGenerator = ms.getKeyGenerator();
-              keyGenerator.processAfter(this, ms, stmt, parameter);
+            KeyGenerator keyGenerator = ms.getKeyGenerator();
+            if (keyGenerator instanceof Jdbc3KeyGenerator) {
+              Jdbc3KeyGenerator jdbc3KeyGenerator = (Jdbc3KeyGenerator) keyGenerator;
+              jdbc3KeyGenerator.processBatch(ms, stmt, parameterObjects);
+            } else {
+              for (Object parameter : parameterObjects) {
+                keyGenerator.processAfter(this, ms, stmt, parameter);
+              }
             }
           } catch (BatchUpdateException e) {
             StringBuffer message = new StringBuffer();
