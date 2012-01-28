@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2011 The MyBatis Team
+ *    Copyright 2009-2012 The MyBatis Team
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,21 +15,24 @@
  */
 package org.apache.ibatis.executor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.ibatis.mapping.MappedStatement;
 
 public class BatchResult {
 
   private final MappedStatement mappedStatement;
   private final String sql;
-  private final Object parameterObject;
+  private final List<Object> parameterObjects;
 
   private int[] updateCounts;
 
-  public BatchResult(MappedStatement mappedStatement, String sql, Object parameterObject) {
+  public BatchResult(MappedStatement mappedStatement, String sql) {
     super();
     this.mappedStatement = mappedStatement;
     this.sql = sql;
-    this.parameterObject = parameterObject;
+    this.parameterObjects = new ArrayList<Object>();
   }
 
   public MappedStatement getMappedStatement() {
@@ -40,8 +43,13 @@ public class BatchResult {
     return sql;
   }
 
+  @Deprecated
   public Object getParameterObject() {
-    return parameterObject;
+    return parameterObjects.get(0);
+  }
+
+  public List<Object> getParameterObjects() {
+    return parameterObjects;
   }
 
   public int[] getUpdateCounts() {
@@ -50,6 +58,10 @@ public class BatchResult {
 
   public void setUpdateCounts(int[] updateCounts) {
     this.updateCounts = updateCounts;
+  }
+
+  public void addParameterObject(Object parameterObject) {
+    this.parameterObjects.add(parameterObject);
   }
 
 }

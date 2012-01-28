@@ -54,12 +54,16 @@ public class BatchExecutor extends BaseExecutor {
     if (currentSql != null && sql.hashCode() == currentSql.hashCode() && sql.length() == currentSql.length()) {
       int last = statementList.size() - 1;
       stmt = statementList.get(last);
+      BatchResult batchResult = batchResultList.get(last);
+      batchResult.addParameterObject(parameterObject);
     } else {
       Connection connection = getConnection();
       stmt = handler.prepare(connection);
       currentSql = sql;
       statementList.add(stmt);
-      batchResultList.add(new BatchResult(ms, sql, parameterObject));
+      BatchResult batchResult = new BatchResult(ms, sql);
+      batchResult.addParameterObject(parameterObject);
+      batchResultList.add(batchResult);
     }
     handler.parameterize(stmt);
     handler.batch(stmt);
@@ -94,9 +98,9 @@ public class BatchExecutor extends BaseExecutor {
           try {
             batchResult.setUpdateCounts(stmt.executeBatch());
             MappedStatement ms = batchResult.getMappedStatement();
-            Object parameter = batchResult.getParameterObject();
-            KeyGenerator keyGenerator = ms.getKeyGenerator();
-            if (keyGenerator instanceof Jdbc3KeyGenerator) {
+            List<Object> parameterObjects = batchResult.getParameterObjects();
+            for (Object parameter : parameterObjects) {
+              KeyGenerator keyGenerator = ms.getKeyGenerator();
               keyGenerator.processAfter(this, ms, stmt, parameter);
             }
           } catch (BatchUpdateException e) {
