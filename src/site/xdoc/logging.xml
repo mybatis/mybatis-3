@@ -163,7 +163,7 @@ log4j.appender.stdout.layout.ConversionPattern=%5p [%t] - %m%n]]></source>
         <source>log4j.logger.org.mybatis.example.BlogMapper.selectBlog=DEBUG</source>
         
         <p>By the contrary you may want want to enable logging for a group of mappers. 
-        In that case you should enable logging for the root package where your mappers reside:</p>
+        In that case you should add as a logger the root package where your mappers reside:</p>
 
         <source>log4j.logger.org.mybatis.example=DEBUG</source>
         
