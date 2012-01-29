@@ -29,8 +29,7 @@
     <section name="Logging">
       <p></p>
       <p>MyBatis provides logging information through the use of an
-        internal
-        log factory. The internal log factory will delegate logging
+        internal log factory. The internal log factory will delegate logging
         information to one of the following log implementations:
       </p>
       <ul>
@@ -62,13 +61,10 @@
         can be very frustrating because it will appear that MyBatis is
         ignoring your Log4J configuration (in fact, MyBatis is ignoring your
         Log4J configuration because MyBatis will use Commons Logging in such
-        environments). If your application is running in an
-        environment
+        environments). If your application is running in an environment
         where Commons Logging is included in the classpath but you would
-        rather use one
-        of the other logging implementations you can select a
-        different
-        logging implementation by calling one of the following
+        rather use one of the other logging implementations you can select a
+        different logging implementation by calling one of the following
         methods:
       </p>
       <source><![CDATA[org.apache.ibatis.logging.LogFactory.useSlf4jLogging();
@@ -77,30 +73,18 @@ org.apache.ibatis.logging.LogFactory.useJdkLogging();
 org.apache.ibatis.logging.LogFactory.useCommonsLogging();
 org.apache.ibatis.logging.LogFactory.useStdOutLogging();]]></source>
       <p>If you choose to call one of these methods, you should do so
-        before
-        calling any other MyBatis method. Also, these methods
-        will only
-        switch to the requested log implementation if that
-        implementation is
-        available on the runtime classpath. For example, if
-        you try to
-        select
-        Log4J logging and Log4J is not available at runtime,
-        then MyBatis
-        will ignore the request to use Log4J and will use it's
-        normal
-        algorithm for discovering logging implementations.
+        before calling any other MyBatis method. Also, these methods
+        will only switch to the requested log implementation if that
+        implementation is available on the runtime classpath. For example, if
+        you try to select Log4J logging and Log4J is not available at runtime,
+        then MyBatis will ignore the request to use Log4J and will use it's
+        normal algorithm for discovering logging implementations.
       </p>
-      <p>The specifics of Apache Commons Logging, Apache Log4J and the JDK
-        Logging
-        API are beyond the scope of this document. However the
-        example
-        configuration below should get you started. If you would like
-        to
-        know
-        more about these frameworks, you can get more information from
-        the
-        following locations:
+      <p>The specifics of SLF4J, Apache Commons Logging, Apache Log4J and the JDK
+        Logging API are beyond the scope of this document. However the
+        example configuration below should get you started. If you would like
+        to know more about these frameworks, you can get more information from
+        the following locations:
       </p>
       <ul>
         <li>
@@ -179,7 +163,7 @@ log4j.appender.stdout.layout.ConversionPattern=%5p [%t] - %m%n]]></source>
         <source>log4j.logger.org.mybatis.example.BlogMapper.selectBlog=DEBUG</source>
         
         <p>By the contrary you may want want to enable logging for a group of mappers. 
-        In that case you should enable logging for the root package were your mappers reside:</p>
+        In that case you should enable logging for the root package where your mappers reside:</p>
 
         <source>log4j.logger.org.mybatis.example=DEBUG</source>
         
