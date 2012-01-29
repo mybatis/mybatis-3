@@ -137,7 +137,7 @@ public interface BlogMapper {
   @Select("SELECT * FROM blog WHERE id = #{id}")
   Blog selectBlog(int id);
 }]]></source>
-        <p>Then, create a file called <code>log4j.properties</code> 
+        <p>Create a file called <code>log4j.properties</code> 
         as shown below and place it in your classpath:
         </p>
         <source><![CDATA[# Global logging configuration
@@ -151,7 +151,7 @@ log4j.appender.stdout.layout.ConversionPattern=%5p [%t] - %m%n]]></source>
         <p>
           The above file will cause log4J to report detailed logging for 
           <code>org.mybatis.example.BlogMapper</code>
-          and just errors for the rest of the classes or your application.
+          and just errors for the rest of the classes of your application.
         </p>
         <p>
           If you want to tune the logging at a finer level you can turn logging 
