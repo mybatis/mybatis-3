@@ -268,7 +268,7 @@ public class MapperAnnotationBuilder {
       if (options != null) {
         flushCache = options.flushCache();
         useCache = options.useCache();
-        fetchSize = options.fetchSize() > -1 ? options.fetchSize() : null;
+        fetchSize = options.fetchSize() > -1 || options.fetchSize() == Integer.MIN_VALUE ? options.fetchSize() : null; //issue #348
         timeout = options.timeout() > -1 ? options.timeout() : null;
         statementType = options.statementType();
         resultSetType = options.resultSetType();
