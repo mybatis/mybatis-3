@@ -41,13 +41,12 @@ public class JdbcDaoTransaction implements ConnectionDaoTransaction {
         connection.setAutoCommit(false);
       }
       if (connectionLog.isDebugEnabled()) {
-        connection = ConnectionLogger.newInstance(connection);
+//        connection = ConnectionLogger.newInstance(connection);
       }
     } catch (SQLException e) {
       throw new DaoException("Error starting JDBC transaction.  Cause: " + e);
     }
   }
-
 
   public void commit() {
     try {

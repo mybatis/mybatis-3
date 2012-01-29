@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2011 The MyBatis Team
+ *    Copyright 2009-2012 The MyBatis Team
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,40 +15,42 @@
  */
 package org.apache.ibatis.logging.jdbc;
 
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
+
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
 import org.apache.ibatis.reflection.ExceptionUtil;
 
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
-import java.sql.ResultSet;
-import java.sql.Statement;
-
 /*
  * Statement proxy to add logging
  */
-public class StatementLogger extends BaseJdbcLogger implements InvocationHandler {
+public final class StatementLogger extends BaseJdbcLogger implements InvocationHandler {
 
-  private static final Log log = LogFactory.getLog(Statement.class);
+  private static final Log log = LogFactory.getLog(PreparedStatement.class);
 
   private Statement statement;
 
-  private StatementLogger(Statement stmt) {
-    super();
+  private StatementLogger(Statement stmt, Log statementLog) {
+    super(statementLog);
     this.statement = stmt;
+    this.statementLog = statementLog;
   }
 
   public Object invoke(Object proxy, Method method, Object[] params) throws Throwable {
     try {
       if (EXECUTE_METHODS.contains(method.getName())) {
-        if (log.isDebugEnabled()) {
-          log.debug("==>  Executing: " + removeBreakingWhitespace((String) params[0]));
+        if (isDebugEnabled()) {
+          debug("==>  Executing: " + removeBreakingWhitespace((String) params[0]));
         }
         if ("executeQuery".equals(method.getName())) {
           ResultSet rs = (ResultSet) method.invoke(statement, params);
           if (rs != null) {
-            return ResultSetLogger.newInstance(rs);
+            return ResultSetLogger.newInstance(rs, this.statementLog);
           } else {
             return null;
           }
@@ -58,7 +60,7 @@ public class StatementLogger extends BaseJdbcLogger implements InvocationHandler
       } else if ("getResultSet".equals(method.getName())) {
         ResultSet rs = (ResultSet) method.invoke(statement, params);
         if (rs != null) {
-          return ResultSetLogger.newInstance(rs);
+          return ResultSetLogger.newInstance(rs, this.statementLog);
         } else {
           return null;
         }
@@ -81,8 +83,8 @@ public class StatementLogger extends BaseJdbcLogger implements InvocationHandler
    * @param stmt - the statement
    * @return - the proxy
    */
-  public static Statement newInstance(Statement stmt) {
-    InvocationHandler handler = new StatementLogger(stmt);
+  public static Statement newInstance(Statement stmt, Log log) {
+    InvocationHandler handler = new StatementLogger(stmt, log);
     ClassLoader cl = Statement.class.getClassLoader();
     return (Statement) Proxy.newProxyInstance(cl, new Class[]{Statement.class}, handler);
   }
@@ -94,6 +96,11 @@ public class StatementLogger extends BaseJdbcLogger implements InvocationHandler
    */
   public Statement getStatement() {
     return statement;
+  }
+
+  @Override
+  protected Log getLog() {
+    return log;
   }
 
 }

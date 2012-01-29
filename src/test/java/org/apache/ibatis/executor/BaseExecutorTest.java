@@ -335,7 +335,7 @@ public class BaseExecutorTest extends BaseDataTest {
   public void shouldFetchPostsForBlog() throws Exception {
     DataSource ds = createBlogDataSource();
     Connection connection = ds.getConnection();
-    connection = ConnectionLogger.newInstance(connection);
+//    connection = ConnectionLogger.newInstance(connection);
     Executor executor = createExecutor(new JdbcTransaction(connection));
     try {
       MappedStatement selectBlog = ExecutorTestHelper.prepareComplexSelectBlogMappedStatement(config);

@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2011 The MyBatis Team
+ *    Copyright 2009-2012 The MyBatis Team
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -23,8 +23,8 @@ public interface Log {
 
   void error(String s);
 
-  public void debug(String s);
+  void debug(String s);
 
-  public void warn(String s);
+  void warn(String s);
 
 }

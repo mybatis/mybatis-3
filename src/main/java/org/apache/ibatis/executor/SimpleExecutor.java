@@ -40,7 +40,7 @@ public class SimpleExecutor extends BaseExecutor {
     try {
       Configuration configuration = ms.getConfiguration();
       StatementHandler handler = configuration.newStatementHandler(this, ms, parameter, RowBounds.DEFAULT, null, null);
-      stmt = prepareStatement(handler);
+      stmt = prepareStatement(handler, ms.getId());
       return handler.update(stmt);
     } finally {
       closeStatement(stmt);
@@ -52,7 +52,7 @@ public class SimpleExecutor extends BaseExecutor {
     try {
       Configuration configuration = ms.getConfiguration();
       StatementHandler handler = configuration.newStatementHandler(this, ms, parameter, rowBounds, resultHandler, boundSql);
-      stmt = prepareStatement(handler);
+      stmt = prepareStatement(handler, ms.getId());
       return handler.<E>query(stmt, resultHandler);
     } finally {
       closeStatement(stmt);
@@ -63,9 +63,9 @@ public class SimpleExecutor extends BaseExecutor {
     return Collections.emptyList();
   }
 
-  private Statement prepareStatement(StatementHandler handler) throws SQLException {
+  private Statement prepareStatement(StatementHandler handler, String logger) throws SQLException {
     Statement stmt;
-    Connection connection = getConnection();
+    Connection connection = getConnection(logger);
     stmt = handler.prepare(connection);
     handler.parameterize(stmt);
     return stmt;

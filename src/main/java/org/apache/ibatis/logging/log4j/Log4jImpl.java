@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2011 The MyBatis Team
+ *    Copyright 2009-2012 The MyBatis Team
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ public class Log4jImpl implements Log {
 
   private Logger log;
 
-  public Log4jImpl(Class<?> clazz) {
+  public Log4jImpl(String clazz) {
     log = Logger.getLogger(clazz);
   }
 
@@ -45,6 +45,5 @@ public class Log4jImpl implements Log {
   public void warn(String s) {
     log.warn(s);
   }
-
 
 }

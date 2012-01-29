@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2011 The MyBatis Team
+ *    Copyright 2009-2012 The MyBatis Team
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ import java.lang.reflect.Constructor;
 
 import org.apache.ibatis.io.Resources;
 
-public class LogFactory {
+public final class LogFactory {
 
   private static Constructor<? extends Log> logConstructor;
 
@@ -51,11 +51,19 @@ public class LogFactory {
     });
   }
 
+  private LogFactory() {
+    // disable construction
+  }
+
   public static Log getLog(Class<?> aClass) {
+    return getLog(aClass.getName());
+  }
+
+  public static Log getLog(String logger) {
     try {
-      return logConstructor.newInstance(new Object[]{aClass});
+      return logConstructor.newInstance(new Object[]{logger});
     } catch (Throwable t) {
-      throw new LogException("Error creating logger for class " + aClass + ".  Cause: " + t, t);
+      throw new LogException("Error creating logger for logger " + logger + ".  Cause: " + t, t);
     }
   }
 
@@ -97,8 +105,8 @@ public class LogFactory {
     try {
       @SuppressWarnings("unchecked")
       Class<? extends Log> implClass = (Class<? extends Log>) Resources.classForName(implClassName);
-      Constructor<? extends Log> candidate = implClass.getConstructor(new Class[]{Class.class});
-      Log log = candidate.newInstance(new Object[]{LogFactory.class});
+      Constructor<? extends Log> candidate = implClass.getConstructor(new Class[]{String.class});
+      Log log = candidate.newInstance(new Object[]{LogFactory.class.getName()});
       log.debug("Logging initialized using '" + implClassName + "' adapter.");
       logConstructor = candidate;
     } catch (Throwable t) {

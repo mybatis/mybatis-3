@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2011 The MyBatis Team
+ *    Copyright 2009-2012 The MyBatis Team
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,10 +15,6 @@
  */
 package org.apache.ibatis.logging.jdbc;
 
-import org.apache.ibatis.logging.Log;
-import org.apache.ibatis.logging.LogFactory;
-import org.apache.ibatis.reflection.ExceptionUtil;
-
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
@@ -26,17 +22,22 @@ import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+import org.apache.ibatis.logging.Log;
+import org.apache.ibatis.logging.LogFactory;
+import org.apache.ibatis.reflection.ExceptionUtil;
+
 /*
  * PreparedStatement proxy to add logging
  */
-public class PreparedStatementLogger extends BaseJdbcLogger implements InvocationHandler {
+public final class PreparedStatementLogger extends BaseJdbcLogger implements InvocationHandler {
 
   private static final Log log = LogFactory.getLog(PreparedStatement.class);
 
   private PreparedStatement statement;
   private String sql;
 
-  private PreparedStatementLogger(PreparedStatement stmt, String sql) {
+  private PreparedStatementLogger(PreparedStatement stmt, String sql, Log statementLog) {
+    super(statementLog);
     this.statement = stmt;
     this.sql = sql;
   }
@@ -44,15 +45,15 @@ public class PreparedStatementLogger extends BaseJdbcLogger implements Invocatio
   public Object invoke(Object proxy, Method method, Object[] params) throws Throwable {
     try {
       if (EXECUTE_METHODS.contains(method.getName())) {
-        if (log.isDebugEnabled()) {
-          log.debug("==>  Executing: " + removeBreakingWhitespace(sql));
-          log.debug("==> Parameters: " + getParameterValueString());
+        if (isDebugEnabled()) {
+          debug("==>  Executing: " + removeBreakingWhitespace(sql));
+          debug("==> Parameters: " + getParameterValueString());
         }
         clearColumnInfo();
         if ("executeQuery".equals(method.getName())) {
           ResultSet rs = (ResultSet) method.invoke(statement, params);
           if (rs != null) {
-            return ResultSetLogger.newInstance(rs);
+            return ResultSetLogger.newInstance(rs, this.statementLog);
           } else {
             return null;
           }
@@ -69,7 +70,7 @@ public class PreparedStatementLogger extends BaseJdbcLogger implements Invocatio
       } else if ("getResultSet".equals(method.getName())) {
         ResultSet rs = (ResultSet) method.invoke(statement, params);
         if (rs != null) {
-          return ResultSetLogger.newInstance(rs);
+          return ResultSetLogger.newInstance(rs, this.statementLog);
         } else {
           return null;
         }
@@ -93,8 +94,8 @@ public class PreparedStatementLogger extends BaseJdbcLogger implements Invocatio
    * @param sql  - the sql statement
    * @return - the proxy
    */
-  public static PreparedStatement newInstance(PreparedStatement stmt, String sql) {
-    InvocationHandler handler = new PreparedStatementLogger(stmt, sql);
+  public static PreparedStatement newInstance(PreparedStatement stmt, String sql, Log log) {
+    InvocationHandler handler = new PreparedStatementLogger(stmt, sql, log);
     ClassLoader cl = PreparedStatement.class.getClassLoader();
     return (PreparedStatement) Proxy.newProxyInstance(cl, new Class[]{PreparedStatement.class, CallableStatement.class}, handler);
   }
@@ -106,6 +107,11 @@ public class PreparedStatementLogger extends BaseJdbcLogger implements Invocatio
    */
   public PreparedStatement getPreparedStatement() {
     return statement;
+  }
+
+  @Override
+  protected Log getLog() {
+    return log;
   }
 
 }

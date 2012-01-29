@@ -311,10 +311,13 @@ public abstract class BaseExecutor implements Executor {
     }
   }
 
-  protected Connection getConnection() throws SQLException {
+  protected Connection getConnection(String statementId) throws SQLException {
     Connection connection = transaction.getConnection();
-    if (log.isDebugEnabled()) {
-      return ConnectionLogger.newInstance(connection);
+    Log statementLogger = LogFactory.getLog(statementId);
+    // kept for backward compatibility with iBATIS 2.x style logging
+    Log connectionLogger = LogFactory.getLog(Connection.class);
+    if (statementLogger.isDebugEnabled() || connectionLogger.isDebugEnabled()) {
+      return ConnectionLogger.newInstance(connection, statementLogger);
     } else {
       return connection;
     }

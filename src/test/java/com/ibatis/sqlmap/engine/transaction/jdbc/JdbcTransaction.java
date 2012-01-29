@@ -46,7 +46,7 @@ public class JdbcTransaction extends BaseTransaction {
   private void init() throws SQLException, TransactionException {
     // Open JDBC Transaction
     Connection connection = dataSource.getConnection();
-    connection = ConnectionLogger.newInstance(connection);        
+//    connection = ConnectionLogger.newInstance(connection);        
     if (connection == null) {
       throw new TransactionException("JdbcTransaction could not start transaction.  Cause: The DataSource returned a null connection.");
     }

@@ -15,12 +15,20 @@
  */
 package org.apache.ibatis.logging.jdbc;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.StringTokenizer;
+
+import org.apache.ibatis.logging.Log;
 
 /*
  * Base class for proxies to do logging
  */
-public class BaseJdbcLogger {
+public abstract class BaseJdbcLogger {
 
   protected static final Set<String> SET_METHODS = new HashSet<String>();
   protected static final Set<String> EXECUTE_METHODS = new HashSet<String>();
@@ -30,10 +38,13 @@ public class BaseJdbcLogger {
   private List<Object> columnNames = new ArrayList<Object>();
   private List<Object> columnValues = new ArrayList<Object>();
 
+  protected Log statementLog;
+
   /*
    * Default constructor
    */
-  public BaseJdbcLogger() {
+  public BaseJdbcLogger(Log log) {
+    this.statementLog = log;
   }
 
   static {
@@ -107,5 +118,22 @@ public class BaseJdbcLogger {
     }
     return builder.toString();
   }
+
+  /*
+   * For backward old style logging compatibility
+   */
+  protected boolean isDebugEnabled() {
+    return statementLog.isDebugEnabled() || getLog().isDebugEnabled();
+  }
+
+  protected void debug(String text) {
+    if (statementLog.isDebugEnabled()) {
+      statementLog.debug(text);
+    } else {
+      getLog().debug(text);
+    }
+  }
+
+  protected abstract Log getLog();
 
 }

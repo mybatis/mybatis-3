@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2011 The MyBatis Team
+ *    Copyright 2009-2012 The MyBatis Team
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -16,49 +16,70 @@
 package org.apache.ibatis.logging;
 
 import static org.junit.Assert.assertEquals;
-import org.junit.Test;
 
+import org.apache.ibatis.logging.commons.JakartaCommonsLoggingImpl;
+import org.apache.ibatis.logging.jdk14.Jdk14LoggingImpl;
+import org.apache.ibatis.logging.log4j.Log4jImpl;
+import org.apache.ibatis.logging.nologging.NoLoggingImpl;
+import org.apache.ibatis.logging.slf4j.Slf4jImpl;
+import org.apache.ibatis.logging.stdout.StdOutImpl;
+import org.junit.Test;
 
 public class LogFactoryTest {
 
   @Test
   public void shouldUseCommonsLogging() {
     LogFactory.useCommonsLogging();
-    logSomething(true);
+    Log log = LogFactory.getLog(Object.class);
+    logSomething(log);
+    assertEquals(log.getClass().getName(), JakartaCommonsLoggingImpl.class.getName());
   }
 
   @Test
   public void shouldUseLog4J() {
     LogFactory.useLog4JLogging();
-    logSomething(true);
+    Log log = LogFactory.getLog(Object.class);
+    logSomething(log);
+    assertEquals(log.getClass().getName(), Log4jImpl.class.getName());
   }
 
   @Test
   public void shouldUseJdKLogging() {
     LogFactory.useJdkLogging();
-    logSomething(false);
+    Log log = LogFactory.getLog(Object.class);
+    logSomething(log);
+    assertEquals(log.getClass().getName(), Jdk14LoggingImpl.class.getName());
+  }
+
+  @Test
+  public void shouldUseSlf4j() {
+    LogFactory.useSlf4jLogging();
+    Log log = LogFactory.getLog(Object.class);
+    logSomething(log);
+    assertEquals(log.getClass().getName(), Slf4jImpl.class.getName());
   }
 
   @Test
   public void shouldUseStdOut() {
     LogFactory.useStdOutLogging();
-    logSomething(true);
+    Log log = LogFactory.getLog(Object.class);
+    logSomething(log);
+    assertEquals(log.getClass().getName(), StdOutImpl.class.getName());
   }
 
   @Test
   public void shouldUseNoLogging() {
     LogFactory.useNoLogging();
-    logSomething(false);
+    Log log = LogFactory.getLog(Object.class);
+    logSomething(log);
+    assertEquals(log.getClass().getName(), NoLoggingImpl.class.getName());
   }
 
-  private void logSomething(boolean expectedDebug) {
-    Log log = LogFactory.getLog(Object.class);
+  private void logSomething(Log log) {
     log.warn("Warning message.");
     log.debug("Debug message.");
     log.error("Error message.");
     log.error("Error with Exception.", new Exception("Test exception."));
-    assertEquals(expectedDebug, log.isDebugEnabled());
   }
-
 
 }

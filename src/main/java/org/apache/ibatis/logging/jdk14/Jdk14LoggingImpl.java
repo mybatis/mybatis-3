@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2011 The MyBatis Team
+ *    Copyright 2009-2012 The MyBatis Team
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -24,8 +24,8 @@ public class Jdk14LoggingImpl implements Log {
 
   private Logger log;
 
-  public Jdk14LoggingImpl(Class<?> clazz) {
-    log = Logger.getLogger(clazz.getName());
+  public Jdk14LoggingImpl(String clazz) {
+    log = Logger.getLogger(clazz);
   }
 
   public boolean isDebugEnabled() {
@@ -47,6 +47,5 @@ public class Jdk14LoggingImpl implements Log {
   public void warn(String s) {
     log.log(Level.WARNING, s);
   }
-
 
 }

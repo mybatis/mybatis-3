@@ -42,14 +42,14 @@ public class ReuseExecutor extends BaseExecutor {
   public int doUpdate(MappedStatement ms, Object parameter) throws SQLException {
     Configuration configuration = ms.getConfiguration();
     StatementHandler handler = configuration.newStatementHandler(this, ms, parameter, RowBounds.DEFAULT, null, null);
-    Statement stmt = prepareStatement(handler);
+    Statement stmt = prepareStatement(handler, ms.getId());
     return handler.update(stmt);
   }
 
   public <E> List<E> doQuery(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql) throws SQLException {
     Configuration configuration = ms.getConfiguration();
     StatementHandler handler = configuration.newStatementHandler(this, ms, parameter, rowBounds, resultHandler, boundSql);
-    Statement stmt = prepareStatement(handler);
+    Statement stmt = prepareStatement(handler, ms.getId());
     return handler.<E>query(stmt, resultHandler);
   }
 
@@ -61,14 +61,14 @@ public class ReuseExecutor extends BaseExecutor {
     return Collections.emptyList();
   }
 
-  private Statement prepareStatement(StatementHandler handler) throws SQLException {
+  private Statement prepareStatement(StatementHandler handler, String logger) throws SQLException {
     Statement stmt;
     BoundSql boundSql = handler.getBoundSql();
     String sql = boundSql.getSql();
     if (hasStatementFor(sql)) {
       stmt = getStatement(sql);
     } else {
-      Connection connection = getConnection();
+      Connection connection = getConnection(logger);
       stmt = handler.prepare(connection);
       putStatement(sql, stmt);
     }
