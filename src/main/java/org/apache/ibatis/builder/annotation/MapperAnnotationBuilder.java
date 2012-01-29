@@ -247,18 +247,20 @@ public class MapperAnnotationBuilder {
 
       KeyGenerator keyGenerator;
       String keyProperty = "id";
+      String keyColumn = null;
       if (SqlCommandType.INSERT.equals(sqlCommandType)) {
         // first check for SelectKey annotation - that overrides everything else
         SelectKey selectKey = method.getAnnotation(SelectKey.class);
         if (selectKey != null) {
-            keyGenerator = handleSelectKeyAnnotation(selectKey, mappedStatementId, getParameterType(method));
-            keyProperty = selectKey.keyProperty();
+          keyGenerator = handleSelectKeyAnnotation(selectKey, mappedStatementId, getParameterType(method));
+          keyProperty = selectKey.keyProperty();
         } else {
           if (options == null) {
-              keyGenerator = configuration.isUseGeneratedKeys() ? new Jdbc3KeyGenerator(null) : new NoKeyGenerator();
+            keyGenerator = configuration.isUseGeneratedKeys() ? new Jdbc3KeyGenerator() : new NoKeyGenerator();
           } else {
-              keyGenerator = options.useGeneratedKeys() ? new Jdbc3KeyGenerator(options.keyColumn()) : new NoKeyGenerator();
-              keyProperty = options.keyProperty();
+            keyGenerator = options.useGeneratedKeys() ? new Jdbc3KeyGenerator() : new NoKeyGenerator();
+            keyProperty = options.keyProperty();
+            keyColumn = options.keyColumn();
           }
         }
       } else {
@@ -277,9 +279,9 @@ public class MapperAnnotationBuilder {
       ResultMap resultMapAnnotation = method.getAnnotation(ResultMap.class);
       String resultMapId;
       if (resultMapAnnotation == null) {
-          resultMapId = generateResultMapName(method);
+        resultMapId = generateResultMapName(method);
       } else {
-          resultMapId = resultMapAnnotation.value();
+        resultMapId = resultMapAnnotation.value();
       }
 
       assistant.addMappedStatement(
@@ -298,6 +300,7 @@ public class MapperAnnotationBuilder {
           useCache,
           keyGenerator,
           keyProperty,
+          keyColumn,
           null);
     }
   }
@@ -386,7 +389,7 @@ public class MapperAnnotationBuilder {
       type = getSqlProviderAnnotationType(method);
 
       if (type == null) {
-          return SqlCommandType.UNKNOWN;
+        return SqlCommandType.UNKNOWN;
       }
 
       if (type == SelectProvider.class) {
@@ -425,7 +428,8 @@ public class MapperAnnotationBuilder {
     if (results.length > 0) {
       for (Result result : results) {
         ArrayList<ResultFlag> flags = new ArrayList<ResultFlag>();
-        if (result.id()) flags.add(ResultFlag.ID);
+        if (result.id())
+          flags.add(ResultFlag.ID);
 
         ResultMapping resultMapping = assistant.buildResultMapping(
             resultType,
@@ -456,8 +460,7 @@ public class MapperAnnotationBuilder {
   }
 
   private boolean hasNestedSelect(Result result) {
-    return result.one().select().length() > 0
-        || result.many().select().length() > 0;
+    return result.one().select().length() > 0 || result.many().select().length() > 0;
   }
 
   private void applyConstructorArgs(Arg[] args, Class<?> resultType, List<ResultMapping> resultMappings) {
@@ -515,9 +518,8 @@ public class MapperAnnotationBuilder {
     SqlSource sqlSource = buildSqlSourceFromStrings(selectKeyAnnotation.statement());
     SqlCommandType sqlCommandType = SqlCommandType.SELECT;
 
-    assistant.addMappedStatement(id, sqlSource, statementType, sqlCommandType,
-          fetchSize, timeout, parameterMap, parameterTypeClass, resultMap, resultTypeClass,
-          resultSetTypeEnum, flushCache, useCache, keyGenerator, keyProperty, null);
+    assistant.addMappedStatement(id, sqlSource, statementType, sqlCommandType, fetchSize, timeout, parameterMap, parameterTypeClass, resultMap, resultTypeClass, resultSetTypeEnum,
+        flushCache, useCache, keyGenerator, keyProperty, null, null);
 
     id = assistant.applyCurrentNamespace(id, false);
 

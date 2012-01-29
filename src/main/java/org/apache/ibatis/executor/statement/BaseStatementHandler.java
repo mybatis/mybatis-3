@@ -47,7 +47,7 @@ public abstract class BaseStatementHandler implements StatementHandler {
   protected final RowBounds rowBounds;
 
   protected BoundSql boundSql;
- 
+
   protected BaseStatementHandler(Executor executor, MappedStatement mappedStatement, Object parameterObject, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql) {
     this.configuration = mappedStatement.getConfiguration();
     this.executor = executor;
@@ -57,7 +57,7 @@ public abstract class BaseStatementHandler implements StatementHandler {
     this.typeHandlerRegistry = configuration.getTypeHandlerRegistry();
     this.objectFactory = configuration.getObjectFactory();
 
-    if (boundSql == null) boundSql = mappedStatement.getBoundSql(parameterObject);    
+    if (boundSql == null) boundSql = mappedStatement.getBoundSql(parameterObject);
     this.boundSql = boundSql;
 
     this.parameterHandler = configuration.newParameterHandler(mappedStatement, parameterObject, boundSql);
@@ -72,8 +72,7 @@ public abstract class BaseStatementHandler implements StatementHandler {
     return parameterHandler;
   }
 
-  public Statement prepare(Connection connection)
-      throws SQLException {
+  public Statement prepare(Connection connection) throws SQLException {
     ErrorContext.instance().sql(boundSql.getSql());
     Statement statement = null;
     try {
@@ -90,11 +89,9 @@ public abstract class BaseStatementHandler implements StatementHandler {
     }
   }
 
-  protected abstract Statement instantiateStatement(Connection connection)
-      throws SQLException;
+  protected abstract Statement instantiateStatement(Connection connection) throws SQLException;
 
-  protected void setStatementTimeout(Statement stmt)
-      throws SQLException {
+  protected void setStatementTimeout(Statement stmt) throws SQLException {
     Integer timeout = mappedStatement.getTimeout();
     Integer defaultTimeout = configuration.getDefaultStatementTimeout();
     if (timeout != null) {
@@ -104,8 +101,7 @@ public abstract class BaseStatementHandler implements StatementHandler {
     }
   }
 
-  protected void setFetchSize(Statement stmt)
-      throws SQLException {
+  protected void setFetchSize(Statement stmt) throws SQLException {
     Integer fetchSize = mappedStatement.getFetchSize();
     if (fetchSize != null) {
       stmt.setFetchSize(fetchSize);
@@ -120,7 +116,6 @@ public abstract class BaseStatementHandler implements StatementHandler {
     } catch (SQLException e) {
       //ignore
     }
-
   }
 
   protected void rebindGeneratedKey() {
@@ -129,10 +124,12 @@ public abstract class BaseStatementHandler implements StatementHandler {
       if (configuration.hasStatement(keyStatementName)) {
         MappedStatement keyStatement = configuration.getMappedStatement(keyStatementName);
         if (keyStatement != null) {
-          String keyProperty = keyStatement.getKeyProperty();
           MetaObject metaParam = configuration.newMetaObject(boundSql.getParameterObject());
-          if (keyProperty != null && metaParam.hasSetter(keyProperty) && metaParam.hasGetter(keyProperty)) {
-            boundSql.setAdditionalParameter(keyProperty, metaParam.getValue(keyProperty));
+          String[] keyProperties = keyStatement.getKeyProperties();
+          for (String keyProperty : keyProperties) {
+            if (keyProperty != null && metaParam.hasSetter(keyProperty) && metaParam.hasGetter(keyProperty)) {
+              boundSql.setAdditionalParameter(keyProperty, metaParam.getValue(keyProperty));
+            }
           }
         }
       }

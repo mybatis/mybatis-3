@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2011 The MyBatis Team
+ *    Copyright 2009-2012 The MyBatis Team
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -55,8 +55,8 @@ public class SelectKeyGenerator implements KeyGenerator {
         String keyStatementName = ms.getId() + SELECT_KEY_SUFFIX;
         if (configuration.hasStatement(keyStatementName)) {
 
-          if (keyStatement != null) {
-            String keyProperty = keyStatement.getKeyProperty();
+          if (keyStatement != null && keyStatement.getKeyProperties() != null) {
+            String keyProperty = keyStatement.getKeyProperties()[0]; //just one key property is supported
             final MetaObject metaParam = configuration.newMetaObject(parameter);
             if (keyProperty != null && metaParam.hasSetter(keyProperty)) {
               // Do not close keyExecutor.

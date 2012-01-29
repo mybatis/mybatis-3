@@ -37,8 +37,7 @@ public class PreparedStatementHandler extends BaseStatementHandler {
     super(executor, mappedStatement, parameter, rowBounds, resultHandler, boundSql);
   }
 
-  public int update(Statement statement)
-      throws SQLException {
+  public int update(Statement statement) throws SQLException {
     PreparedStatement ps = (PreparedStatement) statement;
     ps.execute();
     int rows = ps.getUpdateCount();
@@ -48,24 +47,21 @@ public class PreparedStatementHandler extends BaseStatementHandler {
     return rows;
   }
 
-  public void batch(Statement statement)
-      throws SQLException {
+  public void batch(Statement statement) throws SQLException {
     PreparedStatement ps = (PreparedStatement) statement;
     ps.addBatch();
   }
 
-  public <E> List<E> query(Statement statement, ResultHandler resultHandler)
-      throws SQLException {
+  public <E> List<E> query(Statement statement, ResultHandler resultHandler) throws SQLException {
     PreparedStatement ps = (PreparedStatement) statement;
     ps.execute();
-    return resultSetHandler.<E>handleResultSets(ps);
+    return resultSetHandler.<E> handleResultSets(ps);
   }
 
   protected Statement instantiateStatement(Connection connection) throws SQLException {
     String sql = boundSql.getSql();
     if (mappedStatement.getKeyGenerator() instanceof Jdbc3KeyGenerator) {
-      Jdbc3KeyGenerator keyGen = (Jdbc3KeyGenerator) mappedStatement.getKeyGenerator();
-      String[] keyColumnNames = keyGen.getKeyColumnNames();
+      String[] keyColumnNames = mappedStatement.getKeyColumns();
       if (keyColumnNames == null) {
         return connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
       } else {
@@ -78,8 +74,7 @@ public class PreparedStatementHandler extends BaseStatementHandler {
     }
   }
 
-  public void parameterize(Statement statement)
-      throws SQLException {
+  public void parameterize(Statement statement) throws SQLException {
     KeyGenerator keyGenerator = mappedStatement.getKeyGenerator();
     ErrorContext.instance().store();
     keyGenerator.processBefore(executor, mappedStatement, statement, boundSql.getParameterObject());

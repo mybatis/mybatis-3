@@ -272,16 +272,19 @@ public class MapperBuilderAssistant extends BaseBuilder {
       boolean useCache,
       KeyGenerator keyGenerator,
       String keyProperty,
+      String keyColumn,
       String databaseId) {
     id = applyCurrentNamespace(id, false);
     boolean isSelect = sqlCommandType == SqlCommandType.SELECT;
 
-    MappedStatement.Builder statementBuilder = new MappedStatement.Builder(configuration, id, sqlSource, sqlCommandType, databaseId);
+    MappedStatement.Builder statementBuilder = new MappedStatement.Builder(configuration, id, sqlSource, sqlCommandType);
     statementBuilder.resource(resource);
     statementBuilder.fetchSize(fetchSize);
     statementBuilder.statementType(statementType);
     statementBuilder.keyGenerator(keyGenerator);
     statementBuilder.keyProperty(keyProperty);
+    statementBuilder.keyColumn(keyColumn);
+    statementBuilder.databaseId(databaseId);    
     setStatementTimeout(timeout, statementBuilder);
 
     setStatementParameterMap(parameterMap, parameterType, statementBuilder);

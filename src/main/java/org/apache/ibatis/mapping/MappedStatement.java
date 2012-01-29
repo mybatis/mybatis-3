@@ -42,7 +42,8 @@ public class MappedStatement {
   private boolean useCache;
   private SqlCommandType sqlCommandType;
   private KeyGenerator keyGenerator;
-  private String keyProperty;
+  private String[] keyProperties;
+  private String[] keyColumns;
   private boolean hasNestedResultMaps;
   private String databaseId;
 
@@ -53,21 +54,15 @@ public class MappedStatement {
     private MappedStatement mappedStatement = new MappedStatement();
 
     public Builder(Configuration configuration, String id, SqlSource sqlSource, SqlCommandType sqlCommandType) {
-      this(configuration, id, sqlSource, sqlCommandType, null);
-    }
-      
-    public Builder(Configuration configuration, String id, SqlSource sqlSource, SqlCommandType sqlCommandType, String databaseId) {
       mappedStatement.configuration = configuration;
       mappedStatement.id = id;
-      mappedStatement.databaseId = databaseId;
       mappedStatement.sqlSource = sqlSource;
       mappedStatement.statementType = StatementType.PREPARED;
       mappedStatement.parameterMap = new ParameterMap.Builder(configuration, "defaultParameterMap", null, new ArrayList<ParameterMapping>()).build();
       mappedStatement.resultMaps = new ArrayList<ResultMap>();
       mappedStatement.timeout = configuration.getDefaultStatementTimeout();
       mappedStatement.sqlCommandType = sqlCommandType;
-      mappedStatement.keyGenerator = configuration.isUseGeneratedKeys()
-          && SqlCommandType.INSERT.equals(sqlCommandType) ? new Jdbc3KeyGenerator(null) : new NoKeyGenerator();
+      mappedStatement.keyGenerator = configuration.isUseGeneratedKeys() && SqlCommandType.INSERT.equals(sqlCommandType) ? new Jdbc3KeyGenerator() : new NoKeyGenerator();
     }
 
     public Builder resource(String resource) {
@@ -133,7 +128,17 @@ public class MappedStatement {
     }
 
     public Builder keyProperty(String keyProperty) {
-      mappedStatement.keyProperty = keyProperty;
+      mappedStatement.keyProperties = delimitedStringtoArray(keyProperty);
+      return this;
+    }
+
+    public Builder keyColumn(String keyColumn) {
+      mappedStatement.keyColumns = delimitedStringtoArray(keyColumn);
+      return this;
+    }
+
+    public Builder databaseId(String databaseId) {
+      mappedStatement.databaseId = databaseId;
       return this;
     }
 
@@ -145,10 +150,6 @@ public class MappedStatement {
       return mappedStatement;
     }
 
-  }
-
-  public String getKeyProperty() {
-    return keyProperty;
   }
 
   public KeyGenerator getKeyGenerator() {
@@ -219,25 +220,42 @@ public class MappedStatement {
     return databaseId;
   }
 
+  public String[] getKeyProperties() {
+    return keyProperties;
+  }
+
+  public String[] getKeyColumns() {
+    return keyColumns;
+  }
+
   public BoundSql getBoundSql(Object parameterObject) {
     BoundSql boundSql = sqlSource.getBoundSql(parameterObject);
     List<ParameterMapping> parameterMappings = boundSql.getParameterMappings();
     if (parameterMappings == null || parameterMappings.size() <= 0) {
       boundSql = new BoundSql(configuration, boundSql.getSql(), parameterMap.getParameterMappings(), parameterObject);
     }
-    
+
     // check for nested result maps in parameter mappings (issue #30)
     for (ParameterMapping pm : boundSql.getParameterMappings()) {
-        String rmId = pm.getResultMapId();
-        if (rmId != null) {
-            ResultMap rm = configuration.getResultMap(rmId);
-            if (rm != null) {
-                hasNestedResultMaps |= rm.hasNestedResultMaps();
-            }
+      String rmId = pm.getResultMapId();
+      if (rmId != null) {
+        ResultMap rm = configuration.getResultMap(rmId);
+        if (rm != null) {
+          hasNestedResultMaps |= rm.hasNestedResultMaps();
         }
+      }
     }
-    
+
     return boundSql;
+  }
+
+  private static String[] delimitedStringtoArray(String in) {
+    if (in == null || in.trim().length() == 0) {
+      return null;
+    } else {
+      String[] answer = in.split(",");
+      return answer;
+    }
   }
 
 }

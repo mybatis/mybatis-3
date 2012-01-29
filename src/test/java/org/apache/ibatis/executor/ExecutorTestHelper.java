@@ -82,7 +82,7 @@ public class ExecutorTestHelper {
               }
             }).build())
         .cache(authorCache)
-        .keyGenerator(new Jdbc3KeyGenerator(null))
+        .keyGenerator(new Jdbc3KeyGenerator())
         .keyProperty("id")
         .build();
     return ms;

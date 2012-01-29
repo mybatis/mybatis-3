@@ -47,25 +47,23 @@ public class BatchExecutor extends BaseExecutor {
   }
 
   public int doUpdate(MappedStatement ms, Object parameterObject) throws SQLException {
-    Configuration configuration = ms.getConfiguration();
-    StatementHandler handler = configuration.newStatementHandler(this, ms, parameterObject, RowBounds.DEFAULT, null, null);
-    BoundSql boundSql = handler.getBoundSql();
-    String sql = boundSql.getSql();
-    Statement stmt;
+    final Configuration configuration = ms.getConfiguration();
+    final StatementHandler handler = configuration.newStatementHandler(this, ms, parameterObject, RowBounds.DEFAULT, null, null);
+    final BoundSql boundSql = handler.getBoundSql();
+    final String sql = boundSql.getSql();
+    final Statement stmt;
     if (sql.equals(currentSql) && ms.equals(currentStatement)) {
       int last = statementList.size() - 1;
       stmt = statementList.get(last);
       BatchResult batchResult = batchResultList.get(last);
       batchResult.addParameterObject(parameterObject);
     } else {
-      Connection connection = getConnection();
+      final Connection connection = getConnection();
       stmt = handler.prepare(connection);
       currentSql = sql;
       currentStatement = ms;
       statementList.add(stmt);
-      BatchResult batchResult = new BatchResult(ms, sql);
-      batchResult.addParameterObject(parameterObject);
-      batchResultList.add(batchResult);
+      batchResultList.add(new BatchResult(ms, sql, parameterObject));
     }
     handler.parameterize(stmt);
     handler.batch(stmt);

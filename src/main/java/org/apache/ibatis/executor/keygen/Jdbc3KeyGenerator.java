@@ -32,13 +32,8 @@ import java.util.List;
 
 public class Jdbc3KeyGenerator implements KeyGenerator {
 
-  private String keyColumnName;
-
-  public Jdbc3KeyGenerator(String keyColumnName) {
-    this.keyColumnName = keyColumnName;
-  }
-
   public void processBefore(Executor executor, MappedStatement ms, Statement stmt, Object parameter) {
+    // do nothing
   }
 
   public void processAfter(Executor executor, MappedStatement ms, Statement stmt, Object parameter) {
@@ -50,14 +45,13 @@ public class Jdbc3KeyGenerator implements KeyGenerator {
   public void processBatch(MappedStatement ms, Statement stmt, List<Object> parameters) {
     ResultSet rs = null;
     try {
+      rs = stmt.getGeneratedKeys();
       final Configuration configuration = ms.getConfiguration();
       final TypeHandlerRegistry typeHandlerRegistry = configuration.getTypeHandlerRegistry();
-      String[] keyProperties = delimitedStringtoArray(ms.getKeyProperty());
-      rs = stmt.getGeneratedKeys();
-      ResultSetMetaData rsmd = rs.getMetaData();
-      int colCount = rsmd.getColumnCount();
+      final String[] keyProperties = ms.getKeyProperties();
+      final ResultSetMetaData rsmd = rs.getMetaData();
       TypeHandler<?>[] typeHandlers = null;
-      if (keyProperties != null && colCount >= keyProperties.length) {
+      if (keyProperties != null && rsmd.getColumnCount() >= keyProperties.length) {
         for (Object parameter : parameters) {
           if (!rs.next()) break; // there should be one row for each statement (also one for each parameter)
           final MetaObject metaParam = configuration.newMetaObject(parameter);
@@ -100,27 +94,4 @@ public class Jdbc3KeyGenerator implements KeyGenerator {
     }
   }
 
-  /*
-   * Return a String array of key column names.  This is used for the
-   * case where the driver requires that the generated key column
-   * be called out (Oracle and PostgreSQL).  In these cases, the driver
-   * will not correctly return the generated key unless the field is named.
-   *
-   * We allow more than one column name, and similarly we allow more then one
-   * key property, for the case where the table contains more than one generated value.
-   *
-   * @return
-   */
-  public String[] getKeyColumnNames() {
-    return delimitedStringtoArray(keyColumnName);
-  }
-
-  private static String[] delimitedStringtoArray(String in) {
-    if (in == null || in.trim().length() == 0) {
-      return null;
-    } else {
-      String[] answer = in.split(",");
-      return answer;
-    }
-  }
 }

@@ -95,6 +95,7 @@ public class XMLStatementBuilder extends BaseBuilder {
     boolean useCache = context.getBooleanAttribute("useCache", isSelect);
 
     String keyProperty = context.getStringAttribute("keyProperty");
+    String keyColumn = context.getStringAttribute("keyColumn");
     KeyGenerator keyGenerator;
     String keyStatementId = id + SelectKeyGenerator.SELECT_KEY_SUFFIX;
     keyStatementId = builderAssistant.applyCurrentNamespace(keyStatementId, true);
@@ -103,12 +104,12 @@ public class XMLStatementBuilder extends BaseBuilder {
     } else {
       keyGenerator = context.getBooleanAttribute("useGeneratedKeys",
           configuration.isUseGeneratedKeys() && SqlCommandType.INSERT.equals(sqlCommandType))
-          ? new Jdbc3KeyGenerator(context.getStringAttribute("keyColumn", null)) : new NoKeyGenerator();
+          ? new Jdbc3KeyGenerator() : new NoKeyGenerator();
     }
 
     builderAssistant.addMappedStatement(id, sqlSource, statementType, sqlCommandType,
         fetchSize, timeout, parameterMap, parameterTypeClass, resultMap, resultTypeClass,
-        resultSetTypeEnum, flushCache, useCache, keyGenerator, keyProperty, databaseId);
+        resultSetTypeEnum, flushCache, useCache, keyGenerator, keyProperty, keyColumn, databaseId);
   }
   
   private boolean databaseIdMatchesCurrent(String id, String databaseId) {
@@ -205,7 +206,7 @@ public class XMLStatementBuilder extends BaseBuilder {
 
       builderAssistant.addMappedStatement(id, sqlSource, statementType, sqlCommandType,
           fetchSize, timeout, parameterMap, parameterTypeClass, resultMap, resultTypeClass,
-          resultSetTypeEnum, flushCache, useCache, keyGenerator, keyProperty, databaseId);
+          resultSetTypeEnum, flushCache, useCache, keyGenerator, keyProperty, null, databaseId);
 
       id = builderAssistant.applyCurrentNamespace(id, false);
 
