@@ -48,18 +48,18 @@ public final class ConnectionLogger extends BaseJdbcLogger implements Invocation
     try {
       if ("prepareStatement".equals(method.getName())) {
         PreparedStatement stmt = (PreparedStatement) method.invoke(connection, params);
-        stmt = PreparedStatementLogger.newInstance(stmt, (String) params[0], this.statementLog);
+        stmt = PreparedStatementLogger.newInstance(stmt, (String) params[0], getStatementLog());
         return stmt;
       } else if ("prepareCall".equals(method.getName())) {
         PreparedStatement stmt = (PreparedStatement) method.invoke(connection, params);
-        stmt = PreparedStatementLogger.newInstance(stmt, (String) params[0], this.statementLog);
+        stmt = PreparedStatementLogger.newInstance(stmt, (String) params[0], getStatementLog());
         return stmt;
       } else if ("createStatement".equals(method.getName())) {
         Statement stmt = (Statement) method.invoke(connection, params);
-        stmt = StatementLogger.newInstance(stmt, this.statementLog);
+        stmt = StatementLogger.newInstance(stmt, getStatementLog());
         return stmt;
       } else if ("close".equals(method.getName())) {
-        if (statementLog.isDebugEnabled()) {
+        if (isDebugEnabled()) {
           debug("xxx Connection Closed");
         }
         return method.invoke(connection, params);
@@ -77,8 +77,8 @@ public final class ConnectionLogger extends BaseJdbcLogger implements Invocation
    * @param conn - the original connection
    * @return - the connection with logging
    */
-  public static Connection newInstance(Connection conn, Log log) {
-    InvocationHandler handler = new ConnectionLogger(conn, log);
+  public static Connection newInstance(Connection conn, Log statementLog) {
+    InvocationHandler handler = new ConnectionLogger(conn, statementLog);
     ClassLoader cl = Connection.class.getClassLoader();
     return (Connection) Proxy.newProxyInstance(cl, new Class[]{Connection.class}, handler);
   }

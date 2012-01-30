@@ -48,6 +48,9 @@ public abstract class BaseExecutor implements Executor {
 
   private static final Log log = LogFactory.getLog(BaseExecutor.class);
 
+  // for backward compatibility with 3.0 style logging
+  private static final Log connectionLog = LogFactory.getLog(Connection.class);
+
   protected Transaction transaction;
 
   protected ConcurrentLinkedQueue<DeferredLoad> deferredLoads;
@@ -311,13 +314,10 @@ public abstract class BaseExecutor implements Executor {
     }
   }
 
-  protected Connection getConnection(String statementId) throws SQLException {
+  protected Connection getConnection(Log statementLog) throws SQLException {
     Connection connection = transaction.getConnection();
-    Log statementLogger = LogFactory.getLog(statementId);
-    // kept for backward compatibility with iBATIS 2.x style logging
-    Log connectionLogger = LogFactory.getLog(Connection.class);
-    if (statementLogger.isDebugEnabled() || connectionLogger.isDebugEnabled()) {
-      return ConnectionLogger.newInstance(connection, statementLogger);
+    if (statementLog.isDebugEnabled() || connectionLog.isDebugEnabled()) {
+      return ConnectionLogger.newInstance(connection, statementLog);
     } else {
       return connection;
     }

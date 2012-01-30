@@ -98,8 +98,8 @@ public final class ResultSetLogger extends BaseJdbcLogger implements InvocationH
    * @param rs - the ResultSet to proxy
    * @return - the ResultSet with logging
    */
-  public static ResultSet newInstance(ResultSet rs, Log log) {
-    InvocationHandler handler = new ResultSetLogger(rs, log);
+  public static ResultSet newInstance(ResultSet rs, Log statementLog) {
+    InvocationHandler handler = new ResultSetLogger(rs, statementLog);
     ClassLoader cl = ResultSet.class.getClassLoader();
     return (ResultSet) Proxy.newProxyInstance(cl, new Class[]{ResultSet.class}, handler);
   }

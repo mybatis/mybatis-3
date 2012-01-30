@@ -58,7 +58,7 @@ public class BatchExecutor extends BaseExecutor {
       BatchResult batchResult = batchResultList.get(last);
       batchResult.addParameterObject(parameterObject);
     } else {
-      Connection connection = getConnection(ms.getId());
+      Connection connection = getConnection(ms.getStatementLog());
       stmt = handler.prepare(connection);
       currentSql = sql;
       currentStatement = ms;
@@ -77,7 +77,7 @@ public class BatchExecutor extends BaseExecutor {
       flushStatements();
       Configuration configuration = ms.getConfiguration();
       StatementHandler handler = configuration.newStatementHandler(this, ms, parameterObject, rowBounds, resultHandler, boundSql);
-      Connection connection = getConnection(ms.getId());
+      Connection connection = getConnection(ms.getStatementLog());
       stmt = handler.prepare(connection);
       handler.parameterize(stmt);
       return handler.<E>query(stmt, resultHandler);

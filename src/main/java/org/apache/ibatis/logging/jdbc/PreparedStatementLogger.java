@@ -53,7 +53,7 @@ public final class PreparedStatementLogger extends BaseJdbcLogger implements Inv
         if ("executeQuery".equals(method.getName())) {
           ResultSet rs = (ResultSet) method.invoke(statement, params);
           if (rs != null) {
-            return ResultSetLogger.newInstance(rs, this.statementLog);
+            return ResultSetLogger.newInstance(rs, getStatementLog());
           } else {
             return null;
           }
@@ -70,7 +70,7 @@ public final class PreparedStatementLogger extends BaseJdbcLogger implements Inv
       } else if ("getResultSet".equals(method.getName())) {
         ResultSet rs = (ResultSet) method.invoke(statement, params);
         if (rs != null) {
-          return ResultSetLogger.newInstance(rs, this.statementLog);
+          return ResultSetLogger.newInstance(rs, getStatementLog());
         } else {
           return null;
         }
@@ -94,8 +94,8 @@ public final class PreparedStatementLogger extends BaseJdbcLogger implements Inv
    * @param sql  - the sql statement
    * @return - the proxy
    */
-  public static PreparedStatement newInstance(PreparedStatement stmt, String sql, Log log) {
-    InvocationHandler handler = new PreparedStatementLogger(stmt, sql, log);
+  public static PreparedStatement newInstance(PreparedStatement stmt, String sql, Log statementLog) {
+    InvocationHandler handler = new PreparedStatementLogger(stmt, sql, statementLog);
     ClassLoader cl = PreparedStatement.class.getClassLoader();
     return (PreparedStatement) Proxy.newProxyInstance(cl, new Class[]{PreparedStatement.class, CallableStatement.class}, handler);
   }

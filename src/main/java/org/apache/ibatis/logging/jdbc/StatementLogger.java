@@ -38,7 +38,6 @@ public final class StatementLogger extends BaseJdbcLogger implements InvocationH
   private StatementLogger(Statement stmt, Log statementLog) {
     super(statementLog);
     this.statement = stmt;
-    this.statementLog = statementLog;
   }
 
   public Object invoke(Object proxy, Method method, Object[] params) throws Throwable {
@@ -50,7 +49,7 @@ public final class StatementLogger extends BaseJdbcLogger implements InvocationH
         if ("executeQuery".equals(method.getName())) {
           ResultSet rs = (ResultSet) method.invoke(statement, params);
           if (rs != null) {
-            return ResultSetLogger.newInstance(rs, this.statementLog);
+            return ResultSetLogger.newInstance(rs, getStatementLog());
           } else {
             return null;
           }
@@ -60,7 +59,7 @@ public final class StatementLogger extends BaseJdbcLogger implements InvocationH
       } else if ("getResultSet".equals(method.getName())) {
         ResultSet rs = (ResultSet) method.invoke(statement, params);
         if (rs != null) {
-          return ResultSetLogger.newInstance(rs, this.statementLog);
+          return ResultSetLogger.newInstance(rs, getStatementLog());
         } else {
           return null;
         }
@@ -83,8 +82,8 @@ public final class StatementLogger extends BaseJdbcLogger implements InvocationH
    * @param stmt - the statement
    * @return - the proxy
    */
-  public static Statement newInstance(Statement stmt, Log log) {
-    InvocationHandler handler = new StatementLogger(stmt, log);
+  public static Statement newInstance(Statement stmt, Log statementLog) {
+    InvocationHandler handler = new StatementLogger(stmt, statementLog);
     ClassLoader cl = Statement.class.getClassLoader();
     return (Statement) Proxy.newProxyInstance(cl, new Class[]{Statement.class}, handler);
   }

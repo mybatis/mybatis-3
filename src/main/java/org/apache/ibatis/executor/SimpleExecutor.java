@@ -16,6 +16,7 @@
 package org.apache.ibatis.executor;
 
 import org.apache.ibatis.executor.statement.StatementHandler;
+import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.session.Configuration;
@@ -40,7 +41,7 @@ public class SimpleExecutor extends BaseExecutor {
     try {
       Configuration configuration = ms.getConfiguration();
       StatementHandler handler = configuration.newStatementHandler(this, ms, parameter, RowBounds.DEFAULT, null, null);
-      stmt = prepareStatement(handler, ms.getId());
+      stmt = prepareStatement(handler, ms.getStatementLog());
       return handler.update(stmt);
     } finally {
       closeStatement(stmt);
@@ -52,7 +53,7 @@ public class SimpleExecutor extends BaseExecutor {
     try {
       Configuration configuration = ms.getConfiguration();
       StatementHandler handler = configuration.newStatementHandler(this, ms, parameter, rowBounds, resultHandler, boundSql);
-      stmt = prepareStatement(handler, ms.getId());
+      stmt = prepareStatement(handler, ms.getStatementLog());
       return handler.<E>query(stmt, resultHandler);
     } finally {
       closeStatement(stmt);
@@ -63,9 +64,9 @@ public class SimpleExecutor extends BaseExecutor {
     return Collections.emptyList();
   }
 
-  private Statement prepareStatement(StatementHandler handler, String logger) throws SQLException {
+  private Statement prepareStatement(StatementHandler handler, Log statementLog) throws SQLException {
     Statement stmt;
-    Connection connection = getConnection(logger);
+    Connection connection = getConnection(statementLog);
     stmt = handler.prepare(connection);
     handler.parameterize(stmt);
     return stmt;

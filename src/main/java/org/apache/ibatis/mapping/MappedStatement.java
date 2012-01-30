@@ -19,13 +19,15 @@ import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.executor.keygen.Jdbc3KeyGenerator;
 import org.apache.ibatis.executor.keygen.KeyGenerator;
 import org.apache.ibatis.executor.keygen.NoKeyGenerator;
+import org.apache.ibatis.logging.Log;
+import org.apache.ibatis.logging.LogFactory;
 import org.apache.ibatis.session.Configuration;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class MappedStatement {
+public final class MappedStatement {
 
   private String resource;
   private Configuration configuration;
@@ -46,8 +48,10 @@ public class MappedStatement {
   private String[] keyColumns;
   private boolean hasNestedResultMaps;
   private String databaseId;
+  private Log statementLog;
 
   private MappedStatement() {
+    // constructor disabled
   }
 
   public static class Builder {
@@ -63,6 +67,7 @@ public class MappedStatement {
       mappedStatement.timeout = configuration.getDefaultStatementTimeout();
       mappedStatement.sqlCommandType = sqlCommandType;
       mappedStatement.keyGenerator = configuration.isUseGeneratedKeys() && SqlCommandType.INSERT.equals(sqlCommandType) ? new Jdbc3KeyGenerator() : new NoKeyGenerator();
+      mappedStatement.statementLog = LogFactory.getLog(id);
     }
 
     public Builder resource(String resource) {
@@ -226,6 +231,10 @@ public class MappedStatement {
 
   public String[] getKeyColumns() {
     return keyColumns;
+  }
+
+  public Log getStatementLog() {
+    return statementLog;
   }
 
   public BoundSql getBoundSql(Object parameterObject) {

@@ -38,7 +38,7 @@ public abstract class BaseJdbcLogger {
   private List<Object> columnNames = new ArrayList<Object>();
   private List<Object> columnValues = new ArrayList<Object>();
 
-  protected Log statementLog;
+  private Log statementLog;
 
   /*
    * Default constructor
@@ -136,4 +136,9 @@ public abstract class BaseJdbcLogger {
 
   protected abstract Log getLog();
 
+  public Log getStatementLog() {
+    return statementLog;
+  }
+
 }
+
