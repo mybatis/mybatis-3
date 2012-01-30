@@ -913,8 +913,7 @@ public class Author {
                 Enumeration Type
               </td>
               <td>
-                Any compatible <code>NUMERIC</code> or <code>DOUBLE</code>, as the position is stored
-                (not the code itself).
+                コードではなく位置（ordinal）が保存されるので、NUMERIC または DOUBLE 互換の型
               </td>
             </tr>
           </tbody>
