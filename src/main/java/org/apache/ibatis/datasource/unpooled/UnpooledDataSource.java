@@ -21,7 +21,6 @@ import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.DriverPropertyInfo;
 import java.sql.SQLException;
-import java.sql.SQLFeatureNotSupportedException;
 import java.util.Properties;
 import java.util.logging.Logger;
 
@@ -29,6 +28,7 @@ import javax.sql.DataSource;
 
 import org.apache.ibatis.datasource.DataSourceException;
 import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.logging.LogFactory;
 
 public class UnpooledDataSource implements DataSource {
 
@@ -234,8 +234,8 @@ public class UnpooledDataSource implements DataSource {
       return this.driver.jdbcCompliant();
     }
 
-    public Logger getParentLogger() throws SQLFeatureNotSupportedException {
-      return Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+    public Logger getParentLogger() {
+      return Logger.getLogger(LogFactory.GLOBAL_LOGGER_NAME);
     }
   }
 
@@ -247,8 +247,8 @@ public class UnpooledDataSource implements DataSource {
     return false;
   }
 
-  public Logger getParentLogger() throws SQLFeatureNotSupportedException {
-    return Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+  public Logger getParentLogger() {
+    return Logger.getLogger(LogFactory.GLOBAL_LOGGER_NAME);
   }
 
 }

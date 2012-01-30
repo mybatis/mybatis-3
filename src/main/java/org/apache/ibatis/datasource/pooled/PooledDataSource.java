@@ -20,7 +20,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.SQLFeatureNotSupportedException;
 import java.sql.Statement;
 import java.util.Properties;
 import java.util.logging.Logger;
@@ -536,8 +535,8 @@ public class PooledDataSource implements DataSource {
     return false;
   }
 
-  public Logger getParentLogger() throws SQLFeatureNotSupportedException {
-    return Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+  public Logger getParentLogger() {
+    return Logger.getLogger(LogFactory.GLOBAL_LOGGER_NAME);
   }
 
 }

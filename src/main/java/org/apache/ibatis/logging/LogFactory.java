@@ -21,6 +21,12 @@ import org.apache.ibatis.io.Resources;
 
 public final class LogFactory {
 
+  /**
+   * Name for the global logger. Reference java.util.Logger.GLOBAL_LOGGER_NAME
+   * directly once we drop JDK 5 compatibility.
+   */
+  public static final String GLOBAL_LOGGER_NAME = "global";
+
   private static Constructor<? extends Log> logConstructor;
 
   static {
