@@ -330,6 +330,8 @@ public class MapperAnnotationBuilder {
           returnTypeParameter = actualTypeArguments[0];
           if (returnTypeParameter instanceof Class) {
             returnType = (Class<?>) returnTypeParameter;
+          } else if (returnTypeParameter instanceof ParameterizedType) { // (issue 443) actual type can be a also a parametrized type
+            returnType = (Class<?>) ((ParameterizedType) returnTypeParameter).getRawType();
           }
         }
       }
@@ -341,6 +343,8 @@ public class MapperAnnotationBuilder {
           returnTypeParameter = actualTypeArguments[1];
           if (returnTypeParameter instanceof Class) {
             returnType = (Class<?>) returnTypeParameter;
+          } else if (returnTypeParameter instanceof ParameterizedType) { // (issue 443) actual type can be a also a parametrized type
+            returnType = (Class<?>) ((ParameterizedType) returnTypeParameter).getRawType();
           }
         }
       }
