@@ -15,4 +15,7 @@ public interface Mapper {
   @MapKey("id")
   Map<Integer, User<String>> getUsersMap();
 
+  @Select("select id, name from users where id=1")
+  Map<Integer, Object> getUsersMap2();
+
 }

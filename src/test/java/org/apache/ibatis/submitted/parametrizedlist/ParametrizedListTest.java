@@ -88,4 +88,16 @@ public class ParametrizedListTest {
     }
   }
 
+  @Test
+  public void testShouldDetectMap() throws Exception {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      Map<Integer, Object> map = mapper.getUsersMap2();
+      Assert.assertEquals(1, map.get("ID"));
+    } finally {
+      sqlSession.close();
+    }
+  }
+
 }
