@@ -554,7 +554,7 @@ public class User {
 </select>]]></source>
 
         <p>
-          Lo mejor de los ResultMaps se que ya has aprendido mucho sobre ellos y ni siquiera los has visto! Los casos sencillos no requieren nada más que lo que ya has visto. Solo como ejemplo, veamos qué aspecto tendría el último ejemplo utilizando un ResultMap externo, lo cual es otra forma de solucionar las divergencias entre los nombres de columnas y de propiedades.
+          Lo mejor de los ResultMaps es que ya has aprendido mucho sobre ellos ¡y ni siquiera los has visto! Los casos sencillos no requieren nada más que lo que ya has visto. Solo como ejemplo, veamos qué aspecto tendría el último ejemplo utilizando un ResultMap externo, lo cual es otra forma de solucionar las divergencias entre los nombres de columnas y de propiedades.
         </p>
 
         <source><![CDATA[<resultMap id="userResultMap" type="User">

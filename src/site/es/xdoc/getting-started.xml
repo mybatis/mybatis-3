@@ -171,7 +171,7 @@ try {
 					Te estarás preguntando qué se está ejecutando en SqlSession o en la
 					clase Mapper. Los
 					<i>Mapped Statements</i>
-					son una materia muy densa, y será el tema que domina la mayor parte
+					son una materia muy densa, y será el tema que domine la mayor parte
 					de esta documentación. Pero, para que te hagas una idea de qué se
 					está ejecutando realmente proporcionaremos un par de ejemplos.
 				</p>

@@ -27,7 +27,7 @@
 
   <body>
   <section name="SQL dinámico">
-  <p>Una de las características más potentes de MyBatis ha sido siempre sus capacidades de SQL dinámico. I tienes experiencia con JDBC o algún framework similar, entenderás que doloroso es concatenar strings de SQL, asegurándose de que no olvidas espacios u omitir una coma al final de la lista de columnas. El SQL dinámico puede ser realmente doloroso de usar.</p>
+  <p>Una de las características más potentes de MyBatis ha sido siempre sus capacidades de SQL dinámico. Si tienes experiencia con JDBC o algún framework similar, entenderás que doloroso es concatenar strings de SQL, asegurándose de que no olvidas espacios u omitir una coma al final de la lista de columnas. El SQL dinámico puede ser realmente doloroso de usar.</p>
   <p>Aunque trabajar con SQL dinámico no va a ser nunca una fiesta, MyBatis ciertamente mejora la situación con un lenguaje de SQL dinámico potente que puede usarse en cualquier mapped statement.</p>
   <p>Los elementos de SQL dinámico deberían ser familiares a aquel que haya usado JSTL o algún procesador de texto basado en XML. En versiones anteriores de MyBatis había un montón de elementos que conocer y comprender. MyBatis 3 mejora esto y ahora hay algo menos de la mitad de esos elementos con los que trabajar. MyBatis emplea potentes expresiones OGNL para eliminar la necesidad del resto de los elementos:</p>  
   <ul>
