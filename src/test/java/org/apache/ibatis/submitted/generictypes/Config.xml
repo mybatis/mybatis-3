@@ -38,7 +38,7 @@
   </environments>
   
   <mappers>
-    <mapper resource="org/apache/ibatis/submitted/generictypes/Mapper.xml" />
+    <mapper class="org.apache.ibatis.submitted.generictypes.Mapper" />
   </mappers>
 
 </configuration>

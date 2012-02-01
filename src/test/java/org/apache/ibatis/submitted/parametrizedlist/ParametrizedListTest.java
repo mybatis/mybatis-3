@@ -111,5 +111,5 @@ public class ParametrizedListTest {
       sqlSession.close();
     }
   }
-  
+
 }
