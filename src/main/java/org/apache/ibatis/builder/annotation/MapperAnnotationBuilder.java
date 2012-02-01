@@ -336,21 +336,19 @@ public class MapperAnnotationBuilder {
           }
         }
       }
-    } else {
-      final MapKey mapKeyAnnotation = method.getAnnotation(MapKey.class);
-      if (mapKeyAnnotation != null && Map.class.isAssignableFrom(returnType)) {
-        Type returnTypeParameter = method.getGenericReturnType();
-        if (returnTypeParameter instanceof ParameterizedType) {
-          Type[] actualTypeArguments = ((ParameterizedType) returnTypeParameter).getActualTypeArguments();
-          if (actualTypeArguments != null && actualTypeArguments.length == 2) {
-            returnTypeParameter = actualTypeArguments[1];
-            if (returnTypeParameter instanceof Class) {
-              returnType = (Class<?>) returnTypeParameter;
-            } else if (returnTypeParameter instanceof ParameterizedType) { // (issue 443) actual type can be a also a parametrized type
-              returnType = (Class<?>) ((ParameterizedType) returnTypeParameter).getRawType();
-            }
+    } else if (method.isAnnotationPresent(MapKey.class) && Map.class.isAssignableFrom(returnType)) {
+      // (issue 195) Do not look into Maps if there is not MapKey annotation 
+      Type returnTypeParameter = method.getGenericReturnType();
+      if (returnTypeParameter instanceof ParameterizedType) {
+        Type[] actualTypeArguments = ((ParameterizedType) returnTypeParameter).getActualTypeArguments();
+        if (actualTypeArguments != null && actualTypeArguments.length == 2) {
+          returnTypeParameter = actualTypeArguments[1];
+          if (returnTypeParameter instanceof Class) {
+            returnType = (Class<?>) returnTypeParameter;
+          } else if (returnTypeParameter instanceof ParameterizedType) { // (issue 443) actual type can be a also a parametrized type
+            returnType = (Class<?>) ((ParameterizedType) returnTypeParameter).getRawType();
           }
-        }
+        }        
       }
     }
 
