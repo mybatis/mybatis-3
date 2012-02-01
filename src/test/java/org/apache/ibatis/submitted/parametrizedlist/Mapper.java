@@ -9,13 +9,16 @@ import org.apache.ibatis.annotations.Select;
 public interface Mapper {
 
   @Select("select id, name from users")
-  List<User<String>> getUsersList();
+  List<User<String>> getAListOfUsers();
 
   @Select("select id, name from users")
   @MapKey("id")
-  Map<Integer, User<String>> getUsersMap();
+  Map<Integer, User<String>> getAMapOfUsers();
 
   @Select("select id, name from users where id=1")
-  Map<Integer, Object> getUsersMap2();
+  Map<Integer, Object> getUserAsAMap();
 
+  @Select("select id, name from users")
+  List<Map<Integer, Object>> getAListOfMaps();
+  
 }

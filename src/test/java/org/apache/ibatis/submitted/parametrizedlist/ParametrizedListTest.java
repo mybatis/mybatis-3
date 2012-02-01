@@ -69,7 +69,7 @@ public class ParametrizedListTest {
     SqlSession sqlSession = sqlSessionFactory.openSession();
     try {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
-      List<User<String>> list = mapper.getUsersList();
+      List<User<String>> list = mapper.getAListOfUsers();
       Assert.assertEquals(User.class, list.get(0).getClass());
     } finally {
       sqlSession.close();
@@ -81,7 +81,7 @@ public class ParametrizedListTest {
     SqlSession sqlSession = sqlSessionFactory.openSession();
     try {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
-      Map<Integer, User<String>> map = mapper.getUsersMap();
+      Map<Integer, User<String>> map = mapper.getAMapOfUsers();
       Assert.assertEquals(User.class, map.get(1).getClass());
     } finally {
       sqlSession.close();
@@ -89,15 +89,27 @@ public class ParametrizedListTest {
   }
 
   @Test
-  public void testShouldDetectMap() throws Exception {
+  public void testShouldGetAUserAsAMap() throws Exception {
     SqlSession sqlSession = sqlSessionFactory.openSession();
     try {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
-      Map<Integer, Object> map = mapper.getUsersMap2();
+      Map<Integer, Object> map = mapper.getUserAsAMap();
       Assert.assertEquals(1, map.get("ID"));
     } finally {
       sqlSession.close();
     }
   }
 
+  @Test
+  public void testShouldGetAListOfMaps() throws Exception {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      List<Map<Integer, Object>> map = mapper.getAListOfMaps();
+      Assert.assertEquals(1, map.get(0).get("ID"));
+    } finally {
+      sqlSession.close();
+    }
+  }
+  
 }
