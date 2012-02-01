@@ -23,13 +23,13 @@ import java.sql.DriverManager;
 
 import junit.framework.Assert;
 
+import org.apache.ibatis.exceptions.PersistenceException;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class GenericTypesTest {
@@ -63,7 +63,6 @@ public class GenericTypesTest {
     }
   }
 
-  @Ignore
   @Test
   public void testShouldGetAListOfMaps() throws Exception {
     SqlSession sqlSession = sqlSessionFactory.openSession();

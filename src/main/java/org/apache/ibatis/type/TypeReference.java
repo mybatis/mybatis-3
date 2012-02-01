@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2011 The MyBatis Team
+ *    Copyright 2009-2012 The MyBatis Team
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -26,14 +26,18 @@ import java.lang.reflect.Type;
  */
 public abstract class TypeReference<T> {
 
-  private final Type rawType;
+  private Type rawType;
 
   protected TypeReference() {
     Type superclass = getClass().getGenericSuperclass();
-    if ( superclass instanceof Class ) {
-      throw new RuntimeException( "Missing type parameter." );
+    if (superclass instanceof Class) {
+      throw new RuntimeException("Missing type parameter.");
     }
-    rawType = ( (ParameterizedType) superclass ).getActualTypeArguments()[0];
+    rawType = ((ParameterizedType) superclass).getActualTypeArguments()[0];
+    // TODO remove this when Reflector is fixed to return Types
+    if (rawType instanceof ParameterizedType) {
+      rawType = ((ParameterizedType) rawType).getRawType();
+    }
   }
 
   public final Type getRawType() {
