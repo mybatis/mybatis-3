@@ -16,9 +16,9 @@ public interface Mapper {
   Map<Integer, User<String>> getAMapOfUsers();
 
   @Select("select id, name from users where id=1")
-  Map<Integer, Object> getUserAsAMap();
+  Map<String, Object> getUserAsAMap();
 
   @Select("select id, name from users")
-  List<Map<Integer, Object>> getAListOfMaps();
+  List<Map<String, Object>> getAListOfMaps();
   
 }

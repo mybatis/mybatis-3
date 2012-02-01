@@ -337,7 +337,7 @@ public class MapperAnnotationBuilder {
         }
       }
     } else if (method.isAnnotationPresent(MapKey.class) && Map.class.isAssignableFrom(returnType)) {
-      // (issue 195) Do not look into Maps if there is not MapKey annotation 
+      // (issue 503) Do not look into Maps if there is not MapKey annotation 
       Type returnTypeParameter = method.getGenericReturnType();
       if (returnTypeParameter instanceof ParameterizedType) {
         Type[] actualTypeArguments = ((ParameterizedType) returnTypeParameter).getActualTypeArguments();
