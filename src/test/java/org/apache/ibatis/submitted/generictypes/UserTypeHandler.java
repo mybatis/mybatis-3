@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import org.apache.ibatis.type.BaseTypeHandler;
 import org.apache.ibatis.type.JdbcType;
 
-public class UserTypeHandler<T> extends BaseTypeHandler<User<String>> {
+public class UserTypeHandler extends BaseTypeHandler<User<String>> {
 
   @Override
   public void setNonNullParameter(PreparedStatement ps, int i, User<String> parameter, JdbcType jdbcType) throws SQLException {
