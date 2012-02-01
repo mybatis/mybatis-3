@@ -55,9 +55,12 @@ org.apache.ibatis.logging.LogFactory.useCommonsLogging();
 org.apache.ibatis.logging.LogFactory.useStdOutLogging();]]></source>
       <p>これらのメソッドは、他の MyBatis のメソッドより前に呼び出す必要があります。また、要求された実装が実行時のクラスパスに含まれている場合にのみ切り替えることが可能です。例えば、Log4J に切り替えようとして、実行時に Log4J が見つからない場合、MyBatis は切り替えの要求を無視して通常のアルゴリズムでロギング実装を検索します。
       </p>
-      <p>Apache Commons Logging, Apache Log4J, JDK Logging API についての詳細はこのドキュメントの範囲外となりますが、後述の設定例は参考になると思います。これらのフレームワークについての詳しい情報は、以下の各サイトを参照してください。
+      <p>SLF4J, Apache Commons Logging, Apache Log4J, JDK Logging API についての詳細はこのドキュメントの範囲外となりますが、後述の設定例は参考になると思います。これらのフレームワークについての詳しい情報は、以下の各サイトを参照してください。
       </p>
       <ul>
+        <li>
+          <a href="http://www.slf4j.org/">SLF4J</a>
+        </li>
         <li>
           <a href="http://commons.apache.org/logging">Apache Commons Logging</a>
         </li>
@@ -69,14 +72,8 @@ org.apache.ibatis.logging.LogFactory.useStdOutLogging();]]></source>
         </li>
       </ul>
       <subsection name="Logging Configuration">
-        <p>MyBatis はほとんどのアクティビティを MyBatis パッケージ以外のログクラスを使って出力します。実行されるステートメントのログを出力するためには、<code>java.sql</code> パッケージ以下のクラスのログ出力を有効にしてください。具体的には次の各クラスです。
+        <p>実行されるステートメントのログを出力するためには、パッケージ、Mapper の完全修飾名、ネームスペース、あるいはステートメントの完全修飾名に対してログ出力を有効にしてください。
         </p>
-        <ul>
-        <li><code>java.sql.Connection</code></li>
-        <li><code>java.sql.PreparedStatement</code></li>
-        <li><code>java.sql.Resultset</code></li>
-        <li><code>java.sql.Statement</code></li>
-        </ul>
         <p>具体的な設定方法は使用するロギング実装によります。以下は Log4J での設定例です。ロギングサービスの設定は、単純にいくつかの設定ファイル（例えば log4j.properties）と、場合によっては新しい JAR（例えば log4j.jar）を追加するだけのことです。以下は、Log4J をプロバイダーとして完全なロギングサービスを設定する手順です。
         </p>
         <p></p>
@@ -91,29 +88,54 @@ org.apache.ibatis.logging.LogFactory.useStdOutLogging();]]></source>
         <h4>
           ステップ２: Log4J を設定する。
         </h4>
-        <p>Log4J の設定はシンプルです。まず、次のテキストを含む log4j.properties というファイルを作成します。
+        <p>Log4J の設定はシンプルです。例えば次の Mapper のログを出力する場合：
+        </p>
+        <source><![CDATA[package org.mybatis.example;
+public interface BlogMapper {
+  @Select("SELECT * FROM blog WHERE id = #{id}")
+  Blog selectBlog(int id);
+}]]></source>
+        <p>次のテキストを含む log4j.properties というファイルを作成し、クラスパスに配置します。
         </p>
         <source><![CDATA[# Global logging configuration
 log4j.rootLogger=ERROR, stdout
 # MyBatis logging configuration...
-#log4j.logger.org.apache.ibatis=DEBUG
-#log4j.logger.java.sql.Connection=DEBUG
-#log4j.logger.java.sql.Statement=DEBUG
-#log4j.logger.java.sql.PreparedStatement=DEBUG
-#log4j.logger.java.sql.ResultSet=DEBUG
+log4j.logger.org.mybatis.example.BlogMapper=DEBUG
 # Console output...
 log4j.appender.stdout=org.apache.log4j.ConsoleAppender
 log4j.appender.stdout.layout=org.apache.log4j.PatternLayout
 log4j.appender.stdout.layout.ConversionPattern=%5p [%t] - %m%n]]></source>
-        <p>上記のファイルはエラーのみを出力する最小限の設定です。２行目でエラーのみを stdout というアペンダーに出力するよう Log4J に指示しています。アペンダーというのは出力単位となるコンポーネントです（例えば console, file, database など）。２行目を下記のように変更すると、出力される情報を最大限とすることができます。
-        </p>
-        <p></p>
-        <source>log4j.rootLogger=DEBUG, stdout</source>
-        <p></p>
-        <p>２行目を上記のように変更すると、Log4J は出力対象となるイベントを全て stdout アペンダー（ここではコンソール）に出力するようになります。より細かい設定が必要なら、上記設定ファイルの MyBatis logging configuration のセクションで、各クラスの出力レベルを調整することができます（４行目から８行目までのコメントアウトされている行です）。もし PreparedStatement の DEBUG レベルのアクティビティ（SQL ステートメント）を出力したいのなら、７行目を次のように変更します（コメント '#' を外します）。
+        <p>上記のように設定すると、Log4J は <code>org.mybatis.example.BlogMapper</code> について詳細なログを出力し、それ以外のクラスについてはエラーのみを出力します。</p>
+        <p>ログに出力される情報を細かく調整したいのなら、Mapper ファイル全体ではなく特定のステートメントを指定することもできます。</p>
+
+        <source>log4j.logger.org.mybatis.example.BlogMapper.selectBlog=DEBUG</source>
+
+        <p>逆に、複数の Mapper に対するログを有効化したい場合もあるでしょう。その場合は、対象となる Mapper を含むパッケージを指定することができます。</p>
+
+        <source>log4j.logger.org.mybatis.example=DEBUG</source>
+        
+        <p>Mapper インターフェイスを使っていない場合、例えば次のような Mapper XML ファイルを使っていたらどうすれば良いのでしょうか。
         </p>
 
-        <source>log4j.logger.java.sql.PreparedStatement=DEBUG</source>
+      <source><![CDATA[<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.mybatis.example.BlogMapper">
+  <select id="selectBlog" parameterType="int" resultType="Blog">
+    select * from Blog where id = #{id}
+  </select>
+</mapper>]]></source>
+
+        <p>この場合、次のようにネームスペースを指定することでこの XML ファイル全体のログを有効化することができます。</p>
+
+        <source>log4j.logger.org.mybatis.example.BlogMapper=DEBUG</source>
+
+        <p>特定のステートメントのみを対象とする場合は次のように指定します。</p>
+
+        <source>log4j.logger.org.mybatis.example.BlogMapper.selectBlog=DEBUG</source>
+
+        <p>お気づきのように、Mapper インターフェイスと XML のどちらを使っている場合でも、設定方法に違いはありません。</p>
 
         <p>上記の log4j.properties の残りの部分はアペンダーの設定になっていますが、このドキュメントでは説明しません。Log4J のサイトを参照してください。あるいは、設定値を変更してみてどのような結果になるか試してみるのも良いでしょう。
         </p>
