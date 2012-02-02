@@ -750,7 +750,7 @@ public class User {
             </tr>
             <tr>
               <td><code>typeHandler</code></td>
-              <td>Un tipo JDBC de los tipos soportados que se muestran a continuación. El tipo JDBC solo se requiere para columnas que admiten nulos en insert, update o delete. Esto es un requerimiento de JDBC no de MyBatis. Incluso si usas JDBC directamente debes especificar el tipo – pero solo para los valores que pueden ser nulos.
+              <td>Ya hemos hablado sobre typeHandlers anteriormente. Usando esta propiedad se puede sobre escribir el typeHandler por defecto. El valor admite un nombre totalmente cualificado o un alias.
               </td>
             </tr>
           </tbody>
