@@ -116,7 +116,7 @@ public class MapperMethod {
       result = sqlSession.<E>selectList(commandName, param);
     }
     // issue #510 Collections support
-    if (!List.class.isAssignableFrom(method.getReturnType())) {
+    if (!method.getReturnType().isAssignableFrom(result.getClass())) {
       return convertToDeclaredCollection(result);
     }
     return result;

@@ -23,6 +23,7 @@ import static org.junit.Assert.fail;
 
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -538,7 +539,31 @@ public class SqlSessionTest extends BaseDataTest {
     SqlSession session = sqlMapper.openSession();
     try {
       AuthorMapper mapper = session.getMapper(AuthorMapper.class);
-      Set<Author> authors = mapper.selectAllAuthorsSet();
+      Collection<Author> authors = mapper.selectAllAuthorsSet();
+      assertEquals(2, authors.size());
+    } finally {
+      session.close();
+    }
+  }
+
+  @Test
+  public void shouldExecuteSelectOneAuthorUsingMapperClassThatReturnsVector() {
+    SqlSession session = sqlMapper.openSession();
+    try {
+      AuthorMapper mapper = session.getMapper(AuthorMapper.class);
+      Collection<Author> authors = mapper.selectAllAuthorsVector();
+      assertEquals(2, authors.size());
+    } finally {
+      session.close();
+    }
+  }
+
+  @Test
+  public void shouldExecuteSelectOneAuthorUsingMapperClassThatReturnsLinkedList() {
+    SqlSession session = sqlMapper.openSession();
+    try {
+      AuthorMapper mapper = session.getMapper(AuthorMapper.class);
+      Collection<Author> authors = mapper.selectAllAuthorsLinkedList();
       assertEquals(2, authors.size());
     } finally {
       session.close();

@@ -15,8 +15,10 @@
  */
 package domain.blog.mappers;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.Vector;
 
 import org.apache.ibatis.session.ResultHandler;
 
@@ -27,6 +29,10 @@ public interface AuthorMapper {
   List<Author> selectAllAuthors();
 
   Set<Author> selectAllAuthorsSet();
+
+  Vector<Author> selectAllAuthorsVector();
+
+  LinkedList<Author> selectAllAuthorsLinkedList();
 
   void selectAllAuthors(ResultHandler handler);
 

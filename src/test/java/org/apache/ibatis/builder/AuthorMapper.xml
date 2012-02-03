@@ -70,10 +70,20 @@
       select * from author
     </select>
 
-  <select id="selectAllAuthorsSet"
+    <select id="selectAllAuthorsSet"
           resultType="domain.blog.Author">
-    select * from author
-  </select>
+      select * from author
+    </select>
+
+    <select id="selectAllAuthorsVector"
+          resultType="domain.blog.Author">
+      select * from author
+    </select>
+
+    <select id="selectAllAuthorsLinkedList"
+          resultType="domain.blog.Author">
+      select * from author
+    </select>
 
     <select id="selectComplexAuthors"
             resultMap="selectComplexImmutableAuthor">
