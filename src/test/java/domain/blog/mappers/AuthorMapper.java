@@ -15,15 +15,18 @@
  */
 package domain.blog.mappers;
 
-import domain.blog.Author;
-
 import java.util.List;
+import java.util.Set;
 
 import org.apache.ibatis.session.ResultHandler;
 
+import domain.blog.Author;
+
 public interface AuthorMapper {
 
-  List selectAllAuthors();
+  List<Author> selectAllAuthors();
+
+  Set<Author> selectAllAuthorsSet();
 
   void selectAllAuthors(ResultHandler handler);
 

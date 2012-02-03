@@ -17,6 +17,7 @@ package org.apache.ibatis.binding;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,7 +42,7 @@ public class MapperMethod {
   private Class<?> declaringInterface;
   private Method method;
 
-  private boolean returnsList;
+  private boolean returnsCollection;
   private boolean returnsMap;
   private boolean returnsVoid;
   private String mapKey;
@@ -67,7 +68,7 @@ public class MapperMethod {
     validateStatement();
   }
 
-  public Object execute(Object[] args) {
+  public Object execute(Object[] args) throws Exception {
     Object result = null;
     if (SqlCommandType.INSERT == type) {
       Object param = getParam(args);
@@ -81,8 +82,8 @@ public class MapperMethod {
     } else if (SqlCommandType.SELECT == type) {
       if (returnsVoid && resultHandlerIndex != null) {
         executeWithResultHandler(args);
-      } else if (returnsList) {
-        result = executeForList(args);
+      } else if (returnsCollection) {
+        result = executeForCollection(args);
       } else if (returnsMap) {
         result = executeForMap(args);
       } else {
@@ -105,7 +106,7 @@ public class MapperMethod {
     }
   }
 
-  private <E> List<E> executeForList(Object[] args) {
+  private <E> Collection<E> executeForCollection(Object[] args) throws Exception {
     List<E> result;
     Object param = getParam(args);
     if (rowBoundsIndex != null) {
@@ -114,7 +115,18 @@ public class MapperMethod {
     } else {
       result = sqlSession.<E>selectList(commandName, param);
     }
+    // issue #510 Collections support
+    if (!List.class.isAssignableFrom(method.getReturnType())) {
+      return convertToDeclaredCollection(result);
+    }
     return result;
+  }
+
+  @SuppressWarnings("unchecked")
+  private <E> Collection<E> convertToDeclaredCollection(List<E> result) throws Exception {
+    Collection<E> collection = (Collection<E>) config.getObjectFactory().create(method.getReturnType());
+    collection.addAll(result);
+    return collection;
   }
 
   private <K, V> Map<K, V> executeForMap(Object[] args) {
@@ -161,8 +173,8 @@ public class MapperMethod {
     if (method.getReturnType().equals(Void.TYPE)) {
       returnsVoid = true;
     }
-    if (List.class.isAssignableFrom(method.getReturnType())) {
-      returnsList = true;
+    if (Collection.class.isAssignableFrom(method.getReturnType())) {
+      returnsCollection = true;
     }
     if (Map.class.isAssignableFrom(method.getReturnType())) {
       final MapKey mapKeyAnnotation = method.getAnnotation(MapKey.class);
@@ -171,7 +183,6 @@ public class MapperMethod {
         returnsMap = true;
       }
     }
-
     final Class<?>[] argTypes = method.getParameterTypes();
     for (int i = 0; i < argTypes.length; i++) {
       if (RowBounds.class.isAssignableFrom(argTypes[i])) {

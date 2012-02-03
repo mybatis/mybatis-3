@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.binding.BindingException;
@@ -527,6 +528,18 @@ public class SqlSessionTest extends BaseDataTest {
       AuthorMapper mapper = session.getMapper(AuthorMapper.class);
       Author author = mapper.selectAuthor(101);
       assertEquals(101, author.getId());
+    } finally {
+      session.close();
+    }
+  }
+
+  @Test
+  public void shouldExecuteSelectOneAuthorUsingMapperClassThatReturnsSet() {
+    SqlSession session = sqlMapper.openSession();
+    try {
+      AuthorMapper mapper = session.getMapper(AuthorMapper.class);
+      Set<Author> authors = mapper.selectAllAuthorsSet();
+      assertEquals(2, authors.size());
     } finally {
       session.close();
     }

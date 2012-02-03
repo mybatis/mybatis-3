@@ -65,7 +65,12 @@
       </constructor>
     </resultMap>
 
-  <select id="selectAllAuthors"
+    <select id="selectAllAuthors"
+          resultType="domain.blog.Author">
+      select * from author
+    </select>
+
+  <select id="selectAllAuthorsSet"
           resultType="domain.blog.Author">
     select * from author
   </select>
