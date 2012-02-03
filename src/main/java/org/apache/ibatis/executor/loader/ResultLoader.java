@@ -20,6 +20,8 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import javax.sql.DataSource;
 
@@ -57,7 +59,9 @@ public class ResultLoader {
 
   public Object loadResult() throws SQLException {
     List<Object> list = selectList();
-    if (targetType != null && Set.class.isAssignableFrom(targetType)) {
+    if (targetType != null && SortedSet.class.isAssignableFrom(targetType)) { // issue #426 support TreeSet
+      resultObject = new TreeSet<Object>(list);
+    } else if (targetType != null && Set.class.isAssignableFrom(targetType)) {
       resultObject = new HashSet<Object>(list);
     } else if (targetType != null && Collection.class.isAssignableFrom(targetType)) {
       resultObject = list;
