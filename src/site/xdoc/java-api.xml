@@ -279,7 +279,7 @@ try {
   int deleteAuthor(int id);
 }]]></source>
   <p>In a nutshell, each Mapper method signature should match that of the SqlSession method that it's associated to, but without the String parameter ID. Instead, the method name must match the mapped statement ID.</p> 
-  <p>In addition, the return type must match that of the expected result type for single results and can be any Collection for multiple results. All of the usual types are supported, including: Primitives, Maps, POJOs and JavaBeans.</p>
+  <p>In addition, the return type must match that of the expected result type for single results or an array or collection for multiple results. All of the usual types are supported, including: Primitives, Maps, POJOs and JavaBeans.</p>
   <p><span class="label important">NOTE</span> Mapper interfaces do not need to implement any interface or extend any class. As long as the method signature can be used to uniquely identify a corresponding mapped statement.</p>
   <p><span class="label important">NOTE</span> Mapper interfaces can extend other interfaces. Be sure that you have the statements in the appropriate namespace when using XML binding to Mapper interfaces. Also, the only limitation is that you cannot have the same method signature in two interfaces in a hierarchy (a bad idea anyway).</p>
   <p>You can pass multiple parameters to a mapper method. If you do, they will be named by the literal "param" followed by their position in the parameter list by default, for example: #{param1}, #{param2} etc. If you wish to change the name of the parameters (multiple only), then you can use the @Param("paramName") annotation on the parameter.</p>
