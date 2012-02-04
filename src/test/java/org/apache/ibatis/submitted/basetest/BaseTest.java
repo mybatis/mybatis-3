@@ -61,7 +61,7 @@ public class BaseTest {
 	}
 
 	@Test
-	public void testList() {
+	public void shouldGetAUser() {
 		SqlSession sqlSession = sqlSessionFactory.openSession();
 		try {
 			Mapper mapper = sqlSession.getMapper(Mapper.class);
