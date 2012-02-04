@@ -68,7 +68,7 @@ public class MapperMethod {
     validateStatement();
   }
 
-  public Object execute(Object[] args) throws Exception {
+  public Object execute(Object[] args) {
     Object result = null;
     if (SqlCommandType.INSERT == type) {
       Object param = getParam(args);
@@ -106,7 +106,7 @@ public class MapperMethod {
     }
   }
 
-  private <E> Object executeForMany(Object[] args) throws Exception {
+  private <E> Object executeForMany(Object[] args) {
     List<E> result;
     Object param = getParam(args);
     if (rowBoundsIndex != null) {
@@ -127,9 +127,9 @@ public class MapperMethod {
   }
 
   @SuppressWarnings("unchecked")
-  private <E> Collection<E> convertToDeclaredCollection(List<E> result) throws Exception {
+  private <E> Collection<E> convertToDeclaredCollection(List<E> list) {
     Collection<E> collection = (Collection<E>) config.getObjectFactory().create(method.getReturnType());
-    collection.addAll(result);
+    collection.addAll(list);
     return collection;
   }
 
