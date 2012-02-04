@@ -571,6 +571,18 @@ public class SqlSessionTest extends BaseDataTest {
   }
 
   @Test
+  public void shouldExecuteSelectOneAuthorUsingMapperClassThatReturnsAnArray() {
+    SqlSession session = sqlMapper.openSession();
+    try {
+      AuthorMapper mapper = session.getMapper(AuthorMapper.class);
+      Author[] authors = mapper.selectAllAuthorsArray();
+      assertEquals(2, authors.length);
+    } finally {
+      session.close();
+    }
+  }
+
+  @Test
   public void shouldExecuteSelectOneAuthorUsingMapperClassWithResultHandler() {
     SqlSession session = sqlMapper.openSession();
     try {

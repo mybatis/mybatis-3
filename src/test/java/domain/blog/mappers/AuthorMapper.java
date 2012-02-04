@@ -34,6 +34,8 @@ public interface AuthorMapper {
 
   LinkedList<Author> selectAllAuthorsLinkedList();
 
+  Author[] selectAllAuthorsArray();
+
   void selectAllAuthors(ResultHandler handler);
 
   Author selectAuthor(int id);

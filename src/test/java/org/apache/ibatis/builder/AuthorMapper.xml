@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
-
-       Copyright 2009-2011 The MyBatis Team
+       Copyright 2009-2012 The MyBatis Team
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -14,136 +13,125 @@
        WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
        See the License for the specific language governing permissions and
        limitations under the License.
-
 -->
-
 <!DOCTYPE mapper
     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="domain.blog.mappers.AuthorMapper">
 
-  <parameterMap id="selectAuthor"
-                type="domain.blog.Author">
-    <parameter property="id"/>
-  </parameterMap>
+	<parameterMap id="selectAuthor" type="domain.blog.Author">
+		<parameter property="id" />
+	</parameterMap>
 
-  <resultMap id="selectAuthor" type="domain.blog.Author">
-    <id column="id" property="id"/>
-    <result property="username" column="username"/>
-    <result property="password" column="password"/>
-    <result property="email" column="email"/>
-    <result property="bio" column="bio"/>
-    <result property="favouriteSection" column="favourite_section"/>
-  </resultMap>
+	<resultMap id="selectAuthor" type="domain.blog.Author">
+		<id column="id" property="id" />
+		<result property="username" column="username" />
+		<result property="password" column="password" />
+		<result property="email" column="email" />
+		<result property="bio" column="bio" />
+		<result property="favouriteSection" column="favourite_section" />
+	</resultMap>
 
-  <resultMap id="selectImmutableAuthor" type="domain.blog.ImmutableAuthor">
-    <constructor>
-      <idArg column="id" javaType="_int"/>
-      <arg column="username" javaType="string"/>
-      <arg column="password" javaType="string"/>
-      <arg column="email" javaType="string"/>
-      <arg column="bio" javaType="string"/>
-      <arg column="favourite_section" javaType="domain.blog.Section"/>
-    </constructor>
-  </resultMap>
+	<resultMap id="selectImmutableAuthor" type="domain.blog.ImmutableAuthor">
+		<constructor>
+			<idArg column="id" javaType="_int" />
+			<arg column="username" javaType="string" />
+			<arg column="password" javaType="string" />
+			<arg column="email" javaType="string" />
+			<arg column="bio" javaType="string" />
+			<arg column="favourite_section" javaType="domain.blog.Section" />
+		</constructor>
+	</resultMap>
 
-    <resultMap id="complexAuthorId" type="domain.blog.ComplexImmutableAuthorId">
-      <constructor>
-        <idArg column="id" javaType="_int"/>
-        <idArg column="username" javaType="string"/>
-        <idArg column="password" javaType="string"/>
-        <idArg column="email" javaType="string"/>
-      </constructor>
-    </resultMap>
+	<resultMap id="complexAuthorId" type="domain.blog.ComplexImmutableAuthorId">
+		<constructor>
+			<idArg column="id" javaType="_int" />
+			<idArg column="username" javaType="string" />
+			<idArg column="password" javaType="string" />
+			<idArg column="email" javaType="string" />
+		</constructor>
+	</resultMap>
 
-    <resultMap id="selectComplexImmutableAuthor" type="domain.blog.ComplexImmutableAuthor">
-      <constructor>
-        <idArg javaType="domain.blog.ComplexImmutableAuthorId" resultMap="complexAuthorId"/>
-        <arg column="bio" javaType="string"/>
-        <arg column="favourite_section" javaType="domain.blog.Section"/>
-      </constructor>
-    </resultMap>
+	<resultMap id="selectComplexImmutableAuthor" type="domain.blog.ComplexImmutableAuthor">
+		<constructor>
+			<idArg javaType="domain.blog.ComplexImmutableAuthorId"
+				resultMap="complexAuthorId" />
+			<arg column="bio" javaType="string" />
+			<arg column="favourite_section" javaType="domain.blog.Section" />
+		</constructor>
+	</resultMap>
 
-    <select id="selectAllAuthors"
-          resultType="domain.blog.Author">
-      select * from author
-    </select>
+	<select id="selectAllAuthors" resultType="domain.blog.Author">
+		select * from author
+	</select>
 
-    <select id="selectAllAuthorsSet"
-          resultType="domain.blog.Author">
-      select * from author
-    </select>
+	<select id="selectAllAuthorsSet" resultType="domain.blog.Author">
+		select * from author
+	</select>
 
-    <select id="selectAllAuthorsVector"
-          resultType="domain.blog.Author">
-      select * from author
-    </select>
+	<select id="selectAllAuthorsVector" resultType="domain.blog.Author">
+		select * from author
+	</select>
 
-    <select id="selectAllAuthorsLinkedList"
-          resultType="domain.blog.Author">
-      select * from author
-    </select>
+	<select id="selectAllAuthorsLinkedList" resultType="domain.blog.Author">
+		select * from author
+	</select>
 
-    <select id="selectComplexAuthors"
-            resultMap="selectComplexImmutableAuthor">
-      select * from author
-    </select>
+	<select id="selectAllAuthorsArray" resultType="domain.blog.Author">
+		select * from author
+	</select>
 
-  <select id="selectAuthor"
-          parameterMap="selectAuthor"
-          resultMap="selectAuthor">
-    select id, username, password, email, bio, favourite_section
-    from author where id = ?
-  </select>
+	<select id="selectComplexAuthors" resultMap="selectComplexImmutableAuthor">
+		select * from author
+	</select>
 
-  <select id="selectImmutableAuthor"
-          parameterMap="selectAuthor"
-          resultMap="selectImmutableAuthor">
-    select id, username, password, email, bio, favourite_section
-    from author where id = ?
-  </select>
+	<select id="selectAuthor" parameterMap="selectAuthor" resultMap="selectAuthor">
+		select id, username, password, email, bio, favourite_section
+		from author where id = ?
+	</select>
 
-  <select id="selectAuthorWithInlineParams"
-          parameterType="int"
-          resultType="domain.blog.Author">
-    select * from author where id = #{id}
-  </select>
+	<select id="selectImmutableAuthor" parameterMap="selectAuthor"
+		resultMap="selectImmutableAuthor">
+		select id, username, password, email, bio, favourite_section
+		from author where id = ?
+	</select>
 
-  <insert id="insertAuthor"
-          parameterType="domain.blog.Author">
-    insert into Author (id,username,password,email,bio)
-    values (#{id},#{username},#{password},#{email},#{bio})
-  </insert>
+	<select id="selectAuthorWithInlineParams" parameterType="int"
+		resultType="domain.blog.Author">
+		select * from author where id = #{id}
+	</select>
 
-  <update id="updateAuthor"
-          parameterType="domain.blog.Author">
-    update Author
-    set username=#{username,
-                 javaType=String},
-        password=#{password},
-        email=#{email},
-        bio=#{bio}
-    where id=#{id}
-  </update>
+	<insert id="insertAuthor" parameterType="domain.blog.Author">
+		insert into Author (id,username,password,email,bio)
+		values (#{id},#{username},#{password},#{email},#{bio})
+	</insert>
 
-  <delete id="deleteAuthor"
-          parameterType="int">
-    delete from Author where id = #{id}
-  </delete>
+	<update id="updateAuthor" parameterType="domain.blog.Author">
+		update Author
+		set username=#{username,
+		javaType=String},
+		password=#{password},
+		email=#{email},
+		bio=#{bio}
+		where id=#{id}
+	</update>
+
+	<delete id="deleteAuthor" parameterType="int">
+		delete from Author where id = #{id}
+	</delete>
 
 
-  <update id="updateAuthorIfNecessary"
-          parameterType="domain.blog.Author">
-    update Author
-    <set>
-      <if test="username != null">username=#{username},</if>
-      <if test="password != null">password=#{password},</if>
-      <if test="email != null">email=#{email},</if>
-      <if test="bio != null">bio=#{bio}</if>
-    </set>
-    where id=#{id}
-  </update>
+	<update id="updateAuthorIfNecessary" parameterType="domain.blog.Author">
+		update Author
+		<set>
+			<if test="username != null">username=#{username},</if>
+			<if test="password != null">password=#{password},</if>
+			<if test="email != null">email=#{email},</if>
+			<if test="bio != null">bio=#{bio}</if>
+		</set>
+		where id=#{id}
+	</update>
 
 
 </mapper>

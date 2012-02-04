@@ -42,7 +42,7 @@ public class MapperMethod {
   private Class<?> declaringInterface;
   private Method method;
 
-  private boolean returnsCollection;
+  private boolean returnsMany;
   private boolean returnsMap;
   private boolean returnsVoid;
   private String mapKey;
@@ -82,8 +82,8 @@ public class MapperMethod {
     } else if (SqlCommandType.SELECT == type) {
       if (returnsVoid && resultHandlerIndex != null) {
         executeWithResultHandler(args);
-      } else if (returnsCollection) {
-        result = executeForCollection(args);
+      } else if (returnsMany) {
+        result = executeForMany(args);
       } else if (returnsMap) {
         result = executeForMap(args);
       } else {
@@ -106,7 +106,7 @@ public class MapperMethod {
     }
   }
 
-  private <E> Collection<E> executeForCollection(Object[] args) throws Exception {
+  private <E> Object executeForMany(Object[] args) throws Exception {
     List<E> result;
     Object param = getParam(args);
     if (rowBoundsIndex != null) {
@@ -115,9 +115,13 @@ public class MapperMethod {
     } else {
       result = sqlSession.<E>selectList(commandName, param);
     }
-    // issue #510 Collections support
+    // issue #510 Collections & arrays support
     if (!method.getReturnType().isAssignableFrom(result.getClass())) {
-      return convertToDeclaredCollection(result);
+      if (method.getReturnType().isArray()) {
+        return convertToArray(result);
+      } else {
+        return convertToDeclaredCollection(result);
+      }
     }
     return result;
   }
@@ -127,6 +131,13 @@ public class MapperMethod {
     Collection<E> collection = (Collection<E>) config.getObjectFactory().create(method.getReturnType());
     collection.addAll(result);
     return collection;
+  }
+
+  @SuppressWarnings("unchecked")
+  private <E> E[] convertToArray(List<E> list) {
+    E[] array = (E[]) java.lang.reflect.Array.newInstance(method.getReturnType().getComponentType(), list.size());
+    array = list.toArray(array);
+    return array;
   }
 
   private <K, V> Map<K, V> executeForMap(Object[] args) {
@@ -173,8 +184,8 @@ public class MapperMethod {
     if (method.getReturnType().equals(Void.TYPE)) {
       returnsVoid = true;
     }
-    if (Collection.class.isAssignableFrom(method.getReturnType())) {
-      returnsCollection = true;
+    if (Collection.class.isAssignableFrom(method.getReturnType()) || method.getReturnType().isArray()) {
+      returnsMany = true;
     }
     if (Map.class.isAssignableFrom(method.getReturnType())) {
       final MapKey mapKeyAnnotation = method.getAnnotation(MapKey.class);
