@@ -53,8 +53,7 @@ public class PermissionsTest {
     reader.close();
   }
 
-  @Ignore // see issue #168
-  @Test
+  @Test // see issue #168
   public void shouldGet4Permissions() {
     SqlSession sqlSession = sqlSessionFactory.openSession();
     try {
