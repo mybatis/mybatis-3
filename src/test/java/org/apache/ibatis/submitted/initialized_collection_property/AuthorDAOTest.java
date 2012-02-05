@@ -20,9 +20,10 @@ import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.apache.ibatis.submitted.initialized_collection_property.test.Author;
-import org.apache.ibatis.submitted.initialized_collection_property.test.AuthorDAO;
 import static org.junit.Assert.assertEquals;
+
+import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.Reader;
@@ -31,12 +32,13 @@ import java.util.List;
 
 public class AuthorDAOTest {
 
+  private static SqlSessionFactory factory;
 
-  @Test
-  public void testGetMessageForEmptyDatabase() throws Exception {
-    final String resource = "org/apache/ibatis/submitted/initialized_collection_property/ibatis-config.xml";
+  @BeforeClass
+  public static void testGetMessageForEmptyDatabase() throws Exception {
+    final String resource = "org/apache/ibatis/submitted/initialized_collection_property/mybatis-config.xml";
     Reader reader = Resources.getResourceAsReader(resource);
-    SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader);
+    factory = new SqlSessionFactoryBuilder().build(reader);
 
     SqlSession session = factory.openSession();
 
@@ -44,13 +46,34 @@ public class AuthorDAOTest {
     ScriptRunner runner = new ScriptRunner(conn);
     runner.setLogWriter(null);
     runner.setErrorLogWriter(null);
-    reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/initialized_collection_property/db/create.sql");
+    reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/initialized_collection_property/create.sql");
     runner.runScript(reader);
     session.close();
+  }
 
-    AuthorDAO dao = new AuthorDAO(factory);
-    List<Author> authors = dao.getAuthors();
+  @Test
+  public void shouldNotOverwriteCollectionOnNestedResultMap() {
+    SqlSession session = factory.openSession();
+    try {
+    List<Author> authors = session.selectList("getAllAuthors");
     assertEquals(1, authors.size());
+    assertEquals(4, authors.get(0).getPosts().size());
+    } finally {
+      session.close();
+    }
+  }
+
+  @Ignore // issue #75 nested selects overwrite collections
+  @Test
+  public void shouldNotOverwriteCollectionOnNestedQuery() {
+    SqlSession session = factory.openSession();
+    try {
+    List<Author> authors = session.selectList("getAllAuthorsNestedQuery");
+    assertEquals(1, authors.size());
+    assertEquals(4, authors.get(0).getPosts().size());
+    } finally {
+      session.close();
+    }
   }
 
 }

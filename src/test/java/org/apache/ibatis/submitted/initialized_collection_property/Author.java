@@ -13,28 +13,42 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package org.apache.ibatis.submitted.initialized_collection_property.test;
+package org.apache.ibatis.submitted.initialized_collection_property;
 
-import org.apache.ibatis.session.SqlSession;
-import org.apache.ibatis.session.SqlSessionFactory;
-
+import java.util.ArrayList;
 import java.util.List;
 
-public class AuthorDAO {
-  private SqlSessionFactory sqlSessionFactory;
+public class Author {
 
-  public AuthorDAO(SqlSessionFactory sqlSessionFactory) {
-    this.sqlSessionFactory = sqlSessionFactory;
+  private long id;
+  private List<Post> posts = new ArrayList<Post>();
+  private String name;
+
+  public Author() {
+    posts.add(new Post(4, "there is a previous post!"));
   }
 
-  public List<Author> getAuthors() {
-    SqlSession session = sqlSessionFactory.openSession();
-    List<Author> authors = session.selectList("Author.getAllAuthors");
-    session.close();
-    return authors;
+  public long getId() {
+    return id;
   }
 
-  public void setSqlSessionFactory(SqlSessionFactory sqlSessionFactory) {
-    this.sqlSessionFactory = sqlSessionFactory;
+  public void setId(long id) {
+    this.id = id;
+  }
+
+  public List<Post> getPosts() {
+    return posts;
+  }
+
+  public void setPosts(List<Post> posts) {
+    this.posts = posts;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
   }
 }

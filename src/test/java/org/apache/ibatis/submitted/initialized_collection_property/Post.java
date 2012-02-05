@@ -13,15 +13,35 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package org.apache.ibatis.submitted.initialized_collection_property.test;
+package org.apache.ibatis.submitted.initialized_collection_property;
 
-import java.util.ArrayList;
-import java.util.List;
+public class Post {
 
-public class Author {
-  public long id;
+  private int id;
+  private String content;
 
-  public List<Post> posts = new ArrayList<Post>();
+  public Post() {
+  }
 
-  public String name;
+  public Post(int id, String content) {
+    this.id = id;
+    this.content = content;
+  }
+
+  public int getId() {
+    return id;
+  }
+
+  public void setId(int id) {
+    this.id = id;
+  }
+
+  public String getContent() {
+    return content;
+  }
+
+  public void setContent(String content) {
+    this.content = content;
+  }
+
 }

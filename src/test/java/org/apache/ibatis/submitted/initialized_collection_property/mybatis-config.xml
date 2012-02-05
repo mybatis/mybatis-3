@@ -23,8 +23,8 @@
 <configuration>
 
   <typeAliases>
-    <typeAlias type="org.apache.ibatis.submitted.initialized_collection_property.test.Author" alias="Author"/>
-    <typeAlias type="org.apache.ibatis.submitted.initialized_collection_property.test.Post" alias="Post"/>
+    <typeAlias type="org.apache.ibatis.submitted.initialized_collection_property.Author" alias="Author"/>
+    <typeAlias type="org.apache.ibatis.submitted.initialized_collection_property.Post" alias="Post"/>
   </typeAliases>
   <environments default="development">
     <environment id="development">
