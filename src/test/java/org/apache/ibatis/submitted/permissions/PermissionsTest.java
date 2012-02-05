@@ -26,7 +26,6 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.Assert;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class PermissionsTest {
@@ -57,10 +56,18 @@ public class PermissionsTest {
   public void shouldGet4Permissions() {
     SqlSession sqlSession = sqlSessionFactory.openSession();
     try {
-      Mapper mapper = sqlSession.getMapper(Mapper.class);
-      List<Resource> resources = mapper.getPermissions();
+      final PermissionsMapper mapper = sqlSession.getMapper(PermissionsMapper.class);
+
+      final List<Resource> resources = mapper.getResources();
       Assert.assertEquals(2, resources.size());
-      Assert.assertEquals(2, resources.get(0).getPermissions().get(0).getPermissions().size());
+
+      final Resource firstResource = resources.get(0);
+      final List<Principal> principalPermissions = firstResource.getPrincipals();
+      Assert.assertEquals(1, principalPermissions.size());
+      
+      final Principal firstPrincipalPermission = principalPermissions.get(0);
+      final List<String> permissions = firstPrincipalPermission.getPermissions();
+      Assert.assertEquals(2, permissions.size());
     } finally {
       sqlSession.close();
     }

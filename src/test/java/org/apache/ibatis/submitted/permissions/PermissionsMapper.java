@@ -17,8 +17,8 @@ package org.apache.ibatis.submitted.permissions;
 
 import java.util.List;
 
-public interface Mapper {
+public interface PermissionsMapper {
 
-  List<Resource> getPermissions();
+  List<Resource> getResources();
 
 }

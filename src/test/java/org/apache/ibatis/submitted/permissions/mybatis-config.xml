@@ -38,7 +38,7 @@
 	</environments>
 
 	<mappers>
-		<mapper resource="org/apache/ibatis/submitted/permissions/Mapper.xml" />
+		<mapper resource="org/apache/ibatis/submitted/permissions/PermissionsMapper.xml" />
 	</mappers>
 
 </configuration>

@@ -3,7 +3,8 @@ package org.apache.ibatis.submitted.permissions;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PrincipalPermissions {
+public class Principal {
+  private String resourceName;
   private String principalName;
   private List<String> permissions = new ArrayList<String>();
   

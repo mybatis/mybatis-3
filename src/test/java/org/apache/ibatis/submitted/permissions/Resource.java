@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Resource {
   private String name;
-  private List<PrincipalPermissions> permissions = new ArrayList<PrincipalPermissions>();
+  private List<Principal> Principals = new ArrayList<Principal>();
 
   public String getName() {
     return name;
@@ -13,10 +13,10 @@ public class Resource {
   public void setName(String name) {
     this.name = name;
   }
-  public List<PrincipalPermissions> getPermissions() {
-    return permissions;
+  public List<Principal> getPrincipals() {
+    return Principals;
   }
-  public void setPermissions(List<PrincipalPermissions> permissions) {
-    this.permissions = permissions;
+  public void setPrincipals(List<Principal> principals) {
+    this.Principals = principals;
   }
 }

@@ -18,21 +18,21 @@
     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="org.apache.ibatis.submitted.permissions.Mapper">
+<mapper namespace="org.apache.ibatis.submitted.permissions.PermissionsMapper">
 
-    <resultMap id="resource" type="Resource">
-        <id property="name" column="resourceName"/>
-        <collection property="permissions" resultMap="principalPermissions"/>
-    </resultMap>
+  <resultMap id="resourceResults" type="Resource">
+    <id property="name" column="resourceName"/>
+    <collection property="principals" resultMap="principalResults"/>
+  </resultMap>
 
-    <resultMap id="principalPermissions" type="PrincipalPermissions">
-        <id property="principalName" column="principalName"/>
-        <collection property="permissions" ofType="string">
-            <result property="permission" column="permission"/>
-        </collection>
-    </resultMap>
-    
-	<select id="getPermissions" resultMap="resource">
+  <resultMap id="principalResults" type="Principal">
+    <id property="principalName" column="principalName"/>
+    <collection property="permissions" ofType="string">
+      <result property="permission" column="permission"/>
+    </collection>
+  </resultMap>
+
+  <select id="getResources" resultMap="resourceResults">
 		select * from permissions
 	</select>
 
