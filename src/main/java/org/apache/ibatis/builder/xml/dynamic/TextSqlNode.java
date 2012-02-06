@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2011 The MyBatis Team
+ *    Copyright 2009-2012 The MyBatis Team
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -52,7 +52,7 @@ public class TextSqlNode implements SqlNode {
           context.getBindings().put("value", parameter);
         }
         Object value = OgnlCache.getValue(content, context.getBindings());
-        return String.valueOf(value);
+        return (value == null ? "" : String.valueOf(value)); // issue #274 return "" instead of "null"
       } catch (OgnlException e) {
         throw new BuilderException("Error evaluating expression '" + content + "'. Cause: " + e, e);
       }

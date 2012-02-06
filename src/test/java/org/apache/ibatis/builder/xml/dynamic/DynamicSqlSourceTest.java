@@ -15,14 +15,7 @@
  */
 package org.apache.ibatis.builder.xml.dynamic;
 
-import org.apache.ibatis.BaseDataTest;
-import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.mapping.BoundSql;
-import org.apache.ibatis.session.Configuration;
-import org.apache.ibatis.session.SqlSessionFactory;
-import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import static org.junit.Assert.assertEquals;
-import org.junit.Test;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -30,6 +23,15 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+
+import org.apache.ibatis.BaseDataTest;
+import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.mapping.BoundSql;
+import org.apache.ibatis.session.Configuration;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.junit.Assert;
+import org.junit.Test;
 
 public class DynamicSqlSourceTest extends BaseDataTest {
 
@@ -239,5 +241,27 @@ public class DynamicSqlSourceTest extends BaseDataTest {
   private MixedSqlNode mixedContents(SqlNode... contents) {
     return new MixedSqlNode(Arrays.asList(contents));
   }
+  
+  @Test
+  public void shouldMapNullStringsToEmptyStrings() {
+    final String expected = "id=${id}";
+    final MixedSqlNode sqlNode = mixedContents(new TextSqlNode(expected));    
+    final DynamicSqlSource source = new DynamicSqlSource(new Configuration(), sqlNode);
+    String sql = source.getBoundSql(new Bean(null)).getSql();
+    Assert.assertEquals("id=", sql);
+  }
+  
+  public static class Bean {
+    public String id;
+    public Bean(String property) {
+      this.id = property;
+    }
+    public String getId() {
+      return id;
+    }
+    public void setId(String property) {
+      this.id = property;
+    }    
+  }  
 
 }
