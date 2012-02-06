@@ -111,6 +111,8 @@ public interface BoundBlogMapper {
 
   Blog selectBlogUsingConstructorWithResultMap(int i);
 
+  Blog selectBlogUsingConstructorWithResultMapCollection(int i);
+  
   Blog selectBlogByIdUsingConstructor(int id);
 
   //======================================================

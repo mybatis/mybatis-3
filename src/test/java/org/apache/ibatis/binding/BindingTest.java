@@ -342,6 +342,23 @@ public class BindingTest {
     }
   }
 
+  @Ignore
+  @Test // issue #480
+  public void shouldExecuteBoundSelectBlogUsingConstructorWithResultMapCollection() {
+    SqlSession session = sqlSessionFactory.openSession();
+    try {
+      BoundBlogMapper mapper = session.getMapper(BoundBlogMapper.class);
+      Blog blog = mapper.selectBlogUsingConstructorWithResultMapCollection(1);
+      assertEquals(1, blog.getId());
+      assertEquals("Jim Business", blog.getTitle());
+      assertNotNull("author should not be null", blog.getAuthor());
+      List<Post> posts = blog.getPosts();
+      assertTrue("posts should not be empty", posts != null && !posts.isEmpty());
+    } finally {
+      session.close();
+    }
+  }
+  
   @Test
   public void shouldExecuteBoundSelectOneBlogStatementWithConstructorUsingXMLConfig() {
     SqlSession session = sqlSessionFactory.openSession();
