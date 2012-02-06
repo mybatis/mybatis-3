@@ -485,13 +485,17 @@ public class FastResultSetHandler implements ResultSetHandler {
   protected Object prepareCompositeKeyParameter(ResultSet rs, ResultMapping resultMapping, Class<?> parameterType, String columnPrefix) throws SQLException {
     final Object parameterObject = instantiateParameterObject(parameterType);
     final MetaObject metaObject = configuration.newMetaObject(parameterObject);
+    boolean foundValues = false;
     for (ResultMapping innerResultMapping : resultMapping.getComposites()) {
       final Class<?> propType = metaObject.getSetterType(innerResultMapping.getProperty());
       final TypeHandler<?> typeHandler = typeHandlerRegistry.getTypeHandler(propType);
       final Object propValue = typeHandler.getResult(rs, prependPrefix(innerResultMapping.getColumn(), columnPrefix));
-      metaObject.setValue(innerResultMapping.getProperty(), propValue);
+      if (propType != null) { // issue #353 do not execute nested query if key is null
+        metaObject.setValue(innerResultMapping.getProperty(), propValue);
+        foundValues = true;
+      }
     }
-    return parameterObject;
+    return foundValues ? parameterObject : null;
   }
 
   protected Object instantiateParameterObject(Class<?> parameterType) {
