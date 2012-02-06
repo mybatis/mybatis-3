@@ -33,7 +33,7 @@ public class BaseTest {
 
   @BeforeClass
   public static void setUp() throws Exception {
-    // create a SqlSessionaFactory
+    // create a SqlSessionFactory
     Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/basetest/mybatis-config.xml");
     sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
     reader.close();
@@ -44,11 +44,9 @@ public class BaseTest {
     reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/basetest/CreateDB.sql");
     ScriptRunner runner = new ScriptRunner(conn);
     runner.setLogWriter(null);
-    runner.setErrorLogWriter(null);
     runner.runScript(reader);
-    conn.commit();
-    conn.close();
     reader.close();
+    session.close();
   }
 
   @Test
