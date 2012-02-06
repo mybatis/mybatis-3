@@ -34,19 +34,16 @@ public final class PreparedStatementLogger extends BaseJdbcLogger implements Inv
   private static final Log log = LogFactory.getLog(PreparedStatement.class);
 
   private PreparedStatement statement;
-  private String sql;
 
-  private PreparedStatementLogger(PreparedStatement stmt, String sql, Log statementLog) {
+  private PreparedStatementLogger(PreparedStatement stmt, Log statementLog) {
     super(statementLog);
     this.statement = stmt;
-    this.sql = sql;
   }
 
   public Object invoke(Object proxy, Method method, Object[] params) throws Throwable {
     try {
       if (EXECUTE_METHODS.contains(method.getName())) {
         if (isDebugEnabled()) {
-          debug("==>  Executing: " + removeBreakingWhitespace(sql));
           debug("==> Parameters: " + getParameterValueString());
         }
         clearColumnInfo();
@@ -94,8 +91,8 @@ public final class PreparedStatementLogger extends BaseJdbcLogger implements Inv
    * @param sql  - the sql statement
    * @return - the proxy
    */
-  public static PreparedStatement newInstance(PreparedStatement stmt, String sql, Log statementLog) {
-    InvocationHandler handler = new PreparedStatementLogger(stmt, sql, statementLog);
+  public static PreparedStatement newInstance(PreparedStatement stmt, Log statementLog) {
+    InvocationHandler handler = new PreparedStatementLogger(stmt, statementLog);
     ClassLoader cl = PreparedStatement.class.getClassLoader();
     return (PreparedStatement) Proxy.newProxyInstance(cl, new Class[]{PreparedStatement.class, CallableStatement.class}, handler);
   }

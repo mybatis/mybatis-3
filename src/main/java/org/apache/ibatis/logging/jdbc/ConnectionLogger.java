@@ -47,12 +47,18 @@ public final class ConnectionLogger extends BaseJdbcLogger implements Invocation
       throws Throwable {
     try {
       if ("prepareStatement".equals(method.getName())) {
+        if (isDebugEnabled()) {
+          debug("==>  Preparing: " + removeBreakingWhitespace((String) params[0]));
+        }        
         PreparedStatement stmt = (PreparedStatement) method.invoke(connection, params);
-        stmt = PreparedStatementLogger.newInstance(stmt, (String) params[0], getStatementLog());
+        stmt = PreparedStatementLogger.newInstance(stmt, getStatementLog());
         return stmt;
       } else if ("prepareCall".equals(method.getName())) {
+        if (isDebugEnabled()) {
+          debug("==>  Preparing: " + removeBreakingWhitespace((String) params[0]));
+        }        
         PreparedStatement stmt = (PreparedStatement) method.invoke(connection, params);
-        stmt = PreparedStatementLogger.newInstance(stmt, (String) params[0], getStatementLog());
+        stmt = PreparedStatementLogger.newInstance(stmt, getStatementLog());
         return stmt;
       } else if ("createStatement".equals(method.getName())) {
         Statement stmt = (Statement) method.invoke(connection, params);
