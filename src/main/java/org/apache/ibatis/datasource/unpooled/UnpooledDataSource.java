@@ -24,7 +24,6 @@ import java.util.logging.Logger;
 
 import javax.sql.DataSource;
 
-import org.apache.ibatis.datasource.DataSourceException;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.logging.LogFactory;
 
@@ -188,7 +187,7 @@ public class UnpooledDataSource implements DataSource {
     }
   }
 
-  private synchronized void initializeDriver() {
+  private synchronized void initializeDriver() throws SQLException {
     if (!driverInitialized) {
       driverInitialized = true;
       try {
@@ -198,13 +197,13 @@ public class UnpooledDataSource implements DataSource {
           Resources.classForName(driver);
         }
       } catch (Exception e) {
-        throw new DataSourceException("Error setting driver on UnpooledDataSource. Cause: " + e, e);
+        throw new SQLException("Error setting driver on UnpooledDataSource. Cause: " + e, e);
       }
     }
   }
 
   public <T> T unwrap(Class<T> iface) throws SQLException {
-    return null;
+    throw new SQLException(getClass().getName() + " is not a wrapper.");
   }
 
   public boolean isWrapperFor(Class<?> iface) throws SQLException {
