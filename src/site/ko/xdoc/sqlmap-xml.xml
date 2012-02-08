@@ -596,7 +596,7 @@ public class User {
     <idArg column="blog_id" javaType="int"/>
   </constructor>
   <result property="title" column="blog_title"/>
-  <association property="author" column="blog_author_id" javaType=" Author">
+  <association property="author" javaType=" Author">
     <id property="id" column="author_id"/>
     <result property="username" column="author_username"/>
     <result property="password" column="author_password"/>
@@ -607,11 +607,11 @@ public class User {
   <collection property="posts" ofType="Post">
     <id property="id" column="post_id"/>
     <result property="subject" column="post_subject"/>
-    <association property="author" column="post_author_id" javaType="Author"/>
-    <collection property="comments" column="post_id" ofType=" Comment">
+    <association property="author" javaType="Author"/>
+    <collection property="comments" ofType=" Comment">
       <id property="id" column="comment_id"/>
     </collection>
-    <collection property="tags" column="post_id" ofType=" Tag" >
+    <collection property="tags" ofType=" Tag" >
       <id property="id" column="tag_id"/>
     </collection>
     <discriminator javaType="int" column="draft">
@@ -885,14 +885,6 @@ column 속성의 칼럼으로 부터 가져온 값은 대상 select 구문에 �
 “address.street.number” 처럼 좀더 복잡하게 매핑될수도 있다.</td>
             </tr>
             <tr>
-              <td><code>column</code></td>
-              <td>데이터베이스의 칼럼명이나 별칭된 칼럼 라벨. resultSet.getString(columnName) 에 전달되는 같은
-문자열이다.
-Note: 복합키를 다루기 위해서, column=”{prop1=col1,prop2=col2}” 문법을 사용해서 여러개의
-칼럼명을 내포된 select 구문에 명시할 수 있다. 이것은 대상의 내포된 select 구문의 파라미터 객체에
-prop1, prop2 형태로 셋팅하게 될 것이다.</td>
-            </tr>
-            <tr>
               <td><code>javaType</code></td>
               <td>패키지 경로를 포함한 클래스 전체명이거나 타입 별칭. 자바빈을 사용한다면 MyBatis 는 타입을 찾아낼
 수 있다. 반면에 HashMap 으로 매핑한다면, 기대하는 처리를 명확히 하기 위해 javaType 을 명시해야
@@ -923,6 +915,14 @@ prop1, prop2 형태로 셋팅하게 될 것이다.</td>
             </tr>
           </thead>
           <tbody>
+            <tr>
+              <td><code>column</code></td>
+              <td>데이터베이스의 칼럼명이나 별칭된 칼럼 라벨. resultSet.getString(columnName) 에 전달되는 같은
+문자열이다.
+Note: 복합키를 다루기 위해서, column=”{prop1=col1,prop2=col2}” 문법을 사용해서 여러개의
+칼럼명을 내포된 select 구문에 명시할 수 있다. 이것은 대상의 내포된 select 구문의 파라미터 객체에
+prop1, prop2 형태로 셋팅하게 될 것이다.</td>
+            </tr>
             <tr>
               <td><code>select</code></td>
               <td>다른 매핑된 구문의 ID 는 이 프로퍼티 매핑이 필요로 하는 복잡한 타입을 로드할 것이다.

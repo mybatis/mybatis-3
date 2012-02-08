@@ -725,7 +725,7 @@ public class User {
     <idArg column="blog_id" javaType="int"/>
   </constructor>
   <result property="title" column="blog_title"/>
-  <association property="author" column="blog_author_id" javaType=" Author">
+  <association property="author" javaType=" Author">
     <id property="id" column="author_id"/>
     <result property="username" column="author_username"/>
     <result property="password" column="author_password"/>
@@ -736,11 +736,11 @@ public class User {
   <collection property="posts" ofType="Post">
     <id property="id" column="post_id"/>
     <result property="subject" column="post_subject"/>
-    <association property="author" column="post_author_id" javaType="Author"/>
-    <collection property="comments" column="post_id" ofType=" Comment">
+    <association property="author" javaType="Author"/>
+    <collection property="comments" ofType=" Comment">
       <id property="id" column="comment_id"/>
     </collection>
-    <collection property="tags" column="post_id" ofType=" Tag" >
+    <collection property="tags" ofType=" Tag" >
       <id property="id" column="tag_id"/>
     </collection>
     <discriminator javaType="int" column="draft">
@@ -1074,13 +1074,6 @@ public class User {
               </td>
             </tr>
             <tr>
-              <td>column</td>
-              <td>
-                データベースで定義されている列名、あるいは列の別名を指定します。resultSet.getString(columnName) メソッドの引数として渡される文字列と同じと考えてください。
-                Note: 複合キー（composite key）を扱う場合、column="{prop1=col1,prop2=col2} のように記述することで複数の列名を指定することができます。この例ではネストされた select の実行時に prop1 と prop2 が引数として渡されます。
-              </td>
-            </tr>
-            <tr>
               <td>javaType</td>
               <td>
                 Java クラスの完全修飾クラス名またはタイプエイリアスを指定します（前に出てきた標準のタイプエイリアスのリストを参照してください）。
@@ -1118,6 +1111,13 @@ public class User {
             </tr>
           </thead>
           <tbody>
+            <tr>
+              <td>column</td>
+              <td>
+                データベースで定義されている列名、あるいは列の別名を指定します。resultSet.getString(columnName) メソッドの引数として渡される文字列と同じと考えてください。
+                Note: 複合キー（composite key）を扱う場合、column="{prop1=col1,prop2=col2} のように記述することで複数の列名を指定することができます。この例ではネストされた select の実行時に prop1 と prop2 が引数として渡されます。
+              </td>
+            </tr>
             <tr>
               <td>select</td>
               <td>

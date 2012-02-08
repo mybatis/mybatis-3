@@ -629,7 +629,7 @@ public class User {
     <idArg column="blog_id" javaType="int"/>
   </constructor>
   <result property="title" column="blog_title"/>
-  <association property="author" column="blog_author_id" javaType=" Author">
+  <association property="author" javaType=" Author">
     <id property="id" column="author_id"/>
     <result property="username" column="author_username"/>
     <result property="password" column="author_password"/>
@@ -640,11 +640,11 @@ public class User {
   <collection property="posts" ofType="Post">
     <id property="id" column="post_id"/>
     <result property="subject" column="post_subject"/>
-    <association property="author" column="post_author_id" javaType="Author"/>
-    <collection property="comments" column="post_id" ofType=" Comment">
+    <association property="author" javaType="Author"/>
+    <collection property="comments" ofType=" Comment">
       <id property="id" column="comment_id"/>
     </collection>
-    <collection property="tags" column="post_id" ofType=" Tag" >
+    <collection property="tags" ofType=" Tag" >
       <id property="id" column="tag_id"/>
     </collection>
     <discriminator javaType="int" column="draft">
@@ -912,11 +912,6 @@ public class User {
               </td>
             </tr>
             <tr>
-              <td><code>column</code></td>
-              <td>El nombre de la columna de la base de datos, o el alias de columna. Es el mismo string que se pasaría al método resultSet.getString(columnName). Nota: para tratar con claves compuestas, puedes especificar varios nombres usando esta sintaxis column=”{prop1=col1,prop2=col2}”. Esto hará que se informen las propiedades prop1 y prop2 del objeto parámetro del select statement destino
-              </td>
-            </tr>
-            <tr>
               <td><code>javaType</code></td>
               <td>Un nombre de clase Java totalmente cualificado, o un typeAlias (más adelante se indican los typeAlias predefinidos). Normalmente MyBatis puede adivinar el tipo de datos de una propiedad de un JavaBean. Sin embargo si usas una HashMap deberás especificar el javaType para obtener el comportamiento deseado.
               </td>
@@ -944,6 +939,11 @@ public class User {
             </tr>
           </thead>
           <tbody>
+            <tr>
+              <td><code>column</code></td>
+              <td>El nombre de la columna de la base de datos, o el alias de columna. Es el mismo string que se pasaría al método resultSet.getString(columnName). Nota: para tratar con claves compuestas, puedes especificar varios nombres usando esta sintaxis column=”{prop1=col1,prop2=col2}”. Esto hará que se informen las propiedades prop1 y prop2 del objeto parámetro del select statement destino
+              </td>
+            </tr>
             <tr>
               <td><code>select</code></td>
               <td>El id de otro mapped statement que cargará el tipo complejo asociado a esta propiedad. Los valores obtenidos de las columnas especificadas en el atributo column se pasarán como parámetros al select  statement referenciado. A continuación se muestra un ejemplo detallado. Nota: para tratar con claves compuestas, puedes especificar varios nombres usando esta sintaxis column=”{prop1=col1,prop2=col2}”. Esto hará que se informen las propiedades prop1 y prop2 del objeto parámetro del select statement destino

@@ -828,7 +828,7 @@ MyBatis 提供处理这个问题的答案。
     <idArg column="blog_id" javaType="int"/>
   </constructor>
   <result property="title" column="blog_title"/>
-  <association property="author" column="blog_author_id" javaType=" Author">
+  <association property="author" javaType=" Author">
     <id property="id" column="author_id"/>
     <result property="username" column="author_username"/>
     <result property="password" column="author_password"/>
@@ -839,11 +839,11 @@ MyBatis 提供处理这个问题的答案。
   <collection property="posts" ofType="Post">
     <id property="id" column="post_id"/>
     <result property="subject" column="post_subject"/>
-    <association property="author" column="post_author_id" javaType="Author"/>
-    <collection property="comments" column="post_id" ofType=" Comment">
+    <association property="author" javaType="Author"/>
+    <collection property="comments" ofType=" Comment">
       <id property="id" column="comment_id"/>
     </collection>
-    <collection property="tags" column="post_id" ofType=" Tag" >
+    <collection property="tags" ofType=" Tag" >
       <id property="id" column="tag_id"/>
     </collection>
     <discriminator javaType="int" column="draft">
@@ -1207,17 +1207,6 @@ JavaBeans 的属性,
 。              </td>
             </tr>
             <tr>
-              <td><code>column</code></td>
-              <td>
-来自数据库的类名,或重命名的列标签。这和通常传递给
-resultSet.getString(columnName)方法的字符串是相同的。
-column
-注 意 : 要 处 理 复 合 主 键 , 你 可 以 指 定 多 个 列 名 通 过 column= ”
-{prop1=col1,prop2=col2} ” 这种语法来传递给嵌套查询语 句。这会引起
-prop1 和 prop2 以参数对象形式来设置给目标嵌套查询语句。
-              </td>
-            </tr>
-            <tr>
               <td><code>javaType</code></td>
               <td>
 一个 Java 类的完全限定名,或一个类型别名(参加上面内建类型别名的列
@@ -1262,6 +1251,17 @@ typeHandler
             </tr>
           </thead>
           <tbody>
+            <tr>
+              <td><code>column</code></td>
+              <td>
+来自数据库的类名,或重命名的列标签。这和通常传递给
+resultSet.getString(columnName)方法的字符串是相同的。
+column
+注 意 : 要 处 理 复 合 主 键 , 你 可 以 指 定 多 个 列 名 通 过 column= ”
+{prop1=col1,prop2=col2} ” 这种语法来传递给嵌套查询语 句。这会引起
+prop1 和 prop2 以参数对象形式来设置给目标嵌套查询语句。
+              </td>
+            </tr>
             <tr>
               <td><code>select</code></td>
               <td>
