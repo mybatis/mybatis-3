@@ -1422,7 +1422,7 @@ resultMap
         <source><![CDATA[<resultMap id="blogResult" type="Blog">
   <id property="blog_id" column="id" />
   <result property="title" column="blog_title"/>
-  <association property="author" column="blog_author_id" javaType="Author">
+  <association property="author" javaType="Author">
     <id property="id" column="author_id"/>
     <result property="username" column="author_username"/>
     <result property="password" column="author_password"/>
