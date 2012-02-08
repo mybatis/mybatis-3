@@ -28,7 +28,7 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.logging.LogFactory;
 
 public class UnpooledDataSource implements DataSource {
-
+  
   private ClassLoader driverClassLoader;
   private Properties driverProperties;
   private boolean driverInitialized;
@@ -42,7 +42,7 @@ public class UnpooledDataSource implements DataSource {
   private Integer defaultTransactionIsolationLevel;
 
   static {
-    DriverManager.getDrivers(); // see DBCP - 272
+    DriverManager.getDrivers();
   }
 
   public UnpooledDataSource() {
@@ -77,26 +77,13 @@ public class UnpooledDataSource implements DataSource {
   }
 
   public Connection getConnection() throws SQLException {
-    initializeDriver();
-    Connection connection;
-    if (driverProperties != null) {
-      connection = DriverManager.getConnection(url, driverProperties);
-    } else if (username == null && password == null) {
-      connection = DriverManager.getConnection(url);
-    } else {
-      connection = DriverManager.getConnection(url, username, password);
-    }
-    configureConnection(connection);
-    return connection;
+    return doGetConnection(username, password);
   }
 
   public Connection getConnection(String username, String password) throws SQLException {
-    initializeDriver();
-    Connection connection = DriverManager.getConnection(url, username, password);
-    configureConnection(connection);
-    return connection;
+    return doGetConnection(username, password);
   }
-
+  
   public void setLoginTimeout(int loginTimeout) throws SQLException {
     DriverManager.setLoginTimeout(loginTimeout);
   }
@@ -178,13 +165,22 @@ public class UnpooledDataSource implements DataSource {
     this.defaultTransactionIsolationLevel = defaultTransactionIsolationLevel;
   }
 
-  private void configureConnection(Connection conn) throws SQLException {
-    if (autoCommit != conn.getAutoCommit()) {
-      conn.setAutoCommit(autoCommit);
+  private Connection doGetConnection(String username, String password) throws SQLException {
+    Properties props = new Properties(driverProperties);
+    if (username != null) {
+      props.setProperty("user", username);
     }
-    if (defaultTransactionIsolationLevel != null) {
-      conn.setTransactionIsolation(defaultTransactionIsolationLevel);
+    if (password != null) {
+      props.setProperty("password", password);
     }
+    return doGetConnection(props);
+  }
+
+  private Connection doGetConnection(Properties properties) throws SQLException {
+    initializeDriver();
+    Connection connection = DriverManager.getConnection(url, properties);
+    configureConnection(connection);
+    return connection;
   }
 
   private synchronized void initializeDriver() throws SQLException {
@@ -197,8 +193,17 @@ public class UnpooledDataSource implements DataSource {
           Resources.classForName(driver);
         }
       } catch (Exception e) {
-        throw new SQLException("Error setting driver on UnpooledDataSource. Cause: " + e, e);
+        throw new SQLException("Error setting driver on UnpooledDataSource. Cause: " + e);
       }
+    }
+  }
+
+  private void configureConnection(Connection conn) throws SQLException {
+    if (autoCommit != conn.getAutoCommit()) {
+      conn.setAutoCommit(autoCommit);
+    }
+    if (defaultTransactionIsolationLevel != null) {
+      conn.setTransactionIsolation(defaultTransactionIsolationLevel);
     }
   }
 
