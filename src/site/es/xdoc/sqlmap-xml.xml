@@ -953,7 +953,7 @@ public class User {
         </table>
 
         <p>
-          For example:
+          Por ejemplo:
         </p>
 
         <source><![CDATA[<resultMap id="blogResult" type="Blog">
