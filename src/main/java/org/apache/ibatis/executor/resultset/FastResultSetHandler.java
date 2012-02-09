@@ -113,7 +113,7 @@ public class FastResultSetHandler implements ResultSetHandler {
     if (resultMapId != null) {
       final ResultMap resultMap = configuration.getResultMap(resultMapId);
       final DefaultResultHandler resultHandler = new DefaultResultHandler(configuration.getDefaultListResultHandlerType());
-      ResultColumnCache resultColumnCache = new ResultColumnCache(cs.getMetaData(), configuration);
+      ResultColumnCache resultColumnCache = new ResultColumnCache(rs.getMetaData(), configuration);
       handleRowValues(rs, resultMap, resultHandler, new RowBounds(), resultColumnCache);
       metaParam.setValue(parameterMapping.getProperty(), resultHandler.getResultList());
     } else {
