@@ -22,9 +22,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.apache.ibatis.cache.CacheKey;
@@ -38,6 +36,7 @@ import org.apache.ibatis.mapping.ParameterMapping;
 import org.apache.ibatis.mapping.ParameterMode;
 import org.apache.ibatis.mapping.StatementType;
 import org.apache.ibatis.reflection.MetaObject;
+import org.apache.ibatis.reflection.factory.ObjectFactory;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
@@ -124,6 +123,7 @@ public abstract class BaseExecutor implements Executor {
     return query(ms, parameter, rowBounds, resultHandler, key, boundSql);
  }
 
+  @SuppressWarnings("unchecked")
   public <E> List<E> query(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, CacheKey key, BoundSql boundSql) throws SQLException {
     ErrorContext.instance().resource(ms.getResource()).activity("executing a query").object(ms.getId());
     if (closed) throw new ExecutorException("Executor was closed.");
@@ -150,11 +150,11 @@ public abstract class BaseExecutor implements Executor {
 
   public void deferLoad(MappedStatement ms, MetaObject resultObject, String property, CacheKey key) {
     if (closed) throw new ExecutorException("Executor was closed.");
-    DeferredLoad deferredLoad = new DeferredLoad(ms, resultObject, property, key, localCache);
+    DeferredLoad deferredLoad = new DeferredLoad(ms, resultObject, property, key, localCache, configuration.getObjectFactory());
     if (deferredLoad.canLoad()) {
     	deferredLoad.load();
     } else {
-    	deferredLoads.add(new DeferredLoad(ms, resultObject, property, key, localCache));
+    	deferredLoads.add(new DeferredLoad(ms, resultObject, property, key, localCache, configuration.getObjectFactory()));
     }
   }
 
@@ -275,16 +275,19 @@ public abstract class BaseExecutor implements Executor {
     private final String property;
     private final CacheKey key;
     private final PerpetualCache localCache;
+    private final ObjectFactory objectFactory;
 
     public DeferredLoad(MappedStatement mappedStatement,
                         MetaObject resultObject,
                         String property,
                         CacheKey key,
-                        PerpetualCache localCache) {
+                        PerpetualCache localCache,
+                        ObjectFactory objectFactory) {
       this.resultObject = resultObject;
       this.property = property;
       this.key = key;
       this.localCache = localCache;
+      this.objectFactory = objectFactory;
     }
 
     public boolean canLoad() {
@@ -296,13 +299,12 @@ public abstract class BaseExecutor implements Executor {
       @SuppressWarnings( "unchecked" ) // we suppose we get back a List
       List<Object> list = (List<Object>) localCache.getObject(key);
       Class<?> targetType = resultObject.getSetterType(property);
-      if (Set.class.isAssignableFrom(targetType)) {
-        value = new HashSet<Object>(list);
-      } else if (Collection.class.isAssignableFrom(targetType)) {
+      if (targetType.isAssignableFrom(list.getClass())) {
         value = list;
+      } else if (Collection.class.isAssignableFrom(targetType)) {
+        value = convertToDeclaredCollection(list, targetType);
       } else if (targetType.isArray()) {
-        Object array = java.lang.reflect.Array.newInstance(targetType.getComponentType(), list.size());
-        value = list.toArray((Object[]) array);
+        value = listToArray(list, targetType.getComponentType());
       } else {
         if (list != null && list.size() > 1) {
           throw new ExecutorException("Statement returned more than one row, where no more than one was expected.");
@@ -312,6 +314,20 @@ public abstract class BaseExecutor implements Executor {
       }
       resultObject.setValue(property, value);
     }
+
+    @SuppressWarnings("unchecked")
+    private <E> E[] listToArray(List<E> list, Class<?> type) {
+      E[] array = (E[]) java.lang.reflect.Array.newInstance(type, list.size());
+      array = list.toArray(array);
+      return array;
+    }
+
+    @SuppressWarnings("unchecked")
+    private <E> Collection<E> convertToDeclaredCollection(List<E> result, Class<?> type) {
+      Collection<E> collection = (Collection<E>) objectFactory.create(type);
+      collection.addAll(result);
+      return collection;
+    }    
   }
 
   protected Connection getConnection(Log statementLog) throws SQLException {
