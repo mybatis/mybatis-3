@@ -81,7 +81,7 @@ public class DefaultObjectFactory implements ObjectFactory, Serializable {
     if (type == List.class || type == Collection.class) {
       classToCreate = ArrayList.class;
     } else if (type == Map.class) {
-      classToCreate = LinkedHashMap.class;
+      classToCreate = HashMap.class;
     } else if (type == SortedSet.class) { // issue #510 Collections Support
       classToCreate = TreeSet.class;
     } else if (type == Set.class) {
