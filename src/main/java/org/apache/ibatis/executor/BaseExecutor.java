@@ -21,7 +21,6 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -269,6 +268,15 @@ public abstract class BaseExecutor implements Executor {
     return list;
   }
 
+  protected Connection getConnection(Log statementLog) throws SQLException {
+    Connection connection = transaction.getConnection();
+    if (statementLog.isDebugEnabled() || connectionLog.isDebugEnabled()) {
+      return ConnectionLogger.newInstance(connection, statementLog);
+    } else {
+      return connection;
+    }
+  }
+
   private static class DeferredLoad {
 
     private final MetaObject resultObject;
@@ -301,10 +309,12 @@ public abstract class BaseExecutor implements Executor {
       Class<?> targetType = resultObject.getSetterType(property);
       if (targetType.isAssignableFrom(list.getClass())) {
         value = list;
-      } else if (Collection.class.isAssignableFrom(targetType)) {
-        value = convertToDeclaredCollection(list, targetType);
+      } else if (objectFactory.isCollection(targetType)) {
+        value = objectFactory.create(targetType);
+        objectFactory.addAll(value, list);
       } else if (targetType.isArray()) {
-        value = listToArray(list, targetType.getComponentType());
+        Object[] array = objectFactory.createArray(targetType.getComponentType(), list.size());
+        value = list.toArray(array);
       } else {
         if (list != null && list.size() > 1) {
           throw new ExecutorException("Statement returned more than one row, where no more than one was expected.");
@@ -315,28 +325,6 @@ public abstract class BaseExecutor implements Executor {
       resultObject.setValue(property, value);
     }
 
-    @SuppressWarnings("unchecked")
-    private <E> E[] listToArray(List<E> list, Class<?> type) {
-      E[] array = (E[]) java.lang.reflect.Array.newInstance(type, list.size());
-      array = list.toArray(array);
-      return array;
-    }
-
-    @SuppressWarnings("unchecked")
-    private <E> Collection<E> convertToDeclaredCollection(List<E> result, Class<?> type) {
-      Collection<E> collection = (Collection<E>) objectFactory.create(type);
-      collection.addAll(result);
-      return collection;
-    }    
-  }
-
-  protected Connection getConnection(Log statementLog) throws SQLException {
-    Connection connection = transaction.getConnection();
-    if (statementLog.isDebugEnabled() || connectionLog.isDebugEnabled()) {
-      return ConnectionLogger.newInstance(connection, statementLog);
-    } else {
-      return connection;
-    }
   }
 
 }

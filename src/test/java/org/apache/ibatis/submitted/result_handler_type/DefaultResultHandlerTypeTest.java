@@ -95,20 +95,6 @@ public class DefaultResultHandlerTypeTest {
     getSqlSessionFactoryXmlConfig(xmlConfig);
   }
 
-  @Test(expected = PersistenceException.class)
-  public void testWrongListTypeJavaConfig() throws Exception {
-    // Should fail-fast.
-    Configuration configuration = new Configuration();
-    configuration.setDefaultListResultHandlerType(HashSet.class);
-  }
-
-  @Test(expected = PersistenceException.class)
-  public void testWrongMapTypeJavaConfig() throws Exception {
-    // Should fail-fast.
-    Configuration configuration = new Configuration();
-    configuration.setDefaultMapResultHandlerType(HashSet.class);
-  }
-
   private SqlSessionFactory getSqlSessionFactoryXmlConfig(String resource) throws Exception {
     Reader configReader = Resources.getResourceAsReader(resource);
     SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(configReader);

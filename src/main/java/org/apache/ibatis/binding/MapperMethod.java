@@ -17,7 +17,6 @@ package org.apache.ibatis.binding;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +25,7 @@ import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.SqlCommandType;
+import org.apache.ibatis.reflection.factory.ObjectFactory;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
@@ -33,8 +33,9 @@ import org.apache.ibatis.session.SqlSession;
 
 public class MapperMethod {
 
-  private SqlSession sqlSession;
-  private Configuration config;
+  private final SqlSession sqlSession;
+  private final Configuration config;
+  private final ObjectFactory objectFactory;
 
   private SqlCommandType type;
   private String commandName;
@@ -62,6 +63,7 @@ public class MapperMethod {
     this.config = sqlSession.getConfiguration();
     this.hasNamedParameters = false;
     this.declaringInterface = declaringInterface;
+    this.objectFactory = config.getObjectFactory();
     setupFields();
     setupMethodSignature();
     setupCommandType();
@@ -126,16 +128,15 @@ public class MapperMethod {
     return result;
   }
 
-  @SuppressWarnings("unchecked")
-  private <E> Collection<E> convertToDeclaredCollection(List<E> list) {
-    Collection<E> collection = (Collection<E>) config.getObjectFactory().create(method.getReturnType());
-    collection.addAll(list);
+  private <E> Object convertToDeclaredCollection(List<E> list) {
+    Object collection = objectFactory.create(method.getReturnType());
+    objectFactory.addAll(collection, list);
     return collection;
   }
 
   @SuppressWarnings("unchecked")
   private <E> E[] convertToArray(List<E> list) {
-    E[] array = (E[]) java.lang.reflect.Array.newInstance(method.getReturnType().getComponentType(), list.size());
+    E[] array = (E[]) objectFactory.createArray(method.getReturnType().getComponentType(), list.size());
     array = list.toArray(array);
     return array;
   }
@@ -184,7 +185,7 @@ public class MapperMethod {
     if (method.getReturnType().equals(Void.TYPE)) {
       returnsVoid = true;
     }
-    if (Collection.class.isAssignableFrom(method.getReturnType()) || method.getReturnType().isArray()) {
+    if (objectFactory.isCollection(method.getReturnType()) || method.getReturnType().isArray()) {
       returnsMany = true;
     }
     if (Map.class.isAssignableFrom(method.getReturnType())) {

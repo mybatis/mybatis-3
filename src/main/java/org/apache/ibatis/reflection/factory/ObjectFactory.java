@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2011 The MyBatis Team
+ *    Copyright 2009-2012 The MyBatis Team
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -23,7 +23,15 @@ public interface ObjectFactory {
   <T> T create(Class<T> type);
 
   <T> T create(Class<T> type, List<Class<?>> constructorArgTypes, List<Object> constructorArgs);
-
+  
   void setProperties(Properties properties);
 
+  <T> T[] createArray(Class<T> type, int size);
+  
+  boolean isCollection(Class<?> type);
+  
+  void add(Object collection, Object element);
+
+  <T> void addAll(Object collection, List<T> elements);
+  
 }

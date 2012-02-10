@@ -23,10 +23,7 @@
 
 <configuration>
 
-	<settings>
-		<setting name="defaultListResultHandlerType" value="java.util.LinkedList" />
-		<setting name="defaultMapResultHandlerType" value="java.util.LinkedHashMap" />
-	</settings>
+	<objectFactory type="org.apache.ibatis.submitted.result_handler_type.ObjectFactory" />
 
 	<environments default="development">
 		<environment id="development">

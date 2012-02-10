@@ -20,13 +20,11 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
 import org.apache.ibatis.binding.MapperRegistry;
-import org.apache.ibatis.builder.BuilderException;
 import org.apache.ibatis.builder.CacheRefResolver;
 import org.apache.ibatis.builder.ResultMapResolver;
 import org.apache.ibatis.builder.xml.XMLStatementBuilder;
@@ -79,7 +77,7 @@ public class Configuration {
 
   protected Environment environment;
 
-  protected boolean safeRowBoundsEnabled = true;
+  protected boolean safeRowBoundsEnabled = false;
   protected boolean mapUnderscoreToCamelCase = false;
   protected boolean lazyLoadingEnabled = false;
   protected boolean aggressiveLazyLoading = true;
@@ -93,8 +91,6 @@ public class Configuration {
   protected Integer defaultStatementTimeout;
   protected ExecutorType defaultExecutorType = ExecutorType.SIMPLE;
   protected AutoMappingBehavior autoMappingBehavior = AutoMappingBehavior.PARTIAL;
-  protected Class<?> defaultListResultHandlerType;
-  protected Class<?> defaultMapResultHandlerType;
 
   protected Properties variables = new Properties();
   protected ObjectFactory objectFactory = new DefaultObjectFactory();
@@ -274,10 +270,6 @@ public class Configuration {
     this.useColumnLabel = useColumnLabel;
   }
 
-  public Class<?> getDefaultListResultHandlerType() {
-    return defaultListResultHandlerType;
-  }
-
   public boolean isClearLocalCacheAfterEachStatement() {
     return clearLocalCacheAfterEachStatement;
   }
@@ -292,26 +284,6 @@ public class Configuration {
 
   public void setJdbcTypeForNull(JdbcType jdbcTypeForNull) {
     this.jdbcTypeForNull = jdbcTypeForNull;
-  }
-
-  public void setDefaultListResultHandlerType(Class<?> defaultListResultHandlerType) {
-    if (defaultListResultHandlerType != null && !List.class.isAssignableFrom(defaultListResultHandlerType))
-      throw new BuilderException("The specified class '" + defaultListResultHandlerType + "' is not assignable to '"
-          + List.class.getCanonicalName() + "'.");
-    else
-      this.defaultListResultHandlerType = defaultListResultHandlerType;
-  }
-
-  public Class<?> getDefaultMapResultHandlerType() {
-    return defaultMapResultHandlerType;
-  }
-
-  public void setDefaultMapResultHandlerType(Class<?> defaultMapResultHandlerType) {
-    if (defaultMapResultHandlerType != null && !Map.class.isAssignableFrom(defaultMapResultHandlerType))
-      throw new BuilderException("The specified class '" + defaultMapResultHandlerType + "' is not assignable to '"
-          + Map.class.getCanonicalName() + "'.");
-    else
-      this.defaultMapResultHandlerType = defaultMapResultHandlerType;
   }
 
   public Properties getVariables() {

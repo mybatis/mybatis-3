@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2011 The MyBatis Team
+ *    Copyright 2009-2012 The MyBatis Team
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,32 +15,24 @@
  */
 package org.apache.ibatis.executor.result;
 
-import org.apache.ibatis.executor.ExecutorException;
-import org.apache.ibatis.session.ResultContext;
-import org.apache.ibatis.session.ResultHandler;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import org.apache.ibatis.reflection.factory.ObjectFactory;
+import org.apache.ibatis.session.ResultContext;
+import org.apache.ibatis.session.ResultHandler;
 
 public class DefaultResultHandler implements ResultHandler {
 
   private final List<Object> list;
 
   public DefaultResultHandler() {
-    this(null);
+    list = new ArrayList<Object>();
   }
 
   @SuppressWarnings("unchecked")
-  public DefaultResultHandler(Class<?> clazz) {
-    if (clazz == null) {
-      list = new ArrayList<Object>();
-    } else {
-      try {
-        list = (List<Object>) clazz.newInstance();
-      } catch (Exception e) {
-        throw new ExecutorException("Failed to instantiate list result handler type.", e);
-      }
-    }
+  public DefaultResultHandler(ObjectFactory objectFactory) {
+    list = objectFactory.create(List.class);
   }
 
   public void handleResult(ResultContext context) {

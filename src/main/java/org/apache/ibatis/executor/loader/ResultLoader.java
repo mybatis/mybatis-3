@@ -16,7 +16,6 @@
 package org.apache.ibatis.executor.loader;
 
 import java.sql.SQLException;
-import java.util.Collection;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -25,6 +24,7 @@ import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.executor.ExecutorException;
 import org.apache.ibatis.mapping.Environment;
 import org.apache.ibatis.mapping.MappedStatement;
+import org.apache.ibatis.reflection.factory.ObjectFactory;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.RowBounds;
@@ -38,6 +38,7 @@ public class ResultLoader {
   protected final MappedStatement mappedStatement;
   protected final Object parameterObject;
   protected final Class<?> targetType;
+  protected final ObjectFactory objectFactory;
 
   protected boolean loaded;
   protected Object resultObject;
@@ -48,16 +49,19 @@ public class ResultLoader {
     this.mappedStatement = mappedStatement;
     this.parameterObject = parameterObject;
     this.targetType = targetType;
+    this.objectFactory = configuration.getObjectFactory();
   }
 
   public <E> Object loadResult() throws SQLException {
     List<E> list = selectList();
     if (targetType != null && targetType.isAssignableFrom(list.getClass())) {
       resultObject = list;
-    } else if (targetType != null && Collection.class.isAssignableFrom(targetType)) {
-      resultObject = convertToDeclaredCollection(list, targetType);
+    } else if (targetType != null && objectFactory.isCollection(targetType)) {
+      resultObject = objectFactory.create(targetType);
+      objectFactory.addAll(resultObject, list);
     } else if (targetType != null && targetType.isArray()) {
-      resultObject = listToArray(list, targetType.getComponentType());
+      Object[] array = objectFactory.createArray(targetType.getComponentType(), list.size());
+      resultObject = list.toArray(array);
     } else {
       if (list.size() > 1) {
         throw new ExecutorException("Statement " + mappedStatement.getId() + " returned more than one row, where no more than one was expected.");
@@ -83,31 +87,17 @@ public class ResultLoader {
   }
 
   private Executor newExecutor() throws SQLException {
-    Environment environment = configuration.getEnvironment();
+    final Environment environment = configuration.getEnvironment();
     if (environment == null) throw new ExecutorException("ResultLoader could not load lazily.  Environment was not configured.");
-    DataSource ds = environment.getDataSource();
+    final DataSource ds = environment.getDataSource();
     if (ds == null) throw new ExecutorException("ResultLoader could not load lazily.  DataSource was not configured.");
     final TransactionFactory transactionFactory = environment.getTransactionFactory();
-    Transaction tx = transactionFactory.newTransaction(ds, null, false);
+    final Transaction tx = transactionFactory.newTransaction(ds, null, false);
     return configuration.newExecutor(tx, ExecutorType.SIMPLE);
   }
 
   public boolean wasNull() {
     return resultObject == null;
-  }
-
-  @SuppressWarnings("unchecked")
-  private <E> E[] listToArray(List<E> list, Class<?> type) {
-    E[] array = (E[]) java.lang.reflect.Array.newInstance(type, list.size());
-    array = list.toArray(array);
-    return array;
-  }
-
-  @SuppressWarnings("unchecked")
-  private <E> Collection<E> convertToDeclaredCollection(List<E> result, Class<?> type) {
-    Collection<E> collection = (Collection<E>) configuration.getObjectFactory().create(type);
-    collection.addAll(result);
-    return collection;
   }
 
 }

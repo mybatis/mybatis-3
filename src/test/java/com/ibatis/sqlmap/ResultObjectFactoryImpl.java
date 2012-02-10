@@ -18,6 +18,9 @@ package com.ibatis.sqlmap;
 import org.apache.ibatis.reflection.factory.ObjectFactory;
 import com.testdomain.*;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Properties;
 
@@ -47,6 +50,8 @@ public class ResultObjectFactoryImpl implements ObjectFactory {
       obj = (T) new ISupplierImpl();
     } else if (clazz.equals((ISupplierKey.class))) {
       obj = (T) new ISupplierKeyImpl();
+    } else if (clazz.equals(List.class)) {
+      obj = (T) new ArrayList<Object>();
     }
 
     return obj;
@@ -58,4 +63,24 @@ public class ResultObjectFactoryImpl implements ObjectFactory {
 
   public void setProperties(Properties properties) {
   }
+
+  public boolean isCollection(Class<?> type) {
+    return Collection.class.isAssignableFrom(type);
+  }
+
+  @SuppressWarnings("unchecked")
+  public void add(Object collection, Object element) {
+    ((Collection<Object>) collection).add(element);
+  }
+
+  @SuppressWarnings("unchecked")
+  public <E> void addAll(Object collection, List<E> elements) {
+    ((Collection<Object>) collection).addAll(elements);
+  }
+
+  @SuppressWarnings("unchecked")
+  public <T> T[] createArray(Class<T> type, int size) {
+    return (T[]) Array.newInstance(type, size);
+  }
+  
 }

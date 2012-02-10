@@ -93,8 +93,8 @@ public class FastResultSetHandler implements ResultSetHandler {
     for (int i = 0; i < parameterMappings.size(); i++) {
       final ParameterMapping parameterMapping = parameterMappings.get(i);
       if (parameterMapping.getMode() == ParameterMode.OUT || parameterMapping.getMode() == ParameterMode.INOUT) {
-        if ("java.sql.ResultSet".equalsIgnoreCase(parameterMapping.getJavaType().getName())) {
-          handleRefCursorOutputParameter(cs, parameterMapping, i, metaParam);
+        if (ResultSet.class.equals(parameterMapping.getJavaType())) {
+          handleRefCursorOutputParameter((ResultSet) cs.getObject(i + 1), parameterMapping, metaParam);
         } else {
           final TypeHandler<?> typeHandler = parameterMapping.getTypeHandler();
           if (typeHandler == null) {
@@ -107,13 +107,12 @@ public class FastResultSetHandler implements ResultSetHandler {
     }
   }
 
-  protected void handleRefCursorOutputParameter(CallableStatement cs, ParameterMapping parameterMapping, int parameterMappingIndex, MetaObject metaParam) throws SQLException {
-    final ResultSet rs = (ResultSet) cs.getObject(parameterMappingIndex + 1);
+  protected void handleRefCursorOutputParameter(ResultSet rs, ParameterMapping parameterMapping, MetaObject metaParam) throws SQLException {
     final String resultMapId = parameterMapping.getResultMapId();
     if (resultMapId != null) {
       final ResultMap resultMap = configuration.getResultMap(resultMapId);
-      final DefaultResultHandler resultHandler = new DefaultResultHandler(configuration.getDefaultListResultHandlerType());
-      ResultColumnCache resultColumnCache = new ResultColumnCache(rs.getMetaData(), configuration);
+      final DefaultResultHandler resultHandler = new DefaultResultHandler(objectFactory);
+      final ResultColumnCache resultColumnCache = new ResultColumnCache(rs.getMetaData(), configuration);
       handleRowValues(rs, resultMap, resultHandler, new RowBounds(), resultColumnCache);
       metaParam.setValue(parameterMapping.getProperty(), resultHandler.getResultList());
     } else {
@@ -183,8 +182,7 @@ public class FastResultSetHandler implements ResultSetHandler {
   protected void handleResultSet(ResultSet rs, ResultMap resultMap, List<Object> multipleResults, ResultColumnCache resultColumnCache) throws SQLException {
     try {
       if (resultHandler == null) {
-        DefaultResultHandler defaultResultHandler = new DefaultResultHandler(
-            configuration.getDefaultListResultHandlerType());
+        DefaultResultHandler defaultResultHandler = new DefaultResultHandler(objectFactory);
         handleRowValues(rs, resultMap, defaultResultHandler, rowBounds, resultColumnCache);
         multipleResults.add(defaultResultHandler.getResultList());
       } else {
@@ -225,7 +223,7 @@ public class FastResultSetHandler implements ResultSetHandler {
 
   protected void skipRows(ResultSet rs, RowBounds rowBounds) throws SQLException {
     if (rs.getType() != ResultSet.TYPE_FORWARD_ONLY) {
-      if (rowBounds.getOffset() != 0) {
+      if (rowBounds.getOffset() != RowBounds.NO_ROW_OFFSET) {
         rs.absolute(rowBounds.getOffset());
       }
     } else {

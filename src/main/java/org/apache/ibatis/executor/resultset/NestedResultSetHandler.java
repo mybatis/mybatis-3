@@ -19,7 +19,6 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -137,7 +136,6 @@ public class NestedResultSetHandler extends FastResultSetHandler {
   // NESTED RESULT MAP (JOIN MAPPING)
   //
 
-  @SuppressWarnings("unchecked")
   private boolean applyNestedResultMappings(ResultSet rs, ResultMap resultMap, MetaObject metaObject, String parentPrefix, ResultColumnCache resultColumnCache, CacheKey parentRowKey) {
     boolean foundValues = false;
     for (ResultMapping resultMapping : resultMap.getPropertyResultMappings()) {
@@ -168,9 +166,11 @@ public class NestedResultSetHandler extends FastResultSetHandler {
           }
 
           if (rowValue != null && anyNotNullColumnIsNotNull) {
-            if (collectionProperty != null && collectionProperty instanceof Collection) {
-              if (!knownValue) {
-                ((Collection<Object>) collectionProperty).add(rowValue);
+            if (collectionProperty != null && objectFactory.isCollection(collectionProperty.getClass())) {
+              if (!knownValue) { 
+                objectFactory.add(collectionProperty, rowValue);
+              } else {
+                // TODO should foundValue be true through this path? 
               }
             } else {
               metaObject.setValue(resultMapping.getProperty(), rowValue);
@@ -204,7 +204,7 @@ public class NestedResultSetHandler extends FastResultSetHandler {
         type = metaObject.getSetterType(propertyName);
       }
       try {
-        if (Collection.class.isAssignableFrom(type)) {
+        if (objectFactory.isCollection(type)) {
           propertyValue = objectFactory.create(type);
           metaObject.setValue(propertyName, propertyValue);
         }

@@ -192,9 +192,7 @@ public class XMLConfigBuilder extends BaseBuilder {
       configuration.setDefaultExecutorType(ExecutorType.valueOf(stringValueOf(props.getProperty("defaultExecutorType"), "SIMPLE")));
       configuration.setDefaultStatementTimeout(integerValueOf(props.getProperty("defaultStatementTimeout"), null));
       configuration.setMapUnderscoreToCamelCase(booleanValueOf(props.getProperty("mapUnderscoreToCamelCase"), false));
-      configuration.setSafeRowBoundsEnabled(booleanValueOf(props.getProperty("safeRowBoundsEnabled"), true));
-      configuration.setDefaultListResultHandlerType(resolveClass(props.getProperty("defaultListResultHandlerType")));
-      configuration.setDefaultMapResultHandlerType(resolveClass(props.getProperty("defaultMapResultHandlerType")));
+      configuration.setSafeRowBoundsEnabled(booleanValueOf(props.getProperty("safeRowBoundsEnabled"), false));
       configuration.setClearLocalCacheAfterEachStatement(booleanValueOf(props.getProperty("flushLocalCacheAfterEachStatement"), false));
       configuration.setJdbcTypeForNull(JdbcType.valueOf(stringValueOf(props.getProperty("jdbcTypeForNull"), "OTHER")));
       configuration.setLazyLoadTriggerMethods(stringSetValueOf(props.getProperty("lazyLoadTriggerMethods"), "equals,clone,hashCode,toString"));

@@ -18,6 +18,7 @@ package org.apache.ibatis.reflection.factory;
 import org.apache.ibatis.reflection.ReflectionException;
 
 import java.io.Serializable;
+import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.util.*;
 
@@ -30,8 +31,9 @@ public class DefaultObjectFactory implements ObjectFactory, Serializable {
   }
 
   public <T> T create(Class<T> type, List<Class<?>> constructorArgTypes, List<Object> constructorArgs) {
-    Class<?> classToCreate = resolveCollectionInterface(type);
-    @SuppressWarnings( "unchecked" ) // we know types are assignable
+    Class<?> classToCreate = resolveInterface(type);
+    @SuppressWarnings("unchecked")
+    // we know types are assignable
     T created = (T) instantiateClass(classToCreate, constructorArgTypes, constructorArgs);
     return created;
   }
@@ -74,13 +76,12 @@ public class DefaultObjectFactory implements ObjectFactory, Serializable {
     }
   }
 
-
-  private Class<?> resolveCollectionInterface(Class<?> type) {
+  private Class<?> resolveInterface(Class<?> type) {
     Class<?> classToCreate;
     if (type == List.class || type == Collection.class) {
       classToCreate = ArrayList.class;
     } else if (type == Map.class) {
-      classToCreate = HashMap.class;
+      classToCreate = LinkedHashMap.class;
     } else if (type == SortedSet.class) { // issue #510 Collections Support
       classToCreate = TreeSet.class;
     } else if (type == Set.class) {
@@ -89,6 +90,25 @@ public class DefaultObjectFactory implements ObjectFactory, Serializable {
       classToCreate = type;
     }
     return classToCreate;
+  }
+
+  public boolean isCollection(Class<?> type) {
+    return Collection.class.isAssignableFrom(type);
+  }
+
+  @SuppressWarnings("unchecked")
+  public void add(Object collection, Object element) {
+    ((Collection<Object>) collection).add(element);
+  }
+
+  @SuppressWarnings("unchecked")
+  public <E> void addAll(Object collection, List<E> elements) {
+    ((Collection<Object>) collection).addAll(elements);
+  }
+
+  @SuppressWarnings("unchecked")
+  public <T> T[] createArray(Class<T> type, int size) {
+    return (T[]) Array.newInstance(type, size);
   }
 
 }
