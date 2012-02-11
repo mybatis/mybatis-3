@@ -122,7 +122,7 @@ public class SqlSourceBuilder extends BaseBuilder {
       String property = extractPropertyName(propertyWithJdbcType);
       map.put("property", property);
       String jdbcType = extractJdbcType(propertyWithJdbcType);
-      map.put("jdbcType", jdbcType); // support old style #{property:TYPE} format
+      if (jdbcType != null) map.put("jdbcType", jdbcType); // support old style #{property:TYPE} format
       while (parameterMappingParts.hasMoreTokens()) {
         String attribute = parameterMappingParts.nextToken();
         StringTokenizer attributeParts = new StringTokenizer(attribute, "=");
