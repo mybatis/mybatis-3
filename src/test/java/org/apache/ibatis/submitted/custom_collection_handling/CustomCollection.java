@@ -17,11 +17,7 @@ package org.apache.ibatis.submitted.custom_collection_handling;
 
 import java.util.*;
 
-/**
- *
- * @author mnesarco
- */
-public class CustomCollection<T> implements Iterable<T> {
+public class CustomCollection<T> {
     
     private List<T> data = new ArrayList<T>();
 

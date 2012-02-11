@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2011 The MyBatis Team
+ *    Copyright 2009-2012 The MyBatis Team
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -14,6 +14,8 @@
  *    limitations under the License.
  */
 package org.apache.ibatis.reflection.wrapper;
+
+import java.util.List;
 
 import org.apache.ibatis.reflection.ExceptionUtil;
 import org.apache.ibatis.reflection.MetaClass;
@@ -171,6 +173,18 @@ public class BeanWrapper extends BaseWrapper {
     } catch (Throwable t) {
       throw new ReflectionException("Could not set property '" + prop.getName() + "' of '" + object + "' with value '" + value + "' Cause: " + t.toString(), t);
     }
+  }
+
+  public boolean isCollection() {
+    return false;
+  }
+
+  public void add(Object element) {
+    throw new UnsupportedOperationException();
+  }
+
+  public <E> void addAll(List<E> list) {
+    throw new UnsupportedOperationException();
   }
 
 }

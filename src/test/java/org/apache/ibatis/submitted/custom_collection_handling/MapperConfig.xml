@@ -23,7 +23,8 @@
 
 <configuration>
 
-    <objectFactory type="org.apache.ibatis.submitted.custom_collection_handling.ObjectFactory" />
+    <objectFactory type="org.apache.ibatis.submitted.custom_collection_handling.CustomObjectFactory" />
+    <objectWrapperFactory type="org.apache.ibatis.submitted.custom_collection_handling.CustomObjectWrapperFactory" />
 
     <environments default="development">
         <environment id="development">

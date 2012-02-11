@@ -17,6 +17,7 @@ package org.apache.ibatis.executor;
 
 import static org.apache.ibatis.executor.ExecutionPlaceholder.EXECUTION_PLACEHOLDER;
 
+import java.lang.reflect.Array;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -149,11 +150,11 @@ public abstract class BaseExecutor implements Executor {
 
   public void deferLoad(MappedStatement ms, MetaObject resultObject, String property, CacheKey key) {
     if (closed) throw new ExecutorException("Executor was closed.");
-    DeferredLoad deferredLoad = new DeferredLoad(ms, resultObject, property, key, localCache, configuration.getObjectFactory());
+    DeferredLoad deferredLoad = new DeferredLoad(ms, resultObject, property, key, localCache, configuration);
     if (deferredLoad.canLoad()) {
     	deferredLoad.load();
     } else {
-    	deferredLoads.add(new DeferredLoad(ms, resultObject, property, key, localCache, configuration.getObjectFactory()));
+    	deferredLoads.add(new DeferredLoad(ms, resultObject, property, key, localCache, configuration));
     }
   }
 
@@ -284,18 +285,20 @@ public abstract class BaseExecutor implements Executor {
     private final CacheKey key;
     private final PerpetualCache localCache;
     private final ObjectFactory objectFactory;
-
+    private final Configuration configuration;
+    
     public DeferredLoad(MappedStatement mappedStatement,
                         MetaObject resultObject,
                         String property,
                         CacheKey key,
                         PerpetualCache localCache,
-                        ObjectFactory objectFactory) {
+                        Configuration configuration) {
       this.resultObject = resultObject;
       this.property = property;
       this.key = key;
       this.localCache = localCache;
-      this.objectFactory = objectFactory;
+      this.objectFactory = configuration.getObjectFactory();
+      this.configuration = configuration;
     }
 
     public boolean canLoad() {
@@ -311,9 +314,10 @@ public abstract class BaseExecutor implements Executor {
         value = list;
       } else if (objectFactory.isCollection(targetType)) {
         value = objectFactory.create(targetType);
-        objectFactory.addAll(value, list);
+        MetaObject metaObject = configuration.newMetaObject(value);
+        metaObject.addAll(list);
       } else if (targetType.isArray()) {
-        Object[] array = objectFactory.createArray(targetType.getComponentType(), list.size());
+        Object[] array = (Object[]) Array.newInstance(targetType.getComponentType(), list.size());
         value = list.toArray(array);
       } else {
         if (list != null && list.size() > 1) {

@@ -15,12 +15,20 @@
  */
 package org.apache.ibatis.reflection.factory;
 
-import org.apache.ibatis.reflection.ReflectionException;
-
 import java.io.Serializable;
-import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
+
+import org.apache.ibatis.reflection.ReflectionException;
 
 public class DefaultObjectFactory implements ObjectFactory, Serializable {
 
@@ -92,23 +100,8 @@ public class DefaultObjectFactory implements ObjectFactory, Serializable {
     return classToCreate;
   }
 
-  public boolean isCollection(Class<?> type) {
+  public <T> boolean isCollection(Class<T> type) {
     return Collection.class.isAssignableFrom(type);
-  }
-
-  @SuppressWarnings("unchecked")
-  public void add(Object collection, Object element) {
-    ((Collection<Object>) collection).add(element);
-  }
-
-  @SuppressWarnings("unchecked")
-  public <E> void addAll(Object collection, List<E> elements) {
-    ((Collection<Object>) collection).addAll(elements);
-  }
-
-  @SuppressWarnings("unchecked")
-  public <T> T[] createArray(Class<T> type, int size) {
-    return (T[]) Array.newInstance(type, size);
   }
 
 }

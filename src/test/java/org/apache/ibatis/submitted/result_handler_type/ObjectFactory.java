@@ -87,7 +87,7 @@ public class ObjectFactory implements org.apache.ibatis.reflection.factory.Objec
   }
 
 
-  public boolean isCollection(Class<?> type) {
+  public <T> boolean isCollection(Class<T> type) {
     return Collection.class.isAssignableFrom(type);
   }
 

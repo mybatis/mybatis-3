@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2011 The MyBatis Team
+ *    Copyright 2009-2012 The MyBatis Team
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -19,11 +19,14 @@ import org.apache.ibatis.reflection.factory.DefaultObjectFactory;
 import org.apache.ibatis.reflection.factory.ObjectFactory;
 import org.apache.ibatis.reflection.property.PropertyTokenizer;
 import org.apache.ibatis.reflection.wrapper.BeanWrapper;
+import org.apache.ibatis.reflection.wrapper.CollectionWrapper;
 import org.apache.ibatis.reflection.wrapper.MapWrapper;
 import org.apache.ibatis.reflection.wrapper.ObjectWrapper;
 import org.apache.ibatis.reflection.wrapper.ObjectWrapperFactory;
 import org.apache.ibatis.reflection.wrapper.DefaultObjectWrapperFactory;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 public class MetaObject {
@@ -48,6 +51,8 @@ public class MetaObject {
       this.objectWrapper = objectWrapperFactory.getWrapperFor(this, object);
     } else if (object instanceof Map) {
       this.objectWrapper = new MapWrapper(this, (Map) object);
+    } else if (object instanceof Collection) {
+      this.objectWrapper = new CollectionWrapper(this, (Collection) object);
     } else {
       this.objectWrapper = new BeanWrapper(this, object);
     }
@@ -138,7 +143,7 @@ public class MetaObject {
 
   public MetaObject metaObjectForProperty(String name) {
     Object value = getValue(name);
-    return MetaObject.forObject(value,objectFactory,objectWrapperFactory);
+    return MetaObject.forObject(value, objectFactory, objectWrapperFactory);
   }
 
   public ObjectWrapper getObjectWrapper() {
@@ -147,5 +152,17 @@ public class MetaObject {
 
   private static class NullObject {
   }
+  
+  public boolean isCollection() {
+    return objectWrapper.isCollection();
+  }
+  
+  public void add(Object element) {
+    objectWrapper.add(element);
+  }
 
+  public <E> void addAll(List<E> list) {
+    objectWrapper.addAll(list);
+  }
+  
 }

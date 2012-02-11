@@ -64,7 +64,7 @@ public class ResultObjectFactoryImpl implements ObjectFactory {
   public void setProperties(Properties properties) {
   }
 
-  public boolean isCollection(Class<?> type) {
+  public <T> boolean isCollection(Class<T> type) {
     return Collection.class.isAssignableFrom(type);
   }
 

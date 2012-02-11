@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2011 The MyBatis Team
+ *    Copyright 2009-2012 The MyBatis Team
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -14,6 +14,8 @@
  *    limitations under the License.
  */
 package org.apache.ibatis.reflection.wrapper;
+
+import java.util.List;
 
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.factory.ObjectFactory;
@@ -40,5 +42,11 @@ public interface ObjectWrapper {
   boolean hasGetter(String name);
 
   MetaObject instantiatePropertyValue(String name, PropertyTokenizer prop, ObjectFactory objectFactory);
+  
+  boolean isCollection();
+  
+  public void add(Object element);
+  
+  public <E> void addAll(List<E> element);
 
 }

@@ -15,6 +15,7 @@
  */
 package org.apache.ibatis.executor.loader;
 
+import java.lang.reflect.Array;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -24,6 +25,7 @@ import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.executor.ExecutorException;
 import org.apache.ibatis.mapping.Environment;
 import org.apache.ibatis.mapping.MappedStatement;
+import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.factory.ObjectFactory;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.ExecutorType;
@@ -52,15 +54,16 @@ public class ResultLoader {
     this.objectFactory = configuration.getObjectFactory();
   }
 
-  public <E> Object loadResult() throws SQLException {
-    List<E> list = selectList();
+  public Object loadResult() throws SQLException {
+    List<Object> list = selectList();
     if (targetType != null && targetType.isAssignableFrom(list.getClass())) {
       resultObject = list;
     } else if (targetType != null && objectFactory.isCollection(targetType)) {
       resultObject = objectFactory.create(targetType);
-      objectFactory.addAll(resultObject, list);
+      MetaObject metaObject = configuration.newMetaObject(resultObject);
+      metaObject.addAll(list);
     } else if (targetType != null && targetType.isArray()) {
-      Object[] array = objectFactory.createArray(targetType.getComponentType(), list.size());
+      Object[] array = (Object[]) Array.newInstance(targetType.getComponentType(), list.size());
       resultObject = list.toArray(array);
     } else {
       if (list.size() > 1) {

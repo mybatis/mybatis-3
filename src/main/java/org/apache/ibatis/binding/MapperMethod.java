@@ -15,6 +15,7 @@
  */
 package org.apache.ibatis.binding;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,6 +26,7 @@ import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.SqlCommandType;
+import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.factory.ObjectFactory;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.ResultHandler;
@@ -130,13 +132,14 @@ public class MapperMethod {
 
   private <E> Object convertToDeclaredCollection(List<E> list) {
     Object collection = objectFactory.create(method.getReturnType());
-    objectFactory.addAll(collection, list);
+    MetaObject metaObject = config.newMetaObject(collection);
+    metaObject.addAll(list);
     return collection;
   }
 
   @SuppressWarnings("unchecked")
   private <E> E[] convertToArray(List<E> list) {
-    E[] array = (E[]) objectFactory.createArray(method.getReturnType().getComponentType(), list.size());
+    E[] array = (E[]) Array.newInstance(method.getReturnType().getComponentType(), list.size());
     array = list.toArray(array);
     return array;
   }

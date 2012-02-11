@@ -147,7 +147,8 @@ public class NestedResultSetHandler extends FastResultSetHandler {
           if (resultMapping.getColumnPrefix()!= null) columnPrefixBuilder.append(resultMapping.getColumnPrefix());
           final String columnPrefix = columnPrefixBuilder.length() == 0 ? null : columnPrefixBuilder.toString().toUpperCase(Locale.ENGLISH);
           final ResultMap nestedResultMap = getNestedResultMap(rs, nestedResultMapId, columnPrefix);
-          final Object collectionProperty = instantiateCollectionPropertyIfAppropriate(resultMapping, metaObject);
+          final Object targetProperty = instantiateCollectionPropertyIfAppropriate(resultMapping, metaObject);
+          final MetaObject targetMetaObject = configuration.newMetaObject(targetProperty);
           final CacheKey rowKey = createRowKey(nestedResultMap, rs, columnPrefix, resultColumnCache, parentRowKey);
           final Set<CacheKey> localRowValueCache = getRowValueCache(parentRowKey);
           final boolean knownValue = localRowValueCache.contains(rowKey);
@@ -166,9 +167,9 @@ public class NestedResultSetHandler extends FastResultSetHandler {
           }
 
           if (rowValue != null && anyNotNullColumnIsNotNull) {
-            if (collectionProperty != null && objectFactory.isCollection(collectionProperty.getClass())) {
+            if (targetProperty != null && objectFactory.isCollection(targetProperty.getClass())) {
               if (!knownValue) { 
-                objectFactory.add(collectionProperty, rowValue);
+                targetMetaObject.add(rowValue);
               } else {
                 // TODO should foundValue be true through this path? 
               }

@@ -14,8 +14,9 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import org.apache.ibatis.reflection.ReflectionException;
+import org.apache.ibatis.reflection.factory.ObjectFactory;
 
-public class ObjectFactory implements org.apache.ibatis.reflection.factory.ObjectFactory {
+public class CustomObjectFactory implements ObjectFactory {
 
     private static final long serialVersionUID = -8855120656940914948L;
 
@@ -83,34 +84,14 @@ public class ObjectFactory implements org.apache.ibatis.reflection.factory.Objec
         }
         return classToCreate;
     }
-
-    public boolean isCollection(Class<?> type) {
-        return Collection.class.isAssignableFrom(type) ||
-               CustomCollection.class.isAssignableFrom(type);
-    }
-
-    @SuppressWarnings("unchecked")
-    public void add(Object collection, Object element) {
-        if (collection instanceof Collection) {
-            ((Collection<Object>) collection).add(element);
-        }
-        else if (collection instanceof CustomCollection) {
-            ((CustomCollection<Object>) collection).add(element);
-        }
-    }
-
-    @SuppressWarnings("unchecked")
-    public <E> void addAll(Object collection, List<E> elements) {
-        if (collection instanceof Collection) {
-            ((Collection<Object>) collection).addAll(elements);
-        }
-        else if (collection instanceof CustomCollection) {
-            ((CustomCollection<Object>) collection).addAll(elements);
-        }
+    
+    public <T> boolean isCollection(Class<T> type) {
+      return CustomCollection.class.isAssignableFrom(type);
     }
 
     @SuppressWarnings("unchecked")
     public <T> T[] createArray(Class<T> type, int size) {
-        return (T[]) Array.newInstance(type, size);
+      return (T[]) Array.newInstance(type, size);
     }
+
 }

@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2011 The MyBatis Team
+ *    Copyright 2009-2012 The MyBatis Team
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import org.apache.ibatis.reflection.factory.ObjectFactory;
 import org.apache.ibatis.reflection.property.PropertyTokenizer;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class MapWrapper extends BaseWrapper {
@@ -123,6 +124,18 @@ public class MapWrapper extends BaseWrapper {
     HashMap<String, Object> map = new HashMap<String, Object>();
     set(prop, map);
     return MetaObject.forObject(map, metaObject.getObjectFactory(), metaObject.getObjectWrapperFactory());
+  }
+
+  public boolean isCollection() {
+    return false;
+  }
+
+  public void add(Object element) {
+    throw new UnsupportedOperationException();
+  }
+
+  public <E> void addAll(List<E> element) {
+    throw new UnsupportedOperationException();
   }
 
 }
