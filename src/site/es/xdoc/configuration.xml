@@ -291,7 +291,7 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 Lista de métodos separados por comas
               </td>
               <td>
-                OTHER
+                equals,clone,hashCode,toString
               </td>
             </tr>
           </tbody>
