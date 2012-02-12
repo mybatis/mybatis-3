@@ -233,7 +233,7 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 true | false
               </td>
               <td>
-                True
+                False
               </td>
             </tr>
             <tr>
@@ -270,7 +270,7 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
               </td>
               <td>
                 Permite especificar el tipo JDBC que 
-                Specifies the JDBC type for null values cuando no se ha especificado un tipo concreto para el parámetro.
+                Especifica el tipo JDBC para valores nulos cuando no se ha especificado un tipo concreto para el parámetro.
                 Algunos drivers requieren que se indique el tipo JDBC de la columna pero otros permite valores genéricos como NULL, VARCHAR or OTHER.
               </td>
               <td>
@@ -282,32 +282,16 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
             </tr>
             <tr>
               <td>
-                defaultListResultHandlerType
+                lazyLoadTriggerMethods
               </td>
               <td>
-                Configures the default List implementation
-                type returned from MyBatis.
+                Permite especificar qué métodos de Object disparan la carga diferida
               </td>
               <td>
-                Any concrete List implementation
+                Lista de métodos separados por comas
               </td>
               <td>
-                Not Set (java.util.ArrayList is used)
-              </td>
-            </tr>
-            <tr>
-              <td>
-                defaultMapResultHandlerType
-              </td>
-              <td>
-                Configures the default Map implementation
-                type returned from MyBatis.
-              </td>
-              <td>
-                Any concrete Map implementation
-              </td>
-              <td>
-                Not Set (java.util.HashMap is used)
+                OTHER
               </td>
             </tr>
           </tbody>
@@ -324,8 +308,11 @@ A continuación se muestra un ejemplo del elemento settings al completo:
   <setting name="enhancementEnabled" value="false"/>
   <setting name="defaultExecutorType" value="SIMPLE"/>
   <setting name="defaultStatementTimeout" value="25000"/>
-  <setting name="defaultListResultHandlerType" value="java.util.ArrayList"/>
-  <setting name="defaultMapResultHandlerType" value="java.util.HashMap"/>
+  <setting name="safeRowBoundsEnabled" value="false"/>
+  <setting name="mapUnderscoreToCamelCase" value="false"/>
+  <setting name="clearLocalCacheAfterEachStatement" value="false"/>
+  <setting name="jdbcTypeForNull" value="OTHER"/>
+  <setting name="lazyLoadTriggerMethods" value="equals,clone,hashCode,toString"/>
 </settings>]]></source>
 
       </subsection>

@@ -265,7 +265,7 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 true | false
               </td>
               <td>
-                True
+                False
               </td>
             </tr>
             <tr>
@@ -314,30 +314,16 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
             </tr>
             <tr>
               <td>
-                defaultListResultHandlerType
+                lazyLoadTriggerMethods
               </td>
               <td>
-                MyBatis が返す List の実装クラスを設定します。
+                Specifies which Object's methods trigger a lazy load
               </td>
               <td>
-                List の実装クラス
+                A method name list separated by commas
               </td>
               <td>
-                未指定（java.util.ArrayList が使用されます）
-              </td>
-            </tr>
-            <tr>
-              <td>
-                defaultMapResultHandlerType
-              </td>
-              <td>
-                MyBatis が返す Map の実装クラスを設定します。
-              </td>
-              <td>
-                Map の実装クラス
-              </td>
-              <td>
-                未指定（java.util.HashMap が使用されます）
+                equals,clone,hashCode,toString
               </td>
             </tr>
           </tbody>
@@ -354,8 +340,11 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
   <setting name="enhancementEnabled" value="false"/>
   <setting name="defaultExecutorType" value="SIMPLE"/>
   <setting name="defaultStatementTimeout" value="25000"/>
-  <setting name="defaultListResultHandlerType" value="java.util.ArrayList"/>
-  <setting name="defaultMapResultHandlerType" value="java.util.HashMap"/>
+  <setting name="safeRowBoundsEnabled" value="false"/>
+  <setting name="mapUnderscoreToCamelCase" value="false"/>
+  <setting name="clearLocalCacheAfterEachStatement" value="false"/>
+  <setting name="jdbcTypeForNull" value="OTHER"/>
+  <setting name="lazyLoadTriggerMethods" value="equals,clone,hashCode,toString"/>
 </settings>]]></source>
 
       </subsection>

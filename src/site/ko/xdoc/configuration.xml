@@ -216,7 +216,7 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 true | false
               </td>
               <td>
-                True
+                False
               </td>
             </tr>
             <tr>
@@ -265,34 +265,18 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
             </tr>
             <tr>
               <td>
-                defaultListResultHandlerType
+                lazyLoadTriggerMethods
               </td>
               <td>
-                Configures the default List implementation
-                type returned from MyBatis.
+                Specifies which Object's methods trigger a lazy load
               </td>
               <td>
-                Any concrete List implementation
+                A method name list separated by commas
               </td>
               <td>
-                Not Set (java.util.ArrayList is used)
+                equals,clone,hashCode,toString
               </td>
             </tr>
-            <tr>
-              <td>
-                defaultMapResultHandlerType
-              </td>
-              <td>
-                Configures the default Map implementation
-                type returned from MyBatis.
-              </td>
-              <td>
-                Any concrete Map implementation
-              </td>
-              <td>
-                Not Set (java.util.HashMap is used)
-              </td>
-            </tr>            
           </tbody>
         </table>
         <p>위 설정을 모두 사용한 setting 요소의 예제이다:</p>
@@ -305,8 +289,11 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
   <setting name="enhancementEnabled" value="false"/>
   <setting name="defaultExecutorType" value="SIMPLE"/>
   <setting name="defaultStatementTimeout" value="25000"/>
-  <setting name="defaultListResultHandlerType" value="java.util.ArrayList"/>
-  <setting name="defaultMapResultHandlerType" value="java.util.HashMap"/>
+  <setting name="safeRowBoundsEnabled" value="false"/>
+  <setting name="mapUnderscoreToCamelCase" value="false"/>
+  <setting name="clearLocalCacheAfterEachStatement" value="false"/>
+  <setting name="jdbcTypeForNull" value="OTHER"/>
+  <setting name="lazyLoadTriggerMethods" value="equals,clone,hashCode,toString"/>
 </settings>]]></source>
 
       </subsection>
