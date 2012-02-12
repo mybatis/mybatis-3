@@ -132,7 +132,7 @@ public class SqlSourceBuilder extends BaseBuilder {
           if (parameterProperties.contains(name)) {
             map.put(name, value);
           } else {
-            throw new BuilderException("An invalid property '" + name + "' was found in mapping " + content + ".  Valid properties are " + parameterProperties);
+            throw new BuilderException("An invalid property '" + name + "' was found in mapping #{" + content + "}.  Valid properties are " + parameterProperties);
           }
         } else {
           throw new BuilderException("Improper inline parameter map format.  Should be: #{propName,attr1=val1,attr2=val2}");
