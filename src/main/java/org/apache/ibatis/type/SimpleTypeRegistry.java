@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2011 The MyBatis Team
+ *    Copyright 2009-2012 The MyBatis Team
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -37,44 +37,16 @@ public class SimpleTypeRegistry {
     SIMPLE_TYPE_SET.add(Class.class);
     SIMPLE_TYPE_SET.add(BigInteger.class);
     SIMPLE_TYPE_SET.add(BigDecimal.class);
-
-    SIMPLE_TYPE_SET.add(Collection.class);
-    SIMPLE_TYPE_SET.add(Set.class);
-    SIMPLE_TYPE_SET.add(Map.class);
-    SIMPLE_TYPE_SET.add(List.class);
-    SIMPLE_TYPE_SET.add(HashMap.class);
-    SIMPLE_TYPE_SET.add(TreeMap.class);
-    SIMPLE_TYPE_SET.add(ArrayList.class);
-    SIMPLE_TYPE_SET.add(LinkedList.class);
-    SIMPLE_TYPE_SET.add(HashSet.class);
-    SIMPLE_TYPE_SET.add(TreeSet.class);
-    SIMPLE_TYPE_SET.add(Vector.class);
-    SIMPLE_TYPE_SET.add(Hashtable.class);
-    SIMPLE_TYPE_SET.add(Enumeration.class);
   }
 
   /*
-   * Tells us if the class passed in is a knwon common type
+   * Tells us if the class passed in is a known common type
    *
    * @param clazz The class to check
    * @return True if the class is known
    */
   public static boolean isSimpleType(Class<?> clazz) {
-    if (SIMPLE_TYPE_SET.contains(clazz)) {
-      return true;
-    } else if (Collection.class.isAssignableFrom(clazz)) {
-      return true;
-    } else if (Map.class.isAssignableFrom(clazz)) {
-      return true;
-    } else if (List.class.isAssignableFrom(clazz)) {
-      return true;
-    } else if (Set.class.isAssignableFrom(clazz)) {
-      return true;
-    } else if (Iterator.class.isAssignableFrom(clazz)) {
-      return true;
-    } else {
-      return false;
-    }
+    return SIMPLE_TYPE_SET.contains(clazz);
   }
 
 }

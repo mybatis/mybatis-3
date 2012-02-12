@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2011 The MyBatis Team
+ *    Copyright 2009-2012 The MyBatis Team
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,10 +15,14 @@
  */
 package org.apache.ibatis.type;
 
-import domain.misc.RichType;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+
+import java.util.HashMap;
+
 import org.junit.Test;
+
+import domain.misc.RichType;
 
 public class SimpleTypeRegistryTest {
 
@@ -30,6 +34,11 @@ public class SimpleTypeRegistryTest {
   @Test
   public void shouldTestIfClassIsSimpleTypeAndReturnFalse() {
     assertFalse(SimpleTypeRegistry.isSimpleType(RichType.class));
+  }
+
+  @Test
+  public void shouldTestIfMapIsSimpleTypeAndReturnFalse() {
+    assertFalse(SimpleTypeRegistry.isSimpleType(HashMap.class)); // see issue #165, a Map is not a simple type
   }
 
 }
