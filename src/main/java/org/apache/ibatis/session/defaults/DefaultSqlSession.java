@@ -15,6 +15,7 @@
  */
 package org.apache.ibatis.session.defaults;
 
+import org.apache.ibatis.binding.BindingException;
 import org.apache.ibatis.exceptions.ExceptionFactory;
 import org.apache.ibatis.exceptions.TooManyResultsException;
 import org.apache.ibatis.executor.BatchResult;
@@ -234,21 +235,29 @@ public class DefaultSqlSession implements SqlSession {
 
   private Object wrapCollection(final Object object) {
     if (object instanceof List) {
-      return new HashMap<String, Object>() {
-        private static final long serialVersionUID = -4705063447161282548L;
-        {
-          put("list", object);
-        }
-      };
+      StrictMap<Object> map = new StrictMap<Object>();
+      map.put("list", object);
+      return map;
     } else if (object != null && object.getClass().isArray()) {
-      return new HashMap<String, Object>() {
-        private static final long serialVersionUID = 5771791745814754233L;
-        {
-          put("array", object);
-        }
-      };
+      StrictMap<Object> map = new StrictMap<Object>();
+      map.put("array", object);
+      return map;
     }
     return object;
+  }
+
+  public static class StrictMap<V> extends HashMap<String, V> {
+
+    private static final long serialVersionUID = -5741767162221585340L;
+
+    @Override
+    public V get(Object key) {
+      if (!super.containsKey(key)) {
+        throw new BindingException("Parameter '" + key + "' not found. Available parameters are " + this.keySet());
+      }
+      return super.get(key);
+    }
+
   }
 
 }
