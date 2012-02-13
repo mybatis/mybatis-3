@@ -309,7 +309,7 @@ public class BaseExecutorTest extends BaseDataTest {
     }
   }
 
-  @Test
+  @Test(expected=ExecutorException.class) // TODO see issue #464
   public void shouldSelectAuthorViaOutParams() throws Exception {
     DataSource ds = createBlogDataSource();
     Connection connection = ds.getConnection();

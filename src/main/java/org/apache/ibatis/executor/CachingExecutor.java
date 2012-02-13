@@ -20,6 +20,9 @@ import org.apache.ibatis.cache.CacheKey;
 import org.apache.ibatis.cache.TransactionalCacheManager;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
+import org.apache.ibatis.mapping.ParameterMapping;
+import org.apache.ibatis.mapping.ParameterMode;
+import org.apache.ibatis.mapping.StatementType;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
@@ -72,6 +75,7 @@ public class CachingExecutor implements Executor {
   public <E> List<E> query(MappedStatement ms, Object parameterObject, RowBounds rowBounds, ResultHandler resultHandler, CacheKey key, BoundSql boundSql) throws SQLException {
     Cache cache = ms.getCache();
     if (cache != null) {
+      ensureNoOutParams(ms, key, parameterObject, boundSql);
       flushCacheIfRequired(ms);
       cache.getReadWriteLock().readLock().lock();
       try {
@@ -110,6 +114,16 @@ public class CachingExecutor implements Executor {
     } finally {
       if (required) {
         tcm.rollback();
+      }
+    }
+  }
+
+  private void ensureNoOutParams(MappedStatement ms, CacheKey key, Object parameter, BoundSql boundSql) {
+    if (ms.getStatementType() == StatementType.CALLABLE) {
+      for (ParameterMapping parameterMapping : ms.getBoundSql(parameter).getParameterMappings()) {
+        if (parameterMapping.getMode() != ParameterMode.IN) {
+          throw new ExecutorException("Caching stored procedures with OUT params is not supported.  Please configure useCache=false in " + ms.getId() + " statement.");
+        }
       }
     }
   }
