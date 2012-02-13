@@ -309,7 +309,7 @@ public class BaseExecutorTest extends BaseDataTest {
     }
   }
 
-  @Test(expected=ExecutorException.class) // TODO see issue #464
+  @Test 
   public void shouldSelectAuthorViaOutParams() throws Exception {
     DataSource ds = createBlogDataSource();
     Connection connection = ds.getConnection();
@@ -325,6 +325,13 @@ public class BaseExecutorTest extends BaseDataTest {
       assertEquals("********", author.getPassword());
       assertEquals("sally@ibatis.apache.org", author.getEmail());
       assertEquals(null, author.getBio());
+    } catch (ExecutorException e) {
+      if (executor instanceof CachingExecutor) {
+        // TODO see issue #464. Fail is OK.
+        assertTrue(e.getMessage().contains("OUT params is not supported"));
+      } else {
+        throw e;
+      }
     } finally {
       executor.rollback(true);
       executor.close(false);
