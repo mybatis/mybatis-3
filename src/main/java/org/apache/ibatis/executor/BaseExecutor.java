@@ -133,7 +133,7 @@ public abstract class BaseExecutor implements Executor {
       queryStack++;
       list = resultHandler == null ? (List<E>) localCache.getObject(key) : null;
       if (list != null) {
-        handleLocallyCachedOutputParameters(ms, key, parameter);
+        handleLocallyCachedOutputParameters(ms, key, parameter, boundSql);
       } else {
         list = queryFromDatabase(ms, parameter, rowBounds, resultHandler, key, boundSql);
       }
@@ -237,13 +237,13 @@ public abstract class BaseExecutor implements Executor {
     }
   }
 
-  private void handleLocallyCachedOutputParameters(MappedStatement ms, CacheKey key, Object parameter) {
+  private void handleLocallyCachedOutputParameters(MappedStatement ms, CacheKey key, Object parameter, BoundSql boundSql) {
     if (ms.getStatementType() == StatementType.CALLABLE) {
       final Object cachedParameter = localOutputParameterCache.getObject(key);
       if (cachedParameter != null && parameter != null) {
         final MetaObject metaCachedParameter = MetaObject.forObject(cachedParameter);
         final MetaObject metaParameter = MetaObject.forObject(parameter);
-        for (ParameterMapping parameterMapping : ms.getBoundSql(parameter).getParameterMappings()) {
+        for (ParameterMapping parameterMapping : boundSql.getParameterMappings()) {
           if (parameterMapping.getMode() != ParameterMode.IN) {
             final String parameterName = parameterMapping.getProperty();
             final Object cachedValue = metaCachedParameter.getValue(parameterName);
