@@ -84,7 +84,7 @@ public class DefaultObjectFactory implements ObjectFactory, Serializable {
     }
   }
 
-  private Class<?> resolveInterface(Class<?> type) {
+  protected Class<?> resolveInterface(Class<?> type) {
     Class<?> classToCreate;
     if (type == List.class || type == Collection.class) {
       classToCreate = ArrayList.class;

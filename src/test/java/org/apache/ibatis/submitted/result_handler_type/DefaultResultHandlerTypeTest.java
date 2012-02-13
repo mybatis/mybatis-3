@@ -21,14 +21,11 @@ import java.io.IOException;
 import java.io.Reader;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.ibatis.exceptions.PersistenceException;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.jdbc.ScriptRunner;
-import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
@@ -79,20 +76,6 @@ public class DefaultResultHandlerTypeTest {
     } finally {
       sqlSession.close();
     }
-  }
-
-  @Test(expected = PersistenceException.class)
-  public void testWrongListType() throws Exception {
-    // Should fail-fast.
-    String xmlConfig = "org/apache/ibatis/submitted/result_handler_type/WrongListConfig.xml";
-    getSqlSessionFactoryXmlConfig(xmlConfig);
-  }
-
-  @Test(expected = PersistenceException.class)
-  public void testWrongMapType() throws Exception {
-    // Should fail-fast.
-    String xmlConfig = "org/apache/ibatis/submitted/result_handler_type/WrongMapConfig.xml";
-    getSqlSessionFactoryXmlConfig(xmlConfig);
   }
 
   private SqlSessionFactory getSqlSessionFactoryXmlConfig(String resource) throws Exception {
