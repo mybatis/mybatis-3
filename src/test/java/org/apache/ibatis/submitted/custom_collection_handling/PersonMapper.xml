@@ -25,7 +25,8 @@
     <resultMap id="personRM" type="org.apache.ibatis.submitted.custom_collection_handling.Person">
         <id property="id" column="id" />
         <result property="name" column="name" />
-        <collection property="contacts"
+        <collection 
+            property="contacts"
             ofType="org.apache.ibatis.submitted.custom_collection_handling.Contact"
             javaType="org.apache.ibatis.submitted.custom_collection_handling.CustomCollection">
             <id property="id" column="c_id" />
@@ -34,10 +35,34 @@
         </collection>
     </resultMap>
 
-    <select id="find" resultMap="personRM">
+    <resultMap id="personRM2" type="org.apache.ibatis.submitted.custom_collection_handling.Person">
+        <id property="id" column="id" />
+        <result property="name" column="name" />
+        <collection 
+            property="contacts"
+            ofType="org.apache.ibatis.submitted.custom_collection_handling.Contact"
+            javaType="org.apache.ibatis.submitted.custom_collection_handling.CustomCollection"
+            column="id" 
+            select="findContacts" />
+    </resultMap>
+
+    <select id="findWithResultMap" resultMap="personRM">
         select p.id, p.name, c.address, c.phone, c.id as c_id
         from person p left join contact c on c.person_id = p.id
         order by p.id, c.address
+    </select>
+
+    <select id="findWithSelect" resultMap="personRM2">
+        select p.id, p.name
+        from person p
+        order by p.id
+    </select>
+
+    <select id="findContacts" parameterType="int" resultType="org.apache.ibatis.submitted.custom_collection_handling.Contact">
+        select c.id, c.address, c.phone
+        from contact c
+        where c.person_id = #{id}
+        order by c.address
     </select>
 
 </mapper>

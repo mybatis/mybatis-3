@@ -74,7 +74,7 @@ public class CustomObjectWrapper implements org.apache.ibatis.reflection.wrapper
   }
 
   public <E> void addAll(List<E> element) {
-    ((CustomCollection<Object>) collection).add(element);
+    ((CustomCollection<Object>) collection).addAll(element);
   }
 
 }
