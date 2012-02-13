@@ -37,6 +37,7 @@ import org.apache.ibatis.reflection.wrapper.ObjectWrapperFactory;
 import org.apache.ibatis.session.AutoMappingBehavior;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.ExecutorType;
+import org.apache.ibatis.session.LocalCacheScope;
 import org.apache.ibatis.transaction.TransactionFactory;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
@@ -203,7 +204,7 @@ public class XMLConfigBuilder extends BaseBuilder {
       configuration.setDefaultStatementTimeout(integerValueOf(props.getProperty("defaultStatementTimeout"), null));
       configuration.setMapUnderscoreToCamelCase(booleanValueOf(props.getProperty("mapUnderscoreToCamelCase"), false));
       configuration.setSafeRowBoundsEnabled(booleanValueOf(props.getProperty("safeRowBoundsEnabled"), false));
-      configuration.setClearLocalCacheAfterEachStatement(booleanValueOf(props.getProperty("flushLocalCacheAfterEachStatement"), false));
+      configuration.setLocalCacheScope(LocalCacheScope.valueOf(stringValueOf(props.getProperty("localCacheScope"), "SESSION")));
       configuration.setJdbcTypeForNull(JdbcType.valueOf(stringValueOf(props.getProperty("jdbcTypeForNull"), "OTHER")));
       configuration.setLazyLoadTriggerMethods(stringSetValueOf(props.getProperty("lazyLoadTriggerMethods"), "equals,clone,hashCode,toString"));
     }

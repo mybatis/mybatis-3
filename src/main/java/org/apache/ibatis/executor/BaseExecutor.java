@@ -38,6 +38,7 @@ import org.apache.ibatis.mapping.StatementType;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.factory.ObjectFactory;
 import org.apache.ibatis.session.Configuration;
+import org.apache.ibatis.session.LocalCacheScope;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.transaction.Transaction;
@@ -127,7 +128,9 @@ public abstract class BaseExecutor implements Executor {
   public <E> List<E> query(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, CacheKey key, BoundSql boundSql) throws SQLException {
     ErrorContext.instance().resource(ms.getResource()).activity("executing a query").object(ms.getId());
     if (closed) throw new ExecutorException("Executor was closed.");
-    if (ms.isFlushCacheRequired()) clearLocalCache(); // Flush the internal cache when force is true
+    if (queryStack == 0 && ms.isFlushCacheRequired()) {
+      clearLocalCache();
+    }
     List<E> list;
     try {
       queryStack++;
@@ -143,6 +146,9 @@ public abstract class BaseExecutor implements Executor {
     if (queryStack == 0) {
       for (DeferredLoad deferredLoad : deferredLoads) {
         deferredLoad.load();
+      }
+      if (configuration.getLocalCacheScope() == LocalCacheScope.STATEMENT) {
+        clearLocalCache(); // issue #482
       }
     }
     return list;

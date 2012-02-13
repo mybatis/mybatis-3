@@ -249,21 +249,23 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 False
               </td>
             </tr>
-           <tr>
+            <tr>
               <td>
-                clearLocalCacheAfterEachStatement
+                localCacheScope
               </td>
               <td>
-                Por defecto la cache local se vacía en actualizaciones, commit, rollback y al cerrar la sesión.
-                Informando esta propiedad a true la sesión se vacía también en las consultas.
+              	MyBatis usa una cache local para evitar dependencias circulares y acelerar ejecuciones repeticas de queries anidadas.
+              	Por defecto (SESSION) todas las queries ejecutadas en una sesión se cachean. Si localCacheScope=STATEMENT 
+              	la sesión local solo se usará durante la ejecución de un statement, no se comparten datos entre distintas llamadas
+              	a SqlSession.
               </td>
               <td>
-                true | false
+                SESSION | STATEMENT
               </td>
               <td>
-                False
+                SESSION
               </td>
-            </tr>            
+            </tr>
             <tr>
               <td>
                 jdbcTypeForNull
@@ -310,7 +312,7 @@ A continuación se muestra un ejemplo del elemento settings al completo:
   <setting name="defaultStatementTimeout" value="25000"/>
   <setting name="safeRowBoundsEnabled" value="false"/>
   <setting name="mapUnderscoreToCamelCase" value="false"/>
-  <setting name="clearLocalCacheAfterEachStatement" value="false"/>
+  <setting name="localCacheScope" value="SESSION"/>
   <setting name="jdbcTypeForNull" value="OTHER"/>
   <setting name="lazyLoadTriggerMethods" value="equals,clone,hashCode,toString"/>
 </settings>]]></source>

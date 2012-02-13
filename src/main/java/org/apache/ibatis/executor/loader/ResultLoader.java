@@ -21,8 +21,10 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
+import org.apache.ibatis.cache.CacheKey;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.executor.ExecutorException;
+import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.Environment;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.reflection.MetaObject;
@@ -41,17 +43,21 @@ public class ResultLoader {
   protected final Object parameterObject;
   protected final Class<?> targetType;
   protected final ObjectFactory objectFactory;
-
+  protected final CacheKey cacheKey;
+  protected final BoundSql boundSql;
+  
   protected boolean loaded;
   protected Object resultObject;
-
-  public ResultLoader(Configuration config, Executor executor, MappedStatement mappedStatement, Object parameterObject, Class<?> targetType) {
+  
+  public ResultLoader(Configuration config, Executor executor, MappedStatement mappedStatement, Object parameterObject, Class<?> targetType, CacheKey cacheKey, BoundSql boundSql) {
     this.configuration = config;
     this.executor = executor;
     this.mappedStatement = mappedStatement;
     this.parameterObject = parameterObject;
     this.targetType = targetType;
     this.objectFactory = configuration.getObjectFactory();
+    this.cacheKey = cacheKey;
+    this.boundSql = boundSql;
   }
 
   public Object loadResult() throws SQLException {
@@ -81,7 +87,7 @@ public class ResultLoader {
       localExecutor = newExecutor();
     }
     try {
-      return localExecutor.<E> query(mappedStatement, parameterObject, RowBounds.DEFAULT, Executor.NO_RESULT_HANDLER);
+      return localExecutor.<E> query(mappedStatement, parameterObject, RowBounds.DEFAULT, Executor.NO_RESULT_HANDLER, cacheKey, boundSql);
     } finally {
       if (localExecutor != executor) {
         localExecutor.close(false);

@@ -23,6 +23,7 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.spi.LocaleServiceProvider;
 
 import org.apache.ibatis.binding.MapperRegistry;
 import org.apache.ibatis.builder.CacheRefResolver;
@@ -85,7 +86,7 @@ public class Configuration {
   protected boolean useGeneratedKeys = false;
   protected boolean useColumnLabel = true;
   protected boolean cacheEnabled = true;
-  protected boolean clearLocalCacheAfterEachStatement = false;
+  protected LocalCacheScope localCacheScope = LocalCacheScope.SESSION;
   protected JdbcType jdbcTypeForNull = JdbcType.OTHER;
   protected Set<String> lazyLoadTriggerMethods = new HashSet<String>(Arrays.asList(new String[] { "equals", "clone", "hashCode", "toString" }));
   protected Integer defaultStatementTimeout;
@@ -270,12 +271,12 @@ public class Configuration {
     this.useColumnLabel = useColumnLabel;
   }
 
-  public boolean isClearLocalCacheAfterEachStatement() {
-    return clearLocalCacheAfterEachStatement;
+  public LocalCacheScope getLocalCacheScope() {
+    return localCacheScope;
   }
 
-  public void setClearLocalCacheAfterEachStatement(boolean clearLocalCacheAfterEachStatement) {
-    this.clearLocalCacheAfterEachStatement = clearLocalCacheAfterEachStatement;
+  public void setLocalCacheScope(LocalCacheScope localCacheScope) {
+    this.localCacheScope = localCacheScope;
   }
 
   public JdbcType getJdbcTypeForNull() {

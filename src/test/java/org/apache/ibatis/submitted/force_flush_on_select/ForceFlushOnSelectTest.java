@@ -27,6 +27,7 @@ import java.util.List;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.ExecutorType;
+import org.apache.ibatis.session.LocalCacheScope;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
@@ -148,7 +149,7 @@ public class ForceFlushOnSelectTest {
 
   @Test
   public void testSelectShouldFlushLocalCacheIfFlushLocalCacheAtferEachStatementIsTrue() throws SQLException {
-    sqlSessionFactory.getConfiguration().setClearLocalCacheAfterEachStatement(true);
+    sqlSessionFactory.getConfiguration().setLocalCacheScope(LocalCacheScope.STATEMENT);
     SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.SIMPLE);
     try {
       PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);

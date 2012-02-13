@@ -349,17 +349,18 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
             </tr>
             <tr>
               <td>
-                clearLocalCacheAfterEachStatement
+                localCacheScope
               </td>
               <td>
-                By default local cache that is cleared upon update, commit, rollback and close. 
-                Setting this property to true will cause it to be cleared also upon queries.
+                MyBatis uses local cache to prevent circular references and speed up repeated nested queries. 
+                By default (SESSION) all queries executed during a session are cached. If localCacheScope=STATEMENT local session will be used just for 
+                statement execution, no data will be shared between two different calls to the same SqlSession.
               </td>
               <td>
-                true | false
+                SESSION | STATEMENT
               </td>
               <td>
-                False
+                SESSION
               </td>
             </tr>
             <tr>
@@ -407,7 +408,7 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
   <setting name="defaultStatementTimeout" value="25000"/>
   <setting name="safeRowBoundsEnabled" value="false"/>
   <setting name="mapUnderscoreToCamelCase" value="false"/>
-  <setting name="clearLocalCacheAfterEachStatement" value="false"/>
+  <setting name="localCacheScope" value="SESSION"/>
   <setting name="jdbcTypeForNull" value="OTHER"/>
   <setting name="lazyLoadTriggerMethods" value="equals,clone,hashCode,toString"/>
 </settings>]]></source>

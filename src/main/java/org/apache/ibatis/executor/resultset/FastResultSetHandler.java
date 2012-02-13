@@ -432,7 +432,9 @@ public class FastResultSetHandler implements ResultSetHandler {
     final Object nestedQueryParameterObject = prepareParameterForNestedQuery(rs, constructorMapping, nestedQueryParameterType, columnPrefix);
     Object value = null;
     if (nestedQueryParameterObject != null) {
-      final ResultLoader resultLoader = new ResultLoader(configuration, executor, nestedQuery, nestedQueryParameterObject, constructorMapping.getJavaType());
+      final BoundSql nestedBoundSql = nestedQuery.getBoundSql(nestedQueryParameterObject);
+      final CacheKey key = executor.createCacheKey(nestedQuery, nestedQueryParameterObject, RowBounds.DEFAULT, nestedBoundSql);
+      final ResultLoader resultLoader = new ResultLoader(configuration, executor, nestedQuery, nestedQueryParameterObject, constructorMapping.getJavaType(), key, nestedBoundSql);
       value = resultLoader.loadResult();
     }
     return value;
@@ -451,7 +453,7 @@ public class FastResultSetHandler implements ResultSetHandler {
       if (executor.isCached(nestedQuery, key)) {
         executor.deferLoad(nestedQuery, metaResultObject, property, key);
       } else {
-        final ResultLoader resultLoader = new ResultLoader(configuration, executor, nestedQuery, nestedQueryParameterObject, propertyMapping.getJavaType());
+        final ResultLoader resultLoader = new ResultLoader(configuration, executor, nestedQuery, nestedQueryParameterObject, propertyMapping.getJavaType(), key, nestedBoundSql);
         if (configuration.isLazyLoadingEnabled()) {
           lazyLoader.addLoader(property, metaResultObject, resultLoader);
         } else {

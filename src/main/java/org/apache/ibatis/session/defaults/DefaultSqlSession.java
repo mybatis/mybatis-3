@@ -99,7 +99,6 @@ public class DefaultSqlSession implements SqlSession {
     try {
       MappedStatement ms = configuration.getMappedStatement(statement);
       List<E> result = executor.<E>query(ms, wrapCollection(parameter), rowBounds, Executor.NO_RESULT_HANDLER);
-      if (configuration.isClearLocalCacheAfterEachStatement()) executor.clearLocalCache();
       return result;
     } catch (Exception e) {
       throw ExceptionFactory.wrapException("Error querying database.  Cause: " + e, e);
@@ -120,7 +119,6 @@ public class DefaultSqlSession implements SqlSession {
     try {
       MappedStatement ms = configuration.getMappedStatement(statement);
       executor.query(ms, wrapCollection(parameter), rowBounds, handler);
-      if (configuration.isClearLocalCacheAfterEachStatement()) executor.clearLocalCache();
     } catch (Exception e) {
       throw ExceptionFactory.wrapException("Error querying database.  Cause: " + e, e);
     } finally {

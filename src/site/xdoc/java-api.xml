@@ -239,9 +239,10 @@ void rollback(boolean force)</source>
   <p>By default MyBatis does not actually commit unless it detects that the database has been changed by a call to insert, update or delete. If you've somehow made changes without calling these methods, then you can pass true into the commit and rollback methods to guarantee that it will be committed (note, you still can't force a session in auto-commit mode, or one that is using an external transaction manager). Most of the time you won't have to call rollback(), as MyBatis will do that for you if you don't call commit. However, if you need more fine grained control over a session where multiple commits and rollbacks are possible, you have the rollback option there to make that possible.</p>
   <p><span class="label important">NOTE</span> MyBatis-Spring and MyBatis-Guice provide declarative transaction handling. So if you are using MyBatis with Spring or Guice please refer to their specific manuals.</p>
 
-  <h5>Clearing the Session Level Cache</h5>
-  <source>void clearCache()</source>
+  <h5>Session Level Cache</h5>
+  <p>MyBatis uses an internal cache to avoid circular references and to speed up repeated nested queries. By default local cache caches query results for the whole session duration. You can configure the local cache to be used just for the duration of an statement by setting localCacheScope=STATEMENT.</p>
   <p>The SqlSession instance has a local cache that is cleared upon update, commit, rollback and close. To clear it explicitly (perhaps with the intention to do more work), you can call clearCache().</p>
+  <source>void clearCache()</source>
 
   <h5>Ensuring that SqlSession is Closed</h5>
   <source>void close()</source>
