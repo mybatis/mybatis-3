@@ -1200,8 +1200,9 @@ public class User {
             <tr>
               <td><code>column</code></td>
               <td>
-                The column name from the database, or the aliased column label. This is the same string
-                that would normally be passed to <code>resultSet.getString(columnName)</code>.
+                The column name from the database, or the aliased column label that holds the value that will be passed to the nested 
+                statement as an input parameter. 
+                This is the same string that would normally be passed to <code>resultSet.getString(columnName)</code>.
                 Note: To deal with composite keys, you can specify multiple column names to pass to the
                 nested select statement by using the syntax <code>column="{prop1=col1,prop2=col2}"</code>. This will
                 cause <code>prop1</code> and <code>prop2</code> to be set against the parameter object for the target nested

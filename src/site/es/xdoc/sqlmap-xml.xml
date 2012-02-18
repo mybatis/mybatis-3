@@ -941,7 +941,7 @@ public class User {
           <tbody>
             <tr>
               <td><code>column</code></td>
-              <td>El nombre de la columna de la base de datos, o el alias de columna. Es el mismo string que se pasaría al método resultSet.getString(columnName). Nota: para tratar con claves compuestas, puedes especificar varios nombres usando esta sintaxis column=”{prop1=col1,prop2=col2}”. Esto hará que se informen las propiedades prop1 y prop2 del objeto parámetro del select statement destino
+              <td>El nombre de la columna de la base de datos, o el alias de columna que contiene el valor que será pasado como parámetro de entrada al statement anidado. Es el mismo string que se pasaría al método resultSet.getString(columnName). Nota: para tratar con claves compuestas, puedes especificar varios nombres usando esta sintaxis column=”{prop1=col1,prop2=col2}”. Esto hará que se informen las propiedades prop1 y prop2 del objeto parámetro del select statement destino
               </td>
             </tr>
             <tr>
