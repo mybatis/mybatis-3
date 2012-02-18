@@ -23,7 +23,7 @@ import java.util.Map;
 
 import org.apache.ibatis.builder.BaseBuilder;
 import org.apache.ibatis.builder.BuilderException;
-import org.apache.ibatis.builder.IncompleteStatementException;
+import org.apache.ibatis.builder.IncompleteElementException;
 import org.apache.ibatis.builder.MapperBuilderAssistant;
 import org.apache.ibatis.builder.xml.dynamic.ChooseSqlNode;
 import org.apache.ibatis.builder.xml.dynamic.DynamicSqlSource;
@@ -225,13 +225,13 @@ public class XMLStatementBuilder extends BaseBuilder {
             String nsrefid = builderAssistant.applyCurrentNamespace(refid, true);
             includeNode = configuration.getSqlFragments().get(nsrefid);
             if (includeNode == null) {
-              throw new IncompleteStatementException("Could not find SQL statement to include with refid '" + refid + "'");
+              throw new IncompleteElementException("Could not find SQL statement to include with refid '" + refid + "'");
             }
           }
           MixedSqlNode mixedSqlNode = new MixedSqlNode(contents(includeNode));
           targetContents.add(mixedSqlNode);
       } catch (IllegalArgumentException e) {
-    	  throw new IncompleteStatementException("Could not find SQL statement to include with refid '" + refid + "'", e);
+    	  throw new IncompleteElementException("Could not find SQL statement to include with refid '" + refid + "'", e);
       }
     }
 

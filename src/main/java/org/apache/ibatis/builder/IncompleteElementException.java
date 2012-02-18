@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2011 The MyBatis Team
+ *    Copyright 2009-2012 The MyBatis Team
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -17,18 +17,23 @@ package org.apache.ibatis.builder;
 
 import org.apache.ibatis.builder.BuilderException;
 
-public class IncompleteResultMapException extends BuilderException {
-  private static final long serialVersionUID = 5710340627945568032L;
-  public IncompleteResultMapException() {
-		super();
-	}
-	public IncompleteResultMapException(String message, Throwable cause) {
-		super(message, cause);
-	}
-	public IncompleteResultMapException(String message) {
-		super(message);
-	}
-	public IncompleteResultMapException(Throwable cause) {
-		super(cause);
-	}
+public class IncompleteElementException extends BuilderException {
+  private static final long serialVersionUID = -3697292286890900315L;
+
+  public IncompleteElementException() {
+    super();
+  }
+
+  public IncompleteElementException(String message, Throwable cause) {
+    super(message, cause);
+  }
+
+  public IncompleteElementException(String message) {
+    super(message);
+  }
+
+  public IncompleteElementException(Throwable cause) {
+    super(cause);
+  }
+
 }

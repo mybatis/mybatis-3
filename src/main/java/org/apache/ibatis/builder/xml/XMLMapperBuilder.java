@@ -28,9 +28,7 @@ import java.util.Properties;
 
 import org.apache.ibatis.builder.BaseBuilder;
 import org.apache.ibatis.builder.CacheRefResolver;
-import org.apache.ibatis.builder.IncompleteCacheException;
-import org.apache.ibatis.builder.IncompleteResultMapException;
-import org.apache.ibatis.builder.IncompleteStatementException;
+import org.apache.ibatis.builder.IncompleteElementException;
 import org.apache.ibatis.builder.MapperBuilderAssistant;
 import org.apache.ibatis.builder.ResultMapResolver;
 import org.apache.ibatis.cache.Cache;
@@ -128,7 +126,7 @@ public class XMLMapperBuilder extends BaseBuilder {
       final XMLStatementBuilder statementParser = new XMLStatementBuilder(configuration, builderAssistant, context, requiredDatabaseId);
       try {
         statementParser.parseStatementNode();
-      } catch (IncompleteStatementException e) {
+      } catch (IncompleteElementException e) {
         configuration.addIncompleteStatement(statementParser);
       }
     }
@@ -142,7 +140,7 @@ public class XMLMapperBuilder extends BaseBuilder {
         try {
           iter.next().resolve();
           iter.remove();
-        } catch (IncompleteResultMapException e) {
+        } catch (IncompleteElementException e) {
           // ResultMap is still missing a resource...
         }
       }
@@ -157,7 +155,7 @@ public class XMLMapperBuilder extends BaseBuilder {
 			  try {
 				  iter.next().resolveCacheRef();
 				  iter.remove();
-			  } catch (IncompleteCacheException e) {
+			  } catch (IncompleteElementException e) {
 				  // Cache ref is still missing a resource...
 			  }
 		  }
@@ -172,7 +170,7 @@ public class XMLMapperBuilder extends BaseBuilder {
 			  try {
 				  iter.next().parseStatementNode();
 				  iter.remove();
-			  } catch (IncompleteStatementException e) {
+			  } catch (IncompleteElementException e) {
 				  // Statement is still missing a resource...
 			  }
 		  }
@@ -185,7 +183,7 @@ public class XMLMapperBuilder extends BaseBuilder {
       CacheRefResolver cacheRefResolver = new CacheRefResolver(builderAssistant, context.getStringAttribute("namespace"));
       try {
     	  cacheRefResolver.resolveCacheRef();
-      } catch (IncompleteCacheException e) {
+      } catch (IncompleteElementException e) {
     	  configuration.addIncompleteCacheRef(cacheRefResolver);
       }
     }
@@ -235,7 +233,7 @@ public class XMLMapperBuilder extends BaseBuilder {
     for (XNode resultMapNode : list) {
       try {
         resultMapElement(resultMapNode);
-      } catch (IncompleteResultMapException e) {
+      } catch (IncompleteElementException e) {
         // ignore, it will be retried
       }
     }
@@ -275,7 +273,7 @@ public class XMLMapperBuilder extends BaseBuilder {
     ResultMapResolver resultMapResolver = new ResultMapResolver(builderAssistant, id, typeClass, extend, discriminator, resultMappings);
     try {
       return resultMapResolver.resolve();
-    } catch (IncompleteResultMapException e) {
+    } catch (IncompleteElementException  e) {
       configuration.addIncompleteResultMap(resultMapResolver);
       throw e;
     }

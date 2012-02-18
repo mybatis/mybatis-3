@@ -16,8 +16,6 @@
 package org.apache.ibatis.executor.loader;
 
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;

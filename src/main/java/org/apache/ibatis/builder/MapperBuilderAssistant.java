@@ -97,12 +97,12 @@ public class MapperBuilderAssistant extends BaseBuilder {
     try {
       Cache cache = configuration.getCache(namespace);
       if (cache == null) {
-        throw new IncompleteCacheException("No cache for namespace '" + namespace + "' could be found.");
+        throw new IncompleteElementException("No cache for namespace '" + namespace + "' could be found.");
       }
       currentCache = cache;
       return cache;
     } catch (IllegalArgumentException e) {
-      throw new IncompleteCacheException("No cache for namespace '" + namespace + "' could be found.", e);
+      throw new IncompleteElementException("No cache for namespace '" + namespace + "' could be found.", e);
     }
   }
 
@@ -171,7 +171,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
     ResultMap.Builder resultMapBuilder = new ResultMap.Builder(configuration, id, type, resultMappings);
     if (extend != null) {
       if (!configuration.hasResultMap(extend)) {
-        throw new IncompleteResultMapException("Could not find a parent resultmap with id '" + extend + "'");
+        throw new IncompleteElementException("Could not find a parent resultmap with id '" + extend + "'");
       }
       ResultMap resultMap = configuration.getResultMap(extend);
       List<ResultMapping> extendedResultMappings = new ArrayList<ResultMapping>(resultMap.getResultMappings());
@@ -323,7 +323,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
       try {
         statementBuilder.parameterMap(configuration.getParameterMap(parameterMap));
       } catch (IllegalArgumentException e) {
-        throw new IncompleteStatementException("Could not find parameter map " + parameterMap, e);
+        throw new IncompleteElementException("Could not find parameter map " + parameterMap, e);
       }
     } else if (parameterTypeClass != null) {
       List<ParameterMapping> parameterMappings = new ArrayList<ParameterMapping>();
@@ -350,7 +350,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
         try {
           resultMaps.add(configuration.getResultMap(resultMapName.trim()));
         } catch (IllegalArgumentException e) {
-          throw new IncompleteStatementException("Could not find result map " + resultMapName, e);
+          throw new IncompleteElementException("Could not find result map " + resultMapName, e);
         }
       }
     } else if (resultType != null) {
