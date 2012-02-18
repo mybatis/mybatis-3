@@ -1107,7 +1107,7 @@ public class User {
 
         <h4>association</h4>
 
-        <source><![CDATA[<association property="author" column="blog_author_id" javaType=" Author">
+        <source><![CDATA[<association property="author" javaType=" Author">
   <id property="id" column="author_id"/>
   <result property="username" column="author_username"/>
 </association>]]></source>
@@ -1115,7 +1115,7 @@ public class User {
         <p>
           The association element deals with a "has-one" type relationship. For example, in our example, a
           Blog has one Author. An association mapping works mostly like any other result. You specify the
-          target property, the column to retrieve the value from, the <code>javaType</code> of the property (which MyBatis
+          target property, the <code>javaType</code> of the property (which MyBatis
           can figure out most of the time), the jdbcType if necessary and a typeHandler if you want to
           override the retrieval of the result values.
         </p>
@@ -1338,7 +1338,7 @@ public class User {
         <source><![CDATA[<resultMap id="blogResult" type="Blog">
   <id property="blog_id" column="id" />
   <result property="title" column="blog_title"/>
-  <association property="author" column="blog_author_id" javaType="Author" resultMap="authorResult"/>
+  <association property="author" javaType="Author" resultMap="authorResult"/>
 </resultMap>
 
 <resultMap id="authorResult" type="Author">
@@ -1478,7 +1478,7 @@ public class User {
   SELECT * FROM BLOG WHERE ID = #{id}
 </select>
 
-<select id="selectPostsForBlog" parameterType="int" resultType="Blog">
+<select id="selectPostsForBlog" parameterType="int" resultType="Post">
   SELECT * FROM POST WHERE BLOG_ID = #{id}
 </select>]]></source>
 

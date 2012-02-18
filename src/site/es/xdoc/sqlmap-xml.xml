@@ -875,12 +875,12 @@ public class User {
 
         <h4>association</h4>
 
-        <source><![CDATA[<association property="author" column="blog_author_id" javaType=" Author">
+        <source><![CDATA[<association property="author" javaType=" Author">
   <id property="id" column="author_id"/>
   <result property="username" column="author_username"/>
 </association>]]></source>
 
-        <p>El elemento association trata las relaciones de tipo “tiene-un”. Por ejemplo, en nuestro ejemplo, un Blog tiene un Autor. Un mapeo association funciona casi como cualquier otro result. Debes especificar la propiedad destino, la columna de la que obtener el valor, el javaType de la propiedad (que normalmente MyBatis puede adivinar), el jdbcType si fuera necesario y un typeHandler si quieres sobre escribir el tratamiento de los valores de retorno.
+        <p>El elemento association trata las relaciones de tipo “tiene-un”. Por ejemplo, en nuestro ejemplo, un Blog tiene un Autor. Un mapeo association funciona casi como cualquier otro result. Debes especificar la propiedad destino, el javaType de la propiedad (que normalmente MyBatis puede adivinar), el jdbcType si fuera necesario y un typeHandler si quieres sobre escribir el tratamiento de los valores de retorno.
         </p>
 
         <p>Donde la association es distinta es en que debes indicar a MyBatis como cargar la asociación. MyBatis puede hacerlo de dos formas distintas:
@@ -1040,7 +1040,7 @@ public class User {
         <source><![CDATA[<resultMap id="blogResult" type="Blog">
   <id property="blog_id" column="id" />
   <result property="title" column="blog_title"/>
-  <association property="author" column="blog_author_id" javaType="Author" resultMap="authorResult"/>
+  <association property="author" javaType="Author" resultMap="authorResult"/>
 </resultMap>
 
 <resultMap id="authorResult" type="Author">
@@ -1159,7 +1159,7 @@ public class User {
   SELECT * FROM BLOG WHERE ID = #{id}
 </select>
 
-<select id="selectPostsForBlog" parameterType="int" resultType="Blog">
+<select id="selectPostsForBlog" parameterType="int" resultType="Post">
   SELECT * FROM POST WHERE BLOG_ID = #{id}
 </select>]]></source>
 
