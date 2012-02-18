@@ -28,9 +28,9 @@
     <result property="subject" column="post_subject"/>
     <discriminator javaType="int" column="draft">
       <case value="1">
-        <association property="author" column="post_author_id" resultMap="joinedAuthor"/>
-        <collection property="comments" column="post_id" resultMap="joinedComment"/>
-        <collection property="tags" column="post_id" resultMap="joinedTag"/>
+        <association property="author" resultMap="joinedAuthor"/>
+        <collection property="comments" resultMap="joinedComment"/>
+        <collection property="tags" resultMap="joinedTag"/>
       </case>
     </discriminator>
   </resultMap>
@@ -76,9 +76,9 @@
   <resultMap id="joinedPost" type="domain.blog.Post">
     <id property="id" column="post_id"/>
     <result property="subject" column="post_subject"/>
-    <association property="author" column="post_author_id" resultMap="joinedAuthor"/>
-    <collection property="comments" column="post_id" resultMap="joinedComment"/>
-    <collection property="tags" column="post_id" resultMap="joinedTag"/>
+    <association property="author" resultMap="joinedAuthor"/>
+    <collection property="comments" resultMap="joinedComment"/>
+    <collection property="tags" resultMap="joinedTag"/>
     <discriminator javaType="int" column="draft">
       <case value="1" resultMap="draftPost"/>
     </discriminator>
@@ -89,7 +89,7 @@
   <resultMap id="blogJoinedWithPostsAndAuthor" type="Blog">
     <id property="id" column="blog_id"/>
     <result property="title" column="blog_title"/>
-    <association property="author" column="blog_author_id" resultMap="joinedAuthor"/>
+    <association property="author" resultMap="joinedAuthor"/>
     <collection property="posts" resultMap="joinedPost"/>
   </resultMap>
 
@@ -98,9 +98,9 @@
     <result property="subject" column="post_subject"/>
     <discriminator javaType="int" column="draft">
       <case value="1">
-        <association property="author" column="post_author_id" resultMap="joinedAuthor"/>
-        <collection property="comments" column="post_id" resultMap="joinedComment"/>
-        <collection property="tags" column="post_id" resultMap="joinedTag"/>
+        <association property="author" resultMap="joinedAuthor"/>
+        <collection property="comments" resultMap="joinedComment"/>
+        <collection property="tags" resultMap="joinedTag"/>
       </case>
     </discriminator>
   </resultMap>
