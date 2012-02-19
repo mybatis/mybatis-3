@@ -264,11 +264,12 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
               <td>
                 Specifies if and how MyBatis
                 should automatically map columns
-                to fields/properties. PARTIAL
-                will only auto-map simple,
-                non-nested results. FULL will
-                auto-map result mappings of any
-                complexity (nested or otherwise).
+                to fields/properties. 
+                NONE disables auto-mapping. 
+                PARTIAL will only auto-map results 
+                with no nested result mappings.
+                FULL will auto-map result mappings of any
+                complexity (containing nested or otherwise).
               </td>
               <td>
                 NONE, PARTIAL, FULL

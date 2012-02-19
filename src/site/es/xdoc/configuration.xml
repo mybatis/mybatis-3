@@ -187,7 +187,7 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
               <td>
                 autoMappingBehavior
               </td>
-              <td>Especifica cómo deben mapearse las columnas a los campos/propiedades. PARTIAL solo mapea automáticamente los resultados simples, no anidados. FULL mapea los mapeos de cualquier complejidad (anidados o no). 
+              <td>Especifica cómo deben mapearse de forma automática las columnas a los campos/propiedades. NONE desactiva el mapeo automático. PARTIAL sólo mapea automáticamente los resultados que no contienen result maps anidados. FULL mapea resultados de cualquier complejidad (contengan anidados o no). 
               </td>
               <td>
                 NONE, PARTIAL, FULL
