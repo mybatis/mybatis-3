@@ -554,13 +554,16 @@ public class SqlSessionManagerTest extends BaseDataTest {
   public void shouldFindOddPostsInList() throws Exception {
     List<Post> posts = manager.selectList("domain.blog.mappers.PostMapper.selectOddPostsIn",
         new ArrayList() {{
+          add(0);
           add(1);
           add(2);
           add(3);
           add(4);
-          add(5);
         }});
-    assertEquals(3, posts.size());
+    // we're getting odd indexes, not odd values, 0 is not odd
+    assertEquals(2, posts.size());
+    assertEquals(1, posts.get(0).getId());
+    assertEquals(3, posts.get(1).getId());
   }
 
 
@@ -569,14 +572,17 @@ public class SqlSessionManagerTest extends BaseDataTest {
     List<Post> posts = manager.selectList("domain.blog.mappers.PostMapper.selectOddPostsInKeysList",
         new HashMap() {{
           put("keys", new ArrayList() {{
+            add(0);
             add(1);
             add(2);
             add(3);
             add(4);
-            add(5);
           }});
         }});
-    assertEquals(3, posts.size());
+    // we're getting odd indexes, not odd values, 0 is not odd
+    assertEquals(2, posts.size());
+    assertEquals(1, posts.get(0).getId());
+    assertEquals(3, posts.get(1).getId());
   }
 
 

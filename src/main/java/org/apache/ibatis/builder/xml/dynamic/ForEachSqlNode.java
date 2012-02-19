@@ -55,7 +55,6 @@ public class ForEachSqlNode implements SqlNode {
     for (Object o : iterable) {
       DynamicContext oldContext = context;
       if (first) {
-        first = false;
         context = new PrefixedContext(context, "");
       } else {
         if (separator != null) {
@@ -68,7 +67,7 @@ public class ForEachSqlNode implements SqlNode {
       applyItem(context, o, uniqueNumber);
       applyIndex(context, i);
       contents.apply(new FilteredDynamicContext(configuration, context, item, uniqueNumber));
-      first = !((PrefixedContext) context).isPrefixApplied();
+      if (first) first = !((PrefixedContext) context).isPrefixApplied();
       context = oldContext;
       i++;
     }

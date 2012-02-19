@@ -89,10 +89,11 @@
     WHERE ID in
     <foreach item="item" index="index" collection="list"
              open="(" separator="," close=")">
-      <if test="index / 2 != 0">
+      <if test="index % 2 != 0">
         #{item}
       </if>
     </foreach>
+    ORDER BY P.ID
   </select>
 
   <select id="selectOddPostsInKeysList" resultType="domain.blog.Post">
@@ -101,9 +102,10 @@
     WHERE ID in
     <foreach item="item" index="index" collection="keys"
              open="(" separator="," close=")">
-      <if test="index / 2 != 0">
+      <if test="index % 2 != 0">
         #{item}
       </if>
     </foreach>
+    ORDER BY P.ID
   </select>
 </mapper>
