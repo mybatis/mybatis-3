@@ -267,7 +267,7 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 to fields/properties. 
                 NONE disables auto-mapping. 
                 PARTIAL will only auto-map results 
-                with no nested result mappings.
+                with no nested result mappings defined inside.
                 FULL will auto-map result mappings of any
                 complexity (containing nested or otherwise).
               </td>
