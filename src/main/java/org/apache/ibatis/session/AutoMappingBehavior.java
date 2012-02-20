@@ -15,6 +15,23 @@
  */
 package org.apache.ibatis.session;
 
+/**
+ * Specifies if and how MyBatis should automatically map columns to fields/properties.
+ */
 public enum AutoMappingBehavior {
-  NONE,PARTIAL,FULL
+  
+    /**
+     * Disables auto-mapping.
+     */
+    NONE,
+    
+    /**
+     * Will only auto-map results with no nested result mappings defined inside.
+     */
+    PARTIAL,
+    
+    /**
+     * Will auto-map result mappings of any complexity (containing nested or otherwise).
+     */
+    FULL
 }
