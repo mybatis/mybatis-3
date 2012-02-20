@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2011 The MyBatis Team
+ *    Copyright 2009-2012 The MyBatis Team
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,9 +15,9 @@
  */
 package org.apache.ibatis.builder;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.StringTokenizer;
 
 import org.apache.ibatis.mapping.ParameterMode;
 import org.apache.ibatis.mapping.ResultSetType;
@@ -56,10 +56,7 @@ public abstract class BaseBuilder {
 
   protected Set<String> stringSetValueOf(String value, String defaultValue) {
     value = (value == null ? defaultValue : value);
-    StringTokenizer stringTokenizer = new StringTokenizer(value, ",");
-    Set<String> result = new HashSet<String>();
-    while (stringTokenizer.hasMoreElements()) result.add(stringTokenizer.nextToken().trim());
-    return result;
+    return new HashSet<String>(Arrays.asList(value.split(",")));
   }
 
   protected JdbcType resolveJdbcType(String alias) {
@@ -102,7 +99,7 @@ public abstract class BaseBuilder {
     if (alias == null) return null;
     Class<?> type = resolveClass(alias);
     if (!TypeHandler.class.isAssignableFrom(type)) {
-      // TODO that was not managed!!!
+      throw new BuilderException("Type " + type.getName() + " is not a valid TypeHandler because it does not implement TypeHandler interface");
     }
     @SuppressWarnings( "unchecked" ) // already verified it is a TypeHandler
     Class<? extends TypeHandler<?>> handlerType = (Class<? extends TypeHandler<?>>) type;
