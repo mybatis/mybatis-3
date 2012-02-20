@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2011 The MyBatis Team
+ *    Copyright 2009-2012 The MyBatis Team
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -19,19 +19,19 @@ package org.apache.ibatis.session;
  * Specifies if and how MyBatis should automatically map columns to fields/properties.
  */
 public enum AutoMappingBehavior {
-  
-    /**
-     * Disables auto-mapping.
-     */
-    NONE,
-    
-    /**
-     * Will only auto-map results with no nested result mappings defined inside.
-     */
-    PARTIAL,
-    
-    /**
-     * Will auto-map result mappings of any complexity (containing nested or otherwise).
-     */
-    FULL
+
+  /**
+   * Disables auto-mapping.
+   */
+  NONE,
+
+  /**
+   * Will only auto-map results with no nested result mappings defined inside.
+   */
+  PARTIAL,
+
+  /**
+   * Will auto-map result mappings of any complexity (containing nested or otherwise).
+   */
+  FULL
 }
