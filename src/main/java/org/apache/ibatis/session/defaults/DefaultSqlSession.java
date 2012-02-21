@@ -155,7 +155,7 @@ public class DefaultSqlSession implements SqlSession {
   }
 
   public int delete(String statement, Object parameter) {
-    return update(statement, wrapCollection(parameter));
+    return update(statement, parameter);
   }
 
   public void commit() {
