@@ -63,6 +63,7 @@ public class TransactionalCache implements Cache {
   }
 
   public void clear() {
+    delegate.clear(); // issue #524 delegate should be cleared
     reset();
     clearOnCommit = true;
   }

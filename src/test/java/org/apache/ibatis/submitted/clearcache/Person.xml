@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.apache.ibatis.submitted.clearcache.Person">
+	
+	<cache></cache>
+	
+    <resultMap id="personMap" type="Person">
+        <id property="id" column="id"/>
+        <result property="lastname" column="lastname" />
+        <result property="firstname" column="firstname" />
+ 
+        <collection property="addresses" javaType="ArrayList" column="personId" ofType="Address">
+        	<id property="id" column="addressId"/>
+	    	<result property="street" column="street"/>
+			<result property="city" column="city"/>
+			<result property="state" column="state"/>
+    		<result property="zip" column="zip"/>    			              
+        </collection>
+    </resultMap>
+    
+    <insert id="create" parameterType="Person" flushCache="true"> 
+        insert into person(id, firstname, lastname) values (#{id}, #{firstname},#{lastname})
+    </insert>
+    
+    <!-- left join address a on p.id = a.personId -->
+    <select id="findById" parameterType="_int" resultMap="personMap" >
+    	select p.*, a.id as addressId, a.personId, a.street, a.city, a.state, a.zip from person p left join address a on p.id = a.personId where p.id = #{id}
+    </select>
+    
+    <update id="update" parameterType="Person">
+    	update person set firstname = #{firstname}, lastname=#{lastname} where id = #{id}
+    </update>
+    
+    <delete id="delete" parameterType="_int" flushCache="true">
+    	delete from person where id = #{id}
+    </delete>
+    
+    <insert id="createAddress" parameterType="Address" flushCache="true">
+    	insert into address(id, personId, street, city, state, zip) values (#{id}, #{personId}, #{street}, #{city}, #{state}, #{zip})
+    </insert>
+    
+	<delete id="deleteAddress" parameterType="_int" flushCache="true">
+    	delete from Address where id = #{id}
+    </delete>
+        
+</mapper>
