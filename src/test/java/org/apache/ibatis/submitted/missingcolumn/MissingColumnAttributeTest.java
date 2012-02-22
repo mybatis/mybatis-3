@@ -16,49 +16,19 @@
 package org.apache.ibatis.submitted.missingcolumn;
 
 import java.io.Reader;
-import java.sql.Connection;
 
 import org.apache.ibatis.exceptions.PersistenceException;
 import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.jdbc.ScriptRunner;
-import org.apache.ibatis.session.SqlSession;
-import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class MissingColumnAttributeTest {
 
-  private static SqlSessionFactory sqlSessionFactory;
-
-  @BeforeClass
-  public static void setUp() throws Exception {
-    // create a SqlSessionFactory
-    Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/missingcolumn/MapperConfig.xml");
-    sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-    reader.close();
-
-    // populate in-memory database
-    SqlSession session = sqlSessionFactory.openSession();
-    Connection conn = session.getConnection();
-    reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/missingcolumn/CreateDB.sql");
-    ScriptRunner runner = new ScriptRunner(conn);
-    runner.setLogWriter(null);
-    runner.runScript(reader);
-    reader.close();
-    session.close();
-  }
-
-  @Ignore // see issue #4
-  @Test(expected=PersistenceException.class)
-  public void shouldFailBecauseOfAMissingColumn() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
-      sqlSession.selectList("getCarsInfo", 1);
-    } finally {
-      sqlSession.close();
-    }
-  }
+	@Test(expected=PersistenceException.class)
+	public void shouldFailWithAMissingColumnInNetstedSelect() throws Exception {
+			Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/missingcolumn/MapperConfig.xml");
+			new SqlSessionFactoryBuilder().build(reader);
+			reader.close();
+	}
 
 }
