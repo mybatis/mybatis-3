@@ -287,9 +287,8 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 localCacheScope
               </td>
               <td>
-                MyBatis uses local cache to prevent circular references and speed up repeated nested queries. 
-                By default (SESSION) all queries executed during a session are cached. If localCacheScope=STATEMENT local session will be used just for 
-                statement execution, no data will be shared between two different calls to the same SqlSession.
+                MyBatis は循環参照の解決やネストされたクエリのスピード向上のためにローカルキャッシュを使用します。
+                デフォルト（SESSION）では同一セッション内の全てのクエリ結果がキャッシュされます。localCacheScope に STATEMENT を設定した場合、ローカルキャッシュはステートメントごとに適用されます。言い換えると、同一 SqlSession に対する複数の呼び出しでデータが共有されることはありません。
               </td>
               <td>
                 SESSION | STATEMENT
