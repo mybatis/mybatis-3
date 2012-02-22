@@ -1114,7 +1114,7 @@ public class User {
             <tr>
               <td>column</td>
               <td>
-                データベースで定義されている列名、あるいは列の別名を指定します。resultSet.getString(columnName) メソッドの引数として渡される文字列と同じと考えてください。
+                ネストされた select ステートメントに引数として渡される列名、あるいは列の別名を指定します。resultSet.getString(columnName) メソッドの引数として渡される文字列と同じと考えてください。
                 Note: 複合キー（composite key）を扱う場合、column="{prop1=col1,prop2=col2} のように記述することで複数の列名を指定することができます。この例ではネストされた select の実行時に prop1 と prop2 が引数として渡されます。
               </td>
             </tr>
