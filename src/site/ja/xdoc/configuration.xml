@@ -211,7 +211,8 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
               </td>
               <td>
                 MyBatis の自動マッピング機能（列をフィールド／プロパティに自動的にマッピングする機能）の動作を指定します。
-                PARTIAL が指定された場合、ネストされていない単純な結果のみが自動マッピングの対象となります。
+                NONE を指定すると自動マッピングは無効となります。
+                PARTIAL が指定された場合、association や collection などを含まない単純な resultMap のみが自動マッピングの対象となります。
                 FULL が指定された場合、ネストされた結果などの複雑なものも含めて全てが自動マッピングの対象となります。
               </td>
               <td>
