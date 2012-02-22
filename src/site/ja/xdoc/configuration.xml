@@ -318,10 +318,10 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 lazyLoadTriggerMethods
               </td>
               <td>
-                Specifies which Object's methods trigger a lazy load
+                Lazy loading のトリガとなる Object のメソッドを指定します。
               </td>
               <td>
-                A method name list separated by commas
+                カンマ区切りのメソッド名のリスト
               </td>
               <td>
                 equals,clone,hashCode,toString
