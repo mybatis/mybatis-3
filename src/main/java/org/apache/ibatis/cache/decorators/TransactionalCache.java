@@ -63,14 +63,8 @@ public class TransactionalCache implements Cache {
   }
 
   public void clear() {
-    delegate.getReadWriteLock().writeLock().lock();
-    try {
-      delegate.clear(); // issue #524 delegate should be cleared
-      reset();
-      clearOnCommit = true;
-    } finally {
-      delegate.getReadWriteLock().writeLock().unlock();
-    }
+    reset();
+    clearOnCommit = true;
   }
 
   public void commit() {
