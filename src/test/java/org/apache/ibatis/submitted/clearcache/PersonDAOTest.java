@@ -17,8 +17,6 @@ package org.apache.ibatis.submitted.clearcache;
 
 import java.io.Reader;
 import java.sql.Connection;
-import java.util.ArrayList;
-import java.util.List;
 
 import junit.framework.Assert;
 
@@ -34,7 +32,6 @@ public class PersonDAOTest {
 
   private static SqlSessionFactory sqlSessionFactory;
   private PersonDAO personDAO;
-  private static Person person;
 
   @BeforeClass
   public static void setUp() throws Exception {
@@ -53,61 +50,17 @@ public class PersonDAOTest {
     reader.close();
     session.close();
   }
-
+  
   @Test
-  public void find() {
-
+  public void shouldClear2ndLevelCache() {
     SqlSession session = sqlSessionFactory.openSession();
     try {
       personDAO = new PersonDAOImpl(session);
-
-      person = new Person();
-      person.setId(1);
-      person.setFirstname("John");
-      person.setLastname("Smith");
-
-      Address home = new Address();
-      home.setId(1);
-      home.setStreet("1 somewhere lane");
-      home.setCity("cary");
-      home.setState("nc");
-      home.setZip("27613");
-
-      Address work = new Address();
-      home.setId(2);
-      work.setStreet("100 nowhere lane");
-      work.setCity("raleigh");
-      work.setState("nc");
-      work.setZip("27614");
-
-      List<Address> addresses = new ArrayList<Address>();
-      addresses.add(home);
-      addresses.add(work);
-      person.setAddresses(addresses);
-      personDAO.create(person);
-
-      Person p = personDAO.findById(person.getId());
-      Assert.assertEquals("John", p.getFirstname());
-      Assert.assertEquals("Smith", p.getLastname());
-      Assert.assertEquals(2, p.getAddresses().size());
-      session.commit();
-    } finally {
-      if (session != null) {
-        session.close();
-      }
-    }
-  }
-
-  @Test
-  public void deleteAddress() {
-    SqlSession session = sqlSessionFactory.openSession();
-    try {
-      personDAO = new PersonDAOImpl(session);
-      Person p = personDAO.findById(person.getId());
+      Person p = personDAO.findById(1);
       Assert.assertEquals(2, p.getAddresses().size());
       Address address = p.getAddresses().get(0);
       personDAO.deleteAddress(address.getId());
-      p = personDAO.findById(person.getId());
+      p = personDAO.findById(1);
       Assert.assertEquals(1, p.getAddresses().size());
       Assert.assertTrue(p.getAddresses().get(0).getId() != address.getId());
       session.commit();
