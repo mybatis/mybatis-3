@@ -238,13 +238,14 @@ public class MapperAnnotationBuilder {
     if (sqlSource != null) {
       Options options = method.getAnnotation(Options.class);
       final String mappedStatementId = type.getName() + "." + method.getName();
-      boolean flushCache = false;
-      boolean useCache = true;
       Integer fetchSize = null;
       Integer timeout = null;
       StatementType statementType = StatementType.PREPARED;
       ResultSetType resultSetType = ResultSetType.FORWARD_ONLY;
       SqlCommandType sqlCommandType = getSqlCommandType(method);
+      boolean isSelect = sqlCommandType == SqlCommandType.SELECT;
+      boolean flushCache = !isSelect;
+      boolean useCache = isSelect;
 
       KeyGenerator keyGenerator;
       String keyProperty = "id";
