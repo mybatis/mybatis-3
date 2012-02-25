@@ -213,7 +213,6 @@ public class NestedResultSetHandler extends FastResultSetHandler {
     final CacheKey cacheKey = new CacheKey();
     List<ResultMapping> resultMappings = getResultMappingsForRowKey(resultMap);
     cacheKey.update(resultMap.getId());
-    if (parent != null) cacheKey.update(parent);
     if (resultMappings.size() == 0) {
       if (Map.class.isAssignableFrom(resultMap.getType())) {
         createRowKeyForMap(rs, cacheKey);
@@ -226,6 +225,7 @@ public class NestedResultSetHandler extends FastResultSetHandler {
     if (cacheKey.getUpdateCount() < 2) {
       return CacheKey.NULL_CACHE_KEY;
     }
+    if (parent != null) cacheKey.update(parent);
     return cacheKey;
   }
 
