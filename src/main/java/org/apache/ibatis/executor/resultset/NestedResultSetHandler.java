@@ -18,7 +18,6 @@ package org.apache.ibatis.executor.resultset;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -105,18 +104,16 @@ public class NestedResultSetHandler extends FastResultSetHandler {
       applyNestedResultMappings(rs, resultMap, metaObject, columnPrefix, resultColumnCache, rowKey);
       return resultObject;
     } else {
-      List<String> mappedColumnNames = new ArrayList<String>();
-      List<String> unmappedColumnNames = new ArrayList<String>();
       final ResultLoaderMap lazyLoader = instantiateResultLoaderMap();
       Object resultObject = createResultObject(rs, resultMap, lazyLoader, columnPrefix, resultColumnCache);
       if (resultObject != null && !typeHandlerRegistry.hasTypeHandler(resultMap.getType())) {
         final MetaObject metaObject = configuration.newMetaObject(resultObject);
-        mappedColumnNames = resultColumnCache.getMappedColumnNames(resultMap, columnPrefix);
-        unmappedColumnNames = resultColumnCache.getUnmappedColumnNames(resultMap, columnPrefix);
         boolean foundValues = resultMap.getConstructorResultMappings().size() > 0;
         if (AutoMappingBehavior.FULL.equals(configuration.getAutoMappingBehavior())) {
+          final List<String> unmappedColumnNames = resultColumnCache.getUnmappedColumnNames(resultMap, columnPrefix);
           foundValues = applyAutomaticMappings(rs, unmappedColumnNames, metaObject, columnPrefix, resultColumnCache) || foundValues;
         }
+        final List<String> mappedColumnNames = resultColumnCache.getMappedColumnNames(resultMap, columnPrefix);
         foundValues = applyPropertyMappings(rs, resultMap, mappedColumnNames, metaObject, lazyLoader, columnPrefix) || foundValues;
         foundValues = applyNestedResultMappings(rs, resultMap, metaObject, columnPrefix, resultColumnCache, rowKey) || foundValues;
         resultObject = foundValues ? resultObject : null;
