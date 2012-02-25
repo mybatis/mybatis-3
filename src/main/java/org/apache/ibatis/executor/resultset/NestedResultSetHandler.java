@@ -225,7 +225,13 @@ public class NestedResultSetHandler extends FastResultSetHandler {
     if (cacheKey.getUpdateCount() < 2) {
       return CacheKey.NULL_CACHE_KEY;
     }
-    if (parent != null) cacheKey.update(parent);
+    if (parent != null) {
+      if (parent == CacheKey.NULL_CACHE_KEY) {
+        return CacheKey.NULL_CACHE_KEY;
+      } else {
+        cacheKey.update(parent);
+      }
+    }
     return cacheKey;
   }
 
