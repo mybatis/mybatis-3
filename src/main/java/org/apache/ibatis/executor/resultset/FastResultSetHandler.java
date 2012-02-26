@@ -251,18 +251,16 @@ public class FastResultSetHandler implements ResultSetHandler {
   //
 
   protected Object getRowValue(ResultSet rs, ResultMap resultMap, CacheKey rowKey, ResultColumnCache resultColumnCache) throws SQLException {
-    List<String> mappedColumnNames = new ArrayList<String>();
-    List<String> unmappedColumnNames = new ArrayList<String>();
     final ResultLoaderMap lazyLoader = instantiateResultLoaderMap();
     Object resultObject = createResultObject(rs, resultMap, lazyLoader, null, resultColumnCache);
     if (resultObject != null && !typeHandlerRegistry.hasTypeHandler(resultMap.getType())) {
       final MetaObject metaObject = configuration.newMetaObject(resultObject);
-      mappedColumnNames = resultColumnCache.getMappedColumnNames(resultMap, null);
-      unmappedColumnNames = resultColumnCache.getUnmappedColumnNames(resultMap, null);
       boolean foundValues = resultMap.getConstructorResultMappings().size() > 0;
       if (!AutoMappingBehavior.NONE.equals(configuration.getAutoMappingBehavior())) {
+        final List<String> unmappedColumnNames = resultColumnCache.getUnmappedColumnNames(resultMap, null);
         foundValues = applyAutomaticMappings(rs, unmappedColumnNames, metaObject, null, resultColumnCache) || foundValues;
       }
+      final List<String> mappedColumnNames = resultColumnCache.getMappedColumnNames(resultMap, null);
       foundValues = applyPropertyMappings(rs, resultMap, mappedColumnNames, metaObject, lazyLoader, null) || foundValues;
       foundValues = (lazyLoader != null && lazyLoader.size() > 0) || foundValues;
       resultObject = foundValues ? resultObject : null;
