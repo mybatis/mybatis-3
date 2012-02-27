@@ -36,6 +36,8 @@ public class CachingExecutor implements Executor {
   private Executor delegate;
   private TransactionalCacheManager tcm = new TransactionalCacheManager();
 
+  private boolean dirty;
+
   public CachingExecutor(Executor delegate) {
     this.delegate = delegate;
   }
@@ -46,8 +48,7 @@ public class CachingExecutor implements Executor {
 
   public void close(boolean forceRollback) {
     try {
-      //issue #499. Rollback on dirty sessions and commit in clean sessions
-      if (forceRollback) {
+      if (dirty) { //issue #499. Unresolved session handling (no commit/rollback)
         tcm.rollback();
       } else {
         tcm.commit();
@@ -76,12 +77,12 @@ public class CachingExecutor implements Executor {
     Cache cache = ms.getCache();
     if (cache != null) {
       flushCacheIfRequired(ms);
-      if (ms.isUseCache() && resultHandler == null) {
+      if (ms.isUseCache() && resultHandler == null) { 
         ensureNoOutParams(ms, key, parameterObject, boundSql);
         cache.getReadWriteLock().readLock().lock();
         try {
           @SuppressWarnings("unchecked")
-          final List<E> cachedList = (List<E>) cache.getObject(key);
+          List<E> cachedList = dirty ? null : (List<E>) cache.getObject(key);
           if (cachedList != null) {
             return cachedList;
           } else {
@@ -94,7 +95,7 @@ public class CachingExecutor implements Executor {
         }
       }
     }
-    return delegate.<E> query(ms, parameterObject, rowBounds, resultHandler, key, boundSql);
+    return delegate.<E>query(ms, parameterObject, rowBounds, resultHandler, key, boundSql);
   }
 
   public List<BatchResult> flushStatements() throws SQLException {
@@ -104,11 +105,13 @@ public class CachingExecutor implements Executor {
   public void commit(boolean required) throws SQLException {
     delegate.commit(required);
     tcm.commit();
+    dirty = false;
   }
 
   public void rollback(boolean required) throws SQLException {
     try {
       delegate.rollback(required);
+      dirty = false;
     } finally {
       if (required) {
         tcm.rollback();
@@ -146,6 +149,7 @@ public class CachingExecutor implements Executor {
     Cache cache = ms.getCache();
     if (cache != null) {
       if (ms.isFlushCacheRequired()) {
+        dirty = true; // issue #524. Disable using cached data for this session
         tcm.clear(cache);
       }
     }

@@ -26,10 +26,9 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
-@Ignore // TODO see issue #524
+// issue #524
 public class CacheTest {
 
   private static SqlSessionFactory sqlSessionFactory;
