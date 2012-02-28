@@ -22,11 +22,13 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
+import org.junit.Ignore;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
 import javax.sql.DataSource;
 
+@Ignore // see issue #509
 public class ParentChildCircularTest extends BaseDataTest {
 
   @Test

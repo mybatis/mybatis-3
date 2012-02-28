@@ -15,25 +15,22 @@
  */
 package org.apache.ibatis.submitted.permissions;
 
-import java.util.ArrayList;
-import java.util.List;
+public class Permission {
 
-public class Principal {
-
-  private String principalName;
-  private List<Permission> permissions = new ArrayList<Permission>();
+  private String permission;
+  private Resource resource;
   
-  public String getPrincipalName() {
-    return principalName;
+  public String getPermission() {
+    return permission;
   }
-  public void setPrincipalName(String principalName) {
-    this.principalName = principalName;
+  public void setPermission(String permission) {
+    this.permission = permission;
   }
-  public List<Permission> getPermissions() {
-    return permissions;
+  public Resource getResource() {
+    return resource;
   }
-  public void setPermissions(List<Permission> permissions) {
-    this.permissions = permissions;
+  public void setResource(Resource resource) {
+    this.resource = resource;
   }
-
+  
 }

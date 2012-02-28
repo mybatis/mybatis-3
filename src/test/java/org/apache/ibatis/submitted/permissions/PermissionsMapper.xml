@@ -27,13 +27,16 @@
 
   <resultMap id="principalResults" type="Principal">
     <id property="principalName" column="principalName"/>
-    <collection property="permissions" ofType="string">
+    <collection property="permissions" resultMap="permisionResults"/>
+  </resultMap>
+  
+  <resultMap id="permisionResults" type="Permission" >
       <result property="permission" column="permission"/>
-    </collection>
+      <association property="resource" resultMap="resourceResults"/>
   </resultMap>
 
   <select id="getResources" resultMap="resourceResults">
 		select * from permissions
-	</select>
+  </select>
 
 </mapper>

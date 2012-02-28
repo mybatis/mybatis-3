@@ -65,9 +65,14 @@ public class PermissionsTest {
       final List<Principal> principalPermissions = firstResource.getPrincipals();
       Assert.assertEquals(1, principalPermissions.size());
       
-      final Principal firstPrincipalPermission = principalPermissions.get(0);
-      final List<String> permissions = firstPrincipalPermission.getPermissions();
+      final Principal firstPrincipal = principalPermissions.get(0);
+      final List<Permission> permissions = firstPrincipal.getPermissions();
       Assert.assertEquals(2, permissions.size());
+      
+      final Permission firstPermission = firstPrincipal.getPermissions().get(0);
+      Assert.assertSame(firstResource, firstPermission.getResource());
+      final Permission secondPermission = firstPrincipal.getPermissions().get(1);
+      Assert.assertSame(firstResource, secondPermission.getResource());
     } finally {
       sqlSession.close();
     }
