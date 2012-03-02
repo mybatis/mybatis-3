@@ -200,7 +200,7 @@ ps.setInt(1,id);]]></source>
             </tr>
             <tr>
               <td><code>timeout</code></td>
-              <td>This sets the maximum time the driver will wait for the database to return from a
+              <td>This sets the number of seconds the driver will wait for the database to return from a
                 request, before throwing an exception. Default is <code>unset</code> (driver dependent).
               </td>
             </tr>

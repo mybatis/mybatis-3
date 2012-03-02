@@ -214,7 +214,7 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
               <td>
                 defaultStatementTimeout
               </td>
-              <td>Establece el timeout que determina cuando tiempo debe esperar el driver la respuesta de la base de datos.
+              <td>Establece el número de segundos que debe esperar el driver la respuesta de la base de datos.
               </td>
               <td>
                 Any positive integer

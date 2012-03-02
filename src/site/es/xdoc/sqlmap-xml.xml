@@ -165,7 +165,7 @@ ps.setInt(1,id);]]></source>
             </tr>
             <tr>
               <td><code>timeout</code></td>
-              <td>Establece el tiempo máximo que el driver esperará a que la base de datos le devuelva una respuesta antes de lanzar una excepción. Por defecto: no informado (depende del driver de base de datos).
+              <td>Establece el número de segundos que el driver esperará a que la base de datos le devuelva una respuesta antes de lanzar una excepción. Por defecto: no informado (depende del driver de base de datos).
               </td>
             </tr>
             <tr>
