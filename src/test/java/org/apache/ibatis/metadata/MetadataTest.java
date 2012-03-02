@@ -31,6 +31,7 @@ public class MetadataTest extends BaseDataTest {
   @Before
   public void setup() throws Exception {
     dataSource = createUnpooledDataSource(BaseDataTest.BLOG_PROPERTIES);
+    runScript(dataSource, BLOG_DDL);
   }
 
   @Test
