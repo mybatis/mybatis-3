@@ -246,10 +246,10 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 defaultStatementTimeout
               </td>
               <td>
-                ドライバがデータベースからの応答を待ち続ける時間（タイムアウト）を設定します。
+                ドライバがデータベースからの応答を待ち続ける秒数（タイムアウト）を設定します。
               </td>
               <td>
-                正の整数
+                正の整数（単位：秒）
               </td>
               <td>
                 なし (null)
