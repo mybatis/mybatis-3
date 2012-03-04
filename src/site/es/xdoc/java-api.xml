@@ -232,9 +232,12 @@ void rollback(boolean force)</source>
   <p>Por defecto MyBatis no hace un commit a no ser que haya detectado que la base de datos ha sido modificada por una insert, update o delete. Si has realizado cambios sin llamar a estos métodos, entonces puedes pasar true en al método de commit() y rollback() para asegurar que se realiza el commit (ten en cuenta que aun así no puedes forzar el commit() en modo auto-commit o cuando se usa un gestor de transacciones externo). La mayoría de las veces no tendrás que llamar a rollback() dado que MyBatis lo hará por ti en caso de que no hayas llamado a commit(). Sin embargo, si necesitas un control más fino sobre la sesión, donde puede que haya varios commits, tienes esta opción para hacerlo posible.</p>
   <p><span class="label important">NOTA</span> MyBatis-Spring y MyBatis-Guice proporcionan gestión de transacción declarativa. Por tanto si estás usando MyBatis con Spring o Guice consulta sus manuales específicos.</p>
 
-  <h5>Borrar la caché de sesión</h5>
+  <h5>Local Cache</h5>
+  <p>MyBatis utliza dos cachés: la caché local y la caché de segundo nivel.</p>
+  <p>Cada vez que se crea una sesión MyBatis crea una cache local y la asocia a dicha sesión. Cualquier query que se ejecute en la sesión será cacheada de forma que si en el futuro se vuelve a lanzar la misma query con los mismos parámetros de entrada los datos se obtendrán de la caché y no se accederá a la base de datos. La caché local se vacía cuando se ejecuta cupdate, commit, rollback y close.</p>
+  <p>Por defecto la cache local se utiliza durante toda la duración de la sesión. Esta cache es necesaria para resolver dependencias circulares y para acelerar consultas anidadas repetidas asi que no puede desactivarse, pero puede configurarse para que se utilize sólo durante la duración de la ejecución de una sentencia infomando el parámetro de configuración localCacheScope=STATEMENT.</p>
+  <p>Puedes borrar el contenido de la caché local en el momento que desees invocando:</p>
   <source>void clearCache()</source>
-  <p>Cada instancia de SqlSession tiene una caché local que se borra en cada update, commit, rollback y close. Para limpiarla explícitamente (quizá porque tienes la intención de hacer más cosas), puedes llamar a clearCache().</p>
 
   <h5>Asegurarse de que la SqlSession se cierra</h5>
   <source>void close()</source>

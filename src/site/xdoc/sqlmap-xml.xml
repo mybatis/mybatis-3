@@ -188,13 +188,13 @@ ps.setInt(1,id);]]></source>
             </tr>
             <tr>
               <td><code>flushCache</code></td>
-              <td>Setting this to true will cause the cache to be flushed whenever this statement is
+              <td>Setting this to true will cause the local and 2nd level caches to be flushed whenever this statement is
                 called. Default: <code>false</code> for select statements.
               </td>
             </tr>
             <tr>
               <td><code>useCache</code></td>
-              <td>Setting this to true will cause the results of this statement to be cached. Default:
+              <td>Setting this to true will cause the results of this statement to be cached in 2nd level cache. Default:
                 <code>true</code> for select statements.
               </td>
             </tr>
@@ -293,7 +293,7 @@ ps.setInt(1,id);]]></source>
             </tr>
             <tr>
               <td><code>flushCache</code></td>
-              <td>Setting this to true will cause the cache to be flushed whenever this statement is
+              <td>Setting this to true will cause the 2nd level and local caches to be flushed whenever this statement is
                 called. Default: <code>true</code> for insert, update and delete statements.
               </td>
             </tr>
@@ -1680,15 +1680,13 @@ public class User {
       </subsection>
       <subsection name="cache">
         <p>
-          MyBatis has includes a powerful query caching feature which is very configurable and customizable. A
-          lot of changes have been made in the MyBatis 3 cache implementation to make it both more powerful
-          and far easier to configure.
+          MyBatis has includes a powerful transactional query caching feature which is very configurable and customizable. 
+          A lot of changes have been made in the MyBatis 3 cache implementation to make it both more powerful and far easier to configure.
         </p>
 
-        <p>
-          By default, there is no caching enabled, except for local session caching, which improves
-          performance and is required to resolve circular dependencies. To enable a second level of caching,
-          you simply need to add one line to your SQL Mapping file:
+        <p>          
+          By default, just local sessión caching is enabled that is used solely to cache data for the duration of a sessión.
+          To enable a global second level of caching you simply need to add one line to your SQL Mapping file:
         </p>
 
         <source><![CDATA[<cache/>]]></source>
@@ -1765,6 +1763,12 @@ public class User {
           of the cached object to all callers. Thus such objects should not be modified. This offers a
           significant performance advantage though. A read-write cache will return a copy (via serialization)
           of the cached object. This is slower, but safer, and thus the default is false.
+        </p>
+
+        <p>
+          <span class="label important">NOTE</span> Second level cache is transactional. That means that it is updated 
+          when a SqlSession finishes with commit or when it finishes with rollback but no inserts/deletes/updates
+          with flushCache=true where executed.
         </p>
 
         <h4>Using a Custom Cache</h4>

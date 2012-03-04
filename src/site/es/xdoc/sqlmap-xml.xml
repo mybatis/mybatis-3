@@ -155,12 +155,12 @@ ps.setInt(1,id);]]></source>
             </tr>
             <tr>
               <td><code>flushCache</code></td>
-              <td>Informar esta propiedad a true hará que la caché se vacíe cada vez que se llame a este statement. Por defecto es false para select statements.
+              <td>Informar esta propiedad a true hará que la cache local y la de segundo nivel se vacíen cada vez que se llame a este statement. Por defecto es false para select statements.
               </td>
             </tr>
             <tr>
               <td><code>useCache</code></td>
-              <td>Informar esta propiedad a true hará que los resultados de la ejecución de este statement se cacheen. Por defecto es true para las select statements.
+              <td>Informar esta propiedad a true hará que los resultados de la ejecución de este statement se cacheen en la caché de segundo nivel. Por defecto es true para las select statements.
               </td>
             </tr>
             <tr>
@@ -1312,10 +1312,12 @@ public class User {
 
       </subsection>
       <subsection name="cache">
-        <p>MyBatis incluye una funcionalidad de caché muy potente que es ampliamente configurable y personalizable. Se han realizado muchos cambios en la caché de MyBatis 3 para hacer la a la vez más potente y más sencilla de configurar.
+        <p>MyBatis incluye una funcionalidad de caché transaccional de segundo nivel muy potente que es ampliamente configurable y personalizable. Se han realizado muchos cambios en la caché de MyBatis 3 para hacer la a la vez más potente y más sencilla de configurar.
         </p>
 
-        <p>Por defecto la caché no está activa, excepto la caché local de sesión, que mejora el rendimiento y que es necesaria para resolver dependencias circulares. Para habilitar un segundo nivel de caché simplemente necesitas añadir una línea en tu fichero de mapping:
+        <p>
+           Por defecto la única caché activa es la caché local de sesión que se utiliza únicamente durante la duración de una sesión.  
+           Para habilitar la caché de segundo nivel global simplemente necesitas añadir una línea en tu fichero de mapping:
         </p>
 
         <source><![CDATA[<cache/>]]></source>
@@ -1369,6 +1371,12 @@ public class User {
         </p>
 
         <p>El atributo readOnly puede informarse con true o false. Una caché de solo lectura devuelve la misma instancia de objeto a todos los llamantes. Por lo tanto estos objetos no deben modificarse. Por otro lado esto proporciona una mejora en el rendimiento. Una caché de tipo lectura-escritura devuelve una copia (vía serialización) del objeto cacheado. Esto es más lento, pero más seguro, y por ello el valor por defecto es false.
+        </p>
+
+        <p>
+          <span class="label important">NOTA</span> La caché de segundo nivel es transaccional. Esto significa que solo es actualizada cuando 
+          una sessión acaba con commit o cuando acaba con rollback pero no se ha ejecutado ninguna sentencia insert/delete/update 
+          con el parámetro flushCache=true.
         </p>
 
         <h4>Como usar una caché personalizada</h4>
