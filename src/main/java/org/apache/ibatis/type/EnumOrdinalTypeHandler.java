@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2011 The MyBatis Team
+ *    Copyright 2009-2012 The MyBatis Team
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
  */
 package org.apache.ibatis.type;
 
-import java.lang.reflect.Method;
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -25,13 +24,14 @@ public class EnumOrdinalTypeHandler<E extends Enum<E>> extends BaseTypeHandler<E
 
   private Class<E> type;
 
-  private final Method values;
-  
+  private final E[] enums;
+
+  @SuppressWarnings("unchecked")
   public EnumOrdinalTypeHandler(Class<E> type) {
     this.type = type;
     try {
-      this.values = type.getDeclaredMethod("values");
-      } catch(Exception ex) {
+      this.enums = (E[]) type.getDeclaredMethod("values").invoke(null);
+    } catch (Exception ex) {
       throw new IllegalArgumentException("Class " + type.getSimpleName() + " is not an enumeration class.", ex);
     }
   }
@@ -48,7 +48,6 @@ public class EnumOrdinalTypeHandler<E extends Enum<E>> extends BaseTypeHandler<E
       return null;
     } else {
       try {
-        E[] enums = (E[]) values.invoke(null);
         return enums[i];
       } catch (Exception ex) {
         throw new IllegalArgumentException("Cannot convert " + i + " to " + type.getSimpleName() + " by ordinal value.", ex);
@@ -63,7 +62,6 @@ public class EnumOrdinalTypeHandler<E extends Enum<E>> extends BaseTypeHandler<E
       return null;
     } else {
       try {
-        E[] enums = (E[]) values.invoke(null);
         return enums[i];
       } catch (Exception ex) {
         throw new IllegalArgumentException("Cannot convert " + i + " to " + type.getSimpleName() + " by ordinal value.", ex);
@@ -78,7 +76,6 @@ public class EnumOrdinalTypeHandler<E extends Enum<E>> extends BaseTypeHandler<E
       return null;
     } else {
       try {
-        E[] enums = (E[]) values.invoke(null);
         return enums[i];
       } catch (Exception ex) {
         throw new IllegalArgumentException("Cannot convert " + i + " to " + type.getSimpleName() + " by ordinal value.", ex);
