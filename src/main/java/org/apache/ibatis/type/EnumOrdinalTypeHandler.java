@@ -23,16 +23,13 @@ import java.sql.SQLException;
 public class EnumOrdinalTypeHandler<E extends Enum<E>> extends BaseTypeHandler<E> {
 
   private Class<E> type;
-
   private final E[] enums;
 
-  @SuppressWarnings("unchecked")
   public EnumOrdinalTypeHandler(Class<E> type) {
     this.type = type;
-    try {
-      this.enums = (E[]) type.getDeclaredMethod("values").invoke(null);
-    } catch (Exception ex) {
-      throw new IllegalArgumentException("Class " + type.getSimpleName() + " is not an enumeration class.", ex);
+    this.enums = type.getEnumConstants();
+    if (this.enums == null) {
+      throw new IllegalArgumentException(type.getSimpleName() + " does not represent an enum type.");
     }
   }
 
@@ -82,4 +79,5 @@ public class EnumOrdinalTypeHandler<E extends Enum<E>> extends BaseTypeHandler<E
       }
     }
   }
+  
 }
