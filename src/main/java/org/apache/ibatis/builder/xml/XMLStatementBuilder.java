@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2011 The MyBatis Team
+ *    Copyright 2009-2012 The MyBatis Team
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -69,7 +69,7 @@ public class XMLStatementBuilder extends BaseBuilder {
   public void parseStatementNode() {
     String id = context.getStringAttribute("id");
     String databaseId = context.getStringAttribute("databaseId");
-    
+
     if (!databaseIdMatchesCurrent(id, databaseId)) return;
 
     Integer fetchSize = context.getIntAttribute("fetchSize", null);
@@ -111,10 +111,10 @@ public class XMLStatementBuilder extends BaseBuilder {
         fetchSize, timeout, parameterMap, parameterTypeClass, resultMap, resultTypeClass,
         resultSetTypeEnum, flushCache, useCache, keyGenerator, keyProperty, keyColumn, databaseId);
   }
-  
+
   private boolean databaseIdMatchesCurrent(String id, String databaseId) {
     if (requiredDatabaseId != null) {
-      if (!requiredDatabaseId.equals(databaseId)) { 
+      if (!requiredDatabaseId.equals(databaseId)) {
         return false;
       }
     } else {
@@ -132,7 +132,7 @@ public class XMLStatementBuilder extends BaseBuilder {
     }
     return true;
   }
-  
+
   private List<SqlNode> parseDynamicTags(XNode node) {
     List<SqlNode> contents = new ArrayList<SqlNode>();
     NodeList children = node.getNode().getChildNodes();
@@ -220,18 +220,18 @@ public class XMLStatementBuilder extends BaseBuilder {
       String refid = nodeToHandle.getStringAttribute("refid");
       refid = builderAssistant.applyCurrentNamespace(refid, true);
       try {
-    	  XNode includeNode = configuration.getSqlFragments().get(refid);
+        XNode includeNode = configuration.getSqlFragments().get(refid);
+        if (includeNode == null) {
+          String nsrefid = builderAssistant.applyCurrentNamespace(refid, true);
+          includeNode = configuration.getSqlFragments().get(nsrefid);
           if (includeNode == null) {
-            String nsrefid = builderAssistant.applyCurrentNamespace(refid, true);
-            includeNode = configuration.getSqlFragments().get(nsrefid);
-            if (includeNode == null) {
-              throw new IncompleteElementException("Could not find SQL statement to include with refid '" + refid + "'");
-            }
+            throw new IncompleteElementException("Could not find SQL statement to include with refid '" + refid + "'");
           }
-          MixedSqlNode mixedSqlNode = new MixedSqlNode(contents(includeNode));
-          targetContents.add(mixedSqlNode);
+        }
+        MixedSqlNode mixedSqlNode = new MixedSqlNode(contents(includeNode));
+        targetContents.add(mixedSqlNode);
       } catch (IllegalArgumentException e) {
-    	  throw new IncompleteElementException("Could not find SQL statement to include with refid '" + refid + "'", e);
+        throw new IncompleteElementException("Could not find SQL statement to include with refid '" + refid + "'", e);
       }
     }
 
@@ -248,7 +248,7 @@ public class XMLStatementBuilder extends BaseBuilder {
       String prefixOverrides = nodeToHandle.getStringAttribute("prefixOverrides");
       String suffix = nodeToHandle.getStringAttribute("suffix");
       String suffixOverrides = nodeToHandle.getStringAttribute("suffixOverrides");
-      TrimSqlNode trim = new TrimSqlNode(configuration,mixedSqlNode, prefix, prefixOverrides, suffix, suffixOverrides);
+      TrimSqlNode trim = new TrimSqlNode(configuration, mixedSqlNode, prefix, prefixOverrides, suffix, suffixOverrides);
       targetContents.add(trim);
     }
   }
@@ -257,7 +257,7 @@ public class XMLStatementBuilder extends BaseBuilder {
     public void handleNode(XNode nodeToHandle, List<SqlNode> targetContents) {
       List<SqlNode> contents = parseDynamicTags(nodeToHandle);
       MixedSqlNode mixedSqlNode = new MixedSqlNode(contents);
-      WhereSqlNode where = new WhereSqlNode(configuration,mixedSqlNode);
+      WhereSqlNode where = new WhereSqlNode(configuration, mixedSqlNode);
       targetContents.add(where);
     }
   }
@@ -266,7 +266,7 @@ public class XMLStatementBuilder extends BaseBuilder {
     public void handleNode(XNode nodeToHandle, List<SqlNode> targetContents) {
       List<SqlNode> contents = parseDynamicTags(nodeToHandle);
       MixedSqlNode mixedSqlNode = new MixedSqlNode(contents);
-      SetSqlNode set = new SetSqlNode(configuration,mixedSqlNode);
+      SetSqlNode set = new SetSqlNode(configuration, mixedSqlNode);
       targetContents.add(set);
     }
   }
