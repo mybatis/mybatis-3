@@ -171,26 +171,6 @@
                     <label>Version-${project.version}</label>
                   </labels>
                 </upload>
-                <upload>
-                  <file>${project.build.directory}/doc/en/MyBatis-3-User-Guide.pdf</file>
-                  <summary>MyBatis Persistence Framework ${project.version} - User Guide (English)</summary>
-                  <labels>
-                    <label>Featured</label>
-                    <label>Type-Docs</label>
-                    <label>Product-MyBatis</label>
-                    <label>Version-${project.version}</label>
-                  </labels>
-                </upload>
-                <upload>
-                  <file>${project.build.directory}/doc/zh_cn/MyBatis 3 User Guide Simplified Chinese.pdf</file>
-                  <summary>MyBatis Persistence Framework ${project.version} - User Guide (Simplified Chinese)</summary>
-                  <labels>
-                    <label>Featured</label>
-                    <label>Type-Docs</label>
-                    <label>Product-MyBatis</label>
-                    <label>Version-${project.version}</label>
-                  </labels>
-                </upload>
               </uploads>
             </configuration>
           </execution>
