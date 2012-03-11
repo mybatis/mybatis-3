@@ -31,10 +31,10 @@
   <version>3.1.0-SNAPSHOT</version>
   <packaging>jar</packaging>
 
-  <name>mybatis</name>
+  <name>MyBatis</name>
   <description>
-    The mybatis data mapper framework makes it easier to use a relational database with object-oriented
-    applications. mybatis couples objects with stored procedures or SQL statements using a XML descriptor or
+    The MyBatis data mapper framework makes it easier to use a relational database with object-oriented
+    applications. MyBatis couples objects with stored procedures or SQL statements using a XML descriptor or
     annotations. Simplicity is the biggest advantage of the mybatis data mapper over object relational mapping
     tools.
   </description>
