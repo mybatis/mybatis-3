@@ -1754,8 +1754,8 @@ public class User {
 </resultMap>]]></source>
         
         <p>
-          With this result map both <i>Blog</i> and <i>Author</i> will be auto-mapped. But note that <i>Author</i> has a <i>id</i> 
-          property and there is an column named <i>id</i> in the ResultSet so Author's id will be filled with Blog's id, and that is not 
+          With this result map both <i>Blog</i> and <i>Author</i> will be auto-mapped. But note that <i>Author</i> has an <i>id</i> 
+          property and there is a column named <i>id</i> in the ResultSet so Author's id will be filled with Blog's id, and that is not 
           what you were expecting. So use the <code>FULL</code> option with caution.
         </p>
        
