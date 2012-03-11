@@ -18,7 +18,7 @@
 <document xmlns="http://maven.apache.org/DOCUMENT/1.0.1"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/DOCUMENT/1.0.1 http://maven.apache.org/xsd/document-1.0.1.xsd"
-  outputName="maven-pdf-plugin">
+  outputName="${project.artifactId}-${project.version}">
 
   <meta>
     <title>MyBatis - the world's most popular SQL Mapping framework.</title>
