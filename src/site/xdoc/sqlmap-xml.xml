@@ -1680,8 +1680,9 @@ public class User {
       <subsection name="Auto-mapping">
 
         <p>
-          As you have already seen in the previous sections in simple cases MyBatis can auto-map the results for you and in others you 
-          will need to build a result map. But as you will see in this section you can also mix both strategies. 
+          As you have already seen in the previous sections, in simple cases MyBatis can auto-map the results for you 
+          and in others you will need to build a result map. 
+          But as you will see in this section you can also mix both strategies. 
           Let's have a deeper look at how auto-mapping works. 
         </p>
 
@@ -1753,7 +1754,7 @@ public class User {
 </resultMap>]]></source>
         
         <p>
-          With this result map both <i>Blog</i> and <i>Author</i> will be auto-mapped. But note that <i>Author</i> has an <i>id</i> 
+          With this result map both <i>Blog</i> and <i>Author</i> will be auto-mapped. But note that <i>Author</i> has a <i>id</i> 
           property and there is an column named <i>id</i> in the ResultSet so Author's id will be filled with Blog's id, and that is not 
           what you were expecting. So use the <code>FULL</code> option with caution.
         </p>
