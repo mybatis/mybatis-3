@@ -674,8 +674,9 @@ public class User {
 </select>]]></source>
 
         <p>
-          In these cases MyBatis is automatically creating a <code>ResultMap</code> behind the scenes to map the columns to
-          the JavaBean properties based on name. If the column names did not match exactly, you could employ
+          In these cases MyBatis is automatically creating a <code>ResultMap</code> behind the scenes to auto-map the columns to
+          the JavaBean properties based on name. 
+          If the column names did not match exactly, you could employ
           select clause aliases (a standard SQL feature) on the column names to make the labels match. For
           example:
         </p>
@@ -698,8 +699,8 @@ public class User {
 
         <source><![CDATA[<resultMap id="userResultMap" type="User">
   <id property="id" column="user_id" />
-  <result property="username" column="username"/>
-  <result property="password" column="password"/>
+  <result property="username" column="user_name"/>
+  <result property="password" column="hashed_password"/>
 </resultMap>]]></source>
 
         <p>
@@ -717,7 +718,7 @@ public class User {
           Now if only the world were always that simple.
         </p>
 
-	      <h4>Advanced Result Maps</h4>
+	    <h4>Advanced Result Maps</h4>
 
         <p>
           MyBatis was created with one idea in mind: Databases aren't always what you want or need them to be.
@@ -1335,7 +1336,7 @@ public class User {
         </p>
 
         <source><![CDATA[<resultMap id="blogResult" type="Blog">
-  <id property="blog_id" column="id" />
+  <id property="id" column="blog_id" />
   <result property="title" column="blog_title"/>
   <association property="author" javaType="Author" resultMap="authorResult"/>
 </resultMap>
@@ -1370,7 +1371,7 @@ public class User {
         </p>
 
         <source><![CDATA[<resultMap id="blogResult" type="Blog">
-  <id property="blog_id" column="id" />
+  <id property="id" column="blog_id" />
   <result property="title" column="blog_title"/>
   <association property="author" javaType="Author">
     <id property="id" column="author_id"/>
@@ -1424,7 +1425,7 @@ public class User {
         </p>
 
         <source><![CDATA[<resultMap id="blogResult" type="Blog">
-  <id property="blog_id" column="id" />
+  <id property="id" column="blog_id" />
   <result property="title" column="blog_title"/>
   <association property="author"
     resultMap="authorResult" />
@@ -1674,7 +1675,89 @@ public class User {
           than they really need to be. That said, most databases are kind of complex and it's unlikely that
           we'll be able to depend on that for all cases.
         </p>
+         
+      </subsection>
+      <subsection name="Auto-mapping">
 
+        <p>
+          As you have already seen in the previous sections in simple cases MyBatis can auto-map the results for you and in others you 
+          will need to build a result map. But as you will see in this section you can also mix both strategies. 
+          Let's have a deeper look at how auto-mapping works. 
+        </p>
+
+        <p>
+          When auto-mapping results MyBatis will get the column name and look for a property with the same name ignoring case. That means that if
+          for a column named <i>ID</i>, if a property named <i>id</i> is found MyBatis will set the id property with the <i>ID</i> column value. 
+        </p>
+
+        <p>
+          Usually database columns are named using uppercase letters and underscores between words and java properties often follow the camelcase 
+          naming covention. To enable the auto-mapping between them set the setting <code>mapUnderscoreToCamelCase</code> to true.
+        </p>
+        
+        <p>
+          Auto-mapping works even when there is a specific result map. When this happens, for each result map all columns that are present in the
+          ResultSet that have not a manual mapping will be auto-mapped, then manual mappings will be processed. 
+          In the following sample <i>id</i> and <i>userName</i> columns will be auto-mapped and <i>hashed_password</i> column will be mapped.</p>
+
+        <source><![CDATA[<select id="selectUsers" parameterType="int" resultType="User">
+  select
+    user_id             as "id",
+    user_name           as "userName",
+    hashed_password
+  from some_table
+  where id = #{id}
+</select>]]></source>
+
+        <source><![CDATA[<resultMap id="userResultMap" type="User">
+  <result property="password" column="hashed_password"/>
+</resultMap>]]></source>
+
+        <p>
+          There are three auto-mapping levels:
+        </p>
+        
+        <ul>
+          <li>
+            <code>NONE</code> - disables auto-mapping. Only manually mapped properties will be set.
+          </li>
+          <li>
+            <code>PARTIAL</code> - will auto-map results except those that have nested result mappings defined inside (joins).
+          </li>
+          <li>
+            <code>FULL</code> - auto-maps everything.
+          </li>
+        </ul>
+
+        <p>
+          The default value is <code>PARTIAL</code>, and it is so for a reason. When <code>FULL</code> is used auto-mapping will
+          be performed when processing join results and joins retrieve data of several different entities in the same row 
+          hence this may result in undesired mappings. To understand the risk have a look at the following sample:
+        </p>
+        
+        <source><![CDATA[<select id="selectBlog" parameterType="int" resultMap="blogResult">
+  select
+    B.id,
+    B.title,
+    A.username,
+  from Blog B left outer join Author A on B.author_id = A.id
+  where B.id = #{id}
+</select>]]></source>
+
+        <source><![CDATA[<resultMap id="blogResult" type="Blog">
+  <association property="author" javaType="Author" resultMap="authorResult"/>
+</resultMap>
+
+<resultMap id="authorResult" type="Author">
+  <result property="username" column="author_username"/>
+</resultMap>]]></source>
+        
+        <p>
+          With this result map both <i>Blog</i> and <i>Author</i> will be auto-mapped. But note that <i>Author</i> has an <i>id</i> 
+          property and there is an column named <i>id</i> in the ResultSet so Author's id will be filled with Blog's id, and that is not 
+          what you were expecting. So use the <code>FULL</code> option with caution.
+        </p>
+       
       </subsection>
       <subsection name="cache">
         <p>
@@ -1732,7 +1815,9 @@ public class User {
             <code>LRU</code> – Least Recently Used: Removes objects that haven't been used for the longst period of
             time.
           </li>
-          <li><code>FIFO</code> – First In First Out: Removes objects in the order that they entered the cache.</li>
+          <li>
+            <code>FIFO</code> – First In First Out: Removes objects in the order that they entered the cache.
+          </li>
           <li>
             <code>SOFT</code> – Soft Reference: Removes objects based on the garbage collector state and the rules of
             Soft References.

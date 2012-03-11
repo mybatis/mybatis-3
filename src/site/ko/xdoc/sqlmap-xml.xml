@@ -1017,7 +1017,7 @@ prop1, prop2 형태로 셋팅하게 될 것이다.</td>
 있다.</p>
 
         <source><![CDATA[<resultMap id="blogResult" type="Blog">
-  <id property="blog_id" column="id" />
+  <id property="id" column="blog_id" />
   <result property="title" column="blog_title"/>
   <association property="author" column="blog_author_id" javaType="Author" resultMap="authorResult"/>
 </resultMap>
@@ -1042,7 +1042,7 @@ prop1, prop2 형태로 셋팅하게 될 것이다.</td>
 association 결과 매핑을 내포시킬수 있다. 다음은 이 방법을 사용한 예제이다.</p>
 
         <source><![CDATA[<resultMap id="blogResult" type="Blog">
-  <id property="blog_id" column="id" />
+  <id property="id" column="blog_id" />
   <result property="title" column="blog_title"/>
   <association property="author" javaType="Author">
     <id property="id" column="author_id"/>
@@ -1096,7 +1096,7 @@ association 결과 매핑을 내포시킬수 있다. 다음은 이 방법을 사
         </p>
 
         <source><![CDATA[<resultMap id="blogResult" type="Blog">
-  <id property="blog_id" column="id" />
+  <id property="id" column="blog_id" />
   <result property="title" column="blog_title"/>
   <association property="author"
     resultMap="authorResult" />

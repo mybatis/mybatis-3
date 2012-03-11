@@ -1388,7 +1388,7 @@ resultMap
         </p>
 
         <source><![CDATA[<resultMap id="blogResult" type="Blog">
-  <id property="blog_id" column="id" />
+  <id property="id" column="blog_id" />
   <result property="title" column="blog_title"/>
   <association property="author" column="blog_author_id" javaType="Author" resultMap="authorResult"/>
 </resultMap>
@@ -1420,7 +1420,7 @@ resultMap
         </p>
 
         <source><![CDATA[<resultMap id="blogResult" type="Blog">
-  <id property="blog_id" column="id" />
+  <id property="id" column="blog_id" />
   <result property="title" column="blog_title"/>
   <association property="author" javaType="Author">
     <id property="id" column="author_id"/>
@@ -1474,7 +1474,7 @@ resultMap
         </p>
 
         <source><![CDATA[<resultMap id="blogResult" type="Blog">
-  <id property="blog_id" column="id" />
+  <id property="id" column="blog_id" />
   <result property="title" column="blog_title"/>
   <association property="author"
     resultMap="authorResult" />
