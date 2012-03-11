@@ -94,7 +94,6 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>cobertura-maven-plugin</artifactId>
-        <version>2.2</version>
         <configuration>
           <formats>
             <format>html</format>
