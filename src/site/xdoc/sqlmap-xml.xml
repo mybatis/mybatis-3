@@ -865,15 +865,13 @@ public class User {
 <result property="subject" column="post_subject"/>]]></source>
 
         <p>
-          These are the most basic of result mappings. Both<i>id</i>, and
-          <i>result</i>
-          map a single column value to a
+          These are the most basic of result mappings. Both <i>id</i>, and
+          <i>result</i> map a single column value to a
           single property or field of a simple data type (String, int, double, Date, etc.).
         </p>
 
         <p>
-          The only difference between the two is that
-          <i>id</i>
+          The only difference between the two is that <i>id</i>
           will flag the result as an identifier property to be
           used when comparing object instances. This helps to improve general performance, but especially
           performance of caching and nested result mapping (i.e. join mapping).
