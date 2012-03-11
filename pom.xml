@@ -84,7 +84,15 @@
     <!-- Cannot define in parent ATM, see COMMONSSITE-26 -->
     <site>
       <id>mybatis.site</id>
-      <url>ftp://${mybatis.host}/core/</url>
+      <!--
+       | make it overridible, FTP is terribly slow when launched from Maven Wagon
+       | an alternative strategy could be deploying the site locally
+       |
+       |    -Dsite.deploymentUrl=file://...
+       |
+       | then async redeploying it via Filezilla/whatelese
+      -->
+      <url>${site.deploymentUrl}</url>
     </site>
   </distributionManagement>
 
@@ -94,6 +102,10 @@
     <osgi.export>org.apache.ibatis.*;version=${project.version};-noimport:=true</osgi.export>
     <osgi.import>!ognl,net.sf.cglib.proxy;resolution:=optional,org.apache.commons.logging;resolution:=optional,org.apache.log4j;resolution:=optional,org.slf4j;resolution:=optional,*</osgi.import>
     <osgi.dynamicImport>*</osgi.dynamicImport>
+    <!--
+     | see distributionManagement.site.url
+    -->
+    <site.deploymentUrl>ftp://${mybatis.host}/core/</site.deploymentUrl>
   </properties>
 
   <dependencies>
