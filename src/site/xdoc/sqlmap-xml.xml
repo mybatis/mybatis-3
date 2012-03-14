@@ -1688,7 +1688,7 @@ public class User {
 
         <p>
           When auto-mapping results MyBatis will get the column name and look for a property with the same name ignoring case. That means that if
-          for a column named <i>ID</i>, if a property named <i>id</i> is found MyBatis will set the id property with the <i>ID</i> column value. 
+          a column named <i>ID</i> and property named <i>id</i> are found MyBatis will set the id property with the <i>ID</i> column value. 
         </p>
 
         <p>
