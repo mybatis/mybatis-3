@@ -23,7 +23,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface UpdateProvider {
-  public abstract Class<?> type();
+  Class<?> type();
 
-  public abstract String method();
+  String method();
 }

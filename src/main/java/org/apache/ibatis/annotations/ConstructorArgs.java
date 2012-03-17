@@ -23,5 +23,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface ConstructorArgs {
-  public abstract Arg[] value() default {};
+  Arg[] value() default {};
 }

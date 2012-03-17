@@ -27,18 +27,17 @@ import org.apache.ibatis.type.UnknownTypeHandler;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface Arg {
+  boolean id() default false;
 
-  public abstract boolean id() default false;
+  String column() default "";
 
-  public abstract String column() default "";
+  Class<?> javaType() default void.class;
 
-  public abstract Class<?> javaType() default void.class;
+  JdbcType jdbcType() default JdbcType.UNDEFINED;
 
-  public abstract JdbcType jdbcType() default JdbcType.UNDEFINED;
+  Class<? extends TypeHandler<?>> typeHandler() default UnknownTypeHandler.class;
 
-  public abstract Class<? extends TypeHandler<?>> typeHandler() default UnknownTypeHandler.class;
+  String select() default "";
 
-  public abstract String select() default "";
-
-  public abstract String resultMap() default "";
+  String resultMap() default "";
 }
