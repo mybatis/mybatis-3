@@ -600,7 +600,6 @@ public class BindingTest {
     }
   }
 
-  @Ignore // TODO see issue #165 (using "value" fails if there is a dynamic variable)
   @Test
   public void shouldSelectBlogWithAParamNamedValue() {
     SqlSession session = sqlSessionFactory.openSession();
