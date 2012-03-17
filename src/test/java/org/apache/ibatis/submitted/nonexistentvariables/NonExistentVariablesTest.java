@@ -15,7 +15,7 @@
  */
 package org.apache.ibatis.submitted.nonexistentvariables;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.fail;
 
 import java.io.Reader;
 import java.sql.Connection;
@@ -28,7 +28,6 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class NonExistentVariablesTest {
@@ -63,8 +62,7 @@ public class NonExistentVariablesTest {
     }
   }
 
-  @Ignore //see issue #5
-  @Test(expected=PersistenceException.class)
+  @Test(expected = PersistenceException.class)
   public void testWrongParameter() {
     SqlSession sqlSession = sqlSessionFactory.openSession();
     try {
