@@ -596,6 +596,20 @@ public class SqlSessionTest extends BaseDataTest {
     }
   }
 
+  @Test(expected=BindingException.class)
+  public void shouldFailExecutingAnAnnotatedMapperClassWithResultHandler() {
+    SqlSession session = sqlMapper.openSession();
+    try {
+      DefaultResultHandler handler = new DefaultResultHandler();
+      AuthorMapper mapper = session.getMapper(AuthorMapper.class);
+      mapper.selectAuthor2(101, handler);
+      Author author = (Author) handler.getResultList().get(0);
+      assertEquals(101, author.getId());
+    } finally {
+      session.close();
+    }
+  }
+  
   @Test
   public void shouldSelectAuthorsUsingMapperClassWithResultHandler() {
     SqlSession session = sqlMapper.openSession();

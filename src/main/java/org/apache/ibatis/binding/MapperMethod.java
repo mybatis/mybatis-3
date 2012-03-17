@@ -101,6 +101,10 @@ public class MapperMethod {
   }
 
   private void executeWithResultHandler(Object[] args) {
+    MappedStatement ms = config.getMappedStatement(commandName);
+    if (Void.TYPE.equals(ms.getResultMaps().get(0).getType())) {
+      throw new BindingException(method.getName() + ", annotated methods do not support ResultHandlers, use XML instead.");
+    }
     Object param = getParam(args);
     if (rowBoundsIndex != null) {
       RowBounds rowBounds = (RowBounds) args[rowBoundsIndex];

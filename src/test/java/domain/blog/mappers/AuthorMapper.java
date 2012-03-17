@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 
+import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.session.ResultHandler;
 
 import domain.blog.Author;
@@ -42,6 +43,9 @@ public interface AuthorMapper {
 
   void selectAuthor(int id, ResultHandler handler);
 
+  @Select("select")
+  void selectAuthor2(int id, ResultHandler handler);
+  
   void insertAuthor(Author author);
 
   int deleteAuthor(int id);
