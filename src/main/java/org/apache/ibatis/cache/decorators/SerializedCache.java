@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2011 The MyBatis Team
+ *    Copyright 2009-2012 The MyBatis Team
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,11 +15,21 @@
  */
 package org.apache.ibatis.cache.decorators;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.ObjectStreamClass;
+import java.io.Serializable;
+import java.util.concurrent.locks.ReadWriteLock;
+
 import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.cache.CacheException;
+import org.apache.ibatis.submitted.permissions.Resource;
 
-import java.io.*;
-import java.util.concurrent.locks.ReadWriteLock;
+import com.ibatis.common.resources.Resources;
 
 public class SerializedCache implements Cache {
 
@@ -87,7 +97,7 @@ public class SerializedCache implements Cache {
     Serializable result;
     try {
       ByteArrayInputStream bis = new ByteArrayInputStream((byte[]) value);
-      ObjectInputStream ois = new ObjectInputStream(bis);
+      ObjectInputStream ois = new ThreadContextObjectInputStream(bis);
       result = (Serializable) ois.readObject();
       ois.close();
     } catch (Exception e) {
@@ -96,5 +106,17 @@ public class SerializedCache implements Cache {
     return result;
   }
 
+  public static class ThreadContextObjectInputStream extends ObjectInputStream {
+
+    public ThreadContextObjectInputStream(InputStream in) throws IOException {
+      super(in);
+    }
+
+    @Override
+    protected Class<?> resolveClass(ObjectStreamClass desc) throws IOException, ClassNotFoundException {
+      return Resources.classForName(desc.getName());
+    }
+    
+  }
 
 }
