@@ -289,9 +289,11 @@ public class FastResultSetHandler implements ResultSetHandler {
       if (propertyMapping.isCompositeResult() || (column != null && mappedColumnNames.contains(column))) {
         Object value = getPropertyMappingValue(rs, metaObject, propertyMapping, lazyLoader, columnPrefix);
         if (value != null) {
-          final String property = propertyMapping.getProperty();
-          metaObject.setValue(property, value);
-          foundValues = true;
+          final String property = propertyMapping.getProperty(); // issue #541 make property optional
+          if (property != null) {
+            metaObject.setValue(property, value);
+            foundValues = true;
+          }
         }
       }
     }
