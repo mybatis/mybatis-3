@@ -18,6 +18,8 @@ package org.apache.ibatis.builder.annotation;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Array;
+import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -332,8 +334,11 @@ public class MapperAnnotationBuilder {
           returnTypeParameter = actualTypeArguments[0];
           if (returnTypeParameter instanceof Class) {
             returnType = (Class<?>) returnTypeParameter;
-          } else if (returnTypeParameter instanceof ParameterizedType) { // (issue 443) actual type can be a also a parametrized type
+          } else if (returnTypeParameter instanceof ParameterizedType) { // (issue #443) actual type can be a also a parametrized type
             returnType = (Class<?>) ((ParameterizedType) returnTypeParameter).getRawType();
+          } else if (returnTypeParameter instanceof GenericArrayType) {
+            Class<?> componentType = (Class<?>) ((GenericArrayType) returnTypeParameter).getGenericComponentType();
+            returnType = Array.newInstance(componentType, 0).getClass(); // (issue #525) support List<byte[]>
           }
         }
       }
