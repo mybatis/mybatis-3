@@ -27,8 +27,7 @@ import java.util.concurrent.locks.ReadWriteLock;
 
 import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.cache.CacheException;
-
-import com.ibatis.common.resources.Resources;
+import org.apache.ibatis.io.Resources;
 
 public class SerializedCache implements Cache {
 
