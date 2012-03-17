@@ -38,6 +38,8 @@ public interface BoundAuthorMapper {
 
   int insertAuthor(Author author);
 
+  int insertAuthorDynamic(Author author);
+
   //======================================================
 
   @ConstructorArgs({

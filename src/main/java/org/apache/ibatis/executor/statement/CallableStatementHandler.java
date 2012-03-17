@@ -22,7 +22,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 
-import org.apache.ibatis.executor.ErrorContext;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.executor.ExecutorException;
 import org.apache.ibatis.executor.keygen.KeyGenerator;
@@ -77,11 +76,6 @@ public class CallableStatementHandler extends BaseStatementHandler {
   }
 
   public void parameterize(Statement statement) throws SQLException {
-    KeyGenerator keyGenerator = mappedStatement.getKeyGenerator();
-    ErrorContext.instance().store();
-    keyGenerator.processBefore(executor, mappedStatement, statement, boundSql.getParameterObject());
-    ErrorContext.instance().recall();
-    rebindGeneratedKey();
     registerOutputParameters((CallableStatement) statement);
     parameterHandler.setParameters((CallableStatement) statement);
   }

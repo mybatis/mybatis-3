@@ -44,6 +44,16 @@
     )
   </insert>
 
+  <insert id="insertAuthorDynamic" parameterType="domain.blog.Author">
+    <selectKey keyProperty="id" resultType="int" order="BEFORE">
+      select CAST(RANDOM()*1000000 as INTEGER) a from SYSIBM.SYSDUMMY1
+    </selectKey>
+    insert into Author (id,username,password,email,bio,favourite_section)
+    values(
+    ${id}, #{username}, #{password}, #{email}, #{bio}, #{favouriteSection:VARCHAR}
+    )
+  </insert>
+
   <select id="findPostsInList" parameterType="list" resultType="domain.blog.Post">
     select * from post
     where id in (#{list[0]},#{list[1]},#{list[2]})

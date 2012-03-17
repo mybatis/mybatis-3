@@ -32,7 +32,7 @@ import java.util.List;
 
 public class Jdbc3KeyGenerator implements KeyGenerator {
 
-  public void processBefore(Executor executor, MappedStatement ms, Statement stmt, Object parameter) {
+  public void processBefore(Executor executor, MappedStatement ms, Object parameter) {
     // do nothing
   }
 

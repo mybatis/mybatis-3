@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2011 The MyBatis Team
+ *    Copyright 2009-2012 The MyBatis Team
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,18 +15,31 @@
  */
 package org.apache.ibatis.binding;
 
-import domain.blog.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.ibatis.exceptions.PersistenceException;
 import org.apache.ibatis.executor.result.DefaultResultHandler;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
-import static org.junit.Assert.*;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import java.util.*;
+import domain.blog.Author;
+import domain.blog.Blog;
+import domain.blog.DraftPost;
+import domain.blog.Post;
+import domain.blog.Section;
 
 public class BindingTest {
   private static SqlSessionFactory sqlSessionFactory;
@@ -114,6 +127,20 @@ public class BindingTest {
   }
 
   @Test
+  public void shouldInsertAuthorWithSelectKeyAndDynamicParams() {
+    SqlSession session = sqlSessionFactory.openSession();
+    try {
+      BoundAuthorMapper mapper = session.getMapper(BoundAuthorMapper.class);
+      Author author = new Author(-1, "cbegin", "******", "cbegin@nowhere.com", "N/A", Section.NEWS);
+      int rows = mapper.insertAuthorDynamic(author);
+      assertEquals(1, rows);
+      session.rollback();
+    } finally {
+      session.close();
+    }
+  }
+
+  @Test
   public void shouldSelectRandom() {
     SqlSession session = sqlSessionFactory.openSession();
     try {
@@ -151,7 +178,7 @@ public class BindingTest {
       session.close();
     }
   }
-  
+
   @Test
   public void shouldExecuteMultipleBoundSelectOfBlogsByIdInWithProvidedResultHandlerBetweenSessions() {
     SqlSession session = sqlSessionFactory.openSession();
@@ -165,7 +192,7 @@ public class BindingTest {
 
       final DefaultResultHandler moreHandler = new DefaultResultHandler();
       session.select("selectBlogsAsMapById", moreHandler);
-      
+
       assertEquals(2, handler.getResultList().size());
       assertEquals(2, moreHandler.getResultList().size());
 
