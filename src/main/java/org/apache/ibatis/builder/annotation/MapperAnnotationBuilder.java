@@ -189,30 +189,11 @@ public class MapperAnnotationBuilder {
   private void createDiscriminatorResultMaps(String resultMapId, Class<?> resultType, TypeDiscriminator discriminator) {
     if (discriminator != null) {
       for (Case c : discriminator.cases()) {
-        String value = c.value();
-        Class<?> type = c.type();
-        String caseResultMapId = resultMapId + "-" + value;
+        String caseResultMapId = resultMapId + "-" + c.value();
         List<ResultMapping> resultMappings = new ArrayList<ResultMapping>();
-        for (Result result : c.results()) {
-          List<ResultFlag> flags = new ArrayList<ResultFlag>();
-          if (result.id()) {
-            flags.add(ResultFlag.ID);
-          }
-          ResultMapping resultMapping = assistant.buildResultMapping(
-              resultType,
-              nullOrEmpty(result.property()),
-              nullOrEmpty(result.column()),
-              result.javaType() == void.class ? null : result.javaType(),
-              result.jdbcType() == JdbcType.UNDEFINED ? null : result.jdbcType(),
-              hasNestedSelect(result) ? nestedSelectId(result) : null,
-              null,
-              null,
-              null,
-              result.typeHandler() == UnknownTypeHandler.class ? null : result.typeHandler(),
-              flags);
-          resultMappings.add(resultMapping);
-        }
-        assistant.addResultMap(caseResultMapId, type, resultMapId, null, resultMappings);
+        applyConstructorArgs(c.constructArgs(), resultType, resultMappings); // issue #136
+        applyResults(c.results(), resultType, resultMappings);
+        assistant.addResultMap(caseResultMapId, c.type(), resultMapId, null, resultMappings);
       }
     }
   }
@@ -343,7 +324,7 @@ public class MapperAnnotationBuilder {
         }
       }
     } else if (method.isAnnotationPresent(MapKey.class) && Map.class.isAssignableFrom(returnType)) {
-      // (issue 504) Do not look into Maps if there is not MapKey annotation 
+      // (issue 504) Do not look into Maps if there is not MapKey annotation
       Type returnTypeParameter = method.getGenericReturnType();
       if (returnTypeParameter instanceof ParameterizedType) {
         Type[] actualTypeArguments = ((ParameterizedType) returnTypeParameter).getActualTypeArguments();
@@ -354,7 +335,7 @@ public class MapperAnnotationBuilder {
           } else if (returnTypeParameter instanceof ParameterizedType) { // (issue 443) actual type can be a also a parametrized type
             returnType = (Class<?>) ((ParameterizedType) returnTypeParameter).getRawType();
           }
-        }        
+        }
       }
     }
 
@@ -437,26 +418,22 @@ public class MapperAnnotationBuilder {
   }
 
   private void applyResults(Result[] results, Class<?> resultType, List<ResultMapping> resultMappings) {
-    if (results.length > 0) {
-      for (Result result : results) {
-        ArrayList<ResultFlag> flags = new ArrayList<ResultFlag>();
-        if (result.id())
-          flags.add(ResultFlag.ID);
-
-        ResultMapping resultMapping = assistant.buildResultMapping(
-            resultType,
-            nullOrEmpty(result.property()),
-            nullOrEmpty(result.column()),
-            result.javaType() == void.class ? null : result.javaType(),
-            result.jdbcType() == JdbcType.UNDEFINED ? null : result.jdbcType(),
-            hasNestedSelect(result) ? nestedSelectId(result) : null,
-            null,
-            null,
-            null,
-            result.typeHandler() == UnknownTypeHandler.class ? null : result.typeHandler(),
-            flags);
-        resultMappings.add(resultMapping);
-      }
+    for (Result result : results) {
+      ArrayList<ResultFlag> flags = new ArrayList<ResultFlag>();
+      if (result.id()) flags.add(ResultFlag.ID);
+      ResultMapping resultMapping = assistant.buildResultMapping(
+          resultType,
+          nullOrEmpty(result.property()),
+          nullOrEmpty(result.column()),
+          result.javaType() == void.class ? null : result.javaType(),
+          result.jdbcType() == JdbcType.UNDEFINED ? null : result.jdbcType(),
+          hasNestedSelect(result) ? nestedSelectId(result) : null,
+          null,
+          null,
+          null,
+          result.typeHandler() == UnknownTypeHandler.class ? null : result.typeHandler(),
+          flags);
+      resultMappings.add(resultMapping);
     }
   }
 
@@ -476,25 +453,23 @@ public class MapperAnnotationBuilder {
   }
 
   private void applyConstructorArgs(Arg[] args, Class<?> resultType, List<ResultMapping> resultMappings) {
-    if (args.length > 0) {
-      for (Arg arg : args) {
-        ArrayList<ResultFlag> flags = new ArrayList<ResultFlag>();
-        flags.add(ResultFlag.CONSTRUCTOR);
-        if (arg.id()) flags.add(ResultFlag.ID);
-        ResultMapping resultMapping = assistant.buildResultMapping(
-            resultType,
-            null,
-            nullOrEmpty(arg.column()),
-            arg.javaType() == void.class ? null : arg.javaType(),
-            arg.jdbcType() == JdbcType.UNDEFINED ? null : arg.jdbcType(),
-            nullOrEmpty(arg.select()),
-            nullOrEmpty(arg.resultMap()),
-            null,
-            null,
-            arg.typeHandler() == UnknownTypeHandler.class ? null : arg.typeHandler(),
-            flags);
-        resultMappings.add(resultMapping);
-      }
+    for (Arg arg : args) {
+      ArrayList<ResultFlag> flags = new ArrayList<ResultFlag>();
+      flags.add(ResultFlag.CONSTRUCTOR);
+      if (arg.id()) flags.add(ResultFlag.ID);
+      ResultMapping resultMapping = assistant.buildResultMapping(
+          resultType,
+          null,
+          nullOrEmpty(arg.column()),
+          arg.javaType() == void.class ? null : arg.javaType(),
+          arg.jdbcType() == JdbcType.UNDEFINED ? null : arg.jdbcType(),
+          nullOrEmpty(arg.select()),
+          nullOrEmpty(arg.resultMap()),
+          null,
+          null,
+          arg.typeHandler() == UnknownTypeHandler.class ? null : arg.typeHandler(),
+          flags);
+      resultMappings.add(resultMapping);
     }
   }
 

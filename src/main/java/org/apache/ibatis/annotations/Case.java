@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2011 The MyBatis Team
+ *    Copyright 2009-2012 The MyBatis Team
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -23,9 +23,12 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface Case {
-  public abstract String value();
 
-  public abstract Class<?> type();
+  String value();
 
-  public abstract Result[] results() default {};
+  Class<?> type();
+
+  Result[] results() default { };
+
+  Arg[] constructArgs() default { };
 }
