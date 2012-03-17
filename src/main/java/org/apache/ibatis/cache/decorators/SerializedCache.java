@@ -27,7 +27,6 @@ import java.util.concurrent.locks.ReadWriteLock;
 
 import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.cache.CacheException;
-import org.apache.ibatis.submitted.permissions.Resource;
 
 import com.ibatis.common.resources.Resources;
 
