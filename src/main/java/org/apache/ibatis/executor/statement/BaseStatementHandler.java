@@ -124,7 +124,7 @@ public abstract class BaseStatementHandler implements StatementHandler {
   protected void generateKeys(Object parameter) {
     KeyGenerator keyGenerator = mappedStatement.getKeyGenerator();
     ErrorContext.instance().store();
-    keyGenerator.processBefore(executor, mappedStatement, parameter);
+    keyGenerator.processBefore(executor, mappedStatement, null, parameter);
     ErrorContext.instance().recall();
   }
 

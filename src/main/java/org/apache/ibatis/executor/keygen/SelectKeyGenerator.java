@@ -36,7 +36,7 @@ public class SelectKeyGenerator implements KeyGenerator {
     this.keyStatement = keyStatement;
   }
 
-  public void processBefore(Executor executor, MappedStatement ms, Object parameter) {
+  public void processBefore(Executor executor, MappedStatement ms, Statement stmt, Object parameter) {
     if (executeBefore) {
       processGeneratedKeys(executor, ms, parameter);
     }
