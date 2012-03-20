@@ -32,6 +32,10 @@ public class Jdk14LoggingImpl implements Log {
     return log.isLoggable(Level.FINE);
   }
 
+  public boolean isTraceEnabled() {
+    return log.isLoggable(Level.FINER);
+  }
+
   public void error(String s, Throwable e) {
     log.log(Level.SEVERE, s, e);
   }
@@ -42,6 +46,10 @@ public class Jdk14LoggingImpl implements Log {
 
   public void debug(String s) {
     log.log(Level.FINE, s);
+  }
+
+  public void trace(String s) {
+    log.log(Level.FINER, s);
   }
 
   public void warn(String s) {

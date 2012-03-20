@@ -31,6 +31,10 @@ public class Slf4jImpl implements Log {
     return log.isDebugEnabled();
   }
 
+  public boolean isTraceEnabled() {
+    return log.isDebugEnabled();
+  }
+
   public void error(String s, Throwable e) {
     log.error(s, e);
   }
@@ -41,6 +45,10 @@ public class Slf4jImpl implements Log {
 
   public void debug(String s) {
     log.debug(s);
+  }
+
+  public void trace(String s) {
+    log.trace(s);
   }
 
   public void warn(String s) {

@@ -26,6 +26,10 @@ public class NoLoggingImpl implements Log {
     return false;
   }
 
+  public boolean isTraceEnabled() {
+    return false;
+  }
+
   public void error(String s, Throwable e) {
   }
 
@@ -33,6 +37,9 @@ public class NoLoggingImpl implements Log {
   }
 
   public void debug(String s) {
+  }
+
+  public void trace(String s) {
   }
 
   public void warn(String s) {

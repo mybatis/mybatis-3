@@ -73,7 +73,7 @@ public abstract class BaseJdbcLogger {
     EXECUTE_METHODS.add("execute");
     EXECUTE_METHODS.add("executeUpdate");
     EXECUTE_METHODS.add("executeQuery");
-    EXECUTE_METHODS.add("executeBatch");
+    EXECUTE_METHODS.add("addBatch");
   }
 
   protected void setColumn(Object key, Object value) {
@@ -131,6 +131,14 @@ public abstract class BaseJdbcLogger {
       statementLog.debug(text);
     } else {
       getLog().debug(text);
+    }
+  }
+
+  protected void trace(String text) {
+    if (statementLog.isTraceEnabled()) {
+      statementLog.trace(text);
+    } else {
+      getLog().trace(text);
     }
   }
 

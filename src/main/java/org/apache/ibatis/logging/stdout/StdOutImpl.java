@@ -26,6 +26,10 @@ public class StdOutImpl implements Log {
     return true;
   }
 
+  public boolean isTraceEnabled() {
+    return true;
+  }
+
   public void error(String s, Throwable e) {
     System.err.println(s);
     e.printStackTrace(System.err);
@@ -36,6 +40,10 @@ public class StdOutImpl implements Log {
   }
 
   public void debug(String s) {
+    System.out.println(s);
+  }
+
+  public void trace(String s) {
     System.out.println(s);
   }
 

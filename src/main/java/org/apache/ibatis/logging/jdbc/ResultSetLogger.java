@@ -72,7 +72,7 @@ public final class ResultSetLogger extends BaseJdbcLogger implements InvocationH
       row.append(colname);
       if (i != columnCount) row.append(", ");
     }
-    debug(row.toString());
+    trace(row.toString());
   }
 
   private void printColumnValues(int columnCount) throws SQLException {
@@ -89,7 +89,7 @@ public final class ResultSetLogger extends BaseJdbcLogger implements InvocationH
       row.append(colname);
       if (i != columnCount) row.append(", ");
     }
-    debug(row.toString());
+    trace(row.toString());
   }
 
   /*
