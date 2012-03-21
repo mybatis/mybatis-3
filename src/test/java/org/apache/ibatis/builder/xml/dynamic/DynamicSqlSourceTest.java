@@ -137,6 +137,58 @@ public class DynamicSqlSourceTest extends BaseDataTest {
   }
 
   @Test
+  public void shouldTrimWHEREANDWithLFForFirstCondition() throws Exception {
+    final String expected = "SELECT * FROM BLOG WHERE \n ID = ?";
+    DynamicSqlSource source = createDynamicSqlSource(
+        new TextSqlNode("SELECT * FROM BLOG"),
+        new WhereSqlNode(new Configuration(),mixedContents(
+            new IfSqlNode(mixedContents(new TextSqlNode("   and\n ID = ?  ")), "true"
+                )
+            )));
+    BoundSql boundSql = source.getBoundSql(null);
+    assertEquals(expected, boundSql.getSql());
+  }
+
+  @Test
+  public void shouldTrimWHEREANDWithCRLFForFirstCondition() throws Exception {
+    final String expected = "SELECT * FROM BLOG WHERE \r\n ID = ?";
+    DynamicSqlSource source = createDynamicSqlSource(
+        new TextSqlNode("SELECT * FROM BLOG"),
+        new WhereSqlNode(new Configuration(),mixedContents(
+            new IfSqlNode(mixedContents(new TextSqlNode("   and\r\n ID = ?  ")), "true"
+                )
+            )));
+    BoundSql boundSql = source.getBoundSql(null);
+    assertEquals(expected, boundSql.getSql());
+  }
+
+  @Test
+  public void shouldTrimWHEREORWithLFForFirstCondition() throws Exception {
+    final String expected = "SELECT * FROM BLOG WHERE \n ID = ?";
+    DynamicSqlSource source = createDynamicSqlSource(
+        new TextSqlNode("SELECT * FROM BLOG"),
+        new WhereSqlNode(new Configuration(),mixedContents(
+            new IfSqlNode(mixedContents(new TextSqlNode("   or\n ID = ?  ")), "true"
+                )
+            )));
+    BoundSql boundSql = source.getBoundSql(null);
+    assertEquals(expected, boundSql.getSql());
+  }
+
+  @Test
+  public void shouldTrimWHEREORWithCRLFForFirstCondition() throws Exception {
+    final String expected = "SELECT * FROM BLOG WHERE \r\n ID = ?";
+    DynamicSqlSource source = createDynamicSqlSource(
+        new TextSqlNode("SELECT * FROM BLOG"),
+        new WhereSqlNode(new Configuration(),mixedContents(
+            new IfSqlNode(mixedContents(new TextSqlNode("   or\r\n ID = ?  ")), "true"
+                )
+            )));
+    BoundSql boundSql = source.getBoundSql(null);
+    assertEquals(expected, boundSql.getSql());
+  }
+
+  @Test
   public void shouldTrimWHEREInsteadOfORForSecondCondition() throws Exception {
     final String expected = "SELECT * FROM BLOG WHERE  NAME = ?";
     DynamicSqlSource source = createDynamicSqlSource(
