@@ -286,7 +286,7 @@ public class FastResultSetHandler implements ResultSetHandler {
     final List<ResultMapping> propertyMappings = resultMap.getPropertyResultMappings();
     for (ResultMapping propertyMapping : propertyMappings) {
       final String column = prependPrefix(propertyMapping.getColumn(), columnPrefix);
-      if (propertyMapping.isCompositeResult() || (column != null && mappedColumnNames.contains(column))) {
+      if (propertyMapping.isCompositeResult() || (column != null && mappedColumnNames.contains(column.toUpperCase(Locale.ENGLISH)))) {
         Object value = getPropertyMappingValue(rs, metaObject, propertyMapping, lazyLoader, columnPrefix);
         if (value != null) {
           final String property = propertyMapping.getProperty(); // issue #541 make property optional
@@ -556,9 +556,9 @@ public class FastResultSetHandler implements ResultSetHandler {
       return columnName;
     }
     if (prefix == null || prefix.length() == 0) {
-      return columnName.toUpperCase(Locale.ENGLISH);
+      return columnName;
     }
-    return (prefix + columnName).toUpperCase(Locale.ENGLISH);
+    return (prefix + columnName);
   }
 
   protected static class ResultColumnCache {
@@ -632,7 +632,8 @@ public class FastResultSetHandler implements ResultSetHandler {
     private void loadMappedAndUnmappedColumnNames(ResultMap resultMap, String columnPrefix) throws SQLException {
       List<String> mappedColumnNames = new ArrayList<String>();
       List<String> unmappedColumnNames = new ArrayList<String>();
-      final Set<String> mappedColumns = prependPrefixes(resultMap.getMappedColumns(), columnPrefix);
+      final String upperColumnPrefix = columnPrefix == null ? null : columnPrefix.toUpperCase(Locale.ENGLISH);
+      final Set<String> mappedColumns = prependPrefixes(resultMap.getMappedColumns(), upperColumnPrefix);
       for (String columnName : columnNames) {
         final String upperColumnName = columnName.toUpperCase(Locale.ENGLISH);
         if (mappedColumns.contains(upperColumnName)) {
