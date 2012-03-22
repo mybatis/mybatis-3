@@ -219,8 +219,9 @@ public interface SqlSession {
   /**
    * Flushes batch statements.
    * @return BatchResult list of updated records
+   * @since 3.0.6
    */
-  public List<BatchResult> flushStatements();
+  List<BatchResult> flushStatements();
 
   /**
    * Closes the session
