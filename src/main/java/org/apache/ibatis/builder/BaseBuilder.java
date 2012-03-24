@@ -95,30 +95,20 @@ public abstract class BaseBuilder {
     }
   }
 
-  protected TypeHandler<?> resolveInstance(String alias) {
-    if (alias == null) return null;
-    Class<?> type = resolveClass(alias);
+  protected TypeHandler<?> resolveTypeHandler(Class<?> javaType, String typeHandlerAlias) {
+    if (typeHandlerAlias == null) return null;
+    Class<?> type = resolveClass(typeHandlerAlias);
     if (type != null && !TypeHandler.class.isAssignableFrom(type)) {
       throw new BuilderException("Type " + type.getName() + " is not a valid TypeHandler because it does not implement TypeHandler interface");
     }
     @SuppressWarnings( "unchecked" ) // already verified it is a TypeHandler
-    Class<? extends TypeHandler<?>> handlerType = (Class<? extends TypeHandler<?>>) type;
-    TypeHandler<?> handler = resolveInstance(handlerType);
-    return handler;
+    Class<? extends TypeHandler<?>> typeHandlerType = (Class<? extends TypeHandler<?>>) type;
+    return resolveTypeHandler(javaType, typeHandlerType);
   }
 
-  protected TypeHandler<?> resolveInstance(Class<? extends TypeHandler<?>> handlerType) {
-    if (handlerType == null) return null;
-    TypeHandler<?> handler = typeHandlerRegistry.getMappingTypeHandler(handlerType);
-    if (handler == null) {
-      // not in registry, create a new one
-      try {
-        handler = handlerType.newInstance();
-      } catch (Exception e) {
-        throw new BuilderException("Error instantiating class. Cause: " + e, e);
-      }
-    }
-    return handler;
+  protected TypeHandler<?> resolveTypeHandler(Class<?> javaType, Class<?> typeHandlerType) {
+    if (typeHandlerType == null) return null;
+    return typeHandlerRegistry.getInstance(javaType, typeHandlerType);
   }
 
   protected Class<?> resolveAlias(String alias) {

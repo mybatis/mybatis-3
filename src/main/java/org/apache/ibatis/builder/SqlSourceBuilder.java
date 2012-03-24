@@ -93,11 +93,14 @@ public class SqlSourceBuilder extends BaseBuilder {
       if (jdbcType != null) {
         builder.jdbcType(resolveJdbcType(jdbcType));
       }
+      Class<?> javaType = null;
+      String typeHandlerAlias = null;
       for (Map.Entry<String, String> entry : propertiesMap.entrySet()) {
         String name = entry.getKey();
         String value = entry.getValue();
         if ("javaType".equals(name)) {
-          builder.javaType(resolveClass(value));
+          javaType = resolveClass(value);
+          builder.javaType(javaType);
         } else if ("jdbcType".equals(name)) {
           builder.jdbcType(resolveJdbcType(value));
         } else if ("mode".equals(name)) {
@@ -107,14 +110,17 @@ public class SqlSourceBuilder extends BaseBuilder {
         } else if ("resultMap".equals(name)) {
           builder.resultMapId(value);
         } else if ("typeHandler".equals(name)) {
-          builder.typeHandler((TypeHandler<?>) resolveInstance(value));
+          typeHandlerAlias = value;
         } else if ("jdbcTypeName".equals(name)) {
           builder.jdbcTypeName(value);
         }
       }
+      if (typeHandlerAlias != null) {
+        builder.typeHandler((TypeHandler<?>) resolveTypeHandler(javaType, typeHandlerAlias));
+      }
       return builder.build();
     }
-    
+
     private Map<String, String> parseParameterMapping(String content) {
       Map<String, String> map = new HashMap<String, String>();
       StringTokenizer parameterMappingParts = new StringTokenizer(content, ", \n\r\t");

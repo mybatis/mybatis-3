@@ -148,7 +148,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
 
     // Class parameterType = parameterMapBuilder.type();
     Class<?> javaTypeClass = resolveParameterJavaType(parameterType, property, javaType, jdbcType);
-    TypeHandler<?> typeHandlerInstance = resolveInstance(typeHandler);
+    TypeHandler<?> typeHandlerInstance = resolveTypeHandler(javaTypeClass, typeHandler);
 
     ParameterMapping.Builder builder = new ParameterMapping.Builder(configuration, property, javaTypeClass);
     builder.jdbcType(jdbcType);
@@ -385,10 +385,9 @@ public class MapperBuilderAssistant extends BaseBuilder {
       String columnPrefix,
       Class<? extends TypeHandler<?>> typeHandler,
       List<ResultFlag> flags) {
-    // Class resultType = resultMapBuilder.type();
     nestedResultMap = applyCurrentNamespace(nestedResultMap, true);
     Class<?> javaTypeClass = resolveResultJavaType(resultType, property, javaType);
-    TypeHandler<?> typeHandlerInstance = (TypeHandler<?>) resolveInstance(typeHandler);
+    TypeHandler<?> typeHandlerInstance = (TypeHandler<?>) resolveTypeHandler(javaTypeClass, typeHandler);
 
     List<ResultMapping> composites = parseCompositeColumnName(column);
     if (composites.size() > 0) {

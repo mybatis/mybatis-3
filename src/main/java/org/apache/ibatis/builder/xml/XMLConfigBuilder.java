@@ -275,19 +275,20 @@ public class XMLConfigBuilder extends BaseBuilder {
           String typeHandlerPackage = child.getStringAttribute("name");
           configuration.getTypeHandlerRegistry().register(typeHandlerPackage);
         } else {
-          String javaType = child.getStringAttribute("javaType");
-          String jdbcType = child.getStringAttribute("jdbcType");
+          String javaTypeName = child.getStringAttribute("javaType");
+          String jdbcTypeName = child.getStringAttribute("jdbcType");
           String handler = child.getStringAttribute("handler");
-          TypeHandler typeHandlerInstance = (TypeHandler) resolveClass(handler).newInstance();
-          Class<?> javaTypeClass = resolveClass(javaType);
+          Class<?> javaTypeClass = resolveClass(javaTypeName);
+          JdbcType jdbcType = resolveJdbcType(jdbcTypeName);
+          Class<?> typeHandlerClass = resolveClass(handler);
           if (javaTypeClass != null) {
             if (jdbcType == null) {
-              typeHandlerRegistry.register(javaTypeClass, typeHandlerInstance);
+              typeHandlerRegistry.register(javaTypeClass, typeHandlerClass);
             } else {
-              typeHandlerRegistry.register(javaTypeClass, resolveJdbcType(jdbcType), typeHandlerInstance);
+              typeHandlerRegistry.register(javaTypeClass, jdbcType, typeHandlerClass);
             }
           } else {
-            typeHandlerRegistry.register(typeHandlerInstance);
+            typeHandlerRegistry.register(typeHandlerClass);
           }
         }
       }
