@@ -490,7 +490,7 @@ public class FastResultSetHandler implements ResultSetHandler {
       final Class<?> propType = metaObject.getSetterType(innerResultMapping.getProperty());
       final TypeHandler<?> typeHandler = typeHandlerRegistry.getTypeHandler(propType);
       final Object propValue = typeHandler.getResult(rs, prependPrefix(innerResultMapping.getColumn(), columnPrefix));
-      if (propType != null) { // issue #353 do not execute nested query if key is null
+      if (propValue != null) { // issue #353 & #560 do not execute nested query if key is null
         metaObject.setValue(innerResultMapping.getProperty(), propValue);
         foundValues = true;
       }
