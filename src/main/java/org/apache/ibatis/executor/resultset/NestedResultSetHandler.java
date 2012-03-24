@@ -30,6 +30,7 @@ import org.apache.ibatis.executor.ExecutorException;
 import org.apache.ibatis.executor.loader.ResultLoaderMap;
 import org.apache.ibatis.executor.parameter.ParameterHandler;
 import org.apache.ibatis.executor.result.DefaultResultContext;
+import org.apache.ibatis.executor.result.DefaultResultHandler;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.ResultMap;
@@ -59,7 +60,8 @@ public class NestedResultSetHandler extends FastResultSetHandler {
     if (rowBounds != null
         && (rowBounds.getLimit() < RowBounds.NO_ROW_LIMIT
         || rowBounds.getOffset() > RowBounds.NO_ROW_OFFSET)) {
-      throw new ExecutorException("Mapped Statements with nested result mappings cannot be safely constrained by RowBounds.");
+      throw new ExecutorException("Mapped Statements with nested result mappings cannot be safely constrained by RowBounds. "
+          + "Use safeRowBoundsEnabled=false setting to bypass this check.");
     }
   }
 
@@ -67,6 +69,26 @@ public class NestedResultSetHandler extends FastResultSetHandler {
   // HANDLE RESULT SETS
   //
 
+  @Override
+  protected void handleResultSet(ResultSet rs, ResultMap resultMap, List<Object> multipleResults, ResultColumnCache resultColumnCache) throws SQLException {
+    try {
+      if (resultHandler == null) {
+        DefaultResultHandler defaultResultHandler = new DefaultResultHandler(objectFactory);
+        handleRowValues(rs, resultMap, defaultResultHandler, rowBounds, resultColumnCache);
+        multipleResults.add(defaultResultHandler.getResultList());
+      } else {
+        if (configuration.isSafeResultHandlerEnabled()) {
+          throw new ExecutorException("Mapped Statements with nested result mappings cannot be safely used with a custom ResultHandler. " 
+              + "Use safeResultHandlerEnabled=false setting to bypass this check.");
+        }
+        handleRowValues(rs, resultMap, resultHandler, rowBounds, resultColumnCache);
+      }
+    } finally {
+      closeResultSet(rs); // issue #228 (close resultsets)
+    }
+  }
+
+  @Override
   protected void cleanUpAfterHandlingResultSet() {
     super.cleanUpAfterHandlingResultSet();
     objectCache.clear();
@@ -76,6 +98,7 @@ public class NestedResultSetHandler extends FastResultSetHandler {
   // HANDLE ROWS
   //
 
+  @Override
   protected void handleRowValues(ResultSet rs, ResultMap resultMap, ResultHandler resultHandler, RowBounds rowBounds, ResultColumnCache resultColumnCache) throws SQLException {
     final DefaultResultContext resultContext = new DefaultResultContext();
     skipRows(rs, rowBounds);
@@ -95,6 +118,7 @@ public class NestedResultSetHandler extends FastResultSetHandler {
   // GET VALUE FROM ROW
   //
 
+  @Override
   protected Object getRowValue(ResultSet rs, ResultMap resultMap, CacheKey rowKey, ResultColumnCache resultColumnCache) throws SQLException {
     return getRowValue(rs, resultMap, rowKey, rowKey, null, resultColumnCache);
   }

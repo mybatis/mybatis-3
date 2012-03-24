@@ -78,6 +78,7 @@ public class Configuration {
   protected Environment environment;
 
   protected boolean safeRowBoundsEnabled = false;
+  protected boolean safeResultHandlerEnabled = true;
   protected boolean mapUnderscoreToCamelCase = false;
   protected boolean lazyLoadingEnabled = false;
   protected boolean aggressiveLazyLoading = true;
@@ -149,6 +150,14 @@ public class Configuration {
 
   public void setDatabaseId(String databaseId) {
     this.databaseId = databaseId;
+  }
+
+  public boolean isSafeResultHandlerEnabled() {
+    return safeResultHandlerEnabled;
+  }
+
+  public void setSafeResultHandlerEnabled(boolean safeResultHandlerEnabled) {
+    this.safeResultHandlerEnabled = safeResultHandlerEnabled;
   }
 
   public boolean isSafeRowBoundsEnabled() {

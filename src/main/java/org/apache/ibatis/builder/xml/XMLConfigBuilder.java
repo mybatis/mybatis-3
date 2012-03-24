@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2011 The MyBatis Team
+ *    Copyright 2009-2012 The MyBatis Team
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -40,7 +40,6 @@ import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.LocalCacheScope;
 import org.apache.ibatis.transaction.TransactionFactory;
 import org.apache.ibatis.type.JdbcType;
-import org.apache.ibatis.type.TypeHandler;
 
 public class XMLConfigBuilder extends BaseBuilder {
 
@@ -207,6 +206,7 @@ public class XMLConfigBuilder extends BaseBuilder {
       configuration.setLocalCacheScope(LocalCacheScope.valueOf(stringValueOf(props.getProperty("localCacheScope"), "SESSION")));
       configuration.setJdbcTypeForNull(JdbcType.valueOf(stringValueOf(props.getProperty("jdbcTypeForNull"), "OTHER")));
       configuration.setLazyLoadTriggerMethods(stringSetValueOf(props.getProperty("lazyLoadTriggerMethods"), "equals,clone,hashCode,toString"));
+      configuration.setSafeResultHandlerEnabled(booleanValueOf(props.getProperty("safeResultHandlerEnabled"), true));
     }
   }
 
@@ -267,20 +267,19 @@ public class XMLConfigBuilder extends BaseBuilder {
     throw new BuilderException("Environment declaration requires a DataSourceFactory.");
   }
 
-  @SuppressWarnings("rawtypes")
   private void typeHandlerElement(XNode parent) throws Exception {
     if (parent != null) {
       for (XNode child : parent.getChildren()) {
         if ("package".equals(child.getName())) {
           String typeHandlerPackage = child.getStringAttribute("name");
-          configuration.getTypeHandlerRegistry().register(typeHandlerPackage);
+          typeHandlerRegistry.register(typeHandlerPackage);
         } else {
           String javaTypeName = child.getStringAttribute("javaType");
           String jdbcTypeName = child.getStringAttribute("jdbcType");
-          String handler = child.getStringAttribute("handler");
+          String handlerTypeName = child.getStringAttribute("handler");
           Class<?> javaTypeClass = resolveClass(javaTypeName);
           JdbcType jdbcType = resolveJdbcType(jdbcTypeName);
-          Class<?> typeHandlerClass = resolveClass(handler);
+          Class<?> typeHandlerClass = resolveClass(handlerTypeName);
           if (javaTypeClass != null) {
             if (jdbcType == null) {
               typeHandlerRegistry.register(javaTypeClass, typeHandlerClass);
