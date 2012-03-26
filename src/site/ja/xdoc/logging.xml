@@ -100,7 +100,7 @@ public interface BlogMapper {
         <source><![CDATA[# Global logging configuration
 log4j.rootLogger=ERROR, stdout
 # MyBatis logging configuration...
-log4j.logger.org.mybatis.example.BlogMapper=DEBUG
+log4j.logger.org.mybatis.example.BlogMapper=TRACE
 # Console output...
 log4j.appender.stdout=org.apache.log4j.ConsoleAppender
 log4j.appender.stdout.layout=org.apache.log4j.PatternLayout
@@ -108,12 +108,16 @@ log4j.appender.stdout.layout.ConversionPattern=%5p [%t] - %m%n]]></source>
         <p>上記のように設定すると、Log4J は <code>org.mybatis.example.BlogMapper</code> について詳細なログを出力し、それ以外のクラスについてはエラーのみを出力します。</p>
         <p>ログに出力される情報を細かく調整したいのなら、Mapper ファイル全体ではなく特定のステートメントを指定することもできます。</p>
 
-        <source>log4j.logger.org.mybatis.example.BlogMapper.selectBlog=DEBUG</source>
+        <source>log4j.logger.org.mybatis.example.BlogMapper.selectBlog=TRACE</source>
 
         <p>逆に、複数の Mapper に対するログを有効化したい場合もあるでしょう。その場合は、対象となる Mapper を含むパッケージを指定することができます。</p>
 
+        <source>log4j.logger.org.mybatis.example=TRACE</source>
+
+        <p>クエリが大量の結果セットを返すようなケースでSQLステートメントのみを出力したい場合に対応できるよう、SQLステートメントは DEBUG（JDK logging では FINE）レベル、結果は TRACE（JDK logging では FINER）レベルで出力されるようになっています。SQLステートメントのみを出力したい場合、ログレベルに DEBUG を設定します。</p>
+
         <source>log4j.logger.org.mybatis.example=DEBUG</source>
-        
+
         <p>Mapper インターフェイスを使っていない場合、例えば次のような Mapper XML ファイルを使っていたらどうすれば良いのでしょうか。
         </p>
 
@@ -129,11 +133,11 @@ log4j.appender.stdout.layout.ConversionPattern=%5p [%t] - %m%n]]></source>
 
         <p>この場合、次のようにネームスペースを指定することでこの XML ファイル全体のログを有効化することができます。</p>
 
-        <source>log4j.logger.org.mybatis.example.BlogMapper=DEBUG</source>
+        <source>log4j.logger.org.mybatis.example.BlogMapper=TRACE</source>
 
         <p>特定のステートメントのみを対象とする場合は次のように指定します。</p>
 
-        <source>log4j.logger.org.mybatis.example.BlogMapper.selectBlog=DEBUG</source>
+        <source>log4j.logger.org.mybatis.example.BlogMapper.selectBlog=TRACE</source>
 
         <p>お気づきのように、Mapper インターフェイスと XML のどちらを使っている場合でも、設定方法に違いはありません。</p>
 
