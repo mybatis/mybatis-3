@@ -28,8 +28,10 @@
   <body>
     <section name="Logging">
       <p></p>
-      <p>MyBatis 는 내부 로그 팩토리를 사용하여 로깅 정보를 제공한다. 내부 로그 팩토리는 로깅 정보를 다른 로그 구현체 중
-하나에 전달한다.</p>
+      <p>MyBatis provides logging information through the use of an
+        internal log factory. The internal log factory will delegate logging
+        information to one of the following log implementations:
+      </p>
       <ul>
         <li>
           SLF4J
@@ -44,27 +46,50 @@
           JDK logging
         </li>
       </ul>
-      <p>로깅 솔루션은 내부 MyBatis 로그 팩토리의 런타임 체크를 통해 선택된다. MyBatis 로그 팩토리는 가능하면 첫번째
-구현체를 사용할 것이다(위 로깅 구현체의 나열 순서는 내부적으로 선택하는 우선순위이다). 만약 MyBatis 가 위 구현체중
-하나도 찾지 못한다면, 로깅을 하지 않을 것이다.</p>
-      <p>많은 환경은 애플리케이션 서버(좋은 예는 Tomcat 과 WebSphere)의 클래스패스의 일부로 JCL 을 사용한다. 이러한 환경을
-아는 것이 중요하다. MyBatis 는 로깅 구현체로 JCL 을 사용할 것이다. WebSphere 와 같은 환경에서 Log4J 설정은 무시될
-것이다. 왜냐하면 WebSphere 는 자체 JCL 구현체를 제공하기 때문이다. 이러한 사항은 불만스러울수 있다. 왜냐하면
-MyBatis 는 당신의 Log4J 설정을 무시하는 것처럼 보일수도 있기 때문이다. (사실 MyBatis 는 당신의 Log4J 설정을
-무시한다. 왜냐하면 MyBatis 는 이러한 환경에서 JCL 을 사용할 것이기 때문이다.) 만약 당신의 애플리케이션이
-클래스패스에 JCL 을 포함한 환경에서 돌아가지만 다른 로깅 구현체 중 하나를 더 선호한다면, 다음의 메서드 중 하나를
-호출하여 다른 로깅 구현체를 선택 할 수 있다.</p>
+      <p>The logging solution chosen is based on runtime introspection by
+        the internal MyBatis log factory. The MyBatis log factory will use
+        the first logging implementation it finds (implementations are
+        searched in the above order). If MyBatis finds none of the above
+        implementations, then logging will be disabled.
+      </p>
+      <p>Many environments ship Commons Logging as a part of the application server
+        classpath (good examples include Tomcat and WebSphere). It is
+        important to know that in such environments, MyBatis will use Commons Logging as
+        the logging implementation. In an environment like WebSphere this
+        will mean that your Log4J configuration will be ignored because
+        WebSphere supplies its own proprietary implementation of Commons Logging. This
+        can be very frustrating because it will appear that MyBatis is
+        ignoring your Log4J configuration (in fact, MyBatis is ignoring your
+        Log4J configuration because MyBatis will use Commons Logging in such
+        environments). If your application is running in an environment
+        where Commons Logging is included in the classpath but you would
+        rather use one of the other logging implementations you can select a
+        different logging implementation by calling one of the following
+        methods:
+      </p>
       <source><![CDATA[org.apache.ibatis.logging.LogFactory.useSlf4jLogging();
 org.apache.ibatis.logging.LogFactory.useLog4JLogging();
 org.apache.ibatis.logging.LogFactory.useJdkLogging();
 org.apache.ibatis.logging.LogFactory.useCommonsLogging();
 org.apache.ibatis.logging.LogFactory.useStdOutLogging();]]></source>
-      <p>MyBatis 메서드를 호출하기 전에 위 메서드 중 하나를 호출해야 한다. 이 메서드들은 런타임 클래스패스에 구현체가
-존재하면 그 로그 구현체를 사용하게 한다. 예를 들어, Log4J 로깅을 선택했지만 런타임에 Log4J 구현체가 클래스패스에
-없다면, MyBatis 는 Log4J 구현체의 사용을 무시하고 로깅 구현체를 찾아 다시 사용할 것이다.</p>
-      <p>Jakarta Commons 로깅, Log4J 그리고 JDK 로깅 API 에 대한 설명은 이 문서의 범위를 벗어난다. 이러한 로깅 관련
-프레임워크에 대해 좀더 알고 싶다면, 개별 위치에서 좀더 많은 정보를 얻을 수 있을 것이다.</p>
+      <p>If you choose to call one of these methods, you should do so
+        before calling any other MyBatis method. Also, these methods
+        will only switch to the requested log implementation if that
+        implementation is available on the runtime classpath. For example, if
+        you try to select Log4J logging and Log4J is not available at runtime,
+        then MyBatis will ignore the request to use Log4J and will use it's
+        normal algorithm for discovering logging implementations.
+      </p>
+      <p>The specifics of SLF4J, Apache Commons Logging, Apache Log4J and the JDK
+        Logging API are beyond the scope of this document. However the
+        example configuration below should get you started. If you would like
+        to know more about these frameworks, you can get more information from
+        the following locations:
+      </p>
       <ul>
+        <li>
+          <a href="http://www.slf4j.org/">SLF4J</a>
+        </li>
         <li>
           <a href="http://commons.apache.org/logging">Apache Commons Logging</a>
         </li>
@@ -76,52 +101,111 @@ org.apache.ibatis.logging.LogFactory.useStdOutLogging();]]></source>
         </li>
       </ul>
       <subsection name="Logging Configuration">
-        <p>MyBatis 가 실제로 사용하는 로그 클래스는 MyBatis 패키지에 포함되어 있지 않다. MyBatis 로깅 구문을 보기 위해서는,
-java.sql 패키지의 클래스에 대해 로깅을 활성화해야 할 것이다. 해당되는 클래스 목록들이다.</p>
-        <ul>
-        <li><code>java.sql.Connection</code></li>
-        <li><code>java.sql.PreparedStatement</code></li>
-        <li><code>java.sql.Resultset</code></li>
-        <li><code>java.sql.Statement</code></li>
-        </ul>
-        <p>Log4J 를 사용하는 방법을 보여줄 것이다. 로깅 서비스는 하나 이상이 설정파일(예를 들면, log4j.properties)과 새로운
-JAR 파일(예를 들면, log4j.jar)을 사용한다. 다음의 예제는 Log4J 를 사용하여 로깅 서비스를 설정할 것이다. 두가지 단계를
-거친다.</p>
+        <p>To see MyBatis logging statements you may enable logging on a
+          package, a mapper fully qualified class name, a namespace 
+          o a fully qualified statement name.
+        </p>
+        <p>Again, how you do this is dependent on the logging implementation
+          in use. We'll show how to do it with Log4J. Configuring the
+          logging services is simply a matter of including one or more extra
+          configuration files (e.g. log4j.properties) and sometimes a new JAR
+          file (e.g. log4j.jar). The following example configuration will
+          configure full logging services using Log4J as a provider. There
+          are 2 steps.
+        </p>
         <p></p>
-        <h4>첫번째 단계 : Log4J JAR 파일 추가하기</h4>
-        <p>Log4J 를 사용하기 때문에, 애플리케이션에 JAR 파일이 있어야 한다. Log4J 를 사용하기 위해, 애플리케이션의
-클래스패스에 JAR 파일을 추가할 필요가 있다. 위 URL 에서 Log4J 를 다운로드 할 수 있다.</p>
-        <p>웹이나 기업용 애플리케이션에서는 WEB-INF/lib 디렉터리에 log4j.jar 파일을 추가할 수 있다. 단독으로 실행되는
-애플리케이션에서는 JVM 의 –classpath 시작 파라미터에서 간단히 추가할 수 있다.</p>
+        <h4>
+          Step 1: Add the Log4J JAR file
+        </h4>
+        <p>Because we are using Log4J, we will need to ensure its
+          JAR file is available to our application. To use Log4J, you need to
+          add the JAR file to your application classpath. You can download
+          Log4J from the URL above.
+        </p>
+        <p>For web or enterprise applications you can add the <code>log4j.jar</code> to
+          your <code>WEB-INF/lib</code> directory, or for a standalone application you can
+          simply add it to the JVM <code>-classpath</code> startup parameter.
+        </p>
         <p></p>
-        <h4>두번째 단계 : Log4J 설정하기</h4>
-        <p>Log4J 를 설정하는 것은 간단하다. 먼저 log4j.properties 파일을 만들어서 다음처럼 설정하면 된다.</p>
+        <h4>
+          Step 2: Configure Log4J
+        </h4>
+        <p>Configuring Log4J is simple. Suppose you want to enable the log for this mapper:
+        </p>
+        <source><![CDATA[package org.mybatis.example;
+public interface BlogMapper {
+  @Select("SELECT * FROM blog WHERE id = #{id}")
+  Blog selectBlog(int id);
+}]]></source>
+        <p>Create a file called <code>log4j.properties</code> 
+        as shown below and place it in your classpath:
+        </p>
         <source><![CDATA[# Global logging configuration
 log4j.rootLogger=ERROR, stdout
 # MyBatis logging configuration...
-#log4j.logger.org.apache.ibatis=DEBUG
-#log4j.logger.java.sql.Connection=DEBUG
-#log4j.logger.java.sql.Statement=DEBUG
-#log4j.logger.java.sql.PreparedStatement=DEBUG
-#log4j.logger.java.sql.ResultSet=DEBUG
+log4j.logger.org.mybatis.example.BlogMapper=TRACE
 # Console output...
 log4j.appender.stdout=org.apache.log4j.ConsoleAppender
 log4j.appender.stdout.layout=org.apache.log4j.PatternLayout
 log4j.appender.stdout.layout.ConversionPattern=%5p [%t] - %m%n]]></source>
-        <p>위 파일은 에러만을 리포트하는 최소한의 설정이다. 파일의 두번째 라인은 stdout appender 에 에러만을 출력한다.
-appender 는 출력(예를 들면, 콘솔, 파일, 데이터베이스 등)을 모으는 컴포넌트이다. 로그를 최대한 출력하기 위해서는
-다음처럼 설정을 변경해야 한다.</p>
-        <p></p>
-        <source>log4j.rootLogger=DEBUG, stdout</source>
-        <p></p>
-        <p>두번째 라인을 위처럼 변경하면, Log4J 는 ‘stdout’ appender 에 모든 로깅 이벤트를 출력한다. finer 레벨로 레벨을
-조정하고자 한다면, 위 파일에서 ‘SqlMap 로깅 설정’(4 번째라인에서 8 번째라인까지) 에서 각 클래스별로 설정할 수 있다.
-PreparedStatement 에 대해 콘솔에 DEBUG 레벨로 로깅(SQL 구문)을 하고 싶다면, 다음처럼 7 번째 라인을 수정하면 된다.</p>
+        <p>
+          The above file will cause log4J to report detailed logging for 
+          <code>org.mybatis.example.BlogMapper</code>
+          and just errors for the rest of the classes of your application.
+        </p>
+        <p>
+          If you want to tune the logging at a finer level you can turn logging 
+          on for specific statements instead of the whole mapper file. 
+          The following line will enable logging just for the <code>selectBlog</code> 
+          statement:
+        </p>
 
-        <source>log4j.logger.java.sql.PreparedStatement=DEBUG</source>
+        <source>log4j.logger.org.mybatis.example.BlogMapper.selectBlog=TRACE</source>
+        
+        <p>By the contrary you may want want to enable logging for a group of mappers. 
+        In that case you should add as a logger the root package where your mappers reside:</p>
 
-        <p>log4j.properties 파일에서 남은 설정은 appender 를 설정하기 위해 사용된다. 하지만 이 내용은 이 문서의 범위를 벗어난다.
-어쨌든 Log4J 웹사이트에서 좀더 많은 정보를 찾을 수 있다.</p>
+        <source>log4j.logger.org.mybatis.example=TRACE</source>
+        
+        <p>There are queries that can return huge result sets. In that cases you may want to see the 
+        SQL stamentent but not the results. For that purpose SQL statements are logged with DEBUG level
+        (FINE in JDK logging) and results with TRACE level (FINER in JDK logging), so in case
+        you want to see the statement but not the result, set the level to DEBUG.
+        </p>
+
+        <source>log4j.logger.org.mybatis.example=DEBUG</source>
+        
+        <p>But what about if you are not using mapper interfaces but mapper XML files like this one?
+        </p>
+
+      <source><![CDATA[<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.mybatis.example.BlogMapper">
+  <select id="selectBlog" parameterType="int" resultType="Blog">
+    select * from Blog where id = #{id}
+  </select>
+</mapper>]]></source>
+
+		<p>In that case you can enable logging for the whole XML file by adding
+		a logger for the namespace as shown below:</p>
+
+        <source>log4j.logger.org.mybatis.example.BlogMapper=TRACE</source>
+
+		<p>Or for an specific statement:</p>
+
+        <source>log4j.logger.org.mybatis.example.BlogMapper.selectBlog=TRACE</source>
+
+		<p>Yes, as you may have noticed, there is no difference in configuring 
+		logging for mapper interfaces or for XML mapper files.</p>
+
+        <p>The remaining configuration in the <code>log4j.properties</code> file is used
+          to configure the appenders, which is beyond the scope of this
+          document. However, you can find more information at the Log4J
+          website (URL above). Or, you could simply experiment with it to see
+          what effects the different configuration options have.
+        </p>
       </subsection>
     </section>
   </body>

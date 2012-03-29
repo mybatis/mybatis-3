@@ -48,6 +48,7 @@
         <item href="sqlmap-xml.html#insert_update_and_delete" name="insert, update and delete" />
         <item href="sqlmap-xml.html#Parameters" name="Parameters" />
         <item href="sqlmap-xml.html#Result_Maps" name="Result Maps" />
+        <item href="sqlmap-xml.html#Auto-mapping" name="Auto-mapping" />
         <item href="sqlmap-xml.html#cache" name="cache" />
       </item>
       <item name="동적 SQL" href="dynamic-sql.html"/>

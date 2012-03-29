@@ -1289,6 +1289,91 @@ vehicle 간의 관계를 알 수 있다. 그러므로, 나머지 프로퍼티들
 예제는 실제로 필요한 내용보다 좀더 많이 서술되어 있다.</p>
 
       </subsection>
+
+      <subsection name="Auto-mapping">
+
+        <p>
+          As you have already seen in the previous sections, in simple cases MyBatis can auto-map the results for you 
+          and in others you will need to build a result map. 
+          But as you will see in this section you can also mix both strategies. 
+          Let's have a deeper look at how auto-mapping works. 
+        </p>
+
+        <p>
+          When auto-mapping results MyBatis will get the column name and look for a property with the same name ignoring case. That means that if
+          a column named <i>ID</i> and property named <i>id</i> are found, MyBatis will set the <i>id</i> property with the <i>ID</i> column value. 
+        </p>
+
+        <p>
+          Usually database columns are named using uppercase letters and underscores between words and java properties often follow the camelcase 
+          naming covention. To enable the auto-mapping between them set the setting <code>mapUnderscoreToCamelCase</code> to true.
+        </p>
+        
+        <p>
+          Auto-mapping works even when there is an specific result map. When this happens, for each result map, all columns that are present in the
+          ResultSet that have not a manual mapping will be auto-mapped, then manual mappings will be processed. 
+          In the following sample <i>id</i> and <i>userName</i> columns will be auto-mapped and <i>hashed_password</i> column will be mapped.</p>
+
+        <source><![CDATA[<select id="selectUsers" parameterType="int" resultType="User">
+  select
+    user_id             as "id",
+    user_name           as "userName",
+    hashed_password
+  from some_table
+  where id = #{id}
+</select>]]></source>
+
+        <source><![CDATA[<resultMap id="userResultMap" type="User">
+  <result property="password" column="hashed_password"/>
+</resultMap>]]></source>
+
+        <p>
+          There are three auto-mapping levels:
+        </p>
+        
+        <ul>
+          <li>
+            <code>NONE</code> - disables auto-mapping. Only manually mapped properties will be set.
+          </li>
+          <li>
+            <code>PARTIAL</code> - will auto-map results except those that have nested result mappings defined inside (joins).
+          </li>
+          <li>
+            <code>FULL</code> - auto-maps everything.
+          </li>
+        </ul>
+
+        <p>
+          The default value is <code>PARTIAL</code>, and it is so for a reason. When <code>FULL</code> is used auto-mapping will
+          be performed when processing join results and joins retrieve data of several different entities in the same row 
+          hence this may result in undesired mappings. To understand the risk have a look at the following sample:
+        </p>
+        
+        <source><![CDATA[<select id="selectBlog" parameterType="int" resultMap="blogResult">
+  select
+    B.id,
+    B.title,
+    A.username,
+  from Blog B left outer join Author A on B.author_id = A.id
+  where B.id = #{id}
+</select>]]></source>
+
+        <source><![CDATA[<resultMap id="blogResult" type="Blog">
+  <association property="author" javaType="Author" resultMap="authorResult"/>
+</resultMap>
+
+<resultMap id="authorResult" type="Author">
+  <result property="username" column="author_username"/>
+</resultMap>]]></source>
+        
+        <p>
+          With this result map both <i>Blog</i> and <i>Author</i> will be auto-mapped. But note that <i>Author</i> has an <i>id</i> 
+          property and there is a column named <i>id</i> in the ResultSet so Author's id will be filled with Blog's id, and that is not 
+          what you were expecting. So use the <code>FULL</code> option with caution.
+        </p>
+       
+      </subsection>
+
       <subsection name="cache">
         <p>MyBatis 는 쉽게 설정가능하고 변경가능한 쿼리 캐싱 기능을 가지고 있다. MyBatis 3 캐시 구현체는 좀더 강력하고 쉽게
 설정할 수 있도록 많은 부분이 수정되었다.</p>
