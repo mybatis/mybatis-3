@@ -130,7 +130,6 @@ public class PooledDataSource implements DataSource {
     forceCloseAll();
   }
 
-
   public void setDriverProperties(Properties driverProps) {
     dataSource.setDriverProperties(driverProps);
     forceCloseAll();
@@ -312,8 +311,7 @@ public class PooledDataSource implements DataSource {
     return ("" + url + username + password).hashCode();
   }
 
-  protected void pushConnection(PooledConnection conn)
-      throws SQLException {
+  protected void pushConnection(PooledConnection conn) throws SQLException {
 
     synchronized (state) {
       state.activeConnections.remove(conn);
@@ -352,8 +350,7 @@ public class PooledDataSource implements DataSource {
     }
   }
 
-  private PooledConnection popConnection(String username, String password)
-      throws SQLException {
+  private PooledConnection popConnection(String username, String password) throws SQLException {
     boolean countedWait = false;
     PooledConnection conn = null;
     long t = System.currentTimeMillis();
@@ -372,7 +369,8 @@ public class PooledDataSource implements DataSource {
           if (state.activeConnections.size() < poolMaximumActiveConnections) {
             // Can create new connection
             conn = new PooledConnection(dataSource.getConnection(), this);
-            @SuppressWarnings("unused") //used in logging, if enabled
+            @SuppressWarnings("unused")
+            //used in logging, if enabled
             Connection realConn = conn.getRealConnection();
             if (log.isDebugEnabled()) {
               log.debug("Created connection " + conn.getRealHashCode() + ".");
@@ -528,7 +526,7 @@ public class PooledDataSource implements DataSource {
   }
 
   public <T> T unwrap(Class<T> iface) throws SQLException {
-    return null;
+    throw new SQLException(getClass().getName() + " is not a wrapper.");
   }
 
   public boolean isWrapperFor(Class<?> iface) throws SQLException {
