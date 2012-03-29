@@ -273,7 +273,7 @@ try {
   List<Author> selectAuthors();
   // (Map<Integer,Author>) selectMap("selectAuthors", "id")
   @MapKey("id")
-  List<Author> selectAuthorsAsMap();
+  Map<Integer, Author> selectAuthors();
   // insert("insertAuthor", author)
   int insertAuthor(Author author);
   // updateAuthor("updateAuthor", author)

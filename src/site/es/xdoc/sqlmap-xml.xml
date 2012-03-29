@@ -1311,6 +1311,90 @@ public class User {
         </p>
 
       </subsection>
+      <subsection name="Auto-mapeo">
+
+        <p>
+          Como ya has visto en las secciones previas, en los casos simples MyBatis puede auto-mapear los resultados por ti y en el resto de los casos 
+          es posible que tengas que crear un result map. Pero, como verás en esta sección también puedes combinar ambas estrategias. 
+          Veamos en detalle cómo funciona el auto-mapeo. 
+        </p>
+
+        <p>
+          Al auto-mapear resultados MyBatis obtiene el nombre de columna y busca una propiedad con el mismo nombre sin tener en cuenta las mayúsculas. 
+          Es decir, si se encuentra una columna <i>ID</i> y una propiedad <i>id</i>, MyBatis informará la propiedad <i>id</i> con el valor de la columna 
+          <i>ID</i>. 
+        </p>
+
+        <p>
+          Normalmente las columnas de base de datos se nombran usando mayúsculas y separando las palabras con un subrayado, mientras que las propiedades
+          java se nombran habitualmente siguiendo la notación tipo camelcase. Para habilitar el auto-mapeo entre ellas informa el parámetro de configuración
+          <code>mapUnderscoreToCamelCase</code> a true.
+        </p>
+        
+        <p>
+          El auto-mapeo funciona incluso cuando hay un result map específico. Cuando esto sucede, para cada result map, todas las columnas que están 
+          presentes en el ResultSet y que no tienen un mapeo manual se auto-mapearán. Posteriormente se procesarán los mapeos manuales.
+          En el siguiente ejemplo las columnas <i>id</i> y <i>userName</i> se auto-mapearán y la columna <i>hashed_password</i> se mapeará manualmente.</p>
+
+        <source><![CDATA[<select id="selectUsers" parameterType="int" resultType="User">
+  select
+    user_id             as "id",
+    user_name           as "userName",
+    hashed_password
+  from some_table
+  where id = #{id}
+</select>]]></source>
+
+        <source><![CDATA[<resultMap id="userResultMap" type="User">
+  <result property="password" column="hashed_password"/>
+</resultMap>]]></source>
+
+        <p>
+          Hay tres niveles de auto-mapeo:
+        </p>
+        
+        <ul>
+          <li>
+            <code>NONE</code> - desactiva el auto-mapeo. Solo las propiedades mapeadas manaulmente se informarán.
+          </li>
+          <li>
+            <code>PARTIAL</code> - auto-mapea todos los resultados que no tienen un mapeo anidado definido en su interior (joins).
+          </li>
+          <li>
+            <code>FULL</code> - lo auto-mapea todo.
+          </li>
+        </ul>
+
+        <p>
+          El valor por defecto es <code>PARTIAL</code>, y hay una razón para ello. Cuandos se utiliza <code>FULL</code> el auto-mapeo se 
+          realiza cuando se están procesando resultados de joins y las joins obtienen datos de distintas entidades en la misma fila 
+          por lo tanto podrían producirse mapeos automáticos indeseados. Para comprender el riesgo observa el siguiente ejemplo:
+        </p>
+        
+        <source><![CDATA[<select id="selectBlog" parameterType="int" resultMap="blogResult">
+  select
+    B.id,
+    B.title,
+    A.username,
+  from Blog B left outer join Author A on B.author_id = A.id
+  where B.id = #{id}
+</select>]]></source>
+
+        <source><![CDATA[<resultMap id="blogResult" type="Blog">
+  <association property="author" javaType="Author" resultMap="authorResult"/>
+</resultMap>
+
+<resultMap id="authorResult" type="Author">
+  <result property="username" column="author_username"/>
+</resultMap>]]></source>
+        
+        <p>
+          Con este result map ambos <i>Blog</i> y <i>Author</i> se auto-mapearán. Pero fíjate que <i>Author</i> tiene un <i>id</i> y que hay una
+          columna con nombre <i>id</i> en el ResultSet por lo que el id de Author se rellenará con el id de Blog, y eso no era lo que esperabas.
+          Por tanto usa la opción <code>FULL</code> con cuidado.
+        </p>
+       
+      </subsection>
       <subsection name="cache">
         <p>MyBatis incluye una funcionalidad de caché transaccional de segundo nivel muy potente que es ampliamente configurable y personalizable. Se han realizado muchos cambios en la caché de MyBatis 3 para hacer la a la vez más potente y más sencilla de configurar.
         </p>

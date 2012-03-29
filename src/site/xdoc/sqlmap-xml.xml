@@ -1688,7 +1688,7 @@ public class User {
 
         <p>
           When auto-mapping results MyBatis will get the column name and look for a property with the same name ignoring case. That means that if
-          a column named <i>ID</i> and property named <i>id</i> are found, MyBatis will set the id property with the <i>ID</i> column value. 
+          a column named <i>ID</i> and property named <i>id</i> are found, MyBatis will set the <i>id</i> property with the <i>ID</i> column value. 
         </p>
 
         <p>
@@ -1697,7 +1697,7 @@ public class User {
         </p>
         
         <p>
-          Auto-mapping works even when there is an specific result map. When this happens, for each result map all columns that are present in the
+          Auto-mapping works even when there is an specific result map. When this happens, for each result map, all columns that are present in the
           ResultSet that have not a manual mapping will be auto-mapped, then manual mappings will be processed. 
           In the following sample <i>id</i> and <i>userName</i> columns will be auto-mapped and <i>hashed_password</i> column will be mapped.</p>
 
