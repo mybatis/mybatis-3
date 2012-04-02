@@ -1555,29 +1555,28 @@ public class User {
         </p>
       </subsection>
 
-      <subsection name="Auto-mapping">
+      <subsection name="自動マッピング">
 
         <p>
-          As you have already seen in the previous sections, in simple cases MyBatis can auto-map the results for you 
-          and in others you will need to build a result map. 
-          But as you will see in this section you can also mix both strategies. 
-          Let's have a deeper look at how auto-mapping works. 
+          前章では、シンプルなケースでは MyBatis の自動マッピングが利用できるということと、複雑なケースではあなた自身で Result Map を記述する必要があるということを説明しました。
+          この章では更に、この２つの方法を同時に利用する方法を説明していきます。
+          まず、自動マッピングの動作について詳しく見て行きましょう。
         </p>
 
         <p>
-          When auto-mapping results MyBatis will get the column name and look for a property with the same name ignoring case. That means that if
-          a column named <i>ID</i> and property named <i>id</i> are found, MyBatis will set the <i>id</i> property with the <i>ID</i> column value. 
+          結果を自動マッピングする際、MyBatis は列名と同じ名前を持つプロパティを探します（大文字と小文字は区別しません）。
+          例えば <i>ID</i> という名前の列と <i>id</i> という名前のプロパティが見つかった場合、MyBatis は <i>id</i> プロパティに <i>ID</i> 列の値をセットします。
         </p>
 
         <p>
-          Usually database columns are named using uppercase letters and underscores between words and java properties often follow the camelcase 
-          naming covention. To enable the auto-mapping between them set the setting <code>mapUnderscoreToCamelCase</code> to true.
+          通常、データベースの列名は英数字と単語を区切るアンダースコアで定義され、Java のプロパティはキャメルケースで定義されるのが一般的です。
+          <code>mapUnderscoreToCamelCase</code> に true に設定すると、この一般的な命名規則に基づいて自動マッピングを適用することができます。
         </p>
         
         <p>
-          Auto-mapping works even when there is an specific result map. When this happens, for each result map, all columns that are present in the
-          ResultSet that have not a manual mapping will be auto-mapped, then manual mappings will be processed. 
-          In the following sample <i>id</i> and <i>userName</i> columns will be auto-mapped and <i>hashed_password</i> column will be mapped.</p>
+          Result Map が指定されている場合でも自動マッピングは動作します。この場合、ResultSet に含まれる列のうち、各 Result Map で明示的にマッピングが指定されていない列が自動マッピングの対象となります。
+          次の例では、<i>hashed_password</i> 列が password プロパティにマップされ、<i>id</i> と <i>userName</i> 列が自動マッピングの対象となります。
+        </p>
 
         <source><![CDATA[<select id="selectUsers" parameterType="int" resultType="User">
   select
@@ -1593,25 +1592,25 @@ public class User {
 </resultMap>]]></source>
 
         <p>
-          There are three auto-mapping levels:
+          自動マッピングには３つのレベルがあります。
         </p>
         
         <ul>
           <li>
-            <code>NONE</code> - disables auto-mapping. Only manually mapped properties will be set.
+            <code>NONE</code> - 自動マッピングを無効化します。明示的にマッピングが指定されたプロパティにのみ値がセットされます。
           </li>
           <li>
-            <code>PARTIAL</code> - will auto-map results except those that have nested result mappings defined inside (joins).
+            <code>PARTIAL</code> - ネストされた Result Map を持たない Result Map のみが自動マッピングの対象となります。
           </li>
           <li>
-            <code>FULL</code> - auto-maps everything.
+            <code>FULL</code> - 全ての Result Map が自動マッピングの対象となります。
           </li>
         </ul>
 
         <p>
-          The default value is <code>PARTIAL</code>, and it is so for a reason. When <code>FULL</code> is used auto-mapping will
-          be performed when processing join results and joins retrieve data of several different entities in the same row 
-          hence this may result in undesired mappings. To understand the risk have a look at the following sample:
+          デフォルト値は <code>PARTIAL</code> で、それには理由があります。
+          <code>FULL</code> が指定されていると、JOIN 句によって複数のエンティティに対する結果が一行に結合されているような場合に自動マッピングによって意図しないマッピングが実行されてしまう場合があります。
+          次の例を見てください。
         </p>
         
         <source><![CDATA[<select id="selectBlog" parameterType="int" resultMap="blogResult">
@@ -1632,9 +1631,8 @@ public class User {
 </resultMap>]]></source>
         
         <p>
-          With this result map both <i>Blog</i> and <i>Author</i> will be auto-mapped. But note that <i>Author</i> has an <i>id</i> 
-          property and there is a column named <i>id</i> in the ResultSet so Author's id will be filled with Blog's id, and that is not 
-          what you were expecting. So use the <code>FULL</code> option with caution.
+          この Result Map では、<i>Blog</i> と <i>Author</i> の両方が自動マッピングの対象となりますが、<i>Author</i> に <i>id</i> というプロパティがあり、ResultSet に <i>id</i> という列が含まれているため、Author の id に Blog の id がセットされることになります。
+          自動マッピングで <code>FULL</code> を指定する場合は、こうした意図しないマッピングが行われないように注意する必要があります。
         </p>
        
       </subsection>
