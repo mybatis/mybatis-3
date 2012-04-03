@@ -34,12 +34,19 @@ import java.util.List;
 public class CachingExecutor implements Executor {
 
   private Executor delegate;
-  private TransactionalCacheManager tcm = new TransactionalCacheManager();
+  private boolean autoCommit; // issue #573. No need to call commit() on autoCommit sessions
+  private TransactionalCacheManager tcm;
 
   private boolean dirty;
 
   public CachingExecutor(Executor delegate) {
+    this(delegate, false);
+  }
+
+  public CachingExecutor(Executor delegate, boolean autoCommit) {
     this.delegate = delegate;
+    this.autoCommit = autoCommit;
+    this.tcm = new TransactionalCacheManager(autoCommit);
   }
 
   public Transaction getTransaction() {
@@ -48,7 +55,7 @@ public class CachingExecutor implements Executor {
 
   public void close(boolean forceRollback) {
     try {
-      if (dirty) { //issue #499. Unresolved session handling (no commit/rollback)
+      if (dirty) { //issue #499. Unresolved session handling
         tcm.rollback();
       } else {
         tcm.commit();
@@ -147,11 +154,9 @@ public class CachingExecutor implements Executor {
 
   private void flushCacheIfRequired(MappedStatement ms) {
     Cache cache = ms.getCache();
-    if (cache != null) {
-      if (ms.isFlushCacheRequired()) {
-        dirty = true; // issue #524. Disable using cached data for this session
-        tcm.clear(cache);
-      }
+    if (cache != null && ms.isFlushCacheRequired()) {
+      tcm.clear(cache);
+      if (!autoCommit) dirty = true; // issue #524. Disable using cached data for this session because data may have changed
     }
   }
 

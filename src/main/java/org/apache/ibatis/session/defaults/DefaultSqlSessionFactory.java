@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2011 The MyBatis Team
+ *    Copyright 2009-2012 The MyBatis Team
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -34,11 +34,9 @@ import org.apache.ibatis.transaction.managed.ManagedTransactionFactory;
 public class DefaultSqlSessionFactory implements SqlSessionFactory {
 
   private final Configuration configuration;
-  private final TransactionFactory managedTransactionFactory;
 
   public DefaultSqlSessionFactory(Configuration configuration) {
     this.configuration = configuration;
-    this.managedTransactionFactory = new ManagedTransactionFactory();
   }
 
   public SqlSession openSession() {
@@ -83,7 +81,7 @@ public class DefaultSqlSessionFactory implements SqlSessionFactory {
       final Environment environment = configuration.getEnvironment();
       final TransactionFactory transactionFactory = getTransactionFactoryFromEnvironment(environment);
       tx = transactionFactory.newTransaction(environment.getDataSource(), level, autoCommit);
-      final Executor executor = configuration.newExecutor(tx, execType);
+      final Executor executor = configuration.newExecutor(tx, execType, autoCommit);
       return new DefaultSqlSession(configuration, executor);
     } catch (Exception e) {
       closeTransaction(tx); // may have fetched a connection so lets call close()
@@ -98,7 +96,7 @@ public class DefaultSqlSessionFactory implements SqlSessionFactory {
       final Environment environment = configuration.getEnvironment();
       final TransactionFactory transactionFactory = getTransactionFactoryFromEnvironment(environment);
       final Transaction tx = transactionFactory.newTransaction(connection);
-      final Executor executor = configuration.newExecutor(tx, execType);
+      final Executor executor = configuration.newExecutor(tx, execType, connection.getAutoCommit());
       return new DefaultSqlSession(configuration, executor);
     } catch (Exception e) {
       throw ExceptionFactory.wrapException("Error opening session.  Cause: " + e, e);
@@ -109,7 +107,7 @@ public class DefaultSqlSessionFactory implements SqlSessionFactory {
 
   private TransactionFactory getTransactionFactoryFromEnvironment(Environment environment) {
     if (environment == null || environment.getTransactionFactory() == null) {
-      return managedTransactionFactory;
+      return new ManagedTransactionFactory();
     }
     return environment.getTransactionFactory();
   }
@@ -125,4 +123,3 @@ public class DefaultSqlSessionFactory implements SqlSessionFactory {
   }
 
 }
-

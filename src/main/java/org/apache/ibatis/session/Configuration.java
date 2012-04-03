@@ -141,7 +141,6 @@ public class Configuration {
     typeAliasRegistry.registerAlias("WEAK", WeakCache.class.getName());
 
     typeAliasRegistry.registerAlias("VENDOR", VendorDatabaseIdProvider.class.getName());
-
   }
   
   public String getDatabaseId() {
@@ -356,6 +355,10 @@ public class Configuration {
   }
 
   public Executor newExecutor(Transaction transaction, ExecutorType executorType) {
+    return newExecutor(transaction, defaultExecutorType, false);
+  }
+    
+  public Executor newExecutor(Transaction transaction, ExecutorType executorType, boolean autoCommit) {
     executorType = executorType == null ? defaultExecutorType : executorType;
     executorType = executorType == null ? ExecutorType.SIMPLE : executorType;
     Executor executor;
@@ -367,7 +370,7 @@ public class Configuration {
       executor = new SimpleExecutor(this, transaction);
     }
     if (cacheEnabled) {
-      executor = new CachingExecutor(executor);
+      executor = new CachingExecutor(executor, autoCommit);
     }
     executor = (Executor) interceptorChain.pluginAll(executor);
     return executor;
