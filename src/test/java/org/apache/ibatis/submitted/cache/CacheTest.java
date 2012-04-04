@@ -97,7 +97,7 @@ public class CacheTest {
    *   Step 6 returns 2 rows. 
    */
   @Test
-  public void testplan5() {
+  public void testplan2() {
     SqlSession sqlSession1 = sqlSessionFactory.openSession(false);
     try {
       PersonMapper pm = sqlSession1.getMapper(PersonMapper.class);
@@ -121,6 +121,48 @@ public class CacheTest {
     try {
       PersonMapper pm = sqlSession3.getMapper(PersonMapper.class);
       Assert.assertEquals(2, pm.findAll().size());
+    }
+    finally {
+      sqlSession3.close();
+    }
+  }
+  
+  /*
+   * Test Plan with Autocommit on:
+   *  1) SqlSession 1 executes "select * from A".
+   *  2) SqlSession 1 closes.
+   *  3) SqlSession 2 executes "delete from A where id = 1"
+   *  4) SqlSession 2 closes.
+   *  5) SqlSession 2 executes "select * from A".
+   *  6) SqlSession 3 closes.
+   *
+   * Assert:
+   *   Step 6 returns 1 row. 
+   */
+  @Test
+  public void testplan3() {
+    SqlSession sqlSession1 = sqlSessionFactory.openSession(true);
+    try {
+      PersonMapper pm = sqlSession1.getMapper(PersonMapper.class);
+      Assert.assertEquals(2, pm.findAll().size());
+    }
+    finally {
+      sqlSession1.close();
+    }
+    
+    SqlSession sqlSession2 = sqlSessionFactory.openSession(true);
+    try {
+      PersonMapper pm = sqlSession2.getMapper(PersonMapper.class);
+      pm.delete(1);
+    }
+    finally {
+      sqlSession2.close();
+    }
+    
+    SqlSession sqlSession3 = sqlSessionFactory.openSession(true);
+    try {
+      PersonMapper pm = sqlSession3.getMapper(PersonMapper.class);
+      Assert.assertEquals(1, pm.findAll().size());
     }
     finally {
       sqlSession3.close();

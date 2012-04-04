@@ -35,7 +35,7 @@ public class CachingExecutor implements Executor {
 
   private Executor delegate;
   private boolean autoCommit; // issue #573. No need to call commit() on autoCommit sessions
-  private TransactionalCacheManager tcm;
+  private TransactionalCacheManager tcm = new TransactionalCacheManager();
 
   private boolean dirty;
 
@@ -46,7 +46,6 @@ public class CachingExecutor implements Executor {
   public CachingExecutor(Executor delegate, boolean autoCommit) {
     this.delegate = delegate;
     this.autoCommit = autoCommit;
-    this.tcm = new TransactionalCacheManager(autoCommit);
   }
 
   public Transaction getTransaction() {
@@ -154,9 +153,11 @@ public class CachingExecutor implements Executor {
 
   private void flushCacheIfRequired(MappedStatement ms) {
     Cache cache = ms.getCache();
-    if (cache != null && ms.isFlushCacheRequired()) {
-      tcm.clear(cache);
-      if (!autoCommit) dirty = true; // issue #524. Disable using cached data for this session because data may have changed
+    if (cache != null) {
+      if (ms.isFlushCacheRequired()) {
+        if (!autoCommit) dirty = true; // issue #524. Disable using cached data for this session
+        tcm.clear(cache);
+      }
     }
   }
 

@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2012 The MyBatis Team
+ *    Copyright 2009-2011 The MyBatis Team
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -23,24 +23,13 @@ import java.util.Map;
 public class TransactionalCacheManager {
 
   private Map<Cache, TransactionalCache> transactionalCaches = new HashMap<Cache, TransactionalCache>();
-  private boolean autoCommit; // issue #573. No need to call commit() on autoCommit sessions
-  
-  public TransactionalCacheManager(){
-    this(false);
-  }
-  
-  public TransactionalCacheManager(boolean autoCommit) {
-    this.autoCommit = autoCommit;
-  }
-  
+
   public void clear(Cache cache) {
     getTransactionalCache(cache).clear();
-    if (autoCommit) commit();
   }
 
   public void putObject(Cache cache, CacheKey key, Object value) {
     getTransactionalCache(cache).putObject(key, value);
-    if (autoCommit) commit();
   }
 
   public void commit() {
