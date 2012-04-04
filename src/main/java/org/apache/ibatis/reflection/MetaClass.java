@@ -15,7 +15,15 @@
  */
 package org.apache.ibatis.reflection;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.Collection;
+
+import org.apache.ibatis.reflection.invoker.GetFieldInvoker;
 import org.apache.ibatis.reflection.invoker.Invoker;
+import org.apache.ibatis.reflection.invoker.MethodInvoker;
 import org.apache.ibatis.reflection.property.PropertyTokenizer;
 
 public class MetaClass {
@@ -69,11 +77,55 @@ public class MetaClass {
   public Class<?> getGetterType(String name) {
     PropertyTokenizer prop = new PropertyTokenizer(name);
     if (prop.hasNext()) {
-      MetaClass metaProp = metaClassForProperty(prop.getName());
+      MetaClass metaProp = metaClassForProperty(prop);
       return metaProp.getGetterType(prop.getChildren());
     } else {
-      return reflector.getGetterType(prop.getName());
+      return getGetterType(prop); // issue #506. Resolve the type inside a Collection Object
     }
+  }
+
+  private MetaClass metaClassForProperty(PropertyTokenizer prop) {
+    Class<?> propType = getGetterType(prop);
+    return MetaClass.forClass(propType);
+  }
+
+  private Class<?> getGetterType(PropertyTokenizer prop) {
+    Class<?> type = reflector.getGetterType(prop.getName());
+    if (prop.getIndex() != null && Collection.class.isAssignableFrom(type)) {
+      Type returnType = getGenericGetterType(prop.getName());
+      if (returnType instanceof ParameterizedType) {
+        Type[] actualTypeArguments = ((ParameterizedType) returnType).getActualTypeArguments();
+        if (actualTypeArguments != null && actualTypeArguments.length == 1) {
+          returnType = actualTypeArguments[0];
+          if (returnType instanceof Class) {
+            type = (Class<?>) returnType;
+          } else if (returnType instanceof ParameterizedType) {
+            type = (Class<?>) ((ParameterizedType) returnType).getRawType();
+          }
+        }
+      }
+    }
+    return type;
+  }
+
+  private Type getGenericGetterType(String propertyName) {
+    try {
+      Invoker invoker = reflector.getGetInvoker(propertyName);
+      if (invoker instanceof MethodInvoker) {
+        Field _method = MethodInvoker.class.getDeclaredField("method");
+        _method.setAccessible(true);
+        Method method = (Method) _method.get(invoker);
+        return method.getGenericReturnType();
+      } else if (invoker instanceof GetFieldInvoker) {
+        Field _field = GetFieldInvoker.class.getDeclaredField("field");
+        _field.setAccessible(true);
+        Field field = (Field) _field.get(invoker);
+        return field.getGenericType();
+      }
+    } catch (NoSuchFieldException e) {
+    } catch (IllegalAccessException e) {
+    }
+    return null;
   }
 
   public boolean hasSetter(String name) {
@@ -94,7 +146,7 @@ public class MetaClass {
     PropertyTokenizer prop = new PropertyTokenizer(name);
     if (prop.hasNext()) {
       if (reflector.hasGetter(prop.getName())) {
-        MetaClass metaProp = metaClassForProperty(prop.getName());
+        MetaClass metaProp = metaClassForProperty(prop);
         return metaProp.hasGetter(prop.getChildren());
       } else {
         return false;
@@ -132,5 +184,3 @@ public class MetaClass {
   }
 
 }
-
-
