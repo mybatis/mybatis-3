@@ -54,7 +54,9 @@ public class CachingExecutor implements Executor {
 
   public void close(boolean forceRollback) {
     try {
-      if (dirty) { //issue #499. Unresolved session handling
+      //issue #499. Unresolved session handling
+      //issue #573. Autocommit sessions should commit
+      if (dirty && !autoCommit) { 
         tcm.rollback();
       } else {
         tcm.commit();
@@ -155,7 +157,7 @@ public class CachingExecutor implements Executor {
     Cache cache = ms.getCache();
     if (cache != null) {
       if (ms.isFlushCacheRequired()) {
-        if (!autoCommit) dirty = true; // issue #524. Disable using cached data for this session
+        dirty = true; // issue #524. Disable using cached data for this session
         tcm.clear(cache);
       }
     }
