@@ -182,7 +182,7 @@ public class MapperAnnotationBuilder {
     applyConstructorArgs(args, returnType, resultMappings);
     applyResults(results, returnType, resultMappings);
     Discriminator disc = applyDiscriminator(resultMapId, returnType, discriminator);
-    assistant.addResultMap(resultMapId, returnType, null, disc, resultMappings);
+    assistant.addResultMap(resultMapId, returnType, null, disc, resultMappings, null); // TODO add AutoMappingBehaviour
     createDiscriminatorResultMaps(resultMapId, returnType, discriminator);
   }
 
@@ -193,7 +193,7 @@ public class MapperAnnotationBuilder {
         List<ResultMapping> resultMappings = new ArrayList<ResultMapping>();
         applyConstructorArgs(c.constructArgs(), resultType, resultMappings); // issue #136
         applyResults(c.results(), resultType, resultMappings);
-        assistant.addResultMap(caseResultMapId, c.type(), resultMapId, null, resultMappings);
+        assistant.addResultMap(caseResultMapId, c.type(), resultMapId, null, resultMappings, null); // TODO add AutoMappingBehaviour
       }
     }
   }

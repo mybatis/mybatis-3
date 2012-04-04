@@ -189,6 +189,19 @@ public class XNode {
     }
   }
 
+  public <T extends Enum<T>> T getEnumAttribute(Class<T> enumType, String name) {
+    return getEnumAttribute(enumType, name, null);
+  }
+
+  public <T extends Enum<T>> T getEnumAttribute(Class<T> enumType, String name, T def) {
+    String value = getStringAttribute(name);
+    if (value == null) {
+      return def;
+    } else {
+      return Enum.valueOf(enumType, value);      
+    }
+  }
+
   public String getStringAttribute(String name) {
     return getStringAttribute(name, null);
   }

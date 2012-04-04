@@ -44,6 +44,7 @@ import org.apache.ibatis.mapping.SqlCommandType;
 import org.apache.ibatis.mapping.SqlSource;
 import org.apache.ibatis.mapping.StatementType;
 import org.apache.ibatis.reflection.MetaClass;
+import org.apache.ibatis.session.AutoMappingBehavior;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
@@ -164,11 +165,12 @@ public class MapperBuilderAssistant extends BaseBuilder {
       Class<?> type,
       String extend,
       Discriminator discriminator,
-      List<ResultMapping> resultMappings) {
+      List<ResultMapping> resultMappings,
+      AutoMappingBehavior autoMappingBehavior) {
     id = applyCurrentNamespace(id, false);
     extend = applyCurrentNamespace(extend, true);
 
-    ResultMap.Builder resultMapBuilder = new ResultMap.Builder(configuration, id, type, resultMappings);
+    ResultMap.Builder resultMapBuilder = new ResultMap.Builder(configuration, id, type, resultMappings, autoMappingBehavior);
     if (extend != null) {
       if (!configuration.hasResultMap(extend)) {
         throw new IncompleteElementException("Could not find a parent resultmap with id '" + extend + "'");
@@ -358,7 +360,8 @@ public class MapperBuilderAssistant extends BaseBuilder {
           configuration,
           statementBuilder.id() + "-Inline",
           resultType,
-          new ArrayList<ResultMapping>());
+          new ArrayList<ResultMapping>(),
+          null);
       resultMaps.add(inlineResultMapBuilder.build());
     }
     statementBuilder.resultMaps(resultMaps);
