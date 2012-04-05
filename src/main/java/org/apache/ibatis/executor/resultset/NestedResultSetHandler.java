@@ -140,7 +140,7 @@ public class NestedResultSetHandler extends FastResultSetHandler {
         if (rowKey != CacheKey.NULL_CACHE_KEY) ancestorCache.put(rowKey, resultObject);
         final MetaObject metaObject = configuration.newMetaObject(resultObject);
         boolean foundValues = resultMap.getConstructorResultMappings().size() > 0;
-        if (AutoMappingBehavior.FULL.equals(getAutoMappingBehavior(resultMap))) {
+        if (shouldApplyAutomaticMappings(resultMap, AutoMappingBehavior.FULL.equals(configuration.getAutoMappingBehavior()))) {
           final List<String> unmappedColumnNames = resultColumnCache.getUnmappedColumnNames(resultMap, columnPrefix);
           foundValues = applyAutomaticMappings(rs, unmappedColumnNames, metaObject, columnPrefix, resultColumnCache) || foundValues;
         }

@@ -15,10 +15,14 @@
  */
 package org.apache.ibatis.mapping;
 
-import org.apache.ibatis.session.AutoMappingBehavior;
-import org.apache.ibatis.session.Configuration;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
 
-import java.util.*;
+import org.apache.ibatis.session.Configuration;
 
 public class ResultMap {
   private String id;
@@ -31,7 +35,7 @@ public class ResultMap {
   private Discriminator discriminator;
   private boolean hasNestedResultMaps;
   private boolean hasNestedQueries;
-  private AutoMappingBehavior autoMappingBehavior;
+  private Boolean autoMapping;
 
   private ResultMap() {
   }
@@ -43,11 +47,11 @@ public class ResultMap {
       this(configuration, id, type, resultMappings, null);
     }
 
-    public Builder(Configuration configuration, String id, Class<?> type, List<ResultMapping> resultMappings, AutoMappingBehavior autoMappingBehavior) {
+    public Builder(Configuration configuration, String id, Class<?> type, List<ResultMapping> resultMappings, Boolean autoMapping) {
       resultMap.id = id;
       resultMap.type = type;
       resultMap.resultMappings = resultMappings;
-      resultMap.autoMappingBehavior = autoMappingBehavior;
+      resultMap.autoMapping = autoMapping;
     }
 
     public Builder discriminator(Discriminator discriminator) {
@@ -147,8 +151,8 @@ public class ResultMap {
     hasNestedResultMaps = true;
   }
   
-  public AutoMappingBehavior getAutoMappingBehavior() {
-    return autoMappingBehavior;
+  public Boolean getAutoMapping() {
+    return autoMapping;
   }
 
 }

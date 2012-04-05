@@ -256,7 +256,7 @@ public class FastResultSetHandler implements ResultSetHandler {
     if (resultObject != null && !typeHandlerRegistry.hasTypeHandler(resultMap.getType())) {
       final MetaObject metaObject = configuration.newMetaObject(resultObject);
       boolean foundValues = resultMap.getConstructorResultMappings().size() > 0;
-      if (!AutoMappingBehavior.NONE.equals(getAutoMappingBehavior(resultMap))) {
+      if (shouldApplyAutomaticMappings(resultMap, !AutoMappingBehavior.NONE.equals(configuration.getAutoMappingBehavior()))) {
         final List<String> unmappedColumnNames = resultColumnCache.getUnmappedColumnNames(resultMap, null);
         foundValues = applyAutomaticMappings(rs, unmappedColumnNames, metaObject, null, resultColumnCache) || foundValues;
       }
@@ -269,9 +269,9 @@ public class FastResultSetHandler implements ResultSetHandler {
     return resultObject;
   }
 
-  protected AutoMappingBehavior getAutoMappingBehavior(ResultMap resultMap) {
-    if (resultMap.getAutoMappingBehavior() != null) return resultMap.getAutoMappingBehavior();
-    return configuration.getAutoMappingBehavior();
+  protected boolean shouldApplyAutomaticMappings(ResultMap resultMap, boolean def) {
+    if (resultMap.getAutoMapping() != null) return resultMap.getAutoMapping();
+    return def;
   }
   
   protected ResultLoaderMap instantiateResultLoaderMap() {

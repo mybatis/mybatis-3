@@ -59,7 +59,7 @@ typeHandler CDATA #IMPLIED
 id CDATA #REQUIRED
 type CDATA #REQUIRED
 extends CDATA #IMPLIED
-autoMappingBehavior (NONE | PARTIAL | FULL) #IMPLIED
+autoMapping (true|false) #IMPLIED
 >
 
 <!ELEMENT constructor (idArg*,arg*)>

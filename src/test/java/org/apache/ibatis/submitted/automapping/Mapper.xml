@@ -24,7 +24,7 @@
 		select * from users
 	</select>
 
-	<resultMap type="org.apache.ibatis.submitted.automapping.User" id="result" autoMappingBehavior="PARTIAL">
+	<resultMap type="org.apache.ibatis.submitted.automapping.User" id="result" autoMapping="true">
 	</resultMap>
 
 </mapper>

@@ -20,7 +20,6 @@ import java.util.List;
 import org.apache.ibatis.mapping.Discriminator;
 import org.apache.ibatis.mapping.ResultMap;
 import org.apache.ibatis.mapping.ResultMapping;
-import org.apache.ibatis.session.AutoMappingBehavior;
 
 public class ResultMapResolver {
   private final MapperBuilderAssistant assistant;
@@ -29,20 +28,20 @@ public class ResultMapResolver {
   private String extend;
   private Discriminator discriminator;
   private List<ResultMapping> resultMappings;
-  private AutoMappingBehavior autoMappingBehavior;
+  private Boolean autoMapping;
 
-  public ResultMapResolver(MapperBuilderAssistant assistant, String id, Class<?> type, String extend, Discriminator discriminator, List<ResultMapping> resultMappings, AutoMappingBehavior autoMappingBehavior) {
+  public ResultMapResolver(MapperBuilderAssistant assistant, String id, Class<?> type, String extend, Discriminator discriminator, List<ResultMapping> resultMappings, Boolean autoMapping) {
     this.assistant = assistant;
     this.id = id;
     this.type = type;
     this.extend = extend;
     this.discriminator = discriminator;
     this.resultMappings = resultMappings;
-    this.autoMappingBehavior = autoMappingBehavior;
+    this.autoMapping = autoMapping;
   }
 
   public ResultMap resolve() {
-    return assistant.addResultMap(this.id, this.type, this.extend, this.discriminator, this.resultMappings, this.autoMappingBehavior);
+    return assistant.addResultMap(this.id, this.type, this.extend, this.discriminator, this.resultMappings, this.autoMapping);
   }
 
 }
