@@ -18,7 +18,6 @@ package org.apache.ibatis.submitted.simplelistparameter;
 import java.util.List;
 
 public class Car {
-  // the result class doesn't need id for further processing
   private String name;
   private List<String> doors;
 
@@ -30,11 +29,11 @@ public class Car {
     this.name = name;
   }
 
-  public List<String> getCarParts() {
+  public List<String> getDoors() {
     return doors;
   }
 
-  public void setCarParts(List<String> doors) {
+  public void setDoors(List<String> doors) {
     this.doors = doors;
   }
 }

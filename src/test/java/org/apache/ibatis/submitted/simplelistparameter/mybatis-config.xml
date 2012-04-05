@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
 
-       Copyright 2009-2011 The MyBatis Team
+       Copyright 2009-2012 The MyBatis Team
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -23,10 +23,6 @@
 
 <configuration>
 
-	<settings>
-		<setting name="mapUnderscoreToCamelCase" value="true" />
-	</settings>
-
 	<typeAliases>
 		<package name="org/apache/ibatis/submitted/simplelistparameter" />
 	</typeAliases>
@@ -45,7 +41,7 @@
 	</environments>
 	
 	<mappers>
-		<mapper resource="org/apache/ibatis/submitted/simplelistparameter/Map.xml" />
+		<mapper class="org.apache.ibatis.submitted.simplelistparameter.CarMapper" />
 	</mappers>
 
 </configuration>

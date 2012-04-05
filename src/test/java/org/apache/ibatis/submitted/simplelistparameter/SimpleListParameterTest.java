@@ -25,7 +25,6 @@ import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.hsqldb.lib.ArraySort;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -37,7 +36,7 @@ public class SimpleListParameterTest {
   @BeforeClass
   public static void setUp() throws Exception {
     // create a SqlSessionFactory
-    Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/simplelistparameter/MapperConfig.xml");
+    Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/simplelistparameter/mybatis-config.xml");
     sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
     reader.close();
 
@@ -53,12 +52,12 @@ public class SimpleListParameterTest {
   }
 
   @Test
-  public void shouldMapResultsWithoutActuallyWritingIdProperties() throws Exception {
+  public void shouldGetACar() throws Exception {
     SqlSession sqlSession = sqlSessionFactory.openSession();
     try {
       CarMapper carMapper = sqlSession.getMapper(CarMapper.class);
       Car car = new Car();
-      car.setCarParts(Arrays.asList(new String[] {"2", "4"}));
+      car.setDoors(Arrays.asList(new String[] {"2", "4"}));
       List<Car> cars = carMapper.getCar(car);
       Assert.assertNotNull(cars);
     } finally {

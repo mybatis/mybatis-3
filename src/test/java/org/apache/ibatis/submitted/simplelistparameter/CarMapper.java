@@ -21,6 +21,6 @@ import org.apache.ibatis.annotations.Select;
 
 public interface CarMapper {
 
-  @Select({ "select id, name from car where doors = #{doors[1]}" })
+  @Select({ "select name from car where doors = #{doors[1]}" })
   List<Car> getCar(Car car);
 }

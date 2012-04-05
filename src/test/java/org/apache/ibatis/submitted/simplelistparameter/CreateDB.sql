@@ -17,11 +17,10 @@
 drop table car if exists;
 
 create table car (
-  id int,
   name varchar(20),
   doors int
 );
 
-insert into car (id, name, doors) values(1, 'Audi', 4);
-insert into car (id, name, doors) values(2, 'Ford', 4);
-insert into car (id, name, doors) values(3, 'Fiat', 4);
+insert into car (name, doors) values('Audi', 4);
+insert into car (name, doors) values('Ford', 4);
+insert into car (name, doors) values('Fiat', 4);
