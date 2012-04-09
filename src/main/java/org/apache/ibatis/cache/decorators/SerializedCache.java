@@ -95,7 +95,7 @@ public class SerializedCache implements Cache {
     Serializable result;
     try {
       ByteArrayInputStream bis = new ByteArrayInputStream((byte[]) value);
-      ObjectInputStream ois = new ThreadContextObjectInputStream(bis);
+      ObjectInputStream ois = new CustomObjectInputStream(bis);
       result = (Serializable) ois.readObject();
       ois.close();
     } catch (Exception e) {
@@ -104,9 +104,9 @@ public class SerializedCache implements Cache {
     return result;
   }
 
-  public static class ThreadContextObjectInputStream extends ObjectInputStream {
+  public static class CustomObjectInputStream extends ObjectInputStream {
 
-    public ThreadContextObjectInputStream(InputStream in) throws IOException {
+    public CustomObjectInputStream(InputStream in) throws IOException {
       super(in);
     }
 
