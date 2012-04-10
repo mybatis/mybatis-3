@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2011 The MyBatis Team
+ *    Copyright 2009-2012 The MyBatis Team
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,18 +15,18 @@
  */
 package org.apache.ibatis.datasource.pooled;
 
-import org.apache.ibatis.datasource.DataSourceException;
-import org.apache.ibatis.reflection.ExceptionUtil;
-
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.sql.Connection;
+import java.sql.SQLException;
+
+import org.apache.ibatis.reflection.ExceptionUtil;
 
 class PooledConnection implements InvocationHandler {
 
   private static final String CLOSE = "close";
-  private static final Class<?>[] IFACES = new Class<?>[]{Connection.class};
+  private static final Class<?>[] IFACES = new Class<?>[] { Connection.class };
 
   private int hashCode = 0;
   private PooledDataSource dataSource;
@@ -237,18 +237,23 @@ class PooledConnection implements InvocationHandler {
       return null;
     } else {
       try {
-        return method.invoke(getValidConnection(), args);
+        if (method.getDeclaringClass() != Object.class) {
+          // issue #578. 
+          // toString() should never fail
+          // throw an SQLException instead of a Runtime
+          checkConnection();
+        }
+        return method.invoke(realConnection, args);
       } catch (Throwable t) {
         throw ExceptionUtil.unwrapThrowable(t);
       }
     }
   }
 
-  private Connection getValidConnection() {
+  private void checkConnection() throws SQLException {
     if (!valid) {
-      throw new DataSourceException("Error accessing PooledConnection. Connection is invalid.");
+      throw new SQLException("Error accessing PooledConnection. Connection is invalid.");
     }
-    return realConnection;
   }
 
 }

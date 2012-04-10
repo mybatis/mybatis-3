@@ -69,4 +69,11 @@ public class PooledDataSourceTest extends BaseDataTest {
     }
   }
 
+  @Test
+  public void shouldNotFailCallingToStringOverAnInvalidConnection() throws Exception {
+    PooledDataSource ds = createPooledDataSource(JPETSTORE_PROPERTIES);
+    Connection c = ds.getConnection();
+    c.close();
+    c.toString();
+  }
 }
