@@ -87,20 +87,19 @@ public class CachingExecutor implements Executor {
       flushCacheIfRequired(ms);
       if (ms.isUseCache() && resultHandler == null) { 
         ensureNoOutParams(ms, key, parameterObject, boundSql);
-        cache.getReadWriteLock().readLock().lock();
-        try {
-          @SuppressWarnings("unchecked")
-          List<E> cachedList = dirty ? null : (List<E>) cache.getObject(key);
-          if (cachedList != null) {
-            return cachedList;
-          } else {
-            List<E> list = delegate.<E> query(ms, parameterObject, rowBounds, resultHandler, key, boundSql);
-            tcm.putObject(cache, key, list);
-            return list;
+        if (!dirty) {
+          cache.getReadWriteLock().readLock().lock();
+          try {
+            @SuppressWarnings("unchecked")
+            List<E> cachedList = (List<E>) cache.getObject(key);
+            if (cachedList != null) return cachedList;
+          } finally {
+            cache.getReadWriteLock().readLock().unlock();
           }
-        } finally {
-          cache.getReadWriteLock().readLock().unlock();
         }
+        List<E> list = delegate.<E> query(ms, parameterObject, rowBounds, resultHandler, key, boundSql);
+        tcm.putObject(cache, key, list); // issue #578. Query must be not synchronized to prevent deadlocks
+        return list;
       }
     }
     return delegate.<E>query(ms, parameterObject, rowBounds, resultHandler, key, boundSql);
