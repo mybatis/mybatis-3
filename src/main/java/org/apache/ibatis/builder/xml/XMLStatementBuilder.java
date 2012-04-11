@@ -86,6 +86,9 @@ public class XMLStatementBuilder extends BaseBuilder {
     ResultSetType resultSetTypeEnum = resolveResultSetType(resultSetType);
 
     List<SqlNode> contents = parseDynamicTags(context);
+    // Parse selectKey after other nodes,
+    // in case another node throws IncompleteElementException (issue #291)
+    parseSelectKey(context);
     MixedSqlNode rootSqlNode = new MixedSqlNode(contents);
     SqlSource sqlSource = new DynamicSqlSource(configuration, rootSqlNode);
     String nodeName = context.getNode().getNodeName();
@@ -132,7 +135,7 @@ public class XMLStatementBuilder extends BaseBuilder {
     }
     return true;
   }
-
+  
   private List<SqlNode> parseDynamicTags(XNode node) {
     List<SqlNode> contents = new ArrayList<SqlNode>();
     NodeList children = node.getNode().getChildNodes();
@@ -143,16 +146,27 @@ public class XMLStatementBuilder extends BaseBuilder {
           || child.getNode().getNodeType() == Node.TEXT_NODE) {
         String data = child.getStringBody("");
         contents.add(new TextSqlNode(data));
-      } else {
+      } else if (!"selectKey".equals(nodeName)) {
         NodeHandler handler = nodeHandlers.get(nodeName);
         if (handler == null) {
           throw new BuilderException("Unknown element <" + nodeName + "> in SQL statement.");
         }
         handler.handleNode(child, contents);
-
       }
     }
     return contents;
+  }
+
+  private void parseSelectKey(XNode node) {
+    NodeList children = node.getNode().getChildNodes();
+    for (int i = 0; i < children.getLength(); i++) {
+      XNode child = node.newXNode(children.item(i));
+      String nodeName = child.getNode().getNodeName();
+      if ("selectKey".equals(nodeName)) {
+        NodeHandler handler = nodeHandlers.get(nodeName);
+        handler.handleNode(child, null);
+      }
+    }
   }
 
   private Map<String, NodeHandler> nodeHandlers = new HashMap<String, NodeHandler>() {
