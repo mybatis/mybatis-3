@@ -16,7 +16,6 @@
 package org.apache.ibatis.executor.resultset;
 
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
@@ -247,7 +246,7 @@ public class NestedResultSetHandler extends FastResultSetHandler {
     List<ResultMapping> resultMappings = getResultMappingsForRowKey(resultMap);
     if (resultMappings.size() == 0) {
       if (Map.class.isAssignableFrom(resultMap.getType())) {
-        createRowKeyForMap(rs, cacheKey);
+        createRowKeyForMap(rs, cacheKey, resultColumnCache);
       } else {
         createRowKeyForUnmappedProperties(resultMap, rs, cacheKey, columnPrefix, resultColumnCache);
       }
@@ -322,16 +321,14 @@ public class NestedResultSetHandler extends FastResultSetHandler {
     }
   }
 
-  private void createRowKeyForMap(ResultSet rs, CacheKey cacheKey) throws SQLException {
-    final ResultSetMetaData rsmd = rs.getMetaData();
-    final int columnCount = rsmd.getColumnCount();
-    for (int i = 1; i <= columnCount; i++) {
-      final String columnName = configuration.isUseColumnLabel() ? rsmd.getColumnLabel(i) : rsmd.getColumnName(i);
+  private void createRowKeyForMap(ResultSet rs, CacheKey cacheKey, ResultColumnCache resultColumnCache) throws SQLException {
+    List<String> columnNames = resultColumnCache.getColumnNames();
+    for (String columnName : columnNames) {
       final String value = rs.getString(columnName);
       if (value != null) {
         cacheKey.update(columnName);
         cacheKey.update(value);
-      }
+      }      
     }
   }
 

@@ -419,8 +419,7 @@ public class FastResultSetHandler implements ResultSetHandler {
       final ResultMapping mapping = resultMappingList.get(0);
       columnName = prependPrefix(mapping.getColumn(), columnPrefix);
     } else {
-      final ResultSetMetaData rsmd = rs.getMetaData();
-      columnName = configuration.isUseColumnLabel() ? rsmd.getColumnLabel(1) : rsmd.getColumnName(1);
+      columnName = resultColumnCache.getColumnNames().get(0);
     }
     final TypeHandler<?> typeHandler = resultColumnCache.getTypeHandler(resultType, columnName);
     return typeHandler.getResult(rs, columnName);
@@ -587,6 +586,10 @@ public class FastResultSetHandler implements ResultSetHandler {
       }
     }
 
+    protected List<String> getColumnNames() {
+      return this.columnNames;
+    }
+    
     protected JdbcType getJdbcType(String columnName) {
       final int index = columnNames.indexOf(columnName);
       return jdbcTypes.get(index);
