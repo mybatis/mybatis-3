@@ -65,6 +65,9 @@ public class ScriptRunner {
     this.removeCRs = removeCRs;
   }
 
+  /**
+   * @since 3.1.1
+   */
   public void setEscapeProcessing(boolean escapeProcessing) {
     this.escapeProcessing = escapeProcessing;
   }
