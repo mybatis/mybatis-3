@@ -37,6 +37,7 @@ public class ScriptRunner {
   private boolean autoCommit;
   private boolean sendFullScript;
   private boolean removeCRs;
+  private boolean escapeProcessing = true;
 
   private PrintWriter logWriter = new PrintWriter(System.out);
   private PrintWriter errorLogWriter = new PrintWriter(System.err);
@@ -62,6 +63,10 @@ public class ScriptRunner {
 
   public void setRemoveCRs(boolean removeCRs) {
     this.removeCRs = removeCRs;
+  }
+
+  public void setEscapeProcessing(boolean escapeProcessing) {
+    this.escapeProcessing = escapeProcessing;
   }
 
   public void setLogWriter(PrintWriter logWriter) {
@@ -201,6 +206,7 @@ public class ScriptRunner {
   private void executeStatement(String command) throws SQLException, UnsupportedEncodingException {
     boolean hasResults = false;
     Statement statement = connection.createStatement();
+    statement.setEscapeProcessing(escapeProcessing);
     String sql = command;
     if (removeCRs)
       sql = sql.replaceAll("\r\n", "\n");
