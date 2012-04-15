@@ -28,7 +28,7 @@
   </parent>
 
   <artifactId>mybatis</artifactId>
-  <version>3.1.1-SNAPSHOT</version>
+  <version>3.1.1</version>
   <packaging>jar</packaging>
 
   <name>MyBatis</name>
@@ -80,9 +80,9 @@
   </contributors>
 
   <scm>
-    <url>scm:svn:https://mybatis.googlecode.com/svn/trunk</url>
-    <connection>scm:svn:https://mybatis.googlecode.com/svn/trunk</connection>
-    <developerConnection>scm:svn:https://mybatis.googlecode.com/svn/trunk</developerConnection>
+    <url>scm:svn:https://mybatis.googlecode.com/svn/tags/mybatis-3.1.1</url>
+    <connection>scm:svn:https://mybatis.googlecode.com/svn/tags/mybatis-3.1.1</connection>
+    <developerConnection>scm:svn:https://mybatis.googlecode.com/svn/tags/mybatis-3.1.1</developerConnection>
   </scm>
   <distributionManagement>
     <!-- Cannot define in parent ATM, see COMMONSSITE-26 -->
