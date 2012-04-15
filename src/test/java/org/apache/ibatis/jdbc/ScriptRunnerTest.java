@@ -101,6 +101,25 @@ public class ScriptRunnerTest extends BaseDataTest {
     }
   }
 
+  @Test
+  public void commentAferStatementDelimiterShouldNotCauseRunnerFail() throws Exception {
+    DataSource ds = createUnpooledDataSource(JPETSTORE_PROPERTIES);
+    Connection conn = ds.getConnection();
+    ScriptRunner runner = new ScriptRunner(conn);
+    runner.setAutoCommit(true);
+    runner.setStopOnError(true);
+
+    String resource = "org/apache/ibatis/jdbc/ScriptCommentAfterEOLTerminator.sql";
+    Reader reader = Resources.getResourceAsReader(resource);
+
+    try {
+      runner.runScript(reader);
+    } catch (Exception e) {
+      e.printStackTrace();
+      fail(e.getMessage());
+    }
+  }
+
   private void runJPetStoreScripts(ScriptRunner runner) throws IOException, SQLException {
     runScript(runner, JPETSTORE_DDL);
     runScript(runner, JPETSTORE_DATA);
