@@ -67,4 +67,12 @@ public class GenericTokenParserTest {
     assertEquals("Hello } ${ this is a test.", parser.parse("Hello } ${ this is a test."));
   }
 
+  @Test
+  public void shallNotInterpolateSkippedVaiables() {
+    GenericTokenParser parser = new GenericTokenParser("${", "}", new VariableTokenHandler(new HashMap<String, String>()));
+
+    assertEquals("${skipped} variable", parser.parse("\\${skipped} variable"));
+    assertEquals("This is a ${skipped} variable", parser.parse("This is a \\${skipped} variable"));
+  }
+
 }

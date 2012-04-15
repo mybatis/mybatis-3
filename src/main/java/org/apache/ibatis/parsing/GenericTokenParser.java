@@ -37,7 +37,16 @@ public class GenericTokenParser {
         if (end > start) {
           String before = after.substring(0, start);
           String content = after.substring(start + openToken.length(), end);
-          String substitution = handler.handleToken(content);
+          String substitution;
+
+          // check if variable has to be skipped
+          if (start > 0 && text.charAt(start - 1) == '\\') {
+            before = before.substring(0, before.length() - 1);
+            substitution = new StringBuilder(openToken).append(content).append(closeToken).toString();
+          } else {
+            substitution = handler.handleToken(content);
+          }
+
           builder.append(before);
           builder.append(substitution);
           after = after.substring(end + closeToken.length());
