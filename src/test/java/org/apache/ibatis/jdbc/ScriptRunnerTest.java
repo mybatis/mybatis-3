@@ -115,7 +115,6 @@ public class ScriptRunnerTest extends BaseDataTest {
     try {
       runner.runScript(reader);
     } catch (Exception e) {
-      e.printStackTrace();
       fail(e.getMessage());
     }
   }
