@@ -26,11 +26,16 @@ import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.transaction.Transaction;
 import org.apache.ibatis.transaction.TransactionFactory;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.runners.MockitoJUnitRunner;
 
+@RunWith(MockitoJUnitRunner.class)
 public class ManagedTransactionFactoryTest extends BaseDataTest {
 
-  protected final Connection conn = Mockito.mock(Connection.class);
+  @Mock
+  private Connection conn;
 
   @Test
   public void shouldEnsureThatCallsToManagedTransactionAPIDoNotForwardToManagedConnections() throws Exception {
