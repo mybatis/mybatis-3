@@ -203,7 +203,8 @@ public class ScriptRunner {
   }
 
   private boolean commandReadyToExecute(String trimmedLine) {
-    return !fullLineDelimiter && trimmedLine.endsWith(delimiter) || fullLineDelimiter && trimmedLine.equals(delimiter);
+    // issue #561 remove anything after the delimiter
+    return !fullLineDelimiter && trimmedLine.contains(delimiter) || fullLineDelimiter && trimmedLine.equals(delimiter);
   }
 
   private void executeStatement(String command) throws SQLException, UnsupportedEncodingException {
