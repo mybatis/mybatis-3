@@ -35,9 +35,8 @@ public class PropertyParser {
     public String handleToken(String content) {
       if (variables != null && variables.containsKey(content)) {
         return variables.getProperty(content);
-      } else {
-        return "${" + content + "}";
       }
+      return "${" + content + "}";
     }
   }
 }
