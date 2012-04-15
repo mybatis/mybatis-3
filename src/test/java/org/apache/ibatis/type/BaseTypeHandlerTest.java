@@ -15,31 +15,31 @@
  */
 package org.apache.ibatis.type;
 
-import org.jmock.Mockery;
-import org.jmock.lib.legacy.ClassImposteriser;
+import java.sql.CallableStatement;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 
-import java.sql.*;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
+@RunWith(MockitoJUnitRunner.class)
 public abstract class BaseTypeHandlerTest {
 
-  protected Mockery mockery = new Mockery() {
-    {
-      setImposteriser(ClassImposteriser.INSTANCE);
-    }
-  };
+  @Mock
+  protected ResultSet rs;
+  @Mock
+  protected PreparedStatement ps;
+  @Mock
+  protected CallableStatement cs;
+  @Mock
+  protected ResultSetMetaData rsmd;
 
-  protected final ResultSet rs = mockery.mock(ResultSet.class);
-  protected final PreparedStatement ps = mockery.mock(PreparedStatement.class);
-  protected final CallableStatement cs = mockery.mock(CallableStatement.class);
-  protected final ResultSetMetaData rsmd = mockery.mock(ResultSetMetaData.class);
+  public abstract void shouldSetParameter() throws Exception;
 
-  public abstract void shouldSetParameter()
-      throws Exception;
+  public abstract void shouldGetResultFromResultSet() throws Exception;
 
-  public abstract void shouldGetResultFromResultSet()
-      throws Exception;
-
-  public abstract void shouldGetResultFromCallableStatement()
-      throws Exception;
+  public abstract void shouldGetResultFromCallableStatement() throws Exception;
 
 }

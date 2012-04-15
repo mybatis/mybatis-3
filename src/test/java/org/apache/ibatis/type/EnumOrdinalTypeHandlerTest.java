@@ -15,12 +15,14 @@
  */
 package org.apache.ibatis.type;
 
-import org.jmock.Expectations;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import org.junit.Test;
 
 public class EnumOrdinalTypeHandlerTest extends BaseTypeHandlerTest {
-  
+
   enum MyEnum {
     ONE, TWO
   }
@@ -29,88 +31,42 @@ public class EnumOrdinalTypeHandlerTest extends BaseTypeHandlerTest {
 
   @Test
   public void shouldSetParameter() throws Exception {
-    mockery.checking(new Expectations() {
-      {
-        one(ps).setInt(with(any(int.class)), with(0));
-      }
-    });
     TYPE_HANDLER.setParameter(ps, 1, MyEnum.ONE, null);
-    mockery.assertIsSatisfied();
+    verify(ps).setInt(1, 0);
   }
 
   @Test
   public void shouldSetNullParameter() throws Exception {
-    mockery.checking(new Expectations() {
-      {
-        one(ps).setNull(with(any(int.class)), with(any(int.class)));
-      }
-    });
     TYPE_HANDLER.setParameter(ps, 1, null, JdbcType.VARCHAR);
-    mockery.assertIsSatisfied();
+    verify(ps).setNull(1, JdbcType.VARCHAR.TYPE_CODE);
   }
 
   @Test
   public void shouldGetResultFromResultSet() throws Exception {
-    mockery.checking(new Expectations() {
-      {
-        one(rs).getInt(with(any(String.class)));
-        will(returnValue(0));
-        one(rs).wasNull();
-        will(returnValue(false));
-        one(rs).wasNull();
-        will(returnValue(false));
-      }
-    });
+    when(rs.getInt("column")).thenReturn(0);
+    when(rs.wasNull()).thenReturn(false);
     assertEquals(MyEnum.ONE, TYPE_HANDLER.getResult(rs, "column"));
-    mockery.assertIsSatisfied();
   }
 
   @Test
   public void shouldGetNullResultFromResultSet() throws Exception {
-    mockery.checking(new Expectations() {
-      {
-        one(rs).getInt(with(any(String.class)));
-        will(returnValue(0));
-        one(rs).wasNull();
-        will(returnValue(true));
-        one(rs).wasNull();
-        will(returnValue(true));
-      }
-    });
+    when(rs.getInt("column")).thenReturn(0);
+    when(rs.wasNull()).thenReturn(true);
     assertEquals(null, TYPE_HANDLER.getResult(rs, "column"));
-    mockery.assertIsSatisfied();
   }
 
   @Test
   public void shouldGetResultFromCallableStatement() throws Exception {
-    mockery.checking(new Expectations() {
-      {
-        one(cs).getInt(with(any(int.class)));
-        will(returnValue(0));
-        one(cs).wasNull();
-        will(returnValue(false));
-        one(cs).wasNull();
-        will(returnValue(false));
-      }
-    });
+    when(cs.getInt(1)).thenReturn(0);
+    when(cs.wasNull()).thenReturn(false);
     assertEquals(MyEnum.ONE, TYPE_HANDLER.getResult(cs, 1));
-    mockery.assertIsSatisfied();
   }
 
   @Test
   public void shouldGetNullResultFromCallableStatement() throws Exception {
-    mockery.checking(new Expectations() {
-      {
-        one(cs).getInt(with(any(int.class)));
-        will(returnValue(0));
-        one(cs).wasNull();
-        will(returnValue(true));
-        one(cs).wasNull();
-        will(returnValue(true));
-      }
-    });
+    when(cs.getInt(1)).thenReturn(0);
+    when(cs.wasNull()).thenReturn(true);
     assertEquals(null, TYPE_HANDLER.getResult(cs, 1));
-    mockery.assertIsSatisfied();
   }
 
 }

@@ -15,55 +15,34 @@
  */
 package org.apache.ibatis.type;
 
-import org.jmock.Expectations;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import org.junit.Test;
 
 public class ByteTypeHandlerTest extends BaseTypeHandlerTest {
 
-  private static final TypeHandler TYPE_HANDLER = new ByteTypeHandler();
+  private static final TypeHandler<Byte> TYPE_HANDLER = new ByteTypeHandler();
 
   @Test
-  public void shouldSetParameter()
-      throws Exception {
-    mockery.checking(new Expectations() {
-      {
-        one(ps).setByte(with(any(int.class)), with(any(byte.class)));
-      }
-    });
+  public void shouldSetParameter() throws Exception {
     TYPE_HANDLER.setParameter(ps, 1, (byte) 100, null);
-    mockery.assertIsSatisfied();
+    verify(ps).setByte(1, (byte) 100);
   }
 
   @Test
-  public void shouldGetResultFromResultSet()
-      throws Exception {
-    mockery.checking(new Expectations() {
-      {
-        one(rs).getByte(with(any(String.class)));
-        will(returnValue((byte) 100));
-        one(rs).wasNull();
-        will(returnValue(false));
-      }
-    });
-    assertEquals((byte) 100, TYPE_HANDLER.getResult(rs, "column"));
-    mockery.assertIsSatisfied();
+  public void shouldGetResultFromResultSet() throws Exception {
+    when(rs.getByte("column")).thenReturn((byte) 100);
+    when(rs.wasNull()).thenReturn(false);
+    assertEquals(new Byte((byte) 100), TYPE_HANDLER.getResult(rs, "column"));
   }
 
   @Test
-  public void shouldGetResultFromCallableStatement()
-      throws Exception {
-    mockery.checking(new Expectations() {
-      {
-        one(cs).getByte(with(any(int.class)));
-        will(returnValue((byte) 100));
-        one(cs).wasNull();
-        will(returnValue(false));
-      }
-    });
-    assertEquals((byte) 100, TYPE_HANDLER.getResult(cs, 1));
-    mockery.assertIsSatisfied();
+  public void shouldGetResultFromCallableStatement() throws Exception {
+    when(cs.getByte(1)).thenReturn((byte) 100);
+    when(cs.wasNull()).thenReturn(false);
+    assertEquals(new Byte((byte) 100), TYPE_HANDLER.getResult(cs, 1));
   }
-
 
 }

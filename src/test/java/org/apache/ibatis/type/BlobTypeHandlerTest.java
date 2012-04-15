@@ -15,68 +15,46 @@
  */
 package org.apache.ibatis.type;
 
-import org.jmock.Expectations;
 import static org.junit.Assert.assertArrayEquals;
-import org.junit.Test;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.io.InputStream;
 import java.sql.Blob;
 
+import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+
 public class BlobTypeHandlerTest extends BaseTypeHandlerTest {
 
-  private static final TypeHandler TYPE_HANDLER = new BlobTypeHandler();
+  private static final TypeHandler<byte[]> TYPE_HANDLER = new BlobTypeHandler();
 
-  protected final Blob blob = mockery.mock(Blob.class);
+  @Mock
+  protected Blob blob;
 
   @Test
-  public void shouldSetParameter()
-      throws Exception {
-    mockery.checking(new Expectations() {
-      {
-        one(ps).setBinaryStream(with(any(int.class)), with(any(InputStream.class)), with(any(int.class)));
-      }
-    });
-    TYPE_HANDLER.setParameter(ps, 1, new byte[]{1, 2, 3}, null);
-    mockery.assertIsSatisfied();
+  public void shouldSetParameter() throws Exception {
+    TYPE_HANDLER.setParameter(ps, 1, new byte[] { 1, 2, 3 }, null);
+    verify(ps).setBinaryStream(Mockito.eq(1), Mockito.any(InputStream.class), Mockito.eq(3));
   }
 
   @Test
-  public void shouldGetResultFromResultSet()
-      throws Exception {
-    mockery.checking(new Expectations() {
-      {
-        one(rs).getBlob(with(any(String.class)));
-        will(returnValue(blob));
-        one(rs).wasNull();
-        will(returnValue(false));
-        one(blob).length();
-        will(returnValue(3l));
-        one(blob).getBytes(with(any(long.class)), with(any(int.class)));
-        will(returnValue(new byte[]{1, 2, 3}));
-      }
-    });
-    assertArrayEquals(new byte[]{1, 2, 3}, (byte[]) TYPE_HANDLER.getResult(rs, "column"));
-    mockery.assertIsSatisfied();
+  public void shouldGetResultFromResultSet() throws Exception {
+    when(rs.getBlob("column")).thenReturn(blob);
+    when(rs.wasNull()).thenReturn(false);
+    when(blob.length()).thenReturn(3l);
+    when(blob.getBytes(1, 3)).thenReturn(new byte[] { 1, 2, 3 });
+    assertArrayEquals(new byte[] { 1, 2, 3 }, (byte[]) TYPE_HANDLER.getResult(rs, "column"));
   }
 
   @Test
-  public void shouldGetResultFromCallableStatement()
-      throws Exception {
-    mockery.checking(new Expectations() {
-      {
-        one(cs).getBlob(with(any(int.class)));
-        will(returnValue(blob));
-        one(cs).wasNull();
-        will(returnValue(false));
-        one(blob).length();
-        will(returnValue(3l));
-        one(blob).getBytes(with(any(long.class)), with(any(int.class)));
-        will(returnValue(new byte[]{1, 2, 3}));
-      }
-    });
-    assertArrayEquals(new byte[]{1, 2, 3}, (byte[]) TYPE_HANDLER.getResult(cs, 1));
-    mockery.assertIsSatisfied();
+  public void shouldGetResultFromCallableStatement() throws Exception {
+    when(cs.getBlob(1)).thenReturn(blob);
+    when(cs.wasNull()).thenReturn(false);
+    when(blob.length()).thenReturn(3l);
+    when(blob.getBytes(1, 3)).thenReturn(new byte[] { 1, 2, 3 });
+    assertArrayEquals(new byte[] { 1, 2, 3 }, (byte[]) TYPE_HANDLER.getResult(cs, 1));
   }
-
 
 }

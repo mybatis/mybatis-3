@@ -15,7 +15,8 @@
  */
 package org.apache.ibatis.executor.resultset;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.when;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -39,13 +40,24 @@ import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.type.TypeHandlerRegistry;
-import org.jmock.Expectations;
-import org.jmock.Mockery;
-import org.jmock.integration.junit4.JUnit4Mockery;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
+@RunWith(MockitoJUnitRunner.class)
 public class FastResultSetHandlerTest {
-  private Mockery context = new JUnit4Mockery();
+
+  @Mock
+  private Statement stmt;
+  @Mock
+  private ResultSet rs;
+  @Mock
+  private ResultSetMetaData rsmd;
+  @Mock
+  private Connection conn;
+  @Mock
+  private DatabaseMetaData dbmd;
 
   /**
    * Contrary to the spec, some drivers require case-sensitive column names when getting result.
@@ -54,17 +66,19 @@ public class FastResultSetHandlerTest {
    */
   @Test
   public void shouldRetainColumnNameCase() throws Exception {
+
     final Configuration config = new Configuration();
     final TypeHandlerRegistry registry = config.getTypeHandlerRegistry();
-    final MappedStatement ms = new MappedStatement.Builder(config, "testSelect", new StaticSqlSource(config, "some select statement"), SqlCommandType.SELECT).resultMaps(new ArrayList<ResultMap>() {
-      {
-        add(new ResultMap.Builder(config, "testMap", HashMap.class, new ArrayList() {
+    final MappedStatement ms = new MappedStatement.Builder(config, "testSelect", new StaticSqlSource(config, "some select statement"), SqlCommandType.SELECT).resultMaps(
+        new ArrayList<ResultMap>() {
           {
-            add(new ResultMapping.Builder(config, "cOlUmN1", "CoLuMn1", registry.getTypeHandler(Integer.class)).build());
+            add(new ResultMap.Builder(config, "testMap", HashMap.class, new ArrayList() {
+              {
+                add(new ResultMapping.Builder(config, "cOlUmN1", "CoLuMn1", registry.getTypeHandler(Integer.class)).build());
+              }
+            }).build());
           }
-        }).build());
-      }
-    }).build();
+        }).build();
 
     final Executor executor = null;
     final ParameterHandler parameterHandler = null;
@@ -73,49 +87,19 @@ public class FastResultSetHandlerTest {
     final RowBounds rowBounds = new RowBounds(0, 100);
     final FastResultSetHandler fastResultSetHandler = new FastResultSetHandler(executor, ms, parameterHandler, resultHandler, boundSql, rowBounds);
 
-    final Statement stmt = context.mock(Statement.class);
-    final ResultSet rs = context.mock(ResultSet.class);
-    final ResultSetMetaData rsmd = context.mock(ResultSetMetaData.class);
-    final Connection conn = context.mock(Connection.class);
-    final DatabaseMetaData dbmd = context.mock(DatabaseMetaData.class);
-
-    context.checking(new Expectations() {
-      {
-        allowing(stmt).getResultSet();
-        will(returnValue(rs));
-
-        allowing(rs).getMetaData();
-        will(returnValue(rsmd));
-        allowing(rs).getType();
-        will(returnValue(ResultSet.TYPE_FORWARD_ONLY));
-        allowing(rs).close();
-        oneOf(rs).next();
-        will(returnValue(true));
-        oneOf(rs).next();
-        will(returnValue(false)); // just one row.
-        allowing(rs).getInt("CoLuMn1");
-        will(returnValue(100));
-        allowing(rs).wasNull();
-        will(returnValue(false));
-
-        allowing(rsmd).getColumnCount();
-        will(returnValue(1));
-        allowing(rsmd).getColumnLabel(1);
-        will(returnValue("CoLuMn1"));
-        allowing(rsmd).getColumnType(1);
-        will(returnValue(Types.INTEGER));
-        allowing(rsmd).getColumnClassName(1);
-        will(returnValue(Integer.class.getCanonicalName()));
-        allowing(stmt).getConnection();
-        will(returnValue(conn));
-
-        allowing(conn).getMetaData();
-        will(returnValue(dbmd));
-
-        allowing(dbmd).supportsMultipleResultSets();
-        will(returnValue(false)); // for simplicity.
-      }
-    });
+    when(stmt.getResultSet()).thenReturn(rs);
+    when(rs.getMetaData()).thenReturn(rsmd);
+    when(rs.getType()).thenReturn(ResultSet.TYPE_FORWARD_ONLY);
+    when(rs.next()).thenReturn(true).thenReturn(false);
+    when(rs.getInt("CoLuMn1")).thenReturn(100);
+    when(rs.wasNull()).thenReturn(false);
+    when(rsmd.getColumnCount()).thenReturn(1);
+    when(rsmd.getColumnLabel(1)).thenReturn("CoLuMn1");
+    when(rsmd.getColumnType(1)).thenReturn(Types.INTEGER);
+    when(rsmd.getColumnClassName(1)).thenReturn(Integer.class.getCanonicalName());
+    when(stmt.getConnection()).thenReturn(conn);
+    when(conn.getMetaData()).thenReturn(dbmd);
+    when(dbmd.supportsMultipleResultSets()).thenReturn(false); // for simplicity.
 
     final List<Object> results = fastResultSetHandler.handleResultSets(stmt);
     assertEquals(1, results.size());

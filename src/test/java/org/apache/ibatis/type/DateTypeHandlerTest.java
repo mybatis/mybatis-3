@@ -15,60 +15,39 @@
  */
 package org.apache.ibatis.type;
 
-import org.jmock.Expectations;
 import static org.junit.Assert.assertEquals;
-import org.junit.Test;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.sql.Timestamp;
 import java.util.Date;
 
+import org.junit.Test;
+
 public class DateTypeHandlerTest extends BaseTypeHandlerTest {
 
-  private static final TypeHandler TYPE_HANDLER = new DateTypeHandler();
+  private static final TypeHandler<Date> TYPE_HANDLER = new DateTypeHandler();
   private static final Date DATE = new Date();
   private static final Timestamp TIMESTAMP = new Timestamp(DATE.getTime());
 
   @Test
-  public void shouldSetParameter()
-      throws Exception {
-    mockery.checking(new Expectations() {
-      {
-        one(ps).setTimestamp(with(any(int.class)), with(any(Timestamp.class)));
-      }
-    });
+  public void shouldSetParameter() throws Exception {
     TYPE_HANDLER.setParameter(ps, 1, DATE, null);
-    mockery.assertIsSatisfied();
+    verify(ps).setTimestamp(1, new java.sql.Timestamp(DATE.getTime()));
   }
 
   @Test
-  public void shouldGetResultFromResultSet()
-      throws Exception {
-    mockery.checking(new Expectations() {
-      {
-        one(rs).getTimestamp(with(any(String.class)));
-        will(returnValue(TIMESTAMP));
-        one(rs).wasNull();
-        will(returnValue(false));
-      }
-    });
+  public void shouldGetResultFromResultSet() throws Exception {
+    when(rs.getTimestamp("column")).thenReturn(TIMESTAMP);
+    when(rs.wasNull()).thenReturn(false);
     assertEquals(DATE, TYPE_HANDLER.getResult(rs, "column"));
-    mockery.assertIsSatisfied();
   }
 
   @Test
-  public void shouldGetResultFromCallableStatement()
-      throws Exception {
-    mockery.checking(new Expectations() {
-      {
-        one(cs).getTimestamp(with(any(int.class)));
-        will(returnValue(TIMESTAMP));
-        one(cs).wasNull();
-        will(returnValue(false));
-      }
-    });
+  public void shouldGetResultFromCallableStatement() throws Exception {
+    when(cs.getTimestamp(1)).thenReturn(TIMESTAMP);
+    when(cs.wasNull()).thenReturn(false);
     assertEquals(DATE, TYPE_HANDLER.getResult(cs, 1));
-    mockery.assertIsSatisfied();
   }
-
 
 }

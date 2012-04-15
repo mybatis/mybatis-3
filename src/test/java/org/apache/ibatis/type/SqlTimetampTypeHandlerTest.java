@@ -15,58 +15,38 @@
  */
 package org.apache.ibatis.type;
 
-import org.jmock.Expectations;
 import static org.junit.Assert.assertEquals;
-import org.junit.Test;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
+import java.sql.Timestamp;
 import java.util.Date;
+
+import org.junit.Test;
 
 public class SqlTimetampTypeHandlerTest extends BaseTypeHandlerTest {
 
-  private static final TypeHandler TYPE_HANDLER = new SqlTimestampTypeHandler();
+  private static final TypeHandler<Timestamp> TYPE_HANDLER = new SqlTimestampTypeHandler();
   private static final java.sql.Timestamp SQL_TIME = new java.sql.Timestamp(new Date().getTime());
 
   @Test
-  public void shouldSetParameter()
-      throws Exception {
-    mockery.checking(new Expectations() {
-      {
-        one(ps).setTimestamp(with(any(int.class)), with(any(java.sql.Timestamp.class)));
-      }
-    });
+  public void shouldSetParameter() throws Exception {
     TYPE_HANDLER.setParameter(ps, 1, SQL_TIME, null);
-    mockery.assertIsSatisfied();
+    verify(ps).setTimestamp(1, SQL_TIME);
   }
 
   @Test
-  public void shouldGetResultFromResultSet()
-      throws Exception {
-    mockery.checking(new Expectations() {
-      {
-        one(rs).getTimestamp(with(any(String.class)));
-        will(returnValue(SQL_TIME));
-        one(rs).wasNull();
-        will(returnValue(false));
-      }
-    });
+  public void shouldGetResultFromResultSet() throws Exception {
+    when(rs.getTimestamp("column")).thenReturn(SQL_TIME);
+    when(rs.wasNull()).thenReturn(false);
     assertEquals(SQL_TIME, TYPE_HANDLER.getResult(rs, "column"));
-    mockery.assertIsSatisfied();
   }
 
   @Test
-  public void shouldGetResultFromCallableStatement()
-      throws Exception {
-    mockery.checking(new Expectations() {
-      {
-        one(cs).getTimestamp(with(any(int.class)));
-        will(returnValue(SQL_TIME));
-        one(cs).wasNull();
-        will(returnValue(false));
-      }
-    });
+  public void shouldGetResultFromCallableStatement() throws Exception {
+    when(cs.getTimestamp(1)).thenReturn(SQL_TIME);
+    when(cs.wasNull()).thenReturn(false);
     assertEquals(SQL_TIME, TYPE_HANDLER.getResult(cs, 1));
-    mockery.assertIsSatisfied();
   }
-
 
 }

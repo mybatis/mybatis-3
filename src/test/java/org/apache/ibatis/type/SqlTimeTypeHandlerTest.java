@@ -15,58 +15,37 @@
  */
 package org.apache.ibatis.type;
 
-import org.jmock.Expectations;
 import static org.junit.Assert.assertEquals;
-import org.junit.Test;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.util.Date;
 
+import org.junit.Test;
+
 public class SqlTimeTypeHandlerTest extends BaseTypeHandlerTest {
 
-  private static final TypeHandler TYPE_HANDLER = new SqlTimeTypeHandler();
+  private static final TypeHandler<java.sql.Time> TYPE_HANDLER = new SqlTimeTypeHandler();
   private static final java.sql.Time SQL_TIME = new java.sql.Time(new Date().getTime());
 
   @Test
-  public void shouldSetParameter()
-      throws Exception {
-    mockery.checking(new Expectations() {
-      {
-        one(ps).setTime(with(any(int.class)), with(any(java.sql.Time.class)));
-      }
-    });
+  public void shouldSetParameter() throws Exception {
     TYPE_HANDLER.setParameter(ps, 1, SQL_TIME, null);
-    mockery.assertIsSatisfied();
+    verify(ps).setTime(1, SQL_TIME);
   }
 
   @Test
-  public void shouldGetResultFromResultSet()
-      throws Exception {
-    mockery.checking(new Expectations() {
-      {
-        one(rs).getTime(with(any(String.class)));
-        will(returnValue(SQL_TIME));
-        one(rs).wasNull();
-        will(returnValue(false));
-      }
-    });
+  public void shouldGetResultFromResultSet() throws Exception {
+    when(rs.getTime("column")).thenReturn(SQL_TIME);
+    when(rs.wasNull()).thenReturn(false);
     assertEquals(SQL_TIME, TYPE_HANDLER.getResult(rs, "column"));
-    mockery.assertIsSatisfied();
   }
 
   @Test
-  public void shouldGetResultFromCallableStatement()
-      throws Exception {
-    mockery.checking(new Expectations() {
-      {
-        one(cs).getTime(with(any(int.class)));
-        will(returnValue(SQL_TIME));
-        one(cs).wasNull();
-        will(returnValue(false));
-      }
-    });
+  public void shouldGetResultFromCallableStatement() throws Exception {
+    when(cs.getTime(1)).thenReturn(SQL_TIME);
+    when(cs.wasNull()).thenReturn(false);
     assertEquals(SQL_TIME, TYPE_HANDLER.getResult(cs, 1));
-    mockery.assertIsSatisfied();
   }
-
 
 }

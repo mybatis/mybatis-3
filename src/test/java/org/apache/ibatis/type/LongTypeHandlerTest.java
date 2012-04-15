@@ -15,55 +15,34 @@
  */
 package org.apache.ibatis.type;
 
-import org.jmock.Expectations;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import org.junit.Test;
 
 public class LongTypeHandlerTest extends BaseTypeHandlerTest {
 
-  private static final TypeHandler TYPE_HANDLER = new LongTypeHandler();
+  private static final TypeHandler<Long> TYPE_HANDLER = new LongTypeHandler();
 
   @Test
-  public void shouldSetParameter()
-      throws Exception {
-    mockery.checking(new Expectations() {
-      {
-        one(ps).setLong(with(any(int.class)), with(any(long.class)));
-      }
-    });
+  public void shouldSetParameter() throws Exception {
     TYPE_HANDLER.setParameter(ps, 1, 100l, null);
-    mockery.assertIsSatisfied();
+    verify(ps).setLong(1, 100l);
   }
 
   @Test
-  public void shouldGetResultFromResultSet()
-      throws Exception {
-    mockery.checking(new Expectations() {
-      {
-        one(rs).getLong(with(any(String.class)));
-        will(returnValue(100l));
-        one(rs).wasNull();
-        will(returnValue(false));
-      }
-    });
-    assertEquals(100l, TYPE_HANDLER.getResult(rs, "column"));
-    mockery.assertIsSatisfied();
+  public void shouldGetResultFromResultSet() throws Exception {
+    when(rs.getLong("column")).thenReturn(100l);
+    when(rs.wasNull()).thenReturn(false);
+    assertEquals(new Long(100l), TYPE_HANDLER.getResult(rs, "column"));
   }
 
   @Test
-  public void shouldGetResultFromCallableStatement()
-      throws Exception {
-    mockery.checking(new Expectations() {
-      {
-        one(cs).getLong(with(any(int.class)));
-        will(returnValue(100l));
-        one(cs).wasNull();
-        will(returnValue(false));
-      }
-    });
-    assertEquals(100l, TYPE_HANDLER.getResult(cs, 1));
-    mockery.assertIsSatisfied();
+  public void shouldGetResultFromCallableStatement() throws Exception {
+    when(cs.getLong(1)).thenReturn(100l);
+    when(cs.wasNull()).thenReturn(false);
+    assertEquals(new Long(100l), TYPE_HANDLER.getResult(cs, 1));
   }
-
 
 }

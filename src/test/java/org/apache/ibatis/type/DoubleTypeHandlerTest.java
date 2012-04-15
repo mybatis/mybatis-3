@@ -15,55 +15,34 @@
  */
 package org.apache.ibatis.type;
 
-import org.jmock.Expectations;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import org.junit.Test;
 
 public class DoubleTypeHandlerTest extends BaseTypeHandlerTest {
 
-  private static final TypeHandler TYPE_HANDLER = new DoubleTypeHandler();
+  private static final TypeHandler<Double> TYPE_HANDLER = new DoubleTypeHandler();
 
   @Test
-  public void shouldSetParameter()
-      throws Exception {
-    mockery.checking(new Expectations() {
-      {
-        one(ps).setDouble(with(any(int.class)), with(any(double.class)));
-      }
-    });
+  public void shouldSetParameter() throws Exception {
     TYPE_HANDLER.setParameter(ps, 1, 100d, null);
-    mockery.assertIsSatisfied();
+    verify(ps).setDouble(1, 100d);
   }
 
   @Test
-  public void shouldGetResultFromResultSet()
-      throws Exception {
-    mockery.checking(new Expectations() {
-      {
-        one(rs).getDouble(with(any(String.class)));
-        will(returnValue(100d));
-        one(rs).wasNull();
-        will(returnValue(false));
-      }
-    });
-    assertEquals(100d, TYPE_HANDLER.getResult(rs, "column"));
-    mockery.assertIsSatisfied();
+  public void shouldGetResultFromResultSet() throws Exception {
+    when(rs.getDouble("column")).thenReturn(100d);
+    when(rs.wasNull()).thenReturn(false);
+    assertEquals(new Double(100d), TYPE_HANDLER.getResult(rs, "column"));
   }
 
   @Test
-  public void shouldGetResultFromCallableStatement()
-      throws Exception {
-    mockery.checking(new Expectations() {
-      {
-        one(cs).getDouble(with(any(int.class)));
-        will(returnValue(100d));
-        one(cs).wasNull();
-        will(returnValue(false));
-      }
-    });
-    assertEquals(100d, TYPE_HANDLER.getResult(cs, 1));
-    mockery.assertIsSatisfied();
+  public void shouldGetResultFromCallableStatement() throws Exception {
+    when(cs.getDouble(1)).thenReturn(100d);
+    when(cs.wasNull()).thenReturn(false);
+    assertEquals(new Double(100d), TYPE_HANDLER.getResult(cs, 1));
   }
-
 
 }

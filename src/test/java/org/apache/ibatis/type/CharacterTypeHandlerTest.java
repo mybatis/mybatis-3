@@ -16,90 +16,53 @@
 package org.apache.ibatis.type;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-import org.jmock.Expectations;
 import org.junit.Test;
 
 public class CharacterTypeHandlerTest extends BaseTypeHandlerTest {
 
-  private static final TypeHandler TYPE_HANDLER = new CharacterTypeHandler();
+  private static final TypeHandler<Character> TYPE_HANDLER = new CharacterTypeHandler();
 
   @Test
   public void shouldSetParameter() throws Exception {
-    mockery.checking(new Expectations() {
-      {
-        one(ps).setString(with(any(int.class)), with(any(String.class)));
-      }
-    });
     TYPE_HANDLER.setParameter(ps, 1, 'a', null);
-    mockery.assertIsSatisfied();
+    verify(ps).setString(1, "a");
   }
 
   @Test
   public void shouldSetNullParameter() throws Exception {
-    mockery.checking(new Expectations() {
-      {
-        one(ps).setNull(with(any(int.class)), with(any(int.class)));
-      }
-    });
     TYPE_HANDLER.setParameter(ps, 1, null, JdbcType.VARCHAR);
-    mockery.assertIsSatisfied();
+    verify(ps).setNull(1, JdbcType.VARCHAR.TYPE_CODE);
   }
 
   @Test
   public void shouldGetResultFromResultSet() throws Exception {
-    mockery.checking(new Expectations() {
-      {
-        one(rs).getString(with(any(String.class)));
-        will(returnValue("a"));
-        one(rs).wasNull();
-        will(returnValue(false));
-      }
-    });
-    assertEquals('a', TYPE_HANDLER.getResult(rs, "column"));
-    mockery.assertIsSatisfied();
+    when(rs.getString("column")).thenReturn("a");
+    when(rs.wasNull()).thenReturn(false);
+    assertEquals(new Character('a'), TYPE_HANDLER.getResult(rs, "column"));
   }
 
   @Test
   public void shouldGetNullResultFromResultSet() throws Exception {
-    mockery.checking(new Expectations() {
-      {
-        one(rs).getString(with(any(String.class)));
-        will(returnValue(null));
-        one(rs).wasNull();
-        will(returnValue(true));
-      }
-    });
+    when(rs.getString("column")).thenReturn(null);
+    when(rs.wasNull()).thenReturn(true);
     assertEquals(null, TYPE_HANDLER.getResult(rs, "column"));
-    mockery.assertIsSatisfied();
   }
 
   @Test
   public void shouldGetResultFromCallableStatement() throws Exception {
-    mockery.checking(new Expectations() {
-      {
-        one(cs).getString(with(any(int.class)));
-        will(returnValue("a"));
-        one(cs).wasNull();
-        will(returnValue(false));
-      }
-    });
-    assertEquals('a', TYPE_HANDLER.getResult(cs, 1));
-    mockery.assertIsSatisfied();
+    when(cs.getString(1)).thenReturn("a");
+    when(cs.wasNull()).thenReturn(false);
+    assertEquals(new Character('a'), TYPE_HANDLER.getResult(cs, 1));
   }
 
   @Test
   public void shouldGetNullResultFromCallableStatement() throws Exception {
-    mockery.checking(new Expectations() {
-      {
-        one(cs).getString(with(any(int.class)));
-        will(returnValue(null));
-        one(cs).wasNull();
-        will(returnValue(true));
-      }
-    });
+    when(cs.getString("column")).thenReturn(null);
+    when(cs.wasNull()).thenReturn(true);
     assertEquals(null, TYPE_HANDLER.getResult(cs, 1));
-    mockery.assertIsSatisfied();
   }
 
 }

@@ -15,55 +15,34 @@
  */
 package org.apache.ibatis.type;
 
-import org.jmock.Expectations;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import org.junit.Test;
 
 public class IntegerTypeHandlerTest extends BaseTypeHandlerTest {
 
-  private static final TypeHandler TYPE_HANDLER = new IntegerTypeHandler();
+  private static final TypeHandler<Integer> TYPE_HANDLER = new IntegerTypeHandler();
 
   @Test
-  public void shouldSetParameter()
-      throws Exception {
-    mockery.checking(new Expectations() {
-      {
-        one(ps).setInt(with(any(int.class)), with(any(int.class)));
-      }
-    });
+  public void shouldSetParameter() throws Exception {
     TYPE_HANDLER.setParameter(ps, 1, 100, null);
-    mockery.assertIsSatisfied();
+    verify(ps).setInt(1, 100);
   }
 
   @Test
-  public void shouldGetResultFromResultSet()
-      throws Exception {
-    mockery.checking(new Expectations() {
-      {
-        one(rs).getInt(with(any(String.class)));
-        will(returnValue(100));
-        one(rs).wasNull();
-        will(returnValue(false));
-      }
-    });
-    assertEquals(100, TYPE_HANDLER.getResult(rs, "column"));
-    mockery.assertIsSatisfied();
+  public void shouldGetResultFromResultSet() throws Exception {
+    when(rs.getInt("column")).thenReturn(100);
+    when(rs.wasNull()).thenReturn(false);
+    assertEquals(new Integer(100), TYPE_HANDLER.getResult(rs, "column"));
   }
 
   @Test
-  public void shouldGetResultFromCallableStatement()
-      throws Exception {
-    mockery.checking(new Expectations() {
-      {
-        one(cs).getInt(with(any(int.class)));
-        will(returnValue(100));
-        one(cs).wasNull();
-        will(returnValue(false));
-      }
-    });
-    assertEquals(100, TYPE_HANDLER.getResult(cs, 1));
-    mockery.assertIsSatisfied();
+  public void shouldGetResultFromCallableStatement() throws Exception {
+    when(cs.getInt(1)).thenReturn(100);
+    when(cs.wasNull()).thenReturn(false);
+    assertEquals(new Integer(100), TYPE_HANDLER.getResult(cs, 1));
   }
-
 
 }

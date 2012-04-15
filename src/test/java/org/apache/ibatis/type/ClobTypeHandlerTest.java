@@ -15,68 +15,46 @@
  */
 package org.apache.ibatis.type;
 
-import org.jmock.Expectations;
 import static org.junit.Assert.assertEquals;
-import org.junit.Test;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.io.Reader;
 import java.sql.Clob;
 
+import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+
 public class ClobTypeHandlerTest extends BaseTypeHandlerTest {
 
-  private static final TypeHandler TYPE_HANDLER = new ClobTypeHandler();
+  private static final TypeHandler<String> TYPE_HANDLER = new ClobTypeHandler();
 
-  protected final Clob clob = mockery.mock(Clob.class);
+  @Mock
+  protected Clob clob;
 
   @Test
-  public void shouldSetParameter()
-      throws Exception {
-    mockery.checking(new Expectations() {
-      {
-        one(ps).setCharacterStream(with(any(int.class)), with(any(Reader.class)), with(any(int.class)));
-      }
-    });
+  public void shouldSetParameter() throws Exception {
     TYPE_HANDLER.setParameter(ps, 1, "Hello", null);
-    mockery.assertIsSatisfied();
+    verify(ps).setCharacterStream(Mockito.eq(1), Mockito.any(Reader.class), Mockito.eq(5));
   }
 
   @Test
-  public void shouldGetResultFromResultSet()
-      throws Exception {
-    mockery.checking(new Expectations() {
-      {
-        one(rs).getClob(with(any(String.class)));
-        will(returnValue(clob));
-        one(rs).wasNull();
-        will(returnValue(false));
-        one(clob).length();
-        will(returnValue(3l));
-        one(clob).getSubString(with(any(long.class)), with(any(int.class)));
-        will(returnValue("Hello"));
-      }
-    });
+  public void shouldGetResultFromResultSet() throws Exception {
+    when(rs.getClob("column")).thenReturn(clob);
+    when(rs.wasNull()).thenReturn(false);
+    when(clob.length()).thenReturn(3l);
+    when(clob.getSubString(1, 3)).thenReturn("Hello");
     assertEquals("Hello", TYPE_HANDLER.getResult(rs, "column"));
-    mockery.assertIsSatisfied();
   }
 
   @Test
-  public void shouldGetResultFromCallableStatement()
-      throws Exception {
-    mockery.checking(new Expectations() {
-      {
-        one(cs).getClob(with(any(int.class)));
-        will(returnValue(clob));
-        one(cs).wasNull();
-        will(returnValue(false));
-        one(clob).length();
-        will(returnValue(3l));
-        one(clob).getSubString(with(any(long.class)), with(any(int.class)));
-        will(returnValue("Hello"));
-      }
-    });
+  public void shouldGetResultFromCallableStatement() throws Exception {
+    when(cs.getClob(1)).thenReturn(clob);
+    when(cs.wasNull()).thenReturn(false);
+    when(clob.length()).thenReturn(3l);
+    when(clob.getSubString(1, 3)).thenReturn("Hello");
     assertEquals("Hello", TYPE_HANDLER.getResult(cs, 1));
-    mockery.assertIsSatisfied();
   }
-
 
 }

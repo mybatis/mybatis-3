@@ -15,55 +15,34 @@
  */
 package org.apache.ibatis.type;
 
-import org.jmock.Expectations;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import org.junit.Test;
 
 public class BooleanTypeHandlerTest extends BaseTypeHandlerTest {
 
-  private static final TypeHandler TYPE_HANDLER = new BooleanTypeHandler();
+  private static final TypeHandler<Boolean> TYPE_HANDLER = new BooleanTypeHandler();
 
   @Test
-  public void shouldSetParameter()
-      throws Exception {
-    mockery.checking(new Expectations() {
-      {
-        one(ps).setBoolean(with(any(int.class)), with(any(boolean.class)));
-      }
-    });
+  public void shouldSetParameter() throws Exception {
     TYPE_HANDLER.setParameter(ps, 1, true, null);
-    mockery.assertIsSatisfied();
+    verify(ps).setBoolean(1, true);
   }
 
   @Test
-  public void shouldGetResultFromResultSet()
-      throws Exception {
-    mockery.checking(new Expectations() {
-      {
-        one(rs).getBoolean(with(any(String.class)));
-        will(returnValue(true));
-        one(rs).wasNull();
-        will(returnValue(false));
-      }
-    });
+  public void shouldGetResultFromResultSet() throws Exception {
+    when(rs.getBoolean("column")).thenReturn(true);
+    when(rs.wasNull()).thenReturn(false);
     assertEquals(true, TYPE_HANDLER.getResult(rs, "column"));
-    mockery.assertIsSatisfied();
   }
 
   @Test
-  public void shouldGetResultFromCallableStatement()
-      throws Exception {
-    mockery.checking(new Expectations() {
-      {
-        one(cs).getBoolean(with(any(int.class)));
-        will(returnValue(true));
-        one(cs).wasNull();
-        will(returnValue(false));
-      }
-    });
+  public void shouldGetResultFromCallableStatement() throws Exception {
+    when(cs.getBoolean(1)).thenReturn(true);
+    when(cs.wasNull()).thenReturn(false);
     assertEquals(true, TYPE_HANDLER.getResult(cs, 1));
-    mockery.assertIsSatisfied();
   }
-
 
 }
