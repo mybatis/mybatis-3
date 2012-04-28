@@ -66,9 +66,12 @@ public class SoftCache implements Cache {
       if (result == null) {
         delegate.removeObject(key);
       } else {
-        hardLinksToAvoidGarbageCollection.addFirst(result);
-        if (hardLinksToAvoidGarbageCollection.size() > numberOfHardLinks) {
-          hardLinksToAvoidGarbageCollection.removeLast();
+        // See #586 (and #335) modifications need more than a read lock 
+        synchronized (hardLinksToAvoidGarbageCollection) {
+          hardLinksToAvoidGarbageCollection.addFirst(result);
+          if (hardLinksToAvoidGarbageCollection.size() > numberOfHardLinks) {
+            hardLinksToAvoidGarbageCollection.removeLast();
+          }
         }
       }
     }
@@ -81,7 +84,9 @@ public class SoftCache implements Cache {
   }
 
   public void clear() {
-    hardLinksToAvoidGarbageCollection.clear();
+    synchronized (hardLinksToAvoidGarbageCollection) {
+      hardLinksToAvoidGarbageCollection.clear();
+    }
     removeGarbageCollectedItems();
     delegate.clear();
   }
