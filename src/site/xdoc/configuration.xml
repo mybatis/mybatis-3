@@ -264,9 +264,9 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
               <td>
                 Specifies if and how MyBatis
                 should automatically map columns
-                to fields/properties. 
-                NONE disables auto-mapping. 
-                PARTIAL will only auto-map results 
+                to fields/properties.
+                NONE disables auto-mapping.
+                PARTIAL will only auto-map results
                 with no nested result mappings defined inside.
                 FULL will auto-map result mappings of any
                 complexity (containing nested or otherwise).
@@ -353,8 +353,8 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 localCacheScope
               </td>
               <td>
-                MyBatis uses local cache to prevent circular references and speed up repeated nested queries. 
-                By default (SESSION) all queries executed during a session are cached. If localCacheScope=STATEMENT local session will be used just for 
+                MyBatis uses local cache to prevent circular references and speed up repeated nested queries.
+                By default (SESSION) all queries executed during a session are cached. If localCacheScope=STATEMENT local session will be used just for
                 statement execution, no data will be shared between two different calls to the same SqlSession.
               </td>
               <td>
@@ -369,7 +369,7 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 jdbcTypeForNull
               </td>
               <td>
-                Specifies the JDBC type for null values when no specific JDBC type was provided for the parameter. 
+                Specifies the JDBC type for null values when no specific JDBC type was provided for the parameter.
                 Some drivers require specifying the column JDBC type but others work with generic values like NULL, VARCHAR or OTHER.
               </td>
               <td>
@@ -391,6 +391,20 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
               </td>
               <td>
                 equals,clone,hashCode,toString
+              </td>
+            </tr>
+            <tr>
+              <td>
+                defaultScriptingLanguage
+              </td>
+              <td>
+                Specifies the language used by default for dynamic SQL generation.
+              </td>
+              <td>
+                A type alias or fully qualified class name.
+              </td>
+              <td>
+                org.apache.ibatis.scripting.xmltags.XMLDynamicLanguageDriver
               </td>
             </tr>
           </tbody>
@@ -968,7 +982,7 @@ public class Author {
                 <code>VARCHAR</code> any string compatible type, as the code is
                   stored (not
                   the index).
-                
+
               </td>
             </tr>
             <tr>
@@ -1036,14 +1050,14 @@ public class ExampleTypeHandler extends BaseTypeHandler<String> {
         </p>
         <p>
           MyBatis will know the the Java type that you want to handle with
-          this TypeHandler by introspecting its generic type, but 
+          this TypeHandler by introspecting its generic type, but
           you can override this behavior by two means:
         </p>
         <ul>
           <li>Adding a <code>javaType</code> attribute to the typeHandler element (for example: <code>javaType="String"</code>)
-          </li> 
-          <li>Adding a <code>@MappedTypes</code> annotation to your TypeHandler class specifying 
-          the list of java types to associate it with. This annotation will be ignored if 
+          </li>
+          <li>Adding a <code>@MappedTypes</code> annotation to your TypeHandler class specifying
+          the list of java types to associate it with. This annotation will be ignored if
           the <code>javaType</code> attribute as also been specified.
           </li>
         </ul>
@@ -1053,8 +1067,8 @@ public class ExampleTypeHandler extends BaseTypeHandler<String> {
           <li>
            Adding a <code>jdbcType</code> attribute to the typeHandler element (for example: <code>jdbcType=VARCHAR</code>).
           </li>
-          <li>Adding a <code>@MappedJdbcTypes</code> annotation to your TypeHandler class specifying 
-          the list of JDBC types to associate it with. This annotation will be ignored if 
+          <li>Adding a <code>@MappedJdbcTypes</code> annotation to your TypeHandler class specifying
+          the list of JDBC types to associate it with. This annotation will be ignored if
           the <code>jdbcType</code> attribute as also been specified.
           </li>
         </ul>
@@ -1321,8 +1335,8 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader,properties);]]
         <p>
           <span class="label important">NOTE</span>
           If you are planning to use MyBatis with Spring there is no need to configure
-          any TransactionManager because the Spring module will set its own one 
-          overriding any previously set configuration.  
+          any TransactionManager because the Spring module will set its own one
+          overriding any previously set configuration.
         </p>
         <p>
           Neither of these TransactionManager types require any properties.
@@ -1334,9 +1348,9 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader,properties);]]
           TransactionFactory interface.
         </p>
         <source><![CDATA[public interface TransactionFactory {
-  void setProperties(Properties props);  
+  void setProperties(Properties props);
   Transaction newTransaction(Connection conn);
-  Transaction newTransaction(DataSource dataSource, TransactionIsolationLevel level, boolean autoCommit);  
+  Transaction newTransaction(DataSource dataSource, TransactionIsolationLevel level, boolean autoCommit);
 }]]></source>
         <p>
           Any properties configured in the XML will be passed to the
@@ -1501,40 +1515,40 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader,properties);]]
           constructor of the InitialContext upon instantiation.
         </p>
       </subsection>
-      
+
       <subsection name="databaseIdProvider">
         <p>
-          MyBatis is able to execute different statements depending on your database vendor. 
-          The multi-db vendor support is based on the mapped statements <code>databaseId</code> attribute. 
-          MyBatis will load all statements with no <code>databaseId</code> attribute 
+          MyBatis is able to execute different statements depending on your database vendor.
+          The multi-db vendor support is based on the mapped statements <code>databaseId</code> attribute.
+          MyBatis will load all statements with no <code>databaseId</code> attribute
           or with a <code>databaseId</code> that matches the current one. If case the same statement
-          if found with and without the <code>databaseId</code> the latter will be discarded.  
+          if found with and without the <code>databaseId</code> the latter will be discarded.
           To enable the multi vendor support add a <code>databaseIdProvider</code>
           to mybatis-config.xml file as follows:
         </p>
-        
+
         <source><![CDATA[<databaseIdProvider type="VENDOR" />
 ]]></source>
 
-		<p> 
-		  The VENDOR implementation databaseIdProvider sets as a databaseId the String returned by 
-		  <code>DatabaseMetaData#getDatabaseProductName()</code>. 
-		  As usually that string is too long and also, different versions of the same product return different values, 
+		<p>
+		  The VENDOR implementation databaseIdProvider sets as a databaseId the String returned by
+		  <code>DatabaseMetaData#getDatabaseProductName()</code>.
+		  As usually that string is too long and also, different versions of the same product return different values,
 		  so you may want to translate it to a shorter one by adding properties like follows:
 		</p>
-		
+
         <source><![CDATA[<databaseIdProvider type="VENDOR">
   <property name="SQL Server" value="sqlserver"/>
-  <property name="DB2" value="db2"/>        
+  <property name="DB2" value="db2"/>
   <property name="Oracle" value="oracle" />
 </databaseIdProvider>]]></source>
 
-		<p> 
-		  When properties are provided, the VENDOR databaseIdProvider will search the property value corresponding to the 
-		  first key found in the returned database product name or "null" if there is not a matching property. 
-		  In this case, if <code>getDatabaseProductName()</code> returns "Oracle (DataDirect)" the databaseId will be set to "oracle".  
+		<p>
+		  When properties are provided, the VENDOR databaseIdProvider will search the property value corresponding to the
+		  first key found in the returned database product name or "null" if there is not a matching property.
+		  In this case, if <code>getDatabaseProductName()</code> returns "Oracle (DataDirect)" the databaseId will be set to "oracle".
 		</p>
-		
+
 		<p>
 		  You can build your own DatabaseIdProvider by implementing the interface <code>org.apache.ibatis.mapping.DatabaseIdProvider</code>
 		  and registering it in mybatis-config.xml:
@@ -1543,12 +1557,12 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader,properties);]]
         <source><![CDATA[public interface DatabaseIdProvider {
 
   void setProperties(Properties p);
-  
+
   String getDatabaseId(DataSource dataSource) throws SQLException;
 }]]></source>
 
       </subsection>
-      
+
       <subsection name="mappers">
         <p>
           Now that the behavior of MyBatis is configured with the above

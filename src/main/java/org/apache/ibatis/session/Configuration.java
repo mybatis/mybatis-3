@@ -23,7 +23,6 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-
 import org.apache.ibatis.binding.MapperRegistry;
 import org.apache.ibatis.builder.CacheRefResolver;
 import org.apache.ibatis.builder.ResultMapResolver;
@@ -43,7 +42,6 @@ import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.executor.ReuseExecutor;
 import org.apache.ibatis.executor.SimpleExecutor;
 import org.apache.ibatis.executor.keygen.KeyGenerator;
-import org.apache.ibatis.executor.parameter.DefaultParameterHandler;
 import org.apache.ibatis.executor.parameter.ParameterHandler;
 import org.apache.ibatis.executor.resultset.FastResultSetHandler;
 import org.apache.ibatis.executor.resultset.NestedResultSetHandler;
@@ -66,6 +64,10 @@ import org.apache.ibatis.reflection.factory.DefaultObjectFactory;
 import org.apache.ibatis.reflection.factory.ObjectFactory;
 import org.apache.ibatis.reflection.wrapper.DefaultObjectWrapperFactory;
 import org.apache.ibatis.reflection.wrapper.ObjectWrapperFactory;
+import org.apache.ibatis.scripting.LanguageDriver;
+import org.apache.ibatis.scripting.LanguageDriverRegistry;
+import org.apache.ibatis.scripting.defaults.StaticSqlLanguageDriver;
+import org.apache.ibatis.scripting.xmltags.XMLDynamicLanguageDriver;
 import org.apache.ibatis.transaction.Transaction;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
 import org.apache.ibatis.transaction.managed.ManagedTransactionFactory;
@@ -103,6 +105,7 @@ public class Configuration {
   protected final InterceptorChain interceptorChain = new InterceptorChain();
   protected final TypeHandlerRegistry typeHandlerRegistry = new TypeHandlerRegistry();
   protected final TypeAliasRegistry typeAliasRegistry = new TypeAliasRegistry();
+  protected final LanguageDriverRegistry languageRegistry = new LanguageDriverRegistry();
   protected final Map<String, MappedStatement> mappedStatements = new StrictMap<MappedStatement>("Mapped Statements collection");
   protected final Map<String, Cache> caches = new StrictMap<Cache>("Caches collection");
   protected final Map<String, ResultMap> resultMaps = new StrictMap<ResultMap>("Result Maps collection");
@@ -141,8 +144,11 @@ public class Configuration {
     typeAliasRegistry.registerAlias("WEAK", WeakCache.class.getName());
 
     typeAliasRegistry.registerAlias("VENDOR", VendorDatabaseIdProvider.class.getName());
+
+    languageRegistry.setDefaultDriverClass(XMLDynamicLanguageDriver.class);
+    languageRegistry.register(StaticSqlLanguageDriver.class);
   }
-  
+
   public String getDatabaseId() {
     return databaseId;
   }
@@ -326,12 +332,27 @@ public class Configuration {
     this.objectWrapperFactory = objectWrapperFactory;
   }
 
+  public LanguageDriverRegistry getLanguageRegistry() {
+    return languageRegistry;
+  }
+
+  public void setDefaultScriptingLanguage(Class<?> driver) {
+    if (driver == null) {
+      driver = XMLDynamicLanguageDriver.class;
+    }
+    getLanguageRegistry().setDefaultDriverClass(driver);
+  }
+
+  public LanguageDriver getDefaultScriptingLanuageInstance() {
+    return languageRegistry.getDefaultDriver();
+  }
+
   public MetaObject newMetaObject(Object object) {
     return MetaObject.forObject(object, objectFactory, objectWrapperFactory);
   }
 
   public ParameterHandler newParameterHandler(MappedStatement mappedStatement, Object parameterObject, BoundSql boundSql) {
-    ParameterHandler parameterHandler = new DefaultParameterHandler(mappedStatement, parameterObject, boundSql);
+    ParameterHandler parameterHandler = mappedStatement.getLang().createParameterHandler(mappedStatement, parameterObject, boundSql);
     parameterHandler = (ParameterHandler) interceptorChain.pluginAll(parameterHandler);
     return parameterHandler;
   }
@@ -357,7 +378,7 @@ public class Configuration {
   public Executor newExecutor(Transaction transaction, ExecutorType executorType) {
     return newExecutor(transaction, defaultExecutorType, false);
   }
-    
+
   public Executor newExecutor(Transaction transaction, ExecutorType executorType, boolean autoCommit) {
     executorType = executorType == null ? defaultExecutorType : executorType;
     executorType = executorType == null ? ExecutorType.SIMPLE : executorType;
@@ -543,7 +564,7 @@ public class Configuration {
   public boolean hasStatement(String statementName) {
     return hasStatement(statementName, true);
   }
-  
+
   public boolean hasStatement(String statementName, boolean validateIncompleteStatements) {
     if (validateIncompleteStatements) {
       buildAllStatements();
@@ -583,7 +604,7 @@ public class Configuration {
 
   /*
    * Extracts namespace from fully qualified statement id.
-   * 
+   *
    * @param statementId
    * @return namespace or null when id does not contain period.
    */

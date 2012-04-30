@@ -24,7 +24,6 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.StringTokenizer;
-
 import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.cache.decorators.LruCache;
 import org.apache.ibatis.cache.impl.PerpetualCache;
@@ -274,7 +273,8 @@ public class MapperBuilderAssistant extends BaseBuilder {
       KeyGenerator keyGenerator,
       String keyProperty,
       String keyColumn,
-      String databaseId) {
+      String databaseId,
+      Class<?> langTypeClass) {
     id = applyCurrentNamespace(id, false);
     boolean isSelect = sqlCommandType == SqlCommandType.SELECT;
 
@@ -285,7 +285,8 @@ public class MapperBuilderAssistant extends BaseBuilder {
     statementBuilder.keyGenerator(keyGenerator);
     statementBuilder.keyProperty(keyProperty);
     statementBuilder.keyColumn(keyColumn);
-    statementBuilder.databaseId(databaseId);    
+    statementBuilder.databaseId(databaseId);
+    statementBuilder.lang(langTypeClass);
     setStatementTimeout(timeout, statementBuilder);
 
     setStatementParameterMap(parameterMap, parameterType, statementBuilder);

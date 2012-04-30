@@ -28,7 +28,7 @@
   </parent>
 
   <artifactId>mybatis</artifactId>
-  <version>3.1.2-SNAPSHOT</version>
+  <version>3.2.0-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>MyBatis</name>
@@ -174,7 +174,7 @@
 	  <artifactId>mockito-core</artifactId>
 	  <version>1.9.0</version>
       <scope>test</scope>
-	</dependency>    
+	</dependency>
     <dependency>
       <groupId>commons-dbcp</groupId>
       <artifactId>commons-dbcp</artifactId>
@@ -185,6 +185,12 @@
       <groupId>javax.transaction</groupId>
       <artifactId>transaction-api</artifactId>
       <version>1.1</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.velocity</groupId>
+      <artifactId>velocity</artifactId>
+      <version>1.7</version>
       <scope>test</scope>
     </dependency>
     <!-- postgresql driver is required to run the refcursor tests -->

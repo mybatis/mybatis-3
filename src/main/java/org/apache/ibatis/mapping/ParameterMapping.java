@@ -32,6 +32,7 @@ public class ParameterMapping {
   private TypeHandler<?> typeHandler;
   private String resultMapId;
   private String jdbcTypeName;
+  private String expression;
 
   private ParameterMapping() {
   }
@@ -88,6 +89,11 @@ public class ParameterMapping {
       return this;
     }
 
+    public Builder expression(String expression) {
+      parameterMapping.expression = expression;
+      return this;
+    }
+
     public ParameterMapping build() {
       resolveTypeHandler();
       return parameterMapping;
@@ -136,6 +142,10 @@ public class ParameterMapping {
 
   public String getJdbcTypeName() {
     return jdbcTypeName;
+  }
+
+  public String getExpression() {
+    return expression;
   }
 
 }

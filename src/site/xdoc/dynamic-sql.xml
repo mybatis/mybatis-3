@@ -29,7 +29,7 @@
   <section name="Dynamic SQL">
   <p>One of the most powerful features of MyBatis has always been its Dynamic SQL capabilities. If you have any experience with JDBC or any similar framework, you understand how painful it is to conditionally concatenate strings of SQL together, making sure not to forget spaces or to omit a comma at the end of a list of columns. Dynamic SQL can be downright painful to deal with.</p>
   <p>While working with Dynamic SQL will never be a party, MyBatis certainly improves the situation with a powerful Dynamic SQL language that can be used within any mapped SQL statement.</p>
-  <p>The Dynamic SQL elements should be familiar to anyone who has used JSTL or any similar XML based text processors. In previous versions of MyBatis, there were a lot of elements to know and understand. MyBatis 3 greatly improves upon this, and now there are less than half of those elements to work with. MyBatis employs powerful OGNL based expressions to eliminate most of the other elements:</p>  
+  <p>The Dynamic SQL elements should be familiar to anyone who has used JSTL or any similar XML based text processors. In previous versions of MyBatis, there were a lot of elements to know and understand. MyBatis 3 greatly improves upon this, and now there are less than half of those elements to work with. MyBatis employs powerful OGNL based expressions to eliminate most of the other elements:</p>
   <ul>
     <li>if</li>
     <li>choose (when, otherwise)</li>
@@ -38,19 +38,19 @@
   </ul>
   <subsection name="if" id="if">
   <p>The most common thing to do in dynamic SQL is conditionally include a part of a where clause. For example:</p>
-  <source><![CDATA[<select id="findActiveBlogWithTitleLike" 
+  <source><![CDATA[<select id="findActiveBlogWithTitleLike"
      parameterType="Blog" resultType="Blog">
-  SELECT * FROM BLOG 
-  WHERE state = ‘ACTIVE’ 
+  SELECT * FROM BLOG
+  WHERE state = ‘ACTIVE’
   <if test="title != null">
     AND title like #{title}
   </if>
-</select>]]></source>  
+</select>]]></source>
   <p>This statement would provide an optional text search type of functionality. If you passed in no title, then all active Blogs would be returned. But if you do pass in a title, it will look for a title like that (for the keen eyed, yes in this case your parameter value would need to include any masking or wildcard characters).</p>
   <p>What if we wanted to optionally search by title and author?  First, I’d change the name of the statement to make more sense. Then simply add another condition.</p>
-  <source><![CDATA[<select id="findActiveBlogLike" 
+  <source><![CDATA[<select id="findActiveBlogLike"
      parameterType="Blog" resultType="Blog">
-  SELECT * FROM BLOG WHERE state = ‘ACTIVE’ 
+  SELECT * FROM BLOG WHERE state = ‘ACTIVE’
   <if test="title != null">
     AND title like #{title}
   </if>
@@ -62,7 +62,7 @@
   <subsection name="choose, when, otherwise" id="chooseWhenOtherwise">
   <p>Sometimes we don’t want all of the conditionals to apply, instead we want to choose only one case among many options. Similar to a switch statement in Java, MyBatis offers a choose element.</p>
   <p>Let’s use the example above, but now let’s search only on title if one is provided, then only by author if one is provided. If neither is provided, let’s only return featured blogs (perhaps a strategically list selected by administrators, instead of returning  a huge meaningless list of random blogs).</p>
-  <source><![CDATA[<select id="findActiveBlogLike" 
+  <source><![CDATA[<select id="findActiveBlogLike"
      parameterType="Blog" resultType="Blog">
   SELECT * FROM BLOG WHERE state = ‘ACTIVE’
   <choose>
@@ -80,13 +80,13 @@
   </subsection>
   <subsection name="trim, where, set" id="trimWhereSet">
   <p>The previous examples have been conveniently dancing around a notorious dynamic SQL challenge. Consider what would happen if we return to our "if" example, but this time we make "ACTIVE = 1" a dynamic condition as well.</p>
-  <source><![CDATA[<select id="findActiveBlogLike" 
+  <source><![CDATA[<select id="findActiveBlogLike"
      parameterType="Blog" resultType="Blog">
-  SELECT * FROM BLOG 
-  WHERE 
+  SELECT * FROM BLOG
+  WHERE
   <if test="state != null">
     state = #{state}
-  </if> 
+  </if>
   <if test="title != null">
     AND title like #{title}
   </if>
@@ -95,21 +95,21 @@
   </if>
 </select>]]></source>
   <p>What happens if none of the conditions are met?  You would end up with SQL that looked like this:</p>
-  <source><![CDATA[SELECT * FROM BLOG 
+  <source><![CDATA[SELECT * FROM BLOG
 WHERE]]></source>
   <p>This would fail. What if only the second condition was met?  You would end up with SQL that looked like this:</p>
-  <source><![CDATA[SELECT * FROM BLOG 
-WHERE 
+  <source><![CDATA[SELECT * FROM BLOG
+WHERE
 AND title like ‘someTitle’]]></source>
   <p>This would also fail. This problem is not easily solved with conditionals, and if you’ve ever had to write it, then you likely never want to do so again.</p>
   <p>MyBatis has a simple answer that will likely work in 90% of the cases. And in cases where it doesn’t, you can customize it so that it does. With one simple change, everything works fine:</p>
-  <source><![CDATA[<select id="findActiveBlogLike" 
+  <source><![CDATA[<select id="findActiveBlogLike"
      parameterType="Blog" resultType="Blog">
-  SELECT * FROM BLOG 
-  <where> 
+  SELECT * FROM BLOG
+  <where>
     <if test="state != null">
          state = #{state}
-    </if> 
+    </if>
     <if test="title != null">
         AND title like #{title}
     </if>
@@ -117,12 +117,12 @@ AND title like ‘someTitle’]]></source>
         AND author_name like #{author.name}
     </if>
   </where>
-</select>]]></source> 
+</select>]]></source>
   <p>The <em>where</em> element knows to only insert "WHERE" if there is any content returned by the containing tags. Furthermore, if that content begins with "AND" or "OR", it knows to strip it off. </p>
   <p>If the <em>where</em> element does not behave exactly as you like, you can customize it by defining your own trim element.  For example, the trim equivalent to the <em>where</em> element is:</p>
   <source><![CDATA[<trim prefix="WHERE" prefixOverrides="AND |OR ">
-  ... 
-</trim>]]></source>  
+  ...
+</trim>]]></source>
   <p>The <em>prefixOverrides</em> attribute takes a pipe delimited list of text to override, where whitespace <u>is</u> relevant. The result is the removal of anything specified in the <em>prefixOverrides</em> attribute, and the insertion of anything in the <em>prefix</em> attribute.</p>
   <p>There is a similar solution for dynamic update statements called <em>set</em>. The <em>set</em> element can be used to dynamically include columns to update, and leave out others. For example:</p>
   <source><![CDATA[<update id="updateAuthorIfNecessary"
@@ -136,7 +136,7 @@ AND title like ‘someTitle’]]></source>
     </set>
   where id=#{id}
 </update>]]></source>
-  <p>Here, the <em>set</em> element will dynamically prepend the SET keyword, and also eliminate any extraneous commas that might trail the value assignments after the conditions are applied.</p>  
+  <p>Here, the <em>set</em> element will dynamically prepend the SET keyword, and also eliminate any extraneous commas that might trail the value assignments after the conditions are applied.</p>
   <p>If you’re curious about what the equivalent <em>trim</em> element would look like, here it is:</p>
   <source><![CDATA[<trim prefix="SET" suffixOverrides=",">
   ...
@@ -157,7 +157,7 @@ AND title like ‘someTitle’]]></source>
   <p>The <em>foreach</em> element is very powerful, and allows you to specify a collection, declare item and index variables that can be used inside the body of the element. It also allows you to specify opening and closing strings, and add a separator to place in between iterations. The element is smart in that it won’t accidentally append extra separators. </p>
   <p><span class="label important">NOTE</span> You can pass a List instance or an Array to MyBatis as a parameter object. When you do, MyBatis will automatically wrap it in a Map, and key it by name. List instances will be keyed to the name "list" and array instances will be keyed to the name "array".</p>
   <p>This wraps up the discussion regarding the XML configuration file and XML mapping files. The next section will discuss the Java API in detail, so that you can get the most out of the mappings that you’ve created.</p>
-  </subsection>  
+  </subsection>
   <subsection name="Multi-db vendor support">
   <p>If a databaseIdProvider was configured a "_databaseId" variable is available for dynamic code, so you can build different statements depending on database vendor. Have a look at the following example:</p>
   <source><![CDATA[<insert id="insert" parameterType="org.myapp.domain.User">
@@ -173,6 +173,12 @@ AND title like ‘someTitle’]]></source>
 </insert>
 ]]></source>
   </subsection>
+  </section>
+  <section name="Pluggable Scripting Languages For Dynamic SQL">
+    <p>Starting from version 3.2 mybatis supports pluggable scripting languages,
+    so you can plug a language driver and use that lang to write your dynamic
+    SQL queries.</p>
+    <p>This feature is to be documented</p>
   </section>
   </body>
 </document>

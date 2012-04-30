@@ -31,7 +31,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-
 import org.apache.ibatis.annotations.Arg;
 import org.apache.ibatis.annotations.CacheNamespace;
 import org.apache.ibatis.annotations.CacheNamespaceRef;
@@ -56,10 +55,6 @@ import org.apache.ibatis.binding.BindingException;
 import org.apache.ibatis.builder.BuilderException;
 import org.apache.ibatis.builder.MapperBuilderAssistant;
 import org.apache.ibatis.builder.xml.XMLMapperBuilder;
-import org.apache.ibatis.builder.xml.dynamic.DynamicSqlSource;
-import org.apache.ibatis.builder.xml.dynamic.MixedSqlNode;
-import org.apache.ibatis.builder.xml.dynamic.SqlNode;
-import org.apache.ibatis.builder.xml.dynamic.TextSqlNode;
 import org.apache.ibatis.executor.keygen.Jdbc3KeyGenerator;
 import org.apache.ibatis.executor.keygen.KeyGenerator;
 import org.apache.ibatis.executor.keygen.NoKeyGenerator;
@@ -75,9 +70,9 @@ import org.apache.ibatis.mapping.SqlSource;
 import org.apache.ibatis.mapping.StatementType;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.RowBounds;
-import org.apache.ibatis.type.UnknownTypeHandler;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
+import org.apache.ibatis.type.UnknownTypeHandler;
 
 public class MapperAnnotationBuilder {
 
@@ -286,7 +281,8 @@ public class MapperAnnotationBuilder {
           keyGenerator,
           keyProperty,
           keyColumn,
-          null);
+          null,
+          configuration.getLanguageRegistry().getDefaultDriverClass());
     }
   }
 
@@ -369,10 +365,7 @@ public class MapperAnnotationBuilder {
       sql.append(fragment);
       sql.append(" ");
     }
-    ArrayList<SqlNode> contents = new ArrayList<SqlNode>();
-    contents.add(new TextSqlNode(sql.toString()));
-    MixedSqlNode rootSqlNode = new MixedSqlNode(contents);
-    return new DynamicSqlSource(configuration, rootSqlNode);
+    return configuration.getDefaultScriptingLanuageInstance().createSqlSource(configuration, assistant, sql.toString(), null);
   }
 
   private SqlCommandType getSqlCommandType(Method method) {
@@ -506,7 +499,7 @@ public class MapperAnnotationBuilder {
     SqlCommandType sqlCommandType = SqlCommandType.SELECT;
 
     assistant.addMappedStatement(id, sqlSource, statementType, sqlCommandType, fetchSize, timeout, parameterMap, parameterTypeClass, resultMap, resultTypeClass, resultSetTypeEnum,
-        flushCache, useCache, keyGenerator, keyProperty, null, null);
+        flushCache, useCache, keyGenerator, keyProperty, null, null, configuration.getLanguageRegistry().getDefaultDriverClass());
 
     id = assistant.applyCurrentNamespace(id, false);
 

@@ -15,17 +15,17 @@
  */
 package org.apache.ibatis.mapping;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.executor.keygen.Jdbc3KeyGenerator;
 import org.apache.ibatis.executor.keygen.KeyGenerator;
 import org.apache.ibatis.executor.keygen.NoKeyGenerator;
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
+import org.apache.ibatis.scripting.LanguageDriver;
 import org.apache.ibatis.session.Configuration;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 public final class MappedStatement {
 
@@ -49,6 +49,7 @@ public final class MappedStatement {
   private boolean hasNestedResultMaps;
   private String databaseId;
   private Log statementLog;
+  private LanguageDriver lang;
 
   private MappedStatement() {
     // constructor disabled
@@ -68,6 +69,7 @@ public final class MappedStatement {
       mappedStatement.sqlCommandType = sqlCommandType;
       mappedStatement.keyGenerator = configuration.isUseGeneratedKeys() && SqlCommandType.INSERT.equals(sqlCommandType) ? new Jdbc3KeyGenerator() : new NoKeyGenerator();
       mappedStatement.statementLog = LogFactory.getLog(id);
+      mappedStatement.lang = configuration.getDefaultScriptingLanuageInstance();
     }
 
     public Builder resource(String resource) {
@@ -147,10 +149,16 @@ public final class MappedStatement {
       return this;
     }
 
+    public Builder lang(Class<?> lang) {
+      mappedStatement.lang = mappedStatement.configuration.getLanguageRegistry().getDriver(lang);
+      return this;
+    }
+
     public MappedStatement build() {
       assert mappedStatement.configuration != null;
       assert mappedStatement.id != null;
       assert mappedStatement.sqlSource != null;
+      assert mappedStatement.lang != null;
       mappedStatement.resultMaps = Collections.unmodifiableList(mappedStatement.resultMaps);
       return mappedStatement;
     }
@@ -235,6 +243,10 @@ public final class MappedStatement {
 
   public Log getStatementLog() {
     return statementLog;
+  }
+
+  public LanguageDriver getLang() {
+    return lang;
   }
 
   public BoundSql getBoundSql(Object parameterObject) {
