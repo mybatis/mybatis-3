@@ -66,7 +66,6 @@ public class DefaultParameterHandler implements ParameterHandler {
         if (parameterMapping.getMode() != ParameterMode.OUT) {
           Object value;
           String propertyName = parameterMapping.getProperty();
-          PropertyTokenizer prop = new PropertyTokenizer(propertyName);
           if (parameterObject == null) {
             value = null;
           } else if (typeHandlerRegistry.hasTypeHandler(parameterObject.getClass())) {
