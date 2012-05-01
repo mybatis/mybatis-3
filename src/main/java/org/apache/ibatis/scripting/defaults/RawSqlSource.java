@@ -15,17 +15,13 @@
  */
 package org.apache.ibatis.scripting.defaults;
 
-import java.util.Map;
+import java.util.HashMap;
+
 import org.apache.ibatis.builder.SqlSourceBuilder;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.SqlSource;
-import org.apache.ibatis.scripting.xmltags.DynamicContext;
 import org.apache.ibatis.session.Configuration;
 
-/**
- *
- * @author mnesarco
- */
 public class RawSqlSource implements SqlSource {
 
   private final Configuration configuration;
@@ -37,14 +33,10 @@ public class RawSqlSource implements SqlSource {
   }
 
   public BoundSql getBoundSql(Object parameterObject) {
-    DynamicContext context = new DynamicContext(configuration, parameterObject);
     SqlSourceBuilder sqlSourceParser = new SqlSourceBuilder(configuration);
     Class<?> parameterType = parameterObject == null ? Object.class : parameterObject.getClass();
-    SqlSource sqlSource = sqlSourceParser.parse(sql, parameterType);
+    SqlSource sqlSource = sqlSourceParser.parse(sql, parameterType, new HashMap<String, Object>());
     BoundSql boundSql = sqlSource.getBoundSql(parameterObject);
-    for (Map.Entry<String, Object> entry : context.getBindings().entrySet()) {
-      boundSql.setAdditionalParameter(entry.getKey(), entry.getValue());
-    }
     return boundSql;
   }
 

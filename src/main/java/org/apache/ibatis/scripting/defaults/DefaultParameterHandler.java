@@ -18,6 +18,7 @@ package org.apache.ibatis.scripting.defaults;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
+
 import org.apache.ibatis.executor.ErrorContext;
 import org.apache.ibatis.executor.ExecutorException;
 import org.apache.ibatis.executor.parameter.ParameterHandler;
@@ -27,7 +28,6 @@ import org.apache.ibatis.mapping.ParameterMapping;
 import org.apache.ibatis.mapping.ParameterMode;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.property.PropertyTokenizer;
-import org.apache.ibatis.scripting.xmltags.ForEachSqlNode;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
@@ -73,12 +73,6 @@ public class DefaultParameterHandler implements ParameterHandler {
             value = parameterObject;
           } else if (boundSql.hasAdditionalParameter(propertyName)) {
             value = boundSql.getAdditionalParameter(propertyName);
-          } else if (propertyName.startsWith(ForEachSqlNode.ITEM_PREFIX)
-              && boundSql.hasAdditionalParameter(prop.getName())) {
-            value = boundSql.getAdditionalParameter(prop.getName());
-            if (value != null) {
-              value = configuration.newMetaObject(value).getValue(propertyName.substring(prop.getName().length()));
-            }
           } else {
             value = metaObject == null ? null : metaObject.getValue(propertyName);
           }
