@@ -22,6 +22,7 @@ import org.apache.ibatis.mapping.SqlSource;
 import org.apache.ibatis.session.Configuration;
 
 import java.lang.reflect.Method;
+import java.util.HashMap;
 
 public class ProviderSqlSource implements SqlSource {
 
@@ -69,7 +70,7 @@ public class ProviderSqlSource implements SqlSource {
         sql = (String) providerMethod.invoke(providerType.newInstance());
       }
       Class<?> parameterType = parameterObject == null ? Object.class : parameterObject.getClass();
-      return sqlSourceParser.parse(sql, parameterType);
+      return sqlSourceParser.parse(sql, parameterType, new HashMap<String, Object>());
     } catch (Exception e) {
       throw new BuilderException("Error invoking SqlProvider method ("
           + providerType.getName() + "." + providerMethod.getName()

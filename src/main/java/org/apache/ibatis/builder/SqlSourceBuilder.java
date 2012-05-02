@@ -24,6 +24,7 @@ import org.apache.ibatis.mapping.SqlSource;
 import org.apache.ibatis.parsing.GenericTokenParser;
 import org.apache.ibatis.parsing.TokenHandler;
 import org.apache.ibatis.reflection.MetaClass;
+import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
@@ -36,8 +37,8 @@ public class SqlSourceBuilder extends BaseBuilder {
     super(configuration);
   }
 
-  public SqlSource parse(String originalSql, Class<?> parameterType) {
-    ParameterMappingTokenHandler handler = new ParameterMappingTokenHandler(configuration, parameterType);
+  public SqlSource parse(String originalSql, Class<?> parameterType, Map<String, Object> additionalParameters) {
+    ParameterMappingTokenHandler handler = new ParameterMappingTokenHandler(configuration, parameterType, additionalParameters);
     GenericTokenParser parser = new GenericTokenParser("#{", "}", handler);
     String sql = parser.parse(originalSql);
     return new StaticSqlSource(configuration, sql, handler.getParameterMappings());
@@ -47,10 +48,12 @@ public class SqlSourceBuilder extends BaseBuilder {
 
     private List<ParameterMapping> parameterMappings = new ArrayList<ParameterMapping>();
     private Class<?> parameterType;
+    private MetaObject metaParameters;
 
-    public ParameterMappingTokenHandler(Configuration configuration, Class<?> parameterType) {
+    public ParameterMappingTokenHandler(Configuration configuration, Class<?> parameterType, Map<String, Object> additionalParameters) {
       super(configuration);
       this.parameterType = parameterType;
+      this.metaParameters = configuration.newMetaObject(additionalParameters);
     }
 
     public List<ParameterMapping> getParameterMappings() {
@@ -65,11 +68,12 @@ public class SqlSourceBuilder extends BaseBuilder {
     private ParameterMapping buildParameterMapping(String content) {
       Map<String, String> propertiesMap = parseParameterMapping(content);
       String property = propertiesMap.get("property");
-      String jdbcType = propertiesMap.get("jdbcType");
       Class<?> propertyType;
-      if (typeHandlerRegistry.hasTypeHandler(parameterType)) {
+      if (metaParameters.hasGetter(property)) { // issue #448 get type from additional params
+        propertyType = metaParameters.getGetterType(property);
+      } else if (typeHandlerRegistry.hasTypeHandler(parameterType)) {
         propertyType = parameterType;
-      } else if (JdbcType.CURSOR.name().equals(jdbcType)) {
+      } else if (JdbcType.CURSOR.name().equals(propertiesMap.get("jdbcType"))) {
         propertyType = java.sql.ResultSet.class;
       } else if (property != null) {
         MetaClass metaClass = MetaClass.forClass(parameterType);
@@ -82,9 +86,6 @@ public class SqlSourceBuilder extends BaseBuilder {
         propertyType = Object.class;
       }
       ParameterMapping.Builder builder = new ParameterMapping.Builder(configuration, property, propertyType);
-      if (jdbcType != null) {
-        builder.jdbcType(resolveJdbcType(jdbcType));
-      }
       Class<?> javaType = null;
       String typeHandlerAlias = null;
       for (Map.Entry<String, String> entry : propertiesMap.entrySet()) {
@@ -128,6 +129,6 @@ public class SqlSourceBuilder extends BaseBuilder {
         throw new BuilderException("Parsing error was found in mapping #{" + content + "}.  Check syntax #{property|(expression), var1=value1, var2=value2, ...} ", ex);
       }
     }
-
   }
+  
 }

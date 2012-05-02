@@ -27,7 +27,6 @@ import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.ParameterMapping;
 import org.apache.ibatis.mapping.ParameterMode;
 import org.apache.ibatis.reflection.MetaObject;
-import org.apache.ibatis.reflection.property.PropertyTokenizer;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
@@ -42,7 +41,6 @@ public class DefaultParameterHandler implements ParameterHandler {
   private BoundSql boundSql;
   private Configuration configuration;
 
-
   public DefaultParameterHandler(MappedStatement mappedStatement, Object parameterObject, BoundSql boundSql) {
     this.mappedStatement = mappedStatement;
     this.configuration = mappedStatement.getConfiguration();
@@ -55,8 +53,7 @@ public class DefaultParameterHandler implements ParameterHandler {
     return parameterObject;
   }
 
-  public void setParameters(PreparedStatement ps)
-      throws SQLException {
+  public void setParameters(PreparedStatement ps) throws SQLException {
     ErrorContext.instance().activity("setting parameters").object(mappedStatement.getParameterMap().getId());
     List<ParameterMapping> parameterMappings = boundSql.getParameterMappings();
     if (parameterMappings != null) {
@@ -66,12 +63,12 @@ public class DefaultParameterHandler implements ParameterHandler {
         if (parameterMapping.getMode() != ParameterMode.OUT) {
           Object value;
           String propertyName = parameterMapping.getProperty();
-          if (parameterObject == null) {
+          if (boundSql.hasAdditionalParameter(propertyName)) { // issue #448 ask first for additional params
+            value = boundSql.getAdditionalParameter(propertyName);
+          } else if (parameterObject == null) {
             value = null;
           } else if (typeHandlerRegistry.hasTypeHandler(parameterObject.getClass())) {
             value = parameterObject;
-          } else if (boundSql.hasAdditionalParameter(propertyName)) {
-            value = boundSql.getAdditionalParameter(propertyName);
           } else {
             value = metaObject == null ? null : metaObject.getValue(propertyName);
           }

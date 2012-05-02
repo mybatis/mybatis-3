@@ -25,7 +25,6 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.Assert;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class OgnlStaticTest {
@@ -57,8 +56,7 @@ public class OgnlStaticTest {
    * DEBUG [main] - ==> Parameters: 1(Integer), 1(Integer)
    * There are two parameter mappings but DefaulParameterHandler maps them both to input paremeter (integer)
    */
-  @Ignore // TODO see issue #448
-  @Test
+  @Test // see issue #448
   public void shouldGetAUser() {
     SqlSession sqlSession = sqlSessionFactory.openSession();
     try {
