@@ -31,7 +31,7 @@ public abstract class TypeReference<T> {
   protected TypeReference() {
     Type superclass = getClass().getGenericSuperclass();
     if (superclass instanceof Class) {
-      throw new TypeException("TypeHandler '" + getClass() + "' extends TypeReference but misses the type parameter. "
+      throw new TypeException("'" + getClass() + "' extends TypeReference but misses the type parameter. "
         + "Remove the extension or add a type parameter to it.");
     }
     rawType = ((ParameterizedType) superclass).getActualTypeArguments()[0];
