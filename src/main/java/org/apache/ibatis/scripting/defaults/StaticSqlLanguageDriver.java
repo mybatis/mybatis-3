@@ -30,7 +30,7 @@ public class StaticSqlLanguageDriver implements LanguageDriver {
     return new DefaultParameterHandler(mappedStatement, parameterObject, boundSql);
   }
 
-  public SqlSource createSqlSource(Configuration configuration, MapperBuilderAssistant builderAssistant, Object script, String databaseId) {
+  public SqlSource createSqlSource(Configuration configuration, MapperBuilderAssistant builderAssistant, Object script, Class<?> parameterType, String databaseId) {
     if (script instanceof XNode) {
       return new RawSqlSource(configuration, ((XNode)script).getStringBody(""));
     }

@@ -34,7 +34,7 @@ public class VelocityLanguageDriver implements LanguageDriver {
     return new DefaultParameterHandler(mappedStatement, parameterObject, boundSql);
   }
 
-  public SqlSource createSqlSource(Configuration configuration, MapperBuilderAssistant builderAssistant, Object script, String databaseId) {
+  public SqlSource createSqlSource(Configuration configuration, MapperBuilderAssistant builderAssistant, Object script, Class<?> parameterTypeClass, String databaseId) {
     if (script instanceof XNode) {
       return new VelocitySqlSource(configuration, builderAssistant, ((XNode)script).getStringBody(""), databaseId);
     }

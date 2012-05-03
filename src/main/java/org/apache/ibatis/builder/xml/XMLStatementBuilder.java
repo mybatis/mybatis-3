@@ -73,7 +73,7 @@ public class XMLStatementBuilder extends BaseBuilder {
     ResultSetType resultSetTypeEnum = resolveResultSetType(resultSetType);
 
     LanguageDriver langDriver = configuration.getLanguageRegistry().getDriver(langTypeClass);
-    SqlSource sqlSource = langDriver.createSqlSource(configuration, builderAssistant, context, databaseId);
+    SqlSource sqlSource = langDriver.createSqlSource(configuration, builderAssistant, context, parameterTypeClass, databaseId);
 
     String nodeName = context.getNode().getNodeName();
     SqlCommandType sqlCommandType = SqlCommandType.valueOf(nodeName.toUpperCase(Locale.ENGLISH));

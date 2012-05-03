@@ -212,7 +212,8 @@ public class MapperAnnotationBuilder {
   }
 
   private void parseStatement(Method method) {
-    SqlSource sqlSource = getSqlSourceFromAnnotations(method);
+    Class parameterTypeClass = getParameterType(method);
+    SqlSource sqlSource = getSqlSourceFromAnnotations(method, parameterTypeClass);
     if (sqlSource != null) {
       Options options = method.getAnnotation(Options.class);
       final String mappedStatementId = type.getName() + "." + method.getName();
@@ -272,7 +273,7 @@ public class MapperAnnotationBuilder {
           fetchSize,
           timeout,
           null,                             // ParameterMapID
-          getParameterType(method),
+          parameterTypeClass,
           resultMapId,    // ResultMapID
           getReturnType(method),
           resultSetType,
@@ -338,7 +339,7 @@ public class MapperAnnotationBuilder {
     return returnType;
   }
 
-  private SqlSource getSqlSourceFromAnnotations(Method method) {
+  private SqlSource getSqlSourceFromAnnotations(Method method, Class<?> parameterType) {
     try {
       Class<? extends Annotation> sqlAnnotationType = getSqlAnnotationType(method);
       Class<? extends Annotation> sqlProviderAnnotationType = getSqlProviderAnnotationType(method);
@@ -348,7 +349,7 @@ public class MapperAnnotationBuilder {
         }
         Annotation sqlAnnotation = method.getAnnotation(sqlAnnotationType);
         final String[] strings = (String[]) sqlAnnotation.getClass().getMethod("value").invoke(sqlAnnotation);
-        return buildSqlSourceFromStrings(strings);
+        return buildSqlSourceFromStrings(strings, parameterType);
       } else if (sqlProviderAnnotationType != null) {
         Annotation sqlProviderAnnotation = method.getAnnotation(sqlProviderAnnotationType);
         return new ProviderSqlSource(assistant.getConfiguration(), sqlProviderAnnotation);
@@ -359,13 +360,13 @@ public class MapperAnnotationBuilder {
     }
   }
 
-  private SqlSource buildSqlSourceFromStrings(String[] strings) {
+  private SqlSource buildSqlSourceFromStrings(String[] strings, Class<?> parameterTypeClass) {
     final StringBuilder sql = new StringBuilder();
     for (String fragment : strings) {
       sql.append(fragment);
       sql.append(" ");
     }
-    return configuration.getDefaultScriptingLanuageInstance().createSqlSource(configuration, assistant, sql.toString(), null);
+    return configuration.getDefaultScriptingLanuageInstance().createSqlSource(configuration, assistant, sql.toString(), parameterTypeClass, null);
   }
 
   private SqlCommandType getSqlCommandType(Method method) {
@@ -495,7 +496,7 @@ public class MapperAnnotationBuilder {
     String resultMap = null;
     ResultSetType resultSetTypeEnum = null;
 
-    SqlSource sqlSource = buildSqlSourceFromStrings(selectKeyAnnotation.statement());
+    SqlSource sqlSource = buildSqlSourceFromStrings(selectKeyAnnotation.statement(), parameterTypeClass);
     SqlCommandType sqlCommandType = SqlCommandType.SELECT;
 
     assistant.addMappedStatement(id, sqlSource, statementType, sqlCommandType, fetchSize, timeout, parameterMap, parameterTypeClass, resultMap, resultTypeClass, resultSetTypeEnum,

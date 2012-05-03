@@ -32,7 +32,7 @@ public class XMLDynamicLanguageDriver implements LanguageDriver {
     return new DefaultParameterHandler(mappedStatement, parameterObject, boundSql);
   }
 
-  public SqlSource createSqlSource(Configuration configuration, MapperBuilderAssistant builderAssistant, Object script, String databaseId) {
+  public SqlSource createSqlSource(Configuration configuration, MapperBuilderAssistant builderAssistant, Object script, Class<?> parameterType, String databaseId) {
     XNode context;
     if (script instanceof XNode) {
       context = (XNode) script;
