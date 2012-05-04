@@ -24,7 +24,7 @@ import org.apache.ibatis.parsing.XNode;
 import org.apache.ibatis.scripting.LanguageDriver;
 import org.apache.ibatis.session.Configuration;
 
-public class StaticSqlLanguageDriver implements LanguageDriver {
+public class RawSqlLanguageDriver implements LanguageDriver {
 
   public ParameterHandler createParameterHandler(MappedStatement mappedStatement, Object parameterObject, BoundSql boundSql) {
     return new DefaultParameterHandler(mappedStatement, parameterObject, boundSql);
@@ -32,9 +32,8 @@ public class StaticSqlLanguageDriver implements LanguageDriver {
 
   public SqlSource createSqlSource(Configuration configuration, MapperBuilderAssistant builderAssistant, Object script, Class<?> parameterType, String databaseId) {
     if (script instanceof XNode) {
-      return new RawSqlSource(configuration, ((XNode)script).getStringBody(""));
-    }
-    else {
+      return new RawSqlSource(configuration, ((XNode) script).getStringBody(""));
+    } else {
       return new RawSqlSource(configuration, script.toString());
     }
   }

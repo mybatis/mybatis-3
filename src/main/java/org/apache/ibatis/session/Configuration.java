@@ -66,7 +66,7 @@ import org.apache.ibatis.reflection.wrapper.DefaultObjectWrapperFactory;
 import org.apache.ibatis.reflection.wrapper.ObjectWrapperFactory;
 import org.apache.ibatis.scripting.LanguageDriver;
 import org.apache.ibatis.scripting.LanguageDriverRegistry;
-import org.apache.ibatis.scripting.defaults.StaticSqlLanguageDriver;
+import org.apache.ibatis.scripting.defaults.RawSqlLanguageDriver;
 import org.apache.ibatis.scripting.xmltags.XMLDynamicLanguageDriver;
 import org.apache.ibatis.transaction.Transaction;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
@@ -145,8 +145,11 @@ public class Configuration {
 
     typeAliasRegistry.registerAlias("VENDOR", VendorDatabaseIdProvider.class.getName());
 
+    typeAliasRegistry.registerAlias("XMLTAGS", XMLDynamicLanguageDriver.class.getName());
+    typeAliasRegistry.registerAlias("RAW", RawSqlLanguageDriver.class.getName());
+
     languageRegistry.setDefaultDriverClass(XMLDynamicLanguageDriver.class);
-    languageRegistry.register(StaticSqlLanguageDriver.class);
+    languageRegistry.register(RawSqlLanguageDriver.class);
   }
 
   public String getDatabaseId() {
