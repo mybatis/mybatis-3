@@ -40,17 +40,11 @@ public class XMLScriptBuilder extends BaseBuilder {
 
   private MapperBuilderAssistant builderAssistant;
   private XNode context;
-  private String requiredDatabaseId;
 
   public XMLScriptBuilder(Configuration configuration, MapperBuilderAssistant builderAssistant, XNode context) {
-    this(configuration, builderAssistant, context, null);
-  }
-
-  public XMLScriptBuilder(Configuration configuration, MapperBuilderAssistant builderAssistant, XNode context, String databaseId) {
     super(configuration);
     this.builderAssistant = builderAssistant;
     this.context = context;
-    this.requiredDatabaseId = databaseId;
   }
 
   public SqlSource parseScriptNode() {

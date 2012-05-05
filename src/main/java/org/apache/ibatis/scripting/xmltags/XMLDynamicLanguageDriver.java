@@ -36,10 +36,9 @@ public class XMLDynamicLanguageDriver implements LanguageDriver {
     XNode context;
     if (script instanceof XNode) {
       context = (XNode) script;
-      XMLScriptBuilder builder = new XMLScriptBuilder(configuration, builderAssistant, context, databaseId);
+      XMLScriptBuilder builder = new XMLScriptBuilder(configuration, builderAssistant, context);
       return builder.parseScriptNode();
-    }
-    else {
+    } else {
       ArrayList<SqlNode> contents = new ArrayList<SqlNode>();
       contents.add(new TextSqlNode(script.toString()));
       MixedSqlNode rootSqlNode = new MixedSqlNode(contents);

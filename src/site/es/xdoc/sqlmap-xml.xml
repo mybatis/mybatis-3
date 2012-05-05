@@ -629,7 +629,7 @@ public class User {
     <idArg column="blog_id" javaType="int"/>
   </constructor>
   <result property="title" column="blog_title"/>
-  <association property="author" javaType=" Author">
+  <association property="author" javaType="Author">
     <id property="id" column="author_id"/>
     <result property="username" column="author_username"/>
     <result property="password" column="author_password"/>
@@ -693,6 +693,32 @@ public class User {
             </ul>
           </li>
         </ul>
+
+        <table>
+          <caption>Atributos de ResultMap</caption>
+          <thead>
+            <tr>
+              <th>Atributo</th>
+              <th>Descripción</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>id</code></td>
+              <td>Un identificador único dentro del namespace que se utiliza para identificar el result map.</td>
+            </tr>
+            <tr>
+              <td><code>parameterType</code></td>
+              <td>El nombre completamente cualificado de la clase o el alias del parámetro que se pasará al statement.</td>
+            </tr>
+            <tr>
+              <td><code>autoMapping</code></td>
+              <td>Si el atributo está presente MyBatis habilita o inhabilita el automapping para este result map.
+                El atributo sobreescribe el parametro global defaultAutomatppingBehaviour. 
+              </td>
+            </tr>
+          </tbody>
+        </table>
 
         <p>
           <span class="label important">Buena práctia</span> Construye los ResultMaps de forma incremental. Las pruebas unitarias son de gran ayuda en ellos. Si intentas construir un ResultMap gigantesco como el que se ha visto anteriormente, es muy probable que lo hagas mal y será difícil trabajar con él. Comienza con una versión sencilla y evolucionarla paso a paso. Y haz pruebas unitarias! La parte negativa de utilizar frameworks es que a veces son una caja negra (sean opensource o no). Lo mejor que puedes hacer para asegurar que estás consiguiendo el comportamiento que pretendes es escribir pruebas unitarias. También son de utilidad para enviar bugs.
@@ -783,7 +809,7 @@ public class User {
             <td><code>LONGVARCHAR</code></td>
             <td><code>VARBINARY</code></td>
             <td><code>CLOB</code></td>
-            <td><code>>NCHAR</code></td>
+            <td><code>NCHAR</code></td>
           </tr>
           <tr>
             <td><code>INTEGER</code></td>
@@ -875,7 +901,7 @@ public class User {
 
         <h4>association</h4>
 
-        <source><![CDATA[<association property="author" javaType=" Author">
+        <source><![CDATA[<association property="author" javaType="Author">
   <id property="id" column="author_id"/>
   <result property="username" column="author_username"/>
 </association>]]></source>
@@ -1014,6 +1040,14 @@ public class User {
                 El atributo columnPrefix te permite mapear dichas columnas a un Result Map externo. Más adelante se muestra un ejemplo de esta función.
               </td>
             </tr>
+            <tr>
+              <td><code>notNullColumn</code></td>
+              <td>
+                Por defecto MyBatis sólo crea objetos hijos si al menos una de las columnas mapeadas a las propiedades de dicho objeto es no nula.
+                Con este atributo se puede modificar este comportamiento especificando qué columnas deben tener un valor de forma que MyBatis
+                sólo creará un objeto hijo si alguna de estas columnas no es nula. Pueden indicarse una lista de columnas usando la coma como separador.
+              </td>
+            </tr>            
           </tbody>
         </table>
 

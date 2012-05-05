@@ -725,7 +725,7 @@ public class User {
     <idArg column="blog_id" javaType="int"/>
   </constructor>
   <result property="title" column="blog_title"/>
-  <association property="author" javaType=" Author">
+  <association property="author" javaType="Author">
     <id property="id" column="author_id"/>
     <result property="username" column="author_username"/>
     <result property="password" column="author_password"/>
@@ -791,6 +791,33 @@ public class User {
             </ul>
           </li>
         </ul>
+
+        <table>
+          <caption>ResultMap Attributes</caption>
+          <thead>
+            <tr>
+              <th>Attribute</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>id</code></td>
+              <td>A unique identifier in this namespace that can be used to reference this result map.</td>
+            </tr>
+            <tr>
+              <td><code>type</code></td>
+              <td>A fully qualified Java class name, or a type alias (see the table above for the list of built-in type aliases). 
+              </td>
+            </tr>
+            <tr>
+              <td><code>autoMapping</code></td>
+              <td>If present, MyBatis will enable or disable the automapping for this ResultMap. 
+                This attribute overrides the global defaultAutomatppingBehaviour. Default: unset. 
+              </td>
+            </tr>
+          </tbody>
+        </table>
 
         <p>
           <span class="label important">ベストプラクティス</span> ResultMap は段階的に実装するようにしましょう。ユニットテストも効果的です。
@@ -1027,7 +1054,7 @@ public class User {
 
         <h4>association</h4>
 
-        <source><![CDATA[<association property="author" column="blog_author_id" javaType=" Author">
+        <source><![CDATA[<association property="author" column="blog_author_id" javaType="Author">
   <id property="id" column="author_id"/>
   <result property="username" column="author_username"/>
 </association>]]></source>
@@ -1207,6 +1234,15 @@ public class User {
                 columnPrefix を指定すると、別の場所で定義されている resultMap を使って別名の付けられた列をマップすることができます。後で説明するサンプルを参照してください。
               </td>
             </tr>
+            <tr>
+              <td><code>notNullColumn</code></td>
+              <td>
+                By default a child object is created only if at least one of the columns mapped to the child's properties 
+                is non null. With this attribute you can change this behaviour by specifiying which columns must have a value
+                so MyBatis will create a child object only if any of those columns is not null. Multiple column names can be 
+                specified using a comma as a separator. Default value: unset.
+              </td>
+            </tr>            
           </tbody>
         </table>
 

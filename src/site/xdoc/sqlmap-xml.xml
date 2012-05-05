@@ -778,7 +778,7 @@ public class User {
     <idArg column="blog_id" javaType="int"/>
   </constructor>
   <result property="title" column="blog_title"/>
-  <association property="author" javaType=" Author">
+  <association property="author" javaType="Author">
     <id property="id" column="author_id"/>
     <result property="username" column="author_username"/>
     <result property="password" column="author_password"/>
@@ -845,6 +845,33 @@ public class User {
             </ul>
           </li>
         </ul>
+
+        <table>
+          <caption>ResultMap Attributes</caption>
+          <thead>
+            <tr>
+              <th>Attribute</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>id</code></td>
+              <td>A unique identifier in this namespace that can be used to reference this result map.</td>
+            </tr>
+            <tr>
+              <td><code>type</code></td>
+              <td>A fully qualified Java class name, or a type alias (see the table above for the list of built-in type aliases). 
+              </td>
+            </tr>
+            <tr>
+              <td><code>autoMapping</code></td>
+              <td>If present, MyBatis will enable or disable the automapping for this ResultMap. 
+                This attribute overrides the global defaultAutomatppingBehaviour. Default: unset. 
+              </td>
+            </tr>
+          </tbody>
+        </table>
 
         <p>
           <span class="label important">Best Practice</span> Always build ResultMaps incrementally. Unit
@@ -972,7 +999,7 @@ public class User {
             <td><code>LONGVARCHAR</code></td>
             <td><code>VARBINARY</code></td>
             <td><code>CLOB</code></td>
-            <td><code>>NCHAR</code></td>
+            <td><code>NCHAR</code></td>
           </tr>
           <tr>
             <td><code>INTEGER</code></td>
@@ -1106,7 +1133,7 @@ public class User {
 
         <h4>association</h4>
 
-        <source><![CDATA[<association property="author" javaType=" Author">
+        <source><![CDATA[<association property="author" javaType="Author">
   <id property="id" column="author_id"/>
   <result property="username" column="author_username"/>
 </association>]]></source>

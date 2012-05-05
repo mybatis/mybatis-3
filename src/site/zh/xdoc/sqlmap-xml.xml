@@ -828,7 +828,7 @@ MyBatis 提供处理这个问题的答案。
     <idArg column="blog_id" javaType="int"/>
   </constructor>
   <result property="title" column="blog_title"/>
-  <association property="author" javaType=" Author">
+  <association property="author" javaType="Author">
     <id property="id" column="author_id"/>
     <result property="username" column="author_username"/>
     <result property="password" column="author_password"/>
@@ -895,6 +895,33 @@ resultMap 元素有很多子元素和一个值得讨论的结构。
             </ul>
           </li>
         </ul>
+
+        <table>
+          <caption>ResultMap Attributes</caption>
+          <thead>
+            <tr>
+              <th>Attribute</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>id</code></td>
+              <td>A unique identifier in this namespace that can be used to reference this result map.</td>
+            </tr>
+            <tr>
+              <td><code>type</code></td>
+              <td>A fully qualified Java class name, or a type alias (see the table above for the list of built-in type aliases). 
+              </td>
+            </tr>
+            <tr>
+              <td><code>autoMapping</code></td>
+              <td>If present, MyBatis will enable or disable the automapping for this ResultMap. 
+                This attribute overrides the global defaultAutomatppingBehaviour. Default: unset. 
+              </td>
+            </tr>
+          </tbody>
+        </table>
 
         <p>
           <span class="label important">最佳实践</span> 通常逐步建立结果映射。单元测试的真正帮助在这里。如果你尝试创建
@@ -1019,7 +1046,7 @@ jdbcType
             <td><code>LONGVARCHAR</code></td>
             <td><code>VARBINARY</code></td>
             <td><code>CLOB</code></td>
-            <td><code>>NCHAR</code></td>
+            <td><code>NCHAR</code></td>
           </tr>
           <tr>
             <td><code>INTEGER</code></td>
@@ -1154,7 +1181,7 @@ jdbcType
 
         <h4><code>关联</code></h4>
 
-        <source><![CDATA[<association property="author" column="blog_author_id" javaType=" Author">
+        <source><![CDATA[<association property="author" column="blog_author_id" javaType="Author">
   <id property="id" column="author_id"/>
   <result property="username" column="author_username"/>
 </association>]]></source>
@@ -1359,6 +1386,15 @@ resultMap
                 to an external resultMap. Please see the example explained later in this section.
               </td>
             </tr>
+            <tr>
+              <td><code>notNullColumn</code></td>
+              <td>
+                By default a child object is created only if at least one of the columns mapped to the child's properties 
+                is non null. With this attribute you can change this behaviour by specifiying which columns must have a value
+                so MyBatis will create a child object only if any of those columns is not null. Multiple column names can be 
+                specified using a comma as a separator. Default value: unset.
+              </td>
+            </tr>            
           </tbody>
         </table>
 

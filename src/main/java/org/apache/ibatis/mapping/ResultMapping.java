@@ -15,15 +15,15 @@
  */
 package org.apache.ibatis.mapping;
 
-import org.apache.ibatis.session.Configuration;
-import org.apache.ibatis.type.JdbcType;
-import org.apache.ibatis.type.TypeHandler;
-import org.apache.ibatis.type.TypeHandlerRegistry;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+
+import org.apache.ibatis.session.Configuration;
+import org.apache.ibatis.type.JdbcType;
+import org.apache.ibatis.type.TypeHandler;
+import org.apache.ibatis.type.TypeHandlerRegistry;
 
 public class ResultMapping {
 
@@ -117,7 +117,7 @@ public class ResultMapping {
     }
 
     public ResultMapping build() {
-      //lock down collections
+      // lock down collections
       resultMapping.flags = Collections.unmodifiableList(resultMapping.flags);
       resultMapping.composites = Collections.unmodifiableList(resultMapping.composites);
       resolveTypeHandler();
@@ -169,7 +169,7 @@ public class ResultMapping {
   }
 
   public Set<String> getNotNullColumns() {
-	return notNullColumns;
+    return notNullColumns;
   }
 
   public String getColumnPrefix() {
@@ -208,12 +208,12 @@ public class ResultMapping {
 
   @Override
   public int hashCode() {
-	if (property != null) {
-		return property.hashCode();
-	} else if (column != null) {
-		return column.hashCode();
-	} else {
-		return 0;
-	}
+    if (property != null) {
+      return property.hashCode();
+    } else if (column != null) {
+      return column.hashCode();
+    } else {
+      return 0;
+    }
   }
 }
