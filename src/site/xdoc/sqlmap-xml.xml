@@ -1334,6 +1334,15 @@ public class User {
                 to an external resultMap. Please see the example explained later in this section.
               </td>
             </tr>
+            <tr>
+              <td><code>notNullColumn</code></td>
+              <td>
+                By default a child object is created only if at least one of the columns mapped to the child's properties 
+                is non null. With this attribute you can change this behaviour by specifiying which columns must have a value
+                so MyBatis will create a child object only if any of those columns is not null. Multiple column names can be 
+                specified using a comma as a separator. Default value: unset.
+              </td>
+            </tr>                        
           </tbody>
         </table>
 
