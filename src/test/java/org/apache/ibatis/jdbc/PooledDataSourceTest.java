@@ -19,6 +19,8 @@ import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.datasource.pooled.PooledDataSource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+
+import org.hsqldb.jdbc.JDBCConnection;
 import org.junit.Test;
 
 import java.sql.Connection;
@@ -75,5 +77,12 @@ public class PooledDataSourceTest extends BaseDataTest {
     Connection c = ds.getConnection();
     c.close();
     c.toString();
+  }
+  
+  @Test
+  public void ShouldReturnRealConnection() throws Exception {
+    PooledDataSource ds = createPooledDataSource(JPETSTORE_PROPERTIES);
+    Connection c = ds.getConnection();
+    JDBCConnection realConnection = (JDBCConnection) PooledDataSource.unwrapConnection(c);
   }
 }

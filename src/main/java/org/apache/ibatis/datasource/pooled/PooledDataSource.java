@@ -16,6 +16,8 @@
 package org.apache.ibatis.datasource.pooled;
 
 import java.io.PrintWriter;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Proxy;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -514,11 +516,13 @@ public class PooledDataSource implements DataSource {
    * @return The 'real' connection
    */
   public static Connection unwrapConnection(Connection conn) {
-    if (conn instanceof PooledConnection) {
-      return ((PooledConnection) conn).getRealConnection();
-    } else {
-      return conn;
+    if (Proxy.isProxyClass(conn.getClass())) {
+      InvocationHandler handler = Proxy.getInvocationHandler(conn);
+      if (handler instanceof PooledConnection) {
+        return ((PooledConnection) handler).getRealConnection();
+      }
     }
+    return conn;
   }
 
   protected void finalize() throws Throwable {
