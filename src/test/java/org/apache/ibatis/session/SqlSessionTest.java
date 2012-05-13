@@ -248,7 +248,8 @@ public class SqlSessionTest extends BaseDataTest {
     SqlSession session = sqlMapper.openSession();
     try {
       Author expected = new Author(500, "cbegin", "******", "cbegin@somewhere.com", "Something...", null);
-      session.insert("domain.blog.mappers.AuthorMapper.insertAuthor", expected);
+      int updates = session.insert("domain.blog.mappers.AuthorMapper.insertAuthor", expected);
+      assertEquals(1, updates);
       Author actual = session.selectOne("domain.blog.mappers.AuthorMapper.selectAuthor", new Author(500));
       assertNotNull(actual);
       assertEquals(expected.getId(), actual.getId());
@@ -269,8 +270,8 @@ public class SqlSessionTest extends BaseDataTest {
     try {
       original = session.selectOne("domain.blog.mappers.AuthorMapper.selectAuthor", 101);
       original.setEmail("new@email.com");
-      session.update("domain.blog.mappers.AuthorMapper.updateAuthor", original);
-
+      int updates = session.update("domain.blog.mappers.AuthorMapper.updateAuthor", original);
+      assertEquals(1, updates);
       updated = session.selectOne("domain.blog.mappers.AuthorMapper.selectAuthor", 101);
       assertEquals(original.getEmail(), updated.getEmail());
     } finally {
@@ -293,8 +294,8 @@ public class SqlSessionTest extends BaseDataTest {
     try {
       original = session.selectOne("domain.blog.mappers.AuthorMapper.selectAuthor", 101);
       original.setEmail("new@email.com");
-      session.update("domain.blog.mappers.AuthorMapper.updateAuthor", original);
-
+      int updates = session.update("domain.blog.mappers.AuthorMapper.updateAuthor", original);
+      assertEquals(1, updates);
       updated = session.selectOne("domain.blog.mappers.AuthorMapper.selectAuthor", 101);
       assertEquals(original.getEmail(), updated.getEmail());
       session.commit();
@@ -319,8 +320,8 @@ public class SqlSessionTest extends BaseDataTest {
       original = session.selectOne("domain.blog.mappers.AuthorMapper.selectAuthor", 101);
       original.setEmail("new@email.com");
       original.setBio(null);
-      session.update("domain.blog.mappers.AuthorMapper.updateAuthorIfNecessary", original);
-
+      int updates = session.update("domain.blog.mappers.AuthorMapper.updateAuthorIfNecessary", original);
+      assertEquals(1, updates);
       updated = session.selectOne("domain.blog.mappers.AuthorMapper.selectAuthor", 101);
       assertEquals(original.getEmail(), updated.getEmail());
       session.commit();
@@ -345,7 +346,9 @@ public class SqlSessionTest extends BaseDataTest {
       List<Author> authors = session.selectList("domain.blog.mappers.AuthorMapper.selectAuthor", id);
       assertEquals(1, authors.size());
 
-      session.delete("domain.blog.mappers.AuthorMapper.deleteAuthor", id);
+      int updates = session.delete("domain.blog.mappers.AuthorMapper.deleteAuthor", id);
+      assertEquals(1, updates);
+
       authors = session.selectList("domain.blog.mappers.AuthorMapper.selectAuthor", id);
       assertEquals(0, authors.size());
 
