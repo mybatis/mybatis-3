@@ -198,7 +198,7 @@ public class XNode {
     if (value == null) {
       return def;
     } else {
-      return Enum.valueOf(enumType, value);      
+      return Enum.valueOf(enumType, value);
     }
   }
 

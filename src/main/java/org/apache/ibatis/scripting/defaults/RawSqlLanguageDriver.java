@@ -30,12 +30,12 @@ public class RawSqlLanguageDriver implements LanguageDriver {
     return new DefaultParameterHandler(mappedStatement, parameterObject, boundSql);
   }
 
-  public SqlSource createSqlSource(Configuration configuration, MapperBuilderAssistant builderAssistant, Object script, Class<?> parameterType, String databaseId) {
-    if (script instanceof XNode) {
-      return new RawSqlSource(configuration, ((XNode) script).getStringBody(""));
-    } else {
-      return new RawSqlSource(configuration, script.toString());
-    }
+  public SqlSource createSqlSource(Configuration configuration, XNode script, Class<?> parameterType) {
+    return new RawSqlSource(configuration, script.getStringBody(""));
+  }
+
+  public SqlSource createSqlSource(Configuration configuration, String script, Class<?> parameterType) {
+    return new RawSqlSource(configuration, script);
   }
 
 }

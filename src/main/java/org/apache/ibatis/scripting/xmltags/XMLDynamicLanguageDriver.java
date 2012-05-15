@@ -16,7 +16,6 @@
 package org.apache.ibatis.scripting.xmltags;
 
 import java.util.ArrayList;
-import org.apache.ibatis.builder.MapperBuilderAssistant;
 import org.apache.ibatis.executor.parameter.ParameterHandler;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
@@ -32,18 +31,15 @@ public class XMLDynamicLanguageDriver implements LanguageDriver {
     return new DefaultParameterHandler(mappedStatement, parameterObject, boundSql);
   }
 
-  public SqlSource createSqlSource(Configuration configuration, MapperBuilderAssistant builderAssistant, Object script, Class<?> parameterType, String databaseId) {
-    XNode context;
-    if (script instanceof XNode) {
-      context = (XNode) script;
-      XMLScriptBuilder builder = new XMLScriptBuilder(configuration, builderAssistant, context);
-      return builder.parseScriptNode();
-    } else {
-      ArrayList<SqlNode> contents = new ArrayList<SqlNode>();
-      contents.add(new TextSqlNode(script.toString()));
-      MixedSqlNode rootSqlNode = new MixedSqlNode(contents);
-      return new DynamicSqlSource(configuration, rootSqlNode);
-    }
+  public SqlSource createSqlSource(Configuration configuration, XNode script, Class<?> parameterType) {
+    XMLScriptBuilder builder = new XMLScriptBuilder(configuration, script);
+    return builder.parseScriptNode();
   }
 
+  public SqlSource createSqlSource(Configuration configuration, String script, Class<?> parameterType) {
+    ArrayList<SqlNode> contents = new ArrayList<SqlNode>();
+    contents.add(new TextSqlNode(script.toString()));
+    MixedSqlNode rootSqlNode = new MixedSqlNode(contents);
+    return new DynamicSqlSource(configuration, rootSqlNode);
+  }
 }

@@ -366,7 +366,7 @@ public class MapperAnnotationBuilder {
       sql.append(fragment);
       sql.append(" ");
     }
-    return configuration.getDefaultScriptingLanuageInstance().createSqlSource(configuration, assistant, sql.toString(), parameterTypeClass, null);
+    return configuration.getDefaultScriptingLanuageInstance().createSqlSource(configuration, sql.toString(), parameterTypeClass);
   }
 
   private SqlCommandType getSqlCommandType(Method method) {

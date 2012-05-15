@@ -15,7 +15,6 @@
  */
 package org.apache.ibatis.submitted.velocity;
 
-import org.apache.ibatis.builder.MapperBuilderAssistant;
 import org.apache.ibatis.executor.parameter.ParameterHandler;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
@@ -34,13 +33,11 @@ public class VelocityLanguageDriver implements LanguageDriver {
     return new DefaultParameterHandler(mappedStatement, parameterObject, boundSql);
   }
 
-  public SqlSource createSqlSource(Configuration configuration, MapperBuilderAssistant builderAssistant, Object script, Class<?> parameterTypeClass, String databaseId) {
-    if (script instanceof XNode) {
-      return new VelocitySqlSource(configuration, builderAssistant, ((XNode)script).getStringBody(""), databaseId);
-    }
-    else {
-      return new VelocitySqlSource(configuration, builderAssistant, script.toString(), databaseId);
-    }
+  public SqlSource createSqlSource(Configuration configuration, XNode script, Class<?> parameterType) {
+    return new VelocitySqlSource(configuration, script.getStringBody(""));
   }
 
+  public SqlSource createSqlSource(Configuration configuration, String script, Class<?> parameterType) {
+    return new VelocitySqlSource(configuration, script);
+  }
 }

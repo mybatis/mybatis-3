@@ -20,7 +20,6 @@ import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.ibatis.builder.BuilderException;
-import org.apache.ibatis.builder.MapperBuilderAssistant;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.SqlSource;
 import org.apache.ibatis.session.Configuration;
@@ -41,18 +40,13 @@ public class VelocitySqlSource implements SqlSource {
 
   private final Configuration configuration;
   private final Template script;
-  private final MapperBuilderAssistant builderAssistant;
-  private final String databaseId;
 
   static {
     Velocity.init();
   }
 
-  public VelocitySqlSource(Configuration configuration, MapperBuilderAssistant builderAssistant, String scriptText, String databaseId) {
+  public VelocitySqlSource(Configuration configuration, String scriptText) {
     this.configuration = configuration;
-    this.builderAssistant = builderAssistant;
-    this.databaseId = databaseId;
-
     try {
       RuntimeServices runtimeServices = RuntimeSingleton.getRuntimeServices();
       StringReader reader = new StringReader(scriptText);
