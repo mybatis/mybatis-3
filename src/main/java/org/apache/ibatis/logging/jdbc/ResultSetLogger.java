@@ -48,7 +48,7 @@ public final class ResultSetLogger extends BaseJdbcLogger implements InvocationH
         if (((Boolean) o)) {
           ResultSetMetaData rsmd = rs.getMetaData();
           final int columnCount = rsmd.getColumnCount();
-          if (isDebugEnabled()) {
+          if (isTraceEnabled()) {
             if (first) {
               first = false;
               printColumnHeaders(rsmd, columnCount);

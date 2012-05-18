@@ -119,11 +119,12 @@ public abstract class BaseJdbcLogger {
     return builder.toString();
   }
 
-  /*
-   * For backward old style logging compatibility
-   */
   protected boolean isDebugEnabled() {
     return statementLog.isDebugEnabled() || getLog().isDebugEnabled();
+  }
+
+  protected boolean isTraceEnabled() {
+    return statementLog.isTraceEnabled() || getLog().isTraceEnabled();
   }
 
   protected void debug(String text) {
