@@ -109,25 +109,11 @@ public class MapperAnnotationBuilder {
       assistant.setCurrentNamespace(type.getName());
       parseCache();
       parseCacheRef();
-      List<Method> methods = removeParents(type.getMethods());
+      Method[] methods = type.getMethods();
       for (Method method : methods) {
-        parseResultsAndConstructorArgs(method);
         parseStatement(method);
       }
     }
-  }
-  
-  private List<Method> removeParents(Method[] methods ) {
-    List<Method> result = new ArrayList<Method>();
-    for (Method method : methods) {
-      try {
-        Method candidate = type.getMethod(method.getName(), method.getParameterTypes());
-        if (!result.contains(candidate)) result.add(candidate);
-      } catch (Exception e) {
-        throw new BuilderException("Could not instropect methods for mapper " + type + ".  Cause: " + e, e);
-      }
-    }    
-    return result;
   }
 
   private void loadXmlResource() {
@@ -163,7 +149,7 @@ public class MapperAnnotationBuilder {
     }
   }
 
-  private void parseResultsAndConstructorArgs(Method method) {
+  private String parseResultMap(Method method) {
     Class<?> returnType = getReturnType(method);
     if (returnType != null) {
       ConstructorArgs args = method.getAnnotation(ConstructorArgs.class);
@@ -171,7 +157,9 @@ public class MapperAnnotationBuilder {
       TypeDiscriminator typeDiscriminator = method.getAnnotation(TypeDiscriminator.class);
       String resultMapId = generateResultMapName(method);
       applyResultMap(resultMapId, returnType, argsIf(args), resultsIf(results), typeDiscriminator);
+      return resultMapId;
     }
+    return null;
   }
 
   private String generateResultMapName(Method method) {
@@ -229,6 +217,7 @@ public class MapperAnnotationBuilder {
     Class<?> parameterTypeClass = getParameterType(method);
     SqlSource sqlSource = getSqlSourceFromAnnotations(method, parameterTypeClass);
     if (sqlSource != null) {
+      String resultMapId = parseResultMap(method);
       Options options = method.getAnnotation(Options.class);
       final String mappedStatementId = type.getName() + "." + method.getName();
       Integer fetchSize = null;
@@ -272,10 +261,7 @@ public class MapperAnnotationBuilder {
       }
 
       ResultMap resultMapAnnotation = method.getAnnotation(ResultMap.class);
-      String resultMapId;
-      if (resultMapAnnotation == null) {
-        resultMapId = generateResultMapName(method);
-      } else {
+      if (resultMapAnnotation != null) {
         resultMapId = resultMapAnnotation.value();
       }
 
