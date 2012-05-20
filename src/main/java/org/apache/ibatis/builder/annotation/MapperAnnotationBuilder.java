@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+
 import org.apache.ibatis.annotations.Arg;
 import org.apache.ibatis.annotations.CacheNamespace;
 import org.apache.ibatis.annotations.CacheNamespaceRef;
@@ -108,12 +109,25 @@ public class MapperAnnotationBuilder {
       assistant.setCurrentNamespace(type.getName());
       parseCache();
       parseCacheRef();
-      Method[] methods = type.getMethods();
+      List<Method> methods = removeParents(type.getMethods());
       for (Method method : methods) {
         parseResultsAndConstructorArgs(method);
         parseStatement(method);
       }
     }
+  }
+  
+  private List<Method> removeParents(Method[] methods ) {
+    List<Method> result = new ArrayList<Method>();
+    for (Method method : methods) {
+      try {
+        Method candidate = type.getMethod(method.getName(), method.getParameterTypes());
+        if (!result.contains(candidate)) result.add(candidate);
+      } catch (Exception e) {
+        throw new BuilderException("Could not instropect methods for mapper " + type + ".  Cause: " + e, e);
+      }
+    }    
+    return result;
   }
 
   private void loadXmlResource() {
@@ -212,7 +226,7 @@ public class MapperAnnotationBuilder {
   }
 
   private void parseStatement(Method method) {
-    Class parameterTypeClass = getParameterType(method);
+    Class<?> parameterTypeClass = getParameterType(method);
     SqlSource sqlSource = getSqlSourceFromAnnotations(method, parameterTypeClass);
     if (sqlSource != null) {
       Options options = method.getAnnotation(Options.class);
