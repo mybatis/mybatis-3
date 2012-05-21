@@ -151,12 +151,15 @@ public class MapperAnnotationBuilder {
 
   private String parseResultMap(Method method) {
     Class<?> returnType = getReturnType(method);
-    ConstructorArgs args = method.getAnnotation(ConstructorArgs.class);
-    Results results = method.getAnnotation(Results.class);
-    TypeDiscriminator typeDiscriminator = method.getAnnotation(TypeDiscriminator.class);
-    String resultMapId = generateResultMapName(method);
-    applyResultMap(resultMapId, returnType, argsIf(args), resultsIf(results), typeDiscriminator);
-    return resultMapId;
+    if (returnType != null) {
+      ConstructorArgs args = method.getAnnotation(ConstructorArgs.class);
+      Results results = method.getAnnotation(Results.class);
+      TypeDiscriminator typeDiscriminator = method.getAnnotation(TypeDiscriminator.class);
+      String resultMapId = generateResultMapName(method);
+      applyResultMap(resultMapId, returnType, argsIf(args), resultsIf(results), typeDiscriminator);
+      return resultMapId;
+    }
+    return null;
   }
 
   private String generateResultMapName(Method method) {
