@@ -180,5 +180,9 @@ AND title like ‘someTitle’]]></source>
 ]]></source>
   </subsection>
   </section>
+  <section name="ダイナミック SQL 記述言語">
+    <p>バージョン 3.2 以降、ダイナミック SQL の記述言語が Pluggable になりました。言語ドライバーを記述することで、任意の言語でダイナミック SQL を記述することができます。</p>
+    <p>機能の詳細については今後記述を追加する予定です。</p>
+  </section>
   </body>
 </document>

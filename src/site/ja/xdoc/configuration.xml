@@ -327,6 +327,20 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 equals,clone,hashCode,toString
               </td>
             </tr>
+            <tr>
+              <td>
+                defaultScriptingLanguage
+              </td>
+              <td>
+                ダイナミック SQL を記述する際のデフォルトの言語を指定します。
+              </td>
+              <td>
+                タイプエイリアスまたは完全修飾クラス名
+              </td>
+              <td>
+                org.apache.ibatis.scripting.xmltags.XMLDynamicLanguageDriver
+              </td>
+            </tr>
           </tbody>
         </table>
         <p>
