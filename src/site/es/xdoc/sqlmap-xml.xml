@@ -714,7 +714,7 @@ public class User {
             <tr>
               <td><code>autoMapping</code></td>
               <td>Si el atributo está presente MyBatis habilita o inhabilita el automapping para este result map.
-                El atributo sobreescribe el parametro global defaultAutomatppingBehaviour. 
+                El atributo sobreescribe el parametro global autoMappingBehavior. 
               </td>
             </tr>
           </tbody>

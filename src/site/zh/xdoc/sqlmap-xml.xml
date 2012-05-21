@@ -917,7 +917,7 @@ resultMap 元素有很多子元素和一个值得讨论的结构。
             <tr>
               <td><code>autoMapping</code></td>
               <td>If present, MyBatis will enable or disable the automapping for this ResultMap. 
-                This attribute overrides the global defaultAutomatppingBehaviour. Default: unset. 
+                This attribute overrides the global autoMappingBehavior. Default: unset. 
               </td>
             </tr>
           </tbody>

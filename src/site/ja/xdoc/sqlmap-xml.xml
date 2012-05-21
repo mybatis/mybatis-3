@@ -796,24 +796,23 @@ public class User {
           <caption>ResultMap Attributes</caption>
           <thead>
             <tr>
-              <th>Attribute</th>
-              <th>Description</th>
+              <th>属性</th>
+              <th>説明</th>
             </tr>
           </thead>
           <tbody>
             <tr>
               <td><code>id</code></td>
-              <td>A unique identifier in this namespace that can be used to reference this result map.</td>
+              <td>このネームスペース内で固有の識別子。resultMap を参照する際に使用します。</td>
             </tr>
             <tr>
               <td><code>type</code></td>
-              <td>A fully qualified Java class name, or a type alias (see the table above for the list of built-in type aliases). 
+              <td>Java クラスの完全修飾クラス名またはタイプエイリアスを指定します（前に出てきた標準のタイプエイリアスのリストを参照してください）。
               </td>
             </tr>
             <tr>
               <td><code>autoMapping</code></td>
-              <td>If present, MyBatis will enable or disable the automapping for this ResultMap. 
-                This attribute overrides the global defaultAutomatppingBehaviour. Default: unset. 
+              <td>この resulMap に結果をマッピングする際、自動マッピングを使用するかどうかを true / false で指定します。ここでの指定はグローバルな設定（autoMappingBehavior）より優先されます。デフォルト：未指定
               </td>
             </tr>
           </tbody>

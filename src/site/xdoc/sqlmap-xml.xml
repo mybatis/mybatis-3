@@ -867,7 +867,7 @@ public class User {
             <tr>
               <td><code>autoMapping</code></td>
               <td>If present, MyBatis will enable or disable the automapping for this ResultMap. 
-                This attribute overrides the global defaultAutomatppingBehaviour. Default: unset. 
+                This attribute overrides the global autoMappingBehavior. Default: unset. 
               </td>
             </tr>
           </tbody>
