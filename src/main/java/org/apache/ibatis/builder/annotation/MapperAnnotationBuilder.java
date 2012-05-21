@@ -151,15 +151,12 @@ public class MapperAnnotationBuilder {
 
   private String parseResultMap(Method method) {
     Class<?> returnType = getReturnType(method);
-    if (returnType != null) {
-      ConstructorArgs args = method.getAnnotation(ConstructorArgs.class);
-      Results results = method.getAnnotation(Results.class);
-      TypeDiscriminator typeDiscriminator = method.getAnnotation(TypeDiscriminator.class);
-      String resultMapId = generateResultMapName(method);
-      applyResultMap(resultMapId, returnType, argsIf(args), resultsIf(results), typeDiscriminator);
-      return resultMapId;
-    }
-    return null;
+    ConstructorArgs args = method.getAnnotation(ConstructorArgs.class);
+    Results results = method.getAnnotation(Results.class);
+    TypeDiscriminator typeDiscriminator = method.getAnnotation(TypeDiscriminator.class);
+    String resultMapId = generateResultMapName(method);
+    applyResultMap(resultMapId, returnType, argsIf(args), resultsIf(results), typeDiscriminator);
+    return resultMapId;
   }
 
   private String generateResultMapName(Method method) {
@@ -217,7 +214,6 @@ public class MapperAnnotationBuilder {
     Class<?> parameterTypeClass = getParameterType(method);
     SqlSource sqlSource = getSqlSourceFromAnnotations(method, parameterTypeClass);
     if (sqlSource != null) {
-      String resultMapId = parseResultMap(method);
       Options options = method.getAnnotation(Options.class);
       final String mappedStatementId = type.getName() + "." + method.getName();
       Integer fetchSize = null;
@@ -260,9 +256,12 @@ public class MapperAnnotationBuilder {
         resultSetType = options.resultSetType();
       }
 
+      String resultMapId = null;
       ResultMap resultMapAnnotation = method.getAnnotation(ResultMap.class);
       if (resultMapAnnotation != null) {
         resultMapId = resultMapAnnotation.value();
+      } else if (isSelect) {
+        resultMapId = parseResultMap(method);
       }
 
       assistant.addMappedStatement(
