@@ -1236,10 +1236,7 @@ public class User {
             <tr>
               <td><code>notNullColumn</code></td>
               <td>
-                By default a child object is created only if at least one of the columns mapped to the child's properties 
-                is non null. With this attribute you can change this behaviour by specifiying which columns must have a value
-                so MyBatis will create a child object only if any of those columns is not null. Multiple column names can be 
-                specified using a comma as a separator. Default value: unset.
+                ネストされた結果をマッピングする際、デフォルトでは子オブジェクトのプロパティに対応する列のうち一つでも null でない値がセットされているものがあれば子オブジェクトが生成されます。notNullColumn に列名（複数可）を指定しておくと、指定された列に null 以外の値がセットされた場合にのみ子オブジェクトが生成されます。デフォルト：未指定
               </td>
             </tr>            
           </tbody>
