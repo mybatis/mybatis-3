@@ -31,7 +31,7 @@ class Slf4jLoggerImpl implements Log {
   }
 
   public boolean isTraceEnabled() {
-    return log.isDebugEnabled();
+    return log.isTraceEnabled();
   }
 
   public void error(String s, Throwable e) {
