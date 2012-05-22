@@ -50,7 +50,7 @@ public class Log4jImpl implements Log {
   }
 
   public void trace(String s) {
-    log.log(FQCN, Level.DEBUG, s, null);
+    log.log(FQCN, Level.TRACE, s, null);
   }
 
   public void warn(String s) {
