@@ -59,7 +59,6 @@
         <item name="SqlBuilder" href="statement-builders.html#SqlBuilder" />
        </item>
       <item name="Logging" href="logging.html"/>
-      <item name="Frequently Asked Questions" href="faq_general.html"/>
     </menu>
 
     <menu ref="reports"/>
