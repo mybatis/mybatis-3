@@ -13,8 +13,8 @@
         What is the difference between #{...} and ${...}?
       </question>
       <answer>
-        <p>MyBatis interprets #{...} as a parameter marker in an SQLprepared statement.  MyBatis
-           interprets ${...} as String substitution.  It is important to know the difference
+        <p>MyBatis interprets #{...} as a parameter marker in a JDBC prepared statement.  MyBatis
+           interprets ${...} as string substitution.  It is important to know the difference
            because parameter markers cannot be used in certain places in SQL statements.
            For example, you cannot use a parameter marker to specify a table name.</p>
         <p>Given the following code:</p>
@@ -35,6 +35,11 @@
             select * from foo
             where col1 = ?
         </source>
+        <p><b>Important</b>: note that use of ${...} (string substitution) presents a risk
+          for SQL injection attacks.
+          Also, string substitution can be problematical for complex types like dates.
+          For these reasons, we recommend using the #{...} form whenever possible.
+        </p>
       </answer>
     </faq>
     
