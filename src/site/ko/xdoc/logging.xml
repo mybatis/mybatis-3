@@ -168,7 +168,7 @@ log4j.appender.stdout.layout.ConversionPattern=%5p [%t] - %m%n]]></source>
         <source>log4j.logger.org.mybatis.example=TRACE</source>
         
         <p>There are queries that can return huge result sets. In that cases you may want to see the 
-        SQL stamentent but not the results. For that purpose SQL statements are logged with DEBUG level
+        SQL statement but not the results. For that purpose SQL statements are logged with DEBUG level
         (FINE in JDK logging) and results with TRACE level (FINER in JDK logging), so in case
         you want to see the statement but not the result, set the level to DEBUG.
         </p>
