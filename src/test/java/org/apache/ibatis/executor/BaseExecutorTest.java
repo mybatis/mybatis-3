@@ -452,6 +452,33 @@ public class BaseExecutorTest extends BaseDataTest {
     }
   }
 
+  @Test
+  public void shouldClearDeferredLoads() throws Exception {
+    DataSource ds = createBlogDataSource();
+    Connection connection = ds.getConnection();
+    Executor executor = createExecutor(new JdbcTransaction(connection));
+    try {
+      MappedStatement selectBlog = ExecutorTestHelper.prepareComplexSelectBlogMappedStatement(config);
+      MappedStatement selectPosts = ExecutorTestHelper.prepareSelectPostsForBlogMappedStatement(config);
+      config.addMappedStatement(selectBlog);
+      config.addMappedStatement(selectPosts);
+      MappedStatement selectAuthor = ExecutorTestHelper.prepareSelectOneAuthorMappedStatement(config);
+      MappedStatement insertAuthor = ExecutorTestHelper.prepareInsertAuthorMappedStatement(config);
+
+      //generate DeferredLoads
+      executor.query(selectPosts, 1, RowBounds.DEFAULT, Executor.NO_RESULT_HANDLER);
+
+      Author author = new Author(-1, "someone", "******", "someone@apache.org", null, Section.NEWS);
+      executor.update(insertAuthor, author);
+      executor.query(selectAuthor, -1, RowBounds.DEFAULT, Executor.NO_RESULT_HANDLER);
+      executor.flushStatements();
+      executor.rollback(true);
+    } finally {
+      executor.rollback(true);
+      executor.close(false);
+    }
+  }
+
   protected Executor createExecutor(Transaction transaction) {
     return new SimpleExecutor(config,transaction);
   }

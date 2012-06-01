@@ -145,6 +145,7 @@ public abstract class BaseExecutor implements Executor {
       for (DeferredLoad deferredLoad : deferredLoads) {
         deferredLoad.load();
       }
+      deferredLoads.clear(); // issue #601
       if (configuration.getLocalCacheScope() == LocalCacheScope.STATEMENT) {
         clearLocalCache(); // issue #482
       }
