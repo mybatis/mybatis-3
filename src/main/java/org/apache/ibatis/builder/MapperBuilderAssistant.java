@@ -43,6 +43,7 @@ import org.apache.ibatis.mapping.SqlCommandType;
 import org.apache.ibatis.mapping.SqlSource;
 import org.apache.ibatis.mapping.StatementType;
 import org.apache.ibatis.reflection.MetaClass;
+import org.apache.ibatis.scripting.LanguageDriver;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
@@ -274,7 +275,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
       String keyProperty,
       String keyColumn,
       String databaseId,
-      Class<?> langTypeClass) {
+      LanguageDriver lang) {
     id = applyCurrentNamespace(id, false);
     boolean isSelect = sqlCommandType == SqlCommandType.SELECT;
 
@@ -286,7 +287,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
     statementBuilder.keyProperty(keyProperty);
     statementBuilder.keyColumn(keyColumn);
     statementBuilder.databaseId(databaseId);
-    statementBuilder.lang(langTypeClass);
+    statementBuilder.lang(lang);
     setStatementTimeout(timeout, statementBuilder);
 
     setStatementParameterMap(parameterMap, parameterType, statementBuilder);

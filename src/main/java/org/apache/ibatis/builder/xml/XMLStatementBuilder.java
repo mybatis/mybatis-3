@@ -64,11 +64,7 @@ public class XMLStatementBuilder extends BaseBuilder {
     String resultMap = context.getStringAttribute("resultMap");
     String resultType = context.getStringAttribute("resultType");
     String lang = context.getStringAttribute("lang");
-    Class<?> langTypeClass = setupLangDriver(lang);
-    if (langTypeClass == null) {
-      langTypeClass = configuration.getLanguageRegistry().getDefaultDriverClass();
-    }
-    LanguageDriver langDriver = configuration.getLanguageRegistry().getDriver(langTypeClass);
+    LanguageDriver langDriver = getLanguageDriver(lang);
 
     Class<?> resultTypeClass = resolveClass(resultType);
     String resultSetType = context.getStringAttribute("resultSetType");
@@ -110,7 +106,7 @@ public class XMLStatementBuilder extends BaseBuilder {
 
     builderAssistant.addMappedStatement(id, sqlSource, statementType, sqlCommandType,
         fetchSize, timeout, parameterMap, parameterTypeClass, resultMap, resultTypeClass,
-        resultSetTypeEnum, flushCache, useCache, keyGenerator, keyProperty, keyColumn, databaseId, langTypeClass);
+        resultSetTypeEnum, flushCache, useCache, keyGenerator, keyProperty, keyColumn, databaseId, langDriver);
   }
 
   public void parseSelectKeyNode(String parentId, XNode nodeToHandle, Class<?> parameterTypeClass, LanguageDriver langDriver, String databaseId) {
@@ -120,7 +116,6 @@ public class XMLStatementBuilder extends BaseBuilder {
     StatementType statementType = StatementType.valueOf(nodeToHandle.getStringAttribute("statementType", StatementType.PREPARED.toString()));
     String keyProperty = nodeToHandle.getStringAttribute("keyProperty");
     boolean executeBefore = "BEFORE".equals(nodeToHandle.getStringAttribute("order", "AFTER"));
-    Class<?> langTypeClass = langDriver.getClass();
 
     //defaults
     boolean useCache = false;
@@ -137,7 +132,7 @@ public class XMLStatementBuilder extends BaseBuilder {
 
     builderAssistant.addMappedStatement(id, sqlSource, statementType, sqlCommandType,
         fetchSize, timeout, parameterMap, parameterTypeClass, resultMap, resultTypeClass,
-        resultSetTypeEnum, flushCache, useCache, keyGenerator, keyProperty, null, databaseId, langTypeClass);
+        resultSetTypeEnum, flushCache, useCache, keyGenerator, keyProperty, null, databaseId, langDriver);
 
     id = builderAssistant.applyCurrentNamespace(id, false);
 
@@ -167,7 +162,7 @@ public class XMLStatementBuilder extends BaseBuilder {
     return true;
   }
 
-  private Class<?> setupLangDriver(String lang) {
+  private LanguageDriver getLanguageDriver(String lang) {
     Class<?> langClass;
     if (lang == null) {
       langClass = configuration.getLanguageRegistry().getDefaultDriverClass();
@@ -175,6 +170,11 @@ public class XMLStatementBuilder extends BaseBuilder {
       langClass = resolveClass(lang);
       configuration.getLanguageRegistry().register(langClass);
     }
-    return langClass;
+    if (langClass == null) {
+      langClass = configuration.getLanguageRegistry().getDefaultDriverClass();
+    }
+    return configuration.getLanguageRegistry().getDriver(langClass);
   }
+
+  
 }

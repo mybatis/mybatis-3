@@ -66,8 +66,8 @@ import org.apache.ibatis.reflection.wrapper.DefaultObjectWrapperFactory;
 import org.apache.ibatis.reflection.wrapper.ObjectWrapperFactory;
 import org.apache.ibatis.scripting.LanguageDriver;
 import org.apache.ibatis.scripting.LanguageDriverRegistry;
-import org.apache.ibatis.scripting.defaults.RawSqlLanguageDriver;
-import org.apache.ibatis.scripting.xmltags.XMLDynamicLanguageDriver;
+import org.apache.ibatis.scripting.defaults.RawLanguageDriver;
+import org.apache.ibatis.scripting.xmltags.XMLLanguageDriver;
 import org.apache.ibatis.transaction.Transaction;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
 import org.apache.ibatis.transaction.managed.ManagedTransactionFactory;
@@ -145,11 +145,11 @@ public class Configuration {
 
     typeAliasRegistry.registerAlias("VENDOR", VendorDatabaseIdProvider.class.getName());
 
-    typeAliasRegistry.registerAlias("XMLTAGS", XMLDynamicLanguageDriver.class.getName());
-    typeAliasRegistry.registerAlias("RAW", RawSqlLanguageDriver.class.getName());
+    typeAliasRegistry.registerAlias("XML", XMLLanguageDriver.class.getName());
+    typeAliasRegistry.registerAlias("RAW", RawLanguageDriver.class.getName());
 
-    languageRegistry.setDefaultDriverClass(XMLDynamicLanguageDriver.class);
-    languageRegistry.register(RawSqlLanguageDriver.class);
+    languageRegistry.setDefaultDriverClass(XMLLanguageDriver.class);
+    languageRegistry.register(RawLanguageDriver.class);
   }
 
   public String getDatabaseId() {
@@ -341,7 +341,7 @@ public class Configuration {
 
   public void setDefaultScriptingLanguage(Class<?> driver) {
     if (driver == null) {
-      driver = XMLDynamicLanguageDriver.class;
+      driver = XMLLanguageDriver.class;
     }
     getLanguageRegistry().setDefaultDriverClass(driver);
   }

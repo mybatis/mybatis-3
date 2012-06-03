@@ -45,7 +45,7 @@
   </environments>
 
   <mappers>
-    <mapper resource="org/apache/ibatis/submitted/velocity/mapper.xml"/>
+    <mapper resource="org/apache/ibatis/submitted/velocity/Mapper.xml"/>
   </mappers>
 
 </configuration>

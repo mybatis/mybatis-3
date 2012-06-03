@@ -72,21 +72,21 @@ public class VelocityLanguageTest {
     try {
 
       Parameter p = new Parameter(true, "Fli%");
-      List<Name> answer = sqlSession.selectList("org.apache.ibatis.submitted.velocity.selectNames", p);
+      List<Name> answer = sqlSession.selectList("org.apache.ibatis.submitted.velocity.Mapper.selectNames", p);
       assertEquals(3, answer.size());
       for (Name n : answer) {
         assertEquals("Flintstone", n.getLastName());
       }
 
       p = new Parameter(false, "Fli%");
-      answer = sqlSession.selectList("org.apache.ibatis.submitted.velocity.selectNames", p);
+      answer = sqlSession.selectList("org.apache.ibatis.submitted.velocity.Mapper.selectNames", p);
       assertEquals(3, answer.size());
       for (Name n : answer) {
         assertTrue(n.getLastName() == null);
       }
 
       p = new Parameter(false, "Rub%");
-      answer = sqlSession.selectList("org.apache.ibatis.submitted.velocity.selectNames", p);
+      answer = sqlSession.selectList("org.apache.ibatis.submitted.velocity.Mapper.selectNames", p);
       assertEquals(2, answer.size());
       for (Name n : answer) {
         assertTrue(n.getLastName() == null);
@@ -104,21 +104,21 @@ public class VelocityLanguageTest {
     try {
 
       Parameter p = new Parameter(true, "Fli");
-      List<Name> answer = sqlSession.selectList("org.apache.ibatis.submitted.velocity.selectNamesWithExpressions", p);
+      List<Name> answer = sqlSession.selectList("org.apache.ibatis.submitted.velocity.Mapper.selectNamesWithExpressions", p);
       assertEquals(3, answer.size());
       for (Name n : answer) {
         assertEquals("Flintstone", n.getLastName());
       }
 
       p = new Parameter(false, "Fli");
-      answer = sqlSession.selectList("org.apache.ibatis.submitted.velocity.selectNamesWithExpressions", p);
+      answer = sqlSession.selectList("org.apache.ibatis.submitted.velocity.Mapper.selectNamesWithExpressions", p);
       assertEquals(3, answer.size());
       for (Name n : answer) {
         assertTrue(n.getLastName() == null);
       }
 
       p = new Parameter(false, "Rub");
-      answer = sqlSession.selectList("org.apache.ibatis.submitted.velocity.selectNamesWithExpressions", p);
+      answer = sqlSession.selectList("org.apache.ibatis.submitted.velocity.Mapper.selectNamesWithExpressions", p);
       assertEquals(2, answer.size());
       for (Name n : answer) {
         assertTrue(n.getLastName() == null);
@@ -138,7 +138,7 @@ public class VelocityLanguageTest {
       int[] ids = {2,4,5};
       Map param = new HashMap();
       param.put("ids", ids);
-      List<Name> answer = sqlSession.selectList("org.apache.ibatis.submitted.velocity.selectNamesWithIteration", param);
+      List<Name> answer = sqlSession.selectList("org.apache.ibatis.submitted.velocity.Mapper.selectNamesWithIteration", param);
       assertEquals(3, answer.size());
       for (int i=0; i<ids.length; i++) {
         assertEquals(ids[i], answer.get(i).getId());
@@ -147,6 +147,53 @@ public class VelocityLanguageTest {
     } finally {
       sqlSession.close();
     }
+  }
+  
+  @Test 
+  public void testLangRaw() {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      Parameter p = new Parameter(true, "Fli%");
+      List<Name> answer = sqlSession.selectList("org.apache.ibatis.submitted.velocity.Mapper.selectRaw", p);
+      assertEquals(3, answer.size());
+      for (Name n : answer) {
+        assertEquals("Flintstone", n.getLastName());
+      }
+    } finally {
+      sqlSession.close();
+    }    
+  }
+
+  
+  @Test 
+  public void testLangXmlTags() {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      Parameter p = new Parameter(true, "Fli%");
+      List<Name> answer = sqlSession.selectList("org.apache.ibatis.submitted.velocity.Mapper.selectXml", p);
+      assertEquals(3, answer.size());
+      for (Name n : answer) {
+        assertEquals("Flintstone", n.getLastName());
+      }
+    } finally {
+      sqlSession.close();
+    }    
+  }
+
+  @Test 
+  public void testLangRawWithMapper() {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      Parameter p = new Parameter(true, "Fli%");
+      Mapper m = sqlSession.getMapper(Mapper.class);
+      List<Name> answer = m.selectRawWithMapper(p);
+      assertEquals(3, answer.size());
+      for (Name n : answer) {
+        assertEquals("Flintstone", n.getLastName());
+      }
+    } finally {
+      sqlSession.close();
+    }    
   }
 
 }

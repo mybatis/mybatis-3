@@ -13,29 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.ibatis.scripting.defaults;
+package org.apache.ibatis.scripting.xmltags;
 
-import org.apache.ibatis.builder.MapperBuilderAssistant;
+import java.util.ArrayList;
 import org.apache.ibatis.executor.parameter.ParameterHandler;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.SqlSource;
 import org.apache.ibatis.parsing.XNode;
 import org.apache.ibatis.scripting.LanguageDriver;
+import org.apache.ibatis.scripting.defaults.DefaultParameterHandler;
 import org.apache.ibatis.session.Configuration;
 
-public class RawSqlLanguageDriver implements LanguageDriver {
+public class XMLLanguageDriver implements LanguageDriver {
 
   public ParameterHandler createParameterHandler(MappedStatement mappedStatement, Object parameterObject, BoundSql boundSql) {
     return new DefaultParameterHandler(mappedStatement, parameterObject, boundSql);
   }
 
   public SqlSource createSqlSource(Configuration configuration, XNode script, Class<?> parameterType) {
-    return new RawSqlSource(configuration, script.getStringBody(""));
+    XMLScriptBuilder builder = new XMLScriptBuilder(configuration, script);
+    return builder.parseScriptNode();
   }
 
   public SqlSource createSqlSource(Configuration configuration, String script, Class<?> parameterType) {
-    return new RawSqlSource(configuration, script);
+    // TODO, should we parse the string to let the user use XML in annotated methods?
+    ArrayList<SqlNode> contents = new ArrayList<SqlNode>();
+    contents.add(new TextSqlNode(script.toString()));
+    MixedSqlNode rootSqlNode = new MixedSqlNode(contents);
+    return new DynamicSqlSource(configuration, rootSqlNode);
   }
-
 }

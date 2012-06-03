@@ -149,8 +149,8 @@ public final class MappedStatement {
       return this;
     }
 
-    public Builder lang(Class<?> lang) {
-      mappedStatement.lang = mappedStatement.configuration.getLanguageRegistry().getDriver(lang);
+    public Builder lang(LanguageDriver driver) {
+      mappedStatement.lang = driver;
       return this;
     }
 
