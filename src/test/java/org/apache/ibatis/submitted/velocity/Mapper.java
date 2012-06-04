@@ -17,7 +17,7 @@ public interface Mapper {
   @Select("SELECT firstName <if test=\"includeLastName != null\">, lastName</if> FROM names WHERE lastName LIKE #{name}")
   List<Name> selectXmlWithMapper(Parameter p);
 
-  @Select("SELECT firstName <if test=\"includeLastName != null\">, lastName</if> FROM names WHERE lastName LIKE #{name}")
+  @Select("SELECT firstName #if($_parameter.includeLastName), lastName#end FROM names WHERE lastName LIKE @{name}")
   List<Name> selectVelocityWithMapper(Parameter p);
 
 }

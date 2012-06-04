@@ -196,4 +196,20 @@ public class VelocityLanguageTest {
     }    
   }
 
+  @Test 
+  public void testLangVelocityWithMapper() {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      Parameter p = new Parameter(true, "Fli%");
+      Mapper m = sqlSession.getMapper(Mapper.class);
+      List<Name> answer = m.selectVelocityWithMapper(p);
+      assertEquals(3, answer.size());
+      for (Name n : answer) {
+        assertEquals("Flintstone", n.getLastName());
+      }
+    } finally {
+      sqlSession.close();
+    }    
+  }
+
 }
