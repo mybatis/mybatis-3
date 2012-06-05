@@ -19,7 +19,6 @@ import org.apache.ibatis.datasource.pooled.PooledDataSource;
 import org.apache.ibatis.datasource.unpooled.UnpooledDataSource;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.jdbc.ScriptRunner;
-import org.junit.Test;
 
 import javax.sql.DataSource;
 import java.io.IOException;

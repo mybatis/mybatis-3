@@ -94,7 +94,7 @@ public class SerializedCache implements Cache {
   private Serializable deserialize(byte[] value) {
     Serializable result;
     try {
-      ByteArrayInputStream bis = new ByteArrayInputStream((byte[]) value);
+      ByteArrayInputStream bis = new ByteArrayInputStream(value);
       ObjectInputStream ois = new CustomObjectInputStream(bis);
       result = (Serializable) ois.readObject();
       ois.close();

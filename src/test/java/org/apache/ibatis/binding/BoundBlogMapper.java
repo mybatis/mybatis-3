@@ -60,7 +60,7 @@ public interface BoundBlogMapper {
       "SELECT *",
       "FROM blog"
   })
-  List<Map> selectBlogsAsMaps();
+  List<Map<String,Object>> selectBlogsAsMaps();
 
   //======================================================
 
@@ -119,7 +119,7 @@ public interface BoundBlogMapper {
 
   @Select("SELECT * FROM " +
       "blog WHERE id = #{id}")
-  Map selectBlogAsMap(Map params);
+  Map<String,Object> selectBlogAsMap(Map<String,Object> params);
 
   //======================================================
 

@@ -17,7 +17,6 @@ package com.ibatis.sqlmap.engine.builder;
 
 import com.ibatis.sqlmap.client.SqlMapException;
 import com.ibatis.sqlmap.engine.mapping.sql.SqlText;
-import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.mapping.ParameterMapping;
 import org.apache.ibatis.mapping.ParameterMode;
@@ -50,11 +49,11 @@ public class InlineParameterMapParser {
     return parseInlineParameterMap(sqlStatement, null);
   }
 
-  public SqlText parseInlineParameterMap(String sqlStatement, Class parameterClass) {
+  public SqlText parseInlineParameterMap(String sqlStatement, Class<?> parameterClass) {
 
     String newSql;
 
-    List mappingList = new ArrayList();
+    List<ParameterMapping> mappingList = new ArrayList<ParameterMapping>();
 
     StringTokenizer parser = new StringTokenizer(sqlStatement, PARAMETER_TOKEN, true);
     StringBuffer newSqlBuffer = new StringBuffer();
@@ -99,14 +98,14 @@ public class InlineParameterMapParser {
     return sqlText;
   }
 
-  private ParameterMapping newParseMapping(String token, Class parameterClass) {
+  private ParameterMapping newParseMapping(String token, Class<?> parameterClass) {
 
     // #propertyName,javaType=string,jdbcType=VARCHAR,mode=IN,nullValue=N/A,handler=string,numericScale=2#
 
     StringTokenizer paramParser = new StringTokenizer(token, "=, ", false);
     String propertyName = paramParser.nextToken();
-    TypeHandler typeHandler = null;
-    Class javaType = null;
+    TypeHandler<?> typeHandler = null;
+    Class<?> javaType = null;
     JdbcType jdbcType = null;
     ParameterMode parameterMode = null;
     Integer numericScale = null;
@@ -130,7 +129,7 @@ public class InlineParameterMapParser {
         } else if ("handler".equals(field)) {
           try {
             Object impl = typeAliasRegistry.resolveAlias(value).newInstance();
-            typeHandler = ((TypeHandler) impl);
+            typeHandler = ((TypeHandler<?>) impl);
           } catch (Exception e) {
             throw new SqlMapException("Error loading class specified by handler field in " + token + ".  Cause: " + e, e);
           }
@@ -173,7 +172,7 @@ public class InlineParameterMapParser {
     return mapping.build();
   }
 
-  private ParameterMapping oldParseMapping(String token, Class parameterClass, TypeHandlerRegistry typeHandlerRegistry) {
+  private ParameterMapping oldParseMapping(String token, Class<?> parameterClass, TypeHandlerRegistry typeHandlerRegistry) {
     if (token.indexOf(PARAM_DELIM) > -1) {
       StringTokenizer paramParser = new StringTokenizer(token, PARAM_DELIM, true);
       int n1 = paramParser.countTokens();
@@ -181,7 +180,7 @@ public class InlineParameterMapParser {
         String name = paramParser.nextToken();
         paramParser.nextToken(); //ignore ":"
         String type = paramParser.nextToken();
-        TypeHandler handler;
+        TypeHandler<?> handler;
         if (parameterClass == null) {
           handler = typeHandlerRegistry.getUnknownTypeHandler();
         } else {
@@ -196,7 +195,7 @@ public class InlineParameterMapParser {
         throw new SqlMapException("Incorrect inline parameter map format: " + token);
       }
     } else {
-      TypeHandler handler;
+      TypeHandler<?> handler;
       if (parameterClass == null) {
         handler = typeHandlerRegistry.getUnknownTypeHandler();
       } else {
@@ -207,8 +206,8 @@ public class InlineParameterMapParser {
     }
   }
 
-  private TypeHandler resolveTypeHandler(Class clazz, String propertyName, String javaType, JdbcType jdbcType) {
-    TypeHandler handler;
+  private TypeHandler<?> resolveTypeHandler(Class<?> clazz, String propertyName, String javaType, JdbcType jdbcType) {
+    TypeHandler<?> handler;
     if (clazz == null) {
       // Unknown
       handler = typeHandlerRegistry.getUnknownTypeHandler();
@@ -218,7 +217,7 @@ public class InlineParameterMapParser {
         handler = typeHandlerRegistry.getUnknownTypeHandler(); //BUG 1012591 - typeHandlerRegistry.getTypeHandler(java.lang.Object.class, jdbcType);
       } else {
         try {
-          Class javaClass = typeAliasRegistry.resolveAlias(javaType);
+          Class<?> javaClass = typeAliasRegistry.resolveAlias(javaType);
           handler = typeHandlerRegistry.getTypeHandler(javaClass, jdbcType);
         } catch (Exception e) {
           throw new SqlMapException("Error.  Could not set TypeHandler.  Cause: " + e, e);
@@ -231,12 +230,12 @@ public class InlineParameterMapParser {
       // JavaBean
       if (javaType == null) {
 
-        Class type = MetaClass.forClass(clazz).getGetterType(propertyName);
+        Class<?> type = MetaClass.forClass(clazz).getGetterType(propertyName);
         handler = typeHandlerRegistry.getTypeHandler(type, jdbcType);
 
       } else {
         try {
-          Class javaClass = typeAliasRegistry.resolveAlias(javaType);
+          Class<?> javaClass = typeAliasRegistry.resolveAlias(javaType);
           handler = typeHandlerRegistry.getTypeHandler(javaClass, jdbcType);
         } catch (Exception e) {
           throw new SqlMapException("Error.  Could not set TypeHandler.  Cause: " + e, e);

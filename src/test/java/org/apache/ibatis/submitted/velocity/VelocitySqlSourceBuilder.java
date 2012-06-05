@@ -18,6 +18,7 @@ package org.apache.ibatis.submitted.velocity;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
 import org.apache.ibatis.builder.BaseBuilder;
 import org.apache.ibatis.builder.BuilderException;
 import org.apache.ibatis.builder.ParameterExpressionParser;
@@ -29,7 +30,6 @@ import org.apache.ibatis.parsing.TokenHandler;
 import org.apache.ibatis.reflection.MetaClass;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.type.JdbcType;
-import org.apache.ibatis.type.TypeHandler;
 
 /**
  * Just a test case. Not a real Velocity implementation.
@@ -120,7 +120,7 @@ public class VelocitySqlSourceBuilder extends BaseBuilder {
         }
       }
       if (typeHandlerAlias != null) {
-        builder.typeHandler((TypeHandler<?>) resolveTypeHandler(javaType, typeHandlerAlias));
+        builder.typeHandler(resolveTypeHandler(javaType, typeHandlerAlias));
       }
       return builder.build();
     }

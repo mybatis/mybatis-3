@@ -26,6 +26,7 @@ import org.junit.Test;
 
 import java.io.Reader;
 import java.util.List;
+import java.util.Map;
 
 public class DuplicateResourceTest extends BaseDataTest {
 
@@ -43,7 +44,7 @@ public class DuplicateResourceTest extends BaseDataTest {
     final SqlSession sqlSession = factory.openSession();
     try {
       final Mapper mapper = sqlSession.getMapper(Mapper.class);
-      final List list = mapper.selectAllBlogs();
+      final List<Map<String, Object>> list = mapper.selectAllBlogs();
       Assert.assertEquals(2,list.size());
     } finally {
       sqlSession.close();

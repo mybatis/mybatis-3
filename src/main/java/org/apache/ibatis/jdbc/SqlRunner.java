@@ -207,13 +207,13 @@ public class SqlRunner {
     try {
       List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
       List<String> columns = new ArrayList<String>();
-      List<TypeHandler> typeHandlers = new ArrayList<TypeHandler>();
+      List<TypeHandler<?>> typeHandlers = new ArrayList<TypeHandler<?>>();
       ResultSetMetaData rsmd = rs.getMetaData();
       for (int i = 0, n = rsmd.getColumnCount(); i < n; i++) {
         columns.add(rsmd.getColumnLabel(i + 1));
         try {
           Class<?> type = Resources.classForName(rsmd.getColumnClassName(i + 1));
-          TypeHandler typeHandler = typeHandlerRegistry.getTypeHandler(type);
+          TypeHandler<?> typeHandler = typeHandlerRegistry.getTypeHandler(type);
           if (typeHandler == null) {
             typeHandler = typeHandlerRegistry.getTypeHandler(Object.class);
           }
@@ -226,7 +226,7 @@ public class SqlRunner {
         Map<String, Object> row = new HashMap<String, Object>();
         for (int i = 0, n = columns.size(); i < n; i++) {
           String name = columns.get(i);
-          TypeHandler handler = typeHandlers.get(i);
+          TypeHandler<?> handler = typeHandlers.get(i);
           row.put(name.toUpperCase(Locale.ENGLISH), handler.getResult(rs, name));
         }
         list.add(row);

@@ -27,7 +27,7 @@ import java.util.Map;
 public class MetaClassTest {
 
   private RichType rich = new RichType();
-  Map map = new HashMap() {
+  Map<String,RichType> map = new HashMap<String,RichType>() {
     {
       put("richType", rich);
     }

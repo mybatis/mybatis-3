@@ -15,7 +15,12 @@
  */
 package org.apache.ibatis.submitted.order_prefix_removed;
 
-import org.apache.ibatis.annotations.Param;
+import static org.junit.Assert.assertNotNull;
+
+import java.io.Reader;
+import java.sql.Connection;
+import java.sql.DriverManager;
+
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.ExecutorType;
@@ -24,15 +29,6 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.io.Reader;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.util.HashMap;
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 public class OrderPrefixRemoved {
 

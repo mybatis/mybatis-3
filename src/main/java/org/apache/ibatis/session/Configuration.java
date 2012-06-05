@@ -638,7 +638,7 @@ public class Configuration {
   protected void checkLocallyForDiscriminatedNestedResultMaps(ResultMap rm) {
     if (!rm.hasNestedResultMaps() && rm.getDiscriminator() != null) {
       for (Map.Entry<String, String> entry : rm.getDiscriminator().getDiscriminatorMap().entrySet()) {
-        String discriminatedResultMapName = (String) entry.getValue();
+        String discriminatedResultMapName = entry.getValue();
         if (hasResultMap(discriminatedResultMapName)) {
           ResultMap discriminatedResultMap = resultMaps.get(discriminatedResultMapName);
           if (discriminatedResultMap.hasNestedResultMaps()) {

@@ -211,7 +211,7 @@ public class SerializableProxyTest {
   }
 
   private Serializable deserialize(byte[] value) throws Exception {
-    ByteArrayInputStream bis = new ByteArrayInputStream((byte[]) value);
+    ByteArrayInputStream bis = new ByteArrayInputStream(value);
     ObjectInputStream ois = new ObjectInputStream(bis);
     Serializable result = (Serializable) ois.readObject();
     ois.close();

@@ -325,7 +325,7 @@ public class SqlSessionManagerTest extends BaseDataTest {
   @Test
   public void shouldSelectAuthorsUsingMapperClass() {
     AuthorMapper mapper = manager.getMapper(AuthorMapper.class);
-    List authors = mapper.selectAllAuthors();
+    List<Author> authors = mapper.selectAllAuthors();
     assertEquals(2, authors.size());
   }
 
@@ -488,7 +488,7 @@ public class SqlSessionManagerTest extends BaseDataTest {
   @Test
   public void shouldFindPostByIDWithDynamicSql() throws Exception {
     List<Post> posts = manager.selectList("domain.blog.mappers.PostMapper.findPost",
-        new HashMap() {{
+        new HashMap<String,Integer>() {{
           put("id", 1);
         }});
     assertEquals(1, posts.size());
@@ -497,8 +497,8 @@ public class SqlSessionManagerTest extends BaseDataTest {
   @Test
   public void shouldFindPostsInSetOfIDsWithDynamicSql() throws Exception {
     List<Post> posts = manager.selectList("domain.blog.mappers.PostMapper.findPost",
-        new HashMap() {{
-          put("ids", new ArrayList() {{
+        new HashMap<String,List<Integer>>() {{
+          put("ids", new ArrayList<Integer>() {{
             add(1);
             add(2);
             add(3);
@@ -510,7 +510,7 @@ public class SqlSessionManagerTest extends BaseDataTest {
   @Test
   public void shouldFindPostsWithBlogIdUsingDynamicSql() throws Exception {
     List<Post> posts = manager.selectList("domain.blog.mappers.PostMapper.findPost",
-        new HashMap() {{
+        new HashMap<String,Integer>() {{
           put("blog_id", 1);
         }});
     assertEquals(2, posts.size());
@@ -519,7 +519,7 @@ public class SqlSessionManagerTest extends BaseDataTest {
   @Test
   public void shouldFindPostsWithAuthorIdUsingDynamicSql() throws Exception {
     List<Post> posts = manager.selectList("domain.blog.mappers.PostMapper.findPost",
-        new HashMap() {{
+        new HashMap<String,Integer>() {{
           put("author_id", 101);
         }});
     assertEquals(3, posts.size());
@@ -528,8 +528,8 @@ public class SqlSessionManagerTest extends BaseDataTest {
   @Test
   public void shouldFindPostsWithAuthorAndBlogIdUsingDynamicSql() throws Exception {
     List<Post> posts = manager.selectList("domain.blog.mappers.PostMapper.findPost",
-        new HashMap() {{
-          put("ids", new ArrayList() {{
+        new HashMap<String, Object>() {{
+          put("ids", new ArrayList<Integer>() {{
             add(1);
             add(2);
             add(3);
@@ -542,7 +542,7 @@ public class SqlSessionManagerTest extends BaseDataTest {
   @Test
   public void shouldFindPostsInList() throws Exception {
     List<Post> posts = manager.selectList("domain.blog.mappers.PostMapper.selectPostIn",
-        new ArrayList() {{
+        new ArrayList<Integer>() {{
           add(1);
           add(3);
           add(5);
@@ -553,7 +553,7 @@ public class SqlSessionManagerTest extends BaseDataTest {
   @Test
   public void shouldFindOddPostsInList() throws Exception {
     List<Post> posts = manager.selectList("domain.blog.mappers.PostMapper.selectOddPostsIn",
-        new ArrayList() {{
+        new ArrayList<Integer>() {{
           add(0);
           add(1);
           add(2);
@@ -570,8 +570,8 @@ public class SqlSessionManagerTest extends BaseDataTest {
   @Test
   public void shouldSelectOddPostsInKeysList() throws Exception {
     List<Post> posts = manager.selectList("domain.blog.mappers.PostMapper.selectOddPostsInKeysList",
-        new HashMap() {{
-          put("keys", new ArrayList() {{
+        new HashMap<String,List<Integer>>() {{
+          put("keys", new ArrayList<Integer>() {{
             add(0);
             add(1);
             add(2);

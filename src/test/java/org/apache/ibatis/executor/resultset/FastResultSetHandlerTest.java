@@ -72,7 +72,7 @@ public class FastResultSetHandlerTest {
     final MappedStatement ms = new MappedStatement.Builder(config, "testSelect", new StaticSqlSource(config, "some select statement"), SqlCommandType.SELECT).resultMaps(
         new ArrayList<ResultMap>() {
           {
-            add(new ResultMap.Builder(config, "testMap", HashMap.class, new ArrayList() {
+            add(new ResultMap.Builder(config, "testMap", HashMap.class, new ArrayList<ResultMapping>() {
               {
                 add(new ResultMapping.Builder(config, "cOlUmN1", "CoLuMn1", registry.getTypeHandler(Integer.class)).build());
               }

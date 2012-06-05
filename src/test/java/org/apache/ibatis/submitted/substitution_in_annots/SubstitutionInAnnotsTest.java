@@ -17,7 +17,6 @@ package org.apache.ibatis.submitted.substitution_in_annots;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.PrintWriter;
 import java.io.Reader;
 import java.sql.Connection;
 import java.sql.DriverManager;

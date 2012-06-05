@@ -15,7 +15,6 @@
  */
 package org.apache.ibatis.submitted.lazyload_common_property;
 
-import java.io.PrintWriter;
 import java.io.Reader;
 import java.sql.Connection;
 import java.sql.DriverManager;

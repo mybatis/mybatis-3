@@ -121,7 +121,7 @@ public class ResourcesTest extends BaseDataTest {
 
   @Test
   public void shouldGetClassForName() throws Exception {
-    Class clazz = Resources.classForName(ResourcesTest.class.getName());
+    Class<?> clazz = Resources.classForName(ResourcesTest.class.getName());
     assertNotNull(clazz);
   }
 

@@ -1,6 +1,5 @@
 package org.apache.ibatis.submitted.custom_collection_handling;
 
-import java.util.Collection;
 import java.util.List;
 
 import org.apache.ibatis.reflection.MetaObject;

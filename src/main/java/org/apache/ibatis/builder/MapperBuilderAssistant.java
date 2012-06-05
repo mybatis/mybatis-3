@@ -391,7 +391,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
       List<ResultFlag> flags) {
     nestedResultMap = applyCurrentNamespace(nestedResultMap, true);
     Class<?> javaTypeClass = resolveResultJavaType(resultType, property, javaType);
-    TypeHandler<?> typeHandlerInstance = (TypeHandler<?>) resolveTypeHandler(javaTypeClass, typeHandler);
+    TypeHandler<?> typeHandlerInstance = resolveTypeHandler(javaTypeClass, typeHandler);
 
     List<ResultMapping> composites = parseCompositeColumnName(column);
     if (composites.size() > 0) {

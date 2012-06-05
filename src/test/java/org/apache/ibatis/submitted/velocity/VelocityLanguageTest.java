@@ -66,7 +66,6 @@ public class VelocityLanguageTest {
   }
 
   @Test
-  @SuppressWarnings("unchecked")
   public void testDynamicSelectWithPropertyParams() {
     SqlSession sqlSession = sqlSessionFactory.openSession();
     try {
@@ -98,7 +97,6 @@ public class VelocityLanguageTest {
   }
 
   @Test
-  @SuppressWarnings("unchecked")
   public void testDynamicSelectWithExpressionParams() {
     SqlSession sqlSession = sqlSessionFactory.openSession();
     try {
@@ -130,13 +128,12 @@ public class VelocityLanguageTest {
   }
 
   @Test
-  @SuppressWarnings("unchecked")
   public void testDynamicSelectWithIteration() {
     SqlSession sqlSession = sqlSessionFactory.openSession();
     try {
 
       int[] ids = {2,4,5};
-      Map param = new HashMap();
+      Map<String, Object> param = new HashMap<String, Object>();
       param.put("ids", ids);
       List<Name> answer = sqlSession.selectList("org.apache.ibatis.submitted.velocity.Mapper.selectNamesWithIteration", param);
       assertEquals(3, answer.size());

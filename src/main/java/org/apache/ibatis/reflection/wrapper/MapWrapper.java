@@ -55,11 +55,11 @@ public class MapWrapper extends BaseWrapper {
   }
 
   public String[] getGetterNames() {
-    return (String[]) map.keySet().toArray(new String[map.keySet().size()]);
+    return map.keySet().toArray(new String[map.keySet().size()]);
   }
 
   public String[] getSetterNames() {
-    return (String[]) map.keySet().toArray(new String[map.keySet().size()]);
+    return map.keySet().toArray(new String[map.keySet().size()]);
   }
 
   public Class<?> getSetterType(String name) {

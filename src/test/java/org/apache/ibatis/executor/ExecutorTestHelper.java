@@ -170,7 +170,7 @@ public class ExecutorTestHelper {
     return new MappedStatement.Builder(config, "selectAuthorAutoMap", new StaticSqlSource(config,"SELECT * FROM author ORDER BY id"), SqlCommandType.SELECT)
         .resultMaps(new ArrayList<ResultMap>() {
           {
-            add(new ResultMap.Builder(config, "defaultResultMap", Author.class, new ArrayList() {
+            add(new ResultMap.Builder(config, "defaultResultMap", Author.class, new ArrayList<ResultMapping>() {
               {
                 add(new ResultMapping.Builder(config, "favouriteSection", "favourite_section", registry.getTypeHandler(Section.class)).build());
                 add(new ResultMapping.Builder(config, null, "not_exists", Object.class).build());
@@ -297,7 +297,6 @@ public class ExecutorTestHelper {
   }
 
   public static MappedStatement createInsertAuthorWithIDof99MappedStatement(final Configuration config) {
-    final TypeHandlerRegistry registry = config.getTypeHandlerRegistry();
     MappedStatement ms = new MappedStatement.Builder(config, "insertAuthor", new StaticSqlSource(config,"INSERT INTO author (id,username,password,email,bio) values(99,'someone','******','someone@apache.org',null)"), SqlCommandType.INSERT)
         .statementType(StatementType.STATEMENT)
         .parameterMap(new ParameterMap.Builder(config, "defaultParameterMap", Author.class,
@@ -426,7 +425,7 @@ public class ExecutorTestHelper {
     final ResultMap tagResultMap = new ResultMap.Builder(config, "tagResultMap", Tag.class, new ArrayList<ResultMapping>() {
       {
         add(new ResultMapping.Builder(config, "id", "tag_id", registry.getTypeHandler(int.class))
-            .flags(new ArrayList() {
+            .flags(new ArrayList<ResultFlag>() {
               {
                 add(ResultFlag.ID);
               }
@@ -492,7 +491,7 @@ public class ExecutorTestHelper {
     final ResultMap tagResultMap = new ResultMap.Builder(config, "tagResultMap", Tag.class, new ArrayList<ResultMapping>() {
       {
         add(new ResultMapping.Builder(config, "id", "tag_id", registry.getTypeHandler(int.class))
-            .flags(new ArrayList() {
+            .flags(new ArrayList<ResultFlag>() {
               {
                 add(ResultFlag.ID);
               }
@@ -561,7 +560,7 @@ public class ExecutorTestHelper {
     final ResultMap tagResultMap = new ResultMap.Builder(config, "tagResultMap", Tag.class, new ArrayList<ResultMapping>() {
       {
         add(new ResultMapping.Builder(config, "id", "tag_id", registry.getTypeHandler(int.class))
-            .flags(new ArrayList() {
+            .flags(new ArrayList<ResultFlag>() {
               {
                 add(ResultFlag.ID);
               }

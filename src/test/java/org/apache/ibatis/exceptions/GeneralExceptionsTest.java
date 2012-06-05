@@ -48,7 +48,7 @@ public class GeneralExceptionsTest {
 
   @Test
   public void shouldInstantiateAndThrowAllCustomExceptions() throws Exception {
-    Class[] exceptionTypes = {
+    Class<?>[] exceptionTypes = {
         BindingException.class,
         CacheException.class,
         DataSourceException.class,
@@ -64,13 +64,13 @@ public class GeneralExceptionsTest {
         TransactionException.class,
         TypeException.class
     };
-    for (Class exceptionType : exceptionTypes) {
+    for (Class<?> exceptionType : exceptionTypes) {
       testExceptionConstructors(exceptionType);
     }
 
   }
 
-  private void testExceptionConstructors(Class exceptionType) throws InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
+  private void testExceptionConstructors(Class<?> exceptionType) throws InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
     Exception e = (Exception) exceptionType.newInstance();
     testThrowException(e);
     e = (Exception) exceptionType.getConstructor(String.class).newInstance(EXPECTED_MESSAGE);

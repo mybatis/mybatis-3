@@ -15,7 +15,6 @@
  */
 package org.apache.ibatis.submitted.flush_statement_npe;
 
-import java.io.PrintWriter;
 import java.io.Reader;
 import java.sql.Connection;
 import java.sql.DriverManager;

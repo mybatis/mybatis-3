@@ -61,7 +61,7 @@ public class JndiDataSourceFactoryTest extends BaseDataTest {
 
   private void createJndiDataSource() throws Exception {
     try {
-      Hashtable env = new Hashtable();
+      Hashtable<String, String> env = new Hashtable<String, String>();
       env.put(Context.INITIAL_CONTEXT_FACTORY, TEST_INITIAL_CONTEXT_FACTORY);
 
       MockContext ctx = new MockContext(false);
@@ -81,7 +81,7 @@ public class JndiDataSourceFactoryTest extends BaseDataTest {
   }
 
   public static class MockContext extends InitialContext {
-    private static Map bindings = new HashMap();
+    private static Map<String,Object> bindings = new HashMap<String,Object>();
 
     public MockContext(boolean lazy) throws NamingException {
       super(lazy);

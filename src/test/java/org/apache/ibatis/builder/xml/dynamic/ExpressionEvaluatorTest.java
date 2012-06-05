@@ -64,10 +64,10 @@ public class ExpressionEvaluatorTest {
 
   @Test
   public void shouldIterateOverIterable() {
-    final HashMap<String, String[]> parameterObject = new HashMap() {{
+    final HashMap<String, String[]> parameterObject = new HashMap<String, String[]>() {{
       put("array", new String[]{"1", "2", "3"});
     }};
-    final Iterable iterable = evaluator.evaluateIterable("array", parameterObject);
+    final Iterable<?> iterable = evaluator.evaluateIterable("array", parameterObject);
     int i = 0;
     for (Object o : iterable) {
       assertEquals(String.valueOf(++i), o);

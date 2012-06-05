@@ -36,7 +36,7 @@ public class SqlRunnerTest extends BaseDataTest {
     runScript(ds, JPETSTORE_DATA);
     Connection connection = ds.getConnection();
     SqlRunner exec = new SqlRunner(connection);
-    Map row = exec.selectOne("SELECT * FROM PRODUCT WHERE PRODUCTID = ?", "FI-SW-01");
+    Map<String, Object> row = exec.selectOne("SELECT * FROM PRODUCT WHERE PRODUCTID = ?", "FI-SW-01");
     connection.close();
     assertEquals("FI-SW-01", row.get("PRODUCTID"));
   }
@@ -48,7 +48,7 @@ public class SqlRunnerTest extends BaseDataTest {
     runScript(ds, JPETSTORE_DATA);
     Connection connection = ds.getConnection();
     SqlRunner exec = new SqlRunner(connection);
-    List rows = exec.selectAll("SELECT * FROM PRODUCT");
+    List<Map<String, Object>> rows = exec.selectAll("SELECT * FROM PRODUCT");
     connection.close();
     assertEquals(16, rows.size());
   }
@@ -61,7 +61,7 @@ public class SqlRunnerTest extends BaseDataTest {
     SqlRunner exec = new SqlRunner(connection);
     exec.setUseGeneratedKeySupport(true);
     int id = exec.insert("INSERT INTO author (username, password, email, bio) VALUES (?,?,?,?)", "someone", "******", "someone@apache.org", Null.LONGVARCHAR);
-    Map row = exec.selectOne("SELECT * FROM author WHERE username = ?", "someone");
+    Map<String,Object> row = exec.selectOne("SELECT * FROM author WHERE username = ?", "someone");
     connection.rollback();
     connection.close();
     assertTrue(SqlRunner.NO_GENERATED_KEY != id);
@@ -76,7 +76,7 @@ public class SqlRunnerTest extends BaseDataTest {
     Connection connection = ds.getConnection();
     SqlRunner exec = new SqlRunner(connection);
     int count = exec.update("update product set category = ? where productid = ?", "DOGS", "FI-SW-01");
-    Map row = exec.selectOne("SELECT * FROM PRODUCT WHERE PRODUCTID = ?", "FI-SW-01");
+    Map<String,Object> row = exec.selectOne("SELECT * FROM PRODUCT WHERE PRODUCTID = ?", "FI-SW-01");
     connection.close();
     assertEquals("DOGS", row.get("CATEGORY"));
     assertEquals(1, count);
@@ -90,7 +90,7 @@ public class SqlRunnerTest extends BaseDataTest {
     Connection connection = ds.getConnection();
     SqlRunner exec = new SqlRunner(connection);
     int count = exec.delete("delete from item");
-    List rows = exec.selectAll("SELECT * FROM ITEM");
+    List<Map<String,Object>> rows = exec.selectAll("SELECT * FROM ITEM");
     connection.close();
     assertEquals(28, count);
     assertEquals(0, rows.size());
@@ -103,7 +103,7 @@ public class SqlRunnerTest extends BaseDataTest {
     SqlRunner exec = new SqlRunner(connection);
     exec.run("CREATE TABLE BLAH(ID INTEGER)");
     exec.run("insert into BLAH values (1)");
-    List rows = exec.selectAll("SELECT * FROM BLAH");
+    List<Map<String,Object>> rows = exec.selectAll("SELECT * FROM BLAH");
     exec.run("DROP TABLE BLAH");
     connection.close();
     assertEquals(1, rows.size());

@@ -42,15 +42,15 @@ public class PrimitiveResultTypeTest {
 
   @Test
   public void shouldReturnProperPrimitiveType() {
-    List codes = ProductDAO.selectProductCodes();
+    List<Integer> codes = ProductDAO.selectProductCodes();
     for (Object code : codes) {
       assertTrue(code instanceof Integer);
     }
-    List lcodes = ProductDAO.selectProductCodesL();
+    List<Long> lcodes = ProductDAO.selectProductCodesL();
     for (Object lcode : lcodes) {
       assertTrue(!(lcode instanceof Integer));
     }
-    List bcodes = ProductDAO.selectProductCodesB();
+    List<BigDecimal> bcodes = ProductDAO.selectProductCodesB();
     for (Object bcode : bcodes) {
       assertTrue(bcode instanceof BigDecimal);
     }

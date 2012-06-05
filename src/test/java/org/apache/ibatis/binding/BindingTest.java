@@ -15,7 +15,7 @@
  */
 package org.apache.ibatis.binding;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -26,7 +26,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.ibatis.exceptions.PersistenceException;
 import org.apache.ibatis.executor.result.DefaultResultHandler;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
@@ -297,7 +296,7 @@ public class BindingTest {
     SqlSession session = sqlSessionFactory.openSession();
     try {
       BoundBlogMapper mapper = session.getMapper(BoundBlogMapper.class);
-      List<Map> blogs = mapper.selectBlogsAsMaps();
+      List<Map<String,Object>> blogs = mapper.selectBlogsAsMaps();
       assertEquals(2, blogs.size());
     } finally {
       session.close();
@@ -411,7 +410,7 @@ public class BindingTest {
     SqlSession session = sqlSessionFactory.openSession();
     try {
       BoundBlogMapper mapper = session.getMapper(BoundBlogMapper.class);
-      Map blog = mapper.selectBlogAsMap(new HashMap() {
+      Map<String,Object> blog = mapper.selectBlogAsMap(new HashMap<String,Object>() {
         {
           put("id", 1);
         }
@@ -480,12 +479,9 @@ public class BindingTest {
       List<Post> posts = mapper.selectPosts();
       assertEquals(5, posts.size());
       assertTrue(posts.get(0) instanceof DraftPost);
-      assertTrue(posts.get(1) instanceof Post);
       assertFalse(posts.get(1) instanceof DraftPost);
       assertTrue(posts.get(2) instanceof DraftPost);
-      assertTrue(posts.get(3) instanceof Post);
       assertFalse(posts.get(3) instanceof DraftPost);
-      assertTrue(posts.get(4) instanceof Post);
       assertFalse(posts.get(4) instanceof DraftPost);
     } finally {
       session.close();
@@ -500,12 +496,9 @@ public class BindingTest {
       List<Post> posts = mapper.selectPostsWithResultMap();
       assertEquals(5, posts.size());
       assertTrue(posts.get(0) instanceof DraftPost);
-      assertTrue(posts.get(1) instanceof Post);
       assertFalse(posts.get(1) instanceof DraftPost);
       assertTrue(posts.get(2) instanceof DraftPost);
-      assertTrue(posts.get(3) instanceof Post);
       assertFalse(posts.get(3) instanceof DraftPost);
-      assertTrue(posts.get(4) instanceof Post);
       assertFalse(posts.get(4) instanceof DraftPost);
     } finally {
       session.close();

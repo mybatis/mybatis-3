@@ -45,7 +45,7 @@ public class BlobTypeHandlerTest extends BaseTypeHandlerTest {
     when(rs.wasNull()).thenReturn(false);
     when(blob.length()).thenReturn(3l);
     when(blob.getBytes(1, 3)).thenReturn(new byte[] { 1, 2, 3 });
-    assertArrayEquals(new byte[] { 1, 2, 3 }, (byte[]) TYPE_HANDLER.getResult(rs, "column"));
+    assertArrayEquals(new byte[] { 1, 2, 3 }, TYPE_HANDLER.getResult(rs, "column"));
   }
 
   @Test
@@ -54,7 +54,7 @@ public class BlobTypeHandlerTest extends BaseTypeHandlerTest {
     when(cs.wasNull()).thenReturn(false);
     when(blob.length()).thenReturn(3l);
     when(blob.getBytes(1, 3)).thenReturn(new byte[] { 1, 2, 3 });
-    assertArrayEquals(new byte[] { 1, 2, 3 }, (byte[]) TYPE_HANDLER.getResult(cs, 1));
+    assertArrayEquals(new byte[] { 1, 2, 3 }, TYPE_HANDLER.getResult(cs, 1));
   }
 
 }

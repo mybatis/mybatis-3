@@ -35,14 +35,14 @@ public class ByteArrayTypeHandlerTest extends BaseTypeHandlerTest {
   public void shouldGetResultFromResultSet() throws Exception {
     when(rs.getBytes("column")).thenReturn(new byte[] { 1, 2, 3 });
     when(rs.wasNull()).thenReturn(false);
-    assertArrayEquals(new byte[] { 1, 2, 3 }, (byte[]) TYPE_HANDLER.getResult(rs, "column"));
+    assertArrayEquals(new byte[] { 1, 2, 3 }, TYPE_HANDLER.getResult(rs, "column"));
   }
 
   @Test
   public void shouldGetResultFromCallableStatement() throws Exception {
     when(cs.getBytes(1)).thenReturn(new byte[] { 1, 2, 3 });
     when(cs.wasNull()).thenReturn(false);
-    assertArrayEquals(new byte[] { 1, 2, 3 }, (byte[]) TYPE_HANDLER.getResult(cs, 1));
+    assertArrayEquals(new byte[] { 1, 2, 3 }, TYPE_HANDLER.getResult(cs, 1));
   }
 
 }

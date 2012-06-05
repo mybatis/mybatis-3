@@ -15,12 +15,11 @@
  */
 package com.ibatis.sqlmap.client;
 
-import com.ibatis.sqlmap.engine.builder.Ibatis2Configuration;
-import com.ibatis.sqlmap.engine.builder.XmlSqlMapConfigParser;
-import com.ibatis.sqlmap.engine.impl.SqlMapClientImpl;
-
 import java.io.Reader;
 import java.util.Properties;
+
+import com.ibatis.sqlmap.engine.builder.XmlSqlMapConfigParser;
+import com.ibatis.sqlmap.engine.impl.SqlMapClientImpl;
 
 /*
  * Builds SqlMapClient instances from a supplied resource (e.g. XML configuration file)
@@ -62,7 +61,7 @@ public class SqlMapClientBuilder {
   public static SqlMapClient buildSqlMapClient(Reader reader) {
     XmlSqlMapConfigParser configParser = new XmlSqlMapConfigParser(reader);
     configParser.parse();
-    return new SqlMapClientImpl((Ibatis2Configuration) configParser.getConfiguration());
+    return new SqlMapClientImpl(configParser.getConfiguration());
   }
 
   /*
@@ -79,7 +78,7 @@ public class SqlMapClientBuilder {
   public static SqlMapClient buildSqlMapClient(Reader reader, Properties props) {
     XmlSqlMapConfigParser configParser = new XmlSqlMapConfigParser(reader, props);
     configParser.parse();
-    return new SqlMapClientImpl((Ibatis2Configuration) configParser.getConfiguration());
+    return new SqlMapClientImpl(configParser.getConfiguration());
   }
 
 }

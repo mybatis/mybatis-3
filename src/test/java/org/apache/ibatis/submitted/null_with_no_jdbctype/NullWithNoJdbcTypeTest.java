@@ -15,8 +15,12 @@
  */
 package org.apache.ibatis.submitted.null_with_no_jdbctype;
 
-import domain.blog.Author;
-import domain.blog.Section;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
+import javax.sql.DataSource;
+
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
@@ -26,12 +30,10 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
-import org.apache.ibatis.type.JdbcType;
 import org.junit.Test;
 
-import javax.sql.DataSource;
-
-import static org.junit.Assert.*;
+import domain.blog.Author;
+import domain.blog.Section;
 
 public class NullWithNoJdbcTypeTest extends BaseDataTest {
 
@@ -78,9 +80,8 @@ public class NullWithNoJdbcTypeTest extends BaseDataTest {
     SqlSession session = sqlMapper.openSession();
     try {
       BlogMapper mapper = session.getMapper(BlogMapper.class);
-      int n = 0;
       try {
-        n = mapper.insertAuthor(new Author(99999, "barney", "******", "barney@iloveyou.com", null, Section.NEWS));
+        mapper.insertAuthor(new Author(99999, "barney", "******", "barney@iloveyou.com", null, Section.NEWS));
         fail("Expected exception.");
       } catch (Exception e) {
         assertTrue(e.getMessage().contains("Error setting null"));

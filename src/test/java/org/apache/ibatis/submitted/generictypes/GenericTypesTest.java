@@ -23,7 +23,6 @@ import java.sql.DriverManager;
 
 import junit.framework.Assert;
 
-import org.apache.ibatis.exceptions.PersistenceException;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSession;

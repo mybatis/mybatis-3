@@ -15,7 +15,6 @@
  */
 package org.apache.ibatis.submitted.ognl_enum;
 
-import java.io.PrintWriter;
 import java.io.Reader;
 import java.sql.Connection;
 import java.sql.DriverManager;

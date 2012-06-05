@@ -15,20 +15,32 @@
  */
 package com.ibatis.sqlmap.engine.builder;
 
-import com.ibatis.sqlmap.client.SqlMapException;
-import com.ibatis.sqlmap.client.extensions.TypeHandlerCallback;
+import java.io.Reader;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.StringTokenizer;
+
 import org.apache.ibatis.cache.Cache;
-import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.mapping.*;
+import org.apache.ibatis.mapping.CacheBuilder;
+import org.apache.ibatis.mapping.Discriminator;
+import org.apache.ibatis.mapping.ParameterMap;
+import org.apache.ibatis.mapping.ParameterMapping;
+import org.apache.ibatis.mapping.ParameterMode;
+import org.apache.ibatis.mapping.ResultFlag;
+import org.apache.ibatis.mapping.ResultMap;
+import org.apache.ibatis.mapping.ResultMapping;
+import org.apache.ibatis.parsing.XNode;
 import org.apache.ibatis.reflection.MetaClass;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
-import com.ibatis.common.util.NodeEvent;
-import org.apache.ibatis.parsing.XNode;
-import com.ibatis.common.util.NodeEventParser;
 
-import java.io.Reader;
-import java.util.*;
+import com.ibatis.common.util.NodeEvent;
+import com.ibatis.common.util.NodeEventParser;
+import com.ibatis.sqlmap.client.SqlMapException;
+import com.ibatis.sqlmap.client.extensions.TypeHandlerCallback;
 
 public class XmlSqlMapParser {
 
@@ -54,7 +66,7 @@ public class XmlSqlMapParser {
 
   public XmlSqlMapParser(XmlSqlMapConfigParser configParser, Reader reader) {
     this.configParser = configParser;
-    this.config = (Ibatis2Configuration) configParser.getConfiguration();
+    this.config = configParser.getConfiguration();
     this.reader = reader;
     this.parser = new NodeEventParser();
     this.parser.addNodeletHandler(this);

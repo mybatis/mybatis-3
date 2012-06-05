@@ -273,7 +273,7 @@ public class PooledDataSource implements DataSource {
       expectedConnectionTypeCode = assembleConnectionTypeCode(dataSource.getUrl(), dataSource.getUsername(), dataSource.getPassword());
       for (int i = state.activeConnections.size(); i > 0; i--) {
         try {
-          PooledConnection conn = (PooledConnection) state.activeConnections.remove(i - 1);
+          PooledConnection conn = state.activeConnections.remove(i - 1);
           conn.invalidate();
 
           Connection realConn = conn.getRealConnection();
@@ -287,7 +287,7 @@ public class PooledDataSource implements DataSource {
       }
       for (int i = state.idleConnections.size(); i > 0; i--) {
         try {
-          PooledConnection conn = (PooledConnection) state.idleConnections.remove(i - 1);
+          PooledConnection conn = state.idleConnections.remove(i - 1);
           conn.invalidate();
 
           Connection realConn = conn.getRealConnection();
@@ -362,7 +362,7 @@ public class PooledDataSource implements DataSource {
       synchronized (state) {
         if (state.idleConnections.size() > 0) {
           // Pool has available connection
-          conn = (PooledConnection) state.idleConnections.remove(0);
+          conn = state.idleConnections.remove(0);
           if (log.isDebugEnabled()) {
             log.debug("Checked out connection " + conn.getRealHashCode() + " from pool.");
           }
@@ -379,7 +379,7 @@ public class PooledDataSource implements DataSource {
             }
           } else {
             // Cannot create new connection
-            PooledConnection oldestActiveConnection = (PooledConnection) state.activeConnections.get(0);
+            PooledConnection oldestActiveConnection = state.activeConnections.get(0);
             long longestCheckoutTime = oldestActiveConnection.getCheckoutTime();
             if (longestCheckoutTime > poolMaximumCheckoutTime) {
               // Can claim overdue connection

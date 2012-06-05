@@ -21,7 +21,7 @@ public class CustomCollection<T> {
     
     private List<T> data = new ArrayList<T>();
 
-    public <T> T[] toArray(T[] a) {
+    public <K> K[] toArray(K[] a) {
         return data.toArray(a);
     }
 

@@ -15,18 +15,20 @@
  */
 package org.apache.ibatis.reflection;
 
-import domain.jpetstore.Product;
-import domain.misc.RichType;
-
-import org.apache.ibatis.reflection.wrapper.ObjectWrapperFactory;
-import domain.misc.CustomBeanWrapper;
-import domain.misc.CustomBeanWrapperFactory;
-
-import static org.junit.Assert.*;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import org.junit.Test;
+
+import domain.jpetstore.Product;
+import domain.misc.CustomBeanWrapper;
+import domain.misc.CustomBeanWrapperFactory;
+import domain.misc.RichType;
 
 public class MetaObjectTest {
 
@@ -204,7 +206,7 @@ public class MetaObjectTest {
 
   @Test
   public void shouldDemonstrateDeeplyNestedMapProperties() {
-    HashMap map = new HashMap();
+    HashMap<String, String> map = new HashMap<String, String>();
     MetaObject metaMap = MetaObject.forObject(map);
 
     assertTrue(metaMap.hasSetter("id"));
@@ -230,8 +232,8 @@ public class MetaObjectTest {
     assertEquals(3, metaMap.getGetterNames().length);
     assertEquals(3, metaMap.getSetterNames().length);
 
-    Map name = (Map) metaMap.getValue("name");
-    Map address = (Map) metaMap.getValue("address");
+    Map<String,String> name = (Map<String,String>) metaMap.getValue("name");
+    Map<String,String> address = (Map<String,String>) metaMap.getValue("address");
 
     assertEquals("Clinton", name.get("first"));
     assertEquals("1 Some Street", address.get("street"));

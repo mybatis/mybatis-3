@@ -149,11 +149,11 @@ public class XMLScriptBuilder extends BaseBuilder {
 
   private class ChooseHandler implements NodeHandler {
     public void handleNode(XNode nodeToHandle, List<SqlNode> targetContents) {
-      List whenSqlNodes = new ArrayList<SqlNode>();
+      List<SqlNode> whenSqlNodes = new ArrayList<SqlNode>();
       List<SqlNode> otherwiseSqlNodes = new ArrayList<SqlNode>();
       handleWhenOtherwiseNodes(nodeToHandle, whenSqlNodes, otherwiseSqlNodes);
       SqlNode defaultSqlNode = getDefaultSqlNode(otherwiseSqlNodes);
-      ChooseSqlNode chooseSqlNode = new ChooseSqlNode((List<IfSqlNode>) whenSqlNodes, defaultSqlNode);
+      ChooseSqlNode chooseSqlNode = new ChooseSqlNode(whenSqlNodes, defaultSqlNode);
       targetContents.add(chooseSqlNode);
     }
 

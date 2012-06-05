@@ -15,12 +15,15 @@
  */
 package org.apache.ibatis.builder.xml.dynamic;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.IOException;
 import java.io.Reader;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.mapping.BoundSql;
@@ -37,8 +40,6 @@ import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.Assert;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 public class DynamicSqlSourceTest extends BaseDataTest {
@@ -89,7 +90,7 @@ public class DynamicSqlSourceTest extends BaseDataTest {
     final String expected = "SELECT * FROM BLOG WHERE CATEGORY = 'DEFAULT'";
     DynamicSqlSource source = createDynamicSqlSource(
         new TextSqlNode("SELECT * FROM BLOG"),
-        new ChooseSqlNode(new ArrayList() {{
+        new ChooseSqlNode(new ArrayList<SqlNode>() {{
           add(new IfSqlNode(mixedContents(new TextSqlNode("WHERE CATEGORY = ?")), "false"
           ));
           add(new IfSqlNode(mixedContents(new TextSqlNode("WHERE CATEGORY = 'NONE'")), "false"
@@ -104,7 +105,7 @@ public class DynamicSqlSourceTest extends BaseDataTest {
     final String expected = "SELECT * FROM BLOG WHERE CATEGORY = ?";
     DynamicSqlSource source = createDynamicSqlSource(
         new TextSqlNode("SELECT * FROM BLOG"),
-        new ChooseSqlNode(new ArrayList() {{
+        new ChooseSqlNode(new ArrayList<SqlNode>() {{
           add(new IfSqlNode(mixedContents(new TextSqlNode("WHERE CATEGORY = ?")), "true"
           ));
           add(new IfSqlNode(mixedContents(new TextSqlNode("WHERE CATEGORY = 'NONE'")), "false"
@@ -119,7 +120,7 @@ public class DynamicSqlSourceTest extends BaseDataTest {
     final String expected = "SELECT * FROM BLOG WHERE CATEGORY = 'NONE'";
     DynamicSqlSource source = createDynamicSqlSource(
         new TextSqlNode("SELECT * FROM BLOG"),
-        new ChooseSqlNode(new ArrayList() {{
+        new ChooseSqlNode(new ArrayList<SqlNode>() {{
           add(new IfSqlNode(mixedContents(new TextSqlNode("WHERE CATEGORY = ?")), "false"
           ));
           add(new IfSqlNode(mixedContents(new TextSqlNode("WHERE CATEGORY = 'NONE'")), "true"
@@ -273,7 +274,7 @@ public class DynamicSqlSourceTest extends BaseDataTest {
 
   @Test
   public void shouldIterateOnceForEachItemInCollection() throws Exception {
-    final HashMap<String, String[]> parameterObject = new HashMap() {{
+    final HashMap<String, String[]> parameterObject = new HashMap<String, String[]>() {{
       put("array", new String[]{"one", "two", "three"});
     }};
     final String expected = "SELECT * FROM BLOG WHERE ID in (  one = ? AND two = ? AND three = ? )";

@@ -23,21 +23,21 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class ExampleTypeHandler implements TypeHandler {
+public class ExampleTypeHandler implements TypeHandler<String> {
 
-  public void setParameter(PreparedStatement ps, int i, Object parameter, JdbcType jdbcType) throws SQLException {
-    ps.setString(i, (String) parameter);
+  public void setParameter(PreparedStatement ps, int i, String parameter, JdbcType jdbcType) throws SQLException {
+    ps.setString(i, parameter);
   }
 
-  public Object getResult(ResultSet rs, String columnName) throws SQLException {
+  public String getResult(ResultSet rs, String columnName) throws SQLException {
     return rs.getString(columnName);
   }
 
-  public Object getResult(ResultSet rs, int columnIndex) throws SQLException {
+  public String getResult(ResultSet rs, int columnIndex) throws SQLException {
     return rs.getString(columnIndex);
   }
 
-  public Object getResult(CallableStatement cs, int columnIndex) throws SQLException {
+  public String getResult(CallableStatement cs, int columnIndex) throws SQLException {
     return cs.getString(columnIndex);
   }
 

@@ -15,25 +15,30 @@
  */
 package org.apache.ibatis.executor;
 
-import domain.blog.Author;
-import domain.blog.Blog;
-import domain.blog.Post;
-import domain.blog.Section;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
+import java.sql.Connection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.sql.DataSource;
+
 import org.apache.ibatis.BaseDataTest;
-import org.apache.ibatis.logging.jdbc.ConnectionLogger;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.transaction.Transaction;
 import org.apache.ibatis.transaction.jdbc.JdbcTransaction;
-import static org.junit.Assert.*;
 import org.junit.Test;
 
-import javax.sql.DataSource;
-import java.sql.Connection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import domain.blog.Author;
+import domain.blog.Blog;
+import domain.blog.Post;
+import domain.blog.Section;
 
 public class BaseExecutorTest extends BaseDataTest {
   protected final Configuration config;
@@ -241,10 +246,10 @@ public class BaseExecutorTest extends BaseDataTest {
     Executor executor = createExecutor(new JdbcTransaction(connection));
     try {
       MappedStatement selectStatement = ExecutorTestHelper.prepareSelectDiscriminatedProduct(config);
-      List<Map> products = executor.query(selectStatement, null, RowBounds.DEFAULT, Executor.NO_RESULT_HANDLER);
+      List<Map<String,String>> products = executor.query(selectStatement, null, RowBounds.DEFAULT, Executor.NO_RESULT_HANDLER);
       connection.rollback();
       assertEquals(16, products.size());
-      for (Map m : products) {
+      for (Map<String,String> m : products) {
         if ("REPTILES".equals(m.get("category"))) {
           assertNull(m.get("name"));
         } else {
@@ -264,10 +269,10 @@ public class BaseExecutorTest extends BaseDataTest {
     Executor executor = createExecutor(new JdbcTransaction(connection));
     try {
       MappedStatement selectStatement = ExecutorTestHelper.prepareSelectDiscriminatedProduct(config);
-      List<Map> products = executor.query(selectStatement, null, new RowBounds(4, 10), Executor.NO_RESULT_HANDLER);
+      List<Map<String, String>> products = executor.query(selectStatement, null, new RowBounds(4, 10), Executor.NO_RESULT_HANDLER);
       connection.rollback();
       assertEquals(10, products.size());
-      for (Map m : products) {
+      for (Map<String, String> m : products) {
         if ("REPTILES".equals(m.get("category"))) {
           assertNull(m.get("name"));
         } else {
@@ -289,7 +294,7 @@ public class BaseExecutorTest extends BaseDataTest {
     Executor executor = createExecutor(new JdbcTransaction(connection));
     try {
       MappedStatement selectStatement = ExecutorTestHelper.prepareSelectTwoSetsOfAuthorsProc(config);
-      List<List> authorSets = executor.query(selectStatement, new HashMap() {
+      List<List<Author>> authorSets = executor.query(selectStatement, new HashMap<String, Object>() {
         {
           put("id1", 101);
           put("id2", 102);
@@ -297,7 +302,7 @@ public class BaseExecutorTest extends BaseDataTest {
       }, RowBounds.DEFAULT, Executor.NO_RESULT_HANDLER);
       connection.rollback();
       assertEquals(2, authorSets.size());
-      for (List authors : authorSets) {
+      for (List<Author> authors : authorSets) {
         assertEquals(2, authors.size());
         for (Object author : authors) {
           assertTrue(author instanceof Author);

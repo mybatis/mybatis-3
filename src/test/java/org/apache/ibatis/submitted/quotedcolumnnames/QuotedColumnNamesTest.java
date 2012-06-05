@@ -15,7 +15,6 @@
  */
 package org.apache.ibatis.submitted.quotedcolumnnames;
 
-import java.io.PrintWriter;
 import java.io.Reader;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -61,7 +60,6 @@ public class QuotedColumnNamesTest {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	@Test
 	public void testIt() {
 		SqlSession sqlSession = sqlSessionFactory.openSession();
@@ -74,7 +72,6 @@ public class QuotedColumnNamesTest {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	@Test
 	public void testItWithResultMap() {
 		SqlSession sqlSession = sqlSessionFactory.openSession();

@@ -19,9 +19,9 @@ import java.util.List;
 
 public class ChooseSqlNode implements SqlNode {
   private SqlNode defaultSqlNode;
-  private List<IfSqlNode> ifSqlNodes;
+  private List<SqlNode> ifSqlNodes;
 
-  public ChooseSqlNode(List<IfSqlNode> ifSqlNodes, SqlNode defaultSqlNode) {
+  public ChooseSqlNode(List<SqlNode> ifSqlNodes, SqlNode defaultSqlNode) {
     this.ifSqlNodes = ifSqlNodes;
     this.defaultSqlNode = defaultSqlNode;
   }

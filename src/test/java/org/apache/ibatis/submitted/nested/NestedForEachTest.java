@@ -65,7 +65,6 @@ public class NestedForEachTest {
   }
 
   @Test
-  @SuppressWarnings("unchecked")
   public void testSimpleSelect() {
     SqlSession sqlSession = sqlSessionFactory.openSession();
     try {
@@ -134,7 +133,6 @@ public class NestedForEachTest {
   }
 
   @Test
-  @SuppressWarnings("unchecked")
   public void testNestedSelect2() {
     SqlSession sqlSession = sqlSessionFactory.openSession();
     try {
