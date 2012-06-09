@@ -27,7 +27,7 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-public class BaseTest {
+public class AutomappingTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
