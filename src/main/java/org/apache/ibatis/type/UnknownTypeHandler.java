@@ -15,10 +15,15 @@
  */
 package org.apache.ibatis.type;
 
-import org.apache.ibatis.io.Resources;
+import java.sql.CallableStatement;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 
-import java.sql.*;
-import java.util.*;
+import org.apache.ibatis.io.Resources;
 
 public class UnknownTypeHandler extends BaseTypeHandler<Object> {
 

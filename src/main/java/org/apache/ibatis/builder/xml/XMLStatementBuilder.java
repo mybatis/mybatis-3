@@ -16,6 +16,7 @@
 package org.apache.ibatis.builder.xml;
 
 import java.util.Locale;
+
 import org.apache.ibatis.builder.BaseBuilder;
 import org.apache.ibatis.builder.MapperBuilderAssistant;
 import org.apache.ibatis.executor.keygen.Jdbc3KeyGenerator;

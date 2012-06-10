@@ -16,7 +16,8 @@
 package org.apache.ibatis.type;
 
 import java.sql.Types;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public enum JdbcType {
   /*

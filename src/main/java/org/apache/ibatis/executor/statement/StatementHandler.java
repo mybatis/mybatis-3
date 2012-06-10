@@ -15,14 +15,14 @@
  */
 package org.apache.ibatis.executor.statement;
 
-import org.apache.ibatis.executor.parameter.ParameterHandler;
-import org.apache.ibatis.mapping.BoundSql;
-import org.apache.ibatis.session.ResultHandler;
-
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
+
+import org.apache.ibatis.executor.parameter.ParameterHandler;
+import org.apache.ibatis.mapping.BoundSql;
+import org.apache.ibatis.session.ResultHandler;
 
 public interface StatementHandler {
 

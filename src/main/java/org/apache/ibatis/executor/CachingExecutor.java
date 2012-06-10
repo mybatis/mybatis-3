@@ -15,6 +15,9 @@
  */
 package org.apache.ibatis.executor;
 
+import java.sql.SQLException;
+import java.util.List;
+
 import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.cache.CacheKey;
 import org.apache.ibatis.cache.TransactionalCacheManager;
@@ -27,9 +30,6 @@ import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.transaction.Transaction;
-
-import java.sql.SQLException;
-import java.util.List;
 
 public class CachingExecutor implements Executor {
 

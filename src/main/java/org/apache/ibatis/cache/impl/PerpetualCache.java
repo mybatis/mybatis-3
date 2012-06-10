@@ -16,13 +16,13 @@
 package org.apache.ibatis.cache.impl;
 
 
-import org.apache.ibatis.cache.Cache;
-import org.apache.ibatis.cache.CacheException;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+
+import org.apache.ibatis.cache.Cache;
+import org.apache.ibatis.cache.CacheException;
 
 public class PerpetualCache implements Cache {
 

@@ -16,6 +16,7 @@
 package org.apache.ibatis.scripting.xmltags;
 
 import ognl.OgnlException;
+
 import org.apache.ibatis.builder.BuilderException;
 import org.apache.ibatis.parsing.GenericTokenParser;
 import org.apache.ibatis.parsing.TokenHandler;

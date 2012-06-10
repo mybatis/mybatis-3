@@ -16,6 +16,7 @@
 package org.apache.ibatis.scripting.xmltags;
 
 import java.util.Map;
+
 import org.apache.ibatis.parsing.GenericTokenParser;
 import org.apache.ibatis.parsing.TokenHandler;
 import org.apache.ibatis.session.Configuration;

@@ -15,11 +15,11 @@
  */
 package org.apache.ibatis.session;
 
-import org.apache.ibatis.executor.BatchResult;
-
 import java.sql.Connection;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.ibatis.executor.BatchResult;
 
 /**
  * The primary Java interface for working with MyBatis.

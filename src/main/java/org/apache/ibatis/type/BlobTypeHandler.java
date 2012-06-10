@@ -16,7 +16,11 @@
 package org.apache.ibatis.type;
 
 import java.io.ByteArrayInputStream;
-import java.sql.*;
+import java.sql.Blob;
+import java.sql.CallableStatement;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class BlobTypeHandler extends BaseTypeHandler<byte[]> {
 

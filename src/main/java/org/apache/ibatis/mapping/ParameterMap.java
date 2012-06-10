@@ -15,10 +15,10 @@
  */
 package org.apache.ibatis.mapping;
 
-import org.apache.ibatis.session.Configuration;
-
 import java.util.Collections;
 import java.util.List;
+
+import org.apache.ibatis.session.Configuration;
 
 public class ParameterMap {
 

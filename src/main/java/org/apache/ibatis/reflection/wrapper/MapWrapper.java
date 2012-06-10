@@ -15,13 +15,13 @@
  */
 package org.apache.ibatis.reflection.wrapper;
 
-import org.apache.ibatis.reflection.MetaObject;
-import org.apache.ibatis.reflection.factory.ObjectFactory;
-import org.apache.ibatis.reflection.property.PropertyTokenizer;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.ibatis.reflection.MetaObject;
+import org.apache.ibatis.reflection.factory.ObjectFactory;
+import org.apache.ibatis.reflection.property.PropertyTokenizer;
 
 public class MapWrapper extends BaseWrapper {
 

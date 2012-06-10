@@ -15,7 +15,6 @@
  */
 package org.apache.ibatis.scripting.defaults;
 
-import org.apache.ibatis.builder.MapperBuilderAssistant;
 import org.apache.ibatis.executor.parameter.ParameterHandler;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;

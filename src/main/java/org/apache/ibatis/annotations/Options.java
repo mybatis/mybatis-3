@@ -15,13 +15,13 @@
  */
 package org.apache.ibatis.annotations;
 
-import org.apache.ibatis.mapping.ResultSetType;
-import org.apache.ibatis.mapping.StatementType;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+
+import org.apache.ibatis.mapping.ResultSetType;
+import org.apache.ibatis.mapping.StatementType;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)

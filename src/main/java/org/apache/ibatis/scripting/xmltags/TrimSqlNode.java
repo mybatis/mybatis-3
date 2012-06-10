@@ -15,7 +15,13 @@
  */
 package org.apache.ibatis.scripting.xmltags;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.StringTokenizer;
+
 import org.apache.ibatis.session.Configuration;
 
 public class TrimSqlNode implements SqlNode {

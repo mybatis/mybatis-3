@@ -15,9 +15,9 @@
  */
 package org.apache.ibatis.mapping;
 
-import org.apache.ibatis.transaction.TransactionFactory;
-
 import javax.sql.DataSource;
+
+import org.apache.ibatis.transaction.TransactionFactory;
 
 public final class Environment {
   private final String id;

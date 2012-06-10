@@ -15,12 +15,13 @@
  */
 package org.apache.ibatis.datasource.unpooled;
 
+import java.util.Properties;
+
+import javax.sql.DataSource;
+
 import org.apache.ibatis.datasource.DataSourceException;
 import org.apache.ibatis.datasource.DataSourceFactory;
 import org.apache.ibatis.reflection.MetaObject;
-
-import javax.sql.DataSource;
-import java.util.Properties;
 
 public class UnpooledDataSourceFactory implements DataSourceFactory {
 

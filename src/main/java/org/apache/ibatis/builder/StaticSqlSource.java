@@ -15,12 +15,12 @@
  */
 package org.apache.ibatis.builder;
 
+import java.util.List;
+
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.ParameterMapping;
 import org.apache.ibatis.mapping.SqlSource;
 import org.apache.ibatis.session.Configuration;
-
-import java.util.List;
 
 public class StaticSqlSource implements SqlSource {
 
