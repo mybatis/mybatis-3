@@ -41,7 +41,11 @@ public class XMLScriptBuilder extends BaseBuilder {
 
   public XMLScriptBuilder(Configuration configuration, String context) {
     super(configuration);
-    XPathParser parser = new XPathParser("<script>" + context + "</script>", false, null, new XMLMapperEntityResolver());
+    XPathParser parser = new XPathParser(
+        "<script>" + context + "</script>", 
+        false, 
+        configuration.getVariables(), 
+        new XMLMapperEntityResolver());
     this.context = parser.evalNode("/script");
   }
 
