@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.ibatis.submitted.velocity;
+package org.apache.ibatis.submitted.language;
 
 import java.io.Reader;
 import java.sql.Connection;
@@ -34,7 +34,7 @@ import org.junit.Test;
 /**
  * Just a test case. Not a real Velocity implementation.
  */
-public class VelocityLanguageTest {
+public class LanguageTest {
 
   protected static SqlSessionFactory sqlSessionFactory;
 
@@ -44,9 +44,9 @@ public class VelocityLanguageTest {
 
     try {
       Class.forName("org.hsqldb.jdbcDriver");
-      conn = DriverManager.getConnection("jdbc:hsqldb:mem:bname", "sa", "");
+      conn = DriverManager.getConnection("jdbc:hsqldb:mem:language", "sa", "");
 
-      Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/velocity/CreateDB.sql");
+      Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/language/CreateDB.sql");
 
       ScriptRunner runner = new ScriptRunner(conn);
       runner.setLogWriter(null);
@@ -55,7 +55,7 @@ public class VelocityLanguageTest {
       conn.commit();
       reader.close();
 
-      reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/velocity/MapperConfig.xml");
+      reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/language/MapperConfig.xml");
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
       reader.close();
     } finally {
@@ -71,21 +71,21 @@ public class VelocityLanguageTest {
     try {
 
       Parameter p = new Parameter(true, "Fli%");
-      List<Name> answer = sqlSession.selectList("org.apache.ibatis.submitted.velocity.Mapper.selectNames", p);
+      List<Name> answer = sqlSession.selectList("selectNames", p);
       assertEquals(3, answer.size());
       for (Name n : answer) {
         assertEquals("Flintstone", n.getLastName());
       }
 
       p = new Parameter(false, "Fli%");
-      answer = sqlSession.selectList("org.apache.ibatis.submitted.velocity.Mapper.selectNames", p);
+      answer = sqlSession.selectList("selectNames", p);
       assertEquals(3, answer.size());
       for (Name n : answer) {
         assertTrue(n.getLastName() == null);
       }
 
       p = new Parameter(false, "Rub%");
-      answer = sqlSession.selectList("org.apache.ibatis.submitted.velocity.Mapper.selectNames", p);
+      answer = sqlSession.selectList("selectNames", p);
       assertEquals(2, answer.size());
       for (Name n : answer) {
         assertTrue(n.getLastName() == null);
@@ -102,21 +102,21 @@ public class VelocityLanguageTest {
     try {
 
       Parameter p = new Parameter(true, "Fli");
-      List<Name> answer = sqlSession.selectList("org.apache.ibatis.submitted.velocity.Mapper.selectNamesWithExpressions", p);
+      List<Name> answer = sqlSession.selectList("selectNamesWithExpressions", p);
       assertEquals(3, answer.size());
       for (Name n : answer) {
         assertEquals("Flintstone", n.getLastName());
       }
 
       p = new Parameter(false, "Fli");
-      answer = sqlSession.selectList("org.apache.ibatis.submitted.velocity.Mapper.selectNamesWithExpressions", p);
+      answer = sqlSession.selectList("selectNamesWithExpressions", p);
       assertEquals(3, answer.size());
       for (Name n : answer) {
         assertTrue(n.getLastName() == null);
       }
 
       p = new Parameter(false, "Rub");
-      answer = sqlSession.selectList("org.apache.ibatis.submitted.velocity.Mapper.selectNamesWithExpressions", p);
+      answer = sqlSession.selectList("selectNamesWithExpressions", p);
       assertEquals(2, answer.size());
       for (Name n : answer) {
         assertTrue(n.getLastName() == null);
@@ -135,7 +135,7 @@ public class VelocityLanguageTest {
       int[] ids = {2,4,5};
       Map<String, Object> param = new HashMap<String, Object>();
       param.put("ids", ids);
-      List<Name> answer = sqlSession.selectList("org.apache.ibatis.submitted.velocity.Mapper.selectNamesWithIteration", param);
+      List<Name> answer = sqlSession.selectList("selectNamesWithIteration", param);
       assertEquals(3, answer.size());
       for (int i=0; i<ids.length; i++) {
         assertEquals(ids[i], answer.get(i).getId());
@@ -151,7 +151,7 @@ public class VelocityLanguageTest {
     SqlSession sqlSession = sqlSessionFactory.openSession();
     try {
       Parameter p = new Parameter(true, "Fli%");
-      List<Name> answer = sqlSession.selectList("org.apache.ibatis.submitted.velocity.Mapper.selectRaw", p);
+      List<Name> answer = sqlSession.selectList("selectRaw", p);
       assertEquals(3, answer.size());
       for (Name n : answer) {
         assertEquals("Flintstone", n.getLastName());
@@ -167,7 +167,7 @@ public class VelocityLanguageTest {
     SqlSession sqlSession = sqlSessionFactory.openSession();
     try {
       Parameter p = new Parameter(true, "Fli%");
-      List<Name> answer = sqlSession.selectList("org.apache.ibatis.submitted.velocity.Mapper.selectXml", p);
+      List<Name> answer = sqlSession.selectList("selectXml", p);
       assertEquals(3, answer.size());
       for (Name n : answer) {
         assertEquals("Flintstone", n.getLastName());

@@ -1,4 +1,4 @@
-package org.apache.ibatis.submitted.velocity;
+package org.apache.ibatis.submitted.language;
 
 import java.util.List;
 

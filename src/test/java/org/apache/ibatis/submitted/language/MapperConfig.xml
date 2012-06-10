@@ -28,7 +28,8 @@
   </settings>
 
   <typeAliases>
-    <typeAlias alias="velocity" type="org.apache.ibatis.submitted.velocity.VelocityLanguageDriver"/>
+    <typeAlias alias="velocity" type="org.apache.ibatis.submitted.language.VelocityLanguageDriver"/>
+    <typeAlias alias="name" type="org.apache.ibatis.submitted.language.Name"/>
   </typeAliases>
 
   <environments default="development">
@@ -38,14 +39,14 @@
       </transactionManager>
       <dataSource type="UNPOOLED">
         <property name="driver" value="org.hsqldb.jdbcDriver"/>
-        <property name="url" value="jdbc:hsqldb:mem:bname"/>
+        <property name="url" value="jdbc:hsqldb:mem:language"/>
         <property name="username" value="sa"/>
       </dataSource>
     </environment>
   </environments>
 
   <mappers>
-    <mapper resource="org/apache/ibatis/submitted/velocity/Mapper.xml"/>
+    <mapper resource="org/apache/ibatis/submitted/language/Mapper.xml"/>
   </mappers>
 
 </configuration>

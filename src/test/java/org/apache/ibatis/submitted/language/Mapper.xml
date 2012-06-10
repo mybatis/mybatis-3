@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2012 The MyBatis Team
+       Copyright 2012 The MyBatis Team
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -21,22 +21,22 @@
     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="org.apache.ibatis.submitted.velocity.Mapper">
+<mapper namespace="org.apache.ibatis.submitted.language.Mapper">
 
-  <select id="selectNames" resultType="org.apache.ibatis.submitted.velocity.Name">
+  <select id="selectNames" resultType="Name">
     SELECT firstName #if($_parameter.includeLastName), lastName#end
     FROM names
     WHERE lastName LIKE @{name}
   </select>
 
-  <select id="selectNamesWithExpressions" resultType="org.apache.ibatis.submitted.velocity.Name">
+  <select id="selectNamesWithExpressions" resultType="Name">
     #set( $pattern = $_parameter.name + "%" )
     SELECT firstName #if($_parameter.includeLastName), lastName#end
     FROM names
     WHERE lastName LIKE @{pattern, javaType=string}
   </select>
 
-  <select id="selectNamesWithIteration" resultType="org.apache.ibatis.submitted.velocity.Name">
+  <select id="selectNamesWithIteration" resultType="Name">
     SELECT *
     FROM names
     WHERE id IN (
@@ -48,13 +48,13 @@
     )
   </select>
 
-  <select id="selectRaw" resultType="org.apache.ibatis.submitted.velocity.Name" lang="raw">
+  <select id="selectRaw" resultType="Name" lang="raw">
     SELECT firstName, lastName
     FROM names
     WHERE lastName LIKE #{name}
   </select>
 
-  <select id="selectXml" resultType="org.apache.ibatis.submitted.velocity.Name" lang="xml">
+  <select id="selectXml" resultType="Name" lang="xml">
     SELECT firstName
     <if test="includeLastName != null">, lastName</if>
     FROM names
