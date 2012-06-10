@@ -21,8 +21,10 @@ import java.util.List;
 import java.util.Map;
 import org.apache.ibatis.builder.BaseBuilder;
 import org.apache.ibatis.builder.BuilderException;
+import org.apache.ibatis.builder.xml.XMLMapperEntityResolver;
 import org.apache.ibatis.mapping.SqlSource;
 import org.apache.ibatis.parsing.XNode;
+import org.apache.ibatis.parsing.XPathParser;
 import org.apache.ibatis.session.Configuration;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -34,6 +36,12 @@ public class XMLScriptBuilder extends BaseBuilder {
   public XMLScriptBuilder(Configuration configuration, XNode context) {
     super(configuration);
     this.context = context;
+  }
+
+  public XMLScriptBuilder(Configuration configuration, String context) {
+    super(configuration);
+    XPathParser parser = new XPathParser("<script>" + context + "</script>", false, null, new XMLMapperEntityResolver());
+    this.context = parser.evalNode("/script");
   }
 
   public SqlSource parseScriptNode() {

@@ -209,4 +209,20 @@ public class VelocityLanguageTest {
     }    
   }
 
+  @Test 
+  public void testLangXmlWithMapper() {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      Parameter p = new Parameter(true, "Fli%");
+      Mapper m = sqlSession.getMapper(Mapper.class);
+      List<Name> answer = m.selectXmlWithMapper(p);
+      assertEquals(3, answer.size());
+      for (Name n : answer) {
+        assertEquals("Flintstone", n.getLastName());
+      }
+    } finally {
+      sqlSession.close();
+    }    
+  }
+
 }
