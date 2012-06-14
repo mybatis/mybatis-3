@@ -105,13 +105,29 @@ public class DynSqlTest {
   }
 
   @Test
+  public void testSelectLike() {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+
+      List<Map<String, Object>> answer = sqlSession.selectList("org.apache.ibatis.submitted.dynsql.selectLike", "Ba");
+
+      assertTrue(answer.size() == 2);
+      assertEquals(new Integer(4), answer.get(0).get("ID"));
+      assertEquals(new Integer(6), answer.get(1).get("ID"));
+
+    } finally {
+      sqlSession.close();
+    }
+  }
+
+  @Test
   public void testNumerics() {
     SqlSession sqlSession = sqlSessionFactory.openSession();
     try {
       List<NumericRow> answer = sqlSession.selectList("org.apache.ibatis.submitted.dynsql.selectNumerics");
 
       assertTrue(answer.size() == 1);
-      
+
       NumericRow row = answer.get(0);
       assertEquals(1, (int) row.getId());
       assertEquals(2, (int) row.getTinynumber());
@@ -123,7 +139,7 @@ public class DynSqlTest {
       assertEquals((Float) 8.0f, row.getRealnumber());
       assertEquals((Float) 9.0f, row.getFloatnumber());
       assertEquals((Double) 10.0, row.getDoublenumber());
-      
+
     } finally {
       sqlSession.close();
     }

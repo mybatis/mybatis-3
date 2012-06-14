@@ -34,7 +34,7 @@
     <result column="floatnumber" property="floatnumber" jdbcType="FLOAT"/>
     <result column="doublenumber" property="doublenumber" jdbcType="DOUBLE"/>
   </resultMap>
-  
+
   <select id="select" parameterType="org.apache.ibatis.submitted.dynsql.Parameter" resultType="map">
     <if test="enabled">
       <foreach collection="ids" item="id" separator="union">
@@ -50,8 +50,16 @@
       select * from ${schema}.names where id = #{id}
     </foreach>
   </select>
-  
+
   <select id="selectNumerics" resultMap="numericRow">
     select * from ibtest.numerics
+  </select>
+
+  <select id="selectLike" resultType="map" parameterType="string">
+    <bind name="pattern" value="'%' + _parameter + '%'" />
+    SELECT *
+    FROM ibtest.names
+    WHERE description LIKE #{pattern}
+    ORDER BY id
   </select>
 </mapper>

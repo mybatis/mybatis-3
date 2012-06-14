@@ -156,7 +156,7 @@ alias CDATA #REQUIRED
 type CDATA #REQUIRED
 >
 
-<!ELEMENT select (#PCDATA | include | trim | where | set | foreach | choose | if)*>
+<!ELEMENT select (#PCDATA | include | trim | where | set | foreach | choose | if | bind)*>
 <!ATTLIST select
 id CDATA #REQUIRED
 parameterMap CDATA #IMPLIED
@@ -173,7 +173,7 @@ databaseId CDATA #IMPLIED
 lang CDATA #IMPLIED
 >
 
-<!ELEMENT insert (#PCDATA | selectKey | include | trim | where | set | foreach | choose | if)*>
+<!ELEMENT insert (#PCDATA | selectKey | include | trim | where | set | foreach | choose | if | bind)*>
 <!ATTLIST insert
 id CDATA #REQUIRED
 parameterMap CDATA #IMPLIED
@@ -188,7 +188,7 @@ databaseId CDATA #IMPLIED
 lang CDATA #IMPLIED
 >
 
-<!ELEMENT selectKey (#PCDATA | include | trim | where | set | foreach | choose | if)*>
+<!ELEMENT selectKey (#PCDATA | include | trim | where | set | foreach | choose | if | bind)*>
 <!ATTLIST selectKey
 resultType CDATA #IMPLIED
 statementType (STATEMENT|PREPARED|CALLABLE) #IMPLIED
@@ -197,7 +197,7 @@ order (BEFORE|AFTER) #IMPLIED
 databaseId CDATA #IMPLIED
 >
 
-<!ELEMENT update (#PCDATA | include | trim | where | set | foreach | choose | if)*>
+<!ELEMENT update (#PCDATA | include | trim | where | set | foreach | choose | if | bind)*>
 <!ATTLIST update
 id CDATA #REQUIRED
 parameterMap CDATA #IMPLIED
@@ -209,7 +209,7 @@ databaseId CDATA #IMPLIED
 lang CDATA #IMPLIED
 >
 
-<!ELEMENT delete (#PCDATA | include | trim | where | set | foreach | choose | if)*>
+<!ELEMENT delete (#PCDATA | include | trim | where | set | foreach | choose | if | bind)*>
 <!ATTLIST delete
 id CDATA #REQUIRED
 parameterMap CDATA #IMPLIED
@@ -226,6 +226,12 @@ lang CDATA #IMPLIED
 <!ELEMENT include EMPTY>
 <!ATTLIST include
 refid CDATA #REQUIRED
+>
+
+<!ELEMENT bind EMPTY>
+<!ATTLIST bind
+ name CDATA #REQUIRED
+ value CDATA #REQUIRED
 >
 
 <!ELEMENT sql (#PCDATA | include | trim | where | set | foreach | choose | if)*>

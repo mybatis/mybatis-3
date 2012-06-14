@@ -42,9 +42,9 @@ public class XMLScriptBuilder extends BaseBuilder {
   public XMLScriptBuilder(Configuration configuration, String context) {
     super(configuration);
     XPathParser parser = new XPathParser(
-        "<script>" + context + "</script>", 
-        false, 
-        configuration.getVariables(), 
+        "<script>" + context + "</script>",
+        false,
+        configuration.getVariables(),
         new XMLMapperEntityResolver());
     this.context = parser.evalNode("/script");
   }
@@ -89,11 +89,21 @@ public class XMLScriptBuilder extends BaseBuilder {
       put("choose", new ChooseHandler());
       put("when", new IfHandler());
       put("otherwise", new OtherwiseHandler());
+      put("bind", new BindHandler());
     }
   };
 
   private interface NodeHandler {
     void handleNode(XNode nodeToHandle, List<SqlNode> targetContents);
+  }
+
+  private class BindHandler implements NodeHandler {
+    public void handleNode(XNode nodeToHandle, List<SqlNode> targetContents) {
+      final String name = nodeToHandle.getStringAttribute("name");
+      final String expression = nodeToHandle.getStringAttribute("value");
+      final VarDeclSqlNode node = new VarDeclSqlNode(name, expression);
+      targetContents.add(node);
+    }
   }
 
   private class TrimHandler implements NodeHandler {
