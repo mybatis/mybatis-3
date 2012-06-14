@@ -108,6 +108,7 @@ public class ScriptRunnerTest extends BaseDataTest {
     ScriptRunner runner = new ScriptRunner(conn);
     runner.setAutoCommit(true);
     runner.setStopOnError(true);
+    runJPetStoreScripts(runner);
 
     String resource = "org/apache/ibatis/jdbc/ScriptCommentAfterEOLTerminator.sql";
     Reader reader = Resources.getResourceAsReader(resource);
