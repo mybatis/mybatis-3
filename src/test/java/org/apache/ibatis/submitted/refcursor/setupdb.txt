@@ -27,6 +27,7 @@ break the MyBatis build on machines that don't have PostgreSQL setup.
 1. Download and install PostgreSQL.  Set the password for the
    "postgres" userid to "root".  If you choose a different password,
    you will need to alter the MapperConfig.xml file accordingly.
+   [1] See steps for ubuntu
 2. Create a database called "mbtest"
 3. Create a schema in "mbtest" database called "mbtest"
 4. Create the following two tables:
@@ -93,3 +94,11 @@ break the MyBatis build on machines that don't have PostgreSQL setup.
      LANGUAGE plpgsql VOLATILE
      COST 100;
    ALTER FUNCTION mbtest.get_order(integer) OWNER TO postgres;
+
+[1] Installation in Ubuntu
+   sudo apt-get install postgresql
+   sudo su - postgres
+   createdb mbtest
+   psql mbtest
+   CREATE SCHEMA mbtest;
+   ALTER USER postgres WITH PASSWORD 'root';
