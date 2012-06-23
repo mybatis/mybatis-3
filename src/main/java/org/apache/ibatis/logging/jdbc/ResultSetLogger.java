@@ -23,15 +23,12 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 
 import org.apache.ibatis.logging.Log;
-import org.apache.ibatis.logging.LogFactory;
 import org.apache.ibatis.reflection.ExceptionUtil;
 
 /*
  * ResultSet proxy to add logging
  */
 public final class ResultSetLogger extends BaseJdbcLogger implements InvocationHandler {
-
-  private static final Log log = LogFactory.getLog(ResultSet.class);
 
   private boolean first = true;
   private ResultSet rs;
@@ -111,11 +108,6 @@ public final class ResultSetLogger extends BaseJdbcLogger implements InvocationH
    */
   public ResultSet getRs() {
     return rs;
-  }
-
-  @Override
-  protected Log getLog() {
-    return log;
   }
 
 }

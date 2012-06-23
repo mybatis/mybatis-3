@@ -23,15 +23,12 @@ import java.sql.PreparedStatement;
 import java.sql.Statement;
 
 import org.apache.ibatis.logging.Log;
-import org.apache.ibatis.logging.LogFactory;
 import org.apache.ibatis.reflection.ExceptionUtil;
 
 /*
  * Connection proxy to add logging
  */
 public final class ConnectionLogger extends BaseJdbcLogger implements InvocationHandler {
-
-  private static final Log log = LogFactory.getLog(Connection.class);
 
   private Connection connection;
 
@@ -96,11 +93,6 @@ public final class ConnectionLogger extends BaseJdbcLogger implements Invocation
    */
   public Connection getConnection() {
     return connection;
-  }
-
-  @Override
-  protected Log getLog() {
-    return log;
   }
 
 }

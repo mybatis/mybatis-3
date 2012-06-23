@@ -23,15 +23,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 import org.apache.ibatis.logging.Log;
-import org.apache.ibatis.logging.LogFactory;
 import org.apache.ibatis.reflection.ExceptionUtil;
 
 /*
  * PreparedStatement proxy to add logging
  */
 public final class PreparedStatementLogger extends BaseJdbcLogger implements InvocationHandler {
-
-  private static final Log log = LogFactory.getLog(PreparedStatement.class);
 
   private PreparedStatement statement;
 
@@ -104,11 +101,6 @@ public final class PreparedStatementLogger extends BaseJdbcLogger implements Inv
    */
   public PreparedStatement getPreparedStatement() {
     return statement;
-  }
-
-  @Override
-  protected Log getLog() {
-    return log;
   }
 
 }

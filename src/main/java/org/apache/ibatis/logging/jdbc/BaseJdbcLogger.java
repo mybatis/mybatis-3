@@ -120,34 +120,27 @@ public abstract class BaseJdbcLogger {
   }
 
   protected boolean isDebugEnabled() {
-    return statementLog.isDebugEnabled() || getLog().isDebugEnabled();
+    return statementLog.isDebugEnabled();
   }
 
   protected boolean isTraceEnabled() {
-    return statementLog.isTraceEnabled() || getLog().isTraceEnabled();
+    return statementLog.isTraceEnabled();
   }
 
   protected void debug(String text) {
     if (statementLog.isDebugEnabled()) {
       statementLog.debug(text);
-    } else {
-      getLog().debug(text);
     }
   }
 
   protected void trace(String text) {
     if (statementLog.isTraceEnabled()) {
       statementLog.trace(text);
-    } else {
-      getLog().trace(text);
     }
   }
-
-  protected abstract Log getLog();
 
   public Log getStatementLog() {
     return statementLog;
   }
 
 }
-

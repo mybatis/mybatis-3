@@ -48,9 +48,6 @@ public abstract class BaseExecutor implements Executor {
 
   private static final Log log = LogFactory.getLog(BaseExecutor.class);
 
-  // for backward compatibility with 3.0 style logging
-  private static final Log connectionLog = LogFactory.getLog(Connection.class);
-
   protected Transaction transaction;
 
   protected ConcurrentLinkedQueue<DeferredLoad> deferredLoads;
@@ -278,7 +275,7 @@ public abstract class BaseExecutor implements Executor {
 
   protected Connection getConnection(Log statementLog) throws SQLException {
     Connection connection = transaction.getConnection();
-    if (statementLog.isDebugEnabled() || connectionLog.isDebugEnabled()) {
+    if (statementLog.isDebugEnabled()) {
       return ConnectionLogger.newInstance(connection, statementLog);
     } else {
       return connection;
