@@ -21,6 +21,10 @@ import org.apache.ibatis.io.Resources;
 
 public final class LogFactory {
 
+  /** 
+   * Marker to be used by logging implementations that support markers 
+   */
+  public static final String MARKER = "MYBATIS";
   /**
    * Name for the global logger. Reference java.util.Logger.GLOBAL_LOGGER_NAME
    * directly once we drop JDK 5 compatibility.

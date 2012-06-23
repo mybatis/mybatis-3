@@ -136,6 +136,8 @@ log4j.appender.stdout.layout.ConversionPattern=%5p [%t] - %m%n]]></source>
 
 		<p>Sí, como ya te habrás dado cuenta, no hay ninguna diferencia entre configurar el logging para un mapper o para un fichero XML.</p>
 
+        <p><span class="label important">NOTA</span> Si usas SLF4J MyBatis le llamará usando MYBATIS como marker.</p>
+
         <p>El resto de la configuración sirve para configurar los appenders, lo cual queda fuera del ámbito de este documento. Sin embargo, puedes encontrar más información en el site de Log4j (la url está más arriba). O, puedes simplemente experimentar para ver los efectos que consigues con las distintas opciones de configuración.</p>
       </subsection>
     </section>
