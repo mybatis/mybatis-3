@@ -110,9 +110,9 @@
 
   <properties>
     <findbugs.onlyAnalyze>org.apache.ibatis.*</findbugs.onlyAnalyze>
-    <clirr.comparisonVersion>3.0.6</clirr.comparisonVersion>
+    <clirr.comparisonVersion>3.1.1</clirr.comparisonVersion>
     <osgi.export>org.apache.ibatis.*;version=${project.version};-noimport:=true</osgi.export>
-    <osgi.import>!ognl,net.sf.cglib.proxy;resolution:=optional,org.apache.commons.logging;resolution:=optional,org.apache.log4j;resolution:=optional,org.slf4j;resolution:=optional,*</osgi.import>
+    <osgi.import>!ognl,net.sf.cglib.proxy;resolution:=optional,javassist.util.proxy;resolution:=optional,org.apache.commons.logging;resolution:=optional,org.apache.log4j;resolution:=optional,org.slf4j;resolution:=optional,*</osgi.import>
     <osgi.dynamicImport>*</osgi.dynamicImport>
     <!--
      | see distributionManagement.site.url
@@ -153,11 +153,18 @@
       <optional>true</optional>
     </dependency>
     <dependency>
+      <groupId>org.javassist</groupId>
+      <artifactId>javassist</artifactId>
+      <version>3.16.1-GA</version>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
       <groupId>cglib</groupId>
       <artifactId>cglib</artifactId>
       <version>2.2.2</version>
       <optional>true</optional>
     </dependency>
+    
     <!-- Test dependencies -->
     <dependency>
       <groupId>junit</groupId>

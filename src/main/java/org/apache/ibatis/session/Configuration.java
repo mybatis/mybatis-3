@@ -43,6 +43,9 @@ import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.executor.ReuseExecutor;
 import org.apache.ibatis.executor.SimpleExecutor;
 import org.apache.ibatis.executor.keygen.KeyGenerator;
+import org.apache.ibatis.executor.loader.CglibProxyFactory;
+import org.apache.ibatis.executor.loader.JavassistProxyFactory;
+import org.apache.ibatis.executor.loader.ProxyFactory;
 import org.apache.ibatis.executor.parameter.ParameterHandler;
 import org.apache.ibatis.executor.resultset.FastResultSetHandler;
 import org.apache.ibatis.executor.resultset.NestedResultSetHandler;
@@ -50,7 +53,6 @@ import org.apache.ibatis.executor.resultset.ResultSetHandler;
 import org.apache.ibatis.executor.statement.RoutingStatementHandler;
 import org.apache.ibatis.executor.statement.StatementHandler;
 import org.apache.ibatis.io.ResolverUtil;
-import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.Environment;
 import org.apache.ibatis.mapping.MappedStatement;
@@ -83,7 +85,6 @@ public class Configuration {
   protected boolean safeRowBoundsEnabled = false;
   protected boolean safeResultHandlerEnabled = true;
   protected boolean mapUnderscoreToCamelCase = false;
-  protected boolean lazyLoadingEnabled = false;
   protected boolean aggressiveLazyLoading = true;
   protected boolean multipleResultSetsEnabled = true;
   protected boolean useGeneratedKeys = false;
@@ -100,6 +101,9 @@ public class Configuration {
   protected ObjectFactory objectFactory = new DefaultObjectFactory();
   protected ObjectWrapperFactory objectWrapperFactory = new DefaultObjectWrapperFactory();
   protected MapperRegistry mapperRegistry = new MapperRegistry(this);
+  
+  protected boolean lazyLoadingEnabled = false;
+  protected ProxyFactory proxyFactory;
 
   protected String databaseId;
 
@@ -107,6 +111,7 @@ public class Configuration {
   protected final TypeHandlerRegistry typeHandlerRegistry = new TypeHandlerRegistry();
   protected final TypeAliasRegistry typeAliasRegistry = new TypeAliasRegistry();
   protected final LanguageDriverRegistry languageRegistry = new LanguageDriverRegistry();
+  
   protected final Map<String, MappedStatement> mappedStatements = new StrictMap<MappedStatement>("Mapped Statements collection");
   protected final Map<String, Cache> caches = new StrictMap<Cache>("Caches collection");
   protected final Map<String, ResultMap> resultMaps = new StrictMap<ResultMap>("Result Maps collection");
@@ -214,14 +219,18 @@ public class Configuration {
   }
 
   public void setLazyLoadingEnabled(boolean lazyLoadingEnabled) {
-    if (lazyLoadingEnabled) {
-      try {
-        Resources.classForName("net.sf.cglib.proxy.Enhancer");
-      } catch (Throwable e) {
-        throw new IllegalStateException("Cannot enable lazy loading because CGLIB is not available. Add CGLIB to your classpath.", e);
-      }
+    if (lazyLoadingEnabled && this.proxyFactory == null) {
+      this.proxyFactory = new CglibProxyFactory();
     }
     this.lazyLoadingEnabled = lazyLoadingEnabled;
+  }
+
+  public ProxyFactory getProxyFactory() {
+    return proxyFactory;
+  }
+
+  public void setProxyFactory(ProxyFactory proxyFactory) {
+    this.proxyFactory = proxyFactory;
   }
 
   public boolean isAggressiveLazyLoading() {
@@ -401,6 +410,10 @@ public class Configuration {
     return executor;
   }
 
+  public ProxyFactory newProxyFactory() {
+    return new JavassistProxyFactory();
+  }
+  
   public void addKeyGenerator(String id, KeyGenerator keyGenerator) {
     keyGenerators.put(id, keyGenerator);
   }

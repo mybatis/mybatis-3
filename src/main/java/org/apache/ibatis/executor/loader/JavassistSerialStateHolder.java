@@ -24,7 +24,7 @@ import java.util.Set;
 
 import org.apache.ibatis.reflection.factory.ObjectFactory;
 
-class SerialStateHolder implements Serializable {
+class JavassistSerialStateHolder implements Serializable {
 
   private static final long serialVersionUID = 9018585337519878124L;
   private Object userBean;
@@ -33,8 +33,12 @@ class SerialStateHolder implements Serializable {
   private Class<?>[] constructorArgTypes;
   private Object[] constructorArgs;
 
-  public SerialStateHolder(final Object userBean, final Set<String> unloadedProperties,
-      final ObjectFactory objectFactory, List<Class<?>> constructorArgTypes, List<Object> constructorArgs) {
+  public JavassistSerialStateHolder(
+      final Object userBean, 
+      final Set<String> unloadedProperties,
+      final ObjectFactory objectFactory, 
+      List<Class<?>> constructorArgTypes, 
+      List<Object> constructorArgs) {
     this.userBean = userBean;
     this.unloadedProperties = unloadedProperties.toArray(new String[unloadedProperties.size()]);
     this.objectFactory = objectFactory;
@@ -46,7 +50,7 @@ class SerialStateHolder implements Serializable {
     Set<String> arrayProps = new HashSet<String>(Arrays.asList(this.unloadedProperties));
     List<Class<?>> arrayTypes = Arrays.asList(this.constructorArgTypes);
     List<Object> arrayValues = Arrays.asList(this.constructorArgs);
-    return ResultObjectProxy.createDeserializationProxy(userBean, arrayProps, objectFactory, arrayTypes, arrayValues);
+    return new JavassistProxyFactory().createDeserializationProxy(userBean, arrayProps, objectFactory, arrayTypes, arrayValues);
   }
 
 }
