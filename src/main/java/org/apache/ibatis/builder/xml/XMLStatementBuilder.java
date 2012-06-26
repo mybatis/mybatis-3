@@ -15,6 +15,7 @@
  */
 package org.apache.ibatis.builder.xml;
 
+import java.util.List;
 import java.util.Locale;
 
 import org.apache.ibatis.builder.BaseBuilder;
@@ -53,7 +54,7 @@ public class XMLStatementBuilder extends BaseBuilder {
     String id = context.getStringAttribute("id");
     String databaseId = context.getStringAttribute("databaseId");
 
-    if (!databaseIdMatchesCurrent(id, databaseId)) {
+    if (!databaseIdMatchesCurrent(id, databaseId, this.requiredDatabaseId)) {
       return;
     }
 
@@ -84,10 +85,11 @@ public class XMLStatementBuilder extends BaseBuilder {
 
     // Parse selectKey after includes,
     // in case if IncompleteElementException (issue #291)
-    XNode selectKeyNode = context.evalNode("selectKey");
-    if (selectKeyNode != null) {
-      parseSelectKeyNode(id, selectKeyNode, parameterTypeClass, langDriver, databaseId);
+    List<XNode> selectKeyNodes = context.evalNodes("selectKey");
+    if (configuration.getDatabaseId() != null) {
+      parseSelectKeyNodes(id, selectKeyNodes, parameterTypeClass, langDriver, configuration.getDatabaseId());
     }
+    parseSelectKeyNodes(id, selectKeyNodes, parameterTypeClass, langDriver, null);
 
     // Parse the SQL (pre: <selectKey> and <include> were parsed and removed)
     SqlSource sqlSource = langDriver.createSqlSource(configuration, context, parameterTypeClass);
@@ -109,9 +111,18 @@ public class XMLStatementBuilder extends BaseBuilder {
         fetchSize, timeout, parameterMap, parameterTypeClass, resultMap, resultTypeClass,
         resultSetTypeEnum, flushCache, useCache, keyGenerator, keyProperty, keyColumn, databaseId, langDriver);
   }
+  
+  public void parseSelectKeyNodes(String parentId, List<XNode> list, Class<?> parameterTypeClass, LanguageDriver langDriver, String skRequiredDatabaseId) {
+    for (XNode nodeToHandle : list) {
+      String id = parentId + SelectKeyGenerator.SELECT_KEY_SUFFIX;
+      String databaseId = nodeToHandle.getStringAttribute("databaseId");
+      if (databaseIdMatchesCurrent(id, databaseId, skRequiredDatabaseId)) {
+        parseSelectKeyNode(id, nodeToHandle, parameterTypeClass, langDriver, databaseId);
+      }
+    }
+  }
 
-  public void parseSelectKeyNode(String parentId, XNode nodeToHandle, Class<?> parameterTypeClass, LanguageDriver langDriver, String databaseId) {
-    String id = parentId + SelectKeyGenerator.SELECT_KEY_SUFFIX;
+  public void parseSelectKeyNode(String id, XNode nodeToHandle, Class<?> parameterTypeClass, LanguageDriver langDriver, String databaseId) {
     String resultType = nodeToHandle.getStringAttribute("resultType");
     Class<?> resultTypeClass = resolveClass(resultType);
     StatementType statementType = StatementType.valueOf(nodeToHandle.getStringAttribute("statementType", StatementType.PREPARED.toString()));
@@ -142,7 +153,7 @@ public class XMLStatementBuilder extends BaseBuilder {
     nodeToHandle.getParent().getNode().removeChild(nodeToHandle.getNode());
   }
 
-  private boolean databaseIdMatchesCurrent(String id, String databaseId) {
+  private boolean databaseIdMatchesCurrent(String id, String databaseId, String requiredDatabaseId) {
     if (requiredDatabaseId != null) {
       if (!requiredDatabaseId.equals(databaseId)) {
         return false;

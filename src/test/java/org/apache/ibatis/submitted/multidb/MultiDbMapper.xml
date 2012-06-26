@@ -72,4 +72,19 @@
 		</if>
 	</insert>
 
+	<insert id="insert2" parameterType="org.apache.ibatis.submitted.multidb.User">
+		<selectKey keyProperty="id" resultType="int" order="BEFORE">
+				select max(id) + 1 from common
+		</selectKey>
+		<selectKey keyProperty="id" resultType="int" order="BEFORE" databaseId="hsql">
+				select max(id) + 1 from hsql
+		</selectKey>
+		<if test="_databaseId == 'hsql'">
+			insert into hsql values (#{id}, #{name})
+		</if>
+		<if test="_databaseId != 'hsql'">
+			insert into common values (#{id}, #{name})
+		</if>
+	</insert>
+
 </mapper>
