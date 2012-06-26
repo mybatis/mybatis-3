@@ -28,9 +28,9 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.Ignore;
 import org.junit.Test;
 
+@Ignore("see issue #614")
 public class SerializeCircularTest {
 
-  @Ignore("see issue #614")
 	@Test
 	public void serializeAndDeserializeObjectsWithAggressiveLazyLoadingWithoutPreloadingAttribute() 
 	throws Exception {
