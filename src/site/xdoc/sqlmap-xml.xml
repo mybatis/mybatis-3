@@ -331,7 +331,13 @@ ps.setInt(1,id);]]></source>
                 first column in the table.
               </td>
             </tr>
-
+            <tr>
+              <td>databaseId</td>
+              <td>In case there is a configured databaseIdProvider, MyBatis will load all statements with no <code>databaseId</code> 
+              attribute or with a <code>databaseId</code> that matches the current one. If case the same statement
+              if found with and without the <code>databaseId</code> the latter will be discarded.
+              </td>
+            </tr>
           </tbody>
         </table>
 

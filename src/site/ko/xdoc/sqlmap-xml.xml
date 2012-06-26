@@ -257,7 +257,12 @@ Server 와 같은 RDBMS 의 자동 증가 필드)를 받는 JDBC getGeneratedKey
               <td>(입력(insert)에만 적용) 생성키를 가진 테이블의 칼럼명을 셋팅. 키 칼럼이 테이블이 첫번째 칼럼이
 아닌 데이터베이스(PostgreSQL 처럼)에서만 필요하다.</td>
             </tr>
-
+            <tr>
+              <td>databaseId</td>
+              <td>설정된 databaseIdProvider가 있는 경우, MyBatis는 <code>databaseId</code> 속성이 없는 모든 구문을 로드하거나 일치하는 <code>databaseId</code>와 함께 로드될 것이다. 
+              같은 구문에서 <code>databaseId</code>가 있거나 없는 경우 모두 있다면 뒤에 나온 것이 무시된다. 
+              </td>
+            </tr>
           </tbody>
         </table>
 

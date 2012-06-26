@@ -317,7 +317,12 @@ ps.setInt(1,id);]]></source>
               <td>（insert のみ）テーブル内で自動生成が設定されている列の名前を指定します。この設定は、特定のデータベース（例えば PostgreSQL）で、テーブルの先頭以外の列にキーの自動生成が設定されている場合にのみ必要となります。
               </td>
             </tr>
-
+            <tr>
+              <td>databaseId</td>
+              <td>databaseIdProvider が設定されている場合、MyBatis は定義されているステートメントの中で <code>databaseId</code> 属性が指定されていないステートメントおよび現在の設定と一致する <code>databaseId</code> 属性を持ったステートメントをロードします。
+                同じステートメントで、<code>databaseId</code> 属性が指定されているものと指定されていないものが両方定義されていた場合、指定がないステートメントは無視されます。
+              </td>
+            </tr>
           </tbody>
         </table>
 

@@ -276,7 +276,13 @@ ps.setInt(1,id);]]></source>
               columna clave no es la primera de la tabla.
               </td>
             </tr>
-
+            <tr>
+              <td>databaseId</td>
+              <td>Si hay un DatabaseIdProvider configurado. MyBatis cargará todos los statements sin el atributo <code>databaseId</code> 
+              o aquellos con un <code>databaseId</code> que coincide con el actual. Si se encuentra un statement con y sin 
+              <code>databaseId</code> el último se descartará.
+              </td>
+            </tr>
           </tbody>
         </table>
 
