@@ -90,19 +90,54 @@ public class Reflector {
   }
 
   private void addGetMethods(Class<?> cls) {
+    Map<String, List<Method>> conflictingGetters = new HashMap<String, List<Method>>();
     Method[] methods = getClassMethods(cls);
     for (Method method : methods) {
       String name = method.getName();
       if (name.startsWith("get") && name.length() > 3) {
         if (method.getParameterTypes().length == 0) {
           name = PropertyNamer.methodToProperty(name);
-          addGetMethod(name, method);
+          addMethodConflict(conflictingGetters, name, method);
         }
       } else if (name.startsWith("is") && name.length() > 2) {
         if (method.getParameterTypes().length == 0) {
           name = PropertyNamer.methodToProperty(name);
-          addGetMethod(name, method);
+          addMethodConflict(conflictingGetters, name, method);
         }
+      }
+    }
+    resolveGetterConflicts(conflictingGetters);
+  }
+
+  private void resolveGetterConflicts(Map<String, List<Method>> conflictingGetters) {
+    for (String propName : conflictingGetters.keySet()) {
+      List<Method> getters = conflictingGetters.get(propName);
+      Iterator<Method> iterator = getters.iterator();
+      Method firstMethod = iterator.next();
+      if (getters.size() == 1) {
+        addGetMethod(propName, firstMethod);
+      } else {
+        Method getter = firstMethod;
+        Class<?> getterType = firstMethod.getReturnType();
+        while (iterator.hasNext()) {
+          Method method = iterator.next();
+          Class<?> methodType = method.getReturnType();
+          if (methodType.equals(getterType)) {
+            throw new ReflectionException("Illegal overloaded getter method with ambiguous type for property " 
+                + propName + " in class " + firstMethod.getDeclaringClass()
+                + ".  This breaks the JavaBeans " + "specification and can cause unpredicatble results.");
+          } else if (methodType.isAssignableFrom(getterType)) {
+            // OK getter type is descendant
+          } else if (getterType.isAssignableFrom(methodType)) {
+            getter = method;
+            getterType = methodType;
+          } else {
+            throw new ReflectionException("Illegal overloaded getter method with ambiguous type for property " 
+                + propName + " in class " + firstMethod.getDeclaringClass()
+                + ".  This breaks the JavaBeans " + "specification and can cause unpredicatble results.");
+          }
+        }
+        addGetMethod(propName, getter);
       }
     }
   }
@@ -122,18 +157,18 @@ public class Reflector {
       if (name.startsWith("set") && name.length() > 3) {
         if (method.getParameterTypes().length == 1) {
           name = PropertyNamer.methodToProperty(name);
-          addSetterConflict(conflictingSetters, name, method);
+          addMethodConflict(conflictingSetters, name, method);
         }
       }
     }
     resolveSetterConflicts(conflictingSetters);
   }
 
-  private void addSetterConflict(Map<String, List<Method>> conflictingSetters, String name, Method method) {
-    List<Method> list = conflictingSetters.get(name);
+  private void addMethodConflict(Map<String, List<Method>> conflictingMethods, String name, Method method) {
+    List<Method> list = conflictingMethods.get(name);
     if (list == null) {
       list = new ArrayList<Method>();
-      conflictingSetters.put(name, list);
+      conflictingMethods.put(name, list);
     }
     list.add(method);
   }
@@ -276,7 +311,11 @@ public class Reflector {
   }
 
   private String getSignature(Method method) {
-    StringBuffer sb = new StringBuffer();
+    StringBuilder sb = new StringBuilder();
+    Class<?> returnType = method.getReturnType();
+    if (returnType != null) {
+      sb.append(returnType.getName()).append('#');
+    }
     sb.append(method.getName());
     Class<?>[] parameters = method.getParameterTypes();
     for (int i = 0; i < parameters.length; i++) {
