@@ -81,7 +81,7 @@ public class FastResultSetHandler implements ResultSetHandler {
     this.typeHandlerRegistry = configuration.getTypeHandlerRegistry();
     this.objectFactory = configuration.getObjectFactory();
     this.resultHandler = resultHandler;
-    this.proxyFactory = configuration.newProxyFactory();
+    this.proxyFactory = configuration.getProxyFactory();
   }
 
   //

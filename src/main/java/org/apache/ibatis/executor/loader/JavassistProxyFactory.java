@@ -50,7 +50,6 @@ public final class JavassistProxyFactory implements org.apache.ibatis.executor.l
     }
   }
 
-  @Override
   public Object createProxy(Object target, ResultLoaderMap lazyLoader, Configuration configuration, ObjectFactory objectFactory, List<Class<?>> constructorArgTypes, List<Object> constructorArgs) {
     return EnhancedResultObjectProxyImpl.createProxy(target, lazyLoader, configuration, objectFactory, constructorArgTypes, constructorArgs);
   }
@@ -59,7 +58,6 @@ public final class JavassistProxyFactory implements org.apache.ibatis.executor.l
     return EnhancedDeserializationProxyImpl.createProxy(target, unloadedProperties, objectFactory, constructorArgTypes, constructorArgs);
   }
 
-  @Override
   public void setProperties(Properties properties) {
   }
   

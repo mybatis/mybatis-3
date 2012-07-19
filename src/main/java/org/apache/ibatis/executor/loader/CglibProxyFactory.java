@@ -51,7 +51,6 @@ public final class CglibProxyFactory implements ProxyFactory {
     }
   }
   
-  @Override
   public Object createProxy(Object target, ResultLoaderMap lazyLoader, Configuration configuration, ObjectFactory objectFactory, List<Class<?>> constructorArgTypes, List<Object> constructorArgs) {
     return EnhancedResultObjectProxyImpl.createProxy(target, lazyLoader, configuration, objectFactory, constructorArgTypes, constructorArgs);
   }
@@ -60,7 +59,6 @@ public final class CglibProxyFactory implements ProxyFactory {
     return EnhancedDeserializationProxyImpl.createProxy(target, unloadedProperties, objectFactory, constructorArgTypes, constructorArgs);
   }
 
-  @Override
   public void setProperties(Properties properties) {
   }
 
@@ -128,7 +126,7 @@ public final class CglibProxyFactory implements ProxyFactory {
             }
             PropertyCopier.copyBeanProperties(type, enhanced, original);
             if (lazyLoader.size() > 0) {
-              return new JavassistSerialStateHolder(original, lazyLoader.getPropertyNames(), objectFactory, constructorArgTypes, constructorArgs);
+              return new CglibSerialStateHolder(original, lazyLoader.getPropertyNames(), objectFactory, constructorArgTypes, constructorArgs);
             } else {
               return original;
             }
@@ -186,7 +184,7 @@ public final class CglibProxyFactory implements ProxyFactory {
             original = objectFactory.create(type, constructorArgTypes, constructorArgs);
           }
           PropertyCopier.copyBeanProperties(type, enhanced, original);
-          return new JavassistSerialStateHolder(original, unloadedProperties, objectFactory, constructorArgTypes, constructorArgs);
+          return new CglibSerialStateHolder(original, unloadedProperties, objectFactory, constructorArgTypes, constructorArgs);
         } else {
           if (!FINALIZE_METHOD.equals(methodName) && PropertyNamer.isProperty(methodName)) {
             final String property = PropertyNamer.methodToProperty(methodName);

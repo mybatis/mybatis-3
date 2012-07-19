@@ -409,10 +409,6 @@ public class Configuration {
     executor = (Executor) interceptorChain.pluginAll(executor);
     return executor;
   }
-
-  public ProxyFactory newProxyFactory() {
-    return new JavassistProxyFactory();
-  }
   
   public void addKeyGenerator(String id, KeyGenerator keyGenerator) {
     keyGenerators.put(id, keyGenerator);
