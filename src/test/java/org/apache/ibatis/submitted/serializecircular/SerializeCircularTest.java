@@ -28,7 +28,7 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.Ignore;
 import org.junit.Test;
 
-@Ignore("see issue #614")
+//@Ignore("see issue #614")
 public class SerializeCircularTest {
 
 	@Test

@@ -21,13 +21,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-import org.junit.Ignore;
-import org.junit.Test;
-
-@Ignore("see issue #614")
 public class UtilityTester {
 	
-  @Test
 	public static void serializeAndDeserializeObject(Object myObject){
 
 		try {
