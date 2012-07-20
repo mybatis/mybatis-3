@@ -17,6 +17,7 @@ package org.apache.ibatis.executor.loader;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -24,6 +25,7 @@ import java.util.HashSet;
 
 import org.apache.ibatis.executor.ExecutorException;
 import org.apache.ibatis.reflection.factory.DefaultObjectFactory;
+import org.apache.ibatis.session.Configuration;
 import org.junit.Test;
 
 import domain.blog.Author;
@@ -32,6 +34,15 @@ public class CglibProxyTest extends SerializableProxyTest {
 
   public CglibProxyTest() {
     proxyFactory = new CglibProxyFactory();
+  }
+  
+  @Test
+  public void shouldCreateAProxyForAPartiallyLoadedBean() throws Exception {
+    ResultLoaderMap loader = new ResultLoaderMap();
+    loader.addLoader("id", null, null);
+    Object proxy = proxyFactory.createProxy(author, loader, new Configuration(), new DefaultObjectFactory(), new ArrayList<Class<?>>(), new ArrayList<Object>());
+    Author author2 = (Author) deserialize(serialize((Serializable) proxy));
+    assertTrue(author2.getClass().getName().contains("CGLIB"));
   }
 
   @Test(expected = ExecutorException.class)

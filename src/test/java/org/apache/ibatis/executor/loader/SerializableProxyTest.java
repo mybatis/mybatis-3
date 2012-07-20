@@ -30,8 +30,6 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-import javassist.util.proxy.Proxy;
-
 import org.apache.ibatis.executor.ExecutorException;
 import org.apache.ibatis.reflection.factory.DefaultObjectFactory;
 import org.apache.ibatis.session.Configuration;
@@ -146,16 +144,6 @@ public abstract class SerializableProxyTest {
       }
     }
     assertFalse(ownInterfaceFound);
-  }
-
-  @Test
-  public void shouldCreateAProxyForAPartiallyLoadedBean() throws Exception {
-    ResultLoaderMap loader = new ResultLoaderMap();
-    loader.addLoader("id", null, null);
-    Object proxy = proxyFactory.createProxy(author, loader, new Configuration(), new DefaultObjectFactory(), new ArrayList<Class<?>>(), new ArrayList<Object>());
-    Author author2 = (Author) deserialize(serialize((Serializable) proxy));
-//    assertTrue(author2.getClass().getName().contains("CGLIB"));
-    assertTrue(author2 instanceof Proxy);
   }
 
   @Test
