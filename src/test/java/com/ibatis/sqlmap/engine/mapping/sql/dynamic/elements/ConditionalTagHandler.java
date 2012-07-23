@@ -23,6 +23,7 @@ import java.math.BigInteger;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import org.apache.ibatis.reflection.SystemMetaObject;
 
 public abstract class ConditionalTagHandler extends BaseTagHandler {
 
@@ -69,7 +70,7 @@ public abstract class ConditionalTagHandler extends BaseTagHandler {
     Object value1;
     Class type;
 
-    MetaObject metaObject = MetaObject.forObject(parameterObject);
+    MetaObject metaObject = SystemMetaObject.forObject(parameterObject);
     if (prop != null) {
       value1 = metaObject.getValue(prop);
       type = metaObject.getGetterType(prop);

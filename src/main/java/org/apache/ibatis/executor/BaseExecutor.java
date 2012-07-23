@@ -245,8 +245,8 @@ public abstract class BaseExecutor implements Executor {
     if (ms.getStatementType() == StatementType.CALLABLE) {
       final Object cachedParameter = localOutputParameterCache.getObject(key);
       if (cachedParameter != null && parameter != null) {
-        final MetaObject metaCachedParameter = MetaObject.forObject(cachedParameter);
-        final MetaObject metaParameter = MetaObject.forObject(parameter);
+        final MetaObject metaCachedParameter = configuration.newMetaObject(cachedParameter);
+        final MetaObject metaParameter = configuration.newMetaObject(parameter);
         for (ParameterMapping parameterMapping : boundSql.getParameterMappings()) {
           if (parameterMapping.getMode() != ParameterMode.IN) {
             final String parameterName = parameterMapping.getProperty();

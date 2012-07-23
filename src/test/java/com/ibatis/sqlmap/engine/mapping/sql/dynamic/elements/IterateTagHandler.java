@@ -16,6 +16,7 @@
 package com.ibatis.sqlmap.engine.mapping.sql.dynamic.elements;
 
 import org.apache.ibatis.reflection.MetaObject;
+import org.apache.ibatis.reflection.SystemMetaObject;
 
 public class IterateTagHandler extends BaseTagHandler {
 
@@ -41,7 +42,7 @@ public class IterateTagHandler extends BaseTagHandler {
           prop = parentIterate.addIndexToTagProperty(prop);
         }
 
-        collection = MetaObject.forObject(parameterObject).getValue(prop);
+        collection = SystemMetaObject.forObject(parameterObject).getValue(prop);
       } else {
         collection = parameterObject;
       }

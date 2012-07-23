@@ -99,7 +99,7 @@ public class XMLConfigBuilder extends BaseBuilder {
       objectWrapperFactoryElement(root.evalNode("objectWrapperFactory"));
       proxyFactoryElement(root.evalNode("proxyFactory")); // read it before reading settings
       settingsElement(root.evalNode("settings"));
-      environmentsElement(root.evalNode("environments"));
+      environmentsElement(root.evalNode("environments")); // read it after objectFactory and objectWrapperFactory issue #631
       databaseIdProviderElement(root.evalNode("databaseIdProvider"));
       typeHandlerElement(root.evalNode("typeHandlers"));
       mapperElement(root.evalNode("mappers"));

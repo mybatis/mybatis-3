@@ -18,6 +18,7 @@ package com.ibatis.sqlmap.engine.mapping.sql.dynamic.elements;
 import org.apache.ibatis.reflection.MetaObject;
 
 import java.util.Map;
+import org.apache.ibatis.reflection.SystemMetaObject;
 
 public class IsPropertyAvailableTagHandler extends ConditionalTagHandler {
 
@@ -35,7 +36,7 @@ public class IsPropertyAvailableTagHandler extends ConditionalTagHandler {
       if (lastIndex != -1) {
         String firstPart = property.substring(0, lastIndex);
         String lastPart = property.substring(lastIndex + 1);
-        parameterObject = MetaObject.forObject(parameterObject).getValue(firstPart);
+        parameterObject = SystemMetaObject.forObject(parameterObject).getValue(firstPart);
         property = lastPart;
       }
 
@@ -44,7 +45,7 @@ public class IsPropertyAvailableTagHandler extends ConditionalTagHandler {
         // properties in Maps and that's not the behavior we want here
         return ((Map) parameterObject).containsKey(property);
       } else {
-        return MetaObject.forObject(parameterObject).hasGetter(property);
+        return SystemMetaObject.forObject(parameterObject).hasGetter(property);
       }
     }
   }

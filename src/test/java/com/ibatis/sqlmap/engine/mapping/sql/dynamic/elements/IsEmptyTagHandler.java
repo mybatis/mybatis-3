@@ -19,6 +19,7 @@ import org.apache.ibatis.reflection.MetaObject;
 
 import java.lang.reflect.Array;
 import java.util.Collection;
+import org.apache.ibatis.reflection.SystemMetaObject;
 
 public class IsEmptyTagHandler extends ConditionalTagHandler {
 
@@ -29,7 +30,7 @@ public class IsEmptyTagHandler extends ConditionalTagHandler {
       String prop = getResolvedProperty(ctx, tag);
       Object value;
       if (prop != null) {
-        value = MetaObject.forObject(parameterObject).getValue(prop);
+        value = SystemMetaObject.forObject(parameterObject).getValue(prop);
       } else {
         value = parameterObject;
       }

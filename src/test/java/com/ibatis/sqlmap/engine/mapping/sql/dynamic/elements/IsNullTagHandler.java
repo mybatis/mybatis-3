@@ -16,6 +16,7 @@
 package com.ibatis.sqlmap.engine.mapping.sql.dynamic.elements;
 
 import org.apache.ibatis.reflection.MetaObject;
+import org.apache.ibatis.reflection.SystemMetaObject;
 
 public class IsNullTagHandler extends ConditionalTagHandler {
 
@@ -26,7 +27,7 @@ public class IsNullTagHandler extends ConditionalTagHandler {
       String prop = getResolvedProperty(ctx, tag);
       Object value;
       if (prop != null) {
-        value = MetaObject.forObject(parameterObject).getValue(prop);
+        value = SystemMetaObject.forObject(parameterObject).getValue(prop);
       } else {
         value = parameterObject;
       }

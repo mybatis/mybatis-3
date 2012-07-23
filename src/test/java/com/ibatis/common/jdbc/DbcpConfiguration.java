@@ -21,6 +21,7 @@ import org.apache.ibatis.reflection.MetaObject;
 import javax.sql.DataSource;
 import java.util.Iterator;
 import java.util.Map;
+import org.apache.ibatis.reflection.SystemMetaObject;
 
 /*
  * Wrapper class to simplify use of DBCP
@@ -61,7 +62,7 @@ public class DbcpConfiguration {
   private BasicDataSource newDbcpConfiguration(Map map) {
     BasicDataSource basicDataSource = new BasicDataSource();
     Iterator props = map.keySet().iterator();
-    MetaObject metaDataSource = MetaObject.forObject(basicDataSource);
+    MetaObject metaDataSource = SystemMetaObject.forObject(basicDataSource);
     while (props.hasNext()) {
       String propertyName = (String) props.next();
       if (propertyName.startsWith(ADD_DRIVER_PROPS_PREFIX)) {
@@ -78,7 +79,7 @@ public class DbcpConfiguration {
 
   private Object convertValue(Object object, String propertyName, String value) {
     Object convertedValue = value;
-    MetaObject metaObject = MetaObject.forObject(object);
+    MetaObject metaObject = SystemMetaObject.forObject(object);
     Class targetType = metaObject.getSetterType(propertyName);
     if (targetType == Integer.class || targetType == int.class) {
       convertedValue = Integer.valueOf(value);

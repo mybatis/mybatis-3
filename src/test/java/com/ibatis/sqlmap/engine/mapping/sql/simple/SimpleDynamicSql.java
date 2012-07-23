@@ -23,6 +23,7 @@ import org.apache.ibatis.type.TypeHandlerRegistry;
 
 import java.util.List;
 import java.util.StringTokenizer;
+import org.apache.ibatis.reflection.SystemMetaObject;
 
 public class SimpleDynamicSql implements Sql {
 
@@ -70,7 +71,7 @@ public class SimpleDynamicSql implements Sql {
             if (typeHandlerRegistry.hasTypeHandler(parameterObject.getClass())) {
               value = parameterObject;
             } else {
-              value = MetaObject.forObject(parameterObject).getValue(token);
+              value = SystemMetaObject.forObject(parameterObject).getValue(token);
             }
           }
           if (value != null) {

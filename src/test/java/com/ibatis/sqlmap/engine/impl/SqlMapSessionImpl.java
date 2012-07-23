@@ -41,6 +41,7 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.*;
+import org.apache.ibatis.reflection.SystemMetaObject;
 
 public class SqlMapSessionImpl implements SqlMapSession {
 
@@ -116,8 +117,8 @@ public class SqlMapSessionImpl implements SqlMapSession {
       MappedStatement ms = configuration.getMappedStatement(id);
       for (ResultMap rm : ms.getResultMaps()) {
         for (ResultMapping mapping : rm.getPropertyResultMappings()) {
-          MetaObject metaUserObject = MetaObject.forObject(userObject);
-          MetaObject metaSystemObject = MetaObject.forObject(systemObject);
+          MetaObject metaUserObject = SystemMetaObject.forObject(userObject);
+          MetaObject metaSystemObject = SystemMetaObject.forObject(systemObject);
           String propName = mapping.getProperty();
           if (propName != null) {
             metaUserObject.setValue(propName, metaSystemObject.getValue(propName));
@@ -206,7 +207,7 @@ public class SqlMapSessionImpl implements SqlMapSession {
     List results = queryForList(id, parameterObject);
     Map map = new HashMap();
     for (Object result : results) {
-      MetaObject metaResult = MetaObject.forObject(result);
+      MetaObject metaResult = SystemMetaObject.forObject(result);
       Object key = metaResult.getValue(keyProp);
       if (valueProp == null) {
         map.put(key, result);
@@ -319,7 +320,7 @@ public class SqlMapSessionImpl implements SqlMapSession {
     }
     try {
       String property = keyStatement.getResultMaps().get(0).getResultMappings().get(0).getProperty();
-      MetaObject.forObject(parameterObject).setValue(property, key);
+      SystemMetaObject.forObject(parameterObject).setValue(property, key);
     } catch (Exception e) {
       //Ignore...sometimes code sucks.  This is a good example.
     }

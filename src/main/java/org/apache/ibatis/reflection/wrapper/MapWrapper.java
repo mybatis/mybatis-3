@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.reflection.MetaObject;
+import org.apache.ibatis.reflection.SystemMetaObject;
 import org.apache.ibatis.reflection.factory.ObjectFactory;
 import org.apache.ibatis.reflection.property.PropertyTokenizer;
 
@@ -66,7 +67,7 @@ public class MapWrapper extends BaseWrapper {
     PropertyTokenizer prop = new PropertyTokenizer(name);
     if (prop.hasNext()) {
       MetaObject metaValue = metaObject.metaObjectForProperty(prop.getIndexedName());
-      if (metaValue == MetaObject.NULL_META_OBJECT) {
+      if (metaValue == SystemMetaObject.NULL_META_OBJECT) {
         return Object.class;
       } else {
         return metaValue.getSetterType(prop.getChildren());
@@ -84,7 +85,7 @@ public class MapWrapper extends BaseWrapper {
     PropertyTokenizer prop = new PropertyTokenizer(name);
     if (prop.hasNext()) {
       MetaObject metaValue = metaObject.metaObjectForProperty(prop.getIndexedName());
-      if (metaValue == MetaObject.NULL_META_OBJECT) {
+      if (metaValue == SystemMetaObject.NULL_META_OBJECT) {
         return Object.class;
       } else {
         return metaValue.getGetterType(prop.getChildren());
@@ -107,7 +108,7 @@ public class MapWrapper extends BaseWrapper {
     if (prop.hasNext()) {
       if (map.containsKey(prop.getIndexedName())) {
         MetaObject metaValue = metaObject.metaObjectForProperty(prop.getIndexedName());
-        if (metaValue == MetaObject.NULL_META_OBJECT) {
+        if (metaValue == SystemMetaObject.NULL_META_OBJECT) {
           return map.containsKey(name);
         } else {
           return metaValue.hasGetter(prop.getChildren());

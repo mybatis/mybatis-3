@@ -22,6 +22,7 @@ import javax.sql.DataSource;
 import org.apache.ibatis.datasource.DataSourceException;
 import org.apache.ibatis.datasource.DataSourceFactory;
 import org.apache.ibatis.reflection.MetaObject;
+import org.apache.ibatis.reflection.SystemMetaObject;
 
 public class UnpooledDataSourceFactory implements DataSourceFactory {
 
@@ -36,7 +37,7 @@ public class UnpooledDataSourceFactory implements DataSourceFactory {
 
   public void setProperties(Properties properties) {
     Properties driverProperties = new Properties();
-    MetaObject metaDataSource = MetaObject.forObject(dataSource);
+    MetaObject metaDataSource = SystemMetaObject.forObject(dataSource);
     for (Object key : properties.keySet()) {
       String propertyName = (String) key;
       if (propertyName.startsWith(DRIVER_PROPERTY_PREFIX)) {

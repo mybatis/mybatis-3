@@ -19,21 +19,15 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.ibatis.reflection.factory.DefaultObjectFactory;
 import org.apache.ibatis.reflection.factory.ObjectFactory;
 import org.apache.ibatis.reflection.property.PropertyTokenizer;
 import org.apache.ibatis.reflection.wrapper.BeanWrapper;
 import org.apache.ibatis.reflection.wrapper.CollectionWrapper;
-import org.apache.ibatis.reflection.wrapper.DefaultObjectWrapperFactory;
 import org.apache.ibatis.reflection.wrapper.MapWrapper;
 import org.apache.ibatis.reflection.wrapper.ObjectWrapper;
 import org.apache.ibatis.reflection.wrapper.ObjectWrapperFactory;
 
 public class MetaObject {
-
-  public static final ObjectFactory DEFAULT_OBJECT_FACTORY = new DefaultObjectFactory();
-  public static final ObjectWrapperFactory DEFAULT_OBJECT_WRAPPER_FACTORY = new DefaultObjectWrapperFactory();
-  public static final MetaObject NULL_META_OBJECT = new MetaObject(NullObject.class, DEFAULT_OBJECT_FACTORY, DEFAULT_OBJECT_WRAPPER_FACTORY);
 
   private Object originalObject;
   private ObjectWrapper objectWrapper;
@@ -60,14 +54,10 @@ public class MetaObject {
 
   public static MetaObject forObject(Object object, ObjectFactory objectFactory, ObjectWrapperFactory objectWrapperFactory) {
     if (object == null) {
-      return NULL_META_OBJECT;
+      return SystemMetaObject.NULL_META_OBJECT;
     } else {
       return new MetaObject(object, objectFactory, objectWrapperFactory);
     }
-  }
-
-  public static MetaObject forObject(Object object) {
-    return forObject(object, DEFAULT_OBJECT_FACTORY, DEFAULT_OBJECT_WRAPPER_FACTORY);
   }
 
   public ObjectFactory getObjectFactory() {
@@ -114,7 +104,7 @@ public class MetaObject {
     PropertyTokenizer prop = new PropertyTokenizer(name);
     if (prop.hasNext()) {
       MetaObject metaValue = metaObjectForProperty(prop.getIndexedName());
-      if (metaValue == MetaObject.NULL_META_OBJECT) {
+      if (metaValue == SystemMetaObject.NULL_META_OBJECT) {
         return null;
       } else {
         return metaValue.getValue(prop.getChildren());
@@ -128,7 +118,7 @@ public class MetaObject {
     PropertyTokenizer prop = new PropertyTokenizer(name);
     if (prop.hasNext()) {
       MetaObject metaValue = metaObjectForProperty(prop.getIndexedName());
-      if (metaValue == MetaObject.NULL_META_OBJECT) {
+      if (metaValue == SystemMetaObject.NULL_META_OBJECT) {
         if (value == null && prop.getChildren() != null) {
           return; // don't instantiate child path if value is null
         } else {
@@ -150,9 +140,6 @@ public class MetaObject {
     return objectWrapper;
   }
 
-  private static class NullObject {
-  }
-  
   public boolean isCollection() {
     return objectWrapper.isCollection();
   }
