@@ -66,7 +66,7 @@ public class XMLScriptBuilder extends BaseBuilder {
           || child.getNode().getNodeType() == Node.TEXT_NODE) {
         String data = child.getStringBody("");
         contents.add(new TextSqlNode(data));
-      } else if (!"selectKey".equals(nodeName)) {
+      } else if (child.getNode().getNodeType() == Node.ELEMENT_NODE && !"selectKey".equals(nodeName)) { // issue #628
         NodeHandler handler = nodeHandlers.get(nodeName);
         if (handler == null) {
           throw new BuilderException("Unknown element <" + nodeName + "> in SQL statement.");
