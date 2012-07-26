@@ -212,14 +212,14 @@ try {
         name of “org.mybatis.example.BlogMapper.selectBlog”, as we did above
         in the following example:
       </p>
-      <source><![CDATA[Blog blog = (Blog) session.selectOne("org.mybatis.example.BlogMapper.selectBlog", 101);]]></source>
+      <source><![CDATA[Blog blog = session.selectOne("org.mybatis.example.BlogMapper.selectBlog", 101);]]></source>
       <p>
         Notice how similar this is to calling a method on a fully qualified Java
         class, and there's a reason for that. This name can be directly
         mapped to a Mapper class of the same name as the namespace, with a
         method that matches the name, parameter, and return type as the
         mapped select statement. This allows you to very simply call the
-        method against the Mapper interface as you sawabove, but here it is
+        method against the Mapper interface as you saw above, but here it is
         again in the following example:
       </p>
       <source><![CDATA[BlogMapper mapper = session.getMapper(BlogMapper.class);
