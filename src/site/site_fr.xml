@@ -20,11 +20,11 @@
 
   <bannerLeft>
     <name>MyBatis</name>
-    <src>../images/logo.png</src>
-    <alt>Logo MyBatis</alt>
+    <src>../../images/logo.png</src>
+    <alt>MyBatis logo</alt>
     <href>index.html</href>
   </bannerLeft>
-
+  
   <body>
     <menu name="Core">
       <item name="Introduction" href="index.html"/>
