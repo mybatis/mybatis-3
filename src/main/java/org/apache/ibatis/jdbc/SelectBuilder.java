@@ -15,6 +15,10 @@
  */
 package org.apache.ibatis.jdbc;
 
+/**
+ * @Deprecated Use the SQL Class
+ */
+@Deprecated
 public class SelectBuilder {
 
   private static final ThreadLocal<SQL> localSQL = new ThreadLocal<SQL>();
