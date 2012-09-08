@@ -28,17 +28,31 @@
   <body>
   <section name="Statement Builders">
   <subsection name="SelectBuilder">
-  <p>One of the nastiest things a Java developer will ever have to do is embed SQL in Java code. &#xa0;Usually this is done because the SQL has to be dynamically generated &#x2013; otherwise you could externalize it in a file or a stored proc. &#xa0;As you&#x2019;ve already seen, MyBatis has a powerful answer for dynamic SQL generation in its XML mapping features. &#xa0;However, sometimes it becomes necessary to build a SQL statement string inside of Java code. &#xa0;In that case, MyBatis has one more feature to help you out, before reducing yourself to the typical mess of plus signs, quotes, newlines, formatting problems and nested conditionals to deal with extra commas or AND conjunctions&#x2026; Indeed, dynamically generating SQL code in Java can be a real nightmare.</p>
-    <p>MyBatis 3 introduces a somewhat different concept to deal with the problem. &#xa0;We could have just created an instance of a class that lets you call methods against it to build a SQL statement one step at a time. &#xa0;But then our SQL ends up looking more like Java and less like SQL. &#xa0;Instead, we&#x2019;re trying something a little different. &#xa0;The end result is about as close to a Domain Specific Language that Java will ever achieve in its current form&#x2026;</p>
+  <p>One of the nastiest things a Java developer will ever have to do is embed SQL in Java code. &#xa0;Usually this is
+    done because the SQL has to be dynamically generated &#x2013; otherwise you could externalize it in a file or a
+    stored proc. &#xa0;As you&#x2019;ve already seen, MyBatis has a powerful answer for dynamic SQL generation in its
+    XML mapping features. &#xa0;However, sometimes it becomes necessary to build a SQL statement string inside of Java
+    code. &#xa0;In that case, MyBatis has one more feature to help you out, before reducing yourself to the typical mess
+    of plus signs, quotes, newlines, formatting problems and nested conditionals to deal with extra commas or
+    AND conjunctions&#x2026; Indeed, dynamically generating SQL code in Java can be a real nightmare.</p>
+    <p>MyBatis 3 introduces a somewhat different concept to deal with the problem. &#xa0;We could have
+      just created an instance of a class that lets you call methods against it to build a SQL statement one step at a
+      time. &#xa0;But then our SQL ends up looking more like Java and less like SQL. &#xa0;Instead, we&#x2019;re trying
+      something a little different. &#xa0;The end result is about as close to a Domain Specific Language that Java will
+      ever achieve in its current form&#x2026;</p>
     <p><strong>The Secrets of SelectBuilder</strong></p>
-    <p>The SelectBuilder class is not magical, nor does it do any of us any good if you don&#x2019;t know how it works. &#xa0;So right off the bat, let&#x2019;s look at what it does. &#xa0;SelectBuilder uses a combination of Static Imports and a ThreadLocal variable to enable a clean syntax that can be easily interlaced with conditionals and takes care of all of the SQL formatting for you. &#xa0;It allows us to create methods like this:</p>
+    <p>The SelectBuilder class is not magical, nor does it do any of us any good if you don&#x2019;t know how it works.
+      &#xa0;So right off the bat, let&#x2019;s look at what it does. &#xa0;SelectBuilder uses a combination of
+      Static Imports and a ThreadLocal variable to enable a clean syntax that can be easily interlaced with conditionals
+      and takes care of all of the SQL formatting for you. &#xa0;It allows us to create methods like this:</p>
 <source><![CDATA[public String selectBlogsSql() {
   BEGIN(); // Clears ThreadLocal variable
   SELECT("*");
   FROM("BLOG");
   return SQL();
 }]]></source>  
-    <p>That&#x2019;s a pretty simple example that you might just choose to build statically. &#xa0;So here&#x2019;s a more complicated example:</p>
+    <p>That&#x2019;s a pretty simple example that you might just choose to build statically. &#xa0;So here&#x2019;s a
+      more complicated example:</p>
 <source><![CDATA[private String selectPersonSql() {
   BEGIN(); // Clears ThreadLocal variable
   SELECT("P.ID, P.USERNAME, P.PASSWORD, P.FULL_NAME");
@@ -71,7 +85,9 @@
 "HAVING (P.LAST_NAME like ?) " +
 "OR (P.FIRST_NAME like ?) " +
 "ORDER BY P.ID, P.FULL_NAME";]]></source>  
-    <p>If you prefer that syntax, then you&#x2019;re still welcome to use it. &#xa0;It is quite error prone though. &#xa0;Notice the careful addition of a space at the end of each line. &#xa0; Now even if you do prefer that syntax, the next example is inarguably far simpler than Java String concatenation:</p>
+    <p>If you prefer that syntax, then you&#x2019;re still welcome to use it. &#xa0;It is quite error prone though.
+      &#xa0;Notice the careful addition of a space at the end of each line. &#xa0; Now even if you do prefer that syntax,
+      the next example is inarguably far simpler than Java String concatenation:</p>
 <source><![CDATA[private String selectPersonLike(Person p){
   BEGIN(); // Clears ThreadLocal variable
   SELECT("P.ID, P.USERNAME, P.PASSWORD, P.FIRST_NAME, P.LAST_NAME");
@@ -88,11 +104,25 @@
   ORDER_BY("P.LAST_NAME");
   return SQL();
 }]]></source>  
-    <p>What is so special about that example? &#xa0;Well, if you look closely, it doesn&#x2019;t have to worry about accidentally duplicating &#x201c;AND&#x201d; keywords, or choosing between &#x201c;WHERE&#x201d; and &#x201c;AND&#x201d; or neither! &#xa0;The statement above will generate a query by example for all PERSON records, ones with ID like the parameter, or the firstName like the parameter, or the lastName like the parameter &#x2013;or any combination of the three. The SelectBuilder takes care of understanding where &#x201c;WHERE&#x201d; needs to go, where an &#x201c;AND&#x201d; should be used and all of the String concatenation. &#xa0;Best of all, it does it almost regardless of which order you call these methods in (there&#x2019;s only one exception with the OR() method).</p>
-    <p>The two methods that may catch your eye are: &#xa0;BEGIN() and SQL(). &#xa0;In a nutshell, every SelectBuilder method should start with a call to BEGIN() and end with a call to SQL(). &#xa0;Of course you can extract methods in the middle to break up your logic, but the scope of the SQL generation should always begin with BEGIN() and end with SQL(). &#xa0;The BEGIN() method clears the ThreadLocal variable, to make sure you don&#x2019;t accidentally carry any state forward, and the SQL() method assembles your SQL statement based on the calls you made since the last call to BEGIN(). &#xa0;Note that BEGIN() has a synonym called RESET(), which does exactly the same thing but reads better in certain contexts.</p>
+    <p>What is so special about that example? &#xa0;Well, if you look closely, it doesn&#x2019;t have to worry about
+      accidentally duplicating &#x201c;AND&#x201d; keywords, or choosing between &#x201c;WHERE&#x201d;
+      and &#x201c;AND&#x201d; or neither! &#xa0;The statement above will generate a query by example for all PERSON
+      records, ones with ID like the parameter, or the firstName like the parameter, or the lastName like the parameter
+      &#x2013;or any combination of the three. The SelectBuilder takes care of understanding where &#x201c;WHERE&#x201d;
+      needs to go, where an &#x201c;AND&#x201d; should be used and all of the String concatenation. &#xa0;Best of all,
+      it does it almost regardless of which order you call these methods in (there&#x2019;s only one exception with the
+      OR() method).</p>
+    <p>The two methods that may catch your eye are: &#xa0;BEGIN() and SQL(). &#xa0;In a nutshell, every SelectBuilder
+      method should start with a call to BEGIN() and end with a call to SQL(). &#xa0;Of course you can extract methods
+      in the middle to break up your logic, but the scope of the SQL generation should always begin with BEGIN() and end
+      with SQL(). &#xa0;The BEGIN() method clears the ThreadLocal variable, to make sure you don&#x2019;t accidentally
+      carry any state forward, and the SQL() method assembles your SQL statement based on the calls you made since the
+      last call to BEGIN(). &#xa0;Note that BEGIN() has a synonym called RESET(), which does exactly the same thing but
+      reads better in certain contexts.</p>
     <p>To use the SelectBuilder as in the examples above, you simply need to import it statically as follows:</p>
 <source>import static org.apache.ibatis.jdbc.SelectBuilder.*;</source>
-    <p>Once this is imported, the class you&#x2019;re working within will have all of the SelectBuilder methods available to it. &#xa0;The complete set of methods is as follows:</p>
+    <p>Once this is imported, the class you&#x2019;re working within will have all of the SelectBuilder methods available
+      to it. &#xa0;The complete set of methods is as follows:</p>
     <table>
     <thead>
     <tr><th><p>Method</p></th><th><p>Description</p></th></tr></thead>
@@ -197,7 +227,9 @@
     </subsection>
 
     <subsection name="SqlBuilder">
-    <p>Similarly to SelectBuilder, MyBatis also includes a generalized SqlBuilder. It includes all the methods for SelectBuilder, as well as methods for building inserts, updates, and deletes. &#xa0;This class can be useful when building SQL strings in a DeleteProvider, InsertProvider, or UpdateProvider (as well as a SelectProvider). &#xa0;</p>
+    <p>Similarly to SelectBuilder, MyBatis also includes a generalized SqlBuilder. It includes all the methods for
+      SelectBuilder, as well as methods for building inserts, updates, and deletes. &#xa0;This class can be useful
+      when building SQL strings in a DeleteProvider, InsertProvider, or UpdateProvider (as well as a SelectProvider). &#xa0;</p>
     <p>To use the SqlBuilder as in the examples above, you simply need to import it statically as follows:</p>
     <source>import static org.apache.ibatis.jdbc.SqlBuilder.*;</source>
     <p>SqlBuilder contains all methods from SelectBuilder, as well as these additional methods:</p>
@@ -270,6 +302,60 @@ public String updatePersonSql() {
   return SQL();
 }]]></source>  
   </subsection>
+
+    <subsection name="The SQL Class">
+      <p>If the fact that SelectBuilder and SqlBuilder use ThreadLocal bothers you, or if your application has a technical
+      reason to avoid the use of ThreadLocal variables, then there is an alternative.  Beneath the SelectBuilder and
+      SqlBuilder classes is the SQL class.  This class is the foundation for the other two, and when used directly
+      avoids the use of a ThreadLocal variable.  It also removes the need for the BEGIN and RESET methods.</p>
+      <p>The consequence is that you now must either use the Builder Pattern style dot notation, or use an
+      anonymous inner class.  In the case of the anonymous inner class, any variables you use inside your SQL
+      code must be final.</p>
+      <p>To use the SQL class there is no need to statically import the clas.  Instead, just import the class normally.</p>
+      <source>import org.apache.ibatis.jdbc.SQL;</source>
+      <p>SQL contains all key methods from SqlBuilder. See the tables above for the complete list.</p>
+
+      <p>Here are some examples:</p>
+
+      <source><![CDATA[
+
+public String deletePersonSql() {
+  return new SQL() {{
+    DELETE_FROM("PERSON");
+    WHERE("ID = ${id}");
+  }}.toString();
+}
+
+public String insertPersonSql() {
+  String sql = new SQL()
+    .INSERT_INTO("PERSON");
+    .VALUES("ID, FIRST_NAME", "${id}, ${firstName}");
+    .VALUES("LAST_NAME", "${lastName}")
+    .toString();
+  return sql;
+}
+
+public String selectPersonLike(final String id, final String firstName, final String lastName) {
+  return new SQL() {{
+    SELECT("P.ID, P.USERNAME, P.PASSWORD, P.FIRST_NAME, P.LAST_NAME");
+    FROM("PERSON P");
+    if (id != null) {
+      WHERE("P.ID like ${id}");
+    }
+    if (firstName != null) {
+      WHERE("P.FIRST_NAME like ${firstName}");
+    }
+    if (lastName != null) {
+      WHERE("P.LAST_NAME like ${lastName}");
+    }
+    ORDER_BY("P.LAST_NAME");
+  }}.toString();
+}
+
+]]></source>
+    </subsection>
+
+
   </section>
   </body>
 
