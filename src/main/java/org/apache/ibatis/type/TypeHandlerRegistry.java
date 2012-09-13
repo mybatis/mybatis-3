@@ -240,6 +240,9 @@ public final class TypeHandlerRegistry {
       for (JdbcType handledJdbcType : mappedJdbcTypes.value()) {
         register(javaType, handledJdbcType, typeHandler);
       }
+      if (mappedJdbcTypes.includeNullJdbcType()) {
+        register(javaType, null, typeHandler);
+      }
     } else {
       register(javaType, null, typeHandler);
     }

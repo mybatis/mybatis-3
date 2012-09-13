@@ -24,4 +24,5 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 public @interface MappedJdbcTypes {
 	public JdbcType[] value();
+	boolean includeNullJdbcType() default false;
 }
