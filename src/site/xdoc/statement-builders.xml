@@ -349,7 +349,7 @@ public String updatePersonSql() {
 
       </subsection>
 
-      <subsection name="SqlBuilder and Select Builder (DEPRECATED)">
+      <subsection name="SqlBuilder and SelectBuilder (DEPRECATED)">
         <p>
           Originally we took a bit of a different approach, by utilizing a ThreadLocal variable to mask some of the
           language limitations that make Java DSLs a bit cumbersome. However, this approach is now deprecated, as modern
@@ -413,7 +413,7 @@ public String updatePersonSql() {
         </p>
 
         <source>import static org.apache.ibatis.jdbc.SelectBuilder.*;</source>
-        <source>import static org.apache.ibatis.jdbc.SelectBuilder.*;</source>
+        <source>import static org.apache.ibatis.jdbc.SqlBuilder.*;</source>
 
         <p>This allows us to create methods like these:</p>
 
