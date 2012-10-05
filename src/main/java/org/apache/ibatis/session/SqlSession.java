@@ -15,6 +15,7 @@
  */
 package org.apache.ibatis.session;
 
+import java.io.Closeable;
 import java.sql.Connection;
 import java.util.List;
 import java.util.Map;
@@ -26,7 +27,7 @@ import org.apache.ibatis.executor.BatchResult;
  * Through this interface you can execute commands, get mappers and manage transactions.
  *
  */
-public interface SqlSession {
+public interface SqlSession extends Closeable {
 
   /**
    * Retrieve a single row mapped from the statement key
