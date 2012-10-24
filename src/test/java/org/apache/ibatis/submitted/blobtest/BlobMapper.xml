@@ -24,12 +24,23 @@
       <arg column="blob" javaType="_byte[]"/>
     </constructor>
   </resultMap>
+
+  <resultMap type="org.apache.ibatis.submitted.blobtest.BlobRecord" id="blobRecordResultWithBlobObjects">
+    <constructor>
+      <idArg column="id" javaType="_int"/>
+      <arg column="blob" javaType="Byte[]"/>
+    </constructor>
+  </resultMap>
   
   <insert id="insert" parameterType="org.apache.ibatis.submitted.blobtest.BlobRecord">
     insert into blobtest.blobs values (#{id}, #{blob})
   </insert>
   
   <select id="selectAll" resultMap="blobRecordResult">
+    select * from blobtest.blobs
+  </select>
+
+  <select id="selectAllWithBlobObjects" resultMap="blobRecordResultWithBlobObjects">
     select * from blobtest.blobs
   </select>
 </mapper>

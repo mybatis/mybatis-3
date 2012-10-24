@@ -105,6 +105,9 @@ public final class TypeHandlerRegistry {
     register(JdbcType.DECIMAL, new BigDecimalTypeHandler());
     register(JdbcType.NUMERIC, new BigDecimalTypeHandler());
 
+    register(Byte[].class, new ByteObjectArrayTypeHandler());
+    register(Byte[].class, JdbcType.BLOB, new BlobByteObjectArrayTypeHandler());
+    register(Byte[].class, JdbcType.LONGVARBINARY, new BlobByteObjectArrayTypeHandler());
     register(byte[].class, new ByteArrayTypeHandler());
     register(byte[].class, JdbcType.BLOB, new BlobTypeHandler());
     register(byte[].class, JdbcType.LONGVARBINARY, new BlobTypeHandler());
