@@ -290,6 +290,7 @@ public abstract class BaseExecutor implements Executor {
     private final PerpetualCache localCache;
     private final ObjectFactory objectFactory;
     private final Configuration configuration;
+    private final ResultExtractor resultExtractor;
 
     public DeferredLoad(MappedStatement mappedStatement,
                         MetaObject resultObject,
@@ -303,6 +304,7 @@ public abstract class BaseExecutor implements Executor {
       this.localCache = localCache;
       this.objectFactory = configuration.getObjectFactory();
       this.configuration = configuration;
+      this.resultExtractor = new ResultExtractor(configuration, objectFactory);
     }
 
     public boolean canLoad() {
@@ -310,26 +312,10 @@ public abstract class BaseExecutor implements Executor {
     }
 
     public void load() {
-      Object value = null;
       @SuppressWarnings( "unchecked" ) // we suppose we get back a List
       List<Object> list = (List<Object>) localCache.getObject(key);
       Class<?> targetType = resultObject.getSetterType(property);
-      if (targetType.isAssignableFrom(list.getClass())) {
-        value = list;
-      } else if (objectFactory.isCollection(targetType)) {
-        value = objectFactory.create(targetType);
-        MetaObject metaObject = configuration.newMetaObject(value);
-        metaObject.addAll(list);
-      } else if (targetType.isArray()) {
-        Object[] array = (Object[]) Array.newInstance(targetType.getComponentType(), list.size());
-        value = list.toArray(array);
-      } else {
-        if (list != null && list.size() > 1) {
-          throw new ExecutorException("Statement returned more than one row, where no more than one was expected.");
-        } else if (list != null && list.size() == 1) {
-          value = list.get(0);
-        }
-      }
+      Object value = resultExtractor.extractObjectFromList(list, targetType);
       resultObject.setValue(property, value);
     }
 

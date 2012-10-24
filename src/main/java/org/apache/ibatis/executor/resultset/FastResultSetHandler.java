@@ -28,9 +28,11 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.cache.CacheKey;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.executor.ExecutorException;
+import org.apache.ibatis.executor.ResultExtractor;
 import org.apache.ibatis.executor.loader.ProxyFactory;
 import org.apache.ibatis.executor.loader.ResultLoader;
 import org.apache.ibatis.executor.loader.ResultLoaderMap;
@@ -70,6 +72,7 @@ public class FastResultSetHandler implements ResultSetHandler {
   protected final TypeHandlerRegistry typeHandlerRegistry;
   protected final ObjectFactory objectFactory;
   protected final ProxyFactory proxyFactory;
+  protected final ResultExtractor resultExtractor;
 
   public FastResultSetHandler(Executor executor, MappedStatement mappedStatement, ParameterHandler parameterHandler, ResultHandler resultHandler, BoundSql boundSql, RowBounds rowBounds) {
     this.executor = executor;
@@ -82,6 +85,7 @@ public class FastResultSetHandler implements ResultSetHandler {
     this.objectFactory = configuration.getObjectFactory();
     this.resultHandler = resultHandler;
     this.proxyFactory = configuration.getProxyFactory();
+    this.resultExtractor = new ResultExtractor(configuration, objectFactory);
   }
 
   //
@@ -440,8 +444,14 @@ public class FastResultSetHandler implements ResultSetHandler {
     if (nestedQueryParameterObject != null) {
       final BoundSql nestedBoundSql = nestedQuery.getBoundSql(nestedQueryParameterObject);
       final CacheKey key = executor.createCacheKey(nestedQuery, nestedQueryParameterObject, RowBounds.DEFAULT, nestedBoundSql);
-      final ResultLoader resultLoader = new ResultLoader(configuration, executor, nestedQuery, nestedQueryParameterObject, constructorMapping.getJavaType(), key, nestedBoundSql);
-      value = resultLoader.loadResult();
+      final Class<?> targetType = constructorMapping.getJavaType();
+      final Object nestedQueryCacheObject = getNestedQueryCacheObject(nestedQuery, key);
+      if (nestedQueryCacheObject != null && nestedQueryCacheObject instanceof List) {
+        value = resultExtractor.extractObjectFromList((List<Object>)nestedQueryCacheObject, targetType);
+      } else {
+        final ResultLoader resultLoader = new ResultLoader(configuration, executor, nestedQuery, nestedQueryParameterObject, targetType, key, nestedBoundSql);
+        value = resultLoader.loadResult();
+      }
     }
     return value;
   }
@@ -456,10 +466,14 @@ public class FastResultSetHandler implements ResultSetHandler {
     if (nestedQueryParameterObject != null) {
       final BoundSql nestedBoundSql = nestedQuery.getBoundSql(nestedQueryParameterObject);
       final CacheKey key = executor.createCacheKey(nestedQuery, nestedQueryParameterObject, RowBounds.DEFAULT, nestedBoundSql);
-      if (executor.isCached(nestedQuery, key)) {
+      final Class<?> targetType = propertyMapping.getJavaType();
+      final Object nestedQueryCacheObject = getNestedQueryCacheObject(nestedQuery, key);
+      if (nestedQueryCacheObject != null && nestedQueryCacheObject instanceof List) {
+        value = resultExtractor.extractObjectFromList((List<Object>)nestedQueryCacheObject, targetType);
+      } else if (executor.isCached(nestedQuery, key)) {
         executor.deferLoad(nestedQuery, metaResultObject, property, key);
       } else {
-        final ResultLoader resultLoader = new ResultLoader(configuration, executor, nestedQuery, nestedQueryParameterObject, propertyMapping.getJavaType(), key, nestedBoundSql);
+        final ResultLoader resultLoader = new ResultLoader(configuration, executor, nestedQuery, nestedQueryParameterObject, targetType, key, nestedBoundSql);
         if (configuration.isLazyLoadingEnabled()) {
           lazyLoader.addLoader(property, metaResultObject, resultLoader);
         } else {
@@ -468,6 +482,11 @@ public class FastResultSetHandler implements ResultSetHandler {
       }
     }
     return value;
+  }
+
+  private Object getNestedQueryCacheObject(MappedStatement nestedQuery, CacheKey key) {
+    final Cache nestedQueryCache = nestedQuery.getCache();
+    return nestedQueryCache != null ? nestedQueryCache.getObject(key) : null;
   }
 
   protected Object prepareParameterForNestedQuery(ResultSet rs, ResultMapping resultMapping, Class<?> parameterType, String columnPrefix) throws SQLException {
