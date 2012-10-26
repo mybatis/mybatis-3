@@ -73,14 +73,9 @@ public class ParameterExpressionParser {
 
   private static int skipWS(char[] expression, int p) {
     for (int i = p; i < expression.length; i++) {
-      switch (expression[i]) {
-        case ' ':
-        case '\t':
-        case '\n':
-        case '\r':
-          continue;
-        default:
-          return i;
+      char c = expression[i];
+      if (!isWhitespaceBreak(c) && c != ' ') {
+        return i;
       }
     }
     return expression.length;
@@ -89,7 +84,7 @@ public class ParameterExpressionParser {
   private static int skipUntil(char[] expression, int p, final char to) {
     for (int i = p; i < expression.length; i++) {
       char c = expression[i];
-      if (c == ' ' || c == '\t' || c == '\n' || c == '\r' || c == to) {
+      if (isWhitespaceBreak(c) || c == to) {
         return i;
       }
     }
@@ -99,11 +94,15 @@ public class ParameterExpressionParser {
   private static int skipUntil(char[] expression, int p, char to1, char to2) {
     for (int i = p; i < expression.length; i++) {
       char c = expression[i];
-      if (c == ' ' || c == '\t' || c == '\n' || c == '\r' || c == to1 || c == to2) {
+      if (isWhitespaceBreak(c) || c == to1 || c == to2) {
         return i;
       }
     }
     return expression.length;
+  }
+
+  private static boolean isWhitespaceBreak(char c) {
+    return c == '\t' || c == '\n' || c == '\r';
   }
 
   private static void jdbcTypeOpt(char[] expression, int p, Map<String, String> map) {

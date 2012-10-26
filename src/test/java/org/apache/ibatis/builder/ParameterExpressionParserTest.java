@@ -90,4 +90,14 @@ public class ParameterExpressionParserTest {
     Assert.assertEquals("val2", result.get("attr2"));
   }
 
+  @Test
+  public void simplePropertyWithSpaceAndManyAttributes() {
+    Map<String, String> result = ParameterExpressionParser.parse("user name, attr1=val1, attr2=val2, attr3=val3");
+    Assert.assertEquals(4, result.size());
+    Assert.assertEquals("user name", result.get("property"));
+    Assert.assertEquals("val1", result.get("attr1"));
+    Assert.assertEquals("val2", result.get("attr2"));
+    Assert.assertEquals("val3", result.get("attr3"));
+  }
+
 }
