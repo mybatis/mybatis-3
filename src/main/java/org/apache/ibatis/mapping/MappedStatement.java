@@ -69,7 +69,9 @@ public final class MappedStatement {
       mappedStatement.timeout = configuration.getDefaultStatementTimeout();
       mappedStatement.sqlCommandType = sqlCommandType;
       mappedStatement.keyGenerator = configuration.isUseGeneratedKeys() && SqlCommandType.INSERT.equals(sqlCommandType) ? new Jdbc3KeyGenerator() : new NoKeyGenerator();
-      mappedStatement.statementLog = LogFactory.getLog(id);
+      String logId = id;
+      if (configuration.getLogPrefix() != null) logId = configuration.getLogPrefix() + id;
+      mappedStatement.statementLog = LogFactory.getLog(logId);
       mappedStatement.lang = configuration.getDefaultScriptingLanuageInstance();
     }
 

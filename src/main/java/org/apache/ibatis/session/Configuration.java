@@ -44,7 +44,6 @@ import org.apache.ibatis.executor.ReuseExecutor;
 import org.apache.ibatis.executor.SimpleExecutor;
 import org.apache.ibatis.executor.keygen.KeyGenerator;
 import org.apache.ibatis.executor.loader.CglibProxyFactory;
-import org.apache.ibatis.executor.loader.JavassistProxyFactory;
 import org.apache.ibatis.executor.loader.ProxyFactory;
 import org.apache.ibatis.executor.parameter.ParameterHandler;
 import org.apache.ibatis.executor.resultset.FastResultSetHandler;
@@ -90,6 +89,7 @@ public class Configuration {
   protected boolean useGeneratedKeys = false;
   protected boolean useColumnLabel = true;
   protected boolean cacheEnabled = true;
+  protected String logPrefix;
   protected LocalCacheScope localCacheScope = LocalCacheScope.SESSION;
   protected JdbcType jdbcTypeForNull = JdbcType.OTHER;
   protected Set<String> lazyLoadTriggerMethods = new HashSet<String>(Arrays.asList(new String[] { "equals", "clone", "hashCode", "toString" }));
@@ -156,6 +156,14 @@ public class Configuration {
 
     languageRegistry.setDefaultDriverClass(XMLLanguageDriver.class);
     languageRegistry.register(RawLanguageDriver.class);
+  }
+
+  public String getLogPrefix() {
+    return logPrefix;
+  }
+
+  public void setLogPrefix(String logPrefix) {
+    this.logPrefix = logPrefix;
   }
 
   public String getDatabaseId() {

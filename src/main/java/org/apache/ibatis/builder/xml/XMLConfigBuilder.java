@@ -220,6 +220,7 @@ public class XMLConfigBuilder extends BaseBuilder {
       configuration.setLazyLoadTriggerMethods(stringSetValueOf(props.getProperty("lazyLoadTriggerMethods"), "equals,clone,hashCode,toString"));
       configuration.setSafeResultHandlerEnabled(booleanValueOf(props.getProperty("safeResultHandlerEnabled"), true));
       configuration.setDefaultScriptingLanguage(resolveClass(props.getProperty("defaultScriptingLanguage")));
+      configuration.setLogPrefix(props.getProperty("logPrefix"));
     }
   }
 
