@@ -17,11 +17,9 @@ package org.apache.ibatis.executor;
 
 import static org.apache.ibatis.executor.ExecutionPlaceholder.EXECUTION_PLACEHOLDER;
 
-import java.lang.reflect.Array;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -56,8 +54,6 @@ public abstract class BaseExecutor implements Executor {
   protected Configuration configuration;
 
   protected int queryStack = 0;
-
-  protected List<BatchResult> batchResults = new ArrayList<BatchResult>();
   private boolean closed;
 
   protected BaseExecutor(Configuration configuration, Transaction transaction) {
@@ -89,7 +85,6 @@ public abstract class BaseExecutor implements Executor {
       deferredLoads = null;
       localCache = null;
       localOutputParameterCache = null;
-      batchResults = null;
       closed = true;
     }
   }
@@ -111,8 +106,7 @@ public abstract class BaseExecutor implements Executor {
 
   public List<BatchResult> flushStatements(boolean isRollBack) throws SQLException {
     if (closed) throw new ExecutorException("Executor was closed.");
-    batchResults.addAll(doFlushStatements(isRollBack));
-    return batchResults;
+    return doFlushStatements(isRollBack);
   }
 
   public <E> List<E> query(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler) throws SQLException {
