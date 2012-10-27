@@ -224,7 +224,7 @@ public class FastResultSetHandler implements ResultSetHandler {
   }
 
   protected boolean shouldProcessMoreRows(ResultSet rs, ResultContext context, RowBounds rowBounds) throws SQLException {
-    return rs.next() && context.getResultCount() < rowBounds.getLimit() && !context.isStopped();
+    return !context.isStopped() && rs.next() && context.getResultCount() < rowBounds.getLimit();
   }
 
   protected void skipRows(ResultSet rs, RowBounds rowBounds) throws SQLException {
