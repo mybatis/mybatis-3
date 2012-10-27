@@ -56,10 +56,7 @@ public class BeanWrapper extends BaseWrapper {
   }
 
   public String findProperty(String name, boolean useCamelCaseMapping) {
-    if (useCamelCaseMapping) {
-      name = name.replace("_", "");
-    }
-    return metaClass.findProperty(name);
+    return metaClass.findProperty(name, useCamelCaseMapping);
   }
 
   public String[] getGetterNames() {

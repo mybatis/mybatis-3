@@ -56,6 +56,13 @@ public class MetaClass {
     return prop.length() > 0 ? prop.toString() : null;
   }
 
+  public String findProperty(String name, boolean useCamelCaseMapping) {
+    if (useCamelCaseMapping) {
+      name = name.replace("_", "");
+    }
+    return findProperty(name);
+  }
+
   public String[] getGetterNames() {
     return reflector.getGetablePropertyNames();
   }

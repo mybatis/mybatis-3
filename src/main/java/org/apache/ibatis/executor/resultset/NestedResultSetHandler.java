@@ -311,7 +311,7 @@ public class NestedResultSetHandler extends FastResultSetHandler {
           continue;
         }
       }
-      if (metaType.findProperty(property) != null) {
+      if (metaType.findProperty(property, configuration.isMapUnderscoreToCamelCase()) != null) {
         String value = rs.getString(column);
         if (value != null) {
           cacheKey.update(column);
