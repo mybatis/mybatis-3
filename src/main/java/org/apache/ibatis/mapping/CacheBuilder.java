@@ -148,6 +148,9 @@ public class CacheBuilder {
           } else if (float.class == type
               || Float.class == type) {
             metaCache.setValue(name, Float.valueOf(value));
+          } else if (boolean.class == type
+              || Boolean.class == type) {
+            metaCache.setValue(name, Boolean.valueOf(value));
           } else if (double.class == type
               || Double.class == type) {
             metaCache.setValue(name, Double.valueOf(value));
