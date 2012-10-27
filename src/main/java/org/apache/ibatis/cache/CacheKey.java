@@ -15,10 +15,13 @@
  */
 package org.apache.ibatis.cache;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CacheKey implements Cloneable {
+public class CacheKey implements Cloneable, Serializable {
+
+  private static final long serialVersionUID = 1146682552656046210L;
 
   public static final CacheKey NULL_CACHE_KEY = new NullCacheKey();
 
