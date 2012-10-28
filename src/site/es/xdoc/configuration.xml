@@ -217,7 +217,7 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
               <td>Establece el número de segundos que debe esperar el driver la respuesta de la base de datos.
               </td>
               <td>
-                Any positive integer
+                Cualquier entero positivo
               </td>
               <td>
                 Sin valor (null)
@@ -294,6 +294,49 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
               </td>
               <td>
                 equals,clone,hashCode,toString
+              </td>
+            </tr>
+            <tr>
+              <td>
+                defaultScriptingLanguage
+              </td>
+              <td>
+                Permite especificar que lenguaje se usará en el SQL dinámico.
+              </td>
+              <td>
+                Un type alias o una nombre de clase completamente cualificado
+              </td>
+              <td>
+                org.apache.ibatis.scripting.xmltags.XMLDynamicLanguageDriver
+              </td>
+            </tr>
+            <tr>
+              <td>
+                logPrefix
+              </td>
+              <td>
+                Permite especificar el prefijo que MyBatis añadirá a los nombres de logger.
+              </td>
+              <td>
+                Cualquier cadena
+              </td>
+              <td>
+                No informado
+              </td>
+            </tr>
+            <tr>
+              <td>
+                callSettersOnNulls
+              </td>
+              <td>
+                Permite especificar si se invocarán a los setters y a los métodos put de los mapas si el valor obtenido es null.
+                Te en cuenta que si se activa las propiedades que puedan ser informadas con nulos no pueden ser de tipos primitivos.
+              </td>
+              <td>
+                true | false
+              </td>
+              <td>
+                false
               </td>
             </tr>
           </tbody>

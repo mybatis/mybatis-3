@@ -407,6 +407,35 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 org.apache.ibatis.scripting.xmltags.XMLDynamicLanguageDriver
               </td>
             </tr>
+            <tr>
+              <td>
+                logPrefix
+              </td>
+              <td>
+                Specifies the prefix string that MyBatis will add to the logger names. 
+              </td>
+              <td>
+                Any String
+              </td>
+              <td>
+                Not set
+              </td>
+            </tr>
+            <tr>
+              <td>
+                callSettersOnNulls
+              </td>
+              <td>
+                Specifies if setters or map's put method will be called when a retrieved value is null. Note that if set, properties 
+                that may be filled with null values must never be primitives. 
+              </td>
+              <td>
+                true | false
+              </td>
+              <td>
+                false
+              </td>
+            </tr>
           </tbody>
         </table>
         <p>
