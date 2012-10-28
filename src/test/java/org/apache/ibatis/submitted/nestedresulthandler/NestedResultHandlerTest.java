@@ -17,9 +17,12 @@ package org.apache.ibatis.submitted.nestedresulthandler;
 
 import java.io.Reader;
 import java.sql.Connection;
+import java.util.List;
 
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.jdbc.ScriptRunner;
+import org.apache.ibatis.session.ResultContext;
+import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
@@ -54,19 +57,21 @@ public class NestedResultHandlerTest {
     try {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
 
-      Person person = mapper.getPerson(1);
+      List<Person> persons = mapper.getPersons();
+      
+      Person person = persons.get(0);
       Assert.assertEquals("grandma", person.getName());
       Assert.assertTrue(person.owns("book"));
       Assert.assertTrue(person.owns("tv"));
       Assert.assertEquals(2, person.getItems().size());
 
-      person = mapper.getPerson(2);
+      person = persons.get(1);
       Assert.assertEquals("sister", person.getName());
       Assert.assertTrue(person.owns("phone"));
       Assert.assertTrue(person.owns("shoes"));
       Assert.assertEquals(2, person.getItems().size());
 
-      person = mapper.getPerson(3);
+      person = persons.get(2);
       Assert.assertEquals("brother", person.getName());
       Assert.assertTrue(person.owns("car"));
       Assert.assertEquals(1, person.getItems().size());
@@ -74,4 +79,22 @@ public class NestedResultHandlerTest {
       sqlSession.close();
     }
   }
+  
+  @Test // issue #542
+  public void testGetPersonWithHandler() {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      sqlSession.select("getPersons", new ResultHandler() {
+        public void handleResult(ResultContext context) {
+          Person person = (Person) context.getResultObject();
+          if ("grandma".equals(person.getName())) {
+            Assert.assertEquals(2, person.getItems().size());
+          }
+        }
+      });      
+    } finally {
+      sqlSession.close();
+    }
+  }
+  
 }

@@ -171,6 +171,7 @@ flushCache (true|false) #IMPLIED
 useCache (true|false) #IMPLIED
 databaseId CDATA #IMPLIED
 lang CDATA #IMPLIED
+nestedResultOrdered (true|false) #IMPLIED
 >
 
 <!ELEMENT insert (#PCDATA | selectKey | include | trim | where | set | foreach | choose | if | bind)*>

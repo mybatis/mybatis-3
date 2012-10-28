@@ -15,6 +15,8 @@
  */
 package org.apache.ibatis.submitted.nestedresulthandler;
 
+import java.util.List;
+
 public interface Mapper {
-  Person getPerson(Integer id);
+  List<Person> getPersons();
 }

@@ -43,6 +43,7 @@ public final class MappedStatement {
   private List<ResultMap> resultMaps;
   private boolean flushCacheRequired;
   private boolean useCache;
+  private boolean nestedResultOrdered;
   private SqlCommandType sqlCommandType;
   private KeyGenerator keyGenerator;
   private String[] keyProperties;
@@ -132,6 +133,11 @@ public final class MappedStatement {
       return this;
     }
 
+    public Builder nestedResultOrdered(boolean nestedResultOrdered) {
+      mappedStatement.nestedResultOrdered = nestedResultOrdered;
+      return this;
+    }
+
     public Builder keyGenerator(KeyGenerator keyGenerator) {
       mappedStatement.keyGenerator = keyGenerator;
       return this;
@@ -165,7 +171,6 @@ public final class MappedStatement {
       mappedStatement.resultMaps = Collections.unmodifiableList(mappedStatement.resultMaps);
       return mappedStatement;
     }
-
   }
 
   public KeyGenerator getKeyGenerator() {
@@ -230,6 +235,10 @@ public final class MappedStatement {
 
   public boolean isUseCache() {
     return useCache;
+  }
+
+  public boolean isNestedResultOrdered() {
+    return nestedResultOrdered;
   }
 
   public String getDatabaseId() {

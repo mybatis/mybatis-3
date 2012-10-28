@@ -29,7 +29,6 @@ import org.apache.ibatis.executor.ExecutorException;
 import org.apache.ibatis.executor.loader.ResultLoaderMap;
 import org.apache.ibatis.executor.parameter.ParameterHandler;
 import org.apache.ibatis.executor.result.DefaultResultContext;
-import org.apache.ibatis.executor.result.DefaultResultHandler;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.ResultMap;
@@ -70,21 +69,13 @@ public class NestedResultSetHandler extends FastResultSetHandler {
 
   @Override
   protected void handleResultSet(ResultSet rs, ResultMap resultMap, List<Object> multipleResults, ResultColumnCache resultColumnCache) throws SQLException {
-    try {
-      if (resultHandler == null) {
-        DefaultResultHandler defaultResultHandler = new DefaultResultHandler(objectFactory);
-        handleRowValues(rs, resultMap, defaultResultHandler, rowBounds, resultColumnCache);
-        multipleResults.add(defaultResultHandler.getResultList());
-      } else {
-        if (configuration.isSafeResultHandlerEnabled()) {
-          throw new ExecutorException("Mapped Statements with nested result mappings cannot be safely used with a custom ResultHandler. " 
-              + "Use safeResultHandlerEnabled=false setting to bypass this check.");
-        }
-        handleRowValues(rs, resultMap, resultHandler, rowBounds, resultColumnCache);
-      }
-    } finally {
-      closeResultSet(rs); // issue #228 (close resultsets)
+    if (resultHandler != null && configuration.isSafeResultHandlerEnabled() && !mappedStatement.isNestedResultOrdered()) {
+      throw new ExecutorException(
+          "Unordered mapped Statements with nested result mappings cannot be safely used with a custom ResultHandler. " 
+          + "Use safeResultHandlerEnabled=false setting to bypass this check "
+          + "or ensure your statement returns ordered data an set nestedResultOrdered=true on it.");
     }
+    super.handleResultSet(rs, resultMap, multipleResults, resultColumnCache);
   }
 
   @Override
@@ -101,18 +92,33 @@ public class NestedResultSetHandler extends FastResultSetHandler {
   protected void handleRowValues(ResultSet rs, ResultMap resultMap, ResultHandler resultHandler, RowBounds rowBounds, ResultColumnCache resultColumnCache) throws SQLException {
     final DefaultResultContext resultContext = new DefaultResultContext();
     skipRows(rs, rowBounds);
+    Object firstNewRowValue = null;
     while (shouldProcessMoreRows(rs, resultContext, rowBounds)) {
       final ResultMap discriminatedResultMap = resolveDiscriminatedResultMap(rs, resultMap, null);
       final CacheKey rowKey = createAbsoluteKey(discriminatedResultMap, rs, null, resultColumnCache);
       final boolean knownValue = objectCache.containsKey(rowKey);
-      Object rowValue = getRowValue(rs, discriminatedResultMap, rowKey, resultColumnCache);
-      if (!knownValue) {
-        resultContext.nextResultObject(rowValue);
-        resultHandler.handleResult(resultContext);
+      if (mappedStatement.isNestedResultOrdered()) { // issue #577 && #542
+        if (!knownValue && firstNewRowValue != null) {
+          objectCache.clear();
+          callResultHandler(resultHandler, resultContext, firstNewRowValue);
+        } 
+        Object rowValue = getRowValue(rs, discriminatedResultMap, rowKey, resultColumnCache);
+        if (!knownValue) {
+          firstNewRowValue = rowValue;
+        }
+      } else {
+        Object rowValue = getRowValue(rs, discriminatedResultMap, rowKey, resultColumnCache);
+        if (!knownValue) {
+          callResultHandler(resultHandler, resultContext, rowValue);
+        }
       }
     }
-  }
 
+    if (firstNewRowValue != null) { // issue #577 && #542
+      callResultHandler(resultHandler, resultContext, firstNewRowValue);
+    }
+  }
+  
   //
   // GET VALUE FROM ROW
   //

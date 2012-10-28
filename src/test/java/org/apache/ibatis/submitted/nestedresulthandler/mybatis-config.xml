@@ -19,6 +19,11 @@
     "http://mybatis.org/dtd/mybatis-3-config.dtd">
 
 <configuration>
+
+	<settings>
+		<setting name="safeResultHandlerEnabled" value="true"/>
+	</settings>
+
 	<environments default="development">
 		<environment id="development">
 			<transactionManager type="JDBC">

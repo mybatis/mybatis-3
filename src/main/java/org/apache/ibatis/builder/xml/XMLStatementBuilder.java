@@ -78,6 +78,7 @@ public class XMLStatementBuilder extends BaseBuilder {
     boolean isSelect = sqlCommandType == SqlCommandType.SELECT;
     boolean flushCache = context.getBooleanAttribute("flushCache", !isSelect);
     boolean useCache = context.getBooleanAttribute("useCache", isSelect);
+    boolean nestedResultOrdered = context.getBooleanAttribute("nestedResultOrdered", false);
 
     // Include Fragments before parsing
     XMLIncludeTransformer includeParser = new XMLIncludeTransformer(configuration, builderAssistant);
@@ -109,7 +110,8 @@ public class XMLStatementBuilder extends BaseBuilder {
 
     builderAssistant.addMappedStatement(id, sqlSource, statementType, sqlCommandType,
         fetchSize, timeout, parameterMap, parameterTypeClass, resultMap, resultTypeClass,
-        resultSetTypeEnum, flushCache, useCache, keyGenerator, keyProperty, keyColumn, databaseId, langDriver);
+        resultSetTypeEnum, flushCache, useCache, nestedResultOrdered, 
+        keyGenerator, keyProperty, keyColumn, databaseId, langDriver);
   }
   
   public void parseSelectKeyNodes(String parentId, List<XNode> list, Class<?> parameterTypeClass, LanguageDriver langDriver, String skRequiredDatabaseId) {
@@ -131,6 +133,7 @@ public class XMLStatementBuilder extends BaseBuilder {
 
     //defaults
     boolean useCache = false;
+    boolean nestedResultOrdered = false;
     KeyGenerator keyGenerator = new NoKeyGenerator();
     Integer fetchSize = null;
     Integer timeout = null;
@@ -144,7 +147,8 @@ public class XMLStatementBuilder extends BaseBuilder {
 
     builderAssistant.addMappedStatement(id, sqlSource, statementType, sqlCommandType,
         fetchSize, timeout, parameterMap, parameterTypeClass, resultMap, resultTypeClass,
-        resultSetTypeEnum, flushCache, useCache, keyGenerator, keyProperty, null, databaseId, langDriver);
+        resultSetTypeEnum, flushCache, useCache, nestedResultOrdered,
+        keyGenerator, keyProperty, null, databaseId, langDriver);
 
     id = builderAssistant.applyCurrentNamespace(id, false);
 

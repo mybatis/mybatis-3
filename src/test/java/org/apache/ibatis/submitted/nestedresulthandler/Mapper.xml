@@ -28,9 +28,9 @@
 		</collection>
 	</resultMap>
 
-	<select id="getPerson" resultMap="personResult">
+	<select id="getPersons" resultMap="personResult" nestedResultOrdered="true">
 		select p.id as person_id, p.name as person_name, i.id as item_id, i.name as item_name 
 		from persons p, items i 
-		where p.id = i.owner and p.id = #{param}
+		where p.id = i.owner
 	</select>
 </mapper>

@@ -219,9 +219,13 @@ public class FastResultSetHandler implements ResultSetHandler {
     while (shouldProcessMoreRows(rs, resultContext, rowBounds)) {
       final ResultMap discriminatedResultMap = resolveDiscriminatedResultMap(rs, resultMap, null);
       Object rowValue = getRowValue(rs, discriminatedResultMap, null, resultColumnCache);
-      resultContext.nextResultObject(rowValue);
-      resultHandler.handleResult(resultContext);
+      callResultHandler(resultHandler, resultContext, rowValue);
     }
+  }
+
+  protected void callResultHandler(ResultHandler resultHandler, DefaultResultContext resultContext, Object rowValue) {
+    resultContext.nextResultObject(rowValue);
+    resultHandler.handleResult(resultContext);
   }
 
   protected boolean shouldProcessMoreRows(ResultSet rs, ResultContext context, RowBounds rowBounds) throws SQLException {

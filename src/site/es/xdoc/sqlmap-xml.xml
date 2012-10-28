@@ -190,6 +190,15 @@ ps.setInt(1,id);]]></source>
               <code>databaseId</code> el último se descartará.
               </td>
             </tr>
+            <tr>
+              <td><code>nestedResultOrdered</code></td>
+              <td>De aplicación exclusiva para select anidadas. Si es true, se asume que los resultados anidados están
+                agrupados de forma que cuando se lee un nuevo resultado principal nuevo, no habrá más referencias
+                a resultados principales anteriores. De esta forma los resultados anidados se rellenarán de 
+                una manera mucho ás eficiente en términos de memoria. Defecto: 
+                <code>false</code>.
+              </td>
+            </tr>
           </tbody>
         </table>
       </subsection>

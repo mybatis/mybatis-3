@@ -222,6 +222,15 @@ ps.setInt(1,id);]]></source>
                 同じステートメントで、<code>databaseId</code> 属性が指定されているものと指定されていないものが両方定義されていた場合、指定がないステートメントは無視されます。
               </td>
             </tr>
+            <tr>
+              <td><code>nestedResultOrdered</code></td>
+              <td>This is only applicable for nested result select statements: If this is true, it
+                is assumed that nested results are contained or grouped together such that when a
+                new main result row is returned, no references to a previous result row will occur
+                anymore. This allows nested results to be filled much more memory friendly. Default:
+                <code>false</code>.
+              </td>
+            </tr>
           </tbody>
         </table>
       </subsection>
