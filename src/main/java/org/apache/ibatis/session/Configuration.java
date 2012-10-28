@@ -89,6 +89,7 @@ public class Configuration {
   protected boolean useGeneratedKeys = false;
   protected boolean useColumnLabel = true;
   protected boolean cacheEnabled = true;
+  protected boolean callSettersOnNulls = false;
   protected String logPrefix;
   protected LocalCacheScope localCacheScope = LocalCacheScope.SESSION;
   protected JdbcType jdbcTypeForNull = JdbcType.OTHER;
@@ -164,6 +165,14 @@ public class Configuration {
 
   public void setLogPrefix(String logPrefix) {
     this.logPrefix = logPrefix;
+  }
+
+  public boolean isCallSettersOnNulls() {
+    return callSettersOnNulls;
+  }
+
+  public void setCallSettersOnNulls(boolean callSettersOnNulls) {
+    this.callSettersOnNulls = callSettersOnNulls;
   }
 
   public String getDatabaseId() {

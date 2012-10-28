@@ -73,6 +73,7 @@ public class FastResultSetHandler implements ResultSetHandler {
   protected final ObjectFactory objectFactory;
   protected final ProxyFactory proxyFactory;
   protected final ResultExtractor resultExtractor;
+  protected final String OMIT = "OMIT";
 
   public FastResultSetHandler(Executor executor, MappedStatement mappedStatement, ParameterHandler parameterHandler, ResultHandler resultHandler, BoundSql boundSql, RowBounds rowBounds) {
     this.executor = executor;
@@ -299,7 +300,7 @@ public class FastResultSetHandler implements ResultSetHandler {
       final String column = prependPrefix(propertyMapping.getColumn(), columnPrefix);
       if (propertyMapping.isCompositeResult() || (column != null && mappedColumnNames.contains(column.toUpperCase(Locale.ENGLISH)))) {
         Object value = getPropertyMappingValue(rs, metaObject, propertyMapping, lazyLoader, columnPrefix);
-        if (value != null) {
+        if (value != OMIT && (value != null || configuration.isCallSettersOnNulls())) { // issue #377, call setter on nulls
           final String property = propertyMapping.getProperty(); // issue #541 make property optional
           if (property != null) {
             metaObject.setValue(property, value);
@@ -319,7 +320,7 @@ public class FastResultSetHandler implements ResultSetHandler {
       final String column = prependPrefix(propertyMapping.getColumn(), columnPrefix);
       return typeHandler.getResult(rs, column);
     }
-    return null;
+    return OMIT;
   }
 
   protected boolean applyAutomaticMappings(ResultSet rs, List<String> unmappedColumnNames, MetaObject metaObject, String columnPrefix, ResultColumnCache resultColumnCache) throws SQLException {
@@ -341,7 +342,7 @@ public class FastResultSetHandler implements ResultSetHandler {
         if (typeHandlerRegistry.hasTypeHandler(propertyType)) {
           final TypeHandler<?> typeHandler = resultColumnCache.getTypeHandler(propertyType, columnName);
           final Object value = typeHandler.getResult(rs, columnName);
-          if (value != null) {
+          if (configuration.isCallSettersOnNulls() || value != null) { // issue #377, call setter on nulls
             metaObject.setValue(property, value);
             foundValues = true;
           }
@@ -462,7 +463,7 @@ public class FastResultSetHandler implements ResultSetHandler {
     final MappedStatement nestedQuery = configuration.getMappedStatement(nestedQueryId);
     final Class<?> nestedQueryParameterType = nestedQuery.getParameterMap().getType();
     final Object nestedQueryParameterObject = prepareParameterForNestedQuery(rs, propertyMapping, nestedQueryParameterType, columnPrefix);
-    Object value = null;
+    Object value = OMIT;
     if (nestedQueryParameterObject != null) {
       final BoundSql nestedBoundSql = nestedQuery.getBoundSql(nestedQueryParameterObject);
       final CacheKey key = executor.createCacheKey(nestedQuery, nestedQueryParameterObject, RowBounds.DEFAULT, nestedBoundSql);
