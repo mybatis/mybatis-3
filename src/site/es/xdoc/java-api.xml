@@ -236,6 +236,7 @@ void rollback(boolean force)</source>
   <p>MyBatis utliza dos cachés: la caché local y la caché de segundo nivel.</p>
   <p>Cada vez que se crea una sesión MyBatis crea una cache local y la asocia a dicha sesión. Cualquier query que se ejecute en la sesión será cacheada de forma que si en el futuro se vuelve a lanzar la misma query con los mismos parámetros de entrada los datos se obtendrán de la caché y no se accederá a la base de datos. La caché local se vacía cuando se ejecuta cupdate, commit, rollback y close.</p>
   <p>Por defecto la cache local se utiliza durante toda la duración de la sesión. Esta cache es necesaria para resolver dependencias circulares y para acelerar consultas anidadas repetidas asi que no puede desactivarse, pero puede configurarse para que se utilize sólo durante la duración de la ejecución de una sentencia infomando el parámetro de configuración localCacheScope=STATEMENT.</p>
+  <p>Cuando localCacheScope está informado a SESSION (valor por defecto) MyBatis devuelve referencias a objetos objetos almacenados en la caché. Cualquier modificación de un objeto (listas etc.) influye en el contenido de la caché y en los valores que serán retornados posteriormente durante la existencia de la sessión. Por lo tanto, como mejor práctica, evita modificaciones sobre los objetos devueltos por MyBatis.</p>
   <p>Puedes borrar el contenido de la caché local en el momento que desees invocando:</p>
   <source>void clearCache()</source>
 
