@@ -57,7 +57,7 @@ public class ResultExtractorTest {
   @Test
   public void shouldExtractSet() {
     final List list = Arrays.asList(1, 2, 3);
-    final Class<?> targetType = Set.class;
+    final Class<Set> targetType = Set.class;
     final Set set = new HashSet();
     final MetaObject metaObject = mock(MetaObject.class);
     when(objectFactory.isCollection(targetType)).thenReturn(true);
