@@ -15,6 +15,9 @@
  */
 package org.apache.ibatis.submitted.sqlprovider;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import java.io.Reader;
 import java.sql.Connection;
 import java.util.ArrayList;
@@ -25,7 +28,6 @@ import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -36,14 +38,16 @@ public class SqlProviderTest {
   @BeforeClass
   public static void setUp() throws Exception {
     // create a SqlSessionFactory
-    Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/sqlprovider/mybatis-config.xml");
+    Reader reader = Resources
+        .getResourceAsReader("org/apache/ibatis/submitted/sqlprovider/mybatis-config.xml");
     sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
     reader.close();
 
     // populate in-memory database
     SqlSession session = sqlSessionFactory.openSession();
     Connection conn = session.getConnection();
-    reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/sqlprovider/CreateDB.sql");
+    reader = Resources
+        .getResourceAsReader("org/apache/ibatis/submitted/sqlprovider/CreateDB.sql");
     ScriptRunner runner = new ScriptRunner(conn);
     runner.setLogWriter(null);
     runner.runScript(reader);
@@ -52,18 +56,32 @@ public class SqlProviderTest {
   }
 
   @Test
-  public void shouldGetAUser() {
+  public void shouldGetTwoUsers() {
     SqlSession sqlSession = sqlSessionFactory.openSession();
     try {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       List<Integer> list = new ArrayList<Integer>();
       list.add(1);
-      list.add(2);
-      User user = mapper.getIdsFromDB(list);
-      Assert.assertEquals("User1", user.getName());
+      list.add(3);
+      List<User> users = mapper.getUsers(list);
+      assertEquals(2, users.size());
+      assertEquals("User1", users.get(0).getName());
+      assertEquals("User3", users.get(1).getName());
     } finally {
       sqlSession.close();
     }
   }
 
+  @Test
+  public void shouldGetOneUser() {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      User user = mapper.getUser(4);
+      assertNotNull(user);
+      assertEquals("User4", user.getName());
+    } finally {
+      sqlSession.close();
+    }
+  }
 }
