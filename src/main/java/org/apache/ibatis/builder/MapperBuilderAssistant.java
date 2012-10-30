@@ -272,7 +272,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
       ResultSetType resultSetType,
       boolean flushCache,
       boolean useCache,
-      boolean nestedResultOrdered,
+      boolean resultOrdered,
       KeyGenerator keyGenerator,
       String keyProperty,
       String keyColumn,
@@ -290,7 +290,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
     statementBuilder.keyColumn(keyColumn);
     statementBuilder.databaseId(databaseId);
     statementBuilder.lang(lang);
-    statementBuilder.nestedResultOrdered(nestedResultOrdered);
+    statementBuilder.resultOrdered(resultOrdered);
     setStatementTimeout(timeout, statementBuilder);
 
     setStatementParameterMap(parameterMap, parameterType, statementBuilder);

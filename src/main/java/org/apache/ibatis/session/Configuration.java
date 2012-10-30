@@ -183,10 +183,12 @@ public class Configuration {
     this.databaseId = databaseId;
   }
 
+  @Deprecated
   public boolean isSafeResultHandlerEnabled() {
     return safeResultHandlerEnabled;
   }
 
+  @Deprecated // "Not needed as of the fix for issue #542")
   public void setSafeResultHandlerEnabled(boolean safeResultHandlerEnabled) {
     this.safeResultHandlerEnabled = safeResultHandlerEnabled;
   }

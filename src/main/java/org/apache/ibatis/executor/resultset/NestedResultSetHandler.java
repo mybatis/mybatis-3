@@ -68,17 +68,6 @@ public class NestedResultSetHandler extends FastResultSetHandler {
   //
 
   @Override
-  protected void handleResultSet(ResultSet rs, ResultMap resultMap, List<Object> multipleResults, ResultColumnCache resultColumnCache) throws SQLException {
-    if (resultHandler != null && configuration.isSafeResultHandlerEnabled() && !mappedStatement.isNestedResultOrdered()) {
-      throw new ExecutorException(
-          "Unordered mapped Statements with nested result mappings cannot be safely used with a custom ResultHandler. " 
-          + "Use safeResultHandlerEnabled=false setting to bypass this check "
-          + "or ensure your statement returns ordered data an set nestedResultOrdered=true on it.");
-    }
-    super.handleResultSet(rs, resultMap, multipleResults, resultColumnCache);
-  }
-
-  @Override
   protected void cleanUpAfterHandlingResultSet() {
     super.cleanUpAfterHandlingResultSet();
     objectCache.clear();
@@ -92,31 +81,18 @@ public class NestedResultSetHandler extends FastResultSetHandler {
   protected void handleRowValues(ResultSet rs, ResultMap resultMap, ResultHandler resultHandler, RowBounds rowBounds, ResultColumnCache resultColumnCache) throws SQLException {
     final DefaultResultContext resultContext = new DefaultResultContext();
     skipRows(rs, rowBounds);
-    Object firstNewRowValue = null;
+    Object rowValue = null;
     while (shouldProcessMoreRows(rs, resultContext, rowBounds)) {
       final ResultMap discriminatedResultMap = resolveDiscriminatedResultMap(rs, resultMap, null);
       final CacheKey rowKey = createAbsoluteKey(discriminatedResultMap, rs, null, resultColumnCache);
       final boolean knownValue = objectCache.containsKey(rowKey);
-      if (mappedStatement.isNestedResultOrdered()) { // issue #577 && #542
-        if (!knownValue && firstNewRowValue != null) {
-          objectCache.clear();
-          callResultHandler(resultHandler, resultContext, firstNewRowValue);
-        } 
-        Object rowValue = getRowValue(rs, discriminatedResultMap, rowKey, resultColumnCache);
-        if (!knownValue) {
-          firstNewRowValue = rowValue;
-        }
-      } else {
-        Object rowValue = getRowValue(rs, discriminatedResultMap, rowKey, resultColumnCache);
-        if (!knownValue) {
-          callResultHandler(resultHandler, resultContext, rowValue);
-        }
-      }
+      if (!knownValue && rowValue != null) { // issue #542 delay calling ResultHandler until object ends
+        if (mappedStatement.isResultOrdered()) objectCache.clear(); // issue #577 clear memory if ordered
+        callResultHandler(resultHandler, resultContext, rowValue);
+      } 
+      rowValue = getRowValue(rs, discriminatedResultMap, rowKey, resultColumnCache);
     }
-
-    if (firstNewRowValue != null) { // issue #577 && #542
-      callResultHandler(resultHandler, resultContext, firstNewRowValue);
-    }
+    if (rowValue != null) callResultHandler(resultHandler, resultContext, rowValue);
   }
   
   //

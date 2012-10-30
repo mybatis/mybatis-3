@@ -218,7 +218,6 @@ public class XMLConfigBuilder extends BaseBuilder {
       configuration.setLocalCacheScope(LocalCacheScope.valueOf(stringValueOf(props.getProperty("localCacheScope"), "SESSION")));
       configuration.setJdbcTypeForNull(JdbcType.valueOf(stringValueOf(props.getProperty("jdbcTypeForNull"), "OTHER")));
       configuration.setLazyLoadTriggerMethods(stringSetValueOf(props.getProperty("lazyLoadTriggerMethods"), "equals,clone,hashCode,toString"));
-      configuration.setSafeResultHandlerEnabled(booleanValueOf(props.getProperty("safeResultHandlerEnabled"), true));
       configuration.setDefaultScriptingLanguage(resolveClass(props.getProperty("defaultScriptingLanguage")));
       configuration.setLogPrefix(props.getProperty("logPrefix"));
       configuration.setCallSettersOnNulls(booleanValueOf(props.getProperty("callSettersOnNulls"), false));
