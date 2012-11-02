@@ -346,7 +346,7 @@ public class FastResultSetHandler implements ResultSetHandler {
         if (typeHandlerRegistry.hasTypeHandler(propertyType)) {
           final TypeHandler<?> typeHandler = resultColumnCache.getTypeHandler(propertyType, columnName);
           final Object value = typeHandler.getResult(rs, columnName);
-          if (configuration.isCallSettersOnNulls() || value != null) { // issue #377, call setter on nulls
+          if (value != null || configuration.isCallSettersOnNulls()) { // issue #377, call setter on nulls
             metaObject.setValue(property, value);
             foundValues = true;
           }
