@@ -16,7 +16,11 @@
 package org.apache.ibatis.type;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+
 import org.junit.Test;
+
+import java.math.BigDecimal;
 
 public class TypeAliasRegistryTest {
 
@@ -33,6 +37,33 @@ public class TypeAliasRegistryTest {
   public void shouldFetchArrayType() {
     TypeAliasRegistry typeAliasRegistry = new TypeAliasRegistry();
     assertEquals(Byte[].class, typeAliasRegistry.resolveAlias("byte[]"));
+  }
+
+  @Test
+  public void shouldBeAbleToRegisterSameAliasWithSameTypeAgain() {
+    TypeAliasRegistry typeAliasRegistry = new TypeAliasRegistry();
+    typeAliasRegistry.registerAlias("String", String.class);
+    typeAliasRegistry.registerAlias("string", String.class);
+  }
+
+  @Test(expected = TypeException.class)
+  public void shouldNotBeAbleToRegisterSameAliasWithDifferentType() {
+    TypeAliasRegistry typeAliasRegistry = new TypeAliasRegistry();
+    typeAliasRegistry.registerAlias("string", BigDecimal.class);
+  }
+
+  @Test
+  public void shouldBeAbleToRegisterAliasWithNullType() {
+    TypeAliasRegistry typeAliasRegistry = new TypeAliasRegistry();
+    typeAliasRegistry.registerAlias("foo", (Class<?>) null);
+    assertNull(typeAliasRegistry.resolveAlias("foo"));
+  }
+
+  @Test
+  public void shouldBeAbleToRegisterNewTypeIfRegisteredTypeIsNull() {
+    TypeAliasRegistry typeAliasRegistry = new TypeAliasRegistry();
+    typeAliasRegistry.registerAlias("foo", (Class<?>) null);
+    typeAliasRegistry.registerAlias("foo", String.class);
   }
 
 }

@@ -54,18 +54,19 @@ public class Ibatis2Configuration extends Configuration {
 
   private void registerDefaultTypeAliases() {
     // TRANSACTION ALIASES
-    this.getTypeAliasRegistry().registerAlias("JDBC", JdbcTransactionConfig.class.getName());
+    // changed to JDBC2 because it collides with the default typealias defined in mb3
+    this.getTypeAliasRegistry().registerAlias("JDBC2", JdbcTransactionConfig.class.getName());
     this.getTypeAliasRegistry().registerAlias("JTA", JtaTransactionConfig.class.getName());
     this.getTypeAliasRegistry().registerAlias("EXTERNAL", ExternalTransactionConfig.class.getName());
 
     // DATA SOURCE ALIASES
     this.getTypeAliasRegistry().registerAlias("SIMPLE", SimpleDataSourceFactory.class.getName());
     this.getTypeAliasRegistry().registerAlias("DBCP", DbcpDataSourceFactory.class.getName());
-    this.getTypeAliasRegistry().registerAlias("JNDI", JndiDataSourceFactory.class.getName());
+//    this.getTypeAliasRegistry().registerAlias("JNDI", JndiDataSourceFactory.class.getName());
 
     // CACHE ALIASES
-    this.getTypeAliasRegistry().registerAlias("FIFO", FifoCache.class.getName());
-    this.getTypeAliasRegistry().registerAlias("LRU", LruCache.class.getName());
+//    this.getTypeAliasRegistry().registerAlias("FIFO", FifoCache.class.getName());
+//    this.getTypeAliasRegistry().registerAlias("LRU", LruCache.class.getName());
     this.getTypeAliasRegistry().registerAlias("MEMORY", SoftCache.class.getName());
   }
 

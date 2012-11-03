@@ -24,7 +24,7 @@
 
   <properties resource="com/properties/database.properties"/>
 
-  <transactionManager type="JDBC">
+  <transactionManager type="JDBC2">
     <dataSource type="SIMPLE">
       <property value="${driver}" name="JDBC.Driver"/>
       <property value="${url}" name="JDBC.ConnectionURL"/>

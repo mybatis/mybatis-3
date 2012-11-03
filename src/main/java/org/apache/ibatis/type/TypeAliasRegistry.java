@@ -136,12 +136,10 @@ public class TypeAliasRegistry {
   }
 
   public void registerAlias(String alias, Class<?> value) {
-    assert alias != null;
+    if (alias == null) throw new TypeException("The parameter alias cannot be null");
     String key = alias.toLowerCase();
-    if (TYPE_ALIASES.containsKey(key) && !TYPE_ALIASES.get(key).equals(value.getName()) && TYPE_ALIASES.get(alias) != null) {
-      if (!value.equals(TYPE_ALIASES.get(alias))) {
-        throw new TypeException("The alias '" + alias + "' is already mapped to the value '" + TYPE_ALIASES.get(alias).getName() + "'.");
-      }
+    if (TYPE_ALIASES.containsKey(key) && TYPE_ALIASES.get(key) != null && !TYPE_ALIASES.get(key).equals(value)) {
+      throw new TypeException("The alias '" + alias + "' is already mapped to the value '" + TYPE_ALIASES.get(key).getName() + "'.");
     }
     TYPE_ALIASES.put(key, value);
   }

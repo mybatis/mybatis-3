@@ -43,7 +43,7 @@
 
   <typeHandler javaType="boolean" jdbcType="VARCHAR" callback="OuiNonBool"/>
 
-  <transactionManager type="JDBC" commitRequired="false">
+  <transactionManager type="JDBC2" commitRequired="false">
     <dataSource type="${dataSourceType}">
       <property name="JDBC.Driver" value="${driver}"/>
       <property name="JDBC.ConnectionURL" value="${url}"/>

@@ -27,7 +27,7 @@
             enhancementEnabled="false"
             lazyLoadingEnabled="false"/>
 
-  <transactionManager type="JDBC">
+  <transactionManager type="JDBC2">
     <dataSource type="SIMPLE">
       <property name="JDBC.Driver" value="org.hsqldb.jdbcDriver"/>
       <property name="JDBC.ConnectionURL" value="jdbc:hsqldb:mem:aname"/>
