@@ -20,7 +20,10 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.junit.Test;
@@ -253,6 +256,28 @@ public class MetaObjectTest {
     // Make sure the old default factory is in place and still works
     meta = SystemMetaObject.forObject(new Product());
     assertFalse(meta.getObjectWrapper().getClass().equals(CustomBeanWrapper.class));
+  }
+
+  @Test
+  public void shouldMethodHasGetterReturnTrueWhenListElementSet() {
+	  List<Object> param1 = new ArrayList<Object>();
+	  param1.add("firstParam");
+	  param1.add(222);
+	  param1.add(new Date());
+	  
+	  Map<String, Object> parametersEmulation = new HashMap<String, Object>();
+	  parametersEmulation.put("param1", param1);
+	  parametersEmulation.put("filterParams", param1);
+	  
+	  MetaObject meta = SystemMetaObject.forObject(parametersEmulation);
+	  
+	  assertEquals(param1.get(0), meta.getValue("filterParams[0]"));
+	  assertEquals(param1.get(1), meta.getValue("filterParams[1]"));
+	  assertEquals(param1.get(2), meta.getValue("filterParams[2]"));
+	  
+	  assertTrue(meta.hasGetter("filterParams[0]"));
+	  assertTrue(meta.hasGetter("filterParams[1]"));
+	  assertTrue(meta.hasGetter("filterParams[2]"));
   }
 
 }

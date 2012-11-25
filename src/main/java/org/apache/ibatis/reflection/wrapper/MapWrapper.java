@@ -117,7 +117,7 @@ public class MapWrapper extends BaseWrapper {
         return false;
       }
     } else {
-      return map.containsKey(name);
+      return map.containsKey(prop.getName());
     }
   }
 
