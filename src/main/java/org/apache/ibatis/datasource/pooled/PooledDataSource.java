@@ -538,7 +538,7 @@ public class PooledDataSource implements DataSource {
   }
 
   public Logger getParentLogger() {
-    return Logger.getLogger(LogFactory.GLOBAL_LOGGER_NAME);
+    return Logger.getLogger(Logger.GLOBAL_LOGGER_NAME); // requires JDK version 1.6
   }
 
 }

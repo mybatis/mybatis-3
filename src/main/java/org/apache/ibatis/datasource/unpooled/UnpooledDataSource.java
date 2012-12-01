@@ -25,7 +25,6 @@ import java.util.logging.Logger;
 import javax.sql.DataSource;
 
 import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.logging.LogFactory;
 
 public class UnpooledDataSource implements DataSource {
   
@@ -216,7 +215,7 @@ public class UnpooledDataSource implements DataSource {
   }
 
   public Logger getParentLogger() {
-    return Logger.getLogger(LogFactory.GLOBAL_LOGGER_NAME);
+    return Logger.getLogger(Logger.GLOBAL_LOGGER_NAME); // requires JDK version 1.6
   }
 
 }

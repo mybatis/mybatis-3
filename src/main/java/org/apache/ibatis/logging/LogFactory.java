@@ -25,11 +25,6 @@ public final class LogFactory {
    * Marker to be used by logging implementations that support markers 
    */
   public static final String MARKER = "MYBATIS";
-  /**
-   * Name for the global logger. Reference java.util.Logger.GLOBAL_LOGGER_NAME
-   * directly once we drop JDK 5 compatibility.
-   */
-  public static final String GLOBAL_LOGGER_NAME = "global";
 
   private static Constructor<? extends Log> logConstructor;
 
