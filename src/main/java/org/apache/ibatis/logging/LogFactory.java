@@ -77,6 +77,10 @@ public final class LogFactory {
     }
   }
 
+  public static synchronized void useCustomLogging(Class<? extends Log> clazz) {
+    setImplementation(clazz);
+  }
+
   public static synchronized void useSlf4jLogging() {
     setImplementation("org.apache.ibatis.logging.slf4j.Slf4jImpl");
   }
@@ -111,13 +115,22 @@ public final class LogFactory {
     }
   }
 
+  @SuppressWarnings("unchecked")
   private static void setImplementation(String implClassName) {
+    Class<? extends Log> implClass = null;
     try {
-      @SuppressWarnings("unchecked")
-      Class<? extends Log> implClass = (Class<? extends Log>) Resources.classForName(implClassName);
+      implClass = (Class<? extends Log>) Resources.classForName(implClassName);
+    } catch (Throwable t) {
+      throw new LogException("Error setting Log implementation.  Cause: " + t, t);
+    }
+    setImplementation(implClass);
+  }
+  
+  private static void setImplementation(Class<? extends Log> implClass) {
+    try {
       Constructor<? extends Log> candidate = implClass.getConstructor(new Class[]{String.class});
       Log log = candidate.newInstance(new Object[]{LogFactory.class.getName()});
-      log.debug("Logging initialized using '" + implClassName + "' adapter.");
+      log.debug("Logging initialized using '" + implClass + "' adapter.");
       logConstructor = candidate;
     } catch (Throwable t) {
       throw new LogException("Error setting Log implementation.  Cause: " + t, t);
