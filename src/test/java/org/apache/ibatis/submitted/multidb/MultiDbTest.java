@@ -96,7 +96,19 @@ public class MultiDbTest {
       sqlSession.close();
     }
   }
-  
+
+  @Test
+  public void shouldExecuteHsqlQueryWithInclude() {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      MultiDbMapper mapper = sqlSession.getMapper(MultiDbMapper.class);
+      String answer = mapper.select4(1);
+      assertEquals("hsql", answer);
+    } finally {
+      sqlSession.close();
+    }
+  }
+
   @Test
   public void shouldInsertInCommonWithSelectKey() {
     SqlSession sqlSession = sqlSessionFactory.openSession();

@@ -239,6 +239,7 @@ refid CDATA #REQUIRED
 <!ATTLIST sql
 id CDATA #REQUIRED
 lang CDATA #IMPLIED
+databaseId CDATA #IMPLIED
 >
 
 <!ELEMENT trim (#PCDATA | include | trim | where | set | foreach | choose | if)*>
