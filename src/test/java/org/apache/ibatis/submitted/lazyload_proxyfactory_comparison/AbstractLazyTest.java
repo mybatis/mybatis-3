@@ -26,7 +26,6 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public abstract class AbstractLazyTest {
@@ -92,6 +91,6 @@ public abstract class AbstractLazyTest {
   
   @Test
   public void lazyLoadUserWithNothingWithoutInterface() throws Exception {
-	  Assert.assertNotNull(mapper.getUserWithNothingWithInterface(1).getOwner());
+	  Assert.assertNotNull(mapper.getUserWithNothingWithoutInterface(1).getOwner());
   }
 }
