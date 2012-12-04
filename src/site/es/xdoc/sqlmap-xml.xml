@@ -214,21 +214,21 @@ ps.setInt(1,id);]]></source>
   keyProperty=""
   keyColumn=""
   useGeneratedKeys=""
-  timeout="20000">
+  timeout="20">
 
 <update
   id="insertAuthor"
   parameterType="domain.blog.Author"
   flushCache="true"
   statementType="PREPARED"
-  timeout="20000">
+  timeout="20">
 
 <delete
   id="insertAuthor"
   parameterType="domain.blog.Author"
   flushCache="true"
   statementType="PREPARED"
-  timeout="20000">]]></source>
+  timeout="20">]]></source>
 
         <table>
           <caption>Insert, Update and Delete Attributes</caption>
@@ -262,7 +262,7 @@ ps.setInt(1,id);]]></source>
             </tr>
             <tr>
               <td><code>timeout</code></td>
-              <td>Establece el tiempo máximo que el driver esperará a que la base de datos le devuelva una respuesta antes de lanzar una excepción. Por defecto: no informado (depende del driver de base de datos).</td>
+              <td>Establece el número máximo de segundos que el driver esperará a que la base de datos le devuelva una respuesta antes de lanzar una excepción. Por defecto: no informado (depende del driver de base de datos).</td>
             </tr>
             <tr>
               <td><code>statementType</code></td>

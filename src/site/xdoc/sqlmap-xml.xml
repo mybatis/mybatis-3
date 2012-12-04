@@ -255,21 +255,21 @@ ps.setInt(1,id);]]></source>
   keyProperty=""
   keyColumn=""
   useGeneratedKeys=""
-  timeout="20000">
+  timeout="20">
 
 <update
   id="insertAuthor"
   parameterType="domain.blog.Author"
   flushCache="true"
   statementType="PREPARED"
-  timeout="20000">
+  timeout="20">
 
 <delete
   id="insertAuthor"
   parameterType="domain.blog.Author"
   flushCache="true"
   statementType="PREPARED"
-  timeout="20000">]]></source>
+  timeout="20">]]></source>
 
         <table>
           <caption>Insert, Update and Delete Attributes</caption>
@@ -308,7 +308,7 @@ ps.setInt(1,id);]]></source>
             </tr>
             <tr>
               <td><code>timeout</code></td>
-              <td>This sets the maximum time the driver will wait for the database to return from a
+              <td>This sets the maximum number of seconds the driver will wait for the database to return from a
                 request, before throwing an exception. Default is <code>unset</code> (driver dependent).
               </td>
             </tr>

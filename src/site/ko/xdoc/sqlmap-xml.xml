@@ -197,21 +197,21 @@ ps.setInt(1,id);]]></source>
   keyProperty=""
   keyColumn=""
   useGeneratedKeys=""
-  timeout="20000">
+  timeout="20">
 
 <update
   id="insertAuthor"
   parameterType="domain.blog.Author"
   flushCache="true"
   statementType="PREPARED"
-  timeout="20000">
+  timeout="20">
 
 <delete
   id="insertAuthor"
   parameterType="domain.blog.Author"
   flushCache="true"
   statementType="PREPARED"
-  timeout="20000">]]></source>
+  timeout="20">]]></source>
 
         <table>
           <caption>Insert, Update and Delete Attributes</caption>
