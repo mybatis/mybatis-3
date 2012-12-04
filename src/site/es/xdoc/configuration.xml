@@ -352,7 +352,7 @@ A continuación se muestra un ejemplo del elemento settings al completo:
   <setting name="useGeneratedKeys" value="false"/>
   <setting name="autoMappingBehavior" value="PARTIAL"/>
   <setting name="defaultExecutorType" value="SIMPLE"/>
-  <setting name="defaultStatementTimeout" value="25000"/>
+  <setting name="defaultStatementTimeout" value="25"/>
   <setting name="safeRowBoundsEnabled" value="false"/>
   <setting name="mapUnderscoreToCamelCase" value="false"/>
   <setting name="localCacheScope" value="SESSION"/>

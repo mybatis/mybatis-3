@@ -332,7 +332,7 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
   <setting name="useGeneratedKeys" value="false"/>
   <setting name="autoMappingBehavior" value="PARTIAL"/>
   <setting name="defaultExecutorType" value="SIMPLE"/>
-  <setting name="defaultStatementTimeout" value="25000"/>
+  <setting name="defaultStatementTimeout" value="25"/>
   <setting name="safeRowBoundsEnabled" value="false"/>
   <setting name="mapUnderscoreToCamelCase" value="false"/>
   <setting name="localCacheScope" value="SESSION"/>

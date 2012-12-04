@@ -27,7 +27,7 @@
     <setting name="useColumnLabel" value="true"/>
     <setting name="useGeneratedKeys" value="false"/>
     <setting name="defaultExecutorType" value="BATCH"/>
-    <setting name="defaultStatementTimeout" value="25000"/>
+    <setting name="defaultStatementTimeout" value="25"/>
   </settings>
   <typeAliases>
     <typeAlias type="org.apache.ibatis.submitted.overwritingproperties.Foo" alias="Foo"/>

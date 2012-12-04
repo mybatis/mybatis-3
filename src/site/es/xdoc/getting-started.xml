@@ -28,7 +28,7 @@
 	<body>
 		<section name="Primeros pasos">
 			<p>
-				Una aplicación que usa MyBatis deberá utilizar una instancia de
+				Una aplicación que usa MyBatis debe utilizar una instancia de
 				SqlSessionFactory. Se puede obtener una instancia de
 				SqlSessionFactory mediante un SqlSessionFactoryBuilder. Un
 				SqlSessionFactoryBuilder
