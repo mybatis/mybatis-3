@@ -497,6 +497,18 @@ try {
         that are defined in XML. This annotation will override any <code>@Results</code> or <code>@ConstructorArgs</code>
         annotation if both are specified on an annotated select.</td>
       </tr>
+      <tr>
+        <td><code>@ResultType</code></td>
+        <td><code>Method</code></td>
+        <td>N/A</td>
+        <td>This annotation is used when using a result handler.  In that case, the return type is void
+        so MyBatis must have a way to determine the type of object to construct for each row.
+        If there is an XML result map, use the @ResultMap annotation.  If the result type is
+        specified in XML on the <code>&lt;select&gt;</code> element, then no other annotation is
+        necessary.  In other cases, use this annotation.  For example, if a @Select annotated method
+        will use a result handler, the return type must be void and this annotation (or @ResultMap)
+        is required.  This annotation is ignored unless the method return type is void.</td>
+      </tr>
     </tbody>
   </table>
 

@@ -103,7 +103,7 @@ public class MapperMethod {
   private void executeWithResultHandler(Object[] args) {
     MappedStatement ms = config.getMappedStatement(commandName);
     if (Void.TYPE.equals(ms.getResultMaps().get(0).getType())) {
-      throw new BindingException("method " + method.getName() + " needs either a @ResultMap annotation or a resultType attribute in XML so a ResultHandler can be used as a parameter.");
+      throw new BindingException("method " + method.getName() + " needs either a @ResultMap annotation, a @ResultType annotation, or a resultType attribute in XML so a ResultHandler can be used as a parameter.");
     }
     Object param = getParam(args);
     if (rowBoundsIndex != null) {

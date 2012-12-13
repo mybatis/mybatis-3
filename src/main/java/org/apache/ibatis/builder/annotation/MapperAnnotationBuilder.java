@@ -46,6 +46,7 @@ import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.ResultMap;
+import org.apache.ibatis.annotations.ResultType;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.SelectKey;
@@ -153,6 +154,12 @@ public class MapperAnnotationBuilder {
 
   private String parseResultMap(Method method) {
     Class<?> returnType = getReturnType(method);
+    if (void.class.equals(returnType)) {
+      ResultType rt = method.getAnnotation(ResultType.class);
+      if (rt != null) {
+        returnType = rt.value();
+      }
+    }
     if (returnType != null) {
       ConstructorArgs args = method.getAnnotation(ConstructorArgs.class);
       Results results = method.getAnnotation(Results.class);
