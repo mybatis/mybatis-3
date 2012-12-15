@@ -283,7 +283,6 @@ public abstract class BaseExecutor implements Executor {
     private final CacheKey key;
     private final PerpetualCache localCache;
     private final ObjectFactory objectFactory;
-    private final Configuration configuration;
     private final ResultExtractor resultExtractor;
 
     public DeferredLoad(MappedStatement mappedStatement,
@@ -297,7 +296,6 @@ public abstract class BaseExecutor implements Executor {
       this.key = key;
       this.localCache = localCache;
       this.objectFactory = configuration.getObjectFactory();
-      this.configuration = configuration;
       this.resultExtractor = new ResultExtractor(configuration, objectFactory);
     }
 
