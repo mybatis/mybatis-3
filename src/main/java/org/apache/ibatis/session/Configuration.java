@@ -408,7 +408,7 @@ public class Configuration {
   }
 
   public Executor newExecutor(Transaction transaction, ExecutorType executorType) {
-    return newExecutor(transaction, defaultExecutorType, false);
+    return newExecutor(transaction, executorType, false);
   }
 
   public Executor newExecutor(Transaction transaction, ExecutorType executorType, boolean autoCommit) {
