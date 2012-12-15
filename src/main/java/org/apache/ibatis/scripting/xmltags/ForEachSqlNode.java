@@ -64,9 +64,16 @@ public class ForEachSqlNode implements SqlNode {
         }
       }
       int uniqueNumber = context.getUniqueNumber();
-      applyItem(context, o, uniqueNumber);
-      applyIndex(context, i);
-      contents.apply(new FilteredDynamicContext(configuration, context, item, uniqueNumber));
+      if (o instanceof Map.Entry) { // Issue #709 
+        @SuppressWarnings("unchecked") 
+        Map.Entry<Object, Object> mapEntry = (Map.Entry<Object, Object>) o;
+        applyIndex(context, mapEntry.getKey(), uniqueNumber);
+        applyItem(context, mapEntry.getValue(), uniqueNumber);
+      } else {
+        applyIndex(context, i, uniqueNumber);
+        applyItem(context, o, uniqueNumber);
+      }
+      contents.apply(new FilteredDynamicContext(configuration, context, index, item, uniqueNumber));
       if (first) first = !((PrefixedContext) context).isPrefixApplied();
       context = oldContext;
       i++;
@@ -75,9 +82,10 @@ public class ForEachSqlNode implements SqlNode {
     return true;
   }
 
-  private void applyIndex(DynamicContext context, int i) {
+  private void applyIndex(DynamicContext context, Object o, int i) {
     if (index != null) {
       context.bind(index, i);
+      context.bind(itemizeItem(index, i), o);
     }
   }
 
@@ -107,12 +115,14 @@ public class ForEachSqlNode implements SqlNode {
   private static class FilteredDynamicContext extends DynamicContext {
     private DynamicContext delegate;
     private int index;
+    private String itemIndex;
     private String item;
 
-    public FilteredDynamicContext(Configuration configuration,DynamicContext delegate, String item, int i) {
+    public FilteredDynamicContext(Configuration configuration,DynamicContext delegate, String itemIndex, String item, int i) {
       super(configuration, null);
       this.delegate = delegate;
       this.index = i;
+      this.itemIndex = itemIndex;
       this.item = item;
     }
 
@@ -136,6 +146,9 @@ public class ForEachSqlNode implements SqlNode {
       GenericTokenParser parser = new GenericTokenParser("#{", "}", new TokenHandler() {
         public String handleToken(String content) {
           String newContent = content.replaceFirst(item, itemizeItem(item, index));
+          if (itemIndex != null && newContent.equals(content)) {
+            newContent = content.replaceFirst(itemIndex, itemizeItem(itemIndex, index));
+          }
           return new StringBuilder("#{").append(newContent).append("}").toString();
         }
       });

@@ -19,6 +19,7 @@ import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.builder.BuilderException;
 
@@ -46,6 +47,9 @@ public class ExpressionEvaluator {
             answer.add(o);
         }
         return answer;
+    }
+    if (value instanceof Map) {
+      return ((Map) value).entrySet();
     }
     throw new BuilderException("Error evaluating expression '" + expression + "'.  Return value (" + value + ") was not iterable.");
   }
