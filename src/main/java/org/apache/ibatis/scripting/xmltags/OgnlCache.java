@@ -28,18 +28,24 @@ import ognl.OgnlParser;
 import ognl.ParseException;
 import ognl.TokenMgrError;
 
+import org.apache.ibatis.builder.BuilderException;
+
 /**
- *
- * Caches OGNL parsed expressions.
- * Have a look at http://code.google.com/p/mybatis/issues/detail?id=342
- *
+ * 
+ * Caches OGNL parsed expressions. Have a look at
+ * http://code.google.com/p/mybatis/issues/detail?id=342
+ * 
  */
 public class OgnlCache {
 
   private static final Map<String, ognl.Node> expressionCache = new ConcurrentHashMap<String, ognl.Node>();
 
-  public static Object getValue(String expression, Object root) throws OgnlException {
-    return Ognl.getValue(parseExpression(expression), root);
+  public static Object getValue(String expression, Object root) {
+    try {
+      return Ognl.getValue(parseExpression(expression), root);
+    } catch (OgnlException e) {
+      throw new BuilderException("Error evaluating expression '" + expression + "'. Cause: " + e, e);
+    }
   }
 
   private static Object parseExpression(String expression) throws OgnlException {

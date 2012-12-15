@@ -15,9 +15,6 @@
  */
 package org.apache.ibatis.scripting.xmltags;
 
-import ognl.OgnlException;
-
-import org.apache.ibatis.builder.BuilderException;
 import org.apache.ibatis.parsing.GenericTokenParser;
 import org.apache.ibatis.parsing.TokenHandler;
 import org.apache.ibatis.type.SimpleTypeRegistry;
@@ -44,18 +41,14 @@ public class TextSqlNode implements SqlNode {
     }
 
     public String handleToken(String content) {
-      try {
-        Object parameter = context.getBindings().get("_parameter");
-        if (parameter == null) {
-          context.getBindings().put("value", null);
-        } else if (SimpleTypeRegistry.isSimpleType(parameter.getClass())) {
-          context.getBindings().put("value", parameter);
-        }
-        Object value = OgnlCache.getValue(content, context.getBindings());
-        return (value == null ? "" : String.valueOf(value)); // issue #274 return "" instead of "null"
-      } catch (OgnlException e) {
-        throw new BuilderException("Error evaluating expression '" + content + "'. Cause: " + e, e);
+      Object parameter = context.getBindings().get("_parameter");
+      if (parameter == null) {
+        context.getBindings().put("value", null);
+      } else if (SimpleTypeRegistry.isSimpleType(parameter.getClass())) {
+        context.getBindings().put("value", parameter);
       }
+      Object value = OgnlCache.getValue(content, context.getBindings());
+      return (value == null ? "" : String.valueOf(value)); // issue #274 return "" instead of "null"
     }
   }
 

@@ -15,13 +15,9 @@
  */
 package org.apache.ibatis.scripting.xmltags;
 
-import ognl.OgnlException;
-import org.apache.ibatis.builder.BuilderException;
-
 public class VarDeclSqlNode implements SqlNode {
 
   private final String name;
-
   private final String expression;
 
   public VarDeclSqlNode(String var, String exp) {
@@ -30,13 +26,9 @@ public class VarDeclSqlNode implements SqlNode {
   }
 
   public boolean apply(DynamicContext context) {
-    try {
-      final Object value = OgnlCache.getValue(expression, context.getBindings());
-      context.bind(name, value);
-      return true;
-    } catch (OgnlException ex) {
-      throw new BuilderException("Error evaluating expression '" + expression + "'. Cause: " + ex.getMessage(), ex);
-    }
+    final Object value = OgnlCache.getValue(expression, context.getBindings());
+    context.bind(name, value);
+    return true;
   }
 
 }
