@@ -15,24 +15,24 @@
  */
 package org.apache.ibatis.exceptions;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+import java.lang.reflect.InvocationTargetException;
+
 import org.apache.ibatis.binding.BindingException;
 import org.apache.ibatis.builder.BuilderException;
 import org.apache.ibatis.cache.CacheException;
 import org.apache.ibatis.datasource.DataSourceException;
 import org.apache.ibatis.executor.ExecutorException;
 import org.apache.ibatis.logging.LogException;
-import org.apache.ibatis.mapping.SqlMapperException;
 import org.apache.ibatis.parsing.ParsingException;
 import org.apache.ibatis.plugin.PluginException;
 import org.apache.ibatis.reflection.ReflectionException;
 import org.apache.ibatis.session.SqlSessionException;
 import org.apache.ibatis.transaction.TransactionException;
 import org.apache.ibatis.type.TypeException;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import org.junit.Test;
-
-import java.lang.reflect.InvocationTargetException;
 
 public class GeneralExceptionsTest {
 
@@ -60,7 +60,6 @@ public class GeneralExceptionsTest {
         ReflectionException.class,
         PersistenceException.class,
         SqlSessionException.class,
-        SqlMapperException.class,
         TransactionException.class,
         TypeException.class
     };
