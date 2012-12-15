@@ -62,7 +62,7 @@ public class TrimSqlNode implements SqlNode {
         }
       };
     }
-    return Collections.EMPTY_LIST;
+    return Collections.emptyList();
   }
 
   private class FilteredDynamicContext extends DynamicContext {
