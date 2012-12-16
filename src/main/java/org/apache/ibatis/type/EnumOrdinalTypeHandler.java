@@ -26,11 +26,10 @@ public class EnumOrdinalTypeHandler<E extends Enum<E>> extends BaseTypeHandler<E
   private final E[] enums;
 
   public EnumOrdinalTypeHandler(Class<E> type) {
+    if (type == null) throw new IllegalArgumentException("Type argument cannot be null");
     this.type = type;
     this.enums = type.getEnumConstants();
-    if (this.enums == null) {
-      throw new IllegalArgumentException(type.getSimpleName() + " does not represent an enum type.");
-    }
+    if (this.enums == null) throw new IllegalArgumentException(type.getSimpleName() + " does not represent an enum type.");
   }
 
   @Override
