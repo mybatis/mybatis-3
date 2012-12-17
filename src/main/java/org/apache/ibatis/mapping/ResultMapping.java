@@ -117,11 +117,20 @@ public class ResultMapping {
     }
 
     public ResultMapping build() {
+      validate();
+
       // lock down collections
       resultMapping.flags = Collections.unmodifiableList(resultMapping.flags);
       resultMapping.composites = Collections.unmodifiableList(resultMapping.composites);
       resolveTypeHandler();
       return resultMapping;
+    }
+
+    private void validate() {
+      // Issue 697: cannot define both nestedQueryId and nestedResultMapId
+      if (resultMapping.nestedQueryId != null && resultMapping.nestedResultMapId != null) {
+        throw new IllegalStateException("Cannot define both nestedQueryId and nestedResultMapId");
+      }
     }
 
     private void resolveTypeHandler() {
