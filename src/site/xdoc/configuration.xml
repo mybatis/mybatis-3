@@ -1114,6 +1114,90 @@ public class ExampleTypeHandler extends BaseTypeHandler<String> {
           specified with annotations.
         </p>
       </subsection>
+      
+      <subsection name="EnumTypeHandler and EnumOrdinalTypeHandler">
+      	<p>
+      	  If you want to map an <code>enum</code>, you'll need to use either
+      	  <code>EnumTypeHandler</code> or <code>EnumOrdinalTypeHandler</code>. 
+      	</p>
+      	<p>For example, let's say that we need to store the rounding mode that 
+      	should be used with some number if it needs to be rounded.  By default, MyBatis
+      	uses <code>EnumTypeHandler</code> to convert the <code>enum</code>
+      	values to their names.
+      	</p>
+
+      	<p>However, we may not want to store names.  Our DBA may insist on an 
+      	integer code instead.  That's just as easy: add <code>EnumOrdinalTypeHandler</code>
+      	to the <code>typeHandlers</code> in your config file, and now each
+      	<code>RoundingMode</code> will be mapped to an integer using its ordinal value.     	
+      	</p>
+       <source><![CDATA[<!-- mybatis-config.xml -->
+<typeHandlers>
+  <typeHandler handler="org.apache.ibatis.type.EnumOrdinalTypeHandler" javaType="java.math.RoundingMode"/>
+</typeHandlers>
+]]></source>
+		<p>
+		  But what if you want to map the same <code>enum</code> to a 
+		  string in one place and to integer in another? 
+		</p>
+      	<p>
+      	  The auto-mapper will automatically use <code>EnumOrdinalTypeHandler</code>
+      	  if it is available, so if we want to go back to using plain old ordinary
+      	  <code>EnumTypeHandler</code>, we have to tell it, by explicitly setting 
+      	  the type handler to use for those SQL statements. 
+      	</p>
+      	<p>
+      	  (Mapper files aren't covered until the next section, so if this is your first
+      	  time reading through the documentation, you may want to skip this for now
+      	  and come back to it later.)
+      	</p>
+      	<source><![CDATA[<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.apache.ibatis.submitted.rounding.Mapper">
+	<resultMap type="org.apache.ibatis.submitted.rounding.User" id="usermap">
+		<id column="id" property="id"/>
+		<result column="name" property="name"/>
+		<result column="funkyNumber" property="funkyNumber"/>
+		<result column="roundingMode" property="roundingMode"/>
+	</resultMap>
+
+	<select id="getUser" resultMap="usermap">
+		select * from users
+	</select>
+	<insert id="insert" parameterType="org.apache.ibatis.submitted.rounding.User">
+	    insert into users (id, name, funkyNumber, roundingMode) values (
+	    	#{id}, #{name}, #{funkyNumber}, #{roundingMode}
+	    )
+	</insert>
+	
+	<resultMap type="org.apache.ibatis.submitted.rounding.User" id="usermap2">
+		<id column="id" property="id"/>
+		<result column="name" property="name"/>
+		<result column="funkyNumber" property="funkyNumber"/>
+		<result column="roundingMode" property="roundingMode" typeHandler="org.apache.ibatis.type.EnumTypeHandler"/>
+	</resultMap>
+	<select id="getUser2" resultMap="usermap2">
+		select * from users2
+	</select>
+	<insert id="insert2" parameterType="org.apache.ibatis.submitted.rounding.User">
+	    insert into users2 (id, name, funkyNumber, roundingMode) values (
+	    	#{id}, #{name}, #{funkyNumber}, #{roundingMode, typeHandler=org.apache.ibatis.type.EnumTypeHandler}
+	    )
+	</insert>
+
+</mapper>
+]]></source>
+		<p>
+		  Note that this forces us to use a <code>resultMap</code> 
+		  instead of a <code>resultType</code> in our select statements.
+		</p>
+      </subsection>
 
       <subsection name="objectFactory">
         <p>
