@@ -1113,8 +1113,8 @@ public class ExampleTypeHandler extends BaseTypeHandler<String> {
 
         <p>
           You can create a generic TypeHandler that is able to handle more than one class. For that purpose  
-          add a constructor that receives the class as a parameter and MyBatis will pass the actual class to the 
-          TypeHandler. This is how EnumTypeHandler and EnymOrdinalTypeHandler handle enums (see next section).
+          add a constructor that receives the class as a parameter and MyBatis will pass the actual class when
+          constructing the TypeHandler.
         </p>
 
         <source><![CDATA[//GenericTypeHandler.java
@@ -1128,6 +1128,11 @@ public class GenericTypeHandler<E extends MyObject> extends BaseTypeHandler<E> {
   }
   ...
 ]]></source>
+
+		<p><code>EnumTypeHandler</code> and <code>EnumOrdinalTypeHandler</code> are generic TypeHandlers. We will learn 
+		about them in the following section. 
+		</p>
+
       </subsection>
       
       <subsection name="Handling Enums">
@@ -1157,12 +1162,12 @@ public class GenericTypeHandler<E extends MyObject> extends BaseTypeHandler<E> {
 </typeHandlers>
 ]]></source>
 		<p>
-		  But what if you want to map the same <code>enum</code> to a 
+		  But what if you want to map the same <code>Enum</code> to a 
 		  string in one place and to integer in another? 
 		</p>
       	<p>
-      	  The auto-mapper will automatically use <code>EnumOrdinalTypeHandler</code>
-      	  if it is available, so if we want to go back to using plain old ordinary
+      	  The auto-mapper will automatically use <code>EnumOrdinalTypeHandler</code>, 
+      	  so if we want to go back to using plain old ordinary
       	  <code>EnumTypeHandler</code>, we have to tell it, by explicitly setting 
       	  the type handler to use for those SQL statements. 
       	</p>

@@ -436,6 +436,18 @@ try {
         <td>N/A</td>
         <td>Esta anotación se usa para proporcionar el id de un elemento &lt;resultMap&gt; en un mapper XML a una anotación @Select o @SelectProvider. Esto permite a las selects anotadas reusar resultmaps definidas en XML. Esta anotación sobrescribe las anotaciones @Result o @ConstructorArgs en caso de que se hayan especificado en la select anotada.</td>
       </tr>
+      <tr>
+        <td><code>@ResultType</code></td>
+        <td><code>Method</code></td>
+        <td>N/A</td>
+        <td>Esta anotación se usa cuando se utiliza un result handler. En ese caso, el tipo devuelto por el método es void y
+        MyBatis no puede determinar el tipo del objeto que debe construir para cada fila. 
+        Si hay un result map XML entonces se utiliza la anotación @ResultMap. Si el tipo de retorno se especifica en el 
+        elemento <code>&lt;select&gt;</code> del XML entonces no es necesaria ninguna otra anotación.  
+        En el resto de casos, usa esta anotación. Por ejemplo en un método anotado con @Select con un result handler
+        el valor de retorno será void y por tanto se requiere incluir esta anotación (o @ResultMap).
+        La anotación se ignora si el tipo devuelto por el méotdo no es void.</td>
+      </tr>
     </tbody>
   </table>
 

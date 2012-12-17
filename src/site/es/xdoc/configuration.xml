@@ -969,8 +969,118 @@ public class ExampleTypeHandler extends BaseTypeHandler<String> {
 ]]></source>
 
         <p>
-          Observa que cuando usas la función de búsqueda los tipos JDBC solo se pueden especificar usando anotaciones.
+          Observa que cuando usas la función de búsqueda los tipos JDBC sólo se pueden especificar usando anotaciones.
         </p>
+
+        <p>
+          Puedes crear un TypeHandler genérico que sea capaz de manejar más de un tipo de clase. Para ello añade
+          un constructor que recibe una clase como parámetro y MyBatis le pasará la clase actual cuando construya
+          el TypeHandler.
+        </p>
+
+        <source><![CDATA[//GenericTypeHandler.java
+public class GenericTypeHandler<E extends MyObject> extends BaseTypeHandler<E> {
+
+  private Class<E> type;
+
+  public GenericTypeHandler(Class<E> type) {
+    if (type == null) throw new IllegalArgumentException("Type argument cannot be null");
+    this.type = type;
+  }
+  ...
+]]></source>
+
+		<p><code>EnumTypeHandler</code> y <code>EnumOrdinalTypeHandler</code> son TypeHandlers genéricos. 
+		Conoceremos más sobre ellos en la próxima sección. 
+		</p>
+
+      </subsection>
+      
+      <subsection name="Handling Enums">
+      	<p>
+      	Si quires mapear un <code>Enum</code>, debes usar bien un 
+      	<code>EnumTypeHandler</code> o un <code>EnumOrdinalTypeHandler</code>. 
+      	</p>
+      	
+      	<p>Por ejemplo, digamos que quieres guardar el modo de reondeo que debe
+      	usarse con un número determinado que debe redondearse. Por defecto MyBatis
+      	usa un <code>EnumTypeHandler</code> para comvertir los valores del  <code>Enum</code>
+      	a sus nombres.
+      	</p>
+      	
+      	<b>Observa que el <code>EnumTypeHandler</code> es un handler especial en el sentido de que 
+      	no maneja una clase específica, como los demás handlers sino cualquier clase que extiende 
+      	de <code>Enum</code></b>
+
+      	<p>
+      	Sin embargo, puede que no queramos guardar nombres. Nuestro DBA puede insistir en que 
+      	usemos un entero en su lugar. Muy sencillo: añade un <code>EnumOrdinalTypeHandler</code>
+      	a las sección de <code>typeHandlers</code> de tu fichero de configuración y ahora todos los
+      	<code>RoundingMode</code> se mapearán a un entero usando su valor ordinal.
+      	</p>
+       <source><![CDATA[<!-- mybatis-config.xml -->
+<typeHandlers>
+  <typeHandler handler="org.apache.ibatis.type.EnumOrdinalTypeHandler" javaType="java.math.RoundingMode"/>
+</typeHandlers>
+]]></source>
+		<p>
+		  Pero ¿y si quieres mapear el mismo <code>Enum</code> a un string en un sitio pero a un entero en otro? 
+		</p>
+      	<p>
+      	  El mapeo automático siempre usará <code>EnumOrdinalTypeHandler</code>,
+      	  así que si queremos usar el clásico <code>EnumTypeHandler</code>, 
+      	  debemos indicarlo establiencidolo esplícitamente su uso en los statements. 
+      	</p>
+      	<p>
+      	  Los mappers no se tratarán hasta la sección siguiente asi que si esta es tu primera lectura de
+      	  la documentación quizá prefieras saltarte esta sección por ahora y volver más tarde).
+      	</p>
+      	<source><![CDATA[<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.apache.ibatis.submitted.rounding.Mapper">
+	<resultMap type="org.apache.ibatis.submitted.rounding.User" id="usermap">
+		<id column="id" property="id"/>
+		<result column="name" property="name"/>
+		<result column="funkyNumber" property="funkyNumber"/>
+		<result column="roundingMode" property="roundingMode"/>
+	</resultMap>
+
+	<select id="getUser" resultMap="usermap">
+		select * from users
+	</select>
+	<insert id="insert" parameterType="org.apache.ibatis.submitted.rounding.User">
+	    insert into users (id, name, funkyNumber, roundingMode) values (
+	    	#{id}, #{name}, #{funkyNumber}, #{roundingMode}
+	    )
+	</insert>
+	
+	<resultMap type="org.apache.ibatis.submitted.rounding.User" id="usermap2">
+		<id column="id" property="id"/>
+		<result column="name" property="name"/>
+		<result column="funkyNumber" property="funkyNumber"/>
+		<result column="roundingMode" property="roundingMode" typeHandler="org.apache.ibatis.type.EnumTypeHandler"/>
+	</resultMap>
+	<select id="getUser2" resultMap="usermap2">
+		select * from users2
+	</select>
+	<insert id="insert2" parameterType="org.apache.ibatis.submitted.rounding.User">
+	    insert into users2 (id, name, funkyNumber, roundingMode) values (
+	    	#{id}, #{name}, #{funkyNumber}, #{roundingMode, typeHandler=org.apache.ibatis.type.EnumTypeHandler}
+	    )
+	</insert>
+
+</mapper>
+]]></source>
+		<p>
+		  Observa que esto nos fuerza a usar un <code>resultMap</code> 
+		  en lugar de un <code>resultType</code> en nuestros statements tipo select.
+		</p>
       </subsection>
 
       <subsection name="objectFactory">
