@@ -392,16 +392,10 @@ public class MapperBuilderAssistant extends BaseBuilder {
       String columnPrefix,
       Class<? extends TypeHandler<?>> typeHandler,
       List<ResultFlag> flags) {
-    nestedResultMap = applyCurrentNamespace(nestedResultMap, true);
     Class<?> javaTypeClass = resolveResultJavaType(resultType, property, javaType);
     TypeHandler<?> typeHandlerInstance = resolveTypeHandler(javaTypeClass, typeHandler);
-
     List<ResultMapping> composites = parseCompositeColumnName(column);
-    if (composites.size() > 0) {
-      ResultMapping first = composites.get(0);
-      column = first.getColumn();
-    }
-
+    if (composites.size() > 0) column = null;
     ResultMapping.Builder builder = new ResultMapping.Builder(configuration, property, column, javaTypeClass);
     builder.jdbcType(jdbcType);
     builder.nestedQueryId(applyCurrentNamespace(nestedSelect, true));
@@ -411,7 +405,6 @@ public class MapperBuilderAssistant extends BaseBuilder {
     builder.composites(composites);
     builder.notNullColumns(parseMultipleColumnNames(notNullColumn));
     builder.columnPrefix(columnPrefix);
-
     return builder.build();
   }
 
@@ -433,16 +426,13 @@ public class MapperBuilderAssistant extends BaseBuilder {
 
   private List<ResultMapping> parseCompositeColumnName(String columnName) {
     List<ResultMapping> composites = new ArrayList<ResultMapping>();
-    if (columnName != null) {
-      if (columnName.indexOf('=') > -1
-          || columnName.indexOf(',') > -1) {
-        StringTokenizer parser = new StringTokenizer(columnName, "{}=, ", false);
-        while (parser.hasMoreTokens()) {
-          String property = parser.nextToken();
-          String column = parser.nextToken();
-          ResultMapping.Builder complexBuilder = new ResultMapping.Builder(configuration, property, column, configuration.getTypeHandlerRegistry().getUnknownTypeHandler());
-          composites.add(complexBuilder.build());
-        }
+    if (columnName != null && columnName.indexOf('=') > -1 || columnName.indexOf(',') > -1) {
+      StringTokenizer parser = new StringTokenizer(columnName, "{}=, ", false);
+      while (parser.hasMoreTokens()) {
+        String property = parser.nextToken();
+        String column = parser.nextToken();
+        ResultMapping.Builder complexBuilder = new ResultMapping.Builder(configuration, property, column, configuration.getTypeHandlerRegistry().getUnknownTypeHandler());
+        composites.add(complexBuilder.build());
       }
     }
     return composites;
