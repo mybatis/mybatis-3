@@ -402,11 +402,6 @@ public class MapperBuilderAssistant extends BaseBuilder {
       column = first.getColumn();
     }
 
-    // issue #4 column is mandatory on nested queries
-    if (nestedSelect != null && column == null) {
-      throw new BuilderException("Missing column attribute for nested select in property " + property);
-    }
-
     ResultMapping.Builder builder = new ResultMapping.Builder(configuration, property, column, javaTypeClass);
     builder.jdbcType(jdbcType);
     builder.nestedQueryId(applyCurrentNamespace(nestedSelect, true));

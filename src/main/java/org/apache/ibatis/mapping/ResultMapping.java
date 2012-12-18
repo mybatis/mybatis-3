@@ -118,7 +118,6 @@ public class ResultMapping {
 
     public ResultMapping build() {
       validate();
-
       // lock down collections
       resultMapping.flags = Collections.unmodifiableList(resultMapping.flags);
       resultMapping.composites = Collections.unmodifiableList(resultMapping.composites);
@@ -127,9 +126,13 @@ public class ResultMapping {
     }
 
     private void validate() {
+      // Issue 4: column is mandatory on nested queries
+      if (resultMapping.nestedQueryId != null && resultMapping.column == null) {
+        throw new IllegalStateException("Missing column attribute for nested select in property " + resultMapping.property);
+      }
       // Issue 697: cannot define both nestedQueryId and nestedResultMapId
       if (resultMapping.nestedQueryId != null && resultMapping.nestedResultMapId != null) {
-        throw new IllegalStateException("Cannot define both nestedQueryId and nestedResultMapId");
+        throw new IllegalStateException("Cannot define both nestedQueryId and nestedResultMapId in property " + resultMapping.property);
       }
     }
 
