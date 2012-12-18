@@ -127,7 +127,7 @@ public class ResultMapping {
 
     private void validate() {
       // Issue 4: column is mandatory on nested queries
-      if (resultMapping.nestedQueryId != null && resultMapping.column == null) {
+      if (resultMapping.nestedQueryId != null && resultMapping.column == null && resultMapping.composites.size() == 0) {
         throw new IllegalStateException("Missing column attribute for nested select in property " + resultMapping.property);
       }
       // Issue 697: cannot define both nestedQueryId and nestedResultMapId
