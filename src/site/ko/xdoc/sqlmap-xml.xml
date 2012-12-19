@@ -174,7 +174,7 @@ ps.setInt(1,id);]]></source>
               </td>
             </tr>
             <tr>
-              <td><code>nestedResultOrdered</code></td>
+              <td><code>resultOrdered</code></td>
               <td>This is only applicable for nested result select statements: If this is true, it
                 is assumed that nested results are contained or grouped together such that when a
                 new main result row is returned, no references to a previous result row will occur

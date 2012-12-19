@@ -191,7 +191,7 @@ ps.setInt(1,id);]]></source>
               </td>
             </tr>
             <tr>
-              <td><code>nestedResultOrdered</code></td>
+              <td><code>resultOrdered</code></td>
               <td>De aplicación exclusiva para select anidadas. Si es true, se asume que los resultados anidados están
                 agrupados de forma que cuando se lee un nuevo resultado principal nuevo, no habrá más referencias
                 a resultados principales anteriores. De esta forma los resultados anidados se rellenarán de 
