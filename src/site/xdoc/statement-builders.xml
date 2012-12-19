@@ -85,19 +85,13 @@ private String selectPersonSql() {
 
       <p>What is so special about that example? Well, if you look closely, it doesn't have to worry about
           accidentally duplicating "AND" keywords, or choosing between "WHERE"
-          and "AND" or none at all. The statement above will generate a query by example for all PERSON
-          records, ones with ID like the parameter, or the firstName like the parameter, or the lastName like the
-          parameter
-          -or any combination of the three. The SelectBuilder takes care of understanding where "WHERE"
-          needs to go, where an "AND" should be used and all of the String concatenation. Best of all,
-          it does it almost regardless of which order you call these methods in (there's only one exception with the
-          OR() method).
+          and "AND" or none at all. The SQL class takes care of understanding where "WHERE"
+          needs to go, where an "AND" should be used and all of the String concatenation.
         </p>
 
       </subsection>
 
       <subsection name="The SQL Class">
-        <source>import org.apache.ibatis.jdbc.SQL;</source>
 
         <p>Here are some examples:</p>
 
@@ -354,7 +348,7 @@ public String updatePersonSql() {
           Originally we took a bit of a different approach, by utilizing a ThreadLocal variable to mask some of the
           language limitations that make Java DSLs a bit cumbersome. However, this approach is now deprecated, as modern
           frameworks have warmed people to the idea of using builder-type patterns and anonymous inner classes for such
-          things. Therefore the SelectBuilder and SQLBuilder classes have been deprecated.
+          things. Therefore the SelectBuilder and SqlBuilder classes have been deprecated.
         </p>
         <p>
           The following methods apply to only the deprecated SqlBuilder and SelectBuilder classes.
