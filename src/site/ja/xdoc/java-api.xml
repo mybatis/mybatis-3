@@ -237,7 +237,7 @@ void rollback(boolean force)</source>
   <p>MyBatis は２種類の内部キャッシュを使用します。</p>
   <p>新しいセッションが生成される際、同時にローカルキャッシュが作成され、セッションにアタッチされます。このセッション内で実行されるクエリは全てローカルキャッシュに保存され、同一パラメーターで再度呼び出された場合はデータベースに問い合わせずに結果を返します。ローカルキャッシュは update, commit, rollback, close が実行されるとクリアされるようになっています。</p>
   <p>デフォルトでは、ローカルキャッシュはセッションが破棄されるまで保持されます。ローカルキャッシュは ResultMap の循環参照の解決やネストされたクエリの効率化にも使用されているため、完全に無効化することはできませんが、localCacheScope に STATEMENT を設定することで保持期間をステートメント単位に変更することができます。</p>
-  <p>Note that when the localCacheScope is set to SESSION, MyBatis returns references to the same objects which are stored in the local cache. Any modification of returned object (lists etc.) influences the local cache contents and subsequently the values which are returned from the cache in the lifetime of the session. Therefore, as best practice, do not to modify the objects returned by MyBatis.</p>
+  <p>localCacheScope に SESSION が設定されている場合、MyBatis は同一オブジェクトへの参照を返すという点に注意してください。返されたオブジェクトやリストなどに変更を加えた場合、ローカルキャッシュの内容が変更されることになるので、セッションが有効な間に同じクエリを発行すると意図しない結果が戻ることになります。同一セッション内で同じクエリを繰り返し発行するようなケースでは、結果として返されたオブジェクトを変更しないほうが無難です。</p>
   <p>また、次のメソッドを呼び出すことにより任意のタイミングでローカルキャッシュをクリアすることも可能です。</p>
   <source>void clearCache()</source>
 
@@ -459,14 +459,8 @@ try {
         <td><code>@ResultType</code></td>
         <td><code>Method</code></td>
         <td>N/A</td>
-        <td>This annotation is used when using a result handler.  In that case, the return type is void
-        so MyBatis must have a way to determine the type of object to construct for each row.
-        If there is an XML result map, use the @ResultMap annotation.  If the result type is
-        specified in XML on the <code>&lt;select&gt;</code> element, then no other annotation is
-        necessary.  In other cases, use this annotation.  For example, if a @Select annotated method
-        will use a result handler, the return type must be void and this annotation (or @ResultMap)
-        is required.  This annotation is ignored unless the method return type is void.</td>
-      </tr>      
+        <td>ResultHandler を使うメソッドでは戻り値の型が void となるので、このアノテーションを使って各行のデータをどのクラスにマップするかを指定します。XMLの ResultMap が存在する場合は @ResultMap アノテーションで指定することができます。XML の <code>&lt;select&gt;</code> 要素で resultType が指定されている場合はアノテーションによる指定は不要です。それ以外の場合、例えば @Select アノテーションが付加された引数に ResultHandler を含むメソッドの場合は戻り値の型は void である必要があるので、このアノテーション（あるいは @ResultMap）を使って型を指定する必要があります。メソッドの戻り値の型が void 以外の場合、このアノテーションは無視されます。</td>
+      </tr>
     </tbody>
   </table>
 

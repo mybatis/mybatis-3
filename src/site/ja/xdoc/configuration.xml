@@ -346,13 +346,13 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 logPrefix
               </td>
               <td>
-                Specifies the prefix string that MyBatis will add to the logger names. 
+                MyBatis が出力するログに付加される接頭辞を指定します。
               </td>
               <td>
-                Any String
+                任意の文字列
               </td>
               <td>
-                Not set
+                未指定
               </td>
             </tr>
             <tr>
@@ -360,8 +360,8 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 callSettersOnNulls
               </td>
               <td>
-                Specifies if setters or map's put method will be called when a retrieved value is null. Note that if set, properties 
-                that may be filled with null values must never be primitives. 
+                受け取った値が null の場合にセッターあるいは Map の put メソッドを呼び出すかどうかを指定します。
+                true を指定した場合、null がセットされる可能性があるプロパティをプリミティブ型として定義することはできません。
               </td>
               <td>
                 true | false
@@ -1028,9 +1028,8 @@ public class BigIntegerHandler implements TypeHandler<BigInteger> {
 ]]></source>
 
         <p>
-          You can create a generic TypeHandler that is able to handle more than one class. For that purpose  
-          add a constructor that receives the class as a parameter and MyBatis will pass the actual class when
-          constructing the TypeHandler.
+          複数のクラスを扱う汎用の TypeHandler を作成することもできます。
+          引数に Class を受け取るコンストラクタを定義しておくと、MyBatis が TypeHandler のインスタンスを作成する際に実際のクラスが渡されます。
         </p>
 
         <source><![CDATA[//GenericTypeHandler.java
@@ -1045,54 +1044,41 @@ public class GenericTypeHandler<E extends MyObject> extends BaseTypeHandler<E> {
   ...
 ]]></source>
 
-		<p><code>EnumTypeHandler</code> and <code>EnumOrdinalTypeHandler</code> are generic TypeHandlers. We will learn 
-		about them in the following section. 
-		</p>
+        <p>この後の節では汎用の TypeHandler である <code>EnumTypeHandler</code> と <code>EnumOrdinalTypeHandler</code> について解説します。
+        </p>
 
       </subsection>
       
       <subsection name="Handling Enums">
-      	<p>
-      	  If you want to map an <code>Enum</code>, you'll need to use either
-      	  <code>EnumTypeHandler</code> or <code>EnumOrdinalTypeHandler</code>. 
-      	</p>
-      	
-      	<p>For example, let's say that we need to store the rounding mode that 
-      	should be used with some number if it needs to be rounded. By default, MyBatis
-      	uses <code>EnumTypeHandler</code> to convert the <code>Enum</code>
-      	values to their names.
-      	</p>
-      	
-      	<b>Note that <code>EnumTypeHandler</code> is an special handler in the sense that it 
-      	does not handle an specific class, like the other handlers, 
-      	but any class that extends <code>Enum</code></b>
+        <p>
+          <code>Enum</code> （列挙型）をマップする場合、
+          <code>EnumTypeHandler</code> または <code>EnumOrdinalTypeHandler</code> のどちらかを使うことになります。
+        </p>
+        
+        <p>例えば数値の丸めモード（java.math.RoundingMode）を格納する場合、デフォルトでは <code>EnumTypeHandler</code> が使われ、各 <code>Enum</code> は名前の文字列（DOWN, HALF_UP, etc.）に変換されます。
+        </p>
+        
+        <b>他の TypeHandler が特定のクラスを対象としているのに対し、<code>EnumTypeHandler</code> は <code>Enum</code> を継承した任意のクラスを対象とする特別な TypeHandler です。</b>
 
-      	<p>However, we may not want to store names. Our DBA may insist on an 
-      	integer code instead. That's just as easy: add <code>EnumOrdinalTypeHandler</code>
-      	to the <code>typeHandlers</code> in your config file, and now each
-      	<code>RoundingMode</code> will be mapped to an integer using its ordinal value.     	
-      	</p>
+        <p>では名前以外の値を格納したい場合、例えばデータベース管理者が数値で格納して欲しいと言ってきた場合はどうすれば良いのでしょうか。
+        簡単です：設定ファイルの <code>typeHandlers</code> に <code>EnumOrdinalTypeHandler</code> を追加すれば <code>RoundingMode</code> は ordinal の数値に変換されてマップされます。
+        </p>
        <source><![CDATA[<!-- mybatis-config.xml -->
 <typeHandlers>
   <typeHandler handler="org.apache.ibatis.type.EnumOrdinalTypeHandler" javaType="java.math.RoundingMode"/>
 </typeHandlers>
 ]]></source>
-		<p>
-		  But what if you want to map the same <code>Enum</code> to a 
-		  string in one place and to integer in another? 
-		</p>
-      	<p>
-      	  The auto-mapper will automatically use <code>EnumOrdinalTypeHandler</code>, 
-      	  so if we want to go back to using plain old ordinary
-      	  <code>EnumTypeHandler</code>, we have to tell it, by explicitly setting 
-      	  the type handler to use for those SQL statements. 
-      	</p>
-      	<p>
-      	  (Mapper files aren't covered until the next section, so if this is your first
-      	  time reading through the documentation, you may want to skip this for now
-      	  and come back to it later.)
-      	</p>
-      	<source><![CDATA[<!DOCTYPE mapper
+        <p>
+          では、同じ <code>Enum</code> を、あるテーブルには文字列として格納し、別のテーブルには数値として格納したいといった場合はどうでしょう。
+        </p>
+        <p>
+          上の設定により自動マッピングでは <code>EnumOrdinalTypeHandler</code> が使われますので、
+          <code>EnumTypeHandler</code> を使いたい箇所ではこれを明示的に指定する必要があります。
+        </p>
+        <p>
+          （Mapper ファイルについては次の章で解説していますので、このドキュメントを初めて読む方はこの部分を後回しにした方が良いかも知れません）
+        </p>
+        <source><![CDATA[<!DOCTYPE mapper
     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
@@ -1134,10 +1120,9 @@ public class GenericTypeHandler<E extends MyObject> extends BaseTypeHandler<E> {
 
 </mapper>
 ]]></source>
-		<p>
-		  Note that this forces us to use a <code>resultMap</code> 
-		  instead of a <code>resultType</code> in our select statements.
-		</p>
+        <p>
+          typeHandler を指定するため、select 要素では <code>resultType</code> ではなく <code>resultMap</code> を使う必要があります。
+        </p>
       </subsection>
 
       <subsection name="objectFactory">

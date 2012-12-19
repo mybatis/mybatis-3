@@ -18,29 +18,323 @@
 <!-- version: $Id$ -->
 
 <document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+          xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
 
   <properties>
-    <title>MyBatis 3 | Statement Builders</title>
+    <title>MyBatis 3 | SQL ビルダークラス</title>
     <author email="mybatis-dev@googlegroups.com">The MyBatis Team</author>
   </properties>
 
   <body>
-  <section name="Statement Builders">
-  <subsection name="SelectBuilder">
-  <p>Java のコードに SQL を埋め込むのは、Java 開発者にとって最も不愉快なことの一つでしょう。通常これは、SQL を動的に生成する必要がある場合に行われます（そうでなければ、別ファイルやストアドプロシージャといった形で外部化できるはずなので）。これまで見てきたように、MyBatis では XML マッピング機能を使って動的に SQL を生成することができます。しかしながら、時には Java のコード内で SQL ステートメントを構築しなくてはならない場合もあります。こうした場合に '+' 記号や引用符、改行、整形などの典型的な問題や余分なカンマや AND 演算子を扱うために条件式を入れ子にしたりしなくて済むように、MyBatis にはもう一つの方法を提供しています。</p>
-    <p>MyBatis 3 はこの問題を扱うため、少し異なるコンセプトを取り入れています。あるクラスのインスタンスを作成し、SQL ステートメントを構築するメソッドを一つずつ呼び出すような実装も可能でしたが、そうすると結果的な SQL は SQL というよりも Java に近いものになってしまいます。そこで私たちは違う方法を試して見ることにしました。その結果、現在の Java で実現可能な範囲でドメイン固有言語（Domain Specific Language）に非常に近いものとなっています。</p>
-    <p><strong>SelectBuilder の秘密</strong></p>
-    <p>SelectBuilder クラスは魔法ではないので、仕組みを理解しておく必要があります。手始めに、SelectBuilder が何をするのか見てみましょう。SelectBuilder は静的インポート（Static Import）と ThreadLocal 変数を組み合わせることで、条件分岐と相性の良いクリーンな構文で SQL に求められるフォーマット処理を可能にしています。例えば、次のようなメソッドを書くことができます。</p>
-<source><![CDATA[public String selectBlogsSql() {
-  BEGIN(); // ThreadLocal 変数をクリアする。
+    <section name="SQL ビルダークラス">
+      <subsection name="問題">
+        <p>Java のコードに SQL を埋め込むのは、Java 開発者にとって最も不愉快なことの一つでしょう。通常これは、SQL を動的に生成する必要がある場合に行われます（そうでなければ、別ファイルやストアドプロシージャといった形で外部化できるはずなので）。これまで見てきたように、MyBatis では XML マッピング機能を使って動的に SQL を生成することができます。しかし、時には Java のコード内で SQL ステートメントを構築しなくてはならない場合もあります。こうした場合に '+' 記号や引用符、改行、整形などの典型的な問題や余分なカンマや AND 演算子を扱うために条件式を入れ子にしたりしなくて済むように、MyBatis にはもう一つの方法を提供しています。
+        </p>
+
+        <source><![CDATA[
+
+// THE PROBLEM
+String sql = "SELECT P.ID, P.USERNAME, P.PASSWORD, P.FULL_NAME, "
+"P.LAST_NAME,P.CREATED_ON, P.UPDATED_ON " +
+"FROM PERSON P, ACCOUNT A " +
+"INNER JOIN DEPARTMENT D on D.ID = P.DEPARTMENT_ID " +
+"INNER JOIN COMPANY C on D.COMPANY_ID = C.ID " +
+"WHERE (P.ID = A.ID AND P.FIRST_NAME like ?) " +
+"OR (P.LAST_NAME like ?) " +
+"GROUP BY P.ID " +
+"HAVING (P.LAST_NAME like ?) " +
+"OR (P.FIRST_NAME like ?) " +
+"ORDER BY P.ID, P.FULL_NAME";
+
+        ]]></source>
+      </subsection>
+      <subsection name="解決策">
+      <p>MyBatis 3 ではこうした問題を解決する際の助けとなる便利なクラス 'SQL' が用意されています。SQL クラスのインスタンスを作成し、順番にメソッドを呼び出していくことで SQL 文を構築することができるようになっています。上記のコードは SQL クラスを使うと次のように書き換えることができます。
+      </p>
+
+      <source><![CDATA[
+import org.apache.ibatis.jdbc.SQL;
+
+private String selectPersonSql() {
+  return new SQL() {{
+    SELECT("P.ID, P.USERNAME, P.PASSWORD, P.FULL_NAME");
+    SELECT("P.LAST_NAME, P.CREATED_ON, P.UPDATED_ON");
+    FROM("PERSON P");
+    FROM("ACCOUNT A");
+    INNER_JOIN("DEPARTMENT D on D.ID = P.DEPARTMENT_ID");
+    INNER_JOIN("COMPANY C on D.COMPANY_ID = C.ID");
+    WHERE("P.ID = A.ID");
+    WHERE("P.FIRST_NAME like ?");
+    OR();
+    WHERE("P.LAST_NAME like ?");
+    GROUP_BY("P.ID");
+    HAVING("P.LAST_NAME like ?");
+    OR();
+    HAVING("P.FIRST_NAME like ?");
+    ORDER_BY("P.ID");
+    ORDER_BY("P.FULL_NAME");
+  }}.toString();
+}
+        ]]></source>
+
+      <p>この例の何がそんなに特別なのでしょうか。よく見るとわかりますが、この例では、誤って "AND" が重複してしまうことや、"WHERE" と "AND" のどちらを使うか、あるいはどちらも使わないか、といったことを考慮せずに書くことができています。SQL クラスは、どこに "WHERE" を挿入すれば良いか、どこで "AND" が必要か、といったことを判断しながら文字列を連結します。
+        </p>
+
+      </subsection>
+
+      <subsection name="SQL クラス">
+
+        <p>いくつか例を挙げておきます。</p>
+
+        <source><![CDATA[
+
+// 匿名内部クラス
+public String deletePersonSql() {
+  return new SQL() {{
+    DELETE_FROM("PERSON");
+    WHERE("ID = ${id}");
+  }}.toString();
+}
+
+// メソッドチェーン（Builder / Fluent スタイル）
+public String insertPersonSql() {
+  String sql = new SQL()
+    .INSERT_INTO("PERSON");
+    .VALUES("ID, FIRST_NAME", "${id}, ${firstName}");
+    .VALUES("LAST_NAME", "${lastName}")
+    .toString();
+  return sql;
+}
+
+// 条件分岐あり（匿名内部クラスからアクセスできるよう、引数は final として宣言されています）
+public String selectPersonLike(final String id, final String firstName, final String lastName) {
+  return new SQL() {{
+    SELECT("P.ID, P.USERNAME, P.PASSWORD, P.FIRST_NAME, P.LAST_NAME");
+    FROM("PERSON P");
+    if (id != null) {
+      WHERE("P.ID like ${id}");
+    }
+    if (firstName != null) {
+      WHERE("P.FIRST_NAME like ${firstName}");
+    }
+    if (lastName != null) {
+      WHERE("P.LAST_NAME like ${lastName}");
+    }
+    ORDER_BY("P.LAST_NAME");
+  }}.toString();
+}
+
+public String deletePersonSql() {
+  return new SQL() {{
+    DELETE_FROM("PERSON");
+    WHERE("ID = ${id}");
+  }}.toString();
+}
+
+public String insertPersonSql() {
+  return new SQL() {{
+    INSERT_INTO("PERSON");
+    VALUES("ID, FIRST_NAME", "${id}, ${firstName}");
+    VALUES("LAST_NAME", "${lastName}");
+  }}.toString();
+}
+
+public String updatePersonSql() {
+  return new SQL() {{
+    UPDATE("PERSON");
+    SET("FIRST_NAME = ${firstName}");
+    WHERE("ID = ${id}");
+  }}.toString();
+}
+
+]]></source>
+
+        <table>
+          <thead>
+            <tr>
+              <th>メソッド</th>
+              <th>説明</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <code>SELECT(String)</code>
+              </td>
+              <td>SELECT 句を開始、あるいは SELECT 句に文字列を追加します。このメソッドは複数回呼び出すことができ、その場合は引数として渡した文字列が SELECT 句に追加されます。引数は通常カンマ区切りの列名あるいはエイリアスのリストですが、ドライバが受け付ける文字列であれば何でも構いません。
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>SELECT_DISTINCT(String)</code>
+              </td>
+              <td>SELECT 句を開始、あるいは SELECT 句に文字列を追加します。また、生成されるクエリに DISTINCT キーワードを追加します。このメソッドは複数回呼び出すことができ、その場合は SELECT 句に引数として渡した文字列が追加されます。引数は通常カンマ区切りの列名あるいはエイリアスのリストですが、ドライバが受け付ける文字列であれば何でも構いません。
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>FROM(String)</code>
+              </td>
+              <td>FROM 句を開始、あるいは FROM 句に文字列を追加します。このメソッドは複数回呼び出すことができ、その場合は FROM 句に引数として渡した文字列が追加されます。引数は通常カンマ区切りのテーブル名あるいはエイリアスのリストですが、ドライバが受け付ける文字列であれば何でも構いません。
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <ul>
+                  <li>
+                    <code>JOIN(String)</code>
+                  </li>
+                  <li>
+                    <code>INNER_JOIN(String)</code>
+                  </li>
+                  <li>
+                    <code>LEFT_OUTER_JOIN(String)</code>
+                  </li>
+                  <li>
+                    <code>RIGHT_OUTER_JOIN(String)</code>
+                  </li>
+                </ul>
+              </td>
+              <td>呼び出されたメソッドに応じて、新しい JOIN 句を追加します。引数には結合対象のテーブルと結合条件の文字列を指定します。
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>WHERE(String)</code>
+              </td>
+              <td>新しい WHERE 条件を AND で連結して追加します。このメソッドは複数回呼び出すことができ、その場合は引数で指定した新しい条件が AND と共に追加されます。複数の条件を OR で連結する場合は OR() メソッドを使ってください。
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>OR()</code>
+              </td>
+              <td>現在の WHERE 条件を OR で分割します。複数回呼ぶことも出来ますが、連続して呼び出すと不正な SQL が生成される場合があります。
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>AND()</code>
+              </td>
+              <td>現在の WHERE 条件を AND で分割します。複数回呼ぶこともできますが、連続して呼び出すと不正な SQL が生成される可能性があります。<code>WHERE</code> と <code>HAVING</code> はどちらも自動的に <code>AND</code> を挟んで引数を連結するので、このメソッドを使うことはまずないと思います。あくまでも API の整合性のために用意されていると考えてください。
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>GROUP_BY(String)</code>
+              </td>
+              <td>カンマを挟んで <code>GROUP BY</code> 句を追加します。複数回呼ぶことができ、その度にカンマを挟んで新しい条件が追加されます。
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>HAVING(String)</code>
+              </td>
+              <td>AND を挟んで新しい <code>HAVING</code> 句を追加します。複数回呼ぶことができ、その度に AND を挟んで新しい条件が追加されます。複数の条件を OR で連結する場合は OR() メソッドを使ってください。
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>ORDER_BY(String)</code>
+              </td>
+              <td>カンマを挟んで <code>ORDER BY</code> 句を追加します。複数回呼ぶことができ、その度にカンマを挟んで新しい条件が追加されます。
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>DELETE_FROM(String)</code>
+              </td>
+              <td>対象となるテーブルを指定して delete ステートメントを開始します。通常、この後に WHERE メソッドの呼び出しが続きます。
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>INSERT_INTO(String)</code>
+              </td>
+              <td>対象となるテーブルを指定して insert ステートメントを開始します。通常、この後に一回以上 VALUES() メソッドの呼び出しが続きます。
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>SET(String)</code>
+              </td>
+              <td>update ステートメントの set 句に文字列を追加します。</td>
+            </tr>
+            <tr>
+              <td>
+                <code>UPDATE(String)</code>
+              </td>
+              <td>対象となるテーブルを指定して update ステートメントを開始します。通常、この後に一回以上の SET() メソッドと WHERE() メソッドの呼び出しが続きます。
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>VALUES(String, String)</code>
+              </td>
+              <td>insert ステートメントに values 句を追加します。第一引数は列のリストで、第二引数は値のリストです。
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+      </subsection>
+
+      <subsection name="SqlBuilder および SelectBuilder （非推奨）">
+        <p>
+          当初は ThreadLocal 変数を使って Java 言語の制限を補うアプローチを採用していましたが、最近はビルダーパターンや匿名内部クラスを使っているフレームワークが主流となってきていることもあり、このアプローチを使っている SelectBuilder, SqlBuilder クラスは非推奨（deprecated）扱いとなりました。
+        </p>
+        <p>
+          以下は、非推奨となった SqlBuilder, SelectBuilder のみを対象とした説明になります。
+        </p>
+        <table>
+        <thead>
+          <tr>
+            <th>Method</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td>
+            <code>BEGIN()</code>
+            /
+            <code>RESET()</code>
+          </td>
+          <td>SelectBuilder クラスの ThreadLocal の状態をクリアし、新たなステートメント構築に備えます。新しいステートメントを開始するときは BEGIN() を使い、実行中にステートメントをクリアする場合（条件次第で全く別のステートメントが必要となるようなケース）は RESET() を使うようにすると読みやすいコードになります。
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <code>SQL()</code>
+          </td>
+          <td>生成された SQL を返すと同時に、<code>SelectBuilder</code> の状態をリセットします（<code>BEGIN()</code> や <code>RESET()</code> の呼び出しと同じ効果を持ちます）。従って、このメソッドは一度しか呼び出すことができません。
+          </td>
+        </tr>
+        </tbody>
+        </table>
+
+        <p>SelectBuilder や SqlBuilder クラスは魔法ではないので、仕組みを理解しておく必要があります。SelectBuilder, SqlBuilder は静的インポート（Static Import）と ThreadLocal 変数を組み合わせることで、条件分岐と相性の良いクリーンな構文で SQL に求められるフォーマット処理を可能にしています。まずどちらかのクラスを静的にインポートしておく必要があります（両方ではありません）。
+        </p>
+
+        <source>import static org.apache.ibatis.jdbc.SelectBuilder.*;</source>
+        <source>import static org.apache.ibatis.jdbc.SqlBuilder.*;</source>
+
+        <p>例えば、次のようなメソッドを書くことができます。</p>
+
+        <source><![CDATA[
+/* DEPRECATED 非推奨 */
+public String selectBlogsSql() {
+  BEGIN(); // Clears ThreadLocal variable
   SELECT("*");
   FROM("BLOG");
   return SQL();
-}]]></source>  
-    <p>この例は非常に簡単なので、これなら静的に構築する方が良いかも知れません。もっと複雑な例を見てみましょう。</p>
-<source><![CDATA[private String selectPersonSql() {
-  BEGIN(); // ThreadLocal 変数をクリアする。
+}
+        ]]></source>
+
+        <source><![CDATA[
+/* DEPRECATED 非推奨 */
+private String selectPersonSql() {
+  BEGIN(); // Clears ThreadLocal variable
   SELECT("P.ID, P.USERNAME, P.PASSWORD, P.FULL_NAME");
   SELECT("P.LAST_NAME, P.CREATED_ON, P.UPDATED_ON");
   FROM("PERSON P");
@@ -58,195 +352,13 @@
   ORDER_BY("P.ID");
   ORDER_BY("P.FULL_NAME");
   return SQL();
-}]]></source>  
-    <p>String の連結によって上記の SQL を構築するのもそれほど大変なことではなさそうです。例えば...</p>
-<source><![CDATA["SELECT P.ID, P.USERNAME, P.PASSWORD, P.FULL_NAME, "
-"P.LAST_NAME,P.CREATED_ON, P.UPDATED_ON " +
-"FROM PERSON P, ACCOUNT A " +
-"INNER JOIN DEPARTMENT D on D.ID = P.DEPARTMENT_ID " +
-"INNER JOIN COMPANY C on D.COMPANY_ID = C.ID " +
-"WHERE (P.ID = A.ID AND P.FIRST_NAME like ?) " +
-"OR (P.LAST_NAME like ?) " +
-"GROUP BY P.ID " +
-"HAVING (P.LAST_NAME like ?) " +
-"OR (P.FIRST_NAME like ?) " +
-"ORDER BY P.ID, P.FULL_NAME";]]></source>  
-    <p>もし後者の構文の方がお好みならこちらを使っても構いませんが、これは非常にミスしやすい方法です。上記の例では各行の末尾にスペースが挿入されていますが、このスペースが一つ欠けただけでも構文エラーとなってしまいます。後者の構文が好みだとしても、次の SQL は String 連結によって構築するよりも圧倒的にシンプルです。</p>
-<source><![CDATA[private String selectPersonLike(Person p){
-  BEGIN(); // ThreadLocal 変数をクリアする。
-  SELECT("P.ID, P.USERNAME, P.PASSWORD, P.FIRST_NAME, P.LAST_NAME");
-  FROM("PERSON P");
-  if (p.id != null) {
-    WHERE("P.ID like #{id}");
-  }
-  if (p.firstName != null) {
-    WHERE("P.FIRST_NAME like #{firstName}");
-  }
-  if (p.lastName != null) {
-    WHERE("P.LAST_NAME like #{lastName}");
-  }
-  ORDER_BY("P.LAST_NAME");
-  return SQL();
-}]]></source>  
-    <p>この例の何がそんなに特別なのでしょうか。よく見るとわかりますが、この例では、誤って "AND" が重複してしまうことや、"WHERE" と "AND" のどちらを使うか、あるいはどちらも使わないか、といったことを考慮せずに書くことができています。上記のメソッドは、引数として渡す PERSON のプロパティに設定する値によって、全ての PERSON、ID に特定の文字列を含む PERSON、名前に特定の文字列を含む PERSON、苗字に特定の文字列を含む PERSON、といった条件を自由に組み合わせたクエリを構築することができます。SelectBuilder は、どこに "WHERE" を挿入すれば良いか、どこで "AND" が必要か、といったことを判断しながら文字列を連結します。何よりも素晴らしいことは、SelectBuilder のメソッドは、ほぼ自由な順番で呼び出すことができます（唯一の例外は OR() メソッドです）。</p>
-    <p>上記のサンプルで目を引くのは BEGIN() と SQL() の二つのメソッドです。端的に言うと、SelectBuilder を使うメソッドは BEGIN() メソッドへの呼び出しから始まり、SQL() メソッドへの呼び出しで終わります。もちろんメソッドの一部を抽出してロジックを分割することは可能ですが、SQL 生成のスコープは常に BEGIN() で始まり SQL() で終わる必要があります。BEGIN() は誤って以前の情報が持ち越されてしまうことがないように ThreadLocal 変数をクリアするメソッドで、SQL() は最後の BEGIN() の後に呼び出されたメソッドに基づいて SQL ステートメントを構築します。<br />BEGIN() には RESET() というシノニムがあります。どちらも働きは全く同じですので、状況に応じて使い分けてください。</p>
-    <p>上記のサンプルのように SelectBuilder を使うためには、下記のように静的にインポートする必要があります。</p>
-<source>import static org.apache.ibatis.jdbc.SelectBuilder.*;</source>
-    <p>このようにインポートしておけば、そのクラスの中で SelectBuilder のメソッドが利用できるようになります。次にメソッドの一覧を挙げておきます。</p>
-    <table>
-    <thead>
-    <tr><th><p>メソッド</p></th><th><p>説明</p></th></tr></thead>
-    <tbody>
-  <tr>
-    <td>
-      <code>BEGIN()</code> / <code>RESET()</code>
-    </td>
-    <td>SelectBuilder クラスの ThreadLocal の状態をクリアし、新たなステートメント構築に備えます。新しいステートメントを開始するときは BEGIN() を使い、実行中にステートメントをクリアする場合（条件次第で全く別のステートメントが必要となるようなケース）は RESET() を使うようにすると読みやすいコードになります。</td>
-  </tr>
-  <tr>
-    <td>
-      <code>SELECT(String)</code>
-    </td>
-    <td>SELECT 句を開始、あるいは SELECT 句に文字列を追加します。このメソッドは複数回呼び出すことができ、その場合は SELECT 句に引数として渡した文字列が追加されます。引数は通常カンマ区切りの列名あるいはエイリアスのリストですが、ドライバが受け付ける文字列であれば何でも構いません。</td>
-  </tr>
-  <tr>
-    <td>
-      <code>SELECT_DISTINCT(String)</code>
-    </td>
-    <td>SELECT 句を開始、あるいは SELECT 句に文字列を追加します。また、生成されるクエリに DISTINCT キーワードを追加します。このメソッドは複数回呼び出すことができ、その場合は SELECT 句に引数として渡した文字列が追加されます。引数は通常カンマ区切りの列名あるいはエイリアスのリストですが、ドライバが受け付ける文字列であれば何でも構いません。</td>
-  </tr>
-  <tr>
-    <td>
-      <code>FROM(String)</code>
-    </td>
-    <td>FROM 句を開始、あるいは FROM 句に文字列を追加します。このメソッドは複数回呼び出すことができ、その場合は FROM 句に引数として渡した文字列が追加されます。引数は通常カンマ区切りのテーブル名あるいはエイリアスのリストですが、ドライバが受け付ける文字列であれば何でも構いません。</td>
-  </tr>
-  <tr>
-    <td>
-      <ul>
-        <li><code>JOIN(String)</code></li>
-        <li><code>INNER_JOIN(String)</code></li>
-        <li><code>LEFT_OUTER_JOIN(String)</code></li>
-        <li><code>RIGHT_OUTER_JOIN(String)</code></li>
-      </ul>
-    </td>
-    <td>呼び出されたメソッドに応じて、新しい JOIN 句を追加します。引数には結合対象のテーブルと結合条件の文字列を指定します。</td>
-  </tr>
-  <tr>
-    <td>
-      <code>WHERE(String)</code>
-    </td>
-    <td>新しい WHERE 条件を AND で連結して追加します。このメソッドは複数回呼び出すことができ、その場合は引数で指定した新しい条件が AND と共に追加されます。複数の条件を OR で連結する場合は OR() メソッドを使ってください。</td>
-  </tr>
-  <tr>
-    <td>
-      <code>OR()</code>
-    </td>
-    <td>現在の WHERE 条件を OR で分割します。複数回呼ぶことも出来ますが、連続して呼び出すと不正な SQL が生成される場合があります。</td>
-  </tr>
-  <tr>
-    <td>
-      <code>AND()</code>
-    </td>
-    <td>現在の WHERE 条件を AND で分割します。複数回呼ぶこともできますが、連続して呼び出すと不正な SQL が生成される可能性があります。<code>WHERE</code> と <code>HAVING</code> はどちらも自動的に <code>AND</code> を挟んで引数を連結するので、このメソッドを使うことはまずないと思います。あくまでも API の整合性のために用意されていると考えてください。</td>
-  </tr>
-  <tr>
-    <td>
-      <code>GROUP_BY(String)</code>
-    </td>
-    <td>カンマを挟んで <code>GROUP BY</code> 句を追加します。複数回呼ぶことができ、その度にカンマを挟んで新しい条件が追加されます。
-    </td>
-  </tr>
-  <tr>
-    <td>
-      <code>HAVING(String)</code>
-    </td>
-    <td>AND を挟んで新しい <code>HAVING</code> 句を追加します。複数回呼ぶことができ、その度に AND を挟んで新しい条件が追加されます。複数の条件を OR で連結する場合は OR() メソッドを使ってください。</td>
-  </tr>
-  <tr>
-    <td>
-      <code>ORDER_BY(String)</code>
-    </td>
-    <td>カンマを挟んで <code>ORDER BY</code> 句を追加します。複数回呼ぶことができ、その度にカンマを挟んで新しい条件が追加されます。</td>
-  </tr>
-  <tr>
-    <td>
-      <code>SQL()</code>
-    </td>
-    <td>生成された SQL を返すと同時に、<code>SelectBuilder</code> の状態をリセットします（<code>BEGIN()</code> や <code>RESET()</code> の呼び出しと同じ効果を持ちます）。従って、このメソッドは一度しか呼び出すことができません。</td>
-  </tr>
-    </tbody></table>
-    </subsection>
-
-    <subsection name="SqlBuilder">
-    <p>SelectBuilder と似ていますが、MyBatis には SqlBuilder というクラスもあります。SqlBuilder には、SelectBuilder の全てのメソッドと、insert, update, delete を構築するためのメソッドが含まれています。このクラスは、InsertProvider, UpdateProvider, DeleteProvider（そして SelectProviderも）を使って SQL を構築する際に便利です。</p>
-    <p>SqlBuilder を使う場合、次のように静的にインポートしておきます。</p>
-    <source>import static org.apache.ibatis.jdbc.SqlBuilder.*;</source>
-    <p>SqlBuilder には下記のメソッドが定義されています（SelectBuilder と同じメソッドは省略します）。</p>
-      <table>
-      <thead>
-      <tr><th>メソッド</th><th>説明</th></tr>
-      </thead>
-      <tbody>
-      <tr>
-  <td>
-    <code>DELETE_FROM(String)</code>
-  </td>
-  <td>対象となるテーブルを指定して delete ステートメントを開始します。通常、この後に WHERE メソッドの呼び出しが続きます。</td>
-</tr>
-  <tr>
-    <td>
-      <code>INSERT_INTO(String)</code>
-    </td>
-    <td>対象となるテーブルを指定して insert ステートメントを開始します。通常、この後に一回以上 VALUES() メソッドの呼び出しが続きます。</td>
-  </tr>
-  <tr>
-    <td>
-      <code>SET(String)</code>
-    </td>
-    <td>update ステートメントの set 句に文字列を追加します。</td>
-  </tr>
-  <tr>
-    <td>
-      <code>UPDATE(String)</code>
-    </td>
-    <td>対象となるテーブルを指定して update ステートメントを開始します。通常、この後に一回以上の SET() メソッドと WHERE() メソッドの呼び出しが続きます。</td>
-  </tr>
-  <tr>
-    <td>
-      <code>VALUES(String, String)</code>
-    </td>
-    <td>insert ステートメントに values 句を追加します。第一引数は列のリストで、第二引数は値のリストです。</td>
-  </tr>
-      </tbody>
-    </table>
-
-    <p>いくつか例を挙げておきます。</p>
-
-<source><![CDATA[public String deletePersonSql() {
-  BEGIN(); // ThreadLocal 変数をクリアする。
-  DELETE_FROM("PERSON");
-  WHERE("ID = ${id}");
-  return SQL();
 }
+        ]]></source>
 
-public String insertPersonSql() {
-  BEGIN(); // ThreadLocal 変数をクリアする。
-  INSERT_INTO("PERSON");
-  VALUES("ID, FIRST_NAME", "${id}, ${firstName}");
-  VALUES("LAST_NAME", "${lastName}");
-  return SQL();
-}
+      </subsection>
 
-public String updatePersonSql() {
-  BEGIN(); // ThreadLocal 変数をクリアする。
-  UPDATE("PERSON");
-  SET("FIRST_NAME = ${firstName}");
-  WHERE("ID = ${id}");
-  return SQL();
-}]]></source>  
-  </subsection>
-  </section>
+
+    </section>
   </body>
 
 </document>

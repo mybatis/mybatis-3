@@ -141,6 +141,8 @@ log4j.appender.stdout.layout.ConversionPattern=%5p [%t] - %m%n]]></source>
 
         <p>お気づきのように、Mapper インターフェイスと XML のどちらを使っている場合でも、設定方法に違いはありません。</p>
 
+        <p><span class="label important">NOTE</span> SLF4J をお使いの場合、MyBatis のログは MYBATIS というマーカーで出力されます。</p>
+
         <p>上記の log4j.properties の残りの部分はアペンダーの設定になっていますが、このドキュメントでは説明しません。Log4J のサイトを参照してください。あるいは、設定値を変更してみてどのような結果になるか試してみるのも良いでしょう。
         </p>
       </subsection>
