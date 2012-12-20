@@ -56,13 +56,6 @@ public class XMLIncludeTransformer {
     refid = builderAssistant.applyCurrentNamespace(refid, true);
     try {
       XNode nodeToInclude = configuration.getSqlFragments().get(refid);
-      if (nodeToInclude == null) {
-        String nsrefid = builderAssistant.applyCurrentNamespace(refid, true);
-        nodeToInclude = configuration.getSqlFragments().get(nsrefid);
-        if (nodeToInclude == null) {
-          throw new IncompleteElementException("Could not find SQL statement to include with refid '" + refid + "'");
-        }
-      }
       Node result = nodeToInclude.getNode().cloneNode(true);
       return result;
     } catch (IllegalArgumentException e) {
