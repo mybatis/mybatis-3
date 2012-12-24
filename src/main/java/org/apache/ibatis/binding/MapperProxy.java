@@ -19,34 +19,52 @@ import java.io.Serializable;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 
 public class MapperProxy implements InvocationHandler, Serializable {
 
   private static final long serialVersionUID = -6424540398559729838L;
-  private SqlSession sqlSession;
+  private final SqlSession sqlSession;
+  private final Class<?>[] interfaces;
+  private final Map<Method, MapperMethod> methodCache;
 
-  private <T> MapperProxy(SqlSession sqlSession) {
+  protected MapperProxy(SqlSession sqlSession, Class<?>[] interfaces, Map<Method, MapperMethod> methodCache) {
     this.sqlSession = sqlSession;
+    this.interfaces = interfaces;
+    this.methodCache = methodCache;
   }
 
   public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
     if (method.getDeclaringClass() == Object.class) {
       return method.invoke(this, args);
     }
-    final Class<?> declaringInterface = findDeclaringInterface(proxy, method);
-    final MapperMethod mapperMethod = new MapperMethod(declaringInterface, method, sqlSession);
-    final Object result = mapperMethod.execute(args);
+    final MapperMethod mapperMethod = cachedMapperMethod(method);
+    final Object result = mapperMethod.execute(sqlSession, args);
     if (result == null && method.getReturnType().isPrimitive() && !method.getReturnType().equals(Void.TYPE)) {
       throw new BindingException("Mapper method '" + method.getName() + "' (" + method.getDeclaringClass() + ") attempted to return null from a method with a primitive return type (" + method.getReturnType() + ").");
     }
     return result;
   }
 
-  private Class<?> findDeclaringInterface(Object proxy, Method method) {
+  private MapperMethod cachedMapperMethod(Method method) {
+    MapperMethod mapperMethod = (MapperMethod) methodCache.get(method);
+    if (mapperMethod == null) {
+      mapperMethod = newMapperMethod(method);
+      methodCache.put(method, mapperMethod);
+    }
+    return mapperMethod;
+  }
+
+  private MapperMethod newMapperMethod(Method method) {
+    final Class<?> declaringInterface = findDeclaringInterface(method);
+    return new MapperMethod(declaringInterface, method, sqlSession.getConfiguration());
+  }
+
+  private Class<?> findDeclaringInterface(Method method) {
     Class<?> declaringInterface = null;
-    for (Class<?> iface : proxy.getClass().getInterfaces()) {
+    for (Class<?> iface : interfaces) {
       try {
         Method m = iface.getMethod(method.getName(), method.getParameterTypes());
         if (declaringInterface != null) {
@@ -67,10 +85,10 @@ public class MapperProxy implements InvocationHandler, Serializable {
   }
 
   @SuppressWarnings("unchecked")
-  public static <T> T newMapperProxy(Class<T> mapperInterface, SqlSession sqlSession) {
+  public static <T> T newMapperProxy(Class<T> mapperInterface, SqlSession sqlSession, Map<Method, MapperMethod> methodCache) {
     ClassLoader classLoader = mapperInterface.getClassLoader();
     Class<?>[] interfaces = new Class[]{mapperInterface};
-    MapperProxy proxy = new MapperProxy(sqlSession);
+    MapperProxy proxy = new MapperProxy(sqlSession, interfaces, methodCache);
     return (T) Proxy.newProxyInstance(classLoader, interfaces, proxy);
   }
 

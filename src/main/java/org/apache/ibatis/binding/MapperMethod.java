@@ -15,113 +15,85 @@
  */
 package org.apache.ibatis.binding;
 
-import java.lang.reflect.Array;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.SqlCommandType;
 import org.apache.ibatis.reflection.MetaObject;
-import org.apache.ibatis.reflection.factory.ObjectFactory;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
 
+import java.lang.reflect.Array;
+import java.lang.reflect.Method;
+import java.util.*;
+
 public class MapperMethod {
 
-  private final SqlSession sqlSession;
   private final Configuration config;
-  private final ObjectFactory objectFactory;
+  private final SqlCommand command;
+  private final MapperMethodSignature method;
 
-  private SqlCommandType type;
-  private String commandName;
-
-  private Class<?> declaringInterface;
-  private Method method;
-
-  private boolean returnsMany;
-  private boolean returnsMap;
-  private boolean returnsVoid;
-  private String mapKey;
-
-  private Integer resultHandlerIndex;
-  private Integer rowBoundsIndex;
-  private List<String> paramNames;
-  private List<Integer> paramPositions;
-
-  private boolean hasNamedParameters;
-
-  public MapperMethod(Class<?> declaringInterface, Method method, SqlSession sqlSession) {
-    paramNames = new ArrayList<String>();
-    paramPositions = new ArrayList<Integer>();
-    this.sqlSession = sqlSession;
-    this.method = method;
-    this.config = sqlSession.getConfiguration();
-    this.hasNamedParameters = false;
-    this.declaringInterface = declaringInterface;
-    this.objectFactory = config.getObjectFactory();
-    setupFields();
-    setupMethodSignature();
-    setupCommandType();
-    validateStatement();
+  public MapperMethod(Class<?> declaringInterface, Method method, Configuration config) {
+    this.config = config;
+    this.command = new SqlCommand(config, declaringInterface, method);
+    this.method = new MapperMethodSignature(method, config);
   }
 
-  public Object execute(Object[] args) {
-    Object result = null;
-    if (SqlCommandType.INSERT == type) {
-      Object param = getParam(args);
-      result = sqlSession.insert(commandName, param);
-    } else if (SqlCommandType.UPDATE == type) {
-      Object param = getParam(args);
-      result = sqlSession.update(commandName, param);
-    } else if (SqlCommandType.DELETE == type) {
-      Object param = getParam(args);
-      result = sqlSession.delete(commandName, param);
-    } else if (SqlCommandType.SELECT == type) {
-      if (returnsVoid && resultHandlerIndex != null) {
-        executeWithResultHandler(args);
-      } else if (returnsMany) {
-        result = executeForMany(args);
-      } else if (returnsMap) {
-        result = executeForMap(args);
+  public Object execute(SqlSession sqlSession, Object[] args) {
+    Object result;
+    if (SqlCommandType.INSERT == command.getType()) {
+      Object param = method.convertArgsToSqlCommandParam(args);
+      result = sqlSession.insert(command.getName(), param);
+    } else if (SqlCommandType.UPDATE == command.getType()) {
+      Object param = method.convertArgsToSqlCommandParam(args);
+      result = sqlSession.update(command.getName(), param);
+    } else if (SqlCommandType.DELETE == command.getType()) {
+      Object param = method.convertArgsToSqlCommandParam(args);
+      result = sqlSession.delete(command.getName(), param);
+    } else if (SqlCommandType.SELECT == command.getType()) {
+      if (method.returnsVoid() && method.hasResultHandler()) {
+        executeWithResultHandler(sqlSession, args);
+        result = null;
+      } else if (method.returnsMany()) {
+        result = executeForMany(sqlSession, args);
+      } else if (method.returnsMap()) {
+        result = executeForMap(sqlSession, args);
       } else {
-        Object param = getParam(args);
-        result = sqlSession.selectOne(commandName, param);
+        Object param = method.convertArgsToSqlCommandParam(args);
+        result = sqlSession.selectOne(command.getName(), param);
       }
     } else {
-      throw new BindingException("Unknown execution method for: " + commandName);
+      throw new BindingException("Unknown execution method for: " + command.getName());
     }
     return result;
   }
 
-  private void executeWithResultHandler(Object[] args) {
-    MappedStatement ms = config.getMappedStatement(commandName);
+  private void executeWithResultHandler(SqlSession sqlSession, Object[] args) {
+    MappedStatement ms = config.getMappedStatement(command.getName());
     if (Void.TYPE.equals(ms.getResultMaps().get(0).getType())) {
-      throw new BindingException("method " + method.getName() + " needs either a @ResultMap annotation, a @ResultType annotation, or a resultType attribute in XML so a ResultHandler can be used as a parameter.");
+      throw new BindingException("method " + command.getName() 
+          + " needs either a @ResultMap annotation, a @ResultType annotation," 
+          + " or a resultType attribute in XML so a ResultHandler can be used as a parameter.");
     }
-    Object param = getParam(args);
-    if (rowBoundsIndex != null) {
-      RowBounds rowBounds = (RowBounds) args[rowBoundsIndex];
-      sqlSession.select(commandName, param, rowBounds, (ResultHandler) args[resultHandlerIndex]);
+    Object param = method.convertArgsToSqlCommandParam(args);
+    if (method.hasRowBounds()) {
+      RowBounds rowBounds = method.extractRowBounds(args);
+      sqlSession.select(command.getName(), param, rowBounds, method.extractResultHandler(args));
     } else {
-      sqlSession.select(commandName, param, (ResultHandler) args[resultHandlerIndex]);
+      sqlSession.select(command.getName(), param, method.extractResultHandler(args));
     }
   }
 
-  private <E> Object executeForMany(Object[] args) {
+  private <E> Object executeForMany(SqlSession sqlSession, Object[] args) {
     List<E> result;
-    Object param = getParam(args);
-    if (rowBoundsIndex != null) {
-      RowBounds rowBounds = (RowBounds) args[rowBoundsIndex];
-      result = sqlSession.<E>selectList(commandName, param, rowBounds);
+    Object param = method.convertArgsToSqlCommandParam(args);
+    if (method.hasRowBounds()) {
+      RowBounds rowBounds = method.extractRowBounds(args);
+      result = sqlSession.<E>selectList(command.getName(), param, rowBounds);
     } else {
-      result = sqlSession.<E>selectList(commandName, param);
+      result = sqlSession.<E>selectList(command.getName(), param);
     }
     // issue #510 Collections & arrays support
     if (!method.getReturnType().isAssignableFrom(result.getClass())) {
@@ -135,7 +107,7 @@ public class MapperMethod {
   }
 
   private <E> Object convertToDeclaredCollection(List<E> list) {
-    Object collection = objectFactory.create(method.getReturnType());
+    Object collection = config.getObjectFactory().create(method.getReturnType());
     MetaObject metaObject = config.newMetaObject(collection);
     metaObject.addAll(list);
     return collection;
@@ -148,108 +120,16 @@ public class MapperMethod {
     return array;
   }
 
-  private <K, V> Map<K, V> executeForMap(Object[] args) {
+  private <K, V> Map<K, V> executeForMap(SqlSession sqlSession, Object[] args) {
     Map<K, V> result;
-    Object param = getParam(args);
-    if (rowBoundsIndex != null) {
-      RowBounds rowBounds = (RowBounds) args[rowBoundsIndex];
-      result = sqlSession.<K, V>selectMap(commandName, param, mapKey, rowBounds);
+    Object param = method.convertArgsToSqlCommandParam(args);
+    if (method.hasRowBounds()) {
+      RowBounds rowBounds = method.extractRowBounds(args);
+      result = sqlSession.<K, V>selectMap(command.getName(), param, method.getMapKey(), rowBounds);
     } else {
-      result = sqlSession.<K, V>selectMap(commandName, param, mapKey);
+      result = sqlSession.<K, V>selectMap(command.getName(), param, method.getMapKey());
     }
     return result;
-  }
-
-  private Object getParam(Object[] args) {
-    final int paramCount = paramPositions.size();
-    if (args == null || paramCount == 0) {
-      return null;
-    } else if (!hasNamedParameters && paramCount == 1) {
-      return args[paramPositions.get(0)];
-    } else {
-      Map<String, Object> param = new MapperParamMap<Object>();
-      for (int i = 0; i < paramCount; i++) {
-        param.put(paramNames.get(i), args[paramPositions.get(i)]);
-      }
-      // issue #71, add param names as param1, param2...but ensure backward compatibility
-      for (int i = 0; i < paramCount; i++) {
-        String genericParamName = "param" + String.valueOf(i + 1);
-        if (!param.containsKey(genericParamName)) {
-          param.put(genericParamName, args[paramPositions.get(i)]);
-        }
-      }
-      return param;
-    }
-  }
-
-  // Setup //
-
-  private void setupFields() {
-    this.commandName = declaringInterface.getName() + "." + method.getName();
-  }
-
-  private void setupMethodSignature() {
-    if (method.getReturnType().equals(Void.TYPE)) {
-      returnsVoid = true;
-    }
-    if (objectFactory.isCollection(method.getReturnType()) || method.getReturnType().isArray()) {
-      returnsMany = true;
-    }
-    if (Map.class.isAssignableFrom(method.getReturnType())) {
-      final MapKey mapKeyAnnotation = method.getAnnotation(MapKey.class);
-      if (mapKeyAnnotation != null) {
-        mapKey = mapKeyAnnotation.value();
-        returnsMap = true;
-      }
-    }
-    final Class<?>[] argTypes = method.getParameterTypes();
-    for (int i = 0; i < argTypes.length; i++) {
-      if (RowBounds.class.isAssignableFrom(argTypes[i])) {
-        if (rowBoundsIndex == null) {
-          rowBoundsIndex = i;
-        } else {
-          throw new BindingException(method.getName() + " cannot have multiple RowBounds parameters");
-        }
-      } else if (ResultHandler.class.isAssignableFrom(argTypes[i])) {
-        if (resultHandlerIndex == null) {
-          resultHandlerIndex = i;
-        } else {
-          throw new BindingException(method.getName() + " cannot have multiple ResultHandler parameters");
-        }
-      } else {
-        String paramName = String.valueOf(paramPositions.size());
-        paramName = getParamNameFromAnnotation(i, paramName);
-        paramNames.add(paramName);
-        paramPositions.add(i);
-      }
-    }
-  }
-
-  private String getParamNameFromAnnotation(int i, String paramName) {
-    Object[] paramAnnos = method.getParameterAnnotations()[i];
-    for (int j = 0; j < paramAnnos.length; j++) {
-      if (paramAnnos[j] instanceof Param) {
-        hasNamedParameters = true;
-        paramName = ((Param) paramAnnos[j]).value();
-      }
-    }
-    return paramName;
-  }
-
-  private void setupCommandType() {
-    MappedStatement ms = config.getMappedStatement(commandName);
-    type = ms.getSqlCommandType();
-    if (type == SqlCommandType.UNKNOWN) {
-      throw new BindingException("Unknown execution method for: " + commandName);
-    }
-  }
-
-  private void validateStatement() {
-    try {
-      config.getMappedStatement(commandName);
-    } catch (Exception e) {
-      throw new BindingException("Invalid bound statement (not found): " + commandName, e);
-    }
   }
 
   public static class MapperParamMap<V> extends HashMap<String, V> {
@@ -262,6 +142,184 @@ public class MapperMethod {
         throw new BindingException("Parameter '" + key + "' not found. Available parameters are " + this.keySet());
       }
       return super.get(key);
+    }
+
+  }
+
+  public static class SqlCommand {
+
+    private final String name;
+    private final SqlCommandType type;
+
+    public SqlCommand(Configuration configuration, Class<?> declaringInterface, Method method) throws BindingException {
+      this.name = declaringInterface.getName() + "." + method.getName();
+      try {
+        configuration.getMappedStatement(this.name);
+      } catch (Exception e) {
+        throw new BindingException("Invalid bound statement (not found): " + this.name, e);
+      }
+      final MappedStatement ms = configuration.getMappedStatement(this.name);
+      type = ms.getSqlCommandType();
+      if (type == SqlCommandType.UNKNOWN) {
+        throw new BindingException("Unknown execution method for: " + this.name);
+      }
+    }
+
+    public String getName() {
+      return name;
+    }
+
+    public SqlCommandType getType() {
+      return type;
+    }
+  }
+
+  public static class MapperMethodSignature {
+
+    private final boolean returnsMany;
+    private final boolean returnsMap;
+    private final boolean returnsVoid;
+    private final Class<?> returnType;
+    private final String mapKey;
+    private final Integer resultHandlerIndex;
+    private final Integer rowBoundsIndex;
+    private final SortedMap<Integer, String> params;
+    private final boolean hasNamedParameters;
+
+    public MapperMethodSignature(Method method, Configuration configuration) throws BindingException {
+      this.returnType = method.getReturnType();
+      this.returnsVoid = this.returnType.equals(Void.TYPE);
+      this.returnsMany = (configuration.getObjectFactory().isCollection(this.returnType) || this.returnType.isArray());
+      this.mapKey = getMapKey(method);
+      this.returnsMap = (this.mapKey != null);
+      this.hasNamedParameters = hasNamedParams(method);
+      this.rowBoundsIndex = getUniqueParamIndex(method, RowBounds.class);
+      this.resultHandlerIndex = getUniqueParamIndex(method, ResultHandler.class);
+      this.params = Collections.unmodifiableSortedMap(getParams(method, this.hasNamedParameters));
+    }
+
+    public Object convertArgsToSqlCommandParam(Object[] args) {
+      final int paramCount = params.size();
+      if (args == null || paramCount == 0) {
+        return null;
+      } else if (!hasNamedParameters && paramCount == 1) {
+        return args[params.keySet().iterator().next()];
+      } else {
+        final Map<String, Object> param = new MapperParamMap<Object>();
+        int i = 0;
+        for (Map.Entry<Integer, String> entry : params.entrySet()) {
+          param.put(entry.getValue(), args[entry.getKey()]);
+          // issue #71, add param names as param1, param2...but ensure backward compatibility
+          final String genericParamName = "param" + String.valueOf(i + 1);
+          if (!param.containsKey(genericParamName)) {
+            param.put(genericParamName, args[entry.getKey()]);
+          }
+          i++;
+        }
+        return param;
+      }
+    }
+
+    public boolean hasRowBounds() {
+      return (this.rowBoundsIndex != null);
+    }
+
+    public RowBounds extractRowBounds(Object[] args) {
+      return (hasRowBounds() ? (RowBounds) args[this.rowBoundsIndex] : null);
+    }
+
+    public boolean hasResultHandler() {
+      return (this.resultHandlerIndex != null);
+    }
+
+    public ResultHandler extractResultHandler(Object[] args) {
+      return (hasResultHandler() ? (ResultHandler) args[this.resultHandlerIndex] : null);
+    }
+
+    public String getMapKey() {
+      return this.mapKey;
+    }
+
+    public Class<?> getReturnType() {
+      return this.returnType;
+    }
+
+    public boolean returnsMany() {
+      return returnsMany;
+    }
+
+    public boolean returnsMap() {
+      return returnsMap;
+    }
+
+    public boolean returnsVoid() {
+      return returnsVoid;
+    }
+
+    private Integer getUniqueParamIndex(Method method, Class<?> paramType) {
+      Integer index = null;
+      final Class<?>[] argTypes = method.getParameterTypes();
+      for (int i = 0; i < argTypes.length; i++) {
+        if (paramType.isAssignableFrom(argTypes[i])) {
+          if (index == null) {
+            index = i;
+          } else {
+            throw new BindingException(method.getName() + " cannot have multiple " + paramType.getSimpleName() + " parameters");
+          }
+        }
+      }
+
+      return index;
+    }
+
+    private String getMapKey(Method method) {
+      String mapKey = null;
+      if (Map.class.isAssignableFrom(method.getReturnType())) {
+        final MapKey mapKeyAnnotation = method.getAnnotation(MapKey.class);
+        if (mapKeyAnnotation != null) {
+          mapKey = mapKeyAnnotation.value();
+        }
+      }
+      return mapKey;
+    }
+
+    private SortedMap<Integer, String> getParams(Method method, boolean hasNamedParameters) {
+      final SortedMap<Integer, String> params = new TreeMap<Integer, String>();
+      final Class<?>[] argTypes = method.getParameterTypes();
+      for (int i = 0; i < argTypes.length; i++) {
+        if (!RowBounds.class.isAssignableFrom(argTypes[i]) && !ResultHandler.class.isAssignableFrom(argTypes[i])) {
+          String paramName = String.valueOf(params.size());
+          if (hasNamedParameters) {
+            paramName = getParamNameFromAnnotation(method, i, paramName);
+          }
+          params.put(i, paramName);
+        }
+      }
+      return params;
+    }
+
+    private String getParamNameFromAnnotation(Method method, int i, String paramName) {
+      final Object[] paramAnnos = method.getParameterAnnotations()[i];
+      for (Object paramAnno : paramAnnos) {
+        if (paramAnno instanceof Param) {
+          paramName = ((Param) paramAnno).value();
+        }
+      }
+      return paramName;
+    }
+
+    private boolean hasNamedParams(Method method) {
+      boolean hasNamedParams = false;
+      final Object[][] paramAnnos = method.getParameterAnnotations();
+      for (Object[] paramAnno : paramAnnos) {
+        for (Object aParamAnno : paramAnno) {
+          if (aParamAnno instanceof Param) {
+            hasNamedParams = true;
+            break;
+          }
+        }
+      }
+      return hasNamedParams;
     }
 
   }
