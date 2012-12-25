@@ -30,7 +30,7 @@ public class MapperProxy implements InvocationHandler, Serializable {
   private final Class<?>[] interfaces;
   private final Map<Method, MapperMethod> methodCache;
 
-  protected MapperProxy(SqlSession sqlSession, Class<?>[] interfaces, Map<Method, MapperMethod> methodCache) {
+  private MapperProxy(SqlSession sqlSession, Class<?>[] interfaces, Map<Method, MapperMethod> methodCache) {
     this.sqlSession = sqlSession;
     this.interfaces = interfaces;
     this.methodCache = methodCache;
