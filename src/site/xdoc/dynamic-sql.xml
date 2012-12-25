@@ -158,6 +158,15 @@ AND title like ‘someTitle’]]></source>
   <p><span class="label important">NOTE</span> You can pass a List instance or an Array to MyBatis as a parameter object. When you do, MyBatis will automatically wrap it in a Map, and key it by name. List instances will be keyed to the name "list" and array instances will be keyed to the name "array".</p>
   <p>This wraps up the discussion regarding the XML configuration file and XML mapping files. The next section will discuss the Java API in detail, so that you can get the most out of the mappings that you’ve created.</p>
   </subsection>
+  <subsection name="bind">
+  <p>This feature is to be documented</p>
+  <source><![CDATA[
+<select id="selectBlogsLike" parameterType="Blog" resultType="Blog">
+  <bind name="pattern" value="'%' + _parameter.getTitle() + '%'" />
+  SELECT * FROM BLOG
+  WHERE title LIKE #{pattern}
+</select>]]></source>
+  </subsection>
   <subsection name="Multi-db vendor support">
   <p>If a databaseIdProvider was configured a "_databaseId" variable is available for dynamic code, so you can build different statements depending on database vendor. Have a look at the following example:</p>
   <source><![CDATA[<insert id="insert" parameterType="org.myapp.domain.User">
