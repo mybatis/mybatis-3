@@ -33,12 +33,12 @@ public class MapperMethod {
 
   private final Configuration config;
   private final SqlCommand command;
-  private final MapperMethodSignature method;
+  private final MethodSignature method;
 
   public MapperMethod(Class<?> declaringInterface, Method method, Configuration config) {
     this.config = config;
     this.command = new SqlCommand(config, declaringInterface, method);
-    this.method = new MapperMethodSignature(method, config);
+    this.method = new MethodSignature(method, config);
   }
 
   public Object execute(SqlSession sqlSession, Object[] args) {
@@ -132,14 +132,14 @@ public class MapperMethod {
     return result;
   }
 
-  public static class MapperParamMap<V> extends HashMap<String, V> {
+  public static class ParamMap<V> extends HashMap<String, V> {
 
     private static final long serialVersionUID = -2212268410512043556L;
 
     @Override
     public V get(Object key) {
       if (!super.containsKey(key)) {
-        throw new BindingException("Parameter '" + key + "' not found. Available parameters are " + this.keySet());
+        throw new BindingException("Parameter '" + key + "' not found. Available parameters are " + keySet());
       }
       return super.get(key);
     }
@@ -152,16 +152,16 @@ public class MapperMethod {
     private final SqlCommandType type;
 
     public SqlCommand(Configuration configuration, Class<?> declaringInterface, Method method) throws BindingException {
-      this.name = declaringInterface.getName() + "." + method.getName();
+      name = declaringInterface.getName() + "." + method.getName();
       try {
-        configuration.getMappedStatement(this.name);
+        configuration.getMappedStatement(name);
       } catch (Exception e) {
-        throw new BindingException("Invalid bound statement (not found): " + this.name, e);
+        throw new BindingException("Invalid bound statement (not found): " + name, e);
       }
-      final MappedStatement ms = configuration.getMappedStatement(this.name);
+      final MappedStatement ms = configuration.getMappedStatement(name);
       type = ms.getSqlCommandType();
       if (type == SqlCommandType.UNKNOWN) {
-        throw new BindingException("Unknown execution method for: " + this.name);
+        throw new BindingException("Unknown execution method for: " + name);
       }
     }
 
@@ -174,7 +174,7 @@ public class MapperMethod {
     }
   }
 
-  public static class MapperMethodSignature {
+  public static class MethodSignature {
 
     private final boolean returnsMany;
     private final boolean returnsMap;
@@ -186,7 +186,7 @@ public class MapperMethod {
     private final SortedMap<Integer, String> params;
     private final boolean hasNamedParameters;
 
-    public MapperMethodSignature(Method method, Configuration configuration) throws BindingException {
+    public MethodSignature(Method method, Configuration configuration) throws BindingException {
       this.returnType = method.getReturnType();
       this.returnsVoid = this.returnType.equals(Void.TYPE);
       this.returnsMany = (configuration.getObjectFactory().isCollection(this.returnType) || this.returnType.isArray());
@@ -205,7 +205,7 @@ public class MapperMethod {
       } else if (!hasNamedParameters && paramCount == 1) {
         return args[params.keySet().iterator().next()];
       } else {
-        final Map<String, Object> param = new MapperParamMap<Object>();
+        final Map<String, Object> param = new ParamMap<Object>();
         int i = 0;
         for (Map.Entry<Integer, String> entry : params.entrySet()) {
           param.put(entry.getValue(), args[entry.getKey()]);
@@ -221,27 +221,27 @@ public class MapperMethod {
     }
 
     public boolean hasRowBounds() {
-      return (this.rowBoundsIndex != null);
+      return (rowBoundsIndex != null);
     }
 
     public RowBounds extractRowBounds(Object[] args) {
-      return (hasRowBounds() ? (RowBounds) args[this.rowBoundsIndex] : null);
+      return (hasRowBounds() ? (RowBounds) args[rowBoundsIndex] : null);
     }
 
     public boolean hasResultHandler() {
-      return (this.resultHandlerIndex != null);
+      return (resultHandlerIndex != null);
     }
 
     public ResultHandler extractResultHandler(Object[] args) {
-      return (hasResultHandler() ? (ResultHandler) args[this.resultHandlerIndex] : null);
+      return (hasResultHandler() ? (ResultHandler) args[resultHandlerIndex] : null);
     }
 
     public String getMapKey() {
-      return this.mapKey;
+      return mapKey;
     }
 
     public Class<?> getReturnType() {
-      return this.returnType;
+      return returnType;
     }
 
     public boolean returnsMany() {
@@ -268,7 +268,6 @@ public class MapperMethod {
           }
         }
       }
-
       return index;
     }
 
