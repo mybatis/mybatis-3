@@ -19,6 +19,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertSame;
+
+import java.lang.reflect.Method;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -603,6 +606,45 @@ public class BindingTest {
       BoundBlogMapper mapper = session.getMapper(BoundBlogMapper.class);
       Blog blog = mapper.selectBlogWithAParamNamedValue("id", 1, "Jim Business");
       assertNotNull(blog);
+    } finally {
+      session.close();
+    }
+  }
+
+  @Test
+  public void shouldCacheMapperMethod() throws Exception {
+    final SqlSession session = sqlSessionFactory.openSession();
+    try {
+      // First register mapper interface with session to ensure it is correctly mapped:
+      session.getMapper(BoundBlogMapper.class);
+
+      // Create another mapper instance with a method cache we can test against:
+      final Map<Method, MapperMethod> methodCache = new HashMap<Method, MapperMethod>();
+      final BoundBlogMapper mapper = MapperProxy.newMapperProxy(BoundBlogMapper.class, session, methodCache);
+
+      // Mapper methods we will call later:
+      final Method selectBlog = BoundBlogMapper.class.getMethod("selectBlog", Integer.TYPE);
+      final Method selectBlogByIdUsingConstructor = BoundBlogMapper.class.getMethod("selectBlogByIdUsingConstructor", Integer.TYPE);
+
+      // Call mapper method and verify it is cached:
+      mapper.selectBlog(1);
+      assertEquals(1, methodCache.size());
+      assertTrue(methodCache.containsKey(selectBlog));
+      final MapperMethod cachedSelectBlog = methodCache.get(selectBlog);
+
+      // Call mapper method again and verify the cache is unchanged:
+      session.clearCache();
+      mapper.selectBlog(1);
+      assertEquals(1, methodCache.size());
+      assertSame(cachedSelectBlog, methodCache.get(selectBlog));
+
+      // Call another mapper method and verify that it shows up in the cache as well:
+      session.clearCache();
+      mapper.selectBlogByIdUsingConstructor(1);
+      assertEquals(2, methodCache.size());
+      assertSame(cachedSelectBlog, methodCache.get(selectBlog));
+      assertTrue(methodCache.containsKey(selectBlogByIdUsingConstructor));
+
     } finally {
       session.close();
     }

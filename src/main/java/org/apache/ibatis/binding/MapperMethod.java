@@ -153,12 +153,12 @@ public class MapperMethod {
 
     public SqlCommand(Configuration configuration, Class<?> declaringInterface, Method method) throws BindingException {
       name = declaringInterface.getName() + "." + method.getName();
+      final MappedStatement ms;
       try {
-        configuration.getMappedStatement(name);
+        ms = configuration.getMappedStatement(name);
       } catch (Exception e) {
         throw new BindingException("Invalid bound statement (not found): " + name, e);
       }
-      final MappedStatement ms = configuration.getMappedStatement(name);
       type = ms.getSqlCommandType();
       if (type == SqlCommandType.UNKNOWN) {
         throw new BindingException("Unknown execution method for: " + name);
