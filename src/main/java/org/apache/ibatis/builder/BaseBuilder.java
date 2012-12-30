@@ -108,9 +108,10 @@ public abstract class BaseBuilder {
 
   protected TypeHandler<?> resolveTypeHandler(Class<?> javaType, Class<? extends TypeHandler<?>> typeHandlerType) {
     if (typeHandlerType == null) return null;
-    TypeHandler<?> handler = typeHandlerRegistry.getReverseTypeHandler(javaType, typeHandlerType);
+    // javaType ignored for injected handlers see issue #746 for full detail
+    TypeHandler<?> handler = typeHandlerRegistry.getMappingTypeHandler(typeHandlerType);
     if (handler == null) {
-      // Issue #746 not in registry, create a new one
+      // not in registry, create a new one
       handler = typeHandlerRegistry.getInstance(javaType, typeHandlerType);
     }
     return handler;
