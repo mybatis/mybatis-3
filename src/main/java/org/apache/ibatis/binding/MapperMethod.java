@@ -45,13 +45,13 @@ public class MapperMethod {
     Object result;
     if (SqlCommandType.INSERT == command.getType()) {
       Object param = method.convertArgsToSqlCommandParam(args);
-      result = sqlSession.insert(command.getName(), param);
+      result = rowCountResult(sqlSession.insert(command.getName(), param));
     } else if (SqlCommandType.UPDATE == command.getType()) {
       Object param = method.convertArgsToSqlCommandParam(args);
-      result = sqlSession.update(command.getName(), param);
+      result = rowCountResult(sqlSession.update(command.getName(), param));
     } else if (SqlCommandType.DELETE == command.getType()) {
       Object param = method.convertArgsToSqlCommandParam(args);
-      result = sqlSession.delete(command.getName(), param);
+      result = rowCountResult(sqlSession.delete(command.getName(), param));
     } else if (SqlCommandType.SELECT == command.getType()) {
       if (method.returnsVoid() && method.hasResultHandler()) {
         executeWithResultHandler(sqlSession, args);
@@ -66,6 +66,22 @@ public class MapperMethod {
       }
     } else {
       throw new BindingException("Unknown execution method for: " + command.getName());
+    }
+    return result;
+  }
+
+  private Object rowCountResult(int rowCount) {
+    final Object result;
+    if (method.returnsVoid()) {
+      result = null;
+    } else if (Integer.class.equals(method.getReturnType()) || Integer.TYPE.equals(method.getReturnType())) {
+      result = rowCount;
+    } else if (Long.class.equals(method.getReturnType()) || Long.TYPE.equals(method.getReturnType())) {
+      result = (long) rowCount;
+    } else if (Boolean.class.equals(method.getReturnType()) || Boolean.TYPE.equals(method.getReturnType())) {
+      result = (rowCount > 0);
+    } else {
+      throw new BindingException("Mapper method '" + command.getName() + "' has an unsupported return type: " + method.getReturnType());
     }
     return result;
   }

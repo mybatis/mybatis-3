@@ -23,11 +23,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.apache.ibatis.type.Alias;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
 
-@Alias("userStateTypeHandler")
 public class UserStateTypeHandler<E> implements TypeHandler<Object> {
 
   private static Map<String, String> lookup;
