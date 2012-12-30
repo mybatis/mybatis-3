@@ -47,7 +47,8 @@ public final class TypeHandlerRegistry {
   private final Map<JdbcType, TypeHandler<?>> JDBC_TYPE_HANDLER_MAP = new EnumMap<JdbcType, TypeHandler<?>>(JdbcType.class);
   private final Map<Type, Map<JdbcType, TypeHandler<?>>> TYPE_HANDLER_MAP = new HashMap<Type, Map<JdbcType, TypeHandler<?>>>();
   private final TypeHandler<Object> UNKNOWN_TYPE_HANDLER = new UnknownTypeHandler(this);
-  private final Map<Class<?>, TypeHandler<?>> ALL_TYPE_HANDLERS_MAP = new HashMap<Class<?>, TypeHandler<?>>();
+  
+  private final Map<Class<?>, Map<Type, TypeHandler<?>>> REVERSE_TYPE_HANDLER_MAP = new HashMap<Class<?>, Map<Type, TypeHandler<?>>>();
 
   public TypeHandlerRegistry() {
     register(Boolean.class, new BooleanTypeHandler());
@@ -150,8 +151,16 @@ public final class TypeHandlerRegistry {
     return javaTypeReference != null && getTypeHandler(javaTypeReference, jdbcType) != null;
   }
 
-  public TypeHandler<?> getMappingTypeHandler(Class<? extends TypeHandler<?>> handlerType) {
-    return ALL_TYPE_HANDLERS_MAP.get(handlerType);
+  public TypeHandler<?> getReverseTypeHandler(Type type, Class<? extends TypeHandler<?>> handlerType) {
+    TypeHandler<?> handler = null;
+    Map<Type, TypeHandler<?>> reverseMap = REVERSE_TYPE_HANDLER_MAP.get(handlerType);
+    if (reverseMap != null) { // Issue #746
+      handler = reverseMap.get(type);
+      if (handler == null) {
+        handler = reverseMap.get(null);
+      }
+    }
+    return handler;
   }
 
   public <T> TypeHandler<T> getTypeHandler(Class<T> type) {
@@ -273,7 +282,9 @@ public final class TypeHandlerRegistry {
         register(reversePrimitiveMap.get(javaType), jdbcType, handler);
       }
     }
-    ALL_TYPE_HANDLERS_MAP.put(handler.getClass(), handler);
+    HashMap <Type, TypeHandler<?>> reverseMap = new HashMap<Type, TypeHandler<?>>();
+    reverseMap.put(javaType, handler);
+    REVERSE_TYPE_HANDLER_MAP.put(handler.getClass(), reverseMap);
   }
 
   //

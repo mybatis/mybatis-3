@@ -106,9 +106,14 @@ public abstract class BaseBuilder {
     return resolveTypeHandler(javaType, typeHandlerType);
   }
 
-  protected TypeHandler<?> resolveTypeHandler(Class<?> javaType, Class<?> typeHandlerType) {
+  protected TypeHandler<?> resolveTypeHandler(Class<?> javaType, Class<? extends TypeHandler<?>> typeHandlerType) {
     if (typeHandlerType == null) return null;
-    return typeHandlerRegistry.getInstance(javaType, typeHandlerType);
+    TypeHandler<?> handler = typeHandlerRegistry.getReverseTypeHandler(javaType, typeHandlerType);
+    if (handler == null) {
+      // Issue #746 not in registry, create a new one
+      handler = typeHandlerRegistry.getInstance(javaType, typeHandlerType);
+    }
+    return handler;
   }
 
   protected Class<?> resolveAlias(String alias) {
