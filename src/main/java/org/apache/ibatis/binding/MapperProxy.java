@@ -27,69 +27,41 @@ public class MapperProxy implements InvocationHandler, Serializable {
 
   private static final long serialVersionUID = -6424540398559729838L;
   private final SqlSession sqlSession;
-  private final Class<?>[] interfaces;
+  private final Class<?> mapperInterface;
   private final Map<Method, MapperMethod> methodCache;
 
-  private MapperProxy(SqlSession sqlSession, Class<?>[] interfaces, Map<Method, MapperMethod> methodCache) {
+  private MapperProxy(SqlSession sqlSession, Class<?> mapperInterface, Map<Method, MapperMethod> methodCache) {
     this.sqlSession = sqlSession;
-    this.interfaces = interfaces;
+    this.mapperInterface = mapperInterface;
     this.methodCache = methodCache;
   }
 
   public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-    if (method.getDeclaringClass() == Object.class) {
+    if (Object.class.equals(method.getDeclaringClass())) {
       return method.invoke(this, args);
     }
     final MapperMethod mapperMethod = cachedMapperMethod(method);
     final Object result = mapperMethod.execute(sqlSession, args);
     if (result == null && method.getReturnType().isPrimitive() && !method.getReturnType().equals(Void.TYPE)) {
-      throw new BindingException("Mapper method '" + method.getName() + "' (" + method.getDeclaringClass() + ") attempted to return null from a method with a primitive return type (" + method.getReturnType() + ").");
+      throw new BindingException("Mapper method '" + method.getName() + "' (" + method.getDeclaringClass()
+          + ") attempted to return null from a method with a primitive return type (" + method.getReturnType() + ").");
     }
     return result;
   }
 
   private MapperMethod cachedMapperMethod(Method method) {
-    MapperMethod mapperMethod = (MapperMethod) methodCache.get(method);
+    MapperMethod mapperMethod = methodCache.get(method);
     if (mapperMethod == null) {
-      mapperMethod = newMapperMethod(method);
+      mapperMethod = new MapperMethod(mapperInterface, method, sqlSession.getConfiguration());
       methodCache.put(method, mapperMethod);
     }
     return mapperMethod;
   }
 
-  private MapperMethod newMapperMethod(Method method) {
-    final Class<?> declaringInterface = findDeclaringInterface(method);
-    return new MapperMethod(declaringInterface, method, sqlSession.getConfiguration());
-  }
-
-  private Class<?> findDeclaringInterface(Method method) {
-    Class<?> declaringInterface = null;
-    for (Class<?> iface : interfaces) {
-      try {
-        Method m = iface.getMethod(method.getName(), method.getParameterTypes());
-        if (declaringInterface != null) {
-          throw new BindingException("Ambiguous method mapping.  Two mapper interfaces contain the identical method signature for " + method);
-        } else if (m != null) {
-          declaringInterface = iface;
-        }
-      } catch (Exception e) {
-        // Intentionally ignore.
-        // This is using exceptions for flow control,
-        // but it's definitely faster.
-      }
-    }
-    if (declaringInterface == null) {
-      throw new BindingException("Could not find interface with the given method " + method);
-    }
-    return declaringInterface;
-  }
-
   @SuppressWarnings("unchecked")
   public static <T> T newMapperProxy(Class<T> mapperInterface, SqlSession sqlSession, Map<Method, MapperMethod> methodCache) {
-    ClassLoader classLoader = mapperInterface.getClassLoader();
-    Class<?>[] interfaces = new Class[]{mapperInterface};
-    MapperProxy proxy = new MapperProxy(sqlSession, interfaces, methodCache);
-    return (T) Proxy.newProxyInstance(classLoader, interfaces, proxy);
+    MapperProxy proxy = new MapperProxy(sqlSession, mapperInterface, methodCache);
+    return (T) Proxy.newProxyInstance(mapperInterface.getClassLoader(), new Class[] { mapperInterface }, proxy);
   }
 
 }

@@ -31,14 +31,12 @@ import java.util.*;
 
 public class MapperMethod {
 
-  private final Configuration config;
   private final SqlCommand command;
   private final MethodSignature method;
 
-  public MapperMethod(Class<?> declaringInterface, Method method, Configuration config) {
-    this.config = config;
-    this.command = new SqlCommand(config, declaringInterface, method);
-    this.method = new MethodSignature(method, config);
+  public MapperMethod(Class<?> mapperInterface, Method method, Configuration config) {
+    this.command = new SqlCommand(config, mapperInterface, method);
+    this.method = new MethodSignature(config, method);
   }
 
   public Object execute(SqlSession sqlSession, Object[] args) {
@@ -87,7 +85,7 @@ public class MapperMethod {
   }
 
   private void executeWithResultHandler(SqlSession sqlSession, Object[] args) {
-    MappedStatement ms = config.getMappedStatement(command.getName());
+    MappedStatement ms = sqlSession.getConfiguration().getMappedStatement(command.getName());
     if (Void.TYPE.equals(ms.getResultMaps().get(0).getType())) {
       throw new BindingException("method " + command.getName() 
           + " needs either a @ResultMap annotation, a @ResultType annotation," 
@@ -116,13 +114,13 @@ public class MapperMethod {
       if (method.getReturnType().isArray()) {
         return convertToArray(result);
       } else {
-        return convertToDeclaredCollection(result);
+        return convertToDeclaredCollection(sqlSession.getConfiguration(), result);
       }
     }
     return result;
   }
 
-  private <E> Object convertToDeclaredCollection(List<E> list) {
+  private <E> Object convertToDeclaredCollection(Configuration config, List<E> list) {
     Object collection = config.getObjectFactory().create(method.getReturnType());
     MetaObject metaObject = config.newMetaObject(collection);
     metaObject.addAll(list);
@@ -202,7 +200,7 @@ public class MapperMethod {
     private final SortedMap<Integer, String> params;
     private final boolean hasNamedParameters;
 
-    public MethodSignature(Method method, Configuration configuration) throws BindingException {
+    public MethodSignature(Configuration configuration, Method method) throws BindingException {
       this.returnType = method.getReturnType();
       this.returnsVoid = this.returnType.equals(Void.TYPE);
       this.returnsMany = (configuration.getObjectFactory().isCollection(this.returnType) || this.returnType.isArray());
