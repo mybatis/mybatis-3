@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2012 The MyBatis Team
+ *    Copyright 2009-2013 The MyBatis Team
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -41,12 +41,7 @@ public class MapperProxy implements InvocationHandler, Serializable {
       return method.invoke(this, args);
     }
     final MapperMethod mapperMethod = cachedMapperMethod(method);
-    final Object result = mapperMethod.execute(sqlSession, args);
-    if (result == null && method.getReturnType().isPrimitive() && !method.getReturnType().equals(Void.TYPE)) {
-      throw new BindingException("Mapper method '" + method.getName() + "' (" + method.getDeclaringClass()
-          + ") attempted to return null from a method with a primitive return type (" + method.getReturnType() + ").");
-    }
-    return result;
+    return mapperMethod.execute(sqlSession, args);
   }
 
   private MapperMethod cachedMapperMethod(Method method) {
