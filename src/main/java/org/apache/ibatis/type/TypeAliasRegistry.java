@@ -23,6 +23,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -97,7 +98,7 @@ public class TypeAliasRegistry {
   public <T> Class<T> resolveAlias(String string) {
     try {
       if (string == null) return null;
-      String key = string.toLowerCase();
+      String key = string.toLowerCase(Locale.ENGLISH); // issue #748
       Class<T> value;
       if (TYPE_ALIASES.containsKey(key)) {
         value = (Class<T>) TYPE_ALIASES.get(key);
@@ -137,7 +138,7 @@ public class TypeAliasRegistry {
 
   public void registerAlias(String alias, Class<?> value) {
     if (alias == null) throw new TypeException("The parameter alias cannot be null");
-    String key = alias.toLowerCase();
+    String key = alias.toLowerCase(Locale.ENGLISH); // issue #748
     if (TYPE_ALIASES.containsKey(key) && TYPE_ALIASES.get(key) != null && !TYPE_ALIASES.get(key).equals(value)) {
       throw new TypeException("The alias '" + alias + "' is already mapped to the value '" + TYPE_ALIASES.get(key).getName() + "'.");
     }
