@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2012 The MyBatis Team
+ *    Copyright 2009-2013 The MyBatis Team
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -30,22 +30,22 @@ public class BigIntegerTypeHandlerTest extends BaseTypeHandlerTest {
 
   @Test
   public void shouldSetParameter() throws Exception {
-    TYPE_HANDLER.setParameter(ps, 1, new BigInteger("1"), null);
-    verify(ps).setBigDecimal(1, new BigDecimal("1"));
+    TYPE_HANDLER.setParameter(ps, 1, new BigInteger("707070656505050302797979792923232303"), null);
+    verify(ps).setBigDecimal(1, new BigDecimal("707070656505050302797979792923232303"));
   }
 
   @Test
   public void shouldGetResultFromResultSet() throws Exception {
-    when(rs.getBigDecimal("column")).thenReturn(new BigDecimal(1));
+    when(rs.getBigDecimal("column")).thenReturn(new BigDecimal("707070656505050302797979792923232303"));
     when(rs.wasNull()).thenReturn(false);
-    assertEquals(new BigInteger("1"), TYPE_HANDLER.getResult(rs, "column"));
+    assertEquals(new BigInteger("707070656505050302797979792923232303"), TYPE_HANDLER.getResult(rs, "column"));
   }
 
   @Test
   public void shouldGetResultFromCallableStatement() throws Exception {
-    when(cs.getBigDecimal(1)).thenReturn(new BigDecimal(1));
+    when(cs.getBigDecimal(1)).thenReturn(new BigDecimal("707070656505050302797979792923232303"));
     when(cs.wasNull()).thenReturn(false);
-    assertEquals(new BigInteger("1"), TYPE_HANDLER.getResult(cs, 1));
+    assertEquals(new BigInteger("707070656505050302797979792923232303"), TYPE_HANDLER.getResult(cs, 1));
   }
 
 }

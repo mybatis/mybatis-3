@@ -16,6 +16,7 @@
 package org.apache.ibatis.type;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -76,11 +77,13 @@ public class TypeAliasRegistry {
     registerAlias("date", Date.class);
     registerAlias("decimal", BigDecimal.class);
     registerAlias("bigdecimal", BigDecimal.class);
+    registerAlias("biginteger", BigInteger.class);
     registerAlias("object", Object.class);
 
     registerAlias("date[]", Date[].class);
     registerAlias("decimal[]", BigDecimal[].class);
     registerAlias("bigdecimal[]", BigDecimal[].class);
+    registerAlias("biginteger[]", BigInteger[].class);
     registerAlias("object[]", Object[].class);
 
     registerAlias("map", Map.class);
