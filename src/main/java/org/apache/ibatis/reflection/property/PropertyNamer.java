@@ -31,7 +31,7 @@ public class PropertyNamer {
     }
 
     if (name.length() == 1 || (name.length() > 1 && !Character.isUpperCase(name.charAt(1)))) {
-      name = name.substring(0, 1).toLowerCase(Locale.US) + name.substring(1);
+      name = name.substring(0, 1).toLowerCase(Locale.ENGLISH) + name.substring(1);
     }
 
     return name;
