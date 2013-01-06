@@ -54,6 +54,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
   private String currentNamespace;
   private String resource;
   private Cache currentCache;
+  private boolean unresolvedCacheRef; // issue #676
 
   public MapperBuilderAssistant(Configuration configuration, String resource) {
     super(configuration);
@@ -96,11 +97,13 @@ public class MapperBuilderAssistant extends BaseBuilder {
       throw new BuilderException("cache-ref element requires a namespace attribute.");
     }
     try {
+      unresolvedCacheRef = true;
       Cache cache = configuration.getCache(namespace);
       if (cache == null) {
         throw new IncompleteElementException("No cache for namespace '" + namespace + "' could be found.");
       }
       currentCache = cache;
+      unresolvedCacheRef = false;
       return cache;
     } catch (IllegalArgumentException e) {
       throw new IncompleteElementException("No cache for namespace '" + namespace + "' could be found.", e);
@@ -278,6 +281,9 @@ public class MapperBuilderAssistant extends BaseBuilder {
       String keyColumn,
       String databaseId,
       LanguageDriver lang) {
+    
+    if (unresolvedCacheRef) throw new IncompleteElementException("Cache-ref not yet resolved");
+    
     id = applyCurrentNamespace(id, false);
     boolean isSelect = sqlCommandType == SqlCommandType.SELECT;
 
