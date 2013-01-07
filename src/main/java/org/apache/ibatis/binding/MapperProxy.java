@@ -18,19 +18,18 @@ package org.apache.ibatis.binding;
 import java.io.Serializable;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
 import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 
-public class MapperProxy implements InvocationHandler, Serializable {
+public class MapperProxy<T> implements InvocationHandler, Serializable {
 
   private static final long serialVersionUID = -6424540398559729838L;
   private final SqlSession sqlSession;
-  private final Class<?> mapperInterface;
+  private final Class<T> mapperInterface;
   private final Map<Method, MapperMethod> methodCache;
 
-  private MapperProxy(SqlSession sqlSession, Class<?> mapperInterface, Map<Method, MapperMethod> methodCache) {
+  public MapperProxy(SqlSession sqlSession, Class<T> mapperInterface, Map<Method, MapperMethod> methodCache) {
     this.sqlSession = sqlSession;
     this.mapperInterface = mapperInterface;
     this.methodCache = methodCache;
@@ -51,12 +50,6 @@ public class MapperProxy implements InvocationHandler, Serializable {
       methodCache.put(method, mapperMethod);
     }
     return mapperMethod;
-  }
-
-  @SuppressWarnings("unchecked")
-  public static <T> T newMapperProxy(Class<T> mapperInterface, SqlSession sqlSession, Map<Method, MapperMethod> methodCache) {
-    MapperProxy proxy = new MapperProxy(sqlSession, mapperInterface, methodCache);
-    return (T) Proxy.newProxyInstance(mapperInterface.getClassLoader(), new Class[] { mapperInterface }, proxy);
   }
 
 }
