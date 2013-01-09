@@ -19,6 +19,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertSame;
 
 import java.lang.reflect.Method;
@@ -413,7 +414,7 @@ public class BindingTest {
     SqlSession session = sqlSessionFactory.openSession();
     try {
       BoundBlogMapper mapper = session.getMapper(BoundBlogMapper.class);
-      Map<String,Object> blog = mapper.selectBlogAsMap(new HashMap<String,Object>() {
+      Map<String,Object> blog = mapper.selectBlogAsMap(new HashMap<String, Object>() {
         {
           put("id", 1);
         }
@@ -615,12 +616,13 @@ public class BindingTest {
   public void shouldCacheMapperMethod() throws Exception {
     final SqlSession session = sqlSessionFactory.openSession();
     try {
-      // First register mapper interface with session to ensure it is correctly mapped:
-      session.getMapper(BoundBlogMapper.class);
 
       // Create another mapper instance with a method cache we can test against:
-      final Map<Method, MapperMethod> methodCache = new HashMap<Method, MapperMethod>();
-      final BoundBlogMapper mapper = MapperProxy.newMapperProxy(BoundBlogMapper.class, session, methodCache);
+      final MapperProxyFactory<BoundBlogMapper> mapperProxyFactory = new MapperProxyFactory<BoundBlogMapper>(BoundBlogMapper.class);
+      assertEquals(BoundBlogMapper.class, mapperProxyFactory.getMapperInterface());
+      final BoundBlogMapper mapper = mapperProxyFactory.newInstance(session);
+      assertNotSame(mapper, mapperProxyFactory.newInstance(session));
+      assertTrue(mapperProxyFactory.getMethodCache().isEmpty());
 
       // Mapper methods we will call later:
       final Method selectBlog = BoundBlogMapper.class.getMethod("selectBlog", Integer.TYPE);
@@ -628,22 +630,22 @@ public class BindingTest {
 
       // Call mapper method and verify it is cached:
       mapper.selectBlog(1);
-      assertEquals(1, methodCache.size());
-      assertTrue(methodCache.containsKey(selectBlog));
-      final MapperMethod cachedSelectBlog = methodCache.get(selectBlog);
+      assertEquals(1, mapperProxyFactory.getMethodCache().size());
+      assertTrue(mapperProxyFactory.getMethodCache().containsKey(selectBlog));
+      final MapperMethod cachedSelectBlog = mapperProxyFactory.getMethodCache().get(selectBlog);
 
       // Call mapper method again and verify the cache is unchanged:
       session.clearCache();
       mapper.selectBlog(1);
-      assertEquals(1, methodCache.size());
-      assertSame(cachedSelectBlog, methodCache.get(selectBlog));
+      assertEquals(1, mapperProxyFactory.getMethodCache().size());
+      assertSame(cachedSelectBlog, mapperProxyFactory.getMethodCache().get(selectBlog));
 
       // Call another mapper method and verify that it shows up in the cache as well:
       session.clearCache();
       mapper.selectBlogByIdUsingConstructor(1);
-      assertEquals(2, methodCache.size());
-      assertSame(cachedSelectBlog, methodCache.get(selectBlog));
-      assertTrue(methodCache.containsKey(selectBlogByIdUsingConstructor));
+      assertEquals(2, mapperProxyFactory.getMethodCache().size());
+      assertSame(cachedSelectBlog, mapperProxyFactory.getMethodCache().get(selectBlog));
+      assertTrue(mapperProxyFactory.getMethodCache().containsKey(selectBlogByIdUsingConstructor));
 
     } finally {
       session.close();
