@@ -37,7 +37,7 @@ public final class ResultSetLogger extends BaseJdbcLogger implements InvocationH
   private ResultSet rs;
   
   private static Set<Integer> BLOB_TYPES;
-  private static Set<Integer> BLOB_COLUMNS;
+  private Set<Integer> BLOB_COLUMNS;
   
   static {
     BLOB_TYPES = new HashSet<Integer>();
@@ -49,14 +49,14 @@ public final class ResultSetLogger extends BaseJdbcLogger implements InvocationH
     BLOB_TYPES.add(Types.LONGVARCHAR);
     BLOB_TYPES.add(Types.NCLOB);
     BLOB_TYPES.add(Types.VARBINARY);
-
-    BLOB_COLUMNS = new HashSet<Integer>();
 }
     
 
   private ResultSetLogger(ResultSet rs, Log statementLog) {
     super(statementLog);
     this.rs = rs;
+
+    BLOB_COLUMNS = new HashSet<Integer>();
   }
 
   public Object invoke(Object proxy, Method method, Object[] params) throws Throwable {
