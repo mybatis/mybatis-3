@@ -33,24 +33,22 @@ import org.apache.ibatis.reflection.ExceptionUtil;
  */
 public final class ResultSetLogger extends BaseJdbcLogger implements InvocationHandler {
 
-  private static Set<Integer> BLOB_TYPES = new HashSet<Integer>() {
-    private static final long serialVersionUID = -2506126512960941569L;
-    {
-      add(Types.BINARY);
-      add(Types.BLOB);
-      add(Types.CLOB);
-      add(Types.LONGNVARCHAR);
-      add(Types.LONGVARBINARY);
-      add(Types.LONGVARCHAR);
-      add(Types.NCLOB);
-      add(Types.VARBINARY);
-    }
-  };
-
+  private static Set<Integer> BLOB_TYPES = new HashSet<Integer>();
   private boolean first = true;
   private ResultSet rs;
   private Set<Integer> blobColumns = new HashSet<Integer>();
 
+  static {
+    BLOB_TYPES.add(Types.BINARY);
+    BLOB_TYPES.add(Types.BLOB);
+    BLOB_TYPES.add(Types.CLOB);
+    BLOB_TYPES.add(Types.LONGNVARCHAR);
+    BLOB_TYPES.add(Types.LONGVARBINARY);
+    BLOB_TYPES.add(Types.LONGVARCHAR);
+    BLOB_TYPES.add(Types.NCLOB);
+    BLOB_TYPES.add(Types.VARBINARY);
+  }
+  
   private ResultSetLogger(ResultSet rs, Log statementLog) {
     super(statementLog);
     this.rs = rs;
