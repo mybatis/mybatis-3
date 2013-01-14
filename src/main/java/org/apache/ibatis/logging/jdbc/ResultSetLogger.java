@@ -21,6 +21,9 @@ import java.lang.reflect.Proxy;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.Types;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.reflection.ExceptionUtil;
@@ -32,6 +35,24 @@ public final class ResultSetLogger extends BaseJdbcLogger implements InvocationH
 
   private boolean first = true;
   private ResultSet rs;
+  
+  private static Set<Integer> BLOB_TYPES;
+  private static Set<Integer> BLOB_COLUMNS;
+  
+  static {
+    BLOB_TYPES = new HashSet<Integer>();
+    BLOB_TYPES.add(Types.BINARY);
+    BLOB_TYPES.add(Types.BLOB);
+    BLOB_TYPES.add(Types.CLOB);
+    BLOB_TYPES.add(Types.LONGNVARCHAR);
+    BLOB_TYPES.add(Types.LONGVARBINARY);
+    BLOB_TYPES.add(Types.LONGVARCHAR);
+    BLOB_TYPES.add(Types.NCLOB);
+    BLOB_TYPES.add(Types.VARBINARY);
+
+    BLOB_COLUMNS = new HashSet<Integer>();
+}
+    
 
   private ResultSetLogger(ResultSet rs, Log statementLog) {
     super(statementLog);
@@ -65,6 +86,9 @@ public final class ResultSetLogger extends BaseJdbcLogger implements InvocationH
     StringBuilder row = new StringBuilder();
     row.append("<==    Columns: ");
     for (int i = 1; i <= columnCount; i++) {
+      if (BLOB_TYPES.contains(rsmd.getColumnType(i))) {
+        BLOB_COLUMNS.add(i);
+      }
       String colname = rsmd.getColumnName(i);
       row.append(colname);
       if (i != columnCount) row.append(", ");
@@ -78,7 +102,11 @@ public final class ResultSetLogger extends BaseJdbcLogger implements InvocationH
     for (int i = 1; i <= columnCount; i++) {
       String colname;
       try {
-        colname = rs.getString(i);
+        if (BLOB_COLUMNS.contains(i)) {
+          colname = "<<BLOB>>";
+        } else {
+          colname = rs.getString(i);
+        }
       } catch (SQLException e) {
         // generally can't call getString() on a BLOB column
         colname = "<<Cannot Display>>";
