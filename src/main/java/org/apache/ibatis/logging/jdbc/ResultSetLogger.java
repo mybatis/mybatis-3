@@ -84,7 +84,7 @@ public final class ResultSetLogger extends BaseJdbcLogger implements InvocationH
       if (BLOB_TYPES.contains(rsmd.getColumnType(i))) {
         blobColumns.add(i);
       }
-      String colname = rsmd.getColumnName(i);
+      String colname = rsmd.getColumnLabel(i);
       row.append(colname);
       if (i != columnCount) row.append(", ");
     }
