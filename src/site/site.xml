@@ -27,7 +27,7 @@
   </bannerLeft>
 
   <body>
-    <menu name="Core">
+    <menu name="Reference Documentation">
       <item name="Introduction" href="index.html"/>
       <item name="Getting Started" href="getting-started.html"/>
       <item name="Configuration XML" href="configuration.html" collapse="true">

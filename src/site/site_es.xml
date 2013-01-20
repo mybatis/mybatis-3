@@ -29,7 +29,7 @@
   </bannerLeft>
 
   <body>
-    <menu name="Core">
+    <menu name="Manual de Referencia">
       <item name="Introducción" href="index.html"/>
       <item name="Primeros pasos" href="getting-started.html"/>
       <item name="Configuración" href="configuration.html" collapse="true">
