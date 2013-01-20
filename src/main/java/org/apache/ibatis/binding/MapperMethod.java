@@ -90,7 +90,7 @@ public class MapperMethod {
 
   private void executeWithResultHandler(SqlSession sqlSession, Object[] args) {
     MappedStatement ms = sqlSession.getConfiguration().getMappedStatement(command.getName());
-    if (Void.TYPE.equals(ms.getResultMaps().get(0).getType())) {
+    if (void.class.equals(ms.getResultMaps().get(0).getType())) {
       throw new BindingException("method " + command.getName() 
           + " needs either a @ResultMap annotation, a @ResultType annotation," 
           + " or a resultType attribute in XML so a ResultHandler can be used as a parameter.");
@@ -206,7 +206,7 @@ public class MapperMethod {
 
     public MethodSignature(Configuration configuration, Method method) throws BindingException {
       this.returnType = method.getReturnType();
-      this.returnsVoid = this.returnType.equals(Void.TYPE);
+      this.returnsVoid = void.class.equals(this.returnType);
       this.returnsMany = (configuration.getObjectFactory().isCollection(this.returnType) || this.returnType.isArray());
       this.mapKey = getMapKey(method);
       this.returnsMap = (this.mapKey != null);

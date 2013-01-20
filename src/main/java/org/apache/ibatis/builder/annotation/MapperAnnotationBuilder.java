@@ -154,21 +154,12 @@ public class MapperAnnotationBuilder {
 
   private String parseResultMap(Method method) {
     Class<?> returnType = getReturnType(method);
-    if (void.class.equals(returnType)) {
-      ResultType rt = method.getAnnotation(ResultType.class);
-      if (rt != null) {
-        returnType = rt.value();
-      }
-    }
-    if (returnType != null) {
-      ConstructorArgs args = method.getAnnotation(ConstructorArgs.class);
-      Results results = method.getAnnotation(Results.class);
-      TypeDiscriminator typeDiscriminator = method.getAnnotation(TypeDiscriminator.class);
-      String resultMapId = generateResultMapName(method);
-      applyResultMap(resultMapId, returnType, argsIf(args), resultsIf(results), typeDiscriminator);
-      return resultMapId;
-    }
-    return null;
+    ConstructorArgs args = method.getAnnotation(ConstructorArgs.class);
+    Results results = method.getAnnotation(Results.class);
+    TypeDiscriminator typeDiscriminator = method.getAnnotation(TypeDiscriminator.class);
+    String resultMapId = generateResultMapName(method);
+    applyResultMap(resultMapId, returnType, argsIf(args), resultsIf(results), typeDiscriminator);
+    return resultMapId;
   }
 
   private String generateResultMapName(Method method) {
@@ -326,7 +317,12 @@ public class MapperAnnotationBuilder {
 
   private Class<?> getReturnType(Method method) {
     Class<?> returnType = method.getReturnType();
-    if (Collection.class.isAssignableFrom(returnType)) {
+    if (void.class.equals(returnType)) { // issue #508
+      ResultType rt = method.getAnnotation(ResultType.class);
+      if (rt != null) {
+        returnType = rt.value();
+      } 
+    } else if (Collection.class.isAssignableFrom(returnType)) {
       Type returnTypeParameter = method.getGenericReturnType();
       if (returnTypeParameter instanceof ParameterizedType) {
         Type[] actualTypeArguments = ((ParameterizedType) returnTypeParameter).getActualTypeArguments();
