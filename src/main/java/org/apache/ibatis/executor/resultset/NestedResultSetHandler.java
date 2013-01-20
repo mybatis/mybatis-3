@@ -264,7 +264,7 @@ public class NestedResultSetHandler extends FastResultSetHandler {
         List<ResultFlag> flags = resultMapping.getFlags();
         if (flags.contains(ResultFlag.ASSOCIATION) || flags.contains(ResultFlag.CONSTRUCTOR)) {
           final ResultMap nestedResultMap = configuration.getResultMap(nestedResultMapId);
-          createRowKeyForMappedProperties(nestedResultMap, rs, cacheKey, nestedResultMap.getResultMappings(),
+          createRowKeyForMappedProperties(nestedResultMap, rs, cacheKey, getResultMappingsForRowKey(nestedResultMap),
               prependPrefix(resultMapping.getColumnPrefix(), columnPrefix), resultColumnCache);
         }
       } else if (resultMapping.getNestedQueryId() == null) {
