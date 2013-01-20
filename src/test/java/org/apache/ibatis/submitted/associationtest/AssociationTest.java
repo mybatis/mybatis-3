@@ -62,15 +62,19 @@ public class AssociationTest {
     }
   }
 
-  @Test
+  @Test 
   public void shouldGetAllCarsNonUnique() {
     // this is a little weird - we might expect 4 objects back, but there are only
     // 2 unique combinations of Car attributes, so we get two back.
+    
+    // update, this was reported as an error, see Issue #433
+    // probably is not an error but as this test shows, the expected output should be 4, not 2
     SqlSession sqlSession = sqlSessionFactory.openSession();
     try {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       List<Car> cars = mapper.getCarsNonUnique();
-      Assert.assertEquals(2, cars.size());
+//      Assert.assertEquals(2, cars.size()); // se the comment up there
+      Assert.assertEquals(4, cars.size());
     } finally {
       sqlSession.close();
     }

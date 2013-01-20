@@ -358,6 +358,11 @@ public class XMLMapperBuilder extends BaseBuilder {
     String notNullColumn = context.getStringAttribute("notNullColumn");
     String columnPrefix = context.getStringAttribute("columnPrefix");
     String typeHandler = context.getStringAttribute("typeHandler");
+    if ("association".equals(context.getName())) {
+      flags.add(ResultFlag.ASSOCIATION);
+    } else if ("collection".equals(context.getName())) {
+      flags.add(ResultFlag.COLLECTION);
+    }
     Class<?> javaTypeClass = resolveClass(javaType);
     @SuppressWarnings("unchecked")
     Class<? extends TypeHandler<?>> typeHandlerClass = (Class<? extends TypeHandler<?>>) resolveClass(typeHandler);

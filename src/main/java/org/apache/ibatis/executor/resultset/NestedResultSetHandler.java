@@ -31,6 +31,7 @@ import org.apache.ibatis.executor.parameter.ParameterHandler;
 import org.apache.ibatis.executor.result.DefaultResultContext;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
+import org.apache.ibatis.mapping.ResultFlag;
 import org.apache.ibatis.mapping.ResultMap;
 import org.apache.ibatis.mapping.ResultMapping;
 import org.apache.ibatis.reflection.MetaClass;
@@ -257,10 +258,15 @@ public class NestedResultSetHandler extends FastResultSetHandler {
 
   private void createRowKeyForMappedProperties(ResultMap resultMap, ResultSet rs, CacheKey cacheKey, List<ResultMapping> resultMappings, String columnPrefix, ResultColumnCache resultColumnCache) throws SQLException {
     for (ResultMapping resultMapping : resultMappings) {
-      if (resultMapping.getNestedResultMapId() != null) {
-        final ResultMap nestedResultMap = configuration.getResultMap(resultMapping.getNestedResultMapId());
-        createRowKeyForMappedProperties(nestedResultMap, rs, cacheKey, nestedResultMap.getConstructorResultMappings(),
-            prependPrefix(resultMapping.getColumnPrefix(), columnPrefix), resultColumnCache);
+      String nestedResultMapId = resultMapping.getNestedResultMapId();
+      if (nestedResultMapId != null) {
+        // Issue #433. Combine child key with parent key when 1 to 1 association is found
+        List<ResultFlag> flags = resultMapping.getFlags();
+        if (flags.contains(ResultFlag.ASSOCIATION) || flags.contains(ResultFlag.CONSTRUCTOR)) {
+          final ResultMap nestedResultMap = configuration.getResultMap(nestedResultMapId);
+          createRowKeyForMappedProperties(nestedResultMap, rs, cacheKey, nestedResultMap.getResultMappings(),
+              prependPrefix(resultMapping.getColumnPrefix(), columnPrefix), resultColumnCache);
+        }
       } else if (resultMapping.getNestedQueryId() == null) {
         final String column = prependPrefix(resultMapping.getColumn(), columnPrefix);
         final TypeHandler<?> th = resultMapping.getTypeHandler();
