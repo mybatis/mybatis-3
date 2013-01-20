@@ -16,7 +16,15 @@
 package domain.blog;
 
 public class PostLiteId {
-    private final int id;
+    private int id;
+    
+    public PostLiteId() {
+      
+    }
+
+    public void setId(int id) {
+      this.id = id;
+    }
 
     public PostLiteId(int aId) {
         id = aId;

@@ -37,16 +37,20 @@
 
   <resultMap id="mutablePostLiteMap" type="domain.blog.PostLite">
       <result property="blogId" column="blog_id"/>
-      <association property="id" column="id" resultMap="postLiteIdMap"/>
+      <association property="id" column="id" resultMap="mutablePostLiteIdMap"/>
   </resultMap>
 
-    <select id="selectPostLite" resultMap="postLiteMap">
-        select id, blog_id from post where blog_id is not null
-    </select>
+  <resultMap id="mutablePostLiteIdMap" type="domain.blog.PostLiteId">
+      <id property="id" column="id"/>
+  </resultMap>
 
-    <select id="selectMutablePostLite" resultMap="mutablePostLiteMap">
-        select id, blog_id from post where blog_id is not null
-    </select>
+  <select id="selectPostLite" resultMap="postLiteMap">
+      select id, blog_id from post where blog_id is not null
+  </select>
+
+  <select id="selectMutablePostLite" resultMap="mutablePostLiteMap">
+      select id, blog_id from post where blog_id is not null
+  </select>
 
   <sql id="byBlogId">
     <if test="blog_id != null">blog_id = #{blog_id}</if>
