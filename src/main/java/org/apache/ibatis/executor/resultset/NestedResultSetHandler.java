@@ -157,8 +157,8 @@ public class NestedResultSetHandler extends FastResultSetHandler {
           final boolean knownValue = objectCache.containsKey(combinedKey);
           final boolean isAncestor = ancestorCache.containsKey(absoluteKey);
           Object rowValue = getRowValue(rs, nestedResultMap, combinedKey, absoluteKey, columnPrefix, resultColumnCache);          
+          final Object collectionProperty = instantiateCollectionPropertyIfAppropriate(resultMapping, metaObject); // even if there is no data an empty collection is set
           if (!knownValue && rowValue != null && anyNotNullColumnHasValue(resultMapping, columnPrefix, rs)) {
-            final Object collectionProperty = instantiateCollectionPropertyIfAppropriate(resultMapping, metaObject);
             if (collectionProperty != null) {
               final MetaObject targetMetaObject = configuration.newMetaObject(collectionProperty);
               targetMetaObject.add(rowValue);
