@@ -19,6 +19,7 @@ import java.io.Reader;
 import java.sql.Connection;
 import java.util.List;
 
+import org.apache.ibatis.exceptions.PersistenceException;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSession;
@@ -62,19 +63,18 @@ public class AssociationTest {
     }
   }
 
-  @Test 
+  @Test(expected=PersistenceException.class)
   public void shouldGetAllCarsNonUnique() {
     // this is a little weird - we might expect 4 objects back, but there are only
     // 2 unique combinations of Car attributes, so we get two back.
     
     // update, this was reported as an error, see Issue #433
-    // probably is not an error but as this test shows, the expected output should be 4, not 2
+    // in this case there is data loss, so now it fails
     SqlSession sqlSession = sqlSessionFactory.openSession();
     try {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       List<Car> cars = mapper.getCarsNonUnique();
-//      Assert.assertEquals(2, cars.size()); // se the comment up there
-      Assert.assertEquals(4, cars.size());
+      Assert.assertEquals(2, cars.size());
     } finally {
       sqlSession.close();
     }

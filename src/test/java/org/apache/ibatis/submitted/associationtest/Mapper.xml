@@ -35,6 +35,6 @@
   </select>
 
   <select id="getCarsNonUnique" resultMap="carResult">
-    select 1, cartype, enginetype, enginecylinders from cars
+    select 1 as carid, cartype, enginetype, enginecylinders from cars
   </select>
 </mapper>

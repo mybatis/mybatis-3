@@ -31,7 +31,6 @@ import org.apache.ibatis.executor.parameter.ParameterHandler;
 import org.apache.ibatis.executor.result.DefaultResultContext;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
-import org.apache.ibatis.mapping.ResultFlag;
 import org.apache.ibatis.mapping.ResultMap;
 import org.apache.ibatis.mapping.ResultMapping;
 import org.apache.ibatis.reflection.MetaClass;
@@ -112,7 +111,7 @@ public class NestedResultSetHandler extends FastResultSetHandler {
       final Object resultObject = objectCache.get(combinedKey);
       ancestorCache.put(absoluteKey, resultObject);
       final MetaObject metaObject = configuration.newMetaObject(resultObject);
-      applyNestedResultMappings(rs, resultMap, metaObject, columnPrefix, resultColumnCache, combinedKey);
+      applyNestedResultMappings(rs, resultMap, metaObject, columnPrefix, resultColumnCache, combinedKey, false);
       ancestorCache.remove(absoluteKey);
       return resultObject;
     } else {
@@ -128,7 +127,7 @@ public class NestedResultSetHandler extends FastResultSetHandler {
         }
         final List<String> mappedColumnNames = resultColumnCache.getMappedColumnNames(resultMap, columnPrefix);
         foundValues = applyPropertyMappings(rs, resultMap, mappedColumnNames, metaObject, lazyLoader, columnPrefix) || foundValues;
-        foundValues = applyNestedResultMappings(rs, resultMap, metaObject, columnPrefix, resultColumnCache, combinedKey) || foundValues;
+        foundValues = applyNestedResultMappings(rs, resultMap, metaObject, columnPrefix, resultColumnCache, combinedKey, true) || foundValues;
         foundValues = (lazyLoader != null && lazyLoader.size() > 0) || foundValues;
         resultObject = foundValues ? resultObject : null;
         ancestorCache.remove(absoluteKey);
@@ -142,7 +141,7 @@ public class NestedResultSetHandler extends FastResultSetHandler {
   // NESTED RESULT MAP (JOIN MAPPING)
   //
 
-  private boolean applyNestedResultMappings(ResultSet rs, ResultMap resultMap, MetaObject metaObject, String parentPrefix, ResultColumnCache resultColumnCache, CacheKey parentRowKey) {
+  private boolean applyNestedResultMappings(ResultSet rs, ResultMap resultMap, MetaObject metaObject, String parentPrefix, ResultColumnCache resultColumnCache, CacheKey parentRowKey, boolean parentIsNew) {
     boolean foundValues = false;
     for (ResultMapping resultMapping : resultMap.getPropertyResultMappings()) {
       final String nestedResultMapId = resultMapping.getNestedResultMapId();
@@ -153,18 +152,19 @@ public class NestedResultSetHandler extends FastResultSetHandler {
           if (resultMapping.getColumnPrefix()!= null) columnPrefixBuilder.append(resultMapping.getColumnPrefix());
           final String columnPrefix = columnPrefixBuilder.length() == 0 ? null : columnPrefixBuilder.toString().toUpperCase(Locale.ENGLISH);
           final ResultMap nestedResultMap = getNestedResultMap(rs, nestedResultMapId, columnPrefix);
-          final Object targetProperty = instantiateCollectionPropertyIfAppropriate(resultMapping, metaObject);
-          final MetaObject targetMetaObject = configuration.newMetaObject(targetProperty);
+          final Object collectionProperty = instantiateCollectionPropertyIfAppropriate(resultMapping, metaObject);
           final CacheKey absoluteKey = createAbsoluteKey(nestedResultMap, rs, columnPrefix, resultColumnCache);
           final CacheKey combinedKey = getCombinedKey(absoluteKey, parentRowKey);
           final boolean knownValue = objectCache.containsKey(combinedKey);
-          Object rowValue = getRowValue(rs, nestedResultMap, combinedKey, absoluteKey, columnPrefix, resultColumnCache);
-          if (rowValue != null && anyNotNullColumnHasValue(resultMapping, columnPrefix, rs)) {
-            if (targetProperty != null && objectFactory.isCollection(targetProperty.getClass())) {
-              if (!knownValue) {
-                targetMetaObject.add(rowValue);
-              }
+          Object rowValue = getRowValue(rs, nestedResultMap, combinedKey, absoluteKey, columnPrefix, resultColumnCache);          
+          if (!knownValue && rowValue != null && anyNotNullColumnHasValue(resultMapping, columnPrefix, rs)) {
+            if (collectionProperty != null) {
+              final MetaObject targetMetaObject = configuration.newMetaObject(collectionProperty);
+              targetMetaObject.add(rowValue);
             } else {
+              if (!parentIsNew && !ancestorCache.containsKey(absoluteKey)) { 
+                throw new ExecutorException("Trying to set a 1 to 1 child element twice  for '" + resultMapping.getProperty() + "'. Check your id properties.");
+              }
               metaObject.setValue(resultMapping.getProperty(), rowValue);
             }
             foundValues = true;
@@ -195,9 +195,9 @@ public class NestedResultSetHandler extends FastResultSetHandler {
 
   private Object instantiateCollectionPropertyIfAppropriate(ResultMapping resultMapping, MetaObject metaObject) {
     final String propertyName = resultMapping.getProperty();
-    Class<?> type = resultMapping.getJavaType();
     Object propertyValue = metaObject.getValue(propertyName);
     if (propertyValue == null) {
+      Class<?> type = resultMapping.getJavaType();
       if (type == null) {
         type = metaObject.getSetterType(propertyName);
       }
@@ -205,12 +205,15 @@ public class NestedResultSetHandler extends FastResultSetHandler {
         if (objectFactory.isCollection(type)) {
           propertyValue = objectFactory.create(type);
           metaObject.setValue(propertyName, propertyValue);
+          return propertyValue;
         }
       } catch (Exception e) {
         throw new ExecutorException("Error instantiating collection property for result '" + resultMapping.getProperty() + "'.  Cause: " + e, e);
       }
+    } else if (objectFactory.isCollection(propertyValue.getClass())) {
+      return propertyValue;
     }
-    return propertyValue;
+    return null;
   }
 
   private ResultMap getNestedResultMap(ResultSet rs, String nestedResultMapId, String columnPrefix) throws SQLException {
@@ -258,15 +261,10 @@ public class NestedResultSetHandler extends FastResultSetHandler {
 
   private void createRowKeyForMappedProperties(ResultMap resultMap, ResultSet rs, CacheKey cacheKey, List<ResultMapping> resultMappings, String columnPrefix, ResultColumnCache resultColumnCache) throws SQLException {
     for (ResultMapping resultMapping : resultMappings) {
-      String nestedResultMapId = resultMapping.getNestedResultMapId();
-      if (nestedResultMapId != null) {
-        // Issue #433. Combine child key with parent key when 1 to 1 association is found
-        List<ResultFlag> flags = resultMapping.getFlags();
-        if (flags.contains(ResultFlag.ASSOCIATION) || flags.contains(ResultFlag.CONSTRUCTOR)) {
-          final ResultMap nestedResultMap = configuration.getResultMap(nestedResultMapId);
-          createRowKeyForMappedProperties(nestedResultMap, rs, cacheKey, getResultMappingsForRowKey(nestedResultMap),
-              prependPrefix(resultMapping.getColumnPrefix(), columnPrefix), resultColumnCache);
-        }
+      if (resultMapping.getNestedResultMapId() != null) {
+        final ResultMap nestedResultMap = configuration.getResultMap(resultMapping.getNestedResultMapId());
+        createRowKeyForMappedProperties(nestedResultMap, rs, cacheKey, nestedResultMap.getConstructorResultMappings(),
+            prependPrefix(resultMapping.getColumnPrefix(), columnPrefix), resultColumnCache);
       } else if (resultMapping.getNestedQueryId() == null) {
         final String column = prependPrefix(resultMapping.getColumn(), columnPrefix);
         final TypeHandler<?> th = resultMapping.getTypeHandler();
