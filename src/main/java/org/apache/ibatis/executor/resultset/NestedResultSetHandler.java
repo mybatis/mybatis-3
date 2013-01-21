@@ -156,13 +156,14 @@ public class NestedResultSetHandler extends FastResultSetHandler {
           final CacheKey absoluteKey = createAbsoluteKey(nestedResultMap, rs, columnPrefix, resultColumnCache);
           final CacheKey combinedKey = getCombinedKey(absoluteKey, parentRowKey);
           final boolean knownValue = objectCache.containsKey(combinedKey);
+          final boolean isAncestor = ancestorCache.containsKey(absoluteKey);
           Object rowValue = getRowValue(rs, nestedResultMap, combinedKey, absoluteKey, columnPrefix, resultColumnCache);          
           if (!knownValue && rowValue != null && anyNotNullColumnHasValue(resultMapping, columnPrefix, rs)) {
             if (collectionProperty != null) {
               final MetaObject targetMetaObject = configuration.newMetaObject(collectionProperty);
               targetMetaObject.add(rowValue);
             } else {
-              if (!parentIsNew && !ancestorCache.containsKey(absoluteKey)) { 
+              if (!parentIsNew && !isAncestor) { 
                 throw new ExecutorException("Trying to set a 1 to 1 child element twice  for '" + resultMapping.getProperty() + "'. Check your id properties.");
               }
               metaObject.setValue(resultMapping.getProperty(), rowValue);
