@@ -164,13 +164,13 @@ public class NestedResultSetHandler extends FastResultSetHandler {
               targetMetaObject.add(rowValue);
             } else {
               if (!parentIsNew && !isAncestor) { 
-                throw new ExecutorException("Trying to set a 1 to 1 child element twice  for '" + resultMapping.getProperty() + "'. Check your id properties.");
+                throw new ExecutorException("Trying to set a 1 to 1 child element twice for '" + resultMapping.getProperty() + "'. Check your id properties.");
               }
               metaObject.setValue(resultMapping.getProperty(), rowValue);
             }
             foundValues = true;
           }
-        } catch (Exception e) {
+        } catch (SQLException e) {
           throw new ExecutorException("Error getting nested result map values for '" + resultMapping.getProperty() + "'.  Cause: " + e, e);
         }
       }
@@ -243,9 +243,14 @@ public class NestedResultSetHandler extends FastResultSetHandler {
     return cacheKey;
   }
   
-  private CacheKey getCombinedKey(CacheKey rowKey, CacheKey parentRowKey) throws CloneNotSupportedException {
+  private CacheKey getCombinedKey(CacheKey rowKey, CacheKey parentRowKey) {
     if (rowKey.getUpdateCount() > 1 && parentRowKey.getUpdateCount() > 1) {
-      CacheKey combinedKey = rowKey.clone();
+      CacheKey combinedKey;
+      try {
+        combinedKey = rowKey.clone();
+      } catch (CloneNotSupportedException e) {
+        throw new ExecutorException("Error cloning cache key.  Cause: " + e, e);
+      }
       combinedKey.update(parentRowKey);
       return combinedKey;
     }
