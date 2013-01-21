@@ -149,16 +149,16 @@ public class NestedResultSetHandler extends FastResultSetHandler {
         try {
           final StringBuilder columnPrefixBuilder = new StringBuilder();
           if (parentPrefix != null) columnPrefixBuilder.append(parentPrefix);
-          if (resultMapping.getColumnPrefix()!= null) columnPrefixBuilder.append(resultMapping.getColumnPrefix());
+          if (resultMapping.getColumnPrefix() != null) columnPrefixBuilder.append(resultMapping.getColumnPrefix());
           final String columnPrefix = columnPrefixBuilder.length() == 0 ? null : columnPrefixBuilder.toString().toUpperCase(Locale.ENGLISH);
           final ResultMap nestedResultMap = getNestedResultMap(rs, nestedResultMapId, columnPrefix);
-          final Object collectionProperty = instantiateCollectionPropertyIfAppropriate(resultMapping, metaObject);
           final CacheKey absoluteKey = createAbsoluteKey(nestedResultMap, rs, columnPrefix, resultColumnCache);
           final CacheKey combinedKey = getCombinedKey(absoluteKey, parentRowKey);
           final boolean knownValue = objectCache.containsKey(combinedKey);
           final boolean isAncestor = ancestorCache.containsKey(absoluteKey);
           Object rowValue = getRowValue(rs, nestedResultMap, combinedKey, absoluteKey, columnPrefix, resultColumnCache);          
           if (!knownValue && rowValue != null && anyNotNullColumnHasValue(resultMapping, columnPrefix, rs)) {
+            final Object collectionProperty = instantiateCollectionPropertyIfAppropriate(resultMapping, metaObject);
             if (collectionProperty != null) {
               final MetaObject targetMetaObject = configuration.newMetaObject(collectionProperty);
               targetMetaObject.add(rowValue);
