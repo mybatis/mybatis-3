@@ -17,7 +17,6 @@ package org.apache.ibatis.submitted.parent_reference_3level;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
 
 import java.io.Reader;
 import java.sql.Connection;
@@ -45,10 +44,8 @@ public class BlogTest {
 
     try {
       Class.forName("org.hsqldb.jdbcDriver");
-      conn = DriverManager.getConnection(
-          "jdbc:hsqldb:mem:parent_reference_3level", "sa", "");
-      Reader reader = Resources
-          .getResourceAsReader("org/apache/ibatis/submitted/parent_reference_3level/CreateDB.sql");
+      conn = DriverManager.getConnection("jdbc:hsqldb:mem:parent_reference_3level", "sa", "");
+      Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/parent_reference_3level/CreateDB.sql");
       ScriptRunner runner = new ScriptRunner(conn);
       runner.setLogWriter(null);
       runner.setErrorLogWriter(null);
@@ -75,9 +72,6 @@ public class BlogTest {
       Blog result = mapper.selectBlogByPrimaryKey(1);
       assertNotNull(result);
       assertEquals("Blog with posts", result.getTitle());
-    } catch (Exception e) {
-      e.printStackTrace();
-      fail("testSelectBlogWithChildrens");
     } finally {
       session.close();
     }
@@ -91,9 +85,6 @@ public class BlogTest {
       Blog result = mapper.selectBlogByPrimaryKey(2);
       assertNotNull(result);
       assertEquals("Blog without posts", result.getTitle());
-    } catch (Exception e) {
-      e.printStackTrace();
-      fail("testSelectBlogWithoutChildrens");
     } finally {
       session.close();
     }
