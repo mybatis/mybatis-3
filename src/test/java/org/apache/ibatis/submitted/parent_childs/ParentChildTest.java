@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2012 The MyBatis Team
+ *    Copyright 2009-2013 The MyBatis Team
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -57,12 +57,12 @@ public class ParentChildTest {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       List<Parent> parents = mapper.getParents();
       Assert.assertEquals(2, parents.size());
-      Parent fistParent = parents.get(0);
-      Assert.assertEquals("Jose", fistParent.getName());
-      Assert.assertEquals(2, fistParent.getChilds().size());
+      Parent firstParent = parents.get(0);
+      Assert.assertEquals("Jose", firstParent.getName());
+      Assert.assertEquals(2, firstParent.getChilds().size());
       Parent secondParent = parents.get(1);
       Assert.assertEquals("Juan", secondParent.getName());
-      Assert.assertEquals(0, secondParent.getChilds().size());
+      Assert.assertEquals(0, secondParent.getChilds().size()); // note an empty list is inyected
     } finally {
       sqlSession.close();
     }
