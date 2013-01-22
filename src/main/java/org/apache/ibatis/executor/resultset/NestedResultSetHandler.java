@@ -162,7 +162,7 @@ public class NestedResultSetHandler extends FastResultSetHandler {
               targetMetaObject.add(rowValue);
             } else {
               if (!parentIsNew) { 
-                throw new ExecutorException("Trying to orverride a previous set value for the association '" + resultMapping.getProperty() 
+                throw new ExecutorException("Trying to overwrite a previous set value for the association '" + resultMapping.getProperty() 
                     + "'. Check your id/result elements to ensure they identify uniquely an record.");
               }
               metaObject.setValue(resultMapping.getProperty(), rowValue);
