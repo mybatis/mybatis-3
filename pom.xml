@@ -134,6 +134,8 @@
      | see distributionManagement.site.url
     -->
     <site.deploymentUrl>ftp://${mybatis.host}/core/</site.deploymentUrl>
+    <javac.src.version>1.6</javac.src.version>
+    <javac.target.version>1.6</javac.target.version>    
   </properties>
 
   <dependencies>
