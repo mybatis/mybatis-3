@@ -158,13 +158,16 @@ public class NestedResultSetHandler extends FastResultSetHandler {
           final boolean isAncestor = ancestorCache.containsKey(absoluteKey);
           Object rowValue = getRowValue(rs, nestedResultMap, combinedKey, absoluteKey, columnPrefix, resultColumnCache);          
           final Object collectionProperty = instantiateCollectionPropertyIfAppropriate(resultMapping, metaObject); // even if there is no data an empty collection is set
-          if (!knownValue && rowValue != null && anyNotNullColumnHasValue(resultMapping, columnPrefix, rs)) {
+          if (rowValue != null
+              && ((isAncestor && parentIsNew)
+              || (!isAncestor && !knownValue && anyNotNullColumnHasValue(resultMapping, columnPrefix, rs)))) {
             if (collectionProperty != null) {
               final MetaObject targetMetaObject = configuration.newMetaObject(collectionProperty);
               targetMetaObject.add(rowValue);
             } else {
-              if (!parentIsNew && !isAncestor) { 
-                throw new ExecutorException("Trying to set a 1 to 1 child element twice for '" + resultMapping.getProperty() + "'. Check your id properties.");
+              if (!parentIsNew) { 
+                throw new ExecutorException("Trying to orverride a previous set value for the association '" + resultMapping.getProperty() 
+                    + "'. Check your id/result elements to ensure they identify uniquely an record.");
               }
               metaObject.setValue(resultMapping.getProperty(), rowValue);
             }

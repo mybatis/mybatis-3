@@ -30,7 +30,7 @@ public class Blog {
     return id;
   }
 
-  public void setId(int id) {
+  public void setId(int id) {    
     this.id = id;
   }
 
@@ -39,6 +39,9 @@ public class Blog {
   }
 
   public void setTitle(String title) {
+    if (this.title != null) {
+      throw new RuntimeException("Setter called twice");
+    }
     this.title = title;
   }
 
@@ -47,6 +50,9 @@ public class Blog {
   }
 
   public void setPosts(List<Post> posts) {
+    if (this.posts != null) {
+      throw new RuntimeException("Setter called twice");
+    }
     this.posts = posts;
   }
 }

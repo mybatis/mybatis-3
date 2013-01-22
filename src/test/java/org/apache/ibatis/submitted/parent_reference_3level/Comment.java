@@ -34,6 +34,9 @@ public class Comment {
   }
 
   public void setPost(Post post) {
+    if (this.post != null) {
+      throw new RuntimeException("Setter called twice");
+    }
     this.post = post;
   }
 
@@ -42,6 +45,9 @@ public class Comment {
   }
 
   public void setComment(String comment) {
+    if (this.comment != null) {
+      throw new RuntimeException("Setter called twice");
+    }    
     this.comment = comment;
   }
 }
