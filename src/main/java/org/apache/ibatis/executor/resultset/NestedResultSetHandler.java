@@ -145,20 +145,22 @@ public class NestedResultSetHandler extends FastResultSetHandler {
             final CacheKey combinedKey = combineKeys(rowKey, parentRowKey);            
             Object rowValue = objectCache.get(combinedKey);
             boolean knownValue = (rowValue != null);
-            rowValue = getRowValue(rs, nestedResultMap, combinedKey, rowKey, columnPrefix, resultColumnCache, rowValue);
-            final Object collectionProperty = instantiateCollectionPropertyIfAppropriate(resultMapping, metaObject);
-            if (rowValue != null && !knownValue && anyNotNullColumnHasValue(resultMapping, columnPrefix, rs)) {
-              if (collectionProperty != null) {
-                final MetaObject targetMetaObject = configuration.newMetaObject(collectionProperty);
-                targetMetaObject.add(rowValue);
-              } else {
-                if (!newObject) { 
-                  throw new ExecutorException("Trying to overwrite a previous set value for the association '" + resultMapping.getProperty() 
-                      + "'. Check your id/result elements to ensure they identify uniquely an record.");
+            final Object collectionProperty = instantiateCollectionPropertyIfAppropriate(resultMapping, metaObject);            
+            if (anyNotNullColumnHasValue(resultMapping, columnPrefix, rs)) {
+              rowValue = getRowValue(rs, nestedResultMap, combinedKey, rowKey, columnPrefix, resultColumnCache, rowValue);
+              if (rowValue != null && !knownValue) {
+                if (collectionProperty != null) {
+                  final MetaObject targetMetaObject = configuration.newMetaObject(collectionProperty);
+                  targetMetaObject.add(rowValue);
+                } else {
+                  if (!newObject) { 
+                    throw new ExecutorException("Trying to overwrite a previous set value for the association '" + resultMapping.getProperty() 
+                        + "'. Check your id/result elements to ensure they identify uniquely an record.");
+                  }
+                  metaObject.setValue(resultMapping.getProperty(), rowValue);
                 }
-                metaObject.setValue(resultMapping.getProperty(), rowValue);
+                foundValues = true;
               }
-              foundValues = true;
             }
           }
         } catch (SQLException e) {
