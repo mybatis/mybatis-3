@@ -183,7 +183,7 @@ AND title like ‘someTitle’]]></source>
 ]]></source>
   </subsection>
   <subsection name="Pluggable Scripting Languages For Dynamic SQL">
-    <p>Starting from version 3.2 mybatis supports pluggable scripting languages,
+    <p>Starting from version 3.2 MyBatis supports pluggable scripting languages,
     so you can plug a language driver and use that language to write your dynamic
     SQL queries.</p>
     <p>There are two built-in languages:</p>
@@ -193,7 +193,7 @@ AND title like ‘someTitle’]]></source>
     </ul>
     <p>The <code>xml</code> language is the default one. It is able to execute all the dynamic tags we saw in the previous sections.</p>
     <p>The <code>raw</code> language is in fact the absence of language. When using this setting MyBatis just performs the 
-    parameter substitution and passes it to the database driver. As you may guess, the <code>raw</code> language 
+    parameter substitution and passes the statement to the database driver. As you may guess, the <code>raw</code> language 
     is faster than the <code>xml</code> language.
     </p>
     <p>You can specify the language you want to use in an statement adding the <code>lang</code> attribute as follows:

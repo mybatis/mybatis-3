@@ -158,6 +158,15 @@ AND title like ‘someTitle’]]></source>
   <p><span class="label important">NOTA</span> Puedes pasar como objeto de parámetro un List o un Array a MyBatis. Cuando haces esto, MyBatis lo envuelve automáticamente en un Map usando su nombre como clave. Las instancias de lista usarán “list” como clave y las instancias array usarán “array”.</p>
   <p>Esto finaliza la discusión sobre la configuración XML y los ficheros de mapeo XML. En la sección siguiente hablaremos del API Java en detalle, de forma que puedas obtener el máximo rendimiento de los mapeos que has creado.</p>
   </subsection>  
+  <subsection name="bind">
+  <p>El elemento <code>bind</code> te permite crear una variable a partir de una expresion OGNL y asociarla al contexto. Por ejemplo:</p>
+  <source><![CDATA[
+<select id="selectBlogsLike" parameterType="Blog" resultType="Blog">
+  <bind name="pattern" value="'%' + _parameter.getTitle() + '%'" />
+  SELECT * FROM BLOG
+  WHERE title LIKE #{pattern}
+</select>]]></source>
+  </subsection>
   <subsection name="Soporte de multiples vendedores de base de datos">
   <p>Si se ha configurado un databaseIdProvider la variable "_databaseId" estará disponible en el código dinámico, de esta forma puedes constrir distintas sntencias dependiendo del fabricante de la base de datos. Mira el siguiente ejemplo:</p>
   <source><![CDATA[<insert id="insert" parameterType="org.myapp.domain.User">
@@ -173,6 +182,38 @@ AND title like ‘someTitle’]]></source>
 </insert>
 ]]></source>
   </subsection>
+  <subsection name="Lenguajes de scripting customizados para SQL dinámico">
+    <p>Desde la versión 3.2 MyBatis soporta la adición de lenguajes de scripting de forma que puedes
+    añadir un driver de lenguaje y usar dicho lenguaje para escribir tus sentencias SQL.
+    </p>
+    <p>Hay dos lenguajes predefinidos:</p>
+    <ul>
+    <li>xml</li>
+    <li>raw</li>
+    </ul>
+    <p>El lenguaje <code>xml</code> es el lenguaje por defecto. Permite ejecutar todos los tags dinámicos que hemos visto en las secciones anteriores.</p>
+    <p>El lenguaje <code>raw</code> es en realidad la ausencia de lenguaje. Con esta configuración MyBatis sólo realiza la sustitución de parámetros 
+    y pasa la sentencia al driver de base de datos. Como supondrás el lenguaje <code>raw</code> es más rápido que el <code>xml</code>.
+    </p>
+    <p>Puedes indicar el lenguaje que quieres usar en cada statement añadiendo el atributo <code>lang</code> de la siguiente forma:
+    </p>
+  <source><![CDATA[<select id="selectBlog" lang="raw">
+  SELECT * FROM BLOG
+</select>]]></source>
+    <p>O, en el caso de que uses mappers, usando la anotación <code>@Lang</code>:</p>
+  <source><![CDATA[public interface Mapper {
+  @Lang(RawLanguageDriver.class)
+  @Select("SELECT * FROM BLOG")
+  List<Blog> selectBlog();
+}]]></source>
+    <p>También puedes implementar tu propio lenguaje implementado el siguiente interfaz:</p>
+  <source><![CDATA[public interface LanguageDriver {
+  public ParameterHandler createParameterHandler(MappedStatement mappedStatement, Object parameterObject, BoundSql boundSql);
+  public SqlSource createSqlSource(Configuration configuration, XNode script, Class<?> parameterType);
+  public SqlSource createSqlSource(Configuration configuration, String script, Class<?> parameterType);
+}]]></source>    
+    <p></p>
+	</subsection>
   </section>
   </body>
 </document>

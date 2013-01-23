@@ -411,6 +411,15 @@ try {
 } finally {
     session.close();
 }</source>
+  <p>Or, If you are using jdk 1.7+ and MyBatis 3.2+, you can use the try-with-resources statement:</p>
+  <source>
+try (SqlSession session = sqlSessionFactory.openSession()) {
+    // following 3 lines pseudocode for "doing some work"
+    session.insert(...);
+    session.update(...);
+    session.delete(...);
+    session.commit();
+}</source>
   <p><span class="label important">注意</span> 就像 SqlSessionFactory,你可以通过调用 getConfiguration()方法获得 SqlSession
 使用的 Configuration 实例
   </p>

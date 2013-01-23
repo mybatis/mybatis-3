@@ -164,6 +164,15 @@ AND title like ‘someTitle’]]></source>
   <p><span class="label important">NOTE</span> List のインスタンスや Array を引数オブジェクトとして MyBatis に渡すこともできます。この場合、MyBatis は渡された引数を Map に格納しキーとして名前を設定します。List のインスタンスは "list" というキーで Map に格納され、Array の場合は "array" というキーで格納されます。</p>
   <p>XML 設定ファイルと XML Mapper ファイルについての説明はここまでになります。次の章では、Java API について詳しく見ていきます。</p>
   </subsection>  
+  <subsection name="bind">
+  <p>The <code>bind</code> element lets you create a variable out of an OGNL expression and bind it to the context. For example:</p>
+  <source><![CDATA[
+<select id="selectBlogsLike" parameterType="Blog" resultType="Blog">
+  <bind name="pattern" value="'%' + _parameter.getTitle() + '%'" />
+  SELECT * FROM BLOG
+  WHERE title LIKE #{pattern}
+</select>]]></source>
+  </subsection>
   <subsection name="複数データベースのサポート">
   <p>databaseIdProvider が設定されている場合、条件式で "_databaseId" 変数が利用可能となります。この変数を使うと、実行時のデータベースに応じてステートメントを使い分けることができます。oracle と db2 で異なる select 文を発行する例を次に挙げておきます。</p>
   <source><![CDATA[<insert id="insert" parameterType="org.myapp.domain.User">
@@ -179,10 +188,37 @@ AND title like ‘someTitle’]]></source>
 </insert>
 ]]></source>
   </subsection>
-  </section>
-  <section name="ダイナミック SQL 記述言語">
+  <subsection name="ダイナミック SQL 記述言語">
     <p>バージョン 3.2 以降、ダイナミック SQL の記述言語が Pluggable になりました。言語ドライバーを記述することで、任意の言語でダイナミック SQL を記述することができます。</p>
     <p>機能の詳細については今後記述を追加する予定です。</p>
-  </section>
+    <p>There are two built-in languages:</p>
+    <ul>
+    <li>xml</li>
+    <li>raw</li>
+    </ul>
+    <p>The <code>xml</code> language is the default one. It is able to execute all the dynamic tags we saw in the previous sections.</p>
+    <p>The <code>raw</code> language is in fact the absence of language. When using this setting MyBatis just performs the 
+    parameter substitution and passes the statement to the database driver. As you may guess, the <code>raw</code> language 
+    is faster than the <code>xml</code> language.
+    </p>
+    <p>You can specify the language you want to use in an statement adding the <code>lang</code> attribute as follows:
+    </p>
+  <source><![CDATA[<select id="selectBlog" lang="raw">
+  SELECT * FROM BLOG
+</select>]]></source>
+    <p>Or, in the case you are using mappers, using the <code>@Lang</code> annotation:</p>
+  <source><![CDATA[public interface Mapper {
+  @Lang(RawLanguageDriver.class)
+  @Select("SELECT * FROM BLOG")
+  List<Blog> selectBlog();
+}]]></source>
+    <p>You can also implement your own language driver by implementing the following interface:</p>
+  <source><![CDATA[public interface LanguageDriver {
+  public ParameterHandler createParameterHandler(MappedStatement mappedStatement, Object parameterObject, BoundSql boundSql);
+  public SqlSource createSqlSource(Configuration configuration, XNode script, Class<?> parameterType);
+  public SqlSource createSqlSource(Configuration configuration, String script, Class<?> parameterType);
+}]]></source>    
+	</subsection>
+	</section>
   </body>
 </document>

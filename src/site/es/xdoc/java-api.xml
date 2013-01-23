@@ -253,6 +253,15 @@ try {
 } finally {
     session.close();
 }</source>
+  <p>O, si usas jdk 1.7+ y MyBatis 3.2+, puedes utilizar la sentencia try-with-resources:</p>
+  <source>
+try (SqlSession session = sqlSessionFactory.openSession()) {
+    // following 3 lines pseudocode for "doing some work"
+    session.insert(...);
+    session.update(...);
+    session.delete(...);
+    session.commit();
+}</source>
   <p><span class="label important">NOTE</span> Al igual que con SqlSessionFactory, puedes obtener la instancia de Configuration que está usando al SqlSession llamando al método getConfiguration().</p>
   <source>Configuration getConfiguration()</source>
 
