@@ -22,6 +22,8 @@ import java.io.Reader;
 import java.sql.Connection;
 import java.sql.DriverManager;
 
+import junit.framework.Assert;
+
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSession;
@@ -72,6 +74,11 @@ public class BlogTest {
       Blog result = mapper.selectBlogByPrimaryKey(1);
       assertNotNull(result);
       assertEquals("Blog with posts", result.getTitle());
+      Assert.assertEquals(2, result.getPosts().size());
+      Post firstPost = result.getPosts().get(0);
+      Assert.assertEquals(2, firstPost.getComments().size());
+      Post secondPost = result.getPosts().get(1);
+      Assert.assertEquals(1, secondPost.getComments().size());
     } finally {
       session.close();
     }
@@ -85,6 +92,7 @@ public class BlogTest {
       Blog result = mapper.selectBlogByPrimaryKey(2);
       assertNotNull(result);
       assertEquals("Blog without posts", result.getTitle());
+      Assert.assertEquals(0, result.getPosts().size());
     } finally {
       session.close();
     }

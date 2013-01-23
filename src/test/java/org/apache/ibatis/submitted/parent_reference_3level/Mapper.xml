@@ -33,19 +33,19 @@
     <resultMap id="BlogResultMap" type="Blog">
         <id column="blog_id" property="id" />
         <result column="blog_title" property="title"/>
-        <collection property="posts" notNullColumn="post_id" resultMap="PostResultMap"></collection>
+        <collection property="posts" resultMap="PostResultMap"></collection>
     </resultMap>
     
     <resultMap id="PostResultMap" type="Post">
         <id column="post_id" property="id" />
         <result column="post_body" property="body"/>
         <association property="blog" resultMap="BlogResultMap"></association>
-        <collection property="comments" notNullColumn="comment_id" resultMap="CommentResultMap"></collection>
+        <collection property="comments" resultMap="CommentResultMap"></collection>
     </resultMap>
     
     <resultMap id="CommentResultMap" type="Comment">
         <id column="comment_id" property="id" />
         <result column="comment" property="comment"/>
-        <association property="post" notNullColumn="post_id" resultMap="PostResultMap"></association>
+        <association property="post" resultMap="PostResultMap"></association>
     </resultMap>
 </mapper>
