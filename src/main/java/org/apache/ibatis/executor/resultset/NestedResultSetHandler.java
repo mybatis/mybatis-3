@@ -135,10 +135,7 @@ public class NestedResultSetHandler extends FastResultSetHandler {
       final String nestedResultMapId = resultMapping.getNestedResultMapId();
       if (nestedResultMapId != null) {
         try {
-          final StringBuilder columnPrefixBuilder = new StringBuilder();
-          if (parentPrefix != null) columnPrefixBuilder.append(parentPrefix);
-          if (resultMapping.getColumnPrefix() != null) columnPrefixBuilder.append(resultMapping.getColumnPrefix());
-          final String columnPrefix = columnPrefixBuilder.length() == 0 ? null : columnPrefixBuilder.toString().toUpperCase(Locale.ENGLISH);
+          final String columnPrefix = getColumnPrefix(parentPrefix, resultMapping);
           final ResultMap nestedResultMap = getNestedResultMap(rs, nestedResultMapId, columnPrefix);
           final CacheKey rowKey = createRowKey(nestedResultMap, rs, columnPrefix, resultColumnCache);
           final Object ancestorObject = ancestorCache.get(rowKey);
@@ -149,7 +146,7 @@ public class NestedResultSetHandler extends FastResultSetHandler {
             Object rowValue = objectCache.get(combinedKey);
             boolean knownValue = (rowValue != null);
             rowValue = getRowValue(rs, nestedResultMap, combinedKey, rowKey, columnPrefix, resultColumnCache, rowValue);
-            final Object collectionProperty = instantiateCollectionPropertyIfAppropriate(resultMapping, metaObject); // even if there is no data an empty collection is set
+            final Object collectionProperty = instantiateCollectionPropertyIfAppropriate(resultMapping, metaObject);
             if (rowValue != null && !knownValue && anyNotNullColumnHasValue(resultMapping, columnPrefix, rs)) {
               if (collectionProperty != null) {
                 final MetaObject targetMetaObject = configuration.newMetaObject(collectionProperty);
@@ -171,21 +168,29 @@ public class NestedResultSetHandler extends FastResultSetHandler {
     }
     return foundValues;
   }
+  
+  private String getColumnPrefix(String parentPrefix, ResultMapping resultMapping) {
+    final StringBuilder columnPrefixBuilder = new StringBuilder();
+    if (parentPrefix != null) columnPrefixBuilder.append(parentPrefix);
+    if (resultMapping.getColumnPrefix() != null) columnPrefixBuilder.append(resultMapping.getColumnPrefix());
+    final String columnPrefix = columnPrefixBuilder.length() == 0 ? null : columnPrefixBuilder.toString().toUpperCase(Locale.ENGLISH);
+    return columnPrefix;
+  }
 
   private boolean anyNotNullColumnHasValue(ResultMapping resultMapping, String columnPrefix, ResultSet rs) throws SQLException {
     Set<String> notNullColumns = resultMapping.getNotNullColumns();
-    boolean anyNotNullColumnIsNotNull = true;
+    boolean anyNotNullColumnHasValue = true;
     if (notNullColumns != null && !notNullColumns.isEmpty()) {
-      anyNotNullColumnIsNotNull = false;
+      anyNotNullColumnHasValue = false;
       for (String column: notNullColumns) {
         rs.getObject(prependPrefix(column, columnPrefix));
         if (!rs.wasNull()) {
-          anyNotNullColumnIsNotNull = true;
+          anyNotNullColumnHasValue = true;
           break;
         }
       }
     }
-    return anyNotNullColumnIsNotNull;
+    return anyNotNullColumnHasValue;
   }
 
   private Object instantiateCollectionPropertyIfAppropriate(ResultMapping resultMapping, MetaObject metaObject) {
