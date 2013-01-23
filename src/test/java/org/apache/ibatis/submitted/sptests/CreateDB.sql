@@ -82,7 +82,7 @@ go
 
 -- note that these create procedure statements will fail until hsqldb 2.0.1
 create procedure sptest.getname(in nameId integer)
-reads sql data
+modifies sql data
 dynamic result sets 1
 BEGIN ATOMIC
   declare cur cursor for select * from sptest.names where id = nameId;
@@ -91,7 +91,7 @@ END
 go
 
 create procedure sptest.getnamesanditems()
-reads sql data
+modifies sql data
 dynamic result sets 2
 BEGIN ATOMIC
   declare cur1 cursor for select * from sptest.names;
@@ -102,7 +102,7 @@ END
 go
 
 create procedure sptest.getnames(in lowestId int, out totalrows integer)
-reads sql data
+modifies sql data
 dynamic result sets 1
 BEGIN ATOMIC
   declare cur cursor for select * from sptest.names where id >= lowestId;
@@ -112,7 +112,7 @@ END
 go
 
 create procedure sptest.arraytest(in ids int array, out rowsrequested integer, out returnedids int array)
-reads sql data
+modifies sql data
 dynamic result sets 1
 begin atomic
   declare cur cursor for select * from sptest.names where id in (unnest(ids));
