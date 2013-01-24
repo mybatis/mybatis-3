@@ -153,10 +153,6 @@ public class NestedResultSetHandler extends FastResultSetHandler {
                   final MetaObject targetMetaObject = configuration.newMetaObject(collectionProperty);
                   targetMetaObject.add(rowValue);
                 } else {
-                  if (!newObject) { 
-                    throw new ExecutorException("Trying to overwrite a previous set value for the association '" + resultMapping.getProperty() 
-                        + "'. Check your id/result elements to ensure they identify uniquely an record.");
-                  }
                   metaObject.setValue(resultMapping.getProperty(), rowValue);
                 }
                 foundValues = true;

@@ -19,7 +19,6 @@ import java.io.Reader;
 import java.sql.Connection;
 import java.util.List;
 
-import org.apache.ibatis.exceptions.PersistenceException;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSession;
@@ -58,25 +57,43 @@ public class AssociationTest {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       List<Car> cars = mapper.getCars();
       Assert.assertEquals(4, cars.size());
+      Assert.assertEquals("VW", cars.get(0).getType());
+      Assert.assertNotNull(cars.get(0).getEngine());
+      Assert.assertNull(cars.get(0).getBrakes());
+      Assert.assertEquals("Opel", cars.get(1).getType());
+      Assert.assertNull(cars.get(1).getEngine());
+      Assert.assertNotNull(cars.get(1).getBrakes());
     } finally {
       sqlSession.close();
     }
   }
 
-  @Test(expected=PersistenceException.class)
-  public void shouldGetAllCarsNonUnique() {
-    // this is a little weird - we might expect 4 objects back, but there are only
-    // 2 unique combinations of Car attributes, so we get two back.
-    
-    // update, this was reported as an error, see Issue #433
-    // in this case there is data loss, so now it fails
+  @Test
+  public void shouldGetOneCarWithOneEngineAndBrakes() {
     SqlSession sqlSession = sqlSessionFactory.openSession();
     try {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
-      List<Car> cars = mapper.getCarsNonUnique();
-      Assert.assertEquals(2, cars.size());
+      List<Car> cars = mapper.getCars2();      
+      Assert.assertEquals(1, cars.size());
+      Assert.assertNotNull(cars.get(0).getEngine());
+      Assert.assertNotNull(cars.get(0).getBrakes());      
     } finally {
       sqlSession.close();
     }
   }
+
+  @Test
+  public void shouldGetAllCarsNonUnique() {
+    // this is a little weird - we might expect 4 objects back, but there are only
+    // 1 distinct carid, so we get one back.
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      List<Car> cars = mapper.getCars2();
+      Assert.assertEquals(1, cars.size());
+    } finally {
+      sqlSession.close();
+    }
+  }
+
 }

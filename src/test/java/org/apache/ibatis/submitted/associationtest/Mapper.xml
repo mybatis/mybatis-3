@@ -21,13 +21,17 @@
 <mapper namespace="org.apache.ibatis.submitted.associationtest.Mapper">
 
   <resultMap type="org.apache.ibatis.submitted.associationtest.Car" id="carResult">
-    <result column="carid" property="id"/>
+    <id column="carid" property="id"/>
     <result column="cartype" property="type"/>
     <association property="engine" resultMap="engineResult"/>
+    <association property="brakes" resultMap="brakesResult"/>
   </resultMap>
   <resultMap type="org.apache.ibatis.submitted.associationtest.Engine" id="engineResult">
     <result column="enginetype" property="type"/>
     <result column="enginecylinders" property="cylinders"/>
+  </resultMap>
+  <resultMap type="org.apache.ibatis.submitted.associationtest.Brakes" id="brakesResult">
+    <result column="brakesType" property="type"/>
   </resultMap>
   
   <select id="getCars" resultMap="carResult">
@@ -35,6 +39,11 @@
   </select>
 
   <select id="getCarsNonUnique" resultMap="carResult">
-    select 1 as carid, cartype, enginetype, enginecylinders from cars
+    select 1 as carid, cartype, enginetype, enginecylinders, brakestype from cars
   </select>
+  
+  <select id="getCars2" resultMap="carResult">
+    select 1 as carid, cartype, enginetype, enginecylinders, brakestype from cars where carid in (1,2)
+  </select>
+  
 </mapper>

@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2012 The MyBatis Team
+ *    Copyright 2009-2013 The MyBatis Team
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,12 +15,16 @@
  */
 package org.apache.ibatis.submitted.associationtest;
 
-import java.util.List;
+public class Brakes {
+  
+  private String type;
 
-public interface Mapper {
+  public String getType() {
+    return type;
+  }
 
-  List<Car> getCars();
-  List<Car> getCars2();
-  List<Car> getCars3();
+  public void setType(String type) {
+    this.type = type;
+  }
 
 }
