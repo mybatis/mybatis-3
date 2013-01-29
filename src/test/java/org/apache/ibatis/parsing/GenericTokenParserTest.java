@@ -75,4 +75,27 @@ public class GenericTokenParserTest {
     assertEquals("This is a ${skipped} variable", parser.parse("This is a \\${skipped} variable"));
   }
 
+  @Test(timeout = 1000)
+  public void shouldParseFastOnJdk7u6() {
+    // issue #760
+    GenericTokenParser parser = new GenericTokenParser("${", "}", new VariableTokenHandler(new HashMap<String, String>() {
+      {
+        put("first_name", "James");
+        put("initial", "T");
+        put("last_name", "Kirk");
+        put("", "");
+      }
+    }));
+
+    StringBuilder input = new StringBuilder();
+    for (int i = 0; i < 10000; i++) {
+      input.append("${first_name} ${initial} ${last_name} reporting. ");
+    }
+    StringBuilder expected = new StringBuilder();
+    for (int i = 0; i < 10000; i++) {
+      expected.append("James T Kirk reporting. ");
+    }
+    assertEquals(expected.toString(), parser.parse(input.toString()));
+  }
+
 }

@@ -29,39 +29,33 @@ public class GenericTokenParser {
 
   public String parse(String text) {
     StringBuilder builder = new StringBuilder();
-    if (text != null) {
-      String after = text;
-      int start = after.indexOf(openToken);
-      int end = after.indexOf(closeToken);
+    if (text != null && text.length() > 0) {
+      char[] src = text.toCharArray();
+      int offset = 0;
+      int start = text.indexOf(openToken, offset);
       while (start > -1) {
-        if (end > start) {
-          String before = after.substring(0, start);
-          String content = after.substring(start + openToken.length(), end);
-          String substitution;
-
-          // check if variable has to be skipped
-          if (start > 0 && text.charAt(start - 1) == '\\') {
-            before = before.substring(0, before.length() - 1);
-            substitution = new StringBuilder(openToken).append(content).append(closeToken).toString();
-          } else {
-            substitution = handler.handleToken(content);
-          }
-
-          builder.append(before);
-          builder.append(substitution);
-          after = after.substring(end + closeToken.length());
-        } else if (end > -1) {
-          String before = after.substring(0, end);
-          builder.append(before);
-          builder.append(closeToken);
-          after = after.substring(end + closeToken.length());
+        if (start > 0 && src[start - 1] == '\\') {
+          // the variable is escaped. remove the backslash.
+          builder.append(src, offset, start - 1).append(openToken);
+          offset = start + openToken.length();
         } else {
-          break;
+          int end = text.indexOf(closeToken, start);
+          if (end == -1) {
+            builder.append(src, offset, src.length - offset);
+            offset = src.length;
+          } else {
+            builder.append(src, offset, start - offset);
+            offset = start + openToken.length();
+            String content = new String(src, offset, end - offset);
+            builder.append(handler.handleToken(content));
+            offset = end + closeToken.length();
+          }
         }
-        start = after.indexOf(openToken);
-        end = after.indexOf(closeToken);
+        start = text.indexOf(openToken, offset);
       }
-      builder.append(after);
+      if (offset < src.length) {
+        builder.append(src, offset, src.length - offset);
+      }
     }
     return builder.toString();
   }
