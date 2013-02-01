@@ -246,7 +246,7 @@ void rollback(boolean force)</source>
   <p>最も重要なのは、オープンした session は必ずクローズする必要があるということです。そのためには次のようなパターンでコードを書くのが最も確実です。</p>
   <source>SqlSession session = sqlSessionFactory.openSession();
 try {
-    // following 3 lines pseudocod for "doing some work"
+    // following 3 lines pseudocode for "doing some work"
     session.insert(...);
     session.update(...);
     session.delete(...);
@@ -254,7 +254,7 @@ try {
 } finally {
     session.close();
 }</source>
-  <p>Or, If you are using jdk 1.7+ and MyBatis 3.2+, you can use the try-with-resources statement:</p>
+  <p>MyBatis 3.2 からは Java 1.7 で導入された try-with-resources 構文を使ってクローズ処理を省略することもできます。</p>
   <source>
 try (SqlSession session = sqlSessionFactory.openSession()) {
     // following 3 lines pseudocode for "doing some work"
