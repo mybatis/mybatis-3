@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -56,6 +57,7 @@ import org.apache.ibatis.annotations.Update;
 import org.apache.ibatis.annotations.UpdateProvider;
 import org.apache.ibatis.binding.BindingException;
 import org.apache.ibatis.builder.BuilderException;
+import org.apache.ibatis.builder.IncompleteElementException;
 import org.apache.ibatis.builder.MapperBuilderAssistant;
 import org.apache.ibatis.builder.xml.XMLMapperBuilder;
 import org.apache.ibatis.executor.keygen.Jdbc3KeyGenerator;
@@ -114,7 +116,27 @@ public class MapperAnnotationBuilder {
       parseCacheRef();
       Method[] methods = type.getMethods();
       for (Method method : methods) {
-        parseStatement(method);
+        try {
+          parseStatement(method);
+        } catch (IncompleteElementException e) {
+          configuration.addIncompleteMethod(new MethodResolver(this, method));
+        }
+      }
+    }
+    parsePendingMethods();
+  }
+
+  private void parsePendingMethods() {
+    Collection<MethodResolver> incompleteMethods = configuration.getIncompleteMethods();
+    synchronized (incompleteMethods) {
+      Iterator<MethodResolver> iter = incompleteMethods.iterator();
+      while (iter.hasNext()) {
+        try {
+          iter.next().resolve();
+          iter.remove();
+        } catch (IncompleteElementException e) {
+          // This method is still missing a resource
+        }
       }
     }
   }
@@ -213,7 +235,7 @@ public class MapperAnnotationBuilder {
     return null;
   }
 
-  private void parseStatement(Method method) {
+  void parseStatement(Method method) {
     Class<?> parameterTypeClass = getParameterType(method);
     LanguageDriver languageDriver = getLanguageDriver(method);
     SqlSource sqlSource = getSqlSourceFromAnnotations(method, parameterTypeClass, languageDriver);

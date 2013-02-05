@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2012 The MyBatis Team
+ *    Copyright 2009-2013 The MyBatis Team
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -27,6 +27,7 @@ import java.util.Set;
 import org.apache.ibatis.binding.MapperRegistry;
 import org.apache.ibatis.builder.CacheRefResolver;
 import org.apache.ibatis.builder.ResultMapResolver;
+import org.apache.ibatis.builder.annotation.MethodResolver;
 import org.apache.ibatis.builder.xml.XMLStatementBuilder;
 import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.cache.decorators.FifoCache;
@@ -125,6 +126,8 @@ public class Configuration {
   protected final Collection<XMLStatementBuilder> incompleteStatements = new LinkedList<XMLStatementBuilder>();
   protected final Collection<CacheRefResolver> incompleteCacheRefs = new LinkedList<CacheRefResolver>();
   protected final Collection<ResultMapResolver> incompleteResultMaps = new LinkedList<ResultMapResolver>();
+  protected final Collection<MethodResolver> incompleteMethods = new LinkedList<MethodResolver>();
+
   /*
    * A map holds cache-ref relationship. The key is the namespace that
    * references a cache bound to another namespace and the value is the
@@ -188,7 +191,7 @@ public class Configuration {
     return safeResultHandlerEnabled;
   }
 
-  @Deprecated // "Not needed as of the fix for issue #542")
+  @Deprecated // "Not needed as of the fix for issue #542"
   public void setSafeResultHandlerEnabled(boolean safeResultHandlerEnabled) {
     this.safeResultHandlerEnabled = safeResultHandlerEnabled;
   }
@@ -547,6 +550,14 @@ public class Configuration {
 
   public void addIncompleteResultMap(ResultMapResolver resultMapResolver) {
     incompleteResultMaps.add(resultMapResolver);
+  }
+
+  public void addIncompleteMethod(MethodResolver builder) {
+    incompleteMethods.add(builder);
+  }
+
+  public Collection<MethodResolver> getIncompleteMethods() {
+    return incompleteMethods;
   }
 
   public MappedStatement getMappedStatement(String id) {
