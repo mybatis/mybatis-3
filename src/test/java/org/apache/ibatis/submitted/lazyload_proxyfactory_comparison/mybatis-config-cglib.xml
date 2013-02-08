@@ -21,11 +21,10 @@
 <configuration>
 
 	<settings>
+		<setting name="proxyFactory" value="CGLIB"/>
         <setting name="lazyLoadingEnabled" value="true"/>
         <setting name="aggressiveLazyLoading" value="false" />
     </settings>
-
-	<proxyFactory type="org.apache.ibatis.executor.loader.CglibProxyFactory" />
 
 	<environments default="development">
 		<environment id="development">

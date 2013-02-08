@@ -22,10 +22,9 @@
 
 	<settings>
         <setting name="lazyLoadingEnabled" value="true"/>
+        <setting name="proxyFactory" value="JAVASSIST"/>
         <setting name="aggressiveLazyLoading" value="false" />
     </settings>
-
-	<proxyFactory type="org.apache.ibatis.executor.loader.JavassistProxyFactory" />
 
 	<environments default="development">
 		<environment id="development">

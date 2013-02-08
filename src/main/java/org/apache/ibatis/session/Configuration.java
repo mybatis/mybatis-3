@@ -45,6 +45,7 @@ import org.apache.ibatis.executor.ReuseExecutor;
 import org.apache.ibatis.executor.SimpleExecutor;
 import org.apache.ibatis.executor.keygen.KeyGenerator;
 import org.apache.ibatis.executor.loader.CglibProxyFactory;
+import org.apache.ibatis.executor.loader.JavassistProxyFactory;
 import org.apache.ibatis.executor.loader.ProxyFactory;
 import org.apache.ibatis.executor.parameter.ParameterHandler;
 import org.apache.ibatis.executor.resultset.FastResultSetHandler;
@@ -55,6 +56,12 @@ import org.apache.ibatis.executor.statement.StatementHandler;
 import org.apache.ibatis.io.ResolverUtil;
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
+import org.apache.ibatis.logging.commons.JakartaCommonsLoggingImpl;
+import org.apache.ibatis.logging.jdk14.Jdk14LoggingImpl;
+import org.apache.ibatis.logging.log4j.Log4jImpl;
+import org.apache.ibatis.logging.nologging.NoLoggingImpl;
+import org.apache.ibatis.logging.slf4j.Slf4jImpl;
+import org.apache.ibatis.logging.stdout.StdOutImpl;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.Environment;
 import org.apache.ibatis.mapping.MappedStatement;
@@ -161,12 +168,15 @@ public class Configuration {
     typeAliasRegistry.registerAlias("XML", XMLLanguageDriver.class.getName());
     typeAliasRegistry.registerAlias("RAW", RawLanguageDriver.class.getName());
 
-    typeAliasRegistry.registerAlias("SLF4J", org.apache.ibatis.logging.slf4j.Slf4jImpl.class.getName());
-    typeAliasRegistry.registerAlias("COMMONS_LOGGING", org.apache.ibatis.logging.commons.JakartaCommonsLoggingImpl.class.getName());
-    typeAliasRegistry.registerAlias("LOG4J", org.apache.ibatis.logging.log4j.Log4jImpl.class.getName());
-    typeAliasRegistry.registerAlias("JDK_LOGGING", org.apache.ibatis.logging.jdk14.Jdk14LoggingImpl.class.getName());
-    typeAliasRegistry.registerAlias("STDOUT_LOGGING", org.apache.ibatis.logging.stdout.StdOutImpl.class.getName());
-    typeAliasRegistry.registerAlias("NO_LOGGING", org.apache.ibatis.logging.nologging.NoLoggingImpl.class.getName());
+    typeAliasRegistry.registerAlias("SLF4J", Slf4jImpl.class.getName());
+    typeAliasRegistry.registerAlias("COMMONS_LOGGING", JakartaCommonsLoggingImpl.class.getName());
+    typeAliasRegistry.registerAlias("LOG4J", Log4jImpl.class.getName());
+    typeAliasRegistry.registerAlias("JDK_LOGGING", Jdk14LoggingImpl.class.getName());
+    typeAliasRegistry.registerAlias("STDOUT_LOGGING", StdOutImpl.class.getName());
+    typeAliasRegistry.registerAlias("NO_LOGGING", NoLoggingImpl.class.getName());
+    
+    typeAliasRegistry.registerAlias("CGLIB", CglibProxyFactory.class.getName());
+    typeAliasRegistry.registerAlias("JAVASSIST", JavassistProxyFactory.class.getName());
     
     languageRegistry.setDefaultDriverClass(XMLLanguageDriver.class);
     languageRegistry.register(RawLanguageDriver.class);
@@ -186,8 +196,10 @@ public class Configuration {
 
   @SuppressWarnings("unchecked")
   public void setLogImpl(Class<?> logImpl) {
-    this.logImpl = (Class<? extends Log>) logImpl;
-    LogFactory.useCustomLogging(this.logImpl);
+    if (logImpl != null) {
+      this.logImpl = (Class<? extends Log>) logImpl;
+      LogFactory.useCustomLogging(this.logImpl);
+    }
   }
 
   public boolean isCallSettersOnNulls() {

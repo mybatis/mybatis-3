@@ -21,6 +21,7 @@
 <configuration>
 
 	<settings>
+		<setting name="proxyFactory" value="JAVASSIST"/>
         <setting name="lazyLoadingEnabled" value="true"/>
         <setting name="aggressiveLazyLoading" value="false" />
     </settings>
