@@ -312,6 +312,21 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
             </tr>
             <tr>
               <td>
+                callSettersOnNulls
+              </td>
+              <td>
+                Permite especificar si se invocarán a los setters y a los métodos put de los mapas si el valor obtenido es null.
+                Te en cuenta que si se activa las propiedades que puedan ser informadas con nulos no pueden ser de tipos primitivos.
+              </td>
+              <td>
+                true | false
+              </td>
+              <td>
+                false
+              </td>
+            </tr>
+            <tr>
+              <td>
                 logPrefix
               </td>
               <td>
@@ -326,17 +341,30 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
             </tr>
             <tr>
               <td>
-                callSettersOnNulls
+                logImpl
               </td>
               <td>
-                Permite especificar si se invocarán a los setters y a los métodos put de los mapas si el valor obtenido es null.
-                Te en cuenta que si se activa las propiedades que puedan ser informadas con nulos no pueden ser de tipos primitivos.
+                Permite especificar qué implementación de logging utilizar. Si no está informado la impelmentación se descubrirá automaticamente.
               </td>
               <td>
-                true | false
+                SLF4J | LOG4J | JDK_LOGGING | COMMONS_LOGGING | STDOUT_LOGGING | NO_LOGGING
               </td>
               <td>
-                false
+                No informado
+              </td>
+            </tr>
+            <tr>
+              <td>
+                proxyFactory
+              </td>
+              <td>
+                Permite especificar qué herramienta de generación de proxys se usará para crear los objetos con capacidad de carga lazy.
+              </td>
+              <td>
+                CGLIB | JAVASSIST
+              </td>
+              <td>
+                CGLIB
               </td>
             </tr>
           </tbody>

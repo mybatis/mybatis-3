@@ -409,6 +409,21 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
             </tr>
             <tr>
               <td>
+                callSettersOnNulls
+              </td>
+              <td>
+                Specifies if setters or map's put method will be called when a retrieved value is null. Note that if set, properties 
+                that may be filled with null values must never be primitives. 
+              </td>
+              <td>
+                true | false
+              </td>
+              <td>
+                false
+              </td>
+            </tr>
+            <tr>
+              <td>
                 logPrefix
               </td>
               <td>
@@ -423,17 +438,30 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
             </tr>
             <tr>
               <td>
-                callSettersOnNulls
+                logImpl
               </td>
               <td>
-                Specifies if setters or map's put method will be called when a retrieved value is null. Note that if set, properties 
-                that may be filled with null values must never be primitives. 
+                Specifies which logging implementation MyBatis should use. If this setting is not present logging implementation will be autodiscovered. 
               </td>
               <td>
-                true | false
+                SLF4J | LOG4J | JDK_LOGGING | COMMONS_LOGGING | STDOUT_LOGGING | NO_LOGGING
               </td>
               <td>
-                false
+                Not set
+              </td>
+            </tr>
+            <tr>
+              <td>
+                proxyFactory
+              </td>
+              <td>
+                Specifies the proxy tool that MyBatis will use for creating lazy loading capable objects.
+              </td>
+              <td>
+                CGLIB | JAVASSIST
+              </td>
+              <td>
+                CGLIB
               </td>
             </tr>
           </tbody>

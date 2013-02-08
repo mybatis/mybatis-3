@@ -343,6 +343,21 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
             </tr>
             <tr>
               <td>
+                callSettersOnNulls
+              </td>
+              <td>
+                受け取った値が null の場合にセッターあるいは Map の put メソッドを呼び出すかどうかを指定します。
+                true を指定した場合、null がセットされる可能性があるプロパティをプリミティブ型として定義することはできません。
+              </td>
+              <td>
+                true | false
+              </td>
+              <td>
+                false
+              </td>
+            </tr>
+            <tr>
+              <td>
                 logPrefix
               </td>
               <td>
@@ -357,17 +372,30 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
             </tr>
             <tr>
               <td>
-                callSettersOnNulls
+                logImpl
               </td>
               <td>
-                受け取った値が null の場合にセッターあるいは Map の put メソッドを呼び出すかどうかを指定します。
-                true を指定した場合、null がセットされる可能性があるプロパティをプリミティブ型として定義することはできません。
+                Specifies which logging implementation MyBatis should use. If this setting is not present logging implementation will be autodiscovered. 
               </td>
               <td>
-                true | false
+                SLF4J | LOG4J | JDK_LOGGING | COMMONS_LOGGING | STDOUT_LOGGING | NO_LOGGING
               </td>
               <td>
-                false
+                Not set
+              </td>
+            </tr>
+            <tr>
+              <td>
+                proxyFactory
+              </td>
+              <td>
+                Specifies the proxy tool that MyBatis will use for creating lazy loading capable objects.
+              </td>
+              <td>
+                CGLIB | JAVASSIST
+              </td>
+              <td>
+                CGLIB
               </td>
             </tr>
           </tbody>
