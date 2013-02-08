@@ -17,12 +17,16 @@ package org.apache.ibatis.logging;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.Reader;
+
+import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.logging.commons.JakartaCommonsLoggingImpl;
 import org.apache.ibatis.logging.jdk14.Jdk14LoggingImpl;
 import org.apache.ibatis.logging.log4j.Log4jImpl;
 import org.apache.ibatis.logging.nologging.NoLoggingImpl;
 import org.apache.ibatis.logging.slf4j.Slf4jImpl;
 import org.apache.ibatis.logging.stdout.StdOutImpl;
+import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.Test;
 
 public class LogFactoryTest {
@@ -72,6 +76,17 @@ public class LogFactoryTest {
     LogFactory.useNoLogging();
     Log log = LogFactory.getLog(Object.class);
     logSomething(log);
+    assertEquals(log.getClass().getName(), NoLoggingImpl.class.getName());
+  }
+
+  @Test
+  public void shouldReadLogImplFromSettings() throws Exception {
+    Reader reader = Resources.getResourceAsReader("org/apache/ibatis/logging/mybatis-config.xml");
+    new SqlSessionFactoryBuilder().build(reader);
+    reader.close();
+    
+    Log log = LogFactory.getLog(Object.class);
+    log.debug("Debug message.");
     assertEquals(log.getClass().getName(), NoLoggingImpl.class.getName());
   }
 

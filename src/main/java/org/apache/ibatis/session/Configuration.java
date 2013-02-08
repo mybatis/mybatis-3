@@ -53,6 +53,8 @@ import org.apache.ibatis.executor.resultset.ResultSetHandler;
 import org.apache.ibatis.executor.statement.RoutingStatementHandler;
 import org.apache.ibatis.executor.statement.StatementHandler;
 import org.apache.ibatis.io.ResolverUtil;
+import org.apache.ibatis.logging.Log;
+import org.apache.ibatis.logging.LogFactory;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.Environment;
 import org.apache.ibatis.mapping.MappedStatement;
@@ -92,6 +94,7 @@ public class Configuration {
   protected boolean cacheEnabled = true;
   protected boolean callSettersOnNulls = false;
   protected String logPrefix;
+  protected Class <? extends Log> logImpl;
   protected LocalCacheScope localCacheScope = LocalCacheScope.SESSION;
   protected JdbcType jdbcTypeForNull = JdbcType.OTHER;
   protected Set<String> lazyLoadTriggerMethods = new HashSet<String>(Arrays.asList(new String[] { "equals", "clone", "hashCode", "toString" }));
@@ -158,6 +161,13 @@ public class Configuration {
     typeAliasRegistry.registerAlias("XML", XMLLanguageDriver.class.getName());
     typeAliasRegistry.registerAlias("RAW", RawLanguageDriver.class.getName());
 
+    typeAliasRegistry.registerAlias("SLF4J", org.apache.ibatis.logging.slf4j.Slf4jImpl.class.getName());
+    typeAliasRegistry.registerAlias("COMMONS_LOGGING", org.apache.ibatis.logging.commons.JakartaCommonsLoggingImpl.class.getName());
+    typeAliasRegistry.registerAlias("LOG4J", org.apache.ibatis.logging.log4j.Log4jImpl.class.getName());
+    typeAliasRegistry.registerAlias("JDK_LOGGING", org.apache.ibatis.logging.jdk14.Jdk14LoggingImpl.class.getName());
+    typeAliasRegistry.registerAlias("STDOUT_LOGGING", org.apache.ibatis.logging.stdout.StdOutImpl.class.getName());
+    typeAliasRegistry.registerAlias("NO_LOGGING", org.apache.ibatis.logging.nologging.NoLoggingImpl.class.getName());
+    
     languageRegistry.setDefaultDriverClass(XMLLanguageDriver.class);
     languageRegistry.register(RawLanguageDriver.class);
   }
@@ -168,6 +178,16 @@ public class Configuration {
 
   public void setLogPrefix(String logPrefix) {
     this.logPrefix = logPrefix;
+  }
+
+  public Class<? extends Log> getLogImpl() {
+    return logImpl;
+  }
+
+  @SuppressWarnings("unchecked")
+  public void setLogImpl(Class<?> logImpl) {
+    this.logImpl = (Class<? extends Log>) logImpl;
+    LogFactory.useCustomLogging(this.logImpl);
   }
 
   public boolean isCallSettersOnNulls() {
