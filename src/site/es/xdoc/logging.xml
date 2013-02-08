@@ -46,8 +46,22 @@
       </ul>
       <p>La solución de logging elegida se basa en una introspección en tiempo de ejecución de la propia factoría interna de MyBatis. La factoría usará la primera implementación de logging que encuentre (el orden de búsqueda es el de la lista de más arriba). Si no se encuentra ninguna, el logging se desactivará.
       </p>
-      <p>Muchos entornos vienen con Commons Logging incluido como pare del classpath del servidor (por ejemplo Tomcat y WebSphere). Es importante conocer que en esos entorno, MyBatis usará JCL como implementación de logging. En un entorno como WebSphere esto significa que tu configuración de log4j será ignorada dado que WebSphere proporciona su propia implementación de JCL. Esto puede ser muy frustrante porque parece que MyBatis está ignorando tu configuración de logging (en realidad, MyBatis está ignorando tu configuración de log4j porque está usando JCL en dicho entorno). Si tu aplicación se ejecuta en un entorno que lleva JCL incluido pero quieres usar un método distinto de logging puedes llamar a los siguientes métodos:
+      <p>Muchos entornos vienen con Commons Logging incluido como pare del classpath del servidor (por ejemplo Tomcat y WebSphere). Es importante conocer que en esos entorno, MyBatis usará JCL como implementación de logging. En un entorno como WebSphere esto significa que tu configuración de log4j será ignorada dado que WebSphere proporciona su propia implementación de JCL. Esto puede ser muy frustrante porque parece que MyBatis está ignorando tu configuración de logging (en realidad, MyBatis está ignorando tu configuración de log4j porque está usando JCL en dicho entorno). Si tu aplicación se ejecuta en un entorno que lleva JCL incluido pero quieres usar un método distinto de logging puedes añadir un setting a tu fichero mybatis-config.xml:
       </p>
+      <source><![CDATA[<configuration>
+  <settings>
+    ...
+    <setting name="logImpl" value="LOG4J"/>
+    ...
+  </settings>
+</configuration>]]>
+      </source>
+      <p>Los valores válidos son: SLF4J, LOG4J, JDK_LOGGING, COMMONS_LOGGING, STDOUT_LOGGING, NO_LOGGING o
+      un nombre de clase plenamente cualificado que implemente <code>org.apache.ibatis.logging.Log</code> y reciba
+      un string como parametro de constructor.
+      </p>
+      <p>Tambien puedes seleccionar el método de logging llamando a uno de los siguientes métodos:
+      </p>      
       <source><![CDATA[org.apache.ibatis.logging.LogFactory.useSlf4jLogging();
 org.apache.ibatis.logging.LogFactory.useLog4JLogging();
 org.apache.ibatis.logging.LogFactory.useJdkLogging();

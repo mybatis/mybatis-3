@@ -64,8 +64,21 @@
         environments). If your application is running in an environment
         where Commons Logging is included in the classpath but you would
         rather use one of the other logging implementations you can select a
-        different logging implementation by calling one of the following
-        methods:
+        different logging implementation by adding a setting in mybatis-config.xml file as follows:
+      </p>
+      <source><![CDATA[<configuration>
+  <settings>
+    ...
+    <setting name="logImpl" value="LOG4J"/>
+    ...
+  </settings>
+</configuration>]]>
+      </source>
+      <p>Valid values are SLF4J, LOG4J, JDK_LOGGING, COMMONS_LOGGING, STDOUT_LOGGING, NO_LOGGING or 
+      a full qualified class name that implements <code>org.apache.ibatis.logging.Log</code> and gets
+      an string as a constructor parameter.
+      </p>
+      <p>You can also select the implementation by calling one of the following methods:
       </p>
       <source><![CDATA[org.apache.ibatis.logging.LogFactory.useSlf4jLogging();
 org.apache.ibatis.logging.LogFactory.useLog4JLogging();
