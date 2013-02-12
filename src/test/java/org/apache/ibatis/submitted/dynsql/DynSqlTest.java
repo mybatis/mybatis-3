@@ -144,4 +144,18 @@ public class DynSqlTest {
       sqlSession.close();
     }
   }
+
+  @Test
+  public void testOgnlStaticMethodCall() {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      List<Map<String, Object>> answer = sqlSession.selectList("org.apache.ibatis.submitted.dynsql.ognlStaticMethodCall", "Rock 'n Roll");
+      assertTrue(answer.size() == 1);
+      assertEquals(new Integer(7), answer.get(0).get("ID"));
+
+    } finally {
+      sqlSession.close();
+    }
+  }
+
 }

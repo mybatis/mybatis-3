@@ -62,4 +62,13 @@
     WHERE description LIKE #{pattern}
     ORDER BY id
   </select>
+
+  <select id="ognlStaticMethodCall" resultType="map" parameterType="string">
+    <bind name="escapedLiteral" value="@org.apache.ibatis.submitted.dynsql.CustomUtil@esc(_parameter)" />
+    SELECT *
+    FROM ibtest.names
+    WHERE description LIKE '${escapedLiteral}'
+    ORDER BY id
+  </select>
+
 </mapper>
