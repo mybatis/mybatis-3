@@ -1,0 +1,15 @@
+/*
+ * when new flags are needed, take them from
+ *
+ * http://www.printableworldflags.com/flag-icon
+ *
+ * that are free for any kind of usage
+ */
+
+ul.i18n {list-style-type:none;}
+li.en {background: url('../images/en.png') left no-repeat;padding-left: 32px; margin: 10px}
+li.es {background: url('../images/es.png') left no-repeat;padding-left: 32px; margin: 10px}
+li.ja {background: url('../images/ja.png') left no-repeat;padding-left: 32px; margin: 10px}
+li.fr {background: url('../images/fr.png') left no-repeat;padding-left: 32px; margin: 10px}
+li.zh {background: url('../images/zh.png') left no-repeat;padding-left: 32px; margin: 10px}
+li.ko {background: url('../images/ko.png') left no-repeat;padding-left: 32px; margin: 10px}

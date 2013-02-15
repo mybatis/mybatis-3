@@ -1,0 +1,49 @@
+a.hastooltip {
+	border-bottom: 1px dotted #00aa00;
+	color: #000000;
+	cursor: help;
+	font-style: normal;
+	position: relative; /* This is the key */
+	text-decoration: none;
+	z-index: 24; /* What does this do? */
+}
+
+a.hastooltip:active {
+	color: #000000;
+	text-decoration: none;
+}
+
+a.hastooltip:link {
+	color: #000000;
+	text-decoration: none;
+}
+
+a.hastooltip:hover {
+	background-color: #a0b8ff;
+	color: #000000;
+	text-decoration: none;
+	z-index: 25;
+}
+
+a.hastooltip:visited {
+	color: #000000;
+	text-decoration: none;
+}
+
+a.hastooltip span {
+	display: none;
+}
+
+a.hastooltip:hover span {
+	background-color: #eeeeee;
+	border: 1px solid #000000;
+	color: #000000;
+	display: block;
+	padding: 5px;
+	left: -15.2em;
+	position: absolute;
+	text-align: center;
+	text-decoration: none;
+	top: 2em;
+	width: 20em;
+}

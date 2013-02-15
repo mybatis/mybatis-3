@@ -1,0 +1,22 @@
+dl {
+	float: left;
+	width: 100%;
+}
+
+dt {
+	border-top: 1px solid #808080;
+	float: left;
+	font-weight: bold;
+	margin: 0;
+	padding: 1em;
+	width: 20%;
+}
+
+dd {
+	border-top: 1px solid #808080;
+	float: left;
+	font-style: italic;
+	margin: 0;
+	padding: 1em;
+	width: 60%;
+}

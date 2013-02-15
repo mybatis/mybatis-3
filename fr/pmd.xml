@@ -1,0 +1,340 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pmd version="4.3" timestamp="2013-02-15T21:03:59.968">
+<file name="/Users/stripodi/Documents/mybatis/mybatis-3/src/main/java/org/apache/ibatis/builder/MapperBuilderAssistant.java">
+<violation beginline="452" endline="454" begincolumn="9" endcolumn="7" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.apache.ibatis.builder" class="MapperBuilderAssistant" method="resolveResultJavaType" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+Avoid empty catch blocks
+</violation>
+</file>
+<file name="/Users/stripodi/Documents/mybatis/mybatis-3/src/main/java/org/apache/ibatis/builder/SqlSourceBuilder.java">
+<violation beginline="108" endline="110" begincolumn="45" endcolumn="9" rule="EmptyIfStmt" ruleset="Basic Rules" package="org.apache.ibatis.builder" class="SqlSourceBuilder$ParameterMappingTokenHandler" method="buildParameterMapping" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyIfStmt" priority="3">
+Avoid empty if statements
+</violation>
+</file>
+<file name="/Users/stripodi/Documents/mybatis/mybatis-3/src/main/java/org/apache/ibatis/builder/annotation/MapperAnnotationBuilder.java">
+<violation beginline="137" endline="139" begincolumn="11" endcolumn="9" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.apache.ibatis.builder.annotation" class="MapperAnnotationBuilder" method="parsePendingMethods" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+Avoid empty catch blocks
+</violation>
+<violation beginline="153" endline="155" begincolumn="9" endcolumn="7" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.apache.ibatis.builder.annotation" class="MapperAnnotationBuilder" method="loadXmlResource" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+Avoid empty catch blocks
+</violation>
+</file>
+<file name="/Users/stripodi/Documents/mybatis/mybatis-3/src/main/java/org/apache/ibatis/builder/annotation/ProviderSqlSource.java">
+<violation beginline="43" endline="47" begincolumn="11" endcolumn="11" rule="CollapsibleIfStatements" ruleset="Basic Rules" package="org.apache.ibatis.builder.annotation" class="ProviderSqlSource" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#CollapsibleIfStatements" priority="3">
+These nested if statements could be combined
+</violation>
+</file>
+<file name="/Users/stripodi/Documents/mybatis/mybatis-3/src/main/java/org/apache/ibatis/builder/xml/XMLMapperBuilder.java">
+<violation beginline="143" endline="145" begincolumn="11" endcolumn="9" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.apache.ibatis.builder.xml" class="XMLMapperBuilder" method="parsePendingResultMaps" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+Avoid empty catch blocks
+</violation>
+<violation beginline="158" endline="160" begincolumn="29" endcolumn="27" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.apache.ibatis.builder.xml" class="XMLMapperBuilder" method="parsePendingChacheRefs" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+Avoid empty catch blocks
+</violation>
+<violation beginline="173" endline="175" begincolumn="29" endcolumn="27" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.apache.ibatis.builder.xml" class="XMLMapperBuilder" method="parsePendingStatements" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+Avoid empty catch blocks
+</violation>
+<violation beginline="237" endline="239" begincolumn="9" endcolumn="7" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.apache.ibatis.builder.xml" class="XMLMapperBuilder" method="resultMapElements" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+Avoid empty catch blocks
+</violation>
+<violation beginline="372" endline="375" begincolumn="7" endcolumn="7" rule="CollapsibleIfStatements" ruleset="Basic Rules" package="org.apache.ibatis.builder.xml" class="XMLMapperBuilder" method="processNestedResultMappings" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#CollapsibleIfStatements" priority="3">
+These nested if statements could be combined
+</violation>
+<violation beginline="386" endline="388" begincolumn="9" endcolumn="7" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.apache.ibatis.builder.xml" class="XMLMapperBuilder" method="bindMapperForNamespace" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+Avoid empty catch blocks
+</violation>
+<violation beginline="390" endline="396" begincolumn="9" endcolumn="9" rule="CollapsibleIfStatements" ruleset="Basic Rules" package="org.apache.ibatis.builder.xml" class="XMLMapperBuilder" method="bindMapperForNamespace" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#CollapsibleIfStatements" priority="3">
+These nested if statements could be combined
+</violation>
+</file>
+<file name="/Users/stripodi/Documents/mybatis/mybatis-3/src/main/java/org/apache/ibatis/builder/xml/XMLMapperEntityResolver.java">
+<violation beginline="99" endline="101" begincolumn="9" endcolumn="7" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.apache.ibatis.builder.xml" class="XMLMapperEntityResolver" method="getInputSource" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+Avoid empty catch blocks
+</violation>
+</file>
+<file name="/Users/stripodi/Documents/mybatis/mybatis-3/src/main/java/org/apache/ibatis/datasource/pooled/PooledDataSource.java">
+<violation beginline="284" endline="286" begincolumn="11" endcolumn="9" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.apache.ibatis.datasource.pooled" class="PooledDataSource" method="forceCloseAll" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+Avoid empty catch blocks
+</violation>
+<violation beginline="298" endline="300" begincolumn="11" endcolumn="9" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.apache.ibatis.datasource.pooled" class="PooledDataSource" method="forceCloseAll" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+Avoid empty catch blocks
+</violation>
+<violation beginline="476" endline="507" begincolumn="7" endcolumn="7" rule="CollapsibleIfStatements" ruleset="Basic Rules" package="org.apache.ibatis.datasource.pooled" class="PooledDataSource" method="pingConnection" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#CollapsibleIfStatements" priority="3">
+These nested if statements could be combined
+</violation>
+<violation beginline="477" endline="506" begincolumn="9" endcolumn="9" rule="CollapsibleIfStatements" ruleset="Basic Rules" package="org.apache.ibatis.datasource.pooled" class="PooledDataSource" method="pingConnection" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#CollapsibleIfStatements" priority="3">
+These nested if statements could be combined
+</violation>
+<violation beginline="484" endline="484" begincolumn="13" endcolumn="21" rule="CheckResultSet" ruleset="Basic Rules" package="org.apache.ibatis.datasource.pooled" class="PooledDataSource" method="pingConnection" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#CheckResultSet" priority="3">
+Always check the return of one of the navigation method (next,previous,first,last) of a ResultSet.
+</violation>
+<violation beginline="498" endline="500" begincolumn="15" endcolumn="13" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.apache.ibatis.datasource.pooled" class="PooledDataSource" method="pingConnection" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+Avoid empty catch blocks
+</violation>
+</file>
+<file name="/Users/stripodi/Documents/mybatis/mybatis-3/src/main/java/org/apache/ibatis/executor/BaseExecutor.java">
+<violation beginline="232" endline="234" begincolumn="9" endcolumn="7" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.apache.ibatis.executor" class="BaseExecutor" method="closeStatement" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+Avoid empty catch blocks
+</violation>
+<violation beginline="288" endline="300" begincolumn="12" endcolumn="5" rule="UnusedFormalParameter" ruleset="Unused Code Rules" package="org.apache.ibatis.executor" class="BaseExecutor$DeferredLoad" externalInfoUrl="http://pmd.sourceforge.net/rules/unusedcode.html#UnusedFormalParameter" priority="3">
+Avoid unused constructor parameters such as 'mappedStatement'.
+</violation>
+</file>
+<file name="/Users/stripodi/Documents/mybatis/mybatis-3/src/main/java/org/apache/ibatis/executor/CachingExecutor.java">
+<violation beginline="129" endline="137" begincolumn="11" endcolumn="3" rule="UnusedFormalParameter" ruleset="Unused Code Rules" package="org.apache.ibatis.executor" class="CachingExecutor" externalInfoUrl="http://pmd.sourceforge.net/rules/unusedcode.html#UnusedFormalParameter" priority="3">
+Avoid unused method parameters such as 'boundSql'.
+</violation>
+<violation beginline="129" endline="137" begincolumn="11" endcolumn="3" rule="UnusedFormalParameter" ruleset="Unused Code Rules" package="org.apache.ibatis.executor" class="CachingExecutor" externalInfoUrl="http://pmd.sourceforge.net/rules/unusedcode.html#UnusedFormalParameter" priority="3">
+Avoid unused method parameters such as 'key'.
+</violation>
+<violation beginline="158" endline="161" begincolumn="7" endcolumn="7" rule="CollapsibleIfStatements" ruleset="Basic Rules" package="org.apache.ibatis.executor" class="CachingExecutor" method="flushCacheIfRequired" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#CollapsibleIfStatements" priority="3">
+These nested if statements could be combined
+</violation>
+</file>
+<file name="/Users/stripodi/Documents/mybatis/mybatis-3/src/main/java/org/apache/ibatis/executor/keygen/Jdbc3KeyGenerator.java">
+<violation beginline="68" endline="70" begincolumn="11" endcolumn="9" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.apache.ibatis.executor.keygen" class="Jdbc3KeyGenerator" method="processBatch" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+Avoid empty catch blocks
+</violation>
+</file>
+<file name="/Users/stripodi/Documents/mybatis/mybatis-3/src/main/java/org/apache/ibatis/executor/keygen/SelectKeyGenerator.java">
+<violation beginline="58" endline="71" begincolumn="11" endcolumn="11" rule="CollapsibleIfStatements" ruleset="Basic Rules" package="org.apache.ibatis.executor.keygen" class="SelectKeyGenerator" method="processGeneratedKeys" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#CollapsibleIfStatements" priority="3">
+These nested if statements could be combined
+</violation>
+</file>
+<file name="/Users/stripodi/Documents/mybatis/mybatis-3/src/main/java/org/apache/ibatis/executor/loader/CglibProxyFactory.java">
+<violation beginline="75" endline="77" begincolumn="7" endcolumn="5" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.apache.ibatis.executor.loader" class="CglibProxyFactory" method="crateProxy" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+Avoid empty catch blocks
+</violation>
+</file>
+<file name="/Users/stripodi/Documents/mybatis/mybatis-3/src/main/java/org/apache/ibatis/executor/loader/JavassistProxyFactory.java">
+<violation beginline="75" endline="77" begincolumn="7" endcolumn="5" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.apache.ibatis.executor.loader" class="JavassistProxyFactory" method="crateProxy" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+Avoid empty catch blocks
+</violation>
+</file>
+<file name="/Users/stripodi/Documents/mybatis/mybatis-3/src/main/java/org/apache/ibatis/executor/resultset/FastResultSetHandler.java">
+<violation beginline="172" endline="174" begincolumn="7" endcolumn="5" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.apache.ibatis.executor.resultset" class="FastResultSetHandler" method="closeResultSet" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+Avoid empty catch blocks
+</violation>
+<violation beginline="250" endline="252" begincolumn="9" endcolumn="9" rule="CollapsibleIfStatements" ruleset="Basic Rules" package="org.apache.ibatis.executor.resultset" class="FastResultSetHandler" method="getNextResultSet" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#CollapsibleIfStatements" priority="3">
+These nested if statements could be combined
+</violation>
+<violation beginline="254" endline="256" begincolumn="7" endcolumn="5" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.apache.ibatis.executor.resultset" class="FastResultSetHandler" method="getNextResultSet" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+Avoid empty catch blocks
+</violation>
+</file>
+<file name="/Users/stripodi/Documents/mybatis/mybatis-3/src/main/java/org/apache/ibatis/executor/statement/BaseStatementHandler.java">
+<violation beginline="119" endline="121" begincolumn="7" endcolumn="5" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.apache.ibatis.executor.statement" class="BaseStatementHandler" method="closeStatement" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+Avoid empty catch blocks
+</violation>
+</file>
+<file name="/Users/stripodi/Documents/mybatis/mybatis-3/src/main/java/org/apache/ibatis/io/ClassLoaderWrapper.java">
+<violation beginline="32" endline="34" begincolumn="7" endcolumn="5" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.apache.ibatis.io" class="ClassLoaderWrapper" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+Avoid empty catch blocks
+</violation>
+<violation beginline="180" endline="182" begincolumn="11" endcolumn="9" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.apache.ibatis.io" class="ClassLoaderWrapper" method="classForName" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+Avoid empty catch blocks
+</violation>
+</file>
+<file name="/Users/stripodi/Documents/mybatis/mybatis-3/src/main/java/org/apache/ibatis/io/DefaultVFS.java">
+<violation beginline="146" endline="147" begincolumn="9" endcolumn="7" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.apache.ibatis.io" class="DefaultVFS" method="list" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+Avoid empty catch blocks
+</violation>
+<violation beginline="205" endline="207" begincolumn="7" endcolumn="5" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.apache.ibatis.io" class="DefaultVFS" method="findJarForResource" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+Avoid empty catch blocks
+</violation>
+<violation beginline="294" endline="296" begincolumn="7" endcolumn="5" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.apache.ibatis.io" class="DefaultVFS" method="isJar" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+Avoid empty catch blocks
+</violation>
+<violation beginline="299" endline="300" begincolumn="9" endcolumn="7" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.apache.ibatis.io" class="DefaultVFS" method="isJar" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+Avoid empty catch blocks
+</violation>
+</file>
+<file name="/Users/stripodi/Documents/mybatis/mybatis-3/src/main/java/org/apache/ibatis/io/ExternalResources.java">
+<violation beginline="55" endline="57" begincolumn="9" endcolumn="7" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.apache.ibatis.io" class="ExternalResources" method="closeQuietly" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+Avoid empty catch blocks
+</violation>
+</file>
+<file name="/Users/stripodi/Documents/mybatis/mybatis-3/src/main/java/org/apache/ibatis/jdbc/DataSourceUtils.java">
+<violation beginline="111" endline="113" begincolumn="11" endcolumn="9" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.apache.ibatis.jdbc" class="DataSourceUtils" method="getDatabaseName" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+Avoid empty catch blocks
+</violation>
+</file>
+<file name="/Users/stripodi/Documents/mybatis/mybatis-3/src/main/java/org/apache/ibatis/jdbc/ScriptRunner.java">
+<violation beginline="143" endline="145" begincolumn="7" endcolumn="5" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.apache.ibatis.jdbc" class="ScriptRunner" method="closeConnection" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+Avoid empty catch blocks
+</violation>
+<violation beginline="173" endline="175" begincolumn="7" endcolumn="5" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.apache.ibatis.jdbc" class="ScriptRunner" method="rollbackConnection" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+Avoid empty catch blocks
+</violation>
+<violation beginline="230" endline="232" begincolumn="7" endcolumn="5" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.apache.ibatis.jdbc" class="ScriptRunner" method="executeStatement" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+Avoid empty catch blocks
+</violation>
+</file>
+<file name="/Users/stripodi/Documents/mybatis/mybatis-3/src/main/java/org/apache/ibatis/jdbc/SqlRunner.java">
+<violation beginline="80" endline="80" begincolumn="7" endcolumn="15" rule="CheckResultSet" ruleset="Basic Rules" package="org.apache.ibatis.jdbc" class="SqlRunner" method="selectAll" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#CheckResultSet" priority="3">
+Always check the return of one of the navigation method (next,previous,first,last) of a ResultSet.
+</violation>
+<violation beginline="85" endline="87" begincolumn="9" endcolumn="7" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.apache.ibatis.jdbc" class="SqlRunner" method="selectAll" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+Avoid empty catch blocks
+</violation>
+<violation beginline="120" endline="122" begincolumn="17" endcolumn="15" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.apache.ibatis.jdbc" class="SqlRunner" method="insert" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+Avoid empty catch blocks
+</violation>
+<violation beginline="131" endline="133" begincolumn="9" endcolumn="7" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.apache.ibatis.jdbc" class="SqlRunner" method="insert" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+Avoid empty catch blocks
+</violation>
+<violation beginline="153" endline="155" begincolumn="9" endcolumn="7" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.apache.ibatis.jdbc" class="SqlRunner" method="update" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+Avoid empty catch blocks
+</violation>
+<violation beginline="185" endline="187" begincolumn="9" endcolumn="7" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.apache.ibatis.jdbc" class="SqlRunner" method="run" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+Avoid empty catch blocks
+</violation>
+<violation beginline="194" endline="196" begincolumn="7" endcolumn="5" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.apache.ibatis.jdbc" class="SqlRunner" method="closeConnection" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+Avoid empty catch blocks
+</violation>
+<violation beginline="248" endline="250" begincolumn="9" endcolumn="7" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.apache.ibatis.jdbc" class="SqlRunner" method="getResults" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+Avoid empty catch blocks
+</violation>
+</file>
+<file name="/Users/stripodi/Documents/mybatis/mybatis-3/src/main/java/org/apache/ibatis/logging/LogFactory.java">
+<violation beginline="105" endline="107" begincolumn="9" endcolumn="7" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.apache.ibatis.logging" class="LogFactory" method="tryImplementation" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+Avoid empty catch blocks
+</violation>
+</file>
+<file name="/Users/stripodi/Documents/mybatis/mybatis-3/src/main/java/org/apache/ibatis/logging/jdbc/ResultSetLogger.java">
+<violation beginline="61" endline="71" begincolumn="9" endcolumn="9" rule="CollapsibleIfStatements" ruleset="Basic Rules" package="org.apache.ibatis.logging.jdbc" class="ResultSetLogger" method="invoke" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#CollapsibleIfStatements" priority="3">
+These nested if statements could be combined
+</violation>
+</file>
+<file name="/Users/stripodi/Documents/mybatis/mybatis-3/src/main/java/org/apache/ibatis/logging/nologging/NoLoggingImpl.java">
+<violation beginline="22" endline="23" begincolumn="10" endcolumn="3" rule="UnusedFormalParameter" ruleset="Unused Code Rules" package="org.apache.ibatis.logging.nologging" class="NoLoggingImpl" externalInfoUrl="http://pmd.sourceforge.net/rules/unusedcode.html#UnusedFormalParameter" priority="3">
+Avoid unused constructor parameters such as 'clazz'.
+</violation>
+</file>
+<file name="/Users/stripodi/Documents/mybatis/mybatis-3/src/main/java/org/apache/ibatis/logging/slf4j/Slf4jImpl.java">
+<violation beginline="37" endline="39" begincolumn="9" endcolumn="7" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.apache.ibatis.logging.slf4j" class="Slf4jImpl" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+Avoid empty catch blocks
+</violation>
+<violation beginline="39" endline="41" begincolumn="9" endcolumn="7" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.apache.ibatis.logging.slf4j" class="Slf4jImpl" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+Avoid empty catch blocks
+</violation>
+</file>
+<file name="/Users/stripodi/Documents/mybatis/mybatis-3/src/main/java/org/apache/ibatis/logging/stdout/StdOutImpl.java">
+<violation beginline="22" endline="23" begincolumn="10" endcolumn="3" rule="UnusedFormalParameter" ruleset="Unused Code Rules" package="org.apache.ibatis.logging.stdout" class="StdOutImpl" externalInfoUrl="http://pmd.sourceforge.net/rules/unusedcode.html#UnusedFormalParameter" priority="3">
+Avoid unused constructor parameters such as 'clazz'.
+</violation>
+</file>
+<file name="/Users/stripodi/Documents/mybatis/mybatis-3/src/main/java/org/apache/ibatis/mapping/Discriminator.java">
+<violation beginline="34" endline="37" begincolumn="12" endcolumn="5" rule="UnusedFormalParameter" ruleset="Unused Code Rules" package="org.apache.ibatis.mapping" class="Discriminator$Builder" externalInfoUrl="http://pmd.sourceforge.net/rules/unusedcode.html#UnusedFormalParameter" priority="3">
+Avoid unused constructor parameters such as 'configuration'.
+</violation>
+</file>
+<file name="/Users/stripodi/Documents/mybatis/mybatis-3/src/main/java/org/apache/ibatis/mapping/ParameterMap.java">
+<violation beginline="35" endline="39" begincolumn="12" endcolumn="5" rule="UnusedFormalParameter" ruleset="Unused Code Rules" package="org.apache.ibatis.mapping" class="ParameterMap$Builder" externalInfoUrl="http://pmd.sourceforge.net/rules/unusedcode.html#UnusedFormalParameter" priority="3">
+Avoid unused constructor parameters such as 'configuration'.
+</violation>
+</file>
+<file name="/Users/stripodi/Documents/mybatis/mybatis-3/src/main/java/org/apache/ibatis/mapping/ParameterMapping.java">
+<violation beginline="104" endline="108" begincolumn="9" endcolumn="9" rule="CollapsibleIfStatements" ruleset="Basic Rules" package="org.apache.ibatis.mapping" class="ParameterMapping$Builder" method="resolveTypeHandler" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#CollapsibleIfStatements" priority="3">
+These nested if statements could be combined
+</violation>
+</file>
+<file name="/Users/stripodi/Documents/mybatis/mybatis-3/src/main/java/org/apache/ibatis/mapping/ResultMap.java">
+<violation beginline="50" endline="55" begincolumn="12" endcolumn="5" rule="UnusedFormalParameter" ruleset="Unused Code Rules" package="org.apache.ibatis.mapping" class="ResultMap$Builder" externalInfoUrl="http://pmd.sourceforge.net/rules/unusedcode.html#UnusedFormalParameter" priority="3">
+Avoid unused constructor parameters such as 'configuration'.
+</violation>
+</file>
+<file name="/Users/stripodi/Documents/mybatis/mybatis-3/src/main/java/org/apache/ibatis/mapping/ResultMapping.java">
+<violation beginline="141" endline="145" begincolumn="9" endcolumn="9" rule="CollapsibleIfStatements" ruleset="Basic Rules" package="org.apache.ibatis.mapping" class="ResultMapping$Builder" method="resolveTypeHandler" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#CollapsibleIfStatements" priority="3">
+These nested if statements could be combined
+</violation>
+</file>
+<file name="/Users/stripodi/Documents/mybatis/mybatis-3/src/main/java/org/apache/ibatis/mapping/VendorDatabaseIdProvider.java">
+<violation beginline="83" endline="85" begincolumn="11" endcolumn="9" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.apache.ibatis.mapping" class="VendorDatabaseIdProvider" method="getDatabaseProductName" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+Avoid empty catch blocks
+</violation>
+</file>
+<file name="/Users/stripodi/Documents/mybatis/mybatis-3/src/main/java/org/apache/ibatis/metadata/DatabaseFactory.java">
+<violation beginline="71" endline="71" begincolumn="9" endcolumn="42" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.apache.ibatis.metadata" class="DatabaseFactory" method="newDatabase" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+Avoid empty catch blocks
+</violation>
+</file>
+<file name="/Users/stripodi/Documents/mybatis/mybatis-3/src/main/java/org/apache/ibatis/reflection/MetaClass.java">
+<violation beginline="132" endline="133" begincolumn="7" endcolumn="5" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.apache.ibatis.reflection" class="MetaClass" method="getGenericGetterType" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+Avoid empty catch blocks
+</violation>
+<violation beginline="133" endline="134" begincolumn="7" endcolumn="5" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.apache.ibatis.reflection" class="MetaClass" method="getGenericGetterType" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+Avoid empty catch blocks
+</violation>
+</file>
+<file name="/Users/stripodi/Documents/mybatis/mybatis-3/src/main/java/org/apache/ibatis/reflection/Reflector.java">
+<violation beginline="81" endline="83" begincolumn="13" endcolumn="11" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.apache.ibatis.reflection" class="Reflector" method="addDefaultConstructor" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+Avoid empty catch blocks
+</violation>
+<violation beginline="103" endline="106" begincolumn="9" endcolumn="9" rule="CollapsibleIfStatements" ruleset="Basic Rules" package="org.apache.ibatis.reflection" class="Reflector" method="addGetMethods" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#CollapsibleIfStatements" priority="3">
+These nested if statements could be combined
+</violation>
+<violation beginline="129" endline="131" begincolumn="63" endcolumn="11" rule="EmptyIfStmt" ruleset="Basic Rules" package="org.apache.ibatis.reflection" class="Reflector" method="resolveGetterConflicts" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyIfStmt" priority="3">
+Avoid empty if statements
+</violation>
+<violation beginline="158" endline="161" begincolumn="9" endcolumn="9" rule="CollapsibleIfStatements" ruleset="Basic Rules" package="org.apache.ibatis.reflection" class="Reflector" method="addSetMethods" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#CollapsibleIfStatements" priority="3">
+These nested if statements could be combined
+</violation>
+<violation beginline="223" endline="225" begincolumn="11" endcolumn="9" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.apache.ibatis.reflection" class="Reflector" method="addFields" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+Avoid empty catch blocks
+</violation>
+<violation beginline="302" endline="304" begincolumn="15" endcolumn="13" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.apache.ibatis.reflection" class="Reflector" method="addUniqueMethods" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+Avoid empty catch blocks
+</violation>
+</file>
+<file name="/Users/stripodi/Documents/mybatis/mybatis-3/src/main/java/org/apache/ibatis/reflection/property/PropertyCopier.java">
+<violation beginline="30" endline="32" begincolumn="11" endcolumn="9" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.apache.ibatis.reflection.property" class="PropertyCopier" method="copyBeanProperties" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+Avoid empty catch blocks
+</violation>
+</file>
+<file name="/Users/stripodi/Documents/mybatis/mybatis-3/src/main/java/org/apache/ibatis/reflection/wrapper/CollectionWrapper.java">
+<violation beginline="29" endline="31" begincolumn="10" endcolumn="3" rule="UnusedFormalParameter" ruleset="Unused Code Rules" package="org.apache.ibatis.reflection.wrapper" class="CollectionWrapper" externalInfoUrl="http://pmd.sourceforge.net/rules/unusedcode.html#UnusedFormalParameter" priority="3">
+Avoid unused constructor parameters such as 'metaObject'.
+</violation>
+</file>
+<file name="/Users/stripodi/Documents/mybatis/mybatis-3/src/main/java/org/apache/ibatis/session/SqlSessionFactoryBuilder.java">
+<violation beginline="56" endline="58" begincolumn="9" endcolumn="7" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.apache.ibatis.session" class="SqlSessionFactoryBuilder" method="build" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+Avoid empty catch blocks
+</violation>
+<violation beginline="84" endline="86" begincolumn="9" endcolumn="7" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.apache.ibatis.session" class="SqlSessionFactoryBuilder" method="build" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+Avoid empty catch blocks
+</violation>
+</file>
+<file name="/Users/stripodi/Documents/mybatis/mybatis-3/src/main/java/org/apache/ibatis/session/defaults/DefaultSqlSession.java">
+<violation beginline="46" endline="48" begincolumn="10" endcolumn="3" rule="UnusedFormalParameter" ruleset="Unused Code Rules" package="org.apache.ibatis.session.defaults" class="DefaultSqlSession" externalInfoUrl="http://pmd.sourceforge.net/rules/unusedcode.html#UnusedFormalParameter" priority="3">
+Avoid unused constructor parameters such as 'autoCommit'.
+</violation>
+</file>
+<file name="/Users/stripodi/Documents/mybatis/mybatis-3/src/main/java/org/apache/ibatis/session/defaults/DefaultSqlSessionFactory.java">
+<violation beginline="119" endline="121" begincolumn="9" endcolumn="7" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.apache.ibatis.session.defaults" class="DefaultSqlSessionFactory" method="closeTransaction" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+Avoid empty catch blocks
+</violation>
+</file>
+<file name="/Users/stripodi/Documents/mybatis/mybatis-3/src/main/java/org/apache/ibatis/type/DateOnlyTypeHandler.java">
+<violation beginline="29" endline="29" begincolumn="23" endcolumn="35" rule="AvoidThreadGroup" ruleset="Basic Rules" package="org.apache.ibatis.type" class="DateOnlyTypeHandler" method="setNonNullParameter" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#AvoidThreadGroup" priority="3">
+Avoid using java.lang.ThreadGroup; it is not thread safe
+</violation>
+<violation beginline="37" endline="37" begincolumn="18" endcolumn="31" rule="AvoidThreadGroup" ruleset="Basic Rules" package="org.apache.ibatis.type" class="DateOnlyTypeHandler" method="getNullableResult" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#AvoidThreadGroup" priority="3">
+Avoid using java.lang.ThreadGroup; it is not thread safe
+</violation>
+<violation beginline="47" endline="47" begincolumn="18" endcolumn="31" rule="AvoidThreadGroup" ruleset="Basic Rules" package="org.apache.ibatis.type" class="DateOnlyTypeHandler" method="getNullableResult" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#AvoidThreadGroup" priority="3">
+Avoid using java.lang.ThreadGroup; it is not thread safe
+</violation>
+<violation beginline="57" endline="57" begincolumn="18" endcolumn="31" rule="AvoidThreadGroup" ruleset="Basic Rules" package="org.apache.ibatis.type" class="DateOnlyTypeHandler" method="getNullableResult" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#AvoidThreadGroup" priority="3">
+Avoid using java.lang.ThreadGroup; it is not thread safe
+</violation>
+</file>
+<file name="/Users/stripodi/Documents/mybatis/mybatis-3/src/main/java/org/apache/ibatis/type/TypeHandlerRegistry.java">
+<violation beginline="225" endline="227" begincolumn="9" endcolumn="7" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.apache.ibatis.type" class="TypeHandlerRegistry" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+Avoid empty catch blocks
+</violation>
+<violation beginline="319" endline="321" begincolumn="9" endcolumn="7" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.apache.ibatis.type" class="TypeHandlerRegistry" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+Avoid empty catch blocks
+</violation>
+</file>
+<suppressedviolation filename="/Users/stripodi/Documents/mybatis/mybatis-3/src/main/java/org/apache/ibatis/datasource/pooled/PooledDataSource.java" suppressiontype="annotation" msg="Avoid unused local variables such as 'realConn'." usermsg=""/>
+</pmd>
