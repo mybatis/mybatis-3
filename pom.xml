@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Copyright 2009-2012 The MyBatis Team
+  Copyright 2009-2013 The MyBatis Team
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -13,10 +13,6 @@
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   See the License for the specific language governing permissions and
   limitations under the License.
--->
-
-<!--
-  version: $Id: pom.xml 4114 2011-11-27 19:03:32Z simone.tripodi $
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
@@ -104,23 +100,23 @@
   </contributors>
 
   <scm>
-    <url>scm:svn:https://mybatis.googlecode.com/svn/trunk</url>
-    <connection>scm:svn:https://mybatis.googlecode.com/svn/trunk</connection>
-    <developerConnection>scm:svn:https://mybatis.googlecode.com/svn/trunk</developerConnection>
+    <url>http://github.com/mybatis/mybatis-3</url>
+    <connection>scm:git:ssh://github.com/mybatis/mybatis-3.git</connection>
+    <developerConnection>scm:git:git+ssh://git@github.com/mybatis/mybatis-3.git</developerConnection>
+    <tag>HEAD</tag>
   </scm>
+  <issueManagement>
+    <system>GitHub Issue Management</system>
+    <url>https://github.com/mybatis/mybatis-3/issues</url>
+  </issueManagement>
+  <ciManagement>
+    <system>Travis CI</system>
+    <url>https://travis-ci.org/mybatis/mybatis-3/</url>
+  </ciManagement>
   <distributionManagement>
-    <!-- Cannot define in parent ATM, see COMMONSSITE-26 -->
     <site>
-      <id>mybatis.site</id>
-      <!--
-       | make it overridible, FTP is terribly slow when launched from Maven Wagon
-       | an alternative strategy could be deploying the site locally
-       |
-       |    -Dsite.deploymentUrl=file://...
-       |
-       | then async redeploying it via Filezilla/whatelese
-      -->
-      <url>${site.deploymentUrl}</url>
+      <id>github</id>
+      <url>gitsite:git@github.com/mybatis/mybatis-3.git</url>
     </site>
   </distributionManagement>
 
@@ -130,12 +126,8 @@
     <osgi.export>org.apache.ibatis.*;version=${project.version};-noimport:=true</osgi.export>
     <osgi.import>!ognl,net.sf.cglib.proxy;resolution:=optional,javassist.util.proxy;resolution:=optional,org.apache.commons.logging;resolution:=optional,org.apache.log4j;resolution:=optional,org.slf4j;resolution:=optional,*</osgi.import>
     <osgi.dynamicImport>*</osgi.dynamicImport>
-    <!--
-     | see distributionManagement.site.url
-    -->
-    <site.deploymentUrl>ftp://${mybatis.host}/core/</site.deploymentUrl>
     <javac.src.version>1.6</javac.src.version>
-    <javac.target.version>1.6</javac.target.version>    
+    <javac.target.version>1.6</javac.target.version>
   </properties>
 
   <dependencies>
@@ -182,7 +174,7 @@
       <version>2.2.2</version>
       <optional>true</optional>
     </dependency>
-    
+
     <!-- Test dependencies -->
     <dependency>
       <groupId>junit</groupId>
@@ -202,12 +194,12 @@
       <version>10.9.1.0</version>
       <scope>test</scope>
     </dependency>
-	<dependency>
-	  <groupId>org.mockito</groupId>
-	  <artifactId>mockito-core</artifactId>
-	  <version>1.9.5</version>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <version>1.9.5</version>
       <scope>test</scope>
-	</dependency>
+    </dependency>
     <dependency>
       <groupId>commons-dbcp</groupId>
       <artifactId>commons-dbcp</artifactId>
