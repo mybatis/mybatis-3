@@ -37,8 +37,8 @@ MyBatis 는 JDBC 코드와 수동으로 셋팅하는 파라미터와 결과 매�
       <subsection name="이 문서가 좀더 좋아지도록 도와주세요…">
         <p>이 문서에서 빈약하거나 기능 중 일부의 내용이 없는 경우, MyBatis에 대해 배우는 가장 좋은 방법은 당신 스스로 문서를 작성하는 것이다!
         </p>
-        <p>이 문서는 xdoc포맷으로 되어 있으며, <a href="http://mybatis.googlecode.com/svn/trunk/src/site/">프로젝트 SVN </a> 에서 볼수 있다.
-        체크아웃 받아서, 수정하고 <a href="http://code.google.com/p/mybatis/issues/entry">tracker</a>로 패치를 보내달라.
+        <p>이 문서는 xdoc포맷으로 되어 있으며, <a href="https://github.com/mybatis/mybatis-3/tree/master/src/site">프로젝트 GitHub </a> 에서 볼수 있다.
+        체크아웃 받아서, 수정하고 <a href="https://github.com/mybatis/mybatis-3/issues">tracker</a>로 패치를 보내달라.
         </p>
         <p>당신은 이 문서의 가장 멋진 저자가 되는 셈이다. 많은 사람들이 이 문서를 읽을 것이다!
         </p>

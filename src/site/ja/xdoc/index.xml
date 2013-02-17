@@ -40,8 +40,8 @@
           このドキュメントの中で誤りや特定の機能に関する記述が抜けていることに気づいたら、詳しく調べてドキュメントを更新して頂けると助かります。
         </p>
         <p>
-          このマニュアルのソースは xdoc 形式で、<a href="http://mybatis.googlecode.com/svn/trunk/src/site/">プロジェクトの SVN リポジトリ</a>で配布されています。<br />
-          SVN からチェックアウトしたファイルを修正したら、<a href="http://code.google.com/p/mybatis/issues/entry">トラッカー</a>で新しいチケットを作成して変更箇所のパッチを添付してください。
+          このマニュアルのソースは xdoc 形式で、<a href="https://github.com/mybatis/mybatis-3/tree/master/src/site">プロジェクトの GitHub リポジトリ</a>で配布されています。<br />
+          SVN からチェックアウトしたファイルを修正したら、<a href="https://github.com/mybatis/mybatis-3/issues">トラッカー</a>で新しいチケットを作成して変更箇所のパッチを添付してください。
         </p>
         <p>
           このドキュメントを読む必要のある人、つまりあなたこそが最高の著者なのです！

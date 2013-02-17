@@ -51,10 +51,10 @@
         </p>
         <p>
           Sources of this manual are available in xdoc format at
-          <a href="http://mybatis.googlecode.com/svn/trunk/src/site/">project's SVN </a>
+          <a href="https://github.com/mybatis/mybatis-3/tree/master/src/site">project's Git </a>
           .
           Check them out, update them and send your patch to the
-          <a href="http://code.google.com/p/mybatis/issues/entry">tracker</a>
+          <a href="https://github.com/mybatis/mybatis-3/issues">tracker</a>
           .
         </p>
         <p>
