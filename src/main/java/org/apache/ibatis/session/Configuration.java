@@ -151,32 +151,32 @@ public class Configuration {
   }
 
   public Configuration() {
-    typeAliasRegistry.registerAlias("JDBC", JdbcTransactionFactory.class.getName());
-    typeAliasRegistry.registerAlias("MANAGED", ManagedTransactionFactory.class.getName());
-    typeAliasRegistry.registerAlias("JNDI", JndiDataSourceFactory.class.getName());
-    typeAliasRegistry.registerAlias("POOLED", PooledDataSourceFactory.class.getName());
-    typeAliasRegistry.registerAlias("UNPOOLED", UnpooledDataSourceFactory.class.getName());
+    typeAliasRegistry.registerAlias("JDBC", JdbcTransactionFactory.class);
+    typeAliasRegistry.registerAlias("MANAGED", ManagedTransactionFactory.class);
+    typeAliasRegistry.registerAlias("JNDI", JndiDataSourceFactory.class);
+    typeAliasRegistry.registerAlias("POOLED", PooledDataSourceFactory.class);
+    typeAliasRegistry.registerAlias("UNPOOLED", UnpooledDataSourceFactory.class);
 
-    typeAliasRegistry.registerAlias("PERPETUAL", PerpetualCache.class.getName());
-    typeAliasRegistry.registerAlias("FIFO", FifoCache.class.getName());
-    typeAliasRegistry.registerAlias("LRU", LruCache.class.getName());
-    typeAliasRegistry.registerAlias("SOFT", SoftCache.class.getName());
-    typeAliasRegistry.registerAlias("WEAK", WeakCache.class.getName());
+    typeAliasRegistry.registerAlias("PERPETUAL", PerpetualCache.class);
+    typeAliasRegistry.registerAlias("FIFO", FifoCache.class);
+    typeAliasRegistry.registerAlias("LRU", LruCache.class);
+    typeAliasRegistry.registerAlias("SOFT", SoftCache.class);
+    typeAliasRegistry.registerAlias("WEAK", WeakCache.class);
 
-    typeAliasRegistry.registerAlias("VENDOR", VendorDatabaseIdProvider.class.getName());
+    typeAliasRegistry.registerAlias("VENDOR", VendorDatabaseIdProvider.class);
 
-    typeAliasRegistry.registerAlias("XML", XMLLanguageDriver.class.getName());
-    typeAliasRegistry.registerAlias("RAW", RawLanguageDriver.class.getName());
+    typeAliasRegistry.registerAlias("XML", XMLLanguageDriver.class);
+    typeAliasRegistry.registerAlias("RAW", RawLanguageDriver.class);
 
-    typeAliasRegistry.registerAlias("SLF4J", Slf4jImpl.class.getName());
-    typeAliasRegistry.registerAlias("COMMONS_LOGGING", JakartaCommonsLoggingImpl.class.getName());
-    typeAliasRegistry.registerAlias("LOG4J", Log4jImpl.class.getName());
-    typeAliasRegistry.registerAlias("JDK_LOGGING", Jdk14LoggingImpl.class.getName());
-    typeAliasRegistry.registerAlias("STDOUT_LOGGING", StdOutImpl.class.getName());
-    typeAliasRegistry.registerAlias("NO_LOGGING", NoLoggingImpl.class.getName());
+    typeAliasRegistry.registerAlias("SLF4J", Slf4jImpl.class);
+    typeAliasRegistry.registerAlias("COMMONS_LOGGING", JakartaCommonsLoggingImpl.class);
+    typeAliasRegistry.registerAlias("LOG4J", Log4jImpl.class);
+    typeAliasRegistry.registerAlias("JDK_LOGGING", Jdk14LoggingImpl.class);
+    typeAliasRegistry.registerAlias("STDOUT_LOGGING", StdOutImpl.class);
+    typeAliasRegistry.registerAlias("NO_LOGGING", NoLoggingImpl.class);
     
-    typeAliasRegistry.registerAlias("CGLIB", CglibProxyFactory.class.getName());
-    typeAliasRegistry.registerAlias("JAVASSIST", JavassistProxyFactory.class.getName());
+    typeAliasRegistry.registerAlias("CGLIB", CglibProxyFactory.class);
+    typeAliasRegistry.registerAlias("JAVASSIST", JavassistProxyFactory.class);
     
     languageRegistry.setDefaultDriverClass(XMLLanguageDriver.class);
     languageRegistry.register(RawLanguageDriver.class);
