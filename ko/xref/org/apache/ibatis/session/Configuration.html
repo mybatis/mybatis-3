@@ -161,32 +161,32 @@
 <a class="jxr_linenumber" name="151" href="#151">151</a>   }
 <a class="jxr_linenumber" name="152" href="#152">152</a> 
 <a class="jxr_linenumber" name="153" href="#153">153</a>   <strong class="jxr_keyword">public</strong> <a href="../../../../org/apache/ibatis/session/Configuration.html">Configuration</a>() {
-<a class="jxr_linenumber" name="154" href="#154">154</a>     typeAliasRegistry.registerAlias(<span class="jxr_string">"JDBC"</span>, JdbcTransactionFactory.<strong class="jxr_keyword">class</strong>.getName());
-<a class="jxr_linenumber" name="155" href="#155">155</a>     typeAliasRegistry.registerAlias(<span class="jxr_string">"MANAGED"</span>, ManagedTransactionFactory.<strong class="jxr_keyword">class</strong>.getName());
-<a class="jxr_linenumber" name="156" href="#156">156</a>     typeAliasRegistry.registerAlias(<span class="jxr_string">"JNDI"</span>, JndiDataSourceFactory.<strong class="jxr_keyword">class</strong>.getName());
-<a class="jxr_linenumber" name="157" href="#157">157</a>     typeAliasRegistry.registerAlias(<span class="jxr_string">"POOLED"</span>, PooledDataSourceFactory.<strong class="jxr_keyword">class</strong>.getName());
-<a class="jxr_linenumber" name="158" href="#158">158</a>     typeAliasRegistry.registerAlias(<span class="jxr_string">"UNPOOLED"</span>, UnpooledDataSourceFactory.<strong class="jxr_keyword">class</strong>.getName());
+<a class="jxr_linenumber" name="154" href="#154">154</a>     typeAliasRegistry.registerAlias(<span class="jxr_string">"JDBC"</span>, JdbcTransactionFactory.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="155" href="#155">155</a>     typeAliasRegistry.registerAlias(<span class="jxr_string">"MANAGED"</span>, ManagedTransactionFactory.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="156" href="#156">156</a>     typeAliasRegistry.registerAlias(<span class="jxr_string">"JNDI"</span>, JndiDataSourceFactory.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="157" href="#157">157</a>     typeAliasRegistry.registerAlias(<span class="jxr_string">"POOLED"</span>, PooledDataSourceFactory.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="158" href="#158">158</a>     typeAliasRegistry.registerAlias(<span class="jxr_string">"UNPOOLED"</span>, UnpooledDataSourceFactory.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="159" href="#159">159</a> 
-<a class="jxr_linenumber" name="160" href="#160">160</a>     typeAliasRegistry.registerAlias(<span class="jxr_string">"PERPETUAL"</span>, PerpetualCache.<strong class="jxr_keyword">class</strong>.getName());
-<a class="jxr_linenumber" name="161" href="#161">161</a>     typeAliasRegistry.registerAlias(<span class="jxr_string">"FIFO"</span>, FifoCache.<strong class="jxr_keyword">class</strong>.getName());
-<a class="jxr_linenumber" name="162" href="#162">162</a>     typeAliasRegistry.registerAlias(<span class="jxr_string">"LRU"</span>, LruCache.<strong class="jxr_keyword">class</strong>.getName());
-<a class="jxr_linenumber" name="163" href="#163">163</a>     typeAliasRegistry.registerAlias(<span class="jxr_string">"SOFT"</span>, SoftCache.<strong class="jxr_keyword">class</strong>.getName());
-<a class="jxr_linenumber" name="164" href="#164">164</a>     typeAliasRegistry.registerAlias(<span class="jxr_string">"WEAK"</span>, WeakCache.<strong class="jxr_keyword">class</strong>.getName());
+<a class="jxr_linenumber" name="160" href="#160">160</a>     typeAliasRegistry.registerAlias(<span class="jxr_string">"PERPETUAL"</span>, PerpetualCache.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="161" href="#161">161</a>     typeAliasRegistry.registerAlias(<span class="jxr_string">"FIFO"</span>, FifoCache.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="162" href="#162">162</a>     typeAliasRegistry.registerAlias(<span class="jxr_string">"LRU"</span>, LruCache.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="163" href="#163">163</a>     typeAliasRegistry.registerAlias(<span class="jxr_string">"SOFT"</span>, SoftCache.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="164" href="#164">164</a>     typeAliasRegistry.registerAlias(<span class="jxr_string">"WEAK"</span>, WeakCache.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="165" href="#165">165</a> 
-<a class="jxr_linenumber" name="166" href="#166">166</a>     typeAliasRegistry.registerAlias(<span class="jxr_string">"VENDOR"</span>, VendorDatabaseIdProvider.<strong class="jxr_keyword">class</strong>.getName());
+<a class="jxr_linenumber" name="166" href="#166">166</a>     typeAliasRegistry.registerAlias(<span class="jxr_string">"VENDOR"</span>, VendorDatabaseIdProvider.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="167" href="#167">167</a> 
-<a class="jxr_linenumber" name="168" href="#168">168</a>     typeAliasRegistry.registerAlias(<span class="jxr_string">"XML"</span>, XMLLanguageDriver.<strong class="jxr_keyword">class</strong>.getName());
-<a class="jxr_linenumber" name="169" href="#169">169</a>     typeAliasRegistry.registerAlias(<span class="jxr_string">"RAW"</span>, RawLanguageDriver.<strong class="jxr_keyword">class</strong>.getName());
+<a class="jxr_linenumber" name="168" href="#168">168</a>     typeAliasRegistry.registerAlias(<span class="jxr_string">"XML"</span>, XMLLanguageDriver.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="169" href="#169">169</a>     typeAliasRegistry.registerAlias(<span class="jxr_string">"RAW"</span>, RawLanguageDriver.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="170" href="#170">170</a> 
-<a class="jxr_linenumber" name="171" href="#171">171</a>     typeAliasRegistry.registerAlias(<span class="jxr_string">"SLF4J"</span>, Slf4jImpl.<strong class="jxr_keyword">class</strong>.getName());
-<a class="jxr_linenumber" name="172" href="#172">172</a>     typeAliasRegistry.registerAlias(<span class="jxr_string">"COMMONS_LOGGING"</span>, JakartaCommonsLoggingImpl.<strong class="jxr_keyword">class</strong>.getName());
-<a class="jxr_linenumber" name="173" href="#173">173</a>     typeAliasRegistry.registerAlias(<span class="jxr_string">"LOG4J"</span>, Log4jImpl.<strong class="jxr_keyword">class</strong>.getName());
-<a class="jxr_linenumber" name="174" href="#174">174</a>     typeAliasRegistry.registerAlias(<span class="jxr_string">"JDK_LOGGING"</span>, Jdk14LoggingImpl.<strong class="jxr_keyword">class</strong>.getName());
-<a class="jxr_linenumber" name="175" href="#175">175</a>     typeAliasRegistry.registerAlias(<span class="jxr_string">"STDOUT_LOGGING"</span>, StdOutImpl.<strong class="jxr_keyword">class</strong>.getName());
-<a class="jxr_linenumber" name="176" href="#176">176</a>     typeAliasRegistry.registerAlias(<span class="jxr_string">"NO_LOGGING"</span>, NoLoggingImpl.<strong class="jxr_keyword">class</strong>.getName());
+<a class="jxr_linenumber" name="171" href="#171">171</a>     typeAliasRegistry.registerAlias(<span class="jxr_string">"SLF4J"</span>, Slf4jImpl.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="172" href="#172">172</a>     typeAliasRegistry.registerAlias(<span class="jxr_string">"COMMONS_LOGGING"</span>, JakartaCommonsLoggingImpl.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="173" href="#173">173</a>     typeAliasRegistry.registerAlias(<span class="jxr_string">"LOG4J"</span>, Log4jImpl.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="174" href="#174">174</a>     typeAliasRegistry.registerAlias(<span class="jxr_string">"JDK_LOGGING"</span>, Jdk14LoggingImpl.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="175" href="#175">175</a>     typeAliasRegistry.registerAlias(<span class="jxr_string">"STDOUT_LOGGING"</span>, StdOutImpl.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="176" href="#176">176</a>     typeAliasRegistry.registerAlias(<span class="jxr_string">"NO_LOGGING"</span>, NoLoggingImpl.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="177" href="#177">177</a>     
-<a class="jxr_linenumber" name="178" href="#178">178</a>     typeAliasRegistry.registerAlias(<span class="jxr_string">"CGLIB"</span>, CglibProxyFactory.<strong class="jxr_keyword">class</strong>.getName());
-<a class="jxr_linenumber" name="179" href="#179">179</a>     typeAliasRegistry.registerAlias(<span class="jxr_string">"JAVASSIST"</span>, JavassistProxyFactory.<strong class="jxr_keyword">class</strong>.getName());
+<a class="jxr_linenumber" name="178" href="#178">178</a>     typeAliasRegistry.registerAlias(<span class="jxr_string">"CGLIB"</span>, CglibProxyFactory.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="179" href="#179">179</a>     typeAliasRegistry.registerAlias(<span class="jxr_string">"JAVASSIST"</span>, JavassistProxyFactory.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="180" href="#180">180</a>     
 <a class="jxr_linenumber" name="181" href="#181">181</a>     languageRegistry.setDefaultDriverClass(XMLLanguageDriver.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="182" href="#182">182</a>     languageRegistry.register(RawLanguageDriver.<strong class="jxr_keyword">class</strong>);
