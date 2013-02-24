@@ -46,7 +46,19 @@
       </ul>
       <p>実際に使用されるのは、MyBatis 内部の Log Factory が検出した実装になります。MyBatis の Log Factory は上に挙げた順番でロギング実装を検索し、最初に見つけた実装を使用します。上記の実装が検出できなかった場合、ログは出力されません。
       </p>
-      <p>アプリケーションサーバーでは、出荷時のクラスパスに Commons Logging が含まれていることがよくあります（Tomcat や WebSphere は良い例でしょう）。重要なのは、このような環境では MyBatis は Commons Logging を使用するということです。これはつまり、独自の Commons Logging 実装を使う WebSphere のような環境では、あなたが追加した Log4J の設定は無視されるということを意味しています。この現象が厄介なのは、MyBatis が Log4J の設定を無視しているように見えるということです（実は、このような環境では MyBatis が Commons Loggin を使用するため、Log4J の設定が無視されているのです）。クラスパスに Commons Logging を含む環境で動作するアプリケーションでも別のロギング実装を使用することができるように、次のメソッドが用意されています。
+      <p>アプリケーションサーバーでは、出荷時のクラスパスに Commons Logging が含まれていることがよくあります（Tomcat や WebSphere は良い例でしょう）。重要なのは、このような環境では MyBatis は Commons Logging を使用するということです。これはつまり、独自の Commons Logging 実装を使う WebSphere のような環境では、あなたが追加した Log4J の設定は無視されるということを意味しています。この現象が厄介なのは、MyBatis が Log4J の設定を無視しているように見えるということです（実は、このような環境では MyBatis が Commons Loggin を使用するため、Log4J の設定が無視されているのです）。クラスパスに Commons Logging を含む環境で動作するアプリケーションでも、mybatis-config.xml に設定を追加することで別のロギング実装を使用することができます。
+      </p>
+      <source><![CDATA[<configuration>
+  <settings>
+    ...
+    <setting name="logImpl" value="LOG4J"/>
+    ...
+  </settings>
+</configuration>]]>
+      </source>
+      <p>指定可能な値は SLF4J, LOG4J, JDK_LOGGING, COMMONS_LOGGING, STDOUT_LOGGING, NO_LOGGING ですが、<code>org.apache.ibatis.logging.Log</code> インターフェイスを実装し、コンストラクター引数として String を受け取る独自に実装したクラスの完全修飾クラス名を指定することもできます。
+      </p>
+      <p>下記のメソッドを呼び出すことでロギング実装を指定することも可能です。
       </p>
       <source><![CDATA[org.apache.ibatis.logging.LogFactory.useSlf4jLogging();
 org.apache.ibatis.logging.LogFactory.useLog4JLogging();

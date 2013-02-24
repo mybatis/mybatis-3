@@ -375,13 +375,13 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 logImpl
               </td>
               <td>
-                Specifies which logging implementation MyBatis should use. If this setting is not present logging implementation will be autodiscovered. 
+                MyBatis のログ出力に使用するロギング実装を指定します。未指定の場合は自動的検出されます。
               </td>
               <td>
                 SLF4J | LOG4J | JDK_LOGGING | COMMONS_LOGGING | STDOUT_LOGGING | NO_LOGGING
               </td>
               <td>
-                Not set
+                未指定
               </td>
             </tr>
             <tr>
@@ -389,7 +389,7 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 proxyFactory
               </td>
               <td>
-                Specifies the proxy tool that MyBatis will use for creating lazy loading capable objects.
+                Lazy Loading（遅延読み込み）に対応したオブジェクトを生成する際に使用するプロクシツールを指定します。
               </td>
               <td>
                 CGLIB | JAVASSIST
