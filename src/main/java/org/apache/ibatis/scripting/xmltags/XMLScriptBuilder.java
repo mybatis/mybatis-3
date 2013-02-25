@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2012 The MyBatis Team
+ *    Copyright 2009-2013 The MyBatis Team
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -41,11 +41,7 @@ public class XMLScriptBuilder extends BaseBuilder {
 
   public XMLScriptBuilder(Configuration configuration, String context) {
     super(configuration);
-    XPathParser parser = new XPathParser(
-        "<script>" + context + "</script>",
-        false,
-        configuration.getVariables(),
-        new XMLMapperEntityResolver());
+    XPathParser parser = new XPathParser(context, false, configuration.getVariables(), new XMLMapperEntityResolver());
     this.context = parser.evalNode("/script");
   }
 

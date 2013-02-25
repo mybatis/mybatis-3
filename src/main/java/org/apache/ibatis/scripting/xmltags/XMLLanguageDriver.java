@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2012 The MyBatis Team
+ *    Copyright 2009-2013 The MyBatis Team
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -14,6 +14,9 @@
  *    limitations under the License.
  */
 package org.apache.ibatis.scripting.xmltags;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.ibatis.executor.parameter.ParameterHandler;
 import org.apache.ibatis.mapping.BoundSql;
@@ -36,8 +39,15 @@ public class XMLLanguageDriver implements LanguageDriver {
   }
 
   public SqlSource createSqlSource(Configuration configuration, String script, Class<?> parameterType) {
-    XMLScriptBuilder builder = new XMLScriptBuilder(configuration, script);
-    return builder.parseScriptNode();
+    if (script.startsWith("<script>")) { // issue #3
+      XMLScriptBuilder builder = new XMLScriptBuilder(configuration, script);
+      return builder.parseScriptNode();
+    } else {
+      List<SqlNode> contents = new ArrayList<SqlNode>();
+      contents.add(new TextSqlNode(script.toString()));
+      MixedSqlNode rootSqlNode = new MixedSqlNode(contents);
+      return new DynamicSqlSource(configuration, rootSqlNode);
+    }
   }
-  
+
 }

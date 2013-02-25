@@ -132,12 +132,12 @@ public class LanguageTest {
     SqlSession sqlSession = sqlSessionFactory.openSession();
     try {
 
-      int[] ids = {2,4,5};
+      int[] ids = { 2, 4, 5 };
       Map<String, Object> param = new HashMap<String, Object>();
       param.put("ids", ids);
       List<Name> answer = sqlSession.selectList("selectNamesWithIteration", param);
       assertEquals(3, answer.size());
-      for (int i=0; i<ids.length; i++) {
+      for (int i = 0; i < ids.length; i++) {
         assertEquals(ids[i], answer.get(i).getId());
       }
 
@@ -145,8 +145,8 @@ public class LanguageTest {
       sqlSession.close();
     }
   }
-  
-  @Test 
+
+  @Test
   public void testLangRaw() {
     SqlSession sqlSession = sqlSessionFactory.openSession();
     try {
@@ -158,11 +158,10 @@ public class LanguageTest {
       }
     } finally {
       sqlSession.close();
-    }    
+    }
   }
 
-  
-  @Test 
+  @Test
   public void testLangXmlTags() {
     SqlSession sqlSession = sqlSessionFactory.openSession();
     try {
@@ -174,10 +173,10 @@ public class LanguageTest {
       }
     } finally {
       sqlSession.close();
-    }    
+    }
   }
 
-  @Test 
+  @Test
   public void testLangRawWithMapper() {
     SqlSession sqlSession = sqlSessionFactory.openSession();
     try {
@@ -190,10 +189,10 @@ public class LanguageTest {
       }
     } finally {
       sqlSession.close();
-    }    
+    }
   }
 
-  @Test 
+  @Test
   public void testLangVelocityWithMapper() {
     SqlSession sqlSession = sqlSessionFactory.openSession();
     try {
@@ -206,10 +205,10 @@ public class LanguageTest {
       }
     } finally {
       sqlSession.close();
-    }    
+    }
   }
 
-  @Test 
+  @Test
   public void testLangXmlWithMapper() {
     SqlSession sqlSession = sqlSessionFactory.openSession();
     try {
@@ -222,7 +221,23 @@ public class LanguageTest {
       }
     } finally {
       sqlSession.close();
-    }    
+    }
+  }
+
+  @Test
+  public void testLangXmlWithMapperAndSqlSymbols() {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      Parameter p = new Parameter(true, "Fli%");
+      Mapper m = sqlSession.getMapper(Mapper.class);
+      List<Name> answer = m.selectXmlWithMapperAndSqlSymbols(p);
+      assertEquals(3, answer.size());
+      for (Name n : answer) {
+        assertEquals("Flintstone", n.getLastName());
+      }
+    } finally {
+      sqlSession.close();
+    }
   }
 
 }
