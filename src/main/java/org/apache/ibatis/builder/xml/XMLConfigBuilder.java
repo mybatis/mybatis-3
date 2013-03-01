@@ -195,7 +195,7 @@ public class XMLConfigBuilder extends BaseBuilder {
       }
       configuration.setAutoMappingBehavior(AutoMappingBehavior.valueOf(props.getProperty("autoMappingBehavior", "PARTIAL")));
       configuration.setCacheEnabled(booleanValueOf(props.getProperty("cacheEnabled"), true));
-      configuration.setProxyFactory((ProxyFactory) createInstance(props.getProperty("proxyFactory", "CGLIB")));      
+      configuration.setProxyFactory((ProxyFactory) createInstance(props.getProperty("proxyFactory")));      
       configuration.setLazyLoadingEnabled(booleanValueOf(props.getProperty("lazyLoadingEnabled"), false));
       configuration.setAggressiveLazyLoading(booleanValueOf(props.getProperty("aggressiveLazyLoading"), true));
       configuration.setMultipleResultSetsEnabled(booleanValueOf(props.getProperty("multipleResultSetsEnabled"), true));
