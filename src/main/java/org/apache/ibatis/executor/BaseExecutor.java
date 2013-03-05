@@ -146,13 +146,13 @@ public abstract class BaseExecutor implements Executor {
     return list;
   }
 
-  public void deferLoad(MappedStatement ms, MetaObject resultObject, String property, CacheKey key) {
+  public void deferLoad(MappedStatement ms, MetaObject resultObject, String property, CacheKey key, Class<?> targetType) {
     if (closed) throw new ExecutorException("Executor was closed.");
-    DeferredLoad deferredLoad = new DeferredLoad(ms, resultObject, property, key, localCache, configuration);
+    DeferredLoad deferredLoad = new DeferredLoad(ms, resultObject, property, key, localCache, configuration, targetType);
     if (deferredLoad.canLoad()) {
     	deferredLoad.load();
     } else {
-    	deferredLoads.add(new DeferredLoad(ms, resultObject, property, key, localCache, configuration));
+    	deferredLoads.add(new DeferredLoad(ms, resultObject, property, key, localCache, configuration, targetType));
     }
   }
 
@@ -280,6 +280,7 @@ public abstract class BaseExecutor implements Executor {
 
     private final MetaObject resultObject;
     private final String property;
+    private final Class<?> targetType;
     private final CacheKey key;
     private final PerpetualCache localCache;
     private final ObjectFactory objectFactory;
@@ -290,13 +291,15 @@ public abstract class BaseExecutor implements Executor {
                         String property,
                         CacheKey key,
                         PerpetualCache localCache,
-                        Configuration configuration) {
+                        Configuration configuration,
+                        Class<?> targetType) { // issue #781
       this.resultObject = resultObject;
       this.property = property;
       this.key = key;
       this.localCache = localCache;
       this.objectFactory = configuration.getObjectFactory();
       this.resultExtractor = new ResultExtractor(configuration, objectFactory);
+      this.targetType = targetType;
     }
 
     public boolean canLoad() {
@@ -306,7 +309,6 @@ public abstract class BaseExecutor implements Executor {
     public void load() {
       @SuppressWarnings( "unchecked" ) // we suppose we get back a List
       List<Object> list = (List<Object>) localCache.getObject(key);
-      Class<?> targetType = resultObject.getSetterType(property);
       Object value = resultExtractor.extractObjectFromList(list, targetType);
       resultObject.setValue(property, value);
     }

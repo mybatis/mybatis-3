@@ -476,7 +476,7 @@ public class FastResultSetHandler implements ResultSetHandler {
       if (nestedQueryCacheObject != null && nestedQueryCacheObject instanceof List) {
         value = resultExtractor.extractObjectFromList((List<Object>)nestedQueryCacheObject, targetType);
       } else if (executor.isCached(nestedQuery, key)) {
-        executor.deferLoad(nestedQuery, metaResultObject, property, key);
+        executor.deferLoad(nestedQuery, metaResultObject, property, key, targetType);
       } else {
         final ResultLoader resultLoader = new ResultLoader(configuration, executor, nestedQuery, nestedQueryParameterObject, targetType, key, nestedBoundSql);
         if (configuration.isLazyLoadingEnabled()) {

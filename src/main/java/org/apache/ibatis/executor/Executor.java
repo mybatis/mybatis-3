@@ -48,7 +48,7 @@ public interface Executor {
 
   void clearLocalCache();
 
-  void deferLoad(MappedStatement ms, MetaObject resultObject, String property, CacheKey key);
+  void deferLoad(MappedStatement ms, MetaObject resultObject, String property, CacheKey key, Class<?> targetType);
 
   Transaction getTransaction();
 
