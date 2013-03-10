@@ -123,8 +123,9 @@ public class TypeAliasRegistry {
     resolverUtil.find(new ResolverUtil.IsA(superType), packageName);
     Set<Class<? extends Class<?>>> typeSet = resolverUtil.getClasses();
     for(Class<?> type : typeSet){
-      //Ignore inner classes and interfaces (including package-info.java)
-      if (!type.isAnonymousClass() && !type.isInterface()) {
+      // Ignore inner classes and interfaces (including package-info.java)
+      // Skip also inner classes. See issue #6
+      if (!type.isAnonymousClass() && !type.isInterface() && !type.isMemberClass()) {
         registerAlias(type);
       }
     }
