@@ -486,7 +486,7 @@
 <a class="jxr_linenumber" name="476" href="#476">476</a>       <strong class="jxr_keyword">if</strong> (nestedQueryCacheObject != <strong class="jxr_keyword">null</strong> &amp;&amp; nestedQueryCacheObject instanceof List) {
 <a class="jxr_linenumber" name="477" href="#477">477</a>         value = resultExtractor.extractObjectFromList((List&lt;Object&gt;)nestedQueryCacheObject, targetType);
 <a class="jxr_linenumber" name="478" href="#478">478</a>       } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (executor.isCached(nestedQuery, key)) {
-<a class="jxr_linenumber" name="479" href="#479">479</a>         executor.deferLoad(nestedQuery, metaResultObject, property, key);
+<a class="jxr_linenumber" name="479" href="#479">479</a>         executor.deferLoad(nestedQuery, metaResultObject, property, key, targetType);
 <a class="jxr_linenumber" name="480" href="#480">480</a>       } <strong class="jxr_keyword">else</strong> {
 <a class="jxr_linenumber" name="481" href="#481">481</a>         <strong class="jxr_keyword">final</strong> <a href="../../../../../org/apache/ibatis/executor/loader/ResultLoader.html">ResultLoader</a> resultLoader = <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/executor/loader/ResultLoader.html">ResultLoader</a>(configuration, executor, nestedQuery, nestedQueryParameterObject, targetType, key, nestedBoundSql);
 <a class="jxr_linenumber" name="482" href="#482">482</a>         <strong class="jxr_keyword">if</strong> (configuration.isLazyLoadingEnabled()) {

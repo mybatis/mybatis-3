@@ -80,7 +80,7 @@
 <a class="jxr_linenumber" name="70" href="#70">70</a>          applyIndex(context, mapEntry.getKey(), uniqueNumber);
 <a class="jxr_linenumber" name="71" href="#71">71</a>          applyItem(context, mapEntry.getValue(), uniqueNumber);
 <a class="jxr_linenumber" name="72" href="#72">72</a>        } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="73" href="#73">73</a>          applyIndex(context, i, uniqueNumber);
+<a class="jxr_linenumber" name="73" href="#73">73</a>          applyIndex(context, uniqueNumber, i);
 <a class="jxr_linenumber" name="74" href="#74">74</a>          applyItem(context, o, uniqueNumber);
 <a class="jxr_linenumber" name="75" href="#75">75</a>        }
 <a class="jxr_linenumber" name="76" href="#76">76</a>        contents.apply(<strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/scripting/xmltags/TrimSqlNode.html">FilteredDynamicContext</a>(configuration, context, index, item, uniqueNumber));

@@ -154,7 +154,7 @@
 <a class="jxr_linenumber" name="144" href="#144">144</a>     <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> UnsupportedOperationException(<span class="jxr_string">"The CachingExecutor should not be used by result loaders and thus isCached() should never be called."</span>);
 <a class="jxr_linenumber" name="145" href="#145">145</a>   }
 <a class="jxr_linenumber" name="146" href="#146">146</a> 
-<a class="jxr_linenumber" name="147" href="#147">147</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> deferLoad(<a href="../../../../org/apache/ibatis/mapping/MappedStatement.html">MappedStatement</a> ms, <a href="../../../../org/apache/ibatis/reflection/MetaObject.html">MetaObject</a> resultObject, String property, <a href="../../../../org/apache/ibatis/cache/CacheKey.html">CacheKey</a> key) {
+<a class="jxr_linenumber" name="147" href="#147">147</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> deferLoad(<a href="../../../../org/apache/ibatis/mapping/MappedStatement.html">MappedStatement</a> ms, <a href="../../../../org/apache/ibatis/reflection/MetaObject.html">MetaObject</a> resultObject, String property, <a href="../../../../org/apache/ibatis/cache/CacheKey.html">CacheKey</a> key, Class&lt;?&gt; targetType) {
 <a class="jxr_linenumber" name="148" href="#148">148</a>     <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> UnsupportedOperationException(<span class="jxr_string">"The CachingExecutor should not be used by result loaders and thus deferLoad() should never be called."</span>);
 <a class="jxr_linenumber" name="149" href="#149">149</a>   }
 <a class="jxr_linenumber" name="150" href="#150">150</a> 

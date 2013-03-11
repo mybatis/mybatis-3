@@ -179,7 +179,7 @@
 <a class="jxr_linenumber" name="169" href="#169">169</a>       <em class="jxr_comment">// skip this statement if there is a previous one with a not null databaseId</em>
 <a class="jxr_linenumber" name="170" href="#170">170</a>       id = builderAssistant.applyCurrentNamespace(id, false);
 <a class="jxr_linenumber" name="171" href="#171">171</a>       <strong class="jxr_keyword">if</strong> (<strong class="jxr_keyword">this</strong>.configuration.hasStatement(id, false)) {
-<a class="jxr_linenumber" name="172" href="#172">172</a>         <a href="../../../../../org/apache/ibatis/mapping/MappedStatement.html">MappedStatement</a> previous = <strong class="jxr_keyword">this</strong>.configuration.getMappedStatement(id);
+<a class="jxr_linenumber" name="172" href="#172">172</a>         <a href="../../../../../org/apache/ibatis/mapping/MappedStatement.html">MappedStatement</a> previous = <strong class="jxr_keyword">this</strong>.configuration.getMappedStatement(id, false); <em class="jxr_comment">// issue #2</em>
 <a class="jxr_linenumber" name="173" href="#173">173</a>         <strong class="jxr_keyword">if</strong> (previous.getDatabaseId() != <strong class="jxr_keyword">null</strong>) {
 <a class="jxr_linenumber" name="174" href="#174">174</a>           <strong class="jxr_keyword">return</strong> false;
 <a class="jxr_linenumber" name="175" href="#175">175</a>         }

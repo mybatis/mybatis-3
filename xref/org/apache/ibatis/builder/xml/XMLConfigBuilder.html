@@ -205,7 +205,7 @@
 <a class="jxr_linenumber" name="195" href="#195">195</a>       }
 <a class="jxr_linenumber" name="196" href="#196">196</a>       configuration.setAutoMappingBehavior(AutoMappingBehavior.valueOf(props.getProperty(<span class="jxr_string">"autoMappingBehavior"</span>, <span class="jxr_string">"PARTIAL"</span>)));
 <a class="jxr_linenumber" name="197" href="#197">197</a>       configuration.setCacheEnabled(booleanValueOf(props.getProperty(<span class="jxr_string">"cacheEnabled"</span>), <strong class="jxr_keyword">true</strong>));
-<a class="jxr_linenumber" name="198" href="#198">198</a>       configuration.setProxyFactory((ProxyFactory) createInstance(props.getProperty(<span class="jxr_string">"proxyFactory"</span>, <span class="jxr_string">"CGLIB"</span>)));      
+<a class="jxr_linenumber" name="198" href="#198">198</a>       configuration.setProxyFactory((ProxyFactory) createInstance(props.getProperty(<span class="jxr_string">"proxyFactory"</span>)));      
 <a class="jxr_linenumber" name="199" href="#199">199</a>       configuration.setLazyLoadingEnabled(booleanValueOf(props.getProperty(<span class="jxr_string">"lazyLoadingEnabled"</span>), false));
 <a class="jxr_linenumber" name="200" href="#200">200</a>       configuration.setAggressiveLazyLoading(booleanValueOf(props.getProperty(<span class="jxr_string">"aggressiveLazyLoading"</span>), <strong class="jxr_keyword">true</strong>));
 <a class="jxr_linenumber" name="201" href="#201">201</a>       configuration.setMultipleResultSetsEnabled(booleanValueOf(props.getProperty(<span class="jxr_string">"multipleResultSetsEnabled"</span>), <strong class="jxr_keyword">true</strong>));

@@ -5362,6 +5362,8 @@
 </parameter>
 <parameter name="key" type="org.apache.ibatis.cache.CacheKey">
 </parameter>
+<parameter name="targetType" type="java.lang.Class&lt;?&gt;">
+</parameter>
 </method>
 <method name="doFlushStatements"
  return="java.util.List&lt;org.apache.ibatis.executor.BatchResult&gt;"
@@ -6017,6 +6019,8 @@
 </parameter>
 <parameter name="key" type="org.apache.ibatis.cache.CacheKey">
 </parameter>
+<parameter name="targetType" type="java.lang.Class&lt;?&gt;">
+</parameter>
 </method>
 <method name="flushStatements"
  return="java.util.List&lt;org.apache.ibatis.executor.BatchResult&gt;"
@@ -6393,6 +6397,8 @@
 <parameter name="property" type="java.lang.String">
 </parameter>
 <parameter name="key" type="org.apache.ibatis.cache.CacheKey">
+</parameter>
+<parameter name="targetType" type="java.lang.Class&lt;?&gt;">
 </parameter>
 </method>
 <method name="flushStatements"

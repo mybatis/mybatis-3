@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <pmd-cpd>
 <duplication lines="68" tokens="489">
-<file line="50" path="/home/eduardo/git/mybatis-3/src/main/java/org/apache/ibatis/executor/loader/CglibSerialStateHolder.java"/>
-<file line="50" path="/home/eduardo/git/mybatis-3/src/main/java/org/apache/ibatis/executor/loader/JavassistSerialStateHolder.java"/>
+<file line="50" path="/Users/stripodi/Documents/mybatis/mybatis-3/target/checkout/src/main/java/org/apache/ibatis/executor/loader/CglibSerialStateHolder.java"/>
+<file line="50" path="/Users/stripodi/Documents/mybatis/mybatis-3/target/checkout/src/main/java/org/apache/ibatis/executor/loader/JavassistSerialStateHolder.java"/>
 <codefragment>
 <![CDATA[
   public CglibSerialStateHolder(
@@ -77,8 +77,8 @@
 </codefragment>
 </duplication>
 <duplication lines="45" tokens="231">
-<file line="25" path="/home/eduardo/git/mybatis-3/src/main/java/org/apache/ibatis/type/ClobTypeHandler.java"/>
-<file line="25" path="/home/eduardo/git/mybatis-3/src/main/java/org/apache/ibatis/type/NClobTypeHandler.java"/>
+<file line="25" path="/Users/stripodi/Documents/mybatis/mybatis-3/target/checkout/src/main/java/org/apache/ibatis/type/ClobTypeHandler.java"/>
+<file line="25" path="/Users/stripodi/Documents/mybatis/mybatis-3/target/checkout/src/main/java/org/apache/ibatis/type/NClobTypeHandler.java"/>
 <codefragment>
 <![CDATA[
 public class ClobTypeHandler extends BaseTypeHandler<String> {
@@ -130,8 +130,8 @@ public class ClobTypeHandler extends BaseTypeHandler<String> {
 </codefragment>
 </duplication>
 <duplication lines="50" tokens="212">
-<file line="43" path="/home/eduardo/git/mybatis-3/src/main/java/org/apache/ibatis/jdbc/SelectBuilder.java"/>
-<file line="71" path="/home/eduardo/git/mybatis-3/src/main/java/org/apache/ibatis/jdbc/SqlBuilder.java"/>
+<file line="43" path="/Users/stripodi/Documents/mybatis/mybatis-3/target/checkout/src/main/java/org/apache/ibatis/jdbc/SelectBuilder.java"/>
+<file line="71" path="/Users/stripodi/Documents/mybatis/mybatis-3/target/checkout/src/main/java/org/apache/ibatis/jdbc/SqlBuilder.java"/>
 <codefragment>
 <![CDATA[
     sql().SELECT_DISTINCT(columns);
@@ -188,8 +188,8 @@ public class ClobTypeHandler extends BaseTypeHandler<String> {
 </codefragment>
 </duplication>
 <duplication lines="28" tokens="206">
-<file line="89" path="/home/eduardo/git/mybatis-3/src/main/java/org/apache/ibatis/executor/loader/CglibProxyFactory.java"/>
-<file line="91" path="/home/eduardo/git/mybatis-3/src/main/java/org/apache/ibatis/executor/loader/JavassistProxyFactory.java"/>
+<file line="89" path="/Users/stripodi/Documents/mybatis/mybatis-3/target/checkout/src/main/java/org/apache/ibatis/executor/loader/CglibProxyFactory.java"/>
+<file line="91" path="/Users/stripodi/Documents/mybatis/mybatis-3/target/checkout/src/main/java/org/apache/ibatis/executor/loader/JavassistProxyFactory.java"/>
 <codefragment>
 <![CDATA[
   private static class EnhancedResultObjectProxyImpl implements MethodInterceptor {
@@ -224,8 +224,8 @@ public class ClobTypeHandler extends BaseTypeHandler<String> {
 </codefragment>
 </duplication>
 <duplication lines="24" tokens="180">
-<file line="153" path="/home/eduardo/git/mybatis-3/src/main/java/org/apache/ibatis/executor/loader/CglibProxyFactory.java"/>
-<file line="155" path="/home/eduardo/git/mybatis-3/src/main/java/org/apache/ibatis/executor/loader/JavassistProxyFactory.java"/>
+<file line="153" path="/Users/stripodi/Documents/mybatis/mybatis-3/target/checkout/src/main/java/org/apache/ibatis/executor/loader/CglibProxyFactory.java"/>
+<file line="155" path="/Users/stripodi/Documents/mybatis/mybatis-3/target/checkout/src/main/java/org/apache/ibatis/executor/loader/JavassistProxyFactory.java"/>
 <codefragment>
 <![CDATA[
   private static class EnhancedDeserializationProxyImpl implements MethodInterceptor {
@@ -256,8 +256,8 @@ public class ClobTypeHandler extends BaseTypeHandler<String> {
 </codefragment>
 </duplication>
 <duplication lines="28" tokens="138">
-<file line="64" path="/home/eduardo/git/mybatis-3/src/main/java/org/apache/ibatis/logging/jdbc/PreparedStatementLogger.java"/>
-<file line="55" path="/home/eduardo/git/mybatis-3/src/main/java/org/apache/ibatis/logging/jdbc/StatementLogger.java"/>
+<file line="64" path="/Users/stripodi/Documents/mybatis/mybatis-3/target/checkout/src/main/java/org/apache/ibatis/logging/jdbc/PreparedStatementLogger.java"/>
+<file line="55" path="/Users/stripodi/Documents/mybatis/mybatis-3/target/checkout/src/main/java/org/apache/ibatis/logging/jdbc/StatementLogger.java"/>
 <codefragment>
 <![CDATA[
       } else if ("getResultSet".equals(method.getName())) {
@@ -292,8 +292,8 @@ public class ClobTypeHandler extends BaseTypeHandler<String> {
 </codefragment>
 </duplication>
 <duplication lines="16" tokens="123">
-<file line="50" path="/home/eduardo/git/mybatis-3/src/main/java/org/apache/ibatis/executor/loader/CglibProxyFactory.java"/>
-<file line="49" path="/home/eduardo/git/mybatis-3/src/main/java/org/apache/ibatis/executor/loader/JavassistProxyFactory.java"/>
+<file line="50" path="/Users/stripodi/Documents/mybatis/mybatis-3/target/checkout/src/main/java/org/apache/ibatis/executor/loader/CglibProxyFactory.java"/>
+<file line="49" path="/Users/stripodi/Documents/mybatis/mybatis-3/target/checkout/src/main/java/org/apache/ibatis/executor/loader/JavassistProxyFactory.java"/>
 <codefragment>
 <![CDATA[
       throw new IllegalStateException("Cannot enable lazy loading because CGLIB is not available. Add CGLIB to your classpath.", e);
@@ -316,8 +316,8 @@ public class ClobTypeHandler extends BaseTypeHandler<String> {
 </codefragment>
 </duplication>
 <duplication lines="32" tokens="109">
-<file line="26" path="/home/eduardo/git/mybatis-3/src/main/java/org/apache/ibatis/logging/commons/JakartaCommonsLoggingImpl.java"/>
-<file line="45" path="/home/eduardo/git/mybatis-3/src/main/java/org/apache/ibatis/logging/slf4j/Slf4jImpl.java"/>
+<file line="26" path="/Users/stripodi/Documents/mybatis/mybatis-3/target/checkout/src/main/java/org/apache/ibatis/logging/commons/JakartaCommonsLoggingImpl.java"/>
+<file line="45" path="/Users/stripodi/Documents/mybatis/mybatis-3/target/checkout/src/main/java/org/apache/ibatis/logging/slf4j/Slf4jImpl.java"/>
 <codefragment>
 <![CDATA[
     log = LogFactory.getLog(clazz);
@@ -356,9 +356,9 @@ public class ClobTypeHandler extends BaseTypeHandler<String> {
 </codefragment>
 </duplication>
 <duplication lines="31" tokens="108">
-<file line="27" path="/home/eduardo/git/mybatis-3/src/main/java/org/apache/ibatis/logging/commons/JakartaCommonsLoggingImpl.java"/>
-<file line="46" path="/home/eduardo/git/mybatis-3/src/main/java/org/apache/ibatis/logging/slf4j/Slf4jImpl.java"/>
-<file line="27" path="/home/eduardo/git/mybatis-3/src/main/java/org/apache/ibatis/logging/slf4j/Slf4jLoggerImpl.java"/>
+<file line="27" path="/Users/stripodi/Documents/mybatis/mybatis-3/target/checkout/src/main/java/org/apache/ibatis/logging/commons/JakartaCommonsLoggingImpl.java"/>
+<file line="46" path="/Users/stripodi/Documents/mybatis/mybatis-3/target/checkout/src/main/java/org/apache/ibatis/logging/slf4j/Slf4jImpl.java"/>
+<file line="27" path="/Users/stripodi/Documents/mybatis/mybatis-3/target/checkout/src/main/java/org/apache/ibatis/logging/slf4j/Slf4jLoggerImpl.java"/>
 <codefragment>
 <![CDATA[
   }
@@ -396,8 +396,8 @@ public class ClobTypeHandler extends BaseTypeHandler<String> {
 </codefragment>
 </duplication>
 <duplication lines="18" tokens="106">
-<file line="129" path="/home/eduardo/git/mybatis-3/src/main/java/org/apache/ibatis/executor/loader/CglibProxyFactory.java"/>
-<file line="131" path="/home/eduardo/git/mybatis-3/src/main/java/org/apache/ibatis/executor/loader/JavassistProxyFactory.java"/>
+<file line="129" path="/Users/stripodi/Documents/mybatis/mybatis-3/target/checkout/src/main/java/org/apache/ibatis/executor/loader/CglibProxyFactory.java"/>
+<file line="131" path="/Users/stripodi/Documents/mybatis/mybatis-3/target/checkout/src/main/java/org/apache/ibatis/executor/loader/JavassistProxyFactory.java"/>
 <codefragment>
 <![CDATA[
               return new CglibSerialStateHolder(original, lazyLoader.getPropertyNames(), objectFactory, constructorArgTypes, constructorArgs);
@@ -422,8 +422,8 @@ public class ClobTypeHandler extends BaseTypeHandler<String> {
 </codefragment>
 </duplication>
 <duplication lines="30" tokens="106">
-<file line="23" path="/home/eduardo/git/mybatis-3/src/main/java/org/apache/ibatis/type/NStringTypeHandler.java"/>
-<file line="23" path="/home/eduardo/git/mybatis-3/src/main/java/org/apache/ibatis/type/StringTypeHandler.java"/>
+<file line="23" path="/Users/stripodi/Documents/mybatis/mybatis-3/target/checkout/src/main/java/org/apache/ibatis/type/NStringTypeHandler.java"/>
+<file line="23" path="/Users/stripodi/Documents/mybatis/mybatis-3/target/checkout/src/main/java/org/apache/ibatis/type/StringTypeHandler.java"/>
 <codefragment>
 <![CDATA[
 public class NStringTypeHandler extends BaseTypeHandler<String> {
@@ -460,8 +460,8 @@ public class NStringTypeHandler extends BaseTypeHandler<String> {
 </codefragment>
 </duplication>
 <duplication lines="23" tokens="102">
-<file line="35" path="/home/eduardo/git/mybatis-3/src/main/java/org/apache/ibatis/cache/decorators/SoftCache.java"/>
-<file line="35" path="/home/eduardo/git/mybatis-3/src/main/java/org/apache/ibatis/cache/decorators/WeakCache.java"/>
+<file line="35" path="/Users/stripodi/Documents/mybatis/mybatis-3/target/checkout/src/main/java/org/apache/ibatis/cache/decorators/SoftCache.java"/>
+<file line="35" path="/Users/stripodi/Documents/mybatis/mybatis-3/target/checkout/src/main/java/org/apache/ibatis/cache/decorators/WeakCache.java"/>
 <codefragment>
 <![CDATA[
   public SoftCache(Cache delegate) {
