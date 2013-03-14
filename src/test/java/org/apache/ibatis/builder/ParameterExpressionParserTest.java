@@ -37,6 +37,14 @@ public class ParameterExpressionParserTest {
   }
 
   @Test
+  public void oldStyleJdbcTypeWithExtraWhitespaces() {
+    Map<String, String> result = ParameterExpressionParser.parse(" id :  VARCHAR ");
+    Assert.assertEquals(2, result.size());
+    Assert.assertEquals("id", result.get("property"));
+    Assert.assertEquals("VARCHAR", result.get("jdbcType"));
+  }
+
+  @Test
   public void expressionWithOldStyleJdbcType() {
     Map<String, String> result = ParameterExpressionParser.parse("(id.toString()):VARCHAR");
     Assert.assertEquals(2, result.size());
@@ -98,6 +106,16 @@ public class ParameterExpressionParserTest {
     Assert.assertEquals("val1", result.get("attr1"));
     Assert.assertEquals("val2", result.get("attr2"));
     Assert.assertEquals("val3", result.get("attr3"));
+  }
+
+  @Test
+  public void shouldIgnoreLeadingAndTrailingSpaces() {
+    Map<String, String> result = ParameterExpressionParser.parse(" id , jdbcType =  VARCHAR,  attr1 = val1 ,  attr2 = val2 ");
+    Assert.assertEquals(4, result.size());
+    Assert.assertEquals("id", result.get("property"));
+    Assert.assertEquals("VARCHAR", result.get("jdbcType"));
+    Assert.assertEquals("val1", result.get("attr1"));
+    Assert.assertEquals("val2", result.get("attr2"));
   }
 
 }
