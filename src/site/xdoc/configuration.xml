@@ -412,8 +412,7 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 callSettersOnNulls
               </td>
               <td>
-                Specifies if setters or map's put method will be called when a retrieved value is null. Note that if set, properties 
-                that may be filled with null values must never be primitives. 
+                Specifies if setters or map's put method will be called when a retrieved value is null. It is useful when you rely on Map.keySet() or null value initialization. Note primitives such as (int,boolean,etc.) will not be set to null. 
               </td>
               <td>
                 true | false

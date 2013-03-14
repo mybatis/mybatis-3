@@ -25,5 +25,6 @@ public interface ProductMapper {
   List<Long> selectProductCodesL();
 
   List<BigDecimal> selectProductCodesB();
-
+  
+  List<Product> selectAllProducts();
 }
