@@ -34,5 +34,8 @@
   <select id="selectProductCodesB" resultType="BigDecimal">
     select distinct productcode from product
   </select>
-
+  
+  <select id="selectAllProducts" resultType="org.apache.ibatis.submitted.primitive_result_type.Product">
+    select productcode,producttype from product
+  </select>
 </mapper>

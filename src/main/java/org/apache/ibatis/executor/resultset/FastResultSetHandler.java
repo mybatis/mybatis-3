@@ -304,18 +304,23 @@ public class FastResultSetHandler implements ResultSetHandler {
       final String column = prependPrefix(propertyMapping.getColumn(), columnPrefix);
       if (propertyMapping.isCompositeResult() || (column != null && mappedColumnNames.contains(column.toUpperCase(Locale.ENGLISH)))) {
         Object value = getPropertyMappingValue(rs, metaObject, propertyMapping, lazyLoader, columnPrefix);
-        if (value != OMIT && (value != null || configuration.isCallSettersOnNulls())) { // issue #377, call setter on nulls
-          final String property = propertyMapping.getProperty(); // issue #541 make property optional
-          if (property != null) {
+        final String property = propertyMapping.getProperty(); // issue #541 make property optional
+        if (value != OMIT && property != null && (value != null || isCallSettersOnNulls(metaObject.getGetterType(property)))) { // issue #377, call setter on nulls          
             metaObject.setValue(property, value);
             foundValues = true;
-          }
         }
       }
     }
     return foundValues;
   }
-
+  
+  private  boolean isCallSettersOnNulls(Class<?> propertyType){
+      if(configuration.isCallSettersOnNulls() && !propertyType.isPrimitive()){
+          return true;
+      }
+      return false;
+  }
+  
   protected Object getPropertyMappingValue(ResultSet rs, MetaObject metaResultObject, ResultMapping propertyMapping, ResultLoaderMap lazyLoader, String columnPrefix) throws SQLException {
     final TypeHandler<?> typeHandler = propertyMapping.getTypeHandler();
     if (propertyMapping.getNestedQueryId() != null) {
@@ -346,7 +351,7 @@ public class FastResultSetHandler implements ResultSetHandler {
         if (typeHandlerRegistry.hasTypeHandler(propertyType)) {
           final TypeHandler<?> typeHandler = resultColumnCache.getTypeHandler(propertyType, columnName);
           final Object value = typeHandler.getResult(rs, columnName);
-          if (value != null || configuration.isCallSettersOnNulls()) { // issue #377, call setter on nulls
+          if (value != null || isCallSettersOnNulls(propertyType)) { // issue #377, call setter on nulls
             metaObject.setValue(property, value);
             foundValues = true;
           }
