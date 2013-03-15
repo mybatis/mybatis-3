@@ -15,8 +15,13 @@
  */
 package org.apache.ibatis.submitted.automapping;
 
+import java.util.List;
+
 public interface Mapper {
 
   User getUser(Integer id);
 
+  List<Book> getBooks();
+  
+  Article getArticle();
 }
