@@ -346,7 +346,7 @@ public class FastResultSetHandler implements ResultSetHandler {
         }
       }
       final String property = metaObject.findProperty(propertyName, configuration.isMapUnderscoreToCamelCase());
-      if (property != null) {
+      if (property != null &&metaObject.hasSetter(property) ) {
         final Class<?> propertyType = metaObject.getSetterType(property);
         if (typeHandlerRegistry.hasTypeHandler(propertyType)) {
           final TypeHandler<?> typeHandler = resultColumnCache.getTypeHandler(propertyType, columnName);

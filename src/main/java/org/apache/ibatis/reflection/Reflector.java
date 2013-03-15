@@ -18,6 +18,7 @@ package org.apache.ibatis.reflection;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.ReflectPermission;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -224,10 +225,12 @@ public class Reflector {
           // Ignored. This is only a final precaution, nothing we can do.
         }
       }
-      if (field.isAccessible()) {
-        if (!setMethods.containsKey(field.getName())) {
-          // issue 379 - removed the check for final because JDK 1.5 allows
-          // modification of final fields through reflection (JSR-133).  (JGB)
+      int modifier=field.getModifiers();
+      // issue 379 - removed the check for final because JDK 1.5 allows
+      // modification of final fields through reflection (JSR-133).  (JGB)
+      // allow final but not final static
+      if (field.isAccessible() && !(Modifier.isFinal(modifier) && Modifier.isStatic(modifier))) {
+      if (!setMethods.containsKey(field.getName())) {
           addSetField(field);
         }
         if (!getMethods.containsKey(field.getName())) {

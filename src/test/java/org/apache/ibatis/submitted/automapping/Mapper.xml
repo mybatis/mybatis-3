@@ -26,5 +26,16 @@
 
 	<resultMap type="org.apache.ibatis.submitted.automapping.User" id="result" autoMapping="true">
 	</resultMap>
-
+	
+	<resultMap type="org.apache.ibatis.submitted.automapping.Book" id="bookResult">
+		 <result property="name" column="name"/>
+	</resultMap>
+	
+	<select id="getBooks" resultMap="bookResult">
+		select version,name from books
+	</select>
+	
+	<select id="getArticle" resultType="org.apache.ibatis.submitted.automapping.Article">
+		select 9 as version from INFORMATION_SCHEMA.SYSTEM_USERS
+	</select>	
 </mapper>
