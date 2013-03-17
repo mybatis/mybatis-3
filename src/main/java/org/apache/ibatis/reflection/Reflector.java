@@ -225,13 +225,15 @@ public class Reflector {
           // Ignored. This is only a final precaution, nothing we can do.
         }
       }
-      int modifier=field.getModifiers();
-      // issue 379 - removed the check for final because JDK 1.5 allows
-      // modification of final fields through reflection (JSR-133).  (JGB)
-      // allow final but not final static
-      if (field.isAccessible() && !(Modifier.isFinal(modifier) && Modifier.isStatic(modifier))) {
-      if (!setMethods.containsKey(field.getName())) {
-          addSetField(field);
+      if (field.isAccessible()) {
+        if (!setMethods.containsKey(field.getName())) {
+          // issue #379 - removed the check for final because JDK 1.5 allows
+          // modification of final fields through reflection (JSR-133). (JGB)
+          // pr #16 - final static can only be set by the classloader
+          int modifiers = field.getModifiers();
+          if (!(Modifier.isFinal(modifiers) && Modifier.isStatic(modifiers))) {
+            addSetField(field);
+          }
         }
         if (!getMethods.containsKey(field.getName())) {
           addGetField(field);

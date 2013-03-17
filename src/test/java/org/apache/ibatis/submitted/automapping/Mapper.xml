@@ -32,7 +32,7 @@
 	</resultMap>
 	
 	<select id="getBooks" resultMap="bookResult">
-		select version,name from books
+		select version, name from books
 	</select>
 	
 	<select id="getArticle" resultType="org.apache.ibatis.submitted.automapping.Article">
