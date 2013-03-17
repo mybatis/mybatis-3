@@ -16,6 +16,7 @@
 
 drop table persons if exists;
 drop table items if exists;
+drop table orderDetail if exists;
 
 create table persons (
   id int,
@@ -27,6 +28,11 @@ create table items (
   owner int,
   name varchar(20)
 );
+
+create table orderDetail (
+  order_id int,
+  product_id int
+);
  
 insert into persons (id, name) values (1, 'grandma');
 insert into persons (id, name) values (2, 'sister');
@@ -37,3 +43,7 @@ insert into items (id, owner, name) values (2, 1, 'tv');
 insert into items (id, owner, name) values (3, 2, 'shoes');
 insert into items (id, owner, name) values (4, 3, 'car');
 insert into items (id, owner, name) values (5, 2, 'phone');
+
+insert into orderDetail (order_id, product_id) values (1, 1);
+insert into orderDetail (order_id, product_id) values (1, 2);
+insert into orderDetail (order_id, product_id) values (2, 1);
