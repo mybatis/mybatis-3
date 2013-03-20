@@ -47,7 +47,7 @@
       <source><![CDATA[
 String resource = "org/mybatis/example/mybatis-config.xml";
 InputStream inputStream = Resources.getResourceAsStream(resource);
-sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);]]></source>
+SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);]]></source>
       <p>
         Le fichier de configuration XML contient les réglages pour le noyeau de
         MyBatis, y compris une DataSource pour obtenir les connections vers la
