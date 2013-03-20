@@ -39,7 +39,7 @@ SqlSessionFactoryBuilder 를 사용하여 만들수 있다. SqlSessionFactoryBui
       <source><![CDATA[
 String resource = "org/mybatis/example/mybatis-config.xml";
 InputStream inputStream = Resources.getResourceAsStream(resource);
-sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);]]></source>
+SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);]]></source>
       <p>XML 설정파일에서 지정하는 MyBatis 의 핵심이 되는 설정은 트랜잭션을 제어하기 위한 TransactionManager 과 함께
 데이터베이스 Connection 인스턴스를 가져오기 위한 DataSource 를 포함한다. 세부적인 설정은 조금 뒤에 보고 간단한
 예제를 먼저보자.</p>

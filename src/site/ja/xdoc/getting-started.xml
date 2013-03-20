@@ -43,7 +43,7 @@
         <source><![CDATA[
 String resource = "org/mybatis/example/mybatis-config.xml";
 InputStream inputStream = Resources.getResourceAsStream(resource);
-sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);]]></source>
+SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);]]></source>
         <p>
           XML 形式の設定ファイルには、MyBatis システムの基本設定が含まれます。
           例えば、データベースから Connection のインスタンスを取得する DataSource や、トランザクションの制御方法を決定する TransactionManager などです。<br />
