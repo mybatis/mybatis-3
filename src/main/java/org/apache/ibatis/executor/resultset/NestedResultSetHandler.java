@@ -17,7 +17,10 @@ package org.apache.ibatis.executor.resultset;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -42,6 +45,8 @@ import org.apache.ibatis.type.TypeHandler;
 
 public class NestedResultSetHandler extends FastResultSetHandler {
 
+  private List<Tuple> unhandledObjects = new ArrayList<Tuple>();
+  private Set<CacheKey> handledObjects = new HashSet<CacheKey>();
   private final Map<CacheKey, Object> objectCache = new HashMap<CacheKey, Object>();
   private final Map<CacheKey, Object> ancestorCache = new HashMap<CacheKey, Object>();
 
@@ -83,14 +88,35 @@ public class NestedResultSetHandler extends FastResultSetHandler {
       final CacheKey rowKey = createRowKey(discriminatedResultMap, rs, null, resultColumnCache);
       Object partialObject = objectCache.get(rowKey);
       if (partialObject == null && rowValue != null) { // issue #542 delay calling ResultHandler until object ends
-        if (mappedStatement.isResultOrdered()) objectCache.clear(); // issue #577 clear memory if ordered
+        if (mappedStatement.isResultOrdered()) clearCache(); // issue #577 clear memory if ordered
         callResultHandler(resultHandler, resultContext, rowValue);
       } 
       rowValue = getRowValue(rs, discriminatedResultMap, rowKey, rowKey, null, resultColumnCache, partialObject);
+      if( partialObject == null ) {
+       // issue #542 when results are not ordered (as described in comment #1), need to keep track of what was or wasn't handled
+        unhandledObjects.add(new Tuple(rowKey, rowValue));
+      }
     }
     if (rowValue != null) callResultHandler(resultHandler, resultContext, rowValue);
   }
-  
+
+  @Override
+  protected void callResultHandler(ResultHandler resultHandler, DefaultResultContext resultContext, Object rowValueIgnored) {
+    for( Iterator<Tuple> iter = unhandledObjects.iterator(); iter.hasNext(); ) {
+      Tuple tuple = iter.next();
+      if( !handledObjects.contains(tuple.getRowKey()) ) {
+        super.callResultHandler(resultHandler, resultContext, tuple.getRowValue());
+        handledObjects.add(tuple.getRowKey());
+      }
+    }
+    unhandledObjects.clear();
+  }
+
+  private void clearCache() {
+    handledObjects.clear();
+    objectCache.clear();
+  }
+
   //
   // GET VALUE FROM ROW
   //
@@ -324,4 +350,19 @@ public class NestedResultSetHandler extends FastResultSetHandler {
     }
   }
 
+  private static class Tuple {
+    private CacheKey rowKey;
+    private Object rowValue;
+
+    public Tuple(CacheKey rowKey, Object rowValue) {
+      this.rowKey = rowKey;
+      this.rowValue = rowValue;
+    }
+    public CacheKey getRowKey() {
+      return rowKey;
+    }
+    public Object getRowValue() {
+      return rowValue;
+    }
+  }
 }
