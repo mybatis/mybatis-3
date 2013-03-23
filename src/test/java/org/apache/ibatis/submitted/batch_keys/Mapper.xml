@@ -41,7 +41,7 @@
   </select>
 
   <insert id="insertIdentity" keyProperty="id" useGeneratedKeys="true">
-  	insert into users2 (id, name) values(null, #{name})
+  	insert into users2 (name) values(#{name})
   </insert>
 
   <select id="selectIdentity" resultType="org.apache.ibatis.submitted.batch_keys.User" >

@@ -37,7 +37,6 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class BatchKeysTest {
@@ -113,8 +112,6 @@ public class BatchKeysTest {
 
   }
 
-  @Ignore // Jdbc3 keys will not work with current implementation
-  // but it seems that neither derby nor hsdqlb are able to return keys with batches
   @Test
   public void testInsertJdbc3() throws Exception {
     SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH);
@@ -124,8 +121,8 @@ public class BatchKeysTest {
       User user2 = new User(null, "Valentina");
       sqlSession.insert("insertIdentity", user2);
       sqlSession.flushStatements();
-      assertEquals(new Integer(50), user1.getId());
-      assertEquals(new Integer(50), user2.getId());
+      assertEquals(Integer.valueOf(0), user1.getId());
+      assertEquals(Integer.valueOf(1), user2.getId());
       sqlSession.commit();
     } finally {
       sqlSession.close();
