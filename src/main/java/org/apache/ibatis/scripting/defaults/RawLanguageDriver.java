@@ -30,11 +30,11 @@ public class RawLanguageDriver implements LanguageDriver {
   }
 
   public SqlSource createSqlSource(Configuration configuration, XNode script, Class<?> parameterType) {
-    return new RawSqlSource(configuration, script.getStringBody(""));
+    return new RawSqlSource(configuration, script.getStringBody(""), parameterType);
   }
 
   public SqlSource createSqlSource(Configuration configuration, String script, Class<?> parameterType) {
-    return new RawSqlSource(configuration, script);
+    return new RawSqlSource(configuration, script, parameterType);
   }
 
 }

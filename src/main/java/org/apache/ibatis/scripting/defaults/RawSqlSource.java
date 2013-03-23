@@ -24,18 +24,15 @@ import org.apache.ibatis.session.Configuration;
 
 public class RawSqlSource implements SqlSource {
 
-  private final Configuration configuration;
-  private final String sql;
+  private final SqlSource sqlSource;
 
-  public RawSqlSource(Configuration configuration, String sql) {
-    this.configuration = configuration;
-    this.sql = sql;
+  public RawSqlSource(Configuration configuration, String sql, Class<?> parameterType) {
+    SqlSourceBuilder sqlSourceParser = new SqlSourceBuilder(configuration);
+    Class<?> clazz = parameterType == null ? Object.class : parameterType;
+    sqlSource = sqlSourceParser.parse(sql, clazz, new HashMap<String, Object>());
   }
 
   public BoundSql getBoundSql(Object parameterObject) {
-    SqlSourceBuilder sqlSourceParser = new SqlSourceBuilder(configuration);
-    Class<?> parameterType = parameterObject == null ? Object.class : parameterObject.getClass();
-    SqlSource sqlSource = sqlSourceParser.parse(sql, parameterType, new HashMap<String, Object>());
     BoundSql boundSql = sqlSource.getBoundSql(parameterObject);
     return boundSql;
   }
