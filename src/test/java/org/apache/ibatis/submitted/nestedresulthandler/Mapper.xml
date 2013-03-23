@@ -29,8 +29,15 @@
 	</resultMap>
 
 	<select id="getPersons" resultMap="personResult">
-		select p.id as person_id, p.name as person_name, i.id as item_id, i.name as item_name 
-		from persons p, items i 
+		select p.id as person_id, p.name as person_name, i.id as item_id, i.name as item_name
+		from persons p, items i
 		where p.id = i.owner
+	</select>
+
+	<select id="getPersonsWithItemsOrdered" resultMap="personResult">
+		select p.id as person_id, p.name as person_name, i.id as item_id, i.name as item_name
+		from persons p, items i
+		where p.id = i.owner
+		order by i.name
 	</select>
 </mapper>

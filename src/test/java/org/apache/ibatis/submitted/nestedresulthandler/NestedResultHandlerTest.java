@@ -58,7 +58,7 @@ public class NestedResultHandlerTest {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
 
       List<Person> persons = mapper.getPersons();
-      
+
       Person person = persons.get(0);
       Assert.assertEquals("grandma", person.getName());
       Assert.assertTrue(person.owns("book"));
@@ -79,8 +79,9 @@ public class NestedResultHandlerTest {
       sqlSession.close();
     }
   }
-  
-  @Test // issue #542
+
+  @Test
+  // issue #542
   public void testGetPersonWithHandler() {
     SqlSession sqlSession = sqlSessionFactory.openSession();
     try {
@@ -91,10 +92,44 @@ public class NestedResultHandlerTest {
             Assert.assertEquals(2, person.getItems().size());
           }
         }
-      });      
+      });
     } finally {
       sqlSession.close();
     }
   }
-  
+
+  /**
+   * Fix bug caused by issue #542, see new issue #22 on github If we order by a
+   * nested result map attribute we can miss some records and end up with
+   * duplicates instead.
+   */
+  @Test
+  public void testGetPersonOrderedByItem() {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+
+      List<Person> persons = mapper.getPersonsWithItemsOrdered();
+
+      Person person = persons.get(0);
+      Assert.assertEquals("grandma", person.getName());
+      Assert.assertTrue(person.owns("book"));
+      Assert.assertTrue(person.owns("tv"));
+      Assert.assertEquals(2, person.getItems().size());
+
+      person = persons.get(1);
+      Assert.assertEquals("brother", person.getName());
+      Assert.assertTrue(person.owns("car"));
+      Assert.assertEquals(1, person.getItems().size());
+
+      person = persons.get(2);
+      Assert.assertEquals("sister", person.getName());
+      Assert.assertTrue(person.owns("phone"));
+      Assert.assertTrue(person.owns("shoes"));
+      Assert.assertEquals(2, person.getItems().size());
+    } finally {
+      sqlSession.close();
+    }
+  }
+
 }

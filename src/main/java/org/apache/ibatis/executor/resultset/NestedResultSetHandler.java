@@ -17,6 +17,7 @@ package org.apache.ibatis.executor.resultset;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -44,6 +45,7 @@ public class NestedResultSetHandler extends FastResultSetHandler {
 
   private final Map<CacheKey, Object> objectCache = new HashMap<CacheKey, Object>();
   private final Map<CacheKey, Object> ancestorCache = new HashMap<CacheKey, Object>();
+  private final List<Object> unsortedRowHandlerElements = new ArrayList<Object>();
 
   public NestedResultSetHandler(Executor executor, MappedStatement mappedStatement, ParameterHandler parameterHandler, ResultHandler resultHandler, BoundSql boundSql, RowBounds rowBounds) {
     super(executor, mappedStatement, parameterHandler, resultHandler, boundSql, rowBounds);
@@ -67,6 +69,7 @@ public class NestedResultSetHandler extends FastResultSetHandler {
   protected void cleanUpAfterHandlingResultSet() {
     super.cleanUpAfterHandlingResultSet();
     objectCache.clear();
+    unsortedRowHandlerElements.clear();
   }
 
   //
@@ -82,13 +85,26 @@ public class NestedResultSetHandler extends FastResultSetHandler {
       final ResultMap discriminatedResultMap = resolveDiscriminatedResultMap(rs, resultMap, null);
       final CacheKey rowKey = createRowKey(discriminatedResultMap, rs, null, resultColumnCache);
       Object partialObject = objectCache.get(rowKey);
-      if (partialObject == null && rowValue != null) { // issue #542 delay calling ResultHandler until object ends
-        if (mappedStatement.isResultOrdered()) objectCache.clear(); // issue #577 clear memory if ordered
-        callResultHandler(resultHandler, resultContext, rowValue);
-      } 
-      rowValue = getRowValue(rs, discriminatedResultMap, rowKey, rowKey, null, resultColumnCache, partialObject);
+      if (mappedStatement.isResultOrdered()) { // issue #577       
+        if (partialObject == null && rowValue != null) {
+          objectCache.clear(); 
+          callResultHandler(resultHandler, resultContext, rowValue);
+        } 
+        rowValue = getRowValue(rs, discriminatedResultMap, rowKey, rowKey, null, resultColumnCache, partialObject);
+      } else {
+        rowValue = getRowValue(rs, discriminatedResultMap, rowKey, rowKey, null, resultColumnCache, partialObject);
+        if (partialObject == null) {
+          unsortedRowHandlerElements.add(rowValue); // issue #542
+        }
+      }
     }
-    if (rowValue != null) callResultHandler(resultHandler, resultContext, rowValue);
+    if (mappedStatement.isResultOrdered()) {
+      if (rowValue != null) callResultHandler(resultHandler, resultContext, rowValue);
+    } else {
+      for (Object o : unsortedRowHandlerElements) {
+        callResultHandler(resultHandler, resultContext, o);
+      }
+    }
   }
   
   //
