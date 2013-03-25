@@ -26,7 +26,7 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-public class BaseTest {
+public class ExtendResultMapTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 

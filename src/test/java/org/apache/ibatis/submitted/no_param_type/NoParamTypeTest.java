@@ -31,7 +31,7 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-public class BaseTest {
+public class NoParamTypeTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
