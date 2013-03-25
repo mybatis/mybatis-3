@@ -121,7 +121,7 @@ public class SqlSourceBuilder extends BaseBuilder {
 
     private Map<String, String> parseParameterMapping(String content) {
       try {
-        return ParameterExpressionParser.parse(content);
+        return new ParameterExpression(content);
       } catch (BuilderException ex) {
         throw ex;
       } catch (Exception ex) {

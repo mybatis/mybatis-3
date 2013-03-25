@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 MyBatis.org.
+ * Copyright 2012-2013 MyBatis.org.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ import java.util.Map;
 
 import org.apache.ibatis.builder.BaseBuilder;
 import org.apache.ibatis.builder.BuilderException;
-import org.apache.ibatis.builder.ParameterExpressionParser;
+import org.apache.ibatis.builder.ParameterExpression;
 import org.apache.ibatis.builder.StaticSqlSource;
 import org.apache.ibatis.mapping.ParameterMapping;
 import org.apache.ibatis.mapping.SqlSource;
@@ -127,13 +127,13 @@ public class VelocitySqlSourceBuilder extends BaseBuilder {
 
     private Map<String, String> parseParameterMapping(String content) {
       try {
-        return ParameterExpressionParser.parse(content);
+        return new ParameterExpression(content);
       } catch (BuilderException ex) {
         throw ex;
       } catch (Exception ex) {
         throw new BuilderException("Parsing error was found in mapping @{" + content + "}.  Check syntax #{property|(expression), var1=value1, var2=value2, ...} ", ex);
       }
     }
-
   }
+  
 }
