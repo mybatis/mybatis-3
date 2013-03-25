@@ -19,6 +19,7 @@ import java.io.Reader;
 import java.sql.Connection;
 import java.util.List;
 
+import org.apache.ibatis.exceptions.PersistenceException;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.ResultContext;
@@ -86,6 +87,23 @@ public class NestedResultHandlerTest {
     SqlSession sqlSession = sqlSessionFactory.openSession();
     try {
       sqlSession.select("getPersons", new ResultHandler() {
+        public void handleResult(ResultContext context) {
+          Person person = (Person) context.getResultObject();
+          if ("grandma".equals(person.getName())) {
+            Assert.assertEquals(2, person.getItems().size());
+          }
+        }
+      });
+    } finally {
+      sqlSession.close();
+    }
+  }
+
+  @Test(expected=PersistenceException.class)
+  public void testUnorderedGetPersonWithHandler() {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      sqlSession.select("getPersonsWithItemsOrdered", new ResultHandler() {
         public void handleResult(ResultContext context) {
           Person person = (Person) context.getResultObject();
           if ("grandma".equals(person.getName())) {

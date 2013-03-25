@@ -83,7 +83,7 @@ public class XMLConfigBuilder extends BaseBuilder {
 
   public Configuration parse() {
     if (parsed) {
-      throw new BuilderException("Each MapperConfigParser can only be used once.");
+      throw new BuilderException("Each XMLConfigBuilder can only be used once.");
     }
     parsed = true;
     parseConfiguration(parser.evalNode("/configuration"));
@@ -208,6 +208,7 @@ public class XMLConfigBuilder extends BaseBuilder {
       configuration.setLocalCacheScope(LocalCacheScope.valueOf(props.getProperty("localCacheScope", "SESSION")));
       configuration.setJdbcTypeForNull(JdbcType.valueOf(props.getProperty("jdbcTypeForNull", "OTHER")));
       configuration.setLazyLoadTriggerMethods(stringSetValueOf(props.getProperty("lazyLoadTriggerMethods"), "equals,clone,hashCode,toString"));
+      configuration.setSafeResultHandlerEnabled(booleanValueOf(props.getProperty("safeResultHandlerEnabled"), true));
       configuration.setDefaultScriptingLanguage(resolveClass(props.getProperty("defaultScriptingLanguage")));
       configuration.setCallSettersOnNulls(booleanValueOf(props.getProperty("callSettersOnNulls"), false));
       configuration.setLogPrefix(props.getProperty("logPrefix"));

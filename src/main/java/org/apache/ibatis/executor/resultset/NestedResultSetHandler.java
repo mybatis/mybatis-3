@@ -17,7 +17,6 @@ package org.apache.ibatis.executor.resultset;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -45,7 +44,6 @@ public class NestedResultSetHandler extends FastResultSetHandler {
 
   private final Map<CacheKey, Object> objectCache = new HashMap<CacheKey, Object>();
   private final Map<CacheKey, Object> ancestorCache = new HashMap<CacheKey, Object>();
-  private final List<Object> unsortedRowHandlerElements = new ArrayList<Object>();
 
   public NestedResultSetHandler(Executor executor, MappedStatement mappedStatement, ParameterHandler parameterHandler, ResultHandler resultHandler, BoundSql boundSql, RowBounds rowBounds) {
     super(executor, mappedStatement, parameterHandler, resultHandler, boundSql, rowBounds);
@@ -66,10 +64,19 @@ public class NestedResultSetHandler extends FastResultSetHandler {
   //
 
   @Override
+  protected void handleResultSet(ResultSet rs, ResultMap resultMap, List<Object> multipleResults, ResultColumnCache resultColumnCache) throws SQLException {
+    if (resultHandler != null && configuration.isSafeResultHandlerEnabled() && !mappedStatement.isResultOrdered()) {
+      throw new ExecutorException("Mapped Statements with nested result mappings cannot be safely used with a custom ResultHandler. "
+          + "Use safeResultHandlerEnabled=false setting to bypass this check " 
+          + "or ensure your statement returns ordered data and set resultOrdered=true on it.");
+    }
+    super.handleResultSet(rs, resultMap, multipleResults, resultColumnCache);
+  }
+
+  @Override
   protected void cleanUpAfterHandlingResultSet() {
     super.cleanUpAfterHandlingResultSet();
     objectCache.clear();
-    unsortedRowHandlerElements.clear();
   }
 
   //
@@ -85,25 +92,21 @@ public class NestedResultSetHandler extends FastResultSetHandler {
       final ResultMap discriminatedResultMap = resolveDiscriminatedResultMap(rs, resultMap, null);
       final CacheKey rowKey = createRowKey(discriminatedResultMap, rs, null, resultColumnCache);
       Object partialObject = objectCache.get(rowKey);
-      if (mappedStatement.isResultOrdered()) { // issue #577       
+      if (mappedStatement.isResultOrdered()) { // issue #577 && #542
         if (partialObject == null && rowValue != null) {
-          objectCache.clear(); 
+          objectCache.clear();
           callResultHandler(resultHandler, resultContext, rowValue);
-        } 
+        }
         rowValue = getRowValue(rs, discriminatedResultMap, rowKey, rowKey, null, resultColumnCache, partialObject);
       } else {
         rowValue = getRowValue(rs, discriminatedResultMap, rowKey, rowKey, null, resultColumnCache, partialObject);
         if (partialObject == null) {
-          unsortedRowHandlerElements.add(rowValue); // issue #542
+          callResultHandler(resultHandler, resultContext, rowValue);
         }
       }
     }
-    if (mappedStatement.isResultOrdered()) {
-      if (rowValue != null) callResultHandler(resultHandler, resultContext, rowValue);
-    } else {
-      for (Object o : unsortedRowHandlerElements) {
-        callResultHandler(resultHandler, resultContext, o);
-      }
+    if (rowValue != null && mappedStatement.isResultOrdered()) {
+      callResultHandler(resultHandler, resultContext, rowValue);
     }
   }
   
