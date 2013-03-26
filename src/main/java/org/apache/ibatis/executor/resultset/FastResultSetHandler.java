@@ -305,31 +305,36 @@ public class FastResultSetHandler implements ResultSetHandler {
       if (propertyMapping.isCompositeResult() || (column != null && mappedColumnNames.contains(column.toUpperCase(Locale.ENGLISH)))) {
         Object value = getPropertyMappingValue(rs, metaObject, propertyMapping, lazyLoader, columnPrefix);
         final String property = propertyMapping.getProperty(); // issue #541 make property optional
-        if (value != OMIT && property != null && (value != null || isCallSettersOnNulls(metaObject.getGetterType(property)))) { // issue #377, call setter on nulls          
+        if (value != OMIT && property != null && (value != null || isCallSettersOnNulls(metaObject.getSetterType(property)))) { // issue #377, call setter on nulls          
             metaObject.setValue(property, value);
-            foundValues = true;
+            foundValues = (value != null) || foundValues;
         }
       }
     }
     return foundValues;
   }
-  
-  private  boolean isCallSettersOnNulls(Class<?> propertyType){
-      if(configuration.isCallSettersOnNulls() && !propertyType.isPrimitive()){
-          return true;
-      }
-      return false;
+
+  protected boolean isCallSettersOnNulls(Class<?> propertyType) {
+    return (configuration.isCallSettersOnNulls() && !propertyType.isPrimitive());
   }
-  
+
   protected Object getPropertyMappingValue(ResultSet rs, MetaObject metaResultObject, ResultMapping propertyMapping, ResultLoaderMap lazyLoader, String columnPrefix) throws SQLException {
-    final TypeHandler<?> typeHandler = propertyMapping.getTypeHandler();
     if (propertyMapping.getNestedQueryId() != null) {
       return getNestedQueryMappingValue(rs, metaResultObject, propertyMapping, lazyLoader, columnPrefix);
-    } else if (typeHandler != null) {
+    } else if (propertyMapping.getNestedResultMapId() != null) {
+      // the user added a column attribute to a nested result map, ignore it
+      return OMIT;
+    } else {
+      final TypeHandler<?> typeHandler = propertyMapping.getTypeHandler();
+      if (typeHandler == null) { // issue #9
+        throw new ExecutorException("Unknown type " + propertyMapping.getJavaType() 
+            + " in mapping property=" + propertyMapping.getProperty()
+            + " column=" +  propertyMapping.getColumn()
+            + ". You need to register a TypeHandler for this type for MyBatis to correctly convert the result.");
+      }
       final String column = prependPrefix(propertyMapping.getColumn(), columnPrefix);
       return typeHandler.getResult(rs, column);
     }
-    return OMIT;
   }
 
   protected boolean applyAutomaticMappings(ResultSet rs, List<String> unmappedColumnNames, MetaObject metaObject, String columnPrefix, ResultColumnCache resultColumnCache) throws SQLException {
@@ -353,7 +358,7 @@ public class FastResultSetHandler implements ResultSetHandler {
           final Object value = typeHandler.getResult(rs, columnName);
           if (value != null || isCallSettersOnNulls(propertyType)) { // issue #377, call setter on nulls
             metaObject.setValue(property, value);
-            foundValues = true;
+            foundValues = (value != null) || foundValues;
           }
         }
       }
