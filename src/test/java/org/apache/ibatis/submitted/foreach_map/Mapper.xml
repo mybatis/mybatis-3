@@ -49,4 +49,11 @@
     <select id="sel_nested_bean" resultType="org.apache.ibatis.submitted.foreach_map.NestedBeanMapEntry">
 		select * from nested_bean order by id
 	</select>
+
+    <select id="sel_key_cols" resultType="int">
+        select count(*) from key_cols where
+        <foreach item="item" index="key" collection="map"
+            open="" separator="AND" close="">${key} = #{item}</foreach>
+    </select>
+
 </mapper>

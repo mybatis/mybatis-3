@@ -70,7 +70,7 @@ public class ForEachSqlNode implements SqlNode {
         applyIndex(context, mapEntry.getKey(), uniqueNumber);
         applyItem(context, mapEntry.getValue(), uniqueNumber);
       } else {
-        applyIndex(context, uniqueNumber, i);
+        applyIndex(context, i, uniqueNumber);
         applyItem(context, o, uniqueNumber);
       }
       contents.apply(new FilteredDynamicContext(configuration, context, index, item, uniqueNumber));
@@ -84,7 +84,7 @@ public class ForEachSqlNode implements SqlNode {
 
   private void applyIndex(DynamicContext context, Object o, int i) {
     if (index != null) {
-      context.bind(index, i);
+      context.bind(index, o);
       context.bind(itemizeItem(index, i), o);
     }
   }

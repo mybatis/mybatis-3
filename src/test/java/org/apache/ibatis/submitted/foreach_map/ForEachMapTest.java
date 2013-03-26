@@ -15,16 +15,20 @@
  */
 package org.apache.ibatis.submitted.foreach_map;
 
+import java.io.Reader;
+import java.sql.Connection;
+import java.util.List;
+
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.*;
-
-import java.io.Reader;
-import java.sql.Connection;
-import java.util.List;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 public class ForEachMapTest {
 
@@ -92,6 +96,15 @@ public class ForEachMapTest {
     List<NestedBeanMapEntry> entries = sqlSession.selectList("sel_nested_bean");
     Assert.assertEquals(new NestedBeanMapEntry(12345, true, 54321, false), entries.get(0));
     Assert.assertEquals(new NestedBeanMapEntry(67890, true, 9876, false), entries.get(1));
+  }
+  
+  @Test
+  public void shouldSubstituteIndexWithKey() throws Exception {
+    MapParam mapParam = new MapParam();
+    mapParam.getMap().put("col_a", 22);
+    mapParam.getMap().put("col_b", 222);
+    int count = sqlSession.selectOne("sel_key_cols", mapParam);
+    Assert.assertEquals(1, count);
   }
 
   private SqlSession sqlSession;
