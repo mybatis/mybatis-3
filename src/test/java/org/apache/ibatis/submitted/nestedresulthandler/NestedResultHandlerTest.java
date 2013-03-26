@@ -149,5 +149,19 @@ public class NestedResultHandlerTest {
       sqlSession.close();
     }
   }
-
+  
+  @Test
+  public void testProducts() {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      List<String> simpleResults=sqlSession.selectList("getSimpleResult");
+      Assert.assertEquals(3, simpleResults.size());
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      List<Product> products = mapper.getProducts();
+      Assert.assertTrue("the first product id is 1", 1==products.get(0).getId());
+      Assert.assertEquals("ID:2", products.get(0).getReferOrder().get(1));
+    } finally {
+      sqlSession.close();
+    }
+  }  
 }

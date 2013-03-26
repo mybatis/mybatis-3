@@ -40,4 +40,26 @@
 		where p.id = i.owner
 		order by i.name
 	</select>
+  
+    <resultMap id="productResult" type="org.apache.ibatis.submitted.nestedresulthandler.Product">
+		<result property="id" column="product_id" />
+        <!-- use resultMap="referOrdersMap" instead of column="ref_id" to verify NPE in NestResultHandler-->
+		<collection property="referOrders"  resultMap="referOrdersMap" javaType="list" ofType="java.lang.String"/> 
+	</resultMap>
+  
+    <resultMap id="referOrdersMap" type="java.lang.String">
+      <result property="value" column="ref_id"/>
+    </resultMap>
+
+    <select id="getProducts" resultMap="productResult">
+      select 'ID:'||order_id ref_id ,product_id
+      from orderDetail
+      order by product_id
+    </select>
+
+    <select id="getSimpleResult" resultMap="referOrdersMap">
+      select 'ID:'||order_id ref_id from orderDetail
+    </select>
+  
 </mapper>
+

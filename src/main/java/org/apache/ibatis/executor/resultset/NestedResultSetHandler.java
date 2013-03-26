@@ -294,10 +294,16 @@ public class NestedResultSetHandler extends FastResultSetHandler {
         createRowKeyForMappedProperties(nestedResultMap, rs, cacheKey, nestedResultMap.getConstructorResultMappings(),
             prependPrefix(resultMapping.getColumnPrefix(), columnPrefix), resultColumnCache);
       } else if (resultMapping.getNestedQueryId() == null) {
-        final String column = prependPrefix(resultMapping.getColumn(), columnPrefix);
-        final TypeHandler<?> th = resultMapping.getTypeHandler();
+        final String columnName=resultMapping.getColumn();
+        final String column = prependPrefix(columnName, columnPrefix);
         List<String> mappedColumnNames = resultColumnCache.getMappedColumnNames(resultMap, columnPrefix);
         if (column != null && mappedColumnNames.contains(column.toUpperCase(Locale.ENGLISH))) { // Issue #114
+          TypeHandler<?> th = resultMapping.getTypeHandler();
+          if(th==null){
+             final Class<?> resultType=resultMap.getType();
+             //handle bean property so no prefix needed in columnName
+             th=resultColumnCache.getTypeHandler(resultType, columnName);
+          }            
           final Object value = th.getResult(rs, column);
           if (value != null) {
             cacheKey.update(column);
