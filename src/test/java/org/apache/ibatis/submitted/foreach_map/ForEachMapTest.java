@@ -103,8 +103,8 @@ public class ForEachMapTest {
     MapParam mapParam = new MapParam();
     mapParam.getMap().put("col_a", 22);
     mapParam.getMap().put("col_b", 222);
-    int count = sqlSession.selectOne("sel_key_cols", mapParam);
-    Assert.assertEquals(1, count);
+    Integer count = sqlSession.selectOne("sel_key_cols", mapParam);
+    Assert.assertEquals(Integer.valueOf(1), count);
   }
 
   private SqlSession sqlSession;
