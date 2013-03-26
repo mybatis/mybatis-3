@@ -346,8 +346,8 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 callSettersOnNulls
               </td>
               <td>
-                受け取った値が null の場合にセッターあるいは Map の put メソッドを呼び出すかどうかを指定します。
-                true を指定した場合、null がセットされる可能性があるプロパティをプリミティブ型として定義することはできません。
+                取得した値が null の場合にセッターあるいは Map の put メソッドを呼び出すかどうかを指定します。
+                この設定は Map.keySet() や null 値による初期化を利用している場合に有用です。プリミティブ型（int, boolean, 等）に null がセットされることはありません。
               </td>
               <td>
                 true | false
