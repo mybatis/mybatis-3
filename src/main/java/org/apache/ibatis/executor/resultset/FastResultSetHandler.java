@@ -326,12 +326,6 @@ public class FastResultSetHandler implements ResultSetHandler {
       return OMIT;
     } else {
       final TypeHandler<?> typeHandler = propertyMapping.getTypeHandler();
-      if (typeHandler == null) { // issue #9
-        throw new ExecutorException("Unknown type " + propertyMapping.getJavaType() 
-            + " in mapping property=" + propertyMapping.getProperty()
-            + " column=" +  propertyMapping.getColumn()
-            + ". You need to register a TypeHandler for this type for MyBatis to correctly convert the result.");
-      }
       final String column = prependPrefix(propertyMapping.getColumn(), columnPrefix);
       return typeHandler.getResult(rs, column);
     }
@@ -462,7 +456,7 @@ public class FastResultSetHandler implements ResultSetHandler {
       final Class<?> targetType = constructorMapping.getJavaType();
       final Object nestedQueryCacheObject = getNestedQueryCacheObject(nestedQuery, key);
       if (nestedQueryCacheObject != null && nestedQueryCacheObject instanceof List) {
-        value = resultExtractor.extractObjectFromList((List<Object>)nestedQueryCacheObject, targetType);
+        value = resultExtractor.extractObjectFromList((List<Object>) nestedQueryCacheObject, targetType);
       } else {
         final ResultLoader resultLoader = new ResultLoader(configuration, executor, nestedQuery, nestedQueryParameterObject, targetType, key, nestedBoundSql);
         value = resultLoader.loadResult();
@@ -471,7 +465,8 @@ public class FastResultSetHandler implements ResultSetHandler {
     return value;
   }
 
-  protected Object getNestedQueryMappingValue(ResultSet rs, MetaObject metaResultObject, ResultMapping propertyMapping, ResultLoaderMap lazyLoader, String columnPrefix) throws SQLException {
+  protected Object getNestedQueryMappingValue(ResultSet rs, MetaObject metaResultObject, ResultMapping propertyMapping, ResultLoaderMap lazyLoader, String columnPrefix)
+      throws SQLException {
     final String nestedQueryId = propertyMapping.getNestedQueryId();
     final String property = propertyMapping.getProperty();
     final MappedStatement nestedQuery = configuration.getMappedStatement(nestedQueryId);
@@ -484,7 +479,7 @@ public class FastResultSetHandler implements ResultSetHandler {
       final Class<?> targetType = propertyMapping.getJavaType();
       final Object nestedQueryCacheObject = getNestedQueryCacheObject(nestedQuery, key);
       if (nestedQueryCacheObject != null && nestedQueryCacheObject instanceof List) {
-        value = resultExtractor.extractObjectFromList((List<Object>)nestedQueryCacheObject, targetType);
+        value = resultExtractor.extractObjectFromList((List<Object>) nestedQueryCacheObject, targetType);
       } else if (executor.isCached(nestedQuery, key)) {
         executor.deferLoad(nestedQuery, metaResultObject, property, key, targetType);
       } else {

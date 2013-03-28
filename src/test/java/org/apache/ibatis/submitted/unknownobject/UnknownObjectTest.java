@@ -24,16 +24,14 @@ import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.Assert;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class UnknownObjectTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
-  @BeforeClass
-  public static void setUp() throws Exception {
+  @Test(expected=PersistenceException.class)
+  public void shouldFailBecauseThereIsAPropertyWithoutTypeHandler() throws Exception {
     // create a SqlSessionFactory
     Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/unknownobject/mybatis-config.xml");
     sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
@@ -48,18 +46,6 @@ public class UnknownObjectTest {
     runner.runScript(reader);
     reader.close();
     session.close();
-  }
-
-  @Test(expected=PersistenceException.class)
-  public void shouldGetAUser() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
-      Mapper mapper = sqlSession.getMapper(Mapper.class);
-      User user = mapper.getUser(1);
-      Assert.assertEquals("User1", user.getName());
-    } finally {
-      sqlSession.close();
-    }
   }
 
 }

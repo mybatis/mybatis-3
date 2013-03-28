@@ -117,25 +117,29 @@ public class ResultMapping {
     }
 
     public ResultMapping build() {
-      validate();
       // lock down collections
       resultMapping.flags = Collections.unmodifiableList(resultMapping.flags);
       resultMapping.composites = Collections.unmodifiableList(resultMapping.composites);
       resolveTypeHandler();
+      validate();
       return resultMapping;
     }
 
     private void validate() {
-      // Issue 4: column is mandatory on nested queries
-      if (resultMapping.nestedQueryId != null && resultMapping.column == null && resultMapping.composites.size() == 0) {
-        throw new IllegalStateException("Missing column attribute for nested select in property " + resultMapping.property);
-      }
-      // Issue 697: cannot define both nestedQueryId and nestedResultMapId
+      // Issue #697: cannot define both nestedQueryId and nestedResultMapId
       if (resultMapping.nestedQueryId != null && resultMapping.nestedResultMapId != null) {
         throw new IllegalStateException("Cannot define both nestedQueryId and nestedResultMapId in property " + resultMapping.property);
       }
+      // Issue #5: there should be no mappings without typehandler
+      if (resultMapping.nestedQueryId == null && resultMapping.nestedResultMapId == null && resultMapping.typeHandler == null) {
+        throw new IllegalStateException("No typehandler found for property " + resultMapping.property);
+      }    
+      // Issue #4: column is mandatory on nested queries
+      if (resultMapping.nestedQueryId != null && resultMapping.column == null && resultMapping.composites.size() == 0) {
+        throw new IllegalStateException("Missing column attribute for nested select in property " + resultMapping.property);
+      }
     }
-
+    
     private void resolveTypeHandler() {
       if (resultMapping.typeHandler == null) {
         if (resultMapping.javaType != null) {
