@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2012 The MyBatis Team
+ *    Copyright 2009-2013 The MyBatis Team
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -148,11 +148,11 @@ public abstract class BaseExecutor implements Executor {
 
   public void deferLoad(MappedStatement ms, MetaObject resultObject, String property, CacheKey key, Class<?> targetType) {
     if (closed) throw new ExecutorException("Executor was closed.");
-    DeferredLoad deferredLoad = new DeferredLoad(ms, resultObject, property, key, localCache, configuration, targetType);
+    DeferredLoad deferredLoad = new DeferredLoad(resultObject, property, key, localCache, configuration, targetType);
     if (deferredLoad.canLoad()) {
     	deferredLoad.load();
     } else {
-    	deferredLoads.add(new DeferredLoad(ms, resultObject, property, key, localCache, configuration, targetType));
+    	deferredLoads.add(new DeferredLoad(resultObject, property, key, localCache, configuration, targetType));
     }
   }
 
@@ -286,8 +286,7 @@ public abstract class BaseExecutor implements Executor {
     private final ObjectFactory objectFactory;
     private final ResultExtractor resultExtractor;
 
-    public DeferredLoad(MappedStatement mappedStatement,
-                        MetaObject resultObject,
+    public DeferredLoad(MetaObject resultObject,
                         String property,
                         CacheKey key,
                         PerpetualCache localCache,

@@ -86,7 +86,7 @@ public class CachingExecutor implements Executor {
     if (cache != null) {
       flushCacheIfRequired(ms);
       if (ms.isUseCache() && resultHandler == null) { 
-        ensureNoOutParams(ms, key, parameterObject, boundSql);
+        ensureNoOutParams(ms, parameterObject, boundSql);
         if (!dirty) {
           cache.getReadWriteLock().readLock().lock();
           try {
@@ -126,9 +126,9 @@ public class CachingExecutor implements Executor {
     }
   }
 
-  private void ensureNoOutParams(MappedStatement ms, CacheKey key, Object parameter, BoundSql boundSql) {
+  private void ensureNoOutParams(MappedStatement ms, Object parameter, BoundSql boundSql) {
     if (ms.getStatementType() == StatementType.CALLABLE) {
-      for (ParameterMapping parameterMapping : ms.getBoundSql(parameter).getParameterMappings()) {
+      for (ParameterMapping parameterMapping : boundSql.getParameterMappings()) {
         if (parameterMapping.getMode() != ParameterMode.IN) {
           throw new ExecutorException("Caching stored procedures with OUT params is not supported.  Please configure useCache=false in " + ms.getId() + " statement.");
         }
@@ -154,11 +154,9 @@ public class CachingExecutor implements Executor {
 
   private void flushCacheIfRequired(MappedStatement ms) {
     Cache cache = ms.getCache();
-    if (cache != null) {
-      if (ms.isFlushCacheRequired()) {
-        dirty = true; // issue #524. Disable using cached data for this session
-        tcm.clear(cache);
-      }
+    if (cache != null && ms.isFlushCacheRequired()) {
+      dirty = true; // issue #524. Disable using cached data for this session
+      tcm.clear(cache);
     }
   }
 
