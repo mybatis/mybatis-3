@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 MyBatis.org.
+ * Copyright 2012-2013 MyBatis.org.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,7 +39,7 @@ public interface LanguageDriver {
    * 
    * @param configuration The MyBatis configuration
    * @param script XNode parsed from a XML file
-   * @param parameterType input parameter type
+   * @param parameterType input parameter type got from a mapper method or specified in the parameterType xml attribute. Can be null.
    * @return
    */
   public SqlSource createSqlSource(Configuration configuration, XNode script, Class<?> parameterType);
@@ -49,7 +49,7 @@ public interface LanguageDriver {
    * 
    * @param configuration The MyBatis configuration
    * @param script The content of the annotation
-   * @param parameterType input parameter type
+   * @param parameterType input parameter type got from a mapper method or specified in the parameterType xml attribute. Can be null.
    * @return 
    */
   public SqlSource createSqlSource(Configuration configuration, String script, Class<?> parameterType);
