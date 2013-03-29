@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2012 The MyBatis Team
+ *    Copyright 2009-2013 The MyBatis Team
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -104,10 +104,6 @@ public class FastResultSetHandler implements ResultSetHandler {
           handleRefCursorOutputParameter((ResultSet) cs.getObject(i + 1), parameterMapping, metaParam);
         } else {
           final TypeHandler<?> typeHandler = parameterMapping.getTypeHandler();
-          if (typeHandler == null) {
-            throw new ExecutorException("Type handler was null on parameter mapping for property '" + parameterMapping.getProperty() + "'.  " +
-                "It was either not specified and/or could not be found for the javaType / jdbcType combination specified.");
-          }
           metaParam.setValue(parameterMapping.getProperty(), typeHandler.getResult(cs, i + 1));
         }
       }
@@ -115,17 +111,16 @@ public class FastResultSetHandler implements ResultSetHandler {
   }
 
   protected void handleRefCursorOutputParameter(ResultSet rs, ParameterMapping parameterMapping, MetaObject metaParam) throws SQLException {
-    final String resultMapId = parameterMapping.getResultMapId();
-    if (resultMapId != null) {
+    try {
+      final String resultMapId = parameterMapping.getResultMapId();
       final ResultMap resultMap = configuration.getResultMap(resultMapId);
       final DefaultResultHandler resultHandler = new DefaultResultHandler(objectFactory);
       final ResultColumnCache resultColumnCache = new ResultColumnCache(rs.getMetaData(), configuration);
       handleRowValues(rs, resultMap, resultHandler, new RowBounds(), resultColumnCache);
       metaParam.setValue(parameterMapping.getProperty(), resultHandler.getResultList());
-    } else {
-      throw new ExecutorException("Parameter requires ResultMap for output types of java.sql.ResultSet");
+    } finally {
+      closeResultSet(rs); // issue #228 (close resultsets)
     }
-    rs.close();
   }
 
   //
@@ -403,7 +398,6 @@ public class FastResultSetHandler implements ResultSetHandler {
       final Class<?> parameterType = constructorMapping.getJavaType();
       final String column = constructorMapping.getColumn();
       final Object value;
-      // check for nested query
       if (constructorMapping.getNestedQueryId() != null) {
         value = getNestedQueryConstructorValue(rs, constructorMapping, columnPrefix);
       } else if (constructorMapping.getNestedResultMapId() != null) {
@@ -411,12 +405,7 @@ public class FastResultSetHandler implements ResultSetHandler {
         final ResultLoaderMap lazyLoader = instantiateResultLoaderMap();
         value = createResultObject(rs, resultMap, lazyLoader, columnPrefix, resultColumnCache);
       } else {
-        // get simple result
         final TypeHandler<?> typeHandler = constructorMapping.getTypeHandler();
-        if (typeHandler == null) { // avoid NPE issue #475
-          throw new ExecutorException("Type handler was null on constructor parameter for column '" + column + "'.  " +
-              "It was either not specified and/or could not be found for the javaType / jdbcType combination specified.");
-        }
         value = typeHandler.getResult(rs, prependPrefix(column, columnPrefix));
       }
       constructorArgTypes.add(parameterType);

@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2012 The MyBatis Team
+ *    Copyright 2009-2013 The MyBatis Team
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,6 +15,9 @@
  */
 package org.apache.ibatis.mapping;
 
+import java.sql.ResultSet;
+
+import org.apache.ibatis.executor.ExecutorException;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
@@ -96,19 +99,33 @@ public class ParameterMapping {
 
     public ParameterMapping build() {
       resolveTypeHandler();
+      validate();
       return parameterMapping;
     }
 
-    private void resolveTypeHandler() {
-      if (parameterMapping.typeHandler == null) {
-        if (parameterMapping.javaType != null) {
-          Configuration configuration = parameterMapping.configuration;
-          TypeHandlerRegistry typeHandlerRegistry = configuration.getTypeHandlerRegistry();
-          parameterMapping.typeHandler = typeHandlerRegistry.getTypeHandler(parameterMapping.javaType, parameterMapping.jdbcType);
+    private void validate() {
+      if (ResultSet.class.equals(parameterMapping.javaType)) {
+        if (parameterMapping.resultMapId == null) { 
+          throw new IllegalStateException("Missing resultmap in property '"  
+              + parameterMapping.property + "'.  " 
+              + "Parameters of type java.sql.ResultSet require a resultmap.");
+        }            
+      } else {
+        if (parameterMapping.typeHandler == null) { 
+          throw new IllegalStateException("Type handler was null on parameter mapping for property '"  
+              + parameterMapping.property + "'.  " 
+              + "It was either not specified and/or could not be found for the javaType / jdbcType combination specified.");
         }
       }
     }
 
+    private void resolveTypeHandler() {
+      if (parameterMapping.typeHandler == null && parameterMapping.javaType != null) {
+        Configuration configuration = parameterMapping.configuration;
+        TypeHandlerRegistry typeHandlerRegistry = configuration.getTypeHandlerRegistry();
+        parameterMapping.typeHandler = typeHandlerRegistry.getTypeHandler(parameterMapping.javaType, parameterMapping.jdbcType);
+      }
+    }
 
   }
 

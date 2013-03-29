@@ -73,9 +73,6 @@ public class DefaultParameterHandler implements ParameterHandler {
             value = metaObject == null ? null : metaObject.getValue(propertyName);
           }
           TypeHandler typeHandler = parameterMapping.getTypeHandler();
-          if (typeHandler == null) {
-            throw new ExecutorException("There was no TypeHandler found for parameter " + propertyName + " of statement " + mappedStatement.getId());
-          }
           JdbcType jdbcType = parameterMapping.getJdbcType();
           if (value == null && jdbcType == null) jdbcType = configuration.getJdbcTypeForNull();
           typeHandler.setParameter(ps, i + 1, value, jdbcType);

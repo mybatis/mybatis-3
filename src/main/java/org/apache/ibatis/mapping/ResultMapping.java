@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2012 The MyBatis Team
+ *    Copyright 2009-2013 The MyBatis Team
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -141,12 +141,10 @@ public class ResultMapping {
     }
     
     private void resolveTypeHandler() {
-      if (resultMapping.typeHandler == null) {
-        if (resultMapping.javaType != null) {
-          Configuration configuration = resultMapping.configuration;
-          TypeHandlerRegistry typeHandlerRegistry = configuration.getTypeHandlerRegistry();
-          resultMapping.typeHandler = typeHandlerRegistry.getTypeHandler(resultMapping.javaType, resultMapping.jdbcType);
-        }
+      if (resultMapping.typeHandler == null && resultMapping.javaType != null) {
+        Configuration configuration = resultMapping.configuration;
+        TypeHandlerRegistry typeHandlerRegistry = configuration.getTypeHandlerRegistry();
+        resultMapping.typeHandler = typeHandlerRegistry.getTypeHandler(resultMapping.javaType, resultMapping.jdbcType);
       }
     }
 
