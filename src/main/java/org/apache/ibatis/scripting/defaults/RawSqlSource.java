@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 MyBatis.org.
+ * Copyright 2012-2013 MyBatis.org.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,8 +33,7 @@ public class RawSqlSource implements SqlSource {
   }
 
   public BoundSql getBoundSql(Object parameterObject) {
-    BoundSql boundSql = sqlSource.getBoundSql(parameterObject);
-    return boundSql;
+    return sqlSource.getBoundSql(parameterObject);
   }
 
 }

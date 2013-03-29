@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 MyBatis.org.
+ * Copyright 2012-2013 MyBatis.org.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ public class RawLanguageDriver implements LanguageDriver {
   }
 
   public SqlSource createSqlSource(Configuration configuration, XNode script, Class<?> parameterType) {
-    return new RawSqlSource(configuration, script.getStringBody(""), parameterType);
+    return new RawSqlSource(configuration, script.getStringBody(), parameterType);
   }
 
   public SqlSource createSqlSource(Configuration configuration, String script, Class<?> parameterType) {
