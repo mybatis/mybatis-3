@@ -16,11 +16,14 @@
 package org.apache.ibatis.binding;
 
 import org.apache.ibatis.builder.annotation.MapperAnnotationBuilder;
+import org.apache.ibatis.io.ResolverUtil;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSession;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class MapperRegistry {
 
@@ -42,7 +45,7 @@ public class MapperRegistry {
       throw new BindingException("Error getting mapper instance. Cause: " + e, e);
     }
   }
-
+  
   public <T> boolean hasMapper(Class<T> type) {
     return knownMappers.containsKey(type);
   }
@@ -69,4 +72,30 @@ public class MapperRegistry {
     }
   }
 
+  /**
+   * @since 3.2.2
+   */
+  public Collection<Class<?>> getMappers() {
+    return knownMappers.keySet();
+  }
+
+  /**
+   * @since 3.2.2
+   */
+  public void addMappers(String packageName, Class<?> superType) {
+    ResolverUtil<Class<?>> resolverUtil = new ResolverUtil<Class<?>>();
+    resolverUtil.find(new ResolverUtil.IsA(superType), packageName);
+    Set<Class<? extends Class<?>>> mapperSet = resolverUtil.getClasses();
+    for (Class<?> mapperClass : mapperSet) {
+      addMapper(mapperClass);
+    }
+  }
+
+  /**
+   * @since 3.2.2
+   */
+  public void addMappers(String packageName) {
+    addMappers(packageName, Object.class);
+  }
+  
 }

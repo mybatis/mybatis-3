@@ -20,6 +20,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -53,7 +54,6 @@ import org.apache.ibatis.executor.resultset.NestedResultSetHandler;
 import org.apache.ibatis.executor.resultset.ResultSetHandler;
 import org.apache.ibatis.executor.statement.RoutingStatementHandler;
 import org.apache.ibatis.executor.statement.StatementHandler;
-import org.apache.ibatis.io.ResolverUtil;
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
 import org.apache.ibatis.logging.commons.JakartaCommonsLoggingImpl;
@@ -381,6 +381,13 @@ public class Configuration {
     return typeAliasRegistry;
   }
 
+  /**
+   * @since 3.2.2
+   */
+  public MapperRegistry getMapperRegistry() {
+    return mapperRegistry;
+  }
+
   public ObjectFactory getObjectFactory() {
     return objectFactory;
   }
@@ -395,6 +402,13 @@ public class Configuration {
 
   public void setObjectWrapperFactory(ObjectWrapperFactory objectWrapperFactory) {
     this.objectWrapperFactory = objectWrapperFactory;
+  }
+  
+  /**
+   * @since 3.2.2
+   */
+  public List<Interceptor> getInterceptors() {
+    return interceptorChain.getInterceptors();
   }
 
   public LanguageDriverRegistry getLanguageRegistry() {
@@ -610,16 +624,11 @@ public class Configuration {
   }
 
   public void addMappers(String packageName, Class<?> superType) {
-    ResolverUtil<Class<?>> resolverUtil = new ResolverUtil<Class<?>>();
-    resolverUtil.find(new ResolverUtil.IsA(superType), packageName);
-    Set<Class<? extends Class<?>>> mapperSet = resolverUtil.getClasses();
-    for (Class<?> mapperClass : mapperSet) {
-      addMapper(mapperClass);
-    }
+    mapperRegistry.addMappers(packageName, superType);
   }
 
   public void addMappers(String packageName) {
-    addMappers(packageName, Object.class);
+    mapperRegistry.addMappers(packageName);
   }
 
   public <T> void addMapper(Class<T> type) {

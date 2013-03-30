@@ -32,5 +32,9 @@ public class InterceptorChain {
   public void addInterceptor(Interceptor interceptor) {
     interceptors.add(interceptor);
   }
+  
+  public List<Interceptor> getInterceptors() {
+    return interceptors;
+  }
 
 }

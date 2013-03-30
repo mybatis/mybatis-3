@@ -33,7 +33,7 @@ import org.apache.ibatis.io.Resources;
 
 public class TypeAliasRegistry {
 
-  private final HashMap<String, Class<?>> TYPE_ALIASES = new HashMap<String, Class<?>>();
+  private final Map<String, Class<?>> TYPE_ALIASES = new HashMap<String, Class<?>>();
 
   public TypeAliasRegistry() {
     registerAlias("string", String.class);
@@ -155,6 +155,13 @@ public class TypeAliasRegistry {
     } catch (ClassNotFoundException e) {
       throw new TypeException("Error registering type alias "+alias+" for "+value+". Cause: " + e, e);
     }
+  }
+  
+  /**
+   * @since 3.2.2
+   */
+  public Map<String, Class<?>> getTypeAliases() {
+    return TYPE_ALIASES;
   }
 
 }
