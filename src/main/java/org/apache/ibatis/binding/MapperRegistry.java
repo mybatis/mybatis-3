@@ -21,6 +21,7 @@ import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSession;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -76,7 +77,7 @@ public class MapperRegistry {
    * @since 3.2.2
    */
   public Collection<Class<?>> getMappers() {
-    return knownMappers.keySet();
+    return Collections.unmodifiableCollection(knownMappers.keySet());
   }
 
   /**

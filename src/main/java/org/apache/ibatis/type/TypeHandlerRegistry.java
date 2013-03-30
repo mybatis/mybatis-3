@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2011 The MyBatis Team
+ *    Copyright 2009-2013 The MyBatis Team
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.EnumMap;
 import java.util.HashMap;
@@ -351,7 +352,7 @@ public final class TypeHandlerRegistry {
    * @since 3.2.2
    */
   public Collection<TypeHandler<?>> getTypeHandlers() {
-    return ALL_TYPE_HANDLERS_MAP.values();
+    return Collections.unmodifiableCollection(ALL_TYPE_HANDLERS_MAP.values());
   }
   
 }
