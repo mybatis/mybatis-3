@@ -32,7 +32,7 @@ public interface LanguageDriver {
    * @param boundSql The resulting SQL once the dynamic language has been executed.
    * @return
    */
-  public ParameterHandler createParameterHandler(MappedStatement mappedStatement, Object parameterObject, BoundSql boundSql);
+  ParameterHandler createParameterHandler(MappedStatement mappedStatement, Object parameterObject, BoundSql boundSql);
 
   /**
    * Creates an {@link SqlSource} that will hold the statement read from a mapper xml file
@@ -42,7 +42,7 @@ public interface LanguageDriver {
    * @param parameterType input parameter type got from a mapper method or specified in the parameterType xml attribute. Can be null.
    * @return
    */
-  public SqlSource createSqlSource(Configuration configuration, XNode script, Class<?> parameterType);
+  SqlSource createSqlSource(Configuration configuration, XNode script, Class<?> parameterType);
 
   /**
    * Creates an {@link SqlSource} that will hold the statement read from an annotation
@@ -52,6 +52,6 @@ public interface LanguageDriver {
    * @param parameterType input parameter type got from a mapper method or specified in the parameterType xml attribute. Can be null.
    * @return 
    */
-  public SqlSource createSqlSource(Configuration configuration, String script, Class<?> parameterType);
+  SqlSource createSqlSource(Configuration configuration, String script, Class<?> parameterType);
 
 }
