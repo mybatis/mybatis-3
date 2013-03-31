@@ -211,9 +211,9 @@ AND title like ‘someTitle’]]></source>
 }]]></source>
     <p>LanguageDriver インターフェイスを実装することで、カスタムの言語ドライバーを作成することもできます。</p>
   <source><![CDATA[public interface LanguageDriver {
-  public ParameterHandler createParameterHandler(MappedStatement mappedStatement, Object parameterObject, BoundSql boundSql);
-  public SqlSource createSqlSource(Configuration configuration, XNode script, Class<?> parameterType);
-  public SqlSource createSqlSource(Configuration configuration, String script, Class<?> parameterType);
+  ParameterHandler createParameterHandler(MappedStatement mappedStatement, Object parameterObject, BoundSql boundSql);
+  SqlSource createSqlSource(Configuration configuration, XNode script, Class<?> parameterType);
+  SqlSource createSqlSource(Configuration configuration, String script, Class<?> parameterType);
 }]]></source>    
 	</subsection>
 	</section>

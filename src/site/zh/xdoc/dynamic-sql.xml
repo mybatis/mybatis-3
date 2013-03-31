@@ -290,9 +290,9 @@ Java API,所以你可以得到你已经创建的最有效的映射。
 }]]></source>
     <p>You can also implement your own language driver by implementing the following interface:</p>
   <source><![CDATA[public interface LanguageDriver {
-  public ParameterHandler createParameterHandler(MappedStatement mappedStatement, Object parameterObject, BoundSql boundSql);
-  public SqlSource createSqlSource(Configuration configuration, XNode script, Class<?> parameterType);
-  public SqlSource createSqlSource(Configuration configuration, String script, Class<?> parameterType);
+  ParameterHandler createParameterHandler(MappedStatement mappedStatement, Object parameterObject, BoundSql boundSql);
+  SqlSource createSqlSource(Configuration configuration, XNode script, Class<?> parameterType);
+  SqlSource createSqlSource(Configuration configuration, String script, Class<?> parameterType);
 }]]></source>    
 	</subsection>
   </section>
