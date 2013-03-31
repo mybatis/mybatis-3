@@ -20,7 +20,6 @@ import java.sql.SQLException;
 import java.util.List;
 
 import org.apache.ibatis.executor.ErrorContext;
-import org.apache.ibatis.executor.ExecutorException;
 import org.apache.ibatis.executor.parameter.ParameterHandler;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
