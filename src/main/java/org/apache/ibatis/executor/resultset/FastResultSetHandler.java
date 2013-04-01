@@ -73,7 +73,7 @@ public class FastResultSetHandler implements ResultSetHandler {
   protected final ObjectFactory objectFactory;
   protected final ProxyFactory proxyFactory;
   protected final ResultExtractor resultExtractor;
-  protected final String OMIT = "OMIT";
+  protected final Object OMIT = new Object();
 
   public FastResultSetHandler(Executor executor, MappedStatement mappedStatement, ParameterHandler parameterHandler, ResultHandler resultHandler, BoundSql boundSql, RowBounds rowBounds) {
     this.executor = executor;
@@ -557,11 +557,7 @@ public class FastResultSetHandler implements ResultSetHandler {
   protected Object getDiscriminatorValue(ResultSet rs, Discriminator discriminator, String columnPrefix) throws SQLException {
     final ResultMapping resultMapping = discriminator.getResultMapping();
     final TypeHandler<?> typeHandler = resultMapping.getTypeHandler();
-    if (typeHandler != null) {
-      return typeHandler.getResult(rs, prependPrefix(resultMapping.getColumn(), columnPrefix));
-    } else {
-      throw new ExecutorException("No type handler could be found to map the property '" + resultMapping.getProperty() + "' to the column '" + resultMapping.getColumn() + "'.  One or both of the types, or the combination of types is not supported.");
-    }
+    return typeHandler.getResult(rs, prependPrefix(resultMapping.getColumn(), columnPrefix));
   }
 
   protected static Set<String> prependPrefixes(Set<String> columnNames, String prefix) {
