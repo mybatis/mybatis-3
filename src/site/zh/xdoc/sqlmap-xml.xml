@@ -858,7 +858,7 @@ MyBatis 提供处理这个问题的答案。
     <collection property="comments" ofType="Comment">
       <id property="id" column="comment_id"/>
     </collection>
-    <collection property="tags" ofType=" Tag" >
+    <collection property="tags" ofType="Tag" >
       <id property="id" column="tag_id"/>
     </collection>
     <discriminator javaType="int" column="draft">
