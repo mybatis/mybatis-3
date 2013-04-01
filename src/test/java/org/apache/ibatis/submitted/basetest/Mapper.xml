@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-       Copyright 2009-2012 The MyBatis Team
+       Copyright 2009-2013 The MyBatis Team
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -21,7 +21,11 @@
 <mapper namespace="org.apache.ibatis.submitted.basetest.Mapper">
 
 	<select id="getUser" resultType="org.apache.ibatis.submitted.basetest.User">
-		select * from users
+		select * from users where id = #{id}
 	</select>
+
+	<insert id="insertUser">
+		insert into users values(#{id}, #{name})
+	</insert>
 
 </mapper>

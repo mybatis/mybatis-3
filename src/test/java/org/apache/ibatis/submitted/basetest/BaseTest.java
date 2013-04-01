@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2012 The MyBatis Team
+ *    Copyright 2009-2013 The MyBatis Team
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ public class BaseTest {
 
   @BeforeClass
   public static void setUp() throws Exception {
-    // create a SqlSessionFactory
+    // create an SqlSessionFactory
     Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/basetest/mybatis-config.xml");
     sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
     reader.close();
@@ -56,6 +56,20 @@ public class BaseTest {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = mapper.getUser(1);
       Assert.assertEquals("User1", user.getName());
+    } finally {
+      sqlSession.close();
+    }
+  }
+
+  @Test
+  public void shouldInsertAUser() {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      User user = new User();
+      user.setId(2);
+      user.setName("User2");
+      mapper.insertUser(user);
     } finally {
       sqlSession.close();
     }
