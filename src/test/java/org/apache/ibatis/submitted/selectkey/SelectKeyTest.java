@@ -21,7 +21,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -102,6 +102,22 @@ public class SelectKeyTest {
       int rows = sqlSession.insert("org.apache.ibatis.submitted.selectkey.Table2.insert", parms);
       assertEquals(1, rows);
       assertEquals(22, parms.get("id"));
+
+    } finally {
+      sqlSession.close();
+    }
+  }
+
+  @Test
+  public void testInsertTable3() {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+
+    try {
+      Map<String, String> parms = new HashMap<String, String>();
+      parms.put("name", "Fred");
+      int rows = sqlSession.insert("org.apache.ibatis.submitted.selectkey.Table2.insertNoValuesInSelectKey", parms);
+      assertEquals(1, rows);
+      assertNull(parms.get("id"));
 
     } finally {
       sqlSession.close();

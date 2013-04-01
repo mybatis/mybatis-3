@@ -24,4 +24,12 @@
       CALL IDENTITY()
     </selectKey>
   </insert>
+  
+  <insert id="insertNoValuesInSelectKey" parameterType="map">
+    insert into table2 (name) values (#{name})
+    <selectKey resultType="java.lang.Integer" keyProperty="id">
+      select * from table2 where name = 'xxx'
+    </selectKey>
+  </insert>
+  
 </mapper>

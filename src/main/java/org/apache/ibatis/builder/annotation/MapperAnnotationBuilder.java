@@ -541,7 +541,7 @@ public class MapperAnnotationBuilder {
     SqlCommandType sqlCommandType = SqlCommandType.SELECT;
 
     assistant.addMappedStatement(id, sqlSource, statementType, sqlCommandType, fetchSize, timeout, parameterMap, parameterTypeClass, resultMap, resultTypeClass, resultSetTypeEnum,
-        flushCache, useCache, false, // TODO issue #577
+        flushCache, useCache, false,
         keyGenerator, keyProperty, null, null, languageDriver);
 
     id = assistant.applyCurrentNamespace(id, false);

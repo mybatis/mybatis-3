@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2012 The MyBatis Team
+ *    Copyright 2009-2013 The MyBatis Team
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -27,6 +27,7 @@ import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.RowBounds;
 
 public class SelectKeyGenerator implements KeyGenerator {
+  
   public static final String SELECT_KEY_SUFFIX = "!selectKey";
   private boolean executeBefore;
   private MappedStatement keyStatement;
@@ -50,27 +51,24 @@ public class SelectKeyGenerator implements KeyGenerator {
 
   private void processGeneratedKeys(Executor executor, MappedStatement ms, Object parameter) {
     try {
-      final Configuration configuration = ms.getConfiguration();
-      if (parameter != null) {
-        String keyStatementName = ms.getId() + SELECT_KEY_SUFFIX;
-        if (configuration.hasStatement(keyStatementName)) {
-
-          if (keyStatement != null && keyStatement.getKeyProperties() != null) {
-            String keyProperty = keyStatement.getKeyProperties()[0]; //just one key property is supported
-            final MetaObject metaParam = configuration.newMetaObject(parameter);
-            if (keyProperty != null && metaParam.hasSetter(keyProperty)) {
-              // Do not close keyExecutor.
-              // The transaction will be closed by parent executor.
-              Executor keyExecutor = configuration.newExecutor(executor.getTransaction(), ExecutorType.SIMPLE);
-              List<Object> values = keyExecutor.query(keyStatement, parameter, RowBounds.DEFAULT, Executor.NO_RESULT_HANDLER);
-              if (values.size() > 1) {
-                throw new ExecutorException("Select statement for SelectKeyGenerator returned more than one value.");
-              }
-              metaParam.setValue(keyProperty, values.get(0));
-            }
+      if (parameter != null && keyStatement != null && keyStatement.getKeyProperties() != null) {
+        String keyProperty = keyStatement.getKeyProperties()[0]; // just one key property is supported
+        final Configuration configuration = ms.getConfiguration();
+        final MetaObject metaParam = configuration.newMetaObject(parameter);
+        if (keyProperty != null && metaParam.hasSetter(keyProperty)) {
+          // Do not close keyExecutor.
+          // The transaction will be closed by parent executor.
+          Executor keyExecutor = configuration.newExecutor(executor.getTransaction(), ExecutorType.SIMPLE);
+          List<Object> values = keyExecutor.query(keyStatement, parameter, RowBounds.DEFAULT, Executor.NO_RESULT_HANDLER);
+          if (values.size() == 1) {
+            metaParam.setValue(keyProperty, values.get(0));
+          } else if (values.size() > 1) {
+            throw new ExecutorException("Select statement for SelectKeyGenerator returned more than one value.");
           }
         }
       }
+    } catch (ExecutorException e) {
+      throw e;
     } catch (Exception e) {
       throw new ExecutorException("Error selecting key or setting result to parameter object. Cause: " + e, e);
     }
