@@ -855,7 +855,7 @@ MyBatis 提供处理这个问题的答案。
     <id property="id" column="post_id"/>
     <result property="subject" column="post_subject"/>
     <association property="author" javaType="Author"/>
-    <collection property="comments" ofType=" Comment">
+    <collection property="comments" ofType="Comment">
       <id property="id" column="comment_id"/>
     </collection>
     <collection property="tags" ofType=" Tag" >
