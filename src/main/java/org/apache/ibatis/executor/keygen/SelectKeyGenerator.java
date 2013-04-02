@@ -60,10 +60,12 @@ public class SelectKeyGenerator implements KeyGenerator {
           // The transaction will be closed by parent executor.
           Executor keyExecutor = configuration.newExecutor(executor.getTransaction(), ExecutorType.SIMPLE);
           List<Object> values = keyExecutor.query(keyStatement, parameter, RowBounds.DEFAULT, Executor.NO_RESULT_HANDLER);
-          if (values.size() == 1) {
-            metaParam.setValue(keyProperty, values.get(0));
+          if (values.size() == 0) {
+            throw new ExecutorException("SelectKey returned no data.");            
           } else if (values.size() > 1) {
-            throw new ExecutorException("Select statement for SelectKeyGenerator returned more than one value.");
+            throw new ExecutorException("SelectKey returned more than one value.");
+          } else {
+            metaParam.setValue(keyProperty, values.get(0));
           }
         }
       }

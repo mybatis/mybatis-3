@@ -31,5 +31,12 @@
       select * from table2 where name = 'xxx'
     </selectKey>
   </insert>
+
+  <insert id="insertTooManyValuesInSelectKey" parameterType="map">
+    insert into table2 (name) values (#{name})
+    <selectKey resultType="java.lang.Integer" keyProperty="id">
+      select id from table2
+    </selectKey>
+  </insert>
   
 </mapper>

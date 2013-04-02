@@ -15,6 +15,7 @@
  */
 package org.apache.ibatis.submitted.selectkey;
 
+import org.apache.ibatis.exceptions.PersistenceException;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSession;
@@ -108,22 +109,33 @@ public class SelectKeyTest {
     }
   }
 
-  @Test
-  public void testInsertTable3() {
+  @Test(expected=PersistenceException.class)
+  public void testSeleckKeyReturnsNoData() {
     SqlSession sqlSession = sqlSessionFactory.openSession();
-
     try {
       Map<String, String> parms = new HashMap<String, String>();
       parms.put("name", "Fred");
       int rows = sqlSession.insert("org.apache.ibatis.submitted.selectkey.Table2.insertNoValuesInSelectKey", parms);
       assertEquals(1, rows);
       assertNull(parms.get("id"));
-
     } finally {
       sqlSession.close();
     }
   }
-  
+
+  @Test(expected=PersistenceException.class)
+  public void testSeleckKeyReturnsTooManyData() {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      Map<String, String> parms = new HashMap<String, String>();
+      parms.put("name", "Fred");
+      sqlSession.insert("org.apache.ibatis.submitted.selectkey.Table2.insertTooManyValuesInSelectKey", parms);
+      sqlSession.insert("org.apache.ibatis.submitted.selectkey.Table2.insertTooManyValuesInSelectKey", parms);
+    } finally {
+      sqlSession.close();
+    }
+  }
+
   @Test
   public void testAnnotatedInsertTable2() {
       SqlSession sqlSession = sqlSessionFactory.openSession();
