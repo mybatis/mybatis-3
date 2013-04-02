@@ -79,7 +79,7 @@ public class ManagedTransaction implements Transaction {
 
   protected void openConnection() throws SQLException {
     if (log.isDebugEnabled()) {
-      log.debug("Openning JDBC Connection");
+      log.debug("Opening JDBC Connection");
     }
     this.connection = this.dataSource.getConnection();
     if (this.level != null) {

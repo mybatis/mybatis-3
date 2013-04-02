@@ -126,7 +126,7 @@ public class JdbcTransaction implements Transaction {
 
   protected void openConnection() throws SQLException {
     if (log.isDebugEnabled()) {
-      log.debug("Openning JDBC Connection");
+      log.debug("Opening JDBC Connection");
     }
     connection = dataSource.getConnection();
     if (level != null) {
