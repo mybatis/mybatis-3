@@ -131,7 +131,7 @@
 <a class="jxr_linenumber" name="121" href="#121">121</a> 
 <a class="jxr_linenumber" name="122" href="#122">122</a>     <strong class="jxr_keyword">private</strong> Map&lt;String, String&gt; parseParameterMapping(String content) {
 <a class="jxr_linenumber" name="123" href="#123">123</a>       <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="124" href="#124">124</a>         <strong class="jxr_keyword">return</strong> ParameterExpressionParser.parse(content);
+<a class="jxr_linenumber" name="124" href="#124">124</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/builder/ParameterExpression.html">ParameterExpression</a>(content);
 <a class="jxr_linenumber" name="125" href="#125">125</a>       } <strong class="jxr_keyword">catch</strong> (BuilderException ex) {
 <a class="jxr_linenumber" name="126" href="#126">126</a>         <strong class="jxr_keyword">throw</strong> ex;
 <a class="jxr_linenumber" name="127" href="#127">127</a>       } <strong class="jxr_keyword">catch</strong> (Exception ex) {

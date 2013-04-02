@@ -227,7 +227,7 @@
 <a class="jxr_linenumber" name="217" href="#217">217</a>         String resultMap = parameterNode.getStringAttribute(<span class="jxr_string">"resultMap"</span>);
 <a class="jxr_linenumber" name="218" href="#218">218</a>         String mode = parameterNode.getStringAttribute(<span class="jxr_string">"mode"</span>);
 <a class="jxr_linenumber" name="219" href="#219">219</a>         String typeHandler = parameterNode.getStringAttribute(<span class="jxr_string">"typeHandler"</span>);
-<a class="jxr_linenumber" name="220" href="#220">220</a>         Integer numericScale = parameterNode.getIntAttribute(<span class="jxr_string">"numericScale"</span>, <strong class="jxr_keyword">null</strong>);
+<a class="jxr_linenumber" name="220" href="#220">220</a>         Integer numericScale = parameterNode.getIntAttribute(<span class="jxr_string">"numericScale"</span>);
 <a class="jxr_linenumber" name="221" href="#221">221</a>         <a href="../../../../../org/apache/ibatis/mapping/ParameterMode.html">ParameterMode</a> modeEnum = resolveParameterMode(mode);
 <a class="jxr_linenumber" name="222" href="#222">222</a>         Class&lt;?&gt; javaTypeClass = resolveClass(javaType);
 <a class="jxr_linenumber" name="223" href="#223">223</a>         <a href="../../../../../org/apache/ibatis/type/JdbcType.html">JdbcType</a> jdbcTypeEnum = resolveJdbcType(jdbcType);
@@ -263,7 +263,7 @@
 <a class="jxr_linenumber" name="253" href="#253">253</a>             resultMapNode.getStringAttribute(<span class="jxr_string">"resultType"</span>,
 <a class="jxr_linenumber" name="254" href="#254">254</a>                 resultMapNode.getStringAttribute(<span class="jxr_string">"javaType"</span>))));
 <a class="jxr_linenumber" name="255" href="#255">255</a>     String extend = resultMapNode.getStringAttribute(<span class="jxr_string">"extends"</span>);
-<a class="jxr_linenumber" name="256" href="#256">256</a>     Boolean autoMapping = resultMapNode.getBooleanAttribute(<span class="jxr_string">"autoMapping"</span>, <strong class="jxr_keyword">null</strong>);
+<a class="jxr_linenumber" name="256" href="#256">256</a>     Boolean autoMapping = resultMapNode.getBooleanAttribute(<span class="jxr_string">"autoMapping"</span>);
 <a class="jxr_linenumber" name="257" href="#257">257</a>     Class&lt;?&gt; typeClass = resolveClass(type);
 <a class="jxr_linenumber" name="258" href="#258">258</a>     <a href="../../../../../org/apache/ibatis/mapping/Discriminator.html">Discriminator</a> discriminator = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="259" href="#259">259</a>     List&lt;ResultMapping&gt; resultMappings = <strong class="jxr_keyword">new</strong> ArrayList&lt;ResultMapping&gt;();

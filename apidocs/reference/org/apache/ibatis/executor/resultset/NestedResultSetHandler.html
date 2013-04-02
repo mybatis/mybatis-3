@@ -505,7 +505,7 @@ Summary:
           protected
           
           final
-          String</nobr></td>
+          Object</nobr></td>
           <td class="jd-linkcol"><a href="../../../../../org/apache/ibatis/executor/resultset/FastResultSetHandler.html#OMIT">OMIT</a></td>
           <td class="jd-descrcol" width="100%"></td>
       </tr>
@@ -717,6 +717,22 @@ Summary:
 
 	 
     <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            void</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../org/apache/ibatis/executor/resultset/NestedResultSetHandler.html#handleResultSet(java.sql.ResultSet, org.apache.ibatis.mapping.ResultMap, java.util.List<java.lang.Object>, org.apache.ibatis.executor.resultset.FastResultSetHandler.ResultColumnCache)">handleResultSet</a></span>(ResultSet rs, <a href="../../../../../org/apache/ibatis/mapping/ResultMap.html">ResultMap</a> resultMap, List&lt;Object&gt; multipleResults, <a href="../../../../../org/apache/ibatis/executor/resultset/FastResultSetHandler.ResultColumnCache.html">FastResultSetHandler.ResultColumnCache</a> resultColumnCache)</nobr>
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
         <td class="jd-typecol"><nobr>
             
             
@@ -1139,6 +1155,22 @@ From class
             
             
             
+            boolean</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../org/apache/ibatis/executor/resultset/FastResultSetHandler.html#isCallSettersOnNulls(java.lang.Class<?>)">isCallSettersOnNulls</a></span>(Class&lt;?&gt; propertyType)</nobr>
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
             Object</nobr>
         </td>
         <td class="jd-linkcol" width="100%"><nobr>
@@ -1148,7 +1180,7 @@ From class
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol"><nobr>
             
             
@@ -1164,7 +1196,7 @@ From class
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol"><nobr>
             
             
@@ -1180,7 +1212,7 @@ From class
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol"><nobr>
             
             
@@ -1196,7 +1228,7 @@ From class
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol"><nobr>
             
             
@@ -1212,7 +1244,7 @@ From class
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol"><nobr>
             
             
@@ -1228,7 +1260,7 @@ From class
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol"><nobr>
             
             
@@ -1244,7 +1276,7 @@ From class
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol"><nobr>
             
             
@@ -1260,7 +1292,7 @@ From class
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol"><nobr>
             
             
@@ -1276,7 +1308,7 @@ From class
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol"><nobr>
             
             
@@ -1686,6 +1718,46 @@ From interface
       </span>
       <span class="sympad">getRowValue</span>
       <span class="normal">(ResultSet rs, <a href="../../../../../org/apache/ibatis/mapping/ResultMap.html">ResultMap</a> resultMap, <a href="../../../../../org/apache/ibatis/cache/CacheKey.html">CacheKey</a> combinedKey, <a href="../../../../../org/apache/ibatis/cache/CacheKey.html">CacheKey</a> absoluteKey, String columnPrefix, <a href="../../../../../org/apache/ibatis/executor/resultset/FastResultSetHandler.ResultColumnCache.html">FastResultSetHandler.ResultColumnCache</a> resultColumnCache, Object partialObject)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Throws</h5>
+      <table class="jd-tagtable">  
+        <tr>
+            <th>SQLException</td>
+            <td></td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<A NAME="handleResultSet(java.sql.ResultSet, org.apache.ibatis.mapping.ResultMap, java.util.List<java.lang.Object>, org.apache.ibatis.executor.resultset.FastResultSetHandler.ResultColumnCache)"></A>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        protected 
+         
+         
+         
+         
+        void
+      </span>
+      <span class="sympad">handleResultSet</span>
+      <span class="normal">(ResultSet rs, <a href="../../../../../org/apache/ibatis/mapping/ResultMap.html">ResultMap</a> resultMap, List&lt;Object&gt; multipleResults, <a href="../../../../../org/apache/ibatis/executor/resultset/FastResultSetHandler.ResultColumnCache.html">FastResultSetHandler.ResultColumnCache</a> resultColumnCache)</span>
     </h4>
       <div class="api-level">
         <div>

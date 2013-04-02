@@ -9,7 +9,7 @@
 <div id="overview"><a href="../../../../../../apidocs/org/apache/ibatis/plugin/InterceptorChain.html">View Javadoc</a></div><pre>
 
 <a class="jxr_linenumber" name="1" href="#1">1</a>   <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="2" href="#2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2012 The MyBatis Team</em>
+<a class="jxr_linenumber" name="2" href="#2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2013 The MyBatis Team</em>
 <a class="jxr_linenumber" name="3" href="#3">3</a>   <em class="jxr_comment"> *</em>
 <a class="jxr_linenumber" name="4" href="#4">4</a>   <em class="jxr_comment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="5" href="#5">5</a>   <em class="jxr_comment"> *    you may not use this file except in compliance with the License.</em>
@@ -26,24 +26,29 @@
 <a class="jxr_linenumber" name="16" href="#16">16</a>  <strong class="jxr_keyword">package</strong> org.apache.ibatis.plugin;
 <a class="jxr_linenumber" name="17" href="#17">17</a>  
 <a class="jxr_linenumber" name="18" href="#18">18</a>  <strong class="jxr_keyword">import</strong> java.util.ArrayList;
-<a class="jxr_linenumber" name="19" href="#19">19</a>  <strong class="jxr_keyword">import</strong> java.util.List;
-<a class="jxr_linenumber" name="20" href="#20">20</a>  
-<a class="jxr_linenumber" name="21" href="#21">21</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../org/apache/ibatis/plugin/InterceptorChain.html">InterceptorChain</a> {
-<a class="jxr_linenumber" name="22" href="#22">22</a>  
-<a class="jxr_linenumber" name="23" href="#23">23</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> List&lt;Interceptor&gt; interceptors = <strong class="jxr_keyword">new</strong> ArrayList&lt;Interceptor&gt;();
-<a class="jxr_linenumber" name="24" href="#24">24</a>  
-<a class="jxr_linenumber" name="25" href="#25">25</a>    <strong class="jxr_keyword">public</strong> Object pluginAll(Object target) {
-<a class="jxr_linenumber" name="26" href="#26">26</a>      <strong class="jxr_keyword">for</strong> (Interceptor interceptor : interceptors) {
-<a class="jxr_linenumber" name="27" href="#27">27</a>        target = interceptor.plugin(target);
-<a class="jxr_linenumber" name="28" href="#28">28</a>      }
-<a class="jxr_linenumber" name="29" href="#29">29</a>      <strong class="jxr_keyword">return</strong> target;
-<a class="jxr_linenumber" name="30" href="#30">30</a>    }
-<a class="jxr_linenumber" name="31" href="#31">31</a>  
-<a class="jxr_linenumber" name="32" href="#32">32</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> addInterceptor(<a href="../../../../org/apache/ibatis/plugin/Interceptor.html">Interceptor</a> interceptor) {
-<a class="jxr_linenumber" name="33" href="#33">33</a>      interceptors.add(interceptor);
-<a class="jxr_linenumber" name="34" href="#34">34</a>    }
-<a class="jxr_linenumber" name="35" href="#35">35</a>  
-<a class="jxr_linenumber" name="36" href="#36">36</a>  }
+<a class="jxr_linenumber" name="19" href="#19">19</a>  <strong class="jxr_keyword">import</strong> java.util.Collections;
+<a class="jxr_linenumber" name="20" href="#20">20</a>  <strong class="jxr_keyword">import</strong> java.util.List;
+<a class="jxr_linenumber" name="21" href="#21">21</a>  
+<a class="jxr_linenumber" name="22" href="#22">22</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../org/apache/ibatis/plugin/InterceptorChain.html">InterceptorChain</a> {
+<a class="jxr_linenumber" name="23" href="#23">23</a>  
+<a class="jxr_linenumber" name="24" href="#24">24</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> List&lt;Interceptor&gt; interceptors = <strong class="jxr_keyword">new</strong> ArrayList&lt;Interceptor&gt;();
+<a class="jxr_linenumber" name="25" href="#25">25</a>  
+<a class="jxr_linenumber" name="26" href="#26">26</a>    <strong class="jxr_keyword">public</strong> Object pluginAll(Object target) {
+<a class="jxr_linenumber" name="27" href="#27">27</a>      <strong class="jxr_keyword">for</strong> (Interceptor interceptor : interceptors) {
+<a class="jxr_linenumber" name="28" href="#28">28</a>        target = interceptor.plugin(target);
+<a class="jxr_linenumber" name="29" href="#29">29</a>      }
+<a class="jxr_linenumber" name="30" href="#30">30</a>      <strong class="jxr_keyword">return</strong> target;
+<a class="jxr_linenumber" name="31" href="#31">31</a>    }
+<a class="jxr_linenumber" name="32" href="#32">32</a>  
+<a class="jxr_linenumber" name="33" href="#33">33</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> addInterceptor(<a href="../../../../org/apache/ibatis/plugin/Interceptor.html">Interceptor</a> interceptor) {
+<a class="jxr_linenumber" name="34" href="#34">34</a>      interceptors.add(interceptor);
+<a class="jxr_linenumber" name="35" href="#35">35</a>    }
+<a class="jxr_linenumber" name="36" href="#36">36</a>    
+<a class="jxr_linenumber" name="37" href="#37">37</a>    <strong class="jxr_keyword">public</strong> List&lt;Interceptor&gt; getInterceptors() {
+<a class="jxr_linenumber" name="38" href="#38">38</a>      <strong class="jxr_keyword">return</strong> Collections.unmodifiableList(interceptors);
+<a class="jxr_linenumber" name="39" href="#39">39</a>    }
+<a class="jxr_linenumber" name="40" href="#40">40</a>  
+<a class="jxr_linenumber" name="41" href="#41">41</a>  }
 </pre>
 <hr/><div id="footer">This page was automatically generated by <a href="http://maven.apache.org/">Maven</a></div></body>
 </html>

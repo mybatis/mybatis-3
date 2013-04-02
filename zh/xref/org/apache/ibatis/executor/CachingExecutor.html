@@ -96,7 +96,7 @@
 <a class="jxr_linenumber" name="86" href="#86">86</a>      <strong class="jxr_keyword">if</strong> (cache != <strong class="jxr_keyword">null</strong>) {
 <a class="jxr_linenumber" name="87" href="#87">87</a>        flushCacheIfRequired(ms);
 <a class="jxr_linenumber" name="88" href="#88">88</a>        <strong class="jxr_keyword">if</strong> (ms.isUseCache() &amp;&amp; resultHandler == <strong class="jxr_keyword">null</strong>) { 
-<a class="jxr_linenumber" name="89" href="#89">89</a>          ensureNoOutParams(ms, key, parameterObject, boundSql);
+<a class="jxr_linenumber" name="89" href="#89">89</a>          ensureNoOutParams(ms, parameterObject, boundSql);
 <a class="jxr_linenumber" name="90" href="#90">90</a>          <strong class="jxr_keyword">if</strong> (!dirty) {
 <a class="jxr_linenumber" name="91" href="#91">91</a>            cache.getReadWriteLock().readLock().lock();
 <a class="jxr_linenumber" name="92" href="#92">92</a>            <strong class="jxr_keyword">try</strong> {
@@ -136,9 +136,9 @@
 <a class="jxr_linenumber" name="126" href="#126">126</a>     }
 <a class="jxr_linenumber" name="127" href="#127">127</a>   }
 <a class="jxr_linenumber" name="128" href="#128">128</a> 
-<a class="jxr_linenumber" name="129" href="#129">129</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> ensureNoOutParams(<a href="../../../../org/apache/ibatis/mapping/MappedStatement.html">MappedStatement</a> ms, <a href="../../../../org/apache/ibatis/cache/CacheKey.html">CacheKey</a> key, Object parameter, <a href="../../../../org/apache/ibatis/mapping/BoundSql.html">BoundSql</a> boundSql) {
+<a class="jxr_linenumber" name="129" href="#129">129</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> ensureNoOutParams(<a href="../../../../org/apache/ibatis/mapping/MappedStatement.html">MappedStatement</a> ms, Object parameter, <a href="../../../../org/apache/ibatis/mapping/BoundSql.html">BoundSql</a> boundSql) {
 <a class="jxr_linenumber" name="130" href="#130">130</a>     <strong class="jxr_keyword">if</strong> (ms.getStatementType() == StatementType.CALLABLE) {
-<a class="jxr_linenumber" name="131" href="#131">131</a>       <strong class="jxr_keyword">for</strong> (ParameterMapping parameterMapping : ms.getBoundSql(parameter).getParameterMappings()) {
+<a class="jxr_linenumber" name="131" href="#131">131</a>       <strong class="jxr_keyword">for</strong> (ParameterMapping parameterMapping : boundSql.getParameterMappings()) {
 <a class="jxr_linenumber" name="132" href="#132">132</a>         <strong class="jxr_keyword">if</strong> (parameterMapping.getMode() != ParameterMode.IN) {
 <a class="jxr_linenumber" name="133" href="#133">133</a>           <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/executor/ExecutorException.html">ExecutorException</a>(<span class="jxr_string">"Caching stored procedures with OUT params is not supported.  Please configure useCache=false in "</span> + ms.getId() + <span class="jxr_string">" statement."</span>);
 <a class="jxr_linenumber" name="134" href="#134">134</a>         }
@@ -164,15 +164,13 @@
 <a class="jxr_linenumber" name="154" href="#154">154</a> 
 <a class="jxr_linenumber" name="155" href="#155">155</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> flushCacheIfRequired(<a href="../../../../org/apache/ibatis/mapping/MappedStatement.html">MappedStatement</a> ms) {
 <a class="jxr_linenumber" name="156" href="#156">156</a>     <a href="../../../../org/apache/ibatis/cache/Cache.html">Cache</a> cache = ms.getCache();
-<a class="jxr_linenumber" name="157" href="#157">157</a>     <strong class="jxr_keyword">if</strong> (cache != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="158" href="#158">158</a>       <strong class="jxr_keyword">if</strong> (ms.isFlushCacheRequired()) {
-<a class="jxr_linenumber" name="159" href="#159">159</a>         dirty = <strong class="jxr_keyword">true</strong>; <em class="jxr_comment">// issue #524. Disable using cached data for this session</em>
-<a class="jxr_linenumber" name="160" href="#160">160</a>         tcm.clear(cache);
-<a class="jxr_linenumber" name="161" href="#161">161</a>       }
-<a class="jxr_linenumber" name="162" href="#162">162</a>     }
-<a class="jxr_linenumber" name="163" href="#163">163</a>   }
-<a class="jxr_linenumber" name="164" href="#164">164</a> 
-<a class="jxr_linenumber" name="165" href="#165">165</a> }
+<a class="jxr_linenumber" name="157" href="#157">157</a>     <strong class="jxr_keyword">if</strong> (cache != <strong class="jxr_keyword">null</strong> &amp;&amp; ms.isFlushCacheRequired()) {
+<a class="jxr_linenumber" name="158" href="#158">158</a>       dirty = <strong class="jxr_keyword">true</strong>; <em class="jxr_comment">// issue #524. Disable using cached data for this session</em>
+<a class="jxr_linenumber" name="159" href="#159">159</a>       tcm.clear(cache);
+<a class="jxr_linenumber" name="160" href="#160">160</a>     }
+<a class="jxr_linenumber" name="161" href="#161">161</a>   }
+<a class="jxr_linenumber" name="162" href="#162">162</a> 
+<a class="jxr_linenumber" name="163" href="#163">163</a> }
 </pre>
 <hr/><div id="footer">This page was automatically generated by <a href="http://maven.apache.org/">Maven</a></div></body>
 </html>

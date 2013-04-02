@@ -711,6 +711,34 @@
 <parameter name="type" type="java.lang.Class&lt;T&gt;">
 </parameter>
 </method>
+<method name="addMappers"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="packageName" type="java.lang.String">
+</parameter>
+</method>
+<method name="addMappers"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="packageName" type="java.lang.String">
+</parameter>
+<parameter name="superType" type="java.lang.Class&lt;?&gt;">
+</parameter>
+</method>
 <method name="getMapper"
  return="T"
  abstract="false"
@@ -725,6 +753,17 @@
 </parameter>
 <parameter name="sqlSession" type="org.apache.ibatis.session.SqlSession">
 </parameter>
+</method>
+<method name="getMappers"
+ return="java.util.Collection&lt;java.lang.Class&lt;?&gt;&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
 </method>
 <method name="hasMapper"
  return="boolean"
@@ -1354,35 +1393,24 @@
 </parameter>
 </method>
 </class>
-<class name="ParameterExpressionParser"
- extends="java.lang.Object"
+<class name="ParameterExpression"
+ extends="java.util.HashMap"
  abstract="false"
  static="false"
  final="false"
  deprecated="not deprecated"
  visibility="public"
 >
-<constructor name="ParameterExpressionParser"
- type="org.apache.ibatis.builder.ParameterExpressionParser"
+<constructor name="ParameterExpression"
+ type="org.apache.ibatis.builder.ParameterExpression"
  static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</constructor>
-<method name="parse"
- return="java.util.Map&lt;java.lang.String, java.lang.String&gt;"
- abstract="false"
- native="false"
- synchronized="false"
- static="true"
  final="false"
  deprecated="not deprecated"
  visibility="public"
 >
 <parameter name="expression" type="java.lang.String">
 </parameter>
-</method>
+</constructor>
 </class>
 <class name="ResultMapResolver"
  extends="java.lang.Object"
@@ -8198,6 +8226,19 @@
  visibility="protected"
 >
 </method>
+<method name="isCallSettersOnNulls"
+ return="boolean"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="protected"
+>
+<parameter name="propertyType" type="java.lang.Class&lt;?&gt;">
+</parameter>
+</method>
 <method name="prepareCompositeKeyParameter"
  return="java.lang.Object"
  abstract="false"
@@ -8377,10 +8418,9 @@
 </parameter>
 </method>
 <field name="OMIT"
- type="java.lang.String"
+ type="java.lang.Object"
  transient="false"
  volatile="false"
- value="&quot;OMIT&quot;"
  static="false"
  final="true"
  deprecated="not deprecated"
@@ -10813,36 +10853,6 @@
  deprecated="not deprecated"
  visibility="public"
 >
-</method>
-</class>
-<class name="DataSourceUtils"
- extends="java.lang.Object"
- abstract="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<constructor name="DataSourceUtils"
- type="org.apache.ibatis.jdbc.DataSourceUtils"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</constructor>
-<method name="getDatabaseName"
- return="java.lang.String"
- abstract="false"
- native="false"
- synchronized="false"
- static="true"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="dataSource" type="javax.sql.DataSource">
-</parameter>
 </method>
 </class>
 <class name="Null"
@@ -16804,6 +16814,17 @@
 <parameter name="interceptor" type="org.apache.ibatis.plugin.Interceptor">
 </parameter>
 </method>
+<method name="getInterceptors"
+ return="java.util.List&lt;org.apache.ibatis.plugin.Interceptor&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
 <method name="pluginAll"
  return="java.lang.Object"
  abstract="false"
@@ -19584,6 +19605,8 @@
 </parameter>
 <parameter name="sql" type="java.lang.String">
 </parameter>
+<parameter name="parameterType" type="java.lang.Class&lt;?&gt;">
+</parameter>
 </constructor>
 <method name="getBoundSql"
  return="org.apache.ibatis.mapping.BoundSql"
@@ -20735,6 +20758,17 @@
  visibility="public"
 >
 </method>
+<method name="getInterceptors"
+ return="java.util.List&lt;org.apache.ibatis.plugin.Interceptor&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
 <method name="getJdbcTypeForNull"
  return="org.apache.ibatis.type.JdbcType"
  abstract="false"
@@ -20900,6 +20934,17 @@
 </parameter>
 <parameter name="sqlSession" type="org.apache.ibatis.session.SqlSession">
 </parameter>
+</method>
+<method name="getMapperRegistry"
+ return="org.apache.ibatis.binding.MapperRegistry"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
 </method>
 <method name="getObjectFactory"
  return="org.apache.ibatis.reflection.factory.ObjectFactory"
@@ -21227,7 +21272,7 @@
  synchronized="false"
  static="false"
  final="false"
- deprecated="deprecated"
+ deprecated="not deprecated"
  visibility="public"
 >
 </method>
@@ -21652,7 +21697,7 @@
  synchronized="false"
  static="false"
  final="false"
- deprecated="deprecated"
+ deprecated="not deprecated"
  visibility="public"
 >
 <parameter name="safeResultHandlerEnabled" type="boolean">
@@ -27865,6 +27910,17 @@
  visibility="public"
 >
 </constructor>
+<method name="getTypeAliases"
+ return="java.util.Map&lt;java.lang.String, java.lang.Class&lt;?&gt;&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
 <method name="registerAlias"
  return="void"
  abstract="false"
@@ -28191,6 +28247,17 @@
 </parameter>
 <parameter name="jdbcType" type="org.apache.ibatis.type.JdbcType">
 </parameter>
+</method>
+<method name="getTypeHandlers"
+ return="java.util.Collection&lt;org.apache.ibatis.type.TypeHandler&lt;?&gt;&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
 </method>
 <method name="getUnknownTypeHandler"
  return="org.apache.ibatis.type.TypeHandler&lt;java.lang.Object&gt;"

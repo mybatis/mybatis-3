@@ -61,9 +61,9 @@
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;22</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;  <span class="keyword">public</span> <span class="keyword">static</span> String parse(String string, Properties variables) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;23</td>  <td class="nbHitsCovered">&nbsp;464941</td>  <td class="src"><pre class="src">&nbsp;    VariableTokenHandler handler = <span class="keyword">new</span> VariableTokenHandler(variables);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;24</td>  <td class="nbHitsCovered">&nbsp;464941</td>  <td class="src"><pre class="src">&nbsp;    GenericTokenParser parser = <span class="keyword">new</span> GenericTokenParser(<span class="string">"${"</span>, <span class="string">"}"</span>, handler);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;25</td>  <td class="nbHitsCovered">&nbsp;464941</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">return</span> parser.parse(string);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;23</td>  <td class="nbHitsCovered">&nbsp;465438</td>  <td class="src"><pre class="src">&nbsp;    VariableTokenHandler handler = <span class="keyword">new</span> VariableTokenHandler(variables);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;24</td>  <td class="nbHitsCovered">&nbsp;465438</td>  <td class="src"><pre class="src">&nbsp;    GenericTokenParser parser = <span class="keyword">new</span> GenericTokenParser(<span class="string">"${"</span>, <span class="string">"}"</span>, handler);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;25</td>  <td class="nbHitsCovered">&nbsp;465438</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">return</span> parser.parse(string);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;26</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;  }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;27</td>  <td class="nbHits">&nbsp;</td>
@@ -73,18 +73,18 @@
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">private</span> Properties variables;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;30</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;31</td>  <td class="nbHitsCovered">&nbsp;464941</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> VariableTokenHandler(Properties variables) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;32</td>  <td class="nbHitsCovered">&nbsp;464941</td>  <td class="src"><pre class="src">&nbsp;      <span class="keyword">this</span>.variables = variables;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;33</td>  <td class="nbHitsCovered">&nbsp;464941</td>  <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;31</td>  <td class="nbHitsCovered">&nbsp;465438</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> VariableTokenHandler(Properties variables) {</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;32</td>  <td class="nbHitsCovered">&nbsp;465438</td>  <td class="src"><pre class="src">&nbsp;      <span class="keyword">this</span>.variables = variables;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;33</td>  <td class="nbHitsCovered">&nbsp;465438</td>  <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;34</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;35</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> String handleToken(String content) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;36</td>  <td class="nbHitsCovered"><a title="Line 36: Conditional coverage 100% (4/4) [each condition: 100%, 100%].">&nbsp;3866</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 36: Conditional coverage 100% (4/4) [each condition: 100%, 100%].">      <span class="keyword">if</span> (variables != <span class="keyword">null</span> &amp;&amp; variables.containsKey(content)) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;36</td>  <td class="nbHitsCovered"><a title="Line 36: Conditional coverage 100% (4/4) [each condition: 100%, 100%].">&nbsp;3868</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 36: Conditional coverage 100% (4/4) [each condition: 100%, 100%].">      <span class="keyword">if</span> (variables != <span class="keyword">null</span> &amp;&amp; variables.containsKey(content)) {</a></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;37</td>  <td class="nbHitsCovered">&nbsp;3797</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> variables.getProperty(content);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;38</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;      }</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;39</td>  <td class="nbHitsCovered">&nbsp;69</td>  <td class="src"><pre class="src">&nbsp;      <span class="keyword">return</span> <span class="string">"${"</span> + content + <span class="string">"}"</span>;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;39</td>  <td class="nbHitsCovered">&nbsp;71</td>  <td class="src"><pre class="src">&nbsp;      <span class="keyword">return</span> <span class="string">"${"</span> + content + <span class="string">"}"</span>;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;40</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;41</td>  <td class="nbHits">&nbsp;</td>
@@ -93,6 +93,6 @@
   <td class="src"><pre class="src">&nbsp;}</pre></td></tr>
 </table>
 
-<div class="footer">Report generated by <a href="http://cobertura.sourceforge.net/" target="_top">Cobertura</a> 1.9.4.1 on 3/10/13 9:13 PM.</div>
+<div class="footer">Report generated by <a href="http://cobertura.sourceforge.net/" target="_top">Cobertura</a> 1.9.4.1 on 2/04/13 18:54.</div>
 </body>
 </html>

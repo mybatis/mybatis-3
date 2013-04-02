@@ -9,7 +9,7 @@
 <div id="overview"><a href="../../../../../apidocs/org/apache/ibatis/scripting/LanguageDriver.html">View Javadoc</a></div><pre>
 
 <a class="jxr_linenumber" name="1" href="#1">1</a>   <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="2" href="#2">2</a>   <em class="jxr_comment"> * Copyright 2012 MyBatis.org.</em>
+<a class="jxr_linenumber" name="2" href="#2">2</a>   <em class="jxr_comment"> * Copyright 2012-2013 MyBatis.org.</em>
 <a class="jxr_linenumber" name="3" href="#3">3</a>   <em class="jxr_comment"> *</em>
 <a class="jxr_linenumber" name="4" href="#4">4</a>   <em class="jxr_comment"> * Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="5" href="#5">5</a>   <em class="jxr_comment"> * you may not use this file except in compliance with the License.</em>
@@ -42,27 +42,27 @@
 <a class="jxr_linenumber" name="32" href="#32">32</a>  <em class="jxr_javadoccomment">   * @param boundSql The resulting SQL once the dynamic language has been executed.</em>
 <a class="jxr_linenumber" name="33" href="#33">33</a>  <em class="jxr_javadoccomment">   * @return</em>
 <a class="jxr_linenumber" name="34" href="#34">34</a>  <em class="jxr_javadoccomment">   */</em>
-<a class="jxr_linenumber" name="35" href="#35">35</a>    <strong class="jxr_keyword">public</strong> <a href="../../../../org/apache/ibatis/executor/parameter/ParameterHandler.html">ParameterHandler</a> createParameterHandler(<a href="../../../../org/apache/ibatis/mapping/MappedStatement.html">MappedStatement</a> mappedStatement, Object parameterObject, <a href="../../../../org/apache/ibatis/mapping/BoundSql.html">BoundSql</a> boundSql);
+<a class="jxr_linenumber" name="35" href="#35">35</a>    <a href="../../../../org/apache/ibatis/executor/parameter/ParameterHandler.html">ParameterHandler</a> createParameterHandler(<a href="../../../../org/apache/ibatis/mapping/MappedStatement.html">MappedStatement</a> mappedStatement, Object parameterObject, <a href="../../../../org/apache/ibatis/mapping/BoundSql.html">BoundSql</a> boundSql);
 <a class="jxr_linenumber" name="36" href="#36">36</a>  
 <a class="jxr_linenumber" name="37" href="#37">37</a>    <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="38" href="#38">38</a>  <em class="jxr_javadoccomment">   * Creates an {@link SqlSource} that will hold the statement read from a mapper xml file</em>
 <a class="jxr_linenumber" name="39" href="#39">39</a>  <em class="jxr_javadoccomment">   * </em>
 <a class="jxr_linenumber" name="40" href="#40">40</a>  <em class="jxr_javadoccomment">   * @param configuration The MyBatis configuration</em>
 <a class="jxr_linenumber" name="41" href="#41">41</a>  <em class="jxr_javadoccomment">   * @param script XNode parsed from a XML file</em>
-<a class="jxr_linenumber" name="42" href="#42">42</a>  <em class="jxr_javadoccomment">   * @param parameterType input parameter type</em>
+<a class="jxr_linenumber" name="42" href="#42">42</a>  <em class="jxr_javadoccomment">   * @param parameterType input parameter type got from a mapper method or specified in the parameterType xml attribute. Can be null.</em>
 <a class="jxr_linenumber" name="43" href="#43">43</a>  <em class="jxr_javadoccomment">   * @return</em>
 <a class="jxr_linenumber" name="44" href="#44">44</a>  <em class="jxr_javadoccomment">   */</em>
-<a class="jxr_linenumber" name="45" href="#45">45</a>    <strong class="jxr_keyword">public</strong> <a href="../../../../org/apache/ibatis/mapping/SqlSource.html">SqlSource</a> createSqlSource(<a href="../../../../org/apache/ibatis/session/Configuration.html">Configuration</a> configuration, <a href="../../../../org/apache/ibatis/parsing/XNode.html">XNode</a> script, Class&lt;?&gt; parameterType);
+<a class="jxr_linenumber" name="45" href="#45">45</a>    <a href="../../../../org/apache/ibatis/mapping/SqlSource.html">SqlSource</a> createSqlSource(<a href="../../../../org/apache/ibatis/session/Configuration.html">Configuration</a> configuration, <a href="../../../../org/apache/ibatis/parsing/XNode.html">XNode</a> script, Class&lt;?&gt; parameterType);
 <a class="jxr_linenumber" name="46" href="#46">46</a>  
 <a class="jxr_linenumber" name="47" href="#47">47</a>    <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="48" href="#48">48</a>  <em class="jxr_javadoccomment">   * Creates an {@link SqlSource} that will hold the statement read from an annotation</em>
 <a class="jxr_linenumber" name="49" href="#49">49</a>  <em class="jxr_javadoccomment">   * </em>
 <a class="jxr_linenumber" name="50" href="#50">50</a>  <em class="jxr_javadoccomment">   * @param configuration The MyBatis configuration</em>
 <a class="jxr_linenumber" name="51" href="#51">51</a>  <em class="jxr_javadoccomment">   * @param script The content of the annotation</em>
-<a class="jxr_linenumber" name="52" href="#52">52</a>  <em class="jxr_javadoccomment">   * @param parameterType input parameter type</em>
+<a class="jxr_linenumber" name="52" href="#52">52</a>  <em class="jxr_javadoccomment">   * @param parameterType input parameter type got from a mapper method or specified in the parameterType xml attribute. Can be null.</em>
 <a class="jxr_linenumber" name="53" href="#53">53</a>  <em class="jxr_javadoccomment">   * @return </em>
 <a class="jxr_linenumber" name="54" href="#54">54</a>  <em class="jxr_javadoccomment">   */</em>
-<a class="jxr_linenumber" name="55" href="#55">55</a>    <strong class="jxr_keyword">public</strong> <a href="../../../../org/apache/ibatis/mapping/SqlSource.html">SqlSource</a> createSqlSource(<a href="../../../../org/apache/ibatis/session/Configuration.html">Configuration</a> configuration, String script, Class&lt;?&gt; parameterType);
+<a class="jxr_linenumber" name="55" href="#55">55</a>    <a href="../../../../org/apache/ibatis/mapping/SqlSource.html">SqlSource</a> createSqlSource(<a href="../../../../org/apache/ibatis/session/Configuration.html">Configuration</a> configuration, String script, Class&lt;?&gt; parameterType);
 <a class="jxr_linenumber" name="56" href="#56">56</a>  
 <a class="jxr_linenumber" name="57" href="#57">57</a>  }
 </pre>
