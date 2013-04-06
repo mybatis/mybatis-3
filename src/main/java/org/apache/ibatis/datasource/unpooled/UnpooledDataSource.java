@@ -37,7 +37,7 @@ public class UnpooledDataSource implements DataSource {
   private String username;
   private String password;
 
-  private boolean autoCommit;
+  private Boolean autoCommit;
   private Integer defaultTransactionIsolationLevel;
 
   static {
@@ -148,11 +148,11 @@ public class UnpooledDataSource implements DataSource {
     this.password = password;
   }
 
-  public boolean isAutoCommit() {
+  public Boolean isAutoCommit() {
     return autoCommit;
   }
 
-  public void setAutoCommit(boolean autoCommit) {
+  public void setAutoCommit(Boolean autoCommit) {
     this.autoCommit = autoCommit;
   }
 
@@ -198,7 +198,7 @@ public class UnpooledDataSource implements DataSource {
   }
 
   private void configureConnection(Connection conn) throws SQLException {
-    if (autoCommit != conn.getAutoCommit()) {
+    if (autoCommit != null && autoCommit != conn.getAutoCommit()) {
       conn.setAutoCommit(autoCommit);
     }
     if (defaultTransactionIsolationLevel != null) {
