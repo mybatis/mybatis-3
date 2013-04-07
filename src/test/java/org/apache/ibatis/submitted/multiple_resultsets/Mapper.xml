@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-       Copyright 2009-2012 The MyBatis Team
+       Copyright 2009-2013 The MyBatis Team
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -20,12 +20,32 @@
 
 <mapper namespace="org.apache.ibatis.submitted.multiple_resultsets.Mapper">
 
-	<select id="getUsersAndGroups" resultMap="usersResult,groupsResult">
-		select * from mbtest.order_detail ; select * from mbtest.order_header
+	<select id="getOrders" resultMap="orderResult">
+		select * from mbtest.order_header ;
+		select * from mbtest.order_detail
 	</select>
 
-	<resultMap type="org.apache.ibatis.submitted.multiple_resultsets.OrderDetail" id="usersResult" />
+	<select id="getOrder" resultMap="orderResultNoFk">
+		select * from mbtest.order_header where order_id=#{id};
+		select * from mbtest.order_detail where order_id=#{id}
+	</select>
 	
-	<resultMap type="org.apache.ibatis.submitted.multiple_resultsets.OrderHeader" id="groupsResult" />
+	<resultMap type="order" id="orderResult">
+		<id column="order_id" property="orderId" />
+		<result column="cust_name" property="customerName" />
+		<collection property="detailLines" column="order_id" foreignColumn="order_id" resultMap="orderDetail" resultSetIndex="1" />
+	</resultMap>
 	
+	<resultMap type="order" id="orderResultNoFk">
+		<id column="order_id" property="orderId" />
+		<result column="cust_name" property="customerName" />
+		<collection property="detailLines" resultMap="orderDetail" resultSetIndex="1" />
+	</resultMap>
+
+	<resultMap type="detail" id="orderDetail">
+		<id property="lineNumber" column="LINE_NUMBER" />
+		<result property="quantity" column="QUANTITY" />
+		<result property="itemDescription" column="ITEM_DESCRIPTION" />
+	</resultMap>
+
 </mapper>

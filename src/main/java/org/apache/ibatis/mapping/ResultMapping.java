@@ -39,6 +39,8 @@ public class ResultMapping {
   private String columnPrefix;
   private List<ResultFlag> flags;
   private List<ResultMapping> composites;
+  private int resultSetIndex;
+  private String foreignColumn;
 
   private ResultMapping() {
   }
@@ -88,6 +90,16 @@ public class ResultMapping {
 
     public Builder nestedQueryId(String nestedQueryId) {
       resultMapping.nestedQueryId = nestedQueryId;
+      return this;
+    }
+
+    public Builder resultSetIndex(int resultSetIndex) {
+      resultMapping.resultSetIndex = resultSetIndex;
+      return this;
+    }
+
+    public Builder foreignColumn(String foreignColumn) {
+      resultMapping.foreignColumn = foreignColumn;
       return this;
     }
 
@@ -200,6 +212,18 @@ public class ResultMapping {
 
   public boolean isCompositeResult() {
     return this.composites != null && !this.composites.isEmpty();
+  }
+
+  public int getResultSetIndex() {
+    return this.resultSetIndex;
+  }
+
+  public String getForeignColumn() {
+    return foreignColumn;
+  }
+
+  public void setForeignColumn(String foreignColumn) {
+    this.foreignColumn = foreignColumn;
   }
 
   @Override

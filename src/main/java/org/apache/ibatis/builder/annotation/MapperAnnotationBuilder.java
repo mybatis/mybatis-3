@@ -467,7 +467,9 @@ public class MapperAnnotationBuilder {
           null,
           null,
           result.typeHandler() == UnknownTypeHandler.class ? null : result.typeHandler(),
-          flags);
+          flags,
+          0,
+          null);
       resultMappings.add(resultMapping);
     }
   }
@@ -503,7 +505,9 @@ public class MapperAnnotationBuilder {
           null,
           null,
           arg.typeHandler() == UnknownTypeHandler.class ? null : arg.typeHandler(),
-          flags);
+          flags,
+          0,
+          null);
       resultMappings.add(resultMapping);
     }
   }

@@ -1389,7 +1389,7 @@ public class User {
         <source><![CDATA[<resultMap id="blogResult" type="Blog">
   <id property="id" column="blog_id" />
   <result property="title" column="blog_title"/>
-  <association property="author" javaType="Author" resultMap="authorResult"/>
+  <association property="author" resultMap="authorResult"/>
 </resultMap>
 
 <resultMap id="authorResult" type="Author">
@@ -1483,6 +1483,55 @@ public class User {
   <association property="coAuthor"
     resultMap="authorResult"
     columnPrefix="co_" />
+</resultMap>]]></source>
+
+        <h4>Multiple ResultSets for Association</h4>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Attribute</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>resultSetIndex</code></td>
+              <td>
+                Identifies the cardinal index of the result set (0, 1, 2) where this complex type will be loaded from.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        
+        <p>Starting from version 3.3 MyBatis provides yet another way to solve the N+1 problem.</p>
+         
+        <p>Some databases are able to execute several statements at once and send back one <code>ResultSet</code> per each one.
+        Using this technique the database runs only two queries instead of N+1, and the data is sent back in separated resultsets
+        so building the result is much faster than when processing a JOIN.
+        </p>
+
+        <p>Instead of joining the tables we send two statements at a once:</p>
+
+        <source><![CDATA[<select id="selectBlog" resultMap="blogResult">
+  SELECT * FROM BLOG WHERE ID = #{id} ; SELECT * FROM AUTHOR WHERE ID = #{id}
+</select>
+]]></source>
+
+        <p>When this multiple statement is executed, it will result in two result sets, the first one (index=0) will 
+        contain blogs and the other one (index=1) will contain Authors. We need to add a resultSetIndex attribute
+        to the association to indicate where to take the data from:</p>
+
+        <source><![CDATA[<resultMap id="blogResult" type="Blog">
+  <id property="id" column="blog_id" />
+  <result property="title" column="blog_title"/>
+  <association property="author" javaType="Author" resultSetIndex="1">
+    <id property="id" column="author_id"/>
+    <result property="username" column="author_username"/>
+    <result property="password" column="author_password"/>
+    <result property="email" column="author_email"/>
+    <result property="bio" column="author_bio"/>
+  </association>
 </resultMap>]]></source>
 
         <p>
@@ -1612,6 +1661,31 @@ public class User {
   <result property="body" column="body"/>
 </resultMap>]]></source>
 
+        <h4>Multiple ResultSets for Collection</h4>
+        
+        <p>
+          As we did for the association, both selects are grouped in one multiple statement:
+        </p>
+
+        <source><![CDATA[<select id="selectBlog" parameterType="int" resultMap="blogResult">
+  SELECT * FROM BLOG WHERE ID = #{id} ; SELECT * FROM POST WHERE BLOG_ID = #{id}
+</select>]]></source>
+
+        <p>
+          The first result set will contain a Blog and the second one will contain Posts.
+          As we did with the association, we add a resultSetIndex attribute to the collection element:
+        </p>
+
+        <source><![CDATA[<resultMap id="blogResult" type="Blog">
+  <id property="id" column="blog_id" />
+  <result property="title" column="blog_title"/>
+  <collection property="posts" ofType="Post" resultSetIndex="1">
+    <id property="id" column="post_id"/>
+    <result property="subject" column="post_subject"/>
+    <result property="body" column="post_body"/>
+  </collection>
+</resultMap>]]></source>
+        
         <p>
           <span class="label important">NOTE</span> There's no limit to the depth, breadth or combinations of the
           associations and collections
@@ -1619,7 +1693,7 @@ public class User {
           testing of your application goes a long way toward discovering the best approach for your
           application. The nice thing is that MyBatis lets you change your mind later, with very little (if
           any) impact to your code.
-        </p>
+        </p>        
 
         <p>
           Advanced association and collection mapping is a deep subject. Documentation can only get you so
