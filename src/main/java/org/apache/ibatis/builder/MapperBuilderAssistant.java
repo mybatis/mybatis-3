@@ -216,7 +216,9 @@ public class MapperBuilderAssistant extends BaseBuilder {
       String notNullColumn,
       String columnPrefix,
       Class<? extends TypeHandler<?>> typeHandler,
-      List<ResultFlag> flags) {
+      List<ResultFlag> flags,
+      int resultSetIndex,
+      String foreignColumn) {
     ResultMapping resultMapping = assembleResultMapping(
         resultType,
         property,
@@ -228,7 +230,9 @@ public class MapperBuilderAssistant extends BaseBuilder {
         notNullColumn,
         columnPrefix,
         typeHandler,
-        flags);
+        flags,
+        resultSetIndex,
+        foreignColumn);
     return resultMapping;
   }
 
@@ -250,7 +254,9 @@ public class MapperBuilderAssistant extends BaseBuilder {
         null,
         null,
         typeHandler,
-        new ArrayList<ResultFlag>());
+        new ArrayList<ResultFlag>(),
+        0,
+        null);
     Map<String, String> namespaceDiscriminatorMap = new HashMap<String, String>();
     for (Map.Entry<String, String> e : discriminatorMap.entrySet()) {
       String resultMap = e.getValue();
@@ -397,7 +403,9 @@ public class MapperBuilderAssistant extends BaseBuilder {
       String notNullColumn,
       String columnPrefix,
       Class<? extends TypeHandler<?>> typeHandler,
-      List<ResultFlag> flags) {
+      List<ResultFlag> flags,
+      int resultSetIndex,
+      String foreignColumn) {
     Class<?> javaTypeClass = resolveResultJavaType(resultType, property, javaType);
     TypeHandler<?> typeHandlerInstance = resolveTypeHandler(javaTypeClass, typeHandler);
     List<ResultMapping> composites = parseCompositeColumnName(column);
@@ -406,11 +414,13 @@ public class MapperBuilderAssistant extends BaseBuilder {
     builder.jdbcType(jdbcType);
     builder.nestedQueryId(applyCurrentNamespace(nestedSelect, true));
     builder.nestedResultMapId(applyCurrentNamespace(nestedResultMap, true));
+    builder.resultSetIndex(resultSetIndex);
     builder.typeHandler(typeHandlerInstance);
     builder.flags(flags == null ? new ArrayList<ResultFlag>() : flags);
     builder.composites(composites);
     builder.notNullColumns(parseMultipleColumnNames(notNullColumn));
     builder.columnPrefix(columnPrefix);
+    builder.foreignColumn(foreignColumn);
     return builder.build();
   }
 
