@@ -39,6 +39,11 @@ public final class LogFactory {
     });
     tryImplementation(new Runnable() {
       public void run() {
+        useLog4J2Logging();
+      }
+    });
+    tryImplementation(new Runnable() {
+      public void run() {
         useLog4JLogging();
       }
     });
@@ -84,6 +89,10 @@ public final class LogFactory {
 
   public static synchronized void useLog4JLogging() {
     setImplementation(org.apache.ibatis.logging.log4j.Log4jImpl.class);
+  }
+
+  public static synchronized void useLog4J2Logging() {
+    setImplementation(org.apache.ibatis.logging.log4j2.Log4j2Impl.class);
   }
 
   public static synchronized void useJdkLogging() {

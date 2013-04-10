@@ -378,7 +378,7 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 MyBatis のログ出力に使用するロギング実装を指定します。未指定の場合は自動的検出されます。
               </td>
               <td>
-                SLF4J | LOG4J | JDK_LOGGING | COMMONS_LOGGING | STDOUT_LOGGING | NO_LOGGING
+                SLF4J | LOG4J | LOG4J2 | JDK_LOGGING | COMMONS_LOGGING | STDOUT_LOGGING | NO_LOGGING
               </td>
               <td>
                 未指定

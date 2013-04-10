@@ -39,7 +39,10 @@
           Apache Commons Logging
         </li>
         <li>
-          Log4J
+          Log4j 2
+        </li>
+        <li>
+          Log4j
         </li>
         <li>
           JDK logging

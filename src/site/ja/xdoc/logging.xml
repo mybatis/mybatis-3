@@ -38,7 +38,10 @@
           Apache Commons Logging
         </li>
         <li>
-          Log4J
+          Log4j 2
+        </li>
+        <li>
+          Log4j
         </li>
         <li>
           JDK logging
@@ -56,7 +59,7 @@
   </settings>
 </configuration>]]>
       </source>
-      <p>指定可能な値は SLF4J, LOG4J, JDK_LOGGING, COMMONS_LOGGING, STDOUT_LOGGING, NO_LOGGING ですが、<code>org.apache.ibatis.logging.Log</code> インターフェイスを実装し、コンストラクター引数として String を受け取る独自に実装したクラスの完全修飾クラス名を指定することもできます。
+      <p>指定可能な値は SLF4J, LOG4J, LOG4J2, JDK_LOGGING, COMMONS_LOGGING, STDOUT_LOGGING, NO_LOGGING ですが、<code>org.apache.ibatis.logging.Log</code> インターフェイスを実装し、コンストラクター引数として String を受け取る独自に実装したクラスの完全修飾クラス名を指定することもできます。
       </p>
       <p>下記のメソッドを呼び出すことでロギング実装を指定することも可能です。
       </p>
@@ -153,7 +156,7 @@ log4j.appender.stdout.layout.ConversionPattern=%5p [%t] - %m%n]]></source>
 
         <p>お気づきのように、Mapper インターフェイスと XML のどちらを使っている場合でも、設定方法に違いはありません。</p>
 
-        <p><span class="label important">NOTE</span> SLF4J をお使いの場合、MyBatis のログは MYBATIS というマーカーで出力されます。</p>
+        <p><span class="label important">NOTE</span> SLF4J or Log4j 2 をお使いの場合、MyBatis のログは MYBATIS というマーカーで出力されます。</p>
 
         <p>上記の log4j.properties の残りの部分はアペンダーの設定になっていますが、このドキュメントでは説明しません。Log4J のサイトを参照してください。あるいは、設定値を変更してみてどのような結果になるか試してみるのも良いでしょう。
         </p>

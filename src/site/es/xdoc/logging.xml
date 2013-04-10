@@ -38,7 +38,10 @@
           Apache Commons Logging
         </li>
         <li>
-          Log4J
+          Log4j 2
+        </li>
+        <li>
+          Log4j
         </li>
         <li>
           JDK logging
@@ -56,7 +59,7 @@
   </settings>
 </configuration>]]>
       </source>
-      <p>Los valores válidos son: SLF4J, LOG4J, JDK_LOGGING, COMMONS_LOGGING, STDOUT_LOGGING, NO_LOGGING o
+      <p>Los valores válidos son: SLF4J, LOG4J, LOG4J2, JDK_LOGGING, COMMONS_LOGGING, STDOUT_LOGGING, NO_LOGGING o
       un nombre de clase plenamente cualificado que implemente <code>org.apache.ibatis.logging.Log</code> y reciba
       un string como parametro de constructor.
       </p>
@@ -79,7 +82,7 @@ org.apache.ibatis.logging.LogFactory.useStdOutLogging();]]></source>
           <a href="http://commons.apache.org/logging">Apache Commons Logging</a>
         </li>
         <li>
-          <a href="http://logging.apache.org/log4j/">Apache Log4j</a>
+          <a href="http://logging.apache.org/log4j/">Apache Log4j 1.x y 2.x</a>
         </li>
         <li>
           <a href="http://java.sun.com/j2se/1.4.1/docs/guide/util/logging/">JDK Logging API</a>
@@ -150,7 +153,7 @@ log4j.appender.stdout.layout.ConversionPattern=%5p [%t] - %m%n]]></source>
 
 		<p>Sí, como ya te habrás dado cuenta, no hay ninguna diferencia entre configurar el logging para un mapper o para un fichero XML.</p>
 
-        <p><span class="label important">NOTA</span> Si usas SLF4J MyBatis le llamará usando MYBATIS como marker.</p>
+        <p><span class="label important">NOTA</span> Si usas SLF4J o Log4j 2 MyBatis le llamará usando MYBATIS como marker.</p>
 
         <p>El resto de la configuración sirve para configurar los appenders, lo cual queda fuera del ámbito de este documento. Sin embargo, puedes encontrar más información en el site de Log4j (la url está más arriba). O, puedes simplemente experimentar para ver los efectos que consigues con las distintas opciones de configuración.</p>
       </subsection>
