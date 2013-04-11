@@ -21,7 +21,6 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.MarkerManager;
 import org.apache.logging.log4j.message.SimpleMessage;
-import org.apache.logging.log4j.message.StringFormatterMessageFactory;
 import org.apache.logging.log4j.spi.AbstractLogger;
 import org.apache.logging.log4j.spi.AbstractLoggerWrapper;
 
@@ -34,7 +33,7 @@ public class Log4j2AbstractLoggerImpl implements Log {
   private AbstractLoggerWrapper log;
 
   public Log4j2AbstractLoggerImpl(AbstractLogger abstractLogger) {
-    log = new AbstractLoggerWrapper(abstractLogger, abstractLogger.getName(), StringFormatterMessageFactory.INSTANCE);
+    log = new AbstractLoggerWrapper(abstractLogger, abstractLogger.getName(), abstractLogger.getMessageFactory());
   }
 
   public boolean isDebugEnabled() {
