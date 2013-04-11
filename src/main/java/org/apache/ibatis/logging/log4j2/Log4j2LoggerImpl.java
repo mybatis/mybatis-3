@@ -16,22 +16,19 @@
 package org.apache.ibatis.logging.log4j2;
 
 import org.apache.ibatis.logging.Log;
-import org.apache.logging.log4j.LogManager;
+import org.apache.ibatis.logging.LogFactory;
 import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.spi.AbstractLogger;
+import org.apache.logging.log4j.Marker;
+import org.apache.logging.log4j.MarkerManager;
 
-public class Log4j2Impl implements Log {
+public class Log4j2LoggerImpl implements Log {
+  
+  private static Marker MARKER = MarkerManager.getMarker(LogFactory.MARKER);
 
-  private Log log;
+  private Logger log;
 
-  public Log4j2Impl(String clazz) {
-    Logger logger = LogManager.getLogger(clazz);
-
-    if (logger instanceof AbstractLogger) {
-      log = new Log4j2AbstractLoggerImpl((AbstractLogger) logger);
-    } else {
-      log = new Log4j2LoggerImpl(logger);
-    }
+  public Log4j2LoggerImpl(Logger logger) {
+    log = logger;
   }
 
   public boolean isDebugEnabled() {
@@ -43,23 +40,23 @@ public class Log4j2Impl implements Log {
   }
 
   public void error(String s, Throwable e) {
-    log.error(s, e);
+    log.error(MARKER, s, e);
   }
 
   public void error(String s) {
-    log.error(s);
+    log.error(MARKER, s);
   }
 
   public void debug(String s) {
-    log.debug(s);
+    log.debug(MARKER, s);
   }
 
   public void trace(String s) {
-    log.trace(s);
+    log.trace(MARKER, s);
   }
 
   public void warn(String s) {
-    log.warn(s);
+    log.warn(MARKER, s);
   }
 
 }

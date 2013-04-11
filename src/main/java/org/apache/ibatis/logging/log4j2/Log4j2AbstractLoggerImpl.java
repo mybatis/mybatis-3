@@ -16,22 +16,25 @@
 package org.apache.ibatis.logging.log4j2;
 
 import org.apache.ibatis.logging.Log;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.ibatis.logging.LogFactory;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.Marker;
+import org.apache.logging.log4j.MarkerManager;
+import org.apache.logging.log4j.message.SimpleMessage;
+import org.apache.logging.log4j.message.StringFormatterMessageFactory;
 import org.apache.logging.log4j.spi.AbstractLogger;
+import org.apache.logging.log4j.spi.AbstractLoggerWrapper;
 
-public class Log4j2Impl implements Log {
+public class Log4j2AbstractLoggerImpl implements Log {
+  
+  private static Marker MARKER = MarkerManager.getMarker(LogFactory.MARKER);
+  
+  private static final String FQCN = Log4j2Impl.class.getName();
+  
+  private AbstractLoggerWrapper log;
 
-  private Log log;
-
-  public Log4j2Impl(String clazz) {
-    Logger logger = LogManager.getLogger(clazz);
-
-    if (logger instanceof AbstractLogger) {
-      log = new Log4j2AbstractLoggerImpl((AbstractLogger) logger);
-    } else {
-      log = new Log4j2LoggerImpl(logger);
-    }
+  public Log4j2AbstractLoggerImpl(AbstractLogger abstractLogger) {
+    log = new AbstractLoggerWrapper(abstractLogger, abstractLogger.getName(), StringFormatterMessageFactory.INSTANCE);
   }
 
   public boolean isDebugEnabled() {
@@ -43,23 +46,23 @@ public class Log4j2Impl implements Log {
   }
 
   public void error(String s, Throwable e) {
-    log.error(s, e);
+    log.log(MARKER, FQCN, Level.ERROR, new SimpleMessage(s), e);
   }
 
   public void error(String s) {
-    log.error(s);
+    log.log(MARKER, FQCN, Level.ERROR, new SimpleMessage(s), null);
   }
 
   public void debug(String s) {
-    log.debug(s);
+    log.log(MARKER, FQCN, Level.DEBUG, new SimpleMessage(s), null);
   }
 
   public void trace(String s) {
-    log.trace(s);
+    log.log(MARKER, FQCN, Level.TRACE, new SimpleMessage(s), null);
   }
 
   public void warn(String s) {
-    log.warn(s);
+    log.log(MARKER, FQCN, Level.WARN, new SimpleMessage(s), null);
   }
 
 }
