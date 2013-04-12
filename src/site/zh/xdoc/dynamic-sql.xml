@@ -253,7 +253,7 @@ Java API,所以你可以得到你已经创建的最有效的映射。
   <source><![CDATA[<insert id="insert" parameterType="org.myapp.domain.User">
   <selectKey keyProperty="id" resultType="int" order="BEFORE">
     <if test="_databaseId == 'oracle'">
-	  select seq_users.nextval from dual
+      select seq_users.nextval from dual
     </if>
     <if test="_databaseId == 'db2'">
       select nextval for seq_users from sysibm.sysdummy1"

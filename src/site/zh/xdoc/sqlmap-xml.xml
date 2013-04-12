@@ -239,14 +239,14 @@ TEMENT,PREPARED 或 CALLABLE 的一种。
               </td>
             </tr>
             <tr>
-              <td>resultSetType</td>
+              <td><code>resultSetType</code></td>
               <td>
 FORWARD_ONLY|SCROLL_SENSITIVE|SCROLL_INSENSITIVE
 中的一种。默认是不设置(驱动自行处理)。
               </td>
             </tr>
             <tr>
-              <td>databaseId</td>
+              <td><code>databaseId</code></td>
               <td>In case there is a configured databaseIdProvider, MyBatis will load all statements with no <code>databaseId</code> 
               attribute or with a <code>databaseId</code> that matches the current one. If case the same statement
               if found with and without the <code>databaseId</code> the latter will be discarded.
@@ -380,7 +380,7 @@ MyBatis 会通过 getGeneratedKeys
               </td>
             </tr>
             <tr>
-              <td>databaseId</td>
+              <td><code>databaseId</code></td>
               <td>In case there is a configured databaseIdProvider, MyBatis will load all statements with no <code>databaseId</code> 
               attribute or with a <code>databaseId</code> that matches the current one. If case the same statement
               if found with and without the <code>databaseId</code> the latter will be discarded.

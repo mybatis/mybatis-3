@@ -179,12 +179,12 @@ ps.setInt(1,id);]]></source>
               </td>
             </tr>
             <tr>
-              <td>resultSetType</td>
+              <td><code>resultSetType</code></td>
               <td>Puede valer FORWARD_ONLY|SCROLL_SENSITIVE|SCROLL_INSENSITIVE.  Por defecto: no informado (depende del driver de base de datos).
               </td>
             </tr>
             <tr>
-              <td>databaseId</td>
+              <td><code>databaseId</code></td>
               <td>Si hay un DatabaseIdProvider configurado. MyBatis cargará todos los statements sin el atributo <code>databaseId</code> 
               o aquellos con un <code>databaseId</code> que coincide con el actual. Si se encuentra un statement con y sin 
               <code>databaseId</code> el último se descartará.
@@ -286,7 +286,7 @@ ps.setInt(1,id);]]></source>
               </td>
             </tr>
             <tr>
-              <td>databaseId</td>
+              <td><code>databaseId</code></td>
               <td>Si hay un DatabaseIdProvider configurado. MyBatis cargará todos los statements sin el atributo <code>databaseId</code> 
               o aquellos con un <code>databaseId</code> que coincide con el actual. Si se encuentra un statement con y sin 
               <code>databaseId</code> el último se descartará.

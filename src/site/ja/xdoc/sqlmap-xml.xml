@@ -211,13 +211,13 @@ ps.setInt(1,id);]]></source>
               </td>
             </tr>
             <tr>
-              <td>resultSetType</td>
+              <td><code>resultSetType</code></td>
               <td>
                 <code>FORWARD_ONLY</code>, <code>SCROLL_SENSITIVE</code>, <code>SCROLL_INSENSITIVE</code> のいずれかを指定します。デフォルトは未指定（ドライバー依存）です。
               </td>
             </tr>
             <tr>
-              <td>databaseId</td>
+              <td><code>databaseId</code></td>
               <td>databaseIdProvider が設定されている場合、MyBatis は定義されているステートメントの中で <code>databaseId</code> 属性が指定されていないステートメントおよび現在の設定と一致する <code>databaseId</code> 属性を持ったステートメントをロードします。
                 同じステートメントで、<code>databaseId</code> 属性が指定されているものと指定されていないものが両方定義されていた場合、指定がないステートメントは無視されます。
               </td>
@@ -324,7 +324,7 @@ ps.setInt(1,id);]]></source>
               </td>
             </tr>
             <tr>
-              <td>databaseId</td>
+              <td><code>databaseId</code></td>
               <td>databaseIdProvider が設定されている場合、MyBatis は定義されているステートメントの中で <code>databaseId</code> 属性が指定されていないステートメントおよび現在の設定と一致する <code>databaseId</code> 属性を持ったステートメントをロードします。
                 同じステートメントで、<code>databaseId</code> 属性が指定されているものと指定されていないものが両方定義されていた場合、指定がないステートメントは無視されます。
               </td>
