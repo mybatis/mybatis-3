@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.apache.ibatis.submitted.lazy_deserialize.Mapper">
+
+    <resultMap id="resultFoo" type="LazyFoo">
+        <id     property="id" column="id" />
+        <association property="lazyObjectBar" column="id_bar" select="loadBar" />
+    </resultMap>
+
+    <resultMap id="resultBar" type="LazyBar">
+        <id     property="id" column="id" />
+    </resultMap>
+
+    <select id="loadFoo" parameterType="int" resultMap="resultFoo">
+        SELECT
+            f.id            AS  id,
+            f.id_bar        AS  id_bar
+        FROM table_foo AS f
+        WHERE f.id = #{fooId}
+    </select>
+
+    <select id="loadBar" parameterType="int" resultMap="resultBar">
+        SELECT
+            b.id            AS  id
+        FROM table_bar AS b
+        WHERE b.id = #{barId}
+    </select>
+
+</mapper>

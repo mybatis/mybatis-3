@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 MyBatis.org.
+ * Copyright 2011 MyBatis.org.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,14 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.ibatis.executor.loader;
+package org.apache.ibatis.submitted.lazy_deserialize;
+
+import java.io.Serializable;
 
 /**
  * @author Franta Mejta
- * @sa.date 2013-04-12T15:06:38+0200
- * @deprecated Moved to {@link org.apache.ibatis.executor.loader.cglib.CglibProxyFactory}
+ * @date 2011-04-06T10:57:30+0200
  */
-@Deprecated
-public class CglibProxyFactory extends org.apache.ibatis.executor.loader.cglib.CglibProxyFactory {
-  /* no-op */
+public class LazyObjectFoo implements Serializable {
+
+    private Integer id;
+    private LazyObjectBar lazyObjectBar;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public LazyObjectBar getLazyObjectBar() {
+        return this.lazyObjectBar;
+    }
+
+    public void setLazyObjectBar(final LazyObjectBar lazyObjectBar) {
+        this.lazyObjectBar = lazyObjectBar;
+    }
+
 }
