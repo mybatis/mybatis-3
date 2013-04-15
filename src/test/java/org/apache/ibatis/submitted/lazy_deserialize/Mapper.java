@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 MyBatis.org.
+ * Copyright 2011 MyBatis.org.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,14 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.ibatis.executor.loader;
+package org.apache.ibatis.submitted.lazy_deserialize;
+
+import org.apache.ibatis.annotations.Param;
 
 /**
+ *
  * @author Franta Mejta
- * @sa.date 2013-04-12T15:06:38+0200
- * @deprecated Moved to {@link org.apache.ibatis.executor.loader.cglib.CglibProxyFactory}
+ * @date 2011-04-06T11:00:30+0200
  */
-@Deprecated
-public class CglibProxyFactory extends org.apache.ibatis.executor.loader.cglib.CglibProxyFactory {
-  /* no-op */
+public interface Mapper {
+
+    LazyObjectFoo loadFoo(@Param("fooId") int fooId);
 }
