@@ -33,11 +33,6 @@ import java.util.Map;
 
 import org.apache.ibatis.reflection.factory.ObjectFactory;
 
-/**
- *
- * @author Franta Mejta
- * @sa.date 2013-04-12T14:45:33+0200
- */
 public abstract class AbstractSerialStateHolder implements Externalizable {
 
   private static final long serialVersionUID = 8940388717901644661L;
@@ -100,6 +95,7 @@ public abstract class AbstractSerialStateHolder implements Externalizable {
     }
   }
 
+  @SuppressWarnings("unchecked")
   protected final Object readResolve() throws ObjectStreamException {
     /* Second run */
     if (this.userBean != null && this.userBeanBytes.length == 0) {

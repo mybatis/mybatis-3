@@ -26,11 +26,6 @@ import org.apache.ibatis.reflection.factory.ObjectFactory;
 import org.apache.ibatis.reflection.property.PropertyCopier;
 import org.apache.ibatis.reflection.property.PropertyNamer;
 
-/**
- *
- * @author Franta Mejta
- * @sa.date 2013-04-12T14:58:19+0200
- */
 public abstract class AbstractEnhancedDeserializationProxy {
 
   protected static final String FINALIZE_METHOD = "finalize";

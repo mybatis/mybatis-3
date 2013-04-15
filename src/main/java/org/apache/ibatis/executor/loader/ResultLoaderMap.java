@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2012 The MyBatis Team
+ *    Copyright 2009-2013 The MyBatis Team
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -162,8 +162,8 @@ public class ResultLoaderMap {
     public void load() throws SQLException {
       /* These field should not be null unless the loadpair was serialized.
        * Yet in that case this method should not be called. */
-      assert this.metaResultObject != null : "metaResultObject is null";
-      assert this.resultLoader != null : "resultLoader is null";
+      if (this.metaResultObject == null) throw new IllegalArgumentException("metaResultObject is null");
+      if (this.resultLoader == null) throw new IllegalArgumentException("resultLoader is null");
 
       this.load(null);
     }

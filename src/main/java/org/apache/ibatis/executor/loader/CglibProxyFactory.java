@@ -15,11 +15,6 @@
  */
 package org.apache.ibatis.executor.loader;
 
-/**
- * @author Franta Mejta
- * @sa.date 2013-04-12T15:06:38+0200
- * @deprecated Moved to {@link org.apache.ibatis.executor.loader.cglib.CglibProxyFactory}
- */
 @Deprecated
 public class CglibProxyFactory extends org.apache.ibatis.executor.loader.cglib.CglibProxyFactory {
   /* no-op */

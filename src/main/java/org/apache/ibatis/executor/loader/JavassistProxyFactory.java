@@ -15,11 +15,6 @@
  */
 package org.apache.ibatis.executor.loader;
 
-/**
- * @author Franta Mejta
- * @sa.date 2013-04-12T15:13:33+0200
- * @deprecated Moved to {@link org.apache.ibatis.executor.loader.javassist.JavassistProxyFactory}
- */
 @Deprecated
 public final class JavassistProxyFactory extends org.apache.ibatis.executor.loader.javassist.JavassistProxyFactory {
   /* no-op */
