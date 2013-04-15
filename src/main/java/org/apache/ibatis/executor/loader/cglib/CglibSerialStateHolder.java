@@ -16,9 +16,10 @@
 package org.apache.ibatis.executor.loader.cglib;
 
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 import org.apache.ibatis.executor.loader.AbstractSerialStateHolder;
+import org.apache.ibatis.executor.loader.ResultLoaderMap;
 import org.apache.ibatis.reflection.factory.ObjectFactory;
 
 class CglibSerialStateHolder extends AbstractSerialStateHolder {
@@ -30,7 +31,7 @@ class CglibSerialStateHolder extends AbstractSerialStateHolder {
 
   public CglibSerialStateHolder(
           final Object userBean,
-          final Set<String> unloadedProperties,
+          final Map<String, ResultLoaderMap.LoadPair> unloadedProperties,
           final ObjectFactory objectFactory,
           List<Class<?>> constructorArgTypes,
           List<Object> constructorArgs) {
@@ -38,7 +39,7 @@ class CglibSerialStateHolder extends AbstractSerialStateHolder {
   }
 
   @Override
-  protected Object createDeserializationProxy(Object target, Set<String> unloadedProperties, ObjectFactory objectFactory,
+  protected Object createDeserializationProxy(Object target, Map<String, ResultLoaderMap.LoadPair> unloadedProperties, ObjectFactory objectFactory,
           List<Class<?>> constructorArgTypes, List<Object> constructorArgs) {
     return new CglibProxyFactory().createDeserializationProxy(target, unloadedProperties, objectFactory, constructorArgTypes, constructorArgs);
   }

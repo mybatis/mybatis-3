@@ -27,9 +27,9 @@ import java.io.ObjectOutputStream;
 import java.io.ObjectStreamException;
 import java.io.StreamCorruptedException;
 import java.util.Arrays;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 import org.apache.ibatis.reflection.factory.ObjectFactory;
 
@@ -44,7 +44,7 @@ public abstract class AbstractSerialStateHolder implements Externalizable {
   private static final ThreadLocal<ObjectOutputStream> stream = new ThreadLocal<ObjectOutputStream>();
   private byte[] userBeanBytes = new byte[0];
   private Object userBean;
-  private String[] unloadedProperties;
+  private Map<String, ResultLoaderMap.LoadPair> unloadedProperties;
   private ObjectFactory objectFactory;
   private Class<?>[] constructorArgTypes;
   private Object[] constructorArgs;
@@ -54,14 +54,14 @@ public abstract class AbstractSerialStateHolder implements Externalizable {
 
   public AbstractSerialStateHolder(
           final Object userBean,
-          final Set<String> unloadedProperties,
+          final Map<String, ResultLoaderMap.LoadPair> unloadedProperties,
           final ObjectFactory objectFactory,
           List<Class<?>> constructorArgTypes,
           List<Object> constructorArgs) {
     this.userBean = userBean;
-    this.unloadedProperties = unloadedProperties.toArray(new String[unloadedProperties.size()]);
+    this.unloadedProperties = new HashMap<String, ResultLoaderMap.LoadPair>(unloadedProperties);
     this.objectFactory = objectFactory;
-    this.constructorArgTypes = constructorArgTypes.toArray(new Class[constructorArgTypes.size()]);
+    this.constructorArgTypes = constructorArgTypes.toArray(new Class<?>[constructorArgTypes.size()]);
     this.constructorArgs = constructorArgs.toArray(new Object[constructorArgs.size()]);
   }
 
@@ -110,7 +110,7 @@ public abstract class AbstractSerialStateHolder implements Externalizable {
     try {
       final ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(this.userBeanBytes));
       this.userBean = in.readObject();
-      this.unloadedProperties = (String[]) in.readObject();
+      this.unloadedProperties = (Map<String, ResultLoaderMap.LoadPair>) in.readObject();
       this.objectFactory = (ObjectFactory) in.readObject();
       this.constructorArgTypes = (Class<?>[]) in.readObject();
       this.constructorArgs = (Object[]) in.readObject();
@@ -120,13 +120,13 @@ public abstract class AbstractSerialStateHolder implements Externalizable {
       throw (ObjectStreamException) new InvalidClassException(ex.getLocalizedMessage()).initCause(ex);
     }
 
-    final Set<String> arrayProps = new HashSet<String>(Arrays.asList(this.unloadedProperties));
+    final Map<String, ResultLoaderMap.LoadPair> arrayProps = new HashMap<String, ResultLoaderMap.LoadPair>(this.unloadedProperties);
     final List<Class<?>> arrayTypes = Arrays.asList(this.constructorArgTypes);
     final List<Object> arrayValues = Arrays.asList(this.constructorArgs);
 
     return this.createDeserializationProxy(userBean, arrayProps, objectFactory, arrayTypes, arrayValues);
   }
 
-  protected abstract Object createDeserializationProxy(Object target, Set<String> unloadedProperties, ObjectFactory objectFactory,
+  protected abstract Object createDeserializationProxy(Object target, Map<String, ResultLoaderMap.LoadPair> unloadedProperties, ObjectFactory objectFactory,
           List<Class<?>> constructorArgTypes, List<Object> constructorArgs);
 }

@@ -15,14 +15,30 @@
  */
 package org.apache.ibatis.executor.loader;
 
+import java.io.Serializable;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.security.AccessController;
+import java.security.PrivilegedActionException;
+import java.security.PrivilegedExceptionAction;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.ibatis.executor.BaseExecutor;
+import org.apache.ibatis.executor.BatchResult;
 import org.apache.ibatis.executor.ExecutorException;
+import org.apache.ibatis.logging.Log;
+import org.apache.ibatis.logging.LogFactory;
+import org.apache.ibatis.mapping.BoundSql;
+import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.reflection.MetaObject;
+import org.apache.ibatis.session.Configuration;
+import org.apache.ibatis.session.ResultHandler;
+import org.apache.ibatis.session.RowBounds;
 
 public class ResultLoaderMap {
 
@@ -37,7 +53,11 @@ public class ResultLoaderMap {
     }
     loaderMap.put(upperFirst, new LoadPair(property, metaResultObject, resultLoader));
   }
-  
+
+  public final Map<String, LoadPair> getProperties() {
+    return new HashMap<String, LoadPair>(this.loaderMap);
+  }
+
   public Set<String> getPropertyNames() {
     return loaderMap.keySet();
   }
@@ -49,7 +69,7 @@ public class ResultLoaderMap {
   public boolean hasLoader(String property) {
     return loaderMap.containsKey(property.toUpperCase(Locale.ENGLISH));
   }
-  
+
   public boolean load(String property) throws SQLException {
     LoadPair pair = loaderMap.remove(property.toUpperCase(Locale.ENGLISH));
     if (pair != null) {
@@ -72,19 +92,203 @@ public class ResultLoaderMap {
     return parts[0].toUpperCase(Locale.ENGLISH);
   }
 
-  private static class LoadPair {
-    private String property;
-    private MetaObject metaResultObject;
-    private ResultLoader resultLoader;
+  /**
+   * Property which was not loaded yet.
+   */
+  public static class LoadPair implements Serializable {
 
-    private LoadPair(String property, MetaObject metaResultObject, ResultLoader resultLoader) {
+    private static final long serialVersionUID = 20130412;
+    /**
+     * Name of factory method which returns database connection.
+     */
+    private static final String FACTORY_METHOD = "getConfiguration";
+    /**
+     * Object to check whether we went through serialization..
+     */
+    private transient final Object serializationCheck = new Object();
+    /**
+     * Meta object which sets loaded properties.
+     */
+    private transient MetaObject metaResultObject;
+    /**
+     * Result loader which loads unread properties.
+     */
+    private transient ResultLoader resultLoader;
+    /**
+     * Wow, logger.
+     */
+    private transient Log log;
+    /**
+     * Factory class through which we get database connection.
+     */
+    private Class<?> configurationFactory;
+    /**
+     * Name of the unread property.
+     */
+    private String property;
+    /**
+     * ID of SQL statement which loads the property.
+     */
+    private String mappedStatement;
+    /**
+     * Parameter of the sql statement.
+     */
+    private Serializable mappedParameter;
+
+    private LoadPair(final String property, MetaObject metaResultObject, ResultLoader resultLoader) {
       this.property = property;
       this.metaResultObject = metaResultObject;
       this.resultLoader = resultLoader;
+
+      /* Save required information only if original object can be serialized. */
+      if (metaResultObject != null && metaResultObject.getOriginalObject() instanceof Serializable) {
+        final Object mappedStatementParameter = resultLoader.parameterObject;
+
+        /* @todo May the parameter be null? */
+        if (mappedStatementParameter instanceof Serializable) {
+          this.mappedStatement = resultLoader.mappedStatement.getId();
+          this.mappedParameter = (Serializable) mappedStatementParameter;
+
+          this.configurationFactory = resultLoader.configuration.getConfigurationFactory();
+        } else {
+          this.getLogger().debug("Property [" + this.property + "] of ["
+                  + metaResultObject.getOriginalObject().getClass() + "] cannot be loaded "
+                  + "after deserialization. Make sure it's loaded before serializing "
+                  + "forenamed object.");
+        }
+      }
     }
 
     public void load() throws SQLException {
-      metaResultObject.setValue(property, resultLoader.loadResult());
+      /* These field should not be null unless the loadpair was serialized.
+       * Yet in that case this method should not be called. */
+      assert this.metaResultObject != null : "metaResultObject is null";
+      assert this.resultLoader != null : "resultLoader is null";
+
+      this.load(null);
+    }
+
+    public void load(final Object userObject) throws SQLException {
+      if (this.metaResultObject == null || this.resultLoader == null) {
+        if (this.mappedParameter == null) {
+          throw new ExecutorException("Property [" + this.property + "] cannot be loaded because "
+                  + "required parameter of mapped statement ["
+                  + this.mappedStatement + "] is not serializable.");
+        }
+
+        final Configuration config = this.getConfiguration();
+        final MappedStatement ms = config.getMappedStatement(this.mappedStatement);
+        if (ms == null) {
+          throw new ExecutorException("Cannot lazy load property [" + this.property
+                  + "] of deserialized object [" + userObject.getClass()
+                  + "] because configuration does not contain statement ["
+                  + this.mappedStatement + "]");
+        }
+
+        this.metaResultObject = config.newMetaObject(userObject);
+        this.resultLoader = new ResultLoader(config, new ClosedExecutor(), ms, this.mappedParameter,
+                metaResultObject.getSetterType(this.property), null, null);
+      }
+
+      /* We are using a new executor because we may be (and likely are) on a new thread
+       * and executors aren't thread safe. (Is this sufficient?)
+       *
+       * A better approach would be making executors thread safe. */
+      if (this.serializationCheck == null) {
+        final ResultLoader old = this.resultLoader;
+        this.resultLoader = new ResultLoader(old.configuration, new ClosedExecutor(), old.mappedStatement,
+                old.parameterObject, old.targetType, old.cacheKey, old.boundSql);
+      }
+
+      this.metaResultObject.setValue(property, this.resultLoader.loadResult());
+    }
+
+    private Configuration getConfiguration() {
+      if (this.configurationFactory == null) {
+        throw new ExecutorException("Cannot get Configuration as configuration factory was not set.");
+      }
+
+      Object configurationObject = null;
+      try {
+        final Method factoryMethod = this.configurationFactory.getDeclaredMethod(FACTORY_METHOD);
+        if (!Modifier.isStatic(factoryMethod.getModifiers())) {
+          throw new ExecutorException("Cannot get Configuration as factory method ["
+                  + this.configurationFactory + "]#["
+                  + FACTORY_METHOD + "] is not static.");
+        }
+
+        if (!factoryMethod.isAccessible()) {
+          configurationObject = AccessController.doPrivileged(new PrivilegedExceptionAction<Object>() {
+            @Override
+            public Object run() throws Exception {
+              try {
+                factoryMethod.setAccessible(true);
+                return factoryMethod.invoke(null);
+              } finally {
+                factoryMethod.setAccessible(false);
+              }
+            }
+          });
+        } else {
+          configurationObject = factoryMethod.invoke(null);
+        }
+      } catch (final NoSuchMethodException ex) {
+        throw new ExecutorException("Cannot get Configuration as factory class ["
+                + this.configurationFactory + "] is missing factory method of name ["
+                + FACTORY_METHOD + "].", ex);
+      } catch (final PrivilegedActionException ex) {
+        throw new ExecutorException("Cannot get Configuration as factory method ["
+                + this.configurationFactory + "]#["
+                + FACTORY_METHOD + "] threw an exception.", ex.getCause());
+      } catch (final Exception ex) {
+        throw new ExecutorException("Cannot get Configuration as factory method ["
+                + this.configurationFactory + "]#["
+                + FACTORY_METHOD + "] threw an exception.", ex);
+      }
+
+      if (!(configurationObject instanceof Configuration)) {
+        final boolean isNull = (configurationObject == null);
+        throw new ExecutorException("Cannot get Configuration as factory method ["
+                + this.configurationFactory + "]#["
+                + FACTORY_METHOD + "] didn't return [" + Configuration.class + "] but ["
+                + (isNull ? "null" : configurationObject.getClass()) + "].");
+      }
+
+      return Configuration.class.cast(configurationObject);
+    }
+
+    private Log getLogger() {
+      if (this.log == null) {
+        this.log = LogFactory.getLog(this.getClass());
+      }
+      return this.log;
+    }
+  }
+
+  private static final class ClosedExecutor extends BaseExecutor {
+
+    public ClosedExecutor() {
+      super(null, null);
+    }
+
+    @Override
+    public boolean isClosed() {
+      return true;
+    }
+
+    @Override
+    protected int doUpdate(MappedStatement ms, Object parameter) throws SQLException {
+      throw new UnsupportedOperationException("Not supported.");
+    }
+
+    @Override
+    protected List<BatchResult> doFlushStatements(boolean isRollback) throws SQLException {
+      throw new UnsupportedOperationException("Not supported.");
+    }
+
+    @Override
+    protected <E> List<E> doQuery(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql) throws SQLException {
+      throw new UnsupportedOperationException("Not supported.");
     }
   }
 }
