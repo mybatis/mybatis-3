@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2012 The MyBatis Team
+ *    Copyright 2009-2013 The MyBatis Team
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -216,7 +216,9 @@ public class MapperBuilderAssistant extends BaseBuilder {
       String notNullColumn,
       String columnPrefix,
       Class<? extends TypeHandler<?>> typeHandler,
-      List<ResultFlag> flags) {
+      List<ResultFlag> flags,
+      String resultSet,
+      String foreignColumn) {
     ResultMapping resultMapping = assembleResultMapping(
         resultType,
         property,
@@ -228,7 +230,9 @@ public class MapperBuilderAssistant extends BaseBuilder {
         notNullColumn,
         columnPrefix,
         typeHandler,
-        flags);
+        flags,
+        resultSet,
+        foreignColumn);
     return resultMapping;
   }
 
@@ -250,7 +254,9 @@ public class MapperBuilderAssistant extends BaseBuilder {
         null,
         null,
         typeHandler,
-        new ArrayList<ResultFlag>());
+        new ArrayList<ResultFlag>(),
+        null,
+        null);
     Map<String, String> namespaceDiscriminatorMap = new HashMap<String, String>();
     for (Map.Entry<String, String> e : discriminatorMap.entrySet()) {
       String resultMap = e.getValue();
@@ -280,7 +286,8 @@ public class MapperBuilderAssistant extends BaseBuilder {
       String keyProperty,
       String keyColumn,
       String databaseId,
-      LanguageDriver lang) {
+      LanguageDriver lang,
+      String resultSets) {
     
     if (unresolvedCacheRef) throw new IncompleteElementException("Cache-ref not yet resolved");
     
@@ -297,6 +304,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
     statementBuilder.databaseId(databaseId);
     statementBuilder.lang(lang);
     statementBuilder.resultOrdered(resultOrdered);
+    statementBuilder.resulSets(resultSets);
     setStatementTimeout(timeout, statementBuilder);
 
     setStatementParameterMap(parameterMap, parameterType, statementBuilder);
@@ -397,7 +405,9 @@ public class MapperBuilderAssistant extends BaseBuilder {
       String notNullColumn,
       String columnPrefix,
       Class<? extends TypeHandler<?>> typeHandler,
-      List<ResultFlag> flags) {
+      List<ResultFlag> flags,
+      String resultSet,
+      String foreignColumn) {
     Class<?> javaTypeClass = resolveResultJavaType(resultType, property, javaType);
     TypeHandler<?> typeHandlerInstance = resolveTypeHandler(javaTypeClass, typeHandler);
     List<ResultMapping> composites = parseCompositeColumnName(column);
@@ -406,11 +416,13 @@ public class MapperBuilderAssistant extends BaseBuilder {
     builder.jdbcType(jdbcType);
     builder.nestedQueryId(applyCurrentNamespace(nestedSelect, true));
     builder.nestedResultMapId(applyCurrentNamespace(nestedResultMap, true));
+    builder.resultSet(resultSet);
     builder.typeHandler(typeHandlerInstance);
     builder.flags(flags == null ? new ArrayList<ResultFlag>() : flags);
     builder.composites(composites);
     builder.notNullColumns(parseMultipleColumnNames(notNullColumn));
     builder.columnPrefix(columnPrefix);
+    builder.foreignColumn(foreignColumn);
     return builder.build();
   }
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
 
-       Copyright 2009-2011 The MyBatis Team
+       Copyright 2009-2013 The MyBatis Team
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -114,6 +114,8 @@ resultMap CDATA #IMPLIED
 typeHandler CDATA #IMPLIED
 notNullColumn CDATA #IMPLIED
 columnPrefix CDATA #IMPLIED
+resultSet CDATA #IMPLIED
+foreignColumn CDATA #IMPLIED
 >
 
 <!ELEMENT association (constructor?,id*,result*,association*,collection*, discriminator?)>
@@ -127,6 +129,8 @@ resultMap CDATA #IMPLIED
 typeHandler CDATA #IMPLIED
 notNullColumn CDATA #IMPLIED
 columnPrefix CDATA #IMPLIED
+resultSetIndex CDATA #IMPLIED
+foreignColumn CDATA #IMPLIED
 >
 
 <!ELEMENT discriminator (case+)>
@@ -172,6 +176,7 @@ useCache (true|false) #IMPLIED
 databaseId CDATA #IMPLIED
 lang CDATA #IMPLIED
 resultOrdered (true|false) #IMPLIED
+resultSets CDATA #IMPLIED 
 >
 
 <!ELEMENT insert (#PCDATA | selectKey | include | trim | where | set | foreach | choose | if | bind)*>

@@ -310,7 +310,8 @@ public class MapperAnnotationBuilder {
           keyProperty,
           keyColumn,
           null,
-          languageDriver);
+          languageDriver,
+          null);
     }
   }
   
@@ -467,7 +468,9 @@ public class MapperAnnotationBuilder {
           null,
           null,
           result.typeHandler() == UnknownTypeHandler.class ? null : result.typeHandler(),
-          flags);
+          flags,
+          null,
+          null);
       resultMappings.add(resultMapping);
     }
   }
@@ -503,7 +506,9 @@ public class MapperAnnotationBuilder {
           null,
           null,
           arg.typeHandler() == UnknownTypeHandler.class ? null : arg.typeHandler(),
-          flags);
+          flags,
+          null,
+          null);
       resultMappings.add(resultMapping);
     }
   }
@@ -542,7 +547,7 @@ public class MapperAnnotationBuilder {
 
     assistant.addMappedStatement(id, sqlSource, statementType, sqlCommandType, fetchSize, timeout, parameterMap, parameterTypeClass, resultMap, resultTypeClass, resultSetTypeEnum,
         flushCache, useCache, false,
-        keyGenerator, keyProperty, null, null, languageDriver);
+        keyGenerator, keyProperty, null, null, languageDriver, null);
 
     id = assistant.applyCurrentNamespace(id, false);
 
