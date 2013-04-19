@@ -63,6 +63,22 @@
   <sql id="include">
   	FROM names
   </sql>
+
+  <select id="selectRawWithIncludeAndCData" resultType="Name" lang="raw">
+  	<![CDATA[
+    SELECT firstName, lastName
+  	]]>
+    <include refid="includeWithCData"/>
+  	<![CDATA[
+    WHERE lastName LIKE #{name}
+  	]]>
+  </select>
+
+  <sql id="includeWithCData">
+  	<![CDATA[
+  	FROM names
+  	]]>
+  </sql>
   
   <select id="selectXml" resultType="Name" lang="xml">
     SELECT firstName
