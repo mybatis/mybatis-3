@@ -54,6 +54,16 @@
     WHERE lastName LIKE #{name}
   </select>
 
+  <select id="selectRawWithInclude" resultType="Name" lang="raw">
+    SELECT firstName, lastName
+    <include refid="include"/>
+    WHERE lastName LIKE #{name}
+  </select>
+
+  <sql id="include">
+  	FROM names
+  </sql>
+  
   <select id="selectXml" resultType="Name" lang="xml">
     SELECT firstName
     <if test="includeLastName != null">, lastName</if>

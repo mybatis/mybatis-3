@@ -162,6 +162,21 @@ public class LanguageTest {
   }
 
   @Test
+  public void testLangRawWithInclude() {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      Parameter p = new Parameter(true, "Fli%");
+      List<Name> answer = sqlSession.selectList("selectRawWithInclude", p);
+      assertEquals(3, answer.size());
+      for (Name n : answer) {
+        assertEquals("Flintstone", n.getLastName());
+      }
+    } finally {
+      sqlSession.close();
+    }
+  }
+  
+  @Test
   public void testLangXmlTags() {
     SqlSession sqlSession = sqlSessionFactory.openSession();
     try {

@@ -22,6 +22,8 @@ import org.apache.ibatis.mapping.SqlSource;
 import org.apache.ibatis.parsing.XNode;
 import org.apache.ibatis.scripting.LanguageDriver;
 import org.apache.ibatis.session.Configuration;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 public class RawLanguageDriver implements LanguageDriver {
 
@@ -30,7 +32,16 @@ public class RawLanguageDriver implements LanguageDriver {
   }
 
   public SqlSource createSqlSource(Configuration configuration, XNode script, Class<?> parameterType) {
-    return new RawSqlSource(configuration, script.getStringBody(), parameterType);
+    StringBuilder contents = new StringBuilder();
+    NodeList children = script.getNode().getChildNodes();
+    for (int i = 0; i < children.getLength(); i++) {
+      XNode child = script.newXNode(children.item(i));
+      if (child.getNode().getNodeType() == Node.CDATA_SECTION_NODE || child.getNode().getNodeType() == Node.TEXT_NODE) {
+        String data = child.getStringBody("");
+        contents.append(data);
+      }
+    }
+    return new RawSqlSource(configuration, contents.toString(), parameterType);
   }
 
   public SqlSource createSqlSource(Configuration configuration, String script, Class<?> parameterType) {
