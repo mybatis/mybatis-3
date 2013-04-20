@@ -1,81 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <pmd-cpd>
-<duplication lines="68" tokens="489">
-<file line="50" path="/home/eduardo/git/mybatis-3/src/main/java/org/apache/ibatis/executor/loader/CglibSerialStateHolder.java"/>
-<file line="50" path="/home/eduardo/git/mybatis-3/src/main/java/org/apache/ibatis/executor/loader/JavassistSerialStateHolder.java"/>
-<codefragment>
-<![CDATA[
-  public CglibSerialStateHolder(
-      final Object userBean, 
-      final Set<String> unloadedProperties,
-      final ObjectFactory objectFactory, 
-      List<Class<?>> constructorArgTypes, 
-      List<Object> constructorArgs) {
-    this.userBean = userBean;
-    this.unloadedProperties = unloadedProperties.toArray(new String[unloadedProperties.size()]);
-    this.objectFactory = objectFactory;
-    this.constructorArgTypes = constructorArgTypes.toArray(new Class[constructorArgTypes.size()]);
-    this.constructorArgs = constructorArgs.toArray(new Object[constructorArgs.size()]);
-  }
-
-  public void writeExternal(final ObjectOutput out) throws IOException {
-    boolean firstRound = false;
-    final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    ObjectOutputStream os = stream.get();
-    if (os == null) {
-      os = new ObjectOutputStream(baos);
-      firstRound = true;
-      stream.set(os);
-    }
-
-    os.writeObject(this.userBean);
-    os.writeObject(this.unloadedProperties);
-    os.writeObject(this.objectFactory);
-    os.writeObject(this.constructorArgTypes);
-    os.writeObject(this.constructorArgs);
-
-    final byte[] bytes = baos.toByteArray();
-    out.writeObject(bytes);
-
-    if (firstRound) stream.remove();
-  }
-
-  public void readExternal(final ObjectInput in) throws IOException, ClassNotFoundException {
-    final Object data = in.readObject();
-    if (data.getClass().isArray()) {
-      this.userBeanBytes = (byte[]) data;
-    } else {
-      this.userBean = data;
-    }
-  }
-
-  protected Object readResolve() throws ObjectStreamException {
-    /* Second run */
-    if (this.userBean != null && this.userBeanBytes.length == 0) {
-      return this.userBean;
-    }
-
-    /* First run */
-    try {
-      final ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(this.userBeanBytes));
-      this.userBean = in.readObject();
-      this.unloadedProperties = (String[]) in.readObject();
-      this.objectFactory = (ObjectFactory) in.readObject();
-      this.constructorArgTypes = (Class<?>[]) in.readObject();
-      this.constructorArgs = (Object[]) in.readObject();
-    } catch (final IOException ex) {
-      throw (ObjectStreamException) new StreamCorruptedException().initCause(ex);
-    } catch (final ClassNotFoundException ex) {
-      throw (ObjectStreamException) new InvalidClassException(ex.getLocalizedMessage()).initCause(ex);
-    }
-
-    Set<String> arrayProps = new HashSet<String>(Arrays.asList(this.unloadedProperties));
-    List<Class<?>> arrayTypes = Arrays.asList(this.constructorArgTypes);
-    List<Object> arrayValues = Arrays.asList(this.constructorArgs);
-    return new CglibProxyFactory().createDeserializationProxy(userBean, arrayProps, objectFactory, arrayTypes, arrayValues);
-]]>
-</codefragment>
-</duplication>
 <duplication lines="45" tokens="231">
 <file line="25" path="/home/eduardo/git/mybatis-3/src/main/java/org/apache/ibatis/type/ClobTypeHandler.java"/>
 <file line="25" path="/home/eduardo/git/mybatis-3/src/main/java/org/apache/ibatis/type/NClobTypeHandler.java"/>
@@ -187,12 +111,13 @@ public class ClobTypeHandler extends BaseTypeHandler<String> {
 ]]>
 </codefragment>
 </duplication>
-<duplication lines="28" tokens="206">
-<file line="89" path="/home/eduardo/git/mybatis-3/src/main/java/org/apache/ibatis/executor/loader/CglibProxyFactory.java"/>
-<file line="91" path="/home/eduardo/git/mybatis-3/src/main/java/org/apache/ibatis/executor/loader/JavassistProxyFactory.java"/>
+<duplication lines="29" tokens="206">
+<file line="92" path="/home/eduardo/git/mybatis-3/src/main/java/org/apache/ibatis/executor/loader/cglib/CglibProxyFactory.java"/>
+<file line="94" path="/home/eduardo/git/mybatis-3/src/main/java/org/apache/ibatis/executor/loader/javassist/JavassistProxyFactory.java"/>
 <codefragment>
 <![CDATA[
   private static class EnhancedResultObjectProxyImpl implements MethodInterceptor {
+
     private Class<?> type;
     private ResultLoaderMap lazyLoader;
     private boolean aggressive;
@@ -223,27 +148,20 @@ public class ClobTypeHandler extends BaseTypeHandler<String> {
 ]]>
 </codefragment>
 </duplication>
-<duplication lines="24" tokens="180">
-<file line="153" path="/home/eduardo/git/mybatis-3/src/main/java/org/apache/ibatis/executor/loader/CglibProxyFactory.java"/>
-<file line="155" path="/home/eduardo/git/mybatis-3/src/main/java/org/apache/ibatis/executor/loader/JavassistProxyFactory.java"/>
+<duplication lines="18" tokens="147">
+<file line="157" path="/home/eduardo/git/mybatis-3/src/main/java/org/apache/ibatis/executor/loader/cglib/CglibProxyFactory.java"/>
+<file line="159" path="/home/eduardo/git/mybatis-3/src/main/java/org/apache/ibatis/executor/loader/javassist/JavassistProxyFactory.java"/>
 <codefragment>
 <![CDATA[
-  private static class EnhancedDeserializationProxyImpl implements MethodInterceptor {
-    private Class<?> type;
-    private Set<String> unloadedProperties;
-    private ObjectFactory objectFactory;
-    private List<Class<?>> constructorArgTypes;
-    private List<Object> constructorArgs;
+  private static class EnhancedDeserializationProxyImpl extends AbstractEnhancedDeserializationProxy implements MethodInterceptor {
 
-    private EnhancedDeserializationProxyImpl(Class<?> type, Set<String> unloadedProperties, ObjectFactory objectFactory, List<Class<?>> constructorArgTypes, List<Object> constructorArgs) {
-      this.type = type;
-      this.unloadedProperties = unloadedProperties;
-      this.objectFactory = objectFactory;
-      this.constructorArgTypes = constructorArgTypes;
-      this.constructorArgs = constructorArgs;
+    private EnhancedDeserializationProxyImpl(Class<?> type, Map<String, ResultLoaderMap.LoadPair> unloadedProperties, ObjectFactory objectFactory,
+            List<Class<?>> constructorArgTypes, List<Object> constructorArgs) {
+      super(type, unloadedProperties, objectFactory, constructorArgTypes, constructorArgs);
     }
 
-    public static Object createProxy(Object target, Set<String> unloadedProperties, ObjectFactory objectFactory, List<Class<?>> constructorArgTypes, List<Object> constructorArgs) {
+    public static Object createProxy(Object target, Map<String, ResultLoaderMap.LoadPair> unloadedProperties, ObjectFactory objectFactory,
+            List<Class<?>> constructorArgTypes, List<Object> constructorArgs) {
       final Class<?> type = target.getClass();
       EnhancedDeserializationProxyImpl callback = new EnhancedDeserializationProxyImpl(type, unloadedProperties, objectFactory, constructorArgTypes, constructorArgs);
       Object enhanced = crateProxy(type, callback, constructorArgTypes, constructorArgs);
@@ -251,6 +169,7 @@ public class ClobTypeHandler extends BaseTypeHandler<String> {
       return enhanced;
     }
 
+    @Override
     public Object intercept(Object enhanced, Method method, Object[] args, MethodProxy methodProxy) throws Throwable {
 ]]>
 </codefragment>
@@ -291,20 +210,20 @@ public class ClobTypeHandler extends BaseTypeHandler<String> {
 ]]>
 </codefragment>
 </duplication>
-<duplication lines="16" tokens="123">
-<file line="50" path="/home/eduardo/git/mybatis-3/src/main/java/org/apache/ibatis/executor/loader/CglibProxyFactory.java"/>
-<file line="49" path="/home/eduardo/git/mybatis-3/src/main/java/org/apache/ibatis/executor/loader/JavassistProxyFactory.java"/>
+<duplication lines="16" tokens="127">
+<file line="53" path="/home/eduardo/git/mybatis-3/src/main/java/org/apache/ibatis/executor/loader/cglib/CglibProxyFactory.java"/>
+<file line="52" path="/home/eduardo/git/mybatis-3/src/main/java/org/apache/ibatis/executor/loader/javassist/JavassistProxyFactory.java"/>
 <codefragment>
 <![CDATA[
       throw new IllegalStateException("Cannot enable lazy loading because CGLIB is not available. Add CGLIB to your classpath.", e);
     }
   }
-  
+
   public Object createProxy(Object target, ResultLoaderMap lazyLoader, Configuration configuration, ObjectFactory objectFactory, List<Class<?>> constructorArgTypes, List<Object> constructorArgs) {
     return EnhancedResultObjectProxyImpl.createProxy(target, lazyLoader, configuration, objectFactory, constructorArgTypes, constructorArgs);
   }
 
-  public Object createDeserializationProxy(Object target, Set<String> unloadedProperties, ObjectFactory objectFactory, List<Class<?>> constructorArgTypes, List<Object> constructorArgs) {
+  public Object createDeserializationProxy(Object target, Map<String, ResultLoaderMap.LoadPair> unloadedProperties, ObjectFactory objectFactory, List<Class<?>> constructorArgTypes, List<Object> constructorArgs) {
     return EnhancedDeserializationProxyImpl.createProxy(target, unloadedProperties, objectFactory, constructorArgTypes, constructorArgs);
   }
 
@@ -357,6 +276,7 @@ public class ClobTypeHandler extends BaseTypeHandler<String> {
 </duplication>
 <duplication lines="31" tokens="108">
 <file line="27" path="/home/eduardo/git/mybatis-3/src/main/java/org/apache/ibatis/logging/commons/JakartaCommonsLoggingImpl.java"/>
+<file line="35" path="/home/eduardo/git/mybatis-3/src/main/java/org/apache/ibatis/logging/log4j2/Log4j2Impl.java"/>
 <file line="46" path="/home/eduardo/git/mybatis-3/src/main/java/org/apache/ibatis/logging/slf4j/Slf4jImpl.java"/>
 <file line="27" path="/home/eduardo/git/mybatis-3/src/main/java/org/apache/ibatis/logging/slf4j/Slf4jLoggerImpl.java"/>
 <codefragment>
@@ -396,11 +316,11 @@ public class ClobTypeHandler extends BaseTypeHandler<String> {
 </codefragment>
 </duplication>
 <duplication lines="18" tokens="106">
-<file line="129" path="/home/eduardo/git/mybatis-3/src/main/java/org/apache/ibatis/executor/loader/CglibProxyFactory.java"/>
-<file line="131" path="/home/eduardo/git/mybatis-3/src/main/java/org/apache/ibatis/executor/loader/JavassistProxyFactory.java"/>
+<file line="133" path="/home/eduardo/git/mybatis-3/src/main/java/org/apache/ibatis/executor/loader/cglib/CglibProxyFactory.java"/>
+<file line="135" path="/home/eduardo/git/mybatis-3/src/main/java/org/apache/ibatis/executor/loader/javassist/JavassistProxyFactory.java"/>
 <codefragment>
 <![CDATA[
-              return new CglibSerialStateHolder(original, lazyLoader.getPropertyNames(), objectFactory, constructorArgTypes, constructorArgs);
+              return new CglibSerialStateHolder(original, lazyLoader.getProperties(), objectFactory, constructorArgTypes, constructorArgs);
             } else {
               return original;
             }

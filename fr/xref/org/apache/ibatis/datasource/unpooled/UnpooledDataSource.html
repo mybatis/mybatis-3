@@ -47,7 +47,7 @@
 <a class="jxr_linenumber" name="37" href="#37">37</a>    <strong class="jxr_keyword">private</strong> String username;
 <a class="jxr_linenumber" name="38" href="#38">38</a>    <strong class="jxr_keyword">private</strong> String password;
 <a class="jxr_linenumber" name="39" href="#39">39</a>  
-<a class="jxr_linenumber" name="40" href="#40">40</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">boolean</strong> autoCommit;
+<a class="jxr_linenumber" name="40" href="#40">40</a>    <strong class="jxr_keyword">private</strong> Boolean autoCommit;
 <a class="jxr_linenumber" name="41" href="#41">41</a>    <strong class="jxr_keyword">private</strong> Integer defaultTransactionIsolationLevel;
 <a class="jxr_linenumber" name="42" href="#42">42</a>  
 <a class="jxr_linenumber" name="43" href="#43">43</a>    <strong class="jxr_keyword">static</strong> {
@@ -158,11 +158,11 @@
 <a class="jxr_linenumber" name="148" href="#148">148</a>     <strong class="jxr_keyword">this</strong>.password = password;
 <a class="jxr_linenumber" name="149" href="#149">149</a>   }
 <a class="jxr_linenumber" name="150" href="#150">150</a> 
-<a class="jxr_linenumber" name="151" href="#151">151</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> isAutoCommit() {
+<a class="jxr_linenumber" name="151" href="#151">151</a>   <strong class="jxr_keyword">public</strong> Boolean isAutoCommit() {
 <a class="jxr_linenumber" name="152" href="#152">152</a>     <strong class="jxr_keyword">return</strong> autoCommit;
 <a class="jxr_linenumber" name="153" href="#153">153</a>   }
 <a class="jxr_linenumber" name="154" href="#154">154</a> 
-<a class="jxr_linenumber" name="155" href="#155">155</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setAutoCommit(<strong class="jxr_keyword">boolean</strong> autoCommit) {
+<a class="jxr_linenumber" name="155" href="#155">155</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setAutoCommit(Boolean autoCommit) {
 <a class="jxr_linenumber" name="156" href="#156">156</a>     <strong class="jxr_keyword">this</strong>.autoCommit = autoCommit;
 <a class="jxr_linenumber" name="157" href="#157">157</a>   }
 <a class="jxr_linenumber" name="158" href="#158">158</a> 
@@ -208,7 +208,7 @@
 <a class="jxr_linenumber" name="198" href="#198">198</a>   }
 <a class="jxr_linenumber" name="199" href="#199">199</a> 
 <a class="jxr_linenumber" name="200" href="#200">200</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> configureConnection(Connection conn) <strong class="jxr_keyword">throws</strong> SQLException {
-<a class="jxr_linenumber" name="201" href="#201">201</a>     <strong class="jxr_keyword">if</strong> (autoCommit != conn.getAutoCommit()) {
+<a class="jxr_linenumber" name="201" href="#201">201</a>     <strong class="jxr_keyword">if</strong> (autoCommit != <strong class="jxr_keyword">null</strong> &amp;&amp; autoCommit != conn.getAutoCommit()) {
 <a class="jxr_linenumber" name="202" href="#202">202</a>       conn.setAutoCommit(autoCommit);
 <a class="jxr_linenumber" name="203" href="#203">203</a>     }
 <a class="jxr_linenumber" name="204" href="#204">204</a>     <strong class="jxr_keyword">if</strong> (defaultTransactionIsolationLevel != <strong class="jxr_keyword">null</strong>) {

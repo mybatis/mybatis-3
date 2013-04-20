@@ -86,135 +86,135 @@
   <td class="src"><pre class="src">&nbsp;<span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">class</span> TypeHandlerRegistry {</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;34</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;35</td>  <td class="nbHitsCovered">&nbsp;152</td>  <td class="src"><pre class="src">&nbsp;  <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Map&lt;Class&lt;?&gt;, Class&lt;?&gt;&gt; reversePrimitiveMap = <span class="keyword">new</span> HashMap&lt;Class&lt;?&gt;, Class&lt;?&gt;&gt;() {</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;35</td>  <td class="nbHitsCovered">&nbsp;306</td>  <td class="src"><pre class="src">&nbsp;  <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Map&lt;Class&lt;?&gt;, Class&lt;?&gt;&gt; reversePrimitiveMap = <span class="keyword">new</span> HashMap&lt;Class&lt;?&gt;, Class&lt;?&gt;&gt;() {</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;36</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">long</span> serialVersionUID = 1L;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;37</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;38</td>  <td class="nbHitsCovered">&nbsp;152</td>  <td class="src"><pre class="src">&nbsp;      put(Byte.<span class="keyword">class</span>, <span class="keyword">byte</span>.<span class="keyword">class</span>);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;39</td>  <td class="nbHitsCovered">&nbsp;152</td>  <td class="src"><pre class="src">&nbsp;      put(Short.<span class="keyword">class</span>, <span class="keyword">short</span>.<span class="keyword">class</span>);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;40</td>  <td class="nbHitsCovered">&nbsp;152</td>  <td class="src"><pre class="src">&nbsp;      put(Integer.<span class="keyword">class</span>, <span class="keyword">int</span>.<span class="keyword">class</span>);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;41</td>  <td class="nbHitsCovered">&nbsp;152</td>  <td class="src"><pre class="src">&nbsp;      put(Long.<span class="keyword">class</span>, <span class="keyword">long</span>.<span class="keyword">class</span>);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;42</td>  <td class="nbHitsCovered">&nbsp;152</td>  <td class="src"><pre class="src">&nbsp;      put(Float.<span class="keyword">class</span>, <span class="keyword">float</span>.<span class="keyword">class</span>);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;43</td>  <td class="nbHitsCovered">&nbsp;152</td>  <td class="src"><pre class="src">&nbsp;      put(Double.<span class="keyword">class</span>, <span class="keyword">double</span>.<span class="keyword">class</span>);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;44</td>  <td class="nbHitsCovered">&nbsp;152</td>  <td class="src"><pre class="src">&nbsp;      put(Boolean.<span class="keyword">class</span>, <span class="keyword">boolean</span>.<span class="keyword">class</span>);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;45</td>  <td class="nbHitsCovered">&nbsp;152</td>  <td class="src"><pre class="src">&nbsp;      put(Character.<span class="keyword">class</span>, <span class="keyword">char</span>.<span class="keyword">class</span>);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;46</td>  <td class="nbHitsCovered">&nbsp;152</td>  <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;38</td>  <td class="nbHitsCovered">&nbsp;306</td>  <td class="src"><pre class="src">&nbsp;      put(Byte.<span class="keyword">class</span>, <span class="keyword">byte</span>.<span class="keyword">class</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;39</td>  <td class="nbHitsCovered">&nbsp;306</td>  <td class="src"><pre class="src">&nbsp;      put(Short.<span class="keyword">class</span>, <span class="keyword">short</span>.<span class="keyword">class</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;40</td>  <td class="nbHitsCovered">&nbsp;306</td>  <td class="src"><pre class="src">&nbsp;      put(Integer.<span class="keyword">class</span>, <span class="keyword">int</span>.<span class="keyword">class</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;41</td>  <td class="nbHitsCovered">&nbsp;306</td>  <td class="src"><pre class="src">&nbsp;      put(Long.<span class="keyword">class</span>, <span class="keyword">long</span>.<span class="keyword">class</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;42</td>  <td class="nbHitsCovered">&nbsp;306</td>  <td class="src"><pre class="src">&nbsp;      put(Float.<span class="keyword">class</span>, <span class="keyword">float</span>.<span class="keyword">class</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;43</td>  <td class="nbHitsCovered">&nbsp;306</td>  <td class="src"><pre class="src">&nbsp;      put(Double.<span class="keyword">class</span>, <span class="keyword">double</span>.<span class="keyword">class</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;44</td>  <td class="nbHitsCovered">&nbsp;306</td>  <td class="src"><pre class="src">&nbsp;      put(Boolean.<span class="keyword">class</span>, <span class="keyword">boolean</span>.<span class="keyword">class</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;45</td>  <td class="nbHitsCovered">&nbsp;306</td>  <td class="src"><pre class="src">&nbsp;      put(Character.<span class="keyword">class</span>, <span class="keyword">char</span>.<span class="keyword">class</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;46</td>  <td class="nbHitsCovered">&nbsp;306</td>  <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;47</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;  };</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;48</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;49</td>  <td class="nbHitsCovered">&nbsp;20588</td>  <td class="src"><pre class="src">&nbsp;  <span class="keyword">private</span> <span class="keyword">final</span> Map&lt;JdbcType, TypeHandler&lt;?&gt;&gt; JDBC_TYPE_HANDLER_MAP = <span class="keyword">new</span> EnumMap&lt;JdbcType, TypeHandler&lt;?&gt;&gt;(JdbcType.<span class="keyword">class</span>);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;50</td>  <td class="nbHitsCovered">&nbsp;20588</td>  <td class="src"><pre class="src">&nbsp;  <span class="keyword">private</span> <span class="keyword">final</span> Map&lt;Type, Map&lt;JdbcType, TypeHandler&lt;?&gt;&gt;&gt; TYPE_HANDLER_MAP = <span class="keyword">new</span> HashMap&lt;Type, Map&lt;JdbcType, TypeHandler&lt;?&gt;&gt;&gt;();</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;51</td>  <td class="nbHitsCovered">&nbsp;20588</td>  <td class="src"><pre class="src">&nbsp;  <span class="keyword">private</span> <span class="keyword">final</span> TypeHandler&lt;Object&gt; UNKNOWN_TYPE_HANDLER = <span class="keyword">new</span> UnknownTypeHandler(<span class="keyword">this</span>);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;52</td>  <td class="nbHitsCovered">&nbsp;20588</td>  <td class="src"><pre class="src">&nbsp;  <span class="keyword">private</span> <span class="keyword">final</span> Map&lt;Class&lt;?&gt;, TypeHandler&lt;?&gt;&gt; ALL_TYPE_HANDLERS_MAP = <span class="keyword">new</span> HashMap&lt;Class&lt;?&gt;, TypeHandler&lt;?&gt;&gt;();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;49</td>  <td class="nbHitsCovered">&nbsp;41178</td>  <td class="src"><pre class="src">&nbsp;  <span class="keyword">private</span> <span class="keyword">final</span> Map&lt;JdbcType, TypeHandler&lt;?&gt;&gt; JDBC_TYPE_HANDLER_MAP = <span class="keyword">new</span> EnumMap&lt;JdbcType, TypeHandler&lt;?&gt;&gt;(JdbcType.<span class="keyword">class</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;50</td>  <td class="nbHitsCovered">&nbsp;41178</td>  <td class="src"><pre class="src">&nbsp;  <span class="keyword">private</span> <span class="keyword">final</span> Map&lt;Type, Map&lt;JdbcType, TypeHandler&lt;?&gt;&gt;&gt; TYPE_HANDLER_MAP = <span class="keyword">new</span> HashMap&lt;Type, Map&lt;JdbcType, TypeHandler&lt;?&gt;&gt;&gt;();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;51</td>  <td class="nbHitsCovered">&nbsp;41178</td>  <td class="src"><pre class="src">&nbsp;  <span class="keyword">private</span> <span class="keyword">final</span> TypeHandler&lt;Object&gt; UNKNOWN_TYPE_HANDLER = <span class="keyword">new</span> UnknownTypeHandler(<span class="keyword">this</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;52</td>  <td class="nbHitsCovered">&nbsp;41178</td>  <td class="src"><pre class="src">&nbsp;  <span class="keyword">private</span> <span class="keyword">final</span> Map&lt;Class&lt;?&gt;, TypeHandler&lt;?&gt;&gt; ALL_TYPE_HANDLERS_MAP = <span class="keyword">new</span> HashMap&lt;Class&lt;?&gt;, TypeHandler&lt;?&gt;&gt;();</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;53</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;54</td>  <td class="nbHitsCovered">&nbsp;20588</td>  <td class="src"><pre class="src">&nbsp;  <span class="keyword">public</span> TypeHandlerRegistry() {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;55</td>  <td class="nbHitsCovered">&nbsp;20588</td>  <td class="src"><pre class="src">&nbsp;    register(Boolean.<span class="keyword">class</span>, <span class="keyword">new</span> BooleanTypeHandler());</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;56</td>  <td class="nbHitsCovered">&nbsp;20588</td>  <td class="src"><pre class="src">&nbsp;    register(<span class="keyword">boolean</span>.<span class="keyword">class</span>, <span class="keyword">new</span> BooleanTypeHandler());</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;57</td>  <td class="nbHitsCovered">&nbsp;20588</td>  <td class="src"><pre class="src">&nbsp;    register(JdbcType.BOOLEAN, <span class="keyword">new</span> BooleanTypeHandler());</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;58</td>  <td class="nbHitsCovered">&nbsp;20588</td>  <td class="src"><pre class="src">&nbsp;    register(JdbcType.BIT, <span class="keyword">new</span> BooleanTypeHandler());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;54</td>  <td class="nbHitsCovered">&nbsp;41178</td>  <td class="src"><pre class="src">&nbsp;  <span class="keyword">public</span> TypeHandlerRegistry() {</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;55</td>  <td class="nbHitsCovered">&nbsp;41178</td>  <td class="src"><pre class="src">&nbsp;    register(Boolean.<span class="keyword">class</span>, <span class="keyword">new</span> BooleanTypeHandler());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;56</td>  <td class="nbHitsCovered">&nbsp;41178</td>  <td class="src"><pre class="src">&nbsp;    register(<span class="keyword">boolean</span>.<span class="keyword">class</span>, <span class="keyword">new</span> BooleanTypeHandler());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;57</td>  <td class="nbHitsCovered">&nbsp;41178</td>  <td class="src"><pre class="src">&nbsp;    register(JdbcType.BOOLEAN, <span class="keyword">new</span> BooleanTypeHandler());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;58</td>  <td class="nbHitsCovered">&nbsp;41178</td>  <td class="src"><pre class="src">&nbsp;    register(JdbcType.BIT, <span class="keyword">new</span> BooleanTypeHandler());</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;59</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;60</td>  <td class="nbHitsCovered">&nbsp;20588</td>  <td class="src"><pre class="src">&nbsp;    register(Byte.<span class="keyword">class</span>, <span class="keyword">new</span> ByteTypeHandler());</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;61</td>  <td class="nbHitsCovered">&nbsp;20588</td>  <td class="src"><pre class="src">&nbsp;    register(<span class="keyword">byte</span>.<span class="keyword">class</span>, <span class="keyword">new</span> ByteTypeHandler());</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;62</td>  <td class="nbHitsCovered">&nbsp;20588</td>  <td class="src"><pre class="src">&nbsp;    register(JdbcType.TINYINT, <span class="keyword">new</span> ByteTypeHandler());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;60</td>  <td class="nbHitsCovered">&nbsp;41178</td>  <td class="src"><pre class="src">&nbsp;    register(Byte.<span class="keyword">class</span>, <span class="keyword">new</span> ByteTypeHandler());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;61</td>  <td class="nbHitsCovered">&nbsp;41178</td>  <td class="src"><pre class="src">&nbsp;    register(<span class="keyword">byte</span>.<span class="keyword">class</span>, <span class="keyword">new</span> ByteTypeHandler());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;62</td>  <td class="nbHitsCovered">&nbsp;41178</td>  <td class="src"><pre class="src">&nbsp;    register(JdbcType.TINYINT, <span class="keyword">new</span> ByteTypeHandler());</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;63</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;64</td>  <td class="nbHitsCovered">&nbsp;20588</td>  <td class="src"><pre class="src">&nbsp;    register(Short.<span class="keyword">class</span>, <span class="keyword">new</span> ShortTypeHandler());</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;65</td>  <td class="nbHitsCovered">&nbsp;20588</td>  <td class="src"><pre class="src">&nbsp;    register(<span class="keyword">short</span>.<span class="keyword">class</span>, <span class="keyword">new</span> ShortTypeHandler());</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;66</td>  <td class="nbHitsCovered">&nbsp;20588</td>  <td class="src"><pre class="src">&nbsp;    register(JdbcType.SMALLINT, <span class="keyword">new</span> ShortTypeHandler());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;64</td>  <td class="nbHitsCovered">&nbsp;41178</td>  <td class="src"><pre class="src">&nbsp;    register(Short.<span class="keyword">class</span>, <span class="keyword">new</span> ShortTypeHandler());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;65</td>  <td class="nbHitsCovered">&nbsp;41178</td>  <td class="src"><pre class="src">&nbsp;    register(<span class="keyword">short</span>.<span class="keyword">class</span>, <span class="keyword">new</span> ShortTypeHandler());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;66</td>  <td class="nbHitsCovered">&nbsp;41178</td>  <td class="src"><pre class="src">&nbsp;    register(JdbcType.SMALLINT, <span class="keyword">new</span> ShortTypeHandler());</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;67</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;68</td>  <td class="nbHitsCovered">&nbsp;20588</td>  <td class="src"><pre class="src">&nbsp;    register(Integer.<span class="keyword">class</span>, <span class="keyword">new</span> IntegerTypeHandler());</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;69</td>  <td class="nbHitsCovered">&nbsp;20588</td>  <td class="src"><pre class="src">&nbsp;    register(<span class="keyword">int</span>.<span class="keyword">class</span>, <span class="keyword">new</span> IntegerTypeHandler());</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;70</td>  <td class="nbHitsCovered">&nbsp;20588</td>  <td class="src"><pre class="src">&nbsp;    register(JdbcType.INTEGER, <span class="keyword">new</span> IntegerTypeHandler());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;68</td>  <td class="nbHitsCovered">&nbsp;41178</td>  <td class="src"><pre class="src">&nbsp;    register(Integer.<span class="keyword">class</span>, <span class="keyword">new</span> IntegerTypeHandler());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;69</td>  <td class="nbHitsCovered">&nbsp;41178</td>  <td class="src"><pre class="src">&nbsp;    register(<span class="keyword">int</span>.<span class="keyword">class</span>, <span class="keyword">new</span> IntegerTypeHandler());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;70</td>  <td class="nbHitsCovered">&nbsp;41178</td>  <td class="src"><pre class="src">&nbsp;    register(JdbcType.INTEGER, <span class="keyword">new</span> IntegerTypeHandler());</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;71</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;72</td>  <td class="nbHitsCovered">&nbsp;20588</td>  <td class="src"><pre class="src">&nbsp;    register(Long.<span class="keyword">class</span>, <span class="keyword">new</span> LongTypeHandler());</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;73</td>  <td class="nbHitsCovered">&nbsp;20588</td>  <td class="src"><pre class="src">&nbsp;    register(<span class="keyword">long</span>.<span class="keyword">class</span>, <span class="keyword">new</span> LongTypeHandler());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;72</td>  <td class="nbHitsCovered">&nbsp;41178</td>  <td class="src"><pre class="src">&nbsp;    register(Long.<span class="keyword">class</span>, <span class="keyword">new</span> LongTypeHandler());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;73</td>  <td class="nbHitsCovered">&nbsp;41178</td>  <td class="src"><pre class="src">&nbsp;    register(<span class="keyword">long</span>.<span class="keyword">class</span>, <span class="keyword">new</span> LongTypeHandler());</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;74</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;75</td>  <td class="nbHitsCovered">&nbsp;20588</td>  <td class="src"><pre class="src">&nbsp;    register(Float.<span class="keyword">class</span>, <span class="keyword">new</span> FloatTypeHandler());</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;76</td>  <td class="nbHitsCovered">&nbsp;20588</td>  <td class="src"><pre class="src">&nbsp;    register(<span class="keyword">float</span>.<span class="keyword">class</span>, <span class="keyword">new</span> FloatTypeHandler());</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;77</td>  <td class="nbHitsCovered">&nbsp;20588</td>  <td class="src"><pre class="src">&nbsp;    register(JdbcType.FLOAT, <span class="keyword">new</span> FloatTypeHandler());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;75</td>  <td class="nbHitsCovered">&nbsp;41178</td>  <td class="src"><pre class="src">&nbsp;    register(Float.<span class="keyword">class</span>, <span class="keyword">new</span> FloatTypeHandler());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;76</td>  <td class="nbHitsCovered">&nbsp;41178</td>  <td class="src"><pre class="src">&nbsp;    register(<span class="keyword">float</span>.<span class="keyword">class</span>, <span class="keyword">new</span> FloatTypeHandler());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;77</td>  <td class="nbHitsCovered">&nbsp;41178</td>  <td class="src"><pre class="src">&nbsp;    register(JdbcType.FLOAT, <span class="keyword">new</span> FloatTypeHandler());</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;78</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;79</td>  <td class="nbHitsCovered">&nbsp;20588</td>  <td class="src"><pre class="src">&nbsp;    register(Double.<span class="keyword">class</span>, <span class="keyword">new</span> DoubleTypeHandler());</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;80</td>  <td class="nbHitsCovered">&nbsp;20588</td>  <td class="src"><pre class="src">&nbsp;    register(<span class="keyword">double</span>.<span class="keyword">class</span>, <span class="keyword">new</span> DoubleTypeHandler());</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;81</td>  <td class="nbHitsCovered">&nbsp;20588</td>  <td class="src"><pre class="src">&nbsp;    register(JdbcType.DOUBLE, <span class="keyword">new</span> DoubleTypeHandler());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;79</td>  <td class="nbHitsCovered">&nbsp;41178</td>  <td class="src"><pre class="src">&nbsp;    register(Double.<span class="keyword">class</span>, <span class="keyword">new</span> DoubleTypeHandler());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;80</td>  <td class="nbHitsCovered">&nbsp;41178</td>  <td class="src"><pre class="src">&nbsp;    register(<span class="keyword">double</span>.<span class="keyword">class</span>, <span class="keyword">new</span> DoubleTypeHandler());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;81</td>  <td class="nbHitsCovered">&nbsp;41178</td>  <td class="src"><pre class="src">&nbsp;    register(JdbcType.DOUBLE, <span class="keyword">new</span> DoubleTypeHandler());</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;82</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;83</td>  <td class="nbHitsCovered">&nbsp;20588</td>  <td class="src"><pre class="src">&nbsp;    register(String.<span class="keyword">class</span>, <span class="keyword">new</span> StringTypeHandler());</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;84</td>  <td class="nbHitsCovered">&nbsp;20588</td>  <td class="src"><pre class="src">&nbsp;    register(String.<span class="keyword">class</span>, JdbcType.CHAR, <span class="keyword">new</span> StringTypeHandler());</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;85</td>  <td class="nbHitsCovered">&nbsp;20588</td>  <td class="src"><pre class="src">&nbsp;    register(String.<span class="keyword">class</span>, JdbcType.CLOB, <span class="keyword">new</span> ClobTypeHandler());</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;86</td>  <td class="nbHitsCovered">&nbsp;20588</td>  <td class="src"><pre class="src">&nbsp;    register(String.<span class="keyword">class</span>, JdbcType.VARCHAR, <span class="keyword">new</span> StringTypeHandler());</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;87</td>  <td class="nbHitsCovered">&nbsp;20588</td>  <td class="src"><pre class="src">&nbsp;    register(String.<span class="keyword">class</span>, JdbcType.LONGVARCHAR, <span class="keyword">new</span> ClobTypeHandler());</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;88</td>  <td class="nbHitsCovered">&nbsp;20588</td>  <td class="src"><pre class="src">&nbsp;    register(String.<span class="keyword">class</span>, JdbcType.NVARCHAR, <span class="keyword">new</span> NStringTypeHandler());</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;89</td>  <td class="nbHitsCovered">&nbsp;20588</td>  <td class="src"><pre class="src">&nbsp;    register(String.<span class="keyword">class</span>, JdbcType.NCHAR, <span class="keyword">new</span> NStringTypeHandler());</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;90</td>  <td class="nbHitsCovered">&nbsp;20588</td>  <td class="src"><pre class="src">&nbsp;    register(String.<span class="keyword">class</span>, JdbcType.NCLOB, <span class="keyword">new</span> NClobTypeHandler());</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;91</td>  <td class="nbHitsCovered">&nbsp;20588</td>  <td class="src"><pre class="src">&nbsp;    register(JdbcType.CHAR, <span class="keyword">new</span> StringTypeHandler());</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;92</td>  <td class="nbHitsCovered">&nbsp;20588</td>  <td class="src"><pre class="src">&nbsp;    register(JdbcType.VARCHAR, <span class="keyword">new</span> StringTypeHandler());</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;93</td>  <td class="nbHitsCovered">&nbsp;20588</td>  <td class="src"><pre class="src">&nbsp;    register(JdbcType.CLOB, <span class="keyword">new</span> ClobTypeHandler());</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;94</td>  <td class="nbHitsCovered">&nbsp;20588</td>  <td class="src"><pre class="src">&nbsp;    register(JdbcType.LONGVARCHAR, <span class="keyword">new</span> ClobTypeHandler());</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;95</td>  <td class="nbHitsCovered">&nbsp;20588</td>  <td class="src"><pre class="src">&nbsp;    register(JdbcType.NVARCHAR, <span class="keyword">new</span> NStringTypeHandler());</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;96</td>  <td class="nbHitsCovered">&nbsp;20588</td>  <td class="src"><pre class="src">&nbsp;    register(JdbcType.NCHAR, <span class="keyword">new</span> NStringTypeHandler());</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;97</td>  <td class="nbHitsCovered">&nbsp;20588</td>  <td class="src"><pre class="src">&nbsp;    register(JdbcType.NCLOB, <span class="keyword">new</span> NClobTypeHandler());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;83</td>  <td class="nbHitsCovered">&nbsp;41178</td>  <td class="src"><pre class="src">&nbsp;    register(String.<span class="keyword">class</span>, <span class="keyword">new</span> StringTypeHandler());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;84</td>  <td class="nbHitsCovered">&nbsp;41178</td>  <td class="src"><pre class="src">&nbsp;    register(String.<span class="keyword">class</span>, JdbcType.CHAR, <span class="keyword">new</span> StringTypeHandler());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;85</td>  <td class="nbHitsCovered">&nbsp;41178</td>  <td class="src"><pre class="src">&nbsp;    register(String.<span class="keyword">class</span>, JdbcType.CLOB, <span class="keyword">new</span> ClobTypeHandler());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;86</td>  <td class="nbHitsCovered">&nbsp;41178</td>  <td class="src"><pre class="src">&nbsp;    register(String.<span class="keyword">class</span>, JdbcType.VARCHAR, <span class="keyword">new</span> StringTypeHandler());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;87</td>  <td class="nbHitsCovered">&nbsp;41178</td>  <td class="src"><pre class="src">&nbsp;    register(String.<span class="keyword">class</span>, JdbcType.LONGVARCHAR, <span class="keyword">new</span> ClobTypeHandler());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;88</td>  <td class="nbHitsCovered">&nbsp;41178</td>  <td class="src"><pre class="src">&nbsp;    register(String.<span class="keyword">class</span>, JdbcType.NVARCHAR, <span class="keyword">new</span> NStringTypeHandler());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;89</td>  <td class="nbHitsCovered">&nbsp;41178</td>  <td class="src"><pre class="src">&nbsp;    register(String.<span class="keyword">class</span>, JdbcType.NCHAR, <span class="keyword">new</span> NStringTypeHandler());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;90</td>  <td class="nbHitsCovered">&nbsp;41178</td>  <td class="src"><pre class="src">&nbsp;    register(String.<span class="keyword">class</span>, JdbcType.NCLOB, <span class="keyword">new</span> NClobTypeHandler());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;91</td>  <td class="nbHitsCovered">&nbsp;41178</td>  <td class="src"><pre class="src">&nbsp;    register(JdbcType.CHAR, <span class="keyword">new</span> StringTypeHandler());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;92</td>  <td class="nbHitsCovered">&nbsp;41178</td>  <td class="src"><pre class="src">&nbsp;    register(JdbcType.VARCHAR, <span class="keyword">new</span> StringTypeHandler());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;93</td>  <td class="nbHitsCovered">&nbsp;41178</td>  <td class="src"><pre class="src">&nbsp;    register(JdbcType.CLOB, <span class="keyword">new</span> ClobTypeHandler());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;94</td>  <td class="nbHitsCovered">&nbsp;41178</td>  <td class="src"><pre class="src">&nbsp;    register(JdbcType.LONGVARCHAR, <span class="keyword">new</span> ClobTypeHandler());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;95</td>  <td class="nbHitsCovered">&nbsp;41178</td>  <td class="src"><pre class="src">&nbsp;    register(JdbcType.NVARCHAR, <span class="keyword">new</span> NStringTypeHandler());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;96</td>  <td class="nbHitsCovered">&nbsp;41178</td>  <td class="src"><pre class="src">&nbsp;    register(JdbcType.NCHAR, <span class="keyword">new</span> NStringTypeHandler());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;97</td>  <td class="nbHitsCovered">&nbsp;41178</td>  <td class="src"><pre class="src">&nbsp;    register(JdbcType.NCLOB, <span class="keyword">new</span> NClobTypeHandler());</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;98</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;99</td>  <td class="nbHitsCovered">&nbsp;20588</td>  <td class="src"><pre class="src">&nbsp;    register(Object.<span class="keyword">class</span>, JdbcType.ARRAY, <span class="keyword">new</span> ArrayTypeHandler());</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;100</td>  <td class="nbHitsCovered">&nbsp;20588</td>  <td class="src"><pre class="src">&nbsp;    register(JdbcType.ARRAY, <span class="keyword">new</span> ArrayTypeHandler());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;99</td>  <td class="nbHitsCovered">&nbsp;41178</td>  <td class="src"><pre class="src">&nbsp;    register(Object.<span class="keyword">class</span>, JdbcType.ARRAY, <span class="keyword">new</span> ArrayTypeHandler());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;100</td>  <td class="nbHitsCovered">&nbsp;41178</td>  <td class="src"><pre class="src">&nbsp;    register(JdbcType.ARRAY, <span class="keyword">new</span> ArrayTypeHandler());</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;101</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;102</td>  <td class="nbHitsCovered">&nbsp;20588</td>  <td class="src"><pre class="src">&nbsp;    register(BigInteger.<span class="keyword">class</span>, <span class="keyword">new</span> BigIntegerTypeHandler());</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;103</td>  <td class="nbHitsCovered">&nbsp;20588</td>  <td class="src"><pre class="src">&nbsp;    register(JdbcType.BIGINT, <span class="keyword">new</span> LongTypeHandler());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;102</td>  <td class="nbHitsCovered">&nbsp;41178</td>  <td class="src"><pre class="src">&nbsp;    register(BigInteger.<span class="keyword">class</span>, <span class="keyword">new</span> BigIntegerTypeHandler());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;103</td>  <td class="nbHitsCovered">&nbsp;41178</td>  <td class="src"><pre class="src">&nbsp;    register(JdbcType.BIGINT, <span class="keyword">new</span> LongTypeHandler());</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;104</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;105</td>  <td class="nbHitsCovered">&nbsp;20588</td>  <td class="src"><pre class="src">&nbsp;    register(BigDecimal.<span class="keyword">class</span>, <span class="keyword">new</span> BigDecimalTypeHandler());</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;106</td>  <td class="nbHitsCovered">&nbsp;20588</td>  <td class="src"><pre class="src">&nbsp;    register(JdbcType.REAL, <span class="keyword">new</span> BigDecimalTypeHandler());</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;107</td>  <td class="nbHitsCovered">&nbsp;20588</td>  <td class="src"><pre class="src">&nbsp;    register(JdbcType.DECIMAL, <span class="keyword">new</span> BigDecimalTypeHandler());</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;108</td>  <td class="nbHitsCovered">&nbsp;20588</td>  <td class="src"><pre class="src">&nbsp;    register(JdbcType.NUMERIC, <span class="keyword">new</span> BigDecimalTypeHandler());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;105</td>  <td class="nbHitsCovered">&nbsp;41178</td>  <td class="src"><pre class="src">&nbsp;    register(BigDecimal.<span class="keyword">class</span>, <span class="keyword">new</span> BigDecimalTypeHandler());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;106</td>  <td class="nbHitsCovered">&nbsp;41178</td>  <td class="src"><pre class="src">&nbsp;    register(JdbcType.REAL, <span class="keyword">new</span> BigDecimalTypeHandler());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;107</td>  <td class="nbHitsCovered">&nbsp;41178</td>  <td class="src"><pre class="src">&nbsp;    register(JdbcType.DECIMAL, <span class="keyword">new</span> BigDecimalTypeHandler());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;108</td>  <td class="nbHitsCovered">&nbsp;41178</td>  <td class="src"><pre class="src">&nbsp;    register(JdbcType.NUMERIC, <span class="keyword">new</span> BigDecimalTypeHandler());</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;109</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;110</td>  <td class="nbHitsCovered">&nbsp;20588</td>  <td class="src"><pre class="src">&nbsp;    register(Byte[].<span class="keyword">class</span>, <span class="keyword">new</span> ByteObjectArrayTypeHandler());</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;111</td>  <td class="nbHitsCovered">&nbsp;20588</td>  <td class="src"><pre class="src">&nbsp;    register(Byte[].<span class="keyword">class</span>, JdbcType.BLOB, <span class="keyword">new</span> BlobByteObjectArrayTypeHandler());</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;112</td>  <td class="nbHitsCovered">&nbsp;20588</td>  <td class="src"><pre class="src">&nbsp;    register(Byte[].<span class="keyword">class</span>, JdbcType.LONGVARBINARY, <span class="keyword">new</span> BlobByteObjectArrayTypeHandler());</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;113</td>  <td class="nbHitsCovered">&nbsp;20588</td>  <td class="src"><pre class="src">&nbsp;    register(<span class="keyword">byte</span>[].<span class="keyword">class</span>, <span class="keyword">new</span> ByteArrayTypeHandler());</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;114</td>  <td class="nbHitsCovered">&nbsp;20588</td>  <td class="src"><pre class="src">&nbsp;    register(<span class="keyword">byte</span>[].<span class="keyword">class</span>, JdbcType.BLOB, <span class="keyword">new</span> BlobTypeHandler());</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;115</td>  <td class="nbHitsCovered">&nbsp;20588</td>  <td class="src"><pre class="src">&nbsp;    register(<span class="keyword">byte</span>[].<span class="keyword">class</span>, JdbcType.LONGVARBINARY, <span class="keyword">new</span> BlobTypeHandler());</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;116</td>  <td class="nbHitsCovered">&nbsp;20588</td>  <td class="src"><pre class="src">&nbsp;    register(JdbcType.LONGVARBINARY, <span class="keyword">new</span> BlobTypeHandler());</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;117</td>  <td class="nbHitsCovered">&nbsp;20588</td>  <td class="src"><pre class="src">&nbsp;    register(JdbcType.BLOB, <span class="keyword">new</span> BlobTypeHandler());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;110</td>  <td class="nbHitsCovered">&nbsp;41178</td>  <td class="src"><pre class="src">&nbsp;    register(Byte[].<span class="keyword">class</span>, <span class="keyword">new</span> ByteObjectArrayTypeHandler());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;111</td>  <td class="nbHitsCovered">&nbsp;41178</td>  <td class="src"><pre class="src">&nbsp;    register(Byte[].<span class="keyword">class</span>, JdbcType.BLOB, <span class="keyword">new</span> BlobByteObjectArrayTypeHandler());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;112</td>  <td class="nbHitsCovered">&nbsp;41178</td>  <td class="src"><pre class="src">&nbsp;    register(Byte[].<span class="keyword">class</span>, JdbcType.LONGVARBINARY, <span class="keyword">new</span> BlobByteObjectArrayTypeHandler());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;113</td>  <td class="nbHitsCovered">&nbsp;41178</td>  <td class="src"><pre class="src">&nbsp;    register(<span class="keyword">byte</span>[].<span class="keyword">class</span>, <span class="keyword">new</span> ByteArrayTypeHandler());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;114</td>  <td class="nbHitsCovered">&nbsp;41178</td>  <td class="src"><pre class="src">&nbsp;    register(<span class="keyword">byte</span>[].<span class="keyword">class</span>, JdbcType.BLOB, <span class="keyword">new</span> BlobTypeHandler());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;115</td>  <td class="nbHitsCovered">&nbsp;41178</td>  <td class="src"><pre class="src">&nbsp;    register(<span class="keyword">byte</span>[].<span class="keyword">class</span>, JdbcType.LONGVARBINARY, <span class="keyword">new</span> BlobTypeHandler());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;116</td>  <td class="nbHitsCovered">&nbsp;41178</td>  <td class="src"><pre class="src">&nbsp;    register(JdbcType.LONGVARBINARY, <span class="keyword">new</span> BlobTypeHandler());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;117</td>  <td class="nbHitsCovered">&nbsp;41178</td>  <td class="src"><pre class="src">&nbsp;    register(JdbcType.BLOB, <span class="keyword">new</span> BlobTypeHandler());</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;118</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;119</td>  <td class="nbHitsCovered">&nbsp;20588</td>  <td class="src"><pre class="src">&nbsp;    register(Object.<span class="keyword">class</span>, UNKNOWN_TYPE_HANDLER);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;120</td>  <td class="nbHitsCovered">&nbsp;20588</td>  <td class="src"><pre class="src">&nbsp;    register(Object.<span class="keyword">class</span>, JdbcType.OTHER, UNKNOWN_TYPE_HANDLER);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;121</td>  <td class="nbHitsCovered">&nbsp;20588</td>  <td class="src"><pre class="src">&nbsp;    register(JdbcType.OTHER, UNKNOWN_TYPE_HANDLER);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;119</td>  <td class="nbHitsCovered">&nbsp;41178</td>  <td class="src"><pre class="src">&nbsp;    register(Object.<span class="keyword">class</span>, UNKNOWN_TYPE_HANDLER);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;120</td>  <td class="nbHitsCovered">&nbsp;41178</td>  <td class="src"><pre class="src">&nbsp;    register(Object.<span class="keyword">class</span>, JdbcType.OTHER, UNKNOWN_TYPE_HANDLER);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;121</td>  <td class="nbHitsCovered">&nbsp;41178</td>  <td class="src"><pre class="src">&nbsp;    register(JdbcType.OTHER, UNKNOWN_TYPE_HANDLER);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;122</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;123</td>  <td class="nbHitsCovered">&nbsp;20588</td>  <td class="src"><pre class="src">&nbsp;    register(Date.<span class="keyword">class</span>, <span class="keyword">new</span> DateTypeHandler());</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;124</td>  <td class="nbHitsCovered">&nbsp;20588</td>  <td class="src"><pre class="src">&nbsp;    register(Date.<span class="keyword">class</span>, JdbcType.DATE, <span class="keyword">new</span> DateOnlyTypeHandler());</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;125</td>  <td class="nbHitsCovered">&nbsp;20588</td>  <td class="src"><pre class="src">&nbsp;    register(Date.<span class="keyword">class</span>, JdbcType.TIME, <span class="keyword">new</span> TimeOnlyTypeHandler());</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;126</td>  <td class="nbHitsCovered">&nbsp;20588</td>  <td class="src"><pre class="src">&nbsp;    register(JdbcType.TIMESTAMP, <span class="keyword">new</span> DateTypeHandler());</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;127</td>  <td class="nbHitsCovered">&nbsp;20588</td>  <td class="src"><pre class="src">&nbsp;    register(JdbcType.DATE, <span class="keyword">new</span> DateOnlyTypeHandler());</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;128</td>  <td class="nbHitsCovered">&nbsp;20588</td>  <td class="src"><pre class="src">&nbsp;    register(JdbcType.TIME, <span class="keyword">new</span> TimeOnlyTypeHandler());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;123</td>  <td class="nbHitsCovered">&nbsp;41178</td>  <td class="src"><pre class="src">&nbsp;    register(Date.<span class="keyword">class</span>, <span class="keyword">new</span> DateTypeHandler());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;124</td>  <td class="nbHitsCovered">&nbsp;41178</td>  <td class="src"><pre class="src">&nbsp;    register(Date.<span class="keyword">class</span>, JdbcType.DATE, <span class="keyword">new</span> DateOnlyTypeHandler());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;125</td>  <td class="nbHitsCovered">&nbsp;41178</td>  <td class="src"><pre class="src">&nbsp;    register(Date.<span class="keyword">class</span>, JdbcType.TIME, <span class="keyword">new</span> TimeOnlyTypeHandler());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;126</td>  <td class="nbHitsCovered">&nbsp;41178</td>  <td class="src"><pre class="src">&nbsp;    register(JdbcType.TIMESTAMP, <span class="keyword">new</span> DateTypeHandler());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;127</td>  <td class="nbHitsCovered">&nbsp;41178</td>  <td class="src"><pre class="src">&nbsp;    register(JdbcType.DATE, <span class="keyword">new</span> DateOnlyTypeHandler());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;128</td>  <td class="nbHitsCovered">&nbsp;41178</td>  <td class="src"><pre class="src">&nbsp;    register(JdbcType.TIME, <span class="keyword">new</span> TimeOnlyTypeHandler());</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;129</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;130</td>  <td class="nbHitsCovered">&nbsp;20588</td>  <td class="src"><pre class="src">&nbsp;    register(java.sql.Date.<span class="keyword">class</span>, <span class="keyword">new</span> SqlDateTypeHandler());</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;131</td>  <td class="nbHitsCovered">&nbsp;20588</td>  <td class="src"><pre class="src">&nbsp;    register(java.sql.Time.<span class="keyword">class</span>, <span class="keyword">new</span> SqlTimeTypeHandler());</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;132</td>  <td class="nbHitsCovered">&nbsp;20588</td>  <td class="src"><pre class="src">&nbsp;    register(java.sql.Timestamp.<span class="keyword">class</span>, <span class="keyword">new</span> SqlTimestampTypeHandler());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;130</td>  <td class="nbHitsCovered">&nbsp;41178</td>  <td class="src"><pre class="src">&nbsp;    register(java.sql.Date.<span class="keyword">class</span>, <span class="keyword">new</span> SqlDateTypeHandler());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;131</td>  <td class="nbHitsCovered">&nbsp;41178</td>  <td class="src"><pre class="src">&nbsp;    register(java.sql.Time.<span class="keyword">class</span>, <span class="keyword">new</span> SqlTimeTypeHandler());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;132</td>  <td class="nbHitsCovered">&nbsp;41178</td>  <td class="src"><pre class="src">&nbsp;    register(java.sql.Timestamp.<span class="keyword">class</span>, <span class="keyword">new</span> SqlTimestampTypeHandler());</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;133</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;134</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="comment">// issue #273</span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;135</td>  <td class="nbHitsCovered">&nbsp;20588</td>  <td class="src"><pre class="src">&nbsp;    register(Character.<span class="keyword">class</span>, <span class="keyword">new</span> CharacterTypeHandler());</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;136</td>  <td class="nbHitsCovered">&nbsp;20588</td>  <td class="src"><pre class="src">&nbsp;    register(<span class="keyword">char</span>.<span class="keyword">class</span>, <span class="keyword">new</span> CharacterTypeHandler());</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;137</td>  <td class="nbHitsCovered">&nbsp;20588</td>  <td class="src"><pre class="src">&nbsp;  }</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;135</td>  <td class="nbHitsCovered">&nbsp;41178</td>  <td class="src"><pre class="src">&nbsp;    register(Character.<span class="keyword">class</span>, <span class="keyword">new</span> CharacterTypeHandler());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;136</td>  <td class="nbHitsCovered">&nbsp;41178</td>  <td class="src"><pre class="src">&nbsp;    register(<span class="keyword">char</span>.<span class="keyword">class</span>, <span class="keyword">new</span> CharacterTypeHandler());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;137</td>  <td class="nbHitsCovered">&nbsp;41178</td>  <td class="src"><pre class="src">&nbsp;  }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;138</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;139</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;  <span class="keyword">public</span> <span class="keyword">boolean</span> hasTypeHandler(Class&lt;?&gt; javaType) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;140</td>  <td class="nbHitsCovered">&nbsp;57922</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">return</span> hasTypeHandler(javaType, <span class="keyword">null</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;140</td>  <td class="nbHitsCovered">&nbsp;115932</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">return</span> hasTypeHandler(javaType, <span class="keyword">null</span>);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;141</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;  }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;142</td>  <td class="nbHits">&nbsp;</td>
@@ -228,7 +228,7 @@
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;147</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;  <span class="keyword">public</span> <span class="keyword">boolean</span> hasTypeHandler(Class&lt;?&gt; javaType, JdbcType jdbcType) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;148</td>  <td class="nbHitsCovered"><a title="Line 148: Conditional coverage 100% (4/4) [each condition: 100%, 100%].">&nbsp;57924</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 148: Conditional coverage 100% (4/4) [each condition: 100%, 100%].">    <span class="keyword">return</span> javaType != <span class="keyword">null</span> &amp;&amp; getTypeHandler((Type) javaType, jdbcType) != <span class="keyword">null</span>;</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;148</td>  <td class="nbHitsCovered"><a title="Line 148: Conditional coverage 100% (4/4) [each condition: 100%, 100%].">&nbsp;115936</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 148: Conditional coverage 100% (4/4) [each condition: 100%, 100%].">    <span class="keyword">return</span> javaType != <span class="keyword">null</span> &amp;&amp; getTypeHandler((Type) javaType, jdbcType) != <span class="keyword">null</span>;</a></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;149</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;  }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;150</td>  <td class="nbHits">&nbsp;</td>
@@ -242,21 +242,21 @@
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;155</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;  <span class="keyword">public</span> TypeHandler&lt;?&gt; getMappingTypeHandler(Class&lt;? <span class="keyword">extends</span> TypeHandler&lt;?&gt;&gt; handlerType) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;156</td>  <td class="nbHitsCovered">&nbsp;7</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">return</span> ALL_TYPE_HANDLERS_MAP.get(handlerType);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;156</td>  <td class="nbHitsCovered">&nbsp;14</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">return</span> ALL_TYPE_HANDLERS_MAP.get(handlerType);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;157</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;  }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;158</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;159</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;  <span class="keyword">public</span> &lt;T&gt; TypeHandler&lt;T&gt; getTypeHandler(Class&lt;T&gt; type) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;160</td>  <td class="nbHitsCovered">&nbsp;8213</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">return</span> getTypeHandler((Type) type, <span class="keyword">null</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;160</td>  <td class="nbHitsCovered">&nbsp;16436</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">return</span> getTypeHandler((Type) type, <span class="keyword">null</span>);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;161</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;  }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;162</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;163</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;  <span class="keyword">public</span> &lt;T&gt; TypeHandler&lt;T&gt; getTypeHandler(TypeReference&lt;T&gt; javaTypeReference) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;164</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">return</span> getTypeHandler(javaTypeReference, <span class="keyword">null</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;164</td>  <td class="nbHitsCovered">&nbsp;4</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">return</span> getTypeHandler(javaTypeReference, <span class="keyword">null</span>);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;165</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;  }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;166</td>  <td class="nbHits">&nbsp;</td>
@@ -270,55 +270,55 @@
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;171</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;  <span class="keyword">public</span> &lt;T&gt; TypeHandler&lt;T&gt; getTypeHandler(Class&lt;T&gt; type, JdbcType jdbcType) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;172</td>  <td class="nbHitsCovered">&nbsp;47968</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">return</span> getTypeHandler((Type) type, jdbcType);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;172</td>  <td class="nbHitsCovered">&nbsp;95958</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">return</span> getTypeHandler((Type) type, jdbcType);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;173</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;  }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;174</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;175</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;  <span class="keyword">public</span> &lt;T&gt; TypeHandler&lt;T&gt; getTypeHandler(TypeReference&lt;T&gt; javaTypeReference, JdbcType jdbcType) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;176</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">return</span> getTypeHandler(javaTypeReference.getRawType(), jdbcType);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;176</td>  <td class="nbHitsCovered">&nbsp;4</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">return</span> getTypeHandler(javaTypeReference.getRawType(), jdbcType);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;177</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;  }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;178</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;179</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;  <span class="keyword">private</span> &lt;T&gt; TypeHandler&lt;T&gt; getTypeHandler(Type type, JdbcType jdbcType) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;180</td>  <td class="nbHitsCovered">&nbsp;114073</td>  <td class="src"><pre class="src">&nbsp;    Map&lt;JdbcType, TypeHandler&lt;?&gt;&gt; jdbcHandlerMap = TYPE_HANDLER_MAP.get(type);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;181</td>  <td class="nbHitsCovered">&nbsp;114073</td>  <td class="src"><pre class="src">&nbsp;    TypeHandler&lt;?&gt; handler = <span class="keyword">null</span>;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;182</td>  <td class="nbHitsCovered"><a title="Line 182: Conditional coverage 100% (2/2).">&nbsp;114073</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 182: Conditional coverage 100% (2/2).">    <span class="keyword">if</span> (jdbcHandlerMap != <span class="keyword">null</span>) {</a></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;183</td>  <td class="nbHitsCovered">&nbsp;49202</td>  <td class="src"><pre class="src">&nbsp;      handler = jdbcHandlerMap.get(jdbcType);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;184</td>  <td class="nbHitsCovered"><a title="Line 184: Conditional coverage 100% (2/2).">&nbsp;49202</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 184: Conditional coverage 100% (2/2).">      <span class="keyword">if</span> (handler == <span class="keyword">null</span>) {</a></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;185</td>  <td class="nbHitsCovered">&nbsp;2816</td>  <td class="src"><pre class="src">&nbsp;        handler = jdbcHandlerMap.get(<span class="keyword">null</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;180</td>  <td class="nbHitsCovered">&nbsp;228266</td>  <td class="src"><pre class="src">&nbsp;    Map&lt;JdbcType, TypeHandler&lt;?&gt;&gt; jdbcHandlerMap = TYPE_HANDLER_MAP.get(type);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;181</td>  <td class="nbHitsCovered">&nbsp;228266</td>  <td class="src"><pre class="src">&nbsp;    TypeHandler&lt;?&gt; handler = <span class="keyword">null</span>;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;182</td>  <td class="nbHitsCovered"><a title="Line 182: Conditional coverage 100% (2/2).">&nbsp;228266</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 182: Conditional coverage 100% (2/2).">    <span class="keyword">if</span> (jdbcHandlerMap != <span class="keyword">null</span>) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;183</td>  <td class="nbHitsCovered">&nbsp;98472</td>  <td class="src"><pre class="src">&nbsp;      handler = jdbcHandlerMap.get(jdbcType);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;184</td>  <td class="nbHitsCovered"><a title="Line 184: Conditional coverage 100% (2/2).">&nbsp;98472</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 184: Conditional coverage 100% (2/2).">      <span class="keyword">if</span> (handler == <span class="keyword">null</span>) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;185</td>  <td class="nbHitsCovered">&nbsp;5632</td>  <td class="src"><pre class="src">&nbsp;        handler = jdbcHandlerMap.get(<span class="keyword">null</span>);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;186</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;      }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;187</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;188</td>  <td class="nbHitsUncovered"><a title="Line 188: Conditional coverage 75% (6/8) [each condition: 100%, 50%, 50%, 100%].">&nbsp;114073</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 188: Conditional coverage 75% (6/8) [each condition: 100%, 50%, 50%, 100%].">    <span class="keyword">if</span> (handler == <span class="keyword">null</span> &amp;&amp; type != <span class="keyword">null</span> &amp;&amp; type <span class="keyword">instanceof</span> Class &amp;&amp; Enum.<span class="keyword">class</span>.isAssignableFrom((Class&lt;?&gt;) type)) {</a></span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;189</td>  <td class="nbHitsCovered">&nbsp;732</td>  <td class="src"><pre class="src">&nbsp;      handler = <span class="keyword">new</span> EnumTypeHandler((Class&lt;?&gt;) type);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;188</td>  <td class="nbHitsUncovered"><a title="Line 188: Conditional coverage 75% (6/8) [each condition: 100%, 50%, 50%, 100%].">&nbsp;228266</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 188: Conditional coverage 75% (6/8) [each condition: 100%, 50%, 50%, 100%].">    <span class="keyword">if</span> (handler == <span class="keyword">null</span> &amp;&amp; type != <span class="keyword">null</span> &amp;&amp; type <span class="keyword">instanceof</span> Class &amp;&amp; Enum.<span class="keyword">class</span>.isAssignableFrom((Class&lt;?&gt;) type)) {</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;189</td>  <td class="nbHitsCovered">&nbsp;1464</td>  <td class="src"><pre class="src">&nbsp;      handler = <span class="keyword">new</span> EnumTypeHandler((Class&lt;?&gt;) type);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;190</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;191</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    @SuppressWarnings(<span class="string">"unchecked"</span>)</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;192</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="comment">// type drives generics here</span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;193</td>  <td class="nbHitsCovered">&nbsp;114073</td>  <td class="src"><pre class="src">&nbsp;    TypeHandler&lt;T&gt; returned = (TypeHandler&lt;T&gt;) handler;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;194</td>  <td class="nbHitsCovered">&nbsp;114073</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">return</span> returned;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;193</td>  <td class="nbHitsCovered">&nbsp;228266</td>  <td class="src"><pre class="src">&nbsp;    TypeHandler&lt;T&gt; returned = (TypeHandler&lt;T&gt;) handler;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;194</td>  <td class="nbHitsCovered">&nbsp;228266</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">return</span> returned;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;195</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;  }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;196</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;197</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;  <span class="keyword">public</span> TypeHandler&lt;Object&gt; getUnknownTypeHandler() {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;198</td>  <td class="nbHitsCovered">&nbsp;26830</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">return</span> UNKNOWN_TYPE_HANDLER;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;198</td>  <td class="nbHitsCovered">&nbsp;53660</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">return</span> UNKNOWN_TYPE_HANDLER;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;199</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;  }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;200</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;201</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;  <span class="keyword">public</span> <span class="keyword">void</span> register(JdbcType jdbcType, TypeHandler&lt;?&gt; handler) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;202</td>  <td class="nbHitsCovered">&nbsp;514700</td>  <td class="src"><pre class="src">&nbsp;    JDBC_TYPE_HANDLER_MAP.put(jdbcType, handler);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;203</td>  <td class="nbHitsCovered">&nbsp;514700</td>  <td class="src"><pre class="src">&nbsp;  }</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;202</td>  <td class="nbHitsCovered">&nbsp;1029450</td>  <td class="src"><pre class="src">&nbsp;    JDBC_TYPE_HANDLER_MAP.put(jdbcType, handler);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;203</td>  <td class="nbHitsCovered">&nbsp;1029450</td>  <td class="src"><pre class="src">&nbsp;  }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;204</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;205</td>  <td class="nbHits">&nbsp;</td>
@@ -337,9 +337,9 @@
   <td class="src"><pre class="src">&nbsp;  @SuppressWarnings(<span class="string">"unchecked"</span>)</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;212</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;  <span class="keyword">public</span> &lt;T&gt; <span class="keyword">void</span> register(TypeHandler&lt;T&gt; typeHandler) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;213</td>  <td class="nbHitsCovered">&nbsp;3</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">boolean</span> mappedTypeFound = <span class="keyword">false</span>;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;214</td>  <td class="nbHitsCovered">&nbsp;3</td>  <td class="src"><pre class="src">&nbsp;    MappedTypes mappedTypes = typeHandler.getClass().getAnnotation(MappedTypes.<span class="keyword">class</span>);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;215</td>  <td class="nbHitsUncovered"><a title="Line 215: Conditional coverage 50% (1/2).">&nbsp;3</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 215: Conditional coverage 50% (1/2).">    <span class="keyword">if</span> (mappedTypes != <span class="keyword">null</span>) {</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;213</td>  <td class="nbHitsCovered">&nbsp;6</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">boolean</span> mappedTypeFound = <span class="keyword">false</span>;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;214</td>  <td class="nbHitsCovered">&nbsp;6</td>  <td class="src"><pre class="src">&nbsp;    MappedTypes mappedTypes = typeHandler.getClass().getAnnotation(MappedTypes.<span class="keyword">class</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;215</td>  <td class="nbHitsUncovered"><a title="Line 215: Conditional coverage 50% (1/2).">&nbsp;6</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 215: Conditional coverage 50% (1/2).">    <span class="keyword">if</span> (mappedTypes != <span class="keyword">null</span>) {</a></span></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;216</td>  <td class="nbHitsUncovered"><a title="Line 216: Conditional coverage 0% (0/2).">&nbsp;0</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 216: Conditional coverage 0% (0/2).">      <span class="keyword">for</span> (Class&lt;?&gt; handledType : mappedTypes.value()) {</a></span></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;217</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;        register(handledType, typeHandler);</span></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;218</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;        mappedTypeFound = <span class="keyword">true</span>;</span></pre></td></tr>
@@ -349,23 +349,23 @@
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;221</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="comment">// @since 3.1.0 - try to auto-discover the mapped type</span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;222</td>  <td class="nbHitsUncovered"><a title="Line 222: Conditional coverage 75% (3/4) [each condition: 50%, 100%].">&nbsp;3</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 222: Conditional coverage 75% (3/4) [each condition: 50%, 100%].">    <span class="keyword">if</span> (!mappedTypeFound &amp;&amp; typeHandler <span class="keyword">instanceof</span> TypeReference) {</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;222</td>  <td class="nbHitsUncovered"><a title="Line 222: Conditional coverage 75% (3/4) [each condition: 50%, 100%].">&nbsp;6</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 222: Conditional coverage 75% (3/4) [each condition: 50%, 100%].">    <span class="keyword">if</span> (!mappedTypeFound &amp;&amp; typeHandler <span class="keyword">instanceof</span> TypeReference) {</a></span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;223</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;      <span class="keyword">try</span> {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;224</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;        TypeReference&lt;T&gt; typeReference = (TypeReference&lt;T&gt;) typeHandler;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;225</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;        register(typeReference.getRawType(), typeHandler);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;226</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;        mappedTypeFound = <span class="keyword">true</span>;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;224</td>  <td class="nbHitsCovered">&nbsp;4</td>  <td class="src"><pre class="src">&nbsp;        TypeReference&lt;T&gt; typeReference = (TypeReference&lt;T&gt;) typeHandler;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;225</td>  <td class="nbHitsCovered">&nbsp;4</td>  <td class="src"><pre class="src">&nbsp;        register(typeReference.getRawType(), typeHandler);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;226</td>  <td class="nbHitsCovered">&nbsp;4</td>  <td class="src"><pre class="src">&nbsp;        mappedTypeFound = <span class="keyword">true</span>;</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;227</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;      } <span class="keyword">catch</span> (Throwable t) {</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;228</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        <span class="comment">// maybe users define the TypeReference with a different type and are not assignable, so just ignore it</span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;229</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;      }</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;229</td>  <td class="nbHitsCovered">&nbsp;4</td>  <td class="src"><pre class="src">&nbsp;      }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;230</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;231</td>  <td class="nbHitsCovered"><a title="Line 231: Conditional coverage 100% (2/2).">&nbsp;3</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 231: Conditional coverage 100% (2/2).">    <span class="keyword">if</span> (!mappedTypeFound) {</a></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;232</td>  <td class="nbHitsCovered">&nbsp;1</td>  <td class="src"><pre class="src">&nbsp;      register((Class&lt;T&gt;) <span class="keyword">null</span>, typeHandler);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;231</td>  <td class="nbHitsCovered"><a title="Line 231: Conditional coverage 100% (2/2).">&nbsp;6</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 231: Conditional coverage 100% (2/2).">    <span class="keyword">if</span> (!mappedTypeFound) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;232</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;      register((Class&lt;T&gt;) <span class="keyword">null</span>, typeHandler);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;233</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;234</td>  <td class="nbHitsCovered">&nbsp;3</td>  <td class="src"><pre class="src">&nbsp;  }</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;234</td>  <td class="nbHitsCovered">&nbsp;6</td>  <td class="src"><pre class="src">&nbsp;  }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;235</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;236</td>  <td class="nbHits">&nbsp;</td>
@@ -374,34 +374,34 @@
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;238</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;  <span class="keyword">public</span> &lt;T&gt; <span class="keyword">void</span> register(Class&lt;T&gt; javaType, TypeHandler&lt;? <span class="keyword">extends</span> T&gt; typeHandler) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;239</td>  <td class="nbHitsCovered">&nbsp;535289</td>  <td class="src"><pre class="src">&nbsp;    register((Type) javaType, typeHandler);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;240</td>  <td class="nbHitsCovered">&nbsp;535289</td>  <td class="src"><pre class="src">&nbsp;  }</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;239</td>  <td class="nbHitsCovered">&nbsp;1070630</td>  <td class="src"><pre class="src">&nbsp;    register((Type) javaType, typeHandler);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;240</td>  <td class="nbHitsCovered">&nbsp;1070630</td>  <td class="src"><pre class="src">&nbsp;  }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;241</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;242</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;  <span class="keyword">private</span> &lt;T&gt; <span class="keyword">void</span> register(Type javaType, TypeHandler&lt;? <span class="keyword">extends</span> T&gt; typeHandler) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;243</td>  <td class="nbHitsCovered">&nbsp;535296</td>  <td class="src"><pre class="src">&nbsp;    MappedJdbcTypes mappedJdbcTypes = typeHandler.getClass().getAnnotation(MappedJdbcTypes.<span class="keyword">class</span>);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;244</td>  <td class="nbHitsCovered"><a title="Line 244: Conditional coverage 100% (2/2).">&nbsp;535296</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 244: Conditional coverage 100% (2/2).">    <span class="keyword">if</span> (mappedJdbcTypes != <span class="keyword">null</span>) {</a></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;245</td>  <td class="nbHitsCovered"><a title="Line 245: Conditional coverage 100% (2/2).">&nbsp;3</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 245: Conditional coverage 100% (2/2).">      <span class="keyword">for</span> (JdbcType handledJdbcType : mappedJdbcTypes.value()) {</a></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;246</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;        register(javaType, handledJdbcType, typeHandler);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;243</td>  <td class="nbHitsCovered">&nbsp;1070644</td>  <td class="src"><pre class="src">&nbsp;    MappedJdbcTypes mappedJdbcTypes = typeHandler.getClass().getAnnotation(MappedJdbcTypes.<span class="keyword">class</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;244</td>  <td class="nbHitsCovered"><a title="Line 244: Conditional coverage 100% (2/2).">&nbsp;1070644</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 244: Conditional coverage 100% (2/2).">    <span class="keyword">if</span> (mappedJdbcTypes != <span class="keyword">null</span>) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;245</td>  <td class="nbHitsCovered"><a title="Line 245: Conditional coverage 100% (2/2).">&nbsp;6</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 245: Conditional coverage 100% (2/2).">      <span class="keyword">for</span> (JdbcType handledJdbcType : mappedJdbcTypes.value()) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;246</td>  <td class="nbHitsCovered">&nbsp;4</td>  <td class="src"><pre class="src">&nbsp;        register(javaType, handledJdbcType, typeHandler);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;247</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;      }</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;248</td>  <td class="nbHitsUncovered"><a title="Line 248: Conditional coverage 50% (1/2).">&nbsp;1</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 248: Conditional coverage 50% (1/2).">      <span class="keyword">if</span> (mappedJdbcTypes.includeNullJdbcType()) {</a></span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;249</td>  <td class="nbHitsCovered">&nbsp;1</td>  <td class="src"><pre class="src">&nbsp;        register(javaType, <span class="keyword">null</span>, typeHandler);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;248</td>  <td class="nbHitsUncovered"><a title="Line 248: Conditional coverage 50% (1/2).">&nbsp;2</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 248: Conditional coverage 50% (1/2).">      <span class="keyword">if</span> (mappedJdbcTypes.includeNullJdbcType()) {</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;249</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;        register(javaType, <span class="keyword">null</span>, typeHandler);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;250</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;      }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;251</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    } <span class="keyword">else</span> {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;252</td>  <td class="nbHitsCovered">&nbsp;535295</td>  <td class="src"><pre class="src">&nbsp;      register(javaType, <span class="keyword">null</span>, typeHandler);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;252</td>  <td class="nbHitsCovered">&nbsp;1070642</td>  <td class="src"><pre class="src">&nbsp;      register(javaType, <span class="keyword">null</span>, typeHandler);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;253</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;254</td>  <td class="nbHitsCovered">&nbsp;535296</td>  <td class="src"><pre class="src">&nbsp;  }</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;254</td>  <td class="nbHitsCovered">&nbsp;1070644</td>  <td class="src"><pre class="src">&nbsp;  }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;255</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;256</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;  <span class="keyword">public</span> &lt;T&gt; <span class="keyword">void</span> register(TypeReference&lt;T&gt; javaTypeReference, TypeHandler&lt;? <span class="keyword">extends</span> T&gt; handler) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;257</td>  <td class="nbHitsCovered">&nbsp;1</td>  <td class="src"><pre class="src">&nbsp;    register(javaTypeReference.getRawType(), handler);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;258</td>  <td class="nbHitsCovered">&nbsp;1</td>  <td class="src"><pre class="src">&nbsp;  }</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;257</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;    register(javaTypeReference.getRawType(), handler);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;258</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;  }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;259</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;260</td>  <td class="nbHits">&nbsp;</td>
@@ -410,28 +410,28 @@
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;262</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;  <span class="keyword">public</span> &lt;T&gt; <span class="keyword">void</span> register(Class&lt;T&gt; type, JdbcType jdbcType, TypeHandler&lt;? <span class="keyword">extends</span> T&gt; handler) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;263</td>  <td class="nbHitsCovered">&nbsp;309017</td>  <td class="src"><pre class="src">&nbsp;    register((Type) type, jdbcType, handler);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;264</td>  <td class="nbHitsCovered">&nbsp;309017</td>  <td class="src"><pre class="src">&nbsp;  }</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;263</td>  <td class="nbHitsCovered">&nbsp;618064</td>  <td class="src"><pre class="src">&nbsp;    register((Type) type, jdbcType, handler);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;264</td>  <td class="nbHitsCovered">&nbsp;618064</td>  <td class="src"><pre class="src">&nbsp;  }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;265</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;266</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;  <span class="keyword">private</span> <span class="keyword">void</span> register(Type javaType, JdbcType jdbcType, TypeHandler&lt;?&gt; handler) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;267</td>  <td class="nbHitsCovered"><a title="Line 267: Conditional coverage 100% (2/2).">&nbsp;1009235</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 267: Conditional coverage 100% (2/2).">    <span class="keyword">if</span> (javaType != <span class="keyword">null</span>) {</a></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;268</td>  <td class="nbHitsCovered">&nbsp;1009234</td>  <td class="src"><pre class="src">&nbsp;      Map&lt;JdbcType, TypeHandler&lt;?&gt;&gt; map = TYPE_HANDLER_MAP.get(javaType);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;269</td>  <td class="nbHitsCovered"><a title="Line 269: Conditional coverage 100% (2/2).">&nbsp;1009234</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 269: Conditional coverage 100% (2/2).">      <span class="keyword">if</span> (map == <span class="keyword">null</span>) {</a></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;270</td>  <td class="nbHitsCovered">&nbsp;535293</td>  <td class="src"><pre class="src">&nbsp;        map = <span class="keyword">new</span> HashMap&lt;JdbcType, TypeHandler&lt;?&gt;&gt;();</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;271</td>  <td class="nbHitsCovered">&nbsp;535293</td>  <td class="src"><pre class="src">&nbsp;        TYPE_HANDLER_MAP.put(javaType, map);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;267</td>  <td class="nbHitsCovered"><a title="Line 267: Conditional coverage 100% (2/2).">&nbsp;2018568</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 267: Conditional coverage 100% (2/2).">    <span class="keyword">if</span> (javaType != <span class="keyword">null</span>) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;268</td>  <td class="nbHitsCovered">&nbsp;2018566</td>  <td class="src"><pre class="src">&nbsp;      Map&lt;JdbcType, TypeHandler&lt;?&gt;&gt; map = TYPE_HANDLER_MAP.get(javaType);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;269</td>  <td class="nbHitsCovered"><a title="Line 269: Conditional coverage 100% (2/2).">&nbsp;2018566</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 269: Conditional coverage 100% (2/2).">      <span class="keyword">if</span> (map == <span class="keyword">null</span>) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;270</td>  <td class="nbHitsCovered">&nbsp;1070638</td>  <td class="src"><pre class="src">&nbsp;        map = <span class="keyword">new</span> HashMap&lt;JdbcType, TypeHandler&lt;?&gt;&gt;();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;271</td>  <td class="nbHitsCovered">&nbsp;1070638</td>  <td class="src"><pre class="src">&nbsp;        TYPE_HANDLER_MAP.put(javaType, map);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;272</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;      }</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;273</td>  <td class="nbHitsCovered">&nbsp;1009234</td>  <td class="src"><pre class="src">&nbsp;      map.put(jdbcType, handler);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;274</td>  <td class="nbHitsCovered"><a title="Line 274: Conditional coverage 100% (2/2).">&nbsp;1009234</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 274: Conditional coverage 100% (2/2).">      <span class="keyword">if</span> (reversePrimitiveMap.containsKey(javaType)) {</a></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;275</td>  <td class="nbHitsCovered">&nbsp;164900</td>  <td class="src"><pre class="src">&nbsp;        register(reversePrimitiveMap.get(javaType), jdbcType, handler);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;273</td>  <td class="nbHitsCovered">&nbsp;2018566</td>  <td class="src"><pre class="src">&nbsp;      map.put(jdbcType, handler);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;274</td>  <td class="nbHitsCovered"><a title="Line 274: Conditional coverage 100% (2/2).">&nbsp;2018566</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 274: Conditional coverage 100% (2/2).">      <span class="keyword">if</span> (reversePrimitiveMap.containsKey(javaType)) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;275</td>  <td class="nbHitsCovered">&nbsp;329816</td>  <td class="src"><pre class="src">&nbsp;        register(reversePrimitiveMap.get(javaType), jdbcType, handler);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;276</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;      }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;277</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;278</td>  <td class="nbHitsCovered">&nbsp;1009235</td>  <td class="src"><pre class="src">&nbsp;    ALL_TYPE_HANDLERS_MAP.put(handler.getClass(), handler);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;279</td>  <td class="nbHitsCovered">&nbsp;1009235</td>  <td class="src"><pre class="src">&nbsp;  }</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;278</td>  <td class="nbHitsCovered">&nbsp;2018568</td>  <td class="src"><pre class="src">&nbsp;    ALL_TYPE_HANDLERS_MAP.put(handler.getClass(), handler);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;279</td>  <td class="nbHitsCovered">&nbsp;2018568</td>  <td class="src"><pre class="src">&nbsp;  }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;280</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;281</td>  <td class="nbHits">&nbsp;</td>
@@ -448,21 +448,21 @@
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;287</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;  <span class="keyword">public</span> <span class="keyword">void</span> register(Class&lt;?&gt; typeHandlerClass) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;288</td>  <td class="nbHitsCovered">&nbsp;3</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">boolean</span> mappedTypeFound = <span class="keyword">false</span>;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;289</td>  <td class="nbHitsCovered">&nbsp;3</td>  <td class="src"><pre class="src">&nbsp;    MappedTypes mappedTypes = typeHandlerClass.getAnnotation(MappedTypes.<span class="keyword">class</span>);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;290</td>  <td class="nbHitsCovered"><a title="Line 290: Conditional coverage 100% (2/2).">&nbsp;3</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 290: Conditional coverage 100% (2/2).">    <span class="keyword">if</span> (mappedTypes != <span class="keyword">null</span>) {</a></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;291</td>  <td class="nbHitsCovered"><a title="Line 291: Conditional coverage 100% (2/2).">&nbsp;4</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 291: Conditional coverage 100% (2/2).">      <span class="keyword">for</span> (Class&lt;?&gt; javaTypeClass : mappedTypes.value()) {</a></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;292</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;        register(javaTypeClass, typeHandlerClass);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;293</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;        mappedTypeFound = <span class="keyword">true</span>;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;288</td>  <td class="nbHitsCovered">&nbsp;6</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">boolean</span> mappedTypeFound = <span class="keyword">false</span>;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;289</td>  <td class="nbHitsCovered">&nbsp;6</td>  <td class="src"><pre class="src">&nbsp;    MappedTypes mappedTypes = typeHandlerClass.getAnnotation(MappedTypes.<span class="keyword">class</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;290</td>  <td class="nbHitsCovered"><a title="Line 290: Conditional coverage 100% (2/2).">&nbsp;6</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 290: Conditional coverage 100% (2/2).">    <span class="keyword">if</span> (mappedTypes != <span class="keyword">null</span>) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;291</td>  <td class="nbHitsCovered"><a title="Line 291: Conditional coverage 100% (2/2).">&nbsp;8</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 291: Conditional coverage 100% (2/2).">      <span class="keyword">for</span> (Class&lt;?&gt; javaTypeClass : mappedTypes.value()) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;292</td>  <td class="nbHitsCovered">&nbsp;4</td>  <td class="src"><pre class="src">&nbsp;        register(javaTypeClass, typeHandlerClass);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;293</td>  <td class="nbHitsCovered">&nbsp;4</td>  <td class="src"><pre class="src">&nbsp;        mappedTypeFound = <span class="keyword">true</span>;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;294</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;      }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;295</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;296</td>  <td class="nbHitsCovered"><a title="Line 296: Conditional coverage 100% (2/2).">&nbsp;3</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 296: Conditional coverage 100% (2/2).">    <span class="keyword">if</span> (!mappedTypeFound) {</a></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;297</td>  <td class="nbHitsCovered">&nbsp;1</td>  <td class="src"><pre class="src">&nbsp;      register(getInstance(<span class="keyword">null</span>, typeHandlerClass));</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;296</td>  <td class="nbHitsCovered"><a title="Line 296: Conditional coverage 100% (2/2).">&nbsp;6</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 296: Conditional coverage 100% (2/2).">    <span class="keyword">if</span> (!mappedTypeFound) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;297</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;      register(getInstance(<span class="keyword">null</span>, typeHandlerClass));</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;298</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;299</td>  <td class="nbHitsCovered">&nbsp;3</td>  <td class="src"><pre class="src">&nbsp;  }</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;299</td>  <td class="nbHitsCovered">&nbsp;6</td>  <td class="src"><pre class="src">&nbsp;  }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;300</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;301</td>  <td class="nbHits">&nbsp;</td>
@@ -471,8 +471,8 @@
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;303</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;  <span class="keyword">public</span> <span class="keyword">void</span> register(Class&lt;?&gt; javaTypeClass, Class&lt;?&gt; typeHandlerClass) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;304</td>  <td class="nbHitsCovered">&nbsp;4</td>  <td class="src"><pre class="src">&nbsp;    register(javaTypeClass, getInstance(javaTypeClass, typeHandlerClass));</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;305</td>  <td class="nbHitsCovered">&nbsp;4</td>  <td class="src"><pre class="src">&nbsp;  }</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;304</td>  <td class="nbHitsCovered">&nbsp;8</td>  <td class="src"><pre class="src">&nbsp;    register(javaTypeClass, getInstance(javaTypeClass, typeHandlerClass));</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;305</td>  <td class="nbHitsCovered">&nbsp;8</td>  <td class="src"><pre class="src">&nbsp;  }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;306</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;307</td>  <td class="nbHits">&nbsp;</td>
@@ -481,8 +481,8 @@
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;309</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;  <span class="keyword">public</span> <span class="keyword">void</span> register(Class&lt;?&gt; javaTypeClass, JdbcType jdbcType, Class&lt;?&gt; typeHandlerClass) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;310</td>  <td class="nbHitsCovered">&nbsp;20</td>  <td class="src"><pre class="src">&nbsp;    register(javaTypeClass, jdbcType, getInstance(javaTypeClass, typeHandlerClass));</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;311</td>  <td class="nbHitsCovered">&nbsp;20</td>  <td class="src"><pre class="src">&nbsp;  }</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;310</td>  <td class="nbHitsCovered">&nbsp;40</td>  <td class="src"><pre class="src">&nbsp;    register(javaTypeClass, jdbcType, getInstance(javaTypeClass, typeHandlerClass));</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;311</td>  <td class="nbHitsCovered">&nbsp;40</td>  <td class="src"><pre class="src">&nbsp;  }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;312</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;313</td>  <td class="nbHits">&nbsp;</td>
@@ -493,23 +493,23 @@
   <td class="src"><pre class="src">&nbsp;  @SuppressWarnings(<span class="string">"unchecked"</span>)</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;316</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;  <span class="keyword">public</span> &lt;T&gt; TypeHandler&lt;T&gt; getInstance(Class&lt;?&gt; javaTypeClass, Class&lt;?&gt; typeHandlerClass) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;317</td>  <td class="nbHitsCovered"><a title="Line 317: Conditional coverage 100% (2/2).">&nbsp;31</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 317: Conditional coverage 100% (2/2).">    <span class="keyword">if</span> (javaTypeClass != <span class="keyword">null</span>) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;317</td>  <td class="nbHitsCovered"><a title="Line 317: Conditional coverage 100% (2/2).">&nbsp;62</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 317: Conditional coverage 100% (2/2).">    <span class="keyword">if</span> (javaTypeClass != <span class="keyword">null</span>) {</a></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;318</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;      <span class="keyword">try</span> {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;319</td>  <td class="nbHitsCovered">&nbsp;30</td>  <td class="src"><pre class="src">&nbsp;        Constructor&lt;?&gt; c = typeHandlerClass.getConstructor(Class.<span class="keyword">class</span>);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;320</td>  <td class="nbHitsCovered">&nbsp;4</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> (TypeHandler&lt;T&gt;) c.newInstance(javaTypeClass);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;321</td>  <td class="nbHitsCovered">&nbsp;26</td>  <td class="src"><pre class="src">&nbsp;      } <span class="keyword">catch</span> (NoSuchMethodException ignored) {</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;319</td>  <td class="nbHitsCovered">&nbsp;60</td>  <td class="src"><pre class="src">&nbsp;        Constructor&lt;?&gt; c = typeHandlerClass.getConstructor(Class.<span class="keyword">class</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;320</td>  <td class="nbHitsCovered">&nbsp;8</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> (TypeHandler&lt;T&gt;) c.newInstance(javaTypeClass);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;321</td>  <td class="nbHitsCovered">&nbsp;52</td>  <td class="src"><pre class="src">&nbsp;      } <span class="keyword">catch</span> (NoSuchMethodException ignored) {</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;322</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        <span class="comment">// ignored</span></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;323</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;      } <span class="keyword">catch</span> (Exception e) {</span></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;324</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;        <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(<span class="string">"Failed invoking constructor for handler "</span> + typeHandlerClass, e);</span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;325</td>  <td class="nbHitsCovered">&nbsp;26</td>  <td class="src"><pre class="src">&nbsp;      }</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;325</td>  <td class="nbHitsCovered">&nbsp;52</td>  <td class="src"><pre class="src">&nbsp;      }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;326</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;327</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">try</span> {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;328</td>  <td class="nbHitsCovered">&nbsp;27</td>  <td class="src"><pre class="src">&nbsp;      Constructor&lt;?&gt; c = typeHandlerClass.getConstructor();</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;329</td>  <td class="nbHitsCovered">&nbsp;27</td>  <td class="src"><pre class="src">&nbsp;      <span class="keyword">return</span> (TypeHandler&lt;T&gt;) c.newInstance();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;328</td>  <td class="nbHitsCovered">&nbsp;54</td>  <td class="src"><pre class="src">&nbsp;      Constructor&lt;?&gt; c = typeHandlerClass.getConstructor();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;329</td>  <td class="nbHitsCovered">&nbsp;54</td>  <td class="src"><pre class="src">&nbsp;      <span class="keyword">return</span> (TypeHandler&lt;T&gt;) c.newInstance();</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;330</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;    } <span class="keyword">catch</span> (Exception e) {</span></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;331</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;      <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(<span class="string">"Unable to find a usable constructor for "</span> + typeHandlerClass, e);</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;332</td>  <td class="nbHits">&nbsp;</td>
@@ -524,18 +524,18 @@
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;337</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;  <span class="keyword">public</span> <span class="keyword">void</span> register(String packageName) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;338</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;    ResolverUtil&lt;Class&lt;?&gt;&gt; resolverUtil = <span class="keyword">new</span> ResolverUtil&lt;Class&lt;?&gt;&gt;();</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;339</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;    resolverUtil.find(<span class="keyword">new</span> ResolverUtil.IsA(TypeHandler.<span class="keyword">class</span>), packageName);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;340</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;    Set&lt;Class&lt;? <span class="keyword">extends</span> Class&lt;?&gt;&gt;&gt; handlerSet = resolverUtil.getClasses();</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;341</td>  <td class="nbHitsCovered"><a title="Line 341: Conditional coverage 100% (2/2).">&nbsp;2</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 341: Conditional coverage 100% (2/2).">    <span class="keyword">for</span> (Class&lt;?&gt; type : handlerSet) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;338</td>  <td class="nbHitsCovered">&nbsp;4</td>  <td class="src"><pre class="src">&nbsp;    ResolverUtil&lt;Class&lt;?&gt;&gt; resolverUtil = <span class="keyword">new</span> ResolverUtil&lt;Class&lt;?&gt;&gt;();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;339</td>  <td class="nbHitsCovered">&nbsp;4</td>  <td class="src"><pre class="src">&nbsp;    resolverUtil.find(<span class="keyword">new</span> ResolverUtil.IsA(TypeHandler.<span class="keyword">class</span>), packageName);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;340</td>  <td class="nbHitsCovered">&nbsp;4</td>  <td class="src"><pre class="src">&nbsp;    Set&lt;Class&lt;? <span class="keyword">extends</span> Class&lt;?&gt;&gt;&gt; handlerSet = resolverUtil.getClasses();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;341</td>  <td class="nbHitsCovered"><a title="Line 341: Conditional coverage 100% (2/2).">&nbsp;4</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 341: Conditional coverage 100% (2/2).">    <span class="keyword">for</span> (Class&lt;?&gt; type : handlerSet) {</a></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;342</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;      <span class="comment">//Ignore inner classes and interfaces (including package-info.java) and abstract classes</span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;343</td>  <td class="nbHitsUncovered"><a title="Line 343: Conditional coverage 50% (3/6) [each condition: 50%, 50%, 50%].">&nbsp;2</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 343: Conditional coverage 50% (3/6) [each condition: 50%, 50%, 50%].">      <span class="keyword">if</span> (!type.isAnonymousClass() &amp;&amp; !type.isInterface() &amp;&amp; !Modifier.isAbstract(type.getModifiers())) {</a></span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;344</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;        register(type);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;343</td>  <td class="nbHitsUncovered"><a title="Line 343: Conditional coverage 50% (3/6) [each condition: 50%, 50%, 50%].">&nbsp;4</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 343: Conditional coverage 50% (3/6) [each condition: 50%, 50%, 50%].">      <span class="keyword">if</span> (!type.isAnonymousClass() &amp;&amp; !type.isInterface() &amp;&amp; !Modifier.isAbstract(type.getModifiers())) {</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;344</td>  <td class="nbHitsCovered">&nbsp;4</td>  <td class="src"><pre class="src">&nbsp;        register(type);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;345</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;      }</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;346</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;347</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;  }</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;346</td>  <td class="nbHitsCovered">&nbsp;4</td>  <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;347</td>  <td class="nbHitsCovered">&nbsp;4</td>  <td class="src"><pre class="src">&nbsp;  }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;348</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;  </pre></td></tr>
 <tr>  <td class="numLine">&nbsp;349</td>  <td class="nbHits">&nbsp;</td>
@@ -559,6 +559,6 @@
   <td class="src"><pre class="src">&nbsp;}</pre></td></tr>
 </table>
 
-<div class="footer">Report generated by <a href="http://cobertura.sourceforge.net/" target="_top">Cobertura</a> 1.9.4.1 on 2/04/13 19:00.</div>
+<div class="footer">Report generated by <a href="http://cobertura.sourceforge.net/" target="_top">Cobertura</a> 1.9.4.1 on 20/04/13 10:34.</div>
 </body>
 </html>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<pmd version="4.3" timestamp="2013-04-02T18:58:39.422">
+<pmd version="4.3" timestamp="2013-04-20T10:31:55.817">
 <file name="/home/eduardo/git/mybatis-3/src/main/java/org/apache/ibatis/builder/MapperBuilderAssistant.java">
 <violation beginline="452" endline="454" begincolumn="9" endcolumn="7" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.apache.ibatis.builder" class="MapperBuilderAssistant" method="resolveResultJavaType" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
 Avoid empty catch blocks
@@ -86,13 +86,13 @@ Avoid unused method parameters such as 'parameter'.
 Avoid empty catch blocks
 </violation>
 </file>
-<file name="/home/eduardo/git/mybatis-3/src/main/java/org/apache/ibatis/executor/loader/CglibProxyFactory.java">
-<violation beginline="75" endline="77" begincolumn="7" endcolumn="5" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.apache.ibatis.executor.loader" class="CglibProxyFactory" method="crateProxy" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+<file name="/home/eduardo/git/mybatis-3/src/main/java/org/apache/ibatis/executor/loader/cglib/CglibProxyFactory.java">
+<violation beginline="78" endline="80" begincolumn="7" endcolumn="5" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.apache.ibatis.executor.loader.cglib" class="CglibProxyFactory" method="crateProxy" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
 Avoid empty catch blocks
 </violation>
 </file>
-<file name="/home/eduardo/git/mybatis-3/src/main/java/org/apache/ibatis/executor/loader/JavassistProxyFactory.java">
-<violation beginline="75" endline="77" begincolumn="7" endcolumn="5" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.apache.ibatis.executor.loader" class="JavassistProxyFactory" method="crateProxy" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+<file name="/home/eduardo/git/mybatis-3/src/main/java/org/apache/ibatis/executor/loader/javassist/JavassistProxyFactory.java">
+<violation beginline="78" endline="80" begincolumn="7" endcolumn="5" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.apache.ibatis.executor.loader.javassist" class="JavassistProxyFactory" method="crateProxy" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
 Avoid empty catch blocks
 </violation>
 </file>
@@ -177,7 +177,7 @@ Avoid empty catch blocks
 </violation>
 </file>
 <file name="/home/eduardo/git/mybatis-3/src/main/java/org/apache/ibatis/logging/LogFactory.java">
-<violation beginline="105" endline="107" begincolumn="9" endcolumn="7" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.apache.ibatis.logging" class="LogFactory" method="tryImplementation" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+<violation beginline="114" endline="116" begincolumn="9" endcolumn="7" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.apache.ibatis.logging" class="LogFactory" method="tryImplementation" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
 Avoid empty catch blocks
 </violation>
 </file>

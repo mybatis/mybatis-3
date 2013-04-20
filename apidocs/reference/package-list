@@ -14,6 +14,8 @@ org.apache.ibatis.exceptions
 org.apache.ibatis.executor
 org.apache.ibatis.executor.keygen
 org.apache.ibatis.executor.loader
+org.apache.ibatis.executor.loader.cglib
+org.apache.ibatis.executor.loader.javassist
 org.apache.ibatis.executor.parameter
 org.apache.ibatis.executor.result
 org.apache.ibatis.executor.resultset
@@ -25,6 +27,7 @@ org.apache.ibatis.logging.commons
 org.apache.ibatis.logging.jdbc
 org.apache.ibatis.logging.jdk14
 org.apache.ibatis.logging.log4j
+org.apache.ibatis.logging.log4j2
 org.apache.ibatis.logging.nologging
 org.apache.ibatis.logging.slf4j
 org.apache.ibatis.logging.stdout

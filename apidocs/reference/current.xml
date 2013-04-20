@@ -4866,7 +4866,7 @@
 >
 </method>
 <method name="isAutoCommit"
- return="boolean"
+ return="java.lang.Boolean"
  abstract="false"
  native="false"
  synchronized="false"
@@ -4901,7 +4901,7 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="autoCommit" type="boolean">
+<parameter name="autoCommit" type="java.lang.Boolean">
 </parameter>
 </method>
 <method name="setDefaultTransactionIsolationLevel"
@@ -7061,16 +7061,206 @@
 </package>
 <package name="org.apache.ibatis.executor.loader"
 >
-<class name="CglibProxyFactory"
+<class name="AbstractEnhancedDeserializationProxy"
  extends="java.lang.Object"
+ abstract="true"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<constructor name="AbstractEnhancedDeserializationProxy"
+ type="org.apache.ibatis.executor.loader.AbstractEnhancedDeserializationProxy"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="protected"
+>
+<parameter name="type" type="java.lang.Class&lt;?&gt;">
+</parameter>
+<parameter name="unloadedProperties" type="java.util.Map&lt;java.lang.String, org.apache.ibatis.executor.loader.ResultLoaderMap.LoadPair&gt;">
+</parameter>
+<parameter name="objectFactory" type="org.apache.ibatis.reflection.factory.ObjectFactory">
+</parameter>
+<parameter name="constructorArgTypes" type="java.util.List&lt;java.lang.Class&lt;?&gt;&gt;">
+</parameter>
+<parameter name="constructorArgs" type="java.util.List&lt;java.lang.Object&gt;">
+</parameter>
+</constructor>
+<method name="invoke"
+ return="java.lang.Object"
  abstract="false"
+ native="false"
+ synchronized="false"
  static="false"
  final="true"
  deprecated="not deprecated"
  visibility="public"
 >
-<implements name="org.apache.ibatis.executor.loader.ProxyFactory">
+<parameter name="enhanced" type="java.lang.Object">
+</parameter>
+<parameter name="method" type="java.lang.reflect.Method">
+</parameter>
+<parameter name="args" type="java.lang.Object[]">
+</parameter>
+<exception name="Throwable" type="java.lang.Throwable">
+</exception>
+</method>
+<method name="newSerialStateHolder"
+ return="org.apache.ibatis.executor.loader.AbstractSerialStateHolder"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="protected"
+>
+<parameter name="userBean" type="java.lang.Object">
+</parameter>
+<parameter name="unloadedProperties" type="java.util.Map&lt;java.lang.String, org.apache.ibatis.executor.loader.ResultLoaderMap.LoadPair&gt;">
+</parameter>
+<parameter name="objectFactory" type="org.apache.ibatis.reflection.factory.ObjectFactory">
+</parameter>
+<parameter name="constructorArgTypes" type="java.util.List&lt;java.lang.Class&lt;?&gt;&gt;">
+</parameter>
+<parameter name="constructorArgs" type="java.util.List&lt;java.lang.Object&gt;">
+</parameter>
+</method>
+<field name="FINALIZE_METHOD"
+ type="java.lang.String"
+ transient="false"
+ volatile="false"
+ value="&quot;finalize&quot;"
+ static="true"
+ final="true"
+ deprecated="not deprecated"
+ visibility="protected"
+>
+</field>
+<field name="WRITE_REPLACE_METHOD"
+ type="java.lang.String"
+ transient="false"
+ volatile="false"
+ value="&quot;writeReplace&quot;"
+ static="true"
+ final="true"
+ deprecated="not deprecated"
+ visibility="protected"
+>
+</field>
+</class>
+<class name="AbstractSerialStateHolder"
+ extends="java.lang.Object"
+ abstract="true"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<implements name="java.io.Externalizable">
 </implements>
+<constructor name="AbstractSerialStateHolder"
+ type="org.apache.ibatis.executor.loader.AbstractSerialStateHolder"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</constructor>
+<constructor name="AbstractSerialStateHolder"
+ type="org.apache.ibatis.executor.loader.AbstractSerialStateHolder"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="userBean" type="java.lang.Object">
+</parameter>
+<parameter name="unloadedProperties" type="java.util.Map&lt;java.lang.String, org.apache.ibatis.executor.loader.ResultLoaderMap.LoadPair&gt;">
+</parameter>
+<parameter name="objectFactory" type="org.apache.ibatis.reflection.factory.ObjectFactory">
+</parameter>
+<parameter name="constructorArgTypes" type="java.util.List&lt;java.lang.Class&lt;?&gt;&gt;">
+</parameter>
+<parameter name="constructorArgs" type="java.util.List&lt;java.lang.Object&gt;">
+</parameter>
+</constructor>
+<method name="createDeserializationProxy"
+ return="java.lang.Object"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="protected"
+>
+<parameter name="target" type="java.lang.Object">
+</parameter>
+<parameter name="unloadedProperties" type="java.util.Map&lt;java.lang.String, org.apache.ibatis.executor.loader.ResultLoaderMap.LoadPair&gt;">
+</parameter>
+<parameter name="objectFactory" type="org.apache.ibatis.reflection.factory.ObjectFactory">
+</parameter>
+<parameter name="constructorArgTypes" type="java.util.List&lt;java.lang.Class&lt;?&gt;&gt;">
+</parameter>
+<parameter name="constructorArgs" type="java.util.List&lt;java.lang.Object&gt;">
+</parameter>
+</method>
+<method name="readExternal"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="true"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="in" type="java.io.ObjectInput">
+</parameter>
+<exception name="ClassNotFoundException" type="java.lang.ClassNotFoundException">
+</exception>
+<exception name="IOException" type="java.io.IOException">
+</exception>
+</method>
+<method name="readResolve"
+ return="java.lang.Object"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="true"
+ deprecated="not deprecated"
+ visibility="protected"
+>
+<exception name="ObjectStreamException" type="java.io.ObjectStreamException">
+</exception>
+</method>
+<method name="writeExternal"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="true"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="out" type="java.io.ObjectOutput">
+</parameter>
+<exception name="IOException" type="java.io.IOException">
+</exception>
+</method>
+</class>
+<class name="CglibProxyFactory"
+ extends="org.apache.ibatis.executor.loader.cglib.CglibProxyFactory"
+ abstract="false"
+ static="false"
+ final="false"
+ deprecated="deprecated"
+ visibility="public"
+>
 <constructor name="CglibProxyFactory"
  type="org.apache.ibatis.executor.loader.CglibProxyFactory"
  static="false"
@@ -7079,74 +7269,15 @@
  visibility="public"
 >
 </constructor>
-<method name="createDeserializationProxy"
- return="java.lang.Object"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="target" type="java.lang.Object">
-</parameter>
-<parameter name="unloadedProperties" type="java.util.Set&lt;java.lang.String&gt;">
-</parameter>
-<parameter name="objectFactory" type="org.apache.ibatis.reflection.factory.ObjectFactory">
-</parameter>
-<parameter name="constructorArgTypes" type="java.util.List&lt;java.lang.Class&lt;?&gt;&gt;">
-</parameter>
-<parameter name="constructorArgs" type="java.util.List&lt;java.lang.Object&gt;">
-</parameter>
-</method>
-<method name="createProxy"
- return="java.lang.Object"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="target" type="java.lang.Object">
-</parameter>
-<parameter name="lazyLoader" type="org.apache.ibatis.executor.loader.ResultLoaderMap">
-</parameter>
-<parameter name="configuration" type="org.apache.ibatis.session.Configuration">
-</parameter>
-<parameter name="objectFactory" type="org.apache.ibatis.reflection.factory.ObjectFactory">
-</parameter>
-<parameter name="constructorArgTypes" type="java.util.List&lt;java.lang.Class&lt;?&gt;&gt;">
-</parameter>
-<parameter name="constructorArgs" type="java.util.List&lt;java.lang.Object&gt;">
-</parameter>
-</method>
-<method name="setProperties"
- return="void"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="properties" type="java.util.Properties">
-</parameter>
-</method>
 </class>
 <class name="JavassistProxyFactory"
- extends="java.lang.Object"
+ extends="org.apache.ibatis.executor.loader.javassist.JavassistProxyFactory"
  abstract="false"
  static="false"
  final="true"
- deprecated="not deprecated"
+ deprecated="deprecated"
  visibility="public"
 >
-<implements name="org.apache.ibatis.executor.loader.ProxyFactory">
-</implements>
 <constructor name="JavassistProxyFactory"
  type="org.apache.ibatis.executor.loader.JavassistProxyFactory"
  static="false"
@@ -7155,63 +7286,6 @@
  visibility="public"
 >
 </constructor>
-<method name="createDeserializationProxy"
- return="java.lang.Object"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="target" type="java.lang.Object">
-</parameter>
-<parameter name="unloadedProperties" type="java.util.Set&lt;java.lang.String&gt;">
-</parameter>
-<parameter name="objectFactory" type="org.apache.ibatis.reflection.factory.ObjectFactory">
-</parameter>
-<parameter name="constructorArgTypes" type="java.util.List&lt;java.lang.Class&lt;?&gt;&gt;">
-</parameter>
-<parameter name="constructorArgs" type="java.util.List&lt;java.lang.Object&gt;">
-</parameter>
-</method>
-<method name="createProxy"
- return="java.lang.Object"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="target" type="java.lang.Object">
-</parameter>
-<parameter name="lazyLoader" type="org.apache.ibatis.executor.loader.ResultLoaderMap">
-</parameter>
-<parameter name="configuration" type="org.apache.ibatis.session.Configuration">
-</parameter>
-<parameter name="objectFactory" type="org.apache.ibatis.reflection.factory.ObjectFactory">
-</parameter>
-<parameter name="constructorArgTypes" type="java.util.List&lt;java.lang.Class&lt;?&gt;&gt;">
-</parameter>
-<parameter name="constructorArgs" type="java.util.List&lt;java.lang.Object&gt;">
-</parameter>
-</method>
-<method name="setProperties"
- return="void"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="properties" type="java.util.Properties">
-</parameter>
-</method>
 </class>
 <interface name="ProxyFactory"
  abstract="true"
@@ -7455,6 +7529,17 @@
 <parameter name="resultLoader" type="org.apache.ibatis.executor.loader.ResultLoader">
 </parameter>
 </method>
+<method name="getProperties"
+ return="java.util.Map&lt;java.lang.String, org.apache.ibatis.executor.loader.ResultLoaderMap.LoadPair&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="true"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
 <method name="getPropertyNames"
  return="java.util.Set&lt;java.lang.String&gt;"
  abstract="false"
@@ -7519,6 +7604,45 @@
 >
 </method>
 </class>
+<class name="ResultLoaderMap.LoadPair"
+ extends="java.lang.Object"
+ abstract="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<implements name="java.io.Serializable">
+</implements>
+<method name="load"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<exception name="SQLException" type="java.sql.SQLException">
+</exception>
+</method>
+<method name="load"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="userObject" type="java.lang.Object">
+</parameter>
+<exception name="SQLException" type="java.sql.SQLException">
+</exception>
+</method>
+</class>
 <interface name="WriteReplaceInterface"
  abstract="true"
  static="false"
@@ -7540,6 +7664,164 @@
 </exception>
 </method>
 </interface>
+</package>
+<package name="org.apache.ibatis.executor.loader.cglib"
+>
+<class name="CglibProxyFactory"
+ extends="java.lang.Object"
+ abstract="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<implements name="org.apache.ibatis.executor.loader.ProxyFactory">
+</implements>
+<constructor name="CglibProxyFactory"
+ type="org.apache.ibatis.executor.loader.cglib.CglibProxyFactory"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</constructor>
+<method name="createDeserializationProxy"
+ return="java.lang.Object"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="target" type="java.lang.Object">
+</parameter>
+<parameter name="unloadedProperties" type="java.util.Map&lt;java.lang.String, org.apache.ibatis.executor.loader.ResultLoaderMap.LoadPair&gt;">
+</parameter>
+<parameter name="objectFactory" type="org.apache.ibatis.reflection.factory.ObjectFactory">
+</parameter>
+<parameter name="constructorArgTypes" type="java.util.List&lt;java.lang.Class&lt;?&gt;&gt;">
+</parameter>
+<parameter name="constructorArgs" type="java.util.List&lt;java.lang.Object&gt;">
+</parameter>
+</method>
+<method name="createProxy"
+ return="java.lang.Object"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="target" type="java.lang.Object">
+</parameter>
+<parameter name="lazyLoader" type="org.apache.ibatis.executor.loader.ResultLoaderMap">
+</parameter>
+<parameter name="configuration" type="org.apache.ibatis.session.Configuration">
+</parameter>
+<parameter name="objectFactory" type="org.apache.ibatis.reflection.factory.ObjectFactory">
+</parameter>
+<parameter name="constructorArgTypes" type="java.util.List&lt;java.lang.Class&lt;?&gt;&gt;">
+</parameter>
+<parameter name="constructorArgs" type="java.util.List&lt;java.lang.Object&gt;">
+</parameter>
+</method>
+<method name="setProperties"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="properties" type="java.util.Properties">
+</parameter>
+</method>
+</class>
+</package>
+<package name="org.apache.ibatis.executor.loader.javassist"
+>
+<class name="JavassistProxyFactory"
+ extends="java.lang.Object"
+ abstract="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<implements name="org.apache.ibatis.executor.loader.ProxyFactory">
+</implements>
+<constructor name="JavassistProxyFactory"
+ type="org.apache.ibatis.executor.loader.javassist.JavassistProxyFactory"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</constructor>
+<method name="createDeserializationProxy"
+ return="java.lang.Object"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="target" type="java.lang.Object">
+</parameter>
+<parameter name="unloadedProperties" type="java.util.Map&lt;java.lang.String, org.apache.ibatis.executor.loader.ResultLoaderMap.LoadPair&gt;">
+</parameter>
+<parameter name="objectFactory" type="org.apache.ibatis.reflection.factory.ObjectFactory">
+</parameter>
+<parameter name="constructorArgTypes" type="java.util.List&lt;java.lang.Class&lt;?&gt;&gt;">
+</parameter>
+<parameter name="constructorArgs" type="java.util.List&lt;java.lang.Object&gt;">
+</parameter>
+</method>
+<method name="createProxy"
+ return="java.lang.Object"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="target" type="java.lang.Object">
+</parameter>
+<parameter name="lazyLoader" type="org.apache.ibatis.executor.loader.ResultLoaderMap">
+</parameter>
+<parameter name="configuration" type="org.apache.ibatis.session.Configuration">
+</parameter>
+<parameter name="objectFactory" type="org.apache.ibatis.reflection.factory.ObjectFactory">
+</parameter>
+<parameter name="constructorArgTypes" type="java.util.List&lt;java.lang.Class&lt;?&gt;&gt;">
+</parameter>
+<parameter name="constructorArgs" type="java.util.List&lt;java.lang.Object&gt;">
+</parameter>
+</method>
+<method name="setProperties"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="properties" type="java.util.Properties">
+</parameter>
+</method>
+</class>
 </package>
 <package name="org.apache.ibatis.executor.parameter"
 >
@@ -12042,6 +12324,17 @@
  visibility="public"
 >
 </method>
+<method name="useLog4J2Logging"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="true"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
 <method name="useLog4JLogging"
  return="void"
  abstract="false"
@@ -12736,6 +13029,339 @@
  visibility="public"
 >
 <parameter name="clazz" type="java.lang.String">
+</parameter>
+</constructor>
+<method name="debug"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="s" type="java.lang.String">
+</parameter>
+</method>
+<method name="error"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="s" type="java.lang.String">
+</parameter>
+</method>
+<method name="error"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="s" type="java.lang.String">
+</parameter>
+<parameter name="e" type="java.lang.Throwable">
+</parameter>
+</method>
+<method name="isDebugEnabled"
+ return="boolean"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="isTraceEnabled"
+ return="boolean"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="trace"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="s" type="java.lang.String">
+</parameter>
+</method>
+<method name="warn"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="s" type="java.lang.String">
+</parameter>
+</method>
+</class>
+</package>
+<package name="org.apache.ibatis.logging.log4j2"
+>
+<class name="Log4j2AbstractLoggerImpl"
+ extends="java.lang.Object"
+ abstract="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<implements name="org.apache.ibatis.logging.Log">
+</implements>
+<constructor name="Log4j2AbstractLoggerImpl"
+ type="org.apache.ibatis.logging.log4j2.Log4j2AbstractLoggerImpl"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="abstractLogger" type="org.apache.logging.log4j.spi.AbstractLogger">
+</parameter>
+</constructor>
+<method name="debug"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="s" type="java.lang.String">
+</parameter>
+</method>
+<method name="error"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="s" type="java.lang.String">
+</parameter>
+</method>
+<method name="error"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="s" type="java.lang.String">
+</parameter>
+<parameter name="e" type="java.lang.Throwable">
+</parameter>
+</method>
+<method name="isDebugEnabled"
+ return="boolean"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="isTraceEnabled"
+ return="boolean"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="trace"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="s" type="java.lang.String">
+</parameter>
+</method>
+<method name="warn"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="s" type="java.lang.String">
+</parameter>
+</method>
+</class>
+<class name="Log4j2Impl"
+ extends="java.lang.Object"
+ abstract="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<implements name="org.apache.ibatis.logging.Log">
+</implements>
+<constructor name="Log4j2Impl"
+ type="org.apache.ibatis.logging.log4j2.Log4j2Impl"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="clazz" type="java.lang.String">
+</parameter>
+</constructor>
+<method name="debug"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="s" type="java.lang.String">
+</parameter>
+</method>
+<method name="error"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="s" type="java.lang.String">
+</parameter>
+</method>
+<method name="error"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="s" type="java.lang.String">
+</parameter>
+<parameter name="e" type="java.lang.Throwable">
+</parameter>
+</method>
+<method name="isDebugEnabled"
+ return="boolean"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="isTraceEnabled"
+ return="boolean"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="trace"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="s" type="java.lang.String">
+</parameter>
+</method>
+<method name="warn"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="s" type="java.lang.String">
+</parameter>
+</method>
+</class>
+<class name="Log4j2LoggerImpl"
+ extends="java.lang.Object"
+ abstract="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<implements name="org.apache.ibatis.logging.Log">
+</implements>
+<constructor name="Log4j2LoggerImpl"
+ type="org.apache.ibatis.logging.log4j2.Log4j2LoggerImpl"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="logger" type="org.apache.logging.log4j.Logger">
 </parameter>
 </constructor>
 <method name="debug"
@@ -20659,6 +21285,17 @@
  visibility="public"
 >
 </method>
+<method name="getConfigurationFactory"
+ return="java.lang.Class&lt;?&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
 <method name="getDatabaseId"
  return="java.lang.String"
  abstract="false"
@@ -21482,6 +22119,19 @@
 <parameter name="callSettersOnNulls" type="boolean">
 </parameter>
 </method>
+<method name="setConfigurationFactory"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="configurationFactory" type="java.lang.Class&lt;?&gt;">
+</parameter>
+</method>
 <method name="setDatabaseId"
  return="void"
  abstract="false"
@@ -21807,6 +22457,16 @@
 </field>
 <field name="callSettersOnNulls"
  type="boolean"
+ transient="false"
+ volatile="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="protected"
+>
+</field>
+<field name="configurationFactory"
+ type="java.lang.Class"
  transient="false"
  volatile="false"
  static="false"

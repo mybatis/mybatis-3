@@ -205,7 +205,7 @@
 <a class="jxr_linenumber" name="195" href="#195">195</a>       }
 <a class="jxr_linenumber" name="196" href="#196">196</a>       configuration.setAutoMappingBehavior(AutoMappingBehavior.valueOf(props.getProperty(<span class="jxr_string">"autoMappingBehavior"</span>, <span class="jxr_string">"PARTIAL"</span>)));
 <a class="jxr_linenumber" name="197" href="#197">197</a>       configuration.setCacheEnabled(booleanValueOf(props.getProperty(<span class="jxr_string">"cacheEnabled"</span>), <strong class="jxr_keyword">true</strong>));
-<a class="jxr_linenumber" name="198" href="#198">198</a>       configuration.setProxyFactory((ProxyFactory) createInstance(props.getProperty(<span class="jxr_string">"proxyFactory"</span>)));      
+<a class="jxr_linenumber" name="198" href="#198">198</a>       configuration.setProxyFactory((ProxyFactory) createInstance(props.getProperty(<span class="jxr_string">"proxyFactory"</span>)));
 <a class="jxr_linenumber" name="199" href="#199">199</a>       configuration.setLazyLoadingEnabled(booleanValueOf(props.getProperty(<span class="jxr_string">"lazyLoadingEnabled"</span>), false));
 <a class="jxr_linenumber" name="200" href="#200">200</a>       configuration.setAggressiveLazyLoading(booleanValueOf(props.getProperty(<span class="jxr_string">"aggressiveLazyLoading"</span>), <strong class="jxr_keyword">true</strong>));
 <a class="jxr_linenumber" name="201" href="#201">201</a>       configuration.setMultipleResultSetsEnabled(booleanValueOf(props.getProperty(<span class="jxr_string">"multipleResultSetsEnabled"</span>), <strong class="jxr_keyword">true</strong>));
@@ -223,136 +223,137 @@
 <a class="jxr_linenumber" name="213" href="#213">213</a>       configuration.setCallSettersOnNulls(booleanValueOf(props.getProperty(<span class="jxr_string">"callSettersOnNulls"</span>), false));
 <a class="jxr_linenumber" name="214" href="#214">214</a>       configuration.setLogPrefix(props.getProperty(<span class="jxr_string">"logPrefix"</span>));
 <a class="jxr_linenumber" name="215" href="#215">215</a>       configuration.setLogImpl(resolveClass(props.getProperty(<span class="jxr_string">"logImpl"</span>)));
-<a class="jxr_linenumber" name="216" href="#216">216</a>     }
-<a class="jxr_linenumber" name="217" href="#217">217</a>   }
-<a class="jxr_linenumber" name="218" href="#218">218</a> 
-<a class="jxr_linenumber" name="219" href="#219">219</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> environmentsElement(<a href="../../../../../org/apache/ibatis/parsing/XNode.html">XNode</a> context) <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="220" href="#220">220</a>     <strong class="jxr_keyword">if</strong> (context != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="221" href="#221">221</a>       <strong class="jxr_keyword">if</strong> (environment == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="222" href="#222">222</a>         environment = context.getStringAttribute(<span class="jxr_string">"default"</span>);
-<a class="jxr_linenumber" name="223" href="#223">223</a>       }
-<a class="jxr_linenumber" name="224" href="#224">224</a>       <strong class="jxr_keyword">for</strong> (XNode child : context.getChildren()) {
-<a class="jxr_linenumber" name="225" href="#225">225</a>         String id = child.getStringAttribute(<span class="jxr_string">"id"</span>);
-<a class="jxr_linenumber" name="226" href="#226">226</a>         <strong class="jxr_keyword">if</strong> (isSpecifiedEnvironment(id)) {
-<a class="jxr_linenumber" name="227" href="#227">227</a>           <a href="../../../../../org/apache/ibatis/transaction/TransactionFactory.html">TransactionFactory</a> txFactory = transactionManagerElement(child.evalNode(<span class="jxr_string">"transactionManager"</span>));
-<a class="jxr_linenumber" name="228" href="#228">228</a>           <a href="../../../../../org/apache/ibatis/datasource/DataSourceFactory.html">DataSourceFactory</a> dsFactory = dataSourceElement(child.evalNode(<span class="jxr_string">"dataSource"</span>));
-<a class="jxr_linenumber" name="229" href="#229">229</a>           DataSource dataSource = dsFactory.getDataSource();
-<a class="jxr_linenumber" name="230" href="#230">230</a>           Environment.Builder environmentBuilder = <strong class="jxr_keyword">new</strong> Environment.Builder(id)
-<a class="jxr_linenumber" name="231" href="#231">231</a>               .transactionFactory(txFactory)
-<a class="jxr_linenumber" name="232" href="#232">232</a>               .dataSource(dataSource);
-<a class="jxr_linenumber" name="233" href="#233">233</a>           configuration.setEnvironment(environmentBuilder.build());
-<a class="jxr_linenumber" name="234" href="#234">234</a>         }
-<a class="jxr_linenumber" name="235" href="#235">235</a>       }
-<a class="jxr_linenumber" name="236" href="#236">236</a>     }
-<a class="jxr_linenumber" name="237" href="#237">237</a>   }
-<a class="jxr_linenumber" name="238" href="#238">238</a> 
-<a class="jxr_linenumber" name="239" href="#239">239</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> databaseIdProviderElement(<a href="../../../../../org/apache/ibatis/parsing/XNode.html">XNode</a> context) <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="240" href="#240">240</a>     <a href="../../../../../org/apache/ibatis/mapping/DatabaseIdProvider.html">DatabaseIdProvider</a> databaseIdProvider = <strong class="jxr_keyword">null</strong>;
-<a class="jxr_linenumber" name="241" href="#241">241</a>     <strong class="jxr_keyword">if</strong> (context != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="242" href="#242">242</a>       String type = context.getStringAttribute(<span class="jxr_string">"type"</span>);
-<a class="jxr_linenumber" name="243" href="#243">243</a>       Properties properties = context.getChildrenAsProperties();
-<a class="jxr_linenumber" name="244" href="#244">244</a>       databaseIdProvider = (DatabaseIdProvider) resolveClass(type).newInstance();
-<a class="jxr_linenumber" name="245" href="#245">245</a>       databaseIdProvider.setProperties(properties);
-<a class="jxr_linenumber" name="246" href="#246">246</a>     }
-<a class="jxr_linenumber" name="247" href="#247">247</a>     <a href="../../../../../org/apache/ibatis/mapping/Environment.html">Environment</a> environment = configuration.getEnvironment();
-<a class="jxr_linenumber" name="248" href="#248">248</a>     <strong class="jxr_keyword">if</strong> (environment != <strong class="jxr_keyword">null</strong> &amp;&amp; databaseIdProvider != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="249" href="#249">249</a>       String databaseId = databaseIdProvider.getDatabaseId(environment.getDataSource());
-<a class="jxr_linenumber" name="250" href="#250">250</a>       configuration.setDatabaseId(databaseId);
-<a class="jxr_linenumber" name="251" href="#251">251</a>     }
-<a class="jxr_linenumber" name="252" href="#252">252</a>   }
-<a class="jxr_linenumber" name="253" href="#253">253</a> 
-<a class="jxr_linenumber" name="254" href="#254">254</a>   <strong class="jxr_keyword">private</strong> <a href="../../../../../org/apache/ibatis/transaction/TransactionFactory.html">TransactionFactory</a> transactionManagerElement(<a href="../../../../../org/apache/ibatis/parsing/XNode.html">XNode</a> context) <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="255" href="#255">255</a>     <strong class="jxr_keyword">if</strong> (context != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="256" href="#256">256</a>       String type = context.getStringAttribute(<span class="jxr_string">"type"</span>);
-<a class="jxr_linenumber" name="257" href="#257">257</a>       Properties props = context.getChildrenAsProperties();
-<a class="jxr_linenumber" name="258" href="#258">258</a>       <a href="../../../../../org/apache/ibatis/transaction/TransactionFactory.html">TransactionFactory</a> factory = (TransactionFactory) resolveClass(type).newInstance();
-<a class="jxr_linenumber" name="259" href="#259">259</a>       factory.setProperties(props);
-<a class="jxr_linenumber" name="260" href="#260">260</a>       <strong class="jxr_keyword">return</strong> factory;
-<a class="jxr_linenumber" name="261" href="#261">261</a>     }
-<a class="jxr_linenumber" name="262" href="#262">262</a>     <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/builder/BuilderException.html">BuilderException</a>(<span class="jxr_string">"Environment declaration requires a TransactionFactory."</span>);
-<a class="jxr_linenumber" name="263" href="#263">263</a>   }
-<a class="jxr_linenumber" name="264" href="#264">264</a> 
-<a class="jxr_linenumber" name="265" href="#265">265</a>   <strong class="jxr_keyword">private</strong> <a href="../../../../../org/apache/ibatis/datasource/DataSourceFactory.html">DataSourceFactory</a> dataSourceElement(<a href="../../../../../org/apache/ibatis/parsing/XNode.html">XNode</a> context) <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="266" href="#266">266</a>     <strong class="jxr_keyword">if</strong> (context != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="267" href="#267">267</a>       String type = context.getStringAttribute(<span class="jxr_string">"type"</span>);
-<a class="jxr_linenumber" name="268" href="#268">268</a>       Properties props = context.getChildrenAsProperties();
-<a class="jxr_linenumber" name="269" href="#269">269</a>       <a href="../../../../../org/apache/ibatis/datasource/DataSourceFactory.html">DataSourceFactory</a> factory = (DataSourceFactory) resolveClass(type).newInstance();
-<a class="jxr_linenumber" name="270" href="#270">270</a>       factory.setProperties(props);
-<a class="jxr_linenumber" name="271" href="#271">271</a>       <strong class="jxr_keyword">return</strong> factory;
-<a class="jxr_linenumber" name="272" href="#272">272</a>     }
-<a class="jxr_linenumber" name="273" href="#273">273</a>     <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/builder/BuilderException.html">BuilderException</a>(<span class="jxr_string">"Environment declaration requires a DataSourceFactory."</span>);
-<a class="jxr_linenumber" name="274" href="#274">274</a>   }
-<a class="jxr_linenumber" name="275" href="#275">275</a> 
-<a class="jxr_linenumber" name="276" href="#276">276</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> typeHandlerElement(<a href="../../../../../org/apache/ibatis/parsing/XNode.html">XNode</a> parent) <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="277" href="#277">277</a>     <strong class="jxr_keyword">if</strong> (parent != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="278" href="#278">278</a>       <strong class="jxr_keyword">for</strong> (XNode child : parent.getChildren()) {
-<a class="jxr_linenumber" name="279" href="#279">279</a>         <strong class="jxr_keyword">if</strong> (<span class="jxr_string">"package"</span>.equals(child.getName())) {
-<a class="jxr_linenumber" name="280" href="#280">280</a>           String typeHandlerPackage = child.getStringAttribute(<span class="jxr_string">"name"</span>);
-<a class="jxr_linenumber" name="281" href="#281">281</a>           typeHandlerRegistry.register(typeHandlerPackage);
-<a class="jxr_linenumber" name="282" href="#282">282</a>         } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="283" href="#283">283</a>           String javaTypeName = child.getStringAttribute(<span class="jxr_string">"javaType"</span>);
-<a class="jxr_linenumber" name="284" href="#284">284</a>           String jdbcTypeName = child.getStringAttribute(<span class="jxr_string">"jdbcType"</span>);
-<a class="jxr_linenumber" name="285" href="#285">285</a>           String handlerTypeName = child.getStringAttribute(<span class="jxr_string">"handler"</span>);
-<a class="jxr_linenumber" name="286" href="#286">286</a>           Class&lt;?&gt; javaTypeClass = resolveClass(javaTypeName);
-<a class="jxr_linenumber" name="287" href="#287">287</a>           <a href="../../../../../org/apache/ibatis/type/JdbcType.html">JdbcType</a> jdbcType = resolveJdbcType(jdbcTypeName);
-<a class="jxr_linenumber" name="288" href="#288">288</a>           Class&lt;?&gt; typeHandlerClass = resolveClass(handlerTypeName);
-<a class="jxr_linenumber" name="289" href="#289">289</a>           <strong class="jxr_keyword">if</strong> (javaTypeClass != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="290" href="#290">290</a>             <strong class="jxr_keyword">if</strong> (jdbcType == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="291" href="#291">291</a>               typeHandlerRegistry.register(javaTypeClass, typeHandlerClass);
-<a class="jxr_linenumber" name="292" href="#292">292</a>             } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="293" href="#293">293</a>               typeHandlerRegistry.register(javaTypeClass, jdbcType, typeHandlerClass);
-<a class="jxr_linenumber" name="294" href="#294">294</a>             }
-<a class="jxr_linenumber" name="295" href="#295">295</a>           } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="296" href="#296">296</a>             typeHandlerRegistry.register(typeHandlerClass);
-<a class="jxr_linenumber" name="297" href="#297">297</a>           }
-<a class="jxr_linenumber" name="298" href="#298">298</a>         }
-<a class="jxr_linenumber" name="299" href="#299">299</a>       }
-<a class="jxr_linenumber" name="300" href="#300">300</a>     }
-<a class="jxr_linenumber" name="301" href="#301">301</a>   }
-<a class="jxr_linenumber" name="302" href="#302">302</a> 
-<a class="jxr_linenumber" name="303" href="#303">303</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> mapperElement(<a href="../../../../../org/apache/ibatis/parsing/XNode.html">XNode</a> parent) <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="304" href="#304">304</a>     <strong class="jxr_keyword">if</strong> (parent != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="305" href="#305">305</a>       <strong class="jxr_keyword">for</strong> (XNode child : parent.getChildren()) {
-<a class="jxr_linenumber" name="306" href="#306">306</a>         <strong class="jxr_keyword">if</strong> (<span class="jxr_string">"package"</span>.equals(child.getName())) {
-<a class="jxr_linenumber" name="307" href="#307">307</a>           String mapperPackage = child.getStringAttribute(<span class="jxr_string">"name"</span>);
-<a class="jxr_linenumber" name="308" href="#308">308</a>           configuration.addMappers(mapperPackage);
-<a class="jxr_linenumber" name="309" href="#309">309</a>         } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="310" href="#310">310</a>           String resource = child.getStringAttribute(<span class="jxr_string">"resource"</span>);
-<a class="jxr_linenumber" name="311" href="#311">311</a>           String url = child.getStringAttribute(<span class="jxr_string">"url"</span>);
-<a class="jxr_linenumber" name="312" href="#312">312</a>           String mapperClass = child.getStringAttribute(<span class="jxr_string">"class"</span>);
-<a class="jxr_linenumber" name="313" href="#313">313</a>           <strong class="jxr_keyword">if</strong> (resource != <strong class="jxr_keyword">null</strong> &amp;&amp; url == <strong class="jxr_keyword">null</strong> &amp;&amp; mapperClass == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="314" href="#314">314</a>             ErrorContext.instance().resource(resource);
-<a class="jxr_linenumber" name="315" href="#315">315</a>             InputStream inputStream = Resources.getResourceAsStream(resource);
-<a class="jxr_linenumber" name="316" href="#316">316</a>             <a href="../../../../../org/apache/ibatis/builder/xml/XMLMapperBuilder.html">XMLMapperBuilder</a> mapperParser = <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/builder/xml/XMLMapperBuilder.html">XMLMapperBuilder</a>(inputStream, configuration, resource, configuration.getSqlFragments());
-<a class="jxr_linenumber" name="317" href="#317">317</a>             mapperParser.parse();
-<a class="jxr_linenumber" name="318" href="#318">318</a>           } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (resource == <strong class="jxr_keyword">null</strong> &amp;&amp; url != <strong class="jxr_keyword">null</strong> &amp;&amp; mapperClass == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="319" href="#319">319</a>             ErrorContext.instance().resource(url);
-<a class="jxr_linenumber" name="320" href="#320">320</a>             InputStream inputStream = Resources.getUrlAsStream(url);
-<a class="jxr_linenumber" name="321" href="#321">321</a>             <a href="../../../../../org/apache/ibatis/builder/xml/XMLMapperBuilder.html">XMLMapperBuilder</a> mapperParser = <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/builder/xml/XMLMapperBuilder.html">XMLMapperBuilder</a>(inputStream, configuration, url, configuration.getSqlFragments());
-<a class="jxr_linenumber" name="322" href="#322">322</a>             mapperParser.parse();
-<a class="jxr_linenumber" name="323" href="#323">323</a>           } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (resource == <strong class="jxr_keyword">null</strong> &amp;&amp; url == <strong class="jxr_keyword">null</strong> &amp;&amp; mapperClass != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="324" href="#324">324</a>             Class&lt;?&gt; mapperInterface = Resources.classForName(mapperClass);
-<a class="jxr_linenumber" name="325" href="#325">325</a>             configuration.addMapper(mapperInterface);
-<a class="jxr_linenumber" name="326" href="#326">326</a>           } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="327" href="#327">327</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/builder/BuilderException.html">BuilderException</a>(<span class="jxr_string">"A mapper element may only specify a url, resource or class, but not more than one."</span>);
-<a class="jxr_linenumber" name="328" href="#328">328</a>           }
-<a class="jxr_linenumber" name="329" href="#329">329</a>         }
-<a class="jxr_linenumber" name="330" href="#330">330</a>       }
-<a class="jxr_linenumber" name="331" href="#331">331</a>     }
-<a class="jxr_linenumber" name="332" href="#332">332</a>   }
-<a class="jxr_linenumber" name="333" href="#333">333</a> 
-<a class="jxr_linenumber" name="334" href="#334">334</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">boolean</strong> isSpecifiedEnvironment(String id) {
-<a class="jxr_linenumber" name="335" href="#335">335</a>     <strong class="jxr_keyword">if</strong> (environment == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="336" href="#336">336</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/builder/BuilderException.html">BuilderException</a>(<span class="jxr_string">"No environment specified."</span>);
-<a class="jxr_linenumber" name="337" href="#337">337</a>     } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (id == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="338" href="#338">338</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/builder/BuilderException.html">BuilderException</a>(<span class="jxr_string">"Environment requires an id attribute."</span>);
-<a class="jxr_linenumber" name="339" href="#339">339</a>     } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (environment.equals(id)) {
-<a class="jxr_linenumber" name="340" href="#340">340</a>       <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">true</strong>;
-<a class="jxr_linenumber" name="341" href="#341">341</a>     }
-<a class="jxr_linenumber" name="342" href="#342">342</a>     <strong class="jxr_keyword">return</strong> false;
-<a class="jxr_linenumber" name="343" href="#343">343</a>   }
-<a class="jxr_linenumber" name="344" href="#344">344</a> 
-<a class="jxr_linenumber" name="345" href="#345">345</a> }
+<a class="jxr_linenumber" name="216" href="#216">216</a>       configuration.setConfigurationFactory(resolveClass(props.getProperty(<span class="jxr_string">"configurationFactory"</span>)));
+<a class="jxr_linenumber" name="217" href="#217">217</a>     }
+<a class="jxr_linenumber" name="218" href="#218">218</a>   }
+<a class="jxr_linenumber" name="219" href="#219">219</a> 
+<a class="jxr_linenumber" name="220" href="#220">220</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> environmentsElement(<a href="../../../../../org/apache/ibatis/parsing/XNode.html">XNode</a> context) <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="221" href="#221">221</a>     <strong class="jxr_keyword">if</strong> (context != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="222" href="#222">222</a>       <strong class="jxr_keyword">if</strong> (environment == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="223" href="#223">223</a>         environment = context.getStringAttribute(<span class="jxr_string">"default"</span>);
+<a class="jxr_linenumber" name="224" href="#224">224</a>       }
+<a class="jxr_linenumber" name="225" href="#225">225</a>       <strong class="jxr_keyword">for</strong> (XNode child : context.getChildren()) {
+<a class="jxr_linenumber" name="226" href="#226">226</a>         String id = child.getStringAttribute(<span class="jxr_string">"id"</span>);
+<a class="jxr_linenumber" name="227" href="#227">227</a>         <strong class="jxr_keyword">if</strong> (isSpecifiedEnvironment(id)) {
+<a class="jxr_linenumber" name="228" href="#228">228</a>           <a href="../../../../../org/apache/ibatis/transaction/TransactionFactory.html">TransactionFactory</a> txFactory = transactionManagerElement(child.evalNode(<span class="jxr_string">"transactionManager"</span>));
+<a class="jxr_linenumber" name="229" href="#229">229</a>           <a href="../../../../../org/apache/ibatis/datasource/DataSourceFactory.html">DataSourceFactory</a> dsFactory = dataSourceElement(child.evalNode(<span class="jxr_string">"dataSource"</span>));
+<a class="jxr_linenumber" name="230" href="#230">230</a>           DataSource dataSource = dsFactory.getDataSource();
+<a class="jxr_linenumber" name="231" href="#231">231</a>           Environment.Builder environmentBuilder = <strong class="jxr_keyword">new</strong> Environment.Builder(id)
+<a class="jxr_linenumber" name="232" href="#232">232</a>               .transactionFactory(txFactory)
+<a class="jxr_linenumber" name="233" href="#233">233</a>               .dataSource(dataSource);
+<a class="jxr_linenumber" name="234" href="#234">234</a>           configuration.setEnvironment(environmentBuilder.build());
+<a class="jxr_linenumber" name="235" href="#235">235</a>         }
+<a class="jxr_linenumber" name="236" href="#236">236</a>       }
+<a class="jxr_linenumber" name="237" href="#237">237</a>     }
+<a class="jxr_linenumber" name="238" href="#238">238</a>   }
+<a class="jxr_linenumber" name="239" href="#239">239</a> 
+<a class="jxr_linenumber" name="240" href="#240">240</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> databaseIdProviderElement(<a href="../../../../../org/apache/ibatis/parsing/XNode.html">XNode</a> context) <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="241" href="#241">241</a>     <a href="../../../../../org/apache/ibatis/mapping/DatabaseIdProvider.html">DatabaseIdProvider</a> databaseIdProvider = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="242" href="#242">242</a>     <strong class="jxr_keyword">if</strong> (context != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="243" href="#243">243</a>       String type = context.getStringAttribute(<span class="jxr_string">"type"</span>);
+<a class="jxr_linenumber" name="244" href="#244">244</a>       Properties properties = context.getChildrenAsProperties();
+<a class="jxr_linenumber" name="245" href="#245">245</a>       databaseIdProvider = (DatabaseIdProvider) resolveClass(type).newInstance();
+<a class="jxr_linenumber" name="246" href="#246">246</a>       databaseIdProvider.setProperties(properties);
+<a class="jxr_linenumber" name="247" href="#247">247</a>     }
+<a class="jxr_linenumber" name="248" href="#248">248</a>     <a href="../../../../../org/apache/ibatis/mapping/Environment.html">Environment</a> environment = configuration.getEnvironment();
+<a class="jxr_linenumber" name="249" href="#249">249</a>     <strong class="jxr_keyword">if</strong> (environment != <strong class="jxr_keyword">null</strong> &amp;&amp; databaseIdProvider != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="250" href="#250">250</a>       String databaseId = databaseIdProvider.getDatabaseId(environment.getDataSource());
+<a class="jxr_linenumber" name="251" href="#251">251</a>       configuration.setDatabaseId(databaseId);
+<a class="jxr_linenumber" name="252" href="#252">252</a>     }
+<a class="jxr_linenumber" name="253" href="#253">253</a>   }
+<a class="jxr_linenumber" name="254" href="#254">254</a> 
+<a class="jxr_linenumber" name="255" href="#255">255</a>   <strong class="jxr_keyword">private</strong> <a href="../../../../../org/apache/ibatis/transaction/TransactionFactory.html">TransactionFactory</a> transactionManagerElement(<a href="../../../../../org/apache/ibatis/parsing/XNode.html">XNode</a> context) <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="256" href="#256">256</a>     <strong class="jxr_keyword">if</strong> (context != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="257" href="#257">257</a>       String type = context.getStringAttribute(<span class="jxr_string">"type"</span>);
+<a class="jxr_linenumber" name="258" href="#258">258</a>       Properties props = context.getChildrenAsProperties();
+<a class="jxr_linenumber" name="259" href="#259">259</a>       <a href="../../../../../org/apache/ibatis/transaction/TransactionFactory.html">TransactionFactory</a> factory = (TransactionFactory) resolveClass(type).newInstance();
+<a class="jxr_linenumber" name="260" href="#260">260</a>       factory.setProperties(props);
+<a class="jxr_linenumber" name="261" href="#261">261</a>       <strong class="jxr_keyword">return</strong> factory;
+<a class="jxr_linenumber" name="262" href="#262">262</a>     }
+<a class="jxr_linenumber" name="263" href="#263">263</a>     <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/builder/BuilderException.html">BuilderException</a>(<span class="jxr_string">"Environment declaration requires a TransactionFactory."</span>);
+<a class="jxr_linenumber" name="264" href="#264">264</a>   }
+<a class="jxr_linenumber" name="265" href="#265">265</a> 
+<a class="jxr_linenumber" name="266" href="#266">266</a>   <strong class="jxr_keyword">private</strong> <a href="../../../../../org/apache/ibatis/datasource/DataSourceFactory.html">DataSourceFactory</a> dataSourceElement(<a href="../../../../../org/apache/ibatis/parsing/XNode.html">XNode</a> context) <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="267" href="#267">267</a>     <strong class="jxr_keyword">if</strong> (context != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="268" href="#268">268</a>       String type = context.getStringAttribute(<span class="jxr_string">"type"</span>);
+<a class="jxr_linenumber" name="269" href="#269">269</a>       Properties props = context.getChildrenAsProperties();
+<a class="jxr_linenumber" name="270" href="#270">270</a>       <a href="../../../../../org/apache/ibatis/datasource/DataSourceFactory.html">DataSourceFactory</a> factory = (DataSourceFactory) resolveClass(type).newInstance();
+<a class="jxr_linenumber" name="271" href="#271">271</a>       factory.setProperties(props);
+<a class="jxr_linenumber" name="272" href="#272">272</a>       <strong class="jxr_keyword">return</strong> factory;
+<a class="jxr_linenumber" name="273" href="#273">273</a>     }
+<a class="jxr_linenumber" name="274" href="#274">274</a>     <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/builder/BuilderException.html">BuilderException</a>(<span class="jxr_string">"Environment declaration requires a DataSourceFactory."</span>);
+<a class="jxr_linenumber" name="275" href="#275">275</a>   }
+<a class="jxr_linenumber" name="276" href="#276">276</a> 
+<a class="jxr_linenumber" name="277" href="#277">277</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> typeHandlerElement(<a href="../../../../../org/apache/ibatis/parsing/XNode.html">XNode</a> parent) <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="278" href="#278">278</a>     <strong class="jxr_keyword">if</strong> (parent != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="279" href="#279">279</a>       <strong class="jxr_keyword">for</strong> (XNode child : parent.getChildren()) {
+<a class="jxr_linenumber" name="280" href="#280">280</a>         <strong class="jxr_keyword">if</strong> (<span class="jxr_string">"package"</span>.equals(child.getName())) {
+<a class="jxr_linenumber" name="281" href="#281">281</a>           String typeHandlerPackage = child.getStringAttribute(<span class="jxr_string">"name"</span>);
+<a class="jxr_linenumber" name="282" href="#282">282</a>           typeHandlerRegistry.register(typeHandlerPackage);
+<a class="jxr_linenumber" name="283" href="#283">283</a>         } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="284" href="#284">284</a>           String javaTypeName = child.getStringAttribute(<span class="jxr_string">"javaType"</span>);
+<a class="jxr_linenumber" name="285" href="#285">285</a>           String jdbcTypeName = child.getStringAttribute(<span class="jxr_string">"jdbcType"</span>);
+<a class="jxr_linenumber" name="286" href="#286">286</a>           String handlerTypeName = child.getStringAttribute(<span class="jxr_string">"handler"</span>);
+<a class="jxr_linenumber" name="287" href="#287">287</a>           Class&lt;?&gt; javaTypeClass = resolveClass(javaTypeName);
+<a class="jxr_linenumber" name="288" href="#288">288</a>           <a href="../../../../../org/apache/ibatis/type/JdbcType.html">JdbcType</a> jdbcType = resolveJdbcType(jdbcTypeName);
+<a class="jxr_linenumber" name="289" href="#289">289</a>           Class&lt;?&gt; typeHandlerClass = resolveClass(handlerTypeName);
+<a class="jxr_linenumber" name="290" href="#290">290</a>           <strong class="jxr_keyword">if</strong> (javaTypeClass != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="291" href="#291">291</a>             <strong class="jxr_keyword">if</strong> (jdbcType == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="292" href="#292">292</a>               typeHandlerRegistry.register(javaTypeClass, typeHandlerClass);
+<a class="jxr_linenumber" name="293" href="#293">293</a>             } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="294" href="#294">294</a>               typeHandlerRegistry.register(javaTypeClass, jdbcType, typeHandlerClass);
+<a class="jxr_linenumber" name="295" href="#295">295</a>             }
+<a class="jxr_linenumber" name="296" href="#296">296</a>           } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="297" href="#297">297</a>             typeHandlerRegistry.register(typeHandlerClass);
+<a class="jxr_linenumber" name="298" href="#298">298</a>           }
+<a class="jxr_linenumber" name="299" href="#299">299</a>         }
+<a class="jxr_linenumber" name="300" href="#300">300</a>       }
+<a class="jxr_linenumber" name="301" href="#301">301</a>     }
+<a class="jxr_linenumber" name="302" href="#302">302</a>   }
+<a class="jxr_linenumber" name="303" href="#303">303</a> 
+<a class="jxr_linenumber" name="304" href="#304">304</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> mapperElement(<a href="../../../../../org/apache/ibatis/parsing/XNode.html">XNode</a> parent) <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="305" href="#305">305</a>     <strong class="jxr_keyword">if</strong> (parent != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="306" href="#306">306</a>       <strong class="jxr_keyword">for</strong> (XNode child : parent.getChildren()) {
+<a class="jxr_linenumber" name="307" href="#307">307</a>         <strong class="jxr_keyword">if</strong> (<span class="jxr_string">"package"</span>.equals(child.getName())) {
+<a class="jxr_linenumber" name="308" href="#308">308</a>           String mapperPackage = child.getStringAttribute(<span class="jxr_string">"name"</span>);
+<a class="jxr_linenumber" name="309" href="#309">309</a>           configuration.addMappers(mapperPackage);
+<a class="jxr_linenumber" name="310" href="#310">310</a>         } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="311" href="#311">311</a>           String resource = child.getStringAttribute(<span class="jxr_string">"resource"</span>);
+<a class="jxr_linenumber" name="312" href="#312">312</a>           String url = child.getStringAttribute(<span class="jxr_string">"url"</span>);
+<a class="jxr_linenumber" name="313" href="#313">313</a>           String mapperClass = child.getStringAttribute(<span class="jxr_string">"class"</span>);
+<a class="jxr_linenumber" name="314" href="#314">314</a>           <strong class="jxr_keyword">if</strong> (resource != <strong class="jxr_keyword">null</strong> &amp;&amp; url == <strong class="jxr_keyword">null</strong> &amp;&amp; mapperClass == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="315" href="#315">315</a>             ErrorContext.instance().resource(resource);
+<a class="jxr_linenumber" name="316" href="#316">316</a>             InputStream inputStream = Resources.getResourceAsStream(resource);
+<a class="jxr_linenumber" name="317" href="#317">317</a>             <a href="../../../../../org/apache/ibatis/builder/xml/XMLMapperBuilder.html">XMLMapperBuilder</a> mapperParser = <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/builder/xml/XMLMapperBuilder.html">XMLMapperBuilder</a>(inputStream, configuration, resource, configuration.getSqlFragments());
+<a class="jxr_linenumber" name="318" href="#318">318</a>             mapperParser.parse();
+<a class="jxr_linenumber" name="319" href="#319">319</a>           } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (resource == <strong class="jxr_keyword">null</strong> &amp;&amp; url != <strong class="jxr_keyword">null</strong> &amp;&amp; mapperClass == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="320" href="#320">320</a>             ErrorContext.instance().resource(url);
+<a class="jxr_linenumber" name="321" href="#321">321</a>             InputStream inputStream = Resources.getUrlAsStream(url);
+<a class="jxr_linenumber" name="322" href="#322">322</a>             <a href="../../../../../org/apache/ibatis/builder/xml/XMLMapperBuilder.html">XMLMapperBuilder</a> mapperParser = <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/builder/xml/XMLMapperBuilder.html">XMLMapperBuilder</a>(inputStream, configuration, url, configuration.getSqlFragments());
+<a class="jxr_linenumber" name="323" href="#323">323</a>             mapperParser.parse();
+<a class="jxr_linenumber" name="324" href="#324">324</a>           } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (resource == <strong class="jxr_keyword">null</strong> &amp;&amp; url == <strong class="jxr_keyword">null</strong> &amp;&amp; mapperClass != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="325" href="#325">325</a>             Class&lt;?&gt; mapperInterface = Resources.classForName(mapperClass);
+<a class="jxr_linenumber" name="326" href="#326">326</a>             configuration.addMapper(mapperInterface);
+<a class="jxr_linenumber" name="327" href="#327">327</a>           } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="328" href="#328">328</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/builder/BuilderException.html">BuilderException</a>(<span class="jxr_string">"A mapper element may only specify a url, resource or class, but not more than one."</span>);
+<a class="jxr_linenumber" name="329" href="#329">329</a>           }
+<a class="jxr_linenumber" name="330" href="#330">330</a>         }
+<a class="jxr_linenumber" name="331" href="#331">331</a>       }
+<a class="jxr_linenumber" name="332" href="#332">332</a>     }
+<a class="jxr_linenumber" name="333" href="#333">333</a>   }
+<a class="jxr_linenumber" name="334" href="#334">334</a> 
+<a class="jxr_linenumber" name="335" href="#335">335</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">boolean</strong> isSpecifiedEnvironment(String id) {
+<a class="jxr_linenumber" name="336" href="#336">336</a>     <strong class="jxr_keyword">if</strong> (environment == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="337" href="#337">337</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/builder/BuilderException.html">BuilderException</a>(<span class="jxr_string">"No environment specified."</span>);
+<a class="jxr_linenumber" name="338" href="#338">338</a>     } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (id == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="339" href="#339">339</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/builder/BuilderException.html">BuilderException</a>(<span class="jxr_string">"Environment requires an id attribute."</span>);
+<a class="jxr_linenumber" name="340" href="#340">340</a>     } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (environment.equals(id)) {
+<a class="jxr_linenumber" name="341" href="#341">341</a>       <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">true</strong>;
+<a class="jxr_linenumber" name="342" href="#342">342</a>     }
+<a class="jxr_linenumber" name="343" href="#343">343</a>     <strong class="jxr_keyword">return</strong> false;
+<a class="jxr_linenumber" name="344" href="#344">344</a>   }
+<a class="jxr_linenumber" name="345" href="#345">345</a> 
+<a class="jxr_linenumber" name="346" href="#346">346</a> }
 </pre>
 <hr/><div id="footer">This page was automatically generated by <a href="http://maven.apache.org/">Maven</a></div></body>
 </html>
