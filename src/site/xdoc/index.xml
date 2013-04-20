@@ -52,10 +52,7 @@
         <p>
           Sources of this manual are available in xdoc format at
           <a href="https://github.com/mybatis/mybatis-3/tree/master/src/site">project's Git </a>
-          .
-          Check them out, update them and send your patch to the
-          <a href="https://github.com/mybatis/mybatis-3/issues">tracker</a>
-          .
+          Fork the repository, update them and send a pull request.
         </p>
         <p>
           You’re the best author of this documentation, people like you have

@@ -41,7 +41,7 @@
         </p>
         <p>
           このマニュアルのソースは xdoc 形式で、<a href="https://github.com/mybatis/mybatis-3/tree/master/src/site">プロジェクトの GitHub リポジトリ</a>で配布されています。<br />
-          チェックアウトしたファイルを修正したら、<a href="https://github.com/mybatis/mybatis-3/issues">トラッカー</a>で新しいチケットを作成して変更箇所のパッチを添付してください。
+          リポジトリをフォーク、それらを更新します、とプルリクエストを送信します。
         </p>
         <p>
           このドキュメントを読む必要のある人、つまりあなたこそが最高の著者なのです！
