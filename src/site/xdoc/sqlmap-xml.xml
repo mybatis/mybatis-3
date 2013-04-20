@@ -1502,9 +1502,10 @@ public class User {
           </thead>
           <tbody>
             <tr>
-              <td><code>resultSet</code></td>
+              <td><code>column</code></td>
               <td>
-                Identifies the name of the result set where this complex type will be loaded from.
+                When using multiple resultset this attribute specifies the columns (separated by commas) that will be correlated
+                with the <code>foreignColumn</code> to identify the parent and the child of a relationship.
               </td>
             </tr>
             <tr>
@@ -1512,6 +1513,12 @@ public class User {
               <td>
                 Identifies the name of the columns that contains the foreing keys which values will be matched against the 
                 values of the values of the columns specified in the <code>column</code> attibute of the parent type. 
+              </td>
+            </tr>
+            <tr>
+              <td><code>resultSet</code></td>
+              <td>
+                Identifies the name of the result set where this complex type will be loaded from.
               </td>
             </tr>
           </tbody>
@@ -1533,7 +1540,7 @@ public class User {
 ]]></source>
 
         <p>
-        Now we can specify that the data to fill the author association comes in the "authors" result set:
+        Now we can specify that the data to fill the "author" association comes in the "authors" result set:
         </p>
 
         <source><![CDATA[<resultMap id="blogResult" type="Blog">
@@ -1686,7 +1693,7 @@ public class User {
   {call getBlogsAndPosts(#{id,jdbcType=INTEGER,mode=IN})}
 </select>]]></source>
         
-        <p>We specify that the collection of posts will be filled out of data contained in the result set named "posts":</p>
+        <p>We specify that the "posts" collection will be filled out of data contained in the result set named "posts":</p>
 
         <source><![CDATA[<resultMap id="blogResult" type="Blog">
   <id property="id" column="blog_id" />
@@ -1700,7 +1707,7 @@ public class User {
 
         <p>In this example there will be just one Blog in the first result set and all its related
         Posts in the second one, so there is no doubt which Post should be liked with
-        each Blog, but in case the statement can return more than one Blog, then we will need to 
+        each Blog. But in case the statement can return more than one Blog, then we need to 
         provide information about how to match parents with childs. For that purpose the <code>column</code>
         and <code>foreignColumn</code> attributes are used:</p>
         
