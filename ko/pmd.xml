@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<pmd version="4.3" timestamp="2013-04-20T10:38:41.431">
+<pmd version="4.3" timestamp="2013-04-20T15:20:20.162">
 <file name="/home/eduardo/git/mybatis-3/src/main/java/org/apache/ibatis/builder/MapperBuilderAssistant.java">
-<violation beginline="452" endline="454" begincolumn="9" endcolumn="7" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.apache.ibatis.builder" class="MapperBuilderAssistant" method="resolveResultJavaType" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+<violation beginline="464" endline="466" begincolumn="9" endcolumn="7" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.apache.ibatis.builder" class="MapperBuilderAssistant" method="resolveResultJavaType" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
 Avoid empty catch blocks
 </violation>
 </file>
@@ -36,13 +36,13 @@ Avoid empty catch blocks
 <violation beginline="237" endline="239" begincolumn="9" endcolumn="7" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.apache.ibatis.builder.xml" class="XMLMapperBuilder" method="resultMapElements" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
 Avoid empty catch blocks
 </violation>
-<violation beginline="372" endline="375" begincolumn="7" endcolumn="7" rule="CollapsibleIfStatements" ruleset="Basic Rules" package="org.apache.ibatis.builder.xml" class="XMLMapperBuilder" method="processNestedResultMappings" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#CollapsibleIfStatements" priority="3">
+<violation beginline="374" endline="377" begincolumn="7" endcolumn="7" rule="CollapsibleIfStatements" ruleset="Basic Rules" package="org.apache.ibatis.builder.xml" class="XMLMapperBuilder" method="processNestedResultMappings" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#CollapsibleIfStatements" priority="3">
 These nested if statements could be combined
 </violation>
-<violation beginline="386" endline="388" begincolumn="9" endcolumn="7" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.apache.ibatis.builder.xml" class="XMLMapperBuilder" method="bindMapperForNamespace" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+<violation beginline="388" endline="390" begincolumn="9" endcolumn="7" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.apache.ibatis.builder.xml" class="XMLMapperBuilder" method="bindMapperForNamespace" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
 Avoid empty catch blocks
 </violation>
-<violation beginline="390" endline="396" begincolumn="9" endcolumn="9" rule="CollapsibleIfStatements" ruleset="Basic Rules" package="org.apache.ibatis.builder.xml" class="XMLMapperBuilder" method="bindMapperForNamespace" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#CollapsibleIfStatements" priority="3">
+<violation beginline="392" endline="398" begincolumn="9" endcolumn="9" rule="CollapsibleIfStatements" ruleset="Basic Rules" package="org.apache.ibatis.builder.xml" class="XMLMapperBuilder" method="bindMapperForNamespace" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#CollapsibleIfStatements" priority="3">
 These nested if statements could be combined
 </violation>
 </file>
@@ -96,15 +96,18 @@ Avoid empty catch blocks
 Avoid empty catch blocks
 </violation>
 </file>
-<file name="/home/eduardo/git/mybatis-3/src/main/java/org/apache/ibatis/executor/resultset/FastResultSetHandler.java">
-<violation beginline="167" endline="169" begincolumn="7" endcolumn="5" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.apache.ibatis.executor.resultset" class="FastResultSetHandler" method="closeResultSet" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
-Avoid empty catch blocks
-</violation>
-<violation beginline="245" endline="247" begincolumn="9" endcolumn="9" rule="CollapsibleIfStatements" ruleset="Basic Rules" package="org.apache.ibatis.executor.resultset" class="FastResultSetHandler" method="getNextResultSet" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#CollapsibleIfStatements" priority="3">
+<file name="/home/eduardo/git/mybatis-3/src/main/java/org/apache/ibatis/executor/resultset/DefaultResultSetHandler.java">
+<violation beginline="194" endline="197" begincolumn="9" endcolumn="9" rule="CollapsibleIfStatements" ruleset="Basic Rules" package="org.apache.ibatis.executor.resultset" class="DefaultResultSetHandler" method="getNextResultSet" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#CollapsibleIfStatements" priority="3">
 These nested if statements could be combined
 </violation>
-<violation beginline="249" endline="251" begincolumn="7" endcolumn="5" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.apache.ibatis.executor.resultset" class="FastResultSetHandler" method="getNextResultSet" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+<violation beginline="199" endline="201" begincolumn="7" endcolumn="5" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.apache.ibatis.executor.resultset" class="DefaultResultSetHandler" method="getNextResultSet" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
 Avoid empty catch blocks
+</violation>
+<violation beginline="210" endline="212" begincolumn="7" endcolumn="5" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.apache.ibatis.executor.resultset" class="DefaultResultSetHandler" method="closeResultSet" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+Avoid empty catch blocks
+</violation>
+<violation beginline="326" endline="341" begincolumn="11" endcolumn="3" rule="UnusedFormalParameter" ruleset="Unused Code Rules" package="org.apache.ibatis.executor.resultset" class="DefaultResultSetHandler" externalInfoUrl="http://pmd.sourceforge.net/rules/unusedcode.html#UnusedFormalParameter" priority="3">
+Avoid unused method parameters such as 'rowKey'.
 </violation>
 </file>
 <file name="/home/eduardo/git/mybatis-3/src/main/java/org/apache/ibatis/executor/statement/BaseStatementHandler.java">
