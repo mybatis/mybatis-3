@@ -239,6 +239,12 @@ ps.setInt(1,id);]]></source>
                 <code>false</code>.
               </td>
             </tr>
+            <tr>
+              <td><code>resultSets</code></td>
+              <td>This is only applicable for multiple result sets. It lists the result sets that will 
+                be returned by the statement and gives a name to each one. Names are separated by commas. 
+              </td>
+            </tr>         
           </tbody>
         </table>
       </subsection>
@@ -1496,36 +1502,44 @@ public class User {
           </thead>
           <tbody>
             <tr>
-              <td><code>resultSetIndex</code></td>
+              <td><code>resultSet</code></td>
               <td>
-                Identifies the cardinal index of the result set (0, 1, 2) where this complex type will be loaded from.
+                Identifies the name of the result set where this complex type will be loaded from.
+              </td>
+            </tr>
+            <tr>
+              <td><code>foreignColumn</code></td>
+              <td>
+                Identifies the name of the columns that contains the foreing keys which values will be matched against the 
+                values of the values of the columns specified in the <code>column</code> attibute of the parent type. 
               </td>
             </tr>
           </tbody>
         </table>
         
-        <p>Starting from version 3.3 MyBatis provides yet another way to solve the N+1 problem.</p>
+        <p>Starting from version 3.2.3 MyBatis provides yet another way to solve the N+1 problem.</p>
          
-        <p>Some databases are able to execute several statements at once and send back a <code>ResultSet</code> per each one.
-        Using this technique the database runs only two queries instead of N+1, and the data is sent back in separated resultsets
-        so building the result is much faster than when processing a JOIN.
-        </p>
+        <p>Some databases allow stored procedures to return more than one resultset or execute more than one statement 
+         at once and return a resultset per each one. This can be used to hit the database just once 
+         and return related data without using a join.</p>
 
-        <p>Instead of joining the tables we send two statements at a once:</p>
+        <p>In the example, the stored procedure will return two result sets, the first will 
+        contain Blogs and the second Authors. A name must be given to each result set by adding a 
+        <code>resultSets</code> attribute to the mapped statement with a list of names separated by commas.</p>
 
-        <source><![CDATA[<select id="selectBlog" resultMap="blogResult">
-  SELECT * FROM BLOG WHERE ID = #{id} ; SELECT * FROM AUTHOR WHERE ID = #{id}
+        <source><![CDATA[<select id="selectBlog" resultSets="blogs,authors" resultMap="blogResult">
+  {call getBlogsAndAuthors(#{id,jdbcType=INTEGER,mode=IN})}
 </select>
 ]]></source>
 
-        <p>When this multiple statement is executed, it will result in two result sets, the first one (index=0) will 
-        contain blogs and the other one (index=1) will contain Authors. We need to add a resultSetIndex attribute
-        to the association to indicate where to take the data from:</p>
+        <p>
+        Now we can specify that the data to fill the author association comes in the "authors" result set:
+        </p>
 
         <source><![CDATA[<resultMap id="blogResult" type="Blog">
   <id property="id" column="blog_id" />
   <result property="title" column="blog_title"/>
-  <association property="author" javaType="Author" resultSetIndex="1">
+  <association property="author" javaType="Author" resultSet="authors">
     <id property="id" column="author_id"/>
     <result property="username" column="author_username"/>
     <result property="password" column="author_password"/>
@@ -1664,32 +1678,38 @@ public class User {
         <h4>Multiple ResultSets for Collection</h4>
         
         <p>
-          As we did for the association, both selects are grouped in one multiple statement:
+          As we did for the association, we can call an stored procedure that returns two result sets, one with Blogs
+          and another with Posts:
         </p>
 
-        <source><![CDATA[<select id="selectBlog" parameterType="int" resultMap="blogResult">
-  SELECT * FROM BLOG WHERE ID = #{id} ; SELECT * FROM POST WHERE BLOG_ID = #{id}
+        <source><![CDATA[<select id="selectBlog" resultSets="blogs,posts" parameterType="int" resultMap="blogResult">
+  {call getBlogsAndPosts(#{id,jdbcType=INTEGER,mode=IN})}
 </select>]]></source>
-
-        <p>
-          The first result set will contain a Blog and the second one will contain Posts.
-          As we did with the association, we add a resultSetIndex attribute to the collection element:
-        </p>
+        
+        <p>We specify that the collection of posts will be filled out of data contained in the result set named "posts":</p>
 
         <source><![CDATA[<resultMap id="blogResult" type="Blog">
   <id property="id" column="blog_id" />
   <result property="title" column="blog_title"/>
-  <collection property="posts" ofType="Post" resultSetIndex="1">
+  <collection property="posts" ofType="Post" resultSet="posts">
     <id property="id" column="post_id"/>
     <result property="subject" column="post_subject"/>
     <result property="body" column="post_body"/>
   </collection>
 </resultMap>]]></source>
+
+        <p>In this example there will be just one Blog in the first result set and all its related
+        Posts in the second one, so there is no doubt which Post should be liked with
+        each Blog, but in case the statement can return more than one Blog, then we will need to 
+        provide information about how to match parents with childs. For that purpose the <code>column</code>
+        and <code>foreignColumn</code> attributes are used:</p>
+        
+        <source><![CDATA[<collection property="posts" column="id" foreignColum="blog_id" resultSet="posts"/>]]></source>        
         
         <p>
-          <span class="label important">NOTE</span> There's no limit to the depth, breadth or combinations of the
-          associations and collections
-          that you map. You should keep performance in mind when mapping them. Unit testing and performance
+          <span class="label important">NOTE</span> There's no limit to the depth, breadth or 
+          combinations of the associations and collections that you map. 
+          You should keep performance in mind when mapping them. Unit testing and performance
           testing of your application goes a long way toward discovering the best approach for your
           application. The nice thing is that MyBatis lets you change your mind later, with very little (if
           any) impact to your code.
