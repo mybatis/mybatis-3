@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2012 The MyBatis Team
+ *    Copyright 2009-2013 The MyBatis Team
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -92,7 +92,7 @@ public class XMLStatementBuilder extends BaseBuilder {
 
     // Parse the SQL (pre: <selectKey> and <include> were parsed and removed)
     SqlSource sqlSource = langDriver.createSqlSource(configuration, context, parameterTypeClass);
-
+    String resultSets = context.getStringAttribute("resultSets");
     String keyProperty = context.getStringAttribute("keyProperty");
     String keyColumn = context.getStringAttribute("keyColumn");
     KeyGenerator keyGenerator;
@@ -109,7 +109,7 @@ public class XMLStatementBuilder extends BaseBuilder {
     builderAssistant.addMappedStatement(id, sqlSource, statementType, sqlCommandType,
         fetchSize, timeout, parameterMap, parameterTypeClass, resultMap, resultTypeClass,
         resultSetTypeEnum, flushCache, useCache, resultOrdered, 
-        keyGenerator, keyProperty, keyColumn, databaseId, langDriver);
+        keyGenerator, keyProperty, keyColumn, databaseId, langDriver, resultSets);
   }
   
   public void parseSelectKeyNodes(String parentId, List<XNode> list, Class<?> parameterTypeClass, LanguageDriver langDriver, String skRequiredDatabaseId) {
@@ -146,7 +146,7 @@ public class XMLStatementBuilder extends BaseBuilder {
     builderAssistant.addMappedStatement(id, sqlSource, statementType, sqlCommandType,
         fetchSize, timeout, parameterMap, parameterTypeClass, resultMap, resultTypeClass,
         resultSetTypeEnum, flushCache, useCache, resultOrdered,
-        keyGenerator, keyProperty, null, databaseId, langDriver);
+        keyGenerator, keyProperty, null, databaseId, langDriver, null);
 
     id = builderAssistant.applyCurrentNamespace(id, false);
 

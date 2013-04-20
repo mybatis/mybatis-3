@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2011 The MyBatis Team
+ *    Copyright 2009-2013 The MyBatis Team
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -73,7 +73,7 @@ public class ResultMap {
       resultMap.propertyResultMappings = new ArrayList<ResultMapping>();
       for (ResultMapping resultMapping : resultMap.resultMappings) {
         resultMap.hasNestedQueries = resultMap.hasNestedQueries || resultMapping.getNestedQueryId() != null;
-        resultMap.hasNestedResultMaps = resultMap.hasNestedResultMaps || resultMapping.getNestedResultMapId() != null;
+        resultMap.hasNestedResultMaps = resultMap.hasNestedResultMaps || (resultMapping.getNestedResultMapId() != null && resultMapping.getResultSet() == null);
         final String column = resultMapping.getColumn();
         if (column != null) {
           resultMap.mappedColumns.add(column.toUpperCase(Locale.ENGLISH));

@@ -52,6 +52,7 @@ public final class MappedStatement {
   private String databaseId;
   private Log statementLog;
   private LanguageDriver lang;
+  private String[] resultSets;
 
   private MappedStatement() {
     // constructor disabled
@@ -163,6 +164,11 @@ public final class MappedStatement {
       return this;
     }
 
+    public Builder resulSets(String resultSet) {
+      mappedStatement.resultSets = delimitedStringtoArray(resultSet);
+      return this;
+    }
+    
     public MappedStatement build() {
       assert mappedStatement.configuration != null;
       assert mappedStatement.id != null;
@@ -261,6 +267,10 @@ public final class MappedStatement {
     return lang;
   }
 
+  public String[] getResulSets() {
+    return resultSets;
+  }
+  
   public BoundSql getBoundSql(Object parameterObject) {
     BoundSql boundSql = sqlSource.getBoundSql(parameterObject);
     List<ParameterMapping> parameterMappings = boundSql.getParameterMappings();

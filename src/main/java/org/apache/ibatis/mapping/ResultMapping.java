@@ -39,6 +39,8 @@ public class ResultMapping {
   private String columnPrefix;
   private List<ResultFlag> flags;
   private List<ResultMapping> composites;
+  private String resultSet;
+  private String foreignColumn;
 
   private ResultMapping() {
   }
@@ -91,6 +93,16 @@ public class ResultMapping {
       return this;
     }
 
+    public Builder resultSet(String resultSet) {
+      resultMapping.resultSet = resultSet;
+      return this;
+    }
+
+    public Builder foreignColumn(String foreignColumn) {
+      resultMapping.foreignColumn = foreignColumn;
+      return this;
+    }
+
     public Builder notNullColumns(Set<String> notNullColumns) {
       resultMapping.notNullColumns = notNullColumns;
       return this;
@@ -137,6 +149,19 @@ public class ResultMapping {
       // Issue #4: column is mandatory on nested queries
       if (resultMapping.nestedQueryId != null && resultMapping.column == null && resultMapping.composites.size() == 0) {
         throw new IllegalStateException("Missing column attribute for nested select in property " + resultMapping.property);
+      }
+      if (resultMapping.getResultSet() != null) {
+        int numColums = 0;
+        if (resultMapping.column != null) {
+          numColums = resultMapping.column.split(",").length;
+        }
+        int numForeignColumns = 0;
+        if (resultMapping.foreignColumn != null) {
+          numForeignColumns = resultMapping.foreignColumn.split(",").length;
+        }
+        if (numColums != numForeignColumns) {
+          throw new IllegalStateException("There should be the same number of columns and foreignColumns in property " + resultMapping.property);
+        }
       }
     }
     
@@ -200,6 +225,18 @@ public class ResultMapping {
 
   public boolean isCompositeResult() {
     return this.composites != null && !this.composites.isEmpty();
+  }
+
+  public String getResultSet() {
+    return this.resultSet;
+  }
+
+  public String getForeignColumn() {
+    return foreignColumn;
+  }
+
+  public void setForeignColumn(String foreignColumn) {
+    this.foreignColumn = foreignColumn;
   }
 
   @Override

@@ -18,10 +18,18 @@
 -->
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.apache.ibatis.submitted.sptests.SPMapper">
+
   <resultMap type="org.apache.ibatis.submitted.sptests.Name" id="nameResult">
     <result column="ID" property="id"/>
     <result column="FIRST_NAME" property="firstName"/>
     <result column="LAST_NAME" property="lastName"/>
+  </resultMap>
+
+  <resultMap type="org.apache.ibatis.submitted.sptests.Name" id="nameResultLinked">
+    <result column="ID" property="id"/>
+    <result column="FIRST_NAME" property="firstName"/>
+    <result column="LAST_NAME" property="lastName"/>
+    <collection property="items" column="id" foreignColumn="name_id" resultSet="items" resultMap="itemResult"/>
   </resultMap>
 
   <resultMap type="org.apache.ibatis.submitted.sptests.Item" id="itemResult">
@@ -97,4 +105,9 @@
     resultMap="nameResult,itemResult">
     {call sptest.getnamesanditems()}
   </select>
+  
+  <select id="getNamesAndItemsLinked" statementType="CALLABLE" resultSets="names,items" resultMap="nameResultLinked">
+    {call sptest.getnamesanditems()}
+  </select>
+  
 </mapper>
