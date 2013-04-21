@@ -163,7 +163,7 @@ ps.setInt(1,id);]]></source>
             </tr>
             <tr>
               <td>
-                <strike>parameterMap</strike>
+                <strike><code>parameterMap</code></strike>
               </td>
               <td>
                 <strike>This is a deprecated approach to referencing an external <code>parameterMap</code>. Use
@@ -1512,7 +1512,7 @@ public class User {
               <td><code>foreignColumn</code></td>
               <td>
                 Identifies the name of the columns that contains the foreing keys which values will be matched against the 
-                values of the values of the columns specified in the <code>column</code> attibute of the parent type. 
+                values of the columns specified in the <code>column</code> attibute of the parent type. 
               </td>
             </tr>
             <tr>
