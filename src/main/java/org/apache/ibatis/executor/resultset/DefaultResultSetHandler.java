@@ -572,7 +572,6 @@ public class DefaultResultSetHandler implements ResultSetHandler {
   // NESTED QUERY
   //
 
-  @SuppressWarnings("unchecked")
   private Object getNestedQueryConstructorValue(ResultSet rs, ResultMapping constructorMapping, String columnPrefix) throws SQLException {
     final String nestedQueryId = constructorMapping.getNestedQueryId();
     final MappedStatement nestedQuery = configuration.getMappedStatement(nestedQueryId);
@@ -583,9 +582,9 @@ public class DefaultResultSetHandler implements ResultSetHandler {
       final BoundSql nestedBoundSql = nestedQuery.getBoundSql(nestedQueryParameterObject);
       final CacheKey key = executor.createCacheKey(nestedQuery, nestedQueryParameterObject, RowBounds.DEFAULT, nestedBoundSql);
       final Class<?> targetType = constructorMapping.getJavaType();
-      final Object nestedQueryCacheObject = getNestedQueryCacheObject(nestedQuery, key);
-      if (nestedQueryCacheObject != null && nestedQueryCacheObject instanceof List) {
-        value = resultExtractor.extractObjectFromList((List<Object>) nestedQueryCacheObject, targetType);
+      final List<Object> nestedQueryCacheObject = getNestedQueryCacheObject(nestedQuery, key);
+      if (nestedQueryCacheObject != null) {
+        value = resultExtractor.extractObjectFromList(nestedQueryCacheObject, targetType);
       } else {
         final ResultLoader resultLoader = new ResultLoader(configuration, executor, nestedQuery, nestedQueryParameterObject, targetType, key, nestedBoundSql);
         value = resultLoader.loadResult();
@@ -594,7 +593,6 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     return value;
   }
 
-  @SuppressWarnings("unchecked")
   private Object getNestedQueryMappingValue(ResultSet rs, MetaObject metaResultObject, ResultMapping propertyMapping, ResultLoaderMap lazyLoader, String columnPrefix)
       throws SQLException {
     final String nestedQueryId = propertyMapping.getNestedQueryId();
@@ -607,9 +605,9 @@ public class DefaultResultSetHandler implements ResultSetHandler {
       final BoundSql nestedBoundSql = nestedQuery.getBoundSql(nestedQueryParameterObject);
       final CacheKey key = executor.createCacheKey(nestedQuery, nestedQueryParameterObject, RowBounds.DEFAULT, nestedBoundSql);
       final Class<?> targetType = propertyMapping.getJavaType();
-      final Object nestedQueryCacheObject = getNestedQueryCacheObject(nestedQuery, key);
-      if (nestedQueryCacheObject != null && nestedQueryCacheObject instanceof List) {
-        value = resultExtractor.extractObjectFromList((List<Object>) nestedQueryCacheObject, targetType);
+      final List<Object> nestedQueryCacheObject = getNestedQueryCacheObject(nestedQuery, key);
+      if (nestedQueryCacheObject != null) {
+        value = resultExtractor.extractObjectFromList(nestedQueryCacheObject, targetType);
       } else if (executor.isCached(nestedQuery, key)) {
         executor.deferLoad(nestedQuery, metaResultObject, property, key, targetType);
       } else {
@@ -624,9 +622,10 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     return value;
   }
 
-  private Object getNestedQueryCacheObject(MappedStatement nestedQuery, CacheKey key) {
+  @SuppressWarnings("unchecked")
+  private List<Object> getNestedQueryCacheObject(MappedStatement nestedQuery, CacheKey key) {
     final Cache nestedQueryCache = nestedQuery.getCache();
-    return nestedQueryCache != null ? nestedQueryCache.getObject(key) : null;
+    return nestedQueryCache != null ? (List<Object>) nestedQueryCache.getObject(key) : null;
   }
 
   private Object prepareParameterForNestedQuery(ResultSet rs, ResultMapping resultMapping, Class<?> parameterType, String columnPrefix) throws SQLException {

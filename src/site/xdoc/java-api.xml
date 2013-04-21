@@ -229,6 +229,13 @@ public interface ResultHandler {
 }</source>
 
   <p>The ResultContext parameter gives you access to the result object itself, a count of the number of result objects created, and a Boolean stop() method that you can use to stop MyBatis from loading any more results.</p>
+  
+  <p>Using a ResultHandler has two limitations that you should be aware of:</p>
+  
+  <ul>
+  <li>Data got from an method called with a ResultHandler will not be cached.</li>
+  <li>When using advanced resultmaps MyBatis will probably require several rows to build an object. If a ResultHandler is used you may be given an object whose associations or collections are not yet filled.</li>
+  </ul>
 
   <h5>Transaction Control Methods</h5>
   <p>There are four methods for controlling the scope of a transaction. Of course, these have no effect if you've chosen to use auto-commit or if you're using an external transaction manager. However, if you're using the JDBC transaction manager, managed by the Connection instance, then the four methods that will come in handy are:</p>
@@ -240,7 +247,7 @@ void rollback(boolean force)</source>
   <p><span class="label important">NOTE</span> MyBatis-Spring and MyBatis-Guice provide declarative transaction handling. So if you are using MyBatis with Spring or Guice please refer to their specific manuals.</p>
 
   <h5>Local Cache</h5>
-  <p>MyBatis uses two caches: a local cache and a 2nd level cache.</p>
+  <p>MyBatis uses two caches: a local cache and a second level cache.</p>
   <p>Each time a new session is created MyBatis creates a local cache and attaches it to the session. Any query executed within the session will be stored in the local cache so further executions of the same query with the same input parameters will not hit the database. The local cache is cleared upon update, commit, rollback and close.</p>
   <p>By default local cache data is used for the whole session duration. This cache is needed to resolve circular references and to speed up repeated nested queries, so it can never be completely disabled but you can configure the local cache to be used just for the duration of an statement execution by setting localCacheScope=STATEMENT.</p>
   <p>Note that when the localCacheScope is set to SESSION, MyBatis returns references to the same objects which are stored in the local cache. Any modification of returned object (lists etc.) influences the local cache contents and subsequently the values which are returned from the cache in the lifetime of the session. Therefore, as best practice, do not to modify the objects returned by MyBatis.</p>
