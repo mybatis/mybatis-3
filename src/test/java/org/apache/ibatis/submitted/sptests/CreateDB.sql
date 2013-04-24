@@ -102,6 +102,17 @@ BEGIN ATOMIC
 END
 go
 
+create procedure sptest.getnamesanditemsbyid(in nameId integer)
+modifies sql data
+dynamic result sets 2
+BEGIN ATOMIC
+  declare cur1 cursor for select * from sptest.names where id = nameId;
+  declare cur2 cursor for select * from sptest.items where name_id in (select id from sptest.names where id = nameId);
+  open cur1;
+  open cur2;
+END
+go
+
 create procedure sptest.getnames(in lowestId int, out totalrows integer)
 modifies sql data
 dynamic result sets 1

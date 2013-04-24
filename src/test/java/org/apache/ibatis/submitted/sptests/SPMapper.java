@@ -43,6 +43,8 @@ public interface SPMapper {
   List<List<?>> getNamesAndItems();
 
   List<Name> getNamesAndItemsLinked();
+  
+  List<Name> getNamesAndItemsLinkedById(int id);
 
   // annotated
   @Select({ "{call sptest.adder(", "#{addend1,jdbcType=INTEGER,mode=IN},", "#{addend2,jdbcType=INTEGER,mode=IN},", "#{sum,jdbcType=INTEGER,mode=OUT})}" })

@@ -32,6 +32,13 @@
     <collection property="items" column="id" foreignColumn="name_id" resultSet="items" resultMap="itemResult"/>
   </resultMap>
 
+  <resultMap type="org.apache.ibatis.submitted.sptests.Name" id="nameResultLinkedNoMatchingInfo">
+    <result column="ID" property="id"/>
+    <result column="FIRST_NAME" property="firstName"/>
+    <result column="LAST_NAME" property="lastName"/>
+    <collection property="items" resultSet="items" resultMap="itemResult"/>
+  </resultMap>
+
   <resultMap type="org.apache.ibatis.submitted.sptests.Item" id="itemResult">
     <result column="ID" property="id"/>
     <result column="ITEM" property="item"/>
@@ -108,6 +115,10 @@
   
   <select id="getNamesAndItemsLinked" statementType="CALLABLE" resultSets="names,items" resultMap="nameResultLinked">
     {call sptest.getnamesanditems()}
+  </select>
+
+  <select id="getNamesAndItemsLinkedById" statementType="CALLABLE" resultSets="names,items" resultMap="nameResultLinkedNoMatchingInfo">
+    {call sptest.getnamesanditemsbyid(#{id,jdbcType=INTEGER,mode=IN})}
   </select>
   
 </mapper>
