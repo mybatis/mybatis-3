@@ -223,6 +223,13 @@ public interface ResultHandler {
 }</source>
 
   <p>引数 ResultContext を介して結果オブジェクトにアクセスすることができます。ResultContext#getResultCount() メソッドは作成された結果オブジェクトの数を返します。ResultContext#stop() メソッドを呼び出すと、それ以上結果を読み込まないよう MyBatis に指示します。</p>
+  
+  <p>ResultHandler を使用する場合に注意すべき点が２つあります。</p>
+  
+  <ul>
+  <li>ResultHandler を引数に取るメソッドから返されるデータはキャッシュされません。</li>
+  <li>複雑な ResultMap では複数行のデータがひとつのオブジェクトにマッピングされることもあります。こうした ResultMap を ResultHandler と併用する際、association や collection のデータがマッピングされる前の状態のオブジェクトが渡される場合があります。</li>
+  </ul>
 
   <h5>トランザクションを制御するメソッド</h5>
   <p>トランザクションのスコープを制御するメソッドは４つあります。当然ですが、auto-commit を使用する場合や、外部のトランザクションマネージャーを使っている場合、これらのメソッドは効果がありません。しかし、Connection のインスタンスによって管理されている JDBC トランザクションマネージャーを利用している場合は便利なメソッドです。</p>

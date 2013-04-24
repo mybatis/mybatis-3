@@ -158,7 +158,7 @@ ps.setInt(1,id);]]></source>
             </tr>
             <tr>
               <td>
-                <strike>parameterMap</strike>
+                <strike><code>parameterMap</code></strike>
               </td>
               <td>
                 <strike>
@@ -226,6 +226,11 @@ ps.setInt(1,id);]]></source>
               <td><code>resultOrdered</code></td>
               <td>この属性は結果がネストされた select ステートメントでのみ有効です。true が設定された場合、MyBatis はクエリの結果が正しい順番にソートされているという前提でマッピングを実行します。これによりメモリ消費を抑えることができます。
                 デフォルトは <code>false</code> です。
+              </td>
+            </tr>
+            <tr>
+              <td><code>resultSets</code></td>
+              <td>複数の ResultSet を利用する場合にのみ有効です。ステートメントが返す ResultSet にそれぞれ任意の名前を付けてリストアップします。名前はカンマで区切ります。
               </td>
             </tr>
           </tbody>
@@ -1279,7 +1284,7 @@ public class User {
         <source><![CDATA[<resultMap id="blogResult" type="Blog">
   <id property="id" column="blog_id" />
   <result property="title" column="blog_title"/>
-  <association property="author" column="blog_author_id" javaType="Author" resultMap="authorResult"/>
+  <association property="author" resultMap="authorResult"/>
 </resultMap>
 
 <resultMap id="authorResult" type="Author">
@@ -1363,6 +1368,60 @@ public class User {
   <association property="coAuthor"
     resultMap="authorResult"
     columnPrefix="co_" />
+</resultMap>]]></source>
+
+        <h4>複数の ResultSet を association にマッピングする</h4>
+
+        <table>
+          <thead>
+            <tr>
+              <th>属性</th>
+              <th>説明</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>column</code></td>
+              <td>複数の ResultSet を返すステートメントをマッピングする場合、<code>foreignColumn</code> で指定した外部キーと対になってリレーションシップを構成する親オブジェクト側の列を指定します（カンマ区切りで複数指定可能）。
+              </td>
+            </tr>
+            <tr>
+              <td><code>foreignColumn</code></td>
+              <td>
+                <code>column</code> 属性で指定した親オブジェクトの列との照合に使用される外部キーを格納する列を指定します。
+              </td>
+            </tr>
+            <tr>
+              <td><code>resultSet</code></td>
+              <td>読み込み元の ResultSet の名前を指定します。下記の説明を参照してください。
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        
+        <p>バージョン 3.2.3 から、N+1 セレクト問題を解決する新しい方法が追加されました。</p>
+         
+        <p>データベースによってはストアドプロシージャから複数の ResultSet を返すことができます。この機能を利用すると、テーブルの結合（Join）を使わず一度の問い合わせで互いに関連する複数のデータを取得することができます。</p>
+
+        <p>以下の例では、ストアドプロシージャが２つの ResultSet を返します。１つめの ResultSet には複数の Blog のデータが含まれており、２つめの ResultSet には複数の Author のデータが含まれています。ストアドプロシージャを実行する select 要素の <code>resultSets</code> 属性で、それぞれの ResultSet に名前を付けておく必要があります（カンマ区切り）。ここでは、それぞれ blogs, authors としています。</p>
+
+        <source><![CDATA[<select id="selectBlog" resultSets="blogs,authors" resultMap="blogResult">
+  {call getBlogsAndAuthors(#{id,jdbcType=INTEGER,mode=IN})}
+</select>
+]]></source>
+
+        <p>下記の resultMap では、authors 内の各 Author が、それぞれ対応する Blog にマッピングされます。</p>
+
+        <source><![CDATA[<resultMap id="blogResult" type="Blog">
+  <id property="id" column="blog_id" />
+  <result property="title" column="blog_title"/>
+  <association property="author" javaType="Author" resultSet="authors">
+    <id property="id" column="author_id"/>
+    <result property="username" column="author_username"/>
+    <result property="password" column="author_password"/>
+    <result property="email" column="author_email"/>
+    <result property="bio" column="author_bio"/>
+  </association>
 </resultMap>]]></source>
 
         <p>
@@ -1485,6 +1544,33 @@ public class User {
   <result property="subject" column="subject"/>
   <result property="body" column="body"/>
 </resultMap>]]></source>
+
+        <h4>複数の ResultSets を collection にマッピングする</h4>
+        
+        <p>
+          association で説明したのと同様に、２つの ResultSet を返すストアドプロシージャを呼び出すことができます。１つ目の ResultSet には Blog のリスト、２つ目の ResultSet には Post のリストが含まれているものとします。
+        </p>
+
+        <source><![CDATA[<select id="selectBlog" resultSets="blogs,posts" parameterType="int" resultMap="blogResult">
+  {call getBlogsAndPosts(#{id,jdbcType=INTEGER,mode=IN})}
+</select>]]></source>
+        
+        <p>以下の resultMap では、posts に含まれる Post が、対応する Blog にマッピングされます。</p>
+
+        <source><![CDATA[<resultMap id="blogResult" type="Blog">
+  <id property="id" column="blog_id" />
+  <result property="title" column="blog_title"/>
+  <collection property="posts" ofType="Post" resultSet="posts">
+    <id property="id" column="post_id"/>
+    <result property="subject" column="post_subject"/>
+    <result property="body" column="post_body"/>
+  </collection>
+</resultMap>]]></source>
+
+        <p>上記の例では最初の ResultSet に含まれている Blog が一件のみで、二番目の ResultSet に含まれている Post は全てその Blog に関連していることを前提としています。複数の Blog が返される可能性がある場合は、<code>column</code>
+        および <code>foreignColumn</code> 属性を使って、Blog と Post を関連付けるキーを指定する必要があります。</p>
+        
+        <source><![CDATA[<collection property="posts" column="id" foreignColum="blog_id" resultSet="posts"/>]]></source>
 
         <p>
           <span class="important">Note</span> collection と association のマッピングに関して、階層の深さやオブジェクトの大きさに制限はありませんし、両者を組み合わせることも可能です。
