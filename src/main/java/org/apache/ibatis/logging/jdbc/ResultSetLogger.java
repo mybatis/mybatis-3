@@ -71,7 +71,7 @@ public final class ResultSetLogger extends BaseJdbcLogger implements InvocationH
             printColumnValues(columnCount);
           }
         } else {
-          debug("==>      Total: " + rows);
+          debug("<==      Total: " + rows);
         }
       }
       clearColumnInfo();

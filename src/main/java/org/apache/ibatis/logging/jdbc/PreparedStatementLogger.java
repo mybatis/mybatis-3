@@ -71,7 +71,7 @@ public final class PreparedStatementLogger extends BaseJdbcLogger implements Inv
       } else if ("getUpdateCount".equals(method.getName())) {
         int updateCount = (Integer) method.invoke(statement, params);
         if (updateCount != -1) {
-          debug("==>    Updates: " + updateCount);
+          debug("<==    Updates: " + updateCount);
         }
         return updateCount;
       } else if ("equals".equals(method.getName())) {
