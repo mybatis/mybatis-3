@@ -1530,7 +1530,7 @@ public class User {
          at once and return a resultset per each one. This can be used to hit the database just once 
          and return related data without using a join.</p>
 
-        <p>In the example, the stored procedure will return two result sets, the first will 
+        <p>In the example, the stored procedure will return two result sets. The first will 
         contain Blogs and the second Authors. A name must be given to each result set by adding a 
         <code>resultSets</code> attribute to the mapped statement with a list of names separated by commas.</p>
 
