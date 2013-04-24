@@ -35,6 +35,7 @@ public final class ResultSetLogger extends BaseJdbcLogger implements InvocationH
 
   private static Set<Integer> BLOB_TYPES = new HashSet<Integer>();
   private boolean first = true;
+  private int rows = 0;
   private ResultSet rs;
   private Set<Integer> blobColumns = new HashSet<Integer>();
 
@@ -59,6 +60,7 @@ public final class ResultSetLogger extends BaseJdbcLogger implements InvocationH
       Object o = method.invoke(rs, params);
       if ("next".equals(method.getName())) {
         if (((Boolean) o)) {
+          rows++;
           ResultSetMetaData rsmd = rs.getMetaData();
           final int columnCount = rsmd.getColumnCount();
           if (isTraceEnabled()) {
@@ -68,6 +70,8 @@ public final class ResultSetLogger extends BaseJdbcLogger implements InvocationH
             }
             printColumnValues(columnCount);
           }
+        } else {
+          debug("==>      Total: " + rows);
         }
       }
       clearColumnInfo();
