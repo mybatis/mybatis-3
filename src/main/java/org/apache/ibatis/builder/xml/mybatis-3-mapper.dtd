@@ -129,7 +129,7 @@ resultMap CDATA #IMPLIED
 typeHandler CDATA #IMPLIED
 notNullColumn CDATA #IMPLIED
 columnPrefix CDATA #IMPLIED
-resultSetIndex CDATA #IMPLIED
+resultSet CDATA #IMPLIED
 foreignColumn CDATA #IMPLIED
 >
 
