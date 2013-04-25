@@ -1178,7 +1178,7 @@ public class User {
         </p>
 
         <source><![CDATA[<resultMap id="blogResult" type="Blog">
-  <association property="author" column="blog_author_id" javaType="Author" select="selectAuthor"/>
+  <association property="author" column="author_id" javaType="Author" select="selectAuthor"/>
 </resultMap>
 
 <select id="selectBlog" parameterType="int" resultMap="blogResult">
@@ -1464,7 +1464,7 @@ SELECT * FROM AUTHOR WHERE ID = #{id}]]></source>
         </p>
 
         <source><![CDATA[<resultMap id="blogResult" type="Blog">
-  <collection property="posts" javaType="ArrayList" column="blog_id" ofType="Post" select="selectPostsForBlog"/>
+  <collection property="posts" javaType="ArrayList" column="id" ofType="Post" select="selectPostsForBlog"/>
 </resultMap>
 
 <select id="selectBlog" parameterType="int" resultMap="blogResult">
@@ -1482,7 +1482,7 @@ SELECT * FROM AUTHOR WHERE ID = #{id}]]></source>
           したがって、このマッピングは次のように読むことができます。
         </p>
 
-        <source><![CDATA[<collection property="posts" javaType="ArrayList" column="blog_id" ofType="Post" select="selectPostsForBlog"/>]]></source>
+        <source><![CDATA[<collection property="posts" javaType="ArrayList" column="id" ofType="Post" select="selectPostsForBlog"/>]]></source>
 
         <p>
           <span class="important">このように読めます</span>: "投稿のリストは、Post クラスを要素とする ArrayList に格納される。"
@@ -1493,7 +1493,7 @@ SELECT * FROM AUTHOR WHERE ID = #{id}]]></source>
           ということで、大抵は下記のように短く書くことができます。
         </p>
 
-        <source><![CDATA[<collection property="posts" column="blog_id" ofType="Post" select="selectPostsForBlog"/>]]></source>
+        <source><![CDATA[<collection property="posts" column="id" ofType="Post" select="selectPostsForBlog"/>]]></source>
 
         <h4>ネストされた結果を使って collection を読み込む</h4>
 

@@ -978,7 +978,7 @@ prop1, prop2 형태로 셋팅하게 될 것이다.</td>
         <p>예를 들면.</p>
 
         <source><![CDATA[<resultMap id="blogResult" type="Blog">
-  <association property="author" column="blog_author_id" javaType="Author" select="selectAuthor"/>
+  <association property="author" column="author_id" javaType="Author" select="selectAuthor"/>
 </resultMap>
 
 <select id="selectBlog" parameterType="int" resultMap="blogResult">
@@ -1180,7 +1180,7 @@ association 결과 매핑을 내포시킬수 있다. 다음은 이 방법을 사
         <p>먼저, Blog 의 Post 를 로드하기 위한 내포된 select 를 사용해보자.</p>
 
         <source><![CDATA[<resultMap id="blogResult" type="Blog">
-  <collection property="posts" javaType="ArrayList" column="blog_id" ofType="Post" select="selectPostsForBlog"/>
+  <collection property="posts" javaType="ArrayList" column="id" ofType="Post" select="selectPostsForBlog"/>
 </resultMap>
 
 <select id="selectBlog" parameterType="int" resultMap="blogResult">
@@ -1195,7 +1195,7 @@ association 결과 매핑을 내포시킬수 있다. 다음은 이 방법을 사
 것이 보일 것이다. 그리고 나서 새로운 “ofType” 속성을 사용한 것을 알아차렸을 것이다. 이 속성은 자바빈 프로퍼티 타입과
 collection 의 타입을 구분하기 위해 필요하다.</p>
 
-        <source><![CDATA[<collection property="posts" javaType="ArrayList" column="blog_id" ofType="Post" select="selectPostsForBlog"/>]]></source>
+        <source><![CDATA[<collection property="posts" javaType="ArrayList" column="id" ofType="Post" select="selectPostsForBlog"/>]]></source>
 
         <p>
           <span class="important">독자 왈</span>: “Post 의 ArrayList 타입의 글 목록”
@@ -1204,7 +1204,7 @@ collection 의 타입을 구분하기 위해 필요하다.</p>
         <p>javaType 속성은 그다지 필요하지 않다. MyBatis 는 대부분의 경우 이 속성을 사용하지 않을 것이다. 그래서 좀더 간단하게
 설정할 수 있다.</p>
 
-        <source><![CDATA[<collection property="posts" column="blog_id" ofType="Post" select="selectPostsForBlog"/>]]></source>
+        <source><![CDATA[<collection property="posts" column="id" ofType="Post" select="selectPostsForBlog"/>]]></source>
 
         <h4>Collection 을 위한 내포된(Nested) Results</h4>
 

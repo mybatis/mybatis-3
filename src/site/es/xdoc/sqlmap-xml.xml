@@ -998,7 +998,7 @@ public class User {
         </p>
 
         <source><![CDATA[<resultMap id="blogResult" type="Blog">
-  <association property="author" column="blog_author_id" javaType="Author" select="selectAuthor"/>
+  <association property="author" column="author_id" javaType="Author" select="selectAuthor"/>
 </resultMap>
 
 <select id="selectBlog" parameterType="int" resultMap="blogResult">
@@ -1271,7 +1271,7 @@ SELECT * FROM AUTHOR WHERE ID = #{id}]]></source>
         </p>
 
         <source><![CDATA[<resultMap id="blogResult" type="Blog">
-  <collection property="posts" javaType="ArrayList" column="blog_id" ofType="Post" select="selectPostsForBlog"/>
+  <collection property="posts" javaType="ArrayList" column="id" ofType="Post" select="selectPostsForBlog"/>
 </resultMap>
 
 <select id="selectBlog" parameterType="int" resultMap="blogResult">
@@ -1285,7 +1285,7 @@ SELECT * FROM AUTHOR WHERE ID = #{id}]]></source>
         <p>Hay unas cuantas diferencias que habrás visto de forma inmediata, pero la mayor parte tiene el mismo aspecto que el elemento association  que vimos anteriormente. Primeramente, verás que estamos usando el elemento collection. Verás también que hay un nuevo atributo “ofType”. Este atributo es necesario para distinguir el tipo de la propiedad del JavaBean (o del campo) y el tipo contenido por la colección. Por tanto podrías leer el siguiente mapeo de esta forma:
         </p>
 
-        <source><![CDATA[<collection property="posts" javaType="ArrayList" column="blog_id" ofType="Post" select="selectPostsForBlog"/>]]></source>
+        <source><![CDATA[<collection property="posts" javaType="ArrayList" column="id" ofType="Post" select="selectPostsForBlog"/>]]></source>
 
         <p>
           <span class="important">Leído como</span>: "Una colección de posts en un ArrayList de tipos Post."
@@ -1294,7 +1294,7 @@ SELECT * FROM AUTHOR WHERE ID = #{id}]]></source>
         <p>El javaType es casi siempre innecesario, porque MyBatis lo adivinará en la mayoría de los casos. Así que podrías acortarlo de esta forma:
         </p>
 
-        <source><![CDATA[<collection property="posts" column="blog_id" ofType="Post" select="selectPostsForBlog"/>]]></source>
+        <source><![CDATA[<collection property="posts" column="id" ofType="Post" select="selectPostsForBlog"/>]]></source>
 
         <h4>ResultMaps anidados en Collection</h4>
 

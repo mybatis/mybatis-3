@@ -1324,7 +1324,7 @@ prop1 和 prop2 以参数对象形式来设置给目标嵌套查询语句。
         </p>
 
         <source><![CDATA[<resultMap id="blogResult" type="Blog">
-  <association property="author" column="blog_author_id" javaType="Author" select="selectAuthor"/>
+  <association property="author" column="author_id" javaType="Author" select="selectAuthor"/>
 </resultMap>
 
 <select id="selectBlog" parameterType="int" resultMap="blogResult">
@@ -1571,7 +1571,7 @@ resultMap
         </p>
 
         <source><![CDATA[<resultMap id="blogResult" type="Blog">
-  <collection property="posts" javaType="ArrayList" column="blog_id" ofType="Post" select="selectPostsForBlog"/>
+  <collection property="posts" javaType="ArrayList" column="id" ofType="Post" select="selectPostsForBlog"/>
 </resultMap>
 
 <select id="selectBlog" parameterType="int" resultMap="blogResult">
@@ -1589,7 +1589,7 @@ JavaBean(或字段)属性类型和集合包含的类型来说是很重要的。�
 映射:
         </p>
 
-        <source><![CDATA[<collection property="posts" javaType="ArrayList" column="blog_id" ofType="Post" select="selectPostsForBlog"/>]]></source>
+        <source><![CDATA[<collection property="posts" javaType="ArrayList" column="id" ofType="Post" select="selectPostsForBlog"/>]]></source>
 
         <p>
           <span class="important">读作</span>: “在 Post 类型的 ArrayList 中的 posts 的集合。”
@@ -1600,7 +1600,7 @@ javaType 属性是不需要的,因为 MyBatis 在很多情况下会为你算出�
 写法:
         </p>
 
-        <source><![CDATA[<collection property="posts" column="blog_id" ofType="Post" select="selectPostsForBlog"/>]]></source>
+        <source><![CDATA[<collection property="posts" column="id" ofType="Post" select="selectPostsForBlog"/>]]></source>
 
         <h4>集合的嵌套结果</h4>
 

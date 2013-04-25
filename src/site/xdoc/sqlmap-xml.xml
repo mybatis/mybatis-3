@@ -1277,7 +1277,7 @@ public class User {
         </p>
 
         <source><![CDATA[<resultMap id="blogResult" type="Blog">
-  <association property="author" column="blog_author_id" javaType="Author" select="selectAuthor"/>
+  <association property="author" column="author_id" javaType="Author" select="selectAuthor"/>
 </resultMap>
 
 <select id="selectBlog" parameterType="int" resultMap="blogResult">
@@ -1598,7 +1598,7 @@ SELECT * FROM AUTHOR WHERE ID = #{id}]]></source>
         </p>
 
         <source><![CDATA[<resultMap id="blogResult" type="Blog">
-  <collection property="posts" javaType="ArrayList" column="blog_id" ofType="Post" select="selectPostsForBlog"/>
+  <collection property="posts" javaType="ArrayList" column="id" ofType="Post" select="selectPostsForBlog"/>
 </resultMap>
 
 <select id="selectBlog" parameterType="int" resultMap="blogResult">
@@ -1617,7 +1617,7 @@ SELECT * FROM AUTHOR WHERE ID = #{id}]]></source>
           So you could read the following mapping like this:
         </p>
 
-        <source><![CDATA[<collection property="posts" javaType="ArrayList" column="blog_id" ofType="Post" select="selectPostsForBlog"/>]]></source>
+        <source><![CDATA[<collection property="posts" javaType="ArrayList" column="id" ofType="Post" select="selectPostsForBlog"/>]]></source>
 
         <p>
           <span class="important">Read as</span>: "A collection of posts in an ArrayList of type Post."
@@ -1628,7 +1628,7 @@ SELECT * FROM AUTHOR WHERE ID = #{id}]]></source>
           So you can often shorten this down to simply:
         </p>
 
-        <source><![CDATA[<collection property="posts" column="blog_id" ofType="Post" select="selectPostsForBlog"/>]]></source>
+        <source><![CDATA[<collection property="posts" column="id" ofType="Post" select="selectPostsForBlog"/>]]></source>
 
         <h4>Nested Results for Collection</h4>
 
