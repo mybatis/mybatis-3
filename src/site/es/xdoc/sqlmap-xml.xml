@@ -1213,7 +1213,13 @@ public class User {
         para acceder una sola vez a la base de datos y obtener datos relacionados sin usar una join.</p>
         
         <p>En el ejemplo, el procedimiento almacenado deolverá dos result sets. El primero contendrá
-        Blogs y el segundo Authors. Se debe proporcionar un nombre a cada resultset informando el atributo 
+        Blogs y el segundo Authors.</p>
+
+        <source><![CDATA[SELECT * FROM BLOG WHERE ID = #{id}
+
+SELECT * FROM AUTHOR WHERE ID = #{id}]]></source>
+
+        <p>Se debe proporcionar un nombre a cada resultset informando el atributo 
         <code>resultSets</code> del mapped statement con una lista de nombres separados por comas.</p>
 
         <source><![CDATA[<select id="selectBlog" resultSets="blogs,authors" resultMap="blogResult">
@@ -1226,14 +1232,14 @@ public class User {
         </p>
 
         <source><![CDATA[<resultMap id="blogResult" type="Blog">
-  <id property="id" column="blog_id" />
-  <result property="title" column="blog_title"/>
-  <association property="author" javaType="Author" resultSet="authors">
-    <id property="id" column="author_id"/>
-    <result property="username" column="author_username"/>
-    <result property="password" column="author_password"/>
-    <result property="email" column="author_email"/>
-    <result property="bio" column="author_bio"/>
+  <id property="id" column="id" />
+  <result property="title" column="title"/>
+  <association property="author" javaType="Author" resultSet="authors" column="author_id" foreignColumn="id">
+    <id property="id" column="id"/>
+    <result property="username" column="username"/>
+    <result property="password" column="password"/>
+    <result property="email" column="email"/>
+    <result property="bio" column="bio"/>
   </association>
 </resultMap>]]></source>
 
@@ -1347,6 +1353,13 @@ public class User {
           dos resultsets, uno con Blogs y otro con Posts:
         </p>
 
+        <source><![CDATA[SELECT * FROM BLOG WHERE ID = #{id}
+
+SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
+
+        <p>Se debe proporcionar un nombre a cada resultset informando el atributo 
+        <code>resultSets</code> del mapped statement con una lista de nombres separados por comas.</p>
+
         <source><![CDATA[<select id="selectBlog" resultSets="blogs,posts" parameterType="int" resultMap="blogResult">
   {call getBlogsAndPosts(#{id,jdbcType=INTEGER,mode=IN})}
 </select>]]></source>
@@ -1354,21 +1367,14 @@ public class User {
         <p>Especificamos que la collection "posts" se rellenará con datos contenidos en el resultset llamado "posts":</p>
 
         <source><![CDATA[<resultMap id="blogResult" type="Blog">
-  <id property="id" column="blog_id" />
-  <result property="title" column="blog_title"/>
-  <collection property="posts" ofType="Post" resultSet="posts">
-    <id property="id" column="post_id"/>
-    <result property="subject" column="post_subject"/>
-    <result property="body" column="post_body"/>
+  <id property="id" column="id" />
+  <result property="title" column="title"/>
+  <collection property="posts" ofType="Post" resultSet="posts" column="id" foreignColumn="blog_id">
+    <id property="id" column="id"/>
+    <result property="subject" column="subject"/>
+    <result property="body" column="body"/>
   </collection>
 </resultMap>]]></source>
-
-        <p>En este ejempo solo hay un Blog en el primer result set y todos sus Post relacionados en el segundo,
-        asi que no hay duda de qué Post debe enlazarse con qué Blog. Pero en caso de que la sentencia
-        devuelva más de un Blog, entonces necesitaremos proporcionar información de cómo emparejar
-        los padres con los hijos. Para ello se usan los atributos <code>column</code> y <code>foreignColumn</code>:</p>
-        
-        <source><![CDATA[<collection property="posts" column="id" foreignColum="blog_id" resultSet="posts"/>]]></source>        
 
         <p>
           <span class="label important">NOTA</span> No hay límite en profundidad, amplitud o combinaciones de las asociaciones y colecciones que mapees. Debes tener en cuenta el rendimiento cuando crees los mapeos. Las pruebas unitarias y de rendimiento de tu aplicación son de gran utilidad para conocer cuales el mejor enfoque para tu aplicación. La parte positiva es que MyBatis te permite cambiar de opinión más tarde, con muy poco (o ningún) cambio en tu código.

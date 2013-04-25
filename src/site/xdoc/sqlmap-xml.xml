@@ -1395,7 +1395,7 @@ public class User {
         <source><![CDATA[<resultMap id="blogResult" type="Blog">
   <id property="id" column="blog_id" />
   <result property="title" column="blog_title"/>
-  <association property="author" resultMap="authorResult"/>
+  <association property="author" resultMap="authorResult" />
 </resultMap>
 
 <resultMap id="authorResult" type="Author">
@@ -1530,8 +1530,14 @@ public class User {
          at once and return a resultset per each one. This can be used to hit the database just once 
          and return related data without using a join.</p>
 
-        <p>In the example, the stored procedure will return two result sets. The first will 
-        contain Blogs and the second Authors. A name must be given to each result set by adding a 
+        <p>In the example, the stored procedure executes the following queries and returns two result sets.
+          The first will contain Blogs and the second Authors.</p>
+
+        <source><![CDATA[SELECT * FROM BLOG WHERE ID = #{id}
+
+SELECT * FROM AUTHOR WHERE ID = #{id}]]></source>
+
+        <p>A name must be given to each result set by adding a 
         <code>resultSets</code> attribute to the mapped statement with a list of names separated by commas.</p>
 
         <source><![CDATA[<select id="selectBlog" resultSets="blogs,authors" resultMap="blogResult">
@@ -1544,14 +1550,14 @@ public class User {
         </p>
 
         <source><![CDATA[<resultMap id="blogResult" type="Blog">
-  <id property="id" column="blog_id" />
-  <result property="title" column="blog_title"/>
-  <association property="author" javaType="Author" resultSet="authors">
-    <id property="id" column="author_id"/>
-    <result property="username" column="author_username"/>
-    <result property="password" column="author_password"/>
-    <result property="email" column="author_email"/>
-    <result property="bio" column="author_bio"/>
+  <id property="id" column="id" />
+  <result property="title" column="title"/>
+  <association property="author" javaType="Author" resultSet="authors" column="author_id" foreignColumn="id">
+    <id property="id" column="id"/>
+    <result property="username" column="username"/>
+    <result property="password" column="password"/>
+    <result property="email" column="email"/>
+    <result property="bio" column="bio"/>
   </association>
 </resultMap>]]></source>
 
@@ -1685,9 +1691,16 @@ public class User {
         <h4>Multiple ResultSets for Collection</h4>
         
         <p>
-          As we did for the association, we can call an stored procedure that returns two result sets, one with Blogs
+          As we did for the association, we can call an stored procedure that executes two queries and returns two result sets, one with Blogs
           and another with Posts:
         </p>
+
+        <source><![CDATA[SELECT * FROM BLOG WHERE ID = #{id}
+
+SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
+
+        <p>A name must be given to each result set by adding a 
+        <code>resultSets</code> attribute to the mapped statement with a list of names separated by commas.</p>
 
         <source><![CDATA[<select id="selectBlog" resultSets="blogs,posts" parameterType="int" resultMap="blogResult">
   {call getBlogsAndPosts(#{id,jdbcType=INTEGER,mode=IN})}
@@ -1696,23 +1709,15 @@ public class User {
         <p>We specify that the "posts" collection will be filled out of data contained in the result set named "posts":</p>
 
         <source><![CDATA[<resultMap id="blogResult" type="Blog">
-  <id property="id" column="blog_id" />
-  <result property="title" column="blog_title"/>
-  <collection property="posts" ofType="Post" resultSet="posts">
-    <id property="id" column="post_id"/>
-    <result property="subject" column="post_subject"/>
-    <result property="body" column="post_body"/>
+  <id property="id" column="id" />
+  <result property="title" column="title"/>
+  <collection property="posts" ofType="Post" resultSet="posts" column="id" foreignColumn="blog_id">
+    <id property="id" column="id"/>
+    <result property="subject" column="subject"/>
+    <result property="body" column="body"/>
   </collection>
 </resultMap>]]></source>
 
-        <p>In this example there will be just one Blog in the first result set and all its related
-        Posts in the second one, so there is no doubt which Post should be liked with
-        each Blog. But in case the statement can return more than one Blog, then we need to 
-        provide information about how to match parents with childs. For that purpose the <code>column</code>
-        and <code>foreignColumn</code> attributes are used:</p>
-        
-        <source><![CDATA[<collection property="posts" column="id" foreignColum="blog_id" resultSet="posts"/>]]></source>        
-        
         <p>
           <span class="label important">NOTE</span> There's no limit to the depth, breadth or 
           combinations of the associations and collections that you map. 

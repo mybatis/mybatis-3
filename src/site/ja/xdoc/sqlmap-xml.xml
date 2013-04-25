@@ -1403,7 +1403,13 @@ public class User {
          
         <p>データベースによってはストアドプロシージャから複数の ResultSet を返すことができます。この機能を利用すると、テーブルの結合（Join）を使わず一度の問い合わせで互いに関連する複数のデータを取得することができます。</p>
 
-        <p>以下の例では、ストアドプロシージャが２つの ResultSet を返します。１つめの ResultSet には複数の Blog のデータが含まれており、２つめの ResultSet には複数の Author のデータが含まれています。ストアドプロシージャを実行する select 要素の <code>resultSets</code> 属性で、それぞれの ResultSet に名前を付けておく必要があります（カンマ区切り）。ここでは、それぞれ blogs, authors としています。</p>
+        <p>以下の例では、ストアドプロシージャが２つの ResultSet を返します。１つめの ResultSet には複数の Blog のデータが含まれており、２つめの ResultSet には複数の Author のデータが含まれています。</p>
+
+        <source><![CDATA[SELECT * FROM BLOG WHERE ID = #{id}
+
+SELECT * FROM AUTHOR WHERE ID = #{id}]]></source>
+
+        <p>ストアドプロシージャを実行する select 要素の <code>resultSets</code> 属性で、それぞれの ResultSet に名前を付けておく必要があります（カンマ区切り）。ここでは、それぞれ blogs, authors としています。</p>
 
         <source><![CDATA[<select id="selectBlog" resultSets="blogs,authors" resultMap="blogResult">
   {call getBlogsAndAuthors(#{id,jdbcType=INTEGER,mode=IN})}
@@ -1413,14 +1419,14 @@ public class User {
         <p>下記の resultMap では、authors 内の各 Author が、それぞれ対応する Blog にマッピングされます。</p>
 
         <source><![CDATA[<resultMap id="blogResult" type="Blog">
-  <id property="id" column="blog_id" />
-  <result property="title" column="blog_title"/>
-  <association property="author" javaType="Author" resultSet="authors">
-    <id property="id" column="author_id"/>
-    <result property="username" column="author_username"/>
-    <result property="password" column="author_password"/>
-    <result property="email" column="author_email"/>
-    <result property="bio" column="author_bio"/>
+  <id property="id" column="id" />
+  <result property="title" column="title"/>
+  <association property="author" javaType="Author" resultSet="authors" column="author_id" foreignColumn="id">
+    <id property="id" column="id"/>
+    <result property="username" column="username"/>
+    <result property="password" column="password"/>
+    <result property="email" column="email"/>
+    <result property="bio" column="bio"/>
   </association>
 </resultMap>]]></source>
 
@@ -1551,6 +1557,12 @@ public class User {
           association で説明したのと同様に、２つの ResultSet を返すストアドプロシージャを呼び出すことができます。１つ目の ResultSet には Blog のリスト、２つ目の ResultSet には Post のリストが含まれているものとします。
         </p>
 
+        <source><![CDATA[SELECT * FROM BLOG WHERE ID = #{id}
+
+SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
+
+       <p>ストアドプロシージャを実行する select 要素の <code>resultSets</code> 属性で、それぞれの ResultSet に名前を付けておく必要があります（カンマ区切り）。ここでは、それぞれ blogs, posts としています。</p>
+
         <source><![CDATA[<select id="selectBlog" resultSets="blogs,posts" parameterType="int" resultMap="blogResult">
   {call getBlogsAndPosts(#{id,jdbcType=INTEGER,mode=IN})}
 </select>]]></source>
@@ -1558,19 +1570,14 @@ public class User {
         <p>以下の resultMap では、posts に含まれる Post が、対応する Blog にマッピングされます。</p>
 
         <source><![CDATA[<resultMap id="blogResult" type="Blog">
-  <id property="id" column="blog_id" />
-  <result property="title" column="blog_title"/>
-  <collection property="posts" ofType="Post" resultSet="posts">
-    <id property="id" column="post_id"/>
-    <result property="subject" column="post_subject"/>
-    <result property="body" column="post_body"/>
+  <id property="id" column="id" />
+  <result property="title" column="title"/>
+  <collection property="posts" ofType="Post" resultSet="posts" column="id" foreignColumn="blog_id">
+    <id property="id" column="id"/>
+    <result property="subject" column="subject"/>
+    <result property="body" column="body"/>
   </collection>
 </resultMap>]]></source>
-
-        <p>上記の例では最初の ResultSet に含まれている Blog が一件のみで、二番目の ResultSet に含まれている Post は全てその Blog に関連していることを前提としています。複数の Blog が返される可能性がある場合は、<code>column</code>
-        および <code>foreignColumn</code> 属性を使って、Blog と Post を関連付けるキーを指定する必要があります。</p>
-        
-        <source><![CDATA[<collection property="posts" column="id" foreignColum="blog_id" resultSet="posts"/>]]></source>
 
         <p>
           <span class="important">Note</span> collection と association のマッピングに関して、階層の深さやオブジェクトの大きさに制限はありませんし、両者を組み合わせることも可能です。
