@@ -1193,6 +1193,8 @@
 </parameter>
 <parameter name="lang" type="org.apache.ibatis.scripting.LanguageDriver">
 </parameter>
+<parameter name="resultSets" type="java.lang.String">
+</parameter>
 </method>
 <method name="addParameterMap"
  return="org.apache.ibatis.mapping.ParameterMap"
@@ -1330,6 +1332,10 @@
 <parameter name="typeHandler" type="java.lang.Class&lt;? extends org.apache.ibatis.type.TypeHandler&lt;?&gt;&gt;">
 </parameter>
 <parameter name="flags" type="java.util.List&lt;org.apache.ibatis.mapping.ResultFlag&gt;">
+</parameter>
+<parameter name="resultSet" type="java.lang.String">
+</parameter>
+<parameter name="foreignColumn" type="java.lang.String">
 </parameter>
 </method>
 <method name="getCurrentNamespace"
@@ -8043,7 +8049,7 @@
 </package>
 <package name="org.apache.ibatis.executor.resultset"
 >
-<class name="FastResultSetHandler"
+<class name="DefaultResultSetHandler"
  extends="java.lang.Object"
  abstract="false"
  static="false"
@@ -8053,8 +8059,8 @@
 >
 <implements name="org.apache.ibatis.executor.resultset.ResultSetHandler">
 </implements>
-<constructor name="FastResultSetHandler"
- type="org.apache.ibatis.executor.resultset.FastResultSetHandler"
+<constructor name="DefaultResultSetHandler"
+ type="org.apache.ibatis.executor.resultset.DefaultResultSetHandler"
  static="false"
  final="false"
  deprecated="not deprecated"
@@ -8073,55 +8079,7 @@
 <parameter name="rowBounds" type="org.apache.ibatis.session.RowBounds">
 </parameter>
 </constructor>
-<method name="applyAutomaticMappings"
- return="boolean"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="protected"
->
-<parameter name="rs" type="java.sql.ResultSet">
-</parameter>
-<parameter name="unmappedColumnNames" type="java.util.List&lt;java.lang.String&gt;">
-</parameter>
-<parameter name="metaObject" type="org.apache.ibatis.reflection.MetaObject">
-</parameter>
-<parameter name="columnPrefix" type="java.lang.String">
-</parameter>
-<parameter name="resultColumnCache" type="org.apache.ibatis.executor.resultset.FastResultSetHandler.ResultColumnCache">
-</parameter>
-<exception name="SQLException" type="java.sql.SQLException">
-</exception>
-</method>
-<method name="applyPropertyMappings"
- return="boolean"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="protected"
->
-<parameter name="rs" type="java.sql.ResultSet">
-</parameter>
-<parameter name="resultMap" type="org.apache.ibatis.mapping.ResultMap">
-</parameter>
-<parameter name="mappedColumnNames" type="java.util.List&lt;java.lang.String&gt;">
-</parameter>
-<parameter name="metaObject" type="org.apache.ibatis.reflection.MetaObject">
-</parameter>
-<parameter name="lazyLoader" type="org.apache.ibatis.executor.loader.ResultLoaderMap">
-</parameter>
-<parameter name="columnPrefix" type="java.lang.String">
-</parameter>
-<exception name="SQLException" type="java.sql.SQLException">
-</exception>
-</method>
-<method name="callResultHandler"
+<method name="checkResultHandler"
  return="void"
  abstract="false"
  native="false"
@@ -8131,265 +8089,6 @@
  deprecated="not deprecated"
  visibility="protected"
 >
-<parameter name="resultHandler" type="org.apache.ibatis.session.ResultHandler">
-</parameter>
-<parameter name="resultContext" type="org.apache.ibatis.executor.result.DefaultResultContext">
-</parameter>
-<parameter name="rowValue" type="java.lang.Object">
-</parameter>
-</method>
-<method name="cleanUpAfterHandlingResultSet"
- return="void"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="protected"
->
-</method>
-<method name="closeResultSet"
- return="void"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="protected"
->
-<parameter name="rs" type="java.sql.ResultSet">
-</parameter>
-</method>
-<method name="collapseSingleResultList"
- return="java.util.List&lt;java.lang.Object&gt;"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="protected"
->
-<parameter name="multipleResults" type="java.util.List&lt;java.lang.Object&gt;">
-</parameter>
-</method>
-<method name="createParameterizedResultObject"
- return="java.lang.Object"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="protected"
->
-<parameter name="rs" type="java.sql.ResultSet">
-</parameter>
-<parameter name="resultType" type="java.lang.Class&lt;?&gt;">
-</parameter>
-<parameter name="constructorMappings" type="java.util.List&lt;org.apache.ibatis.mapping.ResultMapping&gt;">
-</parameter>
-<parameter name="constructorArgTypes" type="java.util.List&lt;java.lang.Class&lt;?&gt;&gt;">
-</parameter>
-<parameter name="constructorArgs" type="java.util.List&lt;java.lang.Object&gt;">
-</parameter>
-<parameter name="columnPrefix" type="java.lang.String">
-</parameter>
-<parameter name="resultColumnCache" type="org.apache.ibatis.executor.resultset.FastResultSetHandler.ResultColumnCache">
-</parameter>
-<exception name="SQLException" type="java.sql.SQLException">
-</exception>
-</method>
-<method name="createPrimitiveResultObject"
- return="java.lang.Object"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="protected"
->
-<parameter name="rs" type="java.sql.ResultSet">
-</parameter>
-<parameter name="resultMap" type="org.apache.ibatis.mapping.ResultMap">
-</parameter>
-<parameter name="columnPrefix" type="java.lang.String">
-</parameter>
-<parameter name="resultColumnCache" type="org.apache.ibatis.executor.resultset.FastResultSetHandler.ResultColumnCache">
-</parameter>
-<exception name="SQLException" type="java.sql.SQLException">
-</exception>
-</method>
-<method name="createResultObject"
- return="java.lang.Object"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="protected"
->
-<parameter name="rs" type="java.sql.ResultSet">
-</parameter>
-<parameter name="resultMap" type="org.apache.ibatis.mapping.ResultMap">
-</parameter>
-<parameter name="constructorArgTypes" type="java.util.List&lt;java.lang.Class&lt;?&gt;&gt;">
-</parameter>
-<parameter name="constructorArgs" type="java.util.List&lt;java.lang.Object&gt;">
-</parameter>
-<parameter name="columnPrefix" type="java.lang.String">
-</parameter>
-<parameter name="resultColumnCache" type="org.apache.ibatis.executor.resultset.FastResultSetHandler.ResultColumnCache">
-</parameter>
-<exception name="SQLException" type="java.sql.SQLException">
-</exception>
-</method>
-<method name="createResultObject"
- return="java.lang.Object"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="protected"
->
-<parameter name="rs" type="java.sql.ResultSet">
-</parameter>
-<parameter name="resultMap" type="org.apache.ibatis.mapping.ResultMap">
-</parameter>
-<parameter name="lazyLoader" type="org.apache.ibatis.executor.loader.ResultLoaderMap">
-</parameter>
-<parameter name="columnPrefix" type="java.lang.String">
-</parameter>
-<parameter name="resultColumnCache" type="org.apache.ibatis.executor.resultset.FastResultSetHandler.ResultColumnCache">
-</parameter>
-<exception name="SQLException" type="java.sql.SQLException">
-</exception>
-</method>
-<method name="getDiscriminatorValue"
- return="java.lang.Object"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="protected"
->
-<parameter name="rs" type="java.sql.ResultSet">
-</parameter>
-<parameter name="discriminator" type="org.apache.ibatis.mapping.Discriminator">
-</parameter>
-<parameter name="columnPrefix" type="java.lang.String">
-</parameter>
-<exception name="SQLException" type="java.sql.SQLException">
-</exception>
-</method>
-<method name="getNestedQueryConstructorValue"
- return="java.lang.Object"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="protected"
->
-<parameter name="rs" type="java.sql.ResultSet">
-</parameter>
-<parameter name="constructorMapping" type="org.apache.ibatis.mapping.ResultMapping">
-</parameter>
-<parameter name="columnPrefix" type="java.lang.String">
-</parameter>
-<exception name="SQLException" type="java.sql.SQLException">
-</exception>
-</method>
-<method name="getNestedQueryMappingValue"
- return="java.lang.Object"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="protected"
->
-<parameter name="rs" type="java.sql.ResultSet">
-</parameter>
-<parameter name="metaResultObject" type="org.apache.ibatis.reflection.MetaObject">
-</parameter>
-<parameter name="propertyMapping" type="org.apache.ibatis.mapping.ResultMapping">
-</parameter>
-<parameter name="lazyLoader" type="org.apache.ibatis.executor.loader.ResultLoaderMap">
-</parameter>
-<parameter name="columnPrefix" type="java.lang.String">
-</parameter>
-<exception name="SQLException" type="java.sql.SQLException">
-</exception>
-</method>
-<method name="getNextResultSet"
- return="java.sql.ResultSet"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="protected"
->
-<parameter name="stmt" type="java.sql.Statement">
-</parameter>
-<exception name="SQLException" type="java.sql.SQLException">
-</exception>
-</method>
-<method name="getPropertyMappingValue"
- return="java.lang.Object"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="protected"
->
-<parameter name="rs" type="java.sql.ResultSet">
-</parameter>
-<parameter name="metaResultObject" type="org.apache.ibatis.reflection.MetaObject">
-</parameter>
-<parameter name="propertyMapping" type="org.apache.ibatis.mapping.ResultMapping">
-</parameter>
-<parameter name="lazyLoader" type="org.apache.ibatis.executor.loader.ResultLoaderMap">
-</parameter>
-<parameter name="columnPrefix" type="java.lang.String">
-</parameter>
-<exception name="SQLException" type="java.sql.SQLException">
-</exception>
-</method>
-<method name="getRowValue"
- return="java.lang.Object"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="protected"
->
-<parameter name="rs" type="java.sql.ResultSet">
-</parameter>
-<parameter name="resultMap" type="org.apache.ibatis.mapping.ResultMap">
-</parameter>
-<parameter name="rowKey" type="org.apache.ibatis.cache.CacheKey">
-</parameter>
-<parameter name="resultColumnCache" type="org.apache.ibatis.executor.resultset.FastResultSetHandler.ResultColumnCache">
-</parameter>
-<exception name="SQLException" type="java.sql.SQLException">
-</exception>
 </method>
 <method name="handleOutputParameters"
  return="void"
@@ -8402,46 +8101,6 @@
  visibility="public"
 >
 <parameter name="cs" type="java.sql.CallableStatement">
-</parameter>
-<exception name="SQLException" type="java.sql.SQLException">
-</exception>
-</method>
-<method name="handleRefCursorOutputParameter"
- return="void"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="protected"
->
-<parameter name="rs" type="java.sql.ResultSet">
-</parameter>
-<parameter name="parameterMapping" type="org.apache.ibatis.mapping.ParameterMapping">
-</parameter>
-<parameter name="metaParam" type="org.apache.ibatis.reflection.MetaObject">
-</parameter>
-<exception name="SQLException" type="java.sql.SQLException">
-</exception>
-</method>
-<method name="handleResultSet"
- return="void"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="protected"
->
-<parameter name="rs" type="java.sql.ResultSet">
-</parameter>
-<parameter name="resultMap" type="org.apache.ibatis.mapping.ResultMap">
-</parameter>
-<parameter name="multipleResults" type="java.util.List&lt;java.lang.Object&gt;">
-</parameter>
-<parameter name="resultColumnCache" type="org.apache.ibatis.executor.resultset.FastResultSetHandler.ResultColumnCache">
 </parameter>
 <exception name="SQLException" type="java.sql.SQLException">
 </exception>
@@ -8461,159 +8120,6 @@
 <exception name="SQLException" type="java.sql.SQLException">
 </exception>
 </method>
-<method name="handleRowValues"
- return="void"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="protected"
->
-<parameter name="rs" type="java.sql.ResultSet">
-</parameter>
-<parameter name="resultMap" type="org.apache.ibatis.mapping.ResultMap">
-</parameter>
-<parameter name="resultHandler" type="org.apache.ibatis.session.ResultHandler">
-</parameter>
-<parameter name="rowBounds" type="org.apache.ibatis.session.RowBounds">
-</parameter>
-<parameter name="resultColumnCache" type="org.apache.ibatis.executor.resultset.FastResultSetHandler.ResultColumnCache">
-</parameter>
-<exception name="SQLException" type="java.sql.SQLException">
-</exception>
-</method>
-<method name="instantiateParameterObject"
- return="java.lang.Object"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="protected"
->
-<parameter name="parameterType" type="java.lang.Class&lt;?&gt;">
-</parameter>
-</method>
-<method name="instantiateResultLoaderMap"
- return="org.apache.ibatis.executor.loader.ResultLoaderMap"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="protected"
->
-</method>
-<method name="isCallSettersOnNulls"
- return="boolean"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="protected"
->
-<parameter name="propertyType" type="java.lang.Class&lt;?&gt;">
-</parameter>
-</method>
-<method name="prepareCompositeKeyParameter"
- return="java.lang.Object"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="protected"
->
-<parameter name="rs" type="java.sql.ResultSet">
-</parameter>
-<parameter name="resultMapping" type="org.apache.ibatis.mapping.ResultMapping">
-</parameter>
-<parameter name="parameterType" type="java.lang.Class&lt;?&gt;">
-</parameter>
-<parameter name="columnPrefix" type="java.lang.String">
-</parameter>
-<exception name="SQLException" type="java.sql.SQLException">
-</exception>
-</method>
-<method name="prepareParameterForNestedQuery"
- return="java.lang.Object"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="protected"
->
-<parameter name="rs" type="java.sql.ResultSet">
-</parameter>
-<parameter name="resultMapping" type="org.apache.ibatis.mapping.ResultMapping">
-</parameter>
-<parameter name="parameterType" type="java.lang.Class&lt;?&gt;">
-</parameter>
-<parameter name="columnPrefix" type="java.lang.String">
-</parameter>
-<exception name="SQLException" type="java.sql.SQLException">
-</exception>
-</method>
-<method name="prepareSimpleKeyParameter"
- return="java.lang.Object"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="protected"
->
-<parameter name="rs" type="java.sql.ResultSet">
-</parameter>
-<parameter name="resultMapping" type="org.apache.ibatis.mapping.ResultMapping">
-</parameter>
-<parameter name="parameterType" type="java.lang.Class&lt;?&gt;">
-</parameter>
-<parameter name="columnPrefix" type="java.lang.String">
-</parameter>
-<exception name="SQLException" type="java.sql.SQLException">
-</exception>
-</method>
-<method name="prependPrefix"
- return="java.lang.String"
- abstract="false"
- native="false"
- synchronized="false"
- static="true"
- final="false"
- deprecated="not deprecated"
- visibility="protected"
->
-<parameter name="columnName" type="java.lang.String">
-</parameter>
-<parameter name="prefix" type="java.lang.String">
-</parameter>
-</method>
-<method name="prependPrefixes"
- return="java.util.Set&lt;java.lang.String&gt;"
- abstract="false"
- native="false"
- synchronized="false"
- static="true"
- final="false"
- deprecated="not deprecated"
- visibility="protected"
->
-<parameter name="columnNames" type="java.util.Set&lt;java.lang.String&gt;">
-</parameter>
-<parameter name="prefix" type="java.lang.String">
-</parameter>
-</method>
 <method name="resolveDiscriminatedResultMap"
  return="org.apache.ibatis.mapping.ResultMap"
  abstract="false"
@@ -8629,344 +8135,6 @@
 <parameter name="resultMap" type="org.apache.ibatis.mapping.ResultMap">
 </parameter>
 <parameter name="columnPrefix" type="java.lang.String">
-</parameter>
-<exception name="SQLException" type="java.sql.SQLException">
-</exception>
-</method>
-<method name="shouldApplyAutomaticMappings"
- return="boolean"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="protected"
->
-<parameter name="resultMap" type="org.apache.ibatis.mapping.ResultMap">
-</parameter>
-<parameter name="def" type="boolean">
-</parameter>
-</method>
-<method name="shouldProcessMoreRows"
- return="boolean"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="protected"
->
-<parameter name="rs" type="java.sql.ResultSet">
-</parameter>
-<parameter name="context" type="org.apache.ibatis.session.ResultContext">
-</parameter>
-<parameter name="rowBounds" type="org.apache.ibatis.session.RowBounds">
-</parameter>
-<exception name="SQLException" type="java.sql.SQLException">
-</exception>
-</method>
-<method name="skipRows"
- return="void"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="protected"
->
-<parameter name="rs" type="java.sql.ResultSet">
-</parameter>
-<parameter name="rowBounds" type="org.apache.ibatis.session.RowBounds">
-</parameter>
-<exception name="SQLException" type="java.sql.SQLException">
-</exception>
-</method>
-<method name="validateResultMapsCount"
- return="void"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="protected"
->
-<parameter name="rs" type="java.sql.ResultSet">
-</parameter>
-<parameter name="resultMapCount" type="int">
-</parameter>
-</method>
-<field name="OMIT"
- type="java.lang.Object"
- transient="false"
- volatile="false"
- static="false"
- final="true"
- deprecated="not deprecated"
- visibility="protected"
->
-</field>
-<field name="boundSql"
- type="org.apache.ibatis.mapping.BoundSql"
- transient="false"
- volatile="false"
- static="false"
- final="true"
- deprecated="not deprecated"
- visibility="protected"
->
-</field>
-<field name="configuration"
- type="org.apache.ibatis.session.Configuration"
- transient="false"
- volatile="false"
- static="false"
- final="true"
- deprecated="not deprecated"
- visibility="protected"
->
-</field>
-<field name="executor"
- type="org.apache.ibatis.executor.Executor"
- transient="false"
- volatile="false"
- static="false"
- final="true"
- deprecated="not deprecated"
- visibility="protected"
->
-</field>
-<field name="mappedStatement"
- type="org.apache.ibatis.mapping.MappedStatement"
- transient="false"
- volatile="false"
- static="false"
- final="true"
- deprecated="not deprecated"
- visibility="protected"
->
-</field>
-<field name="objectFactory"
- type="org.apache.ibatis.reflection.factory.ObjectFactory"
- transient="false"
- volatile="false"
- static="false"
- final="true"
- deprecated="not deprecated"
- visibility="protected"
->
-</field>
-<field name="parameterHandler"
- type="org.apache.ibatis.executor.parameter.ParameterHandler"
- transient="false"
- volatile="false"
- static="false"
- final="true"
- deprecated="not deprecated"
- visibility="protected"
->
-</field>
-<field name="proxyFactory"
- type="org.apache.ibatis.executor.loader.ProxyFactory"
- transient="false"
- volatile="false"
- static="false"
- final="true"
- deprecated="not deprecated"
- visibility="protected"
->
-</field>
-<field name="resultExtractor"
- type="org.apache.ibatis.executor.ResultExtractor"
- transient="false"
- volatile="false"
- static="false"
- final="true"
- deprecated="not deprecated"
- visibility="protected"
->
-</field>
-<field name="resultHandler"
- type="org.apache.ibatis.session.ResultHandler"
- transient="false"
- volatile="false"
- static="false"
- final="true"
- deprecated="not deprecated"
- visibility="protected"
->
-</field>
-<field name="rowBounds"
- type="org.apache.ibatis.session.RowBounds"
- transient="false"
- volatile="false"
- static="false"
- final="true"
- deprecated="not deprecated"
- visibility="protected"
->
-</field>
-<field name="typeHandlerRegistry"
- type="org.apache.ibatis.type.TypeHandlerRegistry"
- transient="false"
- volatile="false"
- static="false"
- final="true"
- deprecated="not deprecated"
- visibility="protected"
->
-</field>
-</class>
-<class name="FastResultSetHandler.ResultColumnCache"
- extends="java.lang.Object"
- abstract="false"
- static="true"
- final="false"
- deprecated="not deprecated"
- visibility="protected"
->
-<constructor name="FastResultSetHandler.ResultColumnCache"
- type="org.apache.ibatis.executor.resultset.FastResultSetHandler.ResultColumnCache"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="protected"
->
-<parameter name="metaData" type="java.sql.ResultSetMetaData">
-</parameter>
-<parameter name="configuration" type="org.apache.ibatis.session.Configuration">
-</parameter>
-<exception name="SQLException" type="java.sql.SQLException">
-</exception>
-</constructor>
-<method name="getColumnNames"
- return="java.util.List&lt;java.lang.String&gt;"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="protected"
->
-</method>
-<method name="getJdbcType"
- return="org.apache.ibatis.type.JdbcType"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="protected"
->
-<parameter name="columnName" type="java.lang.String">
-</parameter>
-</method>
-<method name="getMappedColumnNames"
- return="java.util.List&lt;java.lang.String&gt;"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="protected"
->
-<parameter name="resultMap" type="org.apache.ibatis.mapping.ResultMap">
-</parameter>
-<parameter name="columnPrefix" type="java.lang.String">
-</parameter>
-<exception name="SQLException" type="java.sql.SQLException">
-</exception>
-</method>
-<method name="getTypeHandler"
- return="org.apache.ibatis.type.TypeHandler&lt;?&gt;"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="protected"
->
-<parameter name="propertyType" type="java.lang.Class&lt;?&gt;">
-</parameter>
-<parameter name="columnName" type="java.lang.String">
-</parameter>
-</method>
-<method name="getUnmappedColumnNames"
- return="java.util.List&lt;java.lang.String&gt;"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="protected"
->
-<parameter name="resultMap" type="org.apache.ibatis.mapping.ResultMap">
-</parameter>
-<parameter name="columnPrefix" type="java.lang.String">
-</parameter>
-<exception name="SQLException" type="java.sql.SQLException">
-</exception>
-</method>
-</class>
-<class name="NestedResultSetHandler"
- extends="org.apache.ibatis.executor.resultset.FastResultSetHandler"
- abstract="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<constructor name="NestedResultSetHandler"
- type="org.apache.ibatis.executor.resultset.NestedResultSetHandler"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="executor" type="org.apache.ibatis.executor.Executor">
-</parameter>
-<parameter name="mappedStatement" type="org.apache.ibatis.mapping.MappedStatement">
-</parameter>
-<parameter name="parameterHandler" type="org.apache.ibatis.executor.parameter.ParameterHandler">
-</parameter>
-<parameter name="resultHandler" type="org.apache.ibatis.session.ResultHandler">
-</parameter>
-<parameter name="boundSql" type="org.apache.ibatis.mapping.BoundSql">
-</parameter>
-<parameter name="rowBounds" type="org.apache.ibatis.session.RowBounds">
-</parameter>
-</constructor>
-<method name="getRowValue"
- return="java.lang.Object"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="protected"
->
-<parameter name="rs" type="java.sql.ResultSet">
-</parameter>
-<parameter name="resultMap" type="org.apache.ibatis.mapping.ResultMap">
-</parameter>
-<parameter name="combinedKey" type="org.apache.ibatis.cache.CacheKey">
-</parameter>
-<parameter name="absoluteKey" type="org.apache.ibatis.cache.CacheKey">
-</parameter>
-<parameter name="columnPrefix" type="java.lang.String">
-</parameter>
-<parameter name="resultColumnCache" type="org.apache.ibatis.executor.resultset.FastResultSetHandler.ResultColumnCache">
-</parameter>
-<parameter name="partialObject" type="java.lang.Object">
 </parameter>
 <exception name="SQLException" type="java.sql.SQLException">
 </exception>
@@ -14399,6 +13567,17 @@
  visibility="public"
 >
 </method>
+<method name="getResulSets"
+ return="java.lang.String[]"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
 <method name="getResultMaps"
  return="java.util.List&lt;org.apache.ibatis.mapping.ResultMap&gt;"
  abstract="false"
@@ -14695,6 +13874,19 @@
  visibility="public"
 >
 <parameter name="resource" type="java.lang.String">
+</parameter>
+</method>
+<method name="resulSets"
+ return="org.apache.ibatis.mapping.MappedStatement.Builder"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="resultSet" type="java.lang.String">
 </parameter>
 </method>
 <method name="resultMaps"
@@ -15462,6 +14654,17 @@
  visibility="public"
 >
 </method>
+<method name="getForeignColumn"
+ return="java.lang.String"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
 <method name="getJavaType"
  return="java.lang.Class&lt;?&gt;"
  abstract="false"
@@ -15528,6 +14731,17 @@
  visibility="public"
 >
 </method>
+<method name="getResultSet"
+ return="java.lang.String"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
 <method name="getTypeHandler"
  return="org.apache.ibatis.type.TypeHandler&lt;?&gt;"
  abstract="false"
@@ -15549,6 +14763,19 @@
  deprecated="not deprecated"
  visibility="public"
 >
+</method>
+<method name="setForeignColumn"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="foreignColumn" type="java.lang.String">
+</parameter>
 </method>
 </class>
 <class name="ResultMapping.Builder"
@@ -15666,6 +14893,19 @@
 <parameter name="flags" type="java.util.List&lt;org.apache.ibatis.mapping.ResultFlag&gt;">
 </parameter>
 </method>
+<method name="foreignColumn"
+ return="org.apache.ibatis.mapping.ResultMapping.Builder"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="foreignColumn" type="java.lang.String">
+</parameter>
+</method>
 <method name="javaType"
  return="org.apache.ibatis.mapping.ResultMapping.Builder"
  abstract="false"
@@ -15729,6 +14969,19 @@
  visibility="public"
 >
 <parameter name="notNullColumns" type="java.util.Set&lt;java.lang.String&gt;">
+</parameter>
+</method>
+<method name="resultSet"
+ return="org.apache.ibatis.mapping.ResultMapping.Builder"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="resultSet" type="java.lang.String">
 </parameter>
 </method>
 <method name="typeHandler"

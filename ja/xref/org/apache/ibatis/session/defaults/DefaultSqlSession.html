@@ -80,11 +80,11 @@
 <a class="jxr_linenumber" name="70" href="#70">70</a>    }
 <a class="jxr_linenumber" name="71" href="#71">71</a>  
 <a class="jxr_linenumber" name="72" href="#72">72</a>    <strong class="jxr_keyword">public</strong> &lt;K, V&gt; Map&lt;K, V&gt; selectMap(String statement, String mapKey) {
-<a class="jxr_linenumber" name="73" href="#73">73</a>      <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>.&lt;K, V&gt;selectMap(statement, <strong class="jxr_keyword">null</strong>, mapKey, RowBounds.DEFAULT);
+<a class="jxr_linenumber" name="73" href="#73">73</a>      <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>.selectMap(statement, <strong class="jxr_keyword">null</strong>, mapKey, RowBounds.DEFAULT);
 <a class="jxr_linenumber" name="74" href="#74">74</a>    }
 <a class="jxr_linenumber" name="75" href="#75">75</a>  
 <a class="jxr_linenumber" name="76" href="#76">76</a>    <strong class="jxr_keyword">public</strong> &lt;K, V&gt; Map&lt;K, V&gt; selectMap(String statement, Object parameter, String mapKey) {
-<a class="jxr_linenumber" name="77" href="#77">77</a>      <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>.&lt;K, V&gt;selectMap(statement, parameter, mapKey, RowBounds.DEFAULT);
+<a class="jxr_linenumber" name="77" href="#77">77</a>      <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>.selectMap(statement, parameter, mapKey, RowBounds.DEFAULT);
 <a class="jxr_linenumber" name="78" href="#78">78</a>    }
 <a class="jxr_linenumber" name="79" href="#79">79</a>  
 <a class="jxr_linenumber" name="80" href="#80">80</a>    <strong class="jxr_keyword">public</strong> &lt;K, V&gt; Map&lt;K, V&gt; selectMap(String statement, Object parameter, String mapKey, <a href="../../../../../org/apache/ibatis/session/RowBounds.html">RowBounds</a> rowBounds) {
@@ -101,17 +101,17 @@
 <a class="jxr_linenumber" name="91" href="#91">91</a>    }
 <a class="jxr_linenumber" name="92" href="#92">92</a>  
 <a class="jxr_linenumber" name="93" href="#93">93</a>    <strong class="jxr_keyword">public</strong> &lt;E&gt; List&lt;E&gt; selectList(String statement) {
-<a class="jxr_linenumber" name="94" href="#94">94</a>      <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>.&lt;E&gt;selectList(statement, <strong class="jxr_keyword">null</strong>);
+<a class="jxr_linenumber" name="94" href="#94">94</a>      <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>.selectList(statement, <strong class="jxr_keyword">null</strong>);
 <a class="jxr_linenumber" name="95" href="#95">95</a>    }
 <a class="jxr_linenumber" name="96" href="#96">96</a>  
 <a class="jxr_linenumber" name="97" href="#97">97</a>    <strong class="jxr_keyword">public</strong> &lt;E&gt; List&lt;E&gt; selectList(String statement, Object parameter) {
-<a class="jxr_linenumber" name="98" href="#98">98</a>      <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>.&lt;E&gt;selectList(statement, parameter, RowBounds.DEFAULT);
+<a class="jxr_linenumber" name="98" href="#98">98</a>      <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>.selectList(statement, parameter, RowBounds.DEFAULT);
 <a class="jxr_linenumber" name="99" href="#99">99</a>    }
 <a class="jxr_linenumber" name="100" href="#100">100</a> 
 <a class="jxr_linenumber" name="101" href="#101">101</a>   <strong class="jxr_keyword">public</strong> &lt;E&gt; List&lt;E&gt; selectList(String statement, Object parameter, <a href="../../../../../org/apache/ibatis/session/RowBounds.html">RowBounds</a> rowBounds) {
 <a class="jxr_linenumber" name="102" href="#102">102</a>     <strong class="jxr_keyword">try</strong> {
 <a class="jxr_linenumber" name="103" href="#103">103</a>       <a href="../../../../../org/apache/ibatis/mapping/MappedStatement.html">MappedStatement</a> ms = configuration.getMappedStatement(statement);
-<a class="jxr_linenumber" name="104" href="#104">104</a>       List&lt;E&gt; result = executor.&lt;E&gt;query(ms, wrapCollection(parameter), rowBounds, Executor.NO_RESULT_HANDLER);
+<a class="jxr_linenumber" name="104" href="#104">104</a>       List&lt;E&gt; result = executor.query(ms, wrapCollection(parameter), rowBounds, Executor.NO_RESULT_HANDLER);
 <a class="jxr_linenumber" name="105" href="#105">105</a>       <strong class="jxr_keyword">return</strong> result;
 <a class="jxr_linenumber" name="106" href="#106">106</a>     } <strong class="jxr_keyword">catch</strong> (Exception e) {
 <a class="jxr_linenumber" name="107" href="#107">107</a>       <strong class="jxr_keyword">throw</strong> ExceptionFactory.wrapException(<span class="jxr_string">"Error querying database.  Cause: "</span> + e, e);

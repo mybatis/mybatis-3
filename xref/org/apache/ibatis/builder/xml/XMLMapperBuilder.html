@@ -9,7 +9,7 @@
 <div id="overview"><a href="../../../../../../apidocs/org/apache/ibatis/builder/xml/XMLMapperBuilder.html">View Javadoc</a></div><pre>
 
 <a class="jxr_linenumber" name="1" href="#1">1</a>   <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="2" href="#2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2011 The MyBatis Team</em>
+<a class="jxr_linenumber" name="2" href="#2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2013 The MyBatis Team</em>
 <a class="jxr_linenumber" name="3" href="#3">3</a>   <em class="jxr_comment"> *</em>
 <a class="jxr_linenumber" name="4" href="#4">4</a>   <em class="jxr_comment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="5" href="#5">5</a>   <em class="jxr_comment"> *    you may not use this file except in compliance with the License.</em>
@@ -368,47 +368,49 @@
 <a class="jxr_linenumber" name="358" href="#358">358</a>     String notNullColumn = context.getStringAttribute(<span class="jxr_string">"notNullColumn"</span>);
 <a class="jxr_linenumber" name="359" href="#359">359</a>     String columnPrefix = context.getStringAttribute(<span class="jxr_string">"columnPrefix"</span>);
 <a class="jxr_linenumber" name="360" href="#360">360</a>     String typeHandler = context.getStringAttribute(<span class="jxr_string">"typeHandler"</span>);
-<a class="jxr_linenumber" name="361" href="#361">361</a>     Class&lt;?&gt; javaTypeClass = resolveClass(javaType);
-<a class="jxr_linenumber" name="362" href="#362">362</a>     @SuppressWarnings(<span class="jxr_string">"unchecked"</span>)
-<a class="jxr_linenumber" name="363" href="#363">363</a>     Class&lt;? <strong class="jxr_keyword">extends</strong> TypeHandler&lt;?&gt;&gt; typeHandlerClass = (Class&lt;? <strong class="jxr_keyword">extends</strong> TypeHandler&lt;?&gt;&gt;) resolveClass(typeHandler);
-<a class="jxr_linenumber" name="364" href="#364">364</a>     <a href="../../../../../org/apache/ibatis/type/JdbcType.html">JdbcType</a> jdbcTypeEnum = resolveJdbcType(jdbcType);
-<a class="jxr_linenumber" name="365" href="#365">365</a>     <strong class="jxr_keyword">return</strong> builderAssistant.buildResultMapping(resultType, property, column, javaTypeClass, jdbcTypeEnum, nestedSelect, nestedResultMap, notNullColumn, columnPrefix, typeHandlerClass, flags);
-<a class="jxr_linenumber" name="366" href="#366">366</a>   }
-<a class="jxr_linenumber" name="367" href="#367">367</a> 
-<a class="jxr_linenumber" name="368" href="#368">368</a>   <strong class="jxr_keyword">private</strong> String processNestedResultMappings(<a href="../../../../../org/apache/ibatis/parsing/XNode.html">XNode</a> context, List&lt;ResultMapping&gt; resultMappings) <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="369" href="#369">369</a>     <strong class="jxr_keyword">if</strong> (<span class="jxr_string">"association"</span>.equals(context.getName())
-<a class="jxr_linenumber" name="370" href="#370">370</a>         || <span class="jxr_string">"collection"</span>.equals(context.getName())
-<a class="jxr_linenumber" name="371" href="#371">371</a>         || <span class="jxr_string">"case"</span>.equals(context.getName())) {
-<a class="jxr_linenumber" name="372" href="#372">372</a>       <strong class="jxr_keyword">if</strong> (context.getStringAttribute(<span class="jxr_string">"select"</span>) == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="373" href="#373">373</a>         <a href="../../../../../org/apache/ibatis/mapping/ResultMap.html">ResultMap</a> resultMap = resultMapElement(context, resultMappings);
-<a class="jxr_linenumber" name="374" href="#374">374</a>         <strong class="jxr_keyword">return</strong> resultMap.getId();
-<a class="jxr_linenumber" name="375" href="#375">375</a>       }
-<a class="jxr_linenumber" name="376" href="#376">376</a>     }
-<a class="jxr_linenumber" name="377" href="#377">377</a>     <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">null</strong>;
-<a class="jxr_linenumber" name="378" href="#378">378</a>   }
-<a class="jxr_linenumber" name="379" href="#379">379</a> 
-<a class="jxr_linenumber" name="380" href="#380">380</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> bindMapperForNamespace() {
-<a class="jxr_linenumber" name="381" href="#381">381</a>     String namespace = builderAssistant.getCurrentNamespace();
-<a class="jxr_linenumber" name="382" href="#382">382</a>     <strong class="jxr_keyword">if</strong> (namespace != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="383" href="#383">383</a>       Class&lt;?&gt; boundType = <strong class="jxr_keyword">null</strong>;
-<a class="jxr_linenumber" name="384" href="#384">384</a>       <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="385" href="#385">385</a>         boundType = Resources.classForName(namespace);
-<a class="jxr_linenumber" name="386" href="#386">386</a>       } <strong class="jxr_keyword">catch</strong> (ClassNotFoundException e) {
-<a class="jxr_linenumber" name="387" href="#387">387</a>         <em class="jxr_comment">//ignore, bound type is not required</em>
-<a class="jxr_linenumber" name="388" href="#388">388</a>       }
-<a class="jxr_linenumber" name="389" href="#389">389</a>       <strong class="jxr_keyword">if</strong> (boundType != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="390" href="#390">390</a>         <strong class="jxr_keyword">if</strong> (!configuration.hasMapper(boundType)) {
-<a class="jxr_linenumber" name="391" href="#391">391</a>           <em class="jxr_comment">// Spring may not know the real resource name so we set a flag</em>
-<a class="jxr_linenumber" name="392" href="#392">392</a>           <em class="jxr_comment">// to prevent loading again this resource from the mapper interface</em>
-<a class="jxr_linenumber" name="393" href="#393">393</a>           <em class="jxr_comment">// look at MapperAnnotationBuilder#loadXmlResource</em>
-<a class="jxr_linenumber" name="394" href="#394">394</a>           configuration.addLoadedResource(<span class="jxr_string">"namespace:"</span> + namespace);
-<a class="jxr_linenumber" name="395" href="#395">395</a>           configuration.addMapper(boundType);
-<a class="jxr_linenumber" name="396" href="#396">396</a>         }
-<a class="jxr_linenumber" name="397" href="#397">397</a>       }
-<a class="jxr_linenumber" name="398" href="#398">398</a>     }
-<a class="jxr_linenumber" name="399" href="#399">399</a>   }
-<a class="jxr_linenumber" name="400" href="#400">400</a> 
-<a class="jxr_linenumber" name="401" href="#401">401</a> }
+<a class="jxr_linenumber" name="361" href="#361">361</a>     String resulSet = context.getStringAttribute(<span class="jxr_string">"resultSet"</span>);
+<a class="jxr_linenumber" name="362" href="#362">362</a>     String foreignColumn = context.getStringAttribute(<span class="jxr_string">"foreignColumn"</span>);
+<a class="jxr_linenumber" name="363" href="#363">363</a>     Class&lt;?&gt; javaTypeClass = resolveClass(javaType);
+<a class="jxr_linenumber" name="364" href="#364">364</a>     @SuppressWarnings(<span class="jxr_string">"unchecked"</span>)
+<a class="jxr_linenumber" name="365" href="#365">365</a>     Class&lt;? <strong class="jxr_keyword">extends</strong> TypeHandler&lt;?&gt;&gt; typeHandlerClass = (Class&lt;? <strong class="jxr_keyword">extends</strong> TypeHandler&lt;?&gt;&gt;) resolveClass(typeHandler);
+<a class="jxr_linenumber" name="366" href="#366">366</a>     <a href="../../../../../org/apache/ibatis/type/JdbcType.html">JdbcType</a> jdbcTypeEnum = resolveJdbcType(jdbcType);
+<a class="jxr_linenumber" name="367" href="#367">367</a>     <strong class="jxr_keyword">return</strong> builderAssistant.buildResultMapping(resultType, property, column, javaTypeClass, jdbcTypeEnum, nestedSelect, nestedResultMap, notNullColumn, columnPrefix, typeHandlerClass, flags, resulSet, foreignColumn);
+<a class="jxr_linenumber" name="368" href="#368">368</a>   }
+<a class="jxr_linenumber" name="369" href="#369">369</a> 
+<a class="jxr_linenumber" name="370" href="#370">370</a>   <strong class="jxr_keyword">private</strong> String processNestedResultMappings(<a href="../../../../../org/apache/ibatis/parsing/XNode.html">XNode</a> context, List&lt;ResultMapping&gt; resultMappings) <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="371" href="#371">371</a>     <strong class="jxr_keyword">if</strong> (<span class="jxr_string">"association"</span>.equals(context.getName())
+<a class="jxr_linenumber" name="372" href="#372">372</a>         || <span class="jxr_string">"collection"</span>.equals(context.getName())
+<a class="jxr_linenumber" name="373" href="#373">373</a>         || <span class="jxr_string">"case"</span>.equals(context.getName())) {
+<a class="jxr_linenumber" name="374" href="#374">374</a>       <strong class="jxr_keyword">if</strong> (context.getStringAttribute(<span class="jxr_string">"select"</span>) == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="375" href="#375">375</a>         <a href="../../../../../org/apache/ibatis/mapping/ResultMap.html">ResultMap</a> resultMap = resultMapElement(context, resultMappings);
+<a class="jxr_linenumber" name="376" href="#376">376</a>         <strong class="jxr_keyword">return</strong> resultMap.getId();
+<a class="jxr_linenumber" name="377" href="#377">377</a>       }
+<a class="jxr_linenumber" name="378" href="#378">378</a>     }
+<a class="jxr_linenumber" name="379" href="#379">379</a>     <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="380" href="#380">380</a>   }
+<a class="jxr_linenumber" name="381" href="#381">381</a> 
+<a class="jxr_linenumber" name="382" href="#382">382</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> bindMapperForNamespace() {
+<a class="jxr_linenumber" name="383" href="#383">383</a>     String namespace = builderAssistant.getCurrentNamespace();
+<a class="jxr_linenumber" name="384" href="#384">384</a>     <strong class="jxr_keyword">if</strong> (namespace != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="385" href="#385">385</a>       Class&lt;?&gt; boundType = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="386" href="#386">386</a>       <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="387" href="#387">387</a>         boundType = Resources.classForName(namespace);
+<a class="jxr_linenumber" name="388" href="#388">388</a>       } <strong class="jxr_keyword">catch</strong> (ClassNotFoundException e) {
+<a class="jxr_linenumber" name="389" href="#389">389</a>         <em class="jxr_comment">//ignore, bound type is not required</em>
+<a class="jxr_linenumber" name="390" href="#390">390</a>       }
+<a class="jxr_linenumber" name="391" href="#391">391</a>       <strong class="jxr_keyword">if</strong> (boundType != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="392" href="#392">392</a>         <strong class="jxr_keyword">if</strong> (!configuration.hasMapper(boundType)) {
+<a class="jxr_linenumber" name="393" href="#393">393</a>           <em class="jxr_comment">// Spring may not know the real resource name so we set a flag</em>
+<a class="jxr_linenumber" name="394" href="#394">394</a>           <em class="jxr_comment">// to prevent loading again this resource from the mapper interface</em>
+<a class="jxr_linenumber" name="395" href="#395">395</a>           <em class="jxr_comment">// look at MapperAnnotationBuilder#loadXmlResource</em>
+<a class="jxr_linenumber" name="396" href="#396">396</a>           configuration.addLoadedResource(<span class="jxr_string">"namespace:"</span> + namespace);
+<a class="jxr_linenumber" name="397" href="#397">397</a>           configuration.addMapper(boundType);
+<a class="jxr_linenumber" name="398" href="#398">398</a>         }
+<a class="jxr_linenumber" name="399" href="#399">399</a>       }
+<a class="jxr_linenumber" name="400" href="#400">400</a>     }
+<a class="jxr_linenumber" name="401" href="#401">401</a>   }
+<a class="jxr_linenumber" name="402" href="#402">402</a> 
+<a class="jxr_linenumber" name="403" href="#403">403</a> }
 </pre>
 <hr/><div id="footer">This page was automatically generated by <a href="http://maven.apache.org/">Maven</a></div></body>
 </html>

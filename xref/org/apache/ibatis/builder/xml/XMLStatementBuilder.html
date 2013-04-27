@@ -9,7 +9,7 @@
 <div id="overview"><a href="../../../../../../apidocs/org/apache/ibatis/builder/xml/XMLStatementBuilder.html">View Javadoc</a></div><pre>
 
 <a class="jxr_linenumber" name="1" href="#1">1</a>   <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="2" href="#2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2012 The MyBatis Team</em>
+<a class="jxr_linenumber" name="2" href="#2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2013 The MyBatis Team</em>
 <a class="jxr_linenumber" name="3" href="#3">3</a>   <em class="jxr_comment"> *</em>
 <a class="jxr_linenumber" name="4" href="#4">4</a>   <em class="jxr_comment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="5" href="#5">5</a>   <em class="jxr_comment"> *    you may not use this file except in compliance with the License.</em>
@@ -102,7 +102,7 @@
 <a class="jxr_linenumber" name="92" href="#92">92</a>  
 <a class="jxr_linenumber" name="93" href="#93">93</a>      <em class="jxr_comment">// Parse the SQL (pre: &lt;selectKey&gt; and &lt;include&gt; were parsed and removed)</em>
 <a class="jxr_linenumber" name="94" href="#94">94</a>      <a href="../../../../../org/apache/ibatis/mapping/SqlSource.html">SqlSource</a> sqlSource = langDriver.createSqlSource(configuration, context, parameterTypeClass);
-<a class="jxr_linenumber" name="95" href="#95">95</a>  
+<a class="jxr_linenumber" name="95" href="#95">95</a>      String resultSets = context.getStringAttribute(<span class="jxr_string">"resultSets"</span>);
 <a class="jxr_linenumber" name="96" href="#96">96</a>      String keyProperty = context.getStringAttribute(<span class="jxr_string">"keyProperty"</span>);
 <a class="jxr_linenumber" name="97" href="#97">97</a>      String keyColumn = context.getStringAttribute(<span class="jxr_string">"keyColumn"</span>);
 <a class="jxr_linenumber" name="98" href="#98">98</a>      <a href="../../../../../org/apache/ibatis/executor/keygen/KeyGenerator.html">KeyGenerator</a> keyGenerator;
@@ -119,7 +119,7 @@
 <a class="jxr_linenumber" name="109" href="#109">109</a>     builderAssistant.addMappedStatement(id, sqlSource, statementType, sqlCommandType,
 <a class="jxr_linenumber" name="110" href="#110">110</a>         fetchSize, timeout, parameterMap, parameterTypeClass, resultMap, resultTypeClass,
 <a class="jxr_linenumber" name="111" href="#111">111</a>         resultSetTypeEnum, flushCache, useCache, resultOrdered, 
-<a class="jxr_linenumber" name="112" href="#112">112</a>         keyGenerator, keyProperty, keyColumn, databaseId, langDriver);
+<a class="jxr_linenumber" name="112" href="#112">112</a>         keyGenerator, keyProperty, keyColumn, databaseId, langDriver, resultSets);
 <a class="jxr_linenumber" name="113" href="#113">113</a>   }
 <a class="jxr_linenumber" name="114" href="#114">114</a>   
 <a class="jxr_linenumber" name="115" href="#115">115</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> parseSelectKeyNodes(String parentId, List&lt;XNode&gt; list, Class&lt;?&gt; parameterTypeClass, <a href="../../../../../org/apache/ibatis/scripting/LanguageDriver.html">LanguageDriver</a> langDriver, String skRequiredDatabaseId) {
@@ -156,7 +156,7 @@
 <a class="jxr_linenumber" name="146" href="#146">146</a>     builderAssistant.addMappedStatement(id, sqlSource, statementType, sqlCommandType,
 <a class="jxr_linenumber" name="147" href="#147">147</a>         fetchSize, timeout, parameterMap, parameterTypeClass, resultMap, resultTypeClass,
 <a class="jxr_linenumber" name="148" href="#148">148</a>         resultSetTypeEnum, flushCache, useCache, resultOrdered,
-<a class="jxr_linenumber" name="149" href="#149">149</a>         keyGenerator, keyProperty, <strong class="jxr_keyword">null</strong>, databaseId, langDriver);
+<a class="jxr_linenumber" name="149" href="#149">149</a>         keyGenerator, keyProperty, <strong class="jxr_keyword">null</strong>, databaseId, langDriver, <strong class="jxr_keyword">null</strong>);
 <a class="jxr_linenumber" name="150" href="#150">150</a> 
 <a class="jxr_linenumber" name="151" href="#151">151</a>     id = builderAssistant.applyCurrentNamespace(id, false);
 <a class="jxr_linenumber" name="152" href="#152">152</a> 
