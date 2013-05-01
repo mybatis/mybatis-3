@@ -169,14 +169,21 @@ public class MapperMethod {
     private final String name;
     private final SqlCommandType type;
 
-    public SqlCommand(Configuration configuration, Class<?> declaringInterface, Method method) throws BindingException {
-      name = declaringInterface.getName() + "." + method.getName();
-      final MappedStatement ms;
-      try {
-        ms = configuration.getMappedStatement(name);
-      } catch (Exception e) {
-        throw new BindingException("Invalid bound statement (not found): " + name, e);
+    public SqlCommand(Configuration configuration, Class<?> mapperInterface, Method method) throws BindingException {
+      String statementName = mapperInterface.getName() + "." + method.getName();
+      MappedStatement ms = null;
+      if (configuration.hasStatement(statementName)) {
+        ms = configuration.getMappedStatement(statementName);
+      } else if (!mapperInterface.equals(method.getDeclaringClass().getName())) { // issue #35
+        String parentStatementName = method.getDeclaringClass().getName() + "." + method.getName();
+        if (configuration.hasStatement(parentStatementName)) {
+          ms = configuration.getMappedStatement(parentStatementName);
+        }
       }
+      if (ms == null) {
+        throw new BindingException("Invalid bound statement (not found): " + statementName);
+      }
+      name = ms.getId();
       type = ms.getSqlCommandType();
       if (type == SqlCommandType.UNKNOWN) {
         throw new BindingException("Unknown execution method for: " + name);
