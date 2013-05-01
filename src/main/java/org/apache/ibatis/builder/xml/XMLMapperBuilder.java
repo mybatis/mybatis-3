@@ -27,6 +27,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import org.apache.ibatis.builder.BaseBuilder;
+import org.apache.ibatis.builder.BuilderException;
 import org.apache.ibatis.builder.CacheRefResolver;
 import org.apache.ibatis.builder.IncompleteElementException;
 import org.apache.ibatis.builder.MapperBuilderAssistant;
@@ -110,7 +111,7 @@ public class XMLMapperBuilder extends BaseBuilder {
       sqlElement(context.evalNodes("/mapper/sql"));
       buildStatementFromContext(context.evalNodes("select|insert|update|delete"));
     } catch (Exception e) {
-      throw new RuntimeException("Error parsing Mapper XML. Cause: " + e, e);
+      throw new BuilderException("Error parsing Mapper XML. Cause: " + e, e);
     }
   }
 

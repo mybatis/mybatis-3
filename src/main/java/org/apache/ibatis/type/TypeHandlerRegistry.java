@@ -321,14 +321,14 @@ public final class TypeHandlerRegistry {
       } catch (NoSuchMethodException ignored) {
         // ignored
       } catch (Exception e) {
-        throw new RuntimeException("Failed invoking constructor for handler " + typeHandlerClass, e);
+        throw new TypeException("Failed invoking constructor for handler " + typeHandlerClass, e);
       }
     }
     try {
       Constructor<?> c = typeHandlerClass.getConstructor();
       return (TypeHandler<T>) c.newInstance();
     } catch (Exception e) {
-      throw new RuntimeException("Unable to find a usable constructor for " + typeHandlerClass, e);
+      throw new TypeException("Unable to find a usable constructor for " + typeHandlerClass, e);
     }
   }
 
