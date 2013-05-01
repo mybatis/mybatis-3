@@ -89,4 +89,10 @@ public interface SPMapper {
   @ResultMap("nameResult,itemResult")
   @Options(statementType = StatementType.CALLABLE)
   List<List<?>> getNamesAndItemsAnnotatedWithXMLResultMap();
+  
+  @Select("{call sptest.getnamesanditems()}")
+  @ResultMap({"nameResult","itemResult"})
+  @Options(statementType = StatementType.CALLABLE)
+  List<List<?>> getNamesAndItemsAnnotatedWithXMLResultMapArray();
+  
 }

@@ -286,7 +286,13 @@ public class MapperAnnotationBuilder {
       String resultMapId = null;
       ResultMap resultMapAnnotation = method.getAnnotation(ResultMap.class);
       if (resultMapAnnotation != null) {
-        resultMapId = resultMapAnnotation.value();
+        String[] resultMaps = resultMapAnnotation.value();
+        StringBuilder sb = new StringBuilder();
+        for (String resultMap : resultMaps) {
+          if (sb.length() > 0) sb.append(",");
+          sb.append(resultMap);
+        }
+        resultMapId = sb.toString();
       } else if (isSelect) {
         resultMapId = parseResultMap(method);
       }

@@ -774,6 +774,21 @@ public class SPTest {
   }
 
   @Test
+  public void testGetNamesAndItems_a3() throws SQLException {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      SPMapper spMapper = sqlSession.getMapper(SPMapper.class);
+
+      List<List<?>> results = spMapper.getNamesAndItemsAnnotatedWithXMLResultMapArray();
+      assertEquals(2, results.size());
+      assertEquals(4, results.get(0).size());
+      assertEquals(3, results.get(1).size());
+    } finally {
+      sqlSession.close();
+    }
+  }
+  
+  @Test
   public void testGetNamesAndItemsLinked() throws SQLException {
     SqlSession sqlSession = sqlSessionFactory.openSession();
     try {
