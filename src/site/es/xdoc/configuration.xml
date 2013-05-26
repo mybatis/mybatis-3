@@ -27,7 +27,7 @@
   </properties>
 
   <body>
-    <section name="ConfiguracióConfiguraciónn">
+    <section name="Configuración">
       <p>El fichero de configuración XML contiene parámetros y configuraciones que tienen un efecto crucial en cómo se comporta MyBatis. A alto nivel contiene:</p>
 
       <ul>
