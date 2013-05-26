@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Copyright 2010-2012 The MyBatis Team
+  Copyright 2010-2012 the original author or authors.
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -22,7 +22,8 @@
 
   <properties>
     <title>마이바티스 3 | 로깅</title>
-    <author email="mybatis-dev@googlegroups.com">마이바티스 팀</author>
+    <author email="clinton.begin@gmail.com">Clinton Begin</author>
+    <author email="fromm0@gmail.com">이동국(한국어 번역)</author>
   </properties>
 
   <body>

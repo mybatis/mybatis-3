@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Copyright 2010-2012 The MyBatis Team
+  Copyright 2010-2012 the original author or authors.
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -22,7 +22,8 @@
 
 	<properties>
 		<title>MyBatis 3 | Primeros pasos</title>
-		<author email="mybatis-dev@googlegroups.com">The MyBatis Team</author>
+		<author email="clinton.begin@gmail.com">Clinton Begin</author>
+		<author email="eduardo.macarron@gmail.com">Eduardo Macarron</author>
 	</properties>
 
 	<body>
