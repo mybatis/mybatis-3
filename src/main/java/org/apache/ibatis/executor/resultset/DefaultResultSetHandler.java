@@ -62,10 +62,10 @@ public class DefaultResultSetHandler implements ResultSetHandler {
 
   private final Executor executor;
   private final Configuration configuration;
-  private final MappedStatement mappedStatement;
+  protected final MappedStatement mappedStatement;
   private final RowBounds rowBounds;
   private final ParameterHandler parameterHandler;
-  private final ResultHandler resultHandler;
+  protected final ResultHandler resultHandler;
   private final BoundSql boundSql;
   private final TypeHandlerRegistry typeHandlerRegistry;
   private final ObjectFactory objectFactory;
@@ -73,7 +73,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
   private final ResultExtractor resultExtractor;
 
   // nested resultmaps
-  private final Map<CacheKey, Object> nestedResultObjects = new HashMap<CacheKey, Object>();
+  protected final Map<CacheKey, Object> nestedResultObjects = new HashMap<CacheKey, Object>();
   private final Map<CacheKey, Object> ancestorObjects = new HashMap<CacheKey, Object>();
 
   // multiple resultsets
@@ -224,7 +224,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     }
   }
 
-  private void handleResultSet(ResultSetWrapper rsw, ResultMap resultMap, List<Object> multipleResults, ResultMapping parentMapping) throws SQLException {
+  protected void handleResultSet(ResultSetWrapper rsw, ResultMap resultMap, List<Object> multipleResults, ResultMapping parentMapping) throws SQLException {
     try {
       if (parentMapping != null) {
         handleRowValues(rsw, resultMap, null, RowBounds.DEFAULT, parentMapping);
@@ -255,7 +255,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
   // HANDLE ROWS FOR SIMPLE RESULTMAP
   //
 
-  private void handleRowValues(ResultSetWrapper rsw, ResultMap resultMap, ResultHandler resultHandler, RowBounds rowBounds, ResultMapping parentMapping) throws SQLException {
+  protected void handleRowValues(ResultSetWrapper rsw, ResultMap resultMap, ResultHandler resultHandler, RowBounds rowBounds, ResultMapping parentMapping) throws SQLException {
     if (resultMap.hasNestedResultMaps()) {
       ensureNoRowBounds();
       checkResultHandler();
@@ -291,7 +291,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     }
   }
 
-  private void storeObject(ResultHandler resultHandler, DefaultResultContext resultContext, Object rowValue, ResultMapping parentMapping, ResultSet rs) throws SQLException {
+  protected void storeObject(ResultHandler resultHandler, DefaultResultContext resultContext, Object rowValue, ResultMapping parentMapping, ResultSet rs) throws SQLException {
     if (parentMapping != null) {
       linkToParent(rs, parentMapping, rowValue);
     } else {
@@ -299,16 +299,16 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     }
   }
 
-  private void callResultHandler(ResultHandler resultHandler, DefaultResultContext resultContext, Object rowValue) {
+  protected void callResultHandler(ResultHandler resultHandler, DefaultResultContext resultContext, Object rowValue) {
     resultContext.nextResultObject(rowValue);
     resultHandler.handleResult(resultContext);
   }
 
-  private boolean shouldProcessMoreRows(ResultSet rs, ResultContext context, RowBounds rowBounds) throws SQLException {
+  protected boolean shouldProcessMoreRows(ResultSet rs, ResultContext context, RowBounds rowBounds) throws SQLException {
     return !context.isStopped() && rs.next() && context.getResultCount() < rowBounds.getLimit();
   }
 
-  private void skipRows(ResultSet rs, RowBounds rowBounds) throws SQLException {
+  protected void skipRows(ResultSet rs, RowBounds rowBounds) throws SQLException {
     if (rs.getType() != ResultSet.TYPE_FORWARD_ONLY) {
       if (rowBounds.getOffset() != RowBounds.NO_ROW_OFFSET) {
         rs.absolute(rowBounds.getOffset());
@@ -712,7 +712,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
   // HANDLE NESTED RESULT MAPS
   //
 
-  private void handleRowValuesForNestedResultMap(ResultSetWrapper rsw, ResultMap resultMap, ResultHandler resultHandler, RowBounds rowBounds, ResultMapping parentMapping) throws SQLException {
+  protected void handleRowValuesForNestedResultMap(ResultSetWrapper rsw, ResultMap resultMap, ResultHandler resultHandler, RowBounds rowBounds, ResultMapping parentMapping) throws SQLException {
     final DefaultResultContext resultContext = new DefaultResultContext();
     skipRows(rsw.getResultSet(), rowBounds);
     Object rowValue = null;
@@ -742,7 +742,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
   // GET VALUE FROM ROW FOR NESTED RESULT MAP
   //
 
-  private Object getRowValue(ResultSetWrapper rsw, ResultMap resultMap, CacheKey combinedKey, CacheKey absoluteKey, String columnPrefix, Object partialObject) throws SQLException {
+  protected Object getRowValue(ResultSetWrapper rsw, ResultMap resultMap, CacheKey combinedKey, CacheKey absoluteKey, String columnPrefix, Object partialObject) throws SQLException {
     Object resultObject = partialObject;
     if (resultObject != null) {
       final MetaObject metaObject = configuration.newMetaObject(resultObject);
@@ -846,7 +846,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
   // UNIQUE RESULT KEY
   //
 
-  private CacheKey createRowKey(ResultMap resultMap, ResultSetWrapper rsw, String columnPrefix) throws SQLException {
+  protected CacheKey createRowKey(ResultMap resultMap, ResultSetWrapper rsw, String columnPrefix) throws SQLException {
     final CacheKey cacheKey = new CacheKey();
     cacheKey.update(resultMap.getId());
     List<ResultMapping> resultMappings = getResultMappingsForRowKey(resultMap);

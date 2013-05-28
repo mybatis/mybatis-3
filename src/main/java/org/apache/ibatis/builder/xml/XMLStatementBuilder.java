@@ -24,6 +24,7 @@ import org.apache.ibatis.executor.keygen.Jdbc3KeyGenerator;
 import org.apache.ibatis.executor.keygen.KeyGenerator;
 import org.apache.ibatis.executor.keygen.NoKeyGenerator;
 import org.apache.ibatis.executor.keygen.SelectKeyGenerator;
+import org.apache.ibatis.mapping.FetchType;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.ResultSetType;
 import org.apache.ibatis.mapping.SqlCommandType;
@@ -77,6 +78,7 @@ public class XMLStatementBuilder extends BaseBuilder {
     boolean flushCache = context.getBooleanAttribute("flushCache", !isSelect);
     boolean useCache = context.getBooleanAttribute("useCache", isSelect);
     boolean resultOrdered = context.getBooleanAttribute("resultOrdered", false);
+    FetchType fetchType = FetchType.valueOf(context.getStringAttribute("fetchType", FetchType.DEFAULT.toString()));
 
     // Include Fragments before parsing
     XMLIncludeTransformer includeParser = new XMLIncludeTransformer(configuration, builderAssistant);
@@ -109,7 +111,7 @@ public class XMLStatementBuilder extends BaseBuilder {
     builderAssistant.addMappedStatement(id, sqlSource, statementType, sqlCommandType,
         fetchSize, timeout, parameterMap, parameterTypeClass, resultMap, resultTypeClass,
         resultSetTypeEnum, flushCache, useCache, resultOrdered, 
-        keyGenerator, keyProperty, keyColumn, databaseId, langDriver, resultSets);
+        keyGenerator, keyProperty, keyColumn, databaseId, langDriver, resultSets, fetchType);
   }
   
   public void parseSelectKeyNodes(String parentId, List<XNode> list, Class<?> parameterTypeClass, LanguageDriver langDriver, String skRequiredDatabaseId) {
@@ -146,7 +148,7 @@ public class XMLStatementBuilder extends BaseBuilder {
     builderAssistant.addMappedStatement(id, sqlSource, statementType, sqlCommandType,
         fetchSize, timeout, parameterMap, parameterTypeClass, resultMap, resultTypeClass,
         resultSetTypeEnum, flushCache, useCache, resultOrdered,
-        keyGenerator, keyProperty, null, databaseId, langDriver, null);
+        keyGenerator, keyProperty, null, databaseId, langDriver, null, FetchType.DEFAULT);
 
     id = builderAssistant.applyCurrentNamespace(id, false);
 

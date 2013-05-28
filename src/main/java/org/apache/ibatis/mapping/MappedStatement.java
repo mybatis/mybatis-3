@@ -53,6 +53,7 @@ public final class MappedStatement {
   private Log statementLog;
   private LanguageDriver lang;
   private String[] resultSets;
+  private FetchType fetchType;
 
   private MappedStatement() {
     // constructor disabled
@@ -168,7 +169,12 @@ public final class MappedStatement {
       mappedStatement.resultSets = delimitedStringtoArray(resultSet);
       return this;
     }
-    
+
+    public Builder fetchType(FetchType fetchType) {
+      mappedStatement.fetchType = fetchType;
+      return this;
+    }
+
     public MappedStatement build() {
       assert mappedStatement.configuration != null;
       assert mappedStatement.id != null;
@@ -270,7 +276,11 @@ public final class MappedStatement {
   public String[] getResulSets() {
     return resultSets;
   }
-  
+
+  public FetchType getFetchType() {
+    return fetchType;
+  }
+
   public BoundSql getBoundSql(Object parameterObject) {
     BoundSql boundSql = sqlSource.getBoundSql(parameterObject);
     List<ParameterMapping> parameterMappings = boundSql.getParameterMappings();
