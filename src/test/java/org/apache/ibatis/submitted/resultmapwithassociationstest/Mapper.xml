@@ -20,7 +20,7 @@
 
 <mapper namespace="org.apache.ibatis.submitted.resultmapwithassociationstest.Mapper">
   <resultMap id="personRM" type="org.apache.ibatis.submitted.resultmapwithassociationstest.Person" >
-    <id property="id"/>
+    <id column="id"/>
     <association property="address" column="id_address" javaType="org.apache.ibatis.submitted.resultmapwithassociationstest.Address">
       <id property="id" column="address_id" />
     </association>
