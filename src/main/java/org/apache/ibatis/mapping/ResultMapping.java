@@ -140,15 +140,15 @@ public class ResultMapping {
     private void validate() {
       // Issue #697: cannot define both nestedQueryId and nestedResultMapId
       if (resultMapping.nestedQueryId != null && resultMapping.nestedResultMapId != null) {
-        throw new IllegalStateException("Cannot define both nestedQueryId and nestedResultMapId in property " + resultMapping.property);
+        throw new IllegalStateException("Cannot define both nestedQueryId and nestedResultMapId in mapping " + resultMapping.property);
       }
       // Issue #5: there should be no mappings without typehandler
       if (resultMapping.nestedQueryId == null && resultMapping.nestedResultMapId == null && resultMapping.typeHandler == null) {
-        throw new IllegalStateException("No typehandler found for property " + resultMapping.property);
-      }    
-      // Issue #4: column is mandatory on nested queries
-      if (resultMapping.nestedQueryId != null && resultMapping.column == null && resultMapping.composites.size() == 0) {
-        throw new IllegalStateException("Missing column attribute for nested select in property " + resultMapping.property);
+        throw new IllegalStateException("No typehandler found for mapping " + resultMapping.property);
+      }
+      // Issue #4 and GH #39: column is optional only in nested resultmaps but not in the rest
+      if (resultMapping.nestedResultMapId == null && resultMapping.column == null && resultMapping.composites.size() == 0) {
+        throw new IllegalStateException("Missing column attribute for nested select in mapping " + resultMapping.property);
       }
       if (resultMapping.getResultSet() != null) {
         int numColums = 0;

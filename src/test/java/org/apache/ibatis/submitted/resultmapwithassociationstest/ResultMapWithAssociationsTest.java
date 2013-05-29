@@ -19,21 +19,21 @@ import java.io.Reader;
 import java.sql.Connection;
 import java.util.List;
 
+import org.apache.ibatis.exceptions.PersistenceException;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.Assert;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class ResultMapWithAssociationsTest {
 
     private static SqlSessionFactory sqlSessionFactory;
 
-    @BeforeClass
-    public static void setUp() throws Exception {
+    @Test(expected=PersistenceException.class)
+    public void testMissingColumn() throws Exception {
         // create a SqlSessionFactory
         Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/resultmapwithassociationstest/mybatis-config.xml");
         sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
@@ -50,7 +50,6 @@ public class ResultMapWithAssociationsTest {
         session.close();
     }
 
-    @Test
     public void shouldFindAllPersonRecordsWithAssociatedAddressRecord() {
         SqlSession sqlSession = sqlSessionFactory.openSession();
         try {
