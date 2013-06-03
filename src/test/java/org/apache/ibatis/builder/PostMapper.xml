@@ -35,6 +35,26 @@
       </constructor>
   </resultMap>
 
+  <resultMap id="postLiteMap2NestedWithSelect" type="domain.blog.BlogLite">
+    <id column="blog_id" property="id" />
+    <collection property="posts" ofType="domain.blog.PostLite">
+      <constructor>
+          <arg javaType="domain.blog.PostLiteId" column="{id=id}" select="selectPostLiteId" />
+          <arg javaType="_int" column="blog_id"/>
+      </constructor>
+    </collection>
+  </resultMap>
+
+  <resultMap id="postLiteMap2NestedWithoutSelect" type="domain.blog.BlogLite">
+    <id column="blog_id" property="id" />
+    <collection property="posts" ofType="domain.blog.PostLite">
+      <constructor>
+          <arg javaType="domain.blog.PostLiteId" resultMap="postLiteIdMap" />
+          <arg javaType="_int" column="blog_id"/>
+      </constructor>
+    </collection>
+  </resultMap>
+
   <resultMap id="mutablePostLiteMap" type="domain.blog.PostLite">
       <result property="blogId" column="blog_id"/>
       <association property="id" column="id" resultMap="postLiteIdMap"/>
@@ -46,6 +66,18 @@
 
   <select id="selectPostLite" resultMap="postLiteMap">
       select id, blog_id from post where blog_id is not null
+  </select>
+
+  <select id="selectPostLite2NestedWithSelect" resultMap="postLiteMap2NestedWithSelect">
+      select id, 1 as blog_id from post where blog_id is not null
+  </select>
+
+  <select id="selectPostLite2NestedWithoutSelect" resultMap="postLiteMap2NestedWithoutSelect">
+      select id, 1 as blog_id from post where blog_id is not null
+  </select>
+
+  <select id="selectPostLiteId" resultMap="postLiteIdMap">
+      select ${id} as id from (values(0)) as t
   </select>
 
   <select id="selectMutablePostLite" resultMap="mutablePostLiteMap">

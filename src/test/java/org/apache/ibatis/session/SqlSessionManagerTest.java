@@ -480,6 +480,20 @@ public class SqlSessionManagerTest extends BaseDataTest {
   }
 
   @Test
+  public void shouldFindAllPostLitesWithNestedSelect() throws Exception {
+    final BlogLite blog = manager.selectOne("domain.blog.mappers.PostMapper.selectPostLite2NestedWithSelect");
+    assertNotNull(blog);
+    assertEquals(4, blog.getPosts().size());
+  }
+
+  @Test
+  public void shouldFindAllPostLitesWithNestedResultMap() throws Exception {
+    final BlogLite blog = manager.selectOne("domain.blog.mappers.PostMapper.selectPostLite2NestedWithoutSelect");
+    assertNotNull(blog);
+    assertEquals(4, blog.getPosts().size());
+  }
+
+  @Test
   public void shouldFindAllMutablePostLites() throws Exception {
     List<PostLite> posts = manager.selectList("domain.blog.mappers.PostMapper.selectMutablePostLite");
     assertEquals(4, posts.size());
