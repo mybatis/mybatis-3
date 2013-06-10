@@ -22,14 +22,9 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 public class UtilityTester {
-	
-	public static void serializeAndDeserializeObject(Object myObject){
 
-		try {
-			deserialzeObject(serializeObject(myObject));
-		} catch (IOException e) {
-			System.out.println("Exception: " + e.toString());
-		}
+	public static void serializeAndDeserializeObject(Object myObject) throws Exception{
+		deserialzeObject(serializeObject(myObject));
 	}
 
 	private static byte[] serializeObject(Object myObject) throws IOException {

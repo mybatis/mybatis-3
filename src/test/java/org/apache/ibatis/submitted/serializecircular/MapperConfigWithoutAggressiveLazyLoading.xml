@@ -42,6 +42,8 @@
 	</environments>
 
 	<mappers>
+		<mapper class="org.apache.ibatis.submitted.serializecircular.ParentMapper" />
+		<mapper class="org.apache.ibatis.submitted.serializecircular.ChildMapper" />
 		<mapper class="org.apache.ibatis.submitted.serializecircular.PersonMapper" />
 		<mapper class="org.apache.ibatis.submitted.serializecircular.AttributeMapper" />
 		<mapper class="org.apache.ibatis.submitted.serializecircular.DepartmentMapper" />
