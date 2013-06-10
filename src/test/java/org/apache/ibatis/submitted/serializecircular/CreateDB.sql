@@ -14,18 +14,38 @@
 --    limitations under the License.
 --
 
+-- parent
+drop table if exists parent;
+create table parent (id int, nr_person_id int);
+
+insert into parent (id, nr_person_id)
+values (1, 1);
+
+-- child
+drop table if exists child;
+create table child (id int, nr_parent_id int, nr_person_id int);
+
+insert into child (id, nr_parent_id, nr_person_id)
+values (1, 1, 1);
+
+insert into child (id, nr_parent_id, nr_person_id)
+values (2, 1, 1);
+
+-- person
 drop table if exists person;
 create table person (id int, nr_department int);
 
 insert into person (id,  nr_department) 
 values (1, 1);
 
+-- productattribute
 drop table if exists productattribute;
 create table productattribute (nr_id int);
 
 insert into productattribute(nr_id) 
 values (1);
 
+-- department
 drop table if exists department;
 create table department (nr_id int,nr_attribute int,person int);
 

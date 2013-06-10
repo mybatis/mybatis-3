@@ -15,24 +15,52 @@
  */
 package org.apache.ibatis.submitted.serializecircular;
 
-import java.io.IOException;
 import java.io.Reader;
 import java.sql.Connection;
-import java.sql.SQLException;
 
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.Ignore;
 import org.junit.Test;
 
-//@Ignore("see issue #614")
+// see issue #614
 public class SerializeCircularTest {
 
 	@Test
-	public void serializeAndDeserializeObjectsWithAggressiveLazyLoadingWithoutPreloadingAttribute() 
+	public void serializeAndDeserializeListWithoutAggressiveLazyLoading()
+	throws Exception {
+		SqlSession sqlSession = createSessionWithoutAggressiveLazyLoading();
+	  try {
+		  serializeAndDeserializeList(sqlSession);
+	    } finally {
+	      sqlSession.close();
+	    }
+	}
+
+	@Test
+	public void serializeAndDeserializeListWithAggressiveLazyLoading()
+	throws Exception {
+		SqlSession sqlSession = createSessionWithAggressiveLazyLoading();
+	  try {
+		  serializeAndDeserializeList(sqlSession);
+	    } finally {
+	      sqlSession.close();
+	    }
+	}
+
+	private void serializeAndDeserializeList(SqlSession sqlSession)
+	throws Exception {
+		ParentMapper parentMapper = sqlSession.getMapper(ParentMapper.class);
+		Parent parent = parentMapper.getById(1);
+		Child child = parent.getChildren().get(0);
+
+		UtilityTester.serializeAndDeserializeObject(child);
+	}
+
+	@Test
+	public void serializeAndDeserializeObjectsWithAggressiveLazyLoadingWithoutPreloadingAttribute()
 	throws Exception {
 		SqlSession sqlSession = createSessionWithAggressiveLazyLoading();
 	  try {
@@ -41,9 +69,9 @@ public class SerializeCircularTest {
 	      sqlSession.close();
 	    }
 	}
-	
+
 	@Test
-	public void serializeAndDeserializeObjectsWithAggressiveLazyLoadingWithPreloadingAttribute() 
+	public void serializeAndDeserializeObjectsWithAggressiveLazyLoadingWithPreloadingAttribute()
 	throws Exception {
 		SqlSession sqlSession = createSessionWithAggressiveLazyLoading();
 	  try {
@@ -52,10 +80,10 @@ public class SerializeCircularTest {
 	      sqlSession.close();
 	    }
 	}
-	
-//	@Ignore("See http://code.google.com/p/mybatis/issues/detail?id=614")
+
+	//See http://code.google.com/p/mybatis/issues/detail?id=614
 	@Test
-	public void serializeAndDeserializeObjectsWithoutAggressiveLazyLoadingWithoutPreloadingAttribute() 
+	public void serializeAndDeserializeObjectsWithoutAggressiveLazyLoadingWithoutPreloadingAttribute()
 	throws Exception {
 		SqlSession sqlSession = createSessionWithoutAggressiveLazyLoading();
 	  try {
@@ -65,9 +93,9 @@ public class SerializeCircularTest {
 	      sqlSession.close();
 	    }
 	}
-	
+
 	@Test
-	public void serializeAndDeserializeObjectsWithoutAggressiveLazyLoadingWithPreloadingAttribute() 
+	public void serializeAndDeserializeObjectsWithoutAggressiveLazyLoadingWithPreloadingAttribute()
 	throws Exception {
 	  SqlSession sqlSession = createSessionWithoutAggressiveLazyLoading();
 	  try {
@@ -76,11 +104,11 @@ public class SerializeCircularTest {
 	      sqlSession.close();
 	    }
 	}
-	
+
 	private SqlSession createSessionWithoutAggressiveLazyLoading() throws Exception {
 		return createSession(false);
 	}
-	
+
 	private SqlSession createSessionWithAggressiveLazyLoading() throws Exception {
 		return createSession(true);
 	}
@@ -94,32 +122,32 @@ public class SerializeCircularTest {
 		return sqlSession;
 	}
 
-	private void testSerializeWithPreloadingAttribute(SqlSession sqlSession) {
+	private void testSerializeWithPreloadingAttribute(SqlSession sqlSession) throws Exception {
 		testSerialize(sqlSession, true);
 	}
 
-	private void testSerializeWithoutPreloadingAttribute(SqlSession sqlSession) {
+	private void testSerializeWithoutPreloadingAttribute(SqlSession sqlSession) throws Exception {
 		testSerialize(sqlSession, false);
 	}
-	
-	private void testSerialize(SqlSession sqlSession, boolean aPreloadAttribute) {
+
+	private void testSerialize(SqlSession sqlSession, boolean aPreloadAttribute) throws Exception {
 		DepartmentMapper departmentMapper = sqlSession.getMapper(DepartmentMapper.class);
 		Department department = departmentMapper.getById(1);
 		if (aPreloadAttribute) {
 			department.getAttribute();
 		}
-		
+
 		serializeAndDeserializeObject(department);
-		
+
 		// This call results in problems when deserializing department
 		department.getPerson();
 		serializeAndDeserializeObject(department);
 	}
- 
-	protected void serializeAndDeserializeObject(Object anObject) {
+
+	protected void serializeAndDeserializeObject(Object anObject) throws Exception {
 		UtilityTester.serializeAndDeserializeObject(anObject);
 	}
-  
+
   private SqlSessionFactory getSqlSessionFactoryXmlConfig(String resource) throws Exception {
     Reader configReader = Resources.getResourceAsReader(resource);
     SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(configReader);
@@ -131,7 +159,7 @@ public class SerializeCircularTest {
     return sqlSessionFactory;
   }
 
-  private static void initDb(Connection conn) throws IOException, SQLException {
+  private static void initDb(Connection conn) throws Exception {
     try {
       Reader scriptReader = Resources
           .getResourceAsReader("org/apache/ibatis/submitted/serializecircular/CreateDB.sql");
