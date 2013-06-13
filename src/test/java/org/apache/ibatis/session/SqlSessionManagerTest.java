@@ -24,6 +24,7 @@ import org.apache.ibatis.exceptions.PersistenceException;
 import org.apache.ibatis.io.Resources;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.Reader;
@@ -479,6 +480,7 @@ public class SqlSessionManagerTest extends BaseDataTest {
     assertEquals(4, posts.size());
   }
 
+  @Ignore // see issue #48 (gh)
   @Test
   public void shouldFindAllPostLitesWithNestedSelect() throws Exception {
     final BlogLite blog = manager.selectOne("domain.blog.mappers.PostMapper.selectPostLite2NestedWithSelect");
