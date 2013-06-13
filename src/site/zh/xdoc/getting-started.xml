@@ -28,14 +28,33 @@
 
   <body>
     <section name="入门">
+    
+    <subsection name="Installation">
+      <p>
+        To use the MyBatis you just need to include the
+        <code>
+          mybatis-x.x.x.jar
+        </code>
+        file in the classpath.
+      </p>
+      <p>
+        If you are using Maven just add the following dependency to your pom.xml:
+      </p>
+        <source><![CDATA[
+<dependency>
+  <groupId>org.mybatis</groupId>
+  <artifactId>mybatis</artifactId>
+  <version>x.x.x</version>
+</dependency>]]></source>
+    </subsection>    
+    
+    <subsection name="从 XML 中构建 SqlSessionFactory">
       <p>
         每 一 个 MyBatis 的 应 用 程 序 都 以 一 个 SqlSessionFactory 对 象 的 实 例 为 核 心 。
 SqlSessionFactory 对 象 的 实 例 可 以 通 过 SqlSessionFactoryBuilder 对 象 来 获 得 。
 SqlSessionFactoryBuilder 对象可以从 XML 配置文件,或从 Configuration 类的习惯准备的实
 例中构建 SqlSessionFactory 对象。
       </p>
-
-    <subsection name="从 XML 中构建 SqlSessionFactory">
       <p>
 从 XML 文件中构建 SqlSessionFactory 的实例非常简单。这里建议你使用类路径下的资
 源文件来配置,但是你可以使用任意的 Reader 实例,这个实例包括由文字形式的文件路径

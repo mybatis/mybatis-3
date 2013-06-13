@@ -27,6 +27,27 @@
 
   <body>
     <section name="Getting started">
+    
+    <subsection name="Installation">
+      <p>
+        To use the MyBatis you just need to include the
+        <code>
+          mybatis-x.x.x.jar
+        </code>
+        file in the classpath.
+      </p>
+      <p>
+        If you are using Maven just add the following dependency to your pom.xml:
+      </p>
+        <source><![CDATA[
+<dependency>
+  <groupId>org.mybatis</groupId>
+  <artifactId>mybatis</artifactId>
+  <version>x.x.x</version>
+</dependency>]]></source>
+    </subsection>    
+    
+    <subsection name="Building SqlSessionFactory from XML">    
       <p>
         Every MyBatis application centers around an instance of
         SqlSessionFactory. A SqlSessionFactory instance can be acquired by
@@ -34,8 +55,6 @@
         build a SqlSessionFactory instance from an XML configuration file,
         of from a custom prepared instance of the Configuration class.
       </p>
-
-    <subsection name="Building SqlSessionFactory from XML">
       <p>
         Building a SqlSessionFactory instance from an XML file is very
         simple. It is recommended that you use a classpath resource for
