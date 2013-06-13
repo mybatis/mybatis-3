@@ -79,6 +79,11 @@ public class DynamicContext {
     }
 
     @Override
+    public Object put(String key, Object value) {
+      return super.put(key, value);
+    }
+    
+    @Override
     public Object get(Object key) {
       String strKey = (String) key;
       if (super.containsKey(strKey)) {
@@ -87,9 +92,10 @@ public class DynamicContext {
 
       if (parameterMetaObject != null) {
         Object object = parameterMetaObject.getValue(strKey);
-        if (object != null) {
-          super.put(strKey, object);
-        }
+        // issue #61 do not modify the context when reading
+//        if (object != null) { 
+//          super.put(strKey, object);
+//        }
 
         return object;
       }

@@ -63,14 +63,14 @@ public class OgnlStaticTest {
     try {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = mapper.getUserStatic(1);
+      Assert.assertNotNull(user);
       Assert.assertEquals("User1", user.getName());
     } finally {
       sqlSession.close();
     }
   }
 
-  @Ignore
-  @Test // see issue #61
+  @Test // see issue #61 (gh)
   public void shouldGetAUserWithIfNode() {
     SqlSession sqlSession = sqlSessionFactory.openSession();
     try {
