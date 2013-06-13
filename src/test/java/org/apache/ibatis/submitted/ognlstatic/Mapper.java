@@ -17,6 +17,7 @@ package org.apache.ibatis.submitted.ognlstatic;
 
 public interface Mapper {
 
-  User getUser(Integer id);
+  User getUserStatic(Integer id);
+  User getUserIfNode(String id);
 
 }
