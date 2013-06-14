@@ -9,7 +9,7 @@
 <div id="overview"><a href="../../../../../../apidocs/org/apache/ibatis/builder/annotation/MapperAnnotationBuilder.html">View Javadoc</a></div><pre>
 
 <a class="jxr_linenumber" name="1" href="#1">1</a>   <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="2" href="#2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2013 The MyBatis Team</em>
+<a class="jxr_linenumber" name="2" href="#2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2013 the original author or authors.</em>
 <a class="jxr_linenumber" name="3" href="#3">3</a>   <em class="jxr_comment"> *</em>
 <a class="jxr_linenumber" name="4" href="#4">4</a>   <em class="jxr_comment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="5" href="#5">5</a>   <em class="jxr_comment"> *    you may not use this file except in compliance with the License.</em>
@@ -296,278 +296,284 @@
 <a class="jxr_linenumber" name="286" href="#286">286</a>       String resultMapId = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="287" href="#287">287</a>       <a href="../../../../../org/apache/ibatis/annotations/ResultMap.html">ResultMap</a> resultMapAnnotation = method.getAnnotation(ResultMap.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="288" href="#288">288</a>       <strong class="jxr_keyword">if</strong> (resultMapAnnotation != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="289" href="#289">289</a>         resultMapId = resultMapAnnotation.value();
-<a class="jxr_linenumber" name="290" href="#290">290</a>       } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (isSelect) {
-<a class="jxr_linenumber" name="291" href="#291">291</a>         resultMapId = parseResultMap(method);
-<a class="jxr_linenumber" name="292" href="#292">292</a>       }
-<a class="jxr_linenumber" name="293" href="#293">293</a> 
-<a class="jxr_linenumber" name="294" href="#294">294</a>       assistant.addMappedStatement(
-<a class="jxr_linenumber" name="295" href="#295">295</a>           mappedStatementId,
-<a class="jxr_linenumber" name="296" href="#296">296</a>           sqlSource,
-<a class="jxr_linenumber" name="297" href="#297">297</a>           statementType,
-<a class="jxr_linenumber" name="298" href="#298">298</a>           sqlCommandType,
-<a class="jxr_linenumber" name="299" href="#299">299</a>           fetchSize,
-<a class="jxr_linenumber" name="300" href="#300">300</a>           timeout,
-<a class="jxr_linenumber" name="301" href="#301">301</a>           <strong class="jxr_keyword">null</strong>,                             <em class="jxr_comment">// ParameterMapID</em>
-<a class="jxr_linenumber" name="302" href="#302">302</a>           parameterTypeClass,
-<a class="jxr_linenumber" name="303" href="#303">303</a>           resultMapId,    <em class="jxr_comment">// ResultMapID</em>
-<a class="jxr_linenumber" name="304" href="#304">304</a>           getReturnType(method),
-<a class="jxr_linenumber" name="305" href="#305">305</a>           resultSetType,
-<a class="jxr_linenumber" name="306" href="#306">306</a>           flushCache,
-<a class="jxr_linenumber" name="307" href="#307">307</a>           useCache,
-<a class="jxr_linenumber" name="308" href="#308">308</a>           false, <em class="jxr_comment">// TODO issue #577</em>
-<a class="jxr_linenumber" name="309" href="#309">309</a>           keyGenerator,
-<a class="jxr_linenumber" name="310" href="#310">310</a>           keyProperty,
-<a class="jxr_linenumber" name="311" href="#311">311</a>           keyColumn,
-<a class="jxr_linenumber" name="312" href="#312">312</a>           <strong class="jxr_keyword">null</strong>,
-<a class="jxr_linenumber" name="313" href="#313">313</a>           languageDriver,
-<a class="jxr_linenumber" name="314" href="#314">314</a>           <strong class="jxr_keyword">null</strong>);
-<a class="jxr_linenumber" name="315" href="#315">315</a>     }
-<a class="jxr_linenumber" name="316" href="#316">316</a>   }
-<a class="jxr_linenumber" name="317" href="#317">317</a>   
-<a class="jxr_linenumber" name="318" href="#318">318</a>   <strong class="jxr_keyword">private</strong> <a href="../../../../../org/apache/ibatis/scripting/LanguageDriver.html">LanguageDriver</a> getLanguageDriver(Method method) {
-<a class="jxr_linenumber" name="319" href="#319">319</a>     <a href="../../../../../org/apache/ibatis/annotations/Lang.html">Lang</a> lang = method.getAnnotation(Lang.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="320" href="#320">320</a>     <strong class="jxr_keyword">if</strong> (lang != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="321" href="#321">321</a>       Class&lt;?&gt; languageDriverClass = lang.value();
-<a class="jxr_linenumber" name="322" href="#322">322</a>       <strong class="jxr_keyword">return</strong> configuration.getLanguageRegistry().getDriver(languageDriverClass);
-<a class="jxr_linenumber" name="323" href="#323">323</a>     }
-<a class="jxr_linenumber" name="324" href="#324">324</a>     <strong class="jxr_keyword">return</strong> configuration.getLanguageRegistry().getDefaultDriver();
-<a class="jxr_linenumber" name="325" href="#325">325</a>   }
-<a class="jxr_linenumber" name="326" href="#326">326</a> 
-<a class="jxr_linenumber" name="327" href="#327">327</a>   <strong class="jxr_keyword">private</strong> Class&lt;?&gt; getParameterType(Method method) {
-<a class="jxr_linenumber" name="328" href="#328">328</a>     Class&lt;?&gt; parameterType = <strong class="jxr_keyword">null</strong>;
-<a class="jxr_linenumber" name="329" href="#329">329</a>     Class&lt;?&gt;[] parameterTypes = method.getParameterTypes();
-<a class="jxr_linenumber" name="330" href="#330">330</a>     <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; i &lt; parameterTypes.length; i++) {
-<a class="jxr_linenumber" name="331" href="#331">331</a>       <strong class="jxr_keyword">if</strong> (!RowBounds.<strong class="jxr_keyword">class</strong>.isAssignableFrom(parameterTypes[i]) &amp;&amp; !ResultHandler.<strong class="jxr_keyword">class</strong>.isAssignableFrom(parameterTypes[i])) {
-<a class="jxr_linenumber" name="332" href="#332">332</a>         <strong class="jxr_keyword">if</strong> (parameterType == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="333" href="#333">333</a>           parameterType = parameterTypes[i];
-<a class="jxr_linenumber" name="334" href="#334">334</a>         } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="335" href="#335">335</a>           parameterType = Map.<strong class="jxr_keyword">class</strong>;
-<a class="jxr_linenumber" name="336" href="#336">336</a>         }
-<a class="jxr_linenumber" name="337" href="#337">337</a>       }
-<a class="jxr_linenumber" name="338" href="#338">338</a>     }
-<a class="jxr_linenumber" name="339" href="#339">339</a>     <strong class="jxr_keyword">return</strong> parameterType;
-<a class="jxr_linenumber" name="340" href="#340">340</a>   }
-<a class="jxr_linenumber" name="341" href="#341">341</a> 
-<a class="jxr_linenumber" name="342" href="#342">342</a>   <strong class="jxr_keyword">private</strong> Class&lt;?&gt; getReturnType(Method method) {
-<a class="jxr_linenumber" name="343" href="#343">343</a>     Class&lt;?&gt; returnType = method.getReturnType();
-<a class="jxr_linenumber" name="344" href="#344">344</a>     <strong class="jxr_keyword">if</strong> (<strong class="jxr_keyword">void</strong>.<strong class="jxr_keyword">class</strong>.equals(returnType)) { <em class="jxr_comment">// issue #508</em>
-<a class="jxr_linenumber" name="345" href="#345">345</a>       <a href="../../../../../org/apache/ibatis/annotations/ResultType.html">ResultType</a> rt = method.getAnnotation(ResultType.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="346" href="#346">346</a>       <strong class="jxr_keyword">if</strong> (rt != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="347" href="#347">347</a>         returnType = rt.value();
-<a class="jxr_linenumber" name="348" href="#348">348</a>       } 
-<a class="jxr_linenumber" name="349" href="#349">349</a>     } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (Collection.<strong class="jxr_keyword">class</strong>.isAssignableFrom(returnType)) {
-<a class="jxr_linenumber" name="350" href="#350">350</a>       Type returnTypeParameter = method.getGenericReturnType();
-<a class="jxr_linenumber" name="351" href="#351">351</a>       <strong class="jxr_keyword">if</strong> (returnTypeParameter instanceof ParameterizedType) {
-<a class="jxr_linenumber" name="352" href="#352">352</a>         Type[] actualTypeArguments = ((ParameterizedType) returnTypeParameter).getActualTypeArguments();
-<a class="jxr_linenumber" name="353" href="#353">353</a>         <strong class="jxr_keyword">if</strong> (actualTypeArguments != <strong class="jxr_keyword">null</strong> &amp;&amp; actualTypeArguments.length == 1) {
-<a class="jxr_linenumber" name="354" href="#354">354</a>           returnTypeParameter = actualTypeArguments[0];
-<a class="jxr_linenumber" name="355" href="#355">355</a>           <strong class="jxr_keyword">if</strong> (returnTypeParameter instanceof Class) {
-<a class="jxr_linenumber" name="356" href="#356">356</a>             returnType = (Class&lt;?&gt;) returnTypeParameter;
-<a class="jxr_linenumber" name="357" href="#357">357</a>           } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (returnTypeParameter instanceof ParameterizedType) { <em class="jxr_comment">// (issue #443) actual type can be a also a parametrized type</em>
-<a class="jxr_linenumber" name="358" href="#358">358</a>             returnType = (Class&lt;?&gt;) ((ParameterizedType) returnTypeParameter).getRawType();
-<a class="jxr_linenumber" name="359" href="#359">359</a>           } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (returnTypeParameter instanceof GenericArrayType) {
-<a class="jxr_linenumber" name="360" href="#360">360</a>             Class&lt;?&gt; componentType = (Class&lt;?&gt;) ((GenericArrayType) returnTypeParameter).getGenericComponentType();
-<a class="jxr_linenumber" name="361" href="#361">361</a>             returnType = Array.newInstance(componentType, 0).getClass(); <em class="jxr_comment">// (issue #525) support List&lt;byte[]&gt;</em>
-<a class="jxr_linenumber" name="362" href="#362">362</a>           }
-<a class="jxr_linenumber" name="363" href="#363">363</a>         }
-<a class="jxr_linenumber" name="364" href="#364">364</a>       }
-<a class="jxr_linenumber" name="365" href="#365">365</a>     } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (method.isAnnotationPresent(MapKey.<strong class="jxr_keyword">class</strong>) &amp;&amp; Map.<strong class="jxr_keyword">class</strong>.isAssignableFrom(returnType)) {
-<a class="jxr_linenumber" name="366" href="#366">366</a>       <em class="jxr_comment">// (issue 504) Do not look into Maps if there is not MapKey annotation</em>
-<a class="jxr_linenumber" name="367" href="#367">367</a>       Type returnTypeParameter = method.getGenericReturnType();
-<a class="jxr_linenumber" name="368" href="#368">368</a>       <strong class="jxr_keyword">if</strong> (returnTypeParameter instanceof ParameterizedType) {
-<a class="jxr_linenumber" name="369" href="#369">369</a>         Type[] actualTypeArguments = ((ParameterizedType) returnTypeParameter).getActualTypeArguments();
-<a class="jxr_linenumber" name="370" href="#370">370</a>         <strong class="jxr_keyword">if</strong> (actualTypeArguments != <strong class="jxr_keyword">null</strong> &amp;&amp; actualTypeArguments.length == 2) {
-<a class="jxr_linenumber" name="371" href="#371">371</a>           returnTypeParameter = actualTypeArguments[1];
-<a class="jxr_linenumber" name="372" href="#372">372</a>           <strong class="jxr_keyword">if</strong> (returnTypeParameter instanceof Class) {
-<a class="jxr_linenumber" name="373" href="#373">373</a>             returnType = (Class&lt;?&gt;) returnTypeParameter;
-<a class="jxr_linenumber" name="374" href="#374">374</a>           } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (returnTypeParameter instanceof ParameterizedType) { <em class="jxr_comment">// (issue 443) actual type can be a also a parametrized type</em>
-<a class="jxr_linenumber" name="375" href="#375">375</a>             returnType = (Class&lt;?&gt;) ((ParameterizedType) returnTypeParameter).getRawType();
-<a class="jxr_linenumber" name="376" href="#376">376</a>           }
-<a class="jxr_linenumber" name="377" href="#377">377</a>         }
-<a class="jxr_linenumber" name="378" href="#378">378</a>       }
-<a class="jxr_linenumber" name="379" href="#379">379</a>     }
-<a class="jxr_linenumber" name="380" href="#380">380</a> 
-<a class="jxr_linenumber" name="381" href="#381">381</a>     <strong class="jxr_keyword">return</strong> returnType;
-<a class="jxr_linenumber" name="382" href="#382">382</a>   }
-<a class="jxr_linenumber" name="383" href="#383">383</a> 
-<a class="jxr_linenumber" name="384" href="#384">384</a>   <strong class="jxr_keyword">private</strong> <a href="../../../../../org/apache/ibatis/mapping/SqlSource.html">SqlSource</a> getSqlSourceFromAnnotations(Method method, Class&lt;?&gt; parameterType, <a href="../../../../../org/apache/ibatis/scripting/LanguageDriver.html">LanguageDriver</a> languageDriver) {
-<a class="jxr_linenumber" name="385" href="#385">385</a>     <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="386" href="#386">386</a>       Class&lt;? <strong class="jxr_keyword">extends</strong> Annotation&gt; sqlAnnotationType = getSqlAnnotationType(method);
-<a class="jxr_linenumber" name="387" href="#387">387</a>       Class&lt;? <strong class="jxr_keyword">extends</strong> Annotation&gt; sqlProviderAnnotationType = getSqlProviderAnnotationType(method);
-<a class="jxr_linenumber" name="388" href="#388">388</a>       <strong class="jxr_keyword">if</strong> (sqlAnnotationType != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="389" href="#389">389</a>         <strong class="jxr_keyword">if</strong> (sqlProviderAnnotationType != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="390" href="#390">390</a>           <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/binding/BindingException.html">BindingException</a>(<span class="jxr_string">"You cannot supply both a static SQL and SqlProvider to method named "</span> + method.getName());
-<a class="jxr_linenumber" name="391" href="#391">391</a>         }
-<a class="jxr_linenumber" name="392" href="#392">392</a>         Annotation sqlAnnotation = method.getAnnotation(sqlAnnotationType);
-<a class="jxr_linenumber" name="393" href="#393">393</a>         <strong class="jxr_keyword">final</strong> String[] strings = (String[]) sqlAnnotation.getClass().getMethod(<span class="jxr_string">"value"</span>).invoke(sqlAnnotation);
-<a class="jxr_linenumber" name="394" href="#394">394</a>         <strong class="jxr_keyword">return</strong> buildSqlSourceFromStrings(strings, parameterType, languageDriver);
-<a class="jxr_linenumber" name="395" href="#395">395</a>       } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (sqlProviderAnnotationType != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="396" href="#396">396</a>         Annotation sqlProviderAnnotation = method.getAnnotation(sqlProviderAnnotationType);
-<a class="jxr_linenumber" name="397" href="#397">397</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/builder/annotation/ProviderSqlSource.html">ProviderSqlSource</a>(assistant.getConfiguration(), sqlProviderAnnotation);
-<a class="jxr_linenumber" name="398" href="#398">398</a>       }
-<a class="jxr_linenumber" name="399" href="#399">399</a>       <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">null</strong>;
-<a class="jxr_linenumber" name="400" href="#400">400</a>     } <strong class="jxr_keyword">catch</strong> (Exception e) {
-<a class="jxr_linenumber" name="401" href="#401">401</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/builder/BuilderException.html">BuilderException</a>(<span class="jxr_string">"Could not find value method on SQL annotation.  Cause: "</span> + e, e);
-<a class="jxr_linenumber" name="402" href="#402">402</a>     }
-<a class="jxr_linenumber" name="403" href="#403">403</a>   }
-<a class="jxr_linenumber" name="404" href="#404">404</a> 
-<a class="jxr_linenumber" name="405" href="#405">405</a>   <strong class="jxr_keyword">private</strong> <a href="../../../../../org/apache/ibatis/mapping/SqlSource.html">SqlSource</a> buildSqlSourceFromStrings(String[] strings, Class&lt;?&gt; parameterTypeClass, <a href="../../../../../org/apache/ibatis/scripting/LanguageDriver.html">LanguageDriver</a> languageDriver) {
-<a class="jxr_linenumber" name="406" href="#406">406</a>     <strong class="jxr_keyword">final</strong> StringBuilder sql = <strong class="jxr_keyword">new</strong> StringBuilder();
-<a class="jxr_linenumber" name="407" href="#407">407</a>     <strong class="jxr_keyword">for</strong> (String fragment : strings) {
-<a class="jxr_linenumber" name="408" href="#408">408</a>       sql.append(fragment);
-<a class="jxr_linenumber" name="409" href="#409">409</a>       sql.append(<span class="jxr_string">" "</span>);
-<a class="jxr_linenumber" name="410" href="#410">410</a>     }
-<a class="jxr_linenumber" name="411" href="#411">411</a>     <strong class="jxr_keyword">return</strong> languageDriver.createSqlSource(configuration, sql.toString(), parameterTypeClass);
-<a class="jxr_linenumber" name="412" href="#412">412</a>   }
-<a class="jxr_linenumber" name="413" href="#413">413</a> 
-<a class="jxr_linenumber" name="414" href="#414">414</a>   <strong class="jxr_keyword">private</strong> <a href="../../../../../org/apache/ibatis/mapping/SqlCommandType.html">SqlCommandType</a> getSqlCommandType(Method method) {
-<a class="jxr_linenumber" name="415" href="#415">415</a>     Class&lt;? <strong class="jxr_keyword">extends</strong> Annotation&gt; type = getSqlAnnotationType(method);
-<a class="jxr_linenumber" name="416" href="#416">416</a> 
-<a class="jxr_linenumber" name="417" href="#417">417</a>     <strong class="jxr_keyword">if</strong> (type == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="418" href="#418">418</a>       type = getSqlProviderAnnotationType(method);
+<a class="jxr_linenumber" name="289" href="#289">289</a>         String[] resultMaps = resultMapAnnotation.value();
+<a class="jxr_linenumber" name="290" href="#290">290</a>         StringBuilder sb = <strong class="jxr_keyword">new</strong> StringBuilder();
+<a class="jxr_linenumber" name="291" href="#291">291</a>         <strong class="jxr_keyword">for</strong> (String resultMap : resultMaps) {
+<a class="jxr_linenumber" name="292" href="#292">292</a>           <strong class="jxr_keyword">if</strong> (sb.length() &gt; 0) sb.append(<span class="jxr_string">","</span>);
+<a class="jxr_linenumber" name="293" href="#293">293</a>           sb.append(resultMap);
+<a class="jxr_linenumber" name="294" href="#294">294</a>         }
+<a class="jxr_linenumber" name="295" href="#295">295</a>         resultMapId = sb.toString();
+<a class="jxr_linenumber" name="296" href="#296">296</a>       } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (isSelect) {
+<a class="jxr_linenumber" name="297" href="#297">297</a>         resultMapId = parseResultMap(method);
+<a class="jxr_linenumber" name="298" href="#298">298</a>       }
+<a class="jxr_linenumber" name="299" href="#299">299</a> 
+<a class="jxr_linenumber" name="300" href="#300">300</a>       assistant.addMappedStatement(
+<a class="jxr_linenumber" name="301" href="#301">301</a>           mappedStatementId,
+<a class="jxr_linenumber" name="302" href="#302">302</a>           sqlSource,
+<a class="jxr_linenumber" name="303" href="#303">303</a>           statementType,
+<a class="jxr_linenumber" name="304" href="#304">304</a>           sqlCommandType,
+<a class="jxr_linenumber" name="305" href="#305">305</a>           fetchSize,
+<a class="jxr_linenumber" name="306" href="#306">306</a>           timeout,
+<a class="jxr_linenumber" name="307" href="#307">307</a>           <strong class="jxr_keyword">null</strong>,                             <em class="jxr_comment">// ParameterMapID</em>
+<a class="jxr_linenumber" name="308" href="#308">308</a>           parameterTypeClass,
+<a class="jxr_linenumber" name="309" href="#309">309</a>           resultMapId,    <em class="jxr_comment">// ResultMapID</em>
+<a class="jxr_linenumber" name="310" href="#310">310</a>           getReturnType(method),
+<a class="jxr_linenumber" name="311" href="#311">311</a>           resultSetType,
+<a class="jxr_linenumber" name="312" href="#312">312</a>           flushCache,
+<a class="jxr_linenumber" name="313" href="#313">313</a>           useCache,
+<a class="jxr_linenumber" name="314" href="#314">314</a>           false, <em class="jxr_comment">// TODO issue #577</em>
+<a class="jxr_linenumber" name="315" href="#315">315</a>           keyGenerator,
+<a class="jxr_linenumber" name="316" href="#316">316</a>           keyProperty,
+<a class="jxr_linenumber" name="317" href="#317">317</a>           keyColumn,
+<a class="jxr_linenumber" name="318" href="#318">318</a>           <strong class="jxr_keyword">null</strong>,
+<a class="jxr_linenumber" name="319" href="#319">319</a>           languageDriver,
+<a class="jxr_linenumber" name="320" href="#320">320</a>           <strong class="jxr_keyword">null</strong>);
+<a class="jxr_linenumber" name="321" href="#321">321</a>     }
+<a class="jxr_linenumber" name="322" href="#322">322</a>   }
+<a class="jxr_linenumber" name="323" href="#323">323</a>   
+<a class="jxr_linenumber" name="324" href="#324">324</a>   <strong class="jxr_keyword">private</strong> <a href="../../../../../org/apache/ibatis/scripting/LanguageDriver.html">LanguageDriver</a> getLanguageDriver(Method method) {
+<a class="jxr_linenumber" name="325" href="#325">325</a>     <a href="../../../../../org/apache/ibatis/annotations/Lang.html">Lang</a> lang = method.getAnnotation(Lang.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="326" href="#326">326</a>     <strong class="jxr_keyword">if</strong> (lang != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="327" href="#327">327</a>       Class&lt;?&gt; languageDriverClass = lang.value();
+<a class="jxr_linenumber" name="328" href="#328">328</a>       <strong class="jxr_keyword">return</strong> configuration.getLanguageRegistry().getDriver(languageDriverClass);
+<a class="jxr_linenumber" name="329" href="#329">329</a>     }
+<a class="jxr_linenumber" name="330" href="#330">330</a>     <strong class="jxr_keyword">return</strong> configuration.getLanguageRegistry().getDefaultDriver();
+<a class="jxr_linenumber" name="331" href="#331">331</a>   }
+<a class="jxr_linenumber" name="332" href="#332">332</a> 
+<a class="jxr_linenumber" name="333" href="#333">333</a>   <strong class="jxr_keyword">private</strong> Class&lt;?&gt; getParameterType(Method method) {
+<a class="jxr_linenumber" name="334" href="#334">334</a>     Class&lt;?&gt; parameterType = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="335" href="#335">335</a>     Class&lt;?&gt;[] parameterTypes = method.getParameterTypes();
+<a class="jxr_linenumber" name="336" href="#336">336</a>     <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; i &lt; parameterTypes.length; i++) {
+<a class="jxr_linenumber" name="337" href="#337">337</a>       <strong class="jxr_keyword">if</strong> (!RowBounds.<strong class="jxr_keyword">class</strong>.isAssignableFrom(parameterTypes[i]) &amp;&amp; !ResultHandler.<strong class="jxr_keyword">class</strong>.isAssignableFrom(parameterTypes[i])) {
+<a class="jxr_linenumber" name="338" href="#338">338</a>         <strong class="jxr_keyword">if</strong> (parameterType == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="339" href="#339">339</a>           parameterType = parameterTypes[i];
+<a class="jxr_linenumber" name="340" href="#340">340</a>         } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="341" href="#341">341</a>           parameterType = Map.<strong class="jxr_keyword">class</strong>;
+<a class="jxr_linenumber" name="342" href="#342">342</a>         }
+<a class="jxr_linenumber" name="343" href="#343">343</a>       }
+<a class="jxr_linenumber" name="344" href="#344">344</a>     }
+<a class="jxr_linenumber" name="345" href="#345">345</a>     <strong class="jxr_keyword">return</strong> parameterType;
+<a class="jxr_linenumber" name="346" href="#346">346</a>   }
+<a class="jxr_linenumber" name="347" href="#347">347</a> 
+<a class="jxr_linenumber" name="348" href="#348">348</a>   <strong class="jxr_keyword">private</strong> Class&lt;?&gt; getReturnType(Method method) {
+<a class="jxr_linenumber" name="349" href="#349">349</a>     Class&lt;?&gt; returnType = method.getReturnType();
+<a class="jxr_linenumber" name="350" href="#350">350</a>     <strong class="jxr_keyword">if</strong> (<strong class="jxr_keyword">void</strong>.<strong class="jxr_keyword">class</strong>.equals(returnType)) { <em class="jxr_comment">// issue #508</em>
+<a class="jxr_linenumber" name="351" href="#351">351</a>       <a href="../../../../../org/apache/ibatis/annotations/ResultType.html">ResultType</a> rt = method.getAnnotation(ResultType.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="352" href="#352">352</a>       <strong class="jxr_keyword">if</strong> (rt != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="353" href="#353">353</a>         returnType = rt.value();
+<a class="jxr_linenumber" name="354" href="#354">354</a>       } 
+<a class="jxr_linenumber" name="355" href="#355">355</a>     } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (Collection.<strong class="jxr_keyword">class</strong>.isAssignableFrom(returnType)) {
+<a class="jxr_linenumber" name="356" href="#356">356</a>       Type returnTypeParameter = method.getGenericReturnType();
+<a class="jxr_linenumber" name="357" href="#357">357</a>       <strong class="jxr_keyword">if</strong> (returnTypeParameter instanceof ParameterizedType) {
+<a class="jxr_linenumber" name="358" href="#358">358</a>         Type[] actualTypeArguments = ((ParameterizedType) returnTypeParameter).getActualTypeArguments();
+<a class="jxr_linenumber" name="359" href="#359">359</a>         <strong class="jxr_keyword">if</strong> (actualTypeArguments != <strong class="jxr_keyword">null</strong> &amp;&amp; actualTypeArguments.length == 1) {
+<a class="jxr_linenumber" name="360" href="#360">360</a>           returnTypeParameter = actualTypeArguments[0];
+<a class="jxr_linenumber" name="361" href="#361">361</a>           <strong class="jxr_keyword">if</strong> (returnTypeParameter instanceof Class) {
+<a class="jxr_linenumber" name="362" href="#362">362</a>             returnType = (Class&lt;?&gt;) returnTypeParameter;
+<a class="jxr_linenumber" name="363" href="#363">363</a>           } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (returnTypeParameter instanceof ParameterizedType) { <em class="jxr_comment">// (issue #443) actual type can be a also a parametrized type</em>
+<a class="jxr_linenumber" name="364" href="#364">364</a>             returnType = (Class&lt;?&gt;) ((ParameterizedType) returnTypeParameter).getRawType();
+<a class="jxr_linenumber" name="365" href="#365">365</a>           } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (returnTypeParameter instanceof GenericArrayType) {
+<a class="jxr_linenumber" name="366" href="#366">366</a>             Class&lt;?&gt; componentType = (Class&lt;?&gt;) ((GenericArrayType) returnTypeParameter).getGenericComponentType();
+<a class="jxr_linenumber" name="367" href="#367">367</a>             returnType = Array.newInstance(componentType, 0).getClass(); <em class="jxr_comment">// (issue #525) support List&lt;byte[]&gt;</em>
+<a class="jxr_linenumber" name="368" href="#368">368</a>           }
+<a class="jxr_linenumber" name="369" href="#369">369</a>         }
+<a class="jxr_linenumber" name="370" href="#370">370</a>       }
+<a class="jxr_linenumber" name="371" href="#371">371</a>     } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (method.isAnnotationPresent(MapKey.<strong class="jxr_keyword">class</strong>) &amp;&amp; Map.<strong class="jxr_keyword">class</strong>.isAssignableFrom(returnType)) {
+<a class="jxr_linenumber" name="372" href="#372">372</a>       <em class="jxr_comment">// (issue 504) Do not look into Maps if there is not MapKey annotation</em>
+<a class="jxr_linenumber" name="373" href="#373">373</a>       Type returnTypeParameter = method.getGenericReturnType();
+<a class="jxr_linenumber" name="374" href="#374">374</a>       <strong class="jxr_keyword">if</strong> (returnTypeParameter instanceof ParameterizedType) {
+<a class="jxr_linenumber" name="375" href="#375">375</a>         Type[] actualTypeArguments = ((ParameterizedType) returnTypeParameter).getActualTypeArguments();
+<a class="jxr_linenumber" name="376" href="#376">376</a>         <strong class="jxr_keyword">if</strong> (actualTypeArguments != <strong class="jxr_keyword">null</strong> &amp;&amp; actualTypeArguments.length == 2) {
+<a class="jxr_linenumber" name="377" href="#377">377</a>           returnTypeParameter = actualTypeArguments[1];
+<a class="jxr_linenumber" name="378" href="#378">378</a>           <strong class="jxr_keyword">if</strong> (returnTypeParameter instanceof Class) {
+<a class="jxr_linenumber" name="379" href="#379">379</a>             returnType = (Class&lt;?&gt;) returnTypeParameter;
+<a class="jxr_linenumber" name="380" href="#380">380</a>           } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (returnTypeParameter instanceof ParameterizedType) { <em class="jxr_comment">// (issue 443) actual type can be a also a parametrized type</em>
+<a class="jxr_linenumber" name="381" href="#381">381</a>             returnType = (Class&lt;?&gt;) ((ParameterizedType) returnTypeParameter).getRawType();
+<a class="jxr_linenumber" name="382" href="#382">382</a>           }
+<a class="jxr_linenumber" name="383" href="#383">383</a>         }
+<a class="jxr_linenumber" name="384" href="#384">384</a>       }
+<a class="jxr_linenumber" name="385" href="#385">385</a>     }
+<a class="jxr_linenumber" name="386" href="#386">386</a> 
+<a class="jxr_linenumber" name="387" href="#387">387</a>     <strong class="jxr_keyword">return</strong> returnType;
+<a class="jxr_linenumber" name="388" href="#388">388</a>   }
+<a class="jxr_linenumber" name="389" href="#389">389</a> 
+<a class="jxr_linenumber" name="390" href="#390">390</a>   <strong class="jxr_keyword">private</strong> <a href="../../../../../org/apache/ibatis/mapping/SqlSource.html">SqlSource</a> getSqlSourceFromAnnotations(Method method, Class&lt;?&gt; parameterType, <a href="../../../../../org/apache/ibatis/scripting/LanguageDriver.html">LanguageDriver</a> languageDriver) {
+<a class="jxr_linenumber" name="391" href="#391">391</a>     <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="392" href="#392">392</a>       Class&lt;? <strong class="jxr_keyword">extends</strong> Annotation&gt; sqlAnnotationType = getSqlAnnotationType(method);
+<a class="jxr_linenumber" name="393" href="#393">393</a>       Class&lt;? <strong class="jxr_keyword">extends</strong> Annotation&gt; sqlProviderAnnotationType = getSqlProviderAnnotationType(method);
+<a class="jxr_linenumber" name="394" href="#394">394</a>       <strong class="jxr_keyword">if</strong> (sqlAnnotationType != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="395" href="#395">395</a>         <strong class="jxr_keyword">if</strong> (sqlProviderAnnotationType != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="396" href="#396">396</a>           <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/binding/BindingException.html">BindingException</a>(<span class="jxr_string">"You cannot supply both a static SQL and SqlProvider to method named "</span> + method.getName());
+<a class="jxr_linenumber" name="397" href="#397">397</a>         }
+<a class="jxr_linenumber" name="398" href="#398">398</a>         Annotation sqlAnnotation = method.getAnnotation(sqlAnnotationType);
+<a class="jxr_linenumber" name="399" href="#399">399</a>         <strong class="jxr_keyword">final</strong> String[] strings = (String[]) sqlAnnotation.getClass().getMethod(<span class="jxr_string">"value"</span>).invoke(sqlAnnotation);
+<a class="jxr_linenumber" name="400" href="#400">400</a>         <strong class="jxr_keyword">return</strong> buildSqlSourceFromStrings(strings, parameterType, languageDriver);
+<a class="jxr_linenumber" name="401" href="#401">401</a>       } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (sqlProviderAnnotationType != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="402" href="#402">402</a>         Annotation sqlProviderAnnotation = method.getAnnotation(sqlProviderAnnotationType);
+<a class="jxr_linenumber" name="403" href="#403">403</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/builder/annotation/ProviderSqlSource.html">ProviderSqlSource</a>(assistant.getConfiguration(), sqlProviderAnnotation);
+<a class="jxr_linenumber" name="404" href="#404">404</a>       }
+<a class="jxr_linenumber" name="405" href="#405">405</a>       <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="406" href="#406">406</a>     } <strong class="jxr_keyword">catch</strong> (Exception e) {
+<a class="jxr_linenumber" name="407" href="#407">407</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/builder/BuilderException.html">BuilderException</a>(<span class="jxr_string">"Could not find value method on SQL annotation.  Cause: "</span> + e, e);
+<a class="jxr_linenumber" name="408" href="#408">408</a>     }
+<a class="jxr_linenumber" name="409" href="#409">409</a>   }
+<a class="jxr_linenumber" name="410" href="#410">410</a> 
+<a class="jxr_linenumber" name="411" href="#411">411</a>   <strong class="jxr_keyword">private</strong> <a href="../../../../../org/apache/ibatis/mapping/SqlSource.html">SqlSource</a> buildSqlSourceFromStrings(String[] strings, Class&lt;?&gt; parameterTypeClass, <a href="../../../../../org/apache/ibatis/scripting/LanguageDriver.html">LanguageDriver</a> languageDriver) {
+<a class="jxr_linenumber" name="412" href="#412">412</a>     <strong class="jxr_keyword">final</strong> StringBuilder sql = <strong class="jxr_keyword">new</strong> StringBuilder();
+<a class="jxr_linenumber" name="413" href="#413">413</a>     <strong class="jxr_keyword">for</strong> (String fragment : strings) {
+<a class="jxr_linenumber" name="414" href="#414">414</a>       sql.append(fragment);
+<a class="jxr_linenumber" name="415" href="#415">415</a>       sql.append(<span class="jxr_string">" "</span>);
+<a class="jxr_linenumber" name="416" href="#416">416</a>     }
+<a class="jxr_linenumber" name="417" href="#417">417</a>     <strong class="jxr_keyword">return</strong> languageDriver.createSqlSource(configuration, sql.toString(), parameterTypeClass);
+<a class="jxr_linenumber" name="418" href="#418">418</a>   }
 <a class="jxr_linenumber" name="419" href="#419">419</a> 
-<a class="jxr_linenumber" name="420" href="#420">420</a>       <strong class="jxr_keyword">if</strong> (type == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="421" href="#421">421</a>         <strong class="jxr_keyword">return</strong> SqlCommandType.UNKNOWN;
-<a class="jxr_linenumber" name="422" href="#422">422</a>       }
-<a class="jxr_linenumber" name="423" href="#423">423</a> 
-<a class="jxr_linenumber" name="424" href="#424">424</a>       <strong class="jxr_keyword">if</strong> (type == SelectProvider.<strong class="jxr_keyword">class</strong>) {
-<a class="jxr_linenumber" name="425" href="#425">425</a>         type = Select.<strong class="jxr_keyword">class</strong>;
-<a class="jxr_linenumber" name="426" href="#426">426</a>       } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (type == InsertProvider.<strong class="jxr_keyword">class</strong>) {
-<a class="jxr_linenumber" name="427" href="#427">427</a>         type = Insert.<strong class="jxr_keyword">class</strong>;
-<a class="jxr_linenumber" name="428" href="#428">428</a>       } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (type == UpdateProvider.<strong class="jxr_keyword">class</strong>) {
-<a class="jxr_linenumber" name="429" href="#429">429</a>         type = Update.<strong class="jxr_keyword">class</strong>;
-<a class="jxr_linenumber" name="430" href="#430">430</a>       } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (type == DeleteProvider.<strong class="jxr_keyword">class</strong>) {
-<a class="jxr_linenumber" name="431" href="#431">431</a>         type = Delete.<strong class="jxr_keyword">class</strong>;
-<a class="jxr_linenumber" name="432" href="#432">432</a>       }
-<a class="jxr_linenumber" name="433" href="#433">433</a>     }
-<a class="jxr_linenumber" name="434" href="#434">434</a> 
-<a class="jxr_linenumber" name="435" href="#435">435</a>     <strong class="jxr_keyword">return</strong> SqlCommandType.valueOf(type.getSimpleName().toUpperCase(Locale.ENGLISH));
-<a class="jxr_linenumber" name="436" href="#436">436</a>   }
-<a class="jxr_linenumber" name="437" href="#437">437</a> 
-<a class="jxr_linenumber" name="438" href="#438">438</a>   <strong class="jxr_keyword">private</strong> Class&lt;? <strong class="jxr_keyword">extends</strong> Annotation&gt; getSqlAnnotationType(Method method) {
-<a class="jxr_linenumber" name="439" href="#439">439</a>     <strong class="jxr_keyword">return</strong> chooseAnnotationType(method, sqlAnnotationTypes);
-<a class="jxr_linenumber" name="440" href="#440">440</a>   }
-<a class="jxr_linenumber" name="441" href="#441">441</a> 
-<a class="jxr_linenumber" name="442" href="#442">442</a>   <strong class="jxr_keyword">private</strong> Class&lt;? <strong class="jxr_keyword">extends</strong> Annotation&gt; getSqlProviderAnnotationType(Method method) {
-<a class="jxr_linenumber" name="443" href="#443">443</a>     <strong class="jxr_keyword">return</strong> chooseAnnotationType(method, sqlProviderAnnotationTypes);
-<a class="jxr_linenumber" name="444" href="#444">444</a>   }
-<a class="jxr_linenumber" name="445" href="#445">445</a> 
-<a class="jxr_linenumber" name="446" href="#446">446</a>   <strong class="jxr_keyword">private</strong> Class&lt;? <strong class="jxr_keyword">extends</strong> Annotation&gt; chooseAnnotationType(Method method, Set&lt;Class&lt;? <strong class="jxr_keyword">extends</strong> Annotation&gt;&gt; types) {
-<a class="jxr_linenumber" name="447" href="#447">447</a>     <strong class="jxr_keyword">for</strong> (Class&lt;? <strong class="jxr_keyword">extends</strong> Annotation&gt; type : types) {
-<a class="jxr_linenumber" name="448" href="#448">448</a>       Annotation annotation = method.getAnnotation(type);
-<a class="jxr_linenumber" name="449" href="#449">449</a>       <strong class="jxr_keyword">if</strong> (annotation != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="450" href="#450">450</a>         <strong class="jxr_keyword">return</strong> type;
-<a class="jxr_linenumber" name="451" href="#451">451</a>       }
-<a class="jxr_linenumber" name="452" href="#452">452</a>     }
-<a class="jxr_linenumber" name="453" href="#453">453</a>     <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">null</strong>;
-<a class="jxr_linenumber" name="454" href="#454">454</a>   }
-<a class="jxr_linenumber" name="455" href="#455">455</a> 
-<a class="jxr_linenumber" name="456" href="#456">456</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> applyResults(<a href="../../../../../org/apache/ibatis/annotations/Result.html">Result</a>[] results, Class&lt;?&gt; resultType, List&lt;ResultMapping&gt; resultMappings) {
-<a class="jxr_linenumber" name="457" href="#457">457</a>     <strong class="jxr_keyword">for</strong> (Result result : results) {
-<a class="jxr_linenumber" name="458" href="#458">458</a>       ArrayList&lt;ResultFlag&gt; flags = <strong class="jxr_keyword">new</strong> ArrayList&lt;ResultFlag&gt;();
-<a class="jxr_linenumber" name="459" href="#459">459</a>       <strong class="jxr_keyword">if</strong> (result.id()) flags.add(ResultFlag.ID);
-<a class="jxr_linenumber" name="460" href="#460">460</a>       <a href="../../../../../org/apache/ibatis/mapping/ResultMapping.html">ResultMapping</a> resultMapping = assistant.buildResultMapping(
-<a class="jxr_linenumber" name="461" href="#461">461</a>           resultType,
-<a class="jxr_linenumber" name="462" href="#462">462</a>           nullOrEmpty(result.property()),
-<a class="jxr_linenumber" name="463" href="#463">463</a>           nullOrEmpty(result.column()),
-<a class="jxr_linenumber" name="464" href="#464">464</a>           result.javaType() == <strong class="jxr_keyword">void</strong>.<strong class="jxr_keyword">class</strong> ? <strong class="jxr_keyword">null</strong> : result.javaType(),
-<a class="jxr_linenumber" name="465" href="#465">465</a>           result.jdbcType() == JdbcType.UNDEFINED ? <strong class="jxr_keyword">null</strong> : result.jdbcType(),
-<a class="jxr_linenumber" name="466" href="#466">466</a>           hasNestedSelect(result) ? nestedSelectId(result) : <strong class="jxr_keyword">null</strong>,
-<a class="jxr_linenumber" name="467" href="#467">467</a>           <strong class="jxr_keyword">null</strong>,
-<a class="jxr_linenumber" name="468" href="#468">468</a>           <strong class="jxr_keyword">null</strong>,
-<a class="jxr_linenumber" name="469" href="#469">469</a>           <strong class="jxr_keyword">null</strong>,
-<a class="jxr_linenumber" name="470" href="#470">470</a>           result.typeHandler() == UnknownTypeHandler.<strong class="jxr_keyword">class</strong> ? <strong class="jxr_keyword">null</strong> : result.typeHandler(),
-<a class="jxr_linenumber" name="471" href="#471">471</a>           flags,
-<a class="jxr_linenumber" name="472" href="#472">472</a>           <strong class="jxr_keyword">null</strong>,
-<a class="jxr_linenumber" name="473" href="#473">473</a>           <strong class="jxr_keyword">null</strong>);
-<a class="jxr_linenumber" name="474" href="#474">474</a>       resultMappings.add(resultMapping);
-<a class="jxr_linenumber" name="475" href="#475">475</a>     }
-<a class="jxr_linenumber" name="476" href="#476">476</a>   }
-<a class="jxr_linenumber" name="477" href="#477">477</a> 
-<a class="jxr_linenumber" name="478" href="#478">478</a>   <strong class="jxr_keyword">private</strong> String nestedSelectId(<a href="../../../../../org/apache/ibatis/annotations/Result.html">Result</a> result) {
-<a class="jxr_linenumber" name="479" href="#479">479</a>     String nestedSelect = result.one().select();
-<a class="jxr_linenumber" name="480" href="#480">480</a>     <strong class="jxr_keyword">if</strong> (nestedSelect.length() &lt; 1) {
-<a class="jxr_linenumber" name="481" href="#481">481</a>       nestedSelect = result.many().select();
-<a class="jxr_linenumber" name="482" href="#482">482</a>     }
-<a class="jxr_linenumber" name="483" href="#483">483</a>     <strong class="jxr_keyword">if</strong> (!nestedSelect.contains(<span class="jxr_string">"."</span>)) {
-<a class="jxr_linenumber" name="484" href="#484">484</a>       nestedSelect = type.getName() + <span class="jxr_string">"."</span> + nestedSelect;
-<a class="jxr_linenumber" name="485" href="#485">485</a>     }
-<a class="jxr_linenumber" name="486" href="#486">486</a>     <strong class="jxr_keyword">return</strong> nestedSelect;
-<a class="jxr_linenumber" name="487" href="#487">487</a>   }
-<a class="jxr_linenumber" name="488" href="#488">488</a> 
-<a class="jxr_linenumber" name="489" href="#489">489</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">boolean</strong> hasNestedSelect(<a href="../../../../../org/apache/ibatis/annotations/Result.html">Result</a> result) {
-<a class="jxr_linenumber" name="490" href="#490">490</a>     <strong class="jxr_keyword">return</strong> result.one().select().length() &gt; 0 || result.many().select().length() &gt; 0;
-<a class="jxr_linenumber" name="491" href="#491">491</a>   }
-<a class="jxr_linenumber" name="492" href="#492">492</a> 
-<a class="jxr_linenumber" name="493" href="#493">493</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> applyConstructorArgs(<a href="../../../../../org/apache/ibatis/annotations/Arg.html">Arg</a>[] args, Class&lt;?&gt; resultType, List&lt;ResultMapping&gt; resultMappings) {
-<a class="jxr_linenumber" name="494" href="#494">494</a>     <strong class="jxr_keyword">for</strong> (Arg arg : args) {
-<a class="jxr_linenumber" name="495" href="#495">495</a>       ArrayList&lt;ResultFlag&gt; flags = <strong class="jxr_keyword">new</strong> ArrayList&lt;ResultFlag&gt;();
-<a class="jxr_linenumber" name="496" href="#496">496</a>       flags.add(ResultFlag.CONSTRUCTOR);
-<a class="jxr_linenumber" name="497" href="#497">497</a>       <strong class="jxr_keyword">if</strong> (arg.id()) flags.add(ResultFlag.ID);
-<a class="jxr_linenumber" name="498" href="#498">498</a>       <a href="../../../../../org/apache/ibatis/mapping/ResultMapping.html">ResultMapping</a> resultMapping = assistant.buildResultMapping(
-<a class="jxr_linenumber" name="499" href="#499">499</a>           resultType,
-<a class="jxr_linenumber" name="500" href="#500">500</a>           <strong class="jxr_keyword">null</strong>,
-<a class="jxr_linenumber" name="501" href="#501">501</a>           nullOrEmpty(arg.column()),
-<a class="jxr_linenumber" name="502" href="#502">502</a>           arg.javaType() == <strong class="jxr_keyword">void</strong>.<strong class="jxr_keyword">class</strong> ? <strong class="jxr_keyword">null</strong> : arg.javaType(),
-<a class="jxr_linenumber" name="503" href="#503">503</a>           arg.jdbcType() == JdbcType.UNDEFINED ? <strong class="jxr_keyword">null</strong> : arg.jdbcType(),
-<a class="jxr_linenumber" name="504" href="#504">504</a>           nullOrEmpty(arg.select()),
-<a class="jxr_linenumber" name="505" href="#505">505</a>           nullOrEmpty(arg.resultMap()),
+<a class="jxr_linenumber" name="420" href="#420">420</a>   <strong class="jxr_keyword">private</strong> <a href="../../../../../org/apache/ibatis/mapping/SqlCommandType.html">SqlCommandType</a> getSqlCommandType(Method method) {
+<a class="jxr_linenumber" name="421" href="#421">421</a>     Class&lt;? <strong class="jxr_keyword">extends</strong> Annotation&gt; type = getSqlAnnotationType(method);
+<a class="jxr_linenumber" name="422" href="#422">422</a> 
+<a class="jxr_linenumber" name="423" href="#423">423</a>     <strong class="jxr_keyword">if</strong> (type == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="424" href="#424">424</a>       type = getSqlProviderAnnotationType(method);
+<a class="jxr_linenumber" name="425" href="#425">425</a> 
+<a class="jxr_linenumber" name="426" href="#426">426</a>       <strong class="jxr_keyword">if</strong> (type == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="427" href="#427">427</a>         <strong class="jxr_keyword">return</strong> SqlCommandType.UNKNOWN;
+<a class="jxr_linenumber" name="428" href="#428">428</a>       }
+<a class="jxr_linenumber" name="429" href="#429">429</a> 
+<a class="jxr_linenumber" name="430" href="#430">430</a>       <strong class="jxr_keyword">if</strong> (type == SelectProvider.<strong class="jxr_keyword">class</strong>) {
+<a class="jxr_linenumber" name="431" href="#431">431</a>         type = Select.<strong class="jxr_keyword">class</strong>;
+<a class="jxr_linenumber" name="432" href="#432">432</a>       } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (type == InsertProvider.<strong class="jxr_keyword">class</strong>) {
+<a class="jxr_linenumber" name="433" href="#433">433</a>         type = Insert.<strong class="jxr_keyword">class</strong>;
+<a class="jxr_linenumber" name="434" href="#434">434</a>       } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (type == UpdateProvider.<strong class="jxr_keyword">class</strong>) {
+<a class="jxr_linenumber" name="435" href="#435">435</a>         type = Update.<strong class="jxr_keyword">class</strong>;
+<a class="jxr_linenumber" name="436" href="#436">436</a>       } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (type == DeleteProvider.<strong class="jxr_keyword">class</strong>) {
+<a class="jxr_linenumber" name="437" href="#437">437</a>         type = Delete.<strong class="jxr_keyword">class</strong>;
+<a class="jxr_linenumber" name="438" href="#438">438</a>       }
+<a class="jxr_linenumber" name="439" href="#439">439</a>     }
+<a class="jxr_linenumber" name="440" href="#440">440</a> 
+<a class="jxr_linenumber" name="441" href="#441">441</a>     <strong class="jxr_keyword">return</strong> SqlCommandType.valueOf(type.getSimpleName().toUpperCase(Locale.ENGLISH));
+<a class="jxr_linenumber" name="442" href="#442">442</a>   }
+<a class="jxr_linenumber" name="443" href="#443">443</a> 
+<a class="jxr_linenumber" name="444" href="#444">444</a>   <strong class="jxr_keyword">private</strong> Class&lt;? <strong class="jxr_keyword">extends</strong> Annotation&gt; getSqlAnnotationType(Method method) {
+<a class="jxr_linenumber" name="445" href="#445">445</a>     <strong class="jxr_keyword">return</strong> chooseAnnotationType(method, sqlAnnotationTypes);
+<a class="jxr_linenumber" name="446" href="#446">446</a>   }
+<a class="jxr_linenumber" name="447" href="#447">447</a> 
+<a class="jxr_linenumber" name="448" href="#448">448</a>   <strong class="jxr_keyword">private</strong> Class&lt;? <strong class="jxr_keyword">extends</strong> Annotation&gt; getSqlProviderAnnotationType(Method method) {
+<a class="jxr_linenumber" name="449" href="#449">449</a>     <strong class="jxr_keyword">return</strong> chooseAnnotationType(method, sqlProviderAnnotationTypes);
+<a class="jxr_linenumber" name="450" href="#450">450</a>   }
+<a class="jxr_linenumber" name="451" href="#451">451</a> 
+<a class="jxr_linenumber" name="452" href="#452">452</a>   <strong class="jxr_keyword">private</strong> Class&lt;? <strong class="jxr_keyword">extends</strong> Annotation&gt; chooseAnnotationType(Method method, Set&lt;Class&lt;? <strong class="jxr_keyword">extends</strong> Annotation&gt;&gt; types) {
+<a class="jxr_linenumber" name="453" href="#453">453</a>     <strong class="jxr_keyword">for</strong> (Class&lt;? <strong class="jxr_keyword">extends</strong> Annotation&gt; type : types) {
+<a class="jxr_linenumber" name="454" href="#454">454</a>       Annotation annotation = method.getAnnotation(type);
+<a class="jxr_linenumber" name="455" href="#455">455</a>       <strong class="jxr_keyword">if</strong> (annotation != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="456" href="#456">456</a>         <strong class="jxr_keyword">return</strong> type;
+<a class="jxr_linenumber" name="457" href="#457">457</a>       }
+<a class="jxr_linenumber" name="458" href="#458">458</a>     }
+<a class="jxr_linenumber" name="459" href="#459">459</a>     <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="460" href="#460">460</a>   }
+<a class="jxr_linenumber" name="461" href="#461">461</a> 
+<a class="jxr_linenumber" name="462" href="#462">462</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> applyResults(<a href="../../../../../org/apache/ibatis/annotations/Result.html">Result</a>[] results, Class&lt;?&gt; resultType, List&lt;ResultMapping&gt; resultMappings) {
+<a class="jxr_linenumber" name="463" href="#463">463</a>     <strong class="jxr_keyword">for</strong> (Result result : results) {
+<a class="jxr_linenumber" name="464" href="#464">464</a>       ArrayList&lt;ResultFlag&gt; flags = <strong class="jxr_keyword">new</strong> ArrayList&lt;ResultFlag&gt;();
+<a class="jxr_linenumber" name="465" href="#465">465</a>       <strong class="jxr_keyword">if</strong> (result.id()) flags.add(ResultFlag.ID);
+<a class="jxr_linenumber" name="466" href="#466">466</a>       <a href="../../../../../org/apache/ibatis/mapping/ResultMapping.html">ResultMapping</a> resultMapping = assistant.buildResultMapping(
+<a class="jxr_linenumber" name="467" href="#467">467</a>           resultType,
+<a class="jxr_linenumber" name="468" href="#468">468</a>           nullOrEmpty(result.property()),
+<a class="jxr_linenumber" name="469" href="#469">469</a>           nullOrEmpty(result.column()),
+<a class="jxr_linenumber" name="470" href="#470">470</a>           result.javaType() == <strong class="jxr_keyword">void</strong>.<strong class="jxr_keyword">class</strong> ? <strong class="jxr_keyword">null</strong> : result.javaType(),
+<a class="jxr_linenumber" name="471" href="#471">471</a>           result.jdbcType() == JdbcType.UNDEFINED ? <strong class="jxr_keyword">null</strong> : result.jdbcType(),
+<a class="jxr_linenumber" name="472" href="#472">472</a>           hasNestedSelect(result) ? nestedSelectId(result) : <strong class="jxr_keyword">null</strong>,
+<a class="jxr_linenumber" name="473" href="#473">473</a>           <strong class="jxr_keyword">null</strong>,
+<a class="jxr_linenumber" name="474" href="#474">474</a>           <strong class="jxr_keyword">null</strong>,
+<a class="jxr_linenumber" name="475" href="#475">475</a>           <strong class="jxr_keyword">null</strong>,
+<a class="jxr_linenumber" name="476" href="#476">476</a>           result.typeHandler() == UnknownTypeHandler.<strong class="jxr_keyword">class</strong> ? <strong class="jxr_keyword">null</strong> : result.typeHandler(),
+<a class="jxr_linenumber" name="477" href="#477">477</a>           flags,
+<a class="jxr_linenumber" name="478" href="#478">478</a>           <strong class="jxr_keyword">null</strong>,
+<a class="jxr_linenumber" name="479" href="#479">479</a>           <strong class="jxr_keyword">null</strong>);
+<a class="jxr_linenumber" name="480" href="#480">480</a>       resultMappings.add(resultMapping);
+<a class="jxr_linenumber" name="481" href="#481">481</a>     }
+<a class="jxr_linenumber" name="482" href="#482">482</a>   }
+<a class="jxr_linenumber" name="483" href="#483">483</a> 
+<a class="jxr_linenumber" name="484" href="#484">484</a>   <strong class="jxr_keyword">private</strong> String nestedSelectId(<a href="../../../../../org/apache/ibatis/annotations/Result.html">Result</a> result) {
+<a class="jxr_linenumber" name="485" href="#485">485</a>     String nestedSelect = result.one().select();
+<a class="jxr_linenumber" name="486" href="#486">486</a>     <strong class="jxr_keyword">if</strong> (nestedSelect.length() &lt; 1) {
+<a class="jxr_linenumber" name="487" href="#487">487</a>       nestedSelect = result.many().select();
+<a class="jxr_linenumber" name="488" href="#488">488</a>     }
+<a class="jxr_linenumber" name="489" href="#489">489</a>     <strong class="jxr_keyword">if</strong> (!nestedSelect.contains(<span class="jxr_string">"."</span>)) {
+<a class="jxr_linenumber" name="490" href="#490">490</a>       nestedSelect = type.getName() + <span class="jxr_string">"."</span> + nestedSelect;
+<a class="jxr_linenumber" name="491" href="#491">491</a>     }
+<a class="jxr_linenumber" name="492" href="#492">492</a>     <strong class="jxr_keyword">return</strong> nestedSelect;
+<a class="jxr_linenumber" name="493" href="#493">493</a>   }
+<a class="jxr_linenumber" name="494" href="#494">494</a> 
+<a class="jxr_linenumber" name="495" href="#495">495</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">boolean</strong> hasNestedSelect(<a href="../../../../../org/apache/ibatis/annotations/Result.html">Result</a> result) {
+<a class="jxr_linenumber" name="496" href="#496">496</a>     <strong class="jxr_keyword">return</strong> result.one().select().length() &gt; 0 || result.many().select().length() &gt; 0;
+<a class="jxr_linenumber" name="497" href="#497">497</a>   }
+<a class="jxr_linenumber" name="498" href="#498">498</a> 
+<a class="jxr_linenumber" name="499" href="#499">499</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> applyConstructorArgs(<a href="../../../../../org/apache/ibatis/annotations/Arg.html">Arg</a>[] args, Class&lt;?&gt; resultType, List&lt;ResultMapping&gt; resultMappings) {
+<a class="jxr_linenumber" name="500" href="#500">500</a>     <strong class="jxr_keyword">for</strong> (Arg arg : args) {
+<a class="jxr_linenumber" name="501" href="#501">501</a>       ArrayList&lt;ResultFlag&gt; flags = <strong class="jxr_keyword">new</strong> ArrayList&lt;ResultFlag&gt;();
+<a class="jxr_linenumber" name="502" href="#502">502</a>       flags.add(ResultFlag.CONSTRUCTOR);
+<a class="jxr_linenumber" name="503" href="#503">503</a>       <strong class="jxr_keyword">if</strong> (arg.id()) flags.add(ResultFlag.ID);
+<a class="jxr_linenumber" name="504" href="#504">504</a>       <a href="../../../../../org/apache/ibatis/mapping/ResultMapping.html">ResultMapping</a> resultMapping = assistant.buildResultMapping(
+<a class="jxr_linenumber" name="505" href="#505">505</a>           resultType,
 <a class="jxr_linenumber" name="506" href="#506">506</a>           <strong class="jxr_keyword">null</strong>,
-<a class="jxr_linenumber" name="507" href="#507">507</a>           <strong class="jxr_keyword">null</strong>,
-<a class="jxr_linenumber" name="508" href="#508">508</a>           arg.typeHandler() == UnknownTypeHandler.<strong class="jxr_keyword">class</strong> ? <strong class="jxr_keyword">null</strong> : arg.typeHandler(),
-<a class="jxr_linenumber" name="509" href="#509">509</a>           flags,
-<a class="jxr_linenumber" name="510" href="#510">510</a>           <strong class="jxr_keyword">null</strong>,
-<a class="jxr_linenumber" name="511" href="#511">511</a>           <strong class="jxr_keyword">null</strong>);
-<a class="jxr_linenumber" name="512" href="#512">512</a>       resultMappings.add(resultMapping);
-<a class="jxr_linenumber" name="513" href="#513">513</a>     }
-<a class="jxr_linenumber" name="514" href="#514">514</a>   }
-<a class="jxr_linenumber" name="515" href="#515">515</a> 
-<a class="jxr_linenumber" name="516" href="#516">516</a>   <strong class="jxr_keyword">private</strong> String nullOrEmpty(String value) {
-<a class="jxr_linenumber" name="517" href="#517">517</a>     <strong class="jxr_keyword">return</strong> value == <strong class="jxr_keyword">null</strong> || value.trim().length() == 0 ? <strong class="jxr_keyword">null</strong> : value;
-<a class="jxr_linenumber" name="518" href="#518">518</a>   }
-<a class="jxr_linenumber" name="519" href="#519">519</a> 
-<a class="jxr_linenumber" name="520" href="#520">520</a>   <strong class="jxr_keyword">private</strong> <a href="../../../../../org/apache/ibatis/annotations/Result.html">Result</a>[] resultsIf(<a href="../../../../../org/apache/ibatis/annotations/Results.html">Results</a> results) {
-<a class="jxr_linenumber" name="521" href="#521">521</a>     <strong class="jxr_keyword">return</strong> results == <strong class="jxr_keyword">null</strong> ? <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/annotations/Result.html">Result</a>[0] : results.value();
-<a class="jxr_linenumber" name="522" href="#522">522</a>   }
-<a class="jxr_linenumber" name="523" href="#523">523</a> 
-<a class="jxr_linenumber" name="524" href="#524">524</a>   <strong class="jxr_keyword">private</strong> <a href="../../../../../org/apache/ibatis/annotations/Arg.html">Arg</a>[] argsIf(<a href="../../../../../org/apache/ibatis/annotations/ConstructorArgs.html">ConstructorArgs</a> args) {
-<a class="jxr_linenumber" name="525" href="#525">525</a>     <strong class="jxr_keyword">return</strong> args == <strong class="jxr_keyword">null</strong> ? <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/annotations/Arg.html">Arg</a>[0] : args.value();
-<a class="jxr_linenumber" name="526" href="#526">526</a>   }
-<a class="jxr_linenumber" name="527" href="#527">527</a> 
-<a class="jxr_linenumber" name="528" href="#528">528</a>   <strong class="jxr_keyword">private</strong> <a href="../../../../../org/apache/ibatis/executor/keygen/KeyGenerator.html">KeyGenerator</a> handleSelectKeyAnnotation(<a href="../../../../../org/apache/ibatis/annotations/SelectKey.html">SelectKey</a> selectKeyAnnotation, String baseStatementId, Class&lt;?&gt; parameterTypeClass, <a href="../../../../../org/apache/ibatis/scripting/LanguageDriver.html">LanguageDriver</a> languageDriver) {
-<a class="jxr_linenumber" name="529" href="#529">529</a>     String id = baseStatementId + SelectKeyGenerator.SELECT_KEY_SUFFIX;
-<a class="jxr_linenumber" name="530" href="#530">530</a>     Class&lt;?&gt; resultTypeClass = selectKeyAnnotation.resultType();
-<a class="jxr_linenumber" name="531" href="#531">531</a>     <a href="../../../../../org/apache/ibatis/mapping/StatementType.html">StatementType</a> statementType = selectKeyAnnotation.statementType();
-<a class="jxr_linenumber" name="532" href="#532">532</a>     String keyProperty = selectKeyAnnotation.keyProperty();
-<a class="jxr_linenumber" name="533" href="#533">533</a>     <strong class="jxr_keyword">boolean</strong> executeBefore = selectKeyAnnotation.before();
-<a class="jxr_linenumber" name="534" href="#534">534</a> 
-<a class="jxr_linenumber" name="535" href="#535">535</a>     <em class="jxr_comment">// defaults</em>
-<a class="jxr_linenumber" name="536" href="#536">536</a>     <strong class="jxr_keyword">boolean</strong> useCache = false;
-<a class="jxr_linenumber" name="537" href="#537">537</a>     <a href="../../../../../org/apache/ibatis/executor/keygen/KeyGenerator.html">KeyGenerator</a> keyGenerator = <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/executor/keygen/NoKeyGenerator.html">NoKeyGenerator</a>();
-<a class="jxr_linenumber" name="538" href="#538">538</a>     Integer fetchSize = <strong class="jxr_keyword">null</strong>;
-<a class="jxr_linenumber" name="539" href="#539">539</a>     Integer timeout = <strong class="jxr_keyword">null</strong>;
-<a class="jxr_linenumber" name="540" href="#540">540</a>     <strong class="jxr_keyword">boolean</strong> flushCache = false;
-<a class="jxr_linenumber" name="541" href="#541">541</a>     String parameterMap = <strong class="jxr_keyword">null</strong>;
-<a class="jxr_linenumber" name="542" href="#542">542</a>     String resultMap = <strong class="jxr_keyword">null</strong>;
-<a class="jxr_linenumber" name="543" href="#543">543</a>     <a href="../../../../../org/apache/ibatis/mapping/ResultSetType.html">ResultSetType</a> resultSetTypeEnum = <strong class="jxr_keyword">null</strong>;
-<a class="jxr_linenumber" name="544" href="#544">544</a> 
-<a class="jxr_linenumber" name="545" href="#545">545</a>     <a href="../../../../../org/apache/ibatis/mapping/SqlSource.html">SqlSource</a> sqlSource = buildSqlSourceFromStrings(selectKeyAnnotation.statement(), parameterTypeClass, languageDriver);
-<a class="jxr_linenumber" name="546" href="#546">546</a>     <a href="../../../../../org/apache/ibatis/mapping/SqlCommandType.html">SqlCommandType</a> sqlCommandType = SqlCommandType.SELECT;
-<a class="jxr_linenumber" name="547" href="#547">547</a> 
-<a class="jxr_linenumber" name="548" href="#548">548</a>     assistant.addMappedStatement(id, sqlSource, statementType, sqlCommandType, fetchSize, timeout, parameterMap, parameterTypeClass, resultMap, resultTypeClass, resultSetTypeEnum,
-<a class="jxr_linenumber" name="549" href="#549">549</a>         flushCache, useCache, false,
-<a class="jxr_linenumber" name="550" href="#550">550</a>         keyGenerator, keyProperty, <strong class="jxr_keyword">null</strong>, <strong class="jxr_keyword">null</strong>, languageDriver, <strong class="jxr_keyword">null</strong>);
-<a class="jxr_linenumber" name="551" href="#551">551</a> 
-<a class="jxr_linenumber" name="552" href="#552">552</a>     id = assistant.applyCurrentNamespace(id, false);
+<a class="jxr_linenumber" name="507" href="#507">507</a>           nullOrEmpty(arg.column()),
+<a class="jxr_linenumber" name="508" href="#508">508</a>           arg.javaType() == <strong class="jxr_keyword">void</strong>.<strong class="jxr_keyword">class</strong> ? <strong class="jxr_keyword">null</strong> : arg.javaType(),
+<a class="jxr_linenumber" name="509" href="#509">509</a>           arg.jdbcType() == JdbcType.UNDEFINED ? <strong class="jxr_keyword">null</strong> : arg.jdbcType(),
+<a class="jxr_linenumber" name="510" href="#510">510</a>           nullOrEmpty(arg.select()),
+<a class="jxr_linenumber" name="511" href="#511">511</a>           nullOrEmpty(arg.resultMap()),
+<a class="jxr_linenumber" name="512" href="#512">512</a>           <strong class="jxr_keyword">null</strong>,
+<a class="jxr_linenumber" name="513" href="#513">513</a>           <strong class="jxr_keyword">null</strong>,
+<a class="jxr_linenumber" name="514" href="#514">514</a>           arg.typeHandler() == UnknownTypeHandler.<strong class="jxr_keyword">class</strong> ? <strong class="jxr_keyword">null</strong> : arg.typeHandler(),
+<a class="jxr_linenumber" name="515" href="#515">515</a>           flags,
+<a class="jxr_linenumber" name="516" href="#516">516</a>           <strong class="jxr_keyword">null</strong>,
+<a class="jxr_linenumber" name="517" href="#517">517</a>           <strong class="jxr_keyword">null</strong>);
+<a class="jxr_linenumber" name="518" href="#518">518</a>       resultMappings.add(resultMapping);
+<a class="jxr_linenumber" name="519" href="#519">519</a>     }
+<a class="jxr_linenumber" name="520" href="#520">520</a>   }
+<a class="jxr_linenumber" name="521" href="#521">521</a> 
+<a class="jxr_linenumber" name="522" href="#522">522</a>   <strong class="jxr_keyword">private</strong> String nullOrEmpty(String value) {
+<a class="jxr_linenumber" name="523" href="#523">523</a>     <strong class="jxr_keyword">return</strong> value == <strong class="jxr_keyword">null</strong> || value.trim().length() == 0 ? <strong class="jxr_keyword">null</strong> : value;
+<a class="jxr_linenumber" name="524" href="#524">524</a>   }
+<a class="jxr_linenumber" name="525" href="#525">525</a> 
+<a class="jxr_linenumber" name="526" href="#526">526</a>   <strong class="jxr_keyword">private</strong> <a href="../../../../../org/apache/ibatis/annotations/Result.html">Result</a>[] resultsIf(<a href="../../../../../org/apache/ibatis/annotations/Results.html">Results</a> results) {
+<a class="jxr_linenumber" name="527" href="#527">527</a>     <strong class="jxr_keyword">return</strong> results == <strong class="jxr_keyword">null</strong> ? <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/annotations/Result.html">Result</a>[0] : results.value();
+<a class="jxr_linenumber" name="528" href="#528">528</a>   }
+<a class="jxr_linenumber" name="529" href="#529">529</a> 
+<a class="jxr_linenumber" name="530" href="#530">530</a>   <strong class="jxr_keyword">private</strong> <a href="../../../../../org/apache/ibatis/annotations/Arg.html">Arg</a>[] argsIf(<a href="../../../../../org/apache/ibatis/annotations/ConstructorArgs.html">ConstructorArgs</a> args) {
+<a class="jxr_linenumber" name="531" href="#531">531</a>     <strong class="jxr_keyword">return</strong> args == <strong class="jxr_keyword">null</strong> ? <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/annotations/Arg.html">Arg</a>[0] : args.value();
+<a class="jxr_linenumber" name="532" href="#532">532</a>   }
+<a class="jxr_linenumber" name="533" href="#533">533</a> 
+<a class="jxr_linenumber" name="534" href="#534">534</a>   <strong class="jxr_keyword">private</strong> <a href="../../../../../org/apache/ibatis/executor/keygen/KeyGenerator.html">KeyGenerator</a> handleSelectKeyAnnotation(<a href="../../../../../org/apache/ibatis/annotations/SelectKey.html">SelectKey</a> selectKeyAnnotation, String baseStatementId, Class&lt;?&gt; parameterTypeClass, <a href="../../../../../org/apache/ibatis/scripting/LanguageDriver.html">LanguageDriver</a> languageDriver) {
+<a class="jxr_linenumber" name="535" href="#535">535</a>     String id = baseStatementId + SelectKeyGenerator.SELECT_KEY_SUFFIX;
+<a class="jxr_linenumber" name="536" href="#536">536</a>     Class&lt;?&gt; resultTypeClass = selectKeyAnnotation.resultType();
+<a class="jxr_linenumber" name="537" href="#537">537</a>     <a href="../../../../../org/apache/ibatis/mapping/StatementType.html">StatementType</a> statementType = selectKeyAnnotation.statementType();
+<a class="jxr_linenumber" name="538" href="#538">538</a>     String keyProperty = selectKeyAnnotation.keyProperty();
+<a class="jxr_linenumber" name="539" href="#539">539</a>     <strong class="jxr_keyword">boolean</strong> executeBefore = selectKeyAnnotation.before();
+<a class="jxr_linenumber" name="540" href="#540">540</a> 
+<a class="jxr_linenumber" name="541" href="#541">541</a>     <em class="jxr_comment">// defaults</em>
+<a class="jxr_linenumber" name="542" href="#542">542</a>     <strong class="jxr_keyword">boolean</strong> useCache = false;
+<a class="jxr_linenumber" name="543" href="#543">543</a>     <a href="../../../../../org/apache/ibatis/executor/keygen/KeyGenerator.html">KeyGenerator</a> keyGenerator = <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/executor/keygen/NoKeyGenerator.html">NoKeyGenerator</a>();
+<a class="jxr_linenumber" name="544" href="#544">544</a>     Integer fetchSize = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="545" href="#545">545</a>     Integer timeout = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="546" href="#546">546</a>     <strong class="jxr_keyword">boolean</strong> flushCache = false;
+<a class="jxr_linenumber" name="547" href="#547">547</a>     String parameterMap = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="548" href="#548">548</a>     String resultMap = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="549" href="#549">549</a>     <a href="../../../../../org/apache/ibatis/mapping/ResultSetType.html">ResultSetType</a> resultSetTypeEnum = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="550" href="#550">550</a> 
+<a class="jxr_linenumber" name="551" href="#551">551</a>     <a href="../../../../../org/apache/ibatis/mapping/SqlSource.html">SqlSource</a> sqlSource = buildSqlSourceFromStrings(selectKeyAnnotation.statement(), parameterTypeClass, languageDriver);
+<a class="jxr_linenumber" name="552" href="#552">552</a>     <a href="../../../../../org/apache/ibatis/mapping/SqlCommandType.html">SqlCommandType</a> sqlCommandType = SqlCommandType.SELECT;
 <a class="jxr_linenumber" name="553" href="#553">553</a> 
-<a class="jxr_linenumber" name="554" href="#554">554</a>     <a href="../../../../../org/apache/ibatis/mapping/MappedStatement.html">MappedStatement</a> keyStatement = configuration.getMappedStatement(id, false);
-<a class="jxr_linenumber" name="555" href="#555">555</a>     <a href="../../../../../org/apache/ibatis/executor/keygen/SelectKeyGenerator.html">SelectKeyGenerator</a> answer = <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/executor/keygen/SelectKeyGenerator.html">SelectKeyGenerator</a>(keyStatement, executeBefore);
-<a class="jxr_linenumber" name="556" href="#556">556</a>     configuration.addKeyGenerator(id, answer);
-<a class="jxr_linenumber" name="557" href="#557">557</a>     <strong class="jxr_keyword">return</strong> answer;
-<a class="jxr_linenumber" name="558" href="#558">558</a>   }
+<a class="jxr_linenumber" name="554" href="#554">554</a>     assistant.addMappedStatement(id, sqlSource, statementType, sqlCommandType, fetchSize, timeout, parameterMap, parameterTypeClass, resultMap, resultTypeClass, resultSetTypeEnum,
+<a class="jxr_linenumber" name="555" href="#555">555</a>         flushCache, useCache, false,
+<a class="jxr_linenumber" name="556" href="#556">556</a>         keyGenerator, keyProperty, <strong class="jxr_keyword">null</strong>, <strong class="jxr_keyword">null</strong>, languageDriver, <strong class="jxr_keyword">null</strong>);
+<a class="jxr_linenumber" name="557" href="#557">557</a> 
+<a class="jxr_linenumber" name="558" href="#558">558</a>     id = assistant.applyCurrentNamespace(id, false);
 <a class="jxr_linenumber" name="559" href="#559">559</a> 
-<a class="jxr_linenumber" name="560" href="#560">560</a> }
+<a class="jxr_linenumber" name="560" href="#560">560</a>     <a href="../../../../../org/apache/ibatis/mapping/MappedStatement.html">MappedStatement</a> keyStatement = configuration.getMappedStatement(id, false);
+<a class="jxr_linenumber" name="561" href="#561">561</a>     <a href="../../../../../org/apache/ibatis/executor/keygen/SelectKeyGenerator.html">SelectKeyGenerator</a> answer = <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/executor/keygen/SelectKeyGenerator.html">SelectKeyGenerator</a>(keyStatement, executeBefore);
+<a class="jxr_linenumber" name="562" href="#562">562</a>     configuration.addKeyGenerator(id, answer);
+<a class="jxr_linenumber" name="563" href="#563">563</a>     <strong class="jxr_keyword">return</strong> answer;
+<a class="jxr_linenumber" name="564" href="#564">564</a>   }
+<a class="jxr_linenumber" name="565" href="#565">565</a> 
+<a class="jxr_linenumber" name="566" href="#566">566</a> }
 </pre>
 <hr/><div id="footer">This page was automatically generated by <a href="http://maven.apache.org/">Maven</a></div></body>
 </html>

@@ -9,7 +9,7 @@
 <div id="overview"><a href="../../../../../../apidocs/org/apache/ibatis/builder/xml/XMLMapperBuilder.html">View Javadoc</a></div><pre>
 
 <a class="jxr_linenumber" name="1" href="#1">1</a>   <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="2" href="#2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2013 The MyBatis Team</em>
+<a class="jxr_linenumber" name="2" href="#2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2013 the original author or authors.</em>
 <a class="jxr_linenumber" name="3" href="#3">3</a>   <em class="jxr_comment"> *</em>
 <a class="jxr_linenumber" name="4" href="#4">4</a>   <em class="jxr_comment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="5" href="#5">5</a>   <em class="jxr_comment"> *    you may not use this file except in compliance with the License.</em>
@@ -37,380 +37,384 @@
 <a class="jxr_linenumber" name="27" href="#27">27</a>  <strong class="jxr_keyword">import</strong> java.util.Properties;
 <a class="jxr_linenumber" name="28" href="#28">28</a>  
 <a class="jxr_linenumber" name="29" href="#29">29</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.builder.BaseBuilder;
-<a class="jxr_linenumber" name="30" href="#30">30</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.builder.CacheRefResolver;
-<a class="jxr_linenumber" name="31" href="#31">31</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.builder.IncompleteElementException;
-<a class="jxr_linenumber" name="32" href="#32">32</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.builder.MapperBuilderAssistant;
-<a class="jxr_linenumber" name="33" href="#33">33</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.builder.ResultMapResolver;
-<a class="jxr_linenumber" name="34" href="#34">34</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.cache.Cache;
-<a class="jxr_linenumber" name="35" href="#35">35</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.executor.ErrorContext;
-<a class="jxr_linenumber" name="36" href="#36">36</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.io.Resources;
-<a class="jxr_linenumber" name="37" href="#37">37</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.mapping.Discriminator;
-<a class="jxr_linenumber" name="38" href="#38">38</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.mapping.ParameterMapping;
-<a class="jxr_linenumber" name="39" href="#39">39</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.mapping.ParameterMode;
-<a class="jxr_linenumber" name="40" href="#40">40</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.mapping.ResultFlag;
-<a class="jxr_linenumber" name="41" href="#41">41</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.mapping.ResultMap;
-<a class="jxr_linenumber" name="42" href="#42">42</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.mapping.ResultMapping;
-<a class="jxr_linenumber" name="43" href="#43">43</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.parsing.XNode;
-<a class="jxr_linenumber" name="44" href="#44">44</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.parsing.XPathParser;
-<a class="jxr_linenumber" name="45" href="#45">45</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.session.Configuration;
-<a class="jxr_linenumber" name="46" href="#46">46</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.type.JdbcType;
-<a class="jxr_linenumber" name="47" href="#47">47</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.type.TypeHandler;
-<a class="jxr_linenumber" name="48" href="#48">48</a>  
-<a class="jxr_linenumber" name="49" href="#49">49</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../../org/apache/ibatis/builder/xml/XMLMapperBuilder.html">XMLMapperBuilder</a> <strong class="jxr_keyword">extends</strong> <a href="../../../../../org/apache/ibatis/builder/BaseBuilder.html">BaseBuilder</a> {
-<a class="jxr_linenumber" name="50" href="#50">50</a>  
-<a class="jxr_linenumber" name="51" href="#51">51</a>    <strong class="jxr_keyword">private</strong> <a href="../../../../../org/apache/ibatis/parsing/XPathParser.html">XPathParser</a> parser;
-<a class="jxr_linenumber" name="52" href="#52">52</a>    <strong class="jxr_keyword">private</strong> <a href="../../../../../org/apache/ibatis/builder/MapperBuilderAssistant.html">MapperBuilderAssistant</a> builderAssistant;
-<a class="jxr_linenumber" name="53" href="#53">53</a>    <strong class="jxr_keyword">private</strong> Map&lt;String, XNode&gt; sqlFragments;
-<a class="jxr_linenumber" name="54" href="#54">54</a>    <strong class="jxr_keyword">private</strong> String resource;
-<a class="jxr_linenumber" name="55" href="#55">55</a>  
-<a class="jxr_linenumber" name="56" href="#56">56</a>    @Deprecated
-<a class="jxr_linenumber" name="57" href="#57">57</a>    <strong class="jxr_keyword">public</strong> <a href="../../../../../org/apache/ibatis/builder/xml/XMLMapperBuilder.html">XMLMapperBuilder</a>(Reader reader, <a href="../../../../../org/apache/ibatis/session/Configuration.html">Configuration</a> configuration, String resource, Map&lt;String, XNode&gt; sqlFragments, String namespace) {
-<a class="jxr_linenumber" name="58" href="#58">58</a>      <strong class="jxr_keyword">this</strong>(reader, configuration, resource, sqlFragments);
-<a class="jxr_linenumber" name="59" href="#59">59</a>      <strong class="jxr_keyword">this</strong>.builderAssistant.setCurrentNamespace(namespace);
-<a class="jxr_linenumber" name="60" href="#60">60</a>    }
-<a class="jxr_linenumber" name="61" href="#61">61</a>  
-<a class="jxr_linenumber" name="62" href="#62">62</a>    @Deprecated
-<a class="jxr_linenumber" name="63" href="#63">63</a>    <strong class="jxr_keyword">public</strong> <a href="../../../../../org/apache/ibatis/builder/xml/XMLMapperBuilder.html">XMLMapperBuilder</a>(Reader reader, <a href="../../../../../org/apache/ibatis/session/Configuration.html">Configuration</a> configuration, String resource, Map&lt;String, XNode&gt; sqlFragments) {
-<a class="jxr_linenumber" name="64" href="#64">64</a>      <strong class="jxr_keyword">this</strong>(<strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/parsing/XPathParser.html">XPathParser</a>(reader, <strong class="jxr_keyword">true</strong>, configuration.getVariables(), <strong class="jxr_keyword">new</strong> XMLMapperEntityResolver()),
-<a class="jxr_linenumber" name="65" href="#65">65</a>          configuration, resource, sqlFragments);
-<a class="jxr_linenumber" name="66" href="#66">66</a>    }
-<a class="jxr_linenumber" name="67" href="#67">67</a>  
-<a class="jxr_linenumber" name="68" href="#68">68</a>    <strong class="jxr_keyword">public</strong> <a href="../../../../../org/apache/ibatis/builder/xml/XMLMapperBuilder.html">XMLMapperBuilder</a>(InputStream inputStream, <a href="../../../../../org/apache/ibatis/session/Configuration.html">Configuration</a> configuration, String resource, Map&lt;String, XNode&gt; sqlFragments, String namespace) {
-<a class="jxr_linenumber" name="69" href="#69">69</a>      <strong class="jxr_keyword">this</strong>(inputStream, configuration, resource, sqlFragments);
-<a class="jxr_linenumber" name="70" href="#70">70</a>      <strong class="jxr_keyword">this</strong>.builderAssistant.setCurrentNamespace(namespace);
-<a class="jxr_linenumber" name="71" href="#71">71</a>    }
-<a class="jxr_linenumber" name="72" href="#72">72</a>  
-<a class="jxr_linenumber" name="73" href="#73">73</a>    <strong class="jxr_keyword">public</strong> <a href="../../../../../org/apache/ibatis/builder/xml/XMLMapperBuilder.html">XMLMapperBuilder</a>(InputStream inputStream, <a href="../../../../../org/apache/ibatis/session/Configuration.html">Configuration</a> configuration, String resource, Map&lt;String, XNode&gt; sqlFragments) {
-<a class="jxr_linenumber" name="74" href="#74">74</a>      <strong class="jxr_keyword">this</strong>(<strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/parsing/XPathParser.html">XPathParser</a>(inputStream, <strong class="jxr_keyword">true</strong>, configuration.getVariables(), <strong class="jxr_keyword">new</strong> XMLMapperEntityResolver()),
-<a class="jxr_linenumber" name="75" href="#75">75</a>          configuration, resource, sqlFragments);
-<a class="jxr_linenumber" name="76" href="#76">76</a>    }
-<a class="jxr_linenumber" name="77" href="#77">77</a>  
-<a class="jxr_linenumber" name="78" href="#78">78</a>    <strong class="jxr_keyword">private</strong> <a href="../../../../../org/apache/ibatis/builder/xml/XMLMapperBuilder.html">XMLMapperBuilder</a>(<a href="../../../../../org/apache/ibatis/parsing/XPathParser.html">XPathParser</a> parser, <a href="../../../../../org/apache/ibatis/session/Configuration.html">Configuration</a> configuration, String resource, Map&lt;String, XNode&gt; sqlFragments) {
-<a class="jxr_linenumber" name="79" href="#79">79</a>      <strong class="jxr_keyword">super</strong>(configuration);
-<a class="jxr_linenumber" name="80" href="#80">80</a>      <strong class="jxr_keyword">this</strong>.builderAssistant = <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/builder/MapperBuilderAssistant.html">MapperBuilderAssistant</a>(configuration, resource);
-<a class="jxr_linenumber" name="81" href="#81">81</a>      <strong class="jxr_keyword">this</strong>.parser = parser;
-<a class="jxr_linenumber" name="82" href="#82">82</a>      <strong class="jxr_keyword">this</strong>.sqlFragments = sqlFragments;
-<a class="jxr_linenumber" name="83" href="#83">83</a>      <strong class="jxr_keyword">this</strong>.resource = resource;
-<a class="jxr_linenumber" name="84" href="#84">84</a>    }
-<a class="jxr_linenumber" name="85" href="#85">85</a>  
-<a class="jxr_linenumber" name="86" href="#86">86</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> parse() {
-<a class="jxr_linenumber" name="87" href="#87">87</a>      <strong class="jxr_keyword">if</strong> (!configuration.isResourceLoaded(resource)) {
-<a class="jxr_linenumber" name="88" href="#88">88</a>        configurationElement(parser.evalNode(<span class="jxr_string">"/mapper"</span>));
-<a class="jxr_linenumber" name="89" href="#89">89</a>        configuration.addLoadedResource(resource);
-<a class="jxr_linenumber" name="90" href="#90">90</a>        bindMapperForNamespace();
-<a class="jxr_linenumber" name="91" href="#91">91</a>      }
-<a class="jxr_linenumber" name="92" href="#92">92</a>  
-<a class="jxr_linenumber" name="93" href="#93">93</a>      parsePendingResultMaps();
-<a class="jxr_linenumber" name="94" href="#94">94</a>      parsePendingChacheRefs();
-<a class="jxr_linenumber" name="95" href="#95">95</a>      parsePendingStatements();
-<a class="jxr_linenumber" name="96" href="#96">96</a>    }
-<a class="jxr_linenumber" name="97" href="#97">97</a>  
-<a class="jxr_linenumber" name="98" href="#98">98</a>    <strong class="jxr_keyword">public</strong> <a href="../../../../../org/apache/ibatis/parsing/XNode.html">XNode</a> getSqlFragment(String refid) {
-<a class="jxr_linenumber" name="99" href="#99">99</a>      <strong class="jxr_keyword">return</strong> sqlFragments.get(refid);
-<a class="jxr_linenumber" name="100" href="#100">100</a>   }
-<a class="jxr_linenumber" name="101" href="#101">101</a> 
-<a class="jxr_linenumber" name="102" href="#102">102</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> configurationElement(<a href="../../../../../org/apache/ibatis/parsing/XNode.html">XNode</a> context) {
-<a class="jxr_linenumber" name="103" href="#103">103</a>     <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="104" href="#104">104</a>       String namespace = context.getStringAttribute(<span class="jxr_string">"namespace"</span>);
-<a class="jxr_linenumber" name="105" href="#105">105</a>       builderAssistant.setCurrentNamespace(namespace);
-<a class="jxr_linenumber" name="106" href="#106">106</a>       cacheRefElement(context.evalNode(<span class="jxr_string">"cache-ref"</span>));
-<a class="jxr_linenumber" name="107" href="#107">107</a>       cacheElement(context.evalNode(<span class="jxr_string">"cache"</span>));
-<a class="jxr_linenumber" name="108" href="#108">108</a>       parameterMapElement(context.evalNodes(<span class="jxr_string">"/mapper/parameterMap"</span>));
-<a class="jxr_linenumber" name="109" href="#109">109</a>       resultMapElements(context.evalNodes(<span class="jxr_string">"/mapper/resultMap"</span>));
-<a class="jxr_linenumber" name="110" href="#110">110</a>       sqlElement(context.evalNodes(<span class="jxr_string">"/mapper/sql"</span>));
-<a class="jxr_linenumber" name="111" href="#111">111</a>       buildStatementFromContext(context.evalNodes(<span class="jxr_string">"select|insert|update|delete"</span>));
-<a class="jxr_linenumber" name="112" href="#112">112</a>     } <strong class="jxr_keyword">catch</strong> (Exception e) {
-<a class="jxr_linenumber" name="113" href="#113">113</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> RuntimeException(<span class="jxr_string">"Error parsing Mapper XML. Cause: "</span> + e, e);
-<a class="jxr_linenumber" name="114" href="#114">114</a>     }
-<a class="jxr_linenumber" name="115" href="#115">115</a>   }
-<a class="jxr_linenumber" name="116" href="#116">116</a> 
-<a class="jxr_linenumber" name="117" href="#117">117</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> buildStatementFromContext(List&lt;XNode&gt; list) {
-<a class="jxr_linenumber" name="118" href="#118">118</a>     <strong class="jxr_keyword">if</strong> (configuration.getDatabaseId() != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="119" href="#119">119</a>       buildStatementFromContext(list, configuration.getDatabaseId());
-<a class="jxr_linenumber" name="120" href="#120">120</a>     }
-<a class="jxr_linenumber" name="121" href="#121">121</a>     buildStatementFromContext(list, <strong class="jxr_keyword">null</strong>);
-<a class="jxr_linenumber" name="122" href="#122">122</a>   }
-<a class="jxr_linenumber" name="123" href="#123">123</a> 
-<a class="jxr_linenumber" name="124" href="#124">124</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> buildStatementFromContext(List&lt;XNode&gt; list, String requiredDatabaseId) {
-<a class="jxr_linenumber" name="125" href="#125">125</a>     <strong class="jxr_keyword">for</strong> (XNode context : list) {
-<a class="jxr_linenumber" name="126" href="#126">126</a>       <strong class="jxr_keyword">final</strong> <a href="../../../../../org/apache/ibatis/builder/xml/XMLStatementBuilder.html">XMLStatementBuilder</a> statementParser = <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/builder/xml/XMLStatementBuilder.html">XMLStatementBuilder</a>(configuration, builderAssistant, context, requiredDatabaseId);
-<a class="jxr_linenumber" name="127" href="#127">127</a>       <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="128" href="#128">128</a>         statementParser.parseStatementNode();
-<a class="jxr_linenumber" name="129" href="#129">129</a>       } <strong class="jxr_keyword">catch</strong> (IncompleteElementException e) {
-<a class="jxr_linenumber" name="130" href="#130">130</a>         configuration.addIncompleteStatement(statementParser);
-<a class="jxr_linenumber" name="131" href="#131">131</a>       }
-<a class="jxr_linenumber" name="132" href="#132">132</a>     }
-<a class="jxr_linenumber" name="133" href="#133">133</a>   }
-<a class="jxr_linenumber" name="134" href="#134">134</a> 
-<a class="jxr_linenumber" name="135" href="#135">135</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> parsePendingResultMaps() {
-<a class="jxr_linenumber" name="136" href="#136">136</a>     Collection&lt;ResultMapResolver&gt; incompleteResultMaps = configuration.getIncompleteResultMaps();
-<a class="jxr_linenumber" name="137" href="#137">137</a>     <strong class="jxr_keyword">synchronized</strong> (incompleteResultMaps) {
-<a class="jxr_linenumber" name="138" href="#138">138</a>       Iterator&lt;ResultMapResolver&gt; iter = incompleteResultMaps.iterator();
-<a class="jxr_linenumber" name="139" href="#139">139</a>       <strong class="jxr_keyword">while</strong> (iter.hasNext()) {
-<a class="jxr_linenumber" name="140" href="#140">140</a>         <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="141" href="#141">141</a>           iter.next().resolve();
-<a class="jxr_linenumber" name="142" href="#142">142</a>           iter.remove();
-<a class="jxr_linenumber" name="143" href="#143">143</a>         } <strong class="jxr_keyword">catch</strong> (IncompleteElementException e) {
-<a class="jxr_linenumber" name="144" href="#144">144</a>           <em class="jxr_comment">// ResultMap is still missing a resource...</em>
-<a class="jxr_linenumber" name="145" href="#145">145</a>         }
-<a class="jxr_linenumber" name="146" href="#146">146</a>       }
-<a class="jxr_linenumber" name="147" href="#147">147</a>     }
-<a class="jxr_linenumber" name="148" href="#148">148</a>   }
-<a class="jxr_linenumber" name="149" href="#149">149</a> 
-<a class="jxr_linenumber" name="150" href="#150">150</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> parsePendingChacheRefs() {
-<a class="jxr_linenumber" name="151" href="#151">151</a> 	  Collection&lt;CacheRefResolver&gt; incompleteCacheRefs = configuration.getIncompleteCacheRefs();
-<a class="jxr_linenumber" name="152" href="#152">152</a> 	  <strong class="jxr_keyword">synchronized</strong> (incompleteCacheRefs) {
-<a class="jxr_linenumber" name="153" href="#153">153</a> 		  Iterator&lt;CacheRefResolver&gt; iter = incompleteCacheRefs.iterator();
-<a class="jxr_linenumber" name="154" href="#154">154</a> 		  <strong class="jxr_keyword">while</strong> (iter.hasNext()) {
-<a class="jxr_linenumber" name="155" href="#155">155</a> 			  <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="156" href="#156">156</a> 				  iter.next().resolveCacheRef();
-<a class="jxr_linenumber" name="157" href="#157">157</a> 				  iter.remove();
-<a class="jxr_linenumber" name="158" href="#158">158</a> 			  } <strong class="jxr_keyword">catch</strong> (IncompleteElementException e) {
-<a class="jxr_linenumber" name="159" href="#159">159</a> 				  <em class="jxr_comment">// Cache ref is still missing a resource...</em>
-<a class="jxr_linenumber" name="160" href="#160">160</a> 			  }
-<a class="jxr_linenumber" name="161" href="#161">161</a> 		  }
-<a class="jxr_linenumber" name="162" href="#162">162</a> 	  }
-<a class="jxr_linenumber" name="163" href="#163">163</a>   }
-<a class="jxr_linenumber" name="164" href="#164">164</a> 
-<a class="jxr_linenumber" name="165" href="#165">165</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> parsePendingStatements() {
-<a class="jxr_linenumber" name="166" href="#166">166</a> 	  Collection&lt;XMLStatementBuilder&gt; incompleteStatements = configuration.getIncompleteStatements();
-<a class="jxr_linenumber" name="167" href="#167">167</a> 	  <strong class="jxr_keyword">synchronized</strong> (incompleteStatements) {
-<a class="jxr_linenumber" name="168" href="#168">168</a> 		  Iterator&lt;XMLStatementBuilder&gt; iter = incompleteStatements.iterator();
-<a class="jxr_linenumber" name="169" href="#169">169</a> 		  <strong class="jxr_keyword">while</strong> (iter.hasNext()) {
-<a class="jxr_linenumber" name="170" href="#170">170</a> 			  <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="171" href="#171">171</a> 				  iter.next().parseStatementNode();
-<a class="jxr_linenumber" name="172" href="#172">172</a> 				  iter.remove();
-<a class="jxr_linenumber" name="173" href="#173">173</a> 			  } <strong class="jxr_keyword">catch</strong> (IncompleteElementException e) {
-<a class="jxr_linenumber" name="174" href="#174">174</a> 				  <em class="jxr_comment">// Statement is still missing a resource...</em>
-<a class="jxr_linenumber" name="175" href="#175">175</a> 			  }
-<a class="jxr_linenumber" name="176" href="#176">176</a> 		  }
-<a class="jxr_linenumber" name="177" href="#177">177</a> 	  }
-<a class="jxr_linenumber" name="178" href="#178">178</a>   }
-<a class="jxr_linenumber" name="179" href="#179">179</a> 
-<a class="jxr_linenumber" name="180" href="#180">180</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> cacheRefElement(<a href="../../../../../org/apache/ibatis/parsing/XNode.html">XNode</a> context) {
-<a class="jxr_linenumber" name="181" href="#181">181</a>     <strong class="jxr_keyword">if</strong> (context != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="182" href="#182">182</a>       configuration.addCacheRef(builderAssistant.getCurrentNamespace(), context.getStringAttribute(<span class="jxr_string">"namespace"</span>));
-<a class="jxr_linenumber" name="183" href="#183">183</a>       <a href="../../../../../org/apache/ibatis/builder/CacheRefResolver.html">CacheRefResolver</a> cacheRefResolver = <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/builder/CacheRefResolver.html">CacheRefResolver</a>(builderAssistant, context.getStringAttribute(<span class="jxr_string">"namespace"</span>));
-<a class="jxr_linenumber" name="184" href="#184">184</a>       <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="185" href="#185">185</a>     	  cacheRefResolver.resolveCacheRef();
-<a class="jxr_linenumber" name="186" href="#186">186</a>       } <strong class="jxr_keyword">catch</strong> (IncompleteElementException e) {
-<a class="jxr_linenumber" name="187" href="#187">187</a>     	  configuration.addIncompleteCacheRef(cacheRefResolver);
-<a class="jxr_linenumber" name="188" href="#188">188</a>       }
-<a class="jxr_linenumber" name="189" href="#189">189</a>     }
-<a class="jxr_linenumber" name="190" href="#190">190</a>   }
-<a class="jxr_linenumber" name="191" href="#191">191</a> 
-<a class="jxr_linenumber" name="192" href="#192">192</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> cacheElement(<a href="../../../../../org/apache/ibatis/parsing/XNode.html">XNode</a> context) <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="193" href="#193">193</a>     <strong class="jxr_keyword">if</strong> (context != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="194" href="#194">194</a>       String type = context.getStringAttribute(<span class="jxr_string">"type"</span>, <span class="jxr_string">"PERPETUAL"</span>);
-<a class="jxr_linenumber" name="195" href="#195">195</a>       Class&lt;? <strong class="jxr_keyword">extends</strong> Cache&gt; typeClass = typeAliasRegistry.resolveAlias(type);
-<a class="jxr_linenumber" name="196" href="#196">196</a>       String eviction = context.getStringAttribute(<span class="jxr_string">"eviction"</span>, <span class="jxr_string">"LRU"</span>);
-<a class="jxr_linenumber" name="197" href="#197">197</a>       Class&lt;? <strong class="jxr_keyword">extends</strong> Cache&gt; evictionClass = typeAliasRegistry.resolveAlias(eviction);
-<a class="jxr_linenumber" name="198" href="#198">198</a>       Long flushInterval = context.getLongAttribute(<span class="jxr_string">"flushInterval"</span>);
-<a class="jxr_linenumber" name="199" href="#199">199</a>       Integer size = context.getIntAttribute(<span class="jxr_string">"size"</span>);
-<a class="jxr_linenumber" name="200" href="#200">200</a>       <strong class="jxr_keyword">boolean</strong> readWrite = !context.getBooleanAttribute(<span class="jxr_string">"readOnly"</span>, false);
-<a class="jxr_linenumber" name="201" href="#201">201</a>       Properties props = context.getChildrenAsProperties();
-<a class="jxr_linenumber" name="202" href="#202">202</a>       builderAssistant.useNewCache(typeClass, evictionClass, flushInterval, size, readWrite, props);
-<a class="jxr_linenumber" name="203" href="#203">203</a>     }
-<a class="jxr_linenumber" name="204" href="#204">204</a>   }
-<a class="jxr_linenumber" name="205" href="#205">205</a> 
-<a class="jxr_linenumber" name="206" href="#206">206</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> parameterMapElement(List&lt;XNode&gt; list) <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="207" href="#207">207</a>     <strong class="jxr_keyword">for</strong> (XNode parameterMapNode : list) {
-<a class="jxr_linenumber" name="208" href="#208">208</a>       String id = parameterMapNode.getStringAttribute(<span class="jxr_string">"id"</span>);
-<a class="jxr_linenumber" name="209" href="#209">209</a>       String type = parameterMapNode.getStringAttribute(<span class="jxr_string">"type"</span>);
-<a class="jxr_linenumber" name="210" href="#210">210</a>       Class&lt;?&gt; parameterClass = resolveClass(type);
-<a class="jxr_linenumber" name="211" href="#211">211</a>       List&lt;XNode&gt; parameterNodes = parameterMapNode.evalNodes(<span class="jxr_string">"parameter"</span>);
-<a class="jxr_linenumber" name="212" href="#212">212</a>       List&lt;ParameterMapping&gt; parameterMappings = <strong class="jxr_keyword">new</strong> ArrayList&lt;ParameterMapping&gt;();
-<a class="jxr_linenumber" name="213" href="#213">213</a>       <strong class="jxr_keyword">for</strong> (XNode parameterNode : parameterNodes) {
-<a class="jxr_linenumber" name="214" href="#214">214</a>         String property = parameterNode.getStringAttribute(<span class="jxr_string">"property"</span>);
-<a class="jxr_linenumber" name="215" href="#215">215</a>         String javaType = parameterNode.getStringAttribute(<span class="jxr_string">"javaType"</span>);
-<a class="jxr_linenumber" name="216" href="#216">216</a>         String jdbcType = parameterNode.getStringAttribute(<span class="jxr_string">"jdbcType"</span>);
-<a class="jxr_linenumber" name="217" href="#217">217</a>         String resultMap = parameterNode.getStringAttribute(<span class="jxr_string">"resultMap"</span>);
-<a class="jxr_linenumber" name="218" href="#218">218</a>         String mode = parameterNode.getStringAttribute(<span class="jxr_string">"mode"</span>);
-<a class="jxr_linenumber" name="219" href="#219">219</a>         String typeHandler = parameterNode.getStringAttribute(<span class="jxr_string">"typeHandler"</span>);
-<a class="jxr_linenumber" name="220" href="#220">220</a>         Integer numericScale = parameterNode.getIntAttribute(<span class="jxr_string">"numericScale"</span>);
-<a class="jxr_linenumber" name="221" href="#221">221</a>         <a href="../../../../../org/apache/ibatis/mapping/ParameterMode.html">ParameterMode</a> modeEnum = resolveParameterMode(mode);
-<a class="jxr_linenumber" name="222" href="#222">222</a>         Class&lt;?&gt; javaTypeClass = resolveClass(javaType);
-<a class="jxr_linenumber" name="223" href="#223">223</a>         <a href="../../../../../org/apache/ibatis/type/JdbcType.html">JdbcType</a> jdbcTypeEnum = resolveJdbcType(jdbcType);
-<a class="jxr_linenumber" name="224" href="#224">224</a>         @SuppressWarnings(<span class="jxr_string">"unchecked"</span>)
-<a class="jxr_linenumber" name="225" href="#225">225</a>         Class&lt;? <strong class="jxr_keyword">extends</strong> TypeHandler&lt;?&gt;&gt; typeHandlerClass = (Class&lt;? <strong class="jxr_keyword">extends</strong> TypeHandler&lt;?&gt;&gt;) resolveClass(typeHandler);
-<a class="jxr_linenumber" name="226" href="#226">226</a>         <a href="../../../../../org/apache/ibatis/mapping/ParameterMapping.html">ParameterMapping</a> parameterMapping = builderAssistant.buildParameterMapping(parameterClass, property, javaTypeClass, jdbcTypeEnum, resultMap, modeEnum, typeHandlerClass, numericScale);
-<a class="jxr_linenumber" name="227" href="#227">227</a>         parameterMappings.add(parameterMapping);
-<a class="jxr_linenumber" name="228" href="#228">228</a>       }
-<a class="jxr_linenumber" name="229" href="#229">229</a>       builderAssistant.addParameterMap(id, parameterClass, parameterMappings);
-<a class="jxr_linenumber" name="230" href="#230">230</a>     }
-<a class="jxr_linenumber" name="231" href="#231">231</a>   }
-<a class="jxr_linenumber" name="232" href="#232">232</a> 
-<a class="jxr_linenumber" name="233" href="#233">233</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> resultMapElements(List&lt;XNode&gt; list) <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="234" href="#234">234</a>     <strong class="jxr_keyword">for</strong> (XNode resultMapNode : list) {
-<a class="jxr_linenumber" name="235" href="#235">235</a>       <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="236" href="#236">236</a>         resultMapElement(resultMapNode);
-<a class="jxr_linenumber" name="237" href="#237">237</a>       } <strong class="jxr_keyword">catch</strong> (IncompleteElementException e) {
-<a class="jxr_linenumber" name="238" href="#238">238</a>         <em class="jxr_comment">// ignore, it will be retried</em>
-<a class="jxr_linenumber" name="239" href="#239">239</a>       }
-<a class="jxr_linenumber" name="240" href="#240">240</a>     }
-<a class="jxr_linenumber" name="241" href="#241">241</a>   }
-<a class="jxr_linenumber" name="242" href="#242">242</a> 
-<a class="jxr_linenumber" name="243" href="#243">243</a>   <strong class="jxr_keyword">private</strong> <a href="../../../../../org/apache/ibatis/mapping/ResultMap.html">ResultMap</a> resultMapElement(<a href="../../../../../org/apache/ibatis/parsing/XNode.html">XNode</a> resultMapNode) <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="244" href="#244">244</a>     <strong class="jxr_keyword">return</strong> resultMapElement(resultMapNode, Collections.&lt;ResultMapping&gt; emptyList());
+<a class="jxr_linenumber" name="30" href="#30">30</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.builder.BuilderException;
+<a class="jxr_linenumber" name="31" href="#31">31</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.builder.CacheRefResolver;
+<a class="jxr_linenumber" name="32" href="#32">32</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.builder.IncompleteElementException;
+<a class="jxr_linenumber" name="33" href="#33">33</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.builder.MapperBuilderAssistant;
+<a class="jxr_linenumber" name="34" href="#34">34</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.builder.ResultMapResolver;
+<a class="jxr_linenumber" name="35" href="#35">35</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.cache.Cache;
+<a class="jxr_linenumber" name="36" href="#36">36</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.executor.ErrorContext;
+<a class="jxr_linenumber" name="37" href="#37">37</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.io.Resources;
+<a class="jxr_linenumber" name="38" href="#38">38</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.mapping.Discriminator;
+<a class="jxr_linenumber" name="39" href="#39">39</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.mapping.ParameterMapping;
+<a class="jxr_linenumber" name="40" href="#40">40</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.mapping.ParameterMode;
+<a class="jxr_linenumber" name="41" href="#41">41</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.mapping.ResultFlag;
+<a class="jxr_linenumber" name="42" href="#42">42</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.mapping.ResultMap;
+<a class="jxr_linenumber" name="43" href="#43">43</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.mapping.ResultMapping;
+<a class="jxr_linenumber" name="44" href="#44">44</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.parsing.XNode;
+<a class="jxr_linenumber" name="45" href="#45">45</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.parsing.XPathParser;
+<a class="jxr_linenumber" name="46" href="#46">46</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.session.Configuration;
+<a class="jxr_linenumber" name="47" href="#47">47</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.type.JdbcType;
+<a class="jxr_linenumber" name="48" href="#48">48</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.type.TypeHandler;
+<a class="jxr_linenumber" name="49" href="#49">49</a>  
+<a class="jxr_linenumber" name="50" href="#50">50</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../../org/apache/ibatis/builder/xml/XMLMapperBuilder.html">XMLMapperBuilder</a> <strong class="jxr_keyword">extends</strong> <a href="../../../../../org/apache/ibatis/builder/BaseBuilder.html">BaseBuilder</a> {
+<a class="jxr_linenumber" name="51" href="#51">51</a>  
+<a class="jxr_linenumber" name="52" href="#52">52</a>    <strong class="jxr_keyword">private</strong> <a href="../../../../../org/apache/ibatis/parsing/XPathParser.html">XPathParser</a> parser;
+<a class="jxr_linenumber" name="53" href="#53">53</a>    <strong class="jxr_keyword">private</strong> <a href="../../../../../org/apache/ibatis/builder/MapperBuilderAssistant.html">MapperBuilderAssistant</a> builderAssistant;
+<a class="jxr_linenumber" name="54" href="#54">54</a>    <strong class="jxr_keyword">private</strong> Map&lt;String, XNode&gt; sqlFragments;
+<a class="jxr_linenumber" name="55" href="#55">55</a>    <strong class="jxr_keyword">private</strong> String resource;
+<a class="jxr_linenumber" name="56" href="#56">56</a>  
+<a class="jxr_linenumber" name="57" href="#57">57</a>    @Deprecated
+<a class="jxr_linenumber" name="58" href="#58">58</a>    <strong class="jxr_keyword">public</strong> <a href="../../../../../org/apache/ibatis/builder/xml/XMLMapperBuilder.html">XMLMapperBuilder</a>(Reader reader, <a href="../../../../../org/apache/ibatis/session/Configuration.html">Configuration</a> configuration, String resource, Map&lt;String, XNode&gt; sqlFragments, String namespace) {
+<a class="jxr_linenumber" name="59" href="#59">59</a>      <strong class="jxr_keyword">this</strong>(reader, configuration, resource, sqlFragments);
+<a class="jxr_linenumber" name="60" href="#60">60</a>      <strong class="jxr_keyword">this</strong>.builderAssistant.setCurrentNamespace(namespace);
+<a class="jxr_linenumber" name="61" href="#61">61</a>    }
+<a class="jxr_linenumber" name="62" href="#62">62</a>  
+<a class="jxr_linenumber" name="63" href="#63">63</a>    @Deprecated
+<a class="jxr_linenumber" name="64" href="#64">64</a>    <strong class="jxr_keyword">public</strong> <a href="../../../../../org/apache/ibatis/builder/xml/XMLMapperBuilder.html">XMLMapperBuilder</a>(Reader reader, <a href="../../../../../org/apache/ibatis/session/Configuration.html">Configuration</a> configuration, String resource, Map&lt;String, XNode&gt; sqlFragments) {
+<a class="jxr_linenumber" name="65" href="#65">65</a>      <strong class="jxr_keyword">this</strong>(<strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/parsing/XPathParser.html">XPathParser</a>(reader, <strong class="jxr_keyword">true</strong>, configuration.getVariables(), <strong class="jxr_keyword">new</strong> XMLMapperEntityResolver()),
+<a class="jxr_linenumber" name="66" href="#66">66</a>          configuration, resource, sqlFragments);
+<a class="jxr_linenumber" name="67" href="#67">67</a>    }
+<a class="jxr_linenumber" name="68" href="#68">68</a>  
+<a class="jxr_linenumber" name="69" href="#69">69</a>    <strong class="jxr_keyword">public</strong> <a href="../../../../../org/apache/ibatis/builder/xml/XMLMapperBuilder.html">XMLMapperBuilder</a>(InputStream inputStream, <a href="../../../../../org/apache/ibatis/session/Configuration.html">Configuration</a> configuration, String resource, Map&lt;String, XNode&gt; sqlFragments, String namespace) {
+<a class="jxr_linenumber" name="70" href="#70">70</a>      <strong class="jxr_keyword">this</strong>(inputStream, configuration, resource, sqlFragments);
+<a class="jxr_linenumber" name="71" href="#71">71</a>      <strong class="jxr_keyword">this</strong>.builderAssistant.setCurrentNamespace(namespace);
+<a class="jxr_linenumber" name="72" href="#72">72</a>    }
+<a class="jxr_linenumber" name="73" href="#73">73</a>  
+<a class="jxr_linenumber" name="74" href="#74">74</a>    <strong class="jxr_keyword">public</strong> <a href="../../../../../org/apache/ibatis/builder/xml/XMLMapperBuilder.html">XMLMapperBuilder</a>(InputStream inputStream, <a href="../../../../../org/apache/ibatis/session/Configuration.html">Configuration</a> configuration, String resource, Map&lt;String, XNode&gt; sqlFragments) {
+<a class="jxr_linenumber" name="75" href="#75">75</a>      <strong class="jxr_keyword">this</strong>(<strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/parsing/XPathParser.html">XPathParser</a>(inputStream, <strong class="jxr_keyword">true</strong>, configuration.getVariables(), <strong class="jxr_keyword">new</strong> XMLMapperEntityResolver()),
+<a class="jxr_linenumber" name="76" href="#76">76</a>          configuration, resource, sqlFragments);
+<a class="jxr_linenumber" name="77" href="#77">77</a>    }
+<a class="jxr_linenumber" name="78" href="#78">78</a>  
+<a class="jxr_linenumber" name="79" href="#79">79</a>    <strong class="jxr_keyword">private</strong> <a href="../../../../../org/apache/ibatis/builder/xml/XMLMapperBuilder.html">XMLMapperBuilder</a>(<a href="../../../../../org/apache/ibatis/parsing/XPathParser.html">XPathParser</a> parser, <a href="../../../../../org/apache/ibatis/session/Configuration.html">Configuration</a> configuration, String resource, Map&lt;String, XNode&gt; sqlFragments) {
+<a class="jxr_linenumber" name="80" href="#80">80</a>      <strong class="jxr_keyword">super</strong>(configuration);
+<a class="jxr_linenumber" name="81" href="#81">81</a>      <strong class="jxr_keyword">this</strong>.builderAssistant = <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/builder/MapperBuilderAssistant.html">MapperBuilderAssistant</a>(configuration, resource);
+<a class="jxr_linenumber" name="82" href="#82">82</a>      <strong class="jxr_keyword">this</strong>.parser = parser;
+<a class="jxr_linenumber" name="83" href="#83">83</a>      <strong class="jxr_keyword">this</strong>.sqlFragments = sqlFragments;
+<a class="jxr_linenumber" name="84" href="#84">84</a>      <strong class="jxr_keyword">this</strong>.resource = resource;
+<a class="jxr_linenumber" name="85" href="#85">85</a>    }
+<a class="jxr_linenumber" name="86" href="#86">86</a>  
+<a class="jxr_linenumber" name="87" href="#87">87</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> parse() {
+<a class="jxr_linenumber" name="88" href="#88">88</a>      <strong class="jxr_keyword">if</strong> (!configuration.isResourceLoaded(resource)) {
+<a class="jxr_linenumber" name="89" href="#89">89</a>        configurationElement(parser.evalNode(<span class="jxr_string">"/mapper"</span>));
+<a class="jxr_linenumber" name="90" href="#90">90</a>        configuration.addLoadedResource(resource);
+<a class="jxr_linenumber" name="91" href="#91">91</a>        bindMapperForNamespace();
+<a class="jxr_linenumber" name="92" href="#92">92</a>      }
+<a class="jxr_linenumber" name="93" href="#93">93</a>  
+<a class="jxr_linenumber" name="94" href="#94">94</a>      parsePendingResultMaps();
+<a class="jxr_linenumber" name="95" href="#95">95</a>      parsePendingChacheRefs();
+<a class="jxr_linenumber" name="96" href="#96">96</a>      parsePendingStatements();
+<a class="jxr_linenumber" name="97" href="#97">97</a>    }
+<a class="jxr_linenumber" name="98" href="#98">98</a>  
+<a class="jxr_linenumber" name="99" href="#99">99</a>    <strong class="jxr_keyword">public</strong> <a href="../../../../../org/apache/ibatis/parsing/XNode.html">XNode</a> getSqlFragment(String refid) {
+<a class="jxr_linenumber" name="100" href="#100">100</a>     <strong class="jxr_keyword">return</strong> sqlFragments.get(refid);
+<a class="jxr_linenumber" name="101" href="#101">101</a>   }
+<a class="jxr_linenumber" name="102" href="#102">102</a> 
+<a class="jxr_linenumber" name="103" href="#103">103</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> configurationElement(<a href="../../../../../org/apache/ibatis/parsing/XNode.html">XNode</a> context) {
+<a class="jxr_linenumber" name="104" href="#104">104</a>     <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="105" href="#105">105</a>       String namespace = context.getStringAttribute(<span class="jxr_string">"namespace"</span>);
+<a class="jxr_linenumber" name="106" href="#106">106</a>       <strong class="jxr_keyword">if</strong> (namespace.equals(<span class="jxr_string">""</span>)) {
+<a class="jxr_linenumber" name="107" href="#107">107</a>     	  <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> BuilderException(<span class="jxr_string">"Mapper's namespace cannot be empty"</span>);
+<a class="jxr_linenumber" name="108" href="#108">108</a>       }
+<a class="jxr_linenumber" name="109" href="#109">109</a>       builderAssistant.setCurrentNamespace(namespace);
+<a class="jxr_linenumber" name="110" href="#110">110</a>       cacheRefElement(context.evalNode(<span class="jxr_string">"cache-ref"</span>));
+<a class="jxr_linenumber" name="111" href="#111">111</a>       cacheElement(context.evalNode(<span class="jxr_string">"cache"</span>));
+<a class="jxr_linenumber" name="112" href="#112">112</a>       parameterMapElement(context.evalNodes(<span class="jxr_string">"/mapper/parameterMap"</span>));
+<a class="jxr_linenumber" name="113" href="#113">113</a>       resultMapElements(context.evalNodes(<span class="jxr_string">"/mapper/resultMap"</span>));
+<a class="jxr_linenumber" name="114" href="#114">114</a>       sqlElement(context.evalNodes(<span class="jxr_string">"/mapper/sql"</span>));
+<a class="jxr_linenumber" name="115" href="#115">115</a>       buildStatementFromContext(context.evalNodes(<span class="jxr_string">"select|insert|update|delete"</span>));
+<a class="jxr_linenumber" name="116" href="#116">116</a>     } <strong class="jxr_keyword">catch</strong> (Exception e) {
+<a class="jxr_linenumber" name="117" href="#117">117</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/builder/BuilderException.html">BuilderException</a>(<span class="jxr_string">"Error parsing Mapper XML. Cause: "</span> + e, e);
+<a class="jxr_linenumber" name="118" href="#118">118</a>     }
+<a class="jxr_linenumber" name="119" href="#119">119</a>   }
+<a class="jxr_linenumber" name="120" href="#120">120</a> 
+<a class="jxr_linenumber" name="121" href="#121">121</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> buildStatementFromContext(List&lt;XNode&gt; list) {
+<a class="jxr_linenumber" name="122" href="#122">122</a>     <strong class="jxr_keyword">if</strong> (configuration.getDatabaseId() != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="123" href="#123">123</a>       buildStatementFromContext(list, configuration.getDatabaseId());
+<a class="jxr_linenumber" name="124" href="#124">124</a>     }
+<a class="jxr_linenumber" name="125" href="#125">125</a>     buildStatementFromContext(list, <strong class="jxr_keyword">null</strong>);
+<a class="jxr_linenumber" name="126" href="#126">126</a>   }
+<a class="jxr_linenumber" name="127" href="#127">127</a> 
+<a class="jxr_linenumber" name="128" href="#128">128</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> buildStatementFromContext(List&lt;XNode&gt; list, String requiredDatabaseId) {
+<a class="jxr_linenumber" name="129" href="#129">129</a>     <strong class="jxr_keyword">for</strong> (XNode context : list) {
+<a class="jxr_linenumber" name="130" href="#130">130</a>       <strong class="jxr_keyword">final</strong> <a href="../../../../../org/apache/ibatis/builder/xml/XMLStatementBuilder.html">XMLStatementBuilder</a> statementParser = <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/builder/xml/XMLStatementBuilder.html">XMLStatementBuilder</a>(configuration, builderAssistant, context, requiredDatabaseId);
+<a class="jxr_linenumber" name="131" href="#131">131</a>       <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="132" href="#132">132</a>         statementParser.parseStatementNode();
+<a class="jxr_linenumber" name="133" href="#133">133</a>       } <strong class="jxr_keyword">catch</strong> (IncompleteElementException e) {
+<a class="jxr_linenumber" name="134" href="#134">134</a>         configuration.addIncompleteStatement(statementParser);
+<a class="jxr_linenumber" name="135" href="#135">135</a>       }
+<a class="jxr_linenumber" name="136" href="#136">136</a>     }
+<a class="jxr_linenumber" name="137" href="#137">137</a>   }
+<a class="jxr_linenumber" name="138" href="#138">138</a> 
+<a class="jxr_linenumber" name="139" href="#139">139</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> parsePendingResultMaps() {
+<a class="jxr_linenumber" name="140" href="#140">140</a>     Collection&lt;ResultMapResolver&gt; incompleteResultMaps = configuration.getIncompleteResultMaps();
+<a class="jxr_linenumber" name="141" href="#141">141</a>     <strong class="jxr_keyword">synchronized</strong> (incompleteResultMaps) {
+<a class="jxr_linenumber" name="142" href="#142">142</a>       Iterator&lt;ResultMapResolver&gt; iter = incompleteResultMaps.iterator();
+<a class="jxr_linenumber" name="143" href="#143">143</a>       <strong class="jxr_keyword">while</strong> (iter.hasNext()) {
+<a class="jxr_linenumber" name="144" href="#144">144</a>         <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="145" href="#145">145</a>           iter.next().resolve();
+<a class="jxr_linenumber" name="146" href="#146">146</a>           iter.remove();
+<a class="jxr_linenumber" name="147" href="#147">147</a>         } <strong class="jxr_keyword">catch</strong> (IncompleteElementException e) {
+<a class="jxr_linenumber" name="148" href="#148">148</a>           <em class="jxr_comment">// ResultMap is still missing a resource...</em>
+<a class="jxr_linenumber" name="149" href="#149">149</a>         }
+<a class="jxr_linenumber" name="150" href="#150">150</a>       }
+<a class="jxr_linenumber" name="151" href="#151">151</a>     }
+<a class="jxr_linenumber" name="152" href="#152">152</a>   }
+<a class="jxr_linenumber" name="153" href="#153">153</a> 
+<a class="jxr_linenumber" name="154" href="#154">154</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> parsePendingChacheRefs() {
+<a class="jxr_linenumber" name="155" href="#155">155</a> 	  Collection&lt;CacheRefResolver&gt; incompleteCacheRefs = configuration.getIncompleteCacheRefs();
+<a class="jxr_linenumber" name="156" href="#156">156</a> 	  <strong class="jxr_keyword">synchronized</strong> (incompleteCacheRefs) {
+<a class="jxr_linenumber" name="157" href="#157">157</a> 		  Iterator&lt;CacheRefResolver&gt; iter = incompleteCacheRefs.iterator();
+<a class="jxr_linenumber" name="158" href="#158">158</a> 		  <strong class="jxr_keyword">while</strong> (iter.hasNext()) {
+<a class="jxr_linenumber" name="159" href="#159">159</a> 			  <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="160" href="#160">160</a> 				  iter.next().resolveCacheRef();
+<a class="jxr_linenumber" name="161" href="#161">161</a> 				  iter.remove();
+<a class="jxr_linenumber" name="162" href="#162">162</a> 			  } <strong class="jxr_keyword">catch</strong> (IncompleteElementException e) {
+<a class="jxr_linenumber" name="163" href="#163">163</a> 				  <em class="jxr_comment">// Cache ref is still missing a resource...</em>
+<a class="jxr_linenumber" name="164" href="#164">164</a> 			  }
+<a class="jxr_linenumber" name="165" href="#165">165</a> 		  }
+<a class="jxr_linenumber" name="166" href="#166">166</a> 	  }
+<a class="jxr_linenumber" name="167" href="#167">167</a>   }
+<a class="jxr_linenumber" name="168" href="#168">168</a> 
+<a class="jxr_linenumber" name="169" href="#169">169</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> parsePendingStatements() {
+<a class="jxr_linenumber" name="170" href="#170">170</a> 	  Collection&lt;XMLStatementBuilder&gt; incompleteStatements = configuration.getIncompleteStatements();
+<a class="jxr_linenumber" name="171" href="#171">171</a> 	  <strong class="jxr_keyword">synchronized</strong> (incompleteStatements) {
+<a class="jxr_linenumber" name="172" href="#172">172</a> 		  Iterator&lt;XMLStatementBuilder&gt; iter = incompleteStatements.iterator();
+<a class="jxr_linenumber" name="173" href="#173">173</a> 		  <strong class="jxr_keyword">while</strong> (iter.hasNext()) {
+<a class="jxr_linenumber" name="174" href="#174">174</a> 			  <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="175" href="#175">175</a> 				  iter.next().parseStatementNode();
+<a class="jxr_linenumber" name="176" href="#176">176</a> 				  iter.remove();
+<a class="jxr_linenumber" name="177" href="#177">177</a> 			  } <strong class="jxr_keyword">catch</strong> (IncompleteElementException e) {
+<a class="jxr_linenumber" name="178" href="#178">178</a> 				  <em class="jxr_comment">// Statement is still missing a resource...</em>
+<a class="jxr_linenumber" name="179" href="#179">179</a> 			  }
+<a class="jxr_linenumber" name="180" href="#180">180</a> 		  }
+<a class="jxr_linenumber" name="181" href="#181">181</a> 	  }
+<a class="jxr_linenumber" name="182" href="#182">182</a>   }
+<a class="jxr_linenumber" name="183" href="#183">183</a> 
+<a class="jxr_linenumber" name="184" href="#184">184</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> cacheRefElement(<a href="../../../../../org/apache/ibatis/parsing/XNode.html">XNode</a> context) {
+<a class="jxr_linenumber" name="185" href="#185">185</a>     <strong class="jxr_keyword">if</strong> (context != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="186" href="#186">186</a>       configuration.addCacheRef(builderAssistant.getCurrentNamespace(), context.getStringAttribute(<span class="jxr_string">"namespace"</span>));
+<a class="jxr_linenumber" name="187" href="#187">187</a>       <a href="../../../../../org/apache/ibatis/builder/CacheRefResolver.html">CacheRefResolver</a> cacheRefResolver = <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/builder/CacheRefResolver.html">CacheRefResolver</a>(builderAssistant, context.getStringAttribute(<span class="jxr_string">"namespace"</span>));
+<a class="jxr_linenumber" name="188" href="#188">188</a>       <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="189" href="#189">189</a>     	  cacheRefResolver.resolveCacheRef();
+<a class="jxr_linenumber" name="190" href="#190">190</a>       } <strong class="jxr_keyword">catch</strong> (IncompleteElementException e) {
+<a class="jxr_linenumber" name="191" href="#191">191</a>     	  configuration.addIncompleteCacheRef(cacheRefResolver);
+<a class="jxr_linenumber" name="192" href="#192">192</a>       }
+<a class="jxr_linenumber" name="193" href="#193">193</a>     }
+<a class="jxr_linenumber" name="194" href="#194">194</a>   }
+<a class="jxr_linenumber" name="195" href="#195">195</a> 
+<a class="jxr_linenumber" name="196" href="#196">196</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> cacheElement(<a href="../../../../../org/apache/ibatis/parsing/XNode.html">XNode</a> context) <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="197" href="#197">197</a>     <strong class="jxr_keyword">if</strong> (context != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="198" href="#198">198</a>       String type = context.getStringAttribute(<span class="jxr_string">"type"</span>, <span class="jxr_string">"PERPETUAL"</span>);
+<a class="jxr_linenumber" name="199" href="#199">199</a>       Class&lt;? <strong class="jxr_keyword">extends</strong> Cache&gt; typeClass = typeAliasRegistry.resolveAlias(type);
+<a class="jxr_linenumber" name="200" href="#200">200</a>       String eviction = context.getStringAttribute(<span class="jxr_string">"eviction"</span>, <span class="jxr_string">"LRU"</span>);
+<a class="jxr_linenumber" name="201" href="#201">201</a>       Class&lt;? <strong class="jxr_keyword">extends</strong> Cache&gt; evictionClass = typeAliasRegistry.resolveAlias(eviction);
+<a class="jxr_linenumber" name="202" href="#202">202</a>       Long flushInterval = context.getLongAttribute(<span class="jxr_string">"flushInterval"</span>);
+<a class="jxr_linenumber" name="203" href="#203">203</a>       Integer size = context.getIntAttribute(<span class="jxr_string">"size"</span>);
+<a class="jxr_linenumber" name="204" href="#204">204</a>       <strong class="jxr_keyword">boolean</strong> readWrite = !context.getBooleanAttribute(<span class="jxr_string">"readOnly"</span>, false);
+<a class="jxr_linenumber" name="205" href="#205">205</a>       Properties props = context.getChildrenAsProperties();
+<a class="jxr_linenumber" name="206" href="#206">206</a>       builderAssistant.useNewCache(typeClass, evictionClass, flushInterval, size, readWrite, props);
+<a class="jxr_linenumber" name="207" href="#207">207</a>     }
+<a class="jxr_linenumber" name="208" href="#208">208</a>   }
+<a class="jxr_linenumber" name="209" href="#209">209</a> 
+<a class="jxr_linenumber" name="210" href="#210">210</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> parameterMapElement(List&lt;XNode&gt; list) <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="211" href="#211">211</a>     <strong class="jxr_keyword">for</strong> (XNode parameterMapNode : list) {
+<a class="jxr_linenumber" name="212" href="#212">212</a>       String id = parameterMapNode.getStringAttribute(<span class="jxr_string">"id"</span>);
+<a class="jxr_linenumber" name="213" href="#213">213</a>       String type = parameterMapNode.getStringAttribute(<span class="jxr_string">"type"</span>);
+<a class="jxr_linenumber" name="214" href="#214">214</a>       Class&lt;?&gt; parameterClass = resolveClass(type);
+<a class="jxr_linenumber" name="215" href="#215">215</a>       List&lt;XNode&gt; parameterNodes = parameterMapNode.evalNodes(<span class="jxr_string">"parameter"</span>);
+<a class="jxr_linenumber" name="216" href="#216">216</a>       List&lt;ParameterMapping&gt; parameterMappings = <strong class="jxr_keyword">new</strong> ArrayList&lt;ParameterMapping&gt;();
+<a class="jxr_linenumber" name="217" href="#217">217</a>       <strong class="jxr_keyword">for</strong> (XNode parameterNode : parameterNodes) {
+<a class="jxr_linenumber" name="218" href="#218">218</a>         String property = parameterNode.getStringAttribute(<span class="jxr_string">"property"</span>);
+<a class="jxr_linenumber" name="219" href="#219">219</a>         String javaType = parameterNode.getStringAttribute(<span class="jxr_string">"javaType"</span>);
+<a class="jxr_linenumber" name="220" href="#220">220</a>         String jdbcType = parameterNode.getStringAttribute(<span class="jxr_string">"jdbcType"</span>);
+<a class="jxr_linenumber" name="221" href="#221">221</a>         String resultMap = parameterNode.getStringAttribute(<span class="jxr_string">"resultMap"</span>);
+<a class="jxr_linenumber" name="222" href="#222">222</a>         String mode = parameterNode.getStringAttribute(<span class="jxr_string">"mode"</span>);
+<a class="jxr_linenumber" name="223" href="#223">223</a>         String typeHandler = parameterNode.getStringAttribute(<span class="jxr_string">"typeHandler"</span>);
+<a class="jxr_linenumber" name="224" href="#224">224</a>         Integer numericScale = parameterNode.getIntAttribute(<span class="jxr_string">"numericScale"</span>);
+<a class="jxr_linenumber" name="225" href="#225">225</a>         <a href="../../../../../org/apache/ibatis/mapping/ParameterMode.html">ParameterMode</a> modeEnum = resolveParameterMode(mode);
+<a class="jxr_linenumber" name="226" href="#226">226</a>         Class&lt;?&gt; javaTypeClass = resolveClass(javaType);
+<a class="jxr_linenumber" name="227" href="#227">227</a>         <a href="../../../../../org/apache/ibatis/type/JdbcType.html">JdbcType</a> jdbcTypeEnum = resolveJdbcType(jdbcType);
+<a class="jxr_linenumber" name="228" href="#228">228</a>         @SuppressWarnings(<span class="jxr_string">"unchecked"</span>)
+<a class="jxr_linenumber" name="229" href="#229">229</a>         Class&lt;? <strong class="jxr_keyword">extends</strong> TypeHandler&lt;?&gt;&gt; typeHandlerClass = (Class&lt;? <strong class="jxr_keyword">extends</strong> TypeHandler&lt;?&gt;&gt;) resolveClass(typeHandler);
+<a class="jxr_linenumber" name="230" href="#230">230</a>         <a href="../../../../../org/apache/ibatis/mapping/ParameterMapping.html">ParameterMapping</a> parameterMapping = builderAssistant.buildParameterMapping(parameterClass, property, javaTypeClass, jdbcTypeEnum, resultMap, modeEnum, typeHandlerClass, numericScale);
+<a class="jxr_linenumber" name="231" href="#231">231</a>         parameterMappings.add(parameterMapping);
+<a class="jxr_linenumber" name="232" href="#232">232</a>       }
+<a class="jxr_linenumber" name="233" href="#233">233</a>       builderAssistant.addParameterMap(id, parameterClass, parameterMappings);
+<a class="jxr_linenumber" name="234" href="#234">234</a>     }
+<a class="jxr_linenumber" name="235" href="#235">235</a>   }
+<a class="jxr_linenumber" name="236" href="#236">236</a> 
+<a class="jxr_linenumber" name="237" href="#237">237</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> resultMapElements(List&lt;XNode&gt; list) <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="238" href="#238">238</a>     <strong class="jxr_keyword">for</strong> (XNode resultMapNode : list) {
+<a class="jxr_linenumber" name="239" href="#239">239</a>       <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="240" href="#240">240</a>         resultMapElement(resultMapNode);
+<a class="jxr_linenumber" name="241" href="#241">241</a>       } <strong class="jxr_keyword">catch</strong> (IncompleteElementException e) {
+<a class="jxr_linenumber" name="242" href="#242">242</a>         <em class="jxr_comment">// ignore, it will be retried</em>
+<a class="jxr_linenumber" name="243" href="#243">243</a>       }
+<a class="jxr_linenumber" name="244" href="#244">244</a>     }
 <a class="jxr_linenumber" name="245" href="#245">245</a>   }
 <a class="jxr_linenumber" name="246" href="#246">246</a> 
-<a class="jxr_linenumber" name="247" href="#247">247</a>   <strong class="jxr_keyword">private</strong> <a href="../../../../../org/apache/ibatis/mapping/ResultMap.html">ResultMap</a> resultMapElement(<a href="../../../../../org/apache/ibatis/parsing/XNode.html">XNode</a> resultMapNode, List&lt;ResultMapping&gt; additionalResultMappings) <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="248" href="#248">248</a>     ErrorContext.instance().activity(<span class="jxr_string">"processing "</span> + resultMapNode.getValueBasedIdentifier());
-<a class="jxr_linenumber" name="249" href="#249">249</a>     String id = resultMapNode.getStringAttribute(<span class="jxr_string">"id"</span>,
-<a class="jxr_linenumber" name="250" href="#250">250</a>         resultMapNode.getValueBasedIdentifier());
-<a class="jxr_linenumber" name="251" href="#251">251</a>     String type = resultMapNode.getStringAttribute(<span class="jxr_string">"type"</span>,
-<a class="jxr_linenumber" name="252" href="#252">252</a>         resultMapNode.getStringAttribute(<span class="jxr_string">"ofType"</span>,
-<a class="jxr_linenumber" name="253" href="#253">253</a>             resultMapNode.getStringAttribute(<span class="jxr_string">"resultType"</span>,
-<a class="jxr_linenumber" name="254" href="#254">254</a>                 resultMapNode.getStringAttribute(<span class="jxr_string">"javaType"</span>))));
-<a class="jxr_linenumber" name="255" href="#255">255</a>     String extend = resultMapNode.getStringAttribute(<span class="jxr_string">"extends"</span>);
-<a class="jxr_linenumber" name="256" href="#256">256</a>     Boolean autoMapping = resultMapNode.getBooleanAttribute(<span class="jxr_string">"autoMapping"</span>);
-<a class="jxr_linenumber" name="257" href="#257">257</a>     Class&lt;?&gt; typeClass = resolveClass(type);
-<a class="jxr_linenumber" name="258" href="#258">258</a>     <a href="../../../../../org/apache/ibatis/mapping/Discriminator.html">Discriminator</a> discriminator = <strong class="jxr_keyword">null</strong>;
-<a class="jxr_linenumber" name="259" href="#259">259</a>     List&lt;ResultMapping&gt; resultMappings = <strong class="jxr_keyword">new</strong> ArrayList&lt;ResultMapping&gt;();
-<a class="jxr_linenumber" name="260" href="#260">260</a>     resultMappings.addAll(additionalResultMappings);
-<a class="jxr_linenumber" name="261" href="#261">261</a>     List&lt;XNode&gt; resultChildren = resultMapNode.getChildren();
-<a class="jxr_linenumber" name="262" href="#262">262</a>     <strong class="jxr_keyword">for</strong> (XNode resultChild : resultChildren) {
-<a class="jxr_linenumber" name="263" href="#263">263</a>       <strong class="jxr_keyword">if</strong> (<span class="jxr_string">"constructor"</span>.equals(resultChild.getName())) {
-<a class="jxr_linenumber" name="264" href="#264">264</a>         processConstructorElement(resultChild, typeClass, resultMappings);
-<a class="jxr_linenumber" name="265" href="#265">265</a>       } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (<span class="jxr_string">"discriminator"</span>.equals(resultChild.getName())) {
-<a class="jxr_linenumber" name="266" href="#266">266</a>         discriminator = processDiscriminatorElement(resultChild, typeClass, resultMappings);
-<a class="jxr_linenumber" name="267" href="#267">267</a>       } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="268" href="#268">268</a>         ArrayList&lt;ResultFlag&gt; flags = <strong class="jxr_keyword">new</strong> ArrayList&lt;ResultFlag&gt;();
-<a class="jxr_linenumber" name="269" href="#269">269</a>         <strong class="jxr_keyword">if</strong> (<span class="jxr_string">"id"</span>.equals(resultChild.getName())) {
-<a class="jxr_linenumber" name="270" href="#270">270</a>           flags.add(ResultFlag.ID);
-<a class="jxr_linenumber" name="271" href="#271">271</a>         }
-<a class="jxr_linenumber" name="272" href="#272">272</a>         resultMappings.add(buildResultMappingFromContext(resultChild, typeClass, flags));
-<a class="jxr_linenumber" name="273" href="#273">273</a>       }
-<a class="jxr_linenumber" name="274" href="#274">274</a>     }
-<a class="jxr_linenumber" name="275" href="#275">275</a>     <a href="../../../../../org/apache/ibatis/builder/ResultMapResolver.html">ResultMapResolver</a> resultMapResolver = <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/builder/ResultMapResolver.html">ResultMapResolver</a>(builderAssistant, id, typeClass, extend, discriminator, resultMappings, autoMapping);
-<a class="jxr_linenumber" name="276" href="#276">276</a>     <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="277" href="#277">277</a>       <strong class="jxr_keyword">return</strong> resultMapResolver.resolve();
-<a class="jxr_linenumber" name="278" href="#278">278</a>     } <strong class="jxr_keyword">catch</strong> (IncompleteElementException  e) {
-<a class="jxr_linenumber" name="279" href="#279">279</a>       configuration.addIncompleteResultMap(resultMapResolver);
-<a class="jxr_linenumber" name="280" href="#280">280</a>       <strong class="jxr_keyword">throw</strong> e;
-<a class="jxr_linenumber" name="281" href="#281">281</a>     }
-<a class="jxr_linenumber" name="282" href="#282">282</a>   }
-<a class="jxr_linenumber" name="283" href="#283">283</a> 
-<a class="jxr_linenumber" name="284" href="#284">284</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> processConstructorElement(<a href="../../../../../org/apache/ibatis/parsing/XNode.html">XNode</a> resultChild, Class&lt;?&gt; resultType, List&lt;ResultMapping&gt; resultMappings) <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="285" href="#285">285</a>     List&lt;XNode&gt; argChildren = resultChild.getChildren();
-<a class="jxr_linenumber" name="286" href="#286">286</a>     <strong class="jxr_keyword">for</strong> (XNode argChild : argChildren) {
-<a class="jxr_linenumber" name="287" href="#287">287</a>       ArrayList&lt;ResultFlag&gt; flags = <strong class="jxr_keyword">new</strong> ArrayList&lt;ResultFlag&gt;();
-<a class="jxr_linenumber" name="288" href="#288">288</a>       flags.add(ResultFlag.CONSTRUCTOR);
-<a class="jxr_linenumber" name="289" href="#289">289</a>       <strong class="jxr_keyword">if</strong> (<span class="jxr_string">"idArg"</span>.equals(argChild.getName())) {
-<a class="jxr_linenumber" name="290" href="#290">290</a>         flags.add(ResultFlag.ID);
-<a class="jxr_linenumber" name="291" href="#291">291</a>       }
-<a class="jxr_linenumber" name="292" href="#292">292</a>       resultMappings.add(buildResultMappingFromContext(argChild, resultType, flags));
-<a class="jxr_linenumber" name="293" href="#293">293</a>     }
-<a class="jxr_linenumber" name="294" href="#294">294</a>   }
-<a class="jxr_linenumber" name="295" href="#295">295</a> 
-<a class="jxr_linenumber" name="296" href="#296">296</a>   <strong class="jxr_keyword">private</strong> <a href="../../../../../org/apache/ibatis/mapping/Discriminator.html">Discriminator</a> processDiscriminatorElement(<a href="../../../../../org/apache/ibatis/parsing/XNode.html">XNode</a> context, Class&lt;?&gt; resultType, List&lt;ResultMapping&gt; resultMappings) <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="297" href="#297">297</a>     String column = context.getStringAttribute(<span class="jxr_string">"column"</span>);
-<a class="jxr_linenumber" name="298" href="#298">298</a>     String javaType = context.getStringAttribute(<span class="jxr_string">"javaType"</span>);
-<a class="jxr_linenumber" name="299" href="#299">299</a>     String jdbcType = context.getStringAttribute(<span class="jxr_string">"jdbcType"</span>);
-<a class="jxr_linenumber" name="300" href="#300">300</a>     String typeHandler = context.getStringAttribute(<span class="jxr_string">"typeHandler"</span>);
-<a class="jxr_linenumber" name="301" href="#301">301</a>     Class&lt;?&gt; javaTypeClass = resolveClass(javaType);
-<a class="jxr_linenumber" name="302" href="#302">302</a>     @SuppressWarnings(<span class="jxr_string">"unchecked"</span>)
-<a class="jxr_linenumber" name="303" href="#303">303</a>     Class&lt;? <strong class="jxr_keyword">extends</strong> TypeHandler&lt;?&gt;&gt; typeHandlerClass = (Class&lt;? <strong class="jxr_keyword">extends</strong> TypeHandler&lt;?&gt;&gt;) resolveClass(typeHandler);
-<a class="jxr_linenumber" name="304" href="#304">304</a>     <a href="../../../../../org/apache/ibatis/type/JdbcType.html">JdbcType</a> jdbcTypeEnum = resolveJdbcType(jdbcType);
-<a class="jxr_linenumber" name="305" href="#305">305</a>     Map&lt;String, String&gt; discriminatorMap = <strong class="jxr_keyword">new</strong> HashMap&lt;String, String&gt;();
-<a class="jxr_linenumber" name="306" href="#306">306</a>     <strong class="jxr_keyword">for</strong> (XNode caseChild : context.getChildren()) {
-<a class="jxr_linenumber" name="307" href="#307">307</a>       String value = caseChild.getStringAttribute(<span class="jxr_string">"value"</span>);
-<a class="jxr_linenumber" name="308" href="#308">308</a>       String resultMap = caseChild.getStringAttribute(<span class="jxr_string">"resultMap"</span>, processNestedResultMappings(caseChild, resultMappings));
-<a class="jxr_linenumber" name="309" href="#309">309</a>       discriminatorMap.put(value, resultMap);
-<a class="jxr_linenumber" name="310" href="#310">310</a>     }
-<a class="jxr_linenumber" name="311" href="#311">311</a>     <strong class="jxr_keyword">return</strong> builderAssistant.buildDiscriminator(resultType, column, javaTypeClass, jdbcTypeEnum, typeHandlerClass, discriminatorMap);
-<a class="jxr_linenumber" name="312" href="#312">312</a>   }
-<a class="jxr_linenumber" name="313" href="#313">313</a> 
-<a class="jxr_linenumber" name="314" href="#314">314</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> sqlElement(List&lt;XNode&gt; list) <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="315" href="#315">315</a>     <strong class="jxr_keyword">if</strong> (configuration.getDatabaseId() != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="316" href="#316">316</a>       sqlElement(list, configuration.getDatabaseId());
-<a class="jxr_linenumber" name="317" href="#317">317</a>     }
-<a class="jxr_linenumber" name="318" href="#318">318</a>     sqlElement(list, <strong class="jxr_keyword">null</strong>);
-<a class="jxr_linenumber" name="319" href="#319">319</a>   }
-<a class="jxr_linenumber" name="320" href="#320">320</a> 
-<a class="jxr_linenumber" name="321" href="#321">321</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> sqlElement(List&lt;XNode&gt; list, String requiredDatabaseId) <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="322" href="#322">322</a>     <strong class="jxr_keyword">for</strong> (XNode context : list) {
-<a class="jxr_linenumber" name="323" href="#323">323</a>       String databaseId = context.getStringAttribute(<span class="jxr_string">"databaseId"</span>);
-<a class="jxr_linenumber" name="324" href="#324">324</a>       String id = context.getStringAttribute(<span class="jxr_string">"id"</span>);
-<a class="jxr_linenumber" name="325" href="#325">325</a>       id = builderAssistant.applyCurrentNamespace(id, false);
-<a class="jxr_linenumber" name="326" href="#326">326</a>       <strong class="jxr_keyword">if</strong> (databaseIdMatchesCurrent(id, databaseId, requiredDatabaseId)) sqlFragments.put(id, context);
-<a class="jxr_linenumber" name="327" href="#327">327</a>     }
-<a class="jxr_linenumber" name="328" href="#328">328</a>   }
-<a class="jxr_linenumber" name="329" href="#329">329</a>   
-<a class="jxr_linenumber" name="330" href="#330">330</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">boolean</strong> databaseIdMatchesCurrent(String id, String databaseId, String requiredDatabaseId) {
-<a class="jxr_linenumber" name="331" href="#331">331</a>     <strong class="jxr_keyword">if</strong> (requiredDatabaseId != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="332" href="#332">332</a>       <strong class="jxr_keyword">if</strong> (!requiredDatabaseId.equals(databaseId)) {
-<a class="jxr_linenumber" name="333" href="#333">333</a>         <strong class="jxr_keyword">return</strong> false;
-<a class="jxr_linenumber" name="334" href="#334">334</a>       }
-<a class="jxr_linenumber" name="335" href="#335">335</a>     } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="336" href="#336">336</a>       <strong class="jxr_keyword">if</strong> (databaseId != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="247" href="#247">247</a>   <strong class="jxr_keyword">private</strong> <a href="../../../../../org/apache/ibatis/mapping/ResultMap.html">ResultMap</a> resultMapElement(<a href="../../../../../org/apache/ibatis/parsing/XNode.html">XNode</a> resultMapNode) <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="248" href="#248">248</a>     <strong class="jxr_keyword">return</strong> resultMapElement(resultMapNode, Collections.&lt;ResultMapping&gt; emptyList());
+<a class="jxr_linenumber" name="249" href="#249">249</a>   }
+<a class="jxr_linenumber" name="250" href="#250">250</a> 
+<a class="jxr_linenumber" name="251" href="#251">251</a>   <strong class="jxr_keyword">private</strong> <a href="../../../../../org/apache/ibatis/mapping/ResultMap.html">ResultMap</a> resultMapElement(<a href="../../../../../org/apache/ibatis/parsing/XNode.html">XNode</a> resultMapNode, List&lt;ResultMapping&gt; additionalResultMappings) <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="252" href="#252">252</a>     ErrorContext.instance().activity(<span class="jxr_string">"processing "</span> + resultMapNode.getValueBasedIdentifier());
+<a class="jxr_linenumber" name="253" href="#253">253</a>     String id = resultMapNode.getStringAttribute(<span class="jxr_string">"id"</span>,
+<a class="jxr_linenumber" name="254" href="#254">254</a>         resultMapNode.getValueBasedIdentifier());
+<a class="jxr_linenumber" name="255" href="#255">255</a>     String type = resultMapNode.getStringAttribute(<span class="jxr_string">"type"</span>,
+<a class="jxr_linenumber" name="256" href="#256">256</a>         resultMapNode.getStringAttribute(<span class="jxr_string">"ofType"</span>,
+<a class="jxr_linenumber" name="257" href="#257">257</a>             resultMapNode.getStringAttribute(<span class="jxr_string">"resultType"</span>,
+<a class="jxr_linenumber" name="258" href="#258">258</a>                 resultMapNode.getStringAttribute(<span class="jxr_string">"javaType"</span>))));
+<a class="jxr_linenumber" name="259" href="#259">259</a>     String extend = resultMapNode.getStringAttribute(<span class="jxr_string">"extends"</span>);
+<a class="jxr_linenumber" name="260" href="#260">260</a>     Boolean autoMapping = resultMapNode.getBooleanAttribute(<span class="jxr_string">"autoMapping"</span>);
+<a class="jxr_linenumber" name="261" href="#261">261</a>     Class&lt;?&gt; typeClass = resolveClass(type);
+<a class="jxr_linenumber" name="262" href="#262">262</a>     <a href="../../../../../org/apache/ibatis/mapping/Discriminator.html">Discriminator</a> discriminator = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="263" href="#263">263</a>     List&lt;ResultMapping&gt; resultMappings = <strong class="jxr_keyword">new</strong> ArrayList&lt;ResultMapping&gt;();
+<a class="jxr_linenumber" name="264" href="#264">264</a>     resultMappings.addAll(additionalResultMappings);
+<a class="jxr_linenumber" name="265" href="#265">265</a>     List&lt;XNode&gt; resultChildren = resultMapNode.getChildren();
+<a class="jxr_linenumber" name="266" href="#266">266</a>     <strong class="jxr_keyword">for</strong> (XNode resultChild : resultChildren) {
+<a class="jxr_linenumber" name="267" href="#267">267</a>       <strong class="jxr_keyword">if</strong> (<span class="jxr_string">"constructor"</span>.equals(resultChild.getName())) {
+<a class="jxr_linenumber" name="268" href="#268">268</a>         processConstructorElement(resultChild, typeClass, resultMappings);
+<a class="jxr_linenumber" name="269" href="#269">269</a>       } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (<span class="jxr_string">"discriminator"</span>.equals(resultChild.getName())) {
+<a class="jxr_linenumber" name="270" href="#270">270</a>         discriminator = processDiscriminatorElement(resultChild, typeClass, resultMappings);
+<a class="jxr_linenumber" name="271" href="#271">271</a>       } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="272" href="#272">272</a>         ArrayList&lt;ResultFlag&gt; flags = <strong class="jxr_keyword">new</strong> ArrayList&lt;ResultFlag&gt;();
+<a class="jxr_linenumber" name="273" href="#273">273</a>         <strong class="jxr_keyword">if</strong> (<span class="jxr_string">"id"</span>.equals(resultChild.getName())) {
+<a class="jxr_linenumber" name="274" href="#274">274</a>           flags.add(ResultFlag.ID);
+<a class="jxr_linenumber" name="275" href="#275">275</a>         }
+<a class="jxr_linenumber" name="276" href="#276">276</a>         resultMappings.add(buildResultMappingFromContext(resultChild, typeClass, flags));
+<a class="jxr_linenumber" name="277" href="#277">277</a>       }
+<a class="jxr_linenumber" name="278" href="#278">278</a>     }
+<a class="jxr_linenumber" name="279" href="#279">279</a>     <a href="../../../../../org/apache/ibatis/builder/ResultMapResolver.html">ResultMapResolver</a> resultMapResolver = <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/builder/ResultMapResolver.html">ResultMapResolver</a>(builderAssistant, id, typeClass, extend, discriminator, resultMappings, autoMapping);
+<a class="jxr_linenumber" name="280" href="#280">280</a>     <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="281" href="#281">281</a>       <strong class="jxr_keyword">return</strong> resultMapResolver.resolve();
+<a class="jxr_linenumber" name="282" href="#282">282</a>     } <strong class="jxr_keyword">catch</strong> (IncompleteElementException  e) {
+<a class="jxr_linenumber" name="283" href="#283">283</a>       configuration.addIncompleteResultMap(resultMapResolver);
+<a class="jxr_linenumber" name="284" href="#284">284</a>       <strong class="jxr_keyword">throw</strong> e;
+<a class="jxr_linenumber" name="285" href="#285">285</a>     }
+<a class="jxr_linenumber" name="286" href="#286">286</a>   }
+<a class="jxr_linenumber" name="287" href="#287">287</a> 
+<a class="jxr_linenumber" name="288" href="#288">288</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> processConstructorElement(<a href="../../../../../org/apache/ibatis/parsing/XNode.html">XNode</a> resultChild, Class&lt;?&gt; resultType, List&lt;ResultMapping&gt; resultMappings) <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="289" href="#289">289</a>     List&lt;XNode&gt; argChildren = resultChild.getChildren();
+<a class="jxr_linenumber" name="290" href="#290">290</a>     <strong class="jxr_keyword">for</strong> (XNode argChild : argChildren) {
+<a class="jxr_linenumber" name="291" href="#291">291</a>       ArrayList&lt;ResultFlag&gt; flags = <strong class="jxr_keyword">new</strong> ArrayList&lt;ResultFlag&gt;();
+<a class="jxr_linenumber" name="292" href="#292">292</a>       flags.add(ResultFlag.CONSTRUCTOR);
+<a class="jxr_linenumber" name="293" href="#293">293</a>       <strong class="jxr_keyword">if</strong> (<span class="jxr_string">"idArg"</span>.equals(argChild.getName())) {
+<a class="jxr_linenumber" name="294" href="#294">294</a>         flags.add(ResultFlag.ID);
+<a class="jxr_linenumber" name="295" href="#295">295</a>       }
+<a class="jxr_linenumber" name="296" href="#296">296</a>       resultMappings.add(buildResultMappingFromContext(argChild, resultType, flags));
+<a class="jxr_linenumber" name="297" href="#297">297</a>     }
+<a class="jxr_linenumber" name="298" href="#298">298</a>   }
+<a class="jxr_linenumber" name="299" href="#299">299</a> 
+<a class="jxr_linenumber" name="300" href="#300">300</a>   <strong class="jxr_keyword">private</strong> <a href="../../../../../org/apache/ibatis/mapping/Discriminator.html">Discriminator</a> processDiscriminatorElement(<a href="../../../../../org/apache/ibatis/parsing/XNode.html">XNode</a> context, Class&lt;?&gt; resultType, List&lt;ResultMapping&gt; resultMappings) <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="301" href="#301">301</a>     String column = context.getStringAttribute(<span class="jxr_string">"column"</span>);
+<a class="jxr_linenumber" name="302" href="#302">302</a>     String javaType = context.getStringAttribute(<span class="jxr_string">"javaType"</span>);
+<a class="jxr_linenumber" name="303" href="#303">303</a>     String jdbcType = context.getStringAttribute(<span class="jxr_string">"jdbcType"</span>);
+<a class="jxr_linenumber" name="304" href="#304">304</a>     String typeHandler = context.getStringAttribute(<span class="jxr_string">"typeHandler"</span>);
+<a class="jxr_linenumber" name="305" href="#305">305</a>     Class&lt;?&gt; javaTypeClass = resolveClass(javaType);
+<a class="jxr_linenumber" name="306" href="#306">306</a>     @SuppressWarnings(<span class="jxr_string">"unchecked"</span>)
+<a class="jxr_linenumber" name="307" href="#307">307</a>     Class&lt;? <strong class="jxr_keyword">extends</strong> TypeHandler&lt;?&gt;&gt; typeHandlerClass = (Class&lt;? <strong class="jxr_keyword">extends</strong> TypeHandler&lt;?&gt;&gt;) resolveClass(typeHandler);
+<a class="jxr_linenumber" name="308" href="#308">308</a>     <a href="../../../../../org/apache/ibatis/type/JdbcType.html">JdbcType</a> jdbcTypeEnum = resolveJdbcType(jdbcType);
+<a class="jxr_linenumber" name="309" href="#309">309</a>     Map&lt;String, String&gt; discriminatorMap = <strong class="jxr_keyword">new</strong> HashMap&lt;String, String&gt;();
+<a class="jxr_linenumber" name="310" href="#310">310</a>     <strong class="jxr_keyword">for</strong> (XNode caseChild : context.getChildren()) {
+<a class="jxr_linenumber" name="311" href="#311">311</a>       String value = caseChild.getStringAttribute(<span class="jxr_string">"value"</span>);
+<a class="jxr_linenumber" name="312" href="#312">312</a>       String resultMap = caseChild.getStringAttribute(<span class="jxr_string">"resultMap"</span>, processNestedResultMappings(caseChild, resultMappings));
+<a class="jxr_linenumber" name="313" href="#313">313</a>       discriminatorMap.put(value, resultMap);
+<a class="jxr_linenumber" name="314" href="#314">314</a>     }
+<a class="jxr_linenumber" name="315" href="#315">315</a>     <strong class="jxr_keyword">return</strong> builderAssistant.buildDiscriminator(resultType, column, javaTypeClass, jdbcTypeEnum, typeHandlerClass, discriminatorMap);
+<a class="jxr_linenumber" name="316" href="#316">316</a>   }
+<a class="jxr_linenumber" name="317" href="#317">317</a> 
+<a class="jxr_linenumber" name="318" href="#318">318</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> sqlElement(List&lt;XNode&gt; list) <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="319" href="#319">319</a>     <strong class="jxr_keyword">if</strong> (configuration.getDatabaseId() != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="320" href="#320">320</a>       sqlElement(list, configuration.getDatabaseId());
+<a class="jxr_linenumber" name="321" href="#321">321</a>     }
+<a class="jxr_linenumber" name="322" href="#322">322</a>     sqlElement(list, <strong class="jxr_keyword">null</strong>);
+<a class="jxr_linenumber" name="323" href="#323">323</a>   }
+<a class="jxr_linenumber" name="324" href="#324">324</a> 
+<a class="jxr_linenumber" name="325" href="#325">325</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> sqlElement(List&lt;XNode&gt; list, String requiredDatabaseId) <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="326" href="#326">326</a>     <strong class="jxr_keyword">for</strong> (XNode context : list) {
+<a class="jxr_linenumber" name="327" href="#327">327</a>       String databaseId = context.getStringAttribute(<span class="jxr_string">"databaseId"</span>);
+<a class="jxr_linenumber" name="328" href="#328">328</a>       String id = context.getStringAttribute(<span class="jxr_string">"id"</span>);
+<a class="jxr_linenumber" name="329" href="#329">329</a>       id = builderAssistant.applyCurrentNamespace(id, false);
+<a class="jxr_linenumber" name="330" href="#330">330</a>       <strong class="jxr_keyword">if</strong> (databaseIdMatchesCurrent(id, databaseId, requiredDatabaseId)) sqlFragments.put(id, context);
+<a class="jxr_linenumber" name="331" href="#331">331</a>     }
+<a class="jxr_linenumber" name="332" href="#332">332</a>   }
+<a class="jxr_linenumber" name="333" href="#333">333</a>   
+<a class="jxr_linenumber" name="334" href="#334">334</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">boolean</strong> databaseIdMatchesCurrent(String id, String databaseId, String requiredDatabaseId) {
+<a class="jxr_linenumber" name="335" href="#335">335</a>     <strong class="jxr_keyword">if</strong> (requiredDatabaseId != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="336" href="#336">336</a>       <strong class="jxr_keyword">if</strong> (!requiredDatabaseId.equals(databaseId)) {
 <a class="jxr_linenumber" name="337" href="#337">337</a>         <strong class="jxr_keyword">return</strong> false;
 <a class="jxr_linenumber" name="338" href="#338">338</a>       }
-<a class="jxr_linenumber" name="339" href="#339">339</a>       <em class="jxr_comment">// skip this fragment if there is a previous one with a not null databaseId</em>
-<a class="jxr_linenumber" name="340" href="#340">340</a>       <strong class="jxr_keyword">if</strong> (<strong class="jxr_keyword">this</strong>.sqlFragments.containsKey(id)) {
-<a class="jxr_linenumber" name="341" href="#341">341</a>         <a href="../../../../../org/apache/ibatis/parsing/XNode.html">XNode</a> context = <strong class="jxr_keyword">this</strong>.sqlFragments.get(id);
-<a class="jxr_linenumber" name="342" href="#342">342</a>         <strong class="jxr_keyword">if</strong> (context.getStringAttribute(<span class="jxr_string">"databaseId"</span>) != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="343" href="#343">343</a>           <strong class="jxr_keyword">return</strong> false;
-<a class="jxr_linenumber" name="344" href="#344">344</a>         }
-<a class="jxr_linenumber" name="345" href="#345">345</a>       }
-<a class="jxr_linenumber" name="346" href="#346">346</a>     }
-<a class="jxr_linenumber" name="347" href="#347">347</a>     <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">true</strong>;
-<a class="jxr_linenumber" name="348" href="#348">348</a>   }
-<a class="jxr_linenumber" name="349" href="#349">349</a> 
-<a class="jxr_linenumber" name="350" href="#350">350</a>   <strong class="jxr_keyword">private</strong> <a href="../../../../../org/apache/ibatis/mapping/ResultMapping.html">ResultMapping</a> buildResultMappingFromContext(<a href="../../../../../org/apache/ibatis/parsing/XNode.html">XNode</a> context, Class&lt;?&gt; resultType, ArrayList&lt;ResultFlag&gt; flags) <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="351" href="#351">351</a>     String property = context.getStringAttribute(<span class="jxr_string">"property"</span>);
-<a class="jxr_linenumber" name="352" href="#352">352</a>     String column = context.getStringAttribute(<span class="jxr_string">"column"</span>);
-<a class="jxr_linenumber" name="353" href="#353">353</a>     String javaType = context.getStringAttribute(<span class="jxr_string">"javaType"</span>);
-<a class="jxr_linenumber" name="354" href="#354">354</a>     String jdbcType = context.getStringAttribute(<span class="jxr_string">"jdbcType"</span>);
-<a class="jxr_linenumber" name="355" href="#355">355</a>     String nestedSelect = context.getStringAttribute(<span class="jxr_string">"select"</span>);
-<a class="jxr_linenumber" name="356" href="#356">356</a>     String nestedResultMap = context.getStringAttribute(<span class="jxr_string">"resultMap"</span>,
-<a class="jxr_linenumber" name="357" href="#357">357</a>         processNestedResultMappings(context, Collections.&lt;ResultMapping&gt; emptyList()));
-<a class="jxr_linenumber" name="358" href="#358">358</a>     String notNullColumn = context.getStringAttribute(<span class="jxr_string">"notNullColumn"</span>);
-<a class="jxr_linenumber" name="359" href="#359">359</a>     String columnPrefix = context.getStringAttribute(<span class="jxr_string">"columnPrefix"</span>);
-<a class="jxr_linenumber" name="360" href="#360">360</a>     String typeHandler = context.getStringAttribute(<span class="jxr_string">"typeHandler"</span>);
-<a class="jxr_linenumber" name="361" href="#361">361</a>     String resulSet = context.getStringAttribute(<span class="jxr_string">"resultSet"</span>);
-<a class="jxr_linenumber" name="362" href="#362">362</a>     String foreignColumn = context.getStringAttribute(<span class="jxr_string">"foreignColumn"</span>);
-<a class="jxr_linenumber" name="363" href="#363">363</a>     Class&lt;?&gt; javaTypeClass = resolveClass(javaType);
-<a class="jxr_linenumber" name="364" href="#364">364</a>     @SuppressWarnings(<span class="jxr_string">"unchecked"</span>)
-<a class="jxr_linenumber" name="365" href="#365">365</a>     Class&lt;? <strong class="jxr_keyword">extends</strong> TypeHandler&lt;?&gt;&gt; typeHandlerClass = (Class&lt;? <strong class="jxr_keyword">extends</strong> TypeHandler&lt;?&gt;&gt;) resolveClass(typeHandler);
-<a class="jxr_linenumber" name="366" href="#366">366</a>     <a href="../../../../../org/apache/ibatis/type/JdbcType.html">JdbcType</a> jdbcTypeEnum = resolveJdbcType(jdbcType);
-<a class="jxr_linenumber" name="367" href="#367">367</a>     <strong class="jxr_keyword">return</strong> builderAssistant.buildResultMapping(resultType, property, column, javaTypeClass, jdbcTypeEnum, nestedSelect, nestedResultMap, notNullColumn, columnPrefix, typeHandlerClass, flags, resulSet, foreignColumn);
-<a class="jxr_linenumber" name="368" href="#368">368</a>   }
-<a class="jxr_linenumber" name="369" href="#369">369</a> 
-<a class="jxr_linenumber" name="370" href="#370">370</a>   <strong class="jxr_keyword">private</strong> String processNestedResultMappings(<a href="../../../../../org/apache/ibatis/parsing/XNode.html">XNode</a> context, List&lt;ResultMapping&gt; resultMappings) <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="371" href="#371">371</a>     <strong class="jxr_keyword">if</strong> (<span class="jxr_string">"association"</span>.equals(context.getName())
-<a class="jxr_linenumber" name="372" href="#372">372</a>         || <span class="jxr_string">"collection"</span>.equals(context.getName())
-<a class="jxr_linenumber" name="373" href="#373">373</a>         || <span class="jxr_string">"case"</span>.equals(context.getName())) {
-<a class="jxr_linenumber" name="374" href="#374">374</a>       <strong class="jxr_keyword">if</strong> (context.getStringAttribute(<span class="jxr_string">"select"</span>) == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="375" href="#375">375</a>         <a href="../../../../../org/apache/ibatis/mapping/ResultMap.html">ResultMap</a> resultMap = resultMapElement(context, resultMappings);
-<a class="jxr_linenumber" name="376" href="#376">376</a>         <strong class="jxr_keyword">return</strong> resultMap.getId();
-<a class="jxr_linenumber" name="377" href="#377">377</a>       }
-<a class="jxr_linenumber" name="378" href="#378">378</a>     }
-<a class="jxr_linenumber" name="379" href="#379">379</a>     <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">null</strong>;
-<a class="jxr_linenumber" name="380" href="#380">380</a>   }
-<a class="jxr_linenumber" name="381" href="#381">381</a> 
-<a class="jxr_linenumber" name="382" href="#382">382</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> bindMapperForNamespace() {
-<a class="jxr_linenumber" name="383" href="#383">383</a>     String namespace = builderAssistant.getCurrentNamespace();
-<a class="jxr_linenumber" name="384" href="#384">384</a>     <strong class="jxr_keyword">if</strong> (namespace != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="385" href="#385">385</a>       Class&lt;?&gt; boundType = <strong class="jxr_keyword">null</strong>;
-<a class="jxr_linenumber" name="386" href="#386">386</a>       <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="387" href="#387">387</a>         boundType = Resources.classForName(namespace);
-<a class="jxr_linenumber" name="388" href="#388">388</a>       } <strong class="jxr_keyword">catch</strong> (ClassNotFoundException e) {
-<a class="jxr_linenumber" name="389" href="#389">389</a>         <em class="jxr_comment">//ignore, bound type is not required</em>
-<a class="jxr_linenumber" name="390" href="#390">390</a>       }
-<a class="jxr_linenumber" name="391" href="#391">391</a>       <strong class="jxr_keyword">if</strong> (boundType != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="392" href="#392">392</a>         <strong class="jxr_keyword">if</strong> (!configuration.hasMapper(boundType)) {
-<a class="jxr_linenumber" name="393" href="#393">393</a>           <em class="jxr_comment">// Spring may not know the real resource name so we set a flag</em>
-<a class="jxr_linenumber" name="394" href="#394">394</a>           <em class="jxr_comment">// to prevent loading again this resource from the mapper interface</em>
-<a class="jxr_linenumber" name="395" href="#395">395</a>           <em class="jxr_comment">// look at MapperAnnotationBuilder#loadXmlResource</em>
-<a class="jxr_linenumber" name="396" href="#396">396</a>           configuration.addLoadedResource(<span class="jxr_string">"namespace:"</span> + namespace);
-<a class="jxr_linenumber" name="397" href="#397">397</a>           configuration.addMapper(boundType);
-<a class="jxr_linenumber" name="398" href="#398">398</a>         }
-<a class="jxr_linenumber" name="399" href="#399">399</a>       }
-<a class="jxr_linenumber" name="400" href="#400">400</a>     }
-<a class="jxr_linenumber" name="401" href="#401">401</a>   }
-<a class="jxr_linenumber" name="402" href="#402">402</a> 
-<a class="jxr_linenumber" name="403" href="#403">403</a> }
+<a class="jxr_linenumber" name="339" href="#339">339</a>     } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="340" href="#340">340</a>       <strong class="jxr_keyword">if</strong> (databaseId != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="341" href="#341">341</a>         <strong class="jxr_keyword">return</strong> false;
+<a class="jxr_linenumber" name="342" href="#342">342</a>       }
+<a class="jxr_linenumber" name="343" href="#343">343</a>       <em class="jxr_comment">// skip this fragment if there is a previous one with a not null databaseId</em>
+<a class="jxr_linenumber" name="344" href="#344">344</a>       <strong class="jxr_keyword">if</strong> (<strong class="jxr_keyword">this</strong>.sqlFragments.containsKey(id)) {
+<a class="jxr_linenumber" name="345" href="#345">345</a>         <a href="../../../../../org/apache/ibatis/parsing/XNode.html">XNode</a> context = <strong class="jxr_keyword">this</strong>.sqlFragments.get(id);
+<a class="jxr_linenumber" name="346" href="#346">346</a>         <strong class="jxr_keyword">if</strong> (context.getStringAttribute(<span class="jxr_string">"databaseId"</span>) != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="347" href="#347">347</a>           <strong class="jxr_keyword">return</strong> false;
+<a class="jxr_linenumber" name="348" href="#348">348</a>         }
+<a class="jxr_linenumber" name="349" href="#349">349</a>       }
+<a class="jxr_linenumber" name="350" href="#350">350</a>     }
+<a class="jxr_linenumber" name="351" href="#351">351</a>     <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">true</strong>;
+<a class="jxr_linenumber" name="352" href="#352">352</a>   }
+<a class="jxr_linenumber" name="353" href="#353">353</a> 
+<a class="jxr_linenumber" name="354" href="#354">354</a>   <strong class="jxr_keyword">private</strong> <a href="../../../../../org/apache/ibatis/mapping/ResultMapping.html">ResultMapping</a> buildResultMappingFromContext(<a href="../../../../../org/apache/ibatis/parsing/XNode.html">XNode</a> context, Class&lt;?&gt; resultType, ArrayList&lt;ResultFlag&gt; flags) <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="355" href="#355">355</a>     String property = context.getStringAttribute(<span class="jxr_string">"property"</span>);
+<a class="jxr_linenumber" name="356" href="#356">356</a>     String column = context.getStringAttribute(<span class="jxr_string">"column"</span>);
+<a class="jxr_linenumber" name="357" href="#357">357</a>     String javaType = context.getStringAttribute(<span class="jxr_string">"javaType"</span>);
+<a class="jxr_linenumber" name="358" href="#358">358</a>     String jdbcType = context.getStringAttribute(<span class="jxr_string">"jdbcType"</span>);
+<a class="jxr_linenumber" name="359" href="#359">359</a>     String nestedSelect = context.getStringAttribute(<span class="jxr_string">"select"</span>);
+<a class="jxr_linenumber" name="360" href="#360">360</a>     String nestedResultMap = context.getStringAttribute(<span class="jxr_string">"resultMap"</span>,
+<a class="jxr_linenumber" name="361" href="#361">361</a>         processNestedResultMappings(context, Collections.&lt;ResultMapping&gt; emptyList()));
+<a class="jxr_linenumber" name="362" href="#362">362</a>     String notNullColumn = context.getStringAttribute(<span class="jxr_string">"notNullColumn"</span>);
+<a class="jxr_linenumber" name="363" href="#363">363</a>     String columnPrefix = context.getStringAttribute(<span class="jxr_string">"columnPrefix"</span>);
+<a class="jxr_linenumber" name="364" href="#364">364</a>     String typeHandler = context.getStringAttribute(<span class="jxr_string">"typeHandler"</span>);
+<a class="jxr_linenumber" name="365" href="#365">365</a>     String resulSet = context.getStringAttribute(<span class="jxr_string">"resultSet"</span>);
+<a class="jxr_linenumber" name="366" href="#366">366</a>     String foreignColumn = context.getStringAttribute(<span class="jxr_string">"foreignColumn"</span>);
+<a class="jxr_linenumber" name="367" href="#367">367</a>     Class&lt;?&gt; javaTypeClass = resolveClass(javaType);
+<a class="jxr_linenumber" name="368" href="#368">368</a>     @SuppressWarnings(<span class="jxr_string">"unchecked"</span>)
+<a class="jxr_linenumber" name="369" href="#369">369</a>     Class&lt;? <strong class="jxr_keyword">extends</strong> TypeHandler&lt;?&gt;&gt; typeHandlerClass = (Class&lt;? <strong class="jxr_keyword">extends</strong> TypeHandler&lt;?&gt;&gt;) resolveClass(typeHandler);
+<a class="jxr_linenumber" name="370" href="#370">370</a>     <a href="../../../../../org/apache/ibatis/type/JdbcType.html">JdbcType</a> jdbcTypeEnum = resolveJdbcType(jdbcType);
+<a class="jxr_linenumber" name="371" href="#371">371</a>     <strong class="jxr_keyword">return</strong> builderAssistant.buildResultMapping(resultType, property, column, javaTypeClass, jdbcTypeEnum, nestedSelect, nestedResultMap, notNullColumn, columnPrefix, typeHandlerClass, flags, resulSet, foreignColumn);
+<a class="jxr_linenumber" name="372" href="#372">372</a>   }
+<a class="jxr_linenumber" name="373" href="#373">373</a> 
+<a class="jxr_linenumber" name="374" href="#374">374</a>   <strong class="jxr_keyword">private</strong> String processNestedResultMappings(<a href="../../../../../org/apache/ibatis/parsing/XNode.html">XNode</a> context, List&lt;ResultMapping&gt; resultMappings) <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="375" href="#375">375</a>     <strong class="jxr_keyword">if</strong> (<span class="jxr_string">"association"</span>.equals(context.getName())
+<a class="jxr_linenumber" name="376" href="#376">376</a>         || <span class="jxr_string">"collection"</span>.equals(context.getName())
+<a class="jxr_linenumber" name="377" href="#377">377</a>         || <span class="jxr_string">"case"</span>.equals(context.getName())) {
+<a class="jxr_linenumber" name="378" href="#378">378</a>       <strong class="jxr_keyword">if</strong> (context.getStringAttribute(<span class="jxr_string">"select"</span>) == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="379" href="#379">379</a>         <a href="../../../../../org/apache/ibatis/mapping/ResultMap.html">ResultMap</a> resultMap = resultMapElement(context, resultMappings);
+<a class="jxr_linenumber" name="380" href="#380">380</a>         <strong class="jxr_keyword">return</strong> resultMap.getId();
+<a class="jxr_linenumber" name="381" href="#381">381</a>       }
+<a class="jxr_linenumber" name="382" href="#382">382</a>     }
+<a class="jxr_linenumber" name="383" href="#383">383</a>     <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="384" href="#384">384</a>   }
+<a class="jxr_linenumber" name="385" href="#385">385</a> 
+<a class="jxr_linenumber" name="386" href="#386">386</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> bindMapperForNamespace() {
+<a class="jxr_linenumber" name="387" href="#387">387</a>     String namespace = builderAssistant.getCurrentNamespace();
+<a class="jxr_linenumber" name="388" href="#388">388</a>     <strong class="jxr_keyword">if</strong> (namespace != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="389" href="#389">389</a>       Class&lt;?&gt; boundType = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="390" href="#390">390</a>       <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="391" href="#391">391</a>         boundType = Resources.classForName(namespace);
+<a class="jxr_linenumber" name="392" href="#392">392</a>       } <strong class="jxr_keyword">catch</strong> (ClassNotFoundException e) {
+<a class="jxr_linenumber" name="393" href="#393">393</a>         <em class="jxr_comment">//ignore, bound type is not required</em>
+<a class="jxr_linenumber" name="394" href="#394">394</a>       }
+<a class="jxr_linenumber" name="395" href="#395">395</a>       <strong class="jxr_keyword">if</strong> (boundType != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="396" href="#396">396</a>         <strong class="jxr_keyword">if</strong> (!configuration.hasMapper(boundType)) {
+<a class="jxr_linenumber" name="397" href="#397">397</a>           <em class="jxr_comment">// Spring may not know the real resource name so we set a flag</em>
+<a class="jxr_linenumber" name="398" href="#398">398</a>           <em class="jxr_comment">// to prevent loading again this resource from the mapper interface</em>
+<a class="jxr_linenumber" name="399" href="#399">399</a>           <em class="jxr_comment">// look at MapperAnnotationBuilder#loadXmlResource</em>
+<a class="jxr_linenumber" name="400" href="#400">400</a>           configuration.addLoadedResource(<span class="jxr_string">"namespace:"</span> + namespace);
+<a class="jxr_linenumber" name="401" href="#401">401</a>           configuration.addMapper(boundType);
+<a class="jxr_linenumber" name="402" href="#402">402</a>         }
+<a class="jxr_linenumber" name="403" href="#403">403</a>       }
+<a class="jxr_linenumber" name="404" href="#404">404</a>     }
+<a class="jxr_linenumber" name="405" href="#405">405</a>   }
+<a class="jxr_linenumber" name="406" href="#406">406</a> 
+<a class="jxr_linenumber" name="407" href="#407">407</a> }
 </pre>
 <hr/><div id="footer">This page was automatically generated by <a href="http://maven.apache.org/">Maven</a></div></body>
 </html>

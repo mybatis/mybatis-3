@@ -539,7 +539,7 @@
 >
 <parameter name="configuration" type="org.apache.ibatis.session.Configuration">
 </parameter>
-<parameter name="declaringInterface" type="java.lang.Class&lt;?&gt;">
+<parameter name="mapperInterface" type="java.lang.Class&lt;?&gt;">
 </parameter>
 <parameter name="method" type="java.lang.reflect.Method">
 </parameter>
