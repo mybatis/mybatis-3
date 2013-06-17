@@ -145,9 +145,9 @@ public class ForEachSqlNode implements SqlNode {
     public void appendSql(String sql) {
       GenericTokenParser parser = new GenericTokenParser("#{", "}", new TokenHandler() {
         public String handleToken(String content) {
-          String newContent = content.replaceFirst(item, itemizeItem(item, index));
+          String newContent = content.replaceFirst("^\\s*" + item + "(?![^.,:\\s])", itemizeItem(item, index));
           if (itemIndex != null && newContent.equals(content)) {
-            newContent = content.replaceFirst(itemIndex, itemizeItem(itemIndex, index));
+            newContent = content.replaceFirst("^\\s*" + itemIndex + "(?![^.,:\\s])", itemizeItem(itemIndex, index));
           }
           return new StringBuilder("#{").append(newContent).append("}").toString();
         }

@@ -23,6 +23,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
@@ -287,6 +289,28 @@ public class DynamicSqlSourceTest extends BaseDataTest {
     assertEquals("__frch_item_0", boundSql.getParameterMappings().get(0).getProperty());
     assertEquals("__frch_item_1", boundSql.getParameterMappings().get(1).getProperty());
     assertEquals("__frch_item_2", boundSql.getParameterMappings().get(2).getProperty());
+  }
+
+  @Test
+  public void shouldPerformStrictMatchOnForEachVariableSubstitution() throws Exception {
+    final Map<String, Object> param = new HashMap<String, Object>();
+    final Map<String, String> uuu = new HashMap<String, String>();
+    uuu.put("u", "xyz");
+    List<Bean> uuuu = new ArrayList<Bean>();
+    uuuu.add(new Bean("bean id"));
+    param.put("uuu", uuu);
+    param.put("uuuu", uuuu);
+    DynamicSqlSource source = createDynamicSqlSource(
+        new TextSqlNode("INSERT INTO BLOG (ID, NAME, NOTE, COMMENT) VALUES"),
+        new ForEachSqlNode(new Configuration(),mixedContents(
+            new TextSqlNode("#{uuu.u}, #{u.id}, #{ u,typeHandler=org.apache.ibatis.type.StringTypeHandler},"
+                + " #{u:VARCHAR,typeHandler=org.apache.ibatis.type.StringTypeHandler}")), "uuuu", "uu", "u", "(", ")", ","));
+    BoundSql boundSql = source.getBoundSql(param);
+    assertEquals(4, boundSql.getParameterMappings().size());
+    assertEquals("uuu.u", boundSql.getParameterMappings().get(0).getProperty());
+    assertEquals("__frch_u_0.id", boundSql.getParameterMappings().get(1).getProperty());
+    assertEquals("__frch_u_0", boundSql.getParameterMappings().get(2).getProperty());
+    assertEquals("__frch_u_0", boundSql.getParameterMappings().get(3).getProperty());
   }
 
   private DynamicSqlSource createDynamicSqlSource(SqlNode... contents) throws IOException, SQLException {
