@@ -4,8 +4,9 @@ jdk:
   - openjdk7
   - openjdk6
 after_success:
+  - "mvn clean"
   - "git clone -b travis `git config --get remote.origin.url` target/travis"
-  - "mvn deploy --settings target/travis/settings.xml"
+  - "mvn deploy -Dmaven.test.skip=true --settings target/travis/settings.xml"
 
 branches:
   except:
