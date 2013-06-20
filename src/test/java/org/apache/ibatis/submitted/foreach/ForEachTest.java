@@ -70,4 +70,22 @@ public class ForEachTest {
     }
   }
 
+  @Test
+  public void shouldHandleComplexNullItem() {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      User user1 = new User();
+      user1.setId(2);
+      user1.setName("User2");
+      List<User> users = new ArrayList<User>();
+      users.add(user1);
+      users.add(null);
+      int count = mapper.countByUserList(users);
+      Assert.assertEquals(1, count);
+    } finally {
+      sqlSession.close();
+    }
+  }
+
 }

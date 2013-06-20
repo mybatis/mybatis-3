@@ -15,8 +15,12 @@
  */
 package org.apache.ibatis.submitted.foreach;
 
+import java.util.List;
+
 public interface Mapper {
 
   User getUser(User user);
+
+  int countByUserList(List<User> users);
 
 }
