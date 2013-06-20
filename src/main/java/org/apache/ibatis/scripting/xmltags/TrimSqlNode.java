@@ -29,16 +29,20 @@ public class TrimSqlNode implements SqlNode {
   private SqlNode contents;
   private String prefix;
   private String suffix;
-  private List<String> prefixesToOverride = new ArrayList<String>();
-  private List<String> suffixesToOverride = new ArrayList<String>();
+  private List<String> prefixesToOverride;
+  private List<String> suffixesToOverride;
   private Configuration configuration;
 
   public TrimSqlNode(Configuration configuration, SqlNode contents, String prefix, String prefixesToOverride, String suffix, String suffixesToOverride) {
+    this(configuration, contents, prefix, parseOverrides(prefixesToOverride), suffix, parseOverrides(suffixesToOverride));;
+  }
+
+  protected TrimSqlNode(Configuration configuration, SqlNode contents, String prefix, List<String> prefixesToOverride, String suffix, List<String> suffixesToOverride) {
     this.contents = contents;
     this.prefix = prefix;
-    this.prefixesToOverride = parseOverrides(prefixesToOverride);
+    this.prefixesToOverride = prefixesToOverride;
     this.suffix = suffix;
-    this.suffixesToOverride = parseOverrides(suffixesToOverride);
+    this.suffixesToOverride = suffixesToOverride;
     this.configuration = configuration;
   }
 
@@ -49,7 +53,7 @@ public class TrimSqlNode implements SqlNode {
     return result;
   }
 
-  private List<String> parseOverrides(String overrides) {
+  private static List<String> parseOverrides(String overrides) {
     if (overrides != null) {
       final StringTokenizer parser = new StringTokenizer(overrides, "|", false);
       return new ArrayList<String>() {
@@ -117,10 +121,12 @@ public class TrimSqlNode implements SqlNode {
     private void applyPrefix(StringBuilder sql, String trimmedUppercaseSql) {
       if (!prefixApplied) {
         prefixApplied = true;
-        for (String toRemove : prefixesToOverride) {
-          if (trimmedUppercaseSql.startsWith(toRemove)) {
-            sql.delete(0, toRemove.trim().length());
-            break;
+        if (prefixesToOverride != null) {
+          for (String toRemove : prefixesToOverride) {
+            if (trimmedUppercaseSql.startsWith(toRemove)) {
+              sql.delete(0, toRemove.trim().length());
+              break;
+            }
           }
         }
         if (prefix != null) {
@@ -133,12 +139,14 @@ public class TrimSqlNode implements SqlNode {
     private void applySuffix(StringBuilder sql, String trimmedUppercaseSql) {
       if (!suffixApplied) {
         suffixApplied = true;
-        for (String toRemove : suffixesToOverride) {
-          if (trimmedUppercaseSql.endsWith(toRemove) || trimmedUppercaseSql.endsWith(toRemove.trim())) {
-            int start = sql.length() - toRemove.trim().length();
-            int end = sql.length();
-            sql.delete(start, end);
-            break;
+        if (suffixesToOverride != null) {
+          for (String toRemove : suffixesToOverride) {
+            if (trimmedUppercaseSql.endsWith(toRemove) || trimmedUppercaseSql.endsWith(toRemove.trim())) {
+              int start = sql.length() - toRemove.trim().length();
+              int end = sql.length();
+              sql.delete(start, end);
+              break;
+            }
           }
         }
         if (suffix != null) {
