@@ -40,4 +40,14 @@
       </where>
   </select>
 
+  <select id="countByBestFriend" resultType="_int" parameterType="list">
+    select count(*) from users
+      <where>
+        id in
+        <foreach item="item" collection="list" separator="," open="(" close=")">
+          #{item.bestFriend.id, jdbcType=NUMERIC}
+        </foreach>
+      </where>
+  </select>
+
 </mapper>

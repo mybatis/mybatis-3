@@ -17,6 +17,7 @@ package org.apache.ibatis.reflection;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
@@ -241,7 +242,30 @@ public class MetaObjectTest {
     assertEquals("Clinton", name.get("first"));
     assertEquals("1 Some Street", address.get("street"));
   }
-  
+
+  @Test
+  public void shouldDemonstrateNullValueInMap() {
+    HashMap<String, String> map = new HashMap<String, String>();
+    MetaObject metaMap = SystemMetaObject.forObject(map);
+    assertFalse(metaMap.hasGetter("phone.home"));
+
+    metaMap.setValue("phone", null);
+    assertTrue(metaMap.hasGetter("phone"));
+    // hasGetter returns true if the parent exists and is null.
+    assertTrue(metaMap.hasGetter("phone.home"));
+    assertTrue(metaMap.hasGetter("phone.home.ext"));
+    assertNull(metaMap.getValue("phone"));
+    assertNull(metaMap.getValue("phone.home"));
+    assertNull(metaMap.getValue("phone.home.ext"));
+
+    metaMap.setValue("phone.office", "789");
+    assertFalse(metaMap.hasGetter("phone.home"));
+    assertFalse(metaMap.hasGetter("phone.home.ext"));
+    assertEquals("789", metaMap.getValue("phone.office"));
+    assertNotNull(metaMap.getValue("phone"));
+    assertNull(metaMap.getValue("phone.home"));
+  }
+
   @Test
   public void shouldNotUseObjectWrapperFactoryByDefault() {
     MetaObject meta = SystemMetaObject.forObject(new Product());

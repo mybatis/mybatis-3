@@ -88,4 +88,23 @@ public class ForEachTest {
     }
   }
 
+  @Test
+  public void shouldHandleMoreComplexNullItem() {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      User user1 = new User();
+      User bestFriend = new User();
+      bestFriend.setId(5);
+      user1.setBestFriend(bestFriend);
+      List<User> users = new ArrayList<User>();
+      users.add(user1);
+      users.add(null);
+      int count = mapper.countByBestFriend(users);
+      Assert.assertEquals(1, count);
+    } finally {
+      sqlSession.close();
+    }
+  }
+
 }

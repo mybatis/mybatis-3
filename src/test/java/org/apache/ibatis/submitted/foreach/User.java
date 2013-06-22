@@ -21,6 +21,7 @@ public class User {
 
   private Integer id;
   private String name;
+  private User bestFriend;
   private List<User> friendList;
 
   public Integer getId() {
@@ -37,6 +38,14 @@ public class User {
 
   public void setName(String name) {
     this.name = name;
+  }
+
+  public User getBestFriend() {
+    return bestFriend;
+  }
+
+  public void setBestFriend(User bestFriend) {
+    this.bestFriend = bestFriend;
   }
 
   public List<User> getFriendList() {

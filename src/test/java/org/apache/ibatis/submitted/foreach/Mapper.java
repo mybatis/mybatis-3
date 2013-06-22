@@ -23,4 +23,6 @@ public interface Mapper {
 
   int countByUserList(List<User> users);
 
+  int countByBestFriend(List<User> users);
+
 }
