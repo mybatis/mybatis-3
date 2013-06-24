@@ -31,14 +31,14 @@
     
     <subsection name="Installation">
       <p>
-        To use the MyBatis you just need to include the
+        MyBatis を使うためには、ダウンロードした
         <code>
           mybatis-x.x.x.jar
         </code>
-        file in the classpath.
+        をクラスパスに追加する必要があります。
       </p>
       <p>
-        If you are using Maven just add the following dependency to your pom.xml:
+        Maven を利用している場合は pom.xml に下記の依存性を追加するだけで OK です。
       </p>
         <source><![CDATA[
 <dependency>
