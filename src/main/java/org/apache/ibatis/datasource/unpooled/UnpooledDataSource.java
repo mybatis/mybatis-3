@@ -17,9 +17,14 @@ package org.apache.ibatis.datasource.unpooled;
 
 import java.io.PrintWriter;
 import java.sql.Connection;
+import java.sql.Driver;
 import java.sql.DriverManager;
+import java.sql.DriverPropertyInfo;
 import java.sql.SQLException;
+import java.util.Enumeration;
+import java.util.Map;
 import java.util.Properties;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
 import javax.sql.DataSource;
@@ -30,7 +35,7 @@ public class UnpooledDataSource implements DataSource {
   
   private ClassLoader driverClassLoader;
   private Properties driverProperties;
-  private boolean driverInitialized;
+  private static Map<String, Driver> driverCache = new ConcurrentHashMap<String, Driver>();
 
   private String driver;
   private String url;
@@ -41,7 +46,11 @@ public class UnpooledDataSource implements DataSource {
   private Integer defaultTransactionIsolationLevel;
 
   static {
-    DriverManager.getDrivers();
+    Enumeration<Driver> drivers = DriverManager.getDrivers();
+    while (drivers.hasMoreElements()) {
+      Driver driver = drivers.nextElement();
+      driverCache.put(driver.getClass().getName(), driver);
+    }
   }
 
   public UnpooledDataSource() {
@@ -121,7 +130,6 @@ public class UnpooledDataSource implements DataSource {
 
   public synchronized void setDriver(String driver) {
     this.driver = driver;
-    driverInitialized = false;
   }
 
   public String getUrl() {
@@ -183,14 +191,18 @@ public class UnpooledDataSource implements DataSource {
   }
 
   private synchronized void initializeDriver() throws SQLException {
-    if (!driverInitialized) {
-      driverInitialized = true;
+    if (!driverCache.containsKey(driver)) {
+      Class<?> driverType;
       try {
         if (driverClassLoader != null) {
-          Class.forName(driver, true, driverClassLoader);
+          driverType = Class.forName(driver, true, driverClassLoader);
         } else {
-          Resources.classForName(driver);
+          driverType = Resources.classForName(driver);
         }
+        // http://www.kfu.com/~nsayer/Java/dyn-jdbc.html
+        Driver driverInstance = (Driver)driverType.newInstance();
+        DriverManager.registerDriver(new DriverProxy(driverInstance));
+        driverCache.put(driver, driverInstance);
       } catch (Exception e) {
         throw new SQLException("Error setting driver on UnpooledDataSource. Cause: " + e);
       }
@@ -203,6 +215,38 @@ public class UnpooledDataSource implements DataSource {
     }
     if (defaultTransactionIsolationLevel != null) {
       conn.setTransactionIsolation(defaultTransactionIsolationLevel);
+    }
+  }
+
+  private static class DriverProxy implements Driver {
+    private Driver driver;
+
+    DriverProxy(Driver d) {
+      this.driver = d;
+    }
+
+    public boolean acceptsURL(String u) throws SQLException {
+      return this.driver.acceptsURL(u);
+    }
+
+    public Connection connect(String u, Properties p) throws SQLException {
+      return this.driver.connect(u, p);
+    }
+
+    public int getMajorVersion() {
+      return this.driver.getMajorVersion();
+    }
+
+    public int getMinorVersion() {
+      return this.driver.getMinorVersion();
+    }
+
+    public DriverPropertyInfo[] getPropertyInfo(String u, Properties p) throws SQLException {
+      return this.driver.getPropertyInfo(u, p);
+    }
+
+    public boolean jdbcCompliant() {
+      return this.driver.jdbcCompliant();
     }
   }
 
