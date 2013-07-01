@@ -248,6 +248,11 @@ public class UnpooledDataSource implements DataSource {
     public boolean jdbcCompliant() {
       return this.driver.jdbcCompliant();
     }
+
+    @SuppressWarnings("unused")
+    public Logger getParentLogger() {
+      return Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+    }
   }
 
   public <T> T unwrap(Class<T> iface) throws SQLException {
