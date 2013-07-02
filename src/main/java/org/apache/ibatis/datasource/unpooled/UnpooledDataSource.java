@@ -35,7 +35,7 @@ public class UnpooledDataSource implements DataSource {
   
   private ClassLoader driverClassLoader;
   private Properties driverProperties;
-  private static Map<String, Driver> driverCache = new ConcurrentHashMap<String, Driver>();
+  private static Map<String, Driver> registeredDrivers = new ConcurrentHashMap<String, Driver>();
 
   private String driver;
   private String url;
@@ -49,7 +49,7 @@ public class UnpooledDataSource implements DataSource {
     Enumeration<Driver> drivers = DriverManager.getDrivers();
     while (drivers.hasMoreElements()) {
       Driver driver = drivers.nextElement();
-      driverCache.put(driver.getClass().getName(), driver);
+      registeredDrivers.put(driver.getClass().getName(), driver);
     }
   }
 
@@ -191,7 +191,7 @@ public class UnpooledDataSource implements DataSource {
   }
 
   private synchronized void initializeDriver() throws SQLException {
-    if (!driverCache.containsKey(driver)) {
+    if (!registeredDrivers.containsKey(driver)) {
       Class<?> driverType;
       try {
         if (driverClassLoader != null) {
@@ -199,10 +199,11 @@ public class UnpooledDataSource implements DataSource {
         } else {
           driverType = Resources.classForName(driver);
         }
+        // DriverManager requires the driver to be loaded via the system ClassLoader.
         // http://www.kfu.com/~nsayer/Java/dyn-jdbc.html
         Driver driverInstance = (Driver)driverType.newInstance();
         DriverManager.registerDriver(new DriverProxy(driverInstance));
-        driverCache.put(driver, driverInstance);
+        registeredDrivers.put(driver, driverInstance);
       } catch (Exception e) {
         throw new SQLException("Error setting driver on UnpooledDataSource. Cause: " + e);
       }
