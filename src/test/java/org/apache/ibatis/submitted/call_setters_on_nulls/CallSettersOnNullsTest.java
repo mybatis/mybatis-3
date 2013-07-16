@@ -15,10 +15,6 @@
  */
 package org.apache.ibatis.submitted.call_setters_on_nulls;
 
-import java.io.Reader;
-import java.sql.Connection;
-import java.util.Map;
-
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSession;
@@ -27,6 +23,11 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.io.Reader;
+import java.sql.Connection;
+import java.util.List;
+import java.util.Map;
 
 public class CallSettersOnNullsTest {
 
@@ -85,5 +86,20 @@ public class CallSettersOnNullsTest {
       sqlSession.close();
     }
   }
+
+    @Test
+    public void shouldCallNullOnMapForSingleColumn() {
+      SqlSession sqlSession = sqlSessionFactory.openSession();
+      try {
+        Mapper mapper = sqlSession.getMapper(Mapper.class);
+        List<Map<String,Object>> oneColumns = mapper.getNameOnly();
+        for( Map<String,Object> onecol: oneColumns )
+        {
+            Assert.assertTrue( onecol.containsKey( "NAME" ) );
+        }
+      } finally {
+        sqlSession.close();
+      }
+    }
 
 }
