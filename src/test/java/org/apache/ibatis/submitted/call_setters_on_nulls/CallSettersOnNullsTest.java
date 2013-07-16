@@ -95,7 +95,7 @@ public class CallSettersOnNullsTest {
     try {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       List<Map<String, Object>> oneColumns = mapper.getNameOnly();
-      Assert.assertNull(oneColumns.get(1));
+      Assert.assertNotNull(oneColumns.get(1));
     } finally {
       sqlSession.close();
     }

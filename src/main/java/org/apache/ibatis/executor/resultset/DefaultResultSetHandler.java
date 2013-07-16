@@ -365,17 +365,15 @@ public class DefaultResultSetHandler implements ResultSetHandler {
           || propertyMapping.getResultSet() != null) {
         Object value = getPropertyMappingValue(rsw.getResultSet(), metaObject, propertyMapping, lazyLoader, columnPrefix);
         final String property = propertyMapping.getProperty(); // issue #541 make property optional
-        if (value != NO_VALUE && property != null && (value != null || isCallSettersOnNulls(metaObject.getSetterType(property)))) { // issue #377, call setter on nulls
-          metaObject.setValue(property, value);
+        if (value != NO_VALUE && property != null && (value != null || configuration.isCallSettersOnNulls())) { // issue #377, call setter on nulls
+          if (value != null || !metaObject.getSetterType(property).isPrimitive()) {
+            metaObject.setValue(property, value);
+          }
           foundValues = (value != null) || foundValues;
         }
       }
     }
     return foundValues;
-  }
-
-  private boolean isCallSettersOnNulls(Class<?> propertyType) {
-    return configuration.isCallSettersOnNulls() && !propertyType.isPrimitive();
   }
 
   private Object getPropertyMappingValue(ResultSet rs, MetaObject metaResultObject, ResultMapping propertyMapping, ResultLoaderMap lazyLoader, String columnPrefix)
@@ -415,9 +413,11 @@ public class DefaultResultSetHandler implements ResultSetHandler {
         if (typeHandlerRegistry.hasTypeHandler(propertyType)) {
           final TypeHandler<?> typeHandler = rsw.getTypeHandler(propertyType, columnName);
           final Object value = typeHandler.getResult(rsw.getResultSet(), columnName);
-          if (value != null || isCallSettersOnNulls(propertyType)) { // issue #377, call setter on nulls
-            metaObject.setValue(property, value);
-            foundValues = (value != null) || foundValues;
+          if (value != null || configuration.isCallSettersOnNulls()) { // issue #377, call setter on nulls
+            if (value != null || !propertyType.isPrimitive()) {
+              metaObject.setValue(property, value);
+            }
+            foundValues = true;
           }
         }
       }
