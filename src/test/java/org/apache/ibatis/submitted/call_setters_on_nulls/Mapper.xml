@@ -37,4 +37,8 @@
 		<result property="name" column="name" />
 	</resultMap>
 
+    <select id="getNameOnly" resultType="map">
+        select name from users2
+    </select>
+
 </mapper>
