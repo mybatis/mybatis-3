@@ -41,4 +41,12 @@
         select name from users2
     </select>
 
+    <select id="getNameOnlyMapped" resultMap="mapResult">
+        select name from users2
+    </select>
+    
+    <resultMap type="map" id="mapResult">
+    	<result column="name" property="name" />
+    </resultMap>
+
 </mapper>

@@ -24,5 +24,6 @@ public interface Mapper {
   User getUserUnmapped(Integer id);
   Map getUserInMap(Integer id);
   List<Map<String,Object>> getNameOnly();
+  List<Map<String,Object>> getNameOnlyMapped();
 
 }

@@ -101,4 +101,16 @@ public class CallSettersOnNullsTest {
     }
   }
 
+  @Test
+  public void shouldCallNullOnMapForSingleColumnWithResultMap() {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      List<Map<String, Object>> oneColumns = mapper.getNameOnlyMapped();
+      Assert.assertNotNull(oneColumns.get(1));
+    } finally {
+      sqlSession.close();
+    }
+  }
+  
 }

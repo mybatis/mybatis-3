@@ -369,7 +369,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
           if (value != null || !metaObject.getSetterType(property).isPrimitive()) {
             metaObject.setValue(property, value);
           }
-          foundValues = (value != null) || foundValues;
+          foundValues = true;
         }
       }
     }
