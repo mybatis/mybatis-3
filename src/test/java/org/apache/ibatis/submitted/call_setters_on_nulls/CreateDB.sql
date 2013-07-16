@@ -31,7 +31,6 @@ create table users2(
 insert into users (id, name) values(1, NULL);
 
 insert into users2 (id, name) values( 2, 'mary' );
-insert into users2 (id, name) values( 3, 'angel' );
 insert into users2 (id, name) values( 1, NULL );
 
 

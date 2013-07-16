@@ -36,14 +36,16 @@ public class CallSettersOnNullsTest {
   @BeforeClass
   public static void setUp() throws Exception {
     // create a SqlSessionFactory
-    Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/call_setters_on_nulls/mybatis-config.xml");
+    Reader reader = Resources
+        .getResourceAsReader("org/apache/ibatis/submitted/call_setters_on_nulls/mybatis-config.xml");
     sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
     reader.close();
 
     // populate in-memory database
     SqlSession session = sqlSessionFactory.openSession();
     Connection conn = session.getConnection();
-    reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/call_setters_on_nulls/CreateDB.sql");
+    reader = Resources
+        .getResourceAsReader("org/apache/ibatis/submitted/call_setters_on_nulls/CreateDB.sql");
     ScriptRunner runner = new ScriptRunner(conn);
     runner.setLogWriter(null);
     runner.runScript(reader);
@@ -87,19 +89,16 @@ public class CallSettersOnNullsTest {
     }
   }
 
-    @Test
-    public void shouldCallNullOnMapForSingleColumn() {
-      SqlSession sqlSession = sqlSessionFactory.openSession();
-      try {
-        Mapper mapper = sqlSession.getMapper(Mapper.class);
-        List<Map<String,Object>> oneColumns = mapper.getNameOnly();
-        for( Map<String,Object> onecol: oneColumns )
-        {
-            Assert.assertTrue( onecol.containsKey( "NAME" ) );
-        }
-      } finally {
-        sqlSession.close();
-      }
+  @Test
+  public void shouldCallNullOnMapForSingleColumn() {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      List<Map<String, Object>> oneColumns = mapper.getNameOnly();
+      Assert.assertNull(oneColumns.get(1));
+    } finally {
+      sqlSession.close();
     }
+  }
 
 }
