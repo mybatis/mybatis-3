@@ -17,6 +17,7 @@ package org.apache.ibatis.builder.xml;
 
 import org.apache.ibatis.builder.IncompleteElementException;
 import org.apache.ibatis.builder.MapperBuilderAssistant;
+import org.apache.ibatis.parsing.PropertyParser;
 import org.apache.ibatis.parsing.XNode;
 import org.apache.ibatis.session.Configuration;
 import org.w3c.dom.Node;
@@ -53,6 +54,7 @@ public class XMLIncludeTransformer {
   }
 
   private Node findSqlFragment(String refid) {
+    refid = PropertyParser.parse(refid, configuration.getVariables());
     refid = builderAssistant.applyCurrentNamespace(refid, true);
     try {
       XNode nodeToInclude = configuration.getSqlFragments().get(refid);

@@ -22,6 +22,8 @@ import static org.junit.Assert.assertNotNull;
 import org.junit.Test;
 
 import java.io.Reader;
+import org.apache.ibatis.session.SqlSession;
+import org.junit.Assert;
 
 public class IncludeTest {
 
@@ -32,5 +34,13 @@ public class IncludeTest {
     SqlSessionFactoryBuilder builder = new SqlSessionFactoryBuilder();
     SqlSessionFactory sqlMapper = builder.build(reader);
     assertNotNull(sqlMapper);
+
+    final SqlSession sqlSession = sqlMapper.openSession();
+    try {
+      final int result = sqlSession.selectOne("org.apache.ibatis.submitted.includes.mapper.selectWithProperty");
+      Assert.assertEquals(1, result);
+    } finally {
+      sqlSession.close();
+    }
   }
 }
