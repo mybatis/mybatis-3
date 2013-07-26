@@ -30,7 +30,7 @@ import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.transaction.Transaction;
 
-public class SimpleExecutor extends BaseExecutor {
+public class SimpleExecutor extends SynchronizedBaseExecutor {
 
   public SimpleExecutor(Configuration configuration, Transaction transaction) {
     super(configuration, transaction);
