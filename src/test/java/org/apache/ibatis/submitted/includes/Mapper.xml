@@ -33,6 +33,10 @@
     <include refid="sometable"/>
   </select>
 
+  <select id="selectWithProperty" resultType="_int">
+    <include refid="${ns}.values"/>
+  </select>
+
   <update id="update" parameterType="map">
     <include refid="org.apache.ibatis.submitted.includes.fragments.update"/>
     <include refid="org.apache.ibatis.submitted.includes.mapper.sometable"/>
