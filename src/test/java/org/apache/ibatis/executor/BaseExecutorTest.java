@@ -539,15 +539,12 @@ public class BaseExecutorTest extends BaseDataTest {
 
       closeExecutor.start();
       executor.query(selectAuthor, -1, RowBounds.DEFAULT, new DefaultResultHandler());
-
-      Assert.assertEquals(true, executor.isClosed());
     } finally {
       closeExecutor.join(1000);
-      if (!executor.isClosed()) {
-        executor.rollback(true);
-        executor.close(false);
-      }
     }
+
+    /* Executor should be closed after the closeExecutor thread is joined. */
+    Assert.assertEquals(true, executor.isClosed());
   }
 
   protected Executor createExecutor(Transaction transaction) {
