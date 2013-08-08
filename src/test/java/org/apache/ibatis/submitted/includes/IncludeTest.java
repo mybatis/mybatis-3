@@ -37,8 +37,8 @@ public class IncludeTest {
 
     final SqlSession sqlSession = sqlMapper.openSession();
     try {
-      final int result = sqlSession.selectOne("org.apache.ibatis.submitted.includes.mapper.selectWithProperty");
-      Assert.assertEquals(1, result);
+      final Integer result = sqlSession.selectOne("org.apache.ibatis.submitted.includes.mapper.selectWithProperty");
+      Assert.assertEquals(Integer.valueOf(1), result);
     } finally {
       sqlSession.close();
     }
