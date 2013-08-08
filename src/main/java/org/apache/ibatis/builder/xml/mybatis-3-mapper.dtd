@@ -240,24 +240,24 @@ refid CDATA #REQUIRED
  value CDATA #REQUIRED
 >
 
-<!ELEMENT sql (#PCDATA | include | trim | where | set | foreach | choose | if)*>
+<!ELEMENT sql (#PCDATA | include | trim | where | set | foreach | choose | if | bind)*>
 <!ATTLIST sql
 id CDATA #REQUIRED
 lang CDATA #IMPLIED
 databaseId CDATA #IMPLIED
 >
 
-<!ELEMENT trim (#PCDATA | include | trim | where | set | foreach | choose | if)*>
+<!ELEMENT trim (#PCDATA | include | trim | where | set | foreach | choose | if | bind)*>
 <!ATTLIST trim
 prefix CDATA #IMPLIED
 prefixOverrides CDATA #IMPLIED
 suffix CDATA #IMPLIED
 suffixOverrides CDATA #IMPLIED
 >
-<!ELEMENT where (#PCDATA | include | trim | where | set | foreach | choose | if)*>
-<!ELEMENT set (#PCDATA | include | trim | where | set | foreach | choose | if)*>
+<!ELEMENT where (#PCDATA | include | trim | where | set | foreach | choose | if | bind)*>
+<!ELEMENT set (#PCDATA | include | trim | where | set | foreach | choose | if | bind)*>
 
-<!ELEMENT foreach (#PCDATA | include | trim | where | set | foreach | choose | if)*>
+<!ELEMENT foreach (#PCDATA | include | trim | where | set | foreach | choose | if | bind)*>
 <!ATTLIST foreach
 collection CDATA #REQUIRED
 item CDATA #IMPLIED
@@ -268,13 +268,13 @@ separator CDATA #IMPLIED
 >
 
 <!ELEMENT choose (when* , otherwise?)>
-<!ELEMENT when (#PCDATA | include | trim | where | set | foreach | choose | if)*>
+<!ELEMENT when (#PCDATA | include | trim | where | set | foreach | choose | if | bind)*>
 <!ATTLIST when
 test CDATA #REQUIRED
 >
-<!ELEMENT otherwise (#PCDATA | include | trim | where | set | foreach | choose | if)*>
+<!ELEMENT otherwise (#PCDATA | include | trim | where | set | foreach | choose | if | bind)*>
 
-<!ELEMENT if (#PCDATA | include | trim | where | set | foreach | choose | if)*>
+<!ELEMENT if (#PCDATA | include | trim | where | set | foreach | choose | if | bind)*>
 <!ATTLIST if
 test CDATA #REQUIRED
 >
