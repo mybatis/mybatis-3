@@ -173,7 +173,10 @@ public class UnpooledDataSource implements DataSource {
   }
 
   private Connection doGetConnection(String username, String password) throws SQLException {
-    Properties props = new Properties(driverProperties);
+    Properties props = new Properties();
+    if (driverProperties != null) {
+      props.putAll(driverProperties);
+    }
     if (username != null) {
       props.setProperty("user", username);
     }
