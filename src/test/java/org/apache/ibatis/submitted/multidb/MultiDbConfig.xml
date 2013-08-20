@@ -36,7 +36,7 @@
 		</environment>
 	</environments>
 
-	<databaseIdProvider type="VENDOR">
+	<databaseIdProvider type="DB_VENDOR">
 		<property name="HSQL Database Engine" value="hsql" />
 	</databaseIdProvider>
 

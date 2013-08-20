@@ -1297,20 +1297,20 @@ data_source 프로퍼티가 InitialContext 에서 직접 찾을 것이다.</li>
         다중 지원을 사용하기 위해서는 mybatis-config.xmlo 파일에 다음처럼  <code>databaseIdProvider</code> 를 추가하라:
         </p>
         
-        <source><![CDATA[<databaseIdProvider type="VENDOR" />
+        <source><![CDATA[<databaseIdProvider type="DB_VENDOR" />
 ]]></source>
 
-    <p>VENDOR구현체 databaseIdProvider는 <code>DatabaseMetaData#getDatabaseProductName()</code>에 의해 리턴된 문자열로 databaseId를 셋팅한다. 
+    <p>DB_VENDOR구현체 databaseIdProvider는 <code>DatabaseMetaData#getDatabaseProductName()</code>에 의해 리턴된 문자열로 databaseId를 셋팅한다. 
     이때 리턴되는 문자열이 너무 길거나 같은 제품의 서로다른 버전으로 다른 값을 리턴하는 경우, 다음처럼 프로퍼티를 추가해서 짧게 처리할 수도 있다:
     </p>
     
-        <source><![CDATA[<databaseIdProvider type="VENDOR">
+        <source><![CDATA[<databaseIdProvider type="DB_VENDOR">
   <property name="SQL Server" value="sqlserver"/>
   <property name="DB2" value="db2"/>        
   <property name="Oracle" value="oracle" />
 </databaseIdProvider>]]></source>
 
-    <p>프로퍼터가 제공되면, VENDOR databaseIdProvider는 리턴된 데이터베이스 제품명에서 찾은 첫번째 프로퍼티값이나 일치하는 프로퍼티가 없다면 "null" 을 찾을 것이다. 
+    <p>프로퍼터가 제공되면, DB_VENDOR databaseIdProvider는 리턴된 데이터베이스 제품명에서 찾은 첫번째 프로퍼티값이나 일치하는 프로퍼티가 없다면 "null" 을 찾을 것이다. 
     이 경우, <code>getDatabaseProductName()</code>가 "Oracle (DataDirect)"를 리턴한다면, databaseId는 "oracle"로 셋팅될 것이다. </p>
     
     <p><code>org.apache.ibatis.mapping.DatabaseIdProvider</code> 인터페이스를 구현해서 자신만의 DatabaseIdProvider를 빌드하고 mybatis-config.xml파일에 등록할 수 있다:

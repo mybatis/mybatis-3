@@ -1483,15 +1483,15 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader,properties);]]
           複数データベースサポート機能を有効にするには、mybatis-config.xml に <code>databaseIdProvider</code> を追加します。
         </p>
 
-        <source><![CDATA[<databaseIdProvider type="VENDOR" />
+        <source><![CDATA[<databaseIdProvider type="DB_VENDOR" />
 ]]></source>
 
     <p>
-      databaseIdProvider に VENDOR が指定された場合は VendorDatabaseIdProvider がプロバイダとして使われます。
+      databaseIdProvider に DB_VENDOR が指定された場合は VendorDatabaseIdProvider がプロバイダとして使われます。
       この実装は、<code>DatabaseMetaData#getDatabaseProductName()</code> から返される製品名の文字列を「現在の databaseId」として返します。この文字列は長すぎる上にバージョンによって異なる値を返すことがあるので、次のようにプロパティを指定して短い文字列に変換できるようになっています。
     </p>
 
-        <source><![CDATA[<databaseIdProvider type="VENDOR">
+        <source><![CDATA[<databaseIdProvider type="DB_VENDOR">
   <property name="SQL Server" value="sqlserver"/>
   <property name="DB2" value="db2"/>
   <property name="Oracle" value="oracle" />

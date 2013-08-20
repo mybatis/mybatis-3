@@ -1691,24 +1691,24 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader,properties);]]
           to mybatis-config.xml file as follows:
         </p>
 
-        <source><![CDATA[<databaseIdProvider type="VENDOR" />
+        <source><![CDATA[<databaseIdProvider type="DB_VENDOR" />
 ]]></source>
 
 		<p>
-		  The VENDOR implementation databaseIdProvider sets as a databaseId the String returned by
+		  The DB_VENDOR implementation databaseIdProvider sets as a databaseId the String returned by
 		  <code>DatabaseMetaData#getDatabaseProductName()</code>.
 		  As usually that string is too long and also, different versions of the same product return different values,
 		  so you may want to translate it to a shorter one by adding properties like follows:
 		</p>
 
-        <source><![CDATA[<databaseIdProvider type="VENDOR">
+        <source><![CDATA[<databaseIdProvider type="DB_VENDOR">
   <property name="SQL Server" value="sqlserver"/>
   <property name="DB2" value="db2"/>
   <property name="Oracle" value="oracle" />
 </databaseIdProvider>]]></source>
 
 		<p>
-		  When properties are provided, the VENDOR databaseIdProvider will search the property value corresponding to the
+		  When properties are provided, the DB_VENDOR databaseIdProvider will search the property value corresponding to the
 		  first key found in the returned database product name or "null" if there is not a matching property.
 		  In this case, if <code>getDatabaseProductName()</code> returns "Oracle (DataDirect)" the databaseId will be set to "oracle".
 		</p>
