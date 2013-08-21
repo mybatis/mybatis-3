@@ -45,6 +45,7 @@ public class ResultLoader {
   protected final CacheKey cacheKey;
   protected final BoundSql boundSql;
   protected final ResultExtractor resultExtractor;
+  protected final Thread creatorThread;
   
   protected boolean loaded;
   protected Object resultObject;
@@ -59,6 +60,7 @@ public class ResultLoader {
     this.cacheKey = cacheKey;
     this.boundSql = boundSql;
     this.resultExtractor = new ResultExtractor(configuration, objectFactory);
+    this.creatorThread = Thread.currentThread();
   }
 
   public Object loadResult() throws SQLException {
@@ -69,7 +71,7 @@ public class ResultLoader {
 
   private <E> List<E> selectList() throws SQLException {
     Executor localExecutor = executor;
-    if (localExecutor.isClosed()) {
+    if (Thread.currentThread() != this.creatorThread || localExecutor.isClosed()) {
       localExecutor = newExecutor();
     }
     try {
