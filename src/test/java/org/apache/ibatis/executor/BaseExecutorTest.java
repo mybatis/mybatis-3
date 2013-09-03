@@ -39,8 +39,14 @@ import domain.blog.Author;
 import domain.blog.Blog;
 import domain.blog.Post;
 import domain.blog.Section;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+import org.apache.ibatis.executor.result.DefaultResultHandler;
+import org.junit.Assert;
+import org.mockito.internal.util.reflection.Whitebox;
 
 public class BaseExecutorTest extends BaseDataTest {
+
   protected final Configuration config;
 
   public BaseExecutorTest() {
@@ -314,7 +320,7 @@ public class BaseExecutorTest extends BaseDataTest {
     }
   }
 
-  @Test 
+  @Test
   public void shouldSelectAuthorViaOutParams() throws Exception {
     DataSource ds = createBlogDataSource();
     Connection connection = ds.getConnection();
@@ -411,7 +417,6 @@ public class BaseExecutorTest extends BaseDataTest {
     }
   }
 
-
   @Test
   public void shouldFetchComplexBlogs() throws Exception {
     DataSource ds = createBlogDataSource();
@@ -484,8 +489,65 @@ public class BaseExecutorTest extends BaseDataTest {
     }
   }
 
-  protected Executor createExecutor(Transaction transaction) {
-    return new SimpleExecutor(config,transaction);
+  @Test
+  public void shouldExecutorBeThreadSafe() throws Exception {
+    final DataSource ds = createBlogDataSource();
+    final Connection connection = ds.getConnection();
+
+    final CountDownLatch clearCacheLatch = new CountDownLatch(1);
+    final CountDownLatch closeExecutorLatch = new CountDownLatch(2);
+    final BaseExecutor executor = new SimpleExecutor(config, new JdbcTransaction(connection)) {
+      @Override
+      public void clearLocalCache() {
+        /* This method is called from both query() and close().
+         * We need to let the second call through. */
+        if (closeExecutorLatch.getCount() == 2) {
+          clearCacheLatch.countDown();
+          try {
+            if (closeExecutorLatch.await(1000, TimeUnit.MILLISECONDS) == false) {
+              /* This condition should happen when executor is property synchronized.
+               * We are waiting for the second thread to close the executor while we are
+               * in query(). However, call to close() should block until we finish, so
+               * the timeout should expire. */
+            }
+          } catch (final InterruptedException ex) {
+            throw new AssertionError(ex);
+          }
+
+          super.clearLocalCache();
+        }
+      }
+    };
+
+    final Thread closeExecutor = new Thread(new Runnable() {
+      @Override
+      public void run() {
+        try {
+          clearCacheLatch.await();
+          closeExecutorLatch.countDown();
+          executor.close(false);
+          closeExecutorLatch.countDown();
+        } catch (final InterruptedException ex) {
+          throw new AssertionError(ex);
+        }
+      }
+    });
+
+    try {
+      final MappedStatement selectAuthor = ExecutorTestHelper.prepareSelectOneAuthorMappedStatement(config);
+      Whitebox.setInternalState(selectAuthor, "flushCacheRequired", true);
+
+      closeExecutor.start();
+      executor.query(selectAuthor, -1, RowBounds.DEFAULT, new DefaultResultHandler());
+    } finally {
+      closeExecutor.join(1000);
+    }
+
+    /* Executor should be closed after the closeExecutor thread is joined. */
+    Assert.assertEquals(true, executor.isClosed());
   }
 
+  protected Executor createExecutor(Transaction transaction) {
+    return new SimpleExecutor(config, transaction);
+  }
 }

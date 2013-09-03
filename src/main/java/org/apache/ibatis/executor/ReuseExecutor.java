@@ -32,7 +32,7 @@ import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.transaction.Transaction;
 
-public class ReuseExecutor extends BaseExecutor {
+public class ReuseExecutor extends SynchronizedBaseExecutor {
 
   private final Map<String, Statement> statementMap = new HashMap<String, Statement>();
 
