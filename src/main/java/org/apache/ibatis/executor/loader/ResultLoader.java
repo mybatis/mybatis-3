@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2012 the original author or authors.
+ *    Copyright 2009-2013 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -45,7 +45,7 @@ public class ResultLoader {
   protected final CacheKey cacheKey;
   protected final BoundSql boundSql;
   protected final ResultExtractor resultExtractor;
-  protected final Thread creatorThread;
+  protected final String creatorThread;
   
   protected boolean loaded;
   protected Object resultObject;
@@ -60,7 +60,7 @@ public class ResultLoader {
     this.cacheKey = cacheKey;
     this.boundSql = boundSql;
     this.resultExtractor = new ResultExtractor(configuration, objectFactory);
-    this.creatorThread = Thread.currentThread();
+    this.creatorThread = Thread.currentThread().getName();
   }
 
   public Object loadResult() throws SQLException {
@@ -71,7 +71,7 @@ public class ResultLoader {
 
   private <E> List<E> selectList() throws SQLException {
     Executor localExecutor = executor;
-    if (Thread.currentThread() != this.creatorThread || localExecutor.isClosed()) {
+    if (localExecutor.isClosed() || !Thread.currentThread().getName().equals(this.creatorThread)) {
       localExecutor = newExecutor();
     }
     try {
