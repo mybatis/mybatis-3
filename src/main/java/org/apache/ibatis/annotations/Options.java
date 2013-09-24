@@ -20,6 +20,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.apache.ibatis.mapping.FetchType;
 import org.apache.ibatis.mapping.ResultSetType;
 import org.apache.ibatis.mapping.StatementType;
 
@@ -43,4 +44,6 @@ public @interface Options {
   String keyProperty() default "id";
 
   String keyColumn() default "";
+
+  FetchType fetchType() default FetchType.DEFAULT;
 }

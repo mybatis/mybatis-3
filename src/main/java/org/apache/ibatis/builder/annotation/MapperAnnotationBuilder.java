@@ -66,6 +66,7 @@ import org.apache.ibatis.executor.keygen.NoKeyGenerator;
 import org.apache.ibatis.executor.keygen.SelectKeyGenerator;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.mapping.Discriminator;
+import org.apache.ibatis.mapping.FetchType;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.ResultFlag;
 import org.apache.ibatis.mapping.ResultMapping;
@@ -249,6 +250,7 @@ public class MapperAnnotationBuilder {
       ResultSetType resultSetType = ResultSetType.FORWARD_ONLY;
       SqlCommandType sqlCommandType = getSqlCommandType(method);
       boolean isSelect = sqlCommandType == SqlCommandType.SELECT;
+      FetchType fetchType = FetchType.DEFAULT;
       boolean flushCache = !isSelect;
       boolean useCache = isSelect;
 
@@ -281,6 +283,7 @@ public class MapperAnnotationBuilder {
         timeout = options.timeout() > -1 ? options.timeout() : null;
         statementType = options.statementType();
         resultSetType = options.resultSetType();
+        fetchType = options.fetchType();
       }
 
       String resultMapId = null;
@@ -317,7 +320,8 @@ public class MapperAnnotationBuilder {
           keyColumn,
           null,
           languageDriver,
-          null);
+          null,
+          fetchType);
     }
   }
   
@@ -553,7 +557,7 @@ public class MapperAnnotationBuilder {
 
     assistant.addMappedStatement(id, sqlSource, statementType, sqlCommandType, fetchSize, timeout, parameterMap, parameterTypeClass, resultMap, resultTypeClass, resultSetTypeEnum,
         flushCache, useCache, false,
-        keyGenerator, keyProperty, null, null, languageDriver, null);
+        keyGenerator, keyProperty, null, null, languageDriver, null, FetchType.DEFAULT);
 
     id = assistant.applyCurrentNamespace(id, false);
 

@@ -24,6 +24,7 @@ import java.util.List;
 import org.apache.ibatis.executor.statement.StatementHandler;
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.mapping.BoundSql;
+import org.apache.ibatis.mapping.FetchType;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.ResultHandler;
@@ -56,7 +57,9 @@ public class SimpleExecutor extends BaseExecutor {
       stmt = prepareStatement(handler, ms.getStatementLog());
       return handler.<E>query(stmt, resultHandler);
     } finally {
-      closeStatement(stmt);
+      if (ms.getFetchType() == FetchType.DEFAULT) {
+        closeStatement(stmt);
+      }
     }
   }
 

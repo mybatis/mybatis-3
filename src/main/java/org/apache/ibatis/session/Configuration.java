@@ -49,6 +49,7 @@ import org.apache.ibatis.executor.loader.ProxyFactory;
 import org.apache.ibatis.executor.loader.cglib.CglibProxyFactory;
 import org.apache.ibatis.executor.loader.javassist.JavassistProxyFactory;
 import org.apache.ibatis.executor.parameter.ParameterHandler;
+import org.apache.ibatis.executor.resultset.CursorResultSetHandler;
 import org.apache.ibatis.executor.resultset.DefaultResultSetHandler;
 import org.apache.ibatis.executor.resultset.ResultSetHandler;
 import org.apache.ibatis.executor.statement.RoutingStatementHandler;
@@ -64,6 +65,7 @@ import org.apache.ibatis.logging.slf4j.Slf4jImpl;
 import org.apache.ibatis.logging.stdout.StdOutImpl;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.Environment;
+import org.apache.ibatis.mapping.FetchType;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.ParameterMap;
 import org.apache.ibatis.mapping.ResultMap;
@@ -101,10 +103,10 @@ public class Configuration {
   protected boolean cacheEnabled = true;
   protected boolean callSettersOnNulls = false;
   protected String logPrefix;
-  protected Class <? extends Log> logImpl;
+  protected Class<? extends Log> logImpl;
   protected LocalCacheScope localCacheScope = LocalCacheScope.SESSION;
   protected JdbcType jdbcTypeForNull = JdbcType.OTHER;
-  protected Set<String> lazyLoadTriggerMethods = new HashSet<String>(Arrays.asList(new String[] { "equals", "clone", "hashCode", "toString" }));
+  protected Set<String> lazyLoadTriggerMethods = new HashSet<String>(Arrays.asList(new String[]{"equals", "clone", "hashCode", "toString"}));
   protected Integer defaultStatementTimeout;
   protected ExecutorType defaultExecutorType = ExecutorType.SIMPLE;
   protected AutoMappingBehavior autoMappingBehavior = AutoMappingBehavior.PARTIAL;
@@ -454,9 +456,21 @@ public class Configuration {
   }
 
   public ResultSetHandler newResultSetHandler(Executor executor, MappedStatement mappedStatement, RowBounds rowBounds, ParameterHandler parameterHandler,
-      ResultHandler resultHandler, BoundSql boundSql) {
-    ResultSetHandler resultSetHandler = new DefaultResultSetHandler(executor, mappedStatement, parameterHandler, resultHandler, boundSql, rowBounds);
+          ResultHandler resultHandler, BoundSql boundSql) {
+    ResultSetHandler resultSetHandler = createResultSetHandler(executor, mappedStatement, rowBounds, parameterHandler, resultHandler, boundSql);
     resultSetHandler = (ResultSetHandler) interceptorChain.pluginAll(resultSetHandler);
+    return resultSetHandler;
+  }
+
+  private ResultSetHandler createResultSetHandler(Executor executor, MappedStatement mappedStatement, RowBounds rowBounds, ParameterHandler parameterHandler, ResultHandler resultHandler, BoundSql boundSql) {
+    ResultSetHandler resultSetHandler;
+    FetchType fetchType = mappedStatement.getFetchType();
+    if (fetchType == FetchType.CURSOR || fetchType == FetchType.LAZY) {
+      resultSetHandler = new CursorResultSetHandler(executor, mappedStatement, parameterHandler, resultHandler, boundSql, rowBounds,
+              fetchType);
+    } else {
+      resultSetHandler = new DefaultResultSetHandler(executor, mappedStatement, parameterHandler, resultHandler, boundSql, rowBounds);
+    }
     return resultSetHandler;
   }
 
@@ -792,7 +806,7 @@ public class Configuration {
       }
       if (value instanceof Ambiguity) {
         throw new IllegalArgumentException(((Ambiguity) value).getSubject() + " is ambiguous in " + name
-            + " (try using the full name including the namespace, or rename one of the entries)");
+                + " (try using the full name including the namespace, or rename one of the entries)");
       }
       return value;
     }
@@ -804,6 +818,7 @@ public class Configuration {
     }
 
     protected static class Ambiguity {
+
       private String subject;
 
       public Ambiguity(String subject) {
@@ -815,5 +830,4 @@ public class Configuration {
       }
     }
   }
-
 }
