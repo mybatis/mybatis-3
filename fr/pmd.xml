@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<pmd version="4.3" timestamp="2013-06-13T19:05:38.888">
+<pmd version="4.3" timestamp="2013-09-30T17:58:56.829">
 <file name="/home/eduardo/git/mybatis-3/src/main/java/org/apache/ibatis/builder/MapperBuilderAssistant.java">
 <violation beginline="464" endline="466" begincolumn="9" endcolumn="7" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.apache.ibatis.builder" class="MapperBuilderAssistant" method="resolveResultJavaType" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
 Avoid empty catch blocks
@@ -263,6 +263,11 @@ Avoid empty catch blocks
 <file name="/home/eduardo/git/mybatis-3/src/main/java/org/apache/ibatis/reflection/wrapper/CollectionWrapper.java">
 <violation beginline="29" endline="31" begincolumn="10" endcolumn="3" rule="UnusedFormalParameter" ruleset="Unused Code Rules" package="org.apache.ibatis.reflection.wrapper" class="CollectionWrapper" externalInfoUrl="http://pmd.sourceforge.net/rules/unusedcode.html#UnusedFormalParameter" priority="3">
 Avoid unused constructor parameters such as 'metaObject'.
+</violation>
+</file>
+<file name="/home/eduardo/git/mybatis-3/src/main/java/org/apache/ibatis/scripting/xmltags/TrimSqlNode.java">
+<violation beginline="37" endline="37" begincolumn="123" endcolumn="123" rule="EmptyStatementNotInLoop" ruleset="Basic Rules" package="org.apache.ibatis.scripting.xmltags" class="TrimSqlNode" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyStatementNotInLoop" priority="3">
+An empty statement (semicolon) not part of a loop
 </violation>
 </file>
 <file name="/home/eduardo/git/mybatis-3/src/main/java/org/apache/ibatis/session/SqlSessionFactoryBuilder.java">

@@ -65,7 +65,7 @@
   <td class="src"><pre class="src">&nbsp;<span class="keyword">import</span> org.apache.ibatis.session.Configuration;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;24</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;25</td>  <td class="nbHitsCovered">&nbsp;2637722</td>  <td class="src"><pre class="src">&nbsp;<span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">class</span> BaseTypeHandler&lt;T&gt; <span class="keyword">extends</span> TypeReference&lt;T&gt; <span class="keyword">implements</span> TypeHandler&lt;T&gt; {</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;25</td>  <td class="nbHitsCovered">&nbsp;3957975</td>  <td class="src"><pre class="src">&nbsp;<span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">class</span> BaseTypeHandler&lt;T&gt; <span class="keyword">extends</span> TypeReference&lt;T&gt; <span class="keyword">implements</span> TypeHandler&lt;T&gt; {</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;26</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;27</td>  <td class="nbHits">&nbsp;</td>
@@ -80,37 +80,37 @@
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;33</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;  <span class="keyword">public</span> <span class="keyword">void</span> setParameter(PreparedStatement ps, <span class="keyword">int</span> i, T parameter, JdbcType jdbcType) <span class="keyword">throws</span> SQLException {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;34</td>  <td class="nbHitsCovered"><a title="Line 34: Conditional coverage 100% (2/2).">&nbsp;4810</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 34: Conditional coverage 100% (2/2).">    <span class="keyword">if</span> (parameter == <span class="keyword">null</span>) {</a></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;35</td>  <td class="nbHitsUncovered"><a title="Line 35: Conditional coverage 50% (1/2).">&nbsp;114</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 35: Conditional coverage 50% (1/2).">      <span class="keyword">if</span> (jdbcType == <span class="keyword">null</span>) {</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;34</td>  <td class="nbHitsCovered"><a title="Line 34: Conditional coverage 100% (2/2).">&nbsp;7227</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 34: Conditional coverage 100% (2/2).">    <span class="keyword">if</span> (parameter == <span class="keyword">null</span>) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;35</td>  <td class="nbHitsUncovered"><a title="Line 35: Conditional coverage 50% (1/2).">&nbsp;177</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 35: Conditional coverage 50% (1/2).">      <span class="keyword">if</span> (jdbcType == <span class="keyword">null</span>) {</a></span></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;36</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;        <span class="keyword">throw</span> <span class="keyword">new</span> TypeException(<span class="string">"JDBC requires that the JdbcType must be specified for all nullable parameters."</span>);</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;37</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;      }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;38</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;      <span class="keyword">try</span> {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;39</td>  <td class="nbHitsCovered">&nbsp;114</td>  <td class="src"><pre class="src">&nbsp;        ps.setNull(i, jdbcType.TYPE_CODE);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;40</td>  <td class="nbHitsCovered">&nbsp;4</td>  <td class="src"><pre class="src">&nbsp;      } <span class="keyword">catch</span> (SQLException e) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;41</td>  <td class="nbHitsCovered">&nbsp;4</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">throw</span> <span class="keyword">new</span> TypeException(<span class="string">"Error setting null for parameter #"</span> + i + <span class="string">" with JdbcType "</span> + jdbcType + <span class="string">" . "</span> +</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;39</td>  <td class="nbHitsCovered">&nbsp;177</td>  <td class="src"><pre class="src">&nbsp;        ps.setNull(i, jdbcType.TYPE_CODE);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;40</td>  <td class="nbHitsCovered">&nbsp;6</td>  <td class="src"><pre class="src">&nbsp;      } <span class="keyword">catch</span> (SQLException e) {</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;41</td>  <td class="nbHitsCovered">&nbsp;6</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">throw</span> <span class="keyword">new</span> TypeException(<span class="string">"Error setting null for parameter #"</span> + i + <span class="string">" with JdbcType "</span> + jdbcType + <span class="string">" . "</span> +</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;42</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;                        <span class="string">"Try setting a different JdbcType for this parameter or a different jdbcTypeForNull configuration property. "</span> +</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;43</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;                        <span class="string">"Cause: "</span> + e, e);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;44</td>  <td class="nbHitsCovered">&nbsp;110</td>  <td class="src"><pre class="src">&nbsp;      }</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;44</td>  <td class="nbHitsCovered">&nbsp;171</td>  <td class="src"><pre class="src">&nbsp;      }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;45</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    } <span class="keyword">else</span> {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;46</td>  <td class="nbHitsCovered">&nbsp;4696</td>  <td class="src"><pre class="src">&nbsp;      setNonNullParameter(ps, i, parameter, jdbcType);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;46</td>  <td class="nbHitsCovered">&nbsp;7050</td>  <td class="src"><pre class="src">&nbsp;      setNonNullParameter(ps, i, parameter, jdbcType);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;47</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;48</td>  <td class="nbHitsCovered">&nbsp;4802</td>  <td class="src"><pre class="src">&nbsp;  }</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;48</td>  <td class="nbHitsCovered">&nbsp;7215</td>  <td class="src"><pre class="src">&nbsp;  }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;49</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;50</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;  <span class="keyword">public</span> T getResult(ResultSet rs, String columnName) <span class="keyword">throws</span> SQLException {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;51</td>  <td class="nbHitsCovered">&nbsp;25320</td>  <td class="src"><pre class="src">&nbsp;    T result = getNullableResult(rs, columnName);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;52</td>  <td class="nbHitsCovered"><a title="Line 52: Conditional coverage 100% (2/2).">&nbsp;25320</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 52: Conditional coverage 100% (2/2).">    <span class="keyword">if</span> (rs.wasNull()) {</a></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;53</td>  <td class="nbHitsCovered">&nbsp;1564</td>  <td class="src"><pre class="src">&nbsp;      <span class="keyword">return</span> <span class="keyword">null</span>;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;51</td>  <td class="nbHitsCovered">&nbsp;38055</td>  <td class="src"><pre class="src">&nbsp;    T result = getNullableResult(rs, columnName);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;52</td>  <td class="nbHitsCovered"><a title="Line 52: Conditional coverage 100% (2/2).">&nbsp;38055</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 52: Conditional coverage 100% (2/2).">    <span class="keyword">if</span> (rs.wasNull()) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;53</td>  <td class="nbHitsCovered">&nbsp;2355</td>  <td class="src"><pre class="src">&nbsp;      <span class="keyword">return</span> <span class="keyword">null</span>;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;54</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    } <span class="keyword">else</span> {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;55</td>  <td class="nbHitsCovered">&nbsp;23756</td>  <td class="src"><pre class="src">&nbsp;      <span class="keyword">return</span> result;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;55</td>  <td class="nbHitsCovered">&nbsp;35700</td>  <td class="src"><pre class="src">&nbsp;      <span class="keyword">return</span> result;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;56</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;57</td>  <td class="nbHits">&nbsp;</td>
@@ -119,12 +119,12 @@
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;59</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;  <span class="keyword">public</span> T getResult(ResultSet rs, <span class="keyword">int</span> columnIndex) <span class="keyword">throws</span> SQLException {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;60</td>  <td class="nbHitsCovered">&nbsp;22</td>  <td class="src"><pre class="src">&nbsp;    T result = getNullableResult(rs, columnIndex);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;61</td>  <td class="nbHitsUncovered"><a title="Line 61: Conditional coverage 50% (1/2).">&nbsp;22</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 61: Conditional coverage 50% (1/2).">    <span class="keyword">if</span> (rs.wasNull()) {</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;60</td>  <td class="nbHitsCovered">&nbsp;33</td>  <td class="src"><pre class="src">&nbsp;    T result = getNullableResult(rs, columnIndex);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;61</td>  <td class="nbHitsUncovered"><a title="Line 61: Conditional coverage 50% (1/2).">&nbsp;33</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 61: Conditional coverage 50% (1/2).">    <span class="keyword">if</span> (rs.wasNull()) {</a></span></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;62</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;      <span class="keyword">return</span> <span class="keyword">null</span>;</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;63</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    } <span class="keyword">else</span> {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;64</td>  <td class="nbHitsCovered">&nbsp;22</td>  <td class="src"><pre class="src">&nbsp;      <span class="keyword">return</span> result;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;64</td>  <td class="nbHitsCovered">&nbsp;33</td>  <td class="src"><pre class="src">&nbsp;      <span class="keyword">return</span> result;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;65</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;66</td>  <td class="nbHits">&nbsp;</td>
@@ -133,12 +133,12 @@
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;68</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;  <span class="keyword">public</span> T getResult(CallableStatement cs, <span class="keyword">int</span> columnIndex) <span class="keyword">throws</span> SQLException {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;69</td>  <td class="nbHitsCovered">&nbsp;170</td>  <td class="src"><pre class="src">&nbsp;    T result = getNullableResult(cs, columnIndex);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;70</td>  <td class="nbHitsCovered"><a title="Line 70: Conditional coverage 100% (2/2).">&nbsp;170</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 70: Conditional coverage 100% (2/2).">    <span class="keyword">if</span> (cs.wasNull()) {</a></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;71</td>  <td class="nbHitsCovered">&nbsp;22</td>  <td class="src"><pre class="src">&nbsp;      <span class="keyword">return</span> <span class="keyword">null</span>;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;69</td>  <td class="nbHitsCovered">&nbsp;255</td>  <td class="src"><pre class="src">&nbsp;    T result = getNullableResult(cs, columnIndex);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;70</td>  <td class="nbHitsCovered"><a title="Line 70: Conditional coverage 100% (2/2).">&nbsp;255</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 70: Conditional coverage 100% (2/2).">    <span class="keyword">if</span> (cs.wasNull()) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;71</td>  <td class="nbHitsCovered">&nbsp;33</td>  <td class="src"><pre class="src">&nbsp;      <span class="keyword">return</span> <span class="keyword">null</span>;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;72</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    } <span class="keyword">else</span> {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;73</td>  <td class="nbHitsCovered">&nbsp;148</td>  <td class="src"><pre class="src">&nbsp;      <span class="keyword">return</span> result;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;73</td>  <td class="nbHitsCovered">&nbsp;222</td>  <td class="src"><pre class="src">&nbsp;      <span class="keyword">return</span> result;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;74</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;75</td>  <td class="nbHits">&nbsp;</td>
@@ -165,6 +165,6 @@
   <td class="src"><pre class="src">&nbsp;}</pre></td></tr>
 </table>
 
-<div class="footer">Report generated by <a href="http://cobertura.sourceforge.net/" target="_top">Cobertura</a> 1.9.4.1 on 13/06/13 19:08.</div>
+<div class="footer">Report generated by <a href="http://cobertura.sourceforge.net/" target="_top">Cobertura</a> 1.9.4.1 on 30/09/13 18:00.</div>
 </body>
 </html>

@@ -81,15 +81,15 @@
   <td class="src"><pre class="src">&nbsp;<span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">class</span> BaseJdbcLogger {</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;32</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;33</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;  <span class="keyword">protected</span> <span class="keyword">static</span> <span class="keyword">final</span> Set&lt;String&gt; SET_METHODS = <span class="keyword">new</span> HashSet&lt;String&gt;();</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;34</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;  <span class="keyword">protected</span> <span class="keyword">static</span> <span class="keyword">final</span> Set&lt;String&gt; EXECUTE_METHODS = <span class="keyword">new</span> HashSet&lt;String&gt;();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;33</td>  <td class="nbHitsCovered">&nbsp;3</td>  <td class="src"><pre class="src">&nbsp;  <span class="keyword">protected</span> <span class="keyword">static</span> <span class="keyword">final</span> Set&lt;String&gt; SET_METHODS = <span class="keyword">new</span> HashSet&lt;String&gt;();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;34</td>  <td class="nbHitsCovered">&nbsp;3</td>  <td class="src"><pre class="src">&nbsp;  <span class="keyword">protected</span> <span class="keyword">static</span> <span class="keyword">final</span> Set&lt;String&gt; EXECUTE_METHODS = <span class="keyword">new</span> HashSet&lt;String&gt;();</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;35</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;36</td>  <td class="nbHitsCovered">&nbsp;4</td>  <td class="src"><pre class="src">&nbsp;  <span class="keyword">private</span> Map&lt;Object, Object&gt; columnMap = <span class="keyword">new</span> HashMap&lt;Object, Object&gt;();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;36</td>  <td class="nbHitsCovered">&nbsp;6</td>  <td class="src"><pre class="src">&nbsp;  <span class="keyword">private</span> Map&lt;Object, Object&gt; columnMap = <span class="keyword">new</span> HashMap&lt;Object, Object&gt;();</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;37</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;38</td>  <td class="nbHitsCovered">&nbsp;4</td>  <td class="src"><pre class="src">&nbsp;  <span class="keyword">private</span> List&lt;Object&gt; columnNames = <span class="keyword">new</span> ArrayList&lt;Object&gt;();</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;39</td>  <td class="nbHitsCovered">&nbsp;4</td>  <td class="src"><pre class="src">&nbsp;  <span class="keyword">private</span> List&lt;Object&gt; columnValues = <span class="keyword">new</span> ArrayList&lt;Object&gt;();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;38</td>  <td class="nbHitsCovered">&nbsp;6</td>  <td class="src"><pre class="src">&nbsp;  <span class="keyword">private</span> List&lt;Object&gt; columnNames = <span class="keyword">new</span> ArrayList&lt;Object&gt;();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;39</td>  <td class="nbHitsCovered">&nbsp;6</td>  <td class="src"><pre class="src">&nbsp;  <span class="keyword">private</span> List&lt;Object&gt; columnValues = <span class="keyword">new</span> ArrayList&lt;Object&gt;();</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;40</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;41</td>  <td class="nbHits">&nbsp;</td>
@@ -102,41 +102,41 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">   * Default constructor</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;45</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;<span class="comment">   */</span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;46</td>  <td class="nbHitsCovered">&nbsp;4</td>  <td class="src"><pre class="src">&nbsp;  <span class="keyword">public</span> BaseJdbcLogger(Log log) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;47</td>  <td class="nbHitsCovered">&nbsp;4</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">this</span>.statementLog = log;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;48</td>  <td class="nbHitsCovered">&nbsp;4</td>  <td class="src"><pre class="src">&nbsp;  }</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;46</td>  <td class="nbHitsCovered">&nbsp;6</td>  <td class="src"><pre class="src">&nbsp;  <span class="keyword">public</span> BaseJdbcLogger(Log log) {</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;47</td>  <td class="nbHitsCovered">&nbsp;6</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">this</span>.statementLog = log;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;48</td>  <td class="nbHitsCovered">&nbsp;6</td>  <td class="src"><pre class="src">&nbsp;  }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;49</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;50</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;  <span class="keyword">static</span> {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;51</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;    SET_METHODS.add(<span class="string">"setString"</span>);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;52</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;    SET_METHODS.add(<span class="string">"setInt"</span>);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;53</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;    SET_METHODS.add(<span class="string">"setByte"</span>);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;54</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;    SET_METHODS.add(<span class="string">"setShort"</span>);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;55</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;    SET_METHODS.add(<span class="string">"setLong"</span>);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;56</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;    SET_METHODS.add(<span class="string">"setDouble"</span>);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;57</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;    SET_METHODS.add(<span class="string">"setFloat"</span>);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;58</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;    SET_METHODS.add(<span class="string">"setTimestamp"</span>);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;59</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;    SET_METHODS.add(<span class="string">"setDate"</span>);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;60</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;    SET_METHODS.add(<span class="string">"setTime"</span>);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;61</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;    SET_METHODS.add(<span class="string">"setArray"</span>);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;62</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;    SET_METHODS.add(<span class="string">"setBigDecimal"</span>);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;63</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;    SET_METHODS.add(<span class="string">"setAsciiStream"</span>);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;64</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;    SET_METHODS.add(<span class="string">"setBinaryStream"</span>);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;65</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;    SET_METHODS.add(<span class="string">"setBlob"</span>);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;66</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;    SET_METHODS.add(<span class="string">"setBoolean"</span>);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;67</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;    SET_METHODS.add(<span class="string">"setBytes"</span>);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;68</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;    SET_METHODS.add(<span class="string">"setCharacterStream"</span>);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;69</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;    SET_METHODS.add(<span class="string">"setClob"</span>);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;70</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;    SET_METHODS.add(<span class="string">"setObject"</span>);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;71</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;    SET_METHODS.add(<span class="string">"setNull"</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;51</td>  <td class="nbHitsCovered">&nbsp;3</td>  <td class="src"><pre class="src">&nbsp;    SET_METHODS.add(<span class="string">"setString"</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;52</td>  <td class="nbHitsCovered">&nbsp;3</td>  <td class="src"><pre class="src">&nbsp;    SET_METHODS.add(<span class="string">"setInt"</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;53</td>  <td class="nbHitsCovered">&nbsp;3</td>  <td class="src"><pre class="src">&nbsp;    SET_METHODS.add(<span class="string">"setByte"</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;54</td>  <td class="nbHitsCovered">&nbsp;3</td>  <td class="src"><pre class="src">&nbsp;    SET_METHODS.add(<span class="string">"setShort"</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;55</td>  <td class="nbHitsCovered">&nbsp;3</td>  <td class="src"><pre class="src">&nbsp;    SET_METHODS.add(<span class="string">"setLong"</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;56</td>  <td class="nbHitsCovered">&nbsp;3</td>  <td class="src"><pre class="src">&nbsp;    SET_METHODS.add(<span class="string">"setDouble"</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;57</td>  <td class="nbHitsCovered">&nbsp;3</td>  <td class="src"><pre class="src">&nbsp;    SET_METHODS.add(<span class="string">"setFloat"</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;58</td>  <td class="nbHitsCovered">&nbsp;3</td>  <td class="src"><pre class="src">&nbsp;    SET_METHODS.add(<span class="string">"setTimestamp"</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;59</td>  <td class="nbHitsCovered">&nbsp;3</td>  <td class="src"><pre class="src">&nbsp;    SET_METHODS.add(<span class="string">"setDate"</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;60</td>  <td class="nbHitsCovered">&nbsp;3</td>  <td class="src"><pre class="src">&nbsp;    SET_METHODS.add(<span class="string">"setTime"</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;61</td>  <td class="nbHitsCovered">&nbsp;3</td>  <td class="src"><pre class="src">&nbsp;    SET_METHODS.add(<span class="string">"setArray"</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;62</td>  <td class="nbHitsCovered">&nbsp;3</td>  <td class="src"><pre class="src">&nbsp;    SET_METHODS.add(<span class="string">"setBigDecimal"</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;63</td>  <td class="nbHitsCovered">&nbsp;3</td>  <td class="src"><pre class="src">&nbsp;    SET_METHODS.add(<span class="string">"setAsciiStream"</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;64</td>  <td class="nbHitsCovered">&nbsp;3</td>  <td class="src"><pre class="src">&nbsp;    SET_METHODS.add(<span class="string">"setBinaryStream"</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;65</td>  <td class="nbHitsCovered">&nbsp;3</td>  <td class="src"><pre class="src">&nbsp;    SET_METHODS.add(<span class="string">"setBlob"</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;66</td>  <td class="nbHitsCovered">&nbsp;3</td>  <td class="src"><pre class="src">&nbsp;    SET_METHODS.add(<span class="string">"setBoolean"</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;67</td>  <td class="nbHitsCovered">&nbsp;3</td>  <td class="src"><pre class="src">&nbsp;    SET_METHODS.add(<span class="string">"setBytes"</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;68</td>  <td class="nbHitsCovered">&nbsp;3</td>  <td class="src"><pre class="src">&nbsp;    SET_METHODS.add(<span class="string">"setCharacterStream"</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;69</td>  <td class="nbHitsCovered">&nbsp;3</td>  <td class="src"><pre class="src">&nbsp;    SET_METHODS.add(<span class="string">"setClob"</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;70</td>  <td class="nbHitsCovered">&nbsp;3</td>  <td class="src"><pre class="src">&nbsp;    SET_METHODS.add(<span class="string">"setObject"</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;71</td>  <td class="nbHitsCovered">&nbsp;3</td>  <td class="src"><pre class="src">&nbsp;    SET_METHODS.add(<span class="string">"setNull"</span>);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;72</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;73</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;    EXECUTE_METHODS.add(<span class="string">"execute"</span>);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;74</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;    EXECUTE_METHODS.add(<span class="string">"executeUpdate"</span>);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;75</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;    EXECUTE_METHODS.add(<span class="string">"executeQuery"</span>);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;76</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;    EXECUTE_METHODS.add(<span class="string">"addBatch"</span>);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;77</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;  }</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;73</td>  <td class="nbHitsCovered">&nbsp;3</td>  <td class="src"><pre class="src">&nbsp;    EXECUTE_METHODS.add(<span class="string">"execute"</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;74</td>  <td class="nbHitsCovered">&nbsp;3</td>  <td class="src"><pre class="src">&nbsp;    EXECUTE_METHODS.add(<span class="string">"executeUpdate"</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;75</td>  <td class="nbHitsCovered">&nbsp;3</td>  <td class="src"><pre class="src">&nbsp;    EXECUTE_METHODS.add(<span class="string">"executeQuery"</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;76</td>  <td class="nbHitsCovered">&nbsp;3</td>  <td class="src"><pre class="src">&nbsp;    EXECUTE_METHODS.add(<span class="string">"addBatch"</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;77</td>  <td class="nbHitsCovered">&nbsp;3</td>  <td class="src"><pre class="src">&nbsp;  }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;78</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;79</td>  <td class="nbHits">&nbsp;</td>
@@ -181,10 +181,10 @@
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;106</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;  <span class="keyword">protected</span> <span class="keyword">void</span> clearColumnInfo() {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;107</td>  <td class="nbHitsCovered">&nbsp;4</td>  <td class="src"><pre class="src">&nbsp;    columnMap.clear();</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;108</td>  <td class="nbHitsCovered">&nbsp;4</td>  <td class="src"><pre class="src">&nbsp;    columnNames.clear();</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;109</td>  <td class="nbHitsCovered">&nbsp;4</td>  <td class="src"><pre class="src">&nbsp;    columnValues.clear();</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;110</td>  <td class="nbHitsCovered">&nbsp;4</td>  <td class="src"><pre class="src">&nbsp;  }</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;107</td>  <td class="nbHitsCovered">&nbsp;6</td>  <td class="src"><pre class="src">&nbsp;    columnMap.clear();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;108</td>  <td class="nbHitsCovered">&nbsp;6</td>  <td class="src"><pre class="src">&nbsp;    columnNames.clear();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;109</td>  <td class="nbHitsCovered">&nbsp;6</td>  <td class="src"><pre class="src">&nbsp;    columnValues.clear();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;110</td>  <td class="nbHitsCovered">&nbsp;6</td>  <td class="src"><pre class="src">&nbsp;  }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;111</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;112</td>  <td class="nbHits">&nbsp;</td>
@@ -210,7 +210,7 @@
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;126</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;  <span class="keyword">protected</span> <span class="keyword">boolean</span> isTraceEnabled() {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;127</td>  <td class="nbHitsCovered">&nbsp;4</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">return</span> statementLog.isTraceEnabled();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;127</td>  <td class="nbHitsCovered">&nbsp;6</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">return</span> statementLog.isTraceEnabled();</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;128</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;  }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;129</td>  <td class="nbHits">&nbsp;</td>
@@ -226,11 +226,11 @@
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;136</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;  <span class="keyword">protected</span> <span class="keyword">void</span> trace(String text) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;137</td>  <td class="nbHitsUncovered"><a title="Line 137: Conditional coverage 50% (1/2).">&nbsp;8</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 137: Conditional coverage 50% (1/2).">    <span class="keyword">if</span> (statementLog.isTraceEnabled()) {</a></span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;138</td>  <td class="nbHitsCovered">&nbsp;8</td>  <td class="src"><pre class="src">&nbsp;      statementLog.trace(text);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;137</td>  <td class="nbHitsUncovered"><a title="Line 137: Conditional coverage 50% (1/2).">&nbsp;12</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 137: Conditional coverage 50% (1/2).">    <span class="keyword">if</span> (statementLog.isTraceEnabled()) {</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;138</td>  <td class="nbHitsCovered">&nbsp;12</td>  <td class="src"><pre class="src">&nbsp;      statementLog.trace(text);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;139</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;140</td>  <td class="nbHitsCovered">&nbsp;8</td>  <td class="src"><pre class="src">&nbsp;  }</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;140</td>  <td class="nbHitsCovered">&nbsp;12</td>  <td class="src"><pre class="src">&nbsp;  }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;141</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;142</td>  <td class="nbHits">&nbsp;</td>
@@ -244,6 +244,6 @@
   <td class="src"><pre class="src">&nbsp;}</pre></td></tr>
 </table>
 
-<div class="footer">Report generated by <a href="http://cobertura.sourceforge.net/" target="_top">Cobertura</a> 1.9.4.1 on 13/06/13 19:03.</div>
+<div class="footer">Report generated by <a href="http://cobertura.sourceforge.net/" target="_top">Cobertura</a> 1.9.4.1 on 30/09/13 17:57.</div>
 </body>
 </html>

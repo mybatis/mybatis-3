@@ -498,7 +498,53 @@
 <a class="jxr_linenumber" name="488" href="#488">488</a>     <strong class="jxr_keyword">return</strong> javaType;
 <a class="jxr_linenumber" name="489" href="#489">489</a>   }
 <a class="jxr_linenumber" name="490" href="#490">490</a> 
-<a class="jxr_linenumber" name="491" href="#491">491</a> }
+<a class="jxr_linenumber" name="491" href="#491">491</a>   <em class="jxr_javadoccomment">/**</em><em class="jxr_javadoccomment"> Backward compatibility signature */</em>
+<a class="jxr_linenumber" name="492" href="#492">492</a>   <strong class="jxr_keyword">public</strong> <a href="../../../../org/apache/ibatis/mapping/ResultMapping.html">ResultMapping</a> buildResultMapping(
+<a class="jxr_linenumber" name="493" href="#493">493</a>       Class&lt;?&gt; resultType,
+<a class="jxr_linenumber" name="494" href="#494">494</a>       String property,
+<a class="jxr_linenumber" name="495" href="#495">495</a>       String column,
+<a class="jxr_linenumber" name="496" href="#496">496</a>       Class&lt;?&gt; javaType,
+<a class="jxr_linenumber" name="497" href="#497">497</a>       <a href="../../../../org/apache/ibatis/type/JdbcType.html">JdbcType</a> jdbcType,
+<a class="jxr_linenumber" name="498" href="#498">498</a>       String nestedSelect,
+<a class="jxr_linenumber" name="499" href="#499">499</a>       String nestedResultMap,
+<a class="jxr_linenumber" name="500" href="#500">500</a>       String notNullColumn,
+<a class="jxr_linenumber" name="501" href="#501">501</a>       String columnPrefix,
+<a class="jxr_linenumber" name="502" href="#502">502</a>       Class&lt;? <strong class="jxr_keyword">extends</strong> TypeHandler&lt;?&gt;&gt; typeHandler,
+<a class="jxr_linenumber" name="503" href="#503">503</a>       List&lt;ResultFlag&gt; flags) {
+<a class="jxr_linenumber" name="504" href="#504">504</a>       <strong class="jxr_keyword">return</strong> buildResultMapping(
+<a class="jxr_linenumber" name="505" href="#505">505</a>         resultType, property, column, javaType, jdbcType, nestedSelect, 
+<a class="jxr_linenumber" name="506" href="#506">506</a>         nestedResultMap, notNullColumn, columnPrefix, typeHandler, flags, <strong class="jxr_keyword">null</strong>, <strong class="jxr_keyword">null</strong>);
+<a class="jxr_linenumber" name="507" href="#507">507</a>   }  
+<a class="jxr_linenumber" name="508" href="#508">508</a>   
+<a class="jxr_linenumber" name="509" href="#509">509</a>   <em class="jxr_javadoccomment">/**</em><em class="jxr_javadoccomment"> Backward compatibility signature */</em>
+<a class="jxr_linenumber" name="510" href="#510">510</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../org/apache/ibatis/mapping/MappedStatement.html">MappedStatement</a> addMappedStatement(
+<a class="jxr_linenumber" name="511" href="#511">511</a>       String id,
+<a class="jxr_linenumber" name="512" href="#512">512</a>       <a href="../../../../org/apache/ibatis/mapping/SqlSource.html">SqlSource</a> sqlSource,
+<a class="jxr_linenumber" name="513" href="#513">513</a>       <a href="../../../../org/apache/ibatis/mapping/StatementType.html">StatementType</a> statementType,
+<a class="jxr_linenumber" name="514" href="#514">514</a>       <a href="../../../../org/apache/ibatis/mapping/SqlCommandType.html">SqlCommandType</a> sqlCommandType,
+<a class="jxr_linenumber" name="515" href="#515">515</a>       Integer fetchSize,
+<a class="jxr_linenumber" name="516" href="#516">516</a>       Integer timeout,
+<a class="jxr_linenumber" name="517" href="#517">517</a>       String parameterMap,
+<a class="jxr_linenumber" name="518" href="#518">518</a>       Class&lt;?&gt; parameterType,
+<a class="jxr_linenumber" name="519" href="#519">519</a>       String resultMap,
+<a class="jxr_linenumber" name="520" href="#520">520</a>       Class&lt;?&gt; resultType,
+<a class="jxr_linenumber" name="521" href="#521">521</a>       <a href="../../../../org/apache/ibatis/mapping/ResultSetType.html">ResultSetType</a> resultSetType,
+<a class="jxr_linenumber" name="522" href="#522">522</a>       <strong class="jxr_keyword">boolean</strong> flushCache,
+<a class="jxr_linenumber" name="523" href="#523">523</a>       <strong class="jxr_keyword">boolean</strong> useCache,
+<a class="jxr_linenumber" name="524" href="#524">524</a>       <strong class="jxr_keyword">boolean</strong> resultOrdered,
+<a class="jxr_linenumber" name="525" href="#525">525</a>       <a href="../../../../org/apache/ibatis/executor/keygen/KeyGenerator.html">KeyGenerator</a> keyGenerator,
+<a class="jxr_linenumber" name="526" href="#526">526</a>       String keyProperty,
+<a class="jxr_linenumber" name="527" href="#527">527</a>       String keyColumn,
+<a class="jxr_linenumber" name="528" href="#528">528</a>       String databaseId,
+<a class="jxr_linenumber" name="529" href="#529">529</a>       <a href="../../../../org/apache/ibatis/scripting/LanguageDriver.html">LanguageDriver</a> lang) {
+<a class="jxr_linenumber" name="530" href="#530">530</a>       <strong class="jxr_keyword">return</strong> addMappedStatement(
+<a class="jxr_linenumber" name="531" href="#531">531</a>         id, sqlSource, statementType, sqlCommandType, fetchSize, timeout, 
+<a class="jxr_linenumber" name="532" href="#532">532</a>         parameterMap, parameterType, resultMap, resultType, resultSetType, 
+<a class="jxr_linenumber" name="533" href="#533">533</a>         flushCache, useCache, resultOrdered, keyGenerator, keyProperty, 
+<a class="jxr_linenumber" name="534" href="#534">534</a>         keyColumn, databaseId, lang, <strong class="jxr_keyword">null</strong>);
+<a class="jxr_linenumber" name="535" href="#535">535</a>     }
+<a class="jxr_linenumber" name="536" href="#536">536</a> 
+<a class="jxr_linenumber" name="537" href="#537">537</a> }
 </pre>
 <hr/><div id="footer">This page was automatically generated by <a href="http://maven.apache.org/">Maven</a></div></body>
 </html>

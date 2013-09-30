@@ -81,14 +81,14 @@
   <td class="src"><pre class="src">&nbsp;  <span class="keyword">private</span> Reflector reflector;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;32</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;33</td>  <td class="nbHitsCovered">&nbsp;102532</td>  <td class="src"><pre class="src">&nbsp;  <span class="keyword">private</span> MetaClass(Class&lt;?&gt; type) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;34</td>  <td class="nbHitsCovered">&nbsp;102532</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">this</span>.reflector = Reflector.forClass(type);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;35</td>  <td class="nbHitsCovered">&nbsp;102292</td>  <td class="src"><pre class="src">&nbsp;  }</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;33</td>  <td class="nbHitsCovered">&nbsp;154482</td>  <td class="src"><pre class="src">&nbsp;  <span class="keyword">private</span> MetaClass(Class&lt;?&gt; type) {</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;34</td>  <td class="nbHitsCovered">&nbsp;154482</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">this</span>.reflector = Reflector.forClass(type);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;35</td>  <td class="nbHitsCovered">&nbsp;154068</td>  <td class="src"><pre class="src">&nbsp;  }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;36</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;37</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;  <span class="keyword">public</span> <span class="keyword">static</span> MetaClass forClass(Class&lt;?&gt; type) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;38</td>  <td class="nbHitsCovered">&nbsp;102532</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">return</span> <span class="keyword">new</span> MetaClass(type);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;38</td>  <td class="nbHitsCovered">&nbsp;154482</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">return</span> <span class="keyword">new</span> MetaClass(type);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;39</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;  }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;40</td>  <td class="nbHits">&nbsp;</td>
@@ -102,60 +102,60 @@
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;45</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;  <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> setClassCacheEnabled(<span class="keyword">boolean</span> classCacheEnabled) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;46</td>  <td class="nbHitsCovered">&nbsp;394</td>  <td class="src"><pre class="src">&nbsp;    Reflector.setClassCacheEnabled(classCacheEnabled);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;47</td>  <td class="nbHitsCovered">&nbsp;394</td>  <td class="src"><pre class="src">&nbsp;  }</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;46</td>  <td class="nbHitsCovered">&nbsp;591</td>  <td class="src"><pre class="src">&nbsp;    Reflector.setClassCacheEnabled(classCacheEnabled);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;47</td>  <td class="nbHitsCovered">&nbsp;591</td>  <td class="src"><pre class="src">&nbsp;  }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;48</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;49</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;  <span class="keyword">public</span> MetaClass metaClassForProperty(String name) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;50</td>  <td class="nbHitsCovered">&nbsp;2398</td>  <td class="src"><pre class="src">&nbsp;    Class&lt;?&gt; propType = reflector.getGetterType(name);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;51</td>  <td class="nbHitsCovered">&nbsp;2398</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">return</span> MetaClass.forClass(propType);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;50</td>  <td class="nbHitsCovered">&nbsp;3597</td>  <td class="src"><pre class="src">&nbsp;    Class&lt;?&gt; propType = reflector.getGetterType(name);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;51</td>  <td class="nbHitsCovered">&nbsp;3597</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">return</span> MetaClass.forClass(propType);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;52</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;  }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;53</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;54</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;  <span class="keyword">public</span> String findProperty(String name) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;55</td>  <td class="nbHitsCovered">&nbsp;12504</td>  <td class="src"><pre class="src">&nbsp;    StringBuilder prop = buildProperty(name, <span class="keyword">new</span> StringBuilder());</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;56</td>  <td class="nbHitsCovered"><a title="Line 56: Conditional coverage 100% (2/2).">&nbsp;12504</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 56: Conditional coverage 100% (2/2).">    <span class="keyword">return</span> prop.length() &gt; 0 ? prop.toString() : <span class="keyword">null</span>;</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;55</td>  <td class="nbHitsCovered">&nbsp;18756</td>  <td class="src"><pre class="src">&nbsp;    StringBuilder prop = buildProperty(name, <span class="keyword">new</span> StringBuilder());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;56</td>  <td class="nbHitsCovered"><a title="Line 56: Conditional coverage 100% (2/2).">&nbsp;18756</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 56: Conditional coverage 100% (2/2).">    <span class="keyword">return</span> prop.length() &gt; 0 ? prop.toString() : <span class="keyword">null</span>;</a></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;57</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;  }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;58</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;59</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;  <span class="keyword">public</span> String findProperty(String name, <span class="keyword">boolean</span> useCamelCaseMapping) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;60</td>  <td class="nbHitsCovered"><a title="Line 60: Conditional coverage 100% (2/2).">&nbsp;12502</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 60: Conditional coverage 100% (2/2).">    <span class="keyword">if</span> (useCamelCaseMapping) {</a></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;61</td>  <td class="nbHitsCovered">&nbsp;842</td>  <td class="src"><pre class="src">&nbsp;      name = name.replace(<span class="string">"_"</span>, <span class="string">""</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;60</td>  <td class="nbHitsCovered"><a title="Line 60: Conditional coverage 100% (2/2).">&nbsp;18753</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 60: Conditional coverage 100% (2/2).">    <span class="keyword">if</span> (useCamelCaseMapping) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;61</td>  <td class="nbHitsCovered">&nbsp;1263</td>  <td class="src"><pre class="src">&nbsp;      name = name.replace(<span class="string">"_"</span>, <span class="string">""</span>);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;62</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;63</td>  <td class="nbHitsCovered">&nbsp;12502</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">return</span> findProperty(name);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;63</td>  <td class="nbHitsCovered">&nbsp;18753</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">return</span> findProperty(name);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;64</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;  }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;65</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;66</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;  <span class="keyword">public</span> String[] getGetterNames() {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;67</td>  <td class="nbHitsCovered">&nbsp;6</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">return</span> reflector.getGetablePropertyNames();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;67</td>  <td class="nbHitsCovered">&nbsp;9</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">return</span> reflector.getGetablePropertyNames();</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;68</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;  }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;69</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;70</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;  <span class="keyword">public</span> String[] getSetterNames() {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;71</td>  <td class="nbHitsCovered">&nbsp;10</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">return</span> reflector.getSetablePropertyNames();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;71</td>  <td class="nbHitsCovered">&nbsp;15</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">return</span> reflector.getSetablePropertyNames();</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;72</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;  }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;73</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;74</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;  <span class="keyword">public</span> Class&lt;?&gt; getSetterType(String name) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;75</td>  <td class="nbHitsCovered">&nbsp;84684</td>  <td class="src"><pre class="src">&nbsp;    PropertyTokenizer prop = <span class="keyword">new</span> PropertyTokenizer(name);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;76</td>  <td class="nbHitsCovered"><a title="Line 76: Conditional coverage 100% (2/2).">&nbsp;84684</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 76: Conditional coverage 100% (2/2).">    <span class="keyword">if</span> (prop.hasNext()) {</a></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;77</td>  <td class="nbHitsCovered">&nbsp;2308</td>  <td class="src"><pre class="src">&nbsp;      MetaClass metaProp = metaClassForProperty(prop.getName());</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;78</td>  <td class="nbHitsCovered">&nbsp;2308</td>  <td class="src"><pre class="src">&nbsp;      <span class="keyword">return</span> metaProp.getSetterType(prop.getChildren());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;75</td>  <td class="nbHitsCovered">&nbsp;126240</td>  <td class="src"><pre class="src">&nbsp;    PropertyTokenizer prop = <span class="keyword">new</span> PropertyTokenizer(name);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;76</td>  <td class="nbHitsCovered"><a title="Line 76: Conditional coverage 100% (2/2).">&nbsp;126240</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 76: Conditional coverage 100% (2/2).">    <span class="keyword">if</span> (prop.hasNext()) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;77</td>  <td class="nbHitsCovered">&nbsp;3462</td>  <td class="src"><pre class="src">&nbsp;      MetaClass metaProp = metaClassForProperty(prop.getName());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;78</td>  <td class="nbHitsCovered">&nbsp;3462</td>  <td class="src"><pre class="src">&nbsp;      <span class="keyword">return</span> metaProp.getSetterType(prop.getChildren());</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;79</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    } <span class="keyword">else</span> {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;80</td>  <td class="nbHitsCovered">&nbsp;82376</td>  <td class="src"><pre class="src">&nbsp;      <span class="keyword">return</span> reflector.getSetterType(prop.getName());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;80</td>  <td class="nbHitsCovered">&nbsp;122778</td>  <td class="src"><pre class="src">&nbsp;      <span class="keyword">return</span> reflector.getSetterType(prop.getName());</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;81</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;82</td>  <td class="nbHits">&nbsp;</td>
@@ -164,13 +164,13 @@
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;84</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;  <span class="keyword">public</span> Class&lt;?&gt; getGetterType(String name) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;85</td>  <td class="nbHitsCovered">&nbsp;10362</td>  <td class="src"><pre class="src">&nbsp;    PropertyTokenizer prop = <span class="keyword">new</span> PropertyTokenizer(name);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;86</td>  <td class="nbHitsCovered"><a title="Line 86: Conditional coverage 100% (2/2).">&nbsp;10362</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 86: Conditional coverage 100% (2/2).">    <span class="keyword">if</span> (prop.hasNext()) {</a></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;87</td>  <td class="nbHitsCovered">&nbsp;408</td>  <td class="src"><pre class="src">&nbsp;      MetaClass metaProp = metaClassForProperty(prop);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;88</td>  <td class="nbHitsCovered">&nbsp;408</td>  <td class="src"><pre class="src">&nbsp;      <span class="keyword">return</span> metaProp.getGetterType(prop.getChildren());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;85</td>  <td class="nbHitsCovered">&nbsp;15561</td>  <td class="src"><pre class="src">&nbsp;    PropertyTokenizer prop = <span class="keyword">new</span> PropertyTokenizer(name);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;86</td>  <td class="nbHitsCovered"><a title="Line 86: Conditional coverage 100% (2/2).">&nbsp;15561</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 86: Conditional coverage 100% (2/2).">    <span class="keyword">if</span> (prop.hasNext()) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;87</td>  <td class="nbHitsCovered">&nbsp;612</td>  <td class="src"><pre class="src">&nbsp;      MetaClass metaProp = metaClassForProperty(prop);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;88</td>  <td class="nbHitsCovered">&nbsp;612</td>  <td class="src"><pre class="src">&nbsp;      <span class="keyword">return</span> metaProp.getGetterType(prop.getChildren());</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;89</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    } <span class="keyword">else</span> {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;90</td>  <td class="nbHitsCovered">&nbsp;9954</td>  <td class="src"><pre class="src">&nbsp;      <span class="keyword">return</span> getGetterType(prop); <span class="comment">// issue #506. Resolve the type inside a Collection Object</span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;90</td>  <td class="nbHitsCovered">&nbsp;14949</td>  <td class="src"><pre class="src">&nbsp;      <span class="keyword">return</span> getGetterType(prop); <span class="comment">// issue #506. Resolve the type inside a Collection Object</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;91</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;92</td>  <td class="nbHits">&nbsp;</td>
@@ -179,23 +179,23 @@
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;94</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;  <span class="keyword">private</span> MetaClass metaClassForProperty(PropertyTokenizer prop) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;95</td>  <td class="nbHitsCovered">&nbsp;826</td>  <td class="src"><pre class="src">&nbsp;    Class&lt;?&gt; propType = getGetterType(prop);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;96</td>  <td class="nbHitsCovered">&nbsp;826</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">return</span> MetaClass.forClass(propType);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;95</td>  <td class="nbHitsCovered">&nbsp;1239</td>  <td class="src"><pre class="src">&nbsp;    Class&lt;?&gt; propType = getGetterType(prop);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;96</td>  <td class="nbHitsCovered">&nbsp;1239</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">return</span> MetaClass.forClass(propType);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;97</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;  }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;98</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;99</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;  <span class="keyword">private</span> Class&lt;?&gt; getGetterType(PropertyTokenizer prop) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;100</td>  <td class="nbHitsCovered">&nbsp;10780</td>  <td class="src"><pre class="src">&nbsp;    Class&lt;?&gt; type = reflector.getGetterType(prop.getName());</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;101</td>  <td class="nbHitsCovered"><a title="Line 101: Conditional coverage 100% (4/4) [each condition: 100%, 100%].">&nbsp;10780</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 101: Conditional coverage 100% (4/4) [each condition: 100%, 100%].">    <span class="keyword">if</span> (prop.getIndex() != <span class="keyword">null</span> &amp;&amp; Collection.<span class="keyword">class</span>.isAssignableFrom(type)) {</a></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;102</td>  <td class="nbHitsCovered">&nbsp;786</td>  <td class="src"><pre class="src">&nbsp;      Type returnType = getGenericGetterType(prop.getName());</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;103</td>  <td class="nbHitsCovered"><a title="Line 103: Conditional coverage 100% (2/2).">&nbsp;786</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 103: Conditional coverage 100% (2/2).">      <span class="keyword">if</span> (returnType <span class="keyword">instanceof</span> ParameterizedType) {</a></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;104</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;        Type[] actualTypeArguments = ((ParameterizedType) returnType).getActualTypeArguments();</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;105</td>  <td class="nbHitsUncovered"><a title="Line 105: Conditional coverage 50% (2/4) [each condition: 50%, 50%].">&nbsp;2</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 105: Conditional coverage 50% (2/4) [each condition: 50%, 50%].">        <span class="keyword">if</span> (actualTypeArguments != <span class="keyword">null</span> &amp;&amp; actualTypeArguments.length == 1) {</a></span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;106</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;          returnType = actualTypeArguments[0];</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;107</td>  <td class="nbHitsUncovered"><a title="Line 107: Conditional coverage 50% (1/2).">&nbsp;2</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 107: Conditional coverage 50% (1/2).">          <span class="keyword">if</span> (returnType <span class="keyword">instanceof</span> Class) {</a></span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;108</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;            type = (Class&lt;?&gt;) returnType;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;100</td>  <td class="nbHitsCovered">&nbsp;16188</td>  <td class="src"><pre class="src">&nbsp;    Class&lt;?&gt; type = reflector.getGetterType(prop.getName());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;101</td>  <td class="nbHitsCovered"><a title="Line 101: Conditional coverage 100% (4/4) [each condition: 100%, 100%].">&nbsp;16188</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 101: Conditional coverage 100% (4/4) [each condition: 100%, 100%].">    <span class="keyword">if</span> (prop.getIndex() != <span class="keyword">null</span> &amp;&amp; Collection.<span class="keyword">class</span>.isAssignableFrom(type)) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;102</td>  <td class="nbHitsCovered">&nbsp;1179</td>  <td class="src"><pre class="src">&nbsp;      Type returnType = getGenericGetterType(prop.getName());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;103</td>  <td class="nbHitsCovered"><a title="Line 103: Conditional coverage 100% (2/2).">&nbsp;1179</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 103: Conditional coverage 100% (2/2).">      <span class="keyword">if</span> (returnType <span class="keyword">instanceof</span> ParameterizedType) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;104</td>  <td class="nbHitsCovered">&nbsp;3</td>  <td class="src"><pre class="src">&nbsp;        Type[] actualTypeArguments = ((ParameterizedType) returnType).getActualTypeArguments();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;105</td>  <td class="nbHitsUncovered"><a title="Line 105: Conditional coverage 50% (2/4) [each condition: 50%, 50%].">&nbsp;3</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 105: Conditional coverage 50% (2/4) [each condition: 50%, 50%].">        <span class="keyword">if</span> (actualTypeArguments != <span class="keyword">null</span> &amp;&amp; actualTypeArguments.length == 1) {</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;106</td>  <td class="nbHitsCovered">&nbsp;3</td>  <td class="src"><pre class="src">&nbsp;          returnType = actualTypeArguments[0];</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;107</td>  <td class="nbHitsUncovered"><a title="Line 107: Conditional coverage 50% (1/2).">&nbsp;3</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 107: Conditional coverage 50% (1/2).">          <span class="keyword">if</span> (returnType <span class="keyword">instanceof</span> Class) {</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;108</td>  <td class="nbHitsCovered">&nbsp;3</td>  <td class="src"><pre class="src">&nbsp;            type = (Class&lt;?&gt;) returnType;</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;109</td>  <td class="nbHitsUncovered"><a title="Line 109: Conditional coverage 0% (0/2).">&nbsp;0</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 109: Conditional coverage 0% (0/2).">          } <span class="keyword">else</span> <span class="keyword">if</span> (returnType <span class="keyword">instanceof</span> ParameterizedType) {</a></span></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;110</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;            type = (Class&lt;?&gt;) ((ParameterizedType) returnType).getRawType();</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;111</td>  <td class="nbHits">&nbsp;</td>
@@ -206,7 +206,7 @@
   <td class="src"><pre class="src">&nbsp;      }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;114</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;115</td>  <td class="nbHitsCovered">&nbsp;10780</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">return</span> type;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;115</td>  <td class="nbHitsCovered">&nbsp;16188</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">return</span> type;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;116</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;  }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;117</td>  <td class="nbHits">&nbsp;</td>
@@ -215,12 +215,12 @@
   <td class="src"><pre class="src">&nbsp;  <span class="keyword">private</span> Type getGenericGetterType(String propertyName) {</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;119</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">try</span> {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;120</td>  <td class="nbHitsCovered">&nbsp;786</td>  <td class="src"><pre class="src">&nbsp;      Invoker invoker = reflector.getGetInvoker(propertyName);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;121</td>  <td class="nbHitsUncovered"><a title="Line 121: Conditional coverage 50% (1/2).">&nbsp;786</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 121: Conditional coverage 50% (1/2).">      <span class="keyword">if</span> (invoker <span class="keyword">instanceof</span> MethodInvoker) {</a></span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;122</td>  <td class="nbHitsCovered">&nbsp;786</td>  <td class="src"><pre class="src">&nbsp;        Field _method = MethodInvoker.<span class="keyword">class</span>.getDeclaredField(<span class="string">"method"</span>);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;123</td>  <td class="nbHitsCovered">&nbsp;786</td>  <td class="src"><pre class="src">&nbsp;        _method.setAccessible(<span class="keyword">true</span>);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;124</td>  <td class="nbHitsCovered">&nbsp;786</td>  <td class="src"><pre class="src">&nbsp;        Method method = (Method) _method.get(invoker);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;125</td>  <td class="nbHitsCovered">&nbsp;786</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> method.getGenericReturnType();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;120</td>  <td class="nbHitsCovered">&nbsp;1179</td>  <td class="src"><pre class="src">&nbsp;      Invoker invoker = reflector.getGetInvoker(propertyName);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;121</td>  <td class="nbHitsUncovered"><a title="Line 121: Conditional coverage 50% (1/2).">&nbsp;1179</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 121: Conditional coverage 50% (1/2).">      <span class="keyword">if</span> (invoker <span class="keyword">instanceof</span> MethodInvoker) {</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;122</td>  <td class="nbHitsCovered">&nbsp;1179</td>  <td class="src"><pre class="src">&nbsp;        Field _method = MethodInvoker.<span class="keyword">class</span>.getDeclaredField(<span class="string">"method"</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;123</td>  <td class="nbHitsCovered">&nbsp;1179</td>  <td class="src"><pre class="src">&nbsp;        _method.setAccessible(<span class="keyword">true</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;124</td>  <td class="nbHitsCovered">&nbsp;1179</td>  <td class="src"><pre class="src">&nbsp;        Method method = (Method) _method.get(invoker);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;125</td>  <td class="nbHitsCovered">&nbsp;1179</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> method.getGenericReturnType();</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;126</td>  <td class="nbHitsUncovered"><a title="Line 126: Conditional coverage 0% (0/2).">&nbsp;0</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 126: Conditional coverage 0% (0/2).">      } <span class="keyword">else</span> <span class="keyword">if</span> (invoker <span class="keyword">instanceof</span> GetFieldInvoker) {</a></span></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;127</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;        Field _field = GetFieldInvoker.<span class="keyword">class</span>.getDeclaredField(<span class="string">"field"</span>);</span></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;128</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;        _field.setAccessible(<span class="keyword">true</span>);</span></pre></td></tr>
@@ -238,11 +238,11 @@
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;138</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;  <span class="keyword">public</span> <span class="keyword">boolean</span> hasSetter(String name) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;139</td>  <td class="nbHitsCovered">&nbsp;6320</td>  <td class="src"><pre class="src">&nbsp;    PropertyTokenizer prop = <span class="keyword">new</span> PropertyTokenizer(name);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;140</td>  <td class="nbHitsCovered"><a title="Line 140: Conditional coverage 100% (2/2).">&nbsp;6320</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 140: Conditional coverage 100% (2/2).">    <span class="keyword">if</span> (prop.hasNext()) {</a></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;141</td>  <td class="nbHitsUncovered"><a title="Line 141: Conditional coverage 50% (1/2).">&nbsp;34</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 141: Conditional coverage 50% (1/2).">      <span class="keyword">if</span> (reflector.hasSetter(prop.getName())) {</a></span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;142</td>  <td class="nbHitsCovered">&nbsp;34</td>  <td class="src"><pre class="src">&nbsp;        MetaClass metaProp = metaClassForProperty(prop.getName());</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;143</td>  <td class="nbHitsCovered">&nbsp;34</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> metaProp.hasSetter(prop.getChildren());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;139</td>  <td class="nbHitsCovered">&nbsp;9597</td>  <td class="src"><pre class="src">&nbsp;    PropertyTokenizer prop = <span class="keyword">new</span> PropertyTokenizer(name);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;140</td>  <td class="nbHitsCovered"><a title="Line 140: Conditional coverage 100% (2/2).">&nbsp;9597</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 140: Conditional coverage 100% (2/2).">    <span class="keyword">if</span> (prop.hasNext()) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;141</td>  <td class="nbHitsUncovered"><a title="Line 141: Conditional coverage 50% (1/2).">&nbsp;51</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 141: Conditional coverage 50% (1/2).">      <span class="keyword">if</span> (reflector.hasSetter(prop.getName())) {</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;142</td>  <td class="nbHitsCovered">&nbsp;51</td>  <td class="src"><pre class="src">&nbsp;        MetaClass metaProp = metaClassForProperty(prop.getName());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;143</td>  <td class="nbHitsCovered">&nbsp;51</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> metaProp.hasSetter(prop.getChildren());</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;144</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;      } <span class="keyword">else</span> {</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;145</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;        <span class="keyword">return</span> <span class="keyword">false</span>;</span></pre></td></tr>
@@ -250,7 +250,7 @@
   <td class="src"><pre class="src">&nbsp;      }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;147</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    } <span class="keyword">else</span> {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;148</td>  <td class="nbHitsCovered">&nbsp;6286</td>  <td class="src"><pre class="src">&nbsp;      <span class="keyword">return</span> reflector.hasSetter(prop.getName());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;148</td>  <td class="nbHitsCovered">&nbsp;9546</td>  <td class="src"><pre class="src">&nbsp;      <span class="keyword">return</span> reflector.hasSetter(prop.getName());</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;149</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;150</td>  <td class="nbHits">&nbsp;</td>
@@ -259,19 +259,19 @@
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;152</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;  <span class="keyword">public</span> <span class="keyword">boolean</span> hasGetter(String name) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;153</td>  <td class="nbHitsCovered">&nbsp;10532</td>  <td class="src"><pre class="src">&nbsp;    PropertyTokenizer prop = <span class="keyword">new</span> PropertyTokenizer(name);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;154</td>  <td class="nbHitsCovered"><a title="Line 154: Conditional coverage 100% (2/2).">&nbsp;10532</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 154: Conditional coverage 100% (2/2).">    <span class="keyword">if</span> (prop.hasNext()) {</a></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;155</td>  <td class="nbHitsCovered"><a title="Line 155: Conditional coverage 100% (2/2).">&nbsp;420</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 155: Conditional coverage 100% (2/2).">      <span class="keyword">if</span> (reflector.hasGetter(prop.getName())) {</a></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;156</td>  <td class="nbHitsCovered">&nbsp;418</td>  <td class="src"><pre class="src">&nbsp;        MetaClass metaProp = metaClassForProperty(prop);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;157</td>  <td class="nbHitsCovered">&nbsp;418</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> metaProp.hasGetter(prop.getChildren());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;153</td>  <td class="nbHitsCovered">&nbsp;15831</td>  <td class="src"><pre class="src">&nbsp;    PropertyTokenizer prop = <span class="keyword">new</span> PropertyTokenizer(name);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;154</td>  <td class="nbHitsCovered"><a title="Line 154: Conditional coverage 100% (2/2).">&nbsp;15831</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 154: Conditional coverage 100% (2/2).">    <span class="keyword">if</span> (prop.hasNext()) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;155</td>  <td class="nbHitsCovered"><a title="Line 155: Conditional coverage 100% (2/2).">&nbsp;633</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 155: Conditional coverage 100% (2/2).">      <span class="keyword">if</span> (reflector.hasGetter(prop.getName())) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;156</td>  <td class="nbHitsCovered">&nbsp;627</td>  <td class="src"><pre class="src">&nbsp;        MetaClass metaProp = metaClassForProperty(prop);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;157</td>  <td class="nbHitsCovered">&nbsp;627</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> metaProp.hasGetter(prop.getChildren());</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;158</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;      } <span class="keyword">else</span> {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;159</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> <span class="keyword">false</span>;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;159</td>  <td class="nbHitsCovered">&nbsp;6</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> <span class="keyword">false</span>;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;160</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;      }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;161</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    } <span class="keyword">else</span> {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;162</td>  <td class="nbHitsCovered">&nbsp;10112</td>  <td class="src"><pre class="src">&nbsp;      <span class="keyword">return</span> reflector.hasGetter(prop.getName());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;162</td>  <td class="nbHitsCovered">&nbsp;15198</td>  <td class="src"><pre class="src">&nbsp;      <span class="keyword">return</span> reflector.hasGetter(prop.getName());</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;163</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;164</td>  <td class="nbHits">&nbsp;</td>
@@ -280,39 +280,39 @@
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;166</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;  <span class="keyword">public</span> Invoker getGetInvoker(String name) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;167</td>  <td class="nbHitsCovered">&nbsp;7720</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">return</span> reflector.getGetInvoker(name);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;167</td>  <td class="nbHitsCovered">&nbsp;11619</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">return</span> reflector.getGetInvoker(name);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;168</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;  }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;169</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;170</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;  <span class="keyword">public</span> Invoker getSetInvoker(String name) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;171</td>  <td class="nbHitsCovered">&nbsp;17840</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">return</span> reflector.getSetInvoker(name);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;171</td>  <td class="nbHitsCovered">&nbsp;26832</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">return</span> reflector.getSetInvoker(name);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;172</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;  }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;173</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;174</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;  <span class="keyword">private</span> StringBuilder buildProperty(String name, StringBuilder builder) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;175</td>  <td class="nbHitsCovered">&nbsp;12560</td>  <td class="src"><pre class="src">&nbsp;    PropertyTokenizer prop = <span class="keyword">new</span> PropertyTokenizer(name);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;176</td>  <td class="nbHitsCovered"><a title="Line 176: Conditional coverage 100% (2/2).">&nbsp;12560</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 176: Conditional coverage 100% (2/2).">    <span class="keyword">if</span> (prop.hasNext()) {</a></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;177</td>  <td class="nbHitsCovered">&nbsp;56</td>  <td class="src"><pre class="src">&nbsp;      String propertyName = reflector.findPropertyName(prop.getName());</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;178</td>  <td class="nbHitsUncovered"><a title="Line 178: Conditional coverage 50% (1/2).">&nbsp;56</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 178: Conditional coverage 50% (1/2).">      <span class="keyword">if</span> (propertyName != <span class="keyword">null</span>) {</a></span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;179</td>  <td class="nbHitsCovered">&nbsp;56</td>  <td class="src"><pre class="src">&nbsp;        builder.append(propertyName);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;180</td>  <td class="nbHitsCovered">&nbsp;56</td>  <td class="src"><pre class="src">&nbsp;        builder.append(<span class="string">"."</span>);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;181</td>  <td class="nbHitsCovered">&nbsp;56</td>  <td class="src"><pre class="src">&nbsp;        MetaClass metaProp = metaClassForProperty(propertyName);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;182</td>  <td class="nbHitsCovered">&nbsp;56</td>  <td class="src"><pre class="src">&nbsp;        metaProp.buildProperty(prop.getChildren(), builder);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;175</td>  <td class="nbHitsCovered">&nbsp;18840</td>  <td class="src"><pre class="src">&nbsp;    PropertyTokenizer prop = <span class="keyword">new</span> PropertyTokenizer(name);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;176</td>  <td class="nbHitsCovered"><a title="Line 176: Conditional coverage 100% (2/2).">&nbsp;18840</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 176: Conditional coverage 100% (2/2).">    <span class="keyword">if</span> (prop.hasNext()) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;177</td>  <td class="nbHitsCovered">&nbsp;84</td>  <td class="src"><pre class="src">&nbsp;      String propertyName = reflector.findPropertyName(prop.getName());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;178</td>  <td class="nbHitsUncovered"><a title="Line 178: Conditional coverage 50% (1/2).">&nbsp;84</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 178: Conditional coverage 50% (1/2).">      <span class="keyword">if</span> (propertyName != <span class="keyword">null</span>) {</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;179</td>  <td class="nbHitsCovered">&nbsp;84</td>  <td class="src"><pre class="src">&nbsp;        builder.append(propertyName);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;180</td>  <td class="nbHitsCovered">&nbsp;84</td>  <td class="src"><pre class="src">&nbsp;        builder.append(<span class="string">"."</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;181</td>  <td class="nbHitsCovered">&nbsp;84</td>  <td class="src"><pre class="src">&nbsp;        MetaClass metaProp = metaClassForProperty(propertyName);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;182</td>  <td class="nbHitsCovered">&nbsp;84</td>  <td class="src"><pre class="src">&nbsp;        metaProp.buildProperty(prop.getChildren(), builder);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;183</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;      }</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;184</td>  <td class="nbHitsCovered">&nbsp;56</td>  <td class="src"><pre class="src">&nbsp;    } <span class="keyword">else</span> {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;185</td>  <td class="nbHitsCovered">&nbsp;12504</td>  <td class="src"><pre class="src">&nbsp;      String propertyName = reflector.findPropertyName(name);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;186</td>  <td class="nbHitsCovered"><a title="Line 186: Conditional coverage 100% (2/2).">&nbsp;12504</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 186: Conditional coverage 100% (2/2).">      <span class="keyword">if</span> (propertyName != <span class="keyword">null</span>) {</a></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;187</td>  <td class="nbHitsCovered">&nbsp;4060</td>  <td class="src"><pre class="src">&nbsp;        builder.append(propertyName);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;184</td>  <td class="nbHitsCovered">&nbsp;84</td>  <td class="src"><pre class="src">&nbsp;    } <span class="keyword">else</span> {</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;185</td>  <td class="nbHitsCovered">&nbsp;18756</td>  <td class="src"><pre class="src">&nbsp;      String propertyName = reflector.findPropertyName(name);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;186</td>  <td class="nbHitsCovered"><a title="Line 186: Conditional coverage 100% (2/2).">&nbsp;18756</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 186: Conditional coverage 100% (2/2).">      <span class="keyword">if</span> (propertyName != <span class="keyword">null</span>) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;187</td>  <td class="nbHitsCovered">&nbsp;6090</td>  <td class="src"><pre class="src">&nbsp;        builder.append(propertyName);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;188</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;      }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;189</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;190</td>  <td class="nbHitsCovered">&nbsp;12560</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">return</span> builder;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;190</td>  <td class="nbHitsCovered">&nbsp;18840</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">return</span> builder;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;191</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;  }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;192</td>  <td class="nbHits">&nbsp;</td>
@@ -321,6 +321,6 @@
   <td class="src"><pre class="src">&nbsp;}</pre></td></tr>
 </table>
 
-<div class="footer">Report generated by <a href="http://cobertura.sourceforge.net/" target="_top">Cobertura</a> 1.9.4.1 on 13/06/13 18:58.</div>
+<div class="footer">Report generated by <a href="http://cobertura.sourceforge.net/" target="_top">Cobertura</a> 1.9.4.1 on 30/09/13 17:53.</div>
 </body>
 </html>

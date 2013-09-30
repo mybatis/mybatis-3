@@ -155,9 +155,9 @@
 <a class="jxr_linenumber" name="145" href="#145">145</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> appendSql(String sql) {
 <a class="jxr_linenumber" name="146" href="#146">146</a>       <a href="../../../../../org/apache/ibatis/parsing/GenericTokenParser.html">GenericTokenParser</a> parser = <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/parsing/GenericTokenParser.html">GenericTokenParser</a>(<span class="jxr_string">"#{"</span>, <span class="jxr_string">"}"</span>, <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/parsing/TokenHandler.html">TokenHandler</a>() {
 <a class="jxr_linenumber" name="147" href="#147">147</a>         <strong class="jxr_keyword">public</strong> String handleToken(String content) {
-<a class="jxr_linenumber" name="148" href="#148">148</a>           String newContent = content.replaceFirst(item, itemizeItem(item, index));
+<a class="jxr_linenumber" name="148" href="#148">148</a>           String newContent = content.replaceFirst(<span class="jxr_string">"^&#92;&#92;s*"</span> + item + <span class="jxr_string">"(?![^.,:&#92;&#92;s])"</span>, itemizeItem(item, index));
 <a class="jxr_linenumber" name="149" href="#149">149</a>           <strong class="jxr_keyword">if</strong> (itemIndex != <strong class="jxr_keyword">null</strong> &amp;&amp; newContent.equals(content)) {
-<a class="jxr_linenumber" name="150" href="#150">150</a>             newContent = content.replaceFirst(itemIndex, itemizeItem(itemIndex, index));
+<a class="jxr_linenumber" name="150" href="#150">150</a>             newContent = content.replaceFirst(<span class="jxr_string">"^&#92;&#92;s*"</span> + itemIndex + <span class="jxr_string">"(?![^.,:&#92;&#92;s])"</span>, itemizeItem(itemIndex, index));
 <a class="jxr_linenumber" name="151" href="#151">151</a>           }
 <a class="jxr_linenumber" name="152" href="#152">152</a>           <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> StringBuilder(<span class="jxr_string">"#{"</span>).append(newContent).append(<span class="jxr_string">"}"</span>).toString();
 <a class="jxr_linenumber" name="153" href="#153">153</a>         }

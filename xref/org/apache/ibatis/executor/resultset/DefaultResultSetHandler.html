@@ -375,59 +375,59 @@
 <a class="jxr_linenumber" name="365" href="#365">365</a>           || propertyMapping.getResultSet() != <strong class="jxr_keyword">null</strong>) {
 <a class="jxr_linenumber" name="366" href="#366">366</a>         Object value = getPropertyMappingValue(rsw.getResultSet(), metaObject, propertyMapping, lazyLoader, columnPrefix);
 <a class="jxr_linenumber" name="367" href="#367">367</a>         <strong class="jxr_keyword">final</strong> String property = propertyMapping.getProperty(); <em class="jxr_comment">// issue #541 make property optional</em>
-<a class="jxr_linenumber" name="368" href="#368">368</a>         <strong class="jxr_keyword">if</strong> (value != NO_VALUE &amp;&amp; property != <strong class="jxr_keyword">null</strong> &amp;&amp; (value != <strong class="jxr_keyword">null</strong> || isCallSettersOnNulls(metaObject.getSetterType(property)))) { <em class="jxr_comment">// issue #377, call setter on nulls</em>
-<a class="jxr_linenumber" name="369" href="#369">369</a>           metaObject.setValue(property, value);
-<a class="jxr_linenumber" name="370" href="#370">370</a>           foundValues = (value != <strong class="jxr_keyword">null</strong>) || foundValues;
-<a class="jxr_linenumber" name="371" href="#371">371</a>         }
-<a class="jxr_linenumber" name="372" href="#372">372</a>       }
-<a class="jxr_linenumber" name="373" href="#373">373</a>     }
-<a class="jxr_linenumber" name="374" href="#374">374</a>     <strong class="jxr_keyword">return</strong> foundValues;
-<a class="jxr_linenumber" name="375" href="#375">375</a>   }
-<a class="jxr_linenumber" name="376" href="#376">376</a> 
-<a class="jxr_linenumber" name="377" href="#377">377</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">boolean</strong> isCallSettersOnNulls(Class&lt;?&gt; propertyType) {
-<a class="jxr_linenumber" name="378" href="#378">378</a>     <strong class="jxr_keyword">return</strong> configuration.isCallSettersOnNulls() &amp;&amp; !propertyType.isPrimitive();
-<a class="jxr_linenumber" name="379" href="#379">379</a>   }
-<a class="jxr_linenumber" name="380" href="#380">380</a> 
-<a class="jxr_linenumber" name="381" href="#381">381</a>   <strong class="jxr_keyword">private</strong> Object getPropertyMappingValue(ResultSet rs, <a href="../../../../../org/apache/ibatis/reflection/MetaObject.html">MetaObject</a> metaResultObject, <a href="../../../../../org/apache/ibatis/mapping/ResultMapping.html">ResultMapping</a> propertyMapping, <a href="../../../../../org/apache/ibatis/executor/loader/ResultLoaderMap.html">ResultLoaderMap</a> lazyLoader, String columnPrefix)
-<a class="jxr_linenumber" name="382" href="#382">382</a>       <strong class="jxr_keyword">throws</strong> SQLException {
-<a class="jxr_linenumber" name="383" href="#383">383</a>     <strong class="jxr_keyword">if</strong> (propertyMapping.getNestedQueryId() != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="384" href="#384">384</a>       <strong class="jxr_keyword">return</strong> getNestedQueryMappingValue(rs, metaResultObject, propertyMapping, lazyLoader, columnPrefix);
-<a class="jxr_linenumber" name="385" href="#385">385</a>     } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (propertyMapping.getResultSet() != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="386" href="#386">386</a>       addPendingChildRelation(rs, metaResultObject, propertyMapping);
-<a class="jxr_linenumber" name="387" href="#387">387</a>       <strong class="jxr_keyword">return</strong> NO_VALUE;
-<a class="jxr_linenumber" name="388" href="#388">388</a>     } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (propertyMapping.getNestedResultMapId() != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="389" href="#389">389</a>       <em class="jxr_comment">// the user added a column attribute to a nested result map, ignore it</em>
-<a class="jxr_linenumber" name="390" href="#390">390</a>       <strong class="jxr_keyword">return</strong> NO_VALUE;
-<a class="jxr_linenumber" name="391" href="#391">391</a>     } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="392" href="#392">392</a>       <strong class="jxr_keyword">final</strong> TypeHandler&lt;?&gt; typeHandler = propertyMapping.getTypeHandler();
-<a class="jxr_linenumber" name="393" href="#393">393</a>       <strong class="jxr_keyword">final</strong> String column = prependPrefix(propertyMapping.getColumn(), columnPrefix);
-<a class="jxr_linenumber" name="394" href="#394">394</a>       <strong class="jxr_keyword">return</strong> typeHandler.getResult(rs, column);
-<a class="jxr_linenumber" name="395" href="#395">395</a>     }
-<a class="jxr_linenumber" name="396" href="#396">396</a>   }
-<a class="jxr_linenumber" name="397" href="#397">397</a> 
-<a class="jxr_linenumber" name="398" href="#398">398</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">boolean</strong> applyAutomaticMappings(<a href="../../../../../org/apache/ibatis/executor/resultset/ResultSetWrapper.html">ResultSetWrapper</a> rsw, <a href="../../../../../org/apache/ibatis/mapping/ResultMap.html">ResultMap</a> resultMap, <a href="../../../../../org/apache/ibatis/reflection/MetaObject.html">MetaObject</a> metaObject, String columnPrefix) <strong class="jxr_keyword">throws</strong> SQLException {
-<a class="jxr_linenumber" name="399" href="#399">399</a>     <strong class="jxr_keyword">final</strong> List&lt;String&gt; unmappedColumnNames = rsw.getUnmappedColumnNames(resultMap, columnPrefix);
-<a class="jxr_linenumber" name="400" href="#400">400</a>     <strong class="jxr_keyword">boolean</strong> foundValues = false;
-<a class="jxr_linenumber" name="401" href="#401">401</a>     <strong class="jxr_keyword">for</strong> (String columnName : unmappedColumnNames) {
-<a class="jxr_linenumber" name="402" href="#402">402</a>       String propertyName = columnName;
-<a class="jxr_linenumber" name="403" href="#403">403</a>       <strong class="jxr_keyword">if</strong> (columnPrefix != <strong class="jxr_keyword">null</strong> &amp;&amp; columnPrefix.length() &gt; 0) {
-<a class="jxr_linenumber" name="404" href="#404">404</a>         <em class="jxr_comment">// When columnPrefix is specified,</em>
-<a class="jxr_linenumber" name="405" href="#405">405</a>         <em class="jxr_comment">// ignore columns without the prefix.</em>
-<a class="jxr_linenumber" name="406" href="#406">406</a>         <strong class="jxr_keyword">if</strong> (columnName.startsWith(columnPrefix)) {
-<a class="jxr_linenumber" name="407" href="#407">407</a>           propertyName = columnName.substring(columnPrefix.length());
-<a class="jxr_linenumber" name="408" href="#408">408</a>         } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="409" href="#409">409</a>           <strong class="jxr_keyword">continue</strong>;
-<a class="jxr_linenumber" name="410" href="#410">410</a>         }
-<a class="jxr_linenumber" name="411" href="#411">411</a>       }
-<a class="jxr_linenumber" name="412" href="#412">412</a>       <strong class="jxr_keyword">final</strong> String property = metaObject.findProperty(propertyName, configuration.isMapUnderscoreToCamelCase());
-<a class="jxr_linenumber" name="413" href="#413">413</a>       <strong class="jxr_keyword">if</strong> (property != <strong class="jxr_keyword">null</strong> &amp;&amp; metaObject.hasSetter(property)) {
-<a class="jxr_linenumber" name="414" href="#414">414</a>         <strong class="jxr_keyword">final</strong> Class&lt;?&gt; propertyType = metaObject.getSetterType(property);
-<a class="jxr_linenumber" name="415" href="#415">415</a>         <strong class="jxr_keyword">if</strong> (typeHandlerRegistry.hasTypeHandler(propertyType)) {
-<a class="jxr_linenumber" name="416" href="#416">416</a>           <strong class="jxr_keyword">final</strong> TypeHandler&lt;?&gt; typeHandler = rsw.getTypeHandler(propertyType, columnName);
-<a class="jxr_linenumber" name="417" href="#417">417</a>           <strong class="jxr_keyword">final</strong> Object value = typeHandler.getResult(rsw.getResultSet(), columnName);
-<a class="jxr_linenumber" name="418" href="#418">418</a>           <strong class="jxr_keyword">if</strong> (value != <strong class="jxr_keyword">null</strong> || isCallSettersOnNulls(propertyType)) { <em class="jxr_comment">// issue #377, call setter on nulls</em>
-<a class="jxr_linenumber" name="419" href="#419">419</a>             metaObject.setValue(property, value);
-<a class="jxr_linenumber" name="420" href="#420">420</a>             foundValues = (value != <strong class="jxr_keyword">null</strong>) || foundValues;
+<a class="jxr_linenumber" name="368" href="#368">368</a>         <strong class="jxr_keyword">if</strong> (value != NO_VALUE &amp;&amp; property != <strong class="jxr_keyword">null</strong> &amp;&amp; (value != <strong class="jxr_keyword">null</strong> || configuration.isCallSettersOnNulls())) { <em class="jxr_comment">// issue #377, call setter on nulls</em>
+<a class="jxr_linenumber" name="369" href="#369">369</a>           <strong class="jxr_keyword">if</strong> (value != <strong class="jxr_keyword">null</strong> || !metaObject.getSetterType(property).isPrimitive()) {
+<a class="jxr_linenumber" name="370" href="#370">370</a>             metaObject.setValue(property, value);
+<a class="jxr_linenumber" name="371" href="#371">371</a>           }
+<a class="jxr_linenumber" name="372" href="#372">372</a>           foundValues = <strong class="jxr_keyword">true</strong>;
+<a class="jxr_linenumber" name="373" href="#373">373</a>         }
+<a class="jxr_linenumber" name="374" href="#374">374</a>       }
+<a class="jxr_linenumber" name="375" href="#375">375</a>     }
+<a class="jxr_linenumber" name="376" href="#376">376</a>     <strong class="jxr_keyword">return</strong> foundValues;
+<a class="jxr_linenumber" name="377" href="#377">377</a>   }
+<a class="jxr_linenumber" name="378" href="#378">378</a> 
+<a class="jxr_linenumber" name="379" href="#379">379</a>   <strong class="jxr_keyword">private</strong> Object getPropertyMappingValue(ResultSet rs, <a href="../../../../../org/apache/ibatis/reflection/MetaObject.html">MetaObject</a> metaResultObject, <a href="../../../../../org/apache/ibatis/mapping/ResultMapping.html">ResultMapping</a> propertyMapping, <a href="../../../../../org/apache/ibatis/executor/loader/ResultLoaderMap.html">ResultLoaderMap</a> lazyLoader, String columnPrefix)
+<a class="jxr_linenumber" name="380" href="#380">380</a>       <strong class="jxr_keyword">throws</strong> SQLException {
+<a class="jxr_linenumber" name="381" href="#381">381</a>     <strong class="jxr_keyword">if</strong> (propertyMapping.getNestedQueryId() != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="382" href="#382">382</a>       <strong class="jxr_keyword">return</strong> getNestedQueryMappingValue(rs, metaResultObject, propertyMapping, lazyLoader, columnPrefix);
+<a class="jxr_linenumber" name="383" href="#383">383</a>     } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (propertyMapping.getResultSet() != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="384" href="#384">384</a>       addPendingChildRelation(rs, metaResultObject, propertyMapping);
+<a class="jxr_linenumber" name="385" href="#385">385</a>       <strong class="jxr_keyword">return</strong> NO_VALUE;
+<a class="jxr_linenumber" name="386" href="#386">386</a>     } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (propertyMapping.getNestedResultMapId() != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="387" href="#387">387</a>       <em class="jxr_comment">// the user added a column attribute to a nested result map, ignore it</em>
+<a class="jxr_linenumber" name="388" href="#388">388</a>       <strong class="jxr_keyword">return</strong> NO_VALUE;
+<a class="jxr_linenumber" name="389" href="#389">389</a>     } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="390" href="#390">390</a>       <strong class="jxr_keyword">final</strong> TypeHandler&lt;?&gt; typeHandler = propertyMapping.getTypeHandler();
+<a class="jxr_linenumber" name="391" href="#391">391</a>       <strong class="jxr_keyword">final</strong> String column = prependPrefix(propertyMapping.getColumn(), columnPrefix);
+<a class="jxr_linenumber" name="392" href="#392">392</a>       <strong class="jxr_keyword">return</strong> typeHandler.getResult(rs, column);
+<a class="jxr_linenumber" name="393" href="#393">393</a>     }
+<a class="jxr_linenumber" name="394" href="#394">394</a>   }
+<a class="jxr_linenumber" name="395" href="#395">395</a> 
+<a class="jxr_linenumber" name="396" href="#396">396</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">boolean</strong> applyAutomaticMappings(<a href="../../../../../org/apache/ibatis/executor/resultset/ResultSetWrapper.html">ResultSetWrapper</a> rsw, <a href="../../../../../org/apache/ibatis/mapping/ResultMap.html">ResultMap</a> resultMap, <a href="../../../../../org/apache/ibatis/reflection/MetaObject.html">MetaObject</a> metaObject, String columnPrefix) <strong class="jxr_keyword">throws</strong> SQLException {
+<a class="jxr_linenumber" name="397" href="#397">397</a>     <strong class="jxr_keyword">final</strong> List&lt;String&gt; unmappedColumnNames = rsw.getUnmappedColumnNames(resultMap, columnPrefix);
+<a class="jxr_linenumber" name="398" href="#398">398</a>     <strong class="jxr_keyword">boolean</strong> foundValues = false;
+<a class="jxr_linenumber" name="399" href="#399">399</a>     <strong class="jxr_keyword">for</strong> (String columnName : unmappedColumnNames) {
+<a class="jxr_linenumber" name="400" href="#400">400</a>       String propertyName = columnName;
+<a class="jxr_linenumber" name="401" href="#401">401</a>       <strong class="jxr_keyword">if</strong> (columnPrefix != <strong class="jxr_keyword">null</strong> &amp;&amp; columnPrefix.length() &gt; 0) {
+<a class="jxr_linenumber" name="402" href="#402">402</a>         <em class="jxr_comment">// When columnPrefix is specified,</em>
+<a class="jxr_linenumber" name="403" href="#403">403</a>         <em class="jxr_comment">// ignore columns without the prefix.</em>
+<a class="jxr_linenumber" name="404" href="#404">404</a>         <strong class="jxr_keyword">if</strong> (columnName.startsWith(columnPrefix)) {
+<a class="jxr_linenumber" name="405" href="#405">405</a>           propertyName = columnName.substring(columnPrefix.length());
+<a class="jxr_linenumber" name="406" href="#406">406</a>         } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="407" href="#407">407</a>           <strong class="jxr_keyword">continue</strong>;
+<a class="jxr_linenumber" name="408" href="#408">408</a>         }
+<a class="jxr_linenumber" name="409" href="#409">409</a>       }
+<a class="jxr_linenumber" name="410" href="#410">410</a>       <strong class="jxr_keyword">final</strong> String property = metaObject.findProperty(propertyName, configuration.isMapUnderscoreToCamelCase());
+<a class="jxr_linenumber" name="411" href="#411">411</a>       <strong class="jxr_keyword">if</strong> (property != <strong class="jxr_keyword">null</strong> &amp;&amp; metaObject.hasSetter(property)) {
+<a class="jxr_linenumber" name="412" href="#412">412</a>         <strong class="jxr_keyword">final</strong> Class&lt;?&gt; propertyType = metaObject.getSetterType(property);
+<a class="jxr_linenumber" name="413" href="#413">413</a>         <strong class="jxr_keyword">if</strong> (typeHandlerRegistry.hasTypeHandler(propertyType)) {
+<a class="jxr_linenumber" name="414" href="#414">414</a>           <strong class="jxr_keyword">final</strong> TypeHandler&lt;?&gt; typeHandler = rsw.getTypeHandler(propertyType, columnName);
+<a class="jxr_linenumber" name="415" href="#415">415</a>           <strong class="jxr_keyword">final</strong> Object value = typeHandler.getResult(rsw.getResultSet(), columnName);
+<a class="jxr_linenumber" name="416" href="#416">416</a>           <strong class="jxr_keyword">if</strong> (value != <strong class="jxr_keyword">null</strong> || configuration.isCallSettersOnNulls()) { <em class="jxr_comment">// issue #377, call setter on nulls</em>
+<a class="jxr_linenumber" name="417" href="#417">417</a>             <strong class="jxr_keyword">if</strong> (value != <strong class="jxr_keyword">null</strong> || !propertyType.isPrimitive()) {
+<a class="jxr_linenumber" name="418" href="#418">418</a>               metaObject.setValue(property, value);
+<a class="jxr_linenumber" name="419" href="#419">419</a>             }
+<a class="jxr_linenumber" name="420" href="#420">420</a>             foundValues = <strong class="jxr_keyword">true</strong>;
 <a class="jxr_linenumber" name="421" href="#421">421</a>           }
 <a class="jxr_linenumber" name="422" href="#422">422</a>         }
 <a class="jxr_linenumber" name="423" href="#423">423</a>       }

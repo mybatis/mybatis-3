@@ -103,36 +103,36 @@
   <td class="src"><pre class="src">&nbsp;<span class="keyword">import</span> org.apache.ibatis.session.Configuration;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;42</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;43</td>  <td class="nbHitsCovered">&nbsp;20320</td>  <td class="src"><pre class="src">&nbsp;<span class="keyword">public</span> <span class="keyword">class</span> CglibProxyFactory <span class="keyword">implements</span> ProxyFactory {</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;43</td>  <td class="nbHitsCovered">&nbsp;30480</td>  <td class="src"><pre class="src">&nbsp;<span class="keyword">public</span> <span class="keyword">class</span> CglibProxyFactory <span class="keyword">implements</span> ProxyFactory {</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;44</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;45</td>  <td class="nbHitsCovered">&nbsp;36</td>  <td class="src"><pre class="src">&nbsp;  <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Log log = LogFactory.getLog(CglibProxyFactory.<span class="keyword">class</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;45</td>  <td class="nbHitsCovered">&nbsp;54</td>  <td class="src"><pre class="src">&nbsp;  <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Log log = LogFactory.getLog(CglibProxyFactory.<span class="keyword">class</span>);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;46</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;  <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String FINALIZE_METHOD = <span class="string">"finalize"</span>;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;47</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;  <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String WRITE_REPLACE_METHOD = <span class="string">"writeReplace"</span>;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;48</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;49</td>  <td class="nbHitsCovered">&nbsp;366</td>  <td class="src"><pre class="src">&nbsp;  <span class="keyword">public</span> CglibProxyFactory() {</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;49</td>  <td class="nbHitsCovered">&nbsp;549</td>  <td class="src"><pre class="src">&nbsp;  <span class="keyword">public</span> CglibProxyFactory() {</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;50</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">try</span> {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;51</td>  <td class="nbHitsCovered">&nbsp;366</td>  <td class="src"><pre class="src">&nbsp;      Resources.classForName(<span class="string">"net.sf.cglib.proxy.Enhancer"</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;51</td>  <td class="nbHitsCovered">&nbsp;549</td>  <td class="src"><pre class="src">&nbsp;      Resources.classForName(<span class="string">"net.sf.cglib.proxy.Enhancer"</span>);</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;52</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;    } <span class="keyword">catch</span> (Throwable e) {</span></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;53</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;      <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(<span class="string">"Cannot enable lazy loading because CGLIB is not available. Add CGLIB to your classpath."</span>, e);</span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;54</td>  <td class="nbHitsCovered">&nbsp;366</td>  <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;55</td>  <td class="nbHitsCovered">&nbsp;366</td>  <td class="src"><pre class="src">&nbsp;  }</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;54</td>  <td class="nbHitsCovered">&nbsp;549</td>  <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;55</td>  <td class="nbHitsCovered">&nbsp;549</td>  <td class="src"><pre class="src">&nbsp;  }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;56</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;57</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;  <span class="keyword">public</span> Object createProxy(Object target, ResultLoaderMap lazyLoader, Configuration configuration, ObjectFactory objectFactory, List&lt;Class&lt;?&gt;&gt; constructorArgTypes, List&lt;Object&gt; constructorArgs) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;58</td>  <td class="nbHitsCovered">&nbsp;20280</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">return</span> EnhancedResultObjectProxyImpl.createProxy(target, lazyLoader, configuration, objectFactory, constructorArgTypes, constructorArgs);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;58</td>  <td class="nbHitsCovered">&nbsp;30420</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">return</span> EnhancedResultObjectProxyImpl.createProxy(target, lazyLoader, configuration, objectFactory, constructorArgTypes, constructorArgs);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;59</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;  }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;60</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;61</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;  <span class="keyword">public</span> Object createDeserializationProxy(Object target, Map&lt;String, ResultLoaderMap.LoadPair&gt; unloadedProperties, ObjectFactory objectFactory, List&lt;Class&lt;?&gt;&gt; constructorArgTypes, List&lt;Object&gt; constructorArgs) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;62</td>  <td class="nbHitsCovered">&nbsp;40</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">return</span> EnhancedDeserializationProxyImpl.createProxy(target, unloadedProperties, objectFactory, constructorArgTypes, constructorArgs);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;62</td>  <td class="nbHitsCovered">&nbsp;60</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">return</span> EnhancedDeserializationProxyImpl.createProxy(target, unloadedProperties, objectFactory, constructorArgTypes, constructorArgs);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;63</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;  }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;64</td>  <td class="nbHits">&nbsp;</td>
@@ -144,32 +144,32 @@
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;68</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;  <span class="keyword">private</span> <span class="keyword">static</span> Object crateProxy(Class&lt;?&gt; type, Callback callback, List&lt;Class&lt;?&gt;&gt; constructorArgTypes, List&lt;Object&gt; constructorArgs) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;69</td>  <td class="nbHitsCovered">&nbsp;20320</td>  <td class="src"><pre class="src">&nbsp;    Enhancer enhancer = <span class="keyword">new</span> Enhancer();</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;70</td>  <td class="nbHitsCovered">&nbsp;20320</td>  <td class="src"><pre class="src">&nbsp;    enhancer.setCallback(callback);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;71</td>  <td class="nbHitsCovered">&nbsp;20320</td>  <td class="src"><pre class="src">&nbsp;    enhancer.setSuperclass(type);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;69</td>  <td class="nbHitsCovered">&nbsp;30480</td>  <td class="src"><pre class="src">&nbsp;    Enhancer enhancer = <span class="keyword">new</span> Enhancer();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;70</td>  <td class="nbHitsCovered">&nbsp;30480</td>  <td class="src"><pre class="src">&nbsp;    enhancer.setCallback(callback);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;71</td>  <td class="nbHitsCovered">&nbsp;30480</td>  <td class="src"><pre class="src">&nbsp;    enhancer.setSuperclass(type);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;72</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">try</span> {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;73</td>  <td class="nbHitsCovered">&nbsp;20320</td>  <td class="src"><pre class="src">&nbsp;      type.getDeclaredMethod(WRITE_REPLACE_METHOD);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;73</td>  <td class="nbHitsCovered">&nbsp;30480</td>  <td class="src"><pre class="src">&nbsp;      type.getDeclaredMethod(WRITE_REPLACE_METHOD);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;74</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;      <span class="comment">// ObjectOutputStream will call writeReplace of objects returned by writeReplace</span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;75</td>  <td class="nbHitsCovered">&nbsp;8</td>  <td class="src"><pre class="src">&nbsp;      log.debug(WRITE_REPLACE_METHOD + <span class="string">" method was found on bean "</span> + type + <span class="string">", make sure it returns this"</span>);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;76</td>  <td class="nbHitsCovered">&nbsp;20312</td>  <td class="src"><pre class="src">&nbsp;    } <span class="keyword">catch</span> (NoSuchMethodException e) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;77</td>  <td class="nbHitsCovered">&nbsp;20312</td>  <td class="src"><pre class="src">&nbsp;      enhancer.setInterfaces(<span class="keyword">new</span> Class[]{WriteReplaceInterface.<span class="keyword">class</span>});</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;75</td>  <td class="nbHitsCovered">&nbsp;12</td>  <td class="src"><pre class="src">&nbsp;      log.debug(WRITE_REPLACE_METHOD + <span class="string">" method was found on bean "</span> + type + <span class="string">", make sure it returns this"</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;76</td>  <td class="nbHitsCovered">&nbsp;30468</td>  <td class="src"><pre class="src">&nbsp;    } <span class="keyword">catch</span> (NoSuchMethodException e) {</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;77</td>  <td class="nbHitsCovered">&nbsp;30468</td>  <td class="src"><pre class="src">&nbsp;      enhancer.setInterfaces(<span class="keyword">new</span> Class[]{WriteReplaceInterface.<span class="keyword">class</span>});</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;78</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;    } <span class="keyword">catch</span> (SecurityException e) {</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;79</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;      <span class="comment">// nothing to do here</span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;80</td>  <td class="nbHitsCovered">&nbsp;20320</td>  <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;81</td>  <td class="nbHitsCovered">&nbsp;20320</td>  <td class="src"><pre class="src">&nbsp;    Object enhanced = <span class="keyword">null</span>;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;82</td>  <td class="nbHitsCovered"><a title="Line 82: Conditional coverage 100% (2/2).">&nbsp;20320</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 82: Conditional coverage 100% (2/2).">    <span class="keyword">if</span> (constructorArgTypes.isEmpty()) {</a></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;83</td>  <td class="nbHitsCovered">&nbsp;20314</td>  <td class="src"><pre class="src">&nbsp;      enhanced = enhancer.create();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;80</td>  <td class="nbHitsCovered">&nbsp;30480</td>  <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;81</td>  <td class="nbHitsCovered">&nbsp;30480</td>  <td class="src"><pre class="src">&nbsp;    Object enhanced = <span class="keyword">null</span>;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;82</td>  <td class="nbHitsCovered"><a title="Line 82: Conditional coverage 100% (2/2).">&nbsp;30480</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 82: Conditional coverage 100% (2/2).">    <span class="keyword">if</span> (constructorArgTypes.isEmpty()) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;83</td>  <td class="nbHitsCovered">&nbsp;30471</td>  <td class="src"><pre class="src">&nbsp;      enhanced = enhancer.create();</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;84</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    } <span class="keyword">else</span> {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;85</td>  <td class="nbHitsCovered">&nbsp;6</td>  <td class="src"><pre class="src">&nbsp;      Class&lt;?&gt;[] typesArray = constructorArgTypes.toArray(<span class="keyword">new</span> Class[constructorArgTypes.size()]);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;86</td>  <td class="nbHitsCovered">&nbsp;6</td>  <td class="src"><pre class="src">&nbsp;      Object[] valuesArray = constructorArgs.toArray(<span class="keyword">new</span> Object[constructorArgs.size()]);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;87</td>  <td class="nbHitsCovered">&nbsp;6</td>  <td class="src"><pre class="src">&nbsp;      enhanced = enhancer.create(typesArray, valuesArray);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;85</td>  <td class="nbHitsCovered">&nbsp;9</td>  <td class="src"><pre class="src">&nbsp;      Class&lt;?&gt;[] typesArray = constructorArgTypes.toArray(<span class="keyword">new</span> Class[constructorArgTypes.size()]);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;86</td>  <td class="nbHitsCovered">&nbsp;9</td>  <td class="src"><pre class="src">&nbsp;      Object[] valuesArray = constructorArgs.toArray(<span class="keyword">new</span> Object[constructorArgs.size()]);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;87</td>  <td class="nbHitsCovered">&nbsp;9</td>  <td class="src"><pre class="src">&nbsp;      enhanced = enhancer.create(typesArray, valuesArray);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;88</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;89</td>  <td class="nbHitsCovered">&nbsp;20320</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">return</span> enhanced;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;89</td>  <td class="nbHitsCovered">&nbsp;30480</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">return</span> enhanced;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;90</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;  }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;91</td>  <td class="nbHits">&nbsp;</td>
@@ -194,60 +194,60 @@
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">private</span> List&lt;Object&gt; constructorArgs;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;101</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;102</td>  <td class="nbHitsCovered">&nbsp;20280</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">private</span> EnhancedResultObjectProxyImpl(Class&lt;?&gt; type, ResultLoaderMap lazyLoader, Configuration configuration, ObjectFactory objectFactory, List&lt;Class&lt;?&gt;&gt; constructorArgTypes, List&lt;Object&gt; constructorArgs) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;103</td>  <td class="nbHitsCovered">&nbsp;20280</td>  <td class="src"><pre class="src">&nbsp;      <span class="keyword">this</span>.type = type;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;104</td>  <td class="nbHitsCovered">&nbsp;20280</td>  <td class="src"><pre class="src">&nbsp;      <span class="keyword">this</span>.lazyLoader = lazyLoader;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;105</td>  <td class="nbHitsCovered">&nbsp;20280</td>  <td class="src"><pre class="src">&nbsp;      <span class="keyword">this</span>.aggressive = configuration.isAggressiveLazyLoading();</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;106</td>  <td class="nbHitsCovered">&nbsp;20280</td>  <td class="src"><pre class="src">&nbsp;      <span class="keyword">this</span>.lazyLoadTriggerMethods = configuration.getLazyLoadTriggerMethods();</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;107</td>  <td class="nbHitsCovered">&nbsp;20280</td>  <td class="src"><pre class="src">&nbsp;      <span class="keyword">this</span>.objectFactory = objectFactory;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;108</td>  <td class="nbHitsCovered">&nbsp;20280</td>  <td class="src"><pre class="src">&nbsp;      <span class="keyword">this</span>.constructorArgTypes = constructorArgTypes;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;109</td>  <td class="nbHitsCovered">&nbsp;20280</td>  <td class="src"><pre class="src">&nbsp;      <span class="keyword">this</span>.constructorArgs = constructorArgs;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;110</td>  <td class="nbHitsCovered">&nbsp;20280</td>  <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;102</td>  <td class="nbHitsCovered">&nbsp;30420</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">private</span> EnhancedResultObjectProxyImpl(Class&lt;?&gt; type, ResultLoaderMap lazyLoader, Configuration configuration, ObjectFactory objectFactory, List&lt;Class&lt;?&gt;&gt; constructorArgTypes, List&lt;Object&gt; constructorArgs) {</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;103</td>  <td class="nbHitsCovered">&nbsp;30420</td>  <td class="src"><pre class="src">&nbsp;      <span class="keyword">this</span>.type = type;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;104</td>  <td class="nbHitsCovered">&nbsp;30420</td>  <td class="src"><pre class="src">&nbsp;      <span class="keyword">this</span>.lazyLoader = lazyLoader;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;105</td>  <td class="nbHitsCovered">&nbsp;30420</td>  <td class="src"><pre class="src">&nbsp;      <span class="keyword">this</span>.aggressive = configuration.isAggressiveLazyLoading();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;106</td>  <td class="nbHitsCovered">&nbsp;30420</td>  <td class="src"><pre class="src">&nbsp;      <span class="keyword">this</span>.lazyLoadTriggerMethods = configuration.getLazyLoadTriggerMethods();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;107</td>  <td class="nbHitsCovered">&nbsp;30420</td>  <td class="src"><pre class="src">&nbsp;      <span class="keyword">this</span>.objectFactory = objectFactory;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;108</td>  <td class="nbHitsCovered">&nbsp;30420</td>  <td class="src"><pre class="src">&nbsp;      <span class="keyword">this</span>.constructorArgTypes = constructorArgTypes;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;109</td>  <td class="nbHitsCovered">&nbsp;30420</td>  <td class="src"><pre class="src">&nbsp;      <span class="keyword">this</span>.constructorArgs = constructorArgs;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;110</td>  <td class="nbHitsCovered">&nbsp;30420</td>  <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;111</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;112</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> <span class="keyword">static</span> Object createProxy(Object target, ResultLoaderMap lazyLoader, Configuration configuration, ObjectFactory objectFactory, List&lt;Class&lt;?&gt;&gt; constructorArgTypes, List&lt;Object&gt; constructorArgs) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;113</td>  <td class="nbHitsCovered">&nbsp;20280</td>  <td class="src"><pre class="src">&nbsp;      <span class="keyword">final</span> Class&lt;?&gt; type = target.getClass();</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;114</td>  <td class="nbHitsCovered">&nbsp;20280</td>  <td class="src"><pre class="src">&nbsp;      EnhancedResultObjectProxyImpl callback = <span class="keyword">new</span> EnhancedResultObjectProxyImpl(type, lazyLoader, configuration, objectFactory, constructorArgTypes, constructorArgs);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;115</td>  <td class="nbHitsCovered">&nbsp;20280</td>  <td class="src"><pre class="src">&nbsp;      Object enhanced = crateProxy(type, callback, constructorArgTypes, constructorArgs);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;116</td>  <td class="nbHitsCovered">&nbsp;20280</td>  <td class="src"><pre class="src">&nbsp;      PropertyCopier.copyBeanProperties(type, target, enhanced);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;117</td>  <td class="nbHitsCovered">&nbsp;20280</td>  <td class="src"><pre class="src">&nbsp;      <span class="keyword">return</span> enhanced;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;113</td>  <td class="nbHitsCovered">&nbsp;30420</td>  <td class="src"><pre class="src">&nbsp;      <span class="keyword">final</span> Class&lt;?&gt; type = target.getClass();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;114</td>  <td class="nbHitsCovered">&nbsp;30420</td>  <td class="src"><pre class="src">&nbsp;      EnhancedResultObjectProxyImpl callback = <span class="keyword">new</span> EnhancedResultObjectProxyImpl(type, lazyLoader, configuration, objectFactory, constructorArgTypes, constructorArgs);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;115</td>  <td class="nbHitsCovered">&nbsp;30420</td>  <td class="src"><pre class="src">&nbsp;      Object enhanced = crateProxy(type, callback, constructorArgTypes, constructorArgs);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;116</td>  <td class="nbHitsCovered">&nbsp;30420</td>  <td class="src"><pre class="src">&nbsp;      PropertyCopier.copyBeanProperties(type, target, enhanced);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;117</td>  <td class="nbHitsCovered">&nbsp;30420</td>  <td class="src"><pre class="src">&nbsp;      <span class="keyword">return</span> enhanced;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;118</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;119</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;120</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> Object intercept(Object enhanced, Method method, Object[] args, MethodProxy methodProxy) <span class="keyword">throws</span> Throwable {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;121</td>  <td class="nbHitsCovered">&nbsp;37898</td>  <td class="src"><pre class="src">&nbsp;      <span class="keyword">final</span> String methodName = method.getName();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;121</td>  <td class="nbHitsCovered">&nbsp;56412</td>  <td class="src"><pre class="src">&nbsp;      <span class="keyword">final</span> String methodName = method.getName();</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;122</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;      <span class="keyword">try</span> {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;123</td>  <td class="nbHitsCovered">&nbsp;37898</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">synchronized</span> (lazyLoader) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;124</td>  <td class="nbHitsCovered"><a title="Line 124: Conditional coverage 100% (2/2).">&nbsp;37898</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 124: Conditional coverage 100% (2/2).">          <span class="keyword">if</span> (WRITE_REPLACE_METHOD.equals(methodName)) {</a></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;125</td>  <td class="nbHitsCovered">&nbsp;84</td>  <td class="src"><pre class="src">&nbsp;            Object original = <span class="keyword">null</span>;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;126</td>  <td class="nbHitsCovered"><a title="Line 126: Conditional coverage 100% (2/2).">&nbsp;84</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 126: Conditional coverage 100% (2/2).">            <span class="keyword">if</span> (constructorArgTypes.isEmpty()) {</a></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;127</td>  <td class="nbHitsCovered">&nbsp;80</td>  <td class="src"><pre class="src">&nbsp;              original = objectFactory.create(type);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;123</td>  <td class="nbHitsCovered">&nbsp;56412</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">synchronized</span> (lazyLoader) {</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;124</td>  <td class="nbHitsCovered"><a title="Line 124: Conditional coverage 100% (2/2).">&nbsp;56412</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 124: Conditional coverage 100% (2/2).">          <span class="keyword">if</span> (WRITE_REPLACE_METHOD.equals(methodName)) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;125</td>  <td class="nbHitsCovered">&nbsp;126</td>  <td class="src"><pre class="src">&nbsp;            Object original = <span class="keyword">null</span>;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;126</td>  <td class="nbHitsCovered"><a title="Line 126: Conditional coverage 100% (2/2).">&nbsp;126</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 126: Conditional coverage 100% (2/2).">            <span class="keyword">if</span> (constructorArgTypes.isEmpty()) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;127</td>  <td class="nbHitsCovered">&nbsp;120</td>  <td class="src"><pre class="src">&nbsp;              original = objectFactory.create(type);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;128</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;            } <span class="keyword">else</span> {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;129</td>  <td class="nbHitsCovered">&nbsp;4</td>  <td class="src"><pre class="src">&nbsp;              original = objectFactory.create(type, constructorArgTypes, constructorArgs);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;129</td>  <td class="nbHitsCovered">&nbsp;6</td>  <td class="src"><pre class="src">&nbsp;              original = objectFactory.create(type, constructorArgTypes, constructorArgs);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;130</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;            }</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;131</td>  <td class="nbHitsCovered">&nbsp;84</td>  <td class="src"><pre class="src">&nbsp;            PropertyCopier.copyBeanProperties(type, enhanced, original);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;132</td>  <td class="nbHitsCovered"><a title="Line 132: Conditional coverage 100% (2/2).">&nbsp;84</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 132: Conditional coverage 100% (2/2).">            <span class="keyword">if</span> (lazyLoader.size() &gt; 0) {</a></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;133</td>  <td class="nbHitsCovered">&nbsp;32</td>  <td class="src"><pre class="src">&nbsp;              <span class="keyword">return</span> <span class="keyword">new</span> CglibSerialStateHolder(original, lazyLoader.getProperties(), objectFactory, constructorArgTypes, constructorArgs);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;131</td>  <td class="nbHitsCovered">&nbsp;126</td>  <td class="src"><pre class="src">&nbsp;            PropertyCopier.copyBeanProperties(type, enhanced, original);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;132</td>  <td class="nbHitsCovered"><a title="Line 132: Conditional coverage 100% (2/2).">&nbsp;126</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 132: Conditional coverage 100% (2/2).">            <span class="keyword">if</span> (lazyLoader.size() &gt; 0) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;133</td>  <td class="nbHitsCovered">&nbsp;48</td>  <td class="src"><pre class="src">&nbsp;              <span class="keyword">return</span> <span class="keyword">new</span> CglibSerialStateHolder(original, lazyLoader.getProperties(), objectFactory, constructorArgTypes, constructorArgs);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;134</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;            } <span class="keyword">else</span> {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;135</td>  <td class="nbHitsCovered">&nbsp;52</td>  <td class="src"><pre class="src">&nbsp;              <span class="keyword">return</span> original;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;135</td>  <td class="nbHitsCovered">&nbsp;78</td>  <td class="src"><pre class="src">&nbsp;              <span class="keyword">return</span> original;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;136</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;            }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;137</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;          } <span class="keyword">else</span> {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;138</td>  <td class="nbHitsCovered"><a title="Line 138: Conditional coverage 100% (4/4) [each condition: 100%, 100%].">&nbsp;37814</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 138: Conditional coverage 100% (4/4) [each condition: 100%, 100%].">            <span class="keyword">if</span> (lazyLoader.size() &gt; 0 &amp;&amp; !FINALIZE_METHOD.equals(methodName)) {</a></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;139</td>  <td class="nbHitsCovered"><a title="Line 139: Conditional coverage 100% (4/4) [each condition: 100%, 100%].">&nbsp;134</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 139: Conditional coverage 100% (4/4) [each condition: 100%, 100%].">              <span class="keyword">if</span> (aggressive || lazyLoadTriggerMethods.contains(methodName)) {</a></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;140</td>  <td class="nbHitsCovered">&nbsp;84</td>  <td class="src"><pre class="src">&nbsp;                lazyLoader.loadAll();</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;141</td>  <td class="nbHitsCovered"><a title="Line 141: Conditional coverage 100% (2/2).">&nbsp;50</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 141: Conditional coverage 100% (2/2).">              } <span class="keyword">else</span> <span class="keyword">if</span> (PropertyNamer.isProperty(methodName)) {</a></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;142</td>  <td class="nbHitsCovered">&nbsp;42</td>  <td class="src"><pre class="src">&nbsp;                <span class="keyword">final</span> String property = PropertyNamer.methodToProperty(methodName);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;143</td>  <td class="nbHitsCovered"><a title="Line 143: Conditional coverage 100% (2/2).">&nbsp;42</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 143: Conditional coverage 100% (2/2).">                <span class="keyword">if</span> (lazyLoader.hasLoader(property)) {</a></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;144</td>  <td class="nbHitsCovered">&nbsp;36</td>  <td class="src"><pre class="src">&nbsp;                  lazyLoader.load(property);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;138</td>  <td class="nbHitsCovered"><a title="Line 138: Conditional coverage 100% (4/4) [each condition: 100%, 100%].">&nbsp;56286</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 138: Conditional coverage 100% (4/4) [each condition: 100%, 100%].">            <span class="keyword">if</span> (lazyLoader.size() &gt; 0 &amp;&amp; !FINALIZE_METHOD.equals(methodName)) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;139</td>  <td class="nbHitsCovered"><a title="Line 139: Conditional coverage 100% (4/4) [each condition: 100%, 100%].">&nbsp;201</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 139: Conditional coverage 100% (4/4) [each condition: 100%, 100%].">              <span class="keyword">if</span> (aggressive || lazyLoadTriggerMethods.contains(methodName)) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;140</td>  <td class="nbHitsCovered">&nbsp;126</td>  <td class="src"><pre class="src">&nbsp;                lazyLoader.loadAll();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;141</td>  <td class="nbHitsCovered"><a title="Line 141: Conditional coverage 100% (2/2).">&nbsp;75</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 141: Conditional coverage 100% (2/2).">              } <span class="keyword">else</span> <span class="keyword">if</span> (PropertyNamer.isProperty(methodName)) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;142</td>  <td class="nbHitsCovered">&nbsp;63</td>  <td class="src"><pre class="src">&nbsp;                <span class="keyword">final</span> String property = PropertyNamer.methodToProperty(methodName);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;143</td>  <td class="nbHitsCovered"><a title="Line 143: Conditional coverage 100% (2/2).">&nbsp;63</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 143: Conditional coverage 100% (2/2).">                <span class="keyword">if</span> (lazyLoader.hasLoader(property)) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;144</td>  <td class="nbHitsCovered">&nbsp;54</td>  <td class="src"><pre class="src">&nbsp;                  lazyLoader.load(property);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;145</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;                }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;146</td>  <td class="nbHits">&nbsp;</td>
@@ -256,8 +256,8 @@
   <td class="src"><pre class="src">&nbsp;            }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;148</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;          }</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;149</td>  <td class="nbHitsCovered">&nbsp;37814</td>  <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;150</td>  <td class="nbHitsCovered">&nbsp;37814</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> methodProxy.invokeSuper(enhanced, args);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;149</td>  <td class="nbHitsCovered">&nbsp;56286</td>  <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;150</td>  <td class="nbHitsCovered">&nbsp;56286</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> methodProxy.invokeSuper(enhanced, args);</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;151</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;      } <span class="keyword">catch</span> (Throwable t) {</span></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;152</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;        <span class="keyword">throw</span> ExceptionUtil.unwrapThrowable(t);</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;153</td>  <td class="nbHits">&nbsp;</td>
@@ -276,19 +276,19 @@
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">private</span> EnhancedDeserializationProxyImpl(Class&lt;?&gt; type, Map&lt;String, ResultLoaderMap.LoadPair&gt; unloadedProperties, ObjectFactory objectFactory,</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;160</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;            List&lt;Class&lt;?&gt;&gt; constructorArgTypes, List&lt;Object&gt; constructorArgs) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;161</td>  <td class="nbHitsCovered">&nbsp;40</td>  <td class="src"><pre class="src">&nbsp;      <span class="keyword">super</span>(type, unloadedProperties, objectFactory, constructorArgTypes, constructorArgs);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;162</td>  <td class="nbHitsCovered">&nbsp;40</td>  <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;161</td>  <td class="nbHitsCovered">&nbsp;60</td>  <td class="src"><pre class="src">&nbsp;      <span class="keyword">super</span>(type, unloadedProperties, objectFactory, constructorArgTypes, constructorArgs);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;162</td>  <td class="nbHitsCovered">&nbsp;60</td>  <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;163</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;164</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> <span class="keyword">static</span> Object createProxy(Object target, Map&lt;String, ResultLoaderMap.LoadPair&gt; unloadedProperties, ObjectFactory objectFactory,</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;165</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;            List&lt;Class&lt;?&gt;&gt; constructorArgTypes, List&lt;Object&gt; constructorArgs) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;166</td>  <td class="nbHitsCovered">&nbsp;40</td>  <td class="src"><pre class="src">&nbsp;      <span class="keyword">final</span> Class&lt;?&gt; type = target.getClass();</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;167</td>  <td class="nbHitsCovered">&nbsp;40</td>  <td class="src"><pre class="src">&nbsp;      EnhancedDeserializationProxyImpl callback = <span class="keyword">new</span> EnhancedDeserializationProxyImpl(type, unloadedProperties, objectFactory, constructorArgTypes, constructorArgs);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;168</td>  <td class="nbHitsCovered">&nbsp;40</td>  <td class="src"><pre class="src">&nbsp;      Object enhanced = crateProxy(type, callback, constructorArgTypes, constructorArgs);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;169</td>  <td class="nbHitsCovered">&nbsp;40</td>  <td class="src"><pre class="src">&nbsp;      PropertyCopier.copyBeanProperties(type, target, enhanced);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;170</td>  <td class="nbHitsCovered">&nbsp;40</td>  <td class="src"><pre class="src">&nbsp;      <span class="keyword">return</span> enhanced;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;166</td>  <td class="nbHitsCovered">&nbsp;60</td>  <td class="src"><pre class="src">&nbsp;      <span class="keyword">final</span> Class&lt;?&gt; type = target.getClass();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;167</td>  <td class="nbHitsCovered">&nbsp;60</td>  <td class="src"><pre class="src">&nbsp;      EnhancedDeserializationProxyImpl callback = <span class="keyword">new</span> EnhancedDeserializationProxyImpl(type, unloadedProperties, objectFactory, constructorArgTypes, constructorArgs);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;168</td>  <td class="nbHitsCovered">&nbsp;60</td>  <td class="src"><pre class="src">&nbsp;      Object enhanced = crateProxy(type, callback, constructorArgTypes, constructorArgs);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;169</td>  <td class="nbHitsCovered">&nbsp;60</td>  <td class="src"><pre class="src">&nbsp;      PropertyCopier.copyBeanProperties(type, target, enhanced);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;170</td>  <td class="nbHitsCovered">&nbsp;60</td>  <td class="src"><pre class="src">&nbsp;      <span class="keyword">return</span> enhanced;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;171</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;172</td>  <td class="nbHits">&nbsp;</td>
@@ -297,8 +297,8 @@
   <td class="src"><pre class="src">&nbsp;    @Override</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;174</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> Object intercept(Object enhanced, Method method, Object[] args, MethodProxy methodProxy) <span class="keyword">throws</span> Throwable {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;175</td>  <td class="nbHitsCovered">&nbsp;60</td>  <td class="src"><pre class="src">&nbsp;      <span class="keyword">final</span> Object o = <span class="keyword">super</span>.invoke(enhanced, method, args);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;176</td>  <td class="nbHitsCovered"><a title="Line 176: Conditional coverage 100% (2/2).">&nbsp;42</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 176: Conditional coverage 100% (2/2).">      <span class="keyword">return</span> (o <span class="keyword">instanceof</span> AbstractSerialStateHolder) ? o : methodProxy.invokeSuper(o, args);</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;175</td>  <td class="nbHitsCovered">&nbsp;86</td>  <td class="src"><pre class="src">&nbsp;      <span class="keyword">final</span> Object o = <span class="keyword">super</span>.invoke(enhanced, method, args);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;176</td>  <td class="nbHitsCovered"><a title="Line 176: Conditional coverage 100% (2/2).">&nbsp;59</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 176: Conditional coverage 100% (2/2).">      <span class="keyword">return</span> (o <span class="keyword">instanceof</span> AbstractSerialStateHolder) ? o : methodProxy.invokeSuper(o, args);</a></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;177</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;178</td>  <td class="nbHits">&nbsp;</td>
@@ -309,7 +309,7 @@
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">protected</span> AbstractSerialStateHolder newSerialStateHolder(Object userBean, Map&lt;String, ResultLoaderMap.LoadPair&gt; unloadedProperties, ObjectFactory objectFactory,</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;181</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;            List&lt;Class&lt;?&gt;&gt; constructorArgTypes, List&lt;Object&gt; constructorArgs) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;182</td>  <td class="nbHitsCovered">&nbsp;4</td>  <td class="src"><pre class="src">&nbsp;      <span class="keyword">return</span> <span class="keyword">new</span> CglibSerialStateHolder(userBean, unloadedProperties, objectFactory, constructorArgTypes, constructorArgs);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;182</td>  <td class="nbHitsCovered">&nbsp;6</td>  <td class="src"><pre class="src">&nbsp;      <span class="keyword">return</span> <span class="keyword">new</span> CglibSerialStateHolder(userBean, unloadedProperties, objectFactory, constructorArgTypes, constructorArgs);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;183</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;184</td>  <td class="nbHits">&nbsp;</td>
@@ -318,6 +318,6 @@
   <td class="src"><pre class="src">&nbsp;}</pre></td></tr>
 </table>
 
-<div class="footer">Report generated by <a href="http://cobertura.sourceforge.net/" target="_top">Cobertura</a> 1.9.4.1 on 13/06/13 18:58.</div>
+<div class="footer">Report generated by <a href="http://cobertura.sourceforge.net/" target="_top">Cobertura</a> 1.9.4.1 on 30/09/13 17:53.</div>
 </body>
 </html>

@@ -61,7 +61,7 @@
   <td class="src"><pre class="src">&nbsp;<span class="keyword">import</span> java.sql.SQLException;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;22</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;23</td>  <td class="nbHitsCovered">&nbsp;41186</td>  <td class="src"><pre class="src">&nbsp;<span class="keyword">public</span> <span class="keyword">class</span> ByteObjectArrayTypeHandler <span class="keyword">extends</span> BaseTypeHandler&lt;Byte[]&gt; {</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;23</td>  <td class="nbHitsCovered">&nbsp;61800</td>  <td class="src"><pre class="src">&nbsp;<span class="keyword">public</span> <span class="keyword">class</span> ByteObjectArrayTypeHandler <span class="keyword">extends</span> BaseTypeHandler&lt;Byte[]&gt; {</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;24</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;25</td>  <td class="nbHits">&nbsp;</td>
@@ -76,8 +76,8 @@
   <td class="src"><pre class="src">&nbsp;  @Override</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;31</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;  <span class="keyword">public</span> Byte[] getNullableResult(ResultSet rs, String columnName) <span class="keyword">throws</span> SQLException {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;32</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">byte</span>[] bytes = rs.getBytes(columnName);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;33</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">return</span> getBytes(bytes);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;32</td>  <td class="nbHitsCovered">&nbsp;3</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">byte</span>[] bytes = rs.getBytes(columnName);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;33</td>  <td class="nbHitsCovered">&nbsp;3</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">return</span> getBytes(bytes);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;34</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;  }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;35</td>  <td class="nbHits">&nbsp;</td>
@@ -104,12 +104,12 @@
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;48</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;  <span class="keyword">private</span> Byte[] getBytes(<span class="keyword">byte</span>[] bytes) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;49</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;    Byte[] returnValue = <span class="keyword">null</span>;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;50</td>  <td class="nbHitsUncovered"><a title="Line 50: Conditional coverage 50% (1/2).">&nbsp;2</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 50: Conditional coverage 50% (1/2).">    <span class="keyword">if</span> (bytes != <span class="keyword">null</span>) {</a></span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;51</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;      returnValue = ByteArrayUtils.convertToObjectArray(bytes);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;49</td>  <td class="nbHitsCovered">&nbsp;3</td>  <td class="src"><pre class="src">&nbsp;    Byte[] returnValue = <span class="keyword">null</span>;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;50</td>  <td class="nbHitsUncovered"><a title="Line 50: Conditional coverage 50% (1/2).">&nbsp;3</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 50: Conditional coverage 50% (1/2).">    <span class="keyword">if</span> (bytes != <span class="keyword">null</span>) {</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;51</td>  <td class="nbHitsCovered">&nbsp;3</td>  <td class="src"><pre class="src">&nbsp;      returnValue = ByteArrayUtils.convertToObjectArray(bytes);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;52</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;53</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">return</span> returnValue;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;53</td>  <td class="nbHitsCovered">&nbsp;3</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">return</span> returnValue;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;54</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;  }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;55</td>  <td class="nbHits">&nbsp;</td>
@@ -118,6 +118,6 @@
   <td class="src"><pre class="src">&nbsp;}</pre></td></tr>
 </table>
 
-<div class="footer">Report generated by <a href="http://cobertura.sourceforge.net/" target="_top">Cobertura</a> 1.9.4.1 on 13/06/13 19:05.</div>
+<div class="footer">Report generated by <a href="http://cobertura.sourceforge.net/" target="_top">Cobertura</a> 1.9.4.1 on 30/09/13 17:59.</div>
 </body>
 </html>

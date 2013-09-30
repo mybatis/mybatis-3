@@ -60,29 +60,29 @@
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;22</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;  <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> copyBeanProperties(Class&lt;?&gt; type, Object sourceBean, Object destinationBean) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;23</td>  <td class="nbHitsCovered">&nbsp;40472</td>  <td class="src"><pre class="src">&nbsp;    Class&lt;?&gt; parent = type;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;24</td>  <td class="nbHitsCovered"><a title="Line 24: Conditional coverage 100% (2/2).">&nbsp;121440</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 24: Conditional coverage 100% (2/2).">    <span class="keyword">while</span> (parent != <span class="keyword">null</span>) {</a></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;25</td>  <td class="nbHitsCovered">&nbsp;80968</td>  <td class="src"><pre class="src">&nbsp;      <span class="keyword">final</span> Field[] fields = parent.getDeclaredFields();</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;26</td>  <td class="nbHitsCovered"><a title="Line 26: Conditional coverage 100% (2/2).">&nbsp;323420</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 26: Conditional coverage 100% (2/2).">      <span class="keyword">for</span>(Field field : fields) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;23</td>  <td class="nbHitsCovered">&nbsp;60708</td>  <td class="src"><pre class="src">&nbsp;    Class&lt;?&gt; parent = type;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;24</td>  <td class="nbHitsCovered"><a title="Line 24: Conditional coverage 100% (2/2).">&nbsp;182160</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 24: Conditional coverage 100% (2/2).">    <span class="keyword">while</span> (parent != <span class="keyword">null</span>) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;25</td>  <td class="nbHitsCovered">&nbsp;121452</td>  <td class="src"><pre class="src">&nbsp;      <span class="keyword">final</span> Field[] fields = parent.getDeclaredFields();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;26</td>  <td class="nbHitsCovered"><a title="Line 26: Conditional coverage 100% (2/2).">&nbsp;485130</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 26: Conditional coverage 100% (2/2).">      <span class="keyword">for</span>(Field field : fields) {</a></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;27</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        <span class="keyword">try</span> {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;28</td>  <td class="nbHitsCovered">&nbsp;242452</td>  <td class="src"><pre class="src">&nbsp;          field.setAccessible(<span class="keyword">true</span>);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;29</td>  <td class="nbHitsCovered">&nbsp;242452</td>  <td class="src"><pre class="src">&nbsp;          field.set(destinationBean, field.get(sourceBean));</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;30</td>  <td class="nbHitsCovered">&nbsp;52</td>  <td class="src"><pre class="src">&nbsp;        } <span class="keyword">catch</span> (Exception e) {</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;28</td>  <td class="nbHitsCovered">&nbsp;363678</td>  <td class="src"><pre class="src">&nbsp;          field.setAccessible(<span class="keyword">true</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;29</td>  <td class="nbHitsCovered">&nbsp;363678</td>  <td class="src"><pre class="src">&nbsp;          field.set(destinationBean, field.get(sourceBean));</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;30</td>  <td class="nbHitsCovered">&nbsp;78</td>  <td class="src"><pre class="src">&nbsp;        } <span class="keyword">catch</span> (Exception e) {</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;31</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;          <span class="comment">// Nothing useful to do, will only fail on final fields, which will be ignored.</span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;32</td>  <td class="nbHitsCovered">&nbsp;242400</td>  <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;32</td>  <td class="nbHitsCovered">&nbsp;363600</td>  <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;33</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;      }</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;34</td>  <td class="nbHitsCovered">&nbsp;80968</td>  <td class="src"><pre class="src">&nbsp;      parent = parent.getSuperclass();</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;35</td>  <td class="nbHitsCovered">&nbsp;80968</td>  <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;36</td>  <td class="nbHitsCovered">&nbsp;40472</td>  <td class="src"><pre class="src">&nbsp;  }</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;34</td>  <td class="nbHitsCovered">&nbsp;121452</td>  <td class="src"><pre class="src">&nbsp;      parent = parent.getSuperclass();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;35</td>  <td class="nbHitsCovered">&nbsp;121452</td>  <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;36</td>  <td class="nbHitsCovered">&nbsp;60708</td>  <td class="src"><pre class="src">&nbsp;  }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;37</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;38</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;}</pre></td></tr>
 </table>
 
-<div class="footer">Report generated by <a href="http://cobertura.sourceforge.net/" target="_top">Cobertura</a> 1.9.4.1 on 13/06/13 19:01.</div>
+<div class="footer">Report generated by <a href="http://cobertura.sourceforge.net/" target="_top">Cobertura</a> 1.9.4.1 on 30/09/13 17:55.</div>
 </body>
 </html>

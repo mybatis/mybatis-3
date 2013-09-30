@@ -1193,6 +1193,55 @@
 </parameter>
 <parameter name="lang" type="org.apache.ibatis.scripting.LanguageDriver">
 </parameter>
+</method>
+<method name="addMappedStatement"
+ return="org.apache.ibatis.mapping.MappedStatement"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="id" type="java.lang.String">
+</parameter>
+<parameter name="sqlSource" type="org.apache.ibatis.mapping.SqlSource">
+</parameter>
+<parameter name="statementType" type="org.apache.ibatis.mapping.StatementType">
+</parameter>
+<parameter name="sqlCommandType" type="org.apache.ibatis.mapping.SqlCommandType">
+</parameter>
+<parameter name="fetchSize" type="java.lang.Integer">
+</parameter>
+<parameter name="timeout" type="java.lang.Integer">
+</parameter>
+<parameter name="parameterMap" type="java.lang.String">
+</parameter>
+<parameter name="parameterType" type="java.lang.Class&lt;?&gt;">
+</parameter>
+<parameter name="resultMap" type="java.lang.String">
+</parameter>
+<parameter name="resultType" type="java.lang.Class&lt;?&gt;">
+</parameter>
+<parameter name="resultSetType" type="org.apache.ibatis.mapping.ResultSetType">
+</parameter>
+<parameter name="flushCache" type="boolean">
+</parameter>
+<parameter name="useCache" type="boolean">
+</parameter>
+<parameter name="resultOrdered" type="boolean">
+</parameter>
+<parameter name="keyGenerator" type="org.apache.ibatis.executor.keygen.KeyGenerator">
+</parameter>
+<parameter name="keyProperty" type="java.lang.String">
+</parameter>
+<parameter name="keyColumn" type="java.lang.String">
+</parameter>
+<parameter name="databaseId" type="java.lang.String">
+</parameter>
+<parameter name="lang" type="org.apache.ibatis.scripting.LanguageDriver">
+</parameter>
 <parameter name="resultSets" type="java.lang.String">
 </parameter>
 </method>
@@ -1299,6 +1348,39 @@
 <parameter name="typeHandler" type="java.lang.Class&lt;? extends org.apache.ibatis.type.TypeHandler&lt;?&gt;&gt;">
 </parameter>
 <parameter name="numericScale" type="java.lang.Integer">
+</parameter>
+</method>
+<method name="buildResultMapping"
+ return="org.apache.ibatis.mapping.ResultMapping"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="resultType" type="java.lang.Class&lt;?&gt;">
+</parameter>
+<parameter name="property" type="java.lang.String">
+</parameter>
+<parameter name="column" type="java.lang.String">
+</parameter>
+<parameter name="javaType" type="java.lang.Class&lt;?&gt;">
+</parameter>
+<parameter name="jdbcType" type="org.apache.ibatis.type.JdbcType">
+</parameter>
+<parameter name="nestedSelect" type="java.lang.String">
+</parameter>
+<parameter name="nestedResultMap" type="java.lang.String">
+</parameter>
+<parameter name="notNullColumn" type="java.lang.String">
+</parameter>
+<parameter name="columnPrefix" type="java.lang.String">
+</parameter>
+<parameter name="typeHandler" type="java.lang.Class&lt;? extends org.apache.ibatis.type.TypeHandler&lt;?&gt;&gt;">
+</parameter>
+<parameter name="flags" type="java.util.List&lt;org.apache.ibatis.mapping.ResultFlag&gt;">
 </parameter>
 </method>
 <method name="buildResultMapping"
@@ -7413,6 +7495,16 @@
 </field>
 <field name="configuration"
  type="org.apache.ibatis.session.Configuration"
+ transient="false"
+ volatile="false"
+ static="false"
+ final="true"
+ deprecated="not deprecated"
+ visibility="protected"
+>
+</field>
+<field name="creatorThreadId"
+ type="long"
  transient="false"
  volatile="false"
  static="false"
@@ -19992,6 +20084,26 @@
 <parameter name="suffix" type="java.lang.String">
 </parameter>
 <parameter name="suffixesToOverride" type="java.lang.String">
+</parameter>
+</constructor>
+<constructor name="TrimSqlNode"
+ type="org.apache.ibatis.scripting.xmltags.TrimSqlNode"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="protected"
+>
+<parameter name="configuration" type="org.apache.ibatis.session.Configuration">
+</parameter>
+<parameter name="contents" type="org.apache.ibatis.scripting.xmltags.SqlNode">
+</parameter>
+<parameter name="prefix" type="java.lang.String">
+</parameter>
+<parameter name="prefixesToOverride" type="java.util.List&lt;java.lang.String&gt;">
+</parameter>
+<parameter name="suffix" type="java.lang.String">
+</parameter>
+<parameter name="suffixesToOverride" type="java.util.List&lt;java.lang.String&gt;">
 </parameter>
 </constructor>
 <method name="apply"
