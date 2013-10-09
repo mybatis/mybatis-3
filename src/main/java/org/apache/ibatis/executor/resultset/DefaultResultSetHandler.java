@@ -748,7 +748,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     if (resultObject != null) {
       final MetaObject metaObject = configuration.newMetaObject(resultObject);
       ancestorObjects.put(absoluteKey, resultObject);
-      applyNestedResultMappings(rsw, resultMap, metaObject, columnPrefix, combinedKey, false);
+      applyNestedResultMappings(rsw, resultMap, metaObject, columnPrefix, combinedKey, false, parentAutoMapping);
       ancestorObjects.remove(absoluteKey);
     } else {
       final ResultLoaderMap lazyLoader = instantiateResultLoaderMap();
@@ -761,7 +761,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
         }        
         foundValues = applyPropertyMappings(rsw, resultMap, metaObject, lazyLoader, columnPrefix) || foundValues;
         ancestorObjects.put(absoluteKey, resultObject);
-        foundValues = applyNestedResultMappings(rsw, resultMap, metaObject, columnPrefix, combinedKey, true) || foundValues;
+        foundValues = applyNestedResultMappings(rsw, resultMap, metaObject, columnPrefix, combinedKey, true, parentAutoMapping) || foundValues;
         ancestorObjects.remove(absoluteKey);
         foundValues = (lazyLoader != null && lazyLoader.size() > 0) || foundValues;
         resultObject = foundValues ? resultObject : null;
@@ -775,7 +775,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
   // NESTED RESULT MAP (JOIN MAPPING)
   //
 
-  private boolean applyNestedResultMappings(ResultSetWrapper rsw, ResultMap resultMap, MetaObject metaObject, String parentPrefix, CacheKey parentRowKey, boolean newObject) {
+  private boolean applyNestedResultMappings(ResultSetWrapper rsw, ResultMap resultMap, MetaObject metaObject, String parentPrefix, CacheKey parentRowKey, boolean newObject, Boolean parentAutoMapping) {
     boolean foundValues = false;
     for (ResultMapping resultMapping : resultMap.getPropertyResultMappings()) {
       final String nestedResultMapId = resultMapping.getNestedResultMapId();
@@ -793,7 +793,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
             boolean knownValue = (rowValue != null);
             final Object collectionProperty = instantiateCollectionPropertyIfAppropriate(resultMapping, metaObject);            
             if (anyNotNullColumnHasValue(resultMapping, columnPrefix, rsw.getResultSet())) {
-              rowValue = getRowValue(rsw, nestedResultMap, combinedKey, rowKey, columnPrefix, rowValue, resultMap.getAutoMapping());
+              rowValue = getRowValue(rsw, nestedResultMap, combinedKey, rowKey, columnPrefix, rowValue, parentAutoMapping != null ? parentAutoMapping : resultMap.getAutoMapping());
               if (rowValue != null && !knownValue) {
                 if (collectionProperty != null) {
                   final MetaObject targetMetaObject = configuration.newMetaObject(collectionProperty);

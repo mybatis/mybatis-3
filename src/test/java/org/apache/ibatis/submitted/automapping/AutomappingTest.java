@@ -73,6 +73,7 @@ public class AutomappingTest {
 	    Assert.assertEquals("User2", user.getName());
 	    Assert.assertEquals(2, user.getPets().size());
 	    Assert.assertEquals(Integer.valueOf(12), user.getPets().get(0).getPetId());
+	    Assert.assertEquals("John", user.getPets().get(0).getBreeder().getBreederName());
 	    Assert.assertEquals("Kotetsu", user.getPets().get(1).getPetName());
 	  } finally {
 	    sqlSession.close();

@@ -15,33 +15,24 @@
  */
 package org.apache.ibatis.submitted.automapping;
 
-public class Pet {
+public class Breeder {
 
-  private Integer petId;
-  private String petName;
-  private Breeder breeder;
+  private Integer breederId;
+  private String breederName;
 
-  public Integer getPetId() {
-    return petId;
+  public Integer getBreederId() {
+    return breederId;
   }
 
-  public void setPetId(Integer petId) {
-    this.petId = petId;
+  public void setBreederId(Integer breederId) {
+    this.breederId = breederId;
   }
 
-  public String getPetName() {
-    return petName;
+  public String getBreederName() {
+    return breederName;
   }
 
-  public void setPetName(String petName) {
-    this.petName = petName;
-  }
-
-  public Breeder getBreeder() {
-    return breeder;
-  }
-
-  public void setBreeder(Breeder breeder) {
-    this.breeder = breeder;
+  public void setBreederName(String breederName) {
+    this.breederName = breederName;
   }
 }

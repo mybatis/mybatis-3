@@ -28,8 +28,12 @@
 	</resultMap>
 
 	<select id="getUserWithPets" resultMap="resultWithPets">
-		select users.id, users.name, pets.id as petId, pets.name as petName from users
+		select users.id, users.name,
+			pets.id as petId, pets.name as petName,
+			breeder.id as breederId, breeder.name as breederName
+		from users
 		left join pets on pets.owner = users.id
+		left join breeder on breeder.id = pets.breeder
 		where users.id = #{id}
 	</select>
 
@@ -37,6 +41,7 @@
 		<id column="id" property="id"/>
 		<collection property="pets" ofType="org.apache.ibatis.submitted.automapping.Pet">
 			<id column="petId" property="petId"/>
+			<association property="breeder" javaType="org.apache.ibatis.submitted.automapping.Breeder" />
 		</collection>
 	</resultMap>
 	
