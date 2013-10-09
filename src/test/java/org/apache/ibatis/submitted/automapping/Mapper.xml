@@ -21,7 +21,7 @@
 <mapper namespace="org.apache.ibatis.submitted.automapping.Mapper">
 
 	<select id="getUser" resultMap="result">
-		select * from users
+		select * from users where id = #{id}
 	</select>
 
 	<resultMap type="org.apache.ibatis.submitted.automapping.User" id="result" autoMapping="true">
