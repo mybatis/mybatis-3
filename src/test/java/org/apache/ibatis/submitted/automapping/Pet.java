@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2012 the original author or authors.
+ *    Copyright 2009-2013 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,35 +15,24 @@
  */
 package org.apache.ibatis.submitted.automapping;
 
-import java.util.List;
+public class Pet {
 
-public class User {
+  private Integer petId;
+  private String petName;
 
-  private Integer id;
-  private String name;
-  private List<Pet> pets;
-
-  public Integer getId() {
-    return id;
+  public Integer getPetId() {
+    return petId;
   }
 
-  public void setId(Integer id) {
-    this.id = id;
+  public void setPetId(Integer petId) {
+    this.petId = petId;
   }
 
-  public String getName() {
-    return name;
+  public String getPetName() {
+    return petName;
   }
 
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  public List<Pet> getPets() {
-    return pets;
-  }
-
-  public void setPets(List<Pet> pets) {
-    this.pets = pets;
+  public void setPetName(String petName) {
+    this.petName = petName;
   }
 }

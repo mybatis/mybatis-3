@@ -21,6 +21,8 @@ public interface Mapper {
 
   User getUser(Integer id);
 
+  User getUserWithPets(Integer id);
+
   List<Book> getBooks();
   
   Article getArticle();

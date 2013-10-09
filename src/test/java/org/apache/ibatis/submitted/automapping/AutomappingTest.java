@@ -64,6 +64,22 @@ public class AutomappingTest {
 	}
 
 	@Test
+	public void shouldGetAUserWithPets() {
+	  SqlSession sqlSession = sqlSessionFactory.openSession();
+	  try {
+	    Mapper mapper = sqlSession.getMapper(Mapper.class);
+	    User user = mapper.getUserWithPets(2);
+	    Assert.assertEquals(Integer.valueOf(2), user.getId());
+	    Assert.assertEquals("User2", user.getName());
+	    Assert.assertEquals(2, user.getPets().size());
+	    Assert.assertEquals(Integer.valueOf(12), user.getPets().get(0).getPetId());
+	    Assert.assertEquals("Kotetsu", user.getPets().get(1).getPetName());
+	  } finally {
+	    sqlSession.close();
+	  }
+	}
+
+	@Test
 	public void shouldGetBooks() {
 		//set automapping to default partial
 		sqlSessionFactory.getConfiguration().setAutoMappingBehavior(AutoMappingBehavior.PARTIAL);

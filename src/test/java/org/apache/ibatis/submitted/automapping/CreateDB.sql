@@ -28,6 +28,17 @@ create table books (
   name varchar(20)
 );
 
+create table pets (
+  id int,
+  owner int,
+  name varchar(20)
+);
+
 insert into users (id, name) values(1, 'User1');
+insert into users (id, name) values(2, 'User2');
 
 insert into books (version, name) values(99, 'Learn Java');
+
+insert into pets (id, owner, name) values(11, 1, 'Ren');
+insert into pets (id, owner, name) values(12, 2, 'Chien');
+insert into pets (id, owner, name) values(13, 2, 'Kotetsu');

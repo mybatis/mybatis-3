@@ -26,6 +26,19 @@
 
 	<resultMap type="org.apache.ibatis.submitted.automapping.User" id="result" autoMapping="true">
 	</resultMap>
+
+	<select id="getUserWithPets" resultMap="resultWithPets">
+		select users.id, users.name, pets.id as petId, pets.name as petName from users
+		left join pets on pets.owner = users.id
+		where users.id = #{id}
+	</select>
+
+	<resultMap type="org.apache.ibatis.submitted.automapping.User" id="resultWithPets" autoMapping="true">
+		<id column="id" property="id"/>
+		<collection property="pets" ofType="org.apache.ibatis.submitted.automapping.Pet">
+			<id column="petId" property="petId"/>
+		</collection>
+	</resultMap>
 	
 	<resultMap type="org.apache.ibatis.submitted.automapping.Book" id="bookResult">
 		 <result property="name" column="name"/>
