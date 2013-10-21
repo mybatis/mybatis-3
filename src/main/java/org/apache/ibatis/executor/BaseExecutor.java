@@ -79,7 +79,7 @@ public abstract class BaseExecutor implements Executor {
       }
     } catch (SQLException e) {
       // Ignore.  There's nothing that can be done at this point.
-      log.debug("Unexpected exception on closing transaction.  Cause: " + e);
+      log.warn("Unexpected exception on closing transaction.  Cause: " + e);
     } finally {
       transaction = null;
       deferredLoads = null;
