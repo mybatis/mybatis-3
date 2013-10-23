@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<pmd version="4.3" timestamp="2013-09-30T17:55:44.075">
+<pmd version="4.3" timestamp="2013-10-23T07:17:25.275">
 <file name="/home/eduardo/git/mybatis-3/src/main/java/org/apache/ibatis/builder/MapperBuilderAssistant.java">
 <violation beginline="464" endline="466" begincolumn="9" endcolumn="7" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.apache.ibatis.builder" class="MapperBuilderAssistant" method="resolveResultJavaType" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
 Avoid empty catch blocks

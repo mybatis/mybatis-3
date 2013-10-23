@@ -89,7 +89,7 @@
 <a class="jxr_linenumber" name="79" href="#79">79</a>        }
 <a class="jxr_linenumber" name="80" href="#80">80</a>      } <strong class="jxr_keyword">catch</strong> (SQLException e) {
 <a class="jxr_linenumber" name="81" href="#81">81</a>        <em class="jxr_comment">// Ignore.  There's nothing that can be done at this point.</em>
-<a class="jxr_linenumber" name="82" href="#82">82</a>        log.debug(<span class="jxr_string">"Unexpected exception on closing transaction.  Cause: "</span> + e);
+<a class="jxr_linenumber" name="82" href="#82">82</a>        log.warn(<span class="jxr_string">"Unexpected exception on closing transaction.  Cause: "</span> + e);
 <a class="jxr_linenumber" name="83" href="#83">83</a>      } <strong class="jxr_keyword">finally</strong> {
 <a class="jxr_linenumber" name="84" href="#84">84</a>        transaction = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="85" href="#85">85</a>        deferredLoads = <strong class="jxr_keyword">null</strong>;
