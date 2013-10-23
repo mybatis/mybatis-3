@@ -188,10 +188,16 @@ AND title like ‘someTitle’]]></source>
     añadir un driver de lenguaje y usar dicho lenguaje para escribir tus sentencias SQL.
     </p>
     <p>Hay dos lenguajes predefinidos:</p>
-    <ul>
-    <li>xml</li>
-    <li>raw</li>
-    </ul>
+    <table>
+    <thead>
+    <tr><td>Alias</td><td>Driver</td>
+    </tr>
+    </thead>
+    <tbody>
+    <tr><td>xml</td><td>XmlLanguageDriver</td></tr>
+    <tr><td>raw</td><td>RawLanguageDriver</td></tr>
+    </tbody>
+    </table>
     <p>El lenguaje <code>xml</code> es el lenguaje por defecto. Permite ejecutar todos los tags dinámicos que hemos visto en las secciones anteriores.</p>
     <p>El lenguaje <code>raw</code> es en realidad la ausencia de lenguaje. Con esta configuración MyBatis sólo realiza la sustitución de parámetros 
     y pasa la sentencia al driver de base de datos. Como supondrás el lenguaje <code>raw</code> es más rápido que el <code>xml</code>.
