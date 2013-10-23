@@ -50,10 +50,7 @@
         <item name="SqlSessions" href="java-api.html#sqlSessions" />
       </item>
       <item name="Java API" ref="java-api.xml"/>
-      <item name="Builders de sentencias" href="statement-builders.html" collapse="true">
-        <item name="SelectBuilder" href="statement-builders.html#SelectBuilder" />
-        <item name="SqlBuilder" href="statement-builders.html#SqlBuilder" />
-       </item>
+      <item name="La clase SQL" href="statement-builders.html"/>
       <item name="Logging" href="logging.html"/>
     </menu>
 

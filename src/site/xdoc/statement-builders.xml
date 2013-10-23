@@ -38,8 +38,6 @@
         </p>
 
         <source><![CDATA[
-
-// THE PROBLEM
 String sql = "SELECT P.ID, P.USERNAME, P.PASSWORD, P.FULL_NAME, "
 "P.LAST_NAME,P.CREATED_ON, P.UPDATED_ON " +
 "FROM PERSON P, ACCOUNT A " +
@@ -51,8 +49,7 @@ String sql = "SELECT P.ID, P.USERNAME, P.PASSWORD, P.FULL_NAME, "
 "HAVING (P.LAST_NAME like ?) " +
 "OR (P.FIRST_NAME like ?) " +
 "ORDER BY P.ID, P.FULL_NAME";
-
-        ]]></source>
+]]></source>
       </subsection>
       <subsection name="The Solution">
       <p>MyBatis 3 offers a convenient utility class to help with the problem.
@@ -81,7 +78,7 @@ private String selectPersonSql() {
     ORDER_BY("P.FULL_NAME");
   }}.toString();
 }
-        ]]></source>
+]]></source>
 
       <p>What is so special about that example? Well, if you look closely, it doesn't have to worry about
           accidentally duplicating "AND" keywords, or choosing between "WHERE"
@@ -96,7 +93,6 @@ private String selectPersonSql() {
         <p>Here are some examples:</p>
 
         <source><![CDATA[
-
 // Anonymous inner class
 public String deletePersonSql() {
   return new SQL() {{
@@ -155,7 +151,6 @@ public String updatePersonSql() {
     WHERE("ID = ${id}");
   }}.toString();
 }
-
 ]]></source>
 
         <table>
@@ -345,7 +340,7 @@ public String updatePersonSql() {
 
       <subsection name="SqlBuilder and SelectBuilder (DEPRECATED)">
         <p>
-          Originally we took a bit of a different approach, by utilizing a ThreadLocal variable to mask some of the
+          Before version 3.2 we took a bit of a different approach, by utilizing a ThreadLocal variable to mask some of the
           language limitations that make Java DSLs a bit cumbersome. However, this approach is now deprecated, as modern
           frameworks have warmed people to the idea of using builder-type patterns and anonymous inner classes for such
           things. Therefore the SelectBuilder and SqlBuilder classes have been deprecated.
