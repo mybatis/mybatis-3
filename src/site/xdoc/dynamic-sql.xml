@@ -196,7 +196,12 @@ AND title like ‘someTitle’]]></source>
     parameter substitution and passes the statement to the database driver. As you may guess, the <code>raw</code> language 
     is faster than the <code>xml</code> language.
     </p>
-    <p>You can specify the language you want to use in an statement adding the <code>lang</code> attribute as follows:
+    <p>You can change the default language for your project by configuring it in the mybatis-config.xml file:</p>
+  <source><![CDATA[<settings>
+  <setting name="defaultScriptingLanguage" value="raw"/>
+</settings>
+]]></source>    
+    <p>You can also specify the language you want to use in an specific statement by adding the <code>lang</code> attribute as follows:
     </p>
   <source><![CDATA[<select id="selectBlog" lang="raw">
   SELECT * FROM BLOG
@@ -207,6 +212,9 @@ AND title like ‘someTitle’]]></source>
   @Select("SELECT * FROM BLOG")
   List<Blog> selectBlog();
 }]]></source>
+
+    <p><span class="label important">NOTE</span> You can use Apache Velocity as your dynamic language. Have a look at the MyBatis-Velocity project for the details.</p>
+
     <p>You can also implement your own language driver by implementing the following interface:</p>
   <source><![CDATA[public interface LanguageDriver {
   ParameterHandler createParameterHandler(MappedStatement mappedStatement, Object parameterObject, BoundSql boundSql);

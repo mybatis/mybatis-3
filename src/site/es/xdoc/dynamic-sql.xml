@@ -196,7 +196,12 @@ AND title like ‘someTitle’]]></source>
     <p>El lenguaje <code>raw</code> es en realidad la ausencia de lenguaje. Con esta configuración MyBatis sólo realiza la sustitución de parámetros 
     y pasa la sentencia al driver de base de datos. Como supondrás el lenguaje <code>raw</code> es más rápido que el <code>xml</code>.
     </p>
-    <p>Puedes indicar el lenguaje que quieres usar en cada statement añadiendo el atributo <code>lang</code> de la siguiente forma:
+    <p>Puedes indicar le lenguaje por defecto para tu proyecto configurandolo en el fichero mybatis-config.xml:</p>
+  <source><![CDATA[<settings>
+  <setting name="defaultScriptingLanguage" value="raw"/>
+</settings>
+]]></source>        
+    <p>Puedes indicar el lenguaje que quieres usar en un statement específico añadiendo el atributo <code>lang</code> de la siguiente forma:
     </p>
   <source><![CDATA[<select id="selectBlog" lang="raw">
   SELECT * FROM BLOG
@@ -207,6 +212,9 @@ AND title like ‘someTitle’]]></source>
   @Select("SELECT * FROM BLOG")
   List<Blog> selectBlog();
 }]]></source>
+
+    <p><span class="label important">NOTA</span> Puedes utilizar Apache Velocity como lenguaje dinámico. Echa un vistazo al proyecto MyBatis-Velocity para conocer los detalles.</p>
+
     <p>También puedes implementar tu propio lenguaje implementado el siguiente interfaz:</p>
   <source><![CDATA[public interface LanguageDriver {
   ParameterHandler createParameterHandler(MappedStatement mappedStatement, Object parameterObject, BoundSql boundSql);
