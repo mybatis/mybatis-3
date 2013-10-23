@@ -187,14 +187,20 @@ AND title like ‘someTitle’]]></source>
     so you can plug a language driver and use that language to write your dynamic
     SQL queries.</p>
     <p>There are two built-in languages:</p>
-    <ul>
-    <li>xml</li>
-    <li>raw</li>
-    </ul>
+    <table>
+    <thead>
+    <tr><td>Alias</td><td>Driver</td>
+    </tr>
+    </thead>
+    <tbody>
+    <tr><td>xml</td><td>XmlLanguageDriver</td></tr>
+    <tr><td>raw</td><td>RawLanguageDriver</td></tr>
+    </tbody>
+    </table>
     <p>The <code>xml</code> language is the default one. It is able to execute all the dynamic tags we saw in the previous sections.</p>
     <p>The <code>raw</code> language is in fact the absence of language. When using this setting MyBatis just performs the 
     parameter substitution and passes the statement to the database driver. As you may guess, the <code>raw</code> language 
-    is faster than the <code>xml</code> language.
+    is much faster than the <code>xml</code> language.
     </p>
     <p>You can change the default language for your project by configuring it in the mybatis-config.xml file:</p>
   <source><![CDATA[<settings>
