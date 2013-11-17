@@ -20,16 +20,36 @@ import java.util.HashMap;
 import org.apache.ibatis.builder.SqlSourceBuilder;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.SqlSource;
+import org.apache.ibatis.parsing.XNode;
 import org.apache.ibatis.session.Configuration;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 public class RawSqlSource implements SqlSource {
 
   private final SqlSource sqlSource;
 
+  public RawSqlSource(Configuration configuration, XNode script, Class<?> parameterType) {
+    this(configuration, getString(script), parameterType);
+  }
+  
   public RawSqlSource(Configuration configuration, String sql, Class<?> parameterType) {
     SqlSourceBuilder sqlSourceParser = new SqlSourceBuilder(configuration);
     Class<?> clazz = parameterType == null ? Object.class : parameterType;
     sqlSource = sqlSourceParser.parse(sql, clazz, new HashMap<String, Object>());
+  }
+  
+  private static String getString(XNode script) {
+    StringBuilder contents = new StringBuilder();
+    NodeList children = script.getNode().getChildNodes();
+    for (int i = 0; i < children.getLength(); i++) {
+      XNode child = script.newXNode(children.item(i));
+      if (child.getNode().getNodeType() == Node.CDATA_SECTION_NODE || child.getNode().getNodeType() == Node.TEXT_NODE) {
+        String data = child.getStringBody("");
+        contents.append(data);
+      }
+    }
+    return contents.toString();
   }
 
   public BoundSql getBoundSql(Object parameterObject) {

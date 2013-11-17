@@ -26,6 +26,7 @@ import org.apache.ibatis.builder.xml.XMLMapperEntityResolver;
 import org.apache.ibatis.mapping.SqlSource;
 import org.apache.ibatis.parsing.XNode;
 import org.apache.ibatis.parsing.XPathParser;
+import org.apache.ibatis.scripting.defaults.RawSqlSource;
 import org.apache.ibatis.session.Configuration;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -33,22 +34,39 @@ import org.w3c.dom.NodeList;
 public class XMLScriptBuilder extends BaseBuilder {
 
   private XNode context;
+  private boolean isDynamic;
+  private Class<?> parameterType;
 
   public XMLScriptBuilder(Configuration configuration, XNode context) {
-    super(configuration);
-    this.context = context;
+    this(configuration, context, null);
   }
 
   public XMLScriptBuilder(Configuration configuration, String context) {
+    this(configuration, context, null);
+  }
+
+  public XMLScriptBuilder(Configuration configuration, XNode context, Class<?> parameterType) {
+    super(configuration);
+    this.context = context;
+    this.parameterType = parameterType;
+  }
+
+  public XMLScriptBuilder(Configuration configuration, String context, Class<?> parameterType) {
     super(configuration);
     XPathParser parser = new XPathParser(context, false, configuration.getVariables(), new XMLMapperEntityResolver());
     this.context = parser.evalNode("/script");
+    this.parameterType = parameterType;
   }
-
+  
   public SqlSource parseScriptNode() {
     List<SqlNode> contents = parseDynamicTags(context);
     MixedSqlNode rootSqlNode = new MixedSqlNode(contents);
-    SqlSource sqlSource = new DynamicSqlSource(configuration, rootSqlNode);
+    SqlSource sqlSource = null;
+    if (isDynamic) {
+      sqlSource = new DynamicSqlSource(configuration, rootSqlNode);
+    } else {
+      sqlSource = new RawSqlSource(configuration, context, parameterType);
+    }
     return sqlSource;
   }
 
@@ -61,13 +79,20 @@ public class XMLScriptBuilder extends BaseBuilder {
       if (child.getNode().getNodeType() == Node.CDATA_SECTION_NODE
           || child.getNode().getNodeType() == Node.TEXT_NODE) {
         String data = child.getStringBody("");
-        contents.add(new TextSqlNode(data));
+        TextSqlNode textSqlNode = new TextSqlNode(data);
+        if (textSqlNode.isDynamic()) {
+          contents.add(textSqlNode);
+          isDynamic = true;
+        } else {
+          contents.add(new StaticTextSqlNode(data));
+        }
       } else if (child.getNode().getNodeType() == Node.ELEMENT_NODE && !"selectKey".equals(nodeName)) { // issue #628
         NodeHandler handler = nodeHandlers.get(nodeName);
         if (handler == null) {
           throw new BuilderException("Unknown element <" + nodeName + "> in SQL statement.");
         }
         handler.handleNode(child, contents);
+        isDynamic = true;
       }
     }
     return contents;

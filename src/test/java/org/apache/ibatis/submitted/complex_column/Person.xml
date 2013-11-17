@@ -41,7 +41,12 @@
         FROM Person
         WHERE id = #{id,jdbcType=INTEGER}
     </select>
-    <select id="getParentWithoutComplex" resultMap="personMap" parameterType="Person">
+    <!-- parameterType was removed because it failed when using RAW.
+    the DynamicSqlSource calculates the parameter out of the actual parameter used in the call
+    the RawSqlSource calculates it during startup.
+    This paremter is a Person when called directly but an Integer when calling from the ResultMap (nested select)
+    so it fails -->
+    <select id="getParentWithoutComplex" resultMap="personMap">
         SELECT id, firstName, lastName, parent_id, parent_firstName, parent_lastName
         FROM Person
         WHERE id = #{id,jdbcType=INTEGER}
