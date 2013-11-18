@@ -191,31 +191,35 @@ AND title like ‘someTitle’]]></source>
   </subsection>
   <subsection name="ダイナミック SQL 記述言語">
     <p>バージョン 3.2 以降、ダイナミック SQL の記述言語が Pluggable になりました。言語ドライバーを記述することで、任意の言語でダイナミック SQL を記述することができます。</p>
-    <p>標準では次の２つの言語が用意されています。</p>
-    <ul>
-    <li>xml</li>
-    <li>raw</li>
-    </ul>
-    <p><code>xml</code> はデフォルトの SQL 記述言語で、これまでのセクションで説明した全ての機能を利用することができます。</p>
-    <p><code>raw</code> というのは、実際には言語を使用しない場合に指定します。この場合、MyBatis がステートメントをデータベースドライバーに渡す前に行うのは引数の置換処理のみです。当然、 <code>xml</code> よりも <code>raw</code> を指定した場合の方が処理は高速です。
-    </p>
-    <p>言語の指定は、ステートメント要素に <code>lang</code> 属性を追加することで行います。
-    </p>
-  <source><![CDATA[<select id="selectBlog" lang="raw">
-  SELECT * FROM BLOG
-</select>]]></source>
-    <p>Mapper インターフェイスを使っている場合は <code>@Lang</code> アノテーションを使います。</p>
-  <source><![CDATA[public interface Mapper {
-  @Lang(RawLanguageDriver.class)
-  @Select("SELECT * FROM BLOG")
-  List<Blog> selectBlog();
-}]]></source>
-    <p>LanguageDriver インターフェイスを実装することで、カスタムの言語ドライバーを作成することもできます。</p>
-  <source><![CDATA[public interface LanguageDriver {
+    <p>カスタムの言語ドライバーを使用する場合、まずは LanguageDriver インターフェイスを実装したクラスを作成します。</p>
+    <source><![CDATA[public interface LanguageDriver {
   ParameterHandler createParameterHandler(MappedStatement mappedStatement, Object parameterObject, BoundSql boundSql);
   SqlSource createSqlSource(Configuration configuration, XNode script, Class<?> parameterType);
   SqlSource createSqlSource(Configuration configuration, String script, Class<?> parameterType);
 }]]></source>    
+    <p>作成した言語ドライバーをデフォルトとして使用する場合は、mybatis-config.xml に次のような設定を追加します（typeAlias の使用は必須ではありません）。</p>
+    <source><![CDATA[<typeAliases>
+  <typeAlias type="org.sample.MyLanguageDriver" alias="myLanguage"/>
+</typeAliases>
+<settings>
+  <setting name="defaultScriptingLanguage" value="myLanguage"/>
+</settings>
+]]></source>
+    <p><code>lang</code> 属性を指定することで、特定のステートメントの言語ドライバーのみを変更することもできます。</p>
+    <source><![CDATA[<select id="selectBlog" lang="myLanguage">
+  SELECT * FROM BLOG
+</select>]]></source>
+    <p>Mapper インターフェイスを使っている場合は <code>@Lang</code> アノテーションを使います。</p>
+    <source><![CDATA[public interface Mapper {
+  @Lang(MyLanguageDriver.class)
+  @Select("SELECT * FROM BLOG")
+  List<Blog> selectBlog();
+}]]></source>
+
+    <p><span class="label important">NOTE</span> Apache Velocity を使ってダイナミック SQL を記述することができます。MyBatis-Velocity プロジェクトを参照してください。</p>
+
+    <p>これまでのセクションで出てきた XML タグは、全てデフォルトの言語ドライバー <code>org.apache.ibatis.scripting.xmltags.XmlLanguageDriver</code> （エイリアスは <code>xml</code> ）によって提供されているものです。</p>
+
 	</subsection>
 	</section>
   </body>
