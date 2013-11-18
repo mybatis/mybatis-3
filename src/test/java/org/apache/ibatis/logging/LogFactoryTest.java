@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2012 the original author or authors.
+ *    Copyright 2009-2013 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.logging.commons.JakartaCommonsLoggingImpl;
 import org.apache.ibatis.logging.jdk14.Jdk14LoggingImpl;
 import org.apache.ibatis.logging.log4j.Log4jImpl;
+import org.apache.ibatis.logging.log4j2.Log4j2Impl;
 import org.apache.ibatis.logging.nologging.NoLoggingImpl;
 import org.apache.ibatis.logging.slf4j.Slf4jImpl;
 import org.apache.ibatis.logging.stdout.StdOutImpl;
@@ -47,6 +48,14 @@ public class LogFactoryTest {
     assertEquals(log.getClass().getName(), Log4jImpl.class.getName());
   }
 
+  @Test
+  public void shouldUseLog4J2() {
+    LogFactory.useLog4J2Logging();
+    Log log = LogFactory.getLog(Object.class);
+    logSomething(log);
+    assertEquals(log.getClass().getName(), Log4j2Impl.class.getName());
+  }
+  
   @Test
   public void shouldUseJdKLogging() {
     LogFactory.useJdkLogging();
