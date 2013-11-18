@@ -142,39 +142,71 @@
 <a class="jxr_linenumber" name="132" href="#132">132</a>     <strong class="jxr_keyword">return</strong> property;
 <a class="jxr_linenumber" name="133" href="#133">133</a>   }
 <a class="jxr_linenumber" name="134" href="#134">134</a> 
-<a class="jxr_linenumber" name="135" href="#135">135</a>   <strong class="jxr_keyword">public</strong> <a href="../../../../org/apache/ibatis/mapping/ParameterMode.html">ParameterMode</a> getMode() {
-<a class="jxr_linenumber" name="136" href="#136">136</a>     <strong class="jxr_keyword">return</strong> mode;
-<a class="jxr_linenumber" name="137" href="#137">137</a>   }
-<a class="jxr_linenumber" name="138" href="#138">138</a> 
-<a class="jxr_linenumber" name="139" href="#139">139</a>   <strong class="jxr_keyword">public</strong> Class&lt;?&gt; getJavaType() {
-<a class="jxr_linenumber" name="140" href="#140">140</a>     <strong class="jxr_keyword">return</strong> javaType;
+<a class="jxr_linenumber" name="135" href="#135">135</a>   <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="136" href="#136">136</a> <em class="jxr_javadoccomment">   * Used for handling output of callable statements</em>
+<a class="jxr_linenumber" name="137" href="#137">137</a> <em class="jxr_javadoccomment">   * @return</em>
+<a class="jxr_linenumber" name="138" href="#138">138</a> <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="139" href="#139">139</a>   <strong class="jxr_keyword">public</strong> <a href="../../../../org/apache/ibatis/mapping/ParameterMode.html">ParameterMode</a> getMode() {
+<a class="jxr_linenumber" name="140" href="#140">140</a>     <strong class="jxr_keyword">return</strong> mode;
 <a class="jxr_linenumber" name="141" href="#141">141</a>   }
 <a class="jxr_linenumber" name="142" href="#142">142</a> 
-<a class="jxr_linenumber" name="143" href="#143">143</a>   <strong class="jxr_keyword">public</strong> <a href="../../../../org/apache/ibatis/type/JdbcType.html">JdbcType</a> getJdbcType() {
-<a class="jxr_linenumber" name="144" href="#144">144</a>     <strong class="jxr_keyword">return</strong> jdbcType;
-<a class="jxr_linenumber" name="145" href="#145">145</a>   }
-<a class="jxr_linenumber" name="146" href="#146">146</a> 
-<a class="jxr_linenumber" name="147" href="#147">147</a>   <strong class="jxr_keyword">public</strong> Integer getNumericScale() {
-<a class="jxr_linenumber" name="148" href="#148">148</a>     <strong class="jxr_keyword">return</strong> numericScale;
+<a class="jxr_linenumber" name="143" href="#143">143</a>   <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="144" href="#144">144</a> <em class="jxr_javadoccomment">   * Used for handling output of callable statements</em>
+<a class="jxr_linenumber" name="145" href="#145">145</a> <em class="jxr_javadoccomment">   * @return</em>
+<a class="jxr_linenumber" name="146" href="#146">146</a> <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="147" href="#147">147</a>   <strong class="jxr_keyword">public</strong> Class&lt;?&gt; getJavaType() {
+<a class="jxr_linenumber" name="148" href="#148">148</a>     <strong class="jxr_keyword">return</strong> javaType;
 <a class="jxr_linenumber" name="149" href="#149">149</a>   }
 <a class="jxr_linenumber" name="150" href="#150">150</a> 
-<a class="jxr_linenumber" name="151" href="#151">151</a>   <strong class="jxr_keyword">public</strong> TypeHandler&lt;?&gt; getTypeHandler() {
-<a class="jxr_linenumber" name="152" href="#152">152</a>     <strong class="jxr_keyword">return</strong> typeHandler;
-<a class="jxr_linenumber" name="153" href="#153">153</a>   }
-<a class="jxr_linenumber" name="154" href="#154">154</a> 
-<a class="jxr_linenumber" name="155" href="#155">155</a>   <strong class="jxr_keyword">public</strong> String getResultMapId() {
-<a class="jxr_linenumber" name="156" href="#156">156</a>     <strong class="jxr_keyword">return</strong> resultMapId;
+<a class="jxr_linenumber" name="151" href="#151">151</a>   <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="152" href="#152">152</a> <em class="jxr_javadoccomment">   * Used in the UnknownTypeHandler in case there is no handler for the property type</em>
+<a class="jxr_linenumber" name="153" href="#153">153</a> <em class="jxr_javadoccomment">   * @return</em>
+<a class="jxr_linenumber" name="154" href="#154">154</a> <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="155" href="#155">155</a>   <strong class="jxr_keyword">public</strong> <a href="../../../../org/apache/ibatis/type/JdbcType.html">JdbcType</a> getJdbcType() {
+<a class="jxr_linenumber" name="156" href="#156">156</a>     <strong class="jxr_keyword">return</strong> jdbcType;
 <a class="jxr_linenumber" name="157" href="#157">157</a>   }
 <a class="jxr_linenumber" name="158" href="#158">158</a> 
-<a class="jxr_linenumber" name="159" href="#159">159</a>   <strong class="jxr_keyword">public</strong> String getJdbcTypeName() {
-<a class="jxr_linenumber" name="160" href="#160">160</a>     <strong class="jxr_keyword">return</strong> jdbcTypeName;
-<a class="jxr_linenumber" name="161" href="#161">161</a>   }
-<a class="jxr_linenumber" name="162" href="#162">162</a> 
-<a class="jxr_linenumber" name="163" href="#163">163</a>   <strong class="jxr_keyword">public</strong> String getExpression() {
-<a class="jxr_linenumber" name="164" href="#164">164</a>     <strong class="jxr_keyword">return</strong> expression;
+<a class="jxr_linenumber" name="159" href="#159">159</a>   <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="160" href="#160">160</a> <em class="jxr_javadoccomment">   * Used for handling output of callable statements</em>
+<a class="jxr_linenumber" name="161" href="#161">161</a> <em class="jxr_javadoccomment">   * @return</em>
+<a class="jxr_linenumber" name="162" href="#162">162</a> <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="163" href="#163">163</a>   <strong class="jxr_keyword">public</strong> Integer getNumericScale() {
+<a class="jxr_linenumber" name="164" href="#164">164</a>     <strong class="jxr_keyword">return</strong> numericScale;
 <a class="jxr_linenumber" name="165" href="#165">165</a>   }
 <a class="jxr_linenumber" name="166" href="#166">166</a> 
-<a class="jxr_linenumber" name="167" href="#167">167</a> }
+<a class="jxr_linenumber" name="167" href="#167">167</a>   <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="168" href="#168">168</a> <em class="jxr_javadoccomment">   * Used when setting parameters to the PreparedStatement</em>
+<a class="jxr_linenumber" name="169" href="#169">169</a> <em class="jxr_javadoccomment">   * @return</em>
+<a class="jxr_linenumber" name="170" href="#170">170</a> <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="171" href="#171">171</a>   <strong class="jxr_keyword">public</strong> TypeHandler&lt;?&gt; getTypeHandler() {
+<a class="jxr_linenumber" name="172" href="#172">172</a>     <strong class="jxr_keyword">return</strong> typeHandler;
+<a class="jxr_linenumber" name="173" href="#173">173</a>   }
+<a class="jxr_linenumber" name="174" href="#174">174</a> 
+<a class="jxr_linenumber" name="175" href="#175">175</a>   <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="176" href="#176">176</a> <em class="jxr_javadoccomment">   * Used for handling output of callable statements</em>
+<a class="jxr_linenumber" name="177" href="#177">177</a> <em class="jxr_javadoccomment">   * @return</em>
+<a class="jxr_linenumber" name="178" href="#178">178</a> <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="179" href="#179">179</a>   <strong class="jxr_keyword">public</strong> String getResultMapId() {
+<a class="jxr_linenumber" name="180" href="#180">180</a>     <strong class="jxr_keyword">return</strong> resultMapId;
+<a class="jxr_linenumber" name="181" href="#181">181</a>   }
+<a class="jxr_linenumber" name="182" href="#182">182</a> 
+<a class="jxr_linenumber" name="183" href="#183">183</a>   <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="184" href="#184">184</a> <em class="jxr_javadoccomment">   * Used for handling output of callable statements</em>
+<a class="jxr_linenumber" name="185" href="#185">185</a> <em class="jxr_javadoccomment">   * @return</em>
+<a class="jxr_linenumber" name="186" href="#186">186</a> <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="187" href="#187">187</a>   <strong class="jxr_keyword">public</strong> String getJdbcTypeName() {
+<a class="jxr_linenumber" name="188" href="#188">188</a>     <strong class="jxr_keyword">return</strong> jdbcTypeName;
+<a class="jxr_linenumber" name="189" href="#189">189</a>   }
+<a class="jxr_linenumber" name="190" href="#190">190</a> 
+<a class="jxr_linenumber" name="191" href="#191">191</a>   <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="192" href="#192">192</a> <em class="jxr_javadoccomment">   * Not used</em>
+<a class="jxr_linenumber" name="193" href="#193">193</a> <em class="jxr_javadoccomment">   * @return</em>
+<a class="jxr_linenumber" name="194" href="#194">194</a> <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="195" href="#195">195</a>   <strong class="jxr_keyword">public</strong> String getExpression() {
+<a class="jxr_linenumber" name="196" href="#196">196</a>     <strong class="jxr_keyword">return</strong> expression;
+<a class="jxr_linenumber" name="197" href="#197">197</a>   }
+<a class="jxr_linenumber" name="198" href="#198">198</a> 
+<a class="jxr_linenumber" name="199" href="#199">199</a> }
 </pre>
 <hr/><div id="footer">This page was automatically generated by <a href="http://maven.apache.org/">Maven</a></div></body>
 </html>

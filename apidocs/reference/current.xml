@@ -19579,6 +19579,20 @@
 <parameter name="parameterType" type="java.lang.Class&lt;?&gt;">
 </parameter>
 </constructor>
+<constructor name="RawSqlSource"
+ type="org.apache.ibatis.scripting.defaults.RawSqlSource"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="configuration" type="org.apache.ibatis.session.Configuration">
+</parameter>
+<parameter name="script" type="org.apache.ibatis.parsing.XNode">
+</parameter>
+<parameter name="parameterType" type="java.lang.Class&lt;?&gt;">
+</parameter>
+</constructor>
 <method name="getBoundSql"
  return="org.apache.ibatis.mapping.BoundSql"
  abstract="false"
@@ -20022,6 +20036,40 @@
 </parameter>
 </method>
 </interface>
+<class name="StaticTextSqlNode"
+ extends="java.lang.Object"
+ abstract="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<implements name="org.apache.ibatis.scripting.xmltags.SqlNode">
+</implements>
+<constructor name="StaticTextSqlNode"
+ type="org.apache.ibatis.scripting.xmltags.StaticTextSqlNode"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="text" type="java.lang.String">
+</parameter>
+</constructor>
+<method name="apply"
+ return="boolean"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="context" type="org.apache.ibatis.scripting.xmltags.DynamicContext">
+</parameter>
+</method>
+</class>
 <class name="TextSqlNode"
  extends="java.lang.Object"
  abstract="false"
@@ -20054,6 +20102,17 @@
 >
 <parameter name="context" type="org.apache.ibatis.scripting.xmltags.DynamicContext">
 </parameter>
+</method>
+<method name="isDynamic"
+ return="boolean"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
 </method>
 </class>
 <class name="TrimSqlNode"
@@ -20276,7 +20335,35 @@
 >
 <parameter name="configuration" type="org.apache.ibatis.session.Configuration">
 </parameter>
+<parameter name="context" type="java.lang.String">
+</parameter>
+<parameter name="parameterType" type="java.lang.Class&lt;?&gt;">
+</parameter>
+</constructor>
+<constructor name="XMLScriptBuilder"
+ type="org.apache.ibatis.scripting.xmltags.XMLScriptBuilder"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="configuration" type="org.apache.ibatis.session.Configuration">
+</parameter>
 <parameter name="context" type="org.apache.ibatis.parsing.XNode">
+</parameter>
+</constructor>
+<constructor name="XMLScriptBuilder"
+ type="org.apache.ibatis.scripting.xmltags.XMLScriptBuilder"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="configuration" type="org.apache.ibatis.session.Configuration">
+</parameter>
+<parameter name="context" type="org.apache.ibatis.parsing.XNode">
+</parameter>
+<parameter name="parameterType" type="java.lang.Class&lt;?&gt;">
 </parameter>
 </constructor>
 <method name="parseScriptNode"

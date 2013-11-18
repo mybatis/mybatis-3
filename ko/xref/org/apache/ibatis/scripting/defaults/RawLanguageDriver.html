@@ -32,33 +32,22 @@
 <a class="jxr_linenumber" name="22" href="#22">22</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.parsing.XNode;
 <a class="jxr_linenumber" name="23" href="#23">23</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.scripting.LanguageDriver;
 <a class="jxr_linenumber" name="24" href="#24">24</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.session.Configuration;
-<a class="jxr_linenumber" name="25" href="#25">25</a>  <strong class="jxr_keyword">import</strong> org.w3c.dom.Node;
-<a class="jxr_linenumber" name="26" href="#26">26</a>  <strong class="jxr_keyword">import</strong> org.w3c.dom.NodeList;
+<a class="jxr_linenumber" name="25" href="#25">25</a>  
+<a class="jxr_linenumber" name="26" href="#26">26</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../../org/apache/ibatis/scripting/defaults/RawLanguageDriver.html">RawLanguageDriver</a> <strong class="jxr_keyword">implements</strong> <a href="../../../../../org/apache/ibatis/scripting/LanguageDriver.html">LanguageDriver</a> {
 <a class="jxr_linenumber" name="27" href="#27">27</a>  
-<a class="jxr_linenumber" name="28" href="#28">28</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../../org/apache/ibatis/scripting/defaults/RawLanguageDriver.html">RawLanguageDriver</a> <strong class="jxr_keyword">implements</strong> <a href="../../../../../org/apache/ibatis/scripting/LanguageDriver.html">LanguageDriver</a> {
-<a class="jxr_linenumber" name="29" href="#29">29</a>  
-<a class="jxr_linenumber" name="30" href="#30">30</a>    <strong class="jxr_keyword">public</strong> <a href="../../../../../org/apache/ibatis/executor/parameter/ParameterHandler.html">ParameterHandler</a> createParameterHandler(<a href="../../../../../org/apache/ibatis/mapping/MappedStatement.html">MappedStatement</a> mappedStatement, Object parameterObject, <a href="../../../../../org/apache/ibatis/mapping/BoundSql.html">BoundSql</a> boundSql) {
-<a class="jxr_linenumber" name="31" href="#31">31</a>      <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/scripting/defaults/DefaultParameterHandler.html">DefaultParameterHandler</a>(mappedStatement, parameterObject, boundSql);
-<a class="jxr_linenumber" name="32" href="#32">32</a>    }
-<a class="jxr_linenumber" name="33" href="#33">33</a>  
-<a class="jxr_linenumber" name="34" href="#34">34</a>    <strong class="jxr_keyword">public</strong> <a href="../../../../../org/apache/ibatis/mapping/SqlSource.html">SqlSource</a> createSqlSource(<a href="../../../../../org/apache/ibatis/session/Configuration.html">Configuration</a> configuration, <a href="../../../../../org/apache/ibatis/parsing/XNode.html">XNode</a> script, Class&lt;?&gt; parameterType) {
-<a class="jxr_linenumber" name="35" href="#35">35</a>      StringBuilder contents = <strong class="jxr_keyword">new</strong> StringBuilder();
-<a class="jxr_linenumber" name="36" href="#36">36</a>      NodeList children = script.getNode().getChildNodes();
-<a class="jxr_linenumber" name="37" href="#37">37</a>      <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; i &lt; children.getLength(); i++) {
-<a class="jxr_linenumber" name="38" href="#38">38</a>        <a href="../../../../../org/apache/ibatis/parsing/XNode.html">XNode</a> child = script.newXNode(children.item(i));
-<a class="jxr_linenumber" name="39" href="#39">39</a>        <strong class="jxr_keyword">if</strong> (child.getNode().getNodeType() == Node.CDATA_SECTION_NODE || child.getNode().getNodeType() == Node.TEXT_NODE) {
-<a class="jxr_linenumber" name="40" href="#40">40</a>          String data = child.getStringBody(<span class="jxr_string">""</span>);
-<a class="jxr_linenumber" name="41" href="#41">41</a>          contents.append(data);
-<a class="jxr_linenumber" name="42" href="#42">42</a>        }
-<a class="jxr_linenumber" name="43" href="#43">43</a>      }
-<a class="jxr_linenumber" name="44" href="#44">44</a>      <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/scripting/defaults/RawSqlSource.html">RawSqlSource</a>(configuration, contents.toString(), parameterType);
-<a class="jxr_linenumber" name="45" href="#45">45</a>    }
-<a class="jxr_linenumber" name="46" href="#46">46</a>  
-<a class="jxr_linenumber" name="47" href="#47">47</a>    <strong class="jxr_keyword">public</strong> <a href="../../../../../org/apache/ibatis/mapping/SqlSource.html">SqlSource</a> createSqlSource(<a href="../../../../../org/apache/ibatis/session/Configuration.html">Configuration</a> configuration, String script, Class&lt;?&gt; parameterType) {
-<a class="jxr_linenumber" name="48" href="#48">48</a>      <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/scripting/defaults/RawSqlSource.html">RawSqlSource</a>(configuration, script, parameterType);
-<a class="jxr_linenumber" name="49" href="#49">49</a>    }
-<a class="jxr_linenumber" name="50" href="#50">50</a>  
-<a class="jxr_linenumber" name="51" href="#51">51</a>  }
+<a class="jxr_linenumber" name="28" href="#28">28</a>    <strong class="jxr_keyword">public</strong> <a href="../../../../../org/apache/ibatis/executor/parameter/ParameterHandler.html">ParameterHandler</a> createParameterHandler(<a href="../../../../../org/apache/ibatis/mapping/MappedStatement.html">MappedStatement</a> mappedStatement, Object parameterObject, <a href="../../../../../org/apache/ibatis/mapping/BoundSql.html">BoundSql</a> boundSql) {
+<a class="jxr_linenumber" name="29" href="#29">29</a>      <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/scripting/defaults/DefaultParameterHandler.html">DefaultParameterHandler</a>(mappedStatement, parameterObject, boundSql);
+<a class="jxr_linenumber" name="30" href="#30">30</a>    }
+<a class="jxr_linenumber" name="31" href="#31">31</a>  
+<a class="jxr_linenumber" name="32" href="#32">32</a>    <strong class="jxr_keyword">public</strong> <a href="../../../../../org/apache/ibatis/mapping/SqlSource.html">SqlSource</a> createSqlSource(<a href="../../../../../org/apache/ibatis/session/Configuration.html">Configuration</a> configuration, <a href="../../../../../org/apache/ibatis/parsing/XNode.html">XNode</a> script, Class&lt;?&gt; parameterType) {
+<a class="jxr_linenumber" name="33" href="#33">33</a>      <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/scripting/defaults/RawSqlSource.html">RawSqlSource</a>(configuration, script, parameterType);
+<a class="jxr_linenumber" name="34" href="#34">34</a>    }
+<a class="jxr_linenumber" name="35" href="#35">35</a>  
+<a class="jxr_linenumber" name="36" href="#36">36</a>    <strong class="jxr_keyword">public</strong> <a href="../../../../../org/apache/ibatis/mapping/SqlSource.html">SqlSource</a> createSqlSource(<a href="../../../../../org/apache/ibatis/session/Configuration.html">Configuration</a> configuration, String script, Class&lt;?&gt; parameterType) {
+<a class="jxr_linenumber" name="37" href="#37">37</a>      <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/scripting/defaults/RawSqlSource.html">RawSqlSource</a>(configuration, script, parameterType);
+<a class="jxr_linenumber" name="38" href="#38">38</a>    }
+<a class="jxr_linenumber" name="39" href="#39">39</a>  
+<a class="jxr_linenumber" name="40" href="#40">40</a>  }
 </pre>
 <hr/><div id="footer">This page was automatically generated by <a href="http://maven.apache.org/">Maven</a></div></body>
 </html>
