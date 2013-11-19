@@ -148,7 +148,7 @@ public class ResultMapping {
       }
       // Issue #4 and GH #39: column is optional only in nested resultmaps but not in the rest
       if (resultMapping.nestedResultMapId == null && resultMapping.column == null && resultMapping.composites.size() == 0) {
-        throw new IllegalStateException("Missing column attribute for nested select in mapping " + resultMapping.property);
+        throw new IllegalStateException("Missing column attribute for mapping " + resultMapping.property);
       }
       if (resultMapping.getResultSet() != null) {
         int numColums = 0;
