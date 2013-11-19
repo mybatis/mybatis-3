@@ -15,23 +15,25 @@
  */
 package org.apache.ibatis.submitted.resultmapwithassociationstest;
 
+import java.util.List;
+
 public class Person {
-    private int id;
-    private Address address;
+  private int id;
+  private List<Address> addresses;
 
-    public int getId() {
-        return id;
-    }
+  public int getId() {
+    return id;
+  }
 
-    public void setId(final int id) {
-        this.id = id;
-    }
+  public void setId(final int id) {
+    this.id = id;
+  }
 
-    public Address getAddress() {
-        return address;
-    }
+  public List<Address> getAddresses() {
+    return addresses;
+  }
 
-    public void setAddress(final Address address) {
-        this.address = address;
-    }
+  public void setAddresses(final List<Address> addresses) {
+    this.addresses = addresses;
+  }
 }

@@ -20,17 +20,17 @@
 
 <mapper namespace="org.apache.ibatis.submitted.resultmapwithassociationstest.Mapper">
   <resultMap id="personRM" type="org.apache.ibatis.submitted.resultmapwithassociationstest.Person" >
-    <id property="id"/>
-    <association property="address" column="id_address" javaType="org.apache.ibatis.submitted.resultmapwithassociationstest.Address">
+    <id property="id" column="id"/>
+    <collection property="addresses" ofType="org.apache.ibatis.submitted.resultmapwithassociationstest.Address">
       <id property="id" column="address_id" />
-    </association>
+    </collection>
   </resultMap>
 
   <select id="findAll" parameterType="map" resultMap="personRM">
-    SELECT p.id, id_address, 
-      a.id as address_id
+    SELECT p.id, id_address, a.id as address_id
     FROM person p
-      JOIN address a on a.id = p.id_address
+    JOIN address a 
+    on a.id = p.id_address
   </select>
   
 </mapper>
