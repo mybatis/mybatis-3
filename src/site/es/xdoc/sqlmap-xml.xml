@@ -135,7 +135,7 @@ ps.setInt(1,id);]]></source>
               <td><code>parameterType</code></td>
               <td>El nombre completamente cualificado de la clase o el alias del parámetro que se pasará al statement.
               Este atributo es opcional porque MyBatis puede calcular el TypeHandler a utlizar a partir del parametro actual usado en la invocación al statement.
-              Por defecto: no informado</td>.
+              Por defecto: no informado.</td>
             </tr>
             <tr>
               <td>
