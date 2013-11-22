@@ -58,6 +58,15 @@
         </constructor>
     </resultMap>
 
+    <resultMap id="blogUsingConstructorWithResultMapAndProperties" type="Blog">
+        <constructor>
+            <idArg column="id" javaType="_int"/>
+            <arg column="title" javaType="java.lang.String"/>
+            <arg javaType="domain.blog.Author" resultMap="org.apache.ibatis.binding.BoundAuthorMapper.authorResultMapWithProperties"/>
+            <arg column="id" javaType="java.util.List" select="selectPostsForBlog"/>
+        </constructor>
+    </resultMap>
+
     <resultMap id="blogUsingConstructorWithResultMapCollection" type="Blog">
         <constructor>
             <idArg column="id" javaType="_int"/>
@@ -87,6 +96,20 @@
 
     <select id="selectBlogUsingConstructorWithResultMap" parameterType="int"
             resultMap="blogUsingConstructorWithResultMap">
+      select b.*, 
+      	a.id as author_id, 
+      	a.username as author_username, 
+      	a.password as author_password, 
+      	a.email as author_email, 
+      	a.bio as author_bio, 
+      	a.favourite_section 
+      from Blog b join Author a 
+      on b.author_id = a.id 
+      where b.id = #{id}
+    </select>
+
+    <select id="selectBlogUsingConstructorWithResultMapAndProperties" parameterType="int"
+            resultMap="blogUsingConstructorWithResultMapAndProperties">
       select b.*, 
       	a.id as author_id, 
       	a.username as author_username, 

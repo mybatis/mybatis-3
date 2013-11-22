@@ -286,7 +286,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     skipRows(rsw.getResultSet(), rowBounds);
     while (shouldProcessMoreRows(rsw.getResultSet(), resultContext, rowBounds)) {
       ResultMap discriminatedResultMap = resolveDiscriminatedResultMap(rsw.getResultSet(), resultMap, null);
-      Object rowValue = getRowValue(rsw, discriminatedResultMap, null);
+      Object rowValue = getRowValue(rsw, discriminatedResultMap);
       storeObject(resultHandler, resultContext, rowValue, parentMapping, rsw.getResultSet());
     }
   }
@@ -324,7 +324,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
   // GET VALUE FROM ROW FOR SIMPLE RESULT MAP
   //
 
-  private Object getRowValue(ResultSetWrapper rsw, ResultMap resultMap, CacheKey rowKey) throws SQLException {
+  private Object getRowValue(ResultSetWrapper rsw, ResultMap resultMap) throws SQLException {
     final ResultLoaderMap lazyLoader = instantiateResultLoaderMap();
     Object resultObject = createResultObject(rsw, resultMap, lazyLoader, null);
     if (resultObject != null && !typeHandlerRegistry.hasTypeHandler(resultMap.getType())) {
@@ -543,8 +543,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
         value = getNestedQueryConstructorValue(rsw.getResultSet(), constructorMapping, columnPrefix);
       } else if (constructorMapping.getNestedResultMapId() != null) {
         final ResultMap resultMap = configuration.getResultMap(constructorMapping.getNestedResultMapId());
-        final ResultLoaderMap lazyLoader = instantiateResultLoaderMap();
-        value = createResultObject(rsw, resultMap, lazyLoader, columnPrefix);
+        value = getRowValue(rsw, resultMap);
       } else {
         final TypeHandler<?> typeHandler = constructorMapping.getTypeHandler();
         value = typeHandler.getResult(rsw.getResultSet(), prependPrefix(column, columnPrefix));

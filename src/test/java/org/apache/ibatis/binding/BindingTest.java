@@ -376,8 +376,29 @@ public class BindingTest {
     }
   }
 
+  @Test
+  public void shouldExecuteBoundSelectBlogUsingConstructorWithResultMapAndProperties() {
+    SqlSession session = sqlSessionFactory.openSession();
+    try {
+      BoundBlogMapper mapper = session.getMapper(BoundBlogMapper.class);
+      Blog blog = mapper.selectBlogUsingConstructorWithResultMapAndProperties(1);
+      assertEquals(1, blog.getId());
+      assertEquals("Jim Business", blog.getTitle());
+      assertNotNull("author should not be null", blog.getAuthor());
+      Author author = blog.getAuthor();
+      assertEquals(101, author.getId());
+      assertEquals("jim@ibatis.apache.org", author.getEmail());
+      assertEquals("jim", author.getUsername());
+      List<Post> posts = blog.getPosts();
+      assertTrue("posts should not be empty", posts != null);
+      assertEquals(2, posts.size());
+    } finally {
+      session.close();
+    }
+  }
+  
   @Ignore
-  @Test // issue #480
+  @Test // issue #480 and #101
   public void shouldExecuteBoundSelectBlogUsingConstructorWithResultMapCollection() {
     SqlSession session = sqlSessionFactory.openSession();
     try {
