@@ -16,9 +16,12 @@
 
 package org.apache.ibatis.submitted.column_prefix;
 
+import static org.junit.Assert.*;
+
 import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
+import org.junit.Test;
 
 public class ColumnPrefixAutoMappingTest extends ColumnPrefixTest {
   protected List<Pet> getPetAndRoom(SqlSession sqlSession) {
@@ -34,5 +37,19 @@ public class ColumnPrefixAutoMappingTest extends ColumnPrefixTest {
 
   protected String getConfigPath() {
     return "org/apache/ibatis/submitted/column_prefix/ConfigAutoMapping.xml";
+  }
+
+  @Test
+  public void testCaseInsensitivity() throws Exception {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      Brand brand = sqlSession.selectOne("org.apache.ibatis.submitted.column_prefix.MapperAutoMapping.selectBrandWithProducts", 1);
+      assertEquals(Integer.valueOf(1), brand.getId());
+      assertEquals(2, brand.getProducts().size());
+      assertEquals(Integer.valueOf(10), brand.getProducts().get(0).getId());
+      assertEquals("alpha", brand.getProducts().get(0).getName());
+    } finally {
+      sqlSession.close();
+    }
   }
 }

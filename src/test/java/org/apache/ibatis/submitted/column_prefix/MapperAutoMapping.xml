@@ -158,4 +158,23 @@
     order by person.id, pet.id
   ]]></select>
 
+  <resultMap id="productMapper"
+    type="org.apache.ibatis.submitted.column_prefix.Product">
+    <id column="id" property="id" />
+  </resultMap>
+
+  <resultMap id="brandMapper"
+    type="org.apache.ibatis.submitted.column_prefix.Brand">
+    <id column="id" property="id" />
+    <collection property="products" resultMap="productMapper" columnPrefix="product_" />
+  </resultMap>
+
+  <select id="selectBrandWithProducts" resultMap="brandMapper">
+    select brand.id, brand.name, product."product_id" as "product_id", product."product_name"
+    from brand
+    left join product on product.brand_id = brand.id
+    where brand.id = #{id}
+    order by product."product_id"
+  </select>
+
 </mapper>

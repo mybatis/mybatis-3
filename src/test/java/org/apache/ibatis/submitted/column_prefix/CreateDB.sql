@@ -68,6 +68,20 @@ room_id int,
 room_name varchar(32)
 );
 
+drop table if exists brand;
+create table brand (
+id int,
+name varchar(32)
+);
+
+-- make columns case sensitive
+drop table if exists product;
+create table product (
+"product_id" int,
+"product_name" varchar(32),
+brand_id int
+);
+
 insert into room (room_id, room_name) values (31, 'Sakura');
 insert into room (room_id, room_name) values (32, 'Ume');
 insert into room (room_id, room_name) values (33, 'Tsubaki');
@@ -98,3 +112,8 @@ insert into address (id, state, city, phone1_id, phone2_id, addr_type, caution) 
 insert into person (id, name, billing_address_id, shipping_address_id, room_id) values (1, 'John', 10, 11, 33);
 insert into person (id, name, billing_address_id, shipping_address_id, room_id) values (2, 'Rebecca', 12, null, null);
 insert into person (id, name, billing_address_id, shipping_address_id, room_id) values (3, 'Keith', null, 13, null);
+
+insert into brand (id, name) values (1, 'alpha');
+
+insert into product ("product_id", "product_name", brand_id) values (10, 'alpha', 1);
+insert into product ("product_id", "product_name", brand_id) values (20, 'beta', 1);

@@ -402,7 +402,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
       if (columnPrefix != null && columnPrefix.length() > 0) {
         // When columnPrefix is specified,
         // ignore columns without the prefix.
-        if (columnName.startsWith(columnPrefix)) {
+        if (columnName.toUpperCase(Locale.ENGLISH).startsWith(columnPrefix)) {
           propertyName = columnName.substring(columnPrefix.length());
         } else {
           continue;
@@ -913,7 +913,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
       if (columnPrefix != null && columnPrefix.length() > 0) {
         // When columnPrefix is specified,
         // ignore columns without the prefix.
-        if (column.startsWith(columnPrefix)) {
+        if (column.toUpperCase(Locale.ENGLISH).startsWith(columnPrefix)) {
           property = column.substring(columnPrefix.length());
         } else {
           continue;
