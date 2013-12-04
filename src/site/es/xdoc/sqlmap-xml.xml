@@ -1644,6 +1644,11 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
 </cache>]]></source>
 
         <p>Puedes utilizar propiedades JavaBean de cualquier tipo simple y MyBatis hará la conversión.</p>
+        
+        <p><span class="label important">NOTE</span>
+          Los parametros de configuración de la cache (eviction, read write..etc.) explicados anteriormente no aplican cuando se usa
+          una caché personalizada.
+        </p>        
 
         <p>Es importante recordar que la configuración de la caches y la instancia de caché está asociadas al namespace del fichero SQL Map. Y por tanto, a todas las sentencias del mismo namespace dado que la cache está asociada a él. Los statements pueden modificar cómo interactúan con la caché, o excluirse a sí mismos completamente utilizando dos atributos simples. Por defecto los statements están configurados así:
         </p>

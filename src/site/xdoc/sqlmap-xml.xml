@@ -2040,9 +2040,6 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
   ReadWriteLock getReadWriteLock();
 }]]></source>
 
-        <p>Follows below 
-        </p>
-
         <p>
           To configure your cache, simply add public JavaBeans properties to your Cache implementation, and
           pass properties via the cache Element, for example, the following would call a method called
@@ -2054,6 +2051,11 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
 </cache>]]></source>
 
         <p>You can use JavaBeans properties of all simple types, MyBatis will do the conversion.</p>
+
+        <p><span class="label important">NOTE</span>
+          Settings of cache (like eviction strategy, read write..etc.) in section above are not applied
+          when using Custom Cache.
+        </p>
 
         <p>
           It's important to remember that a cache configuration and the cache instance are bound to the
