@@ -53,6 +53,7 @@ public class AutomappingTest {
 
   @Test
   public void shouldGetAUser() {
+    sqlSessionFactory.getConfiguration().setAutoMappingBehavior(AutoMappingBehavior.NONE);
     SqlSession sqlSession = sqlSessionFactory.openSession();
     try {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
@@ -64,17 +65,98 @@ public class AutomappingTest {
   }
 
   @Test
-  public void shouldGetAUserWithPets() {
+  public void shouldNotInheritAutoMappingInherited_InlineNestedResultMap() {
+    sqlSessionFactory.getConfiguration().setAutoMappingBehavior(AutoMappingBehavior.NONE);
     SqlSession sqlSession = sqlSessionFactory.openSession();
     try {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
-      User user = mapper.getUserWithPets(2);
+      User user = mapper.getUserWithPets_Inline(2);
       Assert.assertEquals(Integer.valueOf(2), user.getId());
       Assert.assertEquals("User2", user.getName());
-      Assert.assertEquals(2, user.getPets().size());
-      Assert.assertEquals(Integer.valueOf(12), user.getPets().get(0).getPetId());
+      Assert.assertNull("should not inherit auto-mapping", user.getPets().get(0).getPetName());
       Assert.assertEquals("John", user.getPets().get(0).getBreeder().getBreederName());
-      Assert.assertEquals("Kotetsu", user.getPets().get(1).getPetName());
+    } finally {
+      sqlSession.close();
+    }
+  }
+  
+  @Test
+  public void shouldNotInheritAutoMappingInherited_ExternalNestedResultMap() {
+    sqlSessionFactory.getConfiguration().setAutoMappingBehavior(AutoMappingBehavior.NONE);
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      User user = mapper.getUserWithPets_External(2);
+      Assert.assertEquals(Integer.valueOf(2), user.getId());
+      Assert.assertEquals("User2", user.getName());
+      Assert.assertNull("should not inherit auto-mapping", user.getPets().get(0).getPetName());
+      Assert.assertEquals("John", user.getPets().get(0).getBreeder().getBreederName());
+    } finally {
+      sqlSession.close();
+    }
+  }
+
+  @Test
+  public void shouldIgnorePartialAutoMappingBehavior_InlineNestedResultMap() {
+    // For nested resultMaps, PARTIAL works the same as NONE
+    sqlSessionFactory.getConfiguration().setAutoMappingBehavior(AutoMappingBehavior.PARTIAL);
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      User user = mapper.getUserWithPets_Inline(2);
+      Assert.assertEquals(Integer.valueOf(2), user.getId());
+      Assert.assertEquals("User2", user.getName());
+      Assert.assertNull("should not inherit auto-mapping", user.getPets().get(0).getPetName());
+      Assert.assertEquals("John", user.getPets().get(0).getBreeder().getBreederName());
+    } finally {
+      sqlSession.close();
+    }
+  }
+
+  @Test
+  public void shouldRespectFullAutoMappingBehavior_InlineNestedResultMap() {
+    sqlSessionFactory.getConfiguration().setAutoMappingBehavior(AutoMappingBehavior.FULL);
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      User user = mapper.getUserWithPets_Inline(2);
+      Assert.assertEquals(Integer.valueOf(2), user.getId());
+      Assert.assertEquals("User2", user.getName());
+      Assert.assertEquals("Chien", user.getPets().get(0).getPetName());
+      Assert.assertEquals("John", user.getPets().get(0).getBreeder().getBreederName());
+    } finally {
+      sqlSession.close();
+    }
+  }
+
+  @Test
+  public void shouldIgnorePartialAutoMappingBehavior_ExternalNestedResultMap() {
+    // For nested resultMaps, PARTIAL works the same as NONE
+    sqlSessionFactory.getConfiguration().setAutoMappingBehavior(AutoMappingBehavior.PARTIAL);
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      User user = mapper.getUserWithPets_External(2);
+      Assert.assertEquals(Integer.valueOf(2), user.getId());
+      Assert.assertEquals("User2", user.getName());
+      Assert.assertNull("should not inherit auto-mapping", user.getPets().get(0).getPetName());
+      Assert.assertEquals("John", user.getPets().get(0).getBreeder().getBreederName());
+    } finally {
+      sqlSession.close();
+    }
+  }
+
+  @Test
+  public void shouldRespectFullAutoMappingBehavior_ExternalNestedResultMap() {
+    sqlSessionFactory.getConfiguration().setAutoMappingBehavior(AutoMappingBehavior.FULL);
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      User user = mapper.getUserWithPets_External(2);
+      Assert.assertEquals(Integer.valueOf(2), user.getId());
+      Assert.assertEquals("User2", user.getName());
+      Assert.assertEquals("Chien", user.getPets().get(0).getPetName());
+      Assert.assertEquals("John", user.getPets().get(0).getBreeder().getBreederName());
     } finally {
       sqlSession.close();
     }

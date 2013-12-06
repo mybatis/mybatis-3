@@ -1256,6 +1256,11 @@ public class User {
                 ネストされた結果をマッピングする際、デフォルトでは子オブジェクトのプロパティに対応する列のうち一つでも null でない値がセットされているものがあれば子オブジェクトが生成されます。notNullColumn に列名（複数可）を指定しておくと、指定された列に null 以外の値がセットされた場合にのみ子オブジェクトが生成されます。デフォルト：未指定
               </td>
             </tr>            
+            <tr>
+              <td><code>autoMapping</code></td>
+              <td>このプロパティに結果をマッピングする際、自動マッピングを使用するかどうかを true / false で指定します。ここでの指定はグローバルな設定（autoMappingBehavior）より優先されます。この設定は別の場所で定義されている ResultMap には適用されませんので、<code>select</code> や <code>resultMap</code> が指定されている場合は無効となります。デフォルト：未指定
+              </td>
+            </tr>
           </tbody>
         </table>
 

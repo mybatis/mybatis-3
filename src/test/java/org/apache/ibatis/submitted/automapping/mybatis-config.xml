@@ -20,9 +20,7 @@
 
 <configuration>
 
-	<settings>
-		<setting name="autoMappingBehavior" value="NONE" />
-	</settings>
+	<!-- autoMappingBehavior should be set in each test case -->
 
 	<environments default="development">
 		<environment id="development">

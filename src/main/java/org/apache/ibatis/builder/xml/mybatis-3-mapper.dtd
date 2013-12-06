@@ -116,6 +116,7 @@ notNullColumn CDATA #IMPLIED
 columnPrefix CDATA #IMPLIED
 resultSet CDATA #IMPLIED
 foreignColumn CDATA #IMPLIED
+autoMapping (true|false) #IMPLIED
 >
 
 <!ELEMENT association (constructor?,id*,result*,association*,collection*, discriminator?)>
@@ -131,6 +132,7 @@ notNullColumn CDATA #IMPLIED
 columnPrefix CDATA #IMPLIED
 resultSet CDATA #IMPLIED
 foreignColumn CDATA #IMPLIED
+autoMapping (true|false) #IMPLIED
 >
 
 <!ELEMENT discriminator (case+)>

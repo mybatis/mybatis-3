@@ -1066,6 +1066,13 @@ public class User {
                 sólo creará un objeto hijo si alguna de estas columnas no es nula. Pueden indicarse una lista de columnas usando la coma como separador.
               </td>
             </tr>            
+            <tr>
+              <td><code>autoMapping</code></td>
+              <td>If present, MyBatis will enable or disable automapping when mapping the result to this property.
+                This attribute overrides the global autoMappingBehavior.
+                Note that it has no effect on an external resultMap, so it is pointless to use it with <code>select</code> or <code>resultMap</code> attribute. Default value: unset.
+              </td>
+            </tr>
           </tbody>
         </table>
 

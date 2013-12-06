@@ -1365,6 +1365,13 @@ public class User {
                 specified using a comma as a separator. Default value: unset.
               </td>
             </tr>                        
+            <tr>
+              <td><code>autoMapping</code></td>
+              <td>If present, MyBatis will enable or disable automapping when mapping the result to this property.
+                This attribute overrides the global autoMappingBehavior.
+                Note that it has no effect on an external resultMap, so it is pointless to use it with <code>select</code> or <code>resultMap</code> attribute. Default value: unset.
+              </td>
+            </tr>
           </tbody>
         </table>
 

@@ -27,7 +27,7 @@
 	<resultMap type="org.apache.ibatis.submitted.automapping.User" id="result" autoMapping="true">
 	</resultMap>
 
-	<select id="getUserWithPets" resultMap="resultWithPets">
+	<sql id="selectUserPetBreeder">
 		select users.id, users.name,
 			pets.id as petId, pets.name as petName,
 			breeder.id as breederId, breeder.name as breederName
@@ -35,18 +35,40 @@
 		left join pets on pets.owner = users.id
 		left join breeder on breeder.id = pets.breeder
 		where users.id = #{id}
+	</sql>
+
+	<select id="getUserWithPets_Inline" resultMap="resultWithPets_Inline">
+		<include refid="selectUserPetBreeder" />
 	</select>
 
-	<resultMap type="org.apache.ibatis.submitted.automapping.User" id="resultWithPets" autoMapping="true">
+	<resultMap type="org.apache.ibatis.submitted.automapping.User" id="resultWithPets_Inline" autoMapping="true">
 		<id column="id" property="id"/>
 		<collection property="pets" ofType="org.apache.ibatis.submitted.automapping.Pet">
 			<id column="petId" property="petId"/>
-			<association property="breeder" javaType="org.apache.ibatis.submitted.automapping.Breeder" />
+			<association property="breeder" javaType="org.apache.ibatis.submitted.automapping.Breeder" autoMapping="true"/>
 		</collection>
 	</resultMap>
-	
+
+	<select id="getUserWithPets_External" resultMap="resultWithPets_External">
+		<include refid="selectUserPetBreeder" />
+	</select>
+
+	<resultMap type="org.apache.ibatis.submitted.automapping.User" id="resultWithPets_External" autoMapping="true">
+		<id column="id" property="id"/>
+		<collection property="pets" resultMap="petResult" />
+	</resultMap>
+
+	<resultMap type="org.apache.ibatis.submitted.automapping.Pet" id="petResult">
+		<id property="petId" column="petId" />
+		<association property="breeder" resultMap="breederResult" />
+	</resultMap>
+
+	<resultMap type="org.apache.ibatis.submitted.automapping.Breeder" id="breederResult" autoMapping="true">
+		<id property="breederId" column="breederId" />
+	</resultMap>
+
 	<resultMap type="org.apache.ibatis.submitted.automapping.Book" id="bookResult">
-		 <result property="name" column="name"/>
+		<result property="name" column="name"/>
 	</resultMap>
 	
 	<select id="getBooks" resultMap="bookResult">

@@ -330,7 +330,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     if (resultObject != null && !typeHandlerRegistry.hasTypeHandler(resultMap.getType())) {
       final MetaObject metaObject = configuration.newMetaObject(resultObject);
       boolean foundValues = resultMap.getConstructorResultMappings().size() > 0;
-      if (shouldApplyAutomaticMappings(resultMap, null, !AutoMappingBehavior.NONE.equals(configuration.getAutoMappingBehavior()))) {        
+      if (shouldApplyAutomaticMappings(resultMap, !AutoMappingBehavior.NONE.equals(configuration.getAutoMappingBehavior()))) {        
         foundValues = applyAutomaticMappings(rsw, resultMap, metaObject, null) || foundValues;
       }
       foundValues = applyPropertyMappings(rsw, resultMap, metaObject, lazyLoader, null) || foundValues;
@@ -341,9 +341,8 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     return resultObject;
   }
 
-  private boolean shouldApplyAutomaticMappings(ResultMap resultMap, Boolean parentAutoMapping, boolean def) {
-    return resultMap.getAutoMapping() != null ? resultMap.getAutoMapping()
-      : parentAutoMapping != null ? parentAutoMapping : def;
+  private boolean shouldApplyAutomaticMappings(ResultMap resultMap, boolean def) {
+    return resultMap.getAutoMapping() != null ? resultMap.getAutoMapping() : def;
   }
 
   private ResultLoaderMap instantiateResultLoaderMap() {
@@ -725,9 +724,9 @@ public class DefaultResultSetHandler implements ResultSetHandler {
           nestedResultObjects.clear();
           storeObject(resultHandler, resultContext, rowValue, parentMapping, rsw.getResultSet());
         }
-        rowValue = getRowValue(rsw, discriminatedResultMap, rowKey, rowKey, null, partialObject, null);
+        rowValue = getRowValue(rsw, discriminatedResultMap, rowKey, rowKey, null, partialObject);
       } else {
-        rowValue = getRowValue(rsw, discriminatedResultMap, rowKey, rowKey, null, partialObject, null);
+        rowValue = getRowValue(rsw, discriminatedResultMap, rowKey, rowKey, null, partialObject);
         if (partialObject == null) {
           storeObject(resultHandler, resultContext, rowValue, parentMapping, rsw.getResultSet());
         }
@@ -742,12 +741,12 @@ public class DefaultResultSetHandler implements ResultSetHandler {
   // GET VALUE FROM ROW FOR NESTED RESULT MAP
   //
 
-  private Object getRowValue(ResultSetWrapper rsw, ResultMap resultMap, CacheKey combinedKey, CacheKey absoluteKey, String columnPrefix, Object partialObject, Boolean parentAutoMapping) throws SQLException {
+  private Object getRowValue(ResultSetWrapper rsw, ResultMap resultMap, CacheKey combinedKey, CacheKey absoluteKey, String columnPrefix, Object partialObject) throws SQLException {
     Object resultObject = partialObject;
     if (resultObject != null) {
       final MetaObject metaObject = configuration.newMetaObject(resultObject);
       ancestorObjects.put(absoluteKey, resultObject);
-      applyNestedResultMappings(rsw, resultMap, metaObject, columnPrefix, combinedKey, false, parentAutoMapping);
+      applyNestedResultMappings(rsw, resultMap, metaObject, columnPrefix, combinedKey, false);
       ancestorObjects.remove(absoluteKey);
     } else {
       final ResultLoaderMap lazyLoader = instantiateResultLoaderMap();
@@ -755,12 +754,12 @@ public class DefaultResultSetHandler implements ResultSetHandler {
       if (resultObject != null && !typeHandlerRegistry.hasTypeHandler(resultMap.getType())) {
         final MetaObject metaObject = configuration.newMetaObject(resultObject);
         boolean foundValues = resultMap.getConstructorResultMappings().size() > 0;
-        if (shouldApplyAutomaticMappings(resultMap, parentAutoMapping, AutoMappingBehavior.FULL.equals(configuration.getAutoMappingBehavior()))) {
+        if (shouldApplyAutomaticMappings(resultMap, AutoMappingBehavior.FULL.equals(configuration.getAutoMappingBehavior()))) {
           foundValues = applyAutomaticMappings(rsw, resultMap, metaObject, columnPrefix) || foundValues;
         }        
         foundValues = applyPropertyMappings(rsw, resultMap, metaObject, lazyLoader, columnPrefix) || foundValues;
         ancestorObjects.put(absoluteKey, resultObject);
-        foundValues = applyNestedResultMappings(rsw, resultMap, metaObject, columnPrefix, combinedKey, true, parentAutoMapping) || foundValues;
+        foundValues = applyNestedResultMappings(rsw, resultMap, metaObject, columnPrefix, combinedKey, true) || foundValues;
         ancestorObjects.remove(absoluteKey);
         foundValues = (lazyLoader != null && lazyLoader.size() > 0) || foundValues;
         resultObject = foundValues ? resultObject : null;
@@ -774,7 +773,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
   // NESTED RESULT MAP (JOIN MAPPING)
   //
 
-  private boolean applyNestedResultMappings(ResultSetWrapper rsw, ResultMap resultMap, MetaObject metaObject, String parentPrefix, CacheKey parentRowKey, boolean newObject, Boolean parentAutoMapping) {
+  private boolean applyNestedResultMappings(ResultSetWrapper rsw, ResultMap resultMap, MetaObject metaObject, String parentPrefix, CacheKey parentRowKey, boolean newObject) {
     boolean foundValues = false;
     for (ResultMapping resultMapping : resultMap.getPropertyResultMappings()) {
       final String nestedResultMapId = resultMapping.getNestedResultMapId();
@@ -792,7 +791,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
             boolean knownValue = (rowValue != null);
             final Object collectionProperty = instantiateCollectionPropertyIfAppropriate(resultMapping, metaObject);            
             if (anyNotNullColumnHasValue(resultMapping, columnPrefix, rsw.getResultSet())) {
-              rowValue = getRowValue(rsw, nestedResultMap, combinedKey, rowKey, columnPrefix, rowValue, parentAutoMapping != null ? parentAutoMapping : resultMap.getAutoMapping());
+              rowValue = getRowValue(rsw, nestedResultMap, combinedKey, rowKey, columnPrefix, rowValue);
               if (rowValue != null && !knownValue) {
                 if (collectionProperty != null) {
                   final MetaObject targetMetaObject = configuration.newMetaObject(collectionProperty);
