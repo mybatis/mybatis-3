@@ -437,7 +437,7 @@
 <a class="jxr_linenumber" name="427" href="#427">427</a>     assertEquals(2, posts.get(1).get(<span class="jxr_string">"ID"</span>));
 <a class="jxr_linenumber" name="428" href="#428">428</a>   }
 <a class="jxr_linenumber" name="429" href="#429">429</a> 
-<a class="jxr_linenumber" name="430" href="#430">430</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../org/apache/ibatis/session/SqlSessionManagerTest.html">TestResultHandler</a> <strong class="jxr_keyword">implements</strong> ResultHandler {
+<a class="jxr_linenumber" name="430" href="#430">430</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../org/apache/ibatis/session/SqlSessionTest.html">TestResultHandler</a> <strong class="jxr_keyword">implements</strong> ResultHandler {
 <a class="jxr_linenumber" name="431" href="#431">431</a>     <strong class="jxr_keyword">int</strong> count = 0;
 <a class="jxr_linenumber" name="432" href="#432">432</a> 
 <a class="jxr_linenumber" name="433" href="#433">433</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> handleResult(ResultContext context) {
@@ -447,12 +447,12 @@
 <a class="jxr_linenumber" name="437" href="#437">437</a> 
 <a class="jxr_linenumber" name="438" href="#438">438</a>   @Test
 <a class="jxr_linenumber" name="439" href="#439">439</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldHandleZeroParameters() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="440" href="#440">440</a>     <strong class="jxr_keyword">final</strong> <a href="../../../../org/apache/ibatis/session/SqlSessionManagerTest.html">TestResultHandler</a> resultHandler = <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/session/SqlSessionManagerTest.html">TestResultHandler</a>();
+<a class="jxr_linenumber" name="440" href="#440">440</a>     <strong class="jxr_keyword">final</strong> <a href="../../../../org/apache/ibatis/session/SqlSessionTest.html">TestResultHandler</a> resultHandler = <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/session/SqlSessionTest.html">TestResultHandler</a>();
 <a class="jxr_linenumber" name="441" href="#441">441</a>     manager.select(<span class="jxr_string">"domain.blog.mappers.BlogMapper.selectAllPosts"</span>, resultHandler);
 <a class="jxr_linenumber" name="442" href="#442">442</a>     assertEquals(5, resultHandler.count);
 <a class="jxr_linenumber" name="443" href="#443">443</a>   }
 <a class="jxr_linenumber" name="444" href="#444">444</a> 
-<a class="jxr_linenumber" name="445" href="#445">445</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../org/apache/ibatis/session/SqlSessionManagerTest.html">TestResultStopHandler</a> <strong class="jxr_keyword">implements</strong> ResultHandler {
+<a class="jxr_linenumber" name="445" href="#445">445</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../org/apache/ibatis/session/SqlSessionTest.html">TestResultStopHandler</a> <strong class="jxr_keyword">implements</strong> ResultHandler {
 <a class="jxr_linenumber" name="446" href="#446">446</a>     <strong class="jxr_keyword">int</strong> count = 0;
 <a class="jxr_linenumber" name="447" href="#447">447</a> 
 <a class="jxr_linenumber" name="448" href="#448">448</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> handleResult(ResultContext context) {
@@ -463,7 +463,7 @@
 <a class="jxr_linenumber" name="453" href="#453">453</a> 
 <a class="jxr_linenumber" name="454" href="#454">454</a>   @Test
 <a class="jxr_linenumber" name="455" href="#455">455</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldStopResultHandler() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="456" href="#456">456</a>     <strong class="jxr_keyword">final</strong> <a href="../../../../org/apache/ibatis/session/SqlSessionManagerTest.html">TestResultStopHandler</a> resultHandler = <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/session/SqlSessionManagerTest.html">TestResultStopHandler</a>();
+<a class="jxr_linenumber" name="456" href="#456">456</a>     <strong class="jxr_keyword">final</strong> <a href="../../../../org/apache/ibatis/session/SqlSessionTest.html">TestResultStopHandler</a> resultHandler = <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/session/SqlSessionTest.html">TestResultStopHandler</a>();
 <a class="jxr_linenumber" name="457" href="#457">457</a>     manager.select(<span class="jxr_string">"domain.blog.mappers.BlogMapper.selectAllPosts"</span>, <strong class="jxr_keyword">null</strong>, resultHandler);
 <a class="jxr_linenumber" name="458" href="#458">458</a>     assertEquals(2, resultHandler.count);
 <a class="jxr_linenumber" name="459" href="#459">459</a>   }

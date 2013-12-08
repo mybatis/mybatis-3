@@ -386,283 +386,304 @@
 <a class="jxr_linenumber" name="376" href="#376">376</a>     }
 <a class="jxr_linenumber" name="377" href="#377">377</a>   }
 <a class="jxr_linenumber" name="378" href="#378">378</a> 
-<a class="jxr_linenumber" name="379" href="#379">379</a>   @Ignore
-<a class="jxr_linenumber" name="380" href="#380">380</a>   @Test <em class="jxr_comment">// issue #480</em>
-<a class="jxr_linenumber" name="381" href="#381">381</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldExecuteBoundSelectBlogUsingConstructorWithResultMapCollection() {
-<a class="jxr_linenumber" name="382" href="#382">382</a>     SqlSession session = sqlSessionFactory.openSession();
-<a class="jxr_linenumber" name="383" href="#383">383</a>     <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="384" href="#384">384</a>       <a href="../../../../org/apache/ibatis/binding/BoundBlogMapper.html">BoundBlogMapper</a> mapper = session.getMapper(BoundBlogMapper.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="385" href="#385">385</a>       <a href="../../../../domain/blog/Blog.html">Blog</a> blog = mapper.selectBlogUsingConstructorWithResultMapCollection(1);
-<a class="jxr_linenumber" name="386" href="#386">386</a>       assertEquals(1, blog.getId());
-<a class="jxr_linenumber" name="387" href="#387">387</a>       assertEquals(<span class="jxr_string">"Jim Business"</span>, blog.getTitle());
-<a class="jxr_linenumber" name="388" href="#388">388</a>       assertNotNull(<span class="jxr_string">"author should not be null"</span>, blog.getAuthor());
-<a class="jxr_linenumber" name="389" href="#389">389</a>       List&lt;Post&gt; posts = blog.getPosts();
-<a class="jxr_linenumber" name="390" href="#390">390</a>       assertTrue(<span class="jxr_string">"posts should not be empty"</span>, posts != <strong class="jxr_keyword">null</strong> &amp;&amp; !posts.isEmpty());
-<a class="jxr_linenumber" name="391" href="#391">391</a>     } <strong class="jxr_keyword">finally</strong> {
-<a class="jxr_linenumber" name="392" href="#392">392</a>       session.close();
-<a class="jxr_linenumber" name="393" href="#393">393</a>     }
-<a class="jxr_linenumber" name="394" href="#394">394</a>   }
-<a class="jxr_linenumber" name="395" href="#395">395</a>   
-<a class="jxr_linenumber" name="396" href="#396">396</a>   @Test
-<a class="jxr_linenumber" name="397" href="#397">397</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldExecuteBoundSelectOneBlogStatementWithConstructorUsingXMLConfig() {
-<a class="jxr_linenumber" name="398" href="#398">398</a>     SqlSession session = sqlSessionFactory.openSession();
-<a class="jxr_linenumber" name="399" href="#399">399</a>     <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="400" href="#400">400</a>       <a href="../../../../org/apache/ibatis/binding/BoundBlogMapper.html">BoundBlogMapper</a> mapper = session.getMapper(BoundBlogMapper.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="401" href="#401">401</a>       <a href="../../../../domain/blog/Blog.html">Blog</a> blog = mapper.selectBlogByIdUsingConstructor(1);
-<a class="jxr_linenumber" name="402" href="#402">402</a>       assertEquals(1, blog.getId());
-<a class="jxr_linenumber" name="403" href="#403">403</a>       assertEquals(<span class="jxr_string">"Jim Business"</span>, blog.getTitle());
-<a class="jxr_linenumber" name="404" href="#404">404</a>       assertNotNull(<span class="jxr_string">"author should not be null"</span>, blog.getAuthor());
-<a class="jxr_linenumber" name="405" href="#405">405</a>       List&lt;Post&gt; posts = blog.getPosts();
-<a class="jxr_linenumber" name="406" href="#406">406</a>       assertTrue(<span class="jxr_string">"posts should not be empty"</span>, posts != <strong class="jxr_keyword">null</strong> &amp;&amp; !posts.isEmpty());
-<a class="jxr_linenumber" name="407" href="#407">407</a>     } <strong class="jxr_keyword">finally</strong> {
-<a class="jxr_linenumber" name="408" href="#408">408</a>       session.close();
-<a class="jxr_linenumber" name="409" href="#409">409</a>     }
-<a class="jxr_linenumber" name="410" href="#410">410</a>   }
-<a class="jxr_linenumber" name="411" href="#411">411</a> 
-<a class="jxr_linenumber" name="412" href="#412">412</a>   @Test
-<a class="jxr_linenumber" name="413" href="#413">413</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldSelectOneBlogAsMap() {
-<a class="jxr_linenumber" name="414" href="#414">414</a>     SqlSession session = sqlSessionFactory.openSession();
-<a class="jxr_linenumber" name="415" href="#415">415</a>     <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="416" href="#416">416</a>       <a href="../../../../org/apache/ibatis/binding/BoundBlogMapper.html">BoundBlogMapper</a> mapper = session.getMapper(BoundBlogMapper.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="417" href="#417">417</a>       Map&lt;String,Object&gt; blog = mapper.selectBlogAsMap(<strong class="jxr_keyword">new</strong> HashMap&lt;String, Object&gt;() {
-<a class="jxr_linenumber" name="418" href="#418">418</a>         {
-<a class="jxr_linenumber" name="419" href="#419">419</a>           put(<span class="jxr_string">"id"</span>, 1);
-<a class="jxr_linenumber" name="420" href="#420">420</a>         }
-<a class="jxr_linenumber" name="421" href="#421">421</a>       });
-<a class="jxr_linenumber" name="422" href="#422">422</a>       assertEquals(1, blog.get(<span class="jxr_string">"ID"</span>));
-<a class="jxr_linenumber" name="423" href="#423">423</a>       assertEquals(<span class="jxr_string">"Jim Business"</span>, blog.get(<span class="jxr_string">"TITLE"</span>));
-<a class="jxr_linenumber" name="424" href="#424">424</a>     } <strong class="jxr_keyword">finally</strong> {
-<a class="jxr_linenumber" name="425" href="#425">425</a>       session.close();
-<a class="jxr_linenumber" name="426" href="#426">426</a>     }
-<a class="jxr_linenumber" name="427" href="#427">427</a>   }
-<a class="jxr_linenumber" name="428" href="#428">428</a> 
-<a class="jxr_linenumber" name="429" href="#429">429</a>   @Test
-<a class="jxr_linenumber" name="430" href="#430">430</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldSelectOneAuthor() {
-<a class="jxr_linenumber" name="431" href="#431">431</a>     SqlSession session = sqlSessionFactory.openSession();
-<a class="jxr_linenumber" name="432" href="#432">432</a>     <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="433" href="#433">433</a>       <a href="../../../../org/apache/ibatis/binding/BoundAuthorMapper.html">BoundAuthorMapper</a> mapper = session.getMapper(BoundAuthorMapper.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="434" href="#434">434</a>       <a href="../../../../domain/blog/Author.html">Author</a> author = mapper.selectAuthor(101);
-<a class="jxr_linenumber" name="435" href="#435">435</a>       assertEquals(101, author.getId());
-<a class="jxr_linenumber" name="436" href="#436">436</a>       assertEquals(<span class="jxr_string">"jim"</span>, author.getUsername());
-<a class="jxr_linenumber" name="437" href="#437">437</a>       assertEquals(<span class="jxr_string">"********"</span>, author.getPassword());
-<a class="jxr_linenumber" name="438" href="#438">438</a>       assertEquals(<span class="jxr_string">"jim@ibatis.apache.org"</span>, author.getEmail());
-<a class="jxr_linenumber" name="439" href="#439">439</a>       assertEquals(<span class="jxr_string">""</span>, author.getBio());
-<a class="jxr_linenumber" name="440" href="#440">440</a>     } <strong class="jxr_keyword">finally</strong> {
-<a class="jxr_linenumber" name="441" href="#441">441</a>       session.close();
-<a class="jxr_linenumber" name="442" href="#442">442</a>     }
-<a class="jxr_linenumber" name="443" href="#443">443</a>   }
-<a class="jxr_linenumber" name="444" href="#444">444</a> 
-<a class="jxr_linenumber" name="445" href="#445">445</a>   @Test
-<a class="jxr_linenumber" name="446" href="#446">446</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldSelectOneAuthorFromCache() {
-<a class="jxr_linenumber" name="447" href="#447">447</a>     <a href="../../../../domain/blog/Author.html">Author</a> author1 = selectOneAuthor();
-<a class="jxr_linenumber" name="448" href="#448">448</a>     <a href="../../../../domain/blog/Author.html">Author</a> author2 = selectOneAuthor();
-<a class="jxr_linenumber" name="449" href="#449">449</a>     assertTrue(<span class="jxr_string">"Same (cached) instance should be returned unless rollback is called."</span>, author1 == author2);
-<a class="jxr_linenumber" name="450" href="#450">450</a>   }
-<a class="jxr_linenumber" name="451" href="#451">451</a> 
-<a class="jxr_linenumber" name="452" href="#452">452</a>   <strong class="jxr_keyword">private</strong> <a href="../../../../domain/blog/Author.html">Author</a> selectOneAuthor() {
-<a class="jxr_linenumber" name="453" href="#453">453</a>     SqlSession session = sqlSessionFactory.openSession();
-<a class="jxr_linenumber" name="454" href="#454">454</a>     <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="455" href="#455">455</a>       <a href="../../../../org/apache/ibatis/binding/BoundAuthorMapper.html">BoundAuthorMapper</a> mapper = session.getMapper(BoundAuthorMapper.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="456" href="#456">456</a>       <strong class="jxr_keyword">return</strong> mapper.selectAuthor(101);
-<a class="jxr_linenumber" name="457" href="#457">457</a>     } <strong class="jxr_keyword">finally</strong> {
-<a class="jxr_linenumber" name="458" href="#458">458</a>       session.close();
-<a class="jxr_linenumber" name="459" href="#459">459</a>     }
-<a class="jxr_linenumber" name="460" href="#460">460</a>   }
-<a class="jxr_linenumber" name="461" href="#461">461</a> 
-<a class="jxr_linenumber" name="462" href="#462">462</a>   @Test
-<a class="jxr_linenumber" name="463" href="#463">463</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldSelectOneAuthorByConstructor() {
-<a class="jxr_linenumber" name="464" href="#464">464</a>     SqlSession session = sqlSessionFactory.openSession();
-<a class="jxr_linenumber" name="465" href="#465">465</a>     <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="466" href="#466">466</a>       <a href="../../../../org/apache/ibatis/binding/BoundAuthorMapper.html">BoundAuthorMapper</a> mapper = session.getMapper(BoundAuthorMapper.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="467" href="#467">467</a>       <a href="../../../../domain/blog/Author.html">Author</a> author = mapper.selectAuthorConstructor(101);
-<a class="jxr_linenumber" name="468" href="#468">468</a>       assertEquals(101, author.getId());
-<a class="jxr_linenumber" name="469" href="#469">469</a>       assertEquals(<span class="jxr_string">"jim"</span>, author.getUsername());
-<a class="jxr_linenumber" name="470" href="#470">470</a>       assertEquals(<span class="jxr_string">"********"</span>, author.getPassword());
-<a class="jxr_linenumber" name="471" href="#471">471</a>       assertEquals(<span class="jxr_string">"jim@ibatis.apache.org"</span>, author.getEmail());
-<a class="jxr_linenumber" name="472" href="#472">472</a>       assertEquals(<span class="jxr_string">""</span>, author.getBio());
-<a class="jxr_linenumber" name="473" href="#473">473</a>     } <strong class="jxr_keyword">finally</strong> {
-<a class="jxr_linenumber" name="474" href="#474">474</a>       session.close();
-<a class="jxr_linenumber" name="475" href="#475">475</a>     }
-<a class="jxr_linenumber" name="476" href="#476">476</a>   }
-<a class="jxr_linenumber" name="477" href="#477">477</a> 
-<a class="jxr_linenumber" name="478" href="#478">478</a>   @Test
-<a class="jxr_linenumber" name="479" href="#479">479</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldSelectDraftTypedPosts() {
-<a class="jxr_linenumber" name="480" href="#480">480</a>     SqlSession session = sqlSessionFactory.openSession();
-<a class="jxr_linenumber" name="481" href="#481">481</a>     <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="482" href="#482">482</a>       <a href="../../../../org/apache/ibatis/binding/BoundBlogMapper.html">BoundBlogMapper</a> mapper = session.getMapper(BoundBlogMapper.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="483" href="#483">483</a>       List&lt;Post&gt; posts = mapper.selectPosts();
-<a class="jxr_linenumber" name="484" href="#484">484</a>       assertEquals(5, posts.size());
-<a class="jxr_linenumber" name="485" href="#485">485</a>       assertTrue(posts.get(0) instanceof DraftPost);
-<a class="jxr_linenumber" name="486" href="#486">486</a>       assertFalse(posts.get(1) instanceof DraftPost);
-<a class="jxr_linenumber" name="487" href="#487">487</a>       assertTrue(posts.get(2) instanceof DraftPost);
-<a class="jxr_linenumber" name="488" href="#488">488</a>       assertFalse(posts.get(3) instanceof DraftPost);
-<a class="jxr_linenumber" name="489" href="#489">489</a>       assertFalse(posts.get(4) instanceof DraftPost);
-<a class="jxr_linenumber" name="490" href="#490">490</a>     } <strong class="jxr_keyword">finally</strong> {
-<a class="jxr_linenumber" name="491" href="#491">491</a>       session.close();
-<a class="jxr_linenumber" name="492" href="#492">492</a>     }
-<a class="jxr_linenumber" name="493" href="#493">493</a>   }
-<a class="jxr_linenumber" name="494" href="#494">494</a> 
-<a class="jxr_linenumber" name="495" href="#495">495</a>   @Test
-<a class="jxr_linenumber" name="496" href="#496">496</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldSelectDraftTypedPostsWithResultMap() {
-<a class="jxr_linenumber" name="497" href="#497">497</a>     SqlSession session = sqlSessionFactory.openSession();
-<a class="jxr_linenumber" name="498" href="#498">498</a>     <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="499" href="#499">499</a>       <a href="../../../../org/apache/ibatis/binding/BoundBlogMapper.html">BoundBlogMapper</a> mapper = session.getMapper(BoundBlogMapper.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="500" href="#500">500</a>       List&lt;Post&gt; posts = mapper.selectPostsWithResultMap();
-<a class="jxr_linenumber" name="501" href="#501">501</a>       assertEquals(5, posts.size());
-<a class="jxr_linenumber" name="502" href="#502">502</a>       assertTrue(posts.get(0) instanceof DraftPost);
-<a class="jxr_linenumber" name="503" href="#503">503</a>       assertFalse(posts.get(1) instanceof DraftPost);
-<a class="jxr_linenumber" name="504" href="#504">504</a>       assertTrue(posts.get(2) instanceof DraftPost);
-<a class="jxr_linenumber" name="505" href="#505">505</a>       assertFalse(posts.get(3) instanceof DraftPost);
-<a class="jxr_linenumber" name="506" href="#506">506</a>       assertFalse(posts.get(4) instanceof DraftPost);
-<a class="jxr_linenumber" name="507" href="#507">507</a>     } <strong class="jxr_keyword">finally</strong> {
-<a class="jxr_linenumber" name="508" href="#508">508</a>       session.close();
-<a class="jxr_linenumber" name="509" href="#509">509</a>     }
-<a class="jxr_linenumber" name="510" href="#510">510</a>   }
-<a class="jxr_linenumber" name="511" href="#511">511</a> 
-<a class="jxr_linenumber" name="512" href="#512">512</a>   @Test
-<a class="jxr_linenumber" name="513" href="#513">513</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldReturnANotNullToString() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="514" href="#514">514</a>     SqlSession session = sqlSessionFactory.openSession();
-<a class="jxr_linenumber" name="515" href="#515">515</a>     <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="516" href="#516">516</a>       <a href="../../../../org/apache/ibatis/binding/BoundBlogMapper.html">BoundBlogMapper</a> mapper = session.getMapper(BoundBlogMapper.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="517" href="#517">517</a>       assertNotNull(mapper.toString());
-<a class="jxr_linenumber" name="518" href="#518">518</a>     } <strong class="jxr_keyword">finally</strong> {
-<a class="jxr_linenumber" name="519" href="#519">519</a>       session.close();
-<a class="jxr_linenumber" name="520" href="#520">520</a>     }
-<a class="jxr_linenumber" name="521" href="#521">521</a>   }
-<a class="jxr_linenumber" name="522" href="#522">522</a> 
-<a class="jxr_linenumber" name="523" href="#523">523</a>   @Test
-<a class="jxr_linenumber" name="524" href="#524">524</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldReturnANotNullHashCode() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="525" href="#525">525</a>     SqlSession session = sqlSessionFactory.openSession();
-<a class="jxr_linenumber" name="526" href="#526">526</a>     <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="527" href="#527">527</a>       <a href="../../../../org/apache/ibatis/binding/BoundBlogMapper.html">BoundBlogMapper</a> mapper = session.getMapper(BoundBlogMapper.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="528" href="#528">528</a>       assertNotNull(mapper.hashCode());
-<a class="jxr_linenumber" name="529" href="#529">529</a>     } <strong class="jxr_keyword">finally</strong> {
-<a class="jxr_linenumber" name="530" href="#530">530</a>       session.close();
-<a class="jxr_linenumber" name="531" href="#531">531</a>     }
-<a class="jxr_linenumber" name="532" href="#532">532</a>   }
-<a class="jxr_linenumber" name="533" href="#533">533</a> 
-<a class="jxr_linenumber" name="534" href="#534">534</a>   @Test
-<a class="jxr_linenumber" name="535" href="#535">535</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldCompareTwoMappers() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="536" href="#536">536</a>     SqlSession session = sqlSessionFactory.openSession();
-<a class="jxr_linenumber" name="537" href="#537">537</a>     <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="538" href="#538">538</a>       <a href="../../../../org/apache/ibatis/binding/BoundBlogMapper.html">BoundBlogMapper</a> mapper = session.getMapper(BoundBlogMapper.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="539" href="#539">539</a>       <a href="../../../../org/apache/ibatis/binding/BoundBlogMapper.html">BoundBlogMapper</a> mapper2 = session.getMapper(BoundBlogMapper.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="540" href="#540">540</a>       assertFalse(mapper.equals(mapper2));
-<a class="jxr_linenumber" name="541" href="#541">541</a>     } <strong class="jxr_keyword">finally</strong> {
-<a class="jxr_linenumber" name="542" href="#542">542</a>       session.close();
-<a class="jxr_linenumber" name="543" href="#543">543</a>     }
-<a class="jxr_linenumber" name="544" href="#544">544</a>   }
-<a class="jxr_linenumber" name="545" href="#545">545</a> 
-<a class="jxr_linenumber" name="546" href="#546">546</a>   @Test(expected = Exception.<strong class="jxr_keyword">class</strong>)
-<a class="jxr_linenumber" name="547" href="#547">547</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldFailWhenSelectingOneBlogWithNonExistentParam() {
-<a class="jxr_linenumber" name="548" href="#548">548</a>     SqlSession session = sqlSessionFactory.openSession();
-<a class="jxr_linenumber" name="549" href="#549">549</a>     <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="550" href="#550">550</a>       <a href="../../../../org/apache/ibatis/binding/BoundBlogMapper.html">BoundBlogMapper</a> mapper = session.getMapper(BoundBlogMapper.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="551" href="#551">551</a>       mapper.selectBlogByNonExistentParam(1);
-<a class="jxr_linenumber" name="552" href="#552">552</a>     } <strong class="jxr_keyword">finally</strong> {
-<a class="jxr_linenumber" name="553" href="#553">553</a>       session.close();
-<a class="jxr_linenumber" name="554" href="#554">554</a>     }
-<a class="jxr_linenumber" name="555" href="#555">555</a>   }
-<a class="jxr_linenumber" name="556" href="#556">556</a> 
-<a class="jxr_linenumber" name="557" href="#557">557</a>   @Test(expected = Exception.<strong class="jxr_keyword">class</strong>)
-<a class="jxr_linenumber" name="558" href="#558">558</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldFailWhenSelectingOneBlogWithNullParam() {
-<a class="jxr_linenumber" name="559" href="#559">559</a>     SqlSession session = sqlSessionFactory.openSession();
-<a class="jxr_linenumber" name="560" href="#560">560</a>     <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="561" href="#561">561</a>       <a href="../../../../org/apache/ibatis/binding/BoundBlogMapper.html">BoundBlogMapper</a> mapper = session.getMapper(BoundBlogMapper.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="562" href="#562">562</a>       mapper.selectBlogByNullParam(<strong class="jxr_keyword">null</strong>);
-<a class="jxr_linenumber" name="563" href="#563">563</a>     } <strong class="jxr_keyword">finally</strong> {
-<a class="jxr_linenumber" name="564" href="#564">564</a>       session.close();
-<a class="jxr_linenumber" name="565" href="#565">565</a>     }
-<a class="jxr_linenumber" name="566" href="#566">566</a>   }
-<a class="jxr_linenumber" name="567" href="#567">567</a> 
-<a class="jxr_linenumber" name="568" href="#568">568</a>   @Test <em class="jxr_comment">// Decided that maps are dynamic so no existent params do not fail</em>
-<a class="jxr_linenumber" name="569" href="#569">569</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldFailWhenSelectingOneBlogWithNonExistentNestedParam() {
-<a class="jxr_linenumber" name="570" href="#570">570</a>     SqlSession session = sqlSessionFactory.openSession();
-<a class="jxr_linenumber" name="571" href="#571">571</a>     <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="572" href="#572">572</a>       <a href="../../../../org/apache/ibatis/binding/BoundBlogMapper.html">BoundBlogMapper</a> mapper = session.getMapper(BoundBlogMapper.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="573" href="#573">573</a>       mapper.selectBlogByNonExistentNestedParam(1, Collections.&lt;String, Object&gt;emptyMap());
-<a class="jxr_linenumber" name="574" href="#574">574</a>     } <strong class="jxr_keyword">finally</strong> {
-<a class="jxr_linenumber" name="575" href="#575">575</a>       session.close();
-<a class="jxr_linenumber" name="576" href="#576">576</a>     }
-<a class="jxr_linenumber" name="577" href="#577">577</a>   }
-<a class="jxr_linenumber" name="578" href="#578">578</a> 
-<a class="jxr_linenumber" name="579" href="#579">579</a>   @Test
-<a class="jxr_linenumber" name="580" href="#580">580</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldSelectBlogWithDefault30ParamNames() {
-<a class="jxr_linenumber" name="581" href="#581">581</a>     SqlSession session = sqlSessionFactory.openSession();
-<a class="jxr_linenumber" name="582" href="#582">582</a>     <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="583" href="#583">583</a>       <a href="../../../../org/apache/ibatis/binding/BoundBlogMapper.html">BoundBlogMapper</a> mapper = session.getMapper(BoundBlogMapper.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="584" href="#584">584</a>       <a href="../../../../domain/blog/Blog.html">Blog</a> blog = mapper.selectBlogByDefault30ParamNames(1, <span class="jxr_string">"Jim Business"</span>);
-<a class="jxr_linenumber" name="585" href="#585">585</a>       assertNotNull(blog);
-<a class="jxr_linenumber" name="586" href="#586">586</a>     } <strong class="jxr_keyword">finally</strong> {
-<a class="jxr_linenumber" name="587" href="#587">587</a>       session.close();
-<a class="jxr_linenumber" name="588" href="#588">588</a>     }
-<a class="jxr_linenumber" name="589" href="#589">589</a>   }
-<a class="jxr_linenumber" name="590" href="#590">590</a> 
-<a class="jxr_linenumber" name="591" href="#591">591</a>   @Test
-<a class="jxr_linenumber" name="592" href="#592">592</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldSelectBlogWithDefault31ParamNames() {
-<a class="jxr_linenumber" name="593" href="#593">593</a>     SqlSession session = sqlSessionFactory.openSession();
-<a class="jxr_linenumber" name="594" href="#594">594</a>     <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="595" href="#595">595</a>       <a href="../../../../org/apache/ibatis/binding/BoundBlogMapper.html">BoundBlogMapper</a> mapper = session.getMapper(BoundBlogMapper.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="596" href="#596">596</a>       <a href="../../../../domain/blog/Blog.html">Blog</a> blog = mapper.selectBlogByDefault31ParamNames(1, <span class="jxr_string">"Jim Business"</span>);
-<a class="jxr_linenumber" name="597" href="#597">597</a>       assertNotNull(blog);
-<a class="jxr_linenumber" name="598" href="#598">598</a>     } <strong class="jxr_keyword">finally</strong> {
-<a class="jxr_linenumber" name="599" href="#599">599</a>       session.close();
-<a class="jxr_linenumber" name="600" href="#600">600</a>     }
-<a class="jxr_linenumber" name="601" href="#601">601</a>   }
-<a class="jxr_linenumber" name="602" href="#602">602</a> 
-<a class="jxr_linenumber" name="603" href="#603">603</a>   @Test
-<a class="jxr_linenumber" name="604" href="#604">604</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldSelectBlogWithAParamNamedValue() {
-<a class="jxr_linenumber" name="605" href="#605">605</a>     SqlSession session = sqlSessionFactory.openSession();
-<a class="jxr_linenumber" name="606" href="#606">606</a>     <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="607" href="#607">607</a>       <a href="../../../../org/apache/ibatis/binding/BoundBlogMapper.html">BoundBlogMapper</a> mapper = session.getMapper(BoundBlogMapper.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="608" href="#608">608</a>       <a href="../../../../domain/blog/Blog.html">Blog</a> blog = mapper.selectBlogWithAParamNamedValue(<span class="jxr_string">"id"</span>, 1, <span class="jxr_string">"Jim Business"</span>);
-<a class="jxr_linenumber" name="609" href="#609">609</a>       assertNotNull(blog);
-<a class="jxr_linenumber" name="610" href="#610">610</a>     } <strong class="jxr_keyword">finally</strong> {
-<a class="jxr_linenumber" name="611" href="#611">611</a>       session.close();
-<a class="jxr_linenumber" name="612" href="#612">612</a>     }
-<a class="jxr_linenumber" name="613" href="#613">613</a>   }
-<a class="jxr_linenumber" name="614" href="#614">614</a> 
-<a class="jxr_linenumber" name="615" href="#615">615</a>   @Test
-<a class="jxr_linenumber" name="616" href="#616">616</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldCacheMapperMethod() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="617" href="#617">617</a>     <strong class="jxr_keyword">final</strong> SqlSession session = sqlSessionFactory.openSession();
-<a class="jxr_linenumber" name="618" href="#618">618</a>     <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="619" href="#619">619</a> 
-<a class="jxr_linenumber" name="620" href="#620">620</a>       <em class="jxr_comment">// Create another mapper instance with a method cache we can test against:</em>
-<a class="jxr_linenumber" name="621" href="#621">621</a>       <strong class="jxr_keyword">final</strong> MapperProxyFactory&lt;BoundBlogMapper&gt; mapperProxyFactory = <strong class="jxr_keyword">new</strong> MapperProxyFactory&lt;BoundBlogMapper&gt;(BoundBlogMapper.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="622" href="#622">622</a>       assertEquals(BoundBlogMapper.<strong class="jxr_keyword">class</strong>, mapperProxyFactory.getMapperInterface());
-<a class="jxr_linenumber" name="623" href="#623">623</a>       <strong class="jxr_keyword">final</strong> <a href="../../../../org/apache/ibatis/binding/BoundBlogMapper.html">BoundBlogMapper</a> mapper = mapperProxyFactory.newInstance(session);
-<a class="jxr_linenumber" name="624" href="#624">624</a>       assertNotSame(mapper, mapperProxyFactory.newInstance(session));
-<a class="jxr_linenumber" name="625" href="#625">625</a>       assertTrue(mapperProxyFactory.getMethodCache().isEmpty());
-<a class="jxr_linenumber" name="626" href="#626">626</a> 
-<a class="jxr_linenumber" name="627" href="#627">627</a>       <em class="jxr_comment">// Mapper methods we will call later:</em>
-<a class="jxr_linenumber" name="628" href="#628">628</a>       <strong class="jxr_keyword">final</strong> Method selectBlog = BoundBlogMapper.<strong class="jxr_keyword">class</strong>.getMethod(<span class="jxr_string">"selectBlog"</span>, Integer.TYPE);
-<a class="jxr_linenumber" name="629" href="#629">629</a>       <strong class="jxr_keyword">final</strong> Method selectBlogByIdUsingConstructor = BoundBlogMapper.<strong class="jxr_keyword">class</strong>.getMethod(<span class="jxr_string">"selectBlogByIdUsingConstructor"</span>, Integer.TYPE);
-<a class="jxr_linenumber" name="630" href="#630">630</a> 
-<a class="jxr_linenumber" name="631" href="#631">631</a>       <em class="jxr_comment">// Call mapper method and verify it is cached:</em>
-<a class="jxr_linenumber" name="632" href="#632">632</a>       mapper.selectBlog(1);
-<a class="jxr_linenumber" name="633" href="#633">633</a>       assertEquals(1, mapperProxyFactory.getMethodCache().size());
-<a class="jxr_linenumber" name="634" href="#634">634</a>       assertTrue(mapperProxyFactory.getMethodCache().containsKey(selectBlog));
-<a class="jxr_linenumber" name="635" href="#635">635</a>       <strong class="jxr_keyword">final</strong> MapperMethod cachedSelectBlog = mapperProxyFactory.getMethodCache().get(selectBlog);
-<a class="jxr_linenumber" name="636" href="#636">636</a> 
-<a class="jxr_linenumber" name="637" href="#637">637</a>       <em class="jxr_comment">// Call mapper method again and verify the cache is unchanged:</em>
-<a class="jxr_linenumber" name="638" href="#638">638</a>       session.clearCache();
-<a class="jxr_linenumber" name="639" href="#639">639</a>       mapper.selectBlog(1);
-<a class="jxr_linenumber" name="640" href="#640">640</a>       assertEquals(1, mapperProxyFactory.getMethodCache().size());
-<a class="jxr_linenumber" name="641" href="#641">641</a>       assertSame(cachedSelectBlog, mapperProxyFactory.getMethodCache().get(selectBlog));
-<a class="jxr_linenumber" name="642" href="#642">642</a> 
-<a class="jxr_linenumber" name="643" href="#643">643</a>       <em class="jxr_comment">// Call another mapper method and verify that it shows up in the cache as well:</em>
-<a class="jxr_linenumber" name="644" href="#644">644</a>       session.clearCache();
-<a class="jxr_linenumber" name="645" href="#645">645</a>       mapper.selectBlogByIdUsingConstructor(1);
-<a class="jxr_linenumber" name="646" href="#646">646</a>       assertEquals(2, mapperProxyFactory.getMethodCache().size());
-<a class="jxr_linenumber" name="647" href="#647">647</a>       assertSame(cachedSelectBlog, mapperProxyFactory.getMethodCache().get(selectBlog));
-<a class="jxr_linenumber" name="648" href="#648">648</a>       assertTrue(mapperProxyFactory.getMethodCache().containsKey(selectBlogByIdUsingConstructor));
-<a class="jxr_linenumber" name="649" href="#649">649</a> 
-<a class="jxr_linenumber" name="650" href="#650">650</a>     } <strong class="jxr_keyword">finally</strong> {
-<a class="jxr_linenumber" name="651" href="#651">651</a>       session.close();
-<a class="jxr_linenumber" name="652" href="#652">652</a>     }
-<a class="jxr_linenumber" name="653" href="#653">653</a>   }
-<a class="jxr_linenumber" name="654" href="#654">654</a> 
-<a class="jxr_linenumber" name="655" href="#655">655</a> }
+<a class="jxr_linenumber" name="379" href="#379">379</a>   @Test
+<a class="jxr_linenumber" name="380" href="#380">380</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldExecuteBoundSelectBlogUsingConstructorWithResultMapAndProperties() {
+<a class="jxr_linenumber" name="381" href="#381">381</a>     SqlSession session = sqlSessionFactory.openSession();
+<a class="jxr_linenumber" name="382" href="#382">382</a>     <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="383" href="#383">383</a>       <a href="../../../../org/apache/ibatis/binding/BoundBlogMapper.html">BoundBlogMapper</a> mapper = session.getMapper(BoundBlogMapper.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="384" href="#384">384</a>       <a href="../../../../domain/blog/Blog.html">Blog</a> blog = mapper.selectBlogUsingConstructorWithResultMapAndProperties(1);
+<a class="jxr_linenumber" name="385" href="#385">385</a>       assertEquals(1, blog.getId());
+<a class="jxr_linenumber" name="386" href="#386">386</a>       assertEquals(<span class="jxr_string">"Jim Business"</span>, blog.getTitle());
+<a class="jxr_linenumber" name="387" href="#387">387</a>       assertNotNull(<span class="jxr_string">"author should not be null"</span>, blog.getAuthor());
+<a class="jxr_linenumber" name="388" href="#388">388</a>       <a href="../../../../domain/blog/Author.html">Author</a> author = blog.getAuthor();
+<a class="jxr_linenumber" name="389" href="#389">389</a>       assertEquals(101, author.getId());
+<a class="jxr_linenumber" name="390" href="#390">390</a>       assertEquals(<span class="jxr_string">"jim@ibatis.apache.org"</span>, author.getEmail());
+<a class="jxr_linenumber" name="391" href="#391">391</a>       assertEquals(<span class="jxr_string">"jim"</span>, author.getUsername());
+<a class="jxr_linenumber" name="392" href="#392">392</a>       List&lt;Post&gt; posts = blog.getPosts();
+<a class="jxr_linenumber" name="393" href="#393">393</a>       assertTrue(<span class="jxr_string">"posts should not be empty"</span>, posts != <strong class="jxr_keyword">null</strong>);
+<a class="jxr_linenumber" name="394" href="#394">394</a>       assertEquals(2, posts.size());
+<a class="jxr_linenumber" name="395" href="#395">395</a>     } <strong class="jxr_keyword">finally</strong> {
+<a class="jxr_linenumber" name="396" href="#396">396</a>       session.close();
+<a class="jxr_linenumber" name="397" href="#397">397</a>     }
+<a class="jxr_linenumber" name="398" href="#398">398</a>   }
+<a class="jxr_linenumber" name="399" href="#399">399</a>   
+<a class="jxr_linenumber" name="400" href="#400">400</a>   @Ignore
+<a class="jxr_linenumber" name="401" href="#401">401</a>   @Test <em class="jxr_comment">// issue #480 and #101</em>
+<a class="jxr_linenumber" name="402" href="#402">402</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldExecuteBoundSelectBlogUsingConstructorWithResultMapCollection() {
+<a class="jxr_linenumber" name="403" href="#403">403</a>     SqlSession session = sqlSessionFactory.openSession();
+<a class="jxr_linenumber" name="404" href="#404">404</a>     <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="405" href="#405">405</a>       <a href="../../../../org/apache/ibatis/binding/BoundBlogMapper.html">BoundBlogMapper</a> mapper = session.getMapper(BoundBlogMapper.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="406" href="#406">406</a>       <a href="../../../../domain/blog/Blog.html">Blog</a> blog = mapper.selectBlogUsingConstructorWithResultMapCollection(1);
+<a class="jxr_linenumber" name="407" href="#407">407</a>       assertEquals(1, blog.getId());
+<a class="jxr_linenumber" name="408" href="#408">408</a>       assertEquals(<span class="jxr_string">"Jim Business"</span>, blog.getTitle());
+<a class="jxr_linenumber" name="409" href="#409">409</a>       assertNotNull(<span class="jxr_string">"author should not be null"</span>, blog.getAuthor());
+<a class="jxr_linenumber" name="410" href="#410">410</a>       List&lt;Post&gt; posts = blog.getPosts();
+<a class="jxr_linenumber" name="411" href="#411">411</a>       assertTrue(<span class="jxr_string">"posts should not be empty"</span>, posts != <strong class="jxr_keyword">null</strong> &amp;&amp; !posts.isEmpty());
+<a class="jxr_linenumber" name="412" href="#412">412</a>     } <strong class="jxr_keyword">finally</strong> {
+<a class="jxr_linenumber" name="413" href="#413">413</a>       session.close();
+<a class="jxr_linenumber" name="414" href="#414">414</a>     }
+<a class="jxr_linenumber" name="415" href="#415">415</a>   }
+<a class="jxr_linenumber" name="416" href="#416">416</a>   
+<a class="jxr_linenumber" name="417" href="#417">417</a>   @Test
+<a class="jxr_linenumber" name="418" href="#418">418</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldExecuteBoundSelectOneBlogStatementWithConstructorUsingXMLConfig() {
+<a class="jxr_linenumber" name="419" href="#419">419</a>     SqlSession session = sqlSessionFactory.openSession();
+<a class="jxr_linenumber" name="420" href="#420">420</a>     <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="421" href="#421">421</a>       <a href="../../../../org/apache/ibatis/binding/BoundBlogMapper.html">BoundBlogMapper</a> mapper = session.getMapper(BoundBlogMapper.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="422" href="#422">422</a>       <a href="../../../../domain/blog/Blog.html">Blog</a> blog = mapper.selectBlogByIdUsingConstructor(1);
+<a class="jxr_linenumber" name="423" href="#423">423</a>       assertEquals(1, blog.getId());
+<a class="jxr_linenumber" name="424" href="#424">424</a>       assertEquals(<span class="jxr_string">"Jim Business"</span>, blog.getTitle());
+<a class="jxr_linenumber" name="425" href="#425">425</a>       assertNotNull(<span class="jxr_string">"author should not be null"</span>, blog.getAuthor());
+<a class="jxr_linenumber" name="426" href="#426">426</a>       List&lt;Post&gt; posts = blog.getPosts();
+<a class="jxr_linenumber" name="427" href="#427">427</a>       assertTrue(<span class="jxr_string">"posts should not be empty"</span>, posts != <strong class="jxr_keyword">null</strong> &amp;&amp; !posts.isEmpty());
+<a class="jxr_linenumber" name="428" href="#428">428</a>     } <strong class="jxr_keyword">finally</strong> {
+<a class="jxr_linenumber" name="429" href="#429">429</a>       session.close();
+<a class="jxr_linenumber" name="430" href="#430">430</a>     }
+<a class="jxr_linenumber" name="431" href="#431">431</a>   }
+<a class="jxr_linenumber" name="432" href="#432">432</a> 
+<a class="jxr_linenumber" name="433" href="#433">433</a>   @Test
+<a class="jxr_linenumber" name="434" href="#434">434</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldSelectOneBlogAsMap() {
+<a class="jxr_linenumber" name="435" href="#435">435</a>     SqlSession session = sqlSessionFactory.openSession();
+<a class="jxr_linenumber" name="436" href="#436">436</a>     <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="437" href="#437">437</a>       <a href="../../../../org/apache/ibatis/binding/BoundBlogMapper.html">BoundBlogMapper</a> mapper = session.getMapper(BoundBlogMapper.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="438" href="#438">438</a>       Map&lt;String,Object&gt; blog = mapper.selectBlogAsMap(<strong class="jxr_keyword">new</strong> HashMap&lt;String, Object&gt;() {
+<a class="jxr_linenumber" name="439" href="#439">439</a>         {
+<a class="jxr_linenumber" name="440" href="#440">440</a>           put(<span class="jxr_string">"id"</span>, 1);
+<a class="jxr_linenumber" name="441" href="#441">441</a>         }
+<a class="jxr_linenumber" name="442" href="#442">442</a>       });
+<a class="jxr_linenumber" name="443" href="#443">443</a>       assertEquals(1, blog.get(<span class="jxr_string">"ID"</span>));
+<a class="jxr_linenumber" name="444" href="#444">444</a>       assertEquals(<span class="jxr_string">"Jim Business"</span>, blog.get(<span class="jxr_string">"TITLE"</span>));
+<a class="jxr_linenumber" name="445" href="#445">445</a>     } <strong class="jxr_keyword">finally</strong> {
+<a class="jxr_linenumber" name="446" href="#446">446</a>       session.close();
+<a class="jxr_linenumber" name="447" href="#447">447</a>     }
+<a class="jxr_linenumber" name="448" href="#448">448</a>   }
+<a class="jxr_linenumber" name="449" href="#449">449</a> 
+<a class="jxr_linenumber" name="450" href="#450">450</a>   @Test
+<a class="jxr_linenumber" name="451" href="#451">451</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldSelectOneAuthor() {
+<a class="jxr_linenumber" name="452" href="#452">452</a>     SqlSession session = sqlSessionFactory.openSession();
+<a class="jxr_linenumber" name="453" href="#453">453</a>     <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="454" href="#454">454</a>       <a href="../../../../org/apache/ibatis/binding/BoundAuthorMapper.html">BoundAuthorMapper</a> mapper = session.getMapper(BoundAuthorMapper.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="455" href="#455">455</a>       <a href="../../../../domain/blog/Author.html">Author</a> author = mapper.selectAuthor(101);
+<a class="jxr_linenumber" name="456" href="#456">456</a>       assertEquals(101, author.getId());
+<a class="jxr_linenumber" name="457" href="#457">457</a>       assertEquals(<span class="jxr_string">"jim"</span>, author.getUsername());
+<a class="jxr_linenumber" name="458" href="#458">458</a>       assertEquals(<span class="jxr_string">"********"</span>, author.getPassword());
+<a class="jxr_linenumber" name="459" href="#459">459</a>       assertEquals(<span class="jxr_string">"jim@ibatis.apache.org"</span>, author.getEmail());
+<a class="jxr_linenumber" name="460" href="#460">460</a>       assertEquals(<span class="jxr_string">""</span>, author.getBio());
+<a class="jxr_linenumber" name="461" href="#461">461</a>     } <strong class="jxr_keyword">finally</strong> {
+<a class="jxr_linenumber" name="462" href="#462">462</a>       session.close();
+<a class="jxr_linenumber" name="463" href="#463">463</a>     }
+<a class="jxr_linenumber" name="464" href="#464">464</a>   }
+<a class="jxr_linenumber" name="465" href="#465">465</a> 
+<a class="jxr_linenumber" name="466" href="#466">466</a>   @Test
+<a class="jxr_linenumber" name="467" href="#467">467</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldSelectOneAuthorFromCache() {
+<a class="jxr_linenumber" name="468" href="#468">468</a>     <a href="../../../../domain/blog/Author.html">Author</a> author1 = selectOneAuthor();
+<a class="jxr_linenumber" name="469" href="#469">469</a>     <a href="../../../../domain/blog/Author.html">Author</a> author2 = selectOneAuthor();
+<a class="jxr_linenumber" name="470" href="#470">470</a>     assertTrue(<span class="jxr_string">"Same (cached) instance should be returned unless rollback is called."</span>, author1 == author2);
+<a class="jxr_linenumber" name="471" href="#471">471</a>   }
+<a class="jxr_linenumber" name="472" href="#472">472</a> 
+<a class="jxr_linenumber" name="473" href="#473">473</a>   <strong class="jxr_keyword">private</strong> <a href="../../../../domain/blog/Author.html">Author</a> selectOneAuthor() {
+<a class="jxr_linenumber" name="474" href="#474">474</a>     SqlSession session = sqlSessionFactory.openSession();
+<a class="jxr_linenumber" name="475" href="#475">475</a>     <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="476" href="#476">476</a>       <a href="../../../../org/apache/ibatis/binding/BoundAuthorMapper.html">BoundAuthorMapper</a> mapper = session.getMapper(BoundAuthorMapper.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="477" href="#477">477</a>       <strong class="jxr_keyword">return</strong> mapper.selectAuthor(101);
+<a class="jxr_linenumber" name="478" href="#478">478</a>     } <strong class="jxr_keyword">finally</strong> {
+<a class="jxr_linenumber" name="479" href="#479">479</a>       session.close();
+<a class="jxr_linenumber" name="480" href="#480">480</a>     }
+<a class="jxr_linenumber" name="481" href="#481">481</a>   }
+<a class="jxr_linenumber" name="482" href="#482">482</a> 
+<a class="jxr_linenumber" name="483" href="#483">483</a>   @Test
+<a class="jxr_linenumber" name="484" href="#484">484</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldSelectOneAuthorByConstructor() {
+<a class="jxr_linenumber" name="485" href="#485">485</a>     SqlSession session = sqlSessionFactory.openSession();
+<a class="jxr_linenumber" name="486" href="#486">486</a>     <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="487" href="#487">487</a>       <a href="../../../../org/apache/ibatis/binding/BoundAuthorMapper.html">BoundAuthorMapper</a> mapper = session.getMapper(BoundAuthorMapper.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="488" href="#488">488</a>       <a href="../../../../domain/blog/Author.html">Author</a> author = mapper.selectAuthorConstructor(101);
+<a class="jxr_linenumber" name="489" href="#489">489</a>       assertEquals(101, author.getId());
+<a class="jxr_linenumber" name="490" href="#490">490</a>       assertEquals(<span class="jxr_string">"jim"</span>, author.getUsername());
+<a class="jxr_linenumber" name="491" href="#491">491</a>       assertEquals(<span class="jxr_string">"********"</span>, author.getPassword());
+<a class="jxr_linenumber" name="492" href="#492">492</a>       assertEquals(<span class="jxr_string">"jim@ibatis.apache.org"</span>, author.getEmail());
+<a class="jxr_linenumber" name="493" href="#493">493</a>       assertEquals(<span class="jxr_string">""</span>, author.getBio());
+<a class="jxr_linenumber" name="494" href="#494">494</a>     } <strong class="jxr_keyword">finally</strong> {
+<a class="jxr_linenumber" name="495" href="#495">495</a>       session.close();
+<a class="jxr_linenumber" name="496" href="#496">496</a>     }
+<a class="jxr_linenumber" name="497" href="#497">497</a>   }
+<a class="jxr_linenumber" name="498" href="#498">498</a> 
+<a class="jxr_linenumber" name="499" href="#499">499</a>   @Test
+<a class="jxr_linenumber" name="500" href="#500">500</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldSelectDraftTypedPosts() {
+<a class="jxr_linenumber" name="501" href="#501">501</a>     SqlSession session = sqlSessionFactory.openSession();
+<a class="jxr_linenumber" name="502" href="#502">502</a>     <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="503" href="#503">503</a>       <a href="../../../../org/apache/ibatis/binding/BoundBlogMapper.html">BoundBlogMapper</a> mapper = session.getMapper(BoundBlogMapper.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="504" href="#504">504</a>       List&lt;Post&gt; posts = mapper.selectPosts();
+<a class="jxr_linenumber" name="505" href="#505">505</a>       assertEquals(5, posts.size());
+<a class="jxr_linenumber" name="506" href="#506">506</a>       assertTrue(posts.get(0) instanceof DraftPost);
+<a class="jxr_linenumber" name="507" href="#507">507</a>       assertFalse(posts.get(1) instanceof DraftPost);
+<a class="jxr_linenumber" name="508" href="#508">508</a>       assertTrue(posts.get(2) instanceof DraftPost);
+<a class="jxr_linenumber" name="509" href="#509">509</a>       assertFalse(posts.get(3) instanceof DraftPost);
+<a class="jxr_linenumber" name="510" href="#510">510</a>       assertFalse(posts.get(4) instanceof DraftPost);
+<a class="jxr_linenumber" name="511" href="#511">511</a>     } <strong class="jxr_keyword">finally</strong> {
+<a class="jxr_linenumber" name="512" href="#512">512</a>       session.close();
+<a class="jxr_linenumber" name="513" href="#513">513</a>     }
+<a class="jxr_linenumber" name="514" href="#514">514</a>   }
+<a class="jxr_linenumber" name="515" href="#515">515</a> 
+<a class="jxr_linenumber" name="516" href="#516">516</a>   @Test
+<a class="jxr_linenumber" name="517" href="#517">517</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldSelectDraftTypedPostsWithResultMap() {
+<a class="jxr_linenumber" name="518" href="#518">518</a>     SqlSession session = sqlSessionFactory.openSession();
+<a class="jxr_linenumber" name="519" href="#519">519</a>     <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="520" href="#520">520</a>       <a href="../../../../org/apache/ibatis/binding/BoundBlogMapper.html">BoundBlogMapper</a> mapper = session.getMapper(BoundBlogMapper.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="521" href="#521">521</a>       List&lt;Post&gt; posts = mapper.selectPostsWithResultMap();
+<a class="jxr_linenumber" name="522" href="#522">522</a>       assertEquals(5, posts.size());
+<a class="jxr_linenumber" name="523" href="#523">523</a>       assertTrue(posts.get(0) instanceof DraftPost);
+<a class="jxr_linenumber" name="524" href="#524">524</a>       assertFalse(posts.get(1) instanceof DraftPost);
+<a class="jxr_linenumber" name="525" href="#525">525</a>       assertTrue(posts.get(2) instanceof DraftPost);
+<a class="jxr_linenumber" name="526" href="#526">526</a>       assertFalse(posts.get(3) instanceof DraftPost);
+<a class="jxr_linenumber" name="527" href="#527">527</a>       assertFalse(posts.get(4) instanceof DraftPost);
+<a class="jxr_linenumber" name="528" href="#528">528</a>     } <strong class="jxr_keyword">finally</strong> {
+<a class="jxr_linenumber" name="529" href="#529">529</a>       session.close();
+<a class="jxr_linenumber" name="530" href="#530">530</a>     }
+<a class="jxr_linenumber" name="531" href="#531">531</a>   }
+<a class="jxr_linenumber" name="532" href="#532">532</a> 
+<a class="jxr_linenumber" name="533" href="#533">533</a>   @Test
+<a class="jxr_linenumber" name="534" href="#534">534</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldReturnANotNullToString() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="535" href="#535">535</a>     SqlSession session = sqlSessionFactory.openSession();
+<a class="jxr_linenumber" name="536" href="#536">536</a>     <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="537" href="#537">537</a>       <a href="../../../../org/apache/ibatis/binding/BoundBlogMapper.html">BoundBlogMapper</a> mapper = session.getMapper(BoundBlogMapper.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="538" href="#538">538</a>       assertNotNull(mapper.toString());
+<a class="jxr_linenumber" name="539" href="#539">539</a>     } <strong class="jxr_keyword">finally</strong> {
+<a class="jxr_linenumber" name="540" href="#540">540</a>       session.close();
+<a class="jxr_linenumber" name="541" href="#541">541</a>     }
+<a class="jxr_linenumber" name="542" href="#542">542</a>   }
+<a class="jxr_linenumber" name="543" href="#543">543</a> 
+<a class="jxr_linenumber" name="544" href="#544">544</a>   @Test
+<a class="jxr_linenumber" name="545" href="#545">545</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldReturnANotNullHashCode() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="546" href="#546">546</a>     SqlSession session = sqlSessionFactory.openSession();
+<a class="jxr_linenumber" name="547" href="#547">547</a>     <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="548" href="#548">548</a>       <a href="../../../../org/apache/ibatis/binding/BoundBlogMapper.html">BoundBlogMapper</a> mapper = session.getMapper(BoundBlogMapper.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="549" href="#549">549</a>       assertNotNull(mapper.hashCode());
+<a class="jxr_linenumber" name="550" href="#550">550</a>     } <strong class="jxr_keyword">finally</strong> {
+<a class="jxr_linenumber" name="551" href="#551">551</a>       session.close();
+<a class="jxr_linenumber" name="552" href="#552">552</a>     }
+<a class="jxr_linenumber" name="553" href="#553">553</a>   }
+<a class="jxr_linenumber" name="554" href="#554">554</a> 
+<a class="jxr_linenumber" name="555" href="#555">555</a>   @Test
+<a class="jxr_linenumber" name="556" href="#556">556</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldCompareTwoMappers() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="557" href="#557">557</a>     SqlSession session = sqlSessionFactory.openSession();
+<a class="jxr_linenumber" name="558" href="#558">558</a>     <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="559" href="#559">559</a>       <a href="../../../../org/apache/ibatis/binding/BoundBlogMapper.html">BoundBlogMapper</a> mapper = session.getMapper(BoundBlogMapper.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="560" href="#560">560</a>       <a href="../../../../org/apache/ibatis/binding/BoundBlogMapper.html">BoundBlogMapper</a> mapper2 = session.getMapper(BoundBlogMapper.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="561" href="#561">561</a>       assertFalse(mapper.equals(mapper2));
+<a class="jxr_linenumber" name="562" href="#562">562</a>     } <strong class="jxr_keyword">finally</strong> {
+<a class="jxr_linenumber" name="563" href="#563">563</a>       session.close();
+<a class="jxr_linenumber" name="564" href="#564">564</a>     }
+<a class="jxr_linenumber" name="565" href="#565">565</a>   }
+<a class="jxr_linenumber" name="566" href="#566">566</a> 
+<a class="jxr_linenumber" name="567" href="#567">567</a>   @Test(expected = Exception.<strong class="jxr_keyword">class</strong>)
+<a class="jxr_linenumber" name="568" href="#568">568</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldFailWhenSelectingOneBlogWithNonExistentParam() {
+<a class="jxr_linenumber" name="569" href="#569">569</a>     SqlSession session = sqlSessionFactory.openSession();
+<a class="jxr_linenumber" name="570" href="#570">570</a>     <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="571" href="#571">571</a>       <a href="../../../../org/apache/ibatis/binding/BoundBlogMapper.html">BoundBlogMapper</a> mapper = session.getMapper(BoundBlogMapper.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="572" href="#572">572</a>       mapper.selectBlogByNonExistentParam(1);
+<a class="jxr_linenumber" name="573" href="#573">573</a>     } <strong class="jxr_keyword">finally</strong> {
+<a class="jxr_linenumber" name="574" href="#574">574</a>       session.close();
+<a class="jxr_linenumber" name="575" href="#575">575</a>     }
+<a class="jxr_linenumber" name="576" href="#576">576</a>   }
+<a class="jxr_linenumber" name="577" href="#577">577</a> 
+<a class="jxr_linenumber" name="578" href="#578">578</a>   @Test(expected = Exception.<strong class="jxr_keyword">class</strong>)
+<a class="jxr_linenumber" name="579" href="#579">579</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldFailWhenSelectingOneBlogWithNullParam() {
+<a class="jxr_linenumber" name="580" href="#580">580</a>     SqlSession session = sqlSessionFactory.openSession();
+<a class="jxr_linenumber" name="581" href="#581">581</a>     <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="582" href="#582">582</a>       <a href="../../../../org/apache/ibatis/binding/BoundBlogMapper.html">BoundBlogMapper</a> mapper = session.getMapper(BoundBlogMapper.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="583" href="#583">583</a>       mapper.selectBlogByNullParam(<strong class="jxr_keyword">null</strong>);
+<a class="jxr_linenumber" name="584" href="#584">584</a>     } <strong class="jxr_keyword">finally</strong> {
+<a class="jxr_linenumber" name="585" href="#585">585</a>       session.close();
+<a class="jxr_linenumber" name="586" href="#586">586</a>     }
+<a class="jxr_linenumber" name="587" href="#587">587</a>   }
+<a class="jxr_linenumber" name="588" href="#588">588</a> 
+<a class="jxr_linenumber" name="589" href="#589">589</a>   @Test <em class="jxr_comment">// Decided that maps are dynamic so no existent params do not fail</em>
+<a class="jxr_linenumber" name="590" href="#590">590</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldFailWhenSelectingOneBlogWithNonExistentNestedParam() {
+<a class="jxr_linenumber" name="591" href="#591">591</a>     SqlSession session = sqlSessionFactory.openSession();
+<a class="jxr_linenumber" name="592" href="#592">592</a>     <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="593" href="#593">593</a>       <a href="../../../../org/apache/ibatis/binding/BoundBlogMapper.html">BoundBlogMapper</a> mapper = session.getMapper(BoundBlogMapper.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="594" href="#594">594</a>       mapper.selectBlogByNonExistentNestedParam(1, Collections.&lt;String, Object&gt;emptyMap());
+<a class="jxr_linenumber" name="595" href="#595">595</a>     } <strong class="jxr_keyword">finally</strong> {
+<a class="jxr_linenumber" name="596" href="#596">596</a>       session.close();
+<a class="jxr_linenumber" name="597" href="#597">597</a>     }
+<a class="jxr_linenumber" name="598" href="#598">598</a>   }
+<a class="jxr_linenumber" name="599" href="#599">599</a> 
+<a class="jxr_linenumber" name="600" href="#600">600</a>   @Test
+<a class="jxr_linenumber" name="601" href="#601">601</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldSelectBlogWithDefault30ParamNames() {
+<a class="jxr_linenumber" name="602" href="#602">602</a>     SqlSession session = sqlSessionFactory.openSession();
+<a class="jxr_linenumber" name="603" href="#603">603</a>     <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="604" href="#604">604</a>       <a href="../../../../org/apache/ibatis/binding/BoundBlogMapper.html">BoundBlogMapper</a> mapper = session.getMapper(BoundBlogMapper.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="605" href="#605">605</a>       <a href="../../../../domain/blog/Blog.html">Blog</a> blog = mapper.selectBlogByDefault30ParamNames(1, <span class="jxr_string">"Jim Business"</span>);
+<a class="jxr_linenumber" name="606" href="#606">606</a>       assertNotNull(blog);
+<a class="jxr_linenumber" name="607" href="#607">607</a>     } <strong class="jxr_keyword">finally</strong> {
+<a class="jxr_linenumber" name="608" href="#608">608</a>       session.close();
+<a class="jxr_linenumber" name="609" href="#609">609</a>     }
+<a class="jxr_linenumber" name="610" href="#610">610</a>   }
+<a class="jxr_linenumber" name="611" href="#611">611</a> 
+<a class="jxr_linenumber" name="612" href="#612">612</a>   @Test
+<a class="jxr_linenumber" name="613" href="#613">613</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldSelectBlogWithDefault31ParamNames() {
+<a class="jxr_linenumber" name="614" href="#614">614</a>     SqlSession session = sqlSessionFactory.openSession();
+<a class="jxr_linenumber" name="615" href="#615">615</a>     <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="616" href="#616">616</a>       <a href="../../../../org/apache/ibatis/binding/BoundBlogMapper.html">BoundBlogMapper</a> mapper = session.getMapper(BoundBlogMapper.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="617" href="#617">617</a>       <a href="../../../../domain/blog/Blog.html">Blog</a> blog = mapper.selectBlogByDefault31ParamNames(1, <span class="jxr_string">"Jim Business"</span>);
+<a class="jxr_linenumber" name="618" href="#618">618</a>       assertNotNull(blog);
+<a class="jxr_linenumber" name="619" href="#619">619</a>     } <strong class="jxr_keyword">finally</strong> {
+<a class="jxr_linenumber" name="620" href="#620">620</a>       session.close();
+<a class="jxr_linenumber" name="621" href="#621">621</a>     }
+<a class="jxr_linenumber" name="622" href="#622">622</a>   }
+<a class="jxr_linenumber" name="623" href="#623">623</a> 
+<a class="jxr_linenumber" name="624" href="#624">624</a>   @Test
+<a class="jxr_linenumber" name="625" href="#625">625</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldSelectBlogWithAParamNamedValue() {
+<a class="jxr_linenumber" name="626" href="#626">626</a>     SqlSession session = sqlSessionFactory.openSession();
+<a class="jxr_linenumber" name="627" href="#627">627</a>     <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="628" href="#628">628</a>       <a href="../../../../org/apache/ibatis/binding/BoundBlogMapper.html">BoundBlogMapper</a> mapper = session.getMapper(BoundBlogMapper.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="629" href="#629">629</a>       <a href="../../../../domain/blog/Blog.html">Blog</a> blog = mapper.selectBlogWithAParamNamedValue(<span class="jxr_string">"id"</span>, 1, <span class="jxr_string">"Jim Business"</span>);
+<a class="jxr_linenumber" name="630" href="#630">630</a>       assertNotNull(blog);
+<a class="jxr_linenumber" name="631" href="#631">631</a>     } <strong class="jxr_keyword">finally</strong> {
+<a class="jxr_linenumber" name="632" href="#632">632</a>       session.close();
+<a class="jxr_linenumber" name="633" href="#633">633</a>     }
+<a class="jxr_linenumber" name="634" href="#634">634</a>   }
+<a class="jxr_linenumber" name="635" href="#635">635</a> 
+<a class="jxr_linenumber" name="636" href="#636">636</a>   @Test
+<a class="jxr_linenumber" name="637" href="#637">637</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldCacheMapperMethod() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="638" href="#638">638</a>     <strong class="jxr_keyword">final</strong> SqlSession session = sqlSessionFactory.openSession();
+<a class="jxr_linenumber" name="639" href="#639">639</a>     <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="640" href="#640">640</a> 
+<a class="jxr_linenumber" name="641" href="#641">641</a>       <em class="jxr_comment">// Create another mapper instance with a method cache we can test against:</em>
+<a class="jxr_linenumber" name="642" href="#642">642</a>       <strong class="jxr_keyword">final</strong> MapperProxyFactory&lt;BoundBlogMapper&gt; mapperProxyFactory = <strong class="jxr_keyword">new</strong> MapperProxyFactory&lt;BoundBlogMapper&gt;(BoundBlogMapper.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="643" href="#643">643</a>       assertEquals(BoundBlogMapper.<strong class="jxr_keyword">class</strong>, mapperProxyFactory.getMapperInterface());
+<a class="jxr_linenumber" name="644" href="#644">644</a>       <strong class="jxr_keyword">final</strong> <a href="../../../../org/apache/ibatis/binding/BoundBlogMapper.html">BoundBlogMapper</a> mapper = mapperProxyFactory.newInstance(session);
+<a class="jxr_linenumber" name="645" href="#645">645</a>       assertNotSame(mapper, mapperProxyFactory.newInstance(session));
+<a class="jxr_linenumber" name="646" href="#646">646</a>       assertTrue(mapperProxyFactory.getMethodCache().isEmpty());
+<a class="jxr_linenumber" name="647" href="#647">647</a> 
+<a class="jxr_linenumber" name="648" href="#648">648</a>       <em class="jxr_comment">// Mapper methods we will call later:</em>
+<a class="jxr_linenumber" name="649" href="#649">649</a>       <strong class="jxr_keyword">final</strong> Method selectBlog = BoundBlogMapper.<strong class="jxr_keyword">class</strong>.getMethod(<span class="jxr_string">"selectBlog"</span>, Integer.TYPE);
+<a class="jxr_linenumber" name="650" href="#650">650</a>       <strong class="jxr_keyword">final</strong> Method selectBlogByIdUsingConstructor = BoundBlogMapper.<strong class="jxr_keyword">class</strong>.getMethod(<span class="jxr_string">"selectBlogByIdUsingConstructor"</span>, Integer.TYPE);
+<a class="jxr_linenumber" name="651" href="#651">651</a> 
+<a class="jxr_linenumber" name="652" href="#652">652</a>       <em class="jxr_comment">// Call mapper method and verify it is cached:</em>
+<a class="jxr_linenumber" name="653" href="#653">653</a>       mapper.selectBlog(1);
+<a class="jxr_linenumber" name="654" href="#654">654</a>       assertEquals(1, mapperProxyFactory.getMethodCache().size());
+<a class="jxr_linenumber" name="655" href="#655">655</a>       assertTrue(mapperProxyFactory.getMethodCache().containsKey(selectBlog));
+<a class="jxr_linenumber" name="656" href="#656">656</a>       <strong class="jxr_keyword">final</strong> MapperMethod cachedSelectBlog = mapperProxyFactory.getMethodCache().get(selectBlog);
+<a class="jxr_linenumber" name="657" href="#657">657</a> 
+<a class="jxr_linenumber" name="658" href="#658">658</a>       <em class="jxr_comment">// Call mapper method again and verify the cache is unchanged:</em>
+<a class="jxr_linenumber" name="659" href="#659">659</a>       session.clearCache();
+<a class="jxr_linenumber" name="660" href="#660">660</a>       mapper.selectBlog(1);
+<a class="jxr_linenumber" name="661" href="#661">661</a>       assertEquals(1, mapperProxyFactory.getMethodCache().size());
+<a class="jxr_linenumber" name="662" href="#662">662</a>       assertSame(cachedSelectBlog, mapperProxyFactory.getMethodCache().get(selectBlog));
+<a class="jxr_linenumber" name="663" href="#663">663</a> 
+<a class="jxr_linenumber" name="664" href="#664">664</a>       <em class="jxr_comment">// Call another mapper method and verify that it shows up in the cache as well:</em>
+<a class="jxr_linenumber" name="665" href="#665">665</a>       session.clearCache();
+<a class="jxr_linenumber" name="666" href="#666">666</a>       mapper.selectBlogByIdUsingConstructor(1);
+<a class="jxr_linenumber" name="667" href="#667">667</a>       assertEquals(2, mapperProxyFactory.getMethodCache().size());
+<a class="jxr_linenumber" name="668" href="#668">668</a>       assertSame(cachedSelectBlog, mapperProxyFactory.getMethodCache().get(selectBlog));
+<a class="jxr_linenumber" name="669" href="#669">669</a>       assertTrue(mapperProxyFactory.getMethodCache().containsKey(selectBlogByIdUsingConstructor));
+<a class="jxr_linenumber" name="670" href="#670">670</a> 
+<a class="jxr_linenumber" name="671" href="#671">671</a>     } <strong class="jxr_keyword">finally</strong> {
+<a class="jxr_linenumber" name="672" href="#672">672</a>       session.close();
+<a class="jxr_linenumber" name="673" href="#673">673</a>     }
+<a class="jxr_linenumber" name="674" href="#674">674</a>   }
+<a class="jxr_linenumber" name="675" href="#675">675</a> 
+<a class="jxr_linenumber" name="676" href="#676">676</a> }
 </pre>
 <hr/><div id="footer">This page was automatically generated by <a href="http://maven.apache.org/">Maven</a></div></body>
 </html>
