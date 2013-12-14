@@ -302,12 +302,12 @@ ps.setInt(1,id);]]></source>
 
         <p>A continuación se muestran unos ejemplos de insert, update y delete.</p>
 
-        <source><![CDATA[<insert id="insertAuthor" parameterType="domain.blog.Author">
+        <source><![CDATA[<insert id="insertAuthor">
   insert into Author (id,username,password,email,bio)
   values (#{id},#{username},#{password},#{email},#{bio})
 </insert>
 
-<update id="updateAuthor" parameterType="domain.blog.Author">
+<update id="updateAuthor">
   update Author set
     username = #{username},
     password = #{password},
@@ -316,7 +316,7 @@ ps.setInt(1,id);]]></source>
   where id = #{id}
 </update>
 
-<delete id="deleteAuthor" parameterType="int">
+<delete id="deleteAuthor">
   delete from Author where id = #{id}
 </delete>]]></source>
 
@@ -328,7 +328,7 @@ ps.setInt(1,id);]]></source>
 Por ejemplo, si la columna id de la tabla Author del ejemplo siguiente fuera autogenerada el insert statement se escribiría de la siguiente forma:
         </p>
 
-        <source><![CDATA[<insert id="insertAuthor" parameterType="domain.blog.Author" useGeneratedKeys="true"
+        <source><![CDATA[<insert id="insertAuthor" useGeneratedKeys="true"
     keyProperty="id">
   insert into Author (username,password,email,bio)
   values (#{username},#{password},#{email},#{bio})
@@ -339,7 +339,7 @@ Por ejemplo, si la columna id de la tabla Author del ejemplo siguiente fuera aut
 
         <p>A continuación se muestra un ejemplo muy simple que genera un id aleatorio (algo que posiblemente nunca harás pero que demuestra la flexibilidad de MyBatis y cómo MyBatis ignora la forma en la que se consigue la clave):
         </p>
-        <source><![CDATA[<insert id="insertAuthor" parameterType="domain.blog.Author">
+        <source><![CDATA[<insert id="insertAuthor">
   <selectKey keyProperty="id" resultType="int" order="BEFORE">
     select CAST(RANDOM()*1000000 as INTEGER) a from SYSIBM.SYSDUMMY1
   </selectKey>
@@ -399,7 +399,7 @@ Por ejemplo, si la columna id de la tabla Author del ejemplo siguiente fuera aut
         <p>Este fragmento de SQL puede ser incluido en otra sentencia, por ejemplo:
         </p>
 
-        <source><![CDATA[<select id="selectUsers" parameterType="int" resultType="hashmap">
+        <source><![CDATA[<select id="selectUsers" resultType="map">
   select <include refid="userColumns"/>
   from some_table
   where id = #{id}
@@ -410,7 +410,7 @@ Por ejemplo, si la columna id de la tabla Author del ejemplo siguiente fuera aut
         <p>En todos los statements anteriores se han mostrado ejemplos de parámetros simples. Los parámetros son elementos muy potentes en MyBatis. En los casos simples, probablemente el 90% de los casos, no hay mucho que decir sobre ellos, por ejemplo:
         </p>
 
-        <source><![CDATA[<select id="selectUsers" parameterType="int" resultType="User">
+        <source><![CDATA[<select id="selectUsers" resultType="User">
   select id, username, password
   from users
   where id = #{id}
@@ -419,7 +419,7 @@ Por ejemplo, si la columna id de la tabla Author del ejemplo siguiente fuera aut
         <p>El ejemplo anterior muestra un mapeo muy simple de parámetro con nombre. El atributo parameterType se ha informado a “int”, por lo tanto el nombre del parámetro puede ser cualquiera. Los tipos primitivos y los tipos de datos simples como Integer o String no tienen propiedades relevantes y por tanto el parámetro será reemplazado por su valor. Sin embargo, si pasas un objeto complejo, entonces el comportamiento es distinto. Por ejemplo:
         </p>
 
-        <source><![CDATA[<insert id="insertUser" parameterType="User" >
+        <source><![CDATA[<insert id="insertUser" parameterType="User">
   insert into users (id, username, password)
   values (#{id}, #{username}, #{password})
 </insert>]]></source>
@@ -498,7 +498,7 @@ Por ejemplo, si la columna id de la tabla Author del ejemplo siguiente fuera aut
         <p>Ya has visto algunos ejemplos de un statement sencillo que no requiere un ResultMap explícito. Por ejemplo:
         </p>
 
-        <source><![CDATA[<select id="selectUsers" parameterType="int" resultType="hashmap">
+        <source><![CDATA[<select id="selectUsers" resultType="map">
   select id, username, hashedPassword
   from some_table
   where id = #{id}
@@ -541,7 +541,7 @@ public class User {
           Este JavaBean puede mapearse desde un ResultSet de forma casi tan sencilla como la HashMap.
         </p>
 
-        <source><![CDATA[<select id="selectUsers" parameterType="int" resultType="com.someapp.model.User">
+        <source><![CDATA[<select id="selectUsers" resultType="com.someapp.model.User">
   select id, username, hashedPassword
   from some_table
   where id = #{id}
@@ -554,7 +554,7 @@ public class User {
 <typeAlias type="com.someapp.model.User" alias="User"/>
 
 <!-- In SQL Mapping XML file -->
-<select id="selectUsers" parameterType="int" resultType="User">
+<select id="selectUsers" resultType="User">
   select id, username, hashedPassword
   from some_table
   where id = #{id}
@@ -564,7 +564,7 @@ public class User {
           En estos casos MyBatis crea automáticamente un RestulMap entre bastidores para mapear las columnas a las propiedades del JavaBean en base a sus nombres. Si los nombres de las columnas no coinciden exactamente, puedes emplear alias en los nombres de columnas de la sentencia SQL (una característica estándar del SQL) para hacer que coincidan. Por ejemplo:
         </p>
 
-        <source><![CDATA[<select id="selectUsers" parameterType="int" resultType="User">
+        <source><![CDATA[<select id="selectUsers" resultType="User">
   select
     user_id             as "id",
     user_name           as "userName",
@@ -587,7 +587,7 @@ public class User {
           Y el statement que las referencia utiliza para ello el atributo resultMap (fíjate que hemos eliminado el atributo resultType). Por ejemplo:
         </p>
 
-        <source><![CDATA[<select id="selectUsers" parameterType="int" resultMap="userResultMap">
+        <source><![CDATA[<select id="selectUsers" resultMap="userResultMap">
   select user_id, user_name, hashed_password
   from some_table
   where id = #{id}
@@ -606,7 +606,7 @@ public class User {
         <p>Por ejemplo, ¿cómo mapearías este statement?</p>
 
         <source><![CDATA[<!-- Very Complex Statement -->
-<select id="selectBlogDetails" parameterType="int" resultMap="detailedBlogResultMap">
+<select id="selectBlogDetails" resultMap="detailedBlogResultMap">
   select
        B.id as blog_id,
        B.title as blog_title,
@@ -1497,7 +1497,7 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
           presentes en el ResultSet y que no tienen un mapeo manual se auto-mapearán. Posteriormente se procesarán los mapeos manuales.
           En el siguiente ejemplo las columnas <i>id</i> y <i>userName</i> se auto-mapearán y la columna <i>hashed_password</i> se mapeará manualmente.</p>
 
-        <source><![CDATA[<select id="selectUsers" parameterType="int" resultType="User">
+        <source><![CDATA[<select id="selectUsers" resultType="User">
   select
     user_id             as "id",
     user_name           as "userName",
@@ -1554,6 +1554,21 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
           columna con nombre <i>id</i> en el ResultSet por lo que el id de Author se rellenará con el id de Blog, y eso no era lo que esperabas.
           Por tanto usa la opción <code>FULL</code> con cuidado.
         </p>
+
+        <p>
+          Independientemente del nivel de auto-mapeo configurado puedes activar o desactivar el auto-mapeo para un statement especifico
+          añadiendole el atributo<code>autoMapping</code>:
+        </p>
+
+        <source><![CDATA[<select id="selectUsers" resultType="User" autoMapping="false">
+  select
+    user_id             as "id",
+    user_name           as "userName",
+    hashed_password
+  from some_table
+  where id = #{id}
+</select>]]></source>
+       
        
       </subsection>
       <subsection name="cache">

@@ -360,12 +360,12 @@ ps.setInt(1,id);]]></source>
 
         <p>The following are some examples of insert, update and delete statements.</p>
 
-        <source><![CDATA[<insert id="insertAuthor" parameterType="domain.blog.Author">
+        <source><![CDATA[<insert id="insertAuthor">
   insert into Author (id,username,password,email,bio)
   values (#{id},#{username},#{password},#{email},#{bio})
 </insert>
 
-<update id="updateAuthor" parameterType="domain.blog.Author">
+<update id="updateAuthor">
   update Author set
     username = #{username},
     password = #{password},
@@ -374,7 +374,7 @@ ps.setInt(1,id);]]></source>
   where id = #{id}
 </update>
 
-<delete id="deleteAuthor" parameterType="int">
+<delete id="deleteAuthor">
   delete from Author where id = #{id}
 </delete>]]></source>
 
@@ -390,7 +390,7 @@ ps.setInt(1,id);]]></source>
           for the id, the statement would be modified as follows:
         </p>
 
-        <source><![CDATA[<insert id="insertAuthor" parameterType="domain.blog.Author" useGeneratedKeys="true"
+        <source><![CDATA[<insert id="insertAuthor" useGeneratedKeys="true"
     keyProperty="id">
   insert into Author (username,password,email,bio)
   values (#{username},#{password},#{email},#{bio})
@@ -405,7 +405,7 @@ ps.setInt(1,id);]]></source>
           Here's a simple (silly) example that would generate a random ID (something you'd likely never do,
           but this demonstrates the flexibility and how MyBatis really doesn't mind):
         </p>
-        <source><![CDATA[<insert id="insertAuthor" parameterType="domain.blog.Author">
+        <source><![CDATA[<insert id="insertAuthor">
   <selectKey keyProperty="id" resultType="int" order="BEFORE">
     select CAST(RANDOM()*1000000 as INTEGER) a from SYSIBM.SYSDUMMY1
   </selectKey>
@@ -481,7 +481,7 @@ ps.setInt(1,id);]]></source>
           The SQL fragment can then be included in another statement, for example:
         </p>
 
-        <source><![CDATA[<select id="selectUsers" parameterType="int" resultType="hashmap">
+        <source><![CDATA[<select id="selectUsers" resultType="map">
   select <include refid="userColumns"/>
   from some_table
   where id = #{id}
@@ -495,7 +495,7 @@ ps.setInt(1,id);]]></source>
           too them, for example:
         </p>
 
-        <source><![CDATA[<select id="selectUsers" parameterType="int" resultType="User">
+        <source><![CDATA[<select id="selectUsers" resultType="User">
   select id, username, password
   from users
   where id = #{id}
@@ -509,7 +509,7 @@ ps.setInt(1,id);]]></source>
           different. For example:
         </p>
 
-        <source><![CDATA[<insert id="insertUser" parameterType="User" >
+        <source><![CDATA[<insert id="insertUser" parameterType="User">
   insert into users (id, username, password)
   values (#{id}, #{username}, #{password})
 </insert>]]></source>
@@ -628,7 +628,7 @@ ps.setInt(1,id);]]></source>
           example:
         </p>
 
-        <source><![CDATA[<select id="selectUsers" parameterType="int" resultType="hashmap">
+        <source><![CDATA[<select id="selectUsers" resultType="map">
   select id, username, hashedPassword
   from some_table
   where id = #{id}
@@ -675,7 +675,7 @@ public class User {
           Such a JavaBean could be mapped to a <code>ResultSet</code> just as easily as the <code>HashMap</code>.
         </p>
 
-        <source><![CDATA[<select id="selectUsers" parameterType="int" resultType="com.someapp.model.User">
+        <source><![CDATA[<select id="selectUsers" resultType="com.someapp.model.User">
   select id, username, hashedPassword
   from some_table
   where id = #{id}
@@ -690,7 +690,7 @@ public class User {
 <typeAlias type="com.someapp.model.User" alias="User"/>
 
 <!-- In SQL Mapping XML file -->
-<select id="selectUsers" parameterType="int" resultType="User">
+<select id="selectUsers" resultType="User">
   select id, username, hashedPassword
   from some_table
   where id = #{id}
@@ -704,7 +704,7 @@ public class User {
           example:
         </p>
 
-        <source><![CDATA[<select id="selectUsers" parameterType="int" resultType="User">
+        <source><![CDATA[<select id="selectUsers" resultType="User">
   select
     user_id             as "id",
     user_name           as "userName",
@@ -731,7 +731,7 @@ public class User {
           <code>resultType</code> attribute). For example:
         </p>
 
-        <source><![CDATA[<select id="selectUsers" parameterType="int" resultMap="userResultMap">
+        <source><![CDATA[<select id="selectUsers" resultMap="userResultMap">
   select user_id, user_name, hashed_password
   from some_table
   where id = #{id}
@@ -753,7 +753,7 @@ public class User {
         <p>For example, how would we map this statement?</p>
 
         <source><![CDATA[<!-- Very Complex Statement -->
-<select id="selectBlogDetails" parameterType="int" resultMap="detailedBlogResultMap">
+<select id="selectBlogDetails" resultMap="detailedBlogResultMap">
   select
        B.id as blog_id,
        B.title as blog_title,
@@ -1867,7 +1867,7 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
           ResultSet that have not a manual mapping will be auto-mapped, then manual mappings will be processed. 
           In the following sample <i>id</i> and <i>userName</i> columns will be auto-mapped and <i>hashed_password</i> column will be mapped.</p>
 
-        <source><![CDATA[<select id="selectUsers" parameterType="int" resultType="User">
+        <source><![CDATA[<select id="selectUsers" resultType="User">
   select
     user_id             as "id",
     user_name           as "userName",
@@ -1924,6 +1924,20 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
           property and there is a column named <i>id</i> in the ResultSet so Author's id will be filled with Blog's id, and that is not 
           what you were expecting. So use the <code>FULL</code> option with caution.
         </p>
+
+        <p>
+          Regardless of the auto-mapping level configured you can enable or disable the automapping for an specific statement
+          by adding the attribute <code>autoMapping</code> to it:
+        </p>
+
+        <source><![CDATA[<select id="selectUsers" resultType="User" autoMapping="false">
+  select
+    user_id             as "id",
+    user_name           as "userName",
+    hashed_password
+  from some_table
+  where id = #{id}
+</select>]]></source>
        
       </subsection>
       <subsection name="cache">

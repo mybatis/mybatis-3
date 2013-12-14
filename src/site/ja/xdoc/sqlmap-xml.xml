@@ -340,12 +340,12 @@ ps.setInt(1,id);]]></source>
 
         <p>以下、insert, update, delete ステートメントの例をいくつか挙げておきます。</p>
 
-        <source><![CDATA[<insert id="insertAuthor" parameterType="domain.blog.Author">
+        <source><![CDATA[<insert id="insertAuthor">
   insert into Author (id,username,password,email,bio)
   values (#{id},#{username},#{password},#{email},#{bio})
 </insert>
 
-<update id="updateAuthor" parameterType="domain.blog.Author">
+<update id="updateAuthor">
   update Author set
     username = #{username},
     password = #{password},
@@ -354,7 +354,7 @@ ps.setInt(1,id);]]></source>
   where id = #{id}
 </update>
 
-<delete id="deleteAuthor" parameterType="int">
+<delete id="deleteAuthor">
   delete from Author where id = #{id}
 </delete>]]></source>
 
@@ -367,7 +367,7 @@ ps.setInt(1,id);]]></source>
           例えば上記の Author テーブルで id 列に自動生成が設定されていた場合、ステートメントは次のように書くことができます。
         </p>
 
-        <source><![CDATA[<insert id="insertAuthor" parameterType="domain.blog.Author" useGeneratedKeys="true"
+        <source><![CDATA[<insert id="insertAuthor" useGeneratedKeys="true"
     keyProperty="id">
   insert into Author (username,password,email,bio)
   values (#{username},#{password},#{email},#{bio})
@@ -380,7 +380,7 @@ ps.setInt(1,id);]]></source>
         <p>
           全く実用的ではありませんが、MyBatis の柔軟さを示す意味も込めて、ID をランダムに生成する例を挙げておきます。
         </p>
-        <source><![CDATA[<insert id="insertAuthor" parameterType="domain.blog.Author">
+        <source><![CDATA[<insert id="insertAuthor">
   <selectKey keyProperty="id" resultType="int" order="BEFORE">
     select CAST(RANDOM()*1000000 as INTEGER) a from SYSIBM.SYSDUMMY1
   </selectKey>
@@ -452,7 +452,7 @@ ps.setInt(1,id);]]></source>
           上記の SQL スニペットを他のステートメントにインクルードするには、次のように記述します。
         </p>
 
-        <source><![CDATA[<select id="selectUsers" parameterType="int" resultType="hashmap">
+        <source><![CDATA[<select id="selectUsers" resultType="map">
   select <include refid="userColumns"/>
   from some_table
   where id = #{id}
@@ -465,7 +465,7 @@ ps.setInt(1,id);]]></source>
           例：
         </p>
 
-        <source><![CDATA[<select id="selectUsers" parameterType="int" resultType="User">
+        <source><![CDATA[<select id="selectUsers" resultType="User">
   select id, username, password
   from users
   where id = #{id}
@@ -476,7 +476,7 @@ ps.setInt(1,id);]]></source>
           パラメーターとして複合型を渡した場合はもう少し複雑です。次の例を見てください。
         </p>
 
-        <source><![CDATA[<insert id="insertUser" parameterType="User" >
+        <source><![CDATA[<insert id="insertUser" parameterType="User">
   insert into users (id, username, password)
   values (#{id}, #{username}, #{password})
 </insert>]]></source>
@@ -575,7 +575,7 @@ ps.setInt(1,id);]]></source>
           例：
         </p>
 
-        <source><![CDATA[<select id="selectUsers" parameterType="int" resultType="hashmap">
+        <source><![CDATA[<select id="selectUsers" resultType="map">
   select id, username, hashedPassword
   from some_table
   where id = #{id}
@@ -622,7 +622,7 @@ public class User {
           このような条件を満たす JavaBean であれば、HashMap のときと同じように ResultSet にマップすることができます。
         </p>
 
-        <source><![CDATA[<select id="selectUsers" parameterType="int" resultType="com.someapp.model.User">
+        <source><![CDATA[<select id="selectUsers" resultType="com.someapp.model.User">
   select id, username, hashedPassword
   from some_table
   where id = #{id}
@@ -636,7 +636,7 @@ public class User {
 <typeAlias type="com.someapp.model.User" alias="User"/>
 
 <!-- In SQL Mapping XML file -->
-<select id="selectUsers" parameterType="int" resultType="User">
+<select id="selectUsers" resultType="User">
   select id, username, hashedPassword
   from some_table
   where id = #{id}
@@ -647,7 +647,7 @@ public class User {
           もし列名が一致しない場合、select 文で列に別名をつけることで対応可能です（列の別名は標準 SQL の機能です）。
         </p>
 
-        <source><![CDATA[<select id="selectUsers" parameterType="int" resultType="User">
+        <source><![CDATA[<select id="selectUsers" resultType="User">
   select
     user_id     as "id",
     user_name     as "userName",
@@ -672,7 +672,7 @@ public class User {
           そして、resultMap 属性を使って定義した ResultMap を参照するステートメントは以下のようになります（resultType 属性は削除しています）。
         </p>
 
-        <source><![CDATA[<select id="selectUsers" parameterType="int" resultMap="userResultMap">
+        <source><![CDATA[<select id="selectUsers" resultMap="userResultMap">
   select user_id, user_name, hashed_password
   from some_table
   where id = #{id}
@@ -695,7 +695,7 @@ public class User {
         <p>例えば、こんなステートメントをどうやってマップすれば良いのでしょう？</p>
 
         <source><![CDATA[<!-- Very Complex Statement -->
-<select id="selectBlogDetails" parameterType="int" resultMap="detailedBlogResultMap">
+<select id="selectBlogDetails" resultMap="detailedBlogResultMap">
   select
     B.id as blog_id,
     B.title as blog_title,
@@ -1720,7 +1720,7 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
           次の例では、<i>hashed_password</i> 列が password プロパティにマップされ、<i>id</i> と <i>userName</i> 列が自動マッピングの対象となります。
         </p>
 
-        <source><![CDATA[<select id="selectUsers" parameterType="int" resultType="User">
+        <source><![CDATA[<select id="selectUsers" resultType="User">
   select
     user_id             as "id",
     user_name           as "userName",
@@ -1777,6 +1777,21 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
           自動マッピングで <code>FULL</code> を指定する場合は、こうした意図しないマッピングが行われないように注意する必要があります。
         </p>
        
+
+        <p>
+          Regardless of the auto-mapping level configured you can enable or disable the automapping for an specific statement
+          by adding the attribute <code>autoMapping</code> to it:
+        </p>
+
+        <source><![CDATA[<select id="selectUsers" resultType="User" autoMapping="false">
+  select
+    user_id             as "id",
+    user_name           as "userName",
+    hashed_password
+  from some_table
+  where id = #{id}
+</select>]]></source>
+              
       </subsection>
 
       <subsection name="cache">

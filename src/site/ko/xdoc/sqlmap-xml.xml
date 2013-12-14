@@ -278,12 +278,12 @@ Server 와 같은 RDBMS 의 자동 증가 필드)를 받는 JDBC getGeneratedKey
 
         <p>Insert, update, delete 구문의 예제이다.</p>
 
-        <source><![CDATA[<insert id="insertAuthor" parameterType="domain.blog.Author">
+        <source><![CDATA[<insert id="insertAuthor">
   insert into Author (id,username,password,email,bio)
   values (#{id},#{username},#{password},#{email},#{bio})
 </insert>
 
-<update id="updateAuthor" parameterType="domain.blog.Author">
+<update id="updateAuthor">
   update Author set
     username = #{username},
     password = #{password},
@@ -292,7 +292,7 @@ Server 와 같은 RDBMS 의 자동 증가 필드)를 받는 JDBC getGeneratedKey
   where id = #{id}
 </update>
 
-<delete id="deleteAuthor" parameterType="int">
+<delete id="deleteAuthor">
   delete from Author where id = #{id}
 </delete>]]></source>
 
@@ -302,7 +302,7 @@ Server 와 같은 RDBMS 의 자동 증가 필드)를 받는 JDBC getGeneratedKey
 설정하고 대상 프로퍼티에 keyProperty 를 셋팅할 수 있다. 예를 들어, Author 테이블이 id 칼럼에 자동생성키를 적용했다고
 하면, 구문은 아래와 같은 형태일 것이다.</p>
 
-        <source><![CDATA[<insert id="insertAuthor" parameterType="domain.blog.Author" useGeneratedKeys="true"
+        <source><![CDATA[<insert id="insertAuthor" useGeneratedKeys="true"
     keyProperty="id">
   insert into Author (username,password,email,bio)
   values (#{username},#{password},#{email},#{bio})
@@ -312,7 +312,7 @@ Server 와 같은 RDBMS 의 자동 증가 필드)를 받는 JDBC getGeneratedKey
 
         <p>이 예제는 랜덤 ID 를 생성하고 있다.</p>
         
-        <source><![CDATA[<insert id="insertAuthor" parameterType="domain.blog.Author">
+        <source><![CDATA[<insert id="insertAuthor">
   <selectKey keyProperty="id" resultType="int" order="BEFORE">
     select CAST(RANDOM()*1000000 as INTEGER) a from SYSIBM.SYSDUMMY1
   </selectKey>
@@ -371,7 +371,7 @@ selectKey 구문을 실행한다. Oracle 과 같은 데이터베이스에서는 
 
         <p>SQL 조각은 다른 구문에 포함시킬수 있다.</p>
 
-        <source><![CDATA[<select id="selectUsers" parameterType="int" resultType="hashmap">
+        <source><![CDATA[<select id="selectUsers" resultType="map">
   select <include refid="userColumns"/>
   from some_table
   where id = #{id}
@@ -382,7 +382,7 @@ selectKey 구문을 실행한다. Oracle 과 같은 데이터베이스에서는 
         <p>앞서 본 구문들에서, 간단한 파라미터들의 예를 보았을 것이다. Parameters 는 MyBatis 에서 매우 중요한 요소이다. 대략
 90% 정도의 간단한 경우, 이러한 형태로 설정할 것이다.</p>
 
-        <source><![CDATA[<select id="selectUsers" parameterType="int" resultType="User">
+        <source><![CDATA[<select id="selectUsers" resultType="User">
   select id, username, password
   from users
   where id = #{id}
@@ -392,7 +392,7 @@ selectKey 구문을 실행한다. Oracle 과 같은 데이터베이스에서는 
 같은 원시타입 이나 간단한 데이터 타입은 프로퍼티를 가지지 않는다. 그래서 파라미터 전체가 값을 대체하게 된다. 하지만
 복잡한 객체를 전달하고자 한다면, 다음의 예제처럼 상황은 조금 다르게 된다.</p>
 
-        <source><![CDATA[<insert id="insertUser" parameterType="User" >
+        <source><![CDATA[<insert id="insertUser" parameterType="User">
   insert into users (id, username, password)
   values (#{id}, #{username}, #{password})
 </insert>]]></source>
@@ -467,7 +467,7 @@ REFCURSOR) 라면, 파라미터의 타입에 ResultSet 를 매핑하기 위해 r
 
         <p>이미 앞에서 명시적인 resultMap 을 가지지 않는 간단한 매핑 구문은 봤을 것이다.</p>
 
-        <source><![CDATA[<select id="selectUsers" parameterType="int" resultType="hashmap">
+        <source><![CDATA[<select id="selectUsers" resultType="map">
   select id, username, hashedPassword
   from some_table
   where id = #{id}
@@ -508,7 +508,7 @@ public class User {
 
         <p>그래서 자바빈은 HashMap 과 마찬가지로 매우 쉽게 ResultSet 에 매핑될 수 있다.</p>
 
-        <source><![CDATA[<select id="selectUsers" parameterType="int" resultType="com.someapp.model.User">
+        <source><![CDATA[<select id="selectUsers" resultType="com.someapp.model.User">
   select id, username, hashedPassword
   from some_table
   where id = #{id}
@@ -520,7 +520,7 @@ public class User {
 <typeAlias type="com.someapp.model.User" alias="User"/>
 
 <!-- In SQL Mapping XML file -->
-<select id="selectUsers" parameterType="int" resultType="User">
+<select id="selectUsers" resultType="User">
   select id, username, hashedPassword
   from some_table
   where id = #{id}
@@ -529,7 +529,7 @@ public class User {
         <p>이 경우 MyBatis 는 칼럼을 자바빈에 이름 기준으로 매핑하여 ResultMap 을 자동으로 생성할 것이다. 만약 칼럼명이
 프로퍼티명과 다르다면, SQL 구문에 별칭을 지정할 수 있다. 예를 들면.</p>
 
-        <source><![CDATA[<select id="selectUsers" parameterType="int" resultType="User">
+        <source><![CDATA[<select id="selectUsers" resultType="User">
   select
     user_id             as "id",
     user_name           as "userName",
@@ -549,7 +549,7 @@ public class User {
 
         <p>구문에서는 resultMap 속성에 이를 지정하여 참조한다. 예를 들면.</p>
 
-        <source><![CDATA[<select id="selectUsers" parameterType="int" resultMap="userResultMap">
+        <source><![CDATA[<select id="selectUsers" resultMap="userResultMap">
   select user_id, user_name, hashed_password
   from some_table
   where id = #{id}
@@ -568,7 +568,7 @@ public class User {
         <p>이런 복잡한 구문은 어떻게 매핑할까.?</p>
 
         <source><![CDATA[<!-- Very Complex Statement -->
-<select id="selectBlogDetails" parameterType="int" resultMap="detailedBlogResultMap">
+<select id="selectBlogDetails" resultMap="detailedBlogResultMap">
   select
        B.id as blog_id,
        B.title as blog_title,
@@ -1372,7 +1372,7 @@ vehicle 간의 관계를 알 수 있다. 그러므로, 나머지 프로퍼티들
           ResultSet that have not a manual mapping will be auto-mapped, then manual mappings will be processed. 
           In the following sample <i>id</i> and <i>userName</i> columns will be auto-mapped and <i>hashed_password</i> column will be mapped.</p>
 
-        <source><![CDATA[<select id="selectUsers" parameterType="int" resultType="User">
+        <source><![CDATA[<select id="selectUsers" resultType="User">
   select
     user_id             as "id",
     user_name           as "userName",
@@ -1430,6 +1430,21 @@ vehicle 간의 관계를 알 수 있다. 그러므로, 나머지 프로퍼티들
           what you were expecting. So use the <code>FULL</code> option with caution.
         </p>
        
+
+        <p>
+          Regardless of the auto-mapping level configured you can enable or disable the automapping for an specific statement
+          by adding the attribute <code>autoMapping</code> to it:
+        </p>
+
+        <source><![CDATA[<select id="selectUsers" resultType="User" autoMapping="false">
+  select
+    user_id             as "id",
+    user_name           as "userName",
+    hashed_password
+  from some_table
+  where id = #{id}
+</select>]]></source>
+              
       </subsection>
 
       <subsection name="cache">

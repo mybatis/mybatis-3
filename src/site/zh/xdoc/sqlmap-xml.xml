@@ -392,12 +392,12 @@ MyBatis 会通过 getGeneratedKeys
 
         <p>下面就是 insert,update 和 delete 语句的示例:</p>
 
-        <source><![CDATA[<insert id="insertAuthor" parameterType="domain.blog.Author">
+        <source><![CDATA[<insert id="insertAuthor">
   insert into Author (id,username,password,email,bio)
   values (#{id},#{username},#{password},#{email},#{bio})
 </insert>
 
-<update id="updateAuthor" parameterType="domain.blog.Author">
+<update id="updateAuthor">
   update Author set
     username = #{username},
     password = #{password},
@@ -406,7 +406,7 @@ MyBatis 会通过 getGeneratedKeys
   where id = #{id}
 </update>
 
-<delete id="deleteAuthor" parameterType="int">
+<delete id="deleteAuthor">
   delete from Author where id = #{id}
 </delete>]]></source>
 
@@ -421,7 +421,7 @@ MyBatis 会通过 getGeneratedKeys
 例如,如果上面的 Author 表已经对 id 使用了自动生成的列类型,那么语句可以修改为:
         </p>
 
-        <source><![CDATA[<insert id="insertAuthor" parameterType="domain.blog.Author" useGeneratedKeys="true"
+        <source><![CDATA[<insert id="insertAuthor" useGeneratedKeys="true"
     keyProperty="id">
   insert into Author (username,password,email,bio)
   values (#{username},#{password},#{email},#{bio})
@@ -437,7 +437,7 @@ MyBatis 有另外一种方法来处理数据库不支持自动生成类型,或�
 但是这展示了 MyBatis 处理问题的灵活性,因为它并不真的关心 ID 的生成):
         </p>
         
-        <source><![CDATA[<insert id="insertAuthor" parameterType="domain.blog.Author">
+        <source><![CDATA[<insert id="insertAuthor">
   <selectKey keyProperty="id" resultType="int" order="BEFORE">
     select CAST(RANDOM()*1000000 as INTEGER) a from SYSIBM.SYSDUMMY1
   </selectKey>
@@ -519,7 +519,7 @@ CallableStatement 类型。
 这个 SQL 片段可以被包含在其他语句中,例如:
         </p>
 
-        <source><![CDATA[<select id="selectUsers" parameterType="int" resultType="hashmap">
+        <source><![CDATA[<select id="selectUsers" resultType="map">
   select <include refid="userColumns"/>
   from some_table
   where id = #{id}
@@ -534,7 +534,7 @@ CallableStatement 类型。
 元素。对于简单的做法,大概 90%的情况,是不用太多的,比如:
         </p>
 
-        <source><![CDATA[<select id="selectUsers" parameterType="int" resultType="User">
+        <source><![CDATA[<select id="selectUsers" resultType="User">
   select id, username, password
   from users
   where id = #{id}
@@ -550,7 +550,7 @@ CallableStatement 类型。
 的处理方式就会有一点不同。比如:
         </p>
 
-        <source><![CDATA[<insert id="insertUser" parameterType="User" >
+        <source><![CDATA[<insert id="insertUser" parameterType="User">
   insert into users (id, username, password)
   values (#{id}, #{username}, #{password})
 </insert>]]></source>
@@ -666,7 +666,7 @@ ResultMap 的设计就是简单语句不需要明确的结果映射,而很多复
 你已经看到简单映射语句的示例了,但没有明确的 resultMap。比如:
         </p>
 
-        <source><![CDATA[<select id="selectUsers" parameterType="int" resultType="hashmap">
+        <source><![CDATA[<select id="selectUsers" resultType="map">
   select id, username, hashedPassword
   from some_table
   where id = #{id}
@@ -713,7 +713,7 @@ public class User {
 这样的一个 JavaBean 可以被映射到结果集,就像映射到 HashMap 一样简单。
         </p>
 
-        <source><![CDATA[<select id="selectUsers" parameterType="int" resultType="com.someapp.model.User">
+        <source><![CDATA[<select id="selectUsers" resultType="com.someapp.model.User">
   select id, username, hashedPassword
   from some_table
   where id = #{id}
@@ -727,7 +727,7 @@ public class User {
 <typeAlias type="com.someapp.model.User" alias="User"/>
 
 <!-- In SQL Mapping XML file -->
-<select id="selectUsers" parameterType="int" resultType="User">
+<select id="selectUsers" resultType="User">
   select id, username, hashedPassword
   from some_table
   where id = #{id}
@@ -739,7 +739,7 @@ JavaBean 的属性上。如果列名没有精确匹配,你可以在列名上使�
 基本的 SQL 特性)来匹配标签。比如:
         </p>
 
-        <source><![CDATA[<select id="selectUsers" parameterType="int" resultType="User">
+        <source><![CDATA[<select id="selectUsers" resultType="User">
   select
     user_id             as "id",
     user_name           as "userName",
@@ -766,7 +766,7 @@ ResultMap 最优秀的地方你已经了解了很多了,但是你还没有真正
 引用它的语句使用 resultMap 属性就行了(注意我们去掉了 resultType 属性)。比如:
         </p>
 
-        <source><![CDATA[<select id="selectUsers" parameterType="int" resultMap="userResultMap">
+        <source><![CDATA[<select id="selectUsers" resultMap="userResultMap">
   select user_id, user_name, hashed_password
   from some_table
   where id = #{id}
@@ -790,7 +790,7 @@ MyBatis 提供处理这个问题的答案。
         </p>
 
         <source><![CDATA[<!-- Very Complex Statement -->
-<select id="selectBlogDetails" parameterType="int" resultMap="detailedBlogResultMap">
+<select id="selectBlogDetails" resultMap="detailedBlogResultMap">
   select
        B.id as blog_id,
        B.title as blog_title,
@@ -1814,7 +1814,7 @@ MyBatis 会从结果集中得到每条记录,
           ResultSet that have not a manual mapping will be auto-mapped, then manual mappings will be processed. 
           In the following sample <i>id</i> and <i>userName</i> columns will be auto-mapped and <i>hashed_password</i> column will be mapped.</p>
 
-        <source><![CDATA[<select id="selectUsers" parameterType="int" resultType="User">
+        <source><![CDATA[<select id="selectUsers" resultType="User">
   select
     user_id             as "id",
     user_name           as "userName",
@@ -1871,7 +1871,21 @@ MyBatis 会从结果集中得到每条记录,
           property and there is a column named <i>id</i> in the ResultSet so Author's id will be filled with Blog's id, and that is not 
           what you were expecting. So use the <code>FULL</code> option with caution.
         </p>
-       
+
+        <p>
+          Regardless of the auto-mapping level configured you can enable or disable the automapping for an specific statement
+          by adding the attribute <code>autoMapping</code> to it:
+        </p>
+
+        <source><![CDATA[<select id="selectUsers" resultType="User" autoMapping="false">
+  select
+    user_id             as "id",
+    user_name           as "userName",
+    hashed_password
+  from some_table
+  where id = #{id}
+</select>]]></source>
+              
       </subsection>
       
       <subsection name="缓存">
