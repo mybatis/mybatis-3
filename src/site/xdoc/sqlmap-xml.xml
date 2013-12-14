@@ -294,7 +294,8 @@ ps.setInt(1,id);]]></source>
             <tr>
               <td><code>parameterType</code></td>
               <td>The fully qualified class name or alias for the parameter that will be passed into this
-                statement.
+                statement. This attribute is optional because MyBatis can calculate the TypeHandler to use out of 
+                the actual parameter passed to the statement. Default is <code>unset</code>.
               </td>
             </tr>
             <tr>
