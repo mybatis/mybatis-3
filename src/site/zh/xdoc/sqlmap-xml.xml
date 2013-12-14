@@ -1328,11 +1328,11 @@ prop1 和 prop2 以参数对象形式来设置给目标嵌套查询语句。
   <association property="author" column="author_id" javaType="Author" select="selectAuthor"/>
 </resultMap>
 
-<select id="selectBlog" parameterType="int" resultMap="blogResult">
+<select id="selectBlog" resultMap="blogResult">
   SELECT * FROM BLOG WHERE ID = #{id}
 </select>
 
-<select id="selectAuthor" parameterType="int" resultType="Author">
+<select id="selectAuthor" resultType="Author">
   SELECT * FROM AUTHOR WHERE ID = #{id}
 </select>]]></source>
 
@@ -1427,7 +1427,7 @@ resultMap
 来说明它如何工作。代替了执行一个分离的语句,我们联合博客表和作者表在一起,就像:
         </p>
 
-        <source><![CDATA[<select id="selectBlog" parameterType="int" resultMap="blogResult">
+        <source><![CDATA[<select id="selectBlog" resultMap="blogResult">
   select
     B.id            as blog_id,
     B.title         as blog_title,
@@ -1495,7 +1495,7 @@ resultMap
           The select statement would look like:
         </p>
 
-        <source><![CDATA[<select id="selectBlog" parameterType="int" resultMap="blogResult">
+        <source><![CDATA[<select id="selectBlog" resultMap="blogResult">
   select
     B.id            as blog_id,
     B.title         as blog_title,
@@ -1582,11 +1582,11 @@ resultMap
   <collection property="posts" javaType="ArrayList" column="id" ofType="Post" select="selectPostsForBlog"/>
 </resultMap>
 
-<select id="selectBlog" parameterType="int" resultMap="blogResult">
+<select id="selectBlog" resultMap="blogResult">
   SELECT * FROM BLOG WHERE ID = #{id}
 </select>
 
-<select id="selectPostsForBlog" parameterType="int" resultType="Blog">
+<select id="selectPostsForBlog" resultType="Blog">
   SELECT * FROM POST WHERE BLOG_ID = #{id}
 </select>]]></source>
 
@@ -1619,7 +1619,7 @@ javaType 属性是不需要的,因为 MyBatis 在很多情况下会为你算出�
 
         <p>First, let's look at the SQL:</p>
 
-        <source><![CDATA[<select id="selectBlog" parameterType="int" resultMap="blogResult">
+        <source><![CDATA[<select id="selectBlog" resultMap="blogResult">
   select
   B.id as blog_id,
   B.title as blog_title,
@@ -1849,7 +1849,7 @@ MyBatis 会从结果集中得到每条记录,
           hence this may result in undesired mappings. To understand the risk have a look at the following sample:
         </p>
         
-        <source><![CDATA[<select id="selectBlog" parameterType="int" resultMap="blogResult">
+        <source><![CDATA[<select id="selectBlog" resultMap="blogResult">
   select
     B.id,
     B.title,

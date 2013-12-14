@@ -982,11 +982,11 @@ prop1, prop2 형태로 셋팅하게 될 것이다.</td>
   <association property="author" column="author_id" javaType="Author" select="selectAuthor"/>
 </resultMap>
 
-<select id="selectBlog" parameterType="int" resultMap="blogResult">
+<select id="selectBlog" resultMap="blogResult">
   SELECT * FROM BLOG WHERE ID = #{id}
 </select>
 
-<select id="selectAuthor" parameterType="int" resultType="Author">
+<select id="selectAuthor" resultType="Author">
   SELECT * FROM AUTHOR WHERE ID = #{id}
 </select>]]></source>
 
@@ -1057,7 +1057,7 @@ prop1, prop2 형태로 셋팅하게 될 것이다.</td>
         <p>위에서 내포된 관계의 매우 복잡한 예제를 보았을 것이다. 다음은 작동하는 것을 보기 위한 좀더 간단한 예제이다. 개별
 구문을 실행하는 것 대신에, Blog 와 Author 테이블을 함께 조인했다.</p>
 
-        <source><![CDATA[<select id="selectBlog" parameterType="int" resultMap="blogResult">
+        <source><![CDATA[<select id="selectBlog" resultMap="blogResult">
   select
     B.id            as blog_id,
     B.title         as blog_title,
@@ -1116,7 +1116,7 @@ association 결과 매핑을 내포시킬수 있다. 다음은 이 방법을 사
           The select statement would look like:
         </p>
 
-        <source><![CDATA[<select id="selectBlog" parameterType="int" resultMap="blogResult">
+        <source><![CDATA[<select id="selectBlog" resultMap="blogResult">
   select
     B.id            as blog_id,
     B.title         as blog_title,
@@ -1191,11 +1191,11 @@ association 결과 매핑을 내포시킬수 있다. 다음은 이 방법을 사
   <collection property="posts" javaType="ArrayList" column="id" ofType="Post" select="selectPostsForBlog"/>
 </resultMap>
 
-<select id="selectBlog" parameterType="int" resultMap="blogResult">
+<select id="selectBlog" resultMap="blogResult">
   SELECT * FROM BLOG WHERE ID = #{id}
 </select>
 
-<select id="selectPostsForBlog" parameterType="int" resultType="Blog">
+<select id="selectPostsForBlog" resultType="Blog">
   SELECT * FROM POST WHERE BLOG_ID = #{id}
 </select>]]></source>
 
@@ -1221,7 +1221,7 @@ collection 의 타입을 구분하기 위해 필요하다.</p>
 
         <p>먼저, SQL 을 보자.</p>
 
-        <source><![CDATA[<select id="selectBlog" parameterType="int" resultMap="blogResult">
+        <source><![CDATA[<select id="selectBlog" resultMap="blogResult">
   select
   B.id as blog_id,
   B.title as blog_title,
@@ -1407,7 +1407,7 @@ vehicle 간의 관계를 알 수 있다. 그러므로, 나머지 프로퍼티들
           hence this may result in undesired mappings. To understand the risk have a look at the following sample:
         </p>
         
-        <source><![CDATA[<select id="selectBlog" parameterType="int" resultMap="blogResult">
+        <source><![CDATA[<select id="selectBlog" resultMap="blogResult">
   select
     B.id,
     B.title,

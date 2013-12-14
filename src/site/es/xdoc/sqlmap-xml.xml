@@ -728,13 +728,13 @@ public class User {
               <td>Un identificador único dentro del namespace que se utiliza para identificar el result map.</td>
             </tr>
             <tr>
-              <td><code>parameterType</code></td>
+              <td><code>type</code></td>
               <td>El nombre completamente cualificado de la clase o el alias del parámetro que se pasará al statement.</td>
             </tr>
             <tr>
               <td><code>autoMapping</code></td>
               <td>Si el atributo está presente MyBatis habilita o inhabilita el automapping para este result map.
-                El atributo sobreescribe el parametro global autoMappingBehavior. 
+                El atributo sobreescribe el parametro global autoMappingBehavior. Valor por defecto: no informado.
               </td>
             </tr>
           </tbody>
@@ -1006,11 +1006,11 @@ public class User {
   <association property="author" column="author_id" javaType="Author" select="selectAuthor"/>
 </resultMap>
 
-<select id="selectBlog" parameterType="int" resultMap="blogResult">
+<select id="selectBlog" resultMap="blogResult">
   SELECT * FROM BLOG WHERE ID = #{id}
 </select>
 
-<select id="selectAuthor" parameterType="int" resultType="Author">
+<select id="selectAuthor" resultType="Author">
   SELECT * FROM AUTHOR WHERE ID = #{id}
 </select>]]></source>
 
@@ -1081,7 +1081,7 @@ public class User {
         <p>Previamente has visto un ejemplo muy complejo de asociaciones anidadas. Lo que se muestra a continuación es un ejemplo más simple que muestra cómo funciona esta característica. En lugar de ejecutar un statement separado, vamos a hacer una JOIN de las tablas Blog y Author de la siguiente forma:
         </p>
 
-        <source><![CDATA[<select id="selectBlog" parameterType="int" resultMap="blogResult">
+        <source><![CDATA[<select id="selectBlog" resultMap="blogResult">
   select
     B.id            as blog_id,
     B.title         as blog_title,
@@ -1138,7 +1138,7 @@ public class User {
           Pero ¿y si el blog tiene un co-autor? La select sería algo así:
         </p>
 
-        <source><![CDATA[<select id="selectBlog" parameterType="int" resultMap="blogResult">
+        <source><![CDATA[<select id="selectBlog" resultMap="blogResult">
   select
     B.id            as blog_id,
     B.title         as blog_title,
@@ -1286,11 +1286,11 @@ SELECT * FROM AUTHOR WHERE ID = #{id}]]></source>
   <collection property="posts" javaType="ArrayList" column="id" ofType="Post" select="selectPostsForBlog"/>
 </resultMap>
 
-<select id="selectBlog" parameterType="int" resultMap="blogResult">
+<select id="selectBlog" resultMap="blogResult">
   SELECT * FROM BLOG WHERE ID = #{id}
 </select>
 
-<select id="selectPostsForBlog" parameterType="int" resultType="Post">
+<select id="selectPostsForBlog" resultType="Post">
   SELECT * FROM POST WHERE BLOG_ID = #{id}
 </select>]]></source>
 
@@ -1315,7 +1315,7 @@ SELECT * FROM AUTHOR WHERE ID = #{id}]]></source>
 
         <p>Primero, echemos un vistazo al SQL:</p>
 
-        <source><![CDATA[<select id="selectBlog" parameterType="int" resultMap="blogResult">
+        <source><![CDATA[<select id="selectBlog" resultMap="blogResult">
   select
   B.id as blog_id,
   B.title as blog_title,
@@ -1372,7 +1372,7 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
         <p>Se debe proporcionar un nombre a cada resultset informando el atributo 
         <code>resultSets</code> del mapped statement con una lista de nombres separados por comas.</p>
 
-        <source><![CDATA[<select id="selectBlog" resultSets="blogs,posts" parameterType="int" resultMap="blogResult">
+        <source><![CDATA[<select id="selectBlog" resultSets="blogs,posts" resultMap="blogResult">
   {call getBlogsAndPosts(#{id,jdbcType=INTEGER,mode=IN})}
 </select>]]></source>
         
@@ -1532,7 +1532,7 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
           por lo tanto podrían producirse mapeos automáticos indeseados. Para comprender el riesgo observa el siguiente ejemplo:
         </p>
         
-        <source><![CDATA[<select id="selectBlog" parameterType="int" resultMap="blogResult">
+        <source><![CDATA[<select id="selectBlog" resultMap="blogResult">
   select
     B.id,
     B.title,
