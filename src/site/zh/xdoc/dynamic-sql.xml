@@ -54,7 +54,7 @@ MyBatis 的一个强大的特性之一通常是它的动态 SQL 能力。
 在动态 SQL 中所做的最通用的事情是包含部分 where 字句的条件。比如:
   </p>
   <source><![CDATA[<select id="findActiveBlogWithTitleLike" 
-     parameterType="Blog" resultType="Blog">
+     resultType="Blog">
   SELECT * FROM BLOG 
   WHERE state = ‘ACTIVE’ 
   <if test="title != null">
@@ -71,7 +71,7 @@ MyBatis 的一个强大的特性之一通常是它的动态 SQL 能力。
 简单加入另外的一个条件。
   </p>
   <source><![CDATA[<select id="findActiveBlogLike" 
-     parameterType="Blog" resultType="Blog">
+     resultType="Blog">
   SELECT * FROM BLOG WHERE state = ‘ACTIVE’ 
   <if test="title != null">
     AND title like #{title}
@@ -94,7 +94,7 @@ MyBatis 的一个强大的特性之一通常是它的动态 SQL 能力。
 择的结果列表,而不是返回大量没有意义的随机博客结果列表)。
   </p>
   <source><![CDATA[<select id="findActiveBlogLike" 
-     parameterType="Blog" resultType="Blog">
+     resultType="Blog">
   SELECT * FROM BLOG WHERE state = ‘ACTIVE’
   <choose>
     <when test="title != null">
@@ -115,7 +115,7 @@ MyBatis 的一个强大的特性之一通常是它的动态 SQL 能力。
 例后会发生什么,但是这次我们将“ACTIVE = 1”也设置成动态的条件。
   </p>
   <source><![CDATA[<select id="findActiveBlogLike" 
-     parameterType="Blog" resultType="Blog">
+     resultType="Blog">
   SELECT * FROM BLOG 
   WHERE 
   <if test="state != null">
@@ -149,7 +149,7 @@ MyBatis 有一个简单的处理,这在 90%的情况下都会有用。而在不�
 以自定义处理方式。加上一个简单的改变,所有事情都会顺利进行:
   </p>
   <source><![CDATA[<select id="findActiveBlogLike" 
-     parameterType="Blog" resultType="Blog">
+     resultType="Blog">
   SELECT * FROM BLOG 
   <where> 
     <if test="state != null">
@@ -185,8 +185,7 @@ prefixOverrides 属性采用管道文本分隔符来覆盖,
 和动态更新语句相似的解决方案是 set。set 元素可以被用于动态包含更新的列,而不包
 含不需更新的。比如:
 </p>
-  <source><![CDATA[<update id="updateAuthorIfNecessary"
-       parameterType="domain.blog.Author">
+  <source><![CDATA[<update id="updateAuthorIfNecessary">
   update Author
     <set>
       <if test="username != null">username=#{username},</if>
@@ -243,7 +242,7 @@ Java API,所以你可以得到你已经创建的最有效的映射。
   <subsection name="bind">
   <p>The <code>bind</code> element lets you create a variable out of an OGNL expression and bind it to the context. For example:</p>
   <source><![CDATA[
-<select id="selectBlogsLike" parameterType="Blog" resultType="Blog">
+<select id="selectBlogsLike" resultType="Blog">
   <bind name="pattern" value="'%' + _parameter.getTitle() + '%'" />
   SELECT * FROM BLOG
   WHERE title LIKE #{pattern}
@@ -251,7 +250,7 @@ Java API,所以你可以得到你已经创建的最有效的映射。
   </subsection>
   <subsection name="Multi-db vendor support">
   <p>If a databaseIdProvider was configured a "_databaseId" variable is available for dynamic code, so you can build different statements depending on database vendor. Have a look at the following example:</p>
-  <source><![CDATA[<insert id="insert" parameterType="org.myapp.domain.User">
+  <source><![CDATA[<insert id="insert">
   <selectKey keyProperty="id" resultType="int" order="BEFORE">
     <if test="_databaseId == 'oracle'">
       select seq_users.nextval from dual

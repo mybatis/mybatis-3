@@ -44,7 +44,7 @@
       <subsection name="if" id="if">
         <p>동적 SQL 에서 가장 공통적으로 사용되는 것으로 where 의 일부로 포함될 수 있다. 예를 들면:</p>
         <source><![CDATA[<select id="findActiveBlogWithTitleLike" 
-     parameterType="Blog" resultType="Blog">
+     resultType="Blog">
   SELECT * FROM BLOG 
   WHERE state = ‘ACTIVE’ 
   <if test="title != null">
@@ -56,7 +56,7 @@
         <p>title 과 author 을 사용하여 검색하고 싶다면? 먼저, 의미가 좀더 잘 전달되도록 구문의 이름을 변경할 것이다. 그리고 다른
 조건을 추가한다.</p>
         <source><![CDATA[<select id="findActiveBlogLike" 
-     parameterType="Blog" resultType="Blog">
+     resultType="Blog">
   SELECT * FROM BLOG WHERE state = ‘ACTIVE’ 
   <if test="title != null">
     AND title like #{title}
@@ -72,7 +72,7 @@ MyBatis 에서는 choose 요소를 제공한다.</p>
         <p>위 예제를 다시 사용해보자. 지금은 title 만으로 검색하고 author 가 있다면 그 값으로 검색된다. 둘다 제공하지 않는다면,
 featured 상태의 blog 가 리턴된다.</p>
         <source><![CDATA[<select id="findActiveBlogLike" 
-     parameterType="Blog" resultType="Blog">
+     resultType="Blog">
   SELECT * FROM BLOG WHERE state = ‘ACTIVE’
   <choose>
     <when test="title != null">
@@ -90,7 +90,7 @@ featured 상태의 blog 가 리턴된다.</p>
       <subsection name="trim, where, set" id="trimWhereSet">
         <p>앞서 예제는 악명높게 다양한 요소가 사용된 동적 SQL 이다. “if” 예제를 사용해보자.</p>
         <source><![CDATA[<select id="findActiveBlogLike" 
-     parameterType="Blog" resultType="Blog">
+     resultType="Blog">
   SELECT * FROM BLOG 
   WHERE 
   <if test="state != null">
@@ -114,7 +114,7 @@ AND title like ‘someTitle’]]></source>
 될 것이다.</p>
         <p>실패하지 않기 위해서 조금 수정해야 한다. 조금 수정하면 아마도 다음과 같을 것이다:</p>
         <source><![CDATA[<select id="findActiveBlogLike" 
-     parameterType="Blog" resultType="Blog">
+     resultType="Blog">
   SELECT * FROM BLOG 
   <where> 
     <if test="state != null">
@@ -139,8 +139,7 @@ AND title like ‘someTitle’]]></source>
 명시된 것을 추가한다.</p>
         <p>다음 예제는 동적인 update 구문의 유사한 경우이다. set 요소는 update 하고자 하는 칼럼을 동적으로 포함시키기 위해
 사용될 수 있다. 예를 들어:</p>
-        <source><![CDATA[<update id="updateAuthorIfNecessary"
-       parameterType="domain.blog.Author">
+        <source><![CDATA[<update id="updateAuthorIfNecessary">
   update Author
     <set>
       <if test="username != null">username=#{username},</if>
@@ -182,7 +181,7 @@ AND title like ‘someTitle’]]></source>
   <subsection name="bind">
   <p>The <code>bind</code> element lets you create a variable out of an OGNL expression and bind it to the context. For example:</p>
   <source><![CDATA[
-<select id="selectBlogsLike" parameterType="Blog" resultType="Blog">
+<select id="selectBlogsLike" resultType="Blog">
   <bind name="pattern" value="'%' + _parameter.getTitle() + '%'" />
   SELECT * FROM BLOG
   WHERE title LIKE #{pattern}
@@ -190,7 +189,7 @@ AND title like ‘someTitle’]]></source>
   </subsection>
       <subsection name="Multi-db vendor support">
         <p>"_databaseId" 변수로 설정된 databaseIdProvider가 동적인 코드에도 사용가능하다면, 데이터베이스 제품별로 서로다른 구문을 사용할 수 있다. 다음의 예제를 보라:</p>
-        <source><![CDATA[<insert id="insert" parameterType="org.myapp.domain.User">
+        <source><![CDATA[<insert id="insert">
   <selectKey keyProperty="id" resultType="int" order="BEFORE">
     <if test="_databaseId == 'oracle'">
       select seq_users.nextval from dual

@@ -39,7 +39,7 @@
   <subsection name="if" id="if">
   <p>The most common thing to do in dynamic SQL is conditionally include a part of a where clause. For example:</p>
   <source><![CDATA[<select id="findActiveBlogWithTitleLike"
-     parameterType="Blog" resultType="Blog">
+     resultType="Blog">
   SELECT * FROM BLOG
   WHERE state = ‘ACTIVE’
   <if test="title != null">
@@ -49,7 +49,7 @@
   <p>This statement would provide an optional text search type of functionality. If you passed in no title, then all active Blogs would be returned. But if you do pass in a title, it will look for a title like that (for the keen eyed, yes in this case your parameter value would need to include any masking or wildcard characters).</p>
   <p>What if we wanted to optionally search by title and author?  First, I’d change the name of the statement to make more sense. Then simply add another condition.</p>
   <source><![CDATA[<select id="findActiveBlogLike"
-     parameterType="Blog" resultType="Blog">
+     resultType="Blog">
   SELECT * FROM BLOG WHERE state = ‘ACTIVE’
   <if test="title != null">
     AND title like #{title}
@@ -63,7 +63,7 @@
   <p>Sometimes we don’t want all of the conditionals to apply, instead we want to choose only one case among many options. Similar to a switch statement in Java, MyBatis offers a choose element.</p>
   <p>Let’s use the example above, but now let’s search only on title if one is provided, then only by author if one is provided. If neither is provided, let’s only return featured blogs (perhaps a strategically list selected by administrators, instead of returning  a huge meaningless list of random blogs).</p>
   <source><![CDATA[<select id="findActiveBlogLike"
-     parameterType="Blog" resultType="Blog">
+     resultType="Blog">
   SELECT * FROM BLOG WHERE state = ‘ACTIVE’
   <choose>
     <when test="title != null">
@@ -81,7 +81,7 @@
   <subsection name="trim, where, set" id="trimWhereSet">
   <p>The previous examples have been conveniently dancing around a notorious dynamic SQL challenge. Consider what would happen if we return to our "if" example, but this time we make "ACTIVE = 1" a dynamic condition as well.</p>
   <source><![CDATA[<select id="findActiveBlogLike"
-     parameterType="Blog" resultType="Blog">
+     resultType="Blog">
   SELECT * FROM BLOG
   WHERE
   <if test="state != null">
@@ -104,7 +104,7 @@ AND title like ‘someTitle’]]></source>
   <p>This would also fail. This problem is not easily solved with conditionals, and if you’ve ever had to write it, then you likely never want to do so again.</p>
   <p>MyBatis has a simple answer that will likely work in 90% of the cases. And in cases where it doesn’t, you can customize it so that it does. With one simple change, everything works fine:</p>
   <source><![CDATA[<select id="findActiveBlogLike"
-     parameterType="Blog" resultType="Blog">
+     resultType="Blog">
   SELECT * FROM BLOG
   <where>
     <if test="state != null">
@@ -125,8 +125,7 @@ AND title like ‘someTitle’]]></source>
 </trim>]]></source>
   <p>The <em>prefixOverrides</em> attribute takes a pipe delimited list of text to override, where whitespace <u>is</u> relevant. The result is the removal of anything specified in the <em>prefixOverrides</em> attribute, and the insertion of anything in the <em>prefix</em> attribute.</p>
   <p>There is a similar solution for dynamic update statements called <em>set</em>. The <em>set</em> element can be used to dynamically include columns to update, and leave out others. For example:</p>
-  <source><![CDATA[<update id="updateAuthorIfNecessary"
-       parameterType="domain.blog.Author">
+  <source><![CDATA[<update id="updateAuthorIfNecessary">
   update Author
     <set>
       <if test="username != null">username=#{username},</if>
@@ -161,7 +160,7 @@ AND title like ‘someTitle’]]></source>
   <subsection name="bind">
   <p>The <code>bind</code> element lets you create a variable out of an OGNL expression and bind it to the context. For example:</p>
   <source><![CDATA[
-<select id="selectBlogsLike" parameterType="Blog" resultType="Blog">
+<select id="selectBlogsLike" resultType="Blog">
   <bind name="pattern" value="'%' + _parameter.getTitle() + '%'" />
   SELECT * FROM BLOG
   WHERE title LIKE #{pattern}
@@ -169,7 +168,7 @@ AND title like ‘someTitle’]]></source>
   </subsection>
   <subsection name="Multi-db vendor support">
   <p>If a databaseIdProvider was configured a "_databaseId" variable is available for dynamic code, so you can build different statements depending on database vendor. Have a look at the following example:</p>
-  <source><![CDATA[<insert id="insert" parameterType="org.myapp.domain.User">
+  <source><![CDATA[<insert id="insert">
   <selectKey keyProperty="id" resultType="int" order="BEFORE">
     <if test="_databaseId == 'oracle'">
       select seq_users.nextval from dual

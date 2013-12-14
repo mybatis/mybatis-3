@@ -43,7 +43,7 @@
   <subsection name="if" id="if">
   <p>動的 SQL で最も良く行うのが、次のように条件に応じて where 句に検索条件を追加する処理でしょう。</p>
   <source><![CDATA[<select id="findActiveBlogWithTitleLike" 
-     parameterType="Blog" resultType="Blog">
+     resultType="Blog">
   SELECT * FROM BLOG 
   WHERE state = ‘ACTIVE’ 
   <if test="title != null">
@@ -56,7 +56,7 @@
     ステートメント名を分かりやすいものに変更したら、あとは条件をもう一つ追加するだけです。
   </p>
   <source><![CDATA[<select id="findActiveBlogLike" 
-     parameterType="Blog" resultType="Blog">
+     resultType="Blog">
   SELECT * FROM BLOG WHERE state = ‘ACTIVE’ 
   <if test="title != null">
     AND title like #{title}
@@ -70,7 +70,7 @@
   <p>全ての条件を適用する代わりに、多くの選択肢の中から一つを選んで適用したいという場合があります。</p>
   <p>引き続き上の例を使って、タイトルが指定されたらタイトルのみを条件として検索し、著者が指定されたら著者のみを条件として検索するようにしてみましょう。どちらも指定されなかった場合は注目のブログのみを返すようにしてみましょう（ランダムに選ばれた無意味なリストではなく、管理者が戦略的に選んだリストを返したいという要件があるのでしょう）。</p>
   <source><![CDATA[<select id="findActiveBlogLike" 
-     parameterType="Blog" resultType="Blog">
+     resultType="Blog">
   SELECT * FROM BLOG WHERE state = ‘ACTIVE’
   <choose>
     <when test="title != null">
@@ -88,7 +88,7 @@
   <subsection name="trim, where, set" id="trimWhereSet">
   <p>ここまでの例題は動的 SQL の厄介な問題点を都合よく避けていました。もう一度 if の例に戻って、今度は "ACTIVE = 1" も動的な条件に変更してみましょう。</p>
   <source><![CDATA[<select id="findActiveBlogLike" 
-     parameterType="Blog" resultType="Blog">
+     resultType="Blog">
   SELECT * FROM BLOG 
   WHERE 
   <if test="state != null">
@@ -111,7 +111,7 @@ AND title like ‘someTitle’]]></source>
   <p>これまた構文エラーで失敗するでしょう。動的 SQL の問題は単なる条件分岐だけで解決できるものではありません。自分で書いたことがある方なら、もう二度と書きたくないと思うはずです。</p>
   <p>MyBatis は約 90% のケースをうまく処理できる簡単な解決策を提供します。残りの 10% についても、カスタマイズすることで処理できるようになります。上記の例は、一箇所修正するだけで期待通りに動作するようになります。</p>
   <source><![CDATA[<select id="findActiveBlogLike" 
-     parameterType="Blog" resultType="Blog">
+     resultType="Blog">
   SELECT * FROM BLOG 
   <where> 
     <if test="state != null">
@@ -132,8 +132,7 @@ AND title like ‘someTitle’]]></source>
 </trim>]]></source>  
   <p><em>prefixOverrides</em> 属性にはパイプで区切られたオーバーライド対象の文字列を指定します。ここではスペースにも意味があります。trim 要素の <em>prefixOverrides</em> 属性のリストに含まれる文字列が先頭にあった場合は削除され、<em>prefix</em> 属性で指定された文字列は結果が空でない場合先頭に挿入されます。</p>
   <p>動的な update ステートメントのために同じような要素 <em>set</em> が用意されています。<em>set</em> 要素を使うと、アップデート対象の列を動的に追加することができます。例：</p>
-  <source><![CDATA[<update id="updateAuthorIfNecessary"
-       parameterType="domain.blog.Author">
+  <source><![CDATA[<update id="updateAuthorIfNecessary">
   update Author
     <set>
       <if test="username != null">username=#{username},</if>
@@ -168,7 +167,7 @@ AND title like ‘someTitle’]]></source>
   <subsection name="bind">
   <p><code>bind</code> 要素を使うと、OGNL 式の結果を変数に格納し、その変数を SQL 文中で使用することができます。</p>
   <source><![CDATA[
-<select id="selectBlogsLike" parameterType="Blog" resultType="Blog">
+<select id="selectBlogsLike" resultType="Blog">
   <bind name="pattern" value="'%' + _parameter.getTitle() + '%'" />
   SELECT * FROM BLOG
   WHERE title LIKE #{pattern} 
@@ -176,7 +175,7 @@ AND title like ‘someTitle’]]></source>
   </subsection>
   <subsection name="複数データベースのサポート">
   <p>databaseIdProvider が設定されている場合、条件式で "_databaseId" 変数が利用可能となります。この変数を使うと、実行時のデータベースに応じてステートメントを使い分けることができます。oracle と db2 で異なる select 文を発行する例を次に挙げておきます。</p>
-  <source><![CDATA[<insert id="insert" parameterType="org.myapp.domain.User">
+  <source><![CDATA[<insert id="insert">
   <selectKey keyProperty="id" resultType="int" order="BEFORE">
     <if test="_databaseId == 'oracle'">
       select seq_users.nextval from dual
