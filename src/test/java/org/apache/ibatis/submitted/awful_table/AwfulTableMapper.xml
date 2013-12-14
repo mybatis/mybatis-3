@@ -50,7 +50,7 @@
     delete from "awful table"
     where "CuStOmEr iD" = #{customerId,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="org.apache.ibatis.submitted.awful_table.AwfulTable" useGeneratedKeys="true" keyProperty="customerId" >
+  <insert id="insert" useGeneratedKeys="true" keyProperty="customerId" >
     insert into "awful table" ("first name", FIRST_NAME, 
       FIRSTNAME, "last name", E_MAIL, 
       "_id1", "$id2", "id5_", "id6$", 
@@ -62,7 +62,7 @@
       #{id7,jdbcType=INTEGER}, #{emailaddress,jdbcType=VARCHAR}, #{from,jdbcType=VARCHAR}, 
       #{active,jdbcType=BIT})
   </insert>
-  <insert id="insertSelective" parameterType="org.apache.ibatis.submitted.awful_table.AwfulTable" useGeneratedKeys="true" keyProperty="customerId" >
+  <insert id="insertSelective" useGeneratedKeys="true" keyProperty="customerId" >
     insert into "awful table"
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="firstFirstName != null" >
