@@ -235,6 +235,16 @@ public interface BlogMapper {
           これまでに説明した様々なクラスに適したスコープや、そのライフサイクルについて理解しておくことは大変重要です。
           誤って使用すると、深刻な整合性の問題の原因となります。
         </p>
+        <hr/>
+        <p><span class="label important">NOTE</span>
+          <strong>オブジェクトのライフサイクルと依存性注入（Dependency Injection）フレームワーク</strong>
+        </p>
+        <p>
+          Dependency Injection フレームワークを使うと、スレッドセーフでトランザクション管理された SqlSession や Mapper のインスタンスを作成し、あなたの Bean にインジェクトすることもできます。
+          こうすることで、SqlSession や Mapper のライフサイクルについてアプリケーションロジックと分離することができます。
+          MyBatis と DI フレームワークの組み合わせについては、サブプロジェクトである MyBatis-Spring または MyBatis-Guice を参照してください。
+        </p>
+        <hr/>
         <h4>SqlSessionFactoryBuilder</h4>
         <p>
           このクラスは、インスタンス化し、使用し、破棄することができます。
@@ -293,16 +303,6 @@ try {
   session.close();
 }
 ]]></source>
-        <hr/>
-        <p><span class="label important">NOTE</span>
-          <strong>オブジェクトのライフサイクルと依存性注入（Dependency Injection）フレームワーク</strong>
-        </p>
-        <p>
-          Dependency Injection フレームワークを使うと、スレッドセーフでトランザクション管理された SqlSession や Mapper のインスタンスを作成し、あなたの Bean にインジェクトすることもできます。
-          こうすることで、SqlSession や Mapper のライフサイクルについてアプリケーションロジックと分離することができます。
-          MyBatis と DI フレームワークの組み合わせについては、サブプロジェクトである MyBatis-Spring または MyBatis-Guice を参照してください。
-        </p>
-        <hr/>
       </subsection>
     </section>
   </body>

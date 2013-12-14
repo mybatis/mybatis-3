@@ -274,6 +274,21 @@ public interface BlogMapper {
         qui ont été abordées jusqu'ici. Utilisées incorrectement, elles peuvent
         poser de sévères problèmes de concurrence.
       </p>
+      <hr/>
+      <p><span class="label important">NOTE</span>
+        <strong>Cycle de vie au sein d'un framework d'injection de dépendance</strong>
+      </p>
+      <p>
+        Les frameworks d'injection de dépendance (ou IoC, inversion de contrôle)
+        peuvent créer des SqlSession et des mappers transactionnels, thread
+        safe, et les injecter directement dans vos beans si bien que vous n'avez
+        plus à vous soucier de leur cycle de vie.
+        Vous serez probablement intéressé par les sous-projets MyBatis-Spring et
+        MyBatis-Guice pour apprendre plus sur l'injection de dépendances avec
+        MyBatis.
+      </p>
+      <hr/>
+
       <h4>SqlSessionFactoryBuilder</h4>
         <p>
           Cette classe peut être instanciée, utilisée puis jetée aux oubliettes.
@@ -348,20 +363,6 @@ try {
 }
 ]]></source>
 
-      <hr/>
-      <p><span class="label important">NOTE</span>
-        <strong>Cycle de vie au sein d'un framework d'injection de dépendance</strong>
-      </p>
-      <p>
-        Les frameworks d'injection de dépendance (ou IoC, inversion de contrôle)
-        peuvent créer des SqlSession et des mappers transactionnels, thread
-        safe, et les injecter directement dans vos beans si bien que vous n'avez
-        plus à vous soucier de leur cycle de vie.
-        Vous serez probablement intéressé par les sous-projets MyBatis-Spring et
-        MyBatis-Guice pour apprendre plus sur l'injection de dépendances avec
-        MyBatis.
-      </p>
-      <hr/>
       </subsection>
     </section>
   </body>

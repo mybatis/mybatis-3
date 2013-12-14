@@ -276,6 +276,17 @@ public interface BlogMapper {
 不正确的使用它们会导
 致严重的并发问题。
       </p>
+      <hr/>
+      <p><span class="label important">重要</span>
+        <strong>Object lifecycle and Dependency Injection Frameworks</strong>
+      </p>
+      <p>
+        Dependency Injection frameworks can create thread safe, transactional SqlSessions and mappers 
+        and inject them directly into your beans so you can just forget about their lifecycle. 
+        You may want to have a look at MyBatis-Spring or
+        MyBatis-Guice sub-projects to know more about using MyBatis with DI frameworks.
+      </p>
+      <hr/>
       <h4>SqlSessionFactoryBuilder</h4>
         <p>
 这个类可以被实例化,使用和丢弃。一旦你创建了 SqlSessionFactory 后,这个类就不需
@@ -342,17 +353,6 @@ try {
 }
 ]]></source>
 
-      <hr/>
-      <p><span class="label important">重要</span>
-        <strong>Object lifecycle and Dependency Injection Frameworks</strong>
-      </p>
-      <p>
-        Dependency Injection frameworks can create thread safe, transactional SqlSessions and mappers 
-        and inject them directly into your beans so you can just forget about their lifecycle. 
-        You may want to have a look at MyBatis-Spring or
-        MyBatis-Guice sub-projects to know more about using MyBatis with DI frameworks.
-      </p>
-      <hr/>
       </subsection>
     </section>
   </body>

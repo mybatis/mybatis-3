@@ -30,7 +30,7 @@
     
     <subsection name="Installation">
       <p>
-        To use the MyBatis you just need to include the
+        To use MyBatis you just need to include the
         <code>
           mybatis-x.x.x.jar
         </code>
@@ -316,6 +316,19 @@ public interface BlogMapper {
         classes we've discussed so far. Using them incorrectly can cause
         severe concurrency problems.
       </p>
+      
+      <hr/>
+      <p><span class="label important">NOTE</span>
+        <strong>Object lifecycle and Dependency Injection Frameworks</strong>
+      </p>
+      <p>
+        Dependency Injection frameworks can create thread safe, transactional SqlSessions and mappers 
+        and inject them directly into your beans so you can just forget about their lifecycle. 
+        You may want to have a look at MyBatis-Spring or
+        MyBatis-Guice sub-projects to know more about using MyBatis with DI frameworks.
+      </p>
+      <hr/>
+      
       <h4>SqlSessionFactoryBuilder</h4>
         <p>
           This class can be instantiated, used and thrown away. There is no need
@@ -388,17 +401,6 @@ try {
 }
 ]]></source>
 
-      <hr/>
-      <p><span class="label important">NOTE</span>
-        <strong>Object lifecycle and Dependency Injection Frameworks</strong>
-      </p>
-      <p>
-        Dependency Injection frameworks can create thread safe, transactional SqlSessions and mappers 
-        and inject them directly into your beans so you can just forget about their lifecycle. 
-        You may want to have a look at MyBatis-Spring or
-        MyBatis-Guice sub-projects to know more about using MyBatis with DI frameworks.
-      </p>
-      <hr/>
       </subsection>
     </section>
   </body>

@@ -316,6 +316,25 @@ public interface BlogMapper {
 				<p>Es muy importante entender los distintos ámbitos y ciclos de vida
 					de las clases de las que hemos hablado hasta ahora. Usarlas de
 					forma incorrecta puede traer serias complicaciones.</p>
+				<hr />
+				<p>
+					<span class="label important">NOTA</span>
+					<strong>Ciclo de vida de los objetos y frameworks de inyección de
+						dependencias</strong>
+				</p>
+				<p>
+					Los frameworks de inyección de dependencias pueden crear
+					SqlSessions y mappers
+					<i>thread safe</i>
+					(reeentrante) y
+					transaccionales, e inyectarlos directmaente en tus beans de forma que puedes
+					olvidarte de su ciclo de vida.
+					Echa un vistazo a los sub-projectos MyBatis-Spring o MyBatis-Guice para
+					conocer más detalles sobre cómo usar
+					MyBatis con estos frameworks.
+				</p>
+				<hr />
+
 				<h4>SqlSessionFactoryBuilder</h4>
 				<p>Esta clase puede instanciarse, usarse y desecharse. No es
 					necesario mantenerla una vez que ya has creado la
@@ -382,24 +401,6 @@ try {
 }
 ]]></source>
 
-				<hr />
-				<p>
-					<span class="label important">NOTA</span>
-					<strong>Ciclo de vida de los objetos y frameworks de inyección de
-						dependencias</strong>
-				</p>
-				<p>
-					Los frameworks de inyección de dependencias pueden crear
-					SqlSessions y mappers
-					<i>thread safe</i>
-					(reeentrante) y
-					transaccionales, e inyectarlos directmaente en tus beans de forma que puedes
-					olvidarte de su ciclo de vida.
-					Echa un vistazo a los sub-projectos MyBatis-Spring o MyBatis-Guice para
-					conocer más detalles sobre cómo usar
-					MyBatis con estos frameworks.
-				</p>
-				<hr />
 			</subsection>
 		</section>
 	</body>

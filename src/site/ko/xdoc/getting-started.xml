@@ -191,6 +191,14 @@ public interface BlogMapper {
     <subsection name="스코프(Scope) 와 생명주기(Lifecycle)">
       <p>이제부터 다룰 스코프와 생명주기에 대해서 이해하는 것은 매우 중요하다. 스코프와 생명주기를 잘못 사용하는 것은 다양한
 동시성 문제를 야기할 수 있다..</p>
+      <hr/>
+      <p><span class="label important">참고</span>
+        <strong>객체 생명주기와 의존성 삽입 프레임워크</strong>
+      </p>
+      <p>의존성 삽입 프레임워크는 쓰레드에 안전하도록 해준다. 트랜잭션 성질을 가지는 SqlSessions과 매퍼들 그리고 그것들을 직접 빈에 삽입하면 생명주기에 대해 기억하지 않아도 되게 해준다.
+      DI프레임워크와 MyBatis를 사용하기 위해 좀더 많은 정보를 보기 위해서는 MyBatis-Spring이나 MyBatis-Guice 하위 프로젝트를 찾아보면 된다. 
+      </p>
+      <hr/>
       <h4>SqlSessionFactoryBuilder</h4>
         <p>이 클래스는 인스턴스회되어 사용되고 던져질 수 있다. SqlSessionFactory 를 생성한 후 유지할 필요는 없다. 그러므로
 SqlSessionFactoryBuilder 인스턴스의 가장 좋은 스코프는 메서드 스코프(예를 들면, 메서드 지역변수)이다. 여러 개의
@@ -232,14 +240,6 @@ try {
 }
 ]]></source>
 
-      <hr/>
-      <p><span class="label important">참고</span>
-        <strong>객체 생명주기와 의존성 삽입 프레임워크</strong>
-      </p>
-      <p>의존성 삽입 프레임워크는 쓰레드에 안전하도록 해준다. 트랜잭션 성질을 가지는 SqlSessions과 매퍼들 그리고 그것들을 직접 빈에 삽입하면 생명주기에 대해 기억하지 않아도 되게 해준다.
-      DI프레임워크와 MyBatis를 사용하기 위해 좀더 많은 정보를 보기 위해서는 MyBatis-Spring이나 MyBatis-Guice 하위 프로젝트를 찾아보면 된다. 
-      </p>
-      <hr/>
       </subsection>
     </section>
   </body>
