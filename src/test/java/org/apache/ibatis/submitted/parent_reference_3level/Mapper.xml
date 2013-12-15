@@ -48,4 +48,34 @@
         <result column="comment" property="comment"/>
         <association property="post" resultMap="PostResultMap"></association>
     </resultMap>
+
+    <select id="selectBlogByPrimaryKeyColumnPrefix" parameterType="int" resultMap="BlogResultMapColumnPrefix">
+        select 
+            b.id as blog_id, b.title as blog_title,
+            p.id as post_id, p.body as post_body,
+            c.id as post_comment_comment_id, c.comment as post_comment_comment
+        from blog b
+        left outer join post p on b.id = p.blog_id
+        left outer join comment c on p.id = c.post_id 
+        where b.id = #{id}
+    </select>
+
+    <resultMap id="BlogResultMapColumnPrefix" type="Blog">
+        <id column="blog_id" property="id" />
+        <result column="blog_title" property="title"/>
+        <collection property="posts" resultMap="PostResultMapColumnPrefix" columnPrefix="post_"></collection>
+    </resultMap>
+
+    <resultMap id="PostResultMapColumnPrefix" type="Post">
+        <id column="id" property="id" />
+        <result column="body" property="body"/>
+        <association property="blog" resultMap="BlogResultMapColumnPrefix"></association>
+        <collection property="comments" resultMap="CommentResultMapColumnPrefix" columnPrefix="comment_"></collection>
+    </resultMap>
+
+    <resultMap id="CommentResultMapColumnPrefix" type="Comment">
+        <id column="comment_id" property="id" />
+        <result column="comment" property="comment"/>
+        <association property="post" resultMap="PostResultMapColumnPrefix"></association>
+    </resultMap>
 </mapper>
