@@ -1779,8 +1779,7 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
        
 
         <p>
-          Regardless of the auto-mapping level configured you can enable or disable the automapping for an specific statement
-          by adding the attribute <code>autoMapping</code> to it:
+          尚、グローバルな自動マッピング設定とは別に、<code>autoMapping</code> 属性を指定することで特定のステートメントでの自動マッピング動作を有効／無効化することもできます。
         </p>
 
         <source><![CDATA[<select id="selectUsers" resultType="User" autoMapping="false">
