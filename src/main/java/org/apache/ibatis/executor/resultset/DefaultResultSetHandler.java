@@ -75,6 +75,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
   // nested resultmaps
   private final Map<CacheKey, Object> nestedResultObjects = new HashMap<CacheKey, Object>();
   private final Map<CacheKey, Object> ancestorObjects = new HashMap<CacheKey, Object>();
+  private final Map<String, String> ancestorColumnPrefix = new HashMap<String, String>();
 
   // multiple resultsets
   private final Map<String, ResultMapping> nextResultMaps = new HashMap<String, ResultMapping>();
@@ -215,6 +216,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
 
   private void cleanUpAfterHandlingResultSet() {
     nestedResultObjects.clear();
+    ancestorColumnPrefix.clear();
   }
 
   private void validateResultMapsCount(ResultSetWrapper rsw, int resultMapCount) {
@@ -742,10 +744,11 @@ public class DefaultResultSetHandler implements ResultSetHandler {
   //
 
   private Object getRowValue(ResultSetWrapper rsw, ResultMap resultMap, CacheKey combinedKey, CacheKey absoluteKey, String columnPrefix, Object partialObject) throws SQLException {
+    final String resultMapId = resultMap.getId();
     Object resultObject = partialObject;
     if (resultObject != null) {
       final MetaObject metaObject = configuration.newMetaObject(resultObject);
-      ancestorObjects.put(absoluteKey, resultObject);
+      putAncestor(absoluteKey, resultObject, resultMapId, columnPrefix);
       applyNestedResultMappings(rsw, resultMap, metaObject, columnPrefix, combinedKey, false);
       ancestorObjects.remove(absoluteKey);
     } else {
@@ -758,7 +761,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
           foundValues = applyAutomaticMappings(rsw, resultMap, metaObject, columnPrefix) || foundValues;
         }        
         foundValues = applyPropertyMappings(rsw, resultMap, metaObject, lazyLoader, columnPrefix) || foundValues;
-        ancestorObjects.put(absoluteKey, resultObject);
+        putAncestor(absoluteKey, resultObject, resultMapId, columnPrefix);
         foundValues = applyNestedResultMappings(rsw, resultMap, metaObject, columnPrefix, combinedKey, true) || foundValues;
         ancestorObjects.remove(absoluteKey);
         foundValues = (lazyLoader != null && lazyLoader.size() > 0) || foundValues;
@@ -767,6 +770,13 @@ public class DefaultResultSetHandler implements ResultSetHandler {
       if (combinedKey != CacheKey.NULL_CACHE_KEY) nestedResultObjects.put(combinedKey, resultObject);
     }
     return resultObject;
+  }
+
+  private void putAncestor(CacheKey rowKey, Object resultObject, String resultMapId, String columnPrefix) {
+    if (!ancestorColumnPrefix.containsKey(resultMapId)) {
+      ancestorColumnPrefix.put(resultMapId, columnPrefix);
+    }
+    ancestorObjects.put(rowKey, resultObject);
   }
 
   //
@@ -781,11 +791,16 @@ public class DefaultResultSetHandler implements ResultSetHandler {
         try {
           final String columnPrefix = getColumnPrefix(parentPrefix, resultMapping);
           final ResultMap nestedResultMap = getNestedResultMap(rsw.getResultSet(), nestedResultMapId, columnPrefix);
-          final CacheKey rowKey = createRowKey(nestedResultMap, rsw, columnPrefix);
-          final Object ancestorObject = ancestorObjects.get(rowKey);
+          CacheKey rowKey = null;
+          Object ancestorObject = null;
+          if (ancestorColumnPrefix.containsKey(nestedResultMapId)) {
+            rowKey = createRowKey(nestedResultMap, rsw, ancestorColumnPrefix.get(nestedResultMapId));
+            ancestorObject = ancestorObjects.get(rowKey);
+          }
           if (ancestorObject != null) { 
             if (newObject) metaObject.setValue(resultMapping.getProperty(), ancestorObject);
           } else {
+            rowKey = createRowKey(nestedResultMap, rsw, columnPrefix);
             final CacheKey combinedKey = combineKeys(rowKey, parentRowKey);            
             Object rowValue = nestedResultObjects.get(combinedKey);
             boolean knownValue = (rowValue != null);

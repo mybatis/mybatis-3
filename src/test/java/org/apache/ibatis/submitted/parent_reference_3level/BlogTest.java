@@ -28,7 +28,6 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class BlogTest {
@@ -99,7 +98,6 @@ public class BlogTest {
     }
   }
 
-  @Ignore
   @Test
   public void testSelectBlogWithPostsColumnPrefix() {
     SqlSession session = sqlSessionFactory.openSession();
@@ -120,7 +118,6 @@ public class BlogTest {
     }
   }
 
-  @Ignore
   @Test
   public void testSelectBlogWithoutPostsColumnPrefix() {
     SqlSession session = sqlSessionFactory.openSession();
