@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2013 the original author or authors.
+ *    Copyright 2009-2014 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -177,17 +177,11 @@ public class XMLStatementBuilder extends BaseBuilder {
   }
 
   private LanguageDriver getLanguageDriver(String lang) {
-    Class<?> langClass;
-    if (lang == null) {
-      langClass = configuration.getLanguageRegistry().getDefaultDriverClass();
-    } else {
+    Class<?> langClass = null;
+    if (lang != null) {
       langClass = resolveClass(lang);
-      configuration.getLanguageRegistry().register(langClass);
     }
-    if (langClass == null) {
-      langClass = configuration.getLanguageRegistry().getDefaultDriverClass();
-    }
-    return configuration.getLanguageRegistry().getDriver(langClass);
+    return builderAssistant.getLanguageDriver(langClass);
   }
 
 }

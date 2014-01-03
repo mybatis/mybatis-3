@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2013 the original author or authors.
+ *    Copyright 2009-2014 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -505,33 +505,42 @@ public class MapperBuilderAssistant extends BaseBuilder {
         resultType, property, column, javaType, jdbcType, nestedSelect, 
         nestedResultMap, notNullColumn, columnPrefix, typeHandler, flags, null, null);
   }  
-  
-  /** Backward compatibility signature */
-    public MappedStatement addMappedStatement(
-      String id,
-      SqlSource sqlSource,
-      StatementType statementType,
-      SqlCommandType sqlCommandType,
-      Integer fetchSize,
-      Integer timeout,
-      String parameterMap,
-      Class<?> parameterType,
-      String resultMap,
-      Class<?> resultType,
-      ResultSetType resultSetType,
-      boolean flushCache,
-      boolean useCache,
-      boolean resultOrdered,
-      KeyGenerator keyGenerator,
-      String keyProperty,
-      String keyColumn,
-      String databaseId,
-      LanguageDriver lang) {
-      return addMappedStatement(
-        id, sqlSource, statementType, sqlCommandType, fetchSize, timeout, 
-        parameterMap, parameterType, resultMap, resultType, resultSetType, 
-        flushCache, useCache, resultOrdered, keyGenerator, keyProperty, 
-        keyColumn, databaseId, lang, null);
+
+  public LanguageDriver getLanguageDriver(Class<?> langClass) {
+    if (langClass != null) {
+      configuration.getLanguageRegistry().register(langClass);
+    } else {
+      langClass = configuration.getLanguageRegistry().getDefaultDriverClass();
     }
+    return configuration.getLanguageRegistry().getDriver(langClass);
+  }
+
+  /** Backward compatibility signature */
+  public MappedStatement addMappedStatement(
+    String id,
+    SqlSource sqlSource,
+    StatementType statementType,
+    SqlCommandType sqlCommandType,
+    Integer fetchSize,
+    Integer timeout,
+    String parameterMap,
+    Class<?> parameterType,
+    String resultMap,
+    Class<?> resultType,
+    ResultSetType resultSetType,
+    boolean flushCache,
+    boolean useCache,
+    boolean resultOrdered,
+    KeyGenerator keyGenerator,
+    String keyProperty,
+    String keyColumn,
+    String databaseId,
+    LanguageDriver lang) {
+    return addMappedStatement(
+      id, sqlSource, statementType, sqlCommandType, fetchSize, timeout, 
+      parameterMap, parameterType, resultMap, resultType, resultSetType, 
+      flushCache, useCache, resultOrdered, keyGenerator, keyProperty, 
+      keyColumn, databaseId, lang, null);
+  }
 
 }
