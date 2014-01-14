@@ -15,6 +15,9 @@
  */
 package org.apache.ibatis.cache;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +54,7 @@ public class CacheKey implements Cloneable, Serializable {
   }
 
   public void update(Object object) {
-    int baseHashCode = object == null ? 1 : object.hashCode();
+    int baseHashCode = new HashCodeBuilder().append(object).toHashCode();
 
     count++;
     checksum += baseHashCode;
@@ -81,10 +84,12 @@ public class CacheKey implements Cloneable, Serializable {
     for (int i = 0; i < updateList.size(); i++) {
       Object thisObject = updateList.get(i);
       Object thatObject = cacheKey.updateList.get(i);
-      if (thisObject == null) {
-        if (thatObject != null) return false;
-      } else {
-        if (!thisObject.equals(thatObject)) return false;
+
+      EqualsBuilder equalsBuilder = new EqualsBuilder();
+      equalsBuilder.append(thisObject, thatObject);
+
+      if (!equalsBuilder.isEquals()) {
+        return false;
       }
     }
     return true;
