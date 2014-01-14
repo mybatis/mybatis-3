@@ -128,7 +128,7 @@
     <findbugs.onlyAnalyze>org.apache.ibatis.*</findbugs.onlyAnalyze>
     <clirr.comparisonVersion>3.1.1</clirr.comparisonVersion>
     <osgi.export>org.apache.ibatis.*;version=${project.version};-noimport:=true</osgi.export>
-    <osgi.import>!ognl,net.sf.cglib.*;resolution:=optional,javassist.*;resolution:=optional,org.apache.commons.logging.*;resolution:=optional,org.apache.log4j.*;resolution:=optional,org.slf4j.*;resolution:=optional,org.apache.logging.log4j.*;resolution:=optional,*</osgi.import>
+    <osgi.import>org.apache.commons.lang3.builder;version="3.2.1",!ognl,net.sf.cglib.*;resolution:=optional,javassist.*;resolution:=optional,org.apache.commons.logging.*;resolution:=optional,org.apache.log4j.*;resolution:=optional,org.slf4j.*;resolution:=optional,org.apache.logging.log4j.*;resolution:=optional,*</osgi.import>
     <osgi.dynamicImport>*</osgi.dynamicImport>
     <javac.src.version>1.6</javac.src.version>
     <javac.target.version>1.6</javac.target.version>
@@ -171,6 +171,11 @@
       <artifactId>commons-logging</artifactId>
       <version>1.1.1</version>
       <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+      <version>3.2.1</version>
     </dependency>
     <dependency>
       <groupId>org.javassist</groupId>

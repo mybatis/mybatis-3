@@ -71,4 +71,12 @@ public class CacheKeyTest {
     assertEquals(key2, key1);
   }
 
+  @Test
+  public void shouldTestCacheKeysWithBinaryArrays() throws Exception {
+    byte[] array1 = new byte[]{1};
+    byte[] array2 = new byte[]{1};
+    CacheKey key1 = new CacheKey(new Object[]{array1});
+    CacheKey key2 = new CacheKey(new Object[]{array2});
+    assertTrue(key1.equals(key2));
+  }
 }
