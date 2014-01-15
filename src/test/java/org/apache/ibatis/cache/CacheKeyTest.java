@@ -25,8 +25,8 @@ public class CacheKeyTest {
   @Test
   public void shouldTestCacheKeysEqual() {
     Date date = new Date();
-    CacheKey key1 = new CacheKey(new Object[]{1, "hello", null, new Date(date.getTime())});
-    CacheKey key2 = new CacheKey(new Object[]{1, "hello", null, new Date(date.getTime())});
+    CacheKey key1 = new CacheKey(new Object[] { 1, "hello", null, new Date(date.getTime()) });
+    CacheKey key2 = new CacheKey(new Object[] { 1, "hello", null, new Date(date.getTime()) });
     assertTrue(key1.equals(key2));
     assertTrue(key2.equals(key1));
     assertTrue(key1.hashCode() == key2.hashCode());
@@ -35,9 +35,9 @@ public class CacheKeyTest {
 
   @Test
   public void shouldTestCacheKeysNotEqualDueToDateDifference() throws Exception {
-    CacheKey key1 = new CacheKey(new Object[]{1, "hello", null, new Date()});
+    CacheKey key1 = new CacheKey(new Object[] { 1, "hello", null, new Date() });
     Thread.sleep(1000);
-    CacheKey key2 = new CacheKey(new Object[]{1, "hello", null, new Date()});
+    CacheKey key2 = new CacheKey(new Object[] { 1, "hello", null, new Date() });
     assertFalse(key1.equals(key2));
     assertFalse(key2.equals(key1));
     assertFalse(key1.hashCode() == key2.hashCode());
@@ -46,9 +46,9 @@ public class CacheKeyTest {
 
   @Test
   public void shouldTestCacheKeysNotEqualDueToOrder() throws Exception {
-    CacheKey key1 = new CacheKey(new Object[]{1, "hello", null});
+    CacheKey key1 = new CacheKey(new Object[] { 1, "hello", null });
     Thread.sleep(1000);
-    CacheKey key2 = new CacheKey(new Object[]{1, null, "hello"});
+    CacheKey key2 = new CacheKey(new Object[] { 1, null, "hello" });
     assertFalse(key1.equals(key2));
     assertFalse(key2.equals(key1));
     assertFalse(key1.hashCode() == key2.hashCode());
@@ -69,6 +69,15 @@ public class CacheKeyTest {
     key2.update(null);
     assertEquals(key1, key2);
     assertEquals(key2, key1);
+  }
+
+  @Test
+  public void shouldTestCacheKeysWithBinaryArrays() throws Exception {
+    byte[] array1 = new byte[] { 1 };
+    byte[] array2 = new byte[] { 1 };
+    CacheKey key1 = new CacheKey(new Object[] { array1 });
+    CacheKey key2 = new CacheKey(new Object[] { array2 });
+    assertTrue(key1.equals(key2));
   }
 
 }
