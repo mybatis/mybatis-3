@@ -9,7 +9,7 @@
 <div id="overview"><a href="../../../../../../../apidocs/org/apache/ibatis/builder/annotation/MapperAnnotationBuilder.html">View Javadoc</a></div><pre>
 
 <a class="jxr_linenumber" name="1" href="#1">1</a>   <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="2" href="#2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2013 the original author or authors.</em>
+<a class="jxr_linenumber" name="2" href="#2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2014 the original author or authors.</em>
 <a class="jxr_linenumber" name="3" href="#3">3</a>   <em class="jxr_comment"> *</em>
 <a class="jxr_linenumber" name="4" href="#4">4</a>   <em class="jxr_comment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="5" href="#5">5</a>   <em class="jxr_comment"> *    you may not use this file except in compliance with the License.</em>
@@ -333,11 +333,11 @@
 <a class="jxr_linenumber" name="323" href="#323">323</a>   
 <a class="jxr_linenumber" name="324" href="#324">324</a>   <strong class="jxr_keyword">private</strong> <a href="../../../../../org/apache/ibatis/scripting/LanguageDriver.html">LanguageDriver</a> getLanguageDriver(Method method) {
 <a class="jxr_linenumber" name="325" href="#325">325</a>     <a href="../../../../../org/apache/ibatis/annotations/Lang.html">Lang</a> lang = method.getAnnotation(Lang.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="326" href="#326">326</a>     <strong class="jxr_keyword">if</strong> (lang != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="327" href="#327">327</a>       Class&lt;?&gt; languageDriverClass = lang.value();
-<a class="jxr_linenumber" name="328" href="#328">328</a>       <strong class="jxr_keyword">return</strong> configuration.getLanguageRegistry().getDriver(languageDriverClass);
+<a class="jxr_linenumber" name="326" href="#326">326</a>     Class&lt;?&gt; langClass = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="327" href="#327">327</a>     <strong class="jxr_keyword">if</strong> (lang != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="328" href="#328">328</a>       langClass = lang.value();
 <a class="jxr_linenumber" name="329" href="#329">329</a>     }
-<a class="jxr_linenumber" name="330" href="#330">330</a>     <strong class="jxr_keyword">return</strong> configuration.getLanguageRegistry().getDefaultDriver();
+<a class="jxr_linenumber" name="330" href="#330">330</a>     <strong class="jxr_keyword">return</strong> assistant.getLanguageDriver(langClass);
 <a class="jxr_linenumber" name="331" href="#331">331</a>   }
 <a class="jxr_linenumber" name="332" href="#332">332</a> 
 <a class="jxr_linenumber" name="333" href="#333">333</a>   <strong class="jxr_keyword">private</strong> Class&lt;?&gt; getParameterType(Method method) {

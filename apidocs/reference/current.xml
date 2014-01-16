@@ -1431,6 +1431,19 @@
  visibility="public"
 >
 </method>
+<method name="getLanguageDriver"
+ return="org.apache.ibatis.scripting.LanguageDriver"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="langClass" type="java.lang.Class&lt;?&gt;">
+</parameter>
+</method>
 <method name="setCurrentNamespace"
  return="void"
  abstract="false"
