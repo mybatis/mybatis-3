@@ -65,7 +65,7 @@ public class XMLScriptBuilder extends BaseBuilder {
     if (isDynamic) {
       sqlSource = new DynamicSqlSource(configuration, rootSqlNode);
     } else {
-      sqlSource = new RawSqlSource(configuration, context, parameterType);
+      sqlSource = new RawSqlSource(configuration, rootSqlNode, parameterType);
     }
     return sqlSource;
   }

@@ -21,6 +21,8 @@ import org.apache.ibatis.builder.SqlSourceBuilder;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.SqlSource;
 import org.apache.ibatis.parsing.XNode;
+import org.apache.ibatis.scripting.xmltags.DynamicContext;
+import org.apache.ibatis.scripting.xmltags.SqlNode;
 import org.apache.ibatis.session.Configuration;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -28,9 +30,13 @@ import org.w3c.dom.NodeList;
 public class RawSqlSource implements SqlSource {
 
   private final SqlSource sqlSource;
+  
+  public RawSqlSource(Configuration configuration, SqlNode rootSqlNode, Class<?> parameterType) {
+    this(configuration, getSql(configuration, rootSqlNode), parameterType);
+  }
 
   public RawSqlSource(Configuration configuration, XNode script, Class<?> parameterType) {
-    this(configuration, getString(script), parameterType);
+    this(configuration, getStringFromXNode(script), parameterType);
   }
   
   public RawSqlSource(Configuration configuration, String sql, Class<?> parameterType) {
@@ -39,7 +45,13 @@ public class RawSqlSource implements SqlSource {
     sqlSource = sqlSourceParser.parse(sql, clazz, new HashMap<String, Object>());
   }
   
-  private static String getString(XNode script) {
+  private static String getSql(Configuration configuration, SqlNode rootSqlNode) {
+    DynamicContext context = new DynamicContext(configuration, null);
+    rootSqlNode.apply(context);
+    return context.getSql();
+  }
+  
+  private static String getStringFromXNode(XNode script) {
     StringBuilder contents = new StringBuilder();
     NodeList children = script.getNode().getChildNodes();
     for (int i = 0; i < children.getLength(); i++) {
