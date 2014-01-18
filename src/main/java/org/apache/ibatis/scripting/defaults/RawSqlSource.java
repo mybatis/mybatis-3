@@ -47,6 +47,7 @@ public class RawSqlSource implements SqlSource {
       if (child.getNode().getNodeType() == Node.CDATA_SECTION_NODE || child.getNode().getNodeType() == Node.TEXT_NODE) {
         String data = child.getStringBody("");
         contents.append(data);
+        contents.append(" "); // issue #128
       }
     }
     return contents.toString();

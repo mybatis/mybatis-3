@@ -29,8 +29,7 @@
   <select id="select" resultType="map">
     <include refid="org.apache.ibatis.submitted.includes.fragments.select"/>
     field1, field2, field3
-    from
-    <include refid="sometable"/>
+    from<include refid="sometable"/>
   </select>
 
   <select id="selectWithProperty" resultType="_int">
