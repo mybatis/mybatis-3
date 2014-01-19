@@ -26,7 +26,7 @@ import org.apache.ibatis.scripting.xmltags.SqlNode;
 import org.apache.ibatis.session.Configuration;
 
 /**
- * Static SqlSource. It is faster than {link {@link DynamicSqlSource} because mappings are 
+ * Static SqlSource. It is faster than {@link DynamicSqlSource} because mappings are 
  * calculated during startup.
  * 
  * @since 3.2.0
