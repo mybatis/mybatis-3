@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="bedpotato.data.UserMapper">
+	<insert id="insert">
+		INSERT INTO `user` (
+		<trim suffixOverrides=",">
+			<if test="id!=0">
+				id,
+			</if>
+			<if test="username!=null">
+				username,
+			</if>
+			<if test="email!=null">
+				email,
+			</if>
+			<if test="password!=null">
+				password,
+			</if>
+		</trim>
+		) VALUES (
+		<trim suffixOverrides=",">
+			<if test="id!=0">
+				#{id},
+			</if>
+			<if test="username!=null">
+				#{username},
+			</if>
+			<if test="email!=null">
+				#{email},
+			</if>
+			<if test="password!=null">
+				#{password},
+			</if>
+		</trim>
+		)
+	</insert>
+</mapper>

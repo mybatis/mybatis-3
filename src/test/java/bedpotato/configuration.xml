@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<settings>
+		<!-- 这个配置使全局的映射器启用或禁用缓存 -->
+		<setting name="cacheEnabled" value="true" />
+		<!-- 全局启用或禁用延迟加载。当禁用时，所有关联对象都会即时加载 -->
+		<setting name="lazyLoadingEnabled" value="true" />
+		<!-- 当启用时，有延迟加载属性的对象在被调用时将会完全加载任意属性。否则，每种属性将会按需要加载 -->
+		<setting name="aggressiveLazyLoading" value="true" />
+		<!-- 允许或不允许多种结果集从一个单独的语句中返回（需要适合的驱动） -->
+		<setting name="multipleResultSetsEnabled" value="true" />
+		<!-- 使用列标签代替列名。不同的驱动在这方便表现不同。参考驱动文档或充分测试两种方法来决定所使用的驱动 -->
+		<setting name="useColumnLabel" value="true" />
+		<!-- 允许JDBC支持生成的键。需要适合的驱动。如果设置为true则这个设置强制生成的键被使用，尽管一些驱动拒绝兼容但仍然有效（比如Derby） -->
+		<setting name="useGeneratedKeys" value="true" />
+		<!-- 指定MyBatis如何自动映射列到字段/属性。PARTIAL只会自动映射简单，没有嵌套的结果。FULL会自动映射任意复杂的结果（嵌套的或其他情况） -->
+		<setting name="autoMappingBehavior" value="PARTIAL" />
+		<!-- 配置默认的执行器。SIMPLE执行器没有什么特别之处。REUSE执行器重用预处理语句。BATCH执行器重用语句和批量更新 -->
+		<setting name="defaultExecutorType" value="SIMPLE" />
+		<!-- 设置超时时间，它决定驱动等待一个数据库响应的时间 -->
+		<setting name="defaultStatementTimeout" value="3000" />
+	</settings>
+	<typeAliases>
+		<typeAlias alias="User" type="bedpotato.model.User" />
+	</typeAliases>
+	<environments default="development">
+		<environment id="development">
+			<transactionManager type="jdbc" />
+			<dataSource type="POOLED">
+				<property name="driver" value="com.mysql.jdbc.Driver" />
+				<property name="url" value="jdbc:mysql://www.zouzou.cc:3306/lialun" />
+				<property name="username" value="root" />
+				<property name="password" value="ba0029" />
+			</dataSource>
+		</environment>
+	</environments>
+	<mappers>
+		<mapper resource="bedpotato/data/UserMapper.xml" />
+	</mappers>
+
+</configuration>
