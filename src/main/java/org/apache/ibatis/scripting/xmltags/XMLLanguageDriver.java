@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2013 the original author or authors.
+ *    Copyright 2009-2014 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ import org.apache.ibatis.executor.parameter.ParameterHandler;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.SqlSource;
+import org.apache.ibatis.parsing.PropertyParser;
 import org.apache.ibatis.parsing.XNode;
 import org.apache.ibatis.scripting.LanguageDriver;
 import org.apache.ibatis.scripting.defaults.DefaultParameterHandler;
@@ -41,6 +42,7 @@ public class XMLLanguageDriver implements LanguageDriver {
       XMLScriptBuilder builder = new XMLScriptBuilder(configuration, script, parameterType);
       return builder.parseScriptNode();
     } else {
+      script = PropertyParser.parse(script, configuration.getVariables()); // issue #127
       TextSqlNode textSqlNode = new TextSqlNode(script);
       if (textSqlNode.isDynamic()) {
         return new DynamicSqlSource(configuration, textSqlNode);
