@@ -156,16 +156,19 @@ public class DefaultResultSetHandler implements ResultSetHandler {
       resultSetCount++;
     }
 
-    while (rsw != null && resultSetCount < mappedStatement.getResulSets().length) {
-      ResultMapping parentMapping = nextResultMaps.get(mappedStatement.getResulSets()[resultSetCount]);
-      if (parentMapping != null) {
-        String nestedResultMapId = parentMapping.getNestedResultMapId();
-        ResultMap resultMap = configuration.getResultMap(nestedResultMapId);
-        handleResultSet(rsw, resultMap, null, parentMapping);
+    String[] resultSets = mappedStatement.getResulSets();
+    if (resultSets != null) {
+      while (rsw != null && resultSetCount < resultSets.length) {
+        ResultMapping parentMapping = nextResultMaps.get(resultSets[resultSetCount]);
+        if (parentMapping != null) {
+          String nestedResultMapId = parentMapping.getNestedResultMapId();
+          ResultMap resultMap = configuration.getResultMap(nestedResultMapId);
+          handleResultSet(rsw, resultMap, null, parentMapping);
+        }
+        rsw = getNextResultSet(stmt);
+        cleanUpAfterHandlingResultSet();
+        resultSetCount++;
       }
-      rsw = getNextResultSet(stmt);
-      cleanUpAfterHandlingResultSet();
-      resultSetCount++;
     }
 
     return collapseSingleResultList(multipleResults);
