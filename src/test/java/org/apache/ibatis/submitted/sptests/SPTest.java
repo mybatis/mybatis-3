@@ -696,6 +696,25 @@ public class SPTest {
   }
 
   /*
+   * 
+   * This test shows using a two named parameters.
+   * 
+   * This test shows using annotations for stored procedures and using a
+   * resultMap in XML
+   */
+  @Test
+  public void testCallLowHighWithResultSet() {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      SPMapper spMapper = sqlSession.getMapper(SPMapper.class);
+      List<Name> names = spMapper.getNamesAnnotatedLowHighWithXMLResultMap(1, 1);
+      assertEquals(1, names.size());
+    } finally {
+      sqlSession.close();
+    }
+  }
+
+  /*
    * This test shows how to use the ARRAY JDBC type with MyBatis.
    * 
    * This test shows using annotations for stored procedures
@@ -818,5 +837,5 @@ public class SPTest {
       sqlSession.close();
     }
   }
-  
+
 }

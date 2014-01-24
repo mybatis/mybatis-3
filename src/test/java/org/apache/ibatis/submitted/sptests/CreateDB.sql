@@ -123,6 +123,15 @@ BEGIN ATOMIC
 END
 go
 
+create procedure sptest.getnamesLowHigh(in lowestId int, in highestId int)
+modifies sql data
+dynamic result sets 1
+BEGIN ATOMIC
+  declare cur cursor for select * from sptest.names where id >= lowestId and id <= highestId;
+  open cur;
+END
+go
+
 create procedure sptest.arraytest(in ids int array, out rowsrequested integer, out returnedids int array)
 modifies sql data
 dynamic result sets 1

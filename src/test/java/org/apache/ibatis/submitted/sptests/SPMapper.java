@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Options;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.ResultMap;
 import org.apache.ibatis.annotations.Results;
@@ -75,6 +76,11 @@ public interface SPMapper {
   @Options(statementType = StatementType.CALLABLE)
   List<Name> getNamesAnnotatedWithXMLResultMap(Map<String, Object> parms);
 
+  @Select({ "{call sptest.getnamesLowHigh(", "#{lowestId,jdbcType=INTEGER,mode=IN},", "#{highestId,jdbcType=INTEGER,mode=IN})}" })
+  @ResultMap("nameResult")
+  @Options(statementType = StatementType.CALLABLE)
+  List<Name> getNamesAnnotatedLowHighWithXMLResultMap(@Param("lowestId") int lowestId, @Param("highestId") int highestId);
+  
   @Select({ "{call sptest.arraytest(", "#{ids,mode=IN,jdbcType=ARRAY},", "#{requestedRows,jdbcType=INTEGER,mode=OUT},", "#{returnedIds,mode=OUT,jdbcType=ARRAY})}" })
   @Results({ @Result(column = "ID", property = "id"), @Result(column = "FIRST_NAME", property = "firstName"), @Result(column = "LAST_NAME", property = "lastName") })
   @Options(statementType = StatementType.CALLABLE)
