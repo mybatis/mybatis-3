@@ -17,6 +17,8 @@ package org.apache.ibatis.submitted.maptypehandler;
 
 import java.io.Reader;
 import java.sql.Connection;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.jdbc.ScriptRunner;
@@ -50,7 +52,7 @@ public class MapTypeHandlerTest {
   }
 
   @Test
-  public void shouldGetAUser() {
+  public void shouldGetAUserFromAnnotation() {
     SqlSession sqlSession = sqlSessionFactory.openSession();
     try {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
@@ -61,4 +63,19 @@ public class MapTypeHandlerTest {
     }
   }
 
+  @Test
+  public void shouldGetAUserFromXML() {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      Map<String, Object> params = new HashMap<String, Object>();
+      params.put("id", 1);
+      params.put("name", "User1");
+      User user = mapper.getUserXML(params);
+      Assert.assertEquals("User1", user.getName());
+    } finally {
+      sqlSession.close();
+    }
+  }
+  
 }

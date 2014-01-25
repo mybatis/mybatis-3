@@ -56,6 +56,7 @@ import org.apache.ibatis.annotations.TypeDiscriminator;
 import org.apache.ibatis.annotations.Update;
 import org.apache.ibatis.annotations.UpdateProvider;
 import org.apache.ibatis.binding.BindingException;
+import org.apache.ibatis.binding.MapperMethod.ParamMap;
 import org.apache.ibatis.builder.BuilderException;
 import org.apache.ibatis.builder.IncompleteElementException;
 import org.apache.ibatis.builder.MapperBuilderAssistant;
@@ -338,7 +339,7 @@ public class MapperAnnotationBuilder {
         if (parameterType == null) {
           parameterType = parameterTypes[i];
         } else {
-          parameterType = Map.class;
+          parameterType = ParamMap.class; // issue #135
         }
       }
     }
