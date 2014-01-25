@@ -20,6 +20,7 @@ import java.sql.Connection;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.ibatis.exceptions.PersistenceException;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSession;
@@ -29,6 +30,10 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+/**
+ * See issue #135
+ *
+ */
 public class MapTypeHandlerTest {
 
   private static SqlSessionFactory sqlSessionFactory;
@@ -63,7 +68,7 @@ public class MapTypeHandlerTest {
     }
   }
 
-  @Test
+  @Test(expected=PersistenceException.class)
   public void shouldGetAUserFromXML() {
     SqlSession sqlSession = sqlSessionFactory.openSession();
     try {
