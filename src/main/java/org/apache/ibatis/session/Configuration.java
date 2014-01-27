@@ -698,6 +698,12 @@ public class Configuration {
         incompleteStatements.iterator().next().parseStatementNode();
       }
     }
+    if (!incompleteMethods.isEmpty()) {
+      synchronized (incompleteMethods) {
+        // This always throws a BuilderException.
+        incompleteMethods.iterator().next().resolve();
+      }
+    }
   }
 
   /*
