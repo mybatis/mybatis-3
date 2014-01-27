@@ -162,7 +162,7 @@ alias CDATA #REQUIRED
 type CDATA #REQUIRED
 >
 
-<!ELEMENT select (#PCDATA | include | trim | where | set | foreach | choose | if | bind)*>
+<!ELEMENT select (#PCDATA | include | includeColumns | trim | where | set | foreach | choose | if | bind)*>
 <!ATTLIST select
 id CDATA #REQUIRED
 parameterMap CDATA #IMPLIED
@@ -234,6 +234,13 @@ lang CDATA #IMPLIED
 <!ELEMENT include EMPTY>
 <!ATTLIST include
 refid CDATA #REQUIRED
+>
+
+<!ELEMENT includeColumns EMPTY>
+<!ATTLIST includeColumns
+refid CDATA #REQUIRED
+tableAlias CDATA #REQUIRED
+columnAliasPrefix CDATA #IMPLIED
 >
 
 <!ELEMENT bind EMPTY>
