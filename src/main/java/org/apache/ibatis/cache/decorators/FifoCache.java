@@ -26,7 +26,7 @@ import org.apache.ibatis.cache.Cache;
 public class FifoCache implements Cache {
 
   private final Cache delegate;
-  private final LinkedList<Object> keyList;
+  private LinkedList<Object> keyList;
   private int size;
 
   public FifoCache(Cache delegate) {
@@ -62,7 +62,7 @@ public class FifoCache implements Cache {
 
   public void clear() {
     delegate.clear();
-    keyList.clear();
+    keyList = new LinkedList<Object>(); // see #138
   }
 
   public ReadWriteLock getReadWriteLock() {
