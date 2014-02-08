@@ -58,12 +58,10 @@ public class RawLanguageDriver implements LanguageDriver {
     NodeList children = script.getNode().getChildNodes();
     for (int i = 0; i < children.getLength(); i++) {
       XNode child = script.newXNode(children.item(i));
-      String nodeName = child.getNode().getNodeName();
       if (child.getNode().getNodeType() == Node.CDATA_SECTION_NODE || child.getNode().getNodeType() == Node.TEXT_NODE) {
-        String data = child.getStringBody("");
-        contents.add(new StaticTextSqlNode(data));
+        contents.add(new StaticTextSqlNode(child.getStringBody("")));
       } else if (child.getNode().getNodeType() == Node.ELEMENT_NODE) {
-        throw new BuilderException("Found an invalid element <" + nodeName + "> for RAW language.");
+        throw new BuilderException("Found an invalid element <" + child.getNode().getNodeName() + "> for RAW language.");
       }
     }
     return new MixedSqlNode(contents);
