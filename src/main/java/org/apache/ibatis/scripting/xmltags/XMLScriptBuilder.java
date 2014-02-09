@@ -22,10 +22,8 @@ import java.util.Map;
 
 import org.apache.ibatis.builder.BaseBuilder;
 import org.apache.ibatis.builder.BuilderException;
-import org.apache.ibatis.builder.xml.XMLMapperEntityResolver;
 import org.apache.ibatis.mapping.SqlSource;
 import org.apache.ibatis.parsing.XNode;
-import org.apache.ibatis.parsing.XPathParser;
 import org.apache.ibatis.scripting.defaults.RawSqlSource;
 import org.apache.ibatis.session.Configuration;
 import org.w3c.dom.Node;
@@ -41,23 +39,12 @@ public class XMLScriptBuilder extends BaseBuilder {
     this(configuration, context, null);
   }
 
-  public XMLScriptBuilder(Configuration configuration, String context) {
-    this(configuration, context, null);
-  }
-
   public XMLScriptBuilder(Configuration configuration, XNode context, Class<?> parameterType) {
     super(configuration);
     this.context = context;
     this.parameterType = parameterType;
   }
 
-  public XMLScriptBuilder(Configuration configuration, String context, Class<?> parameterType) {
-    super(configuration);
-    XPathParser parser = new XPathParser(context, false, configuration.getVariables(), new XMLMapperEntityResolver());
-    this.context = parser.evalNode("/script");
-    this.parameterType = parameterType;
-  }
-  
   public SqlSource parseScriptNode() {
     List<SqlNode> contents = parseDynamicTags(context);
     MixedSqlNode rootSqlNode = new MixedSqlNode(contents);
@@ -75,7 +62,6 @@ public class XMLScriptBuilder extends BaseBuilder {
     NodeList children = node.getNode().getChildNodes();
     for (int i = 0; i < children.getLength(); i++) {
       XNode child = node.newXNode(children.item(i));
-      String nodeName = child.getNode().getNodeName();
       if (child.getNode().getNodeType() == Node.CDATA_SECTION_NODE || child.getNode().getNodeType() == Node.TEXT_NODE) {
         String data = child.getStringBody("");
         TextSqlNode textSqlNode = new TextSqlNode(data);
@@ -86,6 +72,7 @@ public class XMLScriptBuilder extends BaseBuilder {
           contents.add(new StaticTextSqlNode(data));
         }
       } else if (child.getNode().getNodeType() == Node.ELEMENT_NODE) { // issue #628
+        String nodeName = child.getNode().getNodeName();
         NodeHandler handler = nodeHandlers.get(nodeName);
         if (handler == null) {
           throw new BuilderException("Unknown element <" + nodeName + "> in SQL statement.");

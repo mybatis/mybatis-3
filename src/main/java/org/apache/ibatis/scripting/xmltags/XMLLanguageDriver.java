@@ -15,12 +15,14 @@
  */
 package org.apache.ibatis.scripting.xmltags;
 
+import org.apache.ibatis.builder.xml.XMLMapperEntityResolver;
 import org.apache.ibatis.executor.parameter.ParameterHandler;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.SqlSource;
 import org.apache.ibatis.parsing.PropertyParser;
 import org.apache.ibatis.parsing.XNode;
+import org.apache.ibatis.parsing.XPathParser;
 import org.apache.ibatis.scripting.LanguageDriver;
 import org.apache.ibatis.scripting.defaults.DefaultParameterHandler;
 import org.apache.ibatis.scripting.defaults.RawSqlSource;
@@ -39,8 +41,8 @@ public class XMLLanguageDriver implements LanguageDriver {
 
   public SqlSource createSqlSource(Configuration configuration, String script, Class<?> parameterType) {
     if (script.startsWith("<script>")) { // issue #3
-      XMLScriptBuilder builder = new XMLScriptBuilder(configuration, script, parameterType);
-      return builder.parseScriptNode();
+      XPathParser parser = new XPathParser(script, false, configuration.getVariables(), new XMLMapperEntityResolver());
+      return createSqlSource(configuration, parser.evalNode("/script"), parameterType);
     } else {
       script = PropertyParser.parse(script, configuration.getVariables()); // issue #127
       TextSqlNode textSqlNode = new TextSqlNode(script);
