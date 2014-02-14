@@ -20,7 +20,7 @@
   <parent>
     <groupId>org.mybatis</groupId>
     <artifactId>mybatis-parent</artifactId>
-    <version>20</version>
+    <version>21</version>
   </parent>
 
   <artifactId>mybatis</artifactId>
