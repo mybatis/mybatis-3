@@ -38,10 +38,10 @@
 <a class="jxr_linenumber" name="28" href="#28">28</a>    <strong class="jxr_keyword">private</strong> <a href="../../../../org/apache/ibatis/mapping/Discriminator.html">Discriminator</a>() {
 <a class="jxr_linenumber" name="29" href="#29">29</a>    }
 <a class="jxr_linenumber" name="30" href="#30">30</a>  
-<a class="jxr_linenumber" name="31" href="#31">31</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../org/apache/ibatis/mapping/ResultMapping.html">Builder</a> {
+<a class="jxr_linenumber" name="31" href="#31">31</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../org/apache/ibatis/mapping/MappedStatement.html">Builder</a> {
 <a class="jxr_linenumber" name="32" href="#32">32</a>      <strong class="jxr_keyword">private</strong> <a href="../../../../org/apache/ibatis/mapping/Discriminator.html">Discriminator</a> discriminator = <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/mapping/Discriminator.html">Discriminator</a>();
 <a class="jxr_linenumber" name="33" href="#33">33</a>  
-<a class="jxr_linenumber" name="34" href="#34">34</a>      <strong class="jxr_keyword">public</strong> <a href="../../../../org/apache/ibatis/mapping/ResultMapping.html">Builder</a>(<a href="../../../../org/apache/ibatis/session/Configuration.html">Configuration</a> configuration, <a href="../../../../org/apache/ibatis/mapping/ResultMapping.html">ResultMapping</a> resultMapping, Map&lt;String, String&gt; discriminatorMap) {
+<a class="jxr_linenumber" name="34" href="#34">34</a>      <strong class="jxr_keyword">public</strong> <a href="../../../../org/apache/ibatis/mapping/MappedStatement.html">Builder</a>(<a href="../../../../org/apache/ibatis/session/Configuration.html">Configuration</a> configuration, <a href="../../../../org/apache/ibatis/mapping/ResultMapping.html">ResultMapping</a> resultMapping, Map&lt;String, String&gt; discriminatorMap) {
 <a class="jxr_linenumber" name="35" href="#35">35</a>        discriminator.resultMapping = resultMapping;
 <a class="jxr_linenumber" name="36" href="#36">36</a>        discriminator.discriminatorMap = discriminatorMap;
 <a class="jxr_linenumber" name="37" href="#37">37</a>      }

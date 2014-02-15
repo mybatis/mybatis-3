@@ -411,6 +411,10 @@ Summary:
 <div class="jd-descr">
 
 
+<h2>Class Overview</h2>
+<p>Static SqlSource. It is faster than <code><a href="../../../../../org/apache/ibatis/scripting/xmltags/DynamicSqlSource.html">DynamicSqlSource</a></code> because mappings are 
+ calculated during startup.</p>
+
 
 
 
@@ -491,7 +495,7 @@ Summary:
             </nobr>
         </td>
         <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../../org/apache/ibatis/scripting/defaults/RawSqlSource.html#RawSqlSource(org.apache.ibatis.session.Configuration, org.apache.ibatis.parsing.XNode, java.lang.Class<?>)">RawSqlSource</a></span>(<a href="../../../../../org/apache/ibatis/session/Configuration.html">Configuration</a> configuration, <a href="../../../../../org/apache/ibatis/parsing/XNode.html">XNode</a> script, Class&lt;?&gt; parameterType)</nobr>
+        <span class="sympad"><a href="../../../../../org/apache/ibatis/scripting/defaults/RawSqlSource.html#RawSqlSource(org.apache.ibatis.session.Configuration, org.apache.ibatis.scripting.xmltags.SqlNode, java.lang.Class<?>)">RawSqlSource</a></span>(<a href="../../../../../org/apache/ibatis/session/Configuration.html">Configuration</a> configuration, <a href="../../../../../org/apache/ibatis/scripting/xmltags/SqlNode.html">SqlNode</a> rootSqlNode, Class&lt;?&gt; parameterType)</nobr>
         
   </td></tr>
 
@@ -848,7 +852,7 @@ From interface
 </div>
 
 
-<A NAME="RawSqlSource(org.apache.ibatis.session.Configuration, org.apache.ibatis.parsing.XNode, java.lang.Class<?>)"></A>
+<A NAME="RawSqlSource(org.apache.ibatis.session.Configuration, org.apache.ibatis.scripting.xmltags.SqlNode, java.lang.Class<?>)"></A>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -861,7 +865,7 @@ From interface
         
       </span>
       <span class="sympad">RawSqlSource</span>
-      <span class="normal">(<a href="../../../../../org/apache/ibatis/session/Configuration.html">Configuration</a> configuration, <a href="../../../../../org/apache/ibatis/parsing/XNode.html">XNode</a> script, Class&lt;?&gt; parameterType)</span>
+      <span class="normal">(<a href="../../../../../org/apache/ibatis/session/Configuration.html">Configuration</a> configuration, <a href="../../../../../org/apache/ibatis/scripting/xmltags/SqlNode.html">SqlNode</a> rootSqlNode, Class&lt;?&gt; parameterType)</span>
     </h4>
       <div class="api-level">
         <div>

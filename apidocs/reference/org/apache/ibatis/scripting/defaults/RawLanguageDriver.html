@@ -311,6 +311,13 @@
   
   
 
+  
+   
+  
+  
+  
+  
+
 
 <div class="sum-details-links">
 
@@ -363,17 +370,16 @@ Summary:
 
 
   
-    extends Object<br/>
+  
+  
+
+  
+    extends <a href="../../../../../org/apache/ibatis/scripting/xmltags/XMLLanguageDriver.html">XMLLanguageDriver</a><br/>
   
   
   
 
   
-  
-      implements 
-      
-        <a href="../../../../../org/apache/ibatis/scripting/LanguageDriver.html">LanguageDriver</a> 
-      
   
   
 
@@ -388,11 +394,21 @@ Summary:
 
     <tr>
          	
-        <td colspan="2" class="jd-inheritance-class-cell">java.lang.Object</td>
+        <td colspan="3" class="jd-inheritance-class-cell">java.lang.Object</td>
     </tr>
     
 
     <tr>
+        
+            <td class="jd-inheritance-space">&nbsp;&nbsp;&nbsp;&#x21b3;</td>
+         	
+        <td colspan="2" class="jd-inheritance-class-cell"><a href="../../../../../org/apache/ibatis/scripting/xmltags/XMLLanguageDriver.html">org.apache.ibatis.scripting.xmltags.XMLLanguageDriver</a></td>
+    </tr>
+    
+
+    <tr>
+        
+            <td class="jd-inheritance-space">&nbsp;</td>
         
             <td class="jd-inheritance-space">&nbsp;&nbsp;&nbsp;&#x21b3;</td>
          	
@@ -410,6 +426,11 @@ Summary:
 
 <div class="jd-descr">
 
+
+<h2>Class Overview</h2>
+<p>As of 3.2.4 the default XML language is able to identify static statements
+ and create a <code><a href="../../../../../org/apache/ibatis/scripting/defaults/RawSqlSource.html">RawSqlSource</a></code>. So there is no need to use RAW unless you
+ want to make sure that there is not any dynamic tag for any reason.</p>
 
 
 
@@ -501,24 +522,6 @@ Summary:
             
             
             
-            <a href="../../../../../org/apache/ibatis/executor/parameter/ParameterHandler.html">ParameterHandler</a></nobr>
-        </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../../org/apache/ibatis/scripting/defaults/RawLanguageDriver.html#createParameterHandler(org.apache.ibatis.mapping.MappedStatement, java.lang.Object, org.apache.ibatis.mapping.BoundSql)">createParameterHandler</a></span>(<a href="../../../../../org/apache/ibatis/mapping/MappedStatement.html">MappedStatement</a> mappedStatement, Object parameterObject, <a href="../../../../../org/apache/ibatis/mapping/BoundSql.html">BoundSql</a> boundSql)</nobr>
-        
-        <div class="jd-descrdiv">Creates a <code><a href="../../../../../org/apache/ibatis/executor/parameter/ParameterHandler.html">ParameterHandler</a></code> that passes the actual parameters to the the JDBC statement.</div>
-  
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol"><nobr>
-            
-            
-            
-            
-            
             <a href="../../../../../org/apache/ibatis/mapping/SqlSource.html">SqlSource</a></nobr>
         </td>
         <td class="jd-linkcol" width="100%"><nobr>
@@ -530,7 +533,7 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol"><nobr>
             
             
@@ -560,6 +563,86 @@ Summary:
 <table id="inhmethods" class="jd-sumtable"><tr><th>
   <a href="#" class="toggle-all" onclick="return toggleAllInherited(this, null)">[Expand]</a>
   <div style="clear:left;">Inherited Methods</div></th></tr>
+
+
+<tr class="api apilevel-" >
+<td colspan="12">
+  <a href="#" onclick="return toggleInherited(this, null)" id="inherited-methods-org.apache.ibatis.scripting.xmltags.XMLLanguageDriver" class="jd-expando-trigger closed"
+          ><img id="inherited-methods-org.apache.ibatis.scripting.xmltags.XMLLanguageDriver-trigger"
+          src="../../../../../../assets/images/triangle-closed.png"
+          class="jd-expando-trigger-img" /></a>
+From class
+
+  <a href="../../../../../org/apache/ibatis/scripting/xmltags/XMLLanguageDriver.html">org.apache.ibatis.scripting.xmltags.XMLLanguageDriver</a>
+
+<div id="inherited-methods-org.apache.ibatis.scripting.xmltags.XMLLanguageDriver">
+  <div id="inherited-methods-org.apache.ibatis.scripting.xmltags.XMLLanguageDriver-list"
+        class="jd-inheritedlinks">
+  </div>
+  <div id="inherited-methods-org.apache.ibatis.scripting.xmltags.XMLLanguageDriver-summary" style="display: none;">
+    <table class="jd-sumtable-expando">
+    
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            <a href="../../../../../org/apache/ibatis/executor/parameter/ParameterHandler.html">ParameterHandler</a></nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../org/apache/ibatis/scripting/xmltags/XMLLanguageDriver.html#createParameterHandler(org.apache.ibatis.mapping.MappedStatement, java.lang.Object, org.apache.ibatis.mapping.BoundSql)">createParameterHandler</a></span>(<a href="../../../../../org/apache/ibatis/mapping/MappedStatement.html">MappedStatement</a> mappedStatement, Object parameterObject, <a href="../../../../../org/apache/ibatis/mapping/BoundSql.html">BoundSql</a> boundSql)</nobr>
+        
+        <div class="jd-descrdiv">Creates a <code><a href="../../../../../org/apache/ibatis/executor/parameter/ParameterHandler.html">ParameterHandler</a></code> that passes the actual parameters to the the JDBC statement.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            <a href="../../../../../org/apache/ibatis/mapping/SqlSource.html">SqlSource</a></nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../org/apache/ibatis/scripting/xmltags/XMLLanguageDriver.html#createSqlSource(org.apache.ibatis.session.Configuration, java.lang.String, java.lang.Class<?>)">createSqlSource</a></span>(<a href="../../../../../org/apache/ibatis/session/Configuration.html">Configuration</a> configuration, String script, Class&lt;?&gt; parameterType)</nobr>
+        
+        <div class="jd-descrdiv">Creates an <code><a href="../../../../../org/apache/ibatis/mapping/SqlSource.html">SqlSource</a></code> that will hold the statement read from an annotation.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            <a href="../../../../../org/apache/ibatis/mapping/SqlSource.html">SqlSource</a></nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../org/apache/ibatis/scripting/xmltags/XMLLanguageDriver.html#createSqlSource(org.apache.ibatis.session.Configuration, org.apache.ibatis.parsing.XNode, java.lang.Class<?>)">createSqlSource</a></span>(<a href="../../../../../org/apache/ibatis/session/Configuration.html">Configuration</a> configuration, <a href="../../../../../org/apache/ibatis/parsing/XNode.html">XNode</a> script, Class&lt;?&gt; parameterType)</nobr>
+        
+        <div class="jd-descrdiv">Creates an <code><a href="../../../../../org/apache/ibatis/mapping/SqlSource.html">SqlSource</a></code> that will hold the statement read from a mapper xml file.</div>
+  
+  </td></tr>
+
+
+</table>
+  </div>
+</div>
+</td></tr>
+
 
 
 <tr class="api apilevel-" >
@@ -921,54 +1004,6 @@ From interface
 
 <h2>Public Methods</h2>
 
-
-
-<A NAME="createParameterHandler(org.apache.ibatis.mapping.MappedStatement, java.lang.Object, org.apache.ibatis.mapping.BoundSql)"></A>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-         
-         
-        <a href="../../../../../org/apache/ibatis/executor/parameter/ParameterHandler.html">ParameterHandler</a>
-      </span>
-      <span class="sympad">createParameterHandler</span>
-      <span class="normal">(<a href="../../../../../org/apache/ibatis/mapping/MappedStatement.html">MappedStatement</a> mappedStatement, Object parameterObject, <a href="../../../../../org/apache/ibatis/mapping/BoundSql.html">BoundSql</a> boundSql)</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p>Creates a <code><a href="../../../../../org/apache/ibatis/executor/parameter/ParameterHandler.html">ParameterHandler</a></code> that passes the actual parameters to the the JDBC statement.</p></div>
-  <div class="jd-tagdata">
-      <h5 class="jd-tagtitle">Parameters</h5>
-      <table class="jd-tagtable">
-        <tr>
-          <th>mappedStatement</td>
-          <td>The mapped statement that is being executed</td>
-        </tr>
-        <tr>
-          <th>parameterObject</td>
-          <td>The input parameter object (can be null) </td>
-        </tr>
-        <tr>
-          <th>boundSql</td>
-          <td>The resulting SQL once the dynamic language has been executed.</td>
-        </tr>
-      </table>
-  </div>
-
-    </div>
-</div>
 
 
 <A NAME="createSqlSource(org.apache.ibatis.session.Configuration, java.lang.String, java.lang.Class<?>)"></A>

@@ -706,130 +706,149 @@
 <a class="jxr_linenumber" name="696" href="#696">696</a>   }
 <a class="jxr_linenumber" name="697" href="#697">697</a> 
 <a class="jxr_linenumber" name="698" href="#698">698</a>   <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="699" href="#699">699</a> <em class="jxr_comment">   * This test shows how to use the ARRAY JDBC type with MyBatis.</em>
-<a class="jxr_linenumber" name="700" href="#700">700</a> <em class="jxr_comment">   * </em>
-<a class="jxr_linenumber" name="701" href="#701">701</a> <em class="jxr_comment">   * This test shows using annotations for stored procedures</em>
-<a class="jxr_linenumber" name="702" href="#702">702</a> <em class="jxr_comment">   * </em>
-<a class="jxr_linenumber" name="703" href="#703">703</a> <em class="jxr_comment">   * @throws SQLException</em>
+<a class="jxr_linenumber" name="699" href="#699">699</a> <em class="jxr_comment">   * </em>
+<a class="jxr_linenumber" name="700" href="#700">700</a> <em class="jxr_comment">   * This test shows using a two named parameters.</em>
+<a class="jxr_linenumber" name="701" href="#701">701</a> <em class="jxr_comment">   * </em>
+<a class="jxr_linenumber" name="702" href="#702">702</a> <em class="jxr_comment">   * This test shows using annotations for stored procedures and using a</em>
+<a class="jxr_linenumber" name="703" href="#703">703</a> <em class="jxr_comment">   * resultMap in XML</em>
 <a class="jxr_linenumber" name="704" href="#704">704</a> <em class="jxr_comment">   */</em>
 <a class="jxr_linenumber" name="705" href="#705">705</a>   @Test
-<a class="jxr_linenumber" name="706" href="#706">706</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testGetNamesWithArray_a1() <strong class="jxr_keyword">throws</strong> SQLException {
+<a class="jxr_linenumber" name="706" href="#706">706</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testCallLowHighWithResultSet() {
 <a class="jxr_linenumber" name="707" href="#707">707</a>     SqlSession sqlSession = sqlSessionFactory.openSession();
 <a class="jxr_linenumber" name="708" href="#708">708</a>     <strong class="jxr_keyword">try</strong> {
 <a class="jxr_linenumber" name="709" href="#709">709</a>       <a href="../../../../../org/apache/ibatis/submitted/sptests/SPMapper.html">SPMapper</a> spMapper = sqlSession.getMapper(SPMapper.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="710" href="#710">710</a> 
-<a class="jxr_linenumber" name="711" href="#711">711</a>       Array array = sqlSession.getConnection().createArrayOf(<span class="jxr_string">"int"</span>, <strong class="jxr_keyword">new</strong> Integer[] { 1, 2, 5 });
-<a class="jxr_linenumber" name="712" href="#712">712</a> 
-<a class="jxr_linenumber" name="713" href="#713">713</a>       Map&lt;String, Object&gt; parms = <strong class="jxr_keyword">new</strong> HashMap&lt;String, Object&gt;();
-<a class="jxr_linenumber" name="714" href="#714">714</a>       parms.put(<span class="jxr_string">"ids"</span>, array);
-<a class="jxr_linenumber" name="715" href="#715">715</a>       List&lt;Name&gt; names = spMapper.getNamesWithArrayAnnotated(parms);
-<a class="jxr_linenumber" name="716" href="#716">716</a>       Object[] returnedIds = (Object[]) parms.get(<span class="jxr_string">"returnedIds"</span>);
-<a class="jxr_linenumber" name="717" href="#717">717</a>       assertEquals(4, returnedIds.length);
-<a class="jxr_linenumber" name="718" href="#718">718</a>       assertEquals(3, parms.get(<span class="jxr_string">"requestedRows"</span>));
-<a class="jxr_linenumber" name="719" href="#719">719</a>       assertEquals(2, names.size());
-<a class="jxr_linenumber" name="720" href="#720">720</a>     } <strong class="jxr_keyword">finally</strong> {
-<a class="jxr_linenumber" name="721" href="#721">721</a>       sqlSession.close();
-<a class="jxr_linenumber" name="722" href="#722">722</a>     }
-<a class="jxr_linenumber" name="723" href="#723">723</a>   }
-<a class="jxr_linenumber" name="724" href="#724">724</a> 
-<a class="jxr_linenumber" name="725" href="#725">725</a>   <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="726" href="#726">726</a> <em class="jxr_comment">   * This test shows how to use the ARRAY JDBC type with MyBatis.</em>
-<a class="jxr_linenumber" name="727" href="#727">727</a> <em class="jxr_comment">   * </em>
-<a class="jxr_linenumber" name="728" href="#728">728</a> <em class="jxr_comment">   * This test shows using annotations for stored procedures and using a</em>
-<a class="jxr_linenumber" name="729" href="#729">729</a> <em class="jxr_comment">   * resultMap in XML</em>
-<a class="jxr_linenumber" name="730" href="#730">730</a> <em class="jxr_comment">   * </em>
-<a class="jxr_linenumber" name="731" href="#731">731</a> <em class="jxr_comment">   * @throws SQLException</em>
-<a class="jxr_linenumber" name="732" href="#732">732</a> <em class="jxr_comment">   */</em>
-<a class="jxr_linenumber" name="733" href="#733">733</a>   @Test
-<a class="jxr_linenumber" name="734" href="#734">734</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testGetNamesWithArray_a2() <strong class="jxr_keyword">throws</strong> SQLException {
-<a class="jxr_linenumber" name="735" href="#735">735</a>     SqlSession sqlSession = sqlSessionFactory.openSession();
-<a class="jxr_linenumber" name="736" href="#736">736</a>     <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="737" href="#737">737</a>       <a href="../../../../../org/apache/ibatis/submitted/sptests/SPMapper.html">SPMapper</a> spMapper = sqlSession.getMapper(SPMapper.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="738" href="#738">738</a> 
-<a class="jxr_linenumber" name="739" href="#739">739</a>       Array array = sqlSession.getConnection().createArrayOf(<span class="jxr_string">"int"</span>, <strong class="jxr_keyword">new</strong> Integer[] { 1, 2, 5 });
-<a class="jxr_linenumber" name="740" href="#740">740</a> 
-<a class="jxr_linenumber" name="741" href="#741">741</a>       Map&lt;String, Object&gt; parms = <strong class="jxr_keyword">new</strong> HashMap&lt;String, Object&gt;();
-<a class="jxr_linenumber" name="742" href="#742">742</a>       parms.put(<span class="jxr_string">"ids"</span>, array);
-<a class="jxr_linenumber" name="743" href="#743">743</a>       List&lt;Name&gt; names = spMapper.getNamesWithArrayAnnotatedWithXMLResultMap(parms);
-<a class="jxr_linenumber" name="744" href="#744">744</a>       Object[] returnedIds = (Object[]) parms.get(<span class="jxr_string">"returnedIds"</span>);
-<a class="jxr_linenumber" name="745" href="#745">745</a>       assertEquals(4, returnedIds.length);
-<a class="jxr_linenumber" name="746" href="#746">746</a>       assertEquals(3, parms.get(<span class="jxr_string">"requestedRows"</span>));
-<a class="jxr_linenumber" name="747" href="#747">747</a>       assertEquals(2, names.size());
-<a class="jxr_linenumber" name="748" href="#748">748</a>     } <strong class="jxr_keyword">finally</strong> {
-<a class="jxr_linenumber" name="749" href="#749">749</a>       sqlSession.close();
-<a class="jxr_linenumber" name="750" href="#750">750</a>     }
-<a class="jxr_linenumber" name="751" href="#751">751</a>   }
-<a class="jxr_linenumber" name="752" href="#752">752</a> 
-<a class="jxr_linenumber" name="753" href="#753">753</a>   <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="754" href="#754">754</a> <em class="jxr_comment">   * This test shows how to call procedures that return multiple result sets</em>
-<a class="jxr_linenumber" name="755" href="#755">755</a> <em class="jxr_comment">   * </em>
-<a class="jxr_linenumber" name="756" href="#756">756</a> <em class="jxr_comment">   * This test shows using annotations for stored procedures and referring to</em>
-<a class="jxr_linenumber" name="757" href="#757">757</a> <em class="jxr_comment">   * multiple resultMaps in XML</em>
-<a class="jxr_linenumber" name="758" href="#758">758</a> <em class="jxr_comment">   * </em>
-<a class="jxr_linenumber" name="759" href="#759">759</a> <em class="jxr_comment">   * @throws SQLException</em>
-<a class="jxr_linenumber" name="760" href="#760">760</a> <em class="jxr_comment">   */</em>
-<a class="jxr_linenumber" name="761" href="#761">761</a>   @Test
-<a class="jxr_linenumber" name="762" href="#762">762</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testGetNamesAndItems_a2() <strong class="jxr_keyword">throws</strong> SQLException {
-<a class="jxr_linenumber" name="763" href="#763">763</a>     SqlSession sqlSession = sqlSessionFactory.openSession();
-<a class="jxr_linenumber" name="764" href="#764">764</a>     <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="765" href="#765">765</a>       <a href="../../../../../org/apache/ibatis/submitted/sptests/SPMapper.html">SPMapper</a> spMapper = sqlSession.getMapper(SPMapper.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="766" href="#766">766</a> 
-<a class="jxr_linenumber" name="767" href="#767">767</a>       List&lt;List&lt;?&gt;&gt; results = spMapper.getNamesAndItemsAnnotatedWithXMLResultMap();
-<a class="jxr_linenumber" name="768" href="#768">768</a>       assertEquals(2, results.size());
-<a class="jxr_linenumber" name="769" href="#769">769</a>       assertEquals(4, results.get(0).size());
-<a class="jxr_linenumber" name="770" href="#770">770</a>       assertEquals(3, results.get(1).size());
-<a class="jxr_linenumber" name="771" href="#771">771</a>     } <strong class="jxr_keyword">finally</strong> {
-<a class="jxr_linenumber" name="772" href="#772">772</a>       sqlSession.close();
-<a class="jxr_linenumber" name="773" href="#773">773</a>     }
-<a class="jxr_linenumber" name="774" href="#774">774</a>   }
-<a class="jxr_linenumber" name="775" href="#775">775</a> 
-<a class="jxr_linenumber" name="776" href="#776">776</a>   @Test
-<a class="jxr_linenumber" name="777" href="#777">777</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testGetNamesAndItems_a3() <strong class="jxr_keyword">throws</strong> SQLException {
-<a class="jxr_linenumber" name="778" href="#778">778</a>     SqlSession sqlSession = sqlSessionFactory.openSession();
-<a class="jxr_linenumber" name="779" href="#779">779</a>     <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="780" href="#780">780</a>       <a href="../../../../../org/apache/ibatis/submitted/sptests/SPMapper.html">SPMapper</a> spMapper = sqlSession.getMapper(SPMapper.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="781" href="#781">781</a> 
-<a class="jxr_linenumber" name="782" href="#782">782</a>       List&lt;List&lt;?&gt;&gt; results = spMapper.getNamesAndItemsAnnotatedWithXMLResultMapArray();
-<a class="jxr_linenumber" name="783" href="#783">783</a>       assertEquals(2, results.size());
-<a class="jxr_linenumber" name="784" href="#784">784</a>       assertEquals(4, results.get(0).size());
-<a class="jxr_linenumber" name="785" href="#785">785</a>       assertEquals(3, results.get(1).size());
-<a class="jxr_linenumber" name="786" href="#786">786</a>     } <strong class="jxr_keyword">finally</strong> {
-<a class="jxr_linenumber" name="787" href="#787">787</a>       sqlSession.close();
-<a class="jxr_linenumber" name="788" href="#788">788</a>     }
-<a class="jxr_linenumber" name="789" href="#789">789</a>   }
-<a class="jxr_linenumber" name="790" href="#790">790</a>   
-<a class="jxr_linenumber" name="791" href="#791">791</a>   @Test
-<a class="jxr_linenumber" name="792" href="#792">792</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testGetNamesAndItemsLinked() <strong class="jxr_keyword">throws</strong> SQLException {
-<a class="jxr_linenumber" name="793" href="#793">793</a>     SqlSession sqlSession = sqlSessionFactory.openSession();
-<a class="jxr_linenumber" name="794" href="#794">794</a>     <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="795" href="#795">795</a>       <a href="../../../../../org/apache/ibatis/submitted/sptests/SPMapper.html">SPMapper</a> spMapper = sqlSession.getMapper(SPMapper.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="796" href="#796">796</a> 
-<a class="jxr_linenumber" name="797" href="#797">797</a>       List&lt;Name&gt; names = spMapper.getNamesAndItemsLinked();
-<a class="jxr_linenumber" name="798" href="#798">798</a>       assertEquals(4, names.size());
-<a class="jxr_linenumber" name="799" href="#799">799</a>       assertEquals(2, names.get(0).getItems().size());
-<a class="jxr_linenumber" name="800" href="#800">800</a>       assertEquals(1, names.get(1).getItems().size());
-<a class="jxr_linenumber" name="801" href="#801">801</a>       assertNull(names.get(2).getItems());
-<a class="jxr_linenumber" name="802" href="#802">802</a>       assertNull(names.get(3).getItems());
-<a class="jxr_linenumber" name="803" href="#803">803</a>     } <strong class="jxr_keyword">finally</strong> {
-<a class="jxr_linenumber" name="804" href="#804">804</a>       sqlSession.close();
-<a class="jxr_linenumber" name="805" href="#805">805</a>     }
-<a class="jxr_linenumber" name="806" href="#806">806</a>   }
-<a class="jxr_linenumber" name="807" href="#807">807</a> 
-<a class="jxr_linenumber" name="808" href="#808">808</a>   @Test
-<a class="jxr_linenumber" name="809" href="#809">809</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testGetNamesAndItemsLinkedWithNoMatchingInfo() <strong class="jxr_keyword">throws</strong> SQLException {
-<a class="jxr_linenumber" name="810" href="#810">810</a>     SqlSession sqlSession = sqlSessionFactory.openSession();
-<a class="jxr_linenumber" name="811" href="#811">811</a>     <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="812" href="#812">812</a>       <a href="../../../../../org/apache/ibatis/submitted/sptests/SPMapper.html">SPMapper</a> spMapper = sqlSession.getMapper(SPMapper.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="813" href="#813">813</a> 
-<a class="jxr_linenumber" name="814" href="#814">814</a>       List&lt;Name&gt; names = spMapper.getNamesAndItemsLinkedById(0);
-<a class="jxr_linenumber" name="815" href="#815">815</a>       assertEquals(1, names.size());
-<a class="jxr_linenumber" name="816" href="#816">816</a>       assertEquals(2, names.get(0).getItems().size());
-<a class="jxr_linenumber" name="817" href="#817">817</a>     } <strong class="jxr_keyword">finally</strong> {
-<a class="jxr_linenumber" name="818" href="#818">818</a>       sqlSession.close();
-<a class="jxr_linenumber" name="819" href="#819">819</a>     }
-<a class="jxr_linenumber" name="820" href="#820">820</a>   }
-<a class="jxr_linenumber" name="821" href="#821">821</a>   
-<a class="jxr_linenumber" name="822" href="#822">822</a> }
+<a class="jxr_linenumber" name="710" href="#710">710</a>       List&lt;Name&gt; names = spMapper.getNamesAnnotatedLowHighWithXMLResultMap(1, 1);
+<a class="jxr_linenumber" name="711" href="#711">711</a>       assertEquals(1, names.size());
+<a class="jxr_linenumber" name="712" href="#712">712</a>     } <strong class="jxr_keyword">finally</strong> {
+<a class="jxr_linenumber" name="713" href="#713">713</a>       sqlSession.close();
+<a class="jxr_linenumber" name="714" href="#714">714</a>     }
+<a class="jxr_linenumber" name="715" href="#715">715</a>   }
+<a class="jxr_linenumber" name="716" href="#716">716</a> 
+<a class="jxr_linenumber" name="717" href="#717">717</a>   <em class="jxr_comment">/*</em>
+<a class="jxr_linenumber" name="718" href="#718">718</a> <em class="jxr_comment">   * This test shows how to use the ARRAY JDBC type with MyBatis.</em>
+<a class="jxr_linenumber" name="719" href="#719">719</a> <em class="jxr_comment">   * </em>
+<a class="jxr_linenumber" name="720" href="#720">720</a> <em class="jxr_comment">   * This test shows using annotations for stored procedures</em>
+<a class="jxr_linenumber" name="721" href="#721">721</a> <em class="jxr_comment">   * </em>
+<a class="jxr_linenumber" name="722" href="#722">722</a> <em class="jxr_comment">   * @throws SQLException</em>
+<a class="jxr_linenumber" name="723" href="#723">723</a> <em class="jxr_comment">   */</em>
+<a class="jxr_linenumber" name="724" href="#724">724</a>   @Test
+<a class="jxr_linenumber" name="725" href="#725">725</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testGetNamesWithArray_a1() <strong class="jxr_keyword">throws</strong> SQLException {
+<a class="jxr_linenumber" name="726" href="#726">726</a>     SqlSession sqlSession = sqlSessionFactory.openSession();
+<a class="jxr_linenumber" name="727" href="#727">727</a>     <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="728" href="#728">728</a>       <a href="../../../../../org/apache/ibatis/submitted/sptests/SPMapper.html">SPMapper</a> spMapper = sqlSession.getMapper(SPMapper.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="729" href="#729">729</a> 
+<a class="jxr_linenumber" name="730" href="#730">730</a>       Array array = sqlSession.getConnection().createArrayOf(<span class="jxr_string">"int"</span>, <strong class="jxr_keyword">new</strong> Integer[] { 1, 2, 5 });
+<a class="jxr_linenumber" name="731" href="#731">731</a> 
+<a class="jxr_linenumber" name="732" href="#732">732</a>       Map&lt;String, Object&gt; parms = <strong class="jxr_keyword">new</strong> HashMap&lt;String, Object&gt;();
+<a class="jxr_linenumber" name="733" href="#733">733</a>       parms.put(<span class="jxr_string">"ids"</span>, array);
+<a class="jxr_linenumber" name="734" href="#734">734</a>       List&lt;Name&gt; names = spMapper.getNamesWithArrayAnnotated(parms);
+<a class="jxr_linenumber" name="735" href="#735">735</a>       Object[] returnedIds = (Object[]) parms.get(<span class="jxr_string">"returnedIds"</span>);
+<a class="jxr_linenumber" name="736" href="#736">736</a>       assertEquals(4, returnedIds.length);
+<a class="jxr_linenumber" name="737" href="#737">737</a>       assertEquals(3, parms.get(<span class="jxr_string">"requestedRows"</span>));
+<a class="jxr_linenumber" name="738" href="#738">738</a>       assertEquals(2, names.size());
+<a class="jxr_linenumber" name="739" href="#739">739</a>     } <strong class="jxr_keyword">finally</strong> {
+<a class="jxr_linenumber" name="740" href="#740">740</a>       sqlSession.close();
+<a class="jxr_linenumber" name="741" href="#741">741</a>     }
+<a class="jxr_linenumber" name="742" href="#742">742</a>   }
+<a class="jxr_linenumber" name="743" href="#743">743</a> 
+<a class="jxr_linenumber" name="744" href="#744">744</a>   <em class="jxr_comment">/*</em>
+<a class="jxr_linenumber" name="745" href="#745">745</a> <em class="jxr_comment">   * This test shows how to use the ARRAY JDBC type with MyBatis.</em>
+<a class="jxr_linenumber" name="746" href="#746">746</a> <em class="jxr_comment">   * </em>
+<a class="jxr_linenumber" name="747" href="#747">747</a> <em class="jxr_comment">   * This test shows using annotations for stored procedures and using a</em>
+<a class="jxr_linenumber" name="748" href="#748">748</a> <em class="jxr_comment">   * resultMap in XML</em>
+<a class="jxr_linenumber" name="749" href="#749">749</a> <em class="jxr_comment">   * </em>
+<a class="jxr_linenumber" name="750" href="#750">750</a> <em class="jxr_comment">   * @throws SQLException</em>
+<a class="jxr_linenumber" name="751" href="#751">751</a> <em class="jxr_comment">   */</em>
+<a class="jxr_linenumber" name="752" href="#752">752</a>   @Test
+<a class="jxr_linenumber" name="753" href="#753">753</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testGetNamesWithArray_a2() <strong class="jxr_keyword">throws</strong> SQLException {
+<a class="jxr_linenumber" name="754" href="#754">754</a>     SqlSession sqlSession = sqlSessionFactory.openSession();
+<a class="jxr_linenumber" name="755" href="#755">755</a>     <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="756" href="#756">756</a>       <a href="../../../../../org/apache/ibatis/submitted/sptests/SPMapper.html">SPMapper</a> spMapper = sqlSession.getMapper(SPMapper.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="757" href="#757">757</a> 
+<a class="jxr_linenumber" name="758" href="#758">758</a>       Array array = sqlSession.getConnection().createArrayOf(<span class="jxr_string">"int"</span>, <strong class="jxr_keyword">new</strong> Integer[] { 1, 2, 5 });
+<a class="jxr_linenumber" name="759" href="#759">759</a> 
+<a class="jxr_linenumber" name="760" href="#760">760</a>       Map&lt;String, Object&gt; parms = <strong class="jxr_keyword">new</strong> HashMap&lt;String, Object&gt;();
+<a class="jxr_linenumber" name="761" href="#761">761</a>       parms.put(<span class="jxr_string">"ids"</span>, array);
+<a class="jxr_linenumber" name="762" href="#762">762</a>       List&lt;Name&gt; names = spMapper.getNamesWithArrayAnnotatedWithXMLResultMap(parms);
+<a class="jxr_linenumber" name="763" href="#763">763</a>       Object[] returnedIds = (Object[]) parms.get(<span class="jxr_string">"returnedIds"</span>);
+<a class="jxr_linenumber" name="764" href="#764">764</a>       assertEquals(4, returnedIds.length);
+<a class="jxr_linenumber" name="765" href="#765">765</a>       assertEquals(3, parms.get(<span class="jxr_string">"requestedRows"</span>));
+<a class="jxr_linenumber" name="766" href="#766">766</a>       assertEquals(2, names.size());
+<a class="jxr_linenumber" name="767" href="#767">767</a>     } <strong class="jxr_keyword">finally</strong> {
+<a class="jxr_linenumber" name="768" href="#768">768</a>       sqlSession.close();
+<a class="jxr_linenumber" name="769" href="#769">769</a>     }
+<a class="jxr_linenumber" name="770" href="#770">770</a>   }
+<a class="jxr_linenumber" name="771" href="#771">771</a> 
+<a class="jxr_linenumber" name="772" href="#772">772</a>   <em class="jxr_comment">/*</em>
+<a class="jxr_linenumber" name="773" href="#773">773</a> <em class="jxr_comment">   * This test shows how to call procedures that return multiple result sets</em>
+<a class="jxr_linenumber" name="774" href="#774">774</a> <em class="jxr_comment">   * </em>
+<a class="jxr_linenumber" name="775" href="#775">775</a> <em class="jxr_comment">   * This test shows using annotations for stored procedures and referring to</em>
+<a class="jxr_linenumber" name="776" href="#776">776</a> <em class="jxr_comment">   * multiple resultMaps in XML</em>
+<a class="jxr_linenumber" name="777" href="#777">777</a> <em class="jxr_comment">   * </em>
+<a class="jxr_linenumber" name="778" href="#778">778</a> <em class="jxr_comment">   * @throws SQLException</em>
+<a class="jxr_linenumber" name="779" href="#779">779</a> <em class="jxr_comment">   */</em>
+<a class="jxr_linenumber" name="780" href="#780">780</a>   @Test
+<a class="jxr_linenumber" name="781" href="#781">781</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testGetNamesAndItems_a2() <strong class="jxr_keyword">throws</strong> SQLException {
+<a class="jxr_linenumber" name="782" href="#782">782</a>     SqlSession sqlSession = sqlSessionFactory.openSession();
+<a class="jxr_linenumber" name="783" href="#783">783</a>     <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="784" href="#784">784</a>       <a href="../../../../../org/apache/ibatis/submitted/sptests/SPMapper.html">SPMapper</a> spMapper = sqlSession.getMapper(SPMapper.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="785" href="#785">785</a> 
+<a class="jxr_linenumber" name="786" href="#786">786</a>       List&lt;List&lt;?&gt;&gt; results = spMapper.getNamesAndItemsAnnotatedWithXMLResultMap();
+<a class="jxr_linenumber" name="787" href="#787">787</a>       assertEquals(2, results.size());
+<a class="jxr_linenumber" name="788" href="#788">788</a>       assertEquals(4, results.get(0).size());
+<a class="jxr_linenumber" name="789" href="#789">789</a>       assertEquals(3, results.get(1).size());
+<a class="jxr_linenumber" name="790" href="#790">790</a>     } <strong class="jxr_keyword">finally</strong> {
+<a class="jxr_linenumber" name="791" href="#791">791</a>       sqlSession.close();
+<a class="jxr_linenumber" name="792" href="#792">792</a>     }
+<a class="jxr_linenumber" name="793" href="#793">793</a>   }
+<a class="jxr_linenumber" name="794" href="#794">794</a> 
+<a class="jxr_linenumber" name="795" href="#795">795</a>   @Test
+<a class="jxr_linenumber" name="796" href="#796">796</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testGetNamesAndItems_a3() <strong class="jxr_keyword">throws</strong> SQLException {
+<a class="jxr_linenumber" name="797" href="#797">797</a>     SqlSession sqlSession = sqlSessionFactory.openSession();
+<a class="jxr_linenumber" name="798" href="#798">798</a>     <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="799" href="#799">799</a>       <a href="../../../../../org/apache/ibatis/submitted/sptests/SPMapper.html">SPMapper</a> spMapper = sqlSession.getMapper(SPMapper.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="800" href="#800">800</a> 
+<a class="jxr_linenumber" name="801" href="#801">801</a>       List&lt;List&lt;?&gt;&gt; results = spMapper.getNamesAndItemsAnnotatedWithXMLResultMapArray();
+<a class="jxr_linenumber" name="802" href="#802">802</a>       assertEquals(2, results.size());
+<a class="jxr_linenumber" name="803" href="#803">803</a>       assertEquals(4, results.get(0).size());
+<a class="jxr_linenumber" name="804" href="#804">804</a>       assertEquals(3, results.get(1).size());
+<a class="jxr_linenumber" name="805" href="#805">805</a>     } <strong class="jxr_keyword">finally</strong> {
+<a class="jxr_linenumber" name="806" href="#806">806</a>       sqlSession.close();
+<a class="jxr_linenumber" name="807" href="#807">807</a>     }
+<a class="jxr_linenumber" name="808" href="#808">808</a>   }
+<a class="jxr_linenumber" name="809" href="#809">809</a>   
+<a class="jxr_linenumber" name="810" href="#810">810</a>   @Test
+<a class="jxr_linenumber" name="811" href="#811">811</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testGetNamesAndItemsLinked() <strong class="jxr_keyword">throws</strong> SQLException {
+<a class="jxr_linenumber" name="812" href="#812">812</a>     SqlSession sqlSession = sqlSessionFactory.openSession();
+<a class="jxr_linenumber" name="813" href="#813">813</a>     <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="814" href="#814">814</a>       <a href="../../../../../org/apache/ibatis/submitted/sptests/SPMapper.html">SPMapper</a> spMapper = sqlSession.getMapper(SPMapper.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="815" href="#815">815</a> 
+<a class="jxr_linenumber" name="816" href="#816">816</a>       List&lt;Name&gt; names = spMapper.getNamesAndItemsLinked();
+<a class="jxr_linenumber" name="817" href="#817">817</a>       assertEquals(4, names.size());
+<a class="jxr_linenumber" name="818" href="#818">818</a>       assertEquals(2, names.get(0).getItems().size());
+<a class="jxr_linenumber" name="819" href="#819">819</a>       assertEquals(1, names.get(1).getItems().size());
+<a class="jxr_linenumber" name="820" href="#820">820</a>       assertNull(names.get(2).getItems());
+<a class="jxr_linenumber" name="821" href="#821">821</a>       assertNull(names.get(3).getItems());
+<a class="jxr_linenumber" name="822" href="#822">822</a>     } <strong class="jxr_keyword">finally</strong> {
+<a class="jxr_linenumber" name="823" href="#823">823</a>       sqlSession.close();
+<a class="jxr_linenumber" name="824" href="#824">824</a>     }
+<a class="jxr_linenumber" name="825" href="#825">825</a>   }
+<a class="jxr_linenumber" name="826" href="#826">826</a> 
+<a class="jxr_linenumber" name="827" href="#827">827</a>   @Test
+<a class="jxr_linenumber" name="828" href="#828">828</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testGetNamesAndItemsLinkedWithNoMatchingInfo() <strong class="jxr_keyword">throws</strong> SQLException {
+<a class="jxr_linenumber" name="829" href="#829">829</a>     SqlSession sqlSession = sqlSessionFactory.openSession();
+<a class="jxr_linenumber" name="830" href="#830">830</a>     <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="831" href="#831">831</a>       <a href="../../../../../org/apache/ibatis/submitted/sptests/SPMapper.html">SPMapper</a> spMapper = sqlSession.getMapper(SPMapper.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="832" href="#832">832</a> 
+<a class="jxr_linenumber" name="833" href="#833">833</a>       List&lt;Name&gt; names = spMapper.getNamesAndItemsLinkedById(0);
+<a class="jxr_linenumber" name="834" href="#834">834</a>       assertEquals(1, names.size());
+<a class="jxr_linenumber" name="835" href="#835">835</a>       assertEquals(2, names.get(0).getItems().size());
+<a class="jxr_linenumber" name="836" href="#836">836</a>     } <strong class="jxr_keyword">finally</strong> {
+<a class="jxr_linenumber" name="837" href="#837">837</a>       sqlSession.close();
+<a class="jxr_linenumber" name="838" href="#838">838</a>     }
+<a class="jxr_linenumber" name="839" href="#839">839</a>   }
+<a class="jxr_linenumber" name="840" href="#840">840</a> 
+<a class="jxr_linenumber" name="841" href="#841">841</a> }
 </pre>
 <hr/><div id="footer">This page was automatically generated by <a href="http://maven.apache.org/">Maven</a></div></body>
 </html>

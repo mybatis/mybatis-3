@@ -708,125 +708,131 @@
 <a class="jxr_linenumber" name="698" href="#698">698</a>         incompleteStatements.iterator().next().parseStatementNode();
 <a class="jxr_linenumber" name="699" href="#699">699</a>       }
 <a class="jxr_linenumber" name="700" href="#700">700</a>     }
-<a class="jxr_linenumber" name="701" href="#701">701</a>   }
-<a class="jxr_linenumber" name="702" href="#702">702</a> 
-<a class="jxr_linenumber" name="703" href="#703">703</a>   <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="704" href="#704">704</a> <em class="jxr_comment">   * Extracts namespace from fully qualified statement id.</em>
-<a class="jxr_linenumber" name="705" href="#705">705</a> <em class="jxr_comment">   *</em>
-<a class="jxr_linenumber" name="706" href="#706">706</a> <em class="jxr_comment">   * @param statementId</em>
-<a class="jxr_linenumber" name="707" href="#707">707</a> <em class="jxr_comment">   * @return namespace or null when id does not contain period.</em>
-<a class="jxr_linenumber" name="708" href="#708">708</a> <em class="jxr_comment">   */</em>
-<a class="jxr_linenumber" name="709" href="#709">709</a>   <strong class="jxr_keyword">protected</strong> String extractNamespace(String statementId) {
-<a class="jxr_linenumber" name="710" href="#710">710</a>     <strong class="jxr_keyword">int</strong> lastPeriod = statementId.lastIndexOf('.');
-<a class="jxr_linenumber" name="711" href="#711">711</a>     <strong class="jxr_keyword">return</strong> lastPeriod &gt; 0 ? statementId.substring(0, lastPeriod) : <strong class="jxr_keyword">null</strong>;
-<a class="jxr_linenumber" name="712" href="#712">712</a>   }
-<a class="jxr_linenumber" name="713" href="#713">713</a> 
-<a class="jxr_linenumber" name="714" href="#714">714</a>   <em class="jxr_comment">// Slow but a one time cost. A better solution is welcome.</em>
-<a class="jxr_linenumber" name="715" href="#715">715</a>   <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">void</strong> checkGloballyForDiscriminatedNestedResultMaps(<a href="../../../../org/apache/ibatis/mapping/ResultMap.html">ResultMap</a> rm) {
-<a class="jxr_linenumber" name="716" href="#716">716</a>     <strong class="jxr_keyword">if</strong> (rm.hasNestedResultMaps()) {
-<a class="jxr_linenumber" name="717" href="#717">717</a>       <strong class="jxr_keyword">for</strong> (Map.Entry&lt;String, ResultMap&gt; entry : resultMaps.entrySet()) {
-<a class="jxr_linenumber" name="718" href="#718">718</a>         Object value = entry.getValue();
-<a class="jxr_linenumber" name="719" href="#719">719</a>         <strong class="jxr_keyword">if</strong> (value instanceof ResultMap) {
-<a class="jxr_linenumber" name="720" href="#720">720</a>           <a href="../../../../org/apache/ibatis/mapping/ResultMap.html">ResultMap</a> entryResultMap = (ResultMap) value;
-<a class="jxr_linenumber" name="721" href="#721">721</a>           <strong class="jxr_keyword">if</strong> (!entryResultMap.hasNestedResultMaps() &amp;&amp; entryResultMap.getDiscriminator() != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="722" href="#722">722</a>             Collection&lt;String&gt; discriminatedResultMapNames = entryResultMap.getDiscriminator().getDiscriminatorMap().values();
-<a class="jxr_linenumber" name="723" href="#723">723</a>             <strong class="jxr_keyword">if</strong> (discriminatedResultMapNames.contains(rm.getId())) {
-<a class="jxr_linenumber" name="724" href="#724">724</a>               entryResultMap.forceNestedResultMaps();
-<a class="jxr_linenumber" name="725" href="#725">725</a>             }
-<a class="jxr_linenumber" name="726" href="#726">726</a>           }
-<a class="jxr_linenumber" name="727" href="#727">727</a>         }
-<a class="jxr_linenumber" name="728" href="#728">728</a>       }
-<a class="jxr_linenumber" name="729" href="#729">729</a>     }
-<a class="jxr_linenumber" name="730" href="#730">730</a>   }
-<a class="jxr_linenumber" name="731" href="#731">731</a> 
-<a class="jxr_linenumber" name="732" href="#732">732</a>   <em class="jxr_comment">// Slow but a one time cost. A better solution is welcome.</em>
-<a class="jxr_linenumber" name="733" href="#733">733</a>   <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">void</strong> checkLocallyForDiscriminatedNestedResultMaps(<a href="../../../../org/apache/ibatis/mapping/ResultMap.html">ResultMap</a> rm) {
-<a class="jxr_linenumber" name="734" href="#734">734</a>     <strong class="jxr_keyword">if</strong> (!rm.hasNestedResultMaps() &amp;&amp; rm.getDiscriminator() != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="735" href="#735">735</a>       <strong class="jxr_keyword">for</strong> (Map.Entry&lt;String, String&gt; entry : rm.getDiscriminator().getDiscriminatorMap().entrySet()) {
-<a class="jxr_linenumber" name="736" href="#736">736</a>         String discriminatedResultMapName = entry.getValue();
-<a class="jxr_linenumber" name="737" href="#737">737</a>         <strong class="jxr_keyword">if</strong> (hasResultMap(discriminatedResultMapName)) {
-<a class="jxr_linenumber" name="738" href="#738">738</a>           <a href="../../../../org/apache/ibatis/mapping/ResultMap.html">ResultMap</a> discriminatedResultMap = resultMaps.get(discriminatedResultMapName);
-<a class="jxr_linenumber" name="739" href="#739">739</a>           <strong class="jxr_keyword">if</strong> (discriminatedResultMap.hasNestedResultMaps()) {
-<a class="jxr_linenumber" name="740" href="#740">740</a>             rm.forceNestedResultMaps();
-<a class="jxr_linenumber" name="741" href="#741">741</a>             <strong class="jxr_keyword">break</strong>;
-<a class="jxr_linenumber" name="742" href="#742">742</a>           }
-<a class="jxr_linenumber" name="743" href="#743">743</a>         }
-<a class="jxr_linenumber" name="744" href="#744">744</a>       }
-<a class="jxr_linenumber" name="745" href="#745">745</a>     }
-<a class="jxr_linenumber" name="746" href="#746">746</a>   }
-<a class="jxr_linenumber" name="747" href="#747">747</a> 
-<a class="jxr_linenumber" name="748" href="#748">748</a>   <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">class</strong> StrictMap&lt;V&gt; <strong class="jxr_keyword">extends</strong> HashMap&lt;String, V&gt; {
-<a class="jxr_linenumber" name="749" href="#749">749</a> 
-<a class="jxr_linenumber" name="750" href="#750">750</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">long</strong> serialVersionUID = -4950446264854982944L;
-<a class="jxr_linenumber" name="751" href="#751">751</a>     <strong class="jxr_keyword">private</strong> String name;
-<a class="jxr_linenumber" name="752" href="#752">752</a> 
-<a class="jxr_linenumber" name="753" href="#753">753</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../org/apache/ibatis/session/Configuration.html">StrictMap</a>(String name, <strong class="jxr_keyword">int</strong> initialCapacity, <strong class="jxr_keyword">float</strong> loadFactor) {
-<a class="jxr_linenumber" name="754" href="#754">754</a>       <strong class="jxr_keyword">super</strong>(initialCapacity, loadFactor);
-<a class="jxr_linenumber" name="755" href="#755">755</a>       <strong class="jxr_keyword">this</strong>.name = name;
-<a class="jxr_linenumber" name="756" href="#756">756</a>     }
-<a class="jxr_linenumber" name="757" href="#757">757</a> 
-<a class="jxr_linenumber" name="758" href="#758">758</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../org/apache/ibatis/session/Configuration.html">StrictMap</a>(String name, <strong class="jxr_keyword">int</strong> initialCapacity) {
-<a class="jxr_linenumber" name="759" href="#759">759</a>       <strong class="jxr_keyword">super</strong>(initialCapacity);
-<a class="jxr_linenumber" name="760" href="#760">760</a>       <strong class="jxr_keyword">this</strong>.name = name;
-<a class="jxr_linenumber" name="761" href="#761">761</a>     }
-<a class="jxr_linenumber" name="762" href="#762">762</a> 
-<a class="jxr_linenumber" name="763" href="#763">763</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../org/apache/ibatis/session/Configuration.html">StrictMap</a>(String name) {
-<a class="jxr_linenumber" name="764" href="#764">764</a>       <strong class="jxr_keyword">super</strong>();
-<a class="jxr_linenumber" name="765" href="#765">765</a>       <strong class="jxr_keyword">this</strong>.name = name;
-<a class="jxr_linenumber" name="766" href="#766">766</a>     }
-<a class="jxr_linenumber" name="767" href="#767">767</a> 
-<a class="jxr_linenumber" name="768" href="#768">768</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../org/apache/ibatis/session/Configuration.html">StrictMap</a>(String name, Map&lt;String, ? <strong class="jxr_keyword">extends</strong> V&gt; m) {
-<a class="jxr_linenumber" name="769" href="#769">769</a>       <strong class="jxr_keyword">super</strong>(m);
-<a class="jxr_linenumber" name="770" href="#770">770</a>       <strong class="jxr_keyword">this</strong>.name = name;
-<a class="jxr_linenumber" name="771" href="#771">771</a>     }
-<a class="jxr_linenumber" name="772" href="#772">772</a> 
-<a class="jxr_linenumber" name="773" href="#773">773</a>     @SuppressWarnings(<span class="jxr_string">"unchecked"</span>)
-<a class="jxr_linenumber" name="774" href="#774">774</a>     <strong class="jxr_keyword">public</strong> V put(String key, V value) {
-<a class="jxr_linenumber" name="775" href="#775">775</a>       <strong class="jxr_keyword">if</strong> (containsKey(key))
-<a class="jxr_linenumber" name="776" href="#776">776</a>         <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalArgumentException(name + <span class="jxr_string">" already contains value for "</span> + key);
-<a class="jxr_linenumber" name="777" href="#777">777</a>       <strong class="jxr_keyword">if</strong> (key.contains(<span class="jxr_string">"."</span>)) {
-<a class="jxr_linenumber" name="778" href="#778">778</a>         <strong class="jxr_keyword">final</strong> String shortKey = getShortName(key);
-<a class="jxr_linenumber" name="779" href="#779">779</a>         <strong class="jxr_keyword">if</strong> (<strong class="jxr_keyword">super</strong>.get(shortKey) == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="780" href="#780">780</a>           <strong class="jxr_keyword">super</strong>.put(shortKey, value);
-<a class="jxr_linenumber" name="781" href="#781">781</a>         } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="782" href="#782">782</a>           <strong class="jxr_keyword">super</strong>.put(shortKey, (V) <strong class="jxr_keyword">new</strong> Ambiguity(shortKey));
-<a class="jxr_linenumber" name="783" href="#783">783</a>         }
-<a class="jxr_linenumber" name="784" href="#784">784</a>       }
-<a class="jxr_linenumber" name="785" href="#785">785</a>       <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">super</strong>.put(key, value);
-<a class="jxr_linenumber" name="786" href="#786">786</a>     }
-<a class="jxr_linenumber" name="787" href="#787">787</a> 
-<a class="jxr_linenumber" name="788" href="#788">788</a>     <strong class="jxr_keyword">public</strong> V get(Object key) {
-<a class="jxr_linenumber" name="789" href="#789">789</a>       V value = <strong class="jxr_keyword">super</strong>.get(key);
-<a class="jxr_linenumber" name="790" href="#790">790</a>       <strong class="jxr_keyword">if</strong> (value == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="791" href="#791">791</a>         <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalArgumentException(name + <span class="jxr_string">" does not contain value for "</span> + key);
-<a class="jxr_linenumber" name="792" href="#792">792</a>       }
-<a class="jxr_linenumber" name="793" href="#793">793</a>       <strong class="jxr_keyword">if</strong> (value instanceof Ambiguity) {
-<a class="jxr_linenumber" name="794" href="#794">794</a>         <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalArgumentException(((Ambiguity) value).getSubject() + <span class="jxr_string">" is ambiguous in "</span> + name
-<a class="jxr_linenumber" name="795" href="#795">795</a>             + <span class="jxr_string">" (try using the full name including the namespace, or rename one of the entries)"</span>);
-<a class="jxr_linenumber" name="796" href="#796">796</a>       }
-<a class="jxr_linenumber" name="797" href="#797">797</a>       <strong class="jxr_keyword">return</strong> value;
-<a class="jxr_linenumber" name="798" href="#798">798</a>     }
-<a class="jxr_linenumber" name="799" href="#799">799</a> 
-<a class="jxr_linenumber" name="800" href="#800">800</a>     <strong class="jxr_keyword">private</strong> String getShortName(String key) {
-<a class="jxr_linenumber" name="801" href="#801">801</a>       <strong class="jxr_keyword">final</strong> String[] keyparts = key.split(<span class="jxr_string">"&#92;&#92;."</span>);
-<a class="jxr_linenumber" name="802" href="#802">802</a>       <strong class="jxr_keyword">final</strong> String shortKey = keyparts[keyparts.length - 1];
-<a class="jxr_linenumber" name="803" href="#803">803</a>       <strong class="jxr_keyword">return</strong> shortKey;
+<a class="jxr_linenumber" name="701" href="#701">701</a>     <strong class="jxr_keyword">if</strong> (!incompleteMethods.isEmpty()) {
+<a class="jxr_linenumber" name="702" href="#702">702</a>       <strong class="jxr_keyword">synchronized</strong> (incompleteMethods) {
+<a class="jxr_linenumber" name="703" href="#703">703</a>         <em class="jxr_comment">// This always throws a BuilderException.</em>
+<a class="jxr_linenumber" name="704" href="#704">704</a>         incompleteMethods.iterator().next().resolve();
+<a class="jxr_linenumber" name="705" href="#705">705</a>       }
+<a class="jxr_linenumber" name="706" href="#706">706</a>     }
+<a class="jxr_linenumber" name="707" href="#707">707</a>   }
+<a class="jxr_linenumber" name="708" href="#708">708</a> 
+<a class="jxr_linenumber" name="709" href="#709">709</a>   <em class="jxr_comment">/*</em>
+<a class="jxr_linenumber" name="710" href="#710">710</a> <em class="jxr_comment">   * Extracts namespace from fully qualified statement id.</em>
+<a class="jxr_linenumber" name="711" href="#711">711</a> <em class="jxr_comment">   *</em>
+<a class="jxr_linenumber" name="712" href="#712">712</a> <em class="jxr_comment">   * @param statementId</em>
+<a class="jxr_linenumber" name="713" href="#713">713</a> <em class="jxr_comment">   * @return namespace or null when id does not contain period.</em>
+<a class="jxr_linenumber" name="714" href="#714">714</a> <em class="jxr_comment">   */</em>
+<a class="jxr_linenumber" name="715" href="#715">715</a>   <strong class="jxr_keyword">protected</strong> String extractNamespace(String statementId) {
+<a class="jxr_linenumber" name="716" href="#716">716</a>     <strong class="jxr_keyword">int</strong> lastPeriod = statementId.lastIndexOf('.');
+<a class="jxr_linenumber" name="717" href="#717">717</a>     <strong class="jxr_keyword">return</strong> lastPeriod &gt; 0 ? statementId.substring(0, lastPeriod) : <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="718" href="#718">718</a>   }
+<a class="jxr_linenumber" name="719" href="#719">719</a> 
+<a class="jxr_linenumber" name="720" href="#720">720</a>   <em class="jxr_comment">// Slow but a one time cost. A better solution is welcome.</em>
+<a class="jxr_linenumber" name="721" href="#721">721</a>   <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">void</strong> checkGloballyForDiscriminatedNestedResultMaps(<a href="../../../../org/apache/ibatis/mapping/ResultMap.html">ResultMap</a> rm) {
+<a class="jxr_linenumber" name="722" href="#722">722</a>     <strong class="jxr_keyword">if</strong> (rm.hasNestedResultMaps()) {
+<a class="jxr_linenumber" name="723" href="#723">723</a>       <strong class="jxr_keyword">for</strong> (Map.Entry&lt;String, ResultMap&gt; entry : resultMaps.entrySet()) {
+<a class="jxr_linenumber" name="724" href="#724">724</a>         Object value = entry.getValue();
+<a class="jxr_linenumber" name="725" href="#725">725</a>         <strong class="jxr_keyword">if</strong> (value instanceof ResultMap) {
+<a class="jxr_linenumber" name="726" href="#726">726</a>           <a href="../../../../org/apache/ibatis/mapping/ResultMap.html">ResultMap</a> entryResultMap = (ResultMap) value;
+<a class="jxr_linenumber" name="727" href="#727">727</a>           <strong class="jxr_keyword">if</strong> (!entryResultMap.hasNestedResultMaps() &amp;&amp; entryResultMap.getDiscriminator() != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="728" href="#728">728</a>             Collection&lt;String&gt; discriminatedResultMapNames = entryResultMap.getDiscriminator().getDiscriminatorMap().values();
+<a class="jxr_linenumber" name="729" href="#729">729</a>             <strong class="jxr_keyword">if</strong> (discriminatedResultMapNames.contains(rm.getId())) {
+<a class="jxr_linenumber" name="730" href="#730">730</a>               entryResultMap.forceNestedResultMaps();
+<a class="jxr_linenumber" name="731" href="#731">731</a>             }
+<a class="jxr_linenumber" name="732" href="#732">732</a>           }
+<a class="jxr_linenumber" name="733" href="#733">733</a>         }
+<a class="jxr_linenumber" name="734" href="#734">734</a>       }
+<a class="jxr_linenumber" name="735" href="#735">735</a>     }
+<a class="jxr_linenumber" name="736" href="#736">736</a>   }
+<a class="jxr_linenumber" name="737" href="#737">737</a> 
+<a class="jxr_linenumber" name="738" href="#738">738</a>   <em class="jxr_comment">// Slow but a one time cost. A better solution is welcome.</em>
+<a class="jxr_linenumber" name="739" href="#739">739</a>   <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">void</strong> checkLocallyForDiscriminatedNestedResultMaps(<a href="../../../../org/apache/ibatis/mapping/ResultMap.html">ResultMap</a> rm) {
+<a class="jxr_linenumber" name="740" href="#740">740</a>     <strong class="jxr_keyword">if</strong> (!rm.hasNestedResultMaps() &amp;&amp; rm.getDiscriminator() != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="741" href="#741">741</a>       <strong class="jxr_keyword">for</strong> (Map.Entry&lt;String, String&gt; entry : rm.getDiscriminator().getDiscriminatorMap().entrySet()) {
+<a class="jxr_linenumber" name="742" href="#742">742</a>         String discriminatedResultMapName = entry.getValue();
+<a class="jxr_linenumber" name="743" href="#743">743</a>         <strong class="jxr_keyword">if</strong> (hasResultMap(discriminatedResultMapName)) {
+<a class="jxr_linenumber" name="744" href="#744">744</a>           <a href="../../../../org/apache/ibatis/mapping/ResultMap.html">ResultMap</a> discriminatedResultMap = resultMaps.get(discriminatedResultMapName);
+<a class="jxr_linenumber" name="745" href="#745">745</a>           <strong class="jxr_keyword">if</strong> (discriminatedResultMap.hasNestedResultMaps()) {
+<a class="jxr_linenumber" name="746" href="#746">746</a>             rm.forceNestedResultMaps();
+<a class="jxr_linenumber" name="747" href="#747">747</a>             <strong class="jxr_keyword">break</strong>;
+<a class="jxr_linenumber" name="748" href="#748">748</a>           }
+<a class="jxr_linenumber" name="749" href="#749">749</a>         }
+<a class="jxr_linenumber" name="750" href="#750">750</a>       }
+<a class="jxr_linenumber" name="751" href="#751">751</a>     }
+<a class="jxr_linenumber" name="752" href="#752">752</a>   }
+<a class="jxr_linenumber" name="753" href="#753">753</a> 
+<a class="jxr_linenumber" name="754" href="#754">754</a>   <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">class</strong> StrictMap&lt;V&gt; <strong class="jxr_keyword">extends</strong> HashMap&lt;String, V&gt; {
+<a class="jxr_linenumber" name="755" href="#755">755</a> 
+<a class="jxr_linenumber" name="756" href="#756">756</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">long</strong> serialVersionUID = -4950446264854982944L;
+<a class="jxr_linenumber" name="757" href="#757">757</a>     <strong class="jxr_keyword">private</strong> String name;
+<a class="jxr_linenumber" name="758" href="#758">758</a> 
+<a class="jxr_linenumber" name="759" href="#759">759</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../org/apache/ibatis/session/Configuration.html">StrictMap</a>(String name, <strong class="jxr_keyword">int</strong> initialCapacity, <strong class="jxr_keyword">float</strong> loadFactor) {
+<a class="jxr_linenumber" name="760" href="#760">760</a>       <strong class="jxr_keyword">super</strong>(initialCapacity, loadFactor);
+<a class="jxr_linenumber" name="761" href="#761">761</a>       <strong class="jxr_keyword">this</strong>.name = name;
+<a class="jxr_linenumber" name="762" href="#762">762</a>     }
+<a class="jxr_linenumber" name="763" href="#763">763</a> 
+<a class="jxr_linenumber" name="764" href="#764">764</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../org/apache/ibatis/session/Configuration.html">StrictMap</a>(String name, <strong class="jxr_keyword">int</strong> initialCapacity) {
+<a class="jxr_linenumber" name="765" href="#765">765</a>       <strong class="jxr_keyword">super</strong>(initialCapacity);
+<a class="jxr_linenumber" name="766" href="#766">766</a>       <strong class="jxr_keyword">this</strong>.name = name;
+<a class="jxr_linenumber" name="767" href="#767">767</a>     }
+<a class="jxr_linenumber" name="768" href="#768">768</a> 
+<a class="jxr_linenumber" name="769" href="#769">769</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../org/apache/ibatis/session/Configuration.html">StrictMap</a>(String name) {
+<a class="jxr_linenumber" name="770" href="#770">770</a>       <strong class="jxr_keyword">super</strong>();
+<a class="jxr_linenumber" name="771" href="#771">771</a>       <strong class="jxr_keyword">this</strong>.name = name;
+<a class="jxr_linenumber" name="772" href="#772">772</a>     }
+<a class="jxr_linenumber" name="773" href="#773">773</a> 
+<a class="jxr_linenumber" name="774" href="#774">774</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../org/apache/ibatis/session/Configuration.html">StrictMap</a>(String name, Map&lt;String, ? <strong class="jxr_keyword">extends</strong> V&gt; m) {
+<a class="jxr_linenumber" name="775" href="#775">775</a>       <strong class="jxr_keyword">super</strong>(m);
+<a class="jxr_linenumber" name="776" href="#776">776</a>       <strong class="jxr_keyword">this</strong>.name = name;
+<a class="jxr_linenumber" name="777" href="#777">777</a>     }
+<a class="jxr_linenumber" name="778" href="#778">778</a> 
+<a class="jxr_linenumber" name="779" href="#779">779</a>     @SuppressWarnings(<span class="jxr_string">"unchecked"</span>)
+<a class="jxr_linenumber" name="780" href="#780">780</a>     <strong class="jxr_keyword">public</strong> V put(String key, V value) {
+<a class="jxr_linenumber" name="781" href="#781">781</a>       <strong class="jxr_keyword">if</strong> (containsKey(key))
+<a class="jxr_linenumber" name="782" href="#782">782</a>         <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalArgumentException(name + <span class="jxr_string">" already contains value for "</span> + key);
+<a class="jxr_linenumber" name="783" href="#783">783</a>       <strong class="jxr_keyword">if</strong> (key.contains(<span class="jxr_string">"."</span>)) {
+<a class="jxr_linenumber" name="784" href="#784">784</a>         <strong class="jxr_keyword">final</strong> String shortKey = getShortName(key);
+<a class="jxr_linenumber" name="785" href="#785">785</a>         <strong class="jxr_keyword">if</strong> (<strong class="jxr_keyword">super</strong>.get(shortKey) == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="786" href="#786">786</a>           <strong class="jxr_keyword">super</strong>.put(shortKey, value);
+<a class="jxr_linenumber" name="787" href="#787">787</a>         } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="788" href="#788">788</a>           <strong class="jxr_keyword">super</strong>.put(shortKey, (V) <strong class="jxr_keyword">new</strong> Ambiguity(shortKey));
+<a class="jxr_linenumber" name="789" href="#789">789</a>         }
+<a class="jxr_linenumber" name="790" href="#790">790</a>       }
+<a class="jxr_linenumber" name="791" href="#791">791</a>       <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">super</strong>.put(key, value);
+<a class="jxr_linenumber" name="792" href="#792">792</a>     }
+<a class="jxr_linenumber" name="793" href="#793">793</a> 
+<a class="jxr_linenumber" name="794" href="#794">794</a>     <strong class="jxr_keyword">public</strong> V get(Object key) {
+<a class="jxr_linenumber" name="795" href="#795">795</a>       V value = <strong class="jxr_keyword">super</strong>.get(key);
+<a class="jxr_linenumber" name="796" href="#796">796</a>       <strong class="jxr_keyword">if</strong> (value == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="797" href="#797">797</a>         <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalArgumentException(name + <span class="jxr_string">" does not contain value for "</span> + key);
+<a class="jxr_linenumber" name="798" href="#798">798</a>       }
+<a class="jxr_linenumber" name="799" href="#799">799</a>       <strong class="jxr_keyword">if</strong> (value instanceof Ambiguity) {
+<a class="jxr_linenumber" name="800" href="#800">800</a>         <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalArgumentException(((Ambiguity) value).getSubject() + <span class="jxr_string">" is ambiguous in "</span> + name
+<a class="jxr_linenumber" name="801" href="#801">801</a>             + <span class="jxr_string">" (try using the full name including the namespace, or rename one of the entries)"</span>);
+<a class="jxr_linenumber" name="802" href="#802">802</a>       }
+<a class="jxr_linenumber" name="803" href="#803">803</a>       <strong class="jxr_keyword">return</strong> value;
 <a class="jxr_linenumber" name="804" href="#804">804</a>     }
 <a class="jxr_linenumber" name="805" href="#805">805</a> 
-<a class="jxr_linenumber" name="806" href="#806">806</a>     <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../org/apache/ibatis/session/Configuration.html">Ambiguity</a> {
-<a class="jxr_linenumber" name="807" href="#807">807</a>       <strong class="jxr_keyword">private</strong> String subject;
-<a class="jxr_linenumber" name="808" href="#808">808</a> 
-<a class="jxr_linenumber" name="809" href="#809">809</a>       <strong class="jxr_keyword">public</strong> <a href="../../../../org/apache/ibatis/session/Configuration.html">Ambiguity</a>(String subject) {
-<a class="jxr_linenumber" name="810" href="#810">810</a>         <strong class="jxr_keyword">this</strong>.subject = subject;
-<a class="jxr_linenumber" name="811" href="#811">811</a>       }
-<a class="jxr_linenumber" name="812" href="#812">812</a> 
-<a class="jxr_linenumber" name="813" href="#813">813</a>       <strong class="jxr_keyword">public</strong> String getSubject() {
-<a class="jxr_linenumber" name="814" href="#814">814</a>         <strong class="jxr_keyword">return</strong> subject;
-<a class="jxr_linenumber" name="815" href="#815">815</a>       }
-<a class="jxr_linenumber" name="816" href="#816">816</a>     }
-<a class="jxr_linenumber" name="817" href="#817">817</a>   }
+<a class="jxr_linenumber" name="806" href="#806">806</a>     <strong class="jxr_keyword">private</strong> String getShortName(String key) {
+<a class="jxr_linenumber" name="807" href="#807">807</a>       <strong class="jxr_keyword">final</strong> String[] keyparts = key.split(<span class="jxr_string">"&#92;&#92;."</span>);
+<a class="jxr_linenumber" name="808" href="#808">808</a>       <strong class="jxr_keyword">final</strong> String shortKey = keyparts[keyparts.length - 1];
+<a class="jxr_linenumber" name="809" href="#809">809</a>       <strong class="jxr_keyword">return</strong> shortKey;
+<a class="jxr_linenumber" name="810" href="#810">810</a>     }
+<a class="jxr_linenumber" name="811" href="#811">811</a> 
+<a class="jxr_linenumber" name="812" href="#812">812</a>     <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../org/apache/ibatis/session/Configuration.html">Ambiguity</a> {
+<a class="jxr_linenumber" name="813" href="#813">813</a>       <strong class="jxr_keyword">private</strong> String subject;
+<a class="jxr_linenumber" name="814" href="#814">814</a> 
+<a class="jxr_linenumber" name="815" href="#815">815</a>       <strong class="jxr_keyword">public</strong> <a href="../../../../org/apache/ibatis/session/Configuration.html">Ambiguity</a>(String subject) {
+<a class="jxr_linenumber" name="816" href="#816">816</a>         <strong class="jxr_keyword">this</strong>.subject = subject;
+<a class="jxr_linenumber" name="817" href="#817">817</a>       }
 <a class="jxr_linenumber" name="818" href="#818">818</a> 
-<a class="jxr_linenumber" name="819" href="#819">819</a> }
+<a class="jxr_linenumber" name="819" href="#819">819</a>       <strong class="jxr_keyword">public</strong> String getSubject() {
+<a class="jxr_linenumber" name="820" href="#820">820</a>         <strong class="jxr_keyword">return</strong> subject;
+<a class="jxr_linenumber" name="821" href="#821">821</a>       }
+<a class="jxr_linenumber" name="822" href="#822">822</a>     }
+<a class="jxr_linenumber" name="823" href="#823">823</a>   }
+<a class="jxr_linenumber" name="824" href="#824">824</a> 
+<a class="jxr_linenumber" name="825" href="#825">825</a> }
 </pre>
 <hr/><div id="footer">This page was automatically generated by <a href="http://maven.apache.org/">Maven</a></div></body>
 </html>

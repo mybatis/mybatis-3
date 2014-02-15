@@ -36,7 +36,7 @@
 <a class="jxr_linenumber" name="26" href="#26">26</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../../org/apache/ibatis/cache/decorators/FifoCache.html">FifoCache</a> <strong class="jxr_keyword">implements</strong> <a href="../../../../../org/apache/ibatis/cache/Cache.html">Cache</a> {
 <a class="jxr_linenumber" name="27" href="#27">27</a>  
 <a class="jxr_linenumber" name="28" href="#28">28</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <a href="../../../../../org/apache/ibatis/cache/Cache.html">Cache</a> delegate;
-<a class="jxr_linenumber" name="29" href="#29">29</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> LinkedList&lt;Object&gt; keyList;
+<a class="jxr_linenumber" name="29" href="#29">29</a>    <strong class="jxr_keyword">private</strong> LinkedList&lt;Object&gt; keyList;
 <a class="jxr_linenumber" name="30" href="#30">30</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">int</strong> size;
 <a class="jxr_linenumber" name="31" href="#31">31</a>  
 <a class="jxr_linenumber" name="32" href="#32">32</a>    <strong class="jxr_keyword">public</strong> <a href="../../../../../org/apache/ibatis/cache/decorators/FifoCache.html">FifoCache</a>(<a href="../../../../../org/apache/ibatis/cache/Cache.html">Cache</a> delegate) {
@@ -72,7 +72,7 @@
 <a class="jxr_linenumber" name="62" href="#62">62</a>  
 <a class="jxr_linenumber" name="63" href="#63">63</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> clear() {
 <a class="jxr_linenumber" name="64" href="#64">64</a>      delegate.clear();
-<a class="jxr_linenumber" name="65" href="#65">65</a>      keyList.clear();
+<a class="jxr_linenumber" name="65" href="#65">65</a>      keyList = <strong class="jxr_keyword">new</strong> LinkedList&lt;Object&gt;(); <em class="jxr_comment">// see #138</em>
 <a class="jxr_linenumber" name="66" href="#66">66</a>    }
 <a class="jxr_linenumber" name="67" href="#67">67</a>  
 <a class="jxr_linenumber" name="68" href="#68">68</a>    <strong class="jxr_keyword">public</strong> ReadWriteLock getReadWriteLock() {
