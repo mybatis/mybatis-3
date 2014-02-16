@@ -25,6 +25,7 @@ import java.util.List;
 
 import org.apache.ibatis.executor.keygen.Jdbc3KeyGenerator;
 import org.apache.ibatis.executor.keygen.KeyGenerator;
+import org.apache.ibatis.executor.keygen.NoKeyGenerator;
 import org.apache.ibatis.executor.statement.StatementHandler;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
@@ -100,10 +101,10 @@ public class BatchExecutor extends BaseExecutor {
             MappedStatement ms = batchResult.getMappedStatement();
             List<Object> parameterObjects = batchResult.getParameterObjects();
             KeyGenerator keyGenerator = ms.getKeyGenerator();
-            if (keyGenerator instanceof Jdbc3KeyGenerator) {
+            if (Jdbc3KeyGenerator.class.equals(keyGenerator.getClass())) {
               Jdbc3KeyGenerator jdbc3KeyGenerator = (Jdbc3KeyGenerator) keyGenerator;
               jdbc3KeyGenerator.processBatch(ms, stmt, parameterObjects);
-            } else {
+            } else if (!NoKeyGenerator.class.equals(keyGenerator.getClass())) { //issue #141
               for (Object parameter : parameterObjects) {
                 keyGenerator.processAfter(this, ms, stmt, parameter);
               }
