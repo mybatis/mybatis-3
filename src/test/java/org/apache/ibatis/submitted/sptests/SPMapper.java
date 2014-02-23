@@ -32,7 +32,7 @@ public interface SPMapper {
   Object adderAsSelect(Parameter parameter);
 
   void adderAsUpdate(Parameter parameter);
-
+  
   void adderWithParameterMap(Map<String, Object> parameter);
 
   Name getName(Integer id);
@@ -47,6 +47,8 @@ public interface SPMapper {
   
   List<Name> getNamesAndItemsLinkedById(int id);
 
+  Object echoDate(Map<String, Object> parameter);  // issue #145
+  
   // annotated
   @Select({ "{call sptest.adder(", "#{addend1,jdbcType=INTEGER,mode=IN},", "#{addend2,jdbcType=INTEGER,mode=IN},", "#{sum,jdbcType=INTEGER,mode=OUT})}" })
   @Options(statementType = StatementType.CALLABLE)

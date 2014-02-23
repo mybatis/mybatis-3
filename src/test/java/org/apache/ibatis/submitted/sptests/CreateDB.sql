@@ -142,3 +142,9 @@ begin atomic
   open cur;
 end
 go
+
+create procedure sptest.echoDate(in inputDate date, out outputDate date)
+begin atomic
+  set outputDate = inputDate; 
+end
+go

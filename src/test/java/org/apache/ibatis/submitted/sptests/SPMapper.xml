@@ -86,7 +86,7 @@
   <update id="adderWithParameterMap" parameterMap="testParameterMap" statementType="CALLABLE">
     {call sptest.adder(?, ?, ?)}
   </update>
-  
+
   <select id="getName" parameterType="java.lang.Integer" statementType="CALLABLE"
     resultMap="nameResult">
     {call sptest.getname(
@@ -119,6 +119,14 @@
 
   <select id="getNamesAndItemsLinkedById" statementType="CALLABLE" resultSets="names,items" resultMap="nameResultLinkedNoMatchingInfo">
     {call sptest.getnamesanditemsbyid(#{id,jdbcType=INTEGER,mode=IN})}
+  </select>
+
+  <!-- issue #145 -->
+  <select id="echoDate" parameterType="java.util.HashMap" statementType="CALLABLE">
+    {call sptest.echoDate(
+      #{input date,jdbcType=DATE,mode=IN},
+      #{output date,jdbcType=DATE,mode=OUT}
+    )}
   </select>
   
 </mapper>

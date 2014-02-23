@@ -24,6 +24,7 @@ import java.sql.Array;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -183,6 +184,25 @@ public class SPTest {
     }
   }
 
+  // issue #145  
+  @Test
+  public void testEchoDate() {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      HashMap<String, Object> parameter = new HashMap<String, Object>();
+      Date now = new Date();
+      parameter.put("input date", now);
+
+      SPMapper spMapper = sqlSession.getMapper(SPMapper.class);
+      spMapper.echoDate(parameter);
+
+      java.sql.Date outDate = new java.sql.Date(now.getTime());      
+      assertEquals(outDate.toString(), parameter.get("output date").toString());
+    } finally {
+      sqlSession.close();
+    }
+  }
+  
   /*
    * This test shows the use of a declared parameter map. We generally prefer
    * inline parameters, because the syntax is more intuitive (no pesky question
