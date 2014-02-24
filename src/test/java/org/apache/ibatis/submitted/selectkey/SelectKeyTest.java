@@ -200,4 +200,16 @@ public class SelectKeyTest {
         sqlSession.close();
       }
   }
+
+  @Test(expected = PersistenceException.class)
+  public void testSeleckKeyWithWrongKeyProperty() {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      Name name = new Name();
+      name.setName("Kyoto");
+      sqlSession.insert("org.apache.ibatis.submitted.selectkey.Table2.insertWrongKeyProperty", name);
+    } finally {
+      sqlSession.close();
+    }
+  }
 }

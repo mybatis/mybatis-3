@@ -38,5 +38,12 @@
       select id from table2
     </selectKey>
   </insert>
+
+  <insert id="insertWrongKeyProperty">
+    insert into table2 (name) values (#{name})
+    <selectKey resultType="java.lang.Integer" keyProperty="noSuchProperty">
+      select id from table2
+    </selectKey>
+  </insert>
   
 </mapper>

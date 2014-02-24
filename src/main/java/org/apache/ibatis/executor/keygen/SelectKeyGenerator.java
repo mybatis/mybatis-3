@@ -67,6 +67,8 @@ public class SelectKeyGenerator implements KeyGenerator {
           } else {
             metaParam.setValue(keyProperty, values.get(0));
           }
+        } else {
+          throw new ExecutorException("No setter found for the keyProperty '" + keyProperty + "' in " + metaParam.getOriginalObject().getClass().getName() + ".");
         }
       }
     } catch (ExecutorException e) {
