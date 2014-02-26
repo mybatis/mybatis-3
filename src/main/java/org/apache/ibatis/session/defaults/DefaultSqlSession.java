@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2012 the original author or authors.
+ *    Copyright 2009-2014 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -40,17 +40,18 @@ public class DefaultSqlSession implements SqlSession {
   private Configuration configuration;
   private Executor executor;
 
+  private boolean autoCommit;
   private boolean dirty;
-
-  @Deprecated
+  
   public DefaultSqlSession(Configuration configuration, Executor executor, boolean autoCommit) {
-    this(configuration, executor);
-  }
-
-  public DefaultSqlSession(Configuration configuration, Executor executor) {
     this.configuration = configuration;
     this.executor = executor;
     this.dirty = false;
+    this.autoCommit = autoCommit;
+  }
+
+  public DefaultSqlSession(Configuration configuration, Executor executor) {
+    this(configuration, executor, false);
   }
 
   public <T> T selectOne(String statement) {
@@ -231,7 +232,7 @@ public class DefaultSqlSession implements SqlSession {
   }
 
   private boolean isCommitOrRollbackRequired(boolean force) {
-    return dirty || force;
+    return (!autoCommit && dirty) || force;
   }
 
   private Object wrapCollection(final Object object) {

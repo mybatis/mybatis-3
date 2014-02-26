@@ -28,6 +28,10 @@ public class TransactionalCacheManager {
     getTransactionalCache(cache).clear();
   }
 
+  public Object getObject(Cache cache, CacheKey key) {
+    return getTransactionalCache(cache).getObject(key);
+  }
+  
   public void putObject(Cache cache, CacheKey key, Object value) {
     getTransactionalCache(cache).putObject(key, value);
   }

@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2012 the original author or authors.
+ *    Copyright 2009-2014 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -44,7 +44,13 @@ public class TransactionalCache implements Cache {
   }
 
   public Object getObject(Object key) {
-    return delegate.getObject(key);
+    if (clearOnCommit) return null;
+    delegate.getReadWriteLock().readLock().lock();
+    try {
+      return delegate.getObject(key);
+    } finally {
+      delegate.getReadWriteLock().readLock().unlock();
+    }
   }
 
   public ReadWriteLock getReadWriteLock() {
