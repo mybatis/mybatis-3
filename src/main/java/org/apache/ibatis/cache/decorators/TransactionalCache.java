@@ -44,7 +44,7 @@ public class TransactionalCache implements Cache {
   }
 
   public Object getObject(Object key) {
-    if (clearOnCommit) return null;
+    if (clearOnCommit) return null; // issue #146
     delegate.getReadWriteLock().readLock().lock();
     try {
       return delegate.getObject(key);
@@ -131,6 +131,5 @@ public class TransactionalCache implements Cache {
       cache.removeObject(key);
     }
   }
-
 
 }
