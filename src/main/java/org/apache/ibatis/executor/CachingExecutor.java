@@ -80,12 +80,12 @@ public class CachingExecutor implements Executor {
       if (ms.isUseCache() && resultHandler == null) {
         ensureNoOutParams(ms, parameterObject, boundSql);
         @SuppressWarnings("unchecked")
-        List<E> list = (List<E>) cache.getObject(key);
+        List<E> list = (List<E>) tcm.getObject(cache, key);
         if (list == null) {
           list = delegate.<E> query(ms, parameterObject, rowBounds, resultHandler, key, boundSql);
           tcm.putObject(cache, key, list); // issue #578. Query must be not synchronized to prevent deadlocks
-          return list;
         }
+        return list;
       }
     }
     return delegate.<E> query(ms, parameterObject, rowBounds, resultHandler, key, boundSql);
