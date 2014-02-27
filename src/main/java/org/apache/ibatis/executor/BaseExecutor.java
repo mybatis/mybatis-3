@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2013 the original author or authors.
+ *    Copyright 2009-2014 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -47,6 +47,7 @@ public abstract class BaseExecutor implements Executor {
   private static final Log log = LogFactory.getLog(BaseExecutor.class);
 
   protected Transaction transaction;
+  protected Executor wrapper;
 
   protected ConcurrentLinkedQueue<DeferredLoad> deferredLoads;
   protected PerpetualCache localCache;
@@ -63,6 +64,7 @@ public abstract class BaseExecutor implements Executor {
     this.localOutputParameterCache = new PerpetualCache("LocalOutputParameterCache");
     this.closed = false;
     this.configuration = configuration;
+    this.wrapper = this;
   }
 
   public Transaction getTransaction() {
@@ -275,7 +277,11 @@ public abstract class BaseExecutor implements Executor {
       return connection;
     }
   }
-
+  
+  public void setExecutorWrapper(Executor wrapper) {
+    this.wrapper = wrapper;
+  }
+  
   private static class DeferredLoad {
 
     private final MetaObject resultObject;

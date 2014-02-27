@@ -38,6 +38,7 @@ public class CachingExecutor implements Executor {
 
   public CachingExecutor(Executor delegate) {
     this.delegate = delegate;
+    delegate.setExecutorWrapper(this);
   }
 
   public Transaction getTransaction() {
@@ -125,11 +126,11 @@ public class CachingExecutor implements Executor {
   }
 
   public boolean isCached(MappedStatement ms, CacheKey key) {
-    throw new UnsupportedOperationException("The CachingExecutor should not be used by result loaders and thus isCached() should never be called.");
+    return delegate.isCached(ms, key);
   }
 
   public void deferLoad(MappedStatement ms, MetaObject resultObject, String property, CacheKey key, Class<?> targetType) {
-    throw new UnsupportedOperationException("The CachingExecutor should not be used by result loaders and thus deferLoad() should never be called.");
+    delegate.deferLoad(ms, resultObject, property, key, targetType);
   }
 
   public void clearLocalCache() {
@@ -141,6 +142,11 @@ public class CachingExecutor implements Executor {
     if (cache != null && ms.isFlushCacheRequired()) {      
       tcm.clear(cache);
     }
+  }
+
+  @Override
+  public void setExecutorWrapper(Executor executor) {
+    throw new UnsupportedOperationException("This method should not be called");
   }
 
 }

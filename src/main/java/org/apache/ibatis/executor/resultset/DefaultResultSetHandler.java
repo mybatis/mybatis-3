@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2013 the original author or authors.
+ *    Copyright 2009-2014 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -27,11 +27,9 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.cache.CacheKey;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.executor.ExecutorException;
-import org.apache.ibatis.executor.ResultExtractor;
 import org.apache.ibatis.executor.loader.ProxyFactory;
 import org.apache.ibatis.executor.loader.ResultLoader;
 import org.apache.ibatis.executor.loader.ResultLoaderMap;
@@ -70,7 +68,6 @@ public class DefaultResultSetHandler implements ResultSetHandler {
   private final TypeHandlerRegistry typeHandlerRegistry;
   private final ObjectFactory objectFactory;
   private final ProxyFactory proxyFactory;
-  private final ResultExtractor resultExtractor;
 
   // nested resultmaps
   private final Map<CacheKey, Object> nestedResultObjects = new HashMap<CacheKey, Object>();
@@ -98,7 +95,6 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     this.objectFactory = configuration.getObjectFactory();
     this.resultHandler = resultHandler;
     this.proxyFactory = configuration.getProxyFactory();
-    this.resultExtractor = new ResultExtractor(configuration, objectFactory);
   }
 
   //
@@ -587,13 +583,8 @@ public class DefaultResultSetHandler implements ResultSetHandler {
       final BoundSql nestedBoundSql = nestedQuery.getBoundSql(nestedQueryParameterObject);
       final CacheKey key = executor.createCacheKey(nestedQuery, nestedQueryParameterObject, RowBounds.DEFAULT, nestedBoundSql);
       final Class<?> targetType = constructorMapping.getJavaType();
-      final List<Object> nestedQueryCacheObject = getNestedQueryCacheObject(nestedQuery, key);
-      if (nestedQueryCacheObject != null) {
-        value = resultExtractor.extractObjectFromList(nestedQueryCacheObject, targetType);
-      } else {
-        final ResultLoader resultLoader = new ResultLoader(configuration, executor, nestedQuery, nestedQueryParameterObject, targetType, key, nestedBoundSql);
-        value = resultLoader.loadResult();
-      }
+      final ResultLoader resultLoader = new ResultLoader(configuration, executor, nestedQuery, nestedQueryParameterObject, targetType, key, nestedBoundSql);
+      value = resultLoader.loadResult();
     }
     return value;
   }
@@ -610,10 +601,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
       final BoundSql nestedBoundSql = nestedQuery.getBoundSql(nestedQueryParameterObject);
       final CacheKey key = executor.createCacheKey(nestedQuery, nestedQueryParameterObject, RowBounds.DEFAULT, nestedBoundSql);
       final Class<?> targetType = propertyMapping.getJavaType();
-      final List<Object> nestedQueryCacheObject = getNestedQueryCacheObject(nestedQuery, key);
-      if (nestedQueryCacheObject != null) {
-        value = resultExtractor.extractObjectFromList(nestedQueryCacheObject, targetType);
-      } else if (executor.isCached(nestedQuery, key)) {
+      if (executor.isCached(nestedQuery, key)) {
         executor.deferLoad(nestedQuery, metaResultObject, property, key, targetType);
       } else {
         final ResultLoader resultLoader = new ResultLoader(configuration, executor, nestedQuery, nestedQueryParameterObject, targetType, key, nestedBoundSql);
@@ -625,12 +613,6 @@ public class DefaultResultSetHandler implements ResultSetHandler {
       }
     }
     return value;
-  }
-
-  @SuppressWarnings("unchecked")
-  private List<Object> getNestedQueryCacheObject(MappedStatement nestedQuery, CacheKey key) {
-    final Cache nestedQueryCache = nestedQuery.getCache();
-    return nestedQueryCache != null ? (List<Object>) nestedQueryCache.getObject(key) : null;
   }
 
   private Object prepareParameterForNestedQuery(ResultSet rs, ResultMapping resultMapping, Class<?> parameterType, String columnPrefix) throws SQLException {

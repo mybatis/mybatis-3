@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2012 the original author or authors.
+ *    Copyright 2009-2014 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -49,7 +49,7 @@ public class ReuseExecutor extends BaseExecutor {
 
   public <E> List<E> doQuery(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql) throws SQLException {
     Configuration configuration = ms.getConfiguration();
-    StatementHandler handler = configuration.newStatementHandler(this, ms, parameter, rowBounds, resultHandler, boundSql);
+    StatementHandler handler = configuration.newStatementHandler(wrapper, ms, parameter, rowBounds, resultHandler, boundSql);
     Statement stmt = prepareStatement(handler, ms.getStatementLog());
     return handler.<E>query(stmt, resultHandler);
   }
