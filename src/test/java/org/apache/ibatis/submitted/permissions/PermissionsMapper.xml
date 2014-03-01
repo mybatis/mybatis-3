@@ -20,23 +20,60 @@
 
 <mapper namespace="org.apache.ibatis.submitted.permissions.PermissionsMapper">
 
-  <resultMap id="resourceResults" type="Resource">
-    <id property="name" column="resourceName"/>
-    <collection property="principals" resultMap="principalResults"/>
-  </resultMap>
+	<!-- testing nested result map loop -->
 
-  <resultMap id="principalResults" type="Principal">
-    <id property="principalName" column="principalName"/>
-    <collection property="permissions" resultMap="permisionResults"/>
-  </resultMap>
-  
-  <resultMap id="permisionResults" type="Permission" >
-      <result property="permission" column="permission"/>
-      <association property="resource" resultMap="resourceResults"/>
-  </resultMap>
+	<resultMap id="resourceResults" type="Resource">
+		<id property="name" column="resourceName" />
+		<collection property="principals" resultMap="principalResults" />
+	</resultMap>
 
-  <select id="getResources" resultMap="resourceResults">
+	<resultMap id="principalResults" type="Principal">
+		<id property="principalName" column="principalName" />
+		<collection property="permissions" resultMap="permisionResults" />
+	</resultMap>
+
+	<resultMap id="permisionResults" type="Permission">
+		<result property="permission" column="permission" />
+		<association property="resource" resultMap="resourceResults" />
+	</resultMap>
+
+	<select id="getResources" resultMap="resourceResults">
 		select * from permissions
-  </select>
+	</select>
+
+	<!-- testing nested select loop -->
+
+	<resultMap id="resourceResultsSelect" type="Resource">
+		<id property="name" column="resourceName" />
+		<collection property="principals" select="getPrincipal"
+			column="resourceName" />
+	</resultMap>
+
+	<resultMap id="principalResultsSelect" type="Principal">
+		<id property="principalName" column="principalName" />
+		<collection property="permissions" select="getPermission"
+			column="principalName" />
+	</resultMap>
+
+	<resultMap id="permisionResultsSelect" type="Permission">
+		<result property="permission" column="permission" />
+		<association property="resource" select="getResource"
+			column="permission" />
+	</resultMap>
+
+	<select id="getResource" resultMap="resourceResultsSelect">
+		select distinct(resourceName)
+		from permissions where permission = #{permission}
+	</select>
+
+	<select id="getPrincipal" resultMap="principalResultsSelect">
+		select
+		distinct(principalName) from permissions where resourceName = #{name}
+	</select>
+
+	<select id="getPermission" resultMap="permisionResultsSelect">
+		select distinct(permission)
+		from permissions where principalName = #{principalName}
+	</select>
 
 </mapper>

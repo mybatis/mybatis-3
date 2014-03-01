@@ -53,7 +53,7 @@ public class PermissionsTest {
   }
 
   @Test // see issue #168
-  public void shouldGet4Permissions() {
+  public void checkNestedResultMapLoop() {
     SqlSession sqlSession = sqlSessionFactory.openSession();
     try {
       final PermissionsMapper mapper = sqlSession.getMapper(PermissionsMapper.class);
@@ -78,4 +78,38 @@ public class PermissionsTest {
     }
   }
 
+  @Test
+  public void checkNestedSelectLoop() {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      final PermissionsMapper mapper = sqlSession.getMapper(PermissionsMapper.class);
+
+      final List<Resource> resources = mapper.getResource("read");
+      Assert.assertEquals(1, resources.size());
+
+      final Resource firstResource = resources.get(0);
+      final List<Principal> principalPermissions = firstResource.getPrincipals();
+      Assert.assertEquals(1, principalPermissions.size());
+      
+      final Principal firstPrincipal = principalPermissions.get(0);
+      final List<Permission> permissions = firstPrincipal.getPermissions();
+      Assert.assertEquals(4, permissions.size());
+
+      boolean readFound = false;
+      for (Permission permission : permissions) {
+        if ("read".equals(permission.getPermission())) {
+          Assert.assertSame(firstResource, permission.getResource());
+          readFound = true;
+        }
+      }
+      
+      if (!readFound) {
+        Assert.fail();
+      }
+
+    } finally {
+      sqlSession.close();
+    }
+  }
+  
 }
