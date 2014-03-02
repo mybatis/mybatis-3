@@ -22,7 +22,7 @@
 
 <configuration>
   <typeAliases>
-    <typeAlias alias="Person" type="org.apache.ibatis.submitted.map_class_name_conflict.business.Person"/>
+    <typeAlias alias="Person" type="org.apache.ibatis.submitted.map_class_name_conflict.Person"/>
   </typeAliases>
 
   <environments default="test">
@@ -38,6 +38,6 @@
   </environments>
 
   <mappers>
-    <mapper resource="org/apache/ibatis/submitted/map_class_name_conflict/mapper/PersonMapper.xml"/>
+    <mapper resource="org/apache/ibatis/submitted/map_class_name_conflict/PersonMapper.xml"/>
   </mappers>
 </configuration>

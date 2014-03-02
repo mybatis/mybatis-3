@@ -21,7 +21,7 @@
     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="org.apache.ibatis.submitted.map_class_name_conflict.mapper.PersonMapper">
+<mapper namespace="org.apache.ibatis.submitted.map_class_name_conflict.PersonMapper">
 
   <select id="get" resultType="Person" parameterType="long">
     SELECT id, firstName, lastName

@@ -15,7 +15,7 @@
  */
 package org.apache.ibatis.submitted.complex_property;
 
-import static junit.framework.Assert.assertNotNull;
+import static org.junit.Assert.assertNotNull;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSession;
@@ -69,14 +69,14 @@ public class ComponentTest {
     ScriptRunner runner = new ScriptRunner(conn);
     runner.setLogWriter(null);
     runner.setErrorLogWriter(null);
-    String resource = "org/apache/ibatis/submitted/complex_property/db/db.sql";
+    String resource = "org/apache/ibatis/submitted/complex_property/db.sql";
     Reader reader = Resources.getResourceAsReader(resource);
     runner.runScript(reader);
     conn.close();
   }
 
   private static void setupSqlSessionFactory() throws IOException {
-    String resource = "org/apache/ibatis/submitted/complex_property/db/Configuration.xml";
+    String resource = "org/apache/ibatis/submitted/complex_property/Configuration.xml";
     Reader reader = Resources.getResourceAsReader(resource);
     sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
   }
