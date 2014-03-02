@@ -27,11 +27,11 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.binding.BindingException;
 import org.apache.ibatis.cache.impl.PerpetualCache;
+import org.apache.ibatis.exceptions.TooManyResultsException;
 import org.apache.ibatis.executor.result.DefaultResultHandler;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.defaults.DefaultSqlSessionFactory;
@@ -155,6 +155,16 @@ public class SqlSessionTest extends BaseDataTest {
     }
   }
 
+  @Test(expected=TooManyResultsException.class)
+  public void shouldFailWithTooManyResultsException() throws Exception {
+    SqlSession session = sqlMapper.openSession(TransactionIsolationLevel.SERIALIZABLE);
+    try {
+      session.selectOne("domain.blog.mappers.AuthorMapper.selectAllAuthors");
+    } finally {
+      session.close();
+    }
+  }
+  
   @Test
   public void shouldSelectAllAuthorsAsMap() throws Exception {
     SqlSession session = sqlMapper.openSession(TransactionIsolationLevel.SERIALIZABLE);
