@@ -19,7 +19,7 @@ import java.io.Reader;
 import java.sql.Connection;
 import java.sql.DriverManager;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.jdbc.ScriptRunner;

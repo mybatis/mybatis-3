@@ -15,7 +15,7 @@
  */
 package org.apache.ibatis.submitted.duplicate_resource_loaded;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;

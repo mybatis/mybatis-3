@@ -22,9 +22,7 @@
 
 <configuration>
 
-  <properties resource="org/apache/ibatis/builder/mapper.properties">
-    <property name="driver" value="org.apache.derby.jdbc.EmbeddedDriver"/>
-  </properties>
+  <properties resource="databases/blog/blog-derby.properties"/>
 
   <environments default="development">
     <environment id="development">
