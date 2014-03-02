@@ -190,12 +190,9 @@ public class MetaObjectTest {
   @Test
   public void shouldSetAndGetProperties() {
     MetaObject object = SystemMetaObject.forObject(new Author());
-    for (String writeable : object.getSetterNames()) {
-      if (!writeable.contains("$")) {
-        object.setValue(writeable, "test");
-        assertEquals("test", object.getValue(writeable));
-      }
-    }
+    object.setValue("email", "test");
+    assertEquals("test", object.getValue("email"));
+
   }
 
   @Test
