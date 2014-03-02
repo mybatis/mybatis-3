@@ -15,8 +15,12 @@
  */
 package org.apache.ibatis.executor;
 
-import domain.blog.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.ibatis.builder.StaticSqlSource;
 import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.cache.decorators.LoggingCache;
@@ -26,12 +30,29 @@ import org.apache.ibatis.cache.decorators.SynchronizedCache;
 import org.apache.ibatis.cache.impl.PerpetualCache;
 import org.apache.ibatis.executor.keygen.Jdbc3KeyGenerator;
 import org.apache.ibatis.executor.keygen.SelectKeyGenerator;
-import org.apache.ibatis.mapping.*;
+import org.apache.ibatis.mapping.Discriminator;
+import org.apache.ibatis.mapping.MappedStatement;
+import org.apache.ibatis.mapping.ParameterMap;
+import org.apache.ibatis.mapping.ParameterMapping;
+import org.apache.ibatis.mapping.ParameterMode;
+import org.apache.ibatis.mapping.ResultFlag;
+import org.apache.ibatis.mapping.ResultMap;
+import org.apache.ibatis.mapping.ResultMapping;
+import org.apache.ibatis.mapping.SqlCommandType;
+import org.apache.ibatis.mapping.SqlSource;
+import org.apache.ibatis.mapping.StatementType;
 import org.apache.ibatis.scripting.xmltags.DynamicSqlSource;
 import org.apache.ibatis.scripting.xmltags.TextSqlNode;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandlerRegistry;
+
+import domain.blog.Author;
+import domain.blog.Blog;
+import domain.blog.Comment;
+import domain.blog.Post;
+import domain.blog.Section;
+import domain.blog.Tag;
 
 public class ExecutorTestHelper {
 
@@ -261,33 +282,32 @@ public class ExecutorTestHelper {
     return ms;
   }
 
-  public static MappedStatement prepareSelectDiscriminatedProduct(final Configuration config) {
+  public static MappedStatement prepareSelectDiscriminatedPost(final Configuration config) {
     final TypeHandlerRegistry registry = config.getTypeHandlerRegistry();
-    final ResultMap discriminatorResultMap = new ResultMap.Builder(config, "petResultMap", HashMap.class, new ArrayList<ResultMapping>() {
+    final ResultMap discriminatorResultMap = new ResultMap.Builder(config, "postResultMap", HashMap.class, new ArrayList<ResultMapping>() {
       {
-        add(new ResultMapping.Builder(config, "name", "name", registry.getTypeHandler(String.class)).build());
-        add(new ResultMapping.Builder(config, "descn", "descn", registry.getTypeHandler(String.class)).build());
+        add(new ResultMapping.Builder(config, "subject", "subject", registry.getTypeHandler(String.class)).build());
+        add(new ResultMapping.Builder(config, "body", "body", registry.getTypeHandler(String.class)).build());
       }
     }).build();
     config.addResultMap(discriminatorResultMap);
-    MappedStatement ms = new MappedStatement.Builder(config, "selectProducts", new StaticSqlSource(config,"SELECT * FROM product"), SqlCommandType.SELECT)
+    MappedStatement ms = new MappedStatement.Builder(config, "selectPosts", new StaticSqlSource(config,"SELECT * FROM post"), SqlCommandType.SELECT)
         .resultMaps(new ArrayList<ResultMap>() {
           {
             add(new ResultMap.Builder(config, "defaultResultMap", HashMap.class, new ArrayList<ResultMapping>() {
               {
-                add(new ResultMapping.Builder(config, "productid", "productid", registry.getTypeHandler(String.class)).build());
-                add(new ResultMapping.Builder(config, "category", "category", registry.getTypeHandler(String.class)).build());
+                add(new ResultMapping.Builder(config, "id", "id", registry.getTypeHandler(int.class)).build());
+                add(new ResultMapping.Builder(config, "blog_id", "blog_id", registry.getTypeHandler(int.class)).build());
               }
             })
                 .discriminator(new Discriminator.Builder(
-                    config, new ResultMapping.Builder(config, "category", "category", registry.getTypeHandler(String.class)).build(),
+                    config, new ResultMapping.Builder(config, "section", "section", registry.getTypeHandler(String.class)).build(),
                     new HashMap<String, String>() {
                       {
-                        put("CATS", discriminatorResultMap.getId());
-                        put("DOGS", discriminatorResultMap.getId());
-                        put("BIRDS", discriminatorResultMap.getId());
-                        put("FISH", discriminatorResultMap.getId());
-                        //Reptiles left out on purpose.
+                        put("NEWS", discriminatorResultMap.getId());
+                        put("VIDEOS", discriminatorResultMap.getId());
+                        put("PODCASTS", discriminatorResultMap.getId());
+                        //NEWS left out on purpose.
                       }
                     }).build()).build());
 
@@ -295,7 +315,7 @@ public class ExecutorTestHelper {
         }).build();
     return ms;
   }
-
+  
   public static MappedStatement createInsertAuthorWithIDof99MappedStatement(final Configuration config) {
     MappedStatement ms = new MappedStatement.Builder(config, "insertAuthor", new StaticSqlSource(config,"INSERT INTO author (id,username,password,email,bio) values(99,'someone','******','someone@apache.org',null)"), SqlCommandType.INSERT)
         .statementType(StatementType.STATEMENT)

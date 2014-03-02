@@ -29,7 +29,8 @@ import java.util.Map;
 
 import org.junit.Test;
 
-import domain.jpetstore.Product;
+import domain.blog.Author;
+import domain.blog.Section;
 import domain.misc.CustomBeanWrapper;
 import domain.misc.CustomBeanWrapperFactory;
 import domain.misc.RichType;
@@ -172,7 +173,7 @@ public class MetaObjectTest {
 
   @Test
   public void shouldVerifyHasReadablePropertiesReturnedByGetReadablePropertyNames() {
-    MetaObject object = SystemMetaObject.forObject(new Product());
+    MetaObject object = SystemMetaObject.forObject(new Author());
     for (String readable : object.getGetterNames()) {
       assertTrue(object.hasGetter(readable));
     }
@@ -180,7 +181,7 @@ public class MetaObjectTest {
 
   @Test
   public void shouldVerifyHasWriteablePropertiesReturnedByGetWriteablePropertyNames() {
-    MetaObject object = SystemMetaObject.forObject(new Product());
+    MetaObject object = SystemMetaObject.forObject(new Author());
     for (String writeable : object.getSetterNames()) {
       assertTrue(object.hasSetter(writeable));
     }
@@ -188,7 +189,7 @@ public class MetaObjectTest {
 
   @Test
   public void shouldSetAndGetProperties() {
-    MetaObject object = SystemMetaObject.forObject(new Product());
+    MetaObject object = SystemMetaObject.forObject(new Author());
     for (String writeable : object.getSetterNames()) {
       if (!writeable.contains("$")) {
         object.setValue(writeable, "test");
@@ -199,13 +200,14 @@ public class MetaObjectTest {
 
   @Test
   public void shouldVerifyPropertyTypes() {
-    MetaObject object = SystemMetaObject.forObject(new Product());
-    for (String writeable : object.getSetterNames()) {
-      if (!writeable.contains("$")) {
-        assertEquals(String.class, object.getGetterType(writeable));
-        assertEquals(String.class, object.getSetterType(writeable));
-      }
-    }
+    MetaObject object = SystemMetaObject.forObject(new Author());
+    assertEquals(6, object.getSetterNames().length);
+    assertEquals(int.class, object.getGetterType("id"));
+    assertEquals(String.class, object.getGetterType("username"));
+    assertEquals(String.class, object.getGetterType("password"));
+    assertEquals(String.class, object.getGetterType("email"));
+    assertEquals(String.class, object.getGetterType("bio"));
+    assertEquals(Section.class, object.getGetterType("favouriteSection"));
   }
 
   @Test
@@ -268,17 +270,17 @@ public class MetaObjectTest {
 
   @Test
   public void shouldNotUseObjectWrapperFactoryByDefault() {
-    MetaObject meta = SystemMetaObject.forObject(new Product());
+    MetaObject meta = SystemMetaObject.forObject(new Author());
     assertTrue(!meta.getObjectWrapper().getClass().equals(CustomBeanWrapper.class));
   }
   
   @Test
   public void shouldUseObjectWrapperFactoryWhenSet() {
-    MetaObject meta = MetaObject.forObject(new Product(), SystemMetaObject.DEFAULT_OBJECT_FACTORY, new CustomBeanWrapperFactory());
+    MetaObject meta = MetaObject.forObject(new Author(), SystemMetaObject.DEFAULT_OBJECT_FACTORY, new CustomBeanWrapperFactory());
     assertTrue(meta.getObjectWrapper().getClass().equals(CustomBeanWrapper.class));
     
     // Make sure the old default factory is in place and still works
-    meta = SystemMetaObject.forObject(new Product());
+    meta = SystemMetaObject.forObject(new Author());
     assertFalse(meta.getObjectWrapper().getClass().equals(CustomBeanWrapper.class));
   }
 

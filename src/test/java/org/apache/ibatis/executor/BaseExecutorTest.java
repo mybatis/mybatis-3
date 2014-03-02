@@ -240,20 +240,20 @@ public class BaseExecutorTest extends BaseDataTest {
   }
 
   @Test
-  public void shouldSelectDiscriminatedProduct() throws Exception {
-    DataSource ds = createJPetstoreDataSource();
+  public void shouldSelectDiscriminatedPost() throws Exception {
+    DataSource ds = createBlogDataSource();
     Connection connection = ds.getConnection();
     Executor executor = createExecutor(new JdbcTransaction(connection));
     try {
-      MappedStatement selectStatement = ExecutorTestHelper.prepareSelectDiscriminatedProduct(config);
+      MappedStatement selectStatement = ExecutorTestHelper.prepareSelectDiscriminatedPost(config);
       List<Map<String,String>> products = executor.query(selectStatement, null, RowBounds.DEFAULT, Executor.NO_RESULT_HANDLER);
       connection.rollback();
-      assertEquals(16, products.size());
+      assertEquals(5, products.size());
       for (Map<String,String> m : products) {
-        if ("REPTILES".equals(m.get("category"))) {
-          assertNull(m.get("name"));
+        if ("IMAGES".equals(m.get("SECTION"))) {
+          assertNull(m.get("subject"));
         } else {
-          assertNotNull(m.get("name"));
+          assertNotNull(m.get("subject"));
         }
       }
     } finally {
@@ -263,27 +263,26 @@ public class BaseExecutorTest extends BaseDataTest {
   }
 
   @Test
-  public void shouldSelect10DiscriminatedProducts() throws Exception {
-    DataSource ds = createJPetstoreDataSource();
+  public void shouldSelect2DiscriminatedPosts() throws Exception {
+    DataSource ds = createBlogDataSource();
     Connection connection = ds.getConnection();
     Executor executor = createExecutor(new JdbcTransaction(connection));
     try {
-      MappedStatement selectStatement = ExecutorTestHelper.prepareSelectDiscriminatedProduct(config);
-      List<Map<String, String>> products = executor.query(selectStatement, null, new RowBounds(4, 10), Executor.NO_RESULT_HANDLER);
+      MappedStatement selectStatement = ExecutorTestHelper.prepareSelectDiscriminatedPost(config);
+      List<Map<String,String>> products = executor.query(selectStatement, null, new RowBounds(2, 2), Executor.NO_RESULT_HANDLER);
       connection.rollback();
-      assertEquals(10, products.size());
-      for (Map<String, String> m : products) {
-        if ("REPTILES".equals(m.get("category"))) {
-          assertNull(m.get("name"));
+      assertEquals(2, products.size());
+      for (Map<String,String> m : products) {
+        if ("IMAGES".equals(m.get("SECTION"))) {
+          assertNull(m.get("subject"));
         } else {
-          assertNotNull(m.get("name"));
+          assertNotNull(m.get("subject"));
         }
       }
     } finally {
       executor.rollback(true);
       executor.close(false);
     }
-
   }
 
   @Test

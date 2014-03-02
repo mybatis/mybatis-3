@@ -15,15 +15,15 @@
  */
 package domain.misc;
 
-import domain.jpetstore.Product;
-
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.wrapper.ObjectWrapper;
 import org.apache.ibatis.reflection.wrapper.ObjectWrapperFactory;
 
+import domain.blog.Author;
+
 public class CustomBeanWrapperFactory implements ObjectWrapperFactory {
   public boolean hasWrapperFor(Object object) {
-    if (object instanceof Product) {
+    if (object instanceof Author) {
       return true;
     } else {
       return false;
