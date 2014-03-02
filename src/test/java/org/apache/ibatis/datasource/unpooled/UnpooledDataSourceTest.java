@@ -60,8 +60,7 @@ public class UnpooledDataSourceTest {
     Enumeration<Driver> drivers = DriverManager.getDrivers();
     int count = 0;
     while (drivers.hasMoreElements()) {
-      Driver driver = drivers.nextElement();
-      System.out.println(driver.getClass().getName());
+      drivers.nextElement();
       count++;
     }
     return count;
