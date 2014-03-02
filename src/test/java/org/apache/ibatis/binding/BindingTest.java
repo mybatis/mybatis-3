@@ -18,22 +18,29 @@ package org.apache.ibatis.binding;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
 import java.lang.reflect.Method;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.sql.DataSource;
+
+import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.executor.result.DefaultResultHandler;
+import org.apache.ibatis.mapping.Environment;
+import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.apache.ibatis.transaction.TransactionFactory;
+import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -49,7 +56,19 @@ public class BindingTest {
 
   @BeforeClass
   public static void setup() throws Exception {
-    sqlSessionFactory = new IbatisConfig().getSqlSessionFactory();
+    DataSource dataSource = BaseDataTest.createBlogDataSource();
+    BaseDataTest.runScript(dataSource, BaseDataTest.BLOG_DDL);
+    BaseDataTest.runScript(dataSource, BaseDataTest.BLOG_DATA);
+    TransactionFactory transactionFactory = new JdbcTransactionFactory();
+    Environment environment = new Environment("Production", transactionFactory, dataSource);
+    Configuration configuration = new Configuration(environment);
+    configuration.setLazyLoadingEnabled(true);
+    configuration.getTypeAliasRegistry().registerAlias(Blog.class);
+    configuration.getTypeAliasRegistry().registerAlias(Post.class);
+    configuration.getTypeAliasRegistry().registerAlias(Author.class);
+    configuration.addMapper(BoundBlogMapper.class);
+    configuration.addMapper(BoundAuthorMapper.class);
+    sqlSessionFactory = new SqlSessionFactoryBuilder().build(configuration);
   }
 
   @Test
