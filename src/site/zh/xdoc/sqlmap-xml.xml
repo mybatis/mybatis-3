@@ -1005,7 +1005,7 @@ property
             <tr>
               <td><code>javaType</code></td>
               <td>
-一个 Java 类的完全限定名,或一个类型别名(参加上面内建类型别名
+一个 Java 类的完全限定名,或一个类型别名(参考上面内建类型别名
 的列表)
 。如果你映射到一个 JavaBean,MyBatis 通常可以断定类型。
 然而,如果你映射到的是 HashMap,那么你应该明确地指定 javaType
@@ -1145,7 +1145,7 @@ resultSet.getString(columnName)方法的字符串是相同的。
             <tr>
               <td><code>javaType</code></td>
               <td>
-一个 Java 类的完全限定名,或一个类型别名(参加上面内建类型别名的列表)。
+一个 Java 类的完全限定名,或一个类型别名(参考上面内建类型别名的列表)。
 如果你映射到一个 JavaBean,MyBatis 通常可以断定类型。然而,如
 果你映射到的是 HashMap,那么你应该明确地指定 javaType 来保证所需的
 行为。
@@ -1252,7 +1252,7 @@ JavaBeans 的属性,
             <tr>
               <td><code>javaType</code></td>
               <td>
-一个 Java 类的完全限定名,或一个类型别名(参加上面内建类型别名的列
+一个 Java 类的完全限定名,或一个类型别名(参考上面内建类型别名的列
 表)
 。如果你映射到一个 JavaBean,MyBatis 通常可以断定类型。然而,如
 javaType
