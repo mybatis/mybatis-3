@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2011 the original author or authors.
+ *    Copyright 2009-2014 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 package org.apache.ibatis.logging.jdbc;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -38,13 +39,16 @@ public abstract class BaseJdbcLogger {
   private List<Object> columnNames = new ArrayList<Object>();
   private List<Object> columnValues = new ArrayList<Object>();
 
-  private Log statementLog;
+  protected Log statementLog;
+  protected int queryStack;
 
   /*
    * Default constructor
    */
-  public BaseJdbcLogger(Log log) {
+  public BaseJdbcLogger(Log log, int queryStack) {
     this.statementLog = log;
+    if (queryStack == 0) queryStack = 1;
+    this.queryStack = queryStack;
   }
 
   static {
@@ -127,20 +131,28 @@ public abstract class BaseJdbcLogger {
     return statementLog.isTraceEnabled();
   }
 
-  protected void debug(String text) {
+  protected void debug(String text, boolean input) {
     if (statementLog.isDebugEnabled()) {
-      statementLog.debug(text);
+      statementLog.debug(prefix(input) + text);
     }
   }
 
-  protected void trace(String text) {
+  protected void trace(String text, boolean input) {
     if (statementLog.isTraceEnabled()) {
-      statementLog.trace(text);
+      statementLog.trace(prefix(input) + text);
     }
   }
 
-  public Log getStatementLog() {
-    return statementLog;
+  private String prefix(boolean isInput) {
+    char[] buffer = new char[queryStack * 2 + 2];
+    Arrays.fill(buffer, '=');
+    buffer[queryStack * 2 + 1] = ' ';
+    if (isInput) {
+      buffer[queryStack * 2] = '>';
+    } else {
+      buffer[0] = '<';
+    }
+    return new String(buffer);
   }
 
 }

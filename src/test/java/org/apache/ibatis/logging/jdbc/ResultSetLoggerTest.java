@@ -50,7 +50,7 @@ public class ResultSetLoggerTest {
     when(metaData.getColumnLabel(1)).thenReturn("ColumnName");
     when(rs.getString(1)).thenReturn("value");
     when(log.isTraceEnabled()).thenReturn(true);
-    ResultSet resultSet = ResultSetLogger.newInstance(rs, log);
+    ResultSet resultSet = ResultSetLogger.newInstance(rs, log, 1);
     resultSet.next();
   }
 

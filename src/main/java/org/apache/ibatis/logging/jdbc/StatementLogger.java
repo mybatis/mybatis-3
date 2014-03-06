@@ -31,21 +31,24 @@ public final class StatementLogger extends BaseJdbcLogger implements InvocationH
 
   private Statement statement;
 
-  private StatementLogger(Statement stmt, Log statementLog) {
-    super(statementLog);
+  private StatementLogger(Statement stmt, Log statementLog, int queryStack) {
+    super(statementLog, queryStack);
     this.statement = stmt;
   }
 
   public Object invoke(Object proxy, Method method, Object[] params) throws Throwable {
     try {
+      if (Object.class.equals(method.getDeclaringClass())) {
+        return method.invoke(this, params);
+      }    
       if (EXECUTE_METHODS.contains(method.getName())) {
         if (isDebugEnabled()) {
-          debug("==>  Executing: " + removeBreakingWhitespace((String) params[0]));
+          debug(" Executing: " + removeBreakingWhitespace((String) params[0]), true);
         }
         if ("executeQuery".equals(method.getName())) {
           ResultSet rs = (ResultSet) method.invoke(statement, params);
           if (rs != null) {
-            return ResultSetLogger.newInstance(rs, getStatementLog());
+            return ResultSetLogger.newInstance(rs, statementLog, queryStack);
           } else {
             return null;
           }
@@ -55,7 +58,7 @@ public final class StatementLogger extends BaseJdbcLogger implements InvocationH
       } else if ("getResultSet".equals(method.getName())) {
         ResultSet rs = (ResultSet) method.invoke(statement, params);
         if (rs != null) {
-          return ResultSetLogger.newInstance(rs, getStatementLog());
+          return ResultSetLogger.newInstance(rs, statementLog, queryStack);
         } else {
           return null;
         }
@@ -78,8 +81,8 @@ public final class StatementLogger extends BaseJdbcLogger implements InvocationH
    * @param stmt - the statement
    * @return - the proxy
    */
-  public static Statement newInstance(Statement stmt, Log statementLog) {
-    InvocationHandler handler = new StatementLogger(stmt, statementLog);
+  public static Statement newInstance(Statement stmt, Log statementLog, int queryStack) {
+    InvocationHandler handler = new StatementLogger(stmt, statementLog, queryStack);
     ClassLoader cl = Statement.class.getClassLoader();
     return (Statement) Proxy.newProxyInstance(cl, new Class[]{Statement.class}, handler);
   }

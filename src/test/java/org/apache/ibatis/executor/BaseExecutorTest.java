@@ -253,7 +253,6 @@ public class BaseExecutorTest extends BaseDataTest {
         }
       }
     } finally {
-      executor.rollback(true);
       executor.close(false);
     }
   }
@@ -340,6 +339,7 @@ public class BaseExecutorTest extends BaseDataTest {
       List<Post> posts = executor.query(selectPosts, 1, RowBounds.DEFAULT, Executor.NO_RESULT_HANDLER);
       executor.flushStatements();
       assertEquals(2, posts.size());
+      assertTrue(posts.get(1).getClass().getName().contains("CGLIB"));
       assertNotNull(posts.get(1).getBlog());
       assertEquals(1, posts.get(1).getBlog().getId());
       executor.rollback(true);
@@ -392,7 +392,6 @@ public class BaseExecutorTest extends BaseDataTest {
     }
   }
 
-
   @Test
   public void shouldFetchComplexBlogs() throws Exception {
     
@@ -402,7 +401,6 @@ public class BaseExecutorTest extends BaseDataTest {
       MappedStatement selectPosts = ExecutorTestHelper.prepareSelectPostsForBlogMappedStatement(config);
       config.addMappedStatement(selectBlog);
       config.addMappedStatement(selectPosts);
-      config.setLazyLoadingEnabled(true);
       List<Blog> blogs = executor.query(selectBlog, 1, RowBounds.DEFAULT, Executor.NO_RESULT_HANDLER);
       executor.flushStatements();
       assertEquals(1, blogs.size());
@@ -411,7 +409,6 @@ public class BaseExecutorTest extends BaseDataTest {
       assertEquals(1, blogs.get(0).getPosts().get(1).getBlog().getPosts().get(1).getBlog().getId());
       executor.rollback(true);
     } finally {
-      config.setLazyLoadingEnabled(true);
       executor.rollback(true);
       executor.close(false);
     }

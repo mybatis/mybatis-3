@@ -50,13 +50,16 @@ public final class ResultSetLogger extends BaseJdbcLogger implements InvocationH
     BLOB_TYPES.add(Types.VARBINARY);
   }
   
-  private ResultSetLogger(ResultSet rs, Log statementLog) {
-    super(statementLog);
+  private ResultSetLogger(ResultSet rs, Log statementLog, int queryStack) {
+    super(statementLog, queryStack);
     this.rs = rs;
   }
 
   public Object invoke(Object proxy, Method method, Object[] params) throws Throwable {
     try {
+      if (Object.class.equals(method.getDeclaringClass())) {
+        return method.invoke(this, params);
+      }    
       Object o = method.invoke(rs, params);
       if ("next".equals(method.getName())) {
         if (((Boolean) o)) {
@@ -71,7 +74,7 @@ public final class ResultSetLogger extends BaseJdbcLogger implements InvocationH
             printColumnValues(columnCount);
           }
         } else {
-          debug("<==      Total: " + rows);
+          debug("     Total: " + rows, false);
         }
       }
       clearColumnInfo();
@@ -83,7 +86,7 @@ public final class ResultSetLogger extends BaseJdbcLogger implements InvocationH
 
   private void printColumnHeaders(ResultSetMetaData rsmd, int columnCount) throws SQLException {
     StringBuilder row = new StringBuilder();
-    row.append("<==    Columns: ");
+    row.append("   Columns: ");
     for (int i = 1; i <= columnCount; i++) {
       if (BLOB_TYPES.contains(rsmd.getColumnType(i))) {
         blobColumns.add(i);
@@ -92,12 +95,12 @@ public final class ResultSetLogger extends BaseJdbcLogger implements InvocationH
       row.append(colname);
       if (i != columnCount) row.append(", ");
     }
-    trace(row.toString());
+    trace(row.toString(), false);
   }
 
   private void printColumnValues(int columnCount) throws SQLException {
     StringBuilder row = new StringBuilder();
-    row.append("<==        Row: ");
+    row.append("       Row: ");
     for (int i = 1; i <= columnCount; i++) {
       String colname;
       try {
@@ -113,7 +116,7 @@ public final class ResultSetLogger extends BaseJdbcLogger implements InvocationH
       row.append(colname);
       if (i != columnCount) row.append(", ");
     }
-    trace(row.toString());
+    trace(row.toString(), false);
   }
 
   /*
@@ -122,8 +125,8 @@ public final class ResultSetLogger extends BaseJdbcLogger implements InvocationH
    * @param rs - the ResultSet to proxy
    * @return - the ResultSet with logging
    */
-  public static ResultSet newInstance(ResultSet rs, Log statementLog) {
-    InvocationHandler handler = new ResultSetLogger(rs, statementLog);
+  public static ResultSet newInstance(ResultSet rs, Log statementLog, int queryStack) {
+    InvocationHandler handler = new ResultSetLogger(rs, statementLog, queryStack);
     ClassLoader cl = ResultSet.class.getClassLoader();
     return (ResultSet) Proxy.newProxyInstance(cl, new Class[]{ResultSet.class}, handler);
   }
