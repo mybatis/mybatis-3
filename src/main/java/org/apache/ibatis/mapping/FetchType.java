@@ -15,6 +15,6 @@
  */
 package org.apache.ibatis.mapping;
 
-public enum Loading {
+public enum FetchType {
   LAZY, EAGER, DEFAULT
 }

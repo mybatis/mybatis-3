@@ -67,7 +67,7 @@ import org.apache.ibatis.executor.keygen.NoKeyGenerator;
 import org.apache.ibatis.executor.keygen.SelectKeyGenerator;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.mapping.Discriminator;
-import org.apache.ibatis.mapping.Loading;
+import org.apache.ibatis.mapping.FetchType;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.ResultFlag;
 import org.apache.ibatis.mapping.ResultMapping;
@@ -497,12 +497,12 @@ public class MapperAnnotationBuilder {
 
   private boolean isLazy(Result result) {
     Boolean isLazy = null;
-    if (Loading.DEFAULT != result.one().lazy()) {
-      isLazy = (result.one().lazy() == Loading.LAZY);
+    if (FetchType.DEFAULT != result.one().lazy()) {
+      isLazy = (result.one().lazy() == FetchType.LAZY);
     }
-    if (Loading.DEFAULT != result.many().lazy()) {
+    if (FetchType.DEFAULT != result.many().lazy()) {
       if (isLazy == null) {
-        isLazy = (result.many().lazy() == Loading.LAZY);
+        isLazy = (result.many().lazy() == FetchType.LAZY);
       } else {
         throw new BuilderException("Cannot use both @One and @Many annotations in the same @Result");
       }

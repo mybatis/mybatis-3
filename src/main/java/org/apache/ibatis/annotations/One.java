@@ -20,13 +20,13 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.apache.ibatis.mapping.Loading;
+import org.apache.ibatis.mapping.FetchType;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface One {
   String select() default "";
   
-  Loading lazy() default Loading.DEFAULT;
+  FetchType lazy() default FetchType.DEFAULT;
 
 }
