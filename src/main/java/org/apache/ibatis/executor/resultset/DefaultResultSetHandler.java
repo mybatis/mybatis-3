@@ -326,7 +326,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
   //
 
   private Object getRowValue(ResultSetWrapper rsw, ResultMap resultMap) throws SQLException {
-    final ResultLoaderMap lazyLoader = instantiateResultLoaderMap();
+    final ResultLoaderMap lazyLoader = new ResultLoaderMap();
     Object resultObject = createResultObject(rsw, resultMap, lazyLoader, null);
     if (resultObject != null && !typeHandlerRegistry.hasTypeHandler(resultMap.getType())) {
       final MetaObject metaObject = configuration.newMetaObject(resultObject);
@@ -335,7 +335,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
         foundValues = applyAutomaticMappings(rsw, resultMap, metaObject, null) || foundValues;
       }
       foundValues = applyPropertyMappings(rsw, resultMap, metaObject, lazyLoader, null) || foundValues;
-      foundValues = (lazyLoader != null && lazyLoader.size() > 0) || foundValues;
+      foundValues = lazyLoader.size() > 0 || foundValues;
       resultObject = foundValues ? resultObject : null;
       return resultObject;
     }
@@ -344,10 +344,6 @@ public class DefaultResultSetHandler implements ResultSetHandler {
 
   private boolean shouldApplyAutomaticMappings(ResultMap resultMap, boolean def) {
     return resultMap.getAutoMapping() != null ? resultMap.getAutoMapping() : def;
-  }
-
-  private ResultLoaderMap instantiateResultLoaderMap() {
-    return configuration.isLazyLoadingEnabled() ? new ResultLoaderMap() : null;
   }
 
   //
@@ -508,10 +504,10 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     final List<Class<?>> constructorArgTypes = new ArrayList<Class<?>>();
     final List<Object> constructorArgs = new ArrayList<Object>();
     final Object resultObject = createResultObject(rsw, resultMap, constructorArgTypes, constructorArgs, columnPrefix);
-    if (resultObject != null && configuration.isLazyLoadingEnabled() && !typeHandlerRegistry.hasTypeHandler(resultMap.getType())) {
+    if (resultObject != null && !typeHandlerRegistry.hasTypeHandler(resultMap.getType())) {
       final List<ResultMapping> propertyMappings = resultMap.getPropertyResultMappings();
       for (ResultMapping propertyMapping : propertyMappings) {
-        if (propertyMapping.getNestedQueryId() != null) { // issue #109 (avoid creating proxies for leaf objects)
+        if (propertyMapping.getNestedQueryId() != null && propertyMapping.isLazy()) { // issue gcode #109 && issue #149
           return proxyFactory.createProxy(resultObject, lazyLoader, configuration, objectFactory, constructorArgTypes, constructorArgs);
         }
       }
@@ -605,7 +601,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
         executor.deferLoad(nestedQuery, metaResultObject, property, key, targetType);
       } else {
         final ResultLoader resultLoader = new ResultLoader(configuration, executor, nestedQuery, nestedQueryParameterObject, targetType, key, nestedBoundSql);
-        if (configuration.isLazyLoadingEnabled()) {
+        if (propertyMapping.isLazy()) {
           lazyLoader.addLoader(property, metaResultObject, resultLoader);
         } else {
           value = resultLoader.loadResult();
@@ -737,7 +733,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
       applyNestedResultMappings(rsw, resultMap, metaObject, columnPrefix, combinedKey, false);
       ancestorObjects.remove(absoluteKey);
     } else {
-      final ResultLoaderMap lazyLoader = instantiateResultLoaderMap();
+      final ResultLoaderMap lazyLoader = new ResultLoaderMap();
       resultObject = createResultObject(rsw, resultMap, lazyLoader, columnPrefix);
       if (resultObject != null && !typeHandlerRegistry.hasTypeHandler(resultMap.getType())) {
         final MetaObject metaObject = configuration.newMetaObject(resultObject);
@@ -749,7 +745,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
         putAncestor(absoluteKey, resultObject, resultMapId, columnPrefix);
         foundValues = applyNestedResultMappings(rsw, resultMap, metaObject, columnPrefix, combinedKey, true) || foundValues;
         ancestorObjects.remove(absoluteKey);
-        foundValues = (lazyLoader != null && lazyLoader.size() > 0) || foundValues;
+        foundValues = lazyLoader.size() > 0 || foundValues;
         resultObject = foundValues ? resultObject : null;
       }
       if (combinedKey != CacheKey.NULL_CACHE_KEY) nestedResultObjects.put(combinedKey, resultObject);

@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2013 the original author or authors.
+ *    Copyright 2009-2014 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -41,6 +41,7 @@ public class ResultMapping {
   private List<ResultMapping> composites;
   private String resultSet;
   private String foreignColumn;
+  private boolean lazy;
 
   private ResultMapping() {
   }
@@ -49,21 +50,15 @@ public class ResultMapping {
     private ResultMapping resultMapping = new ResultMapping();
 
     public Builder(Configuration configuration, String property, String column, TypeHandler<?> typeHandler) {
-      resultMapping.configuration = configuration;
-      resultMapping.property = property;
+      this(configuration, property);
       resultMapping.column = column;
       resultMapping.typeHandler = typeHandler;
-      resultMapping.flags = new ArrayList<ResultFlag>();
-      resultMapping.composites = new ArrayList<ResultMapping>();
     }
 
     public Builder(Configuration configuration, String property, String column, Class<?> javaType) {
-      resultMapping.configuration = configuration;
-      resultMapping.property = property;
+      this(configuration, property);
       resultMapping.column = column;
       resultMapping.javaType = javaType;
-      resultMapping.flags = new ArrayList<ResultFlag>();
-      resultMapping.composites = new ArrayList<ResultMapping>();
     }
 
     public Builder(Configuration configuration, String property) {
@@ -71,6 +66,7 @@ public class ResultMapping {
       resultMapping.property = property;
       resultMapping.flags = new ArrayList<ResultFlag>();
       resultMapping.composites = new ArrayList<ResultMapping>();
+      resultMapping.lazy = configuration.isLazyLoadingEnabled();
     }
 
     public Builder javaType(Class<?> javaType) {
@@ -128,6 +124,11 @@ public class ResultMapping {
       return this;
     }
 
+    public Builder lazy(boolean lazy) {
+      resultMapping.lazy = lazy;
+      return this;
+    }
+    
     public ResultMapping build() {
       // lock down collections
       resultMapping.flags = Collections.unmodifiableList(resultMapping.flags);
@@ -239,6 +240,14 @@ public class ResultMapping {
     this.foreignColumn = foreignColumn;
   }
 
+  public boolean isLazy() {
+    return lazy;
+  }
+
+  public void setLazy(boolean lazy) {
+    this.lazy = lazy;
+  }
+  
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -267,4 +276,5 @@ public class ResultMapping {
       return 0;
     }
   }
+
 }

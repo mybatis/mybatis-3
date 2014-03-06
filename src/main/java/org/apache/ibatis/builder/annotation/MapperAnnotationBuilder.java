@@ -76,6 +76,7 @@ import org.apache.ibatis.mapping.SqlSource;
 import org.apache.ibatis.mapping.StatementType;
 import org.apache.ibatis.scripting.LanguageDriver;
 import org.apache.ibatis.session.Configuration;
+import org.apache.ibatis.session.Loading;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.type.JdbcType;
@@ -477,7 +478,8 @@ public class MapperAnnotationBuilder {
           result.typeHandler() == UnknownTypeHandler.class ? null : result.typeHandler(),
           flags,
           null,
-          null);
+          null,
+          isLazy(result));
       resultMappings.add(resultMapping);
     }
   }
@@ -493,8 +495,32 @@ public class MapperAnnotationBuilder {
     return nestedSelect;
   }
 
+  private boolean isLazy(Result result) {
+    Boolean isLazy = null;
+    if (Loading.DEFAULT != result.one().lazy()) {
+      isLazy = (result.one().lazy() == Loading.LAZY);
+    }
+    if (Loading.DEFAULT != result.many().lazy()) {
+      if (isLazy == null) {
+        isLazy = (result.many().lazy() == Loading.LAZY);
+      } else {
+        throw new BuilderException("Cannot use both @One and @Many annotations in the same @Result");
+      }
+    }
+    if (isLazy == null) {
+      isLazy = configuration.isLazyLoadingEnabled();
+    }
+    return isLazy;
+  }
+  
   private boolean hasNestedSelect(Result result) {
-    return result.one().select().length() > 0 || result.many().select().length() > 0;
+    boolean hasNestedSelect = result.one().select().length() > 0;
+    if (hasNestedSelect) {
+      throw new BuilderException("Cannot use both @One and @Many annotations in the same @Result");
+    } else {
+      hasNestedSelect = result.many().select().length() > 0;
+    }
+    return hasNestedSelect;  
   }
 
   private void applyConstructorArgs(Arg[] args, Class<?> resultType, List<ResultMapping> resultMappings) {
@@ -515,7 +541,8 @@ public class MapperAnnotationBuilder {
           arg.typeHandler() == UnknownTypeHandler.class ? null : arg.typeHandler(),
           flags,
           null,
-          null);
+          null,
+          false);
       resultMappings.add(resultMapping);
     }
   }

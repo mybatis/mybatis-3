@@ -288,13 +288,13 @@ public class Configuration {
   }
 
   public void setLazyLoadingEnabled(boolean lazyLoadingEnabled) {
-    if (lazyLoadingEnabled && this.proxyFactory == null) {
-      this.proxyFactory = new CglibProxyFactory();
-    }
     this.lazyLoadingEnabled = lazyLoadingEnabled;
   }
 
   public ProxyFactory getProxyFactory() {
+    if (proxyFactory == null) {
+      proxyFactory = new CglibProxyFactory();
+    }
     return proxyFactory;
   }
 

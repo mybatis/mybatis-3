@@ -117,6 +117,7 @@ columnPrefix CDATA #IMPLIED
 resultSet CDATA #IMPLIED
 foreignColumn CDATA #IMPLIED
 autoMapping (true|false) #IMPLIED
+lazy (true|false) #IMPLIED
 >
 
 <!ELEMENT association (constructor?,id*,result*,association*,collection*, discriminator?)>
@@ -133,6 +134,7 @@ columnPrefix CDATA #IMPLIED
 resultSet CDATA #IMPLIED
 foreignColumn CDATA #IMPLIED
 autoMapping (true|false) #IMPLIED
+lazy (true|false) #IMPLIED
 >
 
 <!ELEMENT discriminator (case+)>

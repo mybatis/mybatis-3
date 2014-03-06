@@ -272,7 +272,7 @@ public abstract class BaseExecutor implements Executor {
   protected Connection getConnection(Log statementLog) throws SQLException {
     Connection connection = transaction.getConnection();
     if (statementLog.isDebugEnabled()) {
-      return ConnectionLogger.newInstance(connection, statementLog);
+      return ConnectionLogger.newInstance(connection, statementLog, queryStack);
     } else {
       return connection;
     }
