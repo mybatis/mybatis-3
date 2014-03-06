@@ -20,7 +20,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.apache.ibatis.session.Loading;
+import org.apache.ibatis.mapping.Loading;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
