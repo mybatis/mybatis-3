@@ -23,6 +23,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import net.sf.cglib.proxy.Factory;
+
 import org.apache.ibatis.executor.ExecutorException;
 import org.apache.ibatis.reflection.factory.DefaultObjectFactory;
 import org.apache.ibatis.session.Configuration;
@@ -42,7 +44,7 @@ public class CglibProxyTest extends SerializableProxyTest {
     loader.addLoader("id", null, null);
     Object proxy = proxyFactory.createProxy(author, loader, new Configuration(), new DefaultObjectFactory(), new ArrayList<Class<?>>(), new ArrayList<Object>());
     Author author2 = (Author) deserialize(serialize((Serializable) proxy));
-    assertTrue(author2.getClass().getName().contains("CGLIB"));
+    assertTrue(author2 instanceof Factory);
   }
 
   @Test(expected = ExecutorException.class)

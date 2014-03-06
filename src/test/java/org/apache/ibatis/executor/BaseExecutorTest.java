@@ -26,6 +26,8 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
+import net.sf.cglib.proxy.Factory;
+
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.session.Configuration;
@@ -339,7 +341,7 @@ public class BaseExecutorTest extends BaseDataTest {
       List<Post> posts = executor.query(selectPosts, 1, RowBounds.DEFAULT, Executor.NO_RESULT_HANDLER);
       executor.flushStatements();
       assertEquals(2, posts.size());
-      assertTrue(posts.get(1).getClass().getName().contains("CGLIB"));
+      assertTrue(posts.get(1) instanceof Factory);
       assertNotNull(posts.get(1).getBlog());
       assertEquals(1, posts.get(1).getBlog().getId());
       executor.rollback(true);

@@ -44,7 +44,6 @@ public class JavassistProxyTest extends SerializableProxyTest {
     loader.addLoader("id", null, null);
     Object proxy = proxyFactory.createProxy(author, loader, new Configuration(), new DefaultObjectFactory(), new ArrayList<Class<?>>(), new ArrayList<Object>());
     Author author2 = (Author) deserialize(serialize((Serializable) proxy));
-//    assertTrue(author2.getClass().getName().contains("CGLIB"));
     assertTrue(author2 instanceof Proxy);
   }
 
