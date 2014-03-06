@@ -35,6 +35,7 @@ import org.apache.ibatis.exceptions.TooManyResultsException;
 import org.apache.ibatis.executor.result.DefaultResultHandler;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.defaults.DefaultSqlSessionFactory;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -376,6 +377,22 @@ public class SqlSessionTest extends BaseDataTest {
     SqlSession session = sqlMapper.openSession();
     try {
       Blog blog = session.selectOne("domain.blog.mappers.BlogMapper.selectBlogWithPostsUsingSubSelect", 1);
+      assertEquals("Jim Business", blog.getTitle());
+      assertEquals(2, blog.getPosts().size());
+      assertEquals("Corn nuts", blog.getPosts().get(0).getSubject());
+      assertEquals(101, blog.getAuthor().getId());
+      assertEquals("jim", blog.getAuthor().getUsername());
+    } finally {
+      session.close();
+    }
+  }
+
+  @Test
+  public void shouldSelectBlogWithPostsAndAuthorUsingSubSelectsLazily() throws Exception {
+    SqlSession session = sqlMapper.openSession();
+    try {
+      Blog blog = session.selectOne("domain.blog.mappers.BlogMapper.selectBlogWithPostsUsingSubSelectLazily", 1);
+      Assert.assertTrue(blog.getClass().getName().contains("CGLIB"));
       assertEquals("Jim Business", blog.getTitle());
       assertEquals(2, blog.getPosts().size());
       assertEquals("Corn nuts", blog.getPosts().get(0).getSubject());
