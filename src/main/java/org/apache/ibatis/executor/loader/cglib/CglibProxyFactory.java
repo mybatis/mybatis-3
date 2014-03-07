@@ -16,6 +16,7 @@
 package org.apache.ibatis.executor.loader.cglib;
 
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -26,8 +27,6 @@ import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;
 
-import org.apache.ibatis.executor.loader.AbstractEnhancedDeserializationProxy;
-import org.apache.ibatis.executor.loader.AbstractSerialStateHolder;
 import org.apache.ibatis.executor.loader.ProxyFactory;
 import org.apache.ibatis.executor.loader.ResultLoaderMap;
 import org.apache.ibatis.executor.loader.WriteReplaceInterface;
@@ -58,8 +57,13 @@ public class CglibProxyFactory implements ProxyFactory {
     return EnhancedResultObjectProxyImpl.createProxy(target, lazyLoader, configuration, objectFactory, constructorArgTypes, constructorArgs);
   }
 
+  public Object createDeserializationProxy(Object target, Class<?>[] ctorTypes, Object[] ctorArgs, ObjectFactory factory, Map<String, ResultLoaderMap.LoadPair> unloaded) {
+    final MethodInterceptor callback = new CglibDeserializationProxy(target, ctorTypes, ctorArgs, factory, unloaded);
+    return crateProxy(target.getClass(), callback, Arrays.asList(ctorTypes), Arrays.asList(ctorArgs));
+  }
+
   public Object createDeserializationProxy(Object target, Map<String, ResultLoaderMap.LoadPair> unloadedProperties, ObjectFactory objectFactory, List<Class<?>> constructorArgTypes, List<Object> constructorArgs) {
-    return EnhancedDeserializationProxyImpl.createProxy(target, unloadedProperties, objectFactory, constructorArgTypes, constructorArgs);
+    return this.createDeserializationProxy(target, constructorArgTypes.toArray(new Class<?>[0]), constructorArgs.toArray(), objectFactory, unloadedProperties);
   }
 
   public void setProperties(Properties properties) {
@@ -130,7 +134,7 @@ public class CglibProxyFactory implements ProxyFactory {
             }
             PropertyCopier.copyBeanProperties(type, enhanced, original);
             if (lazyLoader.size() > 0) {
-              return new CglibSerialStateHolder(original, lazyLoader.getProperties(), objectFactory, constructorArgTypes, constructorArgs);
+              return new CglibSerialStateHolder(enhanced, original, lazyLoader.getProperties(), objectFactory, constructorArgTypes, constructorArgs);
             } else {
               return original;
             }
@@ -154,32 +158,4 @@ public class CglibProxyFactory implements ProxyFactory {
     }
   }
 
-  private static class EnhancedDeserializationProxyImpl extends AbstractEnhancedDeserializationProxy implements MethodInterceptor {
-
-    private EnhancedDeserializationProxyImpl(Class<?> type, Map<String, ResultLoaderMap.LoadPair> unloadedProperties, ObjectFactory objectFactory,
-            List<Class<?>> constructorArgTypes, List<Object> constructorArgs) {
-      super(type, unloadedProperties, objectFactory, constructorArgTypes, constructorArgs);
-    }
-
-    public static Object createProxy(Object target, Map<String, ResultLoaderMap.LoadPair> unloadedProperties, ObjectFactory objectFactory,
-            List<Class<?>> constructorArgTypes, List<Object> constructorArgs) {
-      final Class<?> type = target.getClass();
-      EnhancedDeserializationProxyImpl callback = new EnhancedDeserializationProxyImpl(type, unloadedProperties, objectFactory, constructorArgTypes, constructorArgs);
-      Object enhanced = crateProxy(type, callback, constructorArgTypes, constructorArgs);
-      PropertyCopier.copyBeanProperties(type, target, enhanced);
-      return enhanced;
-    }
-
-    @Override
-    public Object intercept(Object enhanced, Method method, Object[] args, MethodProxy methodProxy) throws Throwable {
-      final Object o = super.invoke(enhanced, method, args);
-      return (o instanceof AbstractSerialStateHolder) ? o : methodProxy.invokeSuper(o, args);
-    }
-
-    @Override
-    protected AbstractSerialStateHolder newSerialStateHolder(Object userBean, Map<String, ResultLoaderMap.LoadPair> unloadedProperties, ObjectFactory objectFactory,
-            List<Class<?>> constructorArgTypes, List<Object> constructorArgs) {
-      return new CglibSerialStateHolder(userBean, unloadedProperties, objectFactory, constructorArgTypes, constructorArgs);
-    }
-  }
 }
