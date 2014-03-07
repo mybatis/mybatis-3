@@ -24,8 +24,9 @@
 <configuration>
 
     <settings>
-        <setting name="lazyLoadingEnabled" value="true"/> 
+        <setting name="lazyLoadingEnabled" value="true"/>
         <setting name="aggressiveLazyLoading" value="false"/>
+        <setting name="configurationFactory" value="org.apache.ibatis.submitted.serializecircular.SerializeCircularTest"/>
     </settings>
 
 	<environments default="development">

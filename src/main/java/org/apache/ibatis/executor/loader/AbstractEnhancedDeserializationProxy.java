@@ -16,6 +16,7 @@
 package org.apache.ibatis.executor.loader;
 
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -33,11 +34,11 @@ public abstract class AbstractEnhancedDeserializationProxy {
 
   protected static final String FINALIZE_METHOD = "finalize";
   protected static final String WRITE_REPLACE_METHOD = "writeReplace";
-  private Class<?> type;
-  private Map<String, ResultLoaderMap.LoadPair> unloadedProperties;
-  private ObjectFactory objectFactory;
-  private List<Class<?>> constructorArgTypes;
-  private List<Object> constructorArgs;
+  private final Class<?> type;
+  private final Map<String, ResultLoaderMap.LoadPair> unloadedProperties;
+  private final ObjectFactory objectFactory;
+  private final List<Class<?>> constructorArgTypes;
+  private final List<Object> constructorArgs;
   private final Object reloadingPropertyLock;
   private boolean reloadingProperty;
 
@@ -48,6 +49,16 @@ public abstract class AbstractEnhancedDeserializationProxy {
     this.objectFactory = objectFactory;
     this.constructorArgTypes = constructorArgTypes;
     this.constructorArgs = constructorArgs;
+    this.reloadingPropertyLock = new Object();
+    this.reloadingProperty = false;
+  }
+
+  protected AbstractEnhancedDeserializationProxy(Class<?> type, Class<?>[] ctorTypes, Object[] ctorArgs, ObjectFactory factory, Map<String, ResultLoaderMap.LoadPair> unloaded) {
+    this.type = type;
+    this.unloadedProperties = unloaded;
+    this.objectFactory = factory;
+    this.constructorArgTypes = Arrays.asList(ctorTypes);
+    this.constructorArgs = Arrays.asList(ctorArgs);
     this.reloadingPropertyLock = new Object();
     this.reloadingProperty = false;
   }
@@ -64,7 +75,7 @@ public abstract class AbstractEnhancedDeserializationProxy {
         }
 
         PropertyCopier.copyBeanProperties(type, enhanced, original);
-        return this.newSerialStateHolder(original, unloadedProperties, objectFactory, constructorArgTypes, constructorArgs);
+        return this.newSerialStateHolder(enhanced, original, unloadedProperties, objectFactory, constructorArgTypes, constructorArgs);
       } else {
         synchronized (this.reloadingPropertyLock) {
           if (!FINALIZE_METHOD.equals(methodName) && PropertyNamer.isProperty(methodName) && !reloadingProperty) {
@@ -97,6 +108,7 @@ public abstract class AbstractEnhancedDeserializationProxy {
   }
 
   protected abstract AbstractSerialStateHolder newSerialStateHolder(
+          Object enhanced,
           Object userBean,
           Map<String, ResultLoaderMap.LoadPair> unloadedProperties,
           ObjectFactory objectFactory,
