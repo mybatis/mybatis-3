@@ -292,9 +292,6 @@ public class Configuration {
   }
 
   public ProxyFactory getProxyFactory() {
-    if (proxyFactory == null) {
-      proxyFactory = new CglibProxyFactory();
-    }
     return proxyFactory;
   }
 

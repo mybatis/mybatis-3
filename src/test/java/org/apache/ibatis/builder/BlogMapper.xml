@@ -58,8 +58,8 @@
   <resultMap id="blogWithPostsLazy" type="Blog">
     <id property="id" column="id"/>
     <result property="title" column="title"/>
-    <association property="author" column="author_id" select="domain.blog.mappers.AuthorMapper.selectAuthorWithInlineParams" lazy="true"/>
-    <collection property="posts" column="id" select="selectPostsForBlog" lazy="true"/>
+    <association property="author" column="author_id" select="domain.blog.mappers.AuthorMapper.selectAuthorWithInlineParams" fetchType="lazy"/>
+    <collection property="posts" column="id" select="selectPostsForBlog" fetchType="lazy"/>
   </resultMap>
   
   <select id="selectBlogWithPostsUsingSubSelectLazily" parameterType="int" resultMap="blogWithPostsLazy">

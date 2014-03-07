@@ -33,6 +33,7 @@ import org.apache.ibatis.executor.ExecutorException;
 import org.apache.ibatis.executor.loader.ProxyFactory;
 import org.apache.ibatis.executor.loader.ResultLoader;
 import org.apache.ibatis.executor.loader.ResultLoaderMap;
+import org.apache.ibatis.executor.loader.cglib.CglibProxyFactory;
 import org.apache.ibatis.executor.parameter.ParameterHandler;
 import org.apache.ibatis.executor.result.DefaultResultContext;
 import org.apache.ibatis.executor.result.DefaultResultHandler;
@@ -94,7 +95,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     this.typeHandlerRegistry = configuration.getTypeHandlerRegistry();
     this.objectFactory = configuration.getObjectFactory();
     this.resultHandler = resultHandler;
-    this.proxyFactory = configuration.getProxyFactory();
+    this.proxyFactory = configuration.getProxyFactory() == null ? new CglibProxyFactory() : configuration.getProxyFactory();
   }
 
   //
