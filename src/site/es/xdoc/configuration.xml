@@ -123,7 +123,9 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
               <td>
                 lazyLoadingEnabled
               </td>
-              <td>Habilita o inhabilita globalmente la carga diferida (lazy loading).
+              <td>
+                Habilita o inhabilita globalmente la carga diferida (lazy loading). Cuando está activo, todas las relaciones se cargan en modo diferido.
+                Este valor se puede sobrescribir en cada relación usando el atributo <code>fetchType</code>.
               </td>
               <td>
                 true | false

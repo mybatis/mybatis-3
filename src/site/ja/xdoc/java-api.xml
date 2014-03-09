@@ -383,13 +383,16 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
         <td><code>Method</code></td>
         <td><code>&lt;association&gt;</code></td>
         <td>複雑型のプロパティのマッピング情報を定義します。キーである <code>select</code> は、適切な型を読み込むことができるマップドステートメント（Mapper メソッド）の完全修飾名です。
+        <code>fecthType</code>, which supersedes the global configuration parameter <code>lazyLoadingEnabled</code> for this mapping.        
         <span class="label important">NOTE</span> アノテーション API では結合マッピングがサポートされていません。これは Java アノテーションでは循環参照が許可されないためです。</td>
       </tr>
       <tr>
         <td><code>@Many</code></td>
         <td><code>Method</code></td>
         <td><code>&lt;collection&gt;</code></td>
-        <td>コレクション型のプロパティのマッピング情報を定義します。キーである <code>select</code> は、適切な型のコレクションを読み込むことができるマップドステートメント（Mapper メソッド）の完全修飾名です。 <span class="label important">NOTE</span> アノテーション API では結合マッピングがサポートされていません。これは Java アノテーションでは循環参照が許可されないためです。</td>
+        <td>コレクション型のプロパティのマッピング情報を定義します。キーである <code>select</code> は、適切な型のコレクションを読み込むことができるマップドステートメント（Mapper メソッド）の完全修飾名です。
+        <code>fecthType</code>, which supersedes the global configuration parameter <code>lazyLoadingEnabled</code> for this mapping.        
+        <span class="label important">NOTE</span> アノテーション API では結合マッピングがサポートされていません。これは Java アノテーションでは循環参照が許可されないためです。</td>
       </tr>
       <tr>
         <td><code>@MapKey</code></td>

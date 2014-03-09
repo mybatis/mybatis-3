@@ -1317,6 +1317,13 @@ select
 prop1 和 prop2 以参数对象形式来设置给目标嵌套查询语句。
               </td>
             </tr>
+            <tr>
+              <td><code>fetchType</code></td>
+              <td>
+                Optional. Valid values are <code>lazy</code> and <code>eager</code>. If present, it supersedes
+                the global configuration parameter <code>lazyLoadingEnabled</code> for this mapping.
+              </td>
+            </tr>
           </tbody>
         </table>
 

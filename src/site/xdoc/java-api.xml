@@ -394,8 +394,10 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
         <td><code>@One</code></td>
         <td><code>Method</code></td>
         <td><code>&lt;association&gt;</code></td>
-        <td>A mapping to a single property value of a complex type. Attributes:<code>select</code>, which is the fully
-        qualified name of a mapped statement (i.e. mapper method) that can load an instance of the appropriate type.
+        <td>A mapping to a single property value of a complex type. Attributes: <code>select</code>, which is the fully
+        qualified name of a mapped statement (i.e. mapper method) that can load an instance of the appropriate type,
+        <code>fecthType</code>, which supersedes the global configuration parameter <code>lazyLoadingEnabled</code> for this
+        mapping. 
         <span class="label important">NOTE</span> You will notice that join mapping is not supported via the Annotations API.
         This is due to the limitation in Java Annotations that does not allow for circular references.</td>
       </tr>
@@ -405,7 +407,9 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
         <td><code>&lt;collection&gt;</code></td>
         <td>A mapping to a collection property of a complex type. Attributes: <code>select</code>, which is the fully
         qualified name of a mapped statement (i.e. mapper method) that can load a collection of instances of the appropriate
-        types. <span class="label important">NOTE</span> You will notice that join mapping is not supported via the
+        types, <code>fecthType</code>, which supersedes the global configuration parameter <code>lazyLoadingEnabled</code> for this
+        mapping.
+        <span class="label important">NOTE</span> You will notice that join mapping is not supported via the
         Annotations API. This is due to the limitation in Java Annotations that does not allow for circular references.</td>
       </tr>
       <tr>

@@ -995,6 +995,13 @@ public class User {
               <td>El id de otro mapped statement que cargará el tipo complejo asociado a esta propiedad. Los valores obtenidos de las columnas especificadas en el atributo column se pasarán como parámetros al select  statement referenciado. A continuación se muestra un ejemplo detallado. Nota: para tratar con claves compuestas, puedes especificar varios nombres usando esta sintaxis column=”{prop1=col1,prop2=col2}”. Esto hará que se informen las propiedades prop1 y prop2 del objeto parámetro del select statement destino
               </td>
             </tr>
+            <tr>
+              <td><code>fetchType</code></td>
+              <td>
+                Opcional. Los valores válidos son <code>lazy</code> y <code>eager</code>. Si está presente sobrescribe
+                el parámetro global de configuración <code>lazyLoadingEnabled</code> para este mapping.
+              </td>
+            </tr>
           </tbody>
         </table>
 

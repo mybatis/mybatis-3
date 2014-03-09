@@ -1171,6 +1171,13 @@ public class User {
                 Note: 複合キー（composite key）を扱う場合、column="{prop1=col1,prop2=col2} のように記述することで複数の列名を指定することができます。この例ではネストされた select の実行時に prop1 と prop2 が引数として渡されます。
               </td>
             </tr>
+            <tr>
+              <td><code>fetchType</code></td>
+              <td>
+                Optional. Valid values are <code>lazy</code> and <code>eager</code>. If present, it supersedes
+                the global configuration parameter <code>lazyLoadingEnabled</code> for this mapping.
+              </td>
+            </tr>            
           </tbody>
         </table>
 

@@ -973,6 +973,13 @@ Note: 복합키를 다루기 위해서, column=”{prop1=col1,prop2=col2}” 문
 칼럼명을 내포된 select 구문에 명시할 수 있다. 이것은 대상의 내포된 select 구문의 파라미터 객체에
 prop1, prop2 형태로 셋팅하게 될 것이다.</td>
             </tr>
+            <tr>
+              <td><code>fetchType</code></td>
+              <td>
+                Optional. Valid values are <code>lazy</code> and <code>eager</code>. If present, it supersedes
+                the global configuration parameter <code>lazyLoadingEnabled</code> for this mapping.
+              </td>
+            </tr>
           </tbody>
         </table>
 

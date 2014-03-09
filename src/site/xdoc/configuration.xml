@@ -169,9 +169,8 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 lazyLoadingEnabled
               </td>
               <td>
-                Globally enables or disables lazy
-                loading. When disabled, all
-                associations will be eagerly loaded.
+                Globally enables or disables lazy loading. When enabled, all relations will be lazily loaded. 
+                This value can be superseded for an specific relation by using the <code>fetchType</code> attribute on it.
               </td>
               <td>
                 true | false

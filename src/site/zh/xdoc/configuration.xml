@@ -153,7 +153,8 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 lazyLoadingEnabled
               </td>
               <td>
-                全局启用或禁用延迟加载。当禁用时, 所有关联对象都会即时加载。 
+                全局启用或禁用延迟加载。当禁用时, 所有关联对象都会即时加载。
+                This value can be superseded for an specific relation by using the <code>fetchType</code> attribute on it. 
               </td>
               <td>
                 true | false

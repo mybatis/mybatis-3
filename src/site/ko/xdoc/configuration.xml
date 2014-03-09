@@ -114,7 +114,10 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
               <td>
                 lazyLoadingEnabled
               </td>
-              <td>늦은 로딩을 사용할지에 대한 여부. 사용하지 않는다면 모두 즉시 로딩할 것이다. </td>
+              <td>
+                               늦은 로딩을 사용할지에 대한 여부. 사용하지 않는다면 모두 즉시 로딩할 것이다.
+                This value can be superseded for an specific relation by using the <code>fetchType</code> attribute on it. 
+              </td>
               <td>
                 true | false
               </td>
