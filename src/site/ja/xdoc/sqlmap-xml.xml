@@ -1907,7 +1907,6 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
   boolean hasKey(Object key);
   Object removeObject(Object key);
   void clear();
-  ReadWriteLock getReadWriteLock();
 }]]></source>
 
         <p>

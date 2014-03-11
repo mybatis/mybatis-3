@@ -2002,7 +2002,6 @@ org.mybatis.cache.Cache 接口。这个接口是 MyBatis 框架中很多复杂�
   boolean hasKey(Object key);
   Object removeObject(Object key);
   void clear();
-  ReadWriteLock getReadWriteLock();
 }]]></source>
 
         <p>

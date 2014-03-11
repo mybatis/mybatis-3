@@ -1528,7 +1528,6 @@ vehicle 간의 관계를 알 수 있다. 그러므로, 나머지 프로퍼티들
   boolean hasKey(Object key);
   Object removeObject(Object key);
   void clear();
-  ReadWriteLock getReadWriteLock();
 }]]></source>
 
         <p>캐시를 설정하기 위해, 캐시 구현체에 public 자바빈 프로퍼티를 추가하고 cache 요소를 통해 프로퍼티를 전달한다. 예를

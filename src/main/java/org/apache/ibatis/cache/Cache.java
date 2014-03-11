@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2012 the original author or authors.
+ *    Copyright 2009-2014 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -17,20 +17,71 @@ package org.apache.ibatis.cache;
 
 import java.util.concurrent.locks.ReadWriteLock;
 
+/**
+ * Interface to be implemented by cache providers.
+ * 
+ * One instance of cache will be created for each namespace.
+ * 
+ * The cache implementation must have a constructor that receives the cache id as an String parameter.
+ * 
+ * <pre>
+ * public MyCache(final String id) {
+ *  if (id == null) {
+ *    throw new IllegalArgumentException("Cache instances require an ID");
+ *  }
+ *  this.id = id;
+ *  initialize();
+ * }
+ * </pre>
+ *
+ */
+
 public interface Cache {
 
+  /**
+   * @return The identifier of this cache
+   */
   String getId();
 
+  /**
+   * Optional. It is not called by the core.
+   * 
+   * @return The cache size.
+   */
   int getSize();
 
+  /**
+   * @param key Can be any object but usually it is a {@link CacheKey}
+   * @param value The result of a select.
+   */
   void putObject(Object key, Object value);
 
+  /**
+   * @param key The key
+   * @return The object stored in the cache.
+   */
   Object getObject(Object key);
 
+  /**
+   * Optional. It is not called by the core.
+   * 
+   * @param key The key
+   * @return The object that was removed
+   */
   Object removeObject(Object key);
 
+  /**
+   * Clears this cache instance
+   */  
   void clear();
 
+  /** 
+   * As of 3.2.6 this method is no longer called by the core. 
+   * Any locking needed by the cache must be provided internally by the cache provider.
+   * 
+   * @return A ReadWriteLock 
+   * @deprecated 
+   */
   ReadWriteLock getReadWriteLock();
 
 }

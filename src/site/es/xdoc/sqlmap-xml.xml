@@ -1664,7 +1664,6 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
   boolean hasKey(Object key);
   Object removeObject(Object key);
   void clear();
-  ReadWriteLock getReadWriteLock();
 }]]></source>
 
         <p>Para configurar tu caché añade simplemente propiedades tipo JavaBean a tu implementación, y pasa las propiedades usando el elemento cache, por ejemplo el siguiente ejemplo llamará a un método “setCacheFile(String file)” en tu implementación de caché:

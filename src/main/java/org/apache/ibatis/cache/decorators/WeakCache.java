@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2012 the original author or authors.
+ *    Copyright 2009-2014 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -39,10 +39,12 @@ public class WeakCache implements Cache {
     this.queueOfGarbageCollectedEntries = new ReferenceQueue<Object>();
   }
 
+  @Override
   public String getId() {
     return delegate.getId();
   }
 
+  @Override
   public int getSize() {
     removeGarbageCollectedItems();
     return delegate.getSize();
@@ -52,11 +54,13 @@ public class WeakCache implements Cache {
     this.numberOfHardLinks = size;
   }
 
+  @Override
   public void putObject(Object key, Object value) {
     removeGarbageCollectedItems();
     delegate.putObject(key, new WeakEntry(key, value, queueOfGarbageCollectedEntries));
   }
 
+  @Override
   public Object getObject(Object key) {
     Object result = null;
     @SuppressWarnings("unchecked") // assumed delegate cache is totally managed by this cache
@@ -75,11 +79,13 @@ public class WeakCache implements Cache {
     return result;
   }
 
+  @Override
   public Object removeObject(Object key) {
     removeGarbageCollectedItems();
     return delegate.removeObject(key);
   }
 
+  @Override
   public void clear() {
     hardLinksToAvoidGarbageCollection.clear();
     removeGarbageCollectedItems();
@@ -87,7 +93,7 @@ public class WeakCache implements Cache {
   }
 
   public ReadWriteLock getReadWriteLock() {
-    return delegate.getReadWriteLock();
+    return null;
   }
 
   private void removeGarbageCollectedItems() {
