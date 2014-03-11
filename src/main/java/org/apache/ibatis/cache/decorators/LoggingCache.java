@@ -23,14 +23,14 @@ import org.apache.ibatis.logging.LogFactory;
 
 public class LoggingCache implements Cache {
 
-  private static final Log log = LogFactory.getLog(LoggingCache.class); 
-
+  private Log log;  
   private Cache delegate;
   protected int requests = 0;
   protected int hits = 0;
 
   public LoggingCache(Cache delegate) {
     this.delegate = delegate;
+    this.log = LogFactory.getLog(getId());
   }
 
   @Override
