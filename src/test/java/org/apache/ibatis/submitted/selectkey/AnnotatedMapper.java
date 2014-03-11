@@ -15,6 +15,8 @@
  */
 package org.apache.ibatis.submitted.selectkey;
 
+import java.util.Map;
+
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.InsertProvider;
 import org.apache.ibatis.annotations.Options;
@@ -30,6 +32,14 @@ public interface AnnotatedMapper {
     @Options(useGeneratedKeys=true, keyProperty="nameId,generatedName", keyColumn="ID,NAME_FRED")
     int insertTable2WithOptions(Name name);
     
+    @Insert("insert into table2 (name) values(#{name})")
+    @SelectKey(statement="select id, name_fred from table2 where id = identity()", keyProperty="nameId,generatedName", keyColumn="ID,NAME_FRED", before=false, resultType=Map.class)
+    int insertTable2WithSelectKeyWithKeyMap(Name name);
+
+    @Insert("insert into table2 (name) values(#{name})")
+    @SelectKey(statement="select id as nameId, name_fred as generatedName from table2 where id = identity()", keyProperty="nameId,generatedName", before=false, resultType=Name.class)
+    int insertTable2WithSelectKeyWithKeyObject(Name name);
+
     @Insert("insert into table3 (id, name) values(#{nameId}, #{name})")
     @SelectKey(statement="call next value for TestSequence", keyProperty="nameId", before=true, resultType=int.class)
     int insertTable3(Name name);

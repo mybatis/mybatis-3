@@ -29,6 +29,8 @@ public @interface SelectKey {
 
   String keyProperty();
 
+  String keyColumn() default "";
+
   boolean before();
 
   Class<?> resultType();

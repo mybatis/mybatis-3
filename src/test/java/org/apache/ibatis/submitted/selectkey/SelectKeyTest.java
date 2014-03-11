@@ -170,6 +170,40 @@ public class SelectKeyTest {
   }
 
   @Test
+  public void testAnnotatedInsertTable2WithSelectKeyWithKeyMap() {
+      SqlSession sqlSession = sqlSessionFactory.openSession();
+
+      try {
+        Name name = new Name();
+        name.setName("barney");
+        AnnotatedMapper mapper = sqlSession.getMapper(AnnotatedMapper.class);
+        int rows = mapper.insertTable2WithSelectKeyWithKeyMap(name);
+        assertEquals(1, rows);
+        assertEquals(22, name.getNameId());
+        assertEquals("barney_fred", name.getGeneratedName());
+      } finally {
+        sqlSession.close();
+      }
+  }
+
+  @Test
+  public void testAnnotatedInsertTable2WithSelectKeyWithKeyObject() {
+      SqlSession sqlSession = sqlSessionFactory.openSession();
+
+      try {
+        Name name = new Name();
+        name.setName("barney");
+        AnnotatedMapper mapper = sqlSession.getMapper(AnnotatedMapper.class);
+        int rows = mapper.insertTable2WithSelectKeyWithKeyObject(name);
+        assertEquals(1, rows);
+        assertEquals(22, name.getNameId());
+        assertEquals("barney_fred", name.getGeneratedName());
+      } finally {
+        sqlSession.close();
+      }
+  }
+
+  @Test
   public void testAnnotatedInsertTable3() {
       SqlSession sqlSession = sqlSessionFactory.openSession();
 

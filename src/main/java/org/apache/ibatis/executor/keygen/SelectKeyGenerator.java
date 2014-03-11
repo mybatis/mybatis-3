@@ -52,10 +52,10 @@ public class SelectKeyGenerator implements KeyGenerator {
   private void processGeneratedKeys(Executor executor, MappedStatement ms, Object parameter) {
     try {
       if (parameter != null && keyStatement != null && keyStatement.getKeyProperties() != null) {
-        String keyProperty = keyStatement.getKeyProperties()[0]; // just one key property is supported
+        String[] keyProperties = keyStatement.getKeyProperties();
         final Configuration configuration = ms.getConfiguration();
         final MetaObject metaParam = configuration.newMetaObject(parameter);
-        if (keyProperty != null && metaParam.hasSetter(keyProperty)) {
+        if (keyProperties != null) {
           // Do not close keyExecutor.
           // The transaction will be closed by parent executor.
           Executor keyExecutor = configuration.newExecutor(executor.getTransaction(), ExecutorType.SIMPLE);
@@ -65,10 +65,13 @@ public class SelectKeyGenerator implements KeyGenerator {
           } else if (values.size() > 1) {
             throw new ExecutorException("SelectKey returned more than one value.");
           } else {
-            metaParam.setValue(keyProperty, values.get(0));
+            if (keyProperties.length == 1) {
+              setValue(metaParam, keyProperties[0], values.get(0));
+            } else {
+              MetaObject metaResult = configuration.newMetaObject(values.get(0));
+              handleMultipleProperties(keyProperties, metaParam, metaResult);
+            }
           }
-        } else {
-          throw new ExecutorException("No setter found for the keyProperty '" + keyProperty + "' in " + metaParam.getOriginalObject().getClass().getName() + ".");
         }
       }
     } catch (ExecutorException e) {
@@ -78,4 +81,30 @@ public class SelectKeyGenerator implements KeyGenerator {
     }
   }
 
+  private void handleMultipleProperties(String[] keyProperties,
+      MetaObject metaParam, MetaObject metaResult) {
+    String[] keyColumns = keyStatement.getKeyColumns();
+      
+    if (keyColumns == null || keyColumns.length == 0) {
+      // no key columns specified, just use the property names
+      for (int i = 0; i < keyProperties.length; i++) {
+        setValue(metaParam, keyProperties[i], metaResult.getValue(keyProperties[i]));
+      }
+    } else {
+      if (keyColumns.length != keyProperties.length) {
+        throw new ExecutorException("If SelectKey has key columns, the number must match the number of key properties.");
+      }
+      for (int i = 0; i < keyProperties.length; i++) {
+        setValue(metaParam, keyProperties[i], metaResult.getValue(keyColumns[i]));
+      }
+    }
+  }
+
+  private void setValue(MetaObject metaParam, String property, Object value) {
+    if (metaParam.hasSetter(property)) {
+      metaParam.setValue(property, value);
+    } else {
+      throw new ExecutorException("No setter found for the keyProperty '" + property + "' in " + metaParam.getOriginalObject().getClass().getName() + ".");
+    }
+  }
 }
