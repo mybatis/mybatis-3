@@ -166,24 +166,27 @@ public abstract class BaseExecutor implements Executor {
     cacheKey.update(rowBounds.getLimit());
     cacheKey.update(boundSql.getSql());
     List<ParameterMapping> parameterMappings = boundSql.getParameterMappings();
-    if (parameterMappings.size() > 0 && parameterObject != null) {
-      TypeHandlerRegistry typeHandlerRegistry = ms.getConfiguration().getTypeHandlerRegistry();
-      if (typeHandlerRegistry.hasTypeHandler(parameterObject.getClass())) {
-        cacheKey.update(parameterObject);
-      } else {
-        MetaObject metaObject = configuration.newMetaObject(parameterObject);
-        for (ParameterMapping parameterMapping : parameterMappings) {
-          String propertyName = parameterMapping.getProperty();       
-          if (boundSql.hasAdditionalParameter(propertyName)) { // issue #448 ask first for additional params
-            cacheKey.update(boundSql.getAdditionalParameter(propertyName));
-          } else if (metaObject.hasGetter(propertyName)) {
-            cacheKey.update(metaObject.getValue(propertyName));
-          }
+    TypeHandlerRegistry typeHandlerRegistry = ms.getConfiguration().getTypeHandlerRegistry();
+    for (int i = 0; i < parameterMappings.size(); i++) { // mimic DefaultParameterHandler logic
+      ParameterMapping parameterMapping = parameterMappings.get(i);
+      if (parameterMapping.getMode() != ParameterMode.OUT) {
+        Object value;
+        String propertyName = parameterMapping.getProperty();
+        if (boundSql.hasAdditionalParameter(propertyName)) {
+          value = boundSql.getAdditionalParameter(propertyName);
+        } else if (parameterObject == null) {
+          value = null;
+        } else if (typeHandlerRegistry.hasTypeHandler(parameterObject.getClass())) {
+          value = parameterObject;
+        } else {
+          MetaObject metaObject = configuration.newMetaObject(parameterObject);
+          value = metaObject.getValue(propertyName);
         }
+        cacheKey.update(value);
       }
     }
     return cacheKey;
-  }
+  }    
 
   public boolean isCached(MappedStatement ms, CacheKey key) {
     return localCache.getObject(key) != null;
