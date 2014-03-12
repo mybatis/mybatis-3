@@ -329,23 +329,25 @@ ps.setInt(1,id);]]></source>
             </tr>
             <tr>
               <td><code>useGeneratedKeys</code></td>
-              <td>(insert only) This tells MyBatis to use the JDBC <code>getGeneratedKeys</code> method to retrieve
+              <td>(insert and update only) This tells MyBatis to use the JDBC <code>getGeneratedKeys</code> method to retrieve
                 keys generated internally by the database (e.g. auto increment fields in RDBMS like
                 MySQL or SQL Server). Default: <code>false</code>
               </td>
             </tr>
             <tr>
               <td><code>keyProperty</code></td>
-              <td>(insert only) Identifies a property into which MyBatis will set the key value returned
+              <td>(insert and update only) Identifies a property into which MyBatis will set the key value returned
                 by <code>getGeneratedKeys</code>, or by a <code>selectKey</code> child element of the insert statement.
-                Default: <code>unset</code>.
+                Default: <code>unset</code>.  Can be a comma separated list of property names if multiple
+                generated columns are expected.
               </td>
             </tr>
             <tr>
               <td><code>keyColumn</code></td>
-              <td>(insert only) Sets the name of the column in the table with a generated key. This is
+              <td>(insert and update only) Sets the name of the column in the table with a generated key. This is
                 only required in certain databases (like PostgreSQL) when the key column is not the
-                first column in the table.
+                first column in the table. Can be a comma separated list of columns names if multiple
+                generated columns are expected.
               </td>
             </tr>
             <tr>
@@ -439,14 +441,25 @@ ps.setInt(1,id);]]></source>
           <tbody>
             <tr>
               <td><code>keyProperty</code></td>
-              <td>The target property where the result of the <code>selectKey</code> statement should be set.</td>
+              <td>The target property where the result of the <code>selectKey</code> statement should be set.
+                Can be a comma separated list of property names if multiple generated columns
+                are expected.
+              </td>
+            </tr>
+            <tr>
+              <td><code>keyColumn</code></td>
+              <td>The column name(s) in the returned result set that match the properties.
+                Can be a comma separated list of column names if multiple generated columns
+                are expected.
+              </td>
             </tr>
             <tr>
               <td><code>resultType</code></td>
               <td>
                 The type of the result. MyBatis can usually figure this out, but it doesn't hurt to
                 add it to be sure. MyBatis allows any simple type to be used as the key,
-                including Strings.
+                including Strings.  If you are expecting multiple generated columns, then
+                you can use an Object that contains the expected properties, or a Map.
               </td>
             </tr>
             <tr>
