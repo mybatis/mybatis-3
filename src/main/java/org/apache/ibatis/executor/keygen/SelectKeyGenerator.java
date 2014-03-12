@@ -65,10 +65,16 @@ public class SelectKeyGenerator implements KeyGenerator {
           } else if (values.size() > 1) {
             throw new ExecutorException("SelectKey returned more than one value.");
           } else {
+            MetaObject metaResult = configuration.newMetaObject(values.get(0));
             if (keyProperties.length == 1) {
-              setValue(metaParam, keyProperties[0], values.get(0));
+              if (metaResult.hasGetter(keyProperties[0])) {
+                setValue(metaParam, keyProperties[0], metaResult.getValue(keyProperties[0]));
+              } else {
+                // no getter for the property - maybe just a single value object
+                // so try that
+                setValue(metaParam, keyProperties[0], values.get(0));
+              }
             } else {
-              MetaObject metaResult = configuration.newMetaObject(values.get(0));
               handleMultipleProperties(keyProperties, metaParam, metaResult);
             }
           }
