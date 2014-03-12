@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+       Copyright 2009-2012 the original author or authors.
+
+       Licensed under the Apache License, Version 2.0 (the "License");
+       you may not use this file except in compliance with the License.
+       You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+       Unless required by applicable law or agreed to in writing, software
+       distributed under the License is distributed on an "AS IS" BASIS,
+       WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+       See the License for the specific language governing permissions and
+       limitations under the License.
+
+-->
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="org.apache.ibatis.submitted.selectkey.AnnotatedMapper">
+  <insert id="insertTable2WithSelectKeyWithKeyMapXml">
+    <selectKey keyProperty="nameId,generatedName" keyColumn="ID,NAME_FRED" order="AFTER" resultType="java.util.Map">
+      select id, name_fred from table2 where id = identity()
+    </selectKey>
+    insert into table2 (name) values(#{name})
+  </insert>
+
+  <insert id="insertTable2WithSelectKeyWithKeyObjectXml">
+    <selectKey keyProperty="nameId,generatedName" order="AFTER" resultType="org.apache.ibatis.submitted.selectkey.Name">
+      select id as nameId, name_fred as generatedName from table2 where id = identity()
+    </selectKey>
+    insert into table2 (name) values(#{name})
+  </insert>
+
+  <insert id="insertTable2WithGeneratedKeyXml" useGeneratedKeys="true" keyProperty="nameId,generatedName" keyColumn="ID,NAME_FRED">
+    insert into table2 (name) values(#{name})
+  </insert>
+
+  <update id="updateTable2WithSelectKeyWithKeyMapXml">
+    <selectKey keyProperty="generatedName" keyColumn="NAME_FRED" order="AFTER" resultType="java.lang.String">
+      select name_fred from table2 where id = #{nameId}
+    </selectKey>
+    update table2 set name = #{name} where id = #{nameId}
+  </update>
+
+  <update id="updateTable2WithSelectKeyWithKeyObjectXml">
+    <selectKey keyProperty="generatedName" order="AFTER" resultType="org.apache.ibatis.submitted.selectkey.Name">
+      select name_fred as generatedName from table2 where id = #{nameId}
+    </selectKey>
+    update table2 set name = #{name} where id = #{nameId}
+  </update>
+
+  <update id="updateTable2WithGeneratedKeyXml" useGeneratedKeys="true" keyProperty="generatedName" keyColumn="NAME_FRED">
+    update table2 set name = #{name} where id = #{nameId}
+  </update>
+</mapper>

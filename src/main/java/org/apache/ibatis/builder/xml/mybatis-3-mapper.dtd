@@ -203,11 +203,12 @@ lang CDATA #IMPLIED
 resultType CDATA #IMPLIED
 statementType (STATEMENT|PREPARED|CALLABLE) #IMPLIED
 keyProperty CDATA #IMPLIED
+keyColumn CDATA #IMPLIED
 order (BEFORE|AFTER) #IMPLIED
 databaseId CDATA #IMPLIED
 >
 
-<!ELEMENT update (#PCDATA | include | trim | where | set | foreach | choose | if | bind)*>
+<!ELEMENT update (#PCDATA | selectKey | include | trim | where | set | foreach | choose | if | bind)*>
 <!ATTLIST update
 id CDATA #REQUIRED
 parameterMap CDATA #IMPLIED
@@ -215,6 +216,9 @@ parameterType CDATA #IMPLIED
 timeout CDATA #IMPLIED
 flushCache (true|false) #IMPLIED
 statementType (STATEMENT|PREPARED|CALLABLE) #IMPLIED
+keyProperty CDATA #IMPLIED
+useGeneratedKeys (true|false) #IMPLIED
+keyColumn CDATA #IMPLIED
 databaseId CDATA #IMPLIED
 lang CDATA #IMPLIED
 >
