@@ -1962,7 +1962,7 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
       </subsection>
       <subsection name="cache">
         <p>
-          MyBatis has includes a powerful transactional query caching feature which is very configurable and customizable. 
+          MyBatis includes a powerful transactional query caching feature which is very configurable and customizable. 
           A lot of changes have been made in the MyBatis 3 cache implementation to make it both more powerful and far easier to configure.
         </p>
 
