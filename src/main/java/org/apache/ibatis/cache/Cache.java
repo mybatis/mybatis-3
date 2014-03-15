@@ -18,11 +18,13 @@ package org.apache.ibatis.cache;
 import java.util.concurrent.locks.ReadWriteLock;
 
 /**
- * Interface to be implemented by cache providers.
+ * SPI for cache providers.
  * 
  * One instance of cache will be created for each namespace.
  * 
  * The cache implementation must have a constructor that receives the cache id as an String parameter.
+ * 
+ * MyBatis will pass the namespace as id to the constructor.
  * 
  * <pre>
  * public MyCache(final String id) {
@@ -42,13 +44,6 @@ public interface Cache {
    * @return The identifier of this cache
    */
   String getId();
-
-  /**
-   * Optional. It is not called by the core.
-   * 
-   * @return The cache size.
-   */
-  int getSize();
 
   /**
    * @param key Can be any object but usually it is a {@link CacheKey}
@@ -75,12 +70,19 @@ public interface Cache {
    */  
   void clear();
 
+  /**
+   * Optional. This method is not called by the core.
+   * 
+   * @return The number of elements stored in the cache (not its capacity).
+   */
+  int getSize();
+  
   /** 
-   * As of 3.2.6 this method is no longer called by the core. 
+   * Optional. As of 3.2.6 this method is no longer called by the core.
+   *  
    * Any locking needed by the cache must be provided internally by the cache provider.
    * 
    * @return A ReadWriteLock 
-   * @deprecated 
    */
   ReadWriteLock getReadWriteLock();
 
