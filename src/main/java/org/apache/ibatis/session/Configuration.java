@@ -292,6 +292,10 @@ public class Configuration {
   }
 
   public ProxyFactory getProxyFactory() {
+    if (proxyFactory == null) {
+      // makes sure CGLIB is not needed unless explicitly requested
+      proxyFactory = new CglibProxyFactory();
+    }
     return proxyFactory;
   }
 
