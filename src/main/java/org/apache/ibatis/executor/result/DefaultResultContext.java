@@ -17,6 +17,9 @@ package org.apache.ibatis.executor.result;
 
 import org.apache.ibatis.session.ResultContext;
 
+/**
+ * @author Clinton Begin
+ */
 public class DefaultResultContext implements ResultContext {
 
   private Object resultObject;

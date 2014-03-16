@@ -27,7 +27,7 @@ import org.apache.ibatis.executor.BaseExecutor;
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
 
-/*
+/**
  * Vendor DatabaseId provider
  * 
  * It returns database product name as a databaseId
@@ -36,6 +36,7 @@ import org.apache.ibatis.logging.LogFactory;
  * It can return null, if no database product name or 
  * a properties was specified and no translation was found 
  * 
+ * @author Eduardo Macarron
  */
 public class VendorDatabaseIdProvider implements DatabaseIdProvider {
   

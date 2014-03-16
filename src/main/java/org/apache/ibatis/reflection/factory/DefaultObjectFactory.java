@@ -30,6 +30,9 @@ import java.util.TreeSet;
 
 import org.apache.ibatis.reflection.ReflectionException;
 
+/**
+ * @author Clinton Begin
+ */
 public class DefaultObjectFactory implements ObjectFactory, Serializable {
 
   private static final long serialVersionUID = -8855120656740914948L;

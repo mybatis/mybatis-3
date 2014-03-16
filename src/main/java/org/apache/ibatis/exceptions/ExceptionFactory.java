@@ -17,6 +17,9 @@ package org.apache.ibatis.exceptions;
 
 import org.apache.ibatis.executor.ErrorContext;
 
+/**
+ * @author Clinton Begin
+ */
 public class ExceptionFactory {
 
   public static RuntimeException wrapException(String message, Exception e) {

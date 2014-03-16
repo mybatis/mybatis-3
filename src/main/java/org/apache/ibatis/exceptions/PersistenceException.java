@@ -15,6 +15,9 @@
  */
 package org.apache.ibatis.exceptions;
 
+/**
+ * @author Clinton Begin
+ */
 @SuppressWarnings("deprecation")
 public class PersistenceException extends IbatisException {
 

@@ -19,6 +19,9 @@ import javax.sql.DataSource;
 
 import org.apache.ibatis.transaction.TransactionFactory;
 
+/**
+ * @author Clinton Begin
+ */
 public final class Environment {
   private final String id;
   private final TransactionFactory transactionFactory;

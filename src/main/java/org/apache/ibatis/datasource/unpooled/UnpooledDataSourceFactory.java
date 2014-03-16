@@ -24,6 +24,9 @@ import org.apache.ibatis.datasource.DataSourceFactory;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.SystemMetaObject;
 
+/**
+ * @author Clinton Begin
+ */
 public class UnpooledDataSourceFactory implements DataSourceFactory {
 
   private static final String DRIVER_PROPERTY_PREFIX = "driver.";

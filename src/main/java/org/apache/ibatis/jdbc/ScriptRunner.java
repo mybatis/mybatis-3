@@ -25,6 +25,9 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+/**
+ * @author Clinton Begin
+ */
 public class ScriptRunner {
 
   private static final String LINE_SEPARATOR = System.getProperty("line.separator", "\n");

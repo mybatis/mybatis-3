@@ -17,6 +17,9 @@ package org.apache.ibatis.scripting.xmltags;
 
 import java.util.List;
 
+/**
+ * @author Clinton Begin
+ */
 public class MixedSqlNode implements SqlNode {
   private List<SqlNode> contents;
 

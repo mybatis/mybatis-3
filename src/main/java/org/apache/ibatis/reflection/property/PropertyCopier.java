@@ -17,6 +17,9 @@ package org.apache.ibatis.reflection.property;
 
 import java.lang.reflect.Field;
 
+/**
+ * @author Clinton Begin
+ */
 public class PropertyCopier {
 
   public static void copyBeanProperties(Class<?> type, Object sourceBean, Object destinationBean) {

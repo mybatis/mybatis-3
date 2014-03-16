@@ -26,8 +26,10 @@ import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-/*
- * Offline entity resolver for the iBATIS DTDs
+/**
+ * Offline entity resolver for the MyBatis DTDs
+ * 
+ * @author Clinton Begin
  */
 public class XMLMapperEntityResolver implements EntityResolver {
 

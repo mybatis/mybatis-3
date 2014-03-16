@@ -18,6 +18,9 @@ package org.apache.ibatis.type;
 import java.io.ByteArrayInputStream;
 import java.sql.*;
 
+/**
+ * @author Clinton Begin
+ */
 public class BlobByteObjectArrayTypeHandler extends BaseTypeHandler<Byte[]> {
 
   @Override

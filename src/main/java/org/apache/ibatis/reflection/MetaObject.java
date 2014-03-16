@@ -27,6 +27,9 @@ import org.apache.ibatis.reflection.wrapper.MapWrapper;
 import org.apache.ibatis.reflection.wrapper.ObjectWrapper;
 import org.apache.ibatis.reflection.wrapper.ObjectWrapperFactory;
 
+/**
+ * @author Clinton Begin
+ */
 public class MetaObject {
 
   private Object originalObject;

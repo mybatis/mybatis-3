@@ -42,6 +42,9 @@ import org.apache.ibatis.session.LocalCacheScope;
 import org.apache.ibatis.transaction.TransactionFactory;
 import org.apache.ibatis.type.JdbcType;
 
+/**
+ * @author Clinton Begin
+ */
 public class XMLConfigBuilder extends BaseBuilder {
 
   private boolean parsed;

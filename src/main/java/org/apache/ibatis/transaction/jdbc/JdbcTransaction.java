@@ -34,6 +34,9 @@ import org.apache.ibatis.transaction.TransactionException;
  *
  * @see JdbcTransactionFactory
  */
+/**
+ * @author Clinton Begin
+ */
 public class JdbcTransaction implements Transaction {
 
   private static final Log log = LogFactory.getLog(JdbcTransaction.class);

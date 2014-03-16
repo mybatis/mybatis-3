@@ -17,6 +17,9 @@ package org.apache.ibatis.binding;
 
 import org.apache.ibatis.exceptions.PersistenceException;
 
+/**
+ * @author Clinton Begin
+ */
 public class BindingException extends PersistenceException {
 
   private static final long serialVersionUID = 4300802238789381562L;

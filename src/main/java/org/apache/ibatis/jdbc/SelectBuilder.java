@@ -17,6 +17,8 @@ package org.apache.ibatis.jdbc;
 
 /**
  * @Deprecated Use the SQL Class
+ * 
+ * @author Clinton Begin
  */
 @Deprecated
 public class SelectBuilder {

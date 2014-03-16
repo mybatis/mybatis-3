@@ -32,6 +32,9 @@ import org.apache.ibatis.cache.impl.PerpetualCache;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.SystemMetaObject;
 
+/**
+ * @author Clinton Begin
+ */
 public class CacheBuilder {
   private String id;
   private Class<? extends Cache> implementation;

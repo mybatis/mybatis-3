@@ -29,6 +29,11 @@ import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.util.*;
 
+/**
+ * @author Clinton Begin
+ * @author Eduardo Macarron
+ * @author Lasse Voss
+ */
 public class MapperMethod {
 
   private final SqlCommand command;

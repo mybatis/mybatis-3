@@ -15,6 +15,9 @@
  */
 package org.apache.ibatis.jdbc;
 
+/**
+ * @author Clinton Begin
+ */
 public class RuntimeSqlException extends RuntimeException {
 
   private static final long serialVersionUID = 5224696788505678598L;

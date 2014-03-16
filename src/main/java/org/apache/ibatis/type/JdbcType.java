@@ -19,6 +19,9 @@ import java.sql.Types;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @author Clinton Begin
+ */
 public enum JdbcType {
   /*
    * This is added to enable basic support for the

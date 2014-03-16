@@ -33,6 +33,9 @@ import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.type.JdbcType;
 
+/**
+ * @author Clinton Begin
+ */
 public class CallableStatementHandler extends BaseStatementHandler {
 
   public CallableStatementHandler(Executor executor, MappedStatement mappedStatement, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql) {

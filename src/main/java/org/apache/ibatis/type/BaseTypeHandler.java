@@ -22,6 +22,10 @@ import java.sql.SQLException;
 
 import org.apache.ibatis.session.Configuration;
 
+/**
+ * @author Clinton Begin
+ * @author Simone Tripodi
+ */
 public abstract class BaseTypeHandler<T> extends TypeReference<T> implements TypeHandler<T> {
 
   protected Configuration configuration;

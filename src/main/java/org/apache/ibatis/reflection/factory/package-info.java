@@ -15,6 +15,6 @@
  */
 
 /**
- * TODO fillme.
+ * Object factory.
  */
 package org.apache.ibatis.reflection.factory;

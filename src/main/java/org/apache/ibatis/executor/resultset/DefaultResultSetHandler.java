@@ -53,6 +53,10 @@ import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.TypeHandlerRegistry;
 
+/**
+ * @author Clinton Begin
+ * @author Eduardo Macarron
+ */
 public class DefaultResultSetHandler implements ResultSetHandler {
 
   private static final Object NO_VALUE = new Object();

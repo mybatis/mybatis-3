@@ -21,8 +21,10 @@ import java.util.concurrent.locks.ReadWriteLock;
 
 import org.apache.ibatis.cache.Cache;
 
-/*
+/**
  * Lru (first in, first out) cache decorator
+ *
+ * @author Clinton Begin
  */
 public class LruCache implements Cache {
 

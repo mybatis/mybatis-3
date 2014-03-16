@@ -27,7 +27,7 @@ import java.lang.annotation.Target;
  * it should build for each row.
  * 
  * @since 3.2.0
- *
+ * @author Jeff Butler
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)

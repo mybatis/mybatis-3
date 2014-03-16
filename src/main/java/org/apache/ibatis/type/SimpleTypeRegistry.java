@@ -21,6 +21,9 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * @author Clinton Begin
+ */
 public class SimpleTypeRegistry {
 
   private static final Set<Class<?>> SIMPLE_TYPE_SET = new HashSet<Class<?>>();

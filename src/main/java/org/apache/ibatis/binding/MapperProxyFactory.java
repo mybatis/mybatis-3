@@ -22,6 +22,9 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.ibatis.session.SqlSession;
 
+/**
+ * @author Lasse Voss
+ */
 public class MapperProxyFactory<T> {
 
   private final Class<T> mapperInterface;

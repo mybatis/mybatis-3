@@ -21,6 +21,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 
+/**
+ * @author Clinton Begin
+ */
 public class SqlTimestampTypeHandler extends BaseTypeHandler<Timestamp> {
 
   @Override

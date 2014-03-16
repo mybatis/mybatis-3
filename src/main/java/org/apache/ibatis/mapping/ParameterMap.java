@@ -20,6 +20,9 @@ import java.util.List;
 
 import org.apache.ibatis.session.Configuration;
 
+/**
+ * @author Clinton Begin
+ */
 public class ParameterMap {
 
   private String id;

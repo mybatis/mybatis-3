@@ -26,6 +26,9 @@ import org.apache.ibatis.reflection.factory.ObjectFactory;
 import org.apache.ibatis.reflection.invoker.Invoker;
 import org.apache.ibatis.reflection.property.PropertyTokenizer;
 
+/**
+ * @author Clinton Begin
+ */
 public class BeanWrapper extends BaseWrapper {
 
   private Object object;

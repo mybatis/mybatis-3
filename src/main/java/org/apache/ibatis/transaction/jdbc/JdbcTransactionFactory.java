@@ -29,6 +29,9 @@ import org.apache.ibatis.transaction.TransactionFactory;
  *
  * @see JdbcTransaction
  */
+/**
+ * @author Clinton Begin
+ */
 public class JdbcTransactionFactory implements TransactionFactory {
 
   public void setProperties(Properties props) {

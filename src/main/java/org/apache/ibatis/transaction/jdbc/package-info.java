@@ -15,6 +15,6 @@
  */
 
 /**
- * TODO fillme.
+ * JDBC transaction.
  */
 package org.apache.ibatis.transaction.jdbc;

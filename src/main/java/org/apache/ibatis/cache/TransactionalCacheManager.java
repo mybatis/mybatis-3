@@ -20,6 +20,9 @@ import java.util.Map;
 
 import org.apache.ibatis.cache.decorators.TransactionalCache;
 
+/**
+ * @author Clinton Begin
+ */
 public class TransactionalCacheManager {
 
   private Map<Cache, TransactionalCache> transactionalCaches = new HashMap<Cache, TransactionalCache>();

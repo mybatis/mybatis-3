@@ -37,6 +37,10 @@ import org.apache.ibatis.type.StringTypeHandler;
 import org.apache.ibatis.type.TimeOnlyTypeHandler;
 import org.apache.ibatis.type.TypeHandler;
 
+/**
+ * @author Clinton Begin
+ * @author Adam Gent
+ */
 public enum Null {
   BOOLEAN(new BooleanTypeHandler(), JdbcType.BOOLEAN),
 

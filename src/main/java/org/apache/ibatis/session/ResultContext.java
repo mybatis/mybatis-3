@@ -15,6 +15,9 @@
  */
 package org.apache.ibatis.session;
 
+/**
+ * @author Clinton Begin
+ */
 public interface ResultContext {
 
   Object getResultObject();

@@ -23,6 +23,9 @@ import java.util.Map;
 
 import org.apache.ibatis.builder.BuilderException;
 
+/**
+ * @author Clinton Begin
+ */
 public class ExpressionEvaluator {
 
   public boolean evaluateBoolean(String expression, Object parameterObject) {

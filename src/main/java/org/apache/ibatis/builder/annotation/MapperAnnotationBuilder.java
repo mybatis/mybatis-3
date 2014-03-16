@@ -83,6 +83,9 @@ import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.UnknownTypeHandler;
 
+/**
+ * @author Clinton Begin
+ */
 public class MapperAnnotationBuilder {
 
   private final Set<Class<? extends Annotation>> sqlAnnotationTypes = new HashSet<Class<? extends Annotation>>();

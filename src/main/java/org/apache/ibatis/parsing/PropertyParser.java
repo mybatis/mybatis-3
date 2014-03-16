@@ -17,6 +17,9 @@ package org.apache.ibatis.parsing;
 
 import java.util.Properties;
 
+/**
+ * @author Clinton Begin
+ */
 public class PropertyParser {
 
   public static String parse(String string, Properties variables) {

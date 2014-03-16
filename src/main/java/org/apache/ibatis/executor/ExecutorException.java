@@ -17,6 +17,9 @@ package org.apache.ibatis.executor;
 
 import org.apache.ibatis.exceptions.PersistenceException;
 
+/**
+ * @author Clinton Begin
+ */
 public class ExecutorException extends PersistenceException {
 
   private static final long serialVersionUID = 4060977051977364820L;

@@ -25,6 +25,9 @@ import java.util.Map;
 
 import org.apache.ibatis.io.Resources;
 
+/**
+ * @author Clinton Begin
+ */
 public class UnknownTypeHandler extends BaseTypeHandler<Object> {
 
   private static final ObjectTypeHandler OBJECT_TYPE_HANDLER = new ObjectTypeHandler();

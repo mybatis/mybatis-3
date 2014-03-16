@@ -15,6 +15,6 @@
  */
 
 /**
- * TODO fillme.
+ * Reflection utils.
  */
 package org.apache.ibatis.reflection;

@@ -26,6 +26,9 @@ import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.transaction.Transaction;
 
+/**
+ * @author Clinton Begin
+ */
 public interface Executor {
 
   ResultHandler NO_RESULT_HANDLER = null;

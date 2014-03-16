@@ -22,6 +22,9 @@ import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.factory.ObjectFactory;
 import org.apache.ibatis.reflection.property.PropertyTokenizer;
 
+/**
+ * @author Clinton Begin
+ */
 public class CollectionWrapper implements ObjectWrapper {
 
   private Collection<Object> object;

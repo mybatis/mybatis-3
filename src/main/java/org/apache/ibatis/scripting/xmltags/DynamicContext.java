@@ -25,6 +25,9 @@ import ognl.PropertyAccessor;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.session.Configuration;
 
+/**
+ * @author Clinton Begin
+ */
 public class DynamicContext {
 
   public static final String PARAMETER_OBJECT_KEY = "_parameter";

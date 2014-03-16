@@ -22,6 +22,9 @@ import org.apache.ibatis.session.Configuration;
 import java.lang.reflect.Array;
 import java.util.List;
 
+/**
+ * @author Andrew Gustafson
+ */
 public class ResultExtractor {
   private final Configuration configuration;
   private final ObjectFactory objectFactory;

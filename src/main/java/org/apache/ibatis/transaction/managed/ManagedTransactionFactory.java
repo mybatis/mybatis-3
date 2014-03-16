@@ -29,6 +29,9 @@ import org.apache.ibatis.transaction.TransactionFactory;
  *
  * @see ManagedTransaction
  */
+/**
+ * @author Clinton Begin
+ */
 public class ManagedTransactionFactory implements TransactionFactory {
 
   private boolean closeConnection = true;

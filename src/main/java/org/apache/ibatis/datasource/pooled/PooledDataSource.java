@@ -32,8 +32,10 @@ import org.apache.ibatis.datasource.unpooled.UnpooledDataSource;
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
 
-/*
+/**
  * This is a simple, synchronous, thread-safe database connection pool.
+ *
+ * @author Clinton Begin
  */
 public class PooledDataSource implements DataSource {
 

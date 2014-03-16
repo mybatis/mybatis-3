@@ -39,6 +39,9 @@ import org.apache.ibatis.reflection.property.PropertyNamer;
  * This class represents a cached set of class definition information that
  * allows for easy mapping between property names and getter/setter methods.
  */
+/**
+ * @author Clinton Begin
+ */
 public class Reflector {
 
   private static boolean classCacheEnabled = true;

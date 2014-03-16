@@ -28,6 +28,7 @@ public interface LanguageDriver {
   /**
    * Creates a {@link ParameterHandler} that passes the actual parameters to the the JDBC statement.
    * 
+   * @author Frank D. Martinez [mnesarco]
    * @see DefaultParameterHandler
    * @param mappedStatement The mapped statement that is being executed
    * @param parameterObject The input parameter object (can be null) 

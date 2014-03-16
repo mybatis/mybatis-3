@@ -49,6 +49,9 @@ import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
 
+/**
+ * @author Clinton Begin
+ */
 public class MapperBuilderAssistant extends BaseBuilder {
 
   private String currentNamespace;

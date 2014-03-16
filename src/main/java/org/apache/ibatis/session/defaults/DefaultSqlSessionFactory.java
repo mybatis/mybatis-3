@@ -31,6 +31,9 @@ import org.apache.ibatis.transaction.Transaction;
 import org.apache.ibatis.transaction.TransactionFactory;
 import org.apache.ibatis.transaction.managed.ManagedTransactionFactory;
 
+/**
+ * @author Clinton Begin
+ */
 public class DefaultSqlSessionFactory implements SqlSessionFactory {
 
   private final Configuration configuration;

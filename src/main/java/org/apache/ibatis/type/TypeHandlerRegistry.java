@@ -30,6 +30,9 @@ import java.util.Set;
 
 import org.apache.ibatis.io.ResolverUtil;
 
+/**
+ * @author Clinton Begin
+ */
 public final class TypeHandlerRegistry {
 
   private static final Map<Class<?>, Class<?>> reversePrimitiveMap = new HashMap<Class<?>, Class<?>>() {

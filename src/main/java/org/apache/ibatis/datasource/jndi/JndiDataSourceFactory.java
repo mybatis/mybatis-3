@@ -26,6 +26,9 @@ import javax.sql.DataSource;
 import org.apache.ibatis.datasource.DataSourceException;
 import org.apache.ibatis.datasource.DataSourceFactory;
 
+/**
+ * @author Clinton Begin
+ */
 public class JndiDataSourceFactory implements DataSourceFactory {
 
   public static final String INITIAL_CONTEXT = "initial_context";

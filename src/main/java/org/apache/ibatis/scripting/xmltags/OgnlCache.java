@@ -36,6 +36,9 @@ import org.apache.ibatis.builder.BuilderException;
  * http://code.google.com/p/mybatis/issues/detail?id=342
  * 
  */
+/**
+ * @author Clinton Begin
+ */
 public class OgnlCache {
 
   private static final Map<String, ognl.Node> expressionCache = new ConcurrentHashMap<String, ognl.Node>();

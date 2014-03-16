@@ -21,6 +21,9 @@ import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.factory.ObjectFactory;
 import org.apache.ibatis.reflection.property.PropertyTokenizer;
 
+/**
+ * @author Clinton Begin
+ */
 public interface ObjectWrapper {
 
   Object get(PropertyTokenizer prop);

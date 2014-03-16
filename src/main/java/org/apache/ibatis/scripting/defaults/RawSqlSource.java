@@ -30,6 +30,7 @@ import org.apache.ibatis.session.Configuration;
  * calculated during startup.
  * 
  * @since 3.2.0
+ * @author Eduardo Macarron
  */
 public class RawSqlSource implements SqlSource {
 

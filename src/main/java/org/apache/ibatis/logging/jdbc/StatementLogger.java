@@ -24,8 +24,12 @@ import java.sql.Statement;
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.reflection.ExceptionUtil;
 
-/*
+/**
  * Statement proxy to add logging
+ * 
+ * @author Clinton Begin
+ * @author Eduardo Macarron
+ * 
  */
 public final class StatementLogger extends BaseJdbcLogger implements InvocationHandler {
 

@@ -39,6 +39,9 @@ import org.apache.ibatis.reflection.property.PropertyCopier;
 import org.apache.ibatis.reflection.property.PropertyNamer;
 import org.apache.ibatis.session.Configuration;
 
+/**
+ * @author Eduardo Macarron
+ */
 public class JavassistProxyFactory implements org.apache.ibatis.executor.loader.ProxyFactory {
 
   private static final Log log = LogFactory.getLog(JavassistProxyFactory.class);

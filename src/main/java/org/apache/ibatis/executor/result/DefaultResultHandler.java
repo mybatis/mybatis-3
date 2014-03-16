@@ -22,6 +22,9 @@ import org.apache.ibatis.reflection.factory.ObjectFactory;
 import org.apache.ibatis.session.ResultContext;
 import org.apache.ibatis.session.ResultHandler;
 
+/**
+ * @author Clinton Begin
+ */
 public class DefaultResultHandler implements ResultHandler {
 
   private final List<Object> list;

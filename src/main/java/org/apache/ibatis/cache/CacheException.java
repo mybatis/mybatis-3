@@ -17,6 +17,9 @@ package org.apache.ibatis.cache;
 
 import org.apache.ibatis.exceptions.PersistenceException;
 
+/**
+ * @author Clinton Begin
+ */
 public class CacheException extends PersistenceException {
 
   private static final long serialVersionUID = -193202262468464650L;

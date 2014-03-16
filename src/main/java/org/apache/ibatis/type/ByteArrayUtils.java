@@ -15,6 +15,9 @@
  */
 package org.apache.ibatis.type;
 
+/**
+ * @author Clinton Begin
+ */
 class ByteArrayUtils {
   static byte[] convertToPrimitiveArray(Byte[] objects) {
     final byte[] bytes = new byte[objects.length];

@@ -31,6 +31,10 @@ import javax.sql.DataSource;
 
 import org.apache.ibatis.io.Resources;
 
+/**
+ * @author Clinton Begin
+ * @author Eduardo Macarron
+ */
 public class UnpooledDataSource implements DataSource {
   
   private ClassLoader driverClassLoader;
@@ -253,7 +257,6 @@ public class UnpooledDataSource implements DataSource {
       return this.driver.jdbcCompliant();
     }
 
-    @SuppressWarnings("unused")
     public Logger getParentLogger() {
       return Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
     }

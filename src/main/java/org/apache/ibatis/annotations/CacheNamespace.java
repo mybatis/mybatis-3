@@ -23,6 +23,9 @@ import java.lang.annotation.Target;
 import org.apache.ibatis.cache.decorators.LruCache;
 import org.apache.ibatis.cache.impl.PerpetualCache;
 
+/**
+ * @author Clinton Begin
+ */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface CacheNamespace {

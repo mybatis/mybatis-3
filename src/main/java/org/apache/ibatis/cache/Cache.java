@@ -36,6 +36,7 @@ import java.util.concurrent.locks.ReadWriteLock;
  * }
  * </pre>
  *
+ * @author Clinton Begin
  */
 
 public interface Cache {

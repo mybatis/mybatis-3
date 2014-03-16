@@ -29,6 +29,9 @@ import java.util.HashMap;
  * attribute = name '=' value
  * </pre>
  */
+/**
+ * @author Frank D. Martinez [mnesarco]
+ */
 public class ParameterExpression extends HashMap<String, String> {
 
   private static final long serialVersionUID = -2417552199605158680L;

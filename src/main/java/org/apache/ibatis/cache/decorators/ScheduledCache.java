@@ -19,6 +19,9 @@ import java.util.concurrent.locks.ReadWriteLock;
 
 import org.apache.ibatis.cache.Cache;
 
+/**
+ * @author Clinton Begin
+ */
 public class ScheduledCache implements Cache {
 
   private Cache delegate;

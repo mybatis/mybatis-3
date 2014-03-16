@@ -17,6 +17,10 @@ package org.apache.ibatis.logging;
 
 import java.lang.reflect.Constructor;
 
+/**
+ * @author Clinton Begin
+ * @author Eduardo Macarron
+ */
 public final class LogFactory {
 
   /**

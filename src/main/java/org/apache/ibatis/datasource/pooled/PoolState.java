@@ -18,6 +18,9 @@ package org.apache.ibatis.datasource.pooled;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author Clinton Begin
+ */
 public class PoolState {
 
   protected PooledDataSource dataSource;

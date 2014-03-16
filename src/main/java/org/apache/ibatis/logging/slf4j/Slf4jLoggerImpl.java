@@ -18,6 +18,9 @@ package org.apache.ibatis.logging.slf4j;
 import org.apache.ibatis.logging.Log;
 import org.slf4j.Logger;
 
+/**
+ * @author Eduardo Macarron
+ */
 class Slf4jLoggerImpl implements Log {
 
   private Logger log;

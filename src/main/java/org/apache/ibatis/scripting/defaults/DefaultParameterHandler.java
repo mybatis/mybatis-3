@@ -31,6 +31,10 @@ import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.TypeHandlerRegistry;
 
+/**
+ * @author Clinton Begin
+ * @author Eduardo Macarron
+ */
 public class DefaultParameterHandler implements ParameterHandler {
 
   private final TypeHandlerRegistry typeHandlerRegistry;

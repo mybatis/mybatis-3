@@ -17,6 +17,9 @@ package org.apache.ibatis.builder;
 
 import org.apache.ibatis.exceptions.PersistenceException;
 
+/**
+ * @author Clinton Begin
+ */
 public class BuilderException extends PersistenceException {
 
   private static final long serialVersionUID = -3885164021020443281L;

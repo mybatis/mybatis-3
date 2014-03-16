@@ -19,6 +19,9 @@ import org.apache.ibatis.parsing.GenericTokenParser;
 import org.apache.ibatis.parsing.TokenHandler;
 import org.apache.ibatis.type.SimpleTypeRegistry;
 
+/**
+ * @author Clinton Begin
+ */
 public class TextSqlNode implements SqlNode {
   private String text;
 

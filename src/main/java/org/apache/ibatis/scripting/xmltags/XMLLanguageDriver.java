@@ -28,6 +28,9 @@ import org.apache.ibatis.scripting.defaults.DefaultParameterHandler;
 import org.apache.ibatis.scripting.defaults.RawSqlSource;
 import org.apache.ibatis.session.Configuration;
 
+/**
+ * @author Eduardo Macarron
+ */
 public class XMLLanguageDriver implements LanguageDriver {
 
   public ParameterHandler createParameterHandler(MappedStatement mappedStatement, Object parameterObject, BoundSql boundSql) {

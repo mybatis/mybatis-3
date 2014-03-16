@@ -17,6 +17,8 @@ package org.apache.ibatis.session;
 
 /**
  * Specifies if and how MyBatis should automatically map columns to fields/properties.
+ * 
+ * @author Eduardo Macarron
  */
 public enum AutoMappingBehavior {
 

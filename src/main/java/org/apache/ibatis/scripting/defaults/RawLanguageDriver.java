@@ -27,6 +27,7 @@ import org.apache.ibatis.session.Configuration;
  * want to make sure that there is not any dynamic tag for any reason.
  * 
  * @since 3.2.0
+ * @author Eduardo Macarron
  */
 public class RawLanguageDriver extends XMLLanguageDriver {
 

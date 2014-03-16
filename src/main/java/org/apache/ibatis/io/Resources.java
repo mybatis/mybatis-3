@@ -25,8 +25,10 @@ import java.net.URLConnection;
 import java.nio.charset.Charset;
 import java.util.Properties;
 
-/*
+/**
  * A class to simplify access to resources through the classloader.
+ *
+ * @author Clinton Begin
  */
 public class Resources {
 

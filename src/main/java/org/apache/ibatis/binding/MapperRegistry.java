@@ -26,6 +26,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * @author Clinton Begin
+ * @author Eduardo Macarron
+ * @author Lasse Voss
+ */
 public class MapperRegistry {
 
   private Configuration config;

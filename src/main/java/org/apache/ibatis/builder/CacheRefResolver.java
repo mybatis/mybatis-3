@@ -17,6 +17,9 @@ package org.apache.ibatis.builder;
 
 import org.apache.ibatis.cache.Cache;
 
+/**
+ * @author Clinton Begin
+ */
 public class CacheRefResolver {
 	private final MapperBuilderAssistant assistant;
 	private final String cacheRefNamespace;

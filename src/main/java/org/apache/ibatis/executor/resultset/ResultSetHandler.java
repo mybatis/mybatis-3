@@ -20,6 +20,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 
+/**
+ * @author Clinton Begin
+ */
 public interface ResultSetHandler {
 
   <E> List<E> handleResultSets(Statement stmt) throws SQLException;

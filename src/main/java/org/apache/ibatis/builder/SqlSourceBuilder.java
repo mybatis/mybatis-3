@@ -28,6 +28,9 @@ import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.type.JdbcType;
 
+/**
+ * @author Clinton Begin
+ */
 public class SqlSourceBuilder extends BaseBuilder {
 
   private static final String parameterProperties = "javaType,jdbcType,mode,numericScale,resultMap,typeHandler,jdbcTypeName";

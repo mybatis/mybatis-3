@@ -40,6 +40,9 @@ import org.apache.ibatis.reflection.property.PropertyCopier;
 import org.apache.ibatis.reflection.property.PropertyNamer;
 import org.apache.ibatis.session.Configuration;
 
+/**
+ * @author Clinton Begin
+ */
 public class CglibProxyFactory implements ProxyFactory {
 
   private static final Log log = LogFactory.getLog(CglibProxyFactory.class);

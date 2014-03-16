@@ -24,6 +24,9 @@ import org.apache.logging.log4j.message.SimpleMessage;
 import org.apache.logging.log4j.spi.AbstractLogger;
 import org.apache.logging.log4j.spi.AbstractLoggerWrapper;
 
+/**
+ * @author Eduardo Macarron
+ */
 public class Log4j2AbstractLoggerImpl implements Log {
   
   private static Marker MARKER = MarkerManager.getMarker(LogFactory.MARKER);

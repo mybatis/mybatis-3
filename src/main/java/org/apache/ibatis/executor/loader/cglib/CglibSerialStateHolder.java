@@ -22,6 +22,9 @@ import org.apache.ibatis.executor.loader.AbstractSerialStateHolder;
 import org.apache.ibatis.executor.loader.ResultLoaderMap;
 import org.apache.ibatis.reflection.factory.ObjectFactory;
 
+/**
+ * @author Eduardo Macarron
+ */
 class CglibSerialStateHolder extends AbstractSerialStateHolder {
 
   private static final long serialVersionUID = 8940388717901644661L;

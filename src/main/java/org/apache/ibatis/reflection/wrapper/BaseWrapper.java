@@ -22,6 +22,9 @@ import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.ReflectionException;
 import org.apache.ibatis.reflection.property.PropertyTokenizer;
 
+/**
+ * @author Clinton Begin
+ */
 public abstract class BaseWrapper implements ObjectWrapper {
 
   protected static final Object[] NO_ARGUMENTS = new Object[0];

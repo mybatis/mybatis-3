@@ -28,8 +28,12 @@ import java.util.Set;
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.reflection.ExceptionUtil;
 
-/*
+/**
  * ResultSet proxy to add logging
+ * 
+ * @author Clinton Begin
+ * @author Eduardo Macarron
+ * 
  */
 public final class ResultSetLogger extends BaseJdbcLogger implements InvocationHandler {
 
