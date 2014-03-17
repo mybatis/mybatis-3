@@ -48,6 +48,22 @@ public class XMLIncludeTransformer {
         toInclude.getParentNode().insertBefore(toInclude.getFirstChild(), toInclude);
       }
       toInclude.getParentNode().removeChild(toInclude);
+    } else if (source.getNodeName().equals("includeColumns")) {
+      Node toInclude = findSqlFragment(getStringAttribute(source, "refid"));
+      String tableAlias = getStringAttribute(source, "tableAlias");
+      String columnAliasPrefix = getOptionalStringAttribute(source, "columnAliasPrefix");
+      applyIncludes(toInclude);
+      if (toInclude.getOwnerDocument() != source.getOwnerDocument()) {
+        toInclude = source.getOwnerDocument().importNode(toInclude, true);
+      }
+      source.getParentNode().replaceChild(toInclude, source);
+      while (toInclude.hasChildNodes()) {
+        Node firstChild = toInclude.getFirstChild();
+        String transformedColumnList = transformColumnList(firstChild.getTextContent(), tableAlias, columnAliasPrefix);
+        firstChild.setTextContent(transformedColumnList);
+        toInclude.getParentNode().insertBefore(firstChild, toInclude);
+      }
+      toInclude.getParentNode().removeChild(toInclude);
     } else if (source.getNodeType() == Node.ELEMENT_NODE) {
       NodeList children = source.getChildNodes();
       for (int i=0; i<children.getLength(); i++) {
@@ -70,5 +86,36 @@ public class XMLIncludeTransformer {
 
   private String getStringAttribute(Node node, String name) {
     return node.getAttributes().getNamedItem(name).getNodeValue();
+  }
+
+  private String getOptionalStringAttribute(Node node, String name) {
+    Node namedItem = node.getAttributes().getNamedItem(name);
+    if (namedItem == null) {
+      return null;
+    }
+
+    return namedItem.getNodeValue();
+  }
+
+  private String transformColumnList(String columns, String tableAlias, String columnAliasPrefix) {
+    if (columnAliasPrefix == null) {
+      columnAliasPrefix = tableAlias;
+    }
+    StringBuilder stringBuilder = new StringBuilder();
+    String textContent = columns.trim();
+    String[] tokens = textContent.split(",");
+    for (int i = 0; i < tokens.length; i++) {
+      String token = tokens[i].trim();
+      stringBuilder.append(tableAlias).append(".").append(token);
+      if (!token.toLowerCase().contains(" ")) {
+        stringBuilder.append(" as ").append(columnAliasPrefix).append("_").append(token);
+      }
+
+      if (i < tokens.length - 1) {
+        stringBuilder.append(", ");
+      }
+    }
+
+    return stringBuilder.toString();
   }
 }
