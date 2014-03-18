@@ -1569,6 +1569,42 @@ data_source 属性将会直接以 initialContext 为背景再次寻找。
 在初始化之后,这就会以值“UTF8”向初始上下文的构造方法传递名为“encoding”
 的属性。
         </p>
+        
+		<p>
+		  You can plug any 3rd party DataSource by implementing the interface <code>org.apache.ibatis.datasource.DataSourceFactory</code>:
+		</p>
+
+        <source><![CDATA[public interface DataSourceFactory {
+  void setProperties(Properties props);
+  DataSource getDataSource();
+}]]></source>
+
+        <p>
+		  <code>org.apache.ibatis.datasource.unpooled.UnpooledDataSourceFactory</code> can be used as super class
+		  class to build new datasource adapters. For example this is the code needed to plug C3P0:  
+		</p>
+
+        <source><![CDATA[import org.apache.ibatis.datasource.unpooled.UnpooledDataSourceFactory;
+import com.mchange.v2.c3p0.ComboPooledDataSource;
+        
+public class C3P0DataSourceFactory extends UnpooledDataSourceFactory {
+
+  public C3P0DataSourceFactory() {
+    this.dataSource = new ComboPooledDataSource();
+  }
+}]]></source>
+
+        <p>To set it up, add a property for each setter method you want MyBatis to call. 
+        Below depicts a sample configuration which connects to a PostgreSQL database:</p>        
+
+        <source><![CDATA[<dataSource type="org.myproject.C3P0DataSourceFactory">
+  <property name="driver" value="org.postgresql.Driver"/>
+  <property name="url" value="jdbc:postgresql:mydb"/>
+  <property name="username" value="postgres"/>
+  <property name="password" value="root"/>
+</dataSource>
+]]></source>
+        
       </subsection>
       
       <subsection name="databaseIdProvider">
@@ -1610,9 +1646,7 @@ data_source 属性将会直接以 initialContext 为背景再次寻找。
 		</p>
 
         <source><![CDATA[public interface DatabaseIdProvider {
-
   void setProperties(Properties p);
-  
   String getDatabaseId(DataSource dataSource) throws SQLException;
 }]]></source>
 

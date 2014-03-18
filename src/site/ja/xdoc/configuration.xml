@@ -1473,6 +1473,42 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader,properties);]]
         <p>
           上記のように指定すると、"encoding=UTF8" というプロパティが InitialContext のインスタンス生成時にコンストラクタに渡されます。
         </p>
+        
+		<p>
+		  You can plug any 3rd party DataSource by implementing the interface <code>org.apache.ibatis.datasource.DataSourceFactory</code>:
+		</p>
+
+        <source><![CDATA[public interface DataSourceFactory {
+  void setProperties(Properties props);
+  DataSource getDataSource();
+}]]></source>
+
+        <p>
+		  <code>org.apache.ibatis.datasource.unpooled.UnpooledDataSourceFactory</code> can be used as super class
+		  class to build new datasource adapters. For example this is the code needed to plug C3P0:  
+		</p>
+
+        <source><![CDATA[import org.apache.ibatis.datasource.unpooled.UnpooledDataSourceFactory;
+import com.mchange.v2.c3p0.ComboPooledDataSource;
+        
+public class C3P0DataSourceFactory extends UnpooledDataSourceFactory {
+
+  public C3P0DataSourceFactory() {
+    this.dataSource = new ComboPooledDataSource();
+  }
+}]]></source>
+
+        <p>To set it up, add a property for each setter method you want MyBatis to call. 
+        Below depicts a sample configuration which connects to a PostgreSQL database:</p>        
+
+        <source><![CDATA[<dataSource type="org.myproject.C3P0DataSourceFactory">
+  <property name="driver" value="org.postgresql.Driver"/>
+  <property name="url" value="jdbc:postgresql:mydb"/>
+  <property name="username" value="postgres"/>
+  <property name="password" value="root"/>
+</dataSource>
+]]></source>
+        
       </subsection>
 
       <subsection name="databaseIdProvider">
@@ -1508,9 +1544,7 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader,properties);]]
     </p>
 
         <source><![CDATA[public interface DatabaseIdProvider {
-
   void setProperties(Properties p);
-
   String getDatabaseId(DataSource dataSource) throws SQLException;
 }]]></source>
 

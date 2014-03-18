@@ -1350,6 +1350,42 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader,properties);]]
         <p>
          Enviará la propiedad “encoding” y el valor “UTF-8” al constructor del InitialContext durante su instanciación.
         </p>
+
+		<p>
+		  You can plug any 3rd party DataSource by implementing the interface <code>org.apache.ibatis.datasource.DataSourceFactory</code>:
+		</p>
+
+        <source><![CDATA[public interface DataSourceFactory {
+  void setProperties(Properties props);
+  DataSource getDataSource();
+}]]></source>
+
+        <p>
+		  The <code>org.apache.ibatis.datasource.unpooled.UnpooledDataSourceFactory</code> puede extenderse para crear nuevos 
+		  adaptadores. Por ejemplo, este es el código necesario para integrar C3P0: 
+		</p>
+
+        <source><![CDATA[import org.apache.ibatis.datasource.unpooled.UnpooledDataSourceFactory;
+import com.mchange.v2.c3p0.ComboPooledDataSource;
+        
+public class C3P0DataSourceFactory extends UnpooledDataSourceFactory {
+
+  public C3P0DataSourceFactory() {
+    this.dataSource = new ComboPooledDataSource();
+  }
+}]]></source>
+
+        <p>Para configurarlo, añade una propiedad por cada método al que quieres que llame MyBatis.
+        A continuación se muestra una configuración de ejemplo para conectar con una base de datos PostgresSQL:</p>        
+
+        <source><![CDATA[<dataSource type="org.myproject.C3P0DataSourceFactory">
+  <property name="driver" value="org.postgresql.Driver"/>
+  <property name="url" value="jdbc:postgresql:mydb"/>
+  <property name="username" value="postgres"/>
+  <property name="password" value="root"/>
+</dataSource>
+]]></source>
+        
       </subsection>
       
       <subsection name="databaseIdProvider">
@@ -1391,9 +1427,7 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader,properties);]]
 		</p>
 
         <source><![CDATA[public interface DatabaseIdProvider {
-
   void setProperties(Properties p);
-  
   String getDatabaseId(DataSource dataSource) throws SQLException;
 }]]></source>
 
