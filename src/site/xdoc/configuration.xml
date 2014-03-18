@@ -1766,14 +1766,11 @@ public class C3P0DataSourceFactory extends UnpooledDataSourceFactory {
           configuration elements, we’re ready to define our mapped SQL
           statements. But first, we need to tell MyBatis where to find them.
           Java doesn’t really provide any good means of auto-discovery in
-          this
-          regard, so the best way to do it is to simply tell MyBatis
-          where to
-          find the mapping files. You can use class path relative
-          resource
-          references, or literal, fully qualified url references
-          (including
-          <code>file:///</code> URLs). For example:
+          this regard, so the best way to do it is to simply tell MyBatis
+          where to find the mapping files. You can use class path relative
+          resource references, fully qualified url references
+          (including <code>file:///</code> URLs), class names or package names. 
+          For example:
         </p>
         <source><![CDATA[<!-- Using classpath relative resources -->
 <mappers>
@@ -1803,8 +1800,7 @@ public class C3P0DataSourceFactory extends UnpooledDataSourceFactory {
 
         <p>
           These statement simply tell MyBatis where to go from here. The
-          rest of
-          the details are in each of the SQL Mapping files, and that’s
+          rest of the details are in each of the SQL Mapping files, and that’s
           exactly what the next section will discuss.
         </p>
       </subsection>
