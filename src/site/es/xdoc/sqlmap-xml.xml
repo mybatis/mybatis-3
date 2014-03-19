@@ -281,13 +281,13 @@ ps.setInt(1,id);]]></source>
             </tr>
             <tr>
               <td><code>keyProperty</code></td>
-              <td>(solo en insert y update) Indica la propiedad a la que MyBatis debe asignar la clave autogenerada devuelva por getGeneratedKeys o por un elemento hijo de tipo selectKey. Por defecto: no informado. Can be a comma separated list of property names if multiple generated columns are expected.
+              <td>(solo en insert y update) Indica la propiedad a la que MyBatis debe asignar la clave autogenerada devuelva por getGeneratedKeys o por un elemento hijo de tipo selectKey. Por defecto: no informado. Puede contener una lista de nombres seperados por comas en el caso de que se esperen varios valores autogenerados.
               </td>
             </tr>
             <tr>
               <td><code>keyColumn</code></td>
               <td>(solo en insert y update) Indica el nombre de la columna en tabla con clave generada. Solo se requiere en algunas bases de datos (como PostgreSQL) donde la 
-              columna clave no es la primera de la tabla. Can be a comma separated list of columns names if multiple generated columns are expected.
+              columna clave no es la primera de la tabla. Puede contener una lista de nombres seperados por comas en el caso de que se esperen varios valores autogenerados.
               </td>
             </tr>
             <tr>
@@ -369,14 +369,12 @@ Por ejemplo, si la columna id de la tabla Author del ejemplo siguiente fuera aut
           <tbody>
             <tr>
               <td><code>keyProperty</code></td>
-              <td>La propiedad destino con la que debe informarse el resultado del selectKey statement. Can be a comma separated list of property names if multiple generated columns are expected.
+              <td>La propiedad destino con la que debe informarse el resultado del selectKey statement. Puede contener una lista de nombres seperados por comas en el caso de que se esperen varios valores autogenerados.
               </td>
             </tr>
             <tr>
               <td><code>keyColumn</code></td>
-              <td>The column name(s) in the returned result set that match the properties.
-                Can be a comma separated list of column names if multiple generated columns
-                are expected.
+              <td>Los nombres de columnas en el ResultSet que corresponden con las propiedades. Puede contener una lista de nombres seperados por comas en el caso de que se esperen varios valores autogenerados. 
               </td>
             </tr>
             <tr>
