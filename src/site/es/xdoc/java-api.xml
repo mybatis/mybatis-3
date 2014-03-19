@@ -370,7 +370,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
         <td><code>&lt;association&gt;</code></td>
         <td>
         Un mapeo a una propiedad que contiene un tipo complejo. Atributos: select, que contiene el nombre completamente cualificado de un mapped statement (o un método de mapper) que puede cargar la instancia del tipo indicado, 
-        <code>fecthType</code>, que sobrescribe el parámetro global de configuración <code>lazyLoadingEnabled</code> para este mapeo. 
+        <code>fetchType</code>, que sobrescribe el parámetro global de configuración <code>lazyLoadingEnabled</code> para este mapeo. 
         Nota: Habrás visto que el mapeo de tipo join no se soporta mediante el API de anotaciones. Esto es debido a las limitaciones de las anotaciones en Java que no permiten referencias circulares.</td>
       </tr>
       <tr>
@@ -378,7 +378,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
         <td><code>Method</code></td>
         <td><code>&lt;collection&gt;</code></td>
         <td>Un mapeo a una propiedad que contiene una colección de tipos complejos. Atributos: select, que contiene el nombre completamente cualificado de un mapped statement (o un método de mapper) que puede cargar la instancia del tipo indicado, 
-        <code>fecthType</code>, que sobrescribe el parámetro global de configuración <code>lazyLoadingEnabled</code> para este mapeo. 
+        <code>fetchType</code>, que sobrescribe el parámetro global de configuración <code>lazyLoadingEnabled</code> para este mapeo. 
         Nota: Habrás visto que el mapeo de tipo join no se soporta mediante el API de anotaciones. Esto es debido a las limitaciones de las anotaciones en Java que no permiten referencias circulares.</td>
       </tr>
       <tr>

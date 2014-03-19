@@ -628,7 +628,7 @@ select,已映射语句(也就是映射器方
 型的实例。注意:联合映射在注解 API
 中是不支持的。这是因为 Java 注解的
 限制,不允许循环引用。
-<code>fecthType</code>, which supersedes the global configuration parameter <code>lazyLoadingEnabled</code> for this mapping.
+<code>fetchType</code>, which supersedes the global configuration parameter <code>lazyLoadingEnabled</code> for this mapping.
         </td>
       </tr>
       <tr>
@@ -638,7 +638,7 @@ select,已映射语句(也就是映射器方
         <td>A mapping to a collection property of a complex type. Attributes: <code>select</code>, which is the fully
         qualified name of a mapped statement (i.e. mapper method) that can load a collection of instances of the appropriate
         types,
-        <code>fecthType</code>, which supersedes the global configuration parameter <code>lazyLoadingEnabled</code> for this mapping. 
+        <code>fetchType</code>, which supersedes the global configuration parameter <code>lazyLoadingEnabled</code> for this mapping. 
         <span class="label important">NOTE</span> You will notice that join mapping is not supported via the
         Annotations API. This is due to the limitation in Java Annotations that does not allow for circular references.</td>
       </tr>
