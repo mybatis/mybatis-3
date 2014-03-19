@@ -1174,10 +1174,10 @@ public class User {
             <tr>
               <td><code>fetchType</code></td>
               <td>
-                Optional. Valid values are <code>lazy</code> and <code>eager</code>. If present, it supersedes
-                the global configuration parameter <code>lazyLoadingEnabled</code> for this mapping.
+                任意の属性で、グローバルな <code>lazyLoadingEnabled</code> の設定をオーバーライドする場合に指定します。
+                指定可能な値は <code>lazy</code> または <code>eager</code> です。
               </td>
-            </tr>            
+            </tr>
           </tbody>
         </table>
 

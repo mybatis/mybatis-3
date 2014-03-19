@@ -138,7 +138,7 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
               <td>
                 Lazy Loading（遅延読み込み）の有効／無効を切り替えるグローバルな設定です。
                 無効にした場合、association として指定されているデータは直ちに読み込まれます。
-                This value can be superseded for an specific relation by using the <code>fetchType</code> attribute on it.
+                association 要素で <code>fetchType</code> 属性が指定されている場合はそちらの指定が優先されます。
               </td>
               <td>
                 true | false
