@@ -318,7 +318,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
         <td><code>@CacheNamespace</code></td>
         <td><code>Class</code></td>
         <td><code>&lt;cache&gt;</code></td>
-        <td>アノテーションを付加したネームスペース（＝クラス）に対するキャッシュを設定します。キー: <code>implementation</code>, <code>eviction</code>, <code>flushInterval</code>, <code>size</code>, <code>readWrite</code></td>
+        <td>アノテーションを付加したネームスペース（＝クラス）に対するキャッシュを設定します。属性: <code>implementation</code>, <code>eviction</code>, <code>flushInterval</code>, <code>size</code>, <code>readWrite</code></td>
       </tr>
       <tr>
         <td><code>@CacheNamespaceRef</code></td>
@@ -341,7 +341,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
             <li><code>&lt;idArg&gt;</code></li>
           </ul>
         </td>
-        <td>ConstructorArgs に含まれる個々のコンストラクター引数です。キー: <code>id</code>,
+        <td>ConstructorArgs に含まれる個々のコンストラクター引数です。属性: <code>id</code>,
         <code>column</code>, <code>javaType</code>, <code>jdbcType</code>, <code>typeHandler</code>, <code>select</code>,
         <code>resultMap</code>. id は真偽値で、指定したプロパティがオブジェクトをユニークに識別できる値であることを表します。この働きは XML 要素の <code>&lt;idArg&gt;</code> に相当します。</td>
       </tr>
@@ -349,14 +349,14 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
         <td><code>@TypeDiscriminator</code></td>
         <td><code>Method</code></td>
         <td><code>&lt;discriminator&gt;</code></td>
-        <td>使用する結果マップを決定するための Case のグループを構成します。キー: <code>column</code>,
+        <td>使用する結果マップを決定するための Case のグループを構成します。属性: <code>column</code>,
         <code>javaType</code>, <code>jdbcType</code>, <code>typeHandler</code>, <code>cases</code>. case の値は <code>Case</code> の配列です。</td>
       </tr>
       <tr>
         <td><code>@Case</code></td>
         <td><code>Method</code></td>
         <td><code>&lt;case&gt;</code></td>
-        <td>値と対応するマッピングを含む個々の判定条件です。キー: <code>value</code>, <code>type</code>,
+        <td>値と対応するマッピングを含む個々の判定条件です。属性: <code>value</code>, <code>type</code>,
         <code>results</code>. results は Result の配列を値に取るので、この Case アノテーションは次に挙げる <code>Results</code> アノテーションによって定義される実際の resultMap に近いものです。</td>
       </tr>
       <tr>
@@ -374,7 +374,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
             <li><code>&lt;id&gt;</code></li>
           </ul>
         </td>
-        <td>ある結果列とプロパティまたはフィールドのマッピング情報を定義します。キー: <code>id</code>, <code>column</code>,
+        <td>ある結果列とプロパティまたはフィールドのマッピング情報を定義します。属性: <code>id</code>, <code>column</code>,
         <code>property</code>, <code>javaType</code>, <code>jdbcType</code>, <code>typeHandler</code>, <code>one</code>,
         <code>many</code>. id は真偽値で、そのプロパティがオブジェクトの比較に使うよう指示します（XML マッピングにおける id 要素とほぼ同じです）。one は XML における association 要素に、many は collection 要素に相当します（クラス名のコンフリクトを避けるため異なる名称が使われています）。</td>
       </tr>
@@ -467,7 +467,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
         <td><code>Method</code></td>
         <td><code>&lt;selectKey&gt;</code></td>
         <td>このアノテーションを <code>@Insert</code> or <code>@InsertProvider</code> が付加されたメソッドに追加することで、XML の <code>&lt;selectKey&gt;</code> に相当する機能を実現することができます（他のメソッドに追加しても無視されます）。<code>@SelectKey</code> アノテーションが指定されている場合、<code>@Options</code> アノテーションや設定プロパティによるキーの自動生成に関する設定は無視されます。
-        キー: <code>statement</code> SQL ステートメントを構成する String の配列です。 <code>keyProperty</code> は自動生成されたキーの値が設定される引数オブジェクトのプロパティを指定します。<code>before</code> insert の前にステートメントを実行する場合は true、後に実行する場合は false を指定します。<code>resultType</code> は keyProperty で指定したプロパティの Java タイプです。<code>statementType</code> はステートメントの種類で STATEMENT, PREPARED, CALLABLE のいずれかを指定します（デフォルトは PREPARED）。</td>
+        属性: <code>statement</code> SQL ステートメントを構成する String の配列です。 <code>keyProperty</code> は自動生成されたキーの値が設定される引数オブジェクトのプロパティを指定します。<code>before</code> insert の前にステートメントを実行する場合は true、後に実行する場合は false を指定します。<code>resultType</code> は keyProperty で指定したプロパティの Java タイプです。<code>statementType</code> はステートメントの種類で STATEMENT, PREPARED, CALLABLE のいずれかを指定します（デフォルトは PREPARED）。</td>
       </tr>
       <tr>
         <td><code>@ResultMap</code></td>
