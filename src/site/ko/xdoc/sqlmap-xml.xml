@@ -253,19 +253,19 @@ ps.setInt(1,id);]]></source>
             </tr>
             <tr>
               <td><code>useGeneratedKeys</code></td>
-              <td>(입력(insert)에만 적용) 데이터베이스에서 내부적으로 생성한 키(예를 들어, MySQL 또는 SQL
+              <td>(입력(insert, update)에만 적용) 데이터베이스에서 내부적으로 생성한 키(예를 들어, MySQL 또는 SQL
 Server 와 같은 RDBMS 의 자동 증가 필드)를 받는 JDBC getGeneratedKeys 메서드를
 사용하도록 설정하다. 디폴트는 false 이다.</td>
             </tr>
             <tr>
               <td><code>keyProperty</code></td>
-              <td>(입력(insert)에만 적용) getGeneratedKeys 메서드나 insert 구문의 selectKey 하위 요소에 의해
-리턴된 키를 셋팅할 프로퍼티를 지정. 디폴트는 셋팅하지 않는 것이다.</td>
+              <td>(입력(insert, update)에만 적용) getGeneratedKeys 메서드나 insert 구문의 selectKey 하위 요소에 의해
+리턴된 키를 셋팅할 프로퍼티를 지정. 디폴트는 셋팅하지 않는 것이다. Can be a comma separated list of property names if multiple generated columns are expected.</td>
             </tr>
             <tr>
               <td><code>keyColumn</code></td>
-              <td>(입력(insert)에만 적용) 생성키를 가진 테이블의 칼럼명을 셋팅. 키 칼럼이 테이블이 첫번째 칼럼이
-아닌 데이터베이스(PostgreSQL 처럼)에서만 필요하다.</td>
+              <td>(입력(insert, update)에만 적용) 생성키를 가진 테이블의 칼럼명을 셋팅. 키 칼럼이 테이블이 첫번째 칼럼이
+아닌 데이터베이스(PostgreSQL 처럼)에서만 필요하다. Can be a comma separated list of columns names if multiple generated columns are expected.</td>
             </tr>
             <tr>
               <td><code>databaseId</code></td>
@@ -341,7 +341,14 @@ Server 와 같은 RDBMS 의 자동 증가 필드)를 받는 JDBC getGeneratedKey
           <tbody>
             <tr>
               <td><code>keyProperty</code></td>
-              <td>selectKey 구문의 결과가 셋팅될 대상 프로퍼티</td>
+              <td>selectKey 구문의 결과가 셋팅될 대상 프로퍼티. Can be a comma separated list of property names if multiple generated columns are expected.</td>
+            </tr>
+            <tr>
+              <td><code>keyColumn</code></td>
+              <td>The column name(s) in the returned result set that match the properties.
+                Can be a comma separated list of column names if multiple generated columns
+                are expected.
+              </td>
             </tr>
             <tr>
               <td><code>resultType</code></td>

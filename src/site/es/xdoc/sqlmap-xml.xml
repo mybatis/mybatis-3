@@ -276,18 +276,18 @@ ps.setInt(1,id);]]></source>
             </tr>
             <tr>
               <td><code>useGeneratedKeys</code></td>
-              <td>(solo en insert) Indica a MyBatis que utilice el método getGeneratedKeys de JDBC para recuperar las claves autogeneras automáticamente por la base de datos. (ej. campos autoincrementales en SGBD como MySQL o SQL Server).  Por defecto:  false
+              <td>(solo en insert y update) Indica a MyBatis que utilice el método getGeneratedKeys de JDBC para recuperar las claves autogeneras automáticamente por la base de datos. (ej. campos autoincrementales en SGBD como MySQL o SQL Server).  Por defecto:  false
               </td>
             </tr>
             <tr>
               <td><code>keyProperty</code></td>
-              <td>(solo en insert) Indica la propiedad a la que MyBatis debe asignar la clave autogenerada devuelva por getGeneratedKeys o por un elemento hijo de tipo selectKey. Por defecto: no informado.
+              <td>(solo en insert y update) Indica la propiedad a la que MyBatis debe asignar la clave autogenerada devuelva por getGeneratedKeys o por un elemento hijo de tipo selectKey. Por defecto: no informado. Can be a comma separated list of property names if multiple generated columns are expected.
               </td>
             </tr>
             <tr>
               <td><code>keyColumn</code></td>
-              <td>(solo en insert) Indica el nombre de la columna en tabla con clave generada. Solo se requiere en algunas bases de datos (como PostgreSQL) donde la 
-              columna clave no es la primera de la tabla.
+              <td>(solo en insert y update) Indica el nombre de la columna en tabla con clave generada. Solo se requiere en algunas bases de datos (como PostgreSQL) donde la 
+              columna clave no es la primera de la tabla. Can be a comma separated list of columns names if multiple generated columns are expected.
               </td>
             </tr>
             <tr>
@@ -369,7 +369,15 @@ Por ejemplo, si la columna id de la tabla Author del ejemplo siguiente fuera aut
           <tbody>
             <tr>
               <td><code>keyProperty</code></td>
-              <td>La propiedad destino con la que debe informarse el resultado del selectKey statement.</td>
+              <td>La propiedad destino con la que debe informarse el resultado del selectKey statement. Can be a comma separated list of property names if multiple generated columns are expected.
+              </td>
+            </tr>
+            <tr>
+              <td><code>keyColumn</code></td>
+              <td>The column name(s) in the returned result set that match the properties.
+                Can be a comma separated list of column names if multiple generated columns
+                are expected.
+              </td>
             </tr>
             <tr>
               <td><code>resultType</code></td>

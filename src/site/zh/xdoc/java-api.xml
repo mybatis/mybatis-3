@@ -771,7 +771,7 @@ type,method。type 属性是类的完全限
         <td><code>Method</code></td>
         <td><code>&lt;selectKey&gt;</code></td>
         <td>This annotation duplicates the <code>&lt;selectKey&gt;</code> functionality for methods annotated with
-        <code>@Insert</code> or <code>@InsertProvider</code>. It is ignored for other methods. If you specify a
+        <code>@Insert</code>, <code>@InsertProvider</code>, <code>@Update</code> or <code>@UpdateProvider</code>. It is ignored for other methods. If you specify a
         <code>@SelectKey</code> annotation, then MyBatis will ignore any generated key properties set via the
         <code>@Options</code> annotation, or configuration properties.
         Attributes: statement an array of strings which is the SQL statement to execute, <code>keyProperty</code> which

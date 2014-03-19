@@ -466,7 +466,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
         <td><code>@SelectKey</code></td>
         <td><code>Method</code></td>
         <td><code>&lt;selectKey&gt;</code></td>
-        <td>このアノテーションを <code>@Insert</code> or <code>@InsertProvider</code> が付加されたメソッドに追加することで、XML の <code>&lt;selectKey&gt;</code> に相当する機能を実現することができます（他のメソッドに追加しても無視されます）。<code>@SelectKey</code> アノテーションが指定されている場合、<code>@Options</code> アノテーションや設定プロパティによるキーの自動生成に関する設定は無視されます。
+        <td>このアノテーションを <code>@Insert</code>, <code>@InsertProvider</code>, <code>@Update</code>, <code>@UpdateProvider</code> が付加されたメソッドに追加することで、XML の <code>&lt;selectKey&gt;</code> に相当する機能を実現することができます（他のメソッドに追加しても無視されます）。<code>@SelectKey</code> アノテーションが指定されている場合、<code>@Options</code> アノテーションや設定プロパティによるキーの自動生成に関する設定は無視されます。
         属性: <code>statement</code> SQL ステートメントを構成する String の配列です。 <code>keyProperty</code> は自動生成されたキーの値が設定される引数オブジェクトのプロパティを指定します。<code>before</code> insert の前にステートメントを実行する場合は true、後に実行する場合は false を指定します。<code>resultType</code> は keyProperty で指定したプロパティの Java タイプです。<code>statementType</code> はステートメントの種類で STATEMENT, PREPARED, CALLABLE のいずれかを指定します（デフォルトは PREPARED）。</td>
       </tr>
       <tr>

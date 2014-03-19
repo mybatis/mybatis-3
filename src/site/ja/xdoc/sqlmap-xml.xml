@@ -315,18 +315,18 @@ ps.setInt(1,id);]]></source>
             </tr>
             <tr>
               <td>useGeneratedKeys</td>
-              <td>（insert のみ）MyBatis に対して、JDBC の getGeneratedKeys メソッドを使ってデータベース側で自動生成されたキーを取得するよう指示します（例えば MySQL や SQL Server のような RDBMS における auto increment が設定された列の値が取得できます）。デフォルト値は false です。
+              <td>（insert, update のみ）MyBatis に対して、JDBC の getGeneratedKeys メソッドを使ってデータベース側で自動生成されたキーを取得するよう指示します（例えば MySQL や SQL Server のような RDBMS における auto increment が設定された列の値が取得できます）。デフォルト値は false です。
               </td>
             </tr>
             <tr>
               <td>keyProperty</td>
               <td>
-                （insert のみ）getGeneratedKeys メソッドまたは selectKey 要素で指定されたクエリによって取得したキーの値は、ここで指定したプロパティにセットされます。
+                （insert, update のみ）getGeneratedKeys メソッドまたは selectKey 要素で指定されたクエリによって取得したキーの値は、ここで指定したプロパティにセットされます。カンマ区切りでの複数指定にも対応しています。
               </td>
             </tr>
             <tr>
               <td>keyColumn</td>
-              <td>（insert のみ）テーブル内で自動生成が設定されている列の名前を指定します。この設定は、特定のデータベース（例えば PostgreSQL）で、テーブルの先頭以外の列にキーの自動生成が設定されている場合にのみ必要となります。
+              <td>（insert, update のみ）テーブル内で自動生成が設定されている列の名前を指定します。この設定は、特定のデータベース（例えば PostgreSQL）で、テーブルの先頭以外の列にキーの自動生成が設定されている場合にのみ必要となります。カンマ区切りでの複数指定にも対応しています。
               </td>
             </tr>
             <tr>
@@ -414,12 +414,16 @@ ps.setInt(1,id);]]></source>
           <tbody>
             <tr>
               <td>keyProperty</td>
-              <td>selectKey ステートメントの結果がセットされるプロパティを指定します。</td>
+              <td>selectKey ステートメントの結果がセットされるプロパティを指定します。カンマ区切りでの複数指定にも対応しています。</td>
+            </tr>
+            <tr>
+              <td>keyColumn</td>
+              <td>プロパティに対応する結果セット中の列名を指定します。カンマ区切りでの複数指定にも対応しています。</td>
             </tr>
             <tr>
               <td>resultType</td>
               <td>
-                結果の型を指定します。ほとんどの場合、MyBatis は自動的に型を推測することができますが、念のため設定しておいても害はありません。文字列も含めて、任意の単純型を指定することができます。
+                結果の型を指定します。ほとんどの場合、MyBatis は自動的に型を推測することができますが、念のため設定しておいても害はありません。文字列も含めて、任意の単純型を指定することができます。複数の列が自動生成対象となっている場合、対応するプロパティを持つクラスあるいは Map を指定することができます。
               </td>
             </tr>
             <tr>

@@ -352,7 +352,7 @@ TEMENT,PREPARED 或 CALLABLE 的一种。这会让 MyBatis
             <tr>
               <td><code>useGeneratedKeys</code></td>
               <td>
-( 仅 对 insert 有 用 ) 这 会 告 诉 MyBatis 使 用 JDBC 的
+( 仅 对 insert, update 有 用 ) 这 会 告 诉 MyBatis 使 用 JDBC 的
 getGeneratedKeys 方法来取出由数据(比如:像 MySQL 和 SQL
 Server 这样的数据库管理系统的自动递增字段)内部生成的主键。
 默认值:false。
@@ -361,23 +361,23 @@ Server 这样的数据库管理系统的自动递增字段)内部生成的主键
             <tr>
               <td><code>keyProperty</code></td>
               <td>
-(仅对 insert 有用)
+(仅对 insert, update 有用)
 标记一个属性,
 MyBatis 会通过 getGeneratedKeys
 或者通过 insert 语句的 selectKey 子元素设置它的值。
 默认:
-不设置。
+不设置。 Can be a comma separated list of property names if multiple generated columns are expected.
               </td>
             </tr>
             <tr>
               <td><code>keyColumn</code></td>
               <td>
-(仅对 insert 有用)
+(仅对 insert, update 有用)
 标记一个属性,
 MyBatis 会通过 getGeneratedKeys
 或者通过 insert 语句的 selectKey 子元素设置它的值。
 默认:
-不设置。
+不设置。 Can be a comma separated list of columns names if multiple generated columns are expected.
               </td>
             </tr>
             <tr>
@@ -474,7 +474,14 @@ selectKey 元素描述如下:
             <tr>
               <td><code>keyProperty</code></td>
               <td>
-selectKey 语句结果应该被设置的目标属性。
+selectKey 语句结果应该被设置的目标属性。 Can be a comma separated list of property names if multiple generated columns are expected.
+              </td>
+            </tr>
+            <tr>
+              <td><code>keyColumn</code></td>
+              <td>The column name(s) in the returned result set that match the properties.
+                Can be a comma separated list of column names if multiple generated columns
+                are expected.
               </td>
             </tr>
             <tr>

@@ -443,7 +443,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
         <td><code>@SelectKey</code></td>
         <td><code>Method</code></td>
         <td><code>&lt;selectKey&gt;</code></td>
-        <td>Esta anotación es igual que la &lt;selectKey&gt; para métodos anotados con @Insert o @InsertProvider. Se ignora en otros métodos. Si especificas la anotación @SelectKey, entonces MyBatis ignorará todas las propiedades de generación de claves proporcionadas por la anotación @Options, o mediante propiedades de configuración. Atributos: statement un array de strings que contienen la SQL a ejecutar, keyProperty que es la propiedad del objeto parámetro que se actualizará con el Nuevo valor, before que debe valer true o false para indicar si la sentencia SQL debe ejecutarse antes o después de la insert, resultType que es el tipo de la propiedad keyProperty, y statementType=PREPARED.</td>
+        <td>Esta anotación es igual que la &lt;selectKey&gt; para métodos anotados con @Insert, @InsertProvider, @Update o @UpdateProvider. Se ignora en otros métodos. Si especificas la anotación @SelectKey, entonces MyBatis ignorará todas las propiedades de generación de claves proporcionadas por la anotación @Options, o mediante propiedades de configuración. Atributos: statement un array de strings que contienen la SQL a ejecutar, keyProperty que es la propiedad del objeto parámetro que se actualizará con el Nuevo valor, before que debe valer true o false para indicar si la sentencia SQL debe ejecutarse antes o después de la insert, resultType que es el tipo de la propiedad keyProperty, y statementType=PREPARED.</td>
       </tr>
       <tr>
         <td><code>@ResultMap</code></td>

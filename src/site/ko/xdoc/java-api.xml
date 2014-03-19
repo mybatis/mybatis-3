@@ -585,7 +585,7 @@ Note: 이 섹션은 SelectBuilder 클래스에 대한
         <td><code>@SelectKey</code></td>
         <td><code>Method</code></td>
         <td><code>&lt;selectKey&gt;</code></td>
-        <td>이 애노테이션은 @Insert 또는 @InsertProvider
+        <td>이 애노테이션은 @Insert, @InsertProvider, @Update 또는 @UpdateProvider
                  애노테이션을 사용하는 메서드에서 &lt;selectKey&gt;와
 똑같다. 다른 메서드에서는 무시된다. @SelectKey
 애노테이션을 명시하면, MyBatis 는 @Options
