@@ -85,8 +85,7 @@ public class CacheBuilder {
     setDefaultImplementations();
     Cache cache = newBaseCacheInstance(implementation, id);
     setCacheProperties(cache);
-    // issue #352, do not apply decorators to custom caches
-    if (cache.getClass().getName().startsWith("org.apache.ibatis")) {
+    if (PerpetualCache.class.equals(cache.getClass())) { // issue #352, do not apply decorators to custom caches
       for (Class<? extends Cache> decorator : decorators) {
         cache = newCacheDecoratorInstance(decorator, cache);
         setCacheProperties(cache);
