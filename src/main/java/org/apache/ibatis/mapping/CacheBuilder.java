@@ -23,8 +23,8 @@ import java.util.Properties;
 
 import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.cache.CacheException;
-import org.apache.ibatis.cache.decorators.FifoCache;
 import org.apache.ibatis.cache.decorators.LoggingCache;
+import org.apache.ibatis.cache.decorators.LruCache;
 import org.apache.ibatis.cache.decorators.ScheduledCache;
 import org.apache.ibatis.cache.decorators.SerializedCache;
 import org.apache.ibatis.cache.decorators.SynchronizedCache;
@@ -99,7 +99,7 @@ public class CacheBuilder {
     if (implementation == null) {
       implementation = PerpetualCache.class;
       if (decorators.size() == 0) {
-        decorators.add(FifoCache.class);
+        decorators.add(LruCache.class);
       }
     }
   }
