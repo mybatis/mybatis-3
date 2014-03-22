@@ -23,6 +23,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -964,11 +965,10 @@ public class DefaultResultSetHandler implements ResultSetHandler {
 
   private Object[] fillValuesForConstructor(Constructor<?> constructor, ResultSetWrapper rsw) throws SQLException {
     List<Object> values = new ArrayList<Object>();
-    Class<?>[] parameterTypes = constructor.getParameterTypes();
-    for (int i = 0; i < parameterTypes.length; i++) {
-      Class<?> type = parameterTypes[i];
-      final String columnName = rsw.getColumnNames().get(i);
-      TypeHandler<?> typeHandler = rsw.getTypeHandler(type, columnName);
+    Iterator<String> columnNames = rsw.getColumnNames().iterator();
+    for (Class<?> parameterType : constructor.getParameterTypes()) {
+      String columnName = columnNames.next();
+      TypeHandler<?> typeHandler = rsw.getTypeHandler(parameterType, columnName);
       values.add(typeHandler.getResult(rsw.getResultSet(), columnName));
     }
     return values.toArray();
