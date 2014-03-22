@@ -67,7 +67,7 @@ public final class MappedStatement {
     public Builder(Configuration configuration, String id, SqlSource sqlSource, SqlCommandType sqlCommandType) {
       mappedStatement.configuration = configuration;
       mappedStatement.id = id;
-      mappedStatement.sqlSource = sqlSource;
+      mappedStatement.sqlSource = !configuration.isPrefixQueriesWithStatementId() ? sqlSource : new SqlSourcePrefixWrapper(configuration, "/* " + id + " */\n", sqlSource);
       mappedStatement.statementType = StatementType.PREPARED;
       mappedStatement.parameterMap = new ParameterMap.Builder(configuration, "defaultParameterMap", null, new ArrayList<ParameterMapping>()).build();
       mappedStatement.resultMaps = new ArrayList<ResultMap>();
@@ -171,7 +171,7 @@ public final class MappedStatement {
       mappedStatement.resultSets = delimitedStringtoArray(resultSet);
       return this;
     }
-    
+
     public MappedStatement build() {
       assert mappedStatement.configuration != null;
       assert mappedStatement.id != null;
@@ -179,6 +179,24 @@ public final class MappedStatement {
       assert mappedStatement.lang != null;
       mappedStatement.resultMaps = Collections.unmodifiableList(mappedStatement.resultMaps);
       return mappedStatement;
+    }
+  }
+
+  public static class SqlSourcePrefixWrapper implements SqlSource {
+	private final Configuration configuration;
+    private final String prefix;
+    private final SqlSource sqlSource;
+
+    public SqlSourcePrefixWrapper(Configuration configuration, String prefix, SqlSource sqlSource) {
+      this.configuration = configuration;
+	  this.prefix = prefix;
+      this.sqlSource = sqlSource;
+    }
+
+    @Override
+    public BoundSql getBoundSql(Object parameterObject) {
+	  BoundSql boundSql = sqlSource.getBoundSql(parameterObject);
+      return new BoundSql(configuration, prefix + boundSql.getSql(), boundSql.getParameterMappings(), boundSql.getParameterObject());
     }
   }
 
@@ -273,7 +291,7 @@ public final class MappedStatement {
   public String[] getResulSets() {
     return resultSets;
   }
-  
+
   public BoundSql getBoundSql(Object parameterObject) {
     BoundSql boundSql = sqlSource.getBoundSql(parameterObject);
     List<ParameterMapping> parameterMappings = boundSql.getParameterMappings();
