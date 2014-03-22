@@ -951,24 +951,27 @@ public class DefaultResultSetHandler implements ResultSetHandler {
   private Object createByConstructorSignature(ResultSetWrapper rsw, Class<?> resultType) throws SQLException {
     for (Constructor<?> constructor : resultType.getDeclaredConstructors()) {
       if (typeNames(constructor.getParameterTypes()).equals(rsw.getClassNames())) {
-        List<Object> values = new ArrayList<Object>();
-        Class<?>[] parameterTypes = constructor.getParameterTypes();
-        for (int i = 0; i < parameterTypes.length; i++) {
-          Class<?> type = parameterTypes[i];
-          final String columnName = rsw.getColumnNames().get(i);
-          TypeHandler<?> typeHandler = rsw.getTypeHandler(type, columnName);
-          values.add(typeHandler.getResult(rsw.getResultSet(), columnName));
-        }
-
         try {
           constructor.setAccessible(true);
-          return constructor.newInstance(values.toArray());
+          return constructor.newInstance(fillValuesForConstructor(constructor, rsw));
         } catch (ReflectiveOperationException ex) {
           throw new ReflectionException(ex);
         }
       }
     }
-    throw new ReflectionException("No constructors match");
+    throw new ReflectionException("No constructor found in " + resultType.getName() + " matching " + rsw.getClassNames());
+  }
+
+  private Object[] fillValuesForConstructor(Constructor<?> constructor, ResultSetWrapper rsw) throws SQLException {
+    List<Object> values = new ArrayList<Object>();
+    Class<?>[] parameterTypes = constructor.getParameterTypes();
+    for (int i = 0; i < parameterTypes.length; i++) {
+      Class<?> type = parameterTypes[i];
+      final String columnName = rsw.getColumnNames().get(i);
+      TypeHandler<?> typeHandler = rsw.getTypeHandler(type, columnName);
+      values.add(typeHandler.getResult(rsw.getResultSet(), columnName));
+    }
+    return values.toArray();
   }
   
   private List<String> typeNames(Class<?>[] parameterTypes) {
