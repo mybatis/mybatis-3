@@ -22,14 +22,7 @@
 
 <mapper namespace="org.apache.ibatis.submitted.immutable_constructor.ImmutablePOJOMapper">
 
-    <resultMap id="result" type="ImmutablePOJO">
-        <constructor>
-            <idArg column="id" javaType="int" />
-            <arg column="description" javaType="string" />
-        </constructor>
-    </resultMap>
-
-    <select id="getImmutablePOJO" parameterType="int" resultMap="result">
+    <select id="getImmutablePOJO" parameterType="int" resultType="ImmutablePOJO">
         SELECT
             i.id            AS id,
             i.description   AS description

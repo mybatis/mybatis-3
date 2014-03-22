@@ -15,25 +15,24 @@
  */
 package org.apache.ibatis.submitted.immutable_constructor;
 
-import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.jdbc.ScriptRunner;
-
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.sql.Connection;
 import java.sql.DriverManager;
-
-import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import static org.junit.Assert.assertEquals;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 public final class ImmutablePOJOTest {
 
     private static final Integer POJO_ID = 1;
+    private static final String POJO_DESCRIPTION = "Description of immutable";
+    
     private static SqlSessionFactory factory;
 
     @BeforeClass
@@ -71,11 +70,11 @@ public final class ImmutablePOJOTest {
             final ImmutablePOJO pojo = mapper.getImmutablePOJO(POJO_ID);
 
             assertEquals(POJO_ID, pojo.getId());
-            assertNotNull("Description should not be null.", pojo.getDescription());
-            assertFalse("Description should not be empty.", pojo.getDescription().length() == 0);
+            assertEquals(POJO_DESCRIPTION, pojo.getDescription());
         } finally {
             session.close();
         }
     }
+    
 
 }
