@@ -32,7 +32,6 @@ org.apache.ibatis.logging.nologging
 org.apache.ibatis.logging.slf4j
 org.apache.ibatis.logging.stdout
 org.apache.ibatis.mapping
-org.apache.ibatis.metadata
 org.apache.ibatis.parsing
 org.apache.ibatis.plugin
 org.apache.ibatis.reflection

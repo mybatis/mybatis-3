@@ -209,8 +209,6 @@
     <li class="api apilevel-">
   <a href="../../../../../org/apache/ibatis/mapping/package-summary.html">org.apache.ibatis.mapping</a></li>
     <li class="api apilevel-">
-  <a href="../../../../../org/apache/ibatis/metadata/package-summary.html">org.apache.ibatis.metadata</a></li>
-    <li class="api apilevel-">
   <a href="../../../../../org/apache/ibatis/parsing/package-summary.html">org.apache.ibatis.parsing</a></li>
     <li class="api apilevel-">
   <a href="../../../../../org/apache/ibatis/plugin/package-summary.html">org.apache.ibatis.plugin</a></li>
@@ -418,6 +416,9 @@ Summary:
 <div class="jd-descr">
 
 
+<h2>Class Overview</h2>
+<p>Lru (first in, first out) cache decorator</p>
+
 
 
 
@@ -513,6 +514,9 @@ Summary:
         <td class="jd-linkcol" width="100%"><nobr>
         <span class="sympad"><a href="../../../../../org/apache/ibatis/cache/decorators/LruCache.html#clear()">clear</a></span>()</nobr>
         
+        <div class="jd-descrdiv">Clears this cache instance
+</div>
+  
   </td></tr>
 
 
@@ -561,6 +565,8 @@ Summary:
         <td class="jd-linkcol" width="100%"><nobr>
         <span class="sympad"><a href="../../../../../org/apache/ibatis/cache/decorators/LruCache.html#getReadWriteLock()">getReadWriteLock</a></span>()</nobr>
         
+        <div class="jd-descrdiv">Optional.</div>
+  
   </td></tr>
 
 
@@ -577,6 +583,8 @@ Summary:
         <td class="jd-linkcol" width="100%"><nobr>
         <span class="sympad"><a href="../../../../../org/apache/ibatis/cache/decorators/LruCache.html#getSize()">getSize</a></span>()</nobr>
         
+        <div class="jd-descrdiv">Optional.</div>
+  
   </td></tr>
 
 
@@ -609,6 +617,8 @@ Summary:
         <td class="jd-linkcol" width="100%"><nobr>
         <span class="sympad"><a href="../../../../../org/apache/ibatis/cache/decorators/LruCache.html#removeObject(java.lang.Object)">removeObject</a></span>(Object key)</nobr>
         
+        <div class="jd-descrdiv">Optional.</div>
+  
   </td></tr>
 
 
@@ -877,6 +887,9 @@ From interface
         <td class="jd-linkcol" width="100%"><nobr>
         <span class="sympad"><a href="../../../../../org/apache/ibatis/cache/Cache.html#clear()">clear</a></span>()</nobr>
         
+        <div class="jd-descrdiv">Clears this cache instance
+</div>
+  
   </td></tr>
 
 
@@ -925,6 +938,8 @@ From interface
         <td class="jd-linkcol" width="100%"><nobr>
         <span class="sympad"><a href="../../../../../org/apache/ibatis/cache/Cache.html#getReadWriteLock()">getReadWriteLock</a></span>()</nobr>
         
+        <div class="jd-descrdiv">Optional.</div>
+  
   </td></tr>
 
 
@@ -941,6 +956,8 @@ From interface
         <td class="jd-linkcol" width="100%"><nobr>
         <span class="sympad"><a href="../../../../../org/apache/ibatis/cache/Cache.html#getSize()">getSize</a></span>()</nobr>
         
+        <div class="jd-descrdiv">Optional.</div>
+  
   </td></tr>
 
 
@@ -973,6 +990,8 @@ From interface
         <td class="jd-linkcol" width="100%"><nobr>
         <span class="sympad"><a href="../../../../../org/apache/ibatis/cache/Cache.html#removeObject(java.lang.Object)">removeObject</a></span>(Object key)</nobr>
         
+        <div class="jd-descrdiv">Optional.</div>
+  
   </td></tr>
 
 
@@ -1087,7 +1106,8 @@ From interface
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Clears this cache instance
+</p></div>
 
     </div>
 </div>
@@ -1180,7 +1200,14 @@ From interface
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Optional. As of 3.2.6 this method is no longer called by the core.
+  
+ Any locking needed by the cache must be provided internally by the cache provider.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>A ReadWriteLock 
+</li></ul>
+  </div>
 
     </div>
 </div>
@@ -1211,7 +1238,12 @@ From interface
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Optional. This method is not called by the core.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>The number of elements stored in the cache (not its capacity).
+</li></ul>
+  </div>
 
     </div>
 </div>
@@ -1273,7 +1305,21 @@ From interface
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Optional. It is not called by the core.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>key</td>
+          <td>The key</td>
+        </tr>
+      </table>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>The object that was removed
+</li></ul>
+  </div>
 
     </div>
 </div>

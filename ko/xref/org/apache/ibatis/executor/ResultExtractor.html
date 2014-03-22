@@ -32,36 +32,39 @@
 <a class="jxr_linenumber" name="22" href="#22">22</a>  <strong class="jxr_keyword">import</strong> java.lang.reflect.Array;
 <a class="jxr_linenumber" name="23" href="#23">23</a>  <strong class="jxr_keyword">import</strong> java.util.List;
 <a class="jxr_linenumber" name="24" href="#24">24</a>  
-<a class="jxr_linenumber" name="25" href="#25">25</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../org/apache/ibatis/executor/ResultExtractor.html">ResultExtractor</a> {
-<a class="jxr_linenumber" name="26" href="#26">26</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <a href="../../../../org/apache/ibatis/session/Configuration.html">Configuration</a> configuration;
-<a class="jxr_linenumber" name="27" href="#27">27</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <a href="../../../../org/apache/ibatis/reflection/factory/ObjectFactory.html">ObjectFactory</a> objectFactory;
-<a class="jxr_linenumber" name="28" href="#28">28</a>  
-<a class="jxr_linenumber" name="29" href="#29">29</a>    <strong class="jxr_keyword">public</strong> <a href="../../../../org/apache/ibatis/executor/ResultExtractor.html">ResultExtractor</a>(<a href="../../../../org/apache/ibatis/session/Configuration.html">Configuration</a> configuration, <a href="../../../../org/apache/ibatis/reflection/factory/ObjectFactory.html">ObjectFactory</a> objectFactory) {
-<a class="jxr_linenumber" name="30" href="#30">30</a>      <strong class="jxr_keyword">this</strong>.configuration = configuration;
-<a class="jxr_linenumber" name="31" href="#31">31</a>      <strong class="jxr_keyword">this</strong>.objectFactory = objectFactory;
-<a class="jxr_linenumber" name="32" href="#32">32</a>    }
-<a class="jxr_linenumber" name="33" href="#33">33</a>  
-<a class="jxr_linenumber" name="34" href="#34">34</a>    <strong class="jxr_keyword">public</strong> Object extractObjectFromList(List&lt;Object&gt; list, Class&lt;?&gt; targetType) {
-<a class="jxr_linenumber" name="35" href="#35">35</a>      Object value = <strong class="jxr_keyword">null</strong>;
-<a class="jxr_linenumber" name="36" href="#36">36</a>      <strong class="jxr_keyword">if</strong> (targetType != <strong class="jxr_keyword">null</strong> &amp;&amp; targetType.isAssignableFrom(list.getClass())) {
-<a class="jxr_linenumber" name="37" href="#37">37</a>        value = list;
-<a class="jxr_linenumber" name="38" href="#38">38</a>      } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (targetType != <strong class="jxr_keyword">null</strong> &amp;&amp; objectFactory.isCollection(targetType)) {
-<a class="jxr_linenumber" name="39" href="#39">39</a>        value = objectFactory.create(targetType);
-<a class="jxr_linenumber" name="40" href="#40">40</a>        <a href="../../../../org/apache/ibatis/reflection/MetaObject.html">MetaObject</a> metaObject = configuration.newMetaObject(value);
-<a class="jxr_linenumber" name="41" href="#41">41</a>        metaObject.addAll(list);
-<a class="jxr_linenumber" name="42" href="#42">42</a>      } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (targetType != <strong class="jxr_keyword">null</strong> &amp;&amp; targetType.isArray()) {
-<a class="jxr_linenumber" name="43" href="#43">43</a>        Object[] array = (Object[]) Array.newInstance(targetType.getComponentType(), list.size());
-<a class="jxr_linenumber" name="44" href="#44">44</a>        value = list.toArray(array);
-<a class="jxr_linenumber" name="45" href="#45">45</a>      } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="46" href="#46">46</a>        <strong class="jxr_keyword">if</strong> (list != <strong class="jxr_keyword">null</strong> &amp;&amp; list.size() &gt; 1) {
-<a class="jxr_linenumber" name="47" href="#47">47</a>          <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/executor/ExecutorException.html">ExecutorException</a>(<span class="jxr_string">"Statement returned more than one row, where no more than one was expected."</span>);
-<a class="jxr_linenumber" name="48" href="#48">48</a>        } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (list != <strong class="jxr_keyword">null</strong> &amp;&amp; list.size() == 1) {
-<a class="jxr_linenumber" name="49" href="#49">49</a>          value = list.get(0);
-<a class="jxr_linenumber" name="50" href="#50">50</a>        }
-<a class="jxr_linenumber" name="51" href="#51">51</a>      }
-<a class="jxr_linenumber" name="52" href="#52">52</a>      <strong class="jxr_keyword">return</strong> value;
-<a class="jxr_linenumber" name="53" href="#53">53</a>    }
-<a class="jxr_linenumber" name="54" href="#54">54</a>  }
+<a class="jxr_linenumber" name="25" href="#25">25</a>  <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="26" href="#26">26</a>  <em class="jxr_javadoccomment"> * @author Andrew Gustafson</em>
+<a class="jxr_linenumber" name="27" href="#27">27</a>  <em class="jxr_javadoccomment"> */</em>
+<a class="jxr_linenumber" name="28" href="#28">28</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../org/apache/ibatis/executor/ResultExtractor.html">ResultExtractor</a> {
+<a class="jxr_linenumber" name="29" href="#29">29</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <a href="../../../../org/apache/ibatis/session/Configuration.html">Configuration</a> configuration;
+<a class="jxr_linenumber" name="30" href="#30">30</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <a href="../../../../org/apache/ibatis/reflection/factory/ObjectFactory.html">ObjectFactory</a> objectFactory;
+<a class="jxr_linenumber" name="31" href="#31">31</a>  
+<a class="jxr_linenumber" name="32" href="#32">32</a>    <strong class="jxr_keyword">public</strong> <a href="../../../../org/apache/ibatis/executor/ResultExtractor.html">ResultExtractor</a>(<a href="../../../../org/apache/ibatis/session/Configuration.html">Configuration</a> configuration, <a href="../../../../org/apache/ibatis/reflection/factory/ObjectFactory.html">ObjectFactory</a> objectFactory) {
+<a class="jxr_linenumber" name="33" href="#33">33</a>      <strong class="jxr_keyword">this</strong>.configuration = configuration;
+<a class="jxr_linenumber" name="34" href="#34">34</a>      <strong class="jxr_keyword">this</strong>.objectFactory = objectFactory;
+<a class="jxr_linenumber" name="35" href="#35">35</a>    }
+<a class="jxr_linenumber" name="36" href="#36">36</a>  
+<a class="jxr_linenumber" name="37" href="#37">37</a>    <strong class="jxr_keyword">public</strong> Object extractObjectFromList(List&lt;Object&gt; list, Class&lt;?&gt; targetType) {
+<a class="jxr_linenumber" name="38" href="#38">38</a>      Object value = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="39" href="#39">39</a>      <strong class="jxr_keyword">if</strong> (targetType != <strong class="jxr_keyword">null</strong> &amp;&amp; targetType.isAssignableFrom(list.getClass())) {
+<a class="jxr_linenumber" name="40" href="#40">40</a>        value = list;
+<a class="jxr_linenumber" name="41" href="#41">41</a>      } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (targetType != <strong class="jxr_keyword">null</strong> &amp;&amp; objectFactory.isCollection(targetType)) {
+<a class="jxr_linenumber" name="42" href="#42">42</a>        value = objectFactory.create(targetType);
+<a class="jxr_linenumber" name="43" href="#43">43</a>        <a href="../../../../org/apache/ibatis/reflection/MetaObject.html">MetaObject</a> metaObject = configuration.newMetaObject(value);
+<a class="jxr_linenumber" name="44" href="#44">44</a>        metaObject.addAll(list);
+<a class="jxr_linenumber" name="45" href="#45">45</a>      } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (targetType != <strong class="jxr_keyword">null</strong> &amp;&amp; targetType.isArray()) {
+<a class="jxr_linenumber" name="46" href="#46">46</a>        Object[] array = (Object[]) Array.newInstance(targetType.getComponentType(), list.size());
+<a class="jxr_linenumber" name="47" href="#47">47</a>        value = list.toArray(array);
+<a class="jxr_linenumber" name="48" href="#48">48</a>      } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="49" href="#49">49</a>        <strong class="jxr_keyword">if</strong> (list != <strong class="jxr_keyword">null</strong> &amp;&amp; list.size() &gt; 1) {
+<a class="jxr_linenumber" name="50" href="#50">50</a>          <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/executor/ExecutorException.html">ExecutorException</a>(<span class="jxr_string">"Statement returned more than one row, where no more than one was expected."</span>);
+<a class="jxr_linenumber" name="51" href="#51">51</a>        } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (list != <strong class="jxr_keyword">null</strong> &amp;&amp; list.size() == 1) {
+<a class="jxr_linenumber" name="52" href="#52">52</a>          value = list.get(0);
+<a class="jxr_linenumber" name="53" href="#53">53</a>        }
+<a class="jxr_linenumber" name="54" href="#54">54</a>      }
+<a class="jxr_linenumber" name="55" href="#55">55</a>      <strong class="jxr_keyword">return</strong> value;
+<a class="jxr_linenumber" name="56" href="#56">56</a>    }
+<a class="jxr_linenumber" name="57" href="#57">57</a>  }
 </pre>
 <hr/><div id="footer">This page was automatically generated by <a href="http://maven.apache.org/">Maven</a></div></body>
 </html>

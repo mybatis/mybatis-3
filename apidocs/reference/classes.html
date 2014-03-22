@@ -208,8 +208,6 @@
     <li class="api apilevel-">
   <a href="./org/apache/ibatis/mapping/package-summary.html">org.apache.ibatis.mapping</a></li>
     <li class="api apilevel-">
-  <a href="./org/apache/ibatis/metadata/package-summary.html">org.apache.ibatis.metadata</a></li>
-    <li class="api apilevel-">
   <a href="./org/apache/ibatis/parsing/package-summary.html">org.apache.ibatis.parsing</a></li>
     <li class="api apilevel-">
   <a href="./org/apache/ibatis/plugin/package-summary.html">org.apache.ibatis.plugin</a></li>
@@ -381,7 +379,7 @@
     
         <tr class="alt-color api apilevel-" >
             <td class="jd-linkcol"><a href="./org/apache/ibatis/logging/jdbc/BaseJdbcLogger.html">BaseJdbcLogger</a></td>
-            <td class="jd-descrcol" width="100%">&nbsp;</td>
+            <td class="jd-descrcol" width="100%">Base class for proxies to do logging&nbsp;</td>
         </tr>
     
     
@@ -411,7 +409,8 @@
     
         <tr class=" api apilevel-" >
             <td class="jd-linkcol"><a href="./org/apache/ibatis/executor/BatchExecutorException.html">BatchExecutorException</a></td>
-            <td class="jd-descrcol" width="100%">&nbsp;</td>
+            <td class="jd-descrcol" width="100%">This exception is thrown if a <code>java.sql.BatchUpdateException</code> is caught
+ during the execution of any nested batch.&nbsp;</td>
         </tr>
     
     
@@ -465,7 +464,7 @@
     
         <tr class="alt-color api apilevel-" >
             <td class="jd-linkcol"><a href="./org/apache/ibatis/mapping/BoundSql.html">BoundSql</a></td>
-            <td class="jd-descrcol" width="100%">An actual SQL String got form an <code><a href="./org/apache/ibatis/mapping/SqlSource.html">SqlSource</a></code> after having processed any dynamic content.&nbsp;</td>
+            <td class="jd-descrcol" width="100%">&nbsp;</td>
         </tr>
     
     
@@ -502,7 +501,7 @@
     
         <tr class="alt-color api apilevel-" >
             <td class="jd-linkcol"><a href="./org/apache/ibatis/cache/Cache.html">Cache</a></td>
-            <td class="jd-descrcol" width="100%">&nbsp;</td>
+            <td class="jd-descrcol" width="100%">SPI for cache providers.&nbsp;</td>
         </tr>
     
     
@@ -586,7 +585,7 @@
     
         <tr class="alt-color api apilevel-" >
             <td class="jd-linkcol"><a href="./org/apache/ibatis/io/ClassLoaderWrapper.html">ClassLoaderWrapper</a></td>
-            <td class="jd-descrcol" width="100%">&nbsp;</td>
+            <td class="jd-descrcol" width="100%">A class to wrap access to multiple class loaders making them work as one&nbsp;</td>
         </tr>
     
     
@@ -603,36 +602,30 @@
     
     
         <tr class=" api apilevel-" >
-            <td class="jd-linkcol"><a href="./org/apache/ibatis/metadata/Column.html">Column</a></td>
-            <td class="jd-descrcol" width="100%">&nbsp;</td>
-        </tr>
-    
-    
-        <tr class="alt-color api apilevel-" >
             <td class="jd-linkcol"><a href="./org/apache/ibatis/session/Configuration.html">Configuration</a></td>
             <td class="jd-descrcol" width="100%">&nbsp;</td>
         </tr>
     
     
-        <tr class=" api apilevel-" >
+        <tr class="alt-color api apilevel-" >
             <td class="jd-linkcol"><a href="./org/apache/ibatis/session/Configuration.StrictMap.html">Configuration.StrictMap</a>&lt;V&gt;</td>
             <td class="jd-descrcol" width="100%">&nbsp;</td>
         </tr>
     
     
-        <tr class="alt-color api apilevel-" >
+        <tr class=" api apilevel-" >
             <td class="jd-linkcol"><a href="./org/apache/ibatis/session/Configuration.StrictMap.Ambiguity.html">Configuration.StrictMap.Ambiguity</a></td>
             <td class="jd-descrcol" width="100%">&nbsp;</td>
         </tr>
     
     
-        <tr class=" api apilevel-" >
+        <tr class="alt-color api apilevel-" >
             <td class="jd-linkcol"><a href="./org/apache/ibatis/logging/jdbc/ConnectionLogger.html">ConnectionLogger</a></td>
-            <td class="jd-descrcol" width="100%">&nbsp;</td>
+            <td class="jd-descrcol" width="100%">Connection proxy to add logging&nbsp;</td>
         </tr>
     
     
-        <tr class="alt-color api apilevel-" >
+        <tr class=" api apilevel-" >
             <td class="jd-linkcol"><a href="./org/apache/ibatis/annotations/ConstructorArgs.html">ConstructorArgs</a></td>
             <td class="jd-descrcol" width="100%">&nbsp;</td>
         </tr>
@@ -646,20 +639,8 @@
     
     
         <tr class="alt-color api apilevel-" >
-            <td class="jd-linkcol"><a href="./org/apache/ibatis/metadata/Database.html">Database</a></td>
-            <td class="jd-descrcol" width="100%">&nbsp;</td>
-        </tr>
-    
-    
-        <tr class=" api apilevel-" >
-            <td class="jd-linkcol"><a href="./org/apache/ibatis/metadata/DatabaseFactory.html">DatabaseFactory</a></td>
-            <td class="jd-descrcol" width="100%">&nbsp;</td>
-        </tr>
-    
-    
-        <tr class="alt-color api apilevel-" >
             <td class="jd-linkcol"><a href="./org/apache/ibatis/mapping/DatabaseIdProvider.html">DatabaseIdProvider</a></td>
-            <td class="jd-descrcol" width="100%">&nbsp;</td>
+            <td class="jd-descrcol" width="100%">Should return an id to identify the type of this database.&nbsp;</td>
         </tr>
     
     
@@ -894,18 +875,24 @@
     
     
         <tr class="alt-color api apilevel-" >
-            <td class="jd-linkcol"><a href="./org/apache/ibatis/cache/decorators/FifoCache.html">FifoCache</a></td>
+            <td class="jd-linkcol"><a href="./org/apache/ibatis/mapping/FetchType.html">FetchType</a></td>
             <td class="jd-descrcol" width="100%">&nbsp;</td>
         </tr>
     
     
         <tr class=" api apilevel-" >
+            <td class="jd-linkcol"><a href="./org/apache/ibatis/cache/decorators/FifoCache.html">FifoCache</a></td>
+            <td class="jd-descrcol" width="100%">FIFO (first in, first out) cache decorator&nbsp;</td>
+        </tr>
+    
+    
+        <tr class="alt-color api apilevel-" >
             <td class="jd-linkcol"><a href="./org/apache/ibatis/type/FloatTypeHandler.html">FloatTypeHandler</a></td>
             <td class="jd-descrcol" width="100%">&nbsp;</td>
         </tr>
     
     
-        <tr class="alt-color api apilevel-" >
+        <tr class=" api apilevel-" >
             <td class="jd-linkcol"><a href="./org/apache/ibatis/scripting/xmltags/ForEachSqlNode.html">ForEachSqlNode</a></td>
             <td class="jd-descrcol" width="100%">&nbsp;</td>
         </tr>
@@ -1042,13 +1029,13 @@
     
         <tr class=" api apilevel-" >
             <td class="jd-linkcol"><a href="./org/apache/ibatis/transaction/jdbc/JdbcTransaction.html">JdbcTransaction</a></td>
-            <td class="jd-descrcol" width="100%"><code><a href="./org/apache/ibatis/transaction/Transaction.html">Transaction</a></code> that makes use of the JDBC commit and rollback facilities directly.&nbsp;</td>
+            <td class="jd-descrcol" width="100%">&nbsp;</td>
         </tr>
     
     
         <tr class="alt-color api apilevel-" >
             <td class="jd-linkcol"><a href="./org/apache/ibatis/transaction/jdbc/JdbcTransactionFactory.html">JdbcTransactionFactory</a></td>
-            <td class="jd-descrcol" width="100%">Creates <code><a href="./org/apache/ibatis/transaction/jdbc/JdbcTransaction.html">JdbcTransaction</a></code> instances.&nbsp;</td>
+            <td class="jd-descrcol" width="100%">&nbsp;</td>
         </tr>
     
     
@@ -1170,7 +1157,7 @@
     
         <tr class=" api apilevel-" >
             <td class="jd-linkcol"><a href="./org/apache/ibatis/cache/decorators/LruCache.html">LruCache</a></td>
-            <td class="jd-descrcol" width="100%">&nbsp;</td>
+            <td class="jd-descrcol" width="100%">Lru (first in, first out) cache decorator&nbsp;</td>
         </tr>
     
     
@@ -1183,13 +1170,13 @@
     
         <tr class="alt-color api apilevel-" >
             <td class="jd-linkcol"><a href="./org/apache/ibatis/transaction/managed/ManagedTransaction.html">ManagedTransaction</a></td>
-            <td class="jd-descrcol" width="100%"><code><a href="./org/apache/ibatis/transaction/Transaction.html">Transaction</a></code> that lets the container manage the full lifecycle of the transaction.&nbsp;</td>
+            <td class="jd-descrcol" width="100%">&nbsp;</td>
         </tr>
     
     
         <tr class=" api apilevel-" >
             <td class="jd-linkcol"><a href="./org/apache/ibatis/transaction/managed/ManagedTransactionFactory.html">ManagedTransactionFactory</a></td>
-            <td class="jd-descrcol" width="100%">Creates <code><a href="./org/apache/ibatis/transaction/managed/ManagedTransaction.html">ManagedTransaction</a></code> instances.&nbsp;</td>
+            <td class="jd-descrcol" width="100%">&nbsp;</td>
         </tr>
     
     
@@ -1395,7 +1382,7 @@
     
         <tr class="alt-color api apilevel-" >
             <td class="jd-linkcol"><a href="./org/apache/ibatis/scripting/xmltags/OgnlCache.html">OgnlCache</a></td>
-            <td class="jd-descrcol" width="100%">Caches OGNL parsed expressions.&nbsp;</td>
+            <td class="jd-descrcol" width="100%">&nbsp;</td>
         </tr>
     
     
@@ -1426,15 +1413,13 @@
     
         <tr class=" api apilevel-" >
             <td class="jd-linkcol"><a href="./org/apache/ibatis/builder/ParameterExpression.html">ParameterExpression</a></td>
-            <td class="jd-descrcol" width="100%">Inline parameter expression parser.&nbsp;</td>
+            <td class="jd-descrcol" width="100%">&nbsp;</td>
         </tr>
     
     
         <tr class="alt-color api apilevel-" >
             <td class="jd-linkcol"><a href="./org/apache/ibatis/executor/parameter/ParameterHandler.html">ParameterHandler</a></td>
-            <td class="jd-descrcol" width="100%">A parameter handler sets the parameters of the <code>PreparedStatement</code>
-
-&nbsp;</td>
+            <td class="jd-descrcol" width="100%">A parameter handler sets the parameters of the <code>PreparedStatement</code>&nbsp;</td>
         </tr>
     
     
@@ -1500,7 +1485,7 @@
     
         <tr class=" api apilevel-" >
             <td class="jd-linkcol"><a href="./org/apache/ibatis/datasource/pooled/PooledDataSource.html">PooledDataSource</a></td>
-            <td class="jd-descrcol" width="100%">&nbsp;</td>
+            <td class="jd-descrcol" width="100%">This is a simple, synchronous, thread-safe database connection pool.&nbsp;</td>
         </tr>
     
     
@@ -1524,7 +1509,7 @@
     
         <tr class=" api apilevel-" >
             <td class="jd-linkcol"><a href="./org/apache/ibatis/logging/jdbc/PreparedStatementLogger.html">PreparedStatementLogger</a></td>
-            <td class="jd-descrcol" width="100%">&nbsp;</td>
+            <td class="jd-descrcol" width="100%">PreparedStatement proxy to add logging&nbsp;</td>
         </tr>
     
     
@@ -1624,7 +1609,7 @@
     
         <tr class="alt-color api apilevel-" >
             <td class="jd-linkcol"><a href="./org/apache/ibatis/io/Resources.html">Resources</a></td>
-            <td class="jd-descrcol" width="100%">&nbsp;</td>
+            <td class="jd-descrcol" width="100%">A class to simplify access to resources through the classloader.&nbsp;</td>
         </tr>
     
     
@@ -1726,7 +1711,7 @@
     
         <tr class=" api apilevel-" >
             <td class="jd-linkcol"><a href="./org/apache/ibatis/logging/jdbc/ResultSetLogger.html">ResultSetLogger</a></td>
-            <td class="jd-descrcol" width="100%">&nbsp;</td>
+            <td class="jd-descrcol" width="100%">ResultSet proxy to add logging&nbsp;</td>
         </tr>
     
     
@@ -1939,7 +1924,7 @@
     
         <tr class=" api apilevel-" >
             <td class="jd-linkcol"><a href="./org/apache/ibatis/session/SqlSessionFactory.html">SqlSessionFactory</a></td>
-            <td class="jd-descrcol" width="100%">&nbsp;</td>
+            <td class="jd-descrcol" width="100%">Creates an SqlSesion out of a connection or a DataSource&nbsp;</td>
         </tr>
     
     
@@ -1987,7 +1972,7 @@
     
         <tr class=" api apilevel-" >
             <td class="jd-linkcol"><a href="./org/apache/ibatis/logging/jdbc/StatementLogger.html">StatementLogger</a></td>
-            <td class="jd-descrcol" width="100%">&nbsp;</td>
+            <td class="jd-descrcol" width="100%">Statement proxy to add logging&nbsp;</td>
         </tr>
     
     
@@ -2041,108 +2026,102 @@
     
     
         <tr class="alt-color api apilevel-" >
-            <td class="jd-linkcol"><a href="./org/apache/ibatis/metadata/Table.html">Table</a></td>
-            <td class="jd-descrcol" width="100%">&nbsp;</td>
-        </tr>
-    
-    
-        <tr class=" api apilevel-" >
             <td class="jd-linkcol"><a href="./org/apache/ibatis/scripting/xmltags/TextSqlNode.html">TextSqlNode</a></td>
             <td class="jd-descrcol" width="100%">&nbsp;</td>
         </tr>
     
     
-        <tr class="alt-color api apilevel-" >
+        <tr class=" api apilevel-" >
             <td class="jd-linkcol"><a href="./org/apache/ibatis/type/TimeOnlyTypeHandler.html">TimeOnlyTypeHandler</a></td>
             <td class="jd-descrcol" width="100%">&nbsp;</td>
         </tr>
     
     
-        <tr class=" api apilevel-" >
+        <tr class="alt-color api apilevel-" >
             <td class="jd-linkcol"><a href="./org/apache/ibatis/parsing/TokenHandler.html">TokenHandler</a></td>
             <td class="jd-descrcol" width="100%">&nbsp;</td>
         </tr>
     
     
-        <tr class="alt-color api apilevel-" >
+        <tr class=" api apilevel-" >
             <td class="jd-linkcol"><a href="./org/apache/ibatis/exceptions/TooManyResultsException.html">TooManyResultsException</a></td>
             <td class="jd-descrcol" width="100%">&nbsp;</td>
         </tr>
     
     
-        <tr class=" api apilevel-" >
+        <tr class="alt-color api apilevel-" >
             <td class="jd-linkcol"><a href="./org/apache/ibatis/transaction/Transaction.html">Transaction</a></td>
             <td class="jd-descrcol" width="100%">Wraps a database connection.&nbsp;</td>
         </tr>
     
     
-        <tr class="alt-color api apilevel-" >
+        <tr class=" api apilevel-" >
             <td class="jd-linkcol"><a href="./org/apache/ibatis/cache/decorators/TransactionalCache.html">TransactionalCache</a></td>
             <td class="jd-descrcol" width="100%">&nbsp;</td>
         </tr>
     
     
-        <tr class=" api apilevel-" >
+        <tr class="alt-color api apilevel-" >
             <td class="jd-linkcol"><a href="./org/apache/ibatis/cache/TransactionalCacheManager.html">TransactionalCacheManager</a></td>
             <td class="jd-descrcol" width="100%">&nbsp;</td>
         </tr>
     
     
-        <tr class="alt-color api apilevel-" >
+        <tr class=" api apilevel-" >
             <td class="jd-linkcol"><a href="./org/apache/ibatis/transaction/TransactionException.html">TransactionException</a></td>
             <td class="jd-descrcol" width="100%">&nbsp;</td>
         </tr>
     
     
-        <tr class=" api apilevel-" >
+        <tr class="alt-color api apilevel-" >
             <td class="jd-linkcol"><a href="./org/apache/ibatis/transaction/TransactionFactory.html">TransactionFactory</a></td>
             <td class="jd-descrcol" width="100%">Creates <code><a href="./org/apache/ibatis/transaction/Transaction.html">Transaction</a></code> instances.&nbsp;</td>
         </tr>
     
     
-        <tr class="alt-color api apilevel-" >
+        <tr class=" api apilevel-" >
             <td class="jd-linkcol"><a href="./org/apache/ibatis/session/TransactionIsolationLevel.html">TransactionIsolationLevel</a></td>
             <td class="jd-descrcol" width="100%">&nbsp;</td>
         </tr>
     
     
-        <tr class=" api apilevel-" >
+        <tr class="alt-color api apilevel-" >
             <td class="jd-linkcol"><a href="./org/apache/ibatis/scripting/xmltags/TrimSqlNode.html">TrimSqlNode</a></td>
             <td class="jd-descrcol" width="100%">&nbsp;</td>
         </tr>
     
     
-        <tr class="alt-color api apilevel-" >
+        <tr class=" api apilevel-" >
             <td class="jd-linkcol"><a href="./org/apache/ibatis/type/TypeAliasRegistry.html">TypeAliasRegistry</a></td>
             <td class="jd-descrcol" width="100%">&nbsp;</td>
         </tr>
     
     
-        <tr class=" api apilevel-" >
+        <tr class="alt-color api apilevel-" >
             <td class="jd-linkcol"><a href="./org/apache/ibatis/annotations/TypeDiscriminator.html">TypeDiscriminator</a></td>
             <td class="jd-descrcol" width="100%">&nbsp;</td>
         </tr>
     
     
-        <tr class="alt-color api apilevel-" >
+        <tr class=" api apilevel-" >
             <td class="jd-linkcol"><a href="./org/apache/ibatis/type/TypeException.html">TypeException</a></td>
             <td class="jd-descrcol" width="100%">&nbsp;</td>
         </tr>
     
     
-        <tr class=" api apilevel-" >
+        <tr class="alt-color api apilevel-" >
             <td class="jd-linkcol"><a href="./org/apache/ibatis/type/TypeHandler.html">TypeHandler</a>&lt;T&gt;</td>
             <td class="jd-descrcol" width="100%">&nbsp;</td>
         </tr>
     
     
-        <tr class="alt-color api apilevel-" >
+        <tr class=" api apilevel-" >
             <td class="jd-linkcol"><a href="./org/apache/ibatis/type/TypeHandlerRegistry.html">TypeHandlerRegistry</a></td>
             <td class="jd-descrcol" width="100%">&nbsp;</td>
         </tr>
     
     
-        <tr class=" api apilevel-" >
+        <tr class="alt-color api apilevel-" >
             <td class="jd-linkcol"><a href="./org/apache/ibatis/type/TypeReference.html">TypeReference</a>&lt;T&gt;</td>
             <td class="jd-descrcol" width="100%">References a generic type.&nbsp;</td>
         </tr>
@@ -2200,7 +2179,13 @@
     
         <tr class=" api apilevel-" >
             <td class="jd-linkcol"><a href="./org/apache/ibatis/mapping/VendorDatabaseIdProvider.html">VendorDatabaseIdProvider</a></td>
-            <td class="jd-descrcol" width="100%">&nbsp;</td>
+            <td class="jd-descrcol" width="100%">Vendor DatabaseId provider
+ 
+ It returns database product name as a databaseId
+ If the user provides a properties it uses it to translate database product name
+ key="Microsoft SQL Server", value="ms" will return "ms" 
+ It can return null, if no database product name or 
+ a properties was specified and no translation was found &nbsp;</td>
         </tr>
     
     
@@ -2268,7 +2253,7 @@
     
         <tr class="alt-color api apilevel-" >
             <td class="jd-linkcol"><a href="./org/apache/ibatis/builder/xml/XMLMapperEntityResolver.html">XMLMapperEntityResolver</a></td>
-            <td class="jd-descrcol" width="100%">&nbsp;</td>
+            <td class="jd-descrcol" width="100%">Offline entity resolver for the MyBatis DTDs&nbsp;</td>
         </tr>
     
     

@@ -54,34 +54,33 @@
 <a class="jxr_linenumber" name="44" href="#44">44</a>      loader.addLoader(<span class="jxr_string">"id"</span>, <strong class="jxr_keyword">null</strong>, <strong class="jxr_keyword">null</strong>);
 <a class="jxr_linenumber" name="45" href="#45">45</a>      Object proxy = proxyFactory.createProxy(author, loader, <strong class="jxr_keyword">new</strong> Configuration(), <strong class="jxr_keyword">new</strong> DefaultObjectFactory(), <strong class="jxr_keyword">new</strong> ArrayList&lt;Class&lt;?&gt;&gt;(), <strong class="jxr_keyword">new</strong> ArrayList&lt;Object&gt;());
 <a class="jxr_linenumber" name="46" href="#46">46</a>      <a href="../../../../../domain/blog/Author.html">Author</a> author2 = (Author) deserialize(serialize((Serializable) proxy));
-<a class="jxr_linenumber" name="47" href="#47">47</a>  <em class="jxr_comment">//    assertTrue(author2.getClass().getName().contains("CGLIB"));</em>
-<a class="jxr_linenumber" name="48" href="#48">48</a>      assertTrue(author2 instanceof Proxy);
-<a class="jxr_linenumber" name="49" href="#49">49</a>    }
-<a class="jxr_linenumber" name="50" href="#50">50</a>  
-<a class="jxr_linenumber" name="51" href="#51">51</a>    @Test(expected = ExecutorException.<strong class="jxr_keyword">class</strong>)
-<a class="jxr_linenumber" name="52" href="#52">52</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldFailCallingAnUnloadedProperty() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="53" href="#53">53</a>      <em class="jxr_comment">// yes, it must go in uppercase</em>
-<a class="jxr_linenumber" name="54" href="#54">54</a>      HashMap&lt;String, ResultLoaderMap.LoadPair&gt; unloadedProperties = <strong class="jxr_keyword">new</strong> HashMap&lt;String, ResultLoaderMap.LoadPair&gt; ();
-<a class="jxr_linenumber" name="55" href="#55">55</a>      unloadedProperties.put(<span class="jxr_string">"ID"</span>, <strong class="jxr_keyword">null</strong>);
-<a class="jxr_linenumber" name="56" href="#56">56</a>      <a href="../../../../../domain/blog/Author.html">Author</a> author2 = (Author) ((JavassistProxyFactory)proxyFactory).createDeserializationProxy(author, unloadedProperties, <strong class="jxr_keyword">new</strong> DefaultObjectFactory(), <strong class="jxr_keyword">new</strong> ArrayList&lt;Class&lt;?&gt;&gt;(), <strong class="jxr_keyword">new</strong> ArrayList&lt;Object&gt;());
-<a class="jxr_linenumber" name="57" href="#57">57</a>      author2.getId();
-<a class="jxr_linenumber" name="58" href="#58">58</a>    }
-<a class="jxr_linenumber" name="59" href="#59">59</a>  
-<a class="jxr_linenumber" name="60" href="#60">60</a>    @Test
-<a class="jxr_linenumber" name="61" href="#61">61</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldLetCallALoadedProperty() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="62" href="#62">62</a>      <a href="../../../../../domain/blog/Author.html">Author</a> author2 = (Author) ((JavassistProxyFactory)proxyFactory).createDeserializationProxy(author, <strong class="jxr_keyword">new</strong> HashMap&lt;String, ResultLoaderMap.LoadPair&gt;(), <strong class="jxr_keyword">new</strong> DefaultObjectFactory(), <strong class="jxr_keyword">new</strong> ArrayList&lt;Class&lt;?&gt;&gt;(), <strong class="jxr_keyword">new</strong> ArrayList&lt;Object&gt;());
-<a class="jxr_linenumber" name="63" href="#63">63</a>      assertEquals(999, author2.getId());
-<a class="jxr_linenumber" name="64" href="#64">64</a>    }
-<a class="jxr_linenumber" name="65" href="#65">65</a>  
-<a class="jxr_linenumber" name="66" href="#66">66</a>    @Test
-<a class="jxr_linenumber" name="67" href="#67">67</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldSerizalizeADeserlizaliedProxy() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="68" href="#68">68</a>      Object proxy = ((JavassistProxyFactory)proxyFactory).createDeserializationProxy(author, <strong class="jxr_keyword">new</strong> HashMap&lt;String, ResultLoaderMap.LoadPair&gt; (), <strong class="jxr_keyword">new</strong> DefaultObjectFactory(), <strong class="jxr_keyword">new</strong> ArrayList&lt;Class&lt;?&gt;&gt;(), <strong class="jxr_keyword">new</strong> ArrayList&lt;Object&gt;());
-<a class="jxr_linenumber" name="69" href="#69">69</a>      <a href="../../../../../domain/blog/Author.html">Author</a> author2 = (Author) deserialize(serialize((Serializable) proxy));
-<a class="jxr_linenumber" name="70" href="#70">70</a>      assertEquals(author, author2);
-<a class="jxr_linenumber" name="71" href="#71">71</a>      assertFalse(author.getClass().equals(author2.getClass()));
-<a class="jxr_linenumber" name="72" href="#72">72</a>    }
-<a class="jxr_linenumber" name="73" href="#73">73</a>  
-<a class="jxr_linenumber" name="74" href="#74">74</a>  }
+<a class="jxr_linenumber" name="47" href="#47">47</a>      assertTrue(author2 instanceof Proxy);
+<a class="jxr_linenumber" name="48" href="#48">48</a>    }
+<a class="jxr_linenumber" name="49" href="#49">49</a>  
+<a class="jxr_linenumber" name="50" href="#50">50</a>    @Test(expected = ExecutorException.<strong class="jxr_keyword">class</strong>)
+<a class="jxr_linenumber" name="51" href="#51">51</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldFailCallingAnUnloadedProperty() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="52" href="#52">52</a>      <em class="jxr_comment">// yes, it must go in uppercase</em>
+<a class="jxr_linenumber" name="53" href="#53">53</a>      HashMap&lt;String, ResultLoaderMap.LoadPair&gt; unloadedProperties = <strong class="jxr_keyword">new</strong> HashMap&lt;String, ResultLoaderMap.LoadPair&gt; ();
+<a class="jxr_linenumber" name="54" href="#54">54</a>      unloadedProperties.put(<span class="jxr_string">"ID"</span>, <strong class="jxr_keyword">null</strong>);
+<a class="jxr_linenumber" name="55" href="#55">55</a>      <a href="../../../../../domain/blog/Author.html">Author</a> author2 = (Author) ((JavassistProxyFactory)proxyFactory).createDeserializationProxy(author, unloadedProperties, <strong class="jxr_keyword">new</strong> DefaultObjectFactory(), <strong class="jxr_keyword">new</strong> ArrayList&lt;Class&lt;?&gt;&gt;(), <strong class="jxr_keyword">new</strong> ArrayList&lt;Object&gt;());
+<a class="jxr_linenumber" name="56" href="#56">56</a>      author2.getId();
+<a class="jxr_linenumber" name="57" href="#57">57</a>    }
+<a class="jxr_linenumber" name="58" href="#58">58</a>  
+<a class="jxr_linenumber" name="59" href="#59">59</a>    @Test
+<a class="jxr_linenumber" name="60" href="#60">60</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldLetCallALoadedProperty() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="61" href="#61">61</a>      <a href="../../../../../domain/blog/Author.html">Author</a> author2 = (Author) ((JavassistProxyFactory)proxyFactory).createDeserializationProxy(author, <strong class="jxr_keyword">new</strong> HashMap&lt;String, ResultLoaderMap.LoadPair&gt;(), <strong class="jxr_keyword">new</strong> DefaultObjectFactory(), <strong class="jxr_keyword">new</strong> ArrayList&lt;Class&lt;?&gt;&gt;(), <strong class="jxr_keyword">new</strong> ArrayList&lt;Object&gt;());
+<a class="jxr_linenumber" name="62" href="#62">62</a>      assertEquals(999, author2.getId());
+<a class="jxr_linenumber" name="63" href="#63">63</a>    }
+<a class="jxr_linenumber" name="64" href="#64">64</a>  
+<a class="jxr_linenumber" name="65" href="#65">65</a>    @Test
+<a class="jxr_linenumber" name="66" href="#66">66</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldSerizalizeADeserlizaliedProxy() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="67" href="#67">67</a>      Object proxy = ((JavassistProxyFactory)proxyFactory).createDeserializationProxy(author, <strong class="jxr_keyword">new</strong> HashMap&lt;String, ResultLoaderMap.LoadPair&gt; (), <strong class="jxr_keyword">new</strong> DefaultObjectFactory(), <strong class="jxr_keyword">new</strong> ArrayList&lt;Class&lt;?&gt;&gt;(), <strong class="jxr_keyword">new</strong> ArrayList&lt;Object&gt;());
+<a class="jxr_linenumber" name="68" href="#68">68</a>      <a href="../../../../../domain/blog/Author.html">Author</a> author2 = (Author) deserialize(serialize((Serializable) proxy));
+<a class="jxr_linenumber" name="69" href="#69">69</a>      assertEquals(author, author2);
+<a class="jxr_linenumber" name="70" href="#70">70</a>      assertFalse(author.getClass().equals(author2.getClass()));
+<a class="jxr_linenumber" name="71" href="#71">71</a>    }
+<a class="jxr_linenumber" name="72" href="#72">72</a>  
+<a class="jxr_linenumber" name="73" href="#73">73</a>  }
 </pre>
 <hr/><div id="footer">This page was automatically generated by <a href="http://maven.apache.org/">Maven</a></div></body>
 </html>

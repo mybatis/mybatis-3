@@ -1419,6 +1419,8 @@
 </parameter>
 <parameter name="foreignColumn" type="java.lang.String">
 </parameter>
+<parameter name="lazy" type="boolean">
+</parameter>
 </method>
 <method name="getCurrentNamespace"
  return="java.lang.String"
@@ -2351,6 +2353,21 @@
  visibility="public"
 >
 </method>
+<method name="getObject"
+ return="java.lang.Object"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="cache" type="org.apache.ibatis.cache.Cache">
+</parameter>
+<parameter name="key" type="org.apache.ibatis.cache.CacheKey">
+</parameter>
+</method>
 <method name="putObject"
  return="void"
  abstract="false"
@@ -3156,7 +3173,7 @@
  return="void"
  abstract="false"
  native="false"
- synchronized="false"
+ synchronized="true"
  static="false"
  final="false"
  deprecated="not deprecated"
@@ -3178,7 +3195,7 @@
  return="java.lang.Object"
  abstract="false"
  native="false"
- synchronized="false"
+ synchronized="true"
  static="false"
  final="false"
  deprecated="not deprecated"
@@ -3202,7 +3219,7 @@
  return="int"
  abstract="false"
  native="false"
- synchronized="false"
+ synchronized="true"
  static="false"
  final="false"
  deprecated="not deprecated"
@@ -3213,7 +3230,7 @@
  return="void"
  abstract="false"
  native="false"
- synchronized="false"
+ synchronized="true"
  static="false"
  final="false"
  deprecated="not deprecated"
@@ -3228,7 +3245,7 @@
  return="java.lang.Object"
  abstract="false"
  native="false"
- synchronized="false"
+ synchronized="true"
  static="false"
  final="false"
  deprecated="not deprecated"
@@ -5648,6 +5665,19 @@
 <exception name="SQLException" type="java.sql.SQLException">
 </exception>
 </method>
+<method name="setExecutorWrapper"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="wrapper" type="org.apache.ibatis.executor.Executor">
+</parameter>
+</method>
 <method name="update"
  return="int"
  abstract="false"
@@ -5717,6 +5747,16 @@
 </field>
 <field name="transaction"
  type="org.apache.ibatis.transaction.Transaction"
+ transient="false"
+ volatile="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="protected"
+>
+</field>
+<field name="wrapper"
+ type="org.apache.ibatis.executor.Executor"
  transient="false"
  volatile="false"
  static="false"
@@ -6018,18 +6058,6 @@
 <parameter name="delegate" type="org.apache.ibatis.executor.Executor">
 </parameter>
 </constructor>
-<constructor name="CachingExecutor"
- type="org.apache.ibatis.executor.CachingExecutor"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="delegate" type="org.apache.ibatis.executor.Executor">
-</parameter>
-<parameter name="autoCommit" type="boolean">
-</parameter>
-</constructor>
 <method name="clearLocalCache"
  return="void"
  abstract="false"
@@ -6219,6 +6247,19 @@
 </parameter>
 <exception name="SQLException" type="java.sql.SQLException">
 </exception>
+</method>
+<method name="setExecutorWrapper"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="executor" type="org.apache.ibatis.executor.Executor">
+</parameter>
 </method>
 <method name="update"
  return="int"
@@ -6598,6 +6639,19 @@
 </parameter>
 <exception name="SQLException" type="java.sql.SQLException">
 </exception>
+</method>
+<method name="setExecutorWrapper"
+ return="void"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="executor" type="org.apache.ibatis.executor.Executor">
+</parameter>
 </method>
 <method name="update"
  return="int"
@@ -10893,7 +10947,7 @@
  abstract="false"
  static="false"
  final="false"
- deprecated="deprecated"
+ deprecated="not deprecated"
  visibility="public"
 >
 <constructor name="SqlBuilder"
@@ -11755,6 +11809,8 @@
 >
 <parameter name="log" type="org.apache.ibatis.logging.Log">
 </parameter>
+<parameter name="queryStack" type="int">
+</parameter>
 </constructor>
 <method name="clearColumnInfo"
  return="void"
@@ -11778,6 +11834,8 @@
  visibility="protected"
 >
 <parameter name="text" type="java.lang.String">
+</parameter>
+<parameter name="input" type="boolean">
 </parameter>
 </method>
 <method name="getColumn"
@@ -11813,17 +11871,6 @@
  final="false"
  deprecated="not deprecated"
  visibility="protected"
->
-</method>
-<method name="getStatementLog"
- return="org.apache.ibatis.logging.Log"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
 >
 </method>
 <method name="isDebugEnabled"
@@ -11888,6 +11935,8 @@
 >
 <parameter name="text" type="java.lang.String">
 </parameter>
+<parameter name="input" type="boolean">
+</parameter>
 </method>
 <field name="EXECUTE_METHODS"
  type="java.util.Set"
@@ -11905,6 +11954,26 @@
  volatile="false"
  static="true"
  final="true"
+ deprecated="not deprecated"
+ visibility="protected"
+>
+</field>
+<field name="queryStack"
+ type="int"
+ transient="false"
+ volatile="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="protected"
+>
+</field>
+<field name="statementLog"
+ type="org.apache.ibatis.logging.Log"
+ transient="false"
+ volatile="false"
+ static="false"
+ final="false"
  deprecated="not deprecated"
  visibility="protected"
 >
@@ -11962,6 +12031,8 @@
 </parameter>
 <parameter name="statementLog" type="org.apache.ibatis.logging.Log">
 </parameter>
+<parameter name="queryStack" type="int">
+</parameter>
 </method>
 </class>
 <class name="PreparedStatementLogger"
@@ -12015,6 +12086,8 @@
 <parameter name="stmt" type="java.sql.PreparedStatement">
 </parameter>
 <parameter name="statementLog" type="org.apache.ibatis.logging.Log">
+</parameter>
+<parameter name="queryStack" type="int">
 </parameter>
 </method>
 </class>
@@ -12070,6 +12143,8 @@
 </parameter>
 <parameter name="statementLog" type="org.apache.ibatis.logging.Log">
 </parameter>
+<parameter name="queryStack" type="int">
+</parameter>
 </method>
 </class>
 <class name="StatementLogger"
@@ -12123,6 +12198,8 @@
 <parameter name="stmt" type="java.sql.Statement">
 </parameter>
 <parameter name="statementLog" type="org.apache.ibatis.logging.Log">
+</parameter>
+<parameter name="queryStack" type="int">
 </parameter>
 </method>
 </class>
@@ -13488,6 +13565,39 @@
 </parameter>
 </method>
 </class>
+<class name="FetchType"
+ extends="java.lang.Enum"
+ abstract="false"
+ static="false"
+ final="true"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<method name="valueOf"
+ return="org.apache.ibatis.mapping.FetchType"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="name" type="java.lang.String">
+</parameter>
+</method>
+<method name="values"
+ return="org.apache.ibatis.mapping.FetchType[]"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="true"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+</class>
 <class name="MappedStatement"
  extends="java.lang.Object"
  abstract="false"
@@ -14827,6 +14937,17 @@
  visibility="public"
 >
 </method>
+<method name="isLazy"
+ return="boolean"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
 <method name="setForeignColumn"
  return="void"
  abstract="false"
@@ -14838,6 +14959,19 @@
  visibility="public"
 >
 <parameter name="foreignColumn" type="java.lang.String">
+</parameter>
+</method>
+<method name="setLazy"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="lazy" type="boolean">
 </parameter>
 </method>
 </class>
@@ -14993,6 +15127,19 @@
  visibility="public"
 >
 <parameter name="jdbcType" type="org.apache.ibatis.type.JdbcType">
+</parameter>
+</method>
+<method name="lazy"
+ return="org.apache.ibatis.mapping.ResultMapping.Builder"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="lazy" type="boolean">
 </parameter>
 </method>
 <method name="nestedQueryId"
@@ -15234,299 +15381,6 @@
  visibility="public"
 >
 <parameter name="p" type="java.util.Properties">
-</parameter>
-</method>
-</class>
-</package>
-<package name="org.apache.ibatis.metadata"
->
-<class name="Column"
- extends="java.lang.Object"
- abstract="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<constructor name="Column"
- type="org.apache.ibatis.metadata.Column"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="name" type="java.lang.String">
-</parameter>
-<parameter name="type" type="int">
-</parameter>
-</constructor>
-<method name="getName"
- return="java.lang.String"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</method>
-<method name="getType"
- return="int"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</method>
-</class>
-<class name="Database"
- extends="java.lang.Object"
- abstract="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<constructor name="Database"
- type="org.apache.ibatis.metadata.Database"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="catalog" type="java.lang.String">
-</parameter>
-<parameter name="schema" type="java.lang.String">
-</parameter>
-</constructor>
-<method name="addTable"
- return="void"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="table" type="org.apache.ibatis.metadata.Table">
-</parameter>
-</method>
-<method name="getCatalog"
- return="java.lang.String"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</method>
-<method name="getSchema"
- return="java.lang.String"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</method>
-<method name="getTable"
- return="org.apache.ibatis.metadata.Table"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="name" type="java.lang.String">
-</parameter>
-</method>
-<method name="getTableNames"
- return="java.lang.String[]"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</method>
-</class>
-<class name="DatabaseFactory"
- extends="java.lang.Object"
- abstract="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<method name="newDatabase"
- return="org.apache.ibatis.metadata.Database"
- abstract="false"
- native="false"
- synchronized="false"
- static="true"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="conn" type="java.sql.Connection">
-</parameter>
-<parameter name="catalogFilter" type="java.lang.String">
-</parameter>
-<parameter name="schemaFilter" type="java.lang.String">
-</parameter>
-<exception name="SQLException" type="java.sql.SQLException">
-</exception>
-</method>
-</class>
-<class name="Table"
- extends="java.lang.Object"
- abstract="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<constructor name="Table"
- type="org.apache.ibatis.metadata.Table"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="name" type="java.lang.String">
-</parameter>
-</constructor>
-<method name="addColumn"
- return="void"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="col" type="org.apache.ibatis.metadata.Column">
-</parameter>
-</method>
-<method name="getCatalog"
- return="java.lang.String"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</method>
-<method name="getColumn"
- return="org.apache.ibatis.metadata.Column"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="name" type="java.lang.String">
-</parameter>
-</method>
-<method name="getColumnNames"
- return="java.lang.String[]"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</method>
-<method name="getName"
- return="java.lang.String"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</method>
-<method name="getPrimaryKey"
- return="org.apache.ibatis.metadata.Column"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</method>
-<method name="getSchema"
- return="java.lang.String"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</method>
-<method name="setCatalog"
- return="void"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="catalog" type="java.lang.String">
-</parameter>
-</method>
-<method name="setPrimaryKey"
- return="void"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="column" type="org.apache.ibatis.metadata.Column">
-</parameter>
-</method>
-<method name="setSchema"
- return="void"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="schema" type="java.lang.String">
 </parameter>
 </method>
 </class>
@@ -21318,23 +21172,6 @@
 <parameter name="executorType" type="org.apache.ibatis.session.ExecutorType">
 </parameter>
 </method>
-<method name="newExecutor"
- return="org.apache.ibatis.executor.Executor"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="transaction" type="org.apache.ibatis.transaction.Transaction">
-</parameter>
-<parameter name="executorType" type="org.apache.ibatis.session.ExecutorType">
-</parameter>
-<parameter name="autoCommit" type="boolean">
-</parameter>
-</method>
 <method name="newMetaObject"
  return="org.apache.ibatis.reflection.MetaObject"
  abstract="false"
@@ -23992,7 +23829,7 @@
  type="org.apache.ibatis.session.defaults.DefaultSqlSession"
  static="false"
  final="false"
- deprecated="deprecated"
+ deprecated="not deprecated"
  visibility="public"
 >
 <parameter name="configuration" type="org.apache.ibatis.session.Configuration">

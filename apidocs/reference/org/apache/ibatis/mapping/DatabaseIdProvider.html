@@ -209,8 +209,6 @@
     <li class="selected api apilevel-">
   <a href="../../../../org/apache/ibatis/mapping/package-summary.html">org.apache.ibatis.mapping</a></li>
     <li class="api apilevel-">
-  <a href="../../../../org/apache/ibatis/metadata/package-summary.html">org.apache.ibatis.metadata</a></li>
-    <li class="api apilevel-">
   <a href="../../../../org/apache/ibatis/parsing/package-summary.html">org.apache.ibatis.parsing</a></li>
     <li class="api apilevel-">
   <a href="../../../../org/apache/ibatis/plugin/package-summary.html">org.apache.ibatis.plugin</a></li>
@@ -281,6 +279,7 @@
               
     <li><h2>Enums</h2>
       <ul>
+          <li class="api apilevel-"><a href="../../../../org/apache/ibatis/mapping/FetchType.html">FetchType</a></li>
           <li class="api apilevel-"><a href="../../../../org/apache/ibatis/mapping/ParameterMode.html">ParameterMode</a></li>
           <li class="api apilevel-"><a href="../../../../org/apache/ibatis/mapping/ResultFlag.html">ResultFlag</a></li>
           <li class="api apilevel-"><a href="../../../../org/apache/ibatis/mapping/ResultSetType.html">ResultSetType</a></li>
@@ -429,7 +428,13 @@ Summary:
           </tr>
         <tr class=" api apilevel-" >
               <td class="jd-linkcol"><a href="../../../../org/apache/ibatis/mapping/VendorDatabaseIdProvider.html">VendorDatabaseIdProvider</a></td>
-              <td class="jd-descrcol" width="100%">&nbsp;</td>
+              <td class="jd-descrcol" width="100%">Vendor DatabaseId provider
+ 
+ It returns database product name as a databaseId
+ If the user provides a properties it uses it to translate database product name
+ key="Microsoft SQL Server", value="ms" will return "ms" 
+ It can return null, if no database product name or 
+ a properties was specified and no translation was found &nbsp;</td>
           </tr>
   </table>
       </div>
@@ -439,6 +444,11 @@ Summary:
 
 <div class="jd-descr">
 
+
+<h2>Class Overview</h2>
+<p>Should return an id to identify the type of this database.
+ That id can be used later on to build different queries for each database type
+ This mechanism enables supporting multiple vendors or versions</p>
 
 
 

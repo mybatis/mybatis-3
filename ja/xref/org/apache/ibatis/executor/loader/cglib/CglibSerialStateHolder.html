@@ -32,28 +32,31 @@
 <a class="jxr_linenumber" name="22" href="#22">22</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.executor.loader.ResultLoaderMap;
 <a class="jxr_linenumber" name="23" href="#23">23</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.reflection.factory.ObjectFactory;
 <a class="jxr_linenumber" name="24" href="#24">24</a>  
-<a class="jxr_linenumber" name="25" href="#25">25</a>  <strong class="jxr_keyword">class</strong> <a href="../../../../../../org/apache/ibatis/executor/loader/cglib/CglibSerialStateHolder.html">CglibSerialStateHolder</a> <strong class="jxr_keyword">extends</strong> <a href="../../../../../../org/apache/ibatis/executor/loader/AbstractSerialStateHolder.html">AbstractSerialStateHolder</a> {
-<a class="jxr_linenumber" name="26" href="#26">26</a>  
-<a class="jxr_linenumber" name="27" href="#27">27</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">long</strong> serialVersionUID = 8940388717901644661L;
-<a class="jxr_linenumber" name="28" href="#28">28</a>  
-<a class="jxr_linenumber" name="29" href="#29">29</a>    <strong class="jxr_keyword">public</strong> <a href="../../../../../../org/apache/ibatis/executor/loader/cglib/CglibSerialStateHolder.html">CglibSerialStateHolder</a>() {
-<a class="jxr_linenumber" name="30" href="#30">30</a>    }
+<a class="jxr_linenumber" name="25" href="#25">25</a>  <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="26" href="#26">26</a>  <em class="jxr_javadoccomment"> * @author Eduardo Macarron</em>
+<a class="jxr_linenumber" name="27" href="#27">27</a>  <em class="jxr_javadoccomment"> */</em>
+<a class="jxr_linenumber" name="28" href="#28">28</a>  <strong class="jxr_keyword">class</strong> <a href="../../../../../../org/apache/ibatis/executor/loader/cglib/CglibSerialStateHolder.html">CglibSerialStateHolder</a> <strong class="jxr_keyword">extends</strong> <a href="../../../../../../org/apache/ibatis/executor/loader/AbstractSerialStateHolder.html">AbstractSerialStateHolder</a> {
+<a class="jxr_linenumber" name="29" href="#29">29</a>  
+<a class="jxr_linenumber" name="30" href="#30">30</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">long</strong> serialVersionUID = 8940388717901644661L;
 <a class="jxr_linenumber" name="31" href="#31">31</a>  
-<a class="jxr_linenumber" name="32" href="#32">32</a>    <strong class="jxr_keyword">public</strong> <a href="../../../../../../org/apache/ibatis/executor/loader/cglib/CglibSerialStateHolder.html">CglibSerialStateHolder</a>(
-<a class="jxr_linenumber" name="33" href="#33">33</a>            <strong class="jxr_keyword">final</strong> Object userBean,
-<a class="jxr_linenumber" name="34" href="#34">34</a>            <strong class="jxr_keyword">final</strong> Map&lt;String, ResultLoaderMap.LoadPair&gt; unloadedProperties,
-<a class="jxr_linenumber" name="35" href="#35">35</a>            <strong class="jxr_keyword">final</strong> <a href="../../../../../../org/apache/ibatis/reflection/factory/ObjectFactory.html">ObjectFactory</a> objectFactory,
-<a class="jxr_linenumber" name="36" href="#36">36</a>            List&lt;Class&lt;?&gt;&gt; constructorArgTypes,
-<a class="jxr_linenumber" name="37" href="#37">37</a>            List&lt;Object&gt; constructorArgs) {
-<a class="jxr_linenumber" name="38" href="#38">38</a>      <strong class="jxr_keyword">super</strong>(userBean, unloadedProperties, objectFactory, constructorArgTypes, constructorArgs);
-<a class="jxr_linenumber" name="39" href="#39">39</a>    }
-<a class="jxr_linenumber" name="40" href="#40">40</a>  
-<a class="jxr_linenumber" name="41" href="#41">41</a>    @Override
-<a class="jxr_linenumber" name="42" href="#42">42</a>    <strong class="jxr_keyword">protected</strong> Object createDeserializationProxy(Object target, Map&lt;String, ResultLoaderMap.LoadPair&gt; unloadedProperties, <a href="../../../../../../org/apache/ibatis/reflection/factory/ObjectFactory.html">ObjectFactory</a> objectFactory,
-<a class="jxr_linenumber" name="43" href="#43">43</a>            List&lt;Class&lt;?&gt;&gt; constructorArgTypes, List&lt;Object&gt; constructorArgs) {
-<a class="jxr_linenumber" name="44" href="#44">44</a>      <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../../org/apache/ibatis/executor/loader/CglibProxyFactory.html">CglibProxyFactory</a>().createDeserializationProxy(target, unloadedProperties, objectFactory, constructorArgTypes, constructorArgs);
-<a class="jxr_linenumber" name="45" href="#45">45</a>    }
-<a class="jxr_linenumber" name="46" href="#46">46</a>  }
+<a class="jxr_linenumber" name="32" href="#32">32</a>    <strong class="jxr_keyword">public</strong> <a href="../../../../../../org/apache/ibatis/executor/loader/cglib/CglibSerialStateHolder.html">CglibSerialStateHolder</a>() {
+<a class="jxr_linenumber" name="33" href="#33">33</a>    }
+<a class="jxr_linenumber" name="34" href="#34">34</a>  
+<a class="jxr_linenumber" name="35" href="#35">35</a>    <strong class="jxr_keyword">public</strong> <a href="../../../../../../org/apache/ibatis/executor/loader/cglib/CglibSerialStateHolder.html">CglibSerialStateHolder</a>(
+<a class="jxr_linenumber" name="36" href="#36">36</a>            <strong class="jxr_keyword">final</strong> Object userBean,
+<a class="jxr_linenumber" name="37" href="#37">37</a>            <strong class="jxr_keyword">final</strong> Map&lt;String, ResultLoaderMap.LoadPair&gt; unloadedProperties,
+<a class="jxr_linenumber" name="38" href="#38">38</a>            <strong class="jxr_keyword">final</strong> <a href="../../../../../../org/apache/ibatis/reflection/factory/ObjectFactory.html">ObjectFactory</a> objectFactory,
+<a class="jxr_linenumber" name="39" href="#39">39</a>            List&lt;Class&lt;?&gt;&gt; constructorArgTypes,
+<a class="jxr_linenumber" name="40" href="#40">40</a>            List&lt;Object&gt; constructorArgs) {
+<a class="jxr_linenumber" name="41" href="#41">41</a>      <strong class="jxr_keyword">super</strong>(userBean, unloadedProperties, objectFactory, constructorArgTypes, constructorArgs);
+<a class="jxr_linenumber" name="42" href="#42">42</a>    }
+<a class="jxr_linenumber" name="43" href="#43">43</a>  
+<a class="jxr_linenumber" name="44" href="#44">44</a>    @Override
+<a class="jxr_linenumber" name="45" href="#45">45</a>    <strong class="jxr_keyword">protected</strong> Object createDeserializationProxy(Object target, Map&lt;String, ResultLoaderMap.LoadPair&gt; unloadedProperties, <a href="../../../../../../org/apache/ibatis/reflection/factory/ObjectFactory.html">ObjectFactory</a> objectFactory,
+<a class="jxr_linenumber" name="46" href="#46">46</a>            List&lt;Class&lt;?&gt;&gt; constructorArgTypes, List&lt;Object&gt; constructorArgs) {
+<a class="jxr_linenumber" name="47" href="#47">47</a>      <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../../org/apache/ibatis/executor/loader/CglibProxyFactory.html">CglibProxyFactory</a>().createDeserializationProxy(target, unloadedProperties, objectFactory, constructorArgTypes, constructorArgs);
+<a class="jxr_linenumber" name="48" href="#48">48</a>    }
+<a class="jxr_linenumber" name="49" href="#49">49</a>  }
 </pre>
 <hr/><div id="footer">This page was automatically generated by <a href="http://maven.apache.org/">Maven</a></div></body>
 </html>

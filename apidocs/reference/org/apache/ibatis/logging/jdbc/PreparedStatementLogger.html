@@ -209,8 +209,6 @@
     <li class="api apilevel-">
   <a href="../../../../../org/apache/ibatis/mapping/package-summary.html">org.apache.ibatis.mapping</a></li>
     <li class="api apilevel-">
-  <a href="../../../../../org/apache/ibatis/metadata/package-summary.html">org.apache.ibatis.metadata</a></li>
-    <li class="api apilevel-">
   <a href="../../../../../org/apache/ibatis/parsing/package-summary.html">org.apache.ibatis.parsing</a></li>
     <li class="api apilevel-">
   <a href="../../../../../org/apache/ibatis/plugin/package-summary.html">org.apache.ibatis.plugin</a></li>
@@ -306,6 +304,8 @@
    
   
   
+   
+  
   
 
   
@@ -336,6 +336,9 @@ Summary:
   
 
 
+
+  &#124; <a href="#inhfields">Inherited Fields</a>
+  
 
 
 
@@ -436,6 +439,9 @@ Summary:
 <div class="jd-descr">
 
 
+<h2>Class Overview</h2>
+<p>PreparedStatement proxy to add logging</p>
+
 
 
 
@@ -532,6 +538,64 @@ Summary:
 
 
 
+<!-- =========== FIELD SUMMARY =========== -->
+<table id="inhfields" class="jd-sumtable"><tr><th>
+  <a href="#" class="toggle-all" onclick="return toggleAllInherited(this, null)">[Expand]</a>
+  <div style="clear:left;">Inherited Fields</div></th></tr>
+
+
+<tr class="api apilevel-" >
+<td colspan="12">
+
+  <a href="#" onclick="return toggleInherited(this, null)" id="inherited-fields-org.apache.ibatis.logging.jdbc.BaseJdbcLogger" class="jd-expando-trigger closed"
+          ><img id="inherited-fields-org.apache.ibatis.logging.jdbc.BaseJdbcLogger-trigger"
+          src="../../../../../../assets/images/triangle-closed.png"
+          class="jd-expando-trigger-img" /></a>From class
+<a href="../../../../../org/apache/ibatis/logging/jdbc/BaseJdbcLogger.html">org.apache.ibatis.logging.jdbc.BaseJdbcLogger</a>
+<div id="inherited-fields-org.apache.ibatis.logging.jdbc.BaseJdbcLogger">
+  <div id="inherited-fields-org.apache.ibatis.logging.jdbc.BaseJdbcLogger-list"
+        class="jd-inheritedlinks">
+  </div>
+  <div id="inherited-fields-org.apache.ibatis.logging.jdbc.BaseJdbcLogger-summary" style="display: none;">
+    <table class="jd-sumtable-expando">
+    
+
+    
+      <tr class="alt-color api apilevel-" >
+          <td class="jd-typecol"><nobr>
+          protected
+          
+          
+          int</nobr></td>
+          <td class="jd-linkcol"><a href="../../../../../org/apache/ibatis/logging/jdbc/BaseJdbcLogger.html#queryStack">queryStack</a></td>
+          <td class="jd-descrcol" width="100%"></td>
+      </tr>
+      
+    
+      <tr class=" api apilevel-" >
+          <td class="jd-typecol"><nobr>
+          protected
+          
+          
+          <a href="../../../../../org/apache/ibatis/logging/Log.html">Log</a></nobr></td>
+          <td class="jd-linkcol"><a href="../../../../../org/apache/ibatis/logging/jdbc/BaseJdbcLogger.html#statementLog">statementLog</a></td>
+          <td class="jd-descrcol" width="100%"></td>
+      </tr>
+      
+    
+</table>
+  </div>
+</div>
+</td></tr>
+
+
+
+
+
+
+</table>
+
+
 
 
 
@@ -586,7 +650,7 @@ Summary:
             PreparedStatement</nobr>
         </td>
         <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../../org/apache/ibatis/logging/jdbc/PreparedStatementLogger.html#newInstance(java.sql.PreparedStatement, org.apache.ibatis.logging.Log)">newInstance</a></span>(PreparedStatement stmt, <a href="../../../../../org/apache/ibatis/logging/Log.html">Log</a> statementLog)</nobr>
+        <span class="sympad"><a href="../../../../../org/apache/ibatis/logging/jdbc/PreparedStatementLogger.html#newInstance(java.sql.PreparedStatement, org.apache.ibatis.logging.Log, int)">newInstance</a></span>(PreparedStatement stmt, <a href="../../../../../org/apache/ibatis/logging/Log.html">Log</a> statementLog, int queryStack)</nobr>
         
   </td></tr>
 
@@ -652,7 +716,7 @@ From class
             void</nobr>
         </td>
         <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../../org/apache/ibatis/logging/jdbc/BaseJdbcLogger.html#debug(java.lang.String)">debug</a></span>(String text)</nobr>
+        <span class="sympad"><a href="../../../../../org/apache/ibatis/logging/jdbc/BaseJdbcLogger.html#debug(java.lang.String, boolean)">debug</a></span>(String text, boolean input)</nobr>
         
   </td></tr>
 
@@ -713,22 +777,6 @@ From class
             
             
             
-            <a href="../../../../../org/apache/ibatis/logging/Log.html">Log</a></nobr>
-        </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../../org/apache/ibatis/logging/jdbc/BaseJdbcLogger.html#getStatementLog()">getStatementLog</a></span>()</nobr>
-        
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><nobr>
-            
-            
-            
-            
-            
             boolean</nobr>
         </td>
         <td class="jd-linkcol" width="100%"><nobr>
@@ -738,7 +786,7 @@ From class
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol"><nobr>
             
             
@@ -754,7 +802,7 @@ From class
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol"><nobr>
             
             
@@ -770,7 +818,7 @@ From class
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol"><nobr>
             
             
@@ -786,7 +834,7 @@ From class
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol"><nobr>
             
             
@@ -796,7 +844,7 @@ From class
             void</nobr>
         </td>
         <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../../org/apache/ibatis/logging/jdbc/BaseJdbcLogger.html#trace(java.lang.String)">trace</a></span>(String text)</nobr>
+        <span class="sympad"><a href="../../../../../org/apache/ibatis/logging/jdbc/BaseJdbcLogger.html#trace(java.lang.String, boolean)">trace</a></span>(String text, boolean input)</nobr>
         
   </td></tr>
 
@@ -1164,7 +1212,7 @@ From interface
 </div>
 
 
-<A NAME="newInstance(java.sql.PreparedStatement, org.apache.ibatis.logging.Log)"></A>
+<A NAME="newInstance(java.sql.PreparedStatement, org.apache.ibatis.logging.Log, int)"></A>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1177,7 +1225,7 @@ From interface
         PreparedStatement
       </span>
       <span class="sympad">newInstance</span>
-      <span class="normal">(PreparedStatement stmt, <a href="../../../../../org/apache/ibatis/logging/Log.html">Log</a> statementLog)</span>
+      <span class="normal">(PreparedStatement stmt, <a href="../../../../../org/apache/ibatis/logging/Log.html">Log</a> statementLog, int queryStack)</span>
     </h4>
       <div class="api-level">
         <div>

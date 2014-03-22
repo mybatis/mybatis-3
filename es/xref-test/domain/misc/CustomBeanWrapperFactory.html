@@ -25,15 +25,15 @@
 <a class="jxr_linenumber" name="15" href="#15">15</a>  <em class="jxr_comment"> */</em>
 <a class="jxr_linenumber" name="16" href="#16">16</a>  <strong class="jxr_keyword">package</strong> domain.misc;
 <a class="jxr_linenumber" name="17" href="#17">17</a>  
-<a class="jxr_linenumber" name="18" href="#18">18</a>  <strong class="jxr_keyword">import</strong> domain.jpetstore.Product;
-<a class="jxr_linenumber" name="19" href="#19">19</a>  
-<a class="jxr_linenumber" name="20" href="#20">20</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.reflection.MetaObject;
-<a class="jxr_linenumber" name="21" href="#21">21</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.reflection.wrapper.ObjectWrapper;
-<a class="jxr_linenumber" name="22" href="#22">22</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.reflection.wrapper.ObjectWrapperFactory;
+<a class="jxr_linenumber" name="18" href="#18">18</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.reflection.MetaObject;
+<a class="jxr_linenumber" name="19" href="#19">19</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.reflection.wrapper.ObjectWrapper;
+<a class="jxr_linenumber" name="20" href="#20">20</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.reflection.wrapper.ObjectWrapperFactory;
+<a class="jxr_linenumber" name="21" href="#21">21</a>  
+<a class="jxr_linenumber" name="22" href="#22">22</a>  <strong class="jxr_keyword">import</strong> domain.blog.Author;
 <a class="jxr_linenumber" name="23" href="#23">23</a>  
 <a class="jxr_linenumber" name="24" href="#24">24</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a href="../../domain/misc/CustomBeanWrapperFactory.html">CustomBeanWrapperFactory</a> <strong class="jxr_keyword">implements</strong> ObjectWrapperFactory {
 <a class="jxr_linenumber" name="25" href="#25">25</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> hasWrapperFor(Object object) {
-<a class="jxr_linenumber" name="26" href="#26">26</a>      <strong class="jxr_keyword">if</strong> (object instanceof Product) {
+<a class="jxr_linenumber" name="26" href="#26">26</a>      <strong class="jxr_keyword">if</strong> (object instanceof Author) {
 <a class="jxr_linenumber" name="27" href="#27">27</a>        <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">true</strong>;
 <a class="jxr_linenumber" name="28" href="#28">28</a>      } <strong class="jxr_keyword">else</strong> {
 <a class="jxr_linenumber" name="29" href="#29">29</a>        <strong class="jxr_keyword">return</strong> false;
