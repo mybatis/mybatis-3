@@ -526,10 +526,13 @@ public class DefaultResultSetHandler implements ResultSetHandler {
       return createPrimitiveResultObject(rsw, resultMap, columnPrefix);
     } else if (constructorMappings.size() > 0) {
       return createParameterizedResultObject(rsw, resultType, constructorMappings, constructorArgTypes, constructorArgs, columnPrefix);
-    } else if (hasDefaultConstructor(resultType)) {
-      return objectFactory.create(resultType);
     } else {
-      return createByConstructorSignature(rsw, resultType);
+      try {
+        return objectFactory.create(resultType);
+      } catch (Exception ex) {
+        return createByConstructorSignature(rsw, resultType);
+      }
+      
     }
   }
 
