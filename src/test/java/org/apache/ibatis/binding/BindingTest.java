@@ -191,6 +191,20 @@ public class BindingTest {
   }
 
   @Test
+  public void shouldGetBlogsWithAuthors() {
+    SqlSession session = sqlSessionFactory.openSession();
+    try {
+      BoundBlogMapper mapper = session.getMapper(BoundBlogMapper.class);
+      List<Blog> blogs = mapper.selectBlogsWithAutors();
+      assertEquals(2, blogs.size());
+      assertEquals(101, blogs.get(0).getAuthor().getId());
+      assertEquals(102, blogs.get(1).getAuthor().getId());
+    } finally {
+      session.close();
+    }
+  }
+  
+  @Test
   public void shouldExecuteBoundSelectMapOfBlogsById() {
     SqlSession session = sqlSessionFactory.openSession();
     try {

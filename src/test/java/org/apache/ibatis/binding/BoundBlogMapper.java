@@ -166,5 +166,12 @@ public interface BoundBlogMapper {
       "WHERE ${column} = #{id} AND title = #{value}")
   Blog selectBlogWithAParamNamedValue(@Param("column") String column, @Param("id") int id, @Param("value") String title);
 
+  @Select({
+      "SELECT *",
+      "FROM blog"
+  })
+  @Results({ @Result(property = "author", column = "author_id", one = @One(select = "org.apache.ibatis.binding.BoundAuthorMapper.selectAuthor")) })
+  List<Blog> selectBlogsWithAutors();
+
   
 }

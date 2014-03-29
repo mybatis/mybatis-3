@@ -517,13 +517,10 @@ public class MapperAnnotationBuilder {
   }
   
   private boolean hasNestedSelect(Result result) {
-    boolean hasNestedSelect = result.one().select().length() > 0;
-    if (hasNestedSelect) {
+    if (result.one().select().length() > 0 && result.many().select().length() > 0) {
       throw new BuilderException("Cannot use both @One and @Many annotations in the same @Result");
-    } else {
-      hasNestedSelect = result.many().select().length() > 0;
     }
-    return hasNestedSelect;  
+    return result.one().select().length() > 0 || result.many().select().length() > 0;  
   }
 
   private void applyConstructorArgs(Arg[] args, Class<?> resultType, List<ResultMapping> resultMappings) {
