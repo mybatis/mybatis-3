@@ -91,6 +91,8 @@ public class CacheBuilder {
         setCacheProperties(cache);
       }
       cache = setStandardDecorators(cache);
+    } else if (!LoggingCache.class.isAssignableFrom(cache.getClass())) {
+      cache = new LoggingCache(cache);
     }
     return cache;
   }
