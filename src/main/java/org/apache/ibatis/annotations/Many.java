@@ -30,6 +30,6 @@ import org.apache.ibatis.mapping.FetchType;
 public @interface Many {
   String select() default "";
   
-  FetchType lazy() default FetchType.DEFAULT;
+  FetchType fetchType() default FetchType.DEFAULT;
   
 }

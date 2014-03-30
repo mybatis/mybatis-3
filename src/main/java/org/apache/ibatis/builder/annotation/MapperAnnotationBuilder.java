@@ -500,12 +500,12 @@ public class MapperAnnotationBuilder {
 
   private boolean isLazy(Result result) {
     Boolean isLazy = null;
-    if (FetchType.DEFAULT != result.one().lazy()) {
-      isLazy = (result.one().lazy() == FetchType.LAZY);
+    if (FetchType.DEFAULT != result.one().fetchType()) {
+      isLazy = (result.one().fetchType() == FetchType.LAZY);
     }
-    if (FetchType.DEFAULT != result.many().lazy()) {
+    if (FetchType.DEFAULT != result.many().fetchType()) {
       if (isLazy == null) {
-        isLazy = (result.many().lazy() == FetchType.LAZY);
+        isLazy = (result.many().fetchType() == FetchType.LAZY);
       } else {
         throw new BuilderException("Cannot use both @One and @Many annotations in the same @Result");
       }
