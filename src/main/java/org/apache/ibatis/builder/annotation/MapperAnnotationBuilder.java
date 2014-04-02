@@ -499,19 +499,11 @@ public class MapperAnnotationBuilder {
   }
 
   private boolean isLazy(Result result) {
-    Boolean isLazy = null;
-    if (FetchType.DEFAULT != result.one().fetchType()) {
+    Boolean isLazy = configuration.isLazyLoadingEnabled();
+    if (result.one().select().length() > 0 && FetchType.DEFAULT != result.one().fetchType()) {
       isLazy = (result.one().fetchType() == FetchType.LAZY);
-    }
-    if (FetchType.DEFAULT != result.many().fetchType()) {
-      if (isLazy == null) {
-        isLazy = (result.many().fetchType() == FetchType.LAZY);
-      } else {
-        throw new BuilderException("Cannot use both @One and @Many annotations in the same @Result");
-      }
-    }
-    if (isLazy == null) {
-      isLazy = configuration.isLazyLoadingEnabled();
+    } else if (result.many().select().length() > 0 && FetchType.DEFAULT != result.many().fetchType()) {
+      isLazy = (result.many().fetchType() == FetchType.LAZY);
     }
     return isLazy;
   }
