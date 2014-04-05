@@ -15,6 +15,11 @@
  */
 package org.apache.ibatis.type;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+
 import java.net.URI;
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
@@ -22,9 +27,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-import domain.misc.RichType;
-import static org.junit.Assert.*;
+import org.junit.Ignore;
 import org.junit.Test;
+
+import domain.misc.RichType;
 
 public class TypeHandlerRegistryTest {
 
@@ -116,4 +122,15 @@ public class TypeHandlerRegistryTest {
     assertSame(fakeHandler, typeHandlerRegistry.getTypeHandler(new TypeReference<List<URI>>(){}));
   }
 
+  @Ignore("See https://github.com/mybatis/mybatis-3/issues/165")
+  @Test
+  public void registerWrapperHandlerBeforePrimitive() {
+    
+    typeHandlerRegistry.register(int.class, DateTypeHandler.class);
+    typeHandlerRegistry.register(Integer.class, IntegerTypeHandler.class);
+
+    assertSame(IntegerTypeHandler.class, typeHandlerRegistry.getTypeHandler(Integer.class).getClass());
+    assertSame(DateTypeHandler.class, typeHandlerRegistry.getTypeHandler(int.class).getClass());
+  }
+  
 }
