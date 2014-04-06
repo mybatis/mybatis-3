@@ -24,7 +24,7 @@
   </parent>
 
   <artifactId>mybatis</artifactId>
-  <version>3.2.7</version>
+  <version>3.3.0-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>MyBatis</name>
@@ -107,7 +107,7 @@
     <url>http://github.com/mybatis/mybatis-3</url>
     <connection>scm:git:ssh://github.com/mybatis/mybatis-3.git</connection>
     <developerConnection>scm:git:git+ssh://git@github.com/mybatis/mybatis-3.git</developerConnection>
-    <tag>mybatis-3.2.7</tag>
+    <tag>HEAD</tag>
   </scm>
   <issueManagement>
     <system>GitHub Issue Management</system>
