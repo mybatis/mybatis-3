@@ -665,7 +665,7 @@ public class Author {
                 <code>ByteTypeHandler</code>
               </td>
               <td>
-                <code>java.lang.Byte</code>, byte
+                <code>java.lang.Byte</code>, <code>byte</code>
               </td>
               <td>어떤 호환가능한 NUMERIC 또는 BYTE</td>
             </tr>
@@ -701,7 +701,7 @@ public class Author {
                 <code>FloatTypeHandler</code>
               </td>
               <td>
-                <code>java.lang.Float</code>, float
+                <code>java.lang.Float</code>, <code>float</code>
               </td>
               <td>어떤 호환가능한 NUMERIC 또는 FLOAT</td>
             </tr>
@@ -930,7 +930,7 @@ public class ExampleTypeHandler extends BaseTypeHandler<String> {
 
         <p>관련된 JDBC타입은 두가지 방법으로 명시할 수 있다:</p>
         <ul>
-          <li>typeHandler 요소에 <code>jdbcType</code> 속성 추가(예제: <code>jdbcType=VARCHAR</code>).
+          <li>typeHandler 요소에 <code>jdbcType</code> 속성 추가(예제: <code>jdbcType="VARCHAR"</code>).
           </li>
           <li>TypeHandler클래스에 관련된 JDBC타입의 목록을 정의하는 <code>@MappedJdbcTypes</code> 애노테이션 추가. 
           <code>jdbcType</code> 속성도 함께 정의되어 있다면 <code>@MappedJdbcTypes</code>는 무시된다.</li>
@@ -1071,7 +1071,10 @@ public class ExampleObjectFactory extends DefaultObjectFactory {
   public void setProperties(Properties properties) {
     super.setProperties(properties);
   }
-}]]></source>
+  public <T> boolean isCollection(Class<T> type) {
+    return Collection.class.isAssignableFrom(type);
+  }}
+]]></source>
 
         <source><![CDATA[<!-- mybatis-config.xml -->
 <objectFactory type="org.mybatis.example.ExampleObjectFactory">

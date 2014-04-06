@@ -811,7 +811,7 @@ public class Author {
                 <code>ByteTypeHandler</code>
               </td>
               <td>
-                <code>java.lang.Byte</code>, byte
+                <code>java.lang.Byte</code>, <code>byte</code>
               </td>
               <td>
                 Any compatible <code>NUMERIC</code> or <code>BYTE</code>
@@ -855,7 +855,7 @@ public class Author {
                 <code>FloatTypeHandler</code>
               </td>
               <td>
-                <code>java.lang.Float</code>, float
+                <code>java.lang.Float</code>, <code>float</code>
               </td>
               <td>
                 Any compatible <code>NUMERIC</code> or <code>FLOAT</code>
@@ -1053,10 +1053,9 @@ public class Author {
         </table>
         <p>
           You can override the type handlers or create your own to deal with
-          unsupported or non-standard types. To do so, simply extend
-          the
-          <code>org.apache.ibatis.type.BaseTypeHandler</code> class and optionally map your new
-          TypeHandler class to a JDBC type. For example:
+          unsupported or non-standard types. To do so, implement the interface <code>org.apache.ibatis.type.TypeHandler</code>
+          or extend the convenience class <code>org.apache.ibatis.type.BaseTypeHandler</code> 
+          and optionally map it to a JDBC type. For example:
         </p>
 
         <source><![CDATA[// ExampleTypeHandler.java
@@ -1117,7 +1116,7 @@ public class ExampleTypeHandler extends BaseTypeHandler<String> {
         <p>Associated JDBC type can be specified by two means:</p>
         <ul>
           <li>
-           Adding a <code>jdbcType</code> attribute to the typeHandler element (for example: <code>jdbcType=VARCHAR</code>).
+           Adding a <code>jdbcType</code> attribute to the typeHandler element (for example: <code>jdbcType="VARCHAR"</code>).
           </li>
           <li>Adding a <code>@MappedJdbcTypes</code> annotation to your TypeHandler class specifying
           the list of JDBC types to associate it with. This annotation will be ignored if
@@ -1271,7 +1270,10 @@ public class ExampleObjectFactory extends DefaultObjectFactory {
   public void setProperties(Properties properties) {
     super.setProperties(properties);
   }
-}]]></source>
+  public <T> boolean isCollection(Class<T> type) {
+    return Collection.class.isAssignableFrom(type);
+  }}
+]]></source>
 
         <source><![CDATA[<!-- mybatis-config.xml -->
 <objectFactory type="org.mybatis.example.ExampleObjectFactory">
