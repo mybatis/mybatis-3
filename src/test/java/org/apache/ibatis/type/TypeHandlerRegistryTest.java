@@ -122,7 +122,6 @@ public class TypeHandlerRegistryTest {
     assertSame(fakeHandler, typeHandlerRegistry.getTypeHandler(new TypeReference<List<URI>>(){}));
   }
 
-  @Ignore("see https://github.com/mybatis/mybatis-3/issues/165")
   @Test
   public void shouldBindHandlersToWrapersAndPrimitivesIndividually() {
     typeHandlerRegistry.register(Integer.class, DateTypeHandler.class);

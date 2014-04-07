@@ -35,20 +35,6 @@ import org.apache.ibatis.io.ResolverUtil;
  */
 public final class TypeHandlerRegistry {
 
-  private static final Map<Class<?>, Class<?>> reversePrimitiveMap = new HashMap<Class<?>, Class<?>>() {
-    private static final long serialVersionUID = 1L;
-    {
-      put(Byte.class, byte.class);
-      put(Short.class, short.class);
-      put(Integer.class, int.class);
-      put(Long.class, long.class);
-      put(Float.class, float.class);
-      put(Double.class, double.class);
-      put(Boolean.class, boolean.class);
-      put(Character.class, char.class);
-    }
-  };
-
   private final Map<JdbcType, TypeHandler<?>> JDBC_TYPE_HANDLER_MAP = new EnumMap<JdbcType, TypeHandler<?>>(JdbcType.class);
   private final Map<Type, Map<JdbcType, TypeHandler<?>>> TYPE_HANDLER_MAP = new HashMap<Type, Map<JdbcType, TypeHandler<?>>>();
   private final TypeHandler<Object> UNKNOWN_TYPE_HANDLER = new UnknownTypeHandler(this);
@@ -274,9 +260,6 @@ public final class TypeHandlerRegistry {
         TYPE_HANDLER_MAP.put(javaType, map);
       }
       map.put(jdbcType, handler);
-      if (reversePrimitiveMap.containsKey(javaType)) {
-        register(reversePrimitiveMap.get(javaType), jdbcType, handler);
-      }
     }
     ALL_TYPE_HANDLERS_MAP.put(handler.getClass(), handler);
   }
