@@ -15,6 +15,8 @@
  */
 package org.apache.ibatis.executor.resultset;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -22,11 +24,11 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-
 import org.apache.ibatis.cache.CacheKey;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.executor.ExecutorException;
@@ -44,6 +46,7 @@ import org.apache.ibatis.mapping.ResultMap;
 import org.apache.ibatis.mapping.ResultMapping;
 import org.apache.ibatis.reflection.MetaClass;
 import org.apache.ibatis.reflection.MetaObject;
+import org.apache.ibatis.reflection.ReflectionException;
 import org.apache.ibatis.reflection.factory.ObjectFactory;
 import org.apache.ibatis.session.AutoMappingBehavior;
 import org.apache.ibatis.session.Configuration;
@@ -524,12 +527,18 @@ public class DefaultResultSetHandler implements ResultSetHandler {
       return createPrimitiveResultObject(rsw, resultMap, columnPrefix);
     } else if (constructorMappings.size() > 0) {
       return createParameterizedResultObject(rsw, resultType, constructorMappings, constructorArgTypes, constructorArgs, columnPrefix);
+    } else if ( canBeCreatedByDefaultFactory(resultType) ) {
+        return objectFactory.create(resultType);
     } else {
-      return objectFactory.create(resultType);
+        return createByConstructorSignature(rsw, resultType);
     }
   }
 
-  private Object createParameterizedResultObject(ResultSetWrapper rsw, Class<?> resultType, List<ResultMapping> constructorMappings, List<Class<?>> constructorArgTypes,
+    private boolean canBeCreatedByDefaultFactory(Class<?> resultType) {
+        return resultType.isInterface() || hasDefaultConstructor(resultType);
+    }
+
+    private Object createParameterizedResultObject(ResultSetWrapper rsw, Class<?> resultType, List<ResultMapping> constructorMappings, List<Class<?>> constructorArgTypes,
       List<Object> constructorArgs, String columnPrefix) throws SQLException {
     boolean foundValues = false;
     for (ResultMapping constructorMapping : constructorMappings) {
@@ -934,6 +943,55 @@ public class DefaultResultSetHandler implements ResultSetHandler {
         cacheKey.update(value);
       }
     }
+  }
+  
+  private boolean hasDefaultConstructor(Class<?> resultType) {
+      if ( resultType.getDeclaredConstructors().length == 0) {
+          return true;
+      }
+      for (Constructor<?> constructor : resultType.getDeclaredConstructors()) {
+      if (constructor.getParameterTypes().length == 0) {
+        return true;
+      }
+    }
+    return false;
+  }
+  
+  private Object createByConstructorSignature(ResultSetWrapper rsw, Class<?> resultType) throws SQLException {
+    for (Constructor<?> constructor : resultType.getDeclaredConstructors()) {
+      if (typeNames(constructor.getParameterTypes()).equals(rsw.getClassNames())) {
+          constructor.setAccessible(true);
+          try {
+              return constructor.newInstance(fillValuesForConstructor(constructor, rsw));
+          } catch (InstantiationException e) {
+              throw new ReflectionException(e);
+          } catch (IllegalAccessException e) {
+              throw new ReflectionException(e);
+          } catch (InvocationTargetException e) {
+              throw new ReflectionException(e);
+          }
+      }
+    }
+    throw new ReflectionException("No constructor found in " + resultType.getName() + " matching " + rsw.getClassNames());
+  }
+
+  private Object[] fillValuesForConstructor(Constructor<?> constructor, ResultSetWrapper rsw) throws SQLException {
+    List<Object> values = new ArrayList<Object>();
+    Iterator<String> columnNames = rsw.getColumnNames().iterator();
+    for (Class<?> parameterType : constructor.getParameterTypes()) {
+      String columnName = columnNames.next();
+      TypeHandler<?> typeHandler = rsw.getTypeHandler(parameterType, columnName);
+      values.add(typeHandler.getResult(rsw.getResultSet(), columnName));
+    }
+    return values.toArray();
+  }
+  
+  private List<String> typeNames(Class<?>[] parameterTypes) {
+    List<String> names = new ArrayList<String>();
+    for (Class<?> type : parameterTypes) {
+      names.add(type.getName());
+    }
+    return names;
   }
 
 }
