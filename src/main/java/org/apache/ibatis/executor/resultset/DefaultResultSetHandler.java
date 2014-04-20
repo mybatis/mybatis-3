@@ -16,6 +16,7 @@
 package org.apache.ibatis.executor.resultset;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -526,17 +527,18 @@ public class DefaultResultSetHandler implements ResultSetHandler {
       return createPrimitiveResultObject(rsw, resultMap, columnPrefix);
     } else if (constructorMappings.size() > 0) {
       return createParameterizedResultObject(rsw, resultType, constructorMappings, constructorArgTypes, constructorArgs, columnPrefix);
-    } else {
-      try {
+    } else if ( canBeCreatedByDefaultFactory(resultType) ) {
         return objectFactory.create(resultType);
-      } catch (Exception ex) {
+    } else {
         return createByConstructorSignature(rsw, resultType);
-      }
-      
     }
   }
 
-  private Object createParameterizedResultObject(ResultSetWrapper rsw, Class<?> resultType, List<ResultMapping> constructorMappings, List<Class<?>> constructorArgTypes,
+    private boolean canBeCreatedByDefaultFactory(Class<?> resultType) {
+        return resultType.isInterface() || hasDefaultConstructor(resultType);
+    }
+
+    private Object createParameterizedResultObject(ResultSetWrapper rsw, Class<?> resultType, List<ResultMapping> constructorMappings, List<Class<?>> constructorArgTypes,
       List<Object> constructorArgs, String columnPrefix) throws SQLException {
     boolean foundValues = false;
     for (ResultMapping constructorMapping : constructorMappings) {
@@ -944,7 +946,10 @@ public class DefaultResultSetHandler implements ResultSetHandler {
   }
   
   private boolean hasDefaultConstructor(Class<?> resultType) {
-    for (Constructor<?> constructor : resultType.getDeclaredConstructors()) {
+      if ( resultType.getDeclaredConstructors().length == 0) {
+          return true;
+      }
+      for (Constructor<?> constructor : resultType.getDeclaredConstructors()) {
       if (constructor.getParameterTypes().length == 0) {
         return true;
       }
@@ -955,12 +960,16 @@ public class DefaultResultSetHandler implements ResultSetHandler {
   private Object createByConstructorSignature(ResultSetWrapper rsw, Class<?> resultType) throws SQLException {
     for (Constructor<?> constructor : resultType.getDeclaredConstructors()) {
       if (typeNames(constructor.getParameterTypes()).equals(rsw.getClassNames())) {
-        try {
           constructor.setAccessible(true);
-          return constructor.newInstance(fillValuesForConstructor(constructor, rsw));
-        } catch (ReflectiveOperationException ex) {
-          throw new ReflectionException(ex);
-        }
+          try {
+              return constructor.newInstance(fillValuesForConstructor(constructor, rsw));
+          } catch (InstantiationException e) {
+              throw new ReflectionException(e);
+          } catch (IllegalAccessException e) {
+              throw new ReflectionException(e);
+          } catch (InvocationTargetException e) {
+              throw new ReflectionException(e);
+          }
       }
     }
     throw new ReflectionException("No constructor found in " + resultType.getName() + " matching " + rsw.getClassNames());
