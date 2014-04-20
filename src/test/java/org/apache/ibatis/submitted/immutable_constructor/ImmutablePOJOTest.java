@@ -19,12 +19,16 @@ import java.io.PrintWriter;
 import java.io.Reader;
 import java.sql.Connection;
 import java.sql.DriverManager;
+
+import org.apache.ibatis.exceptions.PersistenceException;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+
 import static org.junit.Assert.assertEquals;
+
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -63,7 +67,7 @@ public final class ImmutablePOJOTest {
   }
 
   @Test
-  public void testLoadLazyImmutablePOJO() {
+  public void shouldLoadImmutablePOJOBySignature() {
     final SqlSession session = factory.openSession();
     try {
       final ImmutablePOJOMapper mapper = session.getMapper(ImmutablePOJOMapper.class);
@@ -76,4 +80,16 @@ public final class ImmutablePOJOTest {
     }
   }
 
+
+  @Test(expected=PersistenceException.class)
+  public void shouldFailLoadingImmutablePOJO() {
+    final SqlSession session = factory.openSession();
+    try {
+      final ImmutablePOJOMapper mapper = session.getMapper(ImmutablePOJOMapper.class);
+      mapper.getImmutablePOJONoMatchingConstructor(POJO_ID);
+    } finally {
+      session.close();
+    }
+  }
+  
 }

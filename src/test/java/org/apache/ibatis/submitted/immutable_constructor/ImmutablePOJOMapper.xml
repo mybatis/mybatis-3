@@ -30,4 +30,11 @@
         WHERE i.id = #{pojoID}
     </select>
     
+    <select id="getImmutablePOJONoMatchingConstructor" parameterType="int" resultType="ImmutablePOJO">
+        SELECT
+            i.id            AS id
+        FROM immutables AS i
+        WHERE i.id = #{pojoID}
+    </select>
+        
 </mapper>
