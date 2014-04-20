@@ -573,7 +573,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
         return foundValues ? objectFactory.create(resultType, constructorArgTypes, constructorArgs) : null;
       }
     }
-    return null;
+    throw new ExecutorException("No constructor found in " + resultType.getName() + " matching " + rsw.getClassNames());
   }
 
   private List<String> typeNames(Class<?>[] parameterTypes) {
