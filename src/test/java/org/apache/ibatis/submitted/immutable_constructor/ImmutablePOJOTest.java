@@ -30,51 +30,50 @@ import org.junit.Test;
 
 public final class ImmutablePOJOTest {
 
-    private static final Integer POJO_ID = 1;
-    private static final String POJO_DESCRIPTION = "Description of immutable";
-    
-    private static SqlSessionFactory factory;
+  private static final Integer POJO_ID = 1;
+  private static final String POJO_DESCRIPTION = "Description of immutable";
 
-    @BeforeClass
-    public static void setupClass() throws Exception {
-        Connection conn = null;
+  private static SqlSessionFactory factory;
 
-        try {
-            Class.forName("org.hsqldb.jdbcDriver");
-            conn = DriverManager.getConnection("jdbc:hsqldb:mem:immutable_constructor", "sa", "");
+  @BeforeClass
+  public static void setupClass() throws Exception {
+    Connection conn = null;
 
-            Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/immutable_constructor/CreateDB.sql");
+    try {
+      Class.forName("org.hsqldb.jdbcDriver");
+      conn = DriverManager.getConnection("jdbc:hsqldb:mem:immutable_constructor", "sa", "");
 
-            ScriptRunner runner = new ScriptRunner(conn);
-            runner.setLogWriter(null);
-            runner.setErrorLogWriter(new PrintWriter(System.err));
-            runner.runScript(reader);
-            conn.commit();
-            reader.close();
+      Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/immutable_constructor/CreateDB.sql");
 
-            reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/immutable_constructor/ibatisConfig.xml");
-            factory = new SqlSessionFactoryBuilder().build(reader);
-            reader.close();
-        } finally {
-            if (conn != null) {
-                conn.close();
-            }
-        }
+      ScriptRunner runner = new ScriptRunner(conn);
+      runner.setLogWriter(null);
+      runner.setErrorLogWriter(new PrintWriter(System.err));
+      runner.runScript(reader);
+      conn.commit();
+      reader.close();
+
+      reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/immutable_constructor/ibatisConfig.xml");
+      factory = new SqlSessionFactoryBuilder().build(reader);
+      reader.close();
+    } finally {
+      if (conn != null) {
+        conn.close();
+      }
     }
+  }
 
-    @Test
-    public void testLoadLazyImmutablePOJO() {
-        final SqlSession session = factory.openSession();
-        try {
-            final ImmutablePOJOMapper mapper = session.getMapper(ImmutablePOJOMapper.class);
-            final ImmutablePOJO pojo = mapper.getImmutablePOJO(POJO_ID);
+  @Test
+  public void testLoadLazyImmutablePOJO() {
+    final SqlSession session = factory.openSession();
+    try {
+      final ImmutablePOJOMapper mapper = session.getMapper(ImmutablePOJOMapper.class);
+      final ImmutablePOJO pojo = mapper.getImmutablePOJO(POJO_ID);
 
-            assertEquals(POJO_ID, pojo.getId());
-            assertEquals(POJO_DESCRIPTION, pojo.getDescription());
-        } finally {
-            session.close();
-        }
+      assertEquals(POJO_ID, pojo.getId());
+      assertEquals(POJO_DESCRIPTION, pojo.getDescription());
+    } finally {
+      session.close();
     }
-    
+  }
 
 }
