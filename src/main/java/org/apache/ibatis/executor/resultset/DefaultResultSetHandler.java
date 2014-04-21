@@ -333,7 +333,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     if (resultObject != null && !typeHandlerRegistry.hasTypeHandler(resultMap.getType())) {
       final MetaObject metaObject = configuration.newMetaObject(resultObject);
       boolean foundValues = resultMap.getConstructorResultMappings().size() > 0;
-      if (shouldApplyAutomaticMappings(resultMap, !AutoMappingBehavior.NONE.equals(configuration.getAutoMappingBehavior()))) {        
+      if (shouldApplyAutomaticMappings(resultMap, false)) {        
         foundValues = applyAutomaticMappings(rsw, resultMap, metaObject, null) || foundValues;
       }
       foundValues = applyPropertyMappings(rsw, resultMap, metaObject, lazyLoader, null) || foundValues;
@@ -344,8 +344,16 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     return resultObject;
   }
 
-  private boolean shouldApplyAutomaticMappings(ResultMap resultMap, boolean def) {
-    return resultMap.getAutoMapping() != null ? resultMap.getAutoMapping() : def;
+  private boolean shouldApplyAutomaticMappings(ResultMap resultMap, boolean isNested) {
+    if (resultMap.getAutoMapping() != null) {
+      return resultMap.getAutoMapping();
+    } else {
+      if (isNested) {
+        return AutoMappingBehavior.FULL == configuration.getAutoMappingBehavior();
+      } else {
+        return AutoMappingBehavior.NONE != configuration.getAutoMappingBehavior();
+      }
+    }
   }
 
   //
@@ -528,9 +536,10 @@ public class DefaultResultSetHandler implements ResultSetHandler {
       return createParameterizedResultObject(rsw, resultType, constructorMappings, constructorArgTypes, constructorArgs, columnPrefix);
     } else if (resultType.isInterface() || metaType.hasDefaultConstructor()) {
       return objectFactory.create(resultType);
-    } else {
+    } else if (shouldApplyAutomaticMappings(resultMap, false)) {
       return createByConstructorSignature(rsw, resultType, constructorArgTypes, constructorArgs, columnPrefix);
     }
+    throw new ExecutorException("Do not know how to create an instance of " + resultType);
   }
 
   private Object createParameterizedResultObject(ResultSetWrapper rsw, Class<?> resultType, List<ResultMapping> constructorMappings,
@@ -771,7 +780,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
       if (resultObject != null && !typeHandlerRegistry.hasTypeHandler(resultMap.getType())) {
         final MetaObject metaObject = configuration.newMetaObject(resultObject);
         boolean foundValues = resultMap.getConstructorResultMappings().size() > 0;
-        if (shouldApplyAutomaticMappings(resultMap, AutoMappingBehavior.FULL.equals(configuration.getAutoMappingBehavior()))) {
+        if (shouldApplyAutomaticMappings(resultMap, true)) {
           foundValues = applyAutomaticMappings(rsw, resultMap, metaObject, columnPrefix) || foundValues;
         }        
         foundValues = applyPropertyMappings(rsw, resultMap, metaObject, lazyLoader, columnPrefix) || foundValues;
