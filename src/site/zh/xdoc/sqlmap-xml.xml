@@ -1804,30 +1804,30 @@ MyBatis 会从结果集中得到每条记录,
 
       </subsection>
       
-      <subsection name="Auto-mapping">
+      <subsection name="自动映射">
 
         <p>
-          As you have already seen in the previous sections, in simple cases MyBatis can auto-map the results for you 
-          and in others you will need to build a result map. 
-          But as you will see in this section you can also mix both strategies. 
-          Let's have a deeper look at how auto-mapping works. 
+           正如你在前面一节看到的，在简单的场景下，MyBatis可以替你自动映射查询结果。
+           如果遇到复杂的场景，你需要构建一个result map。
+           但是在本节你将看到，你也可以混合使用这两种策略。
+           让我们到深一点的层面上看看自动映射是怎样工作的。
         </p>
 
         <p>
-          When auto-mapping results MyBatis will get the column name and look for a property with the same name ignoring case. That means that if
-          a column named <i>ID</i> and property named <i>id</i> are found, MyBatis will set the <i>id</i> property with the <i>ID</i> column value. 
+           当自动映射查询结果时，MyBatis会获取sql返回的列名并在java类中查找相同名字的属性（忽略大小写）。
+           这意味着如果Mybatis发现了<i>ID</i>列和<i>id</i>属性，Mybatis会将<i>ID</i>的值赋给<i>id</i>。
         </p>
 
         <p>
-          Usually database columns are named using uppercase letters and underscores between words and java properties often follow the camelcase 
-          naming covention. To enable the auto-mapping between them set the setting <code>mapUnderscoreToCamelCase</code> to true.
+           通常数据库列使用大写单词命名，单词间用下划线分隔；而java属性一般遵循驼峰命名法。
+           为了在这两种命名方式之间启用自动映射，需要将 <code>mapUnderscoreToCamelCase</code>设置为true。
         </p>
         
         <p>
-          Auto-mapping works even when there is an specific result map. When this happens, for each result map, all columns that are present in the
-          ResultSet that have not a manual mapping will be auto-mapped, then manual mappings will be processed. 
-          In the following sample <i>id</i> and <i>userName</i> columns will be auto-mapped and <i>hashed_password</i> column will be mapped.</p>
-
+           自动映射甚至在特定的result map下也能工作。在这种情况下，对于每一个result map,所有的ResultSet提供的列，
+           如果没有被手工映射，则将被自动映射。自动映射处理完毕后手工映射才会被处理。
+           在接下来的例子中， <i>id</i> 和 <i>userName</i>列将被自动映射， <i>hashed_password</i> 列将根据配置映射。
+        </p>
         <source><![CDATA[<select id="selectUsers" resultType="User">
   select
     user_id             as "id",
