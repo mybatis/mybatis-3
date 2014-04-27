@@ -16,6 +16,7 @@
 package org.apache.ibatis.jdbc;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
@@ -24,15 +25,22 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author Clinton Begin
+ * 
  */
 public class ScriptRunner {
 
   private static final String LINE_SEPARATOR = System.getProperty("line.separator", "\n");
 
   private static final String DEFAULT_DELIMITER = ";";
+  
+  private static final Pattern STORED_PROC_PATTERN = 
+	  Pattern.compile("\\s*CREATE(?:\\s+OR\\s+REPLACE)?\\s+(?:PROC|PROCEDURE|FUNCTION)\\s+(?:\"?\\w+\"?\\.)?\"?(\\w+)\"?"
+			          , Pattern.CASE_INSENSITIVE | Pattern.MULTILINE);
 
   private Connection connection;
 
@@ -128,7 +136,14 @@ public class ScriptRunner {
     try {
       BufferedReader lineReader = new BufferedReader(reader);
       String line;
+      StringBuffer storedProcName = new StringBuffer();
+      
       while ((line = lineReader.readLine()) != null) {
+    	if (isStoredProcedure(line, storedProcName)) {
+    		command.append(line).append(LINE_SEPARATOR);
+    		line = readStoredProcedure(command, storedProcName.toString(), lineReader);
+    	}
+    	
         command = handleLine(command, line);
       }
       commitConnection();
@@ -138,6 +153,63 @@ public class ScriptRunner {
       printlnError(message);
       throw new RuntimeSqlException(message, e);
     }
+  }
+  
+  protected boolean isStoredProcedure(String line) {
+	  return STORED_PROC_PATTERN.matcher(line).find();
+  }
+  
+  protected boolean isStoredProcedure(String line, StringBuffer procName) {
+	  Matcher matcher = STORED_PROC_PATTERN.matcher(line);
+	  boolean isStoredProc = matcher.find();
+	  
+	  if (isStoredProc) {
+		  procName.setLength(0);
+		  procName.append(matcher.group(1));
+	  }
+	  
+	  return isStoredProc;
+  }
+  
+  /**
+   * Read a stored procedure/function completely before attempting to 
+   * execute the SQL statement.
+   * 
+   * @author Joseph Silva
+   * 
+   */
+  protected String readStoredProcedure(StringBuilder command, String procName, 
+		                                   BufferedReader reader) throws IOException {
+      String line;
+      final String endOfProcPattern = ("\\s*END(?:\\s+" + procName + ")?\\s*;$");
+      Pattern endPattern = Pattern.compile(endOfProcPattern, Pattern.CASE_INSENSITIVE);
+      Pattern beginPattern = Pattern.compile("BEGIN(?:\\s+\\w+)", Pattern.CASE_INSENSITIVE);
+      int blockCount = 0;
+      boolean mainBlockStarted = false;
+      
+      
+      // read until end of procedure OR end of file
+      // Make sure reading doesn't prematurely end due to nested BEGIN-END blocks
+      while ((line = reader.readLine()) != null && !(mainBlockStarted && blockCount == 0)) {
+    	  if (beginPattern.matcher(line).find()) {
+    		  ++blockCount;
+    		  mainBlockStarted = true;
+    	  }
+    	  else if (endPattern.matcher(line).find()) {
+    		  --blockCount;
+    	  }
+    	  //TODO: Add support for T-SQL inline table valued syntax
+    	  
+    	  // DO NOT IGNORE ANY COMMENT LINES
+    	  // Stored Procedure/Function comments are very important
+    	  command.append(line).append(LINE_SEPARATOR);
+      }
+      
+      //this will be the 'END <ProcName>;' line.
+      //we should send this back to executeLineByLine() method so that it will
+      //resume with normal execution
+      //NOTE: last line is not appended to the command. This is because handleLine will do that.
+      return line + delimiter;
   }
 
   public void closeConnection() {
