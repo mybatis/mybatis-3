@@ -183,7 +183,7 @@ public class ScriptRunner {
       String line;
       final String endOfProcPattern = ("\\s*END(?:\\s+" + procName + ")?\\s*;$");
       Pattern endPattern = Pattern.compile(endOfProcPattern, Pattern.CASE_INSENSITIVE);
-      Pattern beginPattern = Pattern.compile("BEGIN(?:\\s+\\w+)", Pattern.CASE_INSENSITIVE);
+      Pattern beginPattern = Pattern.compile("BEGIN(?:\\s+\\w+)?", Pattern.CASE_INSENSITIVE);
       int blockCount = 0;
       boolean mainBlockStarted = false;
       
