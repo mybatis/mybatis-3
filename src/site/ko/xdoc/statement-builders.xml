@@ -21,13 +21,13 @@
   xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
 
   <properties>
-    <title>MyBatis 3 | 정책 빌더</title>
+    <title>MyBatis 3 | 구문 빌더</title>
     <author email="clinton.begin@gmail.com">Clinton Begin</author>
     <author email="fromm0@gmail.com">이동국(한국어 번역)</author>
   </properties>
 
   <body>
-  <section name="정책 빌더">
+  <section name="구문 빌더">
   <subsection name="SelectBuilder">
   <p>자바 개발자에게 가장 끔찍한 일중 하나는 자바 코드에서 내장 SQL 을 처리하는 것이다. SQL 은 항상 동적으로 생성되기
 때문에 그렇다. 반면에 파일이나 저장 프로시저를 외부에 둘수도 있다. 이미 그렇게 하고 있다면, MyBatis 는 XML 매핑에서
