@@ -115,8 +115,8 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 lazyLoadingEnabled
               </td>
               <td>
-                               늦은 로딩을 사용할지에 대한 여부. 사용하지 않는다면 모두 즉시 로딩할 것이다.
-                This value can be superseded for an specific relation by using the <code>fetchType</code> attribute on it. 
+                늦은 로딩을 사용할지에 대한 여부. 사용하지 않는다면 모두 즉시 로딩할 것이다.
+                이 값은 <code>fetchType</code> 속성을 사용해서 대체할 수 있다.  
               </td>
               <td>
                 true | false
@@ -242,9 +242,9 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 localCacheScope
               </td>
               <td>
-                MyBatis uses local cache to prevent circular references and speed up repeated nested queries. 
-                By default (SESSION) all queries executed during a session are cached. If localCacheScope=STATEMENT local session will be used just for 
-                statement execution, no data will be shared between two different calls to the same SqlSession.
+                마이바티스는 순환참조를 막거나 반복된 쿼리의 속도를 높히기 위해 로컬캐시를 사용한다. 
+                디폴트 설정인 SESSION을 사용해서 동일 세션의 모든 쿼리를 캐시한다. 
+                localCacheScope=STATEMENT 로 설정하면 로컬 세션은 구문 실행할때만 사용하고 같은 SqlSession에서 두개의 다른 호출사이에는 데이터를 공유하지 않는다. 
               </td>
               <td>
                 SESSION | STATEMENT
@@ -258,11 +258,11 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 jdbcTypeForNull
               </td>
               <td>
-                Specifies the JDBC type for null values when no specific JDBC type was provided for the parameter. 
-                Some drivers require specifying the column JDBC type but others work with generic values like NULL, VARCHAR or OTHER.
+                JDBC타입을 파라미터에 제공하지 않을때 null값을 처리한 JDBC타입을 명시한다. 
+                일부 드라이버는 칼럼의 JDBC타입을 정의하도록 요구하지만 대부분은 NULL, VARCHAR 나 OTHER 처럼 일반적인 값을 사용해서 동작한다. 
               </td>
               <td>
-                JdbcType enumeration. Most common are: NULL, VARCHAR and OTHER
+                JdbcType 이늄. 대부분은 NULL, VARCHAR 나 OTHER 를 공통적으로 사용한다. 
               </td>
               <td>
                 OTHER
@@ -273,10 +273,10 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 lazyLoadTriggerMethods
               </td>
               <td>
-                Specifies which Object's methods trigger a lazy load
+                늦은 로딩을 야기하는 객체의 메소드를 명시
               </td>
               <td>
-                A method name list separated by commas
+                메소드 이름을 나열하고 여러개일 경우 콤마(,) 로 구분
               </td>
               <td>
                 equals,clone,hashCode,toString
@@ -287,10 +287,10 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 defaultScriptingLanguage
               </td>
               <td>
-                Specifies the language used by default for dynamic SQL generation.
+                동적으로 SQL을 만들기 위해 기본적으로 사용하는 언어를 명시
               </td>
               <td>
-                A type alias or fully qualified class name.
+                타입별칭이나 패키지 경로를 포함한 클래스명
               </td>
               <td>
                 org.apache.ibatis.scripting.xmltags.XMLDynamicLanguageDriver
@@ -301,7 +301,9 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 callSettersOnNulls
               </td>
               <td>
-                Specifies if setters or map's put method will be called when a retrieved value is null. It is useful when you rely on Map.keySet() or null value initialization. Note primitives such as (int,boolean,etc.) will not be set to null. 
+                가져온 값이 null일때 setter나 맵의 put 메소드를 호출할지를 명시
+                Map.keySet() 이나 null값을 초기화할때 유용하다. 
+                int, boolean 등과 같은 원시타입은 null을 셋팅할 수 없다는 점은 알아두면 좋다.  
               </td>
               <td>
                 true | false
@@ -315,13 +317,13 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 logPrefix
               </td>
               <td>
-                Specifies the prefix string that MyBatis will add to the logger names. 
+                마이바티스가 로거(logger) 이름에 추가할 접두사 문자열을 명시 
               </td>
               <td>
-                Any String
+                문자열
               </td>
               <td>
-                Not set
+                셋팅하지 않음
               </td>
             </tr>
             <tr>
@@ -329,13 +331,14 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 logImpl
               </td>
               <td>
-                Specifies which logging implementation MyBatis should use. If this setting is not present logging implementation will be autodiscovered. 
+                마이바티스가 사용할 로깅 구현체를 명시
+                이 설정을 사용하지 않으면 마이바티스가 사용할 로깅 구현체를 자동으로 찾는다.  
               </td>
               <td>
                 SLF4J | LOG4J | LOG4J2 | JDK_LOGGING | COMMONS_LOGGING | STDOUT_LOGGING | NO_LOGGING
               </td>
               <td>
-                Not set
+                셋팅하지 않음
               </td>
             </tr>
             <tr>
@@ -343,7 +346,7 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 proxyFactory
               </td>
               <td>
-                Specifies the proxy tool that MyBatis will use for creating lazy loading capable objects.
+                마이바티스가 늦은 로딩을 처리할 객체를 생성할 때 사용할 프록시 툴을 명시
               </td>
               <td>
                 CGLIB | JAVASSIST
@@ -945,9 +948,8 @@ public class ExampleTypeHandler extends BaseTypeHandler<String> {
 
         <p>JDBC타입에 대한 자동검색 기능은 애노테이션을 명시한 경우에만 가능하다는 것을 알아둘 필요가 있다. </p>
         <p>
-          You can create a generic TypeHandler that is able to handle more than one class. For that purpose  
-          add a constructor that receives the class as a parameter and MyBatis will pass the actual class when
-          constructing the TypeHandler.
+          한개 이상의 클래스를 다루는 제네릭 TypeHandler를 만들수 있다. 
+          파라미터로 클래스를 가져오는 생성자를 추가하고 마이바티스는 TypeHandler를 만들때 실제 클래스를 전달할 것이다.
         </p>
 
         <source><![CDATA[//GenericTypeHandler.java
@@ -962,31 +964,27 @@ public class GenericTypeHandler<E extends MyObject> extends BaseTypeHandler<E> {
   ...
 ]]></source>
 
-		<p><code>EnumTypeHandler</code> and <code>EnumOrdinalTypeHandler</code> are generic TypeHandlers. We will learn 
-		about them in the following section. 
+		<p><code>EnumTypeHandler</code> 와 <code>EnumOrdinalTypeHandler</code> 는 제네릭 TypeHandler이다. 
+		이어서 각각을 다룬다.  
 		</p>
 
       </subsection>
       
       <subsection name="Handling Enums">
       	<p>
-      	  If you want to map an <code>Enum</code>, you'll need to use either
-      	  <code>EnumTypeHandler</code> or <code>EnumOrdinalTypeHandler</code>. 
+      	<code>Enum</code>을 매핑하고자 한다면 <code>EnumTypeHandler</code> 나 <code>EnumOrdinalTypeHandler</code> 를 사용할 필요가 있을것이다.  
       	</p>
       	
-      	<p>For example, let's say that we need to store the rounding mode that 
-      	should be used with some number if it needs to be rounded. By default, MyBatis
-      	uses <code>EnumTypeHandler</code> to convert the <code>Enum</code>
-      	values to their names.
+      	<p>예를들어, 순환 방식으로 몇개의 숫자를 사용하는 순환모드를 저장할 필요가 있다고 해보자. 
+      	기본적으로 마이바티스는 <code>Enum</code> 값을 각각의 이름으로 변환하기 위해 <code>EnumTypeHandler</code> 를 사용한다.
       	</p>
       	
-      	<b>Note <code>EnumTypeHandler</code> is special in the sense that unlike other handlers, 
-      	it does not handle just one specific class, but any class that extends <code>Enum</code></b>
+      	<b><code>EnumTypeHandler</code>는 특히 다른 핸들러와 차이가 있다. 
+      	어떤 하나의 특정 클래스를 다루지 않고 <code>Enum</code> 을 확장하는 모든 클래스를 다룬다. </b>
 
-      	<p>However, we may not want to store names. Our DBA may insist on an 
-      	integer code instead. That's just as easy: add <code>EnumOrdinalTypeHandler</code>
-      	to the <code>typeHandlers</code> in your config file, and now each
-      	<code>RoundingMode</code> will be mapped to an integer using its ordinal value.     	
+      	<p>아무리 이름을 저장하려해도 DBA는 숫자코드를 고집할수 있다. 이름대신 숫자코드를 저장하는 방법은 쉽다. 
+      	설정파일의 <code>typeHandlers</code>에 <code>EnumOrdinalTypeHandler</code> 를 추가하자. 
+      	그러면 각각의 <code>RoundingMode</code>는 순서값을 사용해서 숫자를 매핑할 것이다.     	
       	</p>
        <source><![CDATA[<!-- mybatis-config.xml -->
 <typeHandlers>
@@ -994,19 +992,15 @@ public class GenericTypeHandler<E extends MyObject> extends BaseTypeHandler<E> {
 </typeHandlers>
 ]]></source>
 		<p>
-		  But what if you want to map the same <code>Enum</code> to a 
-		  string in one place and to integer in another? 
+		  같은 <code>Enum</code>을 사용해서 어떤곳에는 문자열로 매핑하고 다른곳에는 숫자로 매핑해야 한다면 무엇을 해야 하나?
 		</p>
       	<p>
-      	  The auto-mapper will automatically use <code>EnumOrdinalTypeHandler</code>, 
-      	  so if we want to go back to using plain old ordinary
-      	  <code>EnumTypeHandler</code>, we have to tell it, by explicitly setting 
-      	  the type handler to use for those SQL statements. 
+      	  자동매퍼는 <code>EnumOrdinalTypeHandler</code> 를 자동으로 사용할 것이다. 
+      	  그래서 평범한 순서를 나타내는 <code>EnumTypeHandler</code> 를 사용하고자 한다면 SQL구문에 사용할 타입핸들러를 몀시적으로 설정한다. 
       	</p>
       	<p>
-      	  (Mapper files aren't covered until the next section, so if this is your first
-      	  time reading through the documentation, you may want to skip this for now
-      	  and come back to it later.)
+      	  (매퍼 파일은 다음절까지는 다루지 않는다. 
+      	  그래서 문서를 보면서 처음 봤다면 일단 이부분은 건너띄고 다음에 다시 볼수도 있다. )
       	</p>
       	<source><![CDATA[<!DOCTYPE mapper
     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
@@ -1051,8 +1045,7 @@ public class GenericTypeHandler<E extends MyObject> extends BaseTypeHandler<E> {
 </mapper>
 ]]></source>
 		<p>
-		  Note that this forces us to use a <code>resultMap</code> 
-		  instead of a <code>resultType</code> in our select statements.
+		  여기서 사용한 select구문에서는 <code>resultType</code> 대신에 <code>resultMap</code>을 사용해야 한다는 점을 알아두자. 
 		</p>
       </subsection>
 
@@ -1296,7 +1289,7 @@ data_source 프로퍼티가 InitialContext 에서 직접 찾을 것이다.</li>
         <p>이 설정은 인스턴스화할 때 InitialContext 생성자에 “encoding” 프로퍼티를 “UTF8” 로 전달한다.</p>
 
 		<p>
-		  You can plug any 3rd party DataSource by implementing the interface <code>org.apache.ibatis.datasource.DataSourceFactory</code>:
+		  <code>org.apache.ibatis.datasource.DataSourceFactory</code> 인터페이스를 구현해서 또다른  DataSource구현체를 만들수 있다. 
 		</p>
 
         <source><![CDATA[public interface DataSourceFactory {
@@ -1305,8 +1298,8 @@ data_source 프로퍼티가 InitialContext 에서 직접 찾을 것이다.</li>
 }]]></source>
 
         <p>
-		  <code>org.apache.ibatis.datasource.unpooled.UnpooledDataSourceFactory</code> can be used as super class
-		  class to build new datasource adapters. For example this is the code needed to plug C3P0:  
+		  <code>org.apache.ibatis.datasource.unpooled.UnpooledDataSourceFactory</code> 는 새로운 데이터소스를 만들기 위한 상위 클래스처럼 사용할 수 있다. 
+		  예를들면 다음의 코드를 사용해서 C3P0를 사용할 수 있다.   
 		</p>
 
         <source><![CDATA[import org.apache.ibatis.datasource.unpooled.UnpooledDataSourceFactory;
@@ -1319,8 +1312,8 @@ public class C3P0DataSourceFactory extends UnpooledDataSourceFactory {
   }
 }]]></source>
 
-        <p>To set it up, add a property for each setter method you want MyBatis to call. 
-        Below depicts a sample configuration which connects to a PostgreSQL database:</p>        
+        <p>마이바티스가 호출할 setter메소드가 사용하는 프로퍼티를 추가해서 설정한다. 
+        다음의 설정은 PostgreSQL 데이터베이스에 연결할때 사용한 샘플 설정이다. </p>        
 
         <source><![CDATA[<dataSource type="org.myproject.C3P0DataSourceFactory">
   <property name="driver" value="org.postgresql.Driver"/>
