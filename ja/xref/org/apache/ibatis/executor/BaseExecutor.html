@@ -198,145 +198,146 @@
 <a class="jxr_linenumber" name="188" href="#188">188</a>         cacheKey.update(value);
 <a class="jxr_linenumber" name="189" href="#189">189</a>       }
 <a class="jxr_linenumber" name="190" href="#190">190</a>     }
-<a class="jxr_linenumber" name="191" href="#191">191</a>     <strong class="jxr_keyword">return</strong> cacheKey;
-<a class="jxr_linenumber" name="192" href="#192">192</a>   }    
-<a class="jxr_linenumber" name="193" href="#193">193</a> 
-<a class="jxr_linenumber" name="194" href="#194">194</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> isCached(<a href="../../../../org/apache/ibatis/mapping/MappedStatement.html">MappedStatement</a> ms, <a href="../../../../org/apache/ibatis/cache/CacheKey.html">CacheKey</a> key) {
-<a class="jxr_linenumber" name="195" href="#195">195</a>     <strong class="jxr_keyword">return</strong> localCache.getObject(key) != <strong class="jxr_keyword">null</strong>;
-<a class="jxr_linenumber" name="196" href="#196">196</a>   }
-<a class="jxr_linenumber" name="197" href="#197">197</a> 
-<a class="jxr_linenumber" name="198" href="#198">198</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> commit(<strong class="jxr_keyword">boolean</strong> required) <strong class="jxr_keyword">throws</strong> SQLException {
-<a class="jxr_linenumber" name="199" href="#199">199</a>     <strong class="jxr_keyword">if</strong> (closed) <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> ExecutorException(<span class="jxr_string">"Cannot commit, transaction is already closed"</span>);
-<a class="jxr_linenumber" name="200" href="#200">200</a>     clearLocalCache();
-<a class="jxr_linenumber" name="201" href="#201">201</a>     flushStatements();
-<a class="jxr_linenumber" name="202" href="#202">202</a>     <strong class="jxr_keyword">if</strong> (required) {
-<a class="jxr_linenumber" name="203" href="#203">203</a>       transaction.commit();
-<a class="jxr_linenumber" name="204" href="#204">204</a>     }
-<a class="jxr_linenumber" name="205" href="#205">205</a>   }
-<a class="jxr_linenumber" name="206" href="#206">206</a> 
-<a class="jxr_linenumber" name="207" href="#207">207</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> rollback(<strong class="jxr_keyword">boolean</strong> required) <strong class="jxr_keyword">throws</strong> SQLException {
-<a class="jxr_linenumber" name="208" href="#208">208</a>     <strong class="jxr_keyword">if</strong> (!closed) {
-<a class="jxr_linenumber" name="209" href="#209">209</a>       <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="210" href="#210">210</a>         clearLocalCache();
-<a class="jxr_linenumber" name="211" href="#211">211</a>         flushStatements(<strong class="jxr_keyword">true</strong>);
-<a class="jxr_linenumber" name="212" href="#212">212</a>       } <strong class="jxr_keyword">finally</strong> {
-<a class="jxr_linenumber" name="213" href="#213">213</a>         <strong class="jxr_keyword">if</strong> (required) {
-<a class="jxr_linenumber" name="214" href="#214">214</a>           transaction.rollback();
-<a class="jxr_linenumber" name="215" href="#215">215</a>         }
-<a class="jxr_linenumber" name="216" href="#216">216</a>       }
-<a class="jxr_linenumber" name="217" href="#217">217</a>     }
-<a class="jxr_linenumber" name="218" href="#218">218</a>   }
-<a class="jxr_linenumber" name="219" href="#219">219</a> 
-<a class="jxr_linenumber" name="220" href="#220">220</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> clearLocalCache() {
-<a class="jxr_linenumber" name="221" href="#221">221</a>     <strong class="jxr_keyword">if</strong> (!closed) {
-<a class="jxr_linenumber" name="222" href="#222">222</a>       localCache.clear();
-<a class="jxr_linenumber" name="223" href="#223">223</a>       localOutputParameterCache.clear();
-<a class="jxr_linenumber" name="224" href="#224">224</a>     }
-<a class="jxr_linenumber" name="225" href="#225">225</a>   }
-<a class="jxr_linenumber" name="226" href="#226">226</a> 
-<a class="jxr_linenumber" name="227" href="#227">227</a>   <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">abstract</strong> <strong class="jxr_keyword">int</strong> doUpdate(<a href="../../../../org/apache/ibatis/mapping/MappedStatement.html">MappedStatement</a> ms, Object parameter)
-<a class="jxr_linenumber" name="228" href="#228">228</a>       <strong class="jxr_keyword">throws</strong> SQLException;
-<a class="jxr_linenumber" name="229" href="#229">229</a> 
-<a class="jxr_linenumber" name="230" href="#230">230</a>   <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">abstract</strong> List&lt;BatchResult&gt; doFlushStatements(<strong class="jxr_keyword">boolean</strong> isRollback)
-<a class="jxr_linenumber" name="231" href="#231">231</a>       <strong class="jxr_keyword">throws</strong> SQLException;
-<a class="jxr_linenumber" name="232" href="#232">232</a> 
-<a class="jxr_linenumber" name="233" href="#233">233</a>   <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">abstract</strong> &lt;E&gt; List&lt;E&gt; doQuery(<a href="../../../../org/apache/ibatis/mapping/MappedStatement.html">MappedStatement</a> ms, Object parameter, <a href="../../../../org/apache/ibatis/session/RowBounds.html">RowBounds</a> rowBounds, <a href="../../../../org/apache/ibatis/session/ResultHandler.html">ResultHandler</a> resultHandler, <a href="../../../../org/apache/ibatis/mapping/BoundSql.html">BoundSql</a> boundSql)
-<a class="jxr_linenumber" name="234" href="#234">234</a>       <strong class="jxr_keyword">throws</strong> SQLException;
-<a class="jxr_linenumber" name="235" href="#235">235</a> 
-<a class="jxr_linenumber" name="236" href="#236">236</a>   <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">void</strong> closeStatement(Statement statement) {
-<a class="jxr_linenumber" name="237" href="#237">237</a>     <strong class="jxr_keyword">if</strong> (statement != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="238" href="#238">238</a>       <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="239" href="#239">239</a>         statement.close();
-<a class="jxr_linenumber" name="240" href="#240">240</a>       } <strong class="jxr_keyword">catch</strong> (SQLException e) {
-<a class="jxr_linenumber" name="241" href="#241">241</a>         <em class="jxr_comment">// ignore</em>
-<a class="jxr_linenumber" name="242" href="#242">242</a>       }
-<a class="jxr_linenumber" name="243" href="#243">243</a>     }
-<a class="jxr_linenumber" name="244" href="#244">244</a>   }
-<a class="jxr_linenumber" name="245" href="#245">245</a> 
-<a class="jxr_linenumber" name="246" href="#246">246</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> handleLocallyCachedOutputParameters(<a href="../../../../org/apache/ibatis/mapping/MappedStatement.html">MappedStatement</a> ms, <a href="../../../../org/apache/ibatis/cache/CacheKey.html">CacheKey</a> key, Object parameter, <a href="../../../../org/apache/ibatis/mapping/BoundSql.html">BoundSql</a> boundSql) {
-<a class="jxr_linenumber" name="247" href="#247">247</a>     <strong class="jxr_keyword">if</strong> (ms.getStatementType() == StatementType.CALLABLE) {
-<a class="jxr_linenumber" name="248" href="#248">248</a>       <strong class="jxr_keyword">final</strong> Object cachedParameter = localOutputParameterCache.getObject(key);
-<a class="jxr_linenumber" name="249" href="#249">249</a>       <strong class="jxr_keyword">if</strong> (cachedParameter != <strong class="jxr_keyword">null</strong> &amp;&amp; parameter != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="250" href="#250">250</a>         <strong class="jxr_keyword">final</strong> <a href="../../../../org/apache/ibatis/reflection/MetaObject.html">MetaObject</a> metaCachedParameter = configuration.newMetaObject(cachedParameter);
-<a class="jxr_linenumber" name="251" href="#251">251</a>         <strong class="jxr_keyword">final</strong> <a href="../../../../org/apache/ibatis/reflection/MetaObject.html">MetaObject</a> metaParameter = configuration.newMetaObject(parameter);
-<a class="jxr_linenumber" name="252" href="#252">252</a>         <strong class="jxr_keyword">for</strong> (ParameterMapping parameterMapping : boundSql.getParameterMappings()) {
-<a class="jxr_linenumber" name="253" href="#253">253</a>           <strong class="jxr_keyword">if</strong> (parameterMapping.getMode() != ParameterMode.IN) {
-<a class="jxr_linenumber" name="254" href="#254">254</a>             <strong class="jxr_keyword">final</strong> String parameterName = parameterMapping.getProperty();
-<a class="jxr_linenumber" name="255" href="#255">255</a>             <strong class="jxr_keyword">final</strong> Object cachedValue = metaCachedParameter.getValue(parameterName);
-<a class="jxr_linenumber" name="256" href="#256">256</a>             metaParameter.setValue(parameterName, cachedValue);
-<a class="jxr_linenumber" name="257" href="#257">257</a>           }
-<a class="jxr_linenumber" name="258" href="#258">258</a>         }
-<a class="jxr_linenumber" name="259" href="#259">259</a>       }
-<a class="jxr_linenumber" name="260" href="#260">260</a>     }
-<a class="jxr_linenumber" name="261" href="#261">261</a>   }
-<a class="jxr_linenumber" name="262" href="#262">262</a> 
-<a class="jxr_linenumber" name="263" href="#263">263</a>   <strong class="jxr_keyword">private</strong> &lt;E&gt; List&lt;E&gt; queryFromDatabase(<a href="../../../../org/apache/ibatis/mapping/MappedStatement.html">MappedStatement</a> ms, Object parameter, <a href="../../../../org/apache/ibatis/session/RowBounds.html">RowBounds</a> rowBounds, <a href="../../../../org/apache/ibatis/session/ResultHandler.html">ResultHandler</a> resultHandler, <a href="../../../../org/apache/ibatis/cache/CacheKey.html">CacheKey</a> key, <a href="../../../../org/apache/ibatis/mapping/BoundSql.html">BoundSql</a> boundSql) <strong class="jxr_keyword">throws</strong> SQLException {
-<a class="jxr_linenumber" name="264" href="#264">264</a>     List&lt;E&gt; list;
-<a class="jxr_linenumber" name="265" href="#265">265</a>     localCache.putObject(key, EXECUTION_PLACEHOLDER);
-<a class="jxr_linenumber" name="266" href="#266">266</a>     <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="267" href="#267">267</a>       list = doQuery(ms, parameter, rowBounds, resultHandler, boundSql);
-<a class="jxr_linenumber" name="268" href="#268">268</a>     } <strong class="jxr_keyword">finally</strong> {
-<a class="jxr_linenumber" name="269" href="#269">269</a>       localCache.removeObject(key);
-<a class="jxr_linenumber" name="270" href="#270">270</a>     }
-<a class="jxr_linenumber" name="271" href="#271">271</a>     localCache.putObject(key, list);
-<a class="jxr_linenumber" name="272" href="#272">272</a>     <strong class="jxr_keyword">if</strong> (ms.getStatementType() == StatementType.CALLABLE) {
-<a class="jxr_linenumber" name="273" href="#273">273</a>       localOutputParameterCache.putObject(key, parameter);
-<a class="jxr_linenumber" name="274" href="#274">274</a>     }
-<a class="jxr_linenumber" name="275" href="#275">275</a>     <strong class="jxr_keyword">return</strong> list;
-<a class="jxr_linenumber" name="276" href="#276">276</a>   }
-<a class="jxr_linenumber" name="277" href="#277">277</a> 
-<a class="jxr_linenumber" name="278" href="#278">278</a>   <strong class="jxr_keyword">protected</strong> Connection getConnection(<a href="../../../../org/apache/ibatis/logging/Log.html">Log</a> statementLog) <strong class="jxr_keyword">throws</strong> SQLException {
-<a class="jxr_linenumber" name="279" href="#279">279</a>     Connection connection = transaction.getConnection();
-<a class="jxr_linenumber" name="280" href="#280">280</a>     <strong class="jxr_keyword">if</strong> (statementLog.isDebugEnabled()) {
-<a class="jxr_linenumber" name="281" href="#281">281</a>       <strong class="jxr_keyword">return</strong> ConnectionLogger.newInstance(connection, statementLog, queryStack);
-<a class="jxr_linenumber" name="282" href="#282">282</a>     } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="283" href="#283">283</a>       <strong class="jxr_keyword">return</strong> connection;
-<a class="jxr_linenumber" name="284" href="#284">284</a>     }
-<a class="jxr_linenumber" name="285" href="#285">285</a>   }
-<a class="jxr_linenumber" name="286" href="#286">286</a>   
-<a class="jxr_linenumber" name="287" href="#287">287</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setExecutorWrapper(<a href="../../../../org/apache/ibatis/executor/Executor.html">Executor</a> wrapper) {
-<a class="jxr_linenumber" name="288" href="#288">288</a>     <strong class="jxr_keyword">this</strong>.wrapper = wrapper;
-<a class="jxr_linenumber" name="289" href="#289">289</a>   }
-<a class="jxr_linenumber" name="290" href="#290">290</a>   
-<a class="jxr_linenumber" name="291" href="#291">291</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../org/apache/ibatis/executor/BaseExecutor.html">DeferredLoad</a> {
-<a class="jxr_linenumber" name="292" href="#292">292</a> 
-<a class="jxr_linenumber" name="293" href="#293">293</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <a href="../../../../org/apache/ibatis/reflection/MetaObject.html">MetaObject</a> resultObject;
-<a class="jxr_linenumber" name="294" href="#294">294</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> String property;
-<a class="jxr_linenumber" name="295" href="#295">295</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> Class&lt;?&gt; targetType;
-<a class="jxr_linenumber" name="296" href="#296">296</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <a href="../../../../org/apache/ibatis/cache/CacheKey.html">CacheKey</a> key;
-<a class="jxr_linenumber" name="297" href="#297">297</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <a href="../../../../org/apache/ibatis/cache/impl/PerpetualCache.html">PerpetualCache</a> localCache;
-<a class="jxr_linenumber" name="298" href="#298">298</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <a href="../../../../org/apache/ibatis/reflection/factory/ObjectFactory.html">ObjectFactory</a> objectFactory;
-<a class="jxr_linenumber" name="299" href="#299">299</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <a href="../../../../org/apache/ibatis/executor/ResultExtractor.html">ResultExtractor</a> resultExtractor;
-<a class="jxr_linenumber" name="300" href="#300">300</a> 
-<a class="jxr_linenumber" name="301" href="#301">301</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../org/apache/ibatis/executor/BaseExecutor.html">DeferredLoad</a>(<a href="../../../../org/apache/ibatis/reflection/MetaObject.html">MetaObject</a> resultObject,
-<a class="jxr_linenumber" name="302" href="#302">302</a>                         String property,
-<a class="jxr_linenumber" name="303" href="#303">303</a>                         <a href="../../../../org/apache/ibatis/cache/CacheKey.html">CacheKey</a> key,
-<a class="jxr_linenumber" name="304" href="#304">304</a>                         <a href="../../../../org/apache/ibatis/cache/impl/PerpetualCache.html">PerpetualCache</a> localCache,
-<a class="jxr_linenumber" name="305" href="#305">305</a>                         <a href="../../../../org/apache/ibatis/session/Configuration.html">Configuration</a> configuration,
-<a class="jxr_linenumber" name="306" href="#306">306</a>                         Class&lt;?&gt; targetType) { <em class="jxr_comment">// issue #781</em>
-<a class="jxr_linenumber" name="307" href="#307">307</a>       <strong class="jxr_keyword">this</strong>.resultObject = resultObject;
-<a class="jxr_linenumber" name="308" href="#308">308</a>       <strong class="jxr_keyword">this</strong>.property = property;
-<a class="jxr_linenumber" name="309" href="#309">309</a>       <strong class="jxr_keyword">this</strong>.key = key;
-<a class="jxr_linenumber" name="310" href="#310">310</a>       <strong class="jxr_keyword">this</strong>.localCache = localCache;
-<a class="jxr_linenumber" name="311" href="#311">311</a>       <strong class="jxr_keyword">this</strong>.objectFactory = configuration.getObjectFactory();
-<a class="jxr_linenumber" name="312" href="#312">312</a>       <strong class="jxr_keyword">this</strong>.resultExtractor = <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/executor/ResultExtractor.html">ResultExtractor</a>(configuration, objectFactory);
-<a class="jxr_linenumber" name="313" href="#313">313</a>       <strong class="jxr_keyword">this</strong>.targetType = targetType;
-<a class="jxr_linenumber" name="314" href="#314">314</a>     }
-<a class="jxr_linenumber" name="315" href="#315">315</a> 
-<a class="jxr_linenumber" name="316" href="#316">316</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> canLoad() {
-<a class="jxr_linenumber" name="317" href="#317">317</a>       <strong class="jxr_keyword">return</strong> localCache.getObject(key) != <strong class="jxr_keyword">null</strong> &amp;&amp; localCache.getObject(key) != EXECUTION_PLACEHOLDER;
-<a class="jxr_linenumber" name="318" href="#318">318</a>     }
-<a class="jxr_linenumber" name="319" href="#319">319</a> 
-<a class="jxr_linenumber" name="320" href="#320">320</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> load() {
-<a class="jxr_linenumber" name="321" href="#321">321</a>       @SuppressWarnings( <span class="jxr_string">"unchecked"</span> ) <em class="jxr_comment">// we suppose we get back a List</em>
-<a class="jxr_linenumber" name="322" href="#322">322</a>       List&lt;Object&gt; list = (List&lt;Object&gt;) localCache.getObject(key);
-<a class="jxr_linenumber" name="323" href="#323">323</a>       Object value = resultExtractor.extractObjectFromList(list, targetType);
-<a class="jxr_linenumber" name="324" href="#324">324</a>       resultObject.setValue(property, value);
-<a class="jxr_linenumber" name="325" href="#325">325</a>     }
-<a class="jxr_linenumber" name="326" href="#326">326</a> 
-<a class="jxr_linenumber" name="327" href="#327">327</a>   }
-<a class="jxr_linenumber" name="328" href="#328">328</a> 
-<a class="jxr_linenumber" name="329" href="#329">329</a> }
+<a class="jxr_linenumber" name="191" href="#191">191</a>     <strong class="jxr_keyword">if</strong> (configuration.getEnvironment() != <strong class="jxr_keyword">null</strong>) cacheKey.update(configuration.getEnvironment().getId()); <em class="jxr_comment">//issue #176</em>
+<a class="jxr_linenumber" name="192" href="#192">192</a>     <strong class="jxr_keyword">return</strong> cacheKey;
+<a class="jxr_linenumber" name="193" href="#193">193</a>   }    
+<a class="jxr_linenumber" name="194" href="#194">194</a> 
+<a class="jxr_linenumber" name="195" href="#195">195</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> isCached(<a href="../../../../org/apache/ibatis/mapping/MappedStatement.html">MappedStatement</a> ms, <a href="../../../../org/apache/ibatis/cache/CacheKey.html">CacheKey</a> key) {
+<a class="jxr_linenumber" name="196" href="#196">196</a>     <strong class="jxr_keyword">return</strong> localCache.getObject(key) != <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="197" href="#197">197</a>   }
+<a class="jxr_linenumber" name="198" href="#198">198</a> 
+<a class="jxr_linenumber" name="199" href="#199">199</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> commit(<strong class="jxr_keyword">boolean</strong> required) <strong class="jxr_keyword">throws</strong> SQLException {
+<a class="jxr_linenumber" name="200" href="#200">200</a>     <strong class="jxr_keyword">if</strong> (closed) <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> ExecutorException(<span class="jxr_string">"Cannot commit, transaction is already closed"</span>);
+<a class="jxr_linenumber" name="201" href="#201">201</a>     clearLocalCache();
+<a class="jxr_linenumber" name="202" href="#202">202</a>     flushStatements();
+<a class="jxr_linenumber" name="203" href="#203">203</a>     <strong class="jxr_keyword">if</strong> (required) {
+<a class="jxr_linenumber" name="204" href="#204">204</a>       transaction.commit();
+<a class="jxr_linenumber" name="205" href="#205">205</a>     }
+<a class="jxr_linenumber" name="206" href="#206">206</a>   }
+<a class="jxr_linenumber" name="207" href="#207">207</a> 
+<a class="jxr_linenumber" name="208" href="#208">208</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> rollback(<strong class="jxr_keyword">boolean</strong> required) <strong class="jxr_keyword">throws</strong> SQLException {
+<a class="jxr_linenumber" name="209" href="#209">209</a>     <strong class="jxr_keyword">if</strong> (!closed) {
+<a class="jxr_linenumber" name="210" href="#210">210</a>       <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="211" href="#211">211</a>         clearLocalCache();
+<a class="jxr_linenumber" name="212" href="#212">212</a>         flushStatements(<strong class="jxr_keyword">true</strong>);
+<a class="jxr_linenumber" name="213" href="#213">213</a>       } <strong class="jxr_keyword">finally</strong> {
+<a class="jxr_linenumber" name="214" href="#214">214</a>         <strong class="jxr_keyword">if</strong> (required) {
+<a class="jxr_linenumber" name="215" href="#215">215</a>           transaction.rollback();
+<a class="jxr_linenumber" name="216" href="#216">216</a>         }
+<a class="jxr_linenumber" name="217" href="#217">217</a>       }
+<a class="jxr_linenumber" name="218" href="#218">218</a>     }
+<a class="jxr_linenumber" name="219" href="#219">219</a>   }
+<a class="jxr_linenumber" name="220" href="#220">220</a> 
+<a class="jxr_linenumber" name="221" href="#221">221</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> clearLocalCache() {
+<a class="jxr_linenumber" name="222" href="#222">222</a>     <strong class="jxr_keyword">if</strong> (!closed) {
+<a class="jxr_linenumber" name="223" href="#223">223</a>       localCache.clear();
+<a class="jxr_linenumber" name="224" href="#224">224</a>       localOutputParameterCache.clear();
+<a class="jxr_linenumber" name="225" href="#225">225</a>     }
+<a class="jxr_linenumber" name="226" href="#226">226</a>   }
+<a class="jxr_linenumber" name="227" href="#227">227</a> 
+<a class="jxr_linenumber" name="228" href="#228">228</a>   <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">abstract</strong> <strong class="jxr_keyword">int</strong> doUpdate(<a href="../../../../org/apache/ibatis/mapping/MappedStatement.html">MappedStatement</a> ms, Object parameter)
+<a class="jxr_linenumber" name="229" href="#229">229</a>       <strong class="jxr_keyword">throws</strong> SQLException;
+<a class="jxr_linenumber" name="230" href="#230">230</a> 
+<a class="jxr_linenumber" name="231" href="#231">231</a>   <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">abstract</strong> List&lt;BatchResult&gt; doFlushStatements(<strong class="jxr_keyword">boolean</strong> isRollback)
+<a class="jxr_linenumber" name="232" href="#232">232</a>       <strong class="jxr_keyword">throws</strong> SQLException;
+<a class="jxr_linenumber" name="233" href="#233">233</a> 
+<a class="jxr_linenumber" name="234" href="#234">234</a>   <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">abstract</strong> &lt;E&gt; List&lt;E&gt; doQuery(<a href="../../../../org/apache/ibatis/mapping/MappedStatement.html">MappedStatement</a> ms, Object parameter, <a href="../../../../org/apache/ibatis/session/RowBounds.html">RowBounds</a> rowBounds, <a href="../../../../org/apache/ibatis/session/ResultHandler.html">ResultHandler</a> resultHandler, <a href="../../../../org/apache/ibatis/mapping/BoundSql.html">BoundSql</a> boundSql)
+<a class="jxr_linenumber" name="235" href="#235">235</a>       <strong class="jxr_keyword">throws</strong> SQLException;
+<a class="jxr_linenumber" name="236" href="#236">236</a> 
+<a class="jxr_linenumber" name="237" href="#237">237</a>   <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">void</strong> closeStatement(Statement statement) {
+<a class="jxr_linenumber" name="238" href="#238">238</a>     <strong class="jxr_keyword">if</strong> (statement != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="239" href="#239">239</a>       <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="240" href="#240">240</a>         statement.close();
+<a class="jxr_linenumber" name="241" href="#241">241</a>       } <strong class="jxr_keyword">catch</strong> (SQLException e) {
+<a class="jxr_linenumber" name="242" href="#242">242</a>         <em class="jxr_comment">// ignore</em>
+<a class="jxr_linenumber" name="243" href="#243">243</a>       }
+<a class="jxr_linenumber" name="244" href="#244">244</a>     }
+<a class="jxr_linenumber" name="245" href="#245">245</a>   }
+<a class="jxr_linenumber" name="246" href="#246">246</a> 
+<a class="jxr_linenumber" name="247" href="#247">247</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> handleLocallyCachedOutputParameters(<a href="../../../../org/apache/ibatis/mapping/MappedStatement.html">MappedStatement</a> ms, <a href="../../../../org/apache/ibatis/cache/CacheKey.html">CacheKey</a> key, Object parameter, <a href="../../../../org/apache/ibatis/mapping/BoundSql.html">BoundSql</a> boundSql) {
+<a class="jxr_linenumber" name="248" href="#248">248</a>     <strong class="jxr_keyword">if</strong> (ms.getStatementType() == StatementType.CALLABLE) {
+<a class="jxr_linenumber" name="249" href="#249">249</a>       <strong class="jxr_keyword">final</strong> Object cachedParameter = localOutputParameterCache.getObject(key);
+<a class="jxr_linenumber" name="250" href="#250">250</a>       <strong class="jxr_keyword">if</strong> (cachedParameter != <strong class="jxr_keyword">null</strong> &amp;&amp; parameter != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="251" href="#251">251</a>         <strong class="jxr_keyword">final</strong> <a href="../../../../org/apache/ibatis/reflection/MetaObject.html">MetaObject</a> metaCachedParameter = configuration.newMetaObject(cachedParameter);
+<a class="jxr_linenumber" name="252" href="#252">252</a>         <strong class="jxr_keyword">final</strong> <a href="../../../../org/apache/ibatis/reflection/MetaObject.html">MetaObject</a> metaParameter = configuration.newMetaObject(parameter);
+<a class="jxr_linenumber" name="253" href="#253">253</a>         <strong class="jxr_keyword">for</strong> (ParameterMapping parameterMapping : boundSql.getParameterMappings()) {
+<a class="jxr_linenumber" name="254" href="#254">254</a>           <strong class="jxr_keyword">if</strong> (parameterMapping.getMode() != ParameterMode.IN) {
+<a class="jxr_linenumber" name="255" href="#255">255</a>             <strong class="jxr_keyword">final</strong> String parameterName = parameterMapping.getProperty();
+<a class="jxr_linenumber" name="256" href="#256">256</a>             <strong class="jxr_keyword">final</strong> Object cachedValue = metaCachedParameter.getValue(parameterName);
+<a class="jxr_linenumber" name="257" href="#257">257</a>             metaParameter.setValue(parameterName, cachedValue);
+<a class="jxr_linenumber" name="258" href="#258">258</a>           }
+<a class="jxr_linenumber" name="259" href="#259">259</a>         }
+<a class="jxr_linenumber" name="260" href="#260">260</a>       }
+<a class="jxr_linenumber" name="261" href="#261">261</a>     }
+<a class="jxr_linenumber" name="262" href="#262">262</a>   }
+<a class="jxr_linenumber" name="263" href="#263">263</a> 
+<a class="jxr_linenumber" name="264" href="#264">264</a>   <strong class="jxr_keyword">private</strong> &lt;E&gt; List&lt;E&gt; queryFromDatabase(<a href="../../../../org/apache/ibatis/mapping/MappedStatement.html">MappedStatement</a> ms, Object parameter, <a href="../../../../org/apache/ibatis/session/RowBounds.html">RowBounds</a> rowBounds, <a href="../../../../org/apache/ibatis/session/ResultHandler.html">ResultHandler</a> resultHandler, <a href="../../../../org/apache/ibatis/cache/CacheKey.html">CacheKey</a> key, <a href="../../../../org/apache/ibatis/mapping/BoundSql.html">BoundSql</a> boundSql) <strong class="jxr_keyword">throws</strong> SQLException {
+<a class="jxr_linenumber" name="265" href="#265">265</a>     List&lt;E&gt; list;
+<a class="jxr_linenumber" name="266" href="#266">266</a>     localCache.putObject(key, EXECUTION_PLACEHOLDER);
+<a class="jxr_linenumber" name="267" href="#267">267</a>     <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="268" href="#268">268</a>       list = doQuery(ms, parameter, rowBounds, resultHandler, boundSql);
+<a class="jxr_linenumber" name="269" href="#269">269</a>     } <strong class="jxr_keyword">finally</strong> {
+<a class="jxr_linenumber" name="270" href="#270">270</a>       localCache.removeObject(key);
+<a class="jxr_linenumber" name="271" href="#271">271</a>     }
+<a class="jxr_linenumber" name="272" href="#272">272</a>     localCache.putObject(key, list);
+<a class="jxr_linenumber" name="273" href="#273">273</a>     <strong class="jxr_keyword">if</strong> (ms.getStatementType() == StatementType.CALLABLE) {
+<a class="jxr_linenumber" name="274" href="#274">274</a>       localOutputParameterCache.putObject(key, parameter);
+<a class="jxr_linenumber" name="275" href="#275">275</a>     }
+<a class="jxr_linenumber" name="276" href="#276">276</a>     <strong class="jxr_keyword">return</strong> list;
+<a class="jxr_linenumber" name="277" href="#277">277</a>   }
+<a class="jxr_linenumber" name="278" href="#278">278</a> 
+<a class="jxr_linenumber" name="279" href="#279">279</a>   <strong class="jxr_keyword">protected</strong> Connection getConnection(<a href="../../../../org/apache/ibatis/logging/Log.html">Log</a> statementLog) <strong class="jxr_keyword">throws</strong> SQLException {
+<a class="jxr_linenumber" name="280" href="#280">280</a>     Connection connection = transaction.getConnection();
+<a class="jxr_linenumber" name="281" href="#281">281</a>     <strong class="jxr_keyword">if</strong> (statementLog.isDebugEnabled()) {
+<a class="jxr_linenumber" name="282" href="#282">282</a>       <strong class="jxr_keyword">return</strong> ConnectionLogger.newInstance(connection, statementLog, queryStack);
+<a class="jxr_linenumber" name="283" href="#283">283</a>     } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="284" href="#284">284</a>       <strong class="jxr_keyword">return</strong> connection;
+<a class="jxr_linenumber" name="285" href="#285">285</a>     }
+<a class="jxr_linenumber" name="286" href="#286">286</a>   }
+<a class="jxr_linenumber" name="287" href="#287">287</a>   
+<a class="jxr_linenumber" name="288" href="#288">288</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setExecutorWrapper(<a href="../../../../org/apache/ibatis/executor/Executor.html">Executor</a> wrapper) {
+<a class="jxr_linenumber" name="289" href="#289">289</a>     <strong class="jxr_keyword">this</strong>.wrapper = wrapper;
+<a class="jxr_linenumber" name="290" href="#290">290</a>   }
+<a class="jxr_linenumber" name="291" href="#291">291</a>   
+<a class="jxr_linenumber" name="292" href="#292">292</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../org/apache/ibatis/executor/BaseExecutor.html">DeferredLoad</a> {
+<a class="jxr_linenumber" name="293" href="#293">293</a> 
+<a class="jxr_linenumber" name="294" href="#294">294</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <a href="../../../../org/apache/ibatis/reflection/MetaObject.html">MetaObject</a> resultObject;
+<a class="jxr_linenumber" name="295" href="#295">295</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> String property;
+<a class="jxr_linenumber" name="296" href="#296">296</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> Class&lt;?&gt; targetType;
+<a class="jxr_linenumber" name="297" href="#297">297</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <a href="../../../../org/apache/ibatis/cache/CacheKey.html">CacheKey</a> key;
+<a class="jxr_linenumber" name="298" href="#298">298</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <a href="../../../../org/apache/ibatis/cache/impl/PerpetualCache.html">PerpetualCache</a> localCache;
+<a class="jxr_linenumber" name="299" href="#299">299</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <a href="../../../../org/apache/ibatis/reflection/factory/ObjectFactory.html">ObjectFactory</a> objectFactory;
+<a class="jxr_linenumber" name="300" href="#300">300</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <a href="../../../../org/apache/ibatis/executor/ResultExtractor.html">ResultExtractor</a> resultExtractor;
+<a class="jxr_linenumber" name="301" href="#301">301</a> 
+<a class="jxr_linenumber" name="302" href="#302">302</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../org/apache/ibatis/executor/BaseExecutor.html">DeferredLoad</a>(<a href="../../../../org/apache/ibatis/reflection/MetaObject.html">MetaObject</a> resultObject,
+<a class="jxr_linenumber" name="303" href="#303">303</a>                         String property,
+<a class="jxr_linenumber" name="304" href="#304">304</a>                         <a href="../../../../org/apache/ibatis/cache/CacheKey.html">CacheKey</a> key,
+<a class="jxr_linenumber" name="305" href="#305">305</a>                         <a href="../../../../org/apache/ibatis/cache/impl/PerpetualCache.html">PerpetualCache</a> localCache,
+<a class="jxr_linenumber" name="306" href="#306">306</a>                         <a href="../../../../org/apache/ibatis/session/Configuration.html">Configuration</a> configuration,
+<a class="jxr_linenumber" name="307" href="#307">307</a>                         Class&lt;?&gt; targetType) { <em class="jxr_comment">// issue #781</em>
+<a class="jxr_linenumber" name="308" href="#308">308</a>       <strong class="jxr_keyword">this</strong>.resultObject = resultObject;
+<a class="jxr_linenumber" name="309" href="#309">309</a>       <strong class="jxr_keyword">this</strong>.property = property;
+<a class="jxr_linenumber" name="310" href="#310">310</a>       <strong class="jxr_keyword">this</strong>.key = key;
+<a class="jxr_linenumber" name="311" href="#311">311</a>       <strong class="jxr_keyword">this</strong>.localCache = localCache;
+<a class="jxr_linenumber" name="312" href="#312">312</a>       <strong class="jxr_keyword">this</strong>.objectFactory = configuration.getObjectFactory();
+<a class="jxr_linenumber" name="313" href="#313">313</a>       <strong class="jxr_keyword">this</strong>.resultExtractor = <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/executor/ResultExtractor.html">ResultExtractor</a>(configuration, objectFactory);
+<a class="jxr_linenumber" name="314" href="#314">314</a>       <strong class="jxr_keyword">this</strong>.targetType = targetType;
+<a class="jxr_linenumber" name="315" href="#315">315</a>     }
+<a class="jxr_linenumber" name="316" href="#316">316</a> 
+<a class="jxr_linenumber" name="317" href="#317">317</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> canLoad() {
+<a class="jxr_linenumber" name="318" href="#318">318</a>       <strong class="jxr_keyword">return</strong> localCache.getObject(key) != <strong class="jxr_keyword">null</strong> &amp;&amp; localCache.getObject(key) != EXECUTION_PLACEHOLDER;
+<a class="jxr_linenumber" name="319" href="#319">319</a>     }
+<a class="jxr_linenumber" name="320" href="#320">320</a> 
+<a class="jxr_linenumber" name="321" href="#321">321</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> load() {
+<a class="jxr_linenumber" name="322" href="#322">322</a>       @SuppressWarnings( <span class="jxr_string">"unchecked"</span> ) <em class="jxr_comment">// we suppose we get back a List</em>
+<a class="jxr_linenumber" name="323" href="#323">323</a>       List&lt;Object&gt; list = (List&lt;Object&gt;) localCache.getObject(key);
+<a class="jxr_linenumber" name="324" href="#324">324</a>       Object value = resultExtractor.extractObjectFromList(list, targetType);
+<a class="jxr_linenumber" name="325" href="#325">325</a>       resultObject.setValue(property, value);
+<a class="jxr_linenumber" name="326" href="#326">326</a>     }
+<a class="jxr_linenumber" name="327" href="#327">327</a> 
+<a class="jxr_linenumber" name="328" href="#328">328</a>   }
+<a class="jxr_linenumber" name="329" href="#329">329</a> 
+<a class="jxr_linenumber" name="330" href="#330">330</a> }
 </pre>
 <hr/><div id="footer">This page was automatically generated by <a href="http://maven.apache.org/">Maven</a></div></body>
 </html>
