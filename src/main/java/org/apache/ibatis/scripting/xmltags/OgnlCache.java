@@ -29,6 +29,7 @@ import ognl.ParseException;
 import ognl.TokenMgrError;
 
 import org.apache.ibatis.builder.BuilderException;
+import org.apache.ibatis.ognl.MyBatisClassResolver;
 
 /**
  * 
@@ -45,7 +46,8 @@ public class OgnlCache {
 
   public static Object getValue(String expression, Object root) {
     try {
-      return Ognl.getValue(parseExpression(expression), root);
+      Map context = Ognl.createDefaultContext(root, new MyBatisClassResolver());
+      return Ognl.getValue(parseExpression(expression), context, root);
     } catch (OgnlException e) {
       throw new BuilderException("Error evaluating expression '" + expression + "'. Cause: " + e, e);
     }
