@@ -318,6 +318,20 @@ public class DynamicSqlSourceTest extends BaseDataTest {
   }
 
   @Test
+  public void shouldSkipForEachWhenCollectionIsEmpty() throws Exception {
+    final HashMap<String, Integer[]> parameterObject = new HashMap<String, Integer[]>() {{
+        put("array", new Integer[] {});
+    }};
+    final String expected = "SELECT * FROM BLOG";
+    DynamicSqlSource source = createDynamicSqlSource(new TextSqlNode("SELECT * FROM BLOG"),
+        new ForEachSqlNode(new Configuration(), mixedContents(
+            new TextSqlNode("#{item}")), "array", null, "item", "WHERE id in (", ")", ","));
+    BoundSql boundSql = source.getBoundSql(parameterObject);
+    assertEquals(expected, boundSql.getSql());
+    assertEquals(0, boundSql.getParameterMappings().size());
+  }
+
+  @Test
   public void shouldPerformStrictMatchOnForEachVariableSubstitution() throws Exception {
     final Map<String, Object> param = new HashMap<String, Object>();
     final Map<String, String> uuu = new HashMap<String, String>();
