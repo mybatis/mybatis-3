@@ -15,15 +15,15 @@
  */
 package org.apache.ibatis.mapping;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.TypeHandlerRegistry;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author Clinton Begin
@@ -38,6 +38,7 @@ public class ResultMapping {
   private TypeHandler<?> typeHandler;
   private String nestedResultMapId;
   private String nestedQueryId;
+  private ParameterProvider nestedOneParameterProvider;
   private Set<String> notNullColumns;
   private String columnPrefix;
   private List<ResultFlag> flags;
@@ -89,6 +90,11 @@ public class ResultMapping {
 
     public Builder nestedQueryId(String nestedQueryId) {
       resultMapping.nestedQueryId = nestedQueryId;
+      return this;
+    }
+
+    public Builder nestedOneParameterProvider(ParameterProvider nestedOneParameterProvider) {
+      resultMapping.nestedOneParameterProvider = nestedOneParameterProvider;
       return this;
     }
 
@@ -150,6 +156,9 @@ public class ResultMapping {
       if (resultMapping.nestedQueryId == null && resultMapping.nestedResultMapId == null && resultMapping.typeHandler == null) {
         throw new IllegalStateException("No typehandler found for property " + resultMapping.property);
       }
+      if (resultMapping.nestedQueryId == null && resultMapping.nestedOneParameterProvider != null) {
+        throw new IllegalStateException("No one found for property " + resultMapping.property);
+      }
       // Issue #4 and GH #39: column is optional only in nested resultmaps but not in the rest
       if (resultMapping.nestedResultMapId == null && resultMapping.column == null && resultMapping.composites.size() == 0) {
         throw new IllegalStateException("Mapping is missing column attribute for property " + resultMapping.property);
@@ -209,6 +218,10 @@ public class ResultMapping {
 
   public String getNestedQueryId() {
     return nestedQueryId;
+  }
+
+  public ParameterProvider getNestedOneParameterProvider() {
+    return nestedOneParameterProvider;
   }
 
   public Set<String> getNotNullColumns() {

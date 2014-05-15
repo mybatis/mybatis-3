@@ -15,7 +15,7 @@
  */
 package org.apache.ibatis.annotations;
 
-import org.apache.ibatis.mapping.FetchType;
+import org.apache.ibatis.mapping.DefaultOneParameterProvider;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -23,14 +23,12 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * @author Clinton Begin
+ * @author Craig St. Jean
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-public @interface One {
-  String select() default "";
-  
-  FetchType fetchType() default FetchType.DEFAULT;
+public @interface OneParameterProvider {
+    Class<?> type() default DefaultOneParameterProvider.class;
 
-  OneParameterProvider parameterProvider() default @OneParameterProvider;
+    String method() default "getParameters";
 }
