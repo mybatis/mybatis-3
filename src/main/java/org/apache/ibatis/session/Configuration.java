@@ -103,6 +103,7 @@ public class Configuration {
   protected boolean useColumnLabel = true;
   protected boolean cacheEnabled = true;
   protected boolean callSettersOnNulls = false;
+  protected boolean prefixQueriesWithStatementId = false;
   protected String logPrefix;
   protected Class <? extends Log> logImpl;
   protected LocalCacheScope localCacheScope = LocalCacheScope.SESSION;
@@ -192,6 +193,14 @@ public class Configuration {
 
     languageRegistry.setDefaultDriverClass(XMLLanguageDriver.class);
     languageRegistry.register(RawLanguageDriver.class);
+  }
+
+  public boolean isPrefixQueriesWithStatementId() {
+    return prefixQueriesWithStatementId;
+  }
+
+  public void setPrefixQueriesWithStatementId(boolean prefixQueriesWithStatementId) {
+    this.prefixQueriesWithStatementId = prefixQueriesWithStatementId;
   }
 
   public String getLogPrefix() {

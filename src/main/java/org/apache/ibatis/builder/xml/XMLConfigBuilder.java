@@ -214,7 +214,8 @@ public class XMLConfigBuilder extends BaseBuilder {
       configuration.setSafeResultHandlerEnabled(booleanValueOf(props.getProperty("safeResultHandlerEnabled"), true));
       configuration.setDefaultScriptingLanguage(resolveClass(props.getProperty("defaultScriptingLanguage")));
       configuration.setCallSettersOnNulls(booleanValueOf(props.getProperty("callSettersOnNulls"), false));
-      configuration.setLogPrefix(props.getProperty("logPrefix"));
+      configuration.setPrefixQueriesWithStatementId(booleanValueOf(props.getProperty("prefixQueriesWithStatementId"), false));
+	  configuration.setLogPrefix(props.getProperty("logPrefix"));
       configuration.setLogImpl(resolveClass(props.getProperty("logImpl")));
       configuration.setConfigurationFactory(resolveClass(props.getProperty("configurationFactory")));
     }
