@@ -210,7 +210,7 @@ XML 映射文件中定义很多的映射语句,除 XML 头部和文档类型声�
       <source><![CDATA[BlogMapper mapper = session.getMapper(BlogMapper.class);
 Blog blog = mapper.selectBlog(101);]]></source>
       <p>
-第二种方式有很多有点,首先它不是基于文字的,那就更安全了。第二,如果你的 IDE
+第二种方式有很多优点,首先它不是基于文字的,那就更安全了。第二,如果你的 IDE
 有代码补全功能,那么你可以利用它来操纵已映射的 SQL 语句。第三,不需要强制类型转
 换,同时 BlogMapper 接口可以保持简洁,返回值类型很安全(参数类型也很安全)
 。    </p>
