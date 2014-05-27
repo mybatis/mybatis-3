@@ -634,15 +634,15 @@ public class DefaultResultSetHandler implements ResultSetHandler {
         executor.deferLoad(nestedQuery, metaResultObject, property, key, targetType);
       } else {
         final Object nestedQueryParameterObjects;
-        if (parameterProvider != null) {
-          Map parameterMap = (Map) this.parameterHandler.getParameterObject();
+        final Object parameterObject = this.parameterHandler.getParameterObject();
+        if (parameterProvider != null && parameterObject != null && parameterObject instanceof Map) {
+          Map parameterMap = (Map) parameterObject;
           List<Object> originalParameters = new ArrayList<Object>();
-          if (parameterMap != null) {
-            int i = 0;
-            while (parameterMap.containsKey(Integer.toString(i))) {
-              originalParameters.add(parameterMap.get(Integer.toString(i++)));
-            }
+          int i = 0;
+          while (parameterMap.containsKey(Integer.toString(i))) {
+            originalParameters.add(parameterMap.get(Integer.toString(i++)));
           }
+
           nestedQueryParameterObjects = parameterProvider.invoke(nestedQueryParameterObject, nestedQueryParameterType, originalParameters);
         } else {
           nestedQueryParameterObjects = nestedQueryParameterObject;
