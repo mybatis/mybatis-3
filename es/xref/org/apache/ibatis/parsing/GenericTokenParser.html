@@ -49,7 +49,7 @@
 <a class="jxr_linenumber" name="39" href="#39">39</a>        <strong class="jxr_keyword">while</strong> (start &gt; -1) {
 <a class="jxr_linenumber" name="40" href="#40">40</a>          <strong class="jxr_keyword">if</strong> (start &gt; 0 &amp;&amp; src[start - 1] == '&#92;&#92;') {
 <a class="jxr_linenumber" name="41" href="#41">41</a>            <em class="jxr_comment">// the variable is escaped. remove the backslash.</em>
-<a class="jxr_linenumber" name="42" href="#42">42</a>            builder.append(src, offset, start - 1).append(openToken);
+<a class="jxr_linenumber" name="42" href="#42">42</a>            builder.append(src, offset, start - offset - 1).append(openToken);
 <a class="jxr_linenumber" name="43" href="#43">43</a>            offset = start + openToken.length();
 <a class="jxr_linenumber" name="44" href="#44">44</a>          } <strong class="jxr_keyword">else</strong> {
 <a class="jxr_linenumber" name="45" href="#45">45</a>            <strong class="jxr_keyword">int</strong> end = text.indexOf(closeToken, start);
