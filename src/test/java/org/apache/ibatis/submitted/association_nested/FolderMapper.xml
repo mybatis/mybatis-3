@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.apache.ibatis.submitted.association_nested.FolderMapper">
+
+  <resultMap id="folderResultMap" type="org.apache.ibatis.submitted.association_nested.FolderFlatTree">
+    <association property="root" javaType="org.apache.ibatis.submitted.association_nested.Folder">
+      <result property="id" column="id"/>
+      <result property="name" column="name"/>
+    </association>
+    <association property="level1" javaType="org.apache.ibatis.submitted.association_nested.Folder">
+      <result property="id" column="lvl1_id"/>
+      <result property="name" column="lvl1_name"/>
+    </association>
+    <association property="level2" javaType="org.apache.ibatis.submitted.association_nested.Folder">
+      <result property="id" column="lvl2_id"/>
+      <result property="name" column="lvl2_name"/>
+    </association>
+  </resultMap>
+
+
+  <select id="findWithSubFolders" resultMap="folderResultMap">
+		select f.id, f.name, f1.id as lvl1_id, f1.name as lvl1_name, f2.id as lvl2_id, f2.name as lvl2_name from folder f
+		left join folder f1 on f1.parent_id = f.id
+		left join folder f2 on f2.parent_id = f1.id
+		where name = #{name}
+		order by f.id, f1.id, f2.id
+	</select>
+
+</mapper>
