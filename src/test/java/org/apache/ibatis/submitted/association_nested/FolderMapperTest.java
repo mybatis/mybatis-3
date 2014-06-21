@@ -54,7 +54,6 @@ public class FolderMapperTest {
      *      Folder 2_2
      */
 
-
     String resource = "org/apache/ibatis/submitted/association_nested/mybatis-config.xml";
     InputStream inputStream = Resources.getResourceAsStream(resource);
     SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
@@ -63,11 +62,6 @@ public class FolderMapperTest {
     FolderMapper postMapper = session.getMapper(FolderMapper.class);
 
     List<FolderFlatTree> folders = postMapper.findWithSubFolders("Root");
-
-    for (FolderFlatTree folder : folders) {
-      System.out.println(folder);
-      System.out.println("=================================");
-    }
 
     Assert.assertEquals(3, folders.size());
 
