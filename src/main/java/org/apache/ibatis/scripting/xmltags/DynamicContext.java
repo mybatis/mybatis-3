@@ -18,6 +18,7 @@ package org.apache.ibatis.scripting.xmltags;
 import java.util.HashMap;
 import java.util.Map;
 
+import ognl.OgnlContext;
 import ognl.OgnlException;
 import ognl.OgnlRuntime;
 import ognl.PropertyAccessor;
@@ -130,6 +131,16 @@ public class DynamicContext {
         throws OgnlException {
       Map map = (Map) target;
       map.put(name, value);
+    }
+
+    @Override
+    public String getSourceAccessor(OgnlContext arg0, Object arg1, Object arg2) {
+      return null;
+    }
+
+    @Override
+    public String getSourceSetter(OgnlContext arg0, Object arg1, Object arg2) {
+      return null;
     }
   }
 }

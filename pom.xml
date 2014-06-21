@@ -135,12 +135,32 @@
   </properties>
 
   <dependencies>
+<!--    <dependency>
+      <groupId>org.apache.servicemix.bundles</groupId>
+      <artifactId>org.apache.servicemix.bundles.ognl</artifactId>
+      <version>3.0.8_1</version>
+      <scope>provided</scope>
+      <optional>true</optional>
+      <exclusions>
+         <exclusion>
+            <groupId>javassist</groupId>
+            <artifactId>javassist</artifactId>
+         </exclusion>
+      </exclusions>
+    </dependency>
+ -->
     <dependency>
       <groupId>ognl</groupId>
       <artifactId>ognl</artifactId>
-      <version>2.6.9</version>
+      <version>3.0.8</version>
       <scope>provided</scope>
       <optional>true</optional>
+      <exclusions>
+         <exclusion>
+            <groupId>javassist</groupId>
+            <artifactId>javassist</artifactId>
+         </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
