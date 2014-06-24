@@ -28,7 +28,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.sf.cglib.proxy.Factory;
+import javassist.util.proxy.Proxy;
 
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.binding.BindingException;
@@ -394,7 +394,7 @@ public class SqlSessionTest extends BaseDataTest {
     SqlSession session = sqlMapper.openSession();
     try {
       Blog blog = session.selectOne("domain.blog.mappers.BlogMapper.selectBlogWithPostsUsingSubSelectLazily", 1);
-      Assert.assertTrue(blog instanceof Factory);
+      Assert.assertTrue(blog instanceof Proxy);
       assertEquals("Jim Business", blog.getTitle());
       assertEquals(2, blog.getPosts().size());
       assertEquals("Corn nuts", blog.getPosts().get(0).getSubject());

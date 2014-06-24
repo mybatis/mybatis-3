@@ -24,9 +24,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.sql.DataSource;
+import javassist.util.proxy.Proxy;
 
-import net.sf.cglib.proxy.Factory;
+import javax.sql.DataSource;
 
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.mapping.MappedStatement;
@@ -341,7 +341,7 @@ public class BaseExecutorTest extends BaseDataTest {
       List<Post> posts = executor.query(selectPosts, 1, RowBounds.DEFAULT, Executor.NO_RESULT_HANDLER);
       executor.flushStatements();
       assertEquals(2, posts.size());
-      assertTrue(posts.get(1) instanceof Factory);
+      assertTrue(posts.get(1) instanceof Proxy);
       assertNotNull(posts.get(1).getBlog());
       assertEquals(1, posts.get(1).getBlog().getId());
       executor.rollback(true);

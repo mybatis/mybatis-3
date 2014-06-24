@@ -29,6 +29,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javassist.util.proxy.Proxy;
+
 import javax.sql.DataSource;
 
 import net.sf.cglib.proxy.Factory;
@@ -701,11 +703,11 @@ public class BindingTest {
       BoundBlogMapper mapper = session.getMapper(BoundBlogMapper.class);
       List<Blog> blogs = mapper.selectBlogsWithAutorAndPosts();
       assertEquals(2, blogs.size());
-      assertTrue(blogs.get(0) instanceof Factory);
+      assertTrue(blogs.get(0) instanceof Proxy);
       assertEquals(101, blogs.get(0).getAuthor().getId());
       assertEquals(1, blogs.get(0).getPosts().size());
       assertEquals(1, blogs.get(0).getPosts().get(0).getId());
-      assertTrue(blogs.get(1) instanceof Factory);      
+      assertTrue(blogs.get(1) instanceof Proxy);      
       assertEquals(102, blogs.get(1).getAuthor().getId());
       assertEquals(1, blogs.get(1).getPosts().size());
       assertEquals(2, blogs.get(1).getPosts().get(0).getId());

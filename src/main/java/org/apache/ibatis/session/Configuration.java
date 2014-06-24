@@ -118,7 +118,7 @@ public class Configuration {
   protected MapperRegistry mapperRegistry = new MapperRegistry(this);
 
   protected boolean lazyLoadingEnabled = false;
-  protected ProxyFactory proxyFactory;
+  protected ProxyFactory proxyFactory = new JavassistProxyFactory(); // #224 Using internal Javassist instead of OGNL
 
   protected String databaseId;
   /**
@@ -295,10 +295,6 @@ public class Configuration {
   }
 
   public ProxyFactory getProxyFactory() {
-    if (proxyFactory == null) {
-      // makes sure CGLIB is not needed unless explicitly requested
-      proxyFactory = new CglibProxyFactory();
-    }
     return proxyFactory;
   }
 

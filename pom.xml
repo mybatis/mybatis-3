@@ -128,27 +128,13 @@
     <findbugs.onlyAnalyze>org.apache.ibatis.*</findbugs.onlyAnalyze>
     <clirr.comparisonVersion>3.2.5</clirr.comparisonVersion>
     <osgi.export>org.apache.ibatis.*;version=${project.version};-noimport:=true</osgi.export>
-    <osgi.import>!ognl,net.sf.cglib.*;resolution:=optional,javassist.*;resolution:=optional,org.apache.commons.logging.*;resolution:=optional,org.apache.log4j.*;resolution:=optional,org.slf4j.*;resolution:=optional,org.apache.logging.log4j.*;resolution:=optional,*</osgi.import>
+    <osgi.import>!ognl,!javassist,net.sf.cglib.*;resolution:=optional,org.apache.commons.logging.*;resolution:=optional,org.apache.log4j.*;resolution:=optional,org.slf4j.*;resolution:=optional,org.apache.logging.log4j.*;resolution:=optional,*</osgi.import>
     <osgi.dynamicImport>*</osgi.dynamicImport>
     <javac.src.version>1.6</javac.src.version>
     <javac.target.version>1.6</javac.target.version>
   </properties>
 
   <dependencies>
-<!--    <dependency>
-      <groupId>org.apache.servicemix.bundles</groupId>
-      <artifactId>org.apache.servicemix.bundles.ognl</artifactId>
-      <version>3.0.8_1</version>
-      <scope>provided</scope>
-      <optional>true</optional>
-      <exclusions>
-         <exclusion>
-            <groupId>javassist</groupId>
-            <artifactId>javassist</artifactId>
-         </exclusion>
-      </exclusions>
-    </dependency>
- -->
     <dependency>
       <groupId>ognl</groupId>
       <artifactId>ognl</artifactId>
@@ -161,6 +147,13 @@
             <artifactId>javassist</artifactId>
          </exclusion>
       </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.javassist</groupId>
+      <artifactId>javassist</artifactId>
+      <version>3.18.2-GA</version>
+      <scope>provided</scope>
+      <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
@@ -190,12 +183,6 @@
       <groupId>commons-logging</groupId>
       <artifactId>commons-logging</artifactId>
       <version>1.1.1</version>
-      <optional>true</optional>
-    </dependency>
-    <dependency>
-      <groupId>org.javassist</groupId>
-      <artifactId>javassist</artifactId>
-      <version>3.17.1-GA</version>
       <optional>true</optional>
     </dependency>
     <dependency>
@@ -284,11 +271,16 @@
               <input>{classes}</input>
               <includes>
                 <include>ognl:ognl</include>
+                <include>org.javassist:javassist</include>
               </includes>
               <rules>
                 <rule>
                   <pattern>ognl.**</pattern>
                   <result>org.apache.ibatis.ognl.@1</result>
+                </rule>
+                <rule>
+                  <pattern>javassist.**</pattern>
+                  <result>org.apache.ibatis.javassist.@1</result>
                 </rule>
                 <keep>
                   <pattern>org.apache.ibatis.**</pattern>
