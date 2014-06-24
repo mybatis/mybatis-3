@@ -269,6 +269,7 @@
             </goals>
             <configuration>
               <input>{classes}</input>
+              <input>{test-classes}</input>
               <includes>
                 <include>ognl:ognl</include>
                 <include>org.javassist:javassist</include>
