@@ -299,6 +299,9 @@ public class Configuration {
   }
 
   public void setProxyFactory(ProxyFactory proxyFactory) {
+    if (proxyFactory == null) {
+      proxyFactory = new JavassistProxyFactory();
+    }
     this.proxyFactory = proxyFactory;
   }
 
