@@ -128,7 +128,7 @@
     <findbugs.onlyAnalyze>org.apache.ibatis.*</findbugs.onlyAnalyze>
     <clirr.comparisonVersion>3.2.5</clirr.comparisonVersion>
     <osgi.export>org.apache.ibatis.*;version=${project.version};-noimport:=true</osgi.export>
-    <osgi.import>!ognl,!javassist,net.sf.cglib.*;resolution:=optional,org.apache.commons.logging.*;resolution:=optional,org.apache.log4j.*;resolution:=optional,org.slf4j.*;resolution:=optional,org.apache.logging.log4j.*;resolution:=optional,*</osgi.import>
+    <osgi.import>*;resolution:=optional</osgi.import>
     <osgi.dynamicImport>*</osgi.dynamicImport>
     <javac.src.version>1.6</javac.src.version>
     <javac.target.version>1.6</javac.target.version>
@@ -260,37 +260,50 @@
       <plugin>
         <groupId>org.sonatype.plugins</groupId>
         <artifactId>jarjar-maven-plugin</artifactId>
+        <configuration>
+          <input>{classes}</input>
+          <input>{test-classes}</input>
+          <includes>
+            <include>ognl:ognl</include>
+            <include>org.javassist:javassist</include>
+          </includes>
+          <rules>
+            <rule>
+              <pattern>ognl.**</pattern>
+              <result>org.apache.ibatis.ognl.@1</result>
+            </rule>
+            <rule>
+              <pattern>javassist.**</pattern>
+              <result>org.apache.ibatis.javassist.@1</result>
+            </rule>
+            <keep>
+              <pattern>org.apache.ibatis.**</pattern>
+            </keep>
+          </rules>
+          <overwrite>true</overwrite>
+        </configuration>
         <executions>
           <execution>
             <id>jarjar-classes</id>
-            <phase>compile</phase>
+            <phase>process-test-classes</phase>
             <goals>
               <goal>jarjar</goal>
             </goals>
             <configuration>
               <input>{classes}</input>
-              <input>{test-classes}</input>
-              <includes>
-                <include>ognl:ognl</include>
-                <include>org.javassist:javassist</include>
-              </includes>
-              <rules>
-                <rule>
-                  <pattern>ognl.**</pattern>
-                  <result>org.apache.ibatis.ognl.@1</result>
-                </rule>
-                <rule>
-                  <pattern>javassist.**</pattern>
-                  <result>org.apache.ibatis.javassist.@1</result>
-                </rule>
-                <keep>
-                  <pattern>org.apache.ibatis.**</pattern>
-                </keep>
-              </rules>
-              <overwrite>true</overwrite>
             </configuration>
           </execution>
-        </executions>
+          <execution>
+            <id>jarjar-test-classes</id>
+            <phase>process-test-classes</phase>
+            <goals>
+              <goal>jarjar</goal>
+            </goals>
+            <configuration>
+              <input>{test-classes}</input>
+            </configuration>
+          </execution>
+        </executions>        
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
