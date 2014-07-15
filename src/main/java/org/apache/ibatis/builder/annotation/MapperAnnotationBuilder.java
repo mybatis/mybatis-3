@@ -123,7 +123,9 @@ public class MapperAnnotationBuilder {
       Method[] methods = type.getMethods();
       for (Method method : methods) {
         try {
-          parseStatement(method);
+          if (!method.isBridge()) { // issue #237
+            parseStatement(method);
+          }
         } catch (IncompleteElementException e) {
           configuration.addIncompleteMethod(new MethodResolver(this, method));
         }
