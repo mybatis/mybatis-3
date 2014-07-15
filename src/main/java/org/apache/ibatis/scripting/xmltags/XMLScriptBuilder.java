@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import org.apache.ibatis.builder.BaseBuilder;
 import org.apache.ibatis.builder.BuilderException;
@@ -67,7 +68,7 @@ public class XMLScriptBuilder extends BaseBuilder {
       XNode child = node.newXNode(children.item(i));
       if (child.getNode().getNodeType() == Node.CDATA_SECTION_NODE || child.getNode().getNodeType() == Node.TEXT_NODE) {
         String data = child.getStringBody("");
-        TextSqlNode textSqlNode = new TextSqlNode(data);
+        TextSqlNode textSqlNode = new TextSqlNode(data, getInjectionFilter(configuration));
         if (textSqlNode.isDynamic()) {
           contents.add(textSqlNode);
           isDynamic = true;
@@ -85,6 +86,10 @@ public class XMLScriptBuilder extends BaseBuilder {
       }
     }
     return contents;
+  }
+  
+  private Pattern getInjectionFilter(Configuration configuration) {
+    return configuration.isInjectionFilterEnabled() ? configuration.getInjectionFilter() : null; 
   }
 
   private Map<String, NodeHandler> nodeHandlers = new HashMap<String, NodeHandler>() {

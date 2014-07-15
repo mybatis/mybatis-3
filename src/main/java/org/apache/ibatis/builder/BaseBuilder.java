@@ -18,6 +18,7 @@ package org.apache.ibatis.builder;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import org.apache.ibatis.mapping.ParameterMode;
 import org.apache.ibatis.mapping.ResultSetType;
@@ -43,6 +44,10 @@ public abstract class BaseBuilder {
 
   public Configuration getConfiguration() {
     return configuration;
+  }
+
+  protected Pattern parseExpression(String regex, String defaultValue) {
+    return Pattern.compile(regex == null ? defaultValue : regex);
   }
 
   protected Boolean booleanValueOf(String value, Boolean defaultValue) {

@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import org.apache.ibatis.binding.MapperRegistry;
 import org.apache.ibatis.builder.CacheRefResolver;
@@ -103,6 +104,9 @@ public class Configuration {
   protected boolean useColumnLabel = true;
   protected boolean cacheEnabled = true;
   protected boolean callSettersOnNulls = false;
+  protected boolean injectionFilterEnabled = false; 
+  protected Pattern injectionFilter = Pattern.compile("^[a-zA-Z0-9._]*$");
+  
   protected String logPrefix;
   protected Class <? extends Log> logImpl;
   protected LocalCacheScope localCacheScope = LocalCacheScope.SESSION;
@@ -673,6 +677,22 @@ public class Configuration {
     cacheRefMap.put(namespace, referencedNamespace);
   }
 
+  public boolean isInjectionFilterEnabled() {
+    return injectionFilterEnabled;
+  }
+
+  public void setInjectionFilterEnabled(boolean injectionFilterEnabled) {
+    this.injectionFilterEnabled = injectionFilterEnabled;
+  }
+
+  public Pattern getInjectionFilter() {
+    return injectionFilter;
+  }
+
+  public void setInjectionFilter(Pattern injectionFilter) {
+    this.injectionFilter = injectionFilter;
+  }
+  
   /*
    * Parses all the unprocessed statement nodes in the cache. It is recommended
    * to call this method once all the mappers are added as it provides fail-fast
