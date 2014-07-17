@@ -17,6 +17,7 @@ package org.apache.ibatis.session.defaults;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -239,10 +240,13 @@ public class DefaultSqlSession implements SqlSession {
   }
 
   private Object wrapCollection(final Object object) {
-    if (object instanceof List) {
+    if (object instanceof Collection) {
       StrictMap<Object> map = new StrictMap<Object>();
-      map.put("list", object);
-      return map;
+      map.put("collection", object);
+      if (object instanceof List) {
+        map.put("list", object);
+      }
+      return map;      
     } else if (object != null && object.getClass().isArray()) {
       StrictMap<Object> map = new StrictMap<Object>();
       map.put("array", object);
