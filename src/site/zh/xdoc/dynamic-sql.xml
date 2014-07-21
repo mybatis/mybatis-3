@@ -205,7 +205,7 @@ AND title like ‘someTitle’]]></source>
         <source><![CDATA[<select id="selectBlog" lang="myLanguage">
   SELECT * FROM BLOG
 </select>]]></source>
-        <p>或者在你正在使用的映射中加上标号 <code>@Lang</code> 来完成：</p>
+        <p>或者在你正在使用的映射中加上注解 <code>@Lang</code> 来完成：</p>
         <source><![CDATA[public interface Mapper {
   @Lang(MyLanguageDriver.class)
   @Select("SELECT * FROM BLOG")
