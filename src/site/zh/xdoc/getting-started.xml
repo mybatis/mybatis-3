@@ -24,22 +24,15 @@
     <title>MyBatis 3 | 入门</title>
     <author email="clinton.begin@gmail.com">Clinton Begin</author>
     <author email="nanlei1987@gmail.com">Nan Lei</author>
+    <author email="echowdx@gmail.com">Dongxu Wang</author>
   </properties>
 
   <body>
     <section name="入门">
     
-    <subsection name="Installation">
-      <p>
-        To use the MyBatis you just need to include the
-        <code>
-          mybatis-x.x.x.jar
-        </code>
-        file in the classpath.
-      </p>
-      <p>
-        If you are using Maven just add the following dependency to your pom.xml:
-      </p>
+    <subsection name="安装">
+      <p>想要使用 MyBatis 只需将 <code>mybatis-x.x.x.jar</code> 文件置于 classpath 中。</p>
+      <p>如果使用 Maven 构建项目，则需将下面的 dependency 置于 pom.xml 中：</p>
         <source><![CDATA[
 <dependency>
   <groupId>org.mybatis</groupId>
@@ -49,27 +42,13 @@
     </subsection>    
     
     <subsection name="从 XML 中构建 SqlSessionFactory">
-      <p>
-        每 一 个 MyBatis 的 应 用 程 序 都 以 一 个 SqlSessionFactory 对 象 的 实 例 为 核 心 。
-SqlSessionFactory 对 象 的 实 例 可 以 通 过 SqlSessionFactoryBuilder 对 象 来 获 得 。
-SqlSessionFactoryBuilder 对象可以从 XML 配置文件,或从 Configuration 类的习惯准备的实
-例中构建 SqlSessionFactory 对象。
-      </p>
-      <p>
-从 XML 文件中构建 SqlSessionFactory 的实例非常简单。这里建议你使用类路径下的资
-源文件来配置,但是你可以使用任意的 Reader 实例,这个实例包括由文字形式的文件路径
-或 URL 形式的文件路径 file://来创建。MyBatis 包含了一些工具类,称作为资源,这些工具
-类包含一些方法,这些方法使得从类路径或其他位置加载资源文件更加简单。
-      </p>
+      <p>每个基于 MyBatis 的应用都是以一个 SqlSessionFactory 的实例为中心的。SqlSessionFactory 的实例可以通过 SqlSessionFactoryBuilder 获得。SqlSessionFactoryBuilder 可以从 XML 配置文件或一个预先定制的 Configuration 的实例构建出 SqlSessionFactory 的实例。</p>
+      <p>从 XML 文件中构建 SqlSessionFactory 的实例非常简单，建议使用类路径下的资源文件进行配置。但是也可以使用任意的 InputStream 实例，包括字符串形式或 URL 形式的文件路径来配置。MyBatis 包含一个叫 Resources 的工具类，它包含一些静态方法，可使从 classpath 或其他位置加载资源文件更容易。</p>
       <source><![CDATA[
 String resource = "org/mybatis/example/mybatis-config.xml";
 InputStream inputStream = Resources.getResourceAsStream(resource);
 sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);]]></source>
-      <p>
-XML 配置文件包含对 MyBatis 系统的核心设置,包含获取数据库连接实例的数据源和
-决定事务范围和控制的事务管理器。关于 XML 配置文件的详细内容可以在文档后面找到,
-这里给出一个简单的示例:
-      </p>
+      <p>XML 配置文件（configuration XML）中包含了对 MyBatis 系统的核心设置，包含获取数据库连接实例的数据源（DataSource）和决定事务范围和控制方式的事务管理器（TransactionManager）。XML 配置文件的详细内容后面再探讨，这里先给出一个简单的示例：</p>
       <source><![CDATA[<?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE configuration
   PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
@@ -90,67 +69,28 @@ XML 配置文件包含对 MyBatis 系统的核心设置,包含获取数据库连
     <mapper resource="org/mybatis/example/BlogMapper.xml"/>
   </mappers>
 </configuration>]]></source>
-      <p>
-当然, XML 配置文件中还有很多可以配置的,
-在
-上面的示例指出的则是最关键的部分。
-要注意 XML 头部的声明,需要用来验证 XML 文档正确性。environment 元素体中包含对事
-务管理和连接池的环境配置。
-mappers 元素是包含所有 mapper 映射器)
-(
-的列表,
-这些 mapper
-的 XML 文件包含 SQL 代码和映射定义信息。
-      </p>
+      <p>当然，XML 配置文件中还有很多可以配置的，上面的示例指出的则是最关键的部分。要注意 XML 头部的声明，需要用来验证 XML 文档正确性。environment 元素体中包含了事务管理和连接池的环境配置。mappers 元素是包含一组 mapper 映射器（这些 mapper的 XML 文件包含了 SQL 代码和映射定义信息）。</p>
     </subsection>
     <subsection name="不使用 XML 构建 SqlSessionFactory">
-      <p>
-        如果你喜欢从 Java 程序而不是 XML 文件中直接创建配置实例,
-或创建你自己的配置构
-建器,MyBatis 也提供完整的配置类,提供所有从 XML 文件中加载配置信息的选项。
-
-      </p>
+      <p>如果你更愿意直接从 Java 程序而不是 XML 文件中创建配置，或创建你自己的配置构建器，MyBatis 也提供了完整的配置类，具有所有和 XML 文件相同功能的配置项。</p>
       <source><![CDATA[DataSource dataSource = BlogDataSourceFactory.getBlogDataSource();
 TransactionFactory transactionFactory = new JdbcTransactionFactory();
 Environment environment = new Environment("development", transactionFactory, dataSource);
 Configuration configuration = new Configuration(environment);
 configuration.addMapper(BlogMapper.class);
 SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(configuration);]]></source>
-      <p>
-注意这种情况下配置是添加映射类。映射类是 Java 类,这些类包含 SQL 映射语句的注
-解从而避免了 XML 文件的依赖,
-XML 映射仍然在大多数高级映射
-(比如:
-嵌套 Join 映射)
-时需要。出于这样的原因,如果存在 XML 配置文件的话,MyBatis 将会自动查找和加载一
-个对等的 XML 文件(这种情况下,基于类路径下的 BlogMapper.class 类的类名,那么
-BlogMapper.xml 将会被加载)。后面我们会了解更多。
-      </p>
+      <p>注意该例中配置添加了一个映射类（mapper class）。映射类是 Java 类，它们包含 SQL 映射语句的注解从而避免了 XML 文件的依赖，不过，由于 Java 注解的一些限制加之某些 MyBatis 映射的复杂性，XML 映射对于大多数高级映射（比如：嵌套 Join 映射）来说仍然是必须的。鉴于此，如果存在一个对等的 XML 配置文件的话，MyBatis 会自动查找并加载它（这种情况下， BlogMapper.xml 将会基于类路径和 BlogMapper.class 的类名被加载进来）。具体细节稍后继续。</p>
     </subsection>
     <subsection name="从 SqlSessionFactory 中获取 SqlSession">
-      <p>
-现在,我们已经知道如何获取 SqlSessionFactory 对象了,基于同样的启示,我们就可以
-获得 SqlSession 的实例了。
-SqlSession 对象完全包含以数据库为背景的所有执行 SQL 操作的
-方法。你可以用 SqlSession 实例来直接执行已映射的 SQL 语句。例如:
-      </p>
+      <p>既然有了 SqlSessionFactory ，顾名思义，我们就可以从中获得 SqlSession 的实例了。SqlSession 完全包含了面向数据库执行 SQL 命令所需的所有方法。你可以通过 SqlSession 实例来直接执行已映射的 SQL 语句。例如：</p>
       <source><![CDATA[SqlSession session = sqlSessionFactory.openSession();
 try {
   Blog blog = (Blog) session.selectOne("org.mybatis.example.BlogMapper.selectBlog", 101);
 } finally {
   session.close();
 }]]></source>
-      <p>
-这种方法起到的作用,
-和我们使用之前的 MyBatis 版本是相似的,
-现在有一种更简洁的
-方法。使用合理描述参数和 SQL 语句返回值的接口(比如 BlogMapper.class)
-,这样现在就
-可以至此那个更简单,更安全的代码,没有容易发生的字符串文字和转换的错误。
-      </p>
-      <p>
-例如:
-      </p>
+      <p>诚然这种方式能够正常工作，并且对于之前版本 MyBatis 的用户来说也比较熟悉，不过现在有了一种更直白的方式。通过使用对于给定语句能够合理描述参数和返回值的接口（比如说BlogMapper.class），你现在不但可以执行更清晰和类型安全的代码，而且还不用担心易错的字符串字面值以及强制类型转换。</p>
+      <p>例如：</p>
       <source><![CDATA[SqlSession session = sqlSessionFactory.openSession();
 try {
   BlogMapper mapper = session.getMapper(BlogMapper.class);
@@ -158,23 +98,11 @@ try {
 } finally {
   session.close();
 }]]></source>
-      <p>
-现在我们来探究一下这里到底执行了什么。
-      </p>
+      <p>现在我们来探究一下这里到底是怎么执行的。</p>
     </subsection>
     <subsection name="探究已映射的 SQL 语句">
-      <p>
-这里你也许想知道通过 SqlSession 和 Mapper 对象到底执行了什么操作。已映射的 SQL
-语句是一个很大的主题,
-而且这个主题会贯穿本文档的大部分内容。
-为了给出一个宏观的概
-念,这里有一些示例。
-上面提到的任何一个示例,语句是通过 XML 或注解定义的。我们先来看看 XML。使
-用基于 XML 的映射语言,在过去的几年中使得 MyBatis 非常流行,他为 MyBatis 提供所有
-的特性设置。如果你以前用过 MyBatis,这个概念应该很熟悉了,但是 XML 映射文件也有
-很多的改进,后面我们会详细来说。这里给出一个基于 XML 映射语句的示例,这些语句应
-该可以满足上述示例中 SqlSession 对象的调用。
-      </p>
+      <p>到这里你或许很想知道 SqlSession 和 Mapper 到底执行了什么操作，而 SQL 映射是个相当大的话题，可能会占去文档的大部分篇幅。不过为了让你能够了解个大概，这里会给出几个如何运行的例子。</p>
+      <p>在上面提到的两个例子中，语句应该是一个通过 XML 定义，一个通过注解定义。先看 XML 定义这个，事实上 MyBatis 提供的全部特性可以利用基于 XML 的映射语言来实现，这使得 MyBatis 在过去的数年间得以流行。如果你以前用过 MyBatis，这个概念应该会比较熟悉。不过 XML 映射文件已经有了很多的改进，随着文档的进行会愈发清晰。这里给出一个基于 XML 映射语句的示例，它应该可以满足上述示例中 SqlSession 的调用。</p>
       <source><![CDATA[<?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
@@ -184,18 +112,7 @@ try {
     select * from Blog where id = #{id}
   </select>
 </mapper>]]></source>
-      <p>
-这个简单的例子中看起来有很多额外的东西,
-但是也相当简洁了。
-你可以在一个单独的
-XML 映射文件中定义很多的映射语句,除 XML 头部和文档类型声明之外,你可以得到很
-多 方 便 之 处 。 在 文 件 的 剩 余 部 分 是 很 好 的 自 我 解 释 。 在 命 名 空 间
-“com.mybatis.example.BlogMapper”中,它定义了一个名为“selectBlog”的映射语句,这
-样它允许你使用完全限定名
-“org.mybatis.example.BlogMapper.selectBlog”
-来调用映射语句,
-我们下面示例中所有的写法也是这样的。
-      </p>
+      <p>对于这个简单的例子来说似乎有点小题大做了，但实际上它是非常轻量的。在一个 XML 映射文件中，你想定义多少个映射语句都是可以的，这样下来，XML 头部和文件类型声明占去的部分就显得微不足道了。文件的剩余部分具有很好的自解释性。在命名空间“com.mybatis.example.BlogMapper”中定义了一个名为“selectBlog”的映射语句，这样它就允许你使用指定的完全限定名“org.mybatis.example.BlogMapper.selectBlog”来调用映射语句，就像上面的例子中做的那样：</p>
       <source><![CDATA[Blog blog = (Blog) session.selectOne("org.mybatis.example.BlogMapper.selectBlog", 101);]]></source>
       <p>
 要注意这个使用完全限定名调用 Java 对象的方法是相似的,这样做是有原因的。这个
