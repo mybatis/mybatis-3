@@ -21,18 +21,15 @@
   xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
 
   <properties>
-    <title>MyBatis 3 | XML 映射配置文件</title>
+    <title>MyBatis 3 | 配置</title>
     <author email="clinton.begin@gmail.com">Clinton Begin</author>
     <author email="nanlei1987@gmail.com">Nan Lei</author>
+    <author email="echowdx@gmail.com">Dongxu Wang</author>
   </properties>
 
   <body>
     <section name="XML 映射配置文件">
-      <p>
-MyBatis 的 XML 配置文件包含了影响 MyBatis 行为甚深的设置和属性信息。
-XML 文档
-的高层级结构如下:
-      </p>
+      <p>MyBatis 的配置文件包含了影响 MyBatis 行为甚深的设置（settings）和属性（properties）信息。文档的顶层结构如下：</p>
 
       <ul>
         <li>
@@ -55,24 +52,18 @@ XML 文档
                 </li>
               </ul>
             </li>
-            <li><a href="#databaseIdProvider">databaseIdProvider chinese?</a></li>
+            <li><a href="#databaseIdProvider">databaseIdProvider 数据库厂商标识</a></li>
             <li><a href="#mappers">mappers 映射器</a></li>
           </ul>
         </li>
       </ul>
       <subsection name="properties">
-        <p>
-这些是外部化的,
-可替代的属性,
-这些属性也可以配置在典型的 Java 属性配置文件中,
-或者通过 properties 元素的子元素来传递。例如:
-        </p>
+        <p>这些属性都是可外部配置且可动态替换的，既可以在典型的 Java 属性文件中配置，亦可通过 properties 元素的子元素来传递。例如：</p>
         <source><![CDATA[<properties resource="org/mybatis/example/config.properties">
   <property name="username" value="dev_user"/>
   <property name="password" value="F2Fa3!33TYyg"/>
 </properties>]]></source>
-        <p>
-其中的属性就可以在整个配置文件中使用,使用可替换的属性来实现动态配置。比如:
+        <p>其中的属性就可以在整个配置文件中使用来替换需要动态配置的属性值。比如:
         </p>
         <source><![CDATA[<dataSource type="POOLED">
   <property name="driver" value="${driver}"/>
@@ -80,14 +71,8 @@ XML 文档
   <property name="username" value="${username}"/>
   <property name="password" value="${password}"/>
 </dataSource>]]></source>
-        <p>
-这个例子中的 username 和 password 将会由 properties 元素中设置的值来替换。
-driver 和
-url 属性将会从包含进来的 config.properties 文件中的值来替换。这里提供很多配置的选项。
-        </p>
-        <p>
-属性也可以被传递到 SqlSessionBuilder.build()方法中。例如:
-        </p>
+        <p>这个例子中的 username 和 password 将会由 properties 元素中设置的相应值来替换。driver 和 url 属性将会由 config.properties 文件中对应的值来替换。这样就为配置提供了诸多灵活选择。</p>
+        <p>属性也可以被传递到 SqlSessionBuilder.build()方法中。例如：</p>
         <source><![CDATA[SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, props);
 
 // ... or ...
@@ -95,26 +80,17 @@ url 属性将会从包含进来的 config.properties 文件中的值来替换。
 SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, props);
 ]]></source>
         <p>
-如果在这些地方,属性多于一个的话,MyBatis 按照如下的顺序加载它们:
+如果属性在不只一个地方进行了配置，那么 MyBatis 将按照下面的顺序来加载：
         </p>
         <ul>
           <li>在 properties 元素体内指定的属性首先被读取。
           </li>
-          <li>从类路径下资源或 properties 元素的 url 属性中加载的属性第二被读取,它会
-覆盖已经存在的完全一样的属性。
+          <li>然后会读取从类路径下资源或 properties 元素中的 url 属性（url attributes）中加载的属性，它会覆盖已读取的同名属性。
           </li>
-          <li>作为方法参数传递的属性最后被读取,
-它也会覆盖任一已经存在的完全一样的
-属性,这些属性可能是从 properties 元素体内和资源/url 属性中加载的。
+          <li>最后读取作为方法参数传递的属性，并覆盖已读取的同名属性。
           </li>
         </ul>
-        <p>
-因此,
-最高优先级的属性是那些作为方法参数的,
-然后是资源/url 属性,
-最后是 properties
-元素中指定的属性。
-        </p>
+        <p>因此，通过方法参数传递的属性具有最高优先级，资源文件及 url 属性配置的次之，最低优先级的是 properties 属性中指定的属性。</p>
       </subsection>
       <subsection name="settings">
         <p>
