@@ -79,9 +79,7 @@
 
 SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, props);
 ]]></source>
-        <p>
-如果属性在不只一个地方进行了配置，那么 MyBatis 将按照下面的顺序来加载：
-        </p>
+        <p>如果属性在不只一个地方进行了配置，那么 MyBatis 将按照下面的顺序来加载：</p>
         <ul>
           <li>在 properties 元素体内指定的属性首先被读取。
           </li>
@@ -93,12 +91,7 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
         <p>因此，通过方法参数传递的属性具有最高优先级，资源文件及 url 属性配置的次之，最低优先级的是 properties 属性中指定的属性。</p>
       </subsection>
       <subsection name="settings">
-        <p>
-这些是极其重要的调整,
-它们会修改 MyBatis 在运行时的行为方式。
-下面这个表格描述
-了设置信息,它们的含义和默认值。
-        </p>
+        <p>调整 settings 中的设置是非常关键的，它们会改变 MyBatis 的运行时行为。下表描述了设置中各项的意图、默认值等。</p>
 
         <table>
           <thead>
@@ -115,7 +108,7 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 cacheEnabled
               </td>
               <td>
-              这个配置使全局的映射器启用或禁用 缓存。 
+              该配置影响的所有映射器中配置的缓存的全局开关。
               </td>
               <td>
                 true | false
@@ -129,8 +122,7 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 lazyLoadingEnabled
               </td>
               <td>
-                全局启用或禁用延迟加载。当禁用时, 所有关联对象都会即时加载。
-                This value can be superseded for an specific relation by using the <code>fetchType</code> attribute on it. 
+                延迟加载的全局开关。当开启时，所有关联对象都会延迟加载。特定关联关系中可通过设置<code>fetchType</code>属性来覆盖该项的开关状态。
               </td>
               <td>
                 true | false
@@ -144,9 +136,7 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 aggressiveLazyLoading
               </td>
               <td>
-              当启用时, 有延迟加载属性的对象在被 
-              调用时将会完全加载任意属性。否则, 
-              每种属性将会按需要加载。
+              当启用时，带有延迟加载属性的对象的加载与否完全取决于对任意延迟属性的调用；反之，每种属性将会按需加载。
               </td>
               <td>
                 true | false
@@ -160,8 +150,7 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 multipleResultSetsEnabled
               </td>
               <td>
-                允许或不允许多种结果集从一个单独 
-                的语句中返回(需要适合的驱动) 
+                是否允许单一语句返回多结果集（需要兼容驱动）。
               </td>
               <td>
                 true | false
@@ -175,11 +164,7 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 useColumnLabel
               </td>
               <td>
-                使用列标签代替列名。
-                不同的驱动在这 
-                方便表现不同。 
-                参考驱动文档或充分测 
-                试两种方法来决定所使用的驱动。
+                使用列标签代替列名。不同的驱动在这方面会有不同的表现，具体可参考相关驱动文档或通过测试这两种不同的模式来观察所用驱动的结果。
               </td>
               <td>
                 true | false
@@ -193,13 +178,7 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 useGeneratedKeys
               </td>
               <td>
-                允许 JDBC 支持生成的键。 
-                需要适合的 
-                驱动。 
-                如果设置为 true 则这个设置强制 
-                生成的键被使用, 
-                尽管一些驱动拒绝兼 
-                容但仍然有效(比如 Derby) 
+                允许 JDBC 支持自动生成主键，需要驱动兼容。如果设置为 true 则这个设置强制使用自动生成主键，尽管一些驱动不能兼容但仍可正常工作（比如 Derby）。
               </td>
               <td>
                 true | false
@@ -213,10 +192,7 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 autoMappingBehavior
               </td>
               <td>
-                指定 MyBatis 如何自动映射列到字段/
-                属性。PARTIAL 只会自动映射简单, 
-                没有嵌套的结果。FULL 会自动映射任 
-                意复杂的结果(嵌套的或其他情况)                   。 
+                指定 MyBatis 是否以及如何自动映射指定的列到字段或属性。NONE 表示取消自动映射；PARTIAL 只会自动映射没有定义嵌套结果集映射的结果集。FULL 会自动映射任意复杂的结果集（包括嵌套和其他情况）。
               </td>
               <td>
                 NONE, PARTIAL, FULL
@@ -230,10 +206,7 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 defaultExecutorType
               </td>
               <td>
-                配置默认的执行器。SIMPLE 执行器没 
-                有什么特别之处。REUSE 执行器重用 
-                预处理语句。BATCH 执行器重用语句 
-                和批量更新
+                配置默认的执行器。SIMPLE 就是普通的执行器；REUSE 执行器会重用预处理语句（prepared statements）；BATCH 执行器将重用语句并执行批量更新。
               </td>
               <td>
                 SIMPLE
@@ -249,9 +222,7 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 defaultStatementTimeout
               </td>
               <td>
-                设置超时时间,
-                它决定驱动等待一个数
-                据库响应的时间。
+                设置超时时间，它决定驱动等待数据库响应的秒数。
               </td>
               <td>
                 Any positive integer
@@ -265,8 +236,7 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 safeRowBoundsEnabled
               </td>
               <td>
-                Allows using RowBounds on nested
-                statements.
+                允许在嵌套语句中使用行分界（RowBounds）。
               </td>
               <td>
                 true | false
@@ -280,10 +250,7 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 mapUnderscoreToCamelCase
               </td>
               <td>
-                Enables automatic mapping from
-                classic database column names
-                A_COLUMN to camel case classic Java
-                property names aColumn.
+                是否开启自动驼峰命名规则（camel case）映射，即从经典数据库列名 A_COLUMN 到经典 Java 属性名 aColumn 的类似映射。
               </td>
               <td>
                 true | false
@@ -297,9 +264,7 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 localCacheScope
               </td>
               <td>
-                MyBatis uses local cache to prevent circular references and speed up repeated nested queries. 
-                By default (SESSION) all queries executed during a session are cached. If localCacheScope=STATEMENT local session will be used just for 
-                statement execution, no data will be shared between two different calls to the same SqlSession.
+                MyBatis 利用本地缓存机制（Local Cache）防止循环引用（circular references）和加速重复嵌套查询。默认值为 SESSION，这种情况下会缓存一个会话中执行的所有查询。若设置值为 STATEMENT，本地会话仅用在语句执行上，对相同 SqlSession 的不同调用将不会共享数据。
               </td>
               <td>
                 SESSION | STATEMENT
@@ -313,8 +278,7 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 jdbcTypeForNull
               </td>
               <td>
-                Specifies the JDBC type for null values when no specific JDBC type was provided for the parameter. 
-                Some drivers require specifying the column JDBC type but others work with generic values like NULL, VARCHAR or OTHER.
+                当没有为参数提供特定的 JDBC 类型时，为空值指定 JDBC 类型。某些驱动需要指定列的 JDBC 类型，多数情况直接用一般类型即可，比如 NULL、VARCHAR 或 OTHER。
               </td>
               <td>
                 JdbcType enumeration. Most common are: NULL, VARCHAR and OTHER
@@ -328,7 +292,7 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 lazyLoadTriggerMethods
               </td>
               <td>
-                Specifies which Object's methods trigger a lazy load
+                指定哪个对象的方法触发一次延迟加载。
               </td>
               <td>
                 A method name list separated by commas
@@ -342,7 +306,7 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 defaultScriptingLanguage
               </td>
               <td>
-                Specifies the language used by default for dynamic SQL generation.
+                指定动态 SQL 生成的默认语言。
               </td>
               <td>
                 A type alias or fully qualified class name.
@@ -355,7 +319,8 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
               <td>
                 callSettersOnNulls
               </td>
-              <td>				当结果集中含有Null值时是否执行映射对象的setter或者Map对象的put方法。此设置对于原始类型如int,boolean等无效。
+              <td>
+                指定当结果集中值为 null 的时候是否调用映射对象的 setter（map 对象时为 put）方法，这对于有 Map.keySet() 依赖或 null 值初始化的时候是有用的。注意原始类型（int、boolean等）是不能设置成 null 的。
               </td>
               <td>
                 true | false
@@ -369,7 +334,7 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 logPrefix
               </td>
               <td>
-                Specifies the prefix string that MyBatis will add to the logger names. 
+                指定 MyBatis 增加到日志名称的前缀。
               </td>
               <td>
                 Any String
@@ -383,7 +348,7 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 logImpl
               </td>
               <td>
-                Specifies which logging implementation MyBatis should use. If this setting is not present logging implementation will be autodiscovered. 
+                指定 MyBatis 所用日志的具体实现，未指定时将自动查找。
               </td>
               <td>
                 SLF4J | LOG4J | LOG4J2 | JDK_LOGGING | COMMONS_LOGGING | STDOUT_LOGGING | NO_LOGGING
@@ -397,7 +362,7 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 proxyFactory
               </td>
               <td>
-                Specifies the proxy tool that MyBatis will use for creating lazy loading capable objects.
+                为 Mybatis 用来创建具有延迟加载能力的对象设置代理工具。
               </td>
               <td>
                 CGLIB | JAVASSIST
@@ -409,7 +374,7 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
           </tbody>
         </table>
         <p>
-          一个设置信息元素的示例,完全的配置如下所示:
+          一个配置完整的 settings 元素的示例如下：
         </p>
         <source><![CDATA[<settings>
   <setting name="cacheEnabled" value="true"/>
