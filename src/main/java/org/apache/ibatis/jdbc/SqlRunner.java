@@ -57,8 +57,8 @@ public class SqlRunner {
    *
    * @param sql  The SQL
    * @param args The arguments to be set on the statement.
-   * @return The number of rows impacted or BATCHED_RESULTS if the statements are being batched.
-   * @throws SQLException If more than one row is returned
+   * @return The row expected.
+   * @throws SQLException If less or more than one row is returned
    */
   public Map<String, Object> selectOne(String sql, Object... args) throws SQLException {
     List<Map<String, Object>> results = selectAll(sql, args);
@@ -73,8 +73,8 @@ public class SqlRunner {
    *
    * @param sql  The SQL
    * @param args The arguments to be set on the statement.
-   * @return The number of rows impacted or BATCHED_RESULTS if the statements are being batched.
-   * @throws SQLException If statement prepration or execution fails
+   * @return The list of rows expected.
+   * @throws SQLException If statement preparation or execution fails
    */
   public List<Map<String, Object>> selectAll(String sql, Object... args) throws SQLException {
     PreparedStatement ps = connection.prepareStatement(sql);
@@ -97,7 +97,7 @@ public class SqlRunner {
    * @param sql  The SQL
    * @param args The arguments to be set on the statement.
    * @return The number of rows impacted or BATCHED_RESULTS if the statements are being batched.
-   * @throws SQLException If statement prepration or execution fails
+   * @throws SQLException If statement preparation or execution fails
    */
   public int insert(String sql, Object... args) throws SQLException {
     PreparedStatement ps;
@@ -143,7 +143,7 @@ public class SqlRunner {
    * @param sql  The SQL
    * @param args The arguments to be set on the statement.
    * @return The number of rows impacted or BATCHED_RESULTS if the statements are being batched.
-   * @throws SQLException If statement prepration or execution fails
+   * @throws SQLException If statement preparation or execution fails
    */
   public int update(String sql, Object... args) throws SQLException {
     PreparedStatement ps = connection.prepareStatement(sql);
@@ -165,7 +165,7 @@ public class SqlRunner {
    * @param sql  The SQL
    * @param args The arguments to be set on the statement.
    * @return The number of rows impacted or BATCHED_RESULTS if the statements are being batched.
-   * @throws SQLException If statement prepration or execution fails
+   * @throws SQLException If statement preparation or execution fails
    */
   public int delete(String sql, Object... args) throws SQLException {
     return update(sql, args);
@@ -176,7 +176,7 @@ public class SqlRunner {
    * Good for DDL
    *
    * @param sql The SQL
-   * @throws SQLException If statement prepration or execution fails
+   * @throws SQLException If statement preparation or execution fails
    */
   public void run(String sql) throws SQLException {
     Statement stmt = connection.createStatement();
