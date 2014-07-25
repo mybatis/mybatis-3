@@ -394,12 +394,7 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
 
       </subsection>
       <subsection name="typeAliases">
-        <p>
-          类型别名是为 Java 类型命名一个短的名字。
-它只和 XML 配置有关,
-只用来减少类完全
-限定名的多余部分。例如:
-        </p>
+        <p>类型别名是为 Java 类型命名的一个短的名字。它只和 XML 配置有关，存在的意义仅在于用来减少类完全限定名的冗余。例如:</p>
         <source><![CDATA[<typeAliases>
   <typeAlias alias="Author" type="domain.blog.Author"/>
   <typeAlias alias="Blog" type="domain.blog.Blog"/>
@@ -409,41 +404,20 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
   <typeAlias alias="Tag" type="domain.blog.Tag"/>
 </typeAliases>
 ]]></source>
-        <p>
-使用这个配置,
-“Blog”可以任意用来替代“domain.blog. Blog”所使用的地方。
-        </p>
-        <p> You can also specify a package where MyBatis will search for
-          beans. For example:
+        <p>使用这个配置，“Blog”可以用在任何使用“domain.blog.Blog”的地方。</p>
+        <p>也可以指定一个包名，MyBatis 会在包名下面搜索需要的 Java Bean，比如:
         </p>
         <source><![CDATA[<typeAliases>
   <package name="domain.blog"/>
 </typeAliases>
 ]]></source>
-        <p>
-          Each bean found in
-          <code>domain.blog</code>
-          , if no annotation is found,
-          will be registered as an alias
-          using
-          uncapitalized non-qualified class name of the bean. Thas is
-          <code>domain.blog.Author</code>
-          will be registered as
-          <code>Author</code>
-          . If the
-          <code>@Alias</code>
-          annotation is found its value will
-          be used as an alias. See the example below:
-        </p>
+        <p>每一个在包 <code>domain.blog</code> 中的 Java Bean，在没有注解的情况下，会使用 Bean 的首字母小写的非限定类名来作为它的别名。比如 <code>domain.blog.Author</code> 的别名为 <code>Author</code>；若有注解，则别名为其注解值。看下面的例子：</p>
         <source><![CDATA[@Alias("author")
 public class Author {
     ...
 }
 ]]></source>
-        <p>
-对于普通的 Java 类型,有许多内建的类型别名。它们都是大小写不敏感的,由于重载
-的名字,要注意原生类型的特殊处理。
-        </p>
+        <p>已经为普通的 Java 类型内建了许多相应的类型别名。它们都是大小写不敏感的，需要注意的是由于重载原始类型的名称所做的特殊处理。</p>
         <table>
           <thead>
             <tr>
