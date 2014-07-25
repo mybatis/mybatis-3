@@ -5,17 +5,17 @@ Please use [the mailing list](http://groups.google.com/group/mybatis-user) inste
 ## Reporting a bug
 
 - Create a new issue on [the tracker](https://github.com/mybatis/mybatis-3/issues).
-- The best way to report a bug is to create a failing test case. Please see the Contributing code section.
+- The best way to report a bug is to create a failing test case. Please see the [Contributing code](CONTRIBUTING.md#contributing-code) section.
 
 ## Proposing a new feature
 
 - It is a good idea to discuss your changes on [the mailing list](http://groups.google.com/group/mybatis-user) to get feedback from the community.
-- If you have a patch with unit tests, send a pull request. Please see the [Contribute code](Contribute#contribute-code) section.
+- If you have a patch with unit tests, send a pull request. Please see the [Contributing code](CONTRIBUTING.md#contributing-code) section.
 
 
 ## Improving documentation
 
-- Documentations are placed under [src/site](https://github.com/mybatis/mybatis-3/tree/master/src/site) directory in [the xdoc format](http://maven.apache.org/doxia/references/xdoc-format.html), so it is basically the same as creating a patch to contribute documentation changes. Please see the Contributing code section.
+- Documentations are placed under [src/site](https://github.com/mybatis/mybatis-3/tree/master/src/site) directory in [the xdoc format](http://maven.apache.org/doxia/references/xdoc-format.html), so it is basically the same as creating a patch to contribute documentation changes. Please see the [Contributing code](CONTRIBUTING.md#contributing-code) section.
 
 ## Contributing code
 
