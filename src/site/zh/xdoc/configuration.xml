@@ -650,13 +650,7 @@ public class Author {
         </table>
       </subsection>
       <subsection name="typeHandlers">
-        <p>
-无论是 MyBatis 在预处理语句中设置一个参数,
-还是从结果集中取出一个值时,
-类型处
-理器被用来将获取的值以合适的方式转换成 Java 类型。下面这个表格描述了默认的类型处
-理器。
-        </p>
+        <p>无论是 MyBatis 在预处理语句（PreparedStatement）中设置一个参数时，还是从结果集中取出一个值时，都会用类型处理器将获取的值以合适的方式转换成 Java 类型。下表描述了一些默认的类型处理器。</p>
         <table>
           <thead>
             <tr>
@@ -911,8 +905,7 @@ public class Author {
                 Enumeration Type
               </td>
               <td>
-                VARCHAR-任何兼容的字符串类型,
-                作为代码存储(而不是索引)
+                VARCHAR-任何兼容的字符串类型，作为代码存储（而不是索引）
               </td>
             </tr>
             <tr>
@@ -923,20 +916,12 @@ public class Author {
                 Enumeration Type
               </td>
               <td>
-                Any compatible <code>NUMERIC</code> or <code>DOUBLE</code>, as the position is stored
-                (not the code itself).
+                任何兼容的 <code>NUMERIC</code> 或 <code>DOUBLE</code> 类型，作为位置存储（而不是代码本身）。
               </td>
             </tr>
           </tbody>
         </table>
-        <p>
-          你可以重写类型处理器或创建你自己的类型处理器来处理不支持的或非标准的类型。
-          //TODO translation needed
-          
-          To do so, implement the interface <code>org.apache.ibatis.type.TypeHandler</code>
-          or extend the convenience class <code>org.apache.ibatis.type.BaseTypeHandler</code> 
-          and optionally map it to a JDBC type. 例如:
-        </p>
+        <p>你可以重写类型处理器或创建你自己的类型处理器来处理不支持的或非标准的类型。具体做法为：实现 <code>org.apache.ibatis.type.TypeHandler</code> 接口，或继承一个很便利的类 <code>org.apache.ibatis.type.BaseTypeHandler</code>，然后可以将它映射到一个 JDBC 类型。比如：</p>
         <source><![CDATA[// ExampleTypeHandler.java
 @MappedJdbcTypes(JdbcType.VARCHAR)
 public class ExampleTypeHandler extends BaseTypeHandler<String> {
@@ -969,56 +954,33 @@ public class ExampleTypeHandler extends BaseTypeHandler<String> {
 </typeHandlers>
 ]]></source>
 
-        <p>
-        使用这样的类型处理器将会覆盖已经存在的处理 Java 的 String 类型属性和 VARCHAR
-参数及结果的类型处理器。
-要注意 MyBatis 不会审视数据库元信息来决定使用哪种类型,
-所
-以你必须在参数和结果映射中指定那是 VARCHAR 类型的字段,来绑定到正确的类型处理
-器上。这是因为 MyBatis 直到语句被执行都不知道数据类型的这个现实导致的。
-        </p>
-        <p>
-          // TODO translation needed
-          MyBatis will know the the Java type that you want to handle with
-          this TypeHandler by introspecting its generic type, but 
-          you can override this behavior by two means:
-        </p>
+        <p>使用这个的类型处理器将会覆盖已经存在的处理 Java 的 String 类型属性和 VARCHAR 参数及结果的类型处理器。要注意 MyBatis 不会窥探数据库元信息来决定使用哪种类型，所以你必须在参数和结果映射中指明那是 VARCHAR 类型的字段，以使其能够绑定到正确的类型处理器上。这基于一个事实：MyBatis 直到语句被执行才会去关心数据类型。</p>
+        <p>MyBatis 会通过窥探属性的原始类型（generic type）来推断由类型处理器处理的 Java 类型，不过这种行为可以通过两种方法改变：</p>
         <ul>
-          <li>Adding a <code>javaType</code> attribute to the typeHandler element (for example: <code>javaType="String"</code>)
+          <li>在类型处理器的配置元素（typeHandler element）上增加一个 <code>javaType</code> 属性（比如：<code>javaType="String"</code>）；
           </li> 
-          <li>Adding a <code>@MappedTypes</code> annotation to your <code>TypeHandler</code> class specifying 
-          the list of java types to associate it with. This annotation will be ignored if 
-          the <code>javaType</code> attribute as also been specified.
+          <li>在类型处理器的类上（TypeHandler class）增加一个 <code>@MappedTypes</code> 注解来指定与其关联的 Java 类型列表。 如果在 <code>javaType</code> 属性中也同时指定，则注解方式将被忽略。
           </li>
         </ul>
 
-        <p>Associated JDBC type can be specified by two means:</p>
+        <p>可以通过两种方式来指定被关联的 JDBC 类型：</p>
         <ul>
           <li>
-           Adding a <code>jdbcType</code> attribute to the typeHandler element (for example: <code>jdbcType="VARCHAR"</code>).
+            在类型处理器的配置元素上增加一个 <code>javaType</code> 属性（比如：<code>javaType="VARCHAR"</code>）；
           </li>
-          <li>Adding a <code>@MappedJdbcTypes</code> annotation to your TypeHandler class specifying 
-          the list of JDBC types to associate it with. This annotation will be ignored if 
-          the <code>jdbcType</code> attribute as also been specified.
+          <li>在类型处理器的类上（TypeHandler class）增加一个 <code>@MappedJdbcTypes</code> 注解来指定与其关联的 JDBC 类型列表。 如果在 <code>javaType</code> 属性中也同时指定，则注解方式将被忽略。
           </li>
         </ul>
 
-        <p>And finally you can let MyBatis search for your TypeHandlers:</p>
+        <p>最后，可以让 MyBatis 为你查找类型处理器：</p>
         <source><![CDATA[<!-- mybatis-config.xml -->
 <typeHandlers>
   <package name="org.mybatis.example"/>
 </typeHandlers>
 ]]></source>
 
-        <p>
-          Note that when using the autodiscovery feature JDBC types can only be
-          specified with annotations.
-        </p>
-        <p>
-          You can create a generic TypeHandler that is able to handle more than one class. For that purpose  
-          add a constructor that receives the class as a parameter and MyBatis will pass the actual class when
-          constructing the TypeHandler.
-        </p>
+        <p>注意在使用自动检索（autodiscovery）功能的时候，只能通过注解方式来指定 JDBC 的类型。</p>
+        <p>你能创建一个原始的类型处理器，它可以处理多于一个类。为达到此目的，需要增加一个接收该类作为参数的构造器，这样在构造一个类型处理器的时候 MyBatis 就会传入一个具体的类。</p>
 
         <source><![CDATA[//GenericTypeHandler.java
 public class GenericTypeHandler<E extends MyObject> extends BaseTypeHandler<E> {
@@ -1032,9 +994,7 @@ public class GenericTypeHandler<E extends MyObject> extends BaseTypeHandler<E> {
   ...
 ]]></source>
 
-		<p><code>EnumTypeHandler</code> and <code>EnumOrdinalTypeHandler</code> are generic TypeHandlers. We will learn 
-		about them in the following section. 
-		</p>
+		<p><code>EnumTypeHandler</code> 和 <code>EnumOrdinalTypeHandler</code> 都是原始的类型处理器（generic TypeHandlers），我们将会在接下来的部分详细探讨。</p>
 
       </subsection>
       
