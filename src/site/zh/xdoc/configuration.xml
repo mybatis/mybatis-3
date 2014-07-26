@@ -998,46 +998,22 @@ public class GenericTypeHandler<E extends MyObject> extends BaseTypeHandler<E> {
 
       </subsection>
       
-      <subsection name="Handling Enums">
-      	<p>
-      	  If you want to map an <code>Enum</code>, you'll need to use either
-      	  <code>EnumTypeHandler</code> or <code>EnumOrdinalTypeHandler</code>. 
-      	</p>
+      <subsection name="处理枚举类型">
+      	<p>若想映射枚举类型 <code>Enum</code>，则需要从 <code>EnumTypeHandler</code> 或者 <code>EnumOrdinalTypeHandler</code> 中选一个来使用。</p>
       	
-      	<p>For example, let's say that we need to store the rounding mode that 
-      	should be used with some number if it needs to be rounded. By default, MyBatis
-      	uses <code>EnumTypeHandler</code> to convert the <code>Enum</code>
-      	values to their names.
-      	</p>
+      	<p>比如说我们想存储用来四舍五入一些数字时用到的舍入模式。默认情况下，MyBatis 会利用 <code>EnumTypeHandler</code> 来把 <code>Enum</code> 值转换成对应的名字。</p>
       	
-      	<b>Note <code>EnumTypeHandler</code> is special in the sense that unlike other handlers, 
-      	it does not handle just one specific class, but any class that extends <code>Enum</code></b>
+      	<b>注意 <code>EnumTypeHandler</code> 在某种意义上来说是比较特别的，其他的处理器只针对某个特定的类，而它不同，它会处理任意继承了 <code>Enum</code> 的类。</b>
 
-      	<p>However, we may not want to store names. Our DBA may insist on an 
-      	integer code instead. That's just as easy: add <code>EnumOrdinalTypeHandler</code>
-      	to the <code>typeHandlers</code> in your config file, and now each
-      	<code>RoundingMode</code> will be mapped to an integer using its ordinal value.     	
-      	</p>
+      	<p>不过，我们可能不会去存储名字，相反我们的 DBA 会坚持使用整形值代码。那也一样轻而易举：在配置文件中把 <code>EnumOrdinalTypeHandler</code> 加到 <code>typeHandlers</code> 中即可，这样每个 <code>RoundingMode</code> 将通过他们的序数值来映射成对应的整形。</p>
        <source><![CDATA[<!-- mybatis-config.xml -->
 <typeHandlers>
   <typeHandler handler="org.apache.ibatis.type.EnumOrdinalTypeHandler" javaType="java.math.RoundingMode"/>
 </typeHandlers>
 ]]></source>
-		<p>
-		  But what if you want to map the same <code>Enum</code> to a 
-		  string in one place and to integer in another? 
-		</p>
-      	<p>
-      	  The auto-mapper will automatically use <code>EnumOrdinalTypeHandler</code>, 
-      	  so if we want to go back to using plain old ordinary
-      	  <code>EnumTypeHandler</code>, we have to tell it, by explicitly setting 
-      	  the type handler to use for those SQL statements. 
-      	</p>
-      	<p>
-      	  (Mapper files aren't covered until the next section, so if this is your first
-      	  time reading through the documentation, you may want to skip this for now
-      	  and come back to it later.)
-      	</p>
+		<p>但是怎样能将同样的 <code>Enum</code> 既映射成字符串又映射成整形呢？</p>
+      	<p>自动映射器（auto-mapper）会自动地选用 <code>EnumOrdinalTypeHandler</code> 来处理，所以如果我们想用回旧的序数型的 <code>EnumTypeHandler</code>，就非要为那些 SQL 语句显式地设置要用到的类型处理器不可。</p>
+      	<p>（下一节才开始讲映射器文件，所以如果是首次阅读该文档，你可能需要先越过这一步，过会再来看。）</p>
       	<source><![CDATA[<!DOCTYPE mapper
     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
@@ -1080,10 +1056,7 @@ public class GenericTypeHandler<E extends MyObject> extends BaseTypeHandler<E> {
 
 </mapper>
 ]]></source>
-		<p>
-		  Note that this forces us to use a <code>resultMap</code> 
-		  instead of a <code>resultType</code> in our select statements.
-		</p>
+		<p>注意，这里的 select 语句强制使用 <code>resultMap</code> 来代替 <code>resultType</code>。</p>
       </subsection>
 
       <subsection name="objectFactory">
