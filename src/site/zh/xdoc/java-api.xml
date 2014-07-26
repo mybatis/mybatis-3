@@ -121,7 +121,7 @@ Environment
         ...
   </environment>
 </environments>]]></source>  
-  <p>如果你调用了 一个使用 environment 参数 的 build 方法, 那么 MyBatis 将会使用
+  <p>如果你调用了 一个使用 environment 参数 方 式的 build 方法, 那么 MyBatis 将会使用
 configuration 对象来配置这个 environment。
 当然,
 如果你指定了一个不合法的 environment,
@@ -258,7 +258,7 @@ Connection 和 autoCommit 两者的方法,因为 MyBatis 会使用当前 connect
 置。
 MyBatis 为事务隔离级别调用使用一个 Java 枚举包装器,
 称为 TransactionIsolationLevel,
-否 则 它 们 按 预 期 的 方 式 来 工 作 , 并 有 JDBC 支 持 的 5 级
+否则它们按预期的方式来工作,并有 JDBC 支持的 5 级
 ( NONE,READ_UNCOMMITTED,READ_COMMITTED,REPEA
 TABLE_READ,SERIALIZA
 BLE)
