@@ -658,7 +658,7 @@ public class Author {
                 类型处理器
               </th>
               <th>
-                Java 类型 
+                Java 类型
               </th>
               <th>
                 JDBC 类型
@@ -958,7 +958,7 @@ public class ExampleTypeHandler extends BaseTypeHandler<String> {
         <p>MyBatis 会通过窥探属性的原始类型（generic type）来推断由类型处理器处理的 Java 类型，不过这种行为可以通过两种方法改变：</p>
         <ul>
           <li>在类型处理器的配置元素（typeHandler element）上增加一个 <code>javaType</code> 属性（比如：<code>javaType="String"</code>）；
-          </li> 
+          </li>
           <li>在类型处理器的类上（TypeHandler class）增加一个 <code>@MappedTypes</code> 注解来指定与其关联的 Java 类型列表。 如果在 <code>javaType</code> 属性中也同时指定，则注解方式将被忽略。
           </li>
         </ul>
@@ -997,12 +997,12 @@ public class GenericTypeHandler<E extends MyObject> extends BaseTypeHandler<E> {
 		<p><code>EnumTypeHandler</code> 和 <code>EnumOrdinalTypeHandler</code> 都是原始的类型处理器（generic TypeHandlers），我们将会在接下来的部分详细探讨。</p>
 
       </subsection>
-      
+
       <subsection name="处理枚举类型">
       	<p>若想映射枚举类型 <code>Enum</code>，则需要从 <code>EnumTypeHandler</code> 或者 <code>EnumOrdinalTypeHandler</code> 中选一个来使用。</p>
-      	
+
       	<p>比如说我们想存储用来四舍五入一些数字时用到的舍入模式。默认情况下，MyBatis 会利用 <code>EnumTypeHandler</code> 来把 <code>Enum</code> 值转换成对应的名字。</p>
-      	
+
       	<b>注意 <code>EnumTypeHandler</code> 在某种意义上来说是比较特别的，其他的处理器只针对某个特定的类，而它不同，它会处理任意继承了 <code>Enum</code> 的类。</b>
 
       	<p>不过，我们可能不会去存储名字，相反我们的 DBA 会坚持使用整形值代码。那也一样轻而易举：在配置文件中把 <code>EnumOrdinalTypeHandler</code> 加到 <code>typeHandlers</code> 中即可，这样每个 <code>RoundingMode</code> 将通过他们的序数值来映射成对应的整形。</p>
@@ -1059,14 +1059,8 @@ public class GenericTypeHandler<E extends MyObject> extends BaseTypeHandler<E> {
 		<p>注意，这里的 select 语句强制使用 <code>resultMap</code> 来代替 <code>resultType</code>。</p>
       </subsection>
 
-      <subsection name="objectFactory">
-        <p>
-          MyBatis 每次创建结果对象新的实例时,
-它使用一个 ObjectFactory 实例来完成。
-如果参
-数映射存在,默认的 ObjectFactory 不比使用默认构造方法或带参数的构造方法实例化目标
-类做的工作多。如果你想重写默认的 ObjectFactory,你可以创建你自己的。比如:
-        </p>
+      <subsection name="对象工厂（objectFactory）">
+        <p>MyBatis 每次创建结果对象的新实例时，它都会使用一个对象工厂（ObjectFactory）实例来完成。默认的对象工厂需要做的仅仅是实例化目标类，要么通过默认构造方法，要么在参数映射存在的时候通过参数构造方法来实例化。如果想覆盖对象工厂的默认行为，则可以通过创建自己的对象工厂来实现。比如：</p>
         <source><![CDATA[// ExampleObjectFactory.java
 public class ExampleObjectFactory extends DefaultObjectFactory {
   public Object create(Class type) {
@@ -1087,18 +1081,12 @@ public class ExampleObjectFactory extends DefaultObjectFactory {
 <objectFactory type="org.mybatis.example.ExampleObjectFactory">
   <property name="someProperty" value="100"/>
 </objectFactory>]]></source>
-        <p>
-          ObjectFactory 接口很简单。它包含两个创建用的方法,一个是处理默认构造方法的,另
-外一个是处理带参数构造方法的。最终,setProperties 方法可以被用来配置 ObjectFactory。
-在 初 始化 你 的 ObjectFactory 实例 后 , objectFactory 元素 体 中定 义的 属 性会 被传 递 给
-setProperties 方法。
-        </p>
+        <p>ObjectFactory 接口很简单，它包含两个创建用的方法，一个是处理默认构造方法的，另外一个是处理带参数的构造方法的。最后，setProperties 方法可以被用来配置 ObjectFactory，在初始化你的 ObjectFactory 实例后，objectFactory 元素体中定义的属性会被传递给 setProperties 方法。</p>
 
       </subsection>
-      <subsection name="plugins">
+      <subsection name="插件（plugins）">
         <p>
-          MyBatis 允许你在某一点拦截已映射语句执行的调用。默认情况下,MyBatis 允许使用
-插件来拦截方法调用:
+          MyBatis 允许你在已映射语句执行过程中的某一点进行拦截调用。默认情况下，MyBatis 允许使用插件来拦截的方法调用包括：
         </p>
         <ul>
           <li>
@@ -1120,20 +1108,8 @@ setProperties 方法。
             (prepare, parameterize, batch, update, query)
           </li>
         </ul>
-        <p>
-这些类中方法的详情可以通过查看每个方法的签名来发现 ,而且它们的源代码在
-MyBatis 的发行包中有。你应该理解你覆盖方法的行为,假设你所做的要比监视调用要多。
-如果你尝试修改或覆盖一个给定的方法,
-你可能会打破 MyBatis 的核心。
-这是低层次的类和
-方法,要谨慎使用插件。
-        </p>
-        <p>
-使用插件是它们提供的非常简单的力量。
-简单实现拦截器接口,
-要确定你想拦截的指定
-签名。
-        </p>
+        <p>这些类中方法的细节可以通过查看每个方法的签名来发现，或者直接查看 MyBatis 的发行包中的源代码。假设你想做的不仅仅是监控方法的调用，那么你应该很好的了解正在重写的方法的行为。因为如果在试图修改或重写已有方法的行为的时候，你很可能在破坏 MyBatis 的核心模块。这些都是更低层的类和方法，所以使用插件的时候要特别当心。</p>
+        <p>通过 MyBatis 提供的强大机制，使用插件是非常简单的，只需实现 Interceptor 接口，并指定了想要拦截的方法签名即可。</p>
 
         <source><![CDATA[// ExamplePlugin.java
 @Intercepts({@Signature(
@@ -1157,21 +1133,11 @@ public class ExamplePlugin implements Interceptor {
     <property name="someProperty" value="100"/>
   </plugin>
 </plugins>]]></source>
-        <p>
-上面的插件将会拦截在 Executor 实例中所有的“update”方法调用,它也是负责低层次
-映射语句执行的内部对象。
-        </p>
+        <p>上面的插件将会拦截在 Executor 实例中所有的“update”方法调用，这里的 Executor 是负责低层映射语句执行的内部对象。</p>
         <p><span class="label important">NOTE</span>
-          <strong>覆盖配置类
-          </strong>
+          <strong>覆盖配置类</strong>
         </p>
-        <p>
-除了用插件来修改 MyBatis 核心行为之外,
-你也可以完全覆盖配置类。
-简单扩展它,
-然后覆盖其中的任意方法,之后传递它到 sqlSessionFactoryBuilder.build(myConfig)方法
-的调用。这可能会严重影响 MyBatis 的行为,所以要小心。
-        </p>
+        <p>除了用插件来修改 MyBatis 核心行为之外，还可以通过完全覆盖配置类来达到目的。只需继承后覆盖其中的每个方法，再把它传递到 sqlSessionFactoryBuilder.build(myConfig) 方法即可。再次重申，这可能会严重影响 MyBatis 的行为，务请慎之又慎。</p>
       </subsection>
       <subsection name="environments">
         <p>
@@ -1274,8 +1240,8 @@ MANAGED – 这个配置几乎没做什么。它从来不提交或回滚一个�
         <p>
           <span class="label important">NOTE</span>
           If you are planning to use MyBatis with Spring there is no need to configure
-          any TransactionManager because the Spring module will set its own one 
-          overriding any previously set configuration.  
+          any TransactionManager because the Spring module will set its own one
+          overriding any previously set configuration.
         </p>
         <p>
 这两种事务管理器都不需要任何属性。然而它们都是类型别名,要替换使用它们,你需
@@ -1420,7 +1386,7 @@ data_source 属性将会直接以 initialContext 为背景再次寻找。
 在初始化之后,这就会以值“UTF8”向初始上下文的构造方法传递名为“encoding”
 的属性。
         </p>
-        
+
 		<p>
 		  You can plug any 3rd party DataSource by implementing the interface <code>org.apache.ibatis.datasource.DataSourceFactory</code>:
 		</p>
@@ -1432,7 +1398,7 @@ data_source 属性将会直接以 initialContext 为背景再次寻找。
 
         <p>
 		  <code>org.apache.ibatis.datasource.unpooled.UnpooledDataSourceFactory</code> can be used as super class
-		  class to build new datasource adapters. For example this is the code needed to plug C3P0:  
+		  class to build new datasource adapters. For example this is the code needed to plug C3P0:
 		</p>
 
         <source><![CDATA[import org.apache.ibatis.datasource.unpooled.UnpooledDataSourceFactory;
@@ -1445,8 +1411,8 @@ public class C3P0DataSourceFactory extends UnpooledDataSourceFactory {
   }
 }]]></source>
 
-        <p>To set it up, add a property for each setter method you want MyBatis to call. 
-        Below depicts a sample configuration which connects to a PostgreSQL database:</p>        
+        <p>To set it up, add a property for each setter method you want MyBatis to call.
+        Below depicts a sample configuration which connects to a PostgreSQL database:</p>
 
         <source><![CDATA[<dataSource type="org.myproject.C3P0DataSourceFactory">
   <property name="driver" value="org.postgresql.Driver"/>
@@ -1455,42 +1421,42 @@ public class C3P0DataSourceFactory extends UnpooledDataSourceFactory {
   <property name="password" value="root"/>
 </dataSource>
 ]]></source>
-        
+
       </subsection>
-      
+
       <subsection name="databaseIdProvider">
         <p>
-          MyBatis is able to execute different statements depending on your database vendor. 
-          The multi-db vendor support is based on the mapped statements <code>databaseId</code> attribute. 
-          MyBatis will load all statements with no <code>databaseId</code> attribute 
+          MyBatis is able to execute different statements depending on your database vendor.
+          The multi-db vendor support is based on the mapped statements <code>databaseId</code> attribute.
+          MyBatis will load all statements with no <code>databaseId</code> attribute
           or with a <code>databaseId</code> that matches the current one. If case the same statement
-          if found with and without the <code>databaseId</code> the latter will be discarded.  
+          if found with and without the <code>databaseId</code> the latter will be discarded.
           To enable the multi vendor support add a <code>databaseIdProvider</code>
           to mybatis-config.xml file as follows:
         </p>
-        
+
         <source><![CDATA[<databaseIdProvider type="DB_VENDOR" />
 ]]></source>
 
-		<p> 
-		  The DB_VENDOR implementation databaseIdProvider sets as a databaseId the String returned by 
-		  <code>DatabaseMetaData#getDatabaseProductName()</code>. 
-		  As usually that string is too long and also, different versions of the same product return different values, 
+		<p>
+		  The DB_VENDOR implementation databaseIdProvider sets as a databaseId the String returned by
+		  <code>DatabaseMetaData#getDatabaseProductName()</code>.
+		  As usually that string is too long and also, different versions of the same product return different values,
 		  so you may want to translate it to a shorter one by adding properties like follows:
 		</p>
-		
+
         <source><![CDATA[<databaseIdProvider type="DB_VENDOR">
   <property name="SQL Server" value="sqlserver"/>
   <property name="DB2" value="db2"/>        
   <property name="Oracle" value="oracle" />
 </databaseIdProvider>]]></source>
 
-		<p> 
-		  When properties are provided, the DB_VENDOR databaseIdProvider will search the property value corresponding to the 
-		  first key found in the returned database product name or "null" if there is not a matching property. 
-		  In this case, if <code>getDatabaseProductName()</code> returns "Oracle (DataDirect)" the databaseId will be set to "oracle".  
+		<p>
+		  When properties are provided, the DB_VENDOR databaseIdProvider will search the property value corresponding to the
+		  first key found in the returned database product name or "null" if there is not a matching property.
+		  In this case, if <code>getDatabaseProductName()</code> returns "Oracle (DataDirect)" the databaseId will be set to "oracle".
 		</p>
-		
+
 		<p>
 		  You can build your own database provider by implementing the interface <code>org.apache.ibatis.mapping.DatabaseIdProvider</code>
 		  and registerin it in mybatis-config.xml:
@@ -1502,7 +1468,7 @@ public class C3P0DataSourceFactory extends UnpooledDataSourceFactory {
 }]]></source>
 
       </subsection>
-      
+
       <subsection name="mappers">
         <p>
 既然 MyBatis 的行为已经由上述元素配置完了,我们现在就要定义 SQL 映射语句了。
