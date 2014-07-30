@@ -1139,37 +1139,27 @@ public class ExamplePlugin implements Interceptor {
         </p>
         <p>除了用插件来修改 MyBatis 核心行为之外，还可以通过完全覆盖配置类来达到目的。只需继承后覆盖其中的每个方法，再把它传递到 sqlSessionFactoryBuilder.build(myConfig) 方法即可。再次重申，这可能会严重影响 MyBatis 的行为，务请慎之又慎。</p>
       </subsection>
-      <subsection name="environments">
+      <subsection name="配置环境（environments）">
+        <p>MyBatis 可以配置成适应多种环境，这种机制有助于将 SQL 映射应用于多种数据库之中，现实情况下有多种理由需要这么做。例如，开发、测试和生产环境需要有不同的配置；或者共享相同 Schema 的多个生产数据库，想使用相同的 SQL 映射。许多类似的用例。</p>
         <p>
-MyBatis 可以配置多种环境。这会帮助你将 SQL 映射应用于多种数据库之中。例如,
-你也许为开发要设置不同的配置,
-测试和生产环境。
-或者你可能有多种生产级数据库却共享
-相同的模式,所以你会想对不同数据库使用相同的 SQL 映射。这种用例是很多的。
+          <strong>不过要记住：尽管可以配置多个环境，每个 SqlSessionFactory 实例只能选择其一。</strong>
         </p>
         <p>
-          <strong>一个很重要的问题要记得:你可以配置多种环境,但你只能为每个 SqlSessionFactory
-实例选择一个。</strong>
-        </p>
-        <p>
-          所以,如果你想连接两个数据库,你需要创建两个 SqlSessionFactory 实例,每个数据库
-对应一个。而如果是三个数据库,你就需要三个实例,以此类推。记忆起来很简单:
+          所以，如果你想连接两个数据库，就需要创建两个 SqlSessionFactory 实例，每个数据库对应一个。而如果是三个数据库，就需要三个实例，依此类推，记起来很简单：
         </p>
         <ul>
           <li>
-            <strong>每个数据库对应一个 SqlSessionFactory
+            <strong>每个数据库对应一个 SqlSessionFactory 实例
             </strong>
           </li>
         </ul>
-        <p>
-为了明确创建哪种环境,你可以将它作为可选的参数传递给 SqlSessionFactoryBuilder。
-可以接受环境配置的两个方法签名是:
+        <p>为了指定创建哪种环境，只要将它作为可选的参数传递给 SqlSessionFactoryBuilder 即可。可以接受环境配置的两个方法签名是：
         </p>
 
         <source><![CDATA[SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment);
 SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment,properties);]]></source>
 
-        <p>如果环境被忽略,那么默认环境将会被加载,如下进行:
+        <p>如果忽略了环境参数，那么默认环境将会被加载，如下所示：
         </p>
 
         <source><![CDATA[SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader);
@@ -1192,109 +1182,67 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader,properties);]]
   </environment>
 </environments>]]></source>
         <p>
-          注意这里的键:
+          注意这里的关键点:
         </p>
         <ul>
           <li>
-            默认的环境 ID(比如:default=”development”)。
+            默认的环境 ID（比如:default=”development”）。
           </li>
           <li>
-            每个 environment 元素定义的环境 ID(比如:id=”development”)。
+            每个 environment 元素定义的环境 ID（比如:id=”development”）。
           </li>
           <li>
-            事务管理器的配置(比如:type=”JDBC”)。
+            事务管理器的配置（比如:type=”JDBC”）。
           </li>
           <li>
-            数据源的配置(比如:type=”POOLED”)。
+            数据源的配置（比如:type=”POOLED”）。
           </li>
         </ul>
-        <p>
-          默认的环境和环境 ID 是自我解释的。你可以使用你喜欢的名称来命名,只要确定默认
-的要匹配其中之一。
+        <p>默认的环境和环境 ID 是自我解释的。你可以使用你喜欢的名称来命名，只要确定默认的要匹配其中之一。
         </p>
         <p>
-          <strong>transactionManager</strong>
+          <strong>事务管理器（transactionManager）</strong>
         </p>
-        <p>
-在 MyBatis 中有两种事务管理器类型(也就是 type=”[JDBC|MANAGED]”):
-        </p>
+        <p>在 MyBatis 中有两种类型的事务管理器（也就是 type=”[JDBC|MANAGED]”）：</p>
         <ul>
-          <li>
-JDBC – 这个配置直接简单使用了 JDBC 的提交和回滚设置。
-它依赖于从数据源得
-到的连接来管理事务范围。
+          <li>JDBC – 这个配置就是直接使用了 JDBC 的提交和回滚设置，它依赖于从数据源得到的连接来管理事务范围。
           </li>
-          <li>
-MANAGED – 这个配置几乎没做什么。它从来不提交或回滚一个连接。而它会让
-容器来管理事务的整个生命周期(比如 Spring 或 JEE 应用服务器的上下文)
-默认
-情况下它会关闭连接。
-然而一些容器并不希望这样,
-因此如果你需要从连接中停止
-它,将 closeConnection 属性设置为 false。例如:
+          <li>MANAGED – 这个配置几乎没做什么。它从来不提交或回滚一个连接，而是让容器来管理事务的整个生命周期（比如 JEE 应用服务器的上下文）。默认情况下它会关闭连接，然而一些容器并不希望这样，因此需要将 closeConnection 属性设置为 false 来阻止它默认的关闭行为。例如:
             <source><![CDATA[<transactionManager type="MANAGED">
   <property name="closeConnection" value="false"/>
 </transactionManager>]]></source>
           </li>
         </ul>
         <p>
-          <span class="label important">NOTE</span>
-          If you are planning to use MyBatis with Spring there is no need to configure
-          any TransactionManager because the Spring module will set its own one
-          overriding any previously set configuration.
-        </p>
-        <p>
-这两种事务管理器都不需要任何属性。然而它们都是类型别名,要替换使用它们,你需
-要放置将你自己的类的完全限定名或类型别名,它们引用了你对 TransactionFactory 接口的实现
-类。
+          <span class="label important">NOTE</span>如果你正在使用 Spring + MyBatis，则没有必要配置事务管理器，因为 Spring 模块会使用自带的管理器来覆盖前面的配置。</p>
+        <p>这两种事务管理器类型都不需要任何属性。不过它们都是类型别名，话剧话说，你需要使用自己的完全限定名或类型别名而不是使用他们，它们引用了你对 TransactionFactory 接口的实现类。
         </p>
         <source><![CDATA[public interface TransactionFactory {
   void setProperties(Properties props);  
   Transaction newTransaction(Connection conn);
   Transaction newTransaction(DataSource dataSource, TransactionIsolationLevel level, boolean autoCommit);  
 }]]></source>
-        <p>
-任何在 XML 中配置的属性在实例化之后将会被传递给 setProperties()方法。
-你的实现类
-需要创建一个事务接口的实现,这个接口也很简单:
-        </p>
+        <p>任何在 XML 中配置的属性在实例化之后将会被传递给 setProperties() 方法。你的实现类也需要创建一个事务接口的实现，这个接口也很简单：</p>
         <source><![CDATA[public interface Transaction {
   Connection getConnection() throws SQLException;
   void commit() throws SQLException;
   void rollback() throws SQLException;
   void close() throws SQLException;
 }]]></source>
+        <p>使用这两个接口，你可以完全自定义 MyBatis 对事务的处理。</p>
         <p>
-使用这两个接口,你可以完全自定义 MyBatis 对事务的处理。
+          <strong>数据源（dataSource）</strong>
         </p>
-        <p>
-          <strong>dataSource</strong>
-        </p>
-        <p>
-dataSource 元素使用基本的 JDBC 数据源接口来配置 JDBC 连接对象的资源。
-        </p>
+        <p>dataSource 元素使用基本的 JDBC 数据源接口来配置 JDBC 连接对象的资源。</p>
         <ul>
-          <li>许多 MyBatis 的应用程序将会按示例中的例子来配置数据源。
-然而它并不是必须的。
-要知道为了方便使用延迟加载,数据源才是必须的。
+          <li>许多 MyBatis 的应用程序将会按示例中的例子来配置数据源。然而它并不是必须的。要知道为了方便使用延迟加载，数据源才是必须的。
           </li>
         </ul>
-        <p>有三种内建的数据源类型(也就是 type=”???”):
-        </p>
+        <p>有三种内建的数据源类型（也就是 type=”???”）：</p>
         <p>
-          <strong>UNPOOLED</strong>
-– 这个数据源的实现是每次被请求时简单打开和关闭连接。它有一点慢,
-这是对简单应用程序的一个很好的选择,
-因为它不需要及时的可用连接。
-不同的数据库对这
-个的表现也是不一样的,
-所以对某些数据库来说配置数据源并不重要,
-这个配置也是闲置的。
-UNPOOLED 类型的数据源仅仅用来配置以下 5 种属性:
-        </p>
+          <strong>无连接池（UNPOOLED）</strong>– 这个数据源的实现是每次被请求时简单打开和关闭连接。它有一点慢，这是对简单应用程序的一个很好的选择，因为它不需要及时的可用连接。不同的数据库对这个的表现也是不一样的，所以对某些数据库来说配置数据源并不重要，这个配置也是闲置的。UNPOOLED 类型的数据源仅仅需要配置以下 5 种属性：</p>
         <ul>
-          <li><code>driver</code> – 这是 JDBC 驱动的 Java 类的完全限定名(如果你的驱动包含,它也不是
-              数据源类)。
+          <li><code>driver</code> – 这是 JDBC 驱动的 Java 类的完全限定名（如果你的驱动包含，它也不是数据源类）。
           </li>
           <li><code>url</code> – 这是数据库的 JDBC URL 地址。
           </li>
@@ -1305,90 +1253,53 @@ UNPOOLED 类型的数据源仅仅用来配置以下 5 种属性:
           <li><code>defaultTransactionIsolationLevel</code> – 默认的连接事务隔离级别。
           </li>
         </ul>
-        <p>
-作为可选项,你可以传递数据库驱动的属性。要这样做,属性的前缀是以“driver.”开
-头的,例如:
+        <p>作为可选项，你也可以传递 properties 给数据库驱动。要这样做，属性的前缀以“driver.”开头，例如：
         </p>
         <ul>
           <li><code>driver.encoding=UTF8</code></li>
         </ul>
-        <p>
-这 样 就 会 传 递 以 值 “ UTF8 ” 来 传 递 属 性 “ encoding ”, 它 是 通 过
-DriverManager.getConnection(url,driverProperties)方法传递给数据库驱动。
+        <p>这样就会传递以值 “UTF8” 来传递属性“encoding”，它是通过DriverManager.getConnection(url,driverProperties)方法传递给数据库驱动的。
         </p>
         <p>
-          <strong>POOLED</strong>
-          – 这是 JDBC 连接对象的数据源连接池的实现,用来避免创建新的连接实例
-时必要的初始连接和认证时间。这是一种当前 Web 应用程序用来快速响应请求很流行的方
-法。
+          <strong>有连接池（POOLED）</strong>– 这种数据源的实现利用“池”的概念将 JDBC 连接对象组织起来，避免了创建新的连接实例时所必需的初始化和认证时间。这是一种使得并发 Web 应用快速响应请求的流行处理方式。
         </p>
-        <p>
-除了上述(UNPOOLED)的属性之外,还有很多属性可以用来配置 POOLED 数据源:
-        </p>
+        <p>除了上述无连接池（UNPOOLED）的属性外，会有更多属性用来配置有连接池（POOLED）的数据源：</p>
         <ul>
-          <li><code>poolMaximumActiveConnections</code> – 在任意时间存在的活动(也就是正在使用)连
-接的数量。默认值:10
+          <li><code>poolMaximumActiveConnections</code> – 在任意时间可以存在的活动（也就是正在使用）连接数量，默认值：10
           </li>
-          <li><code>poolMaximumIdleConnections</code> – 任意时间存在的空闲连接数。
+          <li><code>poolMaximumIdleConnections</code> – 任意时间可能存在的空闲连接数。
 
           </li>
-          <li><code>poolMaximumCheckoutTime</code> – 在被强制返回之前,池中连接被检查的时间。默认
-值:20000 毫秒(也就是 20 秒)
+          <li><code>poolMaximumCheckoutTime</code> – 在被强制返回之前，池中连接被检出（checked out）时间，默认值：20000 毫秒（即 20 秒）
           </li>
-          <li><code>poolTimeToWait</code> – 这是给连接池一个打印日志状态机会的低层次设置,还有重新
-尝试获得连接,
-这些情况下往往需要很长时间
-为了避免连接池没有配置时静默失
-败)。默认值:20000 毫秒(也就是 20 秒)
+          <li><code>poolTimeToWait</code> – 这是一个低层设置，如果获取连接花费的相当长的时间，它会给连接池打印日志并重新尝试获取一个连接的机会（避免在误配置的情况下一直安静的失败），默认值：20000 毫秒（即 20 秒）。
           </li>
-          <li><code>poolPingQuery</code> – 发送到数据的侦测查询,用来验证连接是否正常工作,并且准备
-接受请求。默认是“NO PING QUERY SET”
-,这会引起许多数据库驱动连接由一
-个错误信息而导致失败。
+          <li><code>poolPingQuery</code> – 发送到数据的侦测查询，用来检验连接是否处在正常工作秩序中并准备接受请求。默认是“NO PING QUERY SET”，这会导致多数数据库驱动失败时带有一个恰当的错误消息。
           </li>
-          <li><code>poolPingEnabled</code> – 这是开启或禁用侦测查询。如果开启,你必须用一个合法的
-SQL 语句(最好是很快速的)设置 poolPingQuery 属性。默认值:false。
+          <li><code>poolPingEnabled</code> – 是否启用侦测查询。若开启，也必须使用一个可执行的 SQL 语句设置 <code>poolPingQuery</code> 属性（最好是一个非常快的 SQL），默认值：false。
           </li>
-          <li><code>poolPingConnectionsNotUsedFor</code> – 这是用来配置 poolPingQuery 多次时间被用一次。
-这可以被设置匹配标准的数据库连接超时时间,
-来避免不必要的侦测。
-默认值:
-0(也就是所有连接每一时刻都被侦测-但仅仅当 poolPingEnabled 为 true 时适用)。
+          <li><code>poolPingConnectionsNotUsedFor</code> – 配置 poolPingQuery 的使用频度。这可以被设置成匹配标准的数据库连接超时时间，来避免不必要的侦测，默认值：0（即所有连接每一时刻都被侦测 — 当然仅当 poolPingEnabled 为 true 时适用）。
           </li>
         </ul>
         <p>
-          <strong>JNDI</strong>
-          – 这个数据源的实现是为了使用如 Spring 或应用服务器这类的容器,
-容器可以集
-中或在外部配置数据源,然后放置一个 JNDI 上下文的引用。这个数据源配置只需要两个属
-性:
+          <strong>JNDI</strong>– 这个数据源的实现是为了能在如 EJB 或应用服务器这类容器中使用，容器可以集中或在外部配置数据源，然后放置一个 JNDI 上下文的引用。这种数据源配置只需要两个属性：
         </p>
         <ul>
-          <li><code>initial_context</code> – 这 个 属 性 用 来 从 初 始 上 下 文 中 寻 找 环 境 ( 也 就 是
-initialContext.lookup(initial——context) 。这是个可选属性,如果被忽略,那么
-data_source 属性将会直接以 initialContext 为背景再次寻找。
+          <li><code>initial_context</code> – 这个属性用来在 InitialContext 中寻找上下文（即，initialContext.lookup(initial_context)）。这是个可选属性，如果忽略，那么 data_source 属性将会直接从 InitialContext 中寻找。
           </li>
-          <li><code>data_source</code> – 这是引用数据源实例位置的上下文的路径。它会以由 initial_context
-查询返回的环境为背景来查找,如果 initial_context 没有返回结果时,直接以初始
-上下文为环境来查找。
+          <li><code>data_source</code> – 这是引用数据源实例位置的上下文的路径。提供了 initial_context 配置时会在其返回的上下文中进行查找，没有提供时则直接在 InitialContext 中查找。
           </li>
         </ul>
-        <p>和其他数据源配置相似,
-它也可以通过名为
-“env.”
-的前缀直接向初始上下文发送属性。
-比如:
+        <p>和其他数据源配置类似，可以通过名为“env.”的前缀直接向初始上下文发送属性（send properties）。比如：
         </p>
         <ul>
           <li><code>env.encoding=UTF8</code></li>
         </ul>
-        <p>
-在初始化之后,这就会以值“UTF8”向初始上下文的构造方法传递名为“encoding”
-的属性。
+        <p>这就会在初始化时以值“UTF8”向初始上下文的构造方法传递名为“encoding”的属性。
         </p>
 
 		<p>
-		  You can plug any 3rd party DataSource by implementing the interface <code>org.apache.ibatis.datasource.DataSourceFactory</code>:
+		  也可使用任何第三方数据源，需要实现这个接口 <code>org.apache.ibatis.datasource.DataSourceFactory</code>：
 		</p>
 
         <source><![CDATA[public interface DataSourceFactory {
@@ -1397,8 +1308,7 @@ data_source 属性将会直接以 initialContext 为背景再次寻找。
 }]]></source>
 
         <p>
-		  <code>org.apache.ibatis.datasource.unpooled.UnpooledDataSourceFactory</code> can be used as super class
-		  class to build new datasource adapters. For example this is the code needed to plug C3P0:
+		  <code>org.apache.ibatis.datasource.unpooled.UnpooledDataSourceFactory</code> 可被用作父类来构建新的数据源适配器，比如下面这段插入 C3P0 所必需的代码：
 		</p>
 
         <source><![CDATA[import org.apache.ibatis.datasource.unpooled.UnpooledDataSourceFactory;
@@ -1411,8 +1321,7 @@ public class C3P0DataSourceFactory extends UnpooledDataSourceFactory {
   }
 }]]></source>
 
-        <p>To set it up, add a property for each setter method you want MyBatis to call.
-        Below depicts a sample configuration which connects to a PostgreSQL database:</p>
+        <p>为了令其工作，可在每个需要 MyBatis 调用的 setter 方法中增加一个属性。下面是一个可以连接至 PostgreSQL 数据库的例子：</p>
 
         <source><![CDATA[<dataSource type="org.myproject.C3P0DataSourceFactory">
   <property name="driver" value="org.postgresql.Driver"/>
@@ -1425,25 +1334,12 @@ public class C3P0DataSourceFactory extends UnpooledDataSourceFactory {
       </subsection>
 
       <subsection name="databaseIdProvider">
-        <p>
-          MyBatis is able to execute different statements depending on your database vendor.
-          The multi-db vendor support is based on the mapped statements <code>databaseId</code> attribute.
-          MyBatis will load all statements with no <code>databaseId</code> attribute
-          or with a <code>databaseId</code> that matches the current one. If case the same statement
-          if found with and without the <code>databaseId</code> the latter will be discarded.
-          To enable the multi vendor support add a <code>databaseIdProvider</code>
-          to mybatis-config.xml file as follows:
-        </p>
+        <p>MyBatis 可以根据不同的数据库厂商执行不同的语句，这种多厂商的支持是基于映射语句中的 <code>databaseId</code> 属性的。MyBatis 会加载不带 <code>databaseId</code> 属性和带有匹配当前数据库 <code>databaseId</code> 属性的所有语句。如果同时找到带有 <code>databaseId</code> 和不带 <code>databaseId</code> 的相同语句，则后者会被舍弃。为支持多厂商特性只要像下面这样在 mybatis-config.xml 文件中加入 <code>databaseIdProvider</code> 即可：</p>
 
         <source><![CDATA[<databaseIdProvider type="DB_VENDOR" />
 ]]></source>
 
-		<p>
-		  The DB_VENDOR implementation databaseIdProvider sets as a databaseId the String returned by
-		  <code>DatabaseMetaData#getDatabaseProductName()</code>.
-		  As usually that string is too long and also, different versions of the same product return different values,
-		  so you may want to translate it to a shorter one by adding properties like follows:
-		</p>
+		<p>这里的 DB_VENDOR 会通过 <code>DatabaseMetaData#getDatabaseProductName()</code> 返回的字符串进行设置。由于通常情况下这个字符串都非常长而且相同产品的不同版本会返回不同的值，所以最好通过设置属性别名来使其变短，如下：</p>
 
         <source><![CDATA[<databaseIdProvider type="DB_VENDOR">
   <property name="SQL Server" value="sqlserver"/>
@@ -1451,16 +1347,9 @@ public class C3P0DataSourceFactory extends UnpooledDataSourceFactory {
   <property name="Oracle" value="oracle" />
 </databaseIdProvider>]]></source>
 
-		<p>
-		  When properties are provided, the DB_VENDOR databaseIdProvider will search the property value corresponding to the
-		  first key found in the returned database product name or "null" if there is not a matching property.
-		  In this case, if <code>getDatabaseProductName()</code> returns "Oracle (DataDirect)" the databaseId will be set to "oracle".
-		</p>
+		<p>在有 properties 时，DB_VENDOR databaseIdProvider 元素会搜索所返回数据库产品名称的第一个对应键值，如果没有匹配的将会返回 null。在这个例子中，如果 <code>getDatabaseProductName()</code> 返回“Oracle (DataDirect)”，databaseId 将被设置为“oracle”。</p>
 
-		<p>
-		  You can build your own database provider by implementing the interface <code>org.apache.ibatis.mapping.DatabaseIdProvider</code>
-		  and registerin it in mybatis-config.xml:
-		</p>
+		<p>你可以通过实现接口 <code>org.apache.ibatis.mapping.DatabaseIdProvider</code> 并在 mybatis-config.xml 中注册来构建自己的 database provider：</p>
 
         <source><![CDATA[public interface DatabaseIdProvider {
   void setProperties(Properties p);
@@ -1469,18 +1358,8 @@ public class C3P0DataSourceFactory extends UnpooledDataSourceFactory {
 
       </subsection>
 
-      <subsection name="mappers">
-        <p>
-既然 MyBatis 的行为已经由上述元素配置完了,我们现在就要定义 SQL 映射语句了。
-但是,
-首先我们需要告诉 MyBatis 到哪里去找到这些语句。
-Java 在这方面没有提供一个很好
-的方法,
-所以最佳的方式是告诉 MyBatis 到哪里去找映射文件。
-你可以使用相对于类路径的
-资源引用,或者字符表示,或 url 引用的完全限定名(包括 file:///URLs)
-。例如:
-        </p>
+      <subsection name="映射器（mappers）">
+        <p>既然 MyBatis 的行为已经由上述元素配置完了，我们现在就要定义 SQL 映射语句了。但是首先我们需要告诉 MyBatis 到哪里去找到这些语句。Java 在自动查找这方面没有提供一个很好的方法，所以最佳的方式是告诉 MyBatis 到哪里去找映射文件。你可以使用相对于类路径的资源引用，或完全限定资源定位符（包括 <code>file:///</code> 的 URL），或类名和包名等。例如：</p>
         <source><![CDATA[<!-- Using classpath relative resources -->
 <mappers>
   <mapper resource="org/mybatis/builder/AuthorMapper.xml"/>
@@ -1507,10 +1386,7 @@ Java 在这方面没有提供一个很好
   <package name="org.mybatis.builder"/>
 </mappers>]]></source>
 
-        <p>
-这些语句简单告诉了 MyBatis 去哪里找映射文件。其余的细节就是在每个 SQL 映射文
-件中了,下面的部分我们来讨论 SQL 映射文件。
-        </p>
+        <p>这些配置会告诉了 MyBatis 去哪里找映射文件，剩下的细节就应该是每个 SQL 映射文件了，也就是接下来我们要讨论的。</p>
       </subsection>
     </section>
   </body>
