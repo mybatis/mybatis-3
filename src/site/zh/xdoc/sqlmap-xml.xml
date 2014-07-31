@@ -24,43 +24,35 @@
     <title>MyBatis 3 | Mapper XML 文件</title>
     <author email="clinton.begin@gmail.com">Clinton Begin</author>
     <author email="nanlei1987@gmail.com">Nan Lei</author>
+    <author email="echowdx@gmail.com">Dongxu Wang</author>
   </properties>
 
   <body>
     <section name="Mapper XML 文件">
-      <p>
-MyBatis 真正的力量是在映射语句中。这里是奇迹发生的地方。对于所有的力量,SQL
-映射的 XML 文件是相当的简单。当然如果你将它们和对等功能的 JDBC 代码来比较,你会
-发现映射文件节省了大约 95%的代码量。MyBatis 的构建就是聚焦于 SQL 的,使其远离于
-普通的方式。
-      </p>
-      <p>
-SQL 映射文件有很少的几个顶级元素(按照它们应该被定义的顺序):
-      </p>
+      <p>MyBatis 的真正强大在于它的映射语句，也是它的魔力所在。由于它的异常强大，映射器的 XML 文件就显得相对简单。如果拿它跟具有相同功能的 JDBC 代码进行对比，你会立即发现省掉了将近 95% 的代码。MyBatis 就是针对 SQL 构建的，并且比普通的方法做的更好。</p>
+      <p>SQL 映射文件有很少的几个顶级元素（按照它们应该被定义的顺序）：</p>
       <ul>
         <li>
           <code>cache</code>
-          – 配置给定命名空间的缓存。
+          – 给定命名空间的缓存配置。
         </li>
         <li>
           <code>cache-ref</code>
-          – 从其他命名空间引用缓存配置。
+          – 其他命名空间缓存配置的引用。
         </li>
         <li>
           <code>resultMap</code>
-          – 最复杂,也是最有力量的元素,用来描述如何从数据库结果集中来加
-载你的对象。
+          – 是最复杂也是最强大的元素，用来描述如何从数据库结果集中来加载对象。
         </li>
         <li>
           <strike>
             <code>parameterMap</code>
-            – 已经被废弃了!老式风格的参数映射。内联参数是首选,这个元
-素可能在将来被移除。这里不会记录。
+            – 已废弃！老式风格的参数映射。内联参数是首选,这个元素可能在将来被移除，这里不会记录。
           </strike>
         </li>
         <li>
           <code>sql</code>
-          – 可以重用的 SQL 块,也可以被其他语句引用。
+          – 可被其他语句引用的可重用语句块。
         </li>
         <li>
           <code>insert</code>
@@ -79,8 +71,7 @@ SQL 映射文件有很少的几个顶级元素(按照它们应该被定义的顺
           – 映射查询语句
         </li>
       </ul>
-      <p>下一部分将从语句本身开始来描述每个元素的细节。
-      </p>
+      <p>下一部分将从语句本身开始来描述每个元素的细节。</p>
 
       <subsection name="select">
         <p>
