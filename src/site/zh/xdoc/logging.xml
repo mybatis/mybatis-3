@@ -166,7 +166,7 @@ log4j.appender.stdout.layout.ConversionPattern=%5p [%t] - %m%n]]></source>
 
         <source>log4j.logger.org.mybatis.example.BlogMapper.selectBlog=TRACE</source>
 
-		<p>看到了把，两种配置没差别！
+		<p>看到了吧，两种配置没差别！
 		</p>
 
         <p>配置文件<code>log4j.properties</code>的余下内容是针对日志格式的，这一内容已经超出本
