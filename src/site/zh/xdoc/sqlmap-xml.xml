@@ -74,40 +74,21 @@
       <p>下一部分将从语句本身开始来描述每个元素的细节。</p>
 
       <subsection name="select">
-        <p>
-查询语句是使用 MyBatis 时最常用的元素之一。
-直到你从数据库取出数据时才会发现将
-数据存在数据库中是多么的有价值,
-所以许多应用程序查询要比更改数据多的多。
-对于每次
-插入,更新或删除,那也会有很多的查询。这是 MyBatis 的一个基本原则,也是将重心和努
-力放到查询和结果映射的原因。对简单类别的查询元素是非常简单的。比如:
+        <p>查询语句是 MyBatis 中最常用的元素之一，光能把数据存到数据库中价值并不大，如果还能重新取出来才有用，多数应用也都是查询比修改要频繁。对每个插入、更新或删除操作，通常对应多个查询操作。这是 MyBatis 的基本原则之一，也是将焦点和努力放到查询和结果映射的原因。简单查询的 select 元素是非常简单的。比如：
         </p>
 
         <source><![CDATA[<select id="selectPerson" parameterType="int" resultType="hashmap">
   SELECT * FROM PERSON WHERE ID = #{id}
 </select>]]></source>
 
-        <p>
-这个语句被称作 selectPerson,
-使用一个 int
-(或 Integer)
-类型的参数,
-并返回一个 HashMap
-类型的对象,其中的键是列名,值是列对应的值。
+        <p>这个语句被称作 selectPerson，接受一个 int（或 Integer）类型的参数，并返回一个 HashMap 类型的对象，其中的键是列名，值便是结果行中的对应值。
         </p>
 
-        <p>
-注意参数注释:
-        </p>
+        <p>注意参数符号：</p>
 
         <source><![CDATA[#{id}]]></source>
 
-        <p>
-这就告诉 MyBatis 创建一个预处理语句参数。
-使用 JDBC,
-这样的一个参数在 SQL 中会
-由一个“?”来标识,并被传递到一个新的预处理语句中,就像这样:
+        <p>这就告诉 MyBatis 创建一个预处理语句参数，通过 JDBC，这样的一个参数在 SQL 中会由一个“?”来标识，并被传递到一个新的预处理语句中，就像这样：
         </p>
 
         <source><![CDATA[// Similar JDBC code, NOT MyBatis…
@@ -115,16 +96,10 @@ String selectPerson = "SELECT * FROM PERSON WHERE ID=?";
 PreparedStatement ps = conn.prepareStatement(selectPerson);
 ps.setInt(1,id);]]></source>
 
-        <p>
-当然,
-这需要很多单独的 JDBC 的代码来提取结果并将它们映射到对象实例中,
-这就是
-MyBatis 节省你时间的地方。我们需要深入了解参数和结果映射。那些细节部分我们下面来
-了解。
+        <p>当然，这需要很多单独的 JDBC 的代码来提取结果并将它们映射到对象实例中，这就是 MyBatis 节省你时间的地方。我们需要深入了解参数和结果映射，细节部分我们下面来了解。
         </p>
 
-        <p>
-select 元素有很多属性允许你配置,来决定每条语句的作用细节。
+        <p>select 元素有很多属性允许你配置，来决定每条语句的作用细节。
         </p>
 
         <source><![CDATA[<select
@@ -152,13 +127,13 @@ select 元素有很多属性允许你配置,来决定每条语句的作用细节
             <tr>
               <td><code>id</code></td>
               <td>
-              在命名空间中唯一的标识符,可以被用来引用这条语句。
+              在命名空间中唯一的标识符，可以被用来引用这条语句。
               </td>
             </tr>
             <tr>
               <td><code>parameterType</code></td>
               <td>
-              将会传入这条语句的参数类的完全限定名或别名。
+              将会传入这条语句的参数类的完全限定名或别名。这个属性是可选的，因为 MyBatis 可以通过 TypeHandler 推断出具体传入语句的参数，默认值为 unset。
               </td>
             </tr>
             <tr>
@@ -166,91 +141,63 @@ select 元素有很多属性允许你配置,来决定每条语句的作用细节
                 <strike>parameterMap</strike>
               </td>
               <td>
-                <strike>
-这是引用外部 parameterMap 的已经被废弃的方法。使用内联参数
-映射和 parameterType 属性。
+                <strike>这是引用外部 parameterMap 的已经被废弃的方法。使用内联参数映射和 parameterType 属性。
                 </strike>
               </td>
             </tr>
             <tr>
               <td><code>resultType</code></td>
-              <td>
-从这条语句中返回的期望类型的类的完全限定名或别名。注意集
-合情形,那应该是集合可以包含的类型,而不能是集合本身。使
-用 resultType 或 resultMap,但不能同时使用。
+              <td>从这条语句中返回的期望类型的类的完全限定名或别名。注意如果是集合情形，那应该是集合可以包含的类型，而不能是集合本身。使用 resultType 或 resultMap，但不能同时使用。
               </td>
             </tr>
             <tr>
               <td><code>resultMap</code></td>
-              <td>
-命名引用外部的 resultMap。
-返回 map 是 MyBatis 最具力量的特性,
-对其有一个很好的理解的话,
-许多复杂映射的情形就能被解决了。
-使用 resultMap 或 resultType,但不能同时使用。
+              <td>外部 resultMap 的命名引用。结果集的映射是 MyBatis 最强大的特性，对其有一个很好的理解的话，许多复杂映射的情形都能迎刃而解。使用 resultMap 或 resultType，但不能同时使用。
               </td>
             </tr>
             <tr>
               <td><code>flushCache</code></td>
-              <td>
-将其设置为 true,不论语句什么时候被带哦用,都会导致缓存被
-清空。默认值:false。
+              <td>将其设置为 true，任何时候只要语句被调用，都会导致本地缓存和二级缓存都会被清空，默认值：false。
               </td>
             </tr>
             <tr>
               <td><code>useCache</code></td>
-              <td>
-将其设置为 true,
-将会导致本条语句的结果被缓存。
-默认值:
-true。
+              <td>将其设置为 true，将会导致本条语句的结果被二级缓存，默认值：对 select 元素为 true。
               </td>
             </tr>
             <tr>
               <td><code>timeout</code></td>
-              <td>
-这个设置驱动程序等待数据库返回请求结果,并抛出异常时间的
-最大等待值。默认不设置(驱动自行处理)
+              <td>这个设置是在抛出异常之前，驱动程序等待数据库返回请求结果的秒数。默认值为 unset（依赖驱动）。
               </td>
             </tr>
             <tr>
               <td><code>fetchSize</code></td>
-              <td>
-这是暗示驱动程序每次批量返回的结果行数。默认不设置(驱动
-自行处理)。
+              <td>这是尝试影响驱动程序每次批量返回的结果行数和这个设置值相等。默认值为 unset（依赖驱动）。
               </td>
             </tr>
             <tr>
               <td><code>statementType</code></td>
-              <td>
-STA
-TEMENT,PREPARED 或 CALLABLE 的一种。
-这会让 MyBatis
-使用选择使用 Statement,PreparedStatement 或 CallableStatement。
-默认值:PREPARED。
+              <td>STATEMENT，PREPARED 或 CALLABLE 的一个。这会让 MyBatis 分别使用 Statement，PreparedStatement 或 CallableStatement，默认值：PREPARED。
               </td>
             </tr>
             <tr>
               <td><code>resultSetType</code></td>
-              <td>
-FORWARD_ONLY|SCROLL_SENSITIVE|SCROLL_INSENSITIVE
-中的一种。默认是不设置(驱动自行处理)。
+              <td>FORWARD_ONLY，SCROLL_SENSITIVE 或 SCROLL_INSENSITIVE 中的一个，默认值为 unset （依赖驱动）。
               </td>
             </tr>
             <tr>
               <td><code>databaseId</code></td>
-              <td>In case there is a configured databaseIdProvider, MyBatis will load all statements with no <code>databaseId</code> 
-              attribute or with a <code>databaseId</code> that matches the current one. If case the same statement
-              if found with and without the <code>databaseId</code> the latter will be discarded.
+              <td>如果配置了 databaseIdProvider，MyBatis 会加载所有的不带 databaseId 或匹配当前 databaseId 的语句；如果带或者不带的语句都有，则不带的会被忽略。
               </td>
             </tr>
             <tr>
               <td><code>resultOrdered</code></td>
-              <td>This is only applicable for nested result select statements: If this is true, it
-                is assumed that nested results are contained or grouped together such that when a
-                new main result row is returned, no references to a previous result row will occur
-                anymore. This allows nested results to be filled much more memory friendly. Default:
-                <code>false</code>.
+              <td>这个设置仅针对嵌套结果 select 语句适用：如果为 true，就是假设包含了嵌套结果集或是分组了，这样的话当返回一个主结果行的时候，就不会发生有对前面结果集的引用的情况。这就使得在获取嵌套的结果集的时候不至于导致内存不够用。默认值：<code>false</code>。
+              </td>
+            </tr>
+            <tr>
+              <td><code>resultSets</code></td>
+              <td>这个设置仅对多结果集的情况适用，它将列出语句执行后返回的结果集并每个结果集给一个名称，名称是逗号分隔的。
               </td>
             </tr>
           </tbody>
