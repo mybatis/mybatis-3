@@ -392,14 +392,12 @@ ps.setInt(1,id);]]></source>
       </subsection>
 
       <subsection name="sql">
-        <p>
-这个元素可以被用来定义可重用的 SQL 代码段,可以包含在其他语句中。比如:
+        <p>这个元素可以被用来定义可重用的 SQL 代码段，可以包含在其他语句中。比如：
         </p>
 
         <source><![CDATA[<sql id="userColumns"> id,username,password </sql>]]></source>
 
-        <p>
-这个 SQL 片段可以被包含在其他语句中,例如:
+        <p>这个 SQL 片段可以被包含在其他语句中，例如：
         </p>
 
         <source><![CDATA[<select id="selectUsers" resultType="map">
