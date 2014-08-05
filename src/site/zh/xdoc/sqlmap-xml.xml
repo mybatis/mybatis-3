@@ -455,28 +455,17 @@ ps.setInt(1,id);]]></source>
 
         <source><![CDATA[#{height,javaType=double,jdbcType=NUMERIC,numericScale=2}]]></source>
 
-        <p>
-最后,mode 属性允许你指定 IN,OUT 或 INOUT 参数。如果参数为 OUT 或 INOUT,
-参数对象属性的真实值将会被改变,就像你期望你需要你个输出参数。如果 mode 为 OUT
-(或 INOUT)
-,而且 jdbcType 为 CURSOR(也就是 Oracle 的 REFCURSOR)
-,你必须指定
-一个 resultMap 来映射结果集到参数类型。要注意这里的 javaType 属性是可选的,如果左边
-的空白是 jdbcType 的 CURSOR 类型,它会自动地被设置为结果集。
+        <p>最后，mode 属性允许你指定 IN，OUT 或 INOUT 参数。如果参数为 OUT 或 INOUT，参数对象属性的真实值将会被改变，就像你在获取输出参数时所期望的那样。如果 mode 为 OUT（或 INOUT），而且 jdbcType 为 CURSOR(也就是 Oracle 的 REFCURSOR)，你必须指定一个 resultMap 来映射结果集到参数类型。要注意这里的 javaType 属性是可选的，如果左边的空白是 jdbcType 的 CURSOR 类型，它会自动地被设置为结果集。
         </p>
 
         <source><![CDATA[#{department, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=departmentResultMap}]]></source>
 
-        <p>
-MyBatis 也支持很多高级的数据类型,比如结构体,但是当注册 out 参数时你必须告诉
-语句类型名称。比如(再次提示,在实际中不要像这样换行):
+        <p>MyBatis 也支持很多高级的数据类型，比如结构体，但是当注册 out 参数时你必须告诉它语句类型名称。比如（再次提示，在实际中要像这样不能换行）：
         </p>
 
         <source><![CDATA[#{middleInitial, mode=OUT, jdbcType=STRUCT, jdbcTypeName=MY_TYPE, resultMap=departmentResultMap}]]></source>
 
-        <p>
-尽管所有这些强大的选项很多时候你只简单指定属性名,MyBatis 会自己计算剩余的。
-最多的情况是你为 jdbcType 指定可能为空的列名。
+        <p>尽管所有这些强大的选项很多时候你只简单指定属性名，其他的事情 MyBatis 会自己去推断，最多你需要为可能为空的列名指定 <code>jdbcType</code>。
         </p>
 
         <source><![CDATA[#{firstName}
@@ -501,9 +490,7 @@ MyBatis 也支持很多高级的数据类型,比如结构体,但是当注册 out
         </p>
 
         <p>
-          <span class="label important">重要</span> 接受从用户输出的内容并提供给语句中不变的字符串,这样做是不安全的。这会
-导致潜在的 SQL 注入攻击,因此你不应该允许用户输入这些字段,或者通常自行转义并检
-查。
+          <span class="label important">NOTE</span> 接受从用户输出的内容并提供给语句中不变的字符串，这样做是不安全的。这会导致潜在的 SQL 注入攻击,因此要么你不应该允许用户输入这些字段，要么自行转义并检查。
         </p>
       </subsection>
 
