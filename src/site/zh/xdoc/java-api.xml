@@ -803,13 +803,13 @@ type,method。type 属性是类的完全限
     </tbody>
   </table>
 
-  <h5>Mapper Annotation Examples</h5>
-  <p>This example shows using the @SelectKey annotation to retrieve a value from a sequence before an insert:</p>
+  <h5>映射申明样例</h5>
+  <p>这个例子展示了如何使用 @SelectKey 注解来在插入前读取数据库序列的值：</p>
   <source>@Insert("insert into table3 (id, name) values(#{nameId}, #{name})")
 @SelectKey(statement="call next value for TestSequence", keyProperty="nameId", before=<strong>true</strong>, resultType=<strong>int.class</strong>)
 <strong>int</strong> insertTable3(Name name);</source>
 
-  <p>This example shows using the @SelectKey annotation to retrieve an identity value after an insert:</p>
+  <p>这个例子展示了如何使用 @SelectKey 注解来在插入后读取数据库识别列的值：</p>
   <source>@Insert("insert into table2 (name) values(#{name})")
 @SelectKey(statement="call identity()", keyProperty="nameId", before=<strong>false</strong>, resultType=<strong>int.class</strong>)
 <strong>int</strong> insertTable2(Name name);</source>
