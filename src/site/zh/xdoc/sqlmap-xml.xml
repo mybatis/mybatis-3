@@ -392,14 +392,12 @@ ps.setInt(1,id);]]></source>
       </subsection>
 
       <subsection name="sql">
-        <p>
-这个元素可以被用来定义可重用的 SQL 代码段,可以包含在其他语句中。比如:
+        <p>这个元素可以被用来定义可重用的 SQL 代码段，可以包含在其他语句中。比如：
         </p>
 
         <source><![CDATA[<sql id="userColumns"> id,username,password </sql>]]></source>
 
-        <p>
-这个 SQL 片段可以被包含在其他语句中,例如:
+        <p>这个 SQL 片段可以被包含在其他语句中，例如：
         </p>
 
         <source><![CDATA[<select id="selectUsers" resultType="map">
@@ -409,12 +407,8 @@ ps.setInt(1,id);]]></source>
 </select>]]></source>
       </subsection>
 
-      <subsection name="Parameters">
-        <p>
-在之前的语句中,
-你已经看到了一些简单参数的示例。 MyBatis 中参数是非常强大的
-在
-元素。对于简单的做法,大概 90%的情况,是不用太多的,比如:
+      <subsection name="参数（Parameters）">
+        <p>前面的所有语句中你所见到的都是简单参数的例子，实际上参数是 MyBatis 非常强大的元素，对于简单的做法，大概 90% 的情况参数都很少，比如：
         </p>
 
         <source><![CDATA[<select id="selectUsers" resultType="User">
@@ -423,14 +417,7 @@ ps.setInt(1,id);]]></source>
   where id = #{id}
 </select>]]></source>
 
-        <p>
-上面的这个示例说明了一个非常简单的命名参数映射。参数类型被设置为“int”
-,因此
-这个参数可以被设置成任何内容。
-原生的类型或简单数据类型,
-比如整型和没有相关属性的
-字符串,因此它会完全用参数来替代。然而,如果你传递了一个复杂的对象,那么 MyBatis
-的处理方式就会有一点不同。比如:
+        <p>上面的这个示例说明了一个非常简单的命名参数映射。参数类型被设置为 <code>int</code>，这样这个参数就可以被设置成任何内容。原生的类型或简单数据类型（比如整型和字符串）因为没有相关属性，它会完全用参数值来替代。然而，如果传入一个复杂的对象，行为就会有一点不同了。比如：
         </p>
 
         <source><![CDATA[<insert id="insertUser" parameterType="User">
@@ -438,70 +425,47 @@ ps.setInt(1,id);]]></source>
   values (#{id}, #{username}, #{password})
 </insert>]]></source>
 
-        <p>
-如果 User 类型的参数对象传递到了语句中, username 和 password 属性将会被查找,
-id、
-然后它们的值就被传递到预处理语句的参数中。
+        <p>如果 User 类型的参数对象传递到了语句中，id、username 和 password 属性将会被查找，然后将它们的值传入预处理语句的参数中。
         </p>
 
-        <p>
-这点对于传递参数到语句中非常好。但是对于参数映射也有一些其他的特性。
+        <p>这点对于向语句中传参是比较好的而且又简单，不过参数映射的功能远不止于此。
         </p>
 
-        <p>
-首先,像 MyBatis 的其他部分,参数可以指定一个确定的数据类型。
+        <p>首先，像 MyBatis 的其他部分一样，参数也可以指定一个特殊的数据类型。
         </p>
 
         <source><![CDATA[#{property,javaType=int,jdbcType=NUMERIC}]]></source>
 
-        <p>
-像 MyBatis 的剩余部分,javaType 通常可以从参数对象中来去顶,除非对象是一个
-HashMap。那么 javaType 应该被确定来保证使用正确类型处理器。
+        <p>像 MyBatis 的剩余部分一样，javaType 通常可以从参数对象中来去确定，前提是只要对象不是一个 HashMap。那么 javaType 应该被确定来保证使用正确类型处理器。
         </p>
 
-        <p>
-          <span class="label important">注意</span> 如果 null 被当作值来传递,对于所有可能为空的列,JDBC Type 是需要的。以可
-以自己通过阅读预处理语句的 setNull()方法的 JavaDocs 文档来研究这个。
+        <p><span class="label important">NOTE</span> 如果 null 被当作值来传递，对于所有可能为空的列，JDBC Type 是需要的。你可以自己通过阅读预处理语句的 setNull() 方法的 JavaDocs 文档来研究这种情况。
         </p>
 
-        <p>
-为了自定义类型处理器,你可以指定一个确定的类型处理器类(或别名), 比如:
+        <p>为了以后定制类型处理方式，你也可以指定一个特殊的类型处理器类（或别名），比如：
         </p>
 
         <source><![CDATA[#{age,javaType=int,jdbcType=NUMERIC,typeHandler=MyTypeHandler}]]></source>
 
-        <p>
-尽管它看起来繁琐,但是实际上是你很少设置它们其中之一。
+        <p>尽管看起来配置变得越来越繁琐，但实际上是很少去设置它们。
         </p>
 
-        <p>
-对于数值类型,对于决定有多少数字是相关的,有一个数值范围。
+        <p>对于数值类型，还有一个小数保留位数的设置，来确定小数点后保留的位数。
         </p>
 
         <source><![CDATA[#{height,javaType=double,jdbcType=NUMERIC,numericScale=2}]]></source>
 
-        <p>
-最后,mode 属性允许你指定 IN,OUT 或 INOUT 参数。如果参数为 OUT 或 INOUT,
-参数对象属性的真实值将会被改变,就像你期望你需要你个输出参数。如果 mode 为 OUT
-(或 INOUT)
-,而且 jdbcType 为 CURSOR(也就是 Oracle 的 REFCURSOR)
-,你必须指定
-一个 resultMap 来映射结果集到参数类型。要注意这里的 javaType 属性是可选的,如果左边
-的空白是 jdbcType 的 CURSOR 类型,它会自动地被设置为结果集。
+        <p>最后，mode 属性允许你指定 IN，OUT 或 INOUT 参数。如果参数为 OUT 或 INOUT，参数对象属性的真实值将会被改变，就像你在获取输出参数时所期望的那样。如果 mode 为 OUT（或 INOUT），而且 jdbcType 为 CURSOR(也就是 Oracle 的 REFCURSOR)，你必须指定一个 resultMap 来映射结果集到参数类型。要注意这里的 javaType 属性是可选的，如果左边的空白是 jdbcType 的 CURSOR 类型，它会自动地被设置为结果集。
         </p>
 
         <source><![CDATA[#{department, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=departmentResultMap}]]></source>
 
-        <p>
-MyBatis 也支持很多高级的数据类型,比如结构体,但是当注册 out 参数时你必须告诉
-语句类型名称。比如(再次提示,在实际中不要像这样换行):
+        <p>MyBatis 也支持很多高级的数据类型，比如结构体，但是当注册 out 参数时你必须告诉它语句类型名称。比如（再次提示，在实际中要像这样不能换行）：
         </p>
 
         <source><![CDATA[#{middleInitial, mode=OUT, jdbcType=STRUCT, jdbcTypeName=MY_TYPE, resultMap=departmentResultMap}]]></source>
 
-        <p>
-尽管所有这些强大的选项很多时候你只简单指定属性名,MyBatis 会自己计算剩余的。
-最多的情况是你为 jdbcType 指定可能为空的列名。
+        <p>尽管所有这些强大的选项很多时候你只简单指定属性名，其他的事情 MyBatis 会自己去推断，最多你需要为可能为空的列名指定 <code>jdbcType</code>。
         </p>
 
         <source><![CDATA[#{firstName}
@@ -512,23 +476,16 @@ MyBatis 也支持很多高级的数据类型,比如结构体,但是当注册 out
           字符串替换
         </h4>
 
-        <p>
-默认情况下,使用#{}格式的语法会导致 MyBatis 创建预处理语句属性并以它为背景设
-置安全的值(比如?)
-。这样做很安全,很迅速也是首选做法,有时你只是想直接在 SQL 语
-句中插入一个不改变的字符串。比如,像 ORDER BY,你可以这样来使用:
+        <p>默认情况下,使用#{}格式的语法会导致 MyBatis 创建预处理语句属性并安全地设置值（比如?）。这样做更安全，更迅速，通常也是首选做法，不过有时你只是想直接在 SQL 语句中插入一个不改变的字符串。比如，像 ORDER BY，你可以这样来使用：
         </p>
 
         <source><![CDATA[ORDER BY ${columnName}]]></source>
 
-        <p>
-这里 MyBatis 不会修改或转义字符串。
+        <p>这里 MyBatis 不会修改或转义字符串。
         </p>
 
         <p>
-          <span class="label important">重要</span> 接受从用户输出的内容并提供给语句中不变的字符串,这样做是不安全的。这会
-导致潜在的 SQL 注入攻击,因此你不应该允许用户输入这些字段,或者通常自行转义并检
-查。
+          <span class="label important">NOTE</span> 以这种方式接受从用户输出的内容并提供给语句中不变的字符串是不安全的，会导致潜在的 SQL 注入攻击，因此要么不允许用户输入这些字段，要么自行转义并检验。
         </p>
       </subsection>
 
