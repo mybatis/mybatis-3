@@ -20,6 +20,8 @@ import java.math.BigDecimal;
 
 public class Item implements Serializable {
 
+  private static final long serialVersionUID = 1L;
+
   private String itemId;
   private String productId;
   private BigDecimal listPrice;
