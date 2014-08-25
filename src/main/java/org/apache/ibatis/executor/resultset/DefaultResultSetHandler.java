@@ -79,7 +79,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
 
   // multiple resultsets
   private final Map<String, ResultMapping> nextResultMaps = new HashMap<String, ResultMapping>();
-  private final Map<CacheKey, PendingRelation> pendingRelations = new HashMap<CacheKey, PendingRelation>();
+  private final Map<CacheKey, List<PendingRelation>> pendingRelations = new HashMap<CacheKey, List<PendingRelation>>();
   
   private static class PendingRelation {
     public MetaObject metaObject;
@@ -296,7 +296,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
 
   private void storeObject(ResultHandler resultHandler, DefaultResultContext resultContext, Object rowValue, ResultMapping parentMapping, ResultSet rs) throws SQLException {
     if (parentMapping != null) {
-      linkToParent(rs, parentMapping, rowValue);
+      linkToParents(rs, parentMapping, rowValue);
     } else {
       callResultHandler(resultHandler, resultContext, rowValue);
     }
@@ -434,17 +434,19 @@ public class DefaultResultSetHandler implements ResultSetHandler {
 
   // MULTIPLE RESULT SETS
 
-  private void linkToParent(ResultSet rs, ResultMapping parentMapping, Object rowValue) throws SQLException {
+  private void linkToParents(ResultSet rs, ResultMapping parentMapping, Object rowValue) throws SQLException {
     CacheKey parentKey = createKeyForMultipleResults(rs, parentMapping, parentMapping.getColumn(), parentMapping.getForeignColumn());
-    PendingRelation parent = pendingRelations.get(parentKey);
-    if (parent != null) {
-      final Object collectionProperty = instantiateCollectionPropertyIfAppropriate(parent.propertyMapping, parent.metaObject);
-      if (rowValue != null) {
-        if (collectionProperty != null) {
-          final MetaObject targetMetaObject = configuration.newMetaObject(collectionProperty);
-          targetMetaObject.add(rowValue);
-        } else {
-          parent.metaObject.setValue(parent.propertyMapping.getProperty(), rowValue);
+    List<PendingRelation> parents = pendingRelations.get(parentKey);
+    for (PendingRelation parent : parents) {
+      if (parent != null) {
+        final Object collectionProperty = instantiateCollectionPropertyIfAppropriate(parent.propertyMapping, parent.metaObject);
+        if (rowValue != null) {
+          if (collectionProperty != null) {
+            final MetaObject targetMetaObject = configuration.newMetaObject(collectionProperty);
+            targetMetaObject.add(rowValue);
+          } else {
+            parent.metaObject.setValue(parent.propertyMapping.getProperty(), rowValue);
+          }
         }
       }
     }
@@ -478,7 +480,12 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     PendingRelation deferLoad = new PendingRelation();
     deferLoad.metaObject = metaResultObject;
     deferLoad.propertyMapping = parentMapping;
-    pendingRelations.put(cacheKey, deferLoad);
+    List<PendingRelation> relations = pendingRelations.get(cacheKey);
+    if (relations == null) { // issue #255
+      relations = new ArrayList<DefaultResultSetHandler.PendingRelation>();
+      pendingRelations.put(cacheKey, relations);
+    }
+    relations.add(deferLoad);
     ResultMapping previous = nextResultMaps.get(parentMapping.getResultSet());
     if (previous == null) {
       nextResultMaps.put(parentMapping.getResultSet(), parentMapping);
