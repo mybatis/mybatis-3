@@ -21,14 +21,16 @@ import java.util.*;
 
 public class Cart implements Serializable {
 
-  private final Map itemMap = Collections.synchronizedMap(new HashMap());
-  private final List itemList = new ArrayList();
+  private static final long serialVersionUID = 1L;
 
-  public Iterator getCartItems() {
+  private final Map<String, CartItem> itemMap = Collections.synchronizedMap(new HashMap<String, CartItem>());
+  private final List<CartItem> itemList = new ArrayList<CartItem>();
+
+  public Iterator<CartItem> getCartItems() {
     return itemList.iterator();
   }
 
-  public List getCartItemList() {
+  public List<CartItem> getCartItemList() {
     return itemList;
   }
 
@@ -76,7 +78,7 @@ public class Cart implements Serializable {
 
   public BigDecimal getSubTotal() {
     BigDecimal subTotal = new BigDecimal("0");
-    Iterator items = getCartItems();
+    Iterator<CartItem> items = getCartItems();
     while (items.hasNext()) {
       CartItem cartItem = (CartItem) items.next();
       Item item = cartItem.getItem();

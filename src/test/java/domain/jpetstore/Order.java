@@ -25,6 +25,8 @@ import java.util.List;
 
 public class Order implements Serializable {
 
+  private static final long serialVersionUID = 1L;
+
   private int orderId;
   private String username;
   private Date orderDate;
@@ -51,7 +53,7 @@ public class Order implements Serializable {
   private String cardType;
   private String locale;
   private String status;
-  private List lineItems = new ArrayList();
+  private List<LineItem> lineItems = new ArrayList<LineItem>();
 
   public int getOrderId() {
     return orderId;
@@ -261,11 +263,11 @@ public class Order implements Serializable {
     this.status = status;
   }
 
-  public void setLineItems(List lineItems) {
+  public void setLineItems(List<LineItem> lineItems) {
     this.lineItems = lineItems;
   }
 
-  public List getLineItems() {
+  public List<LineItem> getLineItems() {
     return lineItems;
   }
 
@@ -302,7 +304,7 @@ public class Order implements Serializable {
     status = "P";
 
 
-    Iterator i = cart.getCartItems();
+    Iterator<CartItem> i = cart.getCartItems();
     while (i.hasNext()) {
       CartItem cartItem = (CartItem) i.next();
       addLineItem(cartItem);
