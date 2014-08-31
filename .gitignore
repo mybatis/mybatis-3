@@ -5,7 +5,6 @@
 /.idea
 /.project
 /.settings
-/derby.log
 /ibderby
 /nb*
 /release.properties
