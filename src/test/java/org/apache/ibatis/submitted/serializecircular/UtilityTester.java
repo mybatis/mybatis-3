@@ -22,44 +22,48 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 public class UtilityTester {
-	
-	public static void serializeAndDeserializeObject(Object myObject){
 
-		try {
-			deserialzeObject(serializeObject(myObject));
-		} catch (IOException e) {
-			System.out.println("Exception: " + e.toString());
-		}
-	}
+  public static <T> T serializeAndDeserializeObject(Object myObject) throws Exception {
+    return deserialzeObject(serializeObject(myObject));
+  }
 
-	private static byte[] serializeObject(Object myObject) throws IOException {
-		try {
-			ByteArrayOutputStream myByteArrayOutputStream = new ByteArrayOutputStream();
+  private static byte[] serializeObject(Object myObject) throws IOException {
+    try {
+      ByteArrayOutputStream myByteArrayOutputStream = new ByteArrayOutputStream();
 
-			// Serialize to a byte array
-			ObjectOutputStream myObjectOutputStream = new ObjectOutputStream(myByteArrayOutputStream) ;
-			myObjectOutputStream.writeObject(myObject);
-			myObjectOutputStream.close();
+      // Serialize to a byte array
+      ObjectOutputStream myObjectOutputStream = new ObjectOutputStream(myByteArrayOutputStream);
+      myObjectOutputStream.writeObject(myObject);
+      myObjectOutputStream.close();
 
-			// Get the bytes of the serialized object
-			byte[] myResult = myByteArrayOutputStream.toByteArray();
-			return myResult;
-		} catch (Exception anException) {
-			throw new RuntimeException("Problem serializing: " + anException.toString(), anException);
-		}
-	}
+      // Get the bytes of the serialized object
+      byte[] myResult = myByteArrayOutputStream.toByteArray();
+      return myResult;
+    } catch (final Exception ex) {
+      throw rethrow(ex);
+    }
+  }
 
-	private static Object deserialzeObject(byte[] aSerializedObject) {
-		try {
-			// Deserialize from a byte array
-			ObjectInputStream myObjectInputStream = new ObjectInputStream(new ByteArrayInputStream(aSerializedObject));
-			Object myResult = myObjectInputStream.readObject();
-			myObjectInputStream.close();
+  private static <T> T deserialzeObject(byte[] aSerializedObject) {
+    try {
+      // Deserialize from a byte array
+      ObjectInputStream myObjectInputStream = new ObjectInputStream(new ByteArrayInputStream(aSerializedObject));
+      Object myResult = myObjectInputStream.readObject();
+      myObjectInputStream.close();
 
-			return myResult;
-		} catch (Exception anException) {
-			throw new RuntimeException("Problem deserializing", anException);
-		}
-	}
+      return (T) myResult;
+    } catch (final Exception ex) {
+      throw rethrow(ex);
+    }
+  }
 
+  @SuppressWarnings("unchecked")
+  private static RuntimeException rethrow(final Throwable t) {
+    UtilityTester.<RuntimeException>rethrow0(t);
+    return null;
+  }
+  @SuppressWarnings("unchecked")
+  private static <T extends Throwable> RuntimeException rethrow0(final Throwable t) throws T {
+    throw (T) t;
+  }
 }

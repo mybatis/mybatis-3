@@ -67,7 +67,8 @@ public class JavassistProxyTest extends SerializableProxyTest {
     Object proxy = ((JavassistProxyFactory)proxyFactory).createDeserializationProxy(author, new HashMap<String, ResultLoaderMap.LoadPair> (), new DefaultObjectFactory(), new ArrayList<Class<?>>(), new ArrayList<Object>());
     Author author2 = (Author) deserialize(serialize((Serializable) proxy));
     assertEquals(author, author2);
-    assertFalse(author.getClass().equals(author2.getClass()));
+    assertTrue("author.class (" + author.getClass() + ") should be the same as author2.class (" + author2.getClass() + "), since the proxy does not have unloaded properties; it does not need to be proxied.", 
+    		author.getClass().equals(author2.getClass()));
   }
 
 }

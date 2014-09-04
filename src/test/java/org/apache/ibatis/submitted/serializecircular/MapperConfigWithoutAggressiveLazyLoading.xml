@@ -24,8 +24,9 @@
 <configuration>
 
     <settings>
-        <setting name="lazyLoadingEnabled" value="true"/> 
+        <setting name="lazyLoadingEnabled" value="true"/>
         <setting name="aggressiveLazyLoading" value="false"/>
+        <setting name="configurationFactory" value="org.apache.ibatis.submitted.serializecircular.SerializeCircularTest"/>
     </settings>
 
 	<environments default="development">
@@ -42,6 +43,8 @@
 	</environments>
 
 	<mappers>
+		<mapper class="org.apache.ibatis.submitted.serializecircular.ParentMapper" />
+		<mapper class="org.apache.ibatis.submitted.serializecircular.ChildMapper" />
 		<mapper class="org.apache.ibatis.submitted.serializecircular.PersonMapper" />
 		<mapper class="org.apache.ibatis.submitted.serializecircular.AttributeMapper" />
 		<mapper class="org.apache.ibatis.submitted.serializecircular.DepartmentMapper" />

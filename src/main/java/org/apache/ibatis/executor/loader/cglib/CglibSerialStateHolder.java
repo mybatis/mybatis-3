@@ -17,7 +17,8 @@ package org.apache.ibatis.executor.loader.cglib;
 
 import java.util.List;
 import java.util.Map;
-
+import net.sf.cglib.proxy.Enhancer;
+import net.sf.cglib.proxy.FixedValue;
 import org.apache.ibatis.executor.loader.AbstractSerialStateHolder;
 import org.apache.ibatis.executor.loader.ResultLoaderMap;
 import org.apache.ibatis.reflection.factory.ObjectFactory;
@@ -33,17 +34,34 @@ class CglibSerialStateHolder extends AbstractSerialStateHolder {
   }
 
   public CglibSerialStateHolder(
+          final Object enhanced,
           final Object userBean,
           final Map<String, ResultLoaderMap.LoadPair> unloadedProperties,
           final ObjectFactory objectFactory,
           List<Class<?>> constructorArgTypes,
           List<Object> constructorArgs) {
-    super(userBean, unloadedProperties, objectFactory, constructorArgTypes, constructorArgs);
+    super(enhanced, userBean, unloadedProperties, objectFactory, constructorArgTypes, constructorArgs);
   }
 
   @Override
-  protected Object createDeserializationProxy(Object target, Map<String, ResultLoaderMap.LoadPair> unloadedProperties, ObjectFactory objectFactory,
-          List<Class<?>> constructorArgTypes, List<Object> constructorArgs) {
-    return new CglibProxyFactory().createDeserializationProxy(target, unloadedProperties, objectFactory, constructorArgTypes, constructorArgs);
+  protected Object newDeserializationProxy(Object target, Class<?>[] ctorTypes, Object[] ctorArgs, ObjectFactory factory, Map<String, ResultLoaderMap.LoadPair> unloaded) {
+    return new CglibProxyFactory().createDeserializationProxy(target, ctorTypes, ctorArgs, factory, unloaded);
   }
+
+  @Override
+  protected Object newCyclicReferenceMarker(final Class<?> target, final Class<?>[] ctorTypes, final Object[] ctorArgs, final AbstractSerialStateHolder ssh) {
+    final Enhancer enhancer = new Enhancer();
+    enhancer.setCallback(new FixedValue() {
+
+      @Override
+      public Object loadObject() throws Exception {
+        return ssh;
+      }
+    });
+    enhancer.setSuperclass(target);
+    enhancer.setInterfaces(new Class<?>[]{CyclicReferenceMarker.class});
+
+    return enhancer.create(ctorTypes, ctorArgs);
+  }
+
 }

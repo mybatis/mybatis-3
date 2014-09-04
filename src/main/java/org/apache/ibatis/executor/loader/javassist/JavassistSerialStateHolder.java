@@ -15,9 +15,12 @@
  */
 package org.apache.ibatis.executor.loader.javassist;
 
+import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
-
+import javassist.util.proxy.MethodHandler;
+import javassist.util.proxy.Proxy;
+import javassist.util.proxy.ProxyFactory;
 import org.apache.ibatis.executor.loader.AbstractSerialStateHolder;
 import org.apache.ibatis.executor.loader.ResultLoaderMap;
 import org.apache.ibatis.reflection.factory.ObjectFactory;
@@ -33,17 +36,42 @@ class JavassistSerialStateHolder extends AbstractSerialStateHolder {
   }
 
   public JavassistSerialStateHolder(
+          final Object enhanced,
           final Object userBean,
           final Map<String, ResultLoaderMap.LoadPair> unloadedProperties,
           final ObjectFactory objectFactory,
           List<Class<?>> constructorArgTypes,
           List<Object> constructorArgs) {
-    super(userBean, unloadedProperties, objectFactory, constructorArgTypes, constructorArgs);
+    super(enhanced, userBean, unloadedProperties, objectFactory, constructorArgTypes, constructorArgs);
   }
 
   @Override
-  protected Object createDeserializationProxy(Object target, Map<String, ResultLoaderMap.LoadPair> unloadedProperties, ObjectFactory objectFactory,
-          List<Class<?>> constructorArgTypes, List<Object> constructorArgs) {
-    return new JavassistProxyFactory().createDeserializationProxy(target, unloadedProperties, objectFactory, constructorArgTypes, constructorArgs);
+  protected Object newDeserializationProxy(Object target, Class<?>[] ctorTypes, Object[] ctorArgs, ObjectFactory factory, Map<String, ResultLoaderMap.LoadPair> unloaded) {
+    return new JavassistProxyFactory().createDeserializationProxy(target, ctorTypes, ctorArgs, factory, unloaded);
   }
+
+  @Override
+  protected Object newCyclicReferenceMarker(final Class<?> target, final Class<?>[] ctorTypes, final Object[] ctorArgs, final AbstractSerialStateHolder ssh) {
+    final ProxyFactory enhancer = new ProxyFactory();
+    enhancer.setSuperclass(target);
+    enhancer.setInterfaces(new Class<?>[]{CyclicReferenceMarker.class});
+
+    final Proxy enhanced;
+    try {
+      enhanced = (Proxy) enhancer.create(ctorTypes, ctorArgs);
+    } catch (final Exception ex) {
+      throw new IllegalStateException(ex);
+    }
+
+    enhanced.setHandler(new MethodHandler() {
+
+      @Override
+      public Object invoke(Object o, Method method, Method method1, Object[] os) throws Throwable {
+        return ssh;
+      }
+    });
+
+    return enhanced;
+  }
+
 }
