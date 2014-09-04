@@ -43,8 +43,16 @@ public class ResultExtractor {
       MetaObject metaObject = configuration.newMetaObject(value);
       metaObject.addAll(list);
     } else if (targetType != null && targetType.isArray()) {
-      Object[] array = (Object[]) Array.newInstance(targetType.getComponentType(), list.size());
-      value = list.toArray(array);
+      Class<?> arrayComponentType = targetType.getComponentType();
+      Object array = Array.newInstance(arrayComponentType, list.size());
+      if (arrayComponentType.isPrimitive()) {
+        for (int i = 0; i < list.size(); i++) {
+          Array.set(array, i, list.get(i));
+        }
+        value = array;
+      } else {
+        value = list.toArray((Object[])array);
+      }
     } else {
       if (list != null && list.size() > 1) {
         throw new ExecutorException("Statement returned more than one row, where no more than one was expected.");
