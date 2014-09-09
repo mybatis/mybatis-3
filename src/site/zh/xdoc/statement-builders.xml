@@ -28,6 +28,11 @@
 
   <body>
   <section name="Statement Builders">
+  
+  <subsection name="Request For Translation">
+  <p>This section is outdated in the Chinese version. Please refer to the English manual. Any help with the Chinese translation will be really welcome.</p>
+  </subsection>
+  
   <subsection name="SelectBuilder">
   <p>一个 Java 程序员面对的最痛苦的事情之一就是在 Java 代码中嵌入 SQL 语句。
 通常这么

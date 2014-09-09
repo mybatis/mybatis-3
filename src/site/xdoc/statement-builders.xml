@@ -104,8 +104,8 @@ public String deletePersonSql() {
 // Builder / Fluent style
 public String insertPersonSql() {
   String sql = new SQL()
-    .INSERT_INTO("PERSON");
-    .VALUES("ID, FIRST_NAME", "${id}, ${firstName}");
+    .INSERT_INTO("PERSON")
+    .VALUES("ID, FIRST_NAME", "${id}, ${firstName}")
     .VALUES("LAST_NAME", "${lastName}")
     .toString();
   return sql;
