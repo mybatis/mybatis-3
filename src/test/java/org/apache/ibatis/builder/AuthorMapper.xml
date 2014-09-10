@@ -86,6 +86,10 @@
 		select * from author
 	</select>
 
+	<select id="selectAuthorLinkedHashMap" resultType="java.util.LinkedHashMap">
+		select * from author where id = #{value}
+	</select>
+
 	<select id="selectAuthor" parameterMap="selectAuthor" resultMap="selectAuthor">
 		select id, username, password, email, bio, favourite_section
 		from author where id = ?

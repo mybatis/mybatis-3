@@ -25,6 +25,7 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -566,8 +567,21 @@ public class SqlSessionTest extends BaseDataTest {
     }
   }
 
+
   @Test
-  public void shouldExecuteSelectOneAuthorUsingMapperClassThatReturnsSet() {
+  public void shouldExecuteSelectOneAuthorUsingMapperClassThatReturnsALinedHashMap() {
+    SqlSession session = sqlMapper.openSession();
+    try {
+      AuthorMapper mapper = session.getMapper(AuthorMapper.class);
+      LinkedHashMap<String, Object> author = mapper.selectAuthorLinkedHashMap(101);
+      assertEquals(101, author.get("ID"));
+    } finally {
+      session.close();
+    }
+  }
+  
+  @Test
+  public void shouldExecuteSelectAllAuthorsUsingMapperClassThatReturnsSet() {
     SqlSession session = sqlMapper.openSession();
     try {
       AuthorMapper mapper = session.getMapper(AuthorMapper.class);
@@ -579,7 +593,7 @@ public class SqlSessionTest extends BaseDataTest {
   }
 
   @Test
-  public void shouldExecuteSelectOneAuthorUsingMapperClassThatReturnsVector() {
+  public void shouldExecuteSelectAllAuthorsUsingMapperClassThatReturnsVector() {
     SqlSession session = sqlMapper.openSession();
     try {
       AuthorMapper mapper = session.getMapper(AuthorMapper.class);
@@ -591,7 +605,7 @@ public class SqlSessionTest extends BaseDataTest {
   }
 
   @Test
-  public void shouldExecuteSelectOneAuthorUsingMapperClassThatReturnsLinkedList() {
+  public void shouldExecuteSelectAllAuthorsUsingMapperClassThatReturnsLinkedList() {
     SqlSession session = sqlMapper.openSession();
     try {
       AuthorMapper mapper = session.getMapper(AuthorMapper.class);
@@ -603,7 +617,7 @@ public class SqlSessionTest extends BaseDataTest {
   }
 
   @Test
-  public void shouldExecuteSelectOneAuthorUsingMapperClassThatReturnsAnArray() {
+  public void shouldExecuteSelectAllAuthorsUsingMapperClassThatReturnsAnArray() {
     SqlSession session = sqlMapper.openSession();
     try {
       AuthorMapper mapper = session.getMapper(AuthorMapper.class);
