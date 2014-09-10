@@ -87,7 +87,7 @@
 	</select>
 
 	<select id="selectAuthorLinkedHashMap" resultType="java.util.LinkedHashMap">
-		select * from author where id = #{value}
+		select id, username from author where id = #{value}
 	</select>
 
 	<select id="selectAuthor" parameterMap="selectAuthor" resultMap="selectAuthor">
