@@ -115,7 +115,7 @@ SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(input
         and connection pooling.
         The mappers element
         contains a list of mappers – the XML files 
-	and/or annotated Java interface classes that
+        and/or annotated Java interface classes that
         contain the SQL code
         and mapping
         definitions.
