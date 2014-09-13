@@ -151,7 +151,7 @@ AND title like ‘someTitle’]]></source>
   </subsection>
   <subsection name="foreach">
   <p>動的 SQL で良くあるもう一つの要件は、コレクションの要素をイテレーション処理したいというものです。多くの場合、IN 演算子を使った条件を構築するのが目的です。例：</p>
-  <source><![CDATA[<select id="selectPostIn" resultType="org.apache.ibatis.domain.blog.Post">
+  <source><![CDATA[<select id="selectPostIn" resultType="domain.blog.Post">
   SELECT *
   FROM POST P
   WHERE ID in

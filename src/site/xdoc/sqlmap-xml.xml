@@ -256,7 +256,7 @@ ps.setInt(1,id);]]></source>
 
         <source><![CDATA[<insert
   id="insertAuthor"
-  parameterType="org.apache.ibatis.domain.blog.Author"
+  parameterType="domain.blog.Author"
   flushCache="true"
   statementType="PREPARED"
   keyProperty=""
@@ -266,14 +266,14 @@ ps.setInt(1,id);]]></source>
 
 <update
   id="insertAuthor"
-  parameterType="org.apache.ibatis.domain.blog.Author"
+  parameterType="domain.blog.Author"
   flushCache="true"
   statementType="PREPARED"
   timeout="20">
 
 <delete
   id="insertAuthor"
-  parameterType="org.apache.ibatis.domain.blog.Author"
+  parameterType="domain.blog.Author"
   flushCache="true"
   statementType="PREPARED"
   timeout="20">]]></source>
@@ -1597,7 +1597,7 @@ SELECT * FROM AUTHOR WHERE ID = #{id}]]></source>
 
         <h4>collection</h4>
 
-        <source><![CDATA[<collection property="posts" ofType="org.apache.ibatis.domain.blog.Post">
+        <source><![CDATA[<collection property="posts" ofType="domain.blog.Post">
   <id property="id" column="post_id"/>
   <result property="subject" column="post_subject"/>
   <result property="body" column="post_body"/>

@@ -452,7 +452,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
         <td>Esta anotación se usa para proporcionar el id de un elemento &lt;resultMap&gt; en un mapper XML a una anotación @Select o @SelectProvider. Esto permite a las selects anotadas reusar resultmaps definidas en XML. Esta anotación sobrescribe las anotaciones @Result o @ConstructorArgs en caso de que se hayan especificado en la select anotada.</td>
       </tr>
       <tr>
-        <td><code>@resultType</code></td>
+        <td><code>@ResultType</code></td>
         <td><code>Method</code></td>
         <td>N/A</td>
         <td>Esta anotación se usa cuando se utiliza un result handler. En ese caso, el tipo devuelto por el método es void y
