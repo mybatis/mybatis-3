@@ -145,7 +145,7 @@ AND title like ‘someTitle’]]></source>
   </subsection>
   <subsection name="foreach">
   <p>Otra necesidad común del SQL dinámico es iterar sobre una colección, habitualmente para construir una condición IN. Por ejemplo:</p>
-  <source><![CDATA[<select id="selectPostIn" resultType="domain.blog.Post">
+  <source><![CDATA[<select id="selectPostIn" resultType="org.apache.ibatis.domain.blog.Post">
   SELECT *
   FROM POST P
   WHERE ID in

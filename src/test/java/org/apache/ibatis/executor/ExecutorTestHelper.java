@@ -28,6 +28,12 @@ import org.apache.ibatis.cache.decorators.ScheduledCache;
 import org.apache.ibatis.cache.decorators.SerializedCache;
 import org.apache.ibatis.cache.decorators.SynchronizedCache;
 import org.apache.ibatis.cache.impl.PerpetualCache;
+import org.apache.ibatis.domain.blog.Author;
+import org.apache.ibatis.domain.blog.Blog;
+import org.apache.ibatis.domain.blog.Comment;
+import org.apache.ibatis.domain.blog.Post;
+import org.apache.ibatis.domain.blog.Section;
+import org.apache.ibatis.domain.blog.Tag;
 import org.apache.ibatis.executor.keygen.Jdbc3KeyGenerator;
 import org.apache.ibatis.executor.keygen.SelectKeyGenerator;
 import org.apache.ibatis.mapping.Discriminator;
@@ -46,13 +52,6 @@ import org.apache.ibatis.scripting.xmltags.TextSqlNode;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandlerRegistry;
-
-import domain.blog.Author;
-import domain.blog.Blog;
-import domain.blog.Comment;
-import domain.blog.Post;
-import domain.blog.Section;
-import domain.blog.Tag;
 
 public class ExecutorTestHelper {
 

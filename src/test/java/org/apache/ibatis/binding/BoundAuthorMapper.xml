@@ -23,27 +23,27 @@
 
 <mapper namespace="org.apache.ibatis.binding.BoundAuthorMapper">
 
-  <resultMap id="authorResultMap" type="domain.blog.Author">
+  <resultMap id="authorResultMap" type="org.apache.ibatis.domain.blog.Author">
       <constructor>
           <idArg column="author_id" javaType="java.lang.Integer"/>
           <arg column="author_username" javaType="java.lang.String"/>
           <arg column="author_password" javaType="java.lang.String"/>
           <arg column="author_email" javaType="java.lang.String"/>
           <arg column="author_bio" javaType="java.lang.String"/>
-          <arg column="favourite_section" javaType="domain.blog.Section"/>
+          <arg column="favourite_section" javaType="org.apache.ibatis.domain.blog.Section"/>
       </constructor>
   </resultMap>
 
-  <resultMap id="authorResultMapWithProperties" type="domain.blog.Author">
+  <resultMap id="authorResultMapWithProperties" type="org.apache.ibatis.domain.blog.Author">
       <id column="author_id" property="id"/>
       <result column="author_username" property="username" />
       <result column="author_password" property="password"/>
       <result column="author_email" property="email"/>
       <result column="author_bio" property="bio"/>
-      <result column="favourite_section" javaType="domain.blog.Section"/>
+      <result column="favourite_section" javaType="org.apache.ibatis.domain.blog.Section"/>
   </resultMap>
 
-  <insert id="insertAuthor" parameterType="domain.blog.Author">
+  <insert id="insertAuthor" parameterType="org.apache.ibatis.domain.blog.Author">
     <selectKey keyProperty="id" resultType="int" order="BEFORE">
       select CAST(RANDOM()*1000000 as INTEGER) a from SYSIBM.SYSDUMMY1
     </selectKey>
@@ -53,7 +53,7 @@
     )
   </insert>
 
-  <insert id="insertAuthorDynamic" parameterType="domain.blog.Author">
+  <insert id="insertAuthorDynamic" parameterType="org.apache.ibatis.domain.blog.Author">
     <selectKey keyProperty="id" resultType="int" order="BEFORE">
       select CAST(RANDOM()*1000000 as INTEGER) a from SYSIBM.SYSDUMMY1
     </selectKey>
@@ -63,17 +63,17 @@
     )
   </insert>
 
-  <select id="findPostsInList" parameterType="list" resultType="domain.blog.Post">
+  <select id="findPostsInList" parameterType="list" resultType="org.apache.ibatis.domain.blog.Post">
     select * from post
     where id in (#{list[0]},#{list[1]},#{list[2]})
   </select>
 
-  <select id="findPostsInArray" parameterType="list" resultType="domain.blog.Post">
+  <select id="findPostsInArray" parameterType="list" resultType="org.apache.ibatis.domain.blog.Post">
     select * from post
     where id in (#{array[0]},#{array[1]},#{array[2]})
   </select>
 
-  <select id="findThreeSpecificPosts" parameterType="map" resultType="domain.blog.Post">
+  <select id="findThreeSpecificPosts" parameterType="map" resultType="org.apache.ibatis.domain.blog.Post">
     select * from post
     where id in (#{one},#{two},#{2})
   </select>

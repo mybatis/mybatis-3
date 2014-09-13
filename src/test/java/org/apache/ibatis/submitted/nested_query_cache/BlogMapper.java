@@ -15,7 +15,7 @@
  */
 package org.apache.ibatis.submitted.nested_query_cache;
 
-import domain.blog.Blog;
+import org.apache.ibatis.domain.blog.Blog;
 
 public interface BlogMapper {
 

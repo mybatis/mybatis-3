@@ -476,7 +476,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
         <td>このアノテーションを <code>@Select</code> または <code>@SelectProvider</code> が付加されているメソッドに追加することで、結果のマッピングに XML の Mapper ファイルで定義されている resultMap 要素を利用することができます。の id を指定します。単一値の <code>value</code> には resultMap の id を指定します。このアノテーションは <code>@Results</code> や <code>@ConstructorArgs</code> による指定よりも優先されます。</td>
       </tr>
       <tr>
-        <td><code>@ResultType</code></td>
+        <td><code>@resultType</code></td>
         <td><code>Method</code></td>
         <td>N/A</td>
         <td>ResultHandler を使うメソッドでは戻り値の型が void となるので、このアノテーションを使って各行のデータをどのクラスにマップするかを指定します。XMLの ResultMap が存在する場合は @ResultMap アノテーションで指定することができます。XML の <code>&lt;select&gt;</code> 要素で resultType が指定されている場合はアノテーションによる指定は不要です。それ以外の場合、例えば @Select アノテーションが付加された引数に ResultHandler を含むメソッドの場合は戻り値の型は void である必要があるので、このアノテーション（あるいは @ResultMap）を使って型を指定する必要があります。メソッドの戻り値の型が void 以外の場合、このアノテーションは無視されます。</td>

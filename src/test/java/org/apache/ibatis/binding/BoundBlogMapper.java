@@ -15,12 +15,11 @@
  */
 package org.apache.ibatis.binding;
 
-import domain.blog.Author;
-import domain.blog.Blog;
-import domain.blog.DraftPost;
-import domain.blog.Post;
-
 import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.domain.blog.Author;
+import org.apache.ibatis.domain.blog.Blog;
+import org.apache.ibatis.domain.blog.DraftPost;
+import org.apache.ibatis.domain.blog.Post;
 import org.apache.ibatis.mapping.FetchType;
 import org.apache.ibatis.session.RowBounds;
 

@@ -23,7 +23,7 @@
 
 <configuration>
 
-  <properties resource="databases/blog/blog-derby.properties"/>
+  <properties resource="org/apache/ibatis/databases/blog/blog-derby.properties"/>
 
   <settings>
     <setting name="cacheEnabled" value="true"/>
@@ -36,12 +36,12 @@
   </settings>
 
   <typeAliases>
-    <typeAlias alias="Author" type="domain.blog.Author"/>
-    <typeAlias alias="Blog" type="domain.blog.Blog"/>
-    <typeAlias alias="Comment" type="domain.blog.Comment"/>
-    <typeAlias alias="Post" type="domain.blog.Post"/>
-    <typeAlias alias="Section" type="domain.blog.Section"/>
-    <typeAlias alias="Tag" type="domain.blog.Tag"/>
+    <typeAlias alias="Author" type="org.apache.ibatis.domain.blog.Author"/>
+    <typeAlias alias="Blog" type="org.apache.ibatis.domain.blog.Blog"/>
+    <typeAlias alias="Comment" type="org.apache.ibatis.domain.blog.Comment"/>
+    <typeAlias alias="Post" type="org.apache.ibatis.domain.blog.Post"/>
+    <typeAlias alias="Section" type="org.apache.ibatis.domain.blog.Section"/>
+    <typeAlias alias="Tag" type="org.apache.ibatis.domain.blog.Tag"/>
   </typeAliases>
 
   <typeHandlers>

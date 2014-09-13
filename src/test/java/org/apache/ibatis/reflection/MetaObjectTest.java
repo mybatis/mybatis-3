@@ -27,13 +27,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.domain.blog.Author;
+import org.apache.ibatis.domain.blog.Section;
+import org.apache.ibatis.domain.misc.CustomBeanWrapper;
+import org.apache.ibatis.domain.misc.CustomBeanWrapperFactory;
+import org.apache.ibatis.domain.misc.RichType;
 import org.junit.Test;
-
-import domain.blog.Author;
-import domain.blog.Section;
-import domain.misc.CustomBeanWrapper;
-import domain.misc.CustomBeanWrapperFactory;
-import domain.misc.RichType;
 
 public class MetaObjectTest {
 

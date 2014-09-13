@@ -519,7 +519,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
         annotation if both are specified on an annotated select.</td>
       </tr>
       <tr>
-        <td><code>@ResultType</code></td>
+        <td><code>@resultType</code></td>
         <td><code>Method</code></td>
         <td>N/A</td>
         <td>This annotation is used when using a result handler.  In that case, the return type is void

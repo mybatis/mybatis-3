@@ -18,13 +18,13 @@
     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="domain.blog.mappers.AuthorMapper">
+<mapper namespace="org.apache.ibatis.domain.blog.mappers.AuthorMapper">
 
-	<parameterMap id="selectAuthor" type="domain.blog.Author">
+	<parameterMap id="selectAuthor" type="org.apache.ibatis.domain.blog.Author">
 		<parameter property="id" />
 	</parameterMap>
 
-	<resultMap id="selectAuthor" type="domain.blog.Author">
+	<resultMap id="selectAuthor" type="org.apache.ibatis.domain.blog.Author">
 		<id column="id" property="id" />
 		<result property="username" column="username" />
 		<result property="password" column="password" />
@@ -33,18 +33,18 @@
 		<result property="favouriteSection" column="favourite_section" />
 	</resultMap>
 
-	<resultMap id="selectImmutableAuthor" type="domain.blog.ImmutableAuthor">
+	<resultMap id="selectImmutableAuthor" type="org.apache.ibatis.domain.blog.ImmutableAuthor">
 		<constructor>
 			<idArg column="id" javaType="_int" />
 			<arg column="username" javaType="string" />
 			<arg column="password" javaType="string" />
 			<arg column="email" javaType="string" />
 			<arg column="bio" javaType="string" />
-			<arg column="favourite_section" javaType="domain.blog.Section" />
+			<arg column="favourite_section" javaType="org.apache.ibatis.domain.blog.Section" />
 		</constructor>
 	</resultMap>
 
-	<resultMap id="complexAuthorId" type="domain.blog.ComplexImmutableAuthorId">
+	<resultMap id="complexAuthorId" type="org.apache.ibatis.domain.blog.ComplexImmutableAuthorId">
 		<constructor>
 			<idArg column="id" javaType="_int" />
 			<idArg column="username" javaType="string" />
@@ -53,32 +53,32 @@
 		</constructor>
 	</resultMap>
 
-	<resultMap id="selectComplexImmutableAuthor" type="domain.blog.ComplexImmutableAuthor">
+	<resultMap id="selectComplexImmutableAuthor" type="org.apache.ibatis.domain.blog.ComplexImmutableAuthor">
 		<constructor>
-			<idArg javaType="domain.blog.ComplexImmutableAuthorId"
+			<idArg javaType="org.apache.ibatis.domain.blog.ComplexImmutableAuthorId"
 				resultMap="complexAuthorId" />
 			<arg column="bio" javaType="string" />
-			<arg column="favourite_section" javaType="domain.blog.Section" />
+			<arg column="favourite_section" javaType="org.apache.ibatis.domain.blog.Section" />
 		</constructor>
 	</resultMap>
 
-	<select id="selectAllAuthors" resultType="domain.blog.Author">
+	<select id="selectAllAuthors" resultType="org.apache.ibatis.domain.blog.Author">
 		select * from author
 	</select>
 
-	<select id="selectAllAuthorsSet" resultType="domain.blog.Author">
+	<select id="selectAllAuthorsSet" resultType="org.apache.ibatis.domain.blog.Author">
 		select * from author
 	</select>
 
-	<select id="selectAllAuthorsVector" resultType="domain.blog.Author">
+	<select id="selectAllAuthorsVector" resultType="org.apache.ibatis.domain.blog.Author">
 		select * from author
 	</select>
 
-	<select id="selectAllAuthorsLinkedList" resultType="domain.blog.Author">
+	<select id="selectAllAuthorsLinkedList" resultType="org.apache.ibatis.domain.blog.Author">
 		select * from author
 	</select>
 
-	<select id="selectAllAuthorsArray" resultType="domain.blog.Author">
+	<select id="selectAllAuthorsArray" resultType="org.apache.ibatis.domain.blog.Author">
 		select * from author
 	</select>
 
@@ -102,16 +102,16 @@
 	</select>
 
 	<select id="selectAuthorWithInlineParams" parameterType="int"
-		resultType="domain.blog.Author">
+		resultType="org.apache.ibatis.domain.blog.Author">
 		select * from author where id = #{id}
 	</select>
 
-	<insert id="insertAuthor" parameterType="domain.blog.Author">
+	<insert id="insertAuthor" parameterType="org.apache.ibatis.domain.blog.Author">
 		insert into Author (id,username,password,email,bio)
 		values (#{id},#{username},#{password},#{email},#{bio})
 	</insert>
 
-	<update id="updateAuthor" parameterType="domain.blog.Author">
+	<update id="updateAuthor" parameterType="org.apache.ibatis.domain.blog.Author">
 		update Author
 		set username=#{username,
 		javaType=String},
@@ -126,7 +126,7 @@
 	</delete>
 
 
-	<update id="updateAuthorIfNecessary" parameterType="domain.blog.Author">
+	<update id="updateAuthorIfNecessary" parameterType="org.apache.ibatis.domain.blog.Author">
 		update Author
 		<set>
 			<if test="username != null">username=#{username},</if>

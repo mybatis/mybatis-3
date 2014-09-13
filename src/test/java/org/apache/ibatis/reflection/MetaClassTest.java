@@ -15,9 +15,10 @@
  */
 package org.apache.ibatis.reflection;
 
-import domain.misc.RichType;
-import domain.misc.generics.GenericConcrete;
 import static org.junit.Assert.*;
+
+import org.apache.ibatis.domain.misc.RichType;
+import org.apache.ibatis.domain.misc.generics.GenericConcrete;
 import org.junit.Test;
 
 import java.util.HashMap;

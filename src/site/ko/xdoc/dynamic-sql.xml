@@ -159,7 +159,7 @@ AND title like ‘someTitle’]]></source>
       <subsection name="foreach">
         <p>동적 SQL 에서 공통적으로 필요한 것은 collection 에 대해 반복처리를 하는 것이다. 종종 IN 조건을 사용하게 된다. 예를
 들면,</p>
-        <source><![CDATA[<select id="selectPostIn" resultType="domain.blog.Post">
+        <source><![CDATA[<select id="selectPostIn" resultType="org.apache.ibatis.domain.blog.Post">
   SELECT *
   FROM POST P
   WHERE ID in

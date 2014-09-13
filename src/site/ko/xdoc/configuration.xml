@@ -379,12 +379,12 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
         <p>타입 별칭은 자바 타입에 대한 좀더 짧은 이름이다. 오직 XML 설정에서만 사용되며, 타이핑을 줄이기 위해 존재한다.
 예를들면:</p>
         <source><![CDATA[<typeAliases>
-  <typeAlias alias="Author" type="domain.blog.Author"/>
-  <typeAlias alias="Blog" type="domain.blog.Blog"/>
-  <typeAlias alias="Comment" type="domain.blog.Comment"/>
-  <typeAlias alias="Post" type="domain.blog.Post"/>
-  <typeAlias alias="Section" type="domain.blog.Section"/>
-  <typeAlias alias="Tag" type="domain.blog.Tag"/>
+  <typeAlias alias="Author" type="org.apache.ibatis.domain.blog.Author"/>
+  <typeAlias alias="Blog" type="org.apache.ibatis.domain.blog.Blog"/>
+  <typeAlias alias="Comment" type="org.apache.ibatis.domain.blog.Comment"/>
+  <typeAlias alias="Post" type="org.apache.ibatis.domain.blog.Post"/>
+  <typeAlias alias="Section" type="org.apache.ibatis.domain.blog.Section"/>
+  <typeAlias alias="Tag" type="org.apache.ibatis.domain.blog.Tag"/>
 </typeAliases>
 ]]></source>
         <p>이 설정에서, “Blog” 는 도처에서 “domain.blog.Blog” 대신 사용될 수 있다.</p>

@@ -147,7 +147,7 @@ AND title like ‘someTitle’]]></source>
       </subsection>
       <subsection name="foreach">
         <p>动态 SQL 的另外一个常用的必要操作是需要对一个集合进行遍历，通常是在构建 IN 条件语句的时候。比如：</p>
-        <source><![CDATA[<select id="selectPostIn" resultType="domain.blog.Post">
+        <source><![CDATA[<select id="selectPostIn" resultType="org.apache.ibatis.domain.blog.Post">
   SELECT *
   FROM POST P
   WHERE ID in

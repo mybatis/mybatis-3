@@ -282,6 +282,9 @@
               <pattern>javassist.**</pattern>
               <result>org.apache.ibatis.javassist.@1</result>
             </rule>
+            <keep>
+              <pattern>org.apache.ibatis.**</pattern>
+            </keep>            
           </rules>
           <overwrite>true</overwrite>
         </configuration>

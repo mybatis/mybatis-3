@@ -27,7 +27,7 @@
     select CAST(RANDOM()*1000000 as INTEGER) a from SYSIBM.SYSDUMMY1
   </select>
 
-    <select id="selectBlogsFromXML" resultType="domain.blog.Blog">
+    <select id="selectBlogsFromXML" resultType="org.apache.ibatis.domain.blog.Blog">
     SELECT * FROM blog
   </select>
 
@@ -43,7 +43,7 @@
         <constructor>
             <idArg column="id" javaType="_int"/>
             <arg column="title" javaType="java.lang.String"/>
-            <arg column="author_id" javaType="domain.blog.Author"
+            <arg column="author_id" javaType="org.apache.ibatis.domain.blog.Author"
                  select="org.apache.ibatis.binding.BoundAuthorMapper.selectAuthor"/>
             <arg column="id" javaType="java.util.List" select="selectPostsForBlog"/>
         </constructor>
@@ -53,7 +53,7 @@
         <constructor>
             <idArg column="id" javaType="_int"/>
             <arg column="title" javaType="java.lang.String"/>
-            <arg javaType="domain.blog.Author" resultMap="org.apache.ibatis.binding.BoundAuthorMapper.authorResultMap"/>
+            <arg javaType="org.apache.ibatis.domain.blog.Author" resultMap="org.apache.ibatis.binding.BoundAuthorMapper.authorResultMap"/>
             <arg column="id" javaType="java.util.List" select="selectPostsForBlog"/>
         </constructor>
     </resultMap>
@@ -62,7 +62,7 @@
         <constructor>
             <idArg column="id" javaType="_int"/>
             <arg column="title" javaType="java.lang.String"/>
-            <arg javaType="domain.blog.Author" resultMap="org.apache.ibatis.binding.BoundAuthorMapper.authorResultMapWithProperties"/>
+            <arg javaType="org.apache.ibatis.domain.blog.Author" resultMap="org.apache.ibatis.binding.BoundAuthorMapper.authorResultMapWithProperties"/>
             <arg column="id" javaType="java.util.List" select="selectPostsForBlog"/>
         </constructor>
     </resultMap>
@@ -71,7 +71,7 @@
         <constructor>
             <idArg column="id" javaType="_int"/>
             <arg column="title" javaType="java.lang.String"/>
-            <arg javaType="domain.blog.Author" resultMap="org.apache.ibatis.binding.BoundAuthorMapper.authorResultMap"/>
+            <arg javaType="org.apache.ibatis.domain.blog.Author" resultMap="org.apache.ibatis.binding.BoundAuthorMapper.authorResultMap"/>
             <arg javaType="java.util.List" resultMap="blogWithPosts"/>
         </constructor>
     </resultMap>
@@ -82,7 +82,7 @@
 
   <select id="selectAuthorWithInlineParams"
             parameterType="int"
-            resultType="domain.blog.Author">
+            resultType="org.apache.ibatis.domain.blog.Author">
     select * from author where id = #{id}
   </select>
 

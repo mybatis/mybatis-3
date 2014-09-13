@@ -611,7 +611,7 @@ id 를 제공하기 위해 사용된다. XML 에 정의된 결과
 것이다.</td>
       </tr>
       <tr>
-        <td><code>@ResultType</code></td>
+        <td><code>@resultType</code></td>
         <td><code>Method</code></td>
         <td>N/A</td>
         <td>이 애노테이션은 결과 핸들러를 사용할때 사용한다. 

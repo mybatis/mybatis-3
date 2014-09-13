@@ -396,12 +396,12 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
       <subsection name="typeAliases">
         <p>类型别名是为 Java 类型命名的一个短的名字。它只和 XML 配置有关，存在的意义仅在于用来减少类完全限定名的冗余。例如:</p>
         <source><![CDATA[<typeAliases>
-  <typeAlias alias="Author" type="domain.blog.Author"/>
-  <typeAlias alias="Blog" type="domain.blog.Blog"/>
-  <typeAlias alias="Comment" type="domain.blog.Comment"/>
-  <typeAlias alias="Post" type="domain.blog.Post"/>
-  <typeAlias alias="Section" type="domain.blog.Section"/>
-  <typeAlias alias="Tag" type="domain.blog.Tag"/>
+  <typeAlias alias="Author" type="org.apache.ibatis.domain.blog.Author"/>
+  <typeAlias alias="Blog" type="org.apache.ibatis.domain.blog.Blog"/>
+  <typeAlias alias="Comment" type="org.apache.ibatis.domain.blog.Comment"/>
+  <typeAlias alias="Post" type="org.apache.ibatis.domain.blog.Post"/>
+  <typeAlias alias="Section" type="org.apache.ibatis.domain.blog.Section"/>
+  <typeAlias alias="Tag" type="org.apache.ibatis.domain.blog.Tag"/>
 </typeAliases>
 ]]></source>
         <p>使用这个配置，“Blog”可以用在任何使用“domain.blog.Blog”的地方。</p>
