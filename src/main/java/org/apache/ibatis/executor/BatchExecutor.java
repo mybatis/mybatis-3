@@ -50,6 +50,7 @@ public class BatchExecutor extends BaseExecutor {
     super(configuration, transaction);
   }
 
+  @Override
   public int doUpdate(MappedStatement ms, Object parameterObject) throws SQLException {
     final Configuration configuration = ms.getConfiguration();
     final StatementHandler handler = configuration.newStatementHandler(this, ms, parameterObject, RowBounds.DEFAULT, null, null);
@@ -74,6 +75,7 @@ public class BatchExecutor extends BaseExecutor {
     return BATCH_UPDATE_RETURN_VALUE;
   }
 
+  @Override
   public <E> List<E> doQuery(MappedStatement ms, Object parameterObject, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql)
       throws SQLException {
     Statement stmt = null;
@@ -90,6 +92,7 @@ public class BatchExecutor extends BaseExecutor {
     }
   }
 
+  @Override
   public List<BatchResult> doFlushStatements(boolean isRollback) throws SQLException {
     try {
       List<BatchResult> results = new ArrayList<BatchResult>();
@@ -113,7 +116,7 @@ public class BatchExecutor extends BaseExecutor {
               }
             }
           } catch (BatchUpdateException e) {
-            StringBuffer message = new StringBuffer();
+            StringBuilder message = new StringBuilder();
             message.append(batchResult.getMappedStatement().getId())
                 .append(" (batch index #")
                 .append(i + 1)

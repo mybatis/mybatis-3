@@ -166,8 +166,12 @@ public class ResultLoaderMap {
     public void load() throws SQLException {
       /* These field should not be null unless the loadpair was serialized.
        * Yet in that case this method should not be called. */
-      if (this.metaResultObject == null) throw new IllegalArgumentException("metaResultObject is null");
-      if (this.resultLoader == null) throw new IllegalArgumentException("resultLoader is null");
+      if (this.metaResultObject == null) {
+        throw new IllegalArgumentException("metaResultObject is null");
+      }
+      if (this.resultLoader == null) {
+        throw new IllegalArgumentException("resultLoader is null");
+      }
 
       this.load(null);
     }

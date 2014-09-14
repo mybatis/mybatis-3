@@ -79,7 +79,8 @@ public abstract class VFS {
     }
 
     log.debug("Using VFS adapter " + vfs.getClass().getName());
-    return VFS.instance = vfs;
+    VFS.instance = vfs;
+    return VFS.instance;
   }
 
   /**

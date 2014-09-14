@@ -778,8 +778,9 @@ public class Configuration {
 
     @SuppressWarnings("unchecked")
     public V put(String key, V value) {
-      if (containsKey(key))
+      if (containsKey(key)) {
         throw new IllegalArgumentException(name + " already contains value for " + key);
+      }
       if (key.contains(".")) {
         final String shortKey = getShortName(key);
         if (super.get(shortKey) == null) {

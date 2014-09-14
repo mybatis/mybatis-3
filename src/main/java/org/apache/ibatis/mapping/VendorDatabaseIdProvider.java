@@ -43,9 +43,12 @@ public class VendorDatabaseIdProvider implements DatabaseIdProvider {
   private static final Log log = LogFactory.getLog(BaseExecutor.class);
 
   private Properties properties;
-  
+
+  @Override
   public String getDatabaseId(DataSource dataSource) {
-    if (dataSource == null) throw new NullPointerException("dataSource cannot be null");
+    if (dataSource == null) {
+      throw new NullPointerException("dataSource cannot be null");
+    }
     try {
       return getDatabaseName(dataSource);
     } catch (Exception e) {
@@ -54,10 +57,11 @@ public class VendorDatabaseIdProvider implements DatabaseIdProvider {
     return null;
   }
 
+  @Override
   public void setProperties(Properties p) {
     this.properties = p;
   }
-  
+
   private String getDatabaseName(DataSource dataSource) throws SQLException {
     String productName = getDatabaseProductName(dataSource);
     if (this.properties != null) {
@@ -66,7 +70,8 @@ public class VendorDatabaseIdProvider implements DatabaseIdProvider {
           return (String) property.getValue();
         }
       }
-      return null; // no match, return null
+      // no match, return null
+      return null;
     }
     return productName;
   }

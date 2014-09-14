@@ -171,8 +171,9 @@ public class ResolverUtil<T> {
    * @param packageNames one or more package names to scan (including subpackages) for classes
    */
   public ResolverUtil<T> findImplementations(Class<?> parent, String... packageNames) {
-    if (packageNames == null)
+    if (packageNames == null) {
       return this;
+    }
 
     Test test = new IsA(parent);
     for (String pkg : packageNames) {
@@ -190,8 +191,9 @@ public class ResolverUtil<T> {
    * @param packageNames one or more package names to scan (including subpackages) for classes
    */
   public ResolverUtil<T> findAnnotated(Class<? extends Annotation> annotation, String... packageNames) {
-    if (packageNames == null)
+    if (packageNames == null) {
       return this;
+    }
 
     Test test = new AnnotatedWith(annotation);
     for (String pkg : packageNames) {

@@ -52,10 +52,12 @@ public class DefaultParameterHandler implements ParameterHandler {
     this.boundSql = boundSql;
   }
 
+  @Override
   public Object getParameterObject() {
     return parameterObject;
   }
 
+  @Override
   public void setParameters(PreparedStatement ps) throws SQLException {
     ErrorContext.instance().activity("setting parameters").object(mappedStatement.getParameterMap().getId());
     List<ParameterMapping> parameterMappings = boundSql.getParameterMappings();
@@ -77,7 +79,9 @@ public class DefaultParameterHandler implements ParameterHandler {
           }
           TypeHandler typeHandler = parameterMapping.getTypeHandler();
           JdbcType jdbcType = parameterMapping.getJdbcType();
-          if (value == null && jdbcType == null) jdbcType = configuration.getJdbcTypeForNull();
+          if (value == null && jdbcType == null) {
+            jdbcType = configuration.getJdbcTypeForNull();
+          }
           typeHandler.setParameter(ps, i + 1, value, jdbcType);
         }
       }

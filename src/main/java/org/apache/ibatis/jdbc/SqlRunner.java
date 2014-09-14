@@ -246,10 +246,12 @@ public class SqlRunner {
       }
       return list;
     } finally {
-      try {
-        if (rs != null) rs.close();
-      } catch (Exception e) {
-        //ignore
+      if (rs != null) {
+        try {
+            rs.close();
+        } catch (Exception e) {
+          // ignore
+        }
       }
     }
   }

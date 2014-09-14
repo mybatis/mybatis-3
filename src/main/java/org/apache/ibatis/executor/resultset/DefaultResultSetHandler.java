@@ -104,6 +104,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
   // HANDLE OUTPUT PARAMETER
   //
 
+  @Override
   public void handleOutputParameters(CallableStatement cs) throws SQLException {
     final Object parameterObject = parameterHandler.getParameterObject();
     final MetaObject metaParam = configuration.newMetaObject(parameterObject);
@@ -137,7 +138,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
   //
   // HANDLE RESULT SETS
   //
-
+  @Override
   public List<Object> handleResultSets(Statement stmt) throws SQLException {
     ErrorContext.instance().activity("handling results").object(mappedStatement.getId());
     
@@ -484,7 +485,8 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     deferLoad.metaObject = metaResultObject;
     deferLoad.propertyMapping = parentMapping;
     List<PendingRelation> relations = pendingRelations.get(cacheKey);
-    if (relations == null) { // issue #255
+    // issue #255
+    if (relations == null) {
       relations = new ArrayList<DefaultResultSetHandler.PendingRelation>();
       pendingRelations.put(cacheKey, relations);
     }
@@ -800,7 +802,9 @@ public class DefaultResultSetHandler implements ResultSetHandler {
         foundValues = lazyLoader.size() > 0 || foundValues;
         resultObject = foundValues ? resultObject : null;
       }
-      if (combinedKey != CacheKey.NULL_CACHE_KEY) nestedResultObjects.put(combinedKey, resultObject);
+      if (combinedKey != CacheKey.NULL_CACHE_KEY) {
+        nestedResultObjects.put(combinedKey, resultObject);
+      }
     }
     return resultObject;
   }
@@ -831,7 +835,9 @@ public class DefaultResultSetHandler implements ResultSetHandler {
             ancestorObject = ancestorObjects.get(rowKey);
           }
           if (ancestorObject != null) { 
-            if (newObject) metaObject.setValue(resultMapping.getProperty(), ancestorObject);
+            if (newObject) {
+              metaObject.setValue(resultMapping.getProperty(), ancestorObject);
+            }
           } else {
             rowKey = createRowKey(nestedResultMap, rsw, columnPrefix);
             final CacheKey combinedKey = combineKeys(rowKey, parentRowKey);            
@@ -861,8 +867,12 @@ public class DefaultResultSetHandler implements ResultSetHandler {
 
   private String getColumnPrefix(String parentPrefix, ResultMapping resultMapping) {
     final StringBuilder columnPrefixBuilder = new StringBuilder();
-    if (parentPrefix != null) columnPrefixBuilder.append(parentPrefix);
-    if (resultMapping.getColumnPrefix() != null) columnPrefixBuilder.append(resultMapping.getColumnPrefix());
+    if (parentPrefix != null) {
+      columnPrefixBuilder.append(parentPrefix);
+    }
+    if (resultMapping.getColumnPrefix() != null) {
+      columnPrefixBuilder.append(resultMapping.getColumnPrefix());
+    }
     final String columnPrefix = columnPrefixBuilder.length() == 0 ? null : columnPrefixBuilder.toString().toUpperCase(Locale.ENGLISH);
     return columnPrefix;
   }
@@ -958,8 +968,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     for (String column : unmappedColumnNames) {
       String property = column;
       if (columnPrefix != null && columnPrefix.length() > 0) {
-        // When columnPrefix is specified,
-        // ignore columns without the prefix.
+        // When columnPrefix is specified, ignore columns without the prefix.
         if (column.toUpperCase(Locale.ENGLISH).startsWith(columnPrefix)) {
           property = column.substring(columnPrefix.length());
         } else {
