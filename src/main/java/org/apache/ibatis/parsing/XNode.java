@@ -326,7 +326,7 @@ public class XNode {
       builder.append("\"");
     }
     List<XNode> children = getChildren();
-    if (children.size() > 0) {
+    if (!children.isEmpty()) {
       builder.append(">\n");
       for (XNode node : children) {
         builder.append(node.toString());

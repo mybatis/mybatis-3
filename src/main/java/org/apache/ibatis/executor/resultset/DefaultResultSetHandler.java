@@ -336,7 +336,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     Object resultObject = createResultObject(rsw, resultMap, lazyLoader, null);
     if (resultObject != null && !typeHandlerRegistry.hasTypeHandler(resultMap.getType())) {
       final MetaObject metaObject = configuration.newMetaObject(resultObject);
-      boolean foundValues = resultMap.getConstructorResultMappings().size() > 0;
+      boolean foundValues = !resultMap.getConstructorResultMappings().isEmpty();
       if (shouldApplyAutomaticMappings(resultMap, false)) {        
         foundValues = applyAutomaticMappings(rsw, resultMap, metaObject, null) || foundValues;
       }
@@ -409,7 +409,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     boolean foundValues = false;
     for (String columnName : unmappedColumnNames) {
       String propertyName = columnName;
-      if (columnPrefix != null && columnPrefix.length() > 0) {
+      if (columnPrefix != null && !columnPrefix.isEmpty()) {
         // When columnPrefix is specified,
         // ignore columns without the prefix.
         if (columnName.toUpperCase(Locale.ENGLISH).startsWith(columnPrefix)) {
@@ -544,7 +544,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     final List<ResultMapping> constructorMappings = resultMap.getConstructorResultMappings();
     if (typeHandlerRegistry.hasTypeHandler(resultType)) {
       return createPrimitiveResultObject(rsw, resultMap, columnPrefix);
-    } else if (constructorMappings.size() > 0) {
+    } else if (!constructorMappings.isEmpty()) {
       return createParameterizedResultObject(rsw, resultType, constructorMappings, constructorArgTypes, constructorArgs, columnPrefix);
     } else if (resultType.isInterface() || metaType.hasDefaultConstructor()) {
       return objectFactory.create(resultType);
@@ -608,7 +608,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
   private Object createPrimitiveResultObject(ResultSetWrapper rsw, ResultMap resultMap, String columnPrefix) throws SQLException {
     final Class<?> resultType = resultMap.getType();
     final String columnName;
-    if (resultMap.getResultMappings().size() > 0) {
+    if (!resultMap.getResultMappings().isEmpty()) {
       final List<ResultMapping> resultMappingList = resultMap.getResultMappings();
       final ResultMapping mapping = resultMappingList.get(0);
       columnName = prependPrefix(mapping.getColumn(), columnPrefix);
@@ -791,7 +791,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
       resultObject = createResultObject(rsw, resultMap, lazyLoader, columnPrefix);
       if (resultObject != null && !typeHandlerRegistry.hasTypeHandler(resultMap.getType())) {
         final MetaObject metaObject = configuration.newMetaObject(resultObject);
-        boolean foundValues = resultMap.getConstructorResultMappings().size() > 0;
+        boolean foundValues = !resultMap.getConstructorResultMappings().isEmpty();
         if (shouldApplyAutomaticMappings(resultMap, true)) {
           foundValues = applyAutomaticMappings(rsw, resultMap, metaObject, columnPrefix) || foundValues;
         }        
@@ -967,7 +967,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     List<String> unmappedColumnNames = rsw.getUnmappedColumnNames(resultMap, columnPrefix);
     for (String column : unmappedColumnNames) {
       String property = column;
-      if (columnPrefix != null && columnPrefix.length() > 0) {
+      if (columnPrefix != null && !columnPrefix.isEmpty()) {
         // When columnPrefix is specified, ignore columns without the prefix.
         if (column.toUpperCase(Locale.ENGLISH).startsWith(columnPrefix)) {
           property = column.substring(columnPrefix.length());

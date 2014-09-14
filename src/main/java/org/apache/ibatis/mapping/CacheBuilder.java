@@ -85,7 +85,8 @@ public class CacheBuilder {
     setDefaultImplementations();
     Cache cache = newBaseCacheInstance(implementation, id);
     setCacheProperties(cache);
-    if (PerpetualCache.class.equals(cache.getClass())) { // issue #352, do not apply decorators to custom caches
+    // issue #352, do not apply decorators to custom caches
+    if (PerpetualCache.class.equals(cache.getClass())) {
       for (Class<? extends Cache> decorator : decorators) {
         cache = newCacheDecoratorInstance(decorator, cache);
         setCacheProperties(cache);
@@ -100,7 +101,7 @@ public class CacheBuilder {
   private void setDefaultImplementations() {
     if (implementation == null) {
       implementation = PerpetualCache.class;
-      if (decorators.size() == 0) {
+      if (decorators.isEmpty()) {
         decorators.add(LruCache.class);
       }
     }

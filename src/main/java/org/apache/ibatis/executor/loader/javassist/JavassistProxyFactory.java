@@ -56,6 +56,7 @@ public class JavassistProxyFactory implements org.apache.ibatis.executor.loader.
     }
   }
 
+  @Override
   public Object createProxy(Object target, ResultLoaderMap lazyLoader, Configuration configuration, ObjectFactory objectFactory, List<Class<?>> constructorArgTypes, List<Object> constructorArgs) {
     return EnhancedResultObjectProxyImpl.createProxy(target, lazyLoader, configuration, objectFactory, constructorArgTypes, constructorArgs);
   }
@@ -64,10 +65,12 @@ public class JavassistProxyFactory implements org.apache.ibatis.executor.loader.
     return EnhancedDeserializationProxyImpl.createProxy(target, unloadedProperties, objectFactory, constructorArgTypes, constructorArgs);
   }
 
+  @Override
   public void setProperties(Properties properties) {
+      // Not Implemented
   }
 
-  private static Object crateProxy(Class<?> type, MethodHandler callback, List<Class<?>> constructorArgTypes, List<Object> constructorArgs) {
+  static Object crateProxy(Class<?> type, MethodHandler callback, List<Class<?>> constructorArgTypes, List<Object> constructorArgs) {
 
     ProxyFactory enhancer = new ProxyFactory();
     enhancer.setSuperclass(type);
@@ -122,6 +125,7 @@ public class JavassistProxyFactory implements org.apache.ibatis.executor.loader.
       return enhanced;
     }
 
+    @Override
     public Object invoke(Object enhanced, Method method, Method methodProxy, Object[] args) throws Throwable {
       final String methodName = method.getName();
       try {

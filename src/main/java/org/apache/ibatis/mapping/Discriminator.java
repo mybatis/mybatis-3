@@ -42,7 +42,7 @@ public class Discriminator {
     public Discriminator build() {
       assert discriminator.resultMapping != null;
       assert discriminator.discriminatorMap != null;
-      assert discriminator.discriminatorMap.size() > 0;
+      assert !discriminator.discriminatorMap.isEmpty();
       //lock down map
       discriminator.discriminatorMap = Collections.unmodifiableMap(discriminator.discriminatorMap);
       return discriminator;
