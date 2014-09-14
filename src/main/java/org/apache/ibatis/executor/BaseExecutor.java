@@ -70,17 +70,23 @@ public abstract class BaseExecutor implements Executor {
     this.wrapper = this;
   }
 
+  @Override
   public Transaction getTransaction() {
-    if (closed) throw new ExecutorException("Executor was closed.");
+    if (closed) {
+      throw new ExecutorException("Executor was closed.");
+    }
     return transaction;
   }
 
+  @Override
   public void close(boolean forceRollback) {
     try {
       try {
         rollback(forceRollback);
       } finally {
-        if (transaction != null) transaction.close();
+        if (transaction != null) {
+          transaction.close();
+        }
       }
     } catch (SQLException e) {
       // Ignore.  There's nothing that can be done at this point.
@@ -94,26 +100,34 @@ public abstract class BaseExecutor implements Executor {
     }
   }
 
+  @Override
   public boolean isClosed() {
     return closed;
   }
 
+  @Override
   public int update(MappedStatement ms, Object parameter) throws SQLException {
     ErrorContext.instance().resource(ms.getResource()).activity("executing an update").object(ms.getId());
-    if (closed) throw new ExecutorException("Executor was closed.");
+    if (closed) {
+      throw new ExecutorException("Executor was closed.");
+    }
     clearLocalCache();
     return doUpdate(ms, parameter);
   }
 
+  @Override
   public List<BatchResult> flushStatements() throws SQLException {
     return flushStatements(false);
   }
 
   public List<BatchResult> flushStatements(boolean isRollBack) throws SQLException {
-    if (closed) throw new ExecutorException("Executor was closed.");
+    if (closed) {
+      throw new ExecutorException("Executor was closed.");
+    }
     return doFlushStatements(isRollBack);
   }
 
+  @Override
   public <E> List<E> query(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler) throws SQLException {
     BoundSql boundSql = ms.getBoundSql(parameter);
     CacheKey key = createCacheKey(ms, parameter, rowBounds, boundSql);
@@ -121,9 +135,12 @@ public abstract class BaseExecutor implements Executor {
  }
 
   @SuppressWarnings("unchecked")
+  @Override
   public <E> List<E> query(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, CacheKey key, BoundSql boundSql) throws SQLException {
     ErrorContext.instance().resource(ms.getResource()).activity("executing a query").object(ms.getId());
-    if (closed) throw new ExecutorException("Executor was closed.");
+    if (closed) {
+      throw new ExecutorException("Executor was closed.");
+    }
     if (queryStack == 0 && ms.isFlushCacheRequired()) {
       clearLocalCache();
     }
@@ -151,18 +168,24 @@ public abstract class BaseExecutor implements Executor {
     return list;
   }
 
+  @Override
   public void deferLoad(MappedStatement ms, MetaObject resultObject, String property, CacheKey key, Class<?> targetType) {
-    if (closed) throw new ExecutorException("Executor was closed.");
+    if (closed) {
+      throw new ExecutorException("Executor was closed.");
+    }
     DeferredLoad deferredLoad = new DeferredLoad(resultObject, property, key, localCache, configuration, targetType);
     if (deferredLoad.canLoad()) {
-    	deferredLoad.load();
+      deferredLoad.load();
     } else {
-    	deferredLoads.add(new DeferredLoad(resultObject, property, key, localCache, configuration, targetType));
+      deferredLoads.add(new DeferredLoad(resultObject, property, key, localCache, configuration, targetType));
     }
   }
 
+  @Override
   public CacheKey createCacheKey(MappedStatement ms, Object parameterObject, RowBounds rowBounds, BoundSql boundSql) {
-    if (closed) throw new ExecutorException("Executor was closed.");
+    if (closed) {
+      throw new ExecutorException("Executor was closed.");
+    }
     CacheKey cacheKey = new CacheKey();
     cacheKey.update(ms.getId());
     cacheKey.update(rowBounds.getOffset());
@@ -188,16 +211,23 @@ public abstract class BaseExecutor implements Executor {
         cacheKey.update(value);
       }
     }
-    if (configuration.getEnvironment() != null) cacheKey.update(configuration.getEnvironment().getId()); //issue #176
+    if (configuration.getEnvironment() != null) {
+      // issue #176
+      cacheKey.update(configuration.getEnvironment().getId());
+    }
     return cacheKey;
   }    
 
+  @Override
   public boolean isCached(MappedStatement ms, CacheKey key) {
     return localCache.getObject(key) != null;
   }
 
+  @Override
   public void commit(boolean required) throws SQLException {
-    if (closed) throw new ExecutorException("Cannot commit, transaction is already closed");
+    if (closed) {
+      throw new ExecutorException("Cannot commit, transaction is already closed");
+    }
     clearLocalCache();
     flushStatements();
     if (required) {
@@ -205,6 +235,7 @@ public abstract class BaseExecutor implements Executor {
     }
   }
 
+  @Override
   public void rollback(boolean required) throws SQLException {
     if (!closed) {
       try {
@@ -218,6 +249,7 @@ public abstract class BaseExecutor implements Executor {
     }
   }
 
+  @Override
   public void clearLocalCache() {
     if (!closed) {
       localCache.clear();
@@ -284,7 +316,8 @@ public abstract class BaseExecutor implements Executor {
       return connection;
     }
   }
-  
+
+  @Override
   public void setExecutorWrapper(Executor wrapper) {
     this.wrapper = wrapper;
   }
