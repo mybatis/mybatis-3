@@ -48,8 +48,8 @@ public class EnumWithOgnlTest {
     }
     @Test
     public void testMixedConfiguration() throws Exception {
-    	Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/xml_references/ibatisConfig.xml");
-    	SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-    	sqlSessionFactory.getConfiguration().addMapper(PersonMapper2.class);
+      Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/xml_references/ibatisConfig.xml");
+      SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+      sqlSessionFactory.getConfiguration().addMapper(PersonMapper2.class);
     }
 }

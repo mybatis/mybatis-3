@@ -529,6 +529,7 @@ public class PooledDataSource implements DataSource {
 
   protected void finalize() throws Throwable {
     forceCloseAll();
+    super.finalize();
   }
 
   public <T> T unwrap(Class<T> iface) throws SQLException {

@@ -40,10 +40,10 @@ public class User {
   }
 
 public List<Group> getGroups() {
-	return groups;
+  return groups;
 }
 
 public void setGroups(List<Group> groups) {
-	this.groups = groups;
+  this.groups = groups;
 }
 }

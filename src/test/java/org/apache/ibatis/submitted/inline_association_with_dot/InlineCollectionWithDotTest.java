@@ -34,33 +34,33 @@ public class InlineCollectionWithDotTest {
 
   public void openSession(String aConfig) throws Exception {
 
-	final String resource = "org/apache/ibatis/submitted/inline_association_with_dot/ibatis-" + aConfig + ".xml";
-	Reader batisConfigReader = Resources.getResourceAsReader(resource);
+    final String resource = "org/apache/ibatis/submitted/inline_association_with_dot/ibatis-" + aConfig + ".xml";
+    Reader batisConfigReader = Resources.getResourceAsReader(resource);
 
-	SqlSessionFactory sqlSessionFactory;
-	try {
-		sqlSessionFactory = new SqlSessionFactoryBuilder().build(batisConfigReader);
-	} catch(Exception anException) {
-		throw new RuntimeException("Mapper configuration failed, expected this to work: " + anException.getMessage(), anException);
-	}
+    SqlSessionFactory sqlSessionFactory;
+    try {
+      sqlSessionFactory = new SqlSessionFactoryBuilder().build(batisConfigReader);
+    } catch(Exception anException) {
+      throw new RuntimeException("Mapper configuration failed, expected this to work: " + anException.getMessage(), anException);
+    }
 
-	SqlSession session = sqlSessionFactory.openSession();
+    SqlSession session = sqlSessionFactory.openSession();
 
-	Connection conn = session.getConnection();
-	ScriptRunner runner = new ScriptRunner(conn);
-	runner.setLogWriter(null);
-	runner.setErrorLogWriter(null);
-	Reader createScriptReader = Resources.getResourceAsReader("org/apache/ibatis/submitted/inline_association_with_dot/create.sql");
-	runner.runScript(createScriptReader);
+    Connection conn = session.getConnection();
+    ScriptRunner runner = new ScriptRunner(conn);
+    runner.setLogWriter(null);
+    runner.setErrorLogWriter(null);
+    Reader createScriptReader = Resources.getResourceAsReader("org/apache/ibatis/submitted/inline_association_with_dot/create.sql");
+    runner.runScript(createScriptReader);
 
-	sqlSession = sqlSessionFactory.openSession();
+    sqlSession = sqlSessionFactory.openSession();
   }
 
   @After
   public void closeSession() {
-	  if (sqlSession != null) {
-		  sqlSession.close();
-	  }
+    if (sqlSession != null) {
+      sqlSession.close();
+    }
   }
 
   /*
@@ -82,12 +82,11 @@ public class InlineCollectionWithDotTest {
    * possible bij using an sub-'association' map.
    */
   @Test
-  public void selectElementValueInContainerUsingSubMap()
-  throws Exception {
-	 openSession("submap");
+  public void selectElementValueInContainerUsingSubMap() throws Exception {
+   openSession("submap");
 
-	 Element myElement = sqlSession.getMapper(ElementMapperUsingSubMap.class).selectElement();
+   Element myElement = sqlSession.getMapper(ElementMapperUsingSubMap.class).selectElement();
 
-     assertEquals("value", myElement.getElement().getElement().getValue());
+   assertEquals("value", myElement.getElement().getElement().getValue());
   }
 }

@@ -42,19 +42,19 @@ public class User {
   }
   
   public BigDecimal getFunkyNumber() {
-	return funkyNumber;
+    return funkyNumber;
   }
   
   public void setFunkyNumber(BigDecimal big) {
-	funkyNumber = big;  
+    funkyNumber = big;  
   }
   
   public RoundingMode getRoundingMode() {
-	return roundingMode;
+    return roundingMode;
   }
   
   public void setRoundingMode(RoundingMode mode) {
-	roundingMode = mode;
+    roundingMode = mode;
   }
-  
+
 }

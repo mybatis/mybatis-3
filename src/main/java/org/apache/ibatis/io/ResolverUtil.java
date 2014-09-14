@@ -87,6 +87,7 @@ public class ResolverUtil<T> {
     }
 
     /** Returns true if type is assignable to the parent type supplied in the constructor. */
+    @Override
     public boolean matches(Class<?> type) {
       return type != null && parent.isAssignableFrom(type);
     }
@@ -110,6 +111,7 @@ public class ResolverUtil<T> {
     }
 
     /** Returns true if the type is annotated with the class provided to the constructor. */
+    @Override
     public boolean matches(Class<?> type) {
       return type != null && type.isAnnotationPresent(annotation);
     }
@@ -215,8 +217,9 @@ public class ResolverUtil<T> {
     try {
       List<String> children = VFS.getInstance().list(path);
       for (String child : children) {
-        if (child.endsWith(".class"))
+        if (child.endsWith(".class")) {
           addIfMatching(test, child);
+        }
       }
     } catch (IOException ioe) {
       log.error("Could not read package: " + packageName, ioe);

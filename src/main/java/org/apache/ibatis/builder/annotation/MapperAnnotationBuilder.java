@@ -468,7 +468,7 @@ public class MapperAnnotationBuilder {
 
   private void applyResults(Result[] results, Class<?> resultType, List<ResultMapping> resultMappings) {
     for (Result result : results) {
-      ArrayList<ResultFlag> flags = new ArrayList<ResultFlag>();
+      List<ResultFlag> flags = new ArrayList<ResultFlag>();
       if (result.id()) flags.add(ResultFlag.ID);
       ResultMapping resultMapping = assistant.buildResultMapping(
           resultType,
@@ -519,7 +519,7 @@ public class MapperAnnotationBuilder {
 
   private void applyConstructorArgs(Arg[] args, Class<?> resultType, List<ResultMapping> resultMappings) {
     for (Arg arg : args) {
-      ArrayList<ResultFlag> flags = new ArrayList<ResultFlag>();
+      List<ResultFlag> flags = new ArrayList<ResultFlag>();
       flags.add(ResultFlag.CONSTRUCTOR);
       if (arg.id()) flags.add(ResultFlag.ID);
       ResultMapping resultMapping = assistant.buildResultMapping(

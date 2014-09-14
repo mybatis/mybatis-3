@@ -107,7 +107,7 @@ public class XMLMapperBuilder extends BaseBuilder {
     try {
       String namespace = context.getStringAttribute("namespace");
       if (namespace.equals("")) {
-    	  throw new BuilderException("Mapper's namespace cannot be empty");
+        throw new BuilderException("Mapper's namespace cannot be empty");
       }
       builderAssistant.setCurrentNamespace(namespace);
       cacheRefElement(context.evalNode("cache-ref"));
@@ -155,33 +155,33 @@ public class XMLMapperBuilder extends BaseBuilder {
   }
 
   private void parsePendingChacheRefs() {
-	  Collection<CacheRefResolver> incompleteCacheRefs = configuration.getIncompleteCacheRefs();
-	  synchronized (incompleteCacheRefs) {
-		  Iterator<CacheRefResolver> iter = incompleteCacheRefs.iterator();
-		  while (iter.hasNext()) {
-			  try {
-				  iter.next().resolveCacheRef();
-				  iter.remove();
-			  } catch (IncompleteElementException e) {
-				  // Cache ref is still missing a resource...
-			  }
-		  }
-	  }
+    Collection<CacheRefResolver> incompleteCacheRefs = configuration.getIncompleteCacheRefs();
+    synchronized (incompleteCacheRefs) {
+      Iterator<CacheRefResolver> iter = incompleteCacheRefs.iterator();
+      while (iter.hasNext()) {
+        try {
+          iter.next().resolveCacheRef();
+          iter.remove();
+        } catch (IncompleteElementException e) {
+          // Cache ref is still missing a resource...
+        }
+      }
+    }
   }
 
   private void parsePendingStatements() {
-	  Collection<XMLStatementBuilder> incompleteStatements = configuration.getIncompleteStatements();
-	  synchronized (incompleteStatements) {
-		  Iterator<XMLStatementBuilder> iter = incompleteStatements.iterator();
-		  while (iter.hasNext()) {
-			  try {
-				  iter.next().parseStatementNode();
-				  iter.remove();
-			  } catch (IncompleteElementException e) {
-				  // Statement is still missing a resource...
-			  }
-		  }
-	  }
+    Collection<XMLStatementBuilder> incompleteStatements = configuration.getIncompleteStatements();
+    synchronized (incompleteStatements) {
+      Iterator<XMLStatementBuilder> iter = incompleteStatements.iterator();
+      while (iter.hasNext()) {
+        try {
+          iter.next().parseStatementNode();
+          iter.remove();
+        } catch (IncompleteElementException e) {
+          // Statement is still missing a resource...
+        }
+      }
+    }
   }
 
   private void cacheRefElement(XNode context) {
@@ -189,9 +189,9 @@ public class XMLMapperBuilder extends BaseBuilder {
       configuration.addCacheRef(builderAssistant.getCurrentNamespace(), context.getStringAttribute("namespace"));
       CacheRefResolver cacheRefResolver = new CacheRefResolver(builderAssistant, context.getStringAttribute("namespace"));
       try {
-    	  cacheRefResolver.resolveCacheRef();
+        cacheRefResolver.resolveCacheRef();
       } catch (IncompleteElementException e) {
-    	  configuration.addIncompleteCacheRef(cacheRefResolver);
+        configuration.addIncompleteCacheRef(cacheRefResolver);
       }
     }
   }
@@ -272,7 +272,7 @@ public class XMLMapperBuilder extends BaseBuilder {
       } else if ("discriminator".equals(resultChild.getName())) {
         discriminator = processDiscriminatorElement(resultChild, typeClass, resultMappings);
       } else {
-        ArrayList<ResultFlag> flags = new ArrayList<ResultFlag>();
+        List<ResultFlag> flags = new ArrayList<ResultFlag>();
         if ("id".equals(resultChild.getName())) {
           flags.add(ResultFlag.ID);
         }
@@ -291,7 +291,7 @@ public class XMLMapperBuilder extends BaseBuilder {
   private void processConstructorElement(XNode resultChild, Class<?> resultType, List<ResultMapping> resultMappings) throws Exception {
     List<XNode> argChildren = resultChild.getChildren();
     for (XNode argChild : argChildren) {
-      ArrayList<ResultFlag> flags = new ArrayList<ResultFlag>();
+      List<ResultFlag> flags = new ArrayList<ResultFlag>();
       flags.add(ResultFlag.CONSTRUCTOR);
       if ("idArg".equals(argChild.getName())) {
         flags.add(ResultFlag.ID);
@@ -354,7 +354,7 @@ public class XMLMapperBuilder extends BaseBuilder {
     return true;
   }
 
-  private ResultMapping buildResultMappingFromContext(XNode context, Class<?> resultType, ArrayList<ResultFlag> flags) throws Exception {
+  private ResultMapping buildResultMappingFromContext(XNode context, Class<?> resultType, List<ResultFlag> flags) throws Exception {
     String property = context.getStringAttribute("property");
     String column = context.getStringAttribute("column");
     String javaType = context.getStringAttribute("javaType");

@@ -284,7 +284,7 @@
             </rule>
             <keep>
               <pattern>org.apache.ibatis.**</pattern>
-            </keep>            
+            </keep>
           </rules>
           <overwrite>true</overwrite>
         </configuration>
@@ -309,7 +309,7 @@
               <input>{test-classes}</input>
             </configuration>
           </execution>
-        </executions>        
+        </executions>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -342,7 +342,7 @@
         </executions>
       </plugin>
     </plugins>
-    
+
     <resources>
       <resource>
         <directory>${project.basedir}</directory>

@@ -109,7 +109,7 @@ public class ResultLoaderMap {
     /**
      * Object to check whether we went through serialization..
      */
-    private transient final Object serializationCheck = new Object();
+    private final transient Object serializationCheck = new Object();
     /**
      * Meta object which sets loaded properties.
      */

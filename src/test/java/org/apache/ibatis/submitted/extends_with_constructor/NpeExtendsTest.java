@@ -65,64 +65,64 @@ public class NpeExtendsTest {
         }
     }
     
-	@Test
-	public void testNoConstructorConfiguration() {
-		Configuration configuration = new Configuration();
-		configuration.addMapper(StudentMapper.class);
-		configuration.addMapper(TeacherMapper.class);
-		configuration.getMappedStatementNames();
-	}
-	@Test
-	public void testWithConstructorConfiguration() {
-		Configuration configuration = new Configuration();
-		configuration.addMapper(StudentConstructorMapper.class);
-		configuration.addMapper(TeacherMapper.class);
-		configuration.getMappedStatementNames();
-	}
-	
-	private SqlSessionFactory getSqlSessionFactoryWithConstructor() {
-		UnpooledDataSourceFactory unpooledDataSourceFactory = new UnpooledDataSourceFactory();
-		Properties properties = new Properties();
-		properties.setProperty("driver", "org.hsqldb.jdbcDriver");
-		properties.setProperty("url", "jdbc:hsqldb:mem:extends_with_constructor");
-		properties.setProperty("username", "sa");
-		unpooledDataSourceFactory.setProperties(properties);
-		Environment environment = new Environment("extends_with_constructor", new JdbcTransactionFactory(), unpooledDataSourceFactory.getDataSource());
-		
-		Configuration configuration = new Configuration();
-		configuration.setEnvironment(environment);
-		configuration.addMapper(StudentConstructorMapper.class);
-		configuration.addMapper(TeacherMapper.class);
-		configuration.getMappedStatementNames();
-		configuration.setAutoMappingBehavior(AutoMappingBehavior.NONE);
-		
-		return new DefaultSqlSessionFactory(configuration);
-	}
-	@Test
-	public void testSelectWithTeacher() {
-		SqlSessionFactory sqlSessionFactory = getSqlSessionFactoryWithConstructor();
-		SqlSession sqlSession = sqlSessionFactory.openSession();
-		try {
-			StudentConstructorMapper studentConstructorMapper = sqlSession.getMapper(StudentConstructorMapper.class);
-			StudentConstructor testStudent = studentConstructorMapper.selectWithTeacherById(1);
-			assertEquals(1, testStudent.getConstructors().size());
-			assertTrue(testStudent.getConstructors().contains(StudentConstructor.Constructor.ID_NAME));
-		} finally {
-			sqlSession.close();
-		}
-	}
-	@Test
-	public void testSelectNoName() {
-		SqlSessionFactory sqlSessionFactory = getSqlSessionFactoryWithConstructor();
-		SqlSession sqlSession = sqlSessionFactory.openSession();
-		try {
-			StudentConstructorMapper studentConstructorMapper = sqlSession.getMapper(StudentConstructorMapper.class);
-			StudentConstructor testStudent = studentConstructorMapper.selectNoNameById(1);
-			assertEquals(1, testStudent.getConstructors().size());
-			assertTrue(testStudent.getConstructors().contains(StudentConstructor.Constructor.ID));
-			assertNull(testStudent.getName());
-		} finally {
-			sqlSession.close();
-		}
-	}
+    @Test
+    public void testNoConstructorConfiguration() {
+        Configuration configuration = new Configuration();
+        configuration.addMapper(StudentMapper.class);
+        configuration.addMapper(TeacherMapper.class);
+        configuration.getMappedStatementNames();
+    }
+    @Test
+    public void testWithConstructorConfiguration() {
+        Configuration configuration = new Configuration();
+        configuration.addMapper(StudentConstructorMapper.class);
+        configuration.addMapper(TeacherMapper.class);
+        configuration.getMappedStatementNames();
+    }
+    
+    private SqlSessionFactory getSqlSessionFactoryWithConstructor() {
+        UnpooledDataSourceFactory unpooledDataSourceFactory = new UnpooledDataSourceFactory();
+        Properties properties = new Properties();
+        properties.setProperty("driver", "org.hsqldb.jdbcDriver");
+        properties.setProperty("url", "jdbc:hsqldb:mem:extends_with_constructor");
+        properties.setProperty("username", "sa");
+        unpooledDataSourceFactory.setProperties(properties);
+        Environment environment = new Environment("extends_with_constructor", new JdbcTransactionFactory(), unpooledDataSourceFactory.getDataSource());
+        
+        Configuration configuration = new Configuration();
+        configuration.setEnvironment(environment);
+        configuration.addMapper(StudentConstructorMapper.class);
+        configuration.addMapper(TeacherMapper.class);
+        configuration.getMappedStatementNames();
+        configuration.setAutoMappingBehavior(AutoMappingBehavior.NONE);
+        
+        return new DefaultSqlSessionFactory(configuration);
+    }
+    @Test
+    public void testSelectWithTeacher() {
+        SqlSessionFactory sqlSessionFactory = getSqlSessionFactoryWithConstructor();
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        try {
+            StudentConstructorMapper studentConstructorMapper = sqlSession.getMapper(StudentConstructorMapper.class);
+            StudentConstructor testStudent = studentConstructorMapper.selectWithTeacherById(1);
+            assertEquals(1, testStudent.getConstructors().size());
+            assertTrue(testStudent.getConstructors().contains(StudentConstructor.Constructor.ID_NAME));
+        } finally {
+            sqlSession.close();
+        }
+    }
+    @Test
+    public void testSelectNoName() {
+        SqlSessionFactory sqlSessionFactory = getSqlSessionFactoryWithConstructor();
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        try {
+            StudentConstructorMapper studentConstructorMapper = sqlSession.getMapper(StudentConstructorMapper.class);
+            StudentConstructor testStudent = studentConstructorMapper.selectNoNameById(1);
+            assertEquals(1, testStudent.getConstructors().size());
+            assertTrue(testStudent.getConstructors().contains(StudentConstructor.Constructor.ID));
+            assertNull(testStudent.getName());
+        } finally {
+            sqlSession.close();
+        }
+    }
 }

@@ -269,7 +269,7 @@ public class MetaObjectTest {
     MetaObject meta = SystemMetaObject.forObject(new Author());
     assertTrue(!meta.getObjectWrapper().getClass().equals(CustomBeanWrapper.class));
   }
-  
+
   @Test
   public void shouldUseObjectWrapperFactoryWhenSet() {
     MetaObject meta = MetaObject.forObject(new Author(), SystemMetaObject.DEFAULT_OBJECT_FACTORY, new CustomBeanWrapperFactory());
@@ -280,26 +280,26 @@ public class MetaObjectTest {
     assertFalse(meta.getObjectWrapper().getClass().equals(CustomBeanWrapper.class));
   }
 
-  @Test
+  @Test 
   public void shouldMethodHasGetterReturnTrueWhenListElementSet() {
-	  List<Object> param1 = new ArrayList<Object>();
-	  param1.add("firstParam");
-	  param1.add(222);
-	  param1.add(new Date());
-	  
-	  Map<String, Object> parametersEmulation = new HashMap<String, Object>();
-	  parametersEmulation.put("param1", param1);
-	  parametersEmulation.put("filterParams", param1);
-	  
-	  MetaObject meta = SystemMetaObject.forObject(parametersEmulation);
-	  
-	  assertEquals(param1.get(0), meta.getValue("filterParams[0]"));
-	  assertEquals(param1.get(1), meta.getValue("filterParams[1]"));
-	  assertEquals(param1.get(2), meta.getValue("filterParams[2]"));
-	  
-	  assertTrue(meta.hasGetter("filterParams[0]"));
-	  assertTrue(meta.hasGetter("filterParams[1]"));
-	  assertTrue(meta.hasGetter("filterParams[2]"));
+    List<Object> param1 = new ArrayList<Object>();
+    param1.add("firstParam");
+    param1.add(222);
+    param1.add(new Date());
+
+    Map<String, Object> parametersEmulation = new HashMap<String, Object>();
+    parametersEmulation.put("param1", param1);
+    parametersEmulation.put("filterParams", param1);
+
+    MetaObject meta = SystemMetaObject.forObject(parametersEmulation);
+
+    assertEquals(param1.get(0), meta.getValue("filterParams[0]"));
+    assertEquals(param1.get(1), meta.getValue("filterParams[1]"));
+    assertEquals(param1.get(2), meta.getValue("filterParams[2]"));
+
+    assertTrue(meta.hasGetter("filterParams[0]"));
+    assertTrue(meta.hasGetter("filterParams[1]"));
+    assertTrue(meta.hasGetter("filterParams[2]"));
   }
 
 }

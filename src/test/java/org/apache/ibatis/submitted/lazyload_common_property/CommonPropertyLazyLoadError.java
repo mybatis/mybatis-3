@@ -61,54 +61,54 @@ public class CommonPropertyLazyLoadError {
     
     @Test
     public void testLazyLoadWithNoAncestor() {
-    	SqlSession sqlSession = sqlSessionFactory.openSession();
-    	try {
-        	ChildMapper childMapper = sqlSession.getMapper(ChildMapper.class);
-        	
-        	childMapper.selectById(1);
-    	} finally {
-    		sqlSession.close();
-    	}
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        try {
+            ChildMapper childMapper = sqlSession.getMapper(ChildMapper.class);
+            
+            childMapper.selectById(1);
+        } finally {
+            sqlSession.close();
+        }
     }
     @Test
     public void testLazyLoadWithFirstAncestor() {
-    	SqlSession sqlSession = sqlSessionFactory.openSession();
-    	try {
-        	FatherMapper fatherMapper = sqlSession.getMapper(FatherMapper.class);
-        	ChildMapper childMapper = sqlSession.getMapper(ChildMapper.class);
-        	
-        	fatherMapper.selectById(1);
-        	childMapper.selectById(1);
-    	} finally {
-    		sqlSession.close();
-    	}
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        try {
+            FatherMapper fatherMapper = sqlSession.getMapper(FatherMapper.class);
+            ChildMapper childMapper = sqlSession.getMapper(ChildMapper.class);
+            
+            fatherMapper.selectById(1);
+            childMapper.selectById(1);
+        } finally {
+            sqlSession.close();
+        }
     }
     @Test
     public void testLazyLoadWithAllAncestors() {
-    	SqlSession sqlSession = sqlSessionFactory.openSession();
-    	try {
-        	GrandFatherMapper grandFatherMapper = sqlSession.getMapper(GrandFatherMapper.class);
-        	FatherMapper fatherMapper = sqlSession.getMapper(FatherMapper.class);
-        	ChildMapper childMapper = sqlSession.getMapper(ChildMapper.class);
-        	
-        	grandFatherMapper.selectById(1);
-        	fatherMapper.selectById(1);
-        	childMapper.selectById(1);
-    	} finally {
-    		sqlSession.close();
-    	}
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        try {
+            GrandFatherMapper grandFatherMapper = sqlSession.getMapper(GrandFatherMapper.class);
+            FatherMapper fatherMapper = sqlSession.getMapper(FatherMapper.class);
+            ChildMapper childMapper = sqlSession.getMapper(ChildMapper.class);
+            
+            grandFatherMapper.selectById(1);
+            fatherMapper.selectById(1);
+            childMapper.selectById(1);
+        } finally {
+            sqlSession.close();
+        }
     }
     @Test
     public void testLazyLoadSkipFirstAncestor() {
-    	SqlSession sqlSession = sqlSessionFactory.openSession();
-    	try {
-        	GrandFatherMapper grandFatherMapper = sqlSession.getMapper(GrandFatherMapper.class);
-        	ChildMapper childMapper = sqlSession.getMapper(ChildMapper.class);
-        	
-        	grandFatherMapper.selectById(1);
-        	childMapper.selectById(1);
-    	} finally {
-    		sqlSession.close();
-    	}
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        try {
+            GrandFatherMapper grandFatherMapper = sqlSession.getMapper(GrandFatherMapper.class);
+            ChildMapper childMapper = sqlSession.getMapper(ChildMapper.class);
+            
+            grandFatherMapper.selectById(1);
+            childMapper.selectById(1);
+        } finally {
+            sqlSession.close();
+        }
     }
 }

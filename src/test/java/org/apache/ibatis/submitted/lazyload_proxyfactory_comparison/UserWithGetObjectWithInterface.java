@@ -47,6 +47,6 @@ implements Owned<Group> {
   }
   
   public Object getObject() {
-	  return null;
+    return null;
   }
 }
