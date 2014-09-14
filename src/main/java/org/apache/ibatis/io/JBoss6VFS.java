@@ -82,7 +82,7 @@ public class JBoss6VFS extends VFS {
   protected static synchronized void initialize() {
     if (valid == null) {
       // Assume valid. It will get flipped later if something goes wrong.
-      valid = true;
+      valid = Boolean.TRUE;
 
       // Look up and verify required classes
       VFS.VFS = checkNotNull(getClass("org.jboss.vfs.VFS"));
@@ -109,8 +109,9 @@ public class JBoss6VFS extends VFS {
    * @param object The object reference to check for null.
    */
   protected static <T> T checkNotNull(T object) {
-    if (object == null)
+    if (object == null) {
       setInvalid();
+    }
     return object;
   }
 
@@ -133,9 +134,9 @@ public class JBoss6VFS extends VFS {
 
   /** Mark this {@link VFS} as invalid for the current environment. */
   protected static void setInvalid() {
-    if (JBoss6VFS.valid != null && JBoss6VFS.valid) {
+    if (JBoss6VFS.valid == Boolean.TRUE) {
       log.debug("JBoss 6 VFS API is not available in this environment.");
-      JBoss6VFS.valid = false;
+      JBoss6VFS.valid = Boolean.FALSE;
     }
   }
 
@@ -152,17 +153,18 @@ public class JBoss6VFS extends VFS {
   public List<String> list(URL url, String path) throws IOException {
     VirtualFile directory;
     directory = VFS.getChild(url);
-    if (directory == null)
+    if (directory == null) {
       return Collections.emptyList();
+    }
 
-    if (!path.endsWith("/"))
+    if (!path.endsWith("/")) {
       path += "/";
+    }
 
     List<VirtualFile> children = directory.getChildren();
     List<String> names = new ArrayList<String>(children.size());
     for (VirtualFile vf : children) {
-      String relative = vf.getPathNameRelativeTo(directory);
-      names.add(path + relative);
+      names.add(path + vf.getPathNameRelativeTo(directory));
     }
 
     return names;
