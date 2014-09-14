@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import org.apache.ibatis.reflection.invoker.GetFieldInvoker;
 import org.apache.ibatis.reflection.invoker.Invoker;
@@ -46,7 +47,7 @@ public class Reflector {
 
   private static boolean classCacheEnabled = true;
   private static final String[] EMPTY_STRING_ARRAY = new String[0];
-  private static final Map<Class<?>, Reflector> REFLECTOR_MAP = new ConcurrentHashMap<Class<?>, Reflector>();
+  private static final ConcurrentMap<Class<?>, Reflector> REFLECTOR_MAP = new ConcurrentHashMap<Class<?>, Reflector>();
 
   private Class<?> type;
   private String[] readablePropertyNames = EMPTY_STRING_ARRAY;
@@ -276,7 +277,7 @@ public class Reflector {
    * @return An array containing all methods in this class
    */
   private Method[] getClassMethods(Class<?> cls) {
-    HashMap<String, Method> uniqueMethods = new HashMap<String, Method>();
+    Map<String, Method> uniqueMethods = new HashMap<String, Method>();
     Class<?> currentClass = cls;
     while (currentClass != null) {
       addUniqueMethods(uniqueMethods, currentClass.getDeclaredMethods());
@@ -296,7 +297,7 @@ public class Reflector {
     return methods.toArray(new Method[methods.size()]);
   }
 
-  private void addUniqueMethods(HashMap<String, Method> uniqueMethods, Method[] methods) {
+  private void addUniqueMethods(Map<String, Method> uniqueMethods, Method[] methods) {
     for (Method currentMethod : methods) {
       if (!currentMethod.isBridge()) {
         String signature = getSignature(currentMethod);
