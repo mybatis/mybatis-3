@@ -38,12 +38,12 @@ public class MultipleIncludeTest {
 
   @Test
   public void testMultipleIncludeXmlConfig() throws Exception {
-	  testMultipleIncludes(getSqlSessionFactoryXmlConfig());
+    testMultipleIncludes(getSqlSessionFactoryXmlConfig());
   }
 
   @Test
   public void testMultipleIncludeJavaConfig() throws Exception {
-	  testMultipleIncludes(getSqlSessionFactoryJavaConfig());
+    testMultipleIncludes(getSqlSessionFactoryJavaConfig());
   }
 
   private void testMultipleIncludes(SqlSessionFactory sqlSessionFactory) throws Exception {

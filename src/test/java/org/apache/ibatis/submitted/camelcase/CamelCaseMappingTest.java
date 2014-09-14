@@ -32,46 +32,46 @@ import org.junit.Test;
 
 public class CamelCaseMappingTest {
 
-	protected static SqlSessionFactory sqlSessionFactory;
+  protected static SqlSessionFactory sqlSessionFactory;
 
-	@BeforeClass
-	public static void setUp() throws Exception {
-		Connection conn = null;
+  @BeforeClass
+  public static void setUp() throws Exception {
+    Connection conn = null;
 
-		try {
-			Class.forName("org.hsqldb.jdbcDriver");
-			conn = DriverManager.getConnection("jdbc:hsqldb:mem:gname", "sa", "");
-			Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/camelcase/CreateDB.sql");
-			ScriptRunner runner = new ScriptRunner(conn);
-			runner.setLogWriter(null);
-			runner.setErrorLogWriter(null);
-			runner.runScript(reader);
-			conn.commit();
-			reader.close();
+    try {
+      Class.forName("org.hsqldb.jdbcDriver");
+      conn = DriverManager.getConnection("jdbc:hsqldb:mem:gname", "sa", "");
+      Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/camelcase/CreateDB.sql");
+      ScriptRunner runner = new ScriptRunner(conn);
+      runner.setLogWriter(null);
+      runner.setErrorLogWriter(null);
+      runner.runScript(reader);
+      conn.commit();
+      reader.close();
 
-			reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/camelcase/MapperConfig.xml");
-			sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-			reader.close();
+      reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/camelcase/MapperConfig.xml");
+      sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+      reader.close();
 
-		} finally {
-			if (conn != null) {
-				conn.close();
-			}
-		}
-	}
+    } finally {
+      if (conn != null) {
+        conn.close();
+      }
+    }
+  }
 
-	@Test
-	public void testList() {
-		SqlSession sqlSession = sqlSessionFactory.openSession();
-		try {
-			List<Camel> list = sqlSession.selectList("org.apache.ibatis.submitted.camel.doSelect");
-			Assert.assertTrue(list.size() > 0);
-			Assert.assertNotNull(list.get(0).getFirstName());
-			Assert.assertNull(list.get(0).getLAST_NAME());
-		} finally {
-			sqlSession.close();
-		}
-	}
+  @Test
+  public void testList() {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      List<Camel> list = sqlSession.selectList("org.apache.ibatis.submitted.camel.doSelect");
+      Assert.assertTrue(list.size() > 0);
+      Assert.assertNotNull(list.get(0).getFirstName());
+      Assert.assertNull(list.get(0).getLAST_NAME());
+    } finally {
+      sqlSession.close();
+    }
+  }
 
   @Test
   public void testMap() {
@@ -84,5 +84,5 @@ public class CamelCaseMappingTest {
       sqlSession.close();
     }
   }
-	
+
 }

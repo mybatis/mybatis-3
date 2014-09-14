@@ -24,13 +24,13 @@ import org.apache.ibatis.annotations.Select;
 
 @CacheNamespace
 public interface PersonMapper {
-  
-	@Insert("insert into person (id, firstname, lastname) values (#{id}, #{firstname}, #{lastname})")
-	public void create(Person person);
-	
-	@Delete("delete from person where id = #{id}")
-	public void delete(int id);
-	
-	@Select("select id, firstname, lastname from person")
-	public List<Person> findAll();
+
+  @Insert("insert into person (id, firstname, lastname) values (#{id}, #{firstname}, #{lastname})")
+  public void create(Person person);
+
+  @Delete("delete from person where id = #{id}")
+  public void delete(int id);
+
+  @Select("select id, firstname, lastname from person")
+  public List<Person> findAll();
 }

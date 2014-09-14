@@ -34,10 +34,10 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class CommonPropertyDeferLoadError {
-    
+
     private static SqlSessionFactory sqlSessionFactory;
     private static SqlSessionFactory lazyLoadSqlSessionFactory;
-    
+
     @BeforeClass
     public static void initDatabase() throws Exception {
         Connection conn = null;
@@ -67,75 +67,78 @@ public class CommonPropertyDeferLoadError {
             }
         }
     }
-    
+
     @Test
     public void testDeferLoadAfterResultHandler() {
-    	SqlSession sqlSession = sqlSessionFactory.openSession();
-    	try {
-    		class MyResultHandler implements ResultHandler {
-    			List<Child> children = new ArrayList<Child>();
-				public void handleResult(ResultContext context) {
-					Child child = (Child)context.getResultObject();
-					children.add(child);
-				}
-    		};
-    		MyResultHandler myResultHandler = new MyResultHandler();
-    		sqlSession.select("org.apache.ibatis.submitted.deferload_common_property.ChildMapper.selectAll", myResultHandler);
-    		for (Child child: myResultHandler.children) {
-				assertNotNull(child.getFather());
-    		}
-    	} finally {
-    		sqlSession.close();
-    	}
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        try {
+            class MyResultHandler implements ResultHandler {
+                List<Child> children = new ArrayList<Child>();
+                public void handleResult(ResultContext context) {
+                    Child child = (Child)context.getResultObject();
+                    children.add(child);
+                }
+            };
+            MyResultHandler myResultHandler = new MyResultHandler();
+            sqlSession.select("org.apache.ibatis.submitted.deferload_common_property.ChildMapper.selectAll", myResultHandler);
+            for (Child child: myResultHandler.children) {
+                assertNotNull(child.getFather());
+            }
+        } finally {
+            sqlSession.close();
+        }
     }
+
     @Test
     public void testDeferLoadDuringResultHandler() {
-    	SqlSession sqlSession = sqlSessionFactory.openSession();
-    	try {
-    		class MyResultHandler implements ResultHandler {
-				public void handleResult(ResultContext context) {
-					Child child = (Child)context.getResultObject();
-					assertNotNull(child.getFather());
-				}
-    		};
-    		sqlSession.select("org.apache.ibatis.submitted.deferload_common_property.ChildMapper.selectAll", new MyResultHandler());
-    	} finally {
-    		sqlSession.close();
-    	}
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        try {
+            class MyResultHandler implements ResultHandler {
+                public void handleResult(ResultContext context) {
+                    Child child = (Child)context.getResultObject();
+                    assertNotNull(child.getFather());
+                }
+            };
+            sqlSession.select("org.apache.ibatis.submitted.deferload_common_property.ChildMapper.selectAll", new MyResultHandler());
+        } finally {
+            sqlSession.close();
+        }
     }
+
     @Test
     public void testDeferLoadAfterResultHandlerWithLazyLoad() {
-    	SqlSession sqlSession = lazyLoadSqlSessionFactory.openSession();
-    	try {
-    		class MyResultHandler implements ResultHandler {
-    			List<Child> children = new ArrayList<Child>();
-				public void handleResult(ResultContext context) {
-					Child child = (Child)context.getResultObject();
-					children.add(child);
-				}
-    		};
-    		MyResultHandler myResultHandler = new MyResultHandler();
-    		sqlSession.select("org.apache.ibatis.submitted.deferload_common_property.ChildMapper.selectAll", myResultHandler);
-    		for (Child child: myResultHandler.children) {
-				assertNotNull(child.getFather());
-    		}
-    	} finally {
-    		sqlSession.close();
-    	}
+        SqlSession sqlSession = lazyLoadSqlSessionFactory.openSession();
+        try {
+            class MyResultHandler implements ResultHandler {
+                List<Child> children = new ArrayList<Child>();
+                public void handleResult(ResultContext context) {
+                    Child child = (Child)context.getResultObject();
+                    children.add(child);
+                }
+            };
+            MyResultHandler myResultHandler = new MyResultHandler();
+            sqlSession.select("org.apache.ibatis.submitted.deferload_common_property.ChildMapper.selectAll", myResultHandler);
+            for (Child child: myResultHandler.children) {
+                assertNotNull(child.getFather());
+            }
+        } finally {
+            sqlSession.close();
+        }
     }
+
     @Test
     public void testDeferLoadDuringResultHandlerWithLazyLoad() {
-    	SqlSession sqlSession = lazyLoadSqlSessionFactory.openSession();
-    	try {
-    		class MyResultHandler implements ResultHandler {
-				public void handleResult(ResultContext context) {
-					Child child = (Child)context.getResultObject();
-					assertNotNull(child.getFather());
-				}
-    		};
-    		sqlSession.select("org.apache.ibatis.submitted.deferload_common_property.ChildMapper.selectAll", new MyResultHandler());
-    	} finally {
-    		sqlSession.close();
-    	}
+        SqlSession sqlSession = lazyLoadSqlSessionFactory.openSession();
+        try {
+            class MyResultHandler implements ResultHandler {
+                public void handleResult(ResultContext context) {
+                    Child child = (Child)context.getResultObject();
+                    assertNotNull(child.getFather());
+                }
+            };
+            sqlSession.select("org.apache.ibatis.submitted.deferload_common_property.ChildMapper.selectAll", new MyResultHandler());
+        } finally {
+            sqlSession.close();
+        }
     }
 }

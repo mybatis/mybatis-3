@@ -46,6 +46,6 @@ public class UserWithGetObjectWithoutInterface {
   }
   
   public Object getObject() {
-	  return null;
+    return null;
   }
 }

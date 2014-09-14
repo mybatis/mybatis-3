@@ -45,12 +45,12 @@ public class User {
   public void setGroup(Group group) {
     this.group = group;
   }
-  
+
   public String getState() {
-	return state;
+    return state;
   }
 
   public void setState(String state) {
-	  this.state = state;
+    this.state = state;
   }
 }
