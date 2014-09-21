@@ -31,13 +31,17 @@ import org.apache.ibatis.builder.BuilderException;
  *
  * @author Eduardo Macarron
  */
-public class OgnlCache {
+public final class OgnlCache {
 
   private static final Map<String, Object> expressionCache = new ConcurrentHashMap<String, Object>();
 
+  private OgnlCache() {
+    // Prevent Instantiation of Static Class
+  }
+
   public static Object getValue(String expression, Object root) {
     try {
-      Map context = Ognl.createDefaultContext(root, new OgnlClassResolver());
+      Map<Object, OgnlClassResolver> context = Ognl.createDefaultContext(root, new OgnlClassResolver());
       return Ognl.getValue(parseExpression(expression), context, root);
     } catch (OgnlException e) {
       throw new BuilderException("Error evaluating expression '" + expression + "'. Cause: " + e, e);

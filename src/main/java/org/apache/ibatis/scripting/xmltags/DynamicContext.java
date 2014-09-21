@@ -110,6 +110,7 @@ public class DynamicContext {
 
   static class ContextAccessor implements PropertyAccessor {
 
+    @Override
     public Object getProperty(Map context, Object target, Object name)
         throws OgnlException {
       Map map = (Map) target;
@@ -127,9 +128,10 @@ public class DynamicContext {
       return null;
     }
 
+    @Override
     public void setProperty(Map context, Object target, Object name, Object value)
         throws OgnlException {
-      Map map = (Map) target;
+      Map<Object, Object> map = (Map<Object, Object>) target;
       map.put(name, value);
     }
 

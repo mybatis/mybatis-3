@@ -22,7 +22,11 @@ import org.apache.ibatis.reflection.ReflectionException;
 /**
  * @author Clinton Begin
  */
-public class PropertyNamer {
+public final class PropertyNamer {
+
+  private PropertyNamer() {
+    // Prevent Instantiation of Static Class
+  }
 
   public static String methodToProperty(String name) {
     if (name.startsWith("is")) {
