@@ -174,7 +174,7 @@ public class MapperMethod {
     private final String name;
     private final SqlCommandType type;
 
-    public SqlCommand(Configuration configuration, Class<?> mapperInterface, Method method) throws BindingException {
+    public SqlCommand(Configuration configuration, Class<?> mapperInterface, Method method) {
       String statementName = mapperInterface.getName() + "." + method.getName();
       MappedStatement ms = null;
       if (configuration.hasStatement(statementName)) {
@@ -216,7 +216,7 @@ public class MapperMethod {
     private final SortedMap<Integer, String> params;
     private final boolean hasNamedParameters;
 
-    public MethodSignature(Configuration configuration, Method method) throws BindingException {
+    public MethodSignature(Configuration configuration, Method method) {
       this.returnType = method.getReturnType();
       this.returnsVoid = void.class.equals(this.returnType);
       this.returnsMany = (configuration.getObjectFactory().isCollection(this.returnType) || this.returnType.isArray());
