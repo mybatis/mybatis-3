@@ -504,7 +504,7 @@ public class MapperAnnotationBuilder {
   }
 
   private boolean isLazy(Result result) {
-    Boolean isLazy = configuration.isLazyLoadingEnabled();
+    boolean isLazy = configuration.isLazyLoadingEnabled();
     if (result.one().select().length() > 0 && FetchType.DEFAULT != result.one().fetchType()) {
       isLazy = (result.one().fetchType() == FetchType.LAZY);
     } else if (result.many().select().length() > 0 && FetchType.DEFAULT != result.many().fetchType()) {
