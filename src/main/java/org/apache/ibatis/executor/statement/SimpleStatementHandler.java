@@ -39,8 +39,8 @@ public class SimpleStatementHandler extends BaseStatementHandler {
     super(executor, mappedStatement, parameter, rowBounds, resultHandler, boundSql);
   }
 
-  public int update(Statement statement)
-      throws SQLException {
+  @Override
+  public int update(Statement statement) throws SQLException {
     String sql = boundSql.getSql();
     Object parameterObject = boundSql.getParameterObject();
     KeyGenerator keyGenerator = mappedStatement.getKeyGenerator();
@@ -60,19 +60,20 @@ public class SimpleStatementHandler extends BaseStatementHandler {
     return rows;
   }
 
-  public void batch(Statement statement)
-      throws SQLException {
+  @Override
+  public void batch(Statement statement) throws SQLException {
     String sql = boundSql.getSql();
     statement.addBatch(sql);
   }
 
-  public <E> List<E> query(Statement statement, ResultHandler resultHandler)
-      throws SQLException {
+  @Override
+  public <E> List<E> query(Statement statement, ResultHandler resultHandler) throws SQLException {
     String sql = boundSql.getSql();
     statement.execute(sql);
     return resultSetHandler.<E>handleResultSets(statement);
   }
 
+  @Override
   protected Statement instantiateStatement(Connection connection) throws SQLException {
     if (mappedStatement.getResultSetType() != null) {
       return connection.createStatement(mappedStatement.getResultSetType().getValue(), ResultSet.CONCUR_READ_ONLY);
@@ -81,6 +82,7 @@ public class SimpleStatementHandler extends BaseStatementHandler {
     }
   }
 
+  @Override
   public void parameterize(Statement statement) throws SQLException {
     // N/A
   }

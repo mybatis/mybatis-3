@@ -35,6 +35,7 @@ public class PropertyParser {
       this.variables = variables;
     }
 
+    @Override
     public String handleToken(String content) {
       if (variables != null && variables.containsKey(content)) {
         return variables.getProperty(content);

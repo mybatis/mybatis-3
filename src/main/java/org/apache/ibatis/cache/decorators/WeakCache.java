@@ -95,6 +95,7 @@ public class WeakCache implements Cache {
     delegate.clear();
   }
 
+  @Override
   public ReadWriteLock getReadWriteLock() {
     return null;
   }

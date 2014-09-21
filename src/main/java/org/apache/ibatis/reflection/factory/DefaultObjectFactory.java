@@ -37,10 +37,12 @@ public class DefaultObjectFactory implements ObjectFactory, Serializable {
 
   private static final long serialVersionUID = -8855120656740914948L;
 
+  @Override
   public <T> T create(Class<T> type) {
     return create(type, null, null);
   }
 
+  @Override
   public <T> T create(Class<T> type, List<Class<?>> constructorArgTypes, List<Object> constructorArgs) {
     Class<?> classToCreate = resolveInterface(type);
     @SuppressWarnings("unchecked")
@@ -49,6 +51,7 @@ public class DefaultObjectFactory implements ObjectFactory, Serializable {
     return created;
   }
 
+  @Override
   public void setProperties(Properties properties) {
     // no props for default
   }
@@ -103,6 +106,7 @@ public class DefaultObjectFactory implements ObjectFactory, Serializable {
     return classToCreate;
   }
 
+  @Override
   public <T> boolean isCollection(Class<T> type) {
     return Collection.class.isAssignableFrom(type);
   }

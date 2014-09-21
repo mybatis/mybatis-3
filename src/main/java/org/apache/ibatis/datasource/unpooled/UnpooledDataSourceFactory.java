@@ -38,6 +38,7 @@ public class UnpooledDataSourceFactory implements DataSourceFactory {
     this.dataSource = new UnpooledDataSource();
   }
 
+  @Override
   public void setProperties(Properties properties) {
     Properties driverProperties = new Properties();
     MetaObject metaDataSource = SystemMetaObject.forObject(dataSource);
@@ -59,6 +60,7 @@ public class UnpooledDataSourceFactory implements DataSourceFactory {
     }
   }
 
+  @Override
   public DataSource getDataSource() {
     return dataSource;
   }

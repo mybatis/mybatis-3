@@ -27,6 +27,7 @@ public class MixedSqlNode implements SqlNode {
     this.contents = contents;
   }
 
+  @Override
   public boolean apply(DynamicContext context) {
     for (SqlNode sqlNode : contents) {
       sqlNode.apply(context);

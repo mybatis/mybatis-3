@@ -41,6 +41,7 @@ public final class ConnectionLogger extends BaseJdbcLogger implements Invocation
     this.connection = conn;
   }
 
+  @Override
   public Object invoke(Object proxy, Method method, Object[] params)
       throws Throwable {
     try {

@@ -240,14 +240,17 @@ public class XPathParser {
       DocumentBuilder builder = factory.newDocumentBuilder();
       builder.setEntityResolver(entityResolver);
       builder.setErrorHandler(new ErrorHandler() {
+        @Override
         public void error(SAXParseException exception) throws SAXException {
           throw exception;
         }
 
+        @Override
         public void fatalError(SAXParseException exception) throws SAXException {
           throw exception;
         }
 
+        @Override
         public void warning(SAXParseException exception) throws SAXException {
         }
       });

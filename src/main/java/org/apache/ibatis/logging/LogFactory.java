@@ -32,31 +32,37 @@ public final class LogFactory {
 
   static {
     tryImplementation(new Runnable() {
+      @Override
       public void run() {
         useSlf4jLogging();
       }
     });
     tryImplementation(new Runnable() {
+      @Override
       public void run() {
         useCommonsLogging();
       }
     });
     tryImplementation(new Runnable() {
+      @Override
       public void run() {
         useLog4J2Logging();
       }
     });
     tryImplementation(new Runnable() {
+      @Override
       public void run() {
         useLog4JLogging();
       }
     });
     tryImplementation(new Runnable() {
+      @Override
       public void run() {
         useJdkLogging();
       }
     });
     tryImplementation(new Runnable() {
+      @Override
       public void run() {
         useNoLogging();
       }

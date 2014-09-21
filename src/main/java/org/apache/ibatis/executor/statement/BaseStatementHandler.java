@@ -70,14 +70,17 @@ public abstract class BaseStatementHandler implements StatementHandler {
     this.resultSetHandler = configuration.newResultSetHandler(executor, mappedStatement, rowBounds, parameterHandler, resultHandler, boundSql);
   }
 
+  @Override
   public BoundSql getBoundSql() {
     return boundSql;
   }
 
+  @Override
   public ParameterHandler getParameterHandler() {
     return parameterHandler;
   }
 
+  @Override
   public Statement prepare(Connection connection) throws SQLException {
     ErrorContext.instance().sql(boundSql.getSql());
     Statement statement = null;

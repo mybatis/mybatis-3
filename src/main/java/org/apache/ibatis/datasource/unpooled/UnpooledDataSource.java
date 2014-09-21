@@ -88,26 +88,32 @@ public class UnpooledDataSource implements DataSource {
     this.driverProperties = driverProperties;
   }
 
+  @Override
   public Connection getConnection() throws SQLException {
     return doGetConnection(username, password);
   }
 
+  @Override
   public Connection getConnection(String username, String password) throws SQLException {
     return doGetConnection(username, password);
   }
-  
+
+  @Override
   public void setLoginTimeout(int loginTimeout) throws SQLException {
     DriverManager.setLoginTimeout(loginTimeout);
   }
 
+  @Override
   public int getLoginTimeout() throws SQLException {
     return DriverManager.getLoginTimeout();
   }
 
+  @Override
   public void setLogWriter(PrintWriter logWriter) throws SQLException {
     DriverManager.setLogWriter(logWriter);
   }
 
+  @Override
   public PrintWriter getLogWriter() throws SQLException {
     return DriverManager.getLogWriter();
   }
@@ -233,43 +239,53 @@ public class UnpooledDataSource implements DataSource {
       this.driver = d;
     }
 
+    @Override
     public boolean acceptsURL(String u) throws SQLException {
       return this.driver.acceptsURL(u);
     }
 
+    @Override
     public Connection connect(String u, Properties p) throws SQLException {
       return this.driver.connect(u, p);
     }
 
+    @Override
     public int getMajorVersion() {
       return this.driver.getMajorVersion();
     }
 
+    @Override
     public int getMinorVersion() {
       return this.driver.getMinorVersion();
     }
 
+    @Override
     public DriverPropertyInfo[] getPropertyInfo(String u, Properties p) throws SQLException {
       return this.driver.getPropertyInfo(u, p);
     }
 
+    @Override
     public boolean jdbcCompliant() {
       return this.driver.jdbcCompliant();
     }
 
+    @Override
     public Logger getParentLogger() {
       return Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
     }
   }
 
+  @Override
   public <T> T unwrap(Class<T> iface) throws SQLException {
     throw new SQLException(getClass().getName() + " is not a wrapper.");
   }
 
+  @Override
   public boolean isWrapperFor(Class<?> iface) throws SQLException {
     return false;
   }
 
+  @Override
   public Logger getParentLogger() {
     return Logger.getLogger(Logger.GLOBAL_LOGGER_NAME); // requires JDK version 1.6
   }

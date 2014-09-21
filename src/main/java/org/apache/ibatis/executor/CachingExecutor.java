@@ -45,10 +45,12 @@ public class CachingExecutor implements Executor {
     delegate.setExecutorWrapper(this);
   }
 
+  @Override
   public Transaction getTransaction() {
     return delegate.getTransaction();
   }
 
+  @Override
   public void close(boolean forceRollback) {
     try {
       //issues #499, #524 and #573
@@ -62,21 +64,25 @@ public class CachingExecutor implements Executor {
     }
   }
 
+  @Override
   public boolean isClosed() {
     return delegate.isClosed();
   }
 
+  @Override
   public int update(MappedStatement ms, Object parameterObject) throws SQLException {
     flushCacheIfRequired(ms);
     return delegate.update(ms, parameterObject);
   }
 
+  @Override
   public <E> List<E> query(MappedStatement ms, Object parameterObject, RowBounds rowBounds, ResultHandler resultHandler) throws SQLException {
     BoundSql boundSql = ms.getBoundSql(parameterObject);
     CacheKey key = createCacheKey(ms, parameterObject, rowBounds, boundSql);
     return query(ms, parameterObject, rowBounds, resultHandler, key, boundSql);
   }
 
+  @Override
   public <E> List<E> query(MappedStatement ms, Object parameterObject, RowBounds rowBounds, ResultHandler resultHandler, CacheKey key, BoundSql boundSql)
       throws SQLException {
     Cache cache = ms.getCache();
@@ -99,15 +105,18 @@ public class CachingExecutor implements Executor {
     return delegate.<E> query(ms, parameterObject, rowBounds, resultHandler, key, boundSql);
   }
 
+  @Override
   public List<BatchResult> flushStatements() throws SQLException {
     return delegate.flushStatements();
   }
 
+  @Override
   public void commit(boolean required) throws SQLException {
     delegate.commit(required);
     tcm.commit();
   }
 
+  @Override
   public void rollback(boolean required) throws SQLException {
     try {
       delegate.rollback(required);
@@ -128,18 +137,22 @@ public class CachingExecutor implements Executor {
     }
   }
 
+  @Override
   public CacheKey createCacheKey(MappedStatement ms, Object parameterObject, RowBounds rowBounds, BoundSql boundSql) {
     return delegate.createCacheKey(ms, parameterObject, rowBounds, boundSql);
   }
 
+  @Override
   public boolean isCached(MappedStatement ms, CacheKey key) {
     return delegate.isCached(ms, key);
   }
 
+  @Override
   public void deferLoad(MappedStatement ms, MetaObject resultObject, String property, CacheKey key, Class<?> targetType) {
     delegate.deferLoad(ms, resultObject, property, key, targetType);
   }
 
+  @Override
   public void clearLocalCache() {
     delegate.clearLocalCache();
   }

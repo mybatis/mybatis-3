@@ -56,6 +56,7 @@ public class ManagedTransaction implements Transaction {
     this.closeConnection = closeConnection;
   }
 
+  @Override
   public Connection getConnection() throws SQLException {
     if (this.connection == null) {
       openConnection();
@@ -63,14 +64,17 @@ public class ManagedTransaction implements Transaction {
     return this.connection;
   }
 
+  @Override
   public void commit() throws SQLException {
     // Does nothing
   }
 
+  @Override
   public void rollback() throws SQLException {
     // Does nothing
   }
 
+  @Override
   public void close() throws SQLException {
     if (this.closeConnection && this.connection != null) {
       if (log.isDebugEnabled()) {
