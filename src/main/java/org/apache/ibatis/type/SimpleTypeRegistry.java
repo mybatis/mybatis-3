@@ -44,6 +44,10 @@ public class SimpleTypeRegistry {
     SIMPLE_TYPE_SET.add(BigDecimal.class);
   }
 
+  private SimpleTypeRegistry() {
+    // Prevent Instantiation
+  }
+
   /*
    * Tells us if the class passed in is a known common type
    *
