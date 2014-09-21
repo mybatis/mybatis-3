@@ -83,11 +83,6 @@ public class DynamicContext {
     }
 
     @Override
-    public Object put(String key, Object value) {
-      return super.put(key, value);
-    }
-    
-    @Override
     public Object get(Object key) {
       String strKey = (String) key;
       if (super.containsKey(strKey)) {
