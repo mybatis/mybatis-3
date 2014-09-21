@@ -50,8 +50,11 @@ public abstract class BaseJdbcLogger {
    */
   public BaseJdbcLogger(Log log, int queryStack) {
     this.statementLog = log;
-    if (queryStack == 0) queryStack = 1;
-    this.queryStack = queryStack;
+    if (queryStack == 0) {
+      this.queryStack = 1;
+    } else {
+      this.queryStack = queryStack;
+    }
   }
 
   static {

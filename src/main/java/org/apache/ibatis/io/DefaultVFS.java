@@ -127,8 +127,9 @@ public class DefaultVFS extends VFS {
 
         // The URL prefix to use when recursively listing child resources
         String prefix = url.toExternalForm();
-        if (!prefix.endsWith("/"))
+        if (!prefix.endsWith("/")) {
           prefix = prefix + "/";
+        }
 
         // Iterate over immediate children, adding files and recursing into directories
         for (String child : children) {
@@ -175,8 +176,9 @@ public class DefaultVFS extends VFS {
       if (!entry.isDirectory()) {
         // Add leading slash if it's missing
         String name = entry.getName();
-        if (!name.startsWith("/"))
+        if (!name.startsWith("/")) {
           name = "/" + name;
+        }
 
         // Check file name
         if (name.startsWith(path)) {

@@ -104,6 +104,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
   // HANDLE OUTPUT PARAMETER
   //
 
+  @Override
   public void handleOutputParameters(CallableStatement cs) throws SQLException {
     final Object parameterObject = parameterHandler.getParameterObject();
     final MetaObject metaParam = configuration.newMetaObject(parameterObject);
@@ -137,7 +138,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
   //
   // HANDLE RESULT SETS
   //
-
+  @Override
   public List<Object> handleResultSets(Statement stmt) throws SQLException {
     ErrorContext.instance().activity("handling results").object(mappedStatement.getId());
     
@@ -335,7 +336,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     Object resultObject = createResultObject(rsw, resultMap, lazyLoader, null);
     if (resultObject != null && !typeHandlerRegistry.hasTypeHandler(resultMap.getType())) {
       final MetaObject metaObject = configuration.newMetaObject(resultObject);
-      boolean foundValues = resultMap.getConstructorResultMappings().size() > 0;
+      boolean foundValues = !resultMap.getConstructorResultMappings().isEmpty();
       if (shouldApplyAutomaticMappings(resultMap, false)) {        
         foundValues = applyAutomaticMappings(rsw, resultMap, metaObject, null) || foundValues;
       }
@@ -408,7 +409,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     boolean foundValues = false;
     for (String columnName : unmappedColumnNames) {
       String propertyName = columnName;
-      if (columnPrefix != null && columnPrefix.length() > 0) {
+      if (columnPrefix != null && !columnPrefix.isEmpty()) {
         // When columnPrefix is specified,
         // ignore columns without the prefix.
         if (columnName.toUpperCase(Locale.ENGLISH).startsWith(columnPrefix)) {
@@ -484,7 +485,8 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     deferLoad.metaObject = metaResultObject;
     deferLoad.propertyMapping = parentMapping;
     List<PendingRelation> relations = pendingRelations.get(cacheKey);
-    if (relations == null) { // issue #255
+    // issue #255
+    if (relations == null) {
       relations = new ArrayList<DefaultResultSetHandler.PendingRelation>();
       pendingRelations.put(cacheKey, relations);
     }
@@ -542,7 +544,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     final List<ResultMapping> constructorMappings = resultMap.getConstructorResultMappings();
     if (typeHandlerRegistry.hasTypeHandler(resultType)) {
       return createPrimitiveResultObject(rsw, resultMap, columnPrefix);
-    } else if (constructorMappings.size() > 0) {
+    } else if (!constructorMappings.isEmpty()) {
       return createParameterizedResultObject(rsw, resultType, constructorMappings, constructorArgTypes, constructorArgs, columnPrefix);
     } else if (resultType.isInterface() || metaType.hasDefaultConstructor()) {
       return objectFactory.create(resultType);
@@ -606,7 +608,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
   private Object createPrimitiveResultObject(ResultSetWrapper rsw, ResultMap resultMap, String columnPrefix) throws SQLException {
     final Class<?> resultType = resultMap.getType();
     final String columnName;
-    if (resultMap.getResultMappings().size() > 0) {
+    if (!resultMap.getResultMappings().isEmpty()) {
       final List<ResultMapping> resultMappingList = resultMap.getResultMappings();
       final ResultMapping mapping = resultMappingList.get(0);
       columnName = prependPrefix(mapping.getColumn(), columnPrefix);
@@ -789,7 +791,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
       resultObject = createResultObject(rsw, resultMap, lazyLoader, columnPrefix);
       if (resultObject != null && !typeHandlerRegistry.hasTypeHandler(resultMap.getType())) {
         final MetaObject metaObject = configuration.newMetaObject(resultObject);
-        boolean foundValues = resultMap.getConstructorResultMappings().size() > 0;
+        boolean foundValues = !resultMap.getConstructorResultMappings().isEmpty();
         if (shouldApplyAutomaticMappings(resultMap, true)) {
           foundValues = applyAutomaticMappings(rsw, resultMap, metaObject, columnPrefix) || foundValues;
         }        
@@ -800,7 +802,9 @@ public class DefaultResultSetHandler implements ResultSetHandler {
         foundValues = lazyLoader.size() > 0 || foundValues;
         resultObject = foundValues ? resultObject : null;
       }
-      if (combinedKey != CacheKey.NULL_CACHE_KEY) nestedResultObjects.put(combinedKey, resultObject);
+      if (combinedKey != CacheKey.NULL_CACHE_KEY) {
+        nestedResultObjects.put(combinedKey, resultObject);
+      }
     }
     return resultObject;
   }
@@ -831,7 +835,9 @@ public class DefaultResultSetHandler implements ResultSetHandler {
             ancestorObject = ancestorObjects.get(rowKey);
           }
           if (ancestorObject != null) { 
-            if (newObject) metaObject.setValue(resultMapping.getProperty(), ancestorObject);
+            if (newObject) {
+              metaObject.setValue(resultMapping.getProperty(), ancestorObject);
+            }
           } else {
             rowKey = createRowKey(nestedResultMap, rsw, columnPrefix);
             final CacheKey combinedKey = combineKeys(rowKey, parentRowKey);            
@@ -861,8 +867,12 @@ public class DefaultResultSetHandler implements ResultSetHandler {
 
   private String getColumnPrefix(String parentPrefix, ResultMapping resultMapping) {
     final StringBuilder columnPrefixBuilder = new StringBuilder();
-    if (parentPrefix != null) columnPrefixBuilder.append(parentPrefix);
-    if (resultMapping.getColumnPrefix() != null) columnPrefixBuilder.append(resultMapping.getColumnPrefix());
+    if (parentPrefix != null) {
+      columnPrefixBuilder.append(parentPrefix);
+    }
+    if (resultMapping.getColumnPrefix() != null) {
+      columnPrefixBuilder.append(resultMapping.getColumnPrefix());
+    }
     final String columnPrefix = columnPrefixBuilder.length() == 0 ? null : columnPrefixBuilder.toString().toUpperCase(Locale.ENGLISH);
     return columnPrefix;
   }
@@ -957,9 +967,8 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     List<String> unmappedColumnNames = rsw.getUnmappedColumnNames(resultMap, columnPrefix);
     for (String column : unmappedColumnNames) {
       String property = column;
-      if (columnPrefix != null && columnPrefix.length() > 0) {
-        // When columnPrefix is specified,
-        // ignore columns without the prefix.
+      if (columnPrefix != null && !columnPrefix.isEmpty()) {
+        // When columnPrefix is specified, ignore columns without the prefix.
         if (column.toUpperCase(Locale.ENGLISH).startsWith(columnPrefix)) {
           property = column.substring(columnPrefix.length());
         } else {

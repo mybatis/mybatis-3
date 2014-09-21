@@ -73,10 +73,15 @@ public class XMLMapperEntityResolver implements EntityResolver {
    * 
    * @throws org.xml.sax.SAXException If anything goes wrong
    */
+  @Override
   public InputSource resolveEntity(String publicId, String systemId) throws SAXException {
 
-    if (publicId != null) publicId = publicId.toUpperCase(Locale.ENGLISH);
-    if (systemId != null) systemId = systemId.toUpperCase(Locale.ENGLISH);
+    if (publicId != null) {
+      publicId = publicId.toUpperCase(Locale.ENGLISH);
+    }
+    if (systemId != null) {
+      systemId = systemId.toUpperCase(Locale.ENGLISH);
+    }
 
     InputSource source = null;
     try {

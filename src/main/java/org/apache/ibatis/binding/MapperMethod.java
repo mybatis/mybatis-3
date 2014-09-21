@@ -251,19 +251,19 @@ public class MapperMethod {
     }
 
     public boolean hasRowBounds() {
-      return (rowBoundsIndex != null);
+      return rowBoundsIndex != null;
     }
 
     public RowBounds extractRowBounds(Object[] args) {
-      return (hasRowBounds() ? (RowBounds) args[rowBoundsIndex] : null);
+      return hasRowBounds() ? (RowBounds) args[rowBoundsIndex] : null;
     }
 
     public boolean hasResultHandler() {
-      return (resultHandlerIndex != null);
+      return resultHandlerIndex != null;
     }
 
     public ResultHandler extractResultHandler(Object[] args) {
-      return (hasResultHandler() ? (ResultHandler) args[resultHandlerIndex] : null);
+      return hasResultHandler() ? (ResultHandler) args[resultHandlerIndex] : null;
     }
 
     public String getMapKey() {

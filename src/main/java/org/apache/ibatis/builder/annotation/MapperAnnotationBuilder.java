@@ -123,7 +123,8 @@ public class MapperAnnotationBuilder {
       Method[] methods = type.getMethods();
       for (Method method : methods) {
         try {
-          if (!method.isBridge()) { // issue #237
+          // issue #237
+          if (!method.isBridge()) {
             parseStatement(method);
           }
         } catch (IncompleteElementException e) {
@@ -268,14 +269,12 @@ public class MapperAnnotationBuilder {
         if (selectKey != null) {
           keyGenerator = handleSelectKeyAnnotation(selectKey, mappedStatementId, getParameterType(method), languageDriver);
           keyProperty = selectKey.keyProperty();
+        } else if (options == null) {
+          keyGenerator = configuration.isUseGeneratedKeys() ? new Jdbc3KeyGenerator() : new NoKeyGenerator();
         } else {
-          if (options == null) {
-            keyGenerator = configuration.isUseGeneratedKeys() ? new Jdbc3KeyGenerator() : new NoKeyGenerator();
-          } else {
-            keyGenerator = options.useGeneratedKeys() ? new Jdbc3KeyGenerator() : new NoKeyGenerator();
-            keyProperty = options.keyProperty();
-            keyColumn = options.keyColumn();
-          }
+          keyGenerator = options.useGeneratedKeys() ? new Jdbc3KeyGenerator() : new NoKeyGenerator();
+          keyProperty = options.keyProperty();
+          keyColumn = options.keyColumn();
         }
       } else {
         keyGenerator = new NoKeyGenerator();
@@ -296,7 +295,9 @@ public class MapperAnnotationBuilder {
         String[] resultMaps = resultMapAnnotation.value();
         StringBuilder sb = new StringBuilder();
         for (String resultMap : resultMaps) {
-          if (sb.length() > 0) sb.append(",");
+          if (sb.length() > 0) {
+            sb.append(",");
+          }
           sb.append(resultMap);
         }
         resultMapId = sb.toString();
@@ -469,7 +470,9 @@ public class MapperAnnotationBuilder {
   private void applyResults(Result[] results, Class<?> resultType, List<ResultMapping> resultMappings) {
     for (Result result : results) {
       List<ResultFlag> flags = new ArrayList<ResultFlag>();
-      if (result.id()) flags.add(ResultFlag.ID);
+      if (result.id()) {
+        flags.add(ResultFlag.ID);
+      }
       ResultMapping resultMapping = assistant.buildResultMapping(
           resultType,
           nullOrEmpty(result.property()),
@@ -521,7 +524,9 @@ public class MapperAnnotationBuilder {
     for (Arg arg : args) {
       List<ResultFlag> flags = new ArrayList<ResultFlag>();
       flags.add(ResultFlag.CONSTRUCTOR);
-      if (arg.id()) flags.add(ResultFlag.ID);
+      if (arg.id()) {
+        flags.add(ResultFlag.ID);
+      }
       ResultMapping resultMapping = assistant.buildResultMapping(
           resultType,
           null,

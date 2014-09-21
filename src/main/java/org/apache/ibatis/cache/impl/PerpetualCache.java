@@ -35,45 +35,62 @@ public class PerpetualCache implements Cache {
     this.id = id;
   }
 
+  @Override
   public String getId() {
     return id;
   }
 
+  @Override
   public int getSize() {
     return cache.size();
   }
 
+  @Override
   public void putObject(Object key, Object value) {
     cache.put(key, value);
   }
 
+  @Override
   public Object getObject(Object key) {
     return cache.get(key);
   }
 
+  @Override
   public Object removeObject(Object key) {
     return cache.remove(key);
   }
 
+  @Override
   public void clear() {
     cache.clear();
   }
 
+  @Override
   public ReadWriteLock getReadWriteLock() {
     return null;
   }
 
+  @Override
   public boolean equals(Object o) {
-    if (getId() == null) throw new CacheException("Cache instances require an ID.");
-    if (this == o) return true;
-    if (!(o instanceof Cache)) return false;
+    if (getId() == null) {
+      throw new CacheException("Cache instances require an ID.");
+    }
+    if (this == o) {
+      return true;
+    }
+    if (!(o instanceof Cache)) {
+      return false;
+    }
 
     Cache otherCache = (Cache) o;
     return getId().equals(otherCache.getId());
   }
 
+  @Override
   public int hashCode() {
-    if (getId() == null) throw new CacheException("Cache instances require an ID.");
+    if (getId() == null) {
+      throw new CacheException("Cache instances require an ID.");
+    }
     return getId().hashCode();
   }
 

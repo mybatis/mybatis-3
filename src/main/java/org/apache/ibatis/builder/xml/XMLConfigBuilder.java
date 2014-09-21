@@ -244,7 +244,10 @@ public class XMLConfigBuilder extends BaseBuilder {
     DatabaseIdProvider databaseIdProvider = null;
     if (context != null) {
       String type = context.getStringAttribute("type");
-      if ("VENDOR".equals(type)) type = "DB_VENDOR"; // awful patch to keep backward compatibility
+      // awful patch to keep backward compatibility
+      if ("VENDOR".equals(type)) {
+          type = "DB_VENDOR";
+      }
       Properties properties = context.getChildrenAsProperties();
       databaseIdProvider = (DatabaseIdProvider) resolveClass(type).newInstance();
       databaseIdProvider.setProperties(properties);

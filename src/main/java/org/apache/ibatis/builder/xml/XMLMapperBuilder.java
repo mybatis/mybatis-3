@@ -330,7 +330,9 @@ public class XMLMapperBuilder extends BaseBuilder {
       String databaseId = context.getStringAttribute("databaseId");
       String id = context.getStringAttribute("id");
       id = builderAssistant.applyCurrentNamespace(id, false);
-      if (databaseIdMatchesCurrent(id, databaseId, requiredDatabaseId)) sqlFragments.put(id, context);
+      if (databaseIdMatchesCurrent(id, databaseId, requiredDatabaseId)) {
+        sqlFragments.put(id, context);
+      }
     }
   }
   

@@ -35,10 +35,12 @@ import org.apache.ibatis.type.TypeHandlerRegistry;
  */
 public class Jdbc3KeyGenerator implements KeyGenerator {
 
+  @Override
   public void processBefore(Executor executor, MappedStatement ms, Statement stmt, Object parameter) {
     // do nothing
   }
 
+  @Override
   public void processAfter(Executor executor, MappedStatement ms, Statement stmt, Object parameter) {
     List<Object> parameters = new ArrayList<Object>();
     parameters.add(parameter);
@@ -56,9 +58,14 @@ public class Jdbc3KeyGenerator implements KeyGenerator {
       TypeHandler<?>[] typeHandlers = null;
       if (keyProperties != null && rsmd.getColumnCount() >= keyProperties.length) {
         for (Object parameter : parameters) {
-          if (!rs.next()) break; // there should be one row for each statement (also one for each parameter)
+          // there should be one row for each statement (also one for each parameter)
+          if (!rs.next()) {
+            break;
+          }
           final MetaObject metaParam = configuration.newMetaObject(parameter);
-          if (typeHandlers == null) typeHandlers = getTypeHandlers(typeHandlerRegistry, metaParam, keyProperties);
+          if (typeHandlers == null) {
+            typeHandlers = getTypeHandlers(typeHandlerRegistry, metaParam, keyProperties);
+          }
           populateKeys(rs, metaParam, keyProperties, typeHandlers);
         }
       }

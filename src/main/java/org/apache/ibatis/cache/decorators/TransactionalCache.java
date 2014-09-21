@@ -50,7 +50,10 @@ public class TransactionalCache implements Cache {
 
   @Override
   public Object getObject(Object key) {
-    if (clearOnCommit) return null; // issue #146
+    // issue #146
+    if (clearOnCommit) {
+      return null;
+    }
     return delegate.getObject(key);
   }
 

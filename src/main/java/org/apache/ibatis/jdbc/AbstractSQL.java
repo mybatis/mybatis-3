@@ -163,7 +163,9 @@ public abstract class AbstractSQL<T> {
 
     public SafeAppendable append(CharSequence s) {
       try {
-        if (empty && s.length() > 0) empty = false;
+        if (empty && s.length() > 0) {
+          empty = false;
+        }
         a.append(s);
       } catch (IOException e) {
         throw new RuntimeException(e);
@@ -201,11 +203,16 @@ public abstract class AbstractSQL<T> {
     List<String> values = new ArrayList<String>();
     boolean distinct;
 
+    public SQLStatement() {
+        // Prevent Synthetic Access
+    }
+
     private void sqlClause(SafeAppendable builder, String keyword, List<String> parts, String open, String close,
                            String conjunction) {
       if (!parts.isEmpty()) {
-        if (!builder.isEmpty())
+        if (!builder.isEmpty()) {
           builder.append("\n");
+        }
         builder.append(keyword);
         builder.append(" ");
         builder.append(open);

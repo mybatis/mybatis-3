@@ -57,7 +57,7 @@ public final class MappedStatement {
   private LanguageDriver lang;
   private String[] resultSets;
 
-  private MappedStatement() {
+  MappedStatement() {
     // constructor disabled
   }
 
@@ -75,7 +75,9 @@ public final class MappedStatement {
       mappedStatement.sqlCommandType = sqlCommandType;
       mappedStatement.keyGenerator = configuration.isUseGeneratedKeys() && SqlCommandType.INSERT.equals(sqlCommandType) ? new Jdbc3KeyGenerator() : new NoKeyGenerator();
       String logId = id;
-      if (configuration.getLogPrefix() != null) logId = configuration.getLogPrefix() + id;
+      if (configuration.getLogPrefix() != null) {
+        logId = configuration.getLogPrefix() + id;
+      }
       mappedStatement.statementLog = LogFactory.getLog(logId);
       mappedStatement.lang = configuration.getDefaultScriptingLanuageInstance();
     }
@@ -277,7 +279,7 @@ public final class MappedStatement {
   public BoundSql getBoundSql(Object parameterObject) {
     BoundSql boundSql = sqlSource.getBoundSql(parameterObject);
     List<ParameterMapping> parameterMappings = boundSql.getParameterMappings();
-    if (parameterMappings == null || parameterMappings.size() <= 0) {
+    if (parameterMappings == null || parameterMappings.isEmpty()) {
       boundSql = new BoundSql(configuration, boundSql.getSql(), parameterMap.getParameterMappings(), parameterObject);
     }
 
