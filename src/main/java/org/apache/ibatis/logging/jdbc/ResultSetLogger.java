@@ -105,7 +105,7 @@ public final class ResultSetLogger extends BaseJdbcLogger implements InvocationH
     trace(row.toString(), false);
   }
 
-  private void printColumnValues(int columnCount) throws SQLException {
+  private void printColumnValues(int columnCount) {
     StringBuilder row = new StringBuilder();
     row.append("       Row: ");
     for (int i = 1; i <= columnCount; i++) {
