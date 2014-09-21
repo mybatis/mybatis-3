@@ -116,7 +116,7 @@ public class SoftCache implements Cache {
   private static class SoftEntry extends SoftReference<Object> {
     private final Object key;
 
-    private SoftEntry(Object key, Object value, ReferenceQueue<Object> garbageCollectionQueue) {
+    SoftEntry(Object key, Object value, ReferenceQueue<Object> garbageCollectionQueue) {
       super(value, garbageCollectionQueue);
       this.key = key;
     }

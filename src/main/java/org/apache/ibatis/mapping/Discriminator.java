@@ -28,7 +28,7 @@ public class Discriminator {
   private ResultMapping resultMapping;
   private Map<String, String> discriminatorMap;
 
-  private Discriminator() {
+  Discriminator() {
   }
 
   public static class Builder {

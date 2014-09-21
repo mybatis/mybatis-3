@@ -60,7 +60,7 @@ public class XMLScriptBuilder extends BaseBuilder {
     return sqlSource;
   }
 
-  private List<SqlNode> parseDynamicTags(XNode node) {
+  List<SqlNode> parseDynamicTags(XNode node) {
     List<SqlNode> contents = new ArrayList<SqlNode>();
     NodeList children = node.getNode().getChildNodes();
     for (int i = 0; i < children.getLength(); i++) {
@@ -108,6 +108,11 @@ public class XMLScriptBuilder extends BaseBuilder {
   }
 
   private class BindHandler implements NodeHandler {
+    public BindHandler() {
+      // Prevent Synthetic Access
+    }
+
+    @Override
     public void handleNode(XNode nodeToHandle, List<SqlNode> targetContents) {
       final String name = nodeToHandle.getStringAttribute("name");
       final String expression = nodeToHandle.getStringAttribute("value");
@@ -117,6 +122,11 @@ public class XMLScriptBuilder extends BaseBuilder {
   }
 
   private class TrimHandler implements NodeHandler {
+    public TrimHandler() {
+      // Prevent Synthetic Access
+    }
+
+    @Override
     public void handleNode(XNode nodeToHandle, List<SqlNode> targetContents) {
       List<SqlNode> contents = parseDynamicTags(nodeToHandle);
       MixedSqlNode mixedSqlNode = new MixedSqlNode(contents);
@@ -130,6 +140,11 @@ public class XMLScriptBuilder extends BaseBuilder {
   }
 
   private class WhereHandler implements NodeHandler {
+    public WhereHandler() {
+      // Prevent Synthetic Access
+    }
+
+    @Override
     public void handleNode(XNode nodeToHandle, List<SqlNode> targetContents) {
       List<SqlNode> contents = parseDynamicTags(nodeToHandle);
       MixedSqlNode mixedSqlNode = new MixedSqlNode(contents);
@@ -139,6 +154,11 @@ public class XMLScriptBuilder extends BaseBuilder {
   }
 
   private class SetHandler implements NodeHandler {
+    public SetHandler() {
+      // Prevent Synthetic Access
+    }
+
+    @Override
     public void handleNode(XNode nodeToHandle, List<SqlNode> targetContents) {
       List<SqlNode> contents = parseDynamicTags(nodeToHandle);
       MixedSqlNode mixedSqlNode = new MixedSqlNode(contents);
@@ -148,6 +168,11 @@ public class XMLScriptBuilder extends BaseBuilder {
   }
 
   private class ForEachHandler implements NodeHandler {
+    public ForEachHandler() {
+      // Prevent Synthetic Access
+    }
+
+    @Override
     public void handleNode(XNode nodeToHandle, List<SqlNode> targetContents) {
       List<SqlNode> contents = parseDynamicTags(nodeToHandle);
       MixedSqlNode mixedSqlNode = new MixedSqlNode(contents);
@@ -163,6 +188,11 @@ public class XMLScriptBuilder extends BaseBuilder {
   }
 
   private class IfHandler implements NodeHandler {
+    public IfHandler() {
+      // Prevent Synthetic Access
+    }
+
+    @Override
     public void handleNode(XNode nodeToHandle, List<SqlNode> targetContents) {
       List<SqlNode> contents = parseDynamicTags(nodeToHandle);
       MixedSqlNode mixedSqlNode = new MixedSqlNode(contents);
@@ -173,6 +203,11 @@ public class XMLScriptBuilder extends BaseBuilder {
   }
 
   private class OtherwiseHandler implements NodeHandler {
+    public OtherwiseHandler() {
+      // Prevent Synthetic Access
+    }
+
+    @Override
     public void handleNode(XNode nodeToHandle, List<SqlNode> targetContents) {
       List<SqlNode> contents = parseDynamicTags(nodeToHandle);
       MixedSqlNode mixedSqlNode = new MixedSqlNode(contents);
@@ -181,6 +216,11 @@ public class XMLScriptBuilder extends BaseBuilder {
   }
 
   private class ChooseHandler implements NodeHandler {
+    public ChooseHandler() {
+      // Prevent Synthetic Access
+    }
+
+    @Override
     public void handleNode(XNode nodeToHandle, List<SqlNode> targetContents) {
       List<SqlNode> whenSqlNodes = new ArrayList<SqlNode>();
       List<SqlNode> otherwiseSqlNodes = new ArrayList<SqlNode>();
