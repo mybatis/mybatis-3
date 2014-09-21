@@ -249,13 +249,9 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     }
   }
 
+  @SuppressWarnings("unchecked")
   private List<Object> collapseSingleResultList(List<Object> multipleResults) {
-    if (multipleResults.size() == 1) {
-      @SuppressWarnings("unchecked")
-      List<Object> returned = (List<Object>) multipleResults.get(0);
-      return returned;
-    }
-    return multipleResults;
+    return multipleResults.size() == 1 ? (List<Object>) multipleResults.get(0) : multipleResults;
   }
 
   //
@@ -873,8 +869,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     if (resultMapping.getColumnPrefix() != null) {
       columnPrefixBuilder.append(resultMapping.getColumnPrefix());
     }
-    final String columnPrefix = columnPrefixBuilder.length() == 0 ? null : columnPrefixBuilder.toString().toUpperCase(Locale.ENGLISH);
-    return columnPrefix;
+    return columnPrefixBuilder.length() == 0 ? null : columnPrefixBuilder.toString().toUpperCase(Locale.ENGLISH);
   }
 
   private boolean anyNotNullColumnHasValue(ResultMapping resultMapping, String columnPrefix, ResultSet rs) throws SQLException {
@@ -895,8 +890,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
 
   private ResultMap getNestedResultMap(ResultSet rs, String nestedResultMapId, String columnPrefix) throws SQLException {
     ResultMap nestedResultMap = configuration.getResultMap(nestedResultMapId);
-    nestedResultMap = resolveDiscriminatedResultMap(rs, nestedResultMap, columnPrefix);
-    return nestedResultMap;
+    return resolveDiscriminatedResultMap(rs, nestedResultMap, columnPrefix);
   }
 
   //
