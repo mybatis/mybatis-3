@@ -69,6 +69,10 @@ public class JBoss6VFS extends VFS {
     static Class<?> VFS;
     static Method getChild;
 
+    private VFS() {
+      // Prevent Instantiation
+    }
+
     static VirtualFile getChild(URL url) throws IOException {
       Object o = invoke(getChild, VFS, url);
       return o == null ? null : new VirtualFile(o);
@@ -126,7 +130,7 @@ public class JBoss6VFS extends VFS {
   protected static void checkReturnType(Method method, Class<?> expected) {
     if (method != null && !expected.isAssignableFrom(method.getReturnType())) {
       log.error("Method " + method.getClass().getName() + "." + method.getName()
-          + "(..) should return " + expected.getName() + " but returns " //
+          + "(..) should return " + expected.getName() + " but returns "
           + method.getReturnType().getName() + " instead.");
       setInvalid();
     }
