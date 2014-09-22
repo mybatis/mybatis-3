@@ -61,8 +61,7 @@ public class XMLIncludeTransformer {
     refid = builderAssistant.applyCurrentNamespace(refid, true);
     try {
       XNode nodeToInclude = configuration.getSqlFragments().get(refid);
-      Node result = nodeToInclude.getNode().cloneNode(true);
-      return result;
+      return nodeToInclude.getNode().cloneNode(true);
     } catch (IllegalArgumentException e) {
       throw new IncompleteElementException("Could not find SQL statement to include with refid '" + refid + "'", e);
     }

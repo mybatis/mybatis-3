@@ -90,13 +90,8 @@ public class DynamicContext {
       }
 
       if (parameterMetaObject != null) {
-        Object object = parameterMetaObject.getValue(strKey);
         // issue #61 do not modify the context when reading
-//        if (object != null) { 
-//          super.put(strKey, object);
-//        }
-
-        return object;
+        return parameterMetaObject.getValue(strKey);
       }
 
       return null;
