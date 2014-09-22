@@ -118,8 +118,7 @@ class ResultSetWrapper {
 
   private Class<?> resolveClass(String className) {
     try {
-      final Class<?> clazz = Resources.classForName(className);
-      return clazz;
+      return Resources.classForName(className);
     } catch (ClassNotFoundException e) {
       return null;
     }

@@ -34,13 +34,16 @@ import org.apache.ibatis.transaction.TransactionFactory;
  */
 public class JdbcTransactionFactory implements TransactionFactory {
 
+  @Override
   public void setProperties(Properties props) {
   }
 
+  @Override
   public Transaction newTransaction(Connection conn) {
     return new JdbcTransaction(conn);
   }
 
+  @Override
   public Transaction newTransaction(DataSource ds, TransactionIsolationLevel level, boolean autoCommit) {
     return new JdbcTransaction(ds, level, autoCommit);
   }

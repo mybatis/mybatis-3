@@ -83,11 +83,6 @@ public class DynamicContext {
     }
 
     @Override
-    public Object put(String key, Object value) {
-      return super.put(key, value);
-    }
-    
-    @Override
     public Object get(Object key) {
       String strKey = (String) key;
       if (super.containsKey(strKey)) {
@@ -95,13 +90,8 @@ public class DynamicContext {
       }
 
       if (parameterMetaObject != null) {
-        Object object = parameterMetaObject.getValue(strKey);
         // issue #61 do not modify the context when reading
-//        if (object != null) { 
-//          super.put(strKey, object);
-//        }
-
-        return object;
+        return parameterMetaObject.getValue(strKey);
       }
 
       return null;
@@ -110,6 +100,7 @@ public class DynamicContext {
 
   static class ContextAccessor implements PropertyAccessor {
 
+    @Override
     public Object getProperty(Map context, Object target, Object name)
         throws OgnlException {
       Map map = (Map) target;
@@ -127,9 +118,10 @@ public class DynamicContext {
       return null;
     }
 
+    @Override
     public void setProperty(Map context, Object target, Object name, Object value)
         throws OgnlException {
-      Map map = (Map) target;
+      Map<Object, Object> map = (Map<Object, Object>) target;
       map.put(name, value);
     }
 

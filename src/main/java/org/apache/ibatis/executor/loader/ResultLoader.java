@@ -86,7 +86,7 @@ public class ResultLoader {
     }
   }
 
-  private Executor newExecutor() throws SQLException {
+  private Executor newExecutor() {
     final Environment environment = configuration.getEnvironment();
     if (environment == null) {
       throw new ExecutorException("ResultLoader could not load lazily.  Environment was not configured.");

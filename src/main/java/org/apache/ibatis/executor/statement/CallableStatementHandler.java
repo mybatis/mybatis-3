@@ -42,8 +42,8 @@ public class CallableStatementHandler extends BaseStatementHandler {
     super(executor, mappedStatement, parameter, rowBounds, resultHandler, boundSql);
   }
 
-  public int update(Statement statement)
-      throws SQLException {
+  @Override
+  public int update(Statement statement) throws SQLException {
     CallableStatement cs = (CallableStatement) statement;
     cs.execute();
     int rows = cs.getUpdateCount();
@@ -54,14 +54,14 @@ public class CallableStatementHandler extends BaseStatementHandler {
     return rows;
   }
 
-  public void batch(Statement statement)
-      throws SQLException {
+  @Override
+  public void batch(Statement statement) throws SQLException {
     CallableStatement cs = (CallableStatement) statement;
     cs.addBatch();
   }
 
-  public <E> List<E> query(Statement statement, ResultHandler resultHandler)
-      throws SQLException {
+  @Override
+  public <E> List<E> query(Statement statement, ResultHandler resultHandler) throws SQLException {
     CallableStatement cs = (CallableStatement) statement;
     cs.execute();
     List<E> resultList = resultSetHandler.<E>handleResultSets(cs);
@@ -69,6 +69,7 @@ public class CallableStatementHandler extends BaseStatementHandler {
     return resultList;
   }
 
+  @Override
   protected Statement instantiateStatement(Connection connection) throws SQLException {
     String sql = boundSql.getSql();
     if (mappedStatement.getResultSetType() != null) {
@@ -78,6 +79,7 @@ public class CallableStatementHandler extends BaseStatementHandler {
     }
   }
 
+  @Override
   public void parameterize(Statement statement) throws SQLException {
     registerOutputParameters((CallableStatement) statement);
     parameterHandler.setParameters((CallableStatement) statement);

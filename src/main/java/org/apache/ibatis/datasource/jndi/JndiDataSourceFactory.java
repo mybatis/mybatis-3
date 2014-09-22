@@ -37,6 +37,7 @@ public class JndiDataSourceFactory implements DataSourceFactory {
 
   private DataSource dataSource;
 
+  @Override
   public void setProperties(Properties properties) {
     try {
       InitialContext initCtx = null;
@@ -60,6 +61,7 @@ public class JndiDataSourceFactory implements DataSourceFactory {
     }
   }
 
+  @Override
   public DataSource getDataSource() {
     return dataSource;
   }

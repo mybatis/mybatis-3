@@ -123,6 +123,7 @@ public class CglibProxyFactory implements ProxyFactory {
       return enhanced;
     }
 
+    @Override
     public Object intercept(Object enhanced, Method method, Object[] args, MethodProxy methodProxy) throws Throwable {
       final String methodName = method.getName();
       try {

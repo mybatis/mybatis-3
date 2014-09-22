@@ -126,8 +126,8 @@
   </distributionManagement>
 
   <properties>
+    <clirr.comparisonVersion>3.2.7</clirr.comparisonVersion>
     <findbugs.onlyAnalyze>org.apache.ibatis.*</findbugs.onlyAnalyze>
-    <clirr.comparisonVersion>3.2.6</clirr.comparisonVersion>
     <osgi.export>org.apache.ibatis.*;version=${project.version};-noimport:=true</osgi.export>
     <osgi.import>*;resolution:=optional</osgi.import>
     <osgi.dynamicImport>*</osgi.dynamicImport>

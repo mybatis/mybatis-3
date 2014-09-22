@@ -39,6 +39,7 @@ public class SimpleExecutor extends BaseExecutor {
     super(configuration, transaction);
   }
 
+  @Override
   public int doUpdate(MappedStatement ms, Object parameter) throws SQLException {
     Statement stmt = null;
     try {
@@ -51,6 +52,7 @@ public class SimpleExecutor extends BaseExecutor {
     }
   }
 
+  @Override
   public <E> List<E> doQuery(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql) throws SQLException {
     Statement stmt = null;
     try {
@@ -63,6 +65,7 @@ public class SimpleExecutor extends BaseExecutor {
     }
   }
 
+  @Override
   public List<BatchResult> doFlushStatements(boolean isRollback) throws SQLException {
     return Collections.emptyList();
   }

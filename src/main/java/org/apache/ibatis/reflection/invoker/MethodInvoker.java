@@ -36,10 +36,12 @@ public class MethodInvoker implements Invoker {
     }
   }
 
+  @Override
   public Object invoke(Object target, Object[] args) throws IllegalAccessException, InvocationTargetException {
     return method.invoke(target, args);
   }
 
+  @Override
   public Class<?> getType() {
     return type;
   }

@@ -69,15 +69,15 @@ public enum Null {
   SQLDATE(new SqlDateTypeHandler(), JdbcType.DATE),
   SQLTIME(new SqlTimeTypeHandler(), JdbcType.TIME);
 
-  private TypeHandler typeHandler;
+  private TypeHandler<?> typeHandler;
   private JdbcType jdbcType;
 
-  private Null(TypeHandler typeHandler, JdbcType jdbcType) {
+  private Null(TypeHandler<?> typeHandler, JdbcType jdbcType) {
     this.typeHandler = typeHandler;
     this.jdbcType = jdbcType;
   }
 
-  public TypeHandler getTypeHandler() {
+  public TypeHandler<?> getTypeHandler() {
     return typeHandler;
   }
 

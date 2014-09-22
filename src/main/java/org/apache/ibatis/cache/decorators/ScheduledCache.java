@@ -57,11 +57,7 @@ public class ScheduledCache implements Cache {
 
   @Override
   public Object getObject(Object key) {
-    if (clearWhenStale()) {
-      return null;
-    } else {
-      return delegate.getObject(key);
-    }
+    return clearWhenStale() ? null : delegate.getObject(key);
   }
 
   @Override

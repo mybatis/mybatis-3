@@ -56,6 +56,7 @@ public class JdbcTransaction implements Transaction {
     this.connection = connection;
   }
 
+  @Override
   public Connection getConnection() throws SQLException {
     if (connection == null) {
       openConnection();
@@ -63,6 +64,7 @@ public class JdbcTransaction implements Transaction {
     return connection;
   }
 
+  @Override
   public void commit() throws SQLException {
     if (connection != null && !connection.getAutoCommit()) {
       if (log.isDebugEnabled()) {
@@ -72,6 +74,7 @@ public class JdbcTransaction implements Transaction {
     }
   }
 
+  @Override
   public void rollback() throws SQLException {
     if (connection != null && !connection.getAutoCommit()) {
       if (log.isDebugEnabled()) {
@@ -81,6 +84,7 @@ public class JdbcTransaction implements Transaction {
     }
   }
 
+  @Override
   public void close() throws SQLException {
     if (connection != null) {
       resetAutoCommit();

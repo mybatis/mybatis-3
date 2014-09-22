@@ -301,8 +301,7 @@ public final class MappedStatement {
     if (in == null || in.trim().length() == 0) {
       return null;
     } else {
-      String[] answer = in.split(",");
-      return answer;
+      return in.split(",");
     }
   }
 

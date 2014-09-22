@@ -29,6 +29,8 @@ public abstract class AbstractSQL<T> {
   private static final String AND = ") \nAND (";
   private static final String OR = ") \nOR (";
 
+  private SQLStatement sql = new SQLStatement();
+
   public abstract T getSelf();
 
   public T UPDATE(String table) {
@@ -133,8 +135,6 @@ public abstract class AbstractSQL<T> {
     sql().orderBy.add(columns);
     return getSelf();
   }
-
-  private SQLStatement sql = new SQLStatement();
 
   private SQLStatement sql() {
     return sql;

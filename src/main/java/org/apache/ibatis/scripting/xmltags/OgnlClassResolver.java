@@ -37,6 +37,7 @@ public class OgnlClassResolver implements ClassResolver {
 
   private Map<String, Class<?>> classes = new HashMap<String, Class<?>>(101);
 
+  @Override
   public Class classForName(String className, Map context) throws ClassNotFoundException {
     Class<?> result = null;
     if ((result = classes.get(className)) == null) {

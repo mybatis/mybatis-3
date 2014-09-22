@@ -806,8 +806,7 @@ public class Configuration {
 
     private String getShortName(String key) {
       final String[] keyparts = key.split("\\.");
-      final String shortKey = keyparts[keyparts.length - 1];
-      return shortKey;
+      return keyparts[keyparts.length - 1];
     }
 
     protected static class Ambiguity {

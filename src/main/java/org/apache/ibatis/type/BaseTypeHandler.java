@@ -34,6 +34,7 @@ public abstract class BaseTypeHandler<T> extends TypeReference<T> implements Typ
     this.configuration = c;
   }
 
+  @Override
   public void setParameter(PreparedStatement ps, int i, T parameter, JdbcType jdbcType) throws SQLException {
     if (parameter == null) {
       if (jdbcType == null) {
@@ -51,6 +52,7 @@ public abstract class BaseTypeHandler<T> extends TypeReference<T> implements Typ
     }
   }
 
+  @Override
   public T getResult(ResultSet rs, String columnName) throws SQLException {
     T result = getNullableResult(rs, columnName);
     if (rs.wasNull()) {
@@ -60,6 +62,7 @@ public abstract class BaseTypeHandler<T> extends TypeReference<T> implements Typ
     }
   }
 
+  @Override
   public T getResult(ResultSet rs, int columnIndex) throws SQLException {
     T result = getNullableResult(rs, columnIndex);
     if (rs.wasNull()) {
@@ -69,6 +72,7 @@ public abstract class BaseTypeHandler<T> extends TypeReference<T> implements Typ
     }
   }
 
+  @Override
   public T getResult(CallableStatement cs, int columnIndex) throws SQLException {
     T result = getNullableResult(cs, columnIndex);
     if (cs.wasNull()) {

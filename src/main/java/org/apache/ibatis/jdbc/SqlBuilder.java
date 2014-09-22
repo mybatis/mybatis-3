@@ -16,7 +16,7 @@
 package org.apache.ibatis.jdbc;
 
 /**
- * @Deprecated Use the SQL Class
+ * @Deprecated Use the {@link SQL} Class
  *
  * @author Jeff Butler
  */
@@ -26,6 +26,10 @@ public class SqlBuilder {
 
   static {
     BEGIN();
+  }
+
+  private SqlBuilder() {
+    // Prevent Instantiation
   }
 
   public static void BEGIN() {

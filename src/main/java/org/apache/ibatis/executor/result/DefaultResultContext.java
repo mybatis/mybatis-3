@@ -32,14 +32,17 @@ public class DefaultResultContext implements ResultContext {
     stopped = false;
   }
 
+  @Override
   public Object getResultObject() {
     return resultObject;
   }
 
+  @Override
   public int getResultCount() {
     return resultCount;
   }
 
+  @Override
   public boolean isStopped() {
     return stopped;
   }
@@ -49,6 +52,7 @@ public class DefaultResultContext implements ResultContext {
     this.resultObject = resultObject;
   }
 
+  @Override
   public void stop() {
     this.stopped = true;
   }

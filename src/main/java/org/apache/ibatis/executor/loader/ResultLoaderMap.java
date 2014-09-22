@@ -255,11 +255,10 @@ public class ResultLoaderMap {
       }
 
       if (!(configurationObject instanceof Configuration)) {
-        final boolean isNull = (configurationObject == null);
         throw new ExecutorException("Cannot get Configuration as factory method ["
                 + this.configurationFactory + "]#["
                 + FACTORY_METHOD + "] didn't return [" + Configuration.class + "] but ["
-                + (isNull ? "null" : configurationObject.getClass()) + "].");
+                + (configurationObject == null ? "null" : configurationObject.getClass()) + "].");
       }
 
       return Configuration.class.cast(configurationObject);
