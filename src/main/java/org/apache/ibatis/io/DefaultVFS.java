@@ -183,7 +183,8 @@ public class DefaultVFS extends VFS {
         // Check file name
         if (name.startsWith(path)) {
           log.debug("Found resource: " + name);
-          resources.add(name.substring(1)); // Trim leading slash
+          // Trim leading slash
+          resources.add(name.substring(1));
         }
       }
     }

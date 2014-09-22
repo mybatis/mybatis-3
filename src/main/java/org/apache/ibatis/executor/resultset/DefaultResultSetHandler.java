@@ -131,7 +131,8 @@ public class DefaultResultSetHandler implements ResultSetHandler {
       handleRowValues(rsw, resultMap, resultHandler, new RowBounds(), null);
       metaParam.setValue(parameterMapping.getProperty(), resultHandler.getResultList());
     } finally {
-      closeResultSet(rs); // issue #228 (close resultsets)
+      // issue #228 (close resultsets)
+      closeResultSet(rs);
     }
   }
 
@@ -245,7 +246,8 @@ public class DefaultResultSetHandler implements ResultSetHandler {
         }
       }
     } finally {
-      closeResultSet(rsw.getResultSet()); // issue #228 (close resultsets)
+      // issue #228 (close resultsets)
+      closeResultSet(rsw.getResultSet());
     }
   }
 
@@ -371,8 +373,10 @@ public class DefaultResultSetHandler implements ResultSetHandler {
           || (column != null && mappedColumnNames.contains(column.toUpperCase(Locale.ENGLISH))) 
           || propertyMapping.getResultSet() != null) {
         Object value = getPropertyMappingValue(rsw.getResultSet(), metaObject, propertyMapping, lazyLoader, columnPrefix);
-        final String property = propertyMapping.getProperty(); // issue #541 make property optional
-        if (value != NO_VALUE && property != null && (value != null || configuration.isCallSettersOnNulls())) { // issue #377, call setter on nulls
+        // issue #541 make property optional
+        final String property = propertyMapping.getProperty();
+        // issue #377, call setter on nulls
+        if (value != NO_VALUE && property != null && (value != null || configuration.isCallSettersOnNulls())) {
           if (value != null || !metaObject.getSetterType(property).isPrimitive()) {
             metaObject.setValue(property, value);
           }
@@ -420,7 +424,8 @@ public class DefaultResultSetHandler implements ResultSetHandler {
         if (typeHandlerRegistry.hasTypeHandler(propertyType)) {
           final TypeHandler<?> typeHandler = rsw.getTypeHandler(propertyType, columnName);
           final Object value = typeHandler.getResult(rsw.getResultSet(), columnName);
-          if (value != null || configuration.isCallSettersOnNulls()) { // issue #377, call setter on nulls
+          // issue #377, call setter on nulls
+          if (value != null || configuration.isCallSettersOnNulls()) {
             if (value != null || !propertyType.isPrimitive()) {
               metaObject.setValue(property, value);
             }
@@ -525,7 +530,8 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     if (resultObject != null && !typeHandlerRegistry.hasTypeHandler(resultMap.getType())) {
       final List<ResultMapping> propertyMappings = resultMap.getPropertyResultMappings();
       for (ResultMapping propertyMapping : propertyMappings) {
-        if (propertyMapping.getNestedQueryId() != null && propertyMapping.isLazy()) { // issue gcode #109 && issue #149
+        // issue gcode #109 && issue #149
+        if (propertyMapping.getNestedQueryId() != null && propertyMapping.isLazy()) {
           return configuration.getProxyFactory().createProxy(resultObject, lazyLoader, configuration, objectFactory, constructorArgTypes, constructorArgs);
         }
       }
@@ -687,7 +693,8 @@ public class DefaultResultSetHandler implements ResultSetHandler {
       final Class<?> propType = metaObject.getSetterType(innerResultMapping.getProperty());
       final TypeHandler<?> typeHandler = typeHandlerRegistry.getTypeHandler(propType);
       final Object propValue = typeHandler.getResult(rs, prependPrefix(innerResultMapping.getColumn(), columnPrefix));
-      if (propValue != null) { // issue #353 & #560 do not execute nested query if key is null
+      // issue #353 & #560 do not execute nested query if key is null
+      if (propValue != null) {
         metaObject.setValue(innerResultMapping.getProperty(), propValue);
         foundValues = true;
       }
@@ -752,7 +759,8 @@ public class DefaultResultSetHandler implements ResultSetHandler {
       final ResultMap discriminatedResultMap = resolveDiscriminatedResultMap(rsw.getResultSet(), resultMap, null);
       final CacheKey rowKey = createRowKey(discriminatedResultMap, rsw, null);
       Object partialObject = nestedResultObjects.get(rowKey);
-      if (mappedStatement.isResultOrdered()) { // issue #577 && #542
+      // issue #577 && #542
+      if (mappedStatement.isResultOrdered()) {
         if (partialObject == null && rowValue != null) {
           nestedResultObjects.clear();
           storeObject(resultHandler, resultContext, rowValue, parentMapping, rsw.getResultSet());
@@ -937,7 +945,8 @@ public class DefaultResultSetHandler implements ResultSetHandler {
 
   private void createRowKeyForMappedProperties(ResultMap resultMap, ResultSetWrapper rsw, CacheKey cacheKey, List<ResultMapping> resultMappings, String columnPrefix) throws SQLException {
     for (ResultMapping resultMapping : resultMappings) {
-      if (resultMapping.getNestedResultMapId() != null && resultMapping.getResultSet() == null) { // Issue #392
+      if (resultMapping.getNestedResultMapId() != null && resultMapping.getResultSet() == null) {
+        // Issue #392
         final ResultMap nestedResultMap = configuration.getResultMap(resultMapping.getNestedResultMapId());
         createRowKeyForMappedProperties(nestedResultMap, rsw, cacheKey, nestedResultMap.getConstructorResultMappings(),
             prependPrefix(resultMapping.getColumnPrefix(), columnPrefix));
@@ -945,7 +954,8 @@ public class DefaultResultSetHandler implements ResultSetHandler {
         final String column = prependPrefix(resultMapping.getColumn(), columnPrefix);
         final TypeHandler<?> th = resultMapping.getTypeHandler();
         List<String> mappedColumnNames = rsw.getMappedColumnNames(resultMap, columnPrefix);
-        if (column != null && mappedColumnNames.contains(column.toUpperCase(Locale.ENGLISH))) { // Issue #114
+        // Issue #114
+        if (column != null && mappedColumnNames.contains(column.toUpperCase(Locale.ENGLISH))) {
           final Object value = th.getResult(rsw.getResultSet(), column);
           if (value != null) {
             cacheKey.update(column);

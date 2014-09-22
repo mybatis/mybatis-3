@@ -95,13 +95,15 @@ public class XMLConfigBuilder extends BaseBuilder {
 
   private void parseConfiguration(XNode root) {
     try {
-      propertiesElement(root.evalNode("properties")); //issue #117 read properties first
+      //issue #117 read properties first
+      propertiesElement(root.evalNode("properties"));
       typeAliasesElement(root.evalNode("typeAliases"));
       pluginElement(root.evalNode("plugins"));
       objectFactoryElement(root.evalNode("objectFactory"));
       objectWrapperFactoryElement(root.evalNode("objectWrapperFactory"));
       settingsElement(root.evalNode("settings"));
-      environmentsElement(root.evalNode("environments")); // read it after objectFactory and objectWrapperFactory issue #631
+      // read it after objectFactory and objectWrapperFactory issue #631
+      environmentsElement(root.evalNode("environments"));
       databaseIdProviderElement(root.evalNode("databaseIdProvider"));
       typeHandlerElement(root.evalNode("typeHandlers"));
       mapperElement(root.evalNode("mappers"));

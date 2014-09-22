@@ -160,9 +160,11 @@ public abstract class BaseExecutor implements Executor {
       for (DeferredLoad deferredLoad : deferredLoads) {
         deferredLoad.load();
       }
-      deferredLoads.clear(); // issue #601
+      // issue #601
+      deferredLoads.clear();
       if (configuration.getLocalCacheScope() == LocalCacheScope.STATEMENT) {
-        clearLocalCache(); // issue #482
+        // issue #482
+        clearLocalCache();
       }
     }
     return list;
@@ -193,7 +195,8 @@ public abstract class BaseExecutor implements Executor {
     cacheKey.update(boundSql.getSql());
     List<ParameterMapping> parameterMappings = boundSql.getParameterMappings();
     TypeHandlerRegistry typeHandlerRegistry = ms.getConfiguration().getTypeHandlerRegistry();
-    for (int i = 0; i < parameterMappings.size(); i++) { // mimic DefaultParameterHandler logic
+    // mimic DefaultParameterHandler logic
+    for (int i = 0; i < parameterMappings.size(); i++) {
       ParameterMapping parameterMapping = parameterMappings.get(i);
       if (parameterMapping.getMode() != ParameterMode.OUT) {
         Object value;
@@ -332,12 +335,13 @@ public abstract class BaseExecutor implements Executor {
     private final ObjectFactory objectFactory;
     private final ResultExtractor resultExtractor;
 
+    // issue #781
     public DeferredLoad(MetaObject resultObject,
                         String property,
                         CacheKey key,
                         PerpetualCache localCache,
                         Configuration configuration,
-                        Class<?> targetType) { // issue #781
+                        Class<?> targetType) {
       this.resultObject = resultObject;
       this.property = property;
       this.key = key;
@@ -352,7 +356,8 @@ public abstract class BaseExecutor implements Executor {
     }
 
     public void load() {
-      @SuppressWarnings( "unchecked" ) // we suppose we get back a List
+      @SuppressWarnings( "unchecked" )
+      // we suppose we get back a List
       List<Object> list = (List<Object>) localCache.getObject(key);
       Object value = resultExtractor.extractObjectFromList(list, targetType);
       resultObject.setValue(property, value);
