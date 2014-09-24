@@ -172,7 +172,9 @@ public class MapperAnnotationBuilder {
   private void parseCache() {
     CacheNamespace cacheDomain = type.getAnnotation(CacheNamespace.class);
     if (cacheDomain != null) {
-      assistant.useNewCache(cacheDomain.implementation(), cacheDomain.eviction(), cacheDomain.flushInterval(), cacheDomain.size(), cacheDomain.readWrite(), null);
+      Integer size = cacheDomain.size() == 0 ? null : cacheDomain.size();
+      Long flushInterval = cacheDomain.flushInterval() == 0 ? null : cacheDomain.flushInterval();
+      assistant.useNewCache(cacheDomain.implementation(), cacheDomain.eviction(), flushInterval, size, cacheDomain.readWrite(), null);
     }
   }
 

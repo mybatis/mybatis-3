@@ -33,9 +33,9 @@ public @interface CacheNamespace {
 
   Class<? extends org.apache.ibatis.cache.Cache> eviction() default LruCache.class;
 
-  long flushInterval() default 3600000;
+  long flushInterval() default 0;
 
-  int size() default 1000;
+  int size() default 1024;
 
-  boolean readWrite() default true;
+  boolean readWrite() default false;
 }
