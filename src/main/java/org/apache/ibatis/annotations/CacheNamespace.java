@@ -39,4 +39,6 @@ public @interface CacheNamespace {
 
   boolean readWrite() default true;
   
+  boolean blocking() default false;
+  
 }

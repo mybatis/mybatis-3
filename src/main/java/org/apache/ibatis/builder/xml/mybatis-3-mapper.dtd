@@ -35,6 +35,7 @@ eviction CDATA #IMPLIED
 flushInterval CDATA #IMPLIED
 size CDATA #IMPLIED
 readOnly CDATA #IMPLIED
+blocking CDATA #IMPLIED
 >
 
 <!ELEMENT parameterMap (parameter+)?>
