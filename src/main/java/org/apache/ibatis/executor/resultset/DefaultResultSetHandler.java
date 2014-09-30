@@ -289,7 +289,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
       throws SQLException {
     DefaultResultContext resultContext = new DefaultResultContext();
     skipRows(rsw.getResultSet(), rowBounds);
-    while (shouldProcessMoreRows(rsw.getResultSet(), resultContext, rowBounds)) {
+    while (shouldProcessMoreRows(resultContext, rowBounds) && rsw.getResultSet().next()) {
       ResultMap discriminatedResultMap = resolveDiscriminatedResultMap(rsw.getResultSet(), resultMap, null);
       Object rowValue = getRowValue(rsw, discriminatedResultMap);
       storeObject(resultHandler, resultContext, rowValue, parentMapping, rsw.getResultSet());
@@ -309,8 +309,8 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     resultHandler.handleResult(resultContext);
   }
 
-  private boolean shouldProcessMoreRows(ResultSet rs, ResultContext context, RowBounds rowBounds) throws SQLException {
-    return !context.isStopped() && rs.next() && context.getResultCount() < rowBounds.getLimit();
+  private boolean shouldProcessMoreRows(ResultContext context, RowBounds rowBounds) throws SQLException {
+    return !context.isStopped() && context.getResultCount() < rowBounds.getLimit();
   }
 
   private void skipRows(ResultSet rs, RowBounds rowBounds) throws SQLException {
@@ -755,7 +755,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     final DefaultResultContext resultContext = new DefaultResultContext();
     skipRows(rsw.getResultSet(), rowBounds);
     Object rowValue = null;
-    while (shouldProcessMoreRows(rsw.getResultSet(), resultContext, rowBounds)) {
+    while (shouldProcessMoreRows(resultContext, rowBounds) && rsw.getResultSet().next()) {
       final ResultMap discriminatedResultMap = resolveDiscriminatedResultMap(rsw.getResultSet(), resultMap, null);
       final CacheKey rowKey = createRowKey(discriminatedResultMap, rsw, null);
       Object partialObject = nestedResultObjects.get(rowKey);
@@ -773,7 +773,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
         }
       }
     }
-    if (rowValue != null && mappedStatement.isResultOrdered()) {
+    if (rowValue != null && mappedStatement.isResultOrdered() && shouldProcessMoreRows(resultContext, rowBounds)) {
       storeObject(resultHandler, resultContext, rowValue, parentMapping, rsw.getResultSet());
     }
   }

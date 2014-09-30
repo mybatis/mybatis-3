@@ -205,8 +205,9 @@ public class XMLMapperBuilder extends BaseBuilder {
       Long flushInterval = context.getLongAttribute("flushInterval");
       Integer size = context.getIntAttribute("size");
       boolean readWrite = !context.getBooleanAttribute("readOnly", false);
+      boolean blocking = context.getBooleanAttribute("blocking", false);
       Properties props = context.getChildrenAsProperties();
-      builderAssistant.useNewCache(typeClass, evictionClass, flushInterval, size, readWrite, props);
+      builderAssistant.useNewCache(typeClass, evictionClass, flushInterval, size, readWrite, blocking, props);
     }
   }
 

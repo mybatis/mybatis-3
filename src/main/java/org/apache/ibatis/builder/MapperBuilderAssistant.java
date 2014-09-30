@@ -126,6 +126,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
       Long flushInterval,
       Integer size,
       boolean readWrite,
+      boolean blocking,
       Properties props) {
     typeClass = valueOrDefault(typeClass, PerpetualCache.class);
     evictionClass = valueOrDefault(evictionClass, LruCache.class);
@@ -135,6 +136,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
         .clearInterval(flushInterval)
         .size(size)
         .readWrite(readWrite)
+        .blocking(blocking)
         .properties(props)
         .build();
     configuration.addCache(cache);
