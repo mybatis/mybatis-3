@@ -15,16 +15,10 @@
  */
 package org.apache.ibatis.jdbc;
 
-import org.apache.ibatis.BaseDataTest;
-import org.apache.ibatis.datasource.pooled.PooledDataSource;
-import org.apache.ibatis.datasource.unpooled.UnpooledDataSource;
-import org.apache.ibatis.io.Resources;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
-import org.junit.Ignore;
-import org.junit.Test;
-
-import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.Reader;
 import java.sql.Connection;
@@ -32,6 +26,15 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+
+import javax.sql.DataSource;
+
+import org.apache.ibatis.BaseDataTest;
+import org.apache.ibatis.datasource.pooled.PooledDataSource;
+import org.apache.ibatis.datasource.unpooled.UnpooledDataSource;
+import org.apache.ibatis.io.Resources;
+import org.junit.Ignore;
+import org.junit.Test;
 
 public class ScriptRunnerTest extends BaseDataTest {
 
@@ -122,6 +125,31 @@ public class ScriptRunnerTest extends BaseDataTest {
     }
   }
 
+
+  @Test
+  public void storedProceduresShouldBeCreatedInExecuteLineByLineMode() throws Exception {
+    DataSource ds = createUnpooledDataSource(JPETSTORE_PROPERTIES);
+    Connection conn = ds.getConnection();
+    ScriptRunner runner = new ScriptRunner(conn);
+    runner.setAutoCommit(true);
+    runner.setSendFullScript(false);
+    runner.setStopOnError(true);
+    runner.setErrorLogWriter(null);
+    runner.setLogWriter(null);
+    runJPetStoreScripts(runner);
+
+    String resource = "org/apache/ibatis/jdbc/CreateStoredProceduresAndFunctions.sql";
+    Reader reader = Resources.getResourceAsReader(resource);
+
+    try {
+      runner.runScript(reader);
+    } catch (Exception e) {
+      fail(e.getMessage());
+    }
+    
+    verifyStoredProcedure(conn);
+  }
+  
   private void runJPetStoreScripts(ScriptRunner runner) throws IOException, SQLException {
     runScript(runner, JPETSTORE_DDL);
     runScript(runner, JPETSTORE_DATA);
@@ -137,6 +165,21 @@ public class ScriptRunnerTest extends BaseDataTest {
     } finally {
       ds.forceCloseAll();
     }
+  }
+  
+  private void verifyStoredProcedure(Connection conn) throws SQLException {
+
+	    SqlRunner stmtRunner = new SqlRunner(conn);
+	    List<Map<String, Object>> results = null;
+	    
+	    results = stmtRunner.selectAll("SELECT * FROM product WHERE productId like 'AV-XB-%'", new Object[0]);
+	    assertEquals("Number of expected results doesn't match" ,3 , results.size());
+	    
+	    stmtRunner.run("CALL delete_product('AV-XB-%');");
+	    
+	    results = stmtRunner.selectAll("SELECT * FROM product WHERE productId like 'AV-XB-%'", new Object[0]);
+	    assertEquals("Error in stored procedure.", 0, results.size());
+	    
   }
 
 }
