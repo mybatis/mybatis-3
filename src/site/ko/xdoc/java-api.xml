@@ -304,7 +304,7 @@ try {
 } finally {
     session.close();
 }</source>
-  <p>Or, If you are using jdk 1.7+ and MyBatis 3.2+, you can use the try-with-resources statement:</p>
+  <p>JDK 1.7이상과 마이바티스 3.2이상을 사용한다면 다음처럼 try-with-resources 구문을 사용할 수 있다. </p>
   <source>
 try (SqlSession session = sqlSessionFactory.openSession()) {
     // following 3 lines pseudocode for "doing some work"
@@ -614,13 +614,14 @@ id 를 제공하기 위해 사용된다. XML 에 정의된 결과
         <td><code>@ResultType</code></td>
         <td><code>Method</code></td>
         <td>N/A</td>
-        <td>This annotation is used when using a result handler.  In that case, the return type is void
-        so MyBatis must have a way to determine the type of object to construct for each row.
-        If there is an XML result map, use the @ResultMap annotation.  If the result type is
-        specified in XML on the <code>&lt;select&gt;</code> element, then no other annotation is
-        necessary.  In other cases, use this annotation.  For example, if a @Select annotated method
-        will use a result handler, the return type must be void and this annotation (or @ResultMap)
-        is required.  This annotation is ignored unless the method return type is void.</td>
+        <td>이 애노테이션은 결과 핸들러를 사용할때 사용한다. 
+        이 경우 리턴타입은 void이고 마이바티스는 각각의 레코드 정보를 가지는 객체의 타입을 결정하는 방법을 가져야만 한다.
+        XML 결과매핑이 있다면  @ResultMap 애노테이션을 사용하자.
+        결과타입이 XML에서 <code>&lt;select&gt;</code> 엘리먼트에 명시되어 있다면 다른 애노테이션이 필요하지 않다. 
+        결과타입이 XML에서 <code>&lt;select&gt;</code> 엘리먼트에 명시되어 있지 않은 경우에 이 애노테이션을 사용하자.
+        예를들어, @Select 애노테이션이 선언되어 있다면 메소드는 결과 핸들러를 사용할 것이다. 
+        결과 타입은 void여야만 하고 이 애노테이션(이나 @ResultMap)을 반드시 사용해야 한다. 
+        이 애노테이션은 메소드 리턴타입이 void가 아니라면 무시한다. </td>
       </tr>      
     </tbody>
   </table>

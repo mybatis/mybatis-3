@@ -31,14 +31,14 @@
     
     <subsection name="Installation">
       <p>
-        To use the MyBatis you just need to include the
+        마이바티스를 사용하기 위해 
         <code>
           mybatis-x.x.x.jar
         </code>
-        file in the classpath.
+        파일을 클래스패스에 두어야 한다. 
       </p>
       <p>
-        If you are using Maven just add the following dependency to your pom.xml:
+        메이븐을 사용한다면 pom.xml 에 다음의 설정을 추가하자. 
       </p>
         <source><![CDATA[
 <dependency>
