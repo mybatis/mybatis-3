@@ -22,49 +22,56 @@ import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.MarkerManager;
 import org.apache.logging.log4j.message.SimpleMessage;
 import org.apache.logging.log4j.spi.AbstractLogger;
-import org.apache.logging.log4j.spi.AbstractLoggerWrapper;
+import org.apache.logging.log4j.spi.ExtendedLoggerWrapper;
 
 /**
  * @author Eduardo Macarron
  */
 public class Log4j2AbstractLoggerImpl implements Log {
-  
+
   private static Marker MARKER = MarkerManager.getMarker(LogFactory.MARKER);
-  
+
   private static final String FQCN = Log4j2Impl.class.getName();
-  
-  private AbstractLoggerWrapper log;
+
+  private ExtendedLoggerWrapper log;
 
   public Log4j2AbstractLoggerImpl(AbstractLogger abstractLogger) {
-    log = new AbstractLoggerWrapper(abstractLogger, abstractLogger.getName(), abstractLogger.getMessageFactory());
+    log = new ExtendedLoggerWrapper(abstractLogger, abstractLogger.getName(), abstractLogger.getMessageFactory());
   }
 
+  @Override
   public boolean isDebugEnabled() {
     return log.isDebugEnabled();
   }
 
+  @Override
   public boolean isTraceEnabled() {
     return log.isTraceEnabled();
   }
 
+  @Override
   public void error(String s, Throwable e) {
-    log.log(MARKER, FQCN, Level.ERROR, new SimpleMessage(s), e);
+    log.logIfEnabled(FQCN, Level.ERROR, MARKER, new SimpleMessage(s), e);
   }
 
+  @Override
   public void error(String s) {
-    log.log(MARKER, FQCN, Level.ERROR, new SimpleMessage(s), null);
+    log.logIfEnabled(FQCN, Level.ERROR, MARKER, new SimpleMessage(s), null);
   }
 
+  @Override
   public void debug(String s) {
-    log.log(MARKER, FQCN, Level.DEBUG, new SimpleMessage(s), null);
+    log.logIfEnabled(FQCN, Level.DEBUG, MARKER, new SimpleMessage(s), null);
   }
 
+  @Override
   public void trace(String s) {
-    log.log(MARKER, FQCN, Level.TRACE, new SimpleMessage(s), null);
+    log.logIfEnabled(FQCN, Level.TRACE, MARKER, new SimpleMessage(s), null);
   }
 
+  @Override
   public void warn(String s) {
-    log.log(MARKER, FQCN, Level.WARN, new SimpleMessage(s), null);
+    log.logIfEnabled(FQCN, Level.WARN, MARKER, new SimpleMessage(s), null);
   }
 
 }
