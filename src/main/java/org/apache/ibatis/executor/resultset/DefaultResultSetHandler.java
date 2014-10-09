@@ -28,6 +28,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.ibatis.cache.CacheKey;
+import org.apache.ibatis.executor.ErrorContext;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.executor.ExecutorException;
 import org.apache.ibatis.executor.loader.ResultLoader;
@@ -137,6 +138,8 @@ public class DefaultResultSetHandler implements ResultSetHandler {
   //
 
   public List<Object> handleResultSets(Statement stmt) throws SQLException {
+    ErrorContext.instance().activity("handling results").object(mappedStatement.getId());
+    
     final List<Object> multipleResults = new ArrayList<Object>();
 
     int resultSetCount = 0;
