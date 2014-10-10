@@ -42,7 +42,7 @@
 <a class="jxr_linenumber" name="32" href="#32">32</a>  <em class="jxr_javadoccomment"> * </em>
 <a class="jxr_linenumber" name="33" href="#33">33</a>  <em class="jxr_javadoccomment"> * @author Ben Gunter</em>
 <a class="jxr_linenumber" name="34" href="#34">34</a>  <em class="jxr_javadoccomment"> */</em>
-<a class="jxr_linenumber" name="35" href="#35">35</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">abstract</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../org/apache/ibatis/io/VFS.html">VFS</a> {
+<a class="jxr_linenumber" name="35" href="#35">35</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">abstract</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../org/apache/ibatis/io/JBoss6VFS.html">VFS</a> {
 <a class="jxr_linenumber" name="36" href="#36">36</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <a href="../../../../org/apache/ibatis/logging/Log.html">Log</a> log = LogFactory.getLog(ResolverUtil.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="37" href="#37">37</a>  
 <a class="jxr_linenumber" name="38" href="#38">38</a>    <em class="jxr_javadoccomment">/**</em><em class="jxr_javadoccomment"> The built-in implementations. */</em>
@@ -52,14 +52,14 @@
 <a class="jxr_linenumber" name="42" href="#42">42</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> List&lt;Class&lt;? <strong class="jxr_keyword">extends</strong> VFS&gt;&gt; USER_IMPLEMENTATIONS = <strong class="jxr_keyword">new</strong> ArrayList&lt;Class&lt;? <strong class="jxr_keyword">extends</strong> VFS&gt;&gt;();
 <a class="jxr_linenumber" name="43" href="#43">43</a>  
 <a class="jxr_linenumber" name="44" href="#44">44</a>    <em class="jxr_javadoccomment">/**</em><em class="jxr_javadoccomment"> Singleton instance. */</em>
-<a class="jxr_linenumber" name="45" href="#45">45</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <a href="../../../../org/apache/ibatis/io/VFS.html">VFS</a> instance;
+<a class="jxr_linenumber" name="45" href="#45">45</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <a href="../../../../org/apache/ibatis/io/JBoss6VFS.html">VFS</a> instance;
 <a class="jxr_linenumber" name="46" href="#46">46</a>  
 <a class="jxr_linenumber" name="47" href="#47">47</a>    <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="48" href="#48">48</a>  <em class="jxr_javadoccomment">   * Get the singleton {@link VFS} instance. If no {@link VFS} implementation can be found for the</em>
 <a class="jxr_linenumber" name="49" href="#49">49</a>  <em class="jxr_javadoccomment">   * current environment, then this method returns null.</em>
 <a class="jxr_linenumber" name="50" href="#50">50</a>  <em class="jxr_javadoccomment">   */</em>
 <a class="jxr_linenumber" name="51" href="#51">51</a>    @SuppressWarnings(<span class="jxr_string">"unchecked"</span>)
-<a class="jxr_linenumber" name="52" href="#52">52</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <a href="../../../../org/apache/ibatis/io/VFS.html">VFS</a> getInstance() {
+<a class="jxr_linenumber" name="52" href="#52">52</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <a href="../../../../org/apache/ibatis/io/JBoss6VFS.html">VFS</a> getInstance() {
 <a class="jxr_linenumber" name="53" href="#53">53</a>      <strong class="jxr_keyword">if</strong> (instance != <strong class="jxr_keyword">null</strong>)
 <a class="jxr_linenumber" name="54" href="#54">54</a>        <strong class="jxr_keyword">return</strong> instance;
 <a class="jxr_linenumber" name="55" href="#55">55</a>  
@@ -69,7 +69,7 @@
 <a class="jxr_linenumber" name="59" href="#59">59</a>      impls.addAll(Arrays.asList((Class&lt;? <strong class="jxr_keyword">extends</strong> VFS&gt;[]) IMPLEMENTATIONS));
 <a class="jxr_linenumber" name="60" href="#60">60</a>  
 <a class="jxr_linenumber" name="61" href="#61">61</a>      <em class="jxr_comment">// Try each implementation class until a valid one is found</em>
-<a class="jxr_linenumber" name="62" href="#62">62</a>      <a href="../../../../org/apache/ibatis/io/VFS.html">VFS</a> vfs = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="62" href="#62">62</a>      <a href="../../../../org/apache/ibatis/io/JBoss6VFS.html">VFS</a> vfs = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="63" href="#63">63</a>      <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; vfs == <strong class="jxr_keyword">null</strong> || !vfs.isValid(); i++) {
 <a class="jxr_linenumber" name="64" href="#64">64</a>        Class&lt;? <strong class="jxr_keyword">extends</strong> VFS&gt; impl = impls.get(i);
 <a class="jxr_linenumber" name="65" href="#65">65</a>        <strong class="jxr_keyword">try</strong> {

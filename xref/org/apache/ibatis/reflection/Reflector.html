@@ -376,124 +376,120 @@
 <a class="jxr_linenumber" name="366" href="#366">366</a>     }
 <a class="jxr_linenumber" name="367" href="#367">367</a>   }
 <a class="jxr_linenumber" name="368" href="#368">368</a> 
-<a class="jxr_linenumber" name="369" href="#369">369</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> hasDefaultConstructor() {
-<a class="jxr_linenumber" name="370" href="#370">370</a>     <strong class="jxr_keyword">return</strong> defaultConstructor != <strong class="jxr_keyword">null</strong>;
-<a class="jxr_linenumber" name="371" href="#371">371</a>   }
-<a class="jxr_linenumber" name="372" href="#372">372</a> 
-<a class="jxr_linenumber" name="373" href="#373">373</a>   <strong class="jxr_keyword">public</strong> <a href="../../../../org/apache/ibatis/reflection/invoker/Invoker.html">Invoker</a> getSetInvoker(String propertyName) {
-<a class="jxr_linenumber" name="374" href="#374">374</a>     <a href="../../../../org/apache/ibatis/reflection/invoker/Invoker.html">Invoker</a> method = setMethods.get(propertyName);
-<a class="jxr_linenumber" name="375" href="#375">375</a>     <strong class="jxr_keyword">if</strong> (method == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="376" href="#376">376</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/reflection/ReflectionException.html">ReflectionException</a>(<span class="jxr_string">"There is no setter for property named '"</span> + propertyName + <span class="jxr_string">"' in '"</span> + type + <span class="jxr_string">"'"</span>);
-<a class="jxr_linenumber" name="377" href="#377">377</a>     }
-<a class="jxr_linenumber" name="378" href="#378">378</a>     <strong class="jxr_keyword">return</strong> method;
-<a class="jxr_linenumber" name="379" href="#379">379</a>   }
-<a class="jxr_linenumber" name="380" href="#380">380</a> 
-<a class="jxr_linenumber" name="381" href="#381">381</a>   <strong class="jxr_keyword">public</strong> <a href="../../../../org/apache/ibatis/reflection/invoker/Invoker.html">Invoker</a> getGetInvoker(String propertyName) {
-<a class="jxr_linenumber" name="382" href="#382">382</a>     <a href="../../../../org/apache/ibatis/reflection/invoker/Invoker.html">Invoker</a> method = getMethods.get(propertyName);
-<a class="jxr_linenumber" name="383" href="#383">383</a>     <strong class="jxr_keyword">if</strong> (method == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="384" href="#384">384</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/reflection/ReflectionException.html">ReflectionException</a>(<span class="jxr_string">"There is no getter for property named '"</span> + propertyName + <span class="jxr_string">"' in '"</span> + type + <span class="jxr_string">"'"</span>);
-<a class="jxr_linenumber" name="385" href="#385">385</a>     }
-<a class="jxr_linenumber" name="386" href="#386">386</a>     <strong class="jxr_keyword">return</strong> method;
-<a class="jxr_linenumber" name="387" href="#387">387</a>   }
-<a class="jxr_linenumber" name="388" href="#388">388</a> 
-<a class="jxr_linenumber" name="389" href="#389">389</a>   <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="390" href="#390">390</a> <em class="jxr_comment">   * Gets the type for a property setter</em>
-<a class="jxr_linenumber" name="391" href="#391">391</a> <em class="jxr_comment">   *</em>
-<a class="jxr_linenumber" name="392" href="#392">392</a> <em class="jxr_comment">   * @param propertyName - the name of the property</em>
-<a class="jxr_linenumber" name="393" href="#393">393</a> <em class="jxr_comment">   * @return The Class of the propery setter</em>
-<a class="jxr_linenumber" name="394" href="#394">394</a> <em class="jxr_comment">   */</em>
-<a class="jxr_linenumber" name="395" href="#395">395</a>   <strong class="jxr_keyword">public</strong> Class&lt;?&gt; getSetterType(String propertyName) {
-<a class="jxr_linenumber" name="396" href="#396">396</a>     Class&lt;?&gt; clazz = setTypes.get(propertyName);
-<a class="jxr_linenumber" name="397" href="#397">397</a>     <strong class="jxr_keyword">if</strong> (clazz == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="398" href="#398">398</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/reflection/ReflectionException.html">ReflectionException</a>(<span class="jxr_string">"There is no setter for property named '"</span> + propertyName + <span class="jxr_string">"' in '"</span> + type + <span class="jxr_string">"'"</span>);
-<a class="jxr_linenumber" name="399" href="#399">399</a>     }
-<a class="jxr_linenumber" name="400" href="#400">400</a>     <strong class="jxr_keyword">return</strong> clazz;
-<a class="jxr_linenumber" name="401" href="#401">401</a>   }
-<a class="jxr_linenumber" name="402" href="#402">402</a> 
-<a class="jxr_linenumber" name="403" href="#403">403</a>   <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="404" href="#404">404</a> <em class="jxr_comment">   * Gets the type for a property getter</em>
-<a class="jxr_linenumber" name="405" href="#405">405</a> <em class="jxr_comment">   *</em>
-<a class="jxr_linenumber" name="406" href="#406">406</a> <em class="jxr_comment">   * @param propertyName - the name of the property</em>
-<a class="jxr_linenumber" name="407" href="#407">407</a> <em class="jxr_comment">   * @return The Class of the propery getter</em>
-<a class="jxr_linenumber" name="408" href="#408">408</a> <em class="jxr_comment">   */</em>
-<a class="jxr_linenumber" name="409" href="#409">409</a>   <strong class="jxr_keyword">public</strong> Class&lt;?&gt; getGetterType(String propertyName) {
-<a class="jxr_linenumber" name="410" href="#410">410</a>     Class&lt;?&gt; clazz = getTypes.get(propertyName);
-<a class="jxr_linenumber" name="411" href="#411">411</a>     <strong class="jxr_keyword">if</strong> (clazz == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="412" href="#412">412</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/reflection/ReflectionException.html">ReflectionException</a>(<span class="jxr_string">"There is no getter for property named '"</span> + propertyName + <span class="jxr_string">"' in '"</span> + type + <span class="jxr_string">"'"</span>);
-<a class="jxr_linenumber" name="413" href="#413">413</a>     }
-<a class="jxr_linenumber" name="414" href="#414">414</a>     <strong class="jxr_keyword">return</strong> clazz;
-<a class="jxr_linenumber" name="415" href="#415">415</a>   }
-<a class="jxr_linenumber" name="416" href="#416">416</a> 
-<a class="jxr_linenumber" name="417" href="#417">417</a>   <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="418" href="#418">418</a> <em class="jxr_comment">   * Gets an array of the readable properties for an object</em>
-<a class="jxr_linenumber" name="419" href="#419">419</a> <em class="jxr_comment">   *</em>
-<a class="jxr_linenumber" name="420" href="#420">420</a> <em class="jxr_comment">   * @return The array</em>
-<a class="jxr_linenumber" name="421" href="#421">421</a> <em class="jxr_comment">   */</em>
-<a class="jxr_linenumber" name="422" href="#422">422</a>   <strong class="jxr_keyword">public</strong> String[] getGetablePropertyNames() {
-<a class="jxr_linenumber" name="423" href="#423">423</a>     <strong class="jxr_keyword">return</strong> readablePropertyNames;
-<a class="jxr_linenumber" name="424" href="#424">424</a>   }
-<a class="jxr_linenumber" name="425" href="#425">425</a> 
-<a class="jxr_linenumber" name="426" href="#426">426</a>   <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="427" href="#427">427</a> <em class="jxr_comment">   * Gets an array of the writeable properties for an object</em>
-<a class="jxr_linenumber" name="428" href="#428">428</a> <em class="jxr_comment">   *</em>
-<a class="jxr_linenumber" name="429" href="#429">429</a> <em class="jxr_comment">   * @return The array</em>
-<a class="jxr_linenumber" name="430" href="#430">430</a> <em class="jxr_comment">   */</em>
-<a class="jxr_linenumber" name="431" href="#431">431</a>   <strong class="jxr_keyword">public</strong> String[] getSetablePropertyNames() {
-<a class="jxr_linenumber" name="432" href="#432">432</a>     <strong class="jxr_keyword">return</strong> writeablePropertyNames;
-<a class="jxr_linenumber" name="433" href="#433">433</a>   }
-<a class="jxr_linenumber" name="434" href="#434">434</a> 
-<a class="jxr_linenumber" name="435" href="#435">435</a>   <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="436" href="#436">436</a> <em class="jxr_comment">   * Check to see if a class has a writeable property by name</em>
-<a class="jxr_linenumber" name="437" href="#437">437</a> <em class="jxr_comment">   *</em>
-<a class="jxr_linenumber" name="438" href="#438">438</a> <em class="jxr_comment">   * @param propertyName - the name of the property to check</em>
-<a class="jxr_linenumber" name="439" href="#439">439</a> <em class="jxr_comment">   * @return True if the object has a writeable property by the name</em>
-<a class="jxr_linenumber" name="440" href="#440">440</a> <em class="jxr_comment">   */</em>
-<a class="jxr_linenumber" name="441" href="#441">441</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> hasSetter(String propertyName) {
-<a class="jxr_linenumber" name="442" href="#442">442</a>     <strong class="jxr_keyword">return</strong> setMethods.keySet().contains(propertyName);
-<a class="jxr_linenumber" name="443" href="#443">443</a>   }
-<a class="jxr_linenumber" name="444" href="#444">444</a> 
-<a class="jxr_linenumber" name="445" href="#445">445</a>   <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="446" href="#446">446</a> <em class="jxr_comment">   * Check to see if a class has a readable property by name</em>
-<a class="jxr_linenumber" name="447" href="#447">447</a> <em class="jxr_comment">   *</em>
-<a class="jxr_linenumber" name="448" href="#448">448</a> <em class="jxr_comment">   * @param propertyName - the name of the property to check</em>
-<a class="jxr_linenumber" name="449" href="#449">449</a> <em class="jxr_comment">   * @return True if the object has a readable property by the name</em>
-<a class="jxr_linenumber" name="450" href="#450">450</a> <em class="jxr_comment">   */</em>
-<a class="jxr_linenumber" name="451" href="#451">451</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> hasGetter(String propertyName) {
-<a class="jxr_linenumber" name="452" href="#452">452</a>     <strong class="jxr_keyword">return</strong> getMethods.keySet().contains(propertyName);
+<a class="jxr_linenumber" name="369" href="#369">369</a>   <strong class="jxr_keyword">public</strong> <a href="../../../../org/apache/ibatis/reflection/invoker/Invoker.html">Invoker</a> getSetInvoker(String propertyName) {
+<a class="jxr_linenumber" name="370" href="#370">370</a>     <a href="../../../../org/apache/ibatis/reflection/invoker/Invoker.html">Invoker</a> method = setMethods.get(propertyName);
+<a class="jxr_linenumber" name="371" href="#371">371</a>     <strong class="jxr_keyword">if</strong> (method == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="372" href="#372">372</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/reflection/ReflectionException.html">ReflectionException</a>(<span class="jxr_string">"There is no setter for property named '"</span> + propertyName + <span class="jxr_string">"' in '"</span> + type + <span class="jxr_string">"'"</span>);
+<a class="jxr_linenumber" name="373" href="#373">373</a>     }
+<a class="jxr_linenumber" name="374" href="#374">374</a>     <strong class="jxr_keyword">return</strong> method;
+<a class="jxr_linenumber" name="375" href="#375">375</a>   }
+<a class="jxr_linenumber" name="376" href="#376">376</a> 
+<a class="jxr_linenumber" name="377" href="#377">377</a>   <strong class="jxr_keyword">public</strong> <a href="../../../../org/apache/ibatis/reflection/invoker/Invoker.html">Invoker</a> getGetInvoker(String propertyName) {
+<a class="jxr_linenumber" name="378" href="#378">378</a>     <a href="../../../../org/apache/ibatis/reflection/invoker/Invoker.html">Invoker</a> method = getMethods.get(propertyName);
+<a class="jxr_linenumber" name="379" href="#379">379</a>     <strong class="jxr_keyword">if</strong> (method == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="380" href="#380">380</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/reflection/ReflectionException.html">ReflectionException</a>(<span class="jxr_string">"There is no getter for property named '"</span> + propertyName + <span class="jxr_string">"' in '"</span> + type + <span class="jxr_string">"'"</span>);
+<a class="jxr_linenumber" name="381" href="#381">381</a>     }
+<a class="jxr_linenumber" name="382" href="#382">382</a>     <strong class="jxr_keyword">return</strong> method;
+<a class="jxr_linenumber" name="383" href="#383">383</a>   }
+<a class="jxr_linenumber" name="384" href="#384">384</a> 
+<a class="jxr_linenumber" name="385" href="#385">385</a>   <em class="jxr_comment">/*</em>
+<a class="jxr_linenumber" name="386" href="#386">386</a> <em class="jxr_comment">   * Gets the type for a property setter</em>
+<a class="jxr_linenumber" name="387" href="#387">387</a> <em class="jxr_comment">   *</em>
+<a class="jxr_linenumber" name="388" href="#388">388</a> <em class="jxr_comment">   * @param propertyName - the name of the property</em>
+<a class="jxr_linenumber" name="389" href="#389">389</a> <em class="jxr_comment">   * @return The Class of the propery setter</em>
+<a class="jxr_linenumber" name="390" href="#390">390</a> <em class="jxr_comment">   */</em>
+<a class="jxr_linenumber" name="391" href="#391">391</a>   <strong class="jxr_keyword">public</strong> Class&lt;?&gt; getSetterType(String propertyName) {
+<a class="jxr_linenumber" name="392" href="#392">392</a>     Class&lt;?&gt; clazz = setTypes.get(propertyName);
+<a class="jxr_linenumber" name="393" href="#393">393</a>     <strong class="jxr_keyword">if</strong> (clazz == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="394" href="#394">394</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/reflection/ReflectionException.html">ReflectionException</a>(<span class="jxr_string">"There is no setter for property named '"</span> + propertyName + <span class="jxr_string">"' in '"</span> + type + <span class="jxr_string">"'"</span>);
+<a class="jxr_linenumber" name="395" href="#395">395</a>     }
+<a class="jxr_linenumber" name="396" href="#396">396</a>     <strong class="jxr_keyword">return</strong> clazz;
+<a class="jxr_linenumber" name="397" href="#397">397</a>   }
+<a class="jxr_linenumber" name="398" href="#398">398</a> 
+<a class="jxr_linenumber" name="399" href="#399">399</a>   <em class="jxr_comment">/*</em>
+<a class="jxr_linenumber" name="400" href="#400">400</a> <em class="jxr_comment">   * Gets the type for a property getter</em>
+<a class="jxr_linenumber" name="401" href="#401">401</a> <em class="jxr_comment">   *</em>
+<a class="jxr_linenumber" name="402" href="#402">402</a> <em class="jxr_comment">   * @param propertyName - the name of the property</em>
+<a class="jxr_linenumber" name="403" href="#403">403</a> <em class="jxr_comment">   * @return The Class of the propery getter</em>
+<a class="jxr_linenumber" name="404" href="#404">404</a> <em class="jxr_comment">   */</em>
+<a class="jxr_linenumber" name="405" href="#405">405</a>   <strong class="jxr_keyword">public</strong> Class&lt;?&gt; getGetterType(String propertyName) {
+<a class="jxr_linenumber" name="406" href="#406">406</a>     Class&lt;?&gt; clazz = getTypes.get(propertyName);
+<a class="jxr_linenumber" name="407" href="#407">407</a>     <strong class="jxr_keyword">if</strong> (clazz == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="408" href="#408">408</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/reflection/ReflectionException.html">ReflectionException</a>(<span class="jxr_string">"There is no getter for property named '"</span> + propertyName + <span class="jxr_string">"' in '"</span> + type + <span class="jxr_string">"'"</span>);
+<a class="jxr_linenumber" name="409" href="#409">409</a>     }
+<a class="jxr_linenumber" name="410" href="#410">410</a>     <strong class="jxr_keyword">return</strong> clazz;
+<a class="jxr_linenumber" name="411" href="#411">411</a>   }
+<a class="jxr_linenumber" name="412" href="#412">412</a> 
+<a class="jxr_linenumber" name="413" href="#413">413</a>   <em class="jxr_comment">/*</em>
+<a class="jxr_linenumber" name="414" href="#414">414</a> <em class="jxr_comment">   * Gets an array of the readable properties for an object</em>
+<a class="jxr_linenumber" name="415" href="#415">415</a> <em class="jxr_comment">   *</em>
+<a class="jxr_linenumber" name="416" href="#416">416</a> <em class="jxr_comment">   * @return The array</em>
+<a class="jxr_linenumber" name="417" href="#417">417</a> <em class="jxr_comment">   */</em>
+<a class="jxr_linenumber" name="418" href="#418">418</a>   <strong class="jxr_keyword">public</strong> String[] getGetablePropertyNames() {
+<a class="jxr_linenumber" name="419" href="#419">419</a>     <strong class="jxr_keyword">return</strong> readablePropertyNames;
+<a class="jxr_linenumber" name="420" href="#420">420</a>   }
+<a class="jxr_linenumber" name="421" href="#421">421</a> 
+<a class="jxr_linenumber" name="422" href="#422">422</a>   <em class="jxr_comment">/*</em>
+<a class="jxr_linenumber" name="423" href="#423">423</a> <em class="jxr_comment">   * Gets an array of the writeable properties for an object</em>
+<a class="jxr_linenumber" name="424" href="#424">424</a> <em class="jxr_comment">   *</em>
+<a class="jxr_linenumber" name="425" href="#425">425</a> <em class="jxr_comment">   * @return The array</em>
+<a class="jxr_linenumber" name="426" href="#426">426</a> <em class="jxr_comment">   */</em>
+<a class="jxr_linenumber" name="427" href="#427">427</a>   <strong class="jxr_keyword">public</strong> String[] getSetablePropertyNames() {
+<a class="jxr_linenumber" name="428" href="#428">428</a>     <strong class="jxr_keyword">return</strong> writeablePropertyNames;
+<a class="jxr_linenumber" name="429" href="#429">429</a>   }
+<a class="jxr_linenumber" name="430" href="#430">430</a> 
+<a class="jxr_linenumber" name="431" href="#431">431</a>   <em class="jxr_comment">/*</em>
+<a class="jxr_linenumber" name="432" href="#432">432</a> <em class="jxr_comment">   * Check to see if a class has a writeable property by name</em>
+<a class="jxr_linenumber" name="433" href="#433">433</a> <em class="jxr_comment">   *</em>
+<a class="jxr_linenumber" name="434" href="#434">434</a> <em class="jxr_comment">   * @param propertyName - the name of the property to check</em>
+<a class="jxr_linenumber" name="435" href="#435">435</a> <em class="jxr_comment">   * @return True if the object has a writeable property by the name</em>
+<a class="jxr_linenumber" name="436" href="#436">436</a> <em class="jxr_comment">   */</em>
+<a class="jxr_linenumber" name="437" href="#437">437</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> hasSetter(String propertyName) {
+<a class="jxr_linenumber" name="438" href="#438">438</a>     <strong class="jxr_keyword">return</strong> setMethods.keySet().contains(propertyName);
+<a class="jxr_linenumber" name="439" href="#439">439</a>   }
+<a class="jxr_linenumber" name="440" href="#440">440</a> 
+<a class="jxr_linenumber" name="441" href="#441">441</a>   <em class="jxr_comment">/*</em>
+<a class="jxr_linenumber" name="442" href="#442">442</a> <em class="jxr_comment">   * Check to see if a class has a readable property by name</em>
+<a class="jxr_linenumber" name="443" href="#443">443</a> <em class="jxr_comment">   *</em>
+<a class="jxr_linenumber" name="444" href="#444">444</a> <em class="jxr_comment">   * @param propertyName - the name of the property to check</em>
+<a class="jxr_linenumber" name="445" href="#445">445</a> <em class="jxr_comment">   * @return True if the object has a readable property by the name</em>
+<a class="jxr_linenumber" name="446" href="#446">446</a> <em class="jxr_comment">   */</em>
+<a class="jxr_linenumber" name="447" href="#447">447</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> hasGetter(String propertyName) {
+<a class="jxr_linenumber" name="448" href="#448">448</a>     <strong class="jxr_keyword">return</strong> getMethods.keySet().contains(propertyName);
+<a class="jxr_linenumber" name="449" href="#449">449</a>   }
+<a class="jxr_linenumber" name="450" href="#450">450</a> 
+<a class="jxr_linenumber" name="451" href="#451">451</a>   <strong class="jxr_keyword">public</strong> String findPropertyName(String name) {
+<a class="jxr_linenumber" name="452" href="#452">452</a>     <strong class="jxr_keyword">return</strong> caseInsensitivePropertyMap.get(name.toUpperCase(Locale.ENGLISH));
 <a class="jxr_linenumber" name="453" href="#453">453</a>   }
 <a class="jxr_linenumber" name="454" href="#454">454</a> 
-<a class="jxr_linenumber" name="455" href="#455">455</a>   <strong class="jxr_keyword">public</strong> String findPropertyName(String name) {
-<a class="jxr_linenumber" name="456" href="#456">456</a>     <strong class="jxr_keyword">return</strong> caseInsensitivePropertyMap.get(name.toUpperCase(Locale.ENGLISH));
-<a class="jxr_linenumber" name="457" href="#457">457</a>   }
-<a class="jxr_linenumber" name="458" href="#458">458</a> 
-<a class="jxr_linenumber" name="459" href="#459">459</a>   <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="460" href="#460">460</a> <em class="jxr_comment">   * Gets an instance of ClassInfo for the specified class.</em>
-<a class="jxr_linenumber" name="461" href="#461">461</a> <em class="jxr_comment">   *</em>
-<a class="jxr_linenumber" name="462" href="#462">462</a> <em class="jxr_comment">   * @param clazz The class for which to lookup the method cache.</em>
-<a class="jxr_linenumber" name="463" href="#463">463</a> <em class="jxr_comment">   * @return The method cache for the class</em>
-<a class="jxr_linenumber" name="464" href="#464">464</a> <em class="jxr_comment">   */</em>
-<a class="jxr_linenumber" name="465" href="#465">465</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <a href="../../../../org/apache/ibatis/reflection/Reflector.html">Reflector</a> forClass(Class&lt;?&gt; clazz) {
-<a class="jxr_linenumber" name="466" href="#466">466</a>     <strong class="jxr_keyword">if</strong> (classCacheEnabled) {
-<a class="jxr_linenumber" name="467" href="#467">467</a>       <em class="jxr_comment">// synchronized (clazz) removed see issue #461</em>
-<a class="jxr_linenumber" name="468" href="#468">468</a>       <a href="../../../../org/apache/ibatis/reflection/Reflector.html">Reflector</a> cached = REFLECTOR_MAP.get(clazz);
-<a class="jxr_linenumber" name="469" href="#469">469</a>       <strong class="jxr_keyword">if</strong> (cached == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="470" href="#470">470</a>         cached = <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/reflection/Reflector.html">Reflector</a>(clazz);
-<a class="jxr_linenumber" name="471" href="#471">471</a>         REFLECTOR_MAP.put(clazz, cached);
-<a class="jxr_linenumber" name="472" href="#472">472</a>       }
-<a class="jxr_linenumber" name="473" href="#473">473</a>       <strong class="jxr_keyword">return</strong> cached;
-<a class="jxr_linenumber" name="474" href="#474">474</a>     } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="475" href="#475">475</a>       <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/reflection/Reflector.html">Reflector</a>(clazz);
-<a class="jxr_linenumber" name="476" href="#476">476</a>     }
+<a class="jxr_linenumber" name="455" href="#455">455</a>   <em class="jxr_comment">/*</em>
+<a class="jxr_linenumber" name="456" href="#456">456</a> <em class="jxr_comment">   * Gets an instance of ClassInfo for the specified class.</em>
+<a class="jxr_linenumber" name="457" href="#457">457</a> <em class="jxr_comment">   *</em>
+<a class="jxr_linenumber" name="458" href="#458">458</a> <em class="jxr_comment">   * @param clazz The class for which to lookup the method cache.</em>
+<a class="jxr_linenumber" name="459" href="#459">459</a> <em class="jxr_comment">   * @return The method cache for the class</em>
+<a class="jxr_linenumber" name="460" href="#460">460</a> <em class="jxr_comment">   */</em>
+<a class="jxr_linenumber" name="461" href="#461">461</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <a href="../../../../org/apache/ibatis/reflection/Reflector.html">Reflector</a> forClass(Class&lt;?&gt; clazz) {
+<a class="jxr_linenumber" name="462" href="#462">462</a>     <strong class="jxr_keyword">if</strong> (classCacheEnabled) {
+<a class="jxr_linenumber" name="463" href="#463">463</a>       <em class="jxr_comment">// synchronized (clazz) removed see issue #461</em>
+<a class="jxr_linenumber" name="464" href="#464">464</a>       <a href="../../../../org/apache/ibatis/reflection/Reflector.html">Reflector</a> cached = REFLECTOR_MAP.get(clazz);
+<a class="jxr_linenumber" name="465" href="#465">465</a>       <strong class="jxr_keyword">if</strong> (cached == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="466" href="#466">466</a>         cached = <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/reflection/Reflector.html">Reflector</a>(clazz);
+<a class="jxr_linenumber" name="467" href="#467">467</a>         REFLECTOR_MAP.put(clazz, cached);
+<a class="jxr_linenumber" name="468" href="#468">468</a>       }
+<a class="jxr_linenumber" name="469" href="#469">469</a>       <strong class="jxr_keyword">return</strong> cached;
+<a class="jxr_linenumber" name="470" href="#470">470</a>     } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="471" href="#471">471</a>       <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/reflection/Reflector.html">Reflector</a>(clazz);
+<a class="jxr_linenumber" name="472" href="#472">472</a>     }
+<a class="jxr_linenumber" name="473" href="#473">473</a>   }
+<a class="jxr_linenumber" name="474" href="#474">474</a> 
+<a class="jxr_linenumber" name="475" href="#475">475</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> setClassCacheEnabled(<strong class="jxr_keyword">boolean</strong> classCacheEnabled) {
+<a class="jxr_linenumber" name="476" href="#476">476</a>     Reflector.classCacheEnabled = classCacheEnabled;
 <a class="jxr_linenumber" name="477" href="#477">477</a>   }
 <a class="jxr_linenumber" name="478" href="#478">478</a> 
-<a class="jxr_linenumber" name="479" href="#479">479</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> setClassCacheEnabled(<strong class="jxr_keyword">boolean</strong> classCacheEnabled) {
-<a class="jxr_linenumber" name="480" href="#480">480</a>     Reflector.classCacheEnabled = classCacheEnabled;
+<a class="jxr_linenumber" name="479" href="#479">479</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">boolean</strong> isClassCacheEnabled() {
+<a class="jxr_linenumber" name="480" href="#480">480</a>     <strong class="jxr_keyword">return</strong> classCacheEnabled;
 <a class="jxr_linenumber" name="481" href="#481">481</a>   }
-<a class="jxr_linenumber" name="482" href="#482">482</a> 
-<a class="jxr_linenumber" name="483" href="#483">483</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">boolean</strong> isClassCacheEnabled() {
-<a class="jxr_linenumber" name="484" href="#484">484</a>     <strong class="jxr_keyword">return</strong> classCacheEnabled;
-<a class="jxr_linenumber" name="485" href="#485">485</a>   }
-<a class="jxr_linenumber" name="486" href="#486">486</a> }
+<a class="jxr_linenumber" name="482" href="#482">482</a> }
 </pre>
 <hr/><div id="footer">This page was automatically generated by <a href="http://maven.apache.org/">Maven</a></div></body>
 </html>

@@ -14326,17 +14326,6 @@
  visibility="public"
 >
 </method>
-<method name="getSanitizer"
- return="org.apache.ibatis.security.Sanitizer"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</method>
 <method name="getTypeHandler"
  return="org.apache.ibatis.type.TypeHandler&lt;?&gt;"
  abstract="false"
@@ -14347,19 +14336,6 @@
  deprecated="not deprecated"
  visibility="public"
 >
-</method>
-<method name="setSanitizer"
- return="void"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="sanitizer" type="org.apache.ibatis.security.Sanitizer">
-</parameter>
 </method>
 </class>
 <class name="ParameterMapping.Builder"
@@ -14498,19 +14474,6 @@
  visibility="public"
 >
 <parameter name="resultMapId" type="java.lang.String">
-</parameter>
-</method>
-<method name="sanitizer"
- return="org.apache.ibatis.mapping.ParameterMapping.Builder"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="sanitizer" type="org.apache.ibatis.security.Sanitizer">
 </parameter>
 </method>
 <method name="typeHandler"
@@ -17013,17 +16976,6 @@
 <parameter name="name" type="java.lang.String">
 </parameter>
 </method>
-<method name="hasDefaultConstructor"
- return="boolean"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</method>
 <method name="hasGetter"
  return="boolean"
  abstract="false"
@@ -17495,17 +17447,6 @@
 </method>
 <method name="getType"
  return="java.lang.Class&lt;?&gt;"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</method>
-<method name="hasDefaultConstructor"
- return="boolean"
  abstract="false"
  native="false"
  synchronized="false"
@@ -19797,18 +19738,10 @@
  extends="java.lang.Object"
  abstract="false"
  static="false"
- final="false"
+ final="true"
  deprecated="not deprecated"
  visibility="public"
 >
-<constructor name="OgnlCache"
- type="org.apache.ibatis.scripting.xmltags.OgnlCache"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</constructor>
 <method name="getValue"
  return="java.lang.Object"
  abstract="false"
@@ -20218,79 +20151,6 @@
  visibility="public"
 >
 </method>
-</class>
-</package>
-<package name="org.apache.ibatis.security"
->
-<interface name="Sanitizer"
- abstract="true"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<method name="sanitize"
- return="java.lang.Object"
- abstract="true"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="value" type="java.lang.Object">
-</parameter>
-</method>
-</interface>
-<class name="SanitizerException"
- extends="org.apache.ibatis.exceptions.PersistenceException"
- abstract="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<constructor name="SanitizerException"
- type="org.apache.ibatis.security.SanitizerException"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</constructor>
-<constructor name="SanitizerException"
- type="org.apache.ibatis.security.SanitizerException"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="message" type="java.lang.String">
-</parameter>
-</constructor>
-<constructor name="SanitizerException"
- type="org.apache.ibatis.security.SanitizerException"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="message" type="java.lang.String">
-</parameter>
-<parameter name="cause" type="java.lang.Throwable">
-</parameter>
-</constructor>
-<constructor name="SanitizerException"
- type="org.apache.ibatis.security.SanitizerException"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="cause" type="java.lang.Throwable">
-</parameter>
-</constructor>
 </class>
 </package>
 <package name="org.apache.ibatis.session"

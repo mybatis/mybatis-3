@@ -42,7 +42,6 @@ org.apache.ibatis.reflection.wrapper
 org.apache.ibatis.scripting
 org.apache.ibatis.scripting.defaults
 org.apache.ibatis.scripting.xmltags
-org.apache.ibatis.security
 org.apache.ibatis.session
 org.apache.ibatis.session.defaults
 org.apache.ibatis.transaction
