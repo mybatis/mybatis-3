@@ -1569,7 +1569,7 @@ SELECT * FROM AUTHOR WHERE ID = #{id}]]></source>
         <p>A name must be given to each result set by adding a 
         <code>resultSets</code> attribute to the mapped statement with a list of names separated by commas.</p>
 
-        <source><![CDATA[<select id="selectBlog" resultSets="blogs,authors" resultMap="blogResult">
+        <source><![CDATA[<select id="selectBlog" resultSets="blogs,authors" resultMap="blogResult" statementType="CALLABLE">
   {call getBlogsAndAuthors(#{id,jdbcType=INTEGER,mode=IN})}
 </select>
 ]]></source>

@@ -1247,7 +1247,7 @@ SELECT * FROM AUTHOR WHERE ID = #{id}]]></source>
         <p>Se debe proporcionar un nombre a cada resultset informando el atributo 
         <code>resultSets</code> del mapped statement con una lista de nombres separados por comas.</p>
 
-        <source><![CDATA[<select id="selectBlog" resultSets="blogs,authors" resultMap="blogResult">
+        <source><![CDATA[<select id="selectBlog" resultSets="blogs,authors" resultMap="blogResult" statementType="CALLABLE">
   {call getBlogsAndAuthors(#{id,jdbcType=INTEGER,mode=IN})}
 </select>
 ]]></source>
