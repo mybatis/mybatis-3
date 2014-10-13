@@ -49,4 +49,16 @@ public class Invocation {
     return method.invoke(target, args);
   }
 
+  public Object proceed(Object[] args) throws InvocationTargetException, IllegalAccessException {
+      if (args == null) {
+          return proceed();
+      }
+      if (args.length != this.args.length) {
+          throw new IllegalArgumentException("Expecting " +
+                  this.args.length + " arguments to proceed, " +
+                  "but was passed " + args.length + " arguments");
+      }
+      return method.invoke(target, args);
+  }
+    
 }
