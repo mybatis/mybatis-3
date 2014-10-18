@@ -15,7 +15,7 @@
  */
 package org.apache.ibatis.cache.impl;
 
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.Map;
 import java.util.concurrent.locks.ReadWriteLock;
 
