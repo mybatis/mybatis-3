@@ -29,7 +29,7 @@ public class PerpetualCache implements Cache {
 
   private String id;
 
-  private Map<Object, Object> cache = new HashMap<Object, Object>();
+  private Map<Object, Object> cache = new ConcurrentHashMap<Object, Object>();
 
   public PerpetualCache(String id) {
     this.id = id;
