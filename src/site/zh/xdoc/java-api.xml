@@ -529,7 +529,7 @@ flushInterval,size 和 readWrite。
         <td><code>类</code></td>
         <td><code>&lt;cacheRef&gt;</code></td>
         <td>参照另外一个命名空间的缓存来使用。
-属性:value,应该是一个名空姐的字
+属性:value,应该是一个名空间的字
 符串值(也就是类的完全限定名)
 。
         </td>
