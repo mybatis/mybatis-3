@@ -62,6 +62,7 @@ import org.apache.ibatis.type.TypeHandlerRegistry;
 public class DefaultResultSetHandler implements ResultSetHandler {
 
   private static final Object NO_VALUE = new Object();
+  private static final Object NOT_DEFERED_VALUE = new Object();
 
   private final Executor executor;
   private final Configuration configuration;
@@ -283,7 +284,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
           + "Use safeResultHandlerEnabled=false setting to bypass this check " 
           + "or ensure your statement returns ordered data and set resultOrdered=true on it.");
     }
-  } 
+  }
 
   private void handleRowValuesForSimpleResultMap(ResultSetWrapper rsw, ResultMap resultMap, ResultHandler resultHandler, RowBounds rowBounds, ResultMapping parentMapping)
       throws SQLException {
@@ -377,7 +378,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
         final String property = propertyMapping.getProperty();
         // issue #377, call setter on nulls
         if (value != NO_VALUE && property != null && (value != null || configuration.isCallSettersOnNulls())) {
-          if (value != null || !metaObject.getSetterType(property).isPrimitive()) {
+          if (value != NOT_DEFERED_VALUE && (value != null || !metaObject.getSetterType(property).isPrimitive())) {
             metaObject.setValue(property, value);
           }
           foundValues = true;
@@ -654,7 +655,9 @@ public class DefaultResultSetHandler implements ResultSetHandler {
       final CacheKey key = executor.createCacheKey(nestedQuery, nestedQueryParameterObject, RowBounds.DEFAULT, nestedBoundSql);
       final Class<?> targetType = propertyMapping.getJavaType();
       if (executor.isCached(nestedQuery, key)) {
-        executor.deferLoad(nestedQuery, metaResultObject, property, key, targetType);
+        if (executor.deferLoad(nestedQuery, metaResultObject, property, key, targetType)) {
+        	value=NOT_DEFERED_VALUE;
+        }
       } else {
         final ResultLoader resultLoader = new ResultLoader(configuration, executor, nestedQuery, nestedQueryParameterObject, targetType, key, nestedBoundSql);
         if (propertyMapping.isLazy()) {
@@ -798,7 +801,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
         boolean foundValues = !resultMap.getConstructorResultMappings().isEmpty();
         if (shouldApplyAutomaticMappings(resultMap, true)) {
           foundValues = applyAutomaticMappings(rsw, resultMap, metaObject, columnPrefix) || foundValues;
-        }        
+        }
         foundValues = applyPropertyMappings(rsw, resultMap, metaObject, lazyLoader, columnPrefix) || foundValues;
         putAncestor(absoluteKey, resultObject, resultMapId, columnPrefix);
         foundValues = applyNestedResultMappings(rsw, resultMap, metaObject, columnPrefix, combinedKey, true) || foundValues;

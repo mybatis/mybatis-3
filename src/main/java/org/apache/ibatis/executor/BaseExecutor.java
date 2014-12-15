@@ -170,17 +170,22 @@ public abstract class BaseExecutor implements Executor {
     return list;
   }
 
+  /**
+   * Returns true if the call has not been defered
+   */
   @Override
-  public void deferLoad(MappedStatement ms, MetaObject resultObject, String property, CacheKey key, Class<?> targetType) {
+  public boolean deferLoad(MappedStatement ms, MetaObject resultObject, String property, CacheKey key, Class<?> targetType) {
     if (closed) {
       throw new ExecutorException("Executor was closed.");
     }
     DeferredLoad deferredLoad = new DeferredLoad(resultObject, property, key, localCache, configuration, targetType);
     if (deferredLoad.canLoad()) {
       deferredLoad.load();
+      return true;
     } else {
       deferredLoads.add(new DeferredLoad(resultObject, property, key, localCache, configuration, targetType));
     }
+    return false;
   }
 
   @Override
