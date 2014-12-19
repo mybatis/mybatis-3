@@ -411,7 +411,7 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
   <package name="domain.blog"/>
 </typeAliases>
 ]]></source>
-        <p>每一个在包 <code>domain.blog</code> 中的 Java Bean，在没有注解的情况下，会使用 Bean 的首字母小写的非限定类名来作为它的别名。比如 <code>domain.blog.Author</code> 的别名为 <code>Author</code>；若有注解，则别名为其注解值。看下面的例子：</p>
+        <p>每一个在包 <code>domain.blog</code> 中的 Java Bean，在没有注解的情况下，会使用 Bean 的首字母小写的非限定类名来作为它的别名。比如 <code>domain.blog.Author</code> 的别名为 <code>author</code>；若有注解，则别名为其注解值。看下面的例子：</p>
         <source><![CDATA[@Alias("author")
 public class Author {
     ...
