@@ -73,7 +73,7 @@
       </ul>
       <p>下一部分将从语句本身开始来描述每个元素的细节。</p>
 
-      <subsection name="select">
+      <subsection name="select" id="select">
         <p>查询语句是 MyBatis 中最常用的元素之一，光能把数据存到数据库中价值并不大，如果还能重新取出来才有用，多数应用也都是查询比修改要频繁。对每个插入、更新或删除操作，通常对应多个查询操作。这是 MyBatis 的基本原则之一，也是将焦点和努力放到查询和结果映射的原因。简单查询的 select 元素是非常简单的。比如：
         </p>
 
@@ -204,7 +204,7 @@ ps.setInt(1,id);]]></source>
         </table>
       </subsection>
 
-      <subsection name="insert, update 和 delete">
+      <subsection name="insert, update 和 delete" id="insert_update_and_delete">
         <p>
         数据变更语句 insert，update 和 delete 的实现非常接近：
         </p>
@@ -407,7 +407,7 @@ ps.setInt(1,id);]]></source>
 </select>]]></source>
       </subsection>
 
-      <subsection name="参数（Parameters）">
+      <subsection name="参数（Parameters）" id="Parameters">
         <p>前面的所有语句中你所见到的都是简单参数的例子，实际上参数是 MyBatis 非常强大的元素，对于简单的做法，大概 90% 的情况参数都很少，比如：
         </p>
 
@@ -489,7 +489,7 @@ ps.setInt(1,id);]]></source>
         </p>
       </subsection>
 
-      <subsection name="Result Maps">
+      <subsection name="Result Maps" id="Result_Maps">
         <p>
 resultMap 元素是 MyBatis 中最重要最强大的元素。它就是让你远离 90%的需要从结果
 集中取出数据的 JDBC 代码的那个东西,
@@ -1637,7 +1637,7 @@ MyBatis 会从结果集中得到每条记录,
 
       </subsection>
       
-      <subsection name="自动映射">
+      <subsection name="自动映射" id="Auto-mapping">
 
         <p>
            正如你在前面一节看到的，在简单的场景下，MyBatis可以替你自动映射查询结果。
@@ -1735,7 +1735,7 @@ MyBatis 会从结果集中得到每条记录,
               
       </subsection>
       
-      <subsection name="缓存">
+      <subsection name="缓存" id="cache">
         <p>
 MyBatis 包含一个非常强大的查询缓存特性,它可以非常方便地配置和定制。MyBatis 3
 中的缓存实现的很多改进都已经实现了,使得它更加强大而且易于配置。

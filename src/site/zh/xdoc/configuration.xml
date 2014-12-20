@@ -57,7 +57,7 @@
           </ul>
         </li>
       </ul>
-      <subsection name="properties">
+      <subsection name="properties" id="properties">
         <p>这些属性都是可外部配置且可动态替换的，既可以在典型的 Java 属性文件中配置，亦可通过 properties 元素的子元素来传递。例如：</p>
         <source><![CDATA[<properties resource="org/mybatis/example/config.properties">
   <property name="username" value="dev_user"/>
@@ -90,7 +90,7 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
         </ul>
         <p>因此，通过方法参数传递的属性具有最高优先级，资源文件及 url 属性配置的次之，最低优先级的是 properties 属性中指定的属性。</p>
       </subsection>
-      <subsection name="settings">
+      <subsection name="settings" id="settings">
         <p>调整 settings 中的设置是非常关键的，它们会改变 MyBatis 的运行时行为。下表描述了设置中各项的意图、默认值等。</p>
 
         <table>
@@ -393,7 +393,7 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
 </settings>]]></source>
 
       </subsection>
-      <subsection name="typeAliases">
+      <subsection name="typeAliases" id="typeAliases">
         <p>类型别名是为 Java 类型命名的一个短的名字。它只和 XML 配置有关，存在的意义仅在于用来减少类完全限定名的冗余。例如:</p>
         <source><![CDATA[<typeAliases>
   <typeAlias alias="Author" type="domain.blog.Author"/>
@@ -411,7 +411,7 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
   <package name="domain.blog"/>
 </typeAliases>
 ]]></source>
-        <p>每一个在包 <code>domain.blog</code> 中的 Java Bean，在没有注解的情况下，会使用 Bean 的首字母小写的非限定类名来作为它的别名。比如 <code>domain.blog.Author</code> 的别名为 <code>Author</code>；若有注解，则别名为其注解值。看下面的例子：</p>
+        <p>每一个在包 <code>domain.blog</code> 中的 Java Bean，在没有注解的情况下，会使用 Bean 的首字母小写的非限定类名来作为它的别名。比如 <code>domain.blog.Author</code> 的别名为 <code>author</code>；若有注解，则别名为其注解值。看下面的例子：</p>
         <source><![CDATA[@Alias("author")
 public class Author {
     ...
@@ -649,7 +649,7 @@ public class Author {
           </tbody>
         </table>
       </subsection>
-      <subsection name="typeHandlers">
+      <subsection name="typeHandlers" id="typeHandlers">
         <p>无论是 MyBatis 在预处理语句（PreparedStatement）中设置一个参数时，还是从结果集中取出一个值时，都会用类型处理器将获取的值以合适的方式转换成 Java 类型。下表描述了一些默认的类型处理器。</p>
         <table>
           <thead>
@@ -1012,7 +1012,7 @@ public class GenericTypeHandler<E extends MyObject> extends BaseTypeHandler<E> {
 </typeHandlers>
 ]]></source>
 		<p>但是怎样能将同样的 <code>Enum</code> 既映射成字符串又映射成整形呢？</p>
-      	<p>自动映射器（auto-mapper）会自动地选用 <code>EnumOrdinalTypeHandler</code> 来处理，所以如果我们想用回旧的序数型的 <code>EnumTypeHandler</code>，就非要为那些 SQL 语句显式地设置要用到的类型处理器不可。</p>
+      	<p>自动映射器（auto-mapper）会自动地选用 <code>EnumOrdinalTypeHandler</code> 来处理，所以如果我们想用普通的 <code>EnumTypeHandler</code>，就非要为那些 SQL 语句显式地设置要用到的类型处理器不可。</p>
       	<p>（下一节才开始讲映射器文件，所以如果是首次阅读该文档，你可能需要先越过这一步，过会再来看。）</p>
       	<source><![CDATA[<!DOCTYPE mapper
     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
@@ -1055,7 +1055,7 @@ public class GenericTypeHandler<E extends MyObject> extends BaseTypeHandler<E> {
 		<p>注意，这里的 select 语句强制使用 <code>resultMap</code> 来代替 <code>resultType</code>。</p>
       </subsection>
 
-      <subsection name="对象工厂（objectFactory）">
+      <subsection name="对象工厂（objectFactory）" id="objectFactory">
         <p>MyBatis 每次创建结果对象的新实例时，它都会使用一个对象工厂（ObjectFactory）实例来完成。默认的对象工厂需要做的仅仅是实例化目标类，要么通过默认构造方法，要么在参数映射存在的时候通过参数构造方法来实例化。如果想覆盖对象工厂的默认行为，则可以通过创建自己的对象工厂来实现。比如：</p>
         <source><![CDATA[// ExampleObjectFactory.java
 public class ExampleObjectFactory extends DefaultObjectFactory {
@@ -1080,7 +1080,7 @@ public class ExampleObjectFactory extends DefaultObjectFactory {
         <p>ObjectFactory 接口很简单，它包含两个创建用的方法，一个是处理默认构造方法的，另外一个是处理带参数的构造方法的。最后，setProperties 方法可以被用来配置 ObjectFactory，在初始化你的 ObjectFactory 实例后，objectFactory 元素体中定义的属性会被传递给 setProperties 方法。</p>
 
       </subsection>
-      <subsection name="插件（plugins）">
+      <subsection name="插件（plugins）" id="plugins">
         <p>
           MyBatis 允许你在已映射语句执行过程中的某一点进行拦截调用。默认情况下，MyBatis 允许使用插件来拦截的方法调用包括：
         </p>
@@ -1135,7 +1135,7 @@ public class ExamplePlugin implements Interceptor {
         </p>
         <p>除了用插件来修改 MyBatis 核心行为之外，还可以通过完全覆盖配置类来达到目的。只需继承后覆盖其中的每个方法，再把它传递到 sqlSessionFactoryBuilder.build(myConfig) 方法即可。再次重申，这可能会严重影响 MyBatis 的行为，务请慎之又慎。</p>
       </subsection>
-      <subsection name="配置环境（environments）">
+      <subsection name="配置环境（environments）" id="environments">
         <p>MyBatis 可以配置成适应多种环境，这种机制有助于将 SQL 映射应用于多种数据库之中，现实情况下有多种理由需要这么做。例如，开发、测试和生产环境需要有不同的配置；或者共享相同 Schema 的多个生产数据库，想使用相同的 SQL 映射。许多类似的用例。</p>
         <p>
           <strong>不过要记住：尽管可以配置多个环境，每个 SqlSessionFactory 实例只能选择其一。</strong>
@@ -1236,9 +1236,9 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader,properties);]]
         </ul>
         <p>有三种内建的数据源类型（也就是 type=”???”）：</p>
         <p>
-          <strong>无连接池（UNPOOLED）</strong>– 这个数据源的实现是每次被请求时简单打开和关闭连接。它有一点慢，这是对简单应用程序的一个很好的选择，因为它不需要及时的可用连接。不同的数据库对这个的表现也是不一样的，所以对某些数据库来说配置数据源并不重要，这个配置也是闲置的。UNPOOLED 类型的数据源仅仅需要配置以下 5 种属性：</p>
+          <strong>无连接池（UNPOOLED）</strong>– 这个数据源的实现是每次被请求时简单打开和关闭连接。它有一点慢，这是对简单应用程序的一个很好的选择，因为它不需要及时的可用连接。不同的数据库对这个的表现也是不一样的，所以对某些数据库来说使用连接池并不重要，这个配置也是理想的。UNPOOLED 类型的数据源仅仅需要配置以下 5 种属性：</p>
         <ul>
-          <li><code>driver</code> – 这是 JDBC 驱动的 Java 类的完全限定名（如果你的驱动包含，它也不是数据源类）。
+          <li><code>driver</code> – 这是 JDBC 驱动的 Java 类的完全限定名（并不是JDBC驱动中可能包含的数据源类）。
           </li>
           <li><code>url</code> – 这是数据库的 JDBC URL 地址。
           </li>
@@ -1249,12 +1249,12 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader,properties);]]
           <li><code>defaultTransactionIsolationLevel</code> – 默认的连接事务隔离级别。
           </li>
         </ul>
-        <p>作为可选项，你也可以传递 properties 给数据库驱动。要这样做，属性的前缀以“driver.”开头，例如：
+        <p>作为可选项，你也可以传递属性给数据库驱动。要这样做，属性的前缀为“driver.”，例如：
         </p>
         <ul>
           <li><code>driver.encoding=UTF8</code></li>
         </ul>
-        <p>这样就会传递以值 “UTF8” 来传递属性“encoding”，它是通过DriverManager.getConnection(url,driverProperties)方法传递给数据库驱动的。
+        <p>可以通过DriverManager.getConnection(url,driverProperties)方法传递值为“UTF8”的“encoding”属性给数据库驱动。
         </p>
         <p>
           <strong>有连接池（POOLED）</strong>– 这种数据源的实现利用“池”的概念将 JDBC 连接对象组织起来，避免了创建新的连接实例时所必需的初始化和认证时间。这是一种使得并发 Web 应用快速响应请求的流行处理方式。
@@ -1268,9 +1268,9 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader,properties);]]
           </li>
           <li><code>poolMaximumCheckoutTime</code> – 在被强制返回之前，池中连接被检出（checked out）时间，默认值：20000 毫秒（即 20 秒）
           </li>
-          <li><code>poolTimeToWait</code> – 这是一个低层设置，如果获取连接花费的相当长的时间，它会给连接池打印日志并重新尝试获取一个连接的机会（避免在误配置的情况下一直安静的失败），默认值：20000 毫秒（即 20 秒）。
+          <li><code>poolTimeToWait</code> – 这是一个底层设置，如果获取连接花费的相当长的时间，它会给连接池打印日志并重新尝试获取一个连接的机会（避免在误配置的情况下一直安静的失败），默认值：20000 毫秒（即 20 秒）。
           </li>
-          <li><code>poolPingQuery</code> – 发送到数据的侦测查询，用来检验连接是否处在正常工作秩序中并准备接受请求。默认是“NO PING QUERY SET”，这会导致多数数据库驱动失败时带有一个恰当的错误消息。
+          <li><code>poolPingQuery</code> – 发送到数据库的侦测查询，用来检验连接是否处在正常工作秩序中并准备接受请求。默认是“NO PING QUERY SET”，这会导致多数数据库驱动失败时带有一个恰当的错误消息。
           </li>
           <li><code>poolPingEnabled</code> – 是否启用侦测查询。若开启，也必须使用一个可执行的 SQL 语句设置 <code>poolPingQuery</code> 属性（最好是一个非常快的 SQL），默认值：false。
           </li>
@@ -1286,12 +1286,12 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader,properties);]]
           <li><code>data_source</code> – 这是引用数据源实例位置的上下文的路径。提供了 initial_context 配置时会在其返回的上下文中进行查找，没有提供时则直接在 InitialContext 中查找。
           </li>
         </ul>
-        <p>和其他数据源配置类似，可以通过名为“env.”的前缀直接向初始上下文发送属性（send properties）。比如：
+        <p>和其他数据源配置类似，可以通过添加前缀“env.”直接把属性传递给初始上下文。比如：
         </p>
         <ul>
           <li><code>env.encoding=UTF8</code></li>
         </ul>
-        <p>这就会在初始化时以值“UTF8”向初始上下文的构造方法传递名为“encoding”的属性。
+        <p>这就会在初始上下文（InitialContext）实例化时往它的构造方法传递值为“UTF8”的“encoding”属性。
         </p>
 
 		<p>
@@ -1304,7 +1304,7 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader,properties);]]
 }]]></source>
 
         <p>
-		  <code>org.apache.ibatis.datasource.unpooled.UnpooledDataSourceFactory</code> 可被用作父类来构建新的数据源适配器，比如下面这段插入 C3P0 所必需的代码：
+		  <code>org.apache.ibatis.datasource.unpooled.UnpooledDataSourceFactory</code> 可被用作父类来构建新的数据源适配器，比如下面这段插入 C3P0 数据源所必需的代码：
 		</p>
 
         <source><![CDATA[import org.apache.ibatis.datasource.unpooled.UnpooledDataSourceFactory;
@@ -1329,7 +1329,7 @@ public class C3P0DataSourceFactory extends UnpooledDataSourceFactory {
 
       </subsection>
 
-      <subsection name="databaseIdProvider">
+      <subsection name="databaseIdProvider" id="databaseIdProvider">
         <p>MyBatis 可以根据不同的数据库厂商执行不同的语句，这种多厂商的支持是基于映射语句中的 <code>databaseId</code> 属性的。MyBatis 会加载不带 <code>databaseId</code> 属性和带有匹配当前数据库 <code>databaseId</code> 属性的所有语句。如果同时找到带有 <code>databaseId</code> 和不带 <code>databaseId</code> 的相同语句，则后者会被舍弃。为支持多厂商特性只要像下面这样在 mybatis-config.xml 文件中加入 <code>databaseIdProvider</code> 即可：</p>
 
         <source><![CDATA[<databaseIdProvider type="DB_VENDOR" />
@@ -1343,9 +1343,9 @@ public class C3P0DataSourceFactory extends UnpooledDataSourceFactory {
   <property name="Oracle" value="oracle" />
 </databaseIdProvider>]]></source>
 
-		<p>在有 properties 时，DB_VENDOR databaseIdProvider 元素会搜索所返回数据库产品名称的第一个对应键值，如果没有匹配的将会返回 null。在这个例子中，如果 <code>getDatabaseProductName()</code> 返回“Oracle (DataDirect)”，databaseId 将被设置为“oracle”。</p>
+		<p>在有 properties 时，DB_VENDOR databaseIdProvider 的将被设置为第一个能匹配数据库产品名称的属性键对应的值，如果没有匹配的属性将会设置为 “null”。在这个例子中，如果 <code>getDatabaseProductName()</code> 返回“Oracle (DataDirect)”，databaseId 将被设置为“oracle”。</p>
 
-		<p>你可以通过实现接口 <code>org.apache.ibatis.mapping.DatabaseIdProvider</code> 并在 mybatis-config.xml 中注册来构建自己的 database provider：</p>
+		<p>你可以通过实现接口 <code>org.apache.ibatis.mapping.DatabaseIdProvider</code> 并在 mybatis-config.xml 中注册来构建自己的 DatabaseIdProvider：</p>
 
         <source><![CDATA[public interface DatabaseIdProvider {
   void setProperties(Properties p);
@@ -1354,7 +1354,7 @@ public class C3P0DataSourceFactory extends UnpooledDataSourceFactory {
 
       </subsection>
 
-      <subsection name="映射器（mappers）">
+      <subsection name="映射器（mappers）" id="mappers">
         <p>既然 MyBatis 的行为已经由上述元素配置完了，我们现在就要定义 SQL 映射语句了。但是首先我们需要告诉 MyBatis 到哪里去找到这些语句。Java 在自动查找这方面没有提供一个很好的方法，所以最佳的方式是告诉 MyBatis 到哪里去找映射文件。你可以使用相对于类路径的资源引用，或完全限定资源定位符（包括 <code>file:///</code> 的 URL），或类名和包名等。例如：</p>
         <source><![CDATA[<!-- Using classpath relative resources -->
 <mappers>
