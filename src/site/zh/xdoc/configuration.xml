@@ -57,7 +57,7 @@
           </ul>
         </li>
       </ul>
-      <subsection name="properties">
+      <subsection name="properties" id="properties">
         <p>这些属性都是可外部配置且可动态替换的，既可以在典型的 Java 属性文件中配置，亦可通过 properties 元素的子元素来传递。例如：</p>
         <source><![CDATA[<properties resource="org/mybatis/example/config.properties">
   <property name="username" value="dev_user"/>
@@ -90,7 +90,7 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
         </ul>
         <p>因此，通过方法参数传递的属性具有最高优先级，资源文件及 url 属性配置的次之，最低优先级的是 properties 属性中指定的属性。</p>
       </subsection>
-      <subsection name="settings">
+      <subsection name="settings" id="settings">
         <p>调整 settings 中的设置是非常关键的，它们会改变 MyBatis 的运行时行为。下表描述了设置中各项的意图、默认值等。</p>
 
         <table>
@@ -393,7 +393,7 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
 </settings>]]></source>
 
       </subsection>
-      <subsection name="typeAliases">
+      <subsection name="typeAliases" id="typeAliases">
         <p>类型别名是为 Java 类型命名的一个短的名字。它只和 XML 配置有关，存在的意义仅在于用来减少类完全限定名的冗余。例如:</p>
         <source><![CDATA[<typeAliases>
   <typeAlias alias="Author" type="domain.blog.Author"/>
@@ -649,7 +649,7 @@ public class Author {
           </tbody>
         </table>
       </subsection>
-      <subsection name="typeHandlers">
+      <subsection name="typeHandlers" id="typeHandlers">
         <p>无论是 MyBatis 在预处理语句（PreparedStatement）中设置一个参数时，还是从结果集中取出一个值时，都会用类型处理器将获取的值以合适的方式转换成 Java 类型。下表描述了一些默认的类型处理器。</p>
         <table>
           <thead>
@@ -1055,7 +1055,7 @@ public class GenericTypeHandler<E extends MyObject> extends BaseTypeHandler<E> {
 		<p>注意，这里的 select 语句强制使用 <code>resultMap</code> 来代替 <code>resultType</code>。</p>
       </subsection>
 
-      <subsection name="对象工厂（objectFactory）">
+      <subsection name="对象工厂（objectFactory）" id="objectFactory">
         <p>MyBatis 每次创建结果对象的新实例时，它都会使用一个对象工厂（ObjectFactory）实例来完成。默认的对象工厂需要做的仅仅是实例化目标类，要么通过默认构造方法，要么在参数映射存在的时候通过参数构造方法来实例化。如果想覆盖对象工厂的默认行为，则可以通过创建自己的对象工厂来实现。比如：</p>
         <source><![CDATA[// ExampleObjectFactory.java
 public class ExampleObjectFactory extends DefaultObjectFactory {
@@ -1080,7 +1080,7 @@ public class ExampleObjectFactory extends DefaultObjectFactory {
         <p>ObjectFactory 接口很简单，它包含两个创建用的方法，一个是处理默认构造方法的，另外一个是处理带参数的构造方法的。最后，setProperties 方法可以被用来配置 ObjectFactory，在初始化你的 ObjectFactory 实例后，objectFactory 元素体中定义的属性会被传递给 setProperties 方法。</p>
 
       </subsection>
-      <subsection name="插件（plugins）">
+      <subsection name="插件（plugins）" id="plugins">
         <p>
           MyBatis 允许你在已映射语句执行过程中的某一点进行拦截调用。默认情况下，MyBatis 允许使用插件来拦截的方法调用包括：
         </p>
@@ -1135,7 +1135,7 @@ public class ExamplePlugin implements Interceptor {
         </p>
         <p>除了用插件来修改 MyBatis 核心行为之外，还可以通过完全覆盖配置类来达到目的。只需继承后覆盖其中的每个方法，再把它传递到 sqlSessionFactoryBuilder.build(myConfig) 方法即可。再次重申，这可能会严重影响 MyBatis 的行为，务请慎之又慎。</p>
       </subsection>
-      <subsection name="配置环境（environments）">
+      <subsection name="配置环境（environments）" id="environments">
         <p>MyBatis 可以配置成适应多种环境，这种机制有助于将 SQL 映射应用于多种数据库之中，现实情况下有多种理由需要这么做。例如，开发、测试和生产环境需要有不同的配置；或者共享相同 Schema 的多个生产数据库，想使用相同的 SQL 映射。许多类似的用例。</p>
         <p>
           <strong>不过要记住：尽管可以配置多个环境，每个 SqlSessionFactory 实例只能选择其一。</strong>
@@ -1329,7 +1329,7 @@ public class C3P0DataSourceFactory extends UnpooledDataSourceFactory {
 
       </subsection>
 
-      <subsection name="databaseIdProvider">
+      <subsection name="databaseIdProvider" id="databaseIdProvider">
         <p>MyBatis 可以根据不同的数据库厂商执行不同的语句，这种多厂商的支持是基于映射语句中的 <code>databaseId</code> 属性的。MyBatis 会加载不带 <code>databaseId</code> 属性和带有匹配当前数据库 <code>databaseId</code> 属性的所有语句。如果同时找到带有 <code>databaseId</code> 和不带 <code>databaseId</code> 的相同语句，则后者会被舍弃。为支持多厂商特性只要像下面这样在 mybatis-config.xml 文件中加入 <code>databaseIdProvider</code> 即可：</p>
 
         <source><![CDATA[<databaseIdProvider type="DB_VENDOR" />
@@ -1354,7 +1354,7 @@ public class C3P0DataSourceFactory extends UnpooledDataSourceFactory {
 
       </subsection>
 
-      <subsection name="映射器（mappers）">
+      <subsection name="映射器（mappers）" id="mappers">
         <p>既然 MyBatis 的行为已经由上述元素配置完了，我们现在就要定义 SQL 映射语句了。但是首先我们需要告诉 MyBatis 到哪里去找到这些语句。Java 在自动查找这方面没有提供一个很好的方法，所以最佳的方式是告诉 MyBatis 到哪里去找映射文件。你可以使用相对于类路径的资源引用，或完全限定资源定位符（包括 <code>file:///</code> 的 URL），或类名和包名等。例如：</p>
         <source><![CDATA[<!-- Using classpath relative resources -->
 <mappers>
