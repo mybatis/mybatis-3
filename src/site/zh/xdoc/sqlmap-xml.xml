@@ -1661,7 +1661,7 @@ MyBatis 会从结果集中得到每条记录,
            如果没有被手工映射，则将被自动映射。自动映射处理完毕后手工映射才会被处理。
            在接下来的例子中， <i>id</i> 和 <i>userName</i>列将被自动映射， <i>hashed_password</i> 列将根据配置映射。
         </p>
-        <source><![CDATA[<select id="selectUsers" resultType="User">
+        <source><![CDATA[<select id="selectUsers" resultMap="userResultMap">
   select
     user_id             as "id",
     user_name           as "userName",
@@ -1706,7 +1706,7 @@ MyBatis 会从结果集中得到每条记录,
 </select>]]></source>
 
         <source><![CDATA[<resultMap id="blogResult" type="Blog">
-  <association property="author" javaType="Author" resultMap="authorResult"/>
+  <association property="author" resultMap="authorResult"/>
 </resultMap>
 
 <resultMap id="authorResult" type="Author">
@@ -1720,18 +1720,13 @@ MyBatis 会从结果集中得到每条记录,
         </p>
 
         <p>
-          Regardless of the auto-mapping level configured you can enable or disable the automapping for an specific statement
+          Regardless of the auto-mapping level configured you can enable or disable the automapping for an specific ResultMap
           by adding the attribute <code>autoMapping</code> to it:
         </p>
 
-        <source><![CDATA[<select id="selectUsers" resultType="User" autoMapping="false">
-  select
-    user_id             as "id",
-    user_name           as "userName",
-    hashed_password
-  from some_table
-  where id = #{id}
-</select>]]></source>
+        <source><![CDATA[<resultMap id="userResultMap" type="User" autoMapping="false">
+  <result property="password" column="hashed_password"/>
+</resultMap>]]></source>
               
       </subsection>
       

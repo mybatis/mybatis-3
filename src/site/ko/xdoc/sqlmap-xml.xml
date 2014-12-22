@@ -1387,7 +1387,7 @@ vehicle 간의 관계를 알 수 있다. 그러므로, 나머지 프로퍼티들
           이런 경우 각각의 결과매핑에서 ResultSet의 모든 칼럼은 자동매핑이 아니라 수동매핑으로 처리한다.
           다음 샘플에서 <i>id</i> 와 <i>userName</i> 칼럼은 자동매핑되고 <i>hashed_password</i> 칼럼은 수동으로 매핑한다. </p>
 
-        <source><![CDATA[<select id="selectUsers" resultType="User">
+        <source><![CDATA[<select id="selectUsers" resultMap="userResultMap">
   select
     user_id             as "id",
     user_name           as "userName",
@@ -1432,7 +1432,7 @@ vehicle 간의 관계를 알 수 있다. 그러므로, 나머지 프로퍼티들
 </select>]]></source>
 
         <source><![CDATA[<resultMap id="blogResult" type="Blog">
-  <association property="author" javaType="Author" resultMap="authorResult"/>
+  <association property="author" resultMap="authorResult"/>
 </resultMap>
 
 <resultMap id="authorResult" type="Author">
@@ -1450,14 +1450,9 @@ vehicle 간의 관계를 알 수 있다. 그러므로, 나머지 프로퍼티들
           자동매핑 설정에 상관없이 구문별로 <code>autoMapping</code>속성을 추가해서 자동매핑을 사용하거나 사용하지 않을수도 있다.
         </p>
 
-        <source><![CDATA[<select id="selectUsers" resultType="User" autoMapping="false">
-  select
-    user_id             as "id",
-    user_name           as "userName",
-    hashed_password
-  from some_table
-  where id = #{id}
-</select>]]></source>
+        <source><![CDATA[<resultMap id="userResultMap" type="User" autoMapping="false">
+  <result property="password" column="hashed_password"/>
+</resultMap>]]></source>
               
       </subsection>
 
