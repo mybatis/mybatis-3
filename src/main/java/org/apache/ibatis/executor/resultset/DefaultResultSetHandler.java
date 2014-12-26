@@ -60,7 +60,7 @@ import org.apache.ibatis.type.TypeHandlerRegistry;
  */
 public class DefaultResultSetHandler implements ResultSetHandler {
 
-  private static final Object NO_VALUE = new Object();
+  private static final Object DEFERED = new Object();
 
   private final Executor executor;
   private final Configuration configuration;
@@ -360,16 +360,24 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     boolean foundValues = false;
     final List<ResultMapping> propertyMappings = resultMap.getPropertyResultMappings();
     for (ResultMapping propertyMapping : propertyMappings) {
-      final String column = prependPrefix(propertyMapping.getColumn(), columnPrefix);
+      String column = prependPrefix(propertyMapping.getColumn(), columnPrefix);
+      if (propertyMapping.getNestedResultMapId() != null) {
+        // the user added a column attribute to a nested result map, ignore it
+        column = null;
+      }      
       if (propertyMapping.isCompositeResult() 
           || (column != null && mappedColumnNames.contains(column.toUpperCase(Locale.ENGLISH))) 
           || propertyMapping.getResultSet() != null) {
         Object value = getPropertyMappingValue(rsw.getResultSet(), metaObject, propertyMapping, lazyLoader, columnPrefix);
-        final String property = propertyMapping.getProperty(); // issue #541 make property optional
-        if (value != NO_VALUE && property != null && (value != null || configuration.isCallSettersOnNulls())) { // issue #377, call setter on nulls
-          if (value != null || !metaObject.getSetterType(property).isPrimitive()) {
-            metaObject.setValue(property, value);
-          }
+        // issue #541 make property optional
+        final String property = propertyMapping.getProperty();
+        // issue #377, call setter on nulls
+        if (value != DEFERED
+            && property != null
+            && (value != null || (configuration.isCallSettersOnNulls() && !metaObject.getSetterType(property).isPrimitive()))) {
+          metaObject.setValue(property, value);
+        }
+        if (value != null || value == DEFERED) {
           foundValues = true;
         }
       }
@@ -382,11 +390,8 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     if (propertyMapping.getNestedQueryId() != null) {
       return getNestedQueryMappingValue(rs, metaResultObject, propertyMapping, lazyLoader, columnPrefix);
     } else if (propertyMapping.getResultSet() != null) {
-      addPendingChildRelation(rs, metaResultObject, propertyMapping);
-      return NO_VALUE;
-    } else if (propertyMapping.getNestedResultMapId() != null) {
-      // the user added a column attribute to a nested result map, ignore it
-      return NO_VALUE;
+      addPendingChildRelation(rs, metaResultObject, propertyMapping);   // TODO is that OK?
+      return DEFERED;
     } else {
       final TypeHandler<?> typeHandler = propertyMapping.getTypeHandler();
       final String column = prependPrefix(propertyMapping.getColumn(), columnPrefix);
@@ -606,17 +611,19 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     final MappedStatement nestedQuery = configuration.getMappedStatement(nestedQueryId);
     final Class<?> nestedQueryParameterType = nestedQuery.getParameterMap().getType();
     final Object nestedQueryParameterObject = prepareParameterForNestedQuery(rs, propertyMapping, nestedQueryParameterType, columnPrefix);
-    Object value = NO_VALUE;
+    Object value = null;
     if (nestedQueryParameterObject != null) {
       final BoundSql nestedBoundSql = nestedQuery.getBoundSql(nestedQueryParameterObject);
       final CacheKey key = executor.createCacheKey(nestedQuery, nestedQueryParameterObject, RowBounds.DEFAULT, nestedBoundSql);
       final Class<?> targetType = propertyMapping.getJavaType();
       if (executor.isCached(nestedQuery, key)) {
         executor.deferLoad(nestedQuery, metaResultObject, property, key, targetType);
+        value = DEFERED;
       } else {
         final ResultLoader resultLoader = new ResultLoader(configuration, executor, nestedQuery, nestedQueryParameterObject, targetType, key, nestedBoundSql);
         if (propertyMapping.isLazy()) {
           lazyLoader.addLoader(property, metaResultObject, resultLoader);
+          value = DEFERED;
         } else {
           value = resultLoader.loadResult();
         }
