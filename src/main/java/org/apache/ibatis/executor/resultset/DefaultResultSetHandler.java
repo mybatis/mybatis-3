@@ -445,15 +445,17 @@ public class DefaultResultSetHandler implements ResultSetHandler {
   private void linkToParents(ResultSet rs, ResultMapping parentMapping, Object rowValue) throws SQLException {
     CacheKey parentKey = createKeyForMultipleResults(rs, parentMapping, parentMapping.getColumn(), parentMapping.getForeignColumn());
     List<PendingRelation> parents = pendingRelations.get(parentKey);
-    for (PendingRelation parent : parents) {
-      if (parent != null) {
-        final Object collectionProperty = instantiateCollectionPropertyIfAppropriate(parent.propertyMapping, parent.metaObject);
-        if (rowValue != null) {
-          if (collectionProperty != null) {
-            final MetaObject targetMetaObject = configuration.newMetaObject(collectionProperty);
-            targetMetaObject.add(rowValue);
-          } else {
-            parent.metaObject.setValue(parent.propertyMapping.getProperty(), rowValue);
+    if (parents != null) {
+      for (PendingRelation parent : parents) {
+        if (parent != null) {
+          final Object collectionProperty = instantiateCollectionPropertyIfAppropriate(parent.propertyMapping, parent.metaObject);
+          if (rowValue != null) {
+            if (collectionProperty != null) {
+              final MetaObject targetMetaObject = configuration.newMetaObject(collectionProperty);
+              targetMetaObject.add(rowValue);
+            } else {
+              parent.metaObject.setValue(parent.propertyMapping.getProperty(), rowValue);
+            }
           }
         }
       }
