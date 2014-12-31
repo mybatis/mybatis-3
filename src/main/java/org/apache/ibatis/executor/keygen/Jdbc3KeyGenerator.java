@@ -20,7 +20,9 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Map;
 
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.executor.ExecutorException;
@@ -42,12 +44,10 @@ public class Jdbc3KeyGenerator implements KeyGenerator {
 
   @Override
   public void processAfter(Executor executor, MappedStatement ms, Statement stmt, Object parameter) {
-    List<Object> parameters = new ArrayList<Object>();
-    parameters.add(parameter);
-    processBatch(ms, stmt, parameters);
+    processBatch(ms, stmt, getParameters(parameter));
   }
 
-  public void processBatch(MappedStatement ms, Statement stmt, List<Object> parameters) {
+  public void processBatch(MappedStatement ms, Statement stmt, Collection<Object> parameters) {
     ResultSet rs = null;
     try {
       rs = stmt.getGeneratedKeys();
@@ -81,7 +81,34 @@ public class Jdbc3KeyGenerator implements KeyGenerator {
       }
     }
   }
-
+  
+  private Collection<Object> getParameters(Object parameter) {
+    Collection<Object> parameters = null;
+    if (parameter instanceof Collection) {
+      parameters = (Collection) parameter;
+    } else if (parameter instanceof Map) {
+      Map parameterMap = (Map) parameter;
+      if (parameterMap.containsKey("keys")) {
+        Object keys = ((Map) parameter).get("keys");
+        if (keys instanceof Collection) {
+          parameters = (Collection) keys;
+        } else {
+          parameters = new ArrayList<Object>();
+          parameters.add(keys);
+        }
+      } else if (parameterMap.containsKey("list")) {
+        parameters = (Collection) parameterMap.get("list");
+      } else if (parameterMap.containsKey("array")) {
+        parameters = Arrays.asList((Object[])parameterMap.get("array"));
+      }
+    }
+    if (parameters == null) {
+      parameters = new ArrayList<Object>();
+      parameters.add(parameter);
+    }
+    return parameters;
+  }
+  
   private TypeHandler<?>[] getTypeHandlers(TypeHandlerRegistry typeHandlerRegistry, MetaObject metaParam, String[] keyProperties) {
     TypeHandler<?>[] typeHandlers = new TypeHandler<?>[keyProperties.length];
     for (int i = 0; i < keyProperties.length; i++) {
