@@ -99,7 +99,7 @@ public class Jdbc3KeyGenerator implements KeyGenerator {
       } else if (parameterMap.containsKey("list")) {
         parameters = (Collection) parameterMap.get("list");
       } else if (parameterMap.containsKey("array")) {
-        parameters = Arrays.asList(parameterMap.get("array"));
+        parameters = Arrays.asList((Object[])parameterMap.get("array"));
       }
     }
     if (parameters == null) {
