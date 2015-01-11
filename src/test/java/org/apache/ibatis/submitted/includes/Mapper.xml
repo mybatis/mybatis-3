@@ -31,7 +31,9 @@
   </sql>
 
   <select id="select" resultType="map">
-    <include refid="org.apache.ibatis.submitted.includes.fragments.select"/>
+    <include refid="someinclude">
+        <placeholder name="include_target" value="org.apache.ibatis.submitted.includes.fragments.select"/>
+    </include>
     field1, field2, field3
     from
       <include refid="someinclude">

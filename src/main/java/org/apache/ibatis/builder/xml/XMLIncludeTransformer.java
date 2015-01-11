@@ -47,13 +47,22 @@ public class XMLIncludeTransformer {
   public void applyIncludes(Node source) {
     applyIncludes(source, new HashMap<String, String>());
   }
-  
+
+  /**
+   * Recursively apply includes through all SQL fragments.
+   * @param source Include node in DOM tree
+   * @param placeholderContext Current context for static placeholders with values
+   */
   private void applyIncludes(Node source, final Map<String, String> placeholderContext) {
     GenericTokenParser tokenParser = new GenericTokenParser(PLACEHOLDER_START, PLACEHOLDER_END, new PlaceholderTokenHandler(placeholderContext));
     if (source.getNodeName().equals("include")) {
+      // new full context for included SQL - contains inherited context and new variables from current include node
       Map<String, String> fullContext = placeholderContext;
-      
-      Node toInclude = findSqlFragment(tokenParser.parse(getStringAttribute(source, "refid")));
+
+      String refid = getStringAttribute(source, "refid");
+      // replace placeholders also in include refid value
+      refid = tokenParser.parse(refid);
+      Node toInclude = findSqlFragment(refid);
       Map<String, String> newPlaceholderContext = getPlaceholderContext(source);
       if (!newPlaceholderContext.isEmpty()) {
         for (String name : newPlaceholderContext.keySet()) {
@@ -61,9 +70,6 @@ public class XMLIncludeTransformer {
         }
         applyInheritedContext(newPlaceholderContext, placeholderContext);
         fullContext = newPlaceholderContext;
-      }
-      if (!fullContext.isEmpty()) {
-        toInclude = toInclude.cloneNode(true);
       }
       applyIncludes(toInclude, fullContext);
       if (toInclude.getOwnerDocument() != source.getOwnerDocument()) {
@@ -80,8 +86,10 @@ public class XMLIncludeTransformer {
         applyIncludes(children.item(i), placeholderContext);
       }
     } else if (source.getNodeType() == Node.ATTRIBUTE_NODE && !placeholderContext.isEmpty()) {
+      // replace placeholders in all attribute values
       source.setNodeValue(tokenParser.parse(source.getNodeValue()));
     } else if (source.getNodeType() == Node.TEXT_NODE && !placeholderContext.isEmpty()) {
+      // replace placeholder ins all text nodes
       source.setNodeValue(tokenParser.parse(source.getNodeValue()));
     }
   }
@@ -100,7 +108,12 @@ public class XMLIncludeTransformer {
   private String getStringAttribute(Node node, String name) {
     return node.getAttributes().getNamedItem(name).getNodeValue();
   }
-  
+
+  /**
+   * Add inherited context into newly created one.
+   * @param newContext placeholders for current include instance where inherited values will be placed
+   * @param inheritedContext all inherited placeholder values
+   */
   private void applyInheritedContext(Map<String, String> newContext, Map<String, String> inheritedContext) {
     for (Map.Entry<String, String> e : inheritedContext.entrySet()) {
       if (!newContext.containsKey(e.getKey())) {
@@ -108,7 +121,12 @@ public class XMLIncludeTransformer {
       }
     }
   }
-  
+
+  /**
+   * Read placholders and their values from include node definition. 
+   * @param node Include node instance
+   * @return placeholder context from include instance (no inherited values)
+   */
   private Map<String, String> getPlaceholderContext(Node node) {
     List<Node> subElements = getSubElements(node);
     if (subElements.isEmpty()) {
