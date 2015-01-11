@@ -238,9 +238,15 @@ lang CDATA #IMPLIED
 
 <!-- Dynamic -->
 
-<!ELEMENT include EMPTY>
+<!ELEMENT include (placeholder+)?>
 <!ATTLIST include
 refid CDATA #REQUIRED
+>
+
+<!ELEMENT placeholder EMPTY>
+<!ATTLIST placeholder
+ name CDATA #REQUIRED
+ value CDATA #REQUIRED
 >
 
 <!ELEMENT bind EMPTY>
