@@ -29,7 +29,7 @@ import org.apache.ibatis.mapping.FetchType;
 @Target(ElementType.METHOD)
 public @interface One {
   String select() default "";
-  
-  FetchType lazy() default FetchType.DEFAULT;
+
+  FetchType fetchType() default FetchType.DEFAULT;
 
 }

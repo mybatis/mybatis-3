@@ -34,7 +34,7 @@
     <constructor>
       <idArg column="id" javaType="_int"/>
       <arg column="title" javaType="java.lang.String"/>
-      <arg column="author_id" javaType="domain.blog.Author" select="org.apache.ibatis.submitted.nested_query_cache.AuthorMapper.selectAuthor"/>
+      <arg column="author_id" javaType="org.apache.ibatis.domain.blog.Author" select="org.apache.ibatis.submitted.nested_query_cache.AuthorMapper.selectAuthor"/>
       <arg column="id" javaType="java.util.List" select="selectPostsForBlog"/>
     </constructor>
   </resultMap>

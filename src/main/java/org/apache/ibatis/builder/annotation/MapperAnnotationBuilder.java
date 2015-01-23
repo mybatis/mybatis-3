@@ -123,7 +123,10 @@ public class MapperAnnotationBuilder {
       Method[] methods = type.getMethods();
       for (Method method : methods) {
         try {
-          parseStatement(method);
+          // issue #237
+          if (!method.isBridge()) {
+            parseStatement(method);
+          }
         } catch (IncompleteElementException e) {
           configuration.addIncompleteMethod(new MethodResolver(this, method));
         }
@@ -169,7 +172,9 @@ public class MapperAnnotationBuilder {
   private void parseCache() {
     CacheNamespace cacheDomain = type.getAnnotation(CacheNamespace.class);
     if (cacheDomain != null) {
-      assistant.useNewCache(cacheDomain.implementation(), cacheDomain.eviction(), cacheDomain.flushInterval(), cacheDomain.size(), cacheDomain.readWrite(), null);
+      Integer size = cacheDomain.size() == 0 ? null : cacheDomain.size();
+      Long flushInterval = cacheDomain.flushInterval() == 0 ? null : cacheDomain.flushInterval();
+      assistant.useNewCache(cacheDomain.implementation(), cacheDomain.eviction(), flushInterval, size, cacheDomain.readWrite(), cacheDomain.blocking(), null);
     }
   }
 
@@ -207,7 +212,8 @@ public class MapperAnnotationBuilder {
     applyConstructorArgs(args, returnType, resultMappings);
     applyResults(results, returnType, resultMappings);
     Discriminator disc = applyDiscriminator(resultMapId, returnType, discriminator);
-    assistant.addResultMap(resultMapId, returnType, null, disc, resultMappings, null); // TODO add AutoMappingBehaviour
+    // TODO add AutoMappingBehaviour
+    assistant.addResultMap(resultMapId, returnType, null, disc, resultMappings, null);
     createDiscriminatorResultMaps(resultMapId, returnType, discriminator);
   }
 
@@ -216,9 +222,11 @@ public class MapperAnnotationBuilder {
       for (Case c : discriminator.cases()) {
         String caseResultMapId = resultMapId + "-" + c.value();
         List<ResultMapping> resultMappings = new ArrayList<ResultMapping>();
-        applyConstructorArgs(c.constructArgs(), resultType, resultMappings); // issue #136
+        // issue #136
+        applyConstructorArgs(c.constructArgs(), resultType, resultMappings);
         applyResults(c.results(), resultType, resultMappings);
-        assistant.addResultMap(caseResultMapId, c.type(), resultMapId, null, resultMappings, null); // TODO add AutoMappingBehaviour
+        // TODO add AutoMappingBehaviour
+        assistant.addResultMap(caseResultMapId, c.type(), resultMapId, null, resultMappings, null);
       }
     }
   }
@@ -266,14 +274,12 @@ public class MapperAnnotationBuilder {
         if (selectKey != null) {
           keyGenerator = handleSelectKeyAnnotation(selectKey, mappedStatementId, getParameterType(method), languageDriver);
           keyProperty = selectKey.keyProperty();
+        } else if (options == null) {
+          keyGenerator = configuration.isUseGeneratedKeys() ? new Jdbc3KeyGenerator() : new NoKeyGenerator();
         } else {
-          if (options == null) {
-            keyGenerator = configuration.isUseGeneratedKeys() ? new Jdbc3KeyGenerator() : new NoKeyGenerator();
-          } else {
-            keyGenerator = options.useGeneratedKeys() ? new Jdbc3KeyGenerator() : new NoKeyGenerator();
-            keyProperty = options.keyProperty();
-            keyColumn = options.keyColumn();
-          }
+          keyGenerator = options.useGeneratedKeys() ? new Jdbc3KeyGenerator() : new NoKeyGenerator();
+          keyProperty = options.keyProperty();
+          keyColumn = options.keyColumn();
         }
       } else {
         keyGenerator = new NoKeyGenerator();
@@ -294,7 +300,9 @@ public class MapperAnnotationBuilder {
         String[] resultMaps = resultMapAnnotation.value();
         StringBuilder sb = new StringBuilder();
         for (String resultMap : resultMaps) {
-          if (sb.length() > 0) sb.append(",");
+          if (sb.length() > 0) {
+            sb.append(",");
+          }
           sb.append(resultMap);
         }
         resultMapId = sb.toString();
@@ -309,19 +317,23 @@ public class MapperAnnotationBuilder {
           sqlCommandType,
           fetchSize,
           timeout,
-          null,                             // ParameterMapID
+          // ParameterMapID
+          null,
           parameterTypeClass,
-          resultMapId,    // ResultMapID
+          resultMapId,
           getReturnType(method),
           resultSetType,
           flushCache,
           useCache,
-          false, // TODO issue #577
+          // TODO issue #577
+          false,
           keyGenerator,
           keyProperty,
           keyColumn,
+          // DatabaseID
           null,
           languageDriver,
+          // ResultSets
           null);
     }
   }
@@ -343,7 +355,8 @@ public class MapperAnnotationBuilder {
         if (parameterType == null) {
           parameterType = parameterTypes[i];
         } else {
-          parameterType = ParamMap.class; // issue #135
+          // issue #135
+          parameterType = ParamMap.class;
         }
       }
     }
@@ -352,7 +365,8 @@ public class MapperAnnotationBuilder {
 
   private Class<?> getReturnType(Method method) {
     Class<?> returnType = method.getReturnType();
-    if (void.class.equals(returnType)) { // issue #508
+    // issue #508
+    if (void.class.equals(returnType)) {
       ResultType rt = method.getAnnotation(ResultType.class);
       if (rt != null) {
         returnType = rt.value();
@@ -365,11 +379,13 @@ public class MapperAnnotationBuilder {
           returnTypeParameter = actualTypeArguments[0];
           if (returnTypeParameter instanceof Class) {
             returnType = (Class<?>) returnTypeParameter;
-          } else if (returnTypeParameter instanceof ParameterizedType) { // (issue #443) actual type can be a also a parametrized type
+          } else if (returnTypeParameter instanceof ParameterizedType) {
+            // (issue #443) actual type can be a also a parameterized type
             returnType = (Class<?>) ((ParameterizedType) returnTypeParameter).getRawType();
           } else if (returnTypeParameter instanceof GenericArrayType) {
             Class<?> componentType = (Class<?>) ((GenericArrayType) returnTypeParameter).getGenericComponentType();
-            returnType = Array.newInstance(componentType, 0).getClass(); // (issue #525) support List<byte[]>
+            // (issue #525) support List<byte[]>
+            returnType = Array.newInstance(componentType, 0).getClass();
           }
         }
       }
@@ -382,7 +398,8 @@ public class MapperAnnotationBuilder {
           returnTypeParameter = actualTypeArguments[1];
           if (returnTypeParameter instanceof Class) {
             returnType = (Class<?>) returnTypeParameter;
-          } else if (returnTypeParameter instanceof ParameterizedType) { // (issue 443) actual type can be a also a parametrized type
+          } else if (returnTypeParameter instanceof ParameterizedType) {
+            // (issue 443) actual type can be a also a parameterized type
             returnType = (Class<?>) ((ParameterizedType) returnTypeParameter).getRawType();
           }
         }
@@ -466,8 +483,10 @@ public class MapperAnnotationBuilder {
 
   private void applyResults(Result[] results, Class<?> resultType, List<ResultMapping> resultMappings) {
     for (Result result : results) {
-      ArrayList<ResultFlag> flags = new ArrayList<ResultFlag>();
-      if (result.id()) flags.add(ResultFlag.ID);
+      List<ResultFlag> flags = new ArrayList<ResultFlag>();
+      if (result.id()) {
+        flags.add(ResultFlag.ID);
+      }
       ResultMapping resultMapping = assistant.buildResultMapping(
           resultType,
           nullOrEmpty(result.property()),
@@ -499,38 +518,29 @@ public class MapperAnnotationBuilder {
   }
 
   private boolean isLazy(Result result) {
-    Boolean isLazy = null;
-    if (FetchType.DEFAULT != result.one().lazy()) {
-      isLazy = (result.one().lazy() == FetchType.LAZY);
-    }
-    if (FetchType.DEFAULT != result.many().lazy()) {
-      if (isLazy == null) {
-        isLazy = (result.many().lazy() == FetchType.LAZY);
-      } else {
-        throw new BuilderException("Cannot use both @One and @Many annotations in the same @Result");
-      }
-    }
-    if (isLazy == null) {
-      isLazy = configuration.isLazyLoadingEnabled();
+    boolean isLazy = configuration.isLazyLoadingEnabled();
+    if (result.one().select().length() > 0 && FetchType.DEFAULT != result.one().fetchType()) {
+      isLazy = (result.one().fetchType() == FetchType.LAZY);
+    } else if (result.many().select().length() > 0 && FetchType.DEFAULT != result.many().fetchType()) {
+      isLazy = (result.many().fetchType() == FetchType.LAZY);
     }
     return isLazy;
   }
   
   private boolean hasNestedSelect(Result result) {
-    boolean hasNestedSelect = result.one().select().length() > 0;
-    if (hasNestedSelect) {
+    if (result.one().select().length() > 0 && result.many().select().length() > 0) {
       throw new BuilderException("Cannot use both @One and @Many annotations in the same @Result");
-    } else {
-      hasNestedSelect = result.many().select().length() > 0;
     }
-    return hasNestedSelect;  
+    return result.one().select().length() > 0 || result.many().select().length() > 0;  
   }
 
   private void applyConstructorArgs(Arg[] args, Class<?> resultType, List<ResultMapping> resultMappings) {
     for (Arg arg : args) {
-      ArrayList<ResultFlag> flags = new ArrayList<ResultFlag>();
+      List<ResultFlag> flags = new ArrayList<ResultFlag>();
       flags.add(ResultFlag.CONSTRUCTOR);
-      if (arg.id()) flags.add(ResultFlag.ID);
+      if (arg.id()) {
+        flags.add(ResultFlag.ID);
+      }
       ResultMapping resultMapping = assistant.buildResultMapping(
           resultType,
           null,

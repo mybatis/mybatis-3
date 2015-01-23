@@ -59,18 +59,22 @@ public class PropertyTokenizer implements Iterable<PropertyTokenizer>, Iterator<
     return children;
   }
 
+  @Override
   public boolean hasNext() {
     return children != null;
   }
 
+  @Override
   public PropertyTokenizer next() {
     return new PropertyTokenizer(children);
   }
 
+  @Override
   public void remove() {
     throw new UnsupportedOperationException("Remove is not supported, as it has no meaning in the context of properties.");
   }
 
+  @Override
   public Iterator<PropertyTokenizer> iterator() {
     return this;
   }

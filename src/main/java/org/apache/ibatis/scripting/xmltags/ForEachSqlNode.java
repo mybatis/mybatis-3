@@ -49,9 +49,13 @@ public class ForEachSqlNode implements SqlNode {
     this.configuration = configuration;
   }
 
+  @Override
   public boolean apply(DynamicContext context) {
     Map<String, Object> bindings = context.getBindings();
     final Iterable<?> iterable = evaluator.evaluateIterable(collectionExpression, bindings);
+    if (!iterable.iterator().hasNext()) {
+      return true;
+    }
     boolean first = true;
     applyOpen(context);
     int i = 0;
@@ -59,15 +63,14 @@ public class ForEachSqlNode implements SqlNode {
       DynamicContext oldContext = context;
       if (first) {
         context = new PrefixedContext(context, "");
+      } else if (separator != null) {
+        context = new PrefixedContext(context, separator);
       } else {
-        if (separator != null) {
-          context = new PrefixedContext(context, separator);
-        } else {
           context = new PrefixedContext(context, "");
-        }
       }
       int uniqueNumber = context.getUniqueNumber();
-      if (o instanceof Map.Entry) { // Issue #709 
+      // Issue #709 
+      if (o instanceof Map.Entry) {
         @SuppressWarnings("unchecked") 
         Map.Entry<Object, Object> mapEntry = (Map.Entry<Object, Object>) o;
         applyIndex(context, mapEntry.getKey(), uniqueNumber);
@@ -77,7 +80,9 @@ public class ForEachSqlNode implements SqlNode {
         applyItem(context, o, uniqueNumber);
       }
       contents.apply(new FilteredDynamicContext(configuration, context, index, item, uniqueNumber));
-      if (first) first = !((PrefixedContext) context).isPrefixApplied();
+      if (first) {
+        first = !((PrefixedContext) context).isPrefixApplied();
+      }
       context = oldContext;
       i++;
     }
@@ -147,6 +152,7 @@ public class ForEachSqlNode implements SqlNode {
     @Override
     public void appendSql(String sql) {
       GenericTokenParser parser = new GenericTokenParser("#{", "}", new TokenHandler() {
+        @Override
         public String handleToken(String content) {
           String newContent = content.replaceFirst("^\\s*" + item + "(?![^.,:\\s])", itemizeItem(item, index));
           if (itemIndex != null && newContent.equals(content)) {

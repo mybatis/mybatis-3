@@ -18,6 +18,7 @@ package org.apache.ibatis.builder;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import org.apache.ibatis.mapping.ParameterMode;
 import org.apache.ibatis.mapping.ResultSetType;
@@ -45,6 +46,10 @@ public abstract class BaseBuilder {
     return configuration;
   }
 
+  protected Pattern parseExpression(String regex, String defaultValue) {
+    return Pattern.compile(regex == null ? defaultValue : regex);
+  }
+
   protected Boolean booleanValueOf(String value, Boolean defaultValue) {
     return value == null ? defaultValue : Boolean.valueOf(value);
   }
@@ -59,7 +64,9 @@ public abstract class BaseBuilder {
   }
 
   protected JdbcType resolveJdbcType(String alias) {
-    if (alias == null) return null;
+    if (alias == null) {
+      return null;
+    }
     try {
       return JdbcType.valueOf(alias);
     } catch (IllegalArgumentException e) {
@@ -68,7 +75,9 @@ public abstract class BaseBuilder {
   }
 
   protected ResultSetType resolveResultSetType(String alias) {
-    if (alias == null) return null;
+    if (alias == null) {
+      return null;
+    }
     try {
       return ResultSetType.valueOf(alias);
     } catch (IllegalArgumentException e) {
@@ -77,7 +86,9 @@ public abstract class BaseBuilder {
   }
 
   protected ParameterMode resolveParameterMode(String alias) {
-    if (alias == null) return null;
+    if (alias == null) {
+      return null;
+    }
     try {
       return ParameterMode.valueOf(alias);
     } catch (IllegalArgumentException e) {
@@ -87,7 +98,9 @@ public abstract class BaseBuilder {
 
   protected Object createInstance(String alias) {
     Class<?> clazz = resolveClass(alias);
-    if (clazz == null) return null;
+    if (clazz == null) {
+      return null;
+    }
     try {
       return resolveClass(alias).newInstance();
     } catch (Exception e) {
@@ -96,7 +109,9 @@ public abstract class BaseBuilder {
   }
 
   protected Class<?> resolveClass(String alias) {
-    if (alias == null) return null;
+    if (alias == null) {
+      return null;
+    }
     try {
       return resolveAlias(alias);
     } catch (Exception e) {
@@ -105,7 +120,9 @@ public abstract class BaseBuilder {
   }
 
   protected TypeHandler<?> resolveTypeHandler(Class<?> javaType, String typeHandlerAlias) {
-    if (typeHandlerAlias == null) return null;
+    if (typeHandlerAlias == null) {
+      return null;
+    }
     Class<?> type = resolveClass(typeHandlerAlias);
     if (type != null && !TypeHandler.class.isAssignableFrom(type)) {
       throw new BuilderException("Type " + type.getName() + " is not a valid TypeHandler because it does not implement TypeHandler interface");
@@ -116,7 +133,9 @@ public abstract class BaseBuilder {
   }
 
   protected TypeHandler<?> resolveTypeHandler(Class<?> javaType, Class<? extends TypeHandler<?>> typeHandlerType) {
-    if (typeHandlerType == null) return null;
+    if (typeHandlerType == null) {
+      return null;
+    }
     // javaType ignored for injected handlers see issue #746 for full detail
     TypeHandler<?> handler = typeHandlerRegistry.getMappingTypeHandler(typeHandlerType);
     if (handler == null) {

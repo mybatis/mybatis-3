@@ -123,7 +123,8 @@ public class MetaObject {
       MetaObject metaValue = metaObjectForProperty(prop.getIndexedName());
       if (metaValue == SystemMetaObject.NULL_META_OBJECT) {
         if (value == null && prop.getChildren() != null) {
-          return; // don't instantiate child path if value is null
+          // don't instantiate child path if value is null
+          return;
         } else {
           metaValue = objectWrapper.instantiatePropertyValue(name, prop, objectFactory);
         }

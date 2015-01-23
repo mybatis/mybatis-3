@@ -59,7 +59,7 @@ public class AutomaticLazyLoadingTest {
   @Test
   public void selectElementValue_default_nomethods()
   throws Exception {
-	  testScenario("default", true, noMethods);
+    testScenario("default", true, noMethods);
   }
 
   /**
@@ -79,7 +79,7 @@ public class AutomaticLazyLoadingTest {
   @Test
   public void selectElementValue_disabled_nomethods()
   throws Exception {
-	  testScenario("disabled", true, noMethods);
+    testScenario("disabled", true, noMethods);
   }
 
   /**
@@ -100,7 +100,7 @@ public class AutomaticLazyLoadingTest {
   @Test
   public void selectElementValue_enabled_nomethods()
   throws Exception {
-	  testScenario("enabled", true, noMethods);
+    testScenario("enabled", true, noMethods);
   }
 
   /**

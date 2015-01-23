@@ -18,6 +18,7 @@ package org.apache.ibatis.scripting.xmltags;
 import java.util.HashMap;
 import java.util.Map;
 
+import ognl.OgnlContext;
 import ognl.OgnlException;
 import ognl.OgnlRuntime;
 import ognl.PropertyAccessor;
@@ -82,11 +83,6 @@ public class DynamicContext {
     }
 
     @Override
-    public Object put(String key, Object value) {
-      return super.put(key, value);
-    }
-    
-    @Override
     public Object get(Object key) {
       String strKey = (String) key;
       if (super.containsKey(strKey)) {
@@ -94,13 +90,8 @@ public class DynamicContext {
       }
 
       if (parameterMetaObject != null) {
-        Object object = parameterMetaObject.getValue(strKey);
         // issue #61 do not modify the context when reading
-//        if (object != null) { 
-//          super.put(strKey, object);
-//        }
-
-        return object;
+        return parameterMetaObject.getValue(strKey);
       }
 
       return null;
@@ -109,6 +100,7 @@ public class DynamicContext {
 
   static class ContextAccessor implements PropertyAccessor {
 
+    @Override
     public Object getProperty(Map context, Object target, Object name)
         throws OgnlException {
       Map map = (Map) target;
@@ -120,16 +112,27 @@ public class DynamicContext {
 
       Object parameterObject = map.get(PARAMETER_OBJECT_KEY);
       if (parameterObject instanceof Map) {
-    	  return ((Map)parameterObject).get(name);
+        return ((Map)parameterObject).get(name);
       }
 
       return null;
     }
 
+    @Override
     public void setProperty(Map context, Object target, Object name, Object value)
         throws OgnlException {
-      Map map = (Map) target;
+      Map<Object, Object> map = (Map<Object, Object>) target;
       map.put(name, value);
+    }
+
+    @Override
+    public String getSourceAccessor(OgnlContext arg0, Object arg1, Object arg2) {
+      return null;
+    }
+
+    @Override
+    public String getSourceSetter(OgnlContext arg0, Object arg1, Object arg2) {
+      return null;
     }
   }
 }

@@ -83,14 +83,22 @@ public class MapperBuilderAssistant extends BaseBuilder {
   }
 
   public String applyCurrentNamespace(String base, boolean isReference) {
-    if (base == null) return null;
+    if (base == null) {
+      return null;
+    }
     if (isReference) {
       // is it qualified with any namespace yet?
-      if (base.contains(".")) return base;
+      if (base.contains(".")) {
+        return base;
+      }
     } else {
       // is it qualified with this namespace yet?
-      if (base.startsWith(currentNamespace + ".")) return base;
-      if (base.contains(".")) throw new BuilderException("Dots are not allowed in element names, please remove it from " + base);
+      if (base.startsWith(currentNamespace + ".")) {
+        return base;
+      }
+      if (base.contains(".")) {
+        throw new BuilderException("Dots are not allowed in element names, please remove it from " + base);
+      }
     }
     return currentNamespace + "." + base;
   }
@@ -118,6 +126,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
       Long flushInterval,
       Integer size,
       boolean readWrite,
+      boolean blocking,
       Properties props) {
     typeClass = valueOrDefault(typeClass, PerpetualCache.class);
     evictionClass = valueOrDefault(evictionClass, LruCache.class);
@@ -127,6 +136,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
         .clearInterval(flushInterval)
         .size(size)
         .readWrite(readWrite)
+        .blocking(blocking)
         .properties(props)
         .build();
     configuration.addCache(cache);
@@ -262,7 +272,9 @@ public class MapperBuilderAssistant extends BaseBuilder {
       LanguageDriver lang,
       String resultSets) {
     
-    if (unresolvedCacheRef) throw new IncompleteElementException("Cache-ref not yet resolved");
+    if (unresolvedCacheRef) {
+      throw new IncompleteElementException("Cache-ref not yet resolved");
+    }
     
     id = applyCurrentNamespace(id, false);
     boolean isSelect = sqlCommandType == SqlCommandType.SELECT;
@@ -385,7 +397,9 @@ public class MapperBuilderAssistant extends BaseBuilder {
     Class<?> javaTypeClass = resolveResultJavaType(resultType, property, javaType);
     TypeHandler<?> typeHandlerInstance = resolveTypeHandler(javaTypeClass, typeHandler);
     List<ResultMapping> composites = parseCompositeColumnName(column);
-    if (composites.size() > 0) column = null;
+    if (composites.size() > 0) {
+      column = null;
+    }
     ResultMapping.Builder builder = new ResultMapping.Builder(configuration, property, column, javaTypeClass);
     builder.jdbcType(jdbcType);
     builder.nestedQueryId(applyCurrentNamespace(nestedSelect, true));

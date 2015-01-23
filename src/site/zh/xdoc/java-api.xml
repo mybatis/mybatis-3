@@ -121,7 +121,7 @@ Environment
         ...
   </environment>
 </environments>]]></source>  
-  <p>如果你调用了 一个使用 environment 参数 的 build 方法, 那么 MyBatis 将会使用
+  <p>如果你调用了 一个使用 environment 参数 方 式的 build 方法, 那么 MyBatis 将会使用
 configuration 对象来配置这个 environment。
 当然,
 如果你指定了一个不合法的 environment,
@@ -258,7 +258,7 @@ Connection 和 autoCommit 两者的方法,因为 MyBatis 会使用当前 connect
 置。
 MyBatis 为事务隔离级别调用使用一个 Java 枚举包装器,
 称为 TransactionIsolationLevel,
-否 则 它 们 按 预 期 的 方 式 来 工 作 , 并 有 JDBC 支 持 的 5 级
+否则它们按预期的方式来工作,并有 JDBC 支持的 5 级
 ( NONE,READ_UNCOMMITTED,READ_COMMITTED,REPEA
 TABLE_READ,SERIALIZA
 BLE)
@@ -529,7 +529,7 @@ flushInterval,size 和 readWrite。
         <td><code>类</code></td>
         <td><code>&lt;cacheRef&gt;</code></td>
         <td>参照另外一个命名空间的缓存来使用。
-属性:value,应该是一个名空姐的字
+属性:value,应该是一个名空间的字
 符串值(也就是类的完全限定名)
 。
         </td>
@@ -803,13 +803,13 @@ type,method。type 属性是类的完全限
     </tbody>
   </table>
 
-  <h5>Mapper Annotation Examples</h5>
-  <p>This example shows using the @SelectKey annotation to retrieve a value from a sequence before an insert:</p>
+  <h5>映射申明样例</h5>
+  <p>这个例子展示了如何使用 @SelectKey 注解来在插入前读取数据库序列的值：</p>
   <source>@Insert("insert into table3 (id, name) values(#{nameId}, #{name})")
 @SelectKey(statement="call next value for TestSequence", keyProperty="nameId", before=<strong>true</strong>, resultType=<strong>int.class</strong>)
 <strong>int</strong> insertTable3(Name name);</source>
 
-  <p>This example shows using the @SelectKey annotation to retrieve an identity value after an insert:</p>
+  <p>这个例子展示了如何使用 @SelectKey 注解来在插入后读取数据库识别列的值：</p>
   <source>@Insert("insert into table2 (name) values(#{name})")
 @SelectKey(statement="call identity()", keyProperty="nameId", before=<strong>false</strong>, resultType=<strong>int.class</strong>)
 <strong>int</strong> insertTable2(Name name);</source>

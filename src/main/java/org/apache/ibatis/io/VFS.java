@@ -50,8 +50,9 @@ public abstract class VFS {
    */
   @SuppressWarnings("unchecked")
   public static VFS getInstance() {
-    if (instance != null)
+    if (instance != null) {
       return instance;
+    }
 
     // Try the user implementations first, then the built-ins
     List<Class<? extends VFS>> impls = new ArrayList<Class<? extends VFS>>();
@@ -78,7 +79,8 @@ public abstract class VFS {
     }
 
     log.debug("Using VFS adapter " + vfs.getClass().getName());
-    return VFS.instance = vfs;
+    VFS.instance = vfs;
+    return VFS.instance;
   }
 
   /**
@@ -88,8 +90,9 @@ public abstract class VFS {
    * @param clazz The {@link VFS} implementation class to add.
    */
   public static void addImplClass(Class<? extends VFS> clazz) {
-    if (clazz != null)
+    if (clazz != null) {
       USER_IMPLEMENTATIONS.add(clazz);
+    }
   }
 
   /** Get a class by name. If the class is not found then return null. */
@@ -111,11 +114,11 @@ public abstract class VFS {
    * @param parameterTypes The types of the parameters accepted by the method.
    */
   protected static Method getMethod(Class<?> clazz, String methodName, Class<?>... parameterTypes) {
+    if (clazz == null) {
+      return null;
+    }
     try {
-      if (clazz == null)
-        return null;
-      else
-        return clazz.getMethod(methodName, parameterTypes);
+      return clazz.getMethod(methodName, parameterTypes);
     } catch (SecurityException e) {
       log.error("Security exception looking for method " + clazz.getName() + "." + methodName + ".  Cause: " + e);
       return null;
@@ -145,10 +148,11 @@ public abstract class VFS {
     } catch (IllegalAccessException e) {
       throw new RuntimeException(e);
     } catch (InvocationTargetException e) {
-      if (e.getTargetException() instanceof IOException)
+      if (e.getTargetException() instanceof IOException) {
         throw (IOException) e.getTargetException();
-      else
+      } else {
         throw new RuntimeException(e);
+      }
     }
   }
 

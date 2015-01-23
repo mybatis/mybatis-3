@@ -14,20 +14,21 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
     <groupId>org.mybatis</groupId>
     <artifactId>mybatis-parent</artifactId>
-    <version>21</version>
+    <version>22-SNAPSHOT</version>
   </parent>
 
   <artifactId>mybatis</artifactId>
-  <version>3.2.7-SNAPSHOT</version>
+  <version>3.3.0-SNAPSHOT</version>
   <packaging>jar</packaging>
 
-  <name>MyBatis</name>
+  <name>mybatis</name>
   <description>
     The MyBatis data mapper framework makes it easier to use a relational database with object-oriented
     applications. MyBatis couples objects with stored procedures or SQL statements using a XML descriptor or
@@ -125,33 +126,44 @@
   </distributionManagement>
 
   <properties>
+    <clirr.comparisonVersion>3.2.7</clirr.comparisonVersion>
     <findbugs.onlyAnalyze>org.apache.ibatis.*</findbugs.onlyAnalyze>
-    <clirr.comparisonVersion>3.2.5</clirr.comparisonVersion>
     <osgi.export>org.apache.ibatis.*;version=${project.version};-noimport:=true</osgi.export>
-    <osgi.import>!ognl,net.sf.cglib.*;resolution:=optional,javassist.*;resolution:=optional,org.apache.commons.logging.*;resolution:=optional,org.apache.log4j.*;resolution:=optional,org.slf4j.*;resolution:=optional,org.apache.logging.log4j.*;resolution:=optional,*</osgi.import>
+    <osgi.import>*;resolution:=optional</osgi.import>
     <osgi.dynamicImport>*</osgi.dynamicImport>
-    <javac.src.version>1.6</javac.src.version>
-    <javac.target.version>1.6</javac.target.version>
   </properties>
 
   <dependencies>
     <dependency>
       <groupId>ognl</groupId>
       <artifactId>ognl</artifactId>
-      <version>2.6.9</version>
+      <version>3.0.8</version>
+      <scope>provided</scope>
+      <optional>true</optional>
+      <exclusions>
+         <exclusion>
+            <groupId>javassist</groupId>
+            <artifactId>javassist</artifactId>
+         </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.javassist</groupId>
+      <artifactId>javassist</artifactId>
+      <version>3.18.2-GA</version>
       <scope>provided</scope>
       <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
-      <version>1.7.5</version>
+      <version>1.7.10</version>
       <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-log4j12</artifactId>
-      <version>1.7.5</version>
+      <version>1.7.10</version>
       <optional>true</optional>
     </dependency>
     <dependency>
@@ -163,25 +175,19 @@
     <dependency>
       <groupId>org.apache.logging.log4j</groupId>
       <artifactId>log4j-core</artifactId>
-      <version>2.0-rc1</version>
+      <version>2.1</version>
       <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>commons-logging</groupId>
       <artifactId>commons-logging</artifactId>
-      <version>1.1.1</version>
-      <optional>true</optional>
-    </dependency>
-    <dependency>
-      <groupId>org.javassist</groupId>
-      <artifactId>javassist</artifactId>
-      <version>3.17.1-GA</version>
+      <version>1.2</version>
       <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>cglib</groupId>
       <artifactId>cglib</artifactId>
-      <version>2.2.2</version>
+      <version>3.1</version>
       <optional>true</optional>
     </dependency>
 
@@ -189,25 +195,25 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>4.11</version>
+      <version>4.12</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.hsqldb</groupId>
       <artifactId>hsqldb</artifactId>
-      <version>2.2.9</version>
+      <version>2.3.2</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.derby</groupId>
       <artifactId>derby</artifactId>
-      <version>10.9.1.0</version>
+      <version>10.11.1.1</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-core</artifactId>
-      <version>1.9.5</version>
+      <version>1.10.19</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -232,7 +238,7 @@
     <dependency>
       <groupId>postgresql</groupId>
       <artifactId>postgresql</artifactId>
-      <version>9.1-901.jdbc3</version>
+      <version>9.1-901-1.jdbc4</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
@@ -241,40 +247,64 @@
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-pdf-plugin</artifactId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <systemProperties>
+            <property>
+              <name>derby.stream.error.file</name>
+              <value>target/derby.log</value>
+            </property>
+        </systemProperties>
+        </configuration>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-release-plugin</artifactId>
-        <configuration>
-          <arguments>-Prelease</arguments>
-        </configuration>
+        <artifactId>maven-pdf-plugin</artifactId>
       </plugin>
       <plugin>
         <groupId>org.sonatype.plugins</groupId>
         <artifactId>jarjar-maven-plugin</artifactId>
+        <configuration>
+          <input>{classes}</input>
+          <input>{test-classes}</input>
+          <includes>
+            <include>ognl:ognl</include>
+            <include>org.javassist:javassist</include>
+          </includes>
+          <rules>
+            <rule>
+              <pattern>ognl.**</pattern>
+              <result>org.apache.ibatis.ognl.@1</result>
+            </rule>
+            <rule>
+              <pattern>javassist.**</pattern>
+              <result>org.apache.ibatis.javassist.@1</result>
+            </rule>
+            <keep>
+              <pattern>org.apache.ibatis.**</pattern>
+            </keep>
+          </rules>
+          <overwrite>true</overwrite>
+        </configuration>
         <executions>
           <execution>
             <id>jarjar-classes</id>
-            <phase>compile</phase>
+            <phase>process-test-classes</phase>
             <goals>
               <goal>jarjar</goal>
             </goals>
             <configuration>
               <input>{classes}</input>
-              <includes>
-                <include>ognl:ognl</include>
-              </includes>
-              <rules>
-                <rule>
-                  <pattern>ognl.**</pattern>
-                  <result>org.apache.ibatis.ognl.@1</result>
-                </rule>
-                <keep>
-                  <pattern>org.apache.ibatis.**</pattern>
-                </keep>
-              </rules>
-              <overwrite>true</overwrite>
+            </configuration>
+          </execution>
+          <execution>
+            <id>jarjar-test-classes</id>
+            <phase>process-test-classes</phase>
+            <goals>
+              <goal>jarjar</goal>
+            </goals>
+            <configuration>
+              <input>{test-classes}</input>
             </configuration>
           </execution>
         </executions>
@@ -293,9 +323,11 @@
           <instrumentation>
             <ignores>
               <ignore>org.apache.ibatis.ognl.*</ignore>
+              <ignore>org.apache.ibatis.javassist.*</ignore>
             </ignores>
             <excludes>
               <exclude>org/apache/ibatis/ognl/**/*.class</exclude>
+              <exclude>org/apache/ibatis/javassist/**/*.class</exclude>
             </excludes>
           </instrumentation>
         </configuration>
@@ -307,17 +339,11 @@
           </execution>
         </executions>
       </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <configuration>
-          <forkMode>pertest</forkMode>
-        </configuration>
-      </plugin>
     </plugins>
+
     <resources>
       <resource>
-        <directory>${basedir}</directory>
+        <directory>${project.basedir}</directory>
         <targetPath>META-INF</targetPath>
         <includes>
           <include>LICENSE</include>
@@ -339,21 +365,34 @@
         </excludes>
       </testResource>
     </testResources>
+    <pluginManagement>
+        <plugins>
+            <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+            <plugin>
+                <groupId>org.eclipse.m2e</groupId>
+                <artifactId>lifecycle-mapping</artifactId>
+                <version>1.0.0</version>
+                <configuration>
+                    <lifecycleMappingMetadata>
+                        <pluginExecutions>
+                            <pluginExecution>
+                                <pluginExecutionFilter>
+                                    <groupId>org.sonatype.plugins</groupId>
+                                    <artifactId>jarjar-maven-plugin</artifactId>
+                                    <versionRange>[1.9,)</versionRange>
+                                    <goals>
+                                        <goal>jarjar</goal>
+                                    </goals>
+                                </pluginExecutionFilter>
+                                <action>
+                                    <ignore></ignore>
+                                </action>
+                            </pluginExecution>
+                        </pluginExecutions>
+                    </lifecycleMappingMetadata>
+                </configuration>
+            </plugin>
+        </plugins>
+    </pluginManagement>
   </build>
-
-  <reporting>
-    <plugins>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>cobertura-maven-plugin</artifactId>
-        <configuration>
-          <formats>
-            <format>html</format>
-            <format>xml</format>
-          </formats>
-        </configuration>
-      </plugin>
-    </plugins>
-  </reporting>
-
 </project>

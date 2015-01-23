@@ -228,6 +228,7 @@ public interface SqlSession extends Closeable {
   /**
    * Closes the session
    */
+  @Override
   void close();
 
   /**

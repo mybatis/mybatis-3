@@ -52,6 +52,7 @@ public class RawSqlSource implements SqlSource {
     return context.getSql();
   }
 
+  @Override
   public BoundSql getBoundSql(Object parameterObject) {
     return sqlSource.getBoundSql(parameterObject);
   }

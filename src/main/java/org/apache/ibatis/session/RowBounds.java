@@ -20,9 +20,9 @@ package org.apache.ibatis.session;
  */
 public class RowBounds {
 
-  public final static int NO_ROW_OFFSET = 0;
-  public final static int NO_ROW_LIMIT = Integer.MAX_VALUE;
-  public final static RowBounds DEFAULT = new RowBounds();
+  public static final int NO_ROW_OFFSET = 0;
+  public static final int NO_ROW_LIMIT = Integer.MAX_VALUE;
+  public static final RowBounds DEFAULT = new RowBounds();
 
   private int offset;
   private int limit;

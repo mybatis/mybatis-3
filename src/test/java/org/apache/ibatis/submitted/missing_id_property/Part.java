@@ -20,9 +20,9 @@ public class Part {
   private String name;
   
   public Part(String name) {
-	  this.name = name;
+    this.name = name;
   }
-	public String getName() {
+  public String getName() {
     return name;
   }
 }

@@ -109,7 +109,7 @@ public class ResultLoaderMap {
     /**
      * Object to check whether we went through serialization..
      */
-    private transient final Object serializationCheck = new Object();
+    private final transient Object serializationCheck = new Object();
     /**
      * Meta object which sets loaded properties.
      */
@@ -166,8 +166,12 @@ public class ResultLoaderMap {
     public void load() throws SQLException {
       /* These field should not be null unless the loadpair was serialized.
        * Yet in that case this method should not be called. */
-      if (this.metaResultObject == null) throw new IllegalArgumentException("metaResultObject is null");
-      if (this.resultLoader == null) throw new IllegalArgumentException("resultLoader is null");
+      if (this.metaResultObject == null) {
+        throw new IllegalArgumentException("metaResultObject is null");
+      }
+      if (this.resultLoader == null) {
+        throw new IllegalArgumentException("resultLoader is null");
+      }
 
       this.load(null);
     }
@@ -251,11 +255,10 @@ public class ResultLoaderMap {
       }
 
       if (!(configurationObject instanceof Configuration)) {
-        final boolean isNull = (configurationObject == null);
         throw new ExecutorException("Cannot get Configuration as factory method ["
                 + this.configurationFactory + "]#["
                 + FACTORY_METHOD + "] didn't return [" + Configuration.class + "] but ["
-                + (isNull ? "null" : configurationObject.getClass()) + "].");
+                + (configurationObject == null ? "null" : configurationObject.getClass()) + "].");
       }
 
       return Configuration.class.cast(configurationObject);

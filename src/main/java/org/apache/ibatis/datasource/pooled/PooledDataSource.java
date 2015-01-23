@@ -80,26 +80,32 @@ public class PooledDataSource implements DataSource {
     expectedConnectionTypeCode = assembleConnectionTypeCode(dataSource.getUrl(), dataSource.getUsername(), dataSource.getPassword());
   }
 
+  @Override
   public Connection getConnection() throws SQLException {
     return popConnection(dataSource.getUsername(), dataSource.getPassword()).getProxyConnection();
   }
 
+  @Override
   public Connection getConnection(String username, String password) throws SQLException {
     return popConnection(username, password).getProxyConnection();
   }
 
+  @Override
   public void setLoginTimeout(int loginTimeout) throws SQLException {
     DriverManager.setLoginTimeout(loginTimeout);
   }
 
+  @Override
   public int getLoginTimeout() throws SQLException {
     return DriverManager.getLoginTimeout();
   }
 
+  @Override
   public void setLogWriter(PrintWriter logWriter) throws SQLException {
     DriverManager.setLogWriter(logWriter);
   }
 
+  @Override
   public PrintWriter getLogWriter() throws SQLException {
     return DriverManager.getLogWriter();
   }
@@ -362,7 +368,7 @@ public class PooledDataSource implements DataSource {
 
     while (conn == null) {
       synchronized (state) {
-        if (state.idleConnections.size() > 0) {
+        if (!state.idleConnections.isEmpty()) {
           // Pool has available connection
           conn = state.idleConnections.remove(0);
           if (log.isDebugEnabled()) {
@@ -373,9 +379,6 @@ public class PooledDataSource implements DataSource {
           if (state.activeConnections.size() < poolMaximumActiveConnections) {
             // Can create new connection
             conn = new PooledConnection(dataSource.getConnection(), this);
-            @SuppressWarnings("unused")
-            //used in logging, if enabled
-            Connection realConn = conn.getRealConnection();
             if (log.isDebugEnabled()) {
               log.debug("Created connection " + conn.getRealHashCode() + ".");
             }
@@ -529,6 +532,7 @@ public class PooledDataSource implements DataSource {
 
   protected void finalize() throws Throwable {
     forceCloseAll();
+    super.finalize();
   }
 
   public <T> T unwrap(Class<T> iface) throws SQLException {

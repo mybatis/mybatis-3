@@ -16,7 +16,6 @@
 package org.apache.ibatis.submitted.serializecircular;
 
 public interface AttributeMapper {
-
-	  public Attribute getById(Integer anId);
+  public Attribute getById(Integer anId);
 }
 

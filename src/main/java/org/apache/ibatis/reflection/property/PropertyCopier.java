@@ -20,7 +20,11 @@ import java.lang.reflect.Field;
 /**
  * @author Clinton Begin
  */
-public class PropertyCopier {
+public final class PropertyCopier {
+
+  private PropertyCopier() {
+    // Prevent Instantiation of Static Class
+  }
 
   public static void copyBeanProperties(Class<?> type, Object sourceBean, Object destinationBean) {
     Class<?> parent = type;

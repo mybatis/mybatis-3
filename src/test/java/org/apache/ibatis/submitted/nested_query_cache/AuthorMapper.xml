@@ -22,7 +22,7 @@
 
   <cache readOnly="true" />
 
-  <resultMap id="selectAuthor" type="domain.blog.Author">
+  <resultMap id="selectAuthor" type="org.apache.ibatis.domain.blog.Author">
     <id column="id" property="id" />
     <result property="username" column="username" />
     <result property="password" column="password" />

@@ -90,18 +90,18 @@ org.apache.ibatis.logging.LogFactory.useStdOutLogging();]]></source>
           <a href="http://java.sun.com/j2se/1.4.1/docs/guide/util/logging/">JDK Logging API</a>
         </li>
       </ul>
-      <subsection name="Logging Configuration">
+      <subsection name="Configuración">
         <p>Para ver el log de las sentencias debes activar el log en un paquete, el nombre plenamente cualificado de una clase, un namespace o un nombre plenamente cualificado de un mapped statement.</p>
-        <p>Nuevamente, como hagas esto es dependiente de la implementación de logging que se esté usando. Mostraremos cómo hacerlo con Log4j. Configurar los servicios de logging es simplemente cuestión de añadir uno o varios ficheros de configuración (por ejemplo log4j.properties) y a veces un nuevo JAR (por ejemplo log4j.jar). El ejemplo siguiente configura todos los servicios de logging para que usen log4j como proveedor. Sólo son dos pasos:
+        <p>Nuevamente, cómo hagas esto es dependiente de la implementación de logging que se esté usando. Mostraremos cómo hacerlo con Log4j. Configurar los servicios de logging es simplemente cuestión de añadir uno o varios ficheros de configuración (por ejemplo log4j.properties) y a veces un nuevo JAR (por ejemplo log4j.jar). El ejemplo siguiente configura todos los servicios de logging para que usen log4j como proveedor. Sólo son dos pasos:
         </p>
-        <h4>Paso 1: Añade el fichero Log4J JAR
+        <h4>Paso 1: Añade el fichero Log4j JAR
         </h4>
         <p>Dado que usamos Log4j, necesitaremos asegurarnos que el fichero JAR está disponible para nuestra aplicación. Para usar Log4j, necesitas añadir el fichero JAR al classpath de tu aplicación. Puedes descargar Log4j desde la URL indicada más arriba.
         </p>
         <p>En aplicaciones Web o de empresa debes añadir tu fichero log4j.java a tu directorio WEB-INF/lib, y en una aplicación standalone simplemente añádela al parámetro –classpath de la JVM.
         </p>
         <h4>
-          Paso 2: Configurar Log4J
+          Paso 2: Configurar Log4j
         </h4>
         <p>Configurar Log4j es sencillo. Supongamos que quieres habilitar el log para este mapper:</p>
         <source><![CDATA[package org.mybatis.example;

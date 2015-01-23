@@ -21,46 +21,46 @@
     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="domain.blog.mappers.PostMapper">
-  <resultMap id="postLiteIdMap" type="domain.blog.PostLiteId">
+<mapper namespace="org.apache.ibatis.domain.blog.mappers.PostMapper">
+  <resultMap id="postLiteIdMap" type="org.apache.ibatis.domain.blog.PostLiteId">
       <constructor>
           <idArg javaType="_int" column="id"/>
       </constructor>
   </resultMap>
 
-  <resultMap id="postLiteMap" type="domain.blog.PostLite">
+  <resultMap id="postLiteMap" type="org.apache.ibatis.domain.blog.PostLite">
       <constructor>
-          <arg javaType="domain.blog.PostLiteId" resultMap="postLiteIdMap"/>
+          <arg javaType="org.apache.ibatis.domain.blog.PostLiteId" resultMap="postLiteIdMap"/>
           <arg javaType="_int" column="blog_id"/>
       </constructor>
   </resultMap>
 
-  <resultMap id="postLiteMap2NestedWithSelect" type="domain.blog.BlogLite">
+  <resultMap id="postLiteMap2NestedWithSelect" type="org.apache.ibatis.domain.blog.BlogLite">
     <id column="blog_id" property="id" />
-    <collection property="posts" ofType="domain.blog.PostLite">
+    <collection property="posts" ofType="org.apache.ibatis.domain.blog.PostLite">
       <constructor>
-          <arg javaType="domain.blog.PostLiteId" column="{id=id}" select="selectPostLiteId" />
+          <arg javaType="org.apache.ibatis.domain.blog.PostLiteId" column="{id=id}" select="selectPostLiteId" />
           <arg javaType="_int" column="blog_id"/>
       </constructor>
     </collection>
   </resultMap>
 
-  <resultMap id="postLiteMap2NestedWithoutSelect" type="domain.blog.BlogLite">
+  <resultMap id="postLiteMap2NestedWithoutSelect" type="org.apache.ibatis.domain.blog.BlogLite">
     <id column="blog_id" property="id" />
-    <collection property="posts" ofType="domain.blog.PostLite">
+    <collection property="posts" ofType="org.apache.ibatis.domain.blog.PostLite">
       <constructor>
-          <arg javaType="domain.blog.PostLiteId" resultMap="postLiteIdMap" />
+          <arg javaType="org.apache.ibatis.domain.blog.PostLiteId" resultMap="postLiteIdMap" />
           <arg javaType="_int" column="blog_id"/>
       </constructor>
     </collection>
   </resultMap>
 
-  <resultMap id="mutablePostLiteMap" type="domain.blog.PostLite">
+  <resultMap id="mutablePostLiteMap" type="org.apache.ibatis.domain.blog.PostLite">
       <result property="blogId" column="blog_id"/>
       <association property="id" column="id" resultMap="postLiteIdMap"/>
   </resultMap>
 
-  <resultMap id="mutablePostLiteIdMap" type="domain.blog.PostLiteId">
+  <resultMap id="mutablePostLiteIdMap" type="org.apache.ibatis.domain.blog.PostLiteId">
       <id property="id" column="id"/>
   </resultMap>
 
@@ -88,7 +88,7 @@
     <if test="blog_id != null">blog_id = #{blog_id}</if>
   </sql>
 
-  <select id="findPost" resultType="domain.blog.Post">
+  <select id="findPost" resultType="org.apache.ibatis.domain.blog.Post">
     SELECT *
     FROM POST P
     <where>
@@ -109,7 +109,7 @@
     </where>
   </select>
 
-  <select id="selectPostIn" resultType="domain.blog.Post">
+  <select id="selectPostIn" resultType="org.apache.ibatis.domain.blog.Post">
     SELECT *
     FROM POST P
     WHERE ID in
@@ -119,7 +119,7 @@
     </foreach>
   </select>
 
-  <select id="selectOddPostsIn" resultType="domain.blog.Post">
+  <select id="selectOddPostsIn" resultType="org.apache.ibatis.domain.blog.Post">
     SELECT *
     FROM POST P
     WHERE ID in
@@ -132,7 +132,7 @@
     ORDER BY P.ID
   </select>
 
-  <select id="selectOddPostsInKeysList" resultType="domain.blog.Post">
+  <select id="selectOddPostsInKeysList" resultType="org.apache.ibatis.domain.blog.Post">
     SELECT *
     FROM POST P
     WHERE ID in

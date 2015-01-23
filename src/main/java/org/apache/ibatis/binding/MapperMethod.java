@@ -82,11 +82,11 @@ public class MapperMethod {
     if (method.returnsVoid()) {
       result = null;
     } else if (Integer.class.equals(method.getReturnType()) || Integer.TYPE.equals(method.getReturnType())) {
-      result = rowCount;
+      result = Integer.valueOf(rowCount);
     } else if (Long.class.equals(method.getReturnType()) || Long.TYPE.equals(method.getReturnType())) {
-      result = (long) rowCount;
+      result = Long.valueOf(rowCount);
     } else if (Boolean.class.equals(method.getReturnType()) || Boolean.TYPE.equals(method.getReturnType())) {
-      result = (rowCount > 0);
+      result = Boolean.valueOf(rowCount > 0);
     } else {
       throw new BindingException("Mapper method '" + command.getName() + "' has an unsupported return type: " + method.getReturnType());
     }
@@ -174,7 +174,7 @@ public class MapperMethod {
     private final String name;
     private final SqlCommandType type;
 
-    public SqlCommand(Configuration configuration, Class<?> mapperInterface, Method method) throws BindingException {
+    public SqlCommand(Configuration configuration, Class<?> mapperInterface, Method method) {
       String statementName = mapperInterface.getName() + "." + method.getName();
       MappedStatement ms = null;
       if (configuration.hasStatement(statementName)) {
@@ -216,7 +216,7 @@ public class MapperMethod {
     private final SortedMap<Integer, String> params;
     private final boolean hasNamedParameters;
 
-    public MethodSignature(Configuration configuration, Method method) throws BindingException {
+    public MethodSignature(Configuration configuration, Method method) {
       this.returnType = method.getReturnType();
       this.returnsVoid = void.class.equals(this.returnType);
       this.returnsMany = (configuration.getObjectFactory().isCollection(this.returnType) || this.returnType.isArray());
@@ -233,12 +233,12 @@ public class MapperMethod {
       if (args == null || paramCount == 0) {
         return null;
       } else if (!hasNamedParameters && paramCount == 1) {
-        return args[params.keySet().iterator().next()];
+        return args[params.keySet().iterator().next().intValue()];
       } else {
         final Map<String, Object> param = new ParamMap<Object>();
         int i = 0;
         for (Map.Entry<Integer, String> entry : params.entrySet()) {
-          param.put(entry.getValue(), args[entry.getKey()]);
+          param.put(entry.getValue(), args[entry.getKey().intValue()]);
           // issue #71, add param names as param1, param2...but ensure backward compatibility
           final String genericParamName = "param" + String.valueOf(i + 1);
           if (!param.containsKey(genericParamName)) {
@@ -251,19 +251,19 @@ public class MapperMethod {
     }
 
     public boolean hasRowBounds() {
-      return (rowBoundsIndex != null);
+      return rowBoundsIndex != null;
     }
 
     public RowBounds extractRowBounds(Object[] args) {
-      return (hasRowBounds() ? (RowBounds) args[rowBoundsIndex] : null);
+      return hasRowBounds() ? (RowBounds) args[rowBoundsIndex] : null;
     }
 
     public boolean hasResultHandler() {
-      return (resultHandlerIndex != null);
+      return resultHandlerIndex != null;
     }
 
     public ResultHandler extractResultHandler(Object[] args) {
-      return (hasResultHandler() ? (ResultHandler) args[resultHandlerIndex] : null);
+      return hasResultHandler() ? (ResultHandler) args[resultHandlerIndex] : null;
     }
 
     public String getMapKey() {

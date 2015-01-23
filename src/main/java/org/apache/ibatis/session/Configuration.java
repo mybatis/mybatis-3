@@ -103,6 +103,7 @@ public class Configuration {
   protected boolean useColumnLabel = true;
   protected boolean cacheEnabled = true;
   protected boolean callSettersOnNulls = false;
+  
   protected String logPrefix;
   protected Class <? extends Log> logImpl;
   protected LocalCacheScope localCacheScope = LocalCacheScope.SESSION;
@@ -118,7 +119,7 @@ public class Configuration {
   protected MapperRegistry mapperRegistry = new MapperRegistry(this);
 
   protected boolean lazyLoadingEnabled = false;
-  protected ProxyFactory proxyFactory;
+  protected ProxyFactory proxyFactory = new JavassistProxyFactory(); // #224 Using internal Javassist instead of OGNL
 
   protected String databaseId;
   /**
@@ -295,14 +296,13 @@ public class Configuration {
   }
 
   public ProxyFactory getProxyFactory() {
-    if (proxyFactory == null) {
-      // makes sure CGLIB is not needed unless explicitly requested
-      proxyFactory = new CglibProxyFactory();
-    }
     return proxyFactory;
   }
 
   public void setProxyFactory(ProxyFactory proxyFactory) {
+    if (proxyFactory == null) {
+      proxyFactory = new JavassistProxyFactory();
+    }
     this.proxyFactory = proxyFactory;
   }
 
@@ -673,7 +673,7 @@ public class Configuration {
   public void addCacheRef(String namespace, String referencedNamespace) {
     cacheRefMap.put(namespace, referencedNamespace);
   }
-
+  
   /*
    * Parses all the unprocessed statement nodes in the cache. It is recommended
    * to call this method once all the mappers are added as it provides fail-fast
@@ -778,8 +778,9 @@ public class Configuration {
 
     @SuppressWarnings("unchecked")
     public V put(String key, V value) {
-      if (containsKey(key))
+      if (containsKey(key)) {
         throw new IllegalArgumentException(name + " already contains value for " + key);
+      }
       if (key.contains(".")) {
         final String shortKey = getShortName(key);
         if (super.get(shortKey) == null) {
@@ -805,8 +806,7 @@ public class Configuration {
 
     private String getShortName(String key) {
       final String[] keyparts = key.split("\\.");
-      final String shortKey = keyparts[keyparts.length - 1];
-      return shortKey;
+      return keyparts[keyparts.length - 1];
     }
 
     protected static class Ambiguity {

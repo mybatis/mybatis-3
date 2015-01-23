@@ -57,6 +57,7 @@ public class CglibProxyFactory implements ProxyFactory {
     }
   }
 
+  @Override
   public Object createProxy(Object target, ResultLoaderMap lazyLoader, Configuration configuration, ObjectFactory objectFactory, List<Class<?>> constructorArgTypes, List<Object> constructorArgs) {
     return EnhancedResultObjectProxyImpl.createProxy(target, lazyLoader, configuration, objectFactory, constructorArgTypes, constructorArgs);
   }
@@ -65,10 +66,12 @@ public class CglibProxyFactory implements ProxyFactory {
     return EnhancedDeserializationProxyImpl.createProxy(target, unloadedProperties, objectFactory, constructorArgTypes, constructorArgs);
   }
 
+  @Override
   public void setProperties(Properties properties) {
+      // Not Implemented
   }
 
-  private static Object crateProxy(Class<?> type, Callback callback, List<Class<?>> constructorArgTypes, List<Object> constructorArgs) {
+  static Object crateProxy(Class<?> type, Callback callback, List<Class<?>> constructorArgTypes, List<Object> constructorArgs) {
     Enhancer enhancer = new Enhancer();
     enhancer.setCallback(callback);
     enhancer.setSuperclass(type);
@@ -120,6 +123,7 @@ public class CglibProxyFactory implements ProxyFactory {
       return enhanced;
     }
 
+    @Override
     public Object intercept(Object enhanced, Method method, Object[] args, MethodProxy methodProxy) throws Throwable {
       final String methodName = method.getName();
       try {

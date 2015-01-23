@@ -76,7 +76,7 @@ public class FlushStatementNpeTest {
             personMapper.update(person);
             sqlSession.commit();
         } finally {
-        	sqlSession.close();
+            sqlSession.close();
         }
     }
     @Test
@@ -95,7 +95,7 @@ public class FlushStatementNpeTest {
             personMapper.update(person);
             sqlSession.commit();
         } finally {
-        	sqlSession.close();
+            sqlSession.close();
         }
     }
     @Test
@@ -114,7 +114,7 @@ public class FlushStatementNpeTest {
             personMapper.update(person);
             sqlSession.commit();
         } finally {
-        	sqlSession.close();
+            sqlSession.close();
         }
     }
 }

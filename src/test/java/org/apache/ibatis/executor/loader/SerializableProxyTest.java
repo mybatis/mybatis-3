@@ -30,13 +30,12 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashSet;
 
+import org.apache.ibatis.domain.blog.Author;
+import org.apache.ibatis.domain.blog.Section;
 import org.apache.ibatis.executor.ExecutorException;
 import org.apache.ibatis.reflection.factory.DefaultObjectFactory;
 import org.apache.ibatis.session.Configuration;
 import org.junit.Test;
-
-import domain.blog.Author;
-import domain.blog.Section;
 
 public abstract class SerializableProxyTest {
 

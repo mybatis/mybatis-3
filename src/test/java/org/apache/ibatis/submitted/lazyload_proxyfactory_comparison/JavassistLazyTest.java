@@ -20,8 +20,8 @@ import org.junit.Ignore;
 @Ignore("See Issue 664: Javassist ProxyFactory does not handle interfaces with generics correctly.")
 public class JavassistLazyTest 
 extends AbstractLazyTest {
-	@Override
-	protected String getConfiguration() {
-		return "javassist";
-	}
+  @Override
+  protected String getConfiguration() {
+    return "javassist";
+  }
 }

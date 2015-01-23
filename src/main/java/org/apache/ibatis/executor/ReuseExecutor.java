@@ -43,6 +43,7 @@ public class ReuseExecutor extends BaseExecutor {
     super(configuration, transaction);
   }
 
+  @Override
   public int doUpdate(MappedStatement ms, Object parameter) throws SQLException {
     Configuration configuration = ms.getConfiguration();
     StatementHandler handler = configuration.newStatementHandler(this, ms, parameter, RowBounds.DEFAULT, null, null);
@@ -50,6 +51,7 @@ public class ReuseExecutor extends BaseExecutor {
     return handler.update(stmt);
   }
 
+  @Override
   public <E> List<E> doQuery(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql) throws SQLException {
     Configuration configuration = ms.getConfiguration();
     StatementHandler handler = configuration.newStatementHandler(wrapper, ms, parameter, rowBounds, resultHandler, boundSql);
@@ -57,6 +59,7 @@ public class ReuseExecutor extends BaseExecutor {
     return handler.<E>query(stmt, resultHandler);
   }
 
+  @Override
   public List<BatchResult> doFlushStatements(boolean isRollback) throws SQLException {
     for (Statement stmt : statementMap.values()) {
       closeStatement(stmt);

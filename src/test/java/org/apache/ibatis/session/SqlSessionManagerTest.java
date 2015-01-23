@@ -23,13 +23,12 @@ import static org.junit.Assert.fail;
 import java.io.Reader;
 
 import org.apache.ibatis.BaseDataTest;
+import org.apache.ibatis.domain.blog.Author;
+import org.apache.ibatis.domain.blog.mappers.AuthorMapper;
 import org.apache.ibatis.exceptions.PersistenceException;
 import org.apache.ibatis.io.Resources;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import domain.blog.Author;
-import domain.blog.mappers.AuthorMapper;
 
 public class SqlSessionManagerTest extends BaseDataTest {
 

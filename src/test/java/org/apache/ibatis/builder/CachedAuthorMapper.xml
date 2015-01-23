@@ -26,24 +26,24 @@
   <cache readOnly="true"/>
 
   <select id="selectAllAuthors"
-          resultType="domain.blog.Author">
+          resultType="org.apache.ibatis.domain.blog.Author">
     select * from author
   </select>
 
   <select id="selectAuthorWithInlineParams"
           parameterType="int"
-          resultType="domain.blog.Author">
+          resultType="org.apache.ibatis.domain.blog.Author">
     select * from author where id = #{id}
   </select>
 
   <insert id="insertAuthor"
-          parameterType="domain.blog.Author">
+          parameterType="org.apache.ibatis.domain.blog.Author">
     insert into Author (id,username,password,email,bio)
     values (#{id},#{username},#{password},#{email},#{bio})
   </insert>
 
   <update id="updateAuthor"
-          parameterType="domain.blog.Author">
+          parameterType="org.apache.ibatis.domain.blog.Author">
     update Author
     set username=#{username},password=#{password},email=#{email},bio=#{bio}
     where id=#{id}

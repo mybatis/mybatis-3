@@ -39,6 +39,7 @@ public class PreparedStatementHandler extends BaseStatementHandler {
     super(executor, mappedStatement, parameter, rowBounds, resultHandler, boundSql);
   }
 
+  @Override
   public int update(Statement statement) throws SQLException {
     PreparedStatement ps = (PreparedStatement) statement;
     ps.execute();
@@ -49,17 +50,20 @@ public class PreparedStatementHandler extends BaseStatementHandler {
     return rows;
   }
 
+  @Override
   public void batch(Statement statement) throws SQLException {
     PreparedStatement ps = (PreparedStatement) statement;
     ps.addBatch();
   }
 
+  @Override
   public <E> List<E> query(Statement statement, ResultHandler resultHandler) throws SQLException {
     PreparedStatement ps = (PreparedStatement) statement;
     ps.execute();
     return resultSetHandler.<E> handleResultSets(ps);
   }
 
+  @Override
   protected Statement instantiateStatement(Connection connection) throws SQLException {
     String sql = boundSql.getSql();
     if (mappedStatement.getKeyGenerator() instanceof Jdbc3KeyGenerator) {
@@ -76,6 +80,7 @@ public class PreparedStatementHandler extends BaseStatementHandler {
     }
   }
 
+  @Override
   public void parameterize(Statement statement) throws SQLException {
     parameterHandler.setParameters((PreparedStatement) statement);
   }

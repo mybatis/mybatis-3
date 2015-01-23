@@ -29,9 +29,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javassist.util.proxy.Proxy;
+
 import javax.sql.DataSource;
 
+import net.sf.cglib.proxy.Factory;
+
 import org.apache.ibatis.BaseDataTest;
+import org.apache.ibatis.domain.blog.Author;
+import org.apache.ibatis.domain.blog.Blog;
+import org.apache.ibatis.domain.blog.DraftPost;
+import org.apache.ibatis.domain.blog.Post;
+import org.apache.ibatis.domain.blog.Section;
 import org.apache.ibatis.executor.result.DefaultResultHandler;
 import org.apache.ibatis.mapping.Environment;
 import org.apache.ibatis.session.Configuration;
@@ -44,12 +53,6 @@ import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
-
-import domain.blog.Author;
-import domain.blog.Blog;
-import domain.blog.DraftPost;
-import domain.blog.Post;
-import domain.blog.Section;
 
 public class BindingTest {
   private static SqlSessionFactory sqlSessionFactory;
@@ -189,7 +192,7 @@ public class BindingTest {
       session.close();
     }
   }
-
+  
   @Test
   public void shouldExecuteBoundSelectMapOfBlogsById() {
     SqlSession session = sqlSessionFactory.openSession();
@@ -692,4 +695,44 @@ public class BindingTest {
     }
   }
 
+  @Test
+  public void shouldGetBlogsWithAuthorsAndPosts() {
+    SqlSession session = sqlSessionFactory.openSession();
+    try {
+      BoundBlogMapper mapper = session.getMapper(BoundBlogMapper.class);
+      List<Blog> blogs = mapper.selectBlogsWithAutorAndPosts();
+      assertEquals(2, blogs.size());
+      assertTrue(blogs.get(0) instanceof Proxy);
+      assertEquals(101, blogs.get(0).getAuthor().getId());
+      assertEquals(1, blogs.get(0).getPosts().size());
+      assertEquals(1, blogs.get(0).getPosts().get(0).getId());
+      assertTrue(blogs.get(1) instanceof Proxy);      
+      assertEquals(102, blogs.get(1).getAuthor().getId());
+      assertEquals(1, blogs.get(1).getPosts().size());
+      assertEquals(2, blogs.get(1).getPosts().get(0).getId());
+    } finally {
+      session.close();
+    }
+  }
+
+  @Test
+  public void shouldGetBlogsWithAuthorsAndPostsEagerly() {
+    SqlSession session = sqlSessionFactory.openSession();
+    try {
+      BoundBlogMapper mapper = session.getMapper(BoundBlogMapper.class);
+      List<Blog> blogs = mapper.selectBlogsWithAutorAndPostsEagerly();
+      assertEquals(2, blogs.size());
+      assertFalse(blogs.get(0) instanceof Factory);
+      assertEquals(101, blogs.get(0).getAuthor().getId());
+      assertEquals(1, blogs.get(0).getPosts().size());
+      assertEquals(1, blogs.get(0).getPosts().get(0).getId());
+      assertFalse(blogs.get(1) instanceof Factory);      
+      assertEquals(102, blogs.get(1).getAuthor().getId());
+      assertEquals(1, blogs.get(1).getPosts().size());
+      assertEquals(2, blogs.get(1).getPosts().get(0).getId());
+    } finally {
+      session.close();
+    }
+  }
+  
 }

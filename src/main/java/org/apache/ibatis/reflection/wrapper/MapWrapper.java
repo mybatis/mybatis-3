@@ -36,6 +36,7 @@ public class MapWrapper extends BaseWrapper {
     this.map = map;
   }
 
+  @Override
   public Object get(PropertyTokenizer prop) {
     if (prop.getIndex() != null) {
       Object collection = resolveCollection(prop, map);
@@ -45,6 +46,7 @@ public class MapWrapper extends BaseWrapper {
     }
   }
 
+  @Override
   public void set(PropertyTokenizer prop, Object value) {
     if (prop.getIndex() != null) {
       Object collection = resolveCollection(prop, map);
@@ -54,18 +56,22 @@ public class MapWrapper extends BaseWrapper {
     }
   }
 
+  @Override
   public String findProperty(String name, boolean useCamelCaseMapping) {
     return name;
   }
 
+  @Override
   public String[] getGetterNames() {
     return map.keySet().toArray(new String[map.keySet().size()]);
   }
 
+  @Override
   public String[] getSetterNames() {
     return map.keySet().toArray(new String[map.keySet().size()]);
   }
 
+  @Override
   public Class<?> getSetterType(String name) {
     PropertyTokenizer prop = new PropertyTokenizer(name);
     if (prop.hasNext()) {
@@ -84,6 +90,7 @@ public class MapWrapper extends BaseWrapper {
     }
   }
 
+  @Override
   public Class<?> getGetterType(String name) {
     PropertyTokenizer prop = new PropertyTokenizer(name);
     if (prop.hasNext()) {
@@ -102,10 +109,12 @@ public class MapWrapper extends BaseWrapper {
     }
   }
 
+  @Override
   public boolean hasSetter(String name) {
     return true;
   }
 
+  @Override
   public boolean hasGetter(String name) {
     PropertyTokenizer prop = new PropertyTokenizer(name);
     if (prop.hasNext()) {
@@ -124,20 +133,24 @@ public class MapWrapper extends BaseWrapper {
     }
   }
 
+  @Override
   public MetaObject instantiatePropertyValue(String name, PropertyTokenizer prop, ObjectFactory objectFactory) {
     HashMap<String, Object> map = new HashMap<String, Object>();
     set(prop, map);
     return MetaObject.forObject(map, metaObject.getObjectFactory(), metaObject.getObjectWrapperFactory());
   }
 
+  @Override
   public boolean isCollection() {
     return false;
   }
 
+  @Override
   public void add(Object element) {
     throw new UnsupportedOperationException();
   }
 
+  @Override
   public <E> void addAll(List<E> element) {
     throw new UnsupportedOperationException();
   }

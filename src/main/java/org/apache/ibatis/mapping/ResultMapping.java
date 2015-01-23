@@ -46,7 +46,7 @@ public class ResultMapping {
   private String foreignColumn;
   private boolean lazy;
 
-  private ResultMapping() {
+  ResultMapping() {
   }
 
   public static class Builder {
@@ -151,7 +151,7 @@ public class ResultMapping {
         throw new IllegalStateException("No typehandler found for property " + resultMapping.property);
       }
       // Issue #4 and GH #39: column is optional only in nested resultmaps but not in the rest
-      if (resultMapping.nestedResultMapId == null && resultMapping.column == null && resultMapping.composites.size() == 0) {
+      if (resultMapping.nestedResultMapId == null && resultMapping.column == null && resultMapping.composites.isEmpty()) {
         throw new IllegalStateException("Mapping is missing column attribute for property " + resultMapping.property);
       }
       if (resultMapping.getResultSet() != null) {

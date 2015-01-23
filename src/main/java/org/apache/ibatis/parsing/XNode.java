@@ -313,6 +313,7 @@ public class XNode {
     return properties;
   }
 
+  @Override
   public String toString() {
     StringBuilder builder = new StringBuilder();
     builder.append("<");
@@ -325,7 +326,7 @@ public class XNode {
       builder.append("\"");
     }
     List<XNode> children = getChildren();
-    if (children.size() > 0) {
+    if (!children.isEmpty()) {
       builder.append(">\n");
       for (XNode node : children) {
         builder.append(node.toString());
@@ -366,7 +367,9 @@ public class XNode {
       for (int i = 0; i < children.getLength(); i++) {
         Node child = children.item(i);
         data = getBodyData(child);
-        if (data != null) break;
+        if (data != null) {
+          break;
+        }
       }
     }
     return data;

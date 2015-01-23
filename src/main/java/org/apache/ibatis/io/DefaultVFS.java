@@ -77,6 +77,7 @@ public class DefaultVFS extends VFS {
               log.debug("Jar entry: " + entry.getName());
               children.add(entry.getName());
             }
+            jarInput.close();
           }
           else {
             /*
@@ -126,8 +127,9 @@ public class DefaultVFS extends VFS {
 
         // The URL prefix to use when recursively listing child resources
         String prefix = url.toExternalForm();
-        if (!prefix.endsWith("/"))
+        if (!prefix.endsWith("/")) {
           prefix = prefix + "/";
+        }
 
         // Iterate over immediate children, adding files and recursing into directories
         for (String child : children) {
@@ -140,10 +142,12 @@ public class DefaultVFS extends VFS {
 
       return resources;
     } finally {
-      try {
-        if (is != null)
+      if (is != null) {
+        try {
           is.close();
-      } catch (Exception e) {
+        } catch (Exception e) {
+          // Ignore
+        }
       }
     }
   }
@@ -159,10 +163,12 @@ public class DefaultVFS extends VFS {
    */
   protected List<String> listResources(JarInputStream jar, String path) throws IOException {
     // Include the leading and trailing slash when matching names
-    if (!path.startsWith("/"))
+    if (!path.startsWith("/")) {
       path = "/" + path;
-    if (!path.endsWith("/"))
+    }
+    if (!path.endsWith("/")) {
       path = path + "/";
+    }
 
     // Iterate over the entries and collect those that begin with the requested path
     List<String> resources = new ArrayList<String>();
@@ -170,13 +176,15 @@ public class DefaultVFS extends VFS {
       if (!entry.isDirectory()) {
         // Add leading slash if it's missing
         String name = entry.getName();
-        if (!name.startsWith("/"))
+        if (!name.startsWith("/")) {
           name = "/" + name;
+        }
 
         // Check file name
         if (name.startsWith(path)) {
           log.debug("Found resource: " + name);
-          resources.add(name.substring(1)); // Trim leading slash
+          // Trim leading slash
+          resources.add(name.substring(1));
         }
       }
     }
@@ -294,9 +302,12 @@ public class DefaultVFS extends VFS {
     } catch (Exception e) {
       // Failure to read the stream means this is not a JAR
     } finally {
-      try {
-        is.close();
-      } catch (Exception e) {
+      if (is != null) {
+        try {
+          is.close();
+        } catch (Exception e) {
+          // Ignore
+        }
       }
     }
 

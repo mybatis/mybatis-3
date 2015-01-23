@@ -15,8 +15,11 @@
  */
 package org.apache.ibatis.scripting.xmltags;
 
+import java.util.regex.Pattern;
+
 import org.apache.ibatis.parsing.GenericTokenParser;
 import org.apache.ibatis.parsing.TokenHandler;
+import org.apache.ibatis.scripting.ScriptingException;
 import org.apache.ibatis.type.SimpleTypeRegistry;
 
 /**
@@ -24,9 +27,15 @@ import org.apache.ibatis.type.SimpleTypeRegistry;
  */
 public class TextSqlNode implements SqlNode {
   private String text;
+  private Pattern injectionFilter;
 
   public TextSqlNode(String text) {
+    this(text, null);
+  }
+  
+  public TextSqlNode(String text, Pattern injectionFilter) {
     this.text = text;
+    this.injectionFilter = injectionFilter;
   }
   
   public boolean isDynamic() {
@@ -36,8 +45,9 @@ public class TextSqlNode implements SqlNode {
     return checker.isDynamic();
   }
 
+  @Override
   public boolean apply(DynamicContext context) {
-    GenericTokenParser parser = createParser(new BindingTokenParser(context));
+    GenericTokenParser parser = createParser(new BindingTokenParser(context, injectionFilter));
     context.appendSql(parser.parse(text));
     return true;
   }
@@ -49,11 +59,14 @@ public class TextSqlNode implements SqlNode {
   private static class BindingTokenParser implements TokenHandler {
 
     private DynamicContext context;
+    private Pattern injectionFilter;
 
-    public BindingTokenParser(DynamicContext context) {
+    public BindingTokenParser(DynamicContext context, Pattern injectionFilter) {
       this.context = context;
+      this.injectionFilter = injectionFilter;
     }
 
+    @Override
     public String handleToken(String content) {
       Object parameter = context.getBindings().get("_parameter");
       if (parameter == null) {
@@ -62,18 +75,31 @@ public class TextSqlNode implements SqlNode {
         context.getBindings().put("value", parameter);
       }
       Object value = OgnlCache.getValue(content, context.getBindings());
-      return (value == null ? "" : String.valueOf(value)); // issue #274 return "" instead of "null"
+      String srtValue = (value == null ? "" : String.valueOf(value)); // issue #274 return "" instead of "null"
+      checkInjection(srtValue);
+      return srtValue;
+    }
+
+    private void checkInjection(String value) {
+      if (injectionFilter != null && !injectionFilter.matcher(value).matches()) {
+        throw new ScriptingException("Invalid input. Please conform to regex" + injectionFilter.pattern());
+      }
     }
   }
-
+  
   private static class DynamicCheckerTokenParser implements TokenHandler {
-    
+
     private boolean isDynamic;
+
+    public DynamicCheckerTokenParser() {
+      // Prevent Synthetic Access
+    }
 
     public boolean isDynamic() {
       return isDynamic;
     }
 
+    @Override
     public String handleToken(String content) {
       this.isDynamic = true;
       return null;

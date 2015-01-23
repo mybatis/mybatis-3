@@ -98,8 +98,9 @@ public class ErrorContext {
     return this;
   }
 
+  @Override
   public String toString() {
-    StringBuffer description = new StringBuffer();
+    StringBuilder description = new StringBuilder();
 
     // message
     if (this.message != null) {

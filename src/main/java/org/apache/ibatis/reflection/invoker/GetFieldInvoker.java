@@ -28,10 +28,12 @@ public class GetFieldInvoker implements Invoker {
     this.field = field;
   }
 
+  @Override
   public Object invoke(Object target, Object[] args) throws IllegalAccessException, InvocationTargetException {
     return field.get(target);
   }
 
+  @Override
   public Class<?> getType() {
     return field.getType();
   }

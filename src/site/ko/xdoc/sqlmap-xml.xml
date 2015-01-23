@@ -176,11 +176,11 @@ ps.setInt(1,id);]]></source>
             </tr>
             <tr>
               <td><code>resultOrdered</code></td>
-              <td>This is only applicable for nested result select statements: If this is true, it
-                is assumed that nested results are contained or grouped together such that when a
-                new main result row is returned, no references to a previous result row will occur
-                anymore. This allows nested results to be filled much more memory friendly. Default:
-                <code>false</code>.
+              <td>이 설정은 내포된 결과를 조회하는 구문에서만 적용이 가능하다. 
+              true로 설정하면 내포된 결과를 가져오거나 새로운 주요 결과 레코드를 리턴할때 함께 가져오도록 한다. 
+              이전의 결과 레코드에 대한 참조는 더 이상 발생하지 않는다. 
+              이 설정은 내포된 결과를 처리할때 조금 더 많은 메모리를 채운다. 
+              디폴트값은 <code>false</code> 이다.
               </td>
             </tr>
           </tbody>
@@ -345,9 +345,8 @@ Server 와 같은 RDBMS 의 자동 증가 필드)를 받는 JDBC getGeneratedKey
             </tr>
             <tr>
               <td><code>keyColumn</code></td>
-              <td>The column name(s) in the returned result set that match the properties.
-                Can be a comma separated list of column names if multiple generated columns
-                are expected.
+              <td>리턴되는 결과셋의 칼럼명은 프로퍼티에 일치한다. 
+              여러개의 칼럼을 사용한다면 칼럼명의 목록은 콤마를 사용해서 구분한다. 
               </td>
             </tr>
             <tr>
@@ -683,27 +682,27 @@ public class User {
         </ul>
 
         <table>
-          <caption>ResultMap Attributes</caption>
+          <caption>ResultMap 속성</caption>
           <thead>
             <tr>
-              <th>Attribute</th>
-              <th>Description</th>
+              <th>속성</th>
+              <th>설명</th>
             </tr>
           </thead>
           <tbody>
             <tr>
               <td><code>id</code></td>
-              <td>A unique identifier in this namespace that can be used to reference this result map.</td>
+              <td>결과매핑을 참조하기 위해 사용할 수 있는 값으로 네임스페이스에서 유일한 식별자 </td>
             </tr>
             <tr>
               <td><code>type</code></td>
-              <td>A fully qualified Java class name, or a type alias (see the table above for the list of built-in type aliases). 
+              <td>패키지를 포함한 자바 클래스명이나 타입별칭(내장된 타입별칭이 목록은 위 표를 보자.). 
               </td>
             </tr>
             <tr>
               <td><code>autoMapping</code></td>
-              <td>If present, MyBatis will enable or disable the automapping for this ResultMap. 
-                This attribute overrides the global autoMappingBehavior. Default: unset. 
+              <td>이 설정을 사용하면 마이바티스는 결과매핑을 자동매핑으로 처리할지 말지를 처리한다. 
+              이 속성은 autoMappingBehavior 라는 전역설정을 덮는다. 디폴트는 unset이다.  
               </td>
             </tr>
           </tbody>
@@ -983,8 +982,8 @@ prop1, prop2 형태로 셋팅하게 될 것이다.</td>
             <tr>
               <td><code>fetchType</code></td>
               <td>
-                Optional. Valid values are <code>lazy</code> and <code>eager</code>. If present, it supersedes
-                the global configuration parameter <code>lazyLoadingEnabled</code> for this mapping.
+                선택가능한 속성으로 사용가능한 값은 <code>lazy</code> 와 <code>eager</code>이다. 
+                이 속성을 사용하면 전역 설정파라미터인 <code>lazyLoadingEnabled</code> 를 대체한다. 
               </td>
             </tr>
           </tbody>
@@ -1044,25 +1043,27 @@ prop1, prop2 형태로 셋팅하게 될 것이다.</td>
             <tr>
               <td><code>columnPrefix</code></td>
               <td>
-                When joining multiple tables, you would have to use column alias to avoid duplicated
-                column names in the ResultSet. Specifying columnPrefix allows you to map such columns
-                to an external resultMap. Please see the example explained later in this section.
+                여러개의 테이블을 조인할때 ResultSet에서 칼럼명의 중복을 피하기 위해 칼럼별칭을 사용할 수 있다. 
+                칼럼을 외부 결과매핑에 매핑하기 위해 columnPrefix를 명시하자. 이 절의 뒤에 나오는 에제를 보자. 
               </td>
             </tr>
             <tr>
               <td><code>notNullColumn</code></td>
               <td>
-                By default a child object is created only if at least one of the columns mapped to the child's properties 
-                is non null. With this attribute you can change this behaviour by specifiying which columns must have a value
-                so MyBatis will create a child object only if any of those columns is not null. Multiple column names can be 
-                specified using a comma as a separator. Default value: unset.
+                기본적으로 자식객체는 칼럼중 적어도 하나를 null이 아닌 자식객체의 프로퍼티에 매핑할때 만들어진다. 
+                이 속성을 사용해서 칼럼이 값을 가져야만 하는 것을 명시해서 행위를 변경할 수 있다. 
+                그래서 마이바티스는 이러한 칼럼이 null이 아닐때만 자식 객체를 만들것이다. 
+                여러개의 칼럼명은 구분자로 콤마를 사용해서 명시한다. 
+                디폴트값은 unset이다. 
               </td>
             </tr>            
             <tr>
               <td><code>autoMapping</code></td>
-              <td>If present, MyBatis will enable or disable automapping when mapping the result to this property.
-                This attribute overrides the global autoMappingBehavior.
-                Note that it has no effect on an external resultMap, so it is pointless to use it with <code>select</code> or <code>resultMap</code> attribute. Default value: unset.
+              <td>이 속성을 사용하면 마이바티스는 결과를 프로퍼티에 매핑할때 자동매핑을 사용할지 말지를 정한다. 
+              이 속성은 전역설정인 autoMappingBehavior를 무시하게 한다. 
+              외부 결과매핑에는 영향을 주지 않는다. 
+              그래서 <code>select</code> 나 <code>resultMap</code> 속성을 함께 사용하는 것은 의미가 없다. 
+              디폴트값은 unset이다. 
               </td>
             </tr>
           </tbody>
@@ -1126,8 +1127,8 @@ association 결과 매핑을 내포시킬수 있다. 다음은 이 방법을 사
 </resultMap>]]></source>
 
         <p>
-          What if the blog has a co-author?
-          The select statement would look like:
+          블로그에 공동저자가 있다면 어쩌지?
+          select구문은 다음과 같을 것이다. 
         </p>
 
         <source><![CDATA[<select id="selectBlog" resultMap="blogResult">
@@ -1151,7 +1152,7 @@ association 결과 매핑을 내포시킬수 있다. 다음은 이 방법을 사
 </select>]]></source>
 
         <p>
-          Recall that the resultMap for Author is defined as follows.
+          저자(Author)를 위한 결과매핑은 다음처럼 정의했다. 
         </p>
 
         <source><![CDATA[<resultMap id="authorResult" type="Author">
@@ -1163,8 +1164,7 @@ association 결과 매핑을 내포시킬수 있다. 다음은 이 방법을 사
 </resultMap>]]></source>
 
         <p>
-          Because the column names in the results differ from the columns defined in the resultMap,
-          you need to specify <code>columnPrefix</code> to reuse the resultMap for mapping co-author results.
+          결과의 칼럼명은 결과매핑에 정의한 칼럼과는 다르기 때문에 공동저자 결과를 위한 결과매핑을 재사용하기 위해 <code>columnPrefix</code> 를 명시할 필요가 있다. 
         </p>
 
         <source><![CDATA[<resultMap id="blogResult" type="Blog">
@@ -1365,28 +1365,29 @@ vehicle 간의 관계를 알 수 있다. 그러므로, 나머지 프로퍼티들
       <subsection name="Auto-mapping">
 
         <p>
-          As you have already seen in the previous sections, in simple cases MyBatis can auto-map the results for you 
-          and in others you will need to build a result map. 
-          But as you will see in this section you can also mix both strategies. 
-          Let's have a deeper look at how auto-mapping works. 
+          이전의 절에서 이미 본것처럼 간단한 경우 마이바티스는 결과를 자동으로 매핑할 수 있고 간단하지 않은 경우에는 직접 결과매핑을 만들필요가 있다. 
+          하지만 이 절에서 보는것처럼 두가지 방법을 적절히 혼용할수도 있다. 
+          자동매핑을 처리하는 방법을 조금 더 보자.  
         </p>
 
         <p>
-          When auto-mapping results MyBatis will get the column name and look for a property with the same name ignoring case. That means that if
-          a column named <i>ID</i> and property named <i>id</i> are found, MyBatis will set the <i>id</i> property with the <i>ID</i> column value. 
+          결과를 자동매핑할때 마이바티스는 칼럼명을 가져와서 대소문자를 무시한 같은 이름의 프로퍼티를 찾을 것이다. 
+          칼럼명이 <i>ID</i>라면 <i>id</i> 이름의 프로퍼티를 찾는다는 것을 뜻한다. 
+          마이바티스는 <i>ID</i> 칼럼값을 사용해서 <i>id</i> 프로퍼티를 설정할것이다.  
         </p>
 
         <p>
-          Usually database columns are named using uppercase letters and underscores between words and java properties often follow the camelcase 
-          naming covention. To enable the auto-mapping between them set the setting <code>mapUnderscoreToCamelCase</code> to true.
+          대개 데이터베이스 칼럼은 대문자를 사용해서 명명하고 단어 사이사이에는 밑줄을 넣는다. 
+          자바 프로퍼티는 대개 낙나표기법을 사용해서 명명한다. 
+          이런 둘사이의 자동매핑을 가능하게 하기 위해서는 <code>mapUnderscoreToCamelCase</code> 를 true로 설정하자. 
         </p>
         
         <p>
-          Auto-mapping works even when there is an specific result map. When this happens, for each result map, all columns that are present in the
-          ResultSet that have not a manual mapping will be auto-mapped, then manual mappings will be processed. 
-          In the following sample <i>id</i> and <i>userName</i> columns will be auto-mapped and <i>hashed_password</i> column will be mapped.</p>
+          자동매핑은 결과매핑을 선언한 경우에도 동작한다. 
+          이런 경우 각각의 결과매핑에서 ResultSet의 모든 칼럼은 자동매핑이 아니라 수동매핑으로 처리한다.
+          다음 샘플에서 <i>id</i> 와 <i>userName</i> 칼럼은 자동매핑되고 <i>hashed_password</i> 칼럼은 수동으로 매핑한다. </p>
 
-        <source><![CDATA[<select id="selectUsers" resultType="User">
+        <source><![CDATA[<select id="selectUsers" resultMap="userResultMap">
   select
     user_id             as "id",
     user_name           as "userName",
@@ -1400,25 +1401,25 @@ vehicle 간의 관계를 알 수 있다. 그러므로, 나머지 프로퍼티들
 </resultMap>]]></source>
 
         <p>
-          There are three auto-mapping levels:
+          자동매핑에는 3가지가 있다. 
         </p>
         
         <ul>
           <li>
-            <code>NONE</code> - disables auto-mapping. Only manually mapped properties will be set.
+            <code>NONE</code> - 자동매핑을 사용하지 않는다. 오직 수동으로 매핑한 프로퍼티만을 설정할것이다. 
           </li>
           <li>
-            <code>PARTIAL</code> - will auto-map results except those that have nested result mappings defined inside (joins).
+            <code>PARTIAL</code> - 조인 내부에 정의한 내포된 결과매핑을 제외하고 자동매핑한다. 
           </li>
           <li>
-            <code>FULL</code> - auto-maps everything.
+            <code>FULL</code> - 모든것을 자동매핑한다. 
           </li>
         </ul>
 
         <p>
-          The default value is <code>PARTIAL</code>, and it is so for a reason. When <code>FULL</code> is used auto-mapping will
-          be performed when processing join results and joins retrieve data of several different entities in the same row 
-          hence this may result in undesired mappings. To understand the risk have a look at the following sample:
+          디폴트값은 <code>PARTIAL</code>이다. 
+          <code>FULL</code> 을 사용할때 자동매핑은 조인결과나 같은 레코드의 여러가지 다른 엔터티를 가져올때 예상치 못한 문제를 야기할 수 있다.
+          이런 위험을 이해하기 위해 다음의 샘플을 보자. 
         </p>
         
         <source><![CDATA[<select id="selectBlog" resultMap="blogResult">
@@ -1431,7 +1432,7 @@ vehicle 간의 관계를 알 수 있다. 그러므로, 나머지 프로퍼티들
 </select>]]></source>
 
         <source><![CDATA[<resultMap id="blogResult" type="Blog">
-  <association property="author" javaType="Author" resultMap="authorResult"/>
+  <association property="author" resultMap="authorResult"/>
 </resultMap>
 
 <resultMap id="authorResult" type="Author">
@@ -1439,25 +1440,19 @@ vehicle 간의 관계를 알 수 있다. 그러므로, 나머지 프로퍼티들
 </resultMap>]]></source>
         
         <p>
-          With this result map both <i>Blog</i> and <i>Author</i> will be auto-mapped. But note that <i>Author</i> has an <i>id</i> 
-          property and there is a column named <i>id</i> in the ResultSet so Author's id will be filled with Blog's id, and that is not 
-          what you were expecting. So use the <code>FULL</code> option with caution.
+          <i>Blog</i> 와 <i>Author</i> 는 자동매핑으로 처리하지만 <i>Author</i>는 <i>id</i> 프로퍼티를 가지고 ResultSet은 <i>id</i> 칼럼을 가진다. 
+          그래서 기대한 것과는 달리 저자(Author)의 id는 블로그(Blog)의 id로 채워질것이다. 
+          <code>FULL</code> 는 이런 위험을 가진다. 
         </p>
        
 
         <p>
-          Regardless of the auto-mapping level configured you can enable or disable the automapping for an specific statement
-          by adding the attribute <code>autoMapping</code> to it:
+          자동매핑 설정에 상관없이 구문별로 <code>autoMapping</code>속성을 추가해서 자동매핑을 사용하거나 사용하지 않을수도 있다.
         </p>
 
-        <source><![CDATA[<select id="selectUsers" resultType="User" autoMapping="false">
-  select
-    user_id             as "id",
-    user_name           as "userName",
-    hashed_password
-  from some_table
-  where id = #{id}
-</select>]]></source>
+        <source><![CDATA[<resultMap id="userResultMap" type="User" autoMapping="false">
+  <result property="password" column="hashed_password"/>
+</resultMap>]]></source>
               
       </subsection>
 

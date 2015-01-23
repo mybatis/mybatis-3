@@ -41,6 +41,7 @@ public class DefaultMapResultHandler<K, V> implements ResultHandler {
     this.mapKey = mapKey;
   }
 
+  @Override
   public void handleResult(ResultContext context) {
     // TODO is that assignment always true?
     final V value = (V) context.getResultObject();

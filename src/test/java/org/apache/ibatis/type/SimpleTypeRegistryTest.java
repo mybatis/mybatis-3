@@ -20,9 +20,8 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.HashMap;
 
+import org.apache.ibatis.domain.misc.RichType;
 import org.junit.Test;
-
-import domain.misc.RichType;
 
 public class SimpleTypeRegistryTest {
 

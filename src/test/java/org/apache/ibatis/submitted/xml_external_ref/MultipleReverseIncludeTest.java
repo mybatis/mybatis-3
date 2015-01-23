@@ -38,12 +38,12 @@ public class MultipleReverseIncludeTest {
 
   @Test
   public void testMultipleReverseIncludeXmlConfig() throws Exception {
-	  testMultipleReverseIncludes(getSqlSessionFactoryXmlConfig());
+    testMultipleReverseIncludes(getSqlSessionFactoryXmlConfig());
   }
 
   @Test
   public void testMultipleReverseIncludeJavaConfig() throws Exception {
-	  testMultipleReverseIncludes(getSqlSessionFactoryJavaConfig());
+    testMultipleReverseIncludes(getSqlSessionFactoryJavaConfig());
   }
 
   private void testMultipleReverseIncludes(SqlSessionFactory sqlSessionFactory) throws Exception {

@@ -1428,7 +1428,7 @@ SELECT * FROM AUTHOR WHERE ID = #{id}]]></source>
 
         <p>ストアドプロシージャを実行する select 要素の <code>resultSets</code> 属性で、それぞれの ResultSet に名前を付けておく必要があります（カンマ区切り）。ここでは、それぞれ blogs, authors としています。</p>
 
-        <source><![CDATA[<select id="selectBlog" resultSets="blogs,authors" resultMap="blogResult">
+        <source><![CDATA[<select id="selectBlog" resultSets="blogs,authors" resultMap="blogResult" statementType="CALLABLE">
   {call getBlogsAndAuthors(#{id,jdbcType=INTEGER,mode=IN})}
 </select>
 ]]></source>
@@ -1731,7 +1731,7 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
           次の例では、<i>hashed_password</i> 列が password プロパティにマップされ、<i>id</i> と <i>userName</i> 列が自動マッピングの対象となります。
         </p>
 
-        <source><![CDATA[<select id="selectUsers" resultType="User">
+        <source><![CDATA[<select id="selectUsers" resultMap="userResultMap">
   select
     user_id             as "id",
     user_name           as "userName",
@@ -1776,7 +1776,7 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
 </select>]]></source>
 
         <source><![CDATA[<resultMap id="blogResult" type="Blog">
-  <association property="author" javaType="Author" resultMap="authorResult"/>
+  <association property="author" resultMap="authorResult"/>
 </resultMap>
 
 <resultMap id="authorResult" type="Author">
@@ -1787,20 +1787,14 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
           この Result Map では、<i>Blog</i> と <i>Author</i> の両方が自動マッピングの対象となりますが、<i>Author</i> に <i>id</i> というプロパティがあり、ResultSet に <i>id</i> という列が含まれているため、Author の id に Blog の id がセットされることになります。
           自動マッピングで <code>FULL</code> を指定する場合は、こうした意図しないマッピングが行われないように注意する必要があります。
         </p>
-       
 
         <p>
           尚、グローバルな自動マッピング設定とは別に、<code>autoMapping</code> 属性を指定することで特定のステートメントでの自動マッピング動作を有効／無効化することもできます。
         </p>
 
-        <source><![CDATA[<select id="selectUsers" resultType="User" autoMapping="false">
-  select
-    user_id             as "id",
-    user_name           as "userName",
-    hashed_password
-  from some_table
-  where id = #{id}
-</select>]]></source>
+        <source><![CDATA[<resultMap id="userResultMap" type="User" autoMapping="false">
+  <result property="password" column="hashed_password"/>
+</resultMap>]]></source>
               
       </subsection>
 

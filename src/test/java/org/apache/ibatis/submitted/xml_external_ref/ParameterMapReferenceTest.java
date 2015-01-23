@@ -49,9 +49,9 @@ public class ParameterMapReferenceTest {
   private void testCrossReference(SqlSessionFactory sqlSessionFactory) throws Exception {
     SqlSession sqlSession = sqlSessionFactory.openSession();
     try {
-  	  ParameterMapReferencePersonMapper personMapper = sqlSession.getMapper(ParameterMapReferencePersonMapper.class);
-  	  Person parameter = new Person();
-  	  parameter.setId(1);
+      ParameterMapReferencePersonMapper personMapper = sqlSession.getMapper(ParameterMapReferencePersonMapper.class);
+      Person parameter = new Person();
+      parameter.setId(1);
       Person person = personMapper.select(parameter);
       assertEquals((Integer)1, person.getId());
 

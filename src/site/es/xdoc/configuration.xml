@@ -131,7 +131,7 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 true | false
               </td>
               <td>
-                true
+                false
               </td>
             </tr>
             <tr>
@@ -692,7 +692,7 @@ public class Author {
                 <code>ByteTypeHandler</code>
               </td>
               <td>
-                <code>java.lang.Byte</code>, byte
+                <code>java.lang.Byte</code>, <code>byte</code>
               </td>
               <td>
                 Cualquiera compatible con <code>NUMERIC</code> o <code>BYTE</code>
@@ -736,7 +736,7 @@ public class Author {
                 <code>FloatTypeHandler</code>
               </td>
               <td>
-                <code>java.lang.Float</code>, float
+                <code>java.lang.Float</code>, <code>float</code>
               </td>
               <td>
                 Cualquiera compatible con <code>NUMERIC</code> o <code>FLOAT</code>
@@ -933,8 +933,9 @@ public class Author {
         </table>
         <p>
         Es posible sobrescribir los TypeHanders o crear TypeHanders personalizados para tratar tipos no soportados o no estándares. 
-        Para ello, debes simplemente extender la clase <code>org.apache.ibatis.type.BaseTypeHandler</code> y 
-        opcionalmente mapear tu nuevo TypeHandler a un tipo JDBC. Por ejemplo:
+        Para ello, debes implementar la interfaz <code>org.apache.ibatis.type.TypeHandler</code> o extender 
+        la clase de ayuda <code>org.apache.ibatis.type.BaseTypeHandler</code> y opcionalmente mapear el TypeHandler a un tipo JDBC. 
+        Por ejemplo:
         </p>
 
         <source><![CDATA[// ExampleTypeHandler.java
@@ -985,7 +986,7 @@ public class ExampleTypeHandler extends BaseTypeHandler<String> {
         <p>El tipo JDBC asociado se puede especificar de dos maneras:</p>
         <ul>
           <li>
-           Añadiendo un atributo <code>jdbcType</code> al lemento typeHandler (por ejemplo: <code>jdbcType=VARCHAR</code>).
+           Añadiendo un atributo <code>jdbcType</code> al lemento typeHandler (por ejemplo: <code>jdbcType="VARCHAR"</code>).
           </li>
           <li>Añadiendo una anotación <code>@MappedJdbcTypes</code> a tu clase TypeHandler especificando la lista de tipos JDBC a la que asociarlo. 
 		   Esta anotación será ignorada si se ha especificado también un atributo <code>jdbcType</code>.
@@ -1127,6 +1128,9 @@ public class ExampleObjectFactory extends DefaultObjectFactory {
   }
   public void setProperties(Properties properties) {
     super.setProperties(properties);
+  }
+  public <T> boolean isCollection(Class<T> type) {
+    return Collection.class.isAssignableFrom(type);
   }
 }]]></source>
 

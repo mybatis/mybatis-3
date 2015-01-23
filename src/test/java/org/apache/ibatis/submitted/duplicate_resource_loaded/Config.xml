@@ -22,7 +22,7 @@
 
 <configuration>
 
-  <properties resource="databases/blog/blog-derby.properties"/>
+  <properties resource="org/apache/ibatis/databases/blog/blog-derby.properties"/>
 
   <environments default="development">
     <environment id="development">

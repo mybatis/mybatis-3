@@ -2,10 +2,10 @@
 /*.ipr
 /*.iws
 /.classpath
+/.factorypath
 /.idea
 /.project
 /.settings
-/derby.log
 /ibderby
 /nb*
 /release.properties
@@ -18,3 +18,4 @@
 /src/docbkx
 velocity.log
 /bin
+/derby.log

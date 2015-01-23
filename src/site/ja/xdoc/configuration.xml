@@ -144,7 +144,7 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 true | false
               </td>
               <td>
-                true
+                false
               </td>
             </tr>
             <tr>
@@ -1173,7 +1173,10 @@ public class ExampleObjectFactory extends DefaultObjectFactory {
   public void setProperties(Properties properties) {
     super.setProperties(properties);
   }
-}]]></source>
+  public <T> boolean isCollection(Class<T> type) {
+    return Collection.class.isAssignableFrom(type);
+  }}
+]]></source>
 
         <source><![CDATA[<!-- mybatis-config.xml -->
 <objectFactory type="org.mybatis.example.ExampleObjectFactory">

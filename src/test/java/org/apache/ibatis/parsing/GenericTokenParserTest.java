@@ -73,6 +73,8 @@ public class GenericTokenParserTest {
 
     assertEquals("${skipped} variable", parser.parse("\\${skipped} variable"));
     assertEquals("This is a ${skipped} variable", parser.parse("This is a \\${skipped} variable"));
+    assertEquals("null ${skipped} variable", parser.parse("${skipped} \\${skipped} variable"));
+    assertEquals("The null is ${skipped} variable", parser.parse("The ${skipped} is \\${skipped} variable"));
   }
 
   @Test(timeout = 1000)

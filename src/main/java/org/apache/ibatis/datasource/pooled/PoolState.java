@@ -82,33 +82,34 @@ public class PoolState {
     return activeConnections.size();
   }
 
+  @Override
   public synchronized String toString() {
-    StringBuffer buffer = new StringBuffer();
-    buffer.append("\n===CONFINGURATION==============================================");
-    buffer.append("\n jdbcDriver                     ").append(dataSource.getDriver());
-    buffer.append("\n jdbcUrl                        ").append(dataSource.getUrl());
-    buffer.append("\n jdbcUsername                   ").append(dataSource.getUsername());
-    buffer.append("\n jdbcPassword                   ").append((dataSource.getPassword() == null ? "NULL" : "************"));
-    buffer.append("\n poolMaxActiveConnections       ").append(dataSource.poolMaximumActiveConnections);
-    buffer.append("\n poolMaxIdleConnections         ").append(dataSource.poolMaximumIdleConnections);
-    buffer.append("\n poolMaxCheckoutTime            ").append(dataSource.poolMaximumCheckoutTime);
-    buffer.append("\n poolTimeToWait                 ").append(dataSource.poolTimeToWait);
-    buffer.append("\n poolPingEnabled                ").append(dataSource.poolPingEnabled);
-    buffer.append("\n poolPingQuery                  ").append(dataSource.poolPingQuery);
-    buffer.append("\n poolPingConnectionsNotUsedFor  ").append(dataSource.poolPingConnectionsNotUsedFor);
-    buffer.append("\n ---STATUS-----------------------------------------------------");
-    buffer.append("\n activeConnections              ").append(getActiveConnectionCount());
-    buffer.append("\n idleConnections                ").append(getIdleConnectionCount());
-    buffer.append("\n requestCount                   ").append(getRequestCount());
-    buffer.append("\n averageRequestTime             ").append(getAverageRequestTime());
-    buffer.append("\n averageCheckoutTime            ").append(getAverageCheckoutTime());
-    buffer.append("\n claimedOverdue                 ").append(getClaimedOverdueConnectionCount());
-    buffer.append("\n averageOverdueCheckoutTime     ").append(getAverageOverdueCheckoutTime());
-    buffer.append("\n hadToWait                      ").append(getHadToWaitCount());
-    buffer.append("\n averageWaitTime                ").append(getAverageWaitTime());
-    buffer.append("\n badConnectionCount             ").append(getBadConnectionCount());
-    buffer.append("\n===============================================================");
-    return buffer.toString();
+    StringBuilder builder = new StringBuilder();
+    builder.append("\n===CONFINGURATION==============================================");
+    builder.append("\n jdbcDriver                     ").append(dataSource.getDriver());
+    builder.append("\n jdbcUrl                        ").append(dataSource.getUrl());
+    builder.append("\n jdbcUsername                   ").append(dataSource.getUsername());
+    builder.append("\n jdbcPassword                   ").append((dataSource.getPassword() == null ? "NULL" : "************"));
+    builder.append("\n poolMaxActiveConnections       ").append(dataSource.poolMaximumActiveConnections);
+    builder.append("\n poolMaxIdleConnections         ").append(dataSource.poolMaximumIdleConnections);
+    builder.append("\n poolMaxCheckoutTime            ").append(dataSource.poolMaximumCheckoutTime);
+    builder.append("\n poolTimeToWait                 ").append(dataSource.poolTimeToWait);
+    builder.append("\n poolPingEnabled                ").append(dataSource.poolPingEnabled);
+    builder.append("\n poolPingQuery                  ").append(dataSource.poolPingQuery);
+    builder.append("\n poolPingConnectionsNotUsedFor  ").append(dataSource.poolPingConnectionsNotUsedFor);
+    builder.append("\n ---STATUS-----------------------------------------------------");
+    builder.append("\n activeConnections              ").append(getActiveConnectionCount());
+    builder.append("\n idleConnections                ").append(getIdleConnectionCount());
+    builder.append("\n requestCount                   ").append(getRequestCount());
+    builder.append("\n averageRequestTime             ").append(getAverageRequestTime());
+    builder.append("\n averageCheckoutTime            ").append(getAverageCheckoutTime());
+    builder.append("\n claimedOverdue                 ").append(getClaimedOverdueConnectionCount());
+    builder.append("\n averageOverdueCheckoutTime     ").append(getAverageOverdueCheckoutTime());
+    builder.append("\n hadToWait                      ").append(getHadToWaitCount());
+    builder.append("\n averageWaitTime                ").append(getAverageWaitTime());
+    builder.append("\n badConnectionCount             ").append(getBadConnectionCount());
+    builder.append("\n===============================================================");
+    return builder.toString();
   }
 
 }

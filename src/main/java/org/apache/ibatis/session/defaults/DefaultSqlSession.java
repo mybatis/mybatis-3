@@ -17,6 +17,7 @@ package org.apache.ibatis.session.defaults;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -57,10 +58,12 @@ public class DefaultSqlSession implements SqlSession {
     this(configuration, executor, false);
   }
 
+  @Override
   public <T> T selectOne(String statement) {
     return this.<T>selectOne(statement, null);
   }
 
+  @Override
   public <T> T selectOne(String statement, Object parameter) {
     // Popular vote was to return null on 0 results and throw exception on too many.
     List<T> list = this.<T>selectList(statement, parameter);
@@ -73,14 +76,17 @@ public class DefaultSqlSession implements SqlSession {
     }
   }
 
+  @Override
   public <K, V> Map<K, V> selectMap(String statement, String mapKey) {
     return this.selectMap(statement, null, mapKey, RowBounds.DEFAULT);
   }
 
+  @Override
   public <K, V> Map<K, V> selectMap(String statement, Object parameter, String mapKey) {
     return this.selectMap(statement, parameter, mapKey, RowBounds.DEFAULT);
   }
 
+  @Override
   public <K, V> Map<K, V> selectMap(String statement, Object parameter, String mapKey, RowBounds rowBounds) {
     final List<?> list = selectList(statement, parameter, rowBounds);
     final DefaultMapResultHandler<K, V> mapResultHandler = new DefaultMapResultHandler<K, V>(mapKey,
@@ -90,23 +96,24 @@ public class DefaultSqlSession implements SqlSession {
       context.nextResultObject(o);
       mapResultHandler.handleResult(context);
     }
-    Map<K, V> selectedMap = mapResultHandler.getMappedResults();
-    return selectedMap;
+    return mapResultHandler.getMappedResults();
   }
 
+  @Override
   public <E> List<E> selectList(String statement) {
     return this.selectList(statement, null);
   }
 
+  @Override
   public <E> List<E> selectList(String statement, Object parameter) {
     return this.selectList(statement, parameter, RowBounds.DEFAULT);
   }
 
+  @Override
   public <E> List<E> selectList(String statement, Object parameter, RowBounds rowBounds) {
     try {
       MappedStatement ms = configuration.getMappedStatement(statement);
-      List<E> result = executor.query(ms, wrapCollection(parameter), rowBounds, Executor.NO_RESULT_HANDLER);
-      return result;
+      return executor.query(ms, wrapCollection(parameter), rowBounds, Executor.NO_RESULT_HANDLER);
     } catch (Exception e) {
       throw ExceptionFactory.wrapException("Error querying database.  Cause: " + e, e);
     } finally {
@@ -114,14 +121,17 @@ public class DefaultSqlSession implements SqlSession {
     }
   }
 
+  @Override
   public void select(String statement, Object parameter, ResultHandler handler) {
     select(statement, parameter, RowBounds.DEFAULT, handler);
   }
 
+  @Override
   public void select(String statement, ResultHandler handler) {
     select(statement, null, RowBounds.DEFAULT, handler);
   }
 
+  @Override
   public void select(String statement, Object parameter, RowBounds rowBounds, ResultHandler handler) {
     try {
       MappedStatement ms = configuration.getMappedStatement(statement);
@@ -133,18 +143,22 @@ public class DefaultSqlSession implements SqlSession {
     }
   }
 
+  @Override
   public int insert(String statement) {
     return insert(statement, null);
   }
 
+  @Override
   public int insert(String statement, Object parameter) {
     return update(statement, parameter);
   }
 
+  @Override
   public int update(String statement) {
     return update(statement, null);
   }
 
+  @Override
   public int update(String statement, Object parameter) {
     try {
       dirty = true;
@@ -157,18 +171,22 @@ public class DefaultSqlSession implements SqlSession {
     }
   }
 
+  @Override
   public int delete(String statement) {
     return update(statement, null);
   }
 
+  @Override
   public int delete(String statement, Object parameter) {
     return update(statement, parameter);
   }
 
+  @Override
   public void commit() {
     commit(false);
   }
 
+  @Override
   public void commit(boolean force) {
     try {
       executor.commit(isCommitOrRollbackRequired(force));
@@ -180,10 +198,12 @@ public class DefaultSqlSession implements SqlSession {
     }
   }
 
+  @Override
   public void rollback() {
     rollback(false);
   }
 
+  @Override
   public void rollback(boolean force) {
     try {
       executor.rollback(isCommitOrRollbackRequired(force));
@@ -195,6 +215,7 @@ public class DefaultSqlSession implements SqlSession {
     }
   }
 
+  @Override
   public List<BatchResult> flushStatements() {
     try {
       return executor.flushStatements();
@@ -205,6 +226,7 @@ public class DefaultSqlSession implements SqlSession {
     }
   }
 
+  @Override
   public void close() {
     try {
       executor.close(isCommitOrRollbackRequired(false));
@@ -214,14 +236,17 @@ public class DefaultSqlSession implements SqlSession {
     }
   }
 
+  @Override
   public Configuration getConfiguration() {
     return configuration;
   }
 
+  @Override
   public <T> T getMapper(Class<T> type) {
     return configuration.<T>getMapper(type, this);
   }
 
+  @Override
   public Connection getConnection() {
     try {
       return executor.getTransaction().getConnection();
@@ -230,6 +255,7 @@ public class DefaultSqlSession implements SqlSession {
     }
   }
 
+  @Override
   public void clearCache() {
     executor.clearLocalCache();
   }
@@ -239,10 +265,13 @@ public class DefaultSqlSession implements SqlSession {
   }
 
   private Object wrapCollection(final Object object) {
-    if (object instanceof List) {
+    if (object instanceof Collection) {
       StrictMap<Object> map = new StrictMap<Object>();
-      map.put("list", object);
-      return map;
+      map.put("collection", object);
+      if (object instanceof List) {
+        map.put("list", object);
+      }
+      return map;      
     } else if (object != null && object.getClass().isArray()) {
       StrictMap<Object> map = new StrictMap<Object>();
       map.put("array", object);

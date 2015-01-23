@@ -23,6 +23,7 @@ import java.util.Properties;
 
 import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.cache.CacheException;
+import org.apache.ibatis.cache.decorators.BlockingCache;
 import org.apache.ibatis.cache.decorators.LoggingCache;
 import org.apache.ibatis.cache.decorators.LruCache;
 import org.apache.ibatis.cache.decorators.ScheduledCache;
@@ -43,6 +44,7 @@ public class CacheBuilder {
   private Long clearInterval;
   private boolean readWrite;
   private Properties properties;
+  private boolean blocking;
 
   public CacheBuilder(String id) {
     this.id = id;
@@ -76,6 +78,11 @@ public class CacheBuilder {
     return this;
   }
 
+  public CacheBuilder blocking(boolean blocking) {
+    this.blocking = blocking;
+    return this;
+  }
+  
   public CacheBuilder properties(Properties properties) {
     this.properties = properties;
     return this;
@@ -85,12 +92,15 @@ public class CacheBuilder {
     setDefaultImplementations();
     Cache cache = newBaseCacheInstance(implementation, id);
     setCacheProperties(cache);
-    if (PerpetualCache.class.equals(cache.getClass())) { // issue #352, do not apply decorators to custom caches
+    // issue #352, do not apply decorators to custom caches
+    if (PerpetualCache.class.equals(cache.getClass())) {
       for (Class<? extends Cache> decorator : decorators) {
         cache = newCacheDecoratorInstance(decorator, cache);
         setCacheProperties(cache);
       }
       cache = setStandardDecorators(cache);
+    } else if (!LoggingCache.class.isAssignableFrom(cache.getClass())) {
+      cache = new LoggingCache(cache);
     }
     return cache;
   }
@@ -98,7 +108,7 @@ public class CacheBuilder {
   private void setDefaultImplementations() {
     if (implementation == null) {
       implementation = PerpetualCache.class;
-      if (decorators.size() == 0) {
+      if (decorators.isEmpty()) {
         decorators.add(LruCache.class);
       }
     }
@@ -119,6 +129,9 @@ public class CacheBuilder {
       }
       cache = new LoggingCache(cache);
       cache = new SynchronizedCache(cache);
+      if (blocking) {
+        cache = new BlockingCache(cache);
+      }
       return cache;
     } catch (Exception e) {
       throw new CacheException("Error building standard cache decorators.  Cause: " + e, e);

@@ -21,12 +21,12 @@
     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="domain.blog.mappers.NestedBlogMapper">
+<mapper namespace="org.apache.ibatis.domain.blog.mappers.NestedBlogMapper">
 
   <resultMap id="blogJoinedWithPostsAndAuthor" type="Blog">
     <id property="id" column="blog_id"/>
     <result property="title" column="blog_title"/>
-    <association property="author" column="blog_author_id" javaType="domain.blog.Author">
+    <association property="author" column="blog_author_id" javaType="org.apache.ibatis.domain.blog.Author">
       <id property="id" column="author_id"/>
       <result property="username" column="author_username"/>
       <result property="password" column="author_password"/>
@@ -34,18 +34,18 @@
       <result property="bio" column="author_bio"/>
       <result property="favouriteSection" column="author_favourite_section"/>
     </association>
-    <collection property="posts" ofType="domain.blog.Post">
+    <collection property="posts" ofType="org.apache.ibatis.domain.blog.Post">
       <id property="id" column="post_id"/>
       <result property="subject" column="post_subject"/>
-      <association property="author" column="post_author_id" javaType="domain.blog.Author"/>
-      <collection property="comments" column="post_id" ofType="domain.blog.Comment">
+      <association property="author" column="post_author_id" javaType="org.apache.ibatis.domain.blog.Author"/>
+      <collection property="comments" column="post_id" ofType="org.apache.ibatis.domain.blog.Comment">
         <id property="id" column="comment_id"/>
       </collection>
-      <collection property="tags" column="post_id" ofType="domain.blog.Tag">
+      <collection property="tags" column="post_id" ofType="org.apache.ibatis.domain.blog.Tag">
         <id property="id" column="tag_id"/>
       </collection>
       <discriminator javaType="int" column="draft">
-        <case value="1" resultType="domain.blog.DraftPost"/>
+        <case value="1" resultType="org.apache.ibatis.domain.blog.DraftPost"/>
       </discriminator>
     </collection>
   </resultMap>

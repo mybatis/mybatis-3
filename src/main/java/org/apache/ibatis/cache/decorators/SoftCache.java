@@ -17,6 +17,7 @@ package org.apache.ibatis.cache.decorators;
 
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.SoftReference;
+import java.util.Deque;
 import java.util.LinkedList;
 import java.util.concurrent.locks.ReadWriteLock;
 
@@ -29,7 +30,7 @@ import org.apache.ibatis.cache.Cache;
  * @author Clinton Begin
  */
 public class SoftCache implements Cache {
-  private final LinkedList<Object> hardLinksToAvoidGarbageCollection;
+  private final Deque<Object> hardLinksToAvoidGarbageCollection;
   private final ReferenceQueue<Object> queueOfGarbageCollectedEntries;
   private final Cache delegate;
   private int numberOfHardLinks;
@@ -115,7 +116,7 @@ public class SoftCache implements Cache {
   private static class SoftEntry extends SoftReference<Object> {
     private final Object key;
 
-    private SoftEntry(Object key, Object value, ReferenceQueue<Object> garbageCollectionQueue) {
+    SoftEntry(Object key, Object value, ReferenceQueue<Object> garbageCollectionQueue) {
       super(value, garbageCollectionQueue);
       this.key = key;
     }

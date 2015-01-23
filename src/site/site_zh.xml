@@ -14,18 +14,15 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-
 <!-- version: $Id$ -->
-
-<project xmlns="http://maven.apache.org/DECORATION/1.1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/DECORATION/1.1.0 http://maven.apache.org/xsd/decoration-1.1.0.xsd"
-  name="MyBatis">
+<project name="${project.name}" xmlns="http://maven.apache.org/DECORATION/1.6.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/DECORATION/1.6.0 http://maven.apache.org/xsd/decoration-1.6.0.xsd">
 
   <body>
-    <menu name="Core">
-      <item name="Introduction" href="index.html"/>
+    <menu name="参考文档">
+      <item name="简介" href="index.html"/>
       <item name="入门" href="getting-started.html"/>
-      <item name="XML 映射配置文件" href="configuration.html" collapse="true">
+      <item name="XML 配置" href="configuration.html" collapse="true">
         <item href="configuration.html#properties" name="properties" />
         <item href="configuration.html#settings" name="settings" />
         <item href="configuration.html#typeAliases" name="typeAliases" />
@@ -36,12 +33,12 @@
         <item href="configuration.html#databaseIdProvider" name="databaseIdProvider" />
         <item href="configuration.html#mappers" name="mappers" />
       </item>
-      <item name="Mapper XML 文件" href="sqlmap-xml.html" collapse="true">
+      <item name="XML 映射文件" href="sqlmap-xml.html" collapse="true">
         <item href="sqlmap-xml.html#select" name="select" />
         <item href="sqlmap-xml.html#insert_update_and_delete" name="insert, update and delete" />
         <item href="sqlmap-xml.html#Parameters" name="Parameters" />
         <item href="sqlmap-xml.html#Result_Maps" name="Result Maps" />
-        <item href="sqlmap-xml.html#Auto-mapping" name="Auto-mapping" />        
+        <item href="sqlmap-xml.html#Auto-mapping" name="Auto-mapping" />
         <item href="sqlmap-xml.html#cache" name="cache" />
       </item>
       <item name="动态 SQL" href="dynamic-sql.html"/>
@@ -49,11 +46,8 @@
         <item name="Directory Structure" href="java-api.html#directoryStructure" />
         <item name="SqlSessions" href="java-api.html#sqlSessions" />
       </item>
-      <item name="Statement Builders" href="statement-builders.html" collapse="true">
-        <item name="SelectBuilder" href="statement-builders.html#SelectBuilder" />
-        <item name="SqlBuilder" href="statement-builders.html#SqlBuilder" />
-       </item>
-      <item name="Logging" href="logging.html"/>
+      <item name="SQL 组装类" href="statement-builders.html" collapse="true" />
+      <item name="日志处理" href="logging.html"/>
     </menu>
 
     <menu ref="reports"/>

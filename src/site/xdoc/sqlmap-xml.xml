@@ -1569,7 +1569,7 @@ SELECT * FROM AUTHOR WHERE ID = #{id}]]></source>
         <p>A name must be given to each result set by adding a 
         <code>resultSets</code> attribute to the mapped statement with a list of names separated by commas.</p>
 
-        <source><![CDATA[<select id="selectBlog" resultSets="blogs,authors" resultMap="blogResult">
+        <source><![CDATA[<select id="selectBlog" resultSets="blogs,authors" resultMap="blogResult" statementType="CALLABLE">
   {call getBlogsAndAuthors(#{id,jdbcType=INTEGER,mode=IN})}
 </select>
 ]]></source>
@@ -1887,7 +1887,7 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
           ResultSet that have not a manual mapping will be auto-mapped, then manual mappings will be processed. 
           In the following sample <i>id</i> and <i>userName</i> columns will be auto-mapped and <i>hashed_password</i> column will be mapped.</p>
 
-        <source><![CDATA[<select id="selectUsers" resultType="User">
+        <source><![CDATA[<select id="selectUsers" resultMap="userResultMap">
   select
     user_id             as "id",
     user_name           as "userName",
@@ -1932,7 +1932,7 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
 </select>]]></source>
 
         <source><![CDATA[<resultMap id="blogResult" type="Blog">
-  <association property="author" javaType="Author" resultMap="authorResult"/>
+  <association property="author" resultMap="authorResult"/>
 </resultMap>
 
 <resultMap id="authorResult" type="Author">
@@ -1946,18 +1946,13 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
         </p>
 
         <p>
-          Regardless of the auto-mapping level configured you can enable or disable the automapping for an specific statement
+          Regardless of the auto-mapping level configured you can enable or disable the automapping for an specific ResultMap
           by adding the attribute <code>autoMapping</code> to it:
         </p>
 
-        <source><![CDATA[<select id="selectUsers" resultType="User" autoMapping="false">
-  select
-    user_id             as "id",
-    user_name           as "userName",
-    hashed_password
-  from some_table
-  where id = #{id}
-</select>]]></source>
+        <source><![CDATA[<resultMap id="userResultMap" type="User" autoMapping="false">
+  <result property="password" column="hashed_password"/>
+</resultMap>]]></source>
        
       </subsection>
       <subsection name="cache">
