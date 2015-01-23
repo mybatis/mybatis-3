@@ -201,8 +201,11 @@ ps.setInt(1,id);]]></source>
             </tr>
             <tr>
               <td><code>timeout</code></td>
-              <td>This sets the number of seconds the driver will wait for the database to return from a
-                request, before throwing an exception. Default is <code>unset</code> (driver dependent).
+              <td>This sets the number of <em>milli</em>seconds the driver will wait for the database
+                to return from a request before throwing an exception. 
+                If the <a href="configuration.html#settings"><code>defaultStatementTimeout</code></a> 
+                (which is calibrated in seconds) has been set, <code>timeout</code> defaults to 1000 
+                times that value. Otherwise, the default is <code>unset</code> (driver dependent).
               </td>
             </tr>
             <tr>
@@ -316,8 +319,11 @@ ps.setInt(1,id);]]></source>
             </tr>
             <tr>
               <td><code>timeout</code></td>
-              <td>This sets the maximum number of seconds the driver will wait for the database to return from a
-                request, before throwing an exception. Default is <code>unset</code> (driver dependent).
+              <td>This sets the number of <em>milli</em>seconds the driver will wait for the database
+                to return from a request before throwing an exception. 
+                If the <a href="configuration.html#settings"><code>defaultStatementTimeout</code></a> 
+                (which is calibrated in seconds) has been set, <code>timeout</code> defaults to 1000 
+                times that value. Otherwise, the default is <code>unset</code> (driver dependent).
               </td>
             </tr>
             <tr>
