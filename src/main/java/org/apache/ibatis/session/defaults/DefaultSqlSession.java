@@ -37,6 +37,10 @@ import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
 
 /**
+ * 
+ * Note: This class is not Thread-Safe. Only one thread at a time should access {@link DefaultSqlSession}.
+ * Refer <a href="https://github.com/mybatis/mybatis-3/blob/master/src/site/xdoc/getting-started.xml#L384">docs</a> for more info
+ * 
  * @author Clinton Begin
  */
 public class DefaultSqlSession implements SqlSession {
