@@ -39,7 +39,7 @@ import org.apache.ibatis.session.SqlSession;
 /**
  * 
  * Note: This class is not Thread-Safe. Only one thread at a time should access {@link DefaultSqlSession}.
- * Refer <a href="http://mybatis.github.io/mybatis-3/getting-started.html">SqlSession docs</a> for more info
+ * Refer docs concerning <a href="http://mybatis.github.io/mybatis-3/getting-started.html">SqlSession</a> for more info.
  * 
  * @author Clinton Begin
  */
