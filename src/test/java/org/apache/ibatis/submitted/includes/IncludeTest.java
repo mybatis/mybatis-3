@@ -16,26 +16,46 @@
 package org.apache.ibatis.submitted.includes;
 
 import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import static org.junit.Assert.assertNotNull;
+
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.Reader;
+import java.sql.Connection;
+import java.util.Map;
+
 import org.apache.ibatis.session.SqlSession;
 import org.junit.Assert;
 
 public class IncludeTest {
 
+  private static SqlSessionFactory sqlSessionFactory;
+
+  @BeforeClass
+  public static void setUp() throws Exception {
+    // create a SqlSessionFactory
+    Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/includes/MapperConfig.xml");
+    sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+    reader.close();
+
+    // populate in-memory database
+    SqlSession session = sqlSessionFactory.openSession();
+    Connection conn = session.getConnection();
+    reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/includes/CreateDB.sql");
+    ScriptRunner runner = new ScriptRunner(conn);
+    runner.setLogWriter(null);
+    runner.runScript(reader);
+    reader.close();
+    session.close();
+  }
+
   @Test
   public void testIncludes() throws Exception {
-    String resource = "org/apache/ibatis/submitted/includes/MapperConfig.xml";
-    Reader reader = Resources.getResourceAsReader(resource);
-    SqlSessionFactoryBuilder builder = new SqlSessionFactoryBuilder();
-    SqlSessionFactory sqlMapper = builder.build(reader);
-    assertNotNull(sqlMapper);
-
-    final SqlSession sqlSession = sqlMapper.openSession();
+    final SqlSession sqlSession = sqlSessionFactory.openSession();
     try {
       final Integer result = sqlSession.selectOne("org.apache.ibatis.submitted.includes.mapper.selectWithProperty");
       Assert.assertEquals(Integer.valueOf(1), result);
@@ -43,4 +63,16 @@ public class IncludeTest {
       sqlSession.close();
     }
   }
+  
+  @Test
+  public void testParametrizedIncludes() throws Exception {
+    final SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      final Map<String, Object> result = sqlSession.selectOne("org.apache.ibatis.submitted.includes.mapper.select");
+      //Assert.assertEquals(Integer.valueOf(1), result);
+    } finally {
+      sqlSession.close();
+    }
+  }
+  
 }
