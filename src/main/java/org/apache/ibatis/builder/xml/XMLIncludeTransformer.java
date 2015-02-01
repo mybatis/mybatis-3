@@ -32,10 +32,6 @@ import java.util.*;
  */
 public class XMLIncludeTransformer {
 
-  public static final String PLACEHOLDER_START = "${";
-  
-  public static final String PLACEHOLDER_END = "}";
-  
   private final Configuration configuration;
   private final MapperBuilderAssistant builderAssistant;
 
@@ -45,7 +41,12 @@ public class XMLIncludeTransformer {
   }
 
   public void applyIncludes(Node source) {
-    applyIncludes(source, new HashMap<String, String>());
+    Properties placeholderContext = new Properties();
+    Properties configurationVariables = configuration.getVariables();
+    if (configurationVariables != null) {
+      placeholderContext.putAll(configurationVariables);
+    }
+    applyIncludes(source, placeholderContext);
   }
 
   /**
@@ -53,23 +54,27 @@ public class XMLIncludeTransformer {
    * @param source Include node in DOM tree
    * @param placeholderContext Current context for static placeholders with values
    */
-  private void applyIncludes(Node source, final Map<String, String> placeholderContext) {
-    GenericTokenParser tokenParser = new GenericTokenParser(PLACEHOLDER_START, PLACEHOLDER_END, new PlaceholderTokenHandler(placeholderContext));
+  private void applyIncludes(Node source, final Properties placeholderContext) {
     if (source.getNodeName().equals("include")) {
       // new full context for included SQL - contains inherited context and new variables from current include node
-      Map<String, String> fullContext = placeholderContext;
+      Properties fullContext;
 
       String refid = getStringAttribute(source, "refid");
-      // replace placeholders also in include refid value
-      refid = tokenParser.parse(refid);
+      // replace placeholders and variables in include refid value
+      refid = PropertyParser.parse(refid, placeholderContext);
       Node toInclude = findSqlFragment(refid);
-      Map<String, String> newPlaceholderContext = getPlaceholderContext(source);
+      Properties newPlaceholderContext = getPlaceholderContext(source);
       if (!newPlaceholderContext.isEmpty()) {
-        for (String name : newPlaceholderContext.keySet()) {
-          newPlaceholderContext.put(name, tokenParser.parse(newPlaceholderContext.get(name)));
+        // replace placeholders in new variables too
+        for (Object name : newPlaceholderContext.keySet()) {
+          newPlaceholderContext.put(name, PropertyParser.parse(newPlaceholderContext.get(name).toString(), placeholderContext));
         }
+        // merge new and inherited into new full one
         applyInheritedContext(newPlaceholderContext, placeholderContext);
         fullContext = newPlaceholderContext;
+      } else {
+        // no new context - use inherited fully
+        fullContext = placeholderContext;
       }
       applyIncludes(toInclude, fullContext);
       if (toInclude.getOwnerDocument() != source.getOwnerDocument()) {
@@ -87,15 +92,14 @@ public class XMLIncludeTransformer {
       }
     } else if (source.getNodeType() == Node.ATTRIBUTE_NODE && !placeholderContext.isEmpty()) {
       // replace placeholders in all attribute values
-      source.setNodeValue(tokenParser.parse(source.getNodeValue()));
+      source.setNodeValue(PropertyParser.parse(source.getNodeValue(), placeholderContext));
     } else if (source.getNodeType() == Node.TEXT_NODE && !placeholderContext.isEmpty()) {
       // replace placeholder ins all text nodes
-      source.setNodeValue(tokenParser.parse(source.getNodeValue()));
+      source.setNodeValue(PropertyParser.parse(source.getNodeValue(), placeholderContext));
     }
   }
 
   private Node findSqlFragment(String refid) {
-    refid = PropertyParser.parse(refid, configuration.getVariables());
     refid = builderAssistant.applyCurrentNamespace(refid, true);
     try {
       XNode nodeToInclude = configuration.getSqlFragments().get(refid);
@@ -111,11 +115,11 @@ public class XMLIncludeTransformer {
 
   /**
    * Add inherited context into newly created one.
-   * @param newContext placeholders for current include instance where inherited values will be placed
+   * @param newContext placeholders defined current include clause where inherited values will be placed
    * @param inheritedContext all inherited placeholder values
    */
-  private void applyInheritedContext(Map<String, String> newContext, Map<String, String> inheritedContext) {
-    for (Map.Entry<String, String> e : inheritedContext.entrySet()) {
+  private void applyInheritedContext(Properties newContext, Properties inheritedContext) {
+    for (Map.Entry<Object, Object> e : inheritedContext.entrySet()) {
       if (!newContext.containsKey(e.getKey())) {
         newContext.put(e.getKey(), e.getValue());
       }
@@ -127,17 +131,17 @@ public class XMLIncludeTransformer {
    * @param node Include node instance
    * @return placeholder context from include instance (no inherited values)
    */
-  private Map<String, String> getPlaceholderContext(Node node) {
+  private Properties getPlaceholderContext(Node node) {
     List<Node> subElements = getSubElements(node);
     if (subElements.isEmpty()) {
-      return Collections.emptyMap();
+      return new Properties();
     } else {
-      Map<String, String> placeholderContext = new HashMap<String, String>(subElements.size());
+      Properties placeholderContext = new Properties();
       for (Node placeholderValue : subElements) {
         String name = getStringAttribute(placeholderValue, "name");
         String value = getStringAttribute(placeholderValue, "value");
         // Push new value
-        String originalValue = placeholderContext.put(name, value);
+        Object originalValue = placeholderContext.put(name, value);
         if (originalValue != null) {
           throw new IllegalArgumentException("Placeholder " + name + " defined twice in the same include definition");
         }
@@ -162,20 +166,4 @@ public class XMLIncludeTransformer {
     }
   }
   
-  private class PlaceholderTokenHandler implements TokenHandler {
-    
-    private final Map<String, String> context;
-
-    public PlaceholderTokenHandler(Map<String, String> context) {
-      this.context = context;
-    }
-
-    @Override
-    public String handleToken(String content) {
-      if (context != null && context.containsKey(content)) {
-        return context.get(content);
-      }
-      return PLACEHOLDER_START + content + PLACEHOLDER_END;
-    }
-  }
 }
