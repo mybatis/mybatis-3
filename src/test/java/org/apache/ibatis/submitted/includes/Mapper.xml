@@ -32,13 +32,13 @@
 
   <select id="select" resultType="map">
     <include refid="someinclude">
-        <placeholder name="include_target" value="org.apache.ibatis.submitted.includes.fragments.select"/>
+        <property name="include_target" value="org.apache.ibatis.submitted.includes.fragments.select"/>
     </include>
     field1, field2, field3
     from
       <include refid="someinclude">
-          <placeholder name="prefix" value="Some"/>
-          <placeholder name="include_target" value="sometable"/>
+          <property name="prefix" value="Some"/>
+          <property name="include_target" value="sometable"/>
       </include>
   </select>
 
@@ -49,7 +49,7 @@
   <update id="update" parameterType="map">
     <include refid="org.apache.ibatis.submitted.includes.fragments.update"/>
     <include refid="org.apache.ibatis.submitted.includes.mapper.sometable">
-        <placeholder name="prefix" value="Some"/>
+        <property name="prefix" value="Some"/>
     </include>
     set Field2 = #{field2,jdbcType=INTEGER},
     Field3 = #{field3,jdbcType=VARCHAR},

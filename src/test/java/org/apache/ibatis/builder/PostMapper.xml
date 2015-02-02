@@ -103,7 +103,7 @@
           </if>
           <trim prefix="AND">
             <include refid="byBlogId">
-                <placeholder name="prefix" value="blog"/>
+                <property name="prefix" value="blog"/>
             </include>
           </trim>
         </otherwise>
