@@ -41,40 +41,40 @@ public class XMLIncludeTransformer {
   }
 
   public void applyIncludes(Node source) {
-    Properties placeholderContext = new Properties();
+    Properties variablesContext = new Properties();
     Properties configurationVariables = configuration.getVariables();
     if (configurationVariables != null) {
-      placeholderContext.putAll(configurationVariables);
+      variablesContext.putAll(configurationVariables);
     }
-    applyIncludes(source, placeholderContext);
+    applyIncludes(source, variablesContext);
   }
 
   /**
    * Recursively apply includes through all SQL fragments.
    * @param source Include node in DOM tree
-   * @param placeholderContext Current context for static placeholders with values
+   * @param variablesContext Current context for static variables with values
    */
-  private void applyIncludes(Node source, final Properties placeholderContext) {
+  private void applyIncludes(Node source, final Properties variablesContext) {
     if (source.getNodeName().equals("include")) {
       // new full context for included SQL - contains inherited context and new variables from current include node
       Properties fullContext;
 
       String refid = getStringAttribute(source, "refid");
-      // replace placeholders and variables in include refid value
-      refid = PropertyParser.parse(refid, placeholderContext);
+      // replace variables in include refid value
+      refid = PropertyParser.parse(refid, variablesContext);
       Node toInclude = findSqlFragment(refid);
-      Properties newPlaceholderContext = getPlaceholderContext(source);
-      if (!newPlaceholderContext.isEmpty()) {
-        // replace placeholders in new variables too
-        for (Object name : newPlaceholderContext.keySet()) {
-          newPlaceholderContext.put(name, PropertyParser.parse(newPlaceholderContext.get(name).toString(), placeholderContext));
+      Properties newVariablesContext = getVariablesContext(source);
+      if (!newVariablesContext.isEmpty()) {
+        // replace variables in variable values too
+        for (Object name : newVariablesContext.keySet()) {
+          newVariablesContext.put(name, PropertyParser.parse(newVariablesContext.get(name).toString(), variablesContext));
         }
         // merge new and inherited into new full one
-        applyInheritedContext(newPlaceholderContext, placeholderContext);
-        fullContext = newPlaceholderContext;
+        applyInheritedContext(newVariablesContext, variablesContext);
+        fullContext = newVariablesContext;
       } else {
         // no new context - use inherited fully
-        fullContext = placeholderContext;
+        fullContext = variablesContext;
       }
       applyIncludes(toInclude, fullContext);
       if (toInclude.getOwnerDocument() != source.getOwnerDocument()) {
@@ -88,14 +88,14 @@ public class XMLIncludeTransformer {
     } else if (source.getNodeType() == Node.ELEMENT_NODE) {
       NodeList children = source.getChildNodes();
       for (int i=0; i<children.getLength(); i++) {
-        applyIncludes(children.item(i), placeholderContext);
+        applyIncludes(children.item(i), variablesContext);
       }
-    } else if (source.getNodeType() == Node.ATTRIBUTE_NODE && !placeholderContext.isEmpty()) {
-      // replace placeholders in all attribute values
-      source.setNodeValue(PropertyParser.parse(source.getNodeValue(), placeholderContext));
-    } else if (source.getNodeType() == Node.TEXT_NODE && !placeholderContext.isEmpty()) {
-      // replace placeholder ins all text nodes
-      source.setNodeValue(PropertyParser.parse(source.getNodeValue(), placeholderContext));
+    } else if (source.getNodeType() == Node.ATTRIBUTE_NODE && !variablesContext.isEmpty()) {
+      // replace variables in all attribute values
+      source.setNodeValue(PropertyParser.parse(source.getNodeValue(), variablesContext));
+    } else if (source.getNodeType() == Node.TEXT_NODE && !variablesContext.isEmpty()) {
+      // replace variables ins all text nodes
+      source.setNodeValue(PropertyParser.parse(source.getNodeValue(), variablesContext));
     }
   }
 
@@ -115,8 +115,8 @@ public class XMLIncludeTransformer {
 
   /**
    * Add inherited context into newly created one.
-   * @param newContext placeholders defined current include clause where inherited values will be placed
-   * @param inheritedContext all inherited placeholder values
+   * @param newContext variables defined current include clause where inherited values will be placed
+   * @param inheritedContext all inherited variables values
    */
   private void applyInheritedContext(Properties newContext, Properties inheritedContext) {
     for (Map.Entry<Object, Object> e : inheritedContext.entrySet()) {
@@ -129,24 +129,24 @@ public class XMLIncludeTransformer {
   /**
    * Read placholders and their values from include node definition. 
    * @param node Include node instance
-   * @return placeholder context from include instance (no inherited values)
+   * @return variables context from include instance (no inherited values)
    */
-  private Properties getPlaceholderContext(Node node) {
+  private Properties getVariablesContext(Node node) {
     List<Node> subElements = getSubElements(node);
     if (subElements.isEmpty()) {
       return new Properties();
     } else {
-      Properties placeholderContext = new Properties();
-      for (Node placeholderValue : subElements) {
-        String name = getStringAttribute(placeholderValue, "name");
-        String value = getStringAttribute(placeholderValue, "value");
+      Properties variablesContext = new Properties();
+      for (Node variableValue : subElements) {
+        String name = getStringAttribute(variableValue, "name");
+        String value = getStringAttribute(variableValue, "value");
         // Push new value
-        Object originalValue = placeholderContext.put(name, value);
+        Object originalValue = variablesContext.put(name, value);
         if (originalValue != null) {
-          throw new IllegalArgumentException("Placeholder " + name + " defined twice in the same include definition");
+          throw new IllegalArgumentException("Variable " + name + " defined twice in the same include definition");
         }
       }
-      return placeholderContext;
+      return variablesContext;
     }
   }
   
