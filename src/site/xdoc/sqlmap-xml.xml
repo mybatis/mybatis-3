@@ -485,18 +485,19 @@ ps.setInt(1,id);]]></source>
       <subsection name="sql">
         <p>
           This element can be used to define a reusable fragment of SQL code that can be
-          included in other statements. For example:
+          included in other statements. It can be statically (during load phase) parametrized and also included many time
+          with different property values. For example:
         </p>
 
-        <source><![CDATA[<sql id="userColumns"> id,username,password </sql>]]></source>
+        <source><![CDATA[<sql id="userColumns"> ${alias}.id,${alias}.username,${alias}.password </sql>]]></source>
 
         <p>
           The SQL fragment can then be included in another statement, for example:
         </p>
 
         <source><![CDATA[<select id="selectUsers" resultType="map">
-  select <include refid="userColumns"/>
-  from some_table
+  select <include refid="userColumns"><property name="alias" value="t"/></include>
+  from some_table t
   where id = #{id}
 </select>]]></source>
       </subsection>
