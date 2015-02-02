@@ -500,6 +500,28 @@ ps.setInt(1,id);]]></source>
   from some_table t
   where id = #{id}
 </select>]]></source>
+          
+        <p>
+          Property value can be also used in include attributes (e.g. refid), for example:
+        </p>
+        
+        <source><![CDATA[<sql id="sometable">
+  ${prefix}Table
+</sql>
+
+<sql id="someinclude">
+  from
+    <include refid="${include_target}"/>
+</sql>
+
+<select id="select" resultType="map">
+  select
+    field1, field2, field3
+  <include refid="someinclude">
+    <property name="prefix" value="Some"/>
+    <property name="include_target" value="sometable"/>
+  </include>
+</select>]]></source>
       </subsection>
 
       <subsection name="Parameters">
