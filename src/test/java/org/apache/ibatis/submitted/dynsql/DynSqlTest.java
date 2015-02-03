@@ -158,4 +158,16 @@ public class DynSqlTest {
     }
   }
 
+  @Test
+  public void testBindNull() {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      DynSqlMapper mapper = sqlSession.getMapper(DynSqlMapper.class);
+      String description = mapper.selectDescription(null);
+      assertEquals("Pebbles", description);
+    } finally {
+      sqlSession.close();
+    }
+  }
+
 }

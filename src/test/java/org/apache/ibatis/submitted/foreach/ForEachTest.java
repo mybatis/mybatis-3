@@ -107,4 +107,21 @@ public class ForEachTest {
     }
   }
 
+  @Test
+  public void nullItemInContext() {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      User user1 = new User();
+      user1.setId(3);
+      List<User> users = new ArrayList<User>();
+      users.add(user1);
+      users.add(null);
+      String name = mapper.selectWithNullItemCheck(users);
+      Assert.assertEquals("User3", name);
+    } finally {
+      sqlSession.close();
+    }
+  }
+
 }

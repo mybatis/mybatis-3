@@ -50,4 +50,16 @@
       </where>
   </select>
 
+  <select id="selectWithNullItemCheck" resultType="string">
+    select name from users
+      <where>
+        id in
+        <foreach item="item" collection="list" separator="," open="(" close=")">
+          <if test="item != null">
+            #{item.id, jdbcType=NUMERIC}
+          </if>
+        </foreach>
+      </where>
+  </select>
+
 </mapper>
