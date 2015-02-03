@@ -1,5 +1,5 @@
-/*
- *    Copyright 2009-2012 the original author or authors.
+/*-
+ *    Copyright 2009-2015 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -13,18 +13,11 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package org.apache.ibatis.submitted.foreach;
 
-import java.util.List;
+package org.apache.ibatis.submitted.dynsql;
 
-public interface Mapper {
+import org.apache.ibatis.annotations.Param;
 
-  User getUser(User user);
-
-  int countByUserList(List<User> users);
-
-  int countByBestFriend(List<User> users);
-
-  String selectWithNullItemCheck(List<User> users);
-
+public interface DynSqlMapper {
+  String selectDescription(@Param("p") String p);
 }

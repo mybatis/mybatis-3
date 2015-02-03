@@ -106,7 +106,7 @@ public class DynamicContext {
       Map map = (Map) target;
 
       Object result = map.get(name);
-      if (result != null) {
+      if (map.containsKey(name) || result != null) {
         return result;
       }
 
