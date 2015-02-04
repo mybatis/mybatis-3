@@ -220,14 +220,14 @@ ps.setInt(1,id);]]></source>
   timeout="20">
 
 <update
-  id="insertAuthor"
+  id="updateAuthor"
   parameterType="domain.blog.Author"
   flushCache="true"
   statementType="PREPARED"
   timeout="20">
 
 <delete
-  id="insertAuthor"
+  id="deleteAuthor"
   parameterType="domain.blog.Author"
   flushCache="true"
   statementType="PREPARED"
