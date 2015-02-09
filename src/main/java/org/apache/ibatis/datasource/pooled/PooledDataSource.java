@@ -60,6 +60,10 @@ public class PooledDataSource implements DataSource {
     dataSource = new UnpooledDataSource();
   }
 
+  public PooledDataSource(UnpooledDataSource dataSource) {
+    this.dataSource = dataSource;
+  }
+
   public PooledDataSource(String driver, String url, String username, String password) {
     dataSource = new UnpooledDataSource(driver, url, username, password);
     expectedConnectionTypeCode = assembleConnectionTypeCode(dataSource.getUrl(), dataSource.getUsername(), dataSource.getPassword());
