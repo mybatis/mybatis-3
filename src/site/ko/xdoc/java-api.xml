@@ -249,8 +249,8 @@ int delete(String statement)]]></source>
   
   <source><![CDATA[<E> List<E> selectList (String statement, Object parameter, RowBounds rowBounds)
 <K,V> Map<K,V> selectMap(String statement, Object parameter, String mapKey, RowBounds rowbounds)
-void select (String statement, Object parameter, ResultHandler handler)
-void select (String statement, Object parameter, RowBounds rowBounds, ResultHandler handler)]]></source>
+void select (String statement, Object parameter, ResultHandler<T> handler)
+void select (String statement, Object parameter, RowBounds rowBounds, ResultHandler<T> handler)]]></source>
 
   <p>RowBounds 파라미터는 MyBatis 로 하여금 특정 개수 만큼의 레코드를 건너띄게 한다. RowBounds 클래스는 offset 과
 limit 둘다 가지는 생성자가 있다.</p>
@@ -264,10 +264,10 @@ RowBounds rowBounds = new RowBounds(offset, limit);</source>
 각각의 결과를 그냥 던질수도 있다. ResultHandler 로 많은 것을 할 수 있고 MyBatis 는 결과셋을 다루기 위해 내부적으로
 사용한다.</p>
   <p>인터페이스는 매우 간단하다.</p>  
-  <source>package org.apache.ibatis.session;
-public interface ResultHandler {
-  void handleResult(ResultContext context);
-}</source>
+  <source><![CDATA[package org.apache.ibatis.session;
+public interface ResultHandler<T> {
+  void handleResult(ResultContext<? extends T> context);
+}]]></source>
 
   <p>ResultContext 파라미터는 결과 객체에 접근할 수 있도록 해준다.</p>
 

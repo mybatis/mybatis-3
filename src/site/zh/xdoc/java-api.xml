@@ -330,8 +330,8 @@ int delete(String statement)]]></source>
   </p>
   <source><![CDATA[<E> List<E> selectList (String statement, Object parameter, RowBounds rowBounds)
 <K,V> Map<K,V> selectMap(String statement, Object parameter, String mapKey, RowBounds rowbounds)
-void select (String statement, Object parameter, ResultHandler handler)
-void select (String statement, Object parameter, RowBounds rowBounds, ResultHandler handler)]]></source>
+void select (String statement, Object parameter, ResultHandler<T> handler)
+void select (String statement, Object parameter, RowBounds rowBounds, ResultHandler<T> handler)]]></source>
 
   <p>
 RowBounds 参数会告诉 MyBatis 略过指定数量的记录,还有限制返回结果的数量。
@@ -352,10 +352,10 @@ Set
 那就是 MyBatis 内部创建结果集列表。
   </p>
   <p>它的接口很简单。</p>  
-  <source>package org.apache.ibatis.session;
-public interface ResultHandler {
-  void handleResult(ResultContext context);
-}</source>
+  <source><![CDATA[package org.apache.ibatis.session;
+public interface ResultHandler<T> {
+  void handleResult(ResultContext<? extends T> context);
+}]]></source>
 
   <p>
  ResultContext 参数给你访问结果对象本身的方法,
