@@ -186,6 +186,10 @@ public class ScriptRunner {
 
   private StringBuilder handleLine(StringBuilder command, String line) throws SQLException, UnsupportedEncodingException {
     String trimmedLine = line.trim();
+    if (trimmedLine.toUpperCase().startsWith("DELIMITER")) {
+        delimiter = trimmedLine.substring(10).trim();
+        return command;
+    }
     if (lineIsComment(trimmedLine)) {
       println(trimmedLine);
     } else if (commandReadyToExecute(trimmedLine)) {
