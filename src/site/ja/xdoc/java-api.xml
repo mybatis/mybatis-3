@@ -207,8 +207,8 @@ int delete(String statement)]]></source>
   <p>最後に、高度な処理を行うための select メソッドがあります。これらは主に非常に大きなデータセットを扱う場合に、返される行の範囲を限定したり、カスタムの ResultHandler を使って独自に結果処理を行うことができるようになっています。</p>
   <source><![CDATA[<E> List<E> selectList (String statement, Object parameter, RowBounds rowBounds)
 <K,V> Map<K,V> selectMap(String statement, Object parameter, String mapKey, RowBounds rowbounds)
-void select (String statement, Object parameter, ResultHandler handler)
-void select (String statement, Object parameter, RowBounds rowBounds, ResultHandler handler)]]></source>
+void select (String statement, Object parameter, ResultHandler<T> handler)
+void select (String statement, Object parameter, RowBounds rowBounds, ResultHandler<T> handler)]]></source>
 
   <p>RowBounds 引数を渡すことによって、指定された数のレコードをスキップし、結果として返される行の数を制限することができます。RowBounds クラスはイミュータブルで、コンストラクタ引数として offset と limit を取ります。</p>
   <source>int offset = 100;
@@ -219,8 +219,8 @@ RowBounds rowBounds = new RowBounds(offset, limit);</source>
   <p>ResultHandler を渡すと、各行を自由に処理することができます。List に追加したり、Map や Set を作成することもできますし、結果を捨てて合計値のみを返すこともできます。ResultHandler を使えば好きな処理を行うことも可能で、MyBatis 自身も内部的に結果リストを構築するために ResultHandler を利用しています。</p>
   <p>ResultHandler インターフェイスは非常にシンプルです。</p>  
   <source>package org.mybatis.executor.result;
-public interface ResultHandler {
-  void handleResult(ResultContext context);
+public interface ResultHandler<T> {
+  void handleResult(ResultContext<? extends T> context);
 }</source>
 
   <p>引数 ResultContext を介して結果オブジェクトにアクセスすることができます。ResultContext#getResultCount() メソッドは作成された結果オブジェクトの数を返します。ResultContext#stop() メソッドを呼び出すと、それ以上結果を読み込まないよう MyBatis に指示します。</p>
