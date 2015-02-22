@@ -18,8 +18,8 @@ package org.apache.ibatis.session;
 /**
  * @author Clinton Begin
  */
-public interface ResultHandler {
+public interface ResultHandler<T> {
 
-  void handleResult(ResultContext context);
+  void handleResult(ResultContext<? extends T> resultContext);
 
 }

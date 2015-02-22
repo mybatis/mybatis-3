@@ -92,11 +92,11 @@ public class DefaultSqlSession implements SqlSession {
 
   @Override
   public <K, V> Map<K, V> selectMap(String statement, Object parameter, String mapKey, RowBounds rowBounds) {
-    final List<?> list = selectList(statement, parameter, rowBounds);
+    final List<? extends V> list = selectList(statement, parameter, rowBounds);
     final DefaultMapResultHandler<K, V> mapResultHandler = new DefaultMapResultHandler<K, V>(mapKey,
         configuration.getObjectFactory(), configuration.getObjectWrapperFactory());
-    final DefaultResultContext context = new DefaultResultContext();
-    for (Object o : list) {
+    final DefaultResultContext<V> context = new DefaultResultContext<V>();
+    for (V o : list) {
       context.nextResultObject(o);
       mapResultHandler.handleResult(context);
     }

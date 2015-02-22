@@ -20,9 +20,9 @@ import org.apache.ibatis.session.ResultContext;
 /**
  * @author Clinton Begin
  */
-public class DefaultResultContext implements ResultContext {
+public class DefaultResultContext<T> implements ResultContext<T> {
 
-  private Object resultObject;
+  private T resultObject;
   private int resultCount;
   private boolean stopped;
 
@@ -33,7 +33,7 @@ public class DefaultResultContext implements ResultContext {
   }
 
   @Override
-  public Object getResultObject() {
+  public T getResultObject() {
     return resultObject;
   }
 
@@ -47,7 +47,7 @@ public class DefaultResultContext implements ResultContext {
     return stopped;
   }
 
-  public void nextResultObject(Object resultObject) {
+  public void nextResultObject(T resultObject) {
     resultCount++;
     this.resultObject = resultObject;
   }

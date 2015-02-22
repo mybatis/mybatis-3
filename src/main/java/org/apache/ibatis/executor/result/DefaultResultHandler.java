@@ -25,7 +25,7 @@ import org.apache.ibatis.session.ResultHandler;
 /**
  * @author Clinton Begin
  */
-public class DefaultResultHandler implements ResultHandler {
+public class DefaultResultHandler implements ResultHandler<Object> {
 
   private final List<Object> list;
 
@@ -39,7 +39,7 @@ public class DefaultResultHandler implements ResultHandler {
   }
 
   @Override
-  public void handleResult(ResultContext context) {
+  public void handleResult(ResultContext<? extends Object> context) {
     list.add(context.getResultObject());
   }
 

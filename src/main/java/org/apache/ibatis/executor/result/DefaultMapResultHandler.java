@@ -26,7 +26,7 @@ import org.apache.ibatis.session.ResultHandler;
 /**
  * @author Clinton Begin
  */
-public class DefaultMapResultHandler<K, V> implements ResultHandler {
+public class DefaultMapResultHandler<K, V> implements ResultHandler<V> {
 
   private final Map<K, V> mappedResults;
   private final String mapKey;
@@ -42,9 +42,8 @@ public class DefaultMapResultHandler<K, V> implements ResultHandler {
   }
 
   @Override
-  public void handleResult(ResultContext context) {
-    // TODO is that assignment always true?
-    final V value = (V) context.getResultObject();
+  public void handleResult(ResultContext<? extends V> context) {
+    final V value = context.getResultObject();
     final MetaObject mo = MetaObject.forObject(value, objectFactory, objectWrapperFactory);
     // TODO is that assignment always true?
     final K key = (K) mo.getValue(mapKey);
