@@ -18,9 +18,9 @@ package org.apache.ibatis.session;
 /**
  * @author Clinton Begin
  */
-public interface ResultContext {
+public interface ResultContext<T> {
 
-  Object getResultObject();
+  T getResultObject();
 
   int getResultCount();
 
