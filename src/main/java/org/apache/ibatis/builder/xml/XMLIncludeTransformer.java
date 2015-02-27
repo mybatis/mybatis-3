@@ -15,17 +15,19 @@
  */
 package org.apache.ibatis.builder.xml;
 
+import org.apache.ibatis.builder.BuilderException;
 import org.apache.ibatis.builder.IncompleteElementException;
 import org.apache.ibatis.builder.MapperBuilderAssistant;
-import org.apache.ibatis.parsing.GenericTokenParser;
 import org.apache.ibatis.parsing.PropertyParser;
-import org.apache.ibatis.parsing.TokenHandler;
 import org.apache.ibatis.parsing.XNode;
 import org.apache.ibatis.session.Configuration;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Properties;
 
 /**
  * @author Frank D. Martinez [mnesarco]
@@ -63,15 +65,12 @@ public class XMLIncludeTransformer {
       // replace variables in include refid value
       refid = PropertyParser.parse(refid, variablesContext);
       Node toInclude = findSqlFragment(refid);
-      Properties newVariablesContext = getVariablesContext(source);
+      Properties newVariablesContext = getVariablesContext(source, variablesContext);
       if (!newVariablesContext.isEmpty()) {
-        // replace variables in variable values too
-        for (Object name : newVariablesContext.keySet()) {
-          newVariablesContext.put(name, PropertyParser.parse(newVariablesContext.get(name).toString(), variablesContext));
-        }
-        // merge new and inherited into new full one
-        applyInheritedContext(newVariablesContext, variablesContext);
-        fullContext = newVariablesContext;
+        // merge contexts
+        fullContext = new Properties();
+        fullContext.putAll(variablesContext);
+        fullContext.putAll(newVariablesContext);
       } else {
         // no new context - use inherited fully
         fullContext = variablesContext;
@@ -114,24 +113,12 @@ public class XMLIncludeTransformer {
   }
 
   /**
-   * Add inherited context into newly created one.
-   * @param newContext variables defined current include clause where inherited values will be placed
-   * @param inheritedContext all inherited variables values
-   */
-  private void applyInheritedContext(Properties newContext, Properties inheritedContext) {
-    for (Map.Entry<Object, Object> e : inheritedContext.entrySet()) {
-      if (!newContext.containsKey(e.getKey())) {
-        newContext.put(e.getKey(), e.getValue());
-      }
-    }
-  }
-
-  /**
    * Read placholders and their values from include node definition. 
    * @param node Include node instance
+   * @param inheritedVariablesContext Current context used for replace variables in new variables values
    * @return variables context from include instance (no inherited values)
    */
-  private Properties getVariablesContext(Node node) {
+  private Properties getVariablesContext(Node node, Properties inheritedVariablesContext) {
     List<Node> subElements = getSubElements(node);
     if (subElements.isEmpty()) {
       return new Properties();
@@ -140,10 +127,12 @@ public class XMLIncludeTransformer {
       for (Node variableValue : subElements) {
         String name = getStringAttribute(variableValue, "name");
         String value = getStringAttribute(variableValue, "value");
+        // Replace variables inside
+        value = PropertyParser.parse(value, inheritedVariablesContext);
         // Push new value
         Object originalValue = variablesContext.put(name, value);
         if (originalValue != null) {
-          throw new IllegalArgumentException("Variable " + name + " defined twice in the same include definition");
+          throw new BuilderException("Variable " + name + " defined twice in the same include definition");
         }
       }
       return variablesContext;
