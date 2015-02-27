@@ -24,9 +24,6 @@ import org.apache.ibatis.session.Configuration;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.Properties;
 
 /**
@@ -119,14 +116,13 @@ public class XMLIncludeTransformer {
    * @return variables context from include instance (no inherited values)
    */
   private Properties getVariablesContext(Node node, Properties inheritedVariablesContext) {
-    List<Node> subElements = getSubElements(node);
-    if (subElements.isEmpty()) {
-      return new Properties();
-    } else {
-      Properties variablesContext = new Properties();
-      for (Node variableValue : subElements) {
-        String name = getStringAttribute(variableValue, "name");
-        String value = getStringAttribute(variableValue, "value");
+    Properties variablesContext = new Properties();
+    NodeList children = node.getChildNodes();
+    for (int i = 0; i < children.getLength(); i++) {
+      Node n = children.item(i);
+      if (n.getNodeType() == Node.ELEMENT_NODE) {
+        String name = getStringAttribute(n, "name");
+        String value = getStringAttribute(n, "value");
         // Replace variables inside
         value = PropertyParser.parse(value, inheritedVariablesContext);
         // Push new value
@@ -135,24 +131,8 @@ public class XMLIncludeTransformer {
           throw new BuilderException("Variable " + name + " defined twice in the same include definition");
         }
       }
-      return variablesContext;
     }
-  }
-  
-  private List<Node> getSubElements(Node node) {
-    NodeList children = node.getChildNodes();
-    if (children.getLength() == 0) {
-      return Collections.emptyList();
-    } else {
-      List<Node> elements = new ArrayList<Node>();
-      for (int i = 0; i < children.getLength(); i++) {
-        Node n = children.item(i);
-        if (n.getNodeType() == Node.ELEMENT_NODE) {
-          elements.add(n);
-        }
-      }
-      return elements;
-    }
+    return variablesContext;
   }
   
 }
