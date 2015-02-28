@@ -22,9 +22,9 @@ import org.apache.ibatis.session.SqlSession;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author Clinton Begin
@@ -34,7 +34,7 @@ import java.util.Set;
 public class MapperRegistry {
 
   private Configuration config;
-  private final Map<Class<?>, MapperProxyFactory<?>> knownMappers = new HashMap<Class<?>, MapperProxyFactory<?>>();
+  private final Map<Class<?>, MapperProxyFactory<?>> knownMappers = new ConcurrentHashMap<Class<?>, MapperProxyFactory<?>>();
 
   public MapperRegistry(Configuration config) {
     this.config = config;
