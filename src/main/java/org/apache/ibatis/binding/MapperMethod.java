@@ -332,23 +332,22 @@ public class MapperMethod {
       for (Object paramAnno : paramAnnos) {
         if (paramAnno instanceof Param) {
           paramName = ((Param) paramAnno).value();
+          break;
         }
       }
       return paramName;
     }
 
     private boolean hasNamedParams(Method method) {
-      boolean hasNamedParams = false;
       final Object[][] paramAnnos = method.getParameterAnnotations();
       for (Object[] paramAnno : paramAnnos) {
         for (Object aParamAnno : paramAnno) {
           if (aParamAnno instanceof Param) {
-            hasNamedParams = true;
-            break;
+            return true;
           }
         }
       }
-      return hasNamedParams;
+      return false;
     }
 
   }
