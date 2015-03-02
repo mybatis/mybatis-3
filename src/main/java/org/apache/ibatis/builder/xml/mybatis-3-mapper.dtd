@@ -238,7 +238,7 @@ lang CDATA #IMPLIED
 
 <!-- Dynamic -->
 
-<!ELEMENT include EMPTY>
+<!ELEMENT include (property+)?>
 <!ATTLIST include
 refid CDATA #REQUIRED
 >

@@ -23,13 +23,23 @@
 
 <mapper namespace="org.apache.ibatis.submitted.includes.mapper">
   <sql id="sometable">
-    SomeTable
+    ${prefix}Table
+  </sql>
+
+  <sql id="someinclude">
+    <include refid="${include_target}"/>
   </sql>
 
   <select id="select" resultType="map">
-    <include refid="org.apache.ibatis.submitted.includes.fragments.select"/>
+    <include refid="someinclude">
+        <property name="include_target" value="org.apache.ibatis.submitted.includes.fragments.select"/>
+    </include>
     field1, field2, field3
-    from<include refid="sometable"/>
+    from
+      <include refid="someinclude">
+          <property name="prefix" value="Some"/>
+          <property name="include_target" value="sometable"/>
+      </include>
   </select>
 
   <select id="selectWithProperty" resultType="_int">
@@ -38,7 +48,9 @@
 
   <update id="update" parameterType="map">
     <include refid="org.apache.ibatis.submitted.includes.fragments.update"/>
-    <include refid="org.apache.ibatis.submitted.includes.mapper.sometable"/>
+    <include refid="org.apache.ibatis.submitted.includes.mapper.sometable">
+        <property name="prefix" value="Some"/>
+    </include>
     set Field2 = #{field2,jdbcType=INTEGER},
     Field3 = #{field3,jdbcType=VARCHAR},
     where field1 = #{field1,jdbcType=INTEGER}
