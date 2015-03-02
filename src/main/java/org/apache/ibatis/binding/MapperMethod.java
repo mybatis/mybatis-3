@@ -15,6 +15,7 @@
  */
 package org.apache.ibatis.binding;
 
+import org.apache.ibatis.annotations.Flush;
 import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.mapping.MappedStatement;
@@ -67,6 +68,8 @@ public class MapperMethod {
         Object param = method.convertArgsToSqlCommandParam(args);
         result = sqlSession.selectOne(command.getName(), param);
       }
+    } else if (SqlCommandType.FLUSH == command.getType()) {
+        result = sqlSession.flushStatements();
     } else {
       throw new BindingException("Unknown execution method for: " + command.getName());
     }
@@ -186,12 +189,18 @@ public class MapperMethod {
         }
       }
       if (ms == null) {
-        throw new BindingException("Invalid bound statement (not found): " + statementName);
-      }
-      name = ms.getId();
-      type = ms.getSqlCommandType();
-      if (type == SqlCommandType.UNKNOWN) {
-        throw new BindingException("Unknown execution method for: " + name);
+        if(method.getAnnotation(Flush.class) != null){
+          name = null;
+          type = SqlCommandType.FLUSH;
+        } else {
+          throw new BindingException("Invalid bound statement (not found): " + statementName);
+        }
+      } else {
+        name = ms.getId();
+        type = ms.getSqlCommandType();
+        if (type == SqlCommandType.UNKNOWN) {
+          throw new BindingException("Unknown execution method for: " + name);
+        }
       }
     }
 
