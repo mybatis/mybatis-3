@@ -19,6 +19,10 @@ import domain.blog.Author;
 import domain.blog.Post;
 import domain.blog.Section;
 import org.apache.ibatis.annotations.*;
+import domain.blog.Author;
+import domain.blog.Post;
+import domain.blog.Section;
+import org.apache.ibatis.executor.BatchResult;
 import org.apache.ibatis.session.RowBounds;
 
 import java.util.List;
@@ -88,4 +92,8 @@ public interface BoundAuthorMapper {
                                     RowBounds rowBounds,
                                     @Param("two") int two,
                                     int three);
+
+  @Flush
+  List<BatchResult> flush();
+
 }
