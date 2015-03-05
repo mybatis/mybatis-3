@@ -121,6 +121,48 @@ public class ScriptRunnerTest extends BaseDataTest {
       fail(e.getMessage());
     }
   }
+  
+  @Test
+  public void shouldReturnWarningIfNotTheCurrentDelimiterUsed() throws Exception {
+    DataSource ds = createUnpooledDataSource(JPETSTORE_PROPERTIES);
+    Connection conn = ds.getConnection();
+    ScriptRunner runner = new ScriptRunner(conn);
+    runner.setAutoCommit(false);
+    runner.setStopOnError(true);
+    runner.setErrorLogWriter(null);
+    runner.setLogWriter(null);
+
+    String resource = "org/apache/ibatis/jdbc/ScriptChangingDelimiterMissingDelimiter.sql";
+    Reader reader = Resources.getResourceAsReader(resource);
+
+    try {
+      runner.runScript(reader);
+      fail("Expected script runner to fail due to the usage of invalid delimiter.");
+    } catch (Exception e) {
+      assertTrue(e.getMessage().contains("end-of-line terminator"));
+    }
+  }
+
+  @Test
+  public void changingDelimiterShouldNotCauseRunnerFail() throws Exception {
+    DataSource ds = createUnpooledDataSource(JPETSTORE_PROPERTIES);
+    Connection conn = ds.getConnection();
+    ScriptRunner runner = new ScriptRunner(conn);
+    runner.setAutoCommit(false);
+    runner.setStopOnError(true);
+    runner.setErrorLogWriter(null);
+    runner.setLogWriter(null);
+    runJPetStoreScripts(runner);
+
+    String resource = "org/apache/ibatis/jdbc/ScriptChangingDelimiter.sql";
+    Reader reader = Resources.getResourceAsReader(resource);
+
+    try {
+      runner.runScript(reader);
+    } catch (Exception e) {
+      fail(e.getMessage());
+    }
+  }
 
   private void runJPetStoreScripts(ScriptRunner runner) throws IOException, SQLException {
     runScript(runner, JPETSTORE_DDL);
