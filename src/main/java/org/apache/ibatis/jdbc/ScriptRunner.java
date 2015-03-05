@@ -186,11 +186,12 @@ public class ScriptRunner {
 
   private StringBuilder handleLine(StringBuilder command, String line) throws SQLException, UnsupportedEncodingException {
     String trimmedLine = line.trim();
-    if (trimmedLine.toUpperCase().startsWith("DELIMITER")) {
-        delimiter = trimmedLine.substring(10).trim();
-        return command;
-    }
     if (lineIsComment(trimmedLine)) {
+        final String cleanedString = trimmedLine.substring(2).trim();
+        if(cleanedString.toUpperCase().startsWith("//@DELIMITER")) {
+            delimiter = cleanedString.substring(13,14);
+            return command;
+        }
       println(trimmedLine);
     } else if (commandReadyToExecute(trimmedLine)) {
       command.append(line.substring(0, line.lastIndexOf(delimiter)));
