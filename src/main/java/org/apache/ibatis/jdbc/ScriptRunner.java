@@ -187,9 +187,9 @@ public class ScriptRunner {
   private StringBuilder handleLine(StringBuilder command, String line) throws SQLException, UnsupportedEncodingException {
     String trimmedLine = line.trim();
     if (lineIsComment(trimmedLine)) {
-        final String cleanedString = trimmedLine.substring(2).trim();
-        if(cleanedString.toUpperCase().startsWith("//@DELIMITER")) {
-            delimiter = cleanedString.substring(13,14);
+        final String cleanedString = trimmedLine.substring(2).trim().replaceFirst("//", "");
+        if(cleanedString.toUpperCase().startsWith("@DELIMITER")) {
+            delimiter = cleanedString.substring(11,12);
             return command;
         }
       println(trimmedLine);
