@@ -155,10 +155,13 @@ public class ResultLoaderMap {
 
           this.configurationFactory = resultLoader.configuration.getConfigurationFactory();
         } else {
-          this.getLogger().debug("Property [" + this.property + "] of ["
-                  + metaResultObject.getOriginalObject().getClass() + "] cannot be loaded "
-                  + "after deserialization. Make sure it's loaded before serializing "
-                  + "forenamed object.");
+          Log log = this.getLogger();
+          if (log.isDebugEnabled()) {
+            log.debug("Property [" + this.property + "] of ["
+                    + metaResultObject.getOriginalObject().getClass() + "] cannot be loaded "
+                    + "after deserialization. Make sure it's loaded before serializing "
+                    + "forenamed object.");
+          }
         }
       }
     }
