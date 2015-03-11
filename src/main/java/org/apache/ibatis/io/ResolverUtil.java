@@ -252,7 +252,9 @@ public class ResolverUtil<T> {
     try {
       String externalName = fqn.substring(0, fqn.indexOf('.')).replace('/', '.');
       ClassLoader loader = getClassLoader();
-      log.debug("Checking to see if class " + externalName + " matches criteria [" + test + "]");
+      if (log.isDebugEnabled()) {
+        log.debug("Checking to see if class " + externalName + " matches criteria [" + test + "]");
+      }
 
       Class<?> type = loader.loadClass(externalName);
       if (test.matches(type)) {

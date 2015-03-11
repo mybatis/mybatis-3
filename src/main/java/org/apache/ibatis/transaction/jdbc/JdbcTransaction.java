@@ -126,8 +126,10 @@ public class JdbcTransaction implements Transaction {
         connection.setAutoCommit(true);
       }
     } catch (SQLException e) {
-      log.debug("Error resetting autocommit to true "
+      if (log.isDebugEnabled()) {
+        log.debug("Error resetting autocommit to true "
           + "before closing the connection.  Cause: " + e);
+      }
     }
   }
 
