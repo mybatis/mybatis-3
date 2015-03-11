@@ -78,7 +78,9 @@ public class CglibProxyFactory implements ProxyFactory {
     try {
       type.getDeclaredMethod(WRITE_REPLACE_METHOD);
       // ObjectOutputStream will call writeReplace of objects returned by writeReplace
-      log.debug(WRITE_REPLACE_METHOD + " method was found on bean " + type + ", make sure it returns this");
+      if (log.isDebugEnabled()) {
+        log.debug(WRITE_REPLACE_METHOD + " method was found on bean " + type + ", make sure it returns this");
+      }
     } catch (NoSuchMethodException e) {
       enhancer.setInterfaces(new Class[]{WriteReplaceInterface.class});
     } catch (SecurityException e) {

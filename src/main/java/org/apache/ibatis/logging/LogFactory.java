@@ -131,7 +131,9 @@ public final class LogFactory {
     try {
       Constructor<? extends Log> candidate = implClass.getConstructor(new Class[] { String.class });
       Log log = candidate.newInstance(new Object[] { LogFactory.class.getName() });
-      log.debug("Logging initialized using '" + implClass + "' adapter.");
+      if (log.isDebugEnabled()) {
+        log.debug("Logging initialized using '" + implClass + "' adapter.");
+      }
       logConstructor = candidate;
     } catch (Throwable t) {
       throw new LogException("Error setting Log implementation.  Cause: " + t, t);
