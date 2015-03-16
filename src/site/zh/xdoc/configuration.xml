@@ -1211,7 +1211,7 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader,properties);]]
         </ul>
         <p>
           <span class="label important">NOTE</span>如果你正在使用 Spring + MyBatis，则没有必要配置事务管理器，因为 Spring 模块会使用自带的管理器来覆盖前面的配置。</p>
-        <p>这两种事务管理器类型都不需要任何属性。不过它们都是类型别名，换句话说，你需要使用自己的完全限定名或类型别名而不是使用他们，它们引用了你对 TransactionFactory 接口的实现类。
+        <p>这两种事务管理器类型都不需要任何属性。不过它们都是类型别名，换句话说，你需要使用自己的完全限定名或类型别名而不是使用他们，它们引用了你对 TransactionFactory 接口的实现类。        
         </p>
         <source><![CDATA[public interface TransactionFactory {
   void setProperties(Properties props);  
