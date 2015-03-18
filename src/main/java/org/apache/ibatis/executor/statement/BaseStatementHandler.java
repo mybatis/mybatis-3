@@ -114,6 +114,11 @@ public abstract class BaseStatementHandler implements StatementHandler {
     Integer fetchSize = mappedStatement.getFetchSize();
     if (fetchSize != null) {
       stmt.setFetchSize(fetchSize);
+      return;
+    }
+    Integer defaultFetchSize = configuration.getDefaultFetchSize();
+    if (defaultFetchSize != null) {
+      stmt.setFetchSize(defaultFetchSize);
     }
   }
 
