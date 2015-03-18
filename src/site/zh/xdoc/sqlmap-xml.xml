@@ -392,18 +392,43 @@ ps.setInt(1,id);]]></source>
       </subsection>
 
       <subsection name="sql">
-        <p>这个元素可以被用来定义可重用的 SQL 代码段，可以包含在其他语句中。比如：
+        <p>这个元素可以被用来定义可重用的 SQL 代码段，可以包含在其他语句中。It can be statically (during load phase) parametrized. Different property values can
+          vary in include instances. 比如：
         </p>
 
-        <source><![CDATA[<sql id="userColumns"> id,username,password </sql>]]></source>
+        <source><![CDATA[<sql id="userColumns"> ${alias}.id,${alias}.username,${alias}.password </sql>]]></source>
 
         <p>这个 SQL 片段可以被包含在其他语句中，例如：
         </p>
 
         <source><![CDATA[<select id="selectUsers" resultType="map">
-  select <include refid="userColumns"/>
-  from some_table
-  where id = #{id}
+  select
+    <include refid="userColumns"><property name="alias" value="t1"/></include>,
+    <include refid="userColumns"><property name="alias" value="t2"/></include>
+  from some_table t1
+    cross join some_table t2
+</select>]]></source>
+
+        <p>
+          Property value can be also used in include refid attribute or property values inside include clause, for example:
+        </p>
+
+        <source><![CDATA[<sql id="sometable">
+  ${prefix}Table
+</sql>
+
+<sql id="someinclude">
+  from
+    <include refid="${include_target}"/>
+</sql>
+
+<select id="select" resultType="map">
+  select
+    field1, field2, field3
+  <include refid="someinclude">
+    <property name="prefix" value="Some"/>
+    <property name="include_target" value="sometable"/>
+  </include>
 </select>]]></source>
       </subsection>
 

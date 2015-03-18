@@ -371,16 +371,41 @@ selectKey 구문을 실행한다. Oracle 과 같은 데이터베이스에서는 
       </subsection>
 
       <subsection name="sql">
-        <p>이 요소는 다른 구문에서 재사용가능한 SQL 구문을 정의할 때 사용된다.</p>
+        <p>이 요소는 다른 구문에서 재사용가능한 SQL 구문을 정의할 때 사용된다. It can be statically (during load phase) parametrized. Different property values can
+          vary in include instances.</p>
 
-        <source><![CDATA[<sql id="userColumns"> id,username,password </sql>]]></source>
+        <source><![CDATA[<sql id="userColumns"> ${alias}.id,${alias}.username,${alias}.password </sql>]]></source>
 
         <p>SQL 조각은 다른 구문에 포함시킬수 있다.</p>
 
         <source><![CDATA[<select id="selectUsers" resultType="map">
-  select <include refid="userColumns"/>
-  from some_table
-  where id = #{id}
+  select
+    <include refid="userColumns"><property name="alias" value="t1"/></include>,
+    <include refid="userColumns"><property name="alias" value="t2"/></include>
+  from some_table t1
+    cross join some_table t2
+</select>]]></source>
+
+        <p>
+          Property value can be also used in include refid attribute or property values inside include clause, for example:
+        </p>
+
+        <source><![CDATA[<sql id="sometable">
+  ${prefix}Table
+</sql>
+
+<sql id="someinclude">
+  from
+    <include refid="${include_target}"/>
+</sql>
+
+<select id="select" resultType="map">
+  select
+    field1, field2, field3
+  <include refid="someinclude">
+    <property name="prefix" value="Some"/>
+    <property name="include_target" value="sometable"/>
+  </include>
 </select>]]></source>
       </subsection>
 

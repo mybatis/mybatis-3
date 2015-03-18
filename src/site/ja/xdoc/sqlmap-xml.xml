@@ -446,20 +446,45 @@ ps.setInt(1,id);]]></source>
 
       <subsection name="sql">
         <p>
-          この要素を使うと、再利用可能な SQL コードのスニペットを定義しておいて、他のステートメントにインクルードすることができます。<br />
+          この要素を使うと、再利用可能な SQL コードのスニペットを定義しておいて、他のステートメントにインクルードすることができます。このときパラメータを指定することもできますが、インクルードの解決はロード時に行われるので、静的な文字列のみ指定可能です。<br />
           例：
         </p>
 
-        <source><![CDATA[<sql id="userColumns"> id,username,password </sql>]]></source>
+        <source><![CDATA[<sql id="userColumns"> ${alias}.id,${alias}.username,${alias}.password </sql>]]></source>
 
         <p>
           上記の SQL スニペットを他のステートメントにインクルードするには、次のように記述します。
         </p>
 
         <source><![CDATA[<select id="selectUsers" resultType="map">
-  select <include refid="userColumns"/>
-  from some_table
-  where id = #{id}
+  select
+    <include refid="userColumns"><property name="alias" value="t1"/></include>,
+    <include refid="userColumns"><property name="alias" value="t2"/></include>
+  from some_table t1
+    cross join some_table t2
+</select>]]></source>
+
+        <p>
+          呼び出し側の property 要素で指定された値を、sql 要素に内包された include 要素の refid 属性や property 要素の value 属性として指定することも可能です。<br />
+          例：
+        </p>
+
+        <source><![CDATA[<sql id="sometable">
+  ${prefix}Table
+</sql>
+
+<sql id="someinclude">
+  from
+    <include refid="${include_target}"/>
+</sql>
+
+<select id="select" resultType="map">
+  select
+    field1, field2, field3
+  <include refid="someinclude">
+    <property name="prefix" value="Some"/>
+    <property name="include_target" value="sometable"/>
+  </include>
 </select>]]></source>
       </subsection>
 
