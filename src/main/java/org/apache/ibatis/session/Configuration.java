@@ -110,6 +110,7 @@ public class Configuration {
   protected JdbcType jdbcTypeForNull = JdbcType.OTHER;
   protected Set<String> lazyLoadTriggerMethods = new HashSet<String>(Arrays.asList(new String[] { "equals", "clone", "hashCode", "toString" }));
   protected Integer defaultStatementTimeout;
+  protected Integer defaultFetchSize;
   protected ExecutorType defaultExecutorType = ExecutorType.SIMPLE;
   protected AutoMappingBehavior autoMappingBehavior = AutoMappingBehavior.PARTIAL;
 
@@ -360,6 +361,14 @@ public class Configuration {
 
   public void setDefaultStatementTimeout(Integer defaultStatementTimeout) {
     this.defaultStatementTimeout = defaultStatementTimeout;
+  }
+
+  public Integer getDefaultFetchSize() {
+    return defaultFetchSize;
+  }
+
+  public void setDefaultFetchSize(Integer defaultFetchSize) {
+    this.defaultFetchSize = defaultFetchSize;
   }
 
   public boolean isUseColumnLabel() {

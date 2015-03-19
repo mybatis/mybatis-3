@@ -57,6 +57,7 @@ public class BaseExecutorTest extends BaseDataTest {
     config.setMultipleResultSetsEnabled(true);
     config.setUseColumnLabel(true);
     config.setDefaultStatementTimeout(5000);
+    config.setDefaultFetchSize(100);
   }
 
   @Test
