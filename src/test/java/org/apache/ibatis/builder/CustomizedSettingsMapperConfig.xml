@@ -26,7 +26,7 @@
   <settings>
     <setting name="autoMappingBehavior" value="NONE"/>
     <setting name="cacheEnabled" value="false"/>
-    <setting name="proxyFactory" value="CGLIB"/>
+    <setting name="proxyFactory" value="JAVASSIST"/>
     <setting name="lazyLoadingEnabled" value="true"/>
     <setting name="aggressiveLazyLoading" value="false"/>
     <setting name="multipleResultSetsEnabled" value="false"/>
