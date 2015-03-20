@@ -57,7 +57,7 @@ public class XmlConfigBuilderTest {
     assertNotNull(config);
     assertThat(config.getAutoMappingBehavior(), is(AutoMappingBehavior.PARTIAL));
     assertThat(config.isCacheEnabled(), is(true));
-    assertThat(config.getProxyFactory(), is(instanceOf(JavassistProxyFactory.class)));
+    assertThat(config.getProxyFactory(), is(instanceOf(CglibProxyFactory.class)));
     assertThat(config.isLazyLoadingEnabled(), is(false));
     assertThat(config.isAggressiveLazyLoading(), is(true));
     assertThat(config.isMultipleResultSetsEnabled(), is(true));
@@ -145,7 +145,7 @@ public class XmlConfigBuilderTest {
 
       assertThat(config.getAutoMappingBehavior(), is(AutoMappingBehavior.NONE));
       assertThat(config.isCacheEnabled(), is(false));
-      assertThat(config.getProxyFactory(), is(instanceOf(CglibProxyFactory.class)));
+      assertThat(config.getProxyFactory(), is(instanceOf(JavassistProxyFactory.class)));
       assertThat(config.isLazyLoadingEnabled(), is(true));
       assertThat(config.isAggressiveLazyLoading(), is(false));
       assertThat(config.isMultipleResultSetsEnabled(), is(false));
