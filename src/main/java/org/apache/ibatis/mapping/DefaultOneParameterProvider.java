@@ -1,5 +1,5 @@
-/**
- *    Copyright 2009-2015 the original author or authors.
+/*
+ *    Copyright 2009-2014 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -13,24 +13,15 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package org.apache.ibatis.annotations;
+package org.apache.ibatis.mapping;
 
-import org.apache.ibatis.mapping.FetchType;
-
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.util.List;
 
 /**
- * @author Clinton Begin
+ * @author Craig St. Jean
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.METHOD)
-public @interface One {
-  String select() default "";
-
-  FetchType fetchType() default FetchType.DEFAULT;
-
-  OneParameterProvider parameterProvider() default @OneParameterProvider;
+public class DefaultOneParameterProvider {
+  public Object getParameters(Object value, Class<?> type, List<Object> originalParameters) {
+    return value;
+  }
 }

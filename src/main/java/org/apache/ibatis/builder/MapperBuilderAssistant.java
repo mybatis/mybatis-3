@@ -15,39 +15,19 @@
  */
 package org.apache.ibatis.builder;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-import java.util.StringTokenizer;
-
 import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.cache.decorators.LruCache;
 import org.apache.ibatis.cache.impl.PerpetualCache;
 import org.apache.ibatis.executor.ErrorContext;
 import org.apache.ibatis.executor.keygen.KeyGenerator;
-import org.apache.ibatis.mapping.CacheBuilder;
-import org.apache.ibatis.mapping.Discriminator;
-import org.apache.ibatis.mapping.MappedStatement;
-import org.apache.ibatis.mapping.ParameterMap;
-import org.apache.ibatis.mapping.ParameterMapping;
-import org.apache.ibatis.mapping.ParameterMode;
-import org.apache.ibatis.mapping.ResultFlag;
-import org.apache.ibatis.mapping.ResultMap;
-import org.apache.ibatis.mapping.ResultMapping;
-import org.apache.ibatis.mapping.ResultSetType;
-import org.apache.ibatis.mapping.SqlCommandType;
-import org.apache.ibatis.mapping.SqlSource;
-import org.apache.ibatis.mapping.StatementType;
+import org.apache.ibatis.mapping.*;
 import org.apache.ibatis.reflection.MetaClass;
 import org.apache.ibatis.scripting.LanguageDriver;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
+
+import java.util.*;
 
 /**
  * @author Clinton Begin
@@ -235,6 +215,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
         null,
         null,
         null,
+        null,
         typeHandler,
         new ArrayList<ResultFlag>(),
         null,
@@ -386,6 +367,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
       Class<?> javaType,
       JdbcType jdbcType,
       String nestedSelect,
+      ParameterProvider nestedOneParameterProvider,
       String nestedResultMap,
       String notNullColumn,
       String columnPrefix,
@@ -403,6 +385,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
     ResultMapping.Builder builder = new ResultMapping.Builder(configuration, property, column, javaTypeClass);
     builder.jdbcType(jdbcType);
     builder.nestedQueryId(applyCurrentNamespace(nestedSelect, true));
+    builder.nestedOneParameterProvider(nestedOneParameterProvider);
     builder.nestedResultMapId(applyCurrentNamespace(nestedResultMap, true));
     builder.resultSet(resultSet);
     builder.typeHandler(typeHandlerInstance);
@@ -485,13 +468,14 @@ public class MapperBuilderAssistant extends BaseBuilder {
       Class<?> javaType,
       JdbcType jdbcType,
       String nestedSelect,
+      ParameterProvider nestedOneParameterProvider,
       String nestedResultMap,
       String notNullColumn,
       String columnPrefix,
       Class<? extends TypeHandler<?>> typeHandler,
       List<ResultFlag> flags) {
       return buildResultMapping(
-        resultType, property, column, javaType, jdbcType, nestedSelect, 
+        resultType, property, column, javaType, jdbcType, nestedSelect, nestedOneParameterProvider,
         nestedResultMap, notNullColumn, columnPrefix, typeHandler, flags, null, null, configuration.isLazyLoadingEnabled());
   }  
 

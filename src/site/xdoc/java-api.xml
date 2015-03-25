@@ -397,9 +397,19 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
         <td>A mapping to a single property value of a complex type. Attributes: <code>select</code>, which is the fully
         qualified name of a mapped statement (i.e. mapper method) that can load an instance of the appropriate type,
         <code>fetchType</code>, which supersedes the global configuration parameter <code>lazyLoadingEnabled</code> for this
-        mapping. 
+        mapping, and <code>parameterProvider</code>, which allows you to control the inputs to the mapped statement.
         <span class="label important">NOTE</span> You will notice that join mapping is not supported via the Annotations API.
         This is due to the limitation in Java Annotations that does not allow for circular references.</td>
+      </tr>
+      <tr>
+        <td><code>@OneParameterProvider</code></td>
+        <td><code>Method</code></td>
+        <td> </td>
+        <td>This is used to control the inputs to a mapped statement from @One. Attributes: <code>type</code>, and
+        <code>method</code>. Methods should be declared as such:
+        <code>public Object getParametersWithDate(Object value, Class&lt;?&gt; type, List&lt;Object&gt; originalParameters)</code>
+        The method may return an object for consumption of the mapped statement, or a Map with parameters matching the
+        mapped statement (e.g. "0", "1", "param1", etc.).</td>
       </tr>
       <tr>
         <td><code>@Many</code></td>
