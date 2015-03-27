@@ -280,4 +280,26 @@ public class ResultMapping {
     }
   }
 
+  @Override
+  public String toString() {
+    final StringBuilder sb = new StringBuilder("ResultMapping{");
+    //sb.append("configuration=").append(configuration); // configuration doesn't have a useful .toString()
+    sb.append("property='").append(property).append('\'');
+    sb.append(", column='").append(column).append('\'');
+    sb.append(", javaType=").append(javaType);
+    sb.append(", jdbcType=").append(jdbcType);
+    //sb.append(", typeHandler=").append(typeHandler); // typeHandler also doesn't have a useful .toString()
+    sb.append(", nestedResultMapId='").append(nestedResultMapId).append('\'');
+    sb.append(", nestedQueryId='").append(nestedQueryId).append('\'');
+    sb.append(", notNullColumns=").append(notNullColumns);
+    sb.append(", columnPrefix='").append(columnPrefix).append('\'');
+    sb.append(", flags=").append(flags);
+    sb.append(", composites=").append(composites);
+    sb.append(", resultSet='").append(resultSet).append('\'');
+    sb.append(", foreignColumn='").append(foreignColumn).append('\'');
+    sb.append(", lazy=").append(lazy);
+    sb.append('}');
+    return sb.toString();
+  }
+
 }

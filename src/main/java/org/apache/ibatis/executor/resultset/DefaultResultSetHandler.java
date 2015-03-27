@@ -37,6 +37,7 @@ import org.apache.ibatis.executor.loader.ResultLoaderMap;
 import org.apache.ibatis.executor.parameter.ParameterHandler;
 import org.apache.ibatis.executor.result.DefaultResultContext;
 import org.apache.ibatis.executor.result.DefaultResultHandler;
+import org.apache.ibatis.executor.result.ResultMapException;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.Discriminator;
 import org.apache.ibatis.mapping.MappedStatement;
@@ -562,21 +563,27 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     throw new ExecutorException("Do not know how to create an instance of " + resultType);
   }
 
-  private Object createParameterizedResultObject(ResultSetWrapper rsw, Class<?> resultType, List<ResultMapping> constructorMappings,
-      List<Class<?>> constructorArgTypes, List<Object> constructorArgs, String columnPrefix) throws SQLException {
+  Object createParameterizedResultObject(ResultSetWrapper rsw, Class<?> resultType, List<ResultMapping> constructorMappings,
+      List<Class<?>> constructorArgTypes, List<Object> constructorArgs, String columnPrefix) {
     boolean foundValues = false;
     for (ResultMapping constructorMapping : constructorMappings) {
       final Class<?> parameterType = constructorMapping.getJavaType();
       final String column = constructorMapping.getColumn();
       final Object value;
-      if (constructorMapping.getNestedQueryId() != null) {
-        value = getNestedQueryConstructorValue(rsw.getResultSet(), constructorMapping, columnPrefix);
-      } else if (constructorMapping.getNestedResultMapId() != null) {
-        final ResultMap resultMap = configuration.getResultMap(constructorMapping.getNestedResultMapId());
-        value = getRowValue(rsw, resultMap);
-      } else {
-        final TypeHandler<?> typeHandler = constructorMapping.getTypeHandler();
-        value = typeHandler.getResult(rsw.getResultSet(), prependPrefix(column, columnPrefix));
+      try {
+        if (constructorMapping.getNestedQueryId() != null) {
+          value = getNestedQueryConstructorValue(rsw.getResultSet(), constructorMapping, columnPrefix);
+        } else if (constructorMapping.getNestedResultMapId() != null) {
+          final ResultMap resultMap = configuration.getResultMap(constructorMapping.getNestedResultMapId());
+          value = getRowValue(rsw, resultMap);
+        } else {
+          final TypeHandler<?> typeHandler = constructorMapping.getTypeHandler();
+          value = typeHandler.getResult(rsw.getResultSet(), prependPrefix(column, columnPrefix));
+        }
+      } catch (ResultMapException e) {
+        throw new ExecutorException("Could not process result for mapping: " + constructorMapping, e);
+      } catch (SQLException e) {
+        throw new ExecutorException("Could not process result for mapping: " + constructorMapping, e);
       }
       constructorArgTypes.add(parameterType);
       constructorArgs.add(value);

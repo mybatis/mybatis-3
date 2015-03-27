@@ -199,4 +199,20 @@ public class ParameterMapping {
     return expression;
   }
 
+  @Override
+  public String toString() {
+    final StringBuilder sb = new StringBuilder("ParameterMapping{");
+    //sb.append("configuration=").append(configuration); // configuration doesn't have a useful .toString()
+    sb.append("property='").append(property).append('\'');
+    sb.append(", mode=").append(mode);
+    sb.append(", javaType=").append(javaType);
+    sb.append(", jdbcType=").append(jdbcType);
+    sb.append(", numericScale=").append(numericScale);
+    //sb.append(", typeHandler=").append(typeHandler); // typeHandler also doesn't have a useful .toString()
+    sb.append(", resultMapId='").append(resultMapId).append('\'');
+    sb.append(", jdbcTypeName='").append(jdbcTypeName).append('\'');
+    sb.append(", expression='").append(expression).append('\'');
+    sb.append('}');
+    return sb.toString();
+  }
 }
