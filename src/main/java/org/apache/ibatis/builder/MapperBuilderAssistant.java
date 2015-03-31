@@ -271,11 +271,11 @@ public class MapperBuilderAssistant extends BaseBuilder {
       String databaseId,
       LanguageDriver lang,
       String resultSets) {
-    
+
     if (unresolvedCacheRef) {
       throw new IncompleteElementException("Cache-ref not yet resolved");
     }
-    
+
     id = applyCurrentNamespace(id, false);
     boolean isSelect = sqlCommandType == SqlCommandType.SELECT;
 
@@ -392,7 +392,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
       Class<? extends TypeHandler<?>> typeHandler,
       List<ResultFlag> flags,
       String resultSet,
-      String foreignColumn, 
+      String foreignColumn,
       boolean lazy) {
     Class<?> javaTypeClass = resolveResultJavaType(resultType, property, javaType);
     TypeHandler<?> typeHandlerInstance = resolveTypeHandler(javaTypeClass, typeHandler);
@@ -448,7 +448,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
   private Class<?> resolveResultJavaType(Class<?> resultType, String property, Class<?> javaType) {
     if (javaType == null && property != null) {
       try {
-        MetaClass metaResultType = MetaClass.forClass(resultType);
+        MetaClass metaResultType = MetaClass.forClass(resultType, configuration.getReflectorFactory());
         javaType = metaResultType.getSetterType(property);
       } catch (Exception e) {
         //ignore, following null check statement will deal with the situation
@@ -467,7 +467,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
       } else if (Map.class.isAssignableFrom(resultType)) {
         javaType = Object.class;
       } else {
-        MetaClass metaResultType = MetaClass.forClass(resultType);
+        MetaClass metaResultType = MetaClass.forClass(resultType, configuration.getReflectorFactory());
         javaType = metaResultType.getGetterType(property);
       }
     }
@@ -491,9 +491,9 @@ public class MapperBuilderAssistant extends BaseBuilder {
       Class<? extends TypeHandler<?>> typeHandler,
       List<ResultFlag> flags) {
       return buildResultMapping(
-        resultType, property, column, javaType, jdbcType, nestedSelect, 
+        resultType, property, column, javaType, jdbcType, nestedSelect,
         nestedResultMap, notNullColumn, columnPrefix, typeHandler, flags, null, null, configuration.isLazyLoadingEnabled());
-  }  
+  }
 
   public LanguageDriver getLanguageDriver(Class<?> langClass) {
     if (langClass != null) {
@@ -526,9 +526,9 @@ public class MapperBuilderAssistant extends BaseBuilder {
     String databaseId,
     LanguageDriver lang) {
     return addMappedStatement(
-      id, sqlSource, statementType, sqlCommandType, fetchSize, timeout, 
-      parameterMap, parameterType, resultMap, resultType, resultSetType, 
-      flushCache, useCache, resultOrdered, keyGenerator, keyProperty, 
+      id, sqlSource, statementType, sqlCommandType, fetchSize, timeout,
+      parameterMap, parameterType, resultMap, resultType, resultSetType,
+      flushCache, useCache, resultOrdered, keyGenerator, keyProperty,
       keyColumn, databaseId, lang, null);
   }
 

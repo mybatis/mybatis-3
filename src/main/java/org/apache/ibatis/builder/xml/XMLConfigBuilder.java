@@ -32,7 +32,9 @@ import org.apache.ibatis.mapping.Environment;
 import org.apache.ibatis.parsing.XNode;
 import org.apache.ibatis.parsing.XPathParser;
 import org.apache.ibatis.plugin.Interceptor;
+import org.apache.ibatis.reflection.DefaultReflectorFactory;
 import org.apache.ibatis.reflection.MetaClass;
+import org.apache.ibatis.reflection.ReflectorFactory;
 import org.apache.ibatis.reflection.factory.ObjectFactory;
 import org.apache.ibatis.reflection.wrapper.ObjectWrapperFactory;
 import org.apache.ibatis.session.AutoMappingBehavior;
@@ -50,6 +52,7 @@ public class XMLConfigBuilder extends BaseBuilder {
   private boolean parsed;
   private XPathParser parser;
   private String environment;
+  private ReflectorFactory localReflectorFactory = new DefaultReflectorFactory();
 
   public XMLConfigBuilder(Reader reader) {
     this(reader, null, null);
@@ -101,6 +104,7 @@ public class XMLConfigBuilder extends BaseBuilder {
       pluginElement(root.evalNode("plugins"));
       objectFactoryElement(root.evalNode("objectFactory"));
       objectWrapperFactoryElement(root.evalNode("objectWrapperFactory"));
+      reflectionFactoryElement(root.evalNode("reflectionFactory"));
       settingsElement(root.evalNode("settings"));
       // read it after objectFactory and objectWrapperFactory issue #631
       environmentsElement(root.evalNode("environments"));
@@ -166,6 +170,14 @@ public class XMLConfigBuilder extends BaseBuilder {
     }
   }
 
+  private void reflectionFactoryElement(XNode context) throws Exception {
+    if (context != null) {
+       String type = context.getStringAttribute("type");
+       ReflectorFactory factory = (ReflectorFactory) resolveClass(type).newInstance();
+       configuration.setReflectorFactory(factory);
+    }
+  }
+
   private void propertiesElement(XNode context) throws Exception {
     if (context != null) {
       Properties defaults = context.getChildrenAsProperties();
@@ -192,7 +204,7 @@ public class XMLConfigBuilder extends BaseBuilder {
     if (context != null) {
       Properties props = context.getChildrenAsProperties();
       // Check that all settings are known to the configuration class
-      MetaClass metaConfig = MetaClass.forClass(Configuration.class);
+      MetaClass metaConfig = MetaClass.forClass(Configuration.class, localReflectorFactory);
       for (Object key : props.keySet()) {
         if (!metaConfig.hasSetter(String.valueOf(key))) {
           throw new BuilderException("The setting " + key + " is not known.  Make sure you spelled it correctly (case sensitive).");
@@ -222,7 +234,7 @@ public class XMLConfigBuilder extends BaseBuilder {
       configuration.setConfigurationFactory(resolveClass(props.getProperty("configurationFactory")));
     }
   }
-  
+
   private void environmentsElement(XNode context) throws Exception {
     if (context != null) {
       if (environment == null) {

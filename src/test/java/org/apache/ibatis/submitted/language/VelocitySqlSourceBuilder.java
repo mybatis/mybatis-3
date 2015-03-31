@@ -78,7 +78,7 @@ public class VelocitySqlSourceBuilder extends BaseBuilder {
       } else if (JdbcType.CURSOR.name().equals(jdbcType)) {
         propertyType = java.sql.ResultSet.class;
       } else if (property != null) {
-        MetaClass metaClass = MetaClass.forClass(parameterType);
+        MetaClass metaClass = MetaClass.forClass(parameterType, configuration.getReflectorFactory());
         if (metaClass.hasGetter(property)) {
           propertyType = metaClass.getGetterType(property);
         } else {
@@ -135,5 +135,5 @@ public class VelocitySqlSourceBuilder extends BaseBuilder {
       }
     }
   }
-  
+
 }

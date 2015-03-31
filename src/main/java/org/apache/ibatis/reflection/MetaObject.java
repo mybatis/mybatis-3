@@ -36,11 +36,13 @@ public class MetaObject {
   private ObjectWrapper objectWrapper;
   private ObjectFactory objectFactory;
   private ObjectWrapperFactory objectWrapperFactory;
+  private ReflectorFactory reflectorFactory;
 
-  private MetaObject(Object object, ObjectFactory objectFactory, ObjectWrapperFactory objectWrapperFactory) {
+  private MetaObject(Object object, ObjectFactory objectFactory, ObjectWrapperFactory objectWrapperFactory, ReflectorFactory reflectorFactory) {
     this.originalObject = object;
     this.objectFactory = objectFactory;
     this.objectWrapperFactory = objectWrapperFactory;
+    this.reflectorFactory = reflectorFactory;
 
     if (object instanceof ObjectWrapper) {
       this.objectWrapper = (ObjectWrapper) object;
@@ -55,11 +57,11 @@ public class MetaObject {
     }
   }
 
-  public static MetaObject forObject(Object object, ObjectFactory objectFactory, ObjectWrapperFactory objectWrapperFactory) {
+  public static MetaObject forObject(Object object, ObjectFactory objectFactory, ObjectWrapperFactory objectWrapperFactory, ReflectorFactory reflectorFactory) {
     if (object == null) {
       return SystemMetaObject.NULL_META_OBJECT;
     } else {
-      return new MetaObject(object, objectFactory, objectWrapperFactory);
+      return new MetaObject(object, objectFactory, objectWrapperFactory, reflectorFactory);
     }
   }
 
@@ -69,6 +71,10 @@ public class MetaObject {
 
   public ObjectWrapperFactory getObjectWrapperFactory() {
     return objectWrapperFactory;
+  }
+
+  public ReflectorFactory getReflectorFactory() {
+	return reflectorFactory;
   }
 
   public Object getOriginalObject() {
@@ -137,7 +143,7 @@ public class MetaObject {
 
   public MetaObject metaObjectForProperty(String name) {
     Object value = getValue(name);
-    return MetaObject.forObject(value, objectFactory, objectWrapperFactory);
+    return MetaObject.forObject(value, objectFactory, objectWrapperFactory, reflectorFactory);
   }
 
   public ObjectWrapper getObjectWrapper() {
@@ -147,7 +153,7 @@ public class MetaObject {
   public boolean isCollection() {
     return objectWrapper.isCollection();
   }
-  
+
   public void add(Object element) {
     objectWrapper.add(element);
   }
@@ -155,5 +161,5 @@ public class MetaObject {
   public <E> void addAll(List<E> list) {
     objectWrapper.addAll(list);
   }
-  
+
 }
