@@ -26,7 +26,10 @@ import org.junit.Test;
 
 import javax.sql.DataSource;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.Reader;
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
@@ -121,7 +124,7 @@ public class ScriptRunnerTest extends BaseDataTest {
       fail(e.getMessage());
     }
   }
-  
+
   @Test
   public void shouldReturnWarningIfNotTheCurrentDelimiterUsed() throws Exception {
     DataSource ds = createUnpooledDataSource(JPETSTORE_PROPERTIES);
@@ -162,6 +165,44 @@ public class ScriptRunnerTest extends BaseDataTest {
     } catch (Exception e) {
       fail(e.getMessage());
     }
+  }
+
+  @Test
+  public void testLogging() throws Exception {
+    DataSource ds = createUnpooledDataSource(JPETSTORE_PROPERTIES);
+    Connection conn = ds.getConnection();
+    ScriptRunner runner = new ScriptRunner(conn);
+    runner.setAutoCommit(true);
+    runner.setStopOnError(false);
+    runner.setErrorLogWriter(null);
+    runner.setSendFullScript(false);
+    StringWriter sw = new StringWriter();
+    PrintWriter logWriter = new PrintWriter(sw);
+    runner.setLogWriter(logWriter);
+
+    Reader reader = new StringReader("select userid from account where userid = 'j2ee';");
+    runner.runScript(reader);
+
+    assertEquals("select userid from account where userid = 'j2ee'\n\nUSERID\t\nj2ee\t\n", sw.toString());
+  }
+
+  @Test
+  public void testLoggingFullScipt() throws Exception {
+    DataSource ds = createUnpooledDataSource(JPETSTORE_PROPERTIES);
+    Connection conn = ds.getConnection();
+    ScriptRunner runner = new ScriptRunner(conn);
+    runner.setAutoCommit(true);
+    runner.setStopOnError(false);
+    runner.setErrorLogWriter(null);
+    runner.setSendFullScript(true);
+    StringWriter sw = new StringWriter();
+    PrintWriter logWriter = new PrintWriter(sw);
+    runner.setLogWriter(logWriter);
+
+    Reader reader = new StringReader("select userid from account where userid = 'j2ee';");
+    runner.runScript(reader);
+
+    assertEquals("select userid from account where userid = 'j2ee';\n\nUSERID\t\nj2ee\t\n", sw.toString());
   }
 
   private void runJPetStoreScripts(ScriptRunner runner) throws IOException, SQLException {

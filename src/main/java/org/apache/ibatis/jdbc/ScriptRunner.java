@@ -114,7 +114,9 @@ public class ScriptRunner {
         script.append(line);
         script.append(LINE_SEPARATOR);
       }
-      executeStatement(script.toString());
+      String command = script.toString();
+      println(command);
+      executeStatement(command);
       commitConnection();
     } catch (Exception e) {
       String message = "Error executing: " + script + ".  Cause: " + e;
