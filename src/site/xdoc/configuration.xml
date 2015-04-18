@@ -1547,7 +1547,7 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader,properties);]]
             facilitate Lazy Loading, this dataSource is required.
           </li>
         </ul>
-        <p>There are three build-in dataSource types (i.e. type="????"):
+        <p>There are three build-in dataSource types (i.e. type="[UNPOOLED|POOLED|JNDI]"):
         </p>
         <p>
           <strong>UNPOOLED</strong>
