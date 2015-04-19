@@ -21,53 +21,364 @@
   xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
 
   <properties>
-    <title>MyBatis 3 | Statement Builders</title>
+    <title>MyBatis 3 | SQL语句构建器</title>
     <author email="clinton.begin@gmail.com">Clinton Begin</author>
     <author email="nanlei1987@gmail.com">Nan Lei</author>
   </properties>
 
   <body>
-  <section name="Statement Builders">
-  
-  <subsection name="Request For Translation">
-  <p>This section is outdated in the Chinese version. Please refer to the English manual. Any help with the Chinese translation will be really welcome.</p>
-  </subsection>
-  
-  <subsection name="SelectBuilder">
-  <p>一个 Java 程序员面对的最痛苦的事情之一就是在 Java 代码中嵌入 SQL 语句。
-通常这么
-做是因为 SQL 要动态的生成-否则你可以将它们放到外部的文件或存储过程中。正如你已经
-看到的,MyBatis 在它的 XML 映射特性中有处理生成动态 SQL 的很强大的方案。然而,有
-时必须在 Java 代码中创建 SQL 语句的字符串。这种情况下,MyBatis 有另外一种特性来帮
-助你,在减少典型的加号,引号,新行,格式化问题和嵌入条件来处理多余的逗号或 AND
-连接词之前,事实上,在 Java 代码中动态生成 SQL 就是一个噩梦。
-  </p>
-  <p>MyBatis 3 引入了一些不同的理念来处理这个问题,我们可以创建一个类的实例来调用
-其中的方法来一次构建 SQL 语句。
-但是我们的 SQL 结尾时看起来很像 Java 代码而不是 SQL
-语句。相反,我们尝试了一些不同的做法。最终的结果是关于特定领域语言的结束,Java
-也不断实现它目前的形式...
-  </p>
-  <p><strong>SelectBuilder 的秘密</strong></p>
-  <p>SelectBuilder 类并不神奇,
-如果你不了解它的工作机制也不会有什么好的作用。
-别犹豫,
-让我们来看看它是怎么工作的。
-SelectBuilder 使用了静态引入和 ThreadLocal 变量的组合来开
-启简洁的语法可以很容易地用条件进行隔行扫描,而且为你保护所有 SQL 的格式。它允许
-你创建这样的方法:
-  </p>
-<source><![CDATA[public String selectBlogsSql() {
+    <section name="SQL语句构建器类">
+      <subsection name="问题">
+        <p>Java程序员面对的最痛苦的事情之一就是在Java代码中嵌入SQL语句。这么来做通常是由于SQL语句需要动态来生成-否则可以将它们放到外部文件或者存储过程中。正如你已经看到的那样，MyBatis在它的XML映射特性中有一个强大的动态SQL生成方案。但有时在Java代码内部创建SQL语句也是必要的。此时，MyBatis有另外一个特性可以帮到你，在减少典型的加号,引号,新行,格式化问题和嵌入条件来处理多余的逗号或 AND 连接词之前。事实上，在Java代码中来动态生成SQL代码就是一场噩梦。例如：
+        </p>
+
+        <source><![CDATA[
+String sql = "SELECT P.ID, P.USERNAME, P.PASSWORD, P.FULL_NAME, "
+"P.LAST_NAME,P.CREATED_ON, P.UPDATED_ON " +
+"FROM PERSON P, ACCOUNT A " +
+"INNER JOIN DEPARTMENT D on D.ID = P.DEPARTMENT_ID " +
+"INNER JOIN COMPANY C on D.COMPANY_ID = C.ID " +
+"WHERE (P.ID = A.ID AND P.FIRST_NAME like ?) " +
+"OR (P.LAST_NAME like ?) " +
+"GROUP BY P.ID " +
+"HAVING (P.LAST_NAME like ?) " +
+"OR (P.FIRST_NAME like ?) " +
+"ORDER BY P.ID, P.FULL_NAME";
+]]></source>
+      </subsection>
+      <subsection name="The Solution">
+      <p>MyBatis 3提供了方便的工具类来帮助解决该问题。使用SQL类，简单地创建一个实例来调用方法生成SQL语句。上面示例中的问题就像重写SQL类那样：
+      </p>
+
+      <source><![CDATA[
+private String selectPersonSql() {
+  return new SQL() {{
+    SELECT("P.ID, P.USERNAME, P.PASSWORD, P.FULL_NAME");
+    SELECT("P.LAST_NAME, P.CREATED_ON, P.UPDATED_ON");
+    FROM("PERSON P");
+    FROM("ACCOUNT A");
+    INNER_JOIN("DEPARTMENT D on D.ID = P.DEPARTMENT_ID");
+    INNER_JOIN("COMPANY C on D.COMPANY_ID = C.ID");
+    WHERE("P.ID = A.ID");
+    WHERE("P.FIRST_NAME like ?");
+    OR();
+    WHERE("P.LAST_NAME like ?");
+    GROUP_BY("P.ID");
+    HAVING("P.LAST_NAME like ?");
+    OR();
+    HAVING("P.FIRST_NAME like ?");
+    ORDER_BY("P.ID");
+    ORDER_BY("P.FULL_NAME");
+  }}.toString();
+}
+]]></source>
+
+      <p>该例中有什么特殊之处？当你仔细看时，那不用担心偶然间重复出现的"AND"关键字，或者在"WHERE"和"AND"之间的选择，抑或什么都不选。该SQL类非常注意"WHERE"应该出现在何处，哪里又应该使用"AND"，还有所有的字符串链接。
+        </p>
+
+      </subsection>
+
+      <subsection name="SQL类">
+
+        <p>这里给出一些示例：</p>
+
+        <source><![CDATA[
+// Anonymous inner class
+public String deletePersonSql() {
+  return new SQL() {{
+    DELETE_FROM("PERSON");
+    WHERE("ID = ${id}");
+  }}.toString();
+}
+
+// Builder / Fluent style
+public String insertPersonSql() {
+  String sql = new SQL()
+    .INSERT_INTO("PERSON")
+    .VALUES("ID, FIRST_NAME", "${id}, ${firstName}")
+    .VALUES("LAST_NAME", "${lastName}")
+    .toString();
+  return sql;
+}
+
+// With conditionals (note the final parameters, required for the anonymous inner class to access them)
+public String selectPersonLike(final String id, final String firstName, final String lastName) {
+  return new SQL() {{
+    SELECT("P.ID, P.USERNAME, P.PASSWORD, P.FIRST_NAME, P.LAST_NAME");
+    FROM("PERSON P");
+    if (id != null) {
+      WHERE("P.ID like ${id}");
+    }
+    if (firstName != null) {
+      WHERE("P.FIRST_NAME like ${firstName}");
+    }
+    if (lastName != null) {
+      WHERE("P.LAST_NAME like ${lastName}");
+    }
+    ORDER_BY("P.LAST_NAME");
+  }}.toString();
+}
+
+public String deletePersonSql() {
+  return new SQL() {{
+    DELETE_FROM("PERSON");
+    WHERE("ID = ${id}");
+  }}.toString();
+}
+
+public String insertPersonSql() {
+  return new SQL() {{
+    INSERT_INTO("PERSON");
+    VALUES("ID, FIRST_NAME", "${id}, ${firstName}");
+    VALUES("LAST_NAME", "${lastName}");
+  }}.toString();
+}
+
+public String updatePersonSql() {
+  return new SQL() {{
+    UPDATE("PERSON");
+    SET("FIRST_NAME = ${firstName}");
+    WHERE("ID = ${id}");
+  }}.toString();
+}
+]]></source>
+
+        <table>
+          <thead>
+            <tr>
+              <th>方法</th>
+              <th>描述</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <code>SELECT(String)</code>
+              </td>
+              <td>开始或插入到
+                <code>SELECT</code>子句。
+                可以被多次调用，参数也会添加到
+                <code>SELECT</code>子句。
+                参数通常使用逗号分隔的列名和别名列表，但也可以是数据库驱动程序接受的任意类型。
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>SELECT_DISTINCT(String)</code>
+              </td>
+              <td>开始或插入到
+                <code>SELECT</code>子句，
+                也可以插入
+                <code>DISTINCT</code>关键字到生成的查询语句中。
+                可以被多次调用，参数也会添加到
+                <code>SELECT</code>子句。
+                 参数通常使用逗号分隔的列名和别名列表，但也可以是数据库驱动程序接受的任意类型。
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>FROM(String)</code>
+              </td>
+              <td>开始或插入到
+                <code>FROM</code>子句。
+                可以被多次调用，参数也会添加到
+                <code>FROM</code>子句。
+                参数通常是表名或别名，也可以是数据库驱动程序接受的任意类型。
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <ul>
+                  <li>
+                    <code>JOIN(String)</code>
+                  </li>
+                  <li>
+                    <code>INNER_JOIN(String)</code>
+                  </li>
+                  <li>
+                    <code>LEFT_OUTER_JOIN(String)</code>
+                  </li>
+                  <li>
+                    <code>RIGHT_OUTER_JOIN(String)</code>
+                  </li>
+                </ul>
+              </td>
+              <td>基于调用的方法，添加新的合适类型的
+                <code>JOIN</code>子句。
+				参数可以包含由列命和join on条件组合成标准的join。
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>WHERE(String)</code>
+              </td>
+              <td>插入新的
+                <code>WHERE</code>子句条件，
+                由<code>AND</code>链接。可以多次被调用，每次都由<code>AND</code>来链接新条件。使用
+                <code>OR()</code>
+                来分隔<code>OR</code>。
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>OR()</code>
+              </td>
+              <td>使用<code>OR</code>来分隔当前的
+                <code>WHERE</code>子句条件。
+				可以被多次调用，但在一行中多次调用或生成不稳定的<code>SQL</code>。
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>AND()</code>
+              </td>
+              <td>使用<code>AND</code>来分隔当前的
+                <code>WHERE</code>子句条件。
+				可以被多次调用，但在一行中多次调用或生成不稳定的<code>SQL</code>。因为
+                <code>WHERE</code>
+                和
+                <code>HAVING</code>
+                二者都会自动链接
+                <code>AND</code>, 这是非常罕见的方法，只是为了完整性才被使用。
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>GROUP_BY(String)</code>
+              </td>
+              <td>插入新的
+                <code>GROUP BY</code>子句元素，由逗号连接。
+				可以被多次调用，每次都由逗号连接新的条件。
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>HAVING(String)</code>
+              </td>
+              <td>插入新的
+                <code>HAVING</code>子句条件。
+                由AND连接。可以被多次调用，每次都由<code>AND</code>来连接新的条件。使用
+                <code>OR()</code>
+                来分隔<code>OR</code>.
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>ORDER_BY(String)</code>
+              </td>
+              <td>插入新的
+                <code>ORDER BY</code>子句元素，
+                由逗号连接。可以多次被调用，每次由逗号连接新的条件。
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>DELETE_FROM(String)</code>
+              </td>
+              <td>开始一个delete语句并指定需要从哪个表删除的表名。通常它后面都会跟着WHERE语句！
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>INSERT_INTO(String)</code>
+              </td>
+              <td>开始一个insert语句并指定需要插入数据的表名。后面都会跟着一个或者多个VALUES()。
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>SET(String)</code>
+              </td>
+              <td>针对update语句，插入到"set"列表中</td>
+            </tr>
+            <tr>
+              <td>
+                <code>UPDATE(String)</code>
+              </td>
+              <td>开始一个update语句并指定需要更新的表明。后面都会跟着一个或者多个SET()，通常也会有一个WHERE()。 
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>VALUES(String, String)</code>
+              </td>
+              <td>插入到insert语句中。第一个参数是要插入的列名，第二个参数则是该列的值。
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+      </subsection>
+
+      <subsection name="SqlBuilder 和 SelectBuilder (已经废弃)">
+        <p>
+          在3.2版本之前，我们使用了一点不同的做法，通过实现ThreadLocal变量来掩盖一些导致Java DSL麻烦的语言限制。但这种方式已经废弃了，现代的框架都欢迎人们使用构建器类型和匿名内部类的想法。因此，SelectBuilder 和 SqlBuilder 类都被废弃了。
+        </p>
+        <p>
+          下面的方法仅仅适用于废弃的SqlBuilder 和 SelectBuilder 类。
+        </p>
+        <table>
+        <thead>
+          <tr>
+            <th>方法</th>
+            <th>描述</th>
+          </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td>
+            <code>BEGIN()</code>
+            /
+            <code>RESET()</code>
+          </td>
+          <td>这些方法清空SelectBuilder类的ThreadLocal状态，并且准备一个新的构建语句。开始新的语句时，
+            <code>BEGIN()</code>读取得最好。
+			由于一些原因（在某些条件下，也许是逻辑需要一个完全不同的语句），在执行中清理语句
+            <code>RESET()</code>读取得最好。
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <code>SQL()</code>
+          </td>
+          <td>返回生成的
+            <code>SQL()</code>
+            并重置
+            <code>SelectBuilder</code>
+            状态 (好像
+            <code>BEGIN()</code>
+            或
+            <code>RESET()</code>
+            被调用了).
+            因此，该方法只能被调用一次！
+          </td>
+        </tr>
+        </tbody>
+        </table>
+
+        <p>
+          SelectBuilder 和 SqlBuilder 类并不神奇，但是知道它们如何工作也是很重要的。
+          SelectBuilder 使用 SqlBuilder 使用了静态导入和ThreadLocal变量的组合来开启整洁语法，可以很容易地和条件交错。使用它们，静态导入类的方法即可，就像这样(一个或其它，并非两者):
+        </p>
+
+        <source>import static org.apache.ibatis.jdbc.SelectBuilder.*;</source>
+        <source>import static org.apache.ibatis.jdbc.SqlBuilder.*;</source>
+
+        <p>这就允许像下面这样来创建方法：</p>
+
+        <source><![CDATA[
+/* DEPRECATED */
+public String selectBlogsSql() {
   BEGIN(); // Clears ThreadLocal variable
   SELECT("*");
   FROM("BLOG");
   return SQL();
-}]]></source>  
-  <p>这是一个非常简单的示例,
-你也许会选择静态地来构建。
-所以这里给出一个复杂一点的
-示例:</p>
-<source><![CDATA[private String selectPersonSql() {
+}
+        ]]></source>
+
+        <source><![CDATA[
+/* DEPRECATED */
+private String selectPersonSql() {
   BEGIN(); // Clears ThreadLocal variable
   SELECT("P.ID, P.USERNAME, P.PASSWORD, P.FULL_NAME");
   SELECT("P.LAST_NAME, P.CREATED_ON, P.UPDATED_ON");
@@ -86,282 +397,13 @@ SelectBuilder 使用了静态引入和 ThreadLocal 变量的组合来开
   ORDER_BY("P.ID");
   ORDER_BY("P.FULL_NAME");
   return SQL();
-}]]></source>  
-  <p>用字符串连接的方式来构建上面的 SQL 就会有一些繁琐了。比如:</p>
-<source><![CDATA["SELECT P.ID, P.USERNAME, P.PASSWORD, P.FULL_NAME, "
-"P.LAST_NAME,P.CREATED_ON, P.UPDATED_ON " +
-"FROM PERSON P, ACCOUNT A " +
-"INNER JOIN DEPARTMENT D on D.ID = P.DEPARTMENT_ID " +
-"INNER JOIN COMPANY C on D.COMPANY_ID = C.ID " +
-"WHERE (P.ID = A.ID AND P.FIRST_NAME like ?) " +
-"OR (P.LAST_NAME like ?) " +
-"GROUP BY P.ID " +
-"HAVING (P.LAST_NAME like ?) " +
-"OR (P.FIRST_NAME like ?) " +
-"ORDER BY P.ID, P.FULL_NAME";]]></source>  
-  <p>如果你喜欢那样的语法,那么你就可以使用它。它很容易出错,要小心那些每行结尾增
-加的空间。现在,即使你喜欢这样的语法,下面的示例比 Java 中的字符串连接要简单也是
-没有疑问的:
-  </p>
-<source><![CDATA[private String selectPersonLike(Person p){
-  BEGIN(); // Clears ThreadLocal variable
-  SELECT("P.ID, P.USERNAME, P.PASSWORD, P.FIRST_NAME, P.LAST_NAME");
-  FROM("PERSON P");
-  if (p.id != null) {
-  WHERE("P.ID like #{id}");
-  }
-  if (p.firstName != null) {
-  WHERE("P.FIRST_NAME like #{firstName}");
-  }
-  if (p.lastName != null) {
-  WHERE("P.LAST_NAME like #{lastName}");
-  }
-  ORDER_BY("P.LAST_NAME");
-  return SQL();
-}]]></source>  
-  <p>这个例子有什么特殊之处?如果你看得仔细,那就不同担心偶然会重复的“AND”关
-键字,或在“WHERE”和“AND”或两者都没有中选择!上面的语句将会由例子对所有
-PERSON 记录生成一个查询,有像参数一样的 ID 或 firstName 或 lastName-或这三者的任意
-组合。SelectBuilder 对理解哪里放置“WHERE”
-,哪里应该使用“AND”还有所有的字符串
-连接都是很小心的。
-最好的情况,
-无论你以何种顺序调用这些方法
-(只有一种例外使用 OR()
-方法)。
-  </p>
-  <p>有两个方法会吸引你的眼球:BEGIN()和 SQL()。总之,每个 SelectBuilder 方法应该以
-调用 BEGIN()开始,以调用 SQL()结束。当然你可以在中途提取方法来打断你执行的逻
-辑,但是 SQL 生成的范围应该以 BEGIN()方法开始而且以 SQL()方法结束。BEGIN()方法清
-理 ThreadLocal 变量,来确保你不会不小心执行了前面的状态,而且 SQL()方法会基于这些
-调用,
-从最后一次调用 BEGIN()开始组装你的 SQL 语句。
-注意 BEGIN()有一个称为 RESET()
-的代替方法,它们所做的工作相同,只是 RESET()会在特定上下文中读取的更好。
-  </p>
-  <p>要按照上面示例的方式使用 SelectBuilder,你应该静态引入如下内容:
-  </p>
-<source>import static org.apache.ibatis.jdbc.SelectBuilder.*;</source>
-  <p>只要这个被引入了,
-那么你使用的类就会拥有 SelectBuilder 的所有可用的方法。
-下表就
-是可用方法的完整列表:
-  </p>
-    <table>
-    <thead>
-    <tr><th><p>方法</p></th><th><p>描述</p></th></tr></thead>
-    <tbody>
-  <tr>
-    <td>
-      <code>BEGIN()</code> / <code>RESET()</code>
-    </td>
-    <td>这些方法清理 SelectBuilder 类的 ThreadLocal 的状态,而且
-准备构建新的语句。当开始一条新的语句时,BEGIN()读取
-得最好。当在执行中间因为某些原因(在某些条件下,也许
-处理逻辑需要一个完整的而且不同的语句)要清理一条语句
-时 RESET()读取的做好。
-    </td>
-  </tr>
-  <tr>
-    <td>
-      <code>SELECT(String)</code>
-    </td>
-    <td>开始或附加一个 SELECT 子句。可以被多次调用,而且参数
-会被追加在 SELECT 子句后面。
-参数通常是逗号分隔的列名
-列表和别名,但要是驱动程序可以接受的东西。
-</td>
-  </tr>
-  <tr>
-    <td>
-      <code>SELECT_DISTINCT(String)</code>
-    </td>
-    <td>开始或附加一个 SELECT 子句,
-也在生成的查询语句中添加
-“DISTINCT”关键字。可以被多次调用,而且参数会被追
-加在 SELECT 子句后面。
-参数通常是逗号分隔的列名列表和
-别名,但要是驱动程序可以接受的东西。
-</td>
-  </tr>
-  <tr>
-    <td>
-      <code>FROM(String)</code>
-    </td>
-    <td>开始或附加一个 FROM 子句。
-可以被多次调用,
-而且参数会
-被追加在 FROM 子句后面。
-参数通常是表明或别名,
-或是驱
-动程序可以接受的任意内容。
-    </td>
-  </tr>
-  <tr>
-    <td>
-      <ul>
-        <li><code>JOIN(String)</code></li>
-        <li><code>INNER_JOIN(String)</code></li>
-        <li><code>LEFT_OUTER_JOIN(String)</code></li>
-        <li><code>RIGHT_OUTER_JOIN(String)</code></li>
-      </ul>
-    </td>
-    <td>基于调用的方法,添加一个合适类型的新的 JOIN 子句。参
-数可以包含列之间基本的 join 连接还有条件连接。
-    </td>
-  </tr>
-  <tr>
-    <td>
-      <code>WHERE(String)</code>
-    </td>
-    <td>添加一个新的 WHERE 条件子句,由 AND 串联起来。可以
-被多次调用, AND 告诉它来串联一个新的条件。
-由
-使用 OR()
-方法来分隔 OR 条件。
-    </td>
-  </tr>
-  <tr>
-    <td>
-      <code>OR()</code>
-    </td>
-    <td>使用 OR 来分隔当前 WHERE 子句的条件。
-可以被多次调用,
-但是在一行上多次调用会生成不稳定的 SQL。
-</td>
-  </tr>
-  <tr>
-    <td>
-      <code>AND()</code>
-    </td>
-    <td>使用 AND 来分隔当前 WHERE 字句的条件。可以被多次调
-用,但是在一行上多次调用会生成不稳定的 SQL。因为
-WHERE 和 HAVING 两者都自动串联 AND,这样使用是非
-常罕见的,包含它也仅仅是为了完整性。
-    </td>
-  </tr>
-  <tr>
-    <td>
-      <code>GROUP_BY(String)</code>
-    </td>
-    <td>附加一个新的 GROUP BY 子句,由逗号串联起来。可以被
-多次调用,每次使用逗号来告诉它串联一个新的条件。
-    </td>
-  </tr>
-  <tr>
-    <td>
-      <code>HAVING(String)</code>
-    </td>
-    <td>附加一个新的 HAVING 条件子句,由 AND 串联起来。可以
-被多次调用,每次使用 AND 来告诉它要串联新的条件。使
-用 OR()方法来分隔 OR 条件。
-    </td>
-  </tr>
-  <tr>
-    <td>
-      <code>ORDER_BY(String)</code>
-    </td>
-    <td>附加一个新的 ORDER BY 子句,由逗号串联起来。可以被
-多次调用,每次使用逗号来告诉它串联新的条件。
-    </td>
-  </tr>
-  <tr>
-    <td>
-      <code>SQL()</code>
-    </td>
-    <td>这会返回生成 SQL 而且重置 SelectBuilder 的状态(正如
-BEGIN()或 RESET()方法被调用)。因此,这个方法只能被调
-用一次!
-    </td>
-  </tr>
-    </tbody></table>
-    </subsection>
-
-    <subsection name="SqlBuilder">
-    <p>和 SelectBuilder 相似,MyBatis 也包含一个一般性的 SqlBuilder。它包含 SelectBuilder
-的所有方法,还有构建 insert,update 和 delete 的方法。在 DeleteProvider,InsertProvider 或
-UpdateProvider 中(还有 SelectProvider)构建 SQL 字符串时这个类就很有用。
-    </p>
-    <p>在上述示例中要使用 SqlBuilder,你只需简单静态引入如下内容:</p>
-    <source>import static org.apache.ibatis.jdbc.SqlBuilder.*;</source>
-    <p>SqlBuilder 包含 SelectBuilder 中的所有方法,还有下面这些额外的方法:</p>
-      <table>
-      <thead>
-      <tr><th>方法 </th><th>描述</th></tr>
-      </thead>
-      <tbody>
-      <tr>
-  <td>
-    <code>DELETE_FROM(String)</code>
-  </td>
-  <td>
-开始一个 delete 语句,要指定删除的表。通常它后面要跟着一个
-WHERE 语句!
-  </td>
-</tr>
-  <tr>
-    <td>
-      <code>INSERT_INTO(String)</code>
-    </td>
-    <td>开始一个 insert 语句,
-要指定插入的表。
-它的后面要跟着一个或多
-个 VALUES()调用。
-    </td>
-  </tr>
-  <tr>
-    <td>
-      <code>SET(String)</code>
-    </td>
-    <td>为更新语句附加“set”内容的列表。</td>
-  </tr>
-  <tr>
-    <td>
-      <code>UPDATE(String)</code>
-    </td>
-    <td>开始一个 update 语句,要指定更新的表。它的后面要跟着一个或
-多个 SET()调用,通常需要一个 WHERE()调用。
-</td>
-  </tr>
-  <tr>
-    <td>
-      <code>VALUES(String, String)</code>
-    </td>
-    <td>附加到 insert 语句后。
-第一个参数是要插入的列名,
-第二个参数是
-要插入的值。
-</td>
-  </tr>
-      </tbody>
-    </table>
-
-    <p>这里是一些示例:</p>
-
-<source><![CDATA[public String deletePersonSql() {
-  BEGIN(); // Clears ThreadLocal variable
-  DELETE_FROM("PERSON");
-  WHERE("ID = ${id}");
-  return SQL();
 }
+        ]]></source>
 
-public String insertPersonSql() {
-  BEGIN(); // Clears ThreadLocal variable
-  INSERT_INTO("PERSON");
-  VALUES("ID, FIRST_NAME", "${id}, ${firstName}");
-  VALUES("LAST_NAME", "${lastName}");
-  return SQL();
-}
+      </subsection>
 
-public String updatePersonSql() {
-  BEGIN(); // Clears ThreadLocal variable
-  UPDATE("PERSON");
-  SET("FIRST_NAME = ${firstName}");
-  WHERE("ID = ${id}");
-  return SQL();
-}]]></source>  
-  </subsection>
-  </section>
+
+    </section>
   </body>
 
 </document>
