@@ -29,9 +29,9 @@
 
   <body>
     <section name="动态 SQL">
-      <p>MyBatis 的强大特性之一便是它的动态 SQL 能力。如果你有使用 JDBC 或其他类似框架的经验，你就能体会到根据不同条件拼接 SQL 字符串有多么痛苦。拼接的时候要确保不能忘了必要的空格，还要注意省掉列名列表最后的逗号。利用动态 SQL 这一特性可以彻底摆脱这种痛苦。</p>
-      <p>通常使用动态 SQL 不可能是独立的一部分,MyBatis 当然使用一种强大的动态 SQL 语言来改进这种情形,这种语言可以被用在任意映射的 SQL 语句中。</p>
-      <p>动态 SQL 元素和使用 JSTL 或其他相似的基于 XML 的文本处理器相似。在 MyBatis 之前的版本中,有很多的元素需要来了解。MyBatis 3 大大提升了它们,现在用不到原先一半的元素就能工作了。MyBatis 采用功能强大的基于 OGNL 的表达式来消除其他元素。</p>
+      <p>MyBatis 的强大特性之一便是它的动态 SQL。如果你有使用 JDBC 或其他类似框架的经验，你就能体会到根据不同条件拼接 SQL 语句有多么痛苦。拼接的时候要确保不能忘了必要的空格，还要注意省掉列名列表最后的逗号。利用动态 SQL 这一特性可以彻底摆脱这种痛苦。</p>
+      <p>通常使用动态 SQL 不可能是独立的一部分,MyBatis 当然使用一种强大的动态 SQL 语言来改进这种情形,这种语言可以被用在任意的 SQL 映射语句中。</p>
+      <p>动态 SQL 元素和使用 JSTL 或其他类似基于 XML 的文本处理器相似。在 MyBatis 之前的版本中,有很多的元素需要来了解。MyBatis 3 大大提升了它们,现在用不到原先一半的元素就可以了。MyBatis 采用功能强大的基于 OGNL 的表达式来消除其他元素。</p>
       <ul>
         <li>if</li>
         <li>choose (when, otherwise)</li>
@@ -48,7 +48,7 @@
     AND title like #{title}
   </if>
 </select>]]></source>
-        <p>这条语句提供了一个可选的文本查找类型的功能。如果没有传入“title”，那么所有处于“ACTIVE”状态的BLOG都会返回；反之若传入了“title”，那么就会把相近“title”的BLOG返回（就这个例子而言，细心的读者会发现其中的参数值是可以包含一些掩码或通配符的）。</p>
+        <p>这条语句提供了一个可选的文本查找类型的功能。如果没有传入“title”，那么所有处于“ACTIVE”状态的BLOG都会返回；反之若传入了“title”，那么就会把模糊查找“title”内容的BLOG结果返回（就这个例子而言，细心的读者会发现其中的参数值是可以包含一些掩码或通配符的）。</p>
         <p>如果想可选地通过“title”和“author”两个条件搜索该怎么办呢？首先，改变语句的名称让它更具实际意义；然后只要加入另一个条件即可。</p>
         <source><![CDATA[<select id="findActiveBlogLike"
      resultType="Blog">
@@ -63,7 +63,7 @@
       </subsection>
       <subsection name="choose, when, otherwise" id="chooseWhenOtherwise">
         <p>有些时候，我们不想用到所有的条件语句，而只想从中择其一二。针对这种情况，MyBatis 提供了 choose 元素，它有点像 Java 中的 switch 语句。</p>
-        <p>还是上面的例子，但是这次变为提供了“title”就按“title”查找，提供了“author”就按“author”查找，若两者都没有提供，就返回所有符合条件的BLOG（实际情况可能是由管理员策略地选出BLOG列表，而不是返回大量无意义的随机结果）。</p>
+        <p>还是上面的例子，但是这次变为提供了“title”就按“title”查找，提供了“author”就按“author”查找，若两者都没有提供，就返回所有符合条件的BLOG（实际情况可能是由管理员按一定策略选出BLOG列表，而不是返回大量无意义的随机结果）。</p>
         <source><![CDATA[<select id="findActiveBlogLike"
      resultType="Blog">
   SELECT * FROM BLOG WHERE state = ‘ACTIVE’
@@ -104,7 +104,7 @@ WHERE]]></source>
         <source><![CDATA[SELECT * FROM BLOG
 WHERE 
 AND title like ‘someTitle’]]></source>
-        <p>这个查询也会失败。这个问题不能简单的用条件句式来解决，如果你也曾经被迫这样写过，那么你很可能从此以后都不想再这样去写。</p>
+        <p>这个查询也会失败。这个问题不能简单的用条件句式来解决，如果你也曾经被迫这样写过，那么你很可能从此以后都不想再这样去写了。</p>
         <p>MyBatis 有一个简单的处理，这在90%的情况下都会有用。而在不能使用的地方，你可以自定义处理方式来令其正常工作。一处简单的修改就能得到想要的效果：</p>
         <source><![CDATA[<select id="findActiveBlogLike"
      resultType="Blog">
@@ -156,7 +156,7 @@ AND title like ‘someTitle’]]></source>
         #{item}
   </foreach>
 </select>]]></source>
-        <p>foreach 元素是非常强大的，它允许你指定一个集合，声明可以用在元素体内的集合项和索引变量。它也允许你指定开闭匹配的字符串以及在迭代之间放置分隔符。这个元素是很智能的，因此它不会偶然地附加多余的分隔符。</p>
+        <p>foreach 元素的功能是非常强大的，它允许你指定一个集合，声明可以用在元素体内的集合项和索引变量。它也允许你指定开闭匹配的字符串以及在迭代中间放置分隔符。这个元素是很智能的，因此它不会偶然地附加多余的分隔符。</p>
         <p><span class="label important">注意</span> 你可以将一个 List 实例或者数组作为参数对象传给 MyBatis，当你这么做的时候，MyBatis 会自动将它包装在一个 Map 中并以名称为键。List 实例将会以“list”作为键，而数组实例的键将是“array”。</p>
         <p>到此我们已经完成了涉及 XML 配置文件和 XML 映射文件的讨论。下一部分将详细探讨 Java API，这样才能从已创建的映射中获取最大利益。</p>
       </subsection>
@@ -184,7 +184,7 @@ AND title like ‘someTitle’]]></source>
 </insert>
 ]]></source>
       </subsection>
-      <subsection name="Pluggable Scripting Languages For Dynamic SQL">
+      <subsection name="动态 SQL 中可插拔的脚本语言">
         <p>MyBatis 从 3.2 开始支持可插拔的脚本语言，因此你可以在插入一种语言的驱动（language driver）之后来写基于这种语言的动态 SQL 查询。</p>
         <p>可以通过实现下面接口的方式来插入一种语言：</p>
         <source><![CDATA[public interface LanguageDriver {
