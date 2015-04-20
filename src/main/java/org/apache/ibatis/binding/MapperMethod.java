@@ -182,7 +182,7 @@ public class MapperMethod {
       MappedStatement ms = null;
       if (configuration.hasStatement(statementName)) {
         ms = configuration.getMappedStatement(statementName);
-      } else if (!mapperInterface.equals(method.getDeclaringClass().getName())) { // issue #35
+      } else if (!mapperInterface.equals(method.getDeclaringClass())) { // issue #35
         String parentStatementName = method.getDeclaringClass().getName() + "." + method.getName();
         if (configuration.hasStatement(parentStatementName)) {
           ms = configuration.getMappedStatement(parentStatementName);
