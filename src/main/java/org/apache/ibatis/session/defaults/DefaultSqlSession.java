@@ -37,10 +37,10 @@ import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
 
 /**
- * 
+ *
  * The default implementation for {@link SqlSession}.
  * Note that this class is not Thread-Safe.
- * 
+ *
  * @author Clinton Begin
  */
 public class DefaultSqlSession implements SqlSession {
@@ -50,7 +50,7 @@ public class DefaultSqlSession implements SqlSession {
 
   private boolean autoCommit;
   private boolean dirty;
-  
+
   public DefaultSqlSession(Configuration configuration, Executor executor, boolean autoCommit) {
     this.configuration = configuration;
     this.executor = executor;
@@ -94,7 +94,7 @@ public class DefaultSqlSession implements SqlSession {
   public <K, V> Map<K, V> selectMap(String statement, Object parameter, String mapKey, RowBounds rowBounds) {
     final List<? extends V> list = selectList(statement, parameter, rowBounds);
     final DefaultMapResultHandler<K, V> mapResultHandler = new DefaultMapResultHandler<K, V>(mapKey,
-        configuration.getObjectFactory(), configuration.getObjectWrapperFactory());
+        configuration.getObjectFactory(), configuration.getObjectWrapperFactory(), configuration.getReflectorFactory());
     final DefaultResultContext<V> context = new DefaultResultContext<V>();
     for (V o : list) {
       context.nextResultObject(o);
@@ -275,7 +275,7 @@ public class DefaultSqlSession implements SqlSession {
       if (object instanceof List) {
         map.put("list", object);
       }
-      return map;      
+      return map;
     } else if (object != null && object.getClass().isArray()) {
       StrictMap<Object> map = new StrictMap<Object>();
       map.put("array", object);

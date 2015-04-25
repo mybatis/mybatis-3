@@ -27,8 +27,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
 import org.apache.ibatis.reflection.invoker.GetFieldInvoker;
 import org.apache.ibatis.reflection.invoker.Invoker;
@@ -45,9 +43,7 @@ import org.apache.ibatis.reflection.property.PropertyNamer;
  */
 public class Reflector {
 
-  private static boolean classCacheEnabled = true;
   private static final String[] EMPTY_STRING_ARRAY = new String[0];
-  private static final ConcurrentMap<Class<?>, Reflector> REFLECTOR_MAP = new ConcurrentHashMap<Class<?>, Reflector>();
 
   private Class<?> type;
   private String[] readablePropertyNames = EMPTY_STRING_ARRAY;
@@ -60,7 +56,7 @@ public class Reflector {
 
   private Map<String, String> caseInsensitivePropertyMap = new HashMap<String, String>();
 
-  private Reflector(Class<?> clazz) {
+  public Reflector(Class<?> clazz) {
     type = clazz;
     addDefaultConstructor(clazz);
     addGetMethods(clazz);
@@ -128,7 +124,7 @@ public class Reflector {
           Method method = iterator.next();
           Class<?> methodType = method.getReturnType();
           if (methodType.equals(getterType)) {
-            throw new ReflectionException("Illegal overloaded getter method with ambiguous type for property " 
+            throw new ReflectionException("Illegal overloaded getter method with ambiguous type for property "
                 + propName + " in class " + firstMethod.getDeclaringClass()
                 + ".  This breaks the JavaBeans " + "specification and can cause unpredicatble results.");
           } else if (methodType.isAssignableFrom(getterType)) {
@@ -137,7 +133,7 @@ public class Reflector {
             getter = method;
             getterType = methodType;
           } else {
-            throw new ReflectionException("Illegal overloaded getter method with ambiguous type for property " 
+            throw new ReflectionException("Illegal overloaded getter method with ambiguous type for property "
                 + propName + " in class " + firstMethod.getDeclaringClass()
                 + ".  This breaks the JavaBeans " + "specification and can cause unpredicatble results.");
           }
@@ -282,7 +278,7 @@ public class Reflector {
     while (currentClass != null) {
       addUniqueMethods(uniqueMethods, currentClass.getDeclaredMethods());
 
-      // we also need to look for interface methods - 
+      // we also need to look for interface methods -
       // because the class may be abstract
       Class<?>[] interfaces = currentClass.getInterfaces();
       for (Class<?> anInterface : interfaces) {
@@ -455,33 +451,5 @@ public class Reflector {
 
   public String findPropertyName(String name) {
     return caseInsensitivePropertyMap.get(name.toUpperCase(Locale.ENGLISH));
-  }
-
-  /*
-   * Gets an instance of ClassInfo for the specified class.
-   *
-   * @param clazz The class for which to lookup the method cache.
-   * @return The method cache for the class
-   */
-  public static Reflector forClass(Class<?> clazz) {
-    if (classCacheEnabled) {
-      // synchronized (clazz) removed see issue #461
-      Reflector cached = REFLECTOR_MAP.get(clazz);
-      if (cached == null) {
-        cached = new Reflector(clazz);
-        REFLECTOR_MAP.put(clazz, cached);
-      }
-      return cached;
-    } else {
-      return new Reflector(clazz);
-    }
-  }
-
-  public static void setClassCacheEnabled(boolean classCacheEnabled) {
-    Reflector.classCacheEnabled = classCacheEnabled;
-  }
-
-  public static boolean isClassCacheEnabled() {
-    return classCacheEnabled;
   }
 }

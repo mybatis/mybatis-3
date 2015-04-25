@@ -22,19 +22,22 @@ public class ReflectorTest {
 
   @Test
   public void testGetSetterType() throws Exception {
-    Reflector reflector = Reflector.forClass(Section.class);
+    ReflectorFactory reflectorFactory = new DefaultReflectorFactory();
+    Reflector reflector = reflectorFactory.findForClass(Section.class);
     Assert.assertEquals(Long.class, reflector.getSetterType("id"));
   }
 
   @Test
   public void testGetGetterType() throws Exception {
-    Reflector reflector = Reflector.forClass(Section.class);
+    ReflectorFactory reflectorFactory = new DefaultReflectorFactory();
+    Reflector reflector = reflectorFactory.findForClass(Section.class);
     Assert.assertEquals(Long.class, reflector.getGetterType("id"));
   }
 
   @Test
   public void shouldNotGetClass() throws Exception {
-    Reflector reflector = Reflector.forClass(Section.class);
+    ReflectorFactory reflectorFactory = new DefaultReflectorFactory();
+    Reflector reflector = reflectorFactory.findForClass(Section.class);
     Assert.assertFalse(reflector.hasGetter("class"));
   }
 
