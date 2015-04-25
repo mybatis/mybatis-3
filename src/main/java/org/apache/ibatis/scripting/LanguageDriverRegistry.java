@@ -32,7 +32,7 @@ public class LanguageDriverRegistry {
       throw new IllegalArgumentException("null is not a valid Language Driver");
     }
     if (!LanguageDriver.class.isAssignableFrom(cls)) {
-      throw new ScriptingException(cls.getName() + " does not implements " + LanguageDriver.class.getName());
+      throw new ScriptingException(cls.getName() + " does not implement " + LanguageDriver.class.getName());
     }
     LanguageDriver driver = LANGUAGE_DRIVER_MAP.get(cls);
     if (driver == null) {
@@ -45,6 +45,19 @@ public class LanguageDriverRegistry {
     }
   }
 
+  public void register(LanguageDriver instance) {
+    if (instance == null) {
+      throw new IllegalArgumentException("null is not a valid Language Driver");
+    }
+    if (!LanguageDriver.class.isAssignableFrom(instance.getClass())) {
+      throw new ScriptingException(instance.getClass().getName() + " does not implement " + LanguageDriver.class.getName());
+    }
+    LanguageDriver driver = LANGUAGE_DRIVER_MAP.get(instance.getClass());
+    if (driver == null) {
+      LANGUAGE_DRIVER_MAP.put(instance.getClass(), driver);
+    }
+  }
+  
   public LanguageDriver getDriver(Class<?> cls) {
     return LANGUAGE_DRIVER_MAP.get(cls);
   }
