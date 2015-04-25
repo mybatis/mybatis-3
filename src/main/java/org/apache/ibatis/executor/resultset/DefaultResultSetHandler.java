@@ -449,42 +449,11 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     List<PendingRelation> parents = pendingRelations.get(parentKey);
     if (parents != null) {
       for (PendingRelation parent : parents) {
-        if (parent != null) {
-          final Object collectionProperty = instantiateCollectionPropertyIfAppropriate(parent.propertyMapping, parent.metaObject);
-          if (rowValue != null) {
-            if (collectionProperty != null) {
-              final MetaObject targetMetaObject = configuration.newMetaObject(collectionProperty);
-              targetMetaObject.add(rowValue);
-            } else {
-              parent.metaObject.setValue(parent.propertyMapping.getProperty(), rowValue);
-            }
-          }
+        if (parent != null && rowValue != null) {
+            linkObjects(parent.metaObject, parent.propertyMapping, rowValue);
         }
       }
     }
-  }
-
-  private Object instantiateCollectionPropertyIfAppropriate(ResultMapping resultMapping, MetaObject metaObject) {
-    final String propertyName = resultMapping.getProperty();
-    Object propertyValue = metaObject.getValue(propertyName);
-    if (propertyValue == null) {
-      Class<?> type = resultMapping.getJavaType();
-      if (type == null) {
-        type = metaObject.getSetterType(propertyName);
-      }
-      try {
-        if (objectFactory.isCollection(type)) {
-          propertyValue = objectFactory.create(type);
-          metaObject.setValue(propertyName, propertyValue);
-          return propertyValue;
-        }
-      } catch (Exception e) {
-        throw new ExecutorException("Error instantiating collection property for result '" + resultMapping.getProperty() + "'.  Cause: " + e, e);
-      }
-    } else if (objectFactory.isCollection(propertyValue.getClass())) {
-      return propertyValue;
-    }
-    return null;
   }
 
   private void addPendingChildRelation(ResultSet rs, MetaObject metaResultObject, ResultMapping parentMapping) throws SQLException {
@@ -855,23 +824,18 @@ public class DefaultResultSetHandler implements ResultSetHandler {
           }
           if (ancestorObject != null) { 
             if (newObject) {
-              metaObject.setValue(resultMapping.getProperty(), ancestorObject);
+              linkObjects(metaObject, resultMapping, ancestorObject); // issue #385
             }
           } else {
             rowKey = createRowKey(nestedResultMap, rsw, columnPrefix);
             final CacheKey combinedKey = combineKeys(rowKey, parentRowKey);            
             Object rowValue = nestedResultObjects.get(combinedKey);
             boolean knownValue = (rowValue != null);
-            final Object collectionProperty = instantiateCollectionPropertyIfAppropriate(resultMapping, metaObject);            
+            instantiateCollectionPropertyIfAppropriate(resultMapping, metaObject); // mandatory            
             if (anyNotNullColumnHasValue(resultMapping, columnPrefix, rsw.getResultSet())) {
               rowValue = getRowValue(rsw, nestedResultMap, combinedKey, rowKey, columnPrefix, rowValue);
               if (rowValue != null && !knownValue) {
-                if (collectionProperty != null) {
-                  final MetaObject targetMetaObject = configuration.newMetaObject(collectionProperty);
-                  targetMetaObject.add(rowValue);
-                } else {
-                  metaObject.setValue(resultMapping.getProperty(), rowValue);
-                }
+                linkObjects(metaObject, resultMapping, rowValue);
                 foundValues = true;
               }
             }
@@ -1013,6 +977,39 @@ public class DefaultResultSetHandler implements ResultSetHandler {
         cacheKey.update(value);
       }
     }
+  }
+
+  private void linkObjects(MetaObject metaObject, ResultMapping resultMapping, Object rowValue) {
+    final Object collectionProperty = instantiateCollectionPropertyIfAppropriate(resultMapping, metaObject);
+    if (collectionProperty != null) {
+      final MetaObject targetMetaObject = configuration.newMetaObject(collectionProperty);
+      targetMetaObject.add(rowValue);
+    } else {
+      metaObject.setValue(resultMapping.getProperty(), rowValue);
+    }
+  }
+
+  private Object instantiateCollectionPropertyIfAppropriate(ResultMapping resultMapping, MetaObject metaObject) {
+    final String propertyName = resultMapping.getProperty();
+    Object propertyValue = metaObject.getValue(propertyName);
+    if (propertyValue == null) {
+      Class<?> type = resultMapping.getJavaType();
+      if (type == null) {
+        type = metaObject.getSetterType(propertyName);
+      }
+      try {
+        if (objectFactory.isCollection(type)) {
+          propertyValue = objectFactory.create(type);
+          metaObject.setValue(propertyName, propertyValue);
+          return propertyValue;
+        }
+      } catch (Exception e) {
+        throw new ExecutorException("Error instantiating collection property for result '" + resultMapping.getProperty() + "'.  Cause: " + e, e);
+      }
+    } else if (objectFactory.isCollection(propertyValue.getClass())) {
+      return propertyValue;
+    }
+    return null;
   }
 
 }
