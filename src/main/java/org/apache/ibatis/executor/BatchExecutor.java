@@ -60,17 +60,19 @@ public class BatchExecutor extends BaseExecutor {
     if (sql.equals(currentSql) && ms.equals(currentStatement)) {
       int last = statementList.size() - 1;
       stmt = statementList.get(last);
+     handler.parameterize(stmt);//fix Issues 322
       BatchResult batchResult = batchResultList.get(last);
       batchResult.addParameterObject(parameterObject);
     } else {
       Connection connection = getConnection(ms.getStatementLog());
       stmt = handler.prepare(connection);
+      handler.parameterize(stmt);    //fix Issues 322
       currentSql = sql;
       currentStatement = ms;
       statementList.add(stmt);
       batchResultList.add(new BatchResult(ms, sql, parameterObject));
     }
-    handler.parameterize(stmt);
+  // handler.parameterize(stmt);
     handler.batch(stmt);
     return BATCH_UPDATE_RETURN_VALUE;
   }
