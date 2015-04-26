@@ -59,4 +59,4 @@ Here are the steps of a typical workflow.
 For steps 1 to 3, please read [this GitHub help](https://help.github.com/articles/fork-a-repo) if you are not familiar with these operations.  
 Step 4 and 5 are basic [git](http://git-scm.com/) operations. Please see the [online documentation](http://git-scm.com/documentation) for its usage.
 
-For how to write a unit test, please see the [unit test](Unit-Test) page.
+For how to write a unit test, please see the [unit test](https://github.com/mybatis/mybatis-3/wiki/Unit-Test) page.
