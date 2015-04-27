@@ -35,6 +35,7 @@
 
 	<mappers>
 		<mapper resource="org/apache/ibatis/submitted/associationtest/Mapper.xml" />
+        <mapper class="org.apache.ibatis.submitted.associationtest.NoMapper"/>
 	</mappers>
 
 </configuration>

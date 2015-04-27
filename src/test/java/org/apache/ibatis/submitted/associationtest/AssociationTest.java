@@ -96,4 +96,19 @@ public class AssociationTest {
     }
   }
 
+  @Test
+  public void getSubGenericReturnType() {
+      SqlSession sqlSession = sqlSessionFactory.openSession();
+      try {
+          NoMapper mapper = sqlSession.getMapper(NoMapper.class);
+          Car car = mapper.getElement(1);
+          String s = mapper.getMobileElement();
+          List<String> carTypes = mapper.getAllCarTypes();
+          Assert.assertEquals(1, car.getId());
+          Assert.assertEquals("VW", s);
+      } finally {
+          sqlSession.close();
+      }
+  }
+
 }
