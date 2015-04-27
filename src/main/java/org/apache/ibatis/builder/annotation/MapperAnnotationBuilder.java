@@ -609,6 +609,15 @@ public class MapperAnnotationBuilder {
                 return (Class<?>)returnClass;
             }
           } else if (type instanceof ParameterizedType) {
+            ParameterizedType parameterizedType = (ParameterizedType)type;
+            List<Type> resolveTypes = new LinkedList<Type>();
+            for (Type genericArgs: parameterizedType.getActualTypeArguments()) {
+                if (genericArgs instanceof TypeVariable<?>) {
+                    resolveTypes.add(genericTypes.get(((TypeVariable) genericArgs).getName()));
+                } else {
+                    resolveTypes.add(genericArgs);
+                }
+            }
 
           }
       }
