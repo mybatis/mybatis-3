@@ -102,10 +102,13 @@ public class AssociationTest {
       try {
           NoMapper mapper = sqlSession.getMapper(NoMapper.class);
           Car car = mapper.getElement(1);
-          String s = mapper.getMobileElement();
-          List<String> carTypes = mapper.getAllCarTypes();
           Assert.assertEquals(1, car.getId());
+
+          String s = mapper.getMobileType("VW");
           Assert.assertEquals("VW", s);
+
+          List<String> carTypes = mapper.getAllCarTypes();
+          Assert.assertTrue(!carTypes.isEmpty());
       } finally {
           sqlSession.close();
       }

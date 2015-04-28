@@ -70,7 +70,6 @@ import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.UnknownTypeHandler;
-import sun.reflect.generics.reflectiveObjects.TypeVariableImpl;
 
 /**
  * @author Clinton Begin
@@ -378,7 +377,7 @@ public class MapperAnnotationBuilder {
             // (issue #525) support List<byte[]>
             returnType = Array.newInstance(componentType, 0).getClass();
           } else if (returnTypeParameter instanceof TypeVariable<?>) {
-
+            returnType = resolveTypeVariable(method, returnTypeParameter);
           }
         }
       }
@@ -598,28 +597,23 @@ public class MapperAnnotationBuilder {
     return answer;
   }
 
-  private Class<?> resolveReturnType(Method m) {
-      Map<String, Type> genericTypes = parentTypeMap.get(m.getDeclaringClass().getName());
-      if (null != genericTypes) {
-          Type type = m.getGenericReturnType();
-          if (type instanceof  TypeVariableImpl) {
-            String genericTypename = ((TypeVariableImpl) type).getName();
-            Type returnClass = genericTypes.get(genericTypename);
-            if (null != returnClass) {
-                return (Class<?>)returnClass;
-            }
-          } else if (type instanceof ParameterizedType) {
-            ParameterizedType parameterizedType = (ParameterizedType)type;
-            List<Type> resolveTypes = new LinkedList<Type>();
-            for (Type genericArgs: parameterizedType.getActualTypeArguments()) {
-                if (genericArgs instanceof TypeVariable<?>) {
-                    resolveTypes.add(genericTypes.get(((TypeVariable) genericArgs).getName()));
-                } else {
-                    resolveTypes.add(genericArgs);
-                }
-            }
-
+  private Class<?> resolveTypeVariable(Method m, Type typeVariable) {
+      if (typeVariable instanceof  TypeVariable) {
+        Map<String, Type> genericTypes = parentTypeMap.get(m.getDeclaringClass().getName());
+        if (null != genericTypes) {
+          String genericTypeName = ((TypeVariable) typeVariable).getName();
+          Type returnClass = genericTypes.get(genericTypeName);
+          if (null != returnClass) {
+              return (Class<?>)returnClass;
           }
+        }
+      }
+      return null;
+  }
+  private Class<?> resolveReturnType(Method m) {
+      Class<?> retClass = resolveTypeVariable(m, m.getGenericReturnType());
+      if (null != retClass) {
+        return retClass;
       }
       return m.getReturnType();
   }
@@ -638,12 +632,7 @@ public class MapperAnnotationBuilder {
 
       // because offspring is a interface which only extends from other interface, it is no need
       // get getGenericSuperClass
-      List<Type> ancestors = new LinkedList<Type>();
-      for (Type t : offspring.getGenericInterfaces()) {
-          ancestors.add(t);
-      }
-
-      for (Type parent:ancestors) {
+      for (Type parent: offspring.getGenericInterfaces()) {
           if (parent instanceof ParameterizedType) {
               ParameterizedType parameterizedType = (ParameterizedType) parent;
               Type rawType = parameterizedType.getRawType();
