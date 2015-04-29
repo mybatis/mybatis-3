@@ -28,3 +28,4 @@ insert into cars (carid, cartype, enginetype, enginecylinders, brakestype) value
 insert into cars (carid, cartype, enginetype, enginecylinders, brakestype) values(2, 'Opel',    null,    null, 'drum');
 insert into cars (carid, cartype, enginetype, enginecylinders, brakestype) values(3, 'Audi', 'Diesel', 4,    'disk');
 insert into cars (carid, cartype, enginetype, enginecylinders, brakestype) values(4, 'Ford', 'Gas',    8,    'drum');
+insert into cars (carid, cartype, enginetype, enginecylinders, brakestype) values(5, 'Panamera', 'Gas',    8,    'drum');
