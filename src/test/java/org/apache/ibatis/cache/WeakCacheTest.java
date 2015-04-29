@@ -37,7 +37,6 @@ public class WeakCacheTest {
         break;
       }
     }
-    assertNotNull(cache);
     assertTrue(cache.getSize() < N);
   }
 
