@@ -104,8 +104,8 @@ public class AssociationTest {
           Car car = mapper.getElement(1);
           Assert.assertEquals(1, car.getId());
 
-          String s = mapper.getMobileType("VW");
-          Assert.assertEquals("VW", s);
+          String carType = mapper.getMobileType("VW");
+          Assert.assertEquals("VW", carType);
 
           List<String> carTypes = mapper.getAllCarTypes();
           Assert.assertTrue(!carTypes.isEmpty());
