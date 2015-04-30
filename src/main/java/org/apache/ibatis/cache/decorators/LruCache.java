@@ -22,7 +22,7 @@ import java.util.concurrent.locks.ReadWriteLock;
 import org.apache.ibatis.cache.Cache;
 
 /**
- * Lru (first in, first out) cache decorator
+ * Lru (least recently used) cache decorator
  *
  * @author Clinton Begin
  */
