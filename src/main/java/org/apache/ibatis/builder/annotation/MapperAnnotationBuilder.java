@@ -436,7 +436,7 @@ public class MapperAnnotationBuilder {
       sql.append(fragment);
       sql.append(" ");
     }
-    return languageDriver.createSqlSource(configuration, sql.toString(), parameterTypeClass);
+    return languageDriver.createSqlSource(configuration, sql.toString().trim(), parameterTypeClass);
   }
 
   private SqlCommandType getSqlCommandType(Method method) {
