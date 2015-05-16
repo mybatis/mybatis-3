@@ -22,6 +22,8 @@ import java.util.Set;
 import java.util.concurrent.locks.ReadWriteLock;
 
 import org.apache.ibatis.cache.Cache;
+import org.apache.ibatis.logging.Log;
+import org.apache.ibatis.logging.LogFactory;
 
 /**
  * The 2nd level cache transactional buffer.
@@ -35,6 +37,8 @@ import org.apache.ibatis.cache.Cache;
  * @author Eduardo Macarron
  */
 public class TransactionalCache implements Cache {
+
+  private static final Log log = LogFactory.getLog(TransactionalCache.class);
 
   private Cache delegate;
   private boolean clearOnCommit;
@@ -126,7 +130,12 @@ public class TransactionalCache implements Cache {
 
   private void unlockMissedEntries() {
     for (Object entry : entriesMissedInCache) {
-      delegate.putObject(entry, null);
+      try {
+        delegate.removeObject(entry);
+      } catch (Exception e) {
+        log.warn("Unexpected exception while notifiying a rollback to the cache adapter."
+            + "Consider upgrading your cache adapter to the latest version.  Cause: " + e);
+      }
     }
   }
 

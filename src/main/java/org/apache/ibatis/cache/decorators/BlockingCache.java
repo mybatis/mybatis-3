@@ -27,7 +27,7 @@ import org.apache.ibatis.cache.CacheException;
 /**
  * Simple blocking decorator 
  * 
- * Sipmle and inefficient version of EhCache's BlockingCache decorator.
+ * Simple and inefficient version of EhCache's BlockingCache decorator.
  * It sets a lock over a cache key when the element is not found in cache.
  * This way, other threads will wait until this element is filled instead of hitting the database.
  * 
@@ -76,7 +76,9 @@ public class BlockingCache implements Cache {
 
   @Override
   public Object removeObject(Object key) {
-    return delegate.removeObject(key);
+    // despite of its name, this method is called only to release locks
+    releaseLock(key);
+    return null;
   }
 
   @Override
