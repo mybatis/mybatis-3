@@ -107,7 +107,7 @@
   <scm>
     <url>http://github.com/mybatis/mybatis-3</url>
     <connection>scm:git:ssh://github.com/mybatis/mybatis-3.git</connection>
-    <developerConnection>scm:git:git+ssh://git@github.com/mybatis/mybatis-3.git</developerConnection>
+    <developerConnection>scm:git:ssh://git@github.com/mybatis/mybatis-3.git</developerConnection>
     <tag>HEAD</tag>
   </scm>
   <issueManagement>
