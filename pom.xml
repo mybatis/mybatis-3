@@ -21,7 +21,7 @@
   <parent>
     <groupId>org.mybatis</groupId>
     <artifactId>mybatis-parent</artifactId>
-    <version>24-SNAPSHOT</version>
+    <version>24</version>
   </parent>
 
   <artifactId>mybatis</artifactId>
@@ -126,7 +126,7 @@
   </distributionManagement>
 
   <properties>
-    <clirr.comparisonVersion>3.2.7</clirr.comparisonVersion>
+    <clirr.comparisonVersion>3.2.8</clirr.comparisonVersion>
     <findbugs.onlyAnalyze>org.apache.ibatis.*</findbugs.onlyAnalyze>
     <osgi.export>org.apache.ibatis.*;version=${project.version};-noimport:=true</osgi.export>
     <osgi.import>*;resolution:=optional</osgi.import>
