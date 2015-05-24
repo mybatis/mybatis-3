@@ -137,7 +137,7 @@
       <groupId>ognl</groupId>
       <artifactId>ognl</artifactId>
       <version>3.0.11</version>
-      <scope>provided</scope>
+      <scope>compile</scope>
       <optional>true</optional>
       <exclusions>
          <exclusion>
@@ -253,7 +253,7 @@
               <name>derby.stream.error.file</name>
               <value>target/derby.log</value>
             </property>
-        </systemProperties>
+          </systemProperties>
         </configuration>
       </plugin>
       <plugin>
@@ -261,52 +261,36 @@
         <artifactId>maven-pdf-plugin</artifactId>
       </plugin>
       <plugin>
-        <groupId>org.sonatype.plugins</groupId>
-        <artifactId>jarjar-maven-plugin</artifactId>
-        <configuration>
-          <input>{classes}</input>
-          <input>{test-classes}</input>
-          <includes>
-            <include>ognl:ognl</include>
-            <include>org.javassist:javassist</include>
-          </includes>
-          <rules>
-            <rule>
-              <pattern>ognl.**</pattern>
-              <result>org.apache.ibatis.ognl.@1</result>
-            </rule>
-            <rule>
-              <pattern>javassist.**</pattern>
-              <result>org.apache.ibatis.javassist.@1</result>
-            </rule>
-            <keep>
-              <pattern>org.apache.ibatis.**</pattern>
-            </keep>
-          </rules>
-          <overwrite>true</overwrite>
-        </configuration>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
         <executions>
           <execution>
-            <id>jarjar-classes</id>
-            <phase>process-test-classes</phase>
+            <phase>package</phase>
             <goals>
-              <goal>jarjar</goal>
+              <goal>shade</goal>
             </goals>
             <configuration>
-              <input>{classes}</input>
-            </configuration>
-          </execution>
-          <execution>
-            <id>jarjar-test-classes</id>
-            <phase>process-test-classes</phase>
-            <goals>
-              <goal>jarjar</goal>
-            </goals>
-            <configuration>
-              <input>{test-classes}</input>
-            </configuration>
-          </execution>
-        </executions>
+               <createDependencyReducedPom>false</createDependencyReducedPom>
+               <artifactSet>
+                 <includes>
+                   <include>org.mybatis:mybatis</include>
+                   <include>ognl:ognl</include>
+                   <include>org.javassist:javassist</include>
+                 </includes>
+               </artifactSet>
+               <relocations>
+                 <relocation>
+                   <pattern>ognl</pattern>
+                   <shadedPattern>org.apache.ibatis.ognl</shadedPattern>
+                 </relocation>
+                 <relocation>
+                   <pattern>javassist</pattern>
+                   <shadedPattern>org.apache.ibatis.javassist</shadedPattern>
+                 </relocation>
+               </relocations>
+             </configuration>
+           </execution>
+         </executions>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
