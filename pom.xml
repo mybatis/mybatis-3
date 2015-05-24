@@ -146,12 +146,11 @@
          </exclusion>
       </exclusions>
     </dependency>
-    <!-- 3.19.0 causes significant failures in unit tests.  Review why... -->
     <dependency>
       <groupId>org.javassist</groupId>
       <artifactId>javassist</artifactId>
-      <version>3.18.2-GA</version>
-      <scope>provided</scope>
+      <version>3.19.0-GA</version>
+      <scope>compile</scope>
       <optional>true</optional>
     </dependency>
     <dependency>
