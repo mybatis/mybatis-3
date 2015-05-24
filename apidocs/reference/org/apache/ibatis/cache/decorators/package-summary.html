@@ -48,29 +48,31 @@
 
 
 
-
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+  <meta name="description" content="Javadoc API documentation for mybatis." />
+
 <link rel="shortcut icon" type="image/x-icon" href="../../../../../favicon.ico" />
 <title>
 
   org.apache.ibatis.cache.decorators
 
 
-| MyBatis
+| mybatis
 
 </title>
-<link href="../../../../../../assets/android-developer-docs.css" rel="stylesheet" type="text/css" />
+<link href="../../../../../../assets/doclava-developer-docs.css" rel="stylesheet" type="text/css" />
 <link href="../../../../../../assets/customizations.css" rel="stylesheet" type="text/css" />
 <script src="../../../../../../assets/search_autocomplete.js" type="text/javascript"></script>
 <script src="../../../../../../assets/jquery-resizable.min.js" type="text/javascript"></script>
-<script src="../../../../../../assets/android-developer-docs.js" type="text/javascript"></script>
+<script src="../../../../../../assets/doclava-developer-docs.js" type="text/javascript"></script>
 <script src="../../../../../../assets/prettify.js" type="text/javascript"></script>
 <script type="text/javascript">
   setToRoot("../../../../../", "../../../../../../assets/");
 </script>
-<script src="../../../../../../assets/android-developer-reference.js" type="text/javascript"></script>
+<script src="../../../../../../assets/doclava-developer-reference.js" type="text/javascript"></script>
 <script src="../../../../../../assets/navtree_data.js" type="text/javascript"></script>
 <script src="../../../../../../assets/customizations.js" type="text/javascript"></script>
 <noscript>
@@ -90,7 +92,7 @@
 <div id="header">
     <div id="headerLeft">
     
-      <span id="masthead-title">MyBatis</span>
+      <span id="masthead-title">mybatis</span>
     
     </div>
     <div id="headerRight">
@@ -136,9 +138,9 @@
         <div id="nav-panels">
           <div id="resize-packages-nav">
             <div id="packages-nav">
-              <div id="index-links"><nobr>
+              <div id="index-links">
                 <a href="../../../../../packages.html"  >Package Index</a> | 
-                <a href="../../../../../classes.html" >Class Index</a></nobr>
+                <a href="../../../../../classes.html" >Class Index</a>
               </div>
               <ul>
                 
@@ -249,6 +251,7 @@
               
     <li><h2>Classes</h2>
       <ul>
+        <li class="api apilevel-"><a href="../../../../../org/apache/ibatis/cache/decorators/BlockingCache.html">BlockingCache</a></li>
         <li class="api apilevel-"><a href="../../../../../org/apache/ibatis/cache/decorators/FifoCache.html">FifoCache</a></li>
         <li class="api apilevel-"><a href="../../../../../org/apache/ibatis/cache/decorators/LoggingCache.html">LoggingCache</a></li>
         <li class="api apilevel-"><a href="../../../../../org/apache/ibatis/cache/decorators/LruCache.html">LruCache</a></li>
@@ -269,9 +272,9 @@
           </div><!-- end classes -->
         </div><!-- end nav-panels -->
         <div id="nav-tree" style="display:none">
-          <div id="index-links"><nobr>
+          <div id="index-links">
             <a href="../../../../../packages.html"  >Package Index</a> | 
-            <a href="../../../../../classes.html" >Class Index</a></nobr>
+            <a href="../../../../../classes.html" >Class Index</a>
           </div>
         </div><!-- end nav-tree -->
       </div><!-- end swapper -->
@@ -312,11 +315,6 @@
 <div id="jd-header">
   package
   <h1>org.apache.ibatis.cache.decorators</h1>
-  <div class="jd-nav">
-      
-        Classes | <a class="jd-navlink" href="package-descr.html">Description</a>
-      
-  </div>
 </div><!-- end header -->
 
 <div id="naMessage"></div>
@@ -325,9 +323,8 @@
 
 
   <div class="jd-descr">
-  <p>Contains cache decorators
-</p>
-  
+    Contains cache decorators
+
   </div>
 
 
@@ -338,48 +335,54 @@
 
 
   
-    <h3>Classes</h3>
+    <h2>Classes</h2>
     <div class="jd-sumtable">
     
   <table class="jd-sumtable-expando">
         <tr class="alt-color api apilevel-" >
+              <td class="jd-linkcol"><a href="../../../../../org/apache/ibatis/cache/decorators/BlockingCache.html">BlockingCache</a></td>
+              <td class="jd-descrcol" width="100%">Simple blocking decorator 
+ 
+ Simple and inefficient version of EhCache's BlockingCache decorator.&nbsp;</td>
+          </tr>
+        <tr class=" api apilevel-" >
               <td class="jd-linkcol"><a href="../../../../../org/apache/ibatis/cache/decorators/FifoCache.html">FifoCache</a></td>
               <td class="jd-descrcol" width="100%">FIFO (first in, first out) cache decorator&nbsp;</td>
           </tr>
-        <tr class=" api apilevel-" >
+        <tr class="alt-color api apilevel-" >
               <td class="jd-linkcol"><a href="../../../../../org/apache/ibatis/cache/decorators/LoggingCache.html">LoggingCache</a></td>
               <td class="jd-descrcol" width="100%">&nbsp;</td>
           </tr>
-        <tr class="alt-color api apilevel-" >
-              <td class="jd-linkcol"><a href="../../../../../org/apache/ibatis/cache/decorators/LruCache.html">LruCache</a></td>
-              <td class="jd-descrcol" width="100%">Lru (first in, first out) cache decorator&nbsp;</td>
-          </tr>
         <tr class=" api apilevel-" >
+              <td class="jd-linkcol"><a href="../../../../../org/apache/ibatis/cache/decorators/LruCache.html">LruCache</a></td>
+              <td class="jd-descrcol" width="100%">Lru (least recently used) cache decorator&nbsp;</td>
+          </tr>
+        <tr class="alt-color api apilevel-" >
               <td class="jd-linkcol"><a href="../../../../../org/apache/ibatis/cache/decorators/ScheduledCache.html">ScheduledCache</a></td>
               <td class="jd-descrcol" width="100%">&nbsp;</td>
           </tr>
-        <tr class="alt-color api apilevel-" >
+        <tr class=" api apilevel-" >
               <td class="jd-linkcol"><a href="../../../../../org/apache/ibatis/cache/decorators/SerializedCache.html">SerializedCache</a></td>
               <td class="jd-descrcol" width="100%">&nbsp;</td>
           </tr>
-        <tr class=" api apilevel-" >
+        <tr class="alt-color api apilevel-" >
               <td class="jd-linkcol"><a href="../../../../../org/apache/ibatis/cache/decorators/SerializedCache.CustomObjectInputStream.html">SerializedCache.CustomObjectInputStream</a></td>
               <td class="jd-descrcol" width="100%">&nbsp;</td>
           </tr>
-        <tr class="alt-color api apilevel-" >
+        <tr class=" api apilevel-" >
               <td class="jd-linkcol"><a href="../../../../../org/apache/ibatis/cache/decorators/SoftCache.html">SoftCache</a></td>
               <td class="jd-descrcol" width="100%">Soft Reference cache decorator
  Thanks to Dr.&nbsp;</td>
           </tr>
-        <tr class=" api apilevel-" >
+        <tr class="alt-color api apilevel-" >
               <td class="jd-linkcol"><a href="../../../../../org/apache/ibatis/cache/decorators/SynchronizedCache.html">SynchronizedCache</a></td>
               <td class="jd-descrcol" width="100%">&nbsp;</td>
           </tr>
-        <tr class="alt-color api apilevel-" >
-              <td class="jd-linkcol"><a href="../../../../../org/apache/ibatis/cache/decorators/TransactionalCache.html">TransactionalCache</a></td>
-              <td class="jd-descrcol" width="100%">&nbsp;</td>
-          </tr>
         <tr class=" api apilevel-" >
+              <td class="jd-linkcol"><a href="../../../../../org/apache/ibatis/cache/decorators/TransactionalCache.html">TransactionalCache</a></td>
+              <td class="jd-descrcol" width="100%">The 2nd level cache transactional buffer.&nbsp;</td>
+          </tr>
+        <tr class="alt-color api apilevel-" >
               <td class="jd-linkcol"><a href="../../../../../org/apache/ibatis/cache/decorators/WeakCache.html">WeakCache</a></td>
               <td class="jd-descrcol" width="100%">Weak Reference cache decorator.&nbsp;</td>
           </tr>
@@ -407,7 +410,7 @@ Generated by <a href="http://code.google.com/p/doclava/">Doclava</a>.
 </div> <!-- end body-content --> 
 
 <script type="text/javascript">
-init(); /* initialize android-developer-docs.js */
+init(); /* initialize doclava-developer-docs.js */
 </script>
 
 </body>

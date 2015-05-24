@@ -48,29 +48,31 @@
 
 
 
-
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+  <meta name="description" content="Javadoc API documentation for mybatis." />
+
 <link rel="shortcut icon" type="image/x-icon" href="../../../../favicon.ico" />
 <title>
 
   Configuration
 
 
-| MyBatis
+| mybatis
 
 </title>
-<link href="../../../../../assets/android-developer-docs.css" rel="stylesheet" type="text/css" />
+<link href="../../../../../assets/doclava-developer-docs.css" rel="stylesheet" type="text/css" />
 <link href="../../../../../assets/customizations.css" rel="stylesheet" type="text/css" />
 <script src="../../../../../assets/search_autocomplete.js" type="text/javascript"></script>
 <script src="../../../../../assets/jquery-resizable.min.js" type="text/javascript"></script>
-<script src="../../../../../assets/android-developer-docs.js" type="text/javascript"></script>
+<script src="../../../../../assets/doclava-developer-docs.js" type="text/javascript"></script>
 <script src="../../../../../assets/prettify.js" type="text/javascript"></script>
 <script type="text/javascript">
   setToRoot("../../../../", "../../../../../assets/");
 </script>
-<script src="../../../../../assets/android-developer-reference.js" type="text/javascript"></script>
+<script src="../../../../../assets/doclava-developer-reference.js" type="text/javascript"></script>
 <script src="../../../../../assets/navtree_data.js" type="text/javascript"></script>
 <script src="../../../../../assets/customizations.js" type="text/javascript"></script>
 <noscript>
@@ -90,7 +92,7 @@
 <div id="header">
     <div id="headerLeft">
     
-      <span id="masthead-title">MyBatis</span>
+      <span id="masthead-title">mybatis</span>
     
     </div>
     <div id="headerRight">
@@ -136,9 +138,9 @@
         <div id="nav-panels">
           <div id="resize-packages-nav">
             <div id="packages-nav">
-              <div id="index-links"><nobr>
+              <div id="index-links">
                 <a href="../../../../packages.html"  >Package Index</a> | 
-                <a href="../../../../classes.html" >Class Index</a></nobr>
+                <a href="../../../../classes.html" >Class Index</a>
               </div>
               <ul>
                 
@@ -248,8 +250,8 @@
               
     <li><h2>Interfaces</h2>
       <ul>
-          <li class="api apilevel-"><a href="../../../../org/apache/ibatis/session/ResultContext.html">ResultContext</a></li>
-          <li class="api apilevel-"><a href="../../../../org/apache/ibatis/session/ResultHandler.html">ResultHandler</a></li>
+          <li class="api apilevel-"><a href="../../../../org/apache/ibatis/session/ResultContext.html">ResultContext</a>&lt;T&gt;</li>
+          <li class="api apilevel-"><a href="../../../../org/apache/ibatis/session/ResultHandler.html">ResultHandler</a>&lt;T&gt;</li>
           <li class="api apilevel-"><a href="../../../../org/apache/ibatis/session/SqlSession.html">SqlSession</a></li>
           <li class="api apilevel-"><a href="../../../../org/apache/ibatis/session/SqlSessionFactory.html">SqlSessionFactory</a></li>
       </ul>
@@ -286,9 +288,9 @@
           </div><!-- end classes -->
         </div><!-- end nav-panels -->
         <div id="nav-tree" style="display:none">
-          <div id="index-links"><nobr>
+          <div id="index-links">
             <a href="../../../../packages.html"  >Package Index</a> | 
-            <a href="../../../../classes.html" >Class Index</a></nobr>
+            <a href="../../../../classes.html" >Class Index</a>
           </div>
         </div><!-- end nav-tree -->
       </div><!-- end swapper -->
@@ -328,6 +330,7 @@
 
 
 <div class="sum-details-links">
+
 
 Summary:
 
@@ -464,18 +467,19 @@ Summary:
 
   
     <tr class="alt-color api apilevel-" >
-      <td class="jd-typecol"><nobr>
+      <td class="jd-typecol">
         
          
          
         
-        class</nobr></td>
+        class</td>
       <td class="jd-linkcol"><a href="../../../../org/apache/ibatis/session/Configuration.StrictMap.html">Configuration.StrictMap</a>&lt;V&gt;</td>
       <td class="jd-descrcol" width="100%">&nbsp;</td>
     </tr>
     
     
 
+</table>
 
 
 
@@ -499,462 +503,484 @@ Summary:
 
     
       <tr class="alt-color api apilevel-" >
-          <td class="jd-typecol"><nobr>
+          <td class="jd-typecol">
           protected
           
           
-          boolean</nobr></td>
+          boolean</td>
           <td class="jd-linkcol"><a href="../../../../org/apache/ibatis/session/Configuration.html#aggressiveLazyLoading">aggressiveLazyLoading</a></td>
           <td class="jd-descrcol" width="100%"></td>
       </tr>
       
     
       <tr class=" api apilevel-" >
-          <td class="jd-typecol"><nobr>
+          <td class="jd-typecol">
           protected
           
           
-          <a href="../../../../org/apache/ibatis/session/AutoMappingBehavior.html">AutoMappingBehavior</a></nobr></td>
+          <a href="../../../../org/apache/ibatis/session/AutoMappingBehavior.html">AutoMappingBehavior</a></td>
           <td class="jd-linkcol"><a href="../../../../org/apache/ibatis/session/Configuration.html#autoMappingBehavior">autoMappingBehavior</a></td>
           <td class="jd-descrcol" width="100%"></td>
       </tr>
       
     
       <tr class="alt-color api apilevel-" >
-          <td class="jd-typecol"><nobr>
+          <td class="jd-typecol">
           protected
           
           
-          boolean</nobr></td>
+          boolean</td>
           <td class="jd-linkcol"><a href="../../../../org/apache/ibatis/session/Configuration.html#cacheEnabled">cacheEnabled</a></td>
           <td class="jd-descrcol" width="100%"></td>
       </tr>
       
     
       <tr class=" api apilevel-" >
-          <td class="jd-typecol"><nobr>
+          <td class="jd-typecol">
           protected
           
           final
-          Map&lt;String,&nbsp;String&gt;</nobr></td>
+          Map&lt;String,&nbsp;String&gt;</td>
           <td class="jd-linkcol"><a href="../../../../org/apache/ibatis/session/Configuration.html#cacheRefMap">cacheRefMap</a></td>
           <td class="jd-descrcol" width="100%"></td>
       </tr>
       
     
       <tr class="alt-color api apilevel-" >
-          <td class="jd-typecol"><nobr>
+          <td class="jd-typecol">
           protected
           
           final
-          Map&lt;String,&nbsp;<a href="../../../../org/apache/ibatis/cache/Cache.html">Cache</a>&gt;</nobr></td>
+          Map&lt;String,&nbsp;<a href="../../../../org/apache/ibatis/cache/Cache.html">Cache</a>&gt;</td>
           <td class="jd-linkcol"><a href="../../../../org/apache/ibatis/session/Configuration.html#caches">caches</a></td>
           <td class="jd-descrcol" width="100%"></td>
       </tr>
       
     
       <tr class=" api apilevel-" >
-          <td class="jd-typecol"><nobr>
+          <td class="jd-typecol">
           protected
           
           
-          boolean</nobr></td>
+          boolean</td>
           <td class="jd-linkcol"><a href="../../../../org/apache/ibatis/session/Configuration.html#callSettersOnNulls">callSettersOnNulls</a></td>
           <td class="jd-descrcol" width="100%"></td>
       </tr>
       
     
       <tr class="alt-color api apilevel-" >
-          <td class="jd-typecol"><nobr>
+          <td class="jd-typecol">
           protected
           
           
-          Class&lt;?&gt;</nobr></td>
+          Class&lt;?&gt;</td>
           <td class="jd-linkcol"><a href="../../../../org/apache/ibatis/session/Configuration.html#configurationFactory">configurationFactory</a></td>
           <td class="jd-descrcol" width="100%">Configuration factory class.</td>
       </tr>
       
     
       <tr class=" api apilevel-" >
-          <td class="jd-typecol"><nobr>
+          <td class="jd-typecol">
           protected
           
           
-          String</nobr></td>
+          String</td>
           <td class="jd-linkcol"><a href="../../../../org/apache/ibatis/session/Configuration.html#databaseId">databaseId</a></td>
           <td class="jd-descrcol" width="100%"></td>
       </tr>
       
     
       <tr class="alt-color api apilevel-" >
-          <td class="jd-typecol"><nobr>
+          <td class="jd-typecol">
           protected
           
           
-          <a href="../../../../org/apache/ibatis/session/ExecutorType.html">ExecutorType</a></nobr></td>
+          <a href="../../../../org/apache/ibatis/session/ExecutorType.html">ExecutorType</a></td>
           <td class="jd-linkcol"><a href="../../../../org/apache/ibatis/session/Configuration.html#defaultExecutorType">defaultExecutorType</a></td>
           <td class="jd-descrcol" width="100%"></td>
       </tr>
       
     
       <tr class=" api apilevel-" >
-          <td class="jd-typecol"><nobr>
+          <td class="jd-typecol">
           protected
           
           
-          Integer</nobr></td>
+          Integer</td>
+          <td class="jd-linkcol"><a href="../../../../org/apache/ibatis/session/Configuration.html#defaultFetchSize">defaultFetchSize</a></td>
+          <td class="jd-descrcol" width="100%"></td>
+      </tr>
+      
+    
+      <tr class="alt-color api apilevel-" >
+          <td class="jd-typecol">
+          protected
+          
+          
+          Integer</td>
           <td class="jd-linkcol"><a href="../../../../org/apache/ibatis/session/Configuration.html#defaultStatementTimeout">defaultStatementTimeout</a></td>
           <td class="jd-descrcol" width="100%"></td>
       </tr>
       
     
-      <tr class="alt-color api apilevel-" >
-          <td class="jd-typecol"><nobr>
+      <tr class=" api apilevel-" >
+          <td class="jd-typecol">
           protected
           
           
-          <a href="../../../../org/apache/ibatis/mapping/Environment.html">Environment</a></nobr></td>
+          <a href="../../../../org/apache/ibatis/mapping/Environment.html">Environment</a></td>
           <td class="jd-linkcol"><a href="../../../../org/apache/ibatis/session/Configuration.html#environment">environment</a></td>
           <td class="jd-descrcol" width="100%"></td>
       </tr>
       
     
-      <tr class=" api apilevel-" >
-          <td class="jd-typecol"><nobr>
+      <tr class="alt-color api apilevel-" >
+          <td class="jd-typecol">
           protected
           
           final
-          Collection&lt;<a href="../../../../org/apache/ibatis/builder/CacheRefResolver.html">CacheRefResolver</a>&gt;</nobr></td>
+          Collection&lt;<a href="../../../../org/apache/ibatis/builder/CacheRefResolver.html">CacheRefResolver</a>&gt;</td>
           <td class="jd-linkcol"><a href="../../../../org/apache/ibatis/session/Configuration.html#incompleteCacheRefs">incompleteCacheRefs</a></td>
           <td class="jd-descrcol" width="100%"></td>
       </tr>
       
     
-      <tr class="alt-color api apilevel-" >
-          <td class="jd-typecol"><nobr>
+      <tr class=" api apilevel-" >
+          <td class="jd-typecol">
           protected
           
           final
-          Collection&lt;<a href="../../../../org/apache/ibatis/builder/annotation/MethodResolver.html">MethodResolver</a>&gt;</nobr></td>
+          Collection&lt;<a href="../../../../org/apache/ibatis/builder/annotation/MethodResolver.html">MethodResolver</a>&gt;</td>
           <td class="jd-linkcol"><a href="../../../../org/apache/ibatis/session/Configuration.html#incompleteMethods">incompleteMethods</a></td>
           <td class="jd-descrcol" width="100%"></td>
       </tr>
       
     
-      <tr class=" api apilevel-" >
-          <td class="jd-typecol"><nobr>
+      <tr class="alt-color api apilevel-" >
+          <td class="jd-typecol">
           protected
           
           final
-          Collection&lt;<a href="../../../../org/apache/ibatis/builder/ResultMapResolver.html">ResultMapResolver</a>&gt;</nobr></td>
+          Collection&lt;<a href="../../../../org/apache/ibatis/builder/ResultMapResolver.html">ResultMapResolver</a>&gt;</td>
           <td class="jd-linkcol"><a href="../../../../org/apache/ibatis/session/Configuration.html#incompleteResultMaps">incompleteResultMaps</a></td>
           <td class="jd-descrcol" width="100%"></td>
       </tr>
       
     
-      <tr class="alt-color api apilevel-" >
-          <td class="jd-typecol"><nobr>
+      <tr class=" api apilevel-" >
+          <td class="jd-typecol">
           protected
           
           final
-          Collection&lt;<a href="../../../../org/apache/ibatis/builder/xml/XMLStatementBuilder.html">XMLStatementBuilder</a>&gt;</nobr></td>
+          Collection&lt;<a href="../../../../org/apache/ibatis/builder/xml/XMLStatementBuilder.html">XMLStatementBuilder</a>&gt;</td>
           <td class="jd-linkcol"><a href="../../../../org/apache/ibatis/session/Configuration.html#incompleteStatements">incompleteStatements</a></td>
           <td class="jd-descrcol" width="100%"></td>
       </tr>
       
     
-      <tr class=" api apilevel-" >
-          <td class="jd-typecol"><nobr>
+      <tr class="alt-color api apilevel-" >
+          <td class="jd-typecol">
           protected
           
           final
-          <a href="../../../../org/apache/ibatis/plugin/InterceptorChain.html">InterceptorChain</a></nobr></td>
+          <a href="../../../../org/apache/ibatis/plugin/InterceptorChain.html">InterceptorChain</a></td>
           <td class="jd-linkcol"><a href="../../../../org/apache/ibatis/session/Configuration.html#interceptorChain">interceptorChain</a></td>
           <td class="jd-descrcol" width="100%"></td>
       </tr>
       
     
-      <tr class="alt-color api apilevel-" >
-          <td class="jd-typecol"><nobr>
+      <tr class=" api apilevel-" >
+          <td class="jd-typecol">
           protected
           
           
-          <a href="../../../../org/apache/ibatis/type/JdbcType.html">JdbcType</a></nobr></td>
+          <a href="../../../../org/apache/ibatis/type/JdbcType.html">JdbcType</a></td>
           <td class="jd-linkcol"><a href="../../../../org/apache/ibatis/session/Configuration.html#jdbcTypeForNull">jdbcTypeForNull</a></td>
           <td class="jd-descrcol" width="100%"></td>
       </tr>
       
     
-      <tr class=" api apilevel-" >
-          <td class="jd-typecol"><nobr>
+      <tr class="alt-color api apilevel-" >
+          <td class="jd-typecol">
           protected
           
           final
-          Map&lt;String,&nbsp;<a href="../../../../org/apache/ibatis/executor/keygen/KeyGenerator.html">KeyGenerator</a>&gt;</nobr></td>
+          Map&lt;String,&nbsp;<a href="../../../../org/apache/ibatis/executor/keygen/KeyGenerator.html">KeyGenerator</a>&gt;</td>
           <td class="jd-linkcol"><a href="../../../../org/apache/ibatis/session/Configuration.html#keyGenerators">keyGenerators</a></td>
           <td class="jd-descrcol" width="100%"></td>
       </tr>
       
     
-      <tr class="alt-color api apilevel-" >
-          <td class="jd-typecol"><nobr>
+      <tr class=" api apilevel-" >
+          <td class="jd-typecol">
           protected
           
           final
-          <a href="../../../../org/apache/ibatis/scripting/LanguageDriverRegistry.html">LanguageDriverRegistry</a></nobr></td>
+          <a href="../../../../org/apache/ibatis/scripting/LanguageDriverRegistry.html">LanguageDriverRegistry</a></td>
           <td class="jd-linkcol"><a href="../../../../org/apache/ibatis/session/Configuration.html#languageRegistry">languageRegistry</a></td>
           <td class="jd-descrcol" width="100%"></td>
       </tr>
       
     
-      <tr class=" api apilevel-" >
-          <td class="jd-typecol"><nobr>
+      <tr class="alt-color api apilevel-" >
+          <td class="jd-typecol">
           protected
           
           
-          Set&lt;String&gt;</nobr></td>
+          Set&lt;String&gt;</td>
           <td class="jd-linkcol"><a href="../../../../org/apache/ibatis/session/Configuration.html#lazyLoadTriggerMethods">lazyLoadTriggerMethods</a></td>
           <td class="jd-descrcol" width="100%"></td>
       </tr>
       
     
-      <tr class="alt-color api apilevel-" >
-          <td class="jd-typecol"><nobr>
+      <tr class=" api apilevel-" >
+          <td class="jd-typecol">
           protected
           
           
-          boolean</nobr></td>
+          boolean</td>
           <td class="jd-linkcol"><a href="../../../../org/apache/ibatis/session/Configuration.html#lazyLoadingEnabled">lazyLoadingEnabled</a></td>
           <td class="jd-descrcol" width="100%"></td>
       </tr>
       
     
-      <tr class=" api apilevel-" >
-          <td class="jd-typecol"><nobr>
+      <tr class="alt-color api apilevel-" >
+          <td class="jd-typecol">
           protected
           
           final
-          Set&lt;String&gt;</nobr></td>
+          Set&lt;String&gt;</td>
           <td class="jd-linkcol"><a href="../../../../org/apache/ibatis/session/Configuration.html#loadedResources">loadedResources</a></td>
           <td class="jd-descrcol" width="100%"></td>
       </tr>
       
     
-      <tr class="alt-color api apilevel-" >
-          <td class="jd-typecol"><nobr>
+      <tr class=" api apilevel-" >
+          <td class="jd-typecol">
           protected
           
           
-          <a href="../../../../org/apache/ibatis/session/LocalCacheScope.html">LocalCacheScope</a></nobr></td>
+          <a href="../../../../org/apache/ibatis/session/LocalCacheScope.html">LocalCacheScope</a></td>
           <td class="jd-linkcol"><a href="../../../../org/apache/ibatis/session/Configuration.html#localCacheScope">localCacheScope</a></td>
           <td class="jd-descrcol" width="100%"></td>
       </tr>
       
     
-      <tr class=" api apilevel-" >
-          <td class="jd-typecol"><nobr>
+      <tr class="alt-color api apilevel-" >
+          <td class="jd-typecol">
           protected
           
           
-          Class&lt;?&nbsp;extends&nbsp;<a href="../../../../org/apache/ibatis/logging/Log.html">Log</a>&gt;</nobr></td>
+          Class&lt;?&nbsp;extends&nbsp;<a href="../../../../org/apache/ibatis/logging/Log.html">Log</a>&gt;</td>
           <td class="jd-linkcol"><a href="../../../../org/apache/ibatis/session/Configuration.html#logImpl">logImpl</a></td>
           <td class="jd-descrcol" width="100%"></td>
       </tr>
       
     
-      <tr class="alt-color api apilevel-" >
-          <td class="jd-typecol"><nobr>
+      <tr class=" api apilevel-" >
+          <td class="jd-typecol">
           protected
           
           
-          String</nobr></td>
+          String</td>
           <td class="jd-linkcol"><a href="../../../../org/apache/ibatis/session/Configuration.html#logPrefix">logPrefix</a></td>
           <td class="jd-descrcol" width="100%"></td>
       </tr>
       
     
-      <tr class=" api apilevel-" >
-          <td class="jd-typecol"><nobr>
+      <tr class="alt-color api apilevel-" >
+          <td class="jd-typecol">
           protected
           
           
-          boolean</nobr></td>
+          boolean</td>
           <td class="jd-linkcol"><a href="../../../../org/apache/ibatis/session/Configuration.html#mapUnderscoreToCamelCase">mapUnderscoreToCamelCase</a></td>
           <td class="jd-descrcol" width="100%"></td>
       </tr>
       
     
-      <tr class="alt-color api apilevel-" >
-          <td class="jd-typecol"><nobr>
+      <tr class=" api apilevel-" >
+          <td class="jd-typecol">
           protected
           
           final
-          Map&lt;String,&nbsp;<a href="../../../../org/apache/ibatis/mapping/MappedStatement.html">MappedStatement</a>&gt;</nobr></td>
+          Map&lt;String,&nbsp;<a href="../../../../org/apache/ibatis/mapping/MappedStatement.html">MappedStatement</a>&gt;</td>
           <td class="jd-linkcol"><a href="../../../../org/apache/ibatis/session/Configuration.html#mappedStatements">mappedStatements</a></td>
           <td class="jd-descrcol" width="100%"></td>
       </tr>
       
     
-      <tr class=" api apilevel-" >
-          <td class="jd-typecol"><nobr>
+      <tr class="alt-color api apilevel-" >
+          <td class="jd-typecol">
           protected
           
           
-          <a href="../../../../org/apache/ibatis/binding/MapperRegistry.html">MapperRegistry</a></nobr></td>
+          <a href="../../../../org/apache/ibatis/binding/MapperRegistry.html">MapperRegistry</a></td>
           <td class="jd-linkcol"><a href="../../../../org/apache/ibatis/session/Configuration.html#mapperRegistry">mapperRegistry</a></td>
           <td class="jd-descrcol" width="100%"></td>
       </tr>
       
     
-      <tr class="alt-color api apilevel-" >
-          <td class="jd-typecol"><nobr>
+      <tr class=" api apilevel-" >
+          <td class="jd-typecol">
           protected
           
           
-          boolean</nobr></td>
+          boolean</td>
           <td class="jd-linkcol"><a href="../../../../org/apache/ibatis/session/Configuration.html#multipleResultSetsEnabled">multipleResultSetsEnabled</a></td>
           <td class="jd-descrcol" width="100%"></td>
       </tr>
       
     
-      <tr class=" api apilevel-" >
-          <td class="jd-typecol"><nobr>
+      <tr class="alt-color api apilevel-" >
+          <td class="jd-typecol">
           protected
           
           
-          <a href="../../../../org/apache/ibatis/reflection/factory/ObjectFactory.html">ObjectFactory</a></nobr></td>
+          <a href="../../../../org/apache/ibatis/reflection/factory/ObjectFactory.html">ObjectFactory</a></td>
           <td class="jd-linkcol"><a href="../../../../org/apache/ibatis/session/Configuration.html#objectFactory">objectFactory</a></td>
           <td class="jd-descrcol" width="100%"></td>
       </tr>
       
     
-      <tr class="alt-color api apilevel-" >
-          <td class="jd-typecol"><nobr>
+      <tr class=" api apilevel-" >
+          <td class="jd-typecol">
           protected
           
           
-          <a href="../../../../org/apache/ibatis/reflection/wrapper/ObjectWrapperFactory.html">ObjectWrapperFactory</a></nobr></td>
+          <a href="../../../../org/apache/ibatis/reflection/wrapper/ObjectWrapperFactory.html">ObjectWrapperFactory</a></td>
           <td class="jd-linkcol"><a href="../../../../org/apache/ibatis/session/Configuration.html#objectWrapperFactory">objectWrapperFactory</a></td>
           <td class="jd-descrcol" width="100%"></td>
       </tr>
       
     
-      <tr class=" api apilevel-" >
-          <td class="jd-typecol"><nobr>
+      <tr class="alt-color api apilevel-" >
+          <td class="jd-typecol">
           protected
           
           final
-          Map&lt;String,&nbsp;<a href="../../../../org/apache/ibatis/mapping/ParameterMap.html">ParameterMap</a>&gt;</nobr></td>
+          Map&lt;String,&nbsp;<a href="../../../../org/apache/ibatis/mapping/ParameterMap.html">ParameterMap</a>&gt;</td>
           <td class="jd-linkcol"><a href="../../../../org/apache/ibatis/session/Configuration.html#parameterMaps">parameterMaps</a></td>
           <td class="jd-descrcol" width="100%"></td>
       </tr>
       
     
-      <tr class="alt-color api apilevel-" >
-          <td class="jd-typecol"><nobr>
+      <tr class=" api apilevel-" >
+          <td class="jd-typecol">
           protected
           
           
-          <a href="../../../../org/apache/ibatis/executor/loader/ProxyFactory.html">ProxyFactory</a></nobr></td>
+          <a href="../../../../org/apache/ibatis/executor/loader/ProxyFactory.html">ProxyFactory</a></td>
           <td class="jd-linkcol"><a href="../../../../org/apache/ibatis/session/Configuration.html#proxyFactory">proxyFactory</a></td>
           <td class="jd-descrcol" width="100%"></td>
       </tr>
       
     
+      <tr class="alt-color api apilevel-" >
+          <td class="jd-typecol">
+          protected
+          
+          
+          <a href="../../../../org/apache/ibatis/reflection/ReflectorFactory.html">ReflectorFactory</a></td>
+          <td class="jd-linkcol"><a href="../../../../org/apache/ibatis/session/Configuration.html#reflectorFactory">reflectorFactory</a></td>
+          <td class="jd-descrcol" width="100%"></td>
+      </tr>
+      
+    
       <tr class=" api apilevel-" >
-          <td class="jd-typecol"><nobr>
+          <td class="jd-typecol">
           protected
           
           final
-          Map&lt;String,&nbsp;<a href="../../../../org/apache/ibatis/mapping/ResultMap.html">ResultMap</a>&gt;</nobr></td>
+          Map&lt;String,&nbsp;<a href="../../../../org/apache/ibatis/mapping/ResultMap.html">ResultMap</a>&gt;</td>
           <td class="jd-linkcol"><a href="../../../../org/apache/ibatis/session/Configuration.html#resultMaps">resultMaps</a></td>
           <td class="jd-descrcol" width="100%"></td>
       </tr>
       
     
       <tr class="alt-color api apilevel-" >
-          <td class="jd-typecol"><nobr>
+          <td class="jd-typecol">
           protected
           
           
-          boolean</nobr></td>
+          boolean</td>
           <td class="jd-linkcol"><a href="../../../../org/apache/ibatis/session/Configuration.html#safeResultHandlerEnabled">safeResultHandlerEnabled</a></td>
           <td class="jd-descrcol" width="100%"></td>
       </tr>
       
     
       <tr class=" api apilevel-" >
-          <td class="jd-typecol"><nobr>
+          <td class="jd-typecol">
           protected
           
           
-          boolean</nobr></td>
+          boolean</td>
           <td class="jd-linkcol"><a href="../../../../org/apache/ibatis/session/Configuration.html#safeRowBoundsEnabled">safeRowBoundsEnabled</a></td>
           <td class="jd-descrcol" width="100%"></td>
       </tr>
       
     
       <tr class="alt-color api apilevel-" >
-          <td class="jd-typecol"><nobr>
+          <td class="jd-typecol">
           protected
           
           final
-          Map&lt;String,&nbsp;<a href="../../../../org/apache/ibatis/parsing/XNode.html">XNode</a>&gt;</nobr></td>
+          Map&lt;String,&nbsp;<a href="../../../../org/apache/ibatis/parsing/XNode.html">XNode</a>&gt;</td>
           <td class="jd-linkcol"><a href="../../../../org/apache/ibatis/session/Configuration.html#sqlFragments">sqlFragments</a></td>
           <td class="jd-descrcol" width="100%"></td>
       </tr>
       
     
       <tr class=" api apilevel-" >
-          <td class="jd-typecol"><nobr>
+          <td class="jd-typecol">
           protected
           
           final
-          <a href="../../../../org/apache/ibatis/type/TypeAliasRegistry.html">TypeAliasRegistry</a></nobr></td>
+          <a href="../../../../org/apache/ibatis/type/TypeAliasRegistry.html">TypeAliasRegistry</a></td>
           <td class="jd-linkcol"><a href="../../../../org/apache/ibatis/session/Configuration.html#typeAliasRegistry">typeAliasRegistry</a></td>
           <td class="jd-descrcol" width="100%"></td>
       </tr>
       
     
       <tr class="alt-color api apilevel-" >
-          <td class="jd-typecol"><nobr>
+          <td class="jd-typecol">
           protected
           
           final
-          <a href="../../../../org/apache/ibatis/type/TypeHandlerRegistry.html">TypeHandlerRegistry</a></nobr></td>
+          <a href="../../../../org/apache/ibatis/type/TypeHandlerRegistry.html">TypeHandlerRegistry</a></td>
           <td class="jd-linkcol"><a href="../../../../org/apache/ibatis/session/Configuration.html#typeHandlerRegistry">typeHandlerRegistry</a></td>
           <td class="jd-descrcol" width="100%"></td>
       </tr>
       
     
       <tr class=" api apilevel-" >
-          <td class="jd-typecol"><nobr>
+          <td class="jd-typecol">
           protected
           
           
-          boolean</nobr></td>
+          boolean</td>
           <td class="jd-linkcol"><a href="../../../../org/apache/ibatis/session/Configuration.html#useColumnLabel">useColumnLabel</a></td>
           <td class="jd-descrcol" width="100%"></td>
       </tr>
       
     
       <tr class="alt-color api apilevel-" >
-          <td class="jd-typecol"><nobr>
+          <td class="jd-typecol">
           protected
           
           
-          boolean</nobr></td>
+          boolean</td>
           <td class="jd-linkcol"><a href="../../../../org/apache/ibatis/session/Configuration.html#useGeneratedKeys">useGeneratedKeys</a></td>
           <td class="jd-descrcol" width="100%"></td>
       </tr>
       
     
       <tr class=" api apilevel-" >
-          <td class="jd-typecol"><nobr>
+          <td class="jd-typecol">
           protected
           
           
-          Properties</nobr></td>
+          Properties</td>
           <td class="jd-linkcol"><a href="../../../../org/apache/ibatis/session/Configuration.html#variables">variables</a></td>
           <td class="jd-descrcol" width="100%"></td>
       </tr>
@@ -976,32 +1002,32 @@ Summary:
 
 	 
     <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            </nobr>
+            
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#Configuration()">Configuration</a></span>()</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#Configuration(org.apache.ibatis.mapping.Environment)">Configuration</a></span>(<a href="../../../../org/apache/ibatis/mapping/Environment.html">Environment</a> environment)
         
   </td></tr>
 
 
 	 
     <tr class=" api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            </nobr>
+            
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#Configuration(org.apache.ibatis.mapping.Environment)">Configuration</a></span>(<a href="../../../../org/apache/ibatis/mapping/Environment.html">Environment</a> environment)</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#Configuration()">Configuration</a></span>()
         
   </td></tr>
 
@@ -1021,1728 +1047,1792 @@ Summary:
 
 	 
     <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            void</nobr>
+            void
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#addCache(org.apache.ibatis.cache.Cache)">addCache</a></span>(<a href="../../../../org/apache/ibatis/cache/Cache.html">Cache</a> cache)</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#addCache(org.apache.ibatis.cache.Cache)">addCache</a></span>(<a href="../../../../org/apache/ibatis/cache/Cache.html">Cache</a> cache)
         
   </td></tr>
 
 
 	 
     <tr class=" api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            void</nobr>
+            void
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#addCacheRef(java.lang.String, java.lang.String)">addCacheRef</a></span>(String namespace, String referencedNamespace)</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#addCacheRef(java.lang.String, java.lang.String)">addCacheRef</a></span>(String namespace, String referencedNamespace)
         
   </td></tr>
 
 
 	 
     <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            void</nobr>
+            void
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#addIncompleteCacheRef(org.apache.ibatis.builder.CacheRefResolver)">addIncompleteCacheRef</a></span>(<a href="../../../../org/apache/ibatis/builder/CacheRefResolver.html">CacheRefResolver</a> incompleteCacheRef)</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#addIncompleteCacheRef(org.apache.ibatis.builder.CacheRefResolver)">addIncompleteCacheRef</a></span>(<a href="../../../../org/apache/ibatis/builder/CacheRefResolver.html">CacheRefResolver</a> incompleteCacheRef)
         
   </td></tr>
 
 
 	 
     <tr class=" api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            void</nobr>
+            void
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#addIncompleteMethod(org.apache.ibatis.builder.annotation.MethodResolver)">addIncompleteMethod</a></span>(<a href="../../../../org/apache/ibatis/builder/annotation/MethodResolver.html">MethodResolver</a> builder)</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#addIncompleteMethod(org.apache.ibatis.builder.annotation.MethodResolver)">addIncompleteMethod</a></span>(<a href="../../../../org/apache/ibatis/builder/annotation/MethodResolver.html">MethodResolver</a> builder)
         
   </td></tr>
 
 
 	 
     <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            void</nobr>
+            void
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#addIncompleteResultMap(org.apache.ibatis.builder.ResultMapResolver)">addIncompleteResultMap</a></span>(<a href="../../../../org/apache/ibatis/builder/ResultMapResolver.html">ResultMapResolver</a> resultMapResolver)</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#addIncompleteResultMap(org.apache.ibatis.builder.ResultMapResolver)">addIncompleteResultMap</a></span>(<a href="../../../../org/apache/ibatis/builder/ResultMapResolver.html">ResultMapResolver</a> resultMapResolver)
         
   </td></tr>
 
 
 	 
     <tr class=" api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            void</nobr>
+            void
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#addIncompleteStatement(org.apache.ibatis.builder.xml.XMLStatementBuilder)">addIncompleteStatement</a></span>(<a href="../../../../org/apache/ibatis/builder/xml/XMLStatementBuilder.html">XMLStatementBuilder</a> incompleteStatement)</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#addIncompleteStatement(org.apache.ibatis.builder.xml.XMLStatementBuilder)">addIncompleteStatement</a></span>(<a href="../../../../org/apache/ibatis/builder/xml/XMLStatementBuilder.html">XMLStatementBuilder</a> incompleteStatement)
         
   </td></tr>
 
 
 	 
     <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            void</nobr>
+            void
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#addInterceptor(org.apache.ibatis.plugin.Interceptor)">addInterceptor</a></span>(<a href="../../../../org/apache/ibatis/plugin/Interceptor.html">Interceptor</a> interceptor)</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#addInterceptor(org.apache.ibatis.plugin.Interceptor)">addInterceptor</a></span>(<a href="../../../../org/apache/ibatis/plugin/Interceptor.html">Interceptor</a> interceptor)
         
   </td></tr>
 
 
 	 
     <tr class=" api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            void</nobr>
+            void
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#addKeyGenerator(java.lang.String, org.apache.ibatis.executor.keygen.KeyGenerator)">addKeyGenerator</a></span>(String id, <a href="../../../../org/apache/ibatis/executor/keygen/KeyGenerator.html">KeyGenerator</a> keyGenerator)</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#addKeyGenerator(java.lang.String, org.apache.ibatis.executor.keygen.KeyGenerator)">addKeyGenerator</a></span>(String id, <a href="../../../../org/apache/ibatis/executor/keygen/KeyGenerator.html">KeyGenerator</a> keyGenerator)
         
   </td></tr>
 
 
 	 
     <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            void</nobr>
+            void
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#addLoadedResource(java.lang.String)">addLoadedResource</a></span>(String resource)</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#addLoadedResource(java.lang.String)">addLoadedResource</a></span>(String resource)
         
   </td></tr>
 
 
 	 
     <tr class=" api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            void</nobr>
+            void
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#addMappedStatement(org.apache.ibatis.mapping.MappedStatement)">addMappedStatement</a></span>(<a href="../../../../org/apache/ibatis/mapping/MappedStatement.html">MappedStatement</a> ms)</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#addMappedStatement(org.apache.ibatis.mapping.MappedStatement)">addMappedStatement</a></span>(<a href="../../../../org/apache/ibatis/mapping/MappedStatement.html">MappedStatement</a> ms)
         
   </td></tr>
 
 
 	 
     <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             &lt;T&gt;
-            void</nobr>
+            void
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#addMapper(java.lang.Class<T>)">addMapper</a></span>(Class&lt;T&gt; type)</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#addMapper(java.lang.Class<T>)">addMapper</a></span>(Class&lt;T&gt; type)
         
   </td></tr>
 
 
 	 
     <tr class=" api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            void</nobr>
+            void
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#addMappers(java.lang.String)">addMappers</a></span>(String packageName)</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#addMappers(java.lang.String)">addMappers</a></span>(String packageName)
         
   </td></tr>
 
 
 	 
     <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            void</nobr>
+            void
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#addMappers(java.lang.String, java.lang.Class<?>)">addMappers</a></span>(String packageName, Class&lt;?&gt; superType)</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#addMappers(java.lang.String, java.lang.Class<?>)">addMappers</a></span>(String packageName, Class&lt;?&gt; superType)
         
   </td></tr>
 
 
 	 
     <tr class=" api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            void</nobr>
+            void
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#addParameterMap(org.apache.ibatis.mapping.ParameterMap)">addParameterMap</a></span>(<a href="../../../../org/apache/ibatis/mapping/ParameterMap.html">ParameterMap</a> pm)</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#addParameterMap(org.apache.ibatis.mapping.ParameterMap)">addParameterMap</a></span>(<a href="../../../../org/apache/ibatis/mapping/ParameterMap.html">ParameterMap</a> pm)
         
   </td></tr>
 
 
 	 
     <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            void</nobr>
+            void
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#addResultMap(org.apache.ibatis.mapping.ResultMap)">addResultMap</a></span>(<a href="../../../../org/apache/ibatis/mapping/ResultMap.html">ResultMap</a> rm)</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#addResultMap(org.apache.ibatis.mapping.ResultMap)">addResultMap</a></span>(<a href="../../../../org/apache/ibatis/mapping/ResultMap.html">ResultMap</a> rm)
         
   </td></tr>
 
 
 	 
     <tr class=" api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            <a href="../../../../org/apache/ibatis/session/AutoMappingBehavior.html">AutoMappingBehavior</a></nobr>
+            <a href="../../../../org/apache/ibatis/session/AutoMappingBehavior.html">AutoMappingBehavior</a>
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#getAutoMappingBehavior()">getAutoMappingBehavior</a></span>()</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#getAutoMappingBehavior()">getAutoMappingBehavior</a></span>()
         
   </td></tr>
 
 
 	 
     <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            <a href="../../../../org/apache/ibatis/cache/Cache.html">Cache</a></nobr>
+            <a href="../../../../org/apache/ibatis/cache/Cache.html">Cache</a>
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#getCache(java.lang.String)">getCache</a></span>(String id)</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#getCache(java.lang.String)">getCache</a></span>(String id)
         
   </td></tr>
 
 
 	 
     <tr class=" api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            Collection&lt;String&gt;</nobr>
+            Collection&lt;String&gt;
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#getCacheNames()">getCacheNames</a></span>()</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#getCacheNames()">getCacheNames</a></span>()
         
   </td></tr>
 
 
 	 
     <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            Collection&lt;<a href="../../../../org/apache/ibatis/cache/Cache.html">Cache</a>&gt;</nobr>
+            Collection&lt;<a href="../../../../org/apache/ibatis/cache/Cache.html">Cache</a>&gt;
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#getCaches()">getCaches</a></span>()</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#getCaches()">getCaches</a></span>()
         
   </td></tr>
 
 
 	 
     <tr class=" api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            Class&lt;?&gt;</nobr>
+            Class&lt;?&gt;
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#getConfigurationFactory()">getConfigurationFactory</a></span>()</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#getConfigurationFactory()">getConfigurationFactory</a></span>()
         
   </td></tr>
 
 
 	 
     <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            String</nobr>
+            String
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#getDatabaseId()">getDatabaseId</a></span>()</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#getDatabaseId()">getDatabaseId</a></span>()
         
   </td></tr>
 
 
 	 
     <tr class=" api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            <a href="../../../../org/apache/ibatis/session/ExecutorType.html">ExecutorType</a></nobr>
+            <a href="../../../../org/apache/ibatis/session/ExecutorType.html">ExecutorType</a>
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#getDefaultExecutorType()">getDefaultExecutorType</a></span>()</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#getDefaultExecutorType()">getDefaultExecutorType</a></span>()
         
   </td></tr>
 
 
 	 
     <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            <a href="../../../../org/apache/ibatis/scripting/LanguageDriver.html">LanguageDriver</a></nobr>
+            Integer
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#getDefaultScriptingLanuageInstance()">getDefaultScriptingLanuageInstance</a></span>()</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#getDefaultFetchSize()">getDefaultFetchSize</a></span>()
         
   </td></tr>
 
 
 	 
     <tr class=" api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            Integer</nobr>
+            <a href="../../../../org/apache/ibatis/scripting/LanguageDriver.html">LanguageDriver</a>
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#getDefaultStatementTimeout()">getDefaultStatementTimeout</a></span>()</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#getDefaultScriptingLanuageInstance()">getDefaultScriptingLanuageInstance</a></span>()
         
   </td></tr>
 
 
 	 
     <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            <a href="../../../../org/apache/ibatis/mapping/Environment.html">Environment</a></nobr>
+            Integer
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#getEnvironment()">getEnvironment</a></span>()</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#getDefaultStatementTimeout()">getDefaultStatementTimeout</a></span>()
         
   </td></tr>
 
 
 	 
     <tr class=" api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            Collection&lt;<a href="../../../../org/apache/ibatis/builder/CacheRefResolver.html">CacheRefResolver</a>&gt;</nobr>
+            <a href="../../../../org/apache/ibatis/mapping/Environment.html">Environment</a>
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#getIncompleteCacheRefs()">getIncompleteCacheRefs</a></span>()</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#getEnvironment()">getEnvironment</a></span>()
         
   </td></tr>
 
 
 	 
     <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            Collection&lt;<a href="../../../../org/apache/ibatis/builder/annotation/MethodResolver.html">MethodResolver</a>&gt;</nobr>
+            Collection&lt;<a href="../../../../org/apache/ibatis/builder/CacheRefResolver.html">CacheRefResolver</a>&gt;
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#getIncompleteMethods()">getIncompleteMethods</a></span>()</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#getIncompleteCacheRefs()">getIncompleteCacheRefs</a></span>()
         
   </td></tr>
 
 
 	 
     <tr class=" api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            Collection&lt;<a href="../../../../org/apache/ibatis/builder/ResultMapResolver.html">ResultMapResolver</a>&gt;</nobr>
+            Collection&lt;<a href="../../../../org/apache/ibatis/builder/annotation/MethodResolver.html">MethodResolver</a>&gt;
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#getIncompleteResultMaps()">getIncompleteResultMaps</a></span>()</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#getIncompleteMethods()">getIncompleteMethods</a></span>()
         
   </td></tr>
 
 
 	 
     <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            Collection&lt;<a href="../../../../org/apache/ibatis/builder/xml/XMLStatementBuilder.html">XMLStatementBuilder</a>&gt;</nobr>
+            Collection&lt;<a href="../../../../org/apache/ibatis/builder/ResultMapResolver.html">ResultMapResolver</a>&gt;
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#getIncompleteStatements()">getIncompleteStatements</a></span>()</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#getIncompleteResultMaps()">getIncompleteResultMaps</a></span>()
         
   </td></tr>
 
 
 	 
     <tr class=" api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            List&lt;<a href="../../../../org/apache/ibatis/plugin/Interceptor.html">Interceptor</a>&gt;</nobr>
+            Collection&lt;<a href="../../../../org/apache/ibatis/builder/xml/XMLStatementBuilder.html">XMLStatementBuilder</a>&gt;
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#getInterceptors()">getInterceptors</a></span>()</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#getIncompleteStatements()">getIncompleteStatements</a></span>()
         
   </td></tr>
 
 
 	 
     <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            <a href="../../../../org/apache/ibatis/type/JdbcType.html">JdbcType</a></nobr>
+            List&lt;<a href="../../../../org/apache/ibatis/plugin/Interceptor.html">Interceptor</a>&gt;
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#getJdbcTypeForNull()">getJdbcTypeForNull</a></span>()</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#getInterceptors()">getInterceptors</a></span>()
         
   </td></tr>
 
 
 	 
     <tr class=" api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            <a href="../../../../org/apache/ibatis/executor/keygen/KeyGenerator.html">KeyGenerator</a></nobr>
+            <a href="../../../../org/apache/ibatis/type/JdbcType.html">JdbcType</a>
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#getKeyGenerator(java.lang.String)">getKeyGenerator</a></span>(String id)</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#getJdbcTypeForNull()">getJdbcTypeForNull</a></span>()
         
   </td></tr>
 
 
 	 
     <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            Collection&lt;String&gt;</nobr>
+            <a href="../../../../org/apache/ibatis/executor/keygen/KeyGenerator.html">KeyGenerator</a>
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#getKeyGeneratorNames()">getKeyGeneratorNames</a></span>()</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#getKeyGenerator(java.lang.String)">getKeyGenerator</a></span>(String id)
         
   </td></tr>
 
 
 	 
     <tr class=" api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            Collection&lt;<a href="../../../../org/apache/ibatis/executor/keygen/KeyGenerator.html">KeyGenerator</a>&gt;</nobr>
+            Collection&lt;String&gt;
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#getKeyGenerators()">getKeyGenerators</a></span>()</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#getKeyGeneratorNames()">getKeyGeneratorNames</a></span>()
         
   </td></tr>
 
 
 	 
     <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            <a href="../../../../org/apache/ibatis/scripting/LanguageDriverRegistry.html">LanguageDriverRegistry</a></nobr>
+            Collection&lt;<a href="../../../../org/apache/ibatis/executor/keygen/KeyGenerator.html">KeyGenerator</a>&gt;
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#getLanguageRegistry()">getLanguageRegistry</a></span>()</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#getKeyGenerators()">getKeyGenerators</a></span>()
         
   </td></tr>
 
 
 	 
     <tr class=" api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            Set&lt;String&gt;</nobr>
+            <a href="../../../../org/apache/ibatis/scripting/LanguageDriverRegistry.html">LanguageDriverRegistry</a>
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#getLazyLoadTriggerMethods()">getLazyLoadTriggerMethods</a></span>()</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#getLanguageRegistry()">getLanguageRegistry</a></span>()
         
   </td></tr>
 
 
 	 
     <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            <a href="../../../../org/apache/ibatis/session/LocalCacheScope.html">LocalCacheScope</a></nobr>
+            Set&lt;String&gt;
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#getLocalCacheScope()">getLocalCacheScope</a></span>()</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#getLazyLoadTriggerMethods()">getLazyLoadTriggerMethods</a></span>()
         
   </td></tr>
 
 
 	 
     <tr class=" api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            Class&lt;?&nbsp;extends&nbsp;<a href="../../../../org/apache/ibatis/logging/Log.html">Log</a>&gt;</nobr>
+            <a href="../../../../org/apache/ibatis/session/LocalCacheScope.html">LocalCacheScope</a>
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#getLogImpl()">getLogImpl</a></span>()</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#getLocalCacheScope()">getLocalCacheScope</a></span>()
         
   </td></tr>
 
 
 	 
     <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            String</nobr>
+            Class&lt;?&nbsp;extends&nbsp;<a href="../../../../org/apache/ibatis/logging/Log.html">Log</a>&gt;
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#getLogPrefix()">getLogPrefix</a></span>()</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#getLogImpl()">getLogImpl</a></span>()
         
   </td></tr>
 
 
 	 
     <tr class=" api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            <a href="../../../../org/apache/ibatis/mapping/MappedStatement.html">MappedStatement</a></nobr>
+            String
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#getMappedStatement(java.lang.String)">getMappedStatement</a></span>(String id)</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#getLogPrefix()">getLogPrefix</a></span>()
         
   </td></tr>
 
 
 	 
     <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            <a href="../../../../org/apache/ibatis/mapping/MappedStatement.html">MappedStatement</a></nobr>
+            <a href="../../../../org/apache/ibatis/mapping/MappedStatement.html">MappedStatement</a>
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#getMappedStatement(java.lang.String, boolean)">getMappedStatement</a></span>(String id, boolean validateIncompleteStatements)</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#getMappedStatement(java.lang.String)">getMappedStatement</a></span>(String id)
         
   </td></tr>
 
 
 	 
     <tr class=" api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            Collection&lt;String&gt;</nobr>
+            <a href="../../../../org/apache/ibatis/mapping/MappedStatement.html">MappedStatement</a>
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#getMappedStatementNames()">getMappedStatementNames</a></span>()</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#getMappedStatement(java.lang.String, boolean)">getMappedStatement</a></span>(String id, boolean validateIncompleteStatements)
         
   </td></tr>
 
 
 	 
     <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            Collection&lt;<a href="../../../../org/apache/ibatis/mapping/MappedStatement.html">MappedStatement</a>&gt;</nobr>
+            Collection&lt;String&gt;
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#getMappedStatements()">getMappedStatements</a></span>()</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#getMappedStatementNames()">getMappedStatementNames</a></span>()
         
   </td></tr>
 
 
 	 
     <tr class=" api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            Collection&lt;<a href="../../../../org/apache/ibatis/mapping/MappedStatement.html">MappedStatement</a>&gt;
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#getMappedStatements()">getMappedStatements</a></span>()
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
             
             
             
             
             &lt;T&gt;
-            T</nobr>
+            T
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#getMapper(java.lang.Class<T>, org.apache.ibatis.session.SqlSession)">getMapper</a></span>(Class&lt;T&gt; type, <a href="../../../../org/apache/ibatis/session/SqlSession.html">SqlSession</a> sqlSession)</nobr>
-        
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><nobr>
-            
-            
-            
-            
-            
-            <a href="../../../../org/apache/ibatis/binding/MapperRegistry.html">MapperRegistry</a></nobr>
-        </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#getMapperRegistry()">getMapperRegistry</a></span>()</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#getMapper(java.lang.Class<T>, org.apache.ibatis.session.SqlSession)">getMapper</a></span>(Class&lt;T&gt; type, <a href="../../../../org/apache/ibatis/session/SqlSession.html">SqlSession</a> sqlSession)
         
   </td></tr>
 
 
 	 
     <tr class=" api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            <a href="../../../../org/apache/ibatis/reflection/factory/ObjectFactory.html">ObjectFactory</a></nobr>
+            <a href="../../../../org/apache/ibatis/binding/MapperRegistry.html">MapperRegistry</a>
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#getObjectFactory()">getObjectFactory</a></span>()</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#getMapperRegistry()">getMapperRegistry</a></span>()
         
   </td></tr>
 
 
 	 
     <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            <a href="../../../../org/apache/ibatis/reflection/wrapper/ObjectWrapperFactory.html">ObjectWrapperFactory</a></nobr>
+            <a href="../../../../org/apache/ibatis/reflection/factory/ObjectFactory.html">ObjectFactory</a>
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#getObjectWrapperFactory()">getObjectWrapperFactory</a></span>()</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#getObjectFactory()">getObjectFactory</a></span>()
         
   </td></tr>
 
 
 	 
     <tr class=" api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            <a href="../../../../org/apache/ibatis/mapping/ParameterMap.html">ParameterMap</a></nobr>
+            <a href="../../../../org/apache/ibatis/reflection/wrapper/ObjectWrapperFactory.html">ObjectWrapperFactory</a>
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#getParameterMap(java.lang.String)">getParameterMap</a></span>(String id)</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#getObjectWrapperFactory()">getObjectWrapperFactory</a></span>()
         
   </td></tr>
 
 
 	 
     <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            Collection&lt;String&gt;</nobr>
+            <a href="../../../../org/apache/ibatis/mapping/ParameterMap.html">ParameterMap</a>
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#getParameterMapNames()">getParameterMapNames</a></span>()</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#getParameterMap(java.lang.String)">getParameterMap</a></span>(String id)
         
   </td></tr>
 
 
 	 
     <tr class=" api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            Collection&lt;<a href="../../../../org/apache/ibatis/mapping/ParameterMap.html">ParameterMap</a>&gt;</nobr>
+            Collection&lt;String&gt;
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#getParameterMaps()">getParameterMaps</a></span>()</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#getParameterMapNames()">getParameterMapNames</a></span>()
         
   </td></tr>
 
 
 	 
     <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            <a href="../../../../org/apache/ibatis/executor/loader/ProxyFactory.html">ProxyFactory</a></nobr>
+            Collection&lt;<a href="../../../../org/apache/ibatis/mapping/ParameterMap.html">ParameterMap</a>&gt;
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#getProxyFactory()">getProxyFactory</a></span>()</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#getParameterMaps()">getParameterMaps</a></span>()
         
   </td></tr>
 
 
 	 
     <tr class=" api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            <a href="../../../../org/apache/ibatis/mapping/ResultMap.html">ResultMap</a></nobr>
+            <a href="../../../../org/apache/ibatis/executor/loader/ProxyFactory.html">ProxyFactory</a>
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#getResultMap(java.lang.String)">getResultMap</a></span>(String id)</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#getProxyFactory()">getProxyFactory</a></span>()
         
   </td></tr>
 
 
 	 
     <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            Collection&lt;String&gt;</nobr>
+            <a href="../../../../org/apache/ibatis/reflection/ReflectorFactory.html">ReflectorFactory</a>
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#getResultMapNames()">getResultMapNames</a></span>()</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#getReflectorFactory()">getReflectorFactory</a></span>()
         
   </td></tr>
 
 
 	 
     <tr class=" api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            Collection&lt;<a href="../../../../org/apache/ibatis/mapping/ResultMap.html">ResultMap</a>&gt;</nobr>
+            <a href="../../../../org/apache/ibatis/mapping/ResultMap.html">ResultMap</a>
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#getResultMaps()">getResultMaps</a></span>()</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#getResultMap(java.lang.String)">getResultMap</a></span>(String id)
         
   </td></tr>
 
 
 	 
     <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            Map&lt;String,&nbsp;<a href="../../../../org/apache/ibatis/parsing/XNode.html">XNode</a>&gt;</nobr>
+            Collection&lt;String&gt;
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#getSqlFragments()">getSqlFragments</a></span>()</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#getResultMapNames()">getResultMapNames</a></span>()
         
   </td></tr>
 
 
 	 
     <tr class=" api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            <a href="../../../../org/apache/ibatis/type/TypeAliasRegistry.html">TypeAliasRegistry</a></nobr>
+            Collection&lt;<a href="../../../../org/apache/ibatis/mapping/ResultMap.html">ResultMap</a>&gt;
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#getTypeAliasRegistry()">getTypeAliasRegistry</a></span>()</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#getResultMaps()">getResultMaps</a></span>()
         
   </td></tr>
 
 
 	 
     <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            <a href="../../../../org/apache/ibatis/type/TypeHandlerRegistry.html">TypeHandlerRegistry</a></nobr>
+            Map&lt;String,&nbsp;<a href="../../../../org/apache/ibatis/parsing/XNode.html">XNode</a>&gt;
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#getTypeHandlerRegistry()">getTypeHandlerRegistry</a></span>()</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#getSqlFragments()">getSqlFragments</a></span>()
         
   </td></tr>
 
 
 	 
     <tr class=" api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            Properties</nobr>
+            <a href="../../../../org/apache/ibatis/type/TypeAliasRegistry.html">TypeAliasRegistry</a>
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#getVariables()">getVariables</a></span>()</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#getTypeAliasRegistry()">getTypeAliasRegistry</a></span>()
         
   </td></tr>
 
 
 	 
     <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            boolean</nobr>
+            <a href="../../../../org/apache/ibatis/type/TypeHandlerRegistry.html">TypeHandlerRegistry</a>
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#hasCache(java.lang.String)">hasCache</a></span>(String id)</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#getTypeHandlerRegistry()">getTypeHandlerRegistry</a></span>()
         
   </td></tr>
 
 
 	 
     <tr class=" api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            boolean</nobr>
+            Properties
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#hasKeyGenerator(java.lang.String)">hasKeyGenerator</a></span>(String id)</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#getVariables()">getVariables</a></span>()
         
   </td></tr>
 
 
 	 
     <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            boolean</nobr>
+            boolean
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#hasMapper(java.lang.Class<?>)">hasMapper</a></span>(Class&lt;?&gt; type)</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#hasCache(java.lang.String)">hasCache</a></span>(String id)
         
   </td></tr>
 
 
 	 
     <tr class=" api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            boolean</nobr>
+            boolean
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#hasParameterMap(java.lang.String)">hasParameterMap</a></span>(String id)</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#hasKeyGenerator(java.lang.String)">hasKeyGenerator</a></span>(String id)
         
   </td></tr>
 
 
 	 
     <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            boolean</nobr>
+            boolean
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#hasResultMap(java.lang.String)">hasResultMap</a></span>(String id)</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#hasMapper(java.lang.Class<?>)">hasMapper</a></span>(Class&lt;?&gt; type)
         
   </td></tr>
 
 
 	 
     <tr class=" api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            boolean</nobr>
+            boolean
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#hasStatement(java.lang.String)">hasStatement</a></span>(String statementName)</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#hasParameterMap(java.lang.String)">hasParameterMap</a></span>(String id)
         
   </td></tr>
 
 
 	 
     <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            boolean</nobr>
+            boolean
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#hasStatement(java.lang.String, boolean)">hasStatement</a></span>(String statementName, boolean validateIncompleteStatements)</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#hasResultMap(java.lang.String)">hasResultMap</a></span>(String id)
         
   </td></tr>
 
 
 	 
     <tr class=" api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            boolean</nobr>
+            boolean
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#isAggressiveLazyLoading()">isAggressiveLazyLoading</a></span>()</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#hasStatement(java.lang.String, boolean)">hasStatement</a></span>(String statementName, boolean validateIncompleteStatements)
         
   </td></tr>
 
 
 	 
     <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            boolean</nobr>
+            boolean
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#isCacheEnabled()">isCacheEnabled</a></span>()</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#hasStatement(java.lang.String)">hasStatement</a></span>(String statementName)
         
   </td></tr>
 
 
 	 
     <tr class=" api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            boolean</nobr>
+            boolean
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#isCallSettersOnNulls()">isCallSettersOnNulls</a></span>()</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#isAggressiveLazyLoading()">isAggressiveLazyLoading</a></span>()
         
   </td></tr>
 
 
 	 
     <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            boolean</nobr>
+            boolean
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#isLazyLoadingEnabled()">isLazyLoadingEnabled</a></span>()</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#isCacheEnabled()">isCacheEnabled</a></span>()
         
   </td></tr>
 
 
 	 
     <tr class=" api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            boolean</nobr>
+            boolean
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#isMapUnderscoreToCamelCase()">isMapUnderscoreToCamelCase</a></span>()</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#isCallSettersOnNulls()">isCallSettersOnNulls</a></span>()
         
   </td></tr>
 
 
 	 
     <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            boolean</nobr>
+            boolean
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#isMultipleResultSetsEnabled()">isMultipleResultSetsEnabled</a></span>()</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#isLazyLoadingEnabled()">isLazyLoadingEnabled</a></span>()
         
   </td></tr>
 
 
 	 
     <tr class=" api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            boolean</nobr>
+            boolean
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#isResourceLoaded(java.lang.String)">isResourceLoaded</a></span>(String resource)</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#isMapUnderscoreToCamelCase()">isMapUnderscoreToCamelCase</a></span>()
         
   </td></tr>
 
 
 	 
     <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            boolean</nobr>
+            boolean
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#isSafeResultHandlerEnabled()">isSafeResultHandlerEnabled</a></span>()</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#isMultipleResultSetsEnabled()">isMultipleResultSetsEnabled</a></span>()
         
   </td></tr>
 
 
 	 
     <tr class=" api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            boolean</nobr>
+            boolean
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#isSafeRowBoundsEnabled()">isSafeRowBoundsEnabled</a></span>()</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#isResourceLoaded(java.lang.String)">isResourceLoaded</a></span>(String resource)
         
   </td></tr>
 
 
 	 
     <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            boolean</nobr>
+            boolean
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#isUseColumnLabel()">isUseColumnLabel</a></span>()</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#isSafeResultHandlerEnabled()">isSafeResultHandlerEnabled</a></span>()
         
   </td></tr>
 
 
 	 
     <tr class=" api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            boolean</nobr>
+            boolean
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#isUseGeneratedKeys()">isUseGeneratedKeys</a></span>()</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#isSafeRowBoundsEnabled()">isSafeRowBoundsEnabled</a></span>()
         
   </td></tr>
 
 
 	 
     <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            <a href="../../../../org/apache/ibatis/executor/Executor.html">Executor</a></nobr>
+            boolean
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#newExecutor(org.apache.ibatis.transaction.Transaction)">newExecutor</a></span>(<a href="../../../../org/apache/ibatis/transaction/Transaction.html">Transaction</a> transaction)</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#isUseColumnLabel()">isUseColumnLabel</a></span>()
         
   </td></tr>
 
 
 	 
     <tr class=" api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            <a href="../../../../org/apache/ibatis/executor/Executor.html">Executor</a></nobr>
+            boolean
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#newExecutor(org.apache.ibatis.transaction.Transaction, org.apache.ibatis.session.ExecutorType)">newExecutor</a></span>(<a href="../../../../org/apache/ibatis/transaction/Transaction.html">Transaction</a> transaction, <a href="../../../../org/apache/ibatis/session/ExecutorType.html">ExecutorType</a> executorType)</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#isUseGeneratedKeys()">isUseGeneratedKeys</a></span>()
         
   </td></tr>
 
 
 	 
     <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            <a href="../../../../org/apache/ibatis/reflection/MetaObject.html">MetaObject</a></nobr>
+            <a href="../../../../org/apache/ibatis/executor/Executor.html">Executor</a>
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#newMetaObject(java.lang.Object)">newMetaObject</a></span>(Object object)</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#newExecutor(org.apache.ibatis.transaction.Transaction)">newExecutor</a></span>(<a href="../../../../org/apache/ibatis/transaction/Transaction.html">Transaction</a> transaction)
         
   </td></tr>
 
 
 	 
     <tr class=" api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            <a href="../../../../org/apache/ibatis/executor/parameter/ParameterHandler.html">ParameterHandler</a></nobr>
+            <a href="../../../../org/apache/ibatis/executor/Executor.html">Executor</a>
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#newParameterHandler(org.apache.ibatis.mapping.MappedStatement, java.lang.Object, org.apache.ibatis.mapping.BoundSql)">newParameterHandler</a></span>(<a href="../../../../org/apache/ibatis/mapping/MappedStatement.html">MappedStatement</a> mappedStatement, Object parameterObject, <a href="../../../../org/apache/ibatis/mapping/BoundSql.html">BoundSql</a> boundSql)</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#newExecutor(org.apache.ibatis.transaction.Transaction, org.apache.ibatis.session.ExecutorType)">newExecutor</a></span>(<a href="../../../../org/apache/ibatis/transaction/Transaction.html">Transaction</a> transaction, <a href="../../../../org/apache/ibatis/session/ExecutorType.html">ExecutorType</a> executorType)
         
   </td></tr>
 
 
 	 
     <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            <a href="../../../../org/apache/ibatis/executor/resultset/ResultSetHandler.html">ResultSetHandler</a></nobr>
+            <a href="../../../../org/apache/ibatis/reflection/MetaObject.html">MetaObject</a>
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#newResultSetHandler(org.apache.ibatis.executor.Executor, org.apache.ibatis.mapping.MappedStatement, org.apache.ibatis.session.RowBounds, org.apache.ibatis.executor.parameter.ParameterHandler, org.apache.ibatis.session.ResultHandler, org.apache.ibatis.mapping.BoundSql)">newResultSetHandler</a></span>(<a href="../../../../org/apache/ibatis/executor/Executor.html">Executor</a> executor, <a href="../../../../org/apache/ibatis/mapping/MappedStatement.html">MappedStatement</a> mappedStatement, <a href="../../../../org/apache/ibatis/session/RowBounds.html">RowBounds</a> rowBounds, <a href="../../../../org/apache/ibatis/executor/parameter/ParameterHandler.html">ParameterHandler</a> parameterHandler, <a href="../../../../org/apache/ibatis/session/ResultHandler.html">ResultHandler</a> resultHandler, <a href="../../../../org/apache/ibatis/mapping/BoundSql.html">BoundSql</a> boundSql)</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#newMetaObject(java.lang.Object)">newMetaObject</a></span>(Object object)
         
   </td></tr>
 
 
 	 
     <tr class=" api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            <a href="../../../../org/apache/ibatis/executor/statement/StatementHandler.html">StatementHandler</a></nobr>
+            <a href="../../../../org/apache/ibatis/executor/parameter/ParameterHandler.html">ParameterHandler</a>
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#newStatementHandler(org.apache.ibatis.executor.Executor, org.apache.ibatis.mapping.MappedStatement, java.lang.Object, org.apache.ibatis.session.RowBounds, org.apache.ibatis.session.ResultHandler, org.apache.ibatis.mapping.BoundSql)">newStatementHandler</a></span>(<a href="../../../../org/apache/ibatis/executor/Executor.html">Executor</a> executor, <a href="../../../../org/apache/ibatis/mapping/MappedStatement.html">MappedStatement</a> mappedStatement, Object parameterObject, <a href="../../../../org/apache/ibatis/session/RowBounds.html">RowBounds</a> rowBounds, <a href="../../../../org/apache/ibatis/session/ResultHandler.html">ResultHandler</a> resultHandler, <a href="../../../../org/apache/ibatis/mapping/BoundSql.html">BoundSql</a> boundSql)</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#newParameterHandler(org.apache.ibatis.mapping.MappedStatement, java.lang.Object, org.apache.ibatis.mapping.BoundSql)">newParameterHandler</a></span>(<a href="../../../../org/apache/ibatis/mapping/MappedStatement.html">MappedStatement</a> mappedStatement, Object parameterObject, <a href="../../../../org/apache/ibatis/mapping/BoundSql.html">BoundSql</a> boundSql)
         
   </td></tr>
 
 
 	 
     <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            void</nobr>
+            <a href="../../../../org/apache/ibatis/executor/resultset/ResultSetHandler.html">ResultSetHandler</a>
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#setAggressiveLazyLoading(boolean)">setAggressiveLazyLoading</a></span>(boolean aggressiveLazyLoading)</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#newResultSetHandler(org.apache.ibatis.executor.Executor, org.apache.ibatis.mapping.MappedStatement, org.apache.ibatis.session.RowBounds, org.apache.ibatis.executor.parameter.ParameterHandler, org.apache.ibatis.session.ResultHandler, org.apache.ibatis.mapping.BoundSql)">newResultSetHandler</a></span>(<a href="../../../../org/apache/ibatis/executor/Executor.html">Executor</a> executor, <a href="../../../../org/apache/ibatis/mapping/MappedStatement.html">MappedStatement</a> mappedStatement, <a href="../../../../org/apache/ibatis/session/RowBounds.html">RowBounds</a> rowBounds, <a href="../../../../org/apache/ibatis/executor/parameter/ParameterHandler.html">ParameterHandler</a> parameterHandler, <a href="../../../../org/apache/ibatis/session/ResultHandler.html">ResultHandler</a> resultHandler, <a href="../../../../org/apache/ibatis/mapping/BoundSql.html">BoundSql</a> boundSql)
         
   </td></tr>
 
 
 	 
     <tr class=" api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            void</nobr>
+            <a href="../../../../org/apache/ibatis/executor/statement/StatementHandler.html">StatementHandler</a>
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#setAutoMappingBehavior(org.apache.ibatis.session.AutoMappingBehavior)">setAutoMappingBehavior</a></span>(<a href="../../../../org/apache/ibatis/session/AutoMappingBehavior.html">AutoMappingBehavior</a> autoMappingBehavior)</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#newStatementHandler(org.apache.ibatis.executor.Executor, org.apache.ibatis.mapping.MappedStatement, java.lang.Object, org.apache.ibatis.session.RowBounds, org.apache.ibatis.session.ResultHandler, org.apache.ibatis.mapping.BoundSql)">newStatementHandler</a></span>(<a href="../../../../org/apache/ibatis/executor/Executor.html">Executor</a> executor, <a href="../../../../org/apache/ibatis/mapping/MappedStatement.html">MappedStatement</a> mappedStatement, Object parameterObject, <a href="../../../../org/apache/ibatis/session/RowBounds.html">RowBounds</a> rowBounds, <a href="../../../../org/apache/ibatis/session/ResultHandler.html">ResultHandler</a> resultHandler, <a href="../../../../org/apache/ibatis/mapping/BoundSql.html">BoundSql</a> boundSql)
         
   </td></tr>
 
 
 	 
     <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            void</nobr>
+            void
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#setCacheEnabled(boolean)">setCacheEnabled</a></span>(boolean cacheEnabled)</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#setAggressiveLazyLoading(boolean)">setAggressiveLazyLoading</a></span>(boolean aggressiveLazyLoading)
         
   </td></tr>
 
 
 	 
     <tr class=" api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            void</nobr>
+            void
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#setCallSettersOnNulls(boolean)">setCallSettersOnNulls</a></span>(boolean callSettersOnNulls)</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#setAutoMappingBehavior(org.apache.ibatis.session.AutoMappingBehavior)">setAutoMappingBehavior</a></span>(<a href="../../../../org/apache/ibatis/session/AutoMappingBehavior.html">AutoMappingBehavior</a> autoMappingBehavior)
         
   </td></tr>
 
 
 	 
     <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            void</nobr>
+            void
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#setConfigurationFactory(java.lang.Class<?>)">setConfigurationFactory</a></span>(Class&lt;?&gt; configurationFactory)</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#setCacheEnabled(boolean)">setCacheEnabled</a></span>(boolean cacheEnabled)
         
   </td></tr>
 
 
 	 
     <tr class=" api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            void</nobr>
+            void
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#setDatabaseId(java.lang.String)">setDatabaseId</a></span>(String databaseId)</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#setCallSettersOnNulls(boolean)">setCallSettersOnNulls</a></span>(boolean callSettersOnNulls)
         
   </td></tr>
 
 
 	 
     <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            void</nobr>
+            void
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#setDefaultExecutorType(org.apache.ibatis.session.ExecutorType)">setDefaultExecutorType</a></span>(<a href="../../../../org/apache/ibatis/session/ExecutorType.html">ExecutorType</a> defaultExecutorType)</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#setConfigurationFactory(java.lang.Class<?>)">setConfigurationFactory</a></span>(Class&lt;?&gt; configurationFactory)
         
   </td></tr>
 
 
 	 
     <tr class=" api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            void</nobr>
+            void
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#setDefaultScriptingLanguage(java.lang.Class<?>)">setDefaultScriptingLanguage</a></span>(Class&lt;?&gt; driver)</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#setDatabaseId(java.lang.String)">setDatabaseId</a></span>(String databaseId)
         
   </td></tr>
 
 
 	 
     <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            void</nobr>
+            void
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#setDefaultStatementTimeout(java.lang.Integer)">setDefaultStatementTimeout</a></span>(Integer defaultStatementTimeout)</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#setDefaultExecutorType(org.apache.ibatis.session.ExecutorType)">setDefaultExecutorType</a></span>(<a href="../../../../org/apache/ibatis/session/ExecutorType.html">ExecutorType</a> defaultExecutorType)
         
   </td></tr>
 
 
 	 
     <tr class=" api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            void</nobr>
+            void
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#setEnvironment(org.apache.ibatis.mapping.Environment)">setEnvironment</a></span>(<a href="../../../../org/apache/ibatis/mapping/Environment.html">Environment</a> environment)</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#setDefaultFetchSize(java.lang.Integer)">setDefaultFetchSize</a></span>(Integer defaultFetchSize)
         
   </td></tr>
 
 
 	 
     <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            void</nobr>
+            void
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#setJdbcTypeForNull(org.apache.ibatis.type.JdbcType)">setJdbcTypeForNull</a></span>(<a href="../../../../org/apache/ibatis/type/JdbcType.html">JdbcType</a> jdbcTypeForNull)</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#setDefaultScriptingLanguage(java.lang.Class<?>)">setDefaultScriptingLanguage</a></span>(Class&lt;?&gt; driver)
         
   </td></tr>
 
 
 	 
     <tr class=" api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            void</nobr>
+            void
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#setLazyLoadTriggerMethods(java.util.Set<java.lang.String>)">setLazyLoadTriggerMethods</a></span>(Set&lt;String&gt; lazyLoadTriggerMethods)</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#setDefaultStatementTimeout(java.lang.Integer)">setDefaultStatementTimeout</a></span>(Integer defaultStatementTimeout)
         
   </td></tr>
 
 
 	 
     <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            void</nobr>
+            void
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#setLazyLoadingEnabled(boolean)">setLazyLoadingEnabled</a></span>(boolean lazyLoadingEnabled)</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#setEnvironment(org.apache.ibatis.mapping.Environment)">setEnvironment</a></span>(<a href="../../../../org/apache/ibatis/mapping/Environment.html">Environment</a> environment)
         
   </td></tr>
 
 
 	 
     <tr class=" api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            void</nobr>
+            void
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#setLocalCacheScope(org.apache.ibatis.session.LocalCacheScope)">setLocalCacheScope</a></span>(<a href="../../../../org/apache/ibatis/session/LocalCacheScope.html">LocalCacheScope</a> localCacheScope)</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#setJdbcTypeForNull(org.apache.ibatis.type.JdbcType)">setJdbcTypeForNull</a></span>(<a href="../../../../org/apache/ibatis/type/JdbcType.html">JdbcType</a> jdbcTypeForNull)
         
   </td></tr>
 
 
 	 
     <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            void</nobr>
+            void
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#setLogImpl(java.lang.Class<?>)">setLogImpl</a></span>(Class&lt;?&gt; logImpl)</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#setLazyLoadTriggerMethods(java.util.Set<java.lang.String>)">setLazyLoadTriggerMethods</a></span>(Set&lt;String&gt; lazyLoadTriggerMethods)
         
   </td></tr>
 
 
 	 
     <tr class=" api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            void</nobr>
+            void
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#setLogPrefix(java.lang.String)">setLogPrefix</a></span>(String logPrefix)</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#setLazyLoadingEnabled(boolean)">setLazyLoadingEnabled</a></span>(boolean lazyLoadingEnabled)
         
   </td></tr>
 
 
 	 
     <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            void</nobr>
+            void
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#setMapUnderscoreToCamelCase(boolean)">setMapUnderscoreToCamelCase</a></span>(boolean mapUnderscoreToCamelCase)</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#setLocalCacheScope(org.apache.ibatis.session.LocalCacheScope)">setLocalCacheScope</a></span>(<a href="../../../../org/apache/ibatis/session/LocalCacheScope.html">LocalCacheScope</a> localCacheScope)
         
   </td></tr>
 
 
 	 
     <tr class=" api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            void</nobr>
+            void
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#setMultipleResultSetsEnabled(boolean)">setMultipleResultSetsEnabled</a></span>(boolean multipleResultSetsEnabled)</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#setLogImpl(java.lang.Class<?>)">setLogImpl</a></span>(Class&lt;?&gt; logImpl)
         
   </td></tr>
 
 
 	 
     <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            void</nobr>
+            void
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#setObjectFactory(org.apache.ibatis.reflection.factory.ObjectFactory)">setObjectFactory</a></span>(<a href="../../../../org/apache/ibatis/reflection/factory/ObjectFactory.html">ObjectFactory</a> objectFactory)</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#setLogPrefix(java.lang.String)">setLogPrefix</a></span>(String logPrefix)
         
   </td></tr>
 
 
 	 
     <tr class=" api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            void</nobr>
+            void
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#setObjectWrapperFactory(org.apache.ibatis.reflection.wrapper.ObjectWrapperFactory)">setObjectWrapperFactory</a></span>(<a href="../../../../org/apache/ibatis/reflection/wrapper/ObjectWrapperFactory.html">ObjectWrapperFactory</a> objectWrapperFactory)</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#setMapUnderscoreToCamelCase(boolean)">setMapUnderscoreToCamelCase</a></span>(boolean mapUnderscoreToCamelCase)
         
   </td></tr>
 
 
 	 
     <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            void</nobr>
+            void
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#setProxyFactory(org.apache.ibatis.executor.loader.ProxyFactory)">setProxyFactory</a></span>(<a href="../../../../org/apache/ibatis/executor/loader/ProxyFactory.html">ProxyFactory</a> proxyFactory)</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#setMultipleResultSetsEnabled(boolean)">setMultipleResultSetsEnabled</a></span>(boolean multipleResultSetsEnabled)
         
   </td></tr>
 
 
 	 
     <tr class=" api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            void</nobr>
+            void
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#setSafeResultHandlerEnabled(boolean)">setSafeResultHandlerEnabled</a></span>(boolean safeResultHandlerEnabled)</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#setObjectFactory(org.apache.ibatis.reflection.factory.ObjectFactory)">setObjectFactory</a></span>(<a href="../../../../org/apache/ibatis/reflection/factory/ObjectFactory.html">ObjectFactory</a> objectFactory)
         
   </td></tr>
 
 
 	 
     <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            void</nobr>
+            void
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#setSafeRowBoundsEnabled(boolean)">setSafeRowBoundsEnabled</a></span>(boolean safeRowBoundsEnabled)</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#setObjectWrapperFactory(org.apache.ibatis.reflection.wrapper.ObjectWrapperFactory)">setObjectWrapperFactory</a></span>(<a href="../../../../org/apache/ibatis/reflection/wrapper/ObjectWrapperFactory.html">ObjectWrapperFactory</a> objectWrapperFactory)
         
   </td></tr>
 
 
 	 
     <tr class=" api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            void</nobr>
+            void
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#setUseColumnLabel(boolean)">setUseColumnLabel</a></span>(boolean useColumnLabel)</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#setProxyFactory(org.apache.ibatis.executor.loader.ProxyFactory)">setProxyFactory</a></span>(<a href="../../../../org/apache/ibatis/executor/loader/ProxyFactory.html">ProxyFactory</a> proxyFactory)
         
   </td></tr>
 
 
 	 
     <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            void</nobr>
+            void
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#setUseGeneratedKeys(boolean)">setUseGeneratedKeys</a></span>(boolean useGeneratedKeys)</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#setReflectorFactory(org.apache.ibatis.reflection.ReflectorFactory)">setReflectorFactory</a></span>(<a href="../../../../org/apache/ibatis/reflection/ReflectorFactory.html">ReflectorFactory</a> reflectorFactory)
         
   </td></tr>
 
 
 	 
     <tr class=" api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            void</nobr>
+            void
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#setVariables(java.util.Properties)">setVariables</a></span>(Properties variables)</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#setSafeResultHandlerEnabled(boolean)">setSafeResultHandlerEnabled</a></span>(boolean safeResultHandlerEnabled)
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#setSafeRowBoundsEnabled(boolean)">setSafeRowBoundsEnabled</a></span>(boolean safeRowBoundsEnabled)
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#setUseColumnLabel(boolean)">setUseColumnLabel</a></span>(boolean useColumnLabel)
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#setUseGeneratedKeys(boolean)">setUseGeneratedKeys</a></span>(boolean useGeneratedKeys)
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#setVariables(java.util.Properties)">setVariables</a></span>(Properties variables)
         
   </td></tr>
 
@@ -2760,64 +2850,64 @@ Summary:
 
 	 
     <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            void</nobr>
+            void
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#buildAllStatements()">buildAllStatements</a></span>()</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#buildAllStatements()">buildAllStatements</a></span>()
         
   </td></tr>
 
 
 	 
     <tr class=" api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            void</nobr>
+            void
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#checkGloballyForDiscriminatedNestedResultMaps(org.apache.ibatis.mapping.ResultMap)">checkGloballyForDiscriminatedNestedResultMaps</a></span>(<a href="../../../../org/apache/ibatis/mapping/ResultMap.html">ResultMap</a> rm)</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#checkGloballyForDiscriminatedNestedResultMaps(org.apache.ibatis.mapping.ResultMap)">checkGloballyForDiscriminatedNestedResultMaps</a></span>(<a href="../../../../org/apache/ibatis/mapping/ResultMap.html">ResultMap</a> rm)
         
   </td></tr>
 
 
 	 
     <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            void</nobr>
+            void
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#checkLocallyForDiscriminatedNestedResultMaps(org.apache.ibatis.mapping.ResultMap)">checkLocallyForDiscriminatedNestedResultMaps</a></span>(<a href="../../../../org/apache/ibatis/mapping/ResultMap.html">ResultMap</a> rm)</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#checkLocallyForDiscriminatedNestedResultMaps(org.apache.ibatis.mapping.ResultMap)">checkLocallyForDiscriminatedNestedResultMaps</a></span>(<a href="../../../../org/apache/ibatis/mapping/ResultMap.html">ResultMap</a> rm)
         
   </td></tr>
 
 
 	 
     <tr class=" api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            String</nobr>
+            String
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#extractNamespace(java.lang.String)">extractNamespace</a></span>(String statementId)</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#extractNamespace(java.lang.String)">extractNamespace</a></span>(String statementId)
         
   </td></tr>
 
@@ -2856,176 +2946,176 @@ From class
 
 	 
     <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            Object</nobr>
+            Object
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad">clone</span>()</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">clone</span>()
         
   </td></tr>
 
 
 	 
     <tr class=" api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            boolean</nobr>
+            boolean
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad">equals</span>(Object arg0)</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">equals</span>(Object arg0)
         
   </td></tr>
 
 
 	 
     <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            void</nobr>
+            void
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad">finalize</span>()</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">finalize</span>()
         
   </td></tr>
 
 
 	 
     <tr class=" api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             final
             
             
-            Class&lt;?&gt;</nobr>
+            Class&lt;?&gt;
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad">getClass</span>()</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">getClass</span>()
         
   </td></tr>
 
 
 	 
     <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            int</nobr>
+            int
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad">hashCode</span>()</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">hashCode</span>()
         
   </td></tr>
 
 
 	 
     <tr class=" api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             final
             
             
-            void</nobr>
+            void
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad">notify</span>()</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">notify</span>()
         
   </td></tr>
 
 
 	 
     <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             final
             
             
-            void</nobr>
+            void
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad">notifyAll</span>()</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">notifyAll</span>()
         
   </td></tr>
 
 
 	 
     <tr class=" api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             
             
             
-            String</nobr>
+            String
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad">toString</span>()</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">toString</span>()
         
   </td></tr>
 
 
 	 
     <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             final
             
             
-            void</nobr>
+            void
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad">wait</span>()</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">wait</span>()
         
   </td></tr>
 
 
 	 
     <tr class=" api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             final
             
             
-            void</nobr>
+            void
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad">wait</span>(long arg0)</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">wait</span>(long arg0, int arg1)
         
   </td></tr>
 
 
 	 
     <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             
             
             final
             
             
-            void</nobr>
+            void
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad">wait</span>(long arg0, int arg1)</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">wait</span>(long arg0)
         
   </td></tr>
 
@@ -3068,7 +3158,7 @@ From class
 
 
 
-<A NAME="aggressiveLazyLoading"></A>
+<a id="aggressiveLazyLoading"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -3098,7 +3188,7 @@ From class
 
 
 
-<A NAME="autoMappingBehavior"></A>
+<a id="autoMappingBehavior"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -3128,7 +3218,7 @@ From class
 
 
 
-<A NAME="cacheEnabled"></A>
+<a id="cacheEnabled"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -3158,7 +3248,7 @@ From class
 
 
 
-<A NAME="cacheRefMap"></A>
+<a id="cacheRefMap"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -3188,7 +3278,7 @@ From class
 
 
 
-<A NAME="caches"></A>
+<a id="caches"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -3218,7 +3308,7 @@ From class
 
 
 
-<A NAME="callSettersOnNulls"></A>
+<a id="callSettersOnNulls"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -3248,7 +3338,7 @@ From class
 
 
 
-<A NAME="configurationFactory"></A>
+<a id="configurationFactory"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -3284,7 +3374,7 @@ From class
 
 
 
-<A NAME="databaseId"></A>
+<a id="databaseId"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -3314,7 +3404,7 @@ From class
 
 
 
-<A NAME="defaultExecutorType"></A>
+<a id="defaultExecutorType"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -3344,7 +3434,37 @@ From class
 
 
 
-<A NAME="defaultStatementTimeout"></A>
+<a id="defaultFetchSize"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        protected 
+         
+         
+        Integer
+      </span>
+        defaultFetchSize
+    </h4>
+      <div class="api-level">
+        
+
+
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    
+    </div>
+</div>
+
+
+
+<a id="defaultStatementTimeout"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -3374,7 +3494,7 @@ From class
 
 
 
-<A NAME="environment"></A>
+<a id="environment"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -3404,7 +3524,7 @@ From class
 
 
 
-<A NAME="incompleteCacheRefs"></A>
+<a id="incompleteCacheRefs"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -3434,7 +3554,7 @@ From class
 
 
 
-<A NAME="incompleteMethods"></A>
+<a id="incompleteMethods"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -3464,7 +3584,7 @@ From class
 
 
 
-<A NAME="incompleteResultMaps"></A>
+<a id="incompleteResultMaps"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -3494,7 +3614,7 @@ From class
 
 
 
-<A NAME="incompleteStatements"></A>
+<a id="incompleteStatements"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -3524,7 +3644,7 @@ From class
 
 
 
-<A NAME="interceptorChain"></A>
+<a id="interceptorChain"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -3554,7 +3674,7 @@ From class
 
 
 
-<A NAME="jdbcTypeForNull"></A>
+<a id="jdbcTypeForNull"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -3584,7 +3704,7 @@ From class
 
 
 
-<A NAME="keyGenerators"></A>
+<a id="keyGenerators"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -3614,7 +3734,7 @@ From class
 
 
 
-<A NAME="languageRegistry"></A>
+<a id="languageRegistry"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -3644,7 +3764,7 @@ From class
 
 
 
-<A NAME="lazyLoadTriggerMethods"></A>
+<a id="lazyLoadTriggerMethods"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -3674,7 +3794,7 @@ From class
 
 
 
-<A NAME="lazyLoadingEnabled"></A>
+<a id="lazyLoadingEnabled"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -3704,7 +3824,7 @@ From class
 
 
 
-<A NAME="loadedResources"></A>
+<a id="loadedResources"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -3734,7 +3854,7 @@ From class
 
 
 
-<A NAME="localCacheScope"></A>
+<a id="localCacheScope"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -3764,7 +3884,7 @@ From class
 
 
 
-<A NAME="logImpl"></A>
+<a id="logImpl"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -3794,7 +3914,7 @@ From class
 
 
 
-<A NAME="logPrefix"></A>
+<a id="logPrefix"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -3824,7 +3944,7 @@ From class
 
 
 
-<A NAME="mapUnderscoreToCamelCase"></A>
+<a id="mapUnderscoreToCamelCase"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -3854,7 +3974,7 @@ From class
 
 
 
-<A NAME="mappedStatements"></A>
+<a id="mappedStatements"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -3884,7 +4004,7 @@ From class
 
 
 
-<A NAME="mapperRegistry"></A>
+<a id="mapperRegistry"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -3914,7 +4034,7 @@ From class
 
 
 
-<A NAME="multipleResultSetsEnabled"></A>
+<a id="multipleResultSetsEnabled"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -3944,7 +4064,7 @@ From class
 
 
 
-<A NAME="objectFactory"></A>
+<a id="objectFactory"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -3974,7 +4094,7 @@ From class
 
 
 
-<A NAME="objectWrapperFactory"></A>
+<a id="objectWrapperFactory"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -4004,7 +4124,7 @@ From class
 
 
 
-<A NAME="parameterMaps"></A>
+<a id="parameterMaps"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -4034,7 +4154,7 @@ From class
 
 
 
-<A NAME="proxyFactory"></A>
+<a id="proxyFactory"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -4064,7 +4184,37 @@ From class
 
 
 
-<A NAME="resultMaps"></A>
+<a id="reflectorFactory"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        protected 
+         
+         
+        <a href="../../../../org/apache/ibatis/reflection/ReflectorFactory.html">ReflectorFactory</a>
+      </span>
+        reflectorFactory
+    </h4>
+      <div class="api-level">
+        
+
+
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    
+    </div>
+</div>
+
+
+
+<a id="resultMaps"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -4094,7 +4244,7 @@ From class
 
 
 
-<A NAME="safeResultHandlerEnabled"></A>
+<a id="safeResultHandlerEnabled"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -4124,7 +4274,7 @@ From class
 
 
 
-<A NAME="safeRowBoundsEnabled"></A>
+<a id="safeRowBoundsEnabled"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -4154,7 +4304,7 @@ From class
 
 
 
-<A NAME="sqlFragments"></A>
+<a id="sqlFragments"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -4184,7 +4334,7 @@ From class
 
 
 
-<A NAME="typeAliasRegistry"></A>
+<a id="typeAliasRegistry"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -4214,7 +4364,7 @@ From class
 
 
 
-<A NAME="typeHandlerRegistry"></A>
+<a id="typeHandlerRegistry"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -4244,7 +4394,7 @@ From class
 
 
 
-<A NAME="useColumnLabel"></A>
+<a id="useColumnLabel"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -4274,7 +4424,7 @@ From class
 
 
 
-<A NAME="useGeneratedKeys"></A>
+<a id="useGeneratedKeys"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -4304,7 +4454,7 @@ From class
 
 
 
-<A NAME="variables"></A>
+<a id="variables"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -4343,7 +4493,7 @@ From class
 
 
 
-<A NAME="Configuration()"></A>
+<a id="Configuration(org.apache.ibatis.mapping.Environment)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -4356,7 +4506,7 @@ From class
         
       </span>
       <span class="sympad">Configuration</span>
-      <span class="normal">()</span>
+      <span class="normal">(<a href="../../../../org/apache/ibatis/mapping/Environment.html">Environment</a> environment)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -4374,7 +4524,7 @@ From class
 </div>
 
 
-<A NAME="Configuration(org.apache.ibatis.mapping.Environment)"></A>
+<a id="Configuration()"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -4387,7 +4537,7 @@ From class
         
       </span>
       <span class="sympad">Configuration</span>
-      <span class="normal">(<a href="../../../../org/apache/ibatis/mapping/Environment.html">Environment</a> environment)</span>
+      <span class="normal">()</span>
     </h4>
       <div class="api-level">
         <div>
@@ -4420,7 +4570,7 @@ From class
 
 
 
-<A NAME="addCache(org.apache.ibatis.cache.Cache)"></A>
+<a id="addCache(org.apache.ibatis.cache.Cache)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -4451,7 +4601,7 @@ From class
 </div>
 
 
-<A NAME="addCacheRef(java.lang.String, java.lang.String)"></A>
+<a id="addCacheRef(java.lang.String, java.lang.String)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -4482,7 +4632,7 @@ From class
 </div>
 
 
-<A NAME="addIncompleteCacheRef(org.apache.ibatis.builder.CacheRefResolver)"></A>
+<a id="addIncompleteCacheRef(org.apache.ibatis.builder.CacheRefResolver)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -4513,7 +4663,7 @@ From class
 </div>
 
 
-<A NAME="addIncompleteMethod(org.apache.ibatis.builder.annotation.MethodResolver)"></A>
+<a id="addIncompleteMethod(org.apache.ibatis.builder.annotation.MethodResolver)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -4544,7 +4694,7 @@ From class
 </div>
 
 
-<A NAME="addIncompleteResultMap(org.apache.ibatis.builder.ResultMapResolver)"></A>
+<a id="addIncompleteResultMap(org.apache.ibatis.builder.ResultMapResolver)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -4575,7 +4725,7 @@ From class
 </div>
 
 
-<A NAME="addIncompleteStatement(org.apache.ibatis.builder.xml.XMLStatementBuilder)"></A>
+<a id="addIncompleteStatement(org.apache.ibatis.builder.xml.XMLStatementBuilder)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -4606,7 +4756,7 @@ From class
 </div>
 
 
-<A NAME="addInterceptor(org.apache.ibatis.plugin.Interceptor)"></A>
+<a id="addInterceptor(org.apache.ibatis.plugin.Interceptor)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -4637,7 +4787,7 @@ From class
 </div>
 
 
-<A NAME="addKeyGenerator(java.lang.String, org.apache.ibatis.executor.keygen.KeyGenerator)"></A>
+<a id="addKeyGenerator(java.lang.String, org.apache.ibatis.executor.keygen.KeyGenerator)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -4668,7 +4818,7 @@ From class
 </div>
 
 
-<A NAME="addLoadedResource(java.lang.String)"></A>
+<a id="addLoadedResource(java.lang.String)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -4699,7 +4849,7 @@ From class
 </div>
 
 
-<A NAME="addMappedStatement(org.apache.ibatis.mapping.MappedStatement)"></A>
+<a id="addMappedStatement(org.apache.ibatis.mapping.MappedStatement)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -4730,7 +4880,7 @@ From class
 </div>
 
 
-<A NAME="addMapper(java.lang.Class<T>)"></A>
+<a id="addMapper(java.lang.Class<T>)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -4761,7 +4911,7 @@ From class
 </div>
 
 
-<A NAME="addMappers(java.lang.String)"></A>
+<a id="addMappers(java.lang.String)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -4792,7 +4942,7 @@ From class
 </div>
 
 
-<A NAME="addMappers(java.lang.String, java.lang.Class<?>)"></A>
+<a id="addMappers(java.lang.String, java.lang.Class<?>)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -4823,7 +4973,7 @@ From class
 </div>
 
 
-<A NAME="addParameterMap(org.apache.ibatis.mapping.ParameterMap)"></A>
+<a id="addParameterMap(org.apache.ibatis.mapping.ParameterMap)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -4854,7 +5004,7 @@ From class
 </div>
 
 
-<A NAME="addResultMap(org.apache.ibatis.mapping.ResultMap)"></A>
+<a id="addResultMap(org.apache.ibatis.mapping.ResultMap)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -4885,7 +5035,7 @@ From class
 </div>
 
 
-<A NAME="getAutoMappingBehavior()"></A>
+<a id="getAutoMappingBehavior()"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -4916,7 +5066,7 @@ From class
 </div>
 
 
-<A NAME="getCache(java.lang.String)"></A>
+<a id="getCache(java.lang.String)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -4947,7 +5097,7 @@ From class
 </div>
 
 
-<A NAME="getCacheNames()"></A>
+<a id="getCacheNames()"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -4978,7 +5128,7 @@ From class
 </div>
 
 
-<A NAME="getCaches()"></A>
+<a id="getCaches()"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -5009,7 +5159,7 @@ From class
 </div>
 
 
-<A NAME="getConfigurationFactory()"></A>
+<a id="getConfigurationFactory()"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -5040,7 +5190,7 @@ From class
 </div>
 
 
-<A NAME="getDatabaseId()"></A>
+<a id="getDatabaseId()"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -5071,7 +5221,7 @@ From class
 </div>
 
 
-<A NAME="getDefaultExecutorType()"></A>
+<a id="getDefaultExecutorType()"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -5102,7 +5252,38 @@ From class
 </div>
 
 
-<A NAME="getDefaultScriptingLanuageInstance()"></A>
+<a id="getDefaultFetchSize()"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        Integer
+      </span>
+      <span class="sympad">getDefaultFetchSize</span>
+      <span class="normal">()</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    </div>
+</div>
+
+
+<a id="getDefaultScriptingLanuageInstance()"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -5133,7 +5314,7 @@ From class
 </div>
 
 
-<A NAME="getDefaultStatementTimeout()"></A>
+<a id="getDefaultStatementTimeout()"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -5164,7 +5345,7 @@ From class
 </div>
 
 
-<A NAME="getEnvironment()"></A>
+<a id="getEnvironment()"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -5195,7 +5376,7 @@ From class
 </div>
 
 
-<A NAME="getIncompleteCacheRefs()"></A>
+<a id="getIncompleteCacheRefs()"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -5226,7 +5407,7 @@ From class
 </div>
 
 
-<A NAME="getIncompleteMethods()"></A>
+<a id="getIncompleteMethods()"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -5257,7 +5438,7 @@ From class
 </div>
 
 
-<A NAME="getIncompleteResultMaps()"></A>
+<a id="getIncompleteResultMaps()"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -5288,7 +5469,7 @@ From class
 </div>
 
 
-<A NAME="getIncompleteStatements()"></A>
+<a id="getIncompleteStatements()"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -5319,7 +5500,7 @@ From class
 </div>
 
 
-<A NAME="getInterceptors()"></A>
+<a id="getInterceptors()"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -5350,7 +5531,7 @@ From class
 </div>
 
 
-<A NAME="getJdbcTypeForNull()"></A>
+<a id="getJdbcTypeForNull()"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -5381,7 +5562,7 @@ From class
 </div>
 
 
-<A NAME="getKeyGenerator(java.lang.String)"></A>
+<a id="getKeyGenerator(java.lang.String)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -5412,7 +5593,7 @@ From class
 </div>
 
 
-<A NAME="getKeyGeneratorNames()"></A>
+<a id="getKeyGeneratorNames()"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -5443,7 +5624,7 @@ From class
 </div>
 
 
-<A NAME="getKeyGenerators()"></A>
+<a id="getKeyGenerators()"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -5474,7 +5655,7 @@ From class
 </div>
 
 
-<A NAME="getLanguageRegistry()"></A>
+<a id="getLanguageRegistry()"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -5505,7 +5686,7 @@ From class
 </div>
 
 
-<A NAME="getLazyLoadTriggerMethods()"></A>
+<a id="getLazyLoadTriggerMethods()"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -5536,7 +5717,7 @@ From class
 </div>
 
 
-<A NAME="getLocalCacheScope()"></A>
+<a id="getLocalCacheScope()"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -5567,7 +5748,7 @@ From class
 </div>
 
 
-<A NAME="getLogImpl()"></A>
+<a id="getLogImpl()"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -5598,7 +5779,7 @@ From class
 </div>
 
 
-<A NAME="getLogPrefix()"></A>
+<a id="getLogPrefix()"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -5629,7 +5810,7 @@ From class
 </div>
 
 
-<A NAME="getMappedStatement(java.lang.String)"></A>
+<a id="getMappedStatement(java.lang.String)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -5660,7 +5841,7 @@ From class
 </div>
 
 
-<A NAME="getMappedStatement(java.lang.String, boolean)"></A>
+<a id="getMappedStatement(java.lang.String, boolean)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -5691,7 +5872,7 @@ From class
 </div>
 
 
-<A NAME="getMappedStatementNames()"></A>
+<a id="getMappedStatementNames()"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -5722,7 +5903,7 @@ From class
 </div>
 
 
-<A NAME="getMappedStatements()"></A>
+<a id="getMappedStatements()"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -5753,7 +5934,7 @@ From class
 </div>
 
 
-<A NAME="getMapper(java.lang.Class<T>, org.apache.ibatis.session.SqlSession)"></A>
+<a id="getMapper(java.lang.Class<T>, org.apache.ibatis.session.SqlSession)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -5784,7 +5965,7 @@ From class
 </div>
 
 
-<A NAME="getMapperRegistry()"></A>
+<a id="getMapperRegistry()"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -5815,7 +5996,7 @@ From class
 </div>
 
 
-<A NAME="getObjectFactory()"></A>
+<a id="getObjectFactory()"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -5846,7 +6027,7 @@ From class
 </div>
 
 
-<A NAME="getObjectWrapperFactory()"></A>
+<a id="getObjectWrapperFactory()"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -5877,7 +6058,7 @@ From class
 </div>
 
 
-<A NAME="getParameterMap(java.lang.String)"></A>
+<a id="getParameterMap(java.lang.String)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -5908,7 +6089,7 @@ From class
 </div>
 
 
-<A NAME="getParameterMapNames()"></A>
+<a id="getParameterMapNames()"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -5939,7 +6120,7 @@ From class
 </div>
 
 
-<A NAME="getParameterMaps()"></A>
+<a id="getParameterMaps()"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -5970,7 +6151,7 @@ From class
 </div>
 
 
-<A NAME="getProxyFactory()"></A>
+<a id="getProxyFactory()"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -6001,7 +6182,38 @@ From class
 </div>
 
 
-<A NAME="getResultMap(java.lang.String)"></A>
+<a id="getReflectorFactory()"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        <a href="../../../../org/apache/ibatis/reflection/ReflectorFactory.html">ReflectorFactory</a>
+      </span>
+      <span class="sympad">getReflectorFactory</span>
+      <span class="normal">()</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    </div>
+</div>
+
+
+<a id="getResultMap(java.lang.String)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -6032,7 +6244,7 @@ From class
 </div>
 
 
-<A NAME="getResultMapNames()"></A>
+<a id="getResultMapNames()"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -6063,7 +6275,7 @@ From class
 </div>
 
 
-<A NAME="getResultMaps()"></A>
+<a id="getResultMaps()"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -6094,7 +6306,7 @@ From class
 </div>
 
 
-<A NAME="getSqlFragments()"></A>
+<a id="getSqlFragments()"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -6125,7 +6337,7 @@ From class
 </div>
 
 
-<A NAME="getTypeAliasRegistry()"></A>
+<a id="getTypeAliasRegistry()"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -6156,7 +6368,7 @@ From class
 </div>
 
 
-<A NAME="getTypeHandlerRegistry()"></A>
+<a id="getTypeHandlerRegistry()"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -6187,7 +6399,7 @@ From class
 </div>
 
 
-<A NAME="getVariables()"></A>
+<a id="getVariables()"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -6218,7 +6430,7 @@ From class
 </div>
 
 
-<A NAME="hasCache(java.lang.String)"></A>
+<a id="hasCache(java.lang.String)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -6249,7 +6461,7 @@ From class
 </div>
 
 
-<A NAME="hasKeyGenerator(java.lang.String)"></A>
+<a id="hasKeyGenerator(java.lang.String)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -6280,7 +6492,7 @@ From class
 </div>
 
 
-<A NAME="hasMapper(java.lang.Class<?>)"></A>
+<a id="hasMapper(java.lang.Class<?>)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -6311,7 +6523,7 @@ From class
 </div>
 
 
-<A NAME="hasParameterMap(java.lang.String)"></A>
+<a id="hasParameterMap(java.lang.String)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -6342,7 +6554,7 @@ From class
 </div>
 
 
-<A NAME="hasResultMap(java.lang.String)"></A>
+<a id="hasResultMap(java.lang.String)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -6373,38 +6585,7 @@ From class
 </div>
 
 
-<A NAME="hasStatement(java.lang.String)"></A>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-         
-         
-        boolean
-      </span>
-      <span class="sympad">hasStatement</span>
-      <span class="normal">(String statementName)</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p></p></div>
-
-    </div>
-</div>
-
-
-<A NAME="hasStatement(java.lang.String, boolean)"></A>
+<a id="hasStatement(java.lang.String, boolean)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -6435,7 +6616,38 @@ From class
 </div>
 
 
-<A NAME="isAggressiveLazyLoading()"></A>
+<a id="hasStatement(java.lang.String)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        boolean
+      </span>
+      <span class="sympad">hasStatement</span>
+      <span class="normal">(String statementName)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    </div>
+</div>
+
+
+<a id="isAggressiveLazyLoading()"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -6466,7 +6678,7 @@ From class
 </div>
 
 
-<A NAME="isCacheEnabled()"></A>
+<a id="isCacheEnabled()"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -6497,7 +6709,7 @@ From class
 </div>
 
 
-<A NAME="isCallSettersOnNulls()"></A>
+<a id="isCallSettersOnNulls()"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -6528,7 +6740,7 @@ From class
 </div>
 
 
-<A NAME="isLazyLoadingEnabled()"></A>
+<a id="isLazyLoadingEnabled()"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -6559,7 +6771,7 @@ From class
 </div>
 
 
-<A NAME="isMapUnderscoreToCamelCase()"></A>
+<a id="isMapUnderscoreToCamelCase()"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -6590,7 +6802,7 @@ From class
 </div>
 
 
-<A NAME="isMultipleResultSetsEnabled()"></A>
+<a id="isMultipleResultSetsEnabled()"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -6621,7 +6833,7 @@ From class
 </div>
 
 
-<A NAME="isResourceLoaded(java.lang.String)"></A>
+<a id="isResourceLoaded(java.lang.String)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -6652,7 +6864,7 @@ From class
 </div>
 
 
-<A NAME="isSafeResultHandlerEnabled()"></A>
+<a id="isSafeResultHandlerEnabled()"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -6683,7 +6895,7 @@ From class
 </div>
 
 
-<A NAME="isSafeRowBoundsEnabled()"></A>
+<a id="isSafeRowBoundsEnabled()"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -6714,7 +6926,7 @@ From class
 </div>
 
 
-<A NAME="isUseColumnLabel()"></A>
+<a id="isUseColumnLabel()"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -6745,7 +6957,7 @@ From class
 </div>
 
 
-<A NAME="isUseGeneratedKeys()"></A>
+<a id="isUseGeneratedKeys()"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -6776,7 +6988,7 @@ From class
 </div>
 
 
-<A NAME="newExecutor(org.apache.ibatis.transaction.Transaction)"></A>
+<a id="newExecutor(org.apache.ibatis.transaction.Transaction)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -6807,7 +7019,7 @@ From class
 </div>
 
 
-<A NAME="newExecutor(org.apache.ibatis.transaction.Transaction, org.apache.ibatis.session.ExecutorType)"></A>
+<a id="newExecutor(org.apache.ibatis.transaction.Transaction, org.apache.ibatis.session.ExecutorType)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -6838,7 +7050,7 @@ From class
 </div>
 
 
-<A NAME="newMetaObject(java.lang.Object)"></A>
+<a id="newMetaObject(java.lang.Object)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -6869,7 +7081,7 @@ From class
 </div>
 
 
-<A NAME="newParameterHandler(org.apache.ibatis.mapping.MappedStatement, java.lang.Object, org.apache.ibatis.mapping.BoundSql)"></A>
+<a id="newParameterHandler(org.apache.ibatis.mapping.MappedStatement, java.lang.Object, org.apache.ibatis.mapping.BoundSql)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -6900,7 +7112,7 @@ From class
 </div>
 
 
-<A NAME="newResultSetHandler(org.apache.ibatis.executor.Executor, org.apache.ibatis.mapping.MappedStatement, org.apache.ibatis.session.RowBounds, org.apache.ibatis.executor.parameter.ParameterHandler, org.apache.ibatis.session.ResultHandler, org.apache.ibatis.mapping.BoundSql)"></A>
+<a id="newResultSetHandler(org.apache.ibatis.executor.Executor, org.apache.ibatis.mapping.MappedStatement, org.apache.ibatis.session.RowBounds, org.apache.ibatis.executor.parameter.ParameterHandler, org.apache.ibatis.session.ResultHandler, org.apache.ibatis.mapping.BoundSql)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -6931,7 +7143,7 @@ From class
 </div>
 
 
-<A NAME="newStatementHandler(org.apache.ibatis.executor.Executor, org.apache.ibatis.mapping.MappedStatement, java.lang.Object, org.apache.ibatis.session.RowBounds, org.apache.ibatis.session.ResultHandler, org.apache.ibatis.mapping.BoundSql)"></A>
+<a id="newStatementHandler(org.apache.ibatis.executor.Executor, org.apache.ibatis.mapping.MappedStatement, java.lang.Object, org.apache.ibatis.session.RowBounds, org.apache.ibatis.session.ResultHandler, org.apache.ibatis.mapping.BoundSql)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -6962,7 +7174,7 @@ From class
 </div>
 
 
-<A NAME="setAggressiveLazyLoading(boolean)"></A>
+<a id="setAggressiveLazyLoading(boolean)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -6993,7 +7205,7 @@ From class
 </div>
 
 
-<A NAME="setAutoMappingBehavior(org.apache.ibatis.session.AutoMappingBehavior)"></A>
+<a id="setAutoMappingBehavior(org.apache.ibatis.session.AutoMappingBehavior)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -7024,7 +7236,7 @@ From class
 </div>
 
 
-<A NAME="setCacheEnabled(boolean)"></A>
+<a id="setCacheEnabled(boolean)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -7055,7 +7267,7 @@ From class
 </div>
 
 
-<A NAME="setCallSettersOnNulls(boolean)"></A>
+<a id="setCallSettersOnNulls(boolean)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -7086,7 +7298,7 @@ From class
 </div>
 
 
-<A NAME="setConfigurationFactory(java.lang.Class<?>)"></A>
+<a id="setConfigurationFactory(java.lang.Class<?>)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -7117,7 +7329,7 @@ From class
 </div>
 
 
-<A NAME="setDatabaseId(java.lang.String)"></A>
+<a id="setDatabaseId(java.lang.String)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -7148,7 +7360,7 @@ From class
 </div>
 
 
-<A NAME="setDefaultExecutorType(org.apache.ibatis.session.ExecutorType)"></A>
+<a id="setDefaultExecutorType(org.apache.ibatis.session.ExecutorType)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -7179,7 +7391,38 @@ From class
 </div>
 
 
-<A NAME="setDefaultScriptingLanguage(java.lang.Class<?>)"></A>
+<a id="setDefaultFetchSize(java.lang.Integer)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        void
+      </span>
+      <span class="sympad">setDefaultFetchSize</span>
+      <span class="normal">(Integer defaultFetchSize)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    </div>
+</div>
+
+
+<a id="setDefaultScriptingLanguage(java.lang.Class<?>)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -7210,7 +7453,7 @@ From class
 </div>
 
 
-<A NAME="setDefaultStatementTimeout(java.lang.Integer)"></A>
+<a id="setDefaultStatementTimeout(java.lang.Integer)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -7241,7 +7484,7 @@ From class
 </div>
 
 
-<A NAME="setEnvironment(org.apache.ibatis.mapping.Environment)"></A>
+<a id="setEnvironment(org.apache.ibatis.mapping.Environment)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -7272,7 +7515,7 @@ From class
 </div>
 
 
-<A NAME="setJdbcTypeForNull(org.apache.ibatis.type.JdbcType)"></A>
+<a id="setJdbcTypeForNull(org.apache.ibatis.type.JdbcType)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -7303,7 +7546,7 @@ From class
 </div>
 
 
-<A NAME="setLazyLoadTriggerMethods(java.util.Set<java.lang.String>)"></A>
+<a id="setLazyLoadTriggerMethods(java.util.Set<java.lang.String>)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -7334,7 +7577,7 @@ From class
 </div>
 
 
-<A NAME="setLazyLoadingEnabled(boolean)"></A>
+<a id="setLazyLoadingEnabled(boolean)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -7365,7 +7608,7 @@ From class
 </div>
 
 
-<A NAME="setLocalCacheScope(org.apache.ibatis.session.LocalCacheScope)"></A>
+<a id="setLocalCacheScope(org.apache.ibatis.session.LocalCacheScope)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -7396,7 +7639,7 @@ From class
 </div>
 
 
-<A NAME="setLogImpl(java.lang.Class<?>)"></A>
+<a id="setLogImpl(java.lang.Class<?>)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -7427,7 +7670,7 @@ From class
 </div>
 
 
-<A NAME="setLogPrefix(java.lang.String)"></A>
+<a id="setLogPrefix(java.lang.String)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -7458,7 +7701,7 @@ From class
 </div>
 
 
-<A NAME="setMapUnderscoreToCamelCase(boolean)"></A>
+<a id="setMapUnderscoreToCamelCase(boolean)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -7489,7 +7732,7 @@ From class
 </div>
 
 
-<A NAME="setMultipleResultSetsEnabled(boolean)"></A>
+<a id="setMultipleResultSetsEnabled(boolean)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -7520,7 +7763,7 @@ From class
 </div>
 
 
-<A NAME="setObjectFactory(org.apache.ibatis.reflection.factory.ObjectFactory)"></A>
+<a id="setObjectFactory(org.apache.ibatis.reflection.factory.ObjectFactory)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -7551,7 +7794,7 @@ From class
 </div>
 
 
-<A NAME="setObjectWrapperFactory(org.apache.ibatis.reflection.wrapper.ObjectWrapperFactory)"></A>
+<a id="setObjectWrapperFactory(org.apache.ibatis.reflection.wrapper.ObjectWrapperFactory)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -7582,7 +7825,7 @@ From class
 </div>
 
 
-<A NAME="setProxyFactory(org.apache.ibatis.executor.loader.ProxyFactory)"></A>
+<a id="setProxyFactory(org.apache.ibatis.executor.loader.ProxyFactory)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -7613,7 +7856,38 @@ From class
 </div>
 
 
-<A NAME="setSafeResultHandlerEnabled(boolean)"></A>
+<a id="setReflectorFactory(org.apache.ibatis.reflection.ReflectorFactory)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        void
+      </span>
+      <span class="sympad">setReflectorFactory</span>
+      <span class="normal">(<a href="../../../../org/apache/ibatis/reflection/ReflectorFactory.html">ReflectorFactory</a> reflectorFactory)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    </div>
+</div>
+
+
+<a id="setSafeResultHandlerEnabled(boolean)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -7644,7 +7918,7 @@ From class
 </div>
 
 
-<A NAME="setSafeRowBoundsEnabled(boolean)"></A>
+<a id="setSafeRowBoundsEnabled(boolean)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -7675,7 +7949,7 @@ From class
 </div>
 
 
-<A NAME="setUseColumnLabel(boolean)"></A>
+<a id="setUseColumnLabel(boolean)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -7706,7 +7980,7 @@ From class
 </div>
 
 
-<A NAME="setUseGeneratedKeys(boolean)"></A>
+<a id="setUseGeneratedKeys(boolean)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -7737,7 +8011,7 @@ From class
 </div>
 
 
-<A NAME="setVariables(java.util.Properties)"></A>
+<a id="setVariables(java.util.Properties)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -7777,7 +8051,7 @@ From class
 
 
 
-<A NAME="buildAllStatements()"></A>
+<a id="buildAllStatements()"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -7808,7 +8082,7 @@ From class
 </div>
 
 
-<A NAME="checkGloballyForDiscriminatedNestedResultMaps(org.apache.ibatis.mapping.ResultMap)"></A>
+<a id="checkGloballyForDiscriminatedNestedResultMaps(org.apache.ibatis.mapping.ResultMap)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -7839,7 +8113,7 @@ From class
 </div>
 
 
-<A NAME="checkLocallyForDiscriminatedNestedResultMaps(org.apache.ibatis.mapping.ResultMap)"></A>
+<a id="checkLocallyForDiscriminatedNestedResultMaps(org.apache.ibatis.mapping.ResultMap)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -7870,7 +8144,7 @@ From class
 </div>
 
 
-<A NAME="extractNamespace(java.lang.String)"></A>
+<a id="extractNamespace(java.lang.String)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -7905,7 +8179,7 @@ From class
 
 
 <!-- ========= END OF CLASS DATA ========= -->
-<A NAME="navbar_top"></A>
+<a id="navbar_top"></a>
 
 <div id="footer">
 Generated by <a href="http://code.google.com/p/doclava/">Doclava</a>.
@@ -7918,7 +8192,7 @@ Generated by <a href="http://code.google.com/p/doclava/">Doclava</a>.
 </div> <!-- end body-content --> 
 
 <script type="text/javascript">
-init(); /* initialize android-developer-docs.js */
+init(); /* initialize doclava-developer-docs.js */
 </script>
 
 </body>

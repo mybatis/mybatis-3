@@ -48,29 +48,31 @@
 
 
 
-
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+  <meta name="description" content="Javadoc API documentation for mybatis." />
+
 <link rel="shortcut icon" type="image/x-icon" href="../../../../favicon.ico" />
 <title>
 
   SqlSession
 
 
-| MyBatis
+| mybatis
 
 </title>
-<link href="../../../../../assets/android-developer-docs.css" rel="stylesheet" type="text/css" />
+<link href="../../../../../assets/doclava-developer-docs.css" rel="stylesheet" type="text/css" />
 <link href="../../../../../assets/customizations.css" rel="stylesheet" type="text/css" />
 <script src="../../../../../assets/search_autocomplete.js" type="text/javascript"></script>
 <script src="../../../../../assets/jquery-resizable.min.js" type="text/javascript"></script>
-<script src="../../../../../assets/android-developer-docs.js" type="text/javascript"></script>
+<script src="../../../../../assets/doclava-developer-docs.js" type="text/javascript"></script>
 <script src="../../../../../assets/prettify.js" type="text/javascript"></script>
 <script type="text/javascript">
   setToRoot("../../../../", "../../../../../assets/");
 </script>
-<script src="../../../../../assets/android-developer-reference.js" type="text/javascript"></script>
+<script src="../../../../../assets/doclava-developer-reference.js" type="text/javascript"></script>
 <script src="../../../../../assets/navtree_data.js" type="text/javascript"></script>
 <script src="../../../../../assets/customizations.js" type="text/javascript"></script>
 <noscript>
@@ -90,7 +92,7 @@
 <div id="header">
     <div id="headerLeft">
     
-      <span id="masthead-title">MyBatis</span>
+      <span id="masthead-title">mybatis</span>
     
     </div>
     <div id="headerRight">
@@ -136,9 +138,9 @@
         <div id="nav-panels">
           <div id="resize-packages-nav">
             <div id="packages-nav">
-              <div id="index-links"><nobr>
+              <div id="index-links">
                 <a href="../../../../packages.html"  >Package Index</a> | 
-                <a href="../../../../classes.html" >Class Index</a></nobr>
+                <a href="../../../../classes.html" >Class Index</a>
               </div>
               <ul>
                 
@@ -248,8 +250,8 @@
               
     <li><h2>Interfaces</h2>
       <ul>
-          <li class="api apilevel-"><a href="../../../../org/apache/ibatis/session/ResultContext.html">ResultContext</a></li>
-          <li class="api apilevel-"><a href="../../../../org/apache/ibatis/session/ResultHandler.html">ResultHandler</a></li>
+          <li class="api apilevel-"><a href="../../../../org/apache/ibatis/session/ResultContext.html">ResultContext</a>&lt;T&gt;</li>
+          <li class="api apilevel-"><a href="../../../../org/apache/ibatis/session/ResultHandler.html">ResultHandler</a>&lt;T&gt;</li>
           <li class="selected api apilevel-"><a href="../../../../org/apache/ibatis/session/SqlSession.html">SqlSession</a></li>
           <li class="api apilevel-"><a href="../../../../org/apache/ibatis/session/SqlSessionFactory.html">SqlSessionFactory</a></li>
       </ul>
@@ -286,9 +288,9 @@
           </div><!-- end classes -->
         </div><!-- end nav-panels -->
         <div id="nav-tree" style="display:none">
-          <div id="index-links"><nobr>
+          <div id="index-links">
             <a href="../../../../packages.html"  >Package Index</a> | 
-            <a href="../../../../classes.html" >Class Index</a></nobr>
+            <a href="../../../../classes.html" >Class Index</a>
           </div>
         </div><!-- end nav-tree -->
       </div><!-- end swapper -->
@@ -335,6 +337,7 @@
 
 
 <div class="sum-details-links">
+
 
 Summary:
 
@@ -438,7 +441,7 @@ Summary:
   <table class="jd-sumtable-expando">
         <tr class="alt-color api apilevel-" >
               <td class="jd-linkcol"><a href="../../../../org/apache/ibatis/session/defaults/DefaultSqlSession.html">DefaultSqlSession</a></td>
-              <td class="jd-descrcol" width="100%">&nbsp;</td>
+              <td class="jd-descrcol" width="100%">The default implementation for <code><a href="../../../../org/apache/ibatis/session/SqlSession.html">SqlSession</a></code>.&nbsp;</td>
           </tr>
         <tr class=" api apilevel-" >
               <td class="jd-linkcol"><a href="../../../../org/apache/ibatis/session/SqlSessionManager.html">SqlSessionManager</a></td>
@@ -516,16 +519,16 @@ Summary:
 
 	 
     <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             abstract
             
             
             
             
-            void</nobr>
+            void
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/SqlSession.html#clearCache()">clearCache</a></span>()</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/SqlSession.html#clearCache()">clearCache</a></span>()
         
         <div class="jd-descrdiv">Clears local session cache
 </div>
@@ -535,16 +538,16 @@ Summary:
 
 	 
     <tr class=" api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             abstract
             
             
             
             
-            void</nobr>
+            void
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/SqlSession.html#close()">close</a></span>()</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/SqlSession.html#close()">close</a></span>()
         
         <div class="jd-descrdiv">Closes the session
 </div>
@@ -554,16 +557,16 @@ Summary:
 
 	 
     <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             abstract
             
             
             
             
-            void</nobr>
+            void
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/SqlSession.html#commit()">commit</a></span>()</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/SqlSession.html#commit()">commit</a></span>()
         
         <div class="jd-descrdiv">Flushes batch statements and commits database connection.</div>
   
@@ -572,16 +575,16 @@ Summary:
 
 	 
     <tr class=" api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             abstract
             
             
             
             
-            void</nobr>
+            void
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/SqlSession.html#commit(boolean)">commit</a></span>(boolean force)</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/SqlSession.html#commit(boolean)">commit</a></span>(boolean force)
         
         <div class="jd-descrdiv">Flushes batch statements and commits database connection.</div>
   
@@ -590,16 +593,16 @@ Summary:
 
 	 
     <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             abstract
             
             
             
             
-            int</nobr>
+            int
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/SqlSession.html#delete(java.lang.String)">delete</a></span>(String statement)</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/SqlSession.html#delete(java.lang.String, java.lang.Object)">delete</a></span>(String statement, Object parameter)
         
         <div class="jd-descrdiv">Execute a delete statement.</div>
   
@@ -608,16 +611,16 @@ Summary:
 
 	 
     <tr class=" api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             abstract
             
             
             
             
-            int</nobr>
+            int
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/SqlSession.html#delete(java.lang.String, java.lang.Object)">delete</a></span>(String statement, Object parameter)</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/SqlSession.html#delete(java.lang.String)">delete</a></span>(String statement)
         
         <div class="jd-descrdiv">Execute a delete statement.</div>
   
@@ -626,16 +629,16 @@ Summary:
 
 	 
     <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             abstract
             
             
             
             
-            List&lt;<a href="../../../../org/apache/ibatis/executor/BatchResult.html">BatchResult</a>&gt;</nobr>
+            List&lt;<a href="../../../../org/apache/ibatis/executor/BatchResult.html">BatchResult</a>&gt;
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/SqlSession.html#flushStatements()">flushStatements</a></span>()</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/SqlSession.html#flushStatements()">flushStatements</a></span>()
         
         <div class="jd-descrdiv">Flushes batch statements.</div>
   
@@ -644,16 +647,16 @@ Summary:
 
 	 
     <tr class=" api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             abstract
             
             
             
             
-            <a href="../../../../org/apache/ibatis/session/Configuration.html">Configuration</a></nobr>
+            <a href="../../../../org/apache/ibatis/session/Configuration.html">Configuration</a>
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/SqlSession.html#getConfiguration()">getConfiguration</a></span>()</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/SqlSession.html#getConfiguration()">getConfiguration</a></span>()
         
         <div class="jd-descrdiv">Retrieves current configuration</div>
   
@@ -662,16 +665,16 @@ Summary:
 
 	 
     <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             abstract
             
             
             
             
-            Connection</nobr>
+            Connection
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/SqlSession.html#getConnection()">getConnection</a></span>()</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/SqlSession.html#getConnection()">getConnection</a></span>()
         
         <div class="jd-descrdiv">Retrieves inner database connection</div>
   
@@ -680,16 +683,16 @@ Summary:
 
 	 
     <tr class=" api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             abstract
             
             
             
             &lt;T&gt;
-            T</nobr>
+            T
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/SqlSession.html#getMapper(java.lang.Class<T>)">getMapper</a></span>(Class&lt;T&gt; type)</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/SqlSession.html#getMapper(java.lang.Class<T>)">getMapper</a></span>(Class&lt;T&gt; type)
         
         <div class="jd-descrdiv">Retrieves a mapper.</div>
   
@@ -698,16 +701,16 @@ Summary:
 
 	 
     <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             abstract
             
             
             
             
-            int</nobr>
+            int
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/SqlSession.html#insert(java.lang.String)">insert</a></span>(String statement)</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/SqlSession.html#insert(java.lang.String)">insert</a></span>(String statement)
         
         <div class="jd-descrdiv">Execute an insert statement.</div>
   
@@ -716,16 +719,16 @@ Summary:
 
 	 
     <tr class=" api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             abstract
             
             
             
             
-            int</nobr>
+            int
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/SqlSession.html#insert(java.lang.String, java.lang.Object)">insert</a></span>(String statement, Object parameter)</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/SqlSession.html#insert(java.lang.String, java.lang.Object)">insert</a></span>(String statement, Object parameter)
         
         <div class="jd-descrdiv">Execute an insert statement with the given parameter object.</div>
   
@@ -734,16 +737,16 @@ Summary:
 
 	 
     <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             abstract
             
             
             
             
-            void</nobr>
+            void
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/SqlSession.html#rollback()">rollback</a></span>()</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/SqlSession.html#rollback()">rollback</a></span>()
         
         <div class="jd-descrdiv">Discards pending batch statements and rolls database connection back.</div>
   
@@ -752,16 +755,16 @@ Summary:
 
 	 
     <tr class=" api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             abstract
             
             
             
             
-            void</nobr>
+            void
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/SqlSession.html#rollback(boolean)">rollback</a></span>(boolean force)</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/SqlSession.html#rollback(boolean)">rollback</a></span>(boolean force)
         
         <div class="jd-descrdiv">Discards pending batch statements and rolls database connection back.</div>
   
@@ -770,35 +773,16 @@ Summary:
 
 	 
     <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             abstract
             
             
             
             
-            void</nobr>
+            void
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/SqlSession.html#select(java.lang.String, java.lang.Object, org.apache.ibatis.session.ResultHandler)">select</a></span>(String statement, Object parameter, <a href="../../../../org/apache/ibatis/session/ResultHandler.html">ResultHandler</a> handler)</nobr>
-        
-        <div class="jd-descrdiv">Retrieve a single row mapped from the statement key and parameter
- using a <code>ResultHandler</code>.</div>
-  
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol"><nobr>
-            abstract
-            
-            
-            
-            
-            void</nobr>
-        </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/SqlSession.html#select(java.lang.String, java.lang.Object, org.apache.ibatis.session.RowBounds, org.apache.ibatis.session.ResultHandler)">select</a></span>(String statement, Object parameter, <a href="../../../../org/apache/ibatis/session/RowBounds.html">RowBounds</a> rowBounds, <a href="../../../../org/apache/ibatis/session/ResultHandler.html">ResultHandler</a> handler)</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/SqlSession.html#select(java.lang.String, java.lang.Object, org.apache.ibatis.session.RowBounds, org.apache.ibatis.session.ResultHandler)">select</a></span>(String statement, Object parameter, <a href="../../../../org/apache/ibatis/session/RowBounds.html">RowBounds</a> rowBounds, <a href="../../../../org/apache/ibatis/session/ResultHandler.html">ResultHandler</a> handler)
         
         <div class="jd-descrdiv">Retrieve a single row mapped from the statement key and parameter
  using a <code>ResultHandler</code> and <code>RowBounds</code></div>
@@ -807,17 +791,17 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><nobr>
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
             abstract
             
             
             
             
-            void</nobr>
+            void
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/SqlSession.html#select(java.lang.String, org.apache.ibatis.session.ResultHandler)">select</a></span>(String statement, <a href="../../../../org/apache/ibatis/session/ResultHandler.html">ResultHandler</a> handler)</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/SqlSession.html#select(java.lang.String, org.apache.ibatis.session.ResultHandler)">select</a></span>(String statement, <a href="../../../../org/apache/ibatis/session/ResultHandler.html">ResultHandler</a> handler)
         
         <div class="jd-descrdiv">Retrieve a single row mapped from the statement
  using a <code>ResultHandler</code>.</div>
@@ -826,17 +810,36 @@ Summary:
 
 
 	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            abstract
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/SqlSession.html#select(java.lang.String, java.lang.Object, org.apache.ibatis.session.ResultHandler)">select</a></span>(String statement, Object parameter, <a href="../../../../org/apache/ibatis/session/ResultHandler.html">ResultHandler</a> handler)
+        
+        <div class="jd-descrdiv">Retrieve a single row mapped from the statement key and parameter
+ using a <code>ResultHandler</code>.</div>
+  
+  </td></tr>
+
+
+	 
     <tr class=" api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             abstract
             
             
             
             &lt;E&gt;
-            List&lt;E&gt;</nobr>
+            List&lt;E&gt;
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/SqlSession.html#selectList(java.lang.String)">selectList</a></span>(String statement)</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/SqlSession.html#selectList(java.lang.String, java.lang.Object)">selectList</a></span>(String statement, Object parameter)
         
         <div class="jd-descrdiv">Retrieve a list of mapped objects from the statement key and parameter.</div>
   
@@ -845,16 +848,16 @@ Summary:
 
 	 
     <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             abstract
             
             
             
             &lt;E&gt;
-            List&lt;E&gt;</nobr>
+            List&lt;E&gt;
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/SqlSession.html#selectList(java.lang.String, java.lang.Object)">selectList</a></span>(String statement, Object parameter)</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/SqlSession.html#selectList(java.lang.String)">selectList</a></span>(String statement)
         
         <div class="jd-descrdiv">Retrieve a list of mapped objects from the statement key and parameter.</div>
   
@@ -863,16 +866,16 @@ Summary:
 
 	 
     <tr class=" api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             abstract
             
             
             
             &lt;E&gt;
-            List&lt;E&gt;</nobr>
+            List&lt;E&gt;
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/SqlSession.html#selectList(java.lang.String, java.lang.Object, org.apache.ibatis.session.RowBounds)">selectList</a></span>(String statement, Object parameter, <a href="../../../../org/apache/ibatis/session/RowBounds.html">RowBounds</a> rowBounds)</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/SqlSession.html#selectList(java.lang.String, java.lang.Object, org.apache.ibatis.session.RowBounds)">selectList</a></span>(String statement, Object parameter, <a href="../../../../org/apache/ibatis/session/RowBounds.html">RowBounds</a> rowBounds)
         
         <div class="jd-descrdiv">Retrieve a list of mapped objects from the statement key and parameter,
  within the specified row bounds.</div>
@@ -882,16 +885,16 @@ Summary:
 
 	 
     <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             abstract
             
             
             
             &lt;K,&nbsp;V&gt;
-            Map&lt;K,&nbsp;V&gt;</nobr>
+            Map&lt;K,&nbsp;V&gt;
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/SqlSession.html#selectMap(java.lang.String, java.lang.Object, java.lang.String)">selectMap</a></span>(String statement, Object parameter, String mapKey)</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/SqlSession.html#selectMap(java.lang.String, java.lang.Object, java.lang.String, org.apache.ibatis.session.RowBounds)">selectMap</a></span>(String statement, Object parameter, String mapKey, <a href="../../../../org/apache/ibatis/session/RowBounds.html">RowBounds</a> rowBounds)
         
         <div class="jd-descrdiv">The selectMap is a special case in that it is designed to convert a list
  of results into a Map based on one of the properties in the resulting
@@ -902,16 +905,16 @@ Summary:
 
 	 
     <tr class=" api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             abstract
             
             
             
             &lt;K,&nbsp;V&gt;
-            Map&lt;K,&nbsp;V&gt;</nobr>
+            Map&lt;K,&nbsp;V&gt;
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/SqlSession.html#selectMap(java.lang.String, java.lang.Object, java.lang.String, org.apache.ibatis.session.RowBounds)">selectMap</a></span>(String statement, Object parameter, String mapKey, <a href="../../../../org/apache/ibatis/session/RowBounds.html">RowBounds</a> rowBounds)</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/SqlSession.html#selectMap(java.lang.String, java.lang.Object, java.lang.String)">selectMap</a></span>(String statement, Object parameter, String mapKey)
         
         <div class="jd-descrdiv">The selectMap is a special case in that it is designed to convert a list
  of results into a Map based on one of the properties in the resulting
@@ -922,16 +925,16 @@ Summary:
 
 	 
     <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             abstract
             
             
             
             &lt;K,&nbsp;V&gt;
-            Map&lt;K,&nbsp;V&gt;</nobr>
+            Map&lt;K,&nbsp;V&gt;
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/SqlSession.html#selectMap(java.lang.String, java.lang.String)">selectMap</a></span>(String statement, String mapKey)</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/SqlSession.html#selectMap(java.lang.String, java.lang.String)">selectMap</a></span>(String statement, String mapKey)
         
         <div class="jd-descrdiv">The selectMap is a special case in that it is designed to convert a list
  of results into a Map based on one of the properties in the resulting
@@ -942,16 +945,16 @@ Summary:
 
 	 
     <tr class=" api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             abstract
             
             
             
             &lt;T&gt;
-            T</nobr>
+            T
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/SqlSession.html#selectOne(java.lang.String)">selectOne</a></span>(String statement)</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/SqlSession.html#selectOne(java.lang.String)">selectOne</a></span>(String statement)
         
         <div class="jd-descrdiv">Retrieve a single row mapped from the statement key</div>
   
@@ -960,16 +963,16 @@ Summary:
 
 	 
     <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             abstract
             
             
             
             &lt;T&gt;
-            T</nobr>
+            T
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/SqlSession.html#selectOne(java.lang.String, java.lang.Object)">selectOne</a></span>(String statement, Object parameter)</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/SqlSession.html#selectOne(java.lang.String, java.lang.Object)">selectOne</a></span>(String statement, Object parameter)
         
         <div class="jd-descrdiv">Retrieve a single row mapped from the statement key and parameter.</div>
   
@@ -978,16 +981,16 @@ Summary:
 
 	 
     <tr class=" api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             abstract
             
             
             
             
-            int</nobr>
+            int
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/SqlSession.html#update(java.lang.String)">update</a></span>(String statement)</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/SqlSession.html#update(java.lang.String, java.lang.Object)">update</a></span>(String statement, Object parameter)
         
         <div class="jd-descrdiv">Execute an update statement.</div>
   
@@ -996,16 +999,16 @@ Summary:
 
 	 
     <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             abstract
             
             
             
             
-            int</nobr>
+            int
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/SqlSession.html#update(java.lang.String, java.lang.Object)">update</a></span>(String statement, Object parameter)</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/SqlSession.html#update(java.lang.String)">update</a></span>(String statement)
         
         <div class="jd-descrdiv">Execute an update statement.</div>
   
@@ -1048,16 +1051,16 @@ From interface
 
 	 
     <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             abstract
             
             
             
             
-            void</nobr>
+            void
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad">close</span>()</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">close</span>()
         
   </td></tr>
 
@@ -1090,16 +1093,16 @@ From interface
 
 	 
     <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             abstract
             
             
             
             
-            void</nobr>
+            void
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad">close</span>()</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">close</span>()
         
   </td></tr>
 
@@ -1152,7 +1155,7 @@ From interface
 
 
 
-<A NAME="clearCache()"></A>
+<a id="clearCache()"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1184,7 +1187,7 @@ From interface
 </div>
 
 
-<A NAME="close()"></A>
+<a id="close()"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1216,7 +1219,7 @@ From interface
 </div>
 
 
-<A NAME="commit()"></A>
+<a id="commit()"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1250,7 +1253,7 @@ From interface
 </div>
 
 
-<A NAME="commit(boolean)"></A>
+<a id="commit(boolean)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1280,7 +1283,7 @@ From interface
       <h5 class="jd-tagtitle">Parameters</h5>
       <table class="jd-tagtable">
         <tr>
-          <th>force</td>
+          <th>force</th>
           <td>forces connection commit
 </td>
         </tr>
@@ -1291,52 +1294,7 @@ From interface
 </div>
 
 
-<A NAME="delete(java.lang.String)"></A>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-        abstract 
-         
-        int
-      </span>
-      <span class="sympad">delete</span>
-      <span class="normal">(String statement)</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p>Execute a delete statement. The number of rows affected will be returned.</p></div>
-  <div class="jd-tagdata">
-      <h5 class="jd-tagtitle">Parameters</h5>
-      <table class="jd-tagtable">
-        <tr>
-          <th>statement</td>
-          <td>Unique identifier matching the statement to execute.</td>
-        </tr>
-      </table>
-  </div>
-  <div class="jd-tagdata">
-      <h5 class="jd-tagtitle">Returns</h5>
-      <ul class="nolist"><li>int The number of rows affected by the delete.
-</li></ul>
-  </div>
-
-    </div>
-</div>
-
-
-<A NAME="delete(java.lang.String, java.lang.Object)"></A>
+<a id="delete(java.lang.String, java.lang.Object)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1366,11 +1324,11 @@ From interface
       <h5 class="jd-tagtitle">Parameters</h5>
       <table class="jd-tagtable">
         <tr>
-          <th>statement</td>
+          <th>statement</th>
           <td>Unique identifier matching the statement to execute.</td>
         </tr>
         <tr>
-          <th>parameter</td>
+          <th>parameter</th>
           <td>A parameter object to pass to the statement.</td>
         </tr>
       </table>
@@ -1385,7 +1343,52 @@ From interface
 </div>
 
 
-<A NAME="flushStatements()"></A>
+<a id="delete(java.lang.String)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+        abstract 
+         
+        int
+      </span>
+      <span class="sympad">delete</span>
+      <span class="normal">(String statement)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Execute a delete statement. The number of rows affected will be returned.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>statement</th>
+          <td>Unique identifier matching the statement to execute.</td>
+        </tr>
+      </table>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>int The number of rows affected by the delete.
+</li></ul>
+  </div>
+
+    </div>
+</div>
+
+
+<a id="flushStatements()"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1420,7 +1423,7 @@ From interface
 </div>
 
 
-<A NAME="getConfiguration()"></A>
+<a id="getConfiguration()"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1456,7 +1459,7 @@ From interface
 </div>
 
 
-<A NAME="getConnection()"></A>
+<a id="getConnection()"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1492,7 +1495,7 @@ From interface
 </div>
 
 
-<A NAME="getMapper(java.lang.Class<T>)"></A>
+<a id="getMapper(java.lang.Class<T>)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1522,7 +1525,7 @@ From interface
       <h5 class="jd-tagtitle">Parameters</h5>
       <table class="jd-tagtable">
         <tr>
-          <th>type</td>
+          <th>type</th>
           <td>Mapper interface class</td>
         </tr>
       </table>
@@ -1537,7 +1540,7 @@ From interface
 </div>
 
 
-<A NAME="insert(java.lang.String)"></A>
+<a id="insert(java.lang.String)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1567,7 +1570,7 @@ From interface
       <h5 class="jd-tagtitle">Parameters</h5>
       <table class="jd-tagtable">
         <tr>
-          <th>statement</td>
+          <th>statement</th>
           <td>Unique identifier matching the statement to execute.</td>
         </tr>
       </table>
@@ -1582,7 +1585,7 @@ From interface
 </div>
 
 
-<A NAME="insert(java.lang.String, java.lang.Object)"></A>
+<a id="insert(java.lang.String, java.lang.Object)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1614,11 +1617,11 @@ From interface
       <h5 class="jd-tagtitle">Parameters</h5>
       <table class="jd-tagtable">
         <tr>
-          <th>statement</td>
+          <th>statement</th>
           <td>Unique identifier matching the statement to execute.</td>
         </tr>
         <tr>
-          <th>parameter</td>
+          <th>parameter</th>
           <td>A parameter object to pass to the statement.</td>
         </tr>
       </table>
@@ -1633,7 +1636,7 @@ From interface
 </div>
 
 
-<A NAME="rollback()"></A>
+<a id="rollback()"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1667,7 +1670,7 @@ From interface
 </div>
 
 
-<A NAME="rollback(boolean)"></A>
+<a id="rollback(boolean)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1698,7 +1701,7 @@ From interface
       <h5 class="jd-tagtitle">Parameters</h5>
       <table class="jd-tagtable">
         <tr>
-          <th>force</td>
+          <th>force</th>
           <td>forces connection rollback
 </td>
         </tr>
@@ -1709,61 +1712,7 @@ From interface
 </div>
 
 
-<A NAME="select(java.lang.String, java.lang.Object, org.apache.ibatis.session.ResultHandler)"></A>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-        abstract 
-         
-        void
-      </span>
-      <span class="sympad">select</span>
-      <span class="normal">(String statement, Object parameter, <a href="../../../../org/apache/ibatis/session/ResultHandler.html">ResultHandler</a> handler)</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p>Retrieve a single row mapped from the statement key and parameter
- using a <code>ResultHandler</code>.</p></div>
-  <div class="jd-tagdata">
-      <h5 class="jd-tagtitle">Parameters</h5>
-      <table class="jd-tagtable">
-        <tr>
-          <th>statement</td>
-          <td>Unique identifier matching the statement to use.</td>
-        </tr>
-        <tr>
-          <th>parameter</td>
-          <td>A parameter object to pass to the statement.</td>
-        </tr>
-        <tr>
-          <th>handler</td>
-          <td>ResultHandler that will handle each retrieved row</td>
-        </tr>
-      </table>
-  </div>
-  <div class="jd-tagdata">
-      <h5 class="jd-tagtitle">Returns</h5>
-      <ul class="nolist"><li>Mapped object
-</li></ul>
-  </div>
-
-    </div>
-</div>
-
-
-<A NAME="select(java.lang.String, java.lang.Object, org.apache.ibatis.session.RowBounds, org.apache.ibatis.session.ResultHandler)"></A>
+<a id="select(java.lang.String, java.lang.Object, org.apache.ibatis.session.RowBounds, org.apache.ibatis.session.ResultHandler)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1794,15 +1743,15 @@ From interface
       <h5 class="jd-tagtitle">Parameters</h5>
       <table class="jd-tagtable">
         <tr>
-          <th>statement</td>
+          <th>statement</th>
           <td>Unique identifier matching the statement to use.</td>
         </tr>
         <tr>
-          <th>rowBounds</td>
+          <th>rowBounds</th>
           <td>RowBound instance to limit the query results</td>
         </tr>
         <tr>
-          <th>handler</td>
+          <th>handler</th>
           <td>ResultHandler that will handle each retrieved row</td>
         </tr>
       </table>
@@ -1817,7 +1766,7 @@ From interface
 </div>
 
 
-<A NAME="select(java.lang.String, org.apache.ibatis.session.ResultHandler)"></A>
+<a id="select(java.lang.String, org.apache.ibatis.session.ResultHandler)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1848,11 +1797,11 @@ From interface
       <h5 class="jd-tagtitle">Parameters</h5>
       <table class="jd-tagtable">
         <tr>
-          <th>statement</td>
+          <th>statement</th>
           <td>Unique identifier matching the statement to use.</td>
         </tr>
         <tr>
-          <th>handler</td>
+          <th>handler</th>
           <td>ResultHandler that will handle each retrieved row</td>
         </tr>
       </table>
@@ -1867,7 +1816,7 @@ From interface
 </div>
 
 
-<A NAME="selectList(java.lang.String)"></A>
+<a id="select(java.lang.String, java.lang.Object, org.apache.ibatis.session.ResultHandler)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1877,10 +1826,10 @@ From interface
          
         abstract 
          
-        List&lt;E&gt;
+        void
       </span>
-      <span class="sympad">selectList</span>
-      <span class="normal">(String statement)</span>
+      <span class="sympad">select</span>
+      <span class="normal">(String statement, Object parameter, <a href="../../../../org/apache/ibatis/session/ResultHandler.html">ResultHandler</a> handler)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -1892,19 +1841,28 @@ From interface
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Retrieve a list of mapped objects from the statement key and parameter.</p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Retrieve a single row mapped from the statement key and parameter
+ using a <code>ResultHandler</code>.</p></div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Parameters</h5>
       <table class="jd-tagtable">
         <tr>
-          <th>statement</td>
+          <th>statement</th>
           <td>Unique identifier matching the statement to use.</td>
+        </tr>
+        <tr>
+          <th>parameter</th>
+          <td>A parameter object to pass to the statement.</td>
+        </tr>
+        <tr>
+          <th>handler</th>
+          <td>ResultHandler that will handle each retrieved row</td>
         </tr>
       </table>
   </div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Returns</h5>
-      <ul class="nolist"><li>List of mapped object
+      <ul class="nolist"><li>Mapped object
 </li></ul>
   </div>
 
@@ -1912,7 +1870,7 @@ From interface
 </div>
 
 
-<A NAME="selectList(java.lang.String, java.lang.Object)"></A>
+<a id="selectList(java.lang.String, java.lang.Object)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1942,11 +1900,11 @@ From interface
       <h5 class="jd-tagtitle">Parameters</h5>
       <table class="jd-tagtable">
         <tr>
-          <th>statement</td>
+          <th>statement</th>
           <td>Unique identifier matching the statement to use.</td>
         </tr>
         <tr>
-          <th>parameter</td>
+          <th>parameter</th>
           <td>A parameter object to pass to the statement.</td>
         </tr>
       </table>
@@ -1961,7 +1919,52 @@ From interface
 </div>
 
 
-<A NAME="selectList(java.lang.String, java.lang.Object, org.apache.ibatis.session.RowBounds)"></A>
+<a id="selectList(java.lang.String)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+        abstract 
+         
+        List&lt;E&gt;
+      </span>
+      <span class="sympad">selectList</span>
+      <span class="normal">(String statement)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Retrieve a list of mapped objects from the statement key and parameter.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>statement</th>
+          <td>Unique identifier matching the statement to use.</td>
+        </tr>
+      </table>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>List of mapped object
+</li></ul>
+  </div>
+
+    </div>
+</div>
+
+
+<a id="selectList(java.lang.String, java.lang.Object, org.apache.ibatis.session.RowBounds)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1992,15 +1995,15 @@ From interface
       <h5 class="jd-tagtitle">Parameters</h5>
       <table class="jd-tagtable">
         <tr>
-          <th>statement</td>
+          <th>statement</th>
           <td>Unique identifier matching the statement to use.</td>
         </tr>
         <tr>
-          <th>parameter</td>
+          <th>parameter</th>
           <td>A parameter object to pass to the statement.</td>
         </tr>
         <tr>
-          <th>rowBounds</td>
+          <th>rowBounds</th>
           <td>Bounds to limit object retrieval</td>
         </tr>
       </table>
@@ -2015,62 +2018,7 @@ From interface
 </div>
 
 
-<A NAME="selectMap(java.lang.String, java.lang.Object, java.lang.String)"></A>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-        abstract 
-         
-        Map&lt;K,&nbsp;V&gt;
-      </span>
-      <span class="sympad">selectMap</span>
-      <span class="normal">(String statement, Object parameter, String mapKey)</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p>The selectMap is a special case in that it is designed to convert a list
- of results into a Map based on one of the properties in the resulting
- objects.</p></div>
-  <div class="jd-tagdata">
-      <h5 class="jd-tagtitle">Parameters</h5>
-      <table class="jd-tagtable">
-        <tr>
-          <th>statement</td>
-          <td>Unique identifier matching the statement to use.</td>
-        </tr>
-        <tr>
-          <th>parameter</td>
-          <td>A parameter object to pass to the statement.</td>
-        </tr>
-        <tr>
-          <th>mapKey</td>
-          <td>The property to use as key for each value in the list.</td>
-        </tr>
-      </table>
-  </div>
-  <div class="jd-tagdata">
-      <h5 class="jd-tagtitle">Returns</h5>
-      <ul class="nolist"><li>Map containing key pair data.
-</li></ul>
-  </div>
-
-    </div>
-</div>
-
-
-<A NAME="selectMap(java.lang.String, java.lang.Object, java.lang.String, org.apache.ibatis.session.RowBounds)"></A>
+<a id="selectMap(java.lang.String, java.lang.Object, java.lang.String, org.apache.ibatis.session.RowBounds)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -2102,19 +2050,19 @@ From interface
       <h5 class="jd-tagtitle">Parameters</h5>
       <table class="jd-tagtable">
         <tr>
-          <th>statement</td>
+          <th>statement</th>
           <td>Unique identifier matching the statement to use.</td>
         </tr>
         <tr>
-          <th>parameter</td>
+          <th>parameter</th>
           <td>A parameter object to pass to the statement.</td>
         </tr>
         <tr>
-          <th>mapKey</td>
+          <th>mapKey</th>
           <td>The property to use as key for each value in the list.</td>
         </tr>
         <tr>
-          <th>rowBounds</td>
+          <th>rowBounds</th>
           <td>Bounds to limit object retrieval</td>
         </tr>
       </table>
@@ -2129,7 +2077,62 @@ From interface
 </div>
 
 
-<A NAME="selectMap(java.lang.String, java.lang.String)"></A>
+<a id="selectMap(java.lang.String, java.lang.Object, java.lang.String)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+        abstract 
+         
+        Map&lt;K,&nbsp;V&gt;
+      </span>
+      <span class="sympad">selectMap</span>
+      <span class="normal">(String statement, Object parameter, String mapKey)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>The selectMap is a special case in that it is designed to convert a list
+ of results into a Map based on one of the properties in the resulting
+ objects.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>statement</th>
+          <td>Unique identifier matching the statement to use.</td>
+        </tr>
+        <tr>
+          <th>parameter</th>
+          <td>A parameter object to pass to the statement.</td>
+        </tr>
+        <tr>
+          <th>mapKey</th>
+          <td>The property to use as key for each value in the list.</td>
+        </tr>
+      </table>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>Map containing key pair data.
+</li></ul>
+  </div>
+
+    </div>
+</div>
+
+
+<a id="selectMap(java.lang.String, java.lang.String)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -2162,11 +2165,11 @@ From interface
       <h5 class="jd-tagtitle">Parameters</h5>
       <table class="jd-tagtable">
         <tr>
-          <th>statement</td>
+          <th>statement</th>
           <td>Unique identifier matching the statement to use.</td>
         </tr>
         <tr>
-          <th>mapKey</td>
+          <th>mapKey</th>
           <td>The property to use as key for each value in the list.</td>
         </tr>
       </table>
@@ -2181,7 +2184,7 @@ From interface
 </div>
 
 
-<A NAME="selectOne(java.lang.String)"></A>
+<a id="selectOne(java.lang.String)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -2217,7 +2220,7 @@ From interface
 </div>
 
 
-<A NAME="selectOne(java.lang.String, java.lang.Object)"></A>
+<a id="selectOne(java.lang.String, java.lang.Object)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -2247,11 +2250,11 @@ From interface
       <h5 class="jd-tagtitle">Parameters</h5>
       <table class="jd-tagtable">
         <tr>
-          <th>statement</td>
+          <th>statement</th>
           <td>Unique identifier matching the statement to use.</td>
         </tr>
         <tr>
-          <th>parameter</td>
+          <th>parameter</th>
           <td>A parameter object to pass to the statement.</td>
         </tr>
       </table>
@@ -2266,52 +2269,7 @@ From interface
 </div>
 
 
-<A NAME="update(java.lang.String)"></A>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-        abstract 
-         
-        int
-      </span>
-      <span class="sympad">update</span>
-      <span class="normal">(String statement)</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p>Execute an update statement. The number of rows affected will be returned.</p></div>
-  <div class="jd-tagdata">
-      <h5 class="jd-tagtitle">Parameters</h5>
-      <table class="jd-tagtable">
-        <tr>
-          <th>statement</td>
-          <td>Unique identifier matching the statement to execute.</td>
-        </tr>
-      </table>
-  </div>
-  <div class="jd-tagdata">
-      <h5 class="jd-tagtitle">Returns</h5>
-      <ul class="nolist"><li>int The number of rows affected by the update.
-</li></ul>
-  </div>
-
-    </div>
-</div>
-
-
-<A NAME="update(java.lang.String, java.lang.Object)"></A>
+<a id="update(java.lang.String, java.lang.Object)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -2341,12 +2299,57 @@ From interface
       <h5 class="jd-tagtitle">Parameters</h5>
       <table class="jd-tagtable">
         <tr>
-          <th>statement</td>
+          <th>statement</th>
           <td>Unique identifier matching the statement to execute.</td>
         </tr>
         <tr>
-          <th>parameter</td>
+          <th>parameter</th>
           <td>A parameter object to pass to the statement.</td>
+        </tr>
+      </table>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>int The number of rows affected by the update.
+</li></ul>
+  </div>
+
+    </div>
+</div>
+
+
+<a id="update(java.lang.String)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+        abstract 
+         
+        int
+      </span>
+      <span class="sympad">update</span>
+      <span class="normal">(String statement)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Execute an update statement. The number of rows affected will be returned.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>statement</th>
+          <td>Unique identifier matching the statement to execute.</td>
         </tr>
       </table>
   </div>
@@ -2368,7 +2371,7 @@ From interface
 
 
 <!-- ========= END OF CLASS DATA ========= -->
-<A NAME="navbar_top"></A>
+<a id="navbar_top"></a>
 
 <div id="footer">
 Generated by <a href="http://code.google.com/p/doclava/">Doclava</a>.
@@ -2381,7 +2384,7 @@ Generated by <a href="http://code.google.com/p/doclava/">Doclava</a>.
 </div> <!-- end body-content --> 
 
 <script type="text/javascript">
-init(); /* initialize android-developer-docs.js */
+init(); /* initialize doclava-developer-docs.js */
 </script>
 
 </body>

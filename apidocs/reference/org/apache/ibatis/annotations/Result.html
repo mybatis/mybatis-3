@@ -48,29 +48,31 @@
 
 
 
-
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+  <meta name="description" content="Javadoc API documentation for mybatis." />
+
 <link rel="shortcut icon" type="image/x-icon" href="../../../../favicon.ico" />
 <title>
 
   Result
 
 
-| MyBatis
+| mybatis
 
 </title>
-<link href="../../../../../assets/android-developer-docs.css" rel="stylesheet" type="text/css" />
+<link href="../../../../../assets/doclava-developer-docs.css" rel="stylesheet" type="text/css" />
 <link href="../../../../../assets/customizations.css" rel="stylesheet" type="text/css" />
 <script src="../../../../../assets/search_autocomplete.js" type="text/javascript"></script>
 <script src="../../../../../assets/jquery-resizable.min.js" type="text/javascript"></script>
-<script src="../../../../../assets/android-developer-docs.js" type="text/javascript"></script>
+<script src="../../../../../assets/doclava-developer-docs.js" type="text/javascript"></script>
 <script src="../../../../../assets/prettify.js" type="text/javascript"></script>
 <script type="text/javascript">
   setToRoot("../../../../", "../../../../../assets/");
 </script>
-<script src="../../../../../assets/android-developer-reference.js" type="text/javascript"></script>
+<script src="../../../../../assets/doclava-developer-reference.js" type="text/javascript"></script>
 <script src="../../../../../assets/navtree_data.js" type="text/javascript"></script>
 <script src="../../../../../assets/customizations.js" type="text/javascript"></script>
 <noscript>
@@ -90,7 +92,7 @@
 <div id="header">
     <div id="headerLeft">
     
-      <span id="masthead-title">MyBatis</span>
+      <span id="masthead-title">mybatis</span>
     
     </div>
     <div id="headerRight">
@@ -136,9 +138,9 @@
         <div id="nav-panels">
           <div id="resize-packages-nav">
             <div id="packages-nav">
-              <div id="index-links"><nobr>
+              <div id="index-links">
                 <a href="../../../../packages.html"  >Package Index</a> | 
-                <a href="../../../../classes.html" >Class Index</a></nobr>
+                <a href="../../../../classes.html" >Class Index</a>
               </div>
               <ul>
                 
@@ -257,6 +259,7 @@
           <li class="api apilevel-"><a href="../../../../org/apache/ibatis/annotations/ConstructorArgs.html">ConstructorArgs</a></li>
           <li class="api apilevel-"><a href="../../../../org/apache/ibatis/annotations/Delete.html">Delete</a></li>
           <li class="api apilevel-"><a href="../../../../org/apache/ibatis/annotations/DeleteProvider.html">DeleteProvider</a></li>
+          <li class="api apilevel-"><a href="../../../../org/apache/ibatis/annotations/Flush.html">Flush</a></li>
           <li class="api apilevel-"><a href="../../../../org/apache/ibatis/annotations/Insert.html">Insert</a></li>
           <li class="api apilevel-"><a href="../../../../org/apache/ibatis/annotations/InsertProvider.html">InsertProvider</a></li>
           <li class="api apilevel-"><a href="../../../../org/apache/ibatis/annotations/Lang.html">Lang</a></li>
@@ -267,8 +270,8 @@
           <li class="api apilevel-"><a href="../../../../org/apache/ibatis/annotations/Param.html">Param</a></li>
           <li class="selected api apilevel-"><a href="../../../../org/apache/ibatis/annotations/Result.html">Result</a></li>
           <li class="api apilevel-"><a href="../../../../org/apache/ibatis/annotations/ResultMap.html">ResultMap</a></li>
-          <li class="api apilevel-"><a href="../../../../org/apache/ibatis/annotations/ResultType.html">ResultType</a></li>
           <li class="api apilevel-"><a href="../../../../org/apache/ibatis/annotations/Results.html">Results</a></li>
+          <li class="api apilevel-"><a href="../../../../org/apache/ibatis/annotations/ResultType.html">ResultType</a></li>
           <li class="api apilevel-"><a href="../../../../org/apache/ibatis/annotations/Select.html">Select</a></li>
           <li class="api apilevel-"><a href="../../../../org/apache/ibatis/annotations/SelectKey.html">SelectKey</a></li>
           <li class="api apilevel-"><a href="../../../../org/apache/ibatis/annotations/SelectProvider.html">SelectProvider</a></li>
@@ -284,9 +287,9 @@
           </div><!-- end classes -->
         </div><!-- end nav-panels -->
         <div id="nav-tree" style="display:none">
-          <div id="index-links"><nobr>
+          <div id="index-links">
             <a href="../../../../packages.html"  >Package Index</a> | 
-            <a href="../../../../classes.html" >Class Index</a></nobr>
+            <a href="../../../../classes.html" >Class Index</a>
           </div>
         </div><!-- end nav-tree -->
       </div><!-- end swapper -->
@@ -326,6 +329,7 @@
 
 
 <div class="sum-details-links">
+
 
 Summary:
 
@@ -488,64 +492,64 @@ From interface
 
 	 
     <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             abstract
             
             
             
             
-            Class&lt;?&nbsp;extends&nbsp;Annotation&gt;</nobr>
+            Class&lt;?&nbsp;extends&nbsp;Annotation&gt;
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad">annotationType</span>()</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">annotationType</span>()
         
   </td></tr>
 
 
 	 
     <tr class=" api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             abstract
             
             
             
             
-            boolean</nobr>
+            boolean
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad">equals</span>(Object arg0)</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">equals</span>(Object arg0)
         
   </td></tr>
 
 
 	 
     <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             abstract
             
             
             
             
-            int</nobr>
+            int
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad">hashCode</span>()</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">hashCode</span>()
         
   </td></tr>
 
 
 	 
     <tr class=" api apilevel-" >
-        <td class="jd-typecol"><nobr>
+        <td class="jd-typecol">
             abstract
             
             
             
             
-            String</nobr>
+            String
         </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad">toString</span>()</nobr>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">toString</span>()
         
   </td></tr>
 
@@ -601,7 +605,7 @@ From interface
 
 
 <!-- ========= END OF CLASS DATA ========= -->
-<A NAME="navbar_top"></A>
+<a id="navbar_top"></a>
 
 <div id="footer">
 Generated by <a href="http://code.google.com/p/doclava/">Doclava</a>.
@@ -614,7 +618,7 @@ Generated by <a href="http://code.google.com/p/doclava/">Doclava</a>.
 </div> <!-- end body-content --> 
 
 <script type="text/javascript">
-init(); /* initialize android-developer-docs.js */
+init(); /* initialize doclava-developer-docs.js */
 </script>
 
 </body>

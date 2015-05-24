@@ -1,4 +1,3 @@
-org.apache.ibatis.annotations
 org.apache.ibatis.binding
 org.apache.ibatis.builder
 org.apache.ibatis.builder.annotation

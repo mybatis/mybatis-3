@@ -78,6 +78,17 @@
 <implements name="java.lang.annotation.Annotation">
 </implements>
 </class>
+<class name="Flush"
+ extends="java.lang.Object"
+ abstract="true"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<implements name="java.lang.annotation.Annotation">
+</implements>
+</class>
 <class name="Insert"
  extends="java.lang.Object"
  abstract="true"
@@ -385,8 +396,6 @@
 </parameter>
 <parameter name="method" type="java.lang.reflect.Method">
 </parameter>
-<exception name="BindingException" type="org.apache.ibatis.binding.BindingException">
-</exception>
 </constructor>
 <method name="convertArgsToSqlCommandParam"
  return="java.lang.Object"
@@ -543,8 +552,6 @@
 </parameter>
 <parameter name="method" type="java.lang.reflect.Method">
 </parameter>
-<exception name="BindingException" type="org.apache.ibatis.binding.BindingException">
-</exception>
 </constructor>
 <method name="getName"
  return="java.lang.String"
@@ -577,8 +584,6 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<implements name="java.io.Serializable">
-</implements>
 <constructor name="MapperProxy"
  type="org.apache.ibatis.binding.MapperProxy"
  static="false"
@@ -723,6 +728,8 @@
 >
 <parameter name="packageName" type="java.lang.String">
 </parameter>
+<parameter name="superType" type="java.lang.Class&lt;?&gt;">
+</parameter>
 </method>
 <method name="addMappers"
  return="void"
@@ -735,8 +742,6 @@
  visibility="public"
 >
 <parameter name="packageName" type="java.lang.String">
-</parameter>
-<parameter name="superType" type="java.lang.Class&lt;?&gt;">
 </parameter>
 </method>
 <method name="getMapper"
@@ -854,6 +859,21 @@
 <parameter name="defaultValue" type="java.lang.Integer">
 </parameter>
 </method>
+<method name="parseExpression"
+ return="java.util.regex.Pattern"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="protected"
+>
+<parameter name="regex" type="java.lang.String">
+</parameter>
+<parameter name="defaultValue" type="java.lang.String">
+</parameter>
+</method>
 <method name="resolveAlias"
  return="java.lang.Class&lt;?&gt;"
  abstract="false"
@@ -931,7 +951,7 @@
 >
 <parameter name="javaType" type="java.lang.Class&lt;?&gt;">
 </parameter>
-<parameter name="typeHandlerType" type="java.lang.Class&lt;? extends org.apache.ibatis.type.TypeHandler&lt;?&gt;&gt;">
+<parameter name="typeHandlerAlias" type="java.lang.String">
 </parameter>
 </method>
 <method name="resolveTypeHandler"
@@ -946,7 +966,7 @@
 >
 <parameter name="javaType" type="java.lang.Class&lt;?&gt;">
 </parameter>
-<parameter name="typeHandlerAlias" type="java.lang.String">
+<parameter name="typeHandlerType" type="java.lang.Class&lt;? extends org.apache.ibatis.type.TypeHandler&lt;?&gt;&gt;">
 </parameter>
 </method>
 <method name="stringSetValueOf"
@@ -1101,6 +1121,8 @@
 >
 <parameter name="message" type="java.lang.String">
 </parameter>
+<parameter name="cause" type="java.lang.Throwable">
+</parameter>
 </constructor>
 <constructor name="IncompleteElementException"
  type="org.apache.ibatis.builder.IncompleteElementException"
@@ -1110,8 +1132,6 @@
  visibility="public"
 >
 <parameter name="message" type="java.lang.String">
-</parameter>
-<parameter name="cause" type="java.lang.Throwable">
 </parameter>
 </constructor>
 <constructor name="IncompleteElementException"
@@ -1193,6 +1213,8 @@
 </parameter>
 <parameter name="lang" type="org.apache.ibatis.scripting.LanguageDriver">
 </parameter>
+<parameter name="resultSets" type="java.lang.String">
+</parameter>
 </method>
 <method name="addMappedStatement"
  return="org.apache.ibatis.mapping.MappedStatement"
@@ -1241,8 +1263,6 @@
 <parameter name="databaseId" type="java.lang.String">
 </parameter>
 <parameter name="lang" type="org.apache.ibatis.scripting.LanguageDriver">
-</parameter>
-<parameter name="resultSets" type="java.lang.String">
 </parameter>
 </method>
 <method name="addParameterMap"
@@ -1382,6 +1402,12 @@
 </parameter>
 <parameter name="flags" type="java.util.List&lt;org.apache.ibatis.mapping.ResultFlag&gt;">
 </parameter>
+<parameter name="resultSet" type="java.lang.String">
+</parameter>
+<parameter name="foreignColumn" type="java.lang.String">
+</parameter>
+<parameter name="lazy" type="boolean">
+</parameter>
 </method>
 <method name="buildResultMapping"
  return="org.apache.ibatis.mapping.ResultMapping"
@@ -1414,12 +1440,6 @@
 <parameter name="typeHandler" type="java.lang.Class&lt;? extends org.apache.ibatis.type.TypeHandler&lt;?&gt;&gt;">
 </parameter>
 <parameter name="flags" type="java.util.List&lt;org.apache.ibatis.mapping.ResultFlag&gt;">
-</parameter>
-<parameter name="resultSet" type="java.lang.String">
-</parameter>
-<parameter name="foreignColumn" type="java.lang.String">
-</parameter>
-<parameter name="lazy" type="boolean">
 </parameter>
 </method>
 <method name="getCurrentNamespace"
@@ -1491,6 +1511,8 @@
 <parameter name="size" type="java.lang.Integer">
 </parameter>
 <parameter name="readWrite" type="boolean">
+</parameter>
+<parameter name="blocking" type="boolean">
 </parameter>
 <parameter name="props" type="java.util.Properties">
 </parameter>
@@ -1764,7 +1786,7 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="inputStream" type="java.io.InputStream">
+<parameter name="reader" type="java.io.Reader">
 </parameter>
 </constructor>
 <constructor name="XMLConfigBuilder"
@@ -1774,7 +1796,7 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="inputStream" type="java.io.InputStream">
+<parameter name="reader" type="java.io.Reader">
 </parameter>
 <parameter name="environment" type="java.lang.String">
 </parameter>
@@ -1786,7 +1808,7 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="inputStream" type="java.io.InputStream">
+<parameter name="reader" type="java.io.Reader">
 </parameter>
 <parameter name="environment" type="java.lang.String">
 </parameter>
@@ -1800,7 +1822,7 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="reader" type="java.io.Reader">
+<parameter name="inputStream" type="java.io.InputStream">
 </parameter>
 </constructor>
 <constructor name="XMLConfigBuilder"
@@ -1810,7 +1832,7 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="reader" type="java.io.Reader">
+<parameter name="inputStream" type="java.io.InputStream">
 </parameter>
 <parameter name="environment" type="java.lang.String">
 </parameter>
@@ -1822,7 +1844,7 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="reader" type="java.io.Reader">
+<parameter name="inputStream" type="java.io.InputStream">
 </parameter>
 <parameter name="environment" type="java.lang.String">
 </parameter>
@@ -1887,26 +1909,10 @@
  type="org.apache.ibatis.builder.xml.XMLMapperBuilder"
  static="false"
  final="false"
- deprecated="not deprecated"
+ deprecated="deprecated"
  visibility="public"
 >
-<parameter name="inputStream" type="java.io.InputStream">
-</parameter>
-<parameter name="configuration" type="org.apache.ibatis.session.Configuration">
-</parameter>
-<parameter name="resource" type="java.lang.String">
-</parameter>
-<parameter name="sqlFragments" type="java.util.Map&lt;java.lang.String, org.apache.ibatis.parsing.XNode&gt;">
-</parameter>
-</constructor>
-<constructor name="XMLMapperBuilder"
- type="org.apache.ibatis.builder.xml.XMLMapperBuilder"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="inputStream" type="java.io.InputStream">
+<parameter name="reader" type="java.io.Reader">
 </parameter>
 <parameter name="configuration" type="org.apache.ibatis.session.Configuration">
 </parameter>
@@ -1937,10 +1943,10 @@
  type="org.apache.ibatis.builder.xml.XMLMapperBuilder"
  static="false"
  final="false"
- deprecated="deprecated"
+ deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="reader" type="java.io.Reader">
+<parameter name="inputStream" type="java.io.InputStream">
 </parameter>
 <parameter name="configuration" type="org.apache.ibatis.session.Configuration">
 </parameter>
@@ -1949,6 +1955,22 @@
 <parameter name="sqlFragments" type="java.util.Map&lt;java.lang.String, org.apache.ibatis.parsing.XNode&gt;">
 </parameter>
 <parameter name="namespace" type="java.lang.String">
+</parameter>
+</constructor>
+<constructor name="XMLMapperBuilder"
+ type="org.apache.ibatis.builder.xml.XMLMapperBuilder"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="inputStream" type="java.io.InputStream">
+</parameter>
+<parameter name="configuration" type="org.apache.ibatis.session.Configuration">
+</parameter>
+<parameter name="resource" type="java.lang.String">
+</parameter>
+<parameter name="sqlFragments" type="java.util.Map&lt;java.lang.String, org.apache.ibatis.parsing.XNode&gt;">
 </parameter>
 </constructor>
 <method name="getSqlFragment"
@@ -2215,8 +2237,6 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<implements name="java.io.Serializable">
-</implements>
 <constructor name="CacheKey"
  type="org.apache.ibatis.cache.CacheKey"
  static="false"
@@ -2400,6 +2420,136 @@
 </package>
 <package name="org.apache.ibatis.cache.decorators"
 >
+<class name="BlockingCache"
+ extends="java.lang.Object"
+ abstract="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<implements name="org.apache.ibatis.cache.Cache">
+</implements>
+<constructor name="BlockingCache"
+ type="org.apache.ibatis.cache.decorators.BlockingCache"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="delegate" type="org.apache.ibatis.cache.Cache">
+</parameter>
+</constructor>
+<method name="clear"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="getId"
+ return="java.lang.String"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="getObject"
+ return="java.lang.Object"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="key" type="java.lang.Object">
+</parameter>
+</method>
+<method name="getReadWriteLock"
+ return="java.util.concurrent.locks.ReadWriteLock"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="getSize"
+ return="int"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="getTimeout"
+ return="long"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="putObject"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="key" type="java.lang.Object">
+</parameter>
+<parameter name="value" type="java.lang.Object">
+</parameter>
+</method>
+<method name="removeObject"
+ return="java.lang.Object"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="key" type="java.lang.Object">
+</parameter>
+</method>
+<method name="setTimeout"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="timeout" type="long">
+</parameter>
+</method>
+</class>
 <class name="FifoCache"
  extends="java.lang.Object"
  abstract="false"
@@ -4041,8 +4191,16 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="driverClassLoader" type="java.lang.ClassLoader">
+<parameter name="dataSource" type="org.apache.ibatis.datasource.unpooled.UnpooledDataSource">
 </parameter>
+</constructor>
+<constructor name="PooledDataSource"
+ type="org.apache.ibatis.datasource.pooled.PooledDataSource"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
 <parameter name="driver" type="java.lang.String">
 </parameter>
 <parameter name="url" type="java.lang.String">
@@ -4059,8 +4217,6 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="driverClassLoader" type="java.lang.ClassLoader">
-</parameter>
 <parameter name="driver" type="java.lang.String">
 </parameter>
 <parameter name="url" type="java.lang.String">
@@ -4075,6 +4231,8 @@
  deprecated="not deprecated"
  visibility="public"
 >
+<parameter name="driverClassLoader" type="java.lang.ClassLoader">
+</parameter>
 <parameter name="driver" type="java.lang.String">
 </parameter>
 <parameter name="url" type="java.lang.String">
@@ -4091,6 +4249,8 @@
  deprecated="not deprecated"
  visibility="public"
 >
+<parameter name="driverClassLoader" type="java.lang.ClassLoader">
+</parameter>
 <parameter name="driver" type="java.lang.String">
 </parameter>
 <parameter name="url" type="java.lang.String">
@@ -4740,8 +4900,6 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="driverClassLoader" type="java.lang.ClassLoader">
-</parameter>
 <parameter name="driver" type="java.lang.String">
 </parameter>
 <parameter name="url" type="java.lang.String">
@@ -4758,8 +4916,6 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="driverClassLoader" type="java.lang.ClassLoader">
-</parameter>
 <parameter name="driver" type="java.lang.String">
 </parameter>
 <parameter name="url" type="java.lang.String">
@@ -4774,6 +4930,8 @@
  deprecated="not deprecated"
  visibility="public"
 >
+<parameter name="driverClassLoader" type="java.lang.ClassLoader">
+</parameter>
 <parameter name="driver" type="java.lang.String">
 </parameter>
 <parameter name="url" type="java.lang.String">
@@ -4790,6 +4948,8 @@
  deprecated="not deprecated"
  visibility="public"
 >
+<parameter name="driverClassLoader" type="java.lang.ClassLoader">
+</parameter>
 <parameter name="driver" type="java.lang.String">
 </parameter>
 <parameter name="url" type="java.lang.String">
@@ -5181,14 +5341,6 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<constructor name="ExceptionFactory"
- type="org.apache.ibatis.exceptions.ExceptionFactory"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</constructor>
 <method name="wrapException"
  return="java.lang.RuntimeException"
  abstract="false"
@@ -6597,6 +6749,10 @@
 </parameter>
 <parameter name="resultHandler" type="org.apache.ibatis.session.ResultHandler">
 </parameter>
+<parameter name="cacheKey" type="org.apache.ibatis.cache.CacheKey">
+</parameter>
+<parameter name="boundSql" type="org.apache.ibatis.mapping.BoundSql">
+</parameter>
 <exception name="SQLException" type="java.sql.SQLException">
 </exception>
 </method>
@@ -6617,10 +6773,6 @@
 <parameter name="rowBounds" type="org.apache.ibatis.session.RowBounds">
 </parameter>
 <parameter name="resultHandler" type="org.apache.ibatis.session.ResultHandler">
-</parameter>
-<parameter name="cacheKey" type="org.apache.ibatis.cache.CacheKey">
-</parameter>
-<parameter name="boundSql" type="org.apache.ibatis.mapping.BoundSql">
 </parameter>
 <exception name="SQLException" type="java.sql.SQLException">
 </exception>
@@ -7271,8 +7423,6 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<implements name="java.io.Externalizable">
-</implements>
 <constructor name="AbstractSerialStateHolder"
  type="org.apache.ibatis.executor.loader.AbstractSerialStateHolder"
  static="false"
@@ -7735,8 +7885,6 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<implements name="java.io.Serializable">
-</implements>
 <method name="load"
  return="void"
  abstract="false"
@@ -8008,6 +8156,8 @@
 </parameter>
 <parameter name="objectWrapperFactory" type="org.apache.ibatis.reflection.wrapper.ObjectWrapperFactory">
 </parameter>
+<parameter name="reflectorFactory" type="org.apache.ibatis.reflection.ReflectorFactory">
+</parameter>
 </constructor>
 <method name="getMappedResults"
  return="java.util.Map&lt;K, V&gt;"
@@ -8030,7 +8180,7 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="context" type="org.apache.ibatis.session.ResultContext">
+<parameter name="context" type="org.apache.ibatis.session.ResultContext&lt;? extends V&gt;">
 </parameter>
 </method>
 </class>
@@ -8064,7 +8214,7 @@
 >
 </method>
 <method name="getResultObject"
- return="java.lang.Object"
+ return="T"
  abstract="false"
  native="false"
  synchronized="false"
@@ -8095,7 +8245,7 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="resultObject" type="java.lang.Object">
+<parameter name="resultObject" type="T">
 </parameter>
 </method>
 <method name="stop"
@@ -8159,9 +8309,58 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="context" type="org.apache.ibatis.session.ResultContext">
+<parameter name="context" type="org.apache.ibatis.session.ResultContext&lt;? extends java.lang.Object&gt;">
 </parameter>
 </method>
+</class>
+<class name="ResultMapException"
+ extends="org.apache.ibatis.exceptions.PersistenceException"
+ abstract="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<constructor name="ResultMapException"
+ type="org.apache.ibatis.executor.result.ResultMapException"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</constructor>
+<constructor name="ResultMapException"
+ type="org.apache.ibatis.executor.result.ResultMapException"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="message" type="java.lang.String">
+</parameter>
+</constructor>
+<constructor name="ResultMapException"
+ type="org.apache.ibatis.executor.result.ResultMapException"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="message" type="java.lang.String">
+</parameter>
+<parameter name="cause" type="java.lang.Throwable">
+</parameter>
+</constructor>
+<constructor name="ResultMapException"
+ type="org.apache.ibatis.executor.result.ResultMapException"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="cause" type="java.lang.Throwable">
+</parameter>
+</constructor>
 </class>
 </package>
 <package name="org.apache.ibatis.executor.resultset"
@@ -8189,7 +8388,7 @@
 </parameter>
 <parameter name="parameterHandler" type="org.apache.ibatis.executor.parameter.ParameterHandler">
 </parameter>
-<parameter name="resultHandler" type="org.apache.ibatis.session.ResultHandler">
+<parameter name="resultHandler" type="org.apache.ibatis.session.ResultHandler&lt;?&gt;">
 </parameter>
 <parameter name="boundSql" type="org.apache.ibatis.mapping.BoundSql">
 </parameter>
@@ -9707,8 +9906,6 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="loader" type="java.lang.ClassLoader">
-</parameter>
 <parameter name="resource" type="java.lang.String">
 </parameter>
 <exception name="IOException" type="java.io.IOException">
@@ -9724,21 +9921,6 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="resource" type="java.lang.String">
-</parameter>
-<exception name="IOException" type="java.io.IOException">
-</exception>
-</method>
-<method name="getResourceAsProperties"
- return="java.util.Properties"
- abstract="false"
- native="false"
- synchronized="false"
- static="true"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
 <parameter name="loader" type="java.lang.ClassLoader">
 </parameter>
 <parameter name="resource" type="java.lang.String">
@@ -9761,8 +9943,8 @@
 <exception name="IOException" type="java.io.IOException">
 </exception>
 </method>
-<method name="getResourceAsReader"
- return="java.io.Reader"
+<method name="getResourceAsProperties"
+ return="java.util.Properties"
  abstract="false"
  native="false"
  synchronized="false"
@@ -9793,8 +9975,8 @@
 <exception name="IOException" type="java.io.IOException">
 </exception>
 </method>
-<method name="getResourceAsStream"
- return="java.io.InputStream"
+<method name="getResourceAsReader"
+ return="java.io.Reader"
  abstract="false"
  native="false"
  synchronized="false"
@@ -9825,8 +10007,8 @@
 <exception name="IOException" type="java.io.IOException">
 </exception>
 </method>
-<method name="getResourceURL"
- return="java.net.URL"
+<method name="getResourceAsStream"
+ return="java.io.InputStream"
  abstract="false"
  native="false"
  synchronized="false"
@@ -9852,6 +10034,23 @@
  deprecated="not deprecated"
  visibility="public"
 >
+<parameter name="resource" type="java.lang.String">
+</parameter>
+<exception name="IOException" type="java.io.IOException">
+</exception>
+</method>
+<method name="getResourceURL"
+ return="java.net.URL"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="loader" type="java.lang.ClassLoader">
+</parameter>
 <parameter name="resource" type="java.lang.String">
 </parameter>
 <exception name="IOException" type="java.io.IOException">
@@ -10048,21 +10247,6 @@
 </method>
 <method name="list"
  return="java.util.List&lt;java.lang.String&gt;"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="path" type="java.lang.String">
-</parameter>
-<exception name="IOException" type="java.io.IOException">
-</exception>
-</method>
-<method name="list"
- return="java.util.List&lt;java.lang.String&gt;"
  abstract="true"
  native="false"
  synchronized="false"
@@ -10074,6 +10258,21 @@
 <parameter name="url" type="java.net.URL">
 </parameter>
 <parameter name="forPath" type="java.lang.String">
+</parameter>
+<exception name="IOException" type="java.io.IOException">
+</exception>
+</method>
+<method name="list"
+ return="java.util.List&lt;java.lang.String&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="path" type="java.lang.String">
 </parameter>
 <exception name="IOException" type="java.io.IOException">
 </exception>
@@ -10442,7 +10641,7 @@
 >
 </method>
 <method name="getTypeHandler"
- return="org.apache.ibatis.type.TypeHandler"
+ return="org.apache.ibatis.type.TypeHandler&lt;?&gt;"
  abstract="false"
  native="false"
  synchronized="false"
@@ -10722,14 +10921,6 @@
  deprecated="deprecated"
  visibility="public"
 >
-<constructor name="SelectBuilder"
- type="org.apache.ibatis.jdbc.SelectBuilder"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</constructor>
 <method name="AND"
  return="void"
  abstract="false"
@@ -10950,14 +11141,6 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<constructor name="SqlBuilder"
- type="org.apache.ibatis.jdbc.SqlBuilder"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</constructor>
 <method name="AND"
  return="void"
  abstract="false"
@@ -11426,6 +11609,8 @@
 >
 <parameter name="s" type="java.lang.String">
 </parameter>
+<parameter name="e" type="java.lang.Throwable">
+</parameter>
 </method>
 <method name="error"
  return="void"
@@ -11438,8 +11623,6 @@
  visibility="public"
 >
 <parameter name="s" type="java.lang.String">
-</parameter>
-<parameter name="e" type="java.lang.Throwable">
 </parameter>
 </method>
 <method name="isDebugEnabled"
@@ -11724,6 +11907,8 @@
 >
 <parameter name="s" type="java.lang.String">
 </parameter>
+<parameter name="e" type="java.lang.Throwable">
+</parameter>
 </method>
 <method name="error"
  return="void"
@@ -11736,8 +11921,6 @@
  visibility="public"
 >
 <parameter name="s" type="java.lang.String">
-</parameter>
-<parameter name="e" type="java.lang.Throwable">
 </parameter>
 </method>
 <method name="isDebugEnabled"
@@ -12251,6 +12434,8 @@
 >
 <parameter name="s" type="java.lang.String">
 </parameter>
+<parameter name="e" type="java.lang.Throwable">
+</parameter>
 </method>
 <method name="error"
  return="void"
@@ -12263,8 +12448,6 @@
  visibility="public"
 >
 <parameter name="s" type="java.lang.String">
-</parameter>
-<parameter name="e" type="java.lang.Throwable">
 </parameter>
 </method>
 <method name="isDebugEnabled"
@@ -12364,6 +12547,8 @@
 >
 <parameter name="s" type="java.lang.String">
 </parameter>
+<parameter name="e" type="java.lang.Throwable">
+</parameter>
 </method>
 <method name="error"
  return="void"
@@ -12376,8 +12561,6 @@
  visibility="public"
 >
 <parameter name="s" type="java.lang.String">
-</parameter>
-<parameter name="e" type="java.lang.Throwable">
 </parameter>
 </method>
 <method name="isDebugEnabled"
@@ -12477,6 +12660,8 @@
 >
 <parameter name="s" type="java.lang.String">
 </parameter>
+<parameter name="e" type="java.lang.Throwable">
+</parameter>
 </method>
 <method name="error"
  return="void"
@@ -12489,8 +12674,6 @@
  visibility="public"
 >
 <parameter name="s" type="java.lang.String">
-</parameter>
-<parameter name="e" type="java.lang.Throwable">
 </parameter>
 </method>
 <method name="isDebugEnabled"
@@ -12587,6 +12770,8 @@
 >
 <parameter name="s" type="java.lang.String">
 </parameter>
+<parameter name="e" type="java.lang.Throwable">
+</parameter>
 </method>
 <method name="error"
  return="void"
@@ -12599,8 +12784,6 @@
  visibility="public"
 >
 <parameter name="s" type="java.lang.String">
-</parameter>
-<parameter name="e" type="java.lang.Throwable">
 </parameter>
 </method>
 <method name="isDebugEnabled"
@@ -12697,6 +12880,8 @@
 >
 <parameter name="s" type="java.lang.String">
 </parameter>
+<parameter name="e" type="java.lang.Throwable">
+</parameter>
 </method>
 <method name="error"
  return="void"
@@ -12709,8 +12894,6 @@
  visibility="public"
 >
 <parameter name="s" type="java.lang.String">
-</parameter>
-<parameter name="e" type="java.lang.Throwable">
 </parameter>
 </method>
 <method name="isDebugEnabled"
@@ -12810,6 +12993,8 @@
 >
 <parameter name="s" type="java.lang.String">
 </parameter>
+<parameter name="e" type="java.lang.Throwable">
+</parameter>
 </method>
 <method name="error"
  return="void"
@@ -12822,8 +13007,6 @@
  visibility="public"
 >
 <parameter name="s" type="java.lang.String">
-</parameter>
-<parameter name="e" type="java.lang.Throwable">
 </parameter>
 </method>
 <method name="isDebugEnabled"
@@ -12923,6 +13106,8 @@
 >
 <parameter name="s" type="java.lang.String">
 </parameter>
+<parameter name="e" type="java.lang.Throwable">
+</parameter>
 </method>
 <method name="error"
  return="void"
@@ -12935,8 +13120,6 @@
  visibility="public"
 >
 <parameter name="s" type="java.lang.String">
-</parameter>
-<parameter name="e" type="java.lang.Throwable">
 </parameter>
 </method>
 <method name="isDebugEnabled"
@@ -13036,6 +13219,8 @@
 >
 <parameter name="s" type="java.lang.String">
 </parameter>
+<parameter name="e" type="java.lang.Throwable">
+</parameter>
 </method>
 <method name="error"
  return="void"
@@ -13048,8 +13233,6 @@
  visibility="public"
 >
 <parameter name="s" type="java.lang.String">
-</parameter>
-<parameter name="e" type="java.lang.Throwable">
 </parameter>
 </method>
 <method name="isDebugEnabled"
@@ -13232,6 +13415,19 @@
  visibility="public"
 >
 <parameter name="decorator" type="java.lang.Class&lt;? extends org.apache.ibatis.cache.Cache&gt;">
+</parameter>
+</method>
+<method name="blocking"
+ return="org.apache.ibatis.mapping.CacheBuilder"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="blocking" type="boolean">
 </parameter>
 </method>
 <method name="build"
@@ -14357,7 +14553,7 @@
 </parameter>
 <parameter name="property" type="java.lang.String">
 </parameter>
-<parameter name="javaType" type="java.lang.Class&lt;?&gt;">
+<parameter name="typeHandler" type="org.apache.ibatis.type.TypeHandler&lt;?&gt;">
 </parameter>
 </constructor>
 <constructor name="ParameterMapping.Builder"
@@ -14371,7 +14567,7 @@
 </parameter>
 <parameter name="property" type="java.lang.String">
 </parameter>
-<parameter name="typeHandler" type="org.apache.ibatis.type.TypeHandler&lt;?&gt;">
+<parameter name="javaType" type="java.lang.Class&lt;?&gt;">
 </parameter>
 </constructor>
 <method name="build"
@@ -14994,6 +15190,10 @@
 </parameter>
 <parameter name="property" type="java.lang.String">
 </parameter>
+<parameter name="column" type="java.lang.String">
+</parameter>
+<parameter name="typeHandler" type="org.apache.ibatis.type.TypeHandler&lt;?&gt;">
+</parameter>
 </constructor>
 <constructor name="ResultMapping.Builder"
  type="org.apache.ibatis.mapping.ResultMapping.Builder"
@@ -15021,10 +15221,6 @@
 <parameter name="configuration" type="org.apache.ibatis.session.Configuration">
 </parameter>
 <parameter name="property" type="java.lang.String">
-</parameter>
-<parameter name="column" type="java.lang.String">
-</parameter>
-<parameter name="typeHandler" type="org.apache.ibatis.type.TypeHandler&lt;?&gt;">
 </parameter>
 </constructor>
 <method name="build"
@@ -15480,14 +15676,6 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<constructor name="PropertyParser"
- type="org.apache.ibatis.parsing.PropertyParser"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</constructor>
 <method name="parse"
  return="java.lang.String"
  abstract="false"
@@ -16062,49 +16250,7 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="inputStream" type="java.io.InputStream">
-</parameter>
-</constructor>
-<constructor name="XPathParser"
- type="org.apache.ibatis.parsing.XPathParser"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="inputStream" type="java.io.InputStream">
-</parameter>
-<parameter name="validation" type="boolean">
-</parameter>
-</constructor>
-<constructor name="XPathParser"
- type="org.apache.ibatis.parsing.XPathParser"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="inputStream" type="java.io.InputStream">
-</parameter>
-<parameter name="validation" type="boolean">
-</parameter>
-<parameter name="variables" type="java.util.Properties">
-</parameter>
-</constructor>
-<constructor name="XPathParser"
- type="org.apache.ibatis.parsing.XPathParser"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="inputStream" type="java.io.InputStream">
-</parameter>
-<parameter name="validation" type="boolean">
-</parameter>
-<parameter name="variables" type="java.util.Properties">
-</parameter>
-<parameter name="entityResolver" type="org.xml.sax.EntityResolver">
+<parameter name="xml" type="java.lang.String">
 </parameter>
 </constructor>
 <constructor name="XPathParser"
@@ -16124,91 +16270,7 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="reader" type="java.io.Reader">
-</parameter>
-<parameter name="validation" type="boolean">
-</parameter>
-</constructor>
-<constructor name="XPathParser"
- type="org.apache.ibatis.parsing.XPathParser"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="reader" type="java.io.Reader">
-</parameter>
-<parameter name="validation" type="boolean">
-</parameter>
-<parameter name="variables" type="java.util.Properties">
-</parameter>
-</constructor>
-<constructor name="XPathParser"
- type="org.apache.ibatis.parsing.XPathParser"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="reader" type="java.io.Reader">
-</parameter>
-<parameter name="validation" type="boolean">
-</parameter>
-<parameter name="variables" type="java.util.Properties">
-</parameter>
-<parameter name="entityResolver" type="org.xml.sax.EntityResolver">
-</parameter>
-</constructor>
-<constructor name="XPathParser"
- type="org.apache.ibatis.parsing.XPathParser"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="xml" type="java.lang.String">
-</parameter>
-</constructor>
-<constructor name="XPathParser"
- type="org.apache.ibatis.parsing.XPathParser"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="xml" type="java.lang.String">
-</parameter>
-<parameter name="validation" type="boolean">
-</parameter>
-</constructor>
-<constructor name="XPathParser"
- type="org.apache.ibatis.parsing.XPathParser"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="xml" type="java.lang.String">
-</parameter>
-<parameter name="validation" type="boolean">
-</parameter>
-<parameter name="variables" type="java.util.Properties">
-</parameter>
-</constructor>
-<constructor name="XPathParser"
- type="org.apache.ibatis.parsing.XPathParser"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="xml" type="java.lang.String">
-</parameter>
-<parameter name="validation" type="boolean">
-</parameter>
-<parameter name="variables" type="java.util.Properties">
-</parameter>
-<parameter name="entityResolver" type="org.xml.sax.EntityResolver">
+<parameter name="inputStream" type="java.io.InputStream">
 </parameter>
 </constructor>
 <constructor name="XPathParser"
@@ -16219,6 +16281,42 @@
  visibility="public"
 >
 <parameter name="document" type="org.w3c.dom.Document">
+</parameter>
+</constructor>
+<constructor name="XPathParser"
+ type="org.apache.ibatis.parsing.XPathParser"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="xml" type="java.lang.String">
+</parameter>
+<parameter name="validation" type="boolean">
+</parameter>
+</constructor>
+<constructor name="XPathParser"
+ type="org.apache.ibatis.parsing.XPathParser"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="reader" type="java.io.Reader">
+</parameter>
+<parameter name="validation" type="boolean">
+</parameter>
+</constructor>
+<constructor name="XPathParser"
+ type="org.apache.ibatis.parsing.XPathParser"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="inputStream" type="java.io.InputStream">
+</parameter>
+<parameter name="validation" type="boolean">
 </parameter>
 </constructor>
 <constructor name="XPathParser"
@@ -16240,11 +16338,101 @@
  deprecated="not deprecated"
  visibility="public"
 >
+<parameter name="xml" type="java.lang.String">
+</parameter>
+<parameter name="validation" type="boolean">
+</parameter>
+<parameter name="variables" type="java.util.Properties">
+</parameter>
+</constructor>
+<constructor name="XPathParser"
+ type="org.apache.ibatis.parsing.XPathParser"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="reader" type="java.io.Reader">
+</parameter>
+<parameter name="validation" type="boolean">
+</parameter>
+<parameter name="variables" type="java.util.Properties">
+</parameter>
+</constructor>
+<constructor name="XPathParser"
+ type="org.apache.ibatis.parsing.XPathParser"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="inputStream" type="java.io.InputStream">
+</parameter>
+<parameter name="validation" type="boolean">
+</parameter>
+<parameter name="variables" type="java.util.Properties">
+</parameter>
+</constructor>
+<constructor name="XPathParser"
+ type="org.apache.ibatis.parsing.XPathParser"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
 <parameter name="document" type="org.w3c.dom.Document">
 </parameter>
 <parameter name="validation" type="boolean">
 </parameter>
 <parameter name="variables" type="java.util.Properties">
+</parameter>
+</constructor>
+<constructor name="XPathParser"
+ type="org.apache.ibatis.parsing.XPathParser"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="xml" type="java.lang.String">
+</parameter>
+<parameter name="validation" type="boolean">
+</parameter>
+<parameter name="variables" type="java.util.Properties">
+</parameter>
+<parameter name="entityResolver" type="org.xml.sax.EntityResolver">
+</parameter>
+</constructor>
+<constructor name="XPathParser"
+ type="org.apache.ibatis.parsing.XPathParser"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="reader" type="java.io.Reader">
+</parameter>
+<parameter name="validation" type="boolean">
+</parameter>
+<parameter name="variables" type="java.util.Properties">
+</parameter>
+<parameter name="entityResolver" type="org.xml.sax.EntityResolver">
+</parameter>
+</constructor>
+<constructor name="XPathParser"
+ type="org.apache.ibatis.parsing.XPathParser"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="inputStream" type="java.io.InputStream">
+</parameter>
+<parameter name="validation" type="boolean">
+</parameter>
+<parameter name="variables" type="java.util.Properties">
+</parameter>
+<parameter name="entityResolver" type="org.xml.sax.EntityResolver">
 </parameter>
 </constructor>
 <constructor name="XPathParser"
@@ -16273,8 +16461,6 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="root" type="java.lang.Object">
-</parameter>
 <parameter name="expression" type="java.lang.String">
 </parameter>
 </method>
@@ -16288,19 +16474,6 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="expression" type="java.lang.String">
-</parameter>
-</method>
-<method name="evalDouble"
- return="java.lang.Double"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
 <parameter name="root" type="java.lang.Object">
 </parameter>
 <parameter name="expression" type="java.lang.String">
@@ -16319,8 +16492,8 @@
 <parameter name="expression" type="java.lang.String">
 </parameter>
 </method>
-<method name="evalFloat"
- return="java.lang.Float"
+<method name="evalDouble"
+ return="java.lang.Double"
  abstract="false"
  native="false"
  synchronized="false"
@@ -16347,8 +16520,8 @@
 <parameter name="expression" type="java.lang.String">
 </parameter>
 </method>
-<method name="evalInteger"
- return="java.lang.Integer"
+<method name="evalFloat"
+ return="java.lang.Float"
  abstract="false"
  native="false"
  synchronized="false"
@@ -16375,8 +16548,8 @@
 <parameter name="expression" type="java.lang.String">
 </parameter>
 </method>
-<method name="evalLong"
- return="java.lang.Long"
+<method name="evalInteger"
+ return="java.lang.Integer"
  abstract="false"
  native="false"
  synchronized="false"
@@ -16403,8 +16576,8 @@
 <parameter name="expression" type="java.lang.String">
 </parameter>
 </method>
-<method name="evalNode"
- return="org.apache.ibatis.parsing.XNode"
+<method name="evalLong"
+ return="java.lang.Long"
  abstract="false"
  native="false"
  synchronized="false"
@@ -16431,8 +16604,8 @@
 <parameter name="expression" type="java.lang.String">
 </parameter>
 </method>
-<method name="evalNodes"
- return="java.util.List&lt;org.apache.ibatis.parsing.XNode&gt;"
+<method name="evalNode"
+ return="org.apache.ibatis.parsing.XNode"
  abstract="false"
  native="false"
  synchronized="false"
@@ -16459,8 +16632,8 @@
 <parameter name="expression" type="java.lang.String">
 </parameter>
 </method>
-<method name="evalShort"
- return="java.lang.Short"
+<method name="evalNodes"
+ return="java.util.List&lt;org.apache.ibatis.parsing.XNode&gt;"
  abstract="false"
  native="false"
  synchronized="false"
@@ -16487,8 +16660,8 @@
 <parameter name="expression" type="java.lang.String">
 </parameter>
 </method>
-<method name="evalString"
- return="java.lang.String"
+<method name="evalShort"
+ return="java.lang.Short"
  abstract="false"
  native="false"
  synchronized="false"
@@ -16512,6 +16685,21 @@
  deprecated="not deprecated"
  visibility="public"
 >
+<parameter name="expression" type="java.lang.String">
+</parameter>
+</method>
+<method name="evalString"
+ return="java.lang.String"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="root" type="java.lang.Object">
+</parameter>
 <parameter name="expression" type="java.lang.String">
 </parameter>
 </method>
@@ -16823,6 +17011,62 @@
 </package>
 <package name="org.apache.ibatis.reflection"
 >
+<class name="DefaultReflectorFactory"
+ extends="java.lang.Object"
+ abstract="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<implements name="org.apache.ibatis.reflection.ReflectorFactory">
+</implements>
+<constructor name="DefaultReflectorFactory"
+ type="org.apache.ibatis.reflection.DefaultReflectorFactory"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</constructor>
+<method name="findForClass"
+ return="org.apache.ibatis.reflection.Reflector"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="type" type="java.lang.Class&lt;?&gt;">
+</parameter>
+</method>
+<method name="isClassCacheEnabled"
+ return="boolean"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="setClassCacheEnabled"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="classCacheEnabled" type="boolean">
+</parameter>
+</method>
+</class>
 <class name="ExceptionUtil"
  extends="java.lang.Object"
  abstract="false"
@@ -16831,14 +17075,6 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<constructor name="ExceptionUtil"
- type="org.apache.ibatis.reflection.ExceptionUtil"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</constructor>
 <method name="unwrapThrowable"
  return="java.lang.Throwable"
  abstract="false"
@@ -16900,6 +17136,8 @@
  visibility="public"
 >
 <parameter name="type" type="java.lang.Class&lt;?&gt;">
+</parameter>
+<parameter name="reflectorFactory" type="org.apache.ibatis.reflection.ReflectorFactory">
 </parameter>
 </method>
 <method name="getGetInvoker"
@@ -16976,6 +17214,17 @@
 <parameter name="name" type="java.lang.String">
 </parameter>
 </method>
+<method name="hasDefaultConstructor"
+ return="boolean"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
 <method name="hasGetter"
  return="boolean"
  abstract="false"
@@ -17002,17 +17251,6 @@
 <parameter name="name" type="java.lang.String">
 </parameter>
 </method>
-<method name="isClassCacheEnabled"
- return="boolean"
- abstract="false"
- native="false"
- synchronized="false"
- static="true"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</method>
 <method name="metaClassForProperty"
  return="org.apache.ibatis.reflection.MetaClass"
  abstract="false"
@@ -17024,19 +17262,6 @@
  visibility="public"
 >
 <parameter name="name" type="java.lang.String">
-</parameter>
-</method>
-<method name="setClassCacheEnabled"
- return="void"
- abstract="false"
- native="false"
- synchronized="false"
- static="true"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="classCacheEnabled" type="boolean">
 </parameter>
 </method>
 </class>
@@ -17105,6 +17330,8 @@
 </parameter>
 <parameter name="objectWrapperFactory" type="org.apache.ibatis.reflection.wrapper.ObjectWrapperFactory">
 </parameter>
+<parameter name="reflectorFactory" type="org.apache.ibatis.reflection.ReflectorFactory">
+</parameter>
 </method>
 <method name="getGetterNames"
  return="java.lang.String[]"
@@ -17165,6 +17392,17 @@
 </method>
 <method name="getOriginalObject"
  return="java.lang.Object"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="getReflectorFactory"
+ return="org.apache.ibatis.reflection.ReflectorFactory"
  abstract="false"
  native="false"
  synchronized="false"
@@ -17334,6 +17572,16 @@
  deprecated="not deprecated"
  visibility="public"
 >
+<constructor name="Reflector"
+ type="org.apache.ibatis.reflection.Reflector"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="clazz" type="java.lang.Class&lt;?&gt;">
+</parameter>
+</constructor>
 <method name="findPropertyName"
  return="java.lang.String"
  abstract="false"
@@ -17345,19 +17593,6 @@
  visibility="public"
 >
 <parameter name="name" type="java.lang.String">
-</parameter>
-</method>
-<method name="forClass"
- return="org.apache.ibatis.reflection.Reflector"
- abstract="false"
- native="false"
- synchronized="false"
- static="true"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="clazz" type="java.lang.Class&lt;?&gt;">
 </parameter>
 </method>
 <method name="getDefaultConstructor"
@@ -17456,6 +17691,17 @@
  visibility="public"
 >
 </method>
+<method name="hasDefaultConstructor"
+ return="boolean"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
 <method name="hasGetter"
  return="boolean"
  abstract="false"
@@ -17482,12 +17728,33 @@
 <parameter name="propertyName" type="java.lang.String">
 </parameter>
 </method>
-<method name="isClassCacheEnabled"
- return="boolean"
- abstract="false"
+</class>
+<interface name="ReflectorFactory"
+ abstract="true"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<method name="findForClass"
+ return="org.apache.ibatis.reflection.Reflector"
+ abstract="true"
  native="false"
  synchronized="false"
- static="true"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="type" type="java.lang.Class&lt;?&gt;">
+</parameter>
+</method>
+<method name="isClassCacheEnabled"
+ return="boolean"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
  final="false"
  deprecated="not deprecated"
  visibility="public"
@@ -17495,10 +17762,10 @@
 </method>
 <method name="setClassCacheEnabled"
  return="void"
- abstract="false"
+ abstract="true"
  native="false"
  synchronized="false"
- static="true"
+ static="false"
  final="false"
  deprecated="not deprecated"
  visibility="public"
@@ -17506,23 +17773,15 @@
 <parameter name="classCacheEnabled" type="boolean">
 </parameter>
 </method>
-</class>
+</interface>
 <class name="SystemMetaObject"
  extends="java.lang.Object"
  abstract="false"
  static="false"
- final="false"
+ final="true"
  deprecated="not deprecated"
  visibility="public"
 >
-<constructor name="SystemMetaObject"
- type="org.apache.ibatis.reflection.SystemMetaObject"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</constructor>
 <method name="forObject"
  return="org.apache.ibatis.reflection.MetaObject"
  abstract="false"
@@ -17579,8 +17838,6 @@
  visibility="public"
 >
 <implements name="org.apache.ibatis.reflection.factory.ObjectFactory">
-</implements>
-<implements name="java.io.Serializable">
 </implements>
 <constructor name="DefaultObjectFactory"
  type="org.apache.ibatis.reflection.factory.DefaultObjectFactory"
@@ -17925,18 +18182,10 @@
  extends="java.lang.Object"
  abstract="false"
  static="false"
- final="false"
+ final="true"
  deprecated="not deprecated"
  visibility="public"
 >
-<constructor name="PropertyCopier"
- type="org.apache.ibatis.reflection.property.PropertyCopier"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</constructor>
 <method name="copyBeanProperties"
  return="void"
  abstract="false"
@@ -17959,18 +18208,10 @@
  extends="java.lang.Object"
  abstract="false"
  static="false"
- final="false"
+ final="true"
  deprecated="not deprecated"
  visibility="public"
 >
-<constructor name="PropertyNamer"
- type="org.apache.ibatis.reflection.property.PropertyNamer"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</constructor>
 <method name="isGetter"
  return="boolean"
  abstract="false"
@@ -19106,7 +19347,7 @@
 >
 <parameter name="configuration" type="org.apache.ibatis.session.Configuration">
 </parameter>
-<parameter name="script" type="java.lang.String">
+<parameter name="script" type="org.apache.ibatis.parsing.XNode">
 </parameter>
 <parameter name="parameterType" type="java.lang.Class&lt;?&gt;">
 </parameter>
@@ -19123,7 +19364,7 @@
 >
 <parameter name="configuration" type="org.apache.ibatis.session.Configuration">
 </parameter>
-<parameter name="script" type="org.apache.ibatis.parsing.XNode">
+<parameter name="script" type="java.lang.String">
 </parameter>
 <parameter name="parameterType" type="java.lang.Class&lt;?&gt;">
 </parameter>
@@ -19191,6 +19432,19 @@
  visibility="public"
 >
 <parameter name="cls" type="java.lang.Class&lt;?&gt;">
+</parameter>
+</method>
+<method name="register"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="instance" type="org.apache.ibatis.scripting.LanguageDriver">
 </parameter>
 </method>
 <method name="setDefaultDriverClass"
@@ -19306,8 +19560,6 @@
 >
 <parameter name="ps" type="java.sql.PreparedStatement">
 </parameter>
-<exception name="SQLException" type="java.sql.SQLException">
-</exception>
 </method>
 </class>
 <class name="RawLanguageDriver"
@@ -19346,7 +19598,7 @@
 >
 <parameter name="configuration" type="org.apache.ibatis.session.Configuration">
 </parameter>
-<parameter name="sql" type="java.lang.String">
+<parameter name="rootSqlNode" type="org.apache.ibatis.scripting.xmltags.SqlNode">
 </parameter>
 <parameter name="parameterType" type="java.lang.Class&lt;?&gt;">
 </parameter>
@@ -19360,7 +19612,7 @@
 >
 <parameter name="configuration" type="org.apache.ibatis.session.Configuration">
 </parameter>
-<parameter name="rootSqlNode" type="org.apache.ibatis.scripting.xmltags.SqlNode">
+<parameter name="sql" type="java.lang.String">
 </parameter>
 <parameter name="parameterType" type="java.lang.Class&lt;?&gt;">
 </parameter>
@@ -19766,8 +20018,6 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<implements name="ognl.ClassResolver">
-</implements>
 <constructor name="OgnlClassResolver"
  type="org.apache.ibatis.scripting.xmltags.OgnlClassResolver"
  static="false"
@@ -19888,6 +20138,18 @@
  visibility="public"
 >
 <parameter name="text" type="java.lang.String">
+</parameter>
+</constructor>
+<constructor name="TextSqlNode"
+ type="org.apache.ibatis.scripting.xmltags.TextSqlNode"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="text" type="java.lang.String">
+</parameter>
+<parameter name="injectionFilter" type="java.util.regex.Pattern">
 </parameter>
 </constructor>
 <method name="apply"
@@ -20083,7 +20345,7 @@
 >
 <parameter name="configuration" type="org.apache.ibatis.session.Configuration">
 </parameter>
-<parameter name="script" type="java.lang.String">
+<parameter name="script" type="org.apache.ibatis.parsing.XNode">
 </parameter>
 <parameter name="parameterType" type="java.lang.Class&lt;?&gt;">
 </parameter>
@@ -20100,7 +20362,7 @@
 >
 <parameter name="configuration" type="org.apache.ibatis.session.Configuration">
 </parameter>
-<parameter name="script" type="org.apache.ibatis.parsing.XNode">
+<parameter name="script" type="java.lang.String">
 </parameter>
 <parameter name="parameterType" type="java.lang.Class&lt;?&gt;">
 </parameter>
@@ -20203,6 +20465,8 @@
  deprecated="not deprecated"
  visibility="public"
 >
+<parameter name="environment" type="org.apache.ibatis.mapping.Environment">
+</parameter>
 </constructor>
 <constructor name="Configuration"
  type="org.apache.ibatis.session.Configuration"
@@ -20211,8 +20475,6 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="environment" type="org.apache.ibatis.mapping.Environment">
-</parameter>
 </constructor>
 <method name="addCache"
  return="void"
@@ -20373,6 +20635,8 @@
 >
 <parameter name="packageName" type="java.lang.String">
 </parameter>
+<parameter name="superType" type="java.lang.Class&lt;?&gt;">
+</parameter>
 </method>
 <method name="addMappers"
  return="void"
@@ -20385,8 +20649,6 @@
  visibility="public"
 >
 <parameter name="packageName" type="java.lang.String">
-</parameter>
-<parameter name="superType" type="java.lang.Class&lt;?&gt;">
 </parameter>
 </method>
 <method name="addParameterMap"
@@ -20535,6 +20797,17 @@
 </method>
 <method name="getDefaultExecutorType"
  return="org.apache.ibatis.session.ExecutorType"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="getDefaultFetchSize"
+ return="java.lang.Integer"
  abstract="false"
  native="false"
  synchronized="false"
@@ -20868,6 +21141,17 @@
 </method>
 <method name="getProxyFactory"
  return="org.apache.ibatis.executor.loader.ProxyFactory"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="getReflectorFactory"
+ return="org.apache.ibatis.reflection.ReflectorFactory"
  abstract="false"
  native="false"
  synchronized="false"
@@ -21367,6 +21651,19 @@
 <parameter name="defaultExecutorType" type="org.apache.ibatis.session.ExecutorType">
 </parameter>
 </method>
+<method name="setDefaultFetchSize"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="defaultFetchSize" type="java.lang.Integer">
+</parameter>
+</method>
 <method name="setDefaultScriptingLanguage"
  return="void"
  abstract="false"
@@ -21549,6 +21846,19 @@
 <parameter name="proxyFactory" type="org.apache.ibatis.executor.loader.ProxyFactory">
 </parameter>
 </method>
+<method name="setReflectorFactory"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="reflectorFactory" type="org.apache.ibatis.reflection.ReflectorFactory">
+</parameter>
+</method>
 <method name="setSafeResultHandlerEnabled"
  return="void"
  abstract="false"
@@ -21696,6 +22006,16 @@
 </field>
 <field name="defaultExecutorType"
  type="org.apache.ibatis.session.ExecutorType"
+ transient="false"
+ volatile="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="protected"
+>
+</field>
+<field name="defaultFetchSize"
+ type="java.lang.Integer"
  transient="false"
  volatile="false"
  static="false"
@@ -21944,6 +22264,16 @@
  visibility="protected"
 >
 </field>
+<field name="reflectorFactory"
+ type="org.apache.ibatis.reflection.ReflectorFactory"
+ transient="false"
+ volatile="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="protected"
+>
+</field>
 <field name="resultMaps"
  type="java.util.Map"
  transient="false"
@@ -22052,31 +22382,31 @@
 >
 <parameter name="name" type="java.lang.String">
 </parameter>
-</constructor>
-<constructor name="Configuration.StrictMap"
- type="org.apache.ibatis.session.Configuration.StrictMap"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="name" type="java.lang.String">
-</parameter>
-<parameter name="initialCapacity" type="int">
-</parameter>
-</constructor>
-<constructor name="Configuration.StrictMap"
- type="org.apache.ibatis.session.Configuration.StrictMap"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="name" type="java.lang.String">
-</parameter>
 <parameter name="initialCapacity" type="int">
 </parameter>
 <parameter name="loadFactor" type="float">
+</parameter>
+</constructor>
+<constructor name="Configuration.StrictMap"
+ type="org.apache.ibatis.session.Configuration.StrictMap"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="name" type="java.lang.String">
+</parameter>
+<parameter name="initialCapacity" type="int">
+</parameter>
+</constructor>
+<constructor name="Configuration.StrictMap"
+ type="org.apache.ibatis.session.Configuration.StrictMap"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="name" type="java.lang.String">
 </parameter>
 </constructor>
 <constructor name="Configuration.StrictMap"
@@ -22222,7 +22552,7 @@
 >
 </method>
 <method name="getResultObject"
- return="java.lang.Object"
+ return="T"
  abstract="true"
  native="false"
  synchronized="false"
@@ -22272,7 +22602,7 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="context" type="org.apache.ibatis.session.ResultContext">
+<parameter name="resultContext" type="org.apache.ibatis.session.ResultContext&lt;? extends T&gt;">
 </parameter>
 </method>
 </interface>
@@ -22366,8 +22696,6 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<implements name="java.io.Closeable">
-</implements>
 <method name="clearCache"
  return="void"
  abstract="true"
@@ -22569,10 +22897,6 @@
 >
 <parameter name="statement" type="java.lang.String">
 </parameter>
-<parameter name="parameter" type="java.lang.Object">
-</parameter>
-<parameter name="rowBounds" type="org.apache.ibatis.session.RowBounds">
-</parameter>
 <parameter name="handler" type="org.apache.ibatis.session.ResultHandler">
 </parameter>
 </method>
@@ -22588,6 +22912,10 @@
 >
 <parameter name="statement" type="java.lang.String">
 </parameter>
+<parameter name="parameter" type="java.lang.Object">
+</parameter>
+<parameter name="rowBounds" type="org.apache.ibatis.session.RowBounds">
+</parameter>
 <parameter name="handler" type="org.apache.ibatis.session.ResultHandler">
 </parameter>
 </method>
@@ -22648,6 +22976,21 @@
 >
 <parameter name="statement" type="java.lang.String">
 </parameter>
+<parameter name="mapKey" type="java.lang.String">
+</parameter>
+</method>
+<method name="selectMap"
+ return="java.util.Map&lt;K, V&gt;"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="statement" type="java.lang.String">
+</parameter>
 <parameter name="parameter" type="java.lang.Object">
 </parameter>
 <parameter name="mapKey" type="java.lang.String">
@@ -22670,21 +23013,6 @@
 <parameter name="mapKey" type="java.lang.String">
 </parameter>
 <parameter name="rowBounds" type="org.apache.ibatis.session.RowBounds">
-</parameter>
-</method>
-<method name="selectMap"
- return="java.util.Map&lt;K, V&gt;"
- abstract="true"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="statement" type="java.lang.String">
-</parameter>
-<parameter name="mapKey" type="java.lang.String">
 </parameter>
 </method>
 <method name="selectOne"
@@ -22858,6 +23186,19 @@
  deprecated="not deprecated"
  visibility="public"
 >
+<parameter name="level" type="org.apache.ibatis.session.TransactionIsolationLevel">
+</parameter>
+</method>
+<method name="openSession"
+ return="org.apache.ibatis.session.SqlSession"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
 <parameter name="execType" type="org.apache.ibatis.session.ExecutorType">
 </parameter>
 </method>
@@ -22888,7 +23229,7 @@
 >
 <parameter name="execType" type="org.apache.ibatis.session.ExecutorType">
 </parameter>
-<parameter name="connection" type="java.sql.Connection">
+<parameter name="level" type="org.apache.ibatis.session.TransactionIsolationLevel">
 </parameter>
 </method>
 <method name="openSession"
@@ -22903,20 +23244,7 @@
 >
 <parameter name="execType" type="org.apache.ibatis.session.ExecutorType">
 </parameter>
-<parameter name="level" type="org.apache.ibatis.session.TransactionIsolationLevel">
-</parameter>
-</method>
-<method name="openSession"
- return="org.apache.ibatis.session.SqlSession"
- abstract="true"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="level" type="org.apache.ibatis.session.TransactionIsolationLevel">
+<parameter name="connection" type="java.sql.Connection">
 </parameter>
 </method>
 </interface>
@@ -22946,66 +23274,6 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="inputStream" type="java.io.InputStream">
-</parameter>
-</method>
-<method name="build"
- return="org.apache.ibatis.session.SqlSessionFactory"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="inputStream" type="java.io.InputStream">
-</parameter>
-<parameter name="environment" type="java.lang.String">
-</parameter>
-</method>
-<method name="build"
- return="org.apache.ibatis.session.SqlSessionFactory"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="inputStream" type="java.io.InputStream">
-</parameter>
-<parameter name="environment" type="java.lang.String">
-</parameter>
-<parameter name="properties" type="java.util.Properties">
-</parameter>
-</method>
-<method name="build"
- return="org.apache.ibatis.session.SqlSessionFactory"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="inputStream" type="java.io.InputStream">
-</parameter>
-<parameter name="properties" type="java.util.Properties">
-</parameter>
-</method>
-<method name="build"
- return="org.apache.ibatis.session.SqlSessionFactory"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
 <parameter name="reader" type="java.io.Reader">
 </parameter>
 </method>
@@ -23022,6 +23290,21 @@
 <parameter name="reader" type="java.io.Reader">
 </parameter>
 <parameter name="environment" type="java.lang.String">
+</parameter>
+</method>
+<method name="build"
+ return="org.apache.ibatis.session.SqlSessionFactory"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="reader" type="java.io.Reader">
+</parameter>
+<parameter name="properties" type="java.util.Properties">
 </parameter>
 </method>
 <method name="build"
@@ -23051,7 +23334,52 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="reader" type="java.io.Reader">
+<parameter name="inputStream" type="java.io.InputStream">
+</parameter>
+</method>
+<method name="build"
+ return="org.apache.ibatis.session.SqlSessionFactory"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="inputStream" type="java.io.InputStream">
+</parameter>
+<parameter name="environment" type="java.lang.String">
+</parameter>
+</method>
+<method name="build"
+ return="org.apache.ibatis.session.SqlSessionFactory"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="inputStream" type="java.io.InputStream">
+</parameter>
+<parameter name="properties" type="java.util.Properties">
+</parameter>
+</method>
+<method name="build"
+ return="org.apache.ibatis.session.SqlSessionFactory"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="inputStream" type="java.io.InputStream">
+</parameter>
+<parameter name="environment" type="java.lang.String">
 </parameter>
 <parameter name="properties" type="java.util.Properties">
 </parameter>
@@ -23251,7 +23579,7 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="inputStream" type="java.io.InputStream">
+<parameter name="reader" type="java.io.Reader">
 </parameter>
 </method>
 <method name="newInstance"
@@ -23264,7 +23592,7 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="inputStream" type="java.io.InputStream">
+<parameter name="reader" type="java.io.Reader">
 </parameter>
 <parameter name="environment" type="java.lang.String">
 </parameter>
@@ -23279,7 +23607,7 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="inputStream" type="java.io.InputStream">
+<parameter name="reader" type="java.io.Reader">
 </parameter>
 <parameter name="properties" type="java.util.Properties">
 </parameter>
@@ -23294,7 +23622,7 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="reader" type="java.io.Reader">
+<parameter name="inputStream" type="java.io.InputStream">
 </parameter>
 </method>
 <method name="newInstance"
@@ -23307,7 +23635,7 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="reader" type="java.io.Reader">
+<parameter name="inputStream" type="java.io.InputStream">
 </parameter>
 <parameter name="environment" type="java.lang.String">
 </parameter>
@@ -23322,7 +23650,7 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="reader" type="java.io.Reader">
+<parameter name="inputStream" type="java.io.InputStream">
 </parameter>
 <parameter name="properties" type="java.util.Properties">
 </parameter>
@@ -23387,6 +23715,19 @@
  deprecated="not deprecated"
  visibility="public"
 >
+<parameter name="level" type="org.apache.ibatis.session.TransactionIsolationLevel">
+</parameter>
+</method>
+<method name="openSession"
+ return="org.apache.ibatis.session.SqlSession"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
 <parameter name="execType" type="org.apache.ibatis.session.ExecutorType">
 </parameter>
 </method>
@@ -23417,7 +23758,7 @@
 >
 <parameter name="execType" type="org.apache.ibatis.session.ExecutorType">
 </parameter>
-<parameter name="connection" type="java.sql.Connection">
+<parameter name="level" type="org.apache.ibatis.session.TransactionIsolationLevel">
 </parameter>
 </method>
 <method name="openSession"
@@ -23432,20 +23773,7 @@
 >
 <parameter name="execType" type="org.apache.ibatis.session.ExecutorType">
 </parameter>
-<parameter name="level" type="org.apache.ibatis.session.TransactionIsolationLevel">
-</parameter>
-</method>
-<method name="openSession"
- return="org.apache.ibatis.session.SqlSession"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="level" type="org.apache.ibatis.session.TransactionIsolationLevel">
+<parameter name="connection" type="java.sql.Connection">
 </parameter>
 </method>
 <method name="rollback"
@@ -23484,6 +23812,21 @@
 >
 <parameter name="statement" type="java.lang.String">
 </parameter>
+<parameter name="handler" type="org.apache.ibatis.session.ResultHandler">
+</parameter>
+</method>
+<method name="select"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="statement" type="java.lang.String">
+</parameter>
 <parameter name="parameter" type="java.lang.Object">
 </parameter>
 <parameter name="handler" type="org.apache.ibatis.session.ResultHandler">
@@ -23508,21 +23851,6 @@
 <parameter name="handler" type="org.apache.ibatis.session.ResultHandler">
 </parameter>
 </method>
-<method name="select"
- return="void"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="statement" type="java.lang.String">
-</parameter>
-<parameter name="handler" type="org.apache.ibatis.session.ResultHandler">
-</parameter>
-</method>
 <method name="selectList"
  return="java.util.List&lt;E&gt;"
  abstract="false"
@@ -23580,6 +23908,21 @@
 >
 <parameter name="statement" type="java.lang.String">
 </parameter>
+<parameter name="mapKey" type="java.lang.String">
+</parameter>
+</method>
+<method name="selectMap"
+ return="java.util.Map&lt;K, V&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="statement" type="java.lang.String">
+</parameter>
 <parameter name="parameter" type="java.lang.Object">
 </parameter>
 <parameter name="mapKey" type="java.lang.String">
@@ -23602,21 +23945,6 @@
 <parameter name="mapKey" type="java.lang.String">
 </parameter>
 <parameter name="rowBounds" type="org.apache.ibatis.session.RowBounds">
-</parameter>
-</method>
-<method name="selectMap"
- return="java.util.Map&lt;K, V&gt;"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="statement" type="java.lang.String">
-</parameter>
-<parameter name="mapKey" type="java.lang.String">
 </parameter>
 </method>
 <method name="selectOne"
@@ -23694,6 +24022,19 @@
  deprecated="not deprecated"
  visibility="public"
 >
+<parameter name="level" type="org.apache.ibatis.session.TransactionIsolationLevel">
+</parameter>
+</method>
+<method name="startManagedSession"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
 <parameter name="execType" type="org.apache.ibatis.session.ExecutorType">
 </parameter>
 </method>
@@ -23724,7 +24065,7 @@
 >
 <parameter name="execType" type="org.apache.ibatis.session.ExecutorType">
 </parameter>
-<parameter name="connection" type="java.sql.Connection">
+<parameter name="level" type="org.apache.ibatis.session.TransactionIsolationLevel">
 </parameter>
 </method>
 <method name="startManagedSession"
@@ -23739,20 +24080,7 @@
 >
 <parameter name="execType" type="org.apache.ibatis.session.ExecutorType">
 </parameter>
-<parameter name="level" type="org.apache.ibatis.session.TransactionIsolationLevel">
-</parameter>
-</method>
-<method name="startManagedSession"
- return="void"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="level" type="org.apache.ibatis.session.TransactionIsolationLevel">
+<parameter name="connection" type="java.sql.Connection">
 </parameter>
 </method>
 <method name="update"
@@ -23852,6 +24180,8 @@
 </parameter>
 <parameter name="executor" type="org.apache.ibatis.executor.Executor">
 </parameter>
+<parameter name="autoCommit" type="boolean">
+</parameter>
 </constructor>
 <constructor name="DefaultSqlSession"
  type="org.apache.ibatis.session.defaults.DefaultSqlSession"
@@ -23863,8 +24193,6 @@
 <parameter name="configuration" type="org.apache.ibatis.session.Configuration">
 </parameter>
 <parameter name="executor" type="org.apache.ibatis.executor.Executor">
-</parameter>
-<parameter name="autoCommit" type="boolean">
 </parameter>
 </constructor>
 <method name="clearCache"
@@ -24068,10 +24396,6 @@
 >
 <parameter name="statement" type="java.lang.String">
 </parameter>
-<parameter name="parameter" type="java.lang.Object">
-</parameter>
-<parameter name="rowBounds" type="org.apache.ibatis.session.RowBounds">
-</parameter>
 <parameter name="handler" type="org.apache.ibatis.session.ResultHandler">
 </parameter>
 </method>
@@ -24087,6 +24411,10 @@
 >
 <parameter name="statement" type="java.lang.String">
 </parameter>
+<parameter name="parameter" type="java.lang.Object">
+</parameter>
+<parameter name="rowBounds" type="org.apache.ibatis.session.RowBounds">
+</parameter>
 <parameter name="handler" type="org.apache.ibatis.session.ResultHandler">
 </parameter>
 </method>
@@ -24147,6 +24475,21 @@
 >
 <parameter name="statement" type="java.lang.String">
 </parameter>
+<parameter name="mapKey" type="java.lang.String">
+</parameter>
+</method>
+<method name="selectMap"
+ return="java.util.Map&lt;K, V&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="statement" type="java.lang.String">
+</parameter>
 <parameter name="parameter" type="java.lang.Object">
 </parameter>
 <parameter name="mapKey" type="java.lang.String">
@@ -24169,21 +24512,6 @@
 <parameter name="mapKey" type="java.lang.String">
 </parameter>
 <parameter name="rowBounds" type="org.apache.ibatis.session.RowBounds">
-</parameter>
-</method>
-<method name="selectMap"
- return="java.util.Map&lt;K, V&gt;"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="statement" type="java.lang.String">
-</parameter>
-<parameter name="mapKey" type="java.lang.String">
 </parameter>
 </method>
 <method name="selectOne"
@@ -24325,7 +24653,20 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="connection" type="java.sql.Connection">
+<parameter name="execType" type="org.apache.ibatis.session.ExecutorType">
+</parameter>
+</method>
+<method name="openSession"
+ return="org.apache.ibatis.session.SqlSession"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="level" type="org.apache.ibatis.session.TransactionIsolationLevel">
 </parameter>
 </method>
 <method name="openSession"
@@ -24339,6 +24680,8 @@
  visibility="public"
 >
 <parameter name="execType" type="org.apache.ibatis.session.ExecutorType">
+</parameter>
+<parameter name="level" type="org.apache.ibatis.session.TransactionIsolationLevel">
 </parameter>
 </method>
 <method name="openSession"
@@ -24366,8 +24709,6 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="execType" type="org.apache.ibatis.session.ExecutorType">
-</parameter>
 <parameter name="connection" type="java.sql.Connection">
 </parameter>
 </method>
@@ -24383,20 +24724,7 @@
 >
 <parameter name="execType" type="org.apache.ibatis.session.ExecutorType">
 </parameter>
-<parameter name="level" type="org.apache.ibatis.session.TransactionIsolationLevel">
-</parameter>
-</method>
-<method name="openSession"
- return="org.apache.ibatis.session.SqlSession"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="level" type="org.apache.ibatis.session.TransactionIsolationLevel">
+<parameter name="connection" type="java.sql.Connection">
 </parameter>
 </method>
 </class>
@@ -24583,7 +24911,11 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="connection" type="java.sql.Connection">
+<parameter name="ds" type="javax.sql.DataSource">
+</parameter>
+<parameter name="desiredLevel" type="org.apache.ibatis.session.TransactionIsolationLevel">
+</parameter>
+<parameter name="desiredAutoCommit" type="boolean">
 </parameter>
 </constructor>
 <constructor name="JdbcTransaction"
@@ -24593,11 +24925,7 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="ds" type="javax.sql.DataSource">
-</parameter>
-<parameter name="desiredLevel" type="org.apache.ibatis.session.TransactionIsolationLevel">
-</parameter>
-<parameter name="desiredAutoCommit" type="boolean">
+<parameter name="connection" type="java.sql.Connection">
 </parameter>
 </constructor>
 <method name="close"
@@ -24999,43 +25327,43 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="cs" type="java.sql.CallableStatement">
-</parameter>
-<parameter name="columnIndex" type="int">
-</parameter>
-<exception name="SQLException" type="java.sql.SQLException">
-</exception>
-</method>
-<method name="getNullableResult"
- return="java.lang.Object"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="rs" type="java.sql.ResultSet">
-</parameter>
-<parameter name="columnIndex" type="int">
-</parameter>
-<exception name="SQLException" type="java.sql.SQLException">
-</exception>
-</method>
-<method name="getNullableResult"
- return="java.lang.Object"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
 <parameter name="rs" type="java.sql.ResultSet">
 </parameter>
 <parameter name="columnName" type="java.lang.String">
+</parameter>
+<exception name="SQLException" type="java.sql.SQLException">
+</exception>
+</method>
+<method name="getNullableResult"
+ return="java.lang.Object"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="rs" type="java.sql.ResultSet">
+</parameter>
+<parameter name="columnIndex" type="int">
+</parameter>
+<exception name="SQLException" type="java.sql.SQLException">
+</exception>
+</method>
+<method name="getNullableResult"
+ return="java.lang.Object"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="cs" type="java.sql.CallableStatement">
+</parameter>
+<parameter name="columnIndex" type="int">
 </parameter>
 <exception name="SQLException" type="java.sql.SQLException">
 </exception>
@@ -25090,9 +25418,9 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="cs" type="java.sql.CallableStatement">
+<parameter name="rs" type="java.sql.ResultSet">
 </parameter>
-<parameter name="columnIndex" type="int">
+<parameter name="columnName" type="java.lang.String">
 </parameter>
 <exception name="SQLException" type="java.sql.SQLException">
 </exception>
@@ -25124,23 +25452,6 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="rs" type="java.sql.ResultSet">
-</parameter>
-<parameter name="columnName" type="java.lang.String">
-</parameter>
-<exception name="SQLException" type="java.sql.SQLException">
-</exception>
-</method>
-<method name="getResult"
- return="T"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
 <parameter name="cs" type="java.sql.CallableStatement">
 </parameter>
 <parameter name="columnIndex" type="int">
@@ -25160,7 +25471,7 @@
 >
 <parameter name="rs" type="java.sql.ResultSet">
 </parameter>
-<parameter name="columnIndex" type="int">
+<parameter name="columnName" type="java.lang.String">
 </parameter>
 <exception name="SQLException" type="java.sql.SQLException">
 </exception>
@@ -25177,7 +25488,24 @@
 >
 <parameter name="rs" type="java.sql.ResultSet">
 </parameter>
-<parameter name="columnName" type="java.lang.String">
+<parameter name="columnIndex" type="int">
+</parameter>
+<exception name="SQLException" type="java.sql.SQLException">
+</exception>
+</method>
+<method name="getResult"
+ return="T"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="cs" type="java.sql.CallableStatement">
+</parameter>
+<parameter name="columnIndex" type="int">
 </parameter>
 <exception name="SQLException" type="java.sql.SQLException">
 </exception>
@@ -25274,43 +25602,43 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="cs" type="java.sql.CallableStatement">
-</parameter>
-<parameter name="columnIndex" type="int">
-</parameter>
-<exception name="SQLException" type="java.sql.SQLException">
-</exception>
-</method>
-<method name="getNullableResult"
- return="java.math.BigDecimal"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="rs" type="java.sql.ResultSet">
-</parameter>
-<parameter name="columnIndex" type="int">
-</parameter>
-<exception name="SQLException" type="java.sql.SQLException">
-</exception>
-</method>
-<method name="getNullableResult"
- return="java.math.BigDecimal"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
 <parameter name="rs" type="java.sql.ResultSet">
 </parameter>
 <parameter name="columnName" type="java.lang.String">
+</parameter>
+<exception name="SQLException" type="java.sql.SQLException">
+</exception>
+</method>
+<method name="getNullableResult"
+ return="java.math.BigDecimal"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="rs" type="java.sql.ResultSet">
+</parameter>
+<parameter name="columnIndex" type="int">
+</parameter>
+<exception name="SQLException" type="java.sql.SQLException">
+</exception>
+</method>
+<method name="getNullableResult"
+ return="java.math.BigDecimal"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="cs" type="java.sql.CallableStatement">
+</parameter>
+<parameter name="columnIndex" type="int">
 </parameter>
 <exception name="SQLException" type="java.sql.SQLException">
 </exception>
@@ -25363,43 +25691,43 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="cs" type="java.sql.CallableStatement">
-</parameter>
-<parameter name="columnIndex" type="int">
-</parameter>
-<exception name="SQLException" type="java.sql.SQLException">
-</exception>
-</method>
-<method name="getNullableResult"
- return="java.math.BigInteger"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="rs" type="java.sql.ResultSet">
-</parameter>
-<parameter name="columnIndex" type="int">
-</parameter>
-<exception name="SQLException" type="java.sql.SQLException">
-</exception>
-</method>
-<method name="getNullableResult"
- return="java.math.BigInteger"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
 <parameter name="rs" type="java.sql.ResultSet">
 </parameter>
 <parameter name="columnName" type="java.lang.String">
+</parameter>
+<exception name="SQLException" type="java.sql.SQLException">
+</exception>
+</method>
+<method name="getNullableResult"
+ return="java.math.BigInteger"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="rs" type="java.sql.ResultSet">
+</parameter>
+<parameter name="columnIndex" type="int">
+</parameter>
+<exception name="SQLException" type="java.sql.SQLException">
+</exception>
+</method>
+<method name="getNullableResult"
+ return="java.math.BigInteger"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="cs" type="java.sql.CallableStatement">
+</parameter>
+<parameter name="columnIndex" type="int">
 </parameter>
 <exception name="SQLException" type="java.sql.SQLException">
 </exception>
@@ -25452,43 +25780,43 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="cs" type="java.sql.CallableStatement">
-</parameter>
-<parameter name="columnIndex" type="int">
-</parameter>
-<exception name="SQLException" type="java.sql.SQLException">
-</exception>
-</method>
-<method name="getNullableResult"
- return="java.lang.Byte[]"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="rs" type="java.sql.ResultSet">
-</parameter>
-<parameter name="columnIndex" type="int">
-</parameter>
-<exception name="SQLException" type="java.sql.SQLException">
-</exception>
-</method>
-<method name="getNullableResult"
- return="java.lang.Byte[]"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
 <parameter name="rs" type="java.sql.ResultSet">
 </parameter>
 <parameter name="columnName" type="java.lang.String">
+</parameter>
+<exception name="SQLException" type="java.sql.SQLException">
+</exception>
+</method>
+<method name="getNullableResult"
+ return="java.lang.Byte[]"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="rs" type="java.sql.ResultSet">
+</parameter>
+<parameter name="columnIndex" type="int">
+</parameter>
+<exception name="SQLException" type="java.sql.SQLException">
+</exception>
+</method>
+<method name="getNullableResult"
+ return="java.lang.Byte[]"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="cs" type="java.sql.CallableStatement">
+</parameter>
+<parameter name="columnIndex" type="int">
 </parameter>
 <exception name="SQLException" type="java.sql.SQLException">
 </exception>
@@ -25541,43 +25869,43 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="cs" type="java.sql.CallableStatement">
-</parameter>
-<parameter name="columnIndex" type="int">
-</parameter>
-<exception name="SQLException" type="java.sql.SQLException">
-</exception>
-</method>
-<method name="getNullableResult"
- return="byte[]"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="rs" type="java.sql.ResultSet">
-</parameter>
-<parameter name="columnIndex" type="int">
-</parameter>
-<exception name="SQLException" type="java.sql.SQLException">
-</exception>
-</method>
-<method name="getNullableResult"
- return="byte[]"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
 <parameter name="rs" type="java.sql.ResultSet">
 </parameter>
 <parameter name="columnName" type="java.lang.String">
+</parameter>
+<exception name="SQLException" type="java.sql.SQLException">
+</exception>
+</method>
+<method name="getNullableResult"
+ return="byte[]"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="rs" type="java.sql.ResultSet">
+</parameter>
+<parameter name="columnIndex" type="int">
+</parameter>
+<exception name="SQLException" type="java.sql.SQLException">
+</exception>
+</method>
+<method name="getNullableResult"
+ return="byte[]"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="cs" type="java.sql.CallableStatement">
+</parameter>
+<parameter name="columnIndex" type="int">
 </parameter>
 <exception name="SQLException" type="java.sql.SQLException">
 </exception>
@@ -25630,43 +25958,43 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="cs" type="java.sql.CallableStatement">
-</parameter>
-<parameter name="columnIndex" type="int">
-</parameter>
-<exception name="SQLException" type="java.sql.SQLException">
-</exception>
-</method>
-<method name="getNullableResult"
- return="java.lang.Boolean"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="rs" type="java.sql.ResultSet">
-</parameter>
-<parameter name="columnIndex" type="int">
-</parameter>
-<exception name="SQLException" type="java.sql.SQLException">
-</exception>
-</method>
-<method name="getNullableResult"
- return="java.lang.Boolean"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
 <parameter name="rs" type="java.sql.ResultSet">
 </parameter>
 <parameter name="columnName" type="java.lang.String">
+</parameter>
+<exception name="SQLException" type="java.sql.SQLException">
+</exception>
+</method>
+<method name="getNullableResult"
+ return="java.lang.Boolean"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="rs" type="java.sql.ResultSet">
+</parameter>
+<parameter name="columnIndex" type="int">
+</parameter>
+<exception name="SQLException" type="java.sql.SQLException">
+</exception>
+</method>
+<method name="getNullableResult"
+ return="java.lang.Boolean"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="cs" type="java.sql.CallableStatement">
+</parameter>
+<parameter name="columnIndex" type="int">
 </parameter>
 <exception name="SQLException" type="java.sql.SQLException">
 </exception>
@@ -25719,43 +26047,43 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="cs" type="java.sql.CallableStatement">
-</parameter>
-<parameter name="columnIndex" type="int">
-</parameter>
-<exception name="SQLException" type="java.sql.SQLException">
-</exception>
-</method>
-<method name="getNullableResult"
- return="byte[]"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="rs" type="java.sql.ResultSet">
-</parameter>
-<parameter name="columnIndex" type="int">
-</parameter>
-<exception name="SQLException" type="java.sql.SQLException">
-</exception>
-</method>
-<method name="getNullableResult"
- return="byte[]"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
 <parameter name="rs" type="java.sql.ResultSet">
 </parameter>
 <parameter name="columnName" type="java.lang.String">
+</parameter>
+<exception name="SQLException" type="java.sql.SQLException">
+</exception>
+</method>
+<method name="getNullableResult"
+ return="byte[]"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="rs" type="java.sql.ResultSet">
+</parameter>
+<parameter name="columnIndex" type="int">
+</parameter>
+<exception name="SQLException" type="java.sql.SQLException">
+</exception>
+</method>
+<method name="getNullableResult"
+ return="byte[]"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="cs" type="java.sql.CallableStatement">
+</parameter>
+<parameter name="columnIndex" type="int">
 </parameter>
 <exception name="SQLException" type="java.sql.SQLException">
 </exception>
@@ -25808,43 +26136,43 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="cs" type="java.sql.CallableStatement">
-</parameter>
-<parameter name="columnIndex" type="int">
-</parameter>
-<exception name="SQLException" type="java.sql.SQLException">
-</exception>
-</method>
-<method name="getNullableResult"
- return="java.lang.Byte[]"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="rs" type="java.sql.ResultSet">
-</parameter>
-<parameter name="columnIndex" type="int">
-</parameter>
-<exception name="SQLException" type="java.sql.SQLException">
-</exception>
-</method>
-<method name="getNullableResult"
- return="java.lang.Byte[]"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
 <parameter name="rs" type="java.sql.ResultSet">
 </parameter>
 <parameter name="columnName" type="java.lang.String">
+</parameter>
+<exception name="SQLException" type="java.sql.SQLException">
+</exception>
+</method>
+<method name="getNullableResult"
+ return="java.lang.Byte[]"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="rs" type="java.sql.ResultSet">
+</parameter>
+<parameter name="columnIndex" type="int">
+</parameter>
+<exception name="SQLException" type="java.sql.SQLException">
+</exception>
+</method>
+<method name="getNullableResult"
+ return="java.lang.Byte[]"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="cs" type="java.sql.CallableStatement">
+</parameter>
+<parameter name="columnIndex" type="int">
 </parameter>
 <exception name="SQLException" type="java.sql.SQLException">
 </exception>
@@ -25897,43 +26225,43 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="cs" type="java.sql.CallableStatement">
-</parameter>
-<parameter name="columnIndex" type="int">
-</parameter>
-<exception name="SQLException" type="java.sql.SQLException">
-</exception>
-</method>
-<method name="getNullableResult"
- return="java.lang.Byte"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="rs" type="java.sql.ResultSet">
-</parameter>
-<parameter name="columnIndex" type="int">
-</parameter>
-<exception name="SQLException" type="java.sql.SQLException">
-</exception>
-</method>
-<method name="getNullableResult"
- return="java.lang.Byte"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
 <parameter name="rs" type="java.sql.ResultSet">
 </parameter>
 <parameter name="columnName" type="java.lang.String">
+</parameter>
+<exception name="SQLException" type="java.sql.SQLException">
+</exception>
+</method>
+<method name="getNullableResult"
+ return="java.lang.Byte"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="rs" type="java.sql.ResultSet">
+</parameter>
+<parameter name="columnIndex" type="int">
+</parameter>
+<exception name="SQLException" type="java.sql.SQLException">
+</exception>
+</method>
+<method name="getNullableResult"
+ return="java.lang.Byte"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="cs" type="java.sql.CallableStatement">
+</parameter>
+<parameter name="columnIndex" type="int">
 </parameter>
 <exception name="SQLException" type="java.sql.SQLException">
 </exception>
@@ -25986,43 +26314,43 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="cs" type="java.sql.CallableStatement">
-</parameter>
-<parameter name="columnIndex" type="int">
-</parameter>
-<exception name="SQLException" type="java.sql.SQLException">
-</exception>
-</method>
-<method name="getNullableResult"
- return="java.lang.Character"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="rs" type="java.sql.ResultSet">
-</parameter>
-<parameter name="columnIndex" type="int">
-</parameter>
-<exception name="SQLException" type="java.sql.SQLException">
-</exception>
-</method>
-<method name="getNullableResult"
- return="java.lang.Character"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
 <parameter name="rs" type="java.sql.ResultSet">
 </parameter>
 <parameter name="columnName" type="java.lang.String">
+</parameter>
+<exception name="SQLException" type="java.sql.SQLException">
+</exception>
+</method>
+<method name="getNullableResult"
+ return="java.lang.Character"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="rs" type="java.sql.ResultSet">
+</parameter>
+<parameter name="columnIndex" type="int">
+</parameter>
+<exception name="SQLException" type="java.sql.SQLException">
+</exception>
+</method>
+<method name="getNullableResult"
+ return="java.lang.Character"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="cs" type="java.sql.CallableStatement">
+</parameter>
+<parameter name="columnIndex" type="int">
 </parameter>
 <exception name="SQLException" type="java.sql.SQLException">
 </exception>
@@ -26075,43 +26403,43 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="cs" type="java.sql.CallableStatement">
-</parameter>
-<parameter name="columnIndex" type="int">
-</parameter>
-<exception name="SQLException" type="java.sql.SQLException">
-</exception>
-</method>
-<method name="getNullableResult"
- return="java.lang.String"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="rs" type="java.sql.ResultSet">
-</parameter>
-<parameter name="columnIndex" type="int">
-</parameter>
-<exception name="SQLException" type="java.sql.SQLException">
-</exception>
-</method>
-<method name="getNullableResult"
- return="java.lang.String"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
 <parameter name="rs" type="java.sql.ResultSet">
 </parameter>
 <parameter name="columnName" type="java.lang.String">
+</parameter>
+<exception name="SQLException" type="java.sql.SQLException">
+</exception>
+</method>
+<method name="getNullableResult"
+ return="java.lang.String"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="rs" type="java.sql.ResultSet">
+</parameter>
+<parameter name="columnIndex" type="int">
+</parameter>
+<exception name="SQLException" type="java.sql.SQLException">
+</exception>
+</method>
+<method name="getNullableResult"
+ return="java.lang.String"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="cs" type="java.sql.CallableStatement">
+</parameter>
+<parameter name="columnIndex" type="int">
 </parameter>
 <exception name="SQLException" type="java.sql.SQLException">
 </exception>
@@ -26164,43 +26492,43 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="cs" type="java.sql.CallableStatement">
-</parameter>
-<parameter name="columnIndex" type="int">
-</parameter>
-<exception name="SQLException" type="java.sql.SQLException">
-</exception>
-</method>
-<method name="getNullableResult"
- return="java.util.Date"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="rs" type="java.sql.ResultSet">
-</parameter>
-<parameter name="columnIndex" type="int">
-</parameter>
-<exception name="SQLException" type="java.sql.SQLException">
-</exception>
-</method>
-<method name="getNullableResult"
- return="java.util.Date"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
 <parameter name="rs" type="java.sql.ResultSet">
 </parameter>
 <parameter name="columnName" type="java.lang.String">
+</parameter>
+<exception name="SQLException" type="java.sql.SQLException">
+</exception>
+</method>
+<method name="getNullableResult"
+ return="java.util.Date"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="rs" type="java.sql.ResultSet">
+</parameter>
+<parameter name="columnIndex" type="int">
+</parameter>
+<exception name="SQLException" type="java.sql.SQLException">
+</exception>
+</method>
+<method name="getNullableResult"
+ return="java.util.Date"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="cs" type="java.sql.CallableStatement">
+</parameter>
+<parameter name="columnIndex" type="int">
 </parameter>
 <exception name="SQLException" type="java.sql.SQLException">
 </exception>
@@ -26253,43 +26581,43 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="cs" type="java.sql.CallableStatement">
-</parameter>
-<parameter name="columnIndex" type="int">
-</parameter>
-<exception name="SQLException" type="java.sql.SQLException">
-</exception>
-</method>
-<method name="getNullableResult"
- return="java.util.Date"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="rs" type="java.sql.ResultSet">
-</parameter>
-<parameter name="columnIndex" type="int">
-</parameter>
-<exception name="SQLException" type="java.sql.SQLException">
-</exception>
-</method>
-<method name="getNullableResult"
- return="java.util.Date"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
 <parameter name="rs" type="java.sql.ResultSet">
 </parameter>
 <parameter name="columnName" type="java.lang.String">
+</parameter>
+<exception name="SQLException" type="java.sql.SQLException">
+</exception>
+</method>
+<method name="getNullableResult"
+ return="java.util.Date"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="rs" type="java.sql.ResultSet">
+</parameter>
+<parameter name="columnIndex" type="int">
+</parameter>
+<exception name="SQLException" type="java.sql.SQLException">
+</exception>
+</method>
+<method name="getNullableResult"
+ return="java.util.Date"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="cs" type="java.sql.CallableStatement">
+</parameter>
+<parameter name="columnIndex" type="int">
 </parameter>
 <exception name="SQLException" type="java.sql.SQLException">
 </exception>
@@ -26342,43 +26670,43 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="cs" type="java.sql.CallableStatement">
-</parameter>
-<parameter name="columnIndex" type="int">
-</parameter>
-<exception name="SQLException" type="java.sql.SQLException">
-</exception>
-</method>
-<method name="getNullableResult"
- return="java.lang.Double"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="rs" type="java.sql.ResultSet">
-</parameter>
-<parameter name="columnIndex" type="int">
-</parameter>
-<exception name="SQLException" type="java.sql.SQLException">
-</exception>
-</method>
-<method name="getNullableResult"
- return="java.lang.Double"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
 <parameter name="rs" type="java.sql.ResultSet">
 </parameter>
 <parameter name="columnName" type="java.lang.String">
+</parameter>
+<exception name="SQLException" type="java.sql.SQLException">
+</exception>
+</method>
+<method name="getNullableResult"
+ return="java.lang.Double"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="rs" type="java.sql.ResultSet">
+</parameter>
+<parameter name="columnIndex" type="int">
+</parameter>
+<exception name="SQLException" type="java.sql.SQLException">
+</exception>
+</method>
+<method name="getNullableResult"
+ return="java.lang.Double"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="cs" type="java.sql.CallableStatement">
+</parameter>
+<parameter name="columnIndex" type="int">
 </parameter>
 <exception name="SQLException" type="java.sql.SQLException">
 </exception>
@@ -26433,43 +26761,43 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="cs" type="java.sql.CallableStatement">
-</parameter>
-<parameter name="columnIndex" type="int">
-</parameter>
-<exception name="SQLException" type="java.sql.SQLException">
-</exception>
-</method>
-<method name="getNullableResult"
- return="E"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="rs" type="java.sql.ResultSet">
-</parameter>
-<parameter name="columnIndex" type="int">
-</parameter>
-<exception name="SQLException" type="java.sql.SQLException">
-</exception>
-</method>
-<method name="getNullableResult"
- return="E"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
 <parameter name="rs" type="java.sql.ResultSet">
 </parameter>
 <parameter name="columnName" type="java.lang.String">
+</parameter>
+<exception name="SQLException" type="java.sql.SQLException">
+</exception>
+</method>
+<method name="getNullableResult"
+ return="E"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="rs" type="java.sql.ResultSet">
+</parameter>
+<parameter name="columnIndex" type="int">
+</parameter>
+<exception name="SQLException" type="java.sql.SQLException">
+</exception>
+</method>
+<method name="getNullableResult"
+ return="E"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="cs" type="java.sql.CallableStatement">
+</parameter>
+<parameter name="columnIndex" type="int">
 </parameter>
 <exception name="SQLException" type="java.sql.SQLException">
 </exception>
@@ -26524,43 +26852,43 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="cs" type="java.sql.CallableStatement">
-</parameter>
-<parameter name="columnIndex" type="int">
-</parameter>
-<exception name="SQLException" type="java.sql.SQLException">
-</exception>
-</method>
-<method name="getNullableResult"
- return="E"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="rs" type="java.sql.ResultSet">
-</parameter>
-<parameter name="columnIndex" type="int">
-</parameter>
-<exception name="SQLException" type="java.sql.SQLException">
-</exception>
-</method>
-<method name="getNullableResult"
- return="E"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
 <parameter name="rs" type="java.sql.ResultSet">
 </parameter>
 <parameter name="columnName" type="java.lang.String">
+</parameter>
+<exception name="SQLException" type="java.sql.SQLException">
+</exception>
+</method>
+<method name="getNullableResult"
+ return="E"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="rs" type="java.sql.ResultSet">
+</parameter>
+<parameter name="columnIndex" type="int">
+</parameter>
+<exception name="SQLException" type="java.sql.SQLException">
+</exception>
+</method>
+<method name="getNullableResult"
+ return="E"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="cs" type="java.sql.CallableStatement">
+</parameter>
+<parameter name="columnIndex" type="int">
 </parameter>
 <exception name="SQLException" type="java.sql.SQLException">
 </exception>
@@ -26613,43 +26941,43 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="cs" type="java.sql.CallableStatement">
-</parameter>
-<parameter name="columnIndex" type="int">
-</parameter>
-<exception name="SQLException" type="java.sql.SQLException">
-</exception>
-</method>
-<method name="getNullableResult"
- return="java.lang.Float"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="rs" type="java.sql.ResultSet">
-</parameter>
-<parameter name="columnIndex" type="int">
-</parameter>
-<exception name="SQLException" type="java.sql.SQLException">
-</exception>
-</method>
-<method name="getNullableResult"
- return="java.lang.Float"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
 <parameter name="rs" type="java.sql.ResultSet">
 </parameter>
 <parameter name="columnName" type="java.lang.String">
+</parameter>
+<exception name="SQLException" type="java.sql.SQLException">
+</exception>
+</method>
+<method name="getNullableResult"
+ return="java.lang.Float"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="rs" type="java.sql.ResultSet">
+</parameter>
+<parameter name="columnIndex" type="int">
+</parameter>
+<exception name="SQLException" type="java.sql.SQLException">
+</exception>
+</method>
+<method name="getNullableResult"
+ return="java.lang.Float"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="cs" type="java.sql.CallableStatement">
+</parameter>
+<parameter name="columnIndex" type="int">
 </parameter>
 <exception name="SQLException" type="java.sql.SQLException">
 </exception>
@@ -26702,43 +27030,43 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="cs" type="java.sql.CallableStatement">
-</parameter>
-<parameter name="columnIndex" type="int">
-</parameter>
-<exception name="SQLException" type="java.sql.SQLException">
-</exception>
-</method>
-<method name="getNullableResult"
- return="java.lang.Integer"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="rs" type="java.sql.ResultSet">
-</parameter>
-<parameter name="columnIndex" type="int">
-</parameter>
-<exception name="SQLException" type="java.sql.SQLException">
-</exception>
-</method>
-<method name="getNullableResult"
- return="java.lang.Integer"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
 <parameter name="rs" type="java.sql.ResultSet">
 </parameter>
 <parameter name="columnName" type="java.lang.String">
+</parameter>
+<exception name="SQLException" type="java.sql.SQLException">
+</exception>
+</method>
+<method name="getNullableResult"
+ return="java.lang.Integer"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="rs" type="java.sql.ResultSet">
+</parameter>
+<parameter name="columnIndex" type="int">
+</parameter>
+<exception name="SQLException" type="java.sql.SQLException">
+</exception>
+</method>
+<method name="getNullableResult"
+ return="java.lang.Integer"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="cs" type="java.sql.CallableStatement">
+</parameter>
+<parameter name="columnIndex" type="int">
 </parameter>
 <exception name="SQLException" type="java.sql.SQLException">
 </exception>
@@ -26847,43 +27175,43 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="cs" type="java.sql.CallableStatement">
-</parameter>
-<parameter name="columnIndex" type="int">
-</parameter>
-<exception name="SQLException" type="java.sql.SQLException">
-</exception>
-</method>
-<method name="getNullableResult"
- return="java.lang.Long"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="rs" type="java.sql.ResultSet">
-</parameter>
-<parameter name="columnIndex" type="int">
-</parameter>
-<exception name="SQLException" type="java.sql.SQLException">
-</exception>
-</method>
-<method name="getNullableResult"
- return="java.lang.Long"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
 <parameter name="rs" type="java.sql.ResultSet">
 </parameter>
 <parameter name="columnName" type="java.lang.String">
+</parameter>
+<exception name="SQLException" type="java.sql.SQLException">
+</exception>
+</method>
+<method name="getNullableResult"
+ return="java.lang.Long"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="rs" type="java.sql.ResultSet">
+</parameter>
+<parameter name="columnIndex" type="int">
+</parameter>
+<exception name="SQLException" type="java.sql.SQLException">
+</exception>
+</method>
+<method name="getNullableResult"
+ return="java.lang.Long"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="cs" type="java.sql.CallableStatement">
+</parameter>
+<parameter name="columnIndex" type="int">
 </parameter>
 <exception name="SQLException" type="java.sql.SQLException">
 </exception>
@@ -26958,43 +27286,43 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="cs" type="java.sql.CallableStatement">
-</parameter>
-<parameter name="columnIndex" type="int">
-</parameter>
-<exception name="SQLException" type="java.sql.SQLException">
-</exception>
-</method>
-<method name="getNullableResult"
- return="java.lang.String"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="rs" type="java.sql.ResultSet">
-</parameter>
-<parameter name="columnIndex" type="int">
-</parameter>
-<exception name="SQLException" type="java.sql.SQLException">
-</exception>
-</method>
-<method name="getNullableResult"
- return="java.lang.String"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
 <parameter name="rs" type="java.sql.ResultSet">
 </parameter>
 <parameter name="columnName" type="java.lang.String">
+</parameter>
+<exception name="SQLException" type="java.sql.SQLException">
+</exception>
+</method>
+<method name="getNullableResult"
+ return="java.lang.String"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="rs" type="java.sql.ResultSet">
+</parameter>
+<parameter name="columnIndex" type="int">
+</parameter>
+<exception name="SQLException" type="java.sql.SQLException">
+</exception>
+</method>
+<method name="getNullableResult"
+ return="java.lang.String"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="cs" type="java.sql.CallableStatement">
+</parameter>
+<parameter name="columnIndex" type="int">
 </parameter>
 <exception name="SQLException" type="java.sql.SQLException">
 </exception>
@@ -27047,43 +27375,43 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="cs" type="java.sql.CallableStatement">
-</parameter>
-<parameter name="columnIndex" type="int">
-</parameter>
-<exception name="SQLException" type="java.sql.SQLException">
-</exception>
-</method>
-<method name="getNullableResult"
- return="java.lang.String"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="rs" type="java.sql.ResultSet">
-</parameter>
-<parameter name="columnIndex" type="int">
-</parameter>
-<exception name="SQLException" type="java.sql.SQLException">
-</exception>
-</method>
-<method name="getNullableResult"
- return="java.lang.String"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
 <parameter name="rs" type="java.sql.ResultSet">
 </parameter>
 <parameter name="columnName" type="java.lang.String">
+</parameter>
+<exception name="SQLException" type="java.sql.SQLException">
+</exception>
+</method>
+<method name="getNullableResult"
+ return="java.lang.String"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="rs" type="java.sql.ResultSet">
+</parameter>
+<parameter name="columnIndex" type="int">
+</parameter>
+<exception name="SQLException" type="java.sql.SQLException">
+</exception>
+</method>
+<method name="getNullableResult"
+ return="java.lang.String"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="cs" type="java.sql.CallableStatement">
+</parameter>
+<parameter name="columnIndex" type="int">
 </parameter>
 <exception name="SQLException" type="java.sql.SQLException">
 </exception>
@@ -27136,43 +27464,43 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="cs" type="java.sql.CallableStatement">
-</parameter>
-<parameter name="columnIndex" type="int">
-</parameter>
-<exception name="SQLException" type="java.sql.SQLException">
-</exception>
-</method>
-<method name="getNullableResult"
- return="java.lang.Object"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="rs" type="java.sql.ResultSet">
-</parameter>
-<parameter name="columnIndex" type="int">
-</parameter>
-<exception name="SQLException" type="java.sql.SQLException">
-</exception>
-</method>
-<method name="getNullableResult"
- return="java.lang.Object"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
 <parameter name="rs" type="java.sql.ResultSet">
 </parameter>
 <parameter name="columnName" type="java.lang.String">
+</parameter>
+<exception name="SQLException" type="java.sql.SQLException">
+</exception>
+</method>
+<method name="getNullableResult"
+ return="java.lang.Object"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="rs" type="java.sql.ResultSet">
+</parameter>
+<parameter name="columnIndex" type="int">
+</parameter>
+<exception name="SQLException" type="java.sql.SQLException">
+</exception>
+</method>
+<method name="getNullableResult"
+ return="java.lang.Object"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="cs" type="java.sql.CallableStatement">
+</parameter>
+<parameter name="columnIndex" type="int">
 </parameter>
 <exception name="SQLException" type="java.sql.SQLException">
 </exception>
@@ -27225,43 +27553,43 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="cs" type="java.sql.CallableStatement">
-</parameter>
-<parameter name="columnIndex" type="int">
-</parameter>
-<exception name="SQLException" type="java.sql.SQLException">
-</exception>
-</method>
-<method name="getNullableResult"
- return="java.lang.Short"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="rs" type="java.sql.ResultSet">
-</parameter>
-<parameter name="columnIndex" type="int">
-</parameter>
-<exception name="SQLException" type="java.sql.SQLException">
-</exception>
-</method>
-<method name="getNullableResult"
- return="java.lang.Short"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
 <parameter name="rs" type="java.sql.ResultSet">
 </parameter>
 <parameter name="columnName" type="java.lang.String">
+</parameter>
+<exception name="SQLException" type="java.sql.SQLException">
+</exception>
+</method>
+<method name="getNullableResult"
+ return="java.lang.Short"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="rs" type="java.sql.ResultSet">
+</parameter>
+<parameter name="columnIndex" type="int">
+</parameter>
+<exception name="SQLException" type="java.sql.SQLException">
+</exception>
+</method>
+<method name="getNullableResult"
+ return="java.lang.Short"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="cs" type="java.sql.CallableStatement">
+</parameter>
+<parameter name="columnIndex" type="int">
 </parameter>
 <exception name="SQLException" type="java.sql.SQLException">
 </exception>
@@ -27296,14 +27624,6 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<constructor name="SimpleTypeRegistry"
- type="org.apache.ibatis.type.SimpleTypeRegistry"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</constructor>
 <method name="isSimpleType"
  return="boolean"
  abstract="false"
@@ -27344,43 +27664,43 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="cs" type="java.sql.CallableStatement">
-</parameter>
-<parameter name="columnIndex" type="int">
-</parameter>
-<exception name="SQLException" type="java.sql.SQLException">
-</exception>
-</method>
-<method name="getNullableResult"
- return="java.sql.Date"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="rs" type="java.sql.ResultSet">
-</parameter>
-<parameter name="columnIndex" type="int">
-</parameter>
-<exception name="SQLException" type="java.sql.SQLException">
-</exception>
-</method>
-<method name="getNullableResult"
- return="java.sql.Date"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
 <parameter name="rs" type="java.sql.ResultSet">
 </parameter>
 <parameter name="columnName" type="java.lang.String">
+</parameter>
+<exception name="SQLException" type="java.sql.SQLException">
+</exception>
+</method>
+<method name="getNullableResult"
+ return="java.sql.Date"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="rs" type="java.sql.ResultSet">
+</parameter>
+<parameter name="columnIndex" type="int">
+</parameter>
+<exception name="SQLException" type="java.sql.SQLException">
+</exception>
+</method>
+<method name="getNullableResult"
+ return="java.sql.Date"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="cs" type="java.sql.CallableStatement">
+</parameter>
+<parameter name="columnIndex" type="int">
 </parameter>
 <exception name="SQLException" type="java.sql.SQLException">
 </exception>
@@ -27433,43 +27753,43 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="cs" type="java.sql.CallableStatement">
-</parameter>
-<parameter name="columnIndex" type="int">
-</parameter>
-<exception name="SQLException" type="java.sql.SQLException">
-</exception>
-</method>
-<method name="getNullableResult"
- return="java.sql.Time"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="rs" type="java.sql.ResultSet">
-</parameter>
-<parameter name="columnIndex" type="int">
-</parameter>
-<exception name="SQLException" type="java.sql.SQLException">
-</exception>
-</method>
-<method name="getNullableResult"
- return="java.sql.Time"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
 <parameter name="rs" type="java.sql.ResultSet">
 </parameter>
 <parameter name="columnName" type="java.lang.String">
+</parameter>
+<exception name="SQLException" type="java.sql.SQLException">
+</exception>
+</method>
+<method name="getNullableResult"
+ return="java.sql.Time"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="rs" type="java.sql.ResultSet">
+</parameter>
+<parameter name="columnIndex" type="int">
+</parameter>
+<exception name="SQLException" type="java.sql.SQLException">
+</exception>
+</method>
+<method name="getNullableResult"
+ return="java.sql.Time"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="cs" type="java.sql.CallableStatement">
+</parameter>
+<parameter name="columnIndex" type="int">
 </parameter>
 <exception name="SQLException" type="java.sql.SQLException">
 </exception>
@@ -27522,43 +27842,43 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="cs" type="java.sql.CallableStatement">
-</parameter>
-<parameter name="columnIndex" type="int">
-</parameter>
-<exception name="SQLException" type="java.sql.SQLException">
-</exception>
-</method>
-<method name="getNullableResult"
- return="java.sql.Timestamp"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="rs" type="java.sql.ResultSet">
-</parameter>
-<parameter name="columnIndex" type="int">
-</parameter>
-<exception name="SQLException" type="java.sql.SQLException">
-</exception>
-</method>
-<method name="getNullableResult"
- return="java.sql.Timestamp"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
 <parameter name="rs" type="java.sql.ResultSet">
 </parameter>
 <parameter name="columnName" type="java.lang.String">
+</parameter>
+<exception name="SQLException" type="java.sql.SQLException">
+</exception>
+</method>
+<method name="getNullableResult"
+ return="java.sql.Timestamp"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="rs" type="java.sql.ResultSet">
+</parameter>
+<parameter name="columnIndex" type="int">
+</parameter>
+<exception name="SQLException" type="java.sql.SQLException">
+</exception>
+</method>
+<method name="getNullableResult"
+ return="java.sql.Timestamp"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="cs" type="java.sql.CallableStatement">
+</parameter>
+<parameter name="columnIndex" type="int">
 </parameter>
 <exception name="SQLException" type="java.sql.SQLException">
 </exception>
@@ -27611,43 +27931,43 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="cs" type="java.sql.CallableStatement">
-</parameter>
-<parameter name="columnIndex" type="int">
-</parameter>
-<exception name="SQLException" type="java.sql.SQLException">
-</exception>
-</method>
-<method name="getNullableResult"
- return="java.lang.String"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="rs" type="java.sql.ResultSet">
-</parameter>
-<parameter name="columnIndex" type="int">
-</parameter>
-<exception name="SQLException" type="java.sql.SQLException">
-</exception>
-</method>
-<method name="getNullableResult"
- return="java.lang.String"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
 <parameter name="rs" type="java.sql.ResultSet">
 </parameter>
 <parameter name="columnName" type="java.lang.String">
+</parameter>
+<exception name="SQLException" type="java.sql.SQLException">
+</exception>
+</method>
+<method name="getNullableResult"
+ return="java.lang.String"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="rs" type="java.sql.ResultSet">
+</parameter>
+<parameter name="columnIndex" type="int">
+</parameter>
+<exception name="SQLException" type="java.sql.SQLException">
+</exception>
+</method>
+<method name="getNullableResult"
+ return="java.lang.String"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="cs" type="java.sql.CallableStatement">
+</parameter>
+<parameter name="columnIndex" type="int">
 </parameter>
 <exception name="SQLException" type="java.sql.SQLException">
 </exception>
@@ -27700,43 +28020,43 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="cs" type="java.sql.CallableStatement">
-</parameter>
-<parameter name="columnIndex" type="int">
-</parameter>
-<exception name="SQLException" type="java.sql.SQLException">
-</exception>
-</method>
-<method name="getNullableResult"
- return="java.util.Date"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="rs" type="java.sql.ResultSet">
-</parameter>
-<parameter name="columnIndex" type="int">
-</parameter>
-<exception name="SQLException" type="java.sql.SQLException">
-</exception>
-</method>
-<method name="getNullableResult"
- return="java.util.Date"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
 <parameter name="rs" type="java.sql.ResultSet">
 </parameter>
 <parameter name="columnName" type="java.lang.String">
+</parameter>
+<exception name="SQLException" type="java.sql.SQLException">
+</exception>
+</method>
+<method name="getNullableResult"
+ return="java.util.Date"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="rs" type="java.sql.ResultSet">
+</parameter>
+<parameter name="columnIndex" type="int">
+</parameter>
+<exception name="SQLException" type="java.sql.SQLException">
+</exception>
+</method>
+<method name="getNullableResult"
+ return="java.util.Date"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="cs" type="java.sql.CallableStatement">
+</parameter>
+<parameter name="columnIndex" type="int">
 </parameter>
 <exception name="SQLException" type="java.sql.SQLException">
 </exception>
@@ -27941,43 +28261,43 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="cs" type="java.sql.CallableStatement">
-</parameter>
-<parameter name="columnIndex" type="int">
-</parameter>
-<exception name="SQLException" type="java.sql.SQLException">
-</exception>
-</method>
-<method name="getResult"
- return="T"
- abstract="true"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="rs" type="java.sql.ResultSet">
-</parameter>
-<parameter name="columnIndex" type="int">
-</parameter>
-<exception name="SQLException" type="java.sql.SQLException">
-</exception>
-</method>
-<method name="getResult"
- return="T"
- abstract="true"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
 <parameter name="rs" type="java.sql.ResultSet">
 </parameter>
 <parameter name="columnName" type="java.lang.String">
+</parameter>
+<exception name="SQLException" type="java.sql.SQLException">
+</exception>
+</method>
+<method name="getResult"
+ return="T"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="rs" type="java.sql.ResultSet">
+</parameter>
+<parameter name="columnIndex" type="int">
+</parameter>
+<exception name="SQLException" type="java.sql.SQLException">
+</exception>
+</method>
+<method name="getResult"
+ return="T"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="cs" type="java.sql.CallableStatement">
+</parameter>
+<parameter name="columnIndex" type="int">
 </parameter>
 <exception name="SQLException" type="java.sql.SQLException">
 </exception>
@@ -28071,9 +28391,7 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="type" type="java.lang.Class&lt;T&gt;">
-</parameter>
-<parameter name="jdbcType" type="org.apache.ibatis.type.JdbcType">
+<parameter name="javaTypeReference" type="org.apache.ibatis.type.TypeReference&lt;T&gt;">
 </parameter>
 </method>
 <method name="getTypeHandler"
@@ -28099,7 +28417,9 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="javaTypeReference" type="org.apache.ibatis.type.TypeReference&lt;T&gt;">
+<parameter name="type" type="java.lang.Class&lt;T&gt;">
+</parameter>
+<parameter name="jdbcType" type="org.apache.ibatis.type.JdbcType">
 </parameter>
 </method>
 <method name="getTypeHandler"
@@ -28162,6 +28482,19 @@
  deprecated="not deprecated"
  visibility="public"
 >
+<parameter name="javaTypeReference" type="org.apache.ibatis.type.TypeReference&lt;?&gt;">
+</parameter>
+</method>
+<method name="hasTypeHandler"
+ return="boolean"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
 <parameter name="javaType" type="java.lang.Class&lt;?&gt;">
 </parameter>
 <parameter name="jdbcType" type="org.apache.ibatis.type.JdbcType">
@@ -28179,110 +28512,7 @@
 >
 <parameter name="javaTypeReference" type="org.apache.ibatis.type.TypeReference&lt;?&gt;">
 </parameter>
-</method>
-<method name="hasTypeHandler"
- return="boolean"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="javaTypeReference" type="org.apache.ibatis.type.TypeReference&lt;?&gt;">
-</parameter>
 <parameter name="jdbcType" type="org.apache.ibatis.type.JdbcType">
-</parameter>
-</method>
-<method name="register"
- return="void"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="typeHandlerClass" type="java.lang.Class&lt;?&gt;">
-</parameter>
-</method>
-<method name="register"
- return="void"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="javaTypeClass" type="java.lang.Class&lt;?&gt;">
-</parameter>
-<parameter name="typeHandlerClass" type="java.lang.Class&lt;?&gt;">
-</parameter>
-</method>
-<method name="register"
- return="void"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="javaTypeClass" type="java.lang.Class&lt;?&gt;">
-</parameter>
-<parameter name="jdbcType" type="org.apache.ibatis.type.JdbcType">
-</parameter>
-<parameter name="typeHandlerClass" type="java.lang.Class&lt;?&gt;">
-</parameter>
-</method>
-<method name="register"
- return="void"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="type" type="java.lang.Class&lt;T&gt;">
-</parameter>
-<parameter name="jdbcType" type="org.apache.ibatis.type.JdbcType">
-</parameter>
-<parameter name="handler" type="org.apache.ibatis.type.TypeHandler&lt;? extends T&gt;">
-</parameter>
-</method>
-<method name="register"
- return="void"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="javaType" type="java.lang.Class&lt;T&gt;">
-</parameter>
-<parameter name="typeHandler" type="org.apache.ibatis.type.TypeHandler&lt;? extends T&gt;">
-</parameter>
-</method>
-<method name="register"
- return="void"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="packageName" type="java.lang.String">
 </parameter>
 </method>
 <method name="register"
@@ -28323,9 +28553,99 @@
  deprecated="not deprecated"
  visibility="public"
 >
+<parameter name="javaType" type="java.lang.Class&lt;T&gt;">
+</parameter>
+<parameter name="typeHandler" type="org.apache.ibatis.type.TypeHandler&lt;? extends T&gt;">
+</parameter>
+</method>
+<method name="register"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
 <parameter name="javaTypeReference" type="org.apache.ibatis.type.TypeReference&lt;T&gt;">
 </parameter>
 <parameter name="handler" type="org.apache.ibatis.type.TypeHandler&lt;? extends T&gt;">
+</parameter>
+</method>
+<method name="register"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="type" type="java.lang.Class&lt;T&gt;">
+</parameter>
+<parameter name="jdbcType" type="org.apache.ibatis.type.JdbcType">
+</parameter>
+<parameter name="handler" type="org.apache.ibatis.type.TypeHandler&lt;? extends T&gt;">
+</parameter>
+</method>
+<method name="register"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="typeHandlerClass" type="java.lang.Class&lt;?&gt;">
+</parameter>
+</method>
+<method name="register"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="javaTypeClass" type="java.lang.Class&lt;?&gt;">
+</parameter>
+<parameter name="typeHandlerClass" type="java.lang.Class&lt;?&gt;">
+</parameter>
+</method>
+<method name="register"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="javaTypeClass" type="java.lang.Class&lt;?&gt;">
+</parameter>
+<parameter name="jdbcType" type="org.apache.ibatis.type.JdbcType">
+</parameter>
+<parameter name="typeHandlerClass" type="java.lang.Class&lt;?&gt;">
+</parameter>
+</method>
+<method name="register"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="packageName" type="java.lang.String">
 </parameter>
 </method>
 </class>
@@ -28385,43 +28705,43 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="cs" type="java.sql.CallableStatement">
-</parameter>
-<parameter name="columnIndex" type="int">
-</parameter>
-<exception name="SQLException" type="java.sql.SQLException">
-</exception>
-</method>
-<method name="getNullableResult"
- return="java.lang.Object"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="rs" type="java.sql.ResultSet">
-</parameter>
-<parameter name="columnIndex" type="int">
-</parameter>
-<exception name="SQLException" type="java.sql.SQLException">
-</exception>
-</method>
-<method name="getNullableResult"
- return="java.lang.Object"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
 <parameter name="rs" type="java.sql.ResultSet">
 </parameter>
 <parameter name="columnName" type="java.lang.String">
+</parameter>
+<exception name="SQLException" type="java.sql.SQLException">
+</exception>
+</method>
+<method name="getNullableResult"
+ return="java.lang.Object"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="rs" type="java.sql.ResultSet">
+</parameter>
+<parameter name="columnIndex" type="int">
+</parameter>
+<exception name="SQLException" type="java.sql.SQLException">
+</exception>
+</method>
+<method name="getNullableResult"
+ return="java.lang.Object"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="cs" type="java.sql.CallableStatement">
+</parameter>
+<parameter name="columnIndex" type="int">
 </parameter>
 <exception name="SQLException" type="java.sql.SQLException">
 </exception>

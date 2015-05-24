@@ -1,116 +1,115 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ko" lang="ko">
-<head>
-<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<head><meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 <title>ExternalResourcesTest xref</title>
 <link type="text/css" rel="stylesheet" href="../../../../stylesheet.css" />
 </head>
 <body>
 <div id="overview"><a href="../../../../../../testapidocs/org/apache/ibatis/io/ExternalResourcesTest.html">View Javadoc</a></div><pre>
-
-<a class="jxr_linenumber" name="1" href="#1">1</a>   <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="2" href="#2">2</a>   <em class="jxr_comment"> *    Copyright 2009-2012 the original author or authors.</em>
-<a class="jxr_linenumber" name="3" href="#3">3</a>   <em class="jxr_comment"> *</em>
-<a class="jxr_linenumber" name="4" href="#4">4</a>   <em class="jxr_comment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
-<a class="jxr_linenumber" name="5" href="#5">5</a>   <em class="jxr_comment"> *    you may not use this file except in compliance with the License.</em>
-<a class="jxr_linenumber" name="6" href="#6">6</a>   <em class="jxr_comment"> *    You may obtain a copy of the License at</em>
-<a class="jxr_linenumber" name="7" href="#7">7</a>   <em class="jxr_comment"> *</em>
-<a class="jxr_linenumber" name="8" href="#8">8</a>   <em class="jxr_comment"> *       <a href="http://www.apache.org/licenses/LICENSE-2.0" target="alexandria_uri">http://www.apache.org/licenses/LICENSE-2.0</a></em>
-<a class="jxr_linenumber" name="9" href="#9">9</a>   <em class="jxr_comment"> *</em>
-<a class="jxr_linenumber" name="10" href="#10">10</a>  <em class="jxr_comment"> *    Unless required by applicable law or agreed to in writing, software</em>
-<a class="jxr_linenumber" name="11" href="#11">11</a>  <em class="jxr_comment"> *    distributed under the License is distributed on an "AS IS" BASIS,</em>
-<a class="jxr_linenumber" name="12" href="#12">12</a>  <em class="jxr_comment"> *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</em>
-<a class="jxr_linenumber" name="13" href="#13">13</a>  <em class="jxr_comment"> *    See the License for the specific language governing permissions and</em>
-<a class="jxr_linenumber" name="14" href="#14">14</a>  <em class="jxr_comment"> *    limitations under the License.</em>
-<a class="jxr_linenumber" name="15" href="#15">15</a>  <em class="jxr_comment"> */</em>
-<a class="jxr_linenumber" name="16" href="#16">16</a>  <strong class="jxr_keyword">package</strong> org.apache.ibatis.io;
-<a class="jxr_linenumber" name="17" href="#17">17</a>  
-<a class="jxr_linenumber" name="18" href="#18">18</a>  <strong class="jxr_keyword">import</strong> java.io.File;
-<a class="jxr_linenumber" name="19" href="#19">19</a>  <strong class="jxr_keyword">import</strong> java.io.FileNotFoundException;
-<a class="jxr_linenumber" name="20" href="#20">20</a>  <strong class="jxr_keyword">import</strong> java.io.FileWriter;
-<a class="jxr_linenumber" name="21" href="#21">21</a>  <strong class="jxr_keyword">import</strong> java.io.IOException;
-<a class="jxr_linenumber" name="22" href="#22">22</a>  
-<a class="jxr_linenumber" name="23" href="#23">23</a>  <strong class="jxr_keyword">import</strong> org.junit.Test;
-<a class="jxr_linenumber" name="24" href="#24">24</a>  <strong class="jxr_keyword">import</strong> org.junit.Before;
-<a class="jxr_linenumber" name="25" href="#25">25</a>  <strong class="jxr_keyword">import</strong> org.junit.After;
-<a class="jxr_linenumber" name="26" href="#26">26</a>  
-<a class="jxr_linenumber" name="27" href="#27">27</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> org.junit.Assert.*;
-<a class="jxr_linenumber" name="28" href="#28">28</a>  
-<a class="jxr_linenumber" name="29" href="#29">29</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../org/apache/ibatis/io/ExternalResourcesTest.html">ExternalResourcesTest</a> {
-<a class="jxr_linenumber" name="30" href="#30">30</a>  
-<a class="jxr_linenumber" name="31" href="#31">31</a>    <strong class="jxr_keyword">private</strong> File sourceFile;
-<a class="jxr_linenumber" name="32" href="#32">32</a>    <strong class="jxr_keyword">private</strong> File destFile;
-<a class="jxr_linenumber" name="33" href="#33">33</a>    <strong class="jxr_keyword">private</strong> File badFile;
-<a class="jxr_linenumber" name="34" href="#34">34</a>    <strong class="jxr_keyword">private</strong> File tempFile;
-<a class="jxr_linenumber" name="35" href="#35">35</a>  
-<a class="jxr_linenumber" name="36" href="#36">36</a>    <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="37" href="#37">37</a>  <em class="jxr_comment">   * @throws java.lang.Exception</em>
-<a class="jxr_linenumber" name="38" href="#38">38</a>  <em class="jxr_comment">   */</em>
-<a class="jxr_linenumber" name="39" href="#39">39</a>    @Before
-<a class="jxr_linenumber" name="40" href="#40">40</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setUp() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="41" href="#41">41</a>      tempFile = File.createTempFile(<span class="jxr_string">"migration"</span>, <span class="jxr_string">"properties"</span>);
-<a class="jxr_linenumber" name="42" href="#42">42</a>      tempFile.canWrite();
-<a class="jxr_linenumber" name="43" href="#43">43</a>      sourceFile = File.createTempFile(<span class="jxr_string">"test1"</span>, <span class="jxr_string">"sql"</span>);
-<a class="jxr_linenumber" name="44" href="#44">44</a>      destFile = File.createTempFile(<span class="jxr_string">"test2"</span>, <span class="jxr_string">"sql"</span>);
-<a class="jxr_linenumber" name="45" href="#45">45</a>    }
-<a class="jxr_linenumber" name="46" href="#46">46</a>  
-<a class="jxr_linenumber" name="47" href="#47">47</a>    @Test
-<a class="jxr_linenumber" name="48" href="#48">48</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testcopyExternalResource() {
-<a class="jxr_linenumber" name="49" href="#49">49</a>  
-<a class="jxr_linenumber" name="50" href="#50">50</a>      <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="51" href="#51">51</a>        ExternalResources.copyExternalResource(sourceFile, destFile);
-<a class="jxr_linenumber" name="52" href="#52">52</a>      } <strong class="jxr_keyword">catch</strong> (IOException e) {
-<a class="jxr_linenumber" name="53" href="#53">53</a>      }
-<a class="jxr_linenumber" name="54" href="#54">54</a>  
-<a class="jxr_linenumber" name="55" href="#55">55</a>    }
-<a class="jxr_linenumber" name="56" href="#56">56</a>  
-<a class="jxr_linenumber" name="57" href="#57">57</a>    @Test
-<a class="jxr_linenumber" name="58" href="#58">58</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testcopyExternalResource_fileNotFound() {
-<a class="jxr_linenumber" name="59" href="#59">59</a>  
-<a class="jxr_linenumber" name="60" href="#60">60</a>      <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="61" href="#61">61</a>        badFile = <strong class="jxr_keyword">new</strong> File(<span class="jxr_string">"/tmp/nofile.sql"</span>);
-<a class="jxr_linenumber" name="62" href="#62">62</a>        ExternalResources.copyExternalResource(badFile, destFile);
-<a class="jxr_linenumber" name="63" href="#63">63</a>      } <strong class="jxr_keyword">catch</strong> (IOException e) {
-<a class="jxr_linenumber" name="64" href="#64">64</a>        assertTrue(e instanceof FileNotFoundException);
-<a class="jxr_linenumber" name="65" href="#65">65</a>      }
-<a class="jxr_linenumber" name="66" href="#66">66</a>  
-<a class="jxr_linenumber" name="67" href="#67">67</a>    }
-<a class="jxr_linenumber" name="68" href="#68">68</a>  
-<a class="jxr_linenumber" name="69" href="#69">69</a>    @Test
-<a class="jxr_linenumber" name="70" href="#70">70</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testcopyExternalResource_emptyStringAsFile() {
-<a class="jxr_linenumber" name="71" href="#71">71</a>  
-<a class="jxr_linenumber" name="72" href="#72">72</a>      <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="73" href="#73">73</a>        badFile = <strong class="jxr_keyword">new</strong> File(<span class="jxr_string">" "</span>);
-<a class="jxr_linenumber" name="74" href="#74">74</a>        ExternalResources.copyExternalResource(badFile, destFile);
-<a class="jxr_linenumber" name="75" href="#75">75</a>      } <strong class="jxr_keyword">catch</strong> (Exception e) {
-<a class="jxr_linenumber" name="76" href="#76">76</a>        assertTrue(e instanceof FileNotFoundException);
-<a class="jxr_linenumber" name="77" href="#77">77</a>      }
-<a class="jxr_linenumber" name="78" href="#78">78</a>  
-<a class="jxr_linenumber" name="79" href="#79">79</a>    }
-<a class="jxr_linenumber" name="80" href="#80">80</a>  
-<a class="jxr_linenumber" name="81" href="#81">81</a>    @Test
-<a class="jxr_linenumber" name="82" href="#82">82</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testGetConfiguredTemplate() {
-<a class="jxr_linenumber" name="83" href="#83">83</a>      String templateName = <span class="jxr_string">""</span>;
-<a class="jxr_linenumber" name="84" href="#84">84</a>  
-<a class="jxr_linenumber" name="85" href="#85">85</a>      <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="86" href="#86">86</a>        FileWriter fileWriter = <strong class="jxr_keyword">new</strong> FileWriter(tempFile);
-<a class="jxr_linenumber" name="87" href="#87">87</a>        fileWriter.append(<span class="jxr_string">"new_command.template=templates/col_new_template_migration.sql"</span>);
-<a class="jxr_linenumber" name="88" href="#88">88</a>        fileWriter.flush();
-<a class="jxr_linenumber" name="89" href="#89">89</a>        templateName = ExternalResources.getConfiguredTemplate(tempFile.getAbsolutePath(), <span class="jxr_string">"new_command.template"</span>);
-<a class="jxr_linenumber" name="90" href="#90">90</a>        assertEquals(<span class="jxr_string">"templates/col_new_template_migration.sql"</span>, templateName);
-<a class="jxr_linenumber" name="91" href="#91">91</a>      } <strong class="jxr_keyword">catch</strong> (Exception e) {
-<a class="jxr_linenumber" name="92" href="#92">92</a>        fail(<span class="jxr_string">"Test failed with execption: "</span> + e.getMessage());
-<a class="jxr_linenumber" name="93" href="#93">93</a>      }
-<a class="jxr_linenumber" name="94" href="#94">94</a>    }
-<a class="jxr_linenumber" name="95" href="#95">95</a>  
-<a class="jxr_linenumber" name="96" href="#96">96</a>    @After
-<a class="jxr_linenumber" name="97" href="#97">97</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> cleanUp() {
-<a class="jxr_linenumber" name="98" href="#98">98</a>      sourceFile.delete();
-<a class="jxr_linenumber" name="99" href="#99">99</a>      destFile.delete();
-<a class="jxr_linenumber" name="100" href="#100">100</a>     tempFile.delete();
-<a class="jxr_linenumber" name="101" href="#101">101</a>   }
-<a class="jxr_linenumber" name="102" href="#102">102</a> }
+<a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2015 the original author or authors.</em>
+<a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_javadoccomment"> *</em>
+<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_javadoccomment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
+<a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_javadoccomment"> *    you may not use this file except in compliance with the License.</em>
+<a class="jxr_linenumber" name="L6" href="#L6">6</a>   <em class="jxr_javadoccomment"> *    You may obtain a copy of the License at</em>
+<a class="jxr_linenumber" name="L7" href="#L7">7</a>   <em class="jxr_javadoccomment"> *</em>
+<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_javadoccomment"> *       <a href="http://www.apache.org/licenses/LICENSE-2." target="alexandria_uri">http://www.apache.org/licenses/LICENSE-2.</a>0</em>
+<a class="jxr_linenumber" name="L9" href="#L9">9</a>   <em class="jxr_javadoccomment"> *</em>
+<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <em class="jxr_javadoccomment"> *    Unless required by applicable law or agreed to in writing, software</em>
+<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <em class="jxr_javadoccomment"> *    distributed under the License is distributed on an "AS IS" BASIS,</em>
+<a class="jxr_linenumber" name="L12" href="#L12">12</a>  <em class="jxr_javadoccomment"> *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</em>
+<a class="jxr_linenumber" name="L13" href="#L13">13</a>  <em class="jxr_javadoccomment"> *    See the License for the specific language governing permissions and</em>
+<a class="jxr_linenumber" name="L14" href="#L14">14</a>  <em class="jxr_javadoccomment"> *    limitations under the License.</em>
+<a class="jxr_linenumber" name="L15" href="#L15">15</a>  <em class="jxr_javadoccomment"> */</em>
+<a class="jxr_linenumber" name="L16" href="#L16">16</a>  <strong class="jxr_keyword">package</strong> org.apache.ibatis.io;
+<a class="jxr_linenumber" name="L17" href="#L17">17</a>  
+<a class="jxr_linenumber" name="L18" href="#L18">18</a>  <strong class="jxr_keyword">import</strong> java.io.File;
+<a class="jxr_linenumber" name="L19" href="#L19">19</a>  <strong class="jxr_keyword">import</strong> java.io.FileNotFoundException;
+<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <strong class="jxr_keyword">import</strong> java.io.FileWriter;
+<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <strong class="jxr_keyword">import</strong> java.io.IOException;
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>  
+<a class="jxr_linenumber" name="L23" href="#L23">23</a>  <strong class="jxr_keyword">import</strong> org.junit.Test;
+<a class="jxr_linenumber" name="L24" href="#L24">24</a>  <strong class="jxr_keyword">import</strong> org.junit.Before;
+<a class="jxr_linenumber" name="L25" href="#L25">25</a>  <strong class="jxr_keyword">import</strong> org.junit.After;
+<a class="jxr_linenumber" name="L26" href="#L26">26</a>  
+<a class="jxr_linenumber" name="L27" href="#L27">27</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> org.junit.Assert.*;
+<a class="jxr_linenumber" name="L28" href="#L28">28</a>  
+<a class="jxr_linenumber" name="L29" href="#L29">29</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../org/apache/ibatis/io/ExternalResourcesTest.html">ExternalResourcesTest</a> {
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>  
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>    <strong class="jxr_keyword">private</strong> File sourceFile;
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>    <strong class="jxr_keyword">private</strong> File destFile;
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>    <strong class="jxr_keyword">private</strong> File badFile;
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>    <strong class="jxr_keyword">private</strong> File tempFile;
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>  
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>    <em class="jxr_comment">/*</em>
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>  <em class="jxr_comment">   * @throws java.lang.Exception</em>
+<a class="jxr_linenumber" name="L38" href="#L38">38</a>  <em class="jxr_comment">   */</em>
+<a class="jxr_linenumber" name="L39" href="#L39">39</a>    @Before
+<a class="jxr_linenumber" name="L40" href="#L40">40</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setUp() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L41" href="#L41">41</a>      tempFile = File.createTempFile(<span class="jxr_string">"migration"</span>, <span class="jxr_string">"properties"</span>);
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>      tempFile.canWrite();
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>      sourceFile = File.createTempFile(<span class="jxr_string">"test1"</span>, <span class="jxr_string">"sql"</span>);
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>      destFile = File.createTempFile(<span class="jxr_string">"test2"</span>, <span class="jxr_string">"sql"</span>);
+<a class="jxr_linenumber" name="L45" href="#L45">45</a>    }
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>  
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>    @Test
+<a class="jxr_linenumber" name="L48" href="#L48">48</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testcopyExternalResource() {
+<a class="jxr_linenumber" name="L49" href="#L49">49</a>  
+<a class="jxr_linenumber" name="L50" href="#L50">50</a>      <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L51" href="#L51">51</a>        ExternalResources.copyExternalResource(sourceFile, destFile);
+<a class="jxr_linenumber" name="L52" href="#L52">52</a>      } <strong class="jxr_keyword">catch</strong> (IOException e) {
+<a class="jxr_linenumber" name="L53" href="#L53">53</a>      }
+<a class="jxr_linenumber" name="L54" href="#L54">54</a>  
+<a class="jxr_linenumber" name="L55" href="#L55">55</a>    }
+<a class="jxr_linenumber" name="L56" href="#L56">56</a>  
+<a class="jxr_linenumber" name="L57" href="#L57">57</a>    @Test
+<a class="jxr_linenumber" name="L58" href="#L58">58</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testcopyExternalResource_fileNotFound() {
+<a class="jxr_linenumber" name="L59" href="#L59">59</a>  
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>      <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L61" href="#L61">61</a>        badFile = <strong class="jxr_keyword">new</strong> File(<span class="jxr_string">"/tmp/nofile.sql"</span>);
+<a class="jxr_linenumber" name="L62" href="#L62">62</a>        ExternalResources.copyExternalResource(badFile, destFile);
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>      } <strong class="jxr_keyword">catch</strong> (IOException e) {
+<a class="jxr_linenumber" name="L64" href="#L64">64</a>        assertTrue(e instanceof FileNotFoundException);
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>      }
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>  
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>    }
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>  
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>    @Test
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testcopyExternalResource_emptyStringAsFile() {
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>  
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>      <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>        badFile = <strong class="jxr_keyword">new</strong> File(<span class="jxr_string">" "</span>);
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>        ExternalResources.copyExternalResource(badFile, destFile);
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>      } <strong class="jxr_keyword">catch</strong> (Exception e) {
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>        assertTrue(e instanceof FileNotFoundException);
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>      }
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>  
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>    }
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>  
+<a class="jxr_linenumber" name="L81" href="#L81">81</a>    @Test
+<a class="jxr_linenumber" name="L82" href="#L82">82</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testGetConfiguredTemplate() {
+<a class="jxr_linenumber" name="L83" href="#L83">83</a>      String templateName = <span class="jxr_string">""</span>;
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>  
+<a class="jxr_linenumber" name="L85" href="#L85">85</a>      <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L86" href="#L86">86</a>        FileWriter fileWriter = <strong class="jxr_keyword">new</strong> FileWriter(tempFile);
+<a class="jxr_linenumber" name="L87" href="#L87">87</a>        fileWriter.append(<span class="jxr_string">"new_command.template=templates/col_new_template_migration.sql"</span>);
+<a class="jxr_linenumber" name="L88" href="#L88">88</a>        fileWriter.flush();
+<a class="jxr_linenumber" name="L89" href="#L89">89</a>        templateName = ExternalResources.getConfiguredTemplate(tempFile.getAbsolutePath(), <span class="jxr_string">"new_command.template"</span>);
+<a class="jxr_linenumber" name="L90" href="#L90">90</a>        assertEquals(<span class="jxr_string">"templates/col_new_template_migration.sql"</span>, templateName);
+<a class="jxr_linenumber" name="L91" href="#L91">91</a>      } <strong class="jxr_keyword">catch</strong> (Exception e) {
+<a class="jxr_linenumber" name="L92" href="#L92">92</a>        fail(<span class="jxr_string">"Test failed with execption: "</span> + e.getMessage());
+<a class="jxr_linenumber" name="L93" href="#L93">93</a>      }
+<a class="jxr_linenumber" name="L94" href="#L94">94</a>    }
+<a class="jxr_linenumber" name="L95" href="#L95">95</a>  
+<a class="jxr_linenumber" name="L96" href="#L96">96</a>    @After
+<a class="jxr_linenumber" name="L97" href="#L97">97</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> cleanUp() {
+<a class="jxr_linenumber" name="L98" href="#L98">98</a>      sourceFile.delete();
+<a class="jxr_linenumber" name="L99" href="#L99">99</a>      destFile.delete();
+<a class="jxr_linenumber" name="L100" href="#L100">100</a>     tempFile.delete();
+<a class="jxr_linenumber" name="L101" href="#L101">101</a>   }
+<a class="jxr_linenumber" name="L102" href="#L102">102</a> }
 </pre>
-<hr/><div id="footer">This page was automatically generated by <a href="http://maven.apache.org/">Maven</a></div></body>
+<hr/>
+<div id="footer">Copyright &#169; 2010&#x2013;2015 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+</body>
 </html>
-
