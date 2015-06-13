@@ -99,7 +99,6 @@ public class ForEachSqlNode implements SqlNode {
 
   private void applyItem(DynamicContext context, Object o, int i) {
     if (item != null) {
-      context.bind(item, o);
       context.bind(itemizeItem(item, i), o);
     }
   }
