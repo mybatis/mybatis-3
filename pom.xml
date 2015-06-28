@@ -306,29 +306,6 @@
           <exclude>org.apache.ibatis.ognl.*</exclude>
           <exclude>org.apache.ibatis.javassist.*</exclude>
         </configuration>
-      </plugin>      
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>cobertura-maven-plugin</artifactId>
-        <configuration>
-          <instrumentation>
-            <ignores>
-              <ignore>org.apache.ibatis.ognl.*</ignore>
-              <ignore>org.apache.ibatis.javassist.*</ignore>
-            </ignores>
-            <excludes>
-              <exclude>org/apache/ibatis/ognl/**/*.class</exclude>
-              <exclude>org/apache/ibatis/javassist/**/*.class</exclude>
-            </excludes>
-          </instrumentation>
-        </configuration>
-        <executions>
-          <execution>
-            <goals>
-              <goal>clean</goal>
-            </goals>
-          </execution>
-        </executions>
       </plugin>
     </plugins>
 
