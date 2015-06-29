@@ -121,7 +121,7 @@
     <site>
       <id>gh-pages</id>
       <name>Mybatis GitHub Pages</name>
-      <url>git:ssh://git@github.com/mybatis/mybatis-3.git?gh-pages#</url>
+      <url>github:ssh://mybatis.github.io/mybatis-3/</url>
     </site>
   </distributionManagement>
 
