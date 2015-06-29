@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>BaseJdbcLogger.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.logging.jdbc</a> &gt; <span class="el_source">BaseJdbcLogger.java</span></div><h1>BaseJdbcLogger.java</h1><pre class="source lang-java linenums">/**
+ *    Copyright 2009-2015 the original author or authors.
+ *
+ *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
+package org.apache.ibatis.logging.jdbc;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.StringTokenizer;
+
+import org.apache.ibatis.logging.Log;
+
+/**
+ * Base class for proxies to do logging
+ * 
+ * @author Clinton Begin
+ * @author Eduardo Macarron
+ */
+public abstract class BaseJdbcLogger {
+
+<span class="fc" id="L37">  protected static final Set&lt;String&gt; SET_METHODS = new HashSet&lt;String&gt;();</span>
+<span class="fc" id="L38">  protected static final Set&lt;String&gt; EXECUTE_METHODS = new HashSet&lt;String&gt;();</span>
+
+<span class="fc" id="L40">  private Map&lt;Object, Object&gt; columnMap = new HashMap&lt;Object, Object&gt;();</span>
+
+<span class="fc" id="L42">  private List&lt;Object&gt; columnNames = new ArrayList&lt;Object&gt;();</span>
+<span class="fc" id="L43">  private List&lt;Object&gt; columnValues = new ArrayList&lt;Object&gt;();</span>
+
+  protected Log statementLog;
+  protected int queryStack;
+
+  /*
+   * Default constructor
+   */
+<span class="fc" id="L51">  public BaseJdbcLogger(Log log, int queryStack) {</span>
+<span class="fc" id="L52">    this.statementLog = log;</span>
+<span class="pc bpc" id="L53" title="1 of 2 branches missed.">    if (queryStack == 0) {</span>
+<span class="nc" id="L54">      this.queryStack = 1;</span>
+    } else {
+<span class="fc" id="L56">      this.queryStack = queryStack;</span>
+    }
+<span class="fc" id="L58">  }</span>
+
+  static {
+<span class="fc" id="L61">    SET_METHODS.add(&quot;setString&quot;);</span>
+<span class="fc" id="L62">    SET_METHODS.add(&quot;setInt&quot;);</span>
+<span class="fc" id="L63">    SET_METHODS.add(&quot;setByte&quot;);</span>
+<span class="fc" id="L64">    SET_METHODS.add(&quot;setShort&quot;);</span>
+<span class="fc" id="L65">    SET_METHODS.add(&quot;setLong&quot;);</span>
+<span class="fc" id="L66">    SET_METHODS.add(&quot;setDouble&quot;);</span>
+<span class="fc" id="L67">    SET_METHODS.add(&quot;setFloat&quot;);</span>
+<span class="fc" id="L68">    SET_METHODS.add(&quot;setTimestamp&quot;);</span>
+<span class="fc" id="L69">    SET_METHODS.add(&quot;setDate&quot;);</span>
+<span class="fc" id="L70">    SET_METHODS.add(&quot;setTime&quot;);</span>
+<span class="fc" id="L71">    SET_METHODS.add(&quot;setArray&quot;);</span>
+<span class="fc" id="L72">    SET_METHODS.add(&quot;setBigDecimal&quot;);</span>
+<span class="fc" id="L73">    SET_METHODS.add(&quot;setAsciiStream&quot;);</span>
+<span class="fc" id="L74">    SET_METHODS.add(&quot;setBinaryStream&quot;);</span>
+<span class="fc" id="L75">    SET_METHODS.add(&quot;setBlob&quot;);</span>
+<span class="fc" id="L76">    SET_METHODS.add(&quot;setBoolean&quot;);</span>
+<span class="fc" id="L77">    SET_METHODS.add(&quot;setBytes&quot;);</span>
+<span class="fc" id="L78">    SET_METHODS.add(&quot;setCharacterStream&quot;);</span>
+<span class="fc" id="L79">    SET_METHODS.add(&quot;setClob&quot;);</span>
+<span class="fc" id="L80">    SET_METHODS.add(&quot;setObject&quot;);</span>
+<span class="fc" id="L81">    SET_METHODS.add(&quot;setNull&quot;);</span>
+
+<span class="fc" id="L83">    EXECUTE_METHODS.add(&quot;execute&quot;);</span>
+<span class="fc" id="L84">    EXECUTE_METHODS.add(&quot;executeUpdate&quot;);</span>
+<span class="fc" id="L85">    EXECUTE_METHODS.add(&quot;executeQuery&quot;);</span>
+<span class="fc" id="L86">    EXECUTE_METHODS.add(&quot;addBatch&quot;);</span>
+<span class="fc" id="L87">  }</span>
+
+  protected void setColumn(Object key, Object value) {
+<span class="nc" id="L90">    columnMap.put(key, value);</span>
+<span class="nc" id="L91">    columnNames.add(key);</span>
+<span class="nc" id="L92">    columnValues.add(value);</span>
+<span class="nc" id="L93">  }</span>
+
+  protected Object getColumn(Object key) {
+<span class="nc" id="L96">    return columnMap.get(key);</span>
+  }
+
+  protected String getParameterValueString() {
+<span class="nc" id="L100">    List&lt;Object&gt; typeList = new ArrayList&lt;Object&gt;(columnValues.size());</span>
+<span class="nc bnc" id="L101" title="All 2 branches missed.">    for (Object value : columnValues) {</span>
+<span class="nc bnc" id="L102" title="All 2 branches missed.">      if (value == null) {</span>
+<span class="nc" id="L103">        typeList.add(&quot;null&quot;);</span>
+      } else {
+<span class="nc" id="L105">        typeList.add(value + &quot;(&quot; + value.getClass().getSimpleName() + &quot;)&quot;);</span>
+      }
+<span class="nc" id="L107">    }</span>
+<span class="nc" id="L108">    final String parameters = typeList.toString();</span>
+<span class="nc" id="L109">    return parameters.substring(1, parameters.length() - 1);</span>
+  }
+
+  protected String getColumnString() {
+<span class="nc" id="L113">    return columnNames.toString();</span>
+  }
+
+  protected void clearColumnInfo() {
+<span class="fc" id="L117">    columnMap.clear();</span>
+<span class="fc" id="L118">    columnNames.clear();</span>
+<span class="fc" id="L119">    columnValues.clear();</span>
+<span class="fc" id="L120">  }</span>
+
+  protected String removeBreakingWhitespace(String original) {
+<span class="nc" id="L123">    StringTokenizer whitespaceStripper = new StringTokenizer(original);</span>
+<span class="nc" id="L124">    StringBuilder builder = new StringBuilder();</span>
+<span class="nc bnc" id="L125" title="All 2 branches missed.">    while (whitespaceStripper.hasMoreTokens()) {</span>
+<span class="nc" id="L126">      builder.append(whitespaceStripper.nextToken());</span>
+<span class="nc" id="L127">      builder.append(&quot; &quot;);</span>
+    }
+<span class="nc" id="L129">    return builder.toString();</span>
+  }
+
+  protected boolean isDebugEnabled() {
+<span class="nc" id="L133">    return statementLog.isDebugEnabled();</span>
+  }
+
+  protected boolean isTraceEnabled() {
+<span class="fc" id="L137">    return statementLog.isTraceEnabled();</span>
+  }
+
+  protected void debug(String text, boolean input) {
+<span class="nc bnc" id="L141" title="All 2 branches missed.">    if (statementLog.isDebugEnabled()) {</span>
+<span class="nc" id="L142">      statementLog.debug(prefix(input) + text);</span>
+    }
+<span class="nc" id="L144">  }</span>
+
+  protected void trace(String text, boolean input) {
+<span class="pc bpc" id="L147" title="1 of 2 branches missed.">    if (statementLog.isTraceEnabled()) {</span>
+<span class="fc" id="L148">      statementLog.trace(prefix(input) + text);</span>
+    }
+<span class="fc" id="L150">  }</span>
+
+  private String prefix(boolean isInput) {
+<span class="fc" id="L153">    char[] buffer = new char[queryStack * 2 + 2];</span>
+<span class="fc" id="L154">    Arrays.fill(buffer, '=');</span>
+<span class="fc" id="L155">    buffer[queryStack * 2 + 1] = ' ';</span>
+<span class="pc bpc" id="L156" title="1 of 2 branches missed.">    if (isInput) {</span>
+<span class="nc" id="L157">      buffer[queryStack * 2] = '&gt;';</span>
+    } else {
+<span class="fc" id="L159">      buffer[0] = '&lt;';</span>
+    }
+<span class="fc" id="L161">    return new String(buffer);</span>
+  }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.5.201505241946</span></div></body></html>

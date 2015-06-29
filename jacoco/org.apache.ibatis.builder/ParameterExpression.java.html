@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>ParameterExpression.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.builder</a> &gt; <span class="el_source">ParameterExpression.java</span></div><h1>ParameterExpression.java</h1><pre class="source lang-java linenums">/**
+ *    Copyright 2009-2015 the original author or authors.
+ *
+ *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
+package org.apache.ibatis.builder;
+
+import java.util.HashMap;
+
+/**
+ * Inline parameter expression parser. Supported grammar (simplified):
+ * 
+ * &lt;pre&gt;
+ * inline-parameter = (propertyName | expression) oldJdbcType attributes
+ * propertyName = /expression language's property navigation path/
+ * expression = '(' /expression language's expression/ ')'
+ * oldJdbcType = ':' /any valid jdbc type/
+ * attributes = (',' attribute)*
+ * attribute = name '=' value
+ * &lt;/pre&gt;
+ */
+/**
+ * @author Frank D. Martinez [mnesarco]
+ */
+public class ParameterExpression extends HashMap&lt;String, String&gt; {
+
+  private static final long serialVersionUID = -2417552199605158680L;
+
+<span class="fc" id="L39">  public ParameterExpression(String expression) {</span>
+<span class="fc" id="L40">    parse(expression);</span>
+<span class="fc" id="L41">  }</span>
+
+  private void parse(String expression) {
+<span class="fc" id="L44">    int p = skipWS(expression, 0);</span>
+<span class="fc bfc" id="L45" title="All 2 branches covered.">    if (expression.charAt(p) == '(') {</span>
+<span class="fc" id="L46">      expression(expression, p + 1);</span>
+    } else {
+<span class="fc" id="L48">      property(expression, p);</span>
+    }
+<span class="fc" id="L50">  }</span>
+
+  private void expression(String expression, int left) {
+<span class="fc" id="L53">    int match = 1;</span>
+<span class="fc" id="L54">    int right = left + 1;</span>
+<span class="fc bfc" id="L55" title="All 2 branches covered.">    while (match &gt; 0) {</span>
+<span class="fc bfc" id="L56" title="All 2 branches covered.">      if (expression.charAt(right) == ')') {</span>
+<span class="fc" id="L57">        match--;</span>
+<span class="fc bfc" id="L58" title="All 2 branches covered.">      } else if (expression.charAt(right) == '(') {</span>
+<span class="fc" id="L59">        match++;</span>
+      }
+<span class="fc" id="L61">      right++;</span>
+    }
+<span class="fc" id="L63">    put(&quot;expression&quot;, expression.substring(left, right - 1));</span>
+<span class="fc" id="L64">    jdbcTypeOpt(expression, right);</span>
+<span class="fc" id="L65">  }</span>
+
+  private void property(String expression, int left) {
+<span class="pc bpc" id="L68" title="1 of 2 branches missed.">    if (left &lt; expression.length()) {</span>
+<span class="fc" id="L69">      int right = skipUntil(expression, left, &quot;,:&quot;);</span>
+<span class="fc" id="L70">      put(&quot;property&quot;, trimmedStr(expression, left, right));</span>
+<span class="fc" id="L71">      jdbcTypeOpt(expression, right);</span>
+    }
+<span class="fc" id="L73">  }</span>
+
+  private int skipWS(String expression, int p) {
+<span class="fc bfc" id="L76" title="All 2 branches covered.">    for (int i = p; i &lt; expression.length(); i++) {</span>
+<span class="fc bfc" id="L77" title="All 2 branches covered.">      if (expression.charAt(i) &gt; 0x20) {</span>
+<span class="fc" id="L78">        return i;</span>
+      }
+    }
+<span class="fc" id="L81">    return expression.length();</span>
+  }
+
+  private int skipUntil(String expression, int p, final String endChars) {
+<span class="fc bfc" id="L85" title="All 2 branches covered.">    for (int i = p; i &lt; expression.length(); i++) {</span>
+<span class="fc" id="L86">      char c = expression.charAt(i);</span>
+<span class="fc bfc" id="L87" title="All 2 branches covered.">      if (endChars.indexOf(c) &gt; -1) {</span>
+<span class="fc" id="L88">        return i;</span>
+      }
+    }
+<span class="fc" id="L91">    return expression.length();</span>
+  }
+
+  private void jdbcTypeOpt(String expression, int p) {
+<span class="fc" id="L95">    p = skipWS(expression, p);</span>
+<span class="fc bfc" id="L96" title="All 2 branches covered.">    if (p &lt; expression.length()) {</span>
+<span class="fc bfc" id="L97" title="All 2 branches covered.">      if (expression.charAt(p) == ':') {</span>
+<span class="fc" id="L98">        jdbcType(expression, p + 1);</span>
+<span class="pc bpc" id="L99" title="1 of 2 branches missed.">      } else if (expression.charAt(p) == ',') {</span>
+<span class="fc" id="L100">        option(expression, p + 1);</span>
+      } else {
+<span class="nc" id="L102">        throw new BuilderException(&quot;Parsing error in {&quot; + new String(expression) + &quot;} in position &quot; + p);</span>
+      }
+    }
+<span class="fc" id="L105">  }</span>
+
+  private void jdbcType(String expression, int p) {
+<span class="fc" id="L108">    int left = skipWS(expression, p);</span>
+<span class="fc" id="L109">    int right = skipUntil(expression, left, &quot;,&quot;);</span>
+<span class="pc bpc" id="L110" title="1 of 2 branches missed.">    if (right &gt; left) {</span>
+<span class="fc" id="L111">      put(&quot;jdbcType&quot;, trimmedStr(expression, left, right));</span>
+    } else {
+<span class="nc" id="L113">      throw new BuilderException(&quot;Parsing error in {&quot; + new String(expression) + &quot;} in position &quot; + p);</span>
+    }
+<span class="fc" id="L115">    option(expression, right + 1);</span>
+<span class="fc" id="L116">  }</span>
+
+  private void option(String expression, int p) {
+<span class="fc" id="L119">    int left = skipWS(expression, p);</span>
+<span class="fc bfc" id="L120" title="All 2 branches covered.">    if (left &lt; expression.length()) {</span>
+<span class="fc" id="L121">      int right = skipUntil(expression, left, &quot;=&quot;);</span>
+<span class="fc" id="L122">      String name = trimmedStr(expression, left, right);</span>
+<span class="fc" id="L123">      left = right + 1;</span>
+<span class="fc" id="L124">      right = skipUntil(expression, left, &quot;,&quot;);</span>
+<span class="fc" id="L125">      String value = trimmedStr(expression, left, right);</span>
+<span class="fc" id="L126">      put(name, value);</span>
+<span class="fc" id="L127">      option(expression, right + 1);</span>
+    }
+<span class="fc" id="L129">  }</span>
+
+  private String trimmedStr(String str, int start, int end) {
+<span class="fc bfc" id="L132" title="All 2 branches covered.">    while (str.charAt(start) &lt;= 0x20) {</span>
+<span class="fc" id="L133">      start++;</span>
+    }
+<span class="fc bfc" id="L135" title="All 2 branches covered.">    while (str.charAt(end - 1) &lt;= 0x20) {</span>
+<span class="fc" id="L136">      end--;</span>
+    }
+<span class="pc bpc" id="L138" title="1 of 2 branches missed.">    return start &gt;= end ? &quot;&quot; : str.substring(start, end);</span>
+  }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.5.201505241946</span></div></body></html>

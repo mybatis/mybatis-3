@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>MapperProxy.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.binding</a> &gt; <span class="el_source">MapperProxy.java</span></div><h1>MapperProxy.java</h1><pre class="source lang-java linenums">/**
+ *    Copyright 2009-2015 the original author or authors.
+ *
+ *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
+package org.apache.ibatis.binding;
+
+import java.io.Serializable;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.util.Map;
+
+import org.apache.ibatis.reflection.ExceptionUtil;
+import org.apache.ibatis.session.SqlSession;
+
+/**
+ * @author Clinton Begin
+ * @author Eduardo Macarron
+ */
+public class MapperProxy&lt;T&gt; implements InvocationHandler, Serializable {
+
+  private static final long serialVersionUID = -6424540398559729838L;
+  private final SqlSession sqlSession;
+  private final Class&lt;T&gt; mapperInterface;
+  private final Map&lt;Method, MapperMethod&gt; methodCache;
+
+<span class="fc" id="L37">  public MapperProxy(SqlSession sqlSession, Class&lt;T&gt; mapperInterface, Map&lt;Method, MapperMethod&gt; methodCache) {</span>
+<span class="fc" id="L38">    this.sqlSession = sqlSession;</span>
+<span class="fc" id="L39">    this.mapperInterface = mapperInterface;</span>
+<span class="fc" id="L40">    this.methodCache = methodCache;</span>
+<span class="fc" id="L41">  }</span>
+
+  @Override
+  public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+<span class="fc bfc" id="L45" title="All 2 branches covered.">    if (Object.class.equals(method.getDeclaringClass())) {</span>
+      try {
+<span class="fc" id="L47">        return method.invoke(this, args);</span>
+<span class="nc" id="L48">      } catch (Throwable t) {</span>
+<span class="nc" id="L49">        throw ExceptionUtil.unwrapThrowable(t);</span>
+      }
+    }
+<span class="fc" id="L52">    final MapperMethod mapperMethod = cachedMapperMethod(method);</span>
+<span class="fc" id="L53">    return mapperMethod.execute(sqlSession, args);</span>
+  }
+
+  private MapperMethod cachedMapperMethod(Method method) {
+<span class="fc" id="L57">    MapperMethod mapperMethod = methodCache.get(method);</span>
+<span class="fc bfc" id="L58" title="All 2 branches covered.">    if (mapperMethod == null) {</span>
+<span class="fc" id="L59">      mapperMethod = new MapperMethod(mapperInterface, method, sqlSession.getConfiguration());</span>
+<span class="fc" id="L60">      methodCache.put(method, mapperMethod);</span>
+    }
+<span class="fc" id="L62">    return mapperMethod;</span>
+  }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.5.201505241946</span></div></body></html>

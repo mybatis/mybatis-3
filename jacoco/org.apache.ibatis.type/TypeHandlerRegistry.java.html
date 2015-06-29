@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>TypeHandlerRegistry.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.type</a> &gt; <span class="el_source">TypeHandlerRegistry.java</span></div><h1>TypeHandlerRegistry.java</h1><pre class="source lang-java linenums">/**
+ *    Copyright 2009-2015 the original author or authors.
+ *
+ *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
+package org.apache.ibatis.type;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Modifier;
+import java.lang.reflect.Type;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
+import org.apache.ibatis.io.ResolverUtil;
+
+/**
+ * @author Clinton Begin
+ */
+public final class TypeHandlerRegistry {
+
+<span class="fc" id="L38">  private final Map&lt;JdbcType, TypeHandler&lt;?&gt;&gt; JDBC_TYPE_HANDLER_MAP = new EnumMap&lt;JdbcType, TypeHandler&lt;?&gt;&gt;(JdbcType.class);</span>
+<span class="fc" id="L39">  private final Map&lt;Type, Map&lt;JdbcType, TypeHandler&lt;?&gt;&gt;&gt; TYPE_HANDLER_MAP = new HashMap&lt;Type, Map&lt;JdbcType, TypeHandler&lt;?&gt;&gt;&gt;();</span>
+<span class="fc" id="L40">  private final TypeHandler&lt;Object&gt; UNKNOWN_TYPE_HANDLER = new UnknownTypeHandler(this);</span>
+<span class="fc" id="L41">  private final Map&lt;Class&lt;?&gt;, TypeHandler&lt;?&gt;&gt; ALL_TYPE_HANDLERS_MAP = new HashMap&lt;Class&lt;?&gt;, TypeHandler&lt;?&gt;&gt;();</span>
+
+<span class="fc" id="L43">  public TypeHandlerRegistry() {</span>
+<span class="fc" id="L44">    register(Boolean.class, new BooleanTypeHandler());</span>
+<span class="fc" id="L45">    register(boolean.class, new BooleanTypeHandler());</span>
+<span class="fc" id="L46">    register(JdbcType.BOOLEAN, new BooleanTypeHandler());</span>
+<span class="fc" id="L47">    register(JdbcType.BIT, new BooleanTypeHandler());</span>
+
+<span class="fc" id="L49">    register(Byte.class, new ByteTypeHandler());</span>
+<span class="fc" id="L50">    register(byte.class, new ByteTypeHandler());</span>
+<span class="fc" id="L51">    register(JdbcType.TINYINT, new ByteTypeHandler());</span>
+
+<span class="fc" id="L53">    register(Short.class, new ShortTypeHandler());</span>
+<span class="fc" id="L54">    register(short.class, new ShortTypeHandler());</span>
+<span class="fc" id="L55">    register(JdbcType.SMALLINT, new ShortTypeHandler());</span>
+
+<span class="fc" id="L57">    register(Integer.class, new IntegerTypeHandler());</span>
+<span class="fc" id="L58">    register(int.class, new IntegerTypeHandler());</span>
+<span class="fc" id="L59">    register(JdbcType.INTEGER, new IntegerTypeHandler());</span>
+
+<span class="fc" id="L61">    register(Long.class, new LongTypeHandler());</span>
+<span class="fc" id="L62">    register(long.class, new LongTypeHandler());</span>
+
+<span class="fc" id="L64">    register(Float.class, new FloatTypeHandler());</span>
+<span class="fc" id="L65">    register(float.class, new FloatTypeHandler());</span>
+<span class="fc" id="L66">    register(JdbcType.FLOAT, new FloatTypeHandler());</span>
+
+<span class="fc" id="L68">    register(Double.class, new DoubleTypeHandler());</span>
+<span class="fc" id="L69">    register(double.class, new DoubleTypeHandler());</span>
+<span class="fc" id="L70">    register(JdbcType.DOUBLE, new DoubleTypeHandler());</span>
+
+<span class="fc" id="L72">    register(String.class, new StringTypeHandler());</span>
+<span class="fc" id="L73">    register(String.class, JdbcType.CHAR, new StringTypeHandler());</span>
+<span class="fc" id="L74">    register(String.class, JdbcType.CLOB, new ClobTypeHandler());</span>
+<span class="fc" id="L75">    register(String.class, JdbcType.VARCHAR, new StringTypeHandler());</span>
+<span class="fc" id="L76">    register(String.class, JdbcType.LONGVARCHAR, new ClobTypeHandler());</span>
+<span class="fc" id="L77">    register(String.class, JdbcType.NVARCHAR, new NStringTypeHandler());</span>
+<span class="fc" id="L78">    register(String.class, JdbcType.NCHAR, new NStringTypeHandler());</span>
+<span class="fc" id="L79">    register(String.class, JdbcType.NCLOB, new NClobTypeHandler());</span>
+<span class="fc" id="L80">    register(JdbcType.CHAR, new StringTypeHandler());</span>
+<span class="fc" id="L81">    register(JdbcType.VARCHAR, new StringTypeHandler());</span>
+<span class="fc" id="L82">    register(JdbcType.CLOB, new ClobTypeHandler());</span>
+<span class="fc" id="L83">    register(JdbcType.LONGVARCHAR, new ClobTypeHandler());</span>
+<span class="fc" id="L84">    register(JdbcType.NVARCHAR, new NStringTypeHandler());</span>
+<span class="fc" id="L85">    register(JdbcType.NCHAR, new NStringTypeHandler());</span>
+<span class="fc" id="L86">    register(JdbcType.NCLOB, new NClobTypeHandler());</span>
+
+<span class="fc" id="L88">    register(Object.class, JdbcType.ARRAY, new ArrayTypeHandler());</span>
+<span class="fc" id="L89">    register(JdbcType.ARRAY, new ArrayTypeHandler());</span>
+
+<span class="fc" id="L91">    register(BigInteger.class, new BigIntegerTypeHandler());</span>
+<span class="fc" id="L92">    register(JdbcType.BIGINT, new LongTypeHandler());</span>
+
+<span class="fc" id="L94">    register(BigDecimal.class, new BigDecimalTypeHandler());</span>
+<span class="fc" id="L95">    register(JdbcType.REAL, new BigDecimalTypeHandler());</span>
+<span class="fc" id="L96">    register(JdbcType.DECIMAL, new BigDecimalTypeHandler());</span>
+<span class="fc" id="L97">    register(JdbcType.NUMERIC, new BigDecimalTypeHandler());</span>
+
+<span class="fc" id="L99">    register(Byte[].class, new ByteObjectArrayTypeHandler());</span>
+<span class="fc" id="L100">    register(Byte[].class, JdbcType.BLOB, new BlobByteObjectArrayTypeHandler());</span>
+<span class="fc" id="L101">    register(Byte[].class, JdbcType.LONGVARBINARY, new BlobByteObjectArrayTypeHandler());</span>
+<span class="fc" id="L102">    register(byte[].class, new ByteArrayTypeHandler());</span>
+<span class="fc" id="L103">    register(byte[].class, JdbcType.BLOB, new BlobTypeHandler());</span>
+<span class="fc" id="L104">    register(byte[].class, JdbcType.LONGVARBINARY, new BlobTypeHandler());</span>
+<span class="fc" id="L105">    register(JdbcType.LONGVARBINARY, new BlobTypeHandler());</span>
+<span class="fc" id="L106">    register(JdbcType.BLOB, new BlobTypeHandler());</span>
+
+<span class="fc" id="L108">    register(Object.class, UNKNOWN_TYPE_HANDLER);</span>
+<span class="fc" id="L109">    register(Object.class, JdbcType.OTHER, UNKNOWN_TYPE_HANDLER);</span>
+<span class="fc" id="L110">    register(JdbcType.OTHER, UNKNOWN_TYPE_HANDLER);</span>
+
+<span class="fc" id="L112">    register(Date.class, new DateTypeHandler());</span>
+<span class="fc" id="L113">    register(Date.class, JdbcType.DATE, new DateOnlyTypeHandler());</span>
+<span class="fc" id="L114">    register(Date.class, JdbcType.TIME, new TimeOnlyTypeHandler());</span>
+<span class="fc" id="L115">    register(JdbcType.TIMESTAMP, new DateTypeHandler());</span>
+<span class="fc" id="L116">    register(JdbcType.DATE, new DateOnlyTypeHandler());</span>
+<span class="fc" id="L117">    register(JdbcType.TIME, new TimeOnlyTypeHandler());</span>
+
+<span class="fc" id="L119">    register(java.sql.Date.class, new SqlDateTypeHandler());</span>
+<span class="fc" id="L120">    register(java.sql.Time.class, new SqlTimeTypeHandler());</span>
+<span class="fc" id="L121">    register(java.sql.Timestamp.class, new SqlTimestampTypeHandler());</span>
+
+    // issue #273
+<span class="fc" id="L124">    register(Character.class, new CharacterTypeHandler());</span>
+<span class="fc" id="L125">    register(char.class, new CharacterTypeHandler());</span>
+<span class="fc" id="L126">  }</span>
+
+  public boolean hasTypeHandler(Class&lt;?&gt; javaType) {
+<span class="fc" id="L129">    return hasTypeHandler(javaType, null);</span>
+  }
+
+  public boolean hasTypeHandler(TypeReference&lt;?&gt; javaTypeReference) {
+<span class="nc" id="L133">    return hasTypeHandler(javaTypeReference, null);</span>
+  }
+
+  public boolean hasTypeHandler(Class&lt;?&gt; javaType, JdbcType jdbcType) {
+<span class="fc bfc" id="L137" title="All 4 branches covered.">    return javaType != null &amp;&amp; getTypeHandler((Type) javaType, jdbcType) != null;</span>
+  }
+
+  public boolean hasTypeHandler(TypeReference&lt;?&gt; javaTypeReference, JdbcType jdbcType) {
+<span class="nc bnc" id="L141" title="All 4 branches missed.">    return javaTypeReference != null &amp;&amp; getTypeHandler(javaTypeReference, jdbcType) != null;</span>
+  }
+
+  public TypeHandler&lt;?&gt; getMappingTypeHandler(Class&lt;? extends TypeHandler&lt;?&gt;&gt; handlerType) {
+<span class="fc" id="L145">    return ALL_TYPE_HANDLERS_MAP.get(handlerType);</span>
+  }
+
+  public &lt;T&gt; TypeHandler&lt;T&gt; getTypeHandler(Class&lt;T&gt; type) {
+<span class="fc" id="L149">    return getTypeHandler((Type) type, null);</span>
+  }
+
+  public &lt;T&gt; TypeHandler&lt;T&gt; getTypeHandler(TypeReference&lt;T&gt; javaTypeReference) {
+<span class="fc" id="L153">    return getTypeHandler(javaTypeReference, null);</span>
+  }
+
+  public TypeHandler&lt;?&gt; getTypeHandler(JdbcType jdbcType) {
+<span class="nc" id="L157">    return JDBC_TYPE_HANDLER_MAP.get(jdbcType);</span>
+  }
+
+  public &lt;T&gt; TypeHandler&lt;T&gt; getTypeHandler(Class&lt;T&gt; type, JdbcType jdbcType) {
+<span class="fc" id="L161">    return getTypeHandler((Type) type, jdbcType);</span>
+  }
+
+  public &lt;T&gt; TypeHandler&lt;T&gt; getTypeHandler(TypeReference&lt;T&gt; javaTypeReference, JdbcType jdbcType) {
+<span class="fc" id="L165">    return getTypeHandler(javaTypeReference.getRawType(), jdbcType);</span>
+  }
+
+  @SuppressWarnings(&quot;unchecked&quot;)
+  private &lt;T&gt; TypeHandler&lt;T&gt; getTypeHandler(Type type, JdbcType jdbcType) {
+<span class="fc" id="L170">    Map&lt;JdbcType, TypeHandler&lt;?&gt;&gt; jdbcHandlerMap = TYPE_HANDLER_MAP.get(type);</span>
+<span class="fc" id="L171">    TypeHandler&lt;?&gt; handler = null;</span>
+<span class="fc bfc" id="L172" title="All 2 branches covered.">    if (jdbcHandlerMap != null) {</span>
+<span class="fc" id="L173">      handler = jdbcHandlerMap.get(jdbcType);</span>
+<span class="fc bfc" id="L174" title="All 2 branches covered.">      if (handler == null) {</span>
+<span class="fc" id="L175">        handler = jdbcHandlerMap.get(null);</span>
+      }
+    }
+<span class="pc bpc" id="L178" title="2 of 8 branches missed.">    if (handler == null &amp;&amp; type != null &amp;&amp; type instanceof Class &amp;&amp; Enum.class.isAssignableFrom((Class&lt;?&gt;) type)) {</span>
+<span class="fc" id="L179">      handler = new EnumTypeHandler((Class&lt;?&gt;) type);</span>
+    }
+    // type drives generics here
+<span class="fc" id="L182">    return (TypeHandler&lt;T&gt;) handler;</span>
+  }
+
+  public TypeHandler&lt;Object&gt; getUnknownTypeHandler() {
+<span class="fc" id="L186">    return UNKNOWN_TYPE_HANDLER;</span>
+  }
+
+  public void register(JdbcType jdbcType, TypeHandler&lt;?&gt; handler) {
+<span class="fc" id="L190">    JDBC_TYPE_HANDLER_MAP.put(jdbcType, handler);</span>
+<span class="fc" id="L191">  }</span>
+
+  //
+  // REGISTER INSTANCE
+  //
+
+  // Only handler
+
+  @SuppressWarnings(&quot;unchecked&quot;)
+  public &lt;T&gt; void register(TypeHandler&lt;T&gt; typeHandler) {
+<span class="fc" id="L201">    boolean mappedTypeFound = false;</span>
+<span class="fc" id="L202">    MappedTypes mappedTypes = typeHandler.getClass().getAnnotation(MappedTypes.class);</span>
+<span class="pc bpc" id="L203" title="1 of 2 branches missed.">    if (mappedTypes != null) {</span>
+<span class="nc bnc" id="L204" title="All 2 branches missed.">      for (Class&lt;?&gt; handledType : mappedTypes.value()) {</span>
+<span class="nc" id="L205">        register(handledType, typeHandler);</span>
+<span class="nc" id="L206">        mappedTypeFound = true;</span>
+      }
+    }
+    // @since 3.1.0 - try to auto-discover the mapped type
+<span class="pc bpc" id="L210" title="1 of 4 branches missed.">    if (!mappedTypeFound &amp;&amp; typeHandler instanceof TypeReference) {</span>
+      try {
+<span class="fc" id="L212">        TypeReference&lt;T&gt; typeReference = (TypeReference&lt;T&gt;) typeHandler;</span>
+<span class="fc" id="L213">        register(typeReference.getRawType(), typeHandler);</span>
+<span class="fc" id="L214">        mappedTypeFound = true;</span>
+<span class="nc" id="L215">      } catch (Throwable t) {</span>
+        // maybe users define the TypeReference with a different type and are not assignable, so just ignore it
+<span class="fc" id="L217">      }</span>
+    }
+<span class="fc bfc" id="L219" title="All 2 branches covered.">    if (!mappedTypeFound) {</span>
+<span class="fc" id="L220">      register((Class&lt;T&gt;) null, typeHandler);</span>
+    }
+<span class="fc" id="L222">  }</span>
+
+  // java type + handler
+
+  public &lt;T&gt; void register(Class&lt;T&gt; javaType, TypeHandler&lt;? extends T&gt; typeHandler) {
+<span class="fc" id="L227">    register((Type) javaType, typeHandler);</span>
+<span class="fc" id="L228">  }</span>
+
+  private &lt;T&gt; void register(Type javaType, TypeHandler&lt;? extends T&gt; typeHandler) {
+<span class="fc" id="L231">    MappedJdbcTypes mappedJdbcTypes = typeHandler.getClass().getAnnotation(MappedJdbcTypes.class);</span>
+<span class="fc bfc" id="L232" title="All 2 branches covered.">    if (mappedJdbcTypes != null) {</span>
+<span class="fc bfc" id="L233" title="All 2 branches covered.">      for (JdbcType handledJdbcType : mappedJdbcTypes.value()) {</span>
+<span class="fc" id="L234">        register(javaType, handledJdbcType, typeHandler);</span>
+      }
+<span class="pc bpc" id="L236" title="1 of 2 branches missed.">      if (mappedJdbcTypes.includeNullJdbcType()) {</span>
+<span class="fc" id="L237">        register(javaType, null, typeHandler);</span>
+      }
+    } else {
+<span class="fc" id="L240">      register(javaType, null, typeHandler);</span>
+    }
+<span class="fc" id="L242">  }</span>
+
+  public &lt;T&gt; void register(TypeReference&lt;T&gt; javaTypeReference, TypeHandler&lt;? extends T&gt; handler) {
+<span class="fc" id="L245">    register(javaTypeReference.getRawType(), handler);</span>
+<span class="fc" id="L246">  }</span>
+
+  // java type + jdbc type + handler
+
+  public &lt;T&gt; void register(Class&lt;T&gt; type, JdbcType jdbcType, TypeHandler&lt;? extends T&gt; handler) {
+<span class="fc" id="L251">    register((Type) type, jdbcType, handler);</span>
+<span class="fc" id="L252">  }</span>
+
+  private void register(Type javaType, JdbcType jdbcType, TypeHandler&lt;?&gt; handler) {
+<span class="fc bfc" id="L255" title="All 2 branches covered.">    if (javaType != null) {</span>
+<span class="fc" id="L256">      Map&lt;JdbcType, TypeHandler&lt;?&gt;&gt; map = TYPE_HANDLER_MAP.get(javaType);</span>
+<span class="fc bfc" id="L257" title="All 2 branches covered.">      if (map == null) {</span>
+<span class="fc" id="L258">        map = new HashMap&lt;JdbcType, TypeHandler&lt;?&gt;&gt;();</span>
+<span class="fc" id="L259">        TYPE_HANDLER_MAP.put(javaType, map);</span>
+      }
+<span class="fc" id="L261">      map.put(jdbcType, handler);</span>
+    }
+<span class="fc" id="L263">    ALL_TYPE_HANDLERS_MAP.put(handler.getClass(), handler);</span>
+<span class="fc" id="L264">  }</span>
+
+  //
+  // REGISTER CLASS
+  //
+
+  // Only handler type
+
+  public void register(Class&lt;?&gt; typeHandlerClass) {
+<span class="fc" id="L273">    boolean mappedTypeFound = false;</span>
+<span class="fc" id="L274">    MappedTypes mappedTypes = typeHandlerClass.getAnnotation(MappedTypes.class);</span>
+<span class="fc bfc" id="L275" title="All 2 branches covered.">    if (mappedTypes != null) {</span>
+<span class="fc bfc" id="L276" title="All 2 branches covered.">      for (Class&lt;?&gt; javaTypeClass : mappedTypes.value()) {</span>
+<span class="fc" id="L277">        register(javaTypeClass, typeHandlerClass);</span>
+<span class="fc" id="L278">        mappedTypeFound = true;</span>
+      }
+    }
+<span class="fc bfc" id="L281" title="All 2 branches covered.">    if (!mappedTypeFound) {</span>
+<span class="fc" id="L282">      register(getInstance(null, typeHandlerClass));</span>
+    }
+<span class="fc" id="L284">  }</span>
+
+  // java type + handler type
+
+  public void register(Class&lt;?&gt; javaTypeClass, Class&lt;?&gt; typeHandlerClass) {
+<span class="fc" id="L289">    register(javaTypeClass, getInstance(javaTypeClass, typeHandlerClass));</span>
+<span class="fc" id="L290">  }</span>
+
+  // java type + jdbc type + handler type
+
+  public void register(Class&lt;?&gt; javaTypeClass, JdbcType jdbcType, Class&lt;?&gt; typeHandlerClass) {
+<span class="fc" id="L295">    register(javaTypeClass, jdbcType, getInstance(javaTypeClass, typeHandlerClass));</span>
+<span class="fc" id="L296">  }</span>
+
+  // Construct a handler (used also from Builders)
+
+  @SuppressWarnings(&quot;unchecked&quot;)
+  public &lt;T&gt; TypeHandler&lt;T&gt; getInstance(Class&lt;?&gt; javaTypeClass, Class&lt;?&gt; typeHandlerClass) {
+<span class="fc bfc" id="L302" title="All 2 branches covered.">    if (javaTypeClass != null) {</span>
+      try {
+<span class="fc" id="L304">        Constructor&lt;?&gt; c = typeHandlerClass.getConstructor(Class.class);</span>
+<span class="fc" id="L305">        return (TypeHandler&lt;T&gt;) c.newInstance(javaTypeClass);</span>
+<span class="fc" id="L306">      } catch (NoSuchMethodException ignored) {</span>
+        // ignored
+<span class="nc" id="L308">      } catch (Exception e) {</span>
+<span class="nc" id="L309">        throw new TypeException(&quot;Failed invoking constructor for handler &quot; + typeHandlerClass, e);</span>
+<span class="fc" id="L310">      }</span>
+    }
+    try {
+<span class="fc" id="L313">      Constructor&lt;?&gt; c = typeHandlerClass.getConstructor();</span>
+<span class="fc" id="L314">      return (TypeHandler&lt;T&gt;) c.newInstance();</span>
+<span class="nc" id="L315">    } catch (Exception e) {</span>
+<span class="nc" id="L316">      throw new TypeException(&quot;Unable to find a usable constructor for &quot; + typeHandlerClass, e);</span>
+    }
+  }
+
+  // scan
+
+  public void register(String packageName) {
+<span class="fc" id="L323">    ResolverUtil&lt;Class&lt;?&gt;&gt; resolverUtil = new ResolverUtil&lt;Class&lt;?&gt;&gt;();</span>
+<span class="fc" id="L324">    resolverUtil.find(new ResolverUtil.IsA(TypeHandler.class), packageName);</span>
+<span class="fc" id="L325">    Set&lt;Class&lt;? extends Class&lt;?&gt;&gt;&gt; handlerSet = resolverUtil.getClasses();</span>
+<span class="fc bfc" id="L326" title="All 2 branches covered.">    for (Class&lt;?&gt; type : handlerSet) {</span>
+      //Ignore inner classes and interfaces (including package-info.java) and abstract classes
+<span class="pc bpc" id="L328" title="3 of 6 branches missed.">      if (!type.isAnonymousClass() &amp;&amp; !type.isInterface() &amp;&amp; !Modifier.isAbstract(type.getModifiers())) {</span>
+<span class="fc" id="L329">        register(type);</span>
+      }
+<span class="fc" id="L331">    }</span>
+<span class="fc" id="L332">  }</span>
+  
+  // get information
+  
+  /**
+   * @since 3.2.2
+   */
+  public Collection&lt;TypeHandler&lt;?&gt;&gt; getTypeHandlers() {
+<span class="nc" id="L340">    return Collections.unmodifiableCollection(ALL_TYPE_HANDLERS_MAP.values());</span>
+  }
+  
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.5.201505241946</span></div></body></html>

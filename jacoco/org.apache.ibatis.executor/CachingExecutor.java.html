@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>CachingExecutor.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.executor</a> &gt; <span class="el_source">CachingExecutor.java</span></div><h1>CachingExecutor.java</h1><pre class="source lang-java linenums">/**
+ *    Copyright 2009-2015 the original author or authors.
+ *
+ *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
+package org.apache.ibatis.executor;
+
+import java.sql.SQLException;
+import java.util.List;
+
+import org.apache.ibatis.cache.Cache;
+import org.apache.ibatis.cache.CacheKey;
+import org.apache.ibatis.cache.TransactionalCacheManager;
+import org.apache.ibatis.mapping.BoundSql;
+import org.apache.ibatis.mapping.MappedStatement;
+import org.apache.ibatis.mapping.ParameterMapping;
+import org.apache.ibatis.mapping.ParameterMode;
+import org.apache.ibatis.mapping.StatementType;
+import org.apache.ibatis.reflection.MetaObject;
+import org.apache.ibatis.session.ResultHandler;
+import org.apache.ibatis.session.RowBounds;
+import org.apache.ibatis.transaction.Transaction;
+
+/**
+ * @author Clinton Begin
+ * @author Eduardo Macarron
+ */
+public class CachingExecutor implements Executor {
+
+  private Executor delegate;
+<span class="fc" id="L41">  private TransactionalCacheManager tcm = new TransactionalCacheManager();</span>
+
+<span class="fc" id="L43">  public CachingExecutor(Executor delegate) {</span>
+<span class="fc" id="L44">    this.delegate = delegate;</span>
+<span class="fc" id="L45">    delegate.setExecutorWrapper(this);</span>
+<span class="fc" id="L46">  }</span>
+
+  @Override
+  public Transaction getTransaction() {
+<span class="fc" id="L50">    return delegate.getTransaction();</span>
+  }
+
+  @Override
+  public void close(boolean forceRollback) {
+    try {
+      //issues #499, #524 and #573
+<span class="fc bfc" id="L57" title="All 2 branches covered.">      if (forceRollback) { </span>
+<span class="fc" id="L58">        tcm.rollback();</span>
+      } else {
+<span class="fc" id="L60">        tcm.commit();</span>
+      }
+    } finally {
+<span class="pc" id="L63">      delegate.close(forceRollback);</span>
+<span class="fc" id="L64">    }</span>
+<span class="fc" id="L65">  }</span>
+
+  @Override
+  public boolean isClosed() {
+<span class="fc" id="L69">    return delegate.isClosed();</span>
+  }
+
+  @Override
+  public int update(MappedStatement ms, Object parameterObject) throws SQLException {
+<span class="fc" id="L74">    flushCacheIfRequired(ms);</span>
+<span class="fc" id="L75">    return delegate.update(ms, parameterObject);</span>
+  }
+
+  @Override
+  public &lt;E&gt; List&lt;E&gt; query(MappedStatement ms, Object parameterObject, RowBounds rowBounds, ResultHandler resultHandler) throws SQLException {
+<span class="fc" id="L80">    BoundSql boundSql = ms.getBoundSql(parameterObject);</span>
+<span class="fc" id="L81">    CacheKey key = createCacheKey(ms, parameterObject, rowBounds, boundSql);</span>
+<span class="fc" id="L82">    return query(ms, parameterObject, rowBounds, resultHandler, key, boundSql);</span>
+  }
+
+  @Override
+  public &lt;E&gt; List&lt;E&gt; query(MappedStatement ms, Object parameterObject, RowBounds rowBounds, ResultHandler resultHandler, CacheKey key, BoundSql boundSql)
+      throws SQLException {
+<span class="fc" id="L88">    Cache cache = ms.getCache();</span>
+<span class="fc bfc" id="L89" title="All 2 branches covered.">    if (cache != null) {</span>
+<span class="fc" id="L90">      flushCacheIfRequired(ms);</span>
+<span class="fc bfc" id="L91" title="All 4 branches covered.">      if (ms.isUseCache() &amp;&amp; resultHandler == null) {</span>
+<span class="fc" id="L92">        ensureNoOutParams(ms, parameterObject, boundSql);</span>
+        @SuppressWarnings(&quot;unchecked&quot;)
+<span class="fc" id="L94">        List&lt;E&gt; list = (List&lt;E&gt;) tcm.getObject(cache, key);</span>
+<span class="fc bfc" id="L95" title="All 2 branches covered.">        if (list == null) {</span>
+<span class="fc" id="L96">          list = delegate.&lt;E&gt; query(ms, parameterObject, rowBounds, resultHandler, key, boundSql);</span>
+<span class="fc" id="L97">          tcm.putObject(cache, key, list); // issue #578 and #116</span>
+        }
+<span class="fc" id="L99">        return list;</span>
+      }
+    }
+<span class="fc" id="L102">    return delegate.&lt;E&gt; query(ms, parameterObject, rowBounds, resultHandler, key, boundSql);</span>
+  }
+
+  @Override
+  public List&lt;BatchResult&gt; flushStatements() throws SQLException {
+<span class="fc" id="L107">    return delegate.flushStatements();</span>
+  }
+
+  @Override
+  public void commit(boolean required) throws SQLException {
+<span class="fc" id="L112">    delegate.commit(required);</span>
+<span class="fc" id="L113">    tcm.commit();</span>
+<span class="fc" id="L114">  }</span>
+
+  @Override
+  public void rollback(boolean required) throws SQLException {
+    try {
+<span class="fc" id="L119">      delegate.rollback(required);</span>
+    } finally {
+<span class="pc bpc" id="L121" title="2 of 4 branches missed.">      if (required) {</span>
+<span class="pc" id="L122">        tcm.rollback();</span>
+      }
+    }
+<span class="fc" id="L125">  }</span>
+
+  private void ensureNoOutParams(MappedStatement ms, Object parameter, BoundSql boundSql) {
+<span class="pc bpc" id="L128" title="1 of 2 branches missed.">    if (ms.getStatementType() == StatementType.CALLABLE) {</span>
+<span class="nc bnc" id="L129" title="All 2 branches missed.">      for (ParameterMapping parameterMapping : boundSql.getParameterMappings()) {</span>
+<span class="nc bnc" id="L130" title="All 2 branches missed.">        if (parameterMapping.getMode() != ParameterMode.IN) {</span>
+<span class="nc" id="L131">          throw new ExecutorException(&quot;Caching stored procedures with OUT params is not supported.  Please configure useCache=false in &quot; + ms.getId() + &quot; statement.&quot;);</span>
+        }
+<span class="nc" id="L133">      }</span>
+    }
+<span class="fc" id="L135">  }</span>
+
+  @Override
+  public CacheKey createCacheKey(MappedStatement ms, Object parameterObject, RowBounds rowBounds, BoundSql boundSql) {
+<span class="fc" id="L139">    return delegate.createCacheKey(ms, parameterObject, rowBounds, boundSql);</span>
+  }
+
+  @Override
+  public boolean isCached(MappedStatement ms, CacheKey key) {
+<span class="fc" id="L144">    return delegate.isCached(ms, key);</span>
+  }
+
+  @Override
+  public void deferLoad(MappedStatement ms, MetaObject resultObject, String property, CacheKey key, Class&lt;?&gt; targetType) {
+<span class="fc" id="L149">    delegate.deferLoad(ms, resultObject, property, key, targetType);</span>
+<span class="fc" id="L150">  }</span>
+
+  @Override
+  public void clearLocalCache() {
+<span class="fc" id="L154">    delegate.clearLocalCache();</span>
+<span class="fc" id="L155">  }</span>
+
+  private void flushCacheIfRequired(MappedStatement ms) {
+<span class="fc" id="L158">    Cache cache = ms.getCache();</span>
+<span class="fc bfc" id="L159" title="All 4 branches covered.">    if (cache != null &amp;&amp; ms.isFlushCacheRequired()) {      </span>
+<span class="fc" id="L160">      tcm.clear(cache);</span>
+    }
+<span class="fc" id="L162">  }</span>
+
+  @Override
+  public void setExecutorWrapper(Executor executor) {
+<span class="nc" id="L166">    throw new UnsupportedOperationException(&quot;This method should not be called&quot;);</span>
+  }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.5.201505241946</span></div></body></html>

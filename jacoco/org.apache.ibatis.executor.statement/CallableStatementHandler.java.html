@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>CallableStatementHandler.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.executor.statement</a> &gt; <span class="el_source">CallableStatementHandler.java</span></div><h1>CallableStatementHandler.java</h1><pre class="source lang-java linenums">/**
+ *    Copyright 2009-2015 the original author or authors.
+ *
+ *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
+package org.apache.ibatis.executor.statement;
+
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.List;
+
+import org.apache.ibatis.executor.Executor;
+import org.apache.ibatis.executor.ExecutorException;
+import org.apache.ibatis.executor.keygen.KeyGenerator;
+import org.apache.ibatis.mapping.BoundSql;
+import org.apache.ibatis.mapping.MappedStatement;
+import org.apache.ibatis.mapping.ParameterMapping;
+import org.apache.ibatis.mapping.ParameterMode;
+import org.apache.ibatis.session.ResultHandler;
+import org.apache.ibatis.session.RowBounds;
+import org.apache.ibatis.type.JdbcType;
+
+/**
+ * @author Clinton Begin
+ */
+public class CallableStatementHandler extends BaseStatementHandler {
+
+  public CallableStatementHandler(Executor executor, MappedStatement mappedStatement, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql) {
+<span class="fc" id="L42">    super(executor, mappedStatement, parameter, rowBounds, resultHandler, boundSql);</span>
+<span class="fc" id="L43">  }</span>
+
+  @Override
+  public int update(Statement statement) throws SQLException {
+<span class="fc" id="L47">    CallableStatement cs = (CallableStatement) statement;</span>
+<span class="fc" id="L48">    cs.execute();</span>
+<span class="fc" id="L49">    int rows = cs.getUpdateCount();</span>
+<span class="fc" id="L50">    Object parameterObject = boundSql.getParameterObject();</span>
+<span class="fc" id="L51">    KeyGenerator keyGenerator = mappedStatement.getKeyGenerator();</span>
+<span class="fc" id="L52">    keyGenerator.processAfter(executor, mappedStatement, cs, parameterObject);</span>
+<span class="fc" id="L53">    resultSetHandler.handleOutputParameters(cs);</span>
+<span class="fc" id="L54">    return rows;</span>
+  }
+
+  @Override
+  public void batch(Statement statement) throws SQLException {
+<span class="nc" id="L59">    CallableStatement cs = (CallableStatement) statement;</span>
+<span class="nc" id="L60">    cs.addBatch();</span>
+<span class="nc" id="L61">  }</span>
+
+  @Override
+  public &lt;E&gt; List&lt;E&gt; query(Statement statement, ResultHandler resultHandler) throws SQLException {
+<span class="fc" id="L65">    CallableStatement cs = (CallableStatement) statement;</span>
+<span class="fc" id="L66">    cs.execute();</span>
+<span class="fc" id="L67">    List&lt;E&gt; resultList = resultSetHandler.&lt;E&gt;handleResultSets(cs);</span>
+<span class="fc" id="L68">    resultSetHandler.handleOutputParameters(cs);</span>
+<span class="fc" id="L69">    return resultList;</span>
+  }
+
+  @Override
+  protected Statement instantiateStatement(Connection connection) throws SQLException {
+<span class="fc" id="L74">    String sql = boundSql.getSql();</span>
+<span class="fc bfc" id="L75" title="All 2 branches covered.">    if (mappedStatement.getResultSetType() != null) {</span>
+<span class="fc" id="L76">      return connection.prepareCall(sql, mappedStatement.getResultSetType().getValue(), ResultSet.CONCUR_READ_ONLY);</span>
+    } else {
+<span class="fc" id="L78">      return connection.prepareCall(sql);</span>
+    }
+  }
+
+  @Override
+  public void parameterize(Statement statement) throws SQLException {
+<span class="fc" id="L84">    registerOutputParameters((CallableStatement) statement);</span>
+<span class="fc" id="L85">    parameterHandler.setParameters((CallableStatement) statement);</span>
+<span class="fc" id="L86">  }</span>
+
+  private void registerOutputParameters(CallableStatement cs) throws SQLException {
+<span class="fc" id="L89">    List&lt;ParameterMapping&gt; parameterMappings = boundSql.getParameterMappings();</span>
+<span class="fc bfc" id="L90" title="All 2 branches covered.">    for (int i = 0, n = parameterMappings.size(); i &lt; n; i++) {</span>
+<span class="fc" id="L91">      ParameterMapping parameterMapping = parameterMappings.get(i);</span>
+<span class="pc bpc" id="L92" title="1 of 4 branches missed.">      if (parameterMapping.getMode() == ParameterMode.OUT || parameterMapping.getMode() == ParameterMode.INOUT) {</span>
+<span class="pc bpc" id="L93" title="1 of 2 branches missed.">        if (null == parameterMapping.getJdbcType()) {</span>
+<span class="nc" id="L94">          throw new ExecutorException(&quot;The JDBC Type must be specified for output parameter.  Parameter: &quot; + parameterMapping.getProperty());</span>
+        } else {
+<span class="pc bpc" id="L96" title="5 of 6 branches missed.">          if (parameterMapping.getNumericScale() != null &amp;&amp; (parameterMapping.getJdbcType() == JdbcType.NUMERIC || parameterMapping.getJdbcType() == JdbcType.DECIMAL)) {</span>
+<span class="nc" id="L97">            cs.registerOutParameter(i + 1, parameterMapping.getJdbcType().TYPE_CODE, parameterMapping.getNumericScale());</span>
+          } else {
+<span class="pc bpc" id="L99" title="1 of 2 branches missed.">            if (parameterMapping.getJdbcTypeName() == null) {</span>
+<span class="fc" id="L100">              cs.registerOutParameter(i + 1, parameterMapping.getJdbcType().TYPE_CODE);</span>
+            } else {
+<span class="nc" id="L102">              cs.registerOutParameter(i + 1, parameterMapping.getJdbcType().TYPE_CODE, parameterMapping.getJdbcTypeName());</span>
+            }
+          }
+        }
+      }
+    }
+<span class="fc" id="L108">  }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.5.201505241946</span></div></body></html>

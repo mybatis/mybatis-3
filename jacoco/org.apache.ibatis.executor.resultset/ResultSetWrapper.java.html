@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>ResultSetWrapper.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.executor.resultset</a> &gt; <span class="el_source">ResultSetWrapper.java</span></div><h1>ResultSetWrapper.java</h1><pre class="source lang-java linenums">/**
+ *    Copyright 2009-2015 the original author or authors.
+ *
+ *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
+package org.apache.ibatis.executor.resultset;
+
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.mapping.ResultMap;
+import org.apache.ibatis.session.Configuration;
+import org.apache.ibatis.type.JdbcType;
+import org.apache.ibatis.type.ObjectTypeHandler;
+import org.apache.ibatis.type.TypeHandler;
+import org.apache.ibatis.type.TypeHandlerRegistry;
+import org.apache.ibatis.type.UnknownTypeHandler;
+
+/**
+ * @author Iwao AVE!
+ */
+class ResultSetWrapper {
+
+  private final ResultSet resultSet;
+  private final TypeHandlerRegistry typeHandlerRegistry;
+<span class="fc" id="L45">  private final List&lt;String&gt; columnNames = new ArrayList&lt;String&gt;();</span>
+<span class="fc" id="L46">  private final List&lt;String&gt; classNames = new ArrayList&lt;String&gt;();</span>
+<span class="fc" id="L47">  private final List&lt;JdbcType&gt; jdbcTypes = new ArrayList&lt;JdbcType&gt;();</span>
+<span class="fc" id="L48">  private final Map&lt;String, Map&lt;Class&lt;?&gt;, TypeHandler&lt;?&gt;&gt;&gt; typeHandlerMap = new HashMap&lt;String, Map&lt;Class&lt;?&gt;, TypeHandler&lt;?&gt;&gt;&gt;();</span>
+<span class="fc" id="L49">  private Map&lt;String, List&lt;String&gt;&gt; mappedColumnNamesMap = new HashMap&lt;String, List&lt;String&gt;&gt;();</span>
+<span class="fc" id="L50">  private Map&lt;String, List&lt;String&gt;&gt; unMappedColumnNamesMap = new HashMap&lt;String, List&lt;String&gt;&gt;();</span>
+
+  public ResultSetWrapper(ResultSet rs, Configuration configuration) throws SQLException {
+<span class="fc" id="L53">    super();</span>
+<span class="fc" id="L54">    this.typeHandlerRegistry = configuration.getTypeHandlerRegistry();</span>
+<span class="fc" id="L55">    this.resultSet = rs;</span>
+<span class="fc" id="L56">    final ResultSetMetaData metaData = rs.getMetaData();</span>
+<span class="fc" id="L57">    final int columnCount = metaData.getColumnCount();</span>
+<span class="fc bfc" id="L58" title="All 2 branches covered.">    for (int i = 1; i &lt;= columnCount; i++) {</span>
+<span class="pc bpc" id="L59" title="1 of 2 branches missed.">      columnNames.add(configuration.isUseColumnLabel() ? metaData.getColumnLabel(i) : metaData.getColumnName(i));</span>
+<span class="fc" id="L60">      jdbcTypes.add(JdbcType.forCode(metaData.getColumnType(i)));</span>
+<span class="fc" id="L61">      classNames.add(metaData.getColumnClassName(i));</span>
+    }
+<span class="fc" id="L63">  }</span>
+
+  public ResultSet getResultSet() {
+<span class="fc" id="L66">    return resultSet;</span>
+  }
+
+  public List&lt;String&gt; getColumnNames() {
+<span class="fc" id="L70">    return this.columnNames;</span>
+  }
+
+  public List&lt;String&gt; getClassNames() {
+<span class="fc" id="L74">    return Collections.unmodifiableList(classNames);</span>
+  }
+
+  /**
+   * Gets the type handler to use when reading the result set.
+   * Tries to get from the TypeHandlerRegistry by searching for the property type.
+   * If not found it gets the column JDBC type and tries to get a handler for it.
+   * 
+   * @param propertyType
+   * @param columnName
+   * @return
+   */
+  public TypeHandler&lt;?&gt; getTypeHandler(Class&lt;?&gt; propertyType, String columnName) {
+<span class="fc" id="L87">    TypeHandler&lt;?&gt; handler = null;</span>
+<span class="fc" id="L88">    Map&lt;Class&lt;?&gt;, TypeHandler&lt;?&gt;&gt; columnHandlers = typeHandlerMap.get(columnName);</span>
+<span class="fc bfc" id="L89" title="All 2 branches covered.">    if (columnHandlers == null) {</span>
+<span class="fc" id="L90">      columnHandlers = new HashMap&lt;Class&lt;?&gt;, TypeHandler&lt;?&gt;&gt;();</span>
+<span class="fc" id="L91">      typeHandlerMap.put(columnName, columnHandlers);</span>
+    } else {
+<span class="fc" id="L93">      handler = columnHandlers.get(propertyType);</span>
+    }
+<span class="fc bfc" id="L95" title="All 2 branches covered.">    if (handler == null) {</span>
+<span class="fc" id="L96">      handler = typeHandlerRegistry.getTypeHandler(propertyType);</span>
+      // Replicate logic of UnknownTypeHandler#resolveTypeHandler
+      // See issue #59 comment 10
+<span class="pc bpc" id="L99" title="1 of 4 branches missed.">      if (handler == null || handler instanceof UnknownTypeHandler) {</span>
+<span class="fc" id="L100">        final int index = columnNames.indexOf(columnName);</span>
+<span class="fc" id="L101">        final JdbcType jdbcType = jdbcTypes.get(index);</span>
+<span class="fc" id="L102">        final Class&lt;?&gt; javaType = resolveClass(classNames.get(index));</span>
+<span class="pc bpc" id="L103" title="2 of 4 branches missed.">        if (javaType != null &amp;&amp; jdbcType != null) {</span>
+<span class="fc" id="L104">          handler = typeHandlerRegistry.getTypeHandler(javaType, jdbcType);</span>
+<span class="nc bnc" id="L105" title="All 2 branches missed.">        } else if (javaType != null) {</span>
+<span class="nc" id="L106">          handler = typeHandlerRegistry.getTypeHandler(javaType);</span>
+<span class="nc bnc" id="L107" title="All 2 branches missed.">        } else if (jdbcType != null) {</span>
+<span class="nc" id="L108">          handler = typeHandlerRegistry.getTypeHandler(jdbcType);</span>
+        }
+      }
+<span class="pc bpc" id="L111" title="1 of 4 branches missed.">      if (handler == null || handler instanceof UnknownTypeHandler) {</span>
+<span class="fc" id="L112">        handler = new ObjectTypeHandler();</span>
+      }
+<span class="fc" id="L114">      columnHandlers.put(propertyType, handler);</span>
+    }
+<span class="fc" id="L116">    return handler;</span>
+  }
+
+  private Class&lt;?&gt; resolveClass(String className) {
+    try {
+<span class="fc" id="L121">      return Resources.classForName(className);</span>
+<span class="nc" id="L122">    } catch (ClassNotFoundException e) {</span>
+<span class="nc" id="L123">      return null;</span>
+    }
+  }
+
+  private void loadMappedAndUnmappedColumnNames(ResultMap resultMap, String columnPrefix) throws SQLException {
+<span class="fc" id="L128">    List&lt;String&gt; mappedColumnNames = new ArrayList&lt;String&gt;();</span>
+<span class="fc" id="L129">    List&lt;String&gt; unmappedColumnNames = new ArrayList&lt;String&gt;();</span>
+<span class="fc bfc" id="L130" title="All 2 branches covered.">    final String upperColumnPrefix = columnPrefix == null ? null : columnPrefix.toUpperCase(Locale.ENGLISH);</span>
+<span class="fc" id="L131">    final Set&lt;String&gt; mappedColumns = prependPrefixes(resultMap.getMappedColumns(), upperColumnPrefix);</span>
+<span class="fc bfc" id="L132" title="All 2 branches covered.">    for (String columnName : columnNames) {</span>
+<span class="fc" id="L133">      final String upperColumnName = columnName.toUpperCase(Locale.ENGLISH);</span>
+<span class="fc bfc" id="L134" title="All 2 branches covered.">      if (mappedColumns.contains(upperColumnName)) {</span>
+<span class="fc" id="L135">        mappedColumnNames.add(upperColumnName);</span>
+      } else {
+<span class="fc" id="L137">        unmappedColumnNames.add(columnName);</span>
+      }
+<span class="fc" id="L139">    }</span>
+<span class="fc" id="L140">    mappedColumnNamesMap.put(getMapKey(resultMap, columnPrefix), mappedColumnNames);</span>
+<span class="fc" id="L141">    unMappedColumnNamesMap.put(getMapKey(resultMap, columnPrefix), unmappedColumnNames);</span>
+<span class="fc" id="L142">  }</span>
+
+  public List&lt;String&gt; getMappedColumnNames(ResultMap resultMap, String columnPrefix) throws SQLException {
+<span class="fc" id="L145">    List&lt;String&gt; mappedColumnNames = mappedColumnNamesMap.get(getMapKey(resultMap, columnPrefix));</span>
+<span class="fc bfc" id="L146" title="All 2 branches covered.">    if (mappedColumnNames == null) {</span>
+<span class="fc" id="L147">      loadMappedAndUnmappedColumnNames(resultMap, columnPrefix);</span>
+<span class="fc" id="L148">      mappedColumnNames = mappedColumnNamesMap.get(getMapKey(resultMap, columnPrefix));</span>
+    }
+<span class="fc" id="L150">    return mappedColumnNames;</span>
+  }
+
+  public List&lt;String&gt; getUnmappedColumnNames(ResultMap resultMap, String columnPrefix) throws SQLException {
+<span class="fc" id="L154">    List&lt;String&gt; unMappedColumnNames = unMappedColumnNamesMap.get(getMapKey(resultMap, columnPrefix));</span>
+<span class="fc bfc" id="L155" title="All 2 branches covered.">    if (unMappedColumnNames == null) {</span>
+<span class="fc" id="L156">      loadMappedAndUnmappedColumnNames(resultMap, columnPrefix);</span>
+<span class="fc" id="L157">      unMappedColumnNames = unMappedColumnNamesMap.get(getMapKey(resultMap, columnPrefix));</span>
+    }
+<span class="fc" id="L159">    return unMappedColumnNames;</span>
+  }
+
+  private String getMapKey(ResultMap resultMap, String columnPrefix) {
+<span class="fc" id="L163">    return resultMap.getId() + &quot;:&quot; + columnPrefix;</span>
+  }
+
+  private Set&lt;String&gt; prependPrefixes(Set&lt;String&gt; columnNames, String prefix) {
+<span class="pc bpc" id="L167" title="2 of 8 branches missed.">    if (columnNames == null || columnNames.isEmpty() || prefix == null || prefix.length() == 0) {</span>
+<span class="fc" id="L168">      return columnNames;</span>
+    }
+<span class="fc" id="L170">    final Set&lt;String&gt; prefixed = new HashSet&lt;String&gt;();</span>
+<span class="fc bfc" id="L171" title="All 2 branches covered.">    for (String columnName : columnNames) {</span>
+<span class="fc" id="L172">      prefixed.add(prefix + columnName);</span>
+<span class="fc" id="L173">    }</span>
+<span class="fc" id="L174">    return prefixed;</span>
+  }
+  
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.5.201505241946</span></div></body></html>
