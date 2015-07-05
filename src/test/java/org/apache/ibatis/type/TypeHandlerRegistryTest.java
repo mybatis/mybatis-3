@@ -38,13 +38,13 @@ public class TypeHandlerRegistryTest {
 
   @Test
   public void shouldRegisterEnumOrdinalTypeHandler() {
-    EnumOrdinalTypeHandler<FetchType> FetchTypeEnumHandler = new EnumOrdinalTypeHandler<FetchType>(FetchType.class);
-    typeHandlerRegistry.register(FetchTypeEnumHandler);
-    EnumOrdinalTypeHandler<ExecutorType> ExecutorTypeEnumHanler = new EnumOrdinalTypeHandler<ExecutorType>(ExecutorType.class);
-    typeHandlerRegistry.register(ExecutorTypeEnumHanler);
+    EnumOrdinalTypeHandler<FetchType> fetchTypeEnumHandler = new EnumOrdinalTypeHandler<FetchType>(FetchType.class);
+    typeHandlerRegistry.register(fetchTypeEnumHandler);
+    EnumOrdinalTypeHandler<ExecutorType> executorTypeEnumHanler = new EnumOrdinalTypeHandler<ExecutorType>(ExecutorType.class);
+    typeHandlerRegistry.register(executorTypeEnumHanler);
 
-    assertEquals(FetchTypeEnumHandler, typeHandlerRegistry.getTypeHandler(FetchType.class));
-    assertEquals(ExecutorTypeEnumHanler, typeHandlerRegistry.getTypeHandler(ExecutorType.class));
+    assertEquals(fetchTypeEnumHandler, typeHandlerRegistry.getTypeHandler(FetchType.class));
+    assertEquals(executorTypeEnumHanler, typeHandlerRegistry.getTypeHandler(ExecutorType.class));
   }
 
   @Test
