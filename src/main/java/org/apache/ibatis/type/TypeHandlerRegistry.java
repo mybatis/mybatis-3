@@ -255,6 +255,10 @@ public final class TypeHandlerRegistry {
     if (javaType != null) {
       Map<JdbcType, TypeHandler<?>> map = TYPE_HANDLER_MAP.get(javaType);
       if (map == null) {
+        if (handler instanceof EnumOrdinalTypeHandler) {
+          EnumOrdinalTypeHandler enumOrdinalTypeHandler = (EnumOrdinalTypeHandler) handler;
+          javaType = enumOrdinalTypeHandler.getType();
+        }
         map = new HashMap<JdbcType, TypeHandler<?>>();
         TYPE_HANDLER_MAP.put(javaType, map);
       }

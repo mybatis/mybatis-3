@@ -28,12 +28,24 @@ import java.sql.SQLException;
 import java.util.List;
 
 import org.apache.ibatis.domain.misc.RichType;
-import org.junit.Ignore;
+import org.apache.ibatis.mapping.FetchType;
+import org.apache.ibatis.session.ExecutorType;
 import org.junit.Test;
 
 public class TypeHandlerRegistryTest {
 
   private TypeHandlerRegistry typeHandlerRegistry = new TypeHandlerRegistry();
+
+  @Test
+  public void shouldRegisterEnumOrdinalTypeHandler() {
+    EnumOrdinalTypeHandler<FetchType> FetchTypeEnumHandler = new EnumOrdinalTypeHandler<FetchType>(FetchType.class);
+    typeHandlerRegistry.register(FetchTypeEnumHandler);
+    EnumOrdinalTypeHandler<ExecutorType> ExecutorTypeEnumHanler = new EnumOrdinalTypeHandler<ExecutorType>(ExecutorType.class);
+    typeHandlerRegistry.register(ExecutorTypeEnumHanler);
+
+    assertEquals(FetchTypeEnumHandler, typeHandlerRegistry.getTypeHandler(FetchType.class));
+    assertEquals(ExecutorTypeEnumHanler, typeHandlerRegistry.getTypeHandler(ExecutorType.class));
+  }
 
   @Test
   public void shouldRegisterAndRetrieveTypeHandler() {
