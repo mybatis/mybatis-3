@@ -15,14 +15,17 @@
  */
 package org.apache.ibatis.session.defaults;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.binding.BindingException;
+import org.apache.ibatis.cursor.Cursor;
 import org.apache.ibatis.exceptions.ExceptionFactory;
 import org.apache.ibatis.exceptions.TooManyResultsException;
 import org.apache.ibatis.executor.BatchResult;
@@ -50,6 +53,7 @@ public class DefaultSqlSession implements SqlSession {
 
   private boolean autoCommit;
   private boolean dirty;
+  private List<Cursor<?>> cursorList;
 
   public DefaultSqlSession(Configuration configuration, Executor executor, boolean autoCommit) {
     this.configuration = configuration;
@@ -101,6 +105,30 @@ public class DefaultSqlSession implements SqlSession {
       mapResultHandler.handleResult(context);
     }
     return mapResultHandler.getMappedResults();
+  }
+
+  @Override
+  public <T> Cursor<T> selectCursor(String statement) {
+    return selectCursor(statement, null);
+  }
+
+  @Override
+  public <T> Cursor<T> selectCursor(String statement, Object parameter) {
+    return selectCursor(statement, parameter, RowBounds.DEFAULT);
+  }
+
+  @Override
+  public <T> Cursor<T> selectCursor(String statement, Object parameter, RowBounds rowBounds) {
+    try {
+      MappedStatement ms = configuration.getMappedStatement(statement);
+      Cursor<T> cursor = executor.queryCursor(ms, wrapCollection(parameter), rowBounds);
+      registerCursor(cursor);
+      return cursor;
+    } catch (Exception e) {
+      throw ExceptionFactory.wrapException("Error querying database.  Cause: " + e, e);
+    } finally {
+      ErrorContext.instance().reset();
+    }
   }
 
   @Override
@@ -234,9 +262,23 @@ public class DefaultSqlSession implements SqlSession {
   public void close() {
     try {
       executor.close(isCommitOrRollbackRequired(false));
+      closeCursors();
       dirty = false;
     } finally {
       ErrorContext.instance().reset();
+    }
+  }
+
+  private void closeCursors() {
+    if (cursorList != null && cursorList.size() != 0) {
+      for (Cursor<?> cursor : cursorList) {
+        try {
+          cursor.close();
+        } catch (IOException e) {
+          throw ExceptionFactory.wrapException("Error closing cursor.  Cause: " + e, e);
+        }
+      }
+      cursorList.clear();
     }
   }
 
@@ -262,6 +304,13 @@ public class DefaultSqlSession implements SqlSession {
   @Override
   public void clearCache() {
     executor.clearLocalCache();
+  }
+
+  private <T> void registerCursor(Cursor<T> cursor) {
+    if (cursorList == null) {
+      cursorList = new ArrayList<Cursor<?>>();
+    }
+    cursorList.add(cursor);
   }
 
   private boolean isCommitOrRollbackRequired(boolean force) {

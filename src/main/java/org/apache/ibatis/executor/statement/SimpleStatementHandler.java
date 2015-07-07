@@ -16,11 +16,13 @@
 package org.apache.ibatis.executor.statement;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 
+import org.apache.ibatis.cursor.Cursor;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.executor.keygen.Jdbc3KeyGenerator;
 import org.apache.ibatis.executor.keygen.KeyGenerator;
@@ -71,6 +73,13 @@ public class SimpleStatementHandler extends BaseStatementHandler {
     String sql = boundSql.getSql();
     statement.execute(sql);
     return resultSetHandler.<E>handleResultSets(statement);
+  }
+
+  @Override
+  public <E> Cursor<E> queryCursor(Statement statement) throws SQLException {
+    String sql = boundSql.getSql();
+    statement.execute(sql);
+    return resultSetHandler.<E>handleCursorResultSets(statement);
   }
 
   @Override

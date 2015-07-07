@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.ibatis.cursor.Cursor;
 import org.apache.ibatis.executor.keygen.Jdbc3KeyGenerator;
 import org.apache.ibatis.executor.keygen.KeyGenerator;
 import org.apache.ibatis.executor.keygen.NoKeyGenerator;
@@ -92,6 +93,17 @@ public class BatchExecutor extends BaseExecutor {
     } finally {
       closeStatement(stmt);
     }
+  }
+
+  @Override
+  protected <E> Cursor<E> doQueryCursor(MappedStatement ms, Object parameter, RowBounds rowBounds, BoundSql boundSql) throws SQLException {
+    flushStatements();
+    Configuration configuration = ms.getConfiguration();
+    StatementHandler handler = configuration.newStatementHandler(wrapper, ms, parameter, rowBounds, null, boundSql);
+    Connection connection = getConnection(ms.getStatementLog());
+    Statement stmt = handler.prepare(connection);
+    handler.parameterize(stmt);
+    return handler.<E>queryCursor(stmt);
   }
 
   @Override

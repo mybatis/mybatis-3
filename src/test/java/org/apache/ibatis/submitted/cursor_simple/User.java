@@ -13,24 +13,34 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package org.apache.ibatis.executor.resultset;
+package org.apache.ibatis.submitted.cursor_simple;
 
-import org.apache.ibatis.cursor.Cursor;
+public class User {
 
-import java.sql.CallableStatement;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.List;
+  private Integer id;
+  private String name;
 
-/**
- * @author Clinton Begin
- */
-public interface ResultSetHandler {
+  public Integer getId() {
+    return id;
+  }
 
-  <E> List<E> handleResultSets(Statement stmt) throws SQLException;
+  public void setId(Integer id) {
+    this.id = id;
+  }
 
-  <E> Cursor<E> handleCursorResultSets(Statement stmt) throws SQLException;
+  public String getName() {
+    return name;
+  }
 
-  void handleOutputParameters(CallableStatement cs) throws SQLException;
+  public void setName(String name) {
+    this.name = name;
+  }
 
+  @Override
+  public String toString() {
+    return "User{" +
+            "id=" + id +
+            ", name='" + name + '\'' +
+            '}';
+  }
 }
