@@ -232,6 +232,10 @@ public interface ResultHandler<T> {
   <li>複雑な ResultMap では複数行のデータがひとつのオブジェクトにマッピングされることもあります。こうした ResultMap を ResultHandler と併用する際、association や collection のデータがマッピングされる前の状態のオブジェクトが渡される場合があります。</li>
   </ul>
 
+  <h5>バッチ更新ステートメントをフラッシュするメソッド</h5>
+  <p>バッチ更新用に JDBC ドライバ内に蓄積されたステートメントを任意のタイミングでデータベースへフラッシュ(実行)するメソッドがあります。このメソッドは、 <code>ExecutorType</code> として <code>ExecutorType.BATCH</code> を使用している場合に使用することができます。</p>
+  <source><![CDATA[List<BatchResult> flushStatements()]]></source>
+
   <h5>トランザクションを制御するメソッド</h5>
   <p>トランザクションのスコープを制御するメソッドは４つあります。当然ですが、auto-commit を使用する場合や、外部のトランザクションマネージャーを使っている場合、これらのメソッドは効果がありません。しかし、Connection のインスタンスによって管理されている JDBC トランザクションマネージャーを利用している場合は便利なメソッドです。</p>
   <source>void commit()
@@ -481,6 +485,12 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
         <td>N/A</td>
         <td>ResultHandler を使うメソッドでは戻り値の型が void となるので、このアノテーションを使って各行のデータをどのクラスにマップするかを指定します。XMLの ResultMap が存在する場合は @ResultMap アノテーションで指定することができます。XML の <code>&lt;select&gt;</code> 要素で resultType が指定されている場合はアノテーションによる指定は不要です。それ以外の場合、例えば @Select アノテーションが付加された引数に ResultHandler を含むメソッドの場合は戻り値の型は void である必要があるので、このアノテーション（あるいは @ResultMap）を使って型を指定する必要があります。メソッドの戻り値の型が void 以外の場合、このアノテーションは無視されます。</td>
       </tr>
+      <tr>
+        <td><code>@Flush</code></td>
+        <td><code>Method</code></td>
+        <td>N/A</td>
+        <td>このアノテーションを使用すると、<code>SqlSession#flushStatements()</code>メソッドを Mapper インタフェースに定義したメソッド経由で呼び出すことができます。(MyBatis 3.3以上)</td>
+      </tr>
     </tbody>
   </table>
 
@@ -494,6 +504,10 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
   <source>@Insert("insert into table2 (name) values(#{name})")
 @SelectKey(statement="call identity()", keyProperty="nameId", before=<strong>false</strong>, resultType=<strong>int.class</strong>)
 <strong>int</strong> insertTable2(Name name);</source>
+
+  <p>次のコードは <code>@Flush</code> アノテーションを使って <code>SqlSession#flushStatements()</code>メソッドを呼び出す例です。</p>
+  <source><![CDATA[@Flush
+List<BatchResult> flush();]]></source>
   </subsection>
 
   </section>
