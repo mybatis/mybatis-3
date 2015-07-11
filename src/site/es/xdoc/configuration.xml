@@ -367,7 +367,7 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 CGLIB | JAVASSIST
               </td>
               <td>
-                CGLIB
+                JAVASSIST (MyBatis 3.3 or above)
               </td>
             </tr>
           </tbody>
