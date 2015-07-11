@@ -18,6 +18,7 @@ package org.apache.ibatis.binding;
 import org.apache.ibatis.annotations.Flush;
 import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.cursor.Cursor;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.SqlCommandType;
 import org.apache.ibatis.reflection.MetaObject;
@@ -64,6 +65,8 @@ public class MapperMethod {
         result = executeForMany(sqlSession, args);
       } else if (method.returnsMap()) {
         result = executeForMap(sqlSession, args);
+      } else if (method.returnsCursor()) {
+        result = executeForCursor(sqlSession, args);
       } else {
         Object param = method.convertArgsToSqlCommandParam(args);
         result = sqlSession.selectOne(command.getName(), param);
@@ -128,6 +131,18 @@ public class MapperMethod {
       } else {
         return convertToDeclaredCollection(sqlSession.getConfiguration(), result);
       }
+    }
+    return result;
+  }
+
+  private <T> Cursor<T> executeForCursor(SqlSession sqlSession, Object[] args) {
+    Cursor<T> result;
+    Object param = method.convertArgsToSqlCommandParam(args);
+    if (method.hasRowBounds()) {
+      RowBounds rowBounds = method.extractRowBounds(args);
+      result = sqlSession.<T>selectCursor(command.getName(), param, rowBounds);
+    } else {
+      result = sqlSession.<T>selectCursor(command.getName(), param);
     }
     return result;
   }
@@ -218,6 +233,7 @@ public class MapperMethod {
     private final boolean returnsMany;
     private final boolean returnsMap;
     private final boolean returnsVoid;
+    private final boolean returnsCursor;
     private final Class<?> returnType;
     private final String mapKey;
     private final Integer resultHandlerIndex;
@@ -229,6 +245,7 @@ public class MapperMethod {
       this.returnType = method.getReturnType();
       this.returnsVoid = void.class.equals(this.returnType);
       this.returnsMany = (configuration.getObjectFactory().isCollection(this.returnType) || this.returnType.isArray());
+      this.returnsCursor = Cursor.class.equals(this.returnType);
       this.mapKey = getMapKey(method);
       this.returnsMap = (this.mapKey != null);
       this.hasNamedParameters = hasNamedParams(method);
@@ -293,6 +310,10 @@ public class MapperMethod {
 
     public boolean returnsVoid() {
       return returnsVoid;
+    }
+
+    public boolean returnsCursor() {
+      return returnsCursor;
     }
 
     private Integer getUniqueParamIndex(Method method, Class<?> paramType) {

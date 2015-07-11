@@ -20,6 +20,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 
+import org.apache.ibatis.cursor.Cursor;
 import org.apache.ibatis.executor.parameter.ParameterHandler;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.session.ResultHandler;
@@ -42,6 +43,9 @@ public interface StatementHandler {
       throws SQLException;
 
   <E> List<E> query(Statement statement, ResultHandler resultHandler)
+      throws SQLException;
+
+  <E> Cursor<E> queryCursor(Statement statement)
       throws SQLException;
 
   BoundSql getBoundSql();

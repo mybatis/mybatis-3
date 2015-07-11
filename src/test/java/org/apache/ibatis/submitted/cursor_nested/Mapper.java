@@ -13,24 +13,14 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package org.apache.ibatis.executor.resultset;
+package org.apache.ibatis.submitted.cursor_nested;
 
 import org.apache.ibatis.cursor.Cursor;
 
-import java.sql.CallableStatement;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.List;
 
-/**
- * @author Clinton Begin
- */
-public interface ResultSetHandler {
+public interface Mapper {
 
-  <E> List<E> handleResultSets(Statement stmt) throws SQLException;
-
-  <E> Cursor<E> handleCursorResultSets(Statement stmt) throws SQLException;
-
-  void handleOutputParameters(CallableStatement cs) throws SQLException;
+  Cursor<User> getAllUsers();
 
 }

@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.cursor.Cursor;
 import org.apache.ibatis.executor.statement.StatementHandler;
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.mapping.BoundSql;
@@ -57,6 +58,14 @@ public class ReuseExecutor extends BaseExecutor {
     StatementHandler handler = configuration.newStatementHandler(wrapper, ms, parameter, rowBounds, resultHandler, boundSql);
     Statement stmt = prepareStatement(handler, ms.getStatementLog());
     return handler.<E>query(stmt, resultHandler);
+  }
+
+  @Override
+  protected <E> Cursor<E> doQueryCursor(MappedStatement ms, Object parameter, RowBounds rowBounds, BoundSql boundSql) throws SQLException {
+    Configuration configuration = ms.getConfiguration();
+    StatementHandler handler = configuration.newStatementHandler(wrapper, ms, parameter, rowBounds, null, boundSql);
+    Statement stmt = prepareStatement(handler, ms.getStatementLog());
+    return handler.<E>queryCursor(stmt);
   }
 
   @Override

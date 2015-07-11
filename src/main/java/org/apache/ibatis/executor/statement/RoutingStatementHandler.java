@@ -20,6 +20,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 
+import org.apache.ibatis.cursor.Cursor;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.executor.ExecutorException;
 import org.apache.ibatis.executor.parameter.ParameterHandler;
@@ -76,6 +77,11 @@ public class RoutingStatementHandler implements StatementHandler {
   @Override
   public <E> List<E> query(Statement statement, ResultHandler resultHandler) throws SQLException {
     return delegate.<E>query(statement, resultHandler);
+  }
+
+  @Override
+  public <E> Cursor<E> queryCursor(Statement statement) throws SQLException {
+    return delegate.queryCursor(statement);
   }
 
   @Override

@@ -15,20 +15,9 @@
  */
 package org.apache.ibatis.executor.resultset;
 
-import java.lang.reflect.Constructor;
-import java.sql.CallableStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-
 import org.apache.ibatis.cache.CacheKey;
+import org.apache.ibatis.cursor.Cursor;
+import org.apache.ibatis.cursor.defaults.DefaultCursor;
 import org.apache.ibatis.executor.ErrorContext;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.executor.ExecutorException;
@@ -57,6 +46,19 @@ import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.TypeHandlerRegistry;
 
+import java.lang.reflect.Constructor;
+import java.sql.CallableStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+
 /**
  * @author Clinton Begin
  * @author Eduardo Macarron
@@ -80,6 +82,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
   private final Map<CacheKey, Object> nestedResultObjects = new HashMap<CacheKey, Object>();
   private final Map<CacheKey, Object> ancestorObjects = new HashMap<CacheKey, Object>();
   private final Map<String, String> ancestorColumnPrefix = new HashMap<String, String>();
+  private Object previousRowValue;
 
   // multiple resultsets
   private final Map<String, ResultMapping> nextResultMaps = new HashMap<String, ResultMapping>();
@@ -181,6 +184,24 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     return collapseSingleResultList(multipleResults);
   }
 
+  @Override
+  public <E> Cursor<E> handleCursorResultSets(Statement stmt) throws SQLException {
+    ErrorContext.instance().activity("handling cursor results").object(mappedStatement.getId());
+
+    ResultSetWrapper rsw = getFirstResultSet(stmt);
+
+    List<ResultMap> resultMaps = mappedStatement.getResultMaps();
+
+    int resultMapCount = resultMaps.size();
+    validateResultMapsCount(rsw, resultMapCount);
+    if (resultMapCount != 1) {
+      throw new ExecutorException("Cursor results cannot be mapped to multiple resultMaps");
+    }
+
+    ResultMap resultMap = resultMaps.get(0);
+    return new DefaultCursor<E>(this, resultMap, rsw, rowBounds);
+  }
+
   private ResultSetWrapper getFirstResultSet(Statement stmt) throws SQLException {
     ResultSet rs = stmt.getResultSet();
     while (rs == null) {
@@ -264,7 +285,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
   // HANDLE ROWS FOR SIMPLE RESULTMAP
   //
 
-  private void handleRowValues(ResultSetWrapper rsw, ResultMap resultMap, ResultHandler<?> resultHandler, RowBounds rowBounds, ResultMapping parentMapping) throws SQLException {
+  public void handleRowValues(ResultSetWrapper rsw, ResultMap resultMap, ResultHandler<?> resultHandler, RowBounds rowBounds, ResultMapping parentMapping) throws SQLException {
     if (resultMap.hasNestedResultMaps()) {
       ensureNoRowBounds();
       checkResultHandler();
@@ -741,7 +762,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
   private void handleRowValuesForNestedResultMap(ResultSetWrapper rsw, ResultMap resultMap, ResultHandler<?> resultHandler, RowBounds rowBounds, ResultMapping parentMapping) throws SQLException {
     final DefaultResultContext<Object> resultContext = new DefaultResultContext<Object>();
     skipRows(rsw.getResultSet(), rowBounds);
-    Object rowValue = null;
+    Object rowValue = previousRowValue;
     while (shouldProcessMoreRows(resultContext, rowBounds) && rsw.getResultSet().next()) {
       final ResultMap discriminatedResultMap = resolveDiscriminatedResultMap(rsw.getResultSet(), resultMap, null);
       final CacheKey rowKey = createRowKey(discriminatedResultMap, rsw, null);
@@ -762,6 +783,9 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     }
     if (rowValue != null && mappedStatement.isResultOrdered() && shouldProcessMoreRows(resultContext, rowBounds)) {
       storeObject(resultHandler, resultContext, rowValue, parentMapping, rsw.getResultSet());
+      previousRowValue = null;
+    } else if (rowValue != null) {
+      previousRowValue = rowValue;
     }
   }
 
