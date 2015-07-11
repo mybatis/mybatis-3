@@ -364,6 +364,11 @@ public interface ResultHandler<T> {
 尔返回值的 stop()方法来停止 MyBatis 加载更多的结果。
   </p>
 
+  <h5>Batch update statement Flush Method</h5>
+  <p>There is method for flushing(executing) batch update statements that stored in a JDBC driver class at any timing. This method can be used when you use the <code>ExecutorType.BATCH</code> as <code>ExecutorType</code>.</p>
+  <source><![CDATA[List<BatchResult> flushStatements()]]></source>
+
+
   <h5>事务控制方法</h5>
   <p>
 控制事务范围有四个方法。
@@ -800,6 +805,12 @@ type,method。type 属性是类的完全限
         will use a result handler, the return type must be void and this annotation (or @ResultMap)
         is required.  This annotation is ignored unless the method return type is void.</td>
       </tr>
+      <tr>
+        <td><code>@Flush</code></td>
+        <td><code>Method</code></td>
+        <td>N/A</td>
+        <td>If this annotation is used, it can be called the <code>SqlSession#flushStatements()</code> via method defined at a Mapper interface.(MyBatis 3.3 or above)</td>
+      </tr>
     </tbody>
   </table>
 
@@ -813,6 +824,10 @@ type,method。type 属性是类的完全限
   <source>@Insert("insert into table2 (name) values(#{name})")
 @SelectKey(statement="call identity()", keyProperty="nameId", before=<strong>false</strong>, resultType=<strong>int.class</strong>)
 <strong>int</strong> insertTable2(Name name);</source>
+
+  <p>This example shows using the <code>@Flush</code> annotation to call the <code>SqlSession#flushStatements()</code>:</p>
+  <source><![CDATA[@Flush
+List<BatchResult> flush();]]></source>
   </subsection>
 
   </section>
