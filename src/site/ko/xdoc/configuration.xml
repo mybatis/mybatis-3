@@ -211,6 +211,21 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
             </tr>
             <tr>
               <td>
+                defaultFetchSize
+              </td>
+              <td>
+                Sets the driver a hint as to control fetching size for return results.
+                This parameter value can be override by a query setting.
+              </td>
+              <td>
+                양수
+              </td>
+              <td>
+                셋팅되지 않음(null)
+              </td>
+            </tr>
+            <tr>
+              <td>
                 safeRowBoundsEnabled
               </td>
               <td>
@@ -367,6 +382,7 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
   <setting name="autoMappingBehavior" value="PARTIAL"/>
   <setting name="defaultExecutorType" value="SIMPLE"/>
   <setting name="defaultStatementTimeout" value="25"/>
+  <setting name="defaultFetchSize" value="100"/>
   <setting name="safeRowBoundsEnabled" value="false"/>
   <setting name="mapUnderscoreToCamelCase" value="false"/>
   <setting name="localCacheScope" value="SESSION"/>
