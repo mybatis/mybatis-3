@@ -94,6 +94,8 @@ public class DefaultCursor<T> implements Cursor<T> {
             opened = false;
         } catch (SQLException e) {
             // ignore
+        } finally {
+            ErrorContext.instance().reset();
         }
     }
 
@@ -163,11 +165,7 @@ public class DefaultCursor<T> implements Cursor<T> {
         @Override
         public boolean hasNext() {
             if (object == null) {
-                try {
-                    object = fetchNextUsingRowBound();
-                } finally {
-                    ErrorContext.instance().reset();
-                }
+                object = fetchNextUsingRowBound();
             }
             return object != null;
         }
@@ -178,11 +176,7 @@ public class DefaultCursor<T> implements Cursor<T> {
             T next = object;
 
             if (next == null) {
-                try {
-                    next = fetchNextUsingRowBound();
-                } finally {
-                    ErrorContext.instance().reset();
-                }
+                next = fetchNextUsingRowBound();
             }
 
             if (next != null) {
