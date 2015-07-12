@@ -35,6 +35,7 @@ import java.util.*;
  * @author Clinton Begin
  * @author Eduardo Macarron
  * @author Lasse Voss
+ * @author Kazuki Shimizu
  */
 public class MapperMethod {
 
@@ -245,7 +246,7 @@ public class MapperMethod {
       this.returnType = method.getReturnType();
       this.returnsVoid = void.class.equals(this.returnType);
       this.returnsMany = (configuration.getObjectFactory().isCollection(this.returnType) || this.returnType.isArray());
-      this.returnsCursor = Cursor.class.equals(this.returnType);
+      this.returnsCursor = Cursor.class.isAssignableFrom(this.returnType);
       this.mapKey = getMapKey(method);
       this.returnsMap = (this.mapKey != null);
       this.hasNamedParameters = hasNamedParams(method);
