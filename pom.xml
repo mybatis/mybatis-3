@@ -119,8 +119,9 @@
   </ciManagement>
   <distributionManagement>
     <site>
-      <id>github</id>
-      <url>gitsite:git@github.com/mybatis/mybatis-3.git</url>
+      <id>gh-pages</id>
+      <name>Mybatis GitHub Pages</name>
+      <url>github:ssh://mybatis.github.io/mybatis-3/</url>
     </site>
   </distributionManagement>
 
@@ -149,7 +150,7 @@
     <dependency>
       <groupId>org.javassist</groupId>
       <artifactId>javassist</artifactId>
-      <version>3.19.0-GA</version>
+      <version>3.20.0-GA</version>
       <scope>compile</scope>
       <optional>true</optional>
     </dependency>
@@ -303,32 +304,9 @@
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
         <configuration>
-			<exclude>org.apache.ibatis.ognl.*</exclude>
-			<exclude>org.apache.ibatis.javassist.*</exclude>
+          <exclude>org.apache.ibatis.ognl.*</exclude>
+          <exclude>org.apache.ibatis.javassist.*</exclude>
         </configuration>
-      </plugin>      
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>cobertura-maven-plugin</artifactId>
-        <configuration>
-          <instrumentation>
-            <ignores>
-              <ignore>org.apache.ibatis.ognl.*</ignore>
-              <ignore>org.apache.ibatis.javassist.*</ignore>
-            </ignores>
-            <excludes>
-              <exclude>org/apache/ibatis/ognl/**/*.class</exclude>
-              <exclude>org/apache/ibatis/javassist/**/*.class</exclude>
-            </excludes>
-          </instrumentation>
-        </configuration>
-        <executions>
-          <execution>
-            <goals>
-              <goal>clean</goal>
-            </goals>
-          </execution>
-        </executions>
       </plugin>
     </plugins>
 
