@@ -16,8 +16,6 @@
 package org.apache.ibatis.cursor.defaults;
 
 import org.apache.ibatis.cursor.Cursor;
-import org.apache.ibatis.exceptions.ExceptionFactory;
-import org.apache.ibatis.executor.ErrorContext;
 import org.apache.ibatis.executor.resultset.DefaultResultSetHandler;
 import org.apache.ibatis.executor.resultset.ResultSetWrapper;
 import org.apache.ibatis.mapping.ResultMap;
@@ -33,7 +31,6 @@ import java.util.NoSuchElementException;
 
 /**
  * @author Guillaume Darmont / guillaume@dropinocean.com
- * @author Kazuki Shimizu
  */
 public class DefaultCursor<T> implements Cursor<T> {
 
@@ -114,7 +111,7 @@ public class DefaultCursor<T> implements Cursor<T> {
             opened = true;
             resultSetHandler.handleRowValues(rsw, resultMap, objectWrapperResultHandler, RowBounds.DEFAULT, null);
         } catch (SQLException e) {
-            ExceptionFactory.wrapException("Error fetching next object from database at the DefaultCursor.", e);
+            throw new RuntimeException(e);
         }
 
         T next = objectWrapperResultHandler.result;
@@ -163,11 +160,7 @@ public class DefaultCursor<T> implements Cursor<T> {
         @Override
         public boolean hasNext() {
             if (object == null) {
-                try {
-                    object = fetchNextUsingRowBound();
-                } finally {
-                    ErrorContext.instance().reset();
-                }
+                object = fetchNextUsingRowBound();
             }
             return object != null;
         }
@@ -178,11 +171,7 @@ public class DefaultCursor<T> implements Cursor<T> {
             T next = object;
 
             if (next == null) {
-                try {
-                    next = fetchNextUsingRowBound();
-                } finally {
-                    ErrorContext.instance().reset();
-                }
+                next = fetchNextUsingRowBound();
             }
 
             if (next != null) {
