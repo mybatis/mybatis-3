@@ -16,6 +16,7 @@
 package org.apache.ibatis.submitted.cursor_simple;
 
 import org.apache.ibatis.cursor.Cursor;
+import org.apache.ibatis.cursor.CursorException;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.RowBounds;
@@ -26,6 +27,7 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.io.Reader;
 import java.sql.Connection;
 import java.util.Iterator;
@@ -60,12 +62,18 @@ public class CursorSimpleTest {
         try {
             Assert.assertFalse(usersCursor.isOpen());
 
+            // Cursor is just created, current index is -1
+            Assert.assertEquals(-1, usersCursor.getCurrentIndex());
+
             Iterator<User> iterator = usersCursor.iterator();
 
             // Check if hasNext, fetching is started
             Assert.assertTrue(iterator.hasNext());
             Assert.assertTrue(usersCursor.isOpen());
             Assert.assertFalse(usersCursor.isConsumed());
+
+            // next() has not been called, index is still -1
+            Assert.assertEquals(-1, usersCursor.getCurrentIndex());
 
             User user = iterator.next();
             Assert.assertEquals("User1", user.getName());
@@ -129,6 +137,7 @@ public class CursorSimpleTest {
         SqlSession sqlSession = sqlSessionFactory.openSession();
 
         try {
+            // RowBound starting at offset 1 and limiting to 2 items
             Cursor<User> usersCursor = sqlSession.selectCursor("getAllUsers", null, new RowBounds(1, 2));
 
             Iterator<User> iterator = usersCursor.iterator();
@@ -147,5 +156,142 @@ public class CursorSimpleTest {
         } finally {
             sqlSession.close();
         }
+    }
+
+    @Test
+    public void testCursorWithBadRowBound() {
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+
+        try {
+            // Trying to start at offset 10 (which does not exist, since there is only 4 items)
+            Cursor<User> usersCursor = sqlSession.selectCursor("getAllUsers", null, new RowBounds(10, 2));
+            Iterator<User> iterator = usersCursor.iterator();
+
+            Assert.assertFalse(iterator.hasNext());
+            Assert.assertFalse(usersCursor.isOpen());
+            Assert.assertTrue(usersCursor.isConsumed());
+        } finally {
+            sqlSession.close();
+        }
+    }
+
+    @Test
+    public void testCursorMultipleHasNextCall() {
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        Mapper mapper = sqlSession.getMapper(Mapper.class);
+        Cursor<User> usersCursor = mapper.getAllUsers();
+
+        try {
+            Iterator<User> iterator = usersCursor.iterator();
+
+            Assert.assertEquals(-1, usersCursor.getCurrentIndex());
+
+            User user = iterator.next();
+            Assert.assertEquals("User1", user.getName());
+            Assert.assertEquals(0, usersCursor.getCurrentIndex());
+
+            Assert.assertTrue(iterator.hasNext());
+            Assert.assertTrue(iterator.hasNext());
+            Assert.assertTrue(iterator.hasNext());
+            // assert that index has not changed after hasNext() call
+            Assert.assertEquals(0, usersCursor.getCurrentIndex());
+        } finally {
+            sqlSession.close();
+        }
+    }
+
+    @Test
+    public void testCursorMultipleIteratorCall() {
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        Mapper mapper = sqlSession.getMapper(Mapper.class);
+        Cursor<User> usersCursor = mapper.getAllUsers();
+
+        Iterator<User> iterator2 = null;
+        try {
+            Iterator<User> iterator = usersCursor.iterator();
+            User user = iterator.next();
+            Assert.assertEquals("User1", user.getName());
+            Assert.assertEquals(0, usersCursor.getCurrentIndex());
+
+            iterator2 = usersCursor.iterator();
+            iterator2.hasNext();
+            Assert.fail("We should have failed since calling iterator several times is not allowed");
+        } catch (IllegalStateException e) {
+            Assert.assertNull("iterator2 should be null", iterator2);
+            return;
+        } finally {
+            sqlSession.close();
+        }
+        Assert.fail("Should have returned earlier");
+    }
+
+    @Test
+    public void testCursorMultipleCloseCall() throws IOException {
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        Mapper mapper = sqlSession.getMapper(Mapper.class);
+        Cursor<User> usersCursor = mapper.getAllUsers();
+        try {
+            Assert.assertFalse(usersCursor.isOpen());
+
+            Iterator<User> iterator = usersCursor.iterator();
+
+            // Check if hasNext, fetching is started
+            Assert.assertTrue(iterator.hasNext());
+            Assert.assertTrue(usersCursor.isOpen());
+            Assert.assertFalse(usersCursor.isConsumed());
+
+            // Consume only the first result
+            User user = iterator.next();
+            Assert.assertEquals("User1", user.getName());
+
+            usersCursor.close();
+            // Check multiple close are no-op
+            usersCursor.close();
+
+            // hasNext now return false, since the cursor is closed
+            Assert.assertFalse(iterator.hasNext());
+            Assert.assertFalse(usersCursor.isOpen());
+            Assert.assertFalse(usersCursor.isConsumed());
+        } finally {
+            sqlSession.close();
+        }
+    }
+
+    @Test
+    public void testCursorUsageAfterClose() throws IOException {
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        Mapper mapper = sqlSession.getMapper(Mapper.class);
+        Cursor<User> usersCursor = mapper.getAllUsers();
+
+        try {
+            Iterator<User> iterator = usersCursor.iterator();
+            User user = iterator.next();
+            Assert.assertEquals("User1", user.getName());
+            Assert.assertEquals(0, usersCursor.getCurrentIndex());
+
+            user = iterator.next();
+            Assert.assertEquals("User2", user.getName());
+            Assert.assertEquals(1, usersCursor.getCurrentIndex());
+
+            usersCursor.close();
+
+            // hasNext now return false, since the cursor is closed
+            Assert.assertFalse(iterator.hasNext());
+            Assert.assertFalse(usersCursor.isOpen());
+            Assert.assertFalse(usersCursor.isConsumed());
+
+            // trying next() will fail
+            iterator.next();
+
+            Assert.fail("We should have failed since Cursor is closed");
+        } catch (CursorException e) {
+            // We had an exception and current index has not changed
+            Assert.assertEquals(1, usersCursor.getCurrentIndex());
+            return;
+        } finally {
+            sqlSession.close();
+        }
+
+        Assert.fail("Should have returned earlier");
     }
 }
