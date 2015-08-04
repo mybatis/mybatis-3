@@ -39,7 +39,7 @@ public interface Cursor<T> extends Closeable, Iterable<T> {
 
     /**
      * Get the current item index. The first item has the index 0.
-     * @return -1 if the cursor is not open and has not been consumed. The index of the current item retrieved.
+     * @return -1 if the first cursor item has not been retrieved. The index of the current item retrieved.
      */
     int getCurrentIndex();
 }
