@@ -1,0 +1,7 @@
+    SELECT
+		field1
+	FROM
+      Table
+    WHERE
+       field2 = '   ' AND field3  = "   " AND 
+	  field4="  \"in  quotes\"  " AND  field5 =   '  \'in  apostrophes\'  ';

@@ -15,16 +15,15 @@
  */
 package org.apache.ibatis.logging.jdbc;
 
+import org.apache.ibatis.logging.Log;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
+import java.util.List;
 import java.util.Set;
-import java.util.StringTokenizer;
-
-import org.apache.ibatis.logging.Log;
 
 /**
  * Base class for proxies to do logging
@@ -120,13 +119,8 @@ public abstract class BaseJdbcLogger {
   }
 
   protected String removeBreakingWhitespace(String original) {
-    StringTokenizer whitespaceStripper = new StringTokenizer(original);
-    StringBuilder builder = new StringBuilder();
-    while (whitespaceStripper.hasMoreTokens()) {
-      builder.append(whitespaceStripper.nextToken());
-      builder.append(" ");
-    }
-    return builder.toString();
+    String regex = "\\s+(?=((\\\\[\\\\\"']|[^\\\\\"'])*[\"'](\\\\[\\\\\"']|[^\\\\\"'])*[\"'])*(\\\\[\\\\\"']|[^\\\\\"'])*$)";
+    return original.replaceAll(regex, " ").trim();
   }
 
   protected boolean isDebugEnabled() {
