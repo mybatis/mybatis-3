@@ -57,7 +57,15 @@ public enum JdbcType {
   NVARCHAR(Types.NVARCHAR), // JDK6
   NCHAR(Types.NCHAR), // JDK6
   NCLOB(Types.NCLOB), // JDK6
-  STRUCT(Types.STRUCT);
+  STRUCT(Types.STRUCT),
+  JAVA_OBJECT(Types.JAVA_OBJECT),
+  DISTINCT(Types.DISTINCT),
+  REF(Types.REF),
+  DATALINK(Types.DATALINK),
+  ROWID(Types.ROWID), // JDK6
+  LONGNVARCHAR(Types.LONGNVARCHAR), // JDK6
+  SQLXML(Types.SQLXML), // JDK6
+  DATETIMEOFFSET(-155); // SQL Server 2008
 
   public final int TYPE_CODE;
   private static Map<Integer,JdbcType> codeLookup = new HashMap<Integer,JdbcType>();
