@@ -45,6 +45,7 @@
     <setting name="callSettersOnNulls" value="true"/>
     <setting name="logPrefix" value="mybatis_"/>
     <setting name="logImpl" value="SLF4J"/>
+    <setting name="vfsImpl" value="org.apache.ibatis.io.JBoss6VFS"/>
     <setting name="configurationFactory" value="java.lang.String"/>
   </settings>
 

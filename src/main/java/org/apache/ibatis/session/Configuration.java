@@ -53,6 +53,7 @@ import org.apache.ibatis.executor.resultset.DefaultResultSetHandler;
 import org.apache.ibatis.executor.resultset.ResultSetHandler;
 import org.apache.ibatis.executor.statement.RoutingStatementHandler;
 import org.apache.ibatis.executor.statement.StatementHandler;
+import org.apache.ibatis.io.VFS;
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
 import org.apache.ibatis.logging.commons.JakartaCommonsLoggingImpl;
@@ -108,6 +109,7 @@ public class Configuration {
 
   protected String logPrefix;
   protected Class <? extends Log> logImpl;
+  protected Class <? extends VFS> vfsImpl;
   protected LocalCacheScope localCacheScope = LocalCacheScope.SESSION;
   protected JdbcType jdbcTypeForNull = JdbcType.OTHER;
   protected Set<String> lazyLoadTriggerMethods = new HashSet<String>(Arrays.asList(new String[] { "equals", "clone", "hashCode", "toString" }));
@@ -216,6 +218,18 @@ public class Configuration {
     if (logImpl != null) {
       this.logImpl = (Class<? extends Log>) logImpl;
       LogFactory.useCustomLogging(this.logImpl);
+    }
+  }
+
+  public Class<? extends VFS> getVfsImpl() {
+    return this.vfsImpl;
+  }
+
+  @SuppressWarnings("unchecked")
+  public void setVfsImpl(Class<?> vfsImpl) {
+    if (vfsImpl != null) {
+      this.vfsImpl = (Class<? extends VFS>) vfsImpl;
+      VFS.addImplClass(this.vfsImpl);
     }
   }
 
