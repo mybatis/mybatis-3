@@ -385,6 +385,20 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 JAVASSIST (MyBatis 3.3 or above)
               </td>
             </tr>
+            <tr>
+              <td>
+                vfsImpl
+              </td>
+              <td>
+                Specifies VFS implementations
+              </td>
+              <td>
+                Fully qualified class names of custom VFS implementation separated by commas.
+              </td>
+              <td>
+                Not set
+              </td>
+            </tr>
           </tbody>
         </table>
         <p>
