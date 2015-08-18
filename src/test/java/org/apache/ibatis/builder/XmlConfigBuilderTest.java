@@ -28,6 +28,7 @@ import java.util.Set;
 import org.apache.ibatis.builder.xml.XMLConfigBuilder;
 import org.apache.ibatis.executor.loader.cglib.CglibProxyFactory;
 import org.apache.ibatis.executor.loader.javassist.JavassistProxyFactory;
+import org.apache.ibatis.io.JBoss6VFS;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.logging.slf4j.Slf4jImpl;
 import org.apache.ibatis.scripting.defaults.RawLanguageDriver;
@@ -164,6 +165,7 @@ public class XmlConfigBuilderTest {
       assertThat(config.isCallSettersOnNulls(), is(true));
       assertThat(config.getLogPrefix(), is("mybatis_"));
       assertThat(config.getLogImpl().getName(), is(Slf4jImpl.class.getName()));
+      assertThat(config.getVfsImpl().getName(), is(JBoss6VFS.class.getName()));
       assertThat(config.getConfigurationFactory().getName(), is(String.class.getName()));
 
     }

@@ -18,6 +18,7 @@ package org.apache.ibatis.builder.xml;
 import java.io.InputStream;
 import java.io.Reader;
 import java.util.Properties;
+import java.util.Set;
 
 import javax.sql.DataSource;
 
@@ -98,14 +99,16 @@ public class XMLConfigBuilder extends BaseBuilder {
 
   private void parseConfiguration(XNode root) {
     try {
+      Properties settings = settingsAsPropertiess(root.evalNode("settings"));
       //issue #117 read properties first
       propertiesElement(root.evalNode("properties"));
+      loadCustomVfs(settings);
       typeAliasesElement(root.evalNode("typeAliases"));
       pluginElement(root.evalNode("plugins"));
       objectFactoryElement(root.evalNode("objectFactory"));
       objectWrapperFactoryElement(root.evalNode("objectWrapperFactory"));
       reflectionFactoryElement(root.evalNode("reflectionFactory"));
-      settingsElement(root.evalNode("settings"));
+      settingsElement(settings);
       // read it after objectFactory and objectWrapperFactory issue #631
       environmentsElement(root.evalNode("environments"));
       databaseIdProviderElement(root.evalNode("databaseIdProvider"));
@@ -113,6 +116,33 @@ public class XMLConfigBuilder extends BaseBuilder {
       mapperElement(root.evalNode("mappers"));
     } catch (Exception e) {
       throw new BuilderException("Error parsing SQL Mapper Configuration. Cause: " + e, e);
+    }
+  }
+
+  private Properties settingsAsPropertiess(XNode context) {
+    if (context == null) {
+      return new Properties();
+    }
+    Properties props = context.getChildrenAsProperties();
+    // Check that all settings are known to the configuration class
+    MetaClass metaConfig = MetaClass.forClass(Configuration.class, localReflectorFactory);
+    for (Object key : props.keySet()) {
+      if (!metaConfig.hasSetter(String.valueOf(key))) {
+        throw new BuilderException("The setting " + key + " is not known.  Make sure you spelled it correctly (case sensitive).");
+      }
+    }
+    return props;
+  }
+
+  private void loadCustomVfs(Properties props) throws ClassNotFoundException {
+    String value = props.getProperty("vfsImpl");
+    if (value != null) {
+      String[] clazzes = value.split(",");
+      for (String clazz : clazzes) {
+        if (!clazz.isEmpty()) {
+          configuration.setVfsImpl(Resources.classForName(clazz));
+        }
+      }
     }
   }
 
@@ -200,39 +230,29 @@ public class XMLConfigBuilder extends BaseBuilder {
     }
   }
 
-  private void settingsElement(XNode context) throws Exception {
-    if (context != null) {
-      Properties props = context.getChildrenAsProperties();
-      // Check that all settings are known to the configuration class
-      MetaClass metaConfig = MetaClass.forClass(Configuration.class, localReflectorFactory);
-      for (Object key : props.keySet()) {
-        if (!metaConfig.hasSetter(String.valueOf(key))) {
-          throw new BuilderException("The setting " + key + " is not known.  Make sure you spelled it correctly (case sensitive).");
-        }
-      }
-      configuration.setAutoMappingBehavior(AutoMappingBehavior.valueOf(props.getProperty("autoMappingBehavior", "PARTIAL")));
-      configuration.setCacheEnabled(booleanValueOf(props.getProperty("cacheEnabled"), true));
-      configuration.setProxyFactory((ProxyFactory) createInstance(props.getProperty("proxyFactory")));
-      configuration.setLazyLoadingEnabled(booleanValueOf(props.getProperty("lazyLoadingEnabled"), false));
-      configuration.setAggressiveLazyLoading(booleanValueOf(props.getProperty("aggressiveLazyLoading"), true));
-      configuration.setMultipleResultSetsEnabled(booleanValueOf(props.getProperty("multipleResultSetsEnabled"), true));
-      configuration.setUseColumnLabel(booleanValueOf(props.getProperty("useColumnLabel"), true));
-      configuration.setUseGeneratedKeys(booleanValueOf(props.getProperty("useGeneratedKeys"), false));
-      configuration.setDefaultExecutorType(ExecutorType.valueOf(props.getProperty("defaultExecutorType", "SIMPLE")));
-      configuration.setDefaultStatementTimeout(integerValueOf(props.getProperty("defaultStatementTimeout"), null));
-      configuration.setDefaultFetchSize(integerValueOf(props.getProperty("defaultFetchSize"), null));
-      configuration.setMapUnderscoreToCamelCase(booleanValueOf(props.getProperty("mapUnderscoreToCamelCase"), false));
-      configuration.setSafeRowBoundsEnabled(booleanValueOf(props.getProperty("safeRowBoundsEnabled"), false));
-      configuration.setLocalCacheScope(LocalCacheScope.valueOf(props.getProperty("localCacheScope", "SESSION")));
-      configuration.setJdbcTypeForNull(JdbcType.valueOf(props.getProperty("jdbcTypeForNull", "OTHER")));
-      configuration.setLazyLoadTriggerMethods(stringSetValueOf(props.getProperty("lazyLoadTriggerMethods"), "equals,clone,hashCode,toString"));
-      configuration.setSafeResultHandlerEnabled(booleanValueOf(props.getProperty("safeResultHandlerEnabled"), true));
-      configuration.setDefaultScriptingLanguage(resolveClass(props.getProperty("defaultScriptingLanguage")));
-      configuration.setCallSettersOnNulls(booleanValueOf(props.getProperty("callSettersOnNulls"), false));
-      configuration.setLogPrefix(props.getProperty("logPrefix"));
-      configuration.setLogImpl(resolveClass(props.getProperty("logImpl")));
-      configuration.setConfigurationFactory(resolveClass(props.getProperty("configurationFactory")));
-    }
+  private void settingsElement(Properties props) throws Exception {
+    configuration.setAutoMappingBehavior(AutoMappingBehavior.valueOf(props.getProperty("autoMappingBehavior", "PARTIAL")));
+    configuration.setCacheEnabled(booleanValueOf(props.getProperty("cacheEnabled"), true));
+    configuration.setProxyFactory((ProxyFactory) createInstance(props.getProperty("proxyFactory")));
+    configuration.setLazyLoadingEnabled(booleanValueOf(props.getProperty("lazyLoadingEnabled"), false));
+    configuration.setAggressiveLazyLoading(booleanValueOf(props.getProperty("aggressiveLazyLoading"), true));
+    configuration.setMultipleResultSetsEnabled(booleanValueOf(props.getProperty("multipleResultSetsEnabled"), true));
+    configuration.setUseColumnLabel(booleanValueOf(props.getProperty("useColumnLabel"), true));
+    configuration.setUseGeneratedKeys(booleanValueOf(props.getProperty("useGeneratedKeys"), false));
+    configuration.setDefaultExecutorType(ExecutorType.valueOf(props.getProperty("defaultExecutorType", "SIMPLE")));
+    configuration.setDefaultStatementTimeout(integerValueOf(props.getProperty("defaultStatementTimeout"), null));
+    configuration.setDefaultFetchSize(integerValueOf(props.getProperty("defaultFetchSize"), null));
+    configuration.setMapUnderscoreToCamelCase(booleanValueOf(props.getProperty("mapUnderscoreToCamelCase"), false));
+    configuration.setSafeRowBoundsEnabled(booleanValueOf(props.getProperty("safeRowBoundsEnabled"), false));
+    configuration.setLocalCacheScope(LocalCacheScope.valueOf(props.getProperty("localCacheScope", "SESSION")));
+    configuration.setJdbcTypeForNull(JdbcType.valueOf(props.getProperty("jdbcTypeForNull", "OTHER")));
+    configuration.setLazyLoadTriggerMethods(stringSetValueOf(props.getProperty("lazyLoadTriggerMethods"), "equals,clone,hashCode,toString"));
+    configuration.setSafeResultHandlerEnabled(booleanValueOf(props.getProperty("safeResultHandlerEnabled"), true));
+    configuration.setDefaultScriptingLanguage(resolveClass(props.getProperty("defaultScriptingLanguage")));
+    configuration.setCallSettersOnNulls(booleanValueOf(props.getProperty("callSettersOnNulls"), false));
+    configuration.setLogPrefix(props.getProperty("logPrefix"));
+    configuration.setLogImpl(resolveClass(props.getProperty("logImpl")));
+    configuration.setConfigurationFactory(resolveClass(props.getProperty("configurationFactory")));
   }
 
   private void environmentsElement(XNode context) throws Exception {
