@@ -40,7 +40,7 @@ import org.apache.ibatis.logging.LogFactory;
  * @author Ben Gunter
  */
 public class DefaultVFS extends VFS {
-  private static final Log log = LogFactory.getLog(ResolverUtil.class);
+  private static final Log log = LogFactory.getLog(DefaultVFS.class);
 
   /** The magic header that indicates a JAR (ZIP) file. */
   private static final byte[] JAR_MAGIC = { 'P', 'K', 3, 4 };

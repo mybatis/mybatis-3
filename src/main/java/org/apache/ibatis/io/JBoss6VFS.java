@@ -31,7 +31,7 @@ import org.apache.ibatis.logging.LogFactory;
  * @author Ben Gunter
  */
 public class JBoss6VFS extends VFS {
-  private static final Log log = LogFactory.getLog(ResolverUtil.class);
+  private static final Log log = LogFactory.getLog(JBoss6VFS.class);
 
   /** A class that mimics a tiny subset of the JBoss VirtualFile class. */
   static class VirtualFile {
