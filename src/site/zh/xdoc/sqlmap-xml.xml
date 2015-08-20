@@ -392,8 +392,7 @@ ps.setInt(1,id);]]></source>
       </subsection>
 
       <subsection name="sql">
-        <p>这个元素可以被用来定义可重用的 SQL 代码段，可以包含在其他语句中。It can be statically (during load phase) parametrized. Different property values can
-          vary in include instances. 比如：
+        <p>这个元素可以被用来定义可重用的 SQL 代码段，可以包含在其他语句中。它可以被静态地(在加载参数) 参数化. 不同的属性值通过包含的实例变化. 比如：
         </p>
 
         <source><![CDATA[<sql id="userColumns"> ${alias}.id,${alias}.username,${alias}.password </sql>]]></source>
@@ -410,7 +409,7 @@ ps.setInt(1,id);]]></source>
 </select>]]></source>
 
         <p>
-          Property value can be also used in include refid attribute or property values inside include clause, for example:
+          属性值可以用于包含的refid属性或者包含的字句里面的属性值，例如：
         </p>
 
         <source><![CDATA[<sql id="sometable">
