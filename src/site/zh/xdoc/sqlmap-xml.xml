@@ -622,8 +622,8 @@ ResultMap 最优秀的地方你已经了解了很多了,但是你还没有真正
 
         <source><![CDATA[<resultMap id="userResultMap" type="User">
   <id property="id" column="user_id" />
-  <result property="username" column="username"/>
-  <result property="password" column="password"/>
+  <result property="username" column="user_name"/>
+  <result property="password" column="hashed_password"/>
 </resultMap>]]></source>
 
         <p>
