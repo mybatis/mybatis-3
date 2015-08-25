@@ -62,4 +62,11 @@
       </where>
   </select>
 
+  <insert id="typoInItemProperty">
+    insert into users (id, name) values
+    <foreach item="item" collection="list" separator=",">
+        (#{item.idd}, #{item.name})
+    </foreach>
+  </insert>
+
 </mapper>

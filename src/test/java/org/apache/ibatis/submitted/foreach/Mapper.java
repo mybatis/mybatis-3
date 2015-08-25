@@ -27,4 +27,5 @@ public interface Mapper {
 
   String selectWithNullItemCheck(List<User> users);
 
+  int typoInItemProperty(List<User> users);
 }
