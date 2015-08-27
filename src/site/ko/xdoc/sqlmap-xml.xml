@@ -386,14 +386,9 @@ ps.setInt(1,id);]]></source>
       </subsection>
 
       <subsection name="sql">
-<<<<<<< HEAD
-        <p>이 요소는 다른 구문에서 재사용가능한 SQL 구문을 정의할 때 사용된다. It can be statically (during load phase) parametrized. Different property values can
-          vary in include instances.</p>
-=======
         <p>이 엘리먼트는 다른 구문에서 재사용가능한 SQL구문을 정의할 때 사용된다. 
 		로딩시점에 정적으로 파라미터처럼 사용할 수 있다. 
 		다른 프로퍼티값은 포함된 인스턴스에서 달라질 수 있다. </p>
->>>>>>> b9090a61fc0164f68da1c4764f0a69a8b84d30ef
 
         <source><![CDATA[<sql id="userColumns"> ${alias}.id,${alias}.username,${alias}.password </sql>]]></source>
 

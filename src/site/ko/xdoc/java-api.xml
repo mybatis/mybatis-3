@@ -291,32 +291,18 @@ RowBounds rowBounds = new RowBounds(offset, limit);</source>
 public interface ResultHandler<T> {
   void handleResult(ResultContext<? extends T> context);
 }]]></source>
-<<<<<<< HEAD
-=======
 
   <p>ResultContext파라미터는 결과 객체에 접근할 수 있도록 해준다.</p>
->>>>>>> b9090a61fc0164f68da1c4764f0a69a8b84d30ef
 
   <h5>배치 수정시 flush메소드</h5>
   <p>어떤 시점에 JDBC드라이버 클래스에 저장된 배치 수정구문을 지울(flushing(executing)) 방법이 있다. 
   이 방법은 <code>ExecutorType</code>을 <code>ExecutorType.BATCH</code>로 설정한 경우 사용가능하다. </p>
   <source><![CDATA[List<BatchResult> flushStatements()]]></source>
 
-<<<<<<< HEAD
-  <h5>Batch update statement Flush Method</h5>
-  <p>There is method for flushing(executing) batch update statements that stored in a JDBC driver class at any timing. This method can be used when you use the <code>ExecutorType.BATCH</code> as <code>ExecutorType</code>.</p>
-  <source><![CDATA[List<BatchResult> flushStatements()]]></source>
-
-  <h5>트랙잭션 제어 메서드</h5>
-  <p>트랜잭션을 제어하기 위해 4 개의 메서드가 있다. 물론 자동커밋을 선택하였거나 외부 트랜잭션 관리자를 사용하면 영향이
-없다. 어쨌든, Connection 인스턴스에 의해 관리되고 JDBC 트랜잭션 관리자를 사용하면, 이 4 개의 메서드를 사용할 수
-있다.</p>
-=======
   <h5>트랙잭션 제어 메소드</h5>
   <p>트랜잭션을 제어하기 위해 4개의 메소드가 있다. 
   물론 자동커밋을 선택하였거나 외부 트랜잭션 관리자를 사용하면 영향이 없다. 
   어쨌든 Connection인스턴스에 의해 관리되고 JDBC 트랜잭션 관리자를 사용하면 이 4개의 메소드를 사용할 수 있다.</p>
->>>>>>> b9090a61fc0164f68da1c4764f0a69a8b84d30ef
   <source>void commit()
 void commit(boolean force)
 void rollback()
@@ -654,11 +640,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
 @SelectKey(statement="call identity()", keyProperty="nameId", before=<strong>false</strong>, resultType=<strong>int.class</strong>)
 <strong>int</strong> insertTable2(Name name);</source>
 
-<<<<<<< HEAD
-  <p>This example shows using the <code>@Flush</code> annotation to call the <code>SqlSession#flushStatements()</code>:</p>
-=======
   <p>이 예제는 <code>SqlSession#flushStatements()</code>를 호출하기 위해 <code>@Flush</code>애노테이션을 사용했다. </p>
->>>>>>> b9090a61fc0164f68da1c4764f0a69a8b84d30ef
   <source><![CDATA[@Flush
 List<BatchResult> flush();]]></source>
   </subsection>
