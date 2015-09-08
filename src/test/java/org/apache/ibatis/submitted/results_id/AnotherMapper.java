@@ -13,22 +13,20 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package org.apache.ibatis.annotations;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+package org.apache.ibatis.submitted.results_id;
 
-/**
- * @author Clinton Begin
- */
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.METHOD)
-public @interface Results {
-  /**
-   * The name of the result map.
-   */
-  String id() default "";
-  Result[] value() default {};
+import java.util.List;
+
+import org.apache.ibatis.annotations.ResultMap;
+import org.apache.ibatis.annotations.Select;
+
+public interface AnotherMapper {
+
+  @ResultMap("org.apache.ibatis.submitted.results_id.Mapper.userResult")
+  @Select("select * from users order by uid")
+  List<User> getUsers();
+
+  User getUser(Integer id);
+
 }

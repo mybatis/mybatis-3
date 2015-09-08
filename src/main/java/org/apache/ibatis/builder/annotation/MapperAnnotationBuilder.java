@@ -196,6 +196,10 @@ public class MapperAnnotationBuilder {
   }
 
   private String generateResultMapName(Method method) {
+    Results results = method.getAnnotation(Results.class);
+    if (results != null && !results.id().isEmpty()) {
+      return type.getName() + "." + results.id();
+    }
     StringBuilder suffix = new StringBuilder();
     for (Class<?> c : method.getParameterTypes()) {
       suffix.append("-");

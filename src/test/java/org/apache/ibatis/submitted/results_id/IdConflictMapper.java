@@ -13,22 +13,15 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package org.apache.ibatis.annotations;
+package org.apache.ibatis.submitted.results_id;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import org.apache.ibatis.annotations.Result;
+import org.apache.ibatis.annotations.Results;
+import org.apache.ibatis.annotations.Select;
 
-/**
- * @author Clinton Begin
- */
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.METHOD)
-public @interface Results {
-  /**
-   * The name of the result map.
-   */
-  String id() default "";
-  Result[] value() default {};
+public interface IdConflictMapper {
+
+  @Results(id = "userResult", value = { @Result(id = true, column = "uid", property = "id") })
+  @Select("select * from users where uid = #{id}")
+  User getUserById(Integer id);
 }
