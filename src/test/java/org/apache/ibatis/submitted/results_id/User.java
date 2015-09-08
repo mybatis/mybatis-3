@@ -13,22 +13,36 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package org.apache.ibatis.annotations;
+package org.apache.ibatis.submitted.results_id;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+public class User {
 
-/**
- * @author Clinton Begin
- */
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.METHOD)
-public @interface Results {
-  /**
-   * The name of the result map.
-   */
-  String id() default "";
-  Result[] value() default {};
+  private Integer id;
+  private String name;
+
+  public Integer getId() {
+    return id;
+  }
+
+  public void setId(Integer id) {
+    this.id = id;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public User() {
+    super();
+  }
+
+  public User(Integer id, String name) {
+    super();
+    this.id = id;
+    this.name = name;
+  }
 }
