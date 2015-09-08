@@ -355,7 +355,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
         <td><code>@Results</code></td>
         <td><code>Method</code></td>
         <td><code>&lt;resultMap&gt;</code></td>
-        <td>Una lista de  Result mapping que contiene los detalles de cómo una columna particular se mapea a una propiedad o campo. Atributos: value, que es un array de anotaciones Result.</td>
+        <td>Una lista de  Result mapping que contiene los detalles de cómo una columna particular se mapea a una propiedad o campo. Atributos: value, id. El atributo value es un array de anotaciones Result. The id attribute is the name of the result mapping.</td>
       </tr>
       <tr>
         <td><code>@Result</code></td>
@@ -490,6 +490,23 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
   <p>This example shows using the <code>@Flush</code> annotation to call the <code>SqlSession#flushStatements()</code>:</p>
   <source><![CDATA[@Flush
 List<BatchResult> flush();]]></source>
+
+  <p>These examples show how to name a ResultMap by specifying id attribute of @Results annotation.</p>
+  <source>@Results(id = "userResult", value = {
+  @Result(property = "id", column = "uid", id = <strong>true</strong>),
+  @Result(property = "firstName", column = "first_name"),
+  @Result(property = "lastName", column = "last_name")
+})
+@Select("select * from users where id = #{id}")
+User getUserById(Integer id);
+
+@Results(id = "companyResults")
+@ConstructorArgs({
+  @Arg(property = "id", column = "cid", id = <strong>true</strong>),
+  @Arg(property = "name", column = "name")
+})
+@Select("select * from company where id = #{id}")
+Company getCompanyById(Integer id);</source>
   </subsection>
 
   </section>

@@ -367,7 +367,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
         <td><code>@Results</code></td>
         <td><code>Method</code></td>
         <td><code>&lt;resultMap&gt;</code></td>
-        <td>ある結果列とプロパティまたはフィールドのマッピング情報を定義する Results のリストです。単一値である <code>value</code> は <code>Result</code> アノテーションの配列です。</td>
+        <td>ある結果列とプロパティまたはフィールドのマッピング情報を定義する Results のリストです。属性: <code>value</code>, <code>id</code>. value 属性は <code>Result</code> アノテーションの配列です。 id 属性でマッピング情報の名前を指定することができます。</td>
       </tr>
       <tr>
         <td><code>@Result</code></td>
@@ -508,6 +508,23 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
   <p>次のコードは <code>@Flush</code> アノテーションを使って <code>SqlSession#flushStatements()</code>メソッドを呼び出す例です。</p>
   <source><![CDATA[@Flush
 List<BatchResult> flush();]]></source>
+
+  <p>次のコードは @Results アノテーションの id 属性で名前を指定する例です。</p>
+  <source>@Results(id = "userResult", value = {
+  @Result(property = "id", column = "uid", id = <strong>true</strong>),
+  @Result(property = "firstName", column = "first_name"),
+  @Result(property = "lastName", column = "last_name")
+})
+@Select("select * from users where id = #{id}")
+User getUserById(Integer id);
+
+@Results(id = "companyResults")
+@ConstructorArgs({
+  @Arg(property = "id", column = "cid", id = <strong>true</strong>),
+  @Arg(property = "name", column = "name")
+})
+@Select("select * from company where id = #{id}")
+Company getCompanyById(Integer id);</source>
   </subsection>
 
   </section>

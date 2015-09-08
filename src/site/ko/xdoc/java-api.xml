@@ -463,7 +463,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
         <td><code>Method</code></td>
         <td><code>&lt;resultMap&gt;</code></td>
         <td>결과 칼럼이 프로퍼티나 필드에 매핑되는 방법에 대한 상세 설정을 포함하는 결과 매핑의 목록
-		사용가능한 속성들 : value(Result 애노테이션의 배열)</td>
+		사용가능한 속성들 : value(Result 애노테이션의 배열), id (name of the result mapping)</td>
       </tr>
       <tr>
         <td><code>@Result</code></td>
@@ -643,6 +643,23 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
   <p>이 예제는 <code>SqlSession#flushStatements()</code>를 호출하기 위해 <code>@Flush</code>애노테이션을 사용했다. </p>
   <source><![CDATA[@Flush
 List<BatchResult> flush();]]></source>
+
+  <p>These examples show how to name a ResultMap by specifying id attribute of @Results annotation.</p>
+  <source>@Results(id = "userResult", value = {
+  @Result(property = "id", column = "uid", id = <strong>true</strong>),
+  @Result(property = "firstName", column = "first_name"),
+  @Result(property = "lastName", column = "last_name")
+})
+@Select("select * from users where id = #{id}")
+User getUserById(Integer id);
+
+@Results(id = "companyResults")
+@ConstructorArgs({
+  @Arg(property = "id", column = "cid", id = <strong>true</strong>),
+  @Arg(property = "name", column = "name")
+})
+@Select("select * from company where id = #{id}")
+Company getCompanyById(Integer id);</source>
   </subsection>
 
   </section>
