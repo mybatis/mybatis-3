@@ -88,11 +88,27 @@ public class DefaultResultSetHandler implements ResultSetHandler {
   private final Map<String, ResultMapping> nextResultMaps = new HashMap<String, ResultMapping>();
   private final Map<CacheKey, List<PendingRelation>> pendingRelations = new HashMap<CacheKey, List<PendingRelation>>();
 
+  // Cached Automappings
+  private final Map<String, List<UnMappedColumAutoMapping>> autoMappingsCache = new HashMap<String, List<UnMappedColumAutoMapping>>();
+  
   private static class PendingRelation {
     public MetaObject metaObject;
     public ResultMapping propertyMapping;
   }
 
+  private static class UnMappedColumAutoMapping {    
+    private final String column;   
+    private final String property;    
+    private final TypeHandler<?> typeHandler;
+    private final boolean primitive;
+    public UnMappedColumAutoMapping(String column, String property, TypeHandler<?> typeHandler, boolean primitive) {
+      this.column = column;
+      this.property = property;
+      this.typeHandler = typeHandler;
+      this.primitive = primitive;
+    }
+  }  
+  
   public DefaultResultSetHandler(Executor executor, MappedStatement mappedStatement, ParameterHandler parameterHandler, ResultHandler<?> resultHandler, BoundSql boundSql,
       RowBounds rowBounds) {
     this.executor = executor;
@@ -433,33 +449,49 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     }
   }
 
-  private boolean applyAutomaticMappings(ResultSetWrapper rsw, ResultMap resultMap, MetaObject metaObject, String columnPrefix) throws SQLException {
-    final List<String> unmappedColumnNames = rsw.getUnmappedColumnNames(resultMap, columnPrefix);
-    boolean foundValues = false;
-    for (String columnName : unmappedColumnNames) {
-      String propertyName = columnName;
-      if (columnPrefix != null && !columnPrefix.isEmpty()) {
-        // When columnPrefix is specified,
-        // ignore columns without the prefix.
-        if (columnName.toUpperCase(Locale.ENGLISH).startsWith(columnPrefix)) {
-          propertyName = columnName.substring(columnPrefix.length());
-        } else {
-          continue;
+  private List<UnMappedColumAutoMapping> createAutomaticMappings(ResultSetWrapper rsw, ResultMap resultMap, MetaObject metaObject, String columnPrefix) throws SQLException {
+    final String mapKey = getMapKey(resultMap, columnPrefix);
+    List<UnMappedColumAutoMapping> autoMapping = autoMappingsCache.get(mapKey);
+    if (autoMapping == null) {
+      autoMapping = new ArrayList<UnMappedColumAutoMapping>();
+      final List<String> unmappedColumnNames = rsw.getUnmappedColumnNames(resultMap, columnPrefix);
+      for (String columnName : unmappedColumnNames) {
+        String propertyName = columnName;
+        if (columnPrefix != null && !columnPrefix.isEmpty()) {
+          // When columnPrefix is specified,
+          // ignore columns without the prefix.
+          if (columnName.toUpperCase(Locale.ENGLISH).startsWith(columnPrefix)) {
+            propertyName = columnName.substring(columnPrefix.length());
+          } else {
+            continue;
+          }
+        }
+        final String property = metaObject.findProperty(propertyName, configuration.isMapUnderscoreToCamelCase());
+        if (property != null && metaObject.hasSetter(property)) {
+          final Class<?> propertyType = metaObject.getSetterType(property);
+          if (typeHandlerRegistry.hasTypeHandler(propertyType)) {
+            final TypeHandler<?> typeHandler = rsw.getTypeHandler(propertyType, columnName);
+            autoMapping.add(new UnMappedColumAutoMapping(columnName, property, typeHandler, propertyType.isPrimitive()));
+          }
         }
       }
-      final String property = metaObject.findProperty(propertyName, configuration.isMapUnderscoreToCamelCase());
-      if (property != null && metaObject.hasSetter(property)) {
-        final Class<?> propertyType = metaObject.getSetterType(property);
-        if (typeHandlerRegistry.hasTypeHandler(propertyType)) {
-          final TypeHandler<?> typeHandler = rsw.getTypeHandler(propertyType, columnName);
-          final Object value = typeHandler.getResult(rsw.getResultSet(), columnName);
-          // issue #377, call setter on nulls
-          if (value != null || configuration.isCallSettersOnNulls()) {
-            if (value != null || !propertyType.isPrimitive()) {
-              metaObject.setValue(property, value);
-            }
-            foundValues = true;
+    }
+    autoMappingsCache.put(mapKey, autoMapping);
+    return autoMapping;
+  }
+  
+  private boolean applyAutomaticMappings(ResultSetWrapper rsw, ResultMap resultMap, MetaObject metaObject, String columnPrefix) throws SQLException {
+    List<UnMappedColumAutoMapping> autoMapping = createAutomaticMappings(rsw, resultMap, metaObject, columnPrefix);
+    boolean foundValues = false;
+    if (autoMapping.size() > 0) {
+      for (UnMappedColumAutoMapping mapping : autoMapping) {
+        final Object value = mapping.typeHandler.getResult(rsw.getResultSet(), mapping.column);
+        // issue #377, call setter on nulls
+        if (value != null || configuration.isCallSettersOnNulls()) {
+          if (value != null || !mapping.primitive) {
+            metaObject.setValue(mapping.property, value);
           }
+          foundValues = true;
         }
       }
     }
@@ -1037,6 +1069,10 @@ public class DefaultResultSetHandler implements ResultSetHandler {
       return propertyValue;
     }
     return null;
-  }
+  }  
 
+  private String getMapKey(ResultMap resultMap, String columnPrefix) {
+    return resultMap.getId() + ":" + columnPrefix;
+  }
+  
 }
