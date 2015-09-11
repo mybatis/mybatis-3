@@ -145,14 +145,23 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     }
   }
 
-  private void handleRefCursorOutputParameter(ResultSet rs, ParameterMapping parameterMapping, MetaObject metaParam) throws SQLException {
+  private void handleRefCursorOutputParameter(
+          ResultSet rs,
+          ParameterMapping parameterMapping,
+          MetaObject metaParam
+  ) throws SQLException {
     try {
       final String resultMapId = parameterMapping.getResultMapId();
       final ResultMap resultMap = configuration.getResultMap(resultMapId);
-      final DefaultResultHandler resultHandler = new DefaultResultHandler(objectFactory);
       final ResultSetWrapper rsw = new ResultSetWrapper(rs, configuration);
-      handleRowValues(rsw, resultMap, resultHandler, new RowBounds(), null);
-      metaParam.setValue(parameterMapping.getProperty(), resultHandler.getResultList());
+      // Se utiliza un ResultHandler perosnalizado si es el caso.
+      if (resultHandler == null) {
+        final DefaultResultHandler defaultResultHandler = new DefaultResultHandler(objectFactory);
+        handleRowValues(rsw, resultMap, defaultResultHandler, new RowBounds(), null);
+        metaParam.setValue(parameterMapping.getProperty(), defaultResultHandler.getResultList());
+      } else {
+        handleRowValues(rsw, resultMap, this.resultHandler, new RowBounds(), null);
+      }
     } finally {
       // issue #228 (close resultsets)
       closeResultSet(rs);
