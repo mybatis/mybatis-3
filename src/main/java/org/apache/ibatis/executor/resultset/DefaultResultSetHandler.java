@@ -475,8 +475,8 @@ public class DefaultResultSetHandler implements ResultSetHandler {
           }
         }
       }
+      autoMappingsCache.put(mapKey, autoMapping);
     }
-    autoMappingsCache.put(mapKey, autoMapping);
     return autoMapping;
   }
   
