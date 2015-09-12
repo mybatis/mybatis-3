@@ -237,6 +237,10 @@ public interface ResultHandler<T> {
   <li>When using advanced resultmaps MyBatis will probably require several rows to build an object. If a ResultHandler is used you may be given an object whose associations or collections are not yet filled.</li>
   </ul>
 
+  <h5>Batch update statement Flush Method</h5>
+  <p>There is method for flushing(executing) batch update statements that stored in a JDBC driver class at any timing. This method can be used when you use the <code>ExecutorType.BATCH</code> as <code>ExecutorType</code>.</p>
+  <source><![CDATA[List<BatchResult> flushStatements()]]></source>
+
   <h5>Transaction Control Methods</h5>
   <p>There are four methods for controlling the scope of a transaction. Of course, these have no effect if you've chosen to use auto-commit or if you're using an external transaction manager. However, if you're using the JDBC transaction manager, managed by the Connection instance, then the four methods that will come in handy are:</p>
   <source>void commit()
@@ -530,6 +534,12 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
         will use a result handler, the return type must be void and this annotation (or @ResultMap)
         is required.  This annotation is ignored unless the method return type is void.</td>
       </tr>
+      <tr>
+        <td><code>@Flush</code></td>
+        <td><code>Method</code></td>
+        <td>N/A</td>
+        <td>If this annotation is used, it can be called the <code>SqlSession#flushStatements()</code> via method defined at a Mapper interface.(MyBatis 3.3 or above)</td>
+      </tr>
     </tbody>
   </table>
 
@@ -543,6 +553,10 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
   <source>@Insert("insert into table2 (name) values(#{name})")
 @SelectKey(statement="call identity()", keyProperty="nameId", before=<strong>false</strong>, resultType=<strong>int.class</strong>)
 <strong>int</strong> insertTable2(Name name);</source>
+
+  <p>This example shows using the <code>@Flush</code> annotation to call the <code>SqlSession#flushStatements()</code>:</p>
+  <source><![CDATA[@Flush
+List<BatchResult> flush();]]></source>
   </subsection>
 
   </section>

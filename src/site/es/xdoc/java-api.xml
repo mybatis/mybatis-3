@@ -224,6 +224,10 @@ public interface ResultHandler<T> {
 
   <p>El parámetro ResultContext te da acceso al objeto resultado en sí mismo, un contador del número de objetos creados y un método booleano stop() que te permite indicar a MyBatis que pare la carga de datos.</p>
 
+  <h5>Batch update statement Flush Method</h5>
+  <p>There is method for flushing(executing) batch update statements that stored in a JDBC driver class at any timing. This method can be used when you use the <code>ExecutorType.BATCH</code> as <code>ExecutorType</code>.</p>
+  <source><![CDATA[List<BatchResult> flushStatements()]]></source>
+
   <h5>Métodos de control de transacción</h5>
   <p>El parámetro ResultContext te da acceso al objeto resultado en sí mismo, un contador del número de objetos creados y un método booleano stop() que te permite indicar a MyBatis que pare la carga de datos.</p>
   <source>void commit()
@@ -463,6 +467,12 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
         el valor de retorno será void y por tanto se requiere incluir esta anotación (o @ResultMap).
         La anotación se ignora si el tipo devuelto por el méotdo no es void.</td>
       </tr>
+      <tr>
+        <td><code>@Flush</code></td>
+        <td><code>Method</code></td>
+        <td>N/A</td>
+        <td>If this annotation is used, it can be called the <code>SqlSession#flushStatements()</code> via method defined at a Mapper interface.(MyBatis 3.3 or above)</td>
+      </tr>
     </tbody>
   </table>
 
@@ -476,6 +486,10 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
   <source>@Insert("insert into table2 (name) values(#{name})")
 @SelectKey(statement="call identity()", keyProperty="nameId", before=<strong>false</strong>, resultType=<strong>int.class</strong>)
 <strong>int</strong> insertTable2(Name name);</source>
+
+  <p>This example shows using the <code>@Flush</code> annotation to call the <code>SqlSession#flushStatements()</code>:</p>
+  <source><![CDATA[@Flush
+List<BatchResult> flush();]]></source>
   </subsection>
 
   </section>

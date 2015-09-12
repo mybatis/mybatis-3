@@ -271,6 +271,10 @@ public interface ResultHandler<T> {
 
   <p>ResultContext 파라미터는 결과 객체에 접근할 수 있도록 해준다.</p>
 
+  <h5>Batch update statement Flush Method</h5>
+  <p>There is method for flushing(executing) batch update statements that stored in a JDBC driver class at any timing. This method can be used when you use the <code>ExecutorType.BATCH</code> as <code>ExecutorType</code>.</p>
+  <source><![CDATA[List<BatchResult> flushStatements()]]></source>
+
   <h5>트랙잭션 제어 메서드</h5>
   <p>트랜잭션을 제어하기 위해 4 개의 메서드가 있다. 물론 자동커밋을 선택하였거나 외부 트랜잭션 관리자를 사용하면 영향이
 없다. 어쨌든, Connection 인스턴스에 의해 관리되고 JDBC 트랜잭션 관리자를 사용하면, 이 4 개의 메서드를 사용할 수
@@ -622,7 +626,13 @@ id 를 제공하기 위해 사용된다. XML 에 정의된 결과
         예를들어, @Select 애노테이션이 선언되어 있다면 메소드는 결과 핸들러를 사용할 것이다. 
         결과 타입은 void여야만 하고 이 애노테이션(이나 @ResultMap)을 반드시 사용해야 한다. 
         이 애노테이션은 메소드 리턴타입이 void가 아니라면 무시한다. </td>
-      </tr>      
+      </tr>
+      <tr>
+        <td><code>@Flush</code></td>
+        <td><code>Method</code></td>
+        <td>N/A</td>
+        <td>If this annotation is used, it can be called the <code>SqlSession#flushStatements()</code> via method defined at a Mapper interface.(MyBatis 3.3 or above)</td>
+      </tr>
     </tbody>
   </table>
 
@@ -636,6 +646,10 @@ id 를 제공하기 위해 사용된다. XML 에 정의된 결과
   <source>@Insert("insert into table2 (name) values(#{name})")
 @SelectKey(statement="call identity()", keyProperty="nameId", before=<strong>false</strong>, resultType=<strong>int.class</strong>)
 <strong>int</strong> insertTable2(Name name);</source>
+
+  <p>This example shows using the <code>@Flush</code> annotation to call the <code>SqlSession#flushStatements()</code>:</p>
+  <source><![CDATA[@Flush
+List<BatchResult> flush();]]></source>
   </subsection>
 
   </section>
