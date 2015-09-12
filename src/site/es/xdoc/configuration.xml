@@ -228,6 +228,21 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
             </tr>
             <tr>
               <td>
+                defaultFetchSize
+              </td>
+              <td>
+                Sets the driver a hint as to control fetching size for return results.
+                This parameter value can be override by a query setting.
+              </td>
+              <td>
+                Cualquier entero positivo
+              </td>
+              <td>
+                Sin valor (null)
+              </td>
+            </tr>
+            <tr>
+              <td>
                 safeRowBoundsEnabled
               </td>
               <td>Habilita el uso de RowBounds en statements anidados.
@@ -384,6 +399,7 @@ A continuación se muestra un ejemplo del elemento settings al completo:
   <setting name="autoMappingBehavior" value="PARTIAL"/>
   <setting name="defaultExecutorType" value="SIMPLE"/>
   <setting name="defaultStatementTimeout" value="25"/>
+  <setting name="defaultFetchSize" value="100"/>
   <setting name="safeRowBoundsEnabled" value="false"/>
   <setting name="mapUnderscoreToCamelCase" value="false"/>
   <setting name="localCacheScope" value="SESSION"/>
