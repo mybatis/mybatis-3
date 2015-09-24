@@ -101,7 +101,7 @@
 <a class="jxr_linenumber" name="L93" href="#L93">93</a>      SqlSession sqlSession = sqlSessionFactory.openSession();
 <a class="jxr_linenumber" name="L94" href="#L94">94</a>      <strong class="jxr_keyword">try</strong> {
 <a class="jxr_linenumber" name="L95" href="#L95">95</a>        <a href="../../../../../org/apache/ibatis/submitted/xml_external_ref/PersonMapper.html">PersonMapper</a> personMapper = sqlSession.getMapper(PersonMapper.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L96" href="#L96">96</a>        <a href="../../../../../org/apache/ibatis/submitted/xml_external_ref/Person.html">Person</a> person = personMapper.select(1);
+<a class="jxr_linenumber" name="L96" href="#L96">96</a>        <a href="../../../../../org/apache/ibatis/mapping/BoundSqlTest.html">Person</a> person = personMapper.select(1);
 <a class="jxr_linenumber" name="L97" href="#L97">97</a>        assertEquals((Integer)1, person.getId());
 <a class="jxr_linenumber" name="L98" href="#L98">98</a>        assertEquals(2, person.getPets().size());
 <a class="jxr_linenumber" name="L99" href="#L99">99</a>        assertEquals((Integer)2, person.getPets().get(1).getId());

@@ -77,7 +77,7 @@
 <a class="jxr_linenumber" name="L69" href="#L69">69</a>      SqlSession sqlSession = sqlSessionFactory.openSession();
 <a class="jxr_linenumber" name="L70" href="#L70">70</a>      <strong class="jxr_keyword">try</strong> {
 <a class="jxr_linenumber" name="L71" href="#L71">71</a>        <a href="../../../../../org/apache/ibatis/submitted/xml_external_ref/MultipleCrossIncludePersonMapper.html">MultipleCrossIncludePersonMapper</a> personMapper = sqlSession.getMapper(MultipleCrossIncludePersonMapper.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L72" href="#L72">72</a>        <a href="../../../../../org/apache/ibatis/submitted/xml_external_ref/Person.html">Person</a> person = personMapper.select(1);
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>        <a href="../../../../../org/apache/ibatis/mapping/BoundSqlTest.html">Person</a> person = personMapper.select(1);
 <a class="jxr_linenumber" name="L73" href="#L73">73</a>        assertEquals((Integer)1, person.getId());
 <a class="jxr_linenumber" name="L74" href="#L74">74</a>        assertEquals(2, person.getPets().size());
 <a class="jxr_linenumber" name="L75" href="#L75">75</a>        assertEquals((Integer)2, person.getPets().get(1).getId());
