@@ -201,6 +201,8 @@ public class MapperMethod {
         String parentStatementName = method.getDeclaringClass().getName() + "." + method.getName();
         if (configuration.hasStatement(parentStatementName)) {
           ms = configuration.getMappedStatement(parentStatementName);
+        } else {
+          ms = walkUpMapperHierarchy(mapperInterface, method, configuration);
         }
       }
       if (ms == null) {
@@ -225,6 +227,23 @@ public class MapperMethod {
 
     public SqlCommandType getType() {
       return type;
+    }
+
+    private MappedStatement walkUpMapperHierarchy(Class<?> mapperInterface, Method method, Configuration configuration) {
+      String methodName = method.getName();
+      Class<?> declaringClass = method.getDeclaringClass();
+      Class<?>[] allInterfaces = mapperInterface.getInterfaces();
+      if (allInterfaces != null) {
+        for (Class<?> superInterface : allInterfaces) {
+          if (superInterface != null && declaringClass.isAssignableFrom(superInterface)) {
+            String parentStatementName = superInterface.getName() + "." + methodName;
+            if (configuration.hasStatement(parentStatementName)) {
+              return configuration.getMappedStatement(parentStatementName);
+            }
+          }
+        }
+      }
+      return null;
     }
   }
 
