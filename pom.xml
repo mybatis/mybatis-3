@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <!--
   Copyright 2009-2015 the original author or authors.
 
@@ -20,7 +20,8 @@
   <parent>
     <groupId>org.mybatis</groupId>
     <artifactId>mybatis-parent</artifactId>
-    <version>25</version>
+    <version>26-SNAPSHOT</version>
+    <relativePath />
   </parent>
 
   <artifactId>mybatis</artifactId>
