@@ -75,6 +75,7 @@ public class JndiDataSourceFactoryTest extends BaseDataTest {
   }
 
   public static class MockContextFactory implements InitialContextFactory {
+    @Override
     public Context getInitialContext(Hashtable<?, ?> environment) throws NamingException {
       return new MockContext(false);
     }
@@ -87,10 +88,12 @@ public class JndiDataSourceFactoryTest extends BaseDataTest {
       super(lazy);
     }
 
+    @Override
     public Object lookup(String name) throws NamingException {
       return bindings.get(name);
     }
 
+    @Override
     public void bind(String name, Object obj) throws NamingException {
       bindings.put(name, obj);
     }

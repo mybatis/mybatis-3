@@ -25,12 +25,14 @@ public class ShortTypeHandlerTest extends BaseTypeHandlerTest {
 
   private static final TypeHandler<Short> TYPE_HANDLER = new ShortTypeHandler();
 
+  @Override
   @Test
   public void shouldSetParameter() throws Exception {
     TYPE_HANDLER.setParameter(ps, 1, (short) 100, null);
     verify(ps).setShort(1, (short) 100);
   }
 
+  @Override
   @Test
   public void shouldGetResultFromResultSet() throws Exception {
     when(rs.getShort("column")).thenReturn((short) 100);
@@ -38,6 +40,7 @@ public class ShortTypeHandlerTest extends BaseTypeHandlerTest {
     assertEquals(new Short((short) 100), TYPE_HANDLER.getResult(rs, "column"));
   }
 
+  @Override
   @Test
   public void shouldGetResultFromCallableStatement() throws Exception {
     when(cs.getShort(1)).thenReturn((short) 100);

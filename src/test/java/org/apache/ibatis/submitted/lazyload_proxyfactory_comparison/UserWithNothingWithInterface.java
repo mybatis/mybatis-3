@@ -38,10 +38,12 @@ implements Owned<Group> {
     this.name = name;
   }
   
+  @Override
   public Group getOwner() {
      return owner;
   }
   
+  @Override
   public void setOwner(Group owner) {
     this.owner = owner;
   }

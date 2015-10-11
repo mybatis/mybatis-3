@@ -25,12 +25,14 @@ public class LongTypeHandlerTest extends BaseTypeHandlerTest {
 
   private static final TypeHandler<Long> TYPE_HANDLER = new LongTypeHandler();
 
+  @Override
   @Test
   public void shouldSetParameter() throws Exception {
     TYPE_HANDLER.setParameter(ps, 1, 100l, null);
     verify(ps).setLong(1, 100l);
   }
 
+  @Override
   @Test
   public void shouldGetResultFromResultSet() throws Exception {
     when(rs.getLong("column")).thenReturn(100l);
@@ -38,6 +40,7 @@ public class LongTypeHandlerTest extends BaseTypeHandlerTest {
     assertEquals(new Long(100l), TYPE_HANDLER.getResult(rs, "column"));
   }
 
+  @Override
   @Test
   public void shouldGetResultFromCallableStatement() throws Exception {
     when(cs.getLong(1)).thenReturn(100l);

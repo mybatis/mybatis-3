@@ -33,12 +33,14 @@ public class BlobTypeHandlerTest extends BaseTypeHandlerTest {
   @Mock
   protected Blob blob;
 
+  @Override
   @Test
   public void shouldSetParameter() throws Exception {
     TYPE_HANDLER.setParameter(ps, 1, new byte[] { 1, 2, 3 }, null);
     verify(ps).setBinaryStream(Mockito.eq(1), Mockito.any(InputStream.class), Mockito.eq(3));
   }
 
+  @Override
   @Test
   public void shouldGetResultFromResultSet() throws Exception {
     when(rs.getBlob("column")).thenReturn(blob);
@@ -48,6 +50,7 @@ public class BlobTypeHandlerTest extends BaseTypeHandlerTest {
     assertArrayEquals(new byte[] { 1, 2, 3 }, TYPE_HANDLER.getResult(rs, "column"));
   }
 
+  @Override
   @Test
   public void shouldGetResultFromCallableStatement() throws Exception {
     when(cs.getBlob(1)).thenReturn(blob);

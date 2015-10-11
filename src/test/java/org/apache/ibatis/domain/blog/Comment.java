@@ -54,6 +54,7 @@ public class Comment {
     this.comment = comment;
   }
 
+  @Override
   public String toString() {
     return "Comment: " + id + " : " + name + " : " + comment;
   }

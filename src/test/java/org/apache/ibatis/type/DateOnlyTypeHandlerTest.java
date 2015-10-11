@@ -29,12 +29,14 @@ public class DateOnlyTypeHandlerTest extends BaseTypeHandlerTest {
   private static final Date DATE = new Date();
   private static final java.sql.Date SQL_DATE = new java.sql.Date(DATE.getTime());
 
+  @Override
   @Test
   public void shouldSetParameter() throws Exception {
     TYPE_HANDLER.setParameter(ps, 1, DATE, null);
     verify(ps).setDate(1, new java.sql.Date(DATE.getTime()));
   }
 
+  @Override
   @Test
   public void shouldGetResultFromResultSet() throws Exception {
     when(rs.getDate("column")).thenReturn(SQL_DATE);
@@ -42,6 +44,7 @@ public class DateOnlyTypeHandlerTest extends BaseTypeHandlerTest {
     assertEquals(DATE, TYPE_HANDLER.getResult(rs, "column"));
   }
 
+  @Override
   @Test
   public void shouldGetResultFromCallableStatement() throws Exception {
     when(cs.getDate(1)).thenReturn(SQL_DATE);

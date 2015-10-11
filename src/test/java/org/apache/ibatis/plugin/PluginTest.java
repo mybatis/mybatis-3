@@ -42,14 +42,17 @@ public class PluginTest {
   @Intercepts({
       @Signature(type = Map.class, method = "get", args = {Object.class})})
   public static class AlwaysMapPlugin implements Interceptor {
+    @Override
     public Object intercept(Invocation invocation) throws Throwable {
       return "Always";
     }
 
+    @Override
     public Object plugin(Object target) {
       return Plugin.wrap(target, this);
     }
 
+    @Override
     public void setProperties(Properties properties) {
     }
   }

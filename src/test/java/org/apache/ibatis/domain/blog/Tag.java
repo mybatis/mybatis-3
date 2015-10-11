@@ -36,6 +36,7 @@ public class Tag {
     this.name = name;
   }
 
+  @Override
   public String toString() {
     return "Tag: " + id + " : " + name;
   }

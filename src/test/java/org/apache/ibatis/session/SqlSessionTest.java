@@ -776,6 +776,7 @@ public class SqlSessionTest extends BaseDataTest {
 
   private static class TestResultHandler implements ResultHandler {
     int count = 0;
+    @Override
     public void handleResult(ResultContext context) {
       count++;
     }
@@ -796,6 +797,7 @@ public class SqlSessionTest extends BaseDataTest {
 
   private static class TestResultStopHandler implements ResultHandler {
     int count = 0;
+    @Override
     public void handleResult(ResultContext context) {
       count++;
       if (count == 2) context.stop();
