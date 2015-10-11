@@ -218,6 +218,7 @@
       <version>1.10.19</version>
       <scope>test</scope>
     </dependency>
+    <!-- Do not go to 2.x until we are on jdk7 -->
     <dependency>
       <groupId>commons-dbcp</groupId>
       <artifactId>commons-dbcp</artifactId>
