@@ -33,12 +33,14 @@ public class ClobTypeHandlerTest extends BaseTypeHandlerTest {
   @Mock
   protected Clob clob;
 
+  @Override
   @Test
   public void shouldSetParameter() throws Exception {
     TYPE_HANDLER.setParameter(ps, 1, "Hello", null);
     verify(ps).setCharacterStream(Mockito.eq(1), Mockito.any(Reader.class), Mockito.eq(5));
   }
 
+  @Override
   @Test
   public void shouldGetResultFromResultSet() throws Exception {
     when(rs.getClob("column")).thenReturn(clob);
@@ -48,6 +50,7 @@ public class ClobTypeHandlerTest extends BaseTypeHandlerTest {
     assertEquals("Hello", TYPE_HANDLER.getResult(rs, "column"));
   }
 
+  @Override
   @Test
   public void shouldGetResultFromCallableStatement() throws Exception {
     when(cs.getClob(1)).thenReturn(clob);

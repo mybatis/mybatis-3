@@ -25,14 +25,17 @@ import java.util.Properties;
 @Intercepts({})
 public class ExamplePlugin implements Interceptor {
 
+  @Override
   public Object intercept(Invocation invocation) throws Throwable {
     return invocation.proceed();
   }
 
+  @Override
   public Object plugin(Object target) {
     return Plugin.wrap(target, this);
   }
 
+  @Override
   public void setProperties(Properties properties) {
 
   }

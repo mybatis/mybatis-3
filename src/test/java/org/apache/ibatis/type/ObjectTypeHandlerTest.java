@@ -25,12 +25,14 @@ public class ObjectTypeHandlerTest extends BaseTypeHandlerTest {
 
   private static final TypeHandler<Object> TYPE_HANDLER = new ObjectTypeHandler();
 
+  @Override
   @Test
   public void shouldSetParameter() throws Exception {
     TYPE_HANDLER.setParameter(ps, 1, "Hello", null);
     verify(ps).setObject(1, "Hello");
   }
 
+  @Override
   @Test
   public void shouldGetResultFromResultSet() throws Exception {
     when(rs.getObject("column")).thenReturn("Hello");
@@ -38,6 +40,7 @@ public class ObjectTypeHandlerTest extends BaseTypeHandlerTest {
     assertEquals("Hello", TYPE_HANDLER.getResult(rs, "column"));
   }
 
+  @Override
   @Test
   public void shouldGetResultFromCallableStatement() throws Exception {
     when(cs.getObject(1)).thenReturn("Hello");

@@ -24,6 +24,7 @@ public class CachingReuseExecutorTest extends BaseExecutorTest {
   public void dummy() {
   }
 
+  @Override
   protected Executor createExecutor(Transaction transaction) {
     return new CachingExecutor(new ReuseExecutor(config, transaction));
   }

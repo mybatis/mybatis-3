@@ -25,6 +25,7 @@ public class CharacterTypeHandlerTest extends BaseTypeHandlerTest {
 
   private static final TypeHandler<Character> TYPE_HANDLER = new CharacterTypeHandler();
 
+  @Override
   @Test
   public void shouldSetParameter() throws Exception {
     TYPE_HANDLER.setParameter(ps, 1, 'a', null);
@@ -37,6 +38,7 @@ public class CharacterTypeHandlerTest extends BaseTypeHandlerTest {
     verify(ps).setNull(1, JdbcType.VARCHAR.TYPE_CODE);
   }
 
+  @Override
   @Test
   public void shouldGetResultFromResultSet() throws Exception {
     when(rs.getString("column")).thenReturn("a");
@@ -51,6 +53,7 @@ public class CharacterTypeHandlerTest extends BaseTypeHandlerTest {
     assertEquals(null, TYPE_HANDLER.getResult(rs, "column"));
   }
 
+  @Override
   @Test
   public void shouldGetResultFromCallableStatement() throws Exception {
     when(cs.getString(1)).thenReturn("a");

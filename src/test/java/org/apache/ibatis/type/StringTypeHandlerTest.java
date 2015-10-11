@@ -25,12 +25,14 @@ public class StringTypeHandlerTest extends BaseTypeHandlerTest {
 
   private static final TypeHandler<String> TYPE_HANDLER = new StringTypeHandler();
 
+  @Override
   @Test
   public void shouldSetParameter() throws Exception {
     TYPE_HANDLER.setParameter(ps, 1, "Hello", null);
     verify(ps).setString(1, "Hello");
   }
 
+  @Override
   @Test
   public void shouldGetResultFromResultSet() throws Exception {
     when(rs.getString("column")).thenReturn("Hello");
@@ -45,6 +47,7 @@ public class StringTypeHandlerTest extends BaseTypeHandlerTest {
     assertEquals(null, TYPE_HANDLER.getResult(cs, 1));
   }
 
+  @Override
   @Test
   public void shouldGetResultFromCallableStatement() throws Exception {
     when(cs.getString(1)).thenReturn("Hello");

@@ -67,6 +67,7 @@ public class Blog {
     this.posts = posts;
   }
 
+  @Override
   public String toString() {
     return "Blog: " + id + " : " + title + " (" + author + ")";
   }

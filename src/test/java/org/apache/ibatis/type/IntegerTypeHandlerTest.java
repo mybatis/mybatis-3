@@ -25,12 +25,14 @@ public class IntegerTypeHandlerTest extends BaseTypeHandlerTest {
 
   private static final TypeHandler<Integer> TYPE_HANDLER = new IntegerTypeHandler();
 
+  @Override
   @Test
   public void shouldSetParameter() throws Exception {
     TYPE_HANDLER.setParameter(ps, 1, 100, null);
     verify(ps).setInt(1, 100);
   }
 
+  @Override
   @Test
   public void shouldGetResultFromResultSet() throws Exception {
     when(rs.getInt("column")).thenReturn(100);
@@ -38,6 +40,7 @@ public class IntegerTypeHandlerTest extends BaseTypeHandlerTest {
     assertEquals(new Integer(100), TYPE_HANDLER.getResult(rs, "column"));
   }
 
+  @Override
   @Test
   public void shouldGetResultFromCallableStatement() throws Exception {
     when(cs.getInt(1)).thenReturn(100);
