@@ -127,7 +127,7 @@
   </distributionManagement>
 
   <properties>
-    <clirr.comparisonVersion>3.2.8</clirr.comparisonVersion>
+    <clirr.comparisonVersion>3.3.0</clirr.comparisonVersion>
     <findbugs.onlyAnalyze>org.apache.ibatis.*</findbugs.onlyAnalyze>
     <osgi.export>org.apache.ibatis.*;version=${project.version};-noimport:=true</osgi.export>
     <osgi.import>*;resolution:=optional</osgi.import>
@@ -218,6 +218,7 @@
       <version>1.10.19</version>
       <scope>test</scope>
     </dependency>
+    <!-- Do not go to 2.x until we are on jdk7 -->
     <dependency>
       <groupId>commons-dbcp</groupId>
       <artifactId>commons-dbcp</artifactId>
@@ -251,7 +252,7 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
-          <argLine>-Xmx1024m</argLine>
+          <argLine>${argLine} -Xmx1024m</argLine>
           <systemProperties>
             <property>
               <name>derby.stream.error.file</name>
@@ -307,8 +308,10 @@
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
         <configuration>
-          <exclude>org.apache.ibatis.ognl.*</exclude>
-          <exclude>org.apache.ibatis.javassist.*</exclude>
+          <excludes>
+            <exclude>org.apache.ibatis.ognl.*</exclude>
+            <exclude>org.apache.ibatis.javassist.*</exclude>
+          </excludes>
         </configuration>
       </plugin>
     </plugins>
