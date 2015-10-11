@@ -308,8 +308,10 @@
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
         <configuration>
-          <exclude>org.apache.ibatis.ognl.*</exclude>
-          <exclude>org.apache.ibatis.javassist.*</exclude>
+          <excludes>
+            <exclude>org.apache.ibatis.ognl.*</exclude>
+            <exclude>org.apache.ibatis.javassist.*</exclude>
+          </excludes>
         </configuration>
       </plugin>
     </plugins>
