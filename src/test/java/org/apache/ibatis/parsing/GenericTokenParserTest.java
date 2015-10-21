@@ -43,6 +43,7 @@ public class GenericTokenParserTest {
         put("first_name", "James");
         put("initial", "T");
         put("last_name", "Kirk");
+        put("var{with}brace", "Hiya");
         put("", "");
       }
     }));
@@ -62,6 +63,9 @@ public class GenericTokenParserTest {
 
     assertEquals("{$$something}JamesTKirk", parser.parse("{$$something}${first_name}${initial}${last_name}"));
     assertEquals("${", parser.parse("${"));
+    assertEquals("${\\}", parser.parse("${\\}"));
+    assertEquals("Hiya", parser.parse("${var{with\\}brace}"));
+    assertEquals("", parser.parse("${}"));
     assertEquals("}", parser.parse("}"));
     assertEquals("Hello ${ this is a test.", parser.parse("Hello ${ this is a test."));
     assertEquals("Hello } this is a test.", parser.parse("Hello } this is a test."));

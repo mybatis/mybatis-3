@@ -318,6 +318,17 @@ public class DynamicSqlSourceTest extends BaseDataTest {
   }
 
   @Test
+  public void shouldHandleOgnlExpression() throws Exception {
+    final HashMap<String, String> parameterObject = new HashMap<String, String>() {{
+      put("name", "Steve");
+    }};
+    final String expected = "Expression test: 3 / yes.";
+    DynamicSqlSource source = createDynamicSqlSource(new TextSqlNode("Expression test: ${name.indexOf('v')} / ${name in {'Bob', 'Steve'\\} ? 'yes' : 'no'}."));
+    BoundSql boundSql = source.getBoundSql(parameterObject);
+    assertEquals(expected, boundSql.getSql());
+  }
+
+  @Test
   public void shouldSkipForEachWhenCollectionIsEmpty() throws Exception {
     final HashMap<String, Integer[]> parameterObject = new HashMap<String, Integer[]>() {{
         put("array", new Integer[] {});
