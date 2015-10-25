@@ -197,7 +197,7 @@ public class ExecutorTestHelper {
               }
             }).build());
           }
-        }).fetchSize(1000).build();
+        }).fetchSize(1000).timeout(2000).build();
   }
 
   public static MappedStatement prepareSelectOneAuthorMappedStatementWithConstructorResults(final Configuration config) {
