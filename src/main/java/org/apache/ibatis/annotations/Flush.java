@@ -24,6 +24,7 @@ import java.lang.annotation.Target;
  * The maker annotation that invoke a flush statements via Mapper interface.
  *
  * @author Kazuki Shimizu
+ * @since 3.3.0
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)

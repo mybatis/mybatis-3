@@ -380,10 +380,16 @@ public class Configuration {
     this.defaultStatementTimeout = defaultStatementTimeout;
   }
 
+  /**
+   * @since 3.3.0
+   */
   public Integer getDefaultFetchSize() {
     return defaultFetchSize;
   }
 
+  /**
+   * @since 3.3.0
+   */
   public void setDefaultFetchSize(Integer defaultFetchSize) {
     this.defaultFetchSize = defaultFetchSize;
   }
