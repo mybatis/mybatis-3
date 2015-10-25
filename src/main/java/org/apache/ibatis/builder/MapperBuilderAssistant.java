@@ -282,6 +282,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
     MappedStatement.Builder statementBuilder = new MappedStatement.Builder(configuration, id, sqlSource, sqlCommandType);
     statementBuilder.resource(resource);
     statementBuilder.fetchSize(fetchSize);
+    statementBuilder.timeout(timeout);
     statementBuilder.statementType(statementType);
     statementBuilder.keyGenerator(keyGenerator);
     statementBuilder.keyProperty(keyProperty);
@@ -290,7 +291,6 @@ public class MapperBuilderAssistant extends BaseBuilder {
     statementBuilder.lang(lang);
     statementBuilder.resultOrdered(resultOrdered);
     statementBuilder.resulSets(resultSets);
-    setStatementTimeout(timeout, statementBuilder);
 
     setStatementParameterMap(parameterMap, parameterType, statementBuilder);
     setStatementResultMap(resultMap, resultType, resultSetType, statementBuilder);
@@ -370,13 +370,6 @@ public class MapperBuilderAssistant extends BaseBuilder {
     statementBuilder.resultMaps(resultMaps);
 
     statementBuilder.resultSetType(resultSetType);
-  }
-
-  private void setStatementTimeout(Integer timeout, MappedStatement.Builder statementBuilder) {
-    if (timeout == null) {
-      timeout = configuration.getDefaultStatementTimeout();
-    }
-    statementBuilder.timeout(timeout);
   }
 
   public ResultMapping buildResultMapping(
