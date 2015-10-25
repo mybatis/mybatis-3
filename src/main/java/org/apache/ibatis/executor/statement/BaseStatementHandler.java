@@ -102,10 +102,12 @@ public abstract class BaseStatementHandler implements StatementHandler {
 
   protected void setStatementTimeout(Statement stmt) throws SQLException {
     Integer timeout = mappedStatement.getTimeout();
-    Integer defaultTimeout = configuration.getDefaultStatementTimeout();
     if (timeout != null) {
       stmt.setQueryTimeout(timeout);
-    } else if (defaultTimeout != null) {
+      return;
+    }
+    Integer defaultTimeout = configuration.getDefaultStatementTimeout();
+    if (defaultTimeout != null) {
       stmt.setQueryTimeout(defaultTimeout);
     }
   }
