@@ -39,10 +39,32 @@ value CDATA #REQUIRED
 <!ELEMENT settings (setting+)>
 
 <!ELEMENT setting EMPTY>
-<!ATTLIST setting
-name CDATA #REQUIRED
-value CDATA #REQUIRED
->
+<!ATTLIST setting name (
+          aggressiveLazyLoading
+        | autoMappingBehavior
+        | cacheEnabled
+        | callSettersOnNulls
+        | configurationFactory
+        | defaultExecutorType
+        | defaultFetchSize
+        | defaultScriptingLanguage
+        | defaultStatementTimeout
+        | jdbcTypeForNull
+        | localCacheScope
+        | lazyLoadingEnabled
+        | lazyLoadTriggerMethods
+        | logPrefix
+        | logImpl
+        | multipleResultSetsEnabled
+        | mapUnderscoreToCamelCase
+        | proxyFactory
+        | safeRowBoundsEnabled
+        | safeResultHandlerEnabled
+        | useColumnLabel
+        | useGeneratedKeys
+        | vfsImpl
+        ) #REQUIRED>
+<!ATTLIST setting value CDATA #REQUIRED>
 
 <!ELEMENT typeAliases (typeAlias*,package*)>
 
