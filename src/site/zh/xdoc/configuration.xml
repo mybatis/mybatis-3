@@ -1021,10 +1021,10 @@ public class ExampleTypeHandler extends BaseTypeHandler<String> {
         <p>可以通过两种方式来指定被关联的 JDBC 类型：</p>
         <ul>
           <li>
-            在类型处理器的配置元素上增加一个 <code>javaType</code> 属性（比如：<code>javaType="VARCHAR"</code>）；
+            在类型处理器的配置元素上增加一个 <code>jdbcType</code> 属性（比如：<code>jdbcType="VARCHAR"</code>）；
           </li>
           <li>在类型处理器的类上（TypeHandler class）增加一个 <code>@MappedJdbcTypes</code> 注解来指定与其关联的 JDBC 类型列表。
-            如果在 <code>javaType</code> 属性中也同时指定，则注解方式将被忽略。
+            如果在 <code>jdbcType</code> 属性中也同时指定，则注解方式将被忽略。
           </li>
         </ul>
 
