@@ -36,7 +36,7 @@ public @interface TypeDiscriminator {
 
   JdbcType jdbcType() default JdbcType.UNDEFINED;
 
-  Class<? extends TypeHandler<?>> typeHandler() default UnknownTypeHandler.class;
+  Class<? extends TypeHandler> typeHandler() default UnknownTypeHandler.class;
 
   Case[] cases();
 }
