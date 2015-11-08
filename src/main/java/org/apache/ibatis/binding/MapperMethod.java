@@ -15,12 +15,15 @@
  */
 package org.apache.ibatis.binding;
 
+import org.apache.ibatis.annotations.CustomMethod;
 import org.apache.ibatis.annotations.Flush;
 import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.cursor.Cursor;
+import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.SqlCommandType;
+import org.apache.ibatis.reflection.ExceptionUtil;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.ResultHandler;
@@ -35,15 +38,22 @@ import java.util.*;
  * @author Clinton Begin
  * @author Eduardo Macarron
  * @author Lasse Voss
+ * @author Kazuki Shimizu
  */
 public class MapperMethod {
 
   private final SqlCommand command;
   private final MethodSignature method;
+  private final CustomMethodAdapter customMethodAdapter;
 
   public MapperMethod(Class<?> mapperInterface, Method method, Configuration config) {
     this.command = new SqlCommand(config, mapperInterface, method);
     this.method = new MethodSignature(config, method);
+    if (SqlCommandType.CUSTOM == command.type) {
+      customMethodAdapter = new CustomMethodAdapter(mapperInterface, method);
+    } else {
+      customMethodAdapter = null;
+    }
   }
 
   public Object execute(SqlSession sqlSession, Object[] args) {
@@ -72,7 +82,9 @@ public class MapperMethod {
         result = sqlSession.selectOne(command.getName(), param);
       }
     } else if (SqlCommandType.FLUSH == command.getType()) {
-        result = sqlSession.flushStatements();
+      result = sqlSession.flushStatements();
+    } else if (SqlCommandType.CUSTOM == command.getType()) {
+      result = customMethodAdapter.invoke(sqlSession, args);
     } else {
       throw new BindingException("Unknown execution method for: " + command.getName());
     }
@@ -207,6 +219,9 @@ public class MapperMethod {
         if(method.getAnnotation(Flush.class) != null){
           name = null;
           type = SqlCommandType.FLUSH;
+        } else if (method.getAnnotation(CustomMethod.class) != null) {
+          name = null;
+          type = SqlCommandType.CUSTOM;
         } else {
           throw new BindingException("Invalid bound statement (not found): " + statementName);
         }
@@ -378,6 +393,74 @@ public class MapperMethod {
         }
       }
       return false;
+    }
+
+  }
+
+  /**
+   * Adapter class of custom method.
+   *
+   * @author Kazuki Shimizu
+   * @since 3.4.0
+   */
+  private static class CustomMethodAdapter {
+
+    private final Object targetObject;
+    private final Method targetMethod;
+
+    private CustomMethodAdapter(Class<?> mapperInterface, Method mapperMethod) {
+      CustomMethod customMethod = mapperMethod.getAnnotation(CustomMethod.class);
+      try {
+        // Decide an implementation type and create instance
+        Class<?> type;
+        if (customMethod.type() == void.class) {
+          type = Resources.classForName(mapperInterface.getName() + "Impl");
+        } else {
+          type = customMethod.type();
+        }
+        this.targetObject = type.getConstructor().newInstance();
+        // Decide an implementation method name
+        String methodName;
+        if (customMethod.method().isEmpty()) {
+          methodName = mapperMethod.getName();
+        } else {
+          methodName = customMethod.method();
+        }
+        // Create a custom method
+        Class<?>[] parameterTypes = mapperMethod.getParameterTypes();
+        int parameterCount = parameterTypes.length;
+        Class<?>[] methodArgTypes = new Class<?>[parameterCount + 1];
+        methodArgTypes[0] = SqlSession.class;
+        System.arraycopy(parameterTypes, 0, methodArgTypes, 1, parameterCount);
+        this.targetMethod = type.getDeclaredMethod(methodName, methodArgTypes);
+      } catch (Exception e) {
+        throw new BindingException("Custom method does not found.", e);
+      }
+    }
+
+    private Object invoke(SqlSession sqlSession, Object[] args) {
+      // Create argument values
+      Object[] methodArgs;
+      if(args == null) {
+        methodArgs = new Object[]{sqlSession};
+      } else {
+        methodArgs = new Object[args.length + 1];
+        methodArgs[0] = sqlSession;
+        System.arraycopy(args, 0, methodArgs, 1, args.length);
+      }
+      // Invoke an implementation method
+      try {
+        return targetMethod.invoke(targetObject, methodArgs);
+      } catch (Throwable t) {
+        Throwable original = ExceptionUtil.unwrapThrowable(t);
+        if (original instanceof Error) {
+          throw (Error) original;
+        }
+        if (original instanceof RuntimeException) {
+          throw (RuntimeException) original;
+        }
+        throw new BindingException("Custom method invocation is failed.", original);
+      }
     }
 
   }
