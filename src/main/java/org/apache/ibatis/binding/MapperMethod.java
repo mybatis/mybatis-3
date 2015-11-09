@@ -20,7 +20,6 @@ import org.apache.ibatis.annotations.Flush;
 import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.cursor.Cursor;
-import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.SqlCommandType;
 import org.apache.ibatis.reflection.ExceptionUtil;
@@ -46,11 +45,11 @@ public class MapperMethod {
   private final MethodSignature method;
   private final CustomMethodAdapter customMethodAdapter;
 
-  public MapperMethod(Class<?> mapperInterface, Method method, Configuration config) {
-    this.command = new SqlCommand(config, mapperInterface, method);
-    this.method = new MethodSignature(config, method);
+  public MapperMethod(Class<?> mapperInterface, Method method, Configuration configuration) {
+    this.command = new SqlCommand(configuration, mapperInterface, method);
+    this.method = new MethodSignature(configuration, method);
     if (SqlCommandType.CUSTOM == command.type) {
-      customMethodAdapter = new CustomMethodAdapter(mapperInterface, method);
+      customMethodAdapter = new CustomMethodAdapter(mapperInterface, method, configuration);
     } else {
       customMethodAdapter = null;
     }
@@ -405,52 +404,33 @@ public class MapperMethod {
    */
   private static class CustomMethodAdapter {
 
+    private final CustomMethodStrategy strategy;
     private final Object targetObject;
     private final Method targetMethod;
 
-    private CustomMethodAdapter(Class<?> mapperInterface, Method mapperMethod) {
+    private CustomMethodAdapter(Class<?> mapperInterface, Method mapperMethod, Configuration configuration) {
+      this.strategy = configuration.getCustomMethodStrategy();
       CustomMethod customMethod = mapperMethod.getAnnotation(CustomMethod.class);
       try {
         // Decide an implementation type and create instance
-        Class<?> type;
-        if (customMethod.type() == void.class) {
-          type = Resources.classForName(mapperInterface.getName() + "Impl");
-        } else {
-          type = customMethod.type();
-        }
-        this.targetObject = type.getConstructor().newInstance();
-        // Decide an implementation method name
+        this.targetObject = strategy.lookupTargetObject(mapperInterface,
+                (customMethod.type() != void.class) ? customMethod.type() : null);
+        // Decide an implementation method name and create method
         String methodName;
         if (customMethod.method().isEmpty()) {
           methodName = mapperMethod.getName();
         } else {
           methodName = customMethod.method();
         }
-        // Create a custom method
-        Class<?>[] parameterTypes = mapperMethod.getParameterTypes();
-        int parameterCount = parameterTypes.length;
-        Class<?>[] methodArgTypes = new Class<?>[parameterCount + 1];
-        methodArgTypes[0] = SqlSession.class;
-        System.arraycopy(parameterTypes, 0, methodArgTypes, 1, parameterCount);
-        this.targetMethod = type.getDeclaredMethod(methodName, methodArgTypes);
+        this.targetMethod = strategy.lookupTargetMethod(targetObject, methodName, mapperMethod.getParameterTypes());
       } catch (Exception e) {
         throw new BindingException("Custom method does not found.", e);
       }
     }
 
-    private Object invoke(SqlSession sqlSession, Object[] args) {
-      // Create argument values
-      Object[] methodArgs;
-      if(args == null) {
-        methodArgs = new Object[]{sqlSession};
-      } else {
-        methodArgs = new Object[args.length + 1];
-        methodArgs[0] = sqlSession;
-        System.arraycopy(args, 0, methodArgs, 1, args.length);
-      }
-      // Invoke an implementation method
+    private Object invoke(SqlSession sqlSession, Object[] mapperMethodArgs) {
       try {
-        return targetMethod.invoke(targetObject, methodArgs);
+        return strategy.invoke(targetObject, targetMethod, sqlSession, mapperMethodArgs);
       } catch (Throwable t) {
         Throwable original = ExceptionUtil.unwrapThrowable(t);
         if (original instanceof Error) {
@@ -464,5 +444,7 @@ public class MapperMethod {
     }
 
   }
+
+
 
 }

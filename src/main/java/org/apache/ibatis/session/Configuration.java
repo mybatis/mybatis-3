@@ -26,6 +26,8 @@ import java.util.Properties;
 import java.util.Set;
 
 import org.apache.ibatis.binding.MapperRegistry;
+import org.apache.ibatis.binding.CustomMethodStrategy;
+import org.apache.ibatis.binding.DefaultCustomMethodStrategy;
 import org.apache.ibatis.builder.CacheRefResolver;
 import org.apache.ibatis.builder.ResultMapResolver;
 import org.apache.ibatis.builder.annotation.MethodResolver;
@@ -126,6 +128,8 @@ public class Configuration {
 
   protected boolean lazyLoadingEnabled = false;
   protected ProxyFactory proxyFactory = new JavassistProxyFactory(); // #224 Using internal Javassist instead of OGNL
+
+  protected CustomMethodStrategy customMethodStrategy = new DefaultCustomMethodStrategy();
 
   protected String databaseId;
   /**
@@ -322,6 +326,27 @@ public class Configuration {
       proxyFactory = new JavassistProxyFactory();
     }
     this.proxyFactory = proxyFactory;
+  }
+
+  /**
+   * Get a strategy of custom method.
+   * @return a strategy of custom method
+   * @since 3.4.0
+   */
+  public CustomMethodStrategy getCustomMethodStrategy() {
+    return customMethodStrategy;
+  }
+
+  /**
+   * Sets a strategy of custom method.
+   * @param customMethodStrategy a strategy of custom method
+   * @since 3.4.0
+   */
+  public void setCustomMethodStrategy(CustomMethodStrategy customMethodStrategy) {
+    if (customMethodStrategy == null) {
+      customMethodStrategy = new DefaultCustomMethodStrategy();
+    }
+    this.customMethodStrategy = customMethodStrategy;
   }
 
   public boolean isAggressiveLazyLoading() {

@@ -25,6 +25,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.ibatis.binding.DefaultCustomMethodStrategy;
 import org.apache.ibatis.builder.xml.XMLConfigBuilder;
 import org.apache.ibatis.executor.loader.cglib.CglibProxyFactory;
 import org.apache.ibatis.executor.loader.javassist.JavassistProxyFactory;
@@ -78,6 +79,7 @@ public class XmlConfigBuilderTest {
     assertNull(config.getLogPrefix());
     assertNull(config.getLogImpl());
     assertNull(config.getConfigurationFactory());
+    assertThat(config.getCustomMethodStrategy(), is(instanceOf(DefaultCustomMethodStrategy.class)));
   }
 
   enum MyEnum {
@@ -137,37 +139,41 @@ public class XmlConfigBuilderTest {
     assertArrayEquals(MyEnum.values(), ((EnumOrderTypeHandler) typeHandler).constants);
   }
 
-    @Test
-    public void shouldSuccessfullyLoadXMLConfigFile() throws Exception {
-      String resource = "org/apache/ibatis/builder/CustomizedSettingsMapperConfig.xml";
-      InputStream inputStream = Resources.getResourceAsStream(resource);
-      XMLConfigBuilder builder = new XMLConfigBuilder(inputStream);
-      Configuration config = builder.parse();
+  @Test
+  public void shouldSuccessfullyLoadXMLConfigFile() throws Exception {
+    String resource = "org/apache/ibatis/builder/CustomizedSettingsMapperConfig.xml";
+    InputStream inputStream = Resources.getResourceAsStream(resource);
+    XMLConfigBuilder builder = new XMLConfigBuilder(inputStream);
+    Configuration config = builder.parse();
 
-      assertThat(config.getAutoMappingBehavior(), is(AutoMappingBehavior.NONE));
-      assertThat(config.isCacheEnabled(), is(false));
-      assertThat(config.getProxyFactory(), is(instanceOf(CglibProxyFactory.class)));
-      assertThat(config.isLazyLoadingEnabled(), is(true));
-      assertThat(config.isAggressiveLazyLoading(), is(false));
-      assertThat(config.isMultipleResultSetsEnabled(), is(false));
-      assertThat(config.isUseColumnLabel(), is(false));
-      assertThat(config.isUseGeneratedKeys(), is(true));
-      assertThat(config.getDefaultExecutorType(), is(ExecutorType.BATCH));
-      assertThat(config.getDefaultStatementTimeout(), is(10));
-      assertThat(config.getDefaultFetchSize(), is(100));
-      assertThat(config.isMapUnderscoreToCamelCase(), is(true));
-      assertThat(config.isSafeRowBoundsEnabled(), is(true));
-      assertThat(config.getLocalCacheScope(), is(LocalCacheScope.STATEMENT));
-      assertThat(config.getJdbcTypeForNull(), is(JdbcType.NULL));
-      assertThat(config.getLazyLoadTriggerMethods(), is((Set<String>) new HashSet<String>(Arrays.asList("equals", "clone", "hashCode", "toString", "xxx"))));
-      assertThat(config.isSafeResultHandlerEnabled(), is(false));
-      assertThat(config.getDefaultScriptingLanuageInstance(), is(instanceOf(RawLanguageDriver.class)));
-      assertThat(config.isCallSettersOnNulls(), is(true));
-      assertThat(config.getLogPrefix(), is("mybatis_"));
-      assertThat(config.getLogImpl().getName(), is(Slf4jImpl.class.getName()));
-      assertThat(config.getVfsImpl().getName(), is(JBoss6VFS.class.getName()));
-      assertThat(config.getConfigurationFactory().getName(), is(String.class.getName()));
+    assertThat(config.getAutoMappingBehavior(), is(AutoMappingBehavior.NONE));
+    assertThat(config.isCacheEnabled(), is(false));
+    assertThat(config.getProxyFactory(), is(instanceOf(CglibProxyFactory.class)));
+    assertThat(config.isLazyLoadingEnabled(), is(true));
+    assertThat(config.isAggressiveLazyLoading(), is(false));
+    assertThat(config.isMultipleResultSetsEnabled(), is(false));
+    assertThat(config.isUseColumnLabel(), is(false));
+    assertThat(config.isUseGeneratedKeys(), is(true));
+    assertThat(config.getDefaultExecutorType(), is(ExecutorType.BATCH));
+    assertThat(config.getDefaultStatementTimeout(), is(10));
+    assertThat(config.getDefaultFetchSize(), is(100));
+    assertThat(config.isMapUnderscoreToCamelCase(), is(true));
+    assertThat(config.isSafeRowBoundsEnabled(), is(true));
+    assertThat(config.getLocalCacheScope(), is(LocalCacheScope.STATEMENT));
+    assertThat(config.getJdbcTypeForNull(), is(JdbcType.NULL));
+    assertThat(config.getLazyLoadTriggerMethods(), is((Set<String>) new HashSet<String>(Arrays.asList("equals", "clone", "hashCode", "toString", "xxx"))));
+    assertThat(config.isSafeResultHandlerEnabled(), is(false));
+    assertThat(config.getDefaultScriptingLanuageInstance(), is(instanceOf(RawLanguageDriver.class)));
+    assertThat(config.isCallSettersOnNulls(), is(true));
+    assertThat(config.getLogPrefix(), is("mybatis_"));
+    assertThat(config.getLogImpl().getName(), is(Slf4jImpl.class.getName()));
+    assertThat(config.getVfsImpl().getName(), is(JBoss6VFS.class.getName()));
+    assertThat(config.getConfigurationFactory().getName(), is(String.class.getName()));
+    assertThat(config.getCustomMethodStrategy(), is(instanceOf(MyCustomMethodStrategy.class)));
 
-    }
+  }
+
+  public static class MyCustomMethodStrategy extends DefaultCustomMethodStrategy {
+  }
 
 }

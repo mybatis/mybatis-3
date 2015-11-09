@@ -15,6 +15,8 @@
  */
 package org.apache.ibatis.annotations;
 
+import org.apache.ibatis.binding.CustomMethodStrategy;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -22,11 +24,11 @@ import java.lang.annotation.Target;
 
 /**
  * The maker annotation that invoke a custom method.
- * <p/>
+ * <p>
  * <h2>How to define :</h2>
  * Define this annotation as method level annotation.<br>
  * Note that this annotation can not mix with another annotations({@link Select}, {@link Insert}, {@link Update}, {@link Delete}, {@link Flush}, etc..}).
- * <p/>
+ * <p>
  * e.g.)
  * <pre class="code">
  *   package com.example.domain.mapper;
@@ -36,12 +38,13 @@ import java.lang.annotation.Target;
  *     Page&lt;Person&gt; findPage(RowBounds rowBounds);
  *   }
  * </pre>
- * <p/>
+ * <p>
  * <h2>How to implement a custom method :</h2>
  * Implements a custom method at default implementation class("FQCN of Mapper interface" + "Impl") or
  * user defined implementation class which specify using annotation attributes ({@link #type} and {@link #method}).<br>
  * Note that first argument needs to define {@link org.apache.ibatis.session.SqlSession}, and subsequent arguments needs to define same signatures with mapper interface.
- * <p/>
+ * <strong>This behavior can customize using {@link CustomMethodStrategy}.</strong>
+ * <p>
  * e.g.)
  * <pre class="code">
  *   package com.example.domain.mapper;
@@ -61,15 +64,16 @@ public @interface CustomMethod {
 
   /**
    * Sets class which implements custom method.
-   * <p/>
-   * Default is "FQCN of Mapper interface" + "Impl".
+   *
+   * Default is "FQCN of Mapper interface" + "Impl",
+   * <strong>it can customize using {@link CustomMethodStrategy}.</strong>
    * @return Class that implements custom method
    */
   Class<?> type() default void.class;
 
   /**
    * Sets implementation method name of custom method.
-   * <p/>
+   *
    * Default is same method name with method which annotated.
    * @return Method name of custom method
    */
