@@ -1,5 +1,5 @@
-/*
- *    Copyright 2009-2012 the original author or authors.
+/**
+ *    Copyright 2009-2015 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.reflection.MetaObject;
+import org.apache.ibatis.reflection.property.PropertyTokenizer;
 import org.apache.ibatis.session.Configuration;
 
 /**
@@ -62,7 +63,9 @@ public class BoundSql {
   }
 
   public boolean hasAdditionalParameter(String name) {
-    return metaParameters.hasGetter(name);
+    PropertyTokenizer prop = new PropertyTokenizer(name);
+    String indexedName = prop.getIndexedName();
+    return additionalParameters.containsKey(indexedName);
   }
 
   public void setAdditionalParameter(String name, Object value) {

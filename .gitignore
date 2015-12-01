@@ -2,6 +2,7 @@
 /*.ipr
 /*.iws
 /.classpath
+/.factorypath
 /.idea
 /.project
 /.settings

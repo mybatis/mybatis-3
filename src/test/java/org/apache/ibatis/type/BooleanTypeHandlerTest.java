@@ -1,5 +1,5 @@
-/*
- *    Copyright 2009-2012 the original author or authors.
+/**
+ *    Copyright 2009-2015 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -25,12 +25,14 @@ public class BooleanTypeHandlerTest extends BaseTypeHandlerTest {
 
   private static final TypeHandler<Boolean> TYPE_HANDLER = new BooleanTypeHandler();
 
+  @Override
   @Test
   public void shouldSetParameter() throws Exception {
     TYPE_HANDLER.setParameter(ps, 1, true, null);
     verify(ps).setBoolean(1, true);
   }
 
+  @Override
   @Test
   public void shouldGetResultFromResultSet() throws Exception {
     when(rs.getBoolean("column")).thenReturn(true);
@@ -38,6 +40,7 @@ public class BooleanTypeHandlerTest extends BaseTypeHandlerTest {
     assertEquals(true, TYPE_HANDLER.getResult(rs, "column"));
   }
 
+  @Override
   @Test
   public void shouldGetResultFromCallableStatement() throws Exception {
     when(cs.getBoolean(1)).thenReturn(true);

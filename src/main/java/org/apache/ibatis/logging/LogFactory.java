@@ -1,5 +1,5 @@
-/*
- *    Copyright 2009-2013 the original author or authors.
+/**
+ *    Copyright 2009-2015 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -131,7 +131,9 @@ public final class LogFactory {
     try {
       Constructor<? extends Log> candidate = implClass.getConstructor(new Class[] { String.class });
       Log log = candidate.newInstance(new Object[] { LogFactory.class.getName() });
-      log.debug("Logging initialized using '" + implClass + "' adapter.");
+      if (log.isDebugEnabled()) {
+        log.debug("Logging initialized using '" + implClass + "' adapter.");
+      }
       logConstructor = candidate;
     } catch (Throwable t) {
       throw new LogException("Error setting Log implementation.  Cause: " + t, t);

@@ -1,5 +1,5 @@
-/*
- *    Copyright 2012 the original author or authors.
+/**
+ *    Copyright 2009-2015 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -22,19 +22,22 @@ public class ReflectorTest {
 
   @Test
   public void testGetSetterType() throws Exception {
-    Reflector reflector = Reflector.forClass(Section.class);
+    ReflectorFactory reflectorFactory = new DefaultReflectorFactory();
+    Reflector reflector = reflectorFactory.findForClass(Section.class);
     Assert.assertEquals(Long.class, reflector.getSetterType("id"));
   }
 
   @Test
   public void testGetGetterType() throws Exception {
-    Reflector reflector = Reflector.forClass(Section.class);
+    ReflectorFactory reflectorFactory = new DefaultReflectorFactory();
+    Reflector reflector = reflectorFactory.findForClass(Section.class);
     Assert.assertEquals(Long.class, reflector.getGetterType("id"));
   }
 
   @Test
   public void shouldNotGetClass() throws Exception {
-    Reflector reflector = Reflector.forClass(Section.class);
+    ReflectorFactory reflectorFactory = new DefaultReflectorFactory();
+    Reflector reflector = reflectorFactory.findForClass(Section.class);
     Assert.assertFalse(reflector.hasGetter("class"));
   }
 
@@ -47,10 +50,12 @@ public class ReflectorTest {
 
     private Long id;
 
+    @Override
     public Long getId() {
       return id;
     }
 
+    @Override
     public void setId(Long id) {
       this.id = id;
     }

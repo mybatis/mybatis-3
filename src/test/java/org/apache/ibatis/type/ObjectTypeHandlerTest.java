@@ -1,5 +1,5 @@
-/*
- *    Copyright 2009-2012 the original author or authors.
+/**
+ *    Copyright 2009-2015 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -25,12 +25,14 @@ public class ObjectTypeHandlerTest extends BaseTypeHandlerTest {
 
   private static final TypeHandler<Object> TYPE_HANDLER = new ObjectTypeHandler();
 
+  @Override
   @Test
   public void shouldSetParameter() throws Exception {
     TYPE_HANDLER.setParameter(ps, 1, "Hello", null);
     verify(ps).setObject(1, "Hello");
   }
 
+  @Override
   @Test
   public void shouldGetResultFromResultSet() throws Exception {
     when(rs.getObject("column")).thenReturn("Hello");
@@ -38,6 +40,7 @@ public class ObjectTypeHandlerTest extends BaseTypeHandlerTest {
     assertEquals("Hello", TYPE_HANDLER.getResult(rs, "column"));
   }
 
+  @Override
   @Test
   public void shouldGetResultFromCallableStatement() throws Exception {
     when(cs.getObject(1)).thenReturn("Hello");

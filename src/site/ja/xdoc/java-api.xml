@@ -207,8 +207,8 @@ int delete(String statement)]]></source>
   <p>最後に、高度な処理を行うための select メソッドがあります。これらは主に非常に大きなデータセットを扱う場合に、返される行の範囲を限定したり、カスタムの ResultHandler を使って独自に結果処理を行うことができるようになっています。</p>
   <source><![CDATA[<E> List<E> selectList (String statement, Object parameter, RowBounds rowBounds)
 <K,V> Map<K,V> selectMap(String statement, Object parameter, String mapKey, RowBounds rowbounds)
-void select (String statement, Object parameter, ResultHandler handler)
-void select (String statement, Object parameter, RowBounds rowBounds, ResultHandler handler)]]></source>
+void select (String statement, Object parameter, ResultHandler<T> handler)
+void select (String statement, Object parameter, RowBounds rowBounds, ResultHandler<T> handler)]]></source>
 
   <p>RowBounds 引数を渡すことによって、指定された数のレコードをスキップし、結果として返される行の数を制限することができます。RowBounds クラスはイミュータブルで、コンストラクタ引数として offset と limit を取ります。</p>
   <source>int offset = 100;
@@ -218,10 +218,10 @@ RowBounds rowBounds = new RowBounds(offset, limit);</source>
   <p>ドライバーによって得られる効果は異なります。SCROLL_SENSITIVE または SCROLL_INSENSITIVE （つまり FORWARD_ONLY 以外）の結果セットタイプを使った時、最も良いパフォーマンスが得られます。</p>
   <p>ResultHandler を渡すと、各行を自由に処理することができます。List に追加したり、Map や Set を作成することもできますし、結果を捨てて合計値のみを返すこともできます。ResultHandler を使えば好きな処理を行うことも可能で、MyBatis 自身も内部的に結果リストを構築するために ResultHandler を利用しています。</p>
   <p>ResultHandler インターフェイスは非常にシンプルです。</p>  
-  <source>package org.mybatis.executor.result;
-public interface ResultHandler {
-  void handleResult(ResultContext context);
-}</source>
+  <source><![CDATA[package org.mybatis.executor.result;
+public interface ResultHandler<T> {
+  void handleResult(ResultContext<? extends T> context);
+}]]></source>
 
   <p>引数 ResultContext を介して結果オブジェクトにアクセスすることができます。ResultContext#getResultCount() メソッドは作成された結果オブジェクトの数を返します。ResultContext#stop() メソッドを呼び出すと、それ以上結果を読み込まないよう MyBatis に指示します。</p>
   
@@ -231,6 +231,10 @@ public interface ResultHandler {
   <li>ResultHandler を引数に取るメソッドから返されるデータはキャッシュされません。</li>
   <li>複雑な ResultMap では複数行のデータがひとつのオブジェクトにマッピングされることもあります。こうした ResultMap を ResultHandler と併用する際、association や collection のデータがマッピングされる前の状態のオブジェクトが渡される場合があります。</li>
   </ul>
+
+  <h5>バッチ更新ステートメントをフラッシュするメソッド</h5>
+  <p>バッチ更新用に JDBC ドライバ内に蓄積されたステートメントを任意のタイミングでデータベースへフラッシュ(実行)するメソッドがあります。このメソッドは、 <code>ExecutorType</code> として <code>ExecutorType.BATCH</code> を使用している場合に使用することができます。</p>
+  <source><![CDATA[List<BatchResult> flushStatements()]]></source>
 
   <h5>トランザクションを制御するメソッド</h5>
   <p>トランザクションのスコープを制御するメソッドは４つあります。当然ですが、auto-commit を使用する場合や、外部のトランザクションマネージャーを使っている場合、これらのメソッドは効果がありません。しかし、Connection のインスタンスによって管理されている JDBC トランザクションマネージャーを利用している場合は便利なメソッドです。</p>
@@ -363,7 +367,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
         <td><code>@Results</code></td>
         <td><code>Method</code></td>
         <td><code>&lt;resultMap&gt;</code></td>
-        <td>ある結果列とプロパティまたはフィールドのマッピング情報を定義する Results のリストです。単一値である <code>value</code> は <code>Result</code> アノテーションの配列です。</td>
+        <td>ある結果列とプロパティまたはフィールドのマッピング情報を定義する Results のリストです。属性: <code>value</code>, <code>id</code>. value 属性は <code>Result</code> アノテーションの配列です。 id 属性でマッピング情報の名前を指定することができます。</td>
       </tr>
       <tr>
         <td><code>@Result</code></td>
@@ -481,6 +485,12 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
         <td>N/A</td>
         <td>ResultHandler を使うメソッドでは戻り値の型が void となるので、このアノテーションを使って各行のデータをどのクラスにマップするかを指定します。XMLの ResultMap が存在する場合は @ResultMap アノテーションで指定することができます。XML の <code>&lt;select&gt;</code> 要素で resultType が指定されている場合はアノテーションによる指定は不要です。それ以外の場合、例えば @Select アノテーションが付加された引数に ResultHandler を含むメソッドの場合は戻り値の型は void である必要があるので、このアノテーション（あるいは @ResultMap）を使って型を指定する必要があります。メソッドの戻り値の型が void 以外の場合、このアノテーションは無視されます。</td>
       </tr>
+      <tr>
+        <td><code>@Flush</code></td>
+        <td><code>Method</code></td>
+        <td>N/A</td>
+        <td>このアノテーションを使用すると、<code>SqlSession#flushStatements()</code>メソッドを Mapper インタフェースに定義したメソッド経由で呼び出すことができます。(MyBatis 3.3以上)</td>
+      </tr>
     </tbody>
   </table>
 
@@ -494,6 +504,27 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
   <source>@Insert("insert into table2 (name) values(#{name})")
 @SelectKey(statement="call identity()", keyProperty="nameId", before=<strong>false</strong>, resultType=<strong>int.class</strong>)
 <strong>int</strong> insertTable2(Name name);</source>
+
+  <p>次のコードは <code>@Flush</code> アノテーションを使って <code>SqlSession#flushStatements()</code>メソッドを呼び出す例です。</p>
+  <source><![CDATA[@Flush
+List<BatchResult> flush();]]></source>
+
+  <p>次のコードは @Results アノテーションの id 属性で名前を指定する例です。</p>
+  <source>@Results(id = "userResult", value = {
+  @Result(property = "id", column = "uid", id = <strong>true</strong>),
+  @Result(property = "firstName", column = "first_name"),
+  @Result(property = "lastName", column = "last_name")
+})
+@Select("select * from users where id = #{id}")
+User getUserById(Integer id);
+
+@Results(id = "companyResults")
+@ConstructorArgs({
+  @Arg(property = "id", column = "cid", id = <strong>true</strong>),
+  @Arg(property = "name", column = "name")
+})
+@Select("select * from company where id = #{id}")
+Company getCompanyById(Integer id);</source>
   </subsection>
 
   </section>

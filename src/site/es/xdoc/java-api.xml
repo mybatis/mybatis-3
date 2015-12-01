@@ -206,8 +206,8 @@ int delete(String statement)]]></source>
   <p>Finalmente hay tres versiones avanzadas de los métodos select que te permiten restringir el rango de filas devueltas, o proporcionar lógica de tratamiento de resultados personalizada, normalmente para grandes cantidades de datos.</p>
   <source><![CDATA[<E> List<E> selectList (String statement, Object parameter, RowBounds rowBounds)
 <K,V> Map<K,V> selectMap(String statement, Object parameter, String mapKey, RowBounds rowbounds)
-void select (String statement, Object parameter, ResultHandler handler)
-void select (String statement, Object parameter, RowBounds rowBounds, ResultHandler handler)]]></source>
+void select (String statement, Object parameter, ResultHandler<T> handler)
+void select (String statement, Object parameter, RowBounds rowBounds, ResultHandler<T> handler)]]></source>
 
   <p>El parámetro RowBounds hace que MyBatis salte los registros especificados y que limite los resultados devueltos a cierto número. La clase RowBounds tiene un constructor que recibe ambos el offset y el limit, y es inmutable.</p> 
   <source>int offset = 100;
@@ -217,12 +217,16 @@ RowBounds rowBounds = new RowBounds(offset, limit);</source>
   <p>El rendimiento de algunos drivers puede variar mucho en este aspecto. Para un rendimiento optimo, usa tipos de ResultSet SCROLL_SENSITIVE o SCROLL_INSENSITIVE (es decir, no FORWARD_ONLY)</p>
   <p>El parámetro ResultHandler te permite manejar cada fila como tú quieras. Puedes añadirla a una lista, crear un Map, un Set, o descartar cada resultado y guardar solo cálculos. Puedes hacer casi todo lo que quieras con un ResultHandler, de hecho, es lo que MyBatis usa internamente para construir listas de ResultSets.</p>
   <p>La interfaz es muy sencilla:</p>  
-  <source>package org.apache.ibatis.session;
-public interface ResultHandler {
-  void handleResult(ResultContext context);
-}</source>
+  <source><![CDATA[package org.apache.ibatis.session;
+public interface ResultHandler<T> {
+  void handleResult(ResultContext<? extends T> context);
+}]]></source>
 
   <p>El parámetro ResultContext te da acceso al objeto resultado en sí mismo, un contador del número de objetos creados y un método booleano stop() que te permite indicar a MyBatis que pare la carga de datos.</p>
+
+  <h5>Batch update statement Flush Method</h5>
+  <p>There is method for flushing(executing) batch update statements that stored in a JDBC driver class at any timing. This method can be used when you use the <code>ExecutorType.BATCH</code> as <code>ExecutorType</code>.</p>
+  <source><![CDATA[List<BatchResult> flushStatements()]]></source>
 
   <h5>Métodos de control de transacción</h5>
   <p>El parámetro ResultContext te da acceso al objeto resultado en sí mismo, un contador del número de objetos creados y un método booleano stop() que te permite indicar a MyBatis que pare la carga de datos.</p>
@@ -351,7 +355,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
         <td><code>@Results</code></td>
         <td><code>Method</code></td>
         <td><code>&lt;resultMap&gt;</code></td>
-        <td>Una lista de  Result mapping que contiene los detalles de cómo una columna particular se mapea a una propiedad o campo. Atributos: value, que es un array de anotaciones Result.</td>
+        <td>Una lista de  Result mapping que contiene los detalles de cómo una columna particular se mapea a una propiedad o campo. Atributos: value, id. El atributo value es un array de anotaciones Result. The id attribute is the name of the result mapping.</td>
       </tr>
       <tr>
         <td><code>@Result</code></td>
@@ -463,6 +467,12 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
         el valor de retorno será void y por tanto se requiere incluir esta anotación (o @ResultMap).
         La anotación se ignora si el tipo devuelto por el méotdo no es void.</td>
       </tr>
+      <tr>
+        <td><code>@Flush</code></td>
+        <td><code>Method</code></td>
+        <td>N/A</td>
+        <td>If this annotation is used, it can be called the <code>SqlSession#flushStatements()</code> via method defined at a Mapper interface.(MyBatis 3.3 or above)</td>
+      </tr>
     </tbody>
   </table>
 
@@ -476,6 +486,27 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
   <source>@Insert("insert into table2 (name) values(#{name})")
 @SelectKey(statement="call identity()", keyProperty="nameId", before=<strong>false</strong>, resultType=<strong>int.class</strong>)
 <strong>int</strong> insertTable2(Name name);</source>
+
+  <p>This example shows using the <code>@Flush</code> annotation to call the <code>SqlSession#flushStatements()</code>:</p>
+  <source><![CDATA[@Flush
+List<BatchResult> flush();]]></source>
+
+  <p>These examples show how to name a ResultMap by specifying id attribute of @Results annotation.</p>
+  <source>@Results(id = "userResult", value = {
+  @Result(property = "id", column = "uid", id = <strong>true</strong>),
+  @Result(property = "firstName", column = "first_name"),
+  @Result(property = "lastName", column = "last_name")
+})
+@Select("select * from users where id = #{id}")
+User getUserById(Integer id);
+
+@Results(id = "companyResults")
+@ConstructorArgs({
+  @Arg(property = "id", column = "cid", id = <strong>true</strong>),
+  @Arg(property = "name", column = "name")
+})
+@Select("select * from company where id = #{id}")
+Company getCompanyById(Integer id);</source>
   </subsection>
 
   </section>

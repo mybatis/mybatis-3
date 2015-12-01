@@ -73,7 +73,7 @@
       </ul>
       <p>下一部分将从语句本身开始来描述每个元素的细节。</p>
 
-      <subsection name="select">
+      <subsection name="select" id="select">
         <p>查询语句是 MyBatis 中最常用的元素之一，光能把数据存到数据库中价值并不大，如果还能重新取出来才有用，多数应用也都是查询比修改要频繁。对每个插入、更新或删除操作，通常对应多个查询操作。这是 MyBatis 的基本原则之一，也是将焦点和努力放到查询和结果映射的原因。简单查询的 select 元素是非常简单的。比如：
         </p>
 
@@ -204,7 +204,7 @@ ps.setInt(1,id);]]></source>
         </table>
       </subsection>
 
-      <subsection name="insert, update 和 delete">
+      <subsection name="insert, update 和 delete" id="insert_update_and_delete">
         <p>
         数据变更语句 insert，update 和 delete 的实现非常接近：
         </p>
@@ -220,14 +220,14 @@ ps.setInt(1,id);]]></source>
   timeout="20">
 
 <update
-  id="insertAuthor"
+  id="updateAuthor"
   parameterType="domain.blog.Author"
   flushCache="true"
   statementType="PREPARED"
   timeout="20">
 
 <delete
-  id="insertAuthor"
+  id="deleteAuthor"
   parameterType="domain.blog.Author"
   flushCache="true"
   statementType="PREPARED"
@@ -392,22 +392,46 @@ ps.setInt(1,id);]]></source>
       </subsection>
 
       <subsection name="sql">
-        <p>这个元素可以被用来定义可重用的 SQL 代码段，可以包含在其他语句中。比如：
+        <p>这个元素可以被用来定义可重用的 SQL 代码段，可以包含在其他语句中。它可以被静态地(在加载参数) 参数化. 不同的属性值通过包含的实例变化. 比如：
         </p>
 
-        <source><![CDATA[<sql id="userColumns"> id,username,password </sql>]]></source>
+        <source><![CDATA[<sql id="userColumns"> ${alias}.id,${alias}.username,${alias}.password </sql>]]></source>
 
         <p>这个 SQL 片段可以被包含在其他语句中，例如：
         </p>
 
         <source><![CDATA[<select id="selectUsers" resultType="map">
-  select <include refid="userColumns"/>
-  from some_table
-  where id = #{id}
+  select
+    <include refid="userColumns"><property name="alias" value="t1"/></include>,
+    <include refid="userColumns"><property name="alias" value="t2"/></include>
+  from some_table t1
+    cross join some_table t2
+</select>]]></source>
+
+        <p>
+          属性值可以用于包含的refid属性或者包含的字句里面的属性值，例如：
+        </p>
+
+        <source><![CDATA[<sql id="sometable">
+  ${prefix}Table
+</sql>
+
+<sql id="someinclude">
+  from
+    <include refid="${include_target}"/>
+</sql>
+
+<select id="select" resultType="map">
+  select
+    field1, field2, field3
+  <include refid="someinclude">
+    <property name="prefix" value="Some"/>
+    <property name="include_target" value="sometable"/>
+  </include>
 </select>]]></source>
       </subsection>
 
-      <subsection name="参数（Parameters）">
+      <subsection name="参数（Parameters）" id="Parameters">
         <p>前面的所有语句中你所见到的都是简单参数的例子，实际上参数是 MyBatis 非常强大的元素，对于简单的做法，大概 90% 的情况参数都很少，比如：
         </p>
 
@@ -489,7 +513,7 @@ ps.setInt(1,id);]]></source>
         </p>
       </subsection>
 
-      <subsection name="Result Maps">
+      <subsection name="Result Maps" id="Result_Maps">
         <p>
 resultMap 元素是 MyBatis 中最重要最强大的元素。它就是让你远离 90%的需要从结果
 集中取出数据的 JDBC 代码的那个东西,
@@ -598,8 +622,8 @@ ResultMap 最优秀的地方你已经了解了很多了,但是你还没有真正
 
         <source><![CDATA[<resultMap id="userResultMap" type="User">
   <id property="id" column="user_id" />
-  <result property="username" column="username"/>
-  <result property="password" column="password"/>
+  <result property="username" column="user_name"/>
+  <result property="password" column="hashed_password"/>
 </resultMap>]]></source>
 
         <p>
@@ -1637,7 +1661,7 @@ MyBatis 会从结果集中得到每条记录,
 
       </subsection>
       
-      <subsection name="自动映射">
+      <subsection name="自动映射" id="Auto-mapping">
 
         <p>
            正如你在前面一节看到的，在简单的场景下，MyBatis可以替你自动映射查询结果。
@@ -1661,7 +1685,7 @@ MyBatis 会从结果集中得到每条记录,
            如果没有被手工映射，则将被自动映射。自动映射处理完毕后手工映射才会被处理。
            在接下来的例子中， <i>id</i> 和 <i>userName</i>列将被自动映射， <i>hashed_password</i> 列将根据配置映射。
         </p>
-        <source><![CDATA[<select id="selectUsers" resultType="User">
+        <source><![CDATA[<select id="selectUsers" resultMap="userResultMap">
   select
     user_id             as "id",
     user_name           as "userName",
@@ -1706,7 +1730,7 @@ MyBatis 会从结果集中得到每条记录,
 </select>]]></source>
 
         <source><![CDATA[<resultMap id="blogResult" type="Blog">
-  <association property="author" javaType="Author" resultMap="authorResult"/>
+  <association property="author" resultMap="authorResult"/>
 </resultMap>
 
 <resultMap id="authorResult" type="Author">
@@ -1720,22 +1744,17 @@ MyBatis 会从结果集中得到每条记录,
         </p>
 
         <p>
-          Regardless of the auto-mapping level configured you can enable or disable the automapping for an specific statement
+          Regardless of the auto-mapping level configured you can enable or disable the automapping for an specific ResultMap
           by adding the attribute <code>autoMapping</code> to it:
         </p>
 
-        <source><![CDATA[<select id="selectUsers" resultType="User" autoMapping="false">
-  select
-    user_id             as "id",
-    user_name           as "userName",
-    hashed_password
-  from some_table
-  where id = #{id}
-</select>]]></source>
+        <source><![CDATA[<resultMap id="userResultMap" type="User" autoMapping="false">
+  <result property="password" column="hashed_password"/>
+</resultMap>]]></source>
               
       </subsection>
       
-      <subsection name="缓存">
+      <subsection name="缓存" id="cache">
         <p>
 MyBatis 包含一个非常强大的查询缓存特性,它可以非常方便地配置和定制。MyBatis 3
 中的缓存实现的很多改进都已经实现了,使得它更加强大而且易于配置。

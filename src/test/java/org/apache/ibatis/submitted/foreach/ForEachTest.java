@@ -1,5 +1,5 @@
-/*
- *    Copyright 2009-2012 the original author or authors.
+/**
+ *    Copyright 2009-2015 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -18,8 +18,10 @@ package org.apache.ibatis.submitted.foreach;
 import java.io.Reader;
 import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import org.apache.ibatis.exceptions.PersistenceException;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSession;
@@ -27,11 +29,16 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.Assert;
 import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 public class ForEachTest {
 
   private static SqlSessionFactory sqlSessionFactory;
+
+  @Rule
+  public ExpectedException ex = ExpectedException.none();
 
   @BeforeClass
   public static void setUp() throws Exception {
@@ -102,6 +109,37 @@ public class ForEachTest {
       users.add(null);
       int count = mapper.countByBestFriend(users);
       Assert.assertEquals(1, count);
+    } finally {
+      sqlSession.close();
+    }
+  }
+
+  @Test
+  public void nullItemInContext() {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      User user1 = new User();
+      user1.setId(3);
+      List<User> users = new ArrayList<User>();
+      users.add(user1);
+      users.add(null);
+      String name = mapper.selectWithNullItemCheck(users);
+      Assert.assertEquals("User3", name);
+    } finally {
+      sqlSession.close();
+    }
+  }
+
+  @Test
+  public void shouldReportMissingPropertyName() {
+    ex.expect(PersistenceException.class);
+    ex.expectMessage("There is no getter for property named 'idd' in 'class org.apache.ibatis.submitted.foreach.User'");
+
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      mapper.typoInItemProperty(Arrays.asList(new User()));
     } finally {
       sqlSession.close();
     }

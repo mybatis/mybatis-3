@@ -1,5 +1,5 @@
-/*
- *    Copyright 2009-2012 the original author or authors.
+/**
+ *    Copyright 2009-2015 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.apache.ibatis.executor.result.ResultMapException;
 import org.apache.ibatis.session.Configuration;
 
 /**
@@ -48,13 +49,24 @@ public abstract class BaseTypeHandler<T> extends TypeReference<T> implements Typ
                 "Cause: " + e, e);
       }
     } else {
-      setNonNullParameter(ps, i, parameter, jdbcType);
+      try {
+        setNonNullParameter(ps, i, parameter, jdbcType);
+      } catch (Exception e) {
+        throw new TypeException("Error setting non null for parameter #" + i + " with JdbcType " + jdbcType + " . " +
+                "Try setting a different JdbcType for this parameter or a different configuration property. " +
+                "Cause: " + e, e);
+      }
     }
   }
 
   @Override
   public T getResult(ResultSet rs, String columnName) throws SQLException {
-    T result = getNullableResult(rs, columnName);
+    T result;
+    try {
+      result = getNullableResult(rs, columnName);
+    } catch (Exception e) {
+      throw new ResultMapException("Error attempting to get column '" + columnName + "' from result set.  Cause: " + e, e);
+    }
     if (rs.wasNull()) {
       return null;
     } else {
@@ -64,7 +76,12 @@ public abstract class BaseTypeHandler<T> extends TypeReference<T> implements Typ
 
   @Override
   public T getResult(ResultSet rs, int columnIndex) throws SQLException {
-    T result = getNullableResult(rs, columnIndex);
+    T result;
+    try {
+      result = getNullableResult(rs, columnIndex);
+    } catch (Exception e) {
+      throw new ResultMapException("Error attempting to get column #" + columnIndex+ " from result set.  Cause: " + e, e);
+    }
     if (rs.wasNull()) {
       return null;
     } else {
@@ -74,7 +91,12 @@ public abstract class BaseTypeHandler<T> extends TypeReference<T> implements Typ
 
   @Override
   public T getResult(CallableStatement cs, int columnIndex) throws SQLException {
-    T result = getNullableResult(cs, columnIndex);
+    T result;
+    try {
+      result = getNullableResult(cs, columnIndex);
+    } catch (Exception e) {
+      throw new ResultMapException("Error attempting to get column #" + columnIndex+ " from callable statement.  Cause: " + e, e);
+    }
     if (cs.wasNull()) {
       return null;
     } else {

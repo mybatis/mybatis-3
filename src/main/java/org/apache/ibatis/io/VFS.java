@@ -1,5 +1,5 @@
-/*
- *    Copyright 2009-2012 the original author or authors.
+/**
+ *    Copyright 2009-2015 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ import org.apache.ibatis.logging.LogFactory;
  * @author Ben Gunter
  */
 public abstract class VFS {
-  private static final Log log = LogFactory.getLog(ResolverUtil.class);
+  private static final Log log = LogFactory.getLog(VFS.class);
 
   /** The built-in implementations. */
   public static final Class<?>[] IMPLEMENTATIONS = { JBoss6VFS.class, DefaultVFS.class };
@@ -66,8 +66,10 @@ public abstract class VFS {
       try {
         vfs = impl.newInstance();
         if (vfs == null || !vfs.isValid()) {
-          log.debug("VFS implementation " + impl.getName() +
+          if (log.isDebugEnabled()) {
+            log.debug("VFS implementation " + impl.getName() +
               " is not valid in this environment.");
+          }
         }
       } catch (InstantiationException e) {
         log.error("Failed to instantiate " + impl, e);
@@ -78,7 +80,9 @@ public abstract class VFS {
       }
     }
 
-    log.debug("Using VFS adapter " + vfs.getClass().getName());
+    if (log.isDebugEnabled()) {
+      log.debug("Using VFS adapter " + vfs.getClass().getName());
+    }
     VFS.instance = vfs;
     return VFS.instance;
   }
@@ -101,7 +105,9 @@ public abstract class VFS {
       return Thread.currentThread().getContextClassLoader().loadClass(className);
 //      return ReflectUtil.findClass(className);
     } catch (ClassNotFoundException e) {
-      log.debug("Class not found: " + className);
+      if (log.isDebugEnabled()) {
+        log.debug("Class not found: " + className);
+      }
       return null;
     }
   }

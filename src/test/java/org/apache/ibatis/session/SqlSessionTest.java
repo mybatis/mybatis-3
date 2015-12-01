@@ -1,5 +1,5 @@
-/*
- *    Copyright 2009-2011 the original author or authors.
+/**
+ *    Copyright 2009-2015 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -776,6 +776,7 @@ public class SqlSessionTest extends BaseDataTest {
 
   private static class TestResultHandler implements ResultHandler {
     int count = 0;
+    @Override
     public void handleResult(ResultContext context) {
       count++;
     }
@@ -796,6 +797,7 @@ public class SqlSessionTest extends BaseDataTest {
 
   private static class TestResultStopHandler implements ResultHandler {
     int count = 0;
+    @Override
     public void handleResult(ResultContext context) {
       count++;
       if (count == 2) context.stop();

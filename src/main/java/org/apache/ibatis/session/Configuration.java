@@ -1,5 +1,5 @@
-/*
- *    Copyright 2009-2014 the original author or authors.
+/**
+ *    Copyright 2009-2015 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -53,6 +53,7 @@ import org.apache.ibatis.executor.resultset.DefaultResultSetHandler;
 import org.apache.ibatis.executor.resultset.ResultSetHandler;
 import org.apache.ibatis.executor.statement.RoutingStatementHandler;
 import org.apache.ibatis.executor.statement.StatementHandler;
+import org.apache.ibatis.io.VFS;
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
 import org.apache.ibatis.logging.commons.JakartaCommonsLoggingImpl;
@@ -71,7 +72,9 @@ import org.apache.ibatis.mapping.VendorDatabaseIdProvider;
 import org.apache.ibatis.parsing.XNode;
 import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.plugin.InterceptorChain;
+import org.apache.ibatis.reflection.DefaultReflectorFactory;
 import org.apache.ibatis.reflection.MetaObject;
+import org.apache.ibatis.reflection.ReflectorFactory;
 import org.apache.ibatis.reflection.factory.DefaultObjectFactory;
 import org.apache.ibatis.reflection.factory.ObjectFactory;
 import org.apache.ibatis.reflection.wrapper.DefaultObjectWrapperFactory;
@@ -103,17 +106,20 @@ public class Configuration {
   protected boolean useColumnLabel = true;
   protected boolean cacheEnabled = true;
   protected boolean callSettersOnNulls = false;
-  
+
   protected String logPrefix;
   protected Class <? extends Log> logImpl;
+  protected Class <? extends VFS> vfsImpl;
   protected LocalCacheScope localCacheScope = LocalCacheScope.SESSION;
   protected JdbcType jdbcTypeForNull = JdbcType.OTHER;
   protected Set<String> lazyLoadTriggerMethods = new HashSet<String>(Arrays.asList(new String[] { "equals", "clone", "hashCode", "toString" }));
   protected Integer defaultStatementTimeout;
+  protected Integer defaultFetchSize;
   protected ExecutorType defaultExecutorType = ExecutorType.SIMPLE;
   protected AutoMappingBehavior autoMappingBehavior = AutoMappingBehavior.PARTIAL;
 
   protected Properties variables = new Properties();
+  protected ReflectorFactory reflectorFactory = new DefaultReflectorFactory();
   protected ObjectFactory objectFactory = new DefaultObjectFactory();
   protected ObjectWrapperFactory objectWrapperFactory = new DefaultObjectWrapperFactory();
   protected MapperRegistry mapperRegistry = new MapperRegistry(this);
@@ -212,6 +218,18 @@ public class Configuration {
     if (logImpl != null) {
       this.logImpl = (Class<? extends Log>) logImpl;
       LogFactory.useCustomLogging(this.logImpl);
+    }
+  }
+
+  public Class<? extends VFS> getVfsImpl() {
+    return this.vfsImpl;
+  }
+
+  @SuppressWarnings("unchecked")
+  public void setVfsImpl(Class<?> vfsImpl) {
+    if (vfsImpl != null) {
+      this.vfsImpl = (Class<? extends VFS>) vfsImpl;
+      VFS.addImplClass(this.vfsImpl);
     }
   }
 
@@ -362,6 +380,20 @@ public class Configuration {
     this.defaultStatementTimeout = defaultStatementTimeout;
   }
 
+  /**
+   * @since 3.3.0
+   */
+  public Integer getDefaultFetchSize() {
+    return defaultFetchSize;
+  }
+
+  /**
+   * @since 3.3.0
+   */
+  public void setDefaultFetchSize(Integer defaultFetchSize) {
+    this.defaultFetchSize = defaultFetchSize;
+  }
+
   public boolean isUseColumnLabel() {
     return useColumnLabel;
   }
@@ -409,6 +441,14 @@ public class Configuration {
     return mapperRegistry;
   }
 
+  public ReflectorFactory getReflectorFactory() {
+	  return reflectorFactory;
+  }
+
+  public void setReflectorFactory(ReflectorFactory reflectorFactory) {
+	  this.reflectorFactory = reflectorFactory;
+  }
+
   public ObjectFactory getObjectFactory() {
     return objectFactory;
   }
@@ -448,7 +488,7 @@ public class Configuration {
   }
 
   public MetaObject newMetaObject(Object object) {
-    return MetaObject.forObject(object, objectFactory, objectWrapperFactory);
+    return MetaObject.forObject(object, objectFactory, objectWrapperFactory, reflectorFactory);
   }
 
   public ParameterHandler newParameterHandler(MappedStatement mappedStatement, Object parameterObject, BoundSql boundSql) {
@@ -673,7 +713,7 @@ public class Configuration {
   public void addCacheRef(String namespace, String referencedNamespace) {
     cacheRefMap.put(namespace, referencedNamespace);
   }
-  
+
   /*
    * Parses all the unprocessed statement nodes in the cache. It is recommended
    * to call this method once all the mappers are added as it provides fail-fast

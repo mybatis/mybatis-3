@@ -1,5 +1,5 @@
-/*
- *    Copyright 2009-2011 the original author or authors.
+/**
+ *    Copyright 2009-2015 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -31,27 +31,21 @@ import org.apache.ibatis.reflection.property.PropertyTokenizer;
  */
 public class MetaClass {
 
+  private ReflectorFactory reflectorFactory;
   private Reflector reflector;
 
-  private MetaClass(Class<?> type) {
-    this.reflector = Reflector.forClass(type);
+  private MetaClass(Class<?> type, ReflectorFactory reflectorFactory) {
+	this.reflectorFactory = reflectorFactory;
+    this.reflector = reflectorFactory.findForClass(type);
   }
 
-  public static MetaClass forClass(Class<?> type) {
-    return new MetaClass(type);
-  }
-
-  public static boolean isClassCacheEnabled() {
-    return Reflector.isClassCacheEnabled();
-  }
-
-  public static void setClassCacheEnabled(boolean classCacheEnabled) {
-    Reflector.setClassCacheEnabled(classCacheEnabled);
+  public static MetaClass forClass(Class<?> type, ReflectorFactory reflectorFactory) {
+    return new MetaClass(type, reflectorFactory);
   }
 
   public MetaClass metaClassForProperty(String name) {
     Class<?> propType = reflector.getGetterType(name);
-    return MetaClass.forClass(propType);
+    return MetaClass.forClass(propType, reflectorFactory);
   }
 
   public String findProperty(String name) {
@@ -96,7 +90,7 @@ public class MetaClass {
 
   private MetaClass metaClassForProperty(PropertyTokenizer prop) {
     Class<?> propType = getGetterType(prop);
-    return MetaClass.forClass(propType);
+    return MetaClass.forClass(propType, reflectorFactory);
   }
 
   private Class<?> getGetterType(PropertyTokenizer prop) {

@@ -1,5 +1,5 @@
-/*
- *    Copyright 2009-2012 the original author or authors.
+/**
+ *    Copyright 2009-2015 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -57,6 +57,7 @@ public class BaseExecutorTest extends BaseDataTest {
     config.setMultipleResultSetsEnabled(true);
     config.setUseColumnLabel(true);
     config.setDefaultStatementTimeout(5000);
+    config.setDefaultFetchSize(100);
   }
 
   @Test

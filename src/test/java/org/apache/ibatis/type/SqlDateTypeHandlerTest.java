@@ -1,5 +1,5 @@
-/*
- *    Copyright 2009-2012 the original author or authors.
+/**
+ *    Copyright 2009-2015 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -28,12 +28,14 @@ public class SqlDateTypeHandlerTest extends BaseTypeHandlerTest {
   private static final TypeHandler<java.sql.Date> TYPE_HANDLER = new SqlDateTypeHandler();
   private static final java.sql.Date SQL_DATE = new java.sql.Date(new Date().getTime());
 
+  @Override
   @Test
   public void shouldSetParameter() throws Exception {
     TYPE_HANDLER.setParameter(ps, 1, SQL_DATE, null);
     verify(ps).setDate(1, SQL_DATE);
   }
 
+  @Override
   @Test
   public void shouldGetResultFromResultSet() throws Exception {
     when(rs.getDate("column")).thenReturn(SQL_DATE);
@@ -41,6 +43,7 @@ public class SqlDateTypeHandlerTest extends BaseTypeHandlerTest {
     assertEquals(SQL_DATE, TYPE_HANDLER.getResult(rs, "column"));
   }
 
+  @Override
   @Test
   public void shouldGetResultFromCallableStatement() throws Exception {
     when(cs.getDate(1)).thenReturn(SQL_DATE);

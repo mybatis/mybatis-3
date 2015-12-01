@@ -1,5 +1,5 @@
-/*
- *    Copyright 2009-2011 the original author or authors.
+/**
+ *    Copyright 2009-2015 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import java.sql.Connection;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.cursor.Cursor;
 import org.apache.ibatis.executor.BatchResult;
 
 /**
@@ -114,6 +115,33 @@ public interface SqlSession extends Closeable {
    * @return Map containing key pair data.
    */
   <K, V> Map<K, V> selectMap(String statement, Object parameter, String mapKey, RowBounds rowBounds);
+
+  /**
+   * A Cursor offers the same results as a List, except it fetches data lazily using an Iterator.
+   * @param <T> the returned cursor element type.
+   * @param statement Unique identifier matching the statement to use.
+   * @return Cursor of mapped objects
+   */
+  <T> Cursor<T> selectCursor(String statement);
+
+  /**
+   * A Cursor offers the same results as a List, except it fetches data lazily using an Iterator.
+   * @param <T> the returned cursor element type.
+   * @param statement Unique identifier matching the statement to use.
+   * @param parameter A parameter object to pass to the statement.
+   * @return Cursor of mapped objects
+   */
+  <T> Cursor<T> selectCursor(String statement, Object parameter);
+
+  /**
+   * A Cursor offers the same results as a List, except it fetches data lazily using an Iterator.
+   * @param <T> the returned cursor element type.
+   * @param statement Unique identifier matching the statement to use.
+   * @param parameter A parameter object to pass to the statement.
+   * @param rowBounds  Bounds to limit object retrieval
+   * @return Cursor of mapped objects
+   */
+  <T> Cursor<T> selectCursor(String statement, Object parameter, RowBounds rowBounds);
 
   /**
    * Retrieve a single row mapped from the statement key and parameter

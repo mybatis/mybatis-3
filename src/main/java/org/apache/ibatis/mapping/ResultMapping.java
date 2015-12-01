@@ -1,5 +1,5 @@
-/*
- *    Copyright 2009-2014 the original author or authors.
+/**
+ *    Copyright 2009-2015 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -278,6 +278,28 @@ public class ResultMapping {
     } else {
       return 0;
     }
+  }
+
+  @Override
+  public String toString() {
+    final StringBuilder sb = new StringBuilder("ResultMapping{");
+    //sb.append("configuration=").append(configuration); // configuration doesn't have a useful .toString()
+    sb.append("property='").append(property).append('\'');
+    sb.append(", column='").append(column).append('\'');
+    sb.append(", javaType=").append(javaType);
+    sb.append(", jdbcType=").append(jdbcType);
+    //sb.append(", typeHandler=").append(typeHandler); // typeHandler also doesn't have a useful .toString()
+    sb.append(", nestedResultMapId='").append(nestedResultMapId).append('\'');
+    sb.append(", nestedQueryId='").append(nestedQueryId).append('\'');
+    sb.append(", notNullColumns=").append(notNullColumns);
+    sb.append(", columnPrefix='").append(columnPrefix).append('\'');
+    sb.append(", flags=").append(flags);
+    sb.append(", composites=").append(composites);
+    sb.append(", resultSet='").append(resultSet).append('\'');
+    sb.append(", foreignColumn='").append(foreignColumn).append('\'');
+    sb.append(", lazy=").append(lazy);
+    sb.append('}');
+    return sb.toString();
   }
 
 }

@@ -1,5 +1,5 @@
-/*
- *    Copyright 2009-2013 the original author or authors.
+/**
+ *    Copyright 2009-2015 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -28,12 +28,14 @@ public class BigIntegerTypeHandlerTest extends BaseTypeHandlerTest {
 
   private static final TypeHandler<BigInteger> TYPE_HANDLER = new BigIntegerTypeHandler();
 
+  @Override
   @Test
   public void shouldSetParameter() throws Exception {
     TYPE_HANDLER.setParameter(ps, 1, new BigInteger("707070656505050302797979792923232303"), null);
     verify(ps).setBigDecimal(1, new BigDecimal("707070656505050302797979792923232303"));
   }
 
+  @Override
   @Test
   public void shouldGetResultFromResultSet() throws Exception {
     when(rs.getBigDecimal("column")).thenReturn(new BigDecimal("707070656505050302797979792923232303"));
@@ -41,6 +43,7 @@ public class BigIntegerTypeHandlerTest extends BaseTypeHandlerTest {
     assertEquals(new BigInteger("707070656505050302797979792923232303"), TYPE_HANDLER.getResult(rs, "column"));
   }
 
+  @Override
   @Test
   public void shouldGetResultFromCallableStatement() throws Exception {
     when(cs.getBigDecimal(1)).thenReturn(new BigDecimal("707070656505050302797979792923232303"));

@@ -1,5 +1,5 @@
-/*
- *    Copyright 2009-2012 the original author or authors.
+/**
+ *    Copyright 2009-2015 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -25,12 +25,14 @@ public class ByteTypeHandlerTest extends BaseTypeHandlerTest {
 
   private static final TypeHandler<Byte> TYPE_HANDLER = new ByteTypeHandler();
 
+  @Override
   @Test
   public void shouldSetParameter() throws Exception {
     TYPE_HANDLER.setParameter(ps, 1, (byte) 100, null);
     verify(ps).setByte(1, (byte) 100);
   }
 
+  @Override
   @Test
   public void shouldGetResultFromResultSet() throws Exception {
     when(rs.getByte("column")).thenReturn((byte) 100);
@@ -38,6 +40,7 @@ public class ByteTypeHandlerTest extends BaseTypeHandlerTest {
     assertEquals(new Byte((byte) 100), TYPE_HANDLER.getResult(rs, "column"));
   }
 
+  @Override
   @Test
   public void shouldGetResultFromCallableStatement() throws Exception {
     when(cs.getByte(1)).thenReturn((byte) 100);

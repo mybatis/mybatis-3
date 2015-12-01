@@ -85,7 +85,7 @@
   </select>
 
   <sql id="byBlogId">
-    <if test="blog_id != null">blog_id = #{blog_id}</if>
+    <if test="blog_id != null">${prefix}_id = #{blog_id}</if>
   </sql>
 
   <select id="findPost" resultType="org.apache.ibatis.domain.blog.Post">
@@ -102,7 +102,9 @@
             </foreach>
           </if>
           <trim prefix="AND">
-            <include refid="byBlogId"/>
+            <include refid="byBlogId">
+                <property name="prefix" value="blog"/>
+            </include>
           </trim>
         </otherwise>
       </choose>

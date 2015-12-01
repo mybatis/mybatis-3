@@ -259,6 +259,21 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
             </tr>
             <tr>
               <td>
+                defaultFetchSize
+              </td>
+              <td>
+                検索結果のフェッチサイズを制御するためのドライバヒントを設定します。
+                このパラメータ値はクエリ毎の設定で上書きできます。
+              </td>
+              <td>
+                正の整数
+              </td>
+              <td>
+                なし (null)
+              </td>
+            </tr>
+            <tr>
+              <td>
                 safeRowBoundsEnabled
               </td>
               <td>
@@ -397,7 +412,21 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 CGLIB | JAVASSIST
               </td>
               <td>
-                CGLIB
+                JAVASSIST (MyBatis 3.3 以上)
+              </td>
+            </tr>
+            <tr>
+              <td>
+                vfsImpl
+              </td>
+              <td>
+                VFS 実装クラスを指定します。
+              </td>
+              <td>
+                完全修飾クラス名（カンマ区切りで複数指定可能）
+              </td>
+              <td>
+                未指定
               </td>
             </tr>
           </tbody>
@@ -414,6 +443,7 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
   <setting name="autoMappingBehavior" value="PARTIAL"/>
   <setting name="defaultExecutorType" value="SIMPLE"/>
   <setting name="defaultStatementTimeout" value="25"/>
+  <setting name="defaultFetchSize" value="100"/>
   <setting name="safeRowBoundsEnabled" value="false"/>
   <setting name="mapUnderscoreToCamelCase" value="false"/>
   <setting name="localCacheScope" value="SESSION"/>

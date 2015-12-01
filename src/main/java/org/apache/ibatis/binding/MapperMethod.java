@@ -1,5 +1,5 @@
-/*
- *    Copyright 2009-2013 the original author or authors.
+/**
+ *    Copyright 2009-2015 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,8 +15,10 @@
  */
 package org.apache.ibatis.binding;
 
+import org.apache.ibatis.annotations.Flush;
 import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.cursor.Cursor;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.SqlCommandType;
 import org.apache.ibatis.reflection.MetaObject;
@@ -63,10 +65,14 @@ public class MapperMethod {
         result = executeForMany(sqlSession, args);
       } else if (method.returnsMap()) {
         result = executeForMap(sqlSession, args);
+      } else if (method.returnsCursor()) {
+        result = executeForCursor(sqlSession, args);
       } else {
         Object param = method.convertArgsToSqlCommandParam(args);
         result = sqlSession.selectOne(command.getName(), param);
       }
+    } else if (SqlCommandType.FLUSH == command.getType()) {
+        result = sqlSession.flushStatements();
     } else {
       throw new BindingException("Unknown execution method for: " + command.getName());
     }
@@ -129,6 +135,18 @@ public class MapperMethod {
     return result;
   }
 
+  private <T> Cursor<T> executeForCursor(SqlSession sqlSession, Object[] args) {
+    Cursor<T> result;
+    Object param = method.convertArgsToSqlCommandParam(args);
+    if (method.hasRowBounds()) {
+      RowBounds rowBounds = method.extractRowBounds(args);
+      result = sqlSession.<T>selectCursor(command.getName(), param, rowBounds);
+    } else {
+      result = sqlSession.<T>selectCursor(command.getName(), param);
+    }
+    return result;
+  }
+
   private <E> Object convertToDeclaredCollection(Configuration config, List<E> list) {
     Object collection = config.getObjectFactory().create(method.getReturnType());
     MetaObject metaObject = config.newMetaObject(collection);
@@ -179,19 +197,25 @@ public class MapperMethod {
       MappedStatement ms = null;
       if (configuration.hasStatement(statementName)) {
         ms = configuration.getMappedStatement(statementName);
-      } else if (!mapperInterface.equals(method.getDeclaringClass().getName())) { // issue #35
+      } else if (!mapperInterface.equals(method.getDeclaringClass())) { // issue #35
         String parentStatementName = method.getDeclaringClass().getName() + "." + method.getName();
         if (configuration.hasStatement(parentStatementName)) {
           ms = configuration.getMappedStatement(parentStatementName);
         }
       }
       if (ms == null) {
-        throw new BindingException("Invalid bound statement (not found): " + statementName);
-      }
-      name = ms.getId();
-      type = ms.getSqlCommandType();
-      if (type == SqlCommandType.UNKNOWN) {
-        throw new BindingException("Unknown execution method for: " + name);
+        if(method.getAnnotation(Flush.class) != null){
+          name = null;
+          type = SqlCommandType.FLUSH;
+        } else {
+          throw new BindingException("Invalid bound statement (not found): " + statementName);
+        }
+      } else {
+        name = ms.getId();
+        type = ms.getSqlCommandType();
+        if (type == SqlCommandType.UNKNOWN) {
+          throw new BindingException("Unknown execution method for: " + name);
+        }
       }
     }
 
@@ -209,6 +233,7 @@ public class MapperMethod {
     private final boolean returnsMany;
     private final boolean returnsMap;
     private final boolean returnsVoid;
+    private final boolean returnsCursor;
     private final Class<?> returnType;
     private final String mapKey;
     private final Integer resultHandlerIndex;
@@ -220,6 +245,7 @@ public class MapperMethod {
       this.returnType = method.getReturnType();
       this.returnsVoid = void.class.equals(this.returnType);
       this.returnsMany = (configuration.getObjectFactory().isCollection(this.returnType) || this.returnType.isArray());
+      this.returnsCursor = Cursor.class.equals(this.returnType);
       this.mapKey = getMapKey(method);
       this.returnsMap = (this.mapKey != null);
       this.hasNamedParameters = hasNamedParams(method);
@@ -286,6 +312,10 @@ public class MapperMethod {
       return returnsVoid;
     }
 
+    public boolean returnsCursor() {
+      return returnsCursor;
+    }
+
     private Integer getUniqueParamIndex(Method method, Class<?> paramType) {
       Integer index = null;
       final Class<?>[] argTypes = method.getParameterTypes();
@@ -332,23 +362,22 @@ public class MapperMethod {
       for (Object paramAnno : paramAnnos) {
         if (paramAnno instanceof Param) {
           paramName = ((Param) paramAnno).value();
+          break;
         }
       }
       return paramName;
     }
 
     private boolean hasNamedParams(Method method) {
-      boolean hasNamedParams = false;
       final Object[][] paramAnnos = method.getParameterAnnotations();
       for (Object[] paramAnno : paramAnnos) {
         for (Object aParamAnno : paramAnno) {
           if (aParamAnno instanceof Param) {
-            hasNamedParams = true;
-            break;
+            return true;
           }
         }
       }
-      return hasNamedParams;
+      return false;
     }
 
   }

@@ -1,5 +1,5 @@
-/*
- *    Copyright 2009-2013 the original author or authors.
+/**
+ *    Copyright 2009-2015 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -28,6 +28,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.ibatis.cursor.Cursor;
 import org.apache.ibatis.executor.BaseExecutor;
 import org.apache.ibatis.executor.BatchResult;
 import org.apache.ibatis.executor.ExecutorException;
@@ -155,10 +156,13 @@ public class ResultLoaderMap {
 
           this.configurationFactory = resultLoader.configuration.getConfigurationFactory();
         } else {
-          this.getLogger().debug("Property [" + this.property + "] of ["
-                  + metaResultObject.getOriginalObject().getClass() + "] cannot be loaded "
-                  + "after deserialization. Make sure it's loaded before serializing "
-                  + "forenamed object.");
+          Log log = this.getLogger();
+          if (log.isDebugEnabled()) {
+            log.debug("Property [" + this.property + "] of ["
+                    + metaResultObject.getOriginalObject().getClass() + "] cannot be loaded "
+                    + "after deserialization. Make sure it's loaded before serializing "
+                    + "forenamed object.");
+          }
         }
       }
     }
@@ -295,6 +299,11 @@ public class ResultLoaderMap {
 
     @Override
     protected <E> List<E> doQuery(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql) throws SQLException {
+      throw new UnsupportedOperationException("Not supported.");
+    }
+
+    @Override
+    protected <E> Cursor<E> doQueryCursor(MappedStatement ms, Object parameter, RowBounds rowBounds, BoundSql boundSql) throws SQLException {
       throw new UnsupportedOperationException("Not supported.");
     }
   }

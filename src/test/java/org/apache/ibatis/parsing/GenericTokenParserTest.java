@@ -1,5 +1,5 @@
-/*
- *    Copyright 2009-2012 the original author or authors.
+/**
+ *    Copyright 2009-2015 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -30,6 +30,7 @@ public class GenericTokenParserTest {
       this.variables = variables;
     }
 
+    @Override
     public String handleToken(String content) {
       return variables.get(content);
     }
@@ -42,6 +43,7 @@ public class GenericTokenParserTest {
         put("first_name", "James");
         put("initial", "T");
         put("last_name", "Kirk");
+        put("var{with}brace", "Hiya");
         put("", "");
       }
     }));
@@ -61,6 +63,9 @@ public class GenericTokenParserTest {
 
     assertEquals("{$$something}JamesTKirk", parser.parse("{$$something}${first_name}${initial}${last_name}"));
     assertEquals("${", parser.parse("${"));
+    assertEquals("${\\}", parser.parse("${\\}"));
+    assertEquals("Hiya", parser.parse("${var{with\\}brace}"));
+    assertEquals("", parser.parse("${}"));
     assertEquals("}", parser.parse("}"));
     assertEquals("Hello ${ this is a test.", parser.parse("Hello ${ this is a test."));
     assertEquals("Hello } this is a test.", parser.parse("Hello } this is a test."));

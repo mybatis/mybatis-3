@@ -265,14 +265,14 @@ ps.setInt(1,id);]]></source>
   timeout="20">
 
 <update
-  id="insertAuthor"
+  id="updateAuthor"
   parameterType="domain.blog.Author"
   flushCache="true"
   statementType="PREPARED"
   timeout="20">
 
 <delete
-  id="insertAuthor"
+  id="deleteAuthor"
   parameterType="domain.blog.Author"
   flushCache="true"
   statementType="PREPARED"
@@ -485,19 +485,44 @@ ps.setInt(1,id);]]></source>
       <subsection name="sql">
         <p>
           This element can be used to define a reusable fragment of SQL code that can be
-          included in other statements. For example:
+          included in other statements. It can be statically (during load phase) parametrized. Different property values can
+          vary in include instances. For example:
         </p>
 
-        <source><![CDATA[<sql id="userColumns"> id,username,password </sql>]]></source>
+        <source><![CDATA[<sql id="userColumns"> ${alias}.id,${alias}.username,${alias}.password </sql>]]></source>
 
         <p>
           The SQL fragment can then be included in another statement, for example:
         </p>
 
         <source><![CDATA[<select id="selectUsers" resultType="map">
-  select <include refid="userColumns"/>
-  from some_table
-  where id = #{id}
+  select
+    <include refid="userColumns"><property name="alias" value="t1"/></include>,
+    <include refid="userColumns"><property name="alias" value="t2"/></include>
+  from some_table t1
+    cross join some_table t2
+</select>]]></source>
+          
+        <p>
+          Property value can be also used in include refid attribute or property values inside include clause, for example:
+        </p>
+        
+        <source><![CDATA[<sql id="sometable">
+  ${prefix}Table
+</sql>
+
+<sql id="someinclude">
+  from
+    <include refid="${include_target}"/>
+</sql>
+
+<select id="select" resultType="map">
+  select
+    field1, field2, field3
+  <include refid="someinclude">
+    <property name="prefix" value="Some"/>
+    <property name="include_target" value="sometable"/>
+  </include>
 </select>]]></source>
       </subsection>
 
@@ -1887,7 +1912,7 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
           ResultSet that have not a manual mapping will be auto-mapped, then manual mappings will be processed. 
           In the following sample <i>id</i> and <i>userName</i> columns will be auto-mapped and <i>hashed_password</i> column will be mapped.</p>
 
-        <source><![CDATA[<select id="selectUsers" resultType="User">
+        <source><![CDATA[<select id="selectUsers" resultMap="userResultMap">
   select
     user_id             as "id",
     user_name           as "userName",
@@ -1932,7 +1957,7 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
 </select>]]></source>
 
         <source><![CDATA[<resultMap id="blogResult" type="Blog">
-  <association property="author" javaType="Author" resultMap="authorResult"/>
+  <association property="author" resultMap="authorResult"/>
 </resultMap>
 
 <resultMap id="authorResult" type="Author">
@@ -1946,18 +1971,13 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
         </p>
 
         <p>
-          Regardless of the auto-mapping level configured you can enable or disable the automapping for an specific statement
+          Regardless of the auto-mapping level configured you can enable or disable the automapping for an specific ResultMap
           by adding the attribute <code>autoMapping</code> to it:
         </p>
 
-        <source><![CDATA[<select id="selectUsers" resultType="User" autoMapping="false">
-  select
-    user_id             as "id",
-    user_name           as "userName",
-    hashed_password
-  from some_table
-  where id = #{id}
-</select>]]></source>
+        <source><![CDATA[<resultMap id="userResultMap" type="User" autoMapping="false">
+  <result property="password" column="hashed_password"/>
+</resultMap>]]></source>
        
       </subsection>
       <subsection name="cache">

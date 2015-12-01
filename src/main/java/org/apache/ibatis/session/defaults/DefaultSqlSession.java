@@ -1,5 +1,5 @@
-/*
- *    Copyright 2009-2014 the original author or authors.
+/**
+ *    Copyright 2009-2015 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,14 +15,17 @@
  */
 package org.apache.ibatis.session.defaults;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.binding.BindingException;
+import org.apache.ibatis.cursor.Cursor;
 import org.apache.ibatis.exceptions.ExceptionFactory;
 import org.apache.ibatis.exceptions.TooManyResultsException;
 import org.apache.ibatis.executor.BatchResult;
@@ -37,6 +40,10 @@ import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
 
 /**
+ *
+ * The default implementation for {@link SqlSession}.
+ * Note that this class is not Thread-Safe.
+ *
  * @author Clinton Begin
  */
 public class DefaultSqlSession implements SqlSession {
@@ -46,7 +53,8 @@ public class DefaultSqlSession implements SqlSession {
 
   private boolean autoCommit;
   private boolean dirty;
-  
+  private List<Cursor<?>> cursorList;
+
   public DefaultSqlSession(Configuration configuration, Executor executor, boolean autoCommit) {
     this.configuration = configuration;
     this.executor = executor;
@@ -88,15 +96,39 @@ public class DefaultSqlSession implements SqlSession {
 
   @Override
   public <K, V> Map<K, V> selectMap(String statement, Object parameter, String mapKey, RowBounds rowBounds) {
-    final List<?> list = selectList(statement, parameter, rowBounds);
+    final List<? extends V> list = selectList(statement, parameter, rowBounds);
     final DefaultMapResultHandler<K, V> mapResultHandler = new DefaultMapResultHandler<K, V>(mapKey,
-        configuration.getObjectFactory(), configuration.getObjectWrapperFactory());
-    final DefaultResultContext context = new DefaultResultContext();
-    for (Object o : list) {
+        configuration.getObjectFactory(), configuration.getObjectWrapperFactory(), configuration.getReflectorFactory());
+    final DefaultResultContext<V> context = new DefaultResultContext<V>();
+    for (V o : list) {
       context.nextResultObject(o);
       mapResultHandler.handleResult(context);
     }
     return mapResultHandler.getMappedResults();
+  }
+
+  @Override
+  public <T> Cursor<T> selectCursor(String statement) {
+    return selectCursor(statement, null);
+  }
+
+  @Override
+  public <T> Cursor<T> selectCursor(String statement, Object parameter) {
+    return selectCursor(statement, parameter, RowBounds.DEFAULT);
+  }
+
+  @Override
+  public <T> Cursor<T> selectCursor(String statement, Object parameter, RowBounds rowBounds) {
+    try {
+      MappedStatement ms = configuration.getMappedStatement(statement);
+      Cursor<T> cursor = executor.queryCursor(ms, wrapCollection(parameter), rowBounds);
+      registerCursor(cursor);
+      return cursor;
+    } catch (Exception e) {
+      throw ExceptionFactory.wrapException("Error querying database.  Cause: " + e, e);
+    } finally {
+      ErrorContext.instance().reset();
+    }
   }
 
   @Override
@@ -230,9 +262,23 @@ public class DefaultSqlSession implements SqlSession {
   public void close() {
     try {
       executor.close(isCommitOrRollbackRequired(false));
+      closeCursors();
       dirty = false;
     } finally {
       ErrorContext.instance().reset();
+    }
+  }
+
+  private void closeCursors() {
+    if (cursorList != null && cursorList.size() != 0) {
+      for (Cursor<?> cursor : cursorList) {
+        try {
+          cursor.close();
+        } catch (IOException e) {
+          throw ExceptionFactory.wrapException("Error closing cursor.  Cause: " + e, e);
+        }
+      }
+      cursorList.clear();
     }
   }
 
@@ -260,6 +306,13 @@ public class DefaultSqlSession implements SqlSession {
     executor.clearLocalCache();
   }
 
+  private <T> void registerCursor(Cursor<T> cursor) {
+    if (cursorList == null) {
+      cursorList = new ArrayList<Cursor<?>>();
+    }
+    cursorList.add(cursor);
+  }
+
   private boolean isCommitOrRollbackRequired(boolean force) {
     return (!autoCommit && dirty) || force;
   }
@@ -271,7 +324,7 @@ public class DefaultSqlSession implements SqlSession {
       if (object instanceof List) {
         map.put("list", object);
       }
-      return map;      
+      return map;
     } else if (object != null && object.getClass().isArray()) {
       StrictMap<Object> map = new StrictMap<Object>();
       map.put("array", object);

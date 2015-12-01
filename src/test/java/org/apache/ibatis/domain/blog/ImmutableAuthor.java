@@ -1,5 +1,5 @@
-/*
- *    Copyright 2009-2012 the original author or authors.
+/**
+ *    Copyright 2009-2015 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -58,6 +58,7 @@ public class ImmutableAuthor implements Serializable {
     return favouriteSection;
   }
 
+  @Override
   public boolean equals(Object o) {
     if (this == o) return true;
     if (!(o instanceof Author)) return false;
@@ -75,6 +76,7 @@ public class ImmutableAuthor implements Serializable {
     return true;
   }
 
+  @Override
   public int hashCode() {
     int result;
     result = id;
@@ -86,6 +88,7 @@ public class ImmutableAuthor implements Serializable {
     return result;
   }
 
+  @Override
   public String toString() {
     return id + " " + username + " " + password + " " + email;
   }

@@ -330,8 +330,8 @@ int delete(String statement)]]></source>
   </p>
   <source><![CDATA[<E> List<E> selectList (String statement, Object parameter, RowBounds rowBounds)
 <K,V> Map<K,V> selectMap(String statement, Object parameter, String mapKey, RowBounds rowbounds)
-void select (String statement, Object parameter, ResultHandler handler)
-void select (String statement, Object parameter, RowBounds rowBounds, ResultHandler handler)]]></source>
+void select (String statement, Object parameter, ResultHandler<T> handler)
+void select (String statement, Object parameter, RowBounds rowBounds, ResultHandler<T> handler)]]></source>
 
   <p>
 RowBounds 参数会告诉 MyBatis 略过指定数量的记录,还有限制返回结果的数量。
@@ -352,10 +352,10 @@ Set
 那就是 MyBatis 内部创建结果集列表。
   </p>
   <p>它的接口很简单。</p>  
-  <source>package org.apache.ibatis.session;
-public interface ResultHandler {
-  void handleResult(ResultContext context);
-}</source>
+  <source><![CDATA[package org.apache.ibatis.session;
+public interface ResultHandler<T> {
+  void handleResult(ResultContext<? extends T> context);
+}]]></source>
 
   <p>
  ResultContext 参数给你访问结果对象本身的方法,
@@ -363,6 +363,11 @@ public interface ResultHandler {
 你可以使用布
 尔返回值的 stop()方法来停止 MyBatis 加载更多的结果。
   </p>
+
+  <h5>Batch update statement Flush Method</h5>
+  <p>There is method for flushing(executing) batch update statements that stored in a JDBC driver class at any timing. This method can be used when you use the <code>ExecutorType.BATCH</code> as <code>ExecutorType</code>.</p>
+  <source><![CDATA[List<BatchResult> flushStatements()]]></source>
+
 
   <h5>事务控制方法</h5>
   <p>
@@ -412,7 +417,7 @@ try {
 } finally {
     session.close();
 }</source>
-  <p>Or, If you are using jdk 1.7+ and MyBatis 3.2+, you can use the try-with-resources statement:</p>
+  <p>还有，如果你正在使用jdk 1.7以上的版本还有MyBatis 3.2以上的版本，你可以使用try-with-resources语句：</p>
   <source>
 try (SqlSession session = sqlSessionFactory.openSession()) {
     // following 3 lines pseudocode for "doing some work"
@@ -593,7 +598,7 @@ ResultMap 很相似,由下面的 Results
 结果映射的列表,
 包含了一个特别结果
 列如何被映射到属性或字段的详情。
-属 性:value,是 Result 注解的数组。
+属 性:value, id。value 属性是 Result 注解的数组。 The id attribute is the name of the result mapping.
         </td>
       </tr>
       <tr>
@@ -800,6 +805,12 @@ type,method。type 属性是类的完全限
         will use a result handler, the return type must be void and this annotation (or @ResultMap)
         is required.  This annotation is ignored unless the method return type is void.</td>
       </tr>
+      <tr>
+        <td><code>@Flush</code></td>
+        <td><code>Method</code></td>
+        <td>N/A</td>
+        <td>If this annotation is used, it can be called the <code>SqlSession#flushStatements()</code> via method defined at a Mapper interface.(MyBatis 3.3 or above)</td>
+      </tr>
     </tbody>
   </table>
 
@@ -813,6 +824,27 @@ type,method。type 属性是类的完全限
   <source>@Insert("insert into table2 (name) values(#{name})")
 @SelectKey(statement="call identity()", keyProperty="nameId", before=<strong>false</strong>, resultType=<strong>int.class</strong>)
 <strong>int</strong> insertTable2(Name name);</source>
+
+  <p>This example shows using the <code>@Flush</code> annotation to call the <code>SqlSession#flushStatements()</code>:</p>
+  <source><![CDATA[@Flush
+List<BatchResult> flush();]]></source>
+
+  <p>These examples show how to name a ResultMap by specifying id attribute of @Results annotation.</p>
+  <source>@Results(id = "userResult", value = {
+  @Result(property = "id", column = "uid", id = <strong>true</strong>),
+  @Result(property = "firstName", column = "first_name"),
+  @Result(property = "lastName", column = "last_name")
+})
+@Select("select * from users where id = #{id}")
+User getUserById(Integer id);
+
+@Results(id = "companyResults")
+@ConstructorArgs({
+  @Arg(property = "id", column = "cid", id = <strong>true</strong>),
+  @Arg(property = "name", column = "name")
+})
+@Select("select * from company where id = #{id}")
+Company getCompanyById(Integer id);</source>
   </subsection>
 
   </section>

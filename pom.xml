@@ -1,6 +1,6 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Copyright 2009-2014 the original author or authors.
+  Copyright 2009-2015 the original author or authors.
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -14,18 +14,18 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
     <groupId>org.mybatis</groupId>
     <artifactId>mybatis-parent</artifactId>
-    <version>22-SNAPSHOT</version>
+    <version>26</version>
+    <relativePath />
   </parent>
 
   <artifactId>mybatis</artifactId>
-  <version>3.3.0-SNAPSHOT</version>
+  <version>3.4.0-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>mybatis</name>
@@ -107,7 +107,7 @@
   <scm>
     <url>http://github.com/mybatis/mybatis-3</url>
     <connection>scm:git:ssh://github.com/mybatis/mybatis-3.git</connection>
-    <developerConnection>scm:git:git+ssh://git@github.com/mybatis/mybatis-3.git</developerConnection>
+    <developerConnection>scm:git:ssh://git@github.com/mybatis/mybatis-3.git</developerConnection>
     <tag>HEAD</tag>
   </scm>
   <issueManagement>
@@ -120,13 +120,14 @@
   </ciManagement>
   <distributionManagement>
     <site>
-      <id>github</id>
-      <url>gitsite:git@github.com/mybatis/mybatis-3.git</url>
+      <id>gh-pages</id>
+      <name>Mybatis GitHub Pages</name>
+      <url>git:ssh://git@github.com/mybatis/mybatis-3.git?gh-pages#</url>
     </site>
   </distributionManagement>
 
   <properties>
-    <clirr.comparisonVersion>3.2.7</clirr.comparisonVersion>
+    <clirr.comparisonVersion>3.3.0</clirr.comparisonVersion>
     <findbugs.onlyAnalyze>org.apache.ibatis.*</findbugs.onlyAnalyze>
     <osgi.export>org.apache.ibatis.*;version=${project.version};-noimport:=true</osgi.export>
     <osgi.import>*;resolution:=optional</osgi.import>
@@ -137,8 +138,8 @@
     <dependency>
       <groupId>ognl</groupId>
       <artifactId>ognl</artifactId>
-      <version>3.0.8</version>
-      <scope>provided</scope>
+      <version>3.1.1</version>
+      <scope>compile</scope>
       <optional>true</optional>
       <exclusions>
          <exclusion>
@@ -150,20 +151,20 @@
     <dependency>
       <groupId>org.javassist</groupId>
       <artifactId>javassist</artifactId>
-      <version>3.18.2-GA</version>
-      <scope>provided</scope>
+      <version>3.20.0-GA</version>
+      <scope>compile</scope>
       <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
-      <version>1.7.7</version>
+      <version>1.7.13</version>
       <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-log4j12</artifactId>
-      <version>1.7.7</version>
+      <version>1.7.13</version>
       <optional>true</optional>
     </dependency>
     <dependency>
@@ -172,10 +173,11 @@
       <version>1.2.17</version>
       <optional>true</optional>
     </dependency>
+    <!-- Don't upgrade to 2.4+ until mybatis switches to java 7 -->
     <dependency>
       <groupId>org.apache.logging.log4j</groupId>
       <artifactId>log4j-core</artifactId>
-      <version>2.1</version>
+      <version>2.3</version>
       <optional>true</optional>
     </dependency>
     <dependency>
@@ -187,7 +189,7 @@
     <dependency>
       <groupId>cglib</groupId>
       <artifactId>cglib</artifactId>
-      <version>3.1</version>
+      <version>3.2.0</version>
       <optional>true</optional>
     </dependency>
 
@@ -195,27 +197,28 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>4.11</version>
+      <version>4.12</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.hsqldb</groupId>
       <artifactId>hsqldb</artifactId>
-      <version>2.3.2</version>
+      <version>2.3.3</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.derby</groupId>
       <artifactId>derby</artifactId>
-      <version>10.11.1.1</version>
+      <version>10.12.1.1</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-core</artifactId>
-      <version>1.10.8</version>
+      <version>1.10.19</version>
       <scope>test</scope>
     </dependency>
+    <!-- Do not go to 2.x until we are on jdk7 -->
     <dependency>
       <groupId>commons-dbcp</groupId>
       <artifactId>commons-dbcp</artifactId>
@@ -249,12 +252,13 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
+          <argLine>${argLine} -Xmx1024m</argLine>
           <systemProperties>
             <property>
               <name>derby.stream.error.file</name>
               <value>target/derby.log</value>
             </property>
-        </systemProperties>
+          </systemProperties>
         </configuration>
       </plugin>
       <plugin>
@@ -262,52 +266,36 @@
         <artifactId>maven-pdf-plugin</artifactId>
       </plugin>
       <plugin>
-        <groupId>org.sonatype.plugins</groupId>
-        <artifactId>jarjar-maven-plugin</artifactId>
-        <configuration>
-          <input>{classes}</input>
-          <input>{test-classes}</input>
-          <includes>
-            <include>ognl:ognl</include>
-            <include>org.javassist:javassist</include>
-          </includes>
-          <rules>
-            <rule>
-              <pattern>ognl.**</pattern>
-              <result>org.apache.ibatis.ognl.@1</result>
-            </rule>
-            <rule>
-              <pattern>javassist.**</pattern>
-              <result>org.apache.ibatis.javassist.@1</result>
-            </rule>
-            <keep>
-              <pattern>org.apache.ibatis.**</pattern>
-            </keep>
-          </rules>
-          <overwrite>true</overwrite>
-        </configuration>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
         <executions>
           <execution>
-            <id>jarjar-classes</id>
-            <phase>process-test-classes</phase>
+            <phase>package</phase>
             <goals>
-              <goal>jarjar</goal>
+              <goal>shade</goal>
             </goals>
             <configuration>
-              <input>{classes}</input>
-            </configuration>
-          </execution>
-          <execution>
-            <id>jarjar-test-classes</id>
-            <phase>process-test-classes</phase>
-            <goals>
-              <goal>jarjar</goal>
-            </goals>
-            <configuration>
-              <input>{test-classes}</input>
-            </configuration>
-          </execution>
-        </executions>
+               <createDependencyReducedPom>false</createDependencyReducedPom>
+               <artifactSet>
+                 <includes>
+                   <include>org.mybatis:mybatis</include>
+                   <include>ognl:ognl</include>
+                   <include>org.javassist:javassist</include>
+                 </includes>
+               </artifactSet>
+               <relocations>
+                 <relocation>
+                   <pattern>ognl</pattern>
+                   <shadedPattern>org.apache.ibatis.ognl</shadedPattern>
+                 </relocation>
+                 <relocation>
+                   <pattern>javassist</pattern>
+                   <shadedPattern>org.apache.ibatis.javassist</shadedPattern>
+                 </relocation>
+               </relocations>
+             </configuration>
+           </execution>
+         </executions>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -317,27 +305,14 @@
         </configuration>
       </plugin>
       <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>cobertura-maven-plugin</artifactId>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
         <configuration>
-          <instrumentation>
-            <ignores>
-              <ignore>org.apache.ibatis.ognl.*</ignore>
-              <ignore>org.apache.ibatis.javassist.*</ignore>
-            </ignores>
-            <excludes>
-              <exclude>org/apache/ibatis/ognl/**/*.class</exclude>
-              <exclude>org/apache/ibatis/javassist/**/*.class</exclude>
-            </excludes>
-          </instrumentation>
+          <excludes>
+            <exclude>org.apache.ibatis.ognl.*</exclude>
+            <exclude>org.apache.ibatis.javassist.*</exclude>
+          </excludes>
         </configuration>
-        <executions>
-          <execution>
-            <goals>
-              <goal>clean</goal>
-            </goals>
-          </execution>
-        </executions>
       </plugin>
     </plugins>
 
@@ -365,35 +340,6 @@
         </excludes>
       </testResource>
     </testResources>
-    <pluginManagement>
-        <plugins>
-            <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
-            <plugin>
-                <groupId>org.eclipse.m2e</groupId>
-                <artifactId>lifecycle-mapping</artifactId>
-                <version>1.0.0</version>
-                <configuration>
-                    <lifecycleMappingMetadata>
-                        <pluginExecutions>
-                            <pluginExecution>
-                                <pluginExecutionFilter>
-                                    <groupId>org.sonatype.plugins</groupId>
-                                    <artifactId>jarjar-maven-plugin</artifactId>
-                                    <versionRange>[1.9,)</versionRange>
-                                    <goals>
-                                        <goal>jarjar</goal>
-                                    </goals>
-                                </pluginExecutionFilter>
-                                <action>
-                                    <ignore></ignore>
-                                </action>
-                            </pluginExecution>
-                        </pluginExecutions>
-                    </lifecycleMappingMetadata>
-                </configuration>
-            </plugin>
-        </plugins>
-    </pluginManagement>
   </build>
 
 </project>

@@ -1,5 +1,5 @@
-/*
- *    Copyright 2009-2012 the original author or authors.
+/**
+ *    Copyright 2009-2015 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -114,7 +114,9 @@ public class ScriptRunner {
         script.append(line);
         script.append(LINE_SEPARATOR);
       }
-      executeStatement(script.toString());
+      String command = script.toString();
+      println(command);
+      executeStatement(command);
       commitConnection();
     } catch (Exception e) {
       String message = "Error executing: " + script + ".  Cause: " + e;
@@ -187,6 +189,11 @@ public class ScriptRunner {
   private StringBuilder handleLine(StringBuilder command, String line) throws SQLException, UnsupportedEncodingException {
     String trimmedLine = line.trim();
     if (lineIsComment(trimmedLine)) {
+        final String cleanedString = trimmedLine.substring(2).trim().replaceFirst("//", "");
+        if(cleanedString.toUpperCase().startsWith("@DELIMITER")) {
+            delimiter = cleanedString.substring(11,12);
+            return command;
+        }
       println(trimmedLine);
     } else if (commandReadyToExecute(trimmedLine)) {
       command.append(line.substring(0, line.lastIndexOf(delimiter)));

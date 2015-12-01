@@ -1,5 +1,5 @@
-/*
- *    Copyright 2009-2012 the original author or authors.
+/**
+ *    Copyright 2009-2015 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -87,6 +87,7 @@ public class NestedResultHandlerTest {
     SqlSession sqlSession = sqlSessionFactory.openSession();
     try {
       sqlSession.select("getPersons", new ResultHandler() {
+        @Override
         public void handleResult(ResultContext context) {
           Person person = (Person) context.getResultObject();
           if ("grandma".equals(person.getName())) {
@@ -104,6 +105,7 @@ public class NestedResultHandlerTest {
     SqlSession sqlSession = sqlSessionFactory.openSession();
     try {
       sqlSession.select("getPersonsWithItemsOrdered", new ResultHandler() {
+        @Override
         public void handleResult(ResultContext context) {
           Person person = (Person) context.getResultObject();
           if ("grandma".equals(person.getName())) {

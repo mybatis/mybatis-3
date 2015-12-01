@@ -1,5 +1,5 @@
-/*
- *    Copyright 2009-2012 the original author or authors.
+/**
+ *    Copyright 2009-2015 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -29,6 +29,7 @@ public class EnumTypeHandlerTest extends BaseTypeHandlerTest {
 
   private static final TypeHandler<MyEnum> TYPE_HANDLER = new EnumTypeHandler<MyEnum>(MyEnum.class);
 
+  @Override
   @Test
   public void shouldSetParameter() throws Exception {
     TYPE_HANDLER.setParameter(ps, 1, MyEnum.ONE, null);
@@ -41,6 +42,7 @@ public class EnumTypeHandlerTest extends BaseTypeHandlerTest {
     verify(ps).setNull(1, JdbcType.VARCHAR.TYPE_CODE);
   }
 
+  @Override
   @Test
   public void shouldGetResultFromResultSet() throws Exception {
     when(rs.getString("column")).thenReturn("ONE");
@@ -55,6 +57,7 @@ public class EnumTypeHandlerTest extends BaseTypeHandlerTest {
     assertEquals(null, TYPE_HANDLER.getResult(rs, "column"));
   }
 
+  @Override
   @Test
   public void shouldGetResultFromCallableStatement() throws Exception {
     when(cs.getString(1)).thenReturn("ONE");

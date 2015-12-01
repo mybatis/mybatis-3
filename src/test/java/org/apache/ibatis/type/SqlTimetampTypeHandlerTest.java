@@ -1,5 +1,5 @@
-/*
- *    Copyright 2009-2012 the original author or authors.
+/**
+ *    Copyright 2009-2015 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -29,12 +29,14 @@ public class SqlTimetampTypeHandlerTest extends BaseTypeHandlerTest {
   private static final TypeHandler<Timestamp> TYPE_HANDLER = new SqlTimestampTypeHandler();
   private static final java.sql.Timestamp SQL_TIME = new java.sql.Timestamp(new Date().getTime());
 
+  @Override
   @Test
   public void shouldSetParameter() throws Exception {
     TYPE_HANDLER.setParameter(ps, 1, SQL_TIME, null);
     verify(ps).setTimestamp(1, SQL_TIME);
   }
 
+  @Override
   @Test
   public void shouldGetResultFromResultSet() throws Exception {
     when(rs.getTimestamp("column")).thenReturn(SQL_TIME);
@@ -42,6 +44,7 @@ public class SqlTimetampTypeHandlerTest extends BaseTypeHandlerTest {
     assertEquals(SQL_TIME, TYPE_HANDLER.getResult(rs, "column"));
   }
 
+  @Override
   @Test
   public void shouldGetResultFromCallableStatement() throws Exception {
     when(cs.getTimestamp(1)).thenReturn(SQL_TIME);
