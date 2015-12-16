@@ -5,8 +5,6 @@ import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.apache.ibatis.submitted.emptycollection.Dao;
-import org.apache.ibatis.submitted.emptycollection.TodoLists;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -14,11 +12,7 @@ import org.junit.Test;
 
 import java.io.Reader;
 import java.sql.Connection;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-
-import static java.util.Arrays.asList;
 
 public class DaoTest {
     private Dao dao;
@@ -47,6 +41,8 @@ public class DaoTest {
         final List<TodoLists> actual = dao.selectWithEmptyList();
 
         Assert.assertEquals(1, actual.size());
+        final List<TodoItem> todoItems = actual.get(0).getTodoItems();
+        Assert.assertEquals("expect " + todoItems + " to be empty", 0, todoItems.size());
     }
 
     @Test
