@@ -80,7 +80,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
 
   // nested resultmaps
   private final Map<CacheKey, Object> nestedResultObjects = new HashMap<CacheKey, Object>();
-  private final Map<CacheKey, Object> ancestorObjects = new HashMap<CacheKey, Object>();
+  private final Map<String, Object> ancestorObjects = new HashMap<String, Object>();
   private final Map<String, String> ancestorColumnPrefix = new HashMap<String, String>();
   private Object previousRowValue;
 
@@ -835,7 +835,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
       final MetaObject metaObject = configuration.newMetaObject(resultObject);
       putAncestor(absoluteKey, resultObject, resultMapId, columnPrefix);
       applyNestedResultMappings(rsw, resultMap, metaObject, columnPrefix, combinedKey, false);
-      ancestorObjects.remove(absoluteKey);
+      ancestorObjects.remove(resultMapId);
     } else {
       final ResultLoaderMap lazyLoader = new ResultLoaderMap();
       resultObject = createResultObject(rsw, resultMap, lazyLoader, columnPrefix);
@@ -848,7 +848,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
         foundValues = applyPropertyMappings(rsw, resultMap, metaObject, lazyLoader, columnPrefix) || foundValues;
         putAncestor(absoluteKey, resultObject, resultMapId, columnPrefix);
         foundValues = applyNestedResultMappings(rsw, resultMap, metaObject, columnPrefix, combinedKey, true) || foundValues;
-        ancestorObjects.remove(absoluteKey);
+        ancestorObjects.remove(resultMapId);
         foundValues = lazyLoader.size() > 0 || foundValues;
         resultObject = foundValues ? resultObject : null;
       }
@@ -863,7 +863,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     if (!ancestorColumnPrefix.containsKey(resultMapId)) {
       ancestorColumnPrefix.put(resultMapId, columnPrefix);
     }
-    ancestorObjects.put(rowKey, resultObject);
+    ancestorObjects.put(resultMapId, resultObject);
   }
 
   //
@@ -881,8 +881,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
           CacheKey rowKey = null;
           Object ancestorObject = null;
           if (ancestorColumnPrefix.containsKey(nestedResultMapId)) {
-            rowKey = createRowKey(nestedResultMap, rsw, ancestorColumnPrefix.get(nestedResultMapId));
-            ancestorObject = ancestorObjects.get(rowKey);
+            ancestorObject = ancestorObjects.get(nestedResultMapId);
           }
           if (ancestorObject != null) {
             if (newObject) {
