@@ -40,4 +40,23 @@
 		where p.id = i.owner
 		order by i.name
 	</select>
+
+	<select id="getPersonItemPairs" resultMap="personItemPairResult">
+		select p.id as person_id, p.name as person_name, i.id as item_id, i.name as item_name
+		from persons p, items i
+		where p.id = i.owner
+		order by p.id, i.id
+	</select>
+
+	<resultMap id="personItemPairResult" type="org.apache.ibatis.submitted.nestedresulthandler.PersonItemPair">
+		<association property="person" javaType="org.apache.ibatis.submitted.nestedresulthandler.Person">
+			<id property="id" column="person_id" />
+			<result property="name" column="person_name"/>
+		</association>
+		<association property="item" javaType="org.apache.ibatis.submitted.nestedresulthandler.Item">
+			<id property="id" column="item_id"/>
+			<result property="name" column="item_name"/>
+		</association>
+	</resultMap>
+
 </mapper>
