@@ -15,6 +15,19 @@
  */
 package org.apache.ibatis.executor.resultset;
 
+import java.lang.reflect.Constructor;
+import java.sql.CallableStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+
 import org.apache.ibatis.cache.CacheKey;
 import org.apache.ibatis.cursor.Cursor;
 import org.apache.ibatis.cursor.defaults.DefaultCursor;
@@ -45,20 +58,6 @@ import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.TypeHandlerRegistry;
-
-import java.lang.reflect.Constructor;
-import java.sql.CallableStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Random;
-import java.util.Set;
 
 /**
  * @author Clinton Begin
@@ -960,6 +959,9 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     } else {
       createRowKeyForMappedProperties(resultMap, rsw, cacheKey, resultMappings, columnPrefix);
     }
+    if (cacheKey.getUpdateCount() < 2) {
+      return CacheKey.NULL_CACHE_KEY; // fix for #39
+    }    
     return cacheKey;
   }
 
@@ -986,7 +988,6 @@ public class DefaultResultSetHandler implements ResultSetHandler {
   }
 
   private void createRowKeyForMappedProperties(ResultMap resultMap, ResultSetWrapper rsw, CacheKey cacheKey, List<ResultMapping> resultMappings, String columnPrefix) throws SQLException {
-    boolean hasSimpleProperties = false;
     for (ResultMapping resultMapping : resultMappings) {
       if (resultMapping.getNestedResultMapId() != null && resultMapping.getResultSet() == null) {
         // Issue #392
@@ -994,22 +995,16 @@ public class DefaultResultSetHandler implements ResultSetHandler {
         createRowKeyForMappedProperties(nestedResultMap, rsw, cacheKey, nestedResultMap.getConstructorResultMappings(),
             prependPrefix(resultMapping.getColumnPrefix(), columnPrefix));
       } else if (resultMapping.getNestedQueryId() == null) {
-        hasSimpleProperties = true;
         final String column = prependPrefix(resultMapping.getColumn(), columnPrefix);
         final TypeHandler<?> th = resultMapping.getTypeHandler();
         List<String> mappedColumnNames = rsw.getMappedColumnNames(resultMap, columnPrefix);
         // Issue #114
         if (column != null && mappedColumnNames.contains(column.toUpperCase(Locale.ENGLISH))) {
           final Object value = th.getResult(rsw.getResultSet(), column);
-          if (value != null) {
-            cacheKey.update(column);
-            cacheKey.update(value);
-          }
+          cacheKey.update(column);  // fix for #39 (removed if)
+          cacheKey.update(value);
         }
       }
-    }
-    if (!hasSimpleProperties && cacheKey.getUpdateCount() == 1) {
-      cacheKey.update(new Random()); // issue #39
     }
   }
 
