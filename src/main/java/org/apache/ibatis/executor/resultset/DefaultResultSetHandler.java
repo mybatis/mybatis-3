@@ -57,6 +57,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 
 /**
@@ -985,6 +986,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
   }
 
   private void createRowKeyForMappedProperties(ResultMap resultMap, ResultSetWrapper rsw, CacheKey cacheKey, List<ResultMapping> resultMappings, String columnPrefix) throws SQLException {
+    boolean hasSimpleProperties = false;
     for (ResultMapping resultMapping : resultMappings) {
       if (resultMapping.getNestedResultMapId() != null && resultMapping.getResultSet() == null) {
         // Issue #392
@@ -992,6 +994,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
         createRowKeyForMappedProperties(nestedResultMap, rsw, cacheKey, nestedResultMap.getConstructorResultMappings(),
             prependPrefix(resultMapping.getColumnPrefix(), columnPrefix));
       } else if (resultMapping.getNestedQueryId() == null) {
+        hasSimpleProperties = true;
         final String column = prependPrefix(resultMapping.getColumn(), columnPrefix);
         final TypeHandler<?> th = resultMapping.getTypeHandler();
         List<String> mappedColumnNames = rsw.getMappedColumnNames(resultMap, columnPrefix);
@@ -1004,6 +1007,9 @@ public class DefaultResultSetHandler implements ResultSetHandler {
           }
         }
       }
+    }
+    if (!hasSimpleProperties && cacheKey.getUpdateCount() == 1) {
+      cacheKey.update(new Random()); // issue #39
     }
   }
 
