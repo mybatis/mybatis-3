@@ -956,7 +956,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
       createRowKeyForMappedProperties(resultMap, rsw, cacheKey, resultMappings, columnPrefix);
     }
     if (cacheKey.getUpdateCount() < 2) {
-      return CacheKey.NULL_CACHE_KEY; // fix for #39
+      return CacheKey.NULL_CACHE_KEY;
     }    
     return cacheKey;
   }
@@ -997,8 +997,10 @@ public class DefaultResultSetHandler implements ResultSetHandler {
         // Issue #114
         if (column != null && mappedColumnNames.contains(column.toUpperCase(Locale.ENGLISH))) {
           final Object value = th.getResult(rsw.getResultSet(), column);
-          cacheKey.update(column);  // fix for #39 (removed if)
-          cacheKey.update(value);
+          if (value != null) {
+            cacheKey.update(column);
+            cacheKey.update(value);
+          }
         }
       }
     }
