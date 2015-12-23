@@ -62,6 +62,7 @@ import org.apache.ibatis.type.TypeHandlerRegistry;
 /**
  * @author Clinton Begin
  * @author Eduardo Macarron
+ * @author Iwao AVE!
  */
 public class DefaultResultSetHandler implements ResultSetHandler {
 
@@ -878,10 +879,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
         try {
           final String columnPrefix = getColumnPrefix(parentPrefix, resultMapping);
           final ResultMap nestedResultMap = getNestedResultMap(rsw.getResultSet(), nestedResultMapId, columnPrefix);
-          Object ancestorObject = null;
-          if (ancestorColumnPrefix.containsKey(nestedResultMapId)) {
-            ancestorObject = ancestorObjects.get(nestedResultMapId);
-          }
+          Object ancestorObject = ancestorObjects.get(nestedResultMapId);
           if (ancestorObject != null) {
             if (newObject) {
               linkObjects(metaObject, resultMapping, ancestorObject); // issue #385
