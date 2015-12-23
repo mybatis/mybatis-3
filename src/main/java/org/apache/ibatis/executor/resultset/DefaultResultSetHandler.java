@@ -808,9 +808,9 @@ public class DefaultResultSetHandler implements ResultSetHandler {
           nestedResultObjects.clear();
           storeObject(resultHandler, resultContext, rowValue, parentMapping, rsw.getResultSet());
         }
-        rowValue = getRowValue(rsw, discriminatedResultMap, rowKey, rowKey, null, partialObject);
+        rowValue = getRowValue(rsw, discriminatedResultMap, rowKey, null, partialObject);
       } else {
-        rowValue = getRowValue(rsw, discriminatedResultMap, rowKey, rowKey, null, partialObject);
+        rowValue = getRowValue(rsw, discriminatedResultMap, rowKey, null, partialObject);
         if (partialObject == null) {
           storeObject(resultHandler, resultContext, rowValue, parentMapping, rsw.getResultSet());
         }
@@ -828,12 +828,12 @@ public class DefaultResultSetHandler implements ResultSetHandler {
   // GET VALUE FROM ROW FOR NESTED RESULT MAP
   //
 
-  private Object getRowValue(ResultSetWrapper rsw, ResultMap resultMap, CacheKey combinedKey, CacheKey absoluteKey, String columnPrefix, Object partialObject) throws SQLException {
+  private Object getRowValue(ResultSetWrapper rsw, ResultMap resultMap, CacheKey combinedKey, String columnPrefix, Object partialObject) throws SQLException {
     final String resultMapId = resultMap.getId();
     Object resultObject = partialObject;
     if (resultObject != null) {
       final MetaObject metaObject = configuration.newMetaObject(resultObject);
-      putAncestor(absoluteKey, resultObject, resultMapId, columnPrefix);
+      putAncestor(resultObject, resultMapId, columnPrefix);
       applyNestedResultMappings(rsw, resultMap, metaObject, columnPrefix, combinedKey, false);
       ancestorObjects.remove(resultMapId);
     } else {
@@ -846,7 +846,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
           foundValues = applyAutomaticMappings(rsw, resultMap, metaObject, columnPrefix) || foundValues;
         }
         foundValues = applyPropertyMappings(rsw, resultMap, metaObject, lazyLoader, columnPrefix) || foundValues;
-        putAncestor(absoluteKey, resultObject, resultMapId, columnPrefix);
+        putAncestor(resultObject, resultMapId, columnPrefix);
         foundValues = applyNestedResultMappings(rsw, resultMap, metaObject, columnPrefix, combinedKey, true) || foundValues;
         ancestorObjects.remove(resultMapId);
         foundValues = lazyLoader.size() > 0 || foundValues;
@@ -859,7 +859,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     return resultObject;
   }
 
-  private void putAncestor(CacheKey rowKey, Object resultObject, String resultMapId, String columnPrefix) {
+  private void putAncestor(Object resultObject, String resultMapId, String columnPrefix) {
     if (!ancestorColumnPrefix.containsKey(resultMapId)) {
       ancestorColumnPrefix.put(resultMapId, columnPrefix);
     }
@@ -878,7 +878,6 @@ public class DefaultResultSetHandler implements ResultSetHandler {
         try {
           final String columnPrefix = getColumnPrefix(parentPrefix, resultMapping);
           final ResultMap nestedResultMap = getNestedResultMap(rsw.getResultSet(), nestedResultMapId, columnPrefix);
-          CacheKey rowKey = null;
           Object ancestorObject = null;
           if (ancestorColumnPrefix.containsKey(nestedResultMapId)) {
             ancestorObject = ancestorObjects.get(nestedResultMapId);
@@ -888,13 +887,13 @@ public class DefaultResultSetHandler implements ResultSetHandler {
               linkObjects(metaObject, resultMapping, ancestorObject); // issue #385
             }
           } else {
-            rowKey = createRowKey(nestedResultMap, rsw, columnPrefix);
+            final CacheKey rowKey = createRowKey(nestedResultMap, rsw, columnPrefix);
             final CacheKey combinedKey = combineKeys(rowKey, parentRowKey);
             Object rowValue = nestedResultObjects.get(combinedKey);
             boolean knownValue = (rowValue != null);
             instantiateCollectionPropertyIfAppropriate(resultMapping, metaObject); // mandatory            
             if (anyNotNullColumnHasValue(resultMapping, columnPrefix, rsw.getResultSet())) {
-              rowValue = getRowValue(rsw, nestedResultMap, combinedKey, rowKey, columnPrefix, rowValue);
+              rowValue = getRowValue(rsw, nestedResultMap, combinedKey, columnPrefix, rowValue);
               if (rowValue != null && !knownValue) {
                 linkObjects(metaObject, resultMapping, rowValue);
                 foundValues = true;
