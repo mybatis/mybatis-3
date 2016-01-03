@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.apache.ibatis.executor.keygen.CountryMapper" >
+  <insert id="insertList" parameterType="org.apache.ibatis.executor.keygen.Country" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+      insert into country (countryname,countrycode)
+      values
+      <foreach collection="list" separator="," item="country">
+          (#{country.countryname},#{country.countrycode})
+      </foreach>
+  </insert>
+</mapper>
