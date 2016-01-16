@@ -19,3 +19,14 @@ break the MyBatis build on machines that don't have MySql setup.
     `countrycode` varchar(255) DEFAULT NULL,
     PRIMARY KEY (`Id`)
   ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+  DROP TABLE IF EXISTS mbtest.country;
+  CREATE TABLE mbtest.country (
+    countryname character varying(30),
+    countrycode character varying(30),
+    id serial NOT NULL,
+    CONSTRAINT test_identity_pkey PRIMARY KEY (id)
+  );
+  ALTER TABLE mbtest.country OWNER TO postgres;
+
+  

@@ -69,6 +69,26 @@ public class BatchKeysTest {
     }
   }
 
+  public void testJdbc3Support() throws Exception {
+    Connection conn = sqlSessionFactory.getConfiguration().getEnvironment().getDataSource().getConnection();
+    PreparedStatement stmt = conn.prepareStatement("insert into users2 values(null, 'Pocoyo')", Statement.RETURN_GENERATED_KEYS);
+    stmt.addBatch();
+    stmt.executeBatch();
+    ResultSet rs = stmt.getGeneratedKeys();
+    if (rs.next()) {
+      ResultSetMetaData rsmd = rs.getMetaData();
+      int colCount = rsmd.getColumnCount();
+      do {
+        for (int i = 1; i <= colCount; i++) {
+          String key = rs.getString(i);
+          System.out.println("key " + i + " is " + key);
+        }
+      } while (rs.next());
+    } else {
+      System.out.println("There are no generated keys.");
+    }
+  }
+  
   @Test
   public void testInsert() throws Exception {
     SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH);
@@ -90,26 +110,6 @@ public class BatchKeysTest {
     Assert.assertTrue(users.size() == 2);
   }
 
-  public void testJdbc3Support() throws Exception {
-    Connection conn = sqlSessionFactory.getConfiguration().getEnvironment().getDataSource().getConnection();
-    PreparedStatement stmt = conn.prepareStatement("insert into users2 values(null, 'Pocoyo')", Statement.RETURN_GENERATED_KEYS);
-    stmt.addBatch();
-    stmt.executeBatch();
-    ResultSet rs = stmt.getGeneratedKeys();
-    if (rs.next()) {
-      ResultSetMetaData rsmd = rs.getMetaData();
-      int colCount = rsmd.getColumnCount();
-      do {
-        for (int i = 1; i <= colCount; i++) {
-          String key = rs.getString(i);
-          System.out.println("key " + i + " is " + key);
-        }
-      } while (rs.next());
-    } else {
-      System.out.println("There are no generated keys.");
-    }
-
-  }
 
   @Test
   public void testInsertJdbc3() throws Exception {
@@ -132,4 +132,66 @@ public class BatchKeysTest {
     Assert.assertTrue(users.size() == 2);
   }
 
+  @Test
+  public void testInsertWithMapper() throws Exception {
+    SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH);
+    try {
+      Mapper userMapper = sqlSession.getMapper(Mapper.class);
+      User user1 = new User(null, "Pocoyo");
+      userMapper.insert(user1);
+      User user2 = new User(null, "Valentina");
+      userMapper.insert(user2);
+      sqlSession.flushStatements();
+      assertEquals(new Integer(50), user1.getId());
+      assertEquals(new Integer(50), user2.getId());
+      sqlSession.commit();
+    } finally {
+      sqlSession.close();
+    }
+
+    sqlSession = sqlSessionFactory.openSession();
+    List<User> users = sqlSession.selectList("select");
+    Assert.assertTrue(users.size() == 2);
+  }
+
+  @Test
+  public void testInsertMapperJdbc3() throws Exception {
+    SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH);
+    try {
+      Mapper userMapper = sqlSession.getMapper(Mapper.class);
+      User user1 = new User(null, "Pocoyo");
+      userMapper.insertIdentity(user1);
+      User user2 = new User(null, "Valentina");
+      userMapper.insertIdentity(user2);
+      sqlSession.flushStatements();
+      assertEquals(Integer.valueOf(0), user1.getId());
+      assertEquals(Integer.valueOf(1), user2.getId());
+      sqlSession.commit();
+    } finally {
+      sqlSession.close();
+    }
+
+    sqlSession = sqlSessionFactory.openSession();
+    List<User> users = sqlSession.selectList("selectIdentity");
+    Assert.assertTrue(users.size() == 2);
+  }
+
+  @Test
+  public void testInsertMapperNoBatchJdbc3() throws Exception {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      Mapper userMapper = sqlSession.getMapper(Mapper.class);
+      User user1 = new User(null, "Pocoyo");
+      userMapper.insertIdentity(user1);
+      assertEquals(Integer.valueOf(0), user1.getId());
+      sqlSession.commit();
+    } finally {
+      sqlSession.close();
+    }
+
+    sqlSession = sqlSessionFactory.openSession();
+    List<User> users = sqlSession.selectList("selectIdentity");
+    Assert.assertTrue(users.size() == 1);
+  }
+  
 }

@@ -1,4 +1,4 @@
-package org.apache.ibatis.executor.keygen;
+package org.apache.ibatis.submitted.keygen;
 
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
@@ -16,12 +16,12 @@ import static org.junit.Assert.assertNotNull;
 /**
  * @author liuzh
  */
-@Ignore("See setupdb.txt for instructions on how to run the tests in this class")
+//@Ignore("See setupdb.txt for instructions on how to run the tests in this class")
 public class Jdbc3KeyGeneratorTest {
 
   @Test
   public void shouldInsertListAndRetrieveId() throws Exception {
-    Reader reader = Resources.getResourceAsReader("org/apache/ibatis/executor/keygen/MapperConfig.xml");
+    Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/keygen/MapperConfig.xml");
     SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
     SqlSession sqlSession = sqlSessionFactory.openSession();
     try {

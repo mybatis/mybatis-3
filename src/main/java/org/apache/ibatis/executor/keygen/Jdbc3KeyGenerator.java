@@ -85,15 +85,12 @@ public class Jdbc3KeyGenerator implements KeyGenerator {
       parameters = (Collection) parameter;
     } else if (parameter instanceof Map) {
       Map parameterMap = (Map) parameter;
-      // when you insert a List(or Array).
-      // If you want retrieve the auto-increment value or default value.
-      // You should not to use @Param annotations, You must use a single parameter(List or Array).
       if (parameterMap.containsKey("collection")) {
         parameters = (Collection) parameterMap.get("collection");
       } else if (parameterMap.containsKey("list")) {
         parameters = (List) parameterMap.get("list");
       } else if (parameterMap.containsKey("array")) {
-        parameters = Arrays.asList((Object[])parameterMap.get("array"));
+        parameters = Arrays.asList((Object[]) parameterMap.get("array"));
       }
     }
     if (parameters == null) {

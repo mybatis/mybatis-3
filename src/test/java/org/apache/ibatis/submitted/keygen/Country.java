@@ -1,4 +1,4 @@
-package org.apache.ibatis.executor.keygen;
+package org.apache.ibatis.submitted.keygen;
 
 /**
  * @author liuzh

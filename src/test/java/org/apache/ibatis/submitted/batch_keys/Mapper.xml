@@ -29,13 +29,6 @@
   	insert into users values(#{id}, #{name})
   </insert>
 
-  <insert id="insertDerby">
-    <selectKey keyProperty="id" resultType="int" order="AFTER">
-    select 50 from sysibm.sysdummy1
-    </selectKey>
-  	insert into users values(#{id}, #{name})
-  </insert>
-
   <select id="select" resultType="org.apache.ibatis.submitted.batch_keys.User" >
   	select id, name from users
   </select>

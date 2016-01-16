@@ -1,4 +1,4 @@
-package org.apache.ibatis.executor.keygen;
+package org.apache.ibatis.submitted.keygen;
 
 import java.util.List;
 
