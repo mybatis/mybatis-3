@@ -259,7 +259,7 @@ public class MapperMethod {
       if (args == null || paramCount == 0) {
         return null;
       } else if (!hasNamedParameters && paramCount == 1) {
-        return args[0];
+        return args[params.keySet().iterator().next().intValue()];
       } else {
         final Map<String, Object> param = new ParamMap<Object>();
         int i = 0;
