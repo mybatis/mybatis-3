@@ -54,14 +54,14 @@ public class DaoTest {
     @Test
     public void testWithEmptyList() throws Exception {
         final List<TodoLists> actual = dao.selectWithEmptyList();
-
         Assert.assertEquals(1, actual.size());
+        final List<TodoItem> todoItems = actual.get(0).getTodoItems();
+        Assert.assertEquals("expect " + todoItems + " to be empty", 0, todoItems.size());        
     }
 
     @Test
     public void testWithNonEmptyList() throws Exception {
         final List<TodoLists> actual = dao.selectWithNonEmptyList();
-
         checkNonEmptyList(actual);
     }
 
