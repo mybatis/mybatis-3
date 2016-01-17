@@ -15,29 +15,48 @@
  */
 package org.apache.ibatis.submitted.keygen;
 
-import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.session.SqlSession;
-import org.apache.ibatis.session.SqlSessionFactory;
-import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.Ignore;
-import org.junit.Test;
+import static org.junit.Assert.*;
 
 import java.io.Reader;
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertNotNull;
+import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.jdbc.ScriptRunner;
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 /**
  * @author liuzh
  */
-@Ignore("See setupdb.txt for instructions on how to run the tests in this class")
 public class Jdbc3KeyGeneratorTest {
+
+  private static SqlSessionFactory sqlSessionFactory;
+
+  @BeforeClass
+  public static void setUp() throws Exception {
+    // create an SqlSessionFactory
+    Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/keygen/MapperConfig.xml");
+    sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+    reader.close();
+
+    // populate in-memory database
+    SqlSession session = sqlSessionFactory.openSession();
+    Connection conn = session.getConnection();
+    reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/keygen/CreateDB.sql");
+    ScriptRunner runner = new ScriptRunner(conn);
+    runner.setLogWriter(null);
+    runner.runScript(reader);
+    reader.close();
+    session.close();
+  }
 
   @Test
   public void shouldInsertListAndRetrieveId() throws Exception {
-    Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/keygen/MapperConfig.xml");
-    SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
     SqlSession sqlSession = sqlSessionFactory.openSession();
     try {
       CountryMapper mapper = sqlSession.getMapper(CountryMapper.class);
