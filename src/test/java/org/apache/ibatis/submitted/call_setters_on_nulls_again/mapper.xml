@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.apache.ibatis.submitted.call_setters_on_nulls_again.mapper">
+
+	<resultMap id="pbResultMap" type="org.apache.ibatis.submitted.call_setters_on_nulls_again.ParentBean">
+		<result property="name" column="name" />
+		<association property="client" javaType="org.apache.ibatis.submitted.call_setters_on_nulls_again.ChildBean">
+			<association property="child" javaType="org.apache.ibatis.submitted.call_setters_on_nulls_again.ChildBean">
+				<result property="name" column="null_value" /> <!-- yes I need this -->
+			</association>
+		</association>
+	</resultMap>
+
+    <select id="test" resultMap="pbResultMap" useCache="false">
+        select 'p1' name, null null_value from (VALUES ('dummy'))
+    </select>
+
+</mapper>
