@@ -15,8 +15,12 @@
  */
 package org.apache.ibatis.submitted.typehandler;
 
+import static org.junit.Assert.*;
+
 import java.io.Reader;
 import java.sql.Connection;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.jdbc.ScriptRunner;
@@ -65,4 +69,18 @@ public class TypeHandlerTest {
     }
   }
 
+  @Test
+  public void shouldApplyTypeHandlerOnGeneratedKey() {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      Product product = new Product();
+      product.setName("new product");
+      mapper.insertProduct(product);
+      assertNotNull(product.getId());
+      assertNotNull(product.getId().getValue());
+    } finally {
+      sqlSession.close();
+    }
+  }
 }

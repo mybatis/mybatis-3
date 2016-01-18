@@ -26,6 +26,7 @@ import org.apache.ibatis.executor.ExecutorException;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.session.Configuration;
+import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.TypeHandlerRegistry;
 
@@ -61,7 +62,7 @@ public class Jdbc3KeyGenerator implements KeyGenerator {
           }
           final MetaObject metaParam = configuration.newMetaObject(parameter);
           if (typeHandlers == null) {
-            typeHandlers = getTypeHandlers(typeHandlerRegistry, metaParam, keyProperties);
+            typeHandlers = getTypeHandlers(typeHandlerRegistry, metaParam, keyProperties, rsmd);
           }
           populateKeys(rs, metaParam, keyProperties, typeHandlers);
         }
@@ -100,12 +101,12 @@ public class Jdbc3KeyGenerator implements KeyGenerator {
     return parameters;
   }
 
-  private TypeHandler<?>[] getTypeHandlers(TypeHandlerRegistry typeHandlerRegistry, MetaObject metaParam, String[] keyProperties) {
+  private TypeHandler<?>[] getTypeHandlers(TypeHandlerRegistry typeHandlerRegistry, MetaObject metaParam, String[] keyProperties, ResultSetMetaData rsmd) throws SQLException {
     TypeHandler<?>[] typeHandlers = new TypeHandler<?>[keyProperties.length];
     for (int i = 0; i < keyProperties.length; i++) {
       if (metaParam.hasSetter(keyProperties[i])) {
         Class<?> keyPropertyType = metaParam.getSetterType(keyProperties[i]);
-        TypeHandler<?> th = typeHandlerRegistry.getTypeHandler(keyPropertyType);
+        TypeHandler<?> th = typeHandlerRegistry.getTypeHandler(keyPropertyType, JdbcType.forCode(rsmd.getColumnType(i + 1)));
         typeHandlers[i] = th;
       }
     }

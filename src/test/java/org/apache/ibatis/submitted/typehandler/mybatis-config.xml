@@ -20,6 +20,13 @@
 
 <configuration>
 
+	<typeHandlers>
+		<typeHandler
+			handler="org.apache.ibatis.submitted.typehandler.Product$ProductIdTypeHandler"
+			javaType="org.apache.ibatis.submitted.typehandler.Product$ProductId"
+			jdbcType="INTEGER" />
+	</typeHandlers>
+
 	<environments default="development">
 		<environment id="development">
 			<transactionManager type="JDBC">
