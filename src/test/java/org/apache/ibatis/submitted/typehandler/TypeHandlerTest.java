@@ -19,8 +19,6 @@ import static org.junit.Assert.*;
 
 import java.io.Reader;
 import java.sql.Connection;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.jdbc.ScriptRunner;

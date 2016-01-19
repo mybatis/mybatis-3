@@ -15,8 +15,6 @@
  */
 package org.apache.ibatis.submitted.typehandler;
 
-import java.util.Map;
-
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Result;
