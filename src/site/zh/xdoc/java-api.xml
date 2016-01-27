@@ -670,7 +670,7 @@ select,是映射语句(也就是映射器方
 而不是将每条语句注解变复
 杂,Options 注解提供连贯清晰的方式
 来访问它们。属性:useCache=true ,
-flushCache=false
+flushCache=FlushCachePolicy.DEFAULT
 ,
 resultSetType=FORWARD_ONLY ,
 statementType=PREPARED ,

@@ -513,7 +513,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
         <td>이 애노테이션은 매핑된 구문에 속성으로 존재하는 많은 분기(switch)와 설정 옵션에 접근할 수 있다. 
 		각 구문을 복잡하게 만들기 보다 Options 애노테이션으로 일관되고 깔끔한 방법으로 설정 할수 있게 한다.
 		사용가능한 속성들 : useCache=true,
-		flushCache=false,
+		flushCache=FlushCachePolicy.DEFAULT,
 		resultSetType=FORWARD_ONLY,
 		statementType=PREPARED, 
 		fetchSize=-1,

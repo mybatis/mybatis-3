@@ -55,6 +55,7 @@ import org.apache.ibatis.annotations.SelectProvider;
 import org.apache.ibatis.annotations.TypeDiscriminator;
 import org.apache.ibatis.annotations.Update;
 import org.apache.ibatis.annotations.UpdateProvider;
+import org.apache.ibatis.annotations.Options.FlushCachePolicy;
 import org.apache.ibatis.binding.BindingException;
 import org.apache.ibatis.binding.MapperMethod.ParamMap;
 import org.apache.ibatis.builder.BuilderException;
@@ -292,7 +293,11 @@ public class MapperAnnotationBuilder {
       }
 
       if (options != null) {
-        flushCache = options.flushCache();
+        if (FlushCachePolicy.TRUE.equals(options.flushCache())) {
+          flushCache = true;
+        } else if (FlushCachePolicy.FALSE.equals(options.flushCache())) {
+          flushCache = false;
+        }
         useCache = options.useCache();
         fetchSize = options.fetchSize() > -1 || options.fetchSize() == Integer.MIN_VALUE ? options.fetchSize() : null; //issue #348
         timeout = options.timeout() > -1 ? options.timeout() : null;
