@@ -18,20 +18,8 @@ package org.apache.ibatis.builder.annotation;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Array;
-import java.lang.reflect.GenericArrayType;
-import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
+import java.lang.reflect.*;
+import java.util.*;
 
 import org.apache.ibatis.annotations.Arg;
 import org.apache.ibatis.annotations.CacheNamespace;
@@ -95,12 +83,14 @@ public class MapperAnnotationBuilder {
   private Configuration configuration;
   private MapperBuilderAssistant assistant;
   private Class<?> type;
+  private Map<String, Map<String, Type>> parentTypeMap = new HashMap<String,Map<String,Type>>();
 
   public MapperAnnotationBuilder(Configuration configuration, Class<?> type) {
     String resource = type.getName().replace('.', '/') + ".java (best guess)";
     this.assistant = new MapperBuilderAssistant(configuration, resource);
     this.configuration = configuration;
     this.type = type;
+    collectTypeParameters(type);
 
     sqlAnnotationTypes.add(Select.class);
     sqlAnnotationTypes.add(Insert.class);
@@ -375,7 +365,7 @@ public class MapperAnnotationBuilder {
   }
 
   private Class<?> getReturnType(Method method) {
-    Class<?> returnType = method.getReturnType();
+    Class<?> returnType = resolveReturnType(method);
     // issue #508
     if (void.class.equals(returnType)) {
       ResultType rt = method.getAnnotation(ResultType.class);
@@ -397,6 +387,8 @@ public class MapperAnnotationBuilder {
             Class<?> componentType = (Class<?>) ((GenericArrayType) returnTypeParameter).getGenericComponentType();
             // (issue #525) support List<byte[]>
             returnType = Array.newInstance(componentType, 0).getClass();
+          } else if (returnTypeParameter instanceof TypeVariable<?>) {
+            returnType = resolveTypeVariable(method, returnTypeParameter);
           }
         }
       }
@@ -622,4 +614,59 @@ public class MapperAnnotationBuilder {
     return answer;
   }
 
+  private Class<?> resolveTypeVariable(Method m, Type typeVariable) {
+      if (typeVariable instanceof  TypeVariable) {
+        Map<String, Type> genericTypes = parentTypeMap.get(m.getDeclaringClass().getName());
+        if (null != genericTypes) {
+          String genericTypeName = ((TypeVariable) typeVariable).getName();
+          Type returnClass = genericTypes.get(genericTypeName);
+          if (null != returnClass) {
+              return (Class<?>)returnClass;
+          }
+        }
+      }
+      return null;
+  }
+  private Class<?> resolveReturnType(Method m) {
+      Class<?> retClass = resolveTypeVariable(m, m.getGenericReturnType());
+      if (null != retClass) {
+        return retClass;
+      }
+      return m.getReturnType();
+  }
+
+  public void collectTypeParameters(Class<?> offspring, Type... actualArgs) {
+      assert offspring != null;
+
+      Map<String, Type> typeVariables = new HashMap<String, Type>();
+      for (int i = 0; i < actualArgs.length; i++) {
+          TypeVariable<?> typeVariable = (TypeVariable<?>) offspring.getTypeParameters()[i];
+          typeVariables.put(typeVariable.getName(), actualArgs[i]);
+      }
+      if (!typeVariables.isEmpty()) {
+        parentTypeMap.put(offspring.getName(), typeVariables);
+      }
+
+      // because offspring is a interface which only extends from other interface, it is no need
+      // get getGenericSuperClass
+      for (Type parent: offspring.getGenericInterfaces()) {
+          if (parent instanceof ParameterizedType) {
+              ParameterizedType parameterizedType = (ParameterizedType) parent;
+              Type rawType = parameterizedType.getRawType();
+              if (rawType instanceof Class<?>) {
+                  Class<?> rawTypeClass = (Class<?>) rawType;
+                  List<Type> resolvedTypes = new LinkedList<Type>();
+                  for (Type t : parameterizedType.getActualTypeArguments()) {
+                      if (t instanceof TypeVariable<?>) {
+                          Type resolvedType = typeVariables.get(((TypeVariable<?>) t).getName());
+                          resolvedTypes.add(resolvedType != null ? resolvedType : t);
+                      } else {
+                          resolvedTypes.add(t);
+                      }
+                  }
+                  collectTypeParameters(rawTypeClass, resolvedTypes.toArray(new Type[]{}));
+              }
+          }
+      }
+  }
 }
