@@ -336,7 +336,7 @@ public class MapperAnnotationBuilder {
           resultSetType,
           flushCache,
           useCache,
-          // TODO issue #577
+          // TODO gcode issue #577
           false,
           keyGenerator,
           keyProperty,
@@ -376,7 +376,7 @@ public class MapperAnnotationBuilder {
 
   private Class<?> getReturnType(Method method) {
     Class<?> returnType = method.getReturnType();
-    // issue #508
+    // gcode issue #508
     if (void.class.equals(returnType)) {
       ResultType rt = method.getAnnotation(ResultType.class);
       if (rt != null) {
@@ -391,17 +391,17 @@ public class MapperAnnotationBuilder {
           if (returnTypeParameter instanceof Class) {
             returnType = (Class<?>) returnTypeParameter;
           } else if (returnTypeParameter instanceof ParameterizedType) {
-            // (issue #443) actual type can be a also a parameterized type
+            // (gcode issue #443) actual type can be a also a parameterized type
             returnType = (Class<?>) ((ParameterizedType) returnTypeParameter).getRawType();
           } else if (returnTypeParameter instanceof GenericArrayType) {
             Class<?> componentType = (Class<?>) ((GenericArrayType) returnTypeParameter).getGenericComponentType();
-            // (issue #525) support List<byte[]>
+            // (gcode issue #525) support List<byte[]>
             returnType = Array.newInstance(componentType, 0).getClass();
           }
         }
       }
     } else if (method.isAnnotationPresent(MapKey.class) && Map.class.isAssignableFrom(returnType)) {
-      // (issue 504) Do not look into Maps if there is not MapKey annotation
+      // (gcode issue 504) Do not look into Maps if there is not MapKey annotation
       Type returnTypeParameter = method.getGenericReturnType();
       if (returnTypeParameter instanceof ParameterizedType) {
         Type[] actualTypeArguments = ((ParameterizedType) returnTypeParameter).getActualTypeArguments();
@@ -410,7 +410,7 @@ public class MapperAnnotationBuilder {
           if (returnTypeParameter instanceof Class) {
             returnType = (Class<?>) returnTypeParameter;
           } else if (returnTypeParameter instanceof ParameterizedType) {
-            // (issue 443) actual type can be a also a parameterized type
+            // (gcode issue 443) actual type can be a also a parameterized type
             returnType = (Class<?>) ((ParameterizedType) returnTypeParameter).getRawType();
           }
         }
