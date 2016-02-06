@@ -13,11 +13,17 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package org.apache.ibatis.mapping;
+package org.apache.ibatis.submitted.custom_method;
+
+import org.apache.ibatis.annotations.CustomMethod;
 
 /**
- * @author Clinton Begin
+ * Mapper interface for test that default implementation class does not found.
+ * @author Kazuki Shimizu
  */
-public enum SqlCommandType {
-  UNKNOWN, INSERT, UPDATE, DELETE, SELECT, FLUSH, CUSTOM;
+public interface EmployeeMapper {
+
+    @CustomMethod
+    long countNotFoundDefaultImplementationType();
+
 }

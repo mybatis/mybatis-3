@@ -20,6 +20,7 @@ import java.io.Reader;
 import java.util.Properties;
 import javax.sql.DataSource;
 
+import org.apache.ibatis.binding.CustomMethodStrategy;
 import org.apache.ibatis.builder.BaseBuilder;
 import org.apache.ibatis.builder.BuilderException;
 import org.apache.ibatis.datasource.DataSourceFactory;
@@ -251,6 +252,7 @@ public class XMLConfigBuilder extends BaseBuilder {
     configuration.setLogPrefix(props.getProperty("logPrefix"));
     configuration.setLogImpl(resolveClass(props.getProperty("logImpl")));
     configuration.setConfigurationFactory(resolveClass(props.getProperty("configurationFactory")));
+    configuration.setCustomMethodStrategy((CustomMethodStrategy) createInstance(props.getProperty("customMethodStrategy")));
   }
 
   private void environmentsElement(XNode context) throws Exception {

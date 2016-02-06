@@ -15,12 +15,14 @@
  */
 package org.apache.ibatis.binding;
 
+import org.apache.ibatis.annotations.CustomMethod;
 import org.apache.ibatis.annotations.Flush;
 import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.cursor.Cursor;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.SqlCommandType;
+import org.apache.ibatis.reflection.ExceptionUtil;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.ResultHandler;
@@ -35,15 +37,22 @@ import java.util.*;
  * @author Clinton Begin
  * @author Eduardo Macarron
  * @author Lasse Voss
+ * @author Kazuki Shimizu
  */
 public class MapperMethod {
 
   private final SqlCommand command;
   private final MethodSignature method;
+  private final CustomMethodAdapter customMethodAdapter;
 
-  public MapperMethod(Class<?> mapperInterface, Method method, Configuration config) {
-    this.command = new SqlCommand(config, mapperInterface, method);
-    this.method = new MethodSignature(config, method);
+  public MapperMethod(Class<?> mapperInterface, Method method, Configuration configuration) {
+    this.command = new SqlCommand(configuration, mapperInterface, method);
+    this.method = new MethodSignature(configuration, method);
+    if (SqlCommandType.CUSTOM == command.type) {
+      customMethodAdapter = new CustomMethodAdapter(mapperInterface, method, configuration);
+    } else {
+      customMethodAdapter = null;
+    }
   }
 
   public Object execute(SqlSession sqlSession, Object[] args) {
@@ -72,7 +81,9 @@ public class MapperMethod {
         result = sqlSession.selectOne(command.getName(), param);
       }
     } else if (SqlCommandType.FLUSH == command.getType()) {
-        result = sqlSession.flushStatements();
+      result = sqlSession.flushStatements();
+    } else if (SqlCommandType.CUSTOM == command.getType()) {
+      result = customMethodAdapter.invoke(sqlSession, args);
     } else {
       throw new BindingException("Unknown execution method for: " + command.getName());
     }
@@ -207,6 +218,9 @@ public class MapperMethod {
         if(method.getAnnotation(Flush.class) != null){
           name = null;
           type = SqlCommandType.FLUSH;
+        } else if (method.getAnnotation(CustomMethod.class) != null) {
+          name = null;
+          type = SqlCommandType.CUSTOM;
         } else {
           throw new BindingException("Invalid bound statement (not found): " + statementName);
         }
@@ -381,5 +395,56 @@ public class MapperMethod {
     }
 
   }
+
+  /**
+   * Adapter class of custom method.
+   *
+   * @author Kazuki Shimizu
+   * @since 3.4.0
+   */
+  private static class CustomMethodAdapter {
+
+    private final CustomMethodStrategy strategy;
+    private final Object targetObject;
+    private final Method targetMethod;
+
+    private CustomMethodAdapter(Class<?> mapperInterface, Method mapperMethod, Configuration configuration) {
+      this.strategy = configuration.getCustomMethodStrategy();
+      CustomMethod customMethod = mapperMethod.getAnnotation(CustomMethod.class);
+      try {
+        // Decide an implementation type and create instance
+        this.targetObject = strategy.lookupTargetObject(mapperInterface,
+                (customMethod.type() != void.class) ? customMethod.type() : null);
+        // Decide an implementation method name and create method
+        String methodName;
+        if (customMethod.method().isEmpty()) {
+          methodName = mapperMethod.getName();
+        } else {
+          methodName = customMethod.method();
+        }
+        this.targetMethod = strategy.lookupTargetMethod(targetObject, methodName, mapperMethod.getParameterTypes());
+      } catch (Exception e) {
+        throw new BindingException("Custom method does not found.", e);
+      }
+    }
+
+    private Object invoke(SqlSession sqlSession, Object[] mapperMethodArgs) {
+      try {
+        return strategy.invoke(targetObject, targetMethod, sqlSession, mapperMethodArgs);
+      } catch (Throwable t) {
+        Throwable original = ExceptionUtil.unwrapThrowable(t);
+        if (original instanceof Error) {
+          throw (Error) original;
+        }
+        if (original instanceof RuntimeException) {
+          throw (RuntimeException) original;
+        }
+        throw new BindingException("Custom method invocation is failed.", original);
+      }
+    }
+
+  }
+
+
 
 }
