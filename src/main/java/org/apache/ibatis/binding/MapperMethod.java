@@ -22,6 +22,7 @@ import org.apache.ibatis.cursor.Cursor;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.SqlCommandType;
 import org.apache.ibatis.reflection.MetaObject;
+import org.apache.ibatis.reflection.TypeParameterResolver;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
@@ -29,6 +30,8 @@ import org.apache.ibatis.session.SqlSession;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.*;
 
 /**
@@ -43,7 +46,7 @@ public class MapperMethod {
 
   public MapperMethod(Class<?> mapperInterface, Method method, Configuration config) {
     this.command = new SqlCommand(config, mapperInterface, method);
-    this.method = new MethodSignature(config, method);
+    this.method = new MethodSignature(config, mapperInterface, method);
   }
 
   public Object execute(SqlSession sqlSession, Object[] args) {
@@ -241,8 +244,15 @@ public class MapperMethod {
     private final SortedMap<Integer, String> params;
     private final boolean hasNamedParameters;
 
-    public MethodSignature(Configuration configuration, Method method) {
-      this.returnType = method.getReturnType();
+    public MethodSignature(Configuration configuration, Class<?> mapperInterface, Method method) {
+      Type exactReturnType = TypeParameterResolver.resolveReturnType(method, mapperInterface);
+      if (exactReturnType instanceof Class<?>) {
+        this.returnType = (Class<?>) exactReturnType;
+      } else if (exactReturnType instanceof ParameterizedType) {
+        this.returnType = (Class<?>) ((ParameterizedType) exactReturnType).getRawType();
+      } else {
+        this.returnType = method.getReturnType();
+      }
       this.returnsVoid = void.class.equals(this.returnType);
       this.returnsMany = (configuration.getObjectFactory().isCollection(this.returnType) || this.returnType.isArray());
       this.returnsCursor = Cursor.class.equals(this.returnType);
