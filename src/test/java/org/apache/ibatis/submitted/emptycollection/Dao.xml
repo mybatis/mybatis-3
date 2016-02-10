@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.apache.ibatis.submitted.emptycollection.Dao">
+    <select id="selectWithEmptyList" resultMap="selectList">
+        select 1 id, null "order", null description from (VALUES ('dummy')) dummy(dummy)
+    </select>
+
+    <select id="selectWithNonEmptyList" resultMap="selectList">
+        select 1 id, 1 "order", 'a description' description from (VALUES ('dummy')) dummy(dummy)
+        union all select 1 id, 2 "order", 'a 2nd description' description from (VALUES ('dummy')) dummy(dummy)
+        union all select 2 id, 1 "order", 'a description' description from (VALUES ('dummy')) dummy(dummy)
+    </select>
+
+    <select id="selectWithNonEmptyList_noCollectionId" resultMap="selectList_noCollectionId">
+        select 1 id, 1 "order", 'a description' description from (VALUES ('dummy')) dummy(dummy)
+        union all select 1 id, 2 "order", 'a 2nd description' description from (VALUES ('dummy')) dummy(dummy)
+        union all select 2 id, 1 "order", 'a description' description from (VALUES ('dummy')) dummy(dummy)
+    </select>
+
+
+    <resultMap id="selectList" type="org.apache.ibatis.submitted.emptycollection.TodoLists">
+        <id column="id" property="id" />
+        <collection property="todoItems" ofType="org.apache.ibatis.submitted.emptycollection.TodoItem" javaType="list">
+            <id column="id" />
+            <id column="order" property="order" />
+            <result column="description" property="description"/>
+        </collection>
+    </resultMap>
+
+    <resultMap id="selectList_noCollectionId" type="org.apache.ibatis.submitted.emptycollection.TodoLists">
+        <id column="id" property="id" />
+        <collection property="todoItems" ofType="org.apache.ibatis.submitted.emptycollection.TodoItem" javaType="list">
+            <id column="order" property="order" />
+            <result column="description" property="description"/>
+        </collection>
+    </resultMap>
+
+</mapper>

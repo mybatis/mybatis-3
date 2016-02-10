@@ -394,7 +394,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
             && (value != null || (configuration.isCallSettersOnNulls() && !metaObject.getSetterType(property).isPrimitive()))) {
           metaObject.setValue(property, value);
         }
-        if (value != null || value == DEFERED) {
+        if (property != null && (value != null || value == DEFERED)) {
           foundValues = true;
         }
       }
