@@ -76,6 +76,7 @@ import org.apache.ibatis.mapping.ResultSetType;
 import org.apache.ibatis.mapping.SqlCommandType;
 import org.apache.ibatis.mapping.SqlSource;
 import org.apache.ibatis.mapping.StatementType;
+import org.apache.ibatis.reflection.TypeParameterResolver;
 import org.apache.ibatis.scripting.LanguageDriver;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.ResultHandler;
@@ -376,19 +377,24 @@ public class MapperAnnotationBuilder {
 
   private Class<?> getReturnType(Method method) {
     Class<?> returnType = method.getReturnType();
-    // gcode issue #508
-    if (void.class.equals(returnType)) {
-      ResultType rt = method.getAnnotation(ResultType.class);
-      if (rt != null) {
-        returnType = rt.value();
-      } 
-    } else if (Collection.class.isAssignableFrom(returnType)) {
-      Type returnTypeParameter = method.getGenericReturnType();
-      if (returnTypeParameter instanceof ParameterizedType) {
-        Type[] actualTypeArguments = ((ParameterizedType) returnTypeParameter).getActualTypeArguments();
+    Type resolvedReturnType = TypeParameterResolver.resolveReturnType(method, type);
+    if (resolvedReturnType instanceof Class) {
+      returnType = (Class<?>) resolvedReturnType;
+      // gcode issue #508
+      if (void.class.equals(returnType)) {
+        ResultType rt = method.getAnnotation(ResultType.class);
+        if (rt != null) {
+          returnType = rt.value();
+        }
+      }
+    } else if (resolvedReturnType instanceof ParameterizedType) {
+      ParameterizedType parameterizedType = (ParameterizedType) resolvedReturnType;
+      Class<?> rawType = (Class<?>) parameterizedType.getRawType();
+      if (Collection.class.isAssignableFrom(rawType)) {
+        Type[] actualTypeArguments = parameterizedType.getActualTypeArguments();
         if (actualTypeArguments != null && actualTypeArguments.length == 1) {
-          returnTypeParameter = actualTypeArguments[0];
-          if (returnTypeParameter instanceof Class) {
+          Type returnTypeParameter = actualTypeArguments[0];
+          if (returnTypeParameter instanceof Class<?>) {
             returnType = (Class<?>) returnTypeParameter;
           } else if (returnTypeParameter instanceof ParameterizedType) {
             // (gcode issue #443) actual type can be a also a parameterized type
@@ -399,21 +405,18 @@ public class MapperAnnotationBuilder {
             returnType = Array.newInstance(componentType, 0).getClass();
           }
         }
-      }
-    } else if (method.isAnnotationPresent(MapKey.class) && Map.class.isAssignableFrom(returnType)) {
-      // (gcode issue 504) Do not look into Maps if there is not MapKey annotation
-      Type returnTypeParameter = method.getGenericReturnType();
-      if (returnTypeParameter instanceof ParameterizedType) {
-        Type[] actualTypeArguments = ((ParameterizedType) returnTypeParameter).getActualTypeArguments();
-        if (actualTypeArguments != null && actualTypeArguments.length == 2) {
-          returnTypeParameter = actualTypeArguments[1];
-          if (returnTypeParameter instanceof Class) {
-            returnType = (Class<?>) returnTypeParameter;
-          } else if (returnTypeParameter instanceof ParameterizedType) {
-            // (gcode issue 443) actual type can be a also a parameterized type
-            returnType = (Class<?>) ((ParameterizedType) returnTypeParameter).getRawType();
+      } else if (method.isAnnotationPresent(MapKey.class) && Map.class.isAssignableFrom(rawType)) {
+        // (gcode issue 504) Do not look into Maps if there is not MapKey annotation
+        Type[] actualTypeArguments = parameterizedType.getActualTypeArguments();
+          if (actualTypeArguments != null && actualTypeArguments.length == 2) {
+            Type returnTypeParameter = actualTypeArguments[1];
+            if (returnTypeParameter instanceof Class<?>) {
+              returnType = (Class<?>) returnTypeParameter;
+            } else if (returnTypeParameter instanceof ParameterizedType) {
+              // (gcode issue 443) actual type can be a also a parameterized type
+              returnType = (Class<?>) ((ParameterizedType) returnTypeParameter).getRawType();
+            }
           }
-        }
       }
     }
 
