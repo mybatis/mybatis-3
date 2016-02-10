@@ -20,9 +20,9 @@ import java.util.Map;
 
 public interface Level0Mapper<L, M, N> {
 
-  void simpleSelectVoid();
+  void simpleSelectVoid(Integer param);
 
-  double simpleSelectPrimitive();
+  double simpleSelectPrimitive(int param);
 
   Double simpleSelect();
 
@@ -30,16 +30,25 @@ public interface Level0Mapper<L, M, N> {
 
   Map<Integer, Double> simpleSelectMap();
 
-  N select();
+  String[] simpleSelectArray();
 
-  List<N> selectList();
+  <K extends Calculator<?>> K simpleSelectTypeVar();
+
+  List<? extends String> simpleSelectWildcard();
+
+  N select(N param);
+
+  List<N> selectList(M param1, N param2);
+
+  List<? extends N> selectWildcardList();
 
   Map<N, M> selectMap();
 
-  Calculator<N> selectCalculator();
+  Calculator<N> selectCalculator(Calculator<N> param);
 
   List<Calculator<L>> selectCalculatorList();
 
   interface Level0InnerMapper extends Level0Mapper<String, Long, Float> {
   }
+
 }

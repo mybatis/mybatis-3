@@ -16,15 +16,35 @@
 package org.apache.ibatis.submitted.mapper_type_parameter;
 
 public class Person {
-  private int id;
+  private Integer id;
 
   private String name;
 
-  public int getId() {
+  public Person() {
+    super();
+  }
+
+  public Person(Integer id) {
+    super();
+    this.id = id;
+  }
+
+  public Person(String name) {
+    super();
+    this.name = name;
+  }
+
+  public Person(Integer id, String name) {
+    super();
+    this.id = id;
+    this.name = name;
+  }
+
+  public Integer getId() {
     return id;
   }
 
-  public void setId(int id) {
+  public void setId(Integer id) {
     this.id = id;
   }
 

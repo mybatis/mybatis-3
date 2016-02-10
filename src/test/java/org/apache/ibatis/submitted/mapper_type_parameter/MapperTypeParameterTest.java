@@ -19,6 +19,7 @@ import static org.junit.Assert.*;
 
 import java.io.Reader;
 import java.sql.Connection;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -52,11 +53,11 @@ public class MapperTypeParameterTest {
   }
 
   @Test
-  public void shouldResolveSelect() {
+  public void shouldResolveSelectReturnTypeAndParam() {
     SqlSession sqlSession = sqlSessionFactory.openSession();
     try {
       PersonMapper mapper = sqlSession.getMapper(PersonMapper.class);
-      Person person = mapper.select(1);
+      Person person = mapper.select(new Person(1));
       assertEquals("Jane", person.getName());
     } finally {
       sqlSession.close();
@@ -64,7 +65,7 @@ public class MapperTypeParameterTest {
   }
 
   @Test
-  public void shouldResolveSelectList() {
+  public void shouldResolveListTypeParam() {
     SqlSession sqlSession = sqlSessionFactory.openSession();
     try {
       PersonMapper mapper = sqlSession.getMapper(PersonMapper.class);
@@ -78,27 +79,52 @@ public class MapperTypeParameterTest {
   }
 
   @Test
-  public void shouldResolveMapKeyTypeParameter() {
+  public void shouldResolveMultipleTypeParam() {
     SqlSession sqlSession = sqlSessionFactory.openSession();
     try {
-      PersonMapper mapper = sqlSession.getMapper(PersonMapper.class);
-      Map<Integer, Person> persons = mapper.selectMap(null);
-      assertEquals(2, persons.size());
-      assertEquals("Jane", persons.get(1).getName());
-      assertEquals("John", persons.get(2).getName());
+      CountryMapper mapper = sqlSession.getMapper(CountryMapper.class);
+      Map<Long, Country> results = mapper.selectMap(new Country());
+      assertEquals(2, results.size());
+      assertEquals("Japan", results.get(1L).getName());
+      assertEquals("New Zealand", results.get(2L).getName());
     } finally {
       sqlSession.close();
     }
   }
 
   @Test
-  public void shouldResolveListTypeParameter() {
+  public void shouldResolveParameterizedReturnType() {
     SqlSession sqlSession = sqlSessionFactory.openSession();
     try {
       PersonListMapper mapper = sqlSession.getMapper(PersonListMapper.class);
       List<Person> persons = mapper.select(null);
       assertEquals(2, persons.size());
       assertEquals("Jane", persons.get(0).getName());
+      assertEquals("John", persons.get(1).getName());
+    } finally {
+      sqlSession.close();
+    }
+  }
+
+  @Test
+  public void shouldResolveParam() {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      CountryMapper mapper = sqlSession.getMapper(CountryMapper.class);
+      assertEquals(1, mapper.update(new Country(2L, "Greenland")));
+    } finally {
+      sqlSession.close();
+    }
+  }
+
+  @Test
+  public void shouldResolveListParam() {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      PersonMapper mapper = sqlSession.getMapper(PersonMapper.class);
+      Person person1 = new Person("James");
+      assertEquals(1, mapper.insert(Arrays.asList(person1)));
+      assertNotNull(person1.getId());
     } finally {
       sqlSession.close();
     }

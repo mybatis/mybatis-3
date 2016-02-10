@@ -34,6 +34,7 @@
 	</environments>
 	
 	<mappers>
+		<mapper class="org.apache.ibatis.submitted.mapper_type_parameter.CountryMapper" />
 		<mapper class="org.apache.ibatis.submitted.mapper_type_parameter.PersonMapper" />
 		<mapper class="org.apache.ibatis.submitted.mapper_type_parameter.PersonListMapper" />
 	</mappers>
