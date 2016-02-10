@@ -23,24 +23,6 @@ import java.lang.reflect.WildcardType;
 
 public class TypeParameterResolver {
 
-  public static Type[] resolveParamTypes(Method method, Type mapper) {
-    Type[] paramTypes = method.getGenericParameterTypes();
-    Class<?> declaringClass = method.getDeclaringClass();
-    Type[] result = new Type[paramTypes.length];
-    for (int i = 0; i < paramTypes.length; i++) {
-      if (paramTypes[i] instanceof Class) {
-        result[i] = paramTypes[i];
-      } else if (paramTypes[i] instanceof TypeVariable) {
-        result[i] = resolveTypeVar((TypeVariable<?>) paramTypes[i], mapper, declaringClass);
-      } else if (paramTypes[i] instanceof ParameterizedType) {
-        result[i] = resolveParameterizedType((ParameterizedType) paramTypes[i], mapper, declaringClass);
-      } else {
-        // TODO: other types?
-      }
-    }
-    return result;
-  }
-
   public static Type resolveReturnType(Method method, Type mapper) {
     Type returnType = method.getGenericReturnType();
     Class<?> declaringClass = method.getDeclaringClass();
