@@ -15,33 +15,36 @@
  */
 package org.apache.ibatis.submitted.nestedresulthandler;
 
-public class Item {
-  private Integer id;
-  private String name;
+/**
+ * Created by eyal on 12/9/2015.
+ */
+public class PersonItemPair {
+    private Person  person;
+    private Item item;
 
-  public String toString(){
-    return new StringBuilder()
-            .append("Item(")
-            .append(id)
-            .append(", ")
-            .append(name)
-            .append(" )")
-            .toString();
-  }
+    public String toString(){
+        return new StringBuilder()
+                .append("PersonItemPair(")
+                .append(person)
+                .append(", ")
+                .append(item)
+                .append(" )")
+                .toString();
+    }
 
-  public Integer getId() {
-    return id;
-  }
+    public Person getPerson() {
+        return person;
+    }
 
-  public void setId(Integer id) {
-    this.id = id;
-  }
+    public void setPerson(Person person) {
+        this.person = person;
+    }
 
-  public String getName() {
-    return name;
-  }
+    public Item getItem() {
+        return item;
+    }
 
-  public void setName(String name) {
-    this.name = name;
-  }
+    public void setItem(Item item) {
+        this.item = item;
+    }
 }
