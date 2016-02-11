@@ -433,7 +433,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
   }
 
   private List<UnMappedColumAutoMapping> createAutomaticMappings(ResultSetWrapper rsw, ResultMap resultMap, MetaObject metaObject, String columnPrefix) throws SQLException {
-    final String mapKey = getMapKey(resultMap, columnPrefix);
+    final String mapKey = resultMap.getId() + ":" + columnPrefix;
     List<UnMappedColumAutoMapping> autoMapping = autoMappingsCache.get(mapKey);
     if (autoMapping == null) {
       autoMapping = new ArrayList<UnMappedColumAutoMapping>();
@@ -1048,9 +1048,5 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     }
     return null;
   }  
-
-  private String getMapKey(ResultMap resultMap, String columnPrefix) {
-    return resultMap.getId() + ":" + columnPrefix;
-  }
   
 }
