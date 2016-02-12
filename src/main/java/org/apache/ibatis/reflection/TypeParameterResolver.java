@@ -15,6 +15,8 @@
  */
 package org.apache.ibatis.reflection;
 
+import java.lang.reflect.Array;
+import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -38,10 +40,29 @@ public class TypeParameterResolver {
       result = resolveTypeVar((TypeVariable<?>) returnType, mapper, declaringClass);
     } else if (returnType instanceof ParameterizedType) {
       result = resolveParameterizedType((ParameterizedType) returnType, mapper, declaringClass);
+    } else if (returnType instanceof GenericArrayType) {
+      result = resolveGenericArrayType((GenericArrayType) returnType, mapper, declaringClass);
     } else {
       result = returnType;
     }
     return result;
+  }
+
+  private static Type resolveGenericArrayType(GenericArrayType genericArrayType, Type mapper, Class<?> declaringClass) {
+    Type componentType = genericArrayType.getGenericComponentType();
+    Type resolvedComponentType = null;
+    if (componentType instanceof TypeVariable) {
+      resolvedComponentType = resolveTypeVar((TypeVariable<?>) componentType, mapper, declaringClass);
+    } else if (componentType instanceof GenericArrayType) {
+      resolvedComponentType = resolveGenericArrayType((GenericArrayType) componentType, mapper, declaringClass);
+    } else if (componentType instanceof ParameterizedType) {
+      resolvedComponentType = resolveParameterizedType((ParameterizedType) componentType, mapper, declaringClass);
+    }
+    if (resolvedComponentType instanceof Class) {
+      return Array.newInstance((Class<?>) resolvedComponentType, 0).getClass();
+    } else {
+      return new GenericArrayTypeImpl(resolvedComponentType);
+    }
   }
 
   private static ParameterizedType resolveParameterizedType(ParameterizedType parameterizedType, Type mapper, Class<?> declaringClass) {
@@ -191,6 +212,20 @@ public class TypeParameterResolver {
     @Override
     public Type[] getUpperBounds() {
       return upperBounds;
+    }
+  }
+
+  static class GenericArrayTypeImpl implements GenericArrayType {
+    private Type genericComponentType;
+
+    private GenericArrayTypeImpl(Type genericComponentType) {
+      super();
+      this.genericComponentType = genericComponentType;
+    }
+
+    @Override
+    public Type getGenericComponentType() {
+      return genericComponentType;
     }
   }
 }

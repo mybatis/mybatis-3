@@ -32,6 +32,8 @@ public interface Level0Mapper<L, M, N> {
 
   String[] simpleSelectArray();
 
+  String[][] simpleSelectArrayOfArray();
+
   <K extends Calculator<?>> K simpleSelectTypeVar();
 
   List<? extends String> simpleSelectWildcard();
@@ -43,6 +45,12 @@ public interface Level0Mapper<L, M, N> {
   List<? extends N> selectWildcardList();
 
   Map<N, M> selectMap();
+
+  N[] selectArray();
+
+  N[][] selectArrayOfArray();
+
+  List<N>[] selectArrayOfList();
 
   Calculator<N> selectCalculator(Calculator<N> param);
 

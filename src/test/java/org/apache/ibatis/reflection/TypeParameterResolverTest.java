@@ -17,6 +17,7 @@ package org.apache.ibatis.reflection;
 
 import static org.junit.Assert.*;
 
+import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -117,6 +118,18 @@ public class TypeParameterResolverTest {
   }
 
   @Test
+  public void testReturn_SimpleArrayOfArray() throws Exception {
+    Class<?> clazz = Level1Mapper.class;
+    Method method = clazz.getMethod("simpleSelectArrayOfArray");
+    Type result = TypeParameterResolver.resolveReturnType(method, clazz);
+    assertTrue(result instanceof Class);
+    Class<?> resultClass = (Class<?>) result;
+    assertTrue(resultClass.isArray());
+    assertTrue(resultClass.getComponentType().isArray());
+    assertEquals(String.class, resultClass.getComponentType().getComponentType());
+  }
+
+  @Test
   public void testReturn_SimpleTypeVar() throws Exception {
     Class<?> clazz = Level1Mapper.class;
     Method method = clazz.getMethod("simpleSelectTypeVar");
@@ -186,6 +199,43 @@ public class TypeParameterResolverTest {
     assertEquals(List.class, type.getRawType());
     assertEquals(1, type.getActualTypeArguments().length);
     assertEquals(String.class, type.getActualTypeArguments()[0]);
+  }
+
+  @Test
+  public void testReturn_Lv1Array() throws Exception {
+    Class<?> clazz = Level1Mapper.class;
+    Method method = clazz.getMethod("selectArray");
+    Type result = TypeParameterResolver.resolveReturnType(method, clazz);
+    assertTrue(result instanceof Class);
+    Class<?> resultClass = (Class<?>) result;
+    assertTrue(resultClass.isArray());
+    assertEquals(String.class, resultClass.getComponentType());
+  }
+
+  @Test
+  public void testReturn_Lv2ArrayOfArray() throws Exception {
+    Class<?> clazz = Level2Mapper.class;
+    Method method = clazz.getMethod("selectArrayOfArray");
+    Type result = TypeParameterResolver.resolveReturnType(method, clazz);
+    assertTrue(result instanceof Class);
+    Class<?> resultClass = (Class<?>) result;
+    assertTrue(result instanceof Class);
+    assertTrue(resultClass.isArray());
+    assertTrue(resultClass.getComponentType().isArray());
+    assertEquals(String.class, resultClass.getComponentType().getComponentType());
+  }
+
+  @Test
+  public void testReturn_Lv2ArrayOfList() throws Exception {
+    Class<?> clazz = Level2Mapper.class;
+    Method method = clazz.getMethod("selectArrayOfList");
+    Type result = TypeParameterResolver.resolveReturnType(method, clazz);
+    assertTrue(result instanceof GenericArrayType);
+    GenericArrayType genericArrayType = (GenericArrayType) result;
+    assertTrue(genericArrayType.getGenericComponentType() instanceof ParameterizedType);
+    ParameterizedType paramType = (ParameterizedType) genericArrayType.getGenericComponentType();
+    assertEquals(List.class, paramType.getRawType());
+    assertEquals(String.class, paramType.getActualTypeArguments()[0]);
   }
 
   @Test
