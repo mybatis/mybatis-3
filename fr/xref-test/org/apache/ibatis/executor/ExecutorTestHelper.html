@@ -205,7 +205,7 @@
 <a class="jxr_linenumber" name="L197" href="#L197">197</a>               }
 <a class="jxr_linenumber" name="L198" href="#L198">198</a>             }).build());
 <a class="jxr_linenumber" name="L199" href="#L199">199</a>           }
-<a class="jxr_linenumber" name="L200" href="#L200">200</a>         }).fetchSize(1000).build();
+<a class="jxr_linenumber" name="L200" href="#L200">200</a>         }).fetchSize(1000).timeout(2000).build();
 <a class="jxr_linenumber" name="L201" href="#L201">201</a>   }
 <a class="jxr_linenumber" name="L202" href="#L202">202</a> 
 <a class="jxr_linenumber" name="L203" href="#L203">203</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> MappedStatement prepareSelectOneAuthorMappedStatementWithConstructorResults(<strong class="jxr_keyword">final</strong> Configuration config) {
@@ -681,6 +681,6 @@
 <a class="jxr_linenumber" name="L673" href="#L673">673</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2010&#x2013;2015 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2010&#x2013;2016 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
 </body>
 </html>

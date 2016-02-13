@@ -158,9 +158,29 @@
 <a class="jxr_linenumber" name="L150" href="#L150">150</a>     }
 <a class="jxr_linenumber" name="L151" href="#L151">151</a>   }
 <a class="jxr_linenumber" name="L152" href="#L152">152</a> 
-<a class="jxr_linenumber" name="L153" href="#L153">153</a> }
+<a class="jxr_linenumber" name="L153" href="#L153">153</a>   @Test <em class="jxr_comment">//reopen issue 39? (not a bug?)</em>
+<a class="jxr_linenumber" name="L154" href="#L154">154</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testGetPersonItemPairs(){
+<a class="jxr_linenumber" name="L155" href="#L155">155</a>     SqlSession sqlSession = sqlSessionFactory.openSession();
+<a class="jxr_linenumber" name="L156" href="#L156">156</a>     <strong class="jxr_keyword">try</strong>{
+<a class="jxr_linenumber" name="L157" href="#L157">157</a>       <a href="../../../../../org/apache/ibatis/submitted/nestedresulthandler/Mapper.html">Mapper</a> mapper = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L158" href="#L158">158</a>       List&lt;PersonItemPair&gt; pairs = mapper.getPersonItemPairs();
+<a class="jxr_linenumber" name="L159" href="#L159">159</a> 
+<a class="jxr_linenumber" name="L160" href="#L160">160</a>       Assert.assertNotNull( pairs );
+<a class="jxr_linenumber" name="L161" href="#L161">161</a> <em class="jxr_comment">//      System.out.println( new StringBuilder().append("selected pairs: ").append(pairs) );</em>
+<a class="jxr_linenumber" name="L162" href="#L162">162</a> 
+<a class="jxr_linenumber" name="L163" href="#L163">163</a>       Assert.assertEquals(5, pairs.size() );
+<a class="jxr_linenumber" name="L164" href="#L164">164</a>       Assert.assertNotNull(pairs.get(0).getPerson());
+<a class="jxr_linenumber" name="L165" href="#L165">165</a>       Assert.assertEquals(pairs.get(0).getPerson().getId(), Integer.valueOf(1));
+<a class="jxr_linenumber" name="L166" href="#L166">166</a>       Assert.assertNotNull(pairs.get(0).getItem());
+<a class="jxr_linenumber" name="L167" href="#L167">167</a>       Assert.assertEquals( pairs.get(0).getItem().getId(), Integer.valueOf(1));
+<a class="jxr_linenumber" name="L168" href="#L168">168</a>     } <strong class="jxr_keyword">finally</strong>{
+<a class="jxr_linenumber" name="L169" href="#L169">169</a>       sqlSession.close();
+<a class="jxr_linenumber" name="L170" href="#L170">170</a>     }
+<a class="jxr_linenumber" name="L171" href="#L171">171</a>   }
+<a class="jxr_linenumber" name="L172" href="#L172">172</a> 
+<a class="jxr_linenumber" name="L173" href="#L173">173</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2010&#x2013;2015 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2010&#x2013;2016 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
 </body>
 </html>

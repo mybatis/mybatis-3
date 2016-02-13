@@ -326,80 +326,91 @@
 <a class="jxr_linenumber" name="L318" href="#L318">318</a>   }
 <a class="jxr_linenumber" name="L319" href="#L319">319</a> 
 <a class="jxr_linenumber" name="L320" href="#L320">320</a>   @Test
-<a class="jxr_linenumber" name="L321" href="#L321">321</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldSkipForEachWhenCollectionIsEmpty() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L322" href="#L322">322</a>     <strong class="jxr_keyword">final</strong> HashMap&lt;String, Integer[]&gt; parameterObject = <strong class="jxr_keyword">new</strong> HashMap&lt;String, Integer[]&gt;() {{
-<a class="jxr_linenumber" name="L323" href="#L323">323</a>         put(<span class="jxr_string">"array"</span>, <strong class="jxr_keyword">new</strong> Integer[] {});
+<a class="jxr_linenumber" name="L321" href="#L321">321</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldHandleOgnlExpression() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L322" href="#L322">322</a>     <strong class="jxr_keyword">final</strong> HashMap&lt;String, String&gt; parameterObject = <strong class="jxr_keyword">new</strong> HashMap&lt;String, String&gt;() {{
+<a class="jxr_linenumber" name="L323" href="#L323">323</a>       put(<span class="jxr_string">"name"</span>, <span class="jxr_string">"Steve"</span>);
 <a class="jxr_linenumber" name="L324" href="#L324">324</a>     }};
-<a class="jxr_linenumber" name="L325" href="#L325">325</a>     <strong class="jxr_keyword">final</strong> String expected = <span class="jxr_string">"SELECT * FROM BLOG"</span>;
-<a class="jxr_linenumber" name="L326" href="#L326">326</a>     DynamicSqlSource source = createDynamicSqlSource(<strong class="jxr_keyword">new</strong> TextSqlNode(<span class="jxr_string">"SELECT * FROM BLOG"</span>),
-<a class="jxr_linenumber" name="L327" href="#L327">327</a>         <strong class="jxr_keyword">new</strong> ForEachSqlNode(<strong class="jxr_keyword">new</strong> Configuration(), mixedContents(
-<a class="jxr_linenumber" name="L328" href="#L328">328</a>             <strong class="jxr_keyword">new</strong> TextSqlNode(<span class="jxr_string">"#{item}"</span>)), <span class="jxr_string">"array"</span>, <strong class="jxr_keyword">null</strong>, <span class="jxr_string">"item"</span>, <span class="jxr_string">"WHERE id in ("</span>, <span class="jxr_string">")"</span>, <span class="jxr_string">","</span>));
-<a class="jxr_linenumber" name="L329" href="#L329">329</a>     BoundSql boundSql = source.getBoundSql(parameterObject);
-<a class="jxr_linenumber" name="L330" href="#L330">330</a>     assertEquals(expected, boundSql.getSql());
-<a class="jxr_linenumber" name="L331" href="#L331">331</a>     assertEquals(0, boundSql.getParameterMappings().size());
-<a class="jxr_linenumber" name="L332" href="#L332">332</a>   }
-<a class="jxr_linenumber" name="L333" href="#L333">333</a> 
-<a class="jxr_linenumber" name="L334" href="#L334">334</a>   @Test
-<a class="jxr_linenumber" name="L335" href="#L335">335</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldPerformStrictMatchOnForEachVariableSubstitution() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L336" href="#L336">336</a>     <strong class="jxr_keyword">final</strong> Map&lt;String, Object&gt; param = <strong class="jxr_keyword">new</strong> HashMap&lt;String, Object&gt;();
-<a class="jxr_linenumber" name="L337" href="#L337">337</a>     <strong class="jxr_keyword">final</strong> Map&lt;String, String&gt; uuu = <strong class="jxr_keyword">new</strong> HashMap&lt;String, String&gt;();
-<a class="jxr_linenumber" name="L338" href="#L338">338</a>     uuu.put(<span class="jxr_string">"u"</span>, <span class="jxr_string">"xyz"</span>);
-<a class="jxr_linenumber" name="L339" href="#L339">339</a>     List&lt;Bean&gt; uuuu = <strong class="jxr_keyword">new</strong> ArrayList&lt;Bean&gt;();
-<a class="jxr_linenumber" name="L340" href="#L340">340</a>     uuuu.add(<strong class="jxr_keyword">new</strong> <a href="../../../../../../org/apache/ibatis/builder/xml/dynamic/DynamicSqlSourceTest.html">Bean</a>(<span class="jxr_string">"bean id"</span>));
-<a class="jxr_linenumber" name="L341" href="#L341">341</a>     param.put(<span class="jxr_string">"uuu"</span>, uuu);
-<a class="jxr_linenumber" name="L342" href="#L342">342</a>     param.put(<span class="jxr_string">"uuuu"</span>, uuuu);
-<a class="jxr_linenumber" name="L343" href="#L343">343</a>     DynamicSqlSource source = createDynamicSqlSource(
-<a class="jxr_linenumber" name="L344" href="#L344">344</a>         <strong class="jxr_keyword">new</strong> TextSqlNode(<span class="jxr_string">"INSERT INTO BLOG (ID, NAME, NOTE, COMMENT) VALUES"</span>),
-<a class="jxr_linenumber" name="L345" href="#L345">345</a>         <strong class="jxr_keyword">new</strong> ForEachSqlNode(<strong class="jxr_keyword">new</strong> Configuration(),mixedContents(
-<a class="jxr_linenumber" name="L346" href="#L346">346</a>             <strong class="jxr_keyword">new</strong> TextSqlNode(<span class="jxr_string">"#{uuu.u}, #{u.id}, #{ u,typeHandler=org.apache.ibatis.type.StringTypeHandler},"</span>
-<a class="jxr_linenumber" name="L347" href="#L347">347</a>                 + <span class="jxr_string">" #{u:VARCHAR,typeHandler=org.apache.ibatis.type.StringTypeHandler}"</span>)), <span class="jxr_string">"uuuu"</span>, <span class="jxr_string">"uu"</span>, <span class="jxr_string">"u"</span>, <span class="jxr_string">"("</span>, <span class="jxr_string">")"</span>, <span class="jxr_string">","</span>));
-<a class="jxr_linenumber" name="L348" href="#L348">348</a>     BoundSql boundSql = source.getBoundSql(param);
-<a class="jxr_linenumber" name="L349" href="#L349">349</a>     assertEquals(4, boundSql.getParameterMappings().size());
-<a class="jxr_linenumber" name="L350" href="#L350">350</a>     assertEquals(<span class="jxr_string">"uuu.u"</span>, boundSql.getParameterMappings().get(0).getProperty());
-<a class="jxr_linenumber" name="L351" href="#L351">351</a>     assertEquals(<span class="jxr_string">"__frch_u_0.id"</span>, boundSql.getParameterMappings().get(1).getProperty());
-<a class="jxr_linenumber" name="L352" href="#L352">352</a>     assertEquals(<span class="jxr_string">"__frch_u_0"</span>, boundSql.getParameterMappings().get(2).getProperty());
-<a class="jxr_linenumber" name="L353" href="#L353">353</a>     assertEquals(<span class="jxr_string">"__frch_u_0"</span>, boundSql.getParameterMappings().get(3).getProperty());
-<a class="jxr_linenumber" name="L354" href="#L354">354</a>   }
-<a class="jxr_linenumber" name="L355" href="#L355">355</a> 
-<a class="jxr_linenumber" name="L356" href="#L356">356</a>   <strong class="jxr_keyword">private</strong> DynamicSqlSource createDynamicSqlSource(SqlNode... contents) <strong class="jxr_keyword">throws</strong> IOException, SQLException {
-<a class="jxr_linenumber" name="L357" href="#L357">357</a>     createBlogDataSource();
-<a class="jxr_linenumber" name="L358" href="#L358">358</a>     <strong class="jxr_keyword">final</strong> String resource = <span class="jxr_string">"org/apache/ibatis/builder/MapperConfig.xml"</span>;
-<a class="jxr_linenumber" name="L359" href="#L359">359</a>     <strong class="jxr_keyword">final</strong> Reader reader = Resources.getResourceAsReader(resource);
-<a class="jxr_linenumber" name="L360" href="#L360">360</a>     SqlSessionFactory sqlMapper = <strong class="jxr_keyword">new</strong> SqlSessionFactoryBuilder().build(reader);
-<a class="jxr_linenumber" name="L361" href="#L361">361</a>     Configuration configuration = sqlMapper.getConfiguration();
-<a class="jxr_linenumber" name="L362" href="#L362">362</a>     MixedSqlNode sqlNode = mixedContents(contents);
-<a class="jxr_linenumber" name="L363" href="#L363">363</a>     <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> DynamicSqlSource(configuration, sqlNode);
-<a class="jxr_linenumber" name="L364" href="#L364">364</a>   }
-<a class="jxr_linenumber" name="L365" href="#L365">365</a> 
-<a class="jxr_linenumber" name="L366" href="#L366">366</a>   <strong class="jxr_keyword">private</strong> MixedSqlNode mixedContents(SqlNode... contents) {
-<a class="jxr_linenumber" name="L367" href="#L367">367</a>     <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> MixedSqlNode(Arrays.asList(contents));
-<a class="jxr_linenumber" name="L368" href="#L368">368</a>   }
-<a class="jxr_linenumber" name="L369" href="#L369">369</a> 
-<a class="jxr_linenumber" name="L370" href="#L370">370</a>   @Test
-<a class="jxr_linenumber" name="L371" href="#L371">371</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldMapNullStringsToEmptyStrings() {
-<a class="jxr_linenumber" name="L372" href="#L372">372</a>     <strong class="jxr_keyword">final</strong> String expected = <span class="jxr_string">"id=${id}"</span>;
-<a class="jxr_linenumber" name="L373" href="#L373">373</a>     <strong class="jxr_keyword">final</strong> MixedSqlNode sqlNode = mixedContents(<strong class="jxr_keyword">new</strong> TextSqlNode(expected));
-<a class="jxr_linenumber" name="L374" href="#L374">374</a>     <strong class="jxr_keyword">final</strong> DynamicSqlSource source = <strong class="jxr_keyword">new</strong> DynamicSqlSource(<strong class="jxr_keyword">new</strong> Configuration(), sqlNode);
-<a class="jxr_linenumber" name="L375" href="#L375">375</a>     String sql = source.getBoundSql(<strong class="jxr_keyword">new</strong> <a href="../../../../../../org/apache/ibatis/builder/xml/dynamic/DynamicSqlSourceTest.html">Bean</a>(<strong class="jxr_keyword">null</strong>)).getSql();
-<a class="jxr_linenumber" name="L376" href="#L376">376</a>     Assert.assertEquals(<span class="jxr_string">"id="</span>, sql);
-<a class="jxr_linenumber" name="L377" href="#L377">377</a>   }
-<a class="jxr_linenumber" name="L378" href="#L378">378</a> 
-<a class="jxr_linenumber" name="L379" href="#L379">379</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../../../org/apache/ibatis/builder/xml/dynamic/DynamicSqlSourceTest.html">Bean</a> {
-<a class="jxr_linenumber" name="L380" href="#L380">380</a>     <strong class="jxr_keyword">public</strong> String id;
-<a class="jxr_linenumber" name="L381" href="#L381">381</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../../../org/apache/ibatis/builder/xml/dynamic/DynamicSqlSourceTest.html">Bean</a>(String property) {
-<a class="jxr_linenumber" name="L382" href="#L382">382</a>       <strong class="jxr_keyword">this</strong>.id = property;
-<a class="jxr_linenumber" name="L383" href="#L383">383</a>     }
-<a class="jxr_linenumber" name="L384" href="#L384">384</a>     <strong class="jxr_keyword">public</strong> String getId() {
-<a class="jxr_linenumber" name="L385" href="#L385">385</a>       <strong class="jxr_keyword">return</strong> id;
-<a class="jxr_linenumber" name="L386" href="#L386">386</a>     }
-<a class="jxr_linenumber" name="L387" href="#L387">387</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setId(String property) {
-<a class="jxr_linenumber" name="L388" href="#L388">388</a>       <strong class="jxr_keyword">this</strong>.id = property;
-<a class="jxr_linenumber" name="L389" href="#L389">389</a>     }
-<a class="jxr_linenumber" name="L390" href="#L390">390</a>   }
-<a class="jxr_linenumber" name="L391" href="#L391">391</a> 
-<a class="jxr_linenumber" name="L392" href="#L392">392</a> }
+<a class="jxr_linenumber" name="L325" href="#L325">325</a>     <strong class="jxr_keyword">final</strong> String expected = <span class="jxr_string">"Expression test: 3 / yes."</span>;
+<a class="jxr_linenumber" name="L326" href="#L326">326</a>     DynamicSqlSource source = createDynamicSqlSource(<strong class="jxr_keyword">new</strong> TextSqlNode(<span class="jxr_string">"Expression test: ${name.indexOf('v')} / ${name in {'Bob', 'Steve'&#92;&#92;} ? 'yes' : 'no'}."</span>));
+<a class="jxr_linenumber" name="L327" href="#L327">327</a>     BoundSql boundSql = source.getBoundSql(parameterObject);
+<a class="jxr_linenumber" name="L328" href="#L328">328</a>     assertEquals(expected, boundSql.getSql());
+<a class="jxr_linenumber" name="L329" href="#L329">329</a>   }
+<a class="jxr_linenumber" name="L330" href="#L330">330</a> 
+<a class="jxr_linenumber" name="L331" href="#L331">331</a>   @Test
+<a class="jxr_linenumber" name="L332" href="#L332">332</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldSkipForEachWhenCollectionIsEmpty() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L333" href="#L333">333</a>     <strong class="jxr_keyword">final</strong> HashMap&lt;String, Integer[]&gt; parameterObject = <strong class="jxr_keyword">new</strong> HashMap&lt;String, Integer[]&gt;() {{
+<a class="jxr_linenumber" name="L334" href="#L334">334</a>         put(<span class="jxr_string">"array"</span>, <strong class="jxr_keyword">new</strong> Integer[] {});
+<a class="jxr_linenumber" name="L335" href="#L335">335</a>     }};
+<a class="jxr_linenumber" name="L336" href="#L336">336</a>     <strong class="jxr_keyword">final</strong> String expected = <span class="jxr_string">"SELECT * FROM BLOG"</span>;
+<a class="jxr_linenumber" name="L337" href="#L337">337</a>     DynamicSqlSource source = createDynamicSqlSource(<strong class="jxr_keyword">new</strong> TextSqlNode(<span class="jxr_string">"SELECT * FROM BLOG"</span>),
+<a class="jxr_linenumber" name="L338" href="#L338">338</a>         <strong class="jxr_keyword">new</strong> ForEachSqlNode(<strong class="jxr_keyword">new</strong> Configuration(), mixedContents(
+<a class="jxr_linenumber" name="L339" href="#L339">339</a>             <strong class="jxr_keyword">new</strong> TextSqlNode(<span class="jxr_string">"#{item}"</span>)), <span class="jxr_string">"array"</span>, <strong class="jxr_keyword">null</strong>, <span class="jxr_string">"item"</span>, <span class="jxr_string">"WHERE id in ("</span>, <span class="jxr_string">")"</span>, <span class="jxr_string">","</span>));
+<a class="jxr_linenumber" name="L340" href="#L340">340</a>     BoundSql boundSql = source.getBoundSql(parameterObject);
+<a class="jxr_linenumber" name="L341" href="#L341">341</a>     assertEquals(expected, boundSql.getSql());
+<a class="jxr_linenumber" name="L342" href="#L342">342</a>     assertEquals(0, boundSql.getParameterMappings().size());
+<a class="jxr_linenumber" name="L343" href="#L343">343</a>   }
+<a class="jxr_linenumber" name="L344" href="#L344">344</a> 
+<a class="jxr_linenumber" name="L345" href="#L345">345</a>   @Test
+<a class="jxr_linenumber" name="L346" href="#L346">346</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldPerformStrictMatchOnForEachVariableSubstitution() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L347" href="#L347">347</a>     <strong class="jxr_keyword">final</strong> Map&lt;String, Object&gt; param = <strong class="jxr_keyword">new</strong> HashMap&lt;String, Object&gt;();
+<a class="jxr_linenumber" name="L348" href="#L348">348</a>     <strong class="jxr_keyword">final</strong> Map&lt;String, String&gt; uuu = <strong class="jxr_keyword">new</strong> HashMap&lt;String, String&gt;();
+<a class="jxr_linenumber" name="L349" href="#L349">349</a>     uuu.put(<span class="jxr_string">"u"</span>, <span class="jxr_string">"xyz"</span>);
+<a class="jxr_linenumber" name="L350" href="#L350">350</a>     List&lt;Bean&gt; uuuu = <strong class="jxr_keyword">new</strong> ArrayList&lt;Bean&gt;();
+<a class="jxr_linenumber" name="L351" href="#L351">351</a>     uuuu.add(<strong class="jxr_keyword">new</strong> <a href="../../../../../../org/apache/ibatis/builder/xml/dynamic/DynamicSqlSourceTest.html">Bean</a>(<span class="jxr_string">"bean id"</span>));
+<a class="jxr_linenumber" name="L352" href="#L352">352</a>     param.put(<span class="jxr_string">"uuu"</span>, uuu);
+<a class="jxr_linenumber" name="L353" href="#L353">353</a>     param.put(<span class="jxr_string">"uuuu"</span>, uuuu);
+<a class="jxr_linenumber" name="L354" href="#L354">354</a>     DynamicSqlSource source = createDynamicSqlSource(
+<a class="jxr_linenumber" name="L355" href="#L355">355</a>         <strong class="jxr_keyword">new</strong> TextSqlNode(<span class="jxr_string">"INSERT INTO BLOG (ID, NAME, NOTE, COMMENT) VALUES"</span>),
+<a class="jxr_linenumber" name="L356" href="#L356">356</a>         <strong class="jxr_keyword">new</strong> ForEachSqlNode(<strong class="jxr_keyword">new</strong> Configuration(),mixedContents(
+<a class="jxr_linenumber" name="L357" href="#L357">357</a>             <strong class="jxr_keyword">new</strong> TextSqlNode(<span class="jxr_string">"#{uuu.u}, #{u.id}, #{ u,typeHandler=org.apache.ibatis.type.StringTypeHandler},"</span>
+<a class="jxr_linenumber" name="L358" href="#L358">358</a>                 + <span class="jxr_string">" #{u:VARCHAR,typeHandler=org.apache.ibatis.type.StringTypeHandler}"</span>)), <span class="jxr_string">"uuuu"</span>, <span class="jxr_string">"uu"</span>, <span class="jxr_string">"u"</span>, <span class="jxr_string">"("</span>, <span class="jxr_string">")"</span>, <span class="jxr_string">","</span>));
+<a class="jxr_linenumber" name="L359" href="#L359">359</a>     BoundSql boundSql = source.getBoundSql(param);
+<a class="jxr_linenumber" name="L360" href="#L360">360</a>     assertEquals(4, boundSql.getParameterMappings().size());
+<a class="jxr_linenumber" name="L361" href="#L361">361</a>     assertEquals(<span class="jxr_string">"uuu.u"</span>, boundSql.getParameterMappings().get(0).getProperty());
+<a class="jxr_linenumber" name="L362" href="#L362">362</a>     assertEquals(<span class="jxr_string">"__frch_u_0.id"</span>, boundSql.getParameterMappings().get(1).getProperty());
+<a class="jxr_linenumber" name="L363" href="#L363">363</a>     assertEquals(<span class="jxr_string">"__frch_u_0"</span>, boundSql.getParameterMappings().get(2).getProperty());
+<a class="jxr_linenumber" name="L364" href="#L364">364</a>     assertEquals(<span class="jxr_string">"__frch_u_0"</span>, boundSql.getParameterMappings().get(3).getProperty());
+<a class="jxr_linenumber" name="L365" href="#L365">365</a>   }
+<a class="jxr_linenumber" name="L366" href="#L366">366</a> 
+<a class="jxr_linenumber" name="L367" href="#L367">367</a>   <strong class="jxr_keyword">private</strong> DynamicSqlSource createDynamicSqlSource(SqlNode... contents) <strong class="jxr_keyword">throws</strong> IOException, SQLException {
+<a class="jxr_linenumber" name="L368" href="#L368">368</a>     createBlogDataSource();
+<a class="jxr_linenumber" name="L369" href="#L369">369</a>     <strong class="jxr_keyword">final</strong> String resource = <span class="jxr_string">"org/apache/ibatis/builder/MapperConfig.xml"</span>;
+<a class="jxr_linenumber" name="L370" href="#L370">370</a>     <strong class="jxr_keyword">final</strong> Reader reader = Resources.getResourceAsReader(resource);
+<a class="jxr_linenumber" name="L371" href="#L371">371</a>     SqlSessionFactory sqlMapper = <strong class="jxr_keyword">new</strong> SqlSessionFactoryBuilder().build(reader);
+<a class="jxr_linenumber" name="L372" href="#L372">372</a>     Configuration configuration = sqlMapper.getConfiguration();
+<a class="jxr_linenumber" name="L373" href="#L373">373</a>     MixedSqlNode sqlNode = mixedContents(contents);
+<a class="jxr_linenumber" name="L374" href="#L374">374</a>     <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> DynamicSqlSource(configuration, sqlNode);
+<a class="jxr_linenumber" name="L375" href="#L375">375</a>   }
+<a class="jxr_linenumber" name="L376" href="#L376">376</a> 
+<a class="jxr_linenumber" name="L377" href="#L377">377</a>   <strong class="jxr_keyword">private</strong> MixedSqlNode mixedContents(SqlNode... contents) {
+<a class="jxr_linenumber" name="L378" href="#L378">378</a>     <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> MixedSqlNode(Arrays.asList(contents));
+<a class="jxr_linenumber" name="L379" href="#L379">379</a>   }
+<a class="jxr_linenumber" name="L380" href="#L380">380</a> 
+<a class="jxr_linenumber" name="L381" href="#L381">381</a>   @Test
+<a class="jxr_linenumber" name="L382" href="#L382">382</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldMapNullStringsToEmptyStrings() {
+<a class="jxr_linenumber" name="L383" href="#L383">383</a>     <strong class="jxr_keyword">final</strong> String expected = <span class="jxr_string">"id=${id}"</span>;
+<a class="jxr_linenumber" name="L384" href="#L384">384</a>     <strong class="jxr_keyword">final</strong> MixedSqlNode sqlNode = mixedContents(<strong class="jxr_keyword">new</strong> TextSqlNode(expected));
+<a class="jxr_linenumber" name="L385" href="#L385">385</a>     <strong class="jxr_keyword">final</strong> DynamicSqlSource source = <strong class="jxr_keyword">new</strong> DynamicSqlSource(<strong class="jxr_keyword">new</strong> Configuration(), sqlNode);
+<a class="jxr_linenumber" name="L386" href="#L386">386</a>     String sql = source.getBoundSql(<strong class="jxr_keyword">new</strong> <a href="../../../../../../org/apache/ibatis/builder/xml/dynamic/DynamicSqlSourceTest.html">Bean</a>(<strong class="jxr_keyword">null</strong>)).getSql();
+<a class="jxr_linenumber" name="L387" href="#L387">387</a>     Assert.assertEquals(<span class="jxr_string">"id="</span>, sql);
+<a class="jxr_linenumber" name="L388" href="#L388">388</a>   }
+<a class="jxr_linenumber" name="L389" href="#L389">389</a> 
+<a class="jxr_linenumber" name="L390" href="#L390">390</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../../../org/apache/ibatis/builder/xml/dynamic/DynamicSqlSourceTest.html">Bean</a> {
+<a class="jxr_linenumber" name="L391" href="#L391">391</a>     <strong class="jxr_keyword">public</strong> String id;
+<a class="jxr_linenumber" name="L392" href="#L392">392</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../../../org/apache/ibatis/builder/xml/dynamic/DynamicSqlSourceTest.html">Bean</a>(String property) {
+<a class="jxr_linenumber" name="L393" href="#L393">393</a>       <strong class="jxr_keyword">this</strong>.id = property;
+<a class="jxr_linenumber" name="L394" href="#L394">394</a>     }
+<a class="jxr_linenumber" name="L395" href="#L395">395</a>     <strong class="jxr_keyword">public</strong> String getId() {
+<a class="jxr_linenumber" name="L396" href="#L396">396</a>       <strong class="jxr_keyword">return</strong> id;
+<a class="jxr_linenumber" name="L397" href="#L397">397</a>     }
+<a class="jxr_linenumber" name="L398" href="#L398">398</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setId(String property) {
+<a class="jxr_linenumber" name="L399" href="#L399">399</a>       <strong class="jxr_keyword">this</strong>.id = property;
+<a class="jxr_linenumber" name="L400" href="#L400">400</a>     }
+<a class="jxr_linenumber" name="L401" href="#L401">401</a>   }
+<a class="jxr_linenumber" name="L402" href="#L402">402</a> 
+<a class="jxr_linenumber" name="L403" href="#L403">403</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2010&#x2013;2015 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2010&#x2013;2016 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
 </body>
 </html>

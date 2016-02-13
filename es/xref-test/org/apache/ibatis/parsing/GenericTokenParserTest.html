@@ -50,67 +50,71 @@
 <a class="jxr_linenumber" name="L42" href="#L42">42</a>          put(<span class="jxr_string">"first_name"</span>, <span class="jxr_string">"James"</span>);
 <a class="jxr_linenumber" name="L43" href="#L43">43</a>          put(<span class="jxr_string">"initial"</span>, <span class="jxr_string">"T"</span>);
 <a class="jxr_linenumber" name="L44" href="#L44">44</a>          put(<span class="jxr_string">"last_name"</span>, <span class="jxr_string">"Kirk"</span>);
-<a class="jxr_linenumber" name="L45" href="#L45">45</a>          put(<span class="jxr_string">""</span>, <span class="jxr_string">""</span>);
-<a class="jxr_linenumber" name="L46" href="#L46">46</a>        }
-<a class="jxr_linenumber" name="L47" href="#L47">47</a>      }));
-<a class="jxr_linenumber" name="L48" href="#L48">48</a>  
-<a class="jxr_linenumber" name="L49" href="#L49">49</a>      assertEquals(<span class="jxr_string">"James T Kirk reporting."</span>, parser.parse(<span class="jxr_string">"${first_name} ${initial} ${last_name} reporting."</span>));
-<a class="jxr_linenumber" name="L50" href="#L50">50</a>      assertEquals(<span class="jxr_string">"Hello captain James T Kirk"</span>, parser.parse(<span class="jxr_string">"Hello captain ${first_name} ${initial} ${last_name}"</span>));
-<a class="jxr_linenumber" name="L51" href="#L51">51</a>      assertEquals(<span class="jxr_string">"James T Kirk"</span>, parser.parse(<span class="jxr_string">"${first_name} ${initial} ${last_name}"</span>));
-<a class="jxr_linenumber" name="L52" href="#L52">52</a>      assertEquals(<span class="jxr_string">"JamesTKirk"</span>, parser.parse(<span class="jxr_string">"${first_name}${initial}${last_name}"</span>));
-<a class="jxr_linenumber" name="L53" href="#L53">53</a>      assertEquals(<span class="jxr_string">"{}JamesTKirk"</span>, parser.parse(<span class="jxr_string">"{}${first_name}${initial}${last_name}"</span>));
-<a class="jxr_linenumber" name="L54" href="#L54">54</a>      assertEquals(<span class="jxr_string">"}JamesTKirk"</span>, parser.parse(<span class="jxr_string">"}${first_name}${initial}${last_name}"</span>));
-<a class="jxr_linenumber" name="L55" href="#L55">55</a>  
-<a class="jxr_linenumber" name="L56" href="#L56">56</a>      assertEquals(<span class="jxr_string">"}James{{T}}Kirk"</span>, parser.parse(<span class="jxr_string">"}${first_name}{{${initial}}}${last_name}"</span>));
-<a class="jxr_linenumber" name="L57" href="#L57">57</a>      assertEquals(<span class="jxr_string">"}James}T{Kirk"</span>, parser.parse(<span class="jxr_string">"}${first_name}}${initial}{${last_name}"</span>));
+<a class="jxr_linenumber" name="L45" href="#L45">45</a>          put(<span class="jxr_string">"var{with}brace"</span>, <span class="jxr_string">"Hiya"</span>);
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>          put(<span class="jxr_string">""</span>, <span class="jxr_string">""</span>);
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>        }
+<a class="jxr_linenumber" name="L48" href="#L48">48</a>      }));
+<a class="jxr_linenumber" name="L49" href="#L49">49</a>  
+<a class="jxr_linenumber" name="L50" href="#L50">50</a>      assertEquals(<span class="jxr_string">"James T Kirk reporting."</span>, parser.parse(<span class="jxr_string">"${first_name} ${initial} ${last_name} reporting."</span>));
+<a class="jxr_linenumber" name="L51" href="#L51">51</a>      assertEquals(<span class="jxr_string">"Hello captain James T Kirk"</span>, parser.parse(<span class="jxr_string">"Hello captain ${first_name} ${initial} ${last_name}"</span>));
+<a class="jxr_linenumber" name="L52" href="#L52">52</a>      assertEquals(<span class="jxr_string">"James T Kirk"</span>, parser.parse(<span class="jxr_string">"${first_name} ${initial} ${last_name}"</span>));
+<a class="jxr_linenumber" name="L53" href="#L53">53</a>      assertEquals(<span class="jxr_string">"JamesTKirk"</span>, parser.parse(<span class="jxr_string">"${first_name}${initial}${last_name}"</span>));
+<a class="jxr_linenumber" name="L54" href="#L54">54</a>      assertEquals(<span class="jxr_string">"{}JamesTKirk"</span>, parser.parse(<span class="jxr_string">"{}${first_name}${initial}${last_name}"</span>));
+<a class="jxr_linenumber" name="L55" href="#L55">55</a>      assertEquals(<span class="jxr_string">"}JamesTKirk"</span>, parser.parse(<span class="jxr_string">"}${first_name}${initial}${last_name}"</span>));
+<a class="jxr_linenumber" name="L56" href="#L56">56</a>  
+<a class="jxr_linenumber" name="L57" href="#L57">57</a>      assertEquals(<span class="jxr_string">"}James{{T}}Kirk"</span>, parser.parse(<span class="jxr_string">"}${first_name}{{${initial}}}${last_name}"</span>));
 <a class="jxr_linenumber" name="L58" href="#L58">58</a>      assertEquals(<span class="jxr_string">"}James}T{Kirk"</span>, parser.parse(<span class="jxr_string">"}${first_name}}${initial}{${last_name}"</span>));
-<a class="jxr_linenumber" name="L59" href="#L59">59</a>      assertEquals(<span class="jxr_string">"}James}T{Kirk{{}}"</span>, parser.parse(<span class="jxr_string">"}${first_name}}${initial}{${last_name}{{}}"</span>));
-<a class="jxr_linenumber" name="L60" href="#L60">60</a>      assertEquals(<span class="jxr_string">"}James}T{Kirk{{}}"</span>, parser.parse(<span class="jxr_string">"}${first_name}}${initial}{${last_name}{{}}${}"</span>));
-<a class="jxr_linenumber" name="L61" href="#L61">61</a>  
-<a class="jxr_linenumber" name="L62" href="#L62">62</a>      assertEquals(<span class="jxr_string">"{$$something}JamesTKirk"</span>, parser.parse(<span class="jxr_string">"{$$something}${first_name}${initial}${last_name}"</span>));
-<a class="jxr_linenumber" name="L63" href="#L63">63</a>      assertEquals(<span class="jxr_string">"${"</span>, parser.parse(<span class="jxr_string">"${"</span>));
-<a class="jxr_linenumber" name="L64" href="#L64">64</a>      assertEquals(<span class="jxr_string">"}"</span>, parser.parse(<span class="jxr_string">"}"</span>));
-<a class="jxr_linenumber" name="L65" href="#L65">65</a>      assertEquals(<span class="jxr_string">"Hello ${ this is a test."</span>, parser.parse(<span class="jxr_string">"Hello ${ this is a test."</span>));
-<a class="jxr_linenumber" name="L66" href="#L66">66</a>      assertEquals(<span class="jxr_string">"Hello } this is a test."</span>, parser.parse(<span class="jxr_string">"Hello } this is a test."</span>));
-<a class="jxr_linenumber" name="L67" href="#L67">67</a>      assertEquals(<span class="jxr_string">"Hello } ${ this is a test."</span>, parser.parse(<span class="jxr_string">"Hello } ${ this is a test."</span>));
-<a class="jxr_linenumber" name="L68" href="#L68">68</a>    }
-<a class="jxr_linenumber" name="L69" href="#L69">69</a>  
-<a class="jxr_linenumber" name="L70" href="#L70">70</a>    @Test
-<a class="jxr_linenumber" name="L71" href="#L71">71</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shallNotInterpolateSkippedVaiables() {
-<a class="jxr_linenumber" name="L72" href="#L72">72</a>      GenericTokenParser parser = <strong class="jxr_keyword">new</strong> GenericTokenParser(<span class="jxr_string">"${"</span>, <span class="jxr_string">"}"</span>, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/parsing/GenericTokenParserTest.html">VariableTokenHandler</a>(<strong class="jxr_keyword">new</strong> HashMap&lt;String, String&gt;()));
+<a class="jxr_linenumber" name="L59" href="#L59">59</a>      assertEquals(<span class="jxr_string">"}James}T{Kirk"</span>, parser.parse(<span class="jxr_string">"}${first_name}}${initial}{${last_name}"</span>));
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>      assertEquals(<span class="jxr_string">"}James}T{Kirk{{}}"</span>, parser.parse(<span class="jxr_string">"}${first_name}}${initial}{${last_name}{{}}"</span>));
+<a class="jxr_linenumber" name="L61" href="#L61">61</a>      assertEquals(<span class="jxr_string">"}James}T{Kirk{{}}"</span>, parser.parse(<span class="jxr_string">"}${first_name}}${initial}{${last_name}{{}}${}"</span>));
+<a class="jxr_linenumber" name="L62" href="#L62">62</a>  
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>      assertEquals(<span class="jxr_string">"{$$something}JamesTKirk"</span>, parser.parse(<span class="jxr_string">"{$$something}${first_name}${initial}${last_name}"</span>));
+<a class="jxr_linenumber" name="L64" href="#L64">64</a>      assertEquals(<span class="jxr_string">"${"</span>, parser.parse(<span class="jxr_string">"${"</span>));
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>      assertEquals(<span class="jxr_string">"${&#92;&#92;}"</span>, parser.parse(<span class="jxr_string">"${&#92;&#92;}"</span>));
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>      assertEquals(<span class="jxr_string">"Hiya"</span>, parser.parse(<span class="jxr_string">"${var{with&#92;&#92;}brace}"</span>));
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>      assertEquals(<span class="jxr_string">""</span>, parser.parse(<span class="jxr_string">"${}"</span>));
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>      assertEquals(<span class="jxr_string">"}"</span>, parser.parse(<span class="jxr_string">"}"</span>));
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>      assertEquals(<span class="jxr_string">"Hello ${ this is a test."</span>, parser.parse(<span class="jxr_string">"Hello ${ this is a test."</span>));
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>      assertEquals(<span class="jxr_string">"Hello } this is a test."</span>, parser.parse(<span class="jxr_string">"Hello } this is a test."</span>));
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>      assertEquals(<span class="jxr_string">"Hello } ${ this is a test."</span>, parser.parse(<span class="jxr_string">"Hello } ${ this is a test."</span>));
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>    }
 <a class="jxr_linenumber" name="L73" href="#L73">73</a>  
-<a class="jxr_linenumber" name="L74" href="#L74">74</a>      assertEquals(<span class="jxr_string">"${skipped} variable"</span>, parser.parse(<span class="jxr_string">"&#92;&#92;${skipped} variable"</span>));
-<a class="jxr_linenumber" name="L75" href="#L75">75</a>      assertEquals(<span class="jxr_string">"This is a ${skipped} variable"</span>, parser.parse(<span class="jxr_string">"This is a &#92;&#92;${skipped} variable"</span>));
-<a class="jxr_linenumber" name="L76" href="#L76">76</a>      assertEquals(<span class="jxr_string">"null ${skipped} variable"</span>, parser.parse(<span class="jxr_string">"${skipped} &#92;&#92;${skipped} variable"</span>));
-<a class="jxr_linenumber" name="L77" href="#L77">77</a>      assertEquals(<span class="jxr_string">"The null is ${skipped} variable"</span>, parser.parse(<span class="jxr_string">"The ${skipped} is &#92;&#92;${skipped} variable"</span>));
-<a class="jxr_linenumber" name="L78" href="#L78">78</a>    }
-<a class="jxr_linenumber" name="L79" href="#L79">79</a>  
-<a class="jxr_linenumber" name="L80" href="#L80">80</a>    @Test(timeout = 1000)
-<a class="jxr_linenumber" name="L81" href="#L81">81</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldParseFastOnJdk7u6() {
-<a class="jxr_linenumber" name="L82" href="#L82">82</a>      <em class="jxr_comment">// issue #760</em>
-<a class="jxr_linenumber" name="L83" href="#L83">83</a>      GenericTokenParser parser = <strong class="jxr_keyword">new</strong> GenericTokenParser(<span class="jxr_string">"${"</span>, <span class="jxr_string">"}"</span>, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/parsing/GenericTokenParserTest.html">VariableTokenHandler</a>(<strong class="jxr_keyword">new</strong> HashMap&lt;String, String&gt;() {
-<a class="jxr_linenumber" name="L84" href="#L84">84</a>        {
-<a class="jxr_linenumber" name="L85" href="#L85">85</a>          put(<span class="jxr_string">"first_name"</span>, <span class="jxr_string">"James"</span>);
-<a class="jxr_linenumber" name="L86" href="#L86">86</a>          put(<span class="jxr_string">"initial"</span>, <span class="jxr_string">"T"</span>);
-<a class="jxr_linenumber" name="L87" href="#L87">87</a>          put(<span class="jxr_string">"last_name"</span>, <span class="jxr_string">"Kirk"</span>);
-<a class="jxr_linenumber" name="L88" href="#L88">88</a>          put(<span class="jxr_string">""</span>, <span class="jxr_string">""</span>);
-<a class="jxr_linenumber" name="L89" href="#L89">89</a>        }
-<a class="jxr_linenumber" name="L90" href="#L90">90</a>      }));
-<a class="jxr_linenumber" name="L91" href="#L91">91</a>  
-<a class="jxr_linenumber" name="L92" href="#L92">92</a>      StringBuilder input = <strong class="jxr_keyword">new</strong> StringBuilder();
-<a class="jxr_linenumber" name="L93" href="#L93">93</a>      <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; i &lt; 10000; i++) {
-<a class="jxr_linenumber" name="L94" href="#L94">94</a>        input.append(<span class="jxr_string">"${first_name} ${initial} ${last_name} reporting. "</span>);
-<a class="jxr_linenumber" name="L95" href="#L95">95</a>      }
-<a class="jxr_linenumber" name="L96" href="#L96">96</a>      StringBuilder expected = <strong class="jxr_keyword">new</strong> StringBuilder();
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>    @Test
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shallNotInterpolateSkippedVaiables() {
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>      GenericTokenParser parser = <strong class="jxr_keyword">new</strong> GenericTokenParser(<span class="jxr_string">"${"</span>, <span class="jxr_string">"}"</span>, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/parsing/GenericTokenParserTest.html">VariableTokenHandler</a>(<strong class="jxr_keyword">new</strong> HashMap&lt;String, String&gt;()));
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>  
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>      assertEquals(<span class="jxr_string">"${skipped} variable"</span>, parser.parse(<span class="jxr_string">"&#92;&#92;${skipped} variable"</span>));
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>      assertEquals(<span class="jxr_string">"This is a ${skipped} variable"</span>, parser.parse(<span class="jxr_string">"This is a &#92;&#92;${skipped} variable"</span>));
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>      assertEquals(<span class="jxr_string">"null ${skipped} variable"</span>, parser.parse(<span class="jxr_string">"${skipped} &#92;&#92;${skipped} variable"</span>));
+<a class="jxr_linenumber" name="L81" href="#L81">81</a>      assertEquals(<span class="jxr_string">"The null is ${skipped} variable"</span>, parser.parse(<span class="jxr_string">"The ${skipped} is &#92;&#92;${skipped} variable"</span>));
+<a class="jxr_linenumber" name="L82" href="#L82">82</a>    }
+<a class="jxr_linenumber" name="L83" href="#L83">83</a>  
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>    @Test(timeout = 1000)
+<a class="jxr_linenumber" name="L85" href="#L85">85</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldParseFastOnJdk7u6() {
+<a class="jxr_linenumber" name="L86" href="#L86">86</a>      <em class="jxr_comment">// issue #760</em>
+<a class="jxr_linenumber" name="L87" href="#L87">87</a>      GenericTokenParser parser = <strong class="jxr_keyword">new</strong> GenericTokenParser(<span class="jxr_string">"${"</span>, <span class="jxr_string">"}"</span>, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/parsing/GenericTokenParserTest.html">VariableTokenHandler</a>(<strong class="jxr_keyword">new</strong> HashMap&lt;String, String&gt;() {
+<a class="jxr_linenumber" name="L88" href="#L88">88</a>        {
+<a class="jxr_linenumber" name="L89" href="#L89">89</a>          put(<span class="jxr_string">"first_name"</span>, <span class="jxr_string">"James"</span>);
+<a class="jxr_linenumber" name="L90" href="#L90">90</a>          put(<span class="jxr_string">"initial"</span>, <span class="jxr_string">"T"</span>);
+<a class="jxr_linenumber" name="L91" href="#L91">91</a>          put(<span class="jxr_string">"last_name"</span>, <span class="jxr_string">"Kirk"</span>);
+<a class="jxr_linenumber" name="L92" href="#L92">92</a>          put(<span class="jxr_string">""</span>, <span class="jxr_string">""</span>);
+<a class="jxr_linenumber" name="L93" href="#L93">93</a>        }
+<a class="jxr_linenumber" name="L94" href="#L94">94</a>      }));
+<a class="jxr_linenumber" name="L95" href="#L95">95</a>  
+<a class="jxr_linenumber" name="L96" href="#L96">96</a>      StringBuilder input = <strong class="jxr_keyword">new</strong> StringBuilder();
 <a class="jxr_linenumber" name="L97" href="#L97">97</a>      <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; i &lt; 10000; i++) {
-<a class="jxr_linenumber" name="L98" href="#L98">98</a>        expected.append(<span class="jxr_string">"James T Kirk reporting. "</span>);
+<a class="jxr_linenumber" name="L98" href="#L98">98</a>        input.append(<span class="jxr_string">"${first_name} ${initial} ${last_name} reporting. "</span>);
 <a class="jxr_linenumber" name="L99" href="#L99">99</a>      }
-<a class="jxr_linenumber" name="L100" href="#L100">100</a>     assertEquals(expected.toString(), parser.parse(input.toString()));
-<a class="jxr_linenumber" name="L101" href="#L101">101</a>   }
-<a class="jxr_linenumber" name="L102" href="#L102">102</a> 
-<a class="jxr_linenumber" name="L103" href="#L103">103</a> }
+<a class="jxr_linenumber" name="L100" href="#L100">100</a>     StringBuilder expected = <strong class="jxr_keyword">new</strong> StringBuilder();
+<a class="jxr_linenumber" name="L101" href="#L101">101</a>     <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; i &lt; 10000; i++) {
+<a class="jxr_linenumber" name="L102" href="#L102">102</a>       expected.append(<span class="jxr_string">"James T Kirk reporting. "</span>);
+<a class="jxr_linenumber" name="L103" href="#L103">103</a>     }
+<a class="jxr_linenumber" name="L104" href="#L104">104</a>     assertEquals(expected.toString(), parser.parse(input.toString()));
+<a class="jxr_linenumber" name="L105" href="#L105">105</a>   }
+<a class="jxr_linenumber" name="L106" href="#L106">106</a> 
+<a class="jxr_linenumber" name="L107" href="#L107">107</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2010&#x2013;2015 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2010&#x2013;2016 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
 </body>
 </html>
