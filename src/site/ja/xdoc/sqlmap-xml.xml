@@ -374,6 +374,18 @@ ps.setInt(1,id);]]></source>
 </insert>]]></source>
 
         <p>
+          複数行の一括挿入に対応したデータベースなら、 <code>Author</code> のリストまたは配列を引数として渡して自動生成された id の値を一括取得することも可能です。
+        </p>
+
+        <source><![CDATA[<insert id="insertAuthor" useGeneratedKeys="true"
+    keyProperty="id">
+  insert into Author (username, password, email, bio) values
+  <foreach item="item" collection="list" separator=",">
+    (#{item.username}, #{item.password}, #{item.email}, #{item.bio})
+  </foreach>
+</insert>]]></source>
+
+        <p>
           主にキーの自動生成に対応していないデータベースやドライバーのため、MyBatis はもうひとつ別の方法を提供しています。
         </p>
 

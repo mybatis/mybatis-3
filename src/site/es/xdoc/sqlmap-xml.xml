@@ -334,6 +334,18 @@ Por ejemplo, si la columna id de la tabla Author del ejemplo siguiente fuera aut
   values (#{username},#{password},#{email},#{bio})
 </insert>]]></source>
 
+        <p>
+          If your database also supports multi-row insert, you can pass a list or an array of <code>Author</code>s and retrieve the auto-generated keys.
+        </p>
+
+        <source><![CDATA[<insert id="insertAuthor" useGeneratedKeys="true"
+    keyProperty="id">
+  insert into Author (username, password, email, bio) values
+  <foreach item="item" collection="list" separator=",">
+    (#{item.username}, #{item.password}, #{item.email}, #{item.bio})
+  </foreach>
+</insert>]]></source>
+
         <p>MyBatis puede tratar las claves autogeneradas de otra forma para el caso de las bases de datos que no soportan columnas autogeneradas, o porque su driver JDBC no haya incluido aun dicho soporte.
         </p>
 

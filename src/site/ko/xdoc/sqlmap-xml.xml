@@ -321,6 +321,18 @@ ps.setInt(1,id);]]></source>
   values (#{username},#{password},#{email},#{bio})
 </insert>]]></source>
 
+        <p>
+          If your database also supports multi-row insert, you can pass a list or an array of <code>Author</code>s and retrieve the auto-generated keys.
+        </p>
+
+        <source><![CDATA[<insert id="insertAuthor" useGeneratedKeys="true"
+    keyProperty="id">
+  insert into Author (username, password, email, bio) values
+  <foreach item="item" collection="list" separator=",">
+    (#{item.username}, #{item.password}, #{item.email}, #{item.bio})
+  </foreach>
+</insert>]]></source>
+
         <p>마이바티스는 자동생성키 칼럼을 지원하지 않는 다른 데이터베이스를 위해 다른 방법 또한 제공한다.</p>
 
         <p>이 예제는 랜덤 ID 를 생성하고 있다.</p>
