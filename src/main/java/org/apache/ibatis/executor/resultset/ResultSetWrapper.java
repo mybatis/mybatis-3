@@ -74,6 +74,15 @@ public class ResultSetWrapper {
     return Collections.unmodifiableList(classNames);
   }
 
+  public JdbcType getJdbcType(String columnName) {
+    for (int i = 0 ; i < columnNames.size(); i++) {
+      if (columnNames.get(i).equalsIgnoreCase(columnName)) {
+        return jdbcTypes.get(i);
+      }
+    }
+    return null;
+  }
+
   /**
    * Gets the type handler to use when reading the result set.
    * Tries to get from the TypeHandlerRegistry by searching for the property type.
@@ -93,12 +102,12 @@ public class ResultSetWrapper {
       handler = columnHandlers.get(propertyType);
     }
     if (handler == null) {
-      handler = typeHandlerRegistry.getTypeHandler(propertyType);
+      JdbcType jdbcType = getJdbcType(columnName);
+      handler = typeHandlerRegistry.getTypeHandler(propertyType, jdbcType);
       // Replicate logic of UnknownTypeHandler#resolveTypeHandler
       // See issue #59 comment 10
       if (handler == null || handler instanceof UnknownTypeHandler) {
         final int index = columnNames.indexOf(columnName);
-        final JdbcType jdbcType = jdbcTypes.get(index);
         final Class<?> javaType = resolveClass(classNames.get(index));
         if (javaType != null && jdbcType != null) {
           handler = typeHandlerRegistry.getTypeHandler(javaType, jdbcType);

@@ -15,11 +15,14 @@
  */
 package org.apache.ibatis.submitted.typehandler;
 
+import org.apache.ibatis.annotations.Arg;
+import org.apache.ibatis.annotations.ConstructorArgs;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.submitted.typehandler.Product.ProductId;
 import org.apache.ibatis.type.JdbcType;
 
 public interface Mapper {
@@ -38,4 +41,17 @@ public interface Mapper {
   })
   @Options(useGeneratedKeys = true, keyProperty = "id")
   int insertProduct(Product product);
+
+  @Select("select id, name from product where name = #{value}")
+  Product getProductByName(String name);
+
+  @Select("select id, name from product where name = #{value}")
+  @ConstructorArgs({
+    @Arg(id = true, column="id", javaType = ProductId.class, jdbcType=JdbcType.INTEGER),
+    @Arg(column="name")
+  })
+  Product getProductByNameUsingConstructor(String name);
+
+  @Select("select id from product where name = #{value}")
+  ProductId getProductIdByName(String name);
 }

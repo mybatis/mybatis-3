@@ -30,3 +30,7 @@ create table product (
 );
 
 insert into users (id, name, city, state) values(1, '   User1', '  Carmel  ', '  IN ');
+
+insert into product (id, name) values
+(1, 'iPod'),
+(2, 'iPad');
