@@ -33,11 +33,11 @@ Feature request?
 
 ## Database vendor and version
 
-## Test case or example project <!-- your GitHub repo, gist, etc. -->
+## Test case or example project
 
 ## Steps to reproduce
 
 ## Expected result
 
-## Actual result <!-- unexpected result, stacktrace, etc. -->
+## Actual result
 
