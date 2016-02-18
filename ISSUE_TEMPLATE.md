@@ -6,7 +6,6 @@ Question?
 Please use the mailing list. http://groups.google.com/group/mybatis-user
 Questions on this tracker will be closed without comment.
 
-
 Bug report?
 ======================
 Please fill out the BUG REPORT FORM below.
@@ -17,7 +16,6 @@ And we spend a lot of time just trying to reproduce the reported problem, so ple
 - How to create a test case : https://github.com/mybatis/mybatis-3/wiki/Unit-Test
 - How to create a good example : http://sscce.org
 - How to upload your project to GitHub: https://help.github.com/articles/adding-an-existing-project-to-github-using-the-command-line/
-
 
 Feature request?
 =======================
