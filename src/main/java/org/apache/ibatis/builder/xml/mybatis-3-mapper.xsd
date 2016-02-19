@@ -6,6 +6,7 @@
            elementFormDefault="qualified">
 
 
+
     <!-- Elements -->
 
     <xs:element name='mapper' type="mapperType"/>
@@ -41,6 +42,7 @@
     <xs:element name='discriminator' type="discriminatorType"/>
     <xs:element name='case' type="caseType"/>
     <xs:element name='typeAlias' type="typeAliasType"/>
+
 
 
     <!-- Enums -->
@@ -84,6 +86,7 @@
     </xs:simpleType>
 
 
+
     <!-- Base Types -->
 
     <xs:complexType name="baseChoiceType" mixed='true'>
@@ -109,6 +112,8 @@
             <xs:element ref='discriminator' minOccurs='0' maxOccurs='1'/>
         </xs:sequence>
     </xs:complexType>
+
+
 
     <!-- Extensible Types -->
 
@@ -286,41 +291,6 @@
         </xs:complexContent>
     </xs:complexType>
 
-    <xs:complexType name="selectKeyType" mixed='true'>
-        <xs:complexContent>
-            <xs:extension base="baseChoiceType">
-                <xs:attribute name='resultType' type='xs:string' use='optional'/>
-                <xs:attribute name='statementType' type="statementTypeEnum" use='optional'/>
-                <xs:attribute name='keyProperty' type='xs:string' use='optional'/>
-                <xs:attribute name='keyColumn' type='xs:string' use='optional'/>
-                <xs:attribute name='order' type="orderEnum" use='optional'/>
-                <xs:attribute name='databaseId' type='xs:string' use='optional'/>
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-
-    <xs:complexType name="selectType" mixed='true'>
-        <xs:complexContent>
-            <xs:extension base="baseChoiceType">
-                <xs:attribute name='id' type='xs:string' use='required'/>
-                <xs:attribute name='parameterMap' type='xs:string' use='optional'/>
-                <xs:attribute name='parameterType' type='xs:string' use='optional'/>
-                <xs:attribute name='resultMap' type='xs:string' use='optional'/>
-                <xs:attribute name='resultType' type='xs:string' use='optional'/>
-                <xs:attribute name='resultSetType' type="resultSetTypeEnum" use='optional'/>
-                <xs:attribute name='statementType' type="statementTypeEnum" use='optional'/>
-                <xs:attribute name='fetchSize' type='xs:string' use='optional'/>
-                <xs:attribute name='timeout' type='xs:string' use='optional'/>
-                <xs:attribute name='flushCache' type="xs:boolean" use='optional'/>
-                <xs:attribute name='useCache' type="xs:boolean" use='optional'/>
-                <xs:attribute name='databaseId' type='xs:string' use='optional'/>
-                <xs:attribute name='lang' type='xs:string' use='optional'/>
-                <xs:attribute name='resultOrdered' type="xs:boolean" use='optional'/>
-                <xs:attribute name='resultSets' type='xs:string' use='optional'/>
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-
     <xs:complexType name="mapperType">
         <xs:choice maxOccurs='unbounded'>
             <xs:element ref='cache-ref'/>
@@ -377,6 +347,41 @@
         <xs:attribute name='column' type='xs:string' use='optional'/>
         <xs:attribute name='jdbcType' type='xs:string' use='optional'/>
         <xs:attribute name='typeHandler' type='xs:string' use='optional'/>
+    </xs:complexType>
+
+    <xs:complexType name="selectKeyType" mixed='true'>
+        <xs:complexContent>
+            <xs:extension base="baseChoiceType">
+                <xs:attribute name='resultType' type='xs:string' use='optional'/>
+                <xs:attribute name='statementType' type="statementTypeEnum" use='optional'/>
+                <xs:attribute name='keyProperty' type='xs:string' use='optional'/>
+                <xs:attribute name='keyColumn' type='xs:string' use='optional'/>
+                <xs:attribute name='order' type="orderEnum" use='optional'/>
+                <xs:attribute name='databaseId' type='xs:string' use='optional'/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="selectType" mixed='true'>
+        <xs:complexContent>
+            <xs:extension base="baseChoiceType">
+                <xs:attribute name='id' type='xs:string' use='required'/>
+                <xs:attribute name='parameterMap' type='xs:string' use='optional'/>
+                <xs:attribute name='parameterType' type='xs:string' use='optional'/>
+                <xs:attribute name='resultMap' type='xs:string' use='optional'/>
+                <xs:attribute name='resultType' type='xs:string' use='optional'/>
+                <xs:attribute name='resultSetType' type="resultSetTypeEnum" use='optional'/>
+                <xs:attribute name='statementType' type="statementTypeEnum" use='optional'/>
+                <xs:attribute name='fetchSize' type='xs:string' use='optional'/>
+                <xs:attribute name='timeout' type='xs:string' use='optional'/>
+                <xs:attribute name='flushCache' type="xs:boolean" use='optional'/>
+                <xs:attribute name='useCache' type="xs:boolean" use='optional'/>
+                <xs:attribute name='databaseId' type='xs:string' use='optional'/>
+                <xs:attribute name='lang' type='xs:string' use='optional'/>
+                <xs:attribute name='resultOrdered' type="xs:boolean" use='optional'/>
+                <xs:attribute name='resultSets' type='xs:string' use='optional'/>
+            </xs:extension>
+        </xs:complexContent>
     </xs:complexType>
 
     <xs:complexType name="sqlType">
