@@ -114,9 +114,9 @@ public class ParameterMapping {
         }            
       } else {
         if (parameterMapping.typeHandler == null) { 
-          throw new IllegalStateException("Type handler was null on parameter mapping for property '"  
-              + parameterMapping.property + "'.  " 
-              + "It was either not specified and/or could not be found for the javaType / jdbcType combination specified.");
+          throw new IllegalStateException("Type handler was null on parameter mapping for property '"
+            + parameterMapping.property + "'. It was either not specified and/or could not be found for the javaType ("
+            + parameterMapping.javaType.getName() + ") : jdbcType (" + parameterMapping.jdbcType + ") combination.");
         }
       }
     }
