@@ -13,10 +13,14 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package org.apache.ibatis.reflection.typeparam;
+package org.apache.ibatis.submitted.generictyperesolution;
 
-public class Calculator<T> {
-  protected T id;
+import java.io.Serializable;
+
+public class Entity<T extends Serializable> {
+  private T id;
+
+  private String name;
 
   public T getId() {
     return id;
@@ -26,6 +30,11 @@ public class Calculator<T> {
     this.id = id;
   }
 
-  public static class SubCalculator extends Calculator<String> {
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
   }
 }

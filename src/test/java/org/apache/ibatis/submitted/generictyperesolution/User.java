@@ -13,19 +13,7 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package org.apache.ibatis.reflection.typeparam;
+package org.apache.ibatis.submitted.generictyperesolution;
 
-public class Calculator<T> {
-  protected T id;
-
-  public T getId() {
-    return id;
-  }
-
-  public void setId(T id) {
-    this.id = id;
-  }
-
-  public static class SubCalculator extends Calculator<String> {
-  }
+public class User extends Entity<Integer> {
 }

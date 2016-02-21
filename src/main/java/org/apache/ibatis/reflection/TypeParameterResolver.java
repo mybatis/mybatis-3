@@ -48,6 +48,26 @@ public class TypeParameterResolver {
     return result;
   }
 
+  public static Type[] resolveParamTypes(Method method, Type mapper) {
+    Type[] paramTypes = method.getGenericParameterTypes();
+    Class<?> declaringClass = method.getDeclaringClass();
+    Type[] result = new Type[paramTypes.length];
+    for (int i = 0; i < paramTypes.length; i++) {
+      if (paramTypes[i] instanceof Class) {
+        result[i] = paramTypes[i];
+      } else if (paramTypes[i] instanceof TypeVariable) {
+        result[i] = resolveTypeVar((TypeVariable<?>) paramTypes[i], mapper, declaringClass);
+      } else if (paramTypes[i] instanceof ParameterizedType) {
+        result[i] = resolveParameterizedType((ParameterizedType) paramTypes[i], mapper, declaringClass);
+      } else if (paramTypes[i] instanceof GenericArrayType) {
+        result[i] = resolveGenericArrayType((GenericArrayType) paramTypes[i], mapper, declaringClass);
+      } else {
+        // should we support other types?
+      }
+    }
+    return result;
+  }
+
   private static Type resolveGenericArrayType(GenericArrayType genericArrayType, Type mapper, Class<?> declaringClass) {
     Type componentType = genericArrayType.getGenericComponentType();
     Type resolvedComponentType = null;
@@ -118,43 +138,57 @@ public class TypeParameterResolver {
     }
 
     if (clazz == declaringClass) {
-      return typeVar;
+      return Object.class;
+    }
+
+    Type superclass = clazz.getGenericSuperclass();
+    result = scanSuperTypes(typeVar, type, declaringClass, clazz, superclass);
+    if (result != null) {
+      return result;
     }
 
     Type[] superInterfaces = clazz.getGenericInterfaces();
     for (Type superInterface : superInterfaces) {
-      if (superInterface instanceof ParameterizedType) {
-        ParameterizedType parentAsType = (ParameterizedType) superInterface;
-        Class<?> parentAsClass = (Class<?>) parentAsType.getRawType();
-        if (declaringClass == parentAsClass) {
-          Type[] typeArgs = parentAsType.getActualTypeArguments();
-          TypeVariable<?>[] declaredTypeVars = declaringClass.getTypeParameters();
-          for (int i = 0; i < declaredTypeVars.length; i++) {
-            if (declaredTypeVars[i] == typeVar) {
-              if (typeArgs[i] instanceof TypeVariable) {
-                TypeVariable<?>[] typeParams = clazz.getTypeParameters();
-                for (int j = 0; j < typeParams.length; j++) {
-                  if (typeParams[j] == typeArgs[i]) {
-                    result = ((ParameterizedType) type).getActualTypeArguments()[j];
-                    break;
-                  }
-                }
-              } else {
-                result = typeArgs[i];
-              }
-            }
-          }
-        } else if (declaringClass.isAssignableFrom(parentAsClass)) {
-          result = resolveTypeVar(typeVar, parentAsType, declaringClass);
-        }
-      } else if (superInterface instanceof Class) {
-        if (declaringClass.isAssignableFrom((Class<?>) superInterface)) {
-          result = resolveTypeVar(typeVar, superInterface, declaringClass);
-        }
+      result = scanSuperTypes(typeVar, type, declaringClass, clazz, superInterface);
+      if (result != null) {
+        return result;
       }
     }
-    if (result == null) {
-      return typeVar;
+    return Object.class;
+  }
+
+  private static Type scanSuperTypes(TypeVariable<?> typeVar, Type type, Class<?> declaringClass, Class<?> clazz, Type superclass) {
+    Type result = null;
+    if (superclass instanceof ParameterizedType) {
+      ParameterizedType parentAsType = (ParameterizedType) superclass;
+      Class<?> parentAsClass = (Class<?>) parentAsType.getRawType();
+      if (declaringClass == parentAsClass) {
+        Type[] typeArgs = parentAsType.getActualTypeArguments();
+        TypeVariable<?>[] declaredTypeVars = declaringClass.getTypeParameters();
+        for (int i = 0; i < declaredTypeVars.length; i++) {
+          if (declaredTypeVars[i] == typeVar) {
+            if (typeArgs[i] instanceof TypeVariable) {
+              TypeVariable<?>[] typeParams = clazz.getTypeParameters();
+              for (int j = 0; j < typeParams.length; j++) {
+                if (typeParams[j] == typeArgs[i]) {
+                  if (type instanceof ParameterizedType) {
+                    result = ((ParameterizedType) type).getActualTypeArguments()[j];
+                  }
+                  break;
+                }
+              }
+            } else {
+              result = typeArgs[i];
+            }
+          }
+        }
+      } else if (declaringClass.isAssignableFrom(parentAsClass)) {
+        result = resolveTypeVar(typeVar, parentAsType, declaringClass);
+      }
+    } else if (superclass instanceof Class) {
+      if (declaringClass.isAssignableFrom((Class<?>) superclass)) {
+        result = resolveTypeVar(typeVar, superclass, declaringClass);
+      }
     }
     return result;
   }

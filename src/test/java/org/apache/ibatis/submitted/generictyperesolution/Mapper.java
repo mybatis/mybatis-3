@@ -13,19 +13,18 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package org.apache.ibatis.reflection.typeparam;
+package org.apache.ibatis.submitted.generictyperesolution;
 
-public class Calculator<T> {
-  protected T id;
+import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Select;
 
-  public T getId() {
-    return id;
-  }
+public interface Mapper {
+  @Select("select * from users where id = #{id}")
+  User getUser(User criteria);
 
-  public void setId(T id) {
-    this.id = id;
-  }
+  @Select("select * from users where name = #{name}")
+  User getUserByName(String name);
 
-  public static class SubCalculator extends Calculator<String> {
-  }
+  @Insert("insert into users (name) values (#{name})")
+  void insertUser(User user);
 }

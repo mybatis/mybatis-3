@@ -15,6 +15,11 @@
  */
 package org.apache.ibatis.reflection;
 
+import static org.junit.Assert.*;
+
+import java.io.Serializable;
+import java.util.List;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -64,4 +69,76 @@ public class ReflectorTest {
   static class Section extends AbstractEntity implements Entity<Long> {
   }
 
+  @Test
+  public void shouldResolveSetterParam() throws Exception {
+    ReflectorFactory reflectorFactory = new DefaultReflectorFactory();
+    Reflector reflector = reflectorFactory.findForClass(Child.class);
+    assertEquals(String.class, reflector.getSetterType("id"));
+  }
+
+  @Test
+  public void shouldResolveParameterizedSetterParam() throws Exception {
+    ReflectorFactory reflectorFactory = new DefaultReflectorFactory();
+    Reflector reflector = reflectorFactory.findForClass(Child.class);
+    assertEquals(List.class, reflector.getSetterType("list"));
+  }
+
+  @Test
+  public void shouldResolveArraySetterParam() throws Exception {
+    ReflectorFactory reflectorFactory = new DefaultReflectorFactory();
+    Reflector reflector = reflectorFactory.findForClass(Child.class);
+    Class<?> clazz = reflector.getSetterType("array");
+    assertTrue(clazz.isArray());
+    assertEquals(String.class, clazz.getComponentType());
+  }
+
+  @Test
+  public void shouldResolveGetterType() throws Exception {
+    ReflectorFactory reflectorFactory = new DefaultReflectorFactory();
+    Reflector reflector = reflectorFactory.findForClass(Child.class);
+    assertEquals(String.class, reflector.getGetterType("id"));
+  }
+
+  @Test
+  public void shouldResolveParameterizedGetterType() throws Exception {
+    ReflectorFactory reflectorFactory = new DefaultReflectorFactory();
+    Reflector reflector = reflectorFactory.findForClass(Child.class);
+    assertEquals(List.class, reflector.getGetterType("list"));
+  }
+
+  @Test
+  public void shouldResolveArrayGetterType() throws Exception {
+    ReflectorFactory reflectorFactory = new DefaultReflectorFactory();
+    Reflector reflector = reflectorFactory.findForClass(Child.class);
+    Class<?> clazz = reflector.getGetterType("array");
+    assertTrue(clazz.isArray());
+    assertEquals(String.class, clazz.getComponentType());
+  }
+
+  static abstract class Parent<T extends Serializable> {
+    protected T id;
+    protected List<T> list;
+    protected T[] array;
+    public T getId() {
+      return id;
+    }
+    public void setId(T id) {
+      this.id = id;
+    }
+    public List<T> getList() {
+      return list;
+    }
+    public void setList(List<T> list) {
+      this.list = list;
+    }
+    public T[] getArray() {
+      return array;
+    }
+    public void setArray(T[] array) {
+      this.array = array;
+    }
+  }
+
+  static class Child extends Parent<String> {
+  }
 }

@@ -46,7 +46,7 @@ public interface Level0Mapper<L, M, N> {
 
   Map<N, M> selectMap();
 
-  N[] selectArray();
+  N[] selectArray(List<N>[] param);
 
   N[][] selectArrayOfArray();
 

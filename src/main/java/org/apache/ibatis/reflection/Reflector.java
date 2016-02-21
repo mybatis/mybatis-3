@@ -15,11 +15,15 @@
  */
 package org.apache.ibatis.reflection;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.ReflectPermission;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -146,7 +150,8 @@ public class Reflector {
   private void addGetMethod(String name, Method method) {
     if (isValidPropertyName(name)) {
       getMethods.put(name, new MethodInvoker(method));
-      getTypes.put(name, method.getReturnType());
+      Type returnType = TypeParameterResolver.resolveReturnType(method, type);
+      getTypes.put(name, typeToClass(returnType));
     }
   }
 
@@ -211,8 +216,30 @@ public class Reflector {
   private void addSetMethod(String name, Method method) {
     if (isValidPropertyName(name)) {
       setMethods.put(name, new MethodInvoker(method));
-      setTypes.put(name, method.getParameterTypes()[0]);
+      Type[] paramTypes = TypeParameterResolver.resolveParamTypes(method, type);
+      setTypes.put(name, typeToClass(paramTypes[0]));
     }
+  }
+
+  private Class<?> typeToClass(Type src) {
+    Class<?> result = null;
+    if (src instanceof Class) {
+      result = (Class<?>) src;
+    } else if (src instanceof ParameterizedType) {
+      result = (Class<?>) ((ParameterizedType) src).getRawType();
+    } else if (src instanceof GenericArrayType) {
+      Type componentType = ((GenericArrayType) src).getGenericComponentType();
+      if (componentType instanceof Class) {
+        result = Array.newInstance((Class<?>) componentType, 0).getClass();
+      } else {
+        Class<?> componentClass = typeToClass(componentType);
+        result = Array.newInstance((Class<?>) componentClass, 0).getClass();
+      }
+    }
+    if (result == null) {
+      result = Object.class;
+    }
+    return result;
   }
 
   private void addFields(Class<?> clazz) {

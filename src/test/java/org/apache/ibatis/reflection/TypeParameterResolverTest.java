@@ -21,13 +21,13 @@ import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.lang.reflect.TypeVariable;
 import java.lang.reflect.WildcardType;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.reflection.typeparam.Calculator;
+import org.apache.ibatis.reflection.typeparam.Calculator.SubCalculator;
 import org.apache.ibatis.reflection.typeparam.Level0Mapper;
 import org.apache.ibatis.reflection.typeparam.Level0Mapper.Level0InnerMapper;
 import org.apache.ibatis.reflection.typeparam.Level1Mapper;
@@ -134,9 +134,7 @@ public class TypeParameterResolverTest {
     Class<?> clazz = Level1Mapper.class;
     Method method = clazz.getMethod("simpleSelectTypeVar");
     Type result = TypeParameterResolver.resolveReturnType(method, clazz);
-    assertTrue(result instanceof TypeVariable);
-    TypeVariable<?> typeVar = (TypeVariable<?>) result;
-    assertEquals("K", typeVar.getName());
+    assertEquals(Object.class, result);
   }
 
   @Test
@@ -204,7 +202,7 @@ public class TypeParameterResolverTest {
   @Test
   public void testReturn_Lv1Array() throws Exception {
     Class<?> clazz = Level1Mapper.class;
-    Method method = clazz.getMethod("selectArray");
+    Method method = clazz.getMethod("selectArray", List[].class);
     Type result = TypeParameterResolver.resolveReturnType(method, clazz);
     assertTrue(result instanceof Class);
     Class<?> resultClass = (Class<?>) result;
@@ -265,5 +263,102 @@ public class TypeParameterResolverTest {
     assertEquals(2, paramType.getActualTypeArguments().length);
     assertEquals(String.class, paramType.getActualTypeArguments()[0]);
     assertEquals(Integer.class, paramType.getActualTypeArguments()[1]);
+  }
+
+  @Test
+  public void testReturn_Subclass() throws Exception {
+    Class<?> clazz = SubCalculator.class;
+    Method method = clazz.getMethod("getId");
+    Type result = TypeParameterResolver.resolveReturnType(method, clazz);
+    assertEquals(String.class, result);
+  }
+
+  @Test
+  public void testParam_Primitive() throws Exception {
+    Class<?> clazz = Level2Mapper.class;
+    Method method = clazz.getMethod("simpleSelectPrimitive", int.class);
+    Type[] result = TypeParameterResolver.resolveParamTypes(method, clazz);
+    assertEquals(1, result.length);
+    assertEquals(int.class, result[0]);
+  }
+
+  @Test
+  public void testParam_Simple() throws Exception {
+    Class<?> clazz = Level1Mapper.class;
+    Method method = clazz.getMethod("simpleSelectVoid", Integer.class);
+    Type[] result = TypeParameterResolver.resolveParamTypes(method, clazz);
+    assertEquals(1, result.length);
+    assertEquals(Integer.class, result[0]);
+  }
+
+  @Test
+  public void testParam_Lv1Single() throws Exception {
+    Class<?> clazz = Level1Mapper.class;
+    Method method = clazz.getMethod("select", Object.class);
+    Type[] result = TypeParameterResolver.resolveParamTypes(method, clazz);
+    assertEquals(1, result.length);
+    assertEquals(String.class, result[0]);
+  }
+
+  @Test
+  public void testParam_Lv2Single() throws Exception {
+    Class<?> clazz = Level2Mapper.class;
+    Method method = clazz.getMethod("select", Object.class);
+    Type[] result = TypeParameterResolver.resolveParamTypes(method, clazz);
+    assertEquals(1, result.length);
+    assertEquals(String.class, result[0]);
+  }
+
+  @Test
+  public void testParam_Lv2Multiple() throws Exception {
+    Class<?> clazz = Level2Mapper.class;
+    Method method = clazz.getMethod("selectList", Object.class, Object.class);
+    Type[] result = TypeParameterResolver.resolveParamTypes(method, clazz);
+    assertEquals(2, result.length);
+    assertEquals(Integer.class, result[0]);
+    assertEquals(String.class, result[1]);
+  }
+
+  @Test
+  public void testParam_Lv2CustomClass() throws Exception {
+    Class<?> clazz = Level2Mapper.class;
+    Method method = clazz.getMethod("selectCalculator", Calculator.class);
+    Type[] result = TypeParameterResolver.resolveParamTypes(method, clazz);
+    assertEquals(1, result.length);
+    assertTrue(result[0] instanceof ParameterizedType);
+    ParameterizedType paramType = (ParameterizedType) result[0];
+    assertEquals(Calculator.class, paramType.getRawType());
+    assertEquals(1, paramType.getActualTypeArguments().length);
+    assertEquals(String.class, paramType.getActualTypeArguments()[0]);
+  }
+
+  @Test
+  public void testParam_Lv1Array() throws Exception {
+    Class<?> clazz = Level1Mapper.class;
+    Method method = clazz.getMethod("selectArray", List[].class);
+    Type[] result = TypeParameterResolver.resolveParamTypes(method, clazz);
+    assertTrue(result[0] instanceof GenericArrayType);
+    GenericArrayType genericArrayType = (GenericArrayType) result[0];
+    assertTrue(genericArrayType.getGenericComponentType() instanceof ParameterizedType);
+    ParameterizedType paramType = (ParameterizedType) genericArrayType.getGenericComponentType();
+    assertEquals(List.class, paramType.getRawType());
+    assertEquals(String.class, paramType.getActualTypeArguments()[0]);
+  }
+
+  @Test
+  public void testParam_Subclass() throws Exception {
+    Class<?> clazz = SubCalculator.class;
+    Method method = clazz.getMethod("setId", Object.class);
+    Type[] result = TypeParameterResolver.resolveParamTypes(method, clazz);
+    assertEquals(String.class, result[0]);
+  }
+
+  @Test
+  public void testReturn_Anonymous() throws Exception {
+    Calculator<?> instance = new Calculator<Integer>();
+    Class<?> clazz = instance.getClass();
+    Method method = clazz.getMethod("getId");
+    Type result = TypeParameterResolver.resolveReturnType(method, clazz);
+    assertEquals(Object.class, result);
   }
 }
