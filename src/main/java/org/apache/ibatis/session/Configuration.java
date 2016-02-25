@@ -117,6 +117,7 @@ public class Configuration {
   protected Integer defaultFetchSize;
   protected ExecutorType defaultExecutorType = ExecutorType.SIMPLE;
   protected AutoMappingBehavior autoMappingBehavior = AutoMappingBehavior.PARTIAL;
+  protected AutoMappingUnknownColumnBehavior autoMappingUnknownColumnBehavior = AutoMappingUnknownColumnBehavior.NONE;
 
   protected Properties variables = new Properties();
   protected ReflectorFactory reflectorFactory = new DefaultReflectorFactory();
@@ -303,6 +304,20 @@ public class Configuration {
 
   public void setAutoMappingBehavior(AutoMappingBehavior autoMappingBehavior) {
     this.autoMappingBehavior = autoMappingBehavior;
+  }
+
+  /**
+   * @since 3.3.2
+   */
+  public AutoMappingUnknownColumnBehavior getAutoMappingUnknownColumnBehavior() {
+    return autoMappingUnknownColumnBehavior;
+  }
+
+  /**
+   * @since 3.3.2
+   */
+  public void setAutoMappingUnknownColumnBehavior(AutoMappingUnknownColumnBehavior autoMappingUnknownColumnBehavior) {
+    this.autoMappingUnknownColumnBehavior = autoMappingUnknownColumnBehavior;
   }
 
   public boolean isLazyLoadingEnabled() {
