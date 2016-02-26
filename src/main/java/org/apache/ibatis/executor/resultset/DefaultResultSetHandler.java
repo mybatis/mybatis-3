@@ -478,11 +478,11 @@ public class DefaultResultSetHandler implements ResultSetHandler {
             autoMapping.add(new UnMappedColumAutoMapping(columnName, property, typeHandler, propertyType.isPrimitive()));
           } else {
             configuration.getAutoMappingUnknownColumnBehavior()
-                    .doAction(columnName, property, propertyType);
+                    .doAction(mappedStatement, columnName, property, propertyType);
           }
         } else{
           configuration.getAutoMappingUnknownColumnBehavior()
-                  .doAction(columnName, (property != null) ? property : propertyName, null);
+                  .doAction(mappedStatement, columnName, (property != null) ? property : propertyName, null);
         }
       }
       autoMappingsCache.put(mapKey, autoMapping);
