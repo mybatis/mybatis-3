@@ -226,6 +226,25 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
             </tr>
             <tr>
               <td>
+                autoMappingUnknownColumnBehavior
+              </td>
+              <td>
+                自動マッピング対象のプロパティが存在しない(又はプロパティ型がサポート外の)カラムを検知した時の動作を指定します。
+                <ul>
+                  <li><code>NONE</code>: 何もしません</li>
+                  <li><code>WARNING</code>: 警告ログを出力します (<code>'org.apache.ibatis.session.AutoMappingUnknownColumnBehavior'</code> のログレベルを<code>WARN</code>に設定してください)</li>
+                  <li><code>FAILING</code>: 自動マッピング処理をエラーにします。(<code>SqlSessionException</code>が発生します)</li>
+                </ul>
+              </td>
+              <td>
+                NONE, WARNING, FAILING
+              </td>
+              <td>
+                NONE
+              </td>
+            </tr>
+            <tr>
+              <td>
                 defaultExecutorType
               </td>
               <td>
@@ -441,6 +460,7 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
   <setting name="useColumnLabel" value="true"/>
   <setting name="useGeneratedKeys" value="false"/>
   <setting name="autoMappingBehavior" value="PARTIAL"/>
+  <setting name="autoMappingUnknownColumnBehavior" value="WARNING"/>
   <setting name="defaultExecutorType" value="SIMPLE"/>
   <setting name="defaultStatementTimeout" value="25"/>
   <setting name="defaultFetchSize" value="100"/>

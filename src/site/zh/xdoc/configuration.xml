@@ -209,6 +209,25 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
             </tr>
             <tr>
               <td>
+                autoMappingUnknownColumnBehavior
+              </td>
+              <td>
+                Specify the behavior when detects an unknown column (or unknown property type) of automatic mapping target.
+                <ul>
+                  <li><code>NONE</code>: Do nothing</li>
+                  <li><code>WARNING</code>: Output warning log (The log level of <code>'org.apache.ibatis.session.AutoMappingUnknownColumnBehavior'</code> must be set to <code>WARN</code>)</li>
+                  <li><code>FAILING</code>: Fail mapping (Throw <code>SqlSessionException</code>)</li>
+                </ul>
+              </td>
+              <td>
+                NONE, WARNING, FAILING
+              </td>
+              <td>
+                NONE
+              </td>
+            </tr>
+            <tr>
+              <td>
                 defaultExecutorType
               </td>
               <td>
@@ -422,6 +441,7 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
   <setting name="useColumnLabel" value="true"/>
   <setting name="useGeneratedKeys" value="false"/>
   <setting name="autoMappingBehavior" value="PARTIAL"/>
+  <setting name="autoMappingUnknownColumnBehavior" value="WARNING"/>
   <setting name="defaultExecutorType" value="SIMPLE"/>
   <setting name="defaultStatementTimeout" value="25"/>
   <setting name="defaultFetchSize" value="100"/>
