@@ -34,6 +34,7 @@ import org.apache.ibatis.logging.slf4j.Slf4jImpl;
 import org.apache.ibatis.scripting.defaults.RawLanguageDriver;
 import org.apache.ibatis.scripting.xmltags.XMLLanguageDriver;
 import org.apache.ibatis.session.AutoMappingBehavior;
+import org.apache.ibatis.session.AutoMappingUnknownColumnBehavior;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.LocalCacheScope;
@@ -57,6 +58,7 @@ public class XmlConfigBuilderTest {
     Configuration config = builder.parse();
     assertNotNull(config);
     assertThat(config.getAutoMappingBehavior(), is(AutoMappingBehavior.PARTIAL));
+    assertThat(config.getAutoMappingUnknownColumnBehavior(), is(AutoMappingUnknownColumnBehavior.NONE));
     assertThat(config.isCacheEnabled(), is(true));
     assertThat(config.getProxyFactory(), is(instanceOf(JavassistProxyFactory.class)));
     assertThat(config.isLazyLoadingEnabled(), is(false));
@@ -145,6 +147,7 @@ public class XmlConfigBuilderTest {
       Configuration config = builder.parse();
 
       assertThat(config.getAutoMappingBehavior(), is(AutoMappingBehavior.NONE));
+      assertThat(config.getAutoMappingUnknownColumnBehavior(), is(AutoMappingUnknownColumnBehavior.WARNING));
       assertThat(config.isCacheEnabled(), is(false));
       assertThat(config.getProxyFactory(), is(instanceOf(CglibProxyFactory.class)));
       assertThat(config.isLazyLoadingEnabled(), is(true));
