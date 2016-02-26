@@ -307,14 +307,14 @@ public class Configuration {
   }
 
   /**
-   * @since 3.3.2
+   * @since 3.4.0
    */
   public AutoMappingUnknownColumnBehavior getAutoMappingUnknownColumnBehavior() {
     return autoMappingUnknownColumnBehavior;
   }
 
   /**
-   * @since 3.3.2
+   * @since 3.4.0
    */
   public void setAutoMappingUnknownColumnBehavior(AutoMappingUnknownColumnBehavior autoMappingUnknownColumnBehavior) {
     this.autoMappingUnknownColumnBehavior = autoMappingUnknownColumnBehavior;

@@ -39,7 +39,7 @@ import static org.junit.Assert.assertThat;
  * Tests for specify the behavior when detects an unknown column (or unknown property type) of automatic mapping target.
  *
  * @author Kazuki Shimizu
- * @since 3.3.2
+ * @since 3.4.0
  */
 public class AutoMappingUnknownColumnBehaviorTest {
 
