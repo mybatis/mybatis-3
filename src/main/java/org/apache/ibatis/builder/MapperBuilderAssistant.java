@@ -286,7 +286,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
         .databaseId(databaseId)
         .lang(lang)
         .resultOrdered(resultOrdered)
-        .resulSets(resultSets)
+        .resultSets(resultSets)
         .resultMaps(getStatementResultMaps(resultMap, resultType, id))
         .resultSetType(resultSetType)
         .flushCacheRequired(valueOrDefault(flushCache, !isSelect))

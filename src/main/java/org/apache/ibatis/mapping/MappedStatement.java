@@ -168,6 +168,13 @@ public final class MappedStatement {
       return this;
     }
 
+    public Builder resultSets(String resultSet) {
+      mappedStatement.resultSets = delimitedStringtoArray(resultSet);
+      return this;
+    }
+
+    /** @deprecated Use {@link #resultSets} */
+    @Deprecated
     public Builder resulSets(String resultSet) {
       mappedStatement.resultSets = delimitedStringtoArray(resultSet);
       return this;
@@ -271,6 +278,12 @@ public final class MappedStatement {
     return lang;
   }
 
+  public String[] getResultSets() {
+    return resultSets;
+  }
+
+  /** @deprecated Use {@link #getResultSets()} */
+  @Deprecated
   public String[] getResulSets() {
     return resultSets;
   }
