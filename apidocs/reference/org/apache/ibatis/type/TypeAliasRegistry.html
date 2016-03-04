@@ -568,7 +568,7 @@ Summary:
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../org/apache/ibatis/type/TypeAliasRegistry.html#registerAlias(java.lang.String, java.lang.String)">registerAlias</a></span>(String alias, String value)
+        <span class="sympad"><a href="../../../../org/apache/ibatis/type/TypeAliasRegistry.html#registerAlias(java.lang.Class<?>)">registerAlias</a></span>(Class&lt;?&gt; type)
         
   </td></tr>
 
@@ -600,7 +600,7 @@ Summary:
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../org/apache/ibatis/type/TypeAliasRegistry.html#registerAlias(java.lang.Class<?>)">registerAlias</a></span>(Class&lt;?&gt; type)
+        <span class="sympad"><a href="../../../../org/apache/ibatis/type/TypeAliasRegistry.html#registerAlias(java.lang.String, java.lang.String)">registerAlias</a></span>(String alias, String value)
         
   </td></tr>
 
@@ -616,7 +616,7 @@ Summary:
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../org/apache/ibatis/type/TypeAliasRegistry.html#registerAliases(java.lang.String)">registerAliases</a></span>(String packageName)
+        <span class="sympad"><a href="../../../../org/apache/ibatis/type/TypeAliasRegistry.html#registerAliases(java.lang.String, java.lang.Class<?>)">registerAliases</a></span>(String packageName, Class&lt;?&gt; superType)
         
   </td></tr>
 
@@ -632,7 +632,7 @@ Summary:
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../org/apache/ibatis/type/TypeAliasRegistry.html#registerAliases(java.lang.String, java.lang.Class<?>)">registerAliases</a></span>(String packageName, Class&lt;?&gt; superType)
+        <span class="sympad"><a href="../../../../org/apache/ibatis/type/TypeAliasRegistry.html#registerAliases(java.lang.String)">registerAliases</a></span>(String packageName)
         
   </td></tr>
 
@@ -826,7 +826,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0, int arg1)
+        <span class="sympad">wait</span>()
         
   </td></tr>
 
@@ -842,7 +842,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0)
+        <span class="sympad">wait</span>(long arg0, int arg1)
         
   </td></tr>
 
@@ -858,7 +858,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>()
+        <span class="sympad">wait</span>(long arg0)
         
   </td></tr>
 
@@ -980,7 +980,7 @@ From class
 </div>
 
 
-<a id="registerAlias(java.lang.String, java.lang.String)"></a>
+<a id="registerAlias(java.lang.Class<?>)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -993,7 +993,7 @@ From class
         void
       </span>
       <span class="sympad">registerAlias</span>
-      <span class="normal">(String alias, String value)</span>
+      <span class="normal">(Class&lt;?&gt; type)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -1042,7 +1042,7 @@ From class
 </div>
 
 
-<a id="registerAlias(java.lang.Class<?>)"></a>
+<a id="registerAlias(java.lang.String, java.lang.String)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1055,38 +1055,7 @@ From class
         void
       </span>
       <span class="sympad">registerAlias</span>
-      <span class="normal">(Class&lt;?&gt; type)</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p></p></div>
-
-    </div>
-</div>
-
-
-<a id="registerAliases(java.lang.String)"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-         
-         
-        void
-      </span>
-      <span class="sympad">registerAliases</span>
-      <span class="normal">(String packageName)</span>
+      <span class="normal">(String alias, String value)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -1118,6 +1087,37 @@ From class
       </span>
       <span class="sympad">registerAliases</span>
       <span class="normal">(String packageName, Class&lt;?&gt; superType)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    </div>
+</div>
+
+
+<a id="registerAliases(java.lang.String)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        void
+      </span>
+      <span class="sympad">registerAliases</span>
+      <span class="normal">(String packageName)</span>
     </h4>
       <div class="api-level">
         <div>

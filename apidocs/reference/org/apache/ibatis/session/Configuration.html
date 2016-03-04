@@ -1261,7 +1261,7 @@ Summary:
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#addMappers(java.lang.String, java.lang.Class<?>)">addMappers</a></span>(String packageName, Class&lt;?&gt; superType)
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#addMappers(java.lang.String)">addMappers</a></span>(String packageName)
         
   </td></tr>
 
@@ -1277,7 +1277,7 @@ Summary:
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#addMappers(java.lang.String)">addMappers</a></span>(String packageName)
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#addMappers(java.lang.String, java.lang.Class<?>)">addMappers</a></span>(String packageName, Class&lt;?&gt; superType)
         
   </td></tr>
 
@@ -2365,7 +2365,7 @@ Summary:
             <a href="../../../../org/apache/ibatis/executor/Executor.html">Executor</a>
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#newExecutor(org.apache.ibatis.transaction.Transaction, org.apache.ibatis.session.ExecutorType)">newExecutor</a></span>(<a href="../../../../org/apache/ibatis/transaction/Transaction.html">Transaction</a> transaction, <a href="../../../../org/apache/ibatis/session/ExecutorType.html">ExecutorType</a> executorType)
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#newExecutor(org.apache.ibatis.transaction.Transaction)">newExecutor</a></span>(<a href="../../../../org/apache/ibatis/transaction/Transaction.html">Transaction</a> transaction)
         
   </td></tr>
 
@@ -2381,7 +2381,7 @@ Summary:
             <a href="../../../../org/apache/ibatis/executor/Executor.html">Executor</a>
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#newExecutor(org.apache.ibatis.transaction.Transaction)">newExecutor</a></span>(<a href="../../../../org/apache/ibatis/transaction/Transaction.html">Transaction</a> transaction)
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.html#newExecutor(org.apache.ibatis.transaction.Transaction, org.apache.ibatis.session.ExecutorType)">newExecutor</a></span>(<a href="../../../../org/apache/ibatis/transaction/Transaction.html">Transaction</a> transaction, <a href="../../../../org/apache/ibatis/session/ExecutorType.html">ExecutorType</a> executorType)
         
   </td></tr>
 
@@ -3176,7 +3176,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0, int arg1)
+        <span class="sympad">wait</span>()
         
   </td></tr>
 
@@ -3192,7 +3192,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0)
+        <span class="sympad">wait</span>(long arg0, int arg1)
         
   </td></tr>
 
@@ -3208,7 +3208,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>()
+        <span class="sympad">wait</span>(long arg0)
         
   </td></tr>
 
@@ -5064,7 +5064,7 @@ From class
 </div>
 
 
-<a id="addMappers(java.lang.String, java.lang.Class<?>)"></a>
+<a id="addMappers(java.lang.String)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -5077,7 +5077,7 @@ From class
         void
       </span>
       <span class="sympad">addMappers</span>
-      <span class="normal">(String packageName, Class&lt;?&gt; superType)</span>
+      <span class="normal">(String packageName)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -5095,7 +5095,7 @@ From class
 </div>
 
 
-<a id="addMappers(java.lang.String)"></a>
+<a id="addMappers(java.lang.String, java.lang.Class<?>)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -5108,7 +5108,7 @@ From class
         void
       </span>
       <span class="sympad">addMappers</span>
-      <span class="normal">(String packageName)</span>
+      <span class="normal">(String packageName, Class&lt;?&gt; superType)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -7203,7 +7203,7 @@ From class
 </div>
 
 
-<a id="newExecutor(org.apache.ibatis.transaction.Transaction, org.apache.ibatis.session.ExecutorType)"></a>
+<a id="newExecutor(org.apache.ibatis.transaction.Transaction)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -7216,7 +7216,7 @@ From class
         <a href="../../../../org/apache/ibatis/executor/Executor.html">Executor</a>
       </span>
       <span class="sympad">newExecutor</span>
-      <span class="normal">(<a href="../../../../org/apache/ibatis/transaction/Transaction.html">Transaction</a> transaction, <a href="../../../../org/apache/ibatis/session/ExecutorType.html">ExecutorType</a> executorType)</span>
+      <span class="normal">(<a href="../../../../org/apache/ibatis/transaction/Transaction.html">Transaction</a> transaction)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -7234,7 +7234,7 @@ From class
 </div>
 
 
-<a id="newExecutor(org.apache.ibatis.transaction.Transaction)"></a>
+<a id="newExecutor(org.apache.ibatis.transaction.Transaction, org.apache.ibatis.session.ExecutorType)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -7247,7 +7247,7 @@ From class
         <a href="../../../../org/apache/ibatis/executor/Executor.html">Executor</a>
       </span>
       <span class="sympad">newExecutor</span>
-      <span class="normal">(<a href="../../../../org/apache/ibatis/transaction/Transaction.html">Transaction</a> transaction)</span>
+      <span class="normal">(<a href="../../../../org/apache/ibatis/transaction/Transaction.html">Transaction</a> transaction, <a href="../../../../org/apache/ibatis/session/ExecutorType.html">ExecutorType</a> executorType)</span>
     </h4>
       <div class="api-level">
         <div>

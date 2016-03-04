@@ -584,7 +584,7 @@ Summary:
             <a href="../../../../org/apache/ibatis/type/TypeHandler.html">TypeHandler</a>&lt;T&gt;
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../org/apache/ibatis/type/TypeHandlerRegistry.html#getTypeHandler(java.lang.Class<T>, org.apache.ibatis.type.JdbcType)">getTypeHandler</a></span>(Class&lt;T&gt; type, <a href="../../../../org/apache/ibatis/type/JdbcType.html">JdbcType</a> jdbcType)
+        <span class="sympad"><a href="../../../../org/apache/ibatis/type/TypeHandlerRegistry.html#getTypeHandler(java.lang.Class<T>)">getTypeHandler</a></span>(Class&lt;T&gt; type)
         
   </td></tr>
 
@@ -596,11 +596,11 @@ Summary:
             
             
             
-            &lt;T&gt;
-            <a href="../../../../org/apache/ibatis/type/TypeHandler.html">TypeHandler</a>&lt;T&gt;
+            
+            <a href="../../../../org/apache/ibatis/type/TypeHandler.html">TypeHandler</a>&lt;?&gt;
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../org/apache/ibatis/type/TypeHandlerRegistry.html#getTypeHandler(java.lang.Class<T>)">getTypeHandler</a></span>(Class&lt;T&gt; type)
+        <span class="sympad"><a href="../../../../org/apache/ibatis/type/TypeHandlerRegistry.html#getTypeHandler(org.apache.ibatis.type.JdbcType)">getTypeHandler</a></span>(<a href="../../../../org/apache/ibatis/type/JdbcType.html">JdbcType</a> jdbcType)
         
   </td></tr>
 
@@ -644,11 +644,11 @@ Summary:
             
             
             
-            
-            <a href="../../../../org/apache/ibatis/type/TypeHandler.html">TypeHandler</a>&lt;?&gt;
+            &lt;T&gt;
+            <a href="../../../../org/apache/ibatis/type/TypeHandler.html">TypeHandler</a>&lt;T&gt;
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../org/apache/ibatis/type/TypeHandlerRegistry.html#getTypeHandler(org.apache.ibatis.type.JdbcType)">getTypeHandler</a></span>(<a href="../../../../org/apache/ibatis/type/JdbcType.html">JdbcType</a> jdbcType)
+        <span class="sympad"><a href="../../../../org/apache/ibatis/type/TypeHandlerRegistry.html#getTypeHandler(java.lang.Class<T>, org.apache.ibatis.type.JdbcType)">getTypeHandler</a></span>(Class&lt;T&gt; type, <a href="../../../../org/apache/ibatis/type/JdbcType.html">JdbcType</a> jdbcType)
         
   </td></tr>
 
@@ -696,29 +696,13 @@ Summary:
             boolean
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../org/apache/ibatis/type/TypeHandlerRegistry.html#hasTypeHandler(org.apache.ibatis.type.TypeReference<?>, org.apache.ibatis.type.JdbcType)">hasTypeHandler</a></span>(<a href="../../../../org/apache/ibatis/type/TypeReference.html">TypeReference</a>&lt;?&gt; javaTypeReference, <a href="../../../../org/apache/ibatis/type/JdbcType.html">JdbcType</a> jdbcType)
-        
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            boolean
-        </td>
-        <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../org/apache/ibatis/type/TypeHandlerRegistry.html#hasTypeHandler(org.apache.ibatis.type.TypeReference<?>)">hasTypeHandler</a></span>(<a href="../../../../org/apache/ibatis/type/TypeReference.html">TypeReference</a>&lt;?&gt; javaTypeReference)
         
   </td></tr>
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -728,13 +712,13 @@ Summary:
             boolean
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../org/apache/ibatis/type/TypeHandlerRegistry.html#hasTypeHandler(java.lang.Class<?>)">hasTypeHandler</a></span>(Class&lt;?&gt; javaType)
+        <span class="sympad"><a href="../../../../org/apache/ibatis/type/TypeHandlerRegistry.html#hasTypeHandler(org.apache.ibatis.type.TypeReference<?>, org.apache.ibatis.type.JdbcType)">hasTypeHandler</a></span>(<a href="../../../../org/apache/ibatis/type/TypeReference.html">TypeReference</a>&lt;?&gt; javaTypeReference, <a href="../../../../org/apache/ibatis/type/JdbcType.html">JdbcType</a> jdbcType)
         
   </td></tr>
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -750,6 +734,86 @@ Summary:
 
 
 	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            boolean
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/type/TypeHandlerRegistry.html#hasTypeHandler(java.lang.Class<?>)">hasTypeHandler</a></span>(Class&lt;?&gt; javaType)
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/type/TypeHandlerRegistry.html#register(java.lang.Class<?>, java.lang.Class<?>)">register</a></span>(Class&lt;?&gt; javaTypeClass, Class&lt;?&gt; typeHandlerClass)
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            &lt;T&gt;
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/type/TypeHandlerRegistry.html#register(java.lang.Class<T>, org.apache.ibatis.type.TypeHandler<? extends T>)">register</a></span>(Class&lt;T&gt; javaType, <a href="../../../../org/apache/ibatis/type/TypeHandler.html">TypeHandler</a>&lt;?&nbsp;extends&nbsp;T&gt; typeHandler)
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/type/TypeHandlerRegistry.html#register(org.apache.ibatis.type.JdbcType, org.apache.ibatis.type.TypeHandler<?>)">register</a></span>(<a href="../../../../org/apache/ibatis/type/JdbcType.html">JdbcType</a> jdbcType, <a href="../../../../org/apache/ibatis/type/TypeHandler.html">TypeHandler</a>&lt;?&gt; handler)
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/type/TypeHandlerRegistry.html#register(java.lang.Class<?>, org.apache.ibatis.type.JdbcType, java.lang.Class<?>)">register</a></span>(Class&lt;?&gt; javaTypeClass, <a href="../../../../org/apache/ibatis/type/JdbcType.html">JdbcType</a> jdbcType, Class&lt;?&gt; typeHandlerClass)
+        
+  </td></tr>
+
+
+	 
     <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
@@ -760,7 +824,39 @@ Summary:
             void
         </td>
         <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/type/TypeHandlerRegistry.html#register(org.apache.ibatis.type.TypeReference<T>, org.apache.ibatis.type.TypeHandler<? extends T>)">register</a></span>(<a href="../../../../org/apache/ibatis/type/TypeReference.html">TypeReference</a>&lt;T&gt; javaTypeReference, <a href="../../../../org/apache/ibatis/type/TypeHandler.html">TypeHandler</a>&lt;?&nbsp;extends&nbsp;T&gt; handler)
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            &lt;T&gt;
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../org/apache/ibatis/type/TypeHandlerRegistry.html#register(java.lang.Class<T>, org.apache.ibatis.type.JdbcType, org.apache.ibatis.type.TypeHandler<? extends T>)">register</a></span>(Class&lt;T&gt; type, <a href="../../../../org/apache/ibatis/type/JdbcType.html">JdbcType</a> jdbcType, <a href="../../../../org/apache/ibatis/type/TypeHandler.html">TypeHandler</a>&lt;?&nbsp;extends&nbsp;T&gt; handler)
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            &lt;T&gt;
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/type/TypeHandlerRegistry.html#register(org.apache.ibatis.type.TypeHandler<T>)">register</a></span>(<a href="../../../../org/apache/ibatis/type/TypeHandler.html">TypeHandler</a>&lt;T&gt; typeHandler)
         
   </td></tr>
 
@@ -793,102 +889,6 @@ Summary:
         </td>
         <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../org/apache/ibatis/type/TypeHandlerRegistry.html#register(java.lang.String)">register</a></span>(String packageName)
-        
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            void
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../org/apache/ibatis/type/TypeHandlerRegistry.html#register(java.lang.Class<?>, java.lang.Class<?>)">register</a></span>(Class&lt;?&gt; javaTypeClass, Class&lt;?&gt; typeHandlerClass)
-        
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            &lt;T&gt;
-            void
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../org/apache/ibatis/type/TypeHandlerRegistry.html#register(org.apache.ibatis.type.TypeReference<T>, org.apache.ibatis.type.TypeHandler<? extends T>)">register</a></span>(<a href="../../../../org/apache/ibatis/type/TypeReference.html">TypeReference</a>&lt;T&gt; javaTypeReference, <a href="../../../../org/apache/ibatis/type/TypeHandler.html">TypeHandler</a>&lt;?&nbsp;extends&nbsp;T&gt; handler)
-        
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            &lt;T&gt;
-            void
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../org/apache/ibatis/type/TypeHandlerRegistry.html#register(org.apache.ibatis.type.TypeHandler<T>)">register</a></span>(<a href="../../../../org/apache/ibatis/type/TypeHandler.html">TypeHandler</a>&lt;T&gt; typeHandler)
-        
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            void
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../org/apache/ibatis/type/TypeHandlerRegistry.html#register(org.apache.ibatis.type.JdbcType, org.apache.ibatis.type.TypeHandler<?>)">register</a></span>(<a href="../../../../org/apache/ibatis/type/JdbcType.html">JdbcType</a> jdbcType, <a href="../../../../org/apache/ibatis/type/TypeHandler.html">TypeHandler</a>&lt;?&gt; handler)
-        
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            &lt;T&gt;
-            void
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../org/apache/ibatis/type/TypeHandlerRegistry.html#register(java.lang.Class<T>, org.apache.ibatis.type.TypeHandler<? extends T>)">register</a></span>(Class&lt;T&gt; javaType, <a href="../../../../org/apache/ibatis/type/TypeHandler.html">TypeHandler</a>&lt;?&nbsp;extends&nbsp;T&gt; typeHandler)
-        
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            void
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../org/apache/ibatis/type/TypeHandlerRegistry.html#register(java.lang.Class<?>, org.apache.ibatis.type.JdbcType, java.lang.Class<?>)">register</a></span>(Class&lt;?&gt; javaTypeClass, <a href="../../../../org/apache/ibatis/type/JdbcType.html">JdbcType</a> jdbcType, Class&lt;?&gt; typeHandlerClass)
         
   </td></tr>
 
@@ -1066,7 +1066,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0, int arg1)
+        <span class="sympad">wait</span>()
         
   </td></tr>
 
@@ -1082,7 +1082,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0)
+        <span class="sympad">wait</span>(long arg0, int arg1)
         
   </td></tr>
 
@@ -1098,7 +1098,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>()
+        <span class="sympad">wait</span>(long arg0)
         
   </td></tr>
 
@@ -1251,7 +1251,7 @@ From class
 </div>
 
 
-<a id="getTypeHandler(java.lang.Class<T>, org.apache.ibatis.type.JdbcType)"></a>
+<a id="getTypeHandler(java.lang.Class<T>)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1264,7 +1264,7 @@ From class
         <a href="../../../../org/apache/ibatis/type/TypeHandler.html">TypeHandler</a>&lt;T&gt;
       </span>
       <span class="sympad">getTypeHandler</span>
-      <span class="normal">(Class&lt;T&gt; type, <a href="../../../../org/apache/ibatis/type/JdbcType.html">JdbcType</a> jdbcType)</span>
+      <span class="normal">(Class&lt;T&gt; type)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -1282,7 +1282,7 @@ From class
 </div>
 
 
-<a id="getTypeHandler(java.lang.Class<T>)"></a>
+<a id="getTypeHandler(org.apache.ibatis.type.JdbcType)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1292,10 +1292,10 @@ From class
          
          
          
-        <a href="../../../../org/apache/ibatis/type/TypeHandler.html">TypeHandler</a>&lt;T&gt;
+        <a href="../../../../org/apache/ibatis/type/TypeHandler.html">TypeHandler</a>&lt;?&gt;
       </span>
       <span class="sympad">getTypeHandler</span>
-      <span class="normal">(Class&lt;T&gt; type)</span>
+      <span class="normal">(<a href="../../../../org/apache/ibatis/type/JdbcType.html">JdbcType</a> jdbcType)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -1375,7 +1375,7 @@ From class
 </div>
 
 
-<a id="getTypeHandler(org.apache.ibatis.type.JdbcType)"></a>
+<a id="getTypeHandler(java.lang.Class<T>, org.apache.ibatis.type.JdbcType)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1385,10 +1385,10 @@ From class
          
          
          
-        <a href="../../../../org/apache/ibatis/type/TypeHandler.html">TypeHandler</a>&lt;?&gt;
+        <a href="../../../../org/apache/ibatis/type/TypeHandler.html">TypeHandler</a>&lt;T&gt;
       </span>
       <span class="sympad">getTypeHandler</span>
-      <span class="normal">(<a href="../../../../org/apache/ibatis/type/JdbcType.html">JdbcType</a> jdbcType)</span>
+      <span class="normal">(Class&lt;T&gt; type, <a href="../../../../org/apache/ibatis/type/JdbcType.html">JdbcType</a> jdbcType)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -1468,37 +1468,6 @@ From class
 </div>
 
 
-<a id="hasTypeHandler(org.apache.ibatis.type.TypeReference<?>, org.apache.ibatis.type.JdbcType)"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-         
-         
-        boolean
-      </span>
-      <span class="sympad">hasTypeHandler</span>
-      <span class="normal">(<a href="../../../../org/apache/ibatis/type/TypeReference.html">TypeReference</a>&lt;?&gt; javaTypeReference, <a href="../../../../org/apache/ibatis/type/JdbcType.html">JdbcType</a> jdbcType)</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p></p></div>
-
-    </div>
-</div>
-
-
 <a id="hasTypeHandler(org.apache.ibatis.type.TypeReference<?>)"></a>
 
 <div class="jd-details api apilevel-"> 
@@ -1530,7 +1499,7 @@ From class
 </div>
 
 
-<a id="hasTypeHandler(java.lang.Class<?>)"></a>
+<a id="hasTypeHandler(org.apache.ibatis.type.TypeReference<?>, org.apache.ibatis.type.JdbcType)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1543,7 +1512,7 @@ From class
         boolean
       </span>
       <span class="sympad">hasTypeHandler</span>
-      <span class="normal">(Class&lt;?&gt; javaType)</span>
+      <span class="normal">(<a href="../../../../org/apache/ibatis/type/TypeReference.html">TypeReference</a>&lt;?&gt; javaTypeReference, <a href="../../../../org/apache/ibatis/type/JdbcType.html">JdbcType</a> jdbcType)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -1592,6 +1561,192 @@ From class
 </div>
 
 
+<a id="hasTypeHandler(java.lang.Class<?>)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        boolean
+      </span>
+      <span class="sympad">hasTypeHandler</span>
+      <span class="normal">(Class&lt;?&gt; javaType)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    </div>
+</div>
+
+
+<a id="register(java.lang.Class<?>, java.lang.Class<?>)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        void
+      </span>
+      <span class="sympad">register</span>
+      <span class="normal">(Class&lt;?&gt; javaTypeClass, Class&lt;?&gt; typeHandlerClass)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    </div>
+</div>
+
+
+<a id="register(java.lang.Class<T>, org.apache.ibatis.type.TypeHandler<? extends T>)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        void
+      </span>
+      <span class="sympad">register</span>
+      <span class="normal">(Class&lt;T&gt; javaType, <a href="../../../../org/apache/ibatis/type/TypeHandler.html">TypeHandler</a>&lt;?&nbsp;extends&nbsp;T&gt; typeHandler)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    </div>
+</div>
+
+
+<a id="register(org.apache.ibatis.type.JdbcType, org.apache.ibatis.type.TypeHandler<?>)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        void
+      </span>
+      <span class="sympad">register</span>
+      <span class="normal">(<a href="../../../../org/apache/ibatis/type/JdbcType.html">JdbcType</a> jdbcType, <a href="../../../../org/apache/ibatis/type/TypeHandler.html">TypeHandler</a>&lt;?&gt; handler)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    </div>
+</div>
+
+
+<a id="register(java.lang.Class<?>, org.apache.ibatis.type.JdbcType, java.lang.Class<?>)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        void
+      </span>
+      <span class="sympad">register</span>
+      <span class="normal">(Class&lt;?&gt; javaTypeClass, <a href="../../../../org/apache/ibatis/type/JdbcType.html">JdbcType</a> jdbcType, Class&lt;?&gt; typeHandlerClass)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    </div>
+</div>
+
+
+<a id="register(org.apache.ibatis.type.TypeReference<T>, org.apache.ibatis.type.TypeHandler<? extends T>)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        void
+      </span>
+      <span class="sympad">register</span>
+      <span class="normal">(<a href="../../../../org/apache/ibatis/type/TypeReference.html">TypeReference</a>&lt;T&gt; javaTypeReference, <a href="../../../../org/apache/ibatis/type/TypeHandler.html">TypeHandler</a>&lt;?&nbsp;extends&nbsp;T&gt; handler)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    </div>
+</div>
+
+
 <a id="register(java.lang.Class<T>, org.apache.ibatis.type.JdbcType, org.apache.ibatis.type.TypeHandler<? extends T>)"></a>
 
 <div class="jd-details api apilevel-"> 
@@ -1606,6 +1761,37 @@ From class
       </span>
       <span class="sympad">register</span>
       <span class="normal">(Class&lt;T&gt; type, <a href="../../../../org/apache/ibatis/type/JdbcType.html">JdbcType</a> jdbcType, <a href="../../../../org/apache/ibatis/type/TypeHandler.html">TypeHandler</a>&lt;?&nbsp;extends&nbsp;T&gt; handler)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    </div>
+</div>
+
+
+<a id="register(org.apache.ibatis.type.TypeHandler<T>)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        void
+      </span>
+      <span class="sympad">register</span>
+      <span class="normal">(<a href="../../../../org/apache/ibatis/type/TypeHandler.html">TypeHandler</a>&lt;T&gt; typeHandler)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -1668,192 +1854,6 @@ From class
       </span>
       <span class="sympad">register</span>
       <span class="normal">(String packageName)</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p></p></div>
-
-    </div>
-</div>
-
-
-<a id="register(java.lang.Class<?>, java.lang.Class<?>)"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-         
-         
-        void
-      </span>
-      <span class="sympad">register</span>
-      <span class="normal">(Class&lt;?&gt; javaTypeClass, Class&lt;?&gt; typeHandlerClass)</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p></p></div>
-
-    </div>
-</div>
-
-
-<a id="register(org.apache.ibatis.type.TypeReference<T>, org.apache.ibatis.type.TypeHandler<? extends T>)"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-         
-         
-        void
-      </span>
-      <span class="sympad">register</span>
-      <span class="normal">(<a href="../../../../org/apache/ibatis/type/TypeReference.html">TypeReference</a>&lt;T&gt; javaTypeReference, <a href="../../../../org/apache/ibatis/type/TypeHandler.html">TypeHandler</a>&lt;?&nbsp;extends&nbsp;T&gt; handler)</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p></p></div>
-
-    </div>
-</div>
-
-
-<a id="register(org.apache.ibatis.type.TypeHandler<T>)"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-         
-         
-        void
-      </span>
-      <span class="sympad">register</span>
-      <span class="normal">(<a href="../../../../org/apache/ibatis/type/TypeHandler.html">TypeHandler</a>&lt;T&gt; typeHandler)</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p></p></div>
-
-    </div>
-</div>
-
-
-<a id="register(org.apache.ibatis.type.JdbcType, org.apache.ibatis.type.TypeHandler<?>)"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-         
-         
-        void
-      </span>
-      <span class="sympad">register</span>
-      <span class="normal">(<a href="../../../../org/apache/ibatis/type/JdbcType.html">JdbcType</a> jdbcType, <a href="../../../../org/apache/ibatis/type/TypeHandler.html">TypeHandler</a>&lt;?&gt; handler)</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p></p></div>
-
-    </div>
-</div>
-
-
-<a id="register(java.lang.Class<T>, org.apache.ibatis.type.TypeHandler<? extends T>)"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-         
-         
-        void
-      </span>
-      <span class="sympad">register</span>
-      <span class="normal">(Class&lt;T&gt; javaType, <a href="../../../../org/apache/ibatis/type/TypeHandler.html">TypeHandler</a>&lt;?&nbsp;extends&nbsp;T&gt; typeHandler)</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p></p></div>
-
-    </div>
-</div>
-
-
-<a id="register(java.lang.Class<?>, org.apache.ibatis.type.JdbcType, java.lang.Class<?>)"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-         
-         
-        void
-      </span>
-      <span class="sympad">register</span>
-      <span class="normal">(Class&lt;?&gt; javaTypeClass, <a href="../../../../org/apache/ibatis/type/JdbcType.html">JdbcType</a> jdbcType, Class&lt;?&gt; typeHandlerClass)</span>
     </h4>
       <div class="api-level">
         <div>

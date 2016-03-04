@@ -971,7 +971,7 @@ From class
             List&lt;<a href="../../../../org/apache/ibatis/executor/BatchResult.html">BatchResult</a>&gt;
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../org/apache/ibatis/executor/BaseExecutor.html#flushStatements()">flushStatements</a></span>()
+        <span class="sympad"><a href="../../../../org/apache/ibatis/executor/BaseExecutor.html#flushStatements(boolean)">flushStatements</a></span>(boolean isRollBack)
         
   </td></tr>
 
@@ -987,7 +987,7 @@ From class
             List&lt;<a href="../../../../org/apache/ibatis/executor/BatchResult.html">BatchResult</a>&gt;
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../org/apache/ibatis/executor/BaseExecutor.html#flushStatements(boolean)">flushStatements</a></span>(boolean isRollBack)
+        <span class="sympad"><a href="../../../../org/apache/ibatis/executor/BaseExecutor.html#flushStatements()">flushStatements</a></span>()
         
   </td></tr>
 
@@ -1067,7 +1067,7 @@ From class
             List&lt;E&gt;
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../org/apache/ibatis/executor/BaseExecutor.html#query(org.apache.ibatis.mapping.MappedStatement, java.lang.Object, org.apache.ibatis.session.RowBounds, org.apache.ibatis.session.ResultHandler)">query</a></span>(<a href="../../../../org/apache/ibatis/mapping/MappedStatement.html">MappedStatement</a> ms, Object parameter, <a href="../../../../org/apache/ibatis/session/RowBounds.html">RowBounds</a> rowBounds, <a href="../../../../org/apache/ibatis/session/ResultHandler.html">ResultHandler</a> resultHandler)
+        <span class="sympad"><a href="../../../../org/apache/ibatis/executor/BaseExecutor.html#query(org.apache.ibatis.mapping.MappedStatement, java.lang.Object, org.apache.ibatis.session.RowBounds, org.apache.ibatis.session.ResultHandler, org.apache.ibatis.cache.CacheKey, org.apache.ibatis.mapping.BoundSql)">query</a></span>(<a href="../../../../org/apache/ibatis/mapping/MappedStatement.html">MappedStatement</a> ms, Object parameter, <a href="../../../../org/apache/ibatis/session/RowBounds.html">RowBounds</a> rowBounds, <a href="../../../../org/apache/ibatis/session/ResultHandler.html">ResultHandler</a> resultHandler, <a href="../../../../org/apache/ibatis/cache/CacheKey.html">CacheKey</a> key, <a href="../../../../org/apache/ibatis/mapping/BoundSql.html">BoundSql</a> boundSql)
         
   </td></tr>
 
@@ -1083,7 +1083,7 @@ From class
             List&lt;E&gt;
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../org/apache/ibatis/executor/BaseExecutor.html#query(org.apache.ibatis.mapping.MappedStatement, java.lang.Object, org.apache.ibatis.session.RowBounds, org.apache.ibatis.session.ResultHandler, org.apache.ibatis.cache.CacheKey, org.apache.ibatis.mapping.BoundSql)">query</a></span>(<a href="../../../../org/apache/ibatis/mapping/MappedStatement.html">MappedStatement</a> ms, Object parameter, <a href="../../../../org/apache/ibatis/session/RowBounds.html">RowBounds</a> rowBounds, <a href="../../../../org/apache/ibatis/session/ResultHandler.html">ResultHandler</a> resultHandler, <a href="../../../../org/apache/ibatis/cache/CacheKey.html">CacheKey</a> key, <a href="../../../../org/apache/ibatis/mapping/BoundSql.html">BoundSql</a> boundSql)
+        <span class="sympad"><a href="../../../../org/apache/ibatis/executor/BaseExecutor.html#query(org.apache.ibatis.mapping.MappedStatement, java.lang.Object, org.apache.ibatis.session.RowBounds, org.apache.ibatis.session.ResultHandler)">query</a></span>(<a href="../../../../org/apache/ibatis/mapping/MappedStatement.html">MappedStatement</a> ms, Object parameter, <a href="../../../../org/apache/ibatis/session/RowBounds.html">RowBounds</a> rowBounds, <a href="../../../../org/apache/ibatis/session/ResultHandler.html">ResultHandler</a> resultHandler)
         
   </td></tr>
 
@@ -1317,7 +1317,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0, int arg1)
+        <span class="sympad">wait</span>()
         
   </td></tr>
 
@@ -1333,7 +1333,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0)
+        <span class="sympad">wait</span>(long arg0, int arg1)
         
   </td></tr>
 
@@ -1349,7 +1349,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>()
+        <span class="sympad">wait</span>(long arg0)
         
   </td></tr>
 
@@ -1535,7 +1535,7 @@ From interface
             List&lt;E&gt;
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../org/apache/ibatis/executor/Executor.html#query(org.apache.ibatis.mapping.MappedStatement, java.lang.Object, org.apache.ibatis.session.RowBounds, org.apache.ibatis.session.ResultHandler)">query</a></span>(<a href="../../../../org/apache/ibatis/mapping/MappedStatement.html">MappedStatement</a> ms, Object parameter, <a href="../../../../org/apache/ibatis/session/RowBounds.html">RowBounds</a> rowBounds, <a href="../../../../org/apache/ibatis/session/ResultHandler.html">ResultHandler</a> resultHandler)
+        <span class="sympad"><a href="../../../../org/apache/ibatis/executor/Executor.html#query(org.apache.ibatis.mapping.MappedStatement, java.lang.Object, org.apache.ibatis.session.RowBounds, org.apache.ibatis.session.ResultHandler, org.apache.ibatis.cache.CacheKey, org.apache.ibatis.mapping.BoundSql)">query</a></span>(<a href="../../../../org/apache/ibatis/mapping/MappedStatement.html">MappedStatement</a> ms, Object parameter, <a href="../../../../org/apache/ibatis/session/RowBounds.html">RowBounds</a> rowBounds, <a href="../../../../org/apache/ibatis/session/ResultHandler.html">ResultHandler</a> resultHandler, <a href="../../../../org/apache/ibatis/cache/CacheKey.html">CacheKey</a> cacheKey, <a href="../../../../org/apache/ibatis/mapping/BoundSql.html">BoundSql</a> boundSql)
         
   </td></tr>
 
@@ -1551,7 +1551,7 @@ From interface
             List&lt;E&gt;
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../org/apache/ibatis/executor/Executor.html#query(org.apache.ibatis.mapping.MappedStatement, java.lang.Object, org.apache.ibatis.session.RowBounds, org.apache.ibatis.session.ResultHandler, org.apache.ibatis.cache.CacheKey, org.apache.ibatis.mapping.BoundSql)">query</a></span>(<a href="../../../../org/apache/ibatis/mapping/MappedStatement.html">MappedStatement</a> ms, Object parameter, <a href="../../../../org/apache/ibatis/session/RowBounds.html">RowBounds</a> rowBounds, <a href="../../../../org/apache/ibatis/session/ResultHandler.html">ResultHandler</a> resultHandler, <a href="../../../../org/apache/ibatis/cache/CacheKey.html">CacheKey</a> cacheKey, <a href="../../../../org/apache/ibatis/mapping/BoundSql.html">BoundSql</a> boundSql)
+        <span class="sympad"><a href="../../../../org/apache/ibatis/executor/Executor.html#query(org.apache.ibatis.mapping.MappedStatement, java.lang.Object, org.apache.ibatis.session.RowBounds, org.apache.ibatis.session.ResultHandler)">query</a></span>(<a href="../../../../org/apache/ibatis/mapping/MappedStatement.html">MappedStatement</a> ms, Object parameter, <a href="../../../../org/apache/ibatis/session/RowBounds.html">RowBounds</a> rowBounds, <a href="../../../../org/apache/ibatis/session/ResultHandler.html">ResultHandler</a> resultHandler)
         
   </td></tr>
 

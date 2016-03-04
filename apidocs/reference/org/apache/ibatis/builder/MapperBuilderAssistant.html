@@ -716,10 +716,8 @@ Summary:
             <a href="../../../../org/apache/ibatis/mapping/ResultMapping.html">ResultMapping</a>
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../org/apache/ibatis/builder/MapperBuilderAssistant.html#buildResultMapping(java.lang.Class<?>, java.lang.String, java.lang.String, java.lang.Class<?>, org.apache.ibatis.type.JdbcType, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.Class<? extends org.apache.ibatis.type.TypeHandler<?>>, java.util.List<org.apache.ibatis.mapping.ResultFlag>)">buildResultMapping</a></span>(Class&lt;?&gt; resultType, String property, String column, Class&lt;?&gt; javaType, <a href="../../../../org/apache/ibatis/type/JdbcType.html">JdbcType</a> jdbcType, String nestedSelect, String nestedResultMap, String notNullColumn, String columnPrefix, Class&lt;?&nbsp;extends&nbsp;<a href="../../../../org/apache/ibatis/type/TypeHandler.html">TypeHandler</a>&lt;?&gt;&gt; typeHandler, List&lt;<a href="../../../../org/apache/ibatis/mapping/ResultFlag.html">ResultFlag</a>&gt; flags)
+        <span class="sympad"><a href="../../../../org/apache/ibatis/builder/MapperBuilderAssistant.html#buildResultMapping(java.lang.Class<?>, java.lang.String, java.lang.String, java.lang.Class<?>, org.apache.ibatis.type.JdbcType, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.Class<? extends org.apache.ibatis.type.TypeHandler<?>>, java.util.List<org.apache.ibatis.mapping.ResultFlag>, java.lang.String, java.lang.String, boolean)">buildResultMapping</a></span>(Class&lt;?&gt; resultType, String property, String column, Class&lt;?&gt; javaType, <a href="../../../../org/apache/ibatis/type/JdbcType.html">JdbcType</a> jdbcType, String nestedSelect, String nestedResultMap, String notNullColumn, String columnPrefix, Class&lt;?&nbsp;extends&nbsp;<a href="../../../../org/apache/ibatis/type/TypeHandler.html">TypeHandler</a>&lt;?&gt;&gt; typeHandler, List&lt;<a href="../../../../org/apache/ibatis/mapping/ResultFlag.html">ResultFlag</a>&gt; flags, String resultSet, String foreignColumn, boolean lazy)
         
-        <div class="jd-descrdiv">Backward compatibility signature </div>
-  
   </td></tr>
 
 
@@ -734,8 +732,10 @@ Summary:
             <a href="../../../../org/apache/ibatis/mapping/ResultMapping.html">ResultMapping</a>
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../org/apache/ibatis/builder/MapperBuilderAssistant.html#buildResultMapping(java.lang.Class<?>, java.lang.String, java.lang.String, java.lang.Class<?>, org.apache.ibatis.type.JdbcType, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.Class<? extends org.apache.ibatis.type.TypeHandler<?>>, java.util.List<org.apache.ibatis.mapping.ResultFlag>, java.lang.String, java.lang.String, boolean)">buildResultMapping</a></span>(Class&lt;?&gt; resultType, String property, String column, Class&lt;?&gt; javaType, <a href="../../../../org/apache/ibatis/type/JdbcType.html">JdbcType</a> jdbcType, String nestedSelect, String nestedResultMap, String notNullColumn, String columnPrefix, Class&lt;?&nbsp;extends&nbsp;<a href="../../../../org/apache/ibatis/type/TypeHandler.html">TypeHandler</a>&lt;?&gt;&gt; typeHandler, List&lt;<a href="../../../../org/apache/ibatis/mapping/ResultFlag.html">ResultFlag</a>&gt; flags, String resultSet, String foreignColumn, boolean lazy)
+        <span class="sympad"><a href="../../../../org/apache/ibatis/builder/MapperBuilderAssistant.html#buildResultMapping(java.lang.Class<?>, java.lang.String, java.lang.String, java.lang.Class<?>, org.apache.ibatis.type.JdbcType, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.Class<? extends org.apache.ibatis.type.TypeHandler<?>>, java.util.List<org.apache.ibatis.mapping.ResultFlag>)">buildResultMapping</a></span>(Class&lt;?&gt; resultType, String property, String column, Class&lt;?&gt; javaType, <a href="../../../../org/apache/ibatis/type/JdbcType.html">JdbcType</a> jdbcType, String nestedSelect, String nestedResultMap, String notNullColumn, String columnPrefix, Class&lt;?&nbsp;extends&nbsp;<a href="../../../../org/apache/ibatis/type/TypeHandler.html">TypeHandler</a>&lt;?&gt;&gt; typeHandler, List&lt;<a href="../../../../org/apache/ibatis/mapping/ResultFlag.html">ResultFlag</a>&gt; flags)
         
+        <div class="jd-descrdiv">Backward compatibility signature </div>
+  
   </td></tr>
 
 
@@ -1024,7 +1024,7 @@ From class
             <a href="../../../../org/apache/ibatis/type/TypeHandler.html">TypeHandler</a>&lt;?&gt;
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../org/apache/ibatis/builder/BaseBuilder.html#resolveTypeHandler(java.lang.Class<?>, java.lang.Class<? extends org.apache.ibatis.type.TypeHandler<?>>)">resolveTypeHandler</a></span>(Class&lt;?&gt; javaType, Class&lt;?&nbsp;extends&nbsp;<a href="../../../../org/apache/ibatis/type/TypeHandler.html">TypeHandler</a>&lt;?&gt;&gt; typeHandlerType)
+        <span class="sympad"><a href="../../../../org/apache/ibatis/builder/BaseBuilder.html#resolveTypeHandler(java.lang.Class<?>, java.lang.String)">resolveTypeHandler</a></span>(Class&lt;?&gt; javaType, String typeHandlerAlias)
         
   </td></tr>
 
@@ -1040,7 +1040,7 @@ From class
             <a href="../../../../org/apache/ibatis/type/TypeHandler.html">TypeHandler</a>&lt;?&gt;
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../org/apache/ibatis/builder/BaseBuilder.html#resolveTypeHandler(java.lang.Class<?>, java.lang.String)">resolveTypeHandler</a></span>(Class&lt;?&gt; javaType, String typeHandlerAlias)
+        <span class="sympad"><a href="../../../../org/apache/ibatis/builder/BaseBuilder.html#resolveTypeHandler(java.lang.Class<?>, java.lang.Class<? extends org.apache.ibatis.type.TypeHandler<?>>)">resolveTypeHandler</a></span>(Class&lt;?&gt; javaType, Class&lt;?&nbsp;extends&nbsp;<a href="../../../../org/apache/ibatis/type/TypeHandler.html">TypeHandler</a>&lt;?&gt;&gt; typeHandlerType)
         
   </td></tr>
 
@@ -1226,7 +1226,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0, int arg1)
+        <span class="sympad">wait</span>()
         
   </td></tr>
 
@@ -1242,7 +1242,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0)
+        <span class="sympad">wait</span>(long arg0, int arg1)
         
   </td></tr>
 
@@ -1258,7 +1258,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>()
+        <span class="sympad">wait</span>(long arg0)
         
   </td></tr>
 
@@ -1566,37 +1566,6 @@ From class
 </div>
 
 
-<a id="buildResultMapping(java.lang.Class<?>, java.lang.String, java.lang.String, java.lang.Class<?>, org.apache.ibatis.type.JdbcType, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.Class<? extends org.apache.ibatis.type.TypeHandler<?>>, java.util.List<org.apache.ibatis.mapping.ResultFlag>)"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-         
-         
-        <a href="../../../../org/apache/ibatis/mapping/ResultMapping.html">ResultMapping</a>
-      </span>
-      <span class="sympad">buildResultMapping</span>
-      <span class="normal">(Class&lt;?&gt; resultType, String property, String column, Class&lt;?&gt; javaType, <a href="../../../../org/apache/ibatis/type/JdbcType.html">JdbcType</a> jdbcType, String nestedSelect, String nestedResultMap, String notNullColumn, String columnPrefix, Class&lt;?&nbsp;extends&nbsp;<a href="../../../../org/apache/ibatis/type/TypeHandler.html">TypeHandler</a>&lt;?&gt;&gt; typeHandler, List&lt;<a href="../../../../org/apache/ibatis/mapping/ResultFlag.html">ResultFlag</a>&gt; flags)</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p>Backward compatibility signature </p></div>
-
-    </div>
-</div>
-
-
 <a id="buildResultMapping(java.lang.Class<?>, java.lang.String, java.lang.String, java.lang.Class<?>, org.apache.ibatis.type.JdbcType, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.Class<? extends org.apache.ibatis.type.TypeHandler<?>>, java.util.List<org.apache.ibatis.mapping.ResultFlag>, java.lang.String, java.lang.String, boolean)"></a>
 
 <div class="jd-details api apilevel-"> 
@@ -1623,6 +1592,37 @@ From class
     <div class="jd-details-descr">
       
   <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    </div>
+</div>
+
+
+<a id="buildResultMapping(java.lang.Class<?>, java.lang.String, java.lang.String, java.lang.Class<?>, org.apache.ibatis.type.JdbcType, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.Class<? extends org.apache.ibatis.type.TypeHandler<?>>, java.util.List<org.apache.ibatis.mapping.ResultFlag>)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        <a href="../../../../org/apache/ibatis/mapping/ResultMapping.html">ResultMapping</a>
+      </span>
+      <span class="sympad">buildResultMapping</span>
+      <span class="normal">(Class&lt;?&gt; resultType, String property, String column, Class&lt;?&gt; javaType, <a href="../../../../org/apache/ibatis/type/JdbcType.html">JdbcType</a> jdbcType, String nestedSelect, String nestedResultMap, String notNullColumn, String columnPrefix, Class&lt;?&nbsp;extends&nbsp;<a href="../../../../org/apache/ibatis/type/TypeHandler.html">TypeHandler</a>&lt;?&gt;&gt; typeHandler, List&lt;<a href="../../../../org/apache/ibatis/mapping/ResultFlag.html">ResultFlag</a>&gt; flags)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Backward compatibility signature </p></div>
 
     </div>
 </div>

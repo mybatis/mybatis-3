@@ -418,7 +418,7 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<constructor name="MethodSignature"
+<constructor name="MapperMethod.MethodSignature"
  type="org.apache.ibatis.binding.MapperMethod.MethodSignature"
  static="false"
  final="false"
@@ -568,7 +568,7 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<constructor name="ParamMap"
+<constructor name="MapperMethod.ParamMap"
  type="org.apache.ibatis.binding.MapperMethod.ParamMap"
  static="false"
  final="false"
@@ -585,7 +585,7 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<constructor name="SqlCommand"
+<constructor name="MapperMethod.SqlCommand"
  type="org.apache.ibatis.binding.MapperMethod.SqlCommand"
  static="false"
  final="false"
@@ -3213,7 +3213,7 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<constructor name="CustomObjectInputStream"
+<constructor name="SerializedCache.CustomObjectInputStream"
  type="org.apache.ibatis.cache.decorators.SerializedCache.CustomObjectInputStream"
  static="false"
  final="false"
@@ -10399,7 +10399,7 @@
 >
 <implements name="org.apache.ibatis.io.ResolverUtil.Test">
 </implements>
-<constructor name="AnnotatedWith"
+<constructor name="ResolverUtil.AnnotatedWith"
  type="org.apache.ibatis.io.ResolverUtil.AnnotatedWith"
  static="false"
  final="false"
@@ -10433,7 +10433,7 @@
 >
 <implements name="org.apache.ibatis.io.ResolverUtil.Test">
 </implements>
-<constructor name="IsA"
+<constructor name="ResolverUtil.IsA"
  type="org.apache.ibatis.io.ResolverUtil.IsA"
  static="false"
  final="false"
@@ -14239,7 +14239,7 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<constructor name="Builder"
+<constructor name="Discriminator.Builder"
  type="org.apache.ibatis.mapping.Discriminator.Builder"
  static="false"
  final="false"
@@ -14329,7 +14329,7 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<constructor name="Builder"
+<constructor name="Environment.Builder"
  type="org.apache.ibatis.mapping.Environment.Builder"
  static="false"
  final="false"
@@ -14715,7 +14715,7 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<constructor name="Builder"
+<constructor name="MappedStatement.Builder"
  type="org.apache.ibatis.mapping.MappedStatement.Builder"
  static="false"
  final="false"
@@ -15038,7 +15038,7 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<constructor name="Builder"
+<constructor name="ParameterMap.Builder"
  type="org.apache.ibatis.mapping.ParameterMap.Builder"
  static="false"
  final="false"
@@ -15193,7 +15193,7 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<constructor name="Builder"
+<constructor name="ParameterMapping.Builder"
  type="org.apache.ibatis.mapping.ParameterMapping.Builder"
  static="false"
  final="false"
@@ -15207,7 +15207,7 @@
 <parameter name="typeHandler" type="org.apache.ibatis.type.TypeHandler&lt;?&gt;">
 </parameter>
 </constructor>
-<constructor name="Builder"
+<constructor name="ParameterMapping.Builder"
  type="org.apache.ibatis.mapping.ParameterMapping.Builder"
  static="false"
  final="false"
@@ -15552,7 +15552,7 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<constructor name="Builder"
+<constructor name="ResultMap.Builder"
  type="org.apache.ibatis.mapping.ResultMap.Builder"
  static="false"
  final="false"
@@ -15568,7 +15568,7 @@
 <parameter name="resultMappings" type="java.util.List&lt;org.apache.ibatis.mapping.ResultMapping&gt;">
 </parameter>
 </constructor>
-<constructor name="Builder"
+<constructor name="ResultMap.Builder"
  type="org.apache.ibatis.mapping.ResultMap.Builder"
  static="false"
  final="false"
@@ -15830,7 +15830,7 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<constructor name="Builder"
+<constructor name="ResultMapping.Builder"
  type="org.apache.ibatis.mapping.ResultMapping.Builder"
  static="false"
  final="false"
@@ -15846,7 +15846,7 @@
 <parameter name="typeHandler" type="org.apache.ibatis.type.TypeHandler&lt;?&gt;">
 </parameter>
 </constructor>
-<constructor name="Builder"
+<constructor name="ResultMapping.Builder"
  type="org.apache.ibatis.mapping.ResultMapping.Builder"
  static="false"
  final="false"
@@ -15862,7 +15862,7 @@
 <parameter name="javaType" type="java.lang.Class&lt;?&gt;">
 </parameter>
 </constructor>
-<constructor name="Builder"
+<constructor name="ResultMapping.Builder"
  type="org.apache.ibatis.mapping.ResultMapping.Builder"
  static="false"
  final="false"
@@ -23183,7 +23183,7 @@
  deprecated="not deprecated"
  visibility="protected"
 >
-<constructor name="StrictMap"
+<constructor name="Configuration.StrictMap"
  type="org.apache.ibatis.session.Configuration.StrictMap"
  static="false"
  final="false"
@@ -23197,7 +23197,7 @@
 <parameter name="loadFactor" type="float">
 </parameter>
 </constructor>
-<constructor name="StrictMap"
+<constructor name="Configuration.StrictMap"
  type="org.apache.ibatis.session.Configuration.StrictMap"
  static="false"
  final="false"
@@ -23209,7 +23209,7 @@
 <parameter name="initialCapacity" type="int">
 </parameter>
 </constructor>
-<constructor name="StrictMap"
+<constructor name="Configuration.StrictMap"
  type="org.apache.ibatis.session.Configuration.StrictMap"
  static="false"
  final="false"
@@ -23219,7 +23219,7 @@
 <parameter name="name" type="java.lang.String">
 </parameter>
 </constructor>
-<constructor name="StrictMap"
+<constructor name="Configuration.StrictMap"
  type="org.apache.ibatis.session.Configuration.StrictMap"
  static="false"
  final="false"
@@ -23255,7 +23255,7 @@
  deprecated="not deprecated"
  visibility="protected"
 >
-<constructor name="Ambiguity"
+<constructor name="Configuration.StrictMap.Ambiguity"
  type="org.apache.ibatis.session.Configuration.StrictMap.Ambiguity"
  static="false"
  final="false"
@@ -25524,7 +25524,7 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<constructor name="StrictMap"
+<constructor name="DefaultSqlSession.StrictMap"
  type="org.apache.ibatis.session.defaults.DefaultSqlSession.StrictMap"
  static="false"
  final="false"

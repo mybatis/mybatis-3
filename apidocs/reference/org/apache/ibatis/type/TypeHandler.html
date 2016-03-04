@@ -724,7 +724,7 @@ Summary:
             T
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../org/apache/ibatis/type/TypeHandler.html#getResult(java.sql.ResultSet, int)">getResult</a></span>(ResultSet rs, int columnIndex)
+        <span class="sympad"><a href="../../../../org/apache/ibatis/type/TypeHandler.html#getResult(java.sql.ResultSet, java.lang.String)">getResult</a></span>(ResultSet rs, String columnName)
         
   </td></tr>
 
@@ -740,7 +740,7 @@ Summary:
             T
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../org/apache/ibatis/type/TypeHandler.html#getResult(java.sql.ResultSet, java.lang.String)">getResult</a></span>(ResultSet rs, String columnName)
+        <span class="sympad"><a href="../../../../org/apache/ibatis/type/TypeHandler.html#getResult(java.sql.CallableStatement, int)">getResult</a></span>(CallableStatement cs, int columnIndex)
         
   </td></tr>
 
@@ -756,7 +756,7 @@ Summary:
             T
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../org/apache/ibatis/type/TypeHandler.html#getResult(java.sql.CallableStatement, int)">getResult</a></span>(CallableStatement cs, int columnIndex)
+        <span class="sympad"><a href="../../../../org/apache/ibatis/type/TypeHandler.html#getResult(java.sql.ResultSet, int)">getResult</a></span>(ResultSet rs, int columnIndex)
         
   </td></tr>
 
@@ -825,46 +825,6 @@ Summary:
 
 
 
-<a id="getResult(java.sql.ResultSet, int)"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-        abstract 
-         
-        T
-      </span>
-      <span class="sympad">getResult</span>
-      <span class="normal">(ResultSet rs, int columnIndex)</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p></p></div>
-  <div class="jd-tagdata">
-      <h5 class="jd-tagtitle">Throws</h5>
-      <table class="jd-tagtable">  
-        <tr>
-            <th>SQLException</td>
-            <td></td>
-        </tr>
-      </table>
-  </div>
-
-    </div>
-</div>
-
-
 <a id="getResult(java.sql.ResultSet, java.lang.String)"></a>
 
 <div class="jd-details api apilevel-"> 
@@ -919,6 +879,46 @@ Summary:
       </span>
       <span class="sympad">getResult</span>
       <span class="normal">(CallableStatement cs, int columnIndex)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Throws</h5>
+      <table class="jd-tagtable">  
+        <tr>
+            <th>SQLException</td>
+            <td></td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<a id="getResult(java.sql.ResultSet, int)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+        abstract 
+         
+        T
+      </span>
+      <span class="sympad">getResult</span>
+      <span class="normal">(ResultSet rs, int columnIndex)</span>
     </h4>
       <div class="api-level">
         <div>
