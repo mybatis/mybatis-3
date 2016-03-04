@@ -85,18 +85,20 @@
 <a class="jxr_linenumber" name="L77" href="#L77">77</a>          SqlSession sqlSession = sqlSessionFactory.openSession();
 <a class="jxr_linenumber" name="L78" href="#L78">78</a>          <a href="../../../../../org/apache/ibatis/submitted/enumtypehandler_on_map/PersonMapper.html">PersonMapper</a> personMapper = sqlSession.getMapper(PersonMapper.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L79" href="#L79">79</a>          List&lt;Person&gt; persons = personMapper.getByTypeNoParam(<strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/submitted/enumtypehandler_on_map/PersonMapper.html">TypeName</a>() {
-<a class="jxr_linenumber" name="L80" href="#L80">80</a>              <strong class="jxr_keyword">public</strong> String getName() {
-<a class="jxr_linenumber" name="L81" href="#L81">81</a>                  <strong class="jxr_keyword">return</strong> <span class="jxr_string">""</span>;
-<a class="jxr_linenumber" name="L82" href="#L82">82</a>              }
-<a class="jxr_linenumber" name="L83" href="#L83">83</a>              <strong class="jxr_keyword">public</strong> <a href="../../../../../org/apache/ibatis/submitted/enumtypehandler_on_map/Person.html">Type</a> getType() {
-<a class="jxr_linenumber" name="L84" href="#L84">84</a>                  <strong class="jxr_keyword">return</strong> Person.Type.PERSON;
-<a class="jxr_linenumber" name="L85" href="#L85">85</a>              }
-<a class="jxr_linenumber" name="L86" href="#L86">86</a>          });
-<a class="jxr_linenumber" name="L87" href="#L87">87</a>          Assert.assertNotNull(<span class="jxr_string">"Persons must not be null"</span>, persons);
-<a class="jxr_linenumber" name="L88" href="#L88">88</a>          Assert.assertEquals(<span class="jxr_string">"Persons must contain exactly 1 person"</span>, 1, persons.size());
-<a class="jxr_linenumber" name="L89" href="#L89">89</a>        sqlSession.close();
-<a class="jxr_linenumber" name="L90" href="#L90">90</a>      }
-<a class="jxr_linenumber" name="L91" href="#L91">91</a>  }
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>              @Override
+<a class="jxr_linenumber" name="L81" href="#L81">81</a>              <strong class="jxr_keyword">public</strong> String getName() {
+<a class="jxr_linenumber" name="L82" href="#L82">82</a>                  <strong class="jxr_keyword">return</strong> <span class="jxr_string">""</span>;
+<a class="jxr_linenumber" name="L83" href="#L83">83</a>              }
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>              @Override
+<a class="jxr_linenumber" name="L85" href="#L85">85</a>              <strong class="jxr_keyword">public</strong> <a href="../../../../../org/apache/ibatis/submitted/enumtypehandler_on_map/Person.html">Type</a> getType() {
+<a class="jxr_linenumber" name="L86" href="#L86">86</a>                  <strong class="jxr_keyword">return</strong> Person.Type.PERSON;
+<a class="jxr_linenumber" name="L87" href="#L87">87</a>              }
+<a class="jxr_linenumber" name="L88" href="#L88">88</a>          });
+<a class="jxr_linenumber" name="L89" href="#L89">89</a>          Assert.assertNotNull(<span class="jxr_string">"Persons must not be null"</span>, persons);
+<a class="jxr_linenumber" name="L90" href="#L90">90</a>          Assert.assertEquals(<span class="jxr_string">"Persons must contain exactly 1 person"</span>, 1, persons.size());
+<a class="jxr_linenumber" name="L91" href="#L91">91</a>        sqlSession.close();
+<a class="jxr_linenumber" name="L92" href="#L92">92</a>      }
+<a class="jxr_linenumber" name="L93" href="#L93">93</a>  }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2010&#x2013;2016 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>

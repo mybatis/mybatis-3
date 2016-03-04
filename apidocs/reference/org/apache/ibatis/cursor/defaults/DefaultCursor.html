@@ -145,6 +145,8 @@
               <ul>
                 
     <li class="api apilevel-">
+  <a href="../../../../../org/apache/ibatis/annotations/package-summary.html">org.apache.ibatis.annotations</a></li>
+    <li class="api apilevel-">
   <a href="../../../../../org/apache/ibatis/binding/package-summary.html">org.apache.ibatis.binding</a></li>
     <li class="api apilevel-">
   <a href="../../../../../org/apache/ibatis/builder/package-summary.html">org.apache.ibatis.builder</a></li>
@@ -820,7 +822,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>()
+        <span class="sympad">wait</span>(long arg0, int arg1)
         
   </td></tr>
 
@@ -836,7 +838,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0, int arg1)
+        <span class="sympad">wait</span>(long arg0)
         
   </td></tr>
 
@@ -852,7 +854,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0)
+        <span class="sympad">wait</span>()
         
   </td></tr>
 
@@ -975,10 +977,42 @@ From interface
             
             
             
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">forEach</span>(Consumer&lt;?&nbsp;super&nbsp;T&gt; arg0)
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            abstract
+            
+            
+            
+            
             Iterator&lt;T&gt;
         </td>
         <td class="jd-linkcol" width="100%">
         <span class="sympad">iterator</span>()
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            abstract
+            
+            
+            
+            
+            Spliterator&lt;T&gt;
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">spliterator</span>()
         
   </td></tr>
 

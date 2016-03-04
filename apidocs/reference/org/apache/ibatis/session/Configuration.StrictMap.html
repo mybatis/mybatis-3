@@ -145,6 +145,8 @@
               <ul>
                 
     <li class="api apilevel-">
+  <a href="../../../../org/apache/ibatis/annotations/package-summary.html">org.apache.ibatis.annotations</a></li>
+    <li class="api apilevel-">
   <a href="../../../../org/apache/ibatis/binding/package-summary.html">org.apache.ibatis.binding</a></li>
     <li class="api apilevel-">
   <a href="../../../../org/apache/ibatis/builder/package-summary.html">org.apache.ibatis.builder</a></li>
@@ -158,6 +160,10 @@
   <a href="../../../../org/apache/ibatis/cache/decorators/package-summary.html">org.apache.ibatis.cache.decorators</a></li>
     <li class="api apilevel-">
   <a href="../../../../org/apache/ibatis/cache/impl/package-summary.html">org.apache.ibatis.cache.impl</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../org/apache/ibatis/cursor/package-summary.html">org.apache.ibatis.cursor</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../org/apache/ibatis/cursor/defaults/package-summary.html">org.apache.ibatis.cursor.defaults</a></li>
     <li class="api apilevel-">
   <a href="../../../../org/apache/ibatis/datasource/package-summary.html">org.apache.ibatis.datasource</a></li>
     <li class="api apilevel-">
@@ -272,6 +278,7 @@
     <li><h2>Enums</h2>
       <ul>
           <li class="api apilevel-"><a href="../../../../org/apache/ibatis/session/AutoMappingBehavior.html">AutoMappingBehavior</a></li>
+          <li class="api apilevel-"><a href="../../../../org/apache/ibatis/session/AutoMappingUnknownColumnBehavior.html">AutoMappingUnknownColumnBehavior</a></li>
           <li class="api apilevel-"><a href="../../../../org/apache/ibatis/session/ExecutorType.html">ExecutorType</a></li>
           <li class="api apilevel-"><a href="../../../../org/apache/ibatis/session/LocalCacheScope.html">LocalCacheScope</a></li>
           <li class="api apilevel-"><a href="../../../../org/apache/ibatis/session/TransactionIsolationLevel.html">TransactionIsolationLevel</a></li>
@@ -573,7 +580,7 @@ Summary:
             
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.StrictMap.html#Configuration.StrictMap(java.lang.String, int, float)">Configuration.StrictMap</a></span>(String name, int initialCapacity, float loadFactor)
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.StrictMap.html#StrictMap(java.lang.String, int, float)">StrictMap</a></span>(String name, int initialCapacity, float loadFactor)
         
   </td></tr>
 
@@ -589,7 +596,7 @@ Summary:
             
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.StrictMap.html#Configuration.StrictMap(java.lang.String, int)">Configuration.StrictMap</a></span>(String name, int initialCapacity)
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.StrictMap.html#StrictMap(java.lang.String, int)">StrictMap</a></span>(String name, int initialCapacity)
         
   </td></tr>
 
@@ -605,7 +612,7 @@ Summary:
             
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.StrictMap.html#Configuration.StrictMap(java.lang.String)">Configuration.StrictMap</a></span>(String name)
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.StrictMap.html#StrictMap(java.lang.String)">StrictMap</a></span>(String name)
         
   </td></tr>
 
@@ -621,7 +628,7 @@ Summary:
             
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.StrictMap.html#Configuration.StrictMap(java.lang.String, java.util.Map<java.lang.String, ? extends V>)">Configuration.StrictMap</a></span>(String name, Map&lt;String,&nbsp;?&nbsp;extends&nbsp;V&gt; m)
+        <span class="sympad"><a href="../../../../org/apache/ibatis/session/Configuration.StrictMap.html#StrictMap(java.lang.String, java.util.Map<java.lang.String, ? extends V>)">StrictMap</a></span>(String name, Map&lt;String,&nbsp;?&nbsp;extends&nbsp;V&gt; m)
         
   </td></tr>
 
@@ -745,10 +752,42 @@ From class
             
             
             
-            boolean
+            V
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">containsKey</span>(Object arg0)
+        <span class="sympad">compute</span>(K arg0, BiFunction&lt;?&nbsp;super&nbsp;K,&nbsp;?&nbsp;super&nbsp;V,&nbsp;?&nbsp;extends&nbsp;V&gt; arg1)
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            V
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">computeIfAbsent</span>(K arg0, Function&lt;?&nbsp;super&nbsp;K,&nbsp;?&nbsp;extends&nbsp;V&gt; arg1)
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            V
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">computeIfPresent</span>(K arg0, BiFunction&lt;?&nbsp;super&nbsp;K,&nbsp;?&nbsp;super&nbsp;V,&nbsp;?&nbsp;extends&nbsp;V&gt; arg1)
         
   </td></tr>
 
@@ -764,7 +803,7 @@ From class
             boolean
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">containsValue</span>(Object arg0)
+        <span class="sympad">containsKey</span>(Object arg0)
         
   </td></tr>
 
@@ -777,10 +816,42 @@ From class
             
             
             
+            boolean
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">containsValue</span>(Object arg0)
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
             Set&lt;Entry&lt;K,&nbsp;V&gt;&gt;
         </td>
         <td class="jd-linkcol" width="100%">
         <span class="sympad">entrySet</span>()
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">forEach</span>(BiConsumer&lt;?&nbsp;super&nbsp;K,&nbsp;?&nbsp;super&nbsp;V&gt; arg0)
         
   </td></tr>
 
@@ -809,10 +880,10 @@ From class
             
             
             
-            boolean
+            V
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">isEmpty</span>()
+        <span class="sympad">getOrDefault</span>(Object arg0, V arg1)
         
   </td></tr>
 
@@ -825,10 +896,42 @@ From class
             
             
             
+            boolean
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">isEmpty</span>()
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
             Set&lt;K&gt;
         </td>
         <td class="jd-linkcol" width="100%">
         <span class="sympad">keySet</span>()
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            V
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">merge</span>(K arg0, V arg1, BiFunction&lt;?&nbsp;super&nbsp;V,&nbsp;?&nbsp;super&nbsp;V,&nbsp;?&nbsp;extends&nbsp;V&gt; arg2)
         
   </td></tr>
 
@@ -876,6 +979,38 @@ From class
             V
         </td>
         <td class="jd-linkcol" width="100%">
+        <span class="sympad">putIfAbsent</span>(K arg0, V arg1)
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            boolean
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">remove</span>(Object arg0, Object arg1)
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            V
+        </td>
+        <td class="jd-linkcol" width="100%">
         <span class="sympad">remove</span>(Object arg0)
         
   </td></tr>
@@ -883,6 +1018,54 @@ From class
 
 	 
     <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            boolean
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">replace</span>(K arg0, V arg1, V arg2)
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            V
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">replace</span>(K arg0, V arg1)
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">replaceAll</span>(BiFunction&lt;?&nbsp;super&nbsp;K,&nbsp;?&nbsp;super&nbsp;V,&nbsp;?&nbsp;extends&nbsp;V&gt; arg0)
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -898,7 +1081,7 @@ From class
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -1360,7 +1543,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>()
+        <span class="sympad">wait</span>(long arg0, int arg1)
         
   </td></tr>
 
@@ -1376,7 +1559,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0, int arg1)
+        <span class="sympad">wait</span>(long arg0)
         
   </td></tr>
 
@@ -1392,7 +1575,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0)
+        <span class="sympad">wait</span>()
         
   </td></tr>
 
@@ -1451,6 +1634,54 @@ From interface
             
             
             
+            V
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">compute</span>(K arg0, BiFunction&lt;?&nbsp;super&nbsp;K,&nbsp;?&nbsp;super&nbsp;V,&nbsp;?&nbsp;extends&nbsp;V&gt; arg1)
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            abstract
+            
+            
+            
+            
+            V
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">computeIfAbsent</span>(K arg0, Function&lt;?&nbsp;super&nbsp;K,&nbsp;?&nbsp;extends&nbsp;V&gt; arg1)
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            abstract
+            
+            
+            
+            
+            V
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">computeIfPresent</span>(K arg0, BiFunction&lt;?&nbsp;super&nbsp;K,&nbsp;?&nbsp;super&nbsp;V,&nbsp;?&nbsp;extends&nbsp;V&gt; arg1)
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            abstract
+            
+            
+            
+            
             boolean
         </td>
         <td class="jd-linkcol" width="100%">
@@ -1460,7 +1691,7 @@ From interface
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             abstract
             
@@ -1476,7 +1707,7 @@ From interface
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             abstract
             
@@ -1492,7 +1723,7 @@ From interface
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             abstract
             
@@ -1503,6 +1734,22 @@ From interface
         </td>
         <td class="jd-linkcol" width="100%">
         <span class="sympad">equals</span>(Object arg0)
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            abstract
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">forEach</span>(BiConsumer&lt;?&nbsp;super&nbsp;K,&nbsp;?&nbsp;super&nbsp;V&gt; arg0)
         
   </td></tr>
 
@@ -1531,6 +1778,22 @@ From interface
             
             
             
+            V
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">getOrDefault</span>(Object arg0, V arg1)
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            abstract
+            
+            
+            
+            
             int
         </td>
         <td class="jd-linkcol" width="100%">
@@ -1540,7 +1803,7 @@ From interface
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             abstract
             
@@ -1556,7 +1819,7 @@ From interface
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             abstract
             
@@ -1567,6 +1830,22 @@ From interface
         </td>
         <td class="jd-linkcol" width="100%">
         <span class="sympad">keySet</span>()
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            abstract
+            
+            
+            
+            
+            V
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">merge</span>(K arg0, V arg1, BiFunction&lt;?&nbsp;super&nbsp;V,&nbsp;?&nbsp;super&nbsp;V,&nbsp;?&nbsp;extends&nbsp;V&gt; arg2)
         
   </td></tr>
 
@@ -1614,6 +1893,38 @@ From interface
             V
         </td>
         <td class="jd-linkcol" width="100%">
+        <span class="sympad">putIfAbsent</span>(K arg0, V arg1)
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            abstract
+            
+            
+            
+            
+            boolean
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">remove</span>(Object arg0, Object arg1)
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            abstract
+            
+            
+            
+            
+            V
+        </td>
+        <td class="jd-linkcol" width="100%">
         <span class="sympad">remove</span>(Object arg0)
         
   </td></tr>
@@ -1621,6 +1932,54 @@ From interface
 
 	 
     <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            abstract
+            
+            
+            
+            
+            boolean
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">replace</span>(K arg0, V arg1, V arg2)
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            abstract
+            
+            
+            
+            
+            V
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">replace</span>(K arg0, V arg1)
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            abstract
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">replaceAll</span>(BiFunction&lt;?&nbsp;super&nbsp;K,&nbsp;?&nbsp;super&nbsp;V,&nbsp;?&nbsp;extends&nbsp;V&gt; arg0)
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             abstract
             
@@ -1636,7 +1995,7 @@ From interface
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             abstract
             
@@ -1691,7 +2050,7 @@ From interface
 
 
 
-<a id="Configuration.StrictMap(java.lang.String, int, float)"></a>
+<a id="StrictMap(java.lang.String, int, float)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1703,7 +2062,7 @@ From interface
          
         
       </span>
-      <span class="sympad">Configuration.StrictMap</span>
+      <span class="sympad">StrictMap</span>
       <span class="normal">(String name, int initialCapacity, float loadFactor)</span>
     </h4>
       <div class="api-level">
@@ -1722,7 +2081,7 @@ From interface
 </div>
 
 
-<a id="Configuration.StrictMap(java.lang.String, int)"></a>
+<a id="StrictMap(java.lang.String, int)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1734,7 +2093,7 @@ From interface
          
         
       </span>
-      <span class="sympad">Configuration.StrictMap</span>
+      <span class="sympad">StrictMap</span>
       <span class="normal">(String name, int initialCapacity)</span>
     </h4>
       <div class="api-level">
@@ -1753,7 +2112,7 @@ From interface
 </div>
 
 
-<a id="Configuration.StrictMap(java.lang.String)"></a>
+<a id="StrictMap(java.lang.String)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1765,7 +2124,7 @@ From interface
          
         
       </span>
-      <span class="sympad">Configuration.StrictMap</span>
+      <span class="sympad">StrictMap</span>
       <span class="normal">(String name)</span>
     </h4>
       <div class="api-level">
@@ -1784,7 +2143,7 @@ From interface
 </div>
 
 
-<a id="Configuration.StrictMap(java.lang.String, java.util.Map<java.lang.String, ? extends V>)"></a>
+<a id="StrictMap(java.lang.String, java.util.Map<java.lang.String, ? extends V>)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1796,7 +2155,7 @@ From interface
          
         
       </span>
-      <span class="sympad">Configuration.StrictMap</span>
+      <span class="sympad">StrictMap</span>
       <span class="normal">(String name, Map&lt;String,&nbsp;?&nbsp;extends&nbsp;V&gt; m)</span>
     </h4>
       <div class="api-level">

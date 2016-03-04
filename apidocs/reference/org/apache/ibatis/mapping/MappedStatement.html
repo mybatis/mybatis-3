@@ -145,6 +145,8 @@
               <ul>
                 
     <li class="api apilevel-">
+  <a href="../../../../org/apache/ibatis/annotations/package-summary.html">org.apache.ibatis.annotations</a></li>
+    <li class="api apilevel-">
   <a href="../../../../org/apache/ibatis/binding/package-summary.html">org.apache.ibatis.binding</a></li>
     <li class="api apilevel-">
   <a href="../../../../org/apache/ibatis/builder/package-summary.html">org.apache.ibatis.builder</a></li>
@@ -158,6 +160,10 @@
   <a href="../../../../org/apache/ibatis/cache/decorators/package-summary.html">org.apache.ibatis.cache.decorators</a></li>
     <li class="api apilevel-">
   <a href="../../../../org/apache/ibatis/cache/impl/package-summary.html">org.apache.ibatis.cache.impl</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../org/apache/ibatis/cursor/package-summary.html">org.apache.ibatis.cursor</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../org/apache/ibatis/cursor/defaults/package-summary.html">org.apache.ibatis.cursor.defaults</a></li>
     <li class="api apilevel-">
   <a href="../../../../org/apache/ibatis/datasource/package-summary.html">org.apache.ibatis.datasource</a></li>
     <li class="api apilevel-">
@@ -714,6 +720,11 @@ Summary:
         <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../org/apache/ibatis/mapping/MappedStatement.html#getResulSets()">getResulSets</a></span>()
         
+        <div class="jd-descrdiv">
+      <em>
+  This method is deprecated.
+      Use <code><a href="../../../../org/apache/ibatis/mapping/MappedStatement.html#getResultSets()">getResultSets()</a></code> </em></div>
+  
   </td></tr>
 
 
@@ -757,6 +768,22 @@ Summary:
             
             
             
+            String[]
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/mapping/MappedStatement.html#getResultSets()">getResultSets</a></span>()
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
             <a href="../../../../org/apache/ibatis/mapping/SqlCommandType.html">SqlCommandType</a>
         </td>
         <td class="jd-linkcol" width="100%">
@@ -766,7 +793,7 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -782,7 +809,7 @@ Summary:
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -798,7 +825,7 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -814,7 +841,7 @@ Summary:
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -830,7 +857,7 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -846,7 +873,7 @@ Summary:
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -862,7 +889,7 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -878,7 +905,7 @@ Summary:
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -1066,7 +1093,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>()
+        <span class="sympad">wait</span>(long arg0, int arg1)
         
   </td></tr>
 
@@ -1082,7 +1109,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0, int arg1)
+        <span class="sympad">wait</span>(long arg0)
         
   </td></tr>
 
@@ -1098,7 +1125,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0)
+        <span class="sympad">wait</span>()
         
   </td></tr>
 
@@ -1547,7 +1574,11 @@ From class
 
       </div>
     <div class="jd-details-descr">
-      
+      <p>
+  <p class="caution">
+      <strong>
+  This method is deprecated.</strong><br/> Use <code><a href="../../../../org/apache/ibatis/mapping/MappedStatement.html#getResultSets()">getResultSets()</a></code> 
+  </p>
   <div class="jd-tagdata jd-tagdescr"><p></p></div>
 
     </div>
@@ -1598,6 +1629,37 @@ From class
         <a href="../../../../org/apache/ibatis/mapping/ResultSetType.html">ResultSetType</a>
       </span>
       <span class="sympad">getResultSetType</span>
+      <span class="normal">()</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    </div>
+</div>
+
+
+<a id="getResultSets()"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        String[]
+      </span>
+      <span class="sympad">getResultSets</span>
       <span class="normal">()</span>
     </h4>
       <div class="api-level">

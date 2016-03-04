@@ -76,7 +76,7 @@
 <a class="jxr_linenumber" name="L68" href="#L68">68</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testSelectBlogWithPosts() {
 <a class="jxr_linenumber" name="L69" href="#L69">69</a>      SqlSession session = sqlSessionFactory.openSession();
 <a class="jxr_linenumber" name="L70" href="#L70">70</a>      <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L71" href="#L71">71</a>        <a href="../../../../../org/apache/ibatis/submitted/parent_reference_3level/Mapper.html">Mapper</a> mapper = session.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>        <a href="../../../../../org/apache/ibatis/session/AutoMappingUnknownColumnBehaviorTest.html">Mapper</a> mapper = session.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L72" href="#L72">72</a>        <a href="../../../../../org/apache/ibatis/submitted/parent_reference_3level/Blog.html">Blog</a> result = mapper.selectBlogByPrimaryKey(1);
 <a class="jxr_linenumber" name="L73" href="#L73">73</a>        assertNotNull(result);
 <a class="jxr_linenumber" name="L74" href="#L74">74</a>        assertEquals(<span class="jxr_string">"Blog with posts"</span>, result.getTitle());
@@ -96,7 +96,7 @@
 <a class="jxr_linenumber" name="L88" href="#L88">88</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testSelectBlogWithoutPosts() {
 <a class="jxr_linenumber" name="L89" href="#L89">89</a>      SqlSession session = sqlSessionFactory.openSession();
 <a class="jxr_linenumber" name="L90" href="#L90">90</a>      <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L91" href="#L91">91</a>        <a href="../../../../../org/apache/ibatis/submitted/parent_reference_3level/Mapper.html">Mapper</a> mapper = session.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L91" href="#L91">91</a>        <a href="../../../../../org/apache/ibatis/session/AutoMappingUnknownColumnBehaviorTest.html">Mapper</a> mapper = session.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L92" href="#L92">92</a>        <a href="../../../../../org/apache/ibatis/submitted/parent_reference_3level/Blog.html">Blog</a> result = mapper.selectBlogByPrimaryKey(2);
 <a class="jxr_linenumber" name="L93" href="#L93">93</a>        assertNotNull(result);
 <a class="jxr_linenumber" name="L94" href="#L94">94</a>        assertEquals(<span class="jxr_string">"Blog without posts"</span>, result.getTitle());
@@ -110,7 +110,7 @@
 <a class="jxr_linenumber" name="L102" href="#L102">102</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testSelectBlogWithPostsColumnPrefix() {
 <a class="jxr_linenumber" name="L103" href="#L103">103</a>     SqlSession session = sqlSessionFactory.openSession();
 <a class="jxr_linenumber" name="L104" href="#L104">104</a>     <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L105" href="#L105">105</a>       <a href="../../../../../org/apache/ibatis/submitted/parent_reference_3level/Mapper.html">Mapper</a> mapper = session.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L105" href="#L105">105</a>       <a href="../../../../../org/apache/ibatis/session/AutoMappingUnknownColumnBehaviorTest.html">Mapper</a> mapper = session.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L106" href="#L106">106</a>       <a href="../../../../../org/apache/ibatis/submitted/parent_reference_3level/Blog.html">Blog</a> result = mapper.selectBlogByPrimaryKeyColumnPrefix(1);
 <a class="jxr_linenumber" name="L107" href="#L107">107</a>       assertNotNull(result);
 <a class="jxr_linenumber" name="L108" href="#L108">108</a>       assertEquals(<span class="jxr_string">"Blog with posts"</span>, result.getTitle());
@@ -130,7 +130,7 @@
 <a class="jxr_linenumber" name="L122" href="#L122">122</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testSelectBlogWithoutPostsColumnPrefix() {
 <a class="jxr_linenumber" name="L123" href="#L123">123</a>     SqlSession session = sqlSessionFactory.openSession();
 <a class="jxr_linenumber" name="L124" href="#L124">124</a>     <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L125" href="#L125">125</a>       <a href="../../../../../org/apache/ibatis/submitted/parent_reference_3level/Mapper.html">Mapper</a> mapper = session.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L125" href="#L125">125</a>       <a href="../../../../../org/apache/ibatis/session/AutoMappingUnknownColumnBehaviorTest.html">Mapper</a> mapper = session.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L126" href="#L126">126</a>       <a href="../../../../../org/apache/ibatis/submitted/parent_reference_3level/Blog.html">Blog</a> result = mapper.selectBlogByPrimaryKeyColumnPrefix(2);
 <a class="jxr_linenumber" name="L127" href="#L127">127</a>       assertNotNull(result);
 <a class="jxr_linenumber" name="L128" href="#L128">128</a>       assertEquals(<span class="jxr_string">"Blog without posts"</span>, result.getTitle());

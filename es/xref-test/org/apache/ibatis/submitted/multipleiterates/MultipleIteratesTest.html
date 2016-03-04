@@ -60,7 +60,7 @@
 <a class="jxr_linenumber" name="L52" href="#L52">52</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldGetAUser() {
 <a class="jxr_linenumber" name="L53" href="#L53">53</a>      SqlSession sqlSession = sqlSessionFactory.openSession();
 <a class="jxr_linenumber" name="L54" href="#L54">54</a>      <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L55" href="#L55">55</a>        <a href="../../../../../org/apache/ibatis/submitted/multipleiterates/Mapper.html">Mapper</a> mapper = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L55" href="#L55">55</a>        <a href="../../../../../org/apache/ibatis/session/AutoMappingUnknownColumnBehaviorTest.html">Mapper</a> mapper = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L56" href="#L56">56</a>        <a href="../../../../../org/apache/ibatis/submitted/multipleiterates/User.html">User</a> user = <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/submitted/multipleiterates/User.html">User</a>();
 <a class="jxr_linenumber" name="L57" href="#L57">57</a>        user.setId(1);
 <a class="jxr_linenumber" name="L58" href="#L58">58</a>        user.setName(<span class="jxr_string">"Justin"</span>);

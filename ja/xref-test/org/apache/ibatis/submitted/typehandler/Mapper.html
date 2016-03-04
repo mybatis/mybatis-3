@@ -23,22 +23,46 @@
 <a class="jxr_linenumber" name="L15" href="#L15">15</a>  <em class="jxr_javadoccomment"> */</em>
 <a class="jxr_linenumber" name="L16" href="#L16">16</a>  <strong class="jxr_keyword">package</strong> org.apache.ibatis.submitted.typehandler;
 <a class="jxr_linenumber" name="L17" href="#L17">17</a>  
-<a class="jxr_linenumber" name="L18" href="#L18">18</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.annotations.Result;
-<a class="jxr_linenumber" name="L19" href="#L19">19</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.annotations.Results;
-<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.annotations.Select;
-<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.type.JdbcType;
-<a class="jxr_linenumber" name="L22" href="#L22">22</a>  
-<a class="jxr_linenumber" name="L23" href="#L23">23</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">interface</strong> <a href="../../../../../org/apache/ibatis/submitted/typehandler/Mapper.html">Mapper</a> {
-<a class="jxr_linenumber" name="L24" href="#L24">24</a>  
-<a class="jxr_linenumber" name="L25" href="#L25">25</a>    @Select(<span class="jxr_string">"select * from users where id = #{value}"</span>)
-<a class="jxr_linenumber" name="L26" href="#L26">26</a>    @Results({
-<a class="jxr_linenumber" name="L27" href="#L27">27</a>      @Result(column=<span class="jxr_string">"id"</span>, property=<span class="jxr_string">"id"</span>),
-<a class="jxr_linenumber" name="L28" href="#L28">28</a>      @Result(column=<span class="jxr_string">"name"</span>, property=<span class="jxr_string">"name"</span>),
-<a class="jxr_linenumber" name="L29" href="#L29">29</a>      @Result(column=<span class="jxr_string">"city"</span>, property=<span class="jxr_string">"city"</span>, jdbcType=JdbcType.CHAR),
-<a class="jxr_linenumber" name="L30" href="#L30">30</a>      @Result(column=<span class="jxr_string">"state"</span>, property=<span class="jxr_string">"state"</span>, jdbcType=JdbcType.VARCHAR)
-<a class="jxr_linenumber" name="L31" href="#L31">31</a>    })
-<a class="jxr_linenumber" name="L32" href="#L32">32</a>    <a href="../../../../../org/apache/ibatis/submitted/typehandler/User.html">User</a> getUser(Integer id);
-<a class="jxr_linenumber" name="L33" href="#L33">33</a>  }
+<a class="jxr_linenumber" name="L18" href="#L18">18</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.annotations.Arg;
+<a class="jxr_linenumber" name="L19" href="#L19">19</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.annotations.ConstructorArgs;
+<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.annotations.Insert;
+<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.annotations.Options;
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.annotations.Result;
+<a class="jxr_linenumber" name="L23" href="#L23">23</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.annotations.Results;
+<a class="jxr_linenumber" name="L24" href="#L24">24</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.annotations.Select;
+<a class="jxr_linenumber" name="L25" href="#L25">25</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.submitted.typehandler.Product.ProductId;
+<a class="jxr_linenumber" name="L26" href="#L26">26</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.type.JdbcType;
+<a class="jxr_linenumber" name="L27" href="#L27">27</a>  
+<a class="jxr_linenumber" name="L28" href="#L28">28</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">interface</strong> <a href="../../../../../org/apache/ibatis/submitted/typehandler/Mapper.html">Mapper</a> {
+<a class="jxr_linenumber" name="L29" href="#L29">29</a>  
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>    @Select(<span class="jxr_string">"select * from users where id = #{value}"</span>)
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>    @Results({
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>      @Result(column=<span class="jxr_string">"id"</span>, property=<span class="jxr_string">"id"</span>),
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>      @Result(column=<span class="jxr_string">"name"</span>, property=<span class="jxr_string">"name"</span>),
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>      @Result(column=<span class="jxr_string">"city"</span>, property=<span class="jxr_string">"city"</span>, jdbcType=JdbcType.CHAR),
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>      @Result(column=<span class="jxr_string">"state"</span>, property=<span class="jxr_string">"state"</span>, jdbcType=JdbcType.VARCHAR)
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>    })
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>    <a href="../../../../../org/apache/ibatis/submitted/typehandler/User.html">User</a> getUser(Integer id);
+<a class="jxr_linenumber" name="L38" href="#L38">38</a>  
+<a class="jxr_linenumber" name="L39" href="#L39">39</a>    @Insert({
+<a class="jxr_linenumber" name="L40" href="#L40">40</a>      <span class="jxr_string">"insert into product (name) values (#{name})"</span>
+<a class="jxr_linenumber" name="L41" href="#L41">41</a>    })
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>    @Options(useGeneratedKeys = <strong class="jxr_keyword">true</strong>, keyProperty = <span class="jxr_string">"id"</span>)
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>    <strong class="jxr_keyword">int</strong> insertProduct(<a href="../../../../../org/apache/ibatis/submitted/typehandler/Product.html">Product</a> product);
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>  
+<a class="jxr_linenumber" name="L45" href="#L45">45</a>    @Select(<span class="jxr_string">"select id, name from product where name = #{value}"</span>)
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>    <a href="../../../../../org/apache/ibatis/submitted/typehandler/Product.html">Product</a> getProductByName(String name);
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>  
+<a class="jxr_linenumber" name="L48" href="#L48">48</a>    @Select(<span class="jxr_string">"select id, name from product where name = #{value}"</span>)
+<a class="jxr_linenumber" name="L49" href="#L49">49</a>    @ConstructorArgs({
+<a class="jxr_linenumber" name="L50" href="#L50">50</a>      @Arg(id = <strong class="jxr_keyword">true</strong>, column=<span class="jxr_string">"id"</span>, javaType = ProductId.<strong class="jxr_keyword">class</strong>, jdbcType=JdbcType.INTEGER),
+<a class="jxr_linenumber" name="L51" href="#L51">51</a>      @Arg(column=<span class="jxr_string">"name"</span>)
+<a class="jxr_linenumber" name="L52" href="#L52">52</a>    })
+<a class="jxr_linenumber" name="L53" href="#L53">53</a>    <a href="../../../../../org/apache/ibatis/submitted/typehandler/Product.html">Product</a> getProductByNameUsingConstructor(String name);
+<a class="jxr_linenumber" name="L54" href="#L54">54</a>  
+<a class="jxr_linenumber" name="L55" href="#L55">55</a>    @Select(<span class="jxr_string">"select id from product where name = #{value}"</span>)
+<a class="jxr_linenumber" name="L56" href="#L56">56</a>    <a href="../../../../../org/apache/ibatis/submitted/typehandler/Product.html">ProductId</a> getProductIdByName(String name);
+<a class="jxr_linenumber" name="L57" href="#L57">57</a>  }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2010&#x2013;2016 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>

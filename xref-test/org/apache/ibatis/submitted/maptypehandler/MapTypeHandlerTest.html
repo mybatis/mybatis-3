@@ -68,7 +68,7 @@
 <a class="jxr_linenumber" name="L60" href="#L60">60</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldGetAUserFromAnnotation() {
 <a class="jxr_linenumber" name="L61" href="#L61">61</a>      SqlSession sqlSession = sqlSessionFactory.openSession();
 <a class="jxr_linenumber" name="L62" href="#L62">62</a>      <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L63" href="#L63">63</a>        <a href="../../../../../org/apache/ibatis/submitted/maptypehandler/Mapper.html">Mapper</a> mapper = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>        <a href="../../../../../org/apache/ibatis/session/AutoMappingUnknownColumnBehaviorTest.html">Mapper</a> mapper = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L64" href="#L64">64</a>        <a href="../../../../../org/apache/ibatis/submitted/maptypehandler/User.html">User</a> user = mapper.getUser(1, <span class="jxr_string">"User1"</span>);
 <a class="jxr_linenumber" name="L65" href="#L65">65</a>        Assert.assertEquals(<span class="jxr_string">"User1"</span>, user.getName());
 <a class="jxr_linenumber" name="L66" href="#L66">66</a>      } <strong class="jxr_keyword">finally</strong> {
@@ -80,7 +80,7 @@
 <a class="jxr_linenumber" name="L72" href="#L72">72</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldGetAUserFromXML() {
 <a class="jxr_linenumber" name="L73" href="#L73">73</a>      SqlSession sqlSession = sqlSessionFactory.openSession();
 <a class="jxr_linenumber" name="L74" href="#L74">74</a>      <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L75" href="#L75">75</a>        <a href="../../../../../org/apache/ibatis/submitted/maptypehandler/Mapper.html">Mapper</a> mapper = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>        <a href="../../../../../org/apache/ibatis/session/AutoMappingUnknownColumnBehaviorTest.html">Mapper</a> mapper = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L76" href="#L76">76</a>        Map&lt;String, Object&gt; params = <strong class="jxr_keyword">new</strong> HashMap&lt;String, Object&gt;();
 <a class="jxr_linenumber" name="L77" href="#L77">77</a>        params.put(<span class="jxr_string">"id"</span>, 1);
 <a class="jxr_linenumber" name="L78" href="#L78">78</a>        params.put(<span class="jxr_string">"name"</span>, <span class="jxr_string">"User1"</span>);

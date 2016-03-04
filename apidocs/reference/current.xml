@@ -166,6 +166,39 @@
 <implements name="java.lang.annotation.Annotation">
 </implements>
 </class>
+<class name="Options.FlushCachePolicy"
+ extends="java.lang.Enum"
+ abstract="false"
+ static="true"
+ final="true"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<method name="valueOf"
+ return="org.apache.ibatis.annotations.Options.FlushCachePolicy"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="name" type="java.lang.String">
+</parameter>
+</method>
+<method name="values"
+ return="org.apache.ibatis.annotations.Options.FlushCachePolicy[]"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="true"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+</class>
 <class name="Param"
  extends="java.lang.Object"
  abstract="true"
@@ -385,7 +418,7 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<constructor name="MapperMethod.MethodSignature"
+<constructor name="MethodSignature"
  type="org.apache.ibatis.binding.MapperMethod.MethodSignature"
  static="false"
  final="false"
@@ -393,6 +426,8 @@
  visibility="public"
 >
 <parameter name="configuration" type="org.apache.ibatis.session.Configuration">
+</parameter>
+<parameter name="mapperInterface" type="java.lang.Class&lt;?&gt;">
 </parameter>
 <parameter name="method" type="java.lang.reflect.Method">
 </parameter>
@@ -480,6 +515,17 @@
  visibility="public"
 >
 </method>
+<method name="returnsCursor"
+ return="boolean"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
 <method name="returnsMany"
  return="boolean"
  abstract="false"
@@ -522,7 +568,7 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<constructor name="MapperMethod.ParamMap"
+<constructor name="ParamMap"
  type="org.apache.ibatis.binding.MapperMethod.ParamMap"
  static="false"
  final="false"
@@ -539,7 +585,7 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<constructor name="MapperMethod.SqlCommand"
+<constructor name="SqlCommand"
  type="org.apache.ibatis.binding.MapperMethod.SqlCommand"
  static="false"
  final="false"
@@ -3167,7 +3213,7 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<constructor name="SerializedCache.CustomObjectInputStream"
+<constructor name="CustomObjectInputStream"
  type="org.apache.ibatis.cache.decorators.SerializedCache.CustomObjectInputStream"
  static="false"
  final="false"
@@ -3759,6 +3805,200 @@
 >
 <parameter name="key" type="java.lang.Object">
 </parameter>
+</method>
+</class>
+</package>
+<package name="org.apache.ibatis.cursor"
+>
+<interface name="Cursor"
+ abstract="true"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<implements name="java.lang.Iterable">
+</implements>
+<method name="getCurrentIndex"
+ return="int"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="isConsumed"
+ return="boolean"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="isOpen"
+ return="boolean"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+</interface>
+<class name="CursorException"
+ extends="org.apache.ibatis.exceptions.PersistenceException"
+ abstract="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<constructor name="CursorException"
+ type="org.apache.ibatis.cursor.CursorException"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="message" type="java.lang.String">
+</parameter>
+</constructor>
+<constructor name="CursorException"
+ type="org.apache.ibatis.cursor.CursorException"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="message" type="java.lang.String">
+</parameter>
+<parameter name="cause" type="java.lang.Throwable">
+</parameter>
+</constructor>
+<constructor name="CursorException"
+ type="org.apache.ibatis.cursor.CursorException"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="cause" type="java.lang.Throwable">
+</parameter>
+</constructor>
+</class>
+</package>
+<package name="org.apache.ibatis.cursor.defaults"
+>
+<class name="DefaultCursor"
+ extends="java.lang.Object"
+ abstract="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<implements name="org.apache.ibatis.cursor.Cursor">
+</implements>
+<constructor name="DefaultCursor"
+ type="org.apache.ibatis.cursor.defaults.DefaultCursor"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="resultSetHandler" type="org.apache.ibatis.executor.resultset.DefaultResultSetHandler">
+</parameter>
+<parameter name="resultMap" type="org.apache.ibatis.mapping.ResultMap">
+</parameter>
+<parameter name="rsw" type="org.apache.ibatis.executor.resultset.ResultSetWrapper">
+</parameter>
+<parameter name="rowBounds" type="org.apache.ibatis.session.RowBounds">
+</parameter>
+</constructor>
+<method name="close"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="fetchNextObjectFromDatabase"
+ return="T"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="protected"
+>
+</method>
+<method name="fetchNextUsingRowBound"
+ return="T"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="protected"
+>
+</method>
+<method name="getCurrentIndex"
+ return="int"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="isConsumed"
+ return="boolean"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="isOpen"
+ return="boolean"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="iterator"
+ return="java.util.Iterator&lt;T&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
 </method>
 </class>
 </package>
@@ -5659,6 +5899,27 @@
 <exception name="SQLException" type="java.sql.SQLException">
 </exception>
 </method>
+<method name="doQueryCursor"
+ return="org.apache.ibatis.cursor.Cursor&lt;E&gt;"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="protected"
+>
+<parameter name="ms" type="org.apache.ibatis.mapping.MappedStatement">
+</parameter>
+<parameter name="parameter" type="java.lang.Object">
+</parameter>
+<parameter name="rowBounds" type="org.apache.ibatis.session.RowBounds">
+</parameter>
+<parameter name="boundSql" type="org.apache.ibatis.mapping.BoundSql">
+</parameter>
+<exception name="SQLException" type="java.sql.SQLException">
+</exception>
+</method>
 <method name="doUpdate"
  return="int"
  abstract="true"
@@ -5798,6 +6059,25 @@
 <parameter name="key" type="org.apache.ibatis.cache.CacheKey">
 </parameter>
 <parameter name="boundSql" type="org.apache.ibatis.mapping.BoundSql">
+</parameter>
+<exception name="SQLException" type="java.sql.SQLException">
+</exception>
+</method>
+<method name="queryCursor"
+ return="org.apache.ibatis.cursor.Cursor&lt;E&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="ms" type="org.apache.ibatis.mapping.MappedStatement">
+</parameter>
+<parameter name="parameter" type="java.lang.Object">
+</parameter>
+<parameter name="rowBounds" type="org.apache.ibatis.session.RowBounds">
 </parameter>
 <exception name="SQLException" type="java.sql.SQLException">
 </exception>
@@ -5970,6 +6250,27 @@
 <parameter name="rowBounds" type="org.apache.ibatis.session.RowBounds">
 </parameter>
 <parameter name="resultHandler" type="org.apache.ibatis.session.ResultHandler">
+</parameter>
+<parameter name="boundSql" type="org.apache.ibatis.mapping.BoundSql">
+</parameter>
+<exception name="SQLException" type="java.sql.SQLException">
+</exception>
+</method>
+<method name="doQueryCursor"
+ return="org.apache.ibatis.cursor.Cursor&lt;E&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="protected"
+>
+<parameter name="ms" type="org.apache.ibatis.mapping.MappedStatement">
+</parameter>
+<parameter name="parameter" type="java.lang.Object">
+</parameter>
+<parameter name="rowBounds" type="org.apache.ibatis.session.RowBounds">
 </parameter>
 <parameter name="boundSql" type="org.apache.ibatis.mapping.BoundSql">
 </parameter>
@@ -6385,6 +6686,25 @@
 <exception name="SQLException" type="java.sql.SQLException">
 </exception>
 </method>
+<method name="queryCursor"
+ return="org.apache.ibatis.cursor.Cursor&lt;E&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="ms" type="org.apache.ibatis.mapping.MappedStatement">
+</parameter>
+<parameter name="parameter" type="java.lang.Object">
+</parameter>
+<parameter name="rowBounds" type="org.apache.ibatis.session.RowBounds">
+</parameter>
+<exception name="SQLException" type="java.sql.SQLException">
+</exception>
+</method>
 <method name="rollback"
  return="void"
  abstract="false"
@@ -6777,6 +7097,25 @@
 <exception name="SQLException" type="java.sql.SQLException">
 </exception>
 </method>
+<method name="queryCursor"
+ return="org.apache.ibatis.cursor.Cursor&lt;E&gt;"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="ms" type="org.apache.ibatis.mapping.MappedStatement">
+</parameter>
+<parameter name="parameter" type="java.lang.Object">
+</parameter>
+<parameter name="rowBounds" type="org.apache.ibatis.session.RowBounds">
+</parameter>
+<exception name="SQLException" type="java.sql.SQLException">
+</exception>
+</method>
 <method name="rollback"
  return="void"
  abstract="true"
@@ -6977,6 +7316,27 @@
 <exception name="SQLException" type="java.sql.SQLException">
 </exception>
 </method>
+<method name="doQueryCursor"
+ return="org.apache.ibatis.cursor.Cursor&lt;E&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="protected"
+>
+<parameter name="ms" type="org.apache.ibatis.mapping.MappedStatement">
+</parameter>
+<parameter name="parameter" type="java.lang.Object">
+</parameter>
+<parameter name="rowBounds" type="org.apache.ibatis.session.RowBounds">
+</parameter>
+<parameter name="boundSql" type="org.apache.ibatis.mapping.BoundSql">
+</parameter>
+<exception name="SQLException" type="java.sql.SQLException">
+</exception>
+</method>
 <method name="doUpdate"
  return="int"
  abstract="false"
@@ -7047,6 +7407,27 @@
 <parameter name="rowBounds" type="org.apache.ibatis.session.RowBounds">
 </parameter>
 <parameter name="resultHandler" type="org.apache.ibatis.session.ResultHandler">
+</parameter>
+<parameter name="boundSql" type="org.apache.ibatis.mapping.BoundSql">
+</parameter>
+<exception name="SQLException" type="java.sql.SQLException">
+</exception>
+</method>
+<method name="doQueryCursor"
+ return="org.apache.ibatis.cursor.Cursor&lt;E&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="protected"
+>
+<parameter name="ms" type="org.apache.ibatis.mapping.MappedStatement">
+</parameter>
+<parameter name="parameter" type="java.lang.Object">
+</parameter>
+<parameter name="rowBounds" type="org.apache.ibatis.session.RowBounds">
 </parameter>
 <parameter name="boundSql" type="org.apache.ibatis.mapping.BoundSql">
 </parameter>
@@ -8406,6 +8787,21 @@
  visibility="protected"
 >
 </method>
+<method name="handleCursorResultSets"
+ return="org.apache.ibatis.cursor.Cursor&lt;E&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="stmt" type="java.sql.Statement">
+</parameter>
+<exception name="SQLException" type="java.sql.SQLException">
+</exception>
+</method>
 <method name="handleOutputParameters"
  return="void"
  abstract="false"
@@ -8432,6 +8828,29 @@
  visibility="public"
 >
 <parameter name="stmt" type="java.sql.Statement">
+</parameter>
+<exception name="SQLException" type="java.sql.SQLException">
+</exception>
+</method>
+<method name="handleRowValues"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="rsw" type="org.apache.ibatis.executor.resultset.ResultSetWrapper">
+</parameter>
+<parameter name="resultMap" type="org.apache.ibatis.mapping.ResultMap">
+</parameter>
+<parameter name="resultHandler" type="org.apache.ibatis.session.ResultHandler&lt;?&gt;">
+</parameter>
+<parameter name="rowBounds" type="org.apache.ibatis.session.RowBounds">
+</parameter>
+<parameter name="parentMapping" type="org.apache.ibatis.mapping.ResultMapping">
 </parameter>
 <exception name="SQLException" type="java.sql.SQLException">
 </exception>
@@ -8463,6 +8882,21 @@
  deprecated="not deprecated"
  visibility="public"
 >
+<method name="handleCursorResultSets"
+ return="org.apache.ibatis.cursor.Cursor&lt;E&gt;"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="stmt" type="java.sql.Statement">
+</parameter>
+<exception name="SQLException" type="java.sql.SQLException">
+</exception>
+</method>
 <method name="handleOutputParameters"
  return="void"
  abstract="true"
@@ -8494,6 +8928,124 @@
 </exception>
 </method>
 </interface>
+<class name="ResultSetWrapper"
+ extends="java.lang.Object"
+ abstract="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<constructor name="ResultSetWrapper"
+ type="org.apache.ibatis.executor.resultset.ResultSetWrapper"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="rs" type="java.sql.ResultSet">
+</parameter>
+<parameter name="configuration" type="org.apache.ibatis.session.Configuration">
+</parameter>
+<exception name="SQLException" type="java.sql.SQLException">
+</exception>
+</constructor>
+<method name="getClassNames"
+ return="java.util.List&lt;java.lang.String&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="getColumnNames"
+ return="java.util.List&lt;java.lang.String&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="getJdbcType"
+ return="org.apache.ibatis.type.JdbcType"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="columnName" type="java.lang.String">
+</parameter>
+</method>
+<method name="getMappedColumnNames"
+ return="java.util.List&lt;java.lang.String&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="resultMap" type="org.apache.ibatis.mapping.ResultMap">
+</parameter>
+<parameter name="columnPrefix" type="java.lang.String">
+</parameter>
+<exception name="SQLException" type="java.sql.SQLException">
+</exception>
+</method>
+<method name="getResultSet"
+ return="java.sql.ResultSet"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="getTypeHandler"
+ return="org.apache.ibatis.type.TypeHandler&lt;?&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="propertyType" type="java.lang.Class&lt;?&gt;">
+</parameter>
+<parameter name="columnName" type="java.lang.String">
+</parameter>
+</method>
+<method name="getUnmappedColumnNames"
+ return="java.util.List&lt;java.lang.String&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="resultMap" type="org.apache.ibatis.mapping.ResultMap">
+</parameter>
+<parameter name="columnPrefix" type="java.lang.String">
+</parameter>
+<exception name="SQLException" type="java.sql.SQLException">
+</exception>
+</method>
+</class>
 </package>
 <package name="org.apache.ibatis.executor.statement"
 >
@@ -8816,6 +9368,21 @@
 <exception name="SQLException" type="java.sql.SQLException">
 </exception>
 </method>
+<method name="queryCursor"
+ return="org.apache.ibatis.cursor.Cursor&lt;E&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="statement" type="java.sql.Statement">
+</parameter>
+<exception name="SQLException" type="java.sql.SQLException">
+</exception>
+</method>
 <method name="update"
  return="int"
  abstract="false"
@@ -8918,6 +9485,21 @@
 <parameter name="statement" type="java.sql.Statement">
 </parameter>
 <parameter name="resultHandler" type="org.apache.ibatis.session.ResultHandler">
+</parameter>
+<exception name="SQLException" type="java.sql.SQLException">
+</exception>
+</method>
+<method name="queryCursor"
+ return="org.apache.ibatis.cursor.Cursor&lt;E&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="statement" type="java.sql.Statement">
 </parameter>
 <exception name="SQLException" type="java.sql.SQLException">
 </exception>
@@ -9052,6 +9634,21 @@
 <exception name="SQLException" type="java.sql.SQLException">
 </exception>
 </method>
+<method name="queryCursor"
+ return="org.apache.ibatis.cursor.Cursor&lt;E&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="statement" type="java.sql.Statement">
+</parameter>
+<exception name="SQLException" type="java.sql.SQLException">
+</exception>
+</method>
 <method name="update"
  return="int"
  abstract="false"
@@ -9154,6 +9751,21 @@
 <parameter name="statement" type="java.sql.Statement">
 </parameter>
 <parameter name="resultHandler" type="org.apache.ibatis.session.ResultHandler">
+</parameter>
+<exception name="SQLException" type="java.sql.SQLException">
+</exception>
+</method>
+<method name="queryCursor"
+ return="org.apache.ibatis.cursor.Cursor&lt;E&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="statement" type="java.sql.Statement">
 </parameter>
 <exception name="SQLException" type="java.sql.SQLException">
 </exception>
@@ -9261,6 +9873,21 @@
 <parameter name="statement" type="java.sql.Statement">
 </parameter>
 <parameter name="resultHandler" type="org.apache.ibatis.session.ResultHandler">
+</parameter>
+<exception name="SQLException" type="java.sql.SQLException">
+</exception>
+</method>
+<method name="queryCursor"
+ return="org.apache.ibatis.cursor.Cursor&lt;E&gt;"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="statement" type="java.sql.Statement">
 </parameter>
 <exception name="SQLException" type="java.sql.SQLException">
 </exception>
@@ -9772,7 +10399,7 @@
 >
 <implements name="org.apache.ibatis.io.ResolverUtil.Test">
 </implements>
-<constructor name="ResolverUtil.AnnotatedWith"
+<constructor name="AnnotatedWith"
  type="org.apache.ibatis.io.ResolverUtil.AnnotatedWith"
  static="false"
  final="false"
@@ -9806,7 +10433,7 @@
 >
 <implements name="org.apache.ibatis.io.ResolverUtil.Test">
 </implements>
-<constructor name="ResolverUtil.IsA"
+<constructor name="IsA"
  type="org.apache.ibatis.io.ResolverUtil.IsA"
  static="false"
  final="false"
@@ -13612,7 +14239,7 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<constructor name="Discriminator.Builder"
+<constructor name="Builder"
  type="org.apache.ibatis.mapping.Discriminator.Builder"
  static="false"
  final="false"
@@ -13702,7 +14329,7 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<constructor name="Environment.Builder"
+<constructor name="Builder"
  type="org.apache.ibatis.mapping.Environment.Builder"
  static="false"
  final="false"
@@ -13943,7 +14570,7 @@
  synchronized="false"
  static="false"
  final="false"
- deprecated="not deprecated"
+ deprecated="deprecated"
  visibility="public"
 >
 </method>
@@ -13960,6 +14587,17 @@
 </method>
 <method name="getResultSetType"
  return="org.apache.ibatis.mapping.ResultSetType"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="getResultSets"
+ return="java.lang.String[]"
  abstract="false"
  native="false"
  synchronized="false"
@@ -14077,7 +14715,7 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<constructor name="MappedStatement.Builder"
+<constructor name="Builder"
  type="org.apache.ibatis.mapping.MappedStatement.Builder"
  static="false"
  final="false"
@@ -14252,7 +14890,7 @@
  synchronized="false"
  static="false"
  final="false"
- deprecated="not deprecated"
+ deprecated="deprecated"
  visibility="public"
 >
 <parameter name="resultSet" type="java.lang.String">
@@ -14295,6 +14933,19 @@
  visibility="public"
 >
 <parameter name="resultSetType" type="org.apache.ibatis.mapping.ResultSetType">
+</parameter>
+</method>
+<method name="resultSets"
+ return="org.apache.ibatis.mapping.MappedStatement.Builder"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="resultSet" type="java.lang.String">
 </parameter>
 </method>
 <method name="statementType"
@@ -14387,7 +15038,7 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<constructor name="ParameterMap.Builder"
+<constructor name="Builder"
  type="org.apache.ibatis.mapping.ParameterMap.Builder"
  static="false"
  final="false"
@@ -14542,7 +15193,7 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<constructor name="ParameterMapping.Builder"
+<constructor name="Builder"
  type="org.apache.ibatis.mapping.ParameterMapping.Builder"
  static="false"
  final="false"
@@ -14556,7 +15207,7 @@
 <parameter name="typeHandler" type="org.apache.ibatis.type.TypeHandler&lt;?&gt;">
 </parameter>
 </constructor>
-<constructor name="ParameterMapping.Builder"
+<constructor name="Builder"
  type="org.apache.ibatis.mapping.ParameterMapping.Builder"
  static="false"
  final="false"
@@ -14901,7 +15552,7 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<constructor name="ResultMap.Builder"
+<constructor name="Builder"
  type="org.apache.ibatis.mapping.ResultMap.Builder"
  static="false"
  final="false"
@@ -14917,7 +15568,7 @@
 <parameter name="resultMappings" type="java.util.List&lt;org.apache.ibatis.mapping.ResultMapping&gt;">
 </parameter>
 </constructor>
-<constructor name="ResultMap.Builder"
+<constructor name="Builder"
  type="org.apache.ibatis.mapping.ResultMap.Builder"
  static="false"
  final="false"
@@ -15179,7 +15830,7 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<constructor name="ResultMapping.Builder"
+<constructor name="Builder"
  type="org.apache.ibatis.mapping.ResultMapping.Builder"
  static="false"
  final="false"
@@ -15195,7 +15846,7 @@
 <parameter name="typeHandler" type="org.apache.ibatis.type.TypeHandler&lt;?&gt;">
 </parameter>
 </constructor>
-<constructor name="ResultMapping.Builder"
+<constructor name="Builder"
  type="org.apache.ibatis.mapping.ResultMapping.Builder"
  static="false"
  final="false"
@@ -15211,7 +15862,7 @@
 <parameter name="javaType" type="java.lang.Class&lt;?&gt;">
 </parameter>
 </constructor>
-<constructor name="ResultMapping.Builder"
+<constructor name="Builder"
  type="org.apache.ibatis.mapping.ResultMapping.Builder"
  static="false"
  final="false"
@@ -17825,6 +18476,45 @@
  visibility="public"
 >
 </field>
+</class>
+<class name="TypeParameterResolver"
+ extends="java.lang.Object"
+ abstract="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<method name="resolveParamTypes"
+ return="java.lang.reflect.Type[]"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="method" type="java.lang.reflect.Method">
+</parameter>
+<parameter name="mapper" type="java.lang.reflect.Type">
+</parameter>
+</method>
+<method name="resolveReturnType"
+ return="java.lang.reflect.Type"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="method" type="java.lang.reflect.Method">
+</parameter>
+<parameter name="mapper" type="java.lang.reflect.Type">
+</parameter>
+</method>
 </class>
 </package>
 <package name="org.apache.ibatis.reflection.factory"
@@ -20450,6 +21140,58 @@
 >
 </method>
 </class>
+<class name="AutoMappingUnknownColumnBehavior"
+ extends="java.lang.Enum"
+ abstract="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<method name="doAction"
+ return="void"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="mappedStatement" type="org.apache.ibatis.mapping.MappedStatement">
+</parameter>
+<parameter name="columnName" type="java.lang.String">
+</parameter>
+<parameter name="propertyName" type="java.lang.String">
+</parameter>
+<parameter name="propertyType" type="java.lang.Class&lt;?&gt;">
+</parameter>
+</method>
+<method name="valueOf"
+ return="org.apache.ibatis.session.AutoMappingUnknownColumnBehavior"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="name" type="java.lang.String">
+</parameter>
+</method>
+<method name="values"
+ return="org.apache.ibatis.session.AutoMappingUnknownColumnBehavior[]"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="true"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+</class>
 <class name="Configuration"
  extends="java.lang.Object"
  abstract="false"
@@ -20729,6 +21471,17 @@
 </method>
 <method name="getAutoMappingBehavior"
  return="org.apache.ibatis.session.AutoMappingBehavior"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="getAutoMappingUnknownColumnBehavior"
+ return="org.apache.ibatis.session.AutoMappingUnknownColumnBehavior"
  abstract="false"
  native="false"
  synchronized="false"
@@ -21597,6 +22350,19 @@
 <parameter name="autoMappingBehavior" type="org.apache.ibatis.session.AutoMappingBehavior">
 </parameter>
 </method>
+<method name="setAutoMappingUnknownColumnBehavior"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="autoMappingUnknownColumnBehavior" type="org.apache.ibatis.session.AutoMappingUnknownColumnBehavior">
+</parameter>
+</method>
 <method name="setCacheEnabled"
  return="void"
  abstract="false"
@@ -21960,6 +22726,16 @@
 </field>
 <field name="autoMappingBehavior"
  type="org.apache.ibatis.session.AutoMappingBehavior"
+ transient="false"
+ volatile="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="protected"
+>
+</field>
+<field name="autoMappingUnknownColumnBehavior"
+ type="org.apache.ibatis.session.AutoMappingUnknownColumnBehavior"
  transient="false"
  volatile="false"
  static="false"
@@ -22407,7 +23183,7 @@
  deprecated="not deprecated"
  visibility="protected"
 >
-<constructor name="Configuration.StrictMap"
+<constructor name="StrictMap"
  type="org.apache.ibatis.session.Configuration.StrictMap"
  static="false"
  final="false"
@@ -22421,7 +23197,7 @@
 <parameter name="loadFactor" type="float">
 </parameter>
 </constructor>
-<constructor name="Configuration.StrictMap"
+<constructor name="StrictMap"
  type="org.apache.ibatis.session.Configuration.StrictMap"
  static="false"
  final="false"
@@ -22433,7 +23209,7 @@
 <parameter name="initialCapacity" type="int">
 </parameter>
 </constructor>
-<constructor name="Configuration.StrictMap"
+<constructor name="StrictMap"
  type="org.apache.ibatis.session.Configuration.StrictMap"
  static="false"
  final="false"
@@ -22443,7 +23219,7 @@
 <parameter name="name" type="java.lang.String">
 </parameter>
 </constructor>
-<constructor name="Configuration.StrictMap"
+<constructor name="StrictMap"
  type="org.apache.ibatis.session.Configuration.StrictMap"
  static="false"
  final="false"
@@ -22479,7 +23255,7 @@
  deprecated="not deprecated"
  visibility="protected"
 >
-<constructor name="Configuration.StrictMap.Ambiguity"
+<constructor name="Ambiguity"
  type="org.apache.ibatis.session.Configuration.StrictMap.Ambiguity"
  static="false"
  final="false"
@@ -22951,6 +23727,51 @@
 <parameter name="rowBounds" type="org.apache.ibatis.session.RowBounds">
 </parameter>
 <parameter name="handler" type="org.apache.ibatis.session.ResultHandler">
+</parameter>
+</method>
+<method name="selectCursor"
+ return="org.apache.ibatis.cursor.Cursor&lt;T&gt;"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="statement" type="java.lang.String">
+</parameter>
+</method>
+<method name="selectCursor"
+ return="org.apache.ibatis.cursor.Cursor&lt;T&gt;"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="statement" type="java.lang.String">
+</parameter>
+<parameter name="parameter" type="java.lang.Object">
+</parameter>
+</method>
+<method name="selectCursor"
+ return="org.apache.ibatis.cursor.Cursor&lt;T&gt;"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="statement" type="java.lang.String">
+</parameter>
+<parameter name="parameter" type="java.lang.Object">
+</parameter>
+<parameter name="rowBounds" type="org.apache.ibatis.session.RowBounds">
 </parameter>
 </method>
 <method name="selectList"
@@ -23885,6 +24706,51 @@
 <parameter name="handler" type="org.apache.ibatis.session.ResultHandler">
 </parameter>
 </method>
+<method name="selectCursor"
+ return="org.apache.ibatis.cursor.Cursor&lt;T&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="statement" type="java.lang.String">
+</parameter>
+</method>
+<method name="selectCursor"
+ return="org.apache.ibatis.cursor.Cursor&lt;T&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="statement" type="java.lang.String">
+</parameter>
+<parameter name="parameter" type="java.lang.Object">
+</parameter>
+</method>
+<method name="selectCursor"
+ return="org.apache.ibatis.cursor.Cursor&lt;T&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="statement" type="java.lang.String">
+</parameter>
+<parameter name="parameter" type="java.lang.Object">
+</parameter>
+<parameter name="rowBounds" type="org.apache.ibatis.session.RowBounds">
+</parameter>
+</method>
 <method name="selectList"
  return="java.util.List&lt;E&gt;"
  abstract="false"
@@ -24452,6 +25318,51 @@
 <parameter name="handler" type="org.apache.ibatis.session.ResultHandler">
 </parameter>
 </method>
+<method name="selectCursor"
+ return="org.apache.ibatis.cursor.Cursor&lt;T&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="statement" type="java.lang.String">
+</parameter>
+</method>
+<method name="selectCursor"
+ return="org.apache.ibatis.cursor.Cursor&lt;T&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="statement" type="java.lang.String">
+</parameter>
+<parameter name="parameter" type="java.lang.Object">
+</parameter>
+</method>
+<method name="selectCursor"
+ return="org.apache.ibatis.cursor.Cursor&lt;T&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="statement" type="java.lang.String">
+</parameter>
+<parameter name="parameter" type="java.lang.Object">
+</parameter>
+<parameter name="rowBounds" type="org.apache.ibatis.session.RowBounds">
+</parameter>
+</method>
 <method name="selectList"
  return="java.util.List&lt;E&gt;"
  abstract="false"
@@ -24613,7 +25524,7 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<constructor name="DefaultSqlSession.StrictMap"
+<constructor name="StrictMap"
  type="org.apache.ibatis.session.defaults.DefaultSqlSession.StrictMap"
  static="false"
  final="false"

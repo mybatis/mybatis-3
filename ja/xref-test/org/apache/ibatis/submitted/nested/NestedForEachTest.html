@@ -111,7 +111,7 @@
 <a class="jxr_linenumber" name="L103" href="#L103">103</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testSimpleSelectWithMapperAndPrimitives() {
 <a class="jxr_linenumber" name="L104" href="#L104">104</a>     SqlSession sqlSession = sqlSessionFactory.openSession();
 <a class="jxr_linenumber" name="L105" href="#L105">105</a>     <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L106" href="#L106">106</a>       <a href="../../../../../org/apache/ibatis/submitted/nested/Mapper.html">Mapper</a> mapper = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L106" href="#L106">106</a>       <a href="../../../../../org/apache/ibatis/session/AutoMappingUnknownColumnBehaviorTest.html">Mapper</a> mapper = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L107" href="#L107">107</a>       List&lt;Map&lt;String, Object&gt;&gt; answer = mapper.simpleSelectWithMapperAndPrimitives(1, 3, 5);
 <a class="jxr_linenumber" name="L108" href="#L108">108</a>       assertEquals(3, answer.size());
 <a class="jxr_linenumber" name="L109" href="#L109">109</a>     } <strong class="jxr_keyword">finally</strong> {

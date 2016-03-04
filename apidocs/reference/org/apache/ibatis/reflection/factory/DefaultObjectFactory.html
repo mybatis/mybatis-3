@@ -145,6 +145,8 @@
               <ul>
                 
     <li class="api apilevel-">
+  <a href="../../../../../org/apache/ibatis/annotations/package-summary.html">org.apache.ibatis.annotations</a></li>
+    <li class="api apilevel-">
   <a href="../../../../../org/apache/ibatis/binding/package-summary.html">org.apache.ibatis.binding</a></li>
     <li class="api apilevel-">
   <a href="../../../../../org/apache/ibatis/builder/package-summary.html">org.apache.ibatis.builder</a></li>
@@ -158,6 +160,10 @@
   <a href="../../../../../org/apache/ibatis/cache/decorators/package-summary.html">org.apache.ibatis.cache.decorators</a></li>
     <li class="api apilevel-">
   <a href="../../../../../org/apache/ibatis/cache/impl/package-summary.html">org.apache.ibatis.cache.impl</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../../org/apache/ibatis/cursor/package-summary.html">org.apache.ibatis.cursor</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../../org/apache/ibatis/cursor/defaults/package-summary.html">org.apache.ibatis.cursor.defaults</a></li>
     <li class="api apilevel-">
   <a href="../../../../../org/apache/ibatis/datasource/package-summary.html">org.apache.ibatis.datasource</a></li>
     <li class="api apilevel-">
@@ -518,9 +524,9 @@ Summary:
             T
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../../org/apache/ibatis/reflection/factory/DefaultObjectFactory.html#create(java.lang.Class<T>)">create</a></span>(Class&lt;T&gt; type)
+        <span class="sympad"><a href="../../../../../org/apache/ibatis/reflection/factory/DefaultObjectFactory.html#create(java.lang.Class<T>, java.util.List<java.lang.Class<?>>, java.util.List<java.lang.Object>)">create</a></span>(Class&lt;T&gt; type, List&lt;Class&lt;?&gt;&gt; constructorArgTypes, List&lt;Object&gt; constructorArgs)
         
-        <div class="jd-descrdiv">Creates a new object with default constructor.</div>
+        <div class="jd-descrdiv">Creates a new object with the specified constructor and params.</div>
   
   </td></tr>
 
@@ -536,9 +542,9 @@ Summary:
             T
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../../org/apache/ibatis/reflection/factory/DefaultObjectFactory.html#create(java.lang.Class<T>, java.util.List<java.lang.Class<?>>, java.util.List<java.lang.Object>)">create</a></span>(Class&lt;T&gt; type, List&lt;Class&lt;?&gt;&gt; constructorArgTypes, List&lt;Object&gt; constructorArgs)
+        <span class="sympad"><a href="../../../../../org/apache/ibatis/reflection/factory/DefaultObjectFactory.html#create(java.lang.Class<T>)">create</a></span>(Class&lt;T&gt; type)
         
-        <div class="jd-descrdiv">Creates a new object with the specified constructor and params.</div>
+        <div class="jd-descrdiv">Creates a new object with default constructor.</div>
   
   </td></tr>
 
@@ -777,7 +783,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>()
+        <span class="sympad">wait</span>(long arg0, int arg1)
         
   </td></tr>
 
@@ -793,7 +799,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0, int arg1)
+        <span class="sympad">wait</span>(long arg0)
         
   </td></tr>
 
@@ -809,7 +815,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0)
+        <span class="sympad">wait</span>()
         
   </td></tr>
 
@@ -853,9 +859,9 @@ From interface
             T
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../../org/apache/ibatis/reflection/factory/ObjectFactory.html#create(java.lang.Class<T>)">create</a></span>(Class&lt;T&gt; type)
+        <span class="sympad"><a href="../../../../../org/apache/ibatis/reflection/factory/ObjectFactory.html#create(java.lang.Class<T>, java.util.List<java.lang.Class<?>>, java.util.List<java.lang.Object>)">create</a></span>(Class&lt;T&gt; type, List&lt;Class&lt;?&gt;&gt; constructorArgTypes, List&lt;Object&gt; constructorArgs)
         
-        <div class="jd-descrdiv">Creates a new object with default constructor.</div>
+        <div class="jd-descrdiv">Creates a new object with the specified constructor and params.</div>
   
   </td></tr>
 
@@ -871,9 +877,9 @@ From interface
             T
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../../org/apache/ibatis/reflection/factory/ObjectFactory.html#create(java.lang.Class<T>, java.util.List<java.lang.Class<?>>, java.util.List<java.lang.Object>)">create</a></span>(Class&lt;T&gt; type, List&lt;Class&lt;?&gt;&gt; constructorArgTypes, List&lt;Object&gt; constructorArgs)
+        <span class="sympad"><a href="../../../../../org/apache/ibatis/reflection/factory/ObjectFactory.html#create(java.lang.Class<T>)">create</a></span>(Class&lt;T&gt; type)
         
-        <div class="jd-descrdiv">Creates a new object with the specified constructor and params.</div>
+        <div class="jd-descrdiv">Creates a new object with default constructor.</div>
   
   </td></tr>
 
@@ -1000,46 +1006,6 @@ From interface
 
 
 
-<a id="create(java.lang.Class<T>)"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-         
-         
-        T
-      </span>
-      <span class="sympad">create</span>
-      <span class="normal">(Class&lt;T&gt; type)</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p>Creates a new object with default constructor. </p></div>
-  <div class="jd-tagdata">
-      <h5 class="jd-tagtitle">Parameters</h5>
-      <table class="jd-tagtable">
-        <tr>
-          <th>type</th>
-          <td>Object type</td>
-        </tr>
-      </table>
-  </div>
-
-    </div>
-</div>
-
-
 <a id="create(java.lang.Class<T>, java.util.List<java.lang.Class<?>>, java.util.List<java.lang.Object>)"></a>
 
 <div class="jd-details api apilevel-"> 
@@ -1080,6 +1046,46 @@ From interface
         <tr>
           <th>constructorArgs</th>
           <td>Constructor argument values</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<a id="create(java.lang.Class<T>)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        T
+      </span>
+      <span class="sympad">create</span>
+      <span class="normal">(Class&lt;T&gt; type)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Creates a new object with default constructor. </p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>type</th>
+          <td>Object type</td>
         </tr>
       </table>
   </div>

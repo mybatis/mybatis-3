@@ -67,7 +67,7 @@
 <a class="jxr_linenumber" name="L59" href="#L59">59</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldGetAUser() {
 <a class="jxr_linenumber" name="L60" href="#L60">60</a>      SqlSession sqlSession = sqlSessionFactory.openSession();
 <a class="jxr_linenumber" name="L61" href="#L61">61</a>      <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L62" href="#L62">62</a>        <a href="../../../../../org/apache/ibatis/submitted/propertiesinmapperfiles/Mapper.html">Mapper</a> mapper = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L62" href="#L62">62</a>        <a href="../../../../../org/apache/ibatis/session/AutoMappingUnknownColumnBehaviorTest.html">Mapper</a> mapper = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L63" href="#L63">63</a>        <a href="../../../../../org/apache/ibatis/submitted/propertiesinmapperfiles/User.html">User</a> user = mapper.getUser(1);
 <a class="jxr_linenumber" name="L64" href="#L64">64</a>        Assert.assertEquals(<span class="jxr_string">"User1"</span>, user.getName());
 <a class="jxr_linenumber" name="L65" href="#L65">65</a>      } <strong class="jxr_keyword">finally</strong> {

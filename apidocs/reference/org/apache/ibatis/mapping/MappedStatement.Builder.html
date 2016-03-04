@@ -145,6 +145,8 @@
               <ul>
                 
     <li class="api apilevel-">
+  <a href="../../../../org/apache/ibatis/annotations/package-summary.html">org.apache.ibatis.annotations</a></li>
+    <li class="api apilevel-">
   <a href="../../../../org/apache/ibatis/binding/package-summary.html">org.apache.ibatis.binding</a></li>
     <li class="api apilevel-">
   <a href="../../../../org/apache/ibatis/builder/package-summary.html">org.apache.ibatis.builder</a></li>
@@ -158,6 +160,10 @@
   <a href="../../../../org/apache/ibatis/cache/decorators/package-summary.html">org.apache.ibatis.cache.decorators</a></li>
     <li class="api apilevel-">
   <a href="../../../../org/apache/ibatis/cache/impl/package-summary.html">org.apache.ibatis.cache.impl</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../org/apache/ibatis/cursor/package-summary.html">org.apache.ibatis.cursor</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../org/apache/ibatis/cursor/defaults/package-summary.html">org.apache.ibatis.cursor.defaults</a></li>
     <li class="api apilevel-">
   <a href="../../../../org/apache/ibatis/datasource/package-summary.html">org.apache.ibatis.datasource</a></li>
     <li class="api apilevel-">
@@ -495,7 +501,7 @@ Summary:
             
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../org/apache/ibatis/mapping/MappedStatement.Builder.html#MappedStatement.Builder(org.apache.ibatis.session.Configuration, java.lang.String, org.apache.ibatis.mapping.SqlSource, org.apache.ibatis.mapping.SqlCommandType)">MappedStatement.Builder</a></span>(<a href="../../../../org/apache/ibatis/session/Configuration.html">Configuration</a> configuration, String id, <a href="../../../../org/apache/ibatis/mapping/SqlSource.html">SqlSource</a> sqlSource, <a href="../../../../org/apache/ibatis/mapping/SqlCommandType.html">SqlCommandType</a> sqlCommandType)
+        <span class="sympad"><a href="../../../../org/apache/ibatis/mapping/MappedStatement.Builder.html#Builder(org.apache.ibatis.session.Configuration, java.lang.String, org.apache.ibatis.mapping.SqlSource, org.apache.ibatis.mapping.SqlCommandType)">Builder</a></span>(<a href="../../../../org/apache/ibatis/session/Configuration.html">Configuration</a> configuration, String id, <a href="../../../../org/apache/ibatis/mapping/SqlSource.html">SqlSource</a> sqlSource, <a href="../../../../org/apache/ibatis/mapping/SqlCommandType.html">SqlCommandType</a> sqlCommandType)
         
   </td></tr>
 
@@ -718,6 +724,11 @@ Summary:
         <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../org/apache/ibatis/mapping/MappedStatement.Builder.html#resulSets(java.lang.String)">resulSets</a></span>(String resultSet)
         
+        <div class="jd-descrdiv">
+      <em>
+  This method is deprecated.
+      Use <code><a href="../../../../org/apache/ibatis/mapping/MappedStatement.Builder.html#resultSets(java.lang.String)">resultSets(String)</a></code> </em></div>
+  
   </td></tr>
 
 
@@ -780,7 +791,7 @@ Summary:
             <a href="../../../../org/apache/ibatis/mapping/MappedStatement.Builder.html">MappedStatement.Builder</a>
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../org/apache/ibatis/mapping/MappedStatement.Builder.html#statementType(org.apache.ibatis.mapping.StatementType)">statementType</a></span>(<a href="../../../../org/apache/ibatis/mapping/StatementType.html">StatementType</a> statementType)
+        <span class="sympad"><a href="../../../../org/apache/ibatis/mapping/MappedStatement.Builder.html#resultSets(java.lang.String)">resultSets</a></span>(String resultSet)
         
   </td></tr>
 
@@ -796,13 +807,29 @@ Summary:
             <a href="../../../../org/apache/ibatis/mapping/MappedStatement.Builder.html">MappedStatement.Builder</a>
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../org/apache/ibatis/mapping/MappedStatement.Builder.html#timeout(java.lang.Integer)">timeout</a></span>(Integer timeout)
+        <span class="sympad"><a href="../../../../org/apache/ibatis/mapping/MappedStatement.Builder.html#statementType(org.apache.ibatis.mapping.StatementType)">statementType</a></span>(<a href="../../../../org/apache/ibatis/mapping/StatementType.html">StatementType</a> statementType)
         
   </td></tr>
 
 
 	 
     <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            <a href="../../../../org/apache/ibatis/mapping/MappedStatement.Builder.html">MappedStatement.Builder</a>
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/mapping/MappedStatement.Builder.html#timeout(java.lang.Integer)">timeout</a></span>(Integer timeout)
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -990,7 +1017,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>()
+        <span class="sympad">wait</span>(long arg0, int arg1)
         
   </td></tr>
 
@@ -1006,7 +1033,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0, int arg1)
+        <span class="sympad">wait</span>(long arg0)
         
   </td></tr>
 
@@ -1022,7 +1049,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0)
+        <span class="sympad">wait</span>()
         
   </td></tr>
 
@@ -1067,7 +1094,7 @@ From class
 
 
 
-<a id="MappedStatement.Builder(org.apache.ibatis.session.Configuration, java.lang.String, org.apache.ibatis.mapping.SqlSource, org.apache.ibatis.mapping.SqlCommandType)"></a>
+<a id="Builder(org.apache.ibatis.session.Configuration, java.lang.String, org.apache.ibatis.mapping.SqlSource, org.apache.ibatis.mapping.SqlCommandType)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1079,7 +1106,7 @@ From class
          
         
       </span>
-      <span class="sympad">MappedStatement.Builder</span>
+      <span class="sympad">Builder</span>
       <span class="normal">(<a href="../../../../org/apache/ibatis/session/Configuration.html">Configuration</a> configuration, String id, <a href="../../../../org/apache/ibatis/mapping/SqlSource.html">SqlSource</a> sqlSource, <a href="../../../../org/apache/ibatis/mapping/SqlCommandType.html">SqlCommandType</a> sqlCommandType)</span>
     </h4>
       <div class="api-level">
@@ -1509,7 +1536,11 @@ From class
 
       </div>
     <div class="jd-details-descr">
-      
+      <p>
+  <p class="caution">
+      <strong>
+  This method is deprecated.</strong><br/> Use <code><a href="../../../../org/apache/ibatis/mapping/MappedStatement.Builder.html#resultSets(java.lang.String)">resultSets(String)</a></code> 
+  </p>
   <div class="jd-tagdata jd-tagdescr"><p></p></div>
 
     </div>
@@ -1592,6 +1623,37 @@ From class
       </span>
       <span class="sympad">resultSetType</span>
       <span class="normal">(<a href="../../../../org/apache/ibatis/mapping/ResultSetType.html">ResultSetType</a> resultSetType)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    </div>
+</div>
+
+
+<a id="resultSets(java.lang.String)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        <a href="../../../../org/apache/ibatis/mapping/MappedStatement.Builder.html">MappedStatement.Builder</a>
+      </span>
+      <span class="sympad">resultSets</span>
+      <span class="normal">(String resultSet)</span>
     </h4>
       <div class="api-level">
         <div>

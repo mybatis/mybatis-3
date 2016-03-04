@@ -144,6 +144,8 @@
               <ul>
                 
     <li class="api apilevel-">
+  <a href="./org/apache/ibatis/annotations/package-summary.html">org.apache.ibatis.annotations</a></li>
+    <li class="api apilevel-">
   <a href="./org/apache/ibatis/binding/package-summary.html">org.apache.ibatis.binding</a></li>
     <li class="api apilevel-">
   <a href="./org/apache/ibatis/builder/package-summary.html">org.apache.ibatis.builder</a></li>
@@ -157,6 +159,10 @@
   <a href="./org/apache/ibatis/cache/decorators/package-summary.html">org.apache.ibatis.cache.decorators</a></li>
     <li class="api apilevel-">
   <a href="./org/apache/ibatis/cache/impl/package-summary.html">org.apache.ibatis.cache.impl</a></li>
+    <li class="api apilevel-">
+  <a href="./org/apache/ibatis/cursor/package-summary.html">org.apache.ibatis.cursor</a></li>
+    <li class="api apilevel-">
+  <a href="./org/apache/ibatis/cursor/defaults/package-summary.html">org.apache.ibatis.cursor.defaults</a></li>
     <li class="api apilevel-">
   <a href="./org/apache/ibatis/datasource/package-summary.html">org.apache.ibatis.datasource</a></li>
     <li class="api apilevel-">
@@ -357,6 +363,12 @@
         <tr class="alt-color api apilevel-" >
             <td class="jd-linkcol"><a href="./org/apache/ibatis/session/AutoMappingBehavior.html">AutoMappingBehavior</a></td>
             <td class="jd-descrcol" width="100%">Specifies if and how MyBatis should automatically map columns to fields/properties.&nbsp;</td>
+        </tr>
+    
+    
+        <tr class=" api apilevel-" >
+            <td class="jd-linkcol"><a href="./org/apache/ibatis/session/AutoMappingUnknownColumnBehavior.html">AutoMappingUnknownColumnBehavior</a></td>
+            <td class="jd-descrcol" width="100%">Specify the behavior when detects an unknown column (or unknown property type) of automatic mapping target.&nbsp;</td>
         </tr>
     
     
@@ -641,6 +653,18 @@
         </tr>
     
     
+        <tr class="alt-color api apilevel-" >
+            <td class="jd-linkcol"><a href="./org/apache/ibatis/cursor/Cursor.html">Cursor</a>&lt;T&gt;</td>
+            <td class="jd-descrcol" width="100%">Cursor contract to handle fetching items lazily using an Iterator.&nbsp;</td>
+        </tr>
+    
+    
+        <tr class=" api apilevel-" >
+            <td class="jd-linkcol"><a href="./org/apache/ibatis/cursor/CursorException.html">CursorException</a></td>
+            <td class="jd-descrcol" width="100%">&nbsp;</td>
+        </tr>
+    
+    
 </table>
 
 
@@ -679,120 +703,126 @@
     
     
         <tr class=" api apilevel-" >
+            <td class="jd-linkcol"><a href="./org/apache/ibatis/cursor/defaults/DefaultCursor.html">DefaultCursor</a>&lt;T&gt;</td>
+            <td class="jd-descrcol" width="100%">This is the default implementation of a MyBatis Cursor.&nbsp;</td>
+        </tr>
+    
+    
+        <tr class="alt-color api apilevel-" >
             <td class="jd-linkcol"><a href="./org/apache/ibatis/mapping/DefaultDatabaseIdProvider.html">DefaultDatabaseIdProvider</a></td>
             <td class="jd-descrcol" width="100%">&nbsp;</td>
         </tr>
     
     
-        <tr class="alt-color api apilevel-" >
+        <tr class=" api apilevel-" >
             <td class="jd-linkcol"><a href="./org/apache/ibatis/executor/result/DefaultMapResultHandler.html">DefaultMapResultHandler</a>&lt;K,&nbsp;V&gt;</td>
             <td class="jd-descrcol" width="100%">&nbsp;</td>
         </tr>
     
     
-        <tr class=" api apilevel-" >
+        <tr class="alt-color api apilevel-" >
             <td class="jd-linkcol"><a href="./org/apache/ibatis/reflection/factory/DefaultObjectFactory.html">DefaultObjectFactory</a></td>
             <td class="jd-descrcol" width="100%">&nbsp;</td>
         </tr>
     
     
-        <tr class="alt-color api apilevel-" >
+        <tr class=" api apilevel-" >
             <td class="jd-linkcol"><a href="./org/apache/ibatis/reflection/wrapper/DefaultObjectWrapperFactory.html">DefaultObjectWrapperFactory</a></td>
             <td class="jd-descrcol" width="100%">&nbsp;</td>
         </tr>
     
     
-        <tr class=" api apilevel-" >
+        <tr class="alt-color api apilevel-" >
             <td class="jd-linkcol"><a href="./org/apache/ibatis/scripting/defaults/DefaultParameterHandler.html">DefaultParameterHandler</a></td>
             <td class="jd-descrcol" width="100%">&nbsp;</td>
         </tr>
     
     
-        <tr class="alt-color api apilevel-" >
+        <tr class=" api apilevel-" >
             <td class="jd-linkcol"><a href="./org/apache/ibatis/reflection/DefaultReflectorFactory.html">DefaultReflectorFactory</a></td>
             <td class="jd-descrcol" width="100%">&nbsp;</td>
         </tr>
     
     
-        <tr class=" api apilevel-" >
+        <tr class="alt-color api apilevel-" >
             <td class="jd-linkcol"><a href="./org/apache/ibatis/executor/result/DefaultResultContext.html">DefaultResultContext</a>&lt;T&gt;</td>
             <td class="jd-descrcol" width="100%">&nbsp;</td>
         </tr>
     
     
-        <tr class="alt-color api apilevel-" >
+        <tr class=" api apilevel-" >
             <td class="jd-linkcol"><a href="./org/apache/ibatis/executor/result/DefaultResultHandler.html">DefaultResultHandler</a></td>
             <td class="jd-descrcol" width="100%">&nbsp;</td>
         </tr>
     
     
-        <tr class=" api apilevel-" >
+        <tr class="alt-color api apilevel-" >
             <td class="jd-linkcol"><a href="./org/apache/ibatis/executor/resultset/DefaultResultSetHandler.html">DefaultResultSetHandler</a></td>
             <td class="jd-descrcol" width="100%">&nbsp;</td>
         </tr>
     
     
-        <tr class="alt-color api apilevel-" >
+        <tr class=" api apilevel-" >
             <td class="jd-linkcol"><a href="./org/apache/ibatis/session/defaults/DefaultSqlSession.html">DefaultSqlSession</a></td>
             <td class="jd-descrcol" width="100%">The default implementation for <code><a href="./org/apache/ibatis/session/SqlSession.html">SqlSession</a></code>.&nbsp;</td>
         </tr>
     
     
-        <tr class=" api apilevel-" >
+        <tr class="alt-color api apilevel-" >
             <td class="jd-linkcol"><a href="./org/apache/ibatis/session/defaults/DefaultSqlSession.StrictMap.html">DefaultSqlSession.StrictMap</a>&lt;V&gt;</td>
             <td class="jd-descrcol" width="100%">&nbsp;</td>
         </tr>
     
     
-        <tr class="alt-color api apilevel-" >
+        <tr class=" api apilevel-" >
             <td class="jd-linkcol"><a href="./org/apache/ibatis/session/defaults/DefaultSqlSessionFactory.html">DefaultSqlSessionFactory</a></td>
             <td class="jd-descrcol" width="100%">&nbsp;</td>
         </tr>
     
     
-        <tr class=" api apilevel-" >
+        <tr class="alt-color api apilevel-" >
             <td class="jd-linkcol"><a href="./org/apache/ibatis/io/DefaultVFS.html">DefaultVFS</a></td>
             <td class="jd-descrcol" width="100%">A default implementation of <code><a href="./org/apache/ibatis/io/VFS.html">VFS</a></code> that works for most application servers.&nbsp;</td>
         </tr>
     
     
-        <tr class="alt-color api apilevel-" >
+        <tr class=" api apilevel-" >
             <td class="jd-linkcol"><a href="./org/apache/ibatis/annotations/Delete.html">Delete</a></td>
             <td class="jd-descrcol" width="100%">&nbsp;</td>
         </tr>
     
     
-        <tr class=" api apilevel-" >
+        <tr class="alt-color api apilevel-" >
             <td class="jd-linkcol"><a href="./org/apache/ibatis/annotations/DeleteProvider.html">DeleteProvider</a></td>
             <td class="jd-descrcol" width="100%">&nbsp;</td>
         </tr>
     
     
-        <tr class="alt-color api apilevel-" >
+        <tr class=" api apilevel-" >
             <td class="jd-linkcol"><a href="./org/apache/ibatis/mapping/Discriminator.html">Discriminator</a></td>
             <td class="jd-descrcol" width="100%">&nbsp;</td>
         </tr>
     
     
-        <tr class=" api apilevel-" >
+        <tr class="alt-color api apilevel-" >
             <td class="jd-linkcol"><a href="./org/apache/ibatis/mapping/Discriminator.Builder.html">Discriminator.Builder</a></td>
             <td class="jd-descrcol" width="100%">&nbsp;</td>
         </tr>
     
     
-        <tr class="alt-color api apilevel-" >
+        <tr class=" api apilevel-" >
             <td class="jd-linkcol"><a href="./org/apache/ibatis/type/DoubleTypeHandler.html">DoubleTypeHandler</a></td>
             <td class="jd-descrcol" width="100%">&nbsp;</td>
         </tr>
     
     
-        <tr class=" api apilevel-" >
+        <tr class="alt-color api apilevel-" >
             <td class="jd-linkcol"><a href="./org/apache/ibatis/scripting/xmltags/DynamicContext.html">DynamicContext</a></td>
             <td class="jd-descrcol" width="100%">&nbsp;</td>
         </tr>
     
     
-        <tr class="alt-color api apilevel-" >
+        <tr class=" api apilevel-" >
             <td class="jd-linkcol"><a href="./org/apache/ibatis/scripting/xmltags/DynamicSqlSource.html">DynamicSqlSource</a></td>
             <td class="jd-descrcol" width="100%">&nbsp;</td>
         </tr>
@@ -1427,6 +1457,12 @@
         </tr>
     
     
+        <tr class="alt-color api apilevel-" >
+            <td class="jd-linkcol"><a href="./org/apache/ibatis/annotations/Options.FlushCachePolicy.html">Options.FlushCachePolicy</a></td>
+            <td class="jd-descrcol" width="100%">The options for the Options#flushCache().&nbsp;</td>
+        </tr>
+    
+    
 </table>
 
 
@@ -1763,31 +1799,37 @@
     
     
         <tr class=" api apilevel-" >
+            <td class="jd-linkcol"><a href="./org/apache/ibatis/executor/resultset/ResultSetWrapper.html">ResultSetWrapper</a></td>
+            <td class="jd-descrcol" width="100%">&nbsp;</td>
+        </tr>
+    
+    
+        <tr class="alt-color api apilevel-" >
             <td class="jd-linkcol"><a href="./org/apache/ibatis/annotations/ResultType.html">ResultType</a></td>
             <td class="jd-descrcol" width="100%">This annotation can be used when a @Select method is using a
  ResultHandler.&nbsp;</td>
         </tr>
     
     
-        <tr class="alt-color api apilevel-" >
+        <tr class=" api apilevel-" >
             <td class="jd-linkcol"><a href="./org/apache/ibatis/executor/ReuseExecutor.html">ReuseExecutor</a></td>
             <td class="jd-descrcol" width="100%">&nbsp;</td>
         </tr>
     
     
-        <tr class=" api apilevel-" >
+        <tr class="alt-color api apilevel-" >
             <td class="jd-linkcol"><a href="./org/apache/ibatis/executor/statement/RoutingStatementHandler.html">RoutingStatementHandler</a></td>
             <td class="jd-descrcol" width="100%">&nbsp;</td>
         </tr>
     
     
-        <tr class="alt-color api apilevel-" >
+        <tr class=" api apilevel-" >
             <td class="jd-linkcol"><a href="./org/apache/ibatis/session/RowBounds.html">RowBounds</a></td>
             <td class="jd-descrcol" width="100%">&nbsp;</td>
         </tr>
     
     
-        <tr class=" api apilevel-" >
+        <tr class="alt-color api apilevel-" >
             <td class="jd-linkcol"><a href="./org/apache/ibatis/jdbc/RuntimeSqlException.html">RuntimeSqlException</a></td>
             <td class="jd-descrcol" width="100%">&nbsp;</td>
         </tr>
@@ -2163,6 +2205,12 @@
     
     
         <tr class="alt-color api apilevel-" >
+            <td class="jd-linkcol"><a href="./org/apache/ibatis/reflection/TypeParameterResolver.html">TypeParameterResolver</a></td>
+            <td class="jd-descrcol" width="100%">&nbsp;</td>
+        </tr>
+    
+    
+        <tr class=" api apilevel-" >
             <td class="jd-linkcol"><a href="./org/apache/ibatis/type/TypeReference.html">TypeReference</a>&lt;T&gt;</td>
             <td class="jd-descrcol" width="100%">References a generic type.&nbsp;</td>
         </tr>

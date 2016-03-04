@@ -103,26 +103,28 @@
 <a class="jxr_linenumber" name="L95" href="#L95">95</a>          SqlSession sqlSession = sqlSessionFactory.openSession();
 <a class="jxr_linenumber" name="L96" href="#L96">96</a>          <a href="../../../../../org/apache/ibatis/submitted/ognl_enum/PersonMapper.html">PersonMapper</a> personMapper = sqlSession.getMapper(PersonMapper.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L97" href="#L97">97</a>          List&lt;Person&gt; persons = personMapper.selectAllByTypeWithInterface(<strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/submitted/ognl_enum/PersonMapper.html">PersonType</a>() {
-<a class="jxr_linenumber" name="L98" href="#L98">98</a>              <strong class="jxr_keyword">public</strong> <a href="../../../../../org/apache/ibatis/submitted/ognl_enum/Person.html">Type</a> getType() {
-<a class="jxr_linenumber" name="L99" href="#L99">99</a>                  <strong class="jxr_keyword">return</strong> Person.Type.DIRECTOR;
-<a class="jxr_linenumber" name="L100" href="#L100">100</a>             }
-<a class="jxr_linenumber" name="L101" href="#L101">101</a>         });
-<a class="jxr_linenumber" name="L102" href="#L102">102</a>         Assert.assertEquals(<span class="jxr_string">"Persons must contain 1 persons"</span>, 1, persons.size());
-<a class="jxr_linenumber" name="L103" href="#L103">103</a>     sqlSession.close();
-<a class="jxr_linenumber" name="L104" href="#L104">104</a>     }
-<a class="jxr_linenumber" name="L105" href="#L105">105</a>     @Test
-<a class="jxr_linenumber" name="L106" href="#L106">106</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testEnumWithOgnlDirectorNameAttributeWithInterface() {
-<a class="jxr_linenumber" name="L107" href="#L107">107</a>         SqlSession sqlSession = sqlSessionFactory.openSession();
-<a class="jxr_linenumber" name="L108" href="#L108">108</a>         <a href="../../../../../org/apache/ibatis/submitted/ognl_enum/PersonMapper.html">PersonMapper</a> personMapper = sqlSession.getMapper(PersonMapper.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L109" href="#L109">109</a>         List&lt;Person&gt; persons = personMapper.selectAllByTypeNameAttributeWithInterface(<strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/submitted/ognl_enum/PersonMapper.html">PersonType</a>() {
-<a class="jxr_linenumber" name="L110" href="#L110">110</a>             <strong class="jxr_keyword">public</strong> <a href="../../../../../org/apache/ibatis/submitted/ognl_enum/Person.html">Type</a> getType() {
-<a class="jxr_linenumber" name="L111" href="#L111">111</a>                 <strong class="jxr_keyword">return</strong> Person.Type.DIRECTOR;
-<a class="jxr_linenumber" name="L112" href="#L112">112</a>             }
-<a class="jxr_linenumber" name="L113" href="#L113">113</a>         });
-<a class="jxr_linenumber" name="L114" href="#L114">114</a>         Assert.assertEquals(<span class="jxr_string">"Persons must contain 1 persons"</span>, 1, persons.size());
-<a class="jxr_linenumber" name="L115" href="#L115">115</a>       sqlSession.close();
-<a class="jxr_linenumber" name="L116" href="#L116">116</a>     }
-<a class="jxr_linenumber" name="L117" href="#L117">117</a> }
+<a class="jxr_linenumber" name="L98" href="#L98">98</a>              @Override
+<a class="jxr_linenumber" name="L99" href="#L99">99</a>              <strong class="jxr_keyword">public</strong> <a href="../../../../../org/apache/ibatis/submitted/ognl_enum/Person.html">Type</a> getType() {
+<a class="jxr_linenumber" name="L100" href="#L100">100</a>                 <strong class="jxr_keyword">return</strong> Person.Type.DIRECTOR;
+<a class="jxr_linenumber" name="L101" href="#L101">101</a>             }
+<a class="jxr_linenumber" name="L102" href="#L102">102</a>         });
+<a class="jxr_linenumber" name="L103" href="#L103">103</a>         Assert.assertEquals(<span class="jxr_string">"Persons must contain 1 persons"</span>, 1, persons.size());
+<a class="jxr_linenumber" name="L104" href="#L104">104</a>     sqlSession.close();
+<a class="jxr_linenumber" name="L105" href="#L105">105</a>     }
+<a class="jxr_linenumber" name="L106" href="#L106">106</a>     @Test
+<a class="jxr_linenumber" name="L107" href="#L107">107</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testEnumWithOgnlDirectorNameAttributeWithInterface() {
+<a class="jxr_linenumber" name="L108" href="#L108">108</a>         SqlSession sqlSession = sqlSessionFactory.openSession();
+<a class="jxr_linenumber" name="L109" href="#L109">109</a>         <a href="../../../../../org/apache/ibatis/submitted/ognl_enum/PersonMapper.html">PersonMapper</a> personMapper = sqlSession.getMapper(PersonMapper.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L110" href="#L110">110</a>         List&lt;Person&gt; persons = personMapper.selectAllByTypeNameAttributeWithInterface(<strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/submitted/ognl_enum/PersonMapper.html">PersonType</a>() {
+<a class="jxr_linenumber" name="L111" href="#L111">111</a>             @Override
+<a class="jxr_linenumber" name="L112" href="#L112">112</a>             <strong class="jxr_keyword">public</strong> <a href="../../../../../org/apache/ibatis/submitted/ognl_enum/Person.html">Type</a> getType() {
+<a class="jxr_linenumber" name="L113" href="#L113">113</a>                 <strong class="jxr_keyword">return</strong> Person.Type.DIRECTOR;
+<a class="jxr_linenumber" name="L114" href="#L114">114</a>             }
+<a class="jxr_linenumber" name="L115" href="#L115">115</a>         });
+<a class="jxr_linenumber" name="L116" href="#L116">116</a>         Assert.assertEquals(<span class="jxr_string">"Persons must contain 1 persons"</span>, 1, persons.size());
+<a class="jxr_linenumber" name="L117" href="#L117">117</a>       sqlSession.close();
+<a class="jxr_linenumber" name="L118" href="#L118">118</a>     }
+<a class="jxr_linenumber" name="L119" href="#L119">119</a> }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2010&#x2013;2016 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>

@@ -145,6 +145,8 @@
               <ul>
                 
     <li class="api apilevel-">
+  <a href="../../../../org/apache/ibatis/annotations/package-summary.html">org.apache.ibatis.annotations</a></li>
+    <li class="api apilevel-">
   <a href="../../../../org/apache/ibatis/binding/package-summary.html">org.apache.ibatis.binding</a></li>
     <li class="api apilevel-">
   <a href="../../../../org/apache/ibatis/builder/package-summary.html">org.apache.ibatis.builder</a></li>
@@ -158,6 +160,10 @@
   <a href="../../../../org/apache/ibatis/cache/decorators/package-summary.html">org.apache.ibatis.cache.decorators</a></li>
     <li class="api apilevel-">
   <a href="../../../../org/apache/ibatis/cache/impl/package-summary.html">org.apache.ibatis.cache.impl</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../org/apache/ibatis/cursor/package-summary.html">org.apache.ibatis.cursor</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../org/apache/ibatis/cursor/defaults/package-summary.html">org.apache.ibatis.cursor.defaults</a></li>
     <li class="api apilevel-">
   <a href="../../../../org/apache/ibatis/datasource/package-summary.html">org.apache.ibatis.datasource</a></li>
     <li class="api apilevel-">
@@ -678,7 +684,7 @@ Summary:
             boolean
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../org/apache/ibatis/io/DefaultVFS.html#isJar(java.net.URL)">isJar</a></span>(URL url)
+        <span class="sympad"><a href="../../../../org/apache/ibatis/io/DefaultVFS.html#isJar(java.net.URL, byte[])">isJar</a></span>(URL url, byte[] buffer)
         
         <div class="jd-descrdiv">Returns true if the resource located at the given URL is a JAR file.</div>
   
@@ -696,7 +702,7 @@ Summary:
             boolean
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../org/apache/ibatis/io/DefaultVFS.html#isJar(java.net.URL, byte[])">isJar</a></span>(URL url, byte[] buffer)
+        <span class="sympad"><a href="../../../../org/apache/ibatis/io/DefaultVFS.html#isJar(java.net.URL)">isJar</a></span>(URL url)
         
         <div class="jd-descrdiv">Returns true if the resource located at the given URL is a JAR file.</div>
   
@@ -884,25 +890,6 @@ From class
 	 
     <tr class=" api apilevel-" >
         <td class="jd-typecol">
-            abstract
-            
-            
-            
-            
-            List&lt;String&gt;
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../org/apache/ibatis/io/VFS.html#list(java.net.URL, java.lang.String)">list</a></span>(URL url, String forPath)
-        
-        <div class="jd-descrdiv">Recursively list the full resource path of all the resources that are children of the
- resource identified by a URL.</div>
-  
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
             
             
             
@@ -915,6 +902,25 @@ From class
         
         <div class="jd-descrdiv">Recursively list the full resource path of all the resources that are children of all the
  resources found at the specified path.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            abstract
+            
+            
+            
+            
+            List&lt;String&gt;
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/io/VFS.html#list(java.net.URL, java.lang.String)">list</a></span>(URL url, String forPath)
+        
+        <div class="jd-descrdiv">Recursively list the full resource path of all the resources that are children of the
+ resource identified by a URL.</div>
   
   </td></tr>
 
@@ -1084,7 +1090,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>()
+        <span class="sympad">wait</span>(long arg0, int arg1)
         
   </td></tr>
 
@@ -1100,7 +1106,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0, int arg1)
+        <span class="sympad">wait</span>(long arg0)
         
   </td></tr>
 
@@ -1116,7 +1122,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0)
+        <span class="sympad">wait</span>()
         
   </td></tr>
 
@@ -1404,47 +1410,6 @@ From class
 </div>
 
 
-<a id="isJar(java.net.URL)"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        protected 
-         
-         
-         
-         
-        boolean
-      </span>
-      <span class="sympad">isJar</span>
-      <span class="normal">(URL url)</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p>Returns true if the resource located at the given URL is a JAR file.</p></div>
-  <div class="jd-tagdata">
-      <h5 class="jd-tagtitle">Parameters</h5>
-      <table class="jd-tagtable">
-        <tr>
-          <th>url</th>
-          <td>The URL of the resource to test.
-</td>
-        </tr>
-      </table>
-  </div>
-
-    </div>
-</div>
-
-
 <a id="isJar(java.net.URL, byte[])"></a>
 
 <div class="jd-details api apilevel-"> 
@@ -1483,6 +1448,47 @@ From class
           <td>A buffer into which the first few bytes of the resource are read. The buffer
             must be at least the size of #JAR_MAGIC. (The same buffer may be reused
             for multiple calls as an optimization.)
+</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<a id="isJar(java.net.URL)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        protected 
+         
+         
+         
+         
+        boolean
+      </span>
+      <span class="sympad">isJar</span>
+      <span class="normal">(URL url)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Returns true if the resource located at the given URL is a JAR file.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>url</th>
+          <td>The URL of the resource to test.
 </td>
         </tr>
       </table>

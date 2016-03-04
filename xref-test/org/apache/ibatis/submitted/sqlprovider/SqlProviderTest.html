@@ -67,7 +67,7 @@
 <a class="jxr_linenumber" name="L59" href="#L59">59</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldGetTwoUsers() {
 <a class="jxr_linenumber" name="L60" href="#L60">60</a>      SqlSession sqlSession = sqlSessionFactory.openSession();
 <a class="jxr_linenumber" name="L61" href="#L61">61</a>      <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L62" href="#L62">62</a>        <a href="../../../../../org/apache/ibatis/submitted/sqlprovider/Mapper.html">Mapper</a> mapper = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L62" href="#L62">62</a>        <a href="../../../../../org/apache/ibatis/session/AutoMappingUnknownColumnBehaviorTest.html">Mapper</a> mapper = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L63" href="#L63">63</a>        List&lt;Integer&gt; list = <strong class="jxr_keyword">new</strong> ArrayList&lt;Integer&gt;();
 <a class="jxr_linenumber" name="L64" href="#L64">64</a>        list.add(1);
 <a class="jxr_linenumber" name="L65" href="#L65">65</a>        list.add(3);
@@ -84,7 +84,7 @@
 <a class="jxr_linenumber" name="L76" href="#L76">76</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldGetOneUser() {
 <a class="jxr_linenumber" name="L77" href="#L77">77</a>      SqlSession sqlSession = sqlSessionFactory.openSession();
 <a class="jxr_linenumber" name="L78" href="#L78">78</a>      <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L79" href="#L79">79</a>        <a href="../../../../../org/apache/ibatis/submitted/sqlprovider/Mapper.html">Mapper</a> mapper = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>        <a href="../../../../../org/apache/ibatis/session/AutoMappingUnknownColumnBehaviorTest.html">Mapper</a> mapper = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L80" href="#L80">80</a>        <a href="../../../../../org/apache/ibatis/submitted/sqlprovider/User.html">User</a> user = mapper.getUser(4);
 <a class="jxr_linenumber" name="L81" href="#L81">81</a>        assertNotNull(user);
 <a class="jxr_linenumber" name="L82" href="#L82">82</a>        assertEquals(<span class="jxr_string">"User4"</span>, user.getName());

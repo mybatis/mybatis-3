@@ -145,6 +145,8 @@
               <ul>
                 
     <li class="api apilevel-">
+  <a href="../../../../../org/apache/ibatis/annotations/package-summary.html">org.apache.ibatis.annotations</a></li>
+    <li class="api apilevel-">
   <a href="../../../../../org/apache/ibatis/binding/package-summary.html">org.apache.ibatis.binding</a></li>
     <li class="api apilevel-">
   <a href="../../../../../org/apache/ibatis/builder/package-summary.html">org.apache.ibatis.builder</a></li>
@@ -158,6 +160,10 @@
   <a href="../../../../../org/apache/ibatis/cache/decorators/package-summary.html">org.apache.ibatis.cache.decorators</a></li>
     <li class="api apilevel-">
   <a href="../../../../../org/apache/ibatis/cache/impl/package-summary.html">org.apache.ibatis.cache.impl</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../../org/apache/ibatis/cursor/package-summary.html">org.apache.ibatis.cursor</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../../org/apache/ibatis/cursor/defaults/package-summary.html">org.apache.ibatis.cursor.defaults</a></li>
     <li class="api apilevel-">
   <a href="../../../../../org/apache/ibatis/datasource/package-summary.html">org.apache.ibatis.datasource</a></li>
     <li class="api apilevel-">
@@ -862,7 +868,7 @@ java.io.ObjectStreamConstants
             
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../../org/apache/ibatis/cache/decorators/SerializedCache.CustomObjectInputStream.html#SerializedCache.CustomObjectInputStream(java.io.InputStream)">SerializedCache.CustomObjectInputStream</a></span>(InputStream in)
+        <span class="sympad"><a href="../../../../../org/apache/ibatis/cache/decorators/SerializedCache.CustomObjectInputStream.html#CustomObjectInputStream(java.io.InputStream)">CustomObjectInputStream</a></span>(InputStream in)
         
   </td></tr>
 
@@ -1005,7 +1011,7 @@ From class
             int
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">read</span>(byte[] arg0, int arg1, int arg2)
+        <span class="sympad">read</span>()
         
   </td></tr>
 
@@ -1021,7 +1027,7 @@ From class
             int
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">read</span>()
+        <span class="sympad">read</span>(byte[] arg0, int arg1, int arg2)
         
   </td></tr>
 
@@ -1519,22 +1525,6 @@ From class
 	 
     <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
-            
-            
-            
-            
-            
-            int
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad">read</span>(byte[] arg0)
-        
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol">
             abstract
             
             
@@ -1544,6 +1534,22 @@ From class
         </td>
         <td class="jd-linkcol" width="100%">
         <span class="sympad">read</span>()
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            int
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">read</span>(byte[] arg0, int arg1, int arg2)
         
   </td></tr>
 
@@ -1559,7 +1565,7 @@ From class
             int
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">read</span>(byte[] arg0, int arg1, int arg2)
+        <span class="sympad">read</span>(byte[] arg0)
         
   </td></tr>
 
@@ -1761,7 +1767,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>()
+        <span class="sympad">wait</span>(long arg0, int arg1)
         
   </td></tr>
 
@@ -1777,7 +1783,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0, int arg1)
+        <span class="sympad">wait</span>(long arg0)
         
   </td></tr>
 
@@ -1793,7 +1799,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0)
+        <span class="sympad">wait</span>()
         
   </td></tr>
 
@@ -2175,7 +2181,7 @@ From interface
             int
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">read</span>(byte[] arg0)
+        <span class="sympad">read</span>()
         
   </td></tr>
 
@@ -2191,7 +2197,7 @@ From interface
             int
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">read</span>()
+        <span class="sympad">read</span>(byte[] arg0, int arg1, int arg2)
         
   </td></tr>
 
@@ -2207,7 +2213,7 @@ From interface
             int
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">read</span>(byte[] arg0, int arg1, int arg2)
+        <span class="sympad">read</span>(byte[] arg0)
         
   </td></tr>
 
@@ -2328,7 +2334,7 @@ From interface
 
 
 
-<a id="SerializedCache.CustomObjectInputStream(java.io.InputStream)"></a>
+<a id="CustomObjectInputStream(java.io.InputStream)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -2340,7 +2346,7 @@ From interface
          
         
       </span>
-      <span class="sympad">SerializedCache.CustomObjectInputStream</span>
+      <span class="sympad">CustomObjectInputStream</span>
       <span class="normal">(InputStream in)</span>
     </h4>
       <div class="api-level">

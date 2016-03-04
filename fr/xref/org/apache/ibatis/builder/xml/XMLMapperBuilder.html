@@ -376,14 +376,14 @@
 <a class="jxr_linenumber" name="L368" href="#L368">368</a>     String notNullColumn = context.getStringAttribute(<span class="jxr_string">"notNullColumn"</span>);
 <a class="jxr_linenumber" name="L369" href="#L369">369</a>     String columnPrefix = context.getStringAttribute(<span class="jxr_string">"columnPrefix"</span>);
 <a class="jxr_linenumber" name="L370" href="#L370">370</a>     String typeHandler = context.getStringAttribute(<span class="jxr_string">"typeHandler"</span>);
-<a class="jxr_linenumber" name="L371" href="#L371">371</a>     String resulSet = context.getStringAttribute(<span class="jxr_string">"resultSet"</span>);
+<a class="jxr_linenumber" name="L371" href="#L371">371</a>     String resultSet = context.getStringAttribute(<span class="jxr_string">"resultSet"</span>);
 <a class="jxr_linenumber" name="L372" href="#L372">372</a>     String foreignColumn = context.getStringAttribute(<span class="jxr_string">"foreignColumn"</span>);
 <a class="jxr_linenumber" name="L373" href="#L373">373</a>     <strong class="jxr_keyword">boolean</strong> lazy = <span class="jxr_string">"lazy"</span>.equals(context.getStringAttribute(<span class="jxr_string">"fetchType"</span>, configuration.isLazyLoadingEnabled() ? <span class="jxr_string">"lazy"</span> : <span class="jxr_string">"eager"</span>));
 <a class="jxr_linenumber" name="L374" href="#L374">374</a>     Class&lt;?&gt; javaTypeClass = resolveClass(javaType);
 <a class="jxr_linenumber" name="L375" href="#L375">375</a>     @SuppressWarnings(<span class="jxr_string">"unchecked"</span>)
 <a class="jxr_linenumber" name="L376" href="#L376">376</a>     Class&lt;? <strong class="jxr_keyword">extends</strong> TypeHandler&lt;?&gt;&gt; typeHandlerClass = (Class&lt;? <strong class="jxr_keyword">extends</strong> TypeHandler&lt;?&gt;&gt;) resolveClass(typeHandler);
 <a class="jxr_linenumber" name="L377" href="#L377">377</a>     <a href="../../../../../org/apache/ibatis/type/JdbcType.html">JdbcType</a> jdbcTypeEnum = resolveJdbcType(jdbcType);
-<a class="jxr_linenumber" name="L378" href="#L378">378</a>     <strong class="jxr_keyword">return</strong> builderAssistant.buildResultMapping(resultType, property, column, javaTypeClass, jdbcTypeEnum, nestedSelect, nestedResultMap, notNullColumn, columnPrefix, typeHandlerClass, flags, resulSet, foreignColumn, lazy);
+<a class="jxr_linenumber" name="L378" href="#L378">378</a>     <strong class="jxr_keyword">return</strong> builderAssistant.buildResultMapping(resultType, property, column, javaTypeClass, jdbcTypeEnum, nestedSelect, nestedResultMap, notNullColumn, columnPrefix, typeHandlerClass, flags, resultSet, foreignColumn, lazy);
 <a class="jxr_linenumber" name="L379" href="#L379">379</a>   }
 <a class="jxr_linenumber" name="L380" href="#L380">380</a>   
 <a class="jxr_linenumber" name="L381" href="#L381">381</a>   <strong class="jxr_keyword">private</strong> String processNestedResultMappings(<a href="../../../../../org/apache/ibatis/parsing/XNode.html">XNode</a> context, List&lt;ResultMapping&gt; resultMappings) <strong class="jxr_keyword">throws</strong> Exception {

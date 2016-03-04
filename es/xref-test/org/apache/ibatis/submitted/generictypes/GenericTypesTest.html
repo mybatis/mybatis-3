@@ -73,7 +73,7 @@
 <a class="jxr_linenumber" name="L65" href="#L65">65</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testShouldGetAListOfMaps() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L66" href="#L66">66</a>      SqlSession sqlSession = sqlSessionFactory.openSession();
 <a class="jxr_linenumber" name="L67" href="#L67">67</a>      <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L68" href="#L68">68</a>        <a href="../../../../../org/apache/ibatis/submitted/generictypes/Mapper.html">Mapper</a> mapper = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>        <a href="../../../../../org/apache/ibatis/session/AutoMappingUnknownColumnBehaviorTest.html">Mapper</a> mapper = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L69" href="#L69">69</a>        <a href="../../../../../org/apache/ibatis/submitted/generictypes/Group.html">Group</a> group = mapper.getGroup();
 <a class="jxr_linenumber" name="L70" href="#L70">70</a>        Assert.assertNotNull(group.getOwner());
 <a class="jxr_linenumber" name="L71" href="#L71">71</a>      } <strong class="jxr_keyword">finally</strong> {

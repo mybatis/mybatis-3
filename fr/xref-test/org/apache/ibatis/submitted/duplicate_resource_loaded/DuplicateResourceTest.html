@@ -51,7 +51,7 @@
 <a class="jxr_linenumber" name="L43" href="#L43">43</a>      <strong class="jxr_keyword">final</strong> SqlSessionFactory factory = builder.build(reader);
 <a class="jxr_linenumber" name="L44" href="#L44">44</a>      <strong class="jxr_keyword">final</strong> SqlSession sqlSession = factory.openSession();
 <a class="jxr_linenumber" name="L45" href="#L45">45</a>      <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L46" href="#L46">46</a>        <strong class="jxr_keyword">final</strong> <a href="../../../../../org/apache/ibatis/submitted/duplicate_resource_loaded/Mapper.html">Mapper</a> mapper = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>        <strong class="jxr_keyword">final</strong> <a href="../../../../../org/apache/ibatis/session/AutoMappingUnknownColumnBehaviorTest.html">Mapper</a> mapper = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L47" href="#L47">47</a>        <strong class="jxr_keyword">final</strong> List&lt;Map&lt;String, Object&gt;&gt; list = mapper.selectAllBlogs();
 <a class="jxr_linenumber" name="L48" href="#L48">48</a>        Assert.assertEquals(2,list.size());
 <a class="jxr_linenumber" name="L49" href="#L49">49</a>      } <strong class="jxr_keyword">finally</strong> {

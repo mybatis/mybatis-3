@@ -145,6 +145,8 @@
               <ul>
                 
     <li class="api apilevel-">
+  <a href="../../../../../org/apache/ibatis/annotations/package-summary.html">org.apache.ibatis.annotations</a></li>
+    <li class="api apilevel-">
   <a href="../../../../../org/apache/ibatis/binding/package-summary.html">org.apache.ibatis.binding</a></li>
     <li class="api apilevel-">
   <a href="../../../../../org/apache/ibatis/builder/package-summary.html">org.apache.ibatis.builder</a></li>
@@ -158,6 +160,10 @@
   <a href="../../../../../org/apache/ibatis/cache/decorators/package-summary.html">org.apache.ibatis.cache.decorators</a></li>
     <li class="api apilevel-">
   <a href="../../../../../org/apache/ibatis/cache/impl/package-summary.html">org.apache.ibatis.cache.impl</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../../org/apache/ibatis/cursor/package-summary.html">org.apache.ibatis.cursor</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../../org/apache/ibatis/cursor/defaults/package-summary.html">org.apache.ibatis.cursor.defaults</a></li>
     <li class="api apilevel-">
   <a href="../../../../../org/apache/ibatis/datasource/package-summary.html">org.apache.ibatis.datasource</a></li>
     <li class="api apilevel-">
@@ -814,7 +820,7 @@ From class
             <a href="../../../../../org/apache/ibatis/type/TypeHandler.html">TypeHandler</a>&lt;?&gt;
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../../org/apache/ibatis/builder/BaseBuilder.html#resolveTypeHandler(java.lang.Class<?>, java.lang.String)">resolveTypeHandler</a></span>(Class&lt;?&gt; javaType, String typeHandlerAlias)
+        <span class="sympad"><a href="../../../../../org/apache/ibatis/builder/BaseBuilder.html#resolveTypeHandler(java.lang.Class<?>, java.lang.Class<? extends org.apache.ibatis.type.TypeHandler<?>>)">resolveTypeHandler</a></span>(Class&lt;?&gt; javaType, Class&lt;?&nbsp;extends&nbsp;<a href="../../../../../org/apache/ibatis/type/TypeHandler.html">TypeHandler</a>&lt;?&gt;&gt; typeHandlerType)
         
   </td></tr>
 
@@ -830,7 +836,7 @@ From class
             <a href="../../../../../org/apache/ibatis/type/TypeHandler.html">TypeHandler</a>&lt;?&gt;
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../../org/apache/ibatis/builder/BaseBuilder.html#resolveTypeHandler(java.lang.Class<?>, java.lang.Class<? extends org.apache.ibatis.type.TypeHandler<?>>)">resolveTypeHandler</a></span>(Class&lt;?&gt; javaType, Class&lt;?&nbsp;extends&nbsp;<a href="../../../../../org/apache/ibatis/type/TypeHandler.html">TypeHandler</a>&lt;?&gt;&gt; typeHandlerType)
+        <span class="sympad"><a href="../../../../../org/apache/ibatis/builder/BaseBuilder.html#resolveTypeHandler(java.lang.Class<?>, java.lang.String)">resolveTypeHandler</a></span>(Class&lt;?&gt; javaType, String typeHandlerAlias)
         
   </td></tr>
 
@@ -1016,7 +1022,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>()
+        <span class="sympad">wait</span>(long arg0, int arg1)
         
   </td></tr>
 
@@ -1032,7 +1038,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0, int arg1)
+        <span class="sympad">wait</span>(long arg0)
         
   </td></tr>
 
@@ -1048,7 +1054,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0)
+        <span class="sympad">wait</span>()
         
   </td></tr>
 

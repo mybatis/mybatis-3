@@ -75,7 +75,7 @@
 <a class="jxr_linenumber" name="L67" href="#L67">67</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testShouldDetectUsersAsParameterInsideAList() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L68" href="#L68">68</a>      SqlSession sqlSession = sqlSessionFactory.openSession();
 <a class="jxr_linenumber" name="L69" href="#L69">69</a>      <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L70" href="#L70">70</a>        <a href="../../../../../org/apache/ibatis/submitted/parametrizedlist/Mapper.html">Mapper</a> mapper = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>        <a href="../../../../../org/apache/ibatis/session/AutoMappingUnknownColumnBehaviorTest.html">Mapper</a> mapper = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L71" href="#L71">71</a>        List&lt;User&lt;String&gt;&gt; list = mapper.getAListOfUsers();
 <a class="jxr_linenumber" name="L72" href="#L72">72</a>        Assert.assertEquals(User.<strong class="jxr_keyword">class</strong>, list.get(0).getClass());
 <a class="jxr_linenumber" name="L73" href="#L73">73</a>      } <strong class="jxr_keyword">finally</strong> {
@@ -87,7 +87,7 @@
 <a class="jxr_linenumber" name="L79" href="#L79">79</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testShouldDetectUsersAsParameterInsideAMap() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L80" href="#L80">80</a>      SqlSession sqlSession = sqlSessionFactory.openSession();
 <a class="jxr_linenumber" name="L81" href="#L81">81</a>      <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L82" href="#L82">82</a>        <a href="../../../../../org/apache/ibatis/submitted/parametrizedlist/Mapper.html">Mapper</a> mapper = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L82" href="#L82">82</a>        <a href="../../../../../org/apache/ibatis/session/AutoMappingUnknownColumnBehaviorTest.html">Mapper</a> mapper = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L83" href="#L83">83</a>        Map&lt;Integer, User&lt;String&gt;&gt; map = mapper.getAMapOfUsers();
 <a class="jxr_linenumber" name="L84" href="#L84">84</a>        Assert.assertEquals(User.<strong class="jxr_keyword">class</strong>, map.get(1).getClass());
 <a class="jxr_linenumber" name="L85" href="#L85">85</a>      } <strong class="jxr_keyword">finally</strong> {
@@ -99,7 +99,7 @@
 <a class="jxr_linenumber" name="L91" href="#L91">91</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testShouldGetAUserAsAMap() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L92" href="#L92">92</a>      SqlSession sqlSession = sqlSessionFactory.openSession();
 <a class="jxr_linenumber" name="L93" href="#L93">93</a>      <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L94" href="#L94">94</a>        <a href="../../../../../org/apache/ibatis/submitted/parametrizedlist/Mapper.html">Mapper</a> mapper = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L94" href="#L94">94</a>        <a href="../../../../../org/apache/ibatis/session/AutoMappingUnknownColumnBehaviorTest.html">Mapper</a> mapper = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L95" href="#L95">95</a>        Map&lt;String, Object&gt; map = mapper.getUserAsAMap();
 <a class="jxr_linenumber" name="L96" href="#L96">96</a>        Assert.assertEquals(1, map.get(<span class="jxr_string">"ID"</span>));
 <a class="jxr_linenumber" name="L97" href="#L97">97</a>      } <strong class="jxr_keyword">finally</strong> {
@@ -111,7 +111,7 @@
 <a class="jxr_linenumber" name="L103" href="#L103">103</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testShouldGetAListOfMaps() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L104" href="#L104">104</a>     SqlSession sqlSession = sqlSessionFactory.openSession();
 <a class="jxr_linenumber" name="L105" href="#L105">105</a>     <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L106" href="#L106">106</a>       <a href="../../../../../org/apache/ibatis/submitted/parametrizedlist/Mapper.html">Mapper</a> mapper = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L106" href="#L106">106</a>       <a href="../../../../../org/apache/ibatis/session/AutoMappingUnknownColumnBehaviorTest.html">Mapper</a> mapper = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L107" href="#L107">107</a>       List&lt;Map&lt;String, Object&gt;&gt; map = mapper.getAListOfMaps();
 <a class="jxr_linenumber" name="L108" href="#L108">108</a>       Assert.assertEquals(1, map.get(0).get(<span class="jxr_string">"ID"</span>));
 <a class="jxr_linenumber" name="L109" href="#L109">109</a>     } <strong class="jxr_keyword">finally</strong> {

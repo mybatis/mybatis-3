@@ -65,7 +65,7 @@
 <a class="jxr_linenumber" name="L57" href="#L57">57</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldCallNullOnMappedProperty() {
 <a class="jxr_linenumber" name="L58" href="#L58">58</a>      SqlSession sqlSession = sqlSessionFactory.openSession();
 <a class="jxr_linenumber" name="L59" href="#L59">59</a>      <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L60" href="#L60">60</a>        <a href="../../../../../org/apache/ibatis/submitted/call_setters_on_nulls/Mapper.html">Mapper</a> mapper = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>        <a href="../../../../../org/apache/ibatis/session/AutoMappingUnknownColumnBehaviorTest.html">Mapper</a> mapper = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L61" href="#L61">61</a>        <a href="../../../../../org/apache/ibatis/submitted/call_setters_on_nulls/User.html">User</a> user = mapper.getUserMapped(1);
 <a class="jxr_linenumber" name="L62" href="#L62">62</a>        Assert.assertTrue(user.nullReceived);
 <a class="jxr_linenumber" name="L63" href="#L63">63</a>      } <strong class="jxr_keyword">finally</strong> {
@@ -77,7 +77,7 @@
 <a class="jxr_linenumber" name="L69" href="#L69">69</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldCallNullOnAutomaticMapping() {
 <a class="jxr_linenumber" name="L70" href="#L70">70</a>      SqlSession sqlSession = sqlSessionFactory.openSession();
 <a class="jxr_linenumber" name="L71" href="#L71">71</a>      <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L72" href="#L72">72</a>        <a href="../../../../../org/apache/ibatis/submitted/call_setters_on_nulls/Mapper.html">Mapper</a> mapper = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>        <a href="../../../../../org/apache/ibatis/session/AutoMappingUnknownColumnBehaviorTest.html">Mapper</a> mapper = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L73" href="#L73">73</a>        <a href="../../../../../org/apache/ibatis/submitted/call_setters_on_nulls/User.html">User</a> user = mapper.getUserUnmapped(1);
 <a class="jxr_linenumber" name="L74" href="#L74">74</a>        Assert.assertTrue(user.nullReceived);
 <a class="jxr_linenumber" name="L75" href="#L75">75</a>      } <strong class="jxr_keyword">finally</strong> {
@@ -89,7 +89,7 @@
 <a class="jxr_linenumber" name="L81" href="#L81">81</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldCallNullOnMap() {
 <a class="jxr_linenumber" name="L82" href="#L82">82</a>      SqlSession sqlSession = sqlSessionFactory.openSession();
 <a class="jxr_linenumber" name="L83" href="#L83">83</a>      <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L84" href="#L84">84</a>        <a href="../../../../../org/apache/ibatis/submitted/call_setters_on_nulls/Mapper.html">Mapper</a> mapper = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>        <a href="../../../../../org/apache/ibatis/session/AutoMappingUnknownColumnBehaviorTest.html">Mapper</a> mapper = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L85" href="#L85">85</a>        Map user = mapper.getUserInMap(1);
 <a class="jxr_linenumber" name="L86" href="#L86">86</a>        Assert.assertTrue(user.containsKey(<span class="jxr_string">"NAME"</span>));
 <a class="jxr_linenumber" name="L87" href="#L87">87</a>      } <strong class="jxr_keyword">finally</strong> {
@@ -101,7 +101,7 @@
 <a class="jxr_linenumber" name="L93" href="#L93">93</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldCallNullOnMapForSingleColumn() {
 <a class="jxr_linenumber" name="L94" href="#L94">94</a>      SqlSession sqlSession = sqlSessionFactory.openSession();
 <a class="jxr_linenumber" name="L95" href="#L95">95</a>      <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L96" href="#L96">96</a>        <a href="../../../../../org/apache/ibatis/submitted/call_setters_on_nulls/Mapper.html">Mapper</a> mapper = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L96" href="#L96">96</a>        <a href="../../../../../org/apache/ibatis/session/AutoMappingUnknownColumnBehaviorTest.html">Mapper</a> mapper = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L97" href="#L97">97</a>        List&lt;Map&lt;String, Object&gt;&gt; oneColumns = mapper.getNameOnly();
 <a class="jxr_linenumber" name="L98" href="#L98">98</a>        Assert.assertNotNull(oneColumns.get(1));
 <a class="jxr_linenumber" name="L99" href="#L99">99</a>      } <strong class="jxr_keyword">finally</strong> {
@@ -113,7 +113,7 @@
 <a class="jxr_linenumber" name="L105" href="#L105">105</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldCallNullOnMapForSingleColumnWithResultMap() {
 <a class="jxr_linenumber" name="L106" href="#L106">106</a>     SqlSession sqlSession = sqlSessionFactory.openSession();
 <a class="jxr_linenumber" name="L107" href="#L107">107</a>     <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L108" href="#L108">108</a>       <a href="../../../../../org/apache/ibatis/submitted/call_setters_on_nulls/Mapper.html">Mapper</a> mapper = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L108" href="#L108">108</a>       <a href="../../../../../org/apache/ibatis/session/AutoMappingUnknownColumnBehaviorTest.html">Mapper</a> mapper = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L109" href="#L109">109</a>       List&lt;Map&lt;String, Object&gt;&gt; oneColumns = mapper.getNameOnlyMapped();
 <a class="jxr_linenumber" name="L110" href="#L110">110</a> <em class="jxr_comment">//      Assert.assertNotNull(oneColumns.get(1));</em>
 <a class="jxr_linenumber" name="L111" href="#L111">111</a>       <em class="jxr_comment">// TEST changed after fix for #307</em>

@@ -27,9 +27,10 @@
 <a class="jxr_linenumber" name="L19" href="#L19">19</a>  
 <a class="jxr_linenumber" name="L20" href="#L20">20</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">interface</strong> <a href="../../../../../org/apache/ibatis/submitted/inheritance/UserProfileMapper.html">UserProfileMapper</a> <strong class="jxr_keyword">extends</strong> BaseMapper&lt;UserProfile&gt; {
 <a class="jxr_linenumber" name="L21" href="#L21">21</a>  
-<a class="jxr_linenumber" name="L22" href="#L22">22</a>    @Select(<span class="jxr_string">"select * from user_profile"</span>)
-<a class="jxr_linenumber" name="L23" href="#L23">23</a>    <a href="../../../../../org/apache/ibatis/submitted/inheritance/UserProfile.html">UserProfile</a> retrieveById(Integer id);
-<a class="jxr_linenumber" name="L24" href="#L24">24</a>  }
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>    @Override
+<a class="jxr_linenumber" name="L23" href="#L23">23</a>    @Select(<span class="jxr_string">"select * from user_profile"</span>)
+<a class="jxr_linenumber" name="L24" href="#L24">24</a>    <a href="../../../../../org/apache/ibatis/submitted/inheritance/UserProfile.html">UserProfile</a> retrieveById(Integer id);
+<a class="jxr_linenumber" name="L25" href="#L25">25</a>  }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2010&#x2013;2016 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>

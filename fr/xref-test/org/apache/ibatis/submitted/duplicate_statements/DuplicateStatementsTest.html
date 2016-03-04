@@ -64,7 +64,7 @@
 <a class="jxr_linenumber" name="L56" href="#L56">56</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldGetAllUsers() {
 <a class="jxr_linenumber" name="L57" href="#L57">57</a>      SqlSession sqlSession = sqlSessionFactory.openSession();
 <a class="jxr_linenumber" name="L58" href="#L58">58</a>      <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L59" href="#L59">59</a>        <a href="../../../../../org/apache/ibatis/submitted/duplicate_statements/Mapper.html">Mapper</a> mapper = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L59" href="#L59">59</a>        <a href="../../../../../org/apache/ibatis/session/AutoMappingUnknownColumnBehaviorTest.html">Mapper</a> mapper = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L60" href="#L60">60</a>        List&lt;User&gt; users = mapper.getAllUsers();
 <a class="jxr_linenumber" name="L61" href="#L61">61</a>        Assert.assertEquals(10, users.size());
 <a class="jxr_linenumber" name="L62" href="#L62">62</a>      } <strong class="jxr_keyword">finally</strong> {
@@ -76,7 +76,7 @@
 <a class="jxr_linenumber" name="L68" href="#L68">68</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldGetFirstFourUsers() {
 <a class="jxr_linenumber" name="L69" href="#L69">69</a>      SqlSession sqlSession = sqlSessionFactory.openSession();
 <a class="jxr_linenumber" name="L70" href="#L70">70</a>      <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L71" href="#L71">71</a>        <a href="../../../../../org/apache/ibatis/submitted/duplicate_statements/Mapper.html">Mapper</a> mapper = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>        <a href="../../../../../org/apache/ibatis/session/AutoMappingUnknownColumnBehaviorTest.html">Mapper</a> mapper = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L72" href="#L72">72</a>        List&lt;User&gt; users = mapper.getAllUsers(<strong class="jxr_keyword">new</strong> RowBounds(0, 4));
 <a class="jxr_linenumber" name="L73" href="#L73">73</a>        Assert.assertEquals(4, users.size());
 <a class="jxr_linenumber" name="L74" href="#L74">74</a>      } <strong class="jxr_keyword">finally</strong> {

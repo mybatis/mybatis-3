@@ -145,6 +145,8 @@
               <ul>
                 
     <li class="api apilevel-">
+  <a href="../../../../org/apache/ibatis/annotations/package-summary.html">org.apache.ibatis.annotations</a></li>
+    <li class="api apilevel-">
   <a href="../../../../org/apache/ibatis/binding/package-summary.html">org.apache.ibatis.binding</a></li>
     <li class="api apilevel-">
   <a href="../../../../org/apache/ibatis/builder/package-summary.html">org.apache.ibatis.builder</a></li>
@@ -158,6 +160,10 @@
   <a href="../../../../org/apache/ibatis/cache/decorators/package-summary.html">org.apache.ibatis.cache.decorators</a></li>
     <li class="api apilevel-">
   <a href="../../../../org/apache/ibatis/cache/impl/package-summary.html">org.apache.ibatis.cache.impl</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../org/apache/ibatis/cursor/package-summary.html">org.apache.ibatis.cursor</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../org/apache/ibatis/cursor/defaults/package-summary.html">org.apache.ibatis.cursor.defaults</a></li>
     <li class="api apilevel-">
   <a href="../../../../org/apache/ibatis/datasource/package-summary.html">org.apache.ibatis.datasource</a></li>
     <li class="api apilevel-">
@@ -368,6 +374,9 @@ Summary:
   &#124; <a href="#pubmethods">Methods</a>
   
 
+
+  &#124; <a href="#promethods">Protected Methods</a>
+  
 
 
   &#124; <a href="#inhmethods">Inherited Methods</a>
@@ -738,6 +747,31 @@ Summary:
 
 
 
+<!-- ========== METHOD SUMMARY =========== -->
+<table id="promethods" class="jd-sumtable"><tr><th colspan="12">Protected Methods</th></tr>
+
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            &lt;E&gt;
+            <a href="../../../../org/apache/ibatis/cursor/Cursor.html">Cursor</a>&lt;E&gt;
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/executor/ReuseExecutor.html#doQueryCursor(org.apache.ibatis.mapping.MappedStatement, java.lang.Object, org.apache.ibatis.session.RowBounds, org.apache.ibatis.mapping.BoundSql)">doQueryCursor</a></span>(<a href="../../../../org/apache/ibatis/mapping/MappedStatement.html">MappedStatement</a> ms, Object parameter, <a href="../../../../org/apache/ibatis/session/RowBounds.html">RowBounds</a> rowBounds, <a href="../../../../org/apache/ibatis/mapping/BoundSql.html">BoundSql</a> boundSql)
+        
+  </td></tr>
+
+
+
+</table>
+
+
 
 
 
@@ -901,11 +935,11 @@ From class
             
             
             
-            
-            int
+            &lt;E&gt;
+            <a href="../../../../org/apache/ibatis/cursor/Cursor.html">Cursor</a>&lt;E&gt;
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../org/apache/ibatis/executor/BaseExecutor.html#doUpdate(org.apache.ibatis.mapping.MappedStatement, java.lang.Object)">doUpdate</a></span>(<a href="../../../../org/apache/ibatis/mapping/MappedStatement.html">MappedStatement</a> ms, Object parameter)
+        <span class="sympad"><a href="../../../../org/apache/ibatis/executor/BaseExecutor.html#doQueryCursor(org.apache.ibatis.mapping.MappedStatement, java.lang.Object, org.apache.ibatis.session.RowBounds, org.apache.ibatis.mapping.BoundSql)">doQueryCursor</a></span>(<a href="../../../../org/apache/ibatis/mapping/MappedStatement.html">MappedStatement</a> ms, Object parameter, <a href="../../../../org/apache/ibatis/session/RowBounds.html">RowBounds</a> rowBounds, <a href="../../../../org/apache/ibatis/mapping/BoundSql.html">BoundSql</a> boundSql)
         
   </td></tr>
 
@@ -913,15 +947,15 @@ From class
 	 
     <tr class=" api apilevel-" >
         <td class="jd-typecol">
+            abstract
             
             
             
             
-            
-            List&lt;<a href="../../../../org/apache/ibatis/executor/BatchResult.html">BatchResult</a>&gt;
+            int
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../org/apache/ibatis/executor/BaseExecutor.html#flushStatements(boolean)">flushStatements</a></span>(boolean isRollBack)
+        <span class="sympad"><a href="../../../../org/apache/ibatis/executor/BaseExecutor.html#doUpdate(org.apache.ibatis.mapping.MappedStatement, java.lang.Object)">doUpdate</a></span>(<a href="../../../../org/apache/ibatis/mapping/MappedStatement.html">MappedStatement</a> ms, Object parameter)
         
   </td></tr>
 
@@ -950,6 +984,22 @@ From class
             
             
             
+            List&lt;<a href="../../../../org/apache/ibatis/executor/BatchResult.html">BatchResult</a>&gt;
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/executor/BaseExecutor.html#flushStatements(boolean)">flushStatements</a></span>(boolean isRollBack)
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
             Connection
         </td>
         <td class="jd-linkcol" width="100%">
@@ -959,7 +1009,7 @@ From class
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -975,7 +1025,7 @@ From class
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -991,7 +1041,7 @@ From class
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -1002,6 +1052,22 @@ From class
         </td>
         <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../org/apache/ibatis/executor/BaseExecutor.html#isClosed()">isClosed</a></span>()
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            &lt;E&gt;
+            List&lt;E&gt;
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/executor/BaseExecutor.html#query(org.apache.ibatis.mapping.MappedStatement, java.lang.Object, org.apache.ibatis.session.RowBounds, org.apache.ibatis.session.ResultHandler)">query</a></span>(<a href="../../../../org/apache/ibatis/mapping/MappedStatement.html">MappedStatement</a> ms, Object parameter, <a href="../../../../org/apache/ibatis/session/RowBounds.html">RowBounds</a> rowBounds, <a href="../../../../org/apache/ibatis/session/ResultHandler.html">ResultHandler</a> resultHandler)
         
   </td></tr>
 
@@ -1030,10 +1096,10 @@ From class
             
             
             &lt;E&gt;
-            List&lt;E&gt;
+            <a href="../../../../org/apache/ibatis/cursor/Cursor.html">Cursor</a>&lt;E&gt;
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../org/apache/ibatis/executor/BaseExecutor.html#query(org.apache.ibatis.mapping.MappedStatement, java.lang.Object, org.apache.ibatis.session.RowBounds, org.apache.ibatis.session.ResultHandler)">query</a></span>(<a href="../../../../org/apache/ibatis/mapping/MappedStatement.html">MappedStatement</a> ms, Object parameter, <a href="../../../../org/apache/ibatis/session/RowBounds.html">RowBounds</a> rowBounds, <a href="../../../../org/apache/ibatis/session/ResultHandler.html">ResultHandler</a> resultHandler)
+        <span class="sympad"><a href="../../../../org/apache/ibatis/executor/BaseExecutor.html#queryCursor(org.apache.ibatis.mapping.MappedStatement, java.lang.Object, org.apache.ibatis.session.RowBounds)">queryCursor</a></span>(<a href="../../../../org/apache/ibatis/mapping/MappedStatement.html">MappedStatement</a> ms, Object parameter, <a href="../../../../org/apache/ibatis/session/RowBounds.html">RowBounds</a> rowBounds)
         
   </td></tr>
 
@@ -1251,7 +1317,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>()
+        <span class="sympad">wait</span>(long arg0, int arg1)
         
   </td></tr>
 
@@ -1267,7 +1333,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0, int arg1)
+        <span class="sympad">wait</span>(long arg0)
         
   </td></tr>
 
@@ -1283,7 +1349,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0)
+        <span class="sympad">wait</span>()
         
   </td></tr>
 
@@ -1469,7 +1535,7 @@ From interface
             List&lt;E&gt;
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../org/apache/ibatis/executor/Executor.html#query(org.apache.ibatis.mapping.MappedStatement, java.lang.Object, org.apache.ibatis.session.RowBounds, org.apache.ibatis.session.ResultHandler, org.apache.ibatis.cache.CacheKey, org.apache.ibatis.mapping.BoundSql)">query</a></span>(<a href="../../../../org/apache/ibatis/mapping/MappedStatement.html">MappedStatement</a> ms, Object parameter, <a href="../../../../org/apache/ibatis/session/RowBounds.html">RowBounds</a> rowBounds, <a href="../../../../org/apache/ibatis/session/ResultHandler.html">ResultHandler</a> resultHandler, <a href="../../../../org/apache/ibatis/cache/CacheKey.html">CacheKey</a> cacheKey, <a href="../../../../org/apache/ibatis/mapping/BoundSql.html">BoundSql</a> boundSql)
+        <span class="sympad"><a href="../../../../org/apache/ibatis/executor/Executor.html#query(org.apache.ibatis.mapping.MappedStatement, java.lang.Object, org.apache.ibatis.session.RowBounds, org.apache.ibatis.session.ResultHandler)">query</a></span>(<a href="../../../../org/apache/ibatis/mapping/MappedStatement.html">MappedStatement</a> ms, Object parameter, <a href="../../../../org/apache/ibatis/session/RowBounds.html">RowBounds</a> rowBounds, <a href="../../../../org/apache/ibatis/session/ResultHandler.html">ResultHandler</a> resultHandler)
         
   </td></tr>
 
@@ -1485,7 +1551,7 @@ From interface
             List&lt;E&gt;
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../org/apache/ibatis/executor/Executor.html#query(org.apache.ibatis.mapping.MappedStatement, java.lang.Object, org.apache.ibatis.session.RowBounds, org.apache.ibatis.session.ResultHandler)">query</a></span>(<a href="../../../../org/apache/ibatis/mapping/MappedStatement.html">MappedStatement</a> ms, Object parameter, <a href="../../../../org/apache/ibatis/session/RowBounds.html">RowBounds</a> rowBounds, <a href="../../../../org/apache/ibatis/session/ResultHandler.html">ResultHandler</a> resultHandler)
+        <span class="sympad"><a href="../../../../org/apache/ibatis/executor/Executor.html#query(org.apache.ibatis.mapping.MappedStatement, java.lang.Object, org.apache.ibatis.session.RowBounds, org.apache.ibatis.session.ResultHandler, org.apache.ibatis.cache.CacheKey, org.apache.ibatis.mapping.BoundSql)">query</a></span>(<a href="../../../../org/apache/ibatis/mapping/MappedStatement.html">MappedStatement</a> ms, Object parameter, <a href="../../../../org/apache/ibatis/session/RowBounds.html">RowBounds</a> rowBounds, <a href="../../../../org/apache/ibatis/session/ResultHandler.html">ResultHandler</a> resultHandler, <a href="../../../../org/apache/ibatis/cache/CacheKey.html">CacheKey</a> cacheKey, <a href="../../../../org/apache/ibatis/mapping/BoundSql.html">BoundSql</a> boundSql)
         
   </td></tr>
 
@@ -1497,11 +1563,11 @@ From interface
             
             
             
-            
-            void
+            &lt;E&gt;
+            <a href="../../../../org/apache/ibatis/cursor/Cursor.html">Cursor</a>&lt;E&gt;
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../org/apache/ibatis/executor/Executor.html#rollback(boolean)">rollback</a></span>(boolean required)
+        <span class="sympad"><a href="../../../../org/apache/ibatis/executor/Executor.html#queryCursor(org.apache.ibatis.mapping.MappedStatement, java.lang.Object, org.apache.ibatis.session.RowBounds)">queryCursor</a></span>(<a href="../../../../org/apache/ibatis/mapping/MappedStatement.html">MappedStatement</a> ms, Object parameter, <a href="../../../../org/apache/ibatis/session/RowBounds.html">RowBounds</a> rowBounds)
         
   </td></tr>
 
@@ -1517,13 +1583,29 @@ From interface
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../org/apache/ibatis/executor/Executor.html#setExecutorWrapper(org.apache.ibatis.executor.Executor)">setExecutorWrapper</a></span>(<a href="../../../../org/apache/ibatis/executor/Executor.html">Executor</a> executor)
+        <span class="sympad"><a href="../../../../org/apache/ibatis/executor/Executor.html#rollback(boolean)">rollback</a></span>(boolean required)
         
   </td></tr>
 
 
 	 
     <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            abstract
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/executor/Executor.html#setExecutorWrapper(org.apache.ibatis.executor.Executor)">setExecutorWrapper</a></span>(<a href="../../../../org/apache/ibatis/executor/Executor.html">Executor</a> executor)
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             abstract
             
@@ -1748,6 +1830,51 @@ From interface
 
 
 <!-- ========= METHOD DETAIL ======== -->
+
+<h2>Protected Methods</h2>
+
+
+
+<a id="doQueryCursor(org.apache.ibatis.mapping.MappedStatement, java.lang.Object, org.apache.ibatis.session.RowBounds, org.apache.ibatis.mapping.BoundSql)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        protected 
+         
+         
+         
+         
+        <a href="../../../../org/apache/ibatis/cursor/Cursor.html">Cursor</a>&lt;E&gt;
+      </span>
+      <span class="sympad">doQueryCursor</span>
+      <span class="normal">(<a href="../../../../org/apache/ibatis/mapping/MappedStatement.html">MappedStatement</a> ms, Object parameter, <a href="../../../../org/apache/ibatis/session/RowBounds.html">RowBounds</a> rowBounds, <a href="../../../../org/apache/ibatis/mapping/BoundSql.html">BoundSql</a> boundSql)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Throws</h5>
+      <table class="jd-tagtable">  
+        <tr>
+            <th>SQLException</td>
+            <td></td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
 
 
 

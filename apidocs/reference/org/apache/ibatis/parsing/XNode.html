@@ -145,6 +145,8 @@
               <ul>
                 
     <li class="api apilevel-">
+  <a href="../../../../org/apache/ibatis/annotations/package-summary.html">org.apache.ibatis.annotations</a></li>
+    <li class="api apilevel-">
   <a href="../../../../org/apache/ibatis/binding/package-summary.html">org.apache.ibatis.binding</a></li>
     <li class="api apilevel-">
   <a href="../../../../org/apache/ibatis/builder/package-summary.html">org.apache.ibatis.builder</a></li>
@@ -158,6 +160,10 @@
   <a href="../../../../org/apache/ibatis/cache/decorators/package-summary.html">org.apache.ibatis.cache.decorators</a></li>
     <li class="api apilevel-">
   <a href="../../../../org/apache/ibatis/cache/impl/package-summary.html">org.apache.ibatis.cache.impl</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../org/apache/ibatis/cursor/package-summary.html">org.apache.ibatis.cursor</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../org/apache/ibatis/cursor/defaults/package-summary.html">org.apache.ibatis.cursor.defaults</a></li>
     <li class="api apilevel-">
   <a href="../../../../org/apache/ibatis/datasource/package-summary.html">org.apache.ibatis.datasource</a></li>
     <li class="api apilevel-">
@@ -680,7 +686,7 @@ Summary:
             Double
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../org/apache/ibatis/parsing/XNode.html#getDoubleAttribute(java.lang.String)">getDoubleAttribute</a></span>(String name)
+        <span class="sympad"><a href="../../../../org/apache/ibatis/parsing/XNode.html#getDoubleAttribute(java.lang.String, java.lang.Double)">getDoubleAttribute</a></span>(String name, Double def)
         
   </td></tr>
 
@@ -696,7 +702,7 @@ Summary:
             Double
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../org/apache/ibatis/parsing/XNode.html#getDoubleAttribute(java.lang.String, java.lang.Double)">getDoubleAttribute</a></span>(String name, Double def)
+        <span class="sympad"><a href="../../../../org/apache/ibatis/parsing/XNode.html#getDoubleAttribute(java.lang.String)">getDoubleAttribute</a></span>(String name)
         
   </td></tr>
 
@@ -776,7 +782,7 @@ Summary:
             Float
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../org/apache/ibatis/parsing/XNode.html#getFloatAttribute(java.lang.String)">getFloatAttribute</a></span>(String name)
+        <span class="sympad"><a href="../../../../org/apache/ibatis/parsing/XNode.html#getFloatAttribute(java.lang.String, java.lang.Float)">getFloatAttribute</a></span>(String name, Float def)
         
   </td></tr>
 
@@ -792,7 +798,7 @@ Summary:
             Float
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../org/apache/ibatis/parsing/XNode.html#getFloatAttribute(java.lang.String, java.lang.Float)">getFloatAttribute</a></span>(String name, Float def)
+        <span class="sympad"><a href="../../../../org/apache/ibatis/parsing/XNode.html#getFloatAttribute(java.lang.String)">getFloatAttribute</a></span>(String name)
         
   </td></tr>
 
@@ -872,7 +878,7 @@ Summary:
             Integer
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../org/apache/ibatis/parsing/XNode.html#getIntBody(java.lang.Integer)">getIntBody</a></span>(Integer def)
+        <span class="sympad"><a href="../../../../org/apache/ibatis/parsing/XNode.html#getIntBody()">getIntBody</a></span>()
         
   </td></tr>
 
@@ -888,7 +894,7 @@ Summary:
             Integer
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../org/apache/ibatis/parsing/XNode.html#getIntBody()">getIntBody</a></span>()
+        <span class="sympad"><a href="../../../../org/apache/ibatis/parsing/XNode.html#getIntBody(java.lang.Integer)">getIntBody</a></span>(Integer def)
         
   </td></tr>
 
@@ -904,7 +910,7 @@ Summary:
             Long
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../org/apache/ibatis/parsing/XNode.html#getLongAttribute(java.lang.String, java.lang.Long)">getLongAttribute</a></span>(String name, Long def)
+        <span class="sympad"><a href="../../../../org/apache/ibatis/parsing/XNode.html#getLongAttribute(java.lang.String)">getLongAttribute</a></span>(String name)
         
   </td></tr>
 
@@ -920,7 +926,7 @@ Summary:
             Long
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../org/apache/ibatis/parsing/XNode.html#getLongAttribute(java.lang.String)">getLongAttribute</a></span>(String name)
+        <span class="sympad"><a href="../../../../org/apache/ibatis/parsing/XNode.html#getLongAttribute(java.lang.String, java.lang.Long)">getLongAttribute</a></span>(String name, Long def)
         
   </td></tr>
 
@@ -1306,7 +1312,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>()
+        <span class="sympad">wait</span>(long arg0, int arg1)
         
   </td></tr>
 
@@ -1322,7 +1328,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0, int arg1)
+        <span class="sympad">wait</span>(long arg0)
         
   </td></tr>
 
@@ -1338,7 +1344,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0)
+        <span class="sympad">wait</span>()
         
   </td></tr>
 
@@ -1770,7 +1776,7 @@ From class
 </div>
 
 
-<a id="getDoubleAttribute(java.lang.String)"></a>
+<a id="getDoubleAttribute(java.lang.String, java.lang.Double)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1783,7 +1789,7 @@ From class
         Double
       </span>
       <span class="sympad">getDoubleAttribute</span>
-      <span class="normal">(String name)</span>
+      <span class="normal">(String name, Double def)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -1801,7 +1807,7 @@ From class
 </div>
 
 
-<a id="getDoubleAttribute(java.lang.String, java.lang.Double)"></a>
+<a id="getDoubleAttribute(java.lang.String)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1814,7 +1820,7 @@ From class
         Double
       </span>
       <span class="sympad">getDoubleAttribute</span>
-      <span class="normal">(String name, Double def)</span>
+      <span class="normal">(String name)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -1956,7 +1962,7 @@ From class
 </div>
 
 
-<a id="getFloatAttribute(java.lang.String)"></a>
+<a id="getFloatAttribute(java.lang.String, java.lang.Float)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1969,7 +1975,7 @@ From class
         Float
       </span>
       <span class="sympad">getFloatAttribute</span>
-      <span class="normal">(String name)</span>
+      <span class="normal">(String name, Float def)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -1987,7 +1993,7 @@ From class
 </div>
 
 
-<a id="getFloatAttribute(java.lang.String, java.lang.Float)"></a>
+<a id="getFloatAttribute(java.lang.String)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -2000,7 +2006,7 @@ From class
         Float
       </span>
       <span class="sympad">getFloatAttribute</span>
-      <span class="normal">(String name, Float def)</span>
+      <span class="normal">(String name)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -2142,37 +2148,6 @@ From class
 </div>
 
 
-<a id="getIntBody(java.lang.Integer)"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-         
-         
-        Integer
-      </span>
-      <span class="sympad">getIntBody</span>
-      <span class="normal">(Integer def)</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p></p></div>
-
-    </div>
-</div>
-
-
 <a id="getIntBody()"></a>
 
 <div class="jd-details api apilevel-"> 
@@ -2204,7 +2179,7 @@ From class
 </div>
 
 
-<a id="getLongAttribute(java.lang.String, java.lang.Long)"></a>
+<a id="getIntBody(java.lang.Integer)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -2214,10 +2189,10 @@ From class
          
          
          
-        Long
+        Integer
       </span>
-      <span class="sympad">getLongAttribute</span>
-      <span class="normal">(String name, Long def)</span>
+      <span class="sympad">getIntBody</span>
+      <span class="normal">(Integer def)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -2249,6 +2224,37 @@ From class
       </span>
       <span class="sympad">getLongAttribute</span>
       <span class="normal">(String name)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    </div>
+</div>
+
+
+<a id="getLongAttribute(java.lang.String, java.lang.Long)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        Long
+      </span>
+      <span class="sympad">getLongAttribute</span>
+      <span class="normal">(String name, Long def)</span>
     </h4>
       <div class="api-level">
         <div>

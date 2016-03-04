@@ -65,7 +65,7 @@
 <a class="jxr_linenumber" name="L57" href="#L57">57</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldGetTwoUsersPassingAList() {
 <a class="jxr_linenumber" name="L58" href="#L58">58</a>      SqlSession sqlSession = sqlSessionFactory.openSession();
 <a class="jxr_linenumber" name="L59" href="#L59">59</a>      <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L60" href="#L60">60</a>        <a href="../../../../../org/apache/ibatis/submitted/collectionparameters/Mapper.html">Mapper</a> mapper = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>        <a href="../../../../../org/apache/ibatis/session/AutoMappingUnknownColumnBehaviorTest.html">Mapper</a> mapper = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L61" href="#L61">61</a>        ArrayList&lt;Integer&gt; list = <strong class="jxr_keyword">new</strong> ArrayList&lt;Integer&gt;();
 <a class="jxr_linenumber" name="L62" href="#L62">62</a>        list.add(1);
 <a class="jxr_linenumber" name="L63" href="#L63">63</a>        list.add(2);
@@ -80,7 +80,7 @@
 <a class="jxr_linenumber" name="L72" href="#L72">72</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldGetTwoUsersPassingAnArray() {
 <a class="jxr_linenumber" name="L73" href="#L73">73</a>      SqlSession sqlSession = sqlSessionFactory.openSession();
 <a class="jxr_linenumber" name="L74" href="#L74">74</a>      <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L75" href="#L75">75</a>        <a href="../../../../../org/apache/ibatis/submitted/collectionparameters/Mapper.html">Mapper</a> mapper = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>        <a href="../../../../../org/apache/ibatis/session/AutoMappingUnknownColumnBehaviorTest.html">Mapper</a> mapper = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L76" href="#L76">76</a>        Integer[] list = <strong class="jxr_keyword">new</strong> Integer[2];
 <a class="jxr_linenumber" name="L77" href="#L77">77</a>        list[0]=1;
 <a class="jxr_linenumber" name="L78" href="#L78">78</a>        list[1]=2;
@@ -95,7 +95,7 @@
 <a class="jxr_linenumber" name="L87" href="#L87">87</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldGetTwoUsersPassingACollection() {
 <a class="jxr_linenumber" name="L88" href="#L88">88</a>      SqlSession sqlSession = sqlSessionFactory.openSession();
 <a class="jxr_linenumber" name="L89" href="#L89">89</a>      <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L90" href="#L90">90</a>        <a href="../../../../../org/apache/ibatis/submitted/collectionparameters/Mapper.html">Mapper</a> mapper = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L90" href="#L90">90</a>        <a href="../../../../../org/apache/ibatis/session/AutoMappingUnknownColumnBehaviorTest.html">Mapper</a> mapper = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L91" href="#L91">91</a>        Set&lt;Integer&gt; list = <strong class="jxr_keyword">new</strong> HashSet&lt;Integer&gt;();
 <a class="jxr_linenumber" name="L92" href="#L92">92</a>        list.add(1);
 <a class="jxr_linenumber" name="L93" href="#L93">93</a>        list.add(2);

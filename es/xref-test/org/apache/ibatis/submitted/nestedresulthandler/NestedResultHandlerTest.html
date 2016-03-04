@@ -64,7 +64,7 @@
 <a class="jxr_linenumber" name="L56" href="#L56">56</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testGetPerson() {
 <a class="jxr_linenumber" name="L57" href="#L57">57</a>      SqlSession sqlSession = sqlSessionFactory.openSession();
 <a class="jxr_linenumber" name="L58" href="#L58">58</a>      <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L59" href="#L59">59</a>        <a href="../../../../../org/apache/ibatis/submitted/nestedresulthandler/Mapper.html">Mapper</a> mapper = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L59" href="#L59">59</a>        <a href="../../../../../org/apache/ibatis/session/AutoMappingUnknownColumnBehaviorTest.html">Mapper</a> mapper = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L60" href="#L60">60</a>  
 <a class="jxr_linenumber" name="L61" href="#L61">61</a>        List&lt;Person&gt; persons = mapper.getPersons();
 <a class="jxr_linenumber" name="L62" href="#L62">62</a>  
@@ -133,7 +133,7 @@
 <a class="jxr_linenumber" name="L125" href="#L125">125</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testGetPersonOrderedByItem() {
 <a class="jxr_linenumber" name="L126" href="#L126">126</a>     SqlSession sqlSession = sqlSessionFactory.openSession();
 <a class="jxr_linenumber" name="L127" href="#L127">127</a>     <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L128" href="#L128">128</a>       <a href="../../../../../org/apache/ibatis/submitted/nestedresulthandler/Mapper.html">Mapper</a> mapper = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L128" href="#L128">128</a>       <a href="../../../../../org/apache/ibatis/session/AutoMappingUnknownColumnBehaviorTest.html">Mapper</a> mapper = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L129" href="#L129">129</a> 
 <a class="jxr_linenumber" name="L130" href="#L130">130</a>       List&lt;Person&gt; persons = mapper.getPersonsWithItemsOrdered();
 <a class="jxr_linenumber" name="L131" href="#L131">131</a> 
@@ -162,7 +162,7 @@
 <a class="jxr_linenumber" name="L154" href="#L154">154</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testGetPersonItemPairs(){
 <a class="jxr_linenumber" name="L155" href="#L155">155</a>     SqlSession sqlSession = sqlSessionFactory.openSession();
 <a class="jxr_linenumber" name="L156" href="#L156">156</a>     <strong class="jxr_keyword">try</strong>{
-<a class="jxr_linenumber" name="L157" href="#L157">157</a>       <a href="../../../../../org/apache/ibatis/submitted/nestedresulthandler/Mapper.html">Mapper</a> mapper = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L157" href="#L157">157</a>       <a href="../../../../../org/apache/ibatis/session/AutoMappingUnknownColumnBehaviorTest.html">Mapper</a> mapper = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L158" href="#L158">158</a>       List&lt;PersonItemPair&gt; pairs = mapper.getPersonItemPairs();
 <a class="jxr_linenumber" name="L159" href="#L159">159</a> 
 <a class="jxr_linenumber" name="L160" href="#L160">160</a>       Assert.assertNotNull( pairs );

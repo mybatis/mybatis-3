@@ -1,3 +1,4 @@
+org.apache.ibatis.annotations
 org.apache.ibatis.binding
 org.apache.ibatis.builder
 org.apache.ibatis.builder.annotation
@@ -5,6 +6,8 @@ org.apache.ibatis.builder.xml
 org.apache.ibatis.cache
 org.apache.ibatis.cache.decorators
 org.apache.ibatis.cache.impl
+org.apache.ibatis.cursor
+org.apache.ibatis.cursor.defaults
 org.apache.ibatis.datasource
 org.apache.ibatis.datasource.jndi
 org.apache.ibatis.datasource.pooled
