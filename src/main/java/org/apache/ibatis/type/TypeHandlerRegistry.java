@@ -174,12 +174,29 @@ public final class TypeHandlerRegistry {
       if (handler == null) {
         handler = jdbcHandlerMap.get(null);
       }
+      if (handler == null) {
+        // #591
+        handler = pickSoleHandler(jdbcHandlerMap);
+      }
     }
     if (handler == null && type != null && type instanceof Class && Enum.class.isAssignableFrom((Class<?>) type)) {
       handler = new EnumTypeHandler((Class<?>) type);
     }
     // type drives generics here
     return (TypeHandler<T>) handler;
+  }
+
+  private TypeHandler<?> pickSoleHandler(Map<JdbcType, TypeHandler<?>> jdbcHandlerMap) {
+    boolean onlyChoice = true;
+    TypeHandler<?> soleHandler = null;
+    for (TypeHandler<?> handler : jdbcHandlerMap.values()) {
+      if (soleHandler != null && !handler.equals(soleHandler)) {
+        onlyChoice = false;
+        break;
+      }
+      soleHandler = handler;
+    }
+    return onlyChoice ? soleHandler : null;
   }
 
   public TypeHandler<Object> getUnknownTypeHandler() {

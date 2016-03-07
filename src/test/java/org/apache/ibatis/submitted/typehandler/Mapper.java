@@ -45,6 +45,8 @@ public interface Mapper {
   @Select("select id, name from product where name = #{value}")
   Product getProductByName(String name);
 
+  Product getProductByNameXml(String name);
+
   @Select("select id, name from product where name = #{value}")
   @ConstructorArgs({
     @Arg(id = true, column="id", javaType = ProductId.class, jdbcType=JdbcType.INTEGER),

@@ -94,4 +94,31 @@ public class Product {
       return id;
     }
   }
+
+  public static class ConstantProductIdTypeHandler extends BaseTypeHandler<ProductId> {
+    @Override
+    public void setNonNullParameter(PreparedStatement ps, int i, ProductId parameter, JdbcType jdbcType) throws SQLException {
+    }
+
+    @Override
+    public ProductId getNullableResult(ResultSet rs, String columnName) throws SQLException {
+      return getConstantId();
+    }
+
+    @Override
+    public ProductId getNullableResult(ResultSet rs, int columnIndex) throws SQLException {
+      return getConstantId();
+    }
+
+    @Override
+    public ProductId getNullableResult(CallableStatement cs, int columnIndex) throws SQLException {
+      return getConstantId();
+    }
+
+    private ProductId getConstantId() {
+      ProductId id = new ProductId();
+      id.setValue(999);
+      return id;
+    }
+  }
 }
