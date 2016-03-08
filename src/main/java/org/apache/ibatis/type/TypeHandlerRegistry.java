@@ -190,7 +190,7 @@ public final class TypeHandlerRegistry {
     boolean onlyChoice = true;
     TypeHandler<?> soleHandler = null;
     for (TypeHandler<?> handler : jdbcHandlerMap.values()) {
-      if (soleHandler != null && !handler.equals(soleHandler)) {
+      if (soleHandler != null && !handler.getClass().equals(soleHandler.getClass())) {
         onlyChoice = false;
         break;
       }

@@ -26,8 +26,9 @@ import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.apache.ibatis.submitted.typehandler.Product.ProductId;
 import org.apache.ibatis.submitted.typehandler.Product.ConstantProductIdTypeHandler;
+import org.apache.ibatis.submitted.typehandler.Product.ProductId;
+import org.apache.ibatis.submitted.typehandler.Product.ProductIdTypeHandler;
 import org.apache.ibatis.type.JdbcType;
 import org.junit.Before;
 import org.junit.Test;
@@ -133,6 +134,20 @@ public class TypeHandlerTest {
 
   @Test
   public void shouldPickSoleTypeHandlerOnXmlResultMap() throws Exception {
+    addMapper();
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      Product product = mapper.getProductByNameXml("iPad");
+      assertEquals(Integer.valueOf(2), product.getId().getValue());
+    } finally {
+      sqlSession.close();
+    }
+  }
+
+  @Test
+  public void shouldPickSameTypeHandlerMappedToDifferentJdbcTypes() throws Exception {
+    sqlSessionFactory.getConfiguration().getTypeHandlerRegistry().register(ProductId.class, JdbcType.BIGINT, ProductIdTypeHandler.class);
     addMapper();
     SqlSession sqlSession = sqlSessionFactory.openSession();
     try {
