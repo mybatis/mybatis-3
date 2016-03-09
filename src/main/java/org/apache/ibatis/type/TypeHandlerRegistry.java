@@ -29,6 +29,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.ibatis.io.ResolverUtil;
+import org.apache.ibatis.io.Resources;
 
 /**
  * @author Clinton Begin
@@ -119,6 +120,19 @@ public final class TypeHandlerRegistry {
     register(java.sql.Date.class, new SqlDateTypeHandler());
     register(java.sql.Time.class, new SqlTimeTypeHandler());
     register(java.sql.Timestamp.class, new SqlTimestampTypeHandler());
+
+    // mybatis-typehandlers-jsr310
+    try {
+      register("java.time.Instant", "org.apache.ibatis.type.InstantTypeHandler");
+      register("java.time.LocalDateTime", "org.apache.ibatis.type.LocalDateTimeTypeHandler");
+      register("java.time.LocalDate", "org.apache.ibatis.type.LocalDateTypeHandler");
+      register("java.time.LocalTime", "org.apache.ibatis.type.LocalTimeTypeHandler");
+      register("java.time.OffsetDateTime", "org.apache.ibatis.type.OffsetDateTimeTypeHandler");
+      register("java.time.OffsetTime", "org.apache.ibatis.type.OffsetTimeTypeHandler");
+      register("java.time.ZonedDateTime", "org.apache.ibatis.type.ZonedDateTimeTypeHandler");
+    } catch (ClassNotFoundException e) {
+      // no JSR-310 handlers
+    }
 
     // issue #273
     register(Character.class, new CharacterTypeHandler());
@@ -301,6 +315,10 @@ public final class TypeHandlerRegistry {
   }
 
   // java type + handler type
+
+  public void register(String javaTypeClassName, String typeHandlerClassName) throws ClassNotFoundException {
+    register(Resources.classForName(javaTypeClassName), Resources.classForName(typeHandlerClassName));
+  }
 
   public void register(Class<?> javaTypeClass, Class<?> typeHandlerClass) {
     register(javaTypeClass, getInstance(javaTypeClass, typeHandlerClass));
