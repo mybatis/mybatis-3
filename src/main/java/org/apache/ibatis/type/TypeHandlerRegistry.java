@@ -15,6 +15,8 @@
  */
 package org.apache.ibatis.type;
 
+import java.io.InputStream;
+import java.io.Reader;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
@@ -70,6 +72,7 @@ public final class TypeHandlerRegistry {
     register(double.class, new DoubleTypeHandler());
     register(JdbcType.DOUBLE, new DoubleTypeHandler());
 
+    register(Reader.class, new ClobReaderTypeHandler());
     register(String.class, new StringTypeHandler());
     register(String.class, JdbcType.CHAR, new StringTypeHandler());
     register(String.class, JdbcType.CLOB, new ClobTypeHandler());
@@ -97,6 +100,7 @@ public final class TypeHandlerRegistry {
     register(JdbcType.DECIMAL, new BigDecimalTypeHandler());
     register(JdbcType.NUMERIC, new BigDecimalTypeHandler());
 
+    register(InputStream.class, new BlobInputStreamTypeHandler());
     register(Byte[].class, new ByteObjectArrayTypeHandler());
     register(Byte[].class, JdbcType.BLOB, new BlobByteObjectArrayTypeHandler());
     register(Byte[].class, JdbcType.LONGVARBINARY, new BlobByteObjectArrayTypeHandler());
