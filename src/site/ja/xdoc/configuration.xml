@@ -877,6 +877,17 @@ public class Author {
             </tr>
             <tr>
               <td>
+                ClobReaderTypeHandler
+              </td>
+              <td>
+                java.io.Reader
+              </td>
+              <td>
+                -
+              </td>
+            </tr>
+            <tr>
+              <td>
                 ClobTypeHandler
               </td>
               <td>
@@ -906,6 +917,17 @@ public class Author {
               </td>
               <td>
                 NCLOB
+              </td>
+            </tr>
+            <tr>
+              <td>
+                BlobInputStreamTypeHandler
+              </td>
+              <td>
+                java.io.InputStream
+              </td>
+              <td>
+                -
               </td>
             </tr>
             <tr>
