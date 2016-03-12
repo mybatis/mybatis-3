@@ -81,12 +81,12 @@ public abstract class BaseStatementHandler implements StatementHandler {
   }
 
   @Override
-  public Statement prepare(Connection connection) throws SQLException {
+  public Statement prepare(Connection connection, Integer transactionTimeout) throws SQLException {
     ErrorContext.instance().sql(boundSql.getSql());
     Statement statement = null;
     try {
       statement = instantiateStatement(connection);
-      setStatementTimeout(statement);
+      setStatementTimeout(statement, transactionTimeout);
       setFetchSize(statement);
       return statement;
     } catch (SQLException e) {
@@ -100,7 +100,11 @@ public abstract class BaseStatementHandler implements StatementHandler {
 
   protected abstract Statement instantiateStatement(Connection connection) throws SQLException;
 
-  protected void setStatementTimeout(Statement stmt) throws SQLException {
+  protected void setStatementTimeout(Statement stmt, Integer transactionTimeout) throws SQLException {
+    if (transactionTimeout != null) {
+      stmt.setQueryTimeout(transactionTimeout);
+      return;
+    }
     Integer timeout = mappedStatement.getTimeout();
     if (timeout != null) {
       stmt.setQueryTimeout(timeout);

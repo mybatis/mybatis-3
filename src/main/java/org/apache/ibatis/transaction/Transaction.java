@@ -17,6 +17,7 @@ package org.apache.ibatis.transaction;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 /**
  * Wraps a database connection.
@@ -51,4 +52,10 @@ public interface Transaction {
    */
   void close() throws SQLException;
 
+  /**
+   * Get transaction timeout if set
+   * @throws SQLException
+   */
+  Integer getTimeout() throws SQLException;
+  
 }

@@ -17,6 +17,7 @@ package org.apache.ibatis.transaction.jdbc;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import javax.sql.DataSource;
 
@@ -144,4 +145,9 @@ public class JdbcTransaction implements Transaction {
     setDesiredAutoCommit(autoCommmit);
   }
 
+  @Override
+  public Integer getTimeout() throws SQLException {
+    return null;
+  }
+  
 }

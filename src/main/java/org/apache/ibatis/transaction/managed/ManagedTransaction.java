@@ -17,6 +17,7 @@ package org.apache.ibatis.transaction.managed;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import javax.sql.DataSource;
 
@@ -92,6 +93,11 @@ public class ManagedTransaction implements Transaction {
     if (this.level != null) {
       this.connection.setTransactionIsolation(this.level.getLevel());
     }
+  }
+
+  @Override
+  public Integer getTimeout() throws SQLException {
+    return null;
   }
 
 }
