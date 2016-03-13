@@ -761,6 +761,11 @@ public class Author {
           MyBatis が PreparedStatement のパラメーターをセットするとき、あるいは ResultSet から値を取得するときには、必ずその Java タイプに対応する TypeHandler が使用されます。<br />
           次の表はデフォルトの TypeHandler の一覧です。
         </p>
+        <p>
+          <span class="label important">NOTE</span>
+          JSR-310(Date and Time API)から提供されているクラスを使用する場合は、
+          <a href="https://github.com/mybatis/typehandlers-jsr310">mybatis-typehandlers-jsr310</a>を使用することができます。
+        </p>
         <table>
           <thead>
             <tr>
