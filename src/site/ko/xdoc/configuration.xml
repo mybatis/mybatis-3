@@ -715,6 +715,11 @@ public class Author {
       <subsection name="typeHandlers">
         <p>마이바티스가 PreparedStatement에 파라미터를 설정하고 ResultSet에서 값을 가져올때마다 TypeHandler는 적절한 자바 타입의 값을 가져오기 위해 사용된다. 
         다음의 표는 디폴트 TypeHandlers를 설명한다.</p>
+        <p>
+          <span class="label important">NOTE</span>
+          If you use classes provided by JSR-310(Date and Time API),
+          you can use the <a href="https://github.com/mybatis/typehandlers-jsr310">mybatis-typehandlers-jsr310</a>.
+        </p>
         <table>
           <thead>
             <tr>
