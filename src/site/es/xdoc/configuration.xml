@@ -1355,6 +1355,7 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader,properties);]]
   void commit() throws SQLException;
   void rollback() throws SQLException;
   void close() throws SQLException;
+  Integer getTimeout() throws SQLException;
 }]]></source>
         <p>Con estos dos interfaces puedes personalizar por completo la forma en la que MyBatis gestiona las transacciones.</p>
         <p>
