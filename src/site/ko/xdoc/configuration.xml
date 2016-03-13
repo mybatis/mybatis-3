@@ -1328,6 +1328,7 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader,properties);]]
   void commit() throws SQLException;
   void rollback() throws SQLException;
   void close() throws SQLException;
+  Integer getTimeout() throws SQLException;
 }]]></source>
         <p>이 두개의 인터페이스를 사용하여 마이바티스가 트랜잭션을 처리하는 방법을 완벽하게 정의할 수 있다.</p>
         <p>

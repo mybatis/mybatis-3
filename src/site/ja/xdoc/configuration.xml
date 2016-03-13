@@ -1445,6 +1445,7 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader,properties);]]
   void commit() throws SQLException;
   void rollback() throws SQLException;
   void close() throws SQLException;
+  Integer getTimeout() throws SQLException;
 }]]></source>
         <p>
           これらのインターフェイスを使えば、MyBatis のトランザクション管理方法を完全にカスタマイズすることが可能です。
