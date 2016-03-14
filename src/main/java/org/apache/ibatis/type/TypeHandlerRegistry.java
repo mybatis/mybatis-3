@@ -1,19 +1,21 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
- *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
+ * Copyright 2009-2015 the original author or authors.
+ * <p>
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.apache.ibatis.type;
+
+import org.apache.ibatis.io.ResolverUtil;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
@@ -27,8 +29,6 @@ import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-
-import org.apache.ibatis.io.ResolverUtil;
 
 /**
  * @author Clinton Begin
@@ -167,6 +167,46 @@ public final class TypeHandlerRegistry {
 
   @SuppressWarnings("unchecked")
   private <T> TypeHandler<T> getTypeHandler(Type type, JdbcType jdbcType) {
+    TypeHandler<?> handler = getRawTypeHandler(type, jdbcType);
+    if (handler == null && type instanceof Class) {
+      //lookup parent class or interface
+      Class<?> javaType = (Class<?>) type;
+      Class<?> parentType = javaType.getSuperclass();
+      while (parentType != Object.class) {
+        handler = getRawTypeHandler(parentType, jdbcType);
+        if (handler != null) {
+          break;
+        }
+        parentType = parentType.getSuperclass();
+      }
+      if (handler == null) {
+        //interface
+        parentType = javaType;
+        outer:while (parentType != Object.class) {
+          Class<?>[] interfaces = parentType.getInterfaces();
+          if (interfaces != null && interfaces.length > 0) {
+            //find out the first interface which has a TypeHandler
+            for (Class<?> clazz : interfaces) {
+              handler = getRawTypeHandler(clazz, jdbcType);
+              if (handler != null) {
+                break outer;
+              }
+            }
+
+          }
+          parentType = parentType.getSuperclass();
+        }
+      }
+    }
+    if (handler == null && type != null && type instanceof Class && Enum.class
+        .isAssignableFrom((Class<?>) type)) {
+      handler = new EnumTypeHandler((Class<?>) type);
+    }
+    // type drives generics here
+    return (TypeHandler<T>) handler;
+  }
+
+  private TypeHandler<?> getRawTypeHandler(Type type, JdbcType jdbcType) {
     Map<JdbcType, TypeHandler<?>> jdbcHandlerMap = TYPE_HANDLER_MAP.get(type);
     TypeHandler<?> handler = null;
     if (jdbcHandlerMap != null) {
@@ -175,11 +215,7 @@ public final class TypeHandlerRegistry {
         handler = jdbcHandlerMap.get(null);
       }
     }
-    if (handler == null && type != null && type instanceof Class && Enum.class.isAssignableFrom((Class<?>) type)) {
-      handler = new EnumTypeHandler((Class<?>) type);
-    }
-    // type drives generics here
-    return (TypeHandler<T>) handler;
+    return handler;
   }
 
   public TypeHandler<Object> getUnknownTypeHandler() {
@@ -325,19 +361,20 @@ public final class TypeHandlerRegistry {
     Set<Class<? extends Class<?>>> handlerSet = resolverUtil.getClasses();
     for (Class<?> type : handlerSet) {
       //Ignore inner classes and interfaces (including package-info.java) and abstract classes
-      if (!type.isAnonymousClass() && !type.isInterface() && !Modifier.isAbstract(type.getModifiers())) {
+      if (!type.isAnonymousClass() && !type.isInterface() && !Modifier
+          .isAbstract(type.getModifiers())) {
         register(type);
       }
     }
   }
-  
+
   // get information
-  
+
   /**
    * @since 3.2.2
    */
   public Collection<TypeHandler<?>> getTypeHandlers() {
     return Collections.unmodifiableCollection(ALL_TYPE_HANDLERS_MAP.values());
   }
-  
+
 }
