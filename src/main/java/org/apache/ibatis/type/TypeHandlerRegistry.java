@@ -169,10 +169,10 @@ public final class TypeHandlerRegistry {
   private <T> TypeHandler<T> getTypeHandler(Type type, JdbcType jdbcType) {
     TypeHandler<?> handler = getRawTypeHandler(type, jdbcType);
     if (handler == null && type instanceof Class) {
-      //lookup parent class or interface
+      //lookup parent class or interface and do not check the Object.class
       Class<?> javaType = (Class<?>) type;
       Class<?> parentType = javaType.getSuperclass();
-      while (parentType != Object.class) {
+      while (parentType != Object.class) {//if parent is object class, skip
         handler = getRawTypeHandler(parentType, jdbcType);
         if (handler != null) {
           break;
@@ -182,7 +182,7 @@ public final class TypeHandlerRegistry {
       if (handler == null) {
         //interface
         parentType = javaType;
-        outer:while (parentType != Object.class) {
+        outer:while (parentType != Object.class) {//if parent is object class, skip
           Class<?>[] interfaces = parentType.getInterfaces();
           if (interfaces != null && interfaces.length > 0) {
             //find out the first interface which has a TypeHandler
