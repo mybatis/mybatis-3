@@ -1075,6 +1075,18 @@ public class ExampleTypeHandler extends BaseTypeHandler<String> {
           </li>
         </ul>
 
+        <p>
+          When deciding which TypeHandler to use in a <code>ResultMap</code>, the Java type is known
+          (from the result type), but the JDBC type is unknown. MyBatis therefore uses the combination
+          <code>javaType=[TheJavaType], jdbcType=null</code> to choose a TypeHandler. This means that
+          using a <code>@MappedJdbcTypes</code> annotation <i>restricts</i> the scope of a TypeHandler
+          and makes it unavailable for use in <code>ResultMap</code>s unless explicity set. To make a
+          TypeHandler available for use in a <code>ResultMap</code>, set <code>includeNullJdbcType=true</code>
+          on the <code>@MappedJdbcTypes</code> annotation. Since Mybatis 3.4.0 however, if a <b>single</b>
+          TypeHandler is registered to handle a Java type, it will be used by default in <code>ResultMap</code>s
+          using this Java type (i.e. even without <code>includeNullJdbcType=true</code>). 
+        </p>
+
         <p>最后，可以让 MyBatis 为你查找类型处理器：</p>
         <source><![CDATA[<!-- mybatis-config.xml -->
 <typeHandlers>

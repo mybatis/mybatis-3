@@ -1118,6 +1118,12 @@ public class StringTypeHandler extends BaseTypeHandler<String> {
           <li>TypeHandler の実装クラスに <code>@MappedJdbcTypes</code> を付加し、JDBC タイプのリストを指定します。jdbcType 属性が指定されている場合、このアノテーションは無視されます。</li>
         </ul>
 
+        <p>
+          <code>ResultMap</code>　でプロパティの指定に <code>typeHandler</code> と <code>jdbcType</code> が明示的に指定されていない場合、パース時点で <code>javaType</code> はプロパティの型から推測可能ですが <code>jdbcType</code> は未知となります。 MyBatis は javaType=[推測された型] と jdbcType=null にマップされた TypeHandler を探します。
+          TypeHandler を jdbcType=null にマップするためには <code>@MappedJdbcTypes</code> の <code>includeNullJdbcType</code> 属性に <code>true</code> を指定します。<br />
+          MyBatis 3.4.0 以降は javaType に対してマップされている TypeHandler が１つの場合は登録時の jdbcType に関わらずこの TypeHandler が使われるようになりました。
+        </p>
+
         <p>また、MyBatis にタイプハンドラーを自動検出させることもできます。</p>
         <source><![CDATA[<!-- mybatis-config.xml -->
 <typeHandlers>
