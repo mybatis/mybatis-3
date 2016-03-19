@@ -26,6 +26,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import org.apache.ibatis.cache.CacheKey;
 import org.apache.ibatis.cache.impl.PerpetualCache;
 import org.apache.ibatis.cursor.Cursor;
+import org.apache.ibatis.executor.statement.StatementUtil;
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
 import org.apache.ibatis.logging.jdbc.ConnectionLogger;
@@ -287,6 +288,17 @@ public abstract class BaseExecutor implements Executor {
         // ignore
       }
     }
+  }
+
+  /**
+   * Apply a transaction timeout.
+   * @param statement a current statement
+   * @exception SQLException if a database access error occurs, this method is called on a closed <code>Statement</code>
+   * @see StatementUtil#applyTransactionTimeout(Statement, Integer, Integer)
+   * @since 3.4.0
+   */
+  protected void applyTransactionTimeout(Statement statement) throws SQLException {
+    StatementUtil.applyTransactionTimeout(statement, statement.getQueryTimeout(), transaction.getTimeout());
   }
 
   private void handleLocallyCachedOutputParameters(MappedStatement ms, CacheKey key, Object parameter, BoundSql boundSql) {

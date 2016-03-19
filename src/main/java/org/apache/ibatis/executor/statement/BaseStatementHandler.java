@@ -101,25 +101,16 @@ public abstract class BaseStatementHandler implements StatementHandler {
   protected abstract Statement instantiateStatement(Connection connection) throws SQLException;
 
   protected void setStatementTimeout(Statement stmt, Integer transactionTimeout) throws SQLException {
-    // determine a query timeout of setting
     Integer queryTimeout = null;
     if (mappedStatement.getTimeout() != null) {
       queryTimeout = mappedStatement.getTimeout();
     } else if (configuration.getDefaultStatementTimeout() != null) {
       queryTimeout = configuration.getDefaultStatementTimeout();
     }
-    // determine a time to live of query
-    Integer timeToLiveOfQuery;
     if (queryTimeout != null) {
-      timeToLiveOfQuery = (transactionTimeout == null) ? queryTimeout
-              : Math.min(queryTimeout, transactionTimeout);
-    } else {
-      timeToLiveOfQuery = transactionTimeout;
+      stmt.setQueryTimeout(queryTimeout);
     }
-    // set a time to live of query
-    if (timeToLiveOfQuery != null) {
-      stmt.setQueryTimeout(timeToLiveOfQuery);
-    }
+    StatementUtil.applyTransactionTimeout(stmt, queryTimeout, transactionTimeout);
   }
 
   protected void setFetchSize(Statement stmt) throws SQLException {
