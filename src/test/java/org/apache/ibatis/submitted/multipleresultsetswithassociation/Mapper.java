@@ -26,9 +26,9 @@ public interface Mapper {
 
   List<OrderDetail> getOrderDetailsWithHeaders();
 
-  @Select(value = "{ call GetOrderDetailsAndHeaders() }", resultSets="orderDetailResultSet,orderHeaderResultSet")
+  @Select(value = "{ call GetOrderDetailsAndHeaders() }")
   @ResultMap("orderDetailResultMap")
-  @Options(statementType= StatementType.CALLABLE)
+  @Options(statementType= StatementType.CALLABLE, resultSets="orderDetailResultSet,orderHeaderResultSet")
   List<OrderDetail> getOrderDetailsWithHeadersAnnotationBased();
 
 }
