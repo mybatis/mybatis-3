@@ -27,4 +27,5 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 public @interface Select {
   String[] value();
+  String resultSets() default "";
 }

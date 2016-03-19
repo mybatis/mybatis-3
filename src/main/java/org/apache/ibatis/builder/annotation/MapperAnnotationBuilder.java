@@ -314,6 +314,7 @@ public class MapperAnnotationBuilder {
         resultMapId = parseResultMap(method);
       }
 
+      final Select select = method.getAnnotation(Select.class);
       assistant.addMappedStatement(
           mappedStatementId,
           sqlSource,
@@ -338,7 +339,7 @@ public class MapperAnnotationBuilder {
           null,
           languageDriver,
           // ResultSets
-          null);
+          select != null ? nullOrEmpty(select.resultSets()) : null);
     }
   }
   
