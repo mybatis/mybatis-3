@@ -346,7 +346,7 @@ public class MapperAnnotationBuilder {
           null,
           languageDriver,
           // ResultSets
-          null);
+          options != null ? nullOrEmpty(options.resultSets()) : null);
     }
   }
   
