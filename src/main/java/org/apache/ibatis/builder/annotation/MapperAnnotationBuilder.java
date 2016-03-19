@@ -339,7 +339,7 @@ public class MapperAnnotationBuilder {
           null,
           languageDriver,
           // ResultSets
-          select != null ? nullOrEmpty(options.resultSets()) : null);
+          options != null ? nullOrEmpty(options.resultSets()) : null);
     }
   }
   
