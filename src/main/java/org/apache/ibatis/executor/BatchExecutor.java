@@ -61,6 +61,7 @@ public class BatchExecutor extends BaseExecutor {
     if (sql.equals(currentSql) && ms.equals(currentStatement)) {
       int last = statementList.size() - 1;
       stmt = statementList.get(last);
+      applyTransactionTimeout(stmt);
      handler.parameterize(stmt);//fix Issues 322
       BatchResult batchResult = batchResultList.get(last);
       batchResult.addParameterObject(parameterObject);
@@ -115,6 +116,7 @@ public class BatchExecutor extends BaseExecutor {
       }
       for (int i = 0, n = statementList.size(); i < n; i++) {
         Statement stmt = statementList.get(i);
+        applyTransactionTimeout(stmt);
         BatchResult batchResult = batchResultList.get(i);
         try {
           batchResult.setUpdateCounts(stmt.executeBatch());

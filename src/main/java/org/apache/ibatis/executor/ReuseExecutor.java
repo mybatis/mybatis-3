@@ -83,6 +83,7 @@ public class ReuseExecutor extends BaseExecutor {
     String sql = boundSql.getSql();
     if (hasStatementFor(sql)) {
       stmt = getStatement(sql);
+      applyTransactionTimeout(stmt);
     } else {
       Connection connection = getConnection(statementLog);
       stmt = handler.prepare(connection, transaction.getTimeout());
