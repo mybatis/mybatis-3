@@ -92,4 +92,26 @@ public class MultipleResultSetTest {
     }
   }
 
+  @Test
+  public void shouldGetOrderDetailsEachHavingAnOrderHeaderAnnotationBased() throws IOException {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      List<OrderDetail> orderDetails = mapper.getOrderDetailsWithHeadersAnnotationBased();
+
+      // There are six order detail records in the database
+      // As long as the data does not change this should be successful
+      Assert.assertEquals(6, orderDetails.size());
+
+      // Each order detail should have a corresponding OrderHeader
+      // Only 2 of 6 orderDetails have orderHeaders
+      for(OrderDetail orderDetail : orderDetails){
+          Assert.assertNotNull(orderDetail.getOrderHeader());
+      }
+
+    } finally {
+      sqlSession.close();
+    }
+  }
+
 }
