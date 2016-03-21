@@ -79,7 +79,7 @@ MyBatis 很大程度简化了你的代码而且保持简洁,很容易理解和�
   <subsection name="SqlSessions" id="sqlSessions">
   <p>
 使用 MyBatis 的主要 Java 接口就是 SqlSession。尽管你可以使用这个接口执行命令,获
-取映射器和管理事务。我们会讨论 SqlSession 本身更多,但是首先我们还是要了解如果获取
+取映射器和管理事务。我们会讨论 SqlSession 本身更多,但是首先我们还是要了解如何获取
 一个 SqlSession 实例。SqlSessions 是由 SqlSessionFactory 实例创建的。SqlSessionFactory 对
 象 包 含 创 建 SqlSession 实 例 的 所 有 方 法 。 而 SqlSessionFactory 本 身 是 由
 SqlSessionFactoryBuilder 创建的,它可以从 XML 配置,注解或手动配置 Java 来创建
