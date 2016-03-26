@@ -31,7 +31,7 @@
     <section name="入门">
     
     <subsection name="安装">
-      <p>要使用 MyBatis， 只需将 <code>mybatis-x.x.x.jar</code> 文件置于 classpath 中即可。</p>
+      <p>要使用 MyBatis， 只需将 <a href="https://github.com/mybatis/mybatis-3/releases">mybatis-x.x.x.jar</a> 文件置于 classpath 中即可。</p>
       <p>如果使用 Maven 来构建项目，则需将下面的 dependency 代码置于 pom.xml 文件中：</p>
         <source><![CDATA[
 <dependency>

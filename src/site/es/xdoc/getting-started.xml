@@ -33,9 +33,7 @@
     <subsection name="Instalación">
       <p>
         Para usar MyBatis sólo tienes que incluir el fichero
-        <code>
-          mybatis-x.x.x.jar
-        </code>
+        <a href="https://github.com/mybatis/mybatis-3/releases">mybatis-x.x.x.jar</a>
         en el classpath.
       </p>
       <p>

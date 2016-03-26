@@ -32,9 +32,7 @@
     <subsection name="Installation">
       <p>
         MyBatis を使うためには、ダウンロードした
-        <code>
-          mybatis-x.x.x.jar
-        </code>
+        <a href="https://github.com/mybatis/mybatis-3/releases">mybatis-x.x.x.jar</a>
         をクラスパスに追加する必要があります。
       </p>
       <p>

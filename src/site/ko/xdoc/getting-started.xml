@@ -32,9 +32,7 @@
     <subsection name="설치">
       <p>
         마이바티스를 사용하기 위해 
-        <code>
-          mybatis-x.x.x.jar
-        </code>
+        <a href="https://github.com/mybatis/mybatis-3/releases">mybatis-x.x.x.jar</a>
         파일을 클래스패스에 두어야 한다. 
       </p>
       <p>
