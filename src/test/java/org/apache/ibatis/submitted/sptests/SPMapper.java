@@ -18,6 +18,7 @@ package org.apache.ibatis.submitted.sptests;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Many;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Result;
@@ -46,6 +47,15 @@ public interface SPMapper {
   List<Name> getNamesAndItemsLinked();
   
   List<Name> getNamesAndItemsLinkedById(int id);
+
+  @Select("{call sptest.getnamesanditemsbyid(#{id,jdbcType=INTEGER,mode=IN})}")
+  @Results({
+    @Result(property = "firstName", column = "FIRST_NAME"),
+    @Result(property = "lastName", column = "LAST_NAME"),
+    @Result(property = "items", many = @Many(resultMap = "itemResult", resultSet = "items"))
+  })
+  @Options(resultSets = "names,items", statementType = StatementType.CALLABLE)
+  List<Name> getNamesAndItemsLinkedByIdAnnotationBased(@Param("id") int id);
 
   Object echoDate(Map<String, Object> parameter);  // issue #145
   

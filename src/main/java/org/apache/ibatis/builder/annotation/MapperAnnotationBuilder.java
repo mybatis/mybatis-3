@@ -499,12 +499,12 @@ public class MapperAnnotationBuilder {
           result.javaType() == void.class ? null : result.javaType(),
           result.jdbcType() == JdbcType.UNDEFINED ? null : result.jdbcType(),
           hasNestedSelect(result) ? nestedSelectId(result) : null,
-          null,
+          hasNestedResultMap(result) ? nestedResultMap(result) : null,
           null,
           null,
           result.typeHandler() == UnknownTypeHandler.class ? null : result.typeHandler(),
           flags,
-          null,
+          hasNestedResultSet(result) ? nestedResultSet(result) : null,
           null,
           isLazy(result));
       resultMappings.add(resultMapping);
@@ -522,6 +522,18 @@ public class MapperAnnotationBuilder {
     return nestedSelect;
   }
 
+  private String nestedResultSet(Result result) {
+    return result.many().resultSet();
+  }
+
+  private String nestedResultMap(Result result) {
+    String nestedResultMap = result.many().resultMap();
+    if (!nestedResultMap.contains(".")) {
+      nestedResultMap = type.getName() + "." + nestedResultMap;
+    }
+    return nestedResultMap;
+  }
+
   private boolean isLazy(Result result) {
     boolean isLazy = configuration.isLazyLoadingEnabled();
     if (result.one().select().length() > 0 && FetchType.DEFAULT != result.one().fetchType()) {
@@ -537,6 +549,14 @@ public class MapperAnnotationBuilder {
       throw new BuilderException("Cannot use both @One and @Many annotations in the same @Result");
     }
     return result.one().select().length() > 0 || result.many().select().length() > 0;  
+  }
+
+  private boolean hasNestedResultSet(Result result) {
+    return result.many().resultSet().length() > 0;
+  }
+
+  private boolean hasNestedResultMap(Result result) {
+    return result.many().resultMap().length() > 0;
   }
 
   private void applyConstructorArgs(Arg[] args, Class<?> resultType, List<ResultMapping> resultMappings) {
