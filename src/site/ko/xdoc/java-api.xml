@@ -520,7 +520,8 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
 		timeout=-1, 
 		useGeneratedKeys=false,
 		keyProperty=“id”, 
-		keyColumn=“”.
+		keyColumn=“”,
+		resultSets=“”.
 		자바 애노테이션을 이해하는 것이 중요하다. 
 		자바 애노테이션은 “null”을 설정 할 수 없다. 
 		그래서 일단 Options 애노테이션을 사용하면 각각의 속성은 디폴트 값을 사용하게 된다. 

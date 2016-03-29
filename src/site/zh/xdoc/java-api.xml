@@ -678,7 +678,9 @@ fetchSize=-1 ,
 , 
   timeout=-1 
 useGeneratedKeys=false ,
-keyProperty=”id”。
+keyProperty=”id” ,
+keyColumn=”” ,
+resultSets=””。
 理解 Java 注解是很
 重要的,因为没有办法来指定“null”
 作为值。因此,一旦你使用了 Options
