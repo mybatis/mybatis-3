@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ja"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>AbstractSerialStateHolder.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.executor.loader</a> &gt; <span class="el_source">AbstractSerialStateHolder.java</span></div><h1>AbstractSerialStateHolder.java</h1><pre class="source lang-java linenums">/**
+ *    Copyright 2009-2015 the original author or authors.
+ *
+ *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
+package org.apache.ibatis.executor.loader;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.Externalizable;
+import java.io.IOException;
+import java.io.InvalidClassException;
+import java.io.ObjectInput;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
+import java.io.ObjectStreamException;
+import java.io.StreamCorruptedException;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.ibatis.reflection.factory.ObjectFactory;
+
+/**
+ * @author Eduardo Macarron
+ * @author Franta Mejta
+ */
+public abstract class AbstractSerialStateHolder implements Externalizable {
+
+  private static final long serialVersionUID = 8940388717901644661L;
+<span class="fc" id="L43">  private static final ThreadLocal&lt;ObjectOutputStream&gt; stream = new ThreadLocal&lt;ObjectOutputStream&gt;();</span>
+<span class="fc" id="L44">  private byte[] userBeanBytes = new byte[0];</span>
+  private Object userBean;
+  private Map&lt;String, ResultLoaderMap.LoadPair&gt; unloadedProperties;
+  private ObjectFactory objectFactory;
+  private Class&lt;?&gt;[] constructorArgTypes;
+  private Object[] constructorArgs;
+
+<span class="fc" id="L51">  public AbstractSerialStateHolder() {</span>
+<span class="fc" id="L52">  }</span>
+
+  public AbstractSerialStateHolder(
+          final Object userBean,
+          final Map&lt;String, ResultLoaderMap.LoadPair&gt; unloadedProperties,
+          final ObjectFactory objectFactory,
+          List&lt;Class&lt;?&gt;&gt; constructorArgTypes,
+<span class="fc" id="L59">          List&lt;Object&gt; constructorArgs) {</span>
+<span class="fc" id="L60">    this.userBean = userBean;</span>
+<span class="fc" id="L61">    this.unloadedProperties = new HashMap&lt;String, ResultLoaderMap.LoadPair&gt;(unloadedProperties);</span>
+<span class="fc" id="L62">    this.objectFactory = objectFactory;</span>
+<span class="fc" id="L63">    this.constructorArgTypes = constructorArgTypes.toArray(new Class&lt;?&gt;[constructorArgTypes.size()]);</span>
+<span class="fc" id="L64">    this.constructorArgs = constructorArgs.toArray(new Object[constructorArgs.size()]);</span>
+<span class="fc" id="L65">  }</span>
+
+  @Override
+  public final void writeExternal(final ObjectOutput out) throws IOException {
+<span class="fc" id="L69">    boolean firstRound = false;</span>
+<span class="fc" id="L70">    final ByteArrayOutputStream baos = new ByteArrayOutputStream();</span>
+<span class="fc" id="L71">    ObjectOutputStream os = stream.get();</span>
+<span class="fc bfc" id="L72" title="All 2 branches covered.">    if (os == null) {</span>
+<span class="fc" id="L73">      os = new ObjectOutputStream(baos);</span>
+<span class="fc" id="L74">      firstRound = true;</span>
+<span class="fc" id="L75">      stream.set(os);</span>
+    }
+
+<span class="fc" id="L78">    os.writeObject(this.userBean);</span>
+<span class="fc" id="L79">    os.writeObject(this.unloadedProperties);</span>
+<span class="fc" id="L80">    os.writeObject(this.objectFactory);</span>
+<span class="fc" id="L81">    os.writeObject(this.constructorArgTypes);</span>
+<span class="fc" id="L82">    os.writeObject(this.constructorArgs);</span>
+
+<span class="fc" id="L84">    final byte[] bytes = baos.toByteArray();</span>
+<span class="fc" id="L85">    out.writeObject(bytes);</span>
+
+<span class="fc bfc" id="L87" title="All 2 branches covered.">    if (firstRound) {</span>
+<span class="fc" id="L88">      stream.remove();</span>
+    }
+<span class="fc" id="L90">  }</span>
+
+  @Override
+  public final void readExternal(final ObjectInput in) throws IOException, ClassNotFoundException {
+<span class="fc" id="L94">    final Object data = in.readObject();</span>
+<span class="fc bfc" id="L95" title="All 2 branches covered.">    if (data.getClass().isArray()) {</span>
+<span class="fc" id="L96">      this.userBeanBytes = (byte[]) data;</span>
+    } else {
+<span class="fc" id="L98">      this.userBean = data;</span>
+    }
+<span class="fc" id="L100">  }</span>
+
+  @SuppressWarnings(&quot;unchecked&quot;)
+  protected final Object readResolve() throws ObjectStreamException {
+    /* Second run */
+<span class="pc bpc" id="L105" title="1 of 4 branches missed.">    if (this.userBean != null &amp;&amp; this.userBeanBytes.length == 0) {</span>
+<span class="fc" id="L106">      return this.userBean;</span>
+    }
+
+    /* First run */
+    try {
+<span class="fc" id="L111">      final ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(this.userBeanBytes));</span>
+<span class="fc" id="L112">      this.userBean = in.readObject();</span>
+<span class="fc" id="L113">      this.unloadedProperties = (Map&lt;String, ResultLoaderMap.LoadPair&gt;) in.readObject();</span>
+<span class="fc" id="L114">      this.objectFactory = (ObjectFactory) in.readObject();</span>
+<span class="fc" id="L115">      this.constructorArgTypes = (Class&lt;?&gt;[]) in.readObject();</span>
+<span class="fc" id="L116">      this.constructorArgs = (Object[]) in.readObject();</span>
+<span class="nc" id="L117">    } catch (final IOException ex) {</span>
+<span class="nc" id="L118">      throw (ObjectStreamException) new StreamCorruptedException().initCause(ex);</span>
+<span class="nc" id="L119">    } catch (final ClassNotFoundException ex) {</span>
+<span class="nc" id="L120">      throw (ObjectStreamException) new InvalidClassException(ex.getLocalizedMessage()).initCause(ex);</span>
+<span class="fc" id="L121">    }</span>
+
+<span class="fc" id="L123">    final Map&lt;String, ResultLoaderMap.LoadPair&gt; arrayProps = new HashMap&lt;String, ResultLoaderMap.LoadPair&gt;(this.unloadedProperties);</span>
+<span class="fc" id="L124">    final List&lt;Class&lt;?&gt;&gt; arrayTypes = Arrays.asList(this.constructorArgTypes);</span>
+<span class="fc" id="L125">    final List&lt;Object&gt; arrayValues = Arrays.asList(this.constructorArgs);</span>
+
+<span class="fc" id="L127">    return this.createDeserializationProxy(userBean, arrayProps, objectFactory, arrayTypes, arrayValues);</span>
+  }
+
+  protected abstract Object createDeserializationProxy(Object target, Map&lt;String, ResultLoaderMap.LoadPair&gt; unloadedProperties, ObjectFactory objectFactory,
+          List&lt;Class&lt;?&gt;&gt; constructorArgTypes, List&lt;Object&gt; constructorArgs);
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.5.201505241946</span></div></body></html>

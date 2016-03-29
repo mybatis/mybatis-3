@@ -81,12 +81,12 @@ public abstract class BaseStatementHandler implements StatementHandler {
   }
 
   @Override
-  public Statement prepare(Connection connection) throws SQLException {
+  public Statement prepare(Connection connection, Integer transactionTimeout) throws SQLException {
 <span class="fc" id="L85">    ErrorContext.instance().sql(boundSql.getSql());</span>
 <span class="fc" id="L86">    Statement statement = null;</span>
     try {
 <span class="fc" id="L88">      statement = instantiateStatement(connection);</span>
-<span class="fc" id="L89">      setStatementTimeout(statement);</span>
+<span class="fc" id="L89">      setStatementTimeout(statement, transactionTimeout);</span>
 <span class="fc" id="L90">      setFetchSize(statement);</span>
 <span class="fc" id="L91">      return statement;</span>
 <span class="nc" id="L92">    } catch (SQLException e) {</span>
@@ -100,44 +100,47 @@ public abstract class BaseStatementHandler implements StatementHandler {
 
   protected abstract Statement instantiateStatement(Connection connection) throws SQLException;
 
-  protected void setStatementTimeout(Statement stmt) throws SQLException {
-<span class="fc" id="L104">    Integer timeout = mappedStatement.getTimeout();</span>
-<span class="fc" id="L105">    Integer defaultTimeout = configuration.getDefaultStatementTimeout();</span>
-<span class="fc bfc" id="L106" title="All 2 branches covered.">    if (timeout != null) {</span>
-<span class="fc" id="L107">      stmt.setQueryTimeout(timeout);</span>
-<span class="pc bpc" id="L108" title="1 of 2 branches missed.">    } else if (defaultTimeout != null) {</span>
-<span class="nc" id="L109">      stmt.setQueryTimeout(defaultTimeout);</span>
+  protected void setStatementTimeout(Statement stmt, Integer transactionTimeout) throws SQLException {
+<span class="fc" id="L104">    Integer queryTimeout = null;</span>
+<span class="fc bfc" id="L105" title="All 2 branches covered.">    if (mappedStatement.getTimeout() != null) {</span>
+<span class="fc" id="L106">      queryTimeout = mappedStatement.getTimeout();</span>
+<span class="fc bfc" id="L107" title="All 2 branches covered.">    } else if (configuration.getDefaultStatementTimeout() != null) {</span>
+<span class="fc" id="L108">      queryTimeout = configuration.getDefaultStatementTimeout();</span>
     }
-<span class="fc" id="L111">  }</span>
+<span class="fc bfc" id="L110" title="All 2 branches covered.">    if (queryTimeout != null) {</span>
+<span class="fc" id="L111">      stmt.setQueryTimeout(queryTimeout);</span>
+    }
+<span class="fc" id="L113">    StatementUtil.applyTransactionTimeout(stmt, queryTimeout, transactionTimeout);</span>
+<span class="fc" id="L114">  }</span>
 
   protected void setFetchSize(Statement stmt) throws SQLException {
-<span class="fc" id="L114">    Integer fetchSize = mappedStatement.getFetchSize();</span>
-<span class="fc bfc" id="L115" title="All 2 branches covered.">    if (fetchSize != null) {</span>
-<span class="fc" id="L116">      stmt.setFetchSize(fetchSize);</span>
-<span class="fc" id="L117">      return;</span>
+<span class="fc" id="L117">    Integer fetchSize = mappedStatement.getFetchSize();</span>
+<span class="fc bfc" id="L118" title="All 2 branches covered.">    if (fetchSize != null) {</span>
+<span class="fc" id="L119">      stmt.setFetchSize(fetchSize);</span>
+<span class="fc" id="L120">      return;</span>
     }
-<span class="fc" id="L119">    Integer defaultFetchSize = configuration.getDefaultFetchSize();</span>
-<span class="fc bfc" id="L120" title="All 2 branches covered.">    if (defaultFetchSize != null) {</span>
-<span class="fc" id="L121">      stmt.setFetchSize(defaultFetchSize);</span>
+<span class="fc" id="L122">    Integer defaultFetchSize = configuration.getDefaultFetchSize();</span>
+<span class="fc bfc" id="L123" title="All 2 branches covered.">    if (defaultFetchSize != null) {</span>
+<span class="fc" id="L124">      stmt.setFetchSize(defaultFetchSize);</span>
     }
-<span class="fc" id="L123">  }</span>
+<span class="fc" id="L126">  }</span>
 
   protected void closeStatement(Statement statement) {
     try {
-<span class="nc bnc" id="L127" title="All 2 branches missed.">      if (statement != null) {</span>
-<span class="nc" id="L128">        statement.close();</span>
+<span class="nc bnc" id="L130" title="All 2 branches missed.">      if (statement != null) {</span>
+<span class="nc" id="L131">        statement.close();</span>
       }
-<span class="nc" id="L130">    } catch (SQLException e) {</span>
+<span class="nc" id="L133">    } catch (SQLException e) {</span>
       //ignore
-<span class="nc" id="L132">    }</span>
-<span class="nc" id="L133">  }</span>
+<span class="nc" id="L135">    }</span>
+<span class="nc" id="L136">  }</span>
 
   protected void generateKeys(Object parameter) {
-<span class="fc" id="L136">    KeyGenerator keyGenerator = mappedStatement.getKeyGenerator();</span>
-<span class="fc" id="L137">    ErrorContext.instance().store();</span>
-<span class="fc" id="L138">    keyGenerator.processBefore(executor, mappedStatement, null, parameter);</span>
-<span class="fc" id="L139">    ErrorContext.instance().recall();</span>
-<span class="fc" id="L140">  }</span>
+<span class="fc" id="L139">    KeyGenerator keyGenerator = mappedStatement.getKeyGenerator();</span>
+<span class="fc" id="L140">    ErrorContext.instance().store();</span>
+<span class="fc" id="L141">    keyGenerator.processBefore(executor, mappedStatement, null, parameter);</span>
+<span class="fc" id="L142">    ErrorContext.instance().recall();</span>
+<span class="fc" id="L143">  }</span>
 
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.5.201505241946</span></div></body></html>

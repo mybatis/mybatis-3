@@ -28,28 +28,25 @@ import java.sql.SQLException;
   @Override
   public void setNonNullParameter(PreparedStatement ps, int i, String parameter, JdbcType jdbcType)
       throws SQLException {
-//    ps.setNString(i, ((String) parameter));
-<span class="nc" id="L32">    ps.setString(i, parameter);</span>
-<span class="nc" id="L33">  }</span>
+<span class="nc" id="L31">    ps.setNString(i, parameter);</span>
+<span class="nc" id="L32">  }</span>
 
   @Override
   public String getNullableResult(ResultSet rs, String columnName)
       throws SQLException {
-//    return rs.getNString(columnName);
-<span class="nc" id="L39">    return rs.getString(columnName);</span>
+<span class="nc" id="L37">    return rs.getNString(columnName);</span>
   }
 
   @Override
   public String getNullableResult(ResultSet rs, int columnIndex)
       throws SQLException {
-<span class="nc" id="L45">    return rs.getString(columnIndex);</span>
+<span class="nc" id="L43">    return rs.getNString(columnIndex);</span>
   }
 
   @Override
   public String getNullableResult(CallableStatement cs, int columnIndex)
       throws SQLException {
-//    return cs.getNString(columnIndex);
-<span class="nc" id="L52">    return cs.getString(columnIndex);</span>
+<span class="nc" id="L49">    return cs.getNString(columnIndex);</span>
   }
 
 }

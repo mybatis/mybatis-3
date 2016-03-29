@@ -205,8 +205,8 @@ public class ClassLoaderWrapper {
 <span class="fc" id="L205">    return new ClassLoader[]{</span>
         classLoader,
         defaultClassLoader,
-        Thread.currentThread().getContextClassLoader(),
-        getClass().getClassLoader(),
+<span class="fc" id="L208">        Thread.currentThread().getContextClassLoader(),</span>
+<span class="fc" id="L209">        getClass().getClassLoader(),</span>
         systemClassLoader};
   }
 

@@ -227,8 +227,8 @@ public class SqlRunner {
         try {
 <span class="fc" id="L228">          Class&lt;?&gt; type = Resources.classForName(rsmd.getColumnClassName(i + 1));</span>
 <span class="fc" id="L229">          TypeHandler&lt;?&gt; typeHandler = typeHandlerRegistry.getTypeHandler(type);</span>
-<span class="pc bpc" id="L230" title="1 of 2 branches missed.">          if (typeHandler == null) {</span>
-<span class="nc" id="L231">            typeHandler = typeHandlerRegistry.getTypeHandler(Object.class);</span>
+<span class="fc bfc" id="L230" title="All 2 branches covered.">          if (typeHandler == null) {</span>
+<span class="fc" id="L231">            typeHandler = typeHandlerRegistry.getTypeHandler(Object.class);</span>
           }
 <span class="fc" id="L233">          typeHandlers.add(typeHandler);</span>
 <span class="nc" id="L234">        } catch (Exception e) {</span>

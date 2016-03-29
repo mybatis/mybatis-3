@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ko"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>SimpleExecutor.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.executor</a> &gt; <span class="el_source">SimpleExecutor.java</span></div><h1>SimpleExecutor.java</h1><pre class="source lang-java linenums">/**
+ *    Copyright 2009-2015 the original author or authors.
+ *
+ *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
+package org.apache.ibatis.executor;
+
+import org.apache.ibatis.cursor.Cursor;
+import org.apache.ibatis.executor.statement.StatementHandler;
+import org.apache.ibatis.logging.Log;
+import org.apache.ibatis.mapping.BoundSql;
+import org.apache.ibatis.mapping.MappedStatement;
+import org.apache.ibatis.session.Configuration;
+import org.apache.ibatis.session.ResultHandler;
+import org.apache.ibatis.session.RowBounds;
+import org.apache.ibatis.transaction.Transaction;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Collections;
+import java.util.List;
+
+/**
+ * @author Clinton Begin
+ */
+public class SimpleExecutor extends BaseExecutor {
+
+  public SimpleExecutor(Configuration configuration, Transaction transaction) {
+<span class="fc" id="L40">    super(configuration, transaction);</span>
+<span class="fc" id="L41">  }</span>
+
+  @Override
+  public int doUpdate(MappedStatement ms, Object parameter) throws SQLException {
+<span class="fc" id="L45">    Statement stmt = null;</span>
+    try {
+<span class="fc" id="L47">      Configuration configuration = ms.getConfiguration();</span>
+<span class="fc" id="L48">      StatementHandler handler = configuration.newStatementHandler(this, ms, parameter, RowBounds.DEFAULT, null, null);</span>
+<span class="fc" id="L49">      stmt = prepareStatement(handler, ms.getStatementLog());</span>
+<span class="fc" id="L50">      return handler.update(stmt);</span>
+    } finally {
+<span class="fc" id="L52">      closeStatement(stmt);</span>
+    }
+  }
+
+  @Override
+  public &lt;E&gt; List&lt;E&gt; doQuery(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql) throws SQLException {
+<span class="fc" id="L58">    Statement stmt = null;</span>
+    try {
+<span class="fc" id="L60">      Configuration configuration = ms.getConfiguration();</span>
+<span class="fc" id="L61">      StatementHandler handler = configuration.newStatementHandler(wrapper, ms, parameter, rowBounds, resultHandler, boundSql);</span>
+<span class="fc" id="L62">      stmt = prepareStatement(handler, ms.getStatementLog());</span>
+<span class="fc" id="L63">      return handler.&lt;E&gt;query(stmt, resultHandler);</span>
+    } finally {
+<span class="fc" id="L65">      closeStatement(stmt);</span>
+    }
+  }
+
+  @Override
+  protected &lt;E&gt; Cursor&lt;E&gt; doQueryCursor(MappedStatement ms, Object parameter, RowBounds rowBounds, BoundSql boundSql) throws SQLException {
+<span class="fc" id="L71">    Configuration configuration = ms.getConfiguration();</span>
+<span class="fc" id="L72">    StatementHandler handler = configuration.newStatementHandler(wrapper, ms, parameter, rowBounds, null, boundSql);</span>
+<span class="fc" id="L73">    Statement stmt = prepareStatement(handler, ms.getStatementLog());</span>
+<span class="fc" id="L74">    return handler.&lt;E&gt;queryCursor(stmt);</span>
+  }
+
+  @Override
+  public List&lt;BatchResult&gt; doFlushStatements(boolean isRollback) throws SQLException {
+<span class="fc" id="L79">    return Collections.emptyList();</span>
+  }
+
+  private Statement prepareStatement(StatementHandler handler, Log statementLog) throws SQLException {
+    Statement stmt;
+<span class="fc" id="L84">    Connection connection = getConnection(statementLog);</span>
+<span class="fc" id="L85">    stmt = handler.prepare(connection, transaction.getTimeout());</span>
+<span class="fc" id="L86">    handler.parameterize(stmt);</span>
+<span class="fc" id="L87">    return stmt;</span>
+  }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.5.201505241946</span></div></body></html>

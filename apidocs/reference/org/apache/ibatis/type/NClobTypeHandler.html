@@ -267,12 +267,14 @@
           <li class="api apilevel-"><a href="../../../../org/apache/ibatis/type/BigDecimalTypeHandler.html">BigDecimalTypeHandler</a></li>
           <li class="api apilevel-"><a href="../../../../org/apache/ibatis/type/BigIntegerTypeHandler.html">BigIntegerTypeHandler</a></li>
           <li class="api apilevel-"><a href="../../../../org/apache/ibatis/type/BlobByteObjectArrayTypeHandler.html">BlobByteObjectArrayTypeHandler</a></li>
+          <li class="api apilevel-"><a href="../../../../org/apache/ibatis/type/BlobInputStreamTypeHandler.html">BlobInputStreamTypeHandler</a></li>
           <li class="api apilevel-"><a href="../../../../org/apache/ibatis/type/BlobTypeHandler.html">BlobTypeHandler</a></li>
           <li class="api apilevel-"><a href="../../../../org/apache/ibatis/type/BooleanTypeHandler.html">BooleanTypeHandler</a></li>
           <li class="api apilevel-"><a href="../../../../org/apache/ibatis/type/ByteArrayTypeHandler.html">ByteArrayTypeHandler</a></li>
           <li class="api apilevel-"><a href="../../../../org/apache/ibatis/type/ByteObjectArrayTypeHandler.html">ByteObjectArrayTypeHandler</a></li>
           <li class="api apilevel-"><a href="../../../../org/apache/ibatis/type/ByteTypeHandler.html">ByteTypeHandler</a></li>
           <li class="api apilevel-"><a href="../../../../org/apache/ibatis/type/CharacterTypeHandler.html">CharacterTypeHandler</a></li>
+          <li class="api apilevel-"><a href="../../../../org/apache/ibatis/type/ClobReaderTypeHandler.html">ClobReaderTypeHandler</a></li>
           <li class="api apilevel-"><a href="../../../../org/apache/ibatis/type/ClobTypeHandler.html">ClobTypeHandler</a></li>
           <li class="api apilevel-"><a href="../../../../org/apache/ibatis/type/DateOnlyTypeHandler.html">DateOnlyTypeHandler</a></li>
           <li class="api apilevel-"><a href="../../../../org/apache/ibatis/type/DateTypeHandler.html">DateTypeHandler</a></li>
@@ -657,7 +659,7 @@ Summary:
             String
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../org/apache/ibatis/type/NClobTypeHandler.html#getNullableResult(java.sql.ResultSet, int)">getNullableResult</a></span>(ResultSet rs, int columnIndex)
+        <span class="sympad"><a href="../../../../org/apache/ibatis/type/NClobTypeHandler.html#getNullableResult(java.sql.CallableStatement, int)">getNullableResult</a></span>(CallableStatement cs, int columnIndex)
         
   </td></tr>
 
@@ -673,7 +675,7 @@ Summary:
             String
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../org/apache/ibatis/type/NClobTypeHandler.html#getNullableResult(java.sql.ResultSet, java.lang.String)">getNullableResult</a></span>(ResultSet rs, String columnName)
+        <span class="sympad"><a href="../../../../org/apache/ibatis/type/NClobTypeHandler.html#getNullableResult(java.sql.ResultSet, int)">getNullableResult</a></span>(ResultSet rs, int columnIndex)
         
   </td></tr>
 
@@ -689,7 +691,7 @@ Summary:
             String
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../org/apache/ibatis/type/NClobTypeHandler.html#getNullableResult(java.sql.CallableStatement, int)">getNullableResult</a></span>(CallableStatement cs, int columnIndex)
+        <span class="sympad"><a href="../../../../org/apache/ibatis/type/NClobTypeHandler.html#getNullableResult(java.sql.ResultSet, java.lang.String)">getNullableResult</a></span>(ResultSet rs, String columnName)
         
   </td></tr>
 
@@ -755,13 +757,29 @@ From class
             T
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../org/apache/ibatis/type/BaseTypeHandler.html#getNullableResult(java.sql.ResultSet, int)">getNullableResult</a></span>(ResultSet rs, int columnIndex)
+        <span class="sympad"><a href="../../../../org/apache/ibatis/type/BaseTypeHandler.html#getNullableResult(java.sql.CallableStatement, int)">getNullableResult</a></span>(CallableStatement cs, int columnIndex)
         
   </td></tr>
 
 
 	 
     <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            abstract
+            
+            
+            
+            
+            T
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/type/BaseTypeHandler.html#getNullableResult(java.sql.ResultSet, int)">getNullableResult</a></span>(ResultSet rs, int columnIndex)
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             abstract
             
@@ -772,54 +790,6 @@ From class
         </td>
         <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../org/apache/ibatis/type/BaseTypeHandler.html#getNullableResult(java.sql.ResultSet, java.lang.String)">getNullableResult</a></span>(ResultSet rs, String columnName)
-        
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            abstract
-            
-            
-            
-            
-            T
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../org/apache/ibatis/type/BaseTypeHandler.html#getNullableResult(java.sql.CallableStatement, int)">getNullableResult</a></span>(CallableStatement cs, int columnIndex)
-        
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            T
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../org/apache/ibatis/type/BaseTypeHandler.html#getResult(java.sql.ResultSet, java.lang.String)">getResult</a></span>(ResultSet rs, String columnName)
-        
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            T
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../org/apache/ibatis/type/BaseTypeHandler.html#getResult(java.sql.CallableStatement, int)">getResult</a></span>(CallableStatement cs, int columnIndex)
         
   </td></tr>
 
@@ -836,6 +806,38 @@ From class
         </td>
         <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../org/apache/ibatis/type/BaseTypeHandler.html#getResult(java.sql.ResultSet, int)">getResult</a></span>(ResultSet rs, int columnIndex)
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            T
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/type/BaseTypeHandler.html#getResult(java.sql.ResultSet, java.lang.String)">getResult</a></span>(ResultSet rs, String columnName)
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            T
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../org/apache/ibatis/type/BaseTypeHandler.html#getResult(java.sql.CallableStatement, int)">getResult</a></span>(CallableStatement cs, int columnIndex)
         
   </td></tr>
 
@@ -1111,7 +1113,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>()
+        <span class="sympad">wait</span>(long arg0, int arg1)
         
   </td></tr>
 
@@ -1127,7 +1129,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0, int arg1)
+        <span class="sympad">wait</span>(long arg0)
         
   </td></tr>
 
@@ -1143,7 +1145,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0)
+        <span class="sympad">wait</span>()
         
   </td></tr>
 
@@ -1185,7 +1187,7 @@ From interface
             T
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../org/apache/ibatis/type/TypeHandler.html#getResult(java.sql.ResultSet, java.lang.String)">getResult</a></span>(ResultSet rs, String columnName)
+        <span class="sympad"><a href="../../../../org/apache/ibatis/type/TypeHandler.html#getResult(java.sql.ResultSet, int)">getResult</a></span>(ResultSet rs, int columnIndex)
         
   </td></tr>
 
@@ -1201,7 +1203,7 @@ From interface
             T
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../org/apache/ibatis/type/TypeHandler.html#getResult(java.sql.CallableStatement, int)">getResult</a></span>(CallableStatement cs, int columnIndex)
+        <span class="sympad"><a href="../../../../org/apache/ibatis/type/TypeHandler.html#getResult(java.sql.ResultSet, java.lang.String)">getResult</a></span>(ResultSet rs, String columnName)
         
   </td></tr>
 
@@ -1217,7 +1219,7 @@ From interface
             T
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../org/apache/ibatis/type/TypeHandler.html#getResult(java.sql.ResultSet, int)">getResult</a></span>(ResultSet rs, int columnIndex)
+        <span class="sympad"><a href="../../../../org/apache/ibatis/type/TypeHandler.html#getResult(java.sql.CallableStatement, int)">getResult</a></span>(CallableStatement cs, int columnIndex)
         
   </td></tr>
 
@@ -1324,6 +1326,46 @@ From interface
 
 
 
+<a id="getNullableResult(java.sql.CallableStatement, int)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        String
+      </span>
+      <span class="sympad">getNullableResult</span>
+      <span class="normal">(CallableStatement cs, int columnIndex)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Throws</h5>
+      <table class="jd-tagtable">  
+        <tr>
+            <th>SQLException</td>
+            <td></td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
 <a id="getNullableResult(java.sql.ResultSet, int)"></a>
 
 <div class="jd-details api apilevel-"> 
@@ -1378,46 +1420,6 @@ From interface
       </span>
       <span class="sympad">getNullableResult</span>
       <span class="normal">(ResultSet rs, String columnName)</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p></p></div>
-  <div class="jd-tagdata">
-      <h5 class="jd-tagtitle">Throws</h5>
-      <table class="jd-tagtable">  
-        <tr>
-            <th>SQLException</td>
-            <td></td>
-        </tr>
-      </table>
-  </div>
-
-    </div>
-</div>
-
-
-<a id="getNullableResult(java.sql.CallableStatement, int)"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-         
-         
-        String
-      </span>
-      <span class="sympad">getNullableResult</span>
-      <span class="normal">(CallableStatement cs, int columnIndex)</span>
     </h4>
       <div class="api-level">
         <div>

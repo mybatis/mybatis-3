@@ -17,6 +17,7 @@ package org.apache.ibatis.transaction.jdbc;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import javax.sql.DataSource;
 
@@ -39,110 +40,115 @@ import org.apache.ibatis.transaction.TransactionException;
  */
 public class JdbcTransaction implements Transaction {
 
-<span class="fc" id="L42">  private static final Log log = LogFactory.getLog(JdbcTransaction.class);</span>
+<span class="fc" id="L43">  private static final Log log = LogFactory.getLog(JdbcTransaction.class);</span>
 
   protected Connection connection;
   protected DataSource dataSource;
   protected TransactionIsolationLevel level;
   protected boolean autoCommmit;
 
-<span class="fc" id="L49">  public JdbcTransaction(DataSource ds, TransactionIsolationLevel desiredLevel, boolean desiredAutoCommit) {</span>
-<span class="fc" id="L50">    dataSource = ds;</span>
-<span class="fc" id="L51">    level = desiredLevel;</span>
-<span class="fc" id="L52">    autoCommmit = desiredAutoCommit;</span>
-<span class="fc" id="L53">  }</span>
+<span class="fc" id="L50">  public JdbcTransaction(DataSource ds, TransactionIsolationLevel desiredLevel, boolean desiredAutoCommit) {</span>
+<span class="fc" id="L51">    dataSource = ds;</span>
+<span class="fc" id="L52">    level = desiredLevel;</span>
+<span class="fc" id="L53">    autoCommmit = desiredAutoCommit;</span>
+<span class="fc" id="L54">  }</span>
 
-<span class="nc" id="L55">  public JdbcTransaction(Connection connection) {</span>
-<span class="nc" id="L56">    this.connection = connection;</span>
-<span class="nc" id="L57">  }</span>
+<span class="nc" id="L56">  public JdbcTransaction(Connection connection) {</span>
+<span class="nc" id="L57">    this.connection = connection;</span>
+<span class="nc" id="L58">  }</span>
 
   @Override
   public Connection getConnection() throws SQLException {
-<span class="fc bfc" id="L61" title="All 2 branches covered.">    if (connection == null) {</span>
-<span class="fc" id="L62">      openConnection();</span>
+<span class="fc bfc" id="L62" title="All 2 branches covered.">    if (connection == null) {</span>
+<span class="fc" id="L63">      openConnection();</span>
     }
-<span class="fc" id="L64">    return connection;</span>
+<span class="fc" id="L65">    return connection;</span>
   }
 
   @Override
   public void commit() throws SQLException {
-<span class="pc bpc" id="L69" title="1 of 4 branches missed.">    if (connection != null &amp;&amp; !connection.getAutoCommit()) {</span>
-<span class="pc bpc" id="L70" title="1 of 2 branches missed.">      if (log.isDebugEnabled()) {</span>
-<span class="nc" id="L71">        log.debug(&quot;Committing JDBC Connection [&quot; + connection + &quot;]&quot;);</span>
+<span class="pc bpc" id="L70" title="1 of 4 branches missed.">    if (connection != null &amp;&amp; !connection.getAutoCommit()) {</span>
+<span class="pc bpc" id="L71" title="1 of 2 branches missed.">      if (log.isDebugEnabled()) {</span>
+<span class="nc" id="L72">        log.debug(&quot;Committing JDBC Connection [&quot; + connection + &quot;]&quot;);</span>
       }
-<span class="fc" id="L73">      connection.commit();</span>
+<span class="fc" id="L74">      connection.commit();</span>
     }
-<span class="fc" id="L75">  }</span>
+<span class="fc" id="L76">  }</span>
 
   @Override
   public void rollback() throws SQLException {
-<span class="pc bpc" id="L79" title="1 of 4 branches missed.">    if (connection != null &amp;&amp; !connection.getAutoCommit()) {</span>
-<span class="pc bpc" id="L80" title="1 of 2 branches missed.">      if (log.isDebugEnabled()) {</span>
-<span class="nc" id="L81">        log.debug(&quot;Rolling back JDBC Connection [&quot; + connection + &quot;]&quot;);</span>
+<span class="pc bpc" id="L80" title="1 of 4 branches missed.">    if (connection != null &amp;&amp; !connection.getAutoCommit()) {</span>
+<span class="pc bpc" id="L81" title="1 of 2 branches missed.">      if (log.isDebugEnabled()) {</span>
+<span class="nc" id="L82">        log.debug(&quot;Rolling back JDBC Connection [&quot; + connection + &quot;]&quot;);</span>
       }
-<span class="fc" id="L83">      connection.rollback();</span>
+<span class="fc" id="L84">      connection.rollback();</span>
     }
-<span class="fc" id="L85">  }</span>
+<span class="fc" id="L86">  }</span>
 
   @Override
   public void close() throws SQLException {
-<span class="fc bfc" id="L89" title="All 2 branches covered.">    if (connection != null) {</span>
-<span class="fc" id="L90">      resetAutoCommit();</span>
-<span class="pc bpc" id="L91" title="1 of 2 branches missed.">      if (log.isDebugEnabled()) {</span>
-<span class="nc" id="L92">        log.debug(&quot;Closing JDBC Connection [&quot; + connection + &quot;]&quot;);</span>
+<span class="fc bfc" id="L90" title="All 2 branches covered.">    if (connection != null) {</span>
+<span class="fc" id="L91">      resetAutoCommit();</span>
+<span class="pc bpc" id="L92" title="1 of 2 branches missed.">      if (log.isDebugEnabled()) {</span>
+<span class="nc" id="L93">        log.debug(&quot;Closing JDBC Connection [&quot; + connection + &quot;]&quot;);</span>
       }
-<span class="fc" id="L94">      connection.close();</span>
+<span class="fc" id="L95">      connection.close();</span>
     }
-<span class="fc" id="L96">  }</span>
+<span class="fc" id="L97">  }</span>
 
   protected void setDesiredAutoCommit(boolean desiredAutoCommit) {
     try {
-<span class="fc bfc" id="L100" title="All 2 branches covered.">      if (connection.getAutoCommit() != desiredAutoCommit) {</span>
-<span class="pc bpc" id="L101" title="1 of 2 branches missed.">        if (log.isDebugEnabled()) {</span>
-<span class="nc" id="L102">          log.debug(&quot;Setting autocommit to &quot; + desiredAutoCommit + &quot; on JDBC Connection [&quot; + connection + &quot;]&quot;);</span>
+<span class="fc bfc" id="L101" title="All 2 branches covered.">      if (connection.getAutoCommit() != desiredAutoCommit) {</span>
+<span class="pc bpc" id="L102" title="1 of 2 branches missed.">        if (log.isDebugEnabled()) {</span>
+<span class="nc" id="L103">          log.debug(&quot;Setting autocommit to &quot; + desiredAutoCommit + &quot; on JDBC Connection [&quot; + connection + &quot;]&quot;);</span>
         }
-<span class="fc" id="L104">        connection.setAutoCommit(desiredAutoCommit);</span>
+<span class="fc" id="L105">        connection.setAutoCommit(desiredAutoCommit);</span>
       }
-<span class="nc" id="L106">    } catch (SQLException e) {</span>
+<span class="nc" id="L107">    } catch (SQLException e) {</span>
       // Only a very poorly implemented driver would fail here,
       // and there's not much we can do about that.
-<span class="nc" id="L109">      throw new TransactionException(&quot;Error configuring AutoCommit.  &quot;</span>
+<span class="nc" id="L110">      throw new TransactionException(&quot;Error configuring AutoCommit.  &quot;</span>
           + &quot;Your driver may not support getAutoCommit() or setAutoCommit(). &quot;
           + &quot;Requested setting: &quot; + desiredAutoCommit + &quot;.  Cause: &quot; + e, e);
-<span class="fc" id="L112">    }</span>
-<span class="fc" id="L113">  }</span>
+<span class="fc" id="L113">    }</span>
+<span class="fc" id="L114">  }</span>
 
   protected void resetAutoCommit() {
     try {
-<span class="fc bfc" id="L117" title="All 2 branches covered.">      if (!connection.getAutoCommit()) {</span>
+<span class="fc bfc" id="L118" title="All 2 branches covered.">      if (!connection.getAutoCommit()) {</span>
         // MyBatis does not call commit/rollback on a connection if just selects were performed.
         // Some databases start transactions with select statements
         // and they mandate a commit/rollback before closing the connection.
         // A workaround is setting the autocommit to true before closing the connection.
         // Sybase throws an exception here.
-<span class="pc bpc" id="L123" title="1 of 2 branches missed.">        if (log.isDebugEnabled()) {</span>
-<span class="nc" id="L124">          log.debug(&quot;Resetting autocommit to true on JDBC Connection [&quot; + connection + &quot;]&quot;);</span>
+<span class="pc bpc" id="L124" title="1 of 2 branches missed.">        if (log.isDebugEnabled()) {</span>
+<span class="nc" id="L125">          log.debug(&quot;Resetting autocommit to true on JDBC Connection [&quot; + connection + &quot;]&quot;);</span>
         }
-<span class="fc" id="L126">        connection.setAutoCommit(true);</span>
+<span class="fc" id="L127">        connection.setAutoCommit(true);</span>
       }
-<span class="nc" id="L128">    } catch (SQLException e) {</span>
-<span class="nc bnc" id="L129" title="All 2 branches missed.">      if (log.isDebugEnabled()) {</span>
-<span class="nc" id="L130">        log.debug(&quot;Error resetting autocommit to true &quot;</span>
+<span class="nc" id="L129">    } catch (SQLException e) {</span>
+<span class="nc bnc" id="L130" title="All 2 branches missed.">      if (log.isDebugEnabled()) {</span>
+<span class="nc" id="L131">        log.debug(&quot;Error resetting autocommit to true &quot;</span>
           + &quot;before closing the connection.  Cause: &quot; + e);
       }
-<span class="fc" id="L133">    }</span>
-<span class="fc" id="L134">  }</span>
+<span class="fc" id="L134">    }</span>
+<span class="fc" id="L135">  }</span>
 
   protected void openConnection() throws SQLException {
-<span class="pc bpc" id="L137" title="1 of 2 branches missed.">    if (log.isDebugEnabled()) {</span>
-<span class="nc" id="L138">      log.debug(&quot;Opening JDBC Connection&quot;);</span>
+<span class="pc bpc" id="L138" title="1 of 2 branches missed.">    if (log.isDebugEnabled()) {</span>
+<span class="nc" id="L139">      log.debug(&quot;Opening JDBC Connection&quot;);</span>
     }
-<span class="fc" id="L140">    connection = dataSource.getConnection();</span>
-<span class="fc bfc" id="L141" title="All 2 branches covered.">    if (level != null) {</span>
-<span class="fc" id="L142">      connection.setTransactionIsolation(level.getLevel());</span>
+<span class="fc" id="L141">    connection = dataSource.getConnection();</span>
+<span class="fc bfc" id="L142" title="All 2 branches covered.">    if (level != null) {</span>
+<span class="fc" id="L143">      connection.setTransactionIsolation(level.getLevel());</span>
     }
-<span class="fc" id="L144">    setDesiredAutoCommit(autoCommmit);</span>
-<span class="fc" id="L145">  }</span>
+<span class="fc" id="L145">    setDesiredAutoCommit(autoCommmit);</span>
+<span class="fc" id="L146">  }</span>
 
+  @Override
+  public Integer getTimeout() throws SQLException {
+<span class="fc" id="L150">    return null;</span>
+  }
+  
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.5.201505241946</span></div></body></html>

@@ -255,11 +255,11 @@ public class XMLMapperBuilder extends BaseBuilder {
   private ResultMap resultMapElement(XNode resultMapNode, List&lt;ResultMapping&gt; additionalResultMappings) throws Exception {
 <span class="fc" id="L256">    ErrorContext.instance().activity(&quot;processing &quot; + resultMapNode.getValueBasedIdentifier());</span>
 <span class="fc" id="L257">    String id = resultMapNode.getStringAttribute(&quot;id&quot;,</span>
-        resultMapNode.getValueBasedIdentifier());
+<span class="fc" id="L258">        resultMapNode.getValueBasedIdentifier());</span>
 <span class="fc" id="L259">    String type = resultMapNode.getStringAttribute(&quot;type&quot;,</span>
-        resultMapNode.getStringAttribute(&quot;ofType&quot;,
-            resultMapNode.getStringAttribute(&quot;resultType&quot;,
-                resultMapNode.getStringAttribute(&quot;javaType&quot;))));
+<span class="fc" id="L260">        resultMapNode.getStringAttribute(&quot;ofType&quot;,</span>
+<span class="fc" id="L261">            resultMapNode.getStringAttribute(&quot;resultType&quot;,</span>
+<span class="fc" id="L262">                resultMapNode.getStringAttribute(&quot;javaType&quot;))));</span>
 <span class="fc" id="L263">    String extend = resultMapNode.getStringAttribute(&quot;extends&quot;);</span>
 <span class="fc" id="L264">    Boolean autoMapping = resultMapNode.getBooleanAttribute(&quot;autoMapping&quot;);</span>
 <span class="fc" id="L265">    Class&lt;?&gt; typeClass = resolveClass(type);</span>
@@ -364,24 +364,24 @@ public class XMLMapperBuilder extends BaseBuilder {
 <span class="fc" id="L364">    String jdbcType = context.getStringAttribute(&quot;jdbcType&quot;);</span>
 <span class="fc" id="L365">    String nestedSelect = context.getStringAttribute(&quot;select&quot;);</span>
 <span class="fc" id="L366">    String nestedResultMap = context.getStringAttribute(&quot;resultMap&quot;,</span>
-        processNestedResultMappings(context, Collections.&lt;ResultMapping&gt; emptyList()));
+<span class="fc" id="L367">        processNestedResultMappings(context, Collections.&lt;ResultMapping&gt; emptyList()));</span>
 <span class="fc" id="L368">    String notNullColumn = context.getStringAttribute(&quot;notNullColumn&quot;);</span>
 <span class="fc" id="L369">    String columnPrefix = context.getStringAttribute(&quot;columnPrefix&quot;);</span>
 <span class="fc" id="L370">    String typeHandler = context.getStringAttribute(&quot;typeHandler&quot;);</span>
-<span class="fc" id="L371">    String resulSet = context.getStringAttribute(&quot;resultSet&quot;);</span>
+<span class="fc" id="L371">    String resultSet = context.getStringAttribute(&quot;resultSet&quot;);</span>
 <span class="fc" id="L372">    String foreignColumn = context.getStringAttribute(&quot;foreignColumn&quot;);</span>
 <span class="fc bfc" id="L373" title="All 2 branches covered.">    boolean lazy = &quot;lazy&quot;.equals(context.getStringAttribute(&quot;fetchType&quot;, configuration.isLazyLoadingEnabled() ? &quot;lazy&quot; : &quot;eager&quot;));</span>
 <span class="fc" id="L374">    Class&lt;?&gt; javaTypeClass = resolveClass(javaType);</span>
     @SuppressWarnings(&quot;unchecked&quot;)
 <span class="fc" id="L376">    Class&lt;? extends TypeHandler&lt;?&gt;&gt; typeHandlerClass = (Class&lt;? extends TypeHandler&lt;?&gt;&gt;) resolveClass(typeHandler);</span>
 <span class="fc" id="L377">    JdbcType jdbcTypeEnum = resolveJdbcType(jdbcType);</span>
-<span class="fc" id="L378">    return builderAssistant.buildResultMapping(resultType, property, column, javaTypeClass, jdbcTypeEnum, nestedSelect, nestedResultMap, notNullColumn, columnPrefix, typeHandlerClass, flags, resulSet, foreignColumn, lazy);</span>
+<span class="fc" id="L378">    return builderAssistant.buildResultMapping(resultType, property, column, javaTypeClass, jdbcTypeEnum, nestedSelect, nestedResultMap, notNullColumn, columnPrefix, typeHandlerClass, flags, resultSet, foreignColumn, lazy);</span>
   }
   
   private String processNestedResultMappings(XNode context, List&lt;ResultMapping&gt; resultMappings) throws Exception {
-<span class="fc bfc" id="L382" title="All 6 branches covered.">    if (&quot;association&quot;.equals(context.getName())</span>
-        || &quot;collection&quot;.equals(context.getName())
-        || &quot;case&quot;.equals(context.getName())) {
+<span class="fc bfc" id="L382" title="All 2 branches covered.">    if (&quot;association&quot;.equals(context.getName())</span>
+<span class="fc bfc" id="L383" title="All 2 branches covered.">        || &quot;collection&quot;.equals(context.getName())</span>
+<span class="fc bfc" id="L384" title="All 2 branches covered.">        || &quot;case&quot;.equals(context.getName())) {</span>
 <span class="fc bfc" id="L385" title="All 2 branches covered.">      if (context.getStringAttribute(&quot;select&quot;) == null) {</span>
 <span class="fc" id="L386">        ResultMap resultMap = resultMapElement(context, resultMappings);</span>
 <span class="fc" id="L387">        return resultMap.getId();</span>

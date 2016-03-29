@@ -15,14 +15,17 @@
  */
 package org.apache.ibatis.session.defaults;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.binding.BindingException;
+import org.apache.ibatis.cursor.Cursor;
 import org.apache.ibatis.exceptions.ExceptionFactory;
 import org.apache.ibatis.exceptions.TooManyResultsException;
 import org.apache.ibatis.executor.BatchResult;
@@ -50,250 +53,296 @@ public class DefaultSqlSession implements SqlSession {
 
   private boolean autoCommit;
   private boolean dirty;
+  private List&lt;Cursor&lt;?&gt;&gt; cursorList;
 
-<span class="fc" id="L54">  public DefaultSqlSession(Configuration configuration, Executor executor, boolean autoCommit) {</span>
-<span class="fc" id="L55">    this.configuration = configuration;</span>
-<span class="fc" id="L56">    this.executor = executor;</span>
-<span class="fc" id="L57">    this.dirty = false;</span>
-<span class="fc" id="L58">    this.autoCommit = autoCommit;</span>
-<span class="fc" id="L59">  }</span>
+<span class="fc" id="L58">  public DefaultSqlSession(Configuration configuration, Executor executor, boolean autoCommit) {</span>
+<span class="fc" id="L59">    this.configuration = configuration;</span>
+<span class="fc" id="L60">    this.executor = executor;</span>
+<span class="fc" id="L61">    this.dirty = false;</span>
+<span class="fc" id="L62">    this.autoCommit = autoCommit;</span>
+<span class="fc" id="L63">  }</span>
 
   public DefaultSqlSession(Configuration configuration, Executor executor) {
-<span class="nc" id="L62">    this(configuration, executor, false);</span>
-<span class="nc" id="L63">  }</span>
+<span class="nc" id="L66">    this(configuration, executor, false);</span>
+<span class="nc" id="L67">  }</span>
 
   @Override
   public &lt;T&gt; T selectOne(String statement) {
-<span class="fc" id="L67">    return this.&lt;T&gt;selectOne(statement, null);</span>
+<span class="fc" id="L71">    return this.&lt;T&gt;selectOne(statement, null);</span>
   }
 
   @Override
   public &lt;T&gt; T selectOne(String statement, Object parameter) {
     // Popular vote was to return null on 0 results and throw exception on too many.
-<span class="fc" id="L73">    List&lt;T&gt; list = this.&lt;T&gt;selectList(statement, parameter);</span>
-<span class="fc bfc" id="L74" title="All 2 branches covered.">    if (list.size() == 1) {</span>
-<span class="fc" id="L75">      return list.get(0);</span>
-<span class="fc bfc" id="L76" title="All 2 branches covered.">    } else if (list.size() &gt; 1) {</span>
-<span class="fc" id="L77">      throw new TooManyResultsException(&quot;Expected one result (or null) to be returned by selectOne(), but found: &quot; + list.size());</span>
+<span class="fc" id="L77">    List&lt;T&gt; list = this.&lt;T&gt;selectList(statement, parameter);</span>
+<span class="fc bfc" id="L78" title="All 2 branches covered.">    if (list.size() == 1) {</span>
+<span class="fc" id="L79">      return list.get(0);</span>
+<span class="fc bfc" id="L80" title="All 2 branches covered.">    } else if (list.size() &gt; 1) {</span>
+<span class="fc" id="L81">      throw new TooManyResultsException(&quot;Expected one result (or null) to be returned by selectOne(), but found: &quot; + list.size());</span>
     } else {
-<span class="fc" id="L79">      return null;</span>
+<span class="fc" id="L83">      return null;</span>
     }
   }
 
   @Override
   public &lt;K, V&gt; Map&lt;K, V&gt; selectMap(String statement, String mapKey) {
-<span class="fc" id="L85">    return this.selectMap(statement, null, mapKey, RowBounds.DEFAULT);</span>
+<span class="fc" id="L89">    return this.selectMap(statement, null, mapKey, RowBounds.DEFAULT);</span>
   }
 
   @Override
   public &lt;K, V&gt; Map&lt;K, V&gt; selectMap(String statement, Object parameter, String mapKey) {
-<span class="fc" id="L90">    return this.selectMap(statement, parameter, mapKey, RowBounds.DEFAULT);</span>
+<span class="fc" id="L94">    return this.selectMap(statement, parameter, mapKey, RowBounds.DEFAULT);</span>
   }
 
   @Override
   public &lt;K, V&gt; Map&lt;K, V&gt; selectMap(String statement, Object parameter, String mapKey, RowBounds rowBounds) {
-<span class="fc" id="L95">    final List&lt;? extends V&gt; list = selectList(statement, parameter, rowBounds);</span>
-<span class="fc" id="L96">    final DefaultMapResultHandler&lt;K, V&gt; mapResultHandler = new DefaultMapResultHandler&lt;K, V&gt;(mapKey,</span>
-        configuration.getObjectFactory(), configuration.getObjectWrapperFactory(), configuration.getReflectorFactory());
-<span class="fc" id="L98">    final DefaultResultContext&lt;V&gt; context = new DefaultResultContext&lt;V&gt;();</span>
-<span class="fc bfc" id="L99" title="All 2 branches covered.">    for (V o : list) {</span>
-<span class="fc" id="L100">      context.nextResultObject(o);</span>
-<span class="fc" id="L101">      mapResultHandler.handleResult(context);</span>
-<span class="fc" id="L102">    }</span>
-<span class="fc" id="L103">    return mapResultHandler.getMappedResults();</span>
+<span class="fc" id="L99">    final List&lt;? extends V&gt; list = selectList(statement, parameter, rowBounds);</span>
+<span class="fc" id="L100">    final DefaultMapResultHandler&lt;K, V&gt; mapResultHandler = new DefaultMapResultHandler&lt;K, V&gt;(mapKey,</span>
+<span class="fc" id="L101">        configuration.getObjectFactory(), configuration.getObjectWrapperFactory(), configuration.getReflectorFactory());</span>
+<span class="fc" id="L102">    final DefaultResultContext&lt;V&gt; context = new DefaultResultContext&lt;V&gt;();</span>
+<span class="fc bfc" id="L103" title="All 2 branches covered.">    for (V o : list) {</span>
+<span class="fc" id="L104">      context.nextResultObject(o);</span>
+<span class="fc" id="L105">      mapResultHandler.handleResult(context);</span>
+<span class="fc" id="L106">    }</span>
+<span class="fc" id="L107">    return mapResultHandler.getMappedResults();</span>
+  }
+
+  @Override
+  public &lt;T&gt; Cursor&lt;T&gt; selectCursor(String statement) {
+<span class="nc" id="L112">    return selectCursor(statement, null);</span>
+  }
+
+  @Override
+  public &lt;T&gt; Cursor&lt;T&gt; selectCursor(String statement, Object parameter) {
+<span class="fc" id="L117">    return selectCursor(statement, parameter, RowBounds.DEFAULT);</span>
+  }
+
+  @Override
+  public &lt;T&gt; Cursor&lt;T&gt; selectCursor(String statement, Object parameter, RowBounds rowBounds) {
+    try {
+<span class="fc" id="L123">      MappedStatement ms = configuration.getMappedStatement(statement);</span>
+<span class="fc" id="L124">      Cursor&lt;T&gt; cursor = executor.queryCursor(ms, wrapCollection(parameter), rowBounds);</span>
+<span class="fc" id="L125">      registerCursor(cursor);</span>
+<span class="fc" id="L126">      return cursor;</span>
+<span class="nc" id="L127">    } catch (Exception e) {</span>
+<span class="nc" id="L128">      throw ExceptionFactory.wrapException(&quot;Error querying database.  Cause: &quot; + e, e);</span>
+    } finally {
+<span class="pc" id="L130">      ErrorContext.instance().reset();</span>
+    }
   }
 
   @Override
   public &lt;E&gt; List&lt;E&gt; selectList(String statement) {
-<span class="fc" id="L108">    return this.selectList(statement, null);</span>
+<span class="fc" id="L136">    return this.selectList(statement, null);</span>
   }
 
   @Override
   public &lt;E&gt; List&lt;E&gt; selectList(String statement, Object parameter) {
-<span class="fc" id="L113">    return this.selectList(statement, parameter, RowBounds.DEFAULT);</span>
+<span class="fc" id="L141">    return this.selectList(statement, parameter, RowBounds.DEFAULT);</span>
   }
 
   @Override
   public &lt;E&gt; List&lt;E&gt; selectList(String statement, Object parameter, RowBounds rowBounds) {
     try {
-<span class="fc" id="L119">      MappedStatement ms = configuration.getMappedStatement(statement);</span>
-<span class="fc" id="L120">      return executor.query(ms, wrapCollection(parameter), rowBounds, Executor.NO_RESULT_HANDLER);</span>
-<span class="fc" id="L121">    } catch (Exception e) {</span>
-<span class="fc" id="L122">      throw ExceptionFactory.wrapException(&quot;Error querying database.  Cause: &quot; + e, e);</span>
+<span class="fc" id="L147">      MappedStatement ms = configuration.getMappedStatement(statement);</span>
+<span class="fc" id="L148">      return executor.query(ms, wrapCollection(parameter), rowBounds, Executor.NO_RESULT_HANDLER);</span>
+<span class="fc" id="L149">    } catch (Exception e) {</span>
+<span class="fc" id="L150">      throw ExceptionFactory.wrapException(&quot;Error querying database.  Cause: &quot; + e, e);</span>
     } finally {
-<span class="fc" id="L124">      ErrorContext.instance().reset();</span>
+<span class="fc" id="L152">      ErrorContext.instance().reset();</span>
     }
   }
 
   @Override
   public void select(String statement, Object parameter, ResultHandler handler) {
-<span class="fc" id="L130">    select(statement, parameter, RowBounds.DEFAULT, handler);</span>
-<span class="fc" id="L131">  }</span>
+<span class="fc" id="L158">    select(statement, parameter, RowBounds.DEFAULT, handler);</span>
+<span class="fc" id="L159">  }</span>
 
   @Override
   public void select(String statement, ResultHandler handler) {
-<span class="fc" id="L135">    select(statement, null, RowBounds.DEFAULT, handler);</span>
-<span class="fc" id="L136">  }</span>
+<span class="fc" id="L163">    select(statement, null, RowBounds.DEFAULT, handler);</span>
+<span class="fc" id="L164">  }</span>
 
   @Override
   public void select(String statement, Object parameter, RowBounds rowBounds, ResultHandler handler) {
     try {
-<span class="fc" id="L141">      MappedStatement ms = configuration.getMappedStatement(statement);</span>
-<span class="fc" id="L142">      executor.query(ms, wrapCollection(parameter), rowBounds, handler);</span>
-<span class="fc" id="L143">    } catch (Exception e) {</span>
-<span class="fc" id="L144">      throw ExceptionFactory.wrapException(&quot;Error querying database.  Cause: &quot; + e, e);</span>
+<span class="fc" id="L169">      MappedStatement ms = configuration.getMappedStatement(statement);</span>
+<span class="fc" id="L170">      executor.query(ms, wrapCollection(parameter), rowBounds, handler);</span>
+<span class="fc" id="L171">    } catch (Exception e) {</span>
+<span class="fc" id="L172">      throw ExceptionFactory.wrapException(&quot;Error querying database.  Cause: &quot; + e, e);</span>
     } finally {
-<span class="fc" id="L146">      ErrorContext.instance().reset();</span>
-<span class="fc" id="L147">    }</span>
-<span class="fc" id="L148">  }</span>
+<span class="fc" id="L174">      ErrorContext.instance().reset();</span>
+<span class="fc" id="L175">    }</span>
+<span class="fc" id="L176">  }</span>
 
   @Override
   public int insert(String statement) {
-<span class="nc" id="L152">    return insert(statement, null);</span>
+<span class="nc" id="L180">    return insert(statement, null);</span>
   }
 
   @Override
   public int insert(String statement, Object parameter) {
-<span class="fc" id="L157">    return update(statement, parameter);</span>
+<span class="fc" id="L185">    return update(statement, parameter);</span>
   }
 
   @Override
   public int update(String statement) {
-<span class="nc" id="L162">    return update(statement, null);</span>
+<span class="nc" id="L190">    return update(statement, null);</span>
   }
 
   @Override
   public int update(String statement, Object parameter) {
     try {
-<span class="fc" id="L168">      dirty = true;</span>
-<span class="fc" id="L169">      MappedStatement ms = configuration.getMappedStatement(statement);</span>
-<span class="fc" id="L170">      return executor.update(ms, wrapCollection(parameter));</span>
-<span class="fc" id="L171">    } catch (Exception e) {</span>
-<span class="fc" id="L172">      throw ExceptionFactory.wrapException(&quot;Error updating database.  Cause: &quot; + e, e);</span>
+<span class="fc" id="L196">      dirty = true;</span>
+<span class="fc" id="L197">      MappedStatement ms = configuration.getMappedStatement(statement);</span>
+<span class="fc" id="L198">      return executor.update(ms, wrapCollection(parameter));</span>
+<span class="fc" id="L199">    } catch (Exception e) {</span>
+<span class="fc" id="L200">      throw ExceptionFactory.wrapException(&quot;Error updating database.  Cause: &quot; + e, e);</span>
     } finally {
-<span class="fc" id="L174">      ErrorContext.instance().reset();</span>
+<span class="fc" id="L202">      ErrorContext.instance().reset();</span>
     }
   }
 
   @Override
   public int delete(String statement) {
-<span class="nc" id="L180">    return update(statement, null);</span>
+<span class="nc" id="L208">    return update(statement, null);</span>
   }
 
   @Override
   public int delete(String statement, Object parameter) {
-<span class="fc" id="L185">    return update(statement, parameter);</span>
+<span class="fc" id="L213">    return update(statement, parameter);</span>
   }
 
   @Override
   public void commit() {
-<span class="fc" id="L190">    commit(false);</span>
-<span class="fc" id="L191">  }</span>
+<span class="fc" id="L218">    commit(false);</span>
+<span class="fc" id="L219">  }</span>
 
   @Override
   public void commit(boolean force) {
     try {
-<span class="fc" id="L196">      executor.commit(isCommitOrRollbackRequired(force));</span>
-<span class="fc" id="L197">      dirty = false;</span>
-<span class="nc" id="L198">    } catch (Exception e) {</span>
-<span class="nc" id="L199">      throw ExceptionFactory.wrapException(&quot;Error committing transaction.  Cause: &quot; + e, e);</span>
+<span class="fc" id="L224">      executor.commit(isCommitOrRollbackRequired(force));</span>
+<span class="fc" id="L225">      dirty = false;</span>
+<span class="nc" id="L226">    } catch (Exception e) {</span>
+<span class="nc" id="L227">      throw ExceptionFactory.wrapException(&quot;Error committing transaction.  Cause: &quot; + e, e);</span>
     } finally {
-<span class="pc" id="L201">      ErrorContext.instance().reset();</span>
-<span class="fc" id="L202">    }</span>
-<span class="fc" id="L203">  }</span>
+<span class="pc" id="L229">      ErrorContext.instance().reset();</span>
+<span class="fc" id="L230">    }</span>
+<span class="fc" id="L231">  }</span>
 
   @Override
   public void rollback() {
-<span class="fc" id="L207">    rollback(false);</span>
-<span class="fc" id="L208">  }</span>
+<span class="fc" id="L235">    rollback(false);</span>
+<span class="fc" id="L236">  }</span>
 
   @Override
   public void rollback(boolean force) {
     try {
-<span class="fc" id="L213">      executor.rollback(isCommitOrRollbackRequired(force));</span>
-<span class="fc" id="L214">      dirty = false;</span>
-<span class="nc" id="L215">    } catch (Exception e) {</span>
-<span class="nc" id="L216">      throw ExceptionFactory.wrapException(&quot;Error rolling back transaction.  Cause: &quot; + e, e);</span>
+<span class="fc" id="L241">      executor.rollback(isCommitOrRollbackRequired(force));</span>
+<span class="fc" id="L242">      dirty = false;</span>
+<span class="nc" id="L243">    } catch (Exception e) {</span>
+<span class="nc" id="L244">      throw ExceptionFactory.wrapException(&quot;Error rolling back transaction.  Cause: &quot; + e, e);</span>
     } finally {
-<span class="pc" id="L218">      ErrorContext.instance().reset();</span>
-<span class="fc" id="L219">    }</span>
-<span class="fc" id="L220">  }</span>
+<span class="pc" id="L246">      ErrorContext.instance().reset();</span>
+<span class="fc" id="L247">    }</span>
+<span class="fc" id="L248">  }</span>
 
   @Override
   public List&lt;BatchResult&gt; flushStatements() {
     try {
-<span class="fc" id="L225">      return executor.flushStatements();</span>
-<span class="nc" id="L226">    } catch (Exception e) {</span>
-<span class="nc" id="L227">      throw ExceptionFactory.wrapException(&quot;Error flushing statements.  Cause: &quot; + e, e);</span>
+<span class="fc" id="L253">      return executor.flushStatements();</span>
+<span class="nc" id="L254">    } catch (Exception e) {</span>
+<span class="nc" id="L255">      throw ExceptionFactory.wrapException(&quot;Error flushing statements.  Cause: &quot; + e, e);</span>
     } finally {
-<span class="pc" id="L229">      ErrorContext.instance().reset();</span>
+<span class="pc" id="L257">      ErrorContext.instance().reset();</span>
     }
   }
 
   @Override
   public void close() {
     try {
-<span class="fc" id="L236">      executor.close(isCommitOrRollbackRequired(false));</span>
-<span class="fc" id="L237">      dirty = false;</span>
+<span class="fc" id="L264">      executor.close(isCommitOrRollbackRequired(false));</span>
+<span class="fc" id="L265">      closeCursors();</span>
+<span class="fc" id="L266">      dirty = false;</span>
     } finally {
-<span class="pc" id="L239">      ErrorContext.instance().reset();</span>
-<span class="fc" id="L240">    }</span>
-<span class="fc" id="L241">  }</span>
+<span class="pc" id="L268">      ErrorContext.instance().reset();</span>
+<span class="fc" id="L269">    }</span>
+<span class="fc" id="L270">  }</span>
+
+  private void closeCursors() {
+<span class="pc bpc" id="L273" title="1 of 4 branches missed.">    if (cursorList != null &amp;&amp; cursorList.size() != 0) {</span>
+<span class="fc bfc" id="L274" title="All 2 branches covered.">      for (Cursor&lt;?&gt; cursor : cursorList) {</span>
+        try {
+<span class="fc" id="L276">          cursor.close();</span>
+<span class="nc" id="L277">        } catch (IOException e) {</span>
+<span class="nc" id="L278">          throw ExceptionFactory.wrapException(&quot;Error closing cursor.  Cause: &quot; + e, e);</span>
+<span class="fc" id="L279">        }</span>
+<span class="fc" id="L280">      }</span>
+<span class="fc" id="L281">      cursorList.clear();</span>
+    }
+<span class="fc" id="L283">  }</span>
 
   @Override
   public Configuration getConfiguration() {
-<span class="fc" id="L245">    return configuration;</span>
+<span class="fc" id="L287">    return configuration;</span>
   }
 
   @Override
   public &lt;T&gt; T getMapper(Class&lt;T&gt; type) {
-<span class="fc" id="L250">    return configuration.&lt;T&gt;getMapper(type, this);</span>
+<span class="fc" id="L292">    return configuration.&lt;T&gt;getMapper(type, this);</span>
   }
 
   @Override
   public Connection getConnection() {
     try {
-<span class="fc" id="L256">      return executor.getTransaction().getConnection();</span>
-<span class="nc" id="L257">    } catch (SQLException e) {</span>
-<span class="nc" id="L258">      throw ExceptionFactory.wrapException(&quot;Error getting a new connection.  Cause: &quot; + e, e);</span>
+<span class="fc" id="L298">      return executor.getTransaction().getConnection();</span>
+<span class="nc" id="L299">    } catch (SQLException e) {</span>
+<span class="nc" id="L300">      throw ExceptionFactory.wrapException(&quot;Error getting a new connection.  Cause: &quot; + e, e);</span>
     }
   }
 
   @Override
   public void clearCache() {
-<span class="fc" id="L264">    executor.clearLocalCache();</span>
-<span class="fc" id="L265">  }</span>
+<span class="fc" id="L306">    executor.clearLocalCache();</span>
+<span class="fc" id="L307">  }</span>
+
+  private &lt;T&gt; void registerCursor(Cursor&lt;T&gt; cursor) {
+<span class="pc bpc" id="L310" title="1 of 2 branches missed.">    if (cursorList == null) {</span>
+<span class="fc" id="L311">      cursorList = new ArrayList&lt;Cursor&lt;?&gt;&gt;();</span>
+    }
+<span class="fc" id="L313">    cursorList.add(cursor);</span>
+<span class="fc" id="L314">  }</span>
 
   private boolean isCommitOrRollbackRequired(boolean force) {
-<span class="fc bfc" id="L268" title="All 6 branches covered.">    return (!autoCommit &amp;&amp; dirty) || force;</span>
+<span class="fc bfc" id="L317" title="All 6 branches covered.">    return (!autoCommit &amp;&amp; dirty) || force;</span>
   }
 
   private Object wrapCollection(final Object object) {
-<span class="fc bfc" id="L272" title="All 2 branches covered.">    if (object instanceof Collection) {</span>
-<span class="fc" id="L273">      StrictMap&lt;Object&gt; map = new StrictMap&lt;Object&gt;();</span>
-<span class="fc" id="L274">      map.put(&quot;collection&quot;, object);</span>
-<span class="fc bfc" id="L275" title="All 2 branches covered.">      if (object instanceof List) {</span>
-<span class="fc" id="L276">        map.put(&quot;list&quot;, object);</span>
+<span class="fc bfc" id="L321" title="All 2 branches covered.">    if (object instanceof Collection) {</span>
+<span class="fc" id="L322">      StrictMap&lt;Object&gt; map = new StrictMap&lt;Object&gt;();</span>
+<span class="fc" id="L323">      map.put(&quot;collection&quot;, object);</span>
+<span class="fc bfc" id="L324" title="All 2 branches covered.">      if (object instanceof List) {</span>
+<span class="fc" id="L325">        map.put(&quot;list&quot;, object);</span>
       }
-<span class="fc" id="L278">      return map;</span>
-<span class="fc bfc" id="L279" title="All 4 branches covered.">    } else if (object != null &amp;&amp; object.getClass().isArray()) {</span>
-<span class="fc" id="L280">      StrictMap&lt;Object&gt; map = new StrictMap&lt;Object&gt;();</span>
-<span class="fc" id="L281">      map.put(&quot;array&quot;, object);</span>
-<span class="fc" id="L282">      return map;</span>
+<span class="fc" id="L327">      return map;</span>
+<span class="fc bfc" id="L328" title="All 4 branches covered.">    } else if (object != null &amp;&amp; object.getClass().isArray()) {</span>
+<span class="fc" id="L329">      StrictMap&lt;Object&gt; map = new StrictMap&lt;Object&gt;();</span>
+<span class="fc" id="L330">      map.put(&quot;array&quot;, object);</span>
+<span class="fc" id="L331">      return map;</span>
     }
-<span class="fc" id="L284">    return object;</span>
+<span class="fc" id="L333">    return object;</span>
   }
 
-<span class="fc" id="L287">  public static class StrictMap&lt;V&gt; extends HashMap&lt;String, V&gt; {</span>
+<span class="fc" id="L336">  public static class StrictMap&lt;V&gt; extends HashMap&lt;String, V&gt; {</span>
 
     private static final long serialVersionUID = -5741767162221585340L;
 
     @Override
     public V get(Object key) {
-<span class="fc bfc" id="L293" title="All 2 branches covered.">      if (!super.containsKey(key)) {</span>
-<span class="fc" id="L294">        throw new BindingException(&quot;Parameter '&quot; + key + &quot;' not found. Available parameters are &quot; + this.keySet());</span>
+<span class="fc bfc" id="L342" title="All 2 branches covered.">      if (!super.containsKey(key)) {</span>
+<span class="fc" id="L343">        throw new BindingException(&quot;Parameter '&quot; + key + &quot;' not found. Available parameters are &quot; + this.keySet());</span>
       }
-<span class="fc" id="L296">      return super.get(key);</span>
+<span class="fc" id="L345">      return super.get(key);</span>
     }
 
   }

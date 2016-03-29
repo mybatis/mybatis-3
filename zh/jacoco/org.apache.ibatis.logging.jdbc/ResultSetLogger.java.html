@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>ResultSetLogger.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.logging.jdbc</a> &gt; <span class="el_source">ResultSetLogger.java</span></div><h1>ResultSetLogger.java</h1><pre class="source lang-java linenums">/**
+ *    Copyright 2009-2015 the original author or authors.
+ *
+ *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
+package org.apache.ibatis.logging.jdbc;
+
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.sql.Types;
+import java.util.HashSet;
+import java.util.Set;
+
+import org.apache.ibatis.logging.Log;
+import org.apache.ibatis.reflection.ExceptionUtil;
+
+/**
+ * ResultSet proxy to add logging
+ * 
+ * @author Clinton Begin
+ * @author Eduardo Macarron
+ * 
+ */
+public final class ResultSetLogger extends BaseJdbcLogger implements InvocationHandler {
+
+<span class="fc" id="L40">  private static Set&lt;Integer&gt; BLOB_TYPES = new HashSet&lt;Integer&gt;();</span>
+<span class="fc" id="L41">  private boolean first = true;</span>
+<span class="fc" id="L42">  private int rows = 0;</span>
+  private ResultSet rs;
+<span class="fc" id="L44">  private Set&lt;Integer&gt; blobColumns = new HashSet&lt;Integer&gt;();</span>
+
+  static {
+<span class="fc" id="L47">    BLOB_TYPES.add(Types.BINARY);</span>
+<span class="fc" id="L48">    BLOB_TYPES.add(Types.BLOB);</span>
+<span class="fc" id="L49">    BLOB_TYPES.add(Types.CLOB);</span>
+<span class="fc" id="L50">    BLOB_TYPES.add(Types.LONGNVARCHAR);</span>
+<span class="fc" id="L51">    BLOB_TYPES.add(Types.LONGVARBINARY);</span>
+<span class="fc" id="L52">    BLOB_TYPES.add(Types.LONGVARCHAR);</span>
+<span class="fc" id="L53">    BLOB_TYPES.add(Types.NCLOB);</span>
+<span class="fc" id="L54">    BLOB_TYPES.add(Types.VARBINARY);</span>
+<span class="fc" id="L55">  }</span>
+  
+  private ResultSetLogger(ResultSet rs, Log statementLog, int queryStack) {
+<span class="fc" id="L58">    super(statementLog, queryStack);</span>
+<span class="fc" id="L59">    this.rs = rs;</span>
+<span class="fc" id="L60">  }</span>
+
+  @Override
+  public Object invoke(Object proxy, Method method, Object[] params) throws Throwable {
+    try {
+<span class="pc bpc" id="L65" title="1 of 2 branches missed.">      if (Object.class.equals(method.getDeclaringClass())) {</span>
+<span class="nc" id="L66">        return method.invoke(this, params);</span>
+      }    
+<span class="fc" id="L68">      Object o = method.invoke(rs, params);</span>
+<span class="pc bpc" id="L69" title="1 of 2 branches missed.">      if (&quot;next&quot;.equals(method.getName())) {</span>
+<span class="pc bpc" id="L70" title="1 of 2 branches missed.">        if (((Boolean) o)) {</span>
+<span class="fc" id="L71">          rows++;</span>
+<span class="pc bpc" id="L72" title="1 of 2 branches missed.">          if (isTraceEnabled()) {</span>
+<span class="fc" id="L73">            ResultSetMetaData rsmd = rs.getMetaData();</span>
+<span class="fc" id="L74">            final int columnCount = rsmd.getColumnCount();</span>
+<span class="pc bpc" id="L75" title="1 of 2 branches missed.">            if (first) {</span>
+<span class="fc" id="L76">              first = false;</span>
+<span class="fc" id="L77">              printColumnHeaders(rsmd, columnCount);</span>
+            }
+<span class="fc" id="L79">            printColumnValues(columnCount);</span>
+<span class="fc" id="L80">          }</span>
+        } else {
+<span class="nc" id="L82">          debug(&quot;     Total: &quot; + rows, false);</span>
+        }
+      }
+<span class="fc" id="L85">      clearColumnInfo();</span>
+<span class="fc" id="L86">      return o;</span>
+<span class="nc" id="L87">    } catch (Throwable t) {</span>
+<span class="nc" id="L88">      throw ExceptionUtil.unwrapThrowable(t);</span>
+    }
+  }
+
+  private void printColumnHeaders(ResultSetMetaData rsmd, int columnCount) throws SQLException {
+<span class="fc" id="L93">    StringBuilder row = new StringBuilder();</span>
+<span class="fc" id="L94">    row.append(&quot;   Columns: &quot;);</span>
+<span class="fc bfc" id="L95" title="All 2 branches covered.">    for (int i = 1; i &lt;= columnCount; i++) {</span>
+<span class="fc bfc" id="L96" title="All 2 branches covered.">      if (BLOB_TYPES.contains(rsmd.getColumnType(i))) {</span>
+<span class="fc" id="L97">        blobColumns.add(i);</span>
+      }
+<span class="fc" id="L99">      String colname = rsmd.getColumnLabel(i);</span>
+<span class="fc" id="L100">      row.append(colname);</span>
+<span class="pc bpc" id="L101" title="1 of 2 branches missed.">      if (i != columnCount) {</span>
+<span class="nc" id="L102">        row.append(&quot;, &quot;);</span>
+      }
+    }
+<span class="fc" id="L105">    trace(row.toString(), false);</span>
+<span class="fc" id="L106">  }</span>
+
+  private void printColumnValues(int columnCount) {
+<span class="fc" id="L109">    StringBuilder row = new StringBuilder();</span>
+<span class="fc" id="L110">    row.append(&quot;       Row: &quot;);</span>
+<span class="fc bfc" id="L111" title="All 2 branches covered.">    for (int i = 1; i &lt;= columnCount; i++) {</span>
+      String colname;
+      try {
+<span class="fc bfc" id="L114" title="All 2 branches covered.">        if (blobColumns.contains(i)) {</span>
+<span class="fc" id="L115">          colname = &quot;&lt;&lt;BLOB&gt;&gt;&quot;;</span>
+        } else {
+<span class="fc" id="L117">          colname = rs.getString(i);</span>
+        }
+<span class="nc" id="L119">      } catch (SQLException e) {</span>
+        // generally can't call getString() on a BLOB column
+<span class="nc" id="L121">        colname = &quot;&lt;&lt;Cannot Display&gt;&gt;&quot;;</span>
+<span class="fc" id="L122">      }</span>
+<span class="fc" id="L123">      row.append(colname);</span>
+<span class="pc bpc" id="L124" title="1 of 2 branches missed.">      if (i != columnCount) {</span>
+<span class="nc" id="L125">        row.append(&quot;, &quot;);</span>
+      }
+    }
+<span class="fc" id="L128">    trace(row.toString(), false);</span>
+<span class="fc" id="L129">  }</span>
+
+  /*
+   * Creates a logging version of a ResultSet
+   *
+   * @param rs - the ResultSet to proxy
+   * @return - the ResultSet with logging
+   */
+  public static ResultSet newInstance(ResultSet rs, Log statementLog, int queryStack) {
+<span class="fc" id="L138">    InvocationHandler handler = new ResultSetLogger(rs, statementLog, queryStack);</span>
+<span class="fc" id="L139">    ClassLoader cl = ResultSet.class.getClassLoader();</span>
+<span class="fc" id="L140">    return (ResultSet) Proxy.newProxyInstance(cl, new Class[]{ResultSet.class}, handler);</span>
+  }
+
+  /*
+   * Get the wrapped result set
+   *
+   * @return the resultSet
+   */
+  public ResultSet getRs() {
+<span class="nc" id="L149">    return rs;</span>
+  }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.5.201505241946</span></div></body></html>

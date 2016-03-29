@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>ExternalResources.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.io</a> &gt; <span class="el_source">ExternalResources.java</span></div><h1>ExternalResources.java</h1><pre class="source lang-java linenums">/**
+ *    Copyright 2009-2015 the original author or authors.
+ *
+ *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
+package org.apache.ibatis.io;
+
+import java.io.Closeable;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.channels.FileChannel;
+import java.util.Properties;
+
+/**
+ * @author Clinton Begin
+ */
+public class ExternalResources {
+
+<span class="nc" id="L32">  private ExternalResources() {</span>
+    // do nothing
+<span class="nc" id="L34">  }</span>
+
+  public static void copyExternalResource(File sourceFile, File destFile) throws IOException {
+<span class="pc bpc" id="L37" title="1 of 2 branches missed.">    if (!destFile.exists()) {</span>
+<span class="nc" id="L38">      destFile.createNewFile();</span>
+    }
+
+<span class="fc" id="L41">    FileChannel source = null;</span>
+<span class="fc" id="L42">    FileChannel destination = null;</span>
+    try {
+<span class="fc" id="L44">      source = new FileInputStream(sourceFile).getChannel();</span>
+<span class="fc" id="L45">      destination = new FileOutputStream(destFile).getChannel();</span>
+<span class="fc" id="L46">      destination.transferFrom(source, 0, source.size());</span>
+    } finally {
+<span class="fc" id="L48">      closeQuietly(source);</span>
+<span class="fc" id="L49">      closeQuietly(destination);</span>
+<span class="fc" id="L50">    }</span>
+
+<span class="fc" id="L52">  }</span>
+
+  private static void closeQuietly(Closeable closeable) {
+<span class="fc bfc" id="L55" title="All 2 branches covered.">    if (closeable != null) {</span>
+      try {
+<span class="fc" id="L57">        closeable.close();</span>
+<span class="nc" id="L58">      } catch (IOException e) {</span>
+        // do nothing, close quietly
+<span class="fc" id="L60">      }</span>
+    }
+<span class="fc" id="L62">  }</span>
+
+  public static String getConfiguredTemplate(String templatePath, String templateProperty) throws FileNotFoundException {
+<span class="fc" id="L65">    String templateName = &quot;&quot;;</span>
+<span class="fc" id="L66">    Properties migrationProperties = new Properties();</span>
+
+    try {
+<span class="fc" id="L69">      migrationProperties.load(new FileInputStream(templatePath));</span>
+<span class="fc" id="L70">      templateName = migrationProperties.getProperty(templateProperty);</span>
+<span class="nc" id="L71">    } catch (FileNotFoundException e) {</span>
+<span class="nc" id="L72">      throw e;</span>
+<span class="nc" id="L73">    } catch (Exception e) {</span>
+<span class="nc" id="L74">      e.printStackTrace();</span>
+<span class="fc" id="L75">    }</span>
+
+<span class="fc" id="L77">    return templateName;</span>
+  }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.5.201505241946</span></div></body></html>

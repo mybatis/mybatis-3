@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>BlobByteObjectArrayTypeHandler.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.type</a> &gt; <span class="el_source">BlobByteObjectArrayTypeHandler.java</span></div><h1>BlobByteObjectArrayTypeHandler.java</h1><pre class="source lang-java linenums">/**
+ *    Copyright 2009-2015 the original author or authors.
+ *
+ *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
+package org.apache.ibatis.type;
+
+import java.io.ByteArrayInputStream;
+import java.sql.*;
+
+/**
+ * @author Clinton Begin
+ */
+<span class="fc" id="L24">public class BlobByteObjectArrayTypeHandler extends BaseTypeHandler&lt;Byte[]&gt; {</span>
+
+  @Override
+  public void setNonNullParameter(PreparedStatement ps, int i, Byte[] parameter, JdbcType jdbcType)
+      throws SQLException {
+<span class="nc" id="L29">    ByteArrayInputStream bis = new ByteArrayInputStream(ByteArrayUtils.convertToPrimitiveArray(parameter));</span>
+<span class="nc" id="L30">    ps.setBinaryStream(i, bis, parameter.length);</span>
+<span class="nc" id="L31">  }</span>
+
+  @Override
+  public Byte[] getNullableResult(ResultSet rs, String columnName)
+      throws SQLException {
+<span class="nc" id="L36">    Blob blob = rs.getBlob(columnName);</span>
+<span class="nc" id="L37">    return getBytes(blob);</span>
+  }
+
+  @Override
+  public Byte[] getNullableResult(ResultSet rs, int columnIndex)
+      throws SQLException {
+<span class="nc" id="L43">    Blob blob = rs.getBlob(columnIndex);</span>
+<span class="nc" id="L44">    return getBytes(blob);</span>
+  }
+
+  @Override
+  public Byte[] getNullableResult(CallableStatement cs, int columnIndex)
+      throws SQLException {
+<span class="nc" id="L50">    Blob blob = cs.getBlob(columnIndex);</span>
+<span class="nc" id="L51">    return getBytes(blob);</span>
+  }
+
+  private Byte[] getBytes(Blob blob) throws SQLException {
+<span class="nc" id="L55">    Byte[] returnValue = null;</span>
+<span class="nc bnc" id="L56" title="All 2 branches missed.">    if (blob != null) {</span>
+<span class="nc" id="L57">      returnValue = ByteArrayUtils.convertToObjectArray(blob.getBytes(1, (int) blob.length()));</span>
+    }
+<span class="nc" id="L59">    return returnValue;</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.5.201505241946</span></div></body></html>

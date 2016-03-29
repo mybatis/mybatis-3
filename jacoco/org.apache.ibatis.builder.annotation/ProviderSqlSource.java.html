@@ -43,8 +43,8 @@ public class ProviderSqlSource implements SqlSource {
 
 <span class="fc bfc" id="L44" title="All 2 branches covered.">      for (Method m : this.providerType.getMethods()) {</span>
 <span class="fc bfc" id="L45" title="All 2 branches covered.">        if (providerMethodName.equals(m.getName())) {</span>
-<span class="pc bpc" id="L46" title="2 of 4 branches missed.">          if (m.getParameterTypes().length &lt; 2</span>
-              &amp;&amp; m.getReturnType() == String.class) {
+<span class="pc bpc" id="L46" title="1 of 2 branches missed.">          if (m.getParameterTypes().length &lt; 2</span>
+<span class="pc bpc" id="L47" title="1 of 2 branches missed.">              &amp;&amp; m.getReturnType() == String.class) {</span>
 <span class="fc" id="L48">            this.providerMethod = m;</span>
 <span class="fc bfc" id="L49" title="All 2 branches covered.">            this.providerTakesParameterObject = m.getParameterTypes().length == 1;</span>
           }
@@ -55,7 +55,7 @@ public class ProviderSqlSource implements SqlSource {
 <span class="fc" id="L55">    }</span>
 <span class="pc bpc" id="L56" title="1 of 2 branches missed.">    if (this.providerMethod == null) {</span>
 <span class="nc" id="L57">      throw new BuilderException(&quot;Error creating SqlSource for SqlProvider. Method '&quot;</span>
-          + providerMethodName + &quot;' not found in SqlProvider '&quot; + this.providerType.getName() + &quot;'.&quot;);
+<span class="nc" id="L58">          + providerMethodName + &quot;' not found in SqlProvider '&quot; + this.providerType.getName() + &quot;'.&quot;);</span>
     }
 <span class="fc" id="L60">  }</span>
 
@@ -77,7 +77,7 @@ public class ProviderSqlSource implements SqlSource {
 <span class="fc" id="L77">      return sqlSourceParser.parse(sql, parameterType, new HashMap&lt;String, Object&gt;());</span>
 <span class="nc" id="L78">    } catch (Exception e) {</span>
 <span class="nc" id="L79">      throw new BuilderException(&quot;Error invoking SqlProvider method (&quot;</span>
-          + providerType.getName() + &quot;.&quot; + providerMethod.getName()
+<span class="nc" id="L80">          + providerType.getName() + &quot;.&quot; + providerMethod.getName()</span>
           + &quot;).  Cause: &quot; + e, e);
     }
   }

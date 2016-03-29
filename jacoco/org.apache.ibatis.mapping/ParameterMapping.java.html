@@ -109,14 +109,14 @@ public class ParameterMapping {
 <span class="pc bpc" id="L109" title="1 of 2 branches missed.">      if (ResultSet.class.equals(parameterMapping.javaType)) {</span>
 <span class="nc bnc" id="L110" title="All 2 branches missed.">        if (parameterMapping.resultMapId == null) { </span>
 <span class="nc" id="L111">          throw new IllegalStateException(&quot;Missing resultmap in property '&quot;  </span>
-              + parameterMapping.property + &quot;'.  &quot; 
+<span class="nc" id="L112">              + parameterMapping.property + &quot;'.  &quot; </span>
               + &quot;Parameters of type java.sql.ResultSet require a resultmap.&quot;);
         }            
       } else {
 <span class="pc bpc" id="L116" title="1 of 2 branches missed.">        if (parameterMapping.typeHandler == null) { </span>
-<span class="nc" id="L117">          throw new IllegalStateException(&quot;Type handler was null on parameter mapping for property '&quot;  </span>
-              + parameterMapping.property + &quot;'.  &quot; 
-              + &quot;It was either not specified and/or could not be found for the javaType / jdbcType combination specified.&quot;);
+<span class="nc" id="L117">          throw new IllegalStateException(&quot;Type handler was null on parameter mapping for property '&quot;</span>
+<span class="nc" id="L118">            + parameterMapping.property + &quot;'. It was either not specified and/or could not be found for the javaType (&quot;</span>
+<span class="nc" id="L119">            + parameterMapping.javaType.getName() + &quot;) : jdbcType (&quot; + parameterMapping.jdbcType + &quot;) combination.&quot;);</span>
         }
       }
 <span class="fc" id="L122">    }</span>

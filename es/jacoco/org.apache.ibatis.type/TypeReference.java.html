@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>TypeReference.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.type</a> &gt; <span class="el_source">TypeReference.java</span></div><h1>TypeReference.java</h1><pre class="source lang-java linenums">/**
+ *    Copyright 2009-2015 the original author or authors.
+ *
+ *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
+package org.apache.ibatis.type;
+
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+
+/**
+ * References a generic type.
+ *
+ * @param &lt;T&gt; the referenced type
+ * @author Simone Tripodi
+ * @since 3.1.0
+ */
+public abstract class TypeReference&lt;T&gt; {
+
+  private final Type rawType;
+
+<span class="fc" id="L32">  protected TypeReference() {</span>
+<span class="fc" id="L33">    rawType = getSuperclassTypeParameter(getClass());</span>
+<span class="fc" id="L34">  }</span>
+
+  Type getSuperclassTypeParameter(Class&lt;?&gt; clazz) {
+<span class="fc" id="L37">    Type genericSuperclass = clazz.getGenericSuperclass();</span>
+<span class="fc bfc" id="L38" title="All 2 branches covered.">    if (genericSuperclass instanceof Class) {</span>
+      // try to climb up the hierarchy until meet something useful
+<span class="pc bpc" id="L40" title="1 of 2 branches missed.">      if (TypeReference.class != genericSuperclass) {</span>
+<span class="fc" id="L41">        return getSuperclassTypeParameter(clazz.getSuperclass());</span>
+      }
+
+<span class="nc" id="L44">      throw new TypeException(&quot;'&quot; + getClass() + &quot;' extends TypeReference but misses the type parameter. &quot;</span>
+        + &quot;Remove the extension or add a type parameter to it.&quot;);
+    }
+
+<span class="fc" id="L48">    Type rawType = ((ParameterizedType) genericSuperclass).getActualTypeArguments()[0];</span>
+    // TODO remove this when Reflector is fixed to return Types
+<span class="fc bfc" id="L50" title="All 2 branches covered.">    if (rawType instanceof ParameterizedType) {</span>
+<span class="fc" id="L51">      rawType = ((ParameterizedType) rawType).getRawType();</span>
+    }
+
+<span class="fc" id="L54">    return rawType;</span>
+  }
+
+  public final Type getRawType() {
+<span class="fc" id="L58">    return rawType;</span>
+  }
+
+  @Override
+  public String toString() {
+<span class="nc" id="L63">    return rawType.toString();</span>
+  }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.5.201505241946</span></div></body></html>

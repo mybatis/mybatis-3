@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.cursor.Cursor;
 import org.apache.ibatis.executor.statement.StatementHandler;
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.mapping.BoundSql;
@@ -37,67 +38,76 @@ import org.apache.ibatis.transaction.Transaction;
  */
 public class ReuseExecutor extends BaseExecutor {
 
-<span class="fc" id="L40">  private final Map&lt;String, Statement&gt; statementMap = new HashMap&lt;String, Statement&gt;();</span>
+<span class="fc" id="L41">  private final Map&lt;String, Statement&gt; statementMap = new HashMap&lt;String, Statement&gt;();</span>
 
   public ReuseExecutor(Configuration configuration, Transaction transaction) {
-<span class="fc" id="L43">    super(configuration, transaction);</span>
-<span class="fc" id="L44">  }</span>
+<span class="fc" id="L44">    super(configuration, transaction);</span>
+<span class="fc" id="L45">  }</span>
 
   @Override
   public int doUpdate(MappedStatement ms, Object parameter) throws SQLException {
-<span class="fc" id="L48">    Configuration configuration = ms.getConfiguration();</span>
-<span class="fc" id="L49">    StatementHandler handler = configuration.newStatementHandler(this, ms, parameter, RowBounds.DEFAULT, null, null);</span>
-<span class="fc" id="L50">    Statement stmt = prepareStatement(handler, ms.getStatementLog());</span>
-<span class="fc" id="L51">    return handler.update(stmt);</span>
+<span class="fc" id="L49">    Configuration configuration = ms.getConfiguration();</span>
+<span class="fc" id="L50">    StatementHandler handler = configuration.newStatementHandler(this, ms, parameter, RowBounds.DEFAULT, null, null);</span>
+<span class="fc" id="L51">    Statement stmt = prepareStatement(handler, ms.getStatementLog());</span>
+<span class="fc" id="L52">    return handler.update(stmt);</span>
   }
 
   @Override
   public &lt;E&gt; List&lt;E&gt; doQuery(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql) throws SQLException {
-<span class="fc" id="L56">    Configuration configuration = ms.getConfiguration();</span>
-<span class="fc" id="L57">    StatementHandler handler = configuration.newStatementHandler(wrapper, ms, parameter, rowBounds, resultHandler, boundSql);</span>
-<span class="fc" id="L58">    Statement stmt = prepareStatement(handler, ms.getStatementLog());</span>
-<span class="fc" id="L59">    return handler.&lt;E&gt;query(stmt, resultHandler);</span>
+<span class="fc" id="L57">    Configuration configuration = ms.getConfiguration();</span>
+<span class="fc" id="L58">    StatementHandler handler = configuration.newStatementHandler(wrapper, ms, parameter, rowBounds, resultHandler, boundSql);</span>
+<span class="fc" id="L59">    Statement stmt = prepareStatement(handler, ms.getStatementLog());</span>
+<span class="fc" id="L60">    return handler.&lt;E&gt;query(stmt, resultHandler);</span>
+  }
+
+  @Override
+  protected &lt;E&gt; Cursor&lt;E&gt; doQueryCursor(MappedStatement ms, Object parameter, RowBounds rowBounds, BoundSql boundSql) throws SQLException {
+<span class="nc" id="L65">    Configuration configuration = ms.getConfiguration();</span>
+<span class="nc" id="L66">    StatementHandler handler = configuration.newStatementHandler(wrapper, ms, parameter, rowBounds, null, boundSql);</span>
+<span class="nc" id="L67">    Statement stmt = prepareStatement(handler, ms.getStatementLog());</span>
+<span class="nc" id="L68">    return handler.&lt;E&gt;queryCursor(stmt);</span>
   }
 
   @Override
   public List&lt;BatchResult&gt; doFlushStatements(boolean isRollback) throws SQLException {
-<span class="fc bfc" id="L64" title="All 2 branches covered.">    for (Statement stmt : statementMap.values()) {</span>
-<span class="fc" id="L65">      closeStatement(stmt);</span>
-<span class="fc" id="L66">    }</span>
-<span class="fc" id="L67">    statementMap.clear();</span>
-<span class="fc" id="L68">    return Collections.emptyList();</span>
+<span class="fc bfc" id="L73" title="All 2 branches covered.">    for (Statement stmt : statementMap.values()) {</span>
+<span class="fc" id="L74">      closeStatement(stmt);</span>
+<span class="fc" id="L75">    }</span>
+<span class="fc" id="L76">    statementMap.clear();</span>
+<span class="fc" id="L77">    return Collections.emptyList();</span>
   }
 
   private Statement prepareStatement(StatementHandler handler, Log statementLog) throws SQLException {
     Statement stmt;
-<span class="fc" id="L73">    BoundSql boundSql = handler.getBoundSql();</span>
-<span class="fc" id="L74">    String sql = boundSql.getSql();</span>
-<span class="pc bpc" id="L75" title="1 of 2 branches missed.">    if (hasStatementFor(sql)) {</span>
-<span class="nc" id="L76">      stmt = getStatement(sql);</span>
+<span class="fc" id="L82">    BoundSql boundSql = handler.getBoundSql();</span>
+<span class="fc" id="L83">    String sql = boundSql.getSql();</span>
+<span class="pc bpc" id="L84" title="1 of 2 branches missed.">    if (hasStatementFor(sql)) {</span>
+<span class="nc" id="L85">      stmt = getStatement(sql);</span>
+<span class="nc" id="L86">      applyTransactionTimeout(stmt);</span>
     } else {
-<span class="fc" id="L78">      Connection connection = getConnection(statementLog);</span>
-<span class="fc" id="L79">      stmt = handler.prepare(connection);</span>
-<span class="fc" id="L80">      putStatement(sql, stmt);</span>
+<span class="fc" id="L88">      Connection connection = getConnection(statementLog);</span>
+<span class="fc" id="L89">      stmt = handler.prepare(connection, transaction.getTimeout());</span>
+<span class="fc" id="L90">      putStatement(sql, stmt);</span>
     }
-<span class="fc" id="L82">    handler.parameterize(stmt);</span>
-<span class="fc" id="L83">    return stmt;</span>
+<span class="fc" id="L92">    handler.parameterize(stmt);</span>
+<span class="fc" id="L93">    return stmt;</span>
   }
 
   private boolean hasStatementFor(String sql) {
     try {
-<span class="pc bpc" id="L88" title="3 of 4 branches missed.">      return statementMap.keySet().contains(sql) &amp;&amp; !statementMap.get(sql).getConnection().isClosed();</span>
-<span class="nc" id="L89">    } catch (SQLException e) {</span>
-<span class="nc" id="L90">      return false;</span>
+<span class="pc bpc" id="L98" title="3 of 4 branches missed.">      return statementMap.keySet().contains(sql) &amp;&amp; !statementMap.get(sql).getConnection().isClosed();</span>
+<span class="nc" id="L99">    } catch (SQLException e) {</span>
+<span class="nc" id="L100">      return false;</span>
     }
   }
 
   private Statement getStatement(String s) {
-<span class="nc" id="L95">    return statementMap.get(s);</span>
+<span class="nc" id="L105">    return statementMap.get(s);</span>
   }
 
   private void putStatement(String sql, Statement stmt) {
-<span class="fc" id="L99">    statementMap.put(sql, stmt);</span>
-<span class="fc" id="L100">  }</span>
+<span class="fc" id="L109">    statementMap.put(sql, stmt);</span>
+<span class="fc" id="L110">  }</span>
 
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.5.201505241946</span></div></body></html>

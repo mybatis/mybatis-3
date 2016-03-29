@@ -70,8 +70,8 @@ public class WeakCache implements Cache {
 <span class="fc" id="L70">    WeakReference&lt;Object&gt; weakReference = (WeakReference&lt;Object&gt;) delegate.getObject(key);</span>
 <span class="fc bfc" id="L71" title="All 2 branches covered.">    if (weakReference != null) {</span>
 <span class="fc" id="L72">      result = weakReference.get();</span>
-<span class="fc bfc" id="L73" title="All 2 branches covered.">      if (result == null) {</span>
-<span class="fc" id="L74">        delegate.removeObject(key);</span>
+<span class="pc bpc" id="L73" title="1 of 2 branches missed.">      if (result == null) {</span>
+<span class="nc" id="L74">        delegate.removeObject(key);</span>
       } else {
 <span class="fc" id="L76">        hardLinksToAvoidGarbageCollection.addFirst(result);</span>
 <span class="fc bfc" id="L77" title="All 2 branches covered.">        if (hardLinksToAvoidGarbageCollection.size() &gt; numberOfHardLinks) {</span>

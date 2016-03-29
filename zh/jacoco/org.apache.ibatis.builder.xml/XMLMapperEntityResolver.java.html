@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>XMLMapperEntityResolver.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.builder.xml</a> &gt; <span class="el_source">XMLMapperEntityResolver.java</span></div><h1>XMLMapperEntityResolver.java</h1><pre class="source lang-java linenums">/**
+ *    Copyright 2009-2015 the original author or authors.
+ *
+ *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
+package org.apache.ibatis.builder.xml;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+
+import org.apache.ibatis.io.Resources;
+import org.xml.sax.EntityResolver;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+
+/**
+ * Offline entity resolver for the MyBatis DTDs
+ * 
+ * @author Clinton Begin
+ */
+<span class="fc" id="L34">public class XMLMapperEntityResolver implements EntityResolver {</span>
+
+<span class="fc" id="L36">  private static final Map&lt;String, String&gt; doctypeMap = new HashMap&lt;String, String&gt;();</span>
+
+<span class="fc" id="L38">  private static final String IBATIS_CONFIG_PUBLIC = &quot;-//ibatis.apache.org//DTD Config 3.0//EN&quot;.toUpperCase(Locale.ENGLISH);</span>
+<span class="fc" id="L39">  private static final String IBATIS_CONFIG_SYSTEM = &quot;http://ibatis.apache.org/dtd/ibatis-3-config.dtd&quot;.toUpperCase(Locale.ENGLISH);</span>
+
+<span class="fc" id="L41">  private static final String IBATIS_MAPPER_PUBLIC = &quot;-//ibatis.apache.org//DTD Mapper 3.0//EN&quot;.toUpperCase(Locale.ENGLISH);</span>
+<span class="fc" id="L42">  private static final String IBATIS_MAPPER_SYSTEM = &quot;http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd&quot;.toUpperCase(Locale.ENGLISH);</span>
+
+<span class="fc" id="L44">  private static final String MYBATIS_CONFIG_PUBLIC = &quot;-//mybatis.org//DTD Config 3.0//EN&quot;.toUpperCase(Locale.ENGLISH);</span>
+<span class="fc" id="L45">  private static final String MYBATIS_CONFIG_SYSTEM = &quot;http://mybatis.org/dtd/mybatis-3-config.dtd&quot;.toUpperCase(Locale.ENGLISH);</span>
+
+<span class="fc" id="L47">  private static final String MYBATIS_MAPPER_PUBLIC = &quot;-//mybatis.org//DTD Mapper 3.0//EN&quot;.toUpperCase(Locale.ENGLISH);</span>
+<span class="fc" id="L48">  private static final String MYBATIS_MAPPER_SYSTEM = &quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot;.toUpperCase(Locale.ENGLISH);</span>
+
+  private static final String MYBATIS_CONFIG_DTD = &quot;org/apache/ibatis/builder/xml/mybatis-3-config.dtd&quot;;
+  private static final String MYBATIS_MAPPER_DTD = &quot;org/apache/ibatis/builder/xml/mybatis-3-mapper.dtd&quot;;
+
+  static {
+<span class="fc" id="L54">    doctypeMap.put(IBATIS_CONFIG_SYSTEM, MYBATIS_CONFIG_DTD);</span>
+<span class="fc" id="L55">    doctypeMap.put(IBATIS_CONFIG_PUBLIC, MYBATIS_CONFIG_DTD);</span>
+
+<span class="fc" id="L57">    doctypeMap.put(IBATIS_MAPPER_SYSTEM, MYBATIS_MAPPER_DTD);</span>
+<span class="fc" id="L58">    doctypeMap.put(IBATIS_MAPPER_PUBLIC, MYBATIS_MAPPER_DTD);</span>
+
+<span class="fc" id="L60">    doctypeMap.put(MYBATIS_CONFIG_SYSTEM, MYBATIS_CONFIG_DTD);</span>
+<span class="fc" id="L61">    doctypeMap.put(MYBATIS_CONFIG_PUBLIC, MYBATIS_CONFIG_DTD);</span>
+
+<span class="fc" id="L63">    doctypeMap.put(MYBATIS_MAPPER_SYSTEM, MYBATIS_MAPPER_DTD);</span>
+<span class="fc" id="L64">    doctypeMap.put(MYBATIS_MAPPER_PUBLIC, MYBATIS_MAPPER_DTD);</span>
+<span class="fc" id="L65">  }</span>
+
+  /*
+   * Converts a public DTD into a local one
+   * 
+   * @param publicId The public id that is what comes after &quot;PUBLIC&quot;
+   * @param systemId The system id that is what comes after the public id.
+   * @return The InputSource for the DTD
+   * 
+   * @throws org.xml.sax.SAXException If anything goes wrong
+   */
+  @Override
+  public InputSource resolveEntity(String publicId, String systemId) throws SAXException {
+
+<span class="pc bpc" id="L79" title="1 of 2 branches missed.">    if (publicId != null) {</span>
+<span class="fc" id="L80">      publicId = publicId.toUpperCase(Locale.ENGLISH);</span>
+    }
+<span class="pc bpc" id="L82" title="1 of 2 branches missed.">    if (systemId != null) {</span>
+<span class="fc" id="L83">      systemId = systemId.toUpperCase(Locale.ENGLISH);</span>
+    }
+
+<span class="fc" id="L86">    InputSource source = null;</span>
+    try {
+<span class="fc" id="L88">      String path = doctypeMap.get(publicId);</span>
+<span class="fc" id="L89">      source = getInputSource(path, source);</span>
+<span class="pc bpc" id="L90" title="1 of 2 branches missed.">      if (source == null) {</span>
+<span class="nc" id="L91">        path = doctypeMap.get(systemId);</span>
+<span class="nc" id="L92">        source = getInputSource(path, source);</span>
+      }
+<span class="nc" id="L94">    } catch (Exception e) {</span>
+<span class="nc" id="L95">      throw new SAXException(e.toString());</span>
+<span class="fc" id="L96">    }</span>
+<span class="fc" id="L97">    return source;</span>
+  }
+
+  private InputSource getInputSource(String path, InputSource source) {
+<span class="pc bpc" id="L101" title="1 of 2 branches missed.">    if (path != null) {</span>
+      InputStream in;
+      try {
+<span class="fc" id="L104">        in = Resources.getResourceAsStream(path);</span>
+<span class="fc" id="L105">        source = new InputSource(in);</span>
+<span class="nc" id="L106">      } catch (IOException e) {</span>
+        // ignore, null is ok
+<span class="fc" id="L108">      }</span>
+    }
+<span class="fc" id="L110">    return source;</span>
+  }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.5.201505241946</span></div></body></html>

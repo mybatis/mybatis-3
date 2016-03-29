@@ -144,7 +144,7 @@ public class CglibProxyFactory implements ProxyFactory {
 <span class="fc" id="L144">              return original;</span>
             }
           } else {
-<span class="fc bfc" id="L147" title="All 4 branches covered.">            if (lazyLoader.size() &gt; 0 &amp;&amp; !FINALIZE_METHOD.equals(methodName)) {</span>
+<span class="pc bpc" id="L147" title="1 of 4 branches missed.">            if (lazyLoader.size() &gt; 0 &amp;&amp; !FINALIZE_METHOD.equals(methodName)) {</span>
 <span class="pc bpc" id="L148" title="2 of 4 branches missed.">              if (aggressive || lazyLoadTriggerMethods.contains(methodName)) {</span>
 <span class="nc" id="L149">                lazyLoader.loadAll();</span>
 <span class="pc bpc" id="L150" title="1 of 2 branches missed.">              } else if (PropertyNamer.isProperty(methodName)) {</span>

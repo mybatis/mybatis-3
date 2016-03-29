@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ko"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>PooledConnection.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.datasource.pooled</a> &gt; <span class="el_source">PooledConnection.java</span></div><h1>PooledConnection.java</h1><pre class="source lang-java linenums">/**
+ *    Copyright 2009-2015 the original author or authors.
+ *
+ *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
+package org.apache.ibatis.datasource.pooled;
+
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+import java.sql.Connection;
+import java.sql.SQLException;
+
+import org.apache.ibatis.reflection.ExceptionUtil;
+
+/**
+ * @author Clinton Begin
+ */
+class PooledConnection implements InvocationHandler {
+
+  private static final String CLOSE = &quot;close&quot;;
+<span class="fc" id="L32">  private static final Class&lt;?&gt;[] IFACES = new Class&lt;?&gt;[] { Connection.class };</span>
+
+<span class="fc" id="L34">  private int hashCode = 0;</span>
+  private PooledDataSource dataSource;
+  private Connection realConnection;
+  private Connection proxyConnection;
+  private long checkoutTimestamp;
+  private long createdTimestamp;
+  private long lastUsedTimestamp;
+  private int connectionTypeCode;
+  private boolean valid;
+
+  /*
+   * Constructor for SimplePooledConnection that uses the Connection and PooledDataSource passed in
+   *
+   * @param connection - the connection that is to be presented as a pooled connection
+   * @param dataSource - the dataSource that the connection is from
+   */
+<span class="fc" id="L50">  public PooledConnection(Connection connection, PooledDataSource dataSource) {</span>
+<span class="fc" id="L51">    this.hashCode = connection.hashCode();</span>
+<span class="fc" id="L52">    this.realConnection = connection;</span>
+<span class="fc" id="L53">    this.dataSource = dataSource;</span>
+<span class="fc" id="L54">    this.createdTimestamp = System.currentTimeMillis();</span>
+<span class="fc" id="L55">    this.lastUsedTimestamp = System.currentTimeMillis();</span>
+<span class="fc" id="L56">    this.valid = true;</span>
+<span class="fc" id="L57">    this.proxyConnection = (Connection) Proxy.newProxyInstance(Connection.class.getClassLoader(), IFACES, this);</span>
+<span class="fc" id="L58">  }</span>
+
+  /*
+   * Invalidates the connection
+   */
+  public void invalidate() {
+<span class="fc" id="L64">    valid = false;</span>
+<span class="fc" id="L65">  }</span>
+
+  /*
+   * Method to see if the connection is usable
+   *
+   * @return True if the connection is usable
+   */
+  public boolean isValid() {
+<span class="pc bpc" id="L73" title="3 of 6 branches missed.">    return valid &amp;&amp; realConnection != null &amp;&amp; dataSource.pingConnection(this);</span>
+  }
+
+  /*
+   * Getter for the *real* connection that this wraps
+   *
+   * @return The connection
+   */
+  public Connection getRealConnection() {
+<span class="fc" id="L82">    return realConnection;</span>
+  }
+
+  /*
+   * Getter for the proxy for the connection
+   *
+   * @return The proxy
+   */
+  public Connection getProxyConnection() {
+<span class="fc" id="L91">    return proxyConnection;</span>
+  }
+
+  /*
+   * Gets the hashcode of the real connection (or 0 if it is null)
+   *
+   * @return The hashcode of the real connection (or 0 if it is null)
+   */
+  public int getRealHashCode() {
+<span class="nc bnc" id="L100" title="All 2 branches missed.">    return realConnection == null ? 0 : realConnection.hashCode();</span>
+  }
+
+  /*
+   * Getter for the connection type (based on url + user + password)
+   *
+   * @return The connection type
+   */
+  public int getConnectionTypeCode() {
+<span class="fc" id="L109">    return connectionTypeCode;</span>
+  }
+
+  /*
+   * Setter for the connection type
+   *
+   * @param connectionTypeCode - the connection type
+   */
+  public void setConnectionTypeCode(int connectionTypeCode) {
+<span class="fc" id="L118">    this.connectionTypeCode = connectionTypeCode;</span>
+<span class="fc" id="L119">  }</span>
+
+  /*
+   * Getter for the time that the connection was created
+   *
+   * @return The creation timestamp
+   */
+  public long getCreatedTimestamp() {
+<span class="fc" id="L127">    return createdTimestamp;</span>
+  }
+
+  /*
+   * Setter for the time that the connection was created
+   *
+   * @param createdTimestamp - the timestamp
+   */
+  public void setCreatedTimestamp(long createdTimestamp) {
+<span class="fc" id="L136">    this.createdTimestamp = createdTimestamp;</span>
+<span class="fc" id="L137">  }</span>
+
+  /*
+   * Getter for the time that the connection was last used
+   *
+   * @return - the timestamp
+   */
+  public long getLastUsedTimestamp() {
+<span class="fc" id="L145">    return lastUsedTimestamp;</span>
+  }
+
+  /*
+   * Setter for the time that the connection was last used
+   *
+   * @param lastUsedTimestamp - the timestamp
+   */
+  public void setLastUsedTimestamp(long lastUsedTimestamp) {
+<span class="fc" id="L154">    this.lastUsedTimestamp = lastUsedTimestamp;</span>
+<span class="fc" id="L155">  }</span>
+
+  /*
+   * Getter for the time since this connection was last used
+   *
+   * @return - the time since the last use
+   */
+  public long getTimeElapsedSinceLastUse() {
+<span class="fc" id="L163">    return System.currentTimeMillis() - lastUsedTimestamp;</span>
+  }
+
+  /*
+   * Getter for the age of the connection
+   *
+   * @return the age
+   */
+  public long getAge() {
+<span class="nc" id="L172">    return System.currentTimeMillis() - createdTimestamp;</span>
+  }
+
+  /*
+   * Getter for the timestamp that this connection was checked out
+   *
+   * @return the timestamp
+   */
+  public long getCheckoutTimestamp() {
+<span class="nc" id="L181">    return checkoutTimestamp;</span>
+  }
+
+  /*
+   * Setter for the timestamp that this connection was checked out
+   *
+   * @param timestamp the timestamp
+   */
+  public void setCheckoutTimestamp(long timestamp) {
+<span class="fc" id="L190">    this.checkoutTimestamp = timestamp;</span>
+<span class="fc" id="L191">  }</span>
+
+  /*
+   * Getter for the time that this connection has been checked out
+   *
+   * @return the time
+   */
+  public long getCheckoutTime() {
+<span class="fc" id="L199">    return System.currentTimeMillis() - checkoutTimestamp;</span>
+  }
+
+  @Override
+  public int hashCode() {
+<span class="nc" id="L204">    return hashCode;</span>
+  }
+
+  /*
+   * Allows comparing this connection to another
+   *
+   * @param obj - the other connection to test for equality
+   * @see Object#equals(Object)
+   */
+  @Override
+  public boolean equals(Object obj) {
+<span class="pc bpc" id="L215" title="1 of 2 branches missed.">    if (obj instanceof PooledConnection) {</span>
+<span class="pc bpc" id="L216" title="1 of 2 branches missed.">      return realConnection.hashCode() == (((PooledConnection) obj).realConnection.hashCode());</span>
+<span class="nc bnc" id="L217" title="All 2 branches missed.">    } else if (obj instanceof Connection) {</span>
+<span class="nc bnc" id="L218" title="All 2 branches missed.">      return hashCode == obj.hashCode();</span>
+    } else {
+<span class="nc" id="L220">      return false;</span>
+    }
+  }
+
+  /*
+   * Required for InvocationHandler implementation.
+   *
+   * @param proxy  - not used
+   * @param method - the method to be executed
+   * @param args   - the parameters to be passed to the method
+   * @see java.lang.reflect.InvocationHandler#invoke(Object, java.lang.reflect.Method, Object[])
+   */
+  @Override
+  public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+<span class="fc" id="L234">    String methodName = method.getName();</span>
+<span class="pc bpc" id="L235" title="1 of 4 branches missed.">    if (CLOSE.hashCode() == methodName.hashCode() &amp;&amp; CLOSE.equals(methodName)) {</span>
+<span class="fc" id="L236">      dataSource.pushConnection(this);</span>
+<span class="fc" id="L237">      return null;</span>
+    } else {
+      try {
+<span class="fc bfc" id="L240" title="All 2 branches covered.">        if (!Object.class.equals(method.getDeclaringClass())) {</span>
+          // issue #579 toString() should never fail
+          // throw an SQLException instead of a Runtime
+<span class="fc" id="L243">          checkConnection();</span>
+        }
+<span class="fc" id="L245">        return method.invoke(realConnection, args);</span>
+<span class="nc" id="L246">      } catch (Throwable t) {</span>
+<span class="nc" id="L247">        throw ExceptionUtil.unwrapThrowable(t);</span>
+      }
+    }
+  }
+
+  private void checkConnection() throws SQLException {
+<span class="pc bpc" id="L253" title="1 of 2 branches missed.">    if (!valid) {</span>
+<span class="nc" id="L254">      throw new SQLException(&quot;Error accessing PooledConnection. Connection is invalid.&quot;);</span>
+    }
+<span class="fc" id="L256">  }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.5.201505241946</span></div></body></html>

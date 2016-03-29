@@ -19,14 +19,14 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.executor.ExecutorException;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.session.Configuration;
+import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.TypeHandlerRegistry;
 
@@ -42,67 +42,86 @@ import org.apache.ibatis.type.TypeHandlerRegistry;
 
   @Override
   public void processAfter(Executor executor, MappedStatement ms, Statement stmt, Object parameter) {
-<span class="fc" id="L45">    List&lt;Object&gt; parameters = new ArrayList&lt;Object&gt;();</span>
-<span class="fc" id="L46">    parameters.add(parameter);</span>
-<span class="fc" id="L47">    processBatch(ms, stmt, parameters);</span>
-<span class="fc" id="L48">  }</span>
+<span class="fc" id="L45">    processBatch(ms, stmt, getParameters(parameter));</span>
+<span class="fc" id="L46">  }</span>
 
-  public void processBatch(MappedStatement ms, Statement stmt, List&lt;Object&gt; parameters) {
-<span class="fc" id="L51">    ResultSet rs = null;</span>
+  public void processBatch(MappedStatement ms, Statement stmt, Collection&lt;Object&gt; parameters) {
+<span class="fc" id="L49">    ResultSet rs = null;</span>
     try {
-<span class="fc" id="L53">      rs = stmt.getGeneratedKeys();</span>
-<span class="fc" id="L54">      final Configuration configuration = ms.getConfiguration();</span>
-<span class="fc" id="L55">      final TypeHandlerRegistry typeHandlerRegistry = configuration.getTypeHandlerRegistry();</span>
-<span class="fc" id="L56">      final String[] keyProperties = ms.getKeyProperties();</span>
-<span class="fc" id="L57">      final ResultSetMetaData rsmd = rs.getMetaData();</span>
-<span class="fc" id="L58">      TypeHandler&lt;?&gt;[] typeHandlers = null;</span>
-<span class="pc bpc" id="L59" title="2 of 4 branches missed.">      if (keyProperties != null &amp;&amp; rsmd.getColumnCount() &gt;= keyProperties.length) {</span>
-<span class="fc bfc" id="L60" title="All 2 branches covered.">        for (Object parameter : parameters) {</span>
+<span class="fc" id="L51">      rs = stmt.getGeneratedKeys();</span>
+<span class="fc" id="L52">      final Configuration configuration = ms.getConfiguration();</span>
+<span class="fc" id="L53">      final TypeHandlerRegistry typeHandlerRegistry = configuration.getTypeHandlerRegistry();</span>
+<span class="fc" id="L54">      final String[] keyProperties = ms.getKeyProperties();</span>
+<span class="fc" id="L55">      final ResultSetMetaData rsmd = rs.getMetaData();</span>
+<span class="fc" id="L56">      TypeHandler&lt;?&gt;[] typeHandlers = null;</span>
+<span class="pc bpc" id="L57" title="2 of 4 branches missed.">      if (keyProperties != null &amp;&amp; rsmd.getColumnCount() &gt;= keyProperties.length) {</span>
+<span class="fc bfc" id="L58" title="All 2 branches covered.">        for (Object parameter : parameters) {</span>
           // there should be one row for each statement (also one for each parameter)
-<span class="pc bpc" id="L62" title="1 of 2 branches missed.">          if (!rs.next()) {</span>
-<span class="nc" id="L63">            break;</span>
+<span class="pc bpc" id="L60" title="1 of 2 branches missed.">          if (!rs.next()) {</span>
+<span class="nc" id="L61">            break;</span>
           }
-<span class="fc" id="L65">          final MetaObject metaParam = configuration.newMetaObject(parameter);</span>
-<span class="fc bfc" id="L66" title="All 2 branches covered.">          if (typeHandlers == null) {</span>
-<span class="fc" id="L67">            typeHandlers = getTypeHandlers(typeHandlerRegistry, metaParam, keyProperties);</span>
+<span class="fc" id="L63">          final MetaObject metaParam = configuration.newMetaObject(parameter);</span>
+<span class="fc bfc" id="L64" title="All 2 branches covered.">          if (typeHandlers == null) {</span>
+<span class="fc" id="L65">            typeHandlers = getTypeHandlers(typeHandlerRegistry, metaParam, keyProperties, rsmd);</span>
           }
-<span class="fc" id="L69">          populateKeys(rs, metaParam, keyProperties, typeHandlers);</span>
-<span class="fc" id="L70">        }</span>
+<span class="fc" id="L67">          populateKeys(rs, metaParam, keyProperties, typeHandlers);</span>
+<span class="fc" id="L68">        }</span>
       }
-<span class="nc" id="L72">    } catch (Exception e) {</span>
-<span class="nc" id="L73">      throw new ExecutorException(&quot;Error getting generated key or setting result to parameter object. Cause: &quot; + e, e);</span>
+<span class="nc" id="L70">    } catch (Exception e) {</span>
+<span class="nc" id="L71">      throw new ExecutorException(&quot;Error getting generated key or setting result to parameter object. Cause: &quot; + e, e);</span>
     } finally {
-<span class="pc bpc" id="L75" title="3 of 4 branches missed.">      if (rs != null) {</span>
+<span class="pc bpc" id="L73" title="3 of 4 branches missed.">      if (rs != null) {</span>
         try {
-<span class="pc" id="L77">          rs.close();</span>
-<span class="nc" id="L78">        } catch (Exception e) {</span>
+<span class="pc" id="L75">          rs.close();</span>
+<span class="nc" id="L76">        } catch (Exception e) {</span>
           // ignore
-<span class="pc" id="L80">        }</span>
+<span class="pc" id="L78">        }</span>
       }
     }
-<span class="fc" id="L83">  }</span>
+<span class="fc" id="L81">  }</span>
 
-  private TypeHandler&lt;?&gt;[] getTypeHandlers(TypeHandlerRegistry typeHandlerRegistry, MetaObject metaParam, String[] keyProperties) {
-<span class="fc" id="L86">    TypeHandler&lt;?&gt;[] typeHandlers = new TypeHandler&lt;?&gt;[keyProperties.length];</span>
-<span class="fc bfc" id="L87" title="All 2 branches covered.">    for (int i = 0; i &lt; keyProperties.length; i++) {</span>
-<span class="pc bpc" id="L88" title="1 of 2 branches missed.">      if (metaParam.hasSetter(keyProperties[i])) {</span>
-<span class="fc" id="L89">        Class&lt;?&gt; keyPropertyType = metaParam.getSetterType(keyProperties[i]);</span>
-<span class="fc" id="L90">        TypeHandler&lt;?&gt; th = typeHandlerRegistry.getTypeHandler(keyPropertyType);</span>
-<span class="fc" id="L91">        typeHandlers[i] = th;</span>
+  private Collection&lt;Object&gt; getParameters(Object parameter) {
+<span class="fc" id="L84">    Collection&lt;Object&gt; parameters = null;</span>
+<span class="pc bpc" id="L85" title="1 of 2 branches missed.">    if (parameter instanceof Collection) {</span>
+<span class="nc" id="L86">      parameters = (Collection) parameter;</span>
+<span class="fc bfc" id="L87" title="All 2 branches covered.">    } else if (parameter instanceof Map) {</span>
+<span class="fc" id="L88">      Map parameterMap = (Map) parameter;</span>
+<span class="pc bpc" id="L89" title="1 of 2 branches missed.">      if (parameterMap.containsKey(&quot;collection&quot;)) {</span>
+<span class="fc" id="L90">        parameters = (Collection) parameterMap.get(&quot;collection&quot;);</span>
+<span class="nc bnc" id="L91" title="All 2 branches missed.">      } else if (parameterMap.containsKey(&quot;list&quot;)) {</span>
+<span class="nc" id="L92">        parameters = (List) parameterMap.get(&quot;list&quot;);</span>
+<span class="nc bnc" id="L93" title="All 2 branches missed.">      } else if (parameterMap.containsKey(&quot;array&quot;)) {</span>
+<span class="nc" id="L94">        parameters = Arrays.asList((Object[]) parameterMap.get(&quot;array&quot;));</span>
       }
     }
-<span class="fc" id="L94">    return typeHandlers;</span>
+<span class="fc bfc" id="L97" title="All 2 branches covered.">    if (parameters == null) {</span>
+<span class="fc" id="L98">      parameters = new ArrayList&lt;Object&gt;();</span>
+<span class="fc" id="L99">      parameters.add(parameter);</span>
+    }
+<span class="fc" id="L101">    return parameters;</span>
+  }
+
+  private TypeHandler&lt;?&gt;[] getTypeHandlers(TypeHandlerRegistry typeHandlerRegistry, MetaObject metaParam, String[] keyProperties, ResultSetMetaData rsmd) throws SQLException {
+<span class="fc" id="L105">    TypeHandler&lt;?&gt;[] typeHandlers = new TypeHandler&lt;?&gt;[keyProperties.length];</span>
+<span class="fc bfc" id="L106" title="All 2 branches covered.">    for (int i = 0; i &lt; keyProperties.length; i++) {</span>
+<span class="pc bpc" id="L107" title="1 of 2 branches missed.">      if (metaParam.hasSetter(keyProperties[i])) {</span>
+<span class="fc" id="L108">        Class&lt;?&gt; keyPropertyType = metaParam.getSetterType(keyProperties[i]);</span>
+<span class="fc" id="L109">        TypeHandler&lt;?&gt; th = typeHandlerRegistry.getTypeHandler(keyPropertyType, JdbcType.forCode(rsmd.getColumnType(i + 1)));</span>
+<span class="fc" id="L110">        typeHandlers[i] = th;</span>
+      }
+    }
+<span class="fc" id="L113">    return typeHandlers;</span>
   }
 
   private void populateKeys(ResultSet rs, MetaObject metaParam, String[] keyProperties, TypeHandler&lt;?&gt;[] typeHandlers) throws SQLException {
-<span class="fc bfc" id="L98" title="All 2 branches covered.">    for (int i = 0; i &lt; keyProperties.length; i++) {</span>
-<span class="fc" id="L99">      TypeHandler&lt;?&gt; th = typeHandlers[i];</span>
-<span class="pc bpc" id="L100" title="1 of 2 branches missed.">      if (th != null) {</span>
-<span class="fc" id="L101">        Object value = th.getResult(rs, i + 1);</span>
-<span class="fc" id="L102">        metaParam.setValue(keyProperties[i], value);</span>
+<span class="fc bfc" id="L117" title="All 2 branches covered.">    for (int i = 0; i &lt; keyProperties.length; i++) {</span>
+<span class="fc" id="L118">      TypeHandler&lt;?&gt; th = typeHandlers[i];</span>
+<span class="pc bpc" id="L119" title="1 of 2 branches missed.">      if (th != null) {</span>
+<span class="fc" id="L120">        Object value = th.getResult(rs, i + 1);</span>
+<span class="fc" id="L121">        metaParam.setValue(keyProperties[i], value);</span>
       }
     }
-<span class="fc" id="L105">  }</span>
+<span class="fc" id="L124">  }</span>
 
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.5.201505241946</span></div></body></html>

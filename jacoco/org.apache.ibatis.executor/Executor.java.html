@@ -19,6 +19,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import org.apache.ibatis.cache.CacheKey;
+import org.apache.ibatis.cursor.Cursor;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.reflection.MetaObject;
@@ -31,13 +32,15 @@ import org.apache.ibatis.transaction.Transaction;
  */
 public interface Executor {
 
-<span class="fc" id="L34">  ResultHandler NO_RESULT_HANDLER = null;</span>
+<span class="fc" id="L35">  ResultHandler NO_RESULT_HANDLER = null;</span>
 
   int update(MappedStatement ms, Object parameter) throws SQLException;
 
   &lt;E&gt; List&lt;E&gt; query(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, CacheKey cacheKey, BoundSql boundSql) throws SQLException;
 
   &lt;E&gt; List&lt;E&gt; query(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler) throws SQLException;
+
+  &lt;E&gt; Cursor&lt;E&gt; queryCursor(MappedStatement ms, Object parameter, RowBounds rowBounds) throws SQLException;
 
   List&lt;BatchResult&gt; flushStatements() throws SQLException;
 

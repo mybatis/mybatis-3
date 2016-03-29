@@ -31,37 +31,52 @@ public class GenericTokenParser {
 <span class="fc" id="L31">  }</span>
 
   public String parse(String text) {
-<span class="fc" id="L34">    StringBuilder builder = new StringBuilder();</span>
-<span class="pc bpc" id="L35" title="1 of 4 branches missed.">    if (text != null &amp;&amp; text.length() &gt; 0) {</span>
-<span class="fc" id="L36">      char[] src = text.toCharArray();</span>
-<span class="fc" id="L37">      int offset = 0;</span>
-<span class="fc" id="L38">      int start = text.indexOf(openToken, offset);</span>
-<span class="fc bfc" id="L39" title="All 2 branches covered.">      while (start &gt; -1) {</span>
-<span class="fc bfc" id="L40" title="All 4 branches covered.">        if (start &gt; 0 &amp;&amp; src[start - 1] == '\\') {</span>
-          // the variable is escaped. remove the backslash.
-<span class="fc" id="L42">          builder.append(src, offset, start - offset - 1).append(openToken);</span>
-<span class="fc" id="L43">          offset = start + openToken.length();</span>
+<span class="fc" id="L34">    final StringBuilder builder = new StringBuilder();</span>
+<span class="fc" id="L35">    final StringBuilder expression = new StringBuilder();</span>
+<span class="pc bpc" id="L36" title="1 of 4 branches missed.">    if (text != null &amp;&amp; text.length() &gt; 0) {</span>
+<span class="fc" id="L37">      char[] src = text.toCharArray();</span>
+<span class="fc" id="L38">      int offset = 0;</span>
+      // search open token
+<span class="fc" id="L40">      int start = text.indexOf(openToken, offset);</span>
+<span class="fc bfc" id="L41" title="All 2 branches covered.">      while (start &gt; -1) {</span>
+<span class="fc bfc" id="L42" title="All 4 branches covered.">        if (start &gt; 0 &amp;&amp; src[start - 1] == '\\') {</span>
+          // this open token is escaped. remove the backslash and continue.
+<span class="fc" id="L44">          builder.append(src, offset, start - offset - 1).append(openToken);</span>
+<span class="fc" id="L45">          offset = start + openToken.length();</span>
         } else {
-<span class="fc" id="L45">          int end = text.indexOf(closeToken, start);</span>
-<span class="fc bfc" id="L46" title="All 2 branches covered.">          if (end == -1) {</span>
-<span class="fc" id="L47">            builder.append(src, offset, src.length - offset);</span>
-<span class="fc" id="L48">            offset = src.length;</span>
+          // found open token. let's search close token.
+<span class="fc" id="L48">          expression.setLength(0);</span>
+<span class="fc" id="L49">          builder.append(src, offset, start - offset);</span>
+<span class="fc" id="L50">          offset = start + openToken.length();</span>
+<span class="fc" id="L51">          int end = text.indexOf(closeToken, offset);</span>
+<span class="fc bfc" id="L52" title="All 2 branches covered.">          while (end &gt; -1) {</span>
+<span class="fc bfc" id="L53" title="All 4 branches covered.">            if (end &gt; offset &amp;&amp; src[end - 1] == '\\') {</span>
+              // this close token is escaped. remove the backslash and continue.
+<span class="fc" id="L55">              expression.append(src, offset, end - offset - 1).append(closeToken);</span>
+<span class="fc" id="L56">              offset = end + closeToken.length();</span>
+<span class="fc" id="L57">              end = text.indexOf(closeToken, offset);</span>
+            } else {
+<span class="fc" id="L59">              expression.append(src, offset, end - offset);</span>
+<span class="fc" id="L60">              offset = end + closeToken.length();</span>
+<span class="fc" id="L61">              break;</span>
+            }
+          }
+<span class="fc bfc" id="L64" title="All 2 branches covered.">          if (end == -1) {</span>
+            // close token was not found.
+<span class="fc" id="L66">            builder.append(src, start, src.length - start);</span>
+<span class="fc" id="L67">            offset = src.length;</span>
           } else {
-<span class="fc" id="L50">            builder.append(src, offset, start - offset);</span>
-<span class="fc" id="L51">            offset = start + openToken.length();</span>
-<span class="fc" id="L52">            String content = new String(src, offset, end - offset);</span>
-<span class="fc" id="L53">            builder.append(handler.handleToken(content));</span>
-<span class="fc" id="L54">            offset = end + closeToken.length();</span>
+<span class="fc" id="L69">            builder.append(handler.handleToken(expression.toString()));</span>
+<span class="fc" id="L70">            offset = end + closeToken.length();</span>
           }
         }
-<span class="fc" id="L57">        start = text.indexOf(openToken, offset);</span>
+<span class="fc" id="L73">        start = text.indexOf(openToken, offset);</span>
       }
-<span class="fc bfc" id="L59" title="All 2 branches covered.">      if (offset &lt; src.length) {</span>
-<span class="fc" id="L60">        builder.append(src, offset, src.length - offset);</span>
+<span class="fc bfc" id="L75" title="All 2 branches covered.">      if (offset &lt; src.length) {</span>
+<span class="fc" id="L76">        builder.append(src, offset, src.length - offset);</span>
       }
     }
-<span class="fc" id="L63">    return builder.toString();</span>
+<span class="fc" id="L79">    return builder.toString();</span>
   }
-
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.5.201505241946</span></div></body></html>

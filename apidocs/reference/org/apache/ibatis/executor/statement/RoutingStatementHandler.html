@@ -267,6 +267,7 @@
           <li class="api apilevel-"><a href="../../../../../org/apache/ibatis/executor/statement/PreparedStatementHandler.html">PreparedStatementHandler</a></li>
           <li class="selected api apilevel-"><a href="../../../../../org/apache/ibatis/executor/statement/RoutingStatementHandler.html">RoutingStatementHandler</a></li>
           <li class="api apilevel-"><a href="../../../../../org/apache/ibatis/executor/statement/SimpleStatementHandler.html">SimpleStatementHandler</a></li>
+          <li class="api apilevel-"><a href="../../../../../org/apache/ibatis/executor/statement/StatementUtil.html">StatementUtil</a></li>
       </ul>
     </li>
               
@@ -582,7 +583,7 @@ Summary:
             Statement
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../../org/apache/ibatis/executor/statement/RoutingStatementHandler.html#prepare(java.sql.Connection)">prepare</a></span>(Connection connection)
+        <span class="sympad"><a href="../../../../../org/apache/ibatis/executor/statement/RoutingStatementHandler.html#prepare(java.sql.Connection, java.lang.Integer)">prepare</a></span>(Connection connection, Integer transactionTimeout)
         
   </td></tr>
 
@@ -808,7 +809,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>()
+        <span class="sympad">wait</span>(long arg0, int arg1)
         
   </td></tr>
 
@@ -824,7 +825,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0, int arg1)
+        <span class="sympad">wait</span>(long arg0)
         
   </td></tr>
 
@@ -840,7 +841,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0)
+        <span class="sympad">wait</span>()
         
   </td></tr>
 
@@ -946,7 +947,7 @@ From interface
             Statement
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../../org/apache/ibatis/executor/statement/StatementHandler.html#prepare(java.sql.Connection)">prepare</a></span>(Connection connection)
+        <span class="sympad"><a href="../../../../../org/apache/ibatis/executor/statement/StatementHandler.html#prepare(java.sql.Connection, java.lang.Integer)">prepare</a></span>(Connection connection, Integer transactionTimeout)
         
   </td></tr>
 
@@ -1227,7 +1228,7 @@ From interface
 </div>
 
 
-<a id="prepare(java.sql.Connection)"></a>
+<a id="prepare(java.sql.Connection, java.lang.Integer)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1240,7 +1241,7 @@ From interface
         Statement
       </span>
       <span class="sympad">prepare</span>
-      <span class="normal">(Connection connection)</span>
+      <span class="normal">(Connection connection, Integer transactionTimeout)</span>
     </h4>
       <div class="api-level">
         <div>

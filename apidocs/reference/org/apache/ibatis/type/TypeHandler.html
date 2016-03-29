@@ -267,12 +267,14 @@
           <li class="api apilevel-"><a href="../../../../org/apache/ibatis/type/BigDecimalTypeHandler.html">BigDecimalTypeHandler</a></li>
           <li class="api apilevel-"><a href="../../../../org/apache/ibatis/type/BigIntegerTypeHandler.html">BigIntegerTypeHandler</a></li>
           <li class="api apilevel-"><a href="../../../../org/apache/ibatis/type/BlobByteObjectArrayTypeHandler.html">BlobByteObjectArrayTypeHandler</a></li>
+          <li class="api apilevel-"><a href="../../../../org/apache/ibatis/type/BlobInputStreamTypeHandler.html">BlobInputStreamTypeHandler</a></li>
           <li class="api apilevel-"><a href="../../../../org/apache/ibatis/type/BlobTypeHandler.html">BlobTypeHandler</a></li>
           <li class="api apilevel-"><a href="../../../../org/apache/ibatis/type/BooleanTypeHandler.html">BooleanTypeHandler</a></li>
           <li class="api apilevel-"><a href="../../../../org/apache/ibatis/type/ByteArrayTypeHandler.html">ByteArrayTypeHandler</a></li>
           <li class="api apilevel-"><a href="../../../../org/apache/ibatis/type/ByteObjectArrayTypeHandler.html">ByteObjectArrayTypeHandler</a></li>
           <li class="api apilevel-"><a href="../../../../org/apache/ibatis/type/ByteTypeHandler.html">ByteTypeHandler</a></li>
           <li class="api apilevel-"><a href="../../../../org/apache/ibatis/type/CharacterTypeHandler.html">CharacterTypeHandler</a></li>
+          <li class="api apilevel-"><a href="../../../../org/apache/ibatis/type/ClobReaderTypeHandler.html">ClobReaderTypeHandler</a></li>
           <li class="api apilevel-"><a href="../../../../org/apache/ibatis/type/ClobTypeHandler.html">ClobTypeHandler</a></li>
           <li class="api apilevel-"><a href="../../../../org/apache/ibatis/type/DateOnlyTypeHandler.html">DateOnlyTypeHandler</a></li>
           <li class="api apilevel-"><a href="../../../../org/apache/ibatis/type/DateTypeHandler.html">DateTypeHandler</a></li>
@@ -470,6 +472,11 @@ Summary:
               
             
               
+                <a href="../../../../org/apache/ibatis/type/BlobInputStreamTypeHandler.html">BlobInputStreamTypeHandler</a>,
+              
+              
+            
+              
                 <a href="../../../../org/apache/ibatis/type/BlobTypeHandler.html">BlobTypeHandler</a>,
               
               
@@ -500,6 +507,11 @@ Summary:
               
             
               
+                <a href="../../../../org/apache/ibatis/type/ClobReaderTypeHandler.html">ClobReaderTypeHandler</a>,
+              
+              
+            
+              
                 <a href="../../../../org/apache/ibatis/type/ClobTypeHandler.html">ClobTypeHandler</a>,
               
               
@@ -507,18 +519,8 @@ Summary:
               
                 <a href="../../../../org/apache/ibatis/type/DateOnlyTypeHandler.html">DateOnlyTypeHandler</a>,
               
-              
-            
-              
-                <a href="../../../../org/apache/ibatis/type/DateTypeHandler.html">DateTypeHandler</a>,
-              
-              
-            
-              
-                <a href="../../../../org/apache/ibatis/type/DoubleTypeHandler.html">DoubleTypeHandler</a>,
-              
               and
-                <a href="#" onclick="return toggleInherited(document.getElementById('subclasses-indirect', null))">15 others.</a>
+                <a href="#" onclick="return toggleInherited(document.getElementById('subclasses-indirect', null))">17 others.</a>
               
             
           
@@ -548,28 +550,36 @@ Summary:
               <td class="jd-descrcol" width="100%">&nbsp;</td>
           </tr>
         <tr class=" api apilevel-" >
+              <td class="jd-linkcol"><a href="../../../../org/apache/ibatis/type/BlobInputStreamTypeHandler.html">BlobInputStreamTypeHandler</a></td>
+              <td class="jd-descrcol" width="100%">The <code><a href="../../../../org/apache/ibatis/type/TypeHandler.html">TypeHandler</a></code> for Blob/InputStream using method supported at JDBC 4.0.&nbsp;</td>
+          </tr>
+        <tr class="alt-color api apilevel-" >
               <td class="jd-linkcol"><a href="../../../../org/apache/ibatis/type/BlobTypeHandler.html">BlobTypeHandler</a></td>
               <td class="jd-descrcol" width="100%">&nbsp;</td>
           </tr>
-        <tr class="alt-color api apilevel-" >
+        <tr class=" api apilevel-" >
               <td class="jd-linkcol"><a href="../../../../org/apache/ibatis/type/BooleanTypeHandler.html">BooleanTypeHandler</a></td>
               <td class="jd-descrcol" width="100%">&nbsp;</td>
           </tr>
-        <tr class=" api apilevel-" >
+        <tr class="alt-color api apilevel-" >
               <td class="jd-linkcol"><a href="../../../../org/apache/ibatis/type/ByteArrayTypeHandler.html">ByteArrayTypeHandler</a></td>
               <td class="jd-descrcol" width="100%">&nbsp;</td>
           </tr>
-        <tr class="alt-color api apilevel-" >
+        <tr class=" api apilevel-" >
               <td class="jd-linkcol"><a href="../../../../org/apache/ibatis/type/ByteObjectArrayTypeHandler.html">ByteObjectArrayTypeHandler</a></td>
               <td class="jd-descrcol" width="100%">&nbsp;</td>
           </tr>
-        <tr class=" api apilevel-" >
+        <tr class="alt-color api apilevel-" >
               <td class="jd-linkcol"><a href="../../../../org/apache/ibatis/type/ByteTypeHandler.html">ByteTypeHandler</a></td>
               <td class="jd-descrcol" width="100%">&nbsp;</td>
           </tr>
-        <tr class="alt-color api apilevel-" >
+        <tr class=" api apilevel-" >
               <td class="jd-linkcol"><a href="../../../../org/apache/ibatis/type/CharacterTypeHandler.html">CharacterTypeHandler</a></td>
               <td class="jd-descrcol" width="100%">&nbsp;</td>
+          </tr>
+        <tr class="alt-color api apilevel-" >
+              <td class="jd-linkcol"><a href="../../../../org/apache/ibatis/type/ClobReaderTypeHandler.html">ClobReaderTypeHandler</a></td>
+              <td class="jd-descrcol" width="100%">The <code><a href="../../../../org/apache/ibatis/type/TypeHandler.html">TypeHandler</a></code> for Clob/Reader using method supported at JDBC 4.0.&nbsp;</td>
           </tr>
         <tr class=" api apilevel-" >
               <td class="jd-linkcol"><a href="../../../../org/apache/ibatis/type/ClobTypeHandler.html">ClobTypeHandler</a></td>
@@ -724,7 +734,7 @@ Summary:
             T
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../org/apache/ibatis/type/TypeHandler.html#getResult(java.sql.ResultSet, java.lang.String)">getResult</a></span>(ResultSet rs, String columnName)
+        <span class="sympad"><a href="../../../../org/apache/ibatis/type/TypeHandler.html#getResult(java.sql.ResultSet, int)">getResult</a></span>(ResultSet rs, int columnIndex)
         
   </td></tr>
 
@@ -740,7 +750,7 @@ Summary:
             T
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../org/apache/ibatis/type/TypeHandler.html#getResult(java.sql.CallableStatement, int)">getResult</a></span>(CallableStatement cs, int columnIndex)
+        <span class="sympad"><a href="../../../../org/apache/ibatis/type/TypeHandler.html#getResult(java.sql.ResultSet, java.lang.String)">getResult</a></span>(ResultSet rs, String columnName)
         
   </td></tr>
 
@@ -756,7 +766,7 @@ Summary:
             T
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../org/apache/ibatis/type/TypeHandler.html#getResult(java.sql.ResultSet, int)">getResult</a></span>(ResultSet rs, int columnIndex)
+        <span class="sympad"><a href="../../../../org/apache/ibatis/type/TypeHandler.html#getResult(java.sql.CallableStatement, int)">getResult</a></span>(CallableStatement cs, int columnIndex)
         
   </td></tr>
 
@@ -825,6 +835,46 @@ Summary:
 
 
 
+<a id="getResult(java.sql.ResultSet, int)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+        abstract 
+         
+        T
+      </span>
+      <span class="sympad">getResult</span>
+      <span class="normal">(ResultSet rs, int columnIndex)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Throws</h5>
+      <table class="jd-tagtable">  
+        <tr>
+            <th>SQLException</td>
+            <td></td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
 <a id="getResult(java.sql.ResultSet, java.lang.String)"></a>
 
 <div class="jd-details api apilevel-"> 
@@ -879,46 +929,6 @@ Summary:
       </span>
       <span class="sympad">getResult</span>
       <span class="normal">(CallableStatement cs, int columnIndex)</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p></p></div>
-  <div class="jd-tagdata">
-      <h5 class="jd-tagtitle">Throws</h5>
-      <table class="jd-tagtable">  
-        <tr>
-            <th>SQLException</td>
-            <td></td>
-        </tr>
-      </table>
-  </div>
-
-    </div>
-</div>
-
-
-<a id="getResult(java.sql.ResultSet, int)"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-        abstract 
-         
-        T
-      </span>
-      <span class="sympad">getResult</span>
-      <span class="normal">(ResultSet rs, int columnIndex)</span>
     </h4>
       <div class="api-level">
         <div>

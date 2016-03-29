@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import org.apache.ibatis.cursor.Cursor;
 import org.apache.ibatis.executor.BatchResult;
 import org.apache.ibatis.reflection.ExceptionUtil;
 
@@ -36,316 +37,331 @@ public class SqlSessionManager implements SqlSessionFactory, SqlSession {
   private final SqlSessionFactory sqlSessionFactory;
   private final SqlSession sqlSessionProxy;
 
-<span class="fc" id="L39">  private ThreadLocal&lt;SqlSession&gt; localSqlSession = new ThreadLocal&lt;SqlSession&gt;();</span>
+<span class="fc" id="L40">  private ThreadLocal&lt;SqlSession&gt; localSqlSession = new ThreadLocal&lt;SqlSession&gt;();</span>
 
-<span class="fc" id="L41">  private SqlSessionManager(SqlSessionFactory sqlSessionFactory) {</span>
-<span class="fc" id="L42">    this.sqlSessionFactory = sqlSessionFactory;</span>
-<span class="fc" id="L43">    this.sqlSessionProxy = (SqlSession) Proxy.newProxyInstance(</span>
-        SqlSessionFactory.class.getClassLoader(),
+<span class="fc" id="L42">  private SqlSessionManager(SqlSessionFactory sqlSessionFactory) {</span>
+<span class="fc" id="L43">    this.sqlSessionFactory = sqlSessionFactory;</span>
+<span class="fc" id="L44">    this.sqlSessionProxy = (SqlSession) Proxy.newProxyInstance(</span>
+<span class="fc" id="L45">        SqlSessionFactory.class.getClassLoader(),</span>
         new Class[]{SqlSession.class},
         new SqlSessionInterceptor());
-<span class="fc" id="L47">  }</span>
+<span class="fc" id="L48">  }</span>
 
   public static SqlSessionManager newInstance(Reader reader) {
-<span class="fc" id="L50">    return new SqlSessionManager(new SqlSessionFactoryBuilder().build(reader, null, null));</span>
+<span class="fc" id="L51">    return new SqlSessionManager(new SqlSessionFactoryBuilder().build(reader, null, null));</span>
   }
 
   public static SqlSessionManager newInstance(Reader reader, String environment) {
-<span class="nc" id="L54">    return new SqlSessionManager(new SqlSessionFactoryBuilder().build(reader, environment, null));</span>
+<span class="nc" id="L55">    return new SqlSessionManager(new SqlSessionFactoryBuilder().build(reader, environment, null));</span>
   }
 
   public static SqlSessionManager newInstance(Reader reader, Properties properties) {
-<span class="nc" id="L58">    return new SqlSessionManager(new SqlSessionFactoryBuilder().build(reader, null, properties));</span>
+<span class="nc" id="L59">    return new SqlSessionManager(new SqlSessionFactoryBuilder().build(reader, null, properties));</span>
   }
 
   public static SqlSessionManager newInstance(InputStream inputStream) {
-<span class="nc" id="L62">    return new SqlSessionManager(new SqlSessionFactoryBuilder().build(inputStream, null, null));</span>
+<span class="nc" id="L63">    return new SqlSessionManager(new SqlSessionFactoryBuilder().build(inputStream, null, null));</span>
   }
 
   public static SqlSessionManager newInstance(InputStream inputStream, String environment) {
-<span class="nc" id="L66">    return new SqlSessionManager(new SqlSessionFactoryBuilder().build(inputStream, environment, null));</span>
+<span class="nc" id="L67">    return new SqlSessionManager(new SqlSessionFactoryBuilder().build(inputStream, environment, null));</span>
   }
 
   public static SqlSessionManager newInstance(InputStream inputStream, Properties properties) {
-<span class="nc" id="L70">    return new SqlSessionManager(new SqlSessionFactoryBuilder().build(inputStream, null, properties));</span>
+<span class="nc" id="L71">    return new SqlSessionManager(new SqlSessionFactoryBuilder().build(inputStream, null, properties));</span>
   }
 
   public static SqlSessionManager newInstance(SqlSessionFactory sqlSessionFactory) {
-<span class="nc" id="L74">    return new SqlSessionManager(sqlSessionFactory);</span>
+<span class="nc" id="L75">    return new SqlSessionManager(sqlSessionFactory);</span>
   }
 
   public void startManagedSession() {
-<span class="fc" id="L78">    this.localSqlSession.set(openSession());</span>
-<span class="fc" id="L79">  }</span>
+<span class="fc" id="L79">    this.localSqlSession.set(openSession());</span>
+<span class="fc" id="L80">  }</span>
 
   public void startManagedSession(boolean autoCommit) {
-<span class="nc" id="L82">    this.localSqlSession.set(openSession(autoCommit));</span>
-<span class="nc" id="L83">  }</span>
+<span class="nc" id="L83">    this.localSqlSession.set(openSession(autoCommit));</span>
+<span class="nc" id="L84">  }</span>
 
   public void startManagedSession(Connection connection) {
-<span class="nc" id="L86">    this.localSqlSession.set(openSession(connection));</span>
-<span class="nc" id="L87">  }</span>
+<span class="nc" id="L87">    this.localSqlSession.set(openSession(connection));</span>
+<span class="nc" id="L88">  }</span>
 
   public void startManagedSession(TransactionIsolationLevel level) {
-<span class="nc" id="L90">    this.localSqlSession.set(openSession(level));</span>
-<span class="nc" id="L91">  }</span>
+<span class="nc" id="L91">    this.localSqlSession.set(openSession(level));</span>
+<span class="nc" id="L92">  }</span>
 
   public void startManagedSession(ExecutorType execType) {
-<span class="nc" id="L94">    this.localSqlSession.set(openSession(execType));</span>
-<span class="nc" id="L95">  }</span>
+<span class="nc" id="L95">    this.localSqlSession.set(openSession(execType));</span>
+<span class="nc" id="L96">  }</span>
 
   public void startManagedSession(ExecutorType execType, boolean autoCommit) {
-<span class="nc" id="L98">    this.localSqlSession.set(openSession(execType, autoCommit));</span>
-<span class="nc" id="L99">  }</span>
+<span class="nc" id="L99">    this.localSqlSession.set(openSession(execType, autoCommit));</span>
+<span class="nc" id="L100">  }</span>
 
   public void startManagedSession(ExecutorType execType, TransactionIsolationLevel level) {
-<span class="nc" id="L102">    this.localSqlSession.set(openSession(execType, level));</span>
-<span class="nc" id="L103">  }</span>
+<span class="nc" id="L103">    this.localSqlSession.set(openSession(execType, level));</span>
+<span class="nc" id="L104">  }</span>
 
   public void startManagedSession(ExecutorType execType, Connection connection) {
-<span class="nc" id="L106">    this.localSqlSession.set(openSession(execType, connection));</span>
-<span class="nc" id="L107">  }</span>
+<span class="nc" id="L107">    this.localSqlSession.set(openSession(execType, connection));</span>
+<span class="nc" id="L108">  }</span>
 
   public boolean isManagedSessionStarted() {
-<span class="nc bnc" id="L110" title="All 2 branches missed.">    return this.localSqlSession.get() != null;</span>
+<span class="nc bnc" id="L111" title="All 2 branches missed.">    return this.localSqlSession.get() != null;</span>
   }
 
   @Override
   public SqlSession openSession() {
-<span class="fc" id="L115">    return sqlSessionFactory.openSession();</span>
+<span class="fc" id="L116">    return sqlSessionFactory.openSession();</span>
   }
 
   @Override
   public SqlSession openSession(boolean autoCommit) {
-<span class="nc" id="L120">    return sqlSessionFactory.openSession(autoCommit);</span>
+<span class="nc" id="L121">    return sqlSessionFactory.openSession(autoCommit);</span>
   }
 
   @Override
   public SqlSession openSession(Connection connection) {
-<span class="nc" id="L125">    return sqlSessionFactory.openSession(connection);</span>
+<span class="nc" id="L126">    return sqlSessionFactory.openSession(connection);</span>
   }
 
   @Override
   public SqlSession openSession(TransactionIsolationLevel level) {
-<span class="nc" id="L130">    return sqlSessionFactory.openSession(level);</span>
+<span class="nc" id="L131">    return sqlSessionFactory.openSession(level);</span>
   }
 
   @Override
   public SqlSession openSession(ExecutorType execType) {
-<span class="nc" id="L135">    return sqlSessionFactory.openSession(execType);</span>
+<span class="nc" id="L136">    return sqlSessionFactory.openSession(execType);</span>
   }
 
   @Override
   public SqlSession openSession(ExecutorType execType, boolean autoCommit) {
-<span class="nc" id="L140">    return sqlSessionFactory.openSession(execType, autoCommit);</span>
+<span class="nc" id="L141">    return sqlSessionFactory.openSession(execType, autoCommit);</span>
   }
 
   @Override
   public SqlSession openSession(ExecutorType execType, TransactionIsolationLevel level) {
-<span class="nc" id="L145">    return sqlSessionFactory.openSession(execType, level);</span>
+<span class="nc" id="L146">    return sqlSessionFactory.openSession(execType, level);</span>
   }
 
   @Override
   public SqlSession openSession(ExecutorType execType, Connection connection) {
-<span class="nc" id="L150">    return sqlSessionFactory.openSession(execType, connection);</span>
+<span class="nc" id="L151">    return sqlSessionFactory.openSession(execType, connection);</span>
   }
 
   @Override
   public Configuration getConfiguration() {
-<span class="fc" id="L155">    return sqlSessionFactory.getConfiguration();</span>
+<span class="fc" id="L156">    return sqlSessionFactory.getConfiguration();</span>
   }
 
   @Override
   public &lt;T&gt; T selectOne(String statement) {
-<span class="nc" id="L160">    return sqlSessionProxy.&lt;T&gt; selectOne(statement);</span>
+<span class="nc" id="L161">    return sqlSessionProxy.&lt;T&gt; selectOne(statement);</span>
   }
 
   @Override
   public &lt;T&gt; T selectOne(String statement, Object parameter) {
-<span class="fc" id="L165">    return sqlSessionProxy.&lt;T&gt; selectOne(statement, parameter);</span>
+<span class="fc" id="L166">    return sqlSessionProxy.&lt;T&gt; selectOne(statement, parameter);</span>
   }
 
   @Override
   public &lt;K, V&gt; Map&lt;K, V&gt; selectMap(String statement, String mapKey) {
-<span class="nc" id="L170">    return sqlSessionProxy.&lt;K, V&gt; selectMap(statement, mapKey);</span>
+<span class="nc" id="L171">    return sqlSessionProxy.&lt;K, V&gt; selectMap(statement, mapKey);</span>
   }
 
   @Override
   public &lt;K, V&gt; Map&lt;K, V&gt; selectMap(String statement, Object parameter, String mapKey) {
-<span class="nc" id="L175">    return sqlSessionProxy.&lt;K, V&gt; selectMap(statement, parameter, mapKey);</span>
+<span class="nc" id="L176">    return sqlSessionProxy.&lt;K, V&gt; selectMap(statement, parameter, mapKey);</span>
   }
 
   @Override
   public &lt;K, V&gt; Map&lt;K, V&gt; selectMap(String statement, Object parameter, String mapKey, RowBounds rowBounds) {
-<span class="nc" id="L180">    return sqlSessionProxy.&lt;K, V&gt; selectMap(statement, parameter, mapKey, rowBounds);</span>
+<span class="nc" id="L181">    return sqlSessionProxy.&lt;K, V&gt; selectMap(statement, parameter, mapKey, rowBounds);</span>
+  }
+
+  @Override
+  public &lt;T&gt; Cursor&lt;T&gt; selectCursor(String statement) {
+<span class="nc" id="L186">    return sqlSessionProxy.selectCursor(statement);</span>
+  }
+
+  @Override
+  public &lt;T&gt; Cursor&lt;T&gt; selectCursor(String statement, Object parameter) {
+<span class="nc" id="L191">    return sqlSessionProxy.selectCursor(statement, parameter);</span>
+  }
+
+  @Override
+  public &lt;T&gt; Cursor&lt;T&gt; selectCursor(String statement, Object parameter, RowBounds rowBounds) {
+<span class="nc" id="L196">    return sqlSessionProxy.selectCursor(statement, parameter, rowBounds);</span>
   }
 
   @Override
   public &lt;E&gt; List&lt;E&gt; selectList(String statement) {
-<span class="nc" id="L185">    return sqlSessionProxy.&lt;E&gt; selectList(statement);</span>
+<span class="nc" id="L201">    return sqlSessionProxy.&lt;E&gt; selectList(statement);</span>
   }
 
   @Override
   public &lt;E&gt; List&lt;E&gt; selectList(String statement, Object parameter) {
-<span class="nc" id="L190">    return sqlSessionProxy.&lt;E&gt; selectList(statement, parameter);</span>
+<span class="nc" id="L206">    return sqlSessionProxy.&lt;E&gt; selectList(statement, parameter);</span>
   }
 
   @Override
   public &lt;E&gt; List&lt;E&gt; selectList(String statement, Object parameter, RowBounds rowBounds) {
-<span class="nc" id="L195">    return sqlSessionProxy.&lt;E&gt; selectList(statement, parameter, rowBounds);</span>
+<span class="nc" id="L211">    return sqlSessionProxy.&lt;E&gt; selectList(statement, parameter, rowBounds);</span>
   }
 
   @Override
   public void select(String statement, ResultHandler handler) {
-<span class="nc" id="L200">    sqlSessionProxy.select(statement, handler);</span>
-<span class="nc" id="L201">  }</span>
+<span class="nc" id="L216">    sqlSessionProxy.select(statement, handler);</span>
+<span class="nc" id="L217">  }</span>
 
   @Override
   public void select(String statement, Object parameter, ResultHandler handler) {
-<span class="nc" id="L205">    sqlSessionProxy.select(statement, parameter, handler);</span>
-<span class="nc" id="L206">  }</span>
+<span class="nc" id="L221">    sqlSessionProxy.select(statement, parameter, handler);</span>
+<span class="nc" id="L222">  }</span>
 
   @Override
   public void select(String statement, Object parameter, RowBounds rowBounds, ResultHandler handler) {
-<span class="nc" id="L210">    sqlSessionProxy.select(statement, parameter, rowBounds, handler);</span>
-<span class="nc" id="L211">  }</span>
+<span class="nc" id="L226">    sqlSessionProxy.select(statement, parameter, rowBounds, handler);</span>
+<span class="nc" id="L227">  }</span>
 
   @Override
   public int insert(String statement) {
-<span class="nc" id="L215">    return sqlSessionProxy.insert(statement);</span>
+<span class="nc" id="L231">    return sqlSessionProxy.insert(statement);</span>
   }
 
   @Override
   public int insert(String statement, Object parameter) {
-<span class="fc" id="L220">    return sqlSessionProxy.insert(statement, parameter);</span>
+<span class="fc" id="L236">    return sqlSessionProxy.insert(statement, parameter);</span>
   }
 
   @Override
   public int update(String statement) {
-<span class="nc" id="L225">    return sqlSessionProxy.update(statement);</span>
+<span class="nc" id="L241">    return sqlSessionProxy.update(statement);</span>
   }
 
   @Override
   public int update(String statement, Object parameter) {
-<span class="nc" id="L230">    return sqlSessionProxy.update(statement, parameter);</span>
+<span class="nc" id="L246">    return sqlSessionProxy.update(statement, parameter);</span>
   }
 
   @Override
   public int delete(String statement) {
-<span class="nc" id="L235">    return sqlSessionProxy.delete(statement);</span>
+<span class="nc" id="L251">    return sqlSessionProxy.delete(statement);</span>
   }
 
   @Override
   public int delete(String statement, Object parameter) {
-<span class="nc" id="L240">    return sqlSessionProxy.delete(statement, parameter);</span>
+<span class="nc" id="L256">    return sqlSessionProxy.delete(statement, parameter);</span>
   }
 
   @Override
   public &lt;T&gt; T getMapper(Class&lt;T&gt; type) {
-<span class="fc" id="L245">    return getConfiguration().getMapper(type, this);</span>
+<span class="fc" id="L261">    return getConfiguration().getMapper(type, this);</span>
   }
 
   @Override
   public Connection getConnection() {
-<span class="nc" id="L250">    final SqlSession sqlSession = localSqlSession.get();</span>
-<span class="nc bnc" id="L251" title="All 2 branches missed.">    if (sqlSession == null) {</span>
-<span class="nc" id="L252">      throw new SqlSessionException(&quot;Error:  Cannot get connection.  No managed session is started.&quot;);</span>
+<span class="nc" id="L266">    final SqlSession sqlSession = localSqlSession.get();</span>
+<span class="nc bnc" id="L267" title="All 2 branches missed.">    if (sqlSession == null) {</span>
+<span class="nc" id="L268">      throw new SqlSessionException(&quot;Error:  Cannot get connection.  No managed session is started.&quot;);</span>
     }
-<span class="nc" id="L254">    return sqlSession.getConnection();</span>
+<span class="nc" id="L270">    return sqlSession.getConnection();</span>
   }
 
   @Override
   public void clearCache() {
-<span class="nc" id="L259">    final SqlSession sqlSession = localSqlSession.get();</span>
-<span class="nc bnc" id="L260" title="All 2 branches missed.">    if (sqlSession == null) {</span>
-<span class="nc" id="L261">      throw new SqlSessionException(&quot;Error:  Cannot clear the cache.  No managed session is started.&quot;);</span>
+<span class="nc" id="L275">    final SqlSession sqlSession = localSqlSession.get();</span>
+<span class="nc bnc" id="L276" title="All 2 branches missed.">    if (sqlSession == null) {</span>
+<span class="nc" id="L277">      throw new SqlSessionException(&quot;Error:  Cannot clear the cache.  No managed session is started.&quot;);</span>
     }
-<span class="nc" id="L263">    sqlSession.clearCache();</span>
-<span class="nc" id="L264">  }</span>
+<span class="nc" id="L279">    sqlSession.clearCache();</span>
+<span class="nc" id="L280">  }</span>
 
   @Override
   public void commit() {
-<span class="fc" id="L268">    final SqlSession sqlSession = localSqlSession.get();</span>
-<span class="pc bpc" id="L269" title="1 of 2 branches missed.">    if (sqlSession == null) {</span>
-<span class="nc" id="L270">      throw new SqlSessionException(&quot;Error:  Cannot commit.  No managed session is started.&quot;);</span>
+<span class="fc" id="L284">    final SqlSession sqlSession = localSqlSession.get();</span>
+<span class="pc bpc" id="L285" title="1 of 2 branches missed.">    if (sqlSession == null) {</span>
+<span class="nc" id="L286">      throw new SqlSessionException(&quot;Error:  Cannot commit.  No managed session is started.&quot;);</span>
     }
-<span class="fc" id="L272">    sqlSession.commit();</span>
-<span class="fc" id="L273">  }</span>
+<span class="fc" id="L288">    sqlSession.commit();</span>
+<span class="fc" id="L289">  }</span>
 
   @Override
   public void commit(boolean force) {
-<span class="nc" id="L277">    final SqlSession sqlSession = localSqlSession.get();</span>
-<span class="nc bnc" id="L278" title="All 2 branches missed.">    if (sqlSession == null) {</span>
-<span class="nc" id="L279">      throw new SqlSessionException(&quot;Error:  Cannot commit.  No managed session is started.&quot;);</span>
+<span class="nc" id="L293">    final SqlSession sqlSession = localSqlSession.get();</span>
+<span class="nc bnc" id="L294" title="All 2 branches missed.">    if (sqlSession == null) {</span>
+<span class="nc" id="L295">      throw new SqlSessionException(&quot;Error:  Cannot commit.  No managed session is started.&quot;);</span>
     }
-<span class="nc" id="L281">    sqlSession.commit(force);</span>
-<span class="nc" id="L282">  }</span>
+<span class="nc" id="L297">    sqlSession.commit(force);</span>
+<span class="nc" id="L298">  }</span>
 
   @Override
   public void rollback() {
-<span class="fc" id="L286">    final SqlSession sqlSession = localSqlSession.get();</span>
-<span class="pc bpc" id="L287" title="1 of 2 branches missed.">    if (sqlSession == null) {</span>
-<span class="nc" id="L288">      throw new SqlSessionException(&quot;Error:  Cannot rollback.  No managed session is started.&quot;);</span>
+<span class="fc" id="L302">    final SqlSession sqlSession = localSqlSession.get();</span>
+<span class="pc bpc" id="L303" title="1 of 2 branches missed.">    if (sqlSession == null) {</span>
+<span class="nc" id="L304">      throw new SqlSessionException(&quot;Error:  Cannot rollback.  No managed session is started.&quot;);</span>
     }
-<span class="fc" id="L290">    sqlSession.rollback();</span>
-<span class="fc" id="L291">  }</span>
+<span class="fc" id="L306">    sqlSession.rollback();</span>
+<span class="fc" id="L307">  }</span>
 
   @Override
   public void rollback(boolean force) {
-<span class="nc" id="L295">    final SqlSession sqlSession = localSqlSession.get();</span>
-<span class="nc bnc" id="L296" title="All 2 branches missed.">    if (sqlSession == null) {</span>
-<span class="nc" id="L297">      throw new SqlSessionException(&quot;Error:  Cannot rollback.  No managed session is started.&quot;);</span>
+<span class="nc" id="L311">    final SqlSession sqlSession = localSqlSession.get();</span>
+<span class="nc bnc" id="L312" title="All 2 branches missed.">    if (sqlSession == null) {</span>
+<span class="nc" id="L313">      throw new SqlSessionException(&quot;Error:  Cannot rollback.  No managed session is started.&quot;);</span>
     }
-<span class="nc" id="L299">    sqlSession.rollback(force);</span>
-<span class="nc" id="L300">  }</span>
+<span class="nc" id="L315">    sqlSession.rollback(force);</span>
+<span class="nc" id="L316">  }</span>
 
   @Override
   public List&lt;BatchResult&gt; flushStatements() {
-<span class="nc" id="L304">    final SqlSession sqlSession = localSqlSession.get();</span>
-<span class="nc bnc" id="L305" title="All 2 branches missed.">    if (sqlSession == null) {</span>
-<span class="nc" id="L306">      throw new SqlSessionException(&quot;Error:  Cannot rollback.  No managed session is started.&quot;);</span>
+<span class="nc" id="L320">    final SqlSession sqlSession = localSqlSession.get();</span>
+<span class="nc bnc" id="L321" title="All 2 branches missed.">    if (sqlSession == null) {</span>
+<span class="nc" id="L322">      throw new SqlSessionException(&quot;Error:  Cannot rollback.  No managed session is started.&quot;);</span>
     }
-<span class="nc" id="L308">    return sqlSession.flushStatements();</span>
+<span class="nc" id="L324">    return sqlSession.flushStatements();</span>
   }
 
   @Override
   public void close() {
-<span class="fc" id="L313">    final SqlSession sqlSession = localSqlSession.get();</span>
-<span class="pc bpc" id="L314" title="1 of 2 branches missed.">    if (sqlSession == null) {</span>
-<span class="nc" id="L315">      throw new SqlSessionException(&quot;Error:  Cannot close.  No managed session is started.&quot;);</span>
+<span class="fc" id="L329">    final SqlSession sqlSession = localSqlSession.get();</span>
+<span class="pc bpc" id="L330" title="1 of 2 branches missed.">    if (sqlSession == null) {</span>
+<span class="nc" id="L331">      throw new SqlSessionException(&quot;Error:  Cannot close.  No managed session is started.&quot;);</span>
     }
     try {
-<span class="fc" id="L318">      sqlSession.close();</span>
+<span class="fc" id="L334">      sqlSession.close();</span>
     } finally {
-<span class="pc" id="L320">      localSqlSession.set(null);</span>
-<span class="fc" id="L321">    }</span>
-<span class="fc" id="L322">  }</span>
+<span class="pc" id="L336">      localSqlSession.set(null);</span>
+<span class="fc" id="L337">    }</span>
+<span class="fc" id="L338">  }</span>
 
   private class SqlSessionInterceptor implements InvocationHandler {
-<span class="fc" id="L325">    public SqlSessionInterceptor() {</span>
+<span class="fc" id="L341">    public SqlSessionInterceptor() {</span>
         // Prevent Synthetic Access
-<span class="fc" id="L327">    }</span>
+<span class="fc" id="L343">    }</span>
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-<span class="fc" id="L331">      final SqlSession sqlSession = SqlSessionManager.this.localSqlSession.get();</span>
-<span class="fc bfc" id="L332" title="All 2 branches covered.">      if (sqlSession != null) {</span>
+<span class="fc" id="L347">      final SqlSession sqlSession = SqlSessionManager.this.localSqlSession.get();</span>
+<span class="fc bfc" id="L348" title="All 2 branches covered.">      if (sqlSession != null) {</span>
         try {
-<span class="fc" id="L334">          return method.invoke(sqlSession, args);</span>
-<span class="fc" id="L335">        } catch (Throwable t) {</span>
-<span class="fc" id="L336">          throw ExceptionUtil.unwrapThrowable(t);</span>
+<span class="fc" id="L350">          return method.invoke(sqlSession, args);</span>
+<span class="fc" id="L351">        } catch (Throwable t) {</span>
+<span class="fc" id="L352">          throw ExceptionUtil.unwrapThrowable(t);</span>
         }
       } else {
-<span class="fc" id="L339">        final SqlSession autoSqlSession = openSession();</span>
+<span class="fc" id="L355">        final SqlSession autoSqlSession = openSession();</span>
         try {
-<span class="fc" id="L341">          final Object result = method.invoke(autoSqlSession, args);</span>
-<span class="fc" id="L342">          autoSqlSession.commit();</span>
-<span class="fc" id="L343">          return result;</span>
-<span class="nc" id="L344">        } catch (Throwable t) {</span>
-<span class="nc" id="L345">          autoSqlSession.rollback();</span>
-<span class="nc" id="L346">          throw ExceptionUtil.unwrapThrowable(t);</span>
+<span class="fc" id="L357">          final Object result = method.invoke(autoSqlSession, args);</span>
+<span class="fc" id="L358">          autoSqlSession.commit();</span>
+<span class="fc" id="L359">          return result;</span>
+<span class="nc" id="L360">        } catch (Throwable t) {</span>
+<span class="nc" id="L361">          autoSqlSession.rollback();</span>
+<span class="nc" id="L362">          throw ExceptionUtil.unwrapThrowable(t);</span>
         } finally {
-<span class="pc" id="L348">          autoSqlSession.close();</span>
+<span class="pc" id="L364">          autoSqlSession.close();</span>
         }
       }
     }

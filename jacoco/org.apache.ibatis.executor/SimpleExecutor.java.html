@@ -15,12 +15,7 @@
  */
 package org.apache.ibatis.executor;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.Collections;
-import java.util.List;
-
+import org.apache.ibatis.cursor.Cursor;
 import org.apache.ibatis.executor.statement.StatementHandler;
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.mapping.BoundSql;
@@ -30,52 +25,66 @@ import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.transaction.Transaction;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Collections;
+import java.util.List;
+
 /**
  * @author Clinton Begin
  */
 public class SimpleExecutor extends BaseExecutor {
 
   public SimpleExecutor(Configuration configuration, Transaction transaction) {
-<span class="fc" id="L39">    super(configuration, transaction);</span>
-<span class="fc" id="L40">  }</span>
+<span class="fc" id="L40">    super(configuration, transaction);</span>
+<span class="fc" id="L41">  }</span>
 
   @Override
   public int doUpdate(MappedStatement ms, Object parameter) throws SQLException {
-<span class="fc" id="L44">    Statement stmt = null;</span>
+<span class="fc" id="L45">    Statement stmt = null;</span>
     try {
-<span class="fc" id="L46">      Configuration configuration = ms.getConfiguration();</span>
-<span class="fc" id="L47">      StatementHandler handler = configuration.newStatementHandler(this, ms, parameter, RowBounds.DEFAULT, null, null);</span>
-<span class="fc" id="L48">      stmt = prepareStatement(handler, ms.getStatementLog());</span>
-<span class="fc" id="L49">      return handler.update(stmt);</span>
+<span class="fc" id="L47">      Configuration configuration = ms.getConfiguration();</span>
+<span class="fc" id="L48">      StatementHandler handler = configuration.newStatementHandler(this, ms, parameter, RowBounds.DEFAULT, null, null);</span>
+<span class="fc" id="L49">      stmt = prepareStatement(handler, ms.getStatementLog());</span>
+<span class="fc" id="L50">      return handler.update(stmt);</span>
     } finally {
-<span class="fc" id="L51">      closeStatement(stmt);</span>
+<span class="fc" id="L52">      closeStatement(stmt);</span>
     }
   }
 
   @Override
   public &lt;E&gt; List&lt;E&gt; doQuery(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql) throws SQLException {
-<span class="fc" id="L57">    Statement stmt = null;</span>
+<span class="fc" id="L58">    Statement stmt = null;</span>
     try {
-<span class="fc" id="L59">      Configuration configuration = ms.getConfiguration();</span>
-<span class="fc" id="L60">      StatementHandler handler = configuration.newStatementHandler(wrapper, ms, parameter, rowBounds, resultHandler, boundSql);</span>
-<span class="fc" id="L61">      stmt = prepareStatement(handler, ms.getStatementLog());</span>
-<span class="fc" id="L62">      return handler.&lt;E&gt;query(stmt, resultHandler);</span>
+<span class="fc" id="L60">      Configuration configuration = ms.getConfiguration();</span>
+<span class="fc" id="L61">      StatementHandler handler = configuration.newStatementHandler(wrapper, ms, parameter, rowBounds, resultHandler, boundSql);</span>
+<span class="fc" id="L62">      stmt = prepareStatement(handler, ms.getStatementLog());</span>
+<span class="fc" id="L63">      return handler.&lt;E&gt;query(stmt, resultHandler);</span>
     } finally {
-<span class="fc" id="L64">      closeStatement(stmt);</span>
+<span class="fc" id="L65">      closeStatement(stmt);</span>
     }
   }
 
   @Override
+  protected &lt;E&gt; Cursor&lt;E&gt; doQueryCursor(MappedStatement ms, Object parameter, RowBounds rowBounds, BoundSql boundSql) throws SQLException {
+<span class="fc" id="L71">    Configuration configuration = ms.getConfiguration();</span>
+<span class="fc" id="L72">    StatementHandler handler = configuration.newStatementHandler(wrapper, ms, parameter, rowBounds, null, boundSql);</span>
+<span class="fc" id="L73">    Statement stmt = prepareStatement(handler, ms.getStatementLog());</span>
+<span class="fc" id="L74">    return handler.&lt;E&gt;queryCursor(stmt);</span>
+  }
+
+  @Override
   public List&lt;BatchResult&gt; doFlushStatements(boolean isRollback) throws SQLException {
-<span class="fc" id="L70">    return Collections.emptyList();</span>
+<span class="fc" id="L79">    return Collections.emptyList();</span>
   }
 
   private Statement prepareStatement(StatementHandler handler, Log statementLog) throws SQLException {
     Statement stmt;
-<span class="fc" id="L75">    Connection connection = getConnection(statementLog);</span>
-<span class="fc" id="L76">    stmt = handler.prepare(connection);</span>
-<span class="fc" id="L77">    handler.parameterize(stmt);</span>
-<span class="fc" id="L78">    return stmt;</span>
+<span class="fc" id="L84">    Connection connection = getConnection(statementLog);</span>
+<span class="fc" id="L85">    stmt = handler.prepare(connection, transaction.getTimeout());</span>
+<span class="fc" id="L86">    handler.parameterize(stmt);</span>
+<span class="fc" id="L87">    return stmt;</span>
   }
 
 }

@@ -48,8 +48,8 @@ import org.apache.ibatis.datasource.DataSourceFactory;
 <span class="fc" id="L48">        initCtx = new InitialContext(env);</span>
       }
 
-<span class="pc bpc" id="L51" title="2 of 4 branches missed.">      if (properties.containsKey(INITIAL_CONTEXT)</span>
-          &amp;&amp; properties.containsKey(DATA_SOURCE)) {
+<span class="pc bpc" id="L51" title="1 of 2 branches missed.">      if (properties.containsKey(INITIAL_CONTEXT)</span>
+<span class="pc bpc" id="L52" title="1 of 2 branches missed.">          &amp;&amp; properties.containsKey(DATA_SOURCE)) {</span>
 <span class="fc" id="L53">        Context ctx = (Context) initCtx.lookup(properties.getProperty(INITIAL_CONTEXT));</span>
 <span class="fc" id="L54">        dataSource = (DataSource) ctx.lookup(properties.getProperty(DATA_SOURCE));</span>
 <span class="pc bnc" id="L55" title="All 2 branches missed.">      } else if (properties.containsKey(DATA_SOURCE)) {</span>

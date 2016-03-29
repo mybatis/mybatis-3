@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>BlockingCache.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.cache.decorators</a> &gt; <span class="el_source">BlockingCache.java</span></div><h1>BlockingCache.java</h1><pre class="source lang-java linenums">/**
+ *    Copyright 2009-2015 the original author or authors.
+ *
+ *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
+package org.apache.ibatis.cache.decorators;
+
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantLock;
+
+import org.apache.ibatis.cache.Cache;
+import org.apache.ibatis.cache.CacheException;
+
+/**
+ * Simple blocking decorator 
+ * 
+ * Simple and inefficient version of EhCache's BlockingCache decorator.
+ * It sets a lock over a cache key when the element is not found in cache.
+ * This way, other threads will wait until this element is filled instead of hitting the database.
+ * 
+ * @author Eduardo Macarron
+ *
+ */
+public class BlockingCache implements Cache {
+
+  private long timeout;
+  private final Cache delegate;
+  private final ConcurrentHashMap&lt;Object, ReentrantLock&gt; locks;
+
+<span class="fc" id="L43">  public BlockingCache(Cache delegate) {</span>
+<span class="fc" id="L44">    this.delegate = delegate;</span>
+<span class="fc" id="L45">    this.locks = new ConcurrentHashMap&lt;Object, ReentrantLock&gt;();</span>
+<span class="fc" id="L46">  }</span>
+
+  @Override
+  public String getId() {
+<span class="fc" id="L50">    return delegate.getId();</span>
+  }
+
+  @Override
+  public int getSize() {
+<span class="nc" id="L55">    return delegate.getSize();</span>
+  }
+
+  @Override
+  public void putObject(Object key, Object value) {
+    try {
+<span class="fc" id="L61">      delegate.putObject(key, value);</span>
+    } finally {
+<span class="pc" id="L63">      releaseLock(key);</span>
+<span class="fc" id="L64">    }</span>
+<span class="fc" id="L65">  }</span>
+
+  @Override
+  public Object getObject(Object key) {
+<span class="fc" id="L69">    acquireLock(key);</span>
+<span class="fc" id="L70">    Object value = delegate.getObject(key);</span>
+<span class="fc bfc" id="L71" title="All 2 branches covered.">    if (value != null) {</span>
+<span class="fc" id="L72">      releaseLock(key);</span>
+    }        
+<span class="fc" id="L74">    return value;</span>
+  }
+
+  @Override
+  public Object removeObject(Object key) {
+    // despite of its name, this method is called only to release locks
+<span class="nc" id="L80">    releaseLock(key);</span>
+<span class="nc" id="L81">    return null;</span>
+  }
+
+  @Override
+  public void clear() {
+<span class="nc" id="L86">    delegate.clear();</span>
+<span class="nc" id="L87">  }</span>
+
+  @Override
+  public ReadWriteLock getReadWriteLock() {
+<span class="nc" id="L91">    return null;</span>
+  }
+  
+  private ReentrantLock getLockForKey(Object key) {
+<span class="fc" id="L95">    ReentrantLock lock = new ReentrantLock();</span>
+<span class="fc" id="L96">    ReentrantLock previous = locks.putIfAbsent(key, lock);</span>
+<span class="fc bfc" id="L97" title="All 2 branches covered.">    return previous == null ? lock : previous;</span>
+  }
+  
+  private void acquireLock(Object key) {
+<span class="fc" id="L101">    Lock lock = getLockForKey(key);</span>
+<span class="pc bpc" id="L102" title="1 of 2 branches missed.">    if (timeout &gt; 0) {</span>
+      try {
+<span class="nc" id="L104">        boolean acquired = lock.tryLock(timeout, TimeUnit.MILLISECONDS);</span>
+<span class="nc bnc" id="L105" title="All 2 branches missed.">        if (!acquired) {</span>
+<span class="nc" id="L106">          throw new CacheException(&quot;Couldn't get a lock in &quot; + timeout + &quot; for the key &quot; +  key + &quot; at the cache &quot; + delegate.getId());  </span>
+        }
+<span class="nc" id="L108">      } catch (InterruptedException e) {</span>
+<span class="nc" id="L109">        throw new CacheException(&quot;Got interrupted while trying to acquire lock for key &quot; + key, e);</span>
+<span class="nc" id="L110">      }</span>
+    } else {
+<span class="fc" id="L112">      lock.lock();</span>
+    }
+<span class="fc" id="L114">  }</span>
+  
+  private void releaseLock(Object key) {
+<span class="fc" id="L117">    ReentrantLock lock = locks.get(key);</span>
+<span class="pc bpc" id="L118" title="1 of 2 branches missed.">    if (lock.isHeldByCurrentThread()) {</span>
+<span class="fc" id="L119">      lock.unlock();</span>
+    }
+<span class="fc" id="L121">  }</span>
+
+  public long getTimeout() {
+<span class="nc" id="L124">    return timeout;</span>
+  }
+
+  public void setTimeout(long timeout) {
+<span class="nc" id="L128">    this.timeout = timeout;</span>
+<span class="nc" id="L129">  }  </span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.5.201505241946</span></div></body></html>

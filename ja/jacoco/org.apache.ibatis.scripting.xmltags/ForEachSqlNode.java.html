@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ja"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>ForEachSqlNode.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.scripting.xmltags</a> &gt; <span class="el_source">ForEachSqlNode.java</span></div><h1>ForEachSqlNode.java</h1><pre class="source lang-java linenums">/**
+ *    Copyright 2009-2015 the original author or authors.
+ *
+ *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
+package org.apache.ibatis.scripting.xmltags;
+
+import java.util.Map;
+
+import org.apache.ibatis.parsing.GenericTokenParser;
+import org.apache.ibatis.parsing.TokenHandler;
+import org.apache.ibatis.session.Configuration;
+
+/**
+ * @author Clinton Begin
+ */
+public class ForEachSqlNode implements SqlNode {
+  public static final String ITEM_PREFIX = &quot;__frch_&quot;;
+
+  private ExpressionEvaluator evaluator;
+  private String collectionExpression;
+  private SqlNode contents;
+  private String open;
+  private String close;
+  private String separator;
+  private String item;
+  private String index;
+  private Configuration configuration;
+
+<span class="fc" id="L40">  public ForEachSqlNode(Configuration configuration, SqlNode contents, String collectionExpression, String index, String item, String open, String close, String separator) {</span>
+<span class="fc" id="L41">    this.evaluator = new ExpressionEvaluator();</span>
+<span class="fc" id="L42">    this.collectionExpression = collectionExpression;</span>
+<span class="fc" id="L43">    this.contents = contents;</span>
+<span class="fc" id="L44">    this.open = open;</span>
+<span class="fc" id="L45">    this.close = close;</span>
+<span class="fc" id="L46">    this.separator = separator;</span>
+<span class="fc" id="L47">    this.index = index;</span>
+<span class="fc" id="L48">    this.item = item;</span>
+<span class="fc" id="L49">    this.configuration = configuration;</span>
+<span class="fc" id="L50">  }</span>
+
+  @Override
+  public boolean apply(DynamicContext context) {
+<span class="fc" id="L54">    Map&lt;String, Object&gt; bindings = context.getBindings();</span>
+<span class="fc" id="L55">    final Iterable&lt;?&gt; iterable = evaluator.evaluateIterable(collectionExpression, bindings);</span>
+<span class="fc bfc" id="L56" title="All 2 branches covered.">    if (!iterable.iterator().hasNext()) {</span>
+<span class="fc" id="L57">      return true;</span>
+    }
+<span class="fc" id="L59">    boolean first = true;</span>
+<span class="fc" id="L60">    applyOpen(context);</span>
+<span class="fc" id="L61">    int i = 0;</span>
+<span class="fc bfc" id="L62" title="All 2 branches covered.">    for (Object o : iterable) {</span>
+<span class="fc" id="L63">      DynamicContext oldContext = context;</span>
+<span class="fc bfc" id="L64" title="All 2 branches covered.">      if (first) {</span>
+<span class="fc" id="L65">        context = new PrefixedContext(context, &quot;&quot;);</span>
+<span class="fc bfc" id="L66" title="All 2 branches covered.">      } else if (separator != null) {</span>
+<span class="fc" id="L67">        context = new PrefixedContext(context, separator);</span>
+      } else {
+<span class="fc" id="L69">          context = new PrefixedContext(context, &quot;&quot;);</span>
+      }
+<span class="fc" id="L71">      int uniqueNumber = context.getUniqueNumber();</span>
+      // Issue #709 
+<span class="fc bfc" id="L73" title="All 2 branches covered.">      if (o instanceof Map.Entry) {</span>
+        @SuppressWarnings(&quot;unchecked&quot;) 
+<span class="fc" id="L75">        Map.Entry&lt;Object, Object&gt; mapEntry = (Map.Entry&lt;Object, Object&gt;) o;</span>
+<span class="fc" id="L76">        applyIndex(context, mapEntry.getKey(), uniqueNumber);</span>
+<span class="fc" id="L77">        applyItem(context, mapEntry.getValue(), uniqueNumber);</span>
+<span class="fc" id="L78">      } else {</span>
+<span class="fc" id="L79">        applyIndex(context, i, uniqueNumber);</span>
+<span class="fc" id="L80">        applyItem(context, o, uniqueNumber);</span>
+      }
+<span class="fc" id="L82">      contents.apply(new FilteredDynamicContext(configuration, context, index, item, uniqueNumber));</span>
+<span class="fc bfc" id="L83" title="All 2 branches covered.">      if (first) {</span>
+<span class="fc bfc" id="L84" title="All 2 branches covered.">        first = !((PrefixedContext) context).isPrefixApplied();</span>
+      }
+<span class="fc" id="L86">      context = oldContext;</span>
+<span class="fc" id="L87">      i++;</span>
+<span class="fc" id="L88">    }</span>
+<span class="fc" id="L89">    applyClose(context);</span>
+<span class="fc" id="L90">    return true;</span>
+  }
+
+  private void applyIndex(DynamicContext context, Object o, int i) {
+<span class="fc bfc" id="L94" title="All 2 branches covered.">    if (index != null) {</span>
+<span class="fc" id="L95">      context.bind(index, o);</span>
+<span class="fc" id="L96">      context.bind(itemizeItem(index, i), o);</span>
+    }
+<span class="fc" id="L98">  }</span>
+
+  private void applyItem(DynamicContext context, Object o, int i) {
+<span class="pc bpc" id="L101" title="1 of 2 branches missed.">    if (item != null) {</span>
+<span class="fc" id="L102">      context.bind(item, o);</span>
+<span class="fc" id="L103">      context.bind(itemizeItem(item, i), o);</span>
+    }
+<span class="fc" id="L105">  }</span>
+
+  private void applyOpen(DynamicContext context) {
+<span class="fc bfc" id="L108" title="All 2 branches covered.">    if (open != null) {</span>
+<span class="fc" id="L109">      context.appendSql(open);</span>
+    }
+<span class="fc" id="L111">  }</span>
+
+  private void applyClose(DynamicContext context) {
+<span class="fc bfc" id="L114" title="All 2 branches covered.">    if (close != null) {</span>
+<span class="fc" id="L115">      context.appendSql(close);</span>
+    }
+<span class="fc" id="L117">  }</span>
+
+  private static String itemizeItem(String item, int i) {
+<span class="fc" id="L120">    return new StringBuilder(ITEM_PREFIX).append(item).append(&quot;_&quot;).append(i).toString();</span>
+  }
+
+  private static class FilteredDynamicContext extends DynamicContext {
+    private DynamicContext delegate;
+    private int index;
+    private String itemIndex;
+    private String item;
+
+    public FilteredDynamicContext(Configuration configuration,DynamicContext delegate, String itemIndex, String item, int i) {
+<span class="fc" id="L130">      super(configuration, null);</span>
+<span class="fc" id="L131">      this.delegate = delegate;</span>
+<span class="fc" id="L132">      this.index = i;</span>
+<span class="fc" id="L133">      this.itemIndex = itemIndex;</span>
+<span class="fc" id="L134">      this.item = item;</span>
+<span class="fc" id="L135">    }</span>
+
+    @Override
+    public Map&lt;String, Object&gt; getBindings() {
+<span class="fc" id="L139">      return delegate.getBindings();</span>
+    }
+
+    @Override
+    public void bind(String name, Object value) {
+<span class="fc" id="L144">      delegate.bind(name, value);</span>
+<span class="fc" id="L145">    }</span>
+
+    @Override
+    public String getSql() {
+<span class="nc" id="L149">      return delegate.getSql();</span>
+    }
+
+    @Override
+    public void appendSql(String sql) {
+<span class="fc" id="L154">      GenericTokenParser parser = new GenericTokenParser(&quot;#{&quot;, &quot;}&quot;, new TokenHandler() {</span>
+        @Override
+        public String handleToken(String content) {
+<span class="fc" id="L157">          String newContent = content.replaceFirst(&quot;^\\s*&quot; + item + &quot;(?![^.,:\\s])&quot;, itemizeItem(item, index));</span>
+<span class="fc bfc" id="L158" title="All 4 branches covered.">          if (itemIndex != null &amp;&amp; newContent.equals(content)) {</span>
+<span class="fc" id="L159">            newContent = content.replaceFirst(&quot;^\\s*&quot; + itemIndex + &quot;(?![^.,:\\s])&quot;, itemizeItem(itemIndex, index));</span>
+          }
+<span class="fc" id="L161">          return new StringBuilder(&quot;#{&quot;).append(newContent).append(&quot;}&quot;).toString();</span>
+        }
+      });
+
+<span class="fc" id="L165">      delegate.appendSql(parser.parse(sql));</span>
+<span class="fc" id="L166">    }</span>
+
+    @Override
+    public int getUniqueNumber() {
+<span class="fc" id="L170">      return delegate.getUniqueNumber();</span>
+    }
+
+  }
+
+
+  private class PrefixedContext extends DynamicContext {
+    private DynamicContext delegate;
+    private String prefix;
+    private boolean prefixApplied;
+
+<span class="fc" id="L181">    public PrefixedContext(DynamicContext delegate, String prefix) {</span>
+<span class="fc" id="L182">      super(configuration, null);</span>
+<span class="fc" id="L183">      this.delegate = delegate;</span>
+<span class="fc" id="L184">      this.prefix = prefix;</span>
+<span class="fc" id="L185">      this.prefixApplied = false;</span>
+<span class="fc" id="L186">    }</span>
+
+    public boolean isPrefixApplied() {
+<span class="fc" id="L189">      return prefixApplied;</span>
+    }
+
+    @Override
+    public Map&lt;String, Object&gt; getBindings() {
+<span class="fc" id="L194">      return delegate.getBindings();</span>
+    }
+
+    @Override
+    public void bind(String name, Object value) {
+<span class="fc" id="L199">      delegate.bind(name, value);</span>
+<span class="fc" id="L200">    }</span>
+
+    @Override
+    public void appendSql(String sql) {
+<span class="pc bpc" id="L204" title="1 of 6 branches missed.">      if (!prefixApplied &amp;&amp; sql != null &amp;&amp; sql.trim().length() &gt; 0) {</span>
+<span class="fc" id="L205">        delegate.appendSql(prefix);</span>
+<span class="fc" id="L206">        prefixApplied = true;</span>
+      }
+<span class="fc" id="L208">      delegate.appendSql(sql);</span>
+<span class="fc" id="L209">    }</span>
+
+    @Override
+    public String getSql() {
+<span class="nc" id="L213">      return delegate.getSql();</span>
+    }
+
+    @Override
+    public int getUniqueNumber() {
+<span class="fc" id="L218">      return delegate.getUniqueNumber();</span>
+    }
+  }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.5.201505241946</span></div></body></html>

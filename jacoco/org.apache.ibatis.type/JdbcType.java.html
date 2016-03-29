@@ -57,23 +57,31 @@ import java.util.Map;
 <span class="fc" id="L57">  NVARCHAR(Types.NVARCHAR), // JDK6</span>
 <span class="fc" id="L58">  NCHAR(Types.NCHAR), // JDK6</span>
 <span class="fc" id="L59">  NCLOB(Types.NCLOB), // JDK6</span>
-<span class="fc" id="L60">  STRUCT(Types.STRUCT);</span>
+<span class="fc" id="L60">  STRUCT(Types.STRUCT),</span>
+<span class="fc" id="L61">  JAVA_OBJECT(Types.JAVA_OBJECT),</span>
+<span class="fc" id="L62">  DISTINCT(Types.DISTINCT),</span>
+<span class="fc" id="L63">  REF(Types.REF),</span>
+<span class="fc" id="L64">  DATALINK(Types.DATALINK),</span>
+<span class="fc" id="L65">  ROWID(Types.ROWID), // JDK6</span>
+<span class="fc" id="L66">  LONGNVARCHAR(Types.LONGNVARCHAR), // JDK6</span>
+<span class="fc" id="L67">  SQLXML(Types.SQLXML), // JDK6</span>
+<span class="fc" id="L68">  DATETIMEOFFSET(-155); // SQL Server 2008</span>
 
   public final int TYPE_CODE;
-<span class="fc" id="L63">  private static Map&lt;Integer,JdbcType&gt; codeLookup = new HashMap&lt;Integer,JdbcType&gt;();</span>
+<span class="fc" id="L71">  private static Map&lt;Integer,JdbcType&gt; codeLookup = new HashMap&lt;Integer,JdbcType&gt;();</span>
 
   static {
-<span class="fc bfc" id="L66" title="All 2 branches covered.">    for (JdbcType type : JdbcType.values()) {</span>
-<span class="fc" id="L67">      codeLookup.put(type.TYPE_CODE, type);</span>
+<span class="fc bfc" id="L74" title="All 2 branches covered.">    for (JdbcType type : JdbcType.values()) {</span>
+<span class="fc" id="L75">      codeLookup.put(type.TYPE_CODE, type);</span>
     }
-<span class="fc" id="L69">  }</span>
+<span class="fc" id="L77">  }</span>
 
-<span class="fc" id="L71">  JdbcType(int code) {</span>
-<span class="fc" id="L72">    this.TYPE_CODE = code;</span>
-<span class="fc" id="L73">  }</span>
+<span class="fc" id="L79">  JdbcType(int code) {</span>
+<span class="fc" id="L80">    this.TYPE_CODE = code;</span>
+<span class="fc" id="L81">  }</span>
 
   public static JdbcType forCode(int code)  {
-<span class="fc" id="L76">    return codeLookup.get(code);</span>
+<span class="fc" id="L84">    return codeLookup.get(code);</span>
   }
 
 }

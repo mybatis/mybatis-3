@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>PropertyNamer.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.reflection.property</a> &gt; <span class="el_source">PropertyNamer.java</span></div><h1>PropertyNamer.java</h1><pre class="source lang-java linenums">/**
+ *    Copyright 2009-2015 the original author or authors.
+ *
+ *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
+package org.apache.ibatis.reflection.property;
+
+import java.util.Locale;
+
+import org.apache.ibatis.reflection.ReflectionException;
+
+/**
+ * @author Clinton Begin
+ */
+public final class PropertyNamer {
+
+<span class="nc" id="L27">  private PropertyNamer() {</span>
+    // Prevent Instantiation of Static Class
+<span class="nc" id="L29">  }</span>
+
+  public static String methodToProperty(String name) {
+<span class="fc bfc" id="L32" title="All 2 branches covered.">    if (name.startsWith(&quot;is&quot;)) {</span>
+<span class="fc" id="L33">      name = name.substring(2);</span>
+<span class="pc bpc" id="L34" title="1 of 4 branches missed.">    } else if (name.startsWith(&quot;get&quot;) || name.startsWith(&quot;set&quot;)) {</span>
+<span class="fc" id="L35">      name = name.substring(3);</span>
+    } else {
+<span class="nc" id="L37">      throw new ReflectionException(&quot;Error parsing property name '&quot; + name + &quot;'.  Didn't start with 'is', 'get' or 'set'.&quot;);</span>
+    }
+
+<span class="pc bpc" id="L40" title="1 of 6 branches missed.">    if (name.length() == 1 || (name.length() &gt; 1 &amp;&amp; !Character.isUpperCase(name.charAt(1)))) {</span>
+<span class="fc" id="L41">      name = name.substring(0, 1).toLowerCase(Locale.ENGLISH) + name.substring(1);</span>
+    }
+
+<span class="fc" id="L44">    return name;</span>
+  }
+
+  public static boolean isProperty(String name) {
+<span class="pc bpc" id="L48" title="1 of 6 branches missed.">    return name.startsWith(&quot;get&quot;) || name.startsWith(&quot;set&quot;) || name.startsWith(&quot;is&quot;);</span>
+  }
+
+  public static boolean isGetter(String name) {
+<span class="nc bnc" id="L52" title="All 4 branches missed.">    return name.startsWith(&quot;get&quot;) || name.startsWith(&quot;is&quot;);</span>
+  }
+
+  public static boolean isSetter(String name) {
+<span class="nc" id="L56">    return name.startsWith(&quot;set&quot;);</span>
+  }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.5.201505241946</span></div></body></html>

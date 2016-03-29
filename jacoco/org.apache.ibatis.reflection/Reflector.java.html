@@ -15,11 +15,15 @@
  */
 package org.apache.ibatis.reflection;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.ReflectPermission;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -43,224 +47,247 @@ import org.apache.ibatis.reflection.property.PropertyNamer;
  */
 public class Reflector {
 
-<span class="fc" id="L46">  private static final String[] EMPTY_STRING_ARRAY = new String[0];</span>
+<span class="fc" id="L50">  private static final String[] EMPTY_STRING_ARRAY = new String[0];</span>
 
   private Class&lt;?&gt; type;
-<span class="fc" id="L49">  private String[] readablePropertyNames = EMPTY_STRING_ARRAY;</span>
-<span class="fc" id="L50">  private String[] writeablePropertyNames = EMPTY_STRING_ARRAY;</span>
-<span class="fc" id="L51">  private Map&lt;String, Invoker&gt; setMethods = new HashMap&lt;String, Invoker&gt;();</span>
-<span class="fc" id="L52">  private Map&lt;String, Invoker&gt; getMethods = new HashMap&lt;String, Invoker&gt;();</span>
-<span class="fc" id="L53">  private Map&lt;String, Class&lt;?&gt;&gt; setTypes = new HashMap&lt;String, Class&lt;?&gt;&gt;();</span>
-<span class="fc" id="L54">  private Map&lt;String, Class&lt;?&gt;&gt; getTypes = new HashMap&lt;String, Class&lt;?&gt;&gt;();</span>
+<span class="fc" id="L53">  private String[] readablePropertyNames = EMPTY_STRING_ARRAY;</span>
+<span class="fc" id="L54">  private String[] writeablePropertyNames = EMPTY_STRING_ARRAY;</span>
+<span class="fc" id="L55">  private Map&lt;String, Invoker&gt; setMethods = new HashMap&lt;String, Invoker&gt;();</span>
+<span class="fc" id="L56">  private Map&lt;String, Invoker&gt; getMethods = new HashMap&lt;String, Invoker&gt;();</span>
+<span class="fc" id="L57">  private Map&lt;String, Class&lt;?&gt;&gt; setTypes = new HashMap&lt;String, Class&lt;?&gt;&gt;();</span>
+<span class="fc" id="L58">  private Map&lt;String, Class&lt;?&gt;&gt; getTypes = new HashMap&lt;String, Class&lt;?&gt;&gt;();</span>
   private Constructor&lt;?&gt; defaultConstructor;
 
-<span class="fc" id="L57">  private Map&lt;String, String&gt; caseInsensitivePropertyMap = new HashMap&lt;String, String&gt;();</span>
+<span class="fc" id="L61">  private Map&lt;String, String&gt; caseInsensitivePropertyMap = new HashMap&lt;String, String&gt;();</span>
 
-<span class="fc" id="L59">  public Reflector(Class&lt;?&gt; clazz) {</span>
-<span class="fc" id="L60">    type = clazz;</span>
-<span class="fc" id="L61">    addDefaultConstructor(clazz);</span>
-<span class="fc" id="L62">    addGetMethods(clazz);</span>
-<span class="fc" id="L63">    addSetMethods(clazz);</span>
-<span class="fc" id="L64">    addFields(clazz);</span>
-<span class="fc" id="L65">    readablePropertyNames = getMethods.keySet().toArray(new String[getMethods.keySet().size()]);</span>
-<span class="fc" id="L66">    writeablePropertyNames = setMethods.keySet().toArray(new String[setMethods.keySet().size()]);</span>
-<span class="fc bfc" id="L67" title="All 2 branches covered.">    for (String propName : readablePropertyNames) {</span>
-<span class="fc" id="L68">      caseInsensitivePropertyMap.put(propName.toUpperCase(Locale.ENGLISH), propName);</span>
+<span class="fc" id="L63">  public Reflector(Class&lt;?&gt; clazz) {</span>
+<span class="fc" id="L64">    type = clazz;</span>
+<span class="fc" id="L65">    addDefaultConstructor(clazz);</span>
+<span class="fc" id="L66">    addGetMethods(clazz);</span>
+<span class="fc" id="L67">    addSetMethods(clazz);</span>
+<span class="fc" id="L68">    addFields(clazz);</span>
+<span class="fc" id="L69">    readablePropertyNames = getMethods.keySet().toArray(new String[getMethods.keySet().size()]);</span>
+<span class="fc" id="L70">    writeablePropertyNames = setMethods.keySet().toArray(new String[setMethods.keySet().size()]);</span>
+<span class="fc bfc" id="L71" title="All 2 branches covered.">    for (String propName : readablePropertyNames) {</span>
+<span class="fc" id="L72">      caseInsensitivePropertyMap.put(propName.toUpperCase(Locale.ENGLISH), propName);</span>
     }
-<span class="fc bfc" id="L70" title="All 2 branches covered.">    for (String propName : writeablePropertyNames) {</span>
-<span class="fc" id="L71">      caseInsensitivePropertyMap.put(propName.toUpperCase(Locale.ENGLISH), propName);</span>
+<span class="fc bfc" id="L74" title="All 2 branches covered.">    for (String propName : writeablePropertyNames) {</span>
+<span class="fc" id="L75">      caseInsensitivePropertyMap.put(propName.toUpperCase(Locale.ENGLISH), propName);</span>
     }
-<span class="fc" id="L73">  }</span>
+<span class="fc" id="L77">  }</span>
 
   private void addDefaultConstructor(Class&lt;?&gt; clazz) {
-<span class="fc" id="L76">    Constructor&lt;?&gt;[] consts = clazz.getDeclaredConstructors();</span>
-<span class="fc bfc" id="L77" title="All 2 branches covered.">    for (Constructor&lt;?&gt; constructor : consts) {</span>
-<span class="fc bfc" id="L78" title="All 2 branches covered.">      if (constructor.getParameterTypes().length == 0) {</span>
-<span class="pc bpc" id="L79" title="1 of 2 branches missed.">        if (canAccessPrivateMethods()) {</span>
+<span class="fc" id="L80">    Constructor&lt;?&gt;[] consts = clazz.getDeclaredConstructors();</span>
+<span class="fc bfc" id="L81" title="All 2 branches covered.">    for (Constructor&lt;?&gt; constructor : consts) {</span>
+<span class="fc bfc" id="L82" title="All 2 branches covered.">      if (constructor.getParameterTypes().length == 0) {</span>
+<span class="pc bpc" id="L83" title="1 of 2 branches missed.">        if (canAccessPrivateMethods()) {</span>
           try {
-<span class="fc" id="L81">            constructor.setAccessible(true);</span>
-<span class="nc" id="L82">          } catch (Exception e) {</span>
+<span class="fc" id="L85">            constructor.setAccessible(true);</span>
+<span class="fc" id="L86">          } catch (Exception e) {</span>
             // Ignored. This is only a final precaution, nothing we can do.
-<span class="fc" id="L84">          }</span>
+<span class="fc" id="L88">          }</span>
         }
-<span class="pc bpc" id="L86" title="1 of 2 branches missed.">        if (constructor.isAccessible()) {</span>
-<span class="fc" id="L87">          this.defaultConstructor = constructor;</span>
+<span class="fc bfc" id="L90" title="All 2 branches covered.">        if (constructor.isAccessible()) {</span>
+<span class="fc" id="L91">          this.defaultConstructor = constructor;</span>
         }
       }
     }
-<span class="fc" id="L91">  }</span>
+<span class="fc" id="L95">  }</span>
 
   private void addGetMethods(Class&lt;?&gt; cls) {
-<span class="fc" id="L94">    Map&lt;String, List&lt;Method&gt;&gt; conflictingGetters = new HashMap&lt;String, List&lt;Method&gt;&gt;();</span>
-<span class="fc" id="L95">    Method[] methods = getClassMethods(cls);</span>
-<span class="fc bfc" id="L96" title="All 2 branches covered.">    for (Method method : methods) {</span>
-<span class="fc" id="L97">      String name = method.getName();</span>
-<span class="fc bfc" id="L98" title="All 4 branches covered.">      if (name.startsWith(&quot;get&quot;) &amp;&amp; name.length() &gt; 3) {</span>
-<span class="fc bfc" id="L99" title="All 2 branches covered.">        if (method.getParameterTypes().length == 0) {</span>
-<span class="fc" id="L100">          name = PropertyNamer.methodToProperty(name);</span>
-<span class="fc" id="L101">          addMethodConflict(conflictingGetters, name, method);</span>
+<span class="fc" id="L98">    Map&lt;String, List&lt;Method&gt;&gt; conflictingGetters = new HashMap&lt;String, List&lt;Method&gt;&gt;();</span>
+<span class="fc" id="L99">    Method[] methods = getClassMethods(cls);</span>
+<span class="fc bfc" id="L100" title="All 2 branches covered.">    for (Method method : methods) {</span>
+<span class="fc" id="L101">      String name = method.getName();</span>
+<span class="fc bfc" id="L102" title="All 4 branches covered.">      if (name.startsWith(&quot;get&quot;) &amp;&amp; name.length() &gt; 3) {</span>
+<span class="fc bfc" id="L103" title="All 2 branches covered.">        if (method.getParameterTypes().length == 0) {</span>
+<span class="fc" id="L104">          name = PropertyNamer.methodToProperty(name);</span>
+<span class="fc" id="L105">          addMethodConflict(conflictingGetters, name, method);</span>
         }
-<span class="pc bpc" id="L103" title="1 of 4 branches missed.">      } else if (name.startsWith(&quot;is&quot;) &amp;&amp; name.length() &gt; 2) {</span>
-<span class="fc bfc" id="L104" title="All 2 branches covered.">        if (method.getParameterTypes().length == 0) {</span>
-<span class="fc" id="L105">          name = PropertyNamer.methodToProperty(name);</span>
-<span class="fc" id="L106">          addMethodConflict(conflictingGetters, name, method);</span>
+<span class="pc bpc" id="L107" title="1 of 4 branches missed.">      } else if (name.startsWith(&quot;is&quot;) &amp;&amp; name.length() &gt; 2) {</span>
+<span class="fc bfc" id="L108" title="All 2 branches covered.">        if (method.getParameterTypes().length == 0) {</span>
+<span class="fc" id="L109">          name = PropertyNamer.methodToProperty(name);</span>
+<span class="fc" id="L110">          addMethodConflict(conflictingGetters, name, method);</span>
         }
       }
     }
-<span class="fc" id="L110">    resolveGetterConflicts(conflictingGetters);</span>
-<span class="fc" id="L111">  }</span>
+<span class="fc" id="L114">    resolveGetterConflicts(conflictingGetters);</span>
+<span class="fc" id="L115">  }</span>
 
   private void resolveGetterConflicts(Map&lt;String, List&lt;Method&gt;&gt; conflictingGetters) {
-<span class="fc bfc" id="L114" title="All 2 branches covered.">    for (String propName : conflictingGetters.keySet()) {</span>
-<span class="fc" id="L115">      List&lt;Method&gt; getters = conflictingGetters.get(propName);</span>
-<span class="fc" id="L116">      Iterator&lt;Method&gt; iterator = getters.iterator();</span>
-<span class="fc" id="L117">      Method firstMethod = iterator.next();</span>
-<span class="fc bfc" id="L118" title="All 2 branches covered.">      if (getters.size() == 1) {</span>
-<span class="fc" id="L119">        addGetMethod(propName, firstMethod);</span>
+<span class="fc bfc" id="L118" title="All 2 branches covered.">    for (String propName : conflictingGetters.keySet()) {</span>
+<span class="fc" id="L119">      List&lt;Method&gt; getters = conflictingGetters.get(propName);</span>
+<span class="fc" id="L120">      Iterator&lt;Method&gt; iterator = getters.iterator();</span>
+<span class="fc" id="L121">      Method firstMethod = iterator.next();</span>
+<span class="fc bfc" id="L122" title="All 2 branches covered.">      if (getters.size() == 1) {</span>
+<span class="fc" id="L123">        addGetMethod(propName, firstMethod);</span>
       } else {
-<span class="fc" id="L121">        Method getter = firstMethod;</span>
-<span class="fc" id="L122">        Class&lt;?&gt; getterType = firstMethod.getReturnType();</span>
-<span class="fc bfc" id="L123" title="All 2 branches covered.">        while (iterator.hasNext()) {</span>
-<span class="fc" id="L124">          Method method = iterator.next();</span>
-<span class="fc" id="L125">          Class&lt;?&gt; methodType = method.getReturnType();</span>
-<span class="pc bpc" id="L126" title="1 of 2 branches missed.">          if (methodType.equals(getterType)) {</span>
-<span class="nc" id="L127">            throw new ReflectionException(&quot;Illegal overloaded getter method with ambiguous type for property &quot;</span>
-                + propName + &quot; in class &quot; + firstMethod.getDeclaringClass()
+<span class="fc" id="L125">        Method getter = firstMethod;</span>
+<span class="fc" id="L126">        Class&lt;?&gt; getterType = firstMethod.getReturnType();</span>
+<span class="fc bfc" id="L127" title="All 2 branches covered.">        while (iterator.hasNext()) {</span>
+<span class="fc" id="L128">          Method method = iterator.next();</span>
+<span class="fc" id="L129">          Class&lt;?&gt; methodType = method.getReturnType();</span>
+<span class="pc bpc" id="L130" title="1 of 2 branches missed.">          if (methodType.equals(getterType)) {</span>
+<span class="nc" id="L131">            throw new ReflectionException(&quot;Illegal overloaded getter method with ambiguous type for property &quot;</span>
+<span class="nc" id="L132">                + propName + &quot; in class &quot; + firstMethod.getDeclaringClass()</span>
                 + &quot;.  This breaks the JavaBeans &quot; + &quot;specification and can cause unpredicatble results.&quot;);
-<span class="fc bfc" id="L130" title="All 2 branches covered.">          } else if (methodType.isAssignableFrom(getterType)) {</span>
+<span class="pc bpc" id="L134" title="1 of 2 branches missed.">          } else if (methodType.isAssignableFrom(getterType)) {</span>
             // OK getter type is descendant
-<span class="pc bpc" id="L132" title="1 of 2 branches missed.">          } else if (getterType.isAssignableFrom(methodType)) {</span>
-<span class="fc" id="L133">            getter = method;</span>
-<span class="fc" id="L134">            getterType = methodType;</span>
+<span class="pc bpc" id="L136" title="1 of 2 branches missed.">          } else if (getterType.isAssignableFrom(methodType)) {</span>
+<span class="fc" id="L137">            getter = method;</span>
+<span class="fc" id="L138">            getterType = methodType;</span>
           } else {
-<span class="nc" id="L136">            throw new ReflectionException(&quot;Illegal overloaded getter method with ambiguous type for property &quot;</span>
-                + propName + &quot; in class &quot; + firstMethod.getDeclaringClass()
+<span class="nc" id="L140">            throw new ReflectionException(&quot;Illegal overloaded getter method with ambiguous type for property &quot;</span>
+<span class="nc" id="L141">                + propName + &quot; in class &quot; + firstMethod.getDeclaringClass()</span>
                 + &quot;.  This breaks the JavaBeans &quot; + &quot;specification and can cause unpredicatble results.&quot;);
           }
-<span class="fc" id="L140">        }</span>
-<span class="fc" id="L141">        addGetMethod(propName, getter);</span>
+<span class="fc" id="L144">        }</span>
+<span class="fc" id="L145">        addGetMethod(propName, getter);</span>
       }
-<span class="fc" id="L143">    }</span>
-<span class="fc" id="L144">  }</span>
+<span class="fc" id="L147">    }</span>
+<span class="fc" id="L148">  }</span>
 
   private void addGetMethod(String name, Method method) {
-<span class="fc bfc" id="L147" title="All 2 branches covered.">    if (isValidPropertyName(name)) {</span>
-<span class="fc" id="L148">      getMethods.put(name, new MethodInvoker(method));</span>
-<span class="fc" id="L149">      getTypes.put(name, method.getReturnType());</span>
+<span class="fc bfc" id="L151" title="All 2 branches covered.">    if (isValidPropertyName(name)) {</span>
+<span class="fc" id="L152">      getMethods.put(name, new MethodInvoker(method));</span>
+<span class="fc" id="L153">      Type returnType = TypeParameterResolver.resolveReturnType(method, type);</span>
+<span class="fc" id="L154">      getTypes.put(name, typeToClass(returnType));</span>
     }
-<span class="fc" id="L151">  }</span>
+<span class="fc" id="L156">  }</span>
 
   private void addSetMethods(Class&lt;?&gt; cls) {
-<span class="fc" id="L154">    Map&lt;String, List&lt;Method&gt;&gt; conflictingSetters = new HashMap&lt;String, List&lt;Method&gt;&gt;();</span>
-<span class="fc" id="L155">    Method[] methods = getClassMethods(cls);</span>
-<span class="fc bfc" id="L156" title="All 2 branches covered.">    for (Method method : methods) {</span>
-<span class="fc" id="L157">      String name = method.getName();</span>
-<span class="fc bfc" id="L158" title="All 4 branches covered.">      if (name.startsWith(&quot;set&quot;) &amp;&amp; name.length() &gt; 3) {</span>
-<span class="fc bfc" id="L159" title="All 2 branches covered.">        if (method.getParameterTypes().length == 1) {</span>
-<span class="fc" id="L160">          name = PropertyNamer.methodToProperty(name);</span>
-<span class="fc" id="L161">          addMethodConflict(conflictingSetters, name, method);</span>
+<span class="fc" id="L159">    Map&lt;String, List&lt;Method&gt;&gt; conflictingSetters = new HashMap&lt;String, List&lt;Method&gt;&gt;();</span>
+<span class="fc" id="L160">    Method[] methods = getClassMethods(cls);</span>
+<span class="fc bfc" id="L161" title="All 2 branches covered.">    for (Method method : methods) {</span>
+<span class="fc" id="L162">      String name = method.getName();</span>
+<span class="fc bfc" id="L163" title="All 4 branches covered.">      if (name.startsWith(&quot;set&quot;) &amp;&amp; name.length() &gt; 3) {</span>
+<span class="fc bfc" id="L164" title="All 2 branches covered.">        if (method.getParameterTypes().length == 1) {</span>
+<span class="fc" id="L165">          name = PropertyNamer.methodToProperty(name);</span>
+<span class="fc" id="L166">          addMethodConflict(conflictingSetters, name, method);</span>
         }
       }
     }
-<span class="fc" id="L165">    resolveSetterConflicts(conflictingSetters);</span>
-<span class="fc" id="L166">  }</span>
+<span class="fc" id="L170">    resolveSetterConflicts(conflictingSetters);</span>
+<span class="fc" id="L171">  }</span>
 
   private void addMethodConflict(Map&lt;String, List&lt;Method&gt;&gt; conflictingMethods, String name, Method method) {
-<span class="fc" id="L169">    List&lt;Method&gt; list = conflictingMethods.get(name);</span>
-<span class="fc bfc" id="L170" title="All 2 branches covered.">    if (list == null) {</span>
-<span class="fc" id="L171">      list = new ArrayList&lt;Method&gt;();</span>
-<span class="fc" id="L172">      conflictingMethods.put(name, list);</span>
+<span class="fc" id="L174">    List&lt;Method&gt; list = conflictingMethods.get(name);</span>
+<span class="fc bfc" id="L175" title="All 2 branches covered.">    if (list == null) {</span>
+<span class="fc" id="L176">      list = new ArrayList&lt;Method&gt;();</span>
+<span class="fc" id="L177">      conflictingMethods.put(name, list);</span>
     }
-<span class="fc" id="L174">    list.add(method);</span>
-<span class="fc" id="L175">  }</span>
+<span class="fc" id="L179">    list.add(method);</span>
+<span class="fc" id="L180">  }</span>
 
   private void resolveSetterConflicts(Map&lt;String, List&lt;Method&gt;&gt; conflictingSetters) {
-<span class="fc bfc" id="L178" title="All 2 branches covered.">    for (String propName : conflictingSetters.keySet()) {</span>
-<span class="fc" id="L179">      List&lt;Method&gt; setters = conflictingSetters.get(propName);</span>
-<span class="fc" id="L180">      Method firstMethod = setters.get(0);</span>
-<span class="fc bfc" id="L181" title="All 2 branches covered.">      if (setters.size() == 1) {</span>
-<span class="fc" id="L182">        addSetMethod(propName, firstMethod);</span>
+<span class="fc bfc" id="L183" title="All 2 branches covered.">    for (String propName : conflictingSetters.keySet()) {</span>
+<span class="fc" id="L184">      List&lt;Method&gt; setters = conflictingSetters.get(propName);</span>
+<span class="fc" id="L185">      Method firstMethod = setters.get(0);</span>
+<span class="fc bfc" id="L186" title="All 2 branches covered.">      if (setters.size() == 1) {</span>
+<span class="fc" id="L187">        addSetMethod(propName, firstMethod);</span>
       } else {
-<span class="fc" id="L184">        Class&lt;?&gt; expectedType = getTypes.get(propName);</span>
-<span class="pc bpc" id="L185" title="1 of 2 branches missed.">        if (expectedType == null) {</span>
-<span class="nc" id="L186">          throw new ReflectionException(&quot;Illegal overloaded setter method with ambiguous type for property &quot;</span>
-              + propName + &quot; in class &quot; + firstMethod.getDeclaringClass() + &quot;.  This breaks the JavaBeans &quot; +
+<span class="fc" id="L189">        Class&lt;?&gt; expectedType = getTypes.get(propName);</span>
+<span class="pc bpc" id="L190" title="1 of 2 branches missed.">        if (expectedType == null) {</span>
+<span class="nc" id="L191">          throw new ReflectionException(&quot;Illegal overloaded setter method with ambiguous type for property &quot;</span>
+<span class="nc" id="L192">              + propName + &quot; in class &quot; + firstMethod.getDeclaringClass() + &quot;.  This breaks the JavaBeans &quot; +</span>
               &quot;specification and can cause unpredicatble results.&quot;);
         } else {
-<span class="fc" id="L190">          Iterator&lt;Method&gt; methods = setters.iterator();</span>
-<span class="fc" id="L191">          Method setter = null;</span>
-<span class="pc bpc" id="L192" title="1 of 2 branches missed.">          while (methods.hasNext()) {</span>
-<span class="fc" id="L193">            Method method = methods.next();</span>
-<span class="pc bpc" id="L194" title="1 of 4 branches missed.">            if (method.getParameterTypes().length == 1</span>
-                &amp;&amp; expectedType.equals(method.getParameterTypes()[0])) {
-<span class="fc" id="L196">              setter = method;</span>
-<span class="fc" id="L197">              break;</span>
+<span class="fc" id="L195">          Iterator&lt;Method&gt; methods = setters.iterator();</span>
+<span class="fc" id="L196">          Method setter = null;</span>
+<span class="pc bpc" id="L197" title="1 of 2 branches missed.">          while (methods.hasNext()) {</span>
+<span class="fc" id="L198">            Method method = methods.next();</span>
+<span class="pc bpc" id="L199" title="1 of 2 branches missed.">            if (method.getParameterTypes().length == 1</span>
+<span class="fc bfc" id="L200" title="All 2 branches covered.">                &amp;&amp; expectedType.equals(method.getParameterTypes()[0])) {</span>
+<span class="fc" id="L201">              setter = method;</span>
+<span class="fc" id="L202">              break;</span>
             }
-<span class="fc" id="L199">          }</span>
-<span class="pc bpc" id="L200" title="1 of 2 branches missed.">          if (setter == null) {</span>
-<span class="nc" id="L201">            throw new ReflectionException(&quot;Illegal overloaded setter method with ambiguous type for property &quot;</span>
-                + propName + &quot; in class &quot; + firstMethod.getDeclaringClass() + &quot;.  This breaks the JavaBeans &quot; +
+<span class="fc" id="L204">          }</span>
+<span class="pc bpc" id="L205" title="1 of 2 branches missed.">          if (setter == null) {</span>
+<span class="nc" id="L206">            throw new ReflectionException(&quot;Illegal overloaded setter method with ambiguous type for property &quot;</span>
+<span class="nc" id="L207">                + propName + &quot; in class &quot; + firstMethod.getDeclaringClass() + &quot;.  This breaks the JavaBeans &quot; +</span>
                 &quot;specification and can cause unpredicatble results.&quot;);
           }
-<span class="fc" id="L205">          addSetMethod(propName, setter);</span>
+<span class="fc" id="L210">          addSetMethod(propName, setter);</span>
         }
       }
-<span class="fc" id="L208">    }</span>
-<span class="fc" id="L209">  }</span>
+<span class="fc" id="L213">    }</span>
+<span class="fc" id="L214">  }</span>
 
   private void addSetMethod(String name, Method method) {
-<span class="pc bpc" id="L212" title="1 of 2 branches missed.">    if (isValidPropertyName(name)) {</span>
-<span class="fc" id="L213">      setMethods.put(name, new MethodInvoker(method));</span>
-<span class="fc" id="L214">      setTypes.put(name, method.getParameterTypes()[0]);</span>
+<span class="pc bpc" id="L217" title="1 of 2 branches missed.">    if (isValidPropertyName(name)) {</span>
+<span class="fc" id="L218">      setMethods.put(name, new MethodInvoker(method));</span>
+<span class="fc" id="L219">      Type[] paramTypes = TypeParameterResolver.resolveParamTypes(method, type);</span>
+<span class="fc" id="L220">      setTypes.put(name, typeToClass(paramTypes[0]));</span>
     }
-<span class="fc" id="L216">  }</span>
+<span class="fc" id="L222">  }</span>
+
+  private Class&lt;?&gt; typeToClass(Type src) {
+<span class="fc" id="L225">    Class&lt;?&gt; result = null;</span>
+<span class="fc bfc" id="L226" title="All 2 branches covered.">    if (src instanceof Class) {</span>
+<span class="fc" id="L227">      result = (Class&lt;?&gt;) src;</span>
+<span class="fc bfc" id="L228" title="All 2 branches covered.">    } else if (src instanceof ParameterizedType) {</span>
+<span class="fc" id="L229">      result = (Class&lt;?&gt;) ((ParameterizedType) src).getRawType();</span>
+<span class="pc bpc" id="L230" title="1 of 2 branches missed.">    } else if (src instanceof GenericArrayType) {</span>
+<span class="fc" id="L231">      Type componentType = ((GenericArrayType) src).getGenericComponentType();</span>
+<span class="pc bpc" id="L232" title="1 of 2 branches missed.">      if (componentType instanceof Class) {</span>
+<span class="nc" id="L233">        result = Array.newInstance((Class&lt;?&gt;) componentType, 0).getClass();</span>
+      } else {
+<span class="fc" id="L235">        Class&lt;?&gt; componentClass = typeToClass(componentType);</span>
+<span class="fc" id="L236">        result = Array.newInstance((Class&lt;?&gt;) componentClass, 0).getClass();</span>
+      }
+    }
+<span class="pc bpc" id="L239" title="1 of 2 branches missed.">    if (result == null) {</span>
+<span class="nc" id="L240">      result = Object.class;</span>
+    }
+<span class="fc" id="L242">    return result;</span>
+  }
 
   private void addFields(Class&lt;?&gt; clazz) {
-<span class="fc" id="L219">    Field[] fields = clazz.getDeclaredFields();</span>
-<span class="fc bfc" id="L220" title="All 2 branches covered.">    for (Field field : fields) {</span>
-<span class="pc bpc" id="L221" title="1 of 2 branches missed.">      if (canAccessPrivateMethods()) {</span>
+<span class="fc" id="L246">    Field[] fields = clazz.getDeclaredFields();</span>
+<span class="fc bfc" id="L247" title="All 2 branches covered.">    for (Field field : fields) {</span>
+<span class="pc bpc" id="L248" title="1 of 2 branches missed.">      if (canAccessPrivateMethods()) {</span>
         try {
-<span class="fc" id="L223">          field.setAccessible(true);</span>
-<span class="nc" id="L224">        } catch (Exception e) {</span>
+<span class="fc" id="L250">          field.setAccessible(true);</span>
+<span class="nc" id="L251">        } catch (Exception e) {</span>
           // Ignored. This is only a final precaution, nothing we can do.
-<span class="fc" id="L226">        }</span>
+<span class="fc" id="L253">        }</span>
       }
-<span class="pc bpc" id="L228" title="1 of 2 branches missed.">      if (field.isAccessible()) {</span>
-<span class="fc bfc" id="L229" title="All 2 branches covered.">        if (!setMethods.containsKey(field.getName())) {</span>
+<span class="pc bpc" id="L255" title="1 of 2 branches missed.">      if (field.isAccessible()) {</span>
+<span class="fc bfc" id="L256" title="All 2 branches covered.">        if (!setMethods.containsKey(field.getName())) {</span>
           // issue #379 - removed the check for final because JDK 1.5 allows
           // modification of final fields through reflection (JSR-133). (JGB)
           // pr #16 - final static can only be set by the classloader
-<span class="fc" id="L233">          int modifiers = field.getModifiers();</span>
-<span class="fc bfc" id="L234" title="All 4 branches covered.">          if (!(Modifier.isFinal(modifiers) &amp;&amp; Modifier.isStatic(modifiers))) {</span>
-<span class="fc" id="L235">            addSetField(field);</span>
+<span class="fc" id="L260">          int modifiers = field.getModifiers();</span>
+<span class="fc bfc" id="L261" title="All 4 branches covered.">          if (!(Modifier.isFinal(modifiers) &amp;&amp; Modifier.isStatic(modifiers))) {</span>
+<span class="fc" id="L262">            addSetField(field);</span>
           }
         }
-<span class="fc bfc" id="L238" title="All 2 branches covered.">        if (!getMethods.containsKey(field.getName())) {</span>
-<span class="fc" id="L239">          addGetField(field);</span>
+<span class="fc bfc" id="L265" title="All 2 branches covered.">        if (!getMethods.containsKey(field.getName())) {</span>
+<span class="fc" id="L266">          addGetField(field);</span>
         }
       }
     }
-<span class="fc bfc" id="L243" title="All 2 branches covered.">    if (clazz.getSuperclass() != null) {</span>
-<span class="fc" id="L244">      addFields(clazz.getSuperclass());</span>
+<span class="fc bfc" id="L270" title="All 2 branches covered.">    if (clazz.getSuperclass() != null) {</span>
+<span class="fc" id="L271">      addFields(clazz.getSuperclass());</span>
     }
-<span class="fc" id="L246">  }</span>
+<span class="fc" id="L273">  }</span>
 
   private void addSetField(Field field) {
-<span class="fc bfc" id="L249" title="All 2 branches covered.">    if (isValidPropertyName(field.getName())) {</span>
-<span class="fc" id="L250">      setMethods.put(field.getName(), new SetFieldInvoker(field));</span>
-<span class="fc" id="L251">      setTypes.put(field.getName(), field.getType());</span>
+<span class="fc bfc" id="L276" title="All 2 branches covered.">    if (isValidPropertyName(field.getName())) {</span>
+<span class="fc" id="L277">      setMethods.put(field.getName(), new SetFieldInvoker(field));</span>
+<span class="fc" id="L278">      setTypes.put(field.getName(), field.getType());</span>
     }
-<span class="fc" id="L253">  }</span>
+<span class="fc" id="L280">  }</span>
 
   private void addGetField(Field field) {
-<span class="fc bfc" id="L256" title="All 2 branches covered.">    if (isValidPropertyName(field.getName())) {</span>
-<span class="fc" id="L257">      getMethods.put(field.getName(), new GetFieldInvoker(field));</span>
-<span class="fc" id="L258">      getTypes.put(field.getName(), field.getType());</span>
+<span class="fc bfc" id="L283" title="All 2 branches covered.">    if (isValidPropertyName(field.getName())) {</span>
+<span class="fc" id="L284">      getMethods.put(field.getName(), new GetFieldInvoker(field));</span>
+<span class="fc" id="L285">      getTypes.put(field.getName(), field.getType());</span>
     }
-<span class="fc" id="L260">  }</span>
+<span class="fc" id="L287">  }</span>
 
   private boolean isValidPropertyName(String name) {
-<span class="fc bfc" id="L263" title="All 6 branches covered.">    return !(name.startsWith(&quot;$&quot;) || &quot;serialVersionUID&quot;.equals(name) || &quot;class&quot;.equals(name));</span>
+<span class="fc bfc" id="L290" title="All 6 branches covered.">    return !(name.startsWith(&quot;$&quot;) || &quot;serialVersionUID&quot;.equals(name) || &quot;class&quot;.equals(name));</span>
   }
 
   /*
@@ -273,77 +300,77 @@ public class Reflector {
    * @return An array containing all methods in this class
    */
   private Method[] getClassMethods(Class&lt;?&gt; cls) {
-<span class="fc" id="L276">    Map&lt;String, Method&gt; uniqueMethods = new HashMap&lt;String, Method&gt;();</span>
-<span class="fc" id="L277">    Class&lt;?&gt; currentClass = cls;</span>
-<span class="fc bfc" id="L278" title="All 2 branches covered.">    while (currentClass != null) {</span>
-<span class="fc" id="L279">      addUniqueMethods(uniqueMethods, currentClass.getDeclaredMethods());</span>
+<span class="fc" id="L303">    Map&lt;String, Method&gt; uniqueMethods = new HashMap&lt;String, Method&gt;();</span>
+<span class="fc" id="L304">    Class&lt;?&gt; currentClass = cls;</span>
+<span class="fc bfc" id="L305" title="All 2 branches covered.">    while (currentClass != null) {</span>
+<span class="fc" id="L306">      addUniqueMethods(uniqueMethods, currentClass.getDeclaredMethods());</span>
 
       // we also need to look for interface methods -
       // because the class may be abstract
-<span class="fc" id="L283">      Class&lt;?&gt;[] interfaces = currentClass.getInterfaces();</span>
-<span class="fc bfc" id="L284" title="All 2 branches covered.">      for (Class&lt;?&gt; anInterface : interfaces) {</span>
-<span class="fc" id="L285">        addUniqueMethods(uniqueMethods, anInterface.getMethods());</span>
+<span class="fc" id="L310">      Class&lt;?&gt;[] interfaces = currentClass.getInterfaces();</span>
+<span class="fc bfc" id="L311" title="All 2 branches covered.">      for (Class&lt;?&gt; anInterface : interfaces) {</span>
+<span class="fc" id="L312">        addUniqueMethods(uniqueMethods, anInterface.getMethods());</span>
       }
 
-<span class="fc" id="L288">      currentClass = currentClass.getSuperclass();</span>
-<span class="fc" id="L289">    }</span>
+<span class="fc" id="L315">      currentClass = currentClass.getSuperclass();</span>
+<span class="fc" id="L316">    }</span>
 
-<span class="fc" id="L291">    Collection&lt;Method&gt; methods = uniqueMethods.values();</span>
+<span class="fc" id="L318">    Collection&lt;Method&gt; methods = uniqueMethods.values();</span>
 
-<span class="fc" id="L293">    return methods.toArray(new Method[methods.size()]);</span>
+<span class="fc" id="L320">    return methods.toArray(new Method[methods.size()]);</span>
   }
 
   private void addUniqueMethods(Map&lt;String, Method&gt; uniqueMethods, Method[] methods) {
-<span class="fc bfc" id="L297" title="All 2 branches covered.">    for (Method currentMethod : methods) {</span>
-<span class="fc bfc" id="L298" title="All 2 branches covered.">      if (!currentMethod.isBridge()) {</span>
-<span class="fc" id="L299">        String signature = getSignature(currentMethod);</span>
+<span class="fc bfc" id="L324" title="All 2 branches covered.">    for (Method currentMethod : methods) {</span>
+<span class="fc bfc" id="L325" title="All 2 branches covered.">      if (!currentMethod.isBridge()) {</span>
+<span class="fc" id="L326">        String signature = getSignature(currentMethod);</span>
         // check to see if the method is already known
         // if it is known, then an extended class must have
         // overridden a method
-<span class="fc bfc" id="L303" title="All 2 branches covered.">        if (!uniqueMethods.containsKey(signature)) {</span>
-<span class="pc bpc" id="L304" title="1 of 2 branches missed.">          if (canAccessPrivateMethods()) {</span>
+<span class="fc bfc" id="L330" title="All 2 branches covered.">        if (!uniqueMethods.containsKey(signature)) {</span>
+<span class="pc bpc" id="L331" title="1 of 2 branches missed.">          if (canAccessPrivateMethods()) {</span>
             try {
-<span class="fc" id="L306">              currentMethod.setAccessible(true);</span>
-<span class="nc" id="L307">            } catch (Exception e) {</span>
+<span class="fc" id="L333">              currentMethod.setAccessible(true);</span>
+<span class="nc" id="L334">            } catch (Exception e) {</span>
               // Ignored. This is only a final precaution, nothing we can do.
-<span class="fc" id="L309">            }</span>
+<span class="fc" id="L336">            }</span>
           }
 
-<span class="fc" id="L312">          uniqueMethods.put(signature, currentMethod);</span>
+<span class="fc" id="L339">          uniqueMethods.put(signature, currentMethod);</span>
         }
       }
     }
-<span class="fc" id="L316">  }</span>
+<span class="fc" id="L343">  }</span>
 
   private String getSignature(Method method) {
-<span class="fc" id="L319">    StringBuilder sb = new StringBuilder();</span>
-<span class="fc" id="L320">    Class&lt;?&gt; returnType = method.getReturnType();</span>
-<span class="pc bpc" id="L321" title="1 of 2 branches missed.">    if (returnType != null) {</span>
-<span class="fc" id="L322">      sb.append(returnType.getName()).append('#');</span>
+<span class="fc" id="L346">    StringBuilder sb = new StringBuilder();</span>
+<span class="fc" id="L347">    Class&lt;?&gt; returnType = method.getReturnType();</span>
+<span class="pc bpc" id="L348" title="1 of 2 branches missed.">    if (returnType != null) {</span>
+<span class="fc" id="L349">      sb.append(returnType.getName()).append('#');</span>
     }
-<span class="fc" id="L324">    sb.append(method.getName());</span>
-<span class="fc" id="L325">    Class&lt;?&gt;[] parameters = method.getParameterTypes();</span>
-<span class="fc bfc" id="L326" title="All 2 branches covered.">    for (int i = 0; i &lt; parameters.length; i++) {</span>
-<span class="fc bfc" id="L327" title="All 2 branches covered.">      if (i == 0) {</span>
-<span class="fc" id="L328">        sb.append(':');</span>
+<span class="fc" id="L351">    sb.append(method.getName());</span>
+<span class="fc" id="L352">    Class&lt;?&gt;[] parameters = method.getParameterTypes();</span>
+<span class="fc bfc" id="L353" title="All 2 branches covered.">    for (int i = 0; i &lt; parameters.length; i++) {</span>
+<span class="fc bfc" id="L354" title="All 2 branches covered.">      if (i == 0) {</span>
+<span class="fc" id="L355">        sb.append(':');</span>
       } else {
-<span class="fc" id="L330">        sb.append(',');</span>
+<span class="fc" id="L357">        sb.append(',');</span>
       }
-<span class="fc" id="L332">      sb.append(parameters[i].getName());</span>
+<span class="fc" id="L359">      sb.append(parameters[i].getName());</span>
     }
-<span class="fc" id="L334">    return sb.toString();</span>
+<span class="fc" id="L361">    return sb.toString();</span>
   }
 
   private static boolean canAccessPrivateMethods() {
     try {
-<span class="fc" id="L339">      SecurityManager securityManager = System.getSecurityManager();</span>
-<span class="pc bpc" id="L340" title="1 of 2 branches missed.">      if (null != securityManager) {</span>
-<span class="nc" id="L341">        securityManager.checkPermission(new ReflectPermission(&quot;suppressAccessChecks&quot;));</span>
+<span class="fc" id="L366">      SecurityManager securityManager = System.getSecurityManager();</span>
+<span class="pc bpc" id="L367" title="1 of 2 branches missed.">      if (null != securityManager) {</span>
+<span class="nc" id="L368">        securityManager.checkPermission(new ReflectPermission(&quot;suppressAccessChecks&quot;));</span>
       }
-<span class="nc" id="L343">    } catch (SecurityException e) {</span>
-<span class="nc" id="L344">      return false;</span>
-<span class="fc" id="L345">    }</span>
-<span class="fc" id="L346">    return true;</span>
+<span class="nc" id="L370">    } catch (SecurityException e) {</span>
+<span class="nc" id="L371">      return false;</span>
+<span class="fc" id="L372">    }</span>
+<span class="fc" id="L373">    return true;</span>
   }
 
   /*
@@ -352,35 +379,35 @@ public class Reflector {
    * @return The class name
    */
   public Class&lt;?&gt; getType() {
-<span class="nc" id="L355">    return type;</span>
+<span class="nc" id="L382">    return type;</span>
   }
 
   public Constructor&lt;?&gt; getDefaultConstructor() {
-<span class="nc bnc" id="L359" title="All 2 branches missed.">    if (defaultConstructor != null) {</span>
-<span class="nc" id="L360">      return defaultConstructor;</span>
+<span class="nc bnc" id="L386" title="All 2 branches missed.">    if (defaultConstructor != null) {</span>
+<span class="nc" id="L387">      return defaultConstructor;</span>
     } else {
-<span class="nc" id="L362">      throw new ReflectionException(&quot;There is no default constructor for &quot; + type);</span>
+<span class="nc" id="L389">      throw new ReflectionException(&quot;There is no default constructor for &quot; + type);</span>
     }
   }
 
   public boolean hasDefaultConstructor() {
-<span class="fc bfc" id="L367" title="All 2 branches covered.">    return defaultConstructor != null;</span>
+<span class="fc bfc" id="L394" title="All 2 branches covered.">    return defaultConstructor != null;</span>
   }
 
   public Invoker getSetInvoker(String propertyName) {
-<span class="fc" id="L371">    Invoker method = setMethods.get(propertyName);</span>
-<span class="pc bpc" id="L372" title="1 of 2 branches missed.">    if (method == null) {</span>
-<span class="nc" id="L373">      throw new ReflectionException(&quot;There is no setter for property named '&quot; + propertyName + &quot;' in '&quot; + type + &quot;'&quot;);</span>
+<span class="fc" id="L398">    Invoker method = setMethods.get(propertyName);</span>
+<span class="pc bpc" id="L399" title="1 of 2 branches missed.">    if (method == null) {</span>
+<span class="nc" id="L400">      throw new ReflectionException(&quot;There is no setter for property named '&quot; + propertyName + &quot;' in '&quot; + type + &quot;'&quot;);</span>
     }
-<span class="fc" id="L375">    return method;</span>
+<span class="fc" id="L402">    return method;</span>
   }
 
   public Invoker getGetInvoker(String propertyName) {
-<span class="fc" id="L379">    Invoker method = getMethods.get(propertyName);</span>
-<span class="fc bfc" id="L380" title="All 2 branches covered.">    if (method == null) {</span>
-<span class="fc" id="L381">      throw new ReflectionException(&quot;There is no getter for property named '&quot; + propertyName + &quot;' in '&quot; + type + &quot;'&quot;);</span>
+<span class="fc" id="L406">    Invoker method = getMethods.get(propertyName);</span>
+<span class="fc bfc" id="L407" title="All 2 branches covered.">    if (method == null) {</span>
+<span class="fc" id="L408">      throw new ReflectionException(&quot;There is no getter for property named '&quot; + propertyName + &quot;' in '&quot; + type + &quot;'&quot;);</span>
     }
-<span class="fc" id="L383">    return method;</span>
+<span class="fc" id="L410">    return method;</span>
   }
 
   /*
@@ -390,11 +417,11 @@ public class Reflector {
    * @return The Class of the propery setter
    */
   public Class&lt;?&gt; getSetterType(String propertyName) {
-<span class="fc" id="L393">    Class&lt;?&gt; clazz = setTypes.get(propertyName);</span>
-<span class="fc bfc" id="L394" title="All 2 branches covered.">    if (clazz == null) {</span>
-<span class="fc" id="L395">      throw new ReflectionException(&quot;There is no setter for property named '&quot; + propertyName + &quot;' in '&quot; + type + &quot;'&quot;);</span>
+<span class="fc" id="L420">    Class&lt;?&gt; clazz = setTypes.get(propertyName);</span>
+<span class="fc bfc" id="L421" title="All 2 branches covered.">    if (clazz == null) {</span>
+<span class="fc" id="L422">      throw new ReflectionException(&quot;There is no setter for property named '&quot; + propertyName + &quot;' in '&quot; + type + &quot;'&quot;);</span>
     }
-<span class="fc" id="L397">    return clazz;</span>
+<span class="fc" id="L424">    return clazz;</span>
   }
 
   /*
@@ -404,11 +431,11 @@ public class Reflector {
    * @return The Class of the propery getter
    */
   public Class&lt;?&gt; getGetterType(String propertyName) {
-<span class="fc" id="L407">    Class&lt;?&gt; clazz = getTypes.get(propertyName);</span>
-<span class="pc bpc" id="L408" title="1 of 2 branches missed.">    if (clazz == null) {</span>
-<span class="nc" id="L409">      throw new ReflectionException(&quot;There is no getter for property named '&quot; + propertyName + &quot;' in '&quot; + type + &quot;'&quot;);</span>
+<span class="fc" id="L434">    Class&lt;?&gt; clazz = getTypes.get(propertyName);</span>
+<span class="pc bpc" id="L435" title="1 of 2 branches missed.">    if (clazz == null) {</span>
+<span class="nc" id="L436">      throw new ReflectionException(&quot;There is no getter for property named '&quot; + propertyName + &quot;' in '&quot; + type + &quot;'&quot;);</span>
     }
-<span class="fc" id="L411">    return clazz;</span>
+<span class="fc" id="L438">    return clazz;</span>
   }
 
   /*
@@ -417,7 +444,7 @@ public class Reflector {
    * @return The array
    */
   public String[] getGetablePropertyNames() {
-<span class="fc" id="L420">    return readablePropertyNames;</span>
+<span class="fc" id="L447">    return readablePropertyNames;</span>
   }
 
   /*
@@ -426,7 +453,7 @@ public class Reflector {
    * @return The array
    */
   public String[] getSetablePropertyNames() {
-<span class="fc" id="L429">    return writeablePropertyNames;</span>
+<span class="fc" id="L456">    return writeablePropertyNames;</span>
   }
 
   /*
@@ -436,7 +463,7 @@ public class Reflector {
    * @return True if the object has a writeable property by the name
    */
   public boolean hasSetter(String propertyName) {
-<span class="fc" id="L439">    return setMethods.keySet().contains(propertyName);</span>
+<span class="fc" id="L466">    return setMethods.keySet().contains(propertyName);</span>
   }
 
   /*
@@ -446,11 +473,11 @@ public class Reflector {
    * @return True if the object has a readable property by the name
    */
   public boolean hasGetter(String propertyName) {
-<span class="fc" id="L449">    return getMethods.keySet().contains(propertyName);</span>
+<span class="fc" id="L476">    return getMethods.keySet().contains(propertyName);</span>
   }
 
   public String findPropertyName(String name) {
-<span class="fc" id="L453">    return caseInsensitivePropertyMap.get(name.toUpperCase(Locale.ENGLISH));</span>
+<span class="fc" id="L480">    return caseInsensitivePropertyMap.get(name.toUpperCase(Locale.ENGLISH));</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.5.201505241946</span></div></body></html>

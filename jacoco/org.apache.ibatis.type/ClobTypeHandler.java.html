@@ -39,7 +39,7 @@ import java.sql.SQLException;
       throws SQLException {
 <span class="fc" id="L40">    String value = &quot;&quot;;</span>
 <span class="fc" id="L41">    Clob clob = rs.getClob(columnName);</span>
-<span class="pc bpc" id="L42" title="1 of 2 branches missed.">    if (clob != null) {</span>
+<span class="fc bfc" id="L42" title="All 2 branches covered.">    if (clob != null) {</span>
 <span class="fc" id="L43">      int size = (int) clob.length();</span>
 <span class="fc" id="L44">      value = clob.getSubString(1, size);</span>
     }

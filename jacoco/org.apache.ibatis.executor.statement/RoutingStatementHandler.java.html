@@ -20,6 +20,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 
+import org.apache.ibatis.cursor.Cursor;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.executor.ExecutorException;
 import org.apache.ibatis.executor.parameter.ParameterHandler;
@@ -35,57 +36,62 @@ public class RoutingStatementHandler implements StatementHandler {
 
   private final StatementHandler delegate;
 
-<span class="fc" id="L38">  public RoutingStatementHandler(Executor executor, MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql) {</span>
+<span class="fc" id="L39">  public RoutingStatementHandler(Executor executor, MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql) {</span>
 
-<span class="pc bpc" id="L40" title="1 of 4 branches missed.">    switch (ms.getStatementType()) {</span>
+<span class="pc bpc" id="L41" title="1 of 4 branches missed.">    switch (ms.getStatementType()) {</span>
       case STATEMENT:
-<span class="fc" id="L42">        delegate = new SimpleStatementHandler(executor, ms, parameter, rowBounds, resultHandler, boundSql);</span>
-<span class="fc" id="L43">        break;</span>
+<span class="fc" id="L43">        delegate = new SimpleStatementHandler(executor, ms, parameter, rowBounds, resultHandler, boundSql);</span>
+<span class="fc" id="L44">        break;</span>
       case PREPARED:
-<span class="fc" id="L45">        delegate = new PreparedStatementHandler(executor, ms, parameter, rowBounds, resultHandler, boundSql);</span>
-<span class="fc" id="L46">        break;</span>
+<span class="fc" id="L46">        delegate = new PreparedStatementHandler(executor, ms, parameter, rowBounds, resultHandler, boundSql);</span>
+<span class="fc" id="L47">        break;</span>
       case CALLABLE:
-<span class="fc" id="L48">        delegate = new CallableStatementHandler(executor, ms, parameter, rowBounds, resultHandler, boundSql);</span>
-<span class="fc" id="L49">        break;</span>
+<span class="fc" id="L49">        delegate = new CallableStatementHandler(executor, ms, parameter, rowBounds, resultHandler, boundSql);</span>
+<span class="fc" id="L50">        break;</span>
       default:
-<span class="nc" id="L51">        throw new ExecutorException(&quot;Unknown statement type: &quot; + ms.getStatementType());</span>
+<span class="nc" id="L52">        throw new ExecutorException(&quot;Unknown statement type: &quot; + ms.getStatementType());</span>
     }
 
-<span class="fc" id="L54">  }</span>
+<span class="fc" id="L55">  }</span>
 
   @Override
-  public Statement prepare(Connection connection) throws SQLException {
-<span class="fc" id="L58">    return delegate.prepare(connection);</span>
+  public Statement prepare(Connection connection, Integer transactionTimeout) throws SQLException {
+<span class="fc" id="L59">    return delegate.prepare(connection, transactionTimeout);</span>
   }
 
   @Override
   public void parameterize(Statement statement) throws SQLException {
-<span class="fc" id="L63">    delegate.parameterize(statement);</span>
-<span class="fc" id="L64">  }</span>
+<span class="fc" id="L64">    delegate.parameterize(statement);</span>
+<span class="fc" id="L65">  }</span>
 
   @Override
   public void batch(Statement statement) throws SQLException {
-<span class="fc" id="L68">    delegate.batch(statement);</span>
-<span class="fc" id="L69">  }</span>
+<span class="fc" id="L69">    delegate.batch(statement);</span>
+<span class="fc" id="L70">  }</span>
 
   @Override
   public int update(Statement statement) throws SQLException {
-<span class="fc" id="L73">    return delegate.update(statement);</span>
+<span class="fc" id="L74">    return delegate.update(statement);</span>
   }
 
   @Override
   public &lt;E&gt; List&lt;E&gt; query(Statement statement, ResultHandler resultHandler) throws SQLException {
-<span class="fc" id="L78">    return delegate.&lt;E&gt;query(statement, resultHandler);</span>
+<span class="fc" id="L79">    return delegate.&lt;E&gt;query(statement, resultHandler);</span>
+  }
+
+  @Override
+  public &lt;E&gt; Cursor&lt;E&gt; queryCursor(Statement statement) throws SQLException {
+<span class="fc" id="L84">    return delegate.queryCursor(statement);</span>
   }
 
   @Override
   public BoundSql getBoundSql() {
-<span class="fc" id="L83">    return delegate.getBoundSql();</span>
+<span class="fc" id="L89">    return delegate.getBoundSql();</span>
   }
 
   @Override
   public ParameterHandler getParameterHandler() {
-<span class="nc" id="L88">    return delegate.getParameterHandler();</span>
+<span class="nc" id="L94">    return delegate.getParameterHandler();</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.5.201505241946</span></div></body></html>

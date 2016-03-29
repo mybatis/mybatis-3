@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.reflection.MetaObject;
+import org.apache.ibatis.reflection.property.PropertyTokenizer;
 import org.apache.ibatis.session.Configuration;
 
 /**
@@ -41,36 +42,38 @@ public class BoundSql {
   private Map&lt;String, Object&gt; additionalParameters;
   private MetaObject metaParameters;
 
-<span class="fc" id="L44">  public BoundSql(Configuration configuration, String sql, List&lt;ParameterMapping&gt; parameterMappings, Object parameterObject) {</span>
-<span class="fc" id="L45">    this.sql = sql;</span>
-<span class="fc" id="L46">    this.parameterMappings = parameterMappings;</span>
-<span class="fc" id="L47">    this.parameterObject = parameterObject;</span>
-<span class="fc" id="L48">    this.additionalParameters = new HashMap&lt;String, Object&gt;();</span>
-<span class="fc" id="L49">    this.metaParameters = configuration.newMetaObject(additionalParameters);</span>
-<span class="fc" id="L50">  }</span>
+<span class="fc" id="L45">  public BoundSql(Configuration configuration, String sql, List&lt;ParameterMapping&gt; parameterMappings, Object parameterObject) {</span>
+<span class="fc" id="L46">    this.sql = sql;</span>
+<span class="fc" id="L47">    this.parameterMappings = parameterMappings;</span>
+<span class="fc" id="L48">    this.parameterObject = parameterObject;</span>
+<span class="fc" id="L49">    this.additionalParameters = new HashMap&lt;String, Object&gt;();</span>
+<span class="fc" id="L50">    this.metaParameters = configuration.newMetaObject(additionalParameters);</span>
+<span class="fc" id="L51">  }</span>
 
   public String getSql() {
-<span class="fc" id="L53">    return sql;</span>
+<span class="fc" id="L54">    return sql;</span>
   }
 
   public List&lt;ParameterMapping&gt; getParameterMappings() {
-<span class="fc" id="L57">    return parameterMappings;</span>
+<span class="fc" id="L58">    return parameterMappings;</span>
   }
 
   public Object getParameterObject() {
-<span class="fc" id="L61">    return parameterObject;</span>
+<span class="fc" id="L62">    return parameterObject;</span>
   }
 
   public boolean hasAdditionalParameter(String name) {
-<span class="fc" id="L65">    return metaParameters.hasGetter(name);</span>
+<span class="fc" id="L66">    PropertyTokenizer prop = new PropertyTokenizer(name);</span>
+<span class="fc" id="L67">    String indexedName = prop.getIndexedName();</span>
+<span class="fc" id="L68">    return additionalParameters.containsKey(indexedName);</span>
   }
 
   public void setAdditionalParameter(String name, Object value) {
-<span class="fc" id="L69">    metaParameters.setValue(name, value);</span>
-<span class="fc" id="L70">  }</span>
+<span class="fc" id="L72">    metaParameters.setValue(name, value);</span>
+<span class="fc" id="L73">  }</span>
 
   public Object getAdditionalParameter(String name) {
-<span class="fc" id="L73">    return metaParameters.getValue(name);</span>
+<span class="fc" id="L76">    return metaParameters.getValue(name);</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.5.201505241946</span></div></body></html>

@@ -33,7 +33,7 @@ import org.apache.ibatis.logging.LogFactory;
  * @author Ben Gunter
  */
 <span class="fc" id="L35">public abstract class VFS {</span>
-<span class="fc" id="L36">  private static final Log log = LogFactory.getLog(ResolverUtil.class);</span>
+<span class="fc" id="L36">  private static final Log log = LogFactory.getLog(VFS.class);</span>
 
   /** The built-in implementations. */
 <span class="fc" id="L39">  public static final Class&lt;?&gt;[] IMPLEMENTATIONS = { JBoss6VFS.class, DefaultVFS.class };</span>
@@ -94,10 +94,10 @@ import org.apache.ibatis.logging.LogFactory;
    * @param clazz The {@link VFS} implementation class to add.
    */
   public static void addImplClass(Class&lt;? extends VFS&gt; clazz) {
-<span class="nc bnc" id="L97" title="All 2 branches missed.">    if (clazz != null) {</span>
-<span class="nc" id="L98">      USER_IMPLEMENTATIONS.add(clazz);</span>
+<span class="pc bpc" id="L97" title="1 of 2 branches missed.">    if (clazz != null) {</span>
+<span class="fc" id="L98">      USER_IMPLEMENTATIONS.add(clazz);</span>
     }
-<span class="nc" id="L100">  }</span>
+<span class="fc" id="L100">  }</span>
 
   /** Get a class by name. If the class is not found then return null. */
   protected static Class&lt;?&gt; getClass(String className) {

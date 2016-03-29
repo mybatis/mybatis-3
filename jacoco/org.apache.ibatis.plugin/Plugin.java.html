@@ -46,7 +46,7 @@ public class Plugin implements InvocationHandler {
 <span class="fc" id="L46">    Class&lt;?&gt;[] interfaces = getAllInterfaces(type, signatureMap);</span>
 <span class="fc bfc" id="L47" title="All 2 branches covered.">    if (interfaces.length &gt; 0) {</span>
 <span class="fc" id="L48">      return Proxy.newProxyInstance(</span>
-          type.getClassLoader(),
+<span class="fc" id="L49">          type.getClassLoader(),</span>
           interfaces,
           new Plugin(target, interceptor, signatureMap));
     }

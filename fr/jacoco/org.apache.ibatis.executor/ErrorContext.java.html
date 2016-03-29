@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>ErrorContext.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.executor</a> &gt; <span class="el_source">ErrorContext.java</span></div><h1>ErrorContext.java</h1><pre class="source lang-java linenums">/**
+ *    Copyright 2009-2015 the original author or authors.
+ *
+ *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
+package org.apache.ibatis.executor;
+
+/**
+ * @author Clinton Begin
+ */
+public class ErrorContext {
+
+<span class="fc" id="L23">  private static final String LINE_SEPARATOR = System.getProperty(&quot;line.separator&quot;,&quot;\n&quot;);</span>
+<span class="fc" id="L24">  private static final ThreadLocal&lt;ErrorContext&gt; LOCAL = new ThreadLocal&lt;ErrorContext&gt;();</span>
+
+  private ErrorContext stored;
+  private String resource;
+  private String activity;
+  private String object;
+  private String message;
+  private String sql;
+  private Throwable cause;
+
+<span class="fc" id="L34">  private ErrorContext() {</span>
+<span class="fc" id="L35">  }</span>
+
+  public static ErrorContext instance() {
+<span class="fc" id="L38">    ErrorContext context = LOCAL.get();</span>
+<span class="fc bfc" id="L39" title="All 2 branches covered.">    if (context == null) {</span>
+<span class="fc" id="L40">      context = new ErrorContext();</span>
+<span class="fc" id="L41">      LOCAL.set(context);</span>
+    }
+<span class="fc" id="L43">    return context;</span>
+  }
+
+  public ErrorContext store() {
+<span class="fc" id="L47">    stored = this;</span>
+<span class="fc" id="L48">    LOCAL.set(new ErrorContext());</span>
+<span class="fc" id="L49">    return LOCAL.get();</span>
+  }
+
+  public ErrorContext recall() {
+<span class="pc bpc" id="L53" title="1 of 2 branches missed.">    if (stored != null) {</span>
+<span class="nc" id="L54">      LOCAL.set(stored);</span>
+<span class="nc" id="L55">      stored = null;</span>
+    }
+<span class="fc" id="L57">    return LOCAL.get();</span>
+  }
+
+  public ErrorContext resource(String resource) {
+<span class="fc" id="L61">    this.resource = resource;</span>
+<span class="fc" id="L62">    return this;</span>
+  }
+
+  public ErrorContext activity(String activity) {
+<span class="fc" id="L66">    this.activity = activity;</span>
+<span class="fc" id="L67">    return this;</span>
+  }
+
+  public ErrorContext object(String object) {
+<span class="fc" id="L71">    this.object = object;</span>
+<span class="fc" id="L72">    return this;</span>
+  }
+
+  public ErrorContext message(String message) {
+<span class="fc" id="L76">    this.message = message;</span>
+<span class="fc" id="L77">    return this;</span>
+  }
+
+  public ErrorContext sql(String sql) {
+<span class="fc" id="L81">    this.sql = sql;</span>
+<span class="fc" id="L82">    return this;</span>
+  }
+
+  public ErrorContext cause(Throwable cause) {
+<span class="fc" id="L86">    this.cause = cause;</span>
+<span class="fc" id="L87">    return this;</span>
+  }
+
+  public ErrorContext reset() {
+<span class="fc" id="L91">    resource = null;</span>
+<span class="fc" id="L92">    activity = null;</span>
+<span class="fc" id="L93">    object = null;</span>
+<span class="fc" id="L94">    message = null;</span>
+<span class="fc" id="L95">    sql = null;</span>
+<span class="fc" id="L96">    cause = null;</span>
+<span class="fc" id="L97">    LOCAL.remove();</span>
+<span class="fc" id="L98">    return this;</span>
+  }
+
+  @Override
+  public String toString() {
+<span class="fc" id="L103">    StringBuilder description = new StringBuilder();</span>
+
+    // message
+<span class="fc bfc" id="L106" title="All 2 branches covered.">    if (this.message != null) {</span>
+<span class="fc" id="L107">      description.append(LINE_SEPARATOR);</span>
+<span class="fc" id="L108">      description.append(&quot;### &quot;);</span>
+<span class="fc" id="L109">      description.append(this.message);</span>
+    }
+
+    // resource
+<span class="fc bfc" id="L113" title="All 2 branches covered.">    if (resource != null) {</span>
+<span class="fc" id="L114">      description.append(LINE_SEPARATOR);</span>
+<span class="fc" id="L115">      description.append(&quot;### The error may exist in &quot;);</span>
+<span class="fc" id="L116">      description.append(resource);</span>
+    }
+
+    // object
+<span class="fc bfc" id="L120" title="All 2 branches covered.">    if (object != null) {</span>
+<span class="fc" id="L121">      description.append(LINE_SEPARATOR);</span>
+<span class="fc" id="L122">      description.append(&quot;### The error may involve &quot;);</span>
+<span class="fc" id="L123">      description.append(object);</span>
+    }
+
+    // activity
+<span class="fc bfc" id="L127" title="All 2 branches covered.">    if (activity != null) {</span>
+<span class="fc" id="L128">      description.append(LINE_SEPARATOR);</span>
+<span class="fc" id="L129">      description.append(&quot;### The error occurred while &quot;);</span>
+<span class="fc" id="L130">      description.append(activity);</span>
+    }
+
+    // activity
+<span class="fc bfc" id="L134" title="All 2 branches covered.">    if (sql != null) {</span>
+<span class="fc" id="L135">      description.append(LINE_SEPARATOR);</span>
+<span class="fc" id="L136">      description.append(&quot;### SQL: &quot;);</span>
+<span class="fc" id="L137">      description.append(sql.replace('\n', ' ').replace('\r', ' ').replace('\t', ' ').trim());</span>
+    }
+
+    // cause
+<span class="fc bfc" id="L141" title="All 2 branches covered.">    if (cause != null) {</span>
+<span class="fc" id="L142">      description.append(LINE_SEPARATOR);</span>
+<span class="fc" id="L143">      description.append(&quot;### Cause: &quot;);</span>
+<span class="fc" id="L144">      description.append(cause.toString());</span>
+    }
+
+<span class="fc" id="L147">    return description.toString();</span>
+  }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.5.201505241946</span></div></body></html>

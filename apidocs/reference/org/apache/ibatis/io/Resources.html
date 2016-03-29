@@ -533,7 +533,7 @@ Summary:
             File
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../org/apache/ibatis/io/Resources.html#getResourceAsFile(java.lang.ClassLoader, java.lang.String)">getResourceAsFile</a></span>(ClassLoader loader, String resource)
+        <span class="sympad"><a href="../../../../org/apache/ibatis/io/Resources.html#getResourceAsFile(java.lang.String)">getResourceAsFile</a></span>(String resource)
         
   </td></tr>
 
@@ -549,7 +549,7 @@ Summary:
             File
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../org/apache/ibatis/io/Resources.html#getResourceAsFile(java.lang.String)">getResourceAsFile</a></span>(String resource)
+        <span class="sympad"><a href="../../../../org/apache/ibatis/io/Resources.html#getResourceAsFile(java.lang.ClassLoader, java.lang.String)">getResourceAsFile</a></span>(ClassLoader loader, String resource)
         
   </td></tr>
 
@@ -565,7 +565,7 @@ Summary:
             Properties
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../org/apache/ibatis/io/Resources.html#getResourceAsProperties(java.lang.String)">getResourceAsProperties</a></span>(String resource)
+        <span class="sympad"><a href="../../../../org/apache/ibatis/io/Resources.html#getResourceAsProperties(java.lang.ClassLoader, java.lang.String)">getResourceAsProperties</a></span>(ClassLoader loader, String resource)
         
   </td></tr>
 
@@ -581,7 +581,7 @@ Summary:
             Properties
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../org/apache/ibatis/io/Resources.html#getResourceAsProperties(java.lang.ClassLoader, java.lang.String)">getResourceAsProperties</a></span>(ClassLoader loader, String resource)
+        <span class="sympad"><a href="../../../../org/apache/ibatis/io/Resources.html#getResourceAsProperties(java.lang.String)">getResourceAsProperties</a></span>(String resource)
         
   </td></tr>
 
@@ -935,7 +935,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>()
+        <span class="sympad">wait</span>(long arg0, int arg1)
         
   </td></tr>
 
@@ -951,7 +951,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0, int arg1)
+        <span class="sympad">wait</span>(long arg0)
         
   </td></tr>
 
@@ -967,7 +967,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0)
+        <span class="sympad">wait</span>()
         
   </td></tr>
 
@@ -1122,46 +1122,6 @@ From class
 </div>
 
 
-<a id="getResourceAsFile(java.lang.ClassLoader, java.lang.String)"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-        static 
-         
-         
-         
-        File
-      </span>
-      <span class="sympad">getResourceAsFile</span>
-      <span class="normal">(ClassLoader loader, String resource)</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p></p></div>
-  <div class="jd-tagdata">
-      <h5 class="jd-tagtitle">Throws</h5>
-      <table class="jd-tagtable">  
-        <tr>
-            <th>IOException</td>
-            <td></td>
-        </tr>
-      </table>
-  </div>
-
-    </div>
-</div>
-
-
 <a id="getResourceAsFile(java.lang.String)"></a>
 
 <div class="jd-details api apilevel-"> 
@@ -1202,7 +1162,7 @@ From class
 </div>
 
 
-<a id="getResourceAsProperties(java.lang.String)"></a>
+<a id="getResourceAsFile(java.lang.ClassLoader, java.lang.String)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1212,10 +1172,10 @@ From class
          
          
          
-        Properties
+        File
       </span>
-      <span class="sympad">getResourceAsProperties</span>
-      <span class="normal">(String resource)</span>
+      <span class="sympad">getResourceAsFile</span>
+      <span class="normal">(ClassLoader loader, String resource)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -1256,6 +1216,46 @@ From class
       </span>
       <span class="sympad">getResourceAsProperties</span>
       <span class="normal">(ClassLoader loader, String resource)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Throws</h5>
+      <table class="jd-tagtable">  
+        <tr>
+            <th>IOException</td>
+            <td></td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<a id="getResourceAsProperties(java.lang.String)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+        static 
+         
+         
+         
+        Properties
+      </span>
+      <span class="sympad">getResourceAsProperties</span>
+      <span class="normal">(String resource)</span>
     </h4>
       <div class="api-level">
         <div>

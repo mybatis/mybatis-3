@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ko"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>ResultMap.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.mapping</a> &gt; <span class="el_source">ResultMap.java</span></div><h1>ResultMap.java</h1><pre class="source lang-java linenums">/**
+ *    Copyright 2009-2015 the original author or authors.
+ *
+ *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
+package org.apache.ibatis.mapping;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
+
+import org.apache.ibatis.session.Configuration;
+
+/**
+ * @author Clinton Begin
+ */
+public class ResultMap {
+  private String id;
+  private Class&lt;?&gt; type;
+  private List&lt;ResultMapping&gt; resultMappings;
+  private List&lt;ResultMapping&gt; idResultMappings;
+  private List&lt;ResultMapping&gt; constructorResultMappings;
+  private List&lt;ResultMapping&gt; propertyResultMappings;
+  private Set&lt;String&gt; mappedColumns;
+  private Discriminator discriminator;
+  private boolean hasNestedResultMaps;
+  private boolean hasNestedQueries;
+  private Boolean autoMapping;
+
+<span class="fc" id="L43">  private ResultMap() {</span>
+<span class="fc" id="L44">  }</span>
+
+  public static class Builder {
+<span class="fc" id="L47">    private ResultMap resultMap = new ResultMap();</span>
+
+    public Builder(Configuration configuration, String id, Class&lt;?&gt; type, List&lt;ResultMapping&gt; resultMappings) {
+<span class="fc" id="L50">      this(configuration, id, type, resultMappings, null);</span>
+<span class="fc" id="L51">    }</span>
+
+<span class="fc" id="L53">    public Builder(Configuration configuration, String id, Class&lt;?&gt; type, List&lt;ResultMapping&gt; resultMappings, Boolean autoMapping) {</span>
+<span class="fc" id="L54">      resultMap.id = id;</span>
+<span class="fc" id="L55">      resultMap.type = type;</span>
+<span class="fc" id="L56">      resultMap.resultMappings = resultMappings;</span>
+<span class="fc" id="L57">      resultMap.autoMapping = autoMapping;</span>
+<span class="fc" id="L58">    }</span>
+
+    public Builder discriminator(Discriminator discriminator) {
+<span class="fc" id="L61">      resultMap.discriminator = discriminator;</span>
+<span class="fc" id="L62">      return this;</span>
+    }
+
+    public Class&lt;?&gt; type() {
+<span class="nc" id="L66">      return resultMap.type;</span>
+    }
+
+    public ResultMap build() {
+<span class="pc bpc" id="L70" title="1 of 2 branches missed.">      if (resultMap.id == null) {</span>
+<span class="nc" id="L71">        throw new IllegalArgumentException(&quot;ResultMaps must have an id&quot;);</span>
+      }
+<span class="fc" id="L73">      resultMap.mappedColumns = new HashSet&lt;String&gt;();</span>
+<span class="fc" id="L74">      resultMap.idResultMappings = new ArrayList&lt;ResultMapping&gt;();</span>
+<span class="fc" id="L75">      resultMap.constructorResultMappings = new ArrayList&lt;ResultMapping&gt;();</span>
+<span class="fc" id="L76">      resultMap.propertyResultMappings = new ArrayList&lt;ResultMapping&gt;();</span>
+<span class="fc bfc" id="L77" title="All 2 branches covered.">      for (ResultMapping resultMapping : resultMap.resultMappings) {</span>
+<span class="fc bfc" id="L78" title="All 4 branches covered.">        resultMap.hasNestedQueries = resultMap.hasNestedQueries || resultMapping.getNestedQueryId() != null;</span>
+<span class="fc bfc" id="L79" title="All 6 branches covered.">        resultMap.hasNestedResultMaps = resultMap.hasNestedResultMaps || (resultMapping.getNestedResultMapId() != null &amp;&amp; resultMapping.getResultSet() == null);</span>
+<span class="fc" id="L80">        final String column = resultMapping.getColumn();</span>
+<span class="fc bfc" id="L81" title="All 2 branches covered.">        if (column != null) {</span>
+<span class="fc" id="L82">          resultMap.mappedColumns.add(column.toUpperCase(Locale.ENGLISH));</span>
+<span class="fc bfc" id="L83" title="All 2 branches covered.">        } else if (resultMapping.isCompositeResult()) {</span>
+<span class="fc bfc" id="L84" title="All 2 branches covered.">          for (ResultMapping compositeResultMapping : resultMapping.getComposites()) {</span>
+<span class="fc" id="L85">            final String compositeColumn = compositeResultMapping.getColumn();</span>
+<span class="pc bpc" id="L86" title="1 of 2 branches missed.">            if (compositeColumn != null) {</span>
+<span class="fc" id="L87">              resultMap.mappedColumns.add(compositeColumn.toUpperCase(Locale.ENGLISH));</span>
+            }
+<span class="fc" id="L89">          }</span>
+        }
+<span class="fc bfc" id="L91" title="All 2 branches covered.">        if (resultMapping.getFlags().contains(ResultFlag.CONSTRUCTOR)) {</span>
+<span class="fc" id="L92">          resultMap.constructorResultMappings.add(resultMapping);</span>
+        } else {
+<span class="fc" id="L94">          resultMap.propertyResultMappings.add(resultMapping);</span>
+        }
+<span class="fc bfc" id="L96" title="All 2 branches covered.">        if (resultMapping.getFlags().contains(ResultFlag.ID)) {</span>
+<span class="fc" id="L97">          resultMap.idResultMappings.add(resultMapping);</span>
+        }
+<span class="fc" id="L99">      }</span>
+<span class="fc bfc" id="L100" title="All 2 branches covered.">      if (resultMap.idResultMappings.isEmpty()) {</span>
+<span class="fc" id="L101">        resultMap.idResultMappings.addAll(resultMap.resultMappings);</span>
+      }
+      // lock down collections
+<span class="fc" id="L104">      resultMap.resultMappings = Collections.unmodifiableList(resultMap.resultMappings);</span>
+<span class="fc" id="L105">      resultMap.idResultMappings = Collections.unmodifiableList(resultMap.idResultMappings);</span>
+<span class="fc" id="L106">      resultMap.constructorResultMappings = Collections.unmodifiableList(resultMap.constructorResultMappings);</span>
+<span class="fc" id="L107">      resultMap.propertyResultMappings = Collections.unmodifiableList(resultMap.propertyResultMappings);</span>
+<span class="fc" id="L108">      resultMap.mappedColumns = Collections.unmodifiableSet(resultMap.mappedColumns);</span>
+<span class="fc" id="L109">      return resultMap;</span>
+    }
+  }
+
+  public String getId() {
+<span class="fc" id="L114">    return id;</span>
+  }
+
+  public boolean hasNestedResultMaps() {
+<span class="fc" id="L118">    return hasNestedResultMaps;</span>
+  }
+
+  public boolean hasNestedQueries() {
+<span class="nc" id="L122">    return hasNestedQueries;</span>
+  }
+
+  public Class&lt;?&gt; getType() {
+<span class="fc" id="L126">    return type;</span>
+  }
+
+  public List&lt;ResultMapping&gt; getResultMappings() {
+<span class="fc" id="L130">    return resultMappings;</span>
+  }
+
+  public List&lt;ResultMapping&gt; getConstructorResultMappings() {
+<span class="fc" id="L134">    return constructorResultMappings;</span>
+  }
+
+  public List&lt;ResultMapping&gt; getPropertyResultMappings() {
+<span class="fc" id="L138">    return propertyResultMappings;</span>
+  }
+
+  public List&lt;ResultMapping&gt; getIdResultMappings() {
+<span class="fc" id="L142">    return idResultMappings;</span>
+  }
+
+  public Set&lt;String&gt; getMappedColumns() {
+<span class="fc" id="L146">    return mappedColumns;</span>
+  }
+
+  public Discriminator getDiscriminator() {
+<span class="fc" id="L150">    return discriminator;</span>
+  }
+
+  public void forceNestedResultMaps() {
+<span class="fc" id="L154">    hasNestedResultMaps = true;</span>
+<span class="fc" id="L155">  }</span>
+  
+  public Boolean getAutoMapping() {
+<span class="fc" id="L158">    return autoMapping;</span>
+  }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.5.201505241946</span></div></body></html>

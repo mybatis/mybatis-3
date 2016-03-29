@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ko"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>Plugin.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.plugin</a> &gt; <span class="el_source">Plugin.java</span></div><h1>Plugin.java</h1><pre class="source lang-java linenums">/**
+ *    Copyright 2009-2015 the original author or authors.
+ *
+ *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
+package org.apache.ibatis.plugin;
+
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+import org.apache.ibatis.reflection.ExceptionUtil;
+
+/**
+ * @author Clinton Begin
+ */
+public class Plugin implements InvocationHandler {
+
+  private Object target;
+  private Interceptor interceptor;
+  private Map&lt;Class&lt;?&gt;, Set&lt;Method&gt;&gt; signatureMap;
+
+<span class="fc" id="L37">  private Plugin(Object target, Interceptor interceptor, Map&lt;Class&lt;?&gt;, Set&lt;Method&gt;&gt; signatureMap) {</span>
+<span class="fc" id="L38">    this.target = target;</span>
+<span class="fc" id="L39">    this.interceptor = interceptor;</span>
+<span class="fc" id="L40">    this.signatureMap = signatureMap;</span>
+<span class="fc" id="L41">  }</span>
+
+  public static Object wrap(Object target, Interceptor interceptor) {
+<span class="fc" id="L44">    Map&lt;Class&lt;?&gt;, Set&lt;Method&gt;&gt; signatureMap = getSignatureMap(interceptor);</span>
+<span class="fc" id="L45">    Class&lt;?&gt; type = target.getClass();</span>
+<span class="fc" id="L46">    Class&lt;?&gt;[] interfaces = getAllInterfaces(type, signatureMap);</span>
+<span class="fc bfc" id="L47" title="All 2 branches covered.">    if (interfaces.length &gt; 0) {</span>
+<span class="fc" id="L48">      return Proxy.newProxyInstance(</span>
+<span class="fc" id="L49">          type.getClassLoader(),</span>
+          interfaces,
+          new Plugin(target, interceptor, signatureMap));
+    }
+<span class="fc" id="L53">    return target;</span>
+  }
+
+  @Override
+  public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+    try {
+<span class="fc" id="L59">      Set&lt;Method&gt; methods = signatureMap.get(method.getDeclaringClass());</span>
+<span class="pc bpc" id="L60" title="1 of 4 branches missed.">      if (methods != null &amp;&amp; methods.contains(method)) {</span>
+<span class="fc" id="L61">        return interceptor.intercept(new Invocation(target, method, args));</span>
+      }
+<span class="fc" id="L63">      return method.invoke(target, args);</span>
+<span class="nc" id="L64">    } catch (Exception e) {</span>
+<span class="nc" id="L65">      throw ExceptionUtil.unwrapThrowable(e);</span>
+    }
+  }
+
+  private static Map&lt;Class&lt;?&gt;, Set&lt;Method&gt;&gt; getSignatureMap(Interceptor interceptor) {
+<span class="fc" id="L70">    Intercepts interceptsAnnotation = interceptor.getClass().getAnnotation(Intercepts.class);</span>
+    // issue #251
+<span class="pc bpc" id="L72" title="1 of 2 branches missed.">    if (interceptsAnnotation == null) {</span>
+<span class="nc" id="L73">      throw new PluginException(&quot;No @Intercepts annotation was found in interceptor &quot; + interceptor.getClass().getName());      </span>
+    }
+<span class="fc" id="L75">    Signature[] sigs = interceptsAnnotation.value();</span>
+<span class="fc" id="L76">    Map&lt;Class&lt;?&gt;, Set&lt;Method&gt;&gt; signatureMap = new HashMap&lt;Class&lt;?&gt;, Set&lt;Method&gt;&gt;();</span>
+<span class="fc bfc" id="L77" title="All 2 branches covered.">    for (Signature sig : sigs) {</span>
+<span class="fc" id="L78">      Set&lt;Method&gt; methods = signatureMap.get(sig.type());</span>
+<span class="pc bpc" id="L79" title="1 of 2 branches missed.">      if (methods == null) {</span>
+<span class="fc" id="L80">        methods = new HashSet&lt;Method&gt;();</span>
+<span class="fc" id="L81">        signatureMap.put(sig.type(), methods);</span>
+      }
+      try {
+<span class="fc" id="L84">        Method method = sig.type().getMethod(sig.method(), sig.args());</span>
+<span class="fc" id="L85">        methods.add(method);</span>
+<span class="nc" id="L86">      } catch (NoSuchMethodException e) {</span>
+<span class="nc" id="L87">        throw new PluginException(&quot;Could not find method on &quot; + sig.type() + &quot; named &quot; + sig.method() + &quot;. Cause: &quot; + e, e);</span>
+<span class="fc" id="L88">      }</span>
+    }
+<span class="fc" id="L90">    return signatureMap;</span>
+  }
+
+  private static Class&lt;?&gt;[] getAllInterfaces(Class&lt;?&gt; type, Map&lt;Class&lt;?&gt;, Set&lt;Method&gt;&gt; signatureMap) {
+<span class="fc" id="L94">    Set&lt;Class&lt;?&gt;&gt; interfaces = new HashSet&lt;Class&lt;?&gt;&gt;();</span>
+<span class="fc bfc" id="L95" title="All 2 branches covered.">    while (type != null) {</span>
+<span class="fc bfc" id="L96" title="All 2 branches covered.">      for (Class&lt;?&gt; c : type.getInterfaces()) {</span>
+<span class="fc bfc" id="L97" title="All 2 branches covered.">        if (signatureMap.containsKey(c)) {</span>
+<span class="fc" id="L98">          interfaces.add(c);</span>
+        }
+      }
+<span class="fc" id="L101">      type = type.getSuperclass();</span>
+    }
+<span class="fc" id="L103">    return interfaces.toArray(new Class&lt;?&gt;[interfaces.size()]);</span>
+  }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.5.201505241946</span></div></body></html>

@@ -21,6 +21,7 @@ import java.util.List;
 import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.cache.CacheKey;
 import org.apache.ibatis.cache.TransactionalCacheManager;
+import org.apache.ibatis.cursor.Cursor;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.ParameterMapping;
@@ -38,132 +39,138 @@ import org.apache.ibatis.transaction.Transaction;
 public class CachingExecutor implements Executor {
 
   private Executor delegate;
-<span class="fc" id="L41">  private TransactionalCacheManager tcm = new TransactionalCacheManager();</span>
+<span class="fc" id="L42">  private TransactionalCacheManager tcm = new TransactionalCacheManager();</span>
 
-<span class="fc" id="L43">  public CachingExecutor(Executor delegate) {</span>
-<span class="fc" id="L44">    this.delegate = delegate;</span>
-<span class="fc" id="L45">    delegate.setExecutorWrapper(this);</span>
-<span class="fc" id="L46">  }</span>
+<span class="fc" id="L44">  public CachingExecutor(Executor delegate) {</span>
+<span class="fc" id="L45">    this.delegate = delegate;</span>
+<span class="fc" id="L46">    delegate.setExecutorWrapper(this);</span>
+<span class="fc" id="L47">  }</span>
 
   @Override
   public Transaction getTransaction() {
-<span class="fc" id="L50">    return delegate.getTransaction();</span>
+<span class="fc" id="L51">    return delegate.getTransaction();</span>
   }
 
   @Override
   public void close(boolean forceRollback) {
     try {
       //issues #499, #524 and #573
-<span class="fc bfc" id="L57" title="All 2 branches covered.">      if (forceRollback) { </span>
-<span class="fc" id="L58">        tcm.rollback();</span>
+<span class="fc bfc" id="L58" title="All 2 branches covered.">      if (forceRollback) { </span>
+<span class="fc" id="L59">        tcm.rollback();</span>
       } else {
-<span class="fc" id="L60">        tcm.commit();</span>
+<span class="fc" id="L61">        tcm.commit();</span>
       }
     } finally {
-<span class="pc" id="L63">      delegate.close(forceRollback);</span>
-<span class="fc" id="L64">    }</span>
-<span class="fc" id="L65">  }</span>
+<span class="pc" id="L64">      delegate.close(forceRollback);</span>
+<span class="fc" id="L65">    }</span>
+<span class="fc" id="L66">  }</span>
 
   @Override
   public boolean isClosed() {
-<span class="fc" id="L69">    return delegate.isClosed();</span>
+<span class="fc" id="L70">    return delegate.isClosed();</span>
   }
 
   @Override
   public int update(MappedStatement ms, Object parameterObject) throws SQLException {
-<span class="fc" id="L74">    flushCacheIfRequired(ms);</span>
-<span class="fc" id="L75">    return delegate.update(ms, parameterObject);</span>
+<span class="fc" id="L75">    flushCacheIfRequired(ms);</span>
+<span class="fc" id="L76">    return delegate.update(ms, parameterObject);</span>
   }
 
   @Override
   public &lt;E&gt; List&lt;E&gt; query(MappedStatement ms, Object parameterObject, RowBounds rowBounds, ResultHandler resultHandler) throws SQLException {
-<span class="fc" id="L80">    BoundSql boundSql = ms.getBoundSql(parameterObject);</span>
-<span class="fc" id="L81">    CacheKey key = createCacheKey(ms, parameterObject, rowBounds, boundSql);</span>
-<span class="fc" id="L82">    return query(ms, parameterObject, rowBounds, resultHandler, key, boundSql);</span>
+<span class="fc" id="L81">    BoundSql boundSql = ms.getBoundSql(parameterObject);</span>
+<span class="fc" id="L82">    CacheKey key = createCacheKey(ms, parameterObject, rowBounds, boundSql);</span>
+<span class="fc" id="L83">    return query(ms, parameterObject, rowBounds, resultHandler, key, boundSql);</span>
+  }
+
+  @Override
+  public &lt;E&gt; Cursor&lt;E&gt; queryCursor(MappedStatement ms, Object parameter, RowBounds rowBounds) throws SQLException {
+<span class="fc" id="L88">    flushCacheIfRequired(ms);</span>
+<span class="fc" id="L89">    return delegate.queryCursor(ms, parameter, rowBounds);</span>
   }
 
   @Override
   public &lt;E&gt; List&lt;E&gt; query(MappedStatement ms, Object parameterObject, RowBounds rowBounds, ResultHandler resultHandler, CacheKey key, BoundSql boundSql)
       throws SQLException {
-<span class="fc" id="L88">    Cache cache = ms.getCache();</span>
-<span class="fc bfc" id="L89" title="All 2 branches covered.">    if (cache != null) {</span>
-<span class="fc" id="L90">      flushCacheIfRequired(ms);</span>
-<span class="fc bfc" id="L91" title="All 4 branches covered.">      if (ms.isUseCache() &amp;&amp; resultHandler == null) {</span>
-<span class="fc" id="L92">        ensureNoOutParams(ms, parameterObject, boundSql);</span>
+<span class="fc" id="L95">    Cache cache = ms.getCache();</span>
+<span class="fc bfc" id="L96" title="All 2 branches covered.">    if (cache != null) {</span>
+<span class="fc" id="L97">      flushCacheIfRequired(ms);</span>
+<span class="fc bfc" id="L98" title="All 4 branches covered.">      if (ms.isUseCache() &amp;&amp; resultHandler == null) {</span>
+<span class="fc" id="L99">        ensureNoOutParams(ms, parameterObject, boundSql);</span>
         @SuppressWarnings(&quot;unchecked&quot;)
-<span class="fc" id="L94">        List&lt;E&gt; list = (List&lt;E&gt;) tcm.getObject(cache, key);</span>
-<span class="fc bfc" id="L95" title="All 2 branches covered.">        if (list == null) {</span>
-<span class="fc" id="L96">          list = delegate.&lt;E&gt; query(ms, parameterObject, rowBounds, resultHandler, key, boundSql);</span>
-<span class="fc" id="L97">          tcm.putObject(cache, key, list); // issue #578 and #116</span>
+<span class="fc" id="L101">        List&lt;E&gt; list = (List&lt;E&gt;) tcm.getObject(cache, key);</span>
+<span class="fc bfc" id="L102" title="All 2 branches covered.">        if (list == null) {</span>
+<span class="fc" id="L103">          list = delegate.&lt;E&gt; query(ms, parameterObject, rowBounds, resultHandler, key, boundSql);</span>
+<span class="fc" id="L104">          tcm.putObject(cache, key, list); // issue #578 and #116</span>
         }
-<span class="fc" id="L99">        return list;</span>
+<span class="fc" id="L106">        return list;</span>
       }
     }
-<span class="fc" id="L102">    return delegate.&lt;E&gt; query(ms, parameterObject, rowBounds, resultHandler, key, boundSql);</span>
+<span class="fc" id="L109">    return delegate.&lt;E&gt; query(ms, parameterObject, rowBounds, resultHandler, key, boundSql);</span>
   }
 
   @Override
   public List&lt;BatchResult&gt; flushStatements() throws SQLException {
-<span class="fc" id="L107">    return delegate.flushStatements();</span>
+<span class="fc" id="L114">    return delegate.flushStatements();</span>
   }
 
   @Override
   public void commit(boolean required) throws SQLException {
-<span class="fc" id="L112">    delegate.commit(required);</span>
-<span class="fc" id="L113">    tcm.commit();</span>
-<span class="fc" id="L114">  }</span>
+<span class="fc" id="L119">    delegate.commit(required);</span>
+<span class="fc" id="L120">    tcm.commit();</span>
+<span class="fc" id="L121">  }</span>
 
   @Override
   public void rollback(boolean required) throws SQLException {
     try {
-<span class="fc" id="L119">      delegate.rollback(required);</span>
+<span class="fc" id="L126">      delegate.rollback(required);</span>
     } finally {
-<span class="pc bpc" id="L121" title="2 of 4 branches missed.">      if (required) {</span>
-<span class="pc" id="L122">        tcm.rollback();</span>
+<span class="pc bpc" id="L128" title="2 of 4 branches missed.">      if (required) {</span>
+<span class="pc" id="L129">        tcm.rollback();</span>
       }
     }
-<span class="fc" id="L125">  }</span>
+<span class="fc" id="L132">  }</span>
 
   private void ensureNoOutParams(MappedStatement ms, Object parameter, BoundSql boundSql) {
-<span class="pc bpc" id="L128" title="1 of 2 branches missed.">    if (ms.getStatementType() == StatementType.CALLABLE) {</span>
-<span class="nc bnc" id="L129" title="All 2 branches missed.">      for (ParameterMapping parameterMapping : boundSql.getParameterMappings()) {</span>
-<span class="nc bnc" id="L130" title="All 2 branches missed.">        if (parameterMapping.getMode() != ParameterMode.IN) {</span>
-<span class="nc" id="L131">          throw new ExecutorException(&quot;Caching stored procedures with OUT params is not supported.  Please configure useCache=false in &quot; + ms.getId() + &quot; statement.&quot;);</span>
+<span class="pc bpc" id="L135" title="1 of 2 branches missed.">    if (ms.getStatementType() == StatementType.CALLABLE) {</span>
+<span class="nc bnc" id="L136" title="All 2 branches missed.">      for (ParameterMapping parameterMapping : boundSql.getParameterMappings()) {</span>
+<span class="nc bnc" id="L137" title="All 2 branches missed.">        if (parameterMapping.getMode() != ParameterMode.IN) {</span>
+<span class="nc" id="L138">          throw new ExecutorException(&quot;Caching stored procedures with OUT params is not supported.  Please configure useCache=false in &quot; + ms.getId() + &quot; statement.&quot;);</span>
         }
-<span class="nc" id="L133">      }</span>
+<span class="nc" id="L140">      }</span>
     }
-<span class="fc" id="L135">  }</span>
+<span class="fc" id="L142">  }</span>
 
   @Override
   public CacheKey createCacheKey(MappedStatement ms, Object parameterObject, RowBounds rowBounds, BoundSql boundSql) {
-<span class="fc" id="L139">    return delegate.createCacheKey(ms, parameterObject, rowBounds, boundSql);</span>
+<span class="fc" id="L146">    return delegate.createCacheKey(ms, parameterObject, rowBounds, boundSql);</span>
   }
 
   @Override
   public boolean isCached(MappedStatement ms, CacheKey key) {
-<span class="fc" id="L144">    return delegate.isCached(ms, key);</span>
+<span class="fc" id="L151">    return delegate.isCached(ms, key);</span>
   }
 
   @Override
   public void deferLoad(MappedStatement ms, MetaObject resultObject, String property, CacheKey key, Class&lt;?&gt; targetType) {
-<span class="fc" id="L149">    delegate.deferLoad(ms, resultObject, property, key, targetType);</span>
-<span class="fc" id="L150">  }</span>
+<span class="fc" id="L156">    delegate.deferLoad(ms, resultObject, property, key, targetType);</span>
+<span class="fc" id="L157">  }</span>
 
   @Override
   public void clearLocalCache() {
-<span class="fc" id="L154">    delegate.clearLocalCache();</span>
-<span class="fc" id="L155">  }</span>
+<span class="fc" id="L161">    delegate.clearLocalCache();</span>
+<span class="fc" id="L162">  }</span>
 
   private void flushCacheIfRequired(MappedStatement ms) {
-<span class="fc" id="L158">    Cache cache = ms.getCache();</span>
-<span class="fc bfc" id="L159" title="All 4 branches covered.">    if (cache != null &amp;&amp; ms.isFlushCacheRequired()) {      </span>
-<span class="fc" id="L160">      tcm.clear(cache);</span>
+<span class="fc" id="L165">    Cache cache = ms.getCache();</span>
+<span class="fc bfc" id="L166" title="All 4 branches covered.">    if (cache != null &amp;&amp; ms.isFlushCacheRequired()) {      </span>
+<span class="fc" id="L167">      tcm.clear(cache);</span>
     }
-<span class="fc" id="L162">  }</span>
+<span class="fc" id="L169">  }</span>
 
   @Override
   public void setExecutorWrapper(Executor executor) {
-<span class="nc" id="L166">    throw new UnsupportedOperationException(&quot;This method should not be called&quot;);</span>
+<span class="nc" id="L173">    throw new UnsupportedOperationException(&quot;This method should not be called&quot;);</span>
   }
 
 }
