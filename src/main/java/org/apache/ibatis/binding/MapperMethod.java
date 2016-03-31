@@ -23,6 +23,8 @@ import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.SqlCommandType;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.session.Configuration;
+import org.apache.ibatis.session.PageBounds;
+import org.apache.ibatis.session.PageResult;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
@@ -67,6 +69,8 @@ public class MapperMethod {
         result = executeForMap(sqlSession, args);
       } else if (method.returnsCursor()) {
         result = executeForCursor(sqlSession, args);
+      } else if (method.returnsPageResult) {
+          result = executeForPageBound(sqlSession, args);
       } else {
         Object param = method.convertArgsToSqlCommandParam(args);
         result = sqlSession.selectOne(command.getName(), param);
@@ -144,6 +148,14 @@ public class MapperMethod {
     } else {
       result = sqlSession.<T>selectCursor(command.getName(), param);
     }
+    return result;
+  }
+  
+  private <E> Object executeForPageBound(SqlSession sqlSession, Object[] args) {
+	PageResult<E> result;
+    Object param = method.convertArgsToSqlCommandParam(args);
+    PageBounds pageBounds = method.extractPageBounds(args);
+    result = sqlSession.<E>selectPageBound(command.getName(), param, pageBounds);
     return result;
   }
 
@@ -234,10 +246,12 @@ public class MapperMethod {
     private final boolean returnsMap;
     private final boolean returnsVoid;
     private final boolean returnsCursor;
+    private final boolean returnsPageResult;
     private final Class<?> returnType;
     private final String mapKey;
     private final Integer resultHandlerIndex;
     private final Integer rowBoundsIndex;
+    private final Integer pageBoundsIndex;
     private final SortedMap<Integer, String> params;
     private final boolean hasNamedParameters;
 
@@ -246,10 +260,12 @@ public class MapperMethod {
       this.returnsVoid = void.class.equals(this.returnType);
       this.returnsMany = (configuration.getObjectFactory().isCollection(this.returnType) || this.returnType.isArray());
       this.returnsCursor = Cursor.class.equals(this.returnType);
+      this.returnsPageResult = PageResult.class.equals(this.returnType);
       this.mapKey = getMapKey(method);
       this.returnsMap = (this.mapKey != null);
       this.hasNamedParameters = hasNamedParams(method);
       this.rowBoundsIndex = getUniqueParamIndex(method, RowBounds.class);
+      this.pageBoundsIndex = getUniqueParamIndex(method, PageBounds.class);
       this.resultHandlerIndex = getUniqueParamIndex(method, ResultHandler.class);
       this.params = Collections.unmodifiableSortedMap(getParams(method, this.hasNamedParameters));
     }
@@ -283,6 +299,14 @@ public class MapperMethod {
     public RowBounds extractRowBounds(Object[] args) {
       return hasRowBounds() ? (RowBounds) args[rowBoundsIndex] : null;
     }
+    
+    public boolean hasPageBounds() {
+    	return pageBoundsIndex != null;
+    }
+
+    public PageBounds extractPageBounds(Object[] args) {
+    	return hasPageBounds() ? (PageBounds) args[pageBoundsIndex] : null;
+    }
 
     public boolean hasResultHandler() {
       return resultHandlerIndex != null;
@@ -315,6 +339,10 @@ public class MapperMethod {
     public boolean returnsCursor() {
       return returnsCursor;
     }
+    
+    public boolean returnsPageResult() {
+        return returnsPageResult;
+    }
 
     private Integer getUniqueParamIndex(Method method, Class<?> paramType) {
       Integer index = null;
@@ -346,7 +374,7 @@ public class MapperMethod {
       final SortedMap<Integer, String> params = new TreeMap<Integer, String>();
       final Class<?>[] argTypes = method.getParameterTypes();
       for (int i = 0; i < argTypes.length; i++) {
-        if (!RowBounds.class.isAssignableFrom(argTypes[i]) && !ResultHandler.class.isAssignableFrom(argTypes[i])) {
+        if (!RowBounds.class.isAssignableFrom(argTypes[i]) && !ResultHandler.class.isAssignableFrom(argTypes[i]) && !PageBounds.class.isAssignableFrom(argTypes[i])) {
           String paramName = String.valueOf(params.size());
           if (hasNamedParameters) {
             paramName = getParamNameFromAnnotation(method, i, paramName);

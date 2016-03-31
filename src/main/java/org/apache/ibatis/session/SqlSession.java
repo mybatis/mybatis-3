@@ -173,6 +173,23 @@ public interface SqlSession extends Closeable {
   void select(String statement, Object parameter, RowBounds rowBounds, ResultHandler handler);
 
   /**
+   * 
+   * @param statement
+   * @param pageBounds
+   * @return
+   */
+  <E> PageResult<E> selectPageBound(String statement, PageBounds pageBounds);
+  
+ /**
+  * 
+  * @param statement
+  * @param parameter
+  * @param pageBounds
+  * @return
+  */
+  <E> PageResult<E> selectPageBound(String statement, Object parameter, PageBounds pageBounds);
+ 
+  /**
    * Execute an insert statement.
    * @param statement Unique identifier matching the statement to execute.
    * @return int The number of rows affected by the insert.

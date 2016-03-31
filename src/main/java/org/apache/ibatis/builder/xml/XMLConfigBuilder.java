@@ -18,7 +18,6 @@ package org.apache.ibatis.builder.xml;
 import java.io.InputStream;
 import java.io.Reader;
 import java.util.Properties;
-import java.util.Set;
 
 import javax.sql.DataSource;
 
@@ -44,6 +43,7 @@ import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.LocalCacheScope;
 import org.apache.ibatis.transaction.TransactionFactory;
 import org.apache.ibatis.type.JdbcType;
+import org.apache.ibatis.mapping.Dialect.Dialect;
 
 /**
  * @author Clinton Begin
@@ -253,6 +253,7 @@ public class XMLConfigBuilder extends BaseBuilder {
     configuration.setLogPrefix(props.getProperty("logPrefix"));
     configuration.setLogImpl(resolveClass(props.getProperty("logImpl")));
     configuration.setConfigurationFactory(resolveClass(props.getProperty("configurationFactory")));
+    configuration.setDialect(Dialect.of(props.getProperty("dialect")));
   }
 
   private void environmentsElement(XNode context) throws Exception {

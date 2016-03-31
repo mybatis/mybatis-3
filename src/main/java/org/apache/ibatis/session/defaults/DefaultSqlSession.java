@@ -35,6 +35,8 @@ import org.apache.ibatis.executor.result.DefaultMapResultHandler;
 import org.apache.ibatis.executor.result.DefaultResultContext;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.session.Configuration;
+import org.apache.ibatis.session.PageBounds;
+import org.apache.ibatis.session.PageResult;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
@@ -153,6 +155,23 @@ public class DefaultSqlSession implements SqlSession {
     }
   }
 
+  @Override
+  public <E> PageResult<E> selectPageBound(String statement, PageBounds pageBounds) {
+  	return selectPageBound(statement, null, pageBounds);
+  }
+
+  @Override
+  public <E> PageResult<E> selectPageBound(String statement, Object parameter, PageBounds pageBounds) {
+	try {
+      MappedStatement ms = configuration.getMappedStatement(statement);
+      return executor.queryPageBound(ms, wrapCollection(parameter), pageBounds, Executor.NO_RESULT_HANDLER);
+    } catch (Exception e) {
+      throw ExceptionFactory.wrapException("Error querying database.  Cause: " + e, e);
+    } finally {
+      ErrorContext.instance().reset();
+    }
+  }
+  
   @Override
   public void select(String statement, Object parameter, ResultHandler handler) {
     select(statement, parameter, RowBounds.DEFAULT, handler);

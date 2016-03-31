@@ -28,6 +28,8 @@ import org.apache.ibatis.mapping.ParameterMapping;
 import org.apache.ibatis.mapping.ParameterMode;
 import org.apache.ibatis.mapping.StatementType;
 import org.apache.ibatis.reflection.MetaObject;
+import org.apache.ibatis.session.PageBounds;
+import org.apache.ibatis.session.PageResult;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.transaction.Transaction;
@@ -109,6 +111,28 @@ public class CachingExecutor implements Executor {
     return delegate.<E> query(ms, parameterObject, rowBounds, resultHandler, key, boundSql);
   }
 
+  @Override
+  public <E> PageResult<E> queryPageBound(MappedStatement ms, Object parameterObject, PageBounds pageBounds, ResultHandler resultHandler) throws SQLException {
+	  RowBounds rowBounds = pageBounds.getRowBounds();
+	  BoundSql boundSql = ms.getBoundSql(parameterObject);
+	  CacheKey key = createCacheKey(ms, parameterObject, rowBounds, boundSql);
+	  Cache cache = ms.getCache();
+	    if (cache != null) {
+	      flushCacheIfRequired(ms);
+	      if (ms.isUseCache() && resultHandler == null) {
+	    	ensureNoOutParams(ms, parameterObject, boundSql);
+	        @SuppressWarnings("unchecked")
+	        PageResult<E> list = (PageResult<E>) tcm.getObject(cache, key);
+	        if (list == null) {
+	          list = delegate.<E> queryPageBound(ms, parameterObject, pageBounds, resultHandler);
+	          tcm.putObject(cache, key, list);
+	        }
+	        return list;
+	      }
+	    }
+	    return delegate.<E> queryPageBound(ms, parameterObject, pageBounds, resultHandler);
+  }
+  
   @Override
   public List<BatchResult> flushStatements() throws SQLException {
     return delegate.flushStatements();

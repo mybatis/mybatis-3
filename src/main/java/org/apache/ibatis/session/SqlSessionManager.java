@@ -212,6 +212,16 @@ public class SqlSessionManager implements SqlSessionFactory, SqlSession {
   }
 
   @Override
+  public <E> PageResult<E> selectPageBound(String statement, PageBounds pageBounds) {
+  	return selectPageBound(statement, null, pageBounds);
+  }
+  
+  @Override
+  public <E> PageResult<E> selectPageBound(String statement, Object parameter, PageBounds rowBounds) {
+	return sqlSessionProxy.<E>selectPageBound(statement, parameter, rowBounds);
+  }
+  
+  @Override
   public void select(String statement, ResultHandler handler) {
     sqlSessionProxy.select(statement, handler);
   }
