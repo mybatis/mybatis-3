@@ -35,7 +35,7 @@
     annotations. Simplicity is the biggest advantage of the MyBatis data mapper over object relational mapping
     tools.
   </description>
-  <url>http://www.mybatis.org/core/</url>
+  <url>http://www.mybatis.org/mybatis-3</url>
 
   <contributors>
     <contributor>
