@@ -20,7 +20,7 @@
   <parent>
     <groupId>org.mybatis</groupId>
     <artifactId>mybatis-parent</artifactId>
-    <version>26</version>
+    <version>27-SNAPSHOT</version>
     <relativePath />
   </parent>
 
@@ -36,6 +36,8 @@
     tools.
   </description>
   <url>http://www.mybatis.org/mybatis-3</url>
+
+<inceptionYear>2009</inceptionYear>
 
   <contributors>
     <contributor>
