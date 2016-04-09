@@ -30,10 +30,6 @@ import org.apache.ibatis.mapping.FetchType;
 public @interface Many {
   String select() default "";
 
-  String resultSet() default "";
-
-  String resultMap() default "";
-
   FetchType fetchType() default FetchType.DEFAULT;
 
 }

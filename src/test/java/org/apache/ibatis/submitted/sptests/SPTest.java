@@ -858,18 +858,4 @@ public class SPTest {
     }
   }
 
-  @Test
-  public void testGetNamesAndItemsLinkedWithNoMatchingInfoAnnotationBased() throws SQLException {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
-      SPMapper spMapper = sqlSession.getMapper(SPMapper.class);
-
-      List<Name> names = spMapper.getNamesAndItemsLinkedByIdAnnotationBased(0);
-      assertEquals(1, names.size());
-      assertEquals(2, names.get(0).getItems().size());
-    } finally {
-      sqlSession.close();
-    }
-  }
-
 }
