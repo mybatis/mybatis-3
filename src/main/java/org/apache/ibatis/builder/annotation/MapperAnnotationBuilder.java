@@ -511,44 +511,16 @@ public class MapperAnnotationBuilder {
           result.javaType() == void.class ? null : result.javaType(),
           result.jdbcType() == JdbcType.UNDEFINED ? null : result.jdbcType(),
           hasNestedSelect(result) ? nestedSelectId(result) : null,
-          hasResultMap(result) ? getResultMap(result) : null,
+          null,
           null,
           null,
           typeHandler,
           flags,
-          hasResultSet(result) ? getResultSet(result) : null,
-          hasForeignColumn(result) ? getForeignColumn(result) : null,
+          null,
+          null,
           isLazy(result));
       resultMappings.add(resultMapping);
     }
-  }
-
-  private boolean hasResultSet(Result result) {
-    return result.many().resultSet().length() > 0;
-  }
-
-  private boolean hasResultMap(Result result) {
-    return result.many().resultMap().length() > 0;
-  }
-
-  private boolean hasForeignColumn(Result result) {
-    return result.many().foreignColumn().length() > 0;
-  }
-
-  private String getResultSet(Result result) {
-    return result.many().resultSet();
-  }
-
-  private String getResultMap(Result result) {
-    String nestedResultMap = result.many().resultMap();
-    if (!nestedResultMap.contains(".")) {
-      nestedResultMap = type.getName() + "." + nestedResultMap;
-    }
-    return nestedResultMap;
-  }
-
-  private String getForeignColumn(Result result) {
-    return result.many().foreignColumn();
   }
   
   private String nestedSelectId(Result result) {

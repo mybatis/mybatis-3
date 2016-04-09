@@ -858,21 +858,4 @@ public class SPTest {
     }
   }
 
-  @Test
-  public void testGetNamesAndItemsLinkedAnnotationBased() throws SQLException {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
-      SPMapper spMapper = sqlSession.getMapper(SPMapper.class);
-
-      List<Name> names = spMapper.getNamesAndItemsLinkedAnnotationBased();
-      assertEquals(4, names.size());
-      assertEquals(2, names.get(0).getItems().size());
-      assertEquals(1, names.get(1).getItems().size());
-      assertNull(names.get(2).getItems());
-      assertNull(names.get(3).getItems());
-    } finally {
-      sqlSession.close();
-    }
-  }
-
 }
