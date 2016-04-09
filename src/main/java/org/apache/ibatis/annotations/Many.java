@@ -28,8 +28,15 @@ import org.apache.ibatis.mapping.FetchType;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface Many {
+	
   String select() default "";
 
   FetchType fetchType() default FetchType.DEFAULT;
+
+  String resultSet() default "";
+
+	String resultMap() default "";
+	
+	String foreignColumn() default "";
 
 }
