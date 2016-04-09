@@ -15,6 +15,7 @@
  */
 package org.apache.ibatis.annotations;
 
+import java.lang.annotation.Documented;
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.PARAMETER;
@@ -30,6 +31,7 @@ import java.lang.annotation.Target;
  * 
  * @author Frank David Martínez
  */
+@Documented
 @Inherited
 @Retention(RUNTIME)
 @Target({ TYPE, METHOD, FIELD, PARAMETER })

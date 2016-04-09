@@ -15,6 +15,7 @@
  */
 package org.apache.ibatis.annotations;
 
+import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -26,6 +27,7 @@ import org.apache.ibatis.cache.impl.PerpetualCache;
 /**
  * @author Clinton Begin
  */
+@Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface CacheNamespace {
