@@ -1,5 +1,5 @@
 /**
- *    Copyright 2013-2016 the original author or authors.
+ *    Copyright 2009-2016 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,6 +15,9 @@
  */
 package org.apache.ibatis.annotations;
 
+import static java.lang.annotation.ElementType.FIELD;
+import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.ElementType.PARAMETER;
 import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
@@ -29,13 +32,7 @@ import java.lang.annotation.Target;
  */
 @Inherited
 @Retention(RUNTIME)
-@Target({TYPE})
+@Target({ TYPE, METHOD, FIELD, PARAMETER })
 public @interface Mapper {
-
-	/**
-	 * Mapper name that can be read by DI injection frameworks
-	 * @return Mapper name
-	 */
-	String value() default "";
-
+  // Interface Mapper
 }
