@@ -293,9 +293,9 @@ public abstract class BaseExecutor implements Executor {
   /**
    * Apply a transaction timeout.
    * @param statement a current statement
-   * @exception SQLException if a database access error occurs, this method is called on a closed <code>Statement</code>
-   * @see StatementUtil#applyTransactionTimeout(Statement, Integer, Integer)
+   * @throws SQLException if a database access error occurs, this method is called on a closed <code>Statement</code>
    * @since 3.4.0
+   * @see StatementUtil#applyTransactionTimeout(Statement, Integer, Integer)
    */
   protected void applyTransactionTimeout(Statement statement) throws SQLException {
     StatementUtil.applyTransactionTimeout(statement, statement.getQueryTimeout(), transaction.getTimeout());
