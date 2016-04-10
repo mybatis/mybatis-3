@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
   Copyright 2009-2015 the original author or authors.
 
@@ -189,7 +189,7 @@
     <dependency>
       <groupId>cglib</groupId>
       <artifactId>cglib</artifactId>
-      <version>3.2.1</version>
+      <version>3.2.2</version>
       <optional>true</optional>
     </dependency>
 
