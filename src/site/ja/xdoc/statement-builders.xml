@@ -93,7 +93,7 @@ private String selectPersonSql() {
 public String deletePersonSql() {
   return new SQL() {{
     DELETE_FROM("PERSON");
-    WHERE("ID = ${id}");
+    WHERE("ID = #{id}");
   }}.toString();
 }
 
@@ -101,8 +101,8 @@ public String deletePersonSql() {
 public String insertPersonSql() {
   String sql = new SQL()
     .INSERT_INTO("PERSON")
-    .VALUES("ID, FIRST_NAME", "${id}, ${firstName}")
-    .VALUES("LAST_NAME", "${lastName}")
+    .VALUES("ID, FIRST_NAME", "#{id}, #{firstName}")
+    .VALUES("LAST_NAME", "#{lastName}")
     .toString();
   return sql;
 }
@@ -113,13 +113,13 @@ public String selectPersonLike(final String id, final String firstName, final St
     SELECT("P.ID, P.USERNAME, P.PASSWORD, P.FIRST_NAME, P.LAST_NAME");
     FROM("PERSON P");
     if (id != null) {
-      WHERE("P.ID like ${id}");
+      WHERE("P.ID like #{id}");
     }
     if (firstName != null) {
-      WHERE("P.FIRST_NAME like ${firstName}");
+      WHERE("P.FIRST_NAME like #{firstName}");
     }
     if (lastName != null) {
-      WHERE("P.LAST_NAME like ${lastName}");
+      WHERE("P.LAST_NAME like #{lastName}");
     }
     ORDER_BY("P.LAST_NAME");
   }}.toString();
@@ -128,23 +128,23 @@ public String selectPersonLike(final String id, final String firstName, final St
 public String deletePersonSql() {
   return new SQL() {{
     DELETE_FROM("PERSON");
-    WHERE("ID = ${id}");
+    WHERE("ID = #{id}");
   }}.toString();
 }
 
 public String insertPersonSql() {
   return new SQL() {{
     INSERT_INTO("PERSON");
-    VALUES("ID, FIRST_NAME", "${id}, ${firstName}");
-    VALUES("LAST_NAME", "${lastName}");
+    VALUES("ID, FIRST_NAME", "#{id}, #{firstName}");
+    VALUES("LAST_NAME", "#{lastName}");
   }}.toString();
 }
 
 public String updatePersonSql() {
   return new SQL() {{
     UPDATE("PERSON");
-    SET("FIRST_NAME = ${firstName}");
-    WHERE("ID = ${id}");
+    SET("FIRST_NAME = #{firstName}");
+    WHERE("ID = #{id}");
   }}.toString();
 }
 
