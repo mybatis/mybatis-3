@@ -205,16 +205,16 @@ public final class TypeHandlerRegistry {
   }
 
   private TypeHandler<?> pickSoleHandler(Map<JdbcType, TypeHandler<?>> jdbcHandlerMap) {
-    boolean onlyChoice = true;
     TypeHandler<?> soleHandler = null;
     for (TypeHandler<?> handler : jdbcHandlerMap.values()) {
-      if (soleHandler != null && !handler.getClass().equals(soleHandler.getClass())) {
-        onlyChoice = false;
-        break;
+      if (soleHandler == null) {
+        soleHandler = handler;
+      } else if (!handler.getClass().equals(soleHandler.getClass())) {
+        // More than one type handlers registered.
+        return null;
       }
-      soleHandler = handler;
     }
-    return onlyChoice ? soleHandler : null;
+    return soleHandler;
   }
 
   public TypeHandler<Object> getUnknownTypeHandler() {
