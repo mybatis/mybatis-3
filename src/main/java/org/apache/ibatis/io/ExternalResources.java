@@ -27,6 +27,7 @@ import java.util.Properties;
 /**
  * @author Clinton Begin
  */
+@Deprecated
 public class ExternalResources {
 
   private ExternalResources() {
