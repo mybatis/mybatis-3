@@ -46,7 +46,7 @@ if [ "$mybatis_repo" == "https://github.com/mybatis/mybatis-3.git" ] && [ "$TRAV
   if [ $VER == "16" ]; then
     mvn clean deploy -q --settings ./travis/settings.xml
     echo -e "Successfully deployed SNAPSHOT artifacts to Sonatype under Travis job ${TRAVIS_JOB_NUMBER}"
-  elif [ $VER == "17" ]; then
+  elif [ $VER == "18" ]; then
     mvn clean test jacoco:report coveralls:report -q
     echo -e "Successfully ran coveralls under Travis job ${TRAVIS_JOB_NUMBER}"
 	# various issues exist currently in building this so comment for now
