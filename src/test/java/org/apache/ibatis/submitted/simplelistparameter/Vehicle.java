@@ -17,16 +17,18 @@ package org.apache.ibatis.submitted.simplelistparameter;
 
 import java.util.List;
 
-import org.apache.ibatis.annotations.Select;
+public class Vehicle<T> {
+  public T name;
 
-public interface CarMapper {
+  public List<T> doors1;
 
-  @Select({ "select name from car where doors = #{doors[1]}" })
-  List<Car> getCar(Car car);
+  private List<T> doors2;
 
-  @Select({ "select name from car where doors = #{doors1[1]}" })
-  List<Rv> getRv1(Rv rv);
+  public List<T> getDoors2() {
+    return doors2;
+  }
 
-  @Select({ "select name from car where doors = #{doors2[1]}" })
-  List<Rv> getRv2(Rv rv);
+  public void setDoors2(List<T> doors2) {
+    this.doors2 = doors2;
+  }
 }
