@@ -89,7 +89,7 @@ public class XMLMapperBuilder extends BaseBuilder {
 
   public void parse() {
     if (!configuration.isResourceLoaded(resource)) {
-      configurationElement(parser.evalNode("/mapper"));
+      configurationElement(parser.evalNode("mapper:mapper"));
       configuration.addLoadedResource(resource);
       bindMapperForNamespace();
     }
@@ -110,12 +110,12 @@ public class XMLMapperBuilder extends BaseBuilder {
         throw new BuilderException("Mapper's namespace cannot be empty");
       }
       builderAssistant.setCurrentNamespace(namespace);
-      cacheRefElement(context.evalNode("cache-ref"));
-      cacheElement(context.evalNode("cache"));
-      parameterMapElement(context.evalNodes("/mapper/parameterMap"));
-      resultMapElements(context.evalNodes("/mapper/resultMap"));
-      sqlElement(context.evalNodes("/mapper/sql"));
-      buildStatementFromContext(context.evalNodes("select|insert|update|delete"));
+      cacheRefElement(context.evalNode("mapper:cache-ref"));
+      cacheElement(context.evalNode("mapper:cache"));
+      parameterMapElement(context.evalNodes("mapper:parameterMap"));
+      resultMapElements(context.evalNodes("mapper:resultMap"));
+      sqlElement(context.evalNodes("mapper:sql"));
+      buildStatementFromContext(context.evalNodes("mapper:select|mapper:insert|mapper:update|mapper:delete"));
     } catch (Exception e) {
       throw new BuilderException("Error parsing Mapper XML. Cause: " + e, e);
     }
@@ -216,7 +216,7 @@ public class XMLMapperBuilder extends BaseBuilder {
       String id = parameterMapNode.getStringAttribute("id");
       String type = parameterMapNode.getStringAttribute("type");
       Class<?> parameterClass = resolveClass(type);
-      List<XNode> parameterNodes = parameterMapNode.evalNodes("parameter");
+      List<XNode> parameterNodes = parameterMapNode.evalNodes("mapper:parameter");
       List<ParameterMapping> parameterMappings = new ArrayList<ParameterMapping>();
       for (XNode parameterNode : parameterNodes) {
         String property = parameterNode.getStringAttribute("property");

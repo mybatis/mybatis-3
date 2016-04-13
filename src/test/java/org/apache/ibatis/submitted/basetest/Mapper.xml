@@ -14,11 +14,11 @@
        See the License for the specific language governing permissions and
        limitations under the License.
 -->
-<!DOCTYPE mapper
-    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-
-<mapper namespace="org.apache.ibatis.submitted.basetest.Mapper">
+<mapper xmlns="http://mybatis.org/schema/mybatis-3-mapper"
+     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xsi:schemaLocation="
+     http://mybatis.org/schema/mybatis-3-mapper http://mybatis.org/schema/mybatis-3-mapper.xsd"
+	namespace="org.apache.ibatis.submitted.basetest.Mapper">
 
 	<select id="getUser" resultType="org.apache.ibatis.submitted.basetest.User">
 		select * from users where id = #{id}

@@ -92,27 +92,27 @@ public class XMLConfigBuilder extends BaseBuilder {
       throw new BuilderException("Each XMLConfigBuilder can only be used once.");
     }
     parsed = true;
-    parseConfiguration(parser.evalNode("/configuration"));
+    parseConfiguration(parser.evalNode("config:configuration"));
     return configuration;
   }
 
   private void parseConfiguration(XNode root) {
     try {
-      Properties settings = settingsAsPropertiess(root.evalNode("settings"));
+      Properties settings = settingsAsPropertiess(root.evalNode("config:settings"));
       //issue #117 read properties first
-      propertiesElement(root.evalNode("properties"));
+      propertiesElement(root.evalNode("config:properties"));
       loadCustomVfs(settings);
-      typeAliasesElement(root.evalNode("typeAliases"));
-      pluginElement(root.evalNode("plugins"));
-      objectFactoryElement(root.evalNode("objectFactory"));
-      objectWrapperFactoryElement(root.evalNode("objectWrapperFactory"));
-      reflectionFactoryElement(root.evalNode("reflectionFactory"));
+      typeAliasesElement(root.evalNode("config:typeAliases"));
+      pluginElement(root.evalNode("config:plugins"));
+      objectFactoryElement(root.evalNode("config:objectFactory"));
+      objectWrapperFactoryElement(root.evalNode("config:objectWrapperFactory"));
+      reflectionFactoryElement(root.evalNode("config:reflectionFactory"));
       settingsElement(settings);
       // read it after objectFactory and objectWrapperFactory issue #631
-      environmentsElement(root.evalNode("environments"));
-      databaseIdProviderElement(root.evalNode("databaseIdProvider"));
-      typeHandlerElement(root.evalNode("typeHandlers"));
-      mapperElement(root.evalNode("mappers"));
+      environmentsElement(root.evalNode("config:environments"));
+      databaseIdProviderElement(root.evalNode("config:databaseIdProvider"));
+      typeHandlerElement(root.evalNode("config:typeHandlers"));
+      mapperElement(root.evalNode("config:mappers"));
     } catch (Exception e) {
       throw new BuilderException("Error parsing SQL Mapper Configuration. Cause: " + e, e);
     }
@@ -263,8 +263,8 @@ public class XMLConfigBuilder extends BaseBuilder {
       for (XNode child : context.getChildren()) {
         String id = child.getStringAttribute("id");
         if (isSpecifiedEnvironment(id)) {
-          TransactionFactory txFactory = transactionManagerElement(child.evalNode("transactionManager"));
-          DataSourceFactory dsFactory = dataSourceElement(child.evalNode("dataSource"));
+          TransactionFactory txFactory = transactionManagerElement(child.evalNode("config:transactionManager"));
+          DataSourceFactory dsFactory = dataSourceElement(child.evalNode("config:dataSource"));
           DataSource dataSource = dsFactory.getDataSource();
           Environment.Builder environmentBuilder = new Environment.Builder(id)
               .transactionFactory(txFactory)

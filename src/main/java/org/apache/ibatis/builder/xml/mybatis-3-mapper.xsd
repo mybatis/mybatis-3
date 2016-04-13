@@ -1,0 +1,669 @@
+<schema
+  xmlns='http://www.w3.org/2001/XMLSchema'
+  targetNamespace='http://mybatis.org/schema/mybatis-3-mapper'
+  xmlns:t='http://mybatis.org/schema/mybatis-3-mapper'>
+
+ <element name='mapper'>
+  <complexType>
+   <choice maxOccurs='unbounded'>
+    <element ref='t:cache-ref'/>
+    <element ref='t:cache'/>
+    <element ref='t:resultMap'/>
+    <element ref='t:parameterMap'/>
+    <element ref='t:sql'/>
+    <element ref='t:insert'/>
+    <element ref='t:update'/>
+    <element ref='t:delete'/>
+    <element ref='t:select'/>
+   </choice>
+   <attribute name='namespace' type='string' use='optional'/>
+  </complexType>
+ </element>
+
+ <element name='cache-ref'>
+  <complexType>
+   <attribute name='namespace' type='string' use='required'/>
+  </complexType>
+ </element>
+
+ <element name='cache'>
+  <complexType>
+   <sequence>
+    <element ref='t:property' minOccurs='0' maxOccurs='unbounded'/>
+   </sequence>
+   <attribute name='type' type='string' use='optional'/>
+   <attribute name='eviction' type='string' use='optional'/>
+   <attribute name='flushInterval' type='string' use='optional'/>
+   <attribute name='size' type='string' use='optional'/>
+   <attribute name='readOnly' type='string' use='optional'/>
+   <attribute name='blocking' type='string' use='optional'/>
+  </complexType>
+ </element>
+
+ <element name='parameterMap'>
+  <complexType>
+   <sequence minOccurs='0' maxOccurs='1'>
+    <element ref='t:parameter' maxOccurs='unbounded'/>
+   </sequence>
+   <attribute name='id' type='string' use='required'/>
+   <attribute name='type' type='string' use='required'/>
+  </complexType>
+ </element>
+
+ <element name='parameter'>
+  <complexType>
+   <attribute name='property' type='string' use='required'/>
+   <attribute name='javaType' type='string' use='optional'/>
+   <attribute name='jdbcType' type='string' use='optional'/>
+   <attribute name='mode' use='optional'>
+    <simpleType>
+     <restriction base='string'>
+      <enumeration value='IN'/>
+      <enumeration value='OUT'/>
+      <enumeration value='INOUT'/>
+     </restriction>
+    </simpleType>
+   </attribute>
+   <attribute name='resultMap' type='string' use='optional'/>
+   <attribute name='scale' type='string' use='optional'/>
+   <attribute name='typeHandler' type='string' use='optional'/>
+  </complexType>
+ </element>
+
+ <element name='resultMap'>
+  <complexType>
+   <sequence>
+    <element ref='t:constructor' minOccurs='0' maxOccurs='1'/>
+    <element ref='t:id' minOccurs='0' maxOccurs='unbounded'/>
+    <element ref='t:result' minOccurs='0' maxOccurs='unbounded'/>
+    <element ref='t:association' minOccurs='0' maxOccurs='unbounded'/>
+    <element ref='t:collection' minOccurs='0' maxOccurs='unbounded'/>
+    <element ref='t:discriminator' minOccurs='0' maxOccurs='1'/>
+   </sequence>
+   <attribute name='id' type='string' use='required'/>
+   <attribute name='type' type='string' use='required'/>
+   <attribute name='extends' type='string' use='optional'/>
+   <attribute name='autoMapping' use='optional'>
+    <simpleType>
+     <restriction base='string'>
+      <enumeration value='true'/>
+      <enumeration value='false'/>
+     </restriction>
+    </simpleType>
+   </attribute>
+  </complexType>
+ </element>
+
+ <element name='constructor'>
+  <complexType>
+   <sequence>
+    <element ref='t:idArg' minOccurs='0' maxOccurs='unbounded'/>
+    <element ref='t:arg' minOccurs='0' maxOccurs='unbounded'/>
+   </sequence>
+  </complexType>
+ </element>
+
+ <element name='id'>
+  <complexType>
+   <attribute name='property' type='string' use='optional'/>
+   <attribute name='javaType' type='string' use='optional'/>
+   <attribute name='column' type='string' use='optional'/>
+   <attribute name='jdbcType' type='string' use='optional'/>
+   <attribute name='typeHandler' type='string' use='optional'/>
+  </complexType>
+ </element>
+
+ <element name='result'>
+  <complexType>
+   <attribute name='property' type='string' use='optional'/>
+   <attribute name='javaType' type='string' use='optional'/>
+   <attribute name='column' type='string' use='optional'/>
+   <attribute name='jdbcType' type='string' use='optional'/>
+   <attribute name='typeHandler' type='string' use='optional'/>
+  </complexType>
+ </element>
+
+ <element name='idArg'>
+  <complexType>
+   <attribute name='javaType' type='string' use='optional'/>
+   <attribute name='column' type='string' use='optional'/>
+   <attribute name='jdbcType' type='string' use='optional'/>
+   <attribute name='typeHandler' type='string' use='optional'/>
+   <attribute name='select' type='string' use='optional'/>
+   <attribute name='resultMap' type='string' use='optional'/>
+  </complexType>
+ </element>
+
+ <element name='arg'>
+  <complexType>
+   <attribute name='javaType' type='string' use='optional'/>
+   <attribute name='column' type='string' use='optional'/>
+   <attribute name='jdbcType' type='string' use='optional'/>
+   <attribute name='typeHandler' type='string' use='optional'/>
+   <attribute name='select' type='string' use='optional'/>
+   <attribute name='resultMap' type='string' use='optional'/>
+  </complexType>
+ </element>
+
+ <element name='collection'>
+  <complexType>
+   <sequence>
+    <element ref='t:constructor' minOccurs='0' maxOccurs='1'/>
+    <element ref='t:id' minOccurs='0' maxOccurs='unbounded'/>
+    <element ref='t:result' minOccurs='0' maxOccurs='unbounded'/>
+    <element ref='t:association' minOccurs='0' maxOccurs='unbounded'/>
+    <element ref='t:collection' minOccurs='0' maxOccurs='unbounded'/>
+    <element ref='t:discriminator' minOccurs='0' maxOccurs='1'/>
+   </sequence>
+   <attribute name='property' type='string' use='required'/>
+   <attribute name='column' type='string' use='optional'/>
+   <attribute name='javaType' type='string' use='optional'/>
+   <attribute name='ofType' type='string' use='optional'/>
+   <attribute name='jdbcType' type='string' use='optional'/>
+   <attribute name='select' type='string' use='optional'/>
+   <attribute name='resultMap' type='string' use='optional'/>
+   <attribute name='typeHandler' type='string' use='optional'/>
+   <attribute name='notNullColumn' type='string' use='optional'/>
+   <attribute name='columnPrefix' type='string' use='optional'/>
+   <attribute name='resultSet' type='string' use='optional'/>
+   <attribute name='foreignColumn' type='string' use='optional'/>
+   <attribute name='autoMapping' use='optional'>
+    <simpleType>
+     <restriction base='string'>
+      <enumeration value='true'/>
+      <enumeration value='false'/>
+     </restriction>
+    </simpleType>
+   </attribute>
+   <attribute name='fetchType' use='optional'>
+    <simpleType>
+     <restriction base='string'>
+      <enumeration value='lazy'/>
+      <enumeration value='eager'/>
+     </restriction>
+    </simpleType>
+   </attribute>
+  </complexType>
+ </element>
+
+ <element name='association'>
+  <complexType>
+   <sequence>
+    <element ref='t:constructor' minOccurs='0' maxOccurs='1'/>
+    <element ref='t:id' minOccurs='0' maxOccurs='unbounded'/>
+    <element ref='t:result' minOccurs='0' maxOccurs='unbounded'/>
+    <element ref='t:association' minOccurs='0' maxOccurs='unbounded'/>
+    <element ref='t:collection' minOccurs='0' maxOccurs='unbounded'/>
+    <element ref='t:discriminator' minOccurs='0' maxOccurs='1'/>
+   </sequence>
+   <attribute name='property' type='string' use='required'/>
+   <attribute name='column' type='string' use='optional'/>
+   <attribute name='javaType' type='string' use='optional'/>
+   <attribute name='jdbcType' type='string' use='optional'/>
+   <attribute name='select' type='string' use='optional'/>
+   <attribute name='resultMap' type='string' use='optional'/>
+   <attribute name='typeHandler' type='string' use='optional'/>
+   <attribute name='notNullColumn' type='string' use='optional'/>
+   <attribute name='columnPrefix' type='string' use='optional'/>
+   <attribute name='resultSet' type='string' use='optional'/>
+   <attribute name='foreignColumn' type='string' use='optional'/>
+   <attribute name='autoMapping' use='optional'>
+    <simpleType>
+     <restriction base='string'>
+      <enumeration value='true'/>
+      <enumeration value='false'/>
+     </restriction>
+    </simpleType>
+   </attribute>
+   <attribute name='fetchType' use='optional'>
+    <simpleType>
+     <restriction base='string'>
+      <enumeration value='lazy'/>
+      <enumeration value='eager'/>
+     </restriction>
+    </simpleType>
+   </attribute>
+  </complexType>
+ </element>
+
+ <element name='discriminator'>
+  <complexType>
+   <sequence>
+    <element ref='t:case' maxOccurs='unbounded'/>
+   </sequence>
+   <attribute name='column' type='string' use='optional'/>
+   <attribute name='javaType' type='string' use='required'/>
+   <attribute name='jdbcType' type='string' use='optional'/>
+   <attribute name='typeHandler' type='string' use='optional'/>
+  </complexType>
+ </element>
+
+ <element name='case'>
+  <complexType>
+   <sequence>
+    <element ref='t:constructor' minOccurs='0' maxOccurs='1'/>
+    <element ref='t:id' minOccurs='0' maxOccurs='unbounded'/>
+    <element ref='t:result' minOccurs='0' maxOccurs='unbounded'/>
+    <element ref='t:association' minOccurs='0' maxOccurs='unbounded'/>
+    <element ref='t:collection' minOccurs='0' maxOccurs='unbounded'/>
+    <element ref='t:discriminator' minOccurs='0' maxOccurs='1'/>
+   </sequence>
+   <attribute name='value' type='string' use='required'/>
+   <attribute name='resultMap' type='string' use='optional'/>
+   <attribute name='resultType' type='string' use='optional'/>
+  </complexType>
+ </element>
+
+ <element name='property'>
+  <complexType>
+   <attribute name='name' type='string' use='required'/>
+   <attribute name='value' type='string' use='required'/>
+  </complexType>
+ </element>
+
+ <element name='typeAlias'>
+  <complexType>
+   <attribute name='alias' type='string' use='required'/>
+   <attribute name='type' type='string' use='required'/>
+  </complexType>
+ </element>
+
+ <element name='select'>
+  <complexType mixed='true'>
+   <choice minOccurs='0' maxOccurs='unbounded'>
+    <element ref='t:include'/>
+    <element ref='t:trim'/>
+    <element ref='t:where'/>
+    <element ref='t:set'/>
+    <element ref='t:foreach'/>
+    <element ref='t:choose'/>
+    <element ref='t:if'/>
+    <element ref='t:bind'/>
+   </choice>
+   <attribute name='id' type='string' use='required'/>
+   <attribute name='parameterMap' type='string' use='optional'/>
+   <attribute name='parameterType' type='string' use='optional'/>
+   <attribute name='resultMap' type='string' use='optional'/>
+   <attribute name='resultType' type='string' use='optional'/>
+   <attribute name='resultSetType' use='optional'>
+    <simpleType>
+     <restriction base='string'>
+      <enumeration value='FORWARD_ONLY'/>
+      <enumeration value='SCROLL_INSENSITIVE'/>
+      <enumeration value='SCROLL_SENSITIVE'/>
+     </restriction>
+    </simpleType>
+   </attribute>
+   <attribute name='statementType' use='optional'>
+    <simpleType>
+     <restriction base='string'>
+      <enumeration value='STATEMENT'/>
+      <enumeration value='PREPARED'/>
+      <enumeration value='CALLABLE'/>
+     </restriction>
+    </simpleType>
+   </attribute>
+   <attribute name='fetchSize' type='string' use='optional'/>
+   <attribute name='timeout' type='string' use='optional'/>
+   <attribute name='flushCache' use='optional'>
+    <simpleType>
+     <restriction base='string'>
+      <enumeration value='true'/>
+      <enumeration value='false'/>
+     </restriction>
+    </simpleType>
+   </attribute>
+   <attribute name='useCache' use='optional'>
+    <simpleType>
+     <restriction base='string'>
+      <enumeration value='true'/>
+      <enumeration value='false'/>
+     </restriction>
+    </simpleType>
+   </attribute>
+   <attribute name='databaseId' type='string' use='optional'/>
+   <attribute name='lang' type='string' use='optional'/>
+   <attribute name='resultOrdered' use='optional'>
+    <simpleType>
+     <restriction base='string'>
+      <enumeration value='true'/>
+      <enumeration value='false'/>
+     </restriction>
+    </simpleType>
+   </attribute>
+   <attribute name='resultSets' type='string' use='optional'/>
+  </complexType>
+ </element>
+
+ <element name='insert'>
+  <complexType mixed='true'>
+   <choice minOccurs='0' maxOccurs='unbounded'>
+    <element ref='t:selectKey'/>
+    <element ref='t:include'/>
+    <element ref='t:trim'/>
+    <element ref='t:where'/>
+    <element ref='t:set'/>
+    <element ref='t:foreach'/>
+    <element ref='t:choose'/>
+    <element ref='t:if'/>
+    <element ref='t:bind'/>
+   </choice>
+   <attribute name='id' type='string' use='required'/>
+   <attribute name='parameterMap' type='string' use='optional'/>
+   <attribute name='parameterType' type='string' use='optional'/>
+   <attribute name='timeout' type='string' use='optional'/>
+   <attribute name='flushCache' use='optional'>
+    <simpleType>
+     <restriction base='string'>
+      <enumeration value='true'/>
+      <enumeration value='false'/>
+     </restriction>
+    </simpleType>
+   </attribute>
+   <attribute name='statementType' use='optional'>
+    <simpleType>
+     <restriction base='string'>
+      <enumeration value='STATEMENT'/>
+      <enumeration value='PREPARED'/>
+      <enumeration value='CALLABLE'/>
+     </restriction>
+    </simpleType>
+   </attribute>
+   <attribute name='keyProperty' type='string' use='optional'/>
+   <attribute name='useGeneratedKeys' use='optional'>
+    <simpleType>
+     <restriction base='string'>
+      <enumeration value='true'/>
+      <enumeration value='false'/>
+     </restriction>
+    </simpleType>
+   </attribute>
+   <attribute name='keyColumn' type='string' use='optional'/>
+   <attribute name='databaseId' type='string' use='optional'/>
+   <attribute name='lang' type='string' use='optional'/>
+  </complexType>
+ </element>
+
+ <element name='selectKey'>
+  <complexType mixed='true'>
+   <choice minOccurs='0' maxOccurs='unbounded'>
+    <element ref='t:include'/>
+    <element ref='t:trim'/>
+    <element ref='t:where'/>
+    <element ref='t:set'/>
+    <element ref='t:foreach'/>
+    <element ref='t:choose'/>
+    <element ref='t:if'/>
+    <element ref='t:bind'/>
+   </choice>
+   <attribute name='resultType' type='string' use='optional'/>
+   <attribute name='statementType' use='optional'>
+    <simpleType>
+     <restriction base='string'>
+      <enumeration value='STATEMENT'/>
+      <enumeration value='PREPARED'/>
+      <enumeration value='CALLABLE'/>
+     </restriction>
+    </simpleType>
+   </attribute>
+   <attribute name='keyProperty' type='string' use='optional'/>
+   <attribute name='keyColumn' type='string' use='optional'/>
+   <attribute name='order' use='optional'>
+    <simpleType>
+     <restriction base='string'>
+      <enumeration value='BEFORE'/>
+      <enumeration value='AFTER'/>
+     </restriction>
+    </simpleType>
+   </attribute>
+   <attribute name='databaseId' type='string' use='optional'/>
+  </complexType>
+ </element>
+
+ <element name='update'>
+  <complexType mixed='true'>
+   <choice minOccurs='0' maxOccurs='unbounded'>
+    <element ref='t:selectKey'/>
+    <element ref='t:include'/>
+    <element ref='t:trim'/>
+    <element ref='t:where'/>
+    <element ref='t:set'/>
+    <element ref='t:foreach'/>
+    <element ref='t:choose'/>
+    <element ref='t:if'/>
+    <element ref='t:bind'/>
+   </choice>
+   <attribute name='id' type='string' use='required'/>
+   <attribute name='parameterMap' type='string' use='optional'/>
+   <attribute name='parameterType' type='string' use='optional'/>
+   <attribute name='timeout' type='string' use='optional'/>
+   <attribute name='flushCache' use='optional'>
+    <simpleType>
+     <restriction base='string'>
+      <enumeration value='true'/>
+      <enumeration value='false'/>
+     </restriction>
+    </simpleType>
+   </attribute>
+   <attribute name='statementType' use='optional'>
+    <simpleType>
+     <restriction base='string'>
+      <enumeration value='STATEMENT'/>
+      <enumeration value='PREPARED'/>
+      <enumeration value='CALLABLE'/>
+     </restriction>
+    </simpleType>
+   </attribute>
+   <attribute name='keyProperty' type='string' use='optional'/>
+   <attribute name='useGeneratedKeys' use='optional'>
+    <simpleType>
+     <restriction base='string'>
+      <enumeration value='true'/>
+      <enumeration value='false'/>
+     </restriction>
+    </simpleType>
+   </attribute>
+   <attribute name='keyColumn' type='string' use='optional'/>
+   <attribute name='databaseId' type='string' use='optional'/>
+   <attribute name='lang' type='string' use='optional'/>
+  </complexType>
+ </element>
+
+ <element name='delete'>
+  <complexType mixed='true'>
+   <choice minOccurs='0' maxOccurs='unbounded'>
+    <element ref='t:include'/>
+    <element ref='t:trim'/>
+    <element ref='t:where'/>
+    <element ref='t:set'/>
+    <element ref='t:foreach'/>
+    <element ref='t:choose'/>
+    <element ref='t:if'/>
+    <element ref='t:bind'/>
+   </choice>
+   <attribute name='id' type='string' use='required'/>
+   <attribute name='parameterMap' type='string' use='optional'/>
+   <attribute name='parameterType' type='string' use='optional'/>
+   <attribute name='timeout' type='string' use='optional'/>
+   <attribute name='flushCache' use='optional'>
+    <simpleType>
+     <restriction base='string'>
+      <enumeration value='true'/>
+      <enumeration value='false'/>
+     </restriction>
+    </simpleType>
+   </attribute>
+   <attribute name='statementType' use='optional'>
+    <simpleType>
+     <restriction base='string'>
+      <enumeration value='STATEMENT'/>
+      <enumeration value='PREPARED'/>
+      <enumeration value='CALLABLE'/>
+     </restriction>
+    </simpleType>
+   </attribute>
+   <attribute name='databaseId' type='string' use='optional'/>
+   <attribute name='lang' type='string' use='optional'/>
+  </complexType>
+ </element>
+
+ <element name='include'>
+  <complexType>
+   <sequence minOccurs='0' maxOccurs='1'>
+    <element ref='t:property' maxOccurs='unbounded'/>
+   </sequence>
+   <attribute name='refid' type='string' use='required'/>
+  </complexType>
+ </element>
+
+ <element name='bind'>
+  <complexType>
+   <attribute name='name' type='string' use='required'/>
+   <attribute name='value' type='string' use='required'/>
+  </complexType>
+ </element>
+
+ <element name='sql'>
+  <complexType mixed='true'>
+   <choice minOccurs='0' maxOccurs='unbounded'>
+    <element ref='t:include'/>
+    <element ref='t:trim'/>
+    <element ref='t:where'/>
+    <element ref='t:set'/>
+    <element ref='t:foreach'/>
+    <element ref='t:choose'/>
+    <element ref='t:if'/>
+    <element ref='t:bind'/>
+   </choice>
+   <attribute name='id' type='string' use='required'/>
+   <attribute name='lang' type='string' use='optional'/>
+   <attribute name='databaseId' type='string' use='optional'/>
+  </complexType>
+ </element>
+
+ <element name='trim'>
+  <complexType mixed='true'>
+   <choice minOccurs='0' maxOccurs='unbounded'>
+    <element ref='t:include'/>
+    <element ref='t:trim'/>
+    <element ref='t:where'/>
+    <element ref='t:set'/>
+    <element ref='t:foreach'/>
+    <element ref='t:choose'/>
+    <element ref='t:if'/>
+    <element ref='t:bind'/>
+   </choice>
+   <attribute name='prefix' type='string' use='optional'/>
+   <attribute name='prefixOverrides' type='string' use='optional'/>
+   <attribute name='suffix' type='string' use='optional'/>
+   <attribute name='suffixOverrides' type='string' use='optional'/>
+  </complexType>
+ </element>
+
+ <element name='where'>
+  <complexType mixed='true'>
+   <choice minOccurs='0' maxOccurs='unbounded'>
+    <element ref='t:include'/>
+    <element ref='t:trim'/>
+    <element ref='t:where'/>
+    <element ref='t:set'/>
+    <element ref='t:foreach'/>
+    <element ref='t:choose'/>
+    <element ref='t:if'/>
+    <element ref='t:bind'/>
+   </choice>
+  </complexType>
+ </element>
+
+ <element name='set'>
+  <complexType mixed='true'>
+   <choice minOccurs='0' maxOccurs='unbounded'>
+    <element ref='t:include'/>
+    <element ref='t:trim'/>
+    <element ref='t:where'/>
+    <element ref='t:set'/>
+    <element ref='t:foreach'/>
+    <element ref='t:choose'/>
+    <element ref='t:if'/>
+    <element ref='t:bind'/>
+   </choice>
+  </complexType>
+ </element>
+
+ <element name='foreach'>
+  <complexType mixed='true'>
+   <choice minOccurs='0' maxOccurs='unbounded'>
+    <element ref='t:include'/>
+    <element ref='t:trim'/>
+    <element ref='t:where'/>
+    <element ref='t:set'/>
+    <element ref='t:foreach'/>
+    <element ref='t:choose'/>
+    <element ref='t:if'/>
+    <element ref='t:bind'/>
+   </choice>
+   <attribute name='collection' type='string' use='required'/>
+   <attribute name='item' type='string' use='optional'/>
+   <attribute name='index' type='string' use='optional'/>
+   <attribute name='open' type='string' use='optional'/>
+   <attribute name='close' type='string' use='optional'/>
+   <attribute name='separator' type='string' use='optional'/>
+  </complexType>
+ </element>
+
+ <element name='choose'>
+  <complexType>
+   <sequence>
+    <element ref='t:when' minOccurs='0' maxOccurs='unbounded'/>
+    <element ref='t:otherwise' minOccurs='0' maxOccurs='1'/>
+   </sequence>
+  </complexType>
+ </element>
+
+ <element name='when'>
+  <complexType mixed='true'>
+   <choice minOccurs='0' maxOccurs='unbounded'>
+    <element ref='t:include'/>
+    <element ref='t:trim'/>
+    <element ref='t:where'/>
+    <element ref='t:set'/>
+    <element ref='t:foreach'/>
+    <element ref='t:choose'/>
+    <element ref='t:if'/>
+    <element ref='t:bind'/>
+   </choice>
+   <attribute name='test' type='string' use='required'/>
+  </complexType>
+ </element>
+
+ <element name='otherwise'>
+  <complexType mixed='true'>
+   <choice minOccurs='0' maxOccurs='unbounded'>
+    <element ref='t:include'/>
+    <element ref='t:trim'/>
+    <element ref='t:where'/>
+    <element ref='t:set'/>
+    <element ref='t:foreach'/>
+    <element ref='t:choose'/>
+    <element ref='t:if'/>
+    <element ref='t:bind'/>
+   </choice>
+  </complexType>
+ </element>
+
+ <element name='if'>
+  <complexType mixed='true'>
+   <choice minOccurs='0' maxOccurs='unbounded'>
+    <element ref='t:include'/>
+    <element ref='t:trim'/>
+    <element ref='t:where'/>
+    <element ref='t:set'/>
+    <element ref='t:foreach'/>
+    <element ref='t:choose'/>
+    <element ref='t:if'/>
+    <element ref='t:bind'/>
+   </choice>
+   <attribute name='test' type='string' use='required'/>
+  </complexType>
+ </element>
+</schema>

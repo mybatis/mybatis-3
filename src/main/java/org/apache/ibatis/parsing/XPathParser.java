@@ -19,7 +19,9 @@ import java.io.InputStream;
 import java.io.Reader;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.xml.namespace.QName;
@@ -30,6 +32,7 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 
 import org.apache.ibatis.builder.BuilderException;
+import org.apache.ibatis.builder.xml.XMLNamespaceContext;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -50,6 +53,9 @@ public class XPathParser {
   private Properties variables;
   private XPath xpath;
 
+  private static final String SCHEMA_LANGUAGE_ATTRIBUTE = "http://java.sun.com/xml/jaxp/properties/schemaLanguage";
+  private static final String XSD_SCHEMA_LANGUAGE = "http://www.w3.org/2001/XMLSchema";
+  
   public XPathParser(String xml) {
     commonConstructor(false, null, null);
     this.document = createDocument(new InputSource(new StringReader(xml)));
@@ -229,16 +235,10 @@ public class XPathParser {
     // important: this must only be called AFTER common constructor
     try {
       DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-      factory.setValidating(validation);
-
-      factory.setNamespaceAware(false);
-      factory.setIgnoringComments(true);
-      factory.setIgnoringElementContentWhitespace(false);
-      factory.setCoalescing(false);
-      factory.setExpandEntityReferences(true);
-
+      factory.setValidating(true);
+      factory.setNamespaceAware(true);
+      factory.setAttribute(SCHEMA_LANGUAGE_ATTRIBUTE, XSD_SCHEMA_LANGUAGE);
       DocumentBuilder builder = factory.newDocumentBuilder();
-      builder.setEntityResolver(entityResolver);
       builder.setErrorHandler(new ErrorHandler() {
         @Override
         public void error(SAXParseException exception) throws SAXException {
@@ -254,6 +254,7 @@ public class XPathParser {
         public void warning(SAXParseException exception) throws SAXException {
         }
       });
+      builder.setEntityResolver(this.entityResolver);
       return builder.parse(inputSource);
     } catch (Exception e) {
       throw new BuilderException("Error creating document instance.  Cause: " + e, e);
@@ -266,6 +267,7 @@ public class XPathParser {
     this.variables = variables;
     XPathFactory factory = XPathFactory.newInstance();
     this.xpath = factory.newXPath();
+    this.xpath.setNamespaceContext(new XMLNamespaceContext());
   }
 
 }

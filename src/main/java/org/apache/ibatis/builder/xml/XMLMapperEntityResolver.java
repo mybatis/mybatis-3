@@ -17,9 +17,7 @@ package org.apache.ibatis.builder.xml;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 
 import org.apache.ibatis.io.Resources;
 import org.xml.sax.EntityResolver;
@@ -27,42 +25,17 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 /**
- * Offline entity resolver for the MyBatis DTDs
+ * Offline entity resolver for the MyBatis XSDs
  * 
- * @author Clinton Begin
+ * @author Eduardo Macarron
  */
 public class XMLMapperEntityResolver implements EntityResolver {
 
-  private static final Map<String, String> doctypeMap = new HashMap<String, String>();
+  private static final String MYBATIS_MAPPER = "mybatis-3-mapper".toUpperCase(Locale.ENGLISH);
+  private static final String MYBATIS_CONFIG = "mybatis-3-config".toUpperCase(Locale.ENGLISH);
 
-  private static final String IBATIS_CONFIG_PUBLIC = "-//ibatis.apache.org//DTD Config 3.0//EN".toUpperCase(Locale.ENGLISH);
-  private static final String IBATIS_CONFIG_SYSTEM = "http://ibatis.apache.org/dtd/ibatis-3-config.dtd".toUpperCase(Locale.ENGLISH);
-
-  private static final String IBATIS_MAPPER_PUBLIC = "-//ibatis.apache.org//DTD Mapper 3.0//EN".toUpperCase(Locale.ENGLISH);
-  private static final String IBATIS_MAPPER_SYSTEM = "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd".toUpperCase(Locale.ENGLISH);
-
-  private static final String MYBATIS_CONFIG_PUBLIC = "-//mybatis.org//DTD Config 3.0//EN".toUpperCase(Locale.ENGLISH);
-  private static final String MYBATIS_CONFIG_SYSTEM = "http://mybatis.org/dtd/mybatis-3-config.dtd".toUpperCase(Locale.ENGLISH);
-
-  private static final String MYBATIS_MAPPER_PUBLIC = "-//mybatis.org//DTD Mapper 3.0//EN".toUpperCase(Locale.ENGLISH);
-  private static final String MYBATIS_MAPPER_SYSTEM = "http://mybatis.org/dtd/mybatis-3-mapper.dtd".toUpperCase(Locale.ENGLISH);
-
-  private static final String MYBATIS_CONFIG_DTD = "org/apache/ibatis/builder/xml/mybatis-3-config.dtd";
-  private static final String MYBATIS_MAPPER_DTD = "org/apache/ibatis/builder/xml/mybatis-3-mapper.dtd";
-
-  static {
-    doctypeMap.put(IBATIS_CONFIG_SYSTEM, MYBATIS_CONFIG_DTD);
-    doctypeMap.put(IBATIS_CONFIG_PUBLIC, MYBATIS_CONFIG_DTD);
-
-    doctypeMap.put(IBATIS_MAPPER_SYSTEM, MYBATIS_MAPPER_DTD);
-    doctypeMap.put(IBATIS_MAPPER_PUBLIC, MYBATIS_MAPPER_DTD);
-
-    doctypeMap.put(MYBATIS_CONFIG_SYSTEM, MYBATIS_CONFIG_DTD);
-    doctypeMap.put(MYBATIS_CONFIG_PUBLIC, MYBATIS_CONFIG_DTD);
-
-    doctypeMap.put(MYBATIS_MAPPER_SYSTEM, MYBATIS_MAPPER_DTD);
-    doctypeMap.put(MYBATIS_MAPPER_PUBLIC, MYBATIS_MAPPER_DTD);
-  }
+  private static final String MYBATIS_CONFIG_XSD = "org/apache/ibatis/builder/xml/mybatis-3-config.xsd";
+  private static final String MYBATIS_MAPPER_XSD = "org/apache/ibatis/builder/xml/mybatis-3-mapper.xsd";
 
   /*
    * Converts a public DTD into a local one
@@ -76,32 +49,22 @@ public class XMLMapperEntityResolver implements EntityResolver {
   @Override
   public InputSource resolveEntity(String publicId, String systemId) throws SAXException {
 
-    if (publicId != null) {
-      publicId = publicId.toUpperCase(Locale.ENGLISH);
-    }
-    if (systemId != null) {
+    if (systemId != null) {     
       systemId = systemId.toUpperCase(Locale.ENGLISH);
-    }
-
-    InputSource source = null;
-    try {
-      String path = doctypeMap.get(publicId);
-      source = getInputSource(path, source);
-      if (source == null) {
-        path = doctypeMap.get(systemId);
-        source = getInputSource(path, source);
+      if (systemId.contains(MYBATIS_CONFIG)) {
+        return getInputSource(MYBATIS_CONFIG_XSD);       
+      } else if (systemId.contains(MYBATIS_MAPPER)){
+        return getInputSource(MYBATIS_MAPPER_XSD);
       }
-    } catch (Exception e) {
-      throw new SAXException(e.toString());
     }
-    return source;
+    return null;
   }
 
-  private InputSource getInputSource(String path, InputSource source) {
+  private InputSource getInputSource(String path) {
+    InputSource source = null;
     if (path != null) {
-      InputStream in;
       try {
-        in = Resources.getResourceAsStream(path);
+        InputStream in = Resources.getResourceAsStream(path);
         source = new InputSource(in);
       } catch (IOException e) {
         // ignore, null is ok

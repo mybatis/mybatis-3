@@ -1,0 +1,191 @@
+<schema
+  xmlns='http://www.w3.org/2001/XMLSchema'
+  targetNamespace='http://mybatis.org/schema/mybatis-3-config'
+  xmlns:t='http://mybatis.org/schema/mybatis-3-config'>
+
+ <element name='configuration'>
+  <complexType>
+   <sequence>
+    <element ref='t:properties' minOccurs='0' maxOccurs='1'/>
+    <element ref='t:settings' minOccurs='0' maxOccurs='1'/>
+    <element ref='t:typeAliases' minOccurs='0' maxOccurs='1'/>
+    <element ref='t:typeHandlers' minOccurs='0' maxOccurs='1'/>
+    <element ref='t:objectFactory' minOccurs='0' maxOccurs='1'/>
+    <element ref='t:objectWrapperFactory' minOccurs='0' maxOccurs='1'/>
+    <element ref='t:plugins' minOccurs='0' maxOccurs='1'/>
+    <element ref='t:environments' minOccurs='0' maxOccurs='1'/>
+    <element ref='t:databaseIdProvider' minOccurs='0' maxOccurs='1'/>
+    <element ref='t:mappers' minOccurs='0' maxOccurs='1'/>
+   </sequence>
+  </complexType>
+ </element>
+
+ <element name='databaseIdProvider'>
+  <complexType>
+   <sequence>
+    <element ref='t:property' minOccurs='0' maxOccurs='unbounded'/>
+   </sequence>
+   <attribute name='type' type='string' use='required'/>
+  </complexType>
+ </element>
+
+ <element name='properties'>
+  <complexType>
+   <sequence>
+    <element ref='t:property' minOccurs='0' maxOccurs='unbounded'/>
+   </sequence>
+   <attribute name='resource' type='string' use='optional'/>
+   <attribute name='url' type='string' use='optional'/>
+  </complexType>
+ </element>
+
+ <element name='property'>
+  <complexType>
+   <attribute name='name' type='string' use='required'/>
+   <attribute name='value' type='string' use='required'/>
+  </complexType>
+ </element>
+
+ <element name='settings'>
+  <complexType>
+   <sequence>
+    <element ref='t:setting' maxOccurs='unbounded'/>
+   </sequence>
+  </complexType>
+ </element>
+
+ <element name='setting'>
+  <complexType>
+   <attribute name='name' type='string' use='required'/>
+   <attribute name='value' type='string' use='required'/>
+  </complexType>
+ </element>
+
+ <element name='typeAliases'>
+  <complexType>
+   <sequence>
+    <element ref='t:typeAlias' minOccurs='0' maxOccurs='unbounded'/>
+    <element ref='t:package' minOccurs='0' maxOccurs='unbounded'/>
+   </sequence>
+  </complexType>
+ </element>
+
+ <element name='typeAlias'>
+  <complexType>
+   <attribute name='type' type='string' use='required'/>
+   <attribute name='alias' type='string' use='optional'/>
+  </complexType>
+ </element>
+
+ <element name='typeHandlers'>
+  <complexType>
+   <sequence>
+    <element ref='t:typeHandler' minOccurs='0' maxOccurs='unbounded'/>
+    <element ref='t:package' minOccurs='0' maxOccurs='unbounded'/>
+   </sequence>
+  </complexType>
+ </element>
+
+ <element name='typeHandler'>
+  <complexType>
+   <attribute name='javaType' type='string' use='optional'/>
+   <attribute name='jdbcType' type='string' use='optional'/>
+   <attribute name='handler' type='string' use='required'/>
+  </complexType>
+ </element>
+
+ <element name='objectFactory'>
+  <complexType>
+   <sequence>
+    <element ref='t:property' minOccurs='0' maxOccurs='unbounded'/>
+   </sequence>
+   <attribute name='type' type='string' use='required'/>
+  </complexType>
+ </element>
+
+ <element name='objectWrapperFactory'>
+  <complexType>
+   <sequence>
+    <element ref='t:property' minOccurs='0' maxOccurs='unbounded'/>
+   </sequence>
+   <attribute name='type' type='string' use='required'/>
+  </complexType>
+ </element>
+
+ <element name='plugins'>
+  <complexType>
+   <sequence>
+    <element ref='t:plugin' maxOccurs='unbounded'/>
+   </sequence>
+  </complexType>
+ </element>
+
+ <element name='plugin'>
+  <complexType>
+   <sequence>
+    <element ref='t:property' minOccurs='0' maxOccurs='unbounded'/>
+   </sequence>
+   <attribute name='interceptor' type='string' use='required'/>
+  </complexType>
+ </element>
+
+ <element name='environments'>
+  <complexType>
+   <sequence>
+    <element ref='t:environment' maxOccurs='unbounded'/>
+   </sequence>
+   <attribute name='default' type='string' use='required'/>
+  </complexType>
+ </element>
+
+ <element name='environment'>
+  <complexType>
+   <sequence>
+    <element ref='t:transactionManager'/>
+    <element ref='t:dataSource'/>
+   </sequence>
+   <attribute name='id' type='string' use='required'/>
+  </complexType>
+ </element>
+
+ <element name='transactionManager'>
+  <complexType>
+   <sequence>
+    <element ref='t:property' minOccurs='0' maxOccurs='unbounded'/>
+   </sequence>
+   <attribute name='type' type='string' use='required'/>
+  </complexType>
+ </element>
+
+ <element name='dataSource'>
+  <complexType>
+   <sequence>
+    <element ref='t:property' minOccurs='0' maxOccurs='unbounded'/>
+   </sequence>
+   <attribute name='type' type='string' use='required'/>
+  </complexType>
+ </element>
+
+ <element name='mappers'>
+  <complexType>
+   <sequence>
+    <element ref='t:mapper' minOccurs='0' maxOccurs='unbounded'/>
+    <element ref='t:package' minOccurs='0' maxOccurs='unbounded'/>
+   </sequence>
+  </complexType>
+ </element>
+
+ <element name='mapper'>
+  <complexType>
+   <attribute name='resource' type='string' use='optional'/>
+   <attribute name='url' type='string' use='optional'/>
+   <attribute name='class' type='string' use='optional'/>
+  </complexType>
+ </element>
+
+ <element name='package'>
+  <complexType>
+   <attribute name='name' type='string' use='required'/>
+  </complexType>
+ </element>
+</schema>
