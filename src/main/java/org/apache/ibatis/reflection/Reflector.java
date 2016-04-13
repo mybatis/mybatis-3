@@ -275,14 +275,16 @@ public class Reflector {
   private void addSetField(Field field) {
     if (isValidPropertyName(field.getName())) {
       setMethods.put(field.getName(), new SetFieldInvoker(field));
-      setTypes.put(field.getName(), field.getType());
+      Type fieldType = TypeParameterResolver.resolveFieldType(field, type);
+      setTypes.put(field.getName(), typeToClass(fieldType));
     }
   }
 
   private void addGetField(Field field) {
     if (isValidPropertyName(field.getName())) {
       getMethods.put(field.getName(), new GetFieldInvoker(field));
-      getTypes.put(field.getName(), field.getType());
+      Type fieldType = TypeParameterResolver.resolveFieldType(field, type);
+      getTypes.put(field.getName(), typeToClass(fieldType));
     }
   }
 

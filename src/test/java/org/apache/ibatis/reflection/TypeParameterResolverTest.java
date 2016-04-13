@@ -17,6 +17,7 @@ package org.apache.ibatis.reflection;
 
 import static org.junit.Assert.*;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
@@ -360,5 +361,14 @@ public class TypeParameterResolverTest {
     Method method = clazz.getMethod("getId");
     Type result = TypeParameterResolver.resolveReturnType(method, clazz);
     assertEquals(Object.class, result);
+  }
+
+  @Test
+  public void testField_GenericField() throws Exception {
+    Class<?> clazz = SubCalculator.class;
+    Class<?> declaredClass = Calculator.class;
+    Field field = declaredClass.getDeclaredField("fld");
+    Type result = TypeParameterResolver.resolveFieldType(field, clazz);
+    assertEquals(String.class, result);
   }
 }

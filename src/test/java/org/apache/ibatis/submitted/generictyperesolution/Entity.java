@@ -22,6 +22,10 @@ public class Entity<T extends Serializable> {
 
   private String name;
 
+  private T fld1;
+
+  public T fld2;
+
   public T getId() {
     return id;
   }
@@ -36,5 +40,9 @@ public class Entity<T extends Serializable> {
 
   public void setName(String name) {
     this.name = name;
+  }
+
+  public T getFld1() {
+    return fld1;
   }
 }

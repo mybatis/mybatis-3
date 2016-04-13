@@ -16,6 +16,7 @@
 package org.apache.ibatis.reflection;
 
 import java.lang.reflect.Array;
+import java.lang.reflect.Field;
 import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
@@ -29,8 +30,18 @@ import java.lang.reflect.WildcardType;
 public class TypeParameterResolver {
 
   /**
+   * @return The field type as {@link Type}. If it has type parameters in the declaration,<br>
+   *         they will be resolved to the actual runtime {@link Type}s.
+   */
+  public static Type resolveFieldType(Field field, Type srcType) {
+    Type fieldType = field.getGenericType();
+    Class<?> declaringClass = field.getDeclaringClass();
+    return resolveType(fieldType, srcType, declaringClass);
+  }
+
+  /**
    * @return The return type of the method as {@link Type}. If it has type parameters in the declaration,<br>
-   *         they will be resolved to the actual runtime {@link Type}.
+   *         they will be resolved to the actual runtime {@link Type}s.
    */
   public static Type resolveReturnType(Method method, Type srcType) {
     Type returnType = method.getGenericReturnType();
@@ -38,6 +49,10 @@ public class TypeParameterResolver {
     return resolveType(returnType, srcType, declaringClass);
   }
 
+  /**
+   * @return The parameter types of the method as an array of {@link Type}s. If they have type parameters in the declaration,<br>
+   *         they will be resolved to the actual runtime {@link Type}s.
+   */
   public static Type[] resolveParamTypes(Method method, Type srcType) {
     Type[] paramTypes = method.getGenericParameterTypes();
     Class<?> declaringClass = method.getDeclaringClass();

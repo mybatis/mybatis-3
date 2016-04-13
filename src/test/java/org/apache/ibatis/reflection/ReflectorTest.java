@@ -100,6 +100,20 @@ public class ReflectorTest {
   }
 
   @Test
+  public void shouldResolveSetterTypeFromPrivateField() throws Exception {
+    ReflectorFactory reflectorFactory = new DefaultReflectorFactory();
+    Reflector reflector = reflectorFactory.findForClass(Child.class);
+    assertEquals(String.class, reflector.getSetterType("fld"));
+  }
+
+  @Test
+  public void shouldResolveGetterTypeFromPublicField() throws Exception {
+    ReflectorFactory reflectorFactory = new DefaultReflectorFactory();
+    Reflector reflector = reflectorFactory.findForClass(Child.class);
+    assertEquals(String.class, reflector.getGetterType("pubFld"));
+  }
+
+  @Test
   public void shouldResolveParameterizedGetterType() throws Exception {
     ReflectorFactory reflectorFactory = new DefaultReflectorFactory();
     Reflector reflector = reflectorFactory.findForClass(Child.class);
@@ -119,6 +133,8 @@ public class ReflectorTest {
     protected T id;
     protected List<T> list;
     protected T[] array;
+    private T fld;
+    public T pubFld;
     public T getId() {
       return id;
     }
@@ -136,6 +152,9 @@ public class ReflectorTest {
     }
     public void setArray(T[] array) {
       this.array = array;
+    }
+    public T getFld() {
+      return fld;
     }
   }
 

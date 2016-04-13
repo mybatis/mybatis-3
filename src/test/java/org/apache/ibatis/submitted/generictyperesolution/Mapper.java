@@ -25,6 +25,6 @@ public interface Mapper {
   @Select("select * from users where name = #{name}")
   User getUserByName(String name);
 
-  @Insert("insert into users (name) values (#{name})")
+  @Insert("insert into users (name, fld2) values (#{name}, #{fld2})")
   void insertUser(User user);
 }

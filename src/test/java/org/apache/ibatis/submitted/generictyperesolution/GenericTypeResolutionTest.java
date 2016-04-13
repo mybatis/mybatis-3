@@ -59,6 +59,7 @@ public class GenericTypeResolutionTest {
       criteria.setId(1);
       User result = mapper.getUser(criteria);
       assertEquals("User1", result.getName());
+      assertEquals(Integer.valueOf(12), result.getFld1());
     } finally {
       sqlSession.close();
     }
@@ -71,6 +72,7 @@ public class GenericTypeResolutionTest {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = new User();
       user.setName("User2");
+      user.fld2 =56;
       mapper.insertUser(user);
       User result = mapper.getUserByName("User2");
       assertNotNull(result);
