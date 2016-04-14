@@ -32,10 +32,10 @@ import org.xml.sax.SAXException;
  */
 public class XMLMapperEntityResolver implements EntityResolver {
 
-  private static final String IBATIS_CONFIG_SYSTEM = "ibatis-3-config.dtd".toUpperCase(Locale.ENGLISH);
-  private static final String IBATIS_MAPPER_SYSTEM = "ibatis-3-mapper.dtd".toUpperCase(Locale.ENGLISH);
-  private static final String MYBATIS_CONFIG_SYSTEM = "mybatis-3-config.dtd".toUpperCase(Locale.ENGLISH);
-  private static final String MYBATIS_MAPPER_SYSTEM = "mybatis-3-mapper.dtd".toUpperCase(Locale.ENGLISH);
+  private static final String IBATIS_CONFIG_SYSTEM = "ibatis-3-config.dtd";
+  private static final String IBATIS_MAPPER_SYSTEM = "ibatis-3-mapper.dtd";
+  private static final String MYBATIS_CONFIG_SYSTEM = "mybatis-3-config.dtd";
+  private static final String MYBATIS_MAPPER_SYSTEM = "mybatis-3-mapper.dtd";
 
   private static final String MYBATIS_CONFIG_DTD = "org/apache/ibatis/builder/xml/mybatis-3-config.dtd";
   private static final String MYBATIS_MAPPER_DTD = "org/apache/ibatis/builder/xml/mybatis-3-mapper.dtd";
@@ -53,10 +53,10 @@ public class XMLMapperEntityResolver implements EntityResolver {
   public InputSource resolveEntity(String publicId, String systemId) throws SAXException {
     try {
       if (systemId != null) {
-        systemId = systemId.toUpperCase(Locale.ENGLISH);
-        if (systemId.contains(MYBATIS_CONFIG_SYSTEM) || systemId.contains(IBATIS_CONFIG_SYSTEM)) {
+        String lowerCaseSystemId = systemId.toLowerCase(Locale.ENGLISH);
+        if (lowerCaseSystemId.contains(MYBATIS_CONFIG_SYSTEM) || lowerCaseSystemId.contains(IBATIS_CONFIG_SYSTEM)) {
           return getInputSource(MYBATIS_CONFIG_DTD, publicId, systemId);
-        } else if (systemId.contains(MYBATIS_MAPPER_SYSTEM) || systemId.contains(IBATIS_MAPPER_SYSTEM)) {
+        } else if (lowerCaseSystemId.contains(MYBATIS_MAPPER_SYSTEM) || lowerCaseSystemId.contains(IBATIS_MAPPER_SYSTEM)) {
           return getInputSource(MYBATIS_MAPPER_DTD, publicId, systemId);
         }
       }
