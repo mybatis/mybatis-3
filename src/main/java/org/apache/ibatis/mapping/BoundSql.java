@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2016 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -30,8 +30,7 @@ import org.apache.ibatis.session.Configuration;
  * the value from). 
  * </br>
  * Can also have additional parameters that are created by the dynamic language (for loops, bind...).
- */
-/**
+ *
  * @author Clinton Begin
  */
 public class BoundSql {

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2016 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -29,23 +29,23 @@ import org.apache.ibatis.logging.LogFactory;
  * arbitrary conditions. The two most common conditions are that a class implements/extends
  * another class, or that is it annotated with a specific annotation. However, through the use
  * of the {@link Test} class it is possible to search using arbitrary conditions.</p>
- * <p/>
+ *
  * <p>A ClassLoader is used to locate all locations (directories and jar files) in the class
  * path that contain classes within certain packages, and then to load those classes and
  * check them. By default the ClassLoader returned by
  * {@code Thread.currentThread().getContextClassLoader()} is used, but this can be overridden
  * by calling {@link #setClassLoader(ClassLoader)} prior to invoking any of the {@code find()}
  * methods.</p>
- * <p/>
+ *
  * <p>General searches are initiated by calling the
  * {@link #find(org.apache.ibatis.io.ResolverUtil.Test, String)} ()} method and supplying
  * a package name and a Test instance. This will cause the named package <b>and all sub-packages</b>
  * to be scanned for classes that meet the test. There are also utility methods for the common
  * use cases of scanning multiple packages for extensions of particular classes, or classes
  * annotated with a specific annotation.</p>
- * <p/>
+ *
  * <p>The standard usage pattern for the ResolverUtil class is as follows:</p>
- * <p/>
+ *
  * <pre>
  * ResolverUtil&lt;ActionBean&gt; resolver = new ResolverUtil&lt;ActionBean&gt;();
  * resolver.findImplementation(ActionBean.class, pkg1, pkg2);

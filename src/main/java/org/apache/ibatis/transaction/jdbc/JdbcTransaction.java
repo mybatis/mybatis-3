@@ -17,8 +17,6 @@ package org.apache.ibatis.transaction.jdbc;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.sql.Statement;
-
 import javax.sql.DataSource;
 
 import org.apache.ibatis.logging.Log;
@@ -33,10 +31,9 @@ import org.apache.ibatis.transaction.TransactionException;
  * Delays connection retrieval until getConnection() is called.
  * Ignores commit or rollback requests when autocommit is on.
  *
- * @see JdbcTransactionFactory
- */
-/**
  * @author Clinton Begin
+ *
+ * @see JdbcTransactionFactory
  */
 public class JdbcTransaction implements Transaction {
 
