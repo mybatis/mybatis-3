@@ -397,7 +397,11 @@ public class PooledDataSource implements DataSource {
               state.accumulatedCheckoutTime += longestCheckoutTime;
               state.activeConnections.remove(oldestActiveConnection);
               if (!oldestActiveConnection.getRealConnection().getAutoCommit()) {
-                oldestActiveConnection.getRealConnection().rollback();
+                try {
+                  oldestActiveConnection.getRealConnection().rollback();
+                } catch (SQLException e) {
+                  log.debug("Bad connection. Could not roll back");
+                }  
               }
               conn = new PooledConnection(oldestActiveConnection.getRealConnection(), this);
               oldestActiveConnection.invalidate();
