@@ -18,7 +18,6 @@
 -->
 <!ELEMENT mapper (cache-ref | cache | resultMap* | parameterMap* | sql* | insert* | update* | delete* | select* )+>
 <!ATTLIST mapper
-xmlns:fo CDATA #IMPLIED
 namespace CDATA #IMPLIED
 >
 
