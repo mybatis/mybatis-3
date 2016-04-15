@@ -80,7 +80,8 @@ public class ProviderSqlSource implements SqlSource {
       String sql;
       if (parameterTypes.length == 0) {
         sql = (String) providerMethod.invoke(providerType.newInstance());
-      } else if (parameterTypes.length == 1) {
+      } else if (parameterTypes.length == 1 &&
+              (parameterObject == null || parameterTypes[0].isAssignableFrom(parameterObject.getClass()))) {
         sql = (String) providerMethod.invoke(providerType.newInstance(), parameterObject);
       } else if (parameterObject instanceof Map) {
         @SuppressWarnings("unchecked")
@@ -89,7 +90,9 @@ public class ProviderSqlSource implements SqlSource {
       } else {
         throw new BuilderException("Error invoking SqlProvider method ("
                 + providerType.getName() + "." + providerMethod.getName()
-                + "). Cannot invoke a method that holds multiple arguments using a specifying parameterObject. In this case, please specify a 'java.util.Map' object.");
+                + "). Cannot invoke a method that holds "
+                + (parameterTypes.length == 1 ? "named argument(@Param)": "multiple arguments")
+                + " using a specifying parameterObject. In this case, please specify a 'java.util.Map' object.");
       }
       Class<?> parameterType = parameterObject == null ? Object.class : parameterObject.getClass();
       return sqlSourceParser.parse(sql, parameterType, new HashMap<String, Object>());

@@ -42,7 +42,7 @@ public class OurSqlBuilder {
     return sb.toString();
   }
 
-  public String buildGetUserQuery(Integer parameter) {
+  public String buildGetUserQuery(Number parameter) {
     // parameter is not a single List or Array,
     // so it is passed as is from the mapper
     return "select * from users where id = #{value}";
