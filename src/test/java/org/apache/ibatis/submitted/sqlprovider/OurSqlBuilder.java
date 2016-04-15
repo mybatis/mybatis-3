@@ -15,6 +15,9 @@
  */
 package org.apache.ibatis.submitted.sqlprovider;
 
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.jdbc.SQL;
+
 import java.util.List;
 import java.util.Map;
 
@@ -44,4 +47,82 @@ public class OurSqlBuilder {
     // so it is passed as is from the mapper
     return "select * from users where id = #{value}";
   }
+  public String buildGetAllUsersQuery() {
+    return "select * from users order by id";
+  }
+
+  public String buildGetUsersByCriteriaQuery(final User criteria) {
+    return new SQL(){{
+      SELECT("*");
+      FROM("users");
+      if (criteria.getId() != null) {
+        WHERE("id = #{id}");
+      }
+      if (criteria.getName() != null) {
+        WHERE("name like #{name} || '%'");
+      }
+    }}.toString();
+  }
+
+  public String buildGetUsersByCriteriaMapQuery(final Map<String, Object> criteria) {
+    return new SQL(){{
+      SELECT("*");
+      FROM("users");
+      if (criteria.get("id") != null) {
+        WHERE("id = #{id}");
+      }
+      if (criteria.get("name") != null) {
+        WHERE("name like #{name} || '%'");
+      }
+    }}.toString();
+  }
+
+  public String buildGetUsersByNameQuery(final String name, final String orderByColumn) {
+    return new SQL(){{
+      SELECT("*");
+      FROM("users");
+      if (name != null) {
+        WHERE("name like #{param1} || '%'");
+      }
+      ORDER_BY(orderByColumn);
+    }}.toString();
+  }
+
+  public String buildGetUsersByNameUsingMap(Map<String, Object> params) {
+    final String name = String.class.cast(params.get("param1"));
+    final String orderByColumn = String.class.cast(params.get("param2"));
+    return new SQL(){{
+      SELECT("*");
+      FROM("users");
+      if (name != null) {
+        WHERE("name like #{param1} || '%'");
+      }
+      ORDER_BY(orderByColumn);
+    }}.toString();
+  }
+
+  public String buildGetUsersByNameWithParamNameQuery(@Param("orderByColumn") final String orderByColumn, @Param("name") final String name) {
+    return new SQL(){{
+      SELECT("*");
+      FROM("users");
+      if (name != null) {
+        WHERE("name like #{name} || '%'");
+      }
+      ORDER_BY(orderByColumn);
+    }}.toString();
+  }
+
+  public String buildGetUsersByNameWithParamNameQueryUsingMap(Map<String, Object> params) {
+    final String name = String.class.cast(params.get("name"));
+    final String orderByColumn = String.class.cast(params.get("orderByColumn"));
+    return new SQL(){{
+      SELECT("*");
+      FROM("users");
+      if (name != null) {
+        WHERE("name like #{param1} || '%'");
+      }
+      ORDER_BY(orderByColumn);
+    }}.toString();
+  }
+
 }
