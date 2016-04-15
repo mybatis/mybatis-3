@@ -80,7 +80,7 @@ public class ProviderSqlSource implements SqlSource {
       String sql;
       if (parameterTypes.length == 0) {
         sql = (String) providerMethod.invoke(providerType.newInstance());
-      } else if (parameterTypes.length == 1) {
+      } else if (parameterTypes[0].isAssignableFrom(parameterObject.getClass())) {
         sql = (String) providerMethod.invoke(providerType.newInstance(), parameterObject);
       } else if (parameterObject instanceof Map) {
         @SuppressWarnings("unchecked")

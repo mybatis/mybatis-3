@@ -208,11 +208,11 @@ public class SqlProviderTest {
 
   // Test for multiple parameter with @Param
   @Test
-  public void shouldGetUsersByNameWithParamName() {
+  public void shouldGetUsersByNameWithParamNameAndOrderBy() {
     SqlSession sqlSession = sqlSessionFactory.openSession();
     try {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
-      List<User> users = mapper.getUsersByNameWithParamName("User", "id DESC");
+      List<User> users = mapper.getUsersByNameWithParamNameAndOrderBy("User", "id DESC");
       assertEquals(4, users.size());
       assertEquals("User4", users.get(0).getName());
       assertEquals("User3", users.get(1).getName());
@@ -229,7 +229,7 @@ public class SqlProviderTest {
     SqlSession sqlSession = sqlSessionFactory.openSession();
     try {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
-      List<User> users = mapper.getUsersByNameWithParamName("User", "id DESC");
+      List<User> users = mapper.getUsersByNameWithParamNameAndOrderBy("User", "id DESC");
       assertEquals(4, users.size());
       assertEquals("User4", users.get(0).getName());
       assertEquals("User3", users.get(1).getName());
@@ -240,6 +240,23 @@ public class SqlProviderTest {
     }
   }
 
+  // Test for map with @Param
+  @Test
+  public void shouldGetUsersByNameWithParamName() {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      List<User> users = mapper.getUsersByNameWithParamName("User");
+      assertEquals(4, users.size());
+      assertEquals("User4", users.get(0).getName());
+      assertEquals("User3", users.get(1).getName());
+      assertEquals("User2", users.get(2).getName());
+      assertEquals("User1", users.get(3).getName());
+    } finally {
+      sqlSession.close();
+    }
+  }
+  
   @Test
   public void methodNotFound() throws NoSuchMethodException {
     expectedException.expect(BuilderException.class);

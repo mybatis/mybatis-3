@@ -101,7 +101,7 @@ public class OurSqlBuilder {
     }}.toString();
   }
 
-  public String buildGetUsersByNameWithParamNameQuery(@Param("orderByColumn") final String orderByColumn, @Param("name") final String name) {
+  public String buildGetUsersByNameWithParamNameAndOrderByQuery(@Param("orderByColumn") final String orderByColumn, @Param("name") final String name) {
     return new SQL(){{
       SELECT("*");
       FROM("users");
@@ -109,6 +109,17 @@ public class OurSqlBuilder {
         WHERE("name like #{name} || '%'");
       }
       ORDER_BY(orderByColumn);
+    }}.toString();
+  }
+
+  public String buildGetUsersByNameWithParamNameQuery(@Param("name") final String name) {
+    return new SQL(){{
+      SELECT("*");
+      FROM("users");
+      if (name != null) {
+        WHERE("name like #{name} || '%'");
+      }
+      ORDER_BY("id DESC");
     }}.toString();
   }
 
