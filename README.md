@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/mybatis/mybatis-3.png?label=ready&title=Ready)](https://waffle.io/mybatis/mybatis-3)
 MyBatis SQL Mapper Framework for Java
 =====================================
 
