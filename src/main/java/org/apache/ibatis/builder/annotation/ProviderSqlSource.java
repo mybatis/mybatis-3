@@ -17,7 +17,9 @@ package org.apache.ibatis.builder.annotation;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.builder.BuilderException;
 import org.apache.ibatis.builder.SqlSourceBuilder;
 import org.apache.ibatis.mapping.BoundSql;
@@ -26,13 +28,14 @@ import org.apache.ibatis.session.Configuration;
 
 /**
  * @author Clinton Begin
+ * @author Kazuki Shimizu
  */
 public class ProviderSqlSource implements SqlSource {
 
   private SqlSourceBuilder sqlSourceParser;
   private Class<?> providerType;
   private Method providerMethod;
-  private boolean providerTakesParameterObject;
+  private String[] providerMethodArgumentNames;
 
   public ProviderSqlSource(Configuration config, Object provider) {
     String providerMethodName = null;
@@ -43,13 +46,19 @@ public class ProviderSqlSource implements SqlSource {
 
       for (Method m : this.providerType.getMethods()) {
         if (providerMethodName.equals(m.getName())) {
-          if (m.getParameterTypes().length < 2
-              && m.getReturnType() == String.class) {
+          if (m.getReturnType() == String.class) {
+            if (providerMethod != null){
+              throw new BuilderException("Error creating SqlSource for SqlProvider. Method '"
+                      + providerMethodName + "' is found multiple in SqlProvider '" + this.providerType.getName()
+                      + "'. Sql provider method can not overload.");
+            }
             this.providerMethod = m;
-            this.providerTakesParameterObject = m.getParameterTypes().length == 1;
+            this.providerMethodArgumentNames = extractProviderMethodArgumentNames(m);
           }
         }
       }
+    } catch (BuilderException e) {
+      throw e;
     } catch (Exception e) {
       throw new BuilderException("Error creating SqlSource for SqlProvider.  Cause: " + e, e);
     }
@@ -67,19 +76,59 @@ public class ProviderSqlSource implements SqlSource {
 
   private SqlSource createSqlSource(Object parameterObject) {
     try {
+      Class<?>[] parameterTypes = providerMethod.getParameterTypes();
       String sql;
-      if (providerTakesParameterObject) {
-        sql = (String) providerMethod.invoke(providerType.newInstance(), parameterObject);
-      } else {
+      if (parameterTypes.length == 0) {
         sql = (String) providerMethod.invoke(providerType.newInstance());
+      } else if (parameterTypes.length == 1) {
+        sql = (String) providerMethod.invoke(providerType.newInstance(), parameterObject);
+      } else if (parameterObject instanceof Map) {
+        @SuppressWarnings("unchecked")
+        Map<String, Object> params = (Map<String, Object>) parameterObject;
+        sql = (String) providerMethod.invoke(providerType.newInstance(), extractProviderMethodArguments(params, providerMethodArgumentNames));
+      } else {
+        throw new BuilderException("Error invoking SqlProvider method ("
+                + providerType.getName() + "." + providerMethod.getName()
+                + "). Cannot invoke a method that holds multiple arguments using a specifying parameterObject. In this case, please specify a 'java.util.Map' object.");
       }
       Class<?> parameterType = parameterObject == null ? Object.class : parameterObject.getClass();
       return sqlSourceParser.parse(sql, parameterType, new HashMap<String, Object>());
+    } catch (BuilderException e) {
+      throw e;
     } catch (Exception e) {
       throw new BuilderException("Error invoking SqlProvider method ("
           + providerType.getName() + "." + providerMethod.getName()
           + ").  Cause: " + e, e);
     }
+  }
+
+  private String[] extractProviderMethodArgumentNames(Method providerMethod) {
+    String[] argumentNames = new String[providerMethod.getParameterTypes().length];
+    for (int i = 0; i < argumentNames.length; i++) {
+      Param param = findParamAnnotation(providerMethod, i);
+      argumentNames[i] = param != null ? param.value() : "param" + (i + 1);
+    }
+    return argumentNames;
+  }
+
+  private Param findParamAnnotation(Method providerMethod, int parameterIndex) {
+    final Object[] annotations = providerMethod.getParameterAnnotations()[parameterIndex];
+    Param param = null;
+    for (Object annotation : annotations) {
+      if (annotation instanceof Param) {
+        param = Param.class.cast(annotation);
+        break;
+      }
+    }
+    return param;
+  }
+
+  private Object[] extractProviderMethodArguments(Map<String, Object> params, String[] argumentNames) {
+    Object[] args = new Object[argumentNames.length];
+    for (int i = 0; i < args.length; i++) {
+      args[i] = params.get(argumentNames[i]);
+    }
+    return args;
   }
 
 }

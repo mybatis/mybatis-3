@@ -16,7 +16,9 @@
 package org.apache.ibatis.submitted.sqlprovider;
 
 import java.util.List;
+import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.SelectProvider;
 
 public interface Mapper {
@@ -25,4 +27,23 @@ public interface Mapper {
 
   @SelectProvider(type = OurSqlBuilder.class, method = "buildGetUserQuery")
   User getUser(Integer userId);
+
+  @SelectProvider(type = OurSqlBuilder.class, method = "buildGetAllUsersQuery")
+  List<User> getAllUsers();
+
+  @SelectProvider(type = OurSqlBuilder.class, method = "buildGetUsersByCriteriaQuery")
+  List<User> getUsersByCriteria(User criteria);
+
+  @SelectProvider(type = OurSqlBuilder.class, method = "buildGetUsersByCriteriaMapQuery")
+  List<User> getUsersByCriteriaMap(Map<String, Object> criteria);
+
+  @SelectProvider(type = OurSqlBuilder.class, method = "buildGetUsersByNameQuery")
+  List<User> getUsersByName(String name, String orderByColumn);
+
+  @SelectProvider(type = OurSqlBuilder.class, method = "buildGetUsersByNameUsingMap")
+  List<User> getUsersByNameUsingMap(String name, String orderByColumn);
+
+  @SelectProvider(type = OurSqlBuilder.class, method = "buildGetUsersByNameWithParamNameQuery")
+  List<User> getUsersByNameWithParamName(@Param("name") String name, @Param("orderByColumn") String orderByColumn);
+
 }
