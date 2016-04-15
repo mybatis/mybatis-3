@@ -19,6 +19,10 @@
 # Get Project Repo
 mybatis_repo=$(git config --get remote.origin.url 2>&1)
 echo "Repo detected: ${mybatis_repo}"
+
+# Get Commit Message
+commit_message=$(git log --format=%B -n 1)
+echo "Current commit detected: ${commit_message}"
  
 # Get the Java version.
 # Java 1.5 will give 15.
@@ -42,7 +46,7 @@ echo "Java detected: ${VER}"
 # 2. Deploy site
 # 3. Use -q option to only display Maven errors and warnings.
 
-if [ "$mybatis_repo" == "https://github.com/mybatis/mybatis-3.git" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ] && [ "$TRAVIS_BRANCH" == "master" ]; then
+if [ "$mybatis_repo" == "https://github.com/mybatis/mybatis-3.git" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ] && [ "$TRAVIS_BRANCH" == "master" ] && [[ "$commit_message" != *"[maven-release-plugin]"* ]]; then
   if [ $VER == "16" ]; then
     mvn clean deploy -q --settings ./travis/settings.xml
     echo -e "Successfully deployed SNAPSHOT artifacts to Sonatype under Travis job ${TRAVIS_JOB_NUMBER}"
