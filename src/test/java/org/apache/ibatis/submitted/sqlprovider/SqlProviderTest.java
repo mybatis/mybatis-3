@@ -18,6 +18,7 @@ package org.apache.ibatis.submitted.sqlprovider;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import java.io.Reader;
 import java.sql.Connection;
@@ -36,7 +37,6 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -86,15 +86,21 @@ public class SqlProviderTest {
     }
   }
 
-  // Test for simple value
+  // Test for simple value without @Param
   @Test
   public void shouldGetOneUser() {
     SqlSession sqlSession = sqlSessionFactory.openSession();
     try {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
-      User user = mapper.getUser(4);
-      assertNotNull(user);
-      assertEquals("User4", user.getName());
+      {
+        User user = mapper.getUser(4);
+        assertNotNull(user);
+        assertEquals("User4", user.getName());
+      }
+      {
+        User user = mapper.getUser(null);
+        assertNull(user);
+      }
     } finally {
       sqlSession.close();
     }
@@ -241,18 +247,28 @@ public class SqlProviderTest {
     }
   }
 
-  // Test for map with @Param
-  @Ignore("TODO failing case")
+  // Test for simple value with @Param
+  @Test
   public void shouldGetUsersByNameWithParamName() {
     SqlSession sqlSession = sqlSessionFactory.openSession();
     try {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
-      List<User> users = mapper.getUsersByNameWithParamName("User");
-      assertEquals(4, users.size());
-      assertEquals("User4", users.get(0).getName());
-      assertEquals("User3", users.get(1).getName());
-      assertEquals("User2", users.get(2).getName());
-      assertEquals("User1", users.get(3).getName());
+      {
+        List<User> users = mapper.getUsersByNameWithParamName("User");
+        assertEquals(4, users.size());
+        assertEquals("User4", users.get(0).getName());
+        assertEquals("User3", users.get(1).getName());
+        assertEquals("User2", users.get(2).getName());
+        assertEquals("User1", users.get(3).getName());
+      }
+      {
+        List<User> users = mapper.getUsersByNameWithParamName(null);
+        assertEquals(4, users.size());
+        assertEquals("User4", users.get(0).getName());
+        assertEquals("User3", users.get(1).getName());
+        assertEquals("User2", users.get(2).getName());
+        assertEquals("User1", users.get(3).getName());
+      }
     } finally {
       sqlSession.close();
     }
@@ -282,11 +298,20 @@ public class SqlProviderTest {
   }
 
   @Test
-  public void notSupportParameterObject() throws NoSuchMethodException {
+  public void notSupportParameterObjectOnMultipleArguments() throws NoSuchMethodException {
     expectedException.expect(BuilderException.class);
     expectedException.expectMessage(is("Error invoking SqlProvider method (org.apache.ibatis.submitted.sqlprovider.OurSqlBuilder.buildGetUsersByNameQuery). Cannot invoke a method that holds multiple arguments using a specifying parameterObject. In this case, please specify a 'java.util.Map' object."));
     new ProviderSqlSource(new Configuration(),
             Mapper.class.getMethod("getUsersByName", String.class, String.class).getAnnotation(SelectProvider.class))
+            .getBoundSql(new Object());
+  }
+
+  @Test
+  public void notSupportParameterObjectOnNamedArgument() throws NoSuchMethodException {
+    expectedException.expect(BuilderException.class);
+    expectedException.expectMessage(is("Error invoking SqlProvider method (org.apache.ibatis.submitted.sqlprovider.OurSqlBuilder.buildGetUsersByNameWithParamNameQuery). Cannot invoke a method that holds named argument(@Param) using a specifying parameterObject. In this case, please specify a 'java.util.Map' object."));
+    new ProviderSqlSource(new Configuration(),
+            Mapper.class.getMethod("getUsersByNameWithParamName", String.class).getAnnotation(SelectProvider.class))
             .getBoundSql(new Object());
   }
 
