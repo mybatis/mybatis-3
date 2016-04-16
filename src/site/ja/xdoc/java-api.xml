@@ -456,8 +456,8 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
           </ul>
         </td>
         <td>これらのアノテーションは動的 SQL を生成するためのものです。実行時に指定されたメソッドが呼び出され、メソッドから返された SQL ステートメントが実行されます。マップドステートメントを実行する際、プロバイダーによって指定したクラスのインスタンスが作成され、指定されたメソッドが実行されます。
-        <u>メソッドに引数オブジェクトを渡すこともできますが、指定できる引数は一つだけです（または引数なし）。</u>
-        キー: <code>type</code>, <code>method</code>. type は完全修飾クラス名、method はそのクラスのメソッド名です。 <span class="label important">NOTE</span> 次の章で、クリーンで可読性の高いコードで動的 SQL を構築するための SelectBuilder クラスについて説明します。
+        メソッドに引数を渡すことができます。(MyBatis 3.4以降では、複数の引数を渡すことができます)
+        キー: <code>type</code>, <code>method</code>. <code>type</code> にはクラスオブジェクト、<code>method</code> にはメソッド名を指定します。 <span class="label important">NOTE</span> 次の章で、クリーンで可読性の高いコードで動的 SQL を構築するためのクラスについて説明します。
 </td>
       </tr>
       <tr>
@@ -526,6 +526,53 @@ User getUserById(Integer id);
 })
 @Select("select * from company where id = #{id}")
 Company getCompanyById(Integer id);</source>
+
+  <p>次のコードは SQLプロバイダー用のアノテーションを使用して、パラメータをひとつ受け取る例です。</p>
+  <source><![CDATA[@SelectProvider(type = UserSqlBuilder.class, method = "buildGetUsersByName")
+List<User> getUsersByName(String name);
+
+class UserSqlBuilder {
+  public String buildGetUsersByName(final String name) {
+    return new SQL(){{
+      SELECT("*");
+      FROM("users");
+      if (name != null) {
+        WHERE("name like #{value} || '%'");
+      }
+      ORDER_BY("id");
+    }}.toString();
+  }
+}]]></source>
+
+  <p>次のコードは SQLプロバイダー用のアノテーションを使用して、複数パラメータをひとつ受け取る例です。</p>
+  <source><![CDATA[@SelectProvider(type = UserSqlBuilder.class, method = "buildGetUsersByName")
+List<User> getUsersByName(
+    @Param("name") String name, @Param("orderByColumn") String orderByColumn);
+
+class UserSqlBuilder {
+
+  // @Paramを使わない場合は, Mapperメソッドと同じ引数で定義する必要があります。
+  public String buildGetUsersByName(
+      final String name, final String orderByColumn) {
+    return new SQL(){{
+      SELECT("*");
+      FROM("users");
+      WHERE("name like #{name} || '%'");
+      ORDER_BY(orderByColumn);
+    }}.toString();
+  }
+
+  // @Paramを使う場合は, 必要な引数のみ定義することができます。
+  public String buildGetUsersByName(@Param("orderByColumn") final String orderByColumn) {
+    return new SQL(){{
+      SELECT("*");
+      FROM("users");
+      WHERE("name like #{name} || '%'");
+      ORDER_BY(orderByColumn);
+    }}.toString();
+  }
+}]]></source>
+
   </subsection>
 
   </section>

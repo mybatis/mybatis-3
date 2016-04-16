@@ -436,7 +436,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
             <li><code>&lt;select&gt;</code></li>
           </ul>
         </td>
-        <td>Estas anotaciones SQL alternativas te permiten especificar un nombre de clases y un método que devolverán la SQL que debe ejecutarse. Cuando se ejecute el método MyBatis instanciará la clase y ejecutará el método especificados en el provider. El método puede opcionalmente recibir el objeto parámetro como su único parámetro o no recibir ningún parámetro. Atributos: type, method.  El atributo type es el nombre completamente cualificado de una clase. El method es el nombre un método de dicha clase. Nota: A continuación hay una sección sobre la clase SelectBuilder, que puede ayudar a construir SQL dinámico de una forma más clara y sencilla de leer.</td>
+        <td>Estas anotaciones SQL alternativas te permiten especificar un nombre de clases y un método que devolverán la SQL que debe ejecutarse. Cuando se ejecute el método MyBatis instanciará la clase y ejecutará el método especificados en el provider. El método puede opcionalmente recibir el objeto parámetro.(In MyBatis 3.4 or later, it's allow multiple parameters) Atributos: type, method.  El atributo type es el nombre completamente cualificado de una clase. El method es el nombre un método de dicha clase. Nota: A continuación hay una sección sobre la clase, que puede ayudar a construir SQL dinámico de una forma más clara y sencilla de leer.</td>
       </tr>
       <tr>
         <td><code>@Param</code></td>
@@ -508,6 +508,53 @@ User getUserById(Integer id);
 })
 @Select("select * from company where id = #{id}")
 Company getCompanyById(Integer id);</source>
+
+  <p>This example shows solo parameter using the Sql Provider annotation:</p>
+  <source><![CDATA[@SelectProvider(type = UserSqlBuilder.class, method = "buildGetUsersByName")
+List<User> getUsersByName(String name);
+
+class UserSqlBuilder {
+  public String buildGetUsersByName(final String name) {
+    return new SQL(){{
+      SELECT("*");
+      FROM("users");
+      if (name != null) {
+        WHERE("name like #{value} || '%'");
+      }
+      ORDER_BY("id");
+    }}.toString();
+  }
+}]]></source>
+
+  <p>This example shows multiple parameters using the Sql Provider annotation:</p>
+  <source><![CDATA[@SelectProvider(type = UserSqlBuilder.class, method = "buildGetUsersByName")
+List<User> getUsersByName(
+    @Param("name") String name, @Param("orderByColumn") String orderByColumn);
+
+class UserSqlBuilder {
+
+  // If not use @Param, you should be define same arguments with mapper method
+  public String buildGetUsersByName(
+      final String name, final String orderByColumn) {
+    return new SQL(){{
+      SELECT("*");
+      FROM("users");
+      WHERE("name like #{name} || '%'");
+      ORDER_BY(orderByColumn);
+    }}.toString();
+  }
+
+  // If use @Param, you can define only arguments to be used
+  public String buildGetUsersByName(@Param("orderByColumn") final String orderByColumn) {
+    return new SQL(){{
+      SELECT("*");
+      FROM("users");
+      WHERE("name like #{name} || '%'");
+      ORDER_BY(orderByColumn);
+    }}.toString();
+  }
+}]]></source>
+
   </subsection>
 
   </section>

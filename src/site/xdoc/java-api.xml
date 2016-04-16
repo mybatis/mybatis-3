@@ -483,13 +483,13 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
             <li><code>&lt;select&gt;</code></li>
           </ul>
         </td>
-        <td>Allows for creation of dynamic SQL.	These alternative SQL annotations allow you to specify a class name and
-        a method that will return the SQL to run at execution time. Upon executing the mapped statement, MyBatis will
+        <td>Allows for creation of dynamic SQL. These alternative SQL annotations allow you to specify a class and
+        a method name that will return the SQL to run at execution time. Upon executing the mapped statement, MyBatis will
         instantiate the class, and execute the method, as specified by the provider.
-        <u>The method can optionally accept the parameter object as its sole parameter, but must only specify that parameter, or no parameters</u>.
-        Attributes: <code>type</code>, <code>method</code>. The type attribute is the fully qualified name of a class.
-        The method is the name of the method on that class. <span class="label important">NOTE</span>
-        Following this section is a discussion about the SelectBuilder class, which can help build dynamic SQL in a cleaner, easier to read way.</td>
+        The method can optionally accept parameter objects.(In MyBatis 3.4 or later, it's allow multiple parameters)
+        Attributes: <code>type</code>, <code>method</code>. The <code>type</code> attribute is a class.
+        The <code>method</code> is the name of the method on that class. <span class="label important">NOTE</span>
+        Following this section is a discussion about the class, which can help build dynamic SQL in a cleaner, easier to read way.</td>
       </tr>
       <tr>
         <td><code>@Param</code></td>
@@ -575,6 +575,52 @@ User getUserById(Integer id);
 })
 @Select("select * from company where id = #{id}")
 Company getCompanyById(Integer id);</source>
+
+  <p>This example shows solo parameter using the Sql Provider annotation:</p>
+  <source><![CDATA[@SelectProvider(type = UserSqlBuilder.class, method = "buildGetUsersByName")
+List<User> getUsersByName(String name);
+
+class UserSqlBuilder {
+  public String buildGetUsersByName(final String name) {
+    return new SQL(){{
+      SELECT("*");
+      FROM("users");
+      if (name != null) {
+        WHERE("name like #{value} || '%'");
+      }
+      ORDER_BY("id");
+    }}.toString();
+  }
+}]]></source>
+
+  <p>This example shows multiple parameters using the Sql Provider annotation:</p>
+  <source><![CDATA[@SelectProvider(type = UserSqlBuilder.class, method = "buildGetUsersByName")
+List<User> getUsersByName(
+    @Param("name") String name, @Param("orderByColumn") String orderByColumn);
+
+class UserSqlBuilder {
+
+  // If not use @Param, you should be define same arguments with mapper method
+  public String buildGetUsersByName(
+      final String name, final String orderByColumn) {
+    return new SQL(){{
+      SELECT("*");
+      FROM("users");
+      WHERE("name like #{name} || '%'");
+      ORDER_BY(orderByColumn);
+    }}.toString();
+  }
+
+  // If use @Param, you can define only arguments to be used
+  public String buildGetUsersByName(@Param("orderByColumn") final String orderByColumn) {
+    return new SQL(){{
+      SELECT("*");
+      FROM("users");
+      WHERE("name like #{name} || '%'");
+      ORDER_BY(orderByColumn);
+    }}.toString();
+  }
+}]]></source>
   </subsection>
 
   </section>

@@ -748,14 +748,11 @@ resultSets=””。
 基于执行的映射语句, 
 MyBatis
 会实例化这个类,然后执行由 provider
-指定的方法. 这个方法可以选择性的接
-受参数对象作为它的唯一参数,
-但是必
-须只指定该参数或者没有参数。属性:
-type,method。type 属性是类的完全限
-定名。method 是该类中的那个方法名。
+指定的方法.
+该方法可以有选择地接受参数对象.(In MyBatis 3.4 or later, it's allow multiple parameters)
+属性: type,method。type 属性是类。method 属性是方法名。
 注意:
-这节之后是对 SelectBuilder 类的
+这节之后是对 类的
 讨论,它可以帮助你以干净,容于阅读
 的方式来构建动态 SQL。
 </td>
@@ -848,6 +845,53 @@ User getUserById(Integer id);
 })
 @Select("select * from company where id = #{id}")
 Company getCompanyById(Integer id);</source>
+
+  <p>This example shows solo parameter using the Sql Provider annotation:</p>
+  <source><![CDATA[@SelectProvider(type = UserSqlBuilder.class, method = "buildGetUsersByName")
+List<User> getUsersByName(String name);
+
+class UserSqlBuilder {
+  public String buildGetUsersByName(final String name) {
+    return new SQL(){{
+      SELECT("*");
+      FROM("users");
+      if (name != null) {
+        WHERE("name like #{value} || '%'");
+      }
+      ORDER_BY("id");
+    }}.toString();
+  }
+}]]></source>
+
+  <p>This example shows multiple parameters using the Sql Provider annotation:</p>
+  <source><![CDATA[@SelectProvider(type = UserSqlBuilder.class, method = "buildGetUsersByName")
+List<User> getUsersByName(
+    @Param("name") String name, @Param("orderByColumn") String orderByColumn);
+
+class UserSqlBuilder {
+
+  // If not use @Param, you should be define same arguments with mapper method
+  public String buildGetUsersByName(
+      final String name, final String orderByColumn) {
+    return new SQL(){{
+      SELECT("*");
+      FROM("users");
+      WHERE("name like #{name} || '%'");
+      ORDER_BY(orderByColumn);
+    }}.toString();
+  }
+
+  // If use @Param, you can define only arguments to be used
+  public String buildGetUsersByName(@Param("orderByColumn") final String orderByColumn) {
+    return new SQL(){{
+      SELECT("*");
+      FROM("users");
+      WHERE("name like #{name} || '%'");
+      ORDER_BY(orderByColumn);
+    }}.toString();
+  }
+}]]></source>
+
   </subsection>
 
   </section>
