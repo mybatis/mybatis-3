@@ -42,7 +42,7 @@ public class SqlSessionManager implements SqlSessionFactory, SqlSession {
 <span class="fc" id="L42">  private SqlSessionManager(SqlSessionFactory sqlSessionFactory) {</span>
 <span class="fc" id="L43">    this.sqlSessionFactory = sqlSessionFactory;</span>
 <span class="fc" id="L44">    this.sqlSessionProxy = (SqlSession) Proxy.newProxyInstance(</span>
-<span class="fc" id="L45">        SqlSessionFactory.class.getClassLoader(),</span>
+        SqlSessionFactory.class.getClassLoader(),
         new Class[]{SqlSession.class},
         new SqlSessionInterceptor());
 <span class="fc" id="L48">  }</span>
@@ -368,4 +368,4 @@ public class SqlSessionManager implements SqlSessionFactory, SqlSession {
   }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.5.201505241946</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span></div></body></html>

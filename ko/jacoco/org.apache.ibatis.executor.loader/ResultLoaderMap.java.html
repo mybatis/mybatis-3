@@ -53,7 +53,7 @@ import org.apache.ibatis.session.RowBounds;
 <span class="fc" id="L53">    String upperFirst = getUppercaseFirstProperty(property);</span>
 <span class="pc bpc" id="L54" title="3 of 4 branches missed.">    if (!upperFirst.equalsIgnoreCase(property) &amp;&amp; loaderMap.containsKey(upperFirst)) {</span>
 <span class="nc" id="L55">      throw new ExecutorException(&quot;Nested lazy loaded result property '&quot; + property +</span>
-<span class="nc" id="L56">              &quot;' for query id '&quot; + resultLoader.mappedStatement.getId() +</span>
+              &quot;' for query id '&quot; + resultLoader.mappedStatement.getId() +
               &quot; already exists in the result map. The leftmost property of all lazy loaded properties must be unique within a result map.&quot;);
     }
 <span class="fc" id="L59">    loaderMap.put(upperFirst, new LoadPair(property, metaResultObject, resultLoader));</span>
@@ -159,7 +159,7 @@ import org.apache.ibatis.session.RowBounds;
 <span class="nc" id="L159">          Log log = this.getLogger();</span>
 <span class="nc bnc" id="L160" title="All 2 branches missed.">          if (log.isDebugEnabled()) {</span>
 <span class="nc" id="L161">            log.debug(&quot;Property [&quot; + this.property + &quot;] of [&quot;</span>
-<span class="nc" id="L162">                    + metaResultObject.getOriginalObject().getClass() + &quot;] cannot be loaded &quot;</span>
+                    + metaResultObject.getOriginalObject().getClass() + &quot;] cannot be loaded &quot;
                     + &quot;after deserialization. Make sure it's loaded before serializing &quot;
                     + &quot;forenamed object.&quot;);
           }
@@ -192,14 +192,14 @@ import org.apache.ibatis.session.RowBounds;
 <span class="fc" id="L192">        final MappedStatement ms = config.getMappedStatement(this.mappedStatement);</span>
 <span class="pc bpc" id="L193" title="1 of 2 branches missed.">        if (ms == null) {</span>
 <span class="nc" id="L194">          throw new ExecutorException(&quot;Cannot lazy load property [&quot; + this.property</span>
-<span class="nc" id="L195">                  + &quot;] of deserialized object [&quot; + userObject.getClass()</span>
+                  + &quot;] of deserialized object [&quot; + userObject.getClass()
                   + &quot;] because configuration does not contain statement [&quot;
                   + this.mappedStatement + &quot;]&quot;);
         }
 
 <span class="fc" id="L200">        this.metaResultObject = config.newMetaObject(userObject);</span>
 <span class="fc" id="L201">        this.resultLoader = new ResultLoader(config, new ClosedExecutor(), ms, this.mappedParameter,</span>
-<span class="fc" id="L202">                metaResultObject.getSetterType(this.property), null, null);</span>
+                metaResultObject.getSetterType(this.property), null, null);
       }
 
       /* We are using a new executor because we may be (and likely are) on a new thread
@@ -251,7 +251,7 @@ import org.apache.ibatis.session.RowBounds;
 <span class="nc" id="L251">      } catch (final PrivilegedActionException ex) {</span>
 <span class="nc" id="L252">        throw new ExecutorException(&quot;Cannot get Configuration as factory method [&quot;</span>
                 + this.configurationFactory + &quot;]#[&quot;
-<span class="nc" id="L254">                + FACTORY_METHOD + &quot;] threw an exception.&quot;, ex.getCause());</span>
+                + FACTORY_METHOD + &quot;] threw an exception.&quot;, ex.getCause());
 <span class="nc" id="L255">      } catch (final Exception ex) {</span>
 <span class="nc" id="L256">        throw new ExecutorException(&quot;Cannot get Configuration as factory method [&quot;</span>
                 + this.configurationFactory + &quot;]#[&quot;
@@ -262,7 +262,7 @@ import org.apache.ibatis.session.RowBounds;
 <span class="nc bnc" id="L262" title="All 2 branches missed.">        throw new ExecutorException(&quot;Cannot get Configuration as factory method [&quot;</span>
                 + this.configurationFactory + &quot;]#[&quot;
                 + FACTORY_METHOD + &quot;] didn't return [&quot; + Configuration.class + &quot;] but [&quot;
-<span class="nc" id="L265">                + (configurationObject == null ? &quot;null&quot; : configurationObject.getClass()) + &quot;].&quot;);</span>
+                + (configurationObject == null ? &quot;null&quot; : configurationObject.getClass()) + &quot;].&quot;);
       }
 
 <span class="fc" id="L268">      return Configuration.class.cast(configurationObject);</span>
@@ -308,4 +308,4 @@ import org.apache.ibatis.session.RowBounds;
     }
   }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.5.201505241946</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span></div></body></html>

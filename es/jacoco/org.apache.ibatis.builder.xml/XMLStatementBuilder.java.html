@@ -101,8 +101,8 @@ public class XMLStatementBuilder extends BaseBuilder {
 <span class="fc bfc" id="L101" title="All 2 branches covered.">    if (configuration.hasKeyGenerator(keyStatementId)) {</span>
 <span class="fc" id="L102">      keyGenerator = configuration.getKeyGenerator(keyStatementId);</span>
     } else {
-<span class="fc bfc" id="L104" title="All 2 branches covered.">      keyGenerator = context.getBooleanAttribute(&quot;useGeneratedKeys&quot;,</span>
-<span class="pc bpc" id="L105" title="3 of 4 branches missed.">          configuration.isUseGeneratedKeys() &amp;&amp; SqlCommandType.INSERT.equals(sqlCommandType))</span>
+<span class="pc bpc" id="L104" title="3 of 6 branches missed.">      keyGenerator = context.getBooleanAttribute(&quot;useGeneratedKeys&quot;,</span>
+          configuration.isUseGeneratedKeys() &amp;&amp; SqlCommandType.INSERT.equals(sqlCommandType))
           ? new Jdbc3KeyGenerator() : new NoKeyGenerator();
     }
 
@@ -200,4 +200,4 @@ public class XMLStatementBuilder extends BaseBuilder {
   }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.5.201505241946</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span></div></body></html>

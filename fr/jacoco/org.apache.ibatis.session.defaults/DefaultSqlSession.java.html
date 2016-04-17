@@ -98,7 +98,7 @@ public class DefaultSqlSession implements SqlSession {
   public &lt;K, V&gt; Map&lt;K, V&gt; selectMap(String statement, Object parameter, String mapKey, RowBounds rowBounds) {
 <span class="fc" id="L99">    final List&lt;? extends V&gt; list = selectList(statement, parameter, rowBounds);</span>
 <span class="fc" id="L100">    final DefaultMapResultHandler&lt;K, V&gt; mapResultHandler = new DefaultMapResultHandler&lt;K, V&gt;(mapKey,</span>
-<span class="fc" id="L101">        configuration.getObjectFactory(), configuration.getObjectWrapperFactory(), configuration.getReflectorFactory());</span>
+        configuration.getObjectFactory(), configuration.getObjectWrapperFactory(), configuration.getReflectorFactory());
 <span class="fc" id="L102">    final DefaultResultContext&lt;V&gt; context = new DefaultResultContext&lt;V&gt;();</span>
 <span class="fc bfc" id="L103" title="All 2 branches covered.">    for (V o : list) {</span>
 <span class="fc" id="L104">      context.nextResultObject(o);</span>
@@ -348,4 +348,4 @@ public class DefaultSqlSession implements SqlSession {
   }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.5.201505241946</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span></div></body></html>

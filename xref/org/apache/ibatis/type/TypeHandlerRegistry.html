@@ -7,7 +7,7 @@
 <body>
 <div id="overview"><a href="../../../../../apidocs/org/apache/ibatis/type/TypeHandlerRegistry.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2015 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2016 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_javadoccomment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_javadoccomment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_javadoccomment"> *    you may not use this file except in compliance with the License.</em>
@@ -213,16 +213,16 @@
 <a class="jxr_linenumber" name="L205" href="#L205">205</a>   }
 <a class="jxr_linenumber" name="L206" href="#L206">206</a> 
 <a class="jxr_linenumber" name="L207" href="#L207">207</a>   <strong class="jxr_keyword">private</strong> TypeHandler&lt;?&gt; pickSoleHandler(Map&lt;JdbcType, TypeHandler&lt;?&gt;&gt; jdbcHandlerMap) {
-<a class="jxr_linenumber" name="L208" href="#L208">208</a>     <strong class="jxr_keyword">boolean</strong> onlyChoice = <strong class="jxr_keyword">true</strong>;
-<a class="jxr_linenumber" name="L209" href="#L209">209</a>     TypeHandler&lt;?&gt; soleHandler = <strong class="jxr_keyword">null</strong>;
-<a class="jxr_linenumber" name="L210" href="#L210">210</a>     <strong class="jxr_keyword">for</strong> (TypeHandler&lt;?&gt; handler : jdbcHandlerMap.values()) {
-<a class="jxr_linenumber" name="L211" href="#L211">211</a>       <strong class="jxr_keyword">if</strong> (soleHandler != <strong class="jxr_keyword">null</strong> &amp;&amp; !handler.getClass().equals(soleHandler.getClass())) {
-<a class="jxr_linenumber" name="L212" href="#L212">212</a>         onlyChoice = false;
-<a class="jxr_linenumber" name="L213" href="#L213">213</a>         <strong class="jxr_keyword">break</strong>;
-<a class="jxr_linenumber" name="L214" href="#L214">214</a>       }
-<a class="jxr_linenumber" name="L215" href="#L215">215</a>       soleHandler = handler;
+<a class="jxr_linenumber" name="L208" href="#L208">208</a>     TypeHandler&lt;?&gt; soleHandler = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L209" href="#L209">209</a>     <strong class="jxr_keyword">for</strong> (TypeHandler&lt;?&gt; handler : jdbcHandlerMap.values()) {
+<a class="jxr_linenumber" name="L210" href="#L210">210</a>       <strong class="jxr_keyword">if</strong> (soleHandler == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L211" href="#L211">211</a>         soleHandler = handler;
+<a class="jxr_linenumber" name="L212" href="#L212">212</a>       } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (!handler.getClass().equals(soleHandler.getClass())) {
+<a class="jxr_linenumber" name="L213" href="#L213">213</a>         <em class="jxr_comment">// More than one type handlers registered.</em>
+<a class="jxr_linenumber" name="L214" href="#L214">214</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L215" href="#L215">215</a>       }
 <a class="jxr_linenumber" name="L216" href="#L216">216</a>     }
-<a class="jxr_linenumber" name="L217" href="#L217">217</a>     <strong class="jxr_keyword">return</strong> onlyChoice ? soleHandler : <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L217" href="#L217">217</a>     <strong class="jxr_keyword">return</strong> soleHandler;
 <a class="jxr_linenumber" name="L218" href="#L218">218</a>   }
 <a class="jxr_linenumber" name="L219" href="#L219">219</a> 
 <a class="jxr_linenumber" name="L220" href="#L220">220</a>   <strong class="jxr_keyword">public</strong> TypeHandler&lt;Object&gt; getUnknownTypeHandler() {
@@ -390,6 +390,6 @@
 <a class="jxr_linenumber" name="L382" href="#L382">382</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2010&#x2013;2016 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2009&#x2013;2016 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
 </body>
 </html>

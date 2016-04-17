@@ -130,8 +130,8 @@ import org.apache.ibatis.logging.LogFactory;
   protected static void checkReturnType(Method method, Class&lt;?&gt; expected) {
 <span class="pc bpc" id="L131" title="3 of 4 branches missed.">    if (method != null &amp;&amp; !expected.isAssignableFrom(method.getReturnType())) {</span>
 <span class="nc" id="L132">      log.error(&quot;Method &quot; + method.getClass().getName() + &quot;.&quot; + method.getName()</span>
-<span class="nc" id="L133">          + &quot;(..) should return &quot; + expected.getName() + &quot; but returns &quot;</span>
-<span class="nc" id="L134">          + method.getReturnType().getName() + &quot; instead.&quot;);</span>
+          + &quot;(..) should return &quot; + expected.getName() + &quot; but returns &quot;
+          + method.getReturnType().getName() + &quot; instead.&quot;);
 <span class="nc" id="L135">      setInvalid();</span>
     }
 <span class="fc" id="L137">  }</span>
@@ -174,4 +174,4 @@ import org.apache.ibatis.logging.LogFactory;
 <span class="nc" id="L174">    return names;</span>
   }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.5.201505241946</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span></div></body></html>

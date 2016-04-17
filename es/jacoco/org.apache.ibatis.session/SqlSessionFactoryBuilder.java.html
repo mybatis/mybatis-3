@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>SqlSessionFactoryBuilder.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.session</a> &gt; <span class="el_source">SqlSessionFactoryBuilder.java</span></div><h1>SqlSessionFactoryBuilder.java</h1><pre class="source lang-java linenums">/**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2016 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  *    you may not use this file except in compliance with the License.
@@ -25,74 +25,72 @@ import org.apache.ibatis.exceptions.ExceptionFactory;
 import org.apache.ibatis.executor.ErrorContext;
 import org.apache.ibatis.session.defaults.DefaultSqlSessionFactory;
 
-/*
+/**
  * Builds {@link SqlSession} instances.
  *
- */
-/**
  * @author Clinton Begin
  */
-<span class="fc" id="L35">public class SqlSessionFactoryBuilder {</span>
+<span class="fc" id="L33">public class SqlSessionFactoryBuilder {</span>
 
   public SqlSessionFactory build(Reader reader) {
-<span class="fc" id="L38">    return build(reader, null, null);</span>
+<span class="fc" id="L36">    return build(reader, null, null);</span>
   }
 
   public SqlSessionFactory build(Reader reader, String environment) {
-<span class="nc" id="L42">    return build(reader, environment, null);</span>
+<span class="nc" id="L40">    return build(reader, environment, null);</span>
   }
 
   public SqlSessionFactory build(Reader reader, Properties properties) {
-<span class="fc" id="L46">    return build(reader, null, properties);</span>
+<span class="fc" id="L44">    return build(reader, null, properties);</span>
   }
 
   public SqlSessionFactory build(Reader reader, String environment, Properties properties) {
     try {
-<span class="fc" id="L51">      XMLConfigBuilder parser = new XMLConfigBuilder(reader, environment, properties);</span>
-<span class="fc" id="L52">      return build(parser.parse());</span>
-<span class="fc" id="L53">    } catch (Exception e) {</span>
-<span class="fc" id="L54">      throw ExceptionFactory.wrapException(&quot;Error building SqlSession.&quot;, e);</span>
+<span class="fc" id="L49">      XMLConfigBuilder parser = new XMLConfigBuilder(reader, environment, properties);</span>
+<span class="fc" id="L50">      return build(parser.parse());</span>
+<span class="fc" id="L51">    } catch (Exception e) {</span>
+<span class="fc" id="L52">      throw ExceptionFactory.wrapException(&quot;Error building SqlSession.&quot;, e);</span>
     } finally {
-<span class="fc" id="L56">      ErrorContext.instance().reset();</span>
+<span class="fc" id="L54">      ErrorContext.instance().reset();</span>
       try {
-<span class="fc" id="L58">        reader.close();</span>
-<span class="nc" id="L59">      } catch (IOException e) {</span>
+<span class="fc" id="L56">        reader.close();</span>
+<span class="nc" id="L57">      } catch (IOException e) {</span>
         // Intentionally ignore. Prefer previous error.
-<span class="fc" id="L61">      }</span>
+<span class="fc" id="L59">      }</span>
     }
   }
 
   public SqlSessionFactory build(InputStream inputStream) {
-<span class="fc" id="L66">    return build(inputStream, null, null);</span>
+<span class="fc" id="L64">    return build(inputStream, null, null);</span>
   }
 
   public SqlSessionFactory build(InputStream inputStream, String environment) {
-<span class="nc" id="L70">    return build(inputStream, environment, null);</span>
+<span class="nc" id="L68">    return build(inputStream, environment, null);</span>
   }
 
   public SqlSessionFactory build(InputStream inputStream, Properties properties) {
-<span class="nc" id="L74">    return build(inputStream, null, properties);</span>
+<span class="nc" id="L72">    return build(inputStream, null, properties);</span>
   }
 
   public SqlSessionFactory build(InputStream inputStream, String environment, Properties properties) {
     try {
-<span class="fc" id="L79">      XMLConfigBuilder parser = new XMLConfigBuilder(inputStream, environment, properties);</span>
-<span class="fc" id="L80">      return build(parser.parse());</span>
-<span class="nc" id="L81">    } catch (Exception e) {</span>
-<span class="nc" id="L82">      throw ExceptionFactory.wrapException(&quot;Error building SqlSession.&quot;, e);</span>
+<span class="fc" id="L77">      XMLConfigBuilder parser = new XMLConfigBuilder(inputStream, environment, properties);</span>
+<span class="fc" id="L78">      return build(parser.parse());</span>
+<span class="nc" id="L79">    } catch (Exception e) {</span>
+<span class="nc" id="L80">      throw ExceptionFactory.wrapException(&quot;Error building SqlSession.&quot;, e);</span>
     } finally {
-<span class="pc" id="L84">      ErrorContext.instance().reset();</span>
+<span class="pc" id="L82">      ErrorContext.instance().reset();</span>
       try {
-<span class="pc" id="L86">        inputStream.close();</span>
-<span class="nc" id="L87">      } catch (IOException e) {</span>
+<span class="pc" id="L84">        inputStream.close();</span>
+<span class="nc" id="L85">      } catch (IOException e) {</span>
         // Intentionally ignore. Prefer previous error.
-<span class="pc" id="L89">      }</span>
+<span class="pc" id="L87">      }</span>
     }
   }
     
   public SqlSessionFactory build(Configuration config) {
-<span class="fc" id="L94">    return new DefaultSqlSessionFactory(config);</span>
+<span class="fc" id="L92">    return new DefaultSqlSessionFactory(config);</span>
   }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.5.201505241946</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span></div></body></html>
