@@ -127,6 +127,7 @@ public final class TypeHandlerRegistry {
 
     // mybatis-typehandlers-jsr310
     try {
+      // since 1.0.0
       register("java.time.Instant", "org.apache.ibatis.type.InstantTypeHandler");
       register("java.time.LocalDateTime", "org.apache.ibatis.type.LocalDateTimeTypeHandler");
       register("java.time.LocalDate", "org.apache.ibatis.type.LocalDateTypeHandler");
@@ -134,6 +135,10 @@ public final class TypeHandlerRegistry {
       register("java.time.OffsetDateTime", "org.apache.ibatis.type.OffsetDateTimeTypeHandler");
       register("java.time.OffsetTime", "org.apache.ibatis.type.OffsetTimeTypeHandler");
       register("java.time.ZonedDateTime", "org.apache.ibatis.type.ZonedDateTimeTypeHandler");
+      // since 1.0.1
+      register("java.time.Month", "org.apache.ibatis.type.MonthTypeHandler");
+      register("java.time.Year", "org.apache.ibatis.type.YearTypeHandler");
+
     } catch (ClassNotFoundException e) {
       // no JSR-310 handlers
     }
