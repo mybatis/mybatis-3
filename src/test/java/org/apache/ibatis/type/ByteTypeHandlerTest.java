@@ -34,10 +34,28 @@ public class ByteTypeHandlerTest extends BaseTypeHandlerTest {
 
   @Override
   @Test
-  public void shouldGetResultFromResultSet() throws Exception {
+  public void shouldGetResultFromResultSetByName() throws Exception {
     when(rs.getByte("column")).thenReturn((byte) 100);
     when(rs.wasNull()).thenReturn(false);
     assertEquals(new Byte((byte) 100), TYPE_HANDLER.getResult(rs, "column"));
+  }
+
+  @Override
+  public void shouldGetResultNullFromResultSetByName() throws Exception {
+    // Unnecessary
+  }
+
+  @Override
+  @Test
+  public void shouldGetResultFromResultSetByPosition() throws Exception {
+    when(rs.getByte(1)).thenReturn((byte) 100);
+    when(rs.wasNull()).thenReturn(false);
+    assertEquals(new Byte((byte) 100), TYPE_HANDLER.getResult(rs, 1));
+  }
+
+  @Override
+  public void shouldGetResultNullFromResultSetByPosition() throws Exception {
+    // Unnecessary
   }
 
   @Override
@@ -47,5 +65,10 @@ public class ByteTypeHandlerTest extends BaseTypeHandlerTest {
     when(cs.wasNull()).thenReturn(false);
     assertEquals(new Byte((byte) 100), TYPE_HANDLER.getResult(cs, 1));
   }
+
+  @Override
+  public void shouldGetResultNullFromCallableStatement() throws Exception {
+    // Unnecessary
+ }
 
 }

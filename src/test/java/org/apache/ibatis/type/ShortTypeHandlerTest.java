@@ -34,10 +34,28 @@ public class ShortTypeHandlerTest extends BaseTypeHandlerTest {
 
   @Override
   @Test
-  public void shouldGetResultFromResultSet() throws Exception {
+  public void shouldGetResultFromResultSetByName() throws Exception {
     when(rs.getShort("column")).thenReturn((short) 100);
     when(rs.wasNull()).thenReturn(false);
     assertEquals(new Short((short) 100), TYPE_HANDLER.getResult(rs, "column"));
+  }
+
+  @Override
+  public void shouldGetResultNullFromResultSetByName() throws Exception {
+    // Unnecessary
+  }
+
+  @Override
+  @Test
+  public void shouldGetResultFromResultSetByPosition() throws Exception {
+    when(rs.getShort(1)).thenReturn((short) 100);
+    when(rs.wasNull()).thenReturn(false);
+    assertEquals(new Short((short) 100), TYPE_HANDLER.getResult(rs, 1));
+  }
+
+  @Override
+  public void shouldGetResultNullFromResultSetByPosition() throws Exception {
+    // Unnecessary
   }
 
   @Override
@@ -46,6 +64,11 @@ public class ShortTypeHandlerTest extends BaseTypeHandlerTest {
     when(cs.getShort(1)).thenReturn((short) 100);
     when(cs.wasNull()).thenReturn(false);
     assertEquals(new Short((short) 100), TYPE_HANDLER.getResult(cs, 1));
+  }
+
+  @Override
+  public void shouldGetResultNullFromCallableStatement() throws Exception {
+    // Unnecessary
   }
 
 }

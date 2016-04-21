@@ -34,10 +34,28 @@ public class ObjectTypeHandlerTest extends BaseTypeHandlerTest {
 
   @Override
   @Test
-  public void shouldGetResultFromResultSet() throws Exception {
+  public void shouldGetResultFromResultSetByName() throws Exception {
     when(rs.getObject("column")).thenReturn("Hello");
     when(rs.wasNull()).thenReturn(false);
     assertEquals("Hello", TYPE_HANDLER.getResult(rs, "column"));
+  }
+
+  @Override
+  public void shouldGetResultNullFromResultSetByName() throws Exception {
+    // Unnecessary
+  }
+
+  @Override
+  @Test
+  public void shouldGetResultFromResultSetByPosition() throws Exception {
+    when(rs.getObject(1)).thenReturn("Hello");
+    when(rs.wasNull()).thenReturn(false);
+    assertEquals("Hello", TYPE_HANDLER.getResult(rs, 1));
+  }
+
+  @Override
+  public void shouldGetResultNullFromResultSetByPosition() throws Exception {
+    // Unnecessary
   }
 
   @Override
@@ -46,6 +64,11 @@ public class ObjectTypeHandlerTest extends BaseTypeHandlerTest {
     when(cs.getObject(1)).thenReturn("Hello");
     when(cs.wasNull()).thenReturn(false);
     assertEquals("Hello", TYPE_HANDLER.getResult(cs, 1));
+  }
+
+  @Override
+  public void shouldGetResultNullFromCallableStatement() throws Exception {
+    // Unnecessary
   }
 
 }

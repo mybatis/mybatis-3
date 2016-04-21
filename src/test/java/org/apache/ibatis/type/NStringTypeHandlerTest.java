@@ -15,74 +15,60 @@
  */
 package org.apache.ibatis.type;
 
+import org.junit.Test;
+
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.Date;
+public class NStringTypeHandlerTest extends BaseTypeHandlerTest {
 
-import org.junit.Test;
-
-public class TimeOnlyTypeHandlerTest extends BaseTypeHandlerTest {
-
-  private static final TypeHandler<Date> TYPE_HANDLER = new TimeOnlyTypeHandler();
-  private static final Date DATE = new Date();
-  private static final java.sql.Time SQL_TIME = new java.sql.Time(DATE.getTime());
+  private static final TypeHandler<String> TYPE_HANDLER = new NStringTypeHandler();
 
   @Override
   @Test
   public void shouldSetParameter() throws Exception {
-    TYPE_HANDLER.setParameter(ps, 1, DATE, null);
-    verify(ps).setTime(1, SQL_TIME);
+    TYPE_HANDLER.setParameter(ps, 1, "Hello", null);
+    verify(ps).setNString(1, "Hello");
   }
 
   @Override
   @Test
   public void shouldGetResultFromResultSetByName() throws Exception {
-    when(rs.getTime("column")).thenReturn(SQL_TIME);
+    when(rs.getNString("column")).thenReturn("Hello");
     when(rs.wasNull()).thenReturn(false);
-    assertEquals(DATE, TYPE_HANDLER.getResult(rs, "column"));
+    assertEquals("Hello", TYPE_HANDLER.getResult(rs, "column"));
   }
 
   @Override
-  @Test
   public void shouldGetResultNullFromResultSetByName() throws Exception {
-    when(rs.getTime("column")).thenReturn(null);
-    when(rs.wasNull()).thenReturn(true);
-    assertNull(TYPE_HANDLER.getResult(rs, "column"));
+    // Unnecessary
   }
 
   @Override
   @Test
   public void shouldGetResultFromResultSetByPosition() throws Exception {
-    when(rs.getTime(1)).thenReturn(SQL_TIME);
+    when(rs.getNString(1)).thenReturn("Hello");
     when(rs.wasNull()).thenReturn(false);
-    assertEquals(DATE, TYPE_HANDLER.getResult(rs, 1));
+    assertEquals("Hello", TYPE_HANDLER.getResult(rs, 1));
   }
 
   @Override
-  @Test
   public void shouldGetResultNullFromResultSetByPosition() throws Exception {
-    when(rs.getTime(1)).thenReturn(null);
-    when(rs.wasNull()).thenReturn(true);
-    assertNull(TYPE_HANDLER.getResult(rs, 1));
+    // Unnecessary
   }
 
   @Override
   @Test
   public void shouldGetResultFromCallableStatement() throws Exception {
-    when(cs.getTime(1)).thenReturn(SQL_TIME);
+    when(cs.getNString(1)).thenReturn("Hello");
     when(cs.wasNull()).thenReturn(false);
-    assertEquals(DATE, TYPE_HANDLER.getResult(cs, 1));
+    assertEquals("Hello", TYPE_HANDLER.getResult(cs, 1));
   }
 
   @Override
-  @Test
   public void shouldGetResultNullFromCallableStatement() throws Exception {
-    when(cs.getTime(1)).thenReturn(null);
-    when(cs.wasNull()).thenReturn(true);
-    assertNull(TYPE_HANDLER.getResult(cs, 1));
+    // Unnecessary
   }
 
 }

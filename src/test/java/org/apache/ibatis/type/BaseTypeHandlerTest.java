@@ -38,8 +38,15 @@ public abstract class BaseTypeHandlerTest {
 
   public abstract void shouldSetParameter() throws Exception;
 
-  public abstract void shouldGetResultFromResultSet() throws Exception;
+  public abstract void shouldGetResultFromResultSetByName() throws Exception;
+
+  public abstract void shouldGetResultNullFromResultSetByName() throws Exception;
+
+  public abstract void shouldGetResultFromResultSetByPosition() throws Exception;
+
+  public abstract void shouldGetResultNullFromResultSetByPosition() throws Exception;
 
   public abstract void shouldGetResultFromCallableStatement() throws Exception;
 
+  public abstract void shouldGetResultNullFromCallableStatement() throws Exception;
 }

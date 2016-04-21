@@ -34,10 +34,28 @@ public class BooleanTypeHandlerTest extends BaseTypeHandlerTest {
 
   @Override
   @Test
-  public void shouldGetResultFromResultSet() throws Exception {
+  public void shouldGetResultFromResultSetByName() throws Exception {
     when(rs.getBoolean("column")).thenReturn(true);
     when(rs.wasNull()).thenReturn(false);
     assertEquals(true, TYPE_HANDLER.getResult(rs, "column"));
+  }
+
+  @Override
+  public void shouldGetResultNullFromResultSetByName() throws Exception {
+    // Unnecessary
+  }
+
+  @Override
+  @Test
+  public void shouldGetResultFromResultSetByPosition() throws Exception {
+    when(rs.getBoolean(1)).thenReturn(true);
+    when(rs.wasNull()).thenReturn(false);
+    assertEquals(true, TYPE_HANDLER.getResult(rs, 1));
+  }
+
+  @Override
+  public void shouldGetResultNullFromResultSetByPosition() throws Exception {
+    // Unnecessary
   }
 
   @Override
@@ -46,6 +64,11 @@ public class BooleanTypeHandlerTest extends BaseTypeHandlerTest {
     when(cs.getBoolean(1)).thenReturn(true);
     when(cs.wasNull()).thenReturn(false);
     assertEquals(true, TYPE_HANDLER.getResult(cs, 1));
+  }
+
+  @Override
+  public void shouldGetResultNullFromCallableStatement() throws Exception {
+    // Unnecessary
   }
 
 }

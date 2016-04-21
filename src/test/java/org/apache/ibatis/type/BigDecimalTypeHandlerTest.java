@@ -36,10 +36,28 @@ public class BigDecimalTypeHandlerTest extends BaseTypeHandlerTest {
 
   @Override
   @Test
-  public void shouldGetResultFromResultSet() throws Exception {
+  public void shouldGetResultFromResultSetByName() throws Exception {
     when(rs.getBigDecimal("column")).thenReturn(new BigDecimal(1));
     when(rs.wasNull()).thenReturn(false);
     assertEquals(new BigDecimal(1), TYPE_HANDLER.getResult(rs, "column"));
+  }
+
+  @Override
+  public void shouldGetResultNullFromResultSetByName() throws Exception {
+    // Unnecessary
+  }
+
+  @Override
+  @Test
+  public void shouldGetResultFromResultSetByPosition() throws Exception {
+    when(rs.getBigDecimal(1)).thenReturn(new BigDecimal(1));
+    when(rs.wasNull()).thenReturn(false);
+    assertEquals(new BigDecimal(1), TYPE_HANDLER.getResult(rs, 1));
+  }
+
+  @Override
+  public void shouldGetResultNullFromResultSetByPosition() throws Exception {
+    // Unnecessary
   }
 
   @Override
@@ -48,6 +66,11 @@ public class BigDecimalTypeHandlerTest extends BaseTypeHandlerTest {
     when(cs.getBigDecimal(1)).thenReturn(new BigDecimal(1));
     when(cs.wasNull()).thenReturn(false);
     assertEquals(new BigDecimal(1), TYPE_HANDLER.getResult(cs, 1));
+  }
+
+  @Override
+  public void shouldGetResultNullFromCallableStatement() throws Exception {
+    // Unnecessary
   }
 
 }

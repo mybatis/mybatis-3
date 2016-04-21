@@ -34,17 +34,28 @@ public class StringTypeHandlerTest extends BaseTypeHandlerTest {
 
   @Override
   @Test
-  public void shouldGetResultFromResultSet() throws Exception {
+  public void shouldGetResultFromResultSetByName() throws Exception {
     when(rs.getString("column")).thenReturn("Hello");
     when(rs.wasNull()).thenReturn(false);
     assertEquals("Hello", TYPE_HANDLER.getResult(rs, "column"));
   }
 
+  @Override
+  public void shouldGetResultNullFromResultSetByName() throws Exception {
+    // Unnecessary
+  }
+
+  @Override
   @Test
-  public void shouldGetNullResultFromResultSet() throws Exception {
-    when(cs.getString(1)).thenReturn(null);
-    when(cs.wasNull()).thenReturn(true);
-    assertEquals(null, TYPE_HANDLER.getResult(cs, 1));
+  public void shouldGetResultFromResultSetByPosition() throws Exception {
+    when(rs.getString(1)).thenReturn("Hello");
+    when(rs.wasNull()).thenReturn(false);
+    assertEquals("Hello", TYPE_HANDLER.getResult(rs, 1));
+  }
+
+  @Override
+  public void shouldGetResultNullFromResultSetByPosition() throws Exception {
+    // Unnecessary
   }
 
   @Override
@@ -55,11 +66,9 @@ public class StringTypeHandlerTest extends BaseTypeHandlerTest {
     assertEquals("Hello", TYPE_HANDLER.getResult(cs, 1));
   }
 
-  @Test
-  public void shouldGetNullResultFromCallableStatement() throws Exception {
-    when(cs.getString(1)).thenReturn(null);
-    when(cs.wasNull()).thenReturn(true);
-    assertEquals(null, TYPE_HANDLER.getResult(cs, 1));
+  @Override
+  public void shouldGetResultNullFromCallableStatement() throws Exception {
+    // Unnecessary
   }
 
 }
