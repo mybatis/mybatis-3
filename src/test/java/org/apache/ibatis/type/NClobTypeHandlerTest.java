@@ -15,40 +15,46 @@
  */
 package org.apache.ibatis.type;
 
+import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+
+import java.io.Reader;
+import java.sql.Clob;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.Date;
+public class NClobTypeHandlerTest extends BaseTypeHandlerTest {
 
-import org.junit.Test;
+  private static final TypeHandler<String> TYPE_HANDLER = new NClobTypeHandler();
 
-public class TimeOnlyTypeHandlerTest extends BaseTypeHandlerTest {
-
-  private static final TypeHandler<Date> TYPE_HANDLER = new TimeOnlyTypeHandler();
-  private static final Date DATE = new Date();
-  private static final java.sql.Time SQL_TIME = new java.sql.Time(DATE.getTime());
+  @Mock
+  protected Clob clob;
 
   @Override
   @Test
   public void shouldSetParameter() throws Exception {
-    TYPE_HANDLER.setParameter(ps, 1, DATE, null);
-    verify(ps).setTime(1, SQL_TIME);
+    TYPE_HANDLER.setParameter(ps, 1, "Hello", null);
+    verify(ps).setCharacterStream(Mockito.eq(1), Mockito.any(Reader.class), Mockito.eq(5));
   }
 
   @Override
   @Test
   public void shouldGetResultFromResultSetByName() throws Exception {
-    when(rs.getTime("column")).thenReturn(SQL_TIME);
+    when(rs.getClob("column")).thenReturn(clob);
     when(rs.wasNull()).thenReturn(false);
-    assertEquals(DATE, TYPE_HANDLER.getResult(rs, "column"));
+    when(clob.length()).thenReturn(3l);
+    when(clob.getSubString(1, 3)).thenReturn("Hello");
+    assertEquals("Hello", TYPE_HANDLER.getResult(rs, "column"));
   }
 
   @Override
   @Test
   public void shouldGetResultNullFromResultSetByName() throws Exception {
-    when(rs.getTime("column")).thenReturn(null);
+    when(rs.getClob("column")).thenReturn(null);
     when(rs.wasNull()).thenReturn(true);
     assertNull(TYPE_HANDLER.getResult(rs, "column"));
   }
@@ -56,15 +62,17 @@ public class TimeOnlyTypeHandlerTest extends BaseTypeHandlerTest {
   @Override
   @Test
   public void shouldGetResultFromResultSetByPosition() throws Exception {
-    when(rs.getTime(1)).thenReturn(SQL_TIME);
+    when(rs.getClob(1)).thenReturn(clob);
     when(rs.wasNull()).thenReturn(false);
-    assertEquals(DATE, TYPE_HANDLER.getResult(rs, 1));
+    when(clob.length()).thenReturn(3l);
+    when(clob.getSubString(1, 3)).thenReturn("Hello");
+    assertEquals("Hello", TYPE_HANDLER.getResult(rs, 1));
   }
 
   @Override
   @Test
   public void shouldGetResultNullFromResultSetByPosition() throws Exception {
-    when(rs.getTime(1)).thenReturn(null);
+    when(rs.getClob(1)).thenReturn(null);
     when(rs.wasNull()).thenReturn(true);
     assertNull(TYPE_HANDLER.getResult(rs, 1));
   }
@@ -72,15 +80,17 @@ public class TimeOnlyTypeHandlerTest extends BaseTypeHandlerTest {
   @Override
   @Test
   public void shouldGetResultFromCallableStatement() throws Exception {
-    when(cs.getTime(1)).thenReturn(SQL_TIME);
+    when(cs.getClob(1)).thenReturn(clob);
     when(cs.wasNull()).thenReturn(false);
-    assertEquals(DATE, TYPE_HANDLER.getResult(cs, 1));
+    when(clob.length()).thenReturn(3l);
+    when(clob.getSubString(1, 3)).thenReturn("Hello");
+    assertEquals("Hello", TYPE_HANDLER.getResult(cs, 1));
   }
 
   @Override
   @Test
   public void shouldGetResultNullFromCallableStatement() throws Exception {
-    when(cs.getTime(1)).thenReturn(null);
+    when(cs.getClob(1)).thenReturn(null);
     when(cs.wasNull()).thenReturn(true);
     assertNull(TYPE_HANDLER.getResult(cs, 1));
   }

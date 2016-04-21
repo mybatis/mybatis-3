@@ -76,18 +76,35 @@ public class ClobReaderTypeHandlerTest extends BaseTypeHandlerTest {
 
   @Override
   @Test
-  public void shouldGetResultFromResultSet() throws Exception {
+  public void shouldGetResultFromResultSetByName() throws Exception {
     Reader reader = new StringReader("Hello");
     when(rs.getClob("column")).thenReturn(clob);
-    when(rs.getClob(1)).thenReturn(clob);
     when(rs.wasNull()).thenReturn(false);
     when(clob.getCharacterStream()).thenReturn(reader);
     assertEquals(reader, TYPE_HANDLER.getResult(rs, "column"));
-    assertEquals(reader, TYPE_HANDLER.getResult(rs, 1));
+  }
 
+  @Override
+  @Test
+  public void shouldGetResultNullFromResultSetByName() throws Exception {
     when(rs.getClob("column")).thenReturn(null);
-    when(rs.getClob(1)).thenReturn(null);
+    when(rs.wasNull()).thenReturn(true);
     assertNull(TYPE_HANDLER.getResult(rs, "column"));
+  }
+
+  @Override
+  @Test
+  public void shouldGetResultFromResultSetByPosition() throws Exception {
+    when(rs.getClob(1)).thenReturn(clob);
+    when(rs.wasNull()).thenReturn(true);
+    assertNull(TYPE_HANDLER.getResult(rs, 1));
+  }
+
+  @Override
+  @Test
+  public void shouldGetResultNullFromResultSetByPosition() throws Exception {
+    when(rs.getClob(1)).thenReturn(null);
+    when(rs.wasNull()).thenReturn(true);
     assertNull(TYPE_HANDLER.getResult(rs, 1));
   }
 
@@ -99,10 +116,14 @@ public class ClobReaderTypeHandlerTest extends BaseTypeHandlerTest {
     when(cs.wasNull()).thenReturn(false);
     when(clob.getCharacterStream()).thenReturn(reader);
     assertEquals(reader, TYPE_HANDLER.getResult(cs, 1));
+  }
 
+  @Override
+  @Test
+  public void shouldGetResultNullFromCallableStatement() throws Exception {
     when(cs.getClob(1)).thenReturn(null);
+    when(cs.wasNull()).thenReturn(true);
     assertNull(TYPE_HANDLER.getResult(cs, 1));
-
   }
 
 

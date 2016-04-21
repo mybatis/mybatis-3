@@ -16,6 +16,7 @@
 package org.apache.ibatis.type;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -44,17 +45,34 @@ public class EnumOrdinalTypeHandlerTest extends BaseTypeHandlerTest {
 
   @Override
   @Test
-  public void shouldGetResultFromResultSet() throws Exception {
+  public void shouldGetResultFromResultSetByName() throws Exception {
     when(rs.getInt("column")).thenReturn(0);
     when(rs.wasNull()).thenReturn(false);
     assertEquals(MyEnum.ONE, TYPE_HANDLER.getResult(rs, "column"));
   }
 
+  @Override
   @Test
-  public void shouldGetNullResultFromResultSet() throws Exception {
+  public void shouldGetResultNullFromResultSetByName() throws Exception {
     when(rs.getInt("column")).thenReturn(0);
     when(rs.wasNull()).thenReturn(true);
-    assertEquals(null, TYPE_HANDLER.getResult(rs, "column"));
+    assertNull(TYPE_HANDLER.getResult(rs, "column"));
+  }
+
+  @Override
+  @Test
+  public void shouldGetResultFromResultSetByPosition() throws Exception {
+    when(rs.getInt(1)).thenReturn(0);
+    when(rs.wasNull()).thenReturn(false);
+    assertEquals(MyEnum.ONE, TYPE_HANDLER.getResult(rs, 1));
+  }
+
+  @Override
+  @Test
+  public void shouldGetResultNullFromResultSetByPosition() throws Exception {
+    when(rs.getInt(1)).thenReturn(0);
+    when(rs.wasNull()).thenReturn(true);
+    assertNull(TYPE_HANDLER.getResult(rs, 1));
   }
 
   @Override
@@ -65,11 +83,12 @@ public class EnumOrdinalTypeHandlerTest extends BaseTypeHandlerTest {
     assertEquals(MyEnum.ONE, TYPE_HANDLER.getResult(cs, 1));
   }
 
+  @Override
   @Test
-  public void shouldGetNullResultFromCallableStatement() throws Exception {
+  public void shouldGetResultNullFromCallableStatement() throws Exception {
     when(cs.getInt(1)).thenReturn(0);
     when(cs.wasNull()).thenReturn(true);
-    assertEquals(null, TYPE_HANDLER.getResult(cs, 1));
+    assertNull(TYPE_HANDLER.getResult(cs, 1));
   }
 
 }

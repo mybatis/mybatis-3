@@ -16,6 +16,7 @@
 package org.apache.ibatis.type;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -40,17 +41,34 @@ public class CharacterTypeHandlerTest extends BaseTypeHandlerTest {
 
   @Override
   @Test
-  public void shouldGetResultFromResultSet() throws Exception {
+  public void shouldGetResultFromResultSetByName() throws Exception {
     when(rs.getString("column")).thenReturn("a");
     when(rs.wasNull()).thenReturn(false);
     assertEquals(new Character('a'), TYPE_HANDLER.getResult(rs, "column"));
   }
 
+  @Override
   @Test
-  public void shouldGetNullResultFromResultSet() throws Exception {
+  public void shouldGetResultNullFromResultSetByName() throws Exception {
     when(rs.getString("column")).thenReturn(null);
     when(rs.wasNull()).thenReturn(true);
-    assertEquals(null, TYPE_HANDLER.getResult(rs, "column"));
+    assertNull(TYPE_HANDLER.getResult(rs, "column"));
+  }
+
+  @Override
+  @Test
+  public void shouldGetResultFromResultSetByPosition() throws Exception {
+    when(rs.getString(1)).thenReturn("a");
+    when(rs.wasNull()).thenReturn(false);
+    assertEquals(new Character('a'), TYPE_HANDLER.getResult(rs, 1));
+  }
+
+  @Override
+  @Test
+  public void shouldGetResultNullFromResultSetByPosition() throws Exception {
+    when(rs.getString(1)).thenReturn(null);
+    when(rs.wasNull()).thenReturn(false);
+    assertNull(TYPE_HANDLER.getResult(rs, 1));
   }
 
   @Override
@@ -61,11 +79,12 @@ public class CharacterTypeHandlerTest extends BaseTypeHandlerTest {
     assertEquals(new Character('a'), TYPE_HANDLER.getResult(cs, 1));
   }
 
+  @Override
   @Test
-  public void shouldGetNullResultFromCallableStatement() throws Exception {
+  public void shouldGetResultNullFromCallableStatement() throws Exception {
     when(cs.getString("column")).thenReturn(null);
     when(cs.wasNull()).thenReturn(true);
-    assertEquals(null, TYPE_HANDLER.getResult(cs, 1));
+    assertNull(TYPE_HANDLER.getResult(cs, 1));
   }
 
 }

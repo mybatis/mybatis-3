@@ -75,18 +75,38 @@ public class BlobInputStreamTypeHandlerTest extends BaseTypeHandlerTest {
 
   @Override
   @Test
-  public void shouldGetResultFromResultSet() throws Exception {
+  public void shouldGetResultFromResultSetByName() throws Exception {
     InputStream in = new ByteArrayInputStream("Hello".getBytes());
     when(rs.getBlob("column")).thenReturn(blob);
-    when(rs.getBlob(1)).thenReturn(blob);
     when(rs.wasNull()).thenReturn(false);
     when(blob.getBinaryStream()).thenReturn(in);
     assertThat(TYPE_HANDLER.getResult(rs, "column"), is(in));
-    assertThat(TYPE_HANDLER.getResult(rs, 1), is(in));
 
+  }
+
+  @Override
+  @Test
+  public void shouldGetResultNullFromResultSetByName() throws Exception {
     when(rs.getBlob("column")).thenReturn(null);
-    when(rs.getBlob(1)).thenReturn(null);
+    when(rs.wasNull()).thenReturn(true);
     assertThat(TYPE_HANDLER.getResult(rs, "column"), nullValue());
+  }
+
+  @Override
+  @Test
+  public void shouldGetResultFromResultSetByPosition() throws Exception {
+    InputStream in = new ByteArrayInputStream("Hello".getBytes());
+    when(rs.getBlob(1)).thenReturn(blob);
+    when(rs.wasNull()).thenReturn(false);
+    when(blob.getBinaryStream()).thenReturn(in);
+    assertThat(TYPE_HANDLER.getResult(rs, 1), is(in));
+  }
+
+  @Override
+  @Test
+  public void shouldGetResultNullFromResultSetByPosition() throws Exception {
+    when(rs.getBlob(1)).thenReturn(null);
+    when(rs.wasNull()).thenReturn(true);
     assertThat(TYPE_HANDLER.getResult(rs, 1), nullValue());
   }
 
@@ -98,10 +118,14 @@ public class BlobInputStreamTypeHandlerTest extends BaseTypeHandlerTest {
     when(cs.wasNull()).thenReturn(false);
     when(blob.getBinaryStream()).thenReturn(in);
     assertThat(TYPE_HANDLER.getResult(cs, 1), is(in));
+  }
 
+  @Override
+  @Test
+  public void shouldGetResultNullFromCallableStatement() throws Exception {
     when(cs.getBlob(1)).thenReturn(null);
+    when(cs.wasNull()).thenReturn(true);
     assertThat(TYPE_HANDLER.getResult(cs, 1), nullValue());
-
   }
 
   @Test
