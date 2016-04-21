@@ -67,7 +67,7 @@ public class CharacterTypeHandlerTest extends BaseTypeHandlerTest {
   @Test
   public void shouldGetResultNullFromResultSetByPosition() throws Exception {
     when(rs.getString(1)).thenReturn(null);
-    when(rs.wasNull()).thenReturn(false);
+    when(rs.wasNull()).thenReturn(true);
     assertNull(TYPE_HANDLER.getResult(rs, 1));
   }
 
