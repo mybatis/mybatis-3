@@ -24,12 +24,11 @@ public class PageBounds {
 	private int page = 1;
 	//evey page size
 	private int pageSize = 20;
-	
-	public PageBounds() {
-	}
+	//row count
+	private int count = 0;
 
   	public PageBounds(int page, int pageSize) {
-  		if(page<1) page=1;
+  		if(page<1) page = 1;
 	    this.page = page;
 	    this.pageSize = pageSize;
   	}
@@ -42,13 +41,29 @@ public class PageBounds {
 		return pageSize;
 	}
 	
+	public int getCount() {
+		return count;
+	}
+
+	public void setCount(int count) {
+		this.count = count;
+	}
+
 	public int getOffset() {
-		return (page-1)*pageSize;
+		return (page-1) * pageSize;
 	}
 
 	public int getLimit() {
 		return pageSize;
     }
+	
+	public int getBeginRow() {
+		return (page-1) * pageSize;
+	}
+	
+	public int getEndRow() {
+		return page * pageSize;
+	}
 	
 	public RowBounds getRowBounds(){
 		return new RowBounds(getOffset(), getLimit());

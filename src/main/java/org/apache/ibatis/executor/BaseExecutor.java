@@ -26,7 +26,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import org.apache.ibatis.cache.CacheKey;
 import org.apache.ibatis.cache.impl.PerpetualCache;
 import org.apache.ibatis.cursor.Cursor;
-import org.apache.ibatis.jdbc.SQL;
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
 import org.apache.ibatis.logging.jdbc.ConnectionLogger;
@@ -180,20 +179,20 @@ public abstract class BaseExecutor implements Executor {
 	  BoundSql boundSql = ms.getBoundSql(parameter);
 	  RowBounds rowBounds = pageBounds.getRowBounds();
 	  PageDialect pageDialect = PageDialect.createStrategy(ms.getConfiguration().getDialect(), ms, boundSql, pageBounds);
-	  
-	  //query row count
-	  Integer  count = 0;
-	  BoundSql countBoundSql = pageDialect.getCountBoundSql();
-	  MappedStatement statment = pageDialect.copyFromMappedStatement(ms, countBoundSql);
-	  CacheKey countKey = createCacheKey(statment, parameter, rowBounds, countBoundSql);
-	  List<Number>  countList = query(statment, parameter, rowBounds, resultHandler, countKey, countBoundSql);
-	  if(countList.size()>0) count = (Integer) countList.get(0);
-	  
+	  //if count greater than 0, cached of count
+	  Integer  count = pageBounds.getCount();
+	  if(count<=0)
+	  {
+		  BoundSql countBoundSql = pageDialect.getCountBoundSql();
+		  MappedStatement statment = pageDialect.copyFromMappedStatement(ms, countBoundSql);
+		  CacheKey countKey = createCacheKey(statment, parameter, rowBounds, countBoundSql);
+		  List<Number>  countList = query(statment, parameter, rowBounds, resultHandler, countKey, countBoundSql);
+		  if(countList.size()>0) count = (Integer) countList.get(0);
+	  }
 	  //query row of offset and limit
 	  BoundSql listBoundSql = pageDialect.getListBoundSql();
 	  CacheKey listKey = createCacheKey(ms, parameter, rowBounds, listBoundSql);
 	  List<E>  queryList = query(ms, parameter, rowBounds, resultHandler, listKey, listBoundSql);
-	  
 	  return new PageResult<E>(queryList, pageBounds.getPage(), pageBounds.getPageSize(), count);
   }
   

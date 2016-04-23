@@ -46,9 +46,7 @@ public abstract class PageDialect{
 		BoundSql boundSql = copyFromBoundSql(mappedStatement, this.boundSql, sql, this.boundSql.getParameterMappings(), this.boundSql.getParameterObject());
 		boundSql.getParameterMappings().add(new ParameterMapping.Builder(configuration, "autoOffset", Integer.class).build());
 		boundSql.getParameterMappings().add(new ParameterMapping.Builder(configuration, "autoLimit", Integer.class).build());
-		
-		boundSql.setAdditionalParameter("autoOffset", new Integer(pageBounds.getOffset()));
-		boundSql.setAdditionalParameter("autoLimit", new Integer(pageBounds.getLimit()));
+		setAdditionalParameter(boundSql);
 		return boundSql;
 	}
 	
@@ -98,18 +96,35 @@ public abstract class PageDialect{
 	 */
 	public static PageDialect createStrategy(Dialect dialect, MappedStatement mappedStatement, BoundSql boundSql,PageBounds pageBounds)
 	{
-		if(dialect==Dialect.mysql){
-			return new MysqlPageDialect(mappedStatement, boundSql, pageBounds);
-		}else if(dialect==Dialect.oracle){
-			return new OraclePageDialect(mappedStatement, boundSql, pageBounds);
+		switch(dialect){
+			case mysql : 
+				return new MysqlPageDialect(mappedStatement, boundSql, pageBounds);
+			case oracle : 
+				return new OraclePageDialect(mappedStatement, boundSql, pageBounds);
+			case sqlserver2012 : 
+				return new SqlServer2012Dialect(mappedStatement, boundSql, pageBounds);
+			case db2 : 
+				return new Db2Dialect(mappedStatement, boundSql, pageBounds);
+			case postgresql : 
+				return new PostgreSQLDialect(mappedStatement, boundSql, pageBounds);
+			case informix : 
+				return new InformixDialect(mappedStatement, boundSql, pageBounds);
+			case hsqldb : 
+				return new PostgreSQLDialect(mappedStatement, boundSql, pageBounds);
+			case h2 : 
+				return new PostgreSQLDialect(mappedStatement, boundSql, pageBounds);
+			default :
+				throw new java.lang.UnsupportedOperationException();
 		}
-		return null;
 	}
 
 	protected abstract String  bulidCountSql();
 	
 	
 	protected abstract String  bulidListSql();
+	
+	
+	protected abstract void  setAdditionalParameter(BoundSql boundSql);
 	
 	
 	/**
@@ -124,12 +139,6 @@ public abstract class PageDialect{
 	private BoundSql copyFromBoundSql(MappedStatement ms, BoundSql boundSql, String sql, List<ParameterMapping> parameterMappings,Object parameter) {
 		List<ParameterMapping> newParameterMappings = new ArrayList<ParameterMapping>(parameterMappings);
 		BoundSql newBoundSql = new BoundSql(ms.getConfiguration(), sql, newParameterMappings, parameter);
-//		for (ParameterMapping mapping : boundSql.getParameterMappings()) {
-//		    String prop = mapping.getProperty();
-//		    if (boundSql.hasAdditionalParameter(prop)) {
-//		        newBoundSql.setAdditionalParameter(prop, boundSql.getAdditionalParameter(prop));
-//		    }
-//		}
 		return newBoundSql;
 	}
 	

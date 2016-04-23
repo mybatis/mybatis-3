@@ -16,18 +16,20 @@ import com.alibaba.druid.sql.dialect.mysql.parser.MySqlStatementParser;
  * @author wenlong.liu
  *
  */
-public  class MysqlPageDialect extends PageDialect {
+public  class InformixDialect extends PageDialect {
 	
-	public MysqlPageDialect(MappedStatement mappedStatement, BoundSql boundSql,PageBounds pageBounds){
+	public InformixDialect(MappedStatement mappedStatement, BoundSql boundSql,PageBounds pageBounds){
 		super(mappedStatement, boundSql, pageBounds);
 	}
 	
 	
 	@Override
 	public String bulidListSql() {
-		StringBuffer buffer = new StringBuffer(this.boundSql.getSql());
-		buffer.append(" LIMIT ?, ?");
-		return buffer.toString();
+		StringBuilder sqlBuilder = new StringBuilder(boundSql.getSql().length() + 40);
+        sqlBuilder.append("select skip ? first ? * from ( ");
+        sqlBuilder.append(boundSql.getSql());
+        sqlBuilder.append(" )");
+        return sqlBuilder.toString();
 	}
 	
 	

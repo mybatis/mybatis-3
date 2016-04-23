@@ -8,17 +8,17 @@ import com.alibaba.druid.sql.ast.expr.SQLAggregateExpr;
 import com.alibaba.druid.sql.ast.expr.SQLAllColumnExpr;
 import com.alibaba.druid.sql.ast.statement.SQLSelectItem;
 import com.alibaba.druid.sql.ast.statement.SQLSelectStatement;
-import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlSelectQueryBlock;
-import com.alibaba.druid.sql.dialect.mysql.parser.MySqlStatementParser;
+import com.alibaba.druid.sql.dialect.postgresql.ast.stmt.PGSelectQueryBlock;
+import com.alibaba.druid.sql.dialect.postgresql.parser.PGSQLStatementParser;
 
 /**
  * 
  * @author wenlong.liu
  *
  */
-public  class MysqlPageDialect extends PageDialect {
+public  class PostgreSQLDialect extends PageDialect {
 	
-	public MysqlPageDialect(MappedStatement mappedStatement, BoundSql boundSql,PageBounds pageBounds){
+	public PostgreSQLDialect(MappedStatement mappedStatement, BoundSql boundSql,PageBounds pageBounds){
 		super(mappedStatement, boundSql, pageBounds);
 	}
 	
@@ -26,7 +26,7 @@ public  class MysqlPageDialect extends PageDialect {
 	@Override
 	public String bulidListSql() {
 		StringBuffer buffer = new StringBuffer(this.boundSql.getSql());
-		buffer.append(" LIMIT ?, ?");
+		buffer.append(" LIMIT ? OFFSET ?");
 		return buffer.toString();
 	}
 	
@@ -34,8 +34,8 @@ public  class MysqlPageDialect extends PageDialect {
 	
 	@Override
 	public String bulidCountSql() {
-		SQLSelectStatement statement = (SQLSelectStatement) new MySqlStatementParser(this.boundSql.getSql()).parseStatement();
-		MySqlSelectQueryBlock mysqlSelectQuery = (MySqlSelectQueryBlock)statement.getSelect().getQuery();
+		SQLSelectStatement statement = (SQLSelectStatement) new PGSQLStatementParser(this.boundSql.getSql()).parseStatement();
+		PGSelectQueryBlock mysqlSelectQuery = (PGSelectQueryBlock)statement.getSelect().getQuery();
 		mysqlSelectQuery.setOrderBy(null);
 		SQLSelectItem count = new SQLSelectItem();
         SQLAggregateExpr countExp = new SQLAggregateExpr("COUNT");
