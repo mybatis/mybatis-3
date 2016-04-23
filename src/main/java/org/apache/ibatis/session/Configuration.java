@@ -123,7 +123,6 @@ public class Configuration {
   protected ReflectorFactory reflectorFactory = new DefaultReflectorFactory();
   protected ObjectFactory objectFactory = new DefaultObjectFactory();
   protected ObjectWrapperFactory objectWrapperFactory = new DefaultObjectWrapperFactory();
-  protected MapperRegistry mapperRegistry = new MapperRegistry(this);
 
   protected boolean lazyLoadingEnabled = false;
   protected ProxyFactory proxyFactory = new JavassistProxyFactory(); // #224 Using internal Javassist instead of OGNL
@@ -137,6 +136,7 @@ public class Configuration {
    */
   protected Class<?> configurationFactory;
 
+  protected final MapperRegistry mapperRegistry = new MapperRegistry(this);
   protected final InterceptorChain interceptorChain = new InterceptorChain();
   protected final TypeHandlerRegistry typeHandlerRegistry = new TypeHandlerRegistry();
   protected final TypeAliasRegistry typeAliasRegistry = new TypeAliasRegistry();
@@ -809,7 +809,7 @@ public class Configuration {
   protected static class StrictMap<V> extends HashMap<String, V> {
 
     private static final long serialVersionUID = -4950446264854982944L;
-    private String name;
+    private final String name;
 
     public StrictMap(String name, int initialCapacity, float loadFactor) {
       super(initialCapacity, loadFactor);
@@ -860,12 +860,12 @@ public class Configuration {
     }
 
     private String getShortName(String key) {
-      final String[] keyparts = key.split("\\.");
-      return keyparts[keyparts.length - 1];
+      final String[] keyParts = key.split("\\.");
+      return keyParts[keyParts.length - 1];
     }
 
     protected static class Ambiguity {
-      private String subject;
+      final private String subject;
 
       public Ambiguity(String subject) {
         this.subject = subject;
