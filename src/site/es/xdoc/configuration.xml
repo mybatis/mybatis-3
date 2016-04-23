@@ -266,12 +266,28 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 safeRowBoundsEnabled
               </td>
               <td>Habilita el uso de RowBounds en statements anidados.
+                If allow, set the false.
               </td>
               <td>
                 true | false
               </td>
               <td>
                 False
+              </td>
+            </tr>
+            <tr>
+              <td>
+                safeResultHandlerEnabled
+              </td>
+              <td>
+                Habilita el uso de ResultHandler en statements anidados.
+                If allow, set the false.
+              </td>
+              <td>
+                true | false
+              </td>
+              <td>
+                True
               </td>
             </tr>
             <tr>
