@@ -214,10 +214,9 @@ public class Configuration {
     return logImpl;
   }
 
-  @SuppressWarnings("unchecked")
-  public void setLogImpl(Class<?> logImpl) {
+  public void setLogImpl(Class<? extends Log> logImpl) {
     if (logImpl != null) {
-      this.logImpl = (Class<? extends Log>) logImpl;
+      this.logImpl = logImpl;
       LogFactory.useCustomLogging(this.logImpl);
     }
   }
@@ -226,10 +225,9 @@ public class Configuration {
     return this.vfsImpl;
   }
 
-  @SuppressWarnings("unchecked")
-  public void setVfsImpl(Class<?> vfsImpl) {
+  public void setVfsImpl(Class<? extends VFS> vfsImpl) {
     if (vfsImpl != null) {
-      this.vfsImpl = (Class<? extends VFS>) vfsImpl;
+      this.vfsImpl = vfsImpl;
       VFS.addImplClass(this.vfsImpl);
     }
   }
