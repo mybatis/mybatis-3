@@ -298,12 +298,28 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
               </td>
               <td>
                 ネストされたステートメントに対して RowBounds の使用を許可するかどうかを設定します。
+                許可する場合は、 false を設定します。
               </td>
               <td>
                 true | false
               </td>
               <td>
                 False
+              </td>
+            </tr>
+            <tr>
+              <td>
+                safeResultHandlerEnabled
+              </td>
+              <td>
+                ネストされたステートメントに対して ResultHandler の使用を許可するかどうかを設定します。
+                許可する場合は、 false を設定します。
+              </td>
+              <td>
+                true | false
+              </td>
+              <td>
+                True
               </td>
             </tr>
             <tr>

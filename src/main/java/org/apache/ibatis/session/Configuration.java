@@ -97,37 +97,120 @@ public class Configuration {
 
   protected Environment environment;
 
+  /**
+   * Allows using RowBounds on nested statements.
+   * If allow, set the false.
+   */
   protected boolean safeRowBoundsEnabled = false;
+  /**
+   * Allows using ResultHandler on nested statements.
+   * If allow, set the false.
+   */
   protected boolean safeResultHandlerEnabled = true;
+  /**
+   * Enables automatic mapping from classic database column names A_COLUMN to camel case classic Java property names aColumn.
+   */
   protected boolean mapUnderscoreToCamelCase = false;
+  /**
+   * When enabled, an object with lazy loaded properties will be loaded entirely upon a call to any of the lazy properties.
+   * Otherwise, each property is loaded on demand.
+   */
   protected boolean aggressiveLazyLoading = true;
+  /**
+   * Allows or disallows multiple ResultSets to be returned from a single statement (compatible driver required).
+   */
   protected boolean multipleResultSetsEnabled = true;
+  /**
+   * Allows JDBC support for generated keys.
+   * A compatible driver is required.
+   * This setting forces generated keys to be used if set to true, as some drivers deny compatibility but still work (e.g. Derby).
+   */
   protected boolean useGeneratedKeys = false;
+  /**
+   * Uses the column label instead of the column name.
+   * Different drivers behave differently in this respect.
+   * Refer to the driver documentation, or test out both modes to determine how your driver behaves.
+   */
   protected boolean useColumnLabel = true;
+  /**
+   * Globally enables or disables any caches configured in any mapper under this configuration.
+   */
   protected boolean cacheEnabled = true;
+  /**
+   * Specifies if setters or map's put method will be called when a retrieved value is null.
+   * It is useful when you rely on Map.keySet() or null value initialization.
+   * Note primitives such as (int,boolean,etc.) will not be set to null.
+   */
   protected boolean callSettersOnNulls = false;
-
+  /**
+   * Specifies the prefix string that MyBatis will add to the logger names.
+   */
   protected String logPrefix;
+  /**
+   * Specifies which logging implementation MyBatis should use.
+   * If this setting is not present logging implementation will be autodiscovered.
+   */
   protected Class <? extends Log> logImpl;
+  /**
+   * Specifies VFS implementations.
+   */
   protected Class <? extends VFS> vfsImpl;
+  /**
+   * MyBatis uses local cache to prevent circular references and speed up repeated nested queries.
+   */
   protected LocalCacheScope localCacheScope = LocalCacheScope.SESSION;
+  /**
+   * Specifies the JDBC type for null values when no specific JDBC type was provided for the parameter.
+   * Some drivers require specifying the column JDBC type but others work with generic values like NULL, VARCHAR or OTHER.
+   */
   protected JdbcType jdbcTypeForNull = JdbcType.OTHER;
+  /**
+   * Specifies which Object's methods trigger a lazy load.
+   */
   protected Set<String> lazyLoadTriggerMethods = new HashSet<String>(Arrays.asList(new String[] { "equals", "clone", "hashCode", "toString" }));
+  /**
+   * Sets the number of seconds the driver will wait for a response from the database.
+   */
   protected Integer defaultStatementTimeout;
+  /**
+   * Sets the driver a hint as to control fetching size for return results.
+   * This parameter value can be override by a query setting.
+   */
   protected Integer defaultFetchSize;
+  /**
+   * Configures the default executor.
+   */
   protected ExecutorType defaultExecutorType = ExecutorType.SIMPLE;
+  /**
+   * Specifies if and how MyBatis should automatically map columns to fields/properties.
+   */
   protected AutoMappingBehavior autoMappingBehavior = AutoMappingBehavior.PARTIAL;
+  /**
+   * Specify the behavior when detects an unknown column (or unknown property type) of automatic mapping target.
+   */
   protected AutoMappingUnknownColumnBehavior autoMappingUnknownColumnBehavior = AutoMappingUnknownColumnBehavior.NONE;
-
+  /**
+   * variable for mybatis configuration.
+   * http://www.mybatis.org/mybatis-3/configuration.html#properties
+   */
   protected Properties variables = new Properties();
+
   protected ReflectorFactory reflectorFactory = new DefaultReflectorFactory();
   protected ObjectFactory objectFactory = new DefaultObjectFactory();
   protected ObjectWrapperFactory objectWrapperFactory = new DefaultObjectWrapperFactory();
   protected MapperRegistry mapperRegistry = new MapperRegistry(this);
-
+  /**
+   * Globally enables or disables lazy loading. When enabled, all relations will be lazily loaded.
+   * This value can be superseded for an specific relation by using the fetchType attribute on it.
+   */
   protected boolean lazyLoadingEnabled = false;
+  /**
+   * Specifies the proxy tool that MyBatis will use for creating lazy loading capable objects.
+   */
   protected ProxyFactory proxyFactory = new JavassistProxyFactory(); // #224 Using internal Javassist instead of OGNL
-
+  /**
+   * An id to identify the type of this database.
+   */
   protected String databaseId;
   /**
    * Configuration factory class.
