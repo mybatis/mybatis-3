@@ -155,15 +155,15 @@ public class ResultMapping {
         throw new IllegalStateException("Mapping is missing column attribute for property " + resultMapping.property);
       }
       if (resultMapping.getResultSet() != null) {
-        int numColums = 0;
+        int numColumns = 0;
         if (resultMapping.column != null) {
-          numColums = resultMapping.column.split(",").length;
+          numColumns = resultMapping.column.split(",").length;
         }
         int numForeignColumns = 0;
         if (resultMapping.foreignColumn != null) {
           numForeignColumns = resultMapping.foreignColumn.split(",").length;
         }
-        if (numColums != numForeignColumns) {
+        if (numColumns != numForeignColumns) {
           throw new IllegalStateException("There should be the same number of columns and foreignColumns in property " + resultMapping.property);
         }
       }

@@ -38,7 +38,7 @@ public class ProviderSqlSource implements SqlSource {
   private String[] providerMethodArgumentNames;
 
   public ProviderSqlSource(Configuration config, Object provider) {
-    String providerMethodName = null;
+    String providerMethodName;
     try {
       this.sqlSourceParser = new SqlSourceBuilder(config);
       this.providerType = (Class<?>) provider.getClass().getMethod("type").invoke(provider);

@@ -98,7 +98,7 @@ public class ParameterExpression extends HashMap<String, String> {
       } else if (expression.charAt(p) == ',') {
         option(expression, p + 1);
       } else {
-        throw new BuilderException("Parsing error in {" + new String(expression) + "} in position " + p);
+        throw new BuilderException("Parsing error in {" + expression + "} in position " + p);
       }
     }
   }
@@ -109,7 +109,7 @@ public class ParameterExpression extends HashMap<String, String> {
     if (right > left) {
       put("jdbcType", trimmedStr(expression, left, right));
     } else {
-      throw new BuilderException("Parsing error in {" + new String(expression) + "} in position " + p);
+      throw new BuilderException("Parsing error in {" + expression + "} in position " + p);
     }
     option(expression, right + 1);
   }

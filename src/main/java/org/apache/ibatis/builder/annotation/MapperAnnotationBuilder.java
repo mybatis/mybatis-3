@@ -362,10 +362,10 @@ public class MapperAnnotationBuilder {
   private Class<?> getParameterType(Method method) {
     Class<?> parameterType = null;
     Class<?>[] parameterTypes = method.getParameterTypes();
-    for (int i = 0; i < parameterTypes.length; i++) {
-      if (!RowBounds.class.isAssignableFrom(parameterTypes[i]) && !ResultHandler.class.isAssignableFrom(parameterTypes[i])) {
+    for (Class<?> currentParameterType : parameterTypes) {
+      if (!RowBounds.class.isAssignableFrom(currentParameterType) && !ResultHandler.class.isAssignableFrom(currentParameterType)) {
         if (parameterType == null) {
-          parameterType = parameterTypes[i];
+          parameterType = currentParameterType;
         } else {
           // issue #135
           parameterType = ParamMap.class;

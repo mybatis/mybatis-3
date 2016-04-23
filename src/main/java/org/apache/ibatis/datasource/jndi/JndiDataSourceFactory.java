@@ -40,7 +40,7 @@ public class JndiDataSourceFactory implements DataSourceFactory {
   @Override
   public void setProperties(Properties properties) {
     try {
-      InitialContext initCtx = null;
+      InitialContext initCtx;
       Properties env = getEnvProperties(properties);
       if (env == null) {
         initCtx = new InitialContext();
