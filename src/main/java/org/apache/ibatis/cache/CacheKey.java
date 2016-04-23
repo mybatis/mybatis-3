@@ -129,8 +129,8 @@ public class CacheKey implements Cloneable, Serializable {
   @Override
   public String toString() {
     StringBuilder returnValue = new StringBuilder().append(hashcode).append(':').append(checksum);
-    for (int i = 0; i < updateList.size(); i++) {
-      returnValue.append(':').append(updateList.get(i));
+    for (Object object : updateList) {
+      returnValue.append(':').append(object);
     }
 
     return returnValue.toString();

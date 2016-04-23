@@ -91,11 +91,11 @@ public class MapperMethod {
     if (method.returnsVoid()) {
       result = null;
     } else if (Integer.class.equals(method.getReturnType()) || Integer.TYPE.equals(method.getReturnType())) {
-      result = Integer.valueOf(rowCount);
+      result = rowCount;
     } else if (Long.class.equals(method.getReturnType()) || Long.TYPE.equals(method.getReturnType())) {
-      result = Long.valueOf(rowCount);
+      result = (long)rowCount;
     } else if (Boolean.class.equals(method.getReturnType()) || Boolean.TYPE.equals(method.getReturnType())) {
-      result = Boolean.valueOf(rowCount > 0);
+      result = rowCount > 0;
     } else {
       throw new BindingException("Mapper method '" + command.getName() + "' has an unsupported return type: " + method.getReturnType());
     }
@@ -269,12 +269,12 @@ public class MapperMethod {
       if (args == null || paramCount == 0) {
         return null;
       } else if (!hasNamedParameters && paramCount == 1) {
-        return args[params.keySet().iterator().next().intValue()];
+        return args[params.keySet().iterator().next()];
       } else {
         final Map<String, Object> param = new ParamMap<Object>();
         int i = 0;
         for (Map.Entry<Integer, String> entry : params.entrySet()) {
-          param.put(entry.getValue(), args[entry.getKey().intValue()]);
+          param.put(entry.getValue(), args[entry.getKey()]);
           // issue #71, add param names as param1, param2...but ensure backward compatibility
           final String genericParamName = "param" + String.valueOf(i + 1);
           if (!param.containsKey(genericParamName)) {

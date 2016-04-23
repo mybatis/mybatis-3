@@ -149,12 +149,12 @@ public final class MappedStatement {
     }
 
     public Builder keyProperty(String keyProperty) {
-      mappedStatement.keyProperties = delimitedStringtoArray(keyProperty);
+      mappedStatement.keyProperties = delimitedStringToArray(keyProperty);
       return this;
     }
 
     public Builder keyColumn(String keyColumn) {
-      mappedStatement.keyColumns = delimitedStringtoArray(keyColumn);
+      mappedStatement.keyColumns = delimitedStringToArray(keyColumn);
       return this;
     }
 
@@ -169,14 +169,14 @@ public final class MappedStatement {
     }
 
     public Builder resultSets(String resultSet) {
-      mappedStatement.resultSets = delimitedStringtoArray(resultSet);
+      mappedStatement.resultSets = delimitedStringToArray(resultSet);
       return this;
     }
 
     /** @deprecated Use {@link #resultSets} */
     @Deprecated
     public Builder resulSets(String resultSet) {
-      mappedStatement.resultSets = delimitedStringtoArray(resultSet);
+      mappedStatement.resultSets = delimitedStringToArray(resultSet);
       return this;
     }
     
@@ -309,7 +309,7 @@ public final class MappedStatement {
     return boundSql;
   }
 
-  private static String[] delimitedStringtoArray(String in) {
+  private static String[] delimitedStringToArray(String in) {
     if (in == null || in.trim().length() == 0) {
       return null;
     } else {

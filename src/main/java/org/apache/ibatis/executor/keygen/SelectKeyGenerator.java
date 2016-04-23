@@ -99,8 +99,8 @@ public class SelectKeyGenerator implements KeyGenerator {
       
     if (keyColumns == null || keyColumns.length == 0) {
       // no key columns specified, just use the property names
-      for (int i = 0; i < keyProperties.length; i++) {
-        setValue(metaParam, keyProperties[i], metaResult.getValue(keyProperties[i]));
+      for (String keyProperty : keyProperties) {
+        setValue(metaParam, keyProperty, metaResult.getValue(keyProperty));
       }
     } else {
       if (keyColumns.length != keyProperties.length) {
