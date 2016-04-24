@@ -138,4 +138,11 @@ public class ParameterExpressionTest {
     new ParameterExpression("id:");
   }
 
+  @Test
+  public void invalidJdbcTypeOptUsingExpression() {
+    expectedException.expect(BuilderException.class);
+    expectedException.expectMessage(is("Parsing error in {(expression)+} in position 12"));
+    new ParameterExpression("(expression)+");
+  }
+
 }
