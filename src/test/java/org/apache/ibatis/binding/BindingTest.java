@@ -24,6 +24,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -785,6 +786,14 @@ public class BindingTest {
     } finally {
       session.close();
     }
+  }
+
+  @Test
+  public void registeredMappers() {
+    Collection<Class<?>> mapperClasses = sqlSessionFactory.getConfiguration().getMapperRegistry().getMappers();
+    assertEquals(2, mapperClasses.size());
+    assertTrue(mapperClasses.contains(BoundBlogMapper.class));
+    assertTrue(mapperClasses.contains(BoundAuthorMapper.class));
   }
 
 }
