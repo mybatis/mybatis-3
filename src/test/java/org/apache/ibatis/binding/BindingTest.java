@@ -26,6 +26,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -36,6 +37,7 @@ import javax.sql.DataSource;
 import net.sf.cglib.proxy.Factory;
 
 import org.apache.ibatis.BaseDataTest;
+import org.apache.ibatis.cursor.Cursor;
 import org.apache.ibatis.domain.blog.Author;
 import org.apache.ibatis.domain.blog.Blog;
 import org.apache.ibatis.domain.blog.DraftPost;
@@ -734,5 +736,55 @@ public class BindingTest {
       session.close();
     }
   }
-  
+
+  @Test
+  public void executeWithResultHandlerAndRowBounds() {
+    SqlSession session = sqlSessionFactory.openSession();
+    try {
+      BoundBlogMapper mapper = session.getMapper(BoundBlogMapper.class);
+      final DefaultResultHandler handler = new DefaultResultHandler();
+      mapper.collectRangeBlogs(handler, new RowBounds(1, 1));
+
+      assertEquals(1, handler.getResultList().size());
+      Blog blog = (Blog) handler.getResultList().get(0);
+      assertEquals(2, blog.getId());
+
+    } finally {
+      session.close();
+    }
+  }
+
+  @Test
+  public void executeWithMapKeyAndRowBounds() {
+    SqlSession session = sqlSessionFactory.openSession();
+    try {
+      BoundBlogMapper mapper = session.getMapper(BoundBlogMapper.class);
+      Map<Integer, Blog> blogs = mapper.selectRangeBlogsAsMapById(new RowBounds(1, 1));
+
+      assertEquals(1, blogs.size());
+      Blog blog = blogs.get(2);
+      assertEquals(2, blog.getId());
+
+    } finally {
+      session.close();
+    }
+  }
+
+  @Test
+  public void executeWithCursorAndRowBounds() {
+    SqlSession session = sqlSessionFactory.openSession();
+    try {
+      BoundBlogMapper mapper = session.getMapper(BoundBlogMapper.class);
+      Cursor<Blog> blogs = mapper.openRangeBlogs(new RowBounds(1, 1));
+
+      Iterator<Blog> blogIterator = blogs.iterator();
+      Blog blog = blogIterator.next();
+      assertEquals(2, blog.getId());
+      assertFalse(blogIterator.hasNext());
+
+    } finally {
+      session.close();
+    }
+  }
+
 }
