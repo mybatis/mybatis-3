@@ -262,6 +262,10 @@
               <name>derby.stream.error.file</name>
               <value>${project.build.directory}/derby.log</value>
             </property>
+            <property>
+              <name>derby.system.home</name>
+              <value>${project.build.directory}</value>
+            </property>
           </systemProperties>
         </configuration>
       </plugin>
