@@ -25,13 +25,13 @@ import org.apache.ibatis.mapping.ResultSetType;
 import org.apache.ibatis.mapping.StatementType;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.type.TypeHandler;
+import org.hamcrest.CoreMatchers;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import static org.junit.Assert.assertThat;
-import static org.hamcrest.core.Is.is;
-import static org.hamcrest.core.IsNull.nullValue;
+import static org.hamcrest.CoreMatchers.*;
 
 public class XmlMapperBuilderTest {
 
@@ -84,7 +84,8 @@ public class XmlMapperBuilderTest {
   public void resolveJdbcTypeWithUndefinedValue() {
     BaseBuilder builder = new BaseBuilder(new Configuration()){{}};
     expectedException.expect(BuilderException.class);
-    expectedException.expectMessage(is("Error resolving JdbcType. Cause: java.lang.IllegalArgumentException: No enum constant org.apache.ibatis.type.JdbcType.aaa"));
+    expectedException.expectMessage(startsWith("Error resolving JdbcType. Cause: java.lang.IllegalArgumentException: No enum"));
+    expectedException.expectMessage(endsWith("org.apache.ibatis.type.JdbcType.aaa"));
     builder.resolveJdbcType("aaa");
   }
 
@@ -92,7 +93,8 @@ public class XmlMapperBuilderTest {
   public void resolveResultSetTypeWithUndefinedValue() {
     BaseBuilder builder = new BaseBuilder(new Configuration()){{}};
     expectedException.expect(BuilderException.class);
-    expectedException.expectMessage(is("Error resolving ResultSetType. Cause: java.lang.IllegalArgumentException: No enum constant org.apache.ibatis.mapping.ResultSetType.bbb"));
+    expectedException.expectMessage(startsWith("Error resolving ResultSetType. Cause: java.lang.IllegalArgumentException: No enum"));
+    expectedException.expectMessage(endsWith("org.apache.ibatis.mapping.ResultSetType.bbb"));
     builder.resolveResultSetType("bbb");
   }
 
@@ -100,7 +102,8 @@ public class XmlMapperBuilderTest {
   public void resolveParameterModeWithUndefinedValue() {
     BaseBuilder builder = new BaseBuilder(new Configuration()){{}};
     expectedException.expect(BuilderException.class);
-    expectedException.expectMessage(is("Error resolving ParameterMode. Cause: java.lang.IllegalArgumentException: No enum constant org.apache.ibatis.mapping.ParameterMode.ccc"));
+    expectedException.expectMessage(startsWith("Error resolving ParameterMode. Cause: java.lang.IllegalArgumentException: No enum"));
+    expectedException.expectMessage(endsWith("org.apache.ibatis.mapping.ParameterMode.ccc"));
     builder.resolveParameterMode("ccc");
   }
 
