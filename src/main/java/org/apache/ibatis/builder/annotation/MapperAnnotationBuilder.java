@@ -381,6 +381,9 @@ public class MapperAnnotationBuilder {
     Type resolvedReturnType = TypeParameterResolver.resolveReturnType(method, type);
     if (resolvedReturnType instanceof Class) {
       returnType = (Class<?>) resolvedReturnType;
+      if (returnType.isArray()) {
+        returnType = returnType.getComponentType();
+      }
       // gcode issue #508
       if (void.class.equals(returnType)) {
         ResultType rt = method.getAnnotation(ResultType.class);
