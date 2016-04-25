@@ -191,10 +191,6 @@ public class DefaultCursor<T> implements Cursor<T> {
 
         @Override
         public boolean hasNext() {
-            if (isClosed()) {
-                return false;
-            }
-
             if (object == null) {
                 object = fetchNextUsingRowBound();
             }
@@ -203,10 +199,6 @@ public class DefaultCursor<T> implements Cursor<T> {
 
         @Override
         public T next() {
-            if (isClosed()) {
-                throw new CursorException("Cursor is closed");
-            }
-
             // Fill next with object fetched from hasNext()
             T next = object;
 

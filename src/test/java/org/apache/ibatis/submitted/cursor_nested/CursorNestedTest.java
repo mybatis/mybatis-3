@@ -103,6 +103,7 @@ public class CursorNestedTest {
 
             Iterator<User> iterator = usersCursor.iterator();
 
+            Assert.assertTrue(iterator.hasNext());
             User user = iterator.next();
             Assert.assertEquals("User3", user.getName());
             Assert.assertEquals(2, usersCursor.getCurrentIndex());
