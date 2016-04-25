@@ -28,6 +28,7 @@
         <result property="lastName" column="lastName"/>
         <association property="parent" column="parent_id" select="getParentWithoutComplex"/>
     </resultMap>
+
     <resultMap id="personMapComplex" type="Person">
         <id property="id" column="id"/>
         <result property="firstName" column="firstName"/>
