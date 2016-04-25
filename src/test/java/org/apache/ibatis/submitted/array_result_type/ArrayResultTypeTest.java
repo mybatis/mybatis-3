@@ -26,7 +26,6 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class ArrayResultTypeTest {
@@ -89,11 +88,12 @@ public class ArrayResultTypeTest {
     }
   }
 
-  @Ignore("primitive array return type is not supported. #555")
-  @Test
+  @Test(expected = ClassCastException.class)
   public void shouldGetPrimitiveArray() {
     SqlSession sqlSession = sqlSessionFactory.openSession();
     try {
+      // Throwing an exception is the expected behavior
+      // until #555 is fixed
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       int[] ids = mapper.getUserIdsPrimitive();
       assertEquals(1, ids[0]);
