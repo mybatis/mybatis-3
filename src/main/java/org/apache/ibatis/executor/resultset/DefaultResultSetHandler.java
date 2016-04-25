@@ -28,6 +28,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.ibatis.binding.MapperMethod.ParamMap;
 import org.apache.ibatis.cache.CacheKey;
 import org.apache.ibatis.cursor.Cursor;
 import org.apache.ibatis.cursor.defaults.DefaultCursor;
@@ -755,6 +756,8 @@ public class DefaultResultSetHandler implements ResultSetHandler {
   private Object instantiateParameterObject(Class<?> parameterType) {
     if (parameterType == null) {
       return new HashMap<Object, Object>();
+    } else if (ParamMap.class.equals(parameterType)) {
+      return new HashMap<Object, Object>(); // issue #649
     } else {
       return objectFactory.create(parameterType);
     }
