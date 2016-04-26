@@ -118,7 +118,37 @@ public abstract class PageDialect{
 		}
 	}
 
-	protected abstract String  bulidCountSql();
+	public  String  bulidCountSql(){
+		String sql = this.boundSql.getSql();
+		sql = sql.replaceAll("\\(", " ( ").replaceAll("\\)", " ) ");
+		java.util.Stack<String> keyStack = new java.util.Stack<String>();
+		String [] strArr = sql.trim().split("\\s+");
+		int fromIndex = 0;
+		int orderbyIndex = strArr.length-1;
+		for(int i=0; i<strArr.length; i++)
+		{
+			String word = strArr[i];
+			if("select".equalsIgnoreCase(word))
+				keyStack.push(word);
+			else if("from".equalsIgnoreCase(word)){
+				keyStack.pop();
+				if(keyStack.isEmpty()) fromIndex = i;
+			}else if("(".equalsIgnoreCase(word))
+				keyStack.push(word);
+			else if(")".equalsIgnoreCase(word))
+				keyStack.pop();
+			else if("order".equalsIgnoreCase(word) && "by".equalsIgnoreCase(strArr[i+1])){
+				if(keyStack.isEmpty()) orderbyIndex = i;
+			}
+		}
+		StringBuffer buffer = new StringBuffer();
+		buffer.append(strArr[0]).append(" count(*) ");
+		for(int i=fromIndex; i<orderbyIndex; i++)
+		{
+			buffer.append(strArr[i]).append(" ");
+		}
+		return buffer.toString();
+	}
 	
 	
 	protected abstract String  bulidListSql();
@@ -126,7 +156,7 @@ public abstract class PageDialect{
 	
 	protected abstract void  setAdditionalParameter(BoundSql boundSql);
 	
-	
+
 	/**
 	 * 
 	 * @param ms
@@ -137,7 +167,11 @@ public abstract class PageDialect{
 	 * @return
 	 */
 	private BoundSql copyFromBoundSql(MappedStatement ms, BoundSql boundSql, String sql, List<ParameterMapping> parameterMappings,Object parameter) {
-		List<ParameterMapping> newParameterMappings = new ArrayList<ParameterMapping>(parameterMappings);
+		List<ParameterMapping> newParameterMappings ;
+		if(parameterMappings==null)
+			newParameterMappings = new ArrayList<ParameterMapping>();
+		else
+			newParameterMappings = new ArrayList<ParameterMapping>(parameterMappings);
 		BoundSql newBoundSql = new BoundSql(ms.getConfiguration(), sql, newParameterMappings, parameter);
 		return newBoundSql;
 	}
