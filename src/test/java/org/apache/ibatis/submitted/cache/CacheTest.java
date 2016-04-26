@@ -260,4 +260,46 @@ public class CacheTest {
       sqlSession4.close();
     }
   }
+
+  @Test
+  public void shouldApplyCacheNamespaceRef() {
+    {
+      SqlSession sqlSession = sqlSessionFactory.openSession(true);
+      try {
+        PersonMapper pm = sqlSession.getMapper(PersonMapper.class);
+        Assert.assertEquals(2, pm.findAll().size());
+        Person p = new Person(3, "hello", "world");
+        pm.createWithoutFlushCache(p);
+      } finally {
+        sqlSession.close();
+      }
+    }
+    {
+      SqlSession sqlSession = sqlSessionFactory.openSession(true);
+      try {
+        PersonMapper pm = sqlSession.getMapper(PersonMapper.class);
+        Assert.assertEquals(2, pm.findAll().size());
+      } finally {
+        sqlSession.close();
+      }
+    }
+    {
+      SqlSession sqlSession = sqlSessionFactory.openSession(true);
+      try {
+        ImportantPersonMapper pm = sqlSession.getMapper(ImportantPersonMapper.class);
+        Assert.assertEquals(3, pm.findWithFlushCache().size());
+      } finally {
+        sqlSession.close();
+      }
+    }
+    {
+      SqlSession sqlSession = sqlSessionFactory.openSession(true);
+      try {
+        PersonMapper pm = sqlSession.getMapper(PersonMapper.class);
+        Assert.assertEquals(3, pm.findAll().size());
+      } finally {
+        sqlSession.close();
+      }
+    }
+  }
 }
