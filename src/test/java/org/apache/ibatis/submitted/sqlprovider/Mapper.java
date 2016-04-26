@@ -19,7 +19,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.DeleteProvider;
+import org.apache.ibatis.annotations.InsertProvider;
 import org.apache.ibatis.annotations.SelectProvider;
+import org.apache.ibatis.annotations.UpdateProvider;
 
 public interface Mapper {
   @SelectProvider(type = OurSqlBuilder.class, method = "buildGetUsersQuery")
@@ -48,5 +51,14 @@ public interface Mapper {
 
   @SelectProvider(type = OurSqlBuilder.class, method = "buildGetUsersByNameWithParamNameQuery")
   List<User> getUsersByNameWithParamName(@Param("name") String name);
+
+  @InsertProvider(type = OurSqlBuilder.class, method = "buildInsert")
+  void insert(User user);
+
+  @UpdateProvider(type= OurSqlBuilder.class, method= "buildUpdate")
+  void update(User user);
+
+  @DeleteProvider(type= OurSqlBuilder.class, method= "buildDelete")
+  void delete(Integer id);
 
 }

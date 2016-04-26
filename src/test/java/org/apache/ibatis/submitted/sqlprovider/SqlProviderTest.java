@@ -324,6 +324,66 @@ public class SqlProviderTest {
             .getBoundSql(new Object());
   }
 
+  @Test
+  public void shouldInsertUser() {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      User user = new User();
+      user.setId(999);
+      user.setName("MyBatis");
+      mapper.insert(user);
+
+      User loadedUser = mapper.getUser(999);
+      assertEquals("MyBatis", loadedUser.getName());
+
+    } finally {
+      sqlSession.close();
+    }
+  }
+
+  @Test
+  public void shouldUpdateUser() {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      User user = new User();
+      user.setId(999);
+      user.setName("MyBatis");
+      mapper.insert(user);
+
+      user.setName("MyBatis3");
+      mapper.update(user);
+
+      User loadedUser = mapper.getUser(999);
+      assertEquals("MyBatis3", loadedUser.getName());
+
+    } finally {
+      sqlSession.close();
+    }
+  }
+
+  @Test
+  public void shouldDeleteUser() {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      User user = new User();
+      user.setId(999);
+      user.setName("MyBatis");
+      mapper.insert(user);
+
+      user.setName("MyBatis3");
+      mapper.delete(999);
+
+      User loadedUser = mapper.getUser(999);
+      assertNull(loadedUser);
+
+    } finally {
+      sqlSession.close();
+    }
+  }
+
   public interface ErrorMapper {
     @SelectProvider(type = ErrorSqlBuilder.class, method = "methodNotFound")
     void methodNotFound();

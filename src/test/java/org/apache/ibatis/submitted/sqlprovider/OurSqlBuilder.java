@@ -136,4 +136,16 @@ public class OurSqlBuilder {
     }}.toString();
   }
 
+  public String buildInsert() {
+    return "insert into users (id, name) values (#{id}, #{name})";
+  }
+
+  public String buildUpdate() {
+    return "update users set name = #{name} where id = #{id}";
+  }
+
+  public String buildDelete() {
+    return "delete from users where id = #{id}";
+  }
+
 }
