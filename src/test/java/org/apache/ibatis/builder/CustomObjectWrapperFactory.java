@@ -15,33 +15,26 @@
  */
 package org.apache.ibatis.builder;
 
-import org.apache.ibatis.plugin.Interceptor;
-import org.apache.ibatis.plugin.Intercepts;
-import org.apache.ibatis.plugin.Invocation;
-import org.apache.ibatis.plugin.Plugin;
+import org.apache.ibatis.reflection.MetaObject;
+import org.apache.ibatis.reflection.factory.DefaultObjectFactory;
+import org.apache.ibatis.reflection.wrapper.ObjectWrapper;
+import org.apache.ibatis.reflection.wrapper.ObjectWrapperFactory;
 
+import java.util.List;
 import java.util.Properties;
 
-@Intercepts({})
-public class ExamplePlugin implements Interceptor {
-  private Properties properties;
+public class CustomObjectWrapperFactory implements ObjectWrapperFactory {
+
+  private String option;
+
   @Override
-  public Object intercept(Invocation invocation) throws Throwable {
-    return invocation.proceed();
+  public boolean hasWrapperFor(Object object) {
+    return false;
   }
 
   @Override
-  public Object plugin(Object target) {
-    return Plugin.wrap(target, this);
-  }
-
-  @Override
-  public void setProperties(Properties properties) {
-    this.properties = properties;
-  }
-
-  public Properties getProperties() {
-    return properties;
+  public ObjectWrapper getWrapperFor(MetaObject metaObject, Object object) {
+    return null;
   }
 
 }

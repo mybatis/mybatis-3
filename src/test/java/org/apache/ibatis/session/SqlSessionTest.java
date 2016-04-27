@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2016 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -505,7 +505,7 @@ public class SqlSessionTest extends BaseDataTest {
     int second = -1;
     SqlSession session = sqlMapper.openSession();
     try {
-      List<Author> authors = session.selectList("com.domain.CachedAuthorMapper.selectAllAuthors");
+      List<Author> authors = session.selectList("org.apache.ibatis.builder.CachedAuthorMapper.selectAllAuthors");
       first = System.identityHashCode(authors);
       session.commit(); // commit should not be required for read/only activity.
     } finally {
@@ -513,7 +513,7 @@ public class SqlSessionTest extends BaseDataTest {
     }
     session = sqlMapper.openSession();
     try {
-      List<Author> authors = session.selectList("com.domain.CachedAuthorMapper.selectAllAuthors");
+      List<Author> authors = session.selectList("org.apache.ibatis.builder.CachedAuthorMapper.selectAllAuthors");
       second = System.identityHashCode(authors);
     } finally {
       session.close();
