@@ -48,6 +48,7 @@ import org.apache.ibatis.type.JdbcType;
 
 /**
  * @author Clinton Begin
+ * @author Kazuki Shimizu
  */
 public class XMLConfigBuilder extends BaseBuilder {
 
@@ -108,7 +109,7 @@ public class XMLConfigBuilder extends BaseBuilder {
       pluginElement(root.evalNode("plugins"));
       objectFactoryElement(root.evalNode("objectFactory"));
       objectWrapperFactoryElement(root.evalNode("objectWrapperFactory"));
-      reflectionFactoryElement(root.evalNode("reflectionFactory"));
+      reflectorFactoryElement(root.evalNode("reflectorFactory"));
       settingsElement(settings);
       // read it after objectFactory and objectWrapperFactory issue #631
       environmentsElement(root.evalNode("environments"));
@@ -203,7 +204,7 @@ public class XMLConfigBuilder extends BaseBuilder {
     }
   }
 
-  private void reflectionFactoryElement(XNode context) throws Exception {
+  private void reflectorFactoryElement(XNode context) throws Exception {
     if (context != null) {
        String type = context.getStringAttribute("type");
        ReflectorFactory factory = (ReflectorFactory) resolveClass(type).newInstance();

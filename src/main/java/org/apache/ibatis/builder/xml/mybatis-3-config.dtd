@@ -16,7 +16,7 @@
        limitations under the License.
 
 -->
-<!ELEMENT configuration (properties?, settings?, typeAliases?, typeHandlers?, objectFactory?, objectWrapperFactory?, plugins?, environments?, databaseIdProvider?, mappers?)>
+<!ELEMENT configuration (properties?, settings?, typeAliases?, typeHandlers?, objectFactory?, objectWrapperFactory?, reflectorFactory?, plugins?, environments?, databaseIdProvider?, mappers?)>
 
 <!ELEMENT databaseIdProvider (property*)>
 <!ATTLIST databaseIdProvider
@@ -67,6 +67,11 @@ type CDATA #REQUIRED
 
 <!ELEMENT objectWrapperFactory (property*)>
 <!ATTLIST objectWrapperFactory
+type CDATA #REQUIRED
+>
+
+<!ELEMENT reflectorFactory EMPTY>
+<!ATTLIST reflectorFactory
 type CDATA #REQUIRED
 >
 

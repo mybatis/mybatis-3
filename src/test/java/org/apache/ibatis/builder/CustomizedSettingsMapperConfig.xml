@@ -72,6 +72,8 @@
   </objectFactory>
 
   <objectWrapperFactory type="org.apache.ibatis.builder.CustomObjectWrapperFactory" />
+  
+  <reflectorFactory type="org.apache.ibatis.builder.CustomReflectorFactory"/>
 
   <plugins>
     <plugin interceptor="org.apache.ibatis.builder.ExamplePlugin">
