@@ -44,7 +44,7 @@
   </typeAliases>
 
   <typeHandlers>
-    <typeHandler javaType="String" jdbcType="VARCHAR" handler="org.apache.ibatis.builder.ExampleTypeHandler"/>
+    <typeHandler javaType="String" jdbcType="VARCHAR" handler="org.apache.ibatis.builder.CustomStringTypeHandler"/>
   </typeHandlers>
 
   <objectFactory type="org.apache.ibatis.builder.ExampleObjectFactory">

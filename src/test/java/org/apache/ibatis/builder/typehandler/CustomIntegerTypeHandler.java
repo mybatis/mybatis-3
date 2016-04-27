@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2016 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -13,9 +13,10 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package org.apache.ibatis.builder;
+package org.apache.ibatis.builder.typehandler;
 
 import org.apache.ibatis.type.JdbcType;
+import org.apache.ibatis.type.MappedTypes;
 import org.apache.ibatis.type.TypeHandler;
 
 import java.sql.CallableStatement;
@@ -23,26 +24,27 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class ExampleTypeHandler implements TypeHandler<String> {
+@MappedTypes(Integer.class)
+public class CustomIntegerTypeHandler implements TypeHandler<Integer> {
 
   @Override
-  public void setParameter(PreparedStatement ps, int i, String parameter, JdbcType jdbcType) throws SQLException {
-    ps.setString(i, parameter);
+  public void setParameter(PreparedStatement ps, int i, Integer parameter, JdbcType jdbcType) throws SQLException {
+    ps.setInt(i, parameter);
   }
 
   @Override
-  public String getResult(ResultSet rs, String columnName) throws SQLException {
-    return rs.getString(columnName);
+  public Integer getResult(ResultSet rs, String columnName) throws SQLException {
+    return rs.getInt(columnName);
   }
 
   @Override
-  public String getResult(ResultSet rs, int columnIndex) throws SQLException {
-    return rs.getString(columnIndex);
+  public Integer getResult(ResultSet rs, int columnIndex) throws SQLException {
+    return rs.getInt(columnIndex);
   }
 
   @Override
-  public String getResult(CallableStatement cs, int columnIndex) throws SQLException {
-    return cs.getString(columnIndex);
+  public Integer getResult(CallableStatement cs, int columnIndex) throws SQLException {
+    return cs.getInt(columnIndex);
   }
 
 }
