@@ -19,8 +19,6 @@ import org.junit.Test;
 import org.mockito.Mock;
 
 import java.sql.Array;
-import java.sql.Timestamp;
-import java.util.Date;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
