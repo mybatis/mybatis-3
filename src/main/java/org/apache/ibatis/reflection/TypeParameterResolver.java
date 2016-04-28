@@ -23,6 +23,7 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.lang.reflect.WildcardType;
+import java.util.Arrays;
 
 /**
  * @author Iwao AVE!
@@ -231,6 +232,11 @@ public class TypeParameterResolver {
     @Override
     public Type getRawType() {
       return rawType;
+    }
+
+    @Override
+    public String toString() {
+      return "ParameterizedTypeImpl [rawType=" + rawType + ", ownerType=" + ownerType + ", actualTypeArguments=" + Arrays.toString(actualTypeArguments) + "]";
     }
   }
 
