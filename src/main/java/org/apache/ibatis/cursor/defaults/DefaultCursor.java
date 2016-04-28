@@ -16,7 +16,6 @@
 package org.apache.ibatis.cursor.defaults;
 
 import org.apache.ibatis.cursor.Cursor;
-import org.apache.ibatis.cursor.CursorException;
 import org.apache.ibatis.executor.resultset.DefaultResultSetHandler;
 import org.apache.ibatis.executor.resultset.ResultSetWrapper;
 import org.apache.ibatis.mapping.ResultMap;
@@ -45,7 +44,7 @@ public class DefaultCursor<T> implements Cursor<T> {
     private final RowBounds rowBounds;
     private final ObjectWrapperResultHandler<T> objectWrapperResultHandler = new ObjectWrapperResultHandler<T>();
 
-    private CursorIterator cursorIterator = new CursorIterator();
+    private final CursorIterator cursorIterator = new CursorIterator();
     private boolean iteratorRetrieved = false;
 
     private CursorStatus status = CursorStatus.CREATED;
@@ -166,13 +165,13 @@ public class DefaultCursor<T> implements Cursor<T> {
         return indexWithRowBound + 1;
     }
 
-    private static class ObjectWrapperResultHandler<E> implements ResultHandler<E> {
+    private static class ObjectWrapperResultHandler<T> implements ResultHandler<T> {
 
-        private E result;
+        private T result;
 
         @Override
-        public void handleResult(ResultContext<? extends E> context) {
-            this.result = (E) context.getResultObject();
+        public void handleResult(ResultContext<? extends T> context) {
+            this.result = context.getResultObject();
             context.stop();
         }
     }

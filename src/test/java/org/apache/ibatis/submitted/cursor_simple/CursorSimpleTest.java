@@ -16,7 +16,6 @@
 package org.apache.ibatis.submitted.cursor_simple;
 
 import org.apache.ibatis.cursor.Cursor;
-import org.apache.ibatis.cursor.CursorException;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.RowBounds;
