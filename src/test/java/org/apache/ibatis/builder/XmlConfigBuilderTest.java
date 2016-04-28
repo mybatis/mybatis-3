@@ -207,6 +207,8 @@ public class XmlConfigBuilderTest {
 
       assertThat(config.getObjectWrapperFactory(), is(instanceOf(CustomObjectWrapperFactory.class)));
 
+      assertThat(config.getReflectorFactory(), is(instanceOf(CustomReflectorFactory.class)));
+
       ExamplePlugin plugin = (ExamplePlugin)config.getInterceptors().get(0);
       assertThat(plugin.getProperties().size(), is(1));
       assertThat(plugin.getProperties().getProperty("pluginProperty"), is("100"));
