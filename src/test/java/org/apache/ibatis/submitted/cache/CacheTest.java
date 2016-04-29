@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -32,17 +32,15 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
+
+import static com.googlecode.catchexception.apis.BDDCatchException.*;
+import static org.assertj.core.api.BDDAssertions.then;
 
 // issue #524
 public class CacheTest {
 
   private static SqlSessionFactory sqlSessionFactory;
-
-  @Rule
-  public ExpectedException expectedException = ExpectedException.none();
 
   @Before
   public void setUp() throws Exception {
@@ -349,28 +347,25 @@ public class CacheTest {
 
   @Test
   public void shouldErrorUnsupportedProperties() {
-    expectedException.expect(CacheException.class);
-    expectedException.expectMessage("Unsupported property type for cache: 'date' of type class java.util.Date");
-
-    sqlSessionFactory.getConfiguration().addMapper(CustomCacheUnsupportedPropertyMapper.class);
+    when(sqlSessionFactory.getConfiguration()).addMapper(CustomCacheUnsupportedPropertyMapper.class);
+    then(caughtException()).isInstanceOf(CacheException.class)
+      .hasMessage("Unsupported property type for cache: 'date' of type class java.util.Date");
   }
 
   @Test
   public void shouldErrorInvalidCacheNamespaceRefAttributesSpecifyBoth() {
-    expectedException.expect(BuilderException.class);
-    expectedException.expectMessage("Cannot use both value() and name() attribute in the @CacheNamespaceRef");
-
-    sqlSessionFactory.getConfiguration().getMapperRegistry()
-        .addMapper(InvalidCacheNamespaceRefBothMapper.class);
+    when(sqlSessionFactory.getConfiguration().getMapperRegistry())
+      .addMapper(InvalidCacheNamespaceRefBothMapper.class);
+    then(caughtException()).isInstanceOf(BuilderException.class)
+      .hasMessage("Cannot use both value() and name() attribute in the @CacheNamespaceRef");
   }
 
   @Test
   public void shouldErrorInvalidCacheNamespaceRefAttributesIsEmpty() {
-    expectedException.expect(BuilderException.class);
-    expectedException.expectMessage("Should be specified either value() or name() attribute in the @CacheNamespaceRef");
-
-    sqlSessionFactory.getConfiguration().getMapperRegistry()
-        .addMapper(InvalidCacheNamespaceRefEmptyMapper.class);
+    when(sqlSessionFactory.getConfiguration().getMapperRegistry())
+      .addMapper(InvalidCacheNamespaceRefEmptyMapper.class);
+    then(caughtException()).isInstanceOf(BuilderException.class)
+      .hasMessage("Should be specified either value() or name() attribute in the @CacheNamespaceRef");
   }
 
   private CustomCache unwrap(Cache cache){

@@ -15,14 +15,12 @@
  */
 package org.apache.ibatis.type.usesjava8;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.type.*;
-import org.hamcrest.core.IsInstanceOf;
 import org.junit.Before;
 import org.junit.Test;
-
-import static org.junit.Assert.*;
-import static org.hamcrest.core.IsInstanceOf.*;
 
 /**
  * Tests for auto-detect type handlers of mybatis-typehandlers-jsr310.
@@ -40,25 +38,25 @@ public class Jsr310TypeHandlerRegistryTest {
 
   @Test
   public void testFor_v1_0_0() throws ClassNotFoundException {
-    assertThat(getTypeHandler("java.time.Instant"), instanceOf(InstantTypeHandler.class));
-    assertThat(getTypeHandler("java.time.LocalDateTime"), instanceOf(LocalDateTimeTypeHandler.class));
-    assertThat(getTypeHandler("java.time.LocalDate"), instanceOf(LocalDateTypeHandler.class));
-    assertThat(getTypeHandler("java.time.LocalTime"), instanceOf(LocalTimeTypeHandler.class));
-    assertThat(getTypeHandler("java.time.OffsetDateTime"), instanceOf(OffsetDateTimeTypeHandler.class));
-    assertThat(getTypeHandler("java.time.OffsetTime"), instanceOf(OffsetTimeTypeHandler.class));
-    assertThat(getTypeHandler("java.time.ZonedDateTime"), instanceOf(ZonedDateTimeTypeHandler.class));
+    assertThat(getTypeHandler("java.time.Instant")).isInstanceOf(InstantTypeHandler.class);
+    assertThat(getTypeHandler("java.time.LocalDateTime")).isInstanceOf(LocalDateTimeTypeHandler.class);
+    assertThat(getTypeHandler("java.time.LocalDate")).isInstanceOf(LocalDateTypeHandler.class);
+    assertThat(getTypeHandler("java.time.LocalTime")).isInstanceOf(LocalTimeTypeHandler.class);
+    assertThat(getTypeHandler("java.time.OffsetDateTime")).isInstanceOf(OffsetDateTimeTypeHandler.class);
+    assertThat(getTypeHandler("java.time.OffsetTime")).isInstanceOf(OffsetTimeTypeHandler.class);
+    assertThat(getTypeHandler("java.time.ZonedDateTime")).isInstanceOf(ZonedDateTimeTypeHandler.class);
   }
 
   @Test
   public void testFor_v1_0_1() throws ClassNotFoundException {
-    assertThat(getTypeHandler("java.time.Month"), instanceOf(MonthTypeHandler.class));
-    assertThat(getTypeHandler("java.time.Year"), instanceOf(YearTypeHandler.class));
+    assertThat(getTypeHandler("java.time.Month")).isInstanceOf(MonthTypeHandler.class);
+    assertThat(getTypeHandler("java.time.Year")).isInstanceOf(YearTypeHandler.class);
   }
 
   @Test
   public void testFor_v1_0_2() throws ClassNotFoundException {
-    assertThat(getTypeHandler("java.time.YearMonth"), instanceOf(YearMonthTypeHandler.class));
-    assertThat(getTypeHandler("java.time.chrono.JapaneseDate"), instanceOf(JapaneseDateTypeHandler.class));
+    assertThat(getTypeHandler("java.time.YearMonth")).isInstanceOf(YearMonthTypeHandler.class);
+    assertThat(getTypeHandler("java.time.chrono.JapaneseDate")).isInstanceOf(JapaneseDateTypeHandler.class);
   }
 
   private TypeHandler<?> getTypeHandler(String fqcn) throws ClassNotFoundException {

@@ -21,7 +21,7 @@ import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.hamcrest.CoreMatchers;
+import org.assertj.core.api.Assertions;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -109,6 +109,6 @@ public class AutoConstructorTest {
 
   private void verifySubjects(final List<?> subjects) {
     Assert.assertNotNull(subjects);
-    Assert.assertThat(subjects.size(), CoreMatchers.equalTo(3));
+    Assertions.assertThat(subjects.size()).isEqualTo(3);
   }
 }

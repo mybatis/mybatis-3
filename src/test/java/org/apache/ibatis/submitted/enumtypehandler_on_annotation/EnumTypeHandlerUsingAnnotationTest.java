@@ -29,8 +29,7 @@ import java.io.Reader;
 import java.sql.Connection;
 import java.sql.DriverManager;
 
-import static org.junit.Assert.*;
-import static org.hamcrest.core.Is.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Tests for type handler of enum using annotations.
@@ -91,17 +90,17 @@ public class EnumTypeHandlerUsingAnnotationTest {
         PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
         {
             Person person = personMapper.findOneUsingConstructor(1);
-            assertThat(person.getId(), is(1));
-            assertThat(person.getFirstName(), is("John"));
-            assertThat(person.getLastName(), is("Smith"));
-            assertThat(person.getPersonType(), is(Person.PersonType.PERSON)); // important
+            assertThat(person.getId()).isEqualTo(1);
+            assertThat(person.getFirstName()).isEqualTo("John");
+            assertThat(person.getLastName()).isEqualTo("Smith");
+            assertThat(person.getPersonType()).isEqualTo(Person.PersonType.PERSON); // important
         }
         {
             Person employee = personMapper.findOneUsingConstructor(2);
-            assertThat(employee.getId(), is(2));
-            assertThat(employee.getFirstName(), is("Mike"));
-            assertThat(employee.getLastName(), is("Jordan"));
-            assertThat(employee.getPersonType(), is(Person.PersonType.EMPLOYEE)); // important
+            assertThat(employee.getId()).isEqualTo(2);
+            assertThat(employee.getFirstName()).isEqualTo("Mike");
+            assertThat(employee.getLastName()).isEqualTo("Jordan");
+            assertThat(employee.getPersonType()).isEqualTo(Person.PersonType.EMPLOYEE); // important
         }
     }
 
@@ -110,17 +109,17 @@ public class EnumTypeHandlerUsingAnnotationTest {
         PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
         {
             Person person = personMapper.findOneUsingSetter(1);
-            assertThat(person.getId(), is(1));
-            assertThat(person.getFirstName(), is("John"));
-            assertThat(person.getLastName(), is("Smith"));
-            assertThat(person.getPersonType(), is(Person.PersonType.PERSON)); // important
+            assertThat(person.getId()).isEqualTo(1);
+            assertThat(person.getFirstName()).isEqualTo("John");
+            assertThat(person.getLastName()).isEqualTo("Smith");
+            assertThat(person.getPersonType()).isEqualTo(Person.PersonType.PERSON); // important
         }
         {
             Person employee = personMapper.findOneUsingSetter(2);
-            assertThat(employee.getId(), is(2));
-            assertThat(employee.getFirstName(), is("Mike"));
-            assertThat(employee.getLastName(), is("Jordan"));
-            assertThat(employee.getPersonType(), is(Person.PersonType.EMPLOYEE)); // important
+            assertThat(employee.getId()).isEqualTo(2);
+            assertThat(employee.getFirstName()).isEqualTo("Mike");
+            assertThat(employee.getLastName()).isEqualTo("Jordan");
+            assertThat(employee.getPersonType()).isEqualTo(Person.PersonType.EMPLOYEE); // important
         }
     }
 
@@ -129,19 +128,19 @@ public class EnumTypeHandlerUsingAnnotationTest {
         PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
         {
             Person person = personMapper.findOneUsingTypeDiscriminator(1);
-            assertTrue(person.getClass() == Person.class); // important
-            assertThat(person.getId(), is(1));
-            assertThat(person.getFirstName(), is("John"));
-            assertThat(person.getLastName(), is("Smith"));
-            assertThat(person.getPersonType(), is(Person.PersonType.PERSON));
+            assertThat(person.getClass()).isEqualTo(Person.class); // important
+            assertThat(person.getId()).isEqualTo(1);
+            assertThat(person.getFirstName()).isEqualTo("John");
+            assertThat(person.getLastName()).isEqualTo("Smith");
+            assertThat(person.getPersonType()).isEqualTo(Person.PersonType.PERSON);
         }
         {
             Person employee = personMapper.findOneUsingTypeDiscriminator(2);
-            assertTrue(employee.getClass() == Employee.class); // important
-            assertThat(employee.getId(), is(2));
-            assertThat(employee.getFirstName(), is("Mike"));
-            assertThat(employee.getLastName(), is("Jordan"));
-            assertThat(employee.getPersonType(), is(Person.PersonType.EMPLOYEE));
+            assertThat(employee.getClass()).isEqualTo(Employee.class); // important
+            assertThat(employee.getId()).isEqualTo(2);
+            assertThat(employee.getFirstName()).isEqualTo("Mike");
+            assertThat(employee.getLastName()).isEqualTo("Jordan");
+            assertThat(employee.getPersonType()).isEqualTo(Person.PersonType.EMPLOYEE);
         }
     }
 

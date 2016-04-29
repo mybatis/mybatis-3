@@ -15,7 +15,6 @@
  */
 package org.apache.ibatis.submitted.lazy_deserialize;
 
-import static org.hamcrest.core.Is.*;
 import static org.junit.Assert.*;
 
 import java.io.ByteArrayInputStream;
@@ -35,9 +34,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 /**
  *
@@ -45,9 +42,6 @@ import org.junit.rules.ExpectedException;
  * @author Franta Mejta
  */
 public final class LazyDeserializeTest {
-
-  @Rule
-  public ExpectedException expectedException = ExpectedException.none();
 
   private static final int FOO_ID = 1;
   private static final int BAR_ID = 10;
@@ -108,17 +102,17 @@ public final class LazyDeserializeTest {
 
   @Test
   public void testLoadLazyDeserializeWithoutConfigurationFactory() throws Exception {
-    expectedException.expect(ExecutorException.class);
-    expectedException
-        .expectMessage(is("Cannot get Configuration as configuration factory was not set."));
-
     final SqlSession session = factory.openSession();
     try {
       final Mapper mapper = session.getMapper(Mapper.class);
       final LazyObjectFoo foo = mapper.loadFoo(FOO_ID);
       final byte[] serializedFoo = this.serializeFoo(foo);
       final LazyObjectFoo deserializedFoo = this.deserializeFoo(serializedFoo);
-      deserializedFoo.getLazyObjectBar();
+      try {
+        deserializedFoo.getLazyObjectBar();
+      } catch (ExecutorException e) {
+        e.getMessage().contains("Cannot get Configuration as configuration factory was not set.");
+      }
     } finally {
       session.close();
     }
