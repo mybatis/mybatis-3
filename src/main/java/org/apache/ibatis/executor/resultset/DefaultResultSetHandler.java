@@ -426,14 +426,17 @@ public class DefaultResultSetHandler implements ResultSetHandler {
         Object value = getPropertyMappingValue(rsw.getResultSet(), metaObject, propertyMapping, lazyLoader, columnPrefix);
         // issue #541 make property optional
         final String property = propertyMapping.getProperty();
-        // issue #377, call setter on nulls
-        if (value != DEFERED
-            && property != null
-            && (value != null || (configuration.isCallSettersOnNulls() && !metaObject.getSetterType(property).isPrimitive()))) {
-          metaObject.setValue(property, value);
-        }
-        if (property != null && (value != null || value == DEFERED)) {
+        if (property == null) {
+          continue;
+        } else if (value == DEFERED) {
           foundValues = true;
+          continue;
+        } else if (value != null) {
+          foundValues = true;
+          metaObject.setValue(property, value);
+        } else if (configuration.isCallSettersOnNulls() && !metaObject.getSetterType(property).isPrimitive()) {
+          // issue #377, call setter on nulls (value is not 'found')
+          metaObject.setValue(property, value);
         }
       }
     }
@@ -497,12 +500,13 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     if (autoMapping.size() > 0) {
       for (UnMappedColumnAutoMapping mapping : autoMapping) {
         final Object value = mapping.typeHandler.getResult(rsw.getResultSet(), mapping.column);
-        // issue #377, call setter on nulls
-        if (value != null || configuration.isCallSettersOnNulls()) {
-          if (value != null || !mapping.primitive) {
-            metaObject.setValue(mapping.property, value);
-          }
+        if (value != null) {
           foundValues = true;
+          metaObject.setValue(mapping.property, value);
+        } else if (configuration.isCallSettersOnNulls() && !mapping.primitive) {
+          // issue #377, call setter on nulls
+          foundValues = true;
+          metaObject.setValue(mapping.property, value);
         }
       }
     }
