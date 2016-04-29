@@ -435,7 +435,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
           foundValues = true;
           metaObject.setValue(property, value);
         } else if (configuration.isCallSettersOnNulls() && !metaObject.getSetterType(property).isPrimitive()) {
-          // issue #377, call setter on nulls (value is not 'found')
+          // gcode issue #377, call setter on nulls (value is not 'found')
           metaObject.setValue(property, value);
         }
       }
@@ -504,8 +504,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
           foundValues = true;
           metaObject.setValue(mapping.property, value);
         } else if (configuration.isCallSettersOnNulls() && !mapping.primitive) {
-          // issue #377, call setter on nulls
-          foundValues = true;
+          // gcode issue #377, call setter on nulls (value is not 'found')
           metaObject.setValue(mapping.property, value);
         }
       }
