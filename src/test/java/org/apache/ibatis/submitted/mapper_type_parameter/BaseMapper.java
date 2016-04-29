@@ -75,7 +75,7 @@ public interface BaseMapper<S, T> {
         }
         sql.append(" (#{list[" + i + "].id}, #{list[" + i + "].name})");
       }
-      return sql.toString();
+      return sql == null ? "" : sql.toString();
     }
 
     public String provideUpdate(Object param) {
