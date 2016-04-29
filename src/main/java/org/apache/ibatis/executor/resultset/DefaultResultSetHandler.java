@@ -431,10 +431,11 @@ public class DefaultResultSetHandler implements ResultSetHandler {
         } else if (value == DEFERED) {
           foundValues = true;
           continue;
-        } else if (value != null) {
+        }
+        if (value != null) {
           foundValues = true;
-          metaObject.setValue(property, value);
-        } else if (configuration.isCallSettersOnNulls() && !metaObject.getSetterType(property).isPrimitive()) {
+        }
+        if (value != null || (configuration.isCallSettersOnNulls() && !metaObject.getSetterType(property).isPrimitive())) {
           // gcode issue #377, call setter on nulls (value is not 'found')
           metaObject.setValue(property, value);
         }
@@ -502,8 +503,8 @@ public class DefaultResultSetHandler implements ResultSetHandler {
         final Object value = mapping.typeHandler.getResult(rsw.getResultSet(), mapping.column);
         if (value != null) {
           foundValues = true;
-          metaObject.setValue(mapping.property, value);
-        } else if (configuration.isCallSettersOnNulls() && !mapping.primitive) {
+        }
+        if (value != null || (configuration.isCallSettersOnNulls() && !mapping.primitive)) {
           // gcode issue #377, call setter on nulls (value is not 'found')
           metaObject.setValue(mapping.property, value);
         }
