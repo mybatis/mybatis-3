@@ -34,6 +34,7 @@ public class ResultMap {
   private List<ResultMapping> idResultMappings;
   private List<ResultMapping> constructorResultMappings;
   private List<ResultMapping> propertyResultMappings;
+  private ResultRelation resultRelation;
   private Set<String> mappedColumns;
   private Discriminator discriminator;
   private boolean hasNestedResultMaps;
@@ -60,6 +61,11 @@ public class ResultMap {
     public Builder discriminator(Discriminator discriminator) {
       resultMap.discriminator = discriminator;
       return this;
+    }
+    
+    public Builder resultRelation(ResultRelation resultRelations) {
+        resultMap.resultRelation = resultRelations;
+        return this;
     }
 
     public Class<?> type() {
@@ -124,6 +130,10 @@ public class ResultMap {
 
   public Class<?> getType() {
     return type;
+  }
+
+  public ResultRelation getResultRelation() {
+      return resultRelation;
   }
 
   public List<ResultMapping> getResultMappings() {

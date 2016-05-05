@@ -18,6 +18,7 @@ package org.apache.ibatis.builder.xml;
 import java.io.InputStream;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -41,6 +42,7 @@ import org.apache.ibatis.mapping.ParameterMode;
 import org.apache.ibatis.mapping.ResultFlag;
 import org.apache.ibatis.mapping.ResultMap;
 import org.apache.ibatis.mapping.ResultMapping;
+import org.apache.ibatis.mapping.ResultRelation;
 import org.apache.ibatis.parsing.XNode;
 import org.apache.ibatis.parsing.XPathParser;
 import org.apache.ibatis.session.Configuration;
@@ -249,10 +251,14 @@ public class XMLMapperBuilder extends BaseBuilder {
   }
 
   private ResultMap resultMapElement(XNode resultMapNode) throws Exception {
-    return resultMapElement(resultMapNode, Collections.<ResultMapping> emptyList());
+    return resultMapElement(resultMapNode, Collections.<ResultMapping> emptyList(), ResultRelation.NONE);
   }
 
   private ResultMap resultMapElement(XNode resultMapNode, List<ResultMapping> additionalResultMappings) throws Exception {
+    return resultMapElement(resultMapNode, additionalResultMappings, ResultRelation.NONE);
+  }
+
+  private ResultMap resultMapElement(XNode resultMapNode, List<ResultMapping> additionalResultMappings, ResultRelation resultRelation) throws Exception {
     ErrorContext.instance().activity("processing " + resultMapNode.getValueBasedIdentifier());
     String id = resultMapNode.getStringAttribute("id",
         resultMapNode.getValueBasedIdentifier());
@@ -280,7 +286,7 @@ public class XMLMapperBuilder extends BaseBuilder {
         resultMappings.add(buildResultMappingFromContext(resultChild, typeClass, flags));
       }
     }
-    ResultMapResolver resultMapResolver = new ResultMapResolver(builderAssistant, id, typeClass, extend, discriminator, resultMappings, autoMapping);
+    ResultMapResolver resultMapResolver = new ResultMapResolver(builderAssistant, id, typeClass, extend, discriminator, resultMappings, autoMapping, resultRelation);
     try {
       return resultMapResolver.resolve();
     } catch (IncompleteElementException  e) {
@@ -383,7 +389,16 @@ public class XMLMapperBuilder extends BaseBuilder {
         || "collection".equals(context.getName())
         || "case".equals(context.getName())) {
       if (context.getStringAttribute("select") == null) {
-        ResultMap resultMap = resultMapElement(context, resultMappings);
+          ResultMap resultMap;
+
+          if ("collection".equals(context.getName())) {
+              resultMap = resultMapElement(context, resultMappings, ResultRelation.COLLECTION);
+          } else if ("association".equals(context.getName())) {
+              resultMap = resultMapElement(context, resultMappings, ResultRelation.ASSOCIATION);
+          } else {
+              resultMap = resultMapElement(context, resultMappings);
+          }
+
         return resultMap.getId();
       }
     }

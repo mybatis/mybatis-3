@@ -27,9 +27,23 @@
     <select id="getWithAssociation" resultMap="associationResultMap">
         select * from ParentChild
     </select>
+    
+    <select id="getWithAssociationAndCollection" resultMap="associationCollectionResultMap">
+        select * from ParentChild
+    </select>
 
     <resultMap id="collectionResultMap" type="Parent">
         <result column="parent_id" property="id" />
+        <collection property="children" ofType="Child">
+            <result property="id" column="child_id"/>
+        </collection>
+    </resultMap>
+    
+    <resultMap id="associationCollectionResultMap" type="Parent">
+        <result column="parent_id" property="id" />
+        <association property="child" javaType="Child">
+            <result property="id" column="child_id"/>
+        </association>
         <collection property="children" ofType="Child">
             <result property="id" column="child_id"/>
         </collection>

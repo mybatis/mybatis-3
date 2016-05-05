@@ -46,6 +46,7 @@ import org.apache.ibatis.mapping.ParameterMode;
 import org.apache.ibatis.mapping.ResultFlag;
 import org.apache.ibatis.mapping.ResultMap;
 import org.apache.ibatis.mapping.ResultMapping;
+import org.apache.ibatis.mapping.ResultRelation;
 import org.apache.ibatis.reflection.MetaClass;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.ReflectorFactory;
@@ -831,7 +832,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
         resultObject = foundValues ? resultObject : null;
       }
       if (combinedKey != CacheKey.NULL_CACHE_KEY) {
-        nestedResultObjects.put(combinedKey, resultObject);
+          nestedResultObjects.put(combinedKey, resultObject);
       }
     }
     return resultObject;
@@ -971,7 +972,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
         final ResultMap nestedResultMap = configuration.getResultMap(resultMapping.getNestedResultMapId());
         if (!refList.contains(nestedResultMap)) {
             refList.add(nestedResultMap);
-            if (resultMapping.getFlags().contains(ResultFlag.CONSTRUCTOR)) {
+            if (resultMapping.getFlags().contains(ResultFlag.CONSTRUCTOR) || nestedResultMap.getResultRelation() == ResultRelation.COLLECTION) {
                 createRowKeyForMappedProperties(nestedResultMap, rsw, cacheKey, nestedResultMap.getConstructorResultMappings(),
                     prependPrefix(resultMapping.getColumnPrefix(), columnPrefix), refList);
             } else {

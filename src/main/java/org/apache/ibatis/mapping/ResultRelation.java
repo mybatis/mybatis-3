@@ -13,14 +13,8 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package org.apache.ibatis.submitted.nested_entity_hashing;
+package org.apache.ibatis.mapping;
 
-import java.util.List;
-
-public interface Mapper {
-
-  List<Parent> getWithAssociation();
-  List<Parent> getWithCollection();
-  List<Parent> getWithAssociationAndCollection();
-
+public enum ResultRelation {
+  COLLECTION, ASSOCIATION, NONE
 }

@@ -81,5 +81,25 @@ public class NestedEntityHashingTest {
       sqlSession.close();
     }
   }
+  
+  @Test
+  public void shouldGetNObjects() {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      List<Parent> parents = mapper.getWithAssociationAndCollection();
+      for (Parent parent: parents) {
+          Assert.assertNotNull(parent);
+          Assert.assertFalse(parent.getChildren().isEmpty());
+      }
+      Assert.assertEquals(3, parents.size());
+      Assert.assertEquals(2, parents.get(0).getChildren().size());
+      Assert.assertEquals(2, parents.get(1).getChildren().size());
+      Assert.assertEquals(1, parents.get(2).getChildren().size());
+      System.out.println();
+    } finally {
+      sqlSession.close();
+    }
+  }
 
 }
