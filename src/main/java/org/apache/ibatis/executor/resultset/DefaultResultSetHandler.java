@@ -83,7 +83,6 @@ public class DefaultResultSetHandler implements ResultSetHandler {
   // nested resultmaps
   private final Map<CacheKey, Object> nestedResultObjects = new HashMap<CacheKey, Object>();
   private final Map<String, Object> ancestorObjects = new HashMap<String, Object>();
-  private final Map<String, String> ancestorColumnPrefix = new HashMap<String, String>();
   private Object previousRowValue;
 
   // multiple resultsets
@@ -268,7 +267,6 @@ public class DefaultResultSetHandler implements ResultSetHandler {
 
   private void cleanUpAfterHandlingResultSet() {
     nestedResultObjects.clear();
-    ancestorColumnPrefix.clear();
   }
 
   private void validateResultMapsCount(ResultSetWrapper rsw, int resultMapCount) {
@@ -874,9 +872,6 @@ public class DefaultResultSetHandler implements ResultSetHandler {
   }
 
   private void putAncestor(Object resultObject, String resultMapId, String columnPrefix) {
-    if (!ancestorColumnPrefix.containsKey(resultMapId)) {
-      ancestorColumnPrefix.put(resultMapId, columnPrefix);
-    }
     ancestorObjects.put(resultMapId, resultObject);
   }
 
