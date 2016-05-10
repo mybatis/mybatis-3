@@ -17,11 +17,11 @@ package org.apache.ibatis.binding;
 
 import org.apache.ibatis.annotations.Flush;
 import org.apache.ibatis.annotations.MapKey;
-import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.cursor.Cursor;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.SqlCommandType;
 import org.apache.ibatis.reflection.MetaObject;
+import org.apache.ibatis.reflection.ParamNameResolver;
 import org.apache.ibatis.reflection.TypeParameterResolver;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.ResultHandler;
@@ -241,8 +241,7 @@ public class MapperMethod {
     private final String mapKey;
     private final Integer resultHandlerIndex;
     private final Integer rowBoundsIndex;
-    private final SortedMap<Integer, String> params;
-    private final boolean hasNamedParameters;
+    private final ParamNameResolver paramNameResolver;
 
     public MethodSignature(Configuration configuration, Class<?> mapperInterface, Method method) {
       Type resolvedReturnType = TypeParameterResolver.resolveReturnType(method, mapperInterface);
@@ -258,32 +257,13 @@ public class MapperMethod {
       this.returnsCursor = Cursor.class.equals(this.returnType);
       this.mapKey = getMapKey(method);
       this.returnsMap = (this.mapKey != null);
-      this.hasNamedParameters = hasNamedParams(method);
       this.rowBoundsIndex = getUniqueParamIndex(method, RowBounds.class);
       this.resultHandlerIndex = getUniqueParamIndex(method, ResultHandler.class);
-      this.params = Collections.unmodifiableSortedMap(getParams(method, this.hasNamedParameters));
+      this.paramNameResolver = new ParamNameResolver(method);
     }
 
     public Object convertArgsToSqlCommandParam(Object[] args) {
-      final int paramCount = params.size();
-      if (args == null || paramCount == 0) {
-        return null;
-      } else if (!hasNamedParameters && paramCount == 1) {
-        return args[params.keySet().iterator().next()];
-      } else {
-        final Map<String, Object> param = new ParamMap<Object>();
-        int i = 0;
-        for (Map.Entry<Integer, String> entry : params.entrySet()) {
-          param.put(entry.getValue(), args[entry.getKey()]);
-          // issue #71, add param names as param1, param2...but ensure backward compatibility
-          final String genericParamName = "param" + String.valueOf(i + 1);
-          if (!param.containsKey(genericParamName)) {
-            param.put(genericParamName, args[entry.getKey()]);
-          }
-          i++;
-        }
-        return param;
-      }
+      return paramNameResolver.getNamedParams(args);
     }
 
     public boolean hasRowBounds() {
@@ -351,45 +331,6 @@ public class MapperMethod {
       }
       return mapKey;
     }
-
-    private SortedMap<Integer, String> getParams(Method method, boolean hasNamedParameters) {
-      final SortedMap<Integer, String> params = new TreeMap<Integer, String>();
-      final Class<?>[] argTypes = method.getParameterTypes();
-      for (int i = 0; i < argTypes.length; i++) {
-        if (!RowBounds.class.isAssignableFrom(argTypes[i]) && !ResultHandler.class.isAssignableFrom(argTypes[i])) {
-          String paramName = String.valueOf(params.size());
-          if (hasNamedParameters) {
-            paramName = getParamNameFromAnnotation(method, i, paramName);
-          }
-          params.put(i, paramName);
-        }
-      }
-      return params;
-    }
-
-    private String getParamNameFromAnnotation(Method method, int i, String paramName) {
-      final Object[] paramAnnos = method.getParameterAnnotations()[i];
-      for (Object paramAnno : paramAnnos) {
-        if (paramAnno instanceof Param) {
-          paramName = ((Param) paramAnno).value();
-          break;
-        }
-      }
-      return paramName;
-    }
-
-    private boolean hasNamedParams(Method method) {
-      final Object[][] paramAnnos = method.getParameterAnnotations();
-      for (Object[] paramAnno : paramAnnos) {
-        for (Object aParamAnno : paramAnno) {
-          if (aParamAnno instanceof Param) {
-            return true;
-          }
-        }
-      }
-      return false;
-    }
-
   }
 
 }

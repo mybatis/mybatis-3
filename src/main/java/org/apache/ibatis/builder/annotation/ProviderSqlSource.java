@@ -19,11 +19,11 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.builder.BuilderException;
 import org.apache.ibatis.builder.SqlSourceBuilder;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.SqlSource;
+import org.apache.ibatis.reflection.ParamNameResolver;
 import org.apache.ibatis.session.Configuration;
 
 /**
@@ -53,7 +53,7 @@ public class ProviderSqlSource implements SqlSource {
                       + "'. Sql provider method can not overload.");
             }
             this.providerMethod = m;
-            this.providerMethodArgumentNames = extractProviderMethodArgumentNames(m);
+            this.providerMethodArgumentNames = new ParamNameResolver(m).getNames();
           }
         }
       }
@@ -103,27 +103,6 @@ public class ProviderSqlSource implements SqlSource {
           + providerType.getName() + "." + providerMethod.getName()
           + ").  Cause: " + e, e);
     }
-  }
-
-  private String[] extractProviderMethodArgumentNames(Method providerMethod) {
-    String[] argumentNames = new String[providerMethod.getParameterTypes().length];
-    for (int i = 0; i < argumentNames.length; i++) {
-      Param param = findParamAnnotation(providerMethod, i);
-      argumentNames[i] = param != null ? param.value() : "param" + (i + 1);
-    }
-    return argumentNames;
-  }
-
-  private Param findParamAnnotation(Method providerMethod, int parameterIndex) {
-    final Object[] annotations = providerMethod.getParameterAnnotations()[parameterIndex];
-    Param param = null;
-    for (Object annotation : annotations) {
-      if (annotation instanceof Param) {
-        param = Param.class.cast(annotation);
-        break;
-      }
-    }
-    return param;
   }
 
   private Object[] extractProviderMethodArguments(Map<String, Object> params, String[] argumentNames) {
