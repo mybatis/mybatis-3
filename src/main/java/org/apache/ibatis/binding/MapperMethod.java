@@ -259,7 +259,7 @@ public class MapperMethod {
       this.returnsMap = (this.mapKey != null);
       this.rowBoundsIndex = getUniqueParamIndex(method, RowBounds.class);
       this.resultHandlerIndex = getUniqueParamIndex(method, ResultHandler.class);
-      this.paramNameResolver = new ParamNameResolver(method);
+      this.paramNameResolver = new ParamNameResolver(configuration, method);
     }
 
     public Object convertArgsToSqlCommandParam(Object[] args) {

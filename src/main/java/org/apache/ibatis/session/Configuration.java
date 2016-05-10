@@ -106,6 +106,7 @@ public class Configuration {
   protected boolean useColumnLabel = true;
   protected boolean cacheEnabled = true;
   protected boolean callSettersOnNulls = false;
+  protected boolean useActualParamName = false;
 
   protected String logPrefix;
   protected Class <? extends Log> logImpl;
@@ -238,6 +239,14 @@ public class Configuration {
 
   public void setCallSettersOnNulls(boolean callSettersOnNulls) {
     this.callSettersOnNulls = callSettersOnNulls;
+  }
+
+  public boolean isUseActualParamName() {
+    return useActualParamName;
+  }
+
+  public void setUseActualParamName(boolean useActualParamName) {
+    this.useActualParamName = useActualParamName;
   }
 
   public String getDatabaseId() {

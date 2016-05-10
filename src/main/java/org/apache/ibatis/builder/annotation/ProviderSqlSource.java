@@ -53,7 +53,7 @@ public class ProviderSqlSource implements SqlSource {
                       + "'. Sql provider method can not overload.");
             }
             this.providerMethod = m;
-            this.providerMethodArgumentNames = new ParamNameResolver(m).getNames();
+            this.providerMethodArgumentNames = new ParamNameResolver(config, m).getNames();
           }
         }
       }

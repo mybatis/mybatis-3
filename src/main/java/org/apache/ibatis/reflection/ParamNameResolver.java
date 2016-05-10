@@ -25,12 +25,27 @@ import java.util.TreeMap;
 
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.binding.MapperMethod.ParamMap;
+import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 
 public class ParamNameResolver {
 
   private static final String GENERIC_NAME_PREFIX = "param";
+  private static final String PARAMETER_CLASS = "java.lang.reflect.Parameter";
+  private static Method GET_NAME = null;
+  private static Method GET_PARAMS = null;
+
+  static {
+    try {
+      Class<?> paramClass = Resources.classForName(PARAMETER_CLASS);
+      GET_NAME = paramClass.getMethod("getName");
+      GET_PARAMS = Method.class.getMethod("getParameters");
+    } catch (Exception e) {
+      // ignore
+    }
+  }
 
   /**
    * <p>
@@ -49,7 +64,7 @@ public class ParamNameResolver {
 
   private boolean hasParamAnnotation;
 
-  public ParamNameResolver(Method method) {
+  public ParamNameResolver(Configuration config, Method method) {
     final Class<?>[] paramTypes = method.getParameterTypes();
     final Annotation[][] paramAnnotations = method.getParameterAnnotations();
     final SortedMap<Integer, String> map = new TreeMap<Integer, String>();
@@ -68,11 +83,31 @@ public class ParamNameResolver {
           break;
         }
       }
-      // When @Param is not specified, use the parameter index as the name
-      // ("0", "1", ...) gcode issue #71
-      map.put(paramIndex, name == null ? String.valueOf(map.size()) : name);
+      if (name == null) {
+        // @Param was not specified.
+        if (config.isUseActualParamName()) {
+          name = getActualParamName(method, paramIndex);
+        } else {
+          // use the parameter index as the name ("0", "1", ...)
+          // gcode issue #71
+          name = String.valueOf(map.size());
+        }
+      }
+      map.put(paramIndex, name);
     }
     names = Collections.unmodifiableSortedMap(map);
+  }
+
+  private String getActualParamName(Method method, int paramIndex) {
+    if (GET_PARAMS == null) {
+      throw new ReflectionException("Method#getParameters() method does not exist. Relaunch on Java 8 or set false to useActualParamName.");
+    }
+    try {
+      Object[] params = (Object[]) GET_PARAMS.invoke(method);
+      return (String) GET_NAME.invoke(params[paramIndex]);
+    } catch (Exception e) {
+      throw new ReflectionException("Error occurred when invoking Method#getParameters().", e);
+    }
   }
 
   private static boolean isSpecialParameter(Class<?> clazz) {
