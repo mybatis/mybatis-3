@@ -463,6 +463,21 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 未指定
               </td>
             </tr>
+            <tr>
+              <td>
+                useActualParamName
+              </td>
+              <td>
+                ステートメントの引数を参照する際、メソッドシグネチャで宣言されている名前で参照できるようにします。
+                このオプションを有効にする場合、プロジェクトを Java 8 （コンパイラオプション <code>-parameters</code> 付き）でコンパイルする必要があります。 (導入されたバージョン: 3.4.1)
+              </td>
+              <td>
+                true | false
+              </td>
+              <td>
+                false
+              </td>
+            </tr>
           </tbody>
         </table>
         <p>
