@@ -234,6 +234,8 @@ public class ScriptRunner {
     if (stopOnError) {
       hasResults = statement.execute(sql);
       if (throwWarning) {
+        // In Oracle, CRATE PROCEDURE, FUNCTION, etc. returns warning
+        // instead of throwing exception if there is compilation error.
         SQLWarning warning = statement.getWarnings();
         if (warning != null) {
           throw warning;
