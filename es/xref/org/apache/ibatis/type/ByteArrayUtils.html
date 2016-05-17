@@ -7,7 +7,7 @@
 <body>
 <div id="overview"><a href="../../../../../../apidocs/org/apache/ibatis/type/ByteArrayUtils.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2015 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2016 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_javadoccomment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_javadoccomment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_javadoccomment"> *    you may not use this file except in compliance with the License.</em>
@@ -35,7 +35,7 @@
 <a class="jxr_linenumber" name="L27" href="#L27">27</a>    <strong class="jxr_keyword">static</strong> byte[] convertToPrimitiveArray(Byte[] objects) {
 <a class="jxr_linenumber" name="L28" href="#L28">28</a>      <strong class="jxr_keyword">final</strong> byte[] bytes = <strong class="jxr_keyword">new</strong> byte[objects.length];
 <a class="jxr_linenumber" name="L29" href="#L29">29</a>      <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; i &lt; objects.length; i++) {
-<a class="jxr_linenumber" name="L30" href="#L30">30</a>        bytes[i] = objects[i].byteValue();
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>        bytes[i] = objects[i];
 <a class="jxr_linenumber" name="L31" href="#L31">31</a>      }
 <a class="jxr_linenumber" name="L32" href="#L32">32</a>      <strong class="jxr_keyword">return</strong> bytes;
 <a class="jxr_linenumber" name="L33" href="#L33">33</a>    }
@@ -43,7 +43,7 @@
 <a class="jxr_linenumber" name="L35" href="#L35">35</a>    <strong class="jxr_keyword">static</strong> Byte[] convertToObjectArray(byte[] bytes) {
 <a class="jxr_linenumber" name="L36" href="#L36">36</a>      <strong class="jxr_keyword">final</strong> Byte[] objects = <strong class="jxr_keyword">new</strong> Byte[bytes.length];
 <a class="jxr_linenumber" name="L37" href="#L37">37</a>      <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; i &lt; bytes.length; i++) {
-<a class="jxr_linenumber" name="L38" href="#L38">38</a>        objects[i] = Byte.valueOf(bytes[i]);
+<a class="jxr_linenumber" name="L38" href="#L38">38</a>        objects[i] = bytes[i];
 <a class="jxr_linenumber" name="L39" href="#L39">39</a>      }
 <a class="jxr_linenumber" name="L40" href="#L40">40</a>      <strong class="jxr_keyword">return</strong> objects;
 <a class="jxr_linenumber" name="L41" href="#L41">41</a>    }

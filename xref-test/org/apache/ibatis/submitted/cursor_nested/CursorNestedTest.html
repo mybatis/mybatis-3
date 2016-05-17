@@ -7,7 +7,7 @@
 <body>
 <div id="overview"><a href="../../../../../../testapidocs/org/apache/ibatis/submitted/cursor_nested/CursorNestedTest.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2015 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2016 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_javadoccomment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_javadoccomment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_javadoccomment"> *    you may not use this file except in compliance with the License.</em>
@@ -111,18 +111,19 @@
 <a class="jxr_linenumber" name="L103" href="#L103">103</a> 
 <a class="jxr_linenumber" name="L104" href="#L104">104</a>             Iterator&lt;User&gt; iterator = usersCursor.iterator();
 <a class="jxr_linenumber" name="L105" href="#L105">105</a> 
-<a class="jxr_linenumber" name="L106" href="#L106">106</a>             <a href="../../../../../org/apache/ibatis/submitted/cursor_nested/User.html">User</a> user = iterator.next();
-<a class="jxr_linenumber" name="L107" href="#L107">107</a>             Assert.assertEquals(<span class="jxr_string">"User3"</span>, user.getName());
-<a class="jxr_linenumber" name="L108" href="#L108">108</a>             Assert.assertEquals(2, usersCursor.getCurrentIndex());
-<a class="jxr_linenumber" name="L109" href="#L109">109</a> 
-<a class="jxr_linenumber" name="L110" href="#L110">110</a>             Assert.assertFalse(iterator.hasNext());
-<a class="jxr_linenumber" name="L111" href="#L111">111</a>             Assert.assertFalse(usersCursor.isOpen());
-<a class="jxr_linenumber" name="L112" href="#L112">112</a>             Assert.assertTrue(usersCursor.isConsumed());
-<a class="jxr_linenumber" name="L113" href="#L113">113</a>         } <strong class="jxr_keyword">finally</strong> {
-<a class="jxr_linenumber" name="L114" href="#L114">114</a>             sqlSession.close();
-<a class="jxr_linenumber" name="L115" href="#L115">115</a>         }
-<a class="jxr_linenumber" name="L116" href="#L116">116</a>     }
-<a class="jxr_linenumber" name="L117" href="#L117">117</a> }
+<a class="jxr_linenumber" name="L106" href="#L106">106</a>             Assert.assertTrue(iterator.hasNext());
+<a class="jxr_linenumber" name="L107" href="#L107">107</a>             <a href="../../../../../org/apache/ibatis/submitted/cursor_nested/User.html">User</a> user = iterator.next();
+<a class="jxr_linenumber" name="L108" href="#L108">108</a>             Assert.assertEquals(<span class="jxr_string">"User3"</span>, user.getName());
+<a class="jxr_linenumber" name="L109" href="#L109">109</a>             Assert.assertEquals(2, usersCursor.getCurrentIndex());
+<a class="jxr_linenumber" name="L110" href="#L110">110</a> 
+<a class="jxr_linenumber" name="L111" href="#L111">111</a>             Assert.assertFalse(iterator.hasNext());
+<a class="jxr_linenumber" name="L112" href="#L112">112</a>             Assert.assertFalse(usersCursor.isOpen());
+<a class="jxr_linenumber" name="L113" href="#L113">113</a>             Assert.assertTrue(usersCursor.isConsumed());
+<a class="jxr_linenumber" name="L114" href="#L114">114</a>         } <strong class="jxr_keyword">finally</strong> {
+<a class="jxr_linenumber" name="L115" href="#L115">115</a>             sqlSession.close();
+<a class="jxr_linenumber" name="L116" href="#L116">116</a>         }
+<a class="jxr_linenumber" name="L117" href="#L117">117</a>     }
+<a class="jxr_linenumber" name="L118" href="#L118">118</a> }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2009&#x2013;2016 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>

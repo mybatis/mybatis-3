@@ -7,7 +7,7 @@
 <body>
 <div id="overview"><a href="../../../../../../testapidocs/org/apache/ibatis/type/BooleanTypeHandlerTest.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2015 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2016 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_javadoccomment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_javadoccomment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_javadoccomment"> *    you may not use this file except in compliance with the License.</em>
@@ -42,21 +42,44 @@
 <a class="jxr_linenumber" name="L34" href="#L34">34</a>  
 <a class="jxr_linenumber" name="L35" href="#L35">35</a>    @Override
 <a class="jxr_linenumber" name="L36" href="#L36">36</a>    @Test
-<a class="jxr_linenumber" name="L37" href="#L37">37</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldGetResultFromResultSet() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldGetResultFromResultSetByName() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L38" href="#L38">38</a>      when(rs.getBoolean(<span class="jxr_string">"column"</span>)).thenReturn(<strong class="jxr_keyword">true</strong>);
 <a class="jxr_linenumber" name="L39" href="#L39">39</a>      when(rs.wasNull()).thenReturn(false);
 <a class="jxr_linenumber" name="L40" href="#L40">40</a>      assertEquals(<strong class="jxr_keyword">true</strong>, TYPE_HANDLER.getResult(rs, <span class="jxr_string">"column"</span>));
 <a class="jxr_linenumber" name="L41" href="#L41">41</a>    }
 <a class="jxr_linenumber" name="L42" href="#L42">42</a>  
 <a class="jxr_linenumber" name="L43" href="#L43">43</a>    @Override
-<a class="jxr_linenumber" name="L44" href="#L44">44</a>    @Test
-<a class="jxr_linenumber" name="L45" href="#L45">45</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldGetResultFromCallableStatement() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L46" href="#L46">46</a>      when(cs.getBoolean(1)).thenReturn(<strong class="jxr_keyword">true</strong>);
-<a class="jxr_linenumber" name="L47" href="#L47">47</a>      when(cs.wasNull()).thenReturn(false);
-<a class="jxr_linenumber" name="L48" href="#L48">48</a>      assertEquals(<strong class="jxr_keyword">true</strong>, TYPE_HANDLER.getResult(cs, 1));
-<a class="jxr_linenumber" name="L49" href="#L49">49</a>    }
-<a class="jxr_linenumber" name="L50" href="#L50">50</a>  
-<a class="jxr_linenumber" name="L51" href="#L51">51</a>  }
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldGetResultNullFromResultSetByName() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L45" href="#L45">45</a>      <em class="jxr_comment">// Unnecessary</em>
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>    }
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>  
+<a class="jxr_linenumber" name="L48" href="#L48">48</a>    @Override
+<a class="jxr_linenumber" name="L49" href="#L49">49</a>    @Test
+<a class="jxr_linenumber" name="L50" href="#L50">50</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldGetResultFromResultSetByPosition() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L51" href="#L51">51</a>      when(rs.getBoolean(1)).thenReturn(<strong class="jxr_keyword">true</strong>);
+<a class="jxr_linenumber" name="L52" href="#L52">52</a>      when(rs.wasNull()).thenReturn(false);
+<a class="jxr_linenumber" name="L53" href="#L53">53</a>      assertEquals(<strong class="jxr_keyword">true</strong>, TYPE_HANDLER.getResult(rs, 1));
+<a class="jxr_linenumber" name="L54" href="#L54">54</a>    }
+<a class="jxr_linenumber" name="L55" href="#L55">55</a>  
+<a class="jxr_linenumber" name="L56" href="#L56">56</a>    @Override
+<a class="jxr_linenumber" name="L57" href="#L57">57</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldGetResultNullFromResultSetByPosition() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L58" href="#L58">58</a>      <em class="jxr_comment">// Unnecessary</em>
+<a class="jxr_linenumber" name="L59" href="#L59">59</a>    }
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>  
+<a class="jxr_linenumber" name="L61" href="#L61">61</a>    @Override
+<a class="jxr_linenumber" name="L62" href="#L62">62</a>    @Test
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldGetResultFromCallableStatement() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L64" href="#L64">64</a>      when(cs.getBoolean(1)).thenReturn(<strong class="jxr_keyword">true</strong>);
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>      when(cs.wasNull()).thenReturn(false);
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>      assertEquals(<strong class="jxr_keyword">true</strong>, TYPE_HANDLER.getResult(cs, 1));
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>    }
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>  
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>    @Override
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldGetResultNullFromCallableStatement() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>      <em class="jxr_comment">// Unnecessary</em>
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>    }
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>  
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>  }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2009&#x2013;2016 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>

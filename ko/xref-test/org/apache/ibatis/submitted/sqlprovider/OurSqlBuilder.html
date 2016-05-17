@@ -144,7 +144,19 @@
 <a class="jxr_linenumber" name="L136" href="#L136">136</a>     }}.toString();
 <a class="jxr_linenumber" name="L137" href="#L137">137</a>   }
 <a class="jxr_linenumber" name="L138" href="#L138">138</a> 
-<a class="jxr_linenumber" name="L139" href="#L139">139</a> }
+<a class="jxr_linenumber" name="L139" href="#L139">139</a>   <strong class="jxr_keyword">public</strong> String buildInsert() {
+<a class="jxr_linenumber" name="L140" href="#L140">140</a>     <strong class="jxr_keyword">return</strong> <span class="jxr_string">"insert into users (id, name) values (#{id}, #{name})"</span>;
+<a class="jxr_linenumber" name="L141" href="#L141">141</a>   }
+<a class="jxr_linenumber" name="L142" href="#L142">142</a> 
+<a class="jxr_linenumber" name="L143" href="#L143">143</a>   <strong class="jxr_keyword">public</strong> String buildUpdate() {
+<a class="jxr_linenumber" name="L144" href="#L144">144</a>     <strong class="jxr_keyword">return</strong> <span class="jxr_string">"update users set name = #{name} where id = #{id}"</span>;
+<a class="jxr_linenumber" name="L145" href="#L145">145</a>   }
+<a class="jxr_linenumber" name="L146" href="#L146">146</a> 
+<a class="jxr_linenumber" name="L147" href="#L147">147</a>   <strong class="jxr_keyword">public</strong> String buildDelete() {
+<a class="jxr_linenumber" name="L148" href="#L148">148</a>     <strong class="jxr_keyword">return</strong> <span class="jxr_string">"delete from users where id = #{id}"</span>;
+<a class="jxr_linenumber" name="L149" href="#L149">149</a>   }
+<a class="jxr_linenumber" name="L150" href="#L150">150</a> 
+<a class="jxr_linenumber" name="L151" href="#L151">151</a> }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2009&#x2013;2016 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>

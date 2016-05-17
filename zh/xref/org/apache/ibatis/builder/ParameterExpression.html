@@ -106,7 +106,7 @@
 <a class="jxr_linenumber" name="L98" href="#L98">98</a>        } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (expression.charAt(p) == ',') {
 <a class="jxr_linenumber" name="L99" href="#L99">99</a>          option(expression, p + 1);
 <a class="jxr_linenumber" name="L100" href="#L100">100</a>       } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="L101" href="#L101">101</a>         <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/builder/BuilderException.html">BuilderException</a>(<span class="jxr_string">"Parsing error in {"</span> + <strong class="jxr_keyword">new</strong> String(expression) + <span class="jxr_string">"} in position "</span> + p);
+<a class="jxr_linenumber" name="L101" href="#L101">101</a>         <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/builder/BuilderException.html">BuilderException</a>(<span class="jxr_string">"Parsing error in {"</span> + expression + <span class="jxr_string">"} in position "</span> + p);
 <a class="jxr_linenumber" name="L102" href="#L102">102</a>       }
 <a class="jxr_linenumber" name="L103" href="#L103">103</a>     }
 <a class="jxr_linenumber" name="L104" href="#L104">104</a>   }
@@ -117,7 +117,7 @@
 <a class="jxr_linenumber" name="L109" href="#L109">109</a>     <strong class="jxr_keyword">if</strong> (right &gt; left) {
 <a class="jxr_linenumber" name="L110" href="#L110">110</a>       put(<span class="jxr_string">"jdbcType"</span>, trimmedStr(expression, left, right));
 <a class="jxr_linenumber" name="L111" href="#L111">111</a>     } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="L112" href="#L112">112</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/builder/BuilderException.html">BuilderException</a>(<span class="jxr_string">"Parsing error in {"</span> + <strong class="jxr_keyword">new</strong> String(expression) + <span class="jxr_string">"} in position "</span> + p);
+<a class="jxr_linenumber" name="L112" href="#L112">112</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/builder/BuilderException.html">BuilderException</a>(<span class="jxr_string">"Parsing error in {"</span> + expression + <span class="jxr_string">"} in position "</span> + p);
 <a class="jxr_linenumber" name="L113" href="#L113">113</a>     }
 <a class="jxr_linenumber" name="L114" href="#L114">114</a>     option(expression, right + 1);
 <a class="jxr_linenumber" name="L115" href="#L115">115</a>   }

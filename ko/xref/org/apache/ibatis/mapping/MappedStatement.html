@@ -157,12 +157,12 @@
 <a class="jxr_linenumber" name="L149" href="#L149">149</a>     }
 <a class="jxr_linenumber" name="L150" href="#L150">150</a> 
 <a class="jxr_linenumber" name="L151" href="#L151">151</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../org/apache/ibatis/mapping/ResultMapping.html">Builder</a> keyProperty(String keyProperty) {
-<a class="jxr_linenumber" name="L152" href="#L152">152</a>       mappedStatement.keyProperties = delimitedStringtoArray(keyProperty);
+<a class="jxr_linenumber" name="L152" href="#L152">152</a>       mappedStatement.keyProperties = delimitedStringToArray(keyProperty);
 <a class="jxr_linenumber" name="L153" href="#L153">153</a>       <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>;
 <a class="jxr_linenumber" name="L154" href="#L154">154</a>     }
 <a class="jxr_linenumber" name="L155" href="#L155">155</a> 
 <a class="jxr_linenumber" name="L156" href="#L156">156</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../org/apache/ibatis/mapping/ResultMapping.html">Builder</a> keyColumn(String keyColumn) {
-<a class="jxr_linenumber" name="L157" href="#L157">157</a>       mappedStatement.keyColumns = delimitedStringtoArray(keyColumn);
+<a class="jxr_linenumber" name="L157" href="#L157">157</a>       mappedStatement.keyColumns = delimitedStringToArray(keyColumn);
 <a class="jxr_linenumber" name="L158" href="#L158">158</a>       <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>;
 <a class="jxr_linenumber" name="L159" href="#L159">159</a>     }
 <a class="jxr_linenumber" name="L160" href="#L160">160</a> 
@@ -177,14 +177,14 @@
 <a class="jxr_linenumber" name="L169" href="#L169">169</a>     }
 <a class="jxr_linenumber" name="L170" href="#L170">170</a> 
 <a class="jxr_linenumber" name="L171" href="#L171">171</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../org/apache/ibatis/mapping/ResultMapping.html">Builder</a> resultSets(String resultSet) {
-<a class="jxr_linenumber" name="L172" href="#L172">172</a>       mappedStatement.resultSets = delimitedStringtoArray(resultSet);
+<a class="jxr_linenumber" name="L172" href="#L172">172</a>       mappedStatement.resultSets = delimitedStringToArray(resultSet);
 <a class="jxr_linenumber" name="L173" href="#L173">173</a>       <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>;
 <a class="jxr_linenumber" name="L174" href="#L174">174</a>     }
 <a class="jxr_linenumber" name="L175" href="#L175">175</a> 
 <a class="jxr_linenumber" name="L176" href="#L176">176</a>     <em class="jxr_javadoccomment">/** @deprecated Use {@link #resultSets} */</em>
 <a class="jxr_linenumber" name="L177" href="#L177">177</a>     @Deprecated
 <a class="jxr_linenumber" name="L178" href="#L178">178</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../org/apache/ibatis/mapping/ResultMapping.html">Builder</a> resulSets(String resultSet) {
-<a class="jxr_linenumber" name="L179" href="#L179">179</a>       mappedStatement.resultSets = delimitedStringtoArray(resultSet);
+<a class="jxr_linenumber" name="L179" href="#L179">179</a>       mappedStatement.resultSets = delimitedStringToArray(resultSet);
 <a class="jxr_linenumber" name="L180" href="#L180">180</a>       <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>;
 <a class="jxr_linenumber" name="L181" href="#L181">181</a>     }
 <a class="jxr_linenumber" name="L182" href="#L182">182</a>     
@@ -317,7 +317,7 @@
 <a class="jxr_linenumber" name="L309" href="#L309">309</a>     <strong class="jxr_keyword">return</strong> boundSql;
 <a class="jxr_linenumber" name="L310" href="#L310">310</a>   }
 <a class="jxr_linenumber" name="L311" href="#L311">311</a> 
-<a class="jxr_linenumber" name="L312" href="#L312">312</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> String[] delimitedStringtoArray(String in) {
+<a class="jxr_linenumber" name="L312" href="#L312">312</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> String[] delimitedStringToArray(String in) {
 <a class="jxr_linenumber" name="L313" href="#L313">313</a>     <strong class="jxr_keyword">if</strong> (in == <strong class="jxr_keyword">null</strong> || in.trim().length() == 0) {
 <a class="jxr_linenumber" name="L314" href="#L314">314</a>       <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L315" href="#L315">315</a>     } <strong class="jxr_keyword">else</strong> {

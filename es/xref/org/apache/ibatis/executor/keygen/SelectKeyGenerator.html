@@ -7,7 +7,7 @@
 <body>
 <div id="overview"><a href="../../../../../../../apidocs/org/apache/ibatis/executor/keygen/SelectKeyGenerator.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2015 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2016 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_javadoccomment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_javadoccomment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_javadoccomment"> *    you may not use this file except in compliance with the License.</em>
@@ -107,8 +107,8 @@
 <a class="jxr_linenumber" name="L99" href="#L99">99</a>        
 <a class="jxr_linenumber" name="L100" href="#L100">100</a>     <strong class="jxr_keyword">if</strong> (keyColumns == <strong class="jxr_keyword">null</strong> || keyColumns.length == 0) {
 <a class="jxr_linenumber" name="L101" href="#L101">101</a>       <em class="jxr_comment">// no key columns specified, just use the property names</em>
-<a class="jxr_linenumber" name="L102" href="#L102">102</a>       <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; i &lt; keyProperties.length; i++) {
-<a class="jxr_linenumber" name="L103" href="#L103">103</a>         setValue(metaParam, keyProperties[i], metaResult.getValue(keyProperties[i]));
+<a class="jxr_linenumber" name="L102" href="#L102">102</a>       <strong class="jxr_keyword">for</strong> (String keyProperty : keyProperties) {
+<a class="jxr_linenumber" name="L103" href="#L103">103</a>         setValue(metaParam, keyProperty, metaResult.getValue(keyProperty));
 <a class="jxr_linenumber" name="L104" href="#L104">104</a>       }
 <a class="jxr_linenumber" name="L105" href="#L105">105</a>     } <strong class="jxr_keyword">else</strong> {
 <a class="jxr_linenumber" name="L106" href="#L106">106</a>       <strong class="jxr_keyword">if</strong> (keyColumns.length != keyProperties.length) {

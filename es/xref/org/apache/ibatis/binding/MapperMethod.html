@@ -25,11 +25,11 @@
 <a class="jxr_linenumber" name="L17" href="#L17">17</a>  
 <a class="jxr_linenumber" name="L18" href="#L18">18</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.annotations.Flush;
 <a class="jxr_linenumber" name="L19" href="#L19">19</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.annotations.MapKey;
-<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.annotations.Param;
-<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.cursor.Cursor;
-<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.mapping.MappedStatement;
-<a class="jxr_linenumber" name="L23" href="#L23">23</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.mapping.SqlCommandType;
-<a class="jxr_linenumber" name="L24" href="#L24">24</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.reflection.MetaObject;
+<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.cursor.Cursor;
+<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.mapping.MappedStatement;
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.mapping.SqlCommandType;
+<a class="jxr_linenumber" name="L23" href="#L23">23</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.reflection.MetaObject;
+<a class="jxr_linenumber" name="L24" href="#L24">24</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.reflection.ParamNameResolver;
 <a class="jxr_linenumber" name="L25" href="#L25">25</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.reflection.TypeParameterResolver;
 <a class="jxr_linenumber" name="L26" href="#L26">26</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.session.Configuration;
 <a class="jxr_linenumber" name="L27" href="#L27">27</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.session.ResultHandler;
@@ -99,11 +99,11 @@
 <a class="jxr_linenumber" name="L91" href="#L91">91</a>      <strong class="jxr_keyword">if</strong> (method.returnsVoid()) {
 <a class="jxr_linenumber" name="L92" href="#L92">92</a>        result = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L93" href="#L93">93</a>      } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (Integer.<strong class="jxr_keyword">class</strong>.equals(method.getReturnType()) || Integer.TYPE.equals(method.getReturnType())) {
-<a class="jxr_linenumber" name="L94" href="#L94">94</a>        result = Integer.valueOf(rowCount);
+<a class="jxr_linenumber" name="L94" href="#L94">94</a>        result = rowCount;
 <a class="jxr_linenumber" name="L95" href="#L95">95</a>      } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (Long.<strong class="jxr_keyword">class</strong>.equals(method.getReturnType()) || Long.TYPE.equals(method.getReturnType())) {
-<a class="jxr_linenumber" name="L96" href="#L96">96</a>        result = Long.valueOf(rowCount);
+<a class="jxr_linenumber" name="L96" href="#L96">96</a>        result = (<strong class="jxr_keyword">long</strong>)rowCount;
 <a class="jxr_linenumber" name="L97" href="#L97">97</a>      } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (Boolean.<strong class="jxr_keyword">class</strong>.equals(method.getReturnType()) || Boolean.TYPE.equals(method.getReturnType())) {
-<a class="jxr_linenumber" name="L98" href="#L98">98</a>        result = Boolean.valueOf(rowCount &gt; 0);
+<a class="jxr_linenumber" name="L98" href="#L98">98</a>        result = rowCount &gt; 0;
 <a class="jxr_linenumber" name="L99" href="#L99">99</a>      } <strong class="jxr_keyword">else</strong> {
 <a class="jxr_linenumber" name="L100" href="#L100">100</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/binding/BindingException.html">BindingException</a>(<span class="jxr_string">"Mapper method '"</span> + command.getName() + <span class="jxr_string">"' has an unsupported return type: "</span> + method.getReturnType());
 <a class="jxr_linenumber" name="L101" href="#L101">101</a>     }
@@ -249,158 +249,99 @@
 <a class="jxr_linenumber" name="L241" href="#L241">241</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> String mapKey;
 <a class="jxr_linenumber" name="L242" href="#L242">242</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> Integer resultHandlerIndex;
 <a class="jxr_linenumber" name="L243" href="#L243">243</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> Integer rowBoundsIndex;
-<a class="jxr_linenumber" name="L244" href="#L244">244</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> SortedMap&lt;Integer, String&gt; params;
-<a class="jxr_linenumber" name="L245" href="#L245">245</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">boolean</strong> hasNamedParameters;
-<a class="jxr_linenumber" name="L246" href="#L246">246</a> 
-<a class="jxr_linenumber" name="L247" href="#L247">247</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../org/apache/ibatis/binding/MapperMethod.html">MethodSignature</a>(<a href="../../../../org/apache/ibatis/session/Configuration.html">Configuration</a> configuration, Class&lt;?&gt; mapperInterface, Method method) {
-<a class="jxr_linenumber" name="L248" href="#L248">248</a>       Type resolvedReturnType = TypeParameterResolver.resolveReturnType(method, mapperInterface);
-<a class="jxr_linenumber" name="L249" href="#L249">249</a>       <strong class="jxr_keyword">if</strong> (resolvedReturnType instanceof Class&lt;?&gt;) {
-<a class="jxr_linenumber" name="L250" href="#L250">250</a>         <strong class="jxr_keyword">this</strong>.returnType = (Class&lt;?&gt;) resolvedReturnType;
-<a class="jxr_linenumber" name="L251" href="#L251">251</a>       } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (resolvedReturnType instanceof ParameterizedType) {
-<a class="jxr_linenumber" name="L252" href="#L252">252</a>         <strong class="jxr_keyword">this</strong>.returnType = (Class&lt;?&gt;) ((ParameterizedType) resolvedReturnType).getRawType();
-<a class="jxr_linenumber" name="L253" href="#L253">253</a>       } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="L254" href="#L254">254</a>         <strong class="jxr_keyword">this</strong>.returnType = method.getReturnType();
-<a class="jxr_linenumber" name="L255" href="#L255">255</a>       }
-<a class="jxr_linenumber" name="L256" href="#L256">256</a>       <strong class="jxr_keyword">this</strong>.returnsVoid = <strong class="jxr_keyword">void</strong>.<strong class="jxr_keyword">class</strong>.equals(<strong class="jxr_keyword">this</strong>.returnType);
-<a class="jxr_linenumber" name="L257" href="#L257">257</a>       <strong class="jxr_keyword">this</strong>.returnsMany = (configuration.getObjectFactory().isCollection(<strong class="jxr_keyword">this</strong>.returnType) || <strong class="jxr_keyword">this</strong>.returnType.isArray());
-<a class="jxr_linenumber" name="L258" href="#L258">258</a>       <strong class="jxr_keyword">this</strong>.returnsCursor = Cursor.<strong class="jxr_keyword">class</strong>.equals(<strong class="jxr_keyword">this</strong>.returnType);
-<a class="jxr_linenumber" name="L259" href="#L259">259</a>       <strong class="jxr_keyword">this</strong>.mapKey = getMapKey(method);
-<a class="jxr_linenumber" name="L260" href="#L260">260</a>       <strong class="jxr_keyword">this</strong>.returnsMap = (<strong class="jxr_keyword">this</strong>.mapKey != <strong class="jxr_keyword">null</strong>);
-<a class="jxr_linenumber" name="L261" href="#L261">261</a>       <strong class="jxr_keyword">this</strong>.hasNamedParameters = hasNamedParams(method);
-<a class="jxr_linenumber" name="L262" href="#L262">262</a>       <strong class="jxr_keyword">this</strong>.rowBoundsIndex = getUniqueParamIndex(method, RowBounds.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L263" href="#L263">263</a>       <strong class="jxr_keyword">this</strong>.resultHandlerIndex = getUniqueParamIndex(method, ResultHandler.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L264" href="#L264">264</a>       <strong class="jxr_keyword">this</strong>.params = Collections.unmodifiableSortedMap(getParams(method, <strong class="jxr_keyword">this</strong>.hasNamedParameters));
-<a class="jxr_linenumber" name="L265" href="#L265">265</a>     }
-<a class="jxr_linenumber" name="L266" href="#L266">266</a> 
-<a class="jxr_linenumber" name="L267" href="#L267">267</a>     <strong class="jxr_keyword">public</strong> Object convertArgsToSqlCommandParam(Object[] args) {
-<a class="jxr_linenumber" name="L268" href="#L268">268</a>       <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> paramCount = params.size();
-<a class="jxr_linenumber" name="L269" href="#L269">269</a>       <strong class="jxr_keyword">if</strong> (args == <strong class="jxr_keyword">null</strong> || paramCount == 0) {
-<a class="jxr_linenumber" name="L270" href="#L270">270</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">null</strong>;
-<a class="jxr_linenumber" name="L271" href="#L271">271</a>       } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (!hasNamedParameters &amp;&amp; paramCount == 1) {
-<a class="jxr_linenumber" name="L272" href="#L272">272</a>         <strong class="jxr_keyword">return</strong> args[params.keySet().iterator().next().intValue()];
-<a class="jxr_linenumber" name="L273" href="#L273">273</a>       } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="L274" href="#L274">274</a>         <strong class="jxr_keyword">final</strong> Map&lt;String, Object&gt; param = <strong class="jxr_keyword">new</strong> ParamMap&lt;Object&gt;();
-<a class="jxr_linenumber" name="L275" href="#L275">275</a>         <strong class="jxr_keyword">int</strong> i = 0;
-<a class="jxr_linenumber" name="L276" href="#L276">276</a>         <strong class="jxr_keyword">for</strong> (Map.Entry&lt;Integer, String&gt; entry : params.entrySet()) {
-<a class="jxr_linenumber" name="L277" href="#L277">277</a>           param.put(entry.getValue(), args[entry.getKey().intValue()]);
-<a class="jxr_linenumber" name="L278" href="#L278">278</a>           <em class="jxr_comment">// issue #71, add param names as param1, param2...but ensure backward compatibility</em>
-<a class="jxr_linenumber" name="L279" href="#L279">279</a>           <strong class="jxr_keyword">final</strong> String genericParamName = <span class="jxr_string">"param"</span> + String.valueOf(i + 1);
-<a class="jxr_linenumber" name="L280" href="#L280">280</a>           <strong class="jxr_keyword">if</strong> (!param.containsKey(genericParamName)) {
-<a class="jxr_linenumber" name="L281" href="#L281">281</a>             param.put(genericParamName, args[entry.getKey()]);
-<a class="jxr_linenumber" name="L282" href="#L282">282</a>           }
-<a class="jxr_linenumber" name="L283" href="#L283">283</a>           i++;
-<a class="jxr_linenumber" name="L284" href="#L284">284</a>         }
-<a class="jxr_linenumber" name="L285" href="#L285">285</a>         <strong class="jxr_keyword">return</strong> param;
-<a class="jxr_linenumber" name="L286" href="#L286">286</a>       }
+<a class="jxr_linenumber" name="L244" href="#L244">244</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <a href="../../../../org/apache/ibatis/reflection/ParamNameResolver.html">ParamNameResolver</a> paramNameResolver;
+<a class="jxr_linenumber" name="L245" href="#L245">245</a> 
+<a class="jxr_linenumber" name="L246" href="#L246">246</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../org/apache/ibatis/binding/MapperMethod.html">MethodSignature</a>(<a href="../../../../org/apache/ibatis/session/Configuration.html">Configuration</a> configuration, Class&lt;?&gt; mapperInterface, Method method) {
+<a class="jxr_linenumber" name="L247" href="#L247">247</a>       Type resolvedReturnType = TypeParameterResolver.resolveReturnType(method, mapperInterface);
+<a class="jxr_linenumber" name="L248" href="#L248">248</a>       <strong class="jxr_keyword">if</strong> (resolvedReturnType instanceof Class&lt;?&gt;) {
+<a class="jxr_linenumber" name="L249" href="#L249">249</a>         <strong class="jxr_keyword">this</strong>.returnType = (Class&lt;?&gt;) resolvedReturnType;
+<a class="jxr_linenumber" name="L250" href="#L250">250</a>       } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (resolvedReturnType instanceof ParameterizedType) {
+<a class="jxr_linenumber" name="L251" href="#L251">251</a>         <strong class="jxr_keyword">this</strong>.returnType = (Class&lt;?&gt;) ((ParameterizedType) resolvedReturnType).getRawType();
+<a class="jxr_linenumber" name="L252" href="#L252">252</a>       } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L253" href="#L253">253</a>         <strong class="jxr_keyword">this</strong>.returnType = method.getReturnType();
+<a class="jxr_linenumber" name="L254" href="#L254">254</a>       }
+<a class="jxr_linenumber" name="L255" href="#L255">255</a>       <strong class="jxr_keyword">this</strong>.returnsVoid = <strong class="jxr_keyword">void</strong>.<strong class="jxr_keyword">class</strong>.equals(<strong class="jxr_keyword">this</strong>.returnType);
+<a class="jxr_linenumber" name="L256" href="#L256">256</a>       <strong class="jxr_keyword">this</strong>.returnsMany = (configuration.getObjectFactory().isCollection(<strong class="jxr_keyword">this</strong>.returnType) || <strong class="jxr_keyword">this</strong>.returnType.isArray());
+<a class="jxr_linenumber" name="L257" href="#L257">257</a>       <strong class="jxr_keyword">this</strong>.returnsCursor = Cursor.<strong class="jxr_keyword">class</strong>.equals(<strong class="jxr_keyword">this</strong>.returnType);
+<a class="jxr_linenumber" name="L258" href="#L258">258</a>       <strong class="jxr_keyword">this</strong>.mapKey = getMapKey(method);
+<a class="jxr_linenumber" name="L259" href="#L259">259</a>       <strong class="jxr_keyword">this</strong>.returnsMap = (<strong class="jxr_keyword">this</strong>.mapKey != <strong class="jxr_keyword">null</strong>);
+<a class="jxr_linenumber" name="L260" href="#L260">260</a>       <strong class="jxr_keyword">this</strong>.rowBoundsIndex = getUniqueParamIndex(method, RowBounds.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L261" href="#L261">261</a>       <strong class="jxr_keyword">this</strong>.resultHandlerIndex = getUniqueParamIndex(method, ResultHandler.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L262" href="#L262">262</a>       <strong class="jxr_keyword">this</strong>.paramNameResolver = <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/reflection/ParamNameResolver.html">ParamNameResolver</a>(configuration, method);
+<a class="jxr_linenumber" name="L263" href="#L263">263</a>     }
+<a class="jxr_linenumber" name="L264" href="#L264">264</a> 
+<a class="jxr_linenumber" name="L265" href="#L265">265</a>     <strong class="jxr_keyword">public</strong> Object convertArgsToSqlCommandParam(Object[] args) {
+<a class="jxr_linenumber" name="L266" href="#L266">266</a>       <strong class="jxr_keyword">return</strong> paramNameResolver.getNamedParams(args);
+<a class="jxr_linenumber" name="L267" href="#L267">267</a>     }
+<a class="jxr_linenumber" name="L268" href="#L268">268</a> 
+<a class="jxr_linenumber" name="L269" href="#L269">269</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> hasRowBounds() {
+<a class="jxr_linenumber" name="L270" href="#L270">270</a>       <strong class="jxr_keyword">return</strong> rowBoundsIndex != <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L271" href="#L271">271</a>     }
+<a class="jxr_linenumber" name="L272" href="#L272">272</a> 
+<a class="jxr_linenumber" name="L273" href="#L273">273</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../org/apache/ibatis/session/RowBounds.html">RowBounds</a> extractRowBounds(Object[] args) {
+<a class="jxr_linenumber" name="L274" href="#L274">274</a>       <strong class="jxr_keyword">return</strong> hasRowBounds() ? (RowBounds) args[rowBoundsIndex] : <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L275" href="#L275">275</a>     }
+<a class="jxr_linenumber" name="L276" href="#L276">276</a> 
+<a class="jxr_linenumber" name="L277" href="#L277">277</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> hasResultHandler() {
+<a class="jxr_linenumber" name="L278" href="#L278">278</a>       <strong class="jxr_keyword">return</strong> resultHandlerIndex != <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L279" href="#L279">279</a>     }
+<a class="jxr_linenumber" name="L280" href="#L280">280</a> 
+<a class="jxr_linenumber" name="L281" href="#L281">281</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../org/apache/ibatis/session/ResultHandler.html">ResultHandler</a> extractResultHandler(Object[] args) {
+<a class="jxr_linenumber" name="L282" href="#L282">282</a>       <strong class="jxr_keyword">return</strong> hasResultHandler() ? (ResultHandler) args[resultHandlerIndex] : <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L283" href="#L283">283</a>     }
+<a class="jxr_linenumber" name="L284" href="#L284">284</a> 
+<a class="jxr_linenumber" name="L285" href="#L285">285</a>     <strong class="jxr_keyword">public</strong> String getMapKey() {
+<a class="jxr_linenumber" name="L286" href="#L286">286</a>       <strong class="jxr_keyword">return</strong> mapKey;
 <a class="jxr_linenumber" name="L287" href="#L287">287</a>     }
 <a class="jxr_linenumber" name="L288" href="#L288">288</a> 
-<a class="jxr_linenumber" name="L289" href="#L289">289</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> hasRowBounds() {
-<a class="jxr_linenumber" name="L290" href="#L290">290</a>       <strong class="jxr_keyword">return</strong> rowBoundsIndex != <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L289" href="#L289">289</a>     <strong class="jxr_keyword">public</strong> Class&lt;?&gt; getReturnType() {
+<a class="jxr_linenumber" name="L290" href="#L290">290</a>       <strong class="jxr_keyword">return</strong> returnType;
 <a class="jxr_linenumber" name="L291" href="#L291">291</a>     }
 <a class="jxr_linenumber" name="L292" href="#L292">292</a> 
-<a class="jxr_linenumber" name="L293" href="#L293">293</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../org/apache/ibatis/session/RowBounds.html">RowBounds</a> extractRowBounds(Object[] args) {
-<a class="jxr_linenumber" name="L294" href="#L294">294</a>       <strong class="jxr_keyword">return</strong> hasRowBounds() ? (RowBounds) args[rowBoundsIndex] : <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L293" href="#L293">293</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> returnsMany() {
+<a class="jxr_linenumber" name="L294" href="#L294">294</a>       <strong class="jxr_keyword">return</strong> returnsMany;
 <a class="jxr_linenumber" name="L295" href="#L295">295</a>     }
 <a class="jxr_linenumber" name="L296" href="#L296">296</a> 
-<a class="jxr_linenumber" name="L297" href="#L297">297</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> hasResultHandler() {
-<a class="jxr_linenumber" name="L298" href="#L298">298</a>       <strong class="jxr_keyword">return</strong> resultHandlerIndex != <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L297" href="#L297">297</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> returnsMap() {
+<a class="jxr_linenumber" name="L298" href="#L298">298</a>       <strong class="jxr_keyword">return</strong> returnsMap;
 <a class="jxr_linenumber" name="L299" href="#L299">299</a>     }
 <a class="jxr_linenumber" name="L300" href="#L300">300</a> 
-<a class="jxr_linenumber" name="L301" href="#L301">301</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../org/apache/ibatis/session/ResultHandler.html">ResultHandler</a> extractResultHandler(Object[] args) {
-<a class="jxr_linenumber" name="L302" href="#L302">302</a>       <strong class="jxr_keyword">return</strong> hasResultHandler() ? (ResultHandler) args[resultHandlerIndex] : <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L301" href="#L301">301</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> returnsVoid() {
+<a class="jxr_linenumber" name="L302" href="#L302">302</a>       <strong class="jxr_keyword">return</strong> returnsVoid;
 <a class="jxr_linenumber" name="L303" href="#L303">303</a>     }
 <a class="jxr_linenumber" name="L304" href="#L304">304</a> 
-<a class="jxr_linenumber" name="L305" href="#L305">305</a>     <strong class="jxr_keyword">public</strong> String getMapKey() {
-<a class="jxr_linenumber" name="L306" href="#L306">306</a>       <strong class="jxr_keyword">return</strong> mapKey;
+<a class="jxr_linenumber" name="L305" href="#L305">305</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> returnsCursor() {
+<a class="jxr_linenumber" name="L306" href="#L306">306</a>       <strong class="jxr_keyword">return</strong> returnsCursor;
 <a class="jxr_linenumber" name="L307" href="#L307">307</a>     }
 <a class="jxr_linenumber" name="L308" href="#L308">308</a> 
-<a class="jxr_linenumber" name="L309" href="#L309">309</a>     <strong class="jxr_keyword">public</strong> Class&lt;?&gt; getReturnType() {
-<a class="jxr_linenumber" name="L310" href="#L310">310</a>       <strong class="jxr_keyword">return</strong> returnType;
-<a class="jxr_linenumber" name="L311" href="#L311">311</a>     }
-<a class="jxr_linenumber" name="L312" href="#L312">312</a> 
-<a class="jxr_linenumber" name="L313" href="#L313">313</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> returnsMany() {
-<a class="jxr_linenumber" name="L314" href="#L314">314</a>       <strong class="jxr_keyword">return</strong> returnsMany;
-<a class="jxr_linenumber" name="L315" href="#L315">315</a>     }
-<a class="jxr_linenumber" name="L316" href="#L316">316</a> 
-<a class="jxr_linenumber" name="L317" href="#L317">317</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> returnsMap() {
-<a class="jxr_linenumber" name="L318" href="#L318">318</a>       <strong class="jxr_keyword">return</strong> returnsMap;
-<a class="jxr_linenumber" name="L319" href="#L319">319</a>     }
-<a class="jxr_linenumber" name="L320" href="#L320">320</a> 
-<a class="jxr_linenumber" name="L321" href="#L321">321</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> returnsVoid() {
-<a class="jxr_linenumber" name="L322" href="#L322">322</a>       <strong class="jxr_keyword">return</strong> returnsVoid;
-<a class="jxr_linenumber" name="L323" href="#L323">323</a>     }
-<a class="jxr_linenumber" name="L324" href="#L324">324</a> 
-<a class="jxr_linenumber" name="L325" href="#L325">325</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> returnsCursor() {
-<a class="jxr_linenumber" name="L326" href="#L326">326</a>       <strong class="jxr_keyword">return</strong> returnsCursor;
-<a class="jxr_linenumber" name="L327" href="#L327">327</a>     }
-<a class="jxr_linenumber" name="L328" href="#L328">328</a> 
-<a class="jxr_linenumber" name="L329" href="#L329">329</a>     <strong class="jxr_keyword">private</strong> Integer getUniqueParamIndex(Method method, Class&lt;?&gt; paramType) {
-<a class="jxr_linenumber" name="L330" href="#L330">330</a>       Integer index = <strong class="jxr_keyword">null</strong>;
-<a class="jxr_linenumber" name="L331" href="#L331">331</a>       <strong class="jxr_keyword">final</strong> Class&lt;?&gt;[] argTypes = method.getParameterTypes();
-<a class="jxr_linenumber" name="L332" href="#L332">332</a>       <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; i &lt; argTypes.length; i++) {
-<a class="jxr_linenumber" name="L333" href="#L333">333</a>         <strong class="jxr_keyword">if</strong> (paramType.isAssignableFrom(argTypes[i])) {
-<a class="jxr_linenumber" name="L334" href="#L334">334</a>           <strong class="jxr_keyword">if</strong> (index == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L335" href="#L335">335</a>             index = i;
-<a class="jxr_linenumber" name="L336" href="#L336">336</a>           } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="L337" href="#L337">337</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/binding/BindingException.html">BindingException</a>(method.getName() + <span class="jxr_string">" cannot have multiple "</span> + paramType.getSimpleName() + <span class="jxr_string">" parameters"</span>);
-<a class="jxr_linenumber" name="L338" href="#L338">338</a>           }
-<a class="jxr_linenumber" name="L339" href="#L339">339</a>         }
-<a class="jxr_linenumber" name="L340" href="#L340">340</a>       }
-<a class="jxr_linenumber" name="L341" href="#L341">341</a>       <strong class="jxr_keyword">return</strong> index;
-<a class="jxr_linenumber" name="L342" href="#L342">342</a>     }
-<a class="jxr_linenumber" name="L343" href="#L343">343</a> 
-<a class="jxr_linenumber" name="L344" href="#L344">344</a>     <strong class="jxr_keyword">private</strong> String getMapKey(Method method) {
-<a class="jxr_linenumber" name="L345" href="#L345">345</a>       String mapKey = <strong class="jxr_keyword">null</strong>;
-<a class="jxr_linenumber" name="L346" href="#L346">346</a>       <strong class="jxr_keyword">if</strong> (Map.<strong class="jxr_keyword">class</strong>.isAssignableFrom(method.getReturnType())) {
-<a class="jxr_linenumber" name="L347" href="#L347">347</a>         <strong class="jxr_keyword">final</strong> <a href="../../../../org/apache/ibatis/annotations/MapKey.html">MapKey</a> mapKeyAnnotation = method.getAnnotation(MapKey.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L348" href="#L348">348</a>         <strong class="jxr_keyword">if</strong> (mapKeyAnnotation != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L349" href="#L349">349</a>           mapKey = mapKeyAnnotation.value();
-<a class="jxr_linenumber" name="L350" href="#L350">350</a>         }
-<a class="jxr_linenumber" name="L351" href="#L351">351</a>       }
-<a class="jxr_linenumber" name="L352" href="#L352">352</a>       <strong class="jxr_keyword">return</strong> mapKey;
-<a class="jxr_linenumber" name="L353" href="#L353">353</a>     }
-<a class="jxr_linenumber" name="L354" href="#L354">354</a> 
-<a class="jxr_linenumber" name="L355" href="#L355">355</a>     <strong class="jxr_keyword">private</strong> SortedMap&lt;Integer, String&gt; getParams(Method method, <strong class="jxr_keyword">boolean</strong> hasNamedParameters) {
-<a class="jxr_linenumber" name="L356" href="#L356">356</a>       <strong class="jxr_keyword">final</strong> SortedMap&lt;Integer, String&gt; params = <strong class="jxr_keyword">new</strong> TreeMap&lt;Integer, String&gt;();
-<a class="jxr_linenumber" name="L357" href="#L357">357</a>       <strong class="jxr_keyword">final</strong> Class&lt;?&gt;[] argTypes = method.getParameterTypes();
-<a class="jxr_linenumber" name="L358" href="#L358">358</a>       <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; i &lt; argTypes.length; i++) {
-<a class="jxr_linenumber" name="L359" href="#L359">359</a>         <strong class="jxr_keyword">if</strong> (!RowBounds.<strong class="jxr_keyword">class</strong>.isAssignableFrom(argTypes[i]) &amp;&amp; !ResultHandler.<strong class="jxr_keyword">class</strong>.isAssignableFrom(argTypes[i])) {
-<a class="jxr_linenumber" name="L360" href="#L360">360</a>           String paramName = String.valueOf(params.size());
-<a class="jxr_linenumber" name="L361" href="#L361">361</a>           <strong class="jxr_keyword">if</strong> (hasNamedParameters) {
-<a class="jxr_linenumber" name="L362" href="#L362">362</a>             paramName = getParamNameFromAnnotation(method, i, paramName);
-<a class="jxr_linenumber" name="L363" href="#L363">363</a>           }
-<a class="jxr_linenumber" name="L364" href="#L364">364</a>           params.put(i, paramName);
-<a class="jxr_linenumber" name="L365" href="#L365">365</a>         }
-<a class="jxr_linenumber" name="L366" href="#L366">366</a>       }
-<a class="jxr_linenumber" name="L367" href="#L367">367</a>       <strong class="jxr_keyword">return</strong> params;
-<a class="jxr_linenumber" name="L368" href="#L368">368</a>     }
-<a class="jxr_linenumber" name="L369" href="#L369">369</a> 
-<a class="jxr_linenumber" name="L370" href="#L370">370</a>     <strong class="jxr_keyword">private</strong> String getParamNameFromAnnotation(Method method, <strong class="jxr_keyword">int</strong> i, String paramName) {
-<a class="jxr_linenumber" name="L371" href="#L371">371</a>       <strong class="jxr_keyword">final</strong> Object[] paramAnnos = method.getParameterAnnotations()[i];
-<a class="jxr_linenumber" name="L372" href="#L372">372</a>       <strong class="jxr_keyword">for</strong> (Object paramAnno : paramAnnos) {
-<a class="jxr_linenumber" name="L373" href="#L373">373</a>         <strong class="jxr_keyword">if</strong> (paramAnno instanceof Param) {
-<a class="jxr_linenumber" name="L374" href="#L374">374</a>           paramName = ((Param) paramAnno).value();
-<a class="jxr_linenumber" name="L375" href="#L375">375</a>           <strong class="jxr_keyword">break</strong>;
-<a class="jxr_linenumber" name="L376" href="#L376">376</a>         }
-<a class="jxr_linenumber" name="L377" href="#L377">377</a>       }
-<a class="jxr_linenumber" name="L378" href="#L378">378</a>       <strong class="jxr_keyword">return</strong> paramName;
-<a class="jxr_linenumber" name="L379" href="#L379">379</a>     }
-<a class="jxr_linenumber" name="L380" href="#L380">380</a> 
-<a class="jxr_linenumber" name="L381" href="#L381">381</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">boolean</strong> hasNamedParams(Method method) {
-<a class="jxr_linenumber" name="L382" href="#L382">382</a>       <strong class="jxr_keyword">final</strong> Object[][] paramAnnos = method.getParameterAnnotations();
-<a class="jxr_linenumber" name="L383" href="#L383">383</a>       <strong class="jxr_keyword">for</strong> (Object[] paramAnno : paramAnnos) {
-<a class="jxr_linenumber" name="L384" href="#L384">384</a>         <strong class="jxr_keyword">for</strong> (Object aParamAnno : paramAnno) {
-<a class="jxr_linenumber" name="L385" href="#L385">385</a>           <strong class="jxr_keyword">if</strong> (aParamAnno instanceof Param) {
-<a class="jxr_linenumber" name="L386" href="#L386">386</a>             <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">true</strong>;
-<a class="jxr_linenumber" name="L387" href="#L387">387</a>           }
-<a class="jxr_linenumber" name="L388" href="#L388">388</a>         }
-<a class="jxr_linenumber" name="L389" href="#L389">389</a>       }
-<a class="jxr_linenumber" name="L390" href="#L390">390</a>       <strong class="jxr_keyword">return</strong> false;
-<a class="jxr_linenumber" name="L391" href="#L391">391</a>     }
-<a class="jxr_linenumber" name="L392" href="#L392">392</a> 
-<a class="jxr_linenumber" name="L393" href="#L393">393</a>   }
-<a class="jxr_linenumber" name="L394" href="#L394">394</a> 
-<a class="jxr_linenumber" name="L395" href="#L395">395</a> }
+<a class="jxr_linenumber" name="L309" href="#L309">309</a>     <strong class="jxr_keyword">private</strong> Integer getUniqueParamIndex(Method method, Class&lt;?&gt; paramType) {
+<a class="jxr_linenumber" name="L310" href="#L310">310</a>       Integer index = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L311" href="#L311">311</a>       <strong class="jxr_keyword">final</strong> Class&lt;?&gt;[] argTypes = method.getParameterTypes();
+<a class="jxr_linenumber" name="L312" href="#L312">312</a>       <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; i &lt; argTypes.length; i++) {
+<a class="jxr_linenumber" name="L313" href="#L313">313</a>         <strong class="jxr_keyword">if</strong> (paramType.isAssignableFrom(argTypes[i])) {
+<a class="jxr_linenumber" name="L314" href="#L314">314</a>           <strong class="jxr_keyword">if</strong> (index == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L315" href="#L315">315</a>             index = i;
+<a class="jxr_linenumber" name="L316" href="#L316">316</a>           } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L317" href="#L317">317</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/binding/BindingException.html">BindingException</a>(method.getName() + <span class="jxr_string">" cannot have multiple "</span> + paramType.getSimpleName() + <span class="jxr_string">" parameters"</span>);
+<a class="jxr_linenumber" name="L318" href="#L318">318</a>           }
+<a class="jxr_linenumber" name="L319" href="#L319">319</a>         }
+<a class="jxr_linenumber" name="L320" href="#L320">320</a>       }
+<a class="jxr_linenumber" name="L321" href="#L321">321</a>       <strong class="jxr_keyword">return</strong> index;
+<a class="jxr_linenumber" name="L322" href="#L322">322</a>     }
+<a class="jxr_linenumber" name="L323" href="#L323">323</a> 
+<a class="jxr_linenumber" name="L324" href="#L324">324</a>     <strong class="jxr_keyword">private</strong> String getMapKey(Method method) {
+<a class="jxr_linenumber" name="L325" href="#L325">325</a>       String mapKey = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L326" href="#L326">326</a>       <strong class="jxr_keyword">if</strong> (Map.<strong class="jxr_keyword">class</strong>.isAssignableFrom(method.getReturnType())) {
+<a class="jxr_linenumber" name="L327" href="#L327">327</a>         <strong class="jxr_keyword">final</strong> <a href="../../../../org/apache/ibatis/annotations/MapKey.html">MapKey</a> mapKeyAnnotation = method.getAnnotation(MapKey.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L328" href="#L328">328</a>         <strong class="jxr_keyword">if</strong> (mapKeyAnnotation != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L329" href="#L329">329</a>           mapKey = mapKeyAnnotation.value();
+<a class="jxr_linenumber" name="L330" href="#L330">330</a>         }
+<a class="jxr_linenumber" name="L331" href="#L331">331</a>       }
+<a class="jxr_linenumber" name="L332" href="#L332">332</a>       <strong class="jxr_keyword">return</strong> mapKey;
+<a class="jxr_linenumber" name="L333" href="#L333">333</a>     }
+<a class="jxr_linenumber" name="L334" href="#L334">334</a>   }
+<a class="jxr_linenumber" name="L335" href="#L335">335</a> 
+<a class="jxr_linenumber" name="L336" href="#L336">336</a> }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2009&#x2013;2016 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
