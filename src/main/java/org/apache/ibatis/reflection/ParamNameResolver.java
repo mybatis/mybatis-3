@@ -87,7 +87,8 @@ public class ParamNameResolver {
         // @Param was not specified.
         if (config.isUseActualParamName()) {
           name = getActualParamName(method, paramIndex);
-        } else {
+        }
+        if (name == null) {
           // use the parameter index as the name ("0", "1", ...)
           // gcode issue #71
           name = String.valueOf(map.size());
@@ -100,7 +101,7 @@ public class ParamNameResolver {
 
   private String getActualParamName(Method method, int paramIndex) {
     if (GET_PARAMS == null) {
-      throw new ReflectionException("Method#getParameters() method does not exist. Relaunch on Java 8 or set false to useActualParamName.");
+      return null;
     }
     try {
       Object[] params = (Object[]) GET_PARAMS.invoke(method);

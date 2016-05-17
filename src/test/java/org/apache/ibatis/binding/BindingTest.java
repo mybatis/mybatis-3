@@ -69,6 +69,7 @@ public class BindingTest {
     Environment environment = new Environment("Production", transactionFactory, dataSource);
     Configuration configuration = new Configuration(environment);
     configuration.setLazyLoadingEnabled(true);
+    configuration.setUseActualParamName(false); // to test legacy style reference (#{0} #{1})
     configuration.getTypeAliasRegistry().registerAlias(Blog.class);
     configuration.getTypeAliasRegistry().registerAlias(Post.class);
     configuration.getTypeAliasRegistry().registerAlias(Author.class);

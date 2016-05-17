@@ -106,7 +106,7 @@ public class Configuration {
   protected boolean useColumnLabel = true;
   protected boolean cacheEnabled = true;
   protected boolean callSettersOnNulls = false;
-  protected boolean useActualParamName = false;
+  protected boolean useActualParamName = true;
 
   protected String logPrefix;
   protected Class <? extends Log> logImpl;
