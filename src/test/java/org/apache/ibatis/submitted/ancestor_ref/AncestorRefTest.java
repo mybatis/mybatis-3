@@ -50,7 +50,6 @@ public class AncestorRefTest {
     session.close();
   }
 
-  @Ignore("issue #215")
   @Test
   public void testCircularAssociation() {
     SqlSession sqlSession = sqlSessionFactory.openSession();
@@ -63,7 +62,6 @@ public class AncestorRefTest {
     }
   }
 
-  @Ignore("issue #215")
   @Test
   public void testCircularCollection() {
     SqlSession sqlSession = sqlSessionFactory.openSession();
