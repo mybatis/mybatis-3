@@ -50,20 +50,23 @@ public class MapperMethod {
   }
 
   public Object execute(SqlSession sqlSession, Object[] args) {
-    Object result, param;
+    Object result;
     switch (command.getType()) {
-      case INSERT:
-        param = method.convertArgsToSqlCommandParam(args);
+      case INSERT: {
+    	Object param = method.convertArgsToSqlCommandParam(args);
         result = rowCountResult(sqlSession.insert(command.getName(), param));
         break;
-      case UPDATE:
-        param = method.convertArgsToSqlCommandParam(args);
+      }
+      case UPDATE: {
+        Object param = method.convertArgsToSqlCommandParam(args);
         result = rowCountResult(sqlSession.update(command.getName(), param));
         break;
-      case DELETE:
-        param = method.convertArgsToSqlCommandParam(args);
+      }
+      case DELETE: {
+        Object param = method.convertArgsToSqlCommandParam(args);
         result = rowCountResult(sqlSession.delete(command.getName(), param));
         break;
+      }
       case SELECT:
         if (method.returnsVoid() && method.hasResultHandler()) {
           executeWithResultHandler(sqlSession, args);
@@ -75,7 +78,7 @@ public class MapperMethod {
         } else if (method.returnsCursor()) {
           result = executeForCursor(sqlSession, args);
         } else {
-          param = method.convertArgsToSqlCommandParam(args);
+          Object param = method.convertArgsToSqlCommandParam(args);
           result = sqlSession.selectOne(command.getName(), param);
         }
         break;
