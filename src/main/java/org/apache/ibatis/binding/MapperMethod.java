@@ -82,7 +82,7 @@ public class MapperMethod {
       case FLUSH:
         result = sqlSession.flushStatements();
         break;
-      case default:
+      default:
         throw new BindingException("Unknown execution method for: " + command.getName());
     }
     if (result == null && method.getReturnType().isPrimitive() && !method.returnsVoid()) {
