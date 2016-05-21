@@ -51,33 +51,39 @@ public class MapperMethod {
 
   public Object execute(SqlSession sqlSession, Object[] args) {
     Object result;
-    if (SqlCommandType.INSERT == command.getType()) {
-      Object param = method.convertArgsToSqlCommandParam(args);
-      result = rowCountResult(sqlSession.insert(command.getName(), param));
-    } else if (SqlCommandType.UPDATE == command.getType()) {
-      Object param = method.convertArgsToSqlCommandParam(args);
-      result = rowCountResult(sqlSession.update(command.getName(), param));
-    } else if (SqlCommandType.DELETE == command.getType()) {
-      Object param = method.convertArgsToSqlCommandParam(args);
-      result = rowCountResult(sqlSession.delete(command.getName(), param));
-    } else if (SqlCommandType.SELECT == command.getType()) {
-      if (method.returnsVoid() && method.hasResultHandler()) {
-        executeWithResultHandler(sqlSession, args);
-        result = null;
-      } else if (method.returnsMany()) {
-        result = executeForMany(sqlSession, args);
-      } else if (method.returnsMap()) {
-        result = executeForMap(sqlSession, args);
-      } else if (method.returnsCursor()) {
-        result = executeForCursor(sqlSession, args);
-      } else {
+    switch (command.getType()) {
+      case INSERT:
         Object param = method.convertArgsToSqlCommandParam(args);
-        result = sqlSession.selectOne(command.getName(), param);
-      }
-    } else if (SqlCommandType.FLUSH == command.getType()) {
+        result = rowCountResult(sqlSession.insert(command.getName(), param));
+        break;
+      case UPDATE:
+        Object param = method.convertArgsToSqlCommandParam(args);
+        result = rowCountResult(sqlSession.update(command.getName(), param));
+        break;
+      case DELETE:
+        Object param = method.convertArgsToSqlCommandParam(args);
+        result = rowCountResult(sqlSession.delete(command.getName(), param));
+        break;
+      case SELECT:
+        if (method.returnsVoid() && method.hasResultHandler()) {
+          executeWithResultHandler(sqlSession, args);
+          result = null;
+        } else if (method.returnsMany()) {
+          result = executeForMany(sqlSession, args);
+        } else if (method.returnsMap()) {
+          result = executeForMap(sqlSession, args);
+        } else if (method.returnsCursor()) {
+          result = executeForCursor(sqlSession, args);
+        } else {
+          Object param = method.convertArgsToSqlCommandParam(args);
+          result = sqlSession.selectOne(command.getName(), param);
+        }
+        break;
+      case FLUSH:
         result = sqlSession.flushStatements();
-    } else {
-      throw new BindingException("Unknown execution method for: " + command.getName());
+        break;
+      case default:
+        throw new BindingException("Unknown execution method for: " + command.getName());
     }
     if (result == null && method.getReturnType().isPrimitive() && !method.returnsVoid()) {
       throw new BindingException("Mapper method '" + command.getName() 
