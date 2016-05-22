@@ -104,10 +104,13 @@ public class BatchKeysTest {
     } finally {
       sqlSession.close();
     }
-
-    sqlSession = sqlSessionFactory.openSession();
-    List<User> users = sqlSession.selectList("select");
-    Assert.assertTrue(users.size() == 2);
+    try {
+      sqlSession = sqlSessionFactory.openSession();
+      List<User> users = sqlSession.selectList("select");
+      Assert.assertTrue(users.size() == 2);
+    } finally {
+      sqlSession.close();
+    }
   }
 
 
@@ -127,9 +130,13 @@ public class BatchKeysTest {
       sqlSession.close();
     }
 
-    sqlSession = sqlSessionFactory.openSession();
-    List<User> users = sqlSession.selectList("selectIdentity");
-    Assert.assertTrue(users.size() == 2);
+    try {
+      sqlSession = sqlSessionFactory.openSession();
+      List<User> users = sqlSession.selectList("selectIdentity");
+      Assert.assertTrue(users.size() == 2);
+    } finally {
+      sqlSession.close();
+    }
   }
 
   @Test
@@ -149,9 +156,13 @@ public class BatchKeysTest {
       sqlSession.close();
     }
 
-    sqlSession = sqlSessionFactory.openSession();
-    List<User> users = sqlSession.selectList("select");
-    Assert.assertTrue(users.size() == 2);
+    try {
+      sqlSession = sqlSessionFactory.openSession();
+      List<User> users = sqlSession.selectList("select");
+      Assert.assertTrue(users.size() == 2);
+    } finally {
+      sqlSession.close();
+    }
   }
 
   @Test
@@ -171,9 +182,13 @@ public class BatchKeysTest {
       sqlSession.close();
     }
 
-    sqlSession = sqlSessionFactory.openSession();
-    List<User> users = sqlSession.selectList("selectIdentity");
-    Assert.assertTrue(users.size() == 2);
+    try {
+      sqlSession = sqlSessionFactory.openSession();
+      List<User> users = sqlSession.selectList("selectIdentity");
+      Assert.assertTrue(users.size() == 2);
+    } finally {
+      sqlSession.close();
+    }
   }
 
   @Test
@@ -189,9 +204,13 @@ public class BatchKeysTest {
       sqlSession.close();
     }
 
-    sqlSession = sqlSessionFactory.openSession();
-    List<User> users = sqlSession.selectList("selectIdentity");
-    Assert.assertTrue(users.size() == 1);
+    try {
+      sqlSession = sqlSessionFactory.openSession();
+      List<User> users = sqlSession.selectList("selectIdentity");
+      Assert.assertTrue(users.size() == 1);
+    } finally {
+      sqlSession.close();
+    }
   }
   
 }
