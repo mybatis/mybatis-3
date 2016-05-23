@@ -212,13 +212,13 @@ public class SqlSessionManager implements SqlSessionFactory, SqlSession {
   }
 
   @Override
-  public <E> PageResult<E> selectPageBound(String statement, PageBounds pageBounds) {
-  	return selectPageBound(statement, null, pageBounds);
+  public <E> PageResult<E> selectList(String statement, PageBounds pageBounds) {
+  	return selectList(statement, null, pageBounds);
   }
   
   @Override
-  public <E> PageResult<E> selectPageBound(String statement, Object parameter, PageBounds rowBounds) {
-	return sqlSessionProxy.<E>selectPageBound(statement, parameter, rowBounds);
+  public <E> PageResult<E> selectList(String statement, Object parameter, PageBounds rowBounds) {
+	return sqlSessionProxy.<E>selectList(statement, parameter, rowBounds);
   }
   
   @Override

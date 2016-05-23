@@ -68,7 +68,7 @@ public class PageResultTest {
 	  PageBounds pageBounds = new PageBounds(1,3);
 	  
 	  SqlSession session = sqlSessionFactory.openSession();
-	  PageResult<User> pageResult = session.selectPageBound("org.apache.ibatis.submitted.pageBound.UserMapper.selectAll", condition, pageBounds);
+	  PageResult<User> pageResult = session.selectList("org.apache.ibatis.submitted.pageBound.UserMapper.selectAll", condition, pageBounds);
 	  session.commit();
 	  session.close();
 	  assertEquals(3, pageResult.getQueryList().size());

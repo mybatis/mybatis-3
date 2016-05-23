@@ -135,7 +135,7 @@ public class DefaultSqlSession implements SqlSession {
 
   @Override
   public <E> List<E> selectList(String statement) {
-    return this.selectList(statement, null);
+    return this.selectList(statement, null, RowBounds.DEFAULT);
   }
 
   @Override
@@ -156,15 +156,15 @@ public class DefaultSqlSession implements SqlSession {
   }
 
   @Override
-  public <E> PageResult<E> selectPageBound(String statement, PageBounds pageBounds) {
-  	return selectPageBound(statement, null, pageBounds);
+  public <E> PageResult<E> selectList(String statement, PageBounds pageBounds) {
+  	return selectList(statement, null, pageBounds);
   }
 
   @Override
-  public <E> PageResult<E> selectPageBound(String statement, Object parameter, PageBounds pageBounds) {
+  public <E> PageResult<E> selectList(String statement, Object parameter, PageBounds pageBounds) {
 	try {
       MappedStatement ms = configuration.getMappedStatement(statement);
-      return executor.queryPageBound(ms, wrapCollection(parameter), pageBounds, Executor.NO_RESULT_HANDLER);
+      return executor.query(ms, wrapCollection(parameter), pageBounds, Executor.NO_RESULT_HANDLER);
     } catch (Exception e) {
       throw ExceptionFactory.wrapException("Error querying database.  Cause: " + e, e);
     } finally {

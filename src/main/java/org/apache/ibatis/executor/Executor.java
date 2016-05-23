@@ -42,10 +42,10 @@ public interface Executor {
 
   <E> List<E> query(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler) throws SQLException;
 
+  <E> PageResult<E> query(MappedStatement ms, Object parameter, PageBounds pageBounds, ResultHandler resultHandler) throws SQLException;
+  
   <E> Cursor<E> queryCursor(MappedStatement ms, Object parameter, RowBounds rowBounds) throws SQLException;
 
-  <E> PageResult<E> queryPageBound(MappedStatement ms, Object parameter, PageBounds pageBounds, ResultHandler resultHandler) throws SQLException;
-  
   List<BatchResult> flushStatements() throws SQLException;
 
   void commit(boolean required) throws SQLException;

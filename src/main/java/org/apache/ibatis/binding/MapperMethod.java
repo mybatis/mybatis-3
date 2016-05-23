@@ -194,7 +194,7 @@ public class MapperMethod {
 	  PageResult<E> result;
       Object param = method.convertArgsToSqlCommandParam(args);
       PageBounds pageBounds = method.extractPageBounds(args);
-      result = sqlSession.<E>selectPageBound(command.getName(), param, pageBounds);
+      result = sqlSession.<E>selectList(command.getName(), param, pageBounds);
       return result;
   }
    

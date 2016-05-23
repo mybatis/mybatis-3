@@ -75,6 +75,23 @@ public interface SqlSession extends Closeable {
    * @return List of mapped object
    */
   <E> List<E> selectList(String statement, Object parameter, RowBounds rowBounds);
+  
+  /**
+   * 
+   * @param statement
+   * @param pageBounds
+   * @return
+   */
+  <E> PageResult<E> selectList(String statement, PageBounds pageBounds);
+  
+ /**
+  * 
+  * @param statement
+  * @param parameter
+  * @param pageBounds
+  * @return
+  */
+  <E> PageResult<E> selectList(String statement, Object parameter, PageBounds pageBounds);
 
   /**
    * The selectMap is a special case in that it is designed to convert a list
@@ -169,23 +186,7 @@ public interface SqlSession extends Closeable {
    */
   void select(String statement, Object parameter, RowBounds rowBounds, ResultHandler handler);
 
-  /**
-   * 
-   * @param statement
-   * @param pageBounds
-   * @return
-   */
-  <E> PageResult<E> selectPageBound(String statement, PageBounds pageBounds);
-  
- /**
-  * 
-  * @param statement
-  * @param parameter
-  * @param pageBounds
-  * @return
-  */
-  <E> PageResult<E> selectPageBound(String statement, Object parameter, PageBounds pageBounds);
- 
+
   /**
    * Execute an insert statement.
    * @param statement Unique identifier matching the statement to execute.

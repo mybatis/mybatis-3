@@ -176,7 +176,7 @@ public abstract class BaseExecutor implements Executor {
   }
 
   @Override
-  public <E> PageResult<E> queryPageBound(MappedStatement ms, Object parameter, PageBounds pageBounds, ResultHandler resultHandler) throws SQLException {
+  public <E> PageResult<E> query(MappedStatement ms, Object parameter, PageBounds pageBounds, ResultHandler resultHandler) throws SQLException {
 	  BoundSql boundSql = ms.getBoundSql(parameter);
 	  RowBounds rowBounds = pageBounds.getRowBounds();
 	  PageDialect pageDialect = PageDialect.createStrategy(ms.getConfiguration().getDialect(), ms, boundSql, pageBounds);

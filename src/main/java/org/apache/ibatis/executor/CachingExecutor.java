@@ -112,7 +112,7 @@ public class CachingExecutor implements Executor {
   }
 
   @Override
-  public <E> PageResult<E> queryPageBound(MappedStatement ms, Object parameterObject, PageBounds pageBounds, ResultHandler resultHandler) throws SQLException {
+  public <E> PageResult<E> query(MappedStatement ms, Object parameterObject, PageBounds pageBounds, ResultHandler resultHandler) throws SQLException {
 	  RowBounds rowBounds = pageBounds.getRowBounds();
 	  BoundSql boundSql = ms.getBoundSql(parameterObject);
 	  CacheKey key = createCacheKey(ms, parameterObject, rowBounds, boundSql);
@@ -124,13 +124,13 @@ public class CachingExecutor implements Executor {
 	        @SuppressWarnings("unchecked")
 	        PageResult<E> list = (PageResult<E>) tcm.getObject(cache, key);
 	        if (list == null) {
-	          list = delegate.<E> queryPageBound(ms, parameterObject, pageBounds, resultHandler);
+	          list = delegate.<E> query(ms, parameterObject, pageBounds, resultHandler);
 	          tcm.putObject(cache, key, list);
 	        }
 	        return list;
 	      }
 	    }
-	    return delegate.<E> queryPageBound(ms, parameterObject, pageBounds, resultHandler);
+	    return delegate.<E> query(ms, parameterObject, pageBounds, resultHandler);
   }
   
   @Override
