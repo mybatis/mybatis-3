@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2016 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -81,12 +81,12 @@ public abstract class BaseStatementHandler implements StatementHandler {
   }
 
   @Override
-  public Statement prepare(Connection connection) throws SQLException {
+  public Statement prepare(Connection connection, Integer transactionTimeout) throws SQLException {
     ErrorContext.instance().sql(boundSql.getSql());
     Statement statement = null;
     try {
       statement = instantiateStatement(connection);
-      setStatementTimeout(statement);
+      setStatementTimeout(statement, transactionTimeout);
       setFetchSize(statement);
       return statement;
     } catch (SQLException e) {
@@ -100,14 +100,17 @@ public abstract class BaseStatementHandler implements StatementHandler {
 
   protected abstract Statement instantiateStatement(Connection connection) throws SQLException;
 
-  protected void setStatementTimeout(Statement stmt) throws SQLException {
-    Integer timeout = mappedStatement.getTimeout();
-    Integer defaultTimeout = configuration.getDefaultStatementTimeout();
-    if (timeout != null) {
-      stmt.setQueryTimeout(timeout);
-    } else if (defaultTimeout != null) {
-      stmt.setQueryTimeout(defaultTimeout);
+  protected void setStatementTimeout(Statement stmt, Integer transactionTimeout) throws SQLException {
+    Integer queryTimeout = null;
+    if (mappedStatement.getTimeout() != null) {
+      queryTimeout = mappedStatement.getTimeout();
+    } else if (configuration.getDefaultStatementTimeout() != null) {
+      queryTimeout = configuration.getDefaultStatementTimeout();
     }
+    if (queryTimeout != null) {
+      stmt.setQueryTimeout(queryTimeout);
+    }
+    StatementUtil.applyTransactionTimeout(stmt, queryTimeout, transactionTimeout);
   }
 
   protected void setFetchSize(Statement stmt) throws SQLException {

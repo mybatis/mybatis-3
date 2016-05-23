@@ -1,22 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Copyright 2010-2012 the original author or authors.
 
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
+       Copyright 2009-2016 the original author or authors.
 
-    http://www.apache.org/licenses/LICENSE-2.0
+       Licensed under the Apache License, Version 2.0 (the "License");
+       you may not use this file except in compliance with the License.
+       You may obtain a copy of the License at
 
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
+          http://www.apache.org/licenses/LICENSE-2.0
+
+       Unless required by applicable law or agreed to in writing, software
+       distributed under the License is distributed on an "AS IS" BASIS,
+       WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+       See the License for the specific language governing permissions and
+       limitations under the License.
+
 -->
-
-<!-- version: $Id$ -->
-
 <document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
 
@@ -226,6 +225,25 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
             </tr>
             <tr>
               <td>
+                autoMappingUnknownColumnBehavior
+              </td>
+              <td>
+                自動マッピング対象のプロパティが存在しない(又はプロパティ型がサポート外の)カラムを検知した時の動作を指定します。
+                <ul>
+                  <li><code>NONE</code>: 何もしません</li>
+                  <li><code>WARNING</code>: 警告ログを出力します (<code>'org.apache.ibatis.session.AutoMappingUnknownColumnBehavior'</code> のログレベルを<code>WARN</code>に設定してください)</li>
+                  <li><code>FAILING</code>: 自動マッピング処理をエラーにします。(<code>SqlSessionException</code>が発生します)</li>
+                </ul>
+              </td>
+              <td>
+                NONE, WARNING, FAILING
+              </td>
+              <td>
+                NONE
+              </td>
+            </tr>
+            <tr>
+              <td>
                 defaultExecutorType
               </td>
               <td>
@@ -278,12 +296,28 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
               </td>
               <td>
                 ネストされたステートメントに対して RowBounds の使用を許可するかどうかを設定します。
+                許可する場合は、 false を設定します。
               </td>
               <td>
                 true | false
               </td>
               <td>
                 False
+              </td>
+            </tr>
+            <tr>
+              <td>
+                safeResultHandlerEnabled
+              </td>
+              <td>
+                ネストされたステートメントに対して ResultHandler の使用を許可するかどうかを設定します。
+                許可する場合は、 false を設定します。
+              </td>
+              <td>
+                true | false
+              </td>
+              <td>
+                True
               </td>
             </tr>
             <tr>
@@ -429,6 +463,21 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 未指定
               </td>
             </tr>
+            <tr>
+              <td>
+                useActualParamName
+              </td>
+              <td>
+                ステートメントの引数を参照する際、メソッドシグネチャで宣言されている名前で参照できるようにします。
+                このオプションを有効にする場合、プロジェクトを Java 8 （コンパイラオプション <code>-parameters</code> 付き）でコンパイルする必要があります。 (導入されたバージョン: 3.4.1)
+              </td>
+              <td>
+                true | false
+              </td>
+              <td>
+                true
+              </td>
+            </tr>
           </tbody>
         </table>
         <p>
@@ -441,6 +490,7 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
   <setting name="useColumnLabel" value="true"/>
   <setting name="useGeneratedKeys" value="false"/>
   <setting name="autoMappingBehavior" value="PARTIAL"/>
+  <setting name="autoMappingUnknownColumnBehavior" value="WARNING"/>
   <setting name="defaultExecutorType" value="SIMPLE"/>
   <setting name="defaultStatementTimeout" value="25"/>
   <setting name="defaultFetchSize" value="100"/>
@@ -741,6 +791,11 @@ public class Author {
           MyBatis が PreparedStatement のパラメーターをセットするとき、あるいは ResultSet から値を取得するときには、必ずその Java タイプに対応する TypeHandler が使用されます。<br />
           次の表はデフォルトの TypeHandler の一覧です。
         </p>
+        <p>
+          <span class="label important">NOTE</span>
+          JSR-310(Date and Time API)から提供されているクラスを使用する場合は、
+          <a href="https://github.com/mybatis/typehandlers-jsr310">mybatis-typehandlers-jsr310</a>を使用することができます。
+        </p>
         <table>
           <thead>
             <tr>
@@ -857,6 +912,17 @@ public class Author {
             </tr>
             <tr>
               <td>
+                ClobReaderTypeHandler
+              </td>
+              <td>
+                java.io.Reader
+              </td>
+              <td>
+                -
+              </td>
+            </tr>
+            <tr>
+              <td>
                 ClobTypeHandler
               </td>
               <td>
@@ -886,6 +952,17 @@ public class Author {
               </td>
               <td>
                 NCLOB
+              </td>
+            </tr>
+            <tr>
+              <td>
+                BlobInputStreamTypeHandler
+              </td>
+              <td>
+                java.io.InputStream
+              </td>
+              <td>
+                -
               </td>
             </tr>
             <tr>
@@ -1070,6 +1147,12 @@ public class StringTypeHandler extends BaseTypeHandler<String> {
           <li>typeHandler 要素に jdbcType 属性を追加する（例：jdbcType=VARCHAR）。</li>
           <li>TypeHandler の実装クラスに <code>@MappedJdbcTypes</code> を付加し、JDBC タイプのリストを指定します。jdbcType 属性が指定されている場合、このアノテーションは無視されます。</li>
         </ul>
+
+        <p>
+          <code>ResultMap</code>　でプロパティの指定に <code>typeHandler</code> と <code>jdbcType</code> が明示的に指定されていない場合、パース時点で <code>javaType</code> はプロパティの型から推測可能ですが <code>jdbcType</code> は未知となります。 MyBatis は javaType=[推測された型] と jdbcType=null にマップされた TypeHandler を探します。
+          TypeHandler を jdbcType=null にマップするためには <code>@MappedJdbcTypes</code> の <code>includeNullJdbcType</code> 属性に <code>true</code> を指定します。<br />
+          MyBatis 3.4.0 以降は javaType に対してマップされている TypeHandler が１つの場合は登録時の jdbcType に関わらずこの TypeHandler が使われるようになりました。
+        </p>
 
         <p>また、MyBatis にタイプハンドラーを自動検出させることもできます。</p>
         <source><![CDATA[<!-- mybatis-config.xml -->
@@ -1403,6 +1486,7 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader,properties);]]
   void commit() throws SQLException;
   void rollback() throws SQLException;
   void close() throws SQLException;
+  Integer getTimeout() throws SQLException;
 }]]></source>
         <p>
           これらのインターフェイスを使えば、MyBatis のトランザクション管理方法を完全にカスタマイズすることが可能です。

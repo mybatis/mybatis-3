@@ -48,9 +48,8 @@ public class SQLParserTest {
 	
 	@Test
     public void mysqlParser() {
-		 String sqlQueryResult="select * from (select b.* from b join a on b.id = a.id and b.time < a.time) where id=? order by b.aid, b.time desc LIMIT ?, ?";
-		 String sqlCountResult="select count(*) from ( select b.* from b join a on b.id = a.id and b.time < a.time ) where id=?";
-		  
+		String sqlQueryResult="select * from (select b.* from b join a on b.id = a.id and b.time < a.time) where id=? order by b.aid, b.time desc LIMIT ?, ?";
+		String sqlCountResult="select count(*) as total from ( select b.* from b join a on b.id = a.id and b.time < a.time ) where id=?";
 		SqlSession session = sqlSessionFactory.openSession();
 		BoundSql boundSql = new BoundSql(session.getConfiguration(), sql, null, null);
 		PageBounds pageBounds = new PageBounds(1,3);
@@ -75,7 +74,7 @@ public class SQLParserTest {
     @Test
     public void oracleParser() {
     	String sqlQueryResult="SELECT * FROM ( SELECT ROWNUM RN, T.* FROM (select * from (select b.* from b join a on b.id = a.id and b.time < a.time) where id=? order by b.aid, b.time desc ) T WHERE ROWNUM <=? ) TT WHERE TT.RN >?";
-    	String sqlCountResult="select count(*) from ( select b.* from b join a on b.id = a.id and b.time < a.time ) where id=?";
+    	String sqlCountResult="select count(*) as total from ( select b.* from b join a on b.id = a.id and b.time < a.time ) where id=?";
 		SqlSession session = sqlSessionFactory.openSession();
 		BoundSql boundSql = new BoundSql(session.getConfiguration(), sql, null, null);
 		PageBounds pageBounds = new PageBounds(1,3);

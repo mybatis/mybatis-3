@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2016 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -59,6 +59,7 @@ public abstract class BaseJdbcLogger {
 
   static {
     SET_METHODS.add("setString");
+    SET_METHODS.add("setNString");
     SET_METHODS.add("setInt");
     SET_METHODS.add("setByte");
     SET_METHODS.add("setShort");
@@ -76,7 +77,9 @@ public abstract class BaseJdbcLogger {
     SET_METHODS.add("setBoolean");
     SET_METHODS.add("setBytes");
     SET_METHODS.add("setCharacterStream");
+    SET_METHODS.add("setNCharacterStream");
     SET_METHODS.add("setClob");
+    SET_METHODS.add("setNClob");
     SET_METHODS.add("setObject");
     SET_METHODS.add("setNull");
 

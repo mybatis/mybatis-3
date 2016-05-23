@@ -1,22 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Copyright 2010-2012 the original author or authors.
 
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
+       Copyright 2009-2016 the original author or authors.
 
-    http://www.apache.org/licenses/LICENSE-2.0
+       Licensed under the Apache License, Version 2.0 (the "License");
+       you may not use this file except in compliance with the License.
+       You may obtain a copy of the License at
 
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
+          http://www.apache.org/licenses/LICENSE-2.0
+
+       Unless required by applicable law or agreed to in writing, software
+       distributed under the License is distributed on an "AS IS" BASIS,
+       WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+       See the License for the specific language governing permissions and
+       limitations under the License.
+
 -->
-
-<!-- version: $Id$ -->
-
 <document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
 
@@ -194,6 +193,25 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
             </tr>
             <tr>
               <td>
+                autoMappingUnknownColumnBehavior
+              </td>
+              <td>
+                Specify the behavior when detects an unknown column (or unknown property type) of automatic mapping target.
+                <ul>
+                  <li><code>NONE</code>: Do nothing</li>
+                  <li><code>WARNING</code>: Output warning log (The log level of <code>'org.apache.ibatis.session.AutoMappingUnknownColumnBehavior'</code> must be set to <code>WARN</code>)</li>
+                  <li><code>FAILING</code>: Fail mapping (Throw <code>SqlSessionException</code>)</li>
+                </ul>
+              </td>
+              <td>
+                NONE, WARNING, FAILING
+              </td>
+              <td>
+                NONE
+              </td>
+            </tr>
+            <tr>
+              <td>
                 defaultExecutorType
               </td>
               <td>디폴트 실행자(executor) 설정. 
@@ -255,12 +273,28 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
               </td>
               <td>
                 중첩구문내 RowBound사용을 허용
+                If allow, set the false.
               </td>
               <td>
                 true | false
               </td>
               <td>
                 False
+              </td>
+            </tr>
+            <tr>
+              <td>
+                safeResultHandlerEnabled
+              </td>
+              <td>
+                중첩구문내 ResultHandler사용을 허용
+                If allow, set the false.
+              </td>
+              <td>
+                true | false
+              </td>
+              <td>
+                True
               </td>
             </tr>
             <tr>
@@ -406,6 +440,21 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 Fully qualified class names of custom VFS implementation separated by commas.
               </td>
             </tr>
+            <tr>
+              <td>
+                useActualParamName
+              </td>
+              <td>
+                Allow referencing statement parameters by their actual names declared in the method signature.
+                To use this feature, your project must be compiled in Java 8 with <code>-parameters</code> option. (Since: 3.4.1)
+              </td>
+              <td>
+                true | false
+              </td>
+              <td>
+                true
+              </td>
+            </tr>
           </tbody>
         </table>
         <p>위 설정을 모두 사용한 setting 엘리먼트의 예제이다:</p>
@@ -416,6 +465,7 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
   <setting name="useColumnLabel" value="true"/>
   <setting name="useGeneratedKeys" value="false"/>
   <setting name="autoMappingBehavior" value="PARTIAL"/>
+  <setting name="autoMappingUnknownColumnBehavior" value="WARNING"/>
   <setting name="defaultExecutorType" value="SIMPLE"/>
   <setting name="defaultStatementTimeout" value="25"/>
   <setting name="defaultFetchSize" value="100"/>
@@ -695,6 +745,11 @@ public class Author {
       <subsection name="typeHandlers">
         <p>마이바티스가 PreparedStatement에 파라미터를 설정하고 ResultSet에서 값을 가져올때마다 TypeHandler는 적절한 자바 타입의 값을 가져오기 위해 사용된다. 
         다음의 표는 디폴트 TypeHandlers를 설명한다.</p>
+        <p>
+          <span class="label important">NOTE</span>
+          If you use classes provided by JSR-310(Date and Time API),
+          you can use the <a href="https://github.com/mybatis/typehandlers-jsr310">mybatis-typehandlers-jsr310</a>.
+        </p>
         <table>
           <thead>
             <tr>
@@ -793,6 +848,17 @@ public class Author {
             </tr>
             <tr>
               <td>
+                <code>ClobReaderTypeHandler</code>
+              </td>
+              <td>
+                <code>java.io.Reader</code>
+              </td>
+              <td>
+                -
+              </td>
+            </tr>
+            <tr>
+              <td>
                 <code>ClobTypeHandler</code>
               </td>
               <td>
@@ -817,6 +883,17 @@ public class Author {
                 <code>java.lang.String</code>
               </td>
               <td>NCLOB</td>
+            </tr>
+            <tr>
+              <td>
+                <code>BlobInputStreamTypeHandler</code>
+              </td>
+              <td>
+                <code>java.io.InputStream</code>
+              </td>
+              <td>
+                -
+              </td>
             </tr>
             <tr>
               <td>
@@ -997,6 +1074,18 @@ public class ExampleTypeHandler extends BaseTypeHandler<String> {
           <li>TypeHandler클래스에 관련된 JDBC타입의 목록을 정의하는 <code>@MappedJdbcTypes</code> 애노테이션 추가. 
           <code>jdbcType</code> 속성도 함께 정의되어 있다면 <code>@MappedJdbcTypes</code>는 무시된다.</li>
         </ul>
+
+        <p>
+          When deciding which TypeHandler to use in a <code>ResultMap</code>, the Java type is known
+          (from the result type), but the JDBC type is unknown. MyBatis therefore uses the combination
+          <code>javaType=[TheJavaType], jdbcType=null</code> to choose a TypeHandler. This means that
+          using a <code>@MappedJdbcTypes</code> annotation <i>restricts</i> the scope of a TypeHandler
+          and makes it unavailable for use in <code>ResultMap</code>s unless explicity set. To make a
+          TypeHandler available for use in a <code>ResultMap</code>, set <code>includeNullJdbcType=true</code>
+          on the <code>@MappedJdbcTypes</code> annotation. Since Mybatis 3.4.0 however, if a <b>single</b>
+          TypeHandler is registered to handle a Java type, it will be used by default in <code>ResultMap</code>s
+          using this Java type (i.e. even without <code>includeNullJdbcType=true</code>). 
+        </p>
 
         <p>마지막으로 마이바티스로 하여금 TypeHandler를 찾도록 할수 있다:</p>
         <source><![CDATA[<!-- mybatis-config.xml -->
@@ -1286,6 +1375,7 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader,properties);]]
   void commit() throws SQLException;
   void rollback() throws SQLException;
   void close() throws SQLException;
+  Integer getTimeout() throws SQLException;
 }]]></source>
         <p>이 두개의 인터페이스를 사용하여 마이바티스가 트랜잭션을 처리하는 방법을 완벽하게 정의할 수 있다.</p>
         <p>

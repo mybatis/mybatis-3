@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2016 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,10 +15,20 @@
  */
 package org.apache.ibatis.submitted.multipleresultsetswithassociation;
 
+import org.apache.ibatis.annotations.Options;
+import org.apache.ibatis.annotations.ResultMap;
+import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.mapping.StatementType;
+
 import java.util.List;
 
 public interface Mapper {
 
   List<OrderDetail> getOrderDetailsWithHeaders();
+
+  @Select(value = "{ call GetOrderDetailsAndHeaders() }")
+  @ResultMap("orderDetailResultMap")
+  @Options(statementType= StatementType.CALLABLE, resultSets="orderDetailResultSet,orderHeaderResultSet")
+  List<OrderDetail> getOrderDetailsWithHeadersAnnotationBased();
 
 }

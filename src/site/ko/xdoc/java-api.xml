@@ -1,22 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Copyright 2010-2012 the original author or authors.
 
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
+       Copyright 2009-2016 the original author or authors.
 
-    http://www.apache.org/licenses/LICENSE-2.0
+       Licensed under the Apache License, Version 2.0 (the "License");
+       you may not use this file except in compliance with the License.
+       You may obtain a copy of the License at
 
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
+          http://www.apache.org/licenses/LICENSE-2.0
+
+       Unless required by applicable law or agreed to in writing, software
+       distributed under the License is distributed on an "AS IS" BASIS,
+       WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+       See the License for the specific language governing permissions and
+       limitations under the License.
+
 -->
-
-<!-- version: $Id$ -->
-
 <document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
 
@@ -463,7 +462,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
         <td><code>Method</code></td>
         <td><code>&lt;resultMap&gt;</code></td>
         <td>결과 칼럼이 프로퍼티나 필드에 매핑되는 방법에 대한 상세 설정을 포함하는 결과 매핑의 목록
-		사용가능한 속성들 : value(Result 애노테이션의 배열)</td>
+		사용가능한 속성들 : value(Result 애노테이션의 배열), id (name of the result mapping)</td>
       </tr>
       <tr>
         <td><code>@Result</code></td>
@@ -513,14 +512,15 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
         <td>이 애노테이션은 매핑된 구문에 속성으로 존재하는 많은 분기(switch)와 설정 옵션에 접근할 수 있다. 
 		각 구문을 복잡하게 만들기 보다 Options 애노테이션으로 일관되고 깔끔한 방법으로 설정 할수 있게 한다.
 		사용가능한 속성들 : useCache=true,
-		flushCache=false,
+		flushCache=FlushCachePolicy.DEFAULT,
 		resultSetType=FORWARD_ONLY,
 		statementType=PREPARED, 
 		fetchSize=-1,
 		timeout=-1, 
 		useGeneratedKeys=false,
 		keyProperty=“id”, 
-		keyColumn=“”.
+		keyColumn=“”,
+		resultSets=“”.
 		자바 애노테이션을 이해하는 것이 중요하다. 
 		자바 애노테이션은 “null”을 설정 할 수 없다. 
 		그래서 일단 Options 애노테이션을 사용하면 각각의 속성은 디폴트 값을 사용하게 된다. 
@@ -569,13 +569,13 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
             <li><code>&lt;select&gt;</code></li>
           </ul>
         </td>
-        <td>실행시 SQL 을 리턴할 클래스명과 메소드명을 명시하도록 해주는 대체수단의 애노테이션이다.
+        <td>실행시 SQL 을 리턴할 클래스 과 메소드명을 명시하도록 해주는 대체수단의 애노테이션이다.
 		매핑된 구문을 실행할 때 마이바티스는 클래스의 인스턴스를 만들고 메소드를 실행한다. 
-		메소드는 파라미터 객체를 받을 수도 있다.
+		메소드는 파라미터 객체를 받을 수도 있다.(In MyBatis 3.4 or later, it's allow multiple parameters)
 		사용가능한 속성들 : type, method. 
-		type 속성은 클래스의 패키지 경로를 포함한 전체 이름이다. 
-		메소드는 클래스의 메소드명이다. 
-		Note: 이 섹션은 SelectBuilder 클래스에 대한 설명으로 동적 SQL 을 좀더 깔끔하고 읽기 쉽게 만드는데 도움이 될 수 있다.</td>
+		type 속성은 클래스.
+		method 속성은 메소드명이다.
+		Note: 이 섹션은 클래스에 대한 설명으로 동적 SQL 을 좀더 깔끔하고 읽기 쉽게 만드는데 도움이 될 수 있다.</td>
       </tr>
       <tr>
         <td><code>@Param</code></td>
@@ -643,6 +643,70 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
   <p>이 예제는 <code>SqlSession#flushStatements()</code>를 호출하기 위해 <code>@Flush</code>애노테이션을 사용했다. </p>
   <source><![CDATA[@Flush
 List<BatchResult> flush();]]></source>
+
+  <p>These examples show how to name a ResultMap by specifying id attribute of @Results annotation.</p>
+  <source>@Results(id = "userResult", value = {
+  @Result(property = "id", column = "uid", id = <strong>true</strong>),
+  @Result(property = "firstName", column = "first_name"),
+  @Result(property = "lastName", column = "last_name")
+})
+@Select("select * from users where id = #{id}")
+User getUserById(Integer id);
+
+@Results(id = "companyResults")
+@ConstructorArgs({
+  @Arg(property = "id", column = "cid", id = <strong>true</strong>),
+  @Arg(property = "name", column = "name")
+})
+@Select("select * from company where id = #{id}")
+Company getCompanyById(Integer id);</source>
+
+  <p>This example shows solo parameter using the Sql Provider annotation:</p>
+  <source><![CDATA[@SelectProvider(type = UserSqlBuilder.class, method = "buildGetUsersByName")
+List<User> getUsersByName(String name);
+
+class UserSqlBuilder {
+  public String buildGetUsersByName(final String name) {
+    return new SQL(){{
+      SELECT("*");
+      FROM("users");
+      if (name != null) {
+        WHERE("name like #{value} || '%'");
+      }
+      ORDER_BY("id");
+    }}.toString();
+  }
+}]]></source>
+
+  <p>This example shows multiple parameters using the Sql Provider annotation:</p>
+  <source><![CDATA[@SelectProvider(type = UserSqlBuilder.class, method = "buildGetUsersByName")
+List<User> getUsersByName(
+    @Param("name") String name, @Param("orderByColumn") String orderByColumn);
+
+class UserSqlBuilder {
+
+  // If not use @Param, you should be define same arguments with mapper method
+  public String buildGetUsersByName(
+      final String name, final String orderByColumn) {
+    return new SQL(){{
+      SELECT("*");
+      FROM("users");
+      WHERE("name like #{name} || '%'");
+      ORDER_BY(orderByColumn);
+    }}.toString();
+  }
+
+  // If use @Param, you can define only arguments to be used
+  public String buildGetUsersByName(@Param("orderByColumn") final String orderByColumn) {
+    return new SQL(){{
+      SELECT("*");
+      FROM("users");
+      WHERE("name like #{name} || '%'");
+      ORDER_BY(orderByColumn);
+    }}.toString();
+  }
+}]]></source>
+
   </subsection>
 
   </section>

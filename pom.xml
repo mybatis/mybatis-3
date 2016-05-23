@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Copyright 2009-2015 the original author or authors.
 
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
+       Copyright 2009-2016 the original author or authors.
 
-    http://www.apache.org/licenses/LICENSE-2.0
+       Licensed under the Apache License, Version 2.0 (the "License");
+       you may not use this file except in compliance with the License.
+       You may obtain a copy of the License at
 
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
+          http://www.apache.org/licenses/LICENSE-2.0
+
+       Unless required by applicable law or agreed to in writing, software
+       distributed under the License is distributed on an "AS IS" BASIS,
+       WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+       See the License for the specific language governing permissions and
+       limitations under the License.
+
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
@@ -20,21 +22,24 @@
   <parent>
     <groupId>org.mybatis</groupId>
     <artifactId>mybatis-parent</artifactId>
-    <version>25</version>
+    <version>27</version>
+    <relativePath />
   </parent>
 
   <artifactId>mybatis</artifactId>
-  <version>3.4.0-SNAPSHOT</version>
+  <version>3.4.1-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>mybatis</name>
   <description>
-    The MyBatis data mapper framework makes it easier to use a relational database with object-oriented
+    The MyBatis SQL mapper framework makes it easier to use a relational database with object-oriented
     applications. MyBatis couples objects with stored procedures or SQL statements using a XML descriptor or
     annotations. Simplicity is the biggest advantage of the MyBatis data mapper over object relational mapping
     tools.
   </description>
-  <url>http://www.mybatis.org/core/</url>
+  <url>http://www.mybatis.org/mybatis-3</url>
+
+<inceptionYear>2009</inceptionYear>
 
   <contributors>
     <contributor>
@@ -121,12 +126,12 @@
     <site>
       <id>gh-pages</id>
       <name>Mybatis GitHub Pages</name>
-      <url>github:ssh://mybatis.github.io/mybatis-3/</url>
+      <url>git:ssh://git@github.com/mybatis/mybatis-3.git?gh-pages#</url>
     </site>
   </distributionManagement>
 
   <properties>
-    <clirr.comparisonVersion>3.2.8</clirr.comparisonVersion>
+    <clirr.comparisonVersion>3.3.0</clirr.comparisonVersion>
     <findbugs.onlyAnalyze>org.apache.ibatis.*</findbugs.onlyAnalyze>
     <osgi.export>org.apache.ibatis.*;version=${project.version};-noimport:=true</osgi.export>
     <osgi.import>*;resolution:=optional</osgi.import>
@@ -137,7 +142,7 @@
     <dependency>
       <groupId>ognl</groupId>
       <artifactId>ognl</artifactId>
-      <version>3.0.11</version>
+      <version>3.1.4</version>
       <scope>compile</scope>
       <optional>true</optional>
       <exclusions>
@@ -157,13 +162,13 @@
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
-      <version>1.7.12</version>
+      <version>1.7.21</version>
       <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-log4j12</artifactId>
-      <version>1.7.12</version>
+      <version>1.7.21</version>
       <optional>true</optional>
     </dependency>
     <dependency>
@@ -172,6 +177,7 @@
       <version>1.2.17</version>
       <optional>true</optional>
     </dependency>
+    <!-- Don't upgrade to 2.4+ until mybatis switches to java 7 -->
     <dependency>
       <groupId>org.apache.logging.log4j</groupId>
       <artifactId>log4j-core</artifactId>
@@ -187,7 +193,7 @@
     <dependency>
       <groupId>cglib</groupId>
       <artifactId>cglib</artifactId>
-      <version>3.1</version>
+      <version>3.2.2</version>
       <optional>true</optional>
     </dependency>
     <!-- Test dependencies -->
@@ -200,13 +206,13 @@
     <dependency>
       <groupId>org.hsqldb</groupId>
       <artifactId>hsqldb</artifactId>
-      <version>2.3.2</version>
+      <version>2.3.4</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.derby</groupId>
       <artifactId>derby</artifactId>
-      <version>10.11.1.1</version>
+      <version>10.12.1.1</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -215,6 +221,7 @@
       <version>1.10.19</version>
       <scope>test</scope>
     </dependency>
+    <!-- Do not go to 2.x until we are on jdk7 -->
     <dependency>
       <groupId>commons-dbcp</groupId>
       <artifactId>commons-dbcp</artifactId>
@@ -248,10 +255,15 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
+          <argLine>${argLine} -Xmx1024m</argLine>
           <systemProperties>
             <property>
               <name>derby.stream.error.file</name>
-              <value>target/derby.log</value>
+              <value>${project.build.directory}/derby.log</value>
+            </property>
+            <property>
+              <name>derby.system.home</name>
+              <value>${project.build.directory}</value>
             </property>
           </systemProperties>
         </configuration>
@@ -303,8 +315,10 @@
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
         <configuration>
-          <exclude>org.apache.ibatis.ognl.*</exclude>
-          <exclude>org.apache.ibatis.javassist.*</exclude>
+          <excludes>
+            <exclude>org.apache.ibatis.ognl.*</exclude>
+            <exclude>org.apache.ibatis.javassist.*</exclude>
+          </excludes>
         </configuration>
       </plugin>
     </plugins>

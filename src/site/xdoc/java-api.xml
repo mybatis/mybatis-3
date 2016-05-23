@@ -1,22 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Copyright 2010-2012 the original author or authors.
 
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
+       Copyright 2009-2016 the original author or authors.
 
-    http://www.apache.org/licenses/LICENSE-2.0
+       Licensed under the Apache License, Version 2.0 (the "License");
+       you may not use this file except in compliance with the License.
+       You may obtain a copy of the License at
 
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
+          http://www.apache.org/licenses/LICENSE-2.0
+
+       Unless required by applicable law or agreed to in writing, software
+       distributed under the License is distributed on an "AS IS" BASIS,
+       WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+       See the License for the specific language governing permissions and
+       limitations under the License.
+
 -->
-
-<!-- version: $Id$ -->
-
 <document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
 
@@ -376,7 +375,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
         <td><code>Method</code></td>
         <td><code>&lt;resultMap&gt;</code></td>
         <td>A list of Result mappings that contain details of how a particular result column is mapped to a property or field.
-        Attributes: <code>value</code>, which is an array of <code>Result</code> annotations.</td>
+        Attributes: <code>value</code>, <code>id</code>. The value attribute is an array of <code>Result</code> annotations. The id attribute is the name of the result mapping.</td>
       </tr>
       <tr>
         <td><code>@Result</code></td>
@@ -430,9 +429,9 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
         <td>This annotation provides access to the wide range of switches and configuration options that are normally
         present on the mapped statement as attributes. Rather than complicate each statement annotation, the
         <code>Options</code> annotation provides a consistent and clear way to access these. Attributes:
-        <code>useCache=true</code>, <code>flushCache=false</code>, <code>resultSetType=FORWARD_ONLY</code>,
+        <code>useCache=true</code>, <code>flushCache=FlushCachePolicy.DEFAULT</code>, <code>resultSetType=FORWARD_ONLY</code>,
         <code>statementType=PREPARED</code>, <code>fetchSize=-1</code>, <code>timeout=-1</code>,
-        <code>useGeneratedKeys=false</code>, <code>keyProperty="id"</code>, <code>keyColumn=""</code>.
+        <code>useGeneratedKeys=false</code>, <code>keyProperty="id"</code>, <code>keyColumn=""</code>, <code>resultSets=""</code>.
         It's important to understand that with Java Annotations, there is no way to specify <code>null</code> as a value.
         Therefore, once you engage the <code>Options</code> annotation, your statement is subject to all of the default
         values. Pay attention to what the default values are to avoid unexpected behavior.<br/><br/>
@@ -482,13 +481,13 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
             <li><code>&lt;select&gt;</code></li>
           </ul>
         </td>
-        <td>Allows for creation of dynamic SQL.	These alternative SQL annotations allow you to specify a class name and
-        a method that will return the SQL to run at execution time. Upon executing the mapped statement, MyBatis will
+        <td>Allows for creation of dynamic SQL. These alternative SQL annotations allow you to specify a class and
+        a method name that will return the SQL to run at execution time. Upon executing the mapped statement, MyBatis will
         instantiate the class, and execute the method, as specified by the provider.
-        <u>The method can optionally accept the parameter object as its sole parameter, but must only specify that parameter, or no parameters</u>.
-        Attributes: <code>type</code>, <code>method</code>. The type attribute is the fully qualified name of a class.
-        The method is the name of the method on that class. <span class="label important">NOTE</span>
-        Following this section is a discussion about the SelectBuilder class, which can help build dynamic SQL in a cleaner, easier to read way.</td>
+        The method can optionally accept parameter objects.(In MyBatis 3.4 or later, it's allow multiple parameters)
+        Attributes: <code>type</code>, <code>method</code>. The <code>type</code> attribute is a class.
+        The <code>method</code> is the name of the method on that class. <span class="label important">NOTE</span>
+        Following this section is a discussion about the class, which can help build dynamic SQL in a cleaner, easier to read way.</td>
       </tr>
       <tr>
         <td><code>@Param</code></td>
@@ -557,6 +556,69 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
   <p>This example shows using the <code>@Flush</code> annotation to call the <code>SqlSession#flushStatements()</code>:</p>
   <source><![CDATA[@Flush
 List<BatchResult> flush();]]></source>
+
+  <p>These examples show how to name a ResultMap by specifying id attribute of @Results annotation.</p>
+  <source>@Results(id = "userResult", value = {
+  @Result(property = "id", column = "uid", id = <strong>true</strong>),
+  @Result(property = "firstName", column = "first_name"),
+  @Result(property = "lastName", column = "last_name")
+})
+@Select("select * from users where id = #{id}")
+User getUserById(Integer id);
+
+@Results(id = "companyResults")
+@ConstructorArgs({
+  @Arg(property = "id", column = "cid", id = <strong>true</strong>),
+  @Arg(property = "name", column = "name")
+})
+@Select("select * from company where id = #{id}")
+Company getCompanyById(Integer id);</source>
+
+  <p>This example shows solo parameter using the Sql Provider annotation:</p>
+  <source><![CDATA[@SelectProvider(type = UserSqlBuilder.class, method = "buildGetUsersByName")
+List<User> getUsersByName(String name);
+
+class UserSqlBuilder {
+  public String buildGetUsersByName(final String name) {
+    return new SQL(){{
+      SELECT("*");
+      FROM("users");
+      if (name != null) {
+        WHERE("name like #{value} || '%'");
+      }
+      ORDER_BY("id");
+    }}.toString();
+  }
+}]]></source>
+
+  <p>This example shows multiple parameters using the Sql Provider annotation:</p>
+  <source><![CDATA[@SelectProvider(type = UserSqlBuilder.class, method = "buildGetUsersByName")
+List<User> getUsersByName(
+    @Param("name") String name, @Param("orderByColumn") String orderByColumn);
+
+class UserSqlBuilder {
+
+  // If not use @Param, you should be define same arguments with mapper method
+  public String buildGetUsersByName(
+      final String name, final String orderByColumn) {
+    return new SQL(){{
+      SELECT("*");
+      FROM("users");
+      WHERE("name like #{name} || '%'");
+      ORDER_BY(orderByColumn);
+    }}.toString();
+  }
+
+  // If use @Param, you can define only arguments to be used
+  public String buildGetUsersByName(@Param("orderByColumn") final String orderByColumn) {
+    return new SQL(){{
+      SELECT("*");
+      FROM("users");
+      WHERE("name like #{name} || '%'");
+      ORDER_BY(orderByColumn);
+    }}.toString();
+  }
+}]]></source>
   </subsection>
 
   </section>

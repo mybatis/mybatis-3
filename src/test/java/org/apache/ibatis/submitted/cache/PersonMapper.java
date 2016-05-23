@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2016 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -20,6 +20,8 @@ import java.util.List;
 import org.apache.ibatis.annotations.CacheNamespace;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Options;
+import org.apache.ibatis.annotations.Options.FlushCachePolicy;
 import org.apache.ibatis.annotations.Select;
 
 @CacheNamespace
@@ -28,9 +30,21 @@ public interface PersonMapper {
   @Insert("insert into person (id, firstname, lastname) values (#{id}, #{firstname}, #{lastname})")
   public void create(Person person);
 
+  @Insert("insert into person (id, firstname, lastname) values (#{id}, #{firstname}, #{lastname})")
+  @Options
+  public void createWithOptions(Person person);
+
+  @Insert("insert into person (id, firstname, lastname) values (#{id}, #{firstname}, #{lastname})")
+  @Options(flushCache = FlushCachePolicy.FALSE)
+  public void createWithoutFlushCache(Person person);
+
   @Delete("delete from person where id = #{id}")
   public void delete(int id);
 
   @Select("select id, firstname, lastname from person")
   public List<Person> findAll();
+
+  @Select("select id, firstname, lastname from person")
+  @Options(flushCache = FlushCachePolicy.TRUE)
+  public List<Person> findWithFlushCache();
 }

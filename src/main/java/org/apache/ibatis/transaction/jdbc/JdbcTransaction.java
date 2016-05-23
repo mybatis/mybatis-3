@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2016 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@ package org.apache.ibatis.transaction.jdbc;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-
 import javax.sql.DataSource;
 
 import org.apache.ibatis.logging.Log;
@@ -32,10 +31,9 @@ import org.apache.ibatis.transaction.TransactionException;
  * Delays connection retrieval until getConnection() is called.
  * Ignores commit or rollback requests when autocommit is on.
  *
- * @see JdbcTransactionFactory
- */
-/**
  * @author Clinton Begin
+ *
+ * @see JdbcTransactionFactory
  */
 public class JdbcTransaction implements Transaction {
 
@@ -144,4 +142,9 @@ public class JdbcTransaction implements Transaction {
     setDesiredAutoCommit(autoCommmit);
   }
 
+  @Override
+  public Integer getTimeout() throws SQLException {
+    return null;
+  }
+  
 }

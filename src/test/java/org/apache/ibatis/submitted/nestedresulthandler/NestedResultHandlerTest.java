@@ -150,4 +150,24 @@ public class NestedResultHandlerTest {
     }
   }
 
+  @Test //reopen issue 39? (not a bug?)
+  public void testGetPersonItemPairs(){
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try{
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      List<PersonItemPair> pairs = mapper.getPersonItemPairs();
+
+      Assert.assertNotNull( pairs );
+//      System.out.println( new StringBuilder().append("selected pairs: ").append(pairs) );
+
+      Assert.assertEquals(5, pairs.size() );
+      Assert.assertNotNull(pairs.get(0).getPerson());
+      Assert.assertEquals(pairs.get(0).getPerson().getId(), Integer.valueOf(1));
+      Assert.assertNotNull(pairs.get(0).getItem());
+      Assert.assertEquals( pairs.get(0).getItem().getId(), Integer.valueOf(1));
+    } finally{
+      sqlSession.close();
+    }
+  }
+
 }

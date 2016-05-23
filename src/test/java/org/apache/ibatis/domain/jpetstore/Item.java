@@ -140,6 +140,7 @@ public class Item implements Serializable {
     this.attribute5 = attribute5;
   }
 
+  @Override
   public String toString() {
     return "(" + getItemId() + "-" + getProductId() + ")";
   }

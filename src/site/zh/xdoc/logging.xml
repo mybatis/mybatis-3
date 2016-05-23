@@ -1,22 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Copyright 2010-2012 the original author or authors.
 
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
+       Copyright 2009-2016 the original author or authors.
 
-    http://www.apache.org/licenses/LICENSE-2.0
+       Licensed under the Apache License, Version 2.0 (the "License");
+       you may not use this file except in compliance with the License.
+       You may obtain a copy of the License at
 
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
+          http://www.apache.org/licenses/LICENSE-2.0
+
+       Unless required by applicable law or agreed to in writing, software
+       distributed under the License is distributed on an "AS IS" BASIS,
+       WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+       See the License for the specific language governing permissions and
+       limitations under the License.
+
 -->
-
-<!-- version: $Id$ -->
-
 <document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
 
@@ -59,7 +58,24 @@
        WebSphere的环境中——WebSphere提供了Commons Logging的私有实现，你的Log4J配置将被忽略。
        	这种做法不免让人悲催，MyBatis怎么能忽略你的配置呢？事实上，因Commons Logging已经存
        	在了，按照优先级顺序，Log4J自然就被忽略了！不过，如果你的应用部署在一个包含Commons Logging的环境，
-       	而你又想用其他的日志框架，你可以根据需要调用如下的某一方法：
+       	而你又想用其他的日志框架，你可以通过在MyBatis的配置文件mybatis-config.xml里面添加一项setting（配置）来选择一个不同的日志实现。
+      </p>
+      <source><![CDATA[<configuration>
+  <settings>
+    ...
+    <setting name="logImpl" value="LOG4J"/>
+    ...
+  </settings>
+</configuration>]]>
+      </source>
+      <p>
+      	logImpl可选的值有：SLF4J、LOG4J、LOG4J2、JDK_LOGGING、COMMONS_LOGGING、STDOUT_LOGGING、NO_LOGGING
+      	或者是实现了接口<code>org.apache.ibatis.logging.Log</code>的类的完全限定类名，
+      	并且这个类的构造函数需要是以一个字符串（String类型）为参数的。
+      	（可以参考org.apache.ibatis.logging.slf4j.Slf4jImpl.java的实现）
+      </p>
+      <p>
+      	你根据需要调用如下的某一方法：
       </p>
       <source><![CDATA[org.apache.ibatis.logging.LogFactory.useSlf4jLogging();
 org.apache.ibatis.logging.LogFactory.useLog4JLogging();

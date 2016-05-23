@@ -1,22 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Copyright 2010-2012 the original author or authors.
 
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
+       Copyright 2009-2016 the original author or authors.
 
-    http://www.apache.org/licenses/LICENSE-2.0
+       Licensed under the Apache License, Version 2.0 (the "License");
+       you may not use this file except in compliance with the License.
+       You may obtain a copy of the License at
 
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
+          http://www.apache.org/licenses/LICENSE-2.0
+
+       Unless required by applicable law or agreed to in writing, software
+       distributed under the License is distributed on an "AS IS" BASIS,
+       WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+       See the License for the specific language governing permissions and
+       limitations under the License.
+
 -->
-
-<!-- version: $Id$ -->
-
 <document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
 
@@ -79,7 +78,7 @@ MyBatis 很大程度简化了你的代码而且保持简洁,很容易理解和�
   <subsection name="SqlSessions" id="sqlSessions">
   <p>
 使用 MyBatis 的主要 Java 接口就是 SqlSession。尽管你可以使用这个接口执行命令,获
-取映射器和管理事务。我们会讨论 SqlSession 本身更多,但是首先我们还是要了解如果获取
+取映射器和管理事务。我们会讨论 SqlSession 本身更多,但是首先我们还是要了解如何获取
 一个 SqlSession 实例。SqlSessions 是由 SqlSessionFactory 实例创建的。SqlSessionFactory 对
 象 包 含 创 建 SqlSession 实 例 的 所 有 方 法 。 而 SqlSessionFactory 本 身 是 由
 SqlSessionFactoryBuilder 创建的,它可以从 XML 配置,注解或手动配置 Java 来创建
@@ -598,7 +597,7 @@ ResultMap 很相似,由下面的 Results
 结果映射的列表,
 包含了一个特别结果
 列如何被映射到属性或字段的详情。
-属 性:value,是 Result 注解的数组。
+属 性:value, id。value 属性是 Result 注解的数组。 The id attribute is the name of the result mapping.
         </td>
       </tr>
       <tr>
@@ -670,7 +669,7 @@ select,是映射语句(也就是映射器方
 而不是将每条语句注解变复
 杂,Options 注解提供连贯清晰的方式
 来访问它们。属性:useCache=true ,
-flushCache=false
+flushCache=FlushCachePolicy.DEFAULT
 ,
 resultSetType=FORWARD_ONLY ,
 statementType=PREPARED ,
@@ -678,7 +677,9 @@ fetchSize=-1 ,
 , 
   timeout=-1 
 useGeneratedKeys=false ,
-keyProperty=”id”。
+keyProperty=”id” ,
+keyColumn=”” ,
+resultSets=””。
 理解 Java 注解是很
 重要的,因为没有办法来指定“null”
 作为值。因此,一旦你使用了 Options
@@ -745,14 +746,11 @@ keyProperty=”id”。
 基于执行的映射语句, 
 MyBatis
 会实例化这个类,然后执行由 provider
-指定的方法. 这个方法可以选择性的接
-受参数对象作为它的唯一参数,
-但是必
-须只指定该参数或者没有参数。属性:
-type,method。type 属性是类的完全限
-定名。method 是该类中的那个方法名。
+指定的方法.
+该方法可以有选择地接受参数对象.(In MyBatis 3.4 or later, it's allow multiple parameters)
+属性: type,method。type 属性是类。method 属性是方法名。
 注意:
-这节之后是对 SelectBuilder 类的
+这节之后是对 类的
 讨论,它可以帮助你以干净,容于阅读
 的方式来构建动态 SQL。
 </td>
@@ -828,6 +826,70 @@ type,method。type 属性是类的完全限
   <p>This example shows using the <code>@Flush</code> annotation to call the <code>SqlSession#flushStatements()</code>:</p>
   <source><![CDATA[@Flush
 List<BatchResult> flush();]]></source>
+
+  <p>These examples show how to name a ResultMap by specifying id attribute of @Results annotation.</p>
+  <source>@Results(id = "userResult", value = {
+  @Result(property = "id", column = "uid", id = <strong>true</strong>),
+  @Result(property = "firstName", column = "first_name"),
+  @Result(property = "lastName", column = "last_name")
+})
+@Select("select * from users where id = #{id}")
+User getUserById(Integer id);
+
+@Results(id = "companyResults")
+@ConstructorArgs({
+  @Arg(property = "id", column = "cid", id = <strong>true</strong>),
+  @Arg(property = "name", column = "name")
+})
+@Select("select * from company where id = #{id}")
+Company getCompanyById(Integer id);</source>
+
+  <p>This example shows solo parameter using the Sql Provider annotation:</p>
+  <source><![CDATA[@SelectProvider(type = UserSqlBuilder.class, method = "buildGetUsersByName")
+List<User> getUsersByName(String name);
+
+class UserSqlBuilder {
+  public String buildGetUsersByName(final String name) {
+    return new SQL(){{
+      SELECT("*");
+      FROM("users");
+      if (name != null) {
+        WHERE("name like #{value} || '%'");
+      }
+      ORDER_BY("id");
+    }}.toString();
+  }
+}]]></source>
+
+  <p>This example shows multiple parameters using the Sql Provider annotation:</p>
+  <source><![CDATA[@SelectProvider(type = UserSqlBuilder.class, method = "buildGetUsersByName")
+List<User> getUsersByName(
+    @Param("name") String name, @Param("orderByColumn") String orderByColumn);
+
+class UserSqlBuilder {
+
+  // If not use @Param, you should be define same arguments with mapper method
+  public String buildGetUsersByName(
+      final String name, final String orderByColumn) {
+    return new SQL(){{
+      SELECT("*");
+      FROM("users");
+      WHERE("name like #{name} || '%'");
+      ORDER_BY(orderByColumn);
+    }}.toString();
+  }
+
+  // If use @Param, you can define only arguments to be used
+  public String buildGetUsersByName(@Param("orderByColumn") final String orderByColumn) {
+    return new SQL(){{
+      SELECT("*");
+      FROM("users");
+      WHERE("name like #{name} || '%'");
+      ORDER_BY(orderByColumn);
+    }}.toString();
+  }
+}]]></source>
+
   </subsection>
 
   </section>

@@ -35,10 +35,12 @@ public class CustomObjectFactory implements ObjectFactory {
 
     private static final long serialVersionUID = -8855120656940914948L;
 
+    @Override
     public <T> T create(Class<T> type) {
         return create(type, null, null);
     }
 
+    @Override
     public <T> T create(Class<T> type, List<Class<?>> constructorArgTypes, List<Object> constructorArgs) {
         Class<?> classToCreate = resolveInterface(type);
         @SuppressWarnings("unchecked") // we know types are assignable
@@ -46,6 +48,7 @@ public class CustomObjectFactory implements ObjectFactory {
         return created;
     }
 
+    @Override
     public void setProperties(Properties properties) {
         // no props for default
     }
@@ -100,6 +103,7 @@ public class CustomObjectFactory implements ObjectFactory {
         return classToCreate;
     }
     
+    @Override
     public <T> boolean isCollection(Class<T> type) {
       return CustomCollection.class.isAssignableFrom(type);
     }

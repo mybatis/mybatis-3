@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2016 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -87,7 +87,7 @@ public class JavassistProxyFactory implements org.apache.ibatis.executor.loader.
       // nothing to do here
     }
 
-    Object enhanced = null;
+    Object enhanced;
     Class<?>[] typesArray = constructorArgTypes.toArray(new Class[constructorArgTypes.size()]);
     Object[] valuesArray = constructorArgs.toArray(new Object[constructorArgs.size()]);
     try {
@@ -101,13 +101,13 @@ public class JavassistProxyFactory implements org.apache.ibatis.executor.loader.
 
   private static class EnhancedResultObjectProxyImpl implements MethodHandler {
 
-    private Class<?> type;
-    private ResultLoaderMap lazyLoader;
-    private boolean aggressive;
-    private Set<String> lazyLoadTriggerMethods;
-    private ObjectFactory objectFactory;
-    private List<Class<?>> constructorArgTypes;
-    private List<Object> constructorArgs;
+    private final Class<?> type;
+    private final ResultLoaderMap lazyLoader;
+    private final boolean aggressive;
+    private final Set<String> lazyLoadTriggerMethods;
+    private final ObjectFactory objectFactory;
+    private final List<Class<?>> constructorArgTypes;
+    private final List<Object> constructorArgs;
 
     private EnhancedResultObjectProxyImpl(Class<?> type, ResultLoaderMap lazyLoader, Configuration configuration, ObjectFactory objectFactory, List<Class<?>> constructorArgTypes, List<Object> constructorArgs) {
       this.type = type;
@@ -133,7 +133,7 @@ public class JavassistProxyFactory implements org.apache.ibatis.executor.loader.
       try {
         synchronized (lazyLoader) {
           if (WRITE_REPLACE_METHOD.equals(methodName)) {
-            Object original = null;
+            Object original;
             if (constructorArgTypes.isEmpty()) {
               original = objectFactory.create(type);
             } else {

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2016 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -16,6 +16,8 @@
 package org.apache.ibatis.parsing;
 
 import static org.junit.Assert.assertEquals;
+
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -30,6 +32,7 @@ public class GenericTokenParserTest {
       this.variables = variables;
     }
 
+    @Override
     public String handleToken(String content) {
       return variables.get(content);
     }
@@ -42,6 +45,7 @@ public class GenericTokenParserTest {
         put("first_name", "James");
         put("initial", "T");
         put("last_name", "Kirk");
+        put("var{with}brace", "Hiya");
         put("", "");
       }
     }));
@@ -61,6 +65,9 @@ public class GenericTokenParserTest {
 
     assertEquals("{$$something}JamesTKirk", parser.parse("{$$something}${first_name}${initial}${last_name}"));
     assertEquals("${", parser.parse("${"));
+    assertEquals("${\\}", parser.parse("${\\}"));
+    assertEquals("Hiya", parser.parse("${var{with\\}brace}"));
+    assertEquals("", parser.parse("${}"));
     assertEquals("}", parser.parse("}"));
     assertEquals("Hello ${ this is a test.", parser.parse("Hello ${ this is a test."));
     assertEquals("Hello } this is a test.", parser.parse("Hello } this is a test."));
@@ -77,6 +84,7 @@ public class GenericTokenParserTest {
     assertEquals("The null is ${skipped} variable", parser.parse("The ${skipped} is \\${skipped} variable"));
   }
 
+  @Ignore("Because it randomly fails on Travis CI. It could be useful during development.")
   @Test(timeout = 1000)
   public void shouldParseFastOnJdk7u6() {
     // issue #760

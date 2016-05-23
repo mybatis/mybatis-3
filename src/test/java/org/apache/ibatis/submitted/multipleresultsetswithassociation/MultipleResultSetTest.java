@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2016 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -87,6 +87,28 @@ public class MultipleResultSetTest {
           Assert.assertNotNull(orderDetail.getOrderHeader());
       }
       
+    } finally {
+      sqlSession.close();
+    }
+  }
+
+  @Test
+  public void shouldGetOrderDetailsEachHavingAnOrderHeaderAnnotationBased() throws IOException {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      List<OrderDetail> orderDetails = mapper.getOrderDetailsWithHeadersAnnotationBased();
+
+      // There are six order detail records in the database
+      // As long as the data does not change this should be successful
+      Assert.assertEquals(6, orderDetails.size());
+
+      // Each order detail should have a corresponding OrderHeader
+      // Only 2 of 6 orderDetails have orderHeaders
+      for(OrderDetail orderDetail : orderDetails){
+          Assert.assertNotNull(orderDetail.getOrderHeader());
+      }
+
     } finally {
       sqlSession.close();
     }

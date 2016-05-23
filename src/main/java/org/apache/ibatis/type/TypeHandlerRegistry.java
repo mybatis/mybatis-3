@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2016 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,6 +15,8 @@
  */
 package org.apache.ibatis.type;
 
+import java.io.InputStream;
+import java.io.Reader;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
@@ -29,6 +31,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.ibatis.io.ResolverUtil;
+import org.apache.ibatis.io.Resources;
 
 /**
  * @author Clinton Begin
@@ -69,6 +72,7 @@ public final class TypeHandlerRegistry {
     register(double.class, new DoubleTypeHandler());
     register(JdbcType.DOUBLE, new DoubleTypeHandler());
 
+    register(Reader.class, new ClobReaderTypeHandler());
     register(String.class, new StringTypeHandler());
     register(String.class, JdbcType.CHAR, new StringTypeHandler());
     register(String.class, JdbcType.CLOB, new ClobTypeHandler());
@@ -96,6 +100,7 @@ public final class TypeHandlerRegistry {
     register(JdbcType.DECIMAL, new BigDecimalTypeHandler());
     register(JdbcType.NUMERIC, new BigDecimalTypeHandler());
 
+    register(InputStream.class, new BlobInputStreamTypeHandler());
     register(Byte[].class, new ByteObjectArrayTypeHandler());
     register(Byte[].class, JdbcType.BLOB, new BlobByteObjectArrayTypeHandler());
     register(Byte[].class, JdbcType.LONGVARBINARY, new BlobByteObjectArrayTypeHandler());
@@ -119,6 +124,24 @@ public final class TypeHandlerRegistry {
     register(java.sql.Date.class, new SqlDateTypeHandler());
     register(java.sql.Time.class, new SqlTimeTypeHandler());
     register(java.sql.Timestamp.class, new SqlTimestampTypeHandler());
+
+    // mybatis-typehandlers-jsr310
+    try {
+      // since 1.0.0
+      register("java.time.Instant", "org.apache.ibatis.type.InstantTypeHandler");
+      register("java.time.LocalDateTime", "org.apache.ibatis.type.LocalDateTimeTypeHandler");
+      register("java.time.LocalDate", "org.apache.ibatis.type.LocalDateTypeHandler");
+      register("java.time.LocalTime", "org.apache.ibatis.type.LocalTimeTypeHandler");
+      register("java.time.OffsetDateTime", "org.apache.ibatis.type.OffsetDateTimeTypeHandler");
+      register("java.time.OffsetTime", "org.apache.ibatis.type.OffsetTimeTypeHandler");
+      register("java.time.ZonedDateTime", "org.apache.ibatis.type.ZonedDateTimeTypeHandler");
+      // since 1.0.1
+      register("java.time.Month", "org.apache.ibatis.type.MonthTypeHandler");
+      register("java.time.Year", "org.apache.ibatis.type.YearTypeHandler");
+
+    } catch (ClassNotFoundException e) {
+      // no JSR-310 handlers
+    }
 
     // issue #273
     register(Character.class, new CharacterTypeHandler());
@@ -174,12 +197,29 @@ public final class TypeHandlerRegistry {
       if (handler == null) {
         handler = jdbcHandlerMap.get(null);
       }
+      if (handler == null) {
+        // #591
+        handler = pickSoleHandler(jdbcHandlerMap);
+      }
     }
     if (handler == null && type != null && type instanceof Class && Enum.class.isAssignableFrom((Class<?>) type)) {
       handler = new EnumTypeHandler((Class<?>) type);
     }
     // type drives generics here
     return (TypeHandler<T>) handler;
+  }
+
+  private TypeHandler<?> pickSoleHandler(Map<JdbcType, TypeHandler<?>> jdbcHandlerMap) {
+    TypeHandler<?> soleHandler = null;
+    for (TypeHandler<?> handler : jdbcHandlerMap.values()) {
+      if (soleHandler == null) {
+        soleHandler = handler;
+      } else if (!handler.getClass().equals(soleHandler.getClass())) {
+        // More than one type handlers registered.
+        return null;
+      }
+    }
+    return soleHandler;
   }
 
   public TypeHandler<Object> getUnknownTypeHandler() {
@@ -284,6 +324,10 @@ public final class TypeHandlerRegistry {
   }
 
   // java type + handler type
+
+  public void register(String javaTypeClassName, String typeHandlerClassName) throws ClassNotFoundException {
+    register(Resources.classForName(javaTypeClassName), Resources.classForName(typeHandlerClassName));
+  }
 
   public void register(Class<?> javaTypeClass, Class<?> typeHandlerClass) {
     register(javaTypeClass, getInstance(javaTypeClass, typeHandlerClass));

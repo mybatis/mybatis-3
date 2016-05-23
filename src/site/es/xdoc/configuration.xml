@@ -1,22 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Copyright 2010-2012 the original author or authors.
 
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
+       Copyright 2009-2016 the original author or authors.
 
-    http://www.apache.org/licenses/LICENSE-2.0
+       Licensed under the Apache License, Version 2.0 (the "License");
+       you may not use this file except in compliance with the License.
+       You may obtain a copy of the License at
 
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
+          http://www.apache.org/licenses/LICENSE-2.0
+
+       Unless required by applicable law or agreed to in writing, software
+       distributed under the License is distributed on an "AS IS" BASIS,
+       WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+       See the License for the specific language governing permissions and
+       limitations under the License.
+
 -->
-
-<!-- version: $Id$ -->
-
 <document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
 
@@ -201,6 +200,25 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
             </tr>
             <tr>
               <td>
+                autoMappingUnknownColumnBehavior
+              </td>
+              <td>
+                Specify the behavior when detects an unknown column (or unknown property type) of automatic mapping target.
+                <ul>
+                  <li><code>NONE</code>: Do nothing</li>
+                  <li><code>WARNING</code>: Output warning log (The log level of <code>'org.apache.ibatis.session.AutoMappingUnknownColumnBehavior'</code> must be set to <code>WARN</code>)</li>
+                  <li><code>FAILING</code>: Fail mapping (Throw <code>SqlSessionException</code>)</li>
+                </ul>
+              </td>
+              <td>
+                NONE, WARNING, FAILING
+              </td>
+              <td>
+                NONE
+              </td>
+            </tr>
+            <tr>
+              <td>
                 defaultExecutorType
               </td>
               <td>Configura el ejecutor (executor) por defecto. SIMPLE no hace nada especial. REUSE reúsa prepared statements. BATCH reúsa statements y ejecuta actualizaciones en batch.</td>
@@ -246,12 +264,28 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 safeRowBoundsEnabled
               </td>
               <td>Habilita el uso de RowBounds en statements anidados.
+                If allow, set the false.
               </td>
               <td>
                 true | false
               </td>
               <td>
                 False
+              </td>
+            </tr>
+            <tr>
+              <td>
+                safeResultHandlerEnabled
+              </td>
+              <td>
+                Habilita el uso de ResultHandler en statements anidados.
+                If allow, set the false.
+              </td>
+              <td>
+                true | false
+              </td>
+              <td>
+                True
               </td>
             </tr>
             <tr>
@@ -399,6 +433,21 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 Not set
               </td>
             </tr>
+            <tr>
+              <td>
+                useActualParamName
+              </td>
+              <td>
+                Allow referencing statement parameters by their actual names declared in the method signature.
+                To use this feature, your project must be compiled in Java 8 with <code>-parameters</code> option. (Since: 3.4.1)
+              </td>
+              <td>
+                true | false
+              </td>
+              <td>
+                true
+              </td>
+            </tr>
           </tbody>
         </table>
         <p>
@@ -411,6 +460,7 @@ A continuación se muestra un ejemplo del elemento settings al completo:
   <setting name="useColumnLabel" value="true"/>
   <setting name="useGeneratedKeys" value="false"/>
   <setting name="autoMappingBehavior" value="PARTIAL"/>
+  <setting name="autoMappingUnknownColumnBehavior" value="WARNING"/>
   <setting name="defaultExecutorType" value="SIMPLE"/>
   <setting name="defaultStatementTimeout" value="25"/>
   <setting name="defaultFetchSize" value="100"/>
@@ -691,6 +741,11 @@ public class Author {
       <subsection name="typeHandlers">
         <p>Cuando MyBatis establece el valor de un parámetro de un PreparedStatement u obtiene un valor de un ResultSet, se utiliza un TypeHandler para convertir el valor al tipo Java apropiado. La siguiente tabla recoge los TypeHandlers predefinidos.
         </p>
+        <p>
+          <span class="label important">NOTE</span>
+          If you use classes provided by JSR-310(Date and Time API),
+          you can use the <a href="https://github.com/mybatis/typehandlers-jsr310">mybatis-typehandlers-jsr310</a>.
+        </p>
         <table>
           <thead>
             <tr>
@@ -807,6 +862,17 @@ public class Author {
             </tr>
             <tr>
               <td>
+                <code>ClobReaderTypeHandler</code>
+              </td>
+              <td>
+                <code>java.io.Reader</code>
+              </td>
+              <td>
+                -
+              </td>
+            </tr>
+            <tr>
+              <td>
                 <code>ClobTypeHandler</code>
               </td>
               <td>
@@ -836,6 +902,17 @@ public class Author {
               </td>
               <td>
                 <code>NCLOB</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>BlobInputStreamTypeHandler</code>
+              </td>
+              <td>
+                <code>java.io.InputStream</code>
+              </td>
+              <td>
+                -
               </td>
             </tr>
             <tr>
@@ -1022,6 +1099,18 @@ public class ExampleTypeHandler extends BaseTypeHandler<String> {
 		   Esta anotación será ignorada si se ha especificado también un atributo <code>jdbcType</code>.
           </li>
         </ul>
+
+        <p>
+          When deciding which TypeHandler to use in a <code>ResultMap</code>, the Java type is known
+          (from the result type), but the JDBC type is unknown. MyBatis therefore uses the combination
+          <code>javaType=[TheJavaType], jdbcType=null</code> to choose a TypeHandler. This means that
+          using a <code>@MappedJdbcTypes</code> annotation <i>restricts</i> the scope of a TypeHandler
+          and makes it unavailable for use in <code>ResultMap</code>s unless explicity set. To make a
+          TypeHandler available for use in a <code>ResultMap</code>, set <code>includeNullJdbcType=true</code>
+          on the <code>@MappedJdbcTypes</code> annotation. Since Mybatis 3.4.0 however, if a <b>single</b>
+          TypeHandler is registered to handle a Java type, it will be used by default in <code>ResultMap</code>s
+          using this Java type (i.e. even without <code>includeNullJdbcType=true</code>). 
+        </p>
 
         <p>Y finalmente puedes hacer que MyBatis busque tus TypeHandlers:</p>
         <source><![CDATA[<!-- mybatis-config.xml -->
@@ -1313,6 +1402,7 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader,properties);]]
   void commit() throws SQLException;
   void rollback() throws SQLException;
   void close() throws SQLException;
+  Integer getTimeout() throws SQLException;
 }]]></source>
         <p>Con estos dos interfaces puedes personalizar por completo la forma en la que MyBatis gestiona las transacciones.</p>
         <p>

@@ -1,22 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Copyright 2010-2012 the original author or authors.
 
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
+       Copyright 2009-2016 the original author or authors.
 
-    http://www.apache.org/licenses/LICENSE-2.0
+       Licensed under the Apache License, Version 2.0 (the "License");
+       you may not use this file except in compliance with the License.
+       You may obtain a copy of the License at
 
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
+          http://www.apache.org/licenses/LICENSE-2.0
+
+       Unless required by applicable law or agreed to in writing, software
+       distributed under the License is distributed on an "AS IS" BASIS,
+       WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+       See the License for the specific language governing permissions and
+       limitations under the License.
+
 -->
-
-<!-- version: $Id$ -->
-
 <document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
 
@@ -367,7 +366,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
         <td><code>@Results</code></td>
         <td><code>Method</code></td>
         <td><code>&lt;resultMap&gt;</code></td>
-        <td>ある結果列とプロパティまたはフィールドのマッピング情報を定義する Results のリストです。単一値である <code>value</code> は <code>Result</code> アノテーションの配列です。</td>
+        <td>ある結果列とプロパティまたはフィールドのマッピング情報を定義する Results のリストです。属性: <code>value</code>, <code>id</code>. value 属性は <code>Result</code> アノテーションの配列です。 id 属性でマッピング情報の名前を指定することができます。</td>
       </tr>
       <tr>
         <td><code>@Result</code></td>
@@ -409,9 +408,9 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
         <td><code>Method</code></td>
         <td>マップドステートメントの属性</td>
         <td>このアノテーションを使うと、通常マップドステートメントの属性として指定される多様なスイッチや設定オプションにアクセスすることができます。<code>Options</code> アノテーションによって、各ステートメントのアノテーションを複雑化することなく、一貫したクリーンな方法で設定にアクセスできるよう工夫されています。キー: Attributes:
-        <code>useCache=true</code>, <code>flushCache=false</code>, <code>resultSetType=FORWARD_ONLY</code>,
+        <code>useCache=true</code>, <code>flushCache=FlushCachePolicy.DEFAULT</code>, <code>resultSetType=FORWARD_ONLY</code>,
         <code>statementType=PREPARED</code>, <code>fetchSize=-1</code>, <code>timeout=-1</code>,
-        <code>useGeneratedKeys=false</code>, <code>keyProperty="id"</code>, <code>keyColumn=""</code>.
+        <code>useGeneratedKeys=false</code>, <code>keyProperty="id"</code>, <code>keyColumn=""</code>, <code>resultSets=""</code>.
         Java アノテーションを使う場合、値として <code>null</code> を指定することはできないという制限があります。これはどういうことかというと、<code>Options</code> アノテーションを付加したステートメントにはデフォルトのオプションが適用されるということです。予期しない動作を防ぐため、各オプションのデフォルト値を把握しておくようにしてください。<br/><br/>
         <code>keyColumn</code> は特定のデータベース（Oracle や PostgreSQL など）でのみ必須となります。
         <code>keyColumn</code> と <code>keyProperty</code> に対して指定可能な値については、上で出てきた insert ステートメントについての説明を参照してください。</td>
@@ -455,8 +454,8 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
           </ul>
         </td>
         <td>これらのアノテーションは動的 SQL を生成するためのものです。実行時に指定されたメソッドが呼び出され、メソッドから返された SQL ステートメントが実行されます。マップドステートメントを実行する際、プロバイダーによって指定したクラスのインスタンスが作成され、指定されたメソッドが実行されます。
-        <u>メソッドに引数オブジェクトを渡すこともできますが、指定できる引数は一つだけです（または引数なし）。</u>
-        キー: <code>type</code>, <code>method</code>. type は完全修飾クラス名、method はそのクラスのメソッド名です。 <span class="label important">NOTE</span> 次の章で、クリーンで可読性の高いコードで動的 SQL を構築するための SelectBuilder クラスについて説明します。
+        メソッドに引数を渡すことができます。(MyBatis 3.4以降では、複数の引数を渡すことができます)
+        キー: <code>type</code>, <code>method</code>. <code>type</code> にはクラスオブジェクト、<code>method</code> にはメソッド名を指定します。 <span class="label important">NOTE</span> 次の章で、クリーンで可読性の高いコードで動的 SQL を構築するためのクラスについて説明します。
 </td>
       </tr>
       <tr>
@@ -508,6 +507,70 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
   <p>次のコードは <code>@Flush</code> アノテーションを使って <code>SqlSession#flushStatements()</code>メソッドを呼び出す例です。</p>
   <source><![CDATA[@Flush
 List<BatchResult> flush();]]></source>
+
+  <p>次のコードは @Results アノテーションの id 属性で名前を指定する例です。</p>
+  <source>@Results(id = "userResult", value = {
+  @Result(property = "id", column = "uid", id = <strong>true</strong>),
+  @Result(property = "firstName", column = "first_name"),
+  @Result(property = "lastName", column = "last_name")
+})
+@Select("select * from users where id = #{id}")
+User getUserById(Integer id);
+
+@Results(id = "companyResults")
+@ConstructorArgs({
+  @Arg(property = "id", column = "cid", id = <strong>true</strong>),
+  @Arg(property = "name", column = "name")
+})
+@Select("select * from company where id = #{id}")
+Company getCompanyById(Integer id);</source>
+
+  <p>次のコードは SQLプロバイダー用のアノテーションを使用して、パラメータをひとつ受け取る例です。</p>
+  <source><![CDATA[@SelectProvider(type = UserSqlBuilder.class, method = "buildGetUsersByName")
+List<User> getUsersByName(String name);
+
+class UserSqlBuilder {
+  public String buildGetUsersByName(final String name) {
+    return new SQL(){{
+      SELECT("*");
+      FROM("users");
+      if (name != null) {
+        WHERE("name like #{value} || '%'");
+      }
+      ORDER_BY("id");
+    }}.toString();
+  }
+}]]></source>
+
+  <p>次のコードは SQLプロバイダー用のアノテーションを使用して、複数パラメータをひとつ受け取る例です。</p>
+  <source><![CDATA[@SelectProvider(type = UserSqlBuilder.class, method = "buildGetUsersByName")
+List<User> getUsersByName(
+    @Param("name") String name, @Param("orderByColumn") String orderByColumn);
+
+class UserSqlBuilder {
+
+  // @Paramを使わない場合は, Mapperメソッドと同じ引数で定義する必要があります。
+  public String buildGetUsersByName(
+      final String name, final String orderByColumn) {
+    return new SQL(){{
+      SELECT("*");
+      FROM("users");
+      WHERE("name like #{name} || '%'");
+      ORDER_BY(orderByColumn);
+    }}.toString();
+  }
+
+  // @Paramを使う場合は, 必要な引数のみ定義することができます。
+  public String buildGetUsersByName(@Param("orderByColumn") final String orderByColumn) {
+    return new SQL(){{
+      SELECT("*");
+      FROM("users");
+      WHERE("name like #{name} || '%'");
+      ORDER_BY(orderByColumn);
+    }}.toString();
+  }
+}]]></source>
+
   </subsection>
 
   </section>

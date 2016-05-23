@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2016 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -13,24 +13,18 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package org.apache.ibatis.cursor;
+package org.apache.ibatis.submitted.generictyperesolution;
 
-import org.apache.ibatis.exceptions.PersistenceException;
+import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Select;
 
-/**
- * @author Guillaume Darmont / guillaume@dropinocean.com
- */
-public class CursorException extends PersistenceException {
+public interface Mapper {
+  @Select("select * from users where id = #{id}")
+  User getUser(User criteria);
 
-    public CursorException(String message) {
-        super(message);
-    }
+  @Select("select * from users where name = #{name}")
+  User getUserByName(String name);
 
-    public CursorException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public CursorException(Throwable cause) {
-        super(cause);
-    }
+  @Insert("insert into users (name, fld2) values (#{name}, #{fld2})")
+  void insertUser(User user);
 }

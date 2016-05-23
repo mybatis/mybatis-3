@@ -1,22 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Copyright 2010-2012 the original author or authors.
 
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
+       Copyright 2009-2016 the original author or authors.
 
-    http://www.apache.org/licenses/LICENSE-2.0
+       Licensed under the Apache License, Version 2.0 (the "License");
+       you may not use this file except in compliance with the License.
+       You may obtain a copy of the License at
 
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
+          http://www.apache.org/licenses/LICENSE-2.0
+
+       Unless required by applicable law or agreed to in writing, software
+       distributed under the License is distributed on an "AS IS" BASIS,
+       WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+       See the License for the specific language governing permissions and
+       limitations under the License.
+
 -->
-
-<!-- version: $Id$ -->
-
 <document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
 
@@ -155,7 +154,7 @@ AND title like ‘someTitle’]]></source>
   </foreach>
 </select>]]></source>
   <p>El elemento foreach es muy potente, permite especificar una colección y declarar variables elemento e índice que pueden usarse dentro del cuerpo del elemento. Permite también abrir y cerrar strings y añadir un separador entre las iteraciones. Este elemento es inteligente en tanto en cuanto no añade separadores extra accidentalmente.</p>
-  <p><span class="label important">NOTA</span> Puedes pasar como objeto de parámetro un List o un Array a MyBatis. Cuando haces esto, MyBatis lo envuelve automáticamente en un Map usando su nombre como clave. Las instancias de lista usarán “list” como clave y las instancias array usarán “array”.</p>
+  <p><span class="label important">NOTA</span> You can pass any Iterable object (for example List, Set, etc.), as well as any Map or Array object to foreach as collection parameter. When using an Iterable or Array, index will be the number of current iteration and value item will be the element retrieved in this iteration. When using a Map (or Collection of Map.Entry objects), index will be the key object and item will be the value object.</p>
   <p>Esto finaliza la discusión sobre la configuración XML y los ficheros de mapeo XML. En la sección siguiente hablaremos del API Java en detalle, de forma que puedas obtener el máximo rendimiento de los mapeos que has creado.</p>
   </subsection>  
   <subsection name="bind">

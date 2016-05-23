@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2016 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -168,4 +168,138 @@ public class CacheTest {
     }
   }
 
+  /*-
+   * Test case for #405
+   *
+   * Test Plan with Autocommit on:
+   *  1) SqlSession 1 executes "select * from A".
+   *  2) SqlSession 1 closes.
+   *  3) SqlSession 2 executes "insert into person (id, firstname, lastname) values (3, hello, world)"
+   *  4) SqlSession 2 closes.
+   *  5) SqlSession 3 executes "select * from A".
+   *  6) SqlSession 3 closes.
+   *
+   * Assert:
+   *   Step 5 returns 3 row.
+   */
+  @Test
+  public void shouldInsertWithOptionsFlushesCache() {
+    SqlSession sqlSession1 = sqlSessionFactory.openSession(true);
+    try {
+      PersonMapper pm = sqlSession1.getMapper(PersonMapper.class);
+      Assert.assertEquals(2, pm.findAll().size());
+    } finally {
+      sqlSession1.close();
+    }
+
+    SqlSession sqlSession2 = sqlSessionFactory.openSession(true);
+    try {
+      PersonMapper pm = sqlSession2.getMapper(PersonMapper.class);
+      Person p = new Person(3, "hello", "world");
+      pm.createWithOptions(p);
+    } finally {
+      sqlSession2.close();
+    }
+
+    SqlSession sqlSession3 = sqlSessionFactory.openSession(true);
+    try {
+      PersonMapper pm = sqlSession3.getMapper(PersonMapper.class);
+      Assert.assertEquals(3, pm.findAll().size());
+    } finally {
+      sqlSession3.close();
+    }
+  }
+
+  /*-
+   * Test Plan with Autocommit on:
+   *  1) SqlSession 1 executes select to cache result
+   *  2) SqlSession 1 closes.
+   *  3) SqlSession 2 executes insert without flushing cache
+   *  4) SqlSession 2 closes.
+   *  5) SqlSession 3 executes select (flushCache = false)
+   *  6) SqlSession 3 closes.
+   *  7) SqlSession 4 executes select (flushCache = true)
+   *  8) SqlSession 4 closes.
+   *
+   * Assert:
+   *   Step 5 returns 2 row.
+   *   Step 7 returns 3 row.
+   */
+  @Test
+  public void shouldApplyFlushCacheOptions() {
+    SqlSession sqlSession1 = sqlSessionFactory.openSession(true);
+    try {
+      PersonMapper pm = sqlSession1.getMapper(PersonMapper.class);
+      Assert.assertEquals(2, pm.findAll().size());
+    } finally {
+      sqlSession1.close();
+    }
+
+    SqlSession sqlSession2 = sqlSessionFactory.openSession(true);
+    try {
+      PersonMapper pm = sqlSession2.getMapper(PersonMapper.class);
+      Person p = new Person(3, "hello", "world");
+      pm.createWithoutFlushCache(p);
+    } finally {
+      sqlSession2.close();
+    }
+
+    SqlSession sqlSession3 = sqlSessionFactory.openSession(true);
+    try {
+      PersonMapper pm = sqlSession3.getMapper(PersonMapper.class);
+      Assert.assertEquals(2, pm.findAll().size());
+    } finally {
+      sqlSession3.close();
+    }
+
+    SqlSession sqlSession4 = sqlSessionFactory.openSession(true);
+    try {
+      PersonMapper pm = sqlSession4.getMapper(PersonMapper.class);
+      Assert.assertEquals(3, pm.findWithFlushCache().size());
+    } finally {
+      sqlSession4.close();
+    }
+  }
+
+  @Test
+  public void shouldApplyCacheNamespaceRef() {
+    {
+      SqlSession sqlSession = sqlSessionFactory.openSession(true);
+      try {
+        PersonMapper pm = sqlSession.getMapper(PersonMapper.class);
+        Assert.assertEquals(2, pm.findAll().size());
+        Person p = new Person(3, "hello", "world");
+        pm.createWithoutFlushCache(p);
+      } finally {
+        sqlSession.close();
+      }
+    }
+    {
+      SqlSession sqlSession = sqlSessionFactory.openSession(true);
+      try {
+        PersonMapper pm = sqlSession.getMapper(PersonMapper.class);
+        Assert.assertEquals(2, pm.findAll().size());
+      } finally {
+        sqlSession.close();
+      }
+    }
+    {
+      SqlSession sqlSession = sqlSessionFactory.openSession(true);
+      try {
+        ImportantPersonMapper pm = sqlSession.getMapper(ImportantPersonMapper.class);
+        Assert.assertEquals(3, pm.findWithFlushCache().size());
+      } finally {
+        sqlSession.close();
+      }
+    }
+    {
+      SqlSession sqlSession = sqlSessionFactory.openSession(true);
+      try {
+        PersonMapper pm = sqlSession.getMapper(PersonMapper.class);
+        Assert.assertEquals(3, pm.findAll().size());
+      } finally {
+        sqlSession.close();
+      }
+    }
+  }
 }

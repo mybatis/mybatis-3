@@ -1,22 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Copyright 2010-2012 the original author or authors.
 
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
+       Copyright 2009-2016 the original author or authors.
 
-    http://www.apache.org/licenses/LICENSE-2.0
+       Licensed under the Apache License, Version 2.0 (the "License");
+       you may not use this file except in compliance with the License.
+       You may obtain a copy of the License at
 
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
+          http://www.apache.org/licenses/LICENSE-2.0
+
+       Unless required by applicable law or agreed to in writing, software
+       distributed under the License is distributed on an "AS IS" BASIS,
+       WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+       See the License for the specific language governing permissions and
+       limitations under the License.
+
 -->
-
-<!-- version: $Id$ -->
-
 <document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
 
@@ -209,6 +208,25 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
             </tr>
             <tr>
               <td>
+                autoMappingUnknownColumnBehavior
+              </td>
+              <td>
+                Specify the behavior when detects an unknown column (or unknown property type) of automatic mapping target.
+                <ul>
+                  <li><code>NONE</code>: Do nothing</li>
+                  <li><code>WARNING</code>: Output warning log (The log level of <code>'org.apache.ibatis.session.AutoMappingUnknownColumnBehavior'</code> must be set to <code>WARN</code>)</li>
+                  <li><code>FAILING</code>: Fail mapping (Throw <code>SqlSessionException</code>)</li>
+                </ul>
+              </td>
+              <td>
+                NONE, WARNING, FAILING
+              </td>
+              <td>
+                NONE
+              </td>
+            </tr>
+            <tr>
+              <td>
                 defaultExecutorType
               </td>
               <td>
@@ -259,12 +277,28 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
               </td>
               <td>
                 允许在嵌套语句中使用分页（RowBounds）。
+                If allow, set the false.
               </td>
               <td>
                 true | false
               </td>
               <td>
                 False
+              </td>
+            </tr>
+            <tr>
+              <td>
+                safeResultHandlerEnabled
+              </td>
+              <td>
+                允许在嵌套语句中使用分页（ResultHandler）。
+                If allow, set the false.
+              </td>
+              <td>
+                true | false
+              </td>
+              <td>
+                True
               </td>
             </tr>
             <tr>
@@ -410,6 +444,21 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 Not set
               </td>
             </tr>
+            <tr>
+              <td>
+                useActualParamName
+              </td>
+              <td>
+                Allow referencing statement parameters by their actual names declared in the method signature.
+                To use this feature, your project must be compiled in Java 8 with <code>-parameters</code> option. (Since: 3.4.1)
+              </td>
+              <td>
+                true | false
+              </td>
+              <td>
+                true
+              </td>
+            </tr>
           </tbody>
         </table>
         <p>
@@ -422,6 +471,7 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
   <setting name="useColumnLabel" value="true"/>
   <setting name="useGeneratedKeys" value="false"/>
   <setting name="autoMappingBehavior" value="PARTIAL"/>
+  <setting name="autoMappingUnknownColumnBehavior" value="WARNING"/>
   <setting name="defaultExecutorType" value="SIMPLE"/>
   <setting name="defaultStatementTimeout" value="25"/>
   <setting name="defaultFetchSize" value="100"/>
@@ -693,6 +743,11 @@ public class Author {
       <subsection name="typeHandlers" id="typeHandlers">
         <p>无论是 MyBatis 在预处理语句（PreparedStatement）中设置一个参数时，还是从结果集中取出一个值时，
           都会用类型处理器将获取的值以合适的方式转换成 Java 类型。下表描述了一些默认的类型处理器。</p>
+        <p>
+          <span class="label important">NOTE</span>
+          If you use classes provided by JSR-310(Date and Time API),
+          you can use the <a href="https://github.com/mybatis/typehandlers-jsr310">mybatis-typehandlers-jsr310</a>.
+        </p>
         <table>
           <thead>
             <tr>
@@ -809,6 +864,17 @@ public class Author {
             </tr>
             <tr>
               <td>
+                <code>ClobReaderTypeHandler</code>
+              </td>
+              <td>
+                <code>java.io.Reader</code>
+              </td>
+              <td>
+                -
+              </td>
+            </tr>
+            <tr>
+              <td>
                 <code>ClobTypeHandler</code>
               </td>
               <td>
@@ -838,6 +904,17 @@ public class Author {
               </td>
               <td>
                 <code>NCLOB</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>BlobInputStreamTypeHandler</code>
+              </td>
+              <td>
+                <code>java.io.InputStream</code>
+              </td>
+              <td>
+                -
               </td>
             </tr>
             <tr>
@@ -1021,12 +1098,24 @@ public class ExampleTypeHandler extends BaseTypeHandler<String> {
         <p>可以通过两种方式来指定被关联的 JDBC 类型：</p>
         <ul>
           <li>
-            在类型处理器的配置元素上增加一个 <code>javaType</code> 属性（比如：<code>javaType="VARCHAR"</code>）；
+            在类型处理器的配置元素上增加一个 <code>jdbcType</code> 属性（比如：<code>jdbcType="VARCHAR"</code>）；
           </li>
           <li>在类型处理器的类上（TypeHandler class）增加一个 <code>@MappedJdbcTypes</code> 注解来指定与其关联的 JDBC 类型列表。
-            如果在 <code>javaType</code> 属性中也同时指定，则注解方式将被忽略。
+            如果在 <code>jdbcType</code> 属性中也同时指定，则注解方式将被忽略。
           </li>
         </ul>
+
+        <p>
+          When deciding which TypeHandler to use in a <code>ResultMap</code>, the Java type is known
+          (from the result type), but the JDBC type is unknown. MyBatis therefore uses the combination
+          <code>javaType=[TheJavaType], jdbcType=null</code> to choose a TypeHandler. This means that
+          using a <code>@MappedJdbcTypes</code> annotation <i>restricts</i> the scope of a TypeHandler
+          and makes it unavailable for use in <code>ResultMap</code>s unless explicity set. To make a
+          TypeHandler available for use in a <code>ResultMap</code>, set <code>includeNullJdbcType=true</code>
+          on the <code>@MappedJdbcTypes</code> annotation. Since Mybatis 3.4.0 however, if a <b>single</b>
+          TypeHandler is registered to handle a Java type, it will be used by default in <code>ResultMap</code>s
+          using this Java type (i.e. even without <code>includeNullJdbcType=true</code>). 
+        </p>
 
         <p>最后，可以让 MyBatis 为你查找类型处理器：</p>
         <source><![CDATA[<!-- mybatis-config.xml -->
@@ -1302,6 +1391,7 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader,properties);]]
   void commit() throws SQLException;
   void rollback() throws SQLException;
   void close() throws SQLException;
+  Integer getTimeout() throws SQLException;
 }]]></source>
         <p>使用这两个接口，你可以完全自定义 MyBatis 对事务的处理。</p>
         <p>
