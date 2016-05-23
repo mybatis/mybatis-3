@@ -72,7 +72,7 @@ public class PageResultTest {
 	  session.commit();
 	  session.close();
 	  assertEquals(3, pageResult.getQueryList().size());
-	  assertEquals(4, pageResult.getTotal());
+	  assertEquals(4, pageResult.getCount());
 	  
 	  
   }
@@ -92,9 +92,34 @@ public class PageResultTest {
 	  session.commit();
 	  session.close();
 	  assertEquals(3, pageResult.getQueryList().size());
-	  assertEquals(4, pageResult.getTotal());
+	  assertEquals(4, pageResult.getCount());
+	  assertEquals(2, pageResult.getPageCount());
 	  
-	  System.out.println("count="+pageResult.getTotal());
+	  System.out.println("count="+pageResult.getCount());
+	  for(User u : pageResult.getQueryList())
+	  {
+		  System.out.println(u.getName());
+	  }
+  }
+  
+  @Test
+  public void unionSelect() {
+	 
+	  Map<String,Object> condition = new HashMap<String,Object>();
+	  condition.put("sex1", "male");
+	  condition.put("sex2", "female");
+	  PageBounds pageBounds = new PageBounds(1,3);
+	  
+	  SqlSession session = sqlSessionFactory.openSession();
+	  UserMapper userMapper = session.getMapper(UserMapper.class);
+	  PageResult<User> pageResult = userMapper.unionSelect(condition, pageBounds);
+	  session.commit();
+	  session.close();
+	  assertEquals(3, pageResult.getQueryList().size());
+	  assertEquals(6, pageResult.getCount());
+	  assertEquals(2, pageResult.getPageCount());
+	  
+	  System.out.println("count="+pageResult.getCount());
 	  for(User u : pageResult.getQueryList())
 	  {
 		  System.out.println(u.getName());

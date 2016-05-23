@@ -25,5 +25,7 @@ import org.apache.ibatis.session.PageResult;
 public interface UserMapper {
 
 	PageResult<User> selectAll(Map<String,Object> param, PageBounds pageBounds );
+	
+	PageResult<User> unionSelect(Map<String,Object> param, PageBounds pageBounds );
   
 }

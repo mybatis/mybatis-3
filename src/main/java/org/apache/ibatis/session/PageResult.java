@@ -19,7 +19,7 @@ public class PageResult<E> implements java.io.Serializable
 	
 	private int pageSize = 20;
 	
-	private int total = 0;
+	private int count = 0;
 	
 	private List<E> queryList = null;
 	
@@ -32,7 +32,7 @@ public class PageResult<E> implements java.io.Serializable
 		this.page = page;
 		this.pageSize = pagesize;
 		this.queryList = queryList;
-		this.total = count;
+		this.count = count;
 	}
 
 	public int getPage() {
@@ -55,12 +55,12 @@ public class PageResult<E> implements java.io.Serializable
 		this.pageSize = pageSize;
 	}
 
-	public int getTotal() {
-		return total;
+	public int getCount() {
+		return count;
 	}
 
-	public void setTotal(int total) {
-		this.total = total;
+	public void setCount(int total) {
+		this.count = total;
 	}
 
 	public List<E> getQueryList() {
@@ -72,6 +72,6 @@ public class PageResult<E> implements java.io.Serializable
 	}
 	
 	public int getPageCount() {
-		return Math.round((float)this.total/(float)this.pageSize);
+		return (int)Math.ceil((float)this.count/(float)this.pageSize);
 	}
 }

@@ -1,6 +1,8 @@
 package org.apache.ibatis.submitted.pageBound;
 
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.Reader;
 import java.sql.Connection;
 
@@ -23,8 +25,9 @@ import org.junit.Test;
 public class SQLParserTest {
 
 	  private static SqlSessionFactory sqlSessionFactory;
-	  private String sql= " select * from (select b.* from b join a on b.id = a.id and b.time < a.time) where id=? order by b.aid, b.time desc";
-
+	  private String sql= "select * from (select b.* from b join a on b.id = a.id and b.time < a.time) where id=? order by b.aid, b.time desc";
+	  private String sqlUnion = "select * from a order by a.id desc union select * from a order by a.id desc";
+	  
 	  @BeforeClass
 	  public static void setUp() throws Exception {
 	    // create a SqlSessionFactory
@@ -45,6 +48,9 @@ public class SQLParserTest {
 	
 	@Test
     public void mysqlParser() {
+		 String sqlQueryResult="select * from (select b.* from b join a on b.id = a.id and b.time < a.time) where id=? order by b.aid, b.time desc LIMIT ?, ?";
+		 String sqlCountResult="select count(*) from ( select b.* from b join a on b.id = a.id and b.time < a.time ) where id=?";
+		  
 		SqlSession session = sqlSessionFactory.openSession();
 		BoundSql boundSql = new BoundSql(session.getConfiguration(), sql, null, null);
 		PageBounds pageBounds = new PageBounds(1,3);
@@ -53,10 +59,23 @@ public class SQLParserTest {
 		System.out.println("================mysql=================");
 		System.out.println(dialect.bulidListSql());
 		System.out.println(dialect.bulidCountSql());
+		assertEquals(sqlQueryResult, dialect.bulidListSql());
+		assertEquals(sqlCountResult, dialect.bulidCountSql());
+		
+		boundSql = new BoundSql(session.getConfiguration(), sqlUnion, null, null);
+		mappedStatement = session.getConfiguration().getMappedStatement("org.apache.ibatis.submitted.pageBound.UserMapper.selectAll");
+		dialect = new MysqlPageDialect(mappedStatement, boundSql, pageBounds);
+		System.out.println(dialect.bulidListSql());
+		System.out.println(dialect.bulidCountSql());
+		
+		
+		
     }
 	
     @Test
     public void oracleParser() {
+    	String sqlQueryResult="SELECT * FROM ( SELECT ROWNUM RN, T.* FROM (select * from (select b.* from b join a on b.id = a.id and b.time < a.time) where id=? order by b.aid, b.time desc ) T WHERE ROWNUM <=? ) TT WHERE TT.RN >?";
+    	String sqlCountResult="select count(*) from ( select b.* from b join a on b.id = a.id and b.time < a.time ) where id=?";
 		SqlSession session = sqlSessionFactory.openSession();
 		BoundSql boundSql = new BoundSql(session.getConfiguration(), sql, null, null);
 		PageBounds pageBounds = new PageBounds(1,3);
@@ -65,6 +84,8 @@ public class SQLParserTest {
 		System.out.println("================oracle=================");
 		System.out.println(dialect.bulidListSql());
 		System.out.println(dialect.bulidCountSql());
+		assertEquals(sqlQueryResult, dialect.bulidListSql());
+		assertEquals(sqlCountResult, dialect.bulidCountSql());
     }
 	
 	@Test

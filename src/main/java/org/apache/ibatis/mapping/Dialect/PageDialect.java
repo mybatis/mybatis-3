@@ -123,29 +123,43 @@ public abstract class PageDialect{
 		sql = sql.replaceAll("\\(", " ( ").replaceAll("\\)", " ) ");
 		java.util.Stack<String> keyStack = new java.util.Stack<String>();
 		String [] strArr = sql.trim().split("\\s+");
-		int fromIndex = 0;
-		int orderbyIndex = strArr.length-1;
+		int orderbyIndex = 0;
+		boolean isAppend = false;
+		boolean isUnion = false;
+		StringBuffer buffer = new StringBuffer();
 		for(int i=0; i<strArr.length; i++)
 		{
 			String word = strArr[i];
-			if("select".equalsIgnoreCase(word))
+			if("select".equalsIgnoreCase(word)){
+				if(keyStack.isEmpty()){
+					buffer.append(word).append(" count(*) as total ");
+					isAppend = false;
+				}
 				keyStack.push(word);
-			else if("from".equalsIgnoreCase(word)){
+			}else if("from".equalsIgnoreCase(word)){
 				keyStack.pop();
-				if(keyStack.isEmpty()) fromIndex = i;
+				if(keyStack.isEmpty()) isAppend = true;
 			}else if("(".equalsIgnoreCase(word))
 				keyStack.push(word);
 			else if(")".equalsIgnoreCase(word))
 				keyStack.pop();
 			else if("order".equalsIgnoreCase(word) && "by".equalsIgnoreCase(strArr[i+1])){
-				if(keyStack.isEmpty()) orderbyIndex = i;
+				if(keyStack.isEmpty()) isAppend = false;
+			}else if(orderbyIndex==0 && "union".equalsIgnoreCase(word)){
+				if(keyStack.isEmpty()) {
+					isAppend = true;
+					isUnion = true;
+				}
 			}
+			
+			if(isAppend) buffer.append(word).append(" ");
 		}
-		StringBuffer buffer = new StringBuffer();
-		buffer.append(strArr[0]).append(" count(*) ");
-		for(int i=fromIndex; i<orderbyIndex; i++)
-		{
-			buffer.append(strArr[i]).append(" ");
+		//delete last space
+		buffer.deleteCharAt(buffer.length()-1);
+		if(isUnion)
+		{ 
+			buffer.insert(0, "select sum(total) from (");
+			buffer.append(")");
 		}
 		return buffer.toString();
 	}

@@ -25,5 +25,9 @@
 	<select id="selectAll"  resultType="org.apache.ibatis.submitted.pageBound.User" parameterType="map">
 	  <![CDATA[	select * from users where  sex=#{sex} and age>#{minAge} and age<#{maxAge} ]]>
 	</select>
+	
+	<select id="unionSelect"  resultType="org.apache.ibatis.submitted.pageBound.User" parameterType="map">
+	  <![CDATA[	select * from users where  sex=#{sex1} union all select * from users where  sex=#{sex2}]]>
+	</select>
 
 </mapper>
