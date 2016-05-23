@@ -5,6 +5,7 @@ public enum Dialect {
 
     public static Dialect of(String dialect) {
         try {
+        	if(dialect==null || "".equals(dialect)) return null;
             Dialect d = Dialect.valueOf(dialect.toLowerCase());
             return d;
         } catch (IllegalArgumentException e) {
