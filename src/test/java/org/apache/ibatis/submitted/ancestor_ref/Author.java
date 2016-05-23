@@ -13,12 +13,35 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
+
 package org.apache.ibatis.submitted.ancestor_ref;
 
-public interface Mapper {
+public class Author {
+  private Integer id;
+  private String name;
+  private Blog blog;
 
-  User getUserAssociation(Integer id);
-  User getUserCollection(Integer id);
-  Blog selectBlog(Integer id);
+  public Integer getId() {
+    return id;
+  }
 
+  public void setId(Integer id) {
+    this.id = id;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public Blog getBlog() {
+    return blog;
+  }
+
+  public void setBlog(Blog blog) {
+    this.blog = blog;
+  }
 }

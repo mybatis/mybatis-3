@@ -32,3 +32,24 @@ insert into users (id, name) values
 
 insert into friend (user_id, friend_id) values
 (1, 2), (2, 2), (2, 3);
+
+drop table blog if exists;
+drop table author if exists;
+
+create table blog (
+  id int,
+  title varchar(16),
+  author_id int,
+  co_author_id int
+);
+
+create table author (
+  id int,
+  name varchar(16)
+);
+
+insert into blog (id, title, author_id, co_author_id) values
+(1, 'Blog1', 1, 2), (2, 'Blog2', 2, 3);
+
+insert into author (id, name) values
+(1, 'Author1'), (2, 'Author2'), (3, 'Author3');

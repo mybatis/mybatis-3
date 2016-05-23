@@ -55,4 +55,30 @@
     order by uf.id
   </select>
 
+  <resultMap type="org.apache.ibatis.submitted.ancestor_ref.Blog"
+    id="blogResult">
+    <id property="id" column="id" />
+    <result property="title" column="title" />
+    <association property="author" resultMap="authorResult"
+      columnPrefix="author_" />
+    <association property="coAuthor" resultMap="authorResult"
+      columnPrefix="co_author_" />
+  </resultMap>
+
+  <resultMap type="org.apache.ibatis.submitted.ancestor_ref.Author"
+    id="authorResult">
+    <id property="id" column="id" />
+    <result property="name" column="name" />
+    <association property="blog" resultMap="blogResult" />
+  </resultMap>
+
+  <select id="selectBlog" resultMap="blogResult"><![CDATA[
+    select id, title, a.id author_id, a.name author_name,
+      ca.id co_author_id, ca.name co_author_name
+    from blog b
+    left join author a on a.id = b.author_id
+    left join author ca on ca.id = b.co_author_id
+    where b.id = #{id}
+  ]]></select>
+
 </mapper>

@@ -73,4 +73,20 @@ public class AncestorRefTest {
       sqlSession.close();
     }
   }
+
+  @Test
+  public void testAncestorRef() {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      Blog blog = mapper.selectBlog(1);
+      assertEquals("Author1", blog.getAuthor().getName());
+      assertEquals("Author2", blog.getCoAuthor().getName());
+      // author and coauthor should have a ref to blog
+      assertEquals(blog, blog.getAuthor().getBlog());
+      assertEquals(blog, blog.getCoAuthor().getBlog());
+    } finally {
+      sqlSession.close();
+    }
+  }
 }
