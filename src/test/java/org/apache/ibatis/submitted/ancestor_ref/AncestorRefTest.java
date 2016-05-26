@@ -85,6 +85,9 @@ public class AncestorRefTest {
       // author and coauthor should have a ref to blog
       assertEquals(blog, blog.getAuthor().getBlog());
       assertEquals(blog, blog.getCoAuthor().getBlog());
+      // reputation should point to it author? or fail but do not point to a random one
+      assertEquals(blog.getAuthor(), blog.getAuthor().getReputation().getAuthor());
+      assertEquals(blog.getCoAuthor(), blog.getCoAuthor().getReputation().getAuthor());
     } finally {
       sqlSession.close();
     }

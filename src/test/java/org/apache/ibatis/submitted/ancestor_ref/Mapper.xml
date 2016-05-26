@@ -70,11 +70,18 @@
     <id property="id" column="id" />
     <result property="name" column="name" />
     <association property="blog" resultMap="blogResult" />
+    <association property="reputation" resultMap="reputationResult" />
+  </resultMap>
+  
+  <resultMap type="org.apache.ibatis.submitted.ancestor_ref.Reputation"
+    id="reputationResult">
+    <id property="value" column="reputation" />
+    <association property="author" resultMap="authorResult" />
   </resultMap>
 
   <select id="selectBlog" resultMap="blogResult"><![CDATA[
-    select id, title, a.id author_id, a.name author_name,
-      ca.id co_author_id, ca.name co_author_name
+    select id, title, a.id author_id, a.name author_name, a.reputation author_reputation, 
+      ca.id co_author_id, ca.name co_author_name, ca.reputation co_author_reputation 
     from blog b
     left join author a on a.id = b.author_id
     left join author ca on ca.id = b.co_author_id

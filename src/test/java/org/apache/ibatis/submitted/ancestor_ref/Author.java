@@ -20,6 +20,7 @@ public class Author {
   private Integer id;
   private String name;
   private Blog blog;
+  private Reputation reputation;
 
   public Integer getId() {
     return id;
@@ -43,5 +44,13 @@ public class Author {
 
   public void setBlog(Blog blog) {
     this.blog = blog;
+  }
+
+  public Reputation getReputation() {
+    return reputation;
+  }
+
+  public void setReputation(Reputation reputation) {
+    this.reputation = reputation;
   }
 }

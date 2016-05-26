@@ -45,11 +45,12 @@ create table blog (
 
 create table author (
   id int,
-  name varchar(16)
+  name varchar(16),
+  reputation int
 );
 
 insert into blog (id, title, author_id, co_author_id) values
 (1, 'Blog1', 1, 2), (2, 'Blog2', 2, 3);
 
-insert into author (id, name) values
-(1, 'Author1'), (2, 'Author2'), (3, 'Author3');
+insert into author (id, name, reputation) values
+(1, 'Author1', 1), (2, 'Author2', 2), (3, 'Author3', 3);
