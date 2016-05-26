@@ -95,7 +95,7 @@
     </environment>
   </environments>
   
-  <databaseIdProvider type="VENDOR">
+  <databaseIdProvider type="DB_VENDOR">
     <property name="Apache Derby" value="derby"/>
   </databaseIdProvider>
 
