@@ -69,6 +69,7 @@ import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.ParameterMap;
 import org.apache.ibatis.mapping.ResultMap;
 import org.apache.ibatis.mapping.VendorDatabaseIdProvider;
+import org.apache.ibatis.mapping.Dialect.Dialect;
 import org.apache.ibatis.parsing.XNode;
 import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.plugin.InterceptorChain;
@@ -129,6 +130,7 @@ public class Configuration {
   protected ProxyFactory proxyFactory = new JavassistProxyFactory(); // #224 Using internal Javassist instead of OGNL
 
   protected String databaseId;
+  protected Dialect dialect;
   /**
    * Configuration factory class.
    * Used to create Configuration for loading deserialized unread properties.
@@ -335,6 +337,14 @@ public class Configuration {
     this.lazyLoadingEnabled = lazyLoadingEnabled;
   }
 
+  public Dialect getDialect() {
+	return dialect;
+  }
+  
+  public void setDialect(Dialect dialect) {
+	this.dialect = dialect;
+  }
+  
   public ProxyFactory getProxyFactory() {
     return proxyFactory;
   }
