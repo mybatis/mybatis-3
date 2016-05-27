@@ -35,10 +35,13 @@ import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.ParameterMapping;
 import org.apache.ibatis.mapping.ParameterMode;
 import org.apache.ibatis.mapping.StatementType;
+import org.apache.ibatis.mapping.Dialect.PageDialect;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.factory.ObjectFactory;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.LocalCacheScope;
+import org.apache.ibatis.session.PageBounds;
+import org.apache.ibatis.session.PageResult;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.transaction.Transaction;
@@ -170,6 +173,28 @@ public abstract class BaseExecutor implements Executor {
       }
     }
     return list;
+  }
+  
+  @Override
+  public <E> PageResult<E> query(MappedStatement ms, Object parameter, PageBounds pageBounds, ResultHandler resultHandler) throws SQLException {
+	  BoundSql boundSql = ms.getBoundSql(parameter);
+	  RowBounds rowBounds = pageBounds.getRowBounds();
+	  PageDialect pageDialect = PageDialect.createStrategy(ms.getConfiguration().getDialect(), ms, boundSql, pageBounds);
+	  //if count greater than 0, cached of count
+	  Integer  count = pageBounds.getCount();
+	  if(count<=0)
+	  {
+		  BoundSql countBoundSql = pageDialect.getCountBoundSql();
+		  MappedStatement statment = pageDialect.copyFromMappedStatement(ms, countBoundSql);
+		  CacheKey countKey = createCacheKey(statment, parameter, rowBounds, countBoundSql);
+		  List<Number>  countList = query(statment, parameter, rowBounds, resultHandler, countKey, countBoundSql);
+		  if(countList.size()>0) count = (Integer) countList.get(0);
+	  }
+	  //query row of offset and limit
+	  BoundSql listBoundSql = pageDialect.getListBoundSql();
+	  CacheKey listKey = createCacheKey(ms, parameter, rowBounds, listBoundSql);
+	  List<E>  queryList = query(ms, parameter, rowBounds, resultHandler, listKey, listBoundSql);
+	  return new PageResult<E>(queryList, pageBounds.getPage(), pageBounds.getPageSize(), count);
   }
 
   @Override
