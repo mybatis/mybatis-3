@@ -127,10 +127,14 @@ public class ResultSetWrapper {
 
   private Class<?> resolveClass(String className) {
     try {
-      return Resources.classForName(className);
+      // #699 className could be null
+      if (className != null) {
+        return Resources.classForName(className);
+      }
     } catch (ClassNotFoundException e) {
-      return null;
+      // ignore
     }
+    return null;
   }
 
   private void loadMappedAndUnmappedColumnNames(ResultMap resultMap, String columnPrefix) throws SQLException {
