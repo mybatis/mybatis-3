@@ -203,7 +203,8 @@
       <groupId>org.mangosdk</groupId>
       <artifactId>spi</artifactId>
       <version>0.2.4</version>
-      <scope>provided</scope>
+      <scope>system</scope>
+      <systemPath>${basedir}/lib/spi-0.2.4.jar</systemPath>
     </dependency>
     <dependency>
       <groupId>com.sun</groupId>
