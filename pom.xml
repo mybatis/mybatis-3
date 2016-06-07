@@ -191,6 +191,28 @@
       <optional>true</optional>
     </dependency>
 
+    <!-- lombok -->
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <!-- don't upgrade to 1.16.X, as it uses shadowclassloader -->
+      <version>1.14.8</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.mangosdk</groupId>
+      <artifactId>spi</artifactId>
+      <version>0.2.4</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.sun</groupId>
+      <artifactId>tools</artifactId>
+      <version>${java.version}</version>
+      <scope>system</scope>
+      <systemPath>${java.home}/../lib/tools.jar</systemPath>
+    </dependency>
+
     <!-- Test dependencies -->
     <dependency>
       <groupId>junit</groupId>
@@ -315,6 +337,27 @@
             <exclude>org.apache.ibatis.javassist.*</exclude>
           </excludes>
         </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-install-plugin</artifactId>
+        <version>2.5.2</version>
+        <executions>
+          <execution>
+            <id>install-external</id>
+            <phase>clean</phase>
+            <configuration>
+              <file>${basedir}/lib/spi-0.2.4.jar</file>
+              <groupId>org.mangosdk</groupId>
+              <artifactId>spi</artifactId>
+              <version>0.2.4</version>
+              <packaging>jar</packaging>
+              <generatePom>true</generatePom>
+            </configuration>
+            <goals>
+              <goal>install-file</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
 
