@@ -15,18 +15,20 @@
  */
 package org.apache.ibatis.jdbc;
 
-import org.apache.ibatis.BaseDataTest;
-import org.apache.ibatis.datasource.pooled.PooledDataSource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-
-import org.hsqldb.jdbc.JDBCConnection;
-import org.junit.Test;
 
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
+
+import org.apache.ibatis.BaseDataTest;
+import org.apache.ibatis.datasource.pooled.PooledDataSource;
+import org.hsqldb.jdbc.JDBCConnection;
+import org.junit.Test;
 
 public class PooledDataSourceTest extends BaseDataTest {
 
@@ -84,5 +86,49 @@ public class PooledDataSourceTest extends BaseDataTest {
     PooledDataSource ds = createPooledDataSource(JPETSTORE_PROPERTIES);
     Connection c = ds.getConnection();
     JDBCConnection realConnection = (JDBCConnection) PooledDataSource.unwrapConnection(c);
+  }
+  
+  @Test
+  public void pingConnection() throws Exception {
+    PooledDataSource ds = createPooledDataSource(JPETSTORE_PROPERTIES);
+    runScript(ds, JPETSTORE_DDL);
+    ds.setPoolPingConnectionsNotUsedFor(0);
+    ds.setPoolPingEnabled(true);
+    ds.setPoolPingQuery("SELECT * FROM PRODUCT");
+    
+    ThreadPoolExecutor pool = (ThreadPoolExecutor)Executors.newFixedThreadPool(2);
+    runThreadPool(ds, pool);
+    runThreadPool(ds, pool);
+    runThreadPool(ds, pool);
+    
+    pool.shutdownNow();
+  }
+  
+  private void runThreadPool(PooledDataSource ds, ThreadPoolExecutor pool){
+    for(int i=0;i<50;i++){
+      pool.execute(()->{
+        Connection c = null;
+        try {
+          c = ds.getConnection();
+        } catch (Exception e) {
+          System.out.println("getConnection exception:" + e.getMessage());
+        }finally{
+          if(c!=null){
+            try {
+              c.close();
+            } catch (Exception e) {
+              System.out.println("close exception:" + e.getMessage());
+            }
+          }
+        }
+      });
+    }
+    while(pool.getActiveCount()>0){
+      try {
+        Thread.sleep(5000);
+      } catch (InterruptedException e) {
+        System.out.println("Thread exception:" + e.getMessage());
+      }
+    }
   }
 }

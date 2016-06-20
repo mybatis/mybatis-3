@@ -52,7 +52,7 @@ public class PooledDataSource implements DataSource {
   protected int poolTimeToWait = 20000;
   protected String poolPingQuery = "NO PING QUERY SET";
   protected boolean poolPingEnabled = false;
-  protected int poolPingConnectionsNotUsedFor = 0;
+  protected int poolPingConnectionsNotUsedFor = -1;
 
   private int expectedConnectionTypeCode;
 
@@ -483,7 +483,7 @@ public class PooledDataSource implements DataSource {
 
     if (result) {
       if (poolPingEnabled) {
-        if (poolPingConnectionsNotUsedFor >= 0 && conn.getTimeElapsedSinceLastUse() > poolPingConnectionsNotUsedFor) {
+        if (poolPingConnectionsNotUsedFor >= 0 && conn.getTimeElapsedSinceLastUse() >= poolPingConnectionsNotUsedFor) {
           try {
             if (log.isDebugEnabled()) {
               log.debug("Testing connection " + conn.getRealHashCode() + " ...");
