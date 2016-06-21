@@ -95,40 +95,8 @@ public class PooledDataSourceTest extends BaseDataTest {
     ds.setPoolPingConnectionsNotUsedFor(0);
     ds.setPoolPingEnabled(true);
     ds.setPoolPingQuery("SELECT * FROM PRODUCT");
-    
-    ThreadPoolExecutor pool = (ThreadPoolExecutor)Executors.newFixedThreadPool(2);
-    runThreadPool(ds, pool);
-    runThreadPool(ds, pool);
-    runThreadPool(ds, pool);
-    
-    pool.shutdownNow();
+    Connection c = ds.getConnection();
+    c.close();
   }
   
-  private void runThreadPool(PooledDataSource ds, ThreadPoolExecutor pool){
-    for(int i=0;i<50;i++){
-      pool.execute(()->{
-        Connection c = null;
-        try {
-          c = ds.getConnection();
-        } catch (Exception e) {
-          System.out.println("getConnection exception:" + e.getMessage());
-        }finally{
-          if(c!=null){
-            try {
-              c.close();
-            } catch (Exception e) {
-              System.out.println("close exception:" + e.getMessage());
-            }
-          }
-        }
-      });
-    }
-    while(pool.getActiveCount()>0){
-      try {
-        Thread.sleep(5000);
-      } catch (InterruptedException e) {
-        System.out.println("Thread exception:" + e.getMessage());
-      }
-    }
-  }
 }
