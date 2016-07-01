@@ -138,6 +138,8 @@ public final class TypeHandlerRegistry {
       // since 1.0.1
       register("java.time.Month", "org.apache.ibatis.type.MonthTypeHandler");
       register("java.time.Year", "org.apache.ibatis.type.YearTypeHandler");
+      // since 1.0.2
+      register("java.time.chrono.JapaneseDate", "org.apache.ibatis.type.JapaneseDateTypeHandler");
 
     } catch (ClassNotFoundException e) {
       // no JSR-310 handlers
