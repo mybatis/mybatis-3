@@ -43,7 +43,7 @@ import org.apache.ibatis.reflection.property.PropertyNamer;
  *
  * @author Clinton Begin
  */
-public class DefaultReflector implements Reflector {
+class DefaultReflector implements Reflector {
 
   private static final String[] EMPTY_STRING_ARRAY = new String[0];
 
@@ -58,7 +58,7 @@ public class DefaultReflector implements Reflector {
 
   private Map<String, String> caseInsensitivePropertyMap = new HashMap<String, String>();
 
-  public DefaultReflector(Class<?> clazz) {
+  DefaultReflector(Class<?> clazz) {
     type = clazz;
     addDefaultConstructor(clazz);
     addGetMethods(clazz);
@@ -378,10 +378,12 @@ public class DefaultReflector implements Reflector {
    *
    * @return The class name
    */
+  @Override
   public Class<?> getType() {
     return type;
   }
 
+  @Override
   public Constructor<?> getDefaultConstructor() {
     if (defaultConstructor != null) {
       return defaultConstructor;
@@ -390,10 +392,12 @@ public class DefaultReflector implements Reflector {
     }
   }
 
+  @Override
   public boolean hasDefaultConstructor() {
     return defaultConstructor != null;
   }
 
+  @Override
   public Invoker getSetInvoker(String propertyName) {
     Invoker method = setMethods.get(propertyName);
     if (method == null) {
@@ -402,6 +406,7 @@ public class DefaultReflector implements Reflector {
     return method;
   }
 
+  @Override
   public Invoker getGetInvoker(String propertyName) {
     Invoker method = getMethods.get(propertyName);
     if (method == null) {
@@ -416,6 +421,7 @@ public class DefaultReflector implements Reflector {
    * @param propertyName - the name of the property
    * @return The Class of the propery setter
    */
+  @Override
   public Class<?> getSetterType(String propertyName) {
     Class<?> clazz = setTypes.get(propertyName);
     if (clazz == null) {
@@ -430,6 +436,7 @@ public class DefaultReflector implements Reflector {
    * @param propertyName - the name of the property
    * @return The Class of the propery getter
    */
+  @Override
   public Class<?> getGetterType(String propertyName) {
     Class<?> clazz = getTypes.get(propertyName);
     if (clazz == null) {
@@ -443,6 +450,7 @@ public class DefaultReflector implements Reflector {
    *
    * @return The array
    */
+  @Override
   public String[] getGetablePropertyNames() {
     return readablePropertyNames;
   }
@@ -452,6 +460,7 @@ public class DefaultReflector implements Reflector {
    *
    * @return The array
    */
+  @Override
   public String[] getSetablePropertyNames() {
     return writeablePropertyNames;
   }
@@ -462,6 +471,7 @@ public class DefaultReflector implements Reflector {
    * @param propertyName - the name of the property to check
    * @return True if the object has a writeable property by the name
    */
+  @Override
   public boolean hasSetter(String propertyName) {
     return setMethods.keySet().contains(propertyName);
   }
@@ -472,10 +482,12 @@ public class DefaultReflector implements Reflector {
    * @param propertyName - the name of the property to check
    * @return True if the object has a readable property by the name
    */
+  @Override
   public boolean hasGetter(String propertyName) {
     return getMethods.keySet().contains(propertyName);
   }
 
+  @Override
   public String findPropertyName(String name) {
     return caseInsensitivePropertyMap.get(name.toUpperCase(Locale.ENGLISH));
   }
