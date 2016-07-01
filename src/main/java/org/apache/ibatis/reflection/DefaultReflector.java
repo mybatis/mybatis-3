@@ -96,20 +96,35 @@ class DefaultReflector implements Reflector {
     Map<String, List<Method>> conflictingGetters = new HashMap<String, List<Method>>();
     Method[] methods = getClassMethods(cls);
     for (Method method : methods) {
-      String name = method.getName();
-      if (name.startsWith("get") && name.length() > 3) {
-        if (method.getParameterTypes().length == 0) {
-          name = PropertyNamer.methodToProperty(name);
-          addMethodConflict(conflictingGetters, name, method);
-        }
-      } else if (name.startsWith("is") && name.length() > 2) {
-        if (method.getParameterTypes().length == 0) {
-          name = PropertyNamer.methodToProperty(name);
-          addMethodConflict(conflictingGetters, name, method);
-        }
-      }
+      maybeAddGetMethodConflict(conflictingGetters, method);
     }
     resolveGetterConflicts(conflictingGetters);
+  }
+
+  /**
+   * If the method has no arguments and certain prefix, it is considered as getter.
+   * Override the method in descendants to alter selection criteria.
+   *
+   * @param conflictingGetters storage of getter methods
+   * @param method under consideration
+   * @return true if the method was actually considered as getter
+   */
+  boolean maybeAddGetMethodConflict(Map<String, List<Method>> conflictingGetters, Method method) {
+    if (method.getParameterTypes().length > 0) {
+      return false;
+    }
+    String name = method.getName();
+    if (name.startsWith("get") && name.length() > 3) {
+      name = PropertyNamer.methodToProperty(name);
+      addMethodConflict(conflictingGetters, name, method);
+      return true;
+    }
+    if (name.startsWith("is") && name.length() > 2) {
+      name = PropertyNamer.methodToProperty(name);
+      addMethodConflict(conflictingGetters, name, method);
+      return true;
+    }
+    return false;
   }
 
   private void resolveGetterConflicts(Map<String, List<Method>> conflictingGetters) {
@@ -157,18 +172,39 @@ class DefaultReflector implements Reflector {
     Map<String, List<Method>> conflictingSetters = new HashMap<String, List<Method>>();
     Method[] methods = getClassMethods(cls);
     for (Method method : methods) {
-      String name = method.getName();
-      if (name.startsWith("set") && name.length() > 3) {
-        if (method.getParameterTypes().length == 1) {
-          name = PropertyNamer.methodToProperty(name);
-          addMethodConflict(conflictingSetters, name, method);
-        }
-      }
+      maybeAddSetMethodConflict(conflictingSetters, method);
     }
     resolveSetterConflicts(conflictingSetters);
   }
 
-  private void addMethodConflict(Map<String, List<Method>> conflictingMethods, String name, Method method) {
+  /**
+   * If the method has single argument and certain prefix, it is considered as setter.
+   * Override the method in descendants to alter selection criteria.
+   *
+   * @param conflictingSetters storage of setter methods
+   * @param method under consideration
+   * @return true if the method was actually considered as setter
+   */
+  boolean maybeAddSetMethodConflict(Map<String, List<Method>> conflictingSetters, Method method) {
+    String name = method.getName();
+    if (name.startsWith("set") && name.length() > 3) {
+      if (method.getParameterTypes().length == 1) {
+        name = PropertyNamer.methodToProperty(name);
+        addMethodConflict(conflictingSetters, name, method);
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
+   * Group adding methods by their names
+   *
+   * @param conflictingMethods method storage
+   * @param name of the method
+   * @param method itself
+   */
+  void addMethodConflict(Map<String, List<Method>> conflictingMethods, String name, Method method) {
     List<Method> list = conflictingMethods.get(name);
     if (list == null) {
       list = new ArrayList<Method>();

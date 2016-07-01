@@ -41,13 +41,17 @@ public class DefaultReflectorFactory implements ReflectorFactory {
             // synchronized (type) removed see issue #461
       Reflector cached = reflectorMap.get(type);
       if (cached == null) {
-        cached = new DefaultReflector(type);
+        cached = createForClass(type);
         reflectorMap.put(type, cached);
       }
       return cached;
     } else {
-      return new DefaultReflector(type);
+      return createForClass(type);
     }
+  }
+
+  Reflector createForClass(Class<?> type) {
+    return new DefaultReflector(type);
   }
 
 }
