@@ -39,12 +39,11 @@ import org.apache.ibatis.reflection.invoker.SetFieldInvoker;
 import org.apache.ibatis.reflection.property.PropertyNamer;
 
 /**
- * This class represents a cached set of class definition information that
- * allows for easy mapping between property names and getter/setter methods.
+ * This class represents a default implementation of {@link Reflector}.
  *
  * @author Clinton Begin
  */
-public class Reflector {
+public class DefaultReflector implements Reflector {
 
   private static final String[] EMPTY_STRING_ARRAY = new String[0];
 
@@ -59,7 +58,7 @@ public class Reflector {
 
   private Map<String, String> caseInsensitivePropertyMap = new HashMap<String, String>();
 
-  public Reflector(Class<?> clazz) {
+  public DefaultReflector(Class<?> clazz) {
     type = clazz;
     addDefaultConstructor(clazz);
     addGetMethods(clazz);
