@@ -142,7 +142,7 @@
     <dependency>
       <groupId>ognl</groupId>
       <artifactId>ognl</artifactId>
-      <version>3.1.8</version>
+      <version>3.1.9</version>
       <scope>compile</scope>
       <optional>true</optional>
     </dependency>
@@ -187,7 +187,7 @@
     <dependency>
       <groupId>cglib</groupId>
       <artifactId>cglib</artifactId>
-      <version>3.2.3</version>
+      <version>3.2.4</version>
       <optional>true</optional>
     </dependency>
 
