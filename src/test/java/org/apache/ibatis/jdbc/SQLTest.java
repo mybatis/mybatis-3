@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2016 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -177,6 +177,130 @@ public class SQLTest {
       }
       ORDER_BY("P.LAST_NAME");
     }}.toString();
+  }
+
+
+  @Test
+  public void variableLengthArgumentOnSelect() {
+    final String sql = new SQL() {{
+      SELECT("P.ID", "P.USERNAME");
+    }}.toString();
+
+    assertEquals("SELECT P.ID, P.USERNAME", sql);
+  }
+
+  @Test
+  public void variableLengthArgumentOnSelectDistinct() {
+    final String sql = new SQL() {{
+      SELECT_DISTINCT("P.ID", "P.USERNAME");
+    }}.toString();
+
+    assertEquals("SELECT DISTINCT P.ID, P.USERNAME", sql);
+  }
+
+  @Test
+  public void variableLengthArgumentOnFrom() {
+    final String sql = new SQL() {{
+      SELECT().FROM("TABLE_A a", "TABLE_B b");
+    }}.toString();
+
+    assertEquals("FROM TABLE_A a, TABLE_B b", sql);
+  }
+
+  @Test
+  public void variableLengthArgumentOnJoin() {
+    final String sql = new SQL() {{
+      SELECT().JOIN("TABLE_A b ON b.id = a.id", "TABLE_C c ON c.id = a.id");
+    }}.toString();
+
+    assertEquals("JOIN TABLE_A b ON b.id = a.id\n" +
+            "JOIN TABLE_C c ON c.id = a.id", sql);
+  }
+
+  @Test
+  public void variableLengthArgumentOnInnerJoin() {
+    final String sql = new SQL() {{
+      SELECT().INNER_JOIN("TABLE_A b ON b.id = a.id", "TABLE_C c ON c.id = a.id");
+    }}.toString();
+
+    assertEquals("INNER JOIN TABLE_A b ON b.id = a.id\n" +
+            "INNER JOIN TABLE_C c ON c.id = a.id", sql);
+  }
+
+  @Test
+  public void variableLengthArgumentOnOuterJoin() {
+    final String sql = new SQL() {{
+      SELECT().OUTER_JOIN("TABLE_A b ON b.id = a.id", "TABLE_C c ON c.id = a.id");
+    }}.toString();
+
+    assertEquals("OUTER JOIN TABLE_A b ON b.id = a.id\n" +
+            "OUTER JOIN TABLE_C c ON c.id = a.id", sql);
+  }
+
+  @Test
+  public void variableLengthArgumentOnLeftOuterJoin() {
+    final String sql = new SQL() {{
+      SELECT().LEFT_OUTER_JOIN("TABLE_A b ON b.id = a.id", "TABLE_C c ON c.id = a.id");
+    }}.toString();
+
+    assertEquals("LEFT OUTER JOIN TABLE_A b ON b.id = a.id\n" +
+            "LEFT OUTER JOIN TABLE_C c ON c.id = a.id", sql);
+  }
+
+  @Test
+  public void variableLengthArgumentOnRightOuterJoin() {
+    final String sql = new SQL() {{
+      SELECT().RIGHT_OUTER_JOIN("TABLE_A b ON b.id = a.id", "TABLE_C c ON c.id = a.id");
+    }}.toString();
+
+    assertEquals("RIGHT OUTER JOIN TABLE_A b ON b.id = a.id\n" +
+            "RIGHT OUTER JOIN TABLE_C c ON c.id = a.id", sql);
+  }
+
+  @Test
+  public void variableLengthArgumentOnWhere() {
+    final String sql = new SQL() {{
+      SELECT().WHERE("a = #{a}", "b = #{b}");
+    }}.toString();
+
+    assertEquals("WHERE (a = #{a} AND b = #{b})", sql);
+  }
+
+  @Test
+  public void variableLengthArgumentOnGroupBy() {
+    final String sql = new SQL() {{
+      SELECT().GROUP_BY("a", "b");
+    }}.toString();
+
+    assertEquals("GROUP BY a, b", sql);
+  }
+
+  @Test
+  public void variableLengthArgumentOnHaving() {
+    final String sql = new SQL() {{
+      SELECT().HAVING("a = #{a}", "b = #{b}");
+    }}.toString();
+
+    assertEquals("HAVING (a = #{a} AND b = #{b})", sql);
+  }
+
+  @Test
+  public void variableLengthArgumentOnOrderBy() {
+    final String sql = new SQL() {{
+      SELECT().ORDER_BY("a", "b");
+    }}.toString();
+
+    assertEquals("ORDER BY a, b", sql);
+  }
+
+  @Test
+  public void variableLengthArgumentOnSet() {
+    final String sql = new SQL() {{
+      UPDATE("TABLE_A").SET("a = #{a}", "b = #{b}");
+    }}.toString();
+
+    assertEquals("UPDATE TABLE_A\n" +
+            "SET a = #{a}, b = #{b}", sql);
   }
 
 }
