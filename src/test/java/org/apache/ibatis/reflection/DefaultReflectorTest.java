@@ -23,7 +23,7 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class ReflectorTest {
+public class DefaultReflectorTest {
 
   @Test
   public void testGetSetterType() throws Exception {

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2016 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -41,13 +41,17 @@ public class DefaultReflectorFactory implements ReflectorFactory {
             // synchronized (type) removed see issue #461
       Reflector cached = reflectorMap.get(type);
       if (cached == null) {
-        cached = new Reflector(type);
+        cached = createForClass(type);
         reflectorMap.put(type, cached);
       }
       return cached;
     } else {
-      return new Reflector(type);
+      return createForClass(type);
     }
+  }
+
+  Reflector createForClass(Class<?> type) {
+    return new DefaultReflector(type);
   }
 
 }
