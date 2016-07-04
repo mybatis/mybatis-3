@@ -97,6 +97,10 @@ public class Reflector {
     Map<String, List<Method>> conflictingGetters = new HashMap<String, List<Method>>();
     Method[] methods = getClassMethods(cls);
     for (Method method : methods) {
+      if (Modifier.isStatic(method.getModifiers())) {
+        // static method is not a getter
+        continue;
+      }
       String name = method.getName();
       if (name.startsWith("get") && name.length() > 3) {
         if (method.getParameterTypes().length == 0) {
@@ -158,6 +162,10 @@ public class Reflector {
     Map<String, List<Method>> conflictingSetters = new HashMap<String, List<Method>>();
     Method[] methods = getClassMethods(cls);
     for (Method method : methods) {
+      if (Modifier.isStatic(method.getModifiers())) {
+        // static method is not a setter
+        continue;
+      }
       String name = method.getName();
       if (name.startsWith("set") && name.length() > 3) {
         if (method.getParameterTypes().length == 1) {

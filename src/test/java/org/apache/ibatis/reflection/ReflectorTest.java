@@ -15,13 +15,14 @@
  */
 package org.apache.ibatis.reflection;
 
-import static org.junit.Assert.*;
-
 import java.io.Serializable;
 import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class ReflectorTest {
 
@@ -189,6 +190,36 @@ public class ReflectorTest {
     public void setId(Long id) {
       ++counter;
       super.setId(id);
+    }
+  }
+
+  @Test
+  public void shouldHaveNoStaticGetters() throws Exception {
+    ReflectorFactory reflectorFactory = new DefaultReflectorFactory();
+    Reflector reflector = reflectorFactory.findForClass(Anxious.class);
+    Assert.assertFalse(reflector.hasGetter("thereAnybodyOutThere"));
+  }
+
+  static abstract class Anxious {
+    private static boolean any;
+
+    static boolean isThereAnybodyOutThere() {
+      return any;
+    }
+  }
+
+  @Test
+  public void shouldHaveNoStaticSetters() throws Exception {
+    ReflectorFactory reflectorFactory = new DefaultReflectorFactory();
+    Reflector reflector = reflectorFactory.findForClass(Happy.class);
+    Assert.assertFalse(reflector.hasSetter("upset"));
+  }
+
+  static abstract class Happy {
+    private static String focus;
+
+    static void setUpset(String reason) {
+      focus = reason;
     }
   }
 }
