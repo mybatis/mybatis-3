@@ -160,4 +160,35 @@ public class ReflectorTest {
 
   static class Child extends Parent<String> {
   }
+
+
+  @Test
+  public void shouldResolveWriteOnlyProperty() throws Exception {
+    ReflectorFactory reflectorFactory = new DefaultReflectorFactory();
+    Reflector reflector = reflectorFactory.findForClass(Child2.class);
+    Assert.assertEquals(Long.class, reflector.getSetterType("id"));
+  }
+
+  static class Parent2<T extends Serializable> {
+    T id;
+
+    /**
+     * A setter for write-only property according to
+     * Java Beans Specification 1.01
+     * http://download.oracle.com/otn-pub/jcp/7224-javabeans-1.01-fr-spec-oth-JSpec/beans.101.pdf
+     * Section 8.3.1
+     */
+    public void setId(T id) {
+      this.id = id;
+    }
+  }
+
+  static class Child2 extends Parent2<Long> {
+    int counter;
+
+    public void setId(Long id) {
+      ++counter;
+      super.setId(id);
+    }
+  }
 }

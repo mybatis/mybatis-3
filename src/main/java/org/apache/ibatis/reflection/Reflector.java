@@ -197,9 +197,9 @@ public class Reflector {
           continue; // next property
         }
       }
-      throw new ReflectionException("Illegal overloaded setter method with ambiguous type for property "
-          + propName + " in class " + setters.get(0).getDeclaringClass() + ".  This breaks the JavaBeans " +
-          "specification and can cause unpredicatble results.");
+      // assume that setter argument is elaborated from parent to child
+      Method narrowestSetter = findNarrowestSetter(propName, setters);
+      addSetMethod(propName, narrowestSetter);
     }
   }
 
@@ -214,6 +214,39 @@ public class Reflector {
       }
     }
     return null;
+  }
+
+  private Method findNarrowestSetter(String propName, List<Method> setters) {
+    Method narrowest = null;
+    Class<?> narrowestType = null;
+    for (Method method : setters) {
+      if (method.getParameterTypes().length != 1) {
+        throw new IllegalStateException("setters are asserted to have only one argument: " + method);
+      }
+      if (narrowest == null) {
+        narrowest = method;
+        narrowestType = method.getParameterTypes()[0];
+        continue; // next conflicting setter
+      }
+
+      Class<?> argType = method.getParameterTypes()[0];
+
+      if (argType.equals(narrowestType)) {
+        throw new ReflectionException("The property " + propName + " in class " + narrowest.getDeclaringClass()
+            + " is referenced twice with " + narrowestType + ". This case is not supported");
+      }
+
+      if (argType.isAssignableFrom(narrowestType)) {
+        // OK narrowest type is descendant
+      } else if (narrowestType.isAssignableFrom(argType)) {
+        narrowest = method;
+        narrowestType = argType;
+      } else {
+        throw new ReflectionException("The property " + propName + " in class " + narrowest.getDeclaringClass()
+            + " is referenced at least twice with types " + argType + " and " + narrowestType + ". This case is not supported");
+      }
+    }
+    return narrowest;
   }
 
   private void addSetMethod(String name, Method method) {
