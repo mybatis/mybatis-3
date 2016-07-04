@@ -42,9 +42,13 @@ import org.apache.ibatis.reflection.property.PropertyNamer;
  * This class represents a cached set of class definition information that
  * allows for easy mapping between property names and getter/setter methods.
  *
+ * Though the class was exposed in public API as a return value of {@link ReflectorFactory#findForClass(Class)},
+ * it is not intended to be public. This class is used in the most frequently changed part of MyBatis,
+ * so it should not be inheritable in application code.
+ *
  * @author Clinton Begin
  */
-public class Reflector {
+public final class Reflector {
 
   private static final String[] EMPTY_STRING_ARRAY = new String[0];
 
