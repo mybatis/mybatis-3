@@ -101,9 +101,9 @@ public class XMLConfigBuilder extends BaseBuilder {
 
   private void parseConfiguration(XNode root) {
     try {
-      Properties settings = settingsAsPropertiess(root.evalNode("settings"));
       //issue #117 read properties first
       propertiesElement(root.evalNode("properties"));
+      Properties settings = settingsAsProperties(root.evalNode("settings"));
       loadCustomVfs(settings);
       typeAliasesElement(root.evalNode("typeAliases"));
       pluginElement(root.evalNode("plugins"));
@@ -121,7 +121,7 @@ public class XMLConfigBuilder extends BaseBuilder {
     }
   }
 
-  private Properties settingsAsPropertiess(XNode context) {
+  private Properties settingsAsProperties(XNode context) {
     if (context == null) {
       return new Properties();
     }

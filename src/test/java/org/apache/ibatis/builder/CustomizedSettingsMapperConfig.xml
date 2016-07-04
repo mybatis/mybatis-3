@@ -24,6 +24,7 @@
 
   <properties resource="org/apache/ibatis/builder/jdbc.properties">
     <property name="prop1" value="aaaa"/>
+    <property name="jdbcTypeForNull" value="NULL" />
   </properties>
 
   <settings>
@@ -42,7 +43,7 @@
     <setting name="mapUnderscoreToCamelCase" value="true"/>
     <setting name="safeRowBoundsEnabled" value="true"/>
     <setting name="localCacheScope" value="STATEMENT"/>
-    <setting name="jdbcTypeForNull" value="NULL"/>
+    <setting name="jdbcTypeForNull" value="${jdbcTypeForNull}"/>
     <setting name="lazyLoadTriggerMethods" value="equals,clone,hashCode,toString,xxx"/>
     <setting name="safeResultHandlerEnabled" value="false"/>
     <setting name="defaultScriptingLanguage" value="org.apache.ibatis.scripting.defaults.RawLanguageDriver"/>
