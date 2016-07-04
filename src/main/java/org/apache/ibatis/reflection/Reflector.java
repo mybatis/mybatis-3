@@ -181,35 +181,39 @@ public class Reflector {
   private void resolveSetterConflicts(Map<String, List<Method>> conflictingSetters) {
     for (String propName : conflictingSetters.keySet()) {
       List<Method> setters = conflictingSetters.get(propName);
-      Method firstMethod = setters.get(0);
       if (setters.size() == 1) {
+        // no conflict
+        Method firstMethod = setters.get(0);
         addSetMethod(propName, firstMethod);
-      } else {
-        Class<?> expectedType = getTypes.get(propName);
-        if (expectedType == null) {
-          throw new ReflectionException("Illegal overloaded setter method with ambiguous type for property "
-              + propName + " in class " + firstMethod.getDeclaringClass() + ".  This breaks the JavaBeans " +
-              "specification and can cause unpredicatble results.");
-        } else {
-          Iterator<Method> methods = setters.iterator();
-          Method setter = null;
-          while (methods.hasNext()) {
-            Method method = methods.next();
-            if (method.getParameterTypes().length == 1
-                && expectedType.equals(method.getParameterTypes()[0])) {
-              setter = method;
-              break;
-            }
-          }
-          if (setter == null) {
-            throw new ReflectionException("Illegal overloaded setter method with ambiguous type for property "
-                + propName + " in class " + firstMethod.getDeclaringClass() + ".  This breaks the JavaBeans " +
-                "specification and can cause unpredicatble results.");
-          }
-          addSetMethod(propName, setter);
+        continue; // next property
+      }
+
+      Class<?> getterType = getTypes.get(propName);
+      if (getterType != null) {
+        // try to resolve conflict using property getter first
+        Method matchingSetter = findSetterMatchingGetter(getterType, setters);
+        if (matchingSetter != null) {
+          addSetMethod(propName, matchingSetter);
+          continue; // next property
         }
       }
+      throw new ReflectionException("Illegal overloaded setter method with ambiguous type for property "
+          + propName + " in class " + setters.get(0).getDeclaringClass() + ".  This breaks the JavaBeans " +
+          "specification and can cause unpredicatble results.");
     }
+  }
+
+  private Method findSetterMatchingGetter(Class<?> getterType, List<Method> setters) {
+    for (Method method : setters) {
+      if (method.getParameterTypes().length != 1) {
+        throw new IllegalStateException("setters are asserted to have only one argument: " + method);
+      }
+      Class<?> argType = method.getParameterTypes()[0];
+      if (getterType.equals(argType)) {
+        return method;
+      }
+    }
+    return null;
   }
 
   private void addSetMethod(String name, Method method) {
