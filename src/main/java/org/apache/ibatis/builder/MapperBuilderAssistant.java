@@ -39,6 +39,7 @@ import org.apache.ibatis.mapping.ParameterMode;
 import org.apache.ibatis.mapping.ResultFlag;
 import org.apache.ibatis.mapping.ResultMap;
 import org.apache.ibatis.mapping.ResultMapping;
+import org.apache.ibatis.mapping.ResultRelation;
 import org.apache.ibatis.mapping.ResultSetType;
 import org.apache.ibatis.mapping.SqlCommandType;
 import org.apache.ibatis.mapping.SqlSource;
@@ -172,6 +173,17 @@ public class MapperBuilderAssistant extends BaseBuilder {
         .typeHandler(typeHandlerInstance)
         .build();
   }
+  
+  public ResultMap addResultMap(
+      String id,
+      Class<?> type,
+      String extend,
+      Discriminator discriminator,
+      List<ResultMapping> resultMappings,
+      Boolean autoMapping) {
+      
+      return addResultMap(id, type, extend, discriminator, resultMappings, ResultRelation.NONE, autoMapping);
+  }
 
   public ResultMap addResultMap(
       String id,
@@ -179,6 +191,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
       String extend,
       Discriminator discriminator,
       List<ResultMapping> resultMappings,
+      ResultRelation resultRelation,
       Boolean autoMapping) {
     id = applyCurrentNamespace(id, false);
     extend = applyCurrentNamespace(extend, true);
@@ -210,6 +223,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
     }
     ResultMap resultMap = new ResultMap.Builder(configuration, id, type, resultMappings, autoMapping)
         .discriminator(discriminator)
+        .resultRelation(resultRelation)
         .build();
     configuration.addResultMap(resultMap);
     return resultMap;

@@ -20,6 +20,7 @@ import java.util.List;
 import org.apache.ibatis.mapping.Discriminator;
 import org.apache.ibatis.mapping.ResultMap;
 import org.apache.ibatis.mapping.ResultMapping;
+import org.apache.ibatis.mapping.ResultRelation;
 
 /**
  * @author Eduardo Macarron
@@ -32,8 +33,13 @@ public class ResultMapResolver {
   private Discriminator discriminator;
   private List<ResultMapping> resultMappings;
   private Boolean autoMapping;
+  private ResultRelation resultRelation;
 
   public ResultMapResolver(MapperBuilderAssistant assistant, String id, Class<?> type, String extend, Discriminator discriminator, List<ResultMapping> resultMappings, Boolean autoMapping) {
+      this(assistant, id, type, extend, discriminator, resultMappings, autoMapping, ResultRelation.NONE);
+  }
+  
+  public ResultMapResolver(MapperBuilderAssistant assistant, String id, Class<?> type, String extend, Discriminator discriminator, List<ResultMapping> resultMappings, Boolean autoMapping, ResultRelation resultRelation) {
     this.assistant = assistant;
     this.id = id;
     this.type = type;
@@ -41,10 +47,11 @@ public class ResultMapResolver {
     this.discriminator = discriminator;
     this.resultMappings = resultMappings;
     this.autoMapping = autoMapping;
+    this.resultRelation = resultRelation;
   }
 
   public ResultMap resolve() {
-    return assistant.addResultMap(this.id, this.type, this.extend, this.discriminator, this.resultMappings, this.autoMapping);
+    return assistant.addResultMap(this.id, this.type, this.extend, this.discriminator, this.resultMappings, this.resultRelation, this.autoMapping);
   }
 
 }

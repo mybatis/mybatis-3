@@ -43,8 +43,10 @@ import org.apache.ibatis.mapping.Discriminator;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.ParameterMapping;
 import org.apache.ibatis.mapping.ParameterMode;
+import org.apache.ibatis.mapping.ResultFlag;
 import org.apache.ibatis.mapping.ResultMap;
 import org.apache.ibatis.mapping.ResultMapping;
+import org.apache.ibatis.mapping.ResultRelation;
 import org.apache.ibatis.reflection.MetaClass;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.ReflectorFactory;
@@ -830,7 +832,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
         resultObject = foundValues ? resultObject : null;
       }
       if (combinedKey != CacheKey.NULL_CACHE_KEY) {
-        nestedResultObjects.put(combinedKey, resultObject);
+          nestedResultObjects.put(combinedKey, resultObject);
       }
     }
     return resultObject;
@@ -960,12 +962,25 @@ public class DefaultResultSetHandler implements ResultSetHandler {
   }
 
   private void createRowKeyForMappedProperties(ResultMap resultMap, ResultSetWrapper rsw, CacheKey cacheKey, List<ResultMapping> resultMappings, String columnPrefix) throws SQLException {
+      createRowKeyForMappedProperties(resultMap, rsw, cacheKey, resultMappings, columnPrefix, new ArrayList<ResultMap>());
+  }
+
+  private void createRowKeyForMappedProperties(ResultMap resultMap, ResultSetWrapper rsw, CacheKey cacheKey, List<ResultMapping> resultMappings, String columnPrefix, List<ResultMap> refList) throws SQLException {
     for (ResultMapping resultMapping : resultMappings) {
       if (resultMapping.getNestedResultMapId() != null && resultMapping.getResultSet() == null) {
         // Issue #392
         final ResultMap nestedResultMap = configuration.getResultMap(resultMapping.getNestedResultMapId());
-        createRowKeyForMappedProperties(nestedResultMap, rsw, cacheKey, nestedResultMap.getConstructorResultMappings(),
-            prependPrefix(resultMapping.getColumnPrefix(), columnPrefix));
+        if (!refList.contains(nestedResultMap)) {
+            refList.add(nestedResultMap);
+            if (resultMapping.getFlags().contains(ResultFlag.CONSTRUCTOR) || nestedResultMap.getResultRelation() == ResultRelation.COLLECTION) {
+                createRowKeyForMappedProperties(nestedResultMap, rsw, cacheKey, nestedResultMap.getConstructorResultMappings(),
+                    prependPrefix(resultMapping.getColumnPrefix(), columnPrefix), refList);
+            } else {
+                createRowKeyForMappedProperties(nestedResultMap, rsw, cacheKey, nestedResultMap.getPropertyResultMappings(),
+                    prependPrefix(resultMapping.getColumnPrefix(), columnPrefix), refList);
+            }
+        }
+
       } else if (resultMapping.getNestedQueryId() == null) {
         final String column = prependPrefix(resultMapping.getColumn(), columnPrefix);
         final TypeHandler<?> th = resultMapping.getTypeHandler();
