@@ -15,18 +15,20 @@
  */
 package org.apache.ibatis.jdbc;
 
-import org.apache.ibatis.BaseDataTest;
-import org.apache.ibatis.datasource.pooled.PooledDataSource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-
-import org.hsqldb.jdbc.JDBCConnection;
-import org.junit.Test;
 
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
+
+import org.apache.ibatis.BaseDataTest;
+import org.apache.ibatis.datasource.pooled.PooledDataSource;
+import org.hsqldb.jdbc.JDBCConnection;
+import org.junit.Test;
 
 public class PooledDataSourceTest extends BaseDataTest {
 
@@ -85,4 +87,16 @@ public class PooledDataSourceTest extends BaseDataTest {
     Connection c = ds.getConnection();
     JDBCConnection realConnection = (JDBCConnection) PooledDataSource.unwrapConnection(c);
   }
+  
+  @Test
+  public void pingConnection() throws Exception {
+    PooledDataSource ds = createPooledDataSource(JPETSTORE_PROPERTIES);
+    runScript(ds, JPETSTORE_DDL);
+    ds.setPoolPingConnectionsNotUsedFor(0);
+    ds.setPoolPingEnabled(true);
+    ds.setPoolPingQuery("SELECT * FROM PRODUCT");
+    Connection c = ds.getConnection();
+    c.close();
+  }
+  
 }
