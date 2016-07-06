@@ -1,22 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Copyright 2010-2012 the original author or authors.
 
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
+       Copyright 2009-2016 the original author or authors.
 
-    http://www.apache.org/licenses/LICENSE-2.0
+       Licensed under the Apache License, Version 2.0 (the "License");
+       you may not use this file except in compliance with the License.
+       You may obtain a copy of the License at
 
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
+          http://www.apache.org/licenses/LICENSE-2.0
+
+       Unless required by applicable law or agreed to in writing, software
+       distributed under the License is distributed on an "AS IS" BASIS,
+       WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+       See the License for the specific language governing permissions and
+       limitations under the License.
+
 -->
-
-<!-- version: $Id$ -->
-
 <document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
 
@@ -34,7 +33,7 @@
 		이미 본것처럼 마이바티스는 XML매핑 기능으로 동적 SQL을 처리하는 강력한 기능을 제공한다. 
 		하지만 종종 자바 코드를 사용해서 SQL구문을 만들어야 할수도 있다. 
 		마이바티스는 이런 경우를 위한 기능도 제공한다. 
-		더하기 기호나 따옴표, 개행처리, 포매팅 그리고 콤마나 문자열을 합치는 등의 다양한 조건을 처리하지 않아도 되도록 해주낟. 
+		더하기 기호나 따옴표, 개행처리, 포매팅 그리고 콤마나 문자열을 합치는 등의 다양한 조건을 처리하지 않아도 되도록 해준다. 
 		정말 자바코드에서 SQL을 동적으로 만드는 것은 악몽과 같다. 
 		예를들어보자. 
         </p>
@@ -99,7 +98,7 @@ private String selectPersonSql() {
 public String deletePersonSql() {
   return new SQL() {{
     DELETE_FROM("PERSON");
-    WHERE("ID = ${id}");
+    WHERE("ID = #{id}");
   }}.toString();
 }
 
@@ -107,8 +106,8 @@ public String deletePersonSql() {
 public String insertPersonSql() {
   String sql = new SQL()
     .INSERT_INTO("PERSON");
-    .VALUES("ID, FIRST_NAME", "${id}, ${firstName}");
-    .VALUES("LAST_NAME", "${lastName}")
+    .VALUES("ID, FIRST_NAME", "#{id}, #{firstName}");
+    .VALUES("LAST_NAME", "#{lastName}")
     .toString();
   return sql;
 }
@@ -119,13 +118,13 @@ public String selectPersonLike(final String id, final String firstName, final St
     SELECT("P.ID, P.USERNAME, P.PASSWORD, P.FIRST_NAME, P.LAST_NAME");
     FROM("PERSON P");
     if (id != null) {
-      WHERE("P.ID like ${id}");
+      WHERE("P.ID like #{id}");
     }
     if (firstName != null) {
-      WHERE("P.FIRST_NAME like ${firstName}");
+      WHERE("P.FIRST_NAME like #{firstName}");
     }
     if (lastName != null) {
-      WHERE("P.LAST_NAME like ${lastName}");
+      WHERE("P.LAST_NAME like #{lastName}");
     }
     ORDER_BY("P.LAST_NAME");
   }}.toString();
@@ -134,23 +133,23 @@ public String selectPersonLike(final String id, final String firstName, final St
 public String deletePersonSql() {
   return new SQL() {{
     DELETE_FROM("PERSON");
-    WHERE("ID = ${id}");
+    WHERE("ID = #{id}");
   }}.toString();
 }
 
 public String insertPersonSql() {
   return new SQL() {{
     INSERT_INTO("PERSON");
-    VALUES("ID, FIRST_NAME", "${id}, ${firstName}");
-    VALUES("LAST_NAME", "${lastName}");
+    VALUES("ID, FIRST_NAME", "#{id}, #{firstName}");
+    VALUES("LAST_NAME", "#{lastName}");
   }}.toString();
 }
 
 public String updatePersonSql() {
   return new SQL() {{
     UPDATE("PERSON");
-    SET("FIRST_NAME = ${firstName}");
-    WHERE("ID = ${id}");
+    SET("FIRST_NAME = #{firstName}");
+    WHERE("ID = #{id}");
   }}.toString();
 }
 ]]></source>
@@ -363,7 +362,7 @@ public String updatePersonSql() {
         <source><![CDATA[
 /* 향후 제거예정 */
 public String selectBlogsSql() {
-  BEGIN(); // Clears ThreadLocal variable
+  BEGIN(); // ThreadLocal 변수 제거
   SELECT("*");
   FROM("BLOG");
   return SQL();
@@ -373,7 +372,7 @@ public String selectBlogsSql() {
         <source><![CDATA[
 /* 향후 제거예정 */
 private String selectPersonSql() {
-  BEGIN(); // ThreadLocal 변수를 제거
+  BEGIN(); // ThreadLocal 변수 제거
   SELECT("P.ID, P.USERNAME, P.PASSWORD, P.FULL_NAME");
   SELECT("P.LAST_NAME, P.CREATED_ON, P.UPDATED_ON");
   FROM("PERSON P");
