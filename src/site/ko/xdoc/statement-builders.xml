@@ -33,7 +33,7 @@
 		이미 본것처럼 마이바티스는 XML매핑 기능으로 동적 SQL을 처리하는 강력한 기능을 제공한다. 
 		하지만 종종 자바 코드를 사용해서 SQL구문을 만들어야 할수도 있다. 
 		마이바티스는 이런 경우를 위한 기능도 제공한다. 
-		더하기 기호나 따옴표, 개행처리, 포매팅 그리고 콤마나 문자열을 합치는 등의 다양한 조건을 처리하지 않아도 되도록 해주낟. 
+		더하기 기호나 따옴표, 개행처리, 포매팅 그리고 콤마나 문자열을 합치는 등의 다양한 조건을 처리하지 않아도 되도록 해준다. 
 		정말 자바코드에서 SQL을 동적으로 만드는 것은 악몽과 같다. 
 		예를들어보자. 
         </p>
@@ -362,7 +362,7 @@ public String updatePersonSql() {
         <source><![CDATA[
 /* 향후 제거예정 */
 public String selectBlogsSql() {
-  BEGIN(); // Clears ThreadLocal variable
+  BEGIN(); // ThreadLocal 변수 제거
   SELECT("*");
   FROM("BLOG");
   return SQL();
@@ -372,7 +372,7 @@ public String selectBlogsSql() {
         <source><![CDATA[
 /* 향후 제거예정 */
 private String selectPersonSql() {
-  BEGIN(); // ThreadLocal 변수를 제거
+  BEGIN(); // ThreadLocal 변수 제거
   SELECT("P.ID, P.USERNAME, P.PASSWORD, P.FULL_NAME");
   SELECT("P.LAST_NAME, P.CREATED_ON, P.UPDATED_ON");
   FROM("PERSON P");

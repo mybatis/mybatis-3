@@ -320,9 +320,7 @@ ps.setInt(1,id);]]></source>
   values (#{username},#{password},#{email},#{bio})
 </insert>]]></source>
 
-        <p>
-          If your database also supports multi-row insert, you can pass a list or an array of <code>Author</code>s and retrieve the auto-generated keys.
-        </p>
+        <p>사용하는 데이터베이스가 다중레코드 입력을 지원한다면, <code>Author</code>의 목록이나 배열을 전달할수 있고 자동생성키를 가져올 수 있다. </p>
 
         <source><![CDATA[<insert id="insertAuthor" useGeneratedKeys="true"
     keyProperty="id">
@@ -413,9 +411,7 @@ ps.setInt(1,id);]]></source>
     cross join some_table t2
 </select>]]></source>
 
-        <p>
-          프로퍼티값은 다음처럼 refid속성이나 include절 내부에서 프로퍼티값으로 사용할 수 있다. 
-        </p>
+        <p>프로퍼티값은 다음처럼 refid속성이나 include절 내부에서 프로퍼티값으로 사용할 수 있다. </p>
 
         <source><![CDATA[<sql id="sometable">
   ${prefix}Table
@@ -583,10 +579,10 @@ public class User {
 		TypeAliases를 사용하면 타이핑 수를 줄일 수 있다. 
 		예를들면,</p>
 
-        <source><![CDATA[<!-- In Config XML file -->
+        <source><![CDATA[<!-- XML설정파일에서 -->
 <typeAlias type="com.someapp.model.User" alias="User"/>
 
-<!-- In SQL Mapping XML file -->
+<!-- SQL매핑 XML파일에서 -->
 <select id="selectUsers" resultType="User">
   select id, username, hashedPassword
   from some_table

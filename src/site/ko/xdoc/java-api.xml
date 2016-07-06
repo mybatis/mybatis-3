@@ -462,7 +462,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
         <td><code>Method</code></td>
         <td><code>&lt;resultMap&gt;</code></td>
         <td>결과 칼럼이 프로퍼티나 필드에 매핑되는 방법에 대한 상세 설정을 포함하는 결과 매핑의 목록
-		사용가능한 속성들 : value(Result 애노테이션의 배열), id (name of the result mapping)</td>
+		사용가능한 속성들 : value(Result 애노테이션의 배열), id (결과매핑의 이름)</td>
       </tr>
       <tr>
         <td><code>@Result</code></td>
@@ -571,7 +571,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
         </td>
         <td>실행시 SQL 을 리턴할 클래스 과 메소드명을 명시하도록 해주는 대체수단의 애노테이션이다.
 		매핑된 구문을 실행할 때 마이바티스는 클래스의 인스턴스를 만들고 메소드를 실행한다. 
-		메소드는 파라미터 객체를 받을 수도 있다.(In MyBatis 3.4 or later, it's allow multiple parameters)
+		메소드는 파라미터 객체를 받을 수도 있다.(마이바티스 3.4이상에서는 복수 파라미터를 허용한다.)
 		사용가능한 속성들 : type, method. 
 		type 속성은 클래스.
 		method 속성은 메소드명이다.
@@ -644,7 +644,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
   <source><![CDATA[@Flush
 List<BatchResult> flush();]]></source>
 
-  <p>These examples show how to name a ResultMap by specifying id attribute of @Results annotation.</p>
+  <p>다음 예제는 @Results애노테이션의 id속성을 명시해서 결과매핑을 명명하는 방법을 보여준다. </p>
   <source>@Results(id = "userResult", value = {
   @Result(property = "id", column = "uid", id = <strong>true</strong>),
   @Result(property = "firstName", column = "first_name"),
@@ -661,7 +661,7 @@ User getUserById(Integer id);
 @Select("select * from company where id = #{id}")
 Company getCompanyById(Integer id);</source>
 
-  <p>This example shows solo parameter using the Sql Provider annotation:</p>
+  <p>다음 예제는 Sql 프로바이더 애노테이션을 사용해서 파라미터 한개를 처리하는 방법을 보여준다.</p>
   <source><![CDATA[@SelectProvider(type = UserSqlBuilder.class, method = "buildGetUsersByName")
 List<User> getUsersByName(String name);
 
@@ -678,14 +678,14 @@ class UserSqlBuilder {
   }
 }]]></source>
 
-  <p>This example shows multiple parameters using the Sql Provider annotation:</p>
+  <p>다음 예제는 Sql 프로바이더 애노테이션을 사용해서 파라미터 여러개를 처리하는 방법을 보여준다.</p>
   <source><![CDATA[@SelectProvider(type = UserSqlBuilder.class, method = "buildGetUsersByName")
 List<User> getUsersByName(
     @Param("name") String name, @Param("orderByColumn") String orderByColumn);
 
 class UserSqlBuilder {
 
-  // If not use @Param, you should be define same arguments with mapper method
+  // @Param애노테이션을 사용하지 않으면 매퍼 메소드와 동일한 인자를 정의해야만 한다. 
   public String buildGetUsersByName(
       final String name, final String orderByColumn) {
     return new SQL(){{
@@ -696,7 +696,7 @@ class UserSqlBuilder {
     }}.toString();
   }
 
-  // If use @Param, you can define only arguments to be used
+  // @Param애노테이션을 사용한다면, 오직 사용할 인자만 정의할 수 있다. 
   public String buildGetUsersByName(@Param("orderByColumn") final String orderByColumn) {
     return new SQL(){{
       SELECT("*");

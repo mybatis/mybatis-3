@@ -177,8 +177,8 @@ log4j.appender.stdout.layout.ConversionPattern=%5p [%t] - %m%n]]></source>
 
 		<p>앞서 언급한것처럼 매퍼 인터페이스와 XML매퍼 파일간의 차이는 없다. </p>
 
-        <p><code>log4j.properties</code> 파일의 나머지는 어펜터(appender)를 설정하기 위해 사용했다. 
-		어펜터는 이 문서의 범위를 넘어선다.
+        <p><code>log4j.properties</code> 파일의 나머지는 어펜더(appender)를 설정하기 위해 사용했다. 
+		어펜더는 이 문서의 범위를 넘어선다.
 		Log4J 웹사이트에서 좀더 많은 정보를 얻을 수 있다. 
 		설정파일간의 차이는 실행을 해보면 간단히 확인할 수 있다. 
         </p>

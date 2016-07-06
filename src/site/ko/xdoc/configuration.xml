@@ -196,11 +196,11 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 autoMappingUnknownColumnBehavior
               </td>
               <td>
-                Specify the behavior when detects an unknown column (or unknown property type) of automatic mapping target.
+                자동매핑 대상중 알수 없는 칼럼(이나 알수없는 프로퍼티 타입)을 발견했을때 행위를 명시
                 <ul>
-                  <li><code>NONE</code>: Do nothing</li>
-                  <li><code>WARNING</code>: Output warning log (The log level of <code>'org.apache.ibatis.session.AutoMappingUnknownColumnBehavior'</code> must be set to <code>WARN</code>)</li>
-                  <li><code>FAILING</code>: Fail mapping (Throw <code>SqlSessionException</code>)</li>
+                  <li><code>NONE</code>: 아무것도 하지 않음</li>
+                  <li><code>WARNING</code>: 경고 로그를 출력(<code>'org.apache.ibatis.session.AutoMappingUnknownColumnBehavior'</code>의 로그레벨은 <code>WARN</code>이어야 한다.) </li>
+                  <li><code>FAILING</code>: 매핑이 실패한다. (<code>SqlSessionException</code>예외를 던진다.)</li>
                 </ul>
               </td>
               <td>
@@ -257,8 +257,8 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 defaultFetchSize
               </td>
               <td>
-                Sets the driver a hint as to control fetching size for return results.
-                This parameter value can be override by a query setting.
+                결과를 가져오는 크기를 제어하는 힌트처럼 드라이버에 설정한다. 
+				이 파라미터는 쿼리설정으로 변경할 수 있다. 
               </td>
               <td>
                 양수
@@ -273,7 +273,7 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
               </td>
               <td>
                 중첩구문내 RowBound사용을 허용
-                If allow, set the false.
+                허용한다면 false로 설정 
               </td>
               <td>
                 true | false
@@ -288,7 +288,7 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
               </td>
               <td>
                 중첩구문내 ResultHandler사용을 허용
-                If allow, set the false.
+                허용한다면 false로 설정 
               </td>
               <td>
                 true | false
@@ -434,10 +434,10 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 vfsImpl
               </td>
               <td>
-                Specifies VFS implementations
+                VFS 구현체를 명시
               </td>
               <td>
-                Fully qualified class names of custom VFS implementation separated by commas.
+                콤마를 사용해서 VFS구현체의 패키지를 포함한 전체 클래스명
               </td>
             </tr>
             <tr>
@@ -445,8 +445,8 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 useActualParamName
               </td>
               <td>
-                Allow referencing statement parameters by their actual names declared in the method signature.
-                To use this feature, your project must be compiled in Java 8 with <code>-parameters</code> option. (Since: 3.4.1)
+                메소드 시그니처에 명시된 실제 이름으로 구문파라미터를 참조하는 것을 허용
+				이 기능을 사용하려면 프로젝트를 자바 8의 <code>-parameters</code>옵션을 사용해서 컴파일해야만 한다.(마이바티스 3.4.1이상의 버전)
               </td>
               <td>
                 true | false
@@ -747,8 +747,7 @@ public class Author {
         다음의 표는 디폴트 TypeHandlers를 설명한다.</p>
         <p>
           <span class="label important">NOTE</span>
-          If you use classes provided by JSR-310(Date and Time API),
-          you can use the <a href="https://github.com/mybatis/typehandlers-jsr310">mybatis-typehandlers-jsr310</a>.
+          JSR-310(Date 와 Time API)이 제공하는 클래스를 사용한다면 <a href="https://github.com/mybatis/typehandlers-jsr310">mybatis-typehandlers-jsr310</a>를 사용할 수 있다. 
         </p>
         <table>
           <thead>
@@ -1008,11 +1007,10 @@ public class Author {
                 <code>EnumOrdinalTypeHandler</code>
               </td>
               <td>
-                Enumeration Type
+                열거형(Enumeration) 타입
               </td>
               <td>
-                Any compatible <code>NUMERIC</code> or <code>DOUBLE</code>, as the position is stored
-                (not the code itself).
+                코드자체가 아니라 위치를 저장할수 있는 <code>NUMERIC</code> 또는 <code>DOUBLE</code>와 호환가능한 타입
               </td>
             </tr>
           </tbody>
@@ -1076,15 +1074,12 @@ public class ExampleTypeHandler extends BaseTypeHandler<String> {
         </ul>
 
         <p>
-          When deciding which TypeHandler to use in a <code>ResultMap</code>, the Java type is known
-          (from the result type), but the JDBC type is unknown. MyBatis therefore uses the combination
-          <code>javaType=[TheJavaType], jdbcType=null</code> to choose a TypeHandler. This means that
-          using a <code>@MappedJdbcTypes</code> annotation <i>restricts</i> the scope of a TypeHandler
-          and makes it unavailable for use in <code>ResultMap</code>s unless explicity set. To make a
-          TypeHandler available for use in a <code>ResultMap</code>, set <code>includeNullJdbcType=true</code>
-          on the <code>@MappedJdbcTypes</code> annotation. Since Mybatis 3.4.0 however, if a <b>single</b>
-          TypeHandler is registered to handle a Java type, it will be used by default in <code>ResultMap</code>s
-          using this Java type (i.e. even without <code>includeNullJdbcType=true</code>). 
+          <code>ResultMap</code>에서 타입핸들러를 사용한다고 결정하면 마이바티스가 자바타입은 잘 처리하지만 JDBC타입은 잘 처리하지 못할 수 있다. 
+		  그래서 마이바티스는 타입핸들러를 선택하기 위해 <code>javaType=[TheJavaType], jdbcType=null</code>조합을 사용한다. 
+		  <code>@MappedJdbcTypes</code> 애노테이션의 사용은 타입핸들러의  범위를 <i>제한</i>하고 명시적으로 설정하지 않는한 <code>결과매핑</code>을 사용하지 못하도록 만든다. 
+		  <code>결과매핑</code>에서 타입핸들러를 사용할수 있도록 하려면 <code>@MappedJdbcTypes</code>애노테이션에 <code>includeNullJdbcType=true</code>를 설정하자. 
+		  자바타입을 다루기 위해 <b>한개의</b> 타입핸들러만 등록한다면 <code>결과매핑</code>에서 자바타입을 다루기 위해 이 타입핸들러를 기본적으로 사용할 것이다. 
+		  한개의 타입핸들러만 등록할 경우 <code>includeNullJdbcType=true</code>를 설정하지 않아도 동일하게 동작한다. 
         </p>
 
         <p>마지막으로 마이바티스로 하여금 TypeHandler를 찾도록 할수 있다:</p>
@@ -1523,28 +1518,28 @@ public class C3P0DataSourceFactory extends UnpooledDataSourceFactory {
 		그래서 가장 좋은 건 어디서 찾으라고 지정하는 것이다. 
 		클래스패스에 상대적으로 리소스를 지정할 수도 있고 url 을 통해서 지정할 수 도 있다. 
 		예를들면</p>
-        <source><![CDATA[<!-- Using classpath relative resources -->
+        <source><![CDATA[<!-- 클래스패스의 상대경로의 리소스 사용 -->
 <mappers>
   <mapper resource="org/mybatis/builder/AuthorMapper.xml"/>
   <mapper resource="org/mybatis/builder/BlogMapper.xml"/>
   <mapper resource="org/mybatis/builder/PostMapper.xml"/>
 </mappers>]]></source>
 
-        <source><![CDATA[<!-- Using url fully qualified paths -->
+        <source><![CDATA[<!-- 절대경로의 url을 사용 -->
 <mappers>
   <mapper url="file:///var/mappers/AuthorMapper.xml"/>
   <mapper url="file:///var/mappers/BlogMapper.xml"/>
   <mapper url="file:///var/mappers/PostMapper.xml"/>
 </mappers>]]></source>
 
-        <source><![CDATA[<!-- Using mapper interface classes -->
+        <source><![CDATA[<!-- 매퍼 인터페이스를 사용 -->
 <mappers>
   <mapper class="org.mybatis.builder.AuthorMapper"/>
   <mapper class="org.mybatis.builder.BlogMapper"/>
   <mapper class="org.mybatis.builder.PostMapper"/>
 </mappers>]]></source>
 
-        <source><![CDATA[<!-- Register all interfaces in a package as mappers -->
+        <source><![CDATA[<!-- 매퍼로 패키지내 모든 인터페이스를 등록 -->
 <mappers>
   <package name="org.mybatis.builder"/>
 </mappers>]]></source>
