@@ -164,7 +164,14 @@ public String updatePersonSql() {
           <tbody>
             <tr>
               <td>
-                <code>SELECT(String)</code>
+                <ul>
+                  <li>
+                    <code>SELECT(String)</code>
+                  </li>
+                  <li>
+                    <code>SELECT(String...)</code>
+                  </li>
+                </ul>
               </td>
               <td><code>SELECT</code>절로 시작하거나 덧붙이기.
 			  한번 이상 호출할 수 있고 파라미터는 <code>SELECT</code>절에 덧붙일것이다.
@@ -173,7 +180,14 @@ public String updatePersonSql() {
             </tr>
             <tr>
               <td>
-                <code>SELECT_DISTINCT(String)</code>
+                <ul>
+                  <li>
+                    <code>SELECT_DISTINCT(String)</code>
+                  </li>
+                  <li>
+                    <code>SELECT_DISTINCT(String...)</code>
+                  </li>
+                </ul>
               </td>
               <td><code>SELECT</code>절로 시작하거나 덧붙이기.
 			  생성된 쿼리에 <code>DISTINCT</code>를 추가한다. 
@@ -183,7 +197,14 @@ public String updatePersonSql() {
             </tr>
             <tr>
               <td>
-                <code>FROM(String)</code>
+                <ul>
+                  <li>
+                    <code>FROM(String)</code>
+                  </li>
+                  <li>
+                    <code>FROM(String...)</code>
+                  </li>
+                </ul>
               </td>
               <td><code>FROM</code>절로 시작하거나 덧붙이기.
 			  한번 이상 호출할 수 있고 파라미터는 <code>FROM</code>절에 덧붙일것이다.
@@ -197,13 +218,25 @@ public String updatePersonSql() {
                     <code>JOIN(String)</code>
                   </li>
                   <li>
+                    <code>JOIN(String...)</code>
+                  </li>
+                  <li>
                     <code>INNER_JOIN(String)</code>
+                  </li>
+                  <li>
+                    <code>INNER_JOIN(String...)</code>
                   </li>
                   <li>
                     <code>LEFT_OUTER_JOIN(String)</code>
                   </li>
                   <li>
+                    <code>LEFT_OUTER_JOIN(String...)</code>
+                  </li>
+                  <li>
                     <code>RIGHT_OUTER_JOIN(String)</code>
+                  </li>
+                  <li>
+                    <code>RIGHT_OUTER_JOIN(String...)</code>
                   </li>
                 </ul>
               </td>
@@ -214,7 +247,14 @@ public String updatePersonSql() {
             </tr>
             <tr>
               <td>
-                <code>WHERE(String)</code>
+                <ul>
+                  <li>
+                    <code>WHERE(String)</code>
+                  </li>
+                  <li>
+                    <code>WHERE(String...)</code>
+                  </li>
+                </ul>
               </td>
               <td>새로운 <code>WHERE</code>절과 <code>AND</code>로 합친 조건을 덧붙인다. 
 			  여러번 호출할 수 있고 <code>AND</code>를 사용할때마다 새로운 조건을 합친다. 
@@ -241,7 +281,14 @@ public String updatePersonSql() {
             </tr>
             <tr>
               <td>
-                <code>GROUP_BY(String)</code>
+                <ul>
+                  <li>
+                    <code>GROUP_BY(String)</code>
+                  </li>
+                  <li>
+                    <code>GROUP_BY(String...)</code>
+                  </li>
+                </ul>
               </td>
               <td>새로운 <code>GROUP BY</code>절을 콤마를 더해서 덧붙인다. 
 			  여러번 호출할 수 있고 개별 조건을 콤마를 붙여서 합칠 수 있다. 
@@ -249,7 +296,14 @@ public String updatePersonSql() {
             </tr>
             <tr>
               <td>
-                <code>HAVING(String)</code>
+                <ul>
+                  <li>
+                    <code>HAVING(String)</code>
+                  </li>
+                  <li>
+                    <code>HAVING(String...)</code>
+                  </li>
+                </ul>
               </td>
               <td>새로운 <code>HAVING</code>절을 AND를 더해서 덧붙인다. 
 			  여러번 호출할 수 있고 개별 조건을 <code>AND</code>를 붙여서 합칠 수 있다. 
@@ -258,7 +312,14 @@ public String updatePersonSql() {
             </tr>
             <tr>
               <td>
-                <code>ORDER_BY(String)</code>
+                <ul>
+                  <li>
+                    <code>ORDER_BY(String)</code>
+                  </li>
+                  <li>
+                    <code>ORDER_BY(String...)</code>
+                  </li>
+                </ul>
               </td>
               <td>새로운 <code>ORDER BY</code>절을 콤마를 더해서 덧붙인다. 
 			  여러번 호출할 수 있고 개별조건을 콤마를 붙여서 합칠수 있다. 
@@ -282,7 +343,14 @@ public String updatePersonSql() {
             </tr>
             <tr>
               <td>
-                <code>SET(String)</code>
+                <ul>
+                  <li>
+                    <code>SET(String)</code>
+                  </li>
+                  <li>
+                    <code>SET(String...)</code>
+                  </li>
+                </ul>
               </td>
               <td>update구문에서 "set" 대상 목록을 덧붙인다. </td>
             </tr>

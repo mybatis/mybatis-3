@@ -159,21 +159,42 @@ public String updatePersonSql() {
           <tbody>
             <tr>
               <td>
-                <code>SELECT(String)</code>
+                <ul>
+                  <li>
+                    <code>SELECT(String)</code>
+                  </li>
+                  <li>
+                    <code>SELECT(String...)</code>
+                  </li>
+                </ul>
               </td>
               <td>SELECT 句を開始、あるいは SELECT 句に文字列を追加します。このメソッドは複数回呼び出すことができ、その場合は引数として渡した文字列が SELECT 句に追加されます。引数は通常カンマ区切りの列名あるいはエイリアスのリストですが、ドライバが受け付ける文字列であれば何でも構いません。
               </td>
             </tr>
             <tr>
               <td>
-                <code>SELECT_DISTINCT(String)</code>
+                <ul>
+                  <li>
+                    <code>SELECT_DISTINCT(String)</code>
+                  </li>
+                  <li>
+                    <code>SELECT_DISTINCT(String...)</code>
+                  </li>
+                </ul>
               </td>
               <td>SELECT 句を開始、あるいは SELECT 句に文字列を追加します。また、生成されるクエリに DISTINCT キーワードを追加します。このメソッドは複数回呼び出すことができ、その場合は SELECT 句に引数として渡した文字列が追加されます。引数は通常カンマ区切りの列名あるいはエイリアスのリストですが、ドライバが受け付ける文字列であれば何でも構いません。
               </td>
             </tr>
             <tr>
               <td>
-                <code>FROM(String)</code>
+                <ul>
+                  <li>
+                    <code>FROM(String)</code>
+                  </li>
+                  <li>
+                    <code>FROM(String...)</code>
+                  </li>
+                </ul>
               </td>
               <td>FROM 句を開始、あるいは FROM 句に文字列を追加します。このメソッドは複数回呼び出すことができ、その場合は FROM 句に引数として渡した文字列が追加されます。引数は通常カンマ区切りのテーブル名あるいはエイリアスのリストですが、ドライバが受け付ける文字列であれば何でも構いません。
               </td>
@@ -185,13 +206,25 @@ public String updatePersonSql() {
                     <code>JOIN(String)</code>
                   </li>
                   <li>
+                    <code>JOIN(String...)</code>
+                  </li>
+                  <li>
                     <code>INNER_JOIN(String)</code>
+                  </li>
+                  <li>
+                    <code>INNER_JOIN(String...)</code>
                   </li>
                   <li>
                     <code>LEFT_OUTER_JOIN(String)</code>
                   </li>
                   <li>
+                    <code>LEFT_OUTER_JOIN(String...)</code>
+                  </li>
+                  <li>
                     <code>RIGHT_OUTER_JOIN(String)</code>
+                  </li>
+                  <li>
+                    <code>RIGHT_OUTER_JOIN(String...)</code>
                   </li>
                 </ul>
               </td>
@@ -200,7 +233,14 @@ public String updatePersonSql() {
             </tr>
             <tr>
               <td>
-                <code>WHERE(String)</code>
+                <ul>
+                  <li>
+                    <code>WHERE(String)</code>
+                  </li>
+                  <li>
+                    <code>WHERE(String...)</code>
+                  </li>
+                </ul>
               </td>
               <td>新しい WHERE 条件を AND で連結して追加します。このメソッドは複数回呼び出すことができ、その場合は引数で指定した新しい条件が AND と共に追加されます。複数の条件を OR で連結する場合は OR() メソッドを使ってください。
               </td>
@@ -221,21 +261,42 @@ public String updatePersonSql() {
             </tr>
             <tr>
               <td>
-                <code>GROUP_BY(String)</code>
+                <ul>
+                  <li>
+                    <code>GROUP_BY(String)</code>
+                  </li>
+                  <li>
+                    <code>GROUP_BY(String...)</code>
+                  </li>
+                </ul>
               </td>
               <td>カンマを挟んで <code>GROUP BY</code> 句を追加します。複数回呼ぶことができ、その度にカンマを挟んで新しい条件が追加されます。
               </td>
             </tr>
             <tr>
               <td>
-                <code>HAVING(String)</code>
+                <ul>
+                  <li>
+                    <code>HAVING(String)</code>
+                  </li>
+                  <li>
+                    <code>HAVING(String...)</code>
+                  </li>
+                </ul>
               </td>
               <td>AND を挟んで新しい <code>HAVING</code> 句を追加します。複数回呼ぶことができ、その度に AND を挟んで新しい条件が追加されます。複数の条件を OR で連結する場合は OR() メソッドを使ってください。
               </td>
             </tr>
             <tr>
               <td>
-                <code>ORDER_BY(String)</code>
+                <ul>
+                  <li>
+                    <code>ORDER_BY(String)</code>
+                  </li>
+                  <li>
+                    <code>ORDER_BY(String...)</code>
+                  </li>
+                </ul>
               </td>
               <td>カンマを挟んで <code>ORDER BY</code> 句を追加します。複数回呼ぶことができ、その度にカンマを挟んで新しい条件が追加されます。
               </td>
@@ -256,7 +317,14 @@ public String updatePersonSql() {
             </tr>
             <tr>
               <td>
-                <code>SET(String)</code>
+                <ul>
+                  <li>
+                    <code>SET(String)</code>
+                  </li>
+                  <li>
+                    <code>SET(String...)</code>
+                  </li>
+                </ul>
               </td>
               <td>update ステートメントの set 句に文字列を追加します。</td>
             </tr>
