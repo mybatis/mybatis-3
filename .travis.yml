@@ -7,6 +7,13 @@ jdk:
   - openjdk7
   - openjdk6
 
+install:
+  - mvn install -Dmaven.test.skip=true -Dmaven.javadoc.skip=true -B -V
+
+script:
+  - jdk_switcher use oraclejdk8
+  - mvn test
+
 after_success:
   - chmod -R 777 ./travis/after_success.sh
   - ./travis/after_success.sh
