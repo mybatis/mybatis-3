@@ -152,36 +152,84 @@ public String updatePersonSql() {
           <tbody>
   <tr>
     <td>
-      <code>SELECT(String)</code>
+      <ul>
+        <li>
+          <code>SELECT(String)</code>
+        </li>
+        <li>
+          <code>SELECT(String...)</code>
+        </li>
+      </ul>
     </td>
     <td>Comienza o añade a una sentencia SELECT. Se puede invocar más de una vez y los parámetros se irán añadiendo a la sentencia SELECT. Los parámetros son normalmente una lista de columnas o alias separados por comas, pero puede ser cualquier cosa que acepte el driver de base de datos.</td>
   </tr>
   <tr>
     <td>
-      <code>SELECT_DISTINCT(String)</code>
+      <ul>
+        <li>
+          <code>SELECT_DISTINCT(String)</code>
+        </li>
+        <li>
+          <code>SELECT_DISTINCT(String...)</code>
+        </li>
+      </ul>
     </td>
     <td>Comienza o añade a una sentencia SELECT, también añade la palabra clave “DISTINCT” a la sentencia generada. Se puede invocar más de una vez y los parámetros se irán añadiendo a la sentencia SELECT. Los parámetros son normalmente una lista de columnas o alias separados por comas, pero puede ser cualquier cosa que acepte el driver de base de datos.</td>
   </tr>
   <tr>
     <td>
-      <code>FROM(String)</code>
+      <ul>
+        <li>
+          <code>FROM(String)</code>
+        </li>
+        <li>
+          <code>FROM(String...)</code>
+        </li>
+      </ul>
     </td>
     <td>Comienza o añade a una cláusula FROM. Se puede invocar más de una vez y los parámetros se irán añadiendo a la clausula FROM. Los parámetros son normalmente un nombre de tabla o alias o cualquier cosa que acepte el driver de base de datos.</td>
   </tr>
   <tr>
     <td>
       <ul>
-        <li><code>JOIN(String)</code></li>
-        <li><code>INNER_JOIN(String)</code></li>
-        <li><code>LEFT_OUTER_JOIN(String)</code></li>
-        <li><code>RIGHT_OUTER_JOIN(String)</code></li>
+        <li>
+          <code>JOIN(String)</code>
+        </li>
+        <li>
+          <code>JOIN(String...)</code>
+        </li>
+        <li>
+          <code>INNER_JOIN(String)</code>
+        </li>
+        <li>
+          <code>INNER_JOIN(String...)</code>
+        </li>
+        <li>
+          <code>LEFT_OUTER_JOIN(String)</code>
+        </li>
+        <li>
+          <code>LEFT_OUTER_JOIN(String...)</code>
+        </li>
+        <li>
+          <code>RIGHT_OUTER_JOIN(String)</code>
+        </li>
+        <li>
+          <code>RIGHT_OUTER_JOIN(String...)</code>
+        </li>
       </ul>
     </td>
     <td>Añade una nueva clausula JOIN del tipo apropiado, dependiendo al método que se haya llamado. El parámetro puede incluir un join estándar que consiste en las columnas y las condiciones sobre las que hacer la join.</td>
   </tr>
   <tr>
     <td>
-      <code>WHERE(String)</code>
+      <ul>
+        <li>
+          <code>WHERE(String)</code>
+        </li>
+        <li>
+          <code>WHERE(String...)</code>
+        </li>
+      </ul>
     </td>
     <td>Añade una nueva condición a la clausula WHERE concatenada con un AND. Puede llamarse más de una vez, lo cual hará que se añadan más condiciones todas ellas concatenadas con un AND. O usa OR() para partirlas con un OR().</td>
   </tr>
@@ -199,19 +247,40 @@ public String updatePersonSql() {
   </tr>
   <tr>
     <td>
-      <code>GROUP_BY(String)</code>
+      <ul>
+        <li>
+          <code>GROUP_BY(String)</code>
+        </li>
+        <li>
+          <code>GROUP_BY(String...)</code>
+        </li>
+      </ul>
     </td>
     <td>Añade una nueva clausula GROUP BY grupo, concatenada con una coma. Se le puede llamar más de una vez, lo cual hará que se concatenen nuevas condiciones separadas también por coma.</td>
   </tr>
   <tr>
     <td>
-      <code>HAVING(String)</code>
+      <ul>
+        <li>
+          <code>HAVING(String)</code>
+        </li>
+        <li>
+          <code>HAVING(String...)</code>
+        </li>
+      </ul>
     </td>
     <td>Añade una nueva clausula HAVING, concatenada con un AND. Se le puede llamar más de una vez, lo cual hará que se concatenen nuevas condiciones separadas también por AND. Usa OR() para dividirlas por OR.</td>
   </tr>
   <tr>
     <td>
-      <code>ORDER_BY(String)</code>
+      <ul>
+        <li>
+          <code>ORDER_BY(String)</code>
+        </li>
+        <li>
+          <code>ORDER_BY(String...)</code>
+        </li>
+      </ul>
     </td>
     <td>Añade un Nuevo elemento a la clausula ORDER BY concatenado por coma. Se le puede llamar más de una vez, lo cual hará que se concatenen nuevas condiciones separadas también por coma.</td>
   </tr>
@@ -231,7 +300,14 @@ public String updatePersonSql() {
   </tr>
   <tr>
     <td>
-      <code>SET(String)</code>
+      <ul>
+        <li>
+          <code>SET(String)</code>
+        </li>
+        <li>
+          <code>SET(String...)</code>
+        </li>
+      </ul>
     </td>
     <td>Añade a la lista “set” de una update.</td>
   </tr>

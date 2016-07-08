@@ -255,7 +255,7 @@ public class XMLConfigBuilder extends BaseBuilder {
     configuration.setSafeResultHandlerEnabled(booleanValueOf(props.getProperty("safeResultHandlerEnabled"), true));
     configuration.setDefaultScriptingLanguage(resolveClass(props.getProperty("defaultScriptingLanguage")));
     configuration.setCallSettersOnNulls(booleanValueOf(props.getProperty("callSettersOnNulls"), false));
-    configuration.setUseActualParamName(booleanValueOf(props.getProperty("useActualParamName"), false));
+    configuration.setUseActualParamName(booleanValueOf(props.getProperty("useActualParamName"), true));
     configuration.setLogPrefix(props.getProperty("logPrefix"));
     @SuppressWarnings("unchecked")
     Class<? extends Log> logImpl = (Class<? extends Log>)resolveClass(props.getProperty("logImpl"));
