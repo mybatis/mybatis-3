@@ -152,7 +152,14 @@ public String updatePersonSql() {
           <tbody>
             <tr>
               <td>
-                <code>SELECT(String)</code>
+                <ul>
+                  <li>
+                    <code>SELECT(String)</code>
+                  </li>
+                  <li>
+                    <code>SELECT(String...)</code>
+                  </li>
+                </ul>
               </td>
               <td>开始或插入到
                 <code>SELECT</code>子句。
@@ -163,7 +170,14 @@ public String updatePersonSql() {
             </tr>
             <tr>
               <td>
-                <code>SELECT_DISTINCT(String)</code>
+                <ul>
+                  <li>
+                    <code>SELECT_DISTINCT(String)</code>
+                  </li>
+                  <li>
+                    <code>SELECT_DISTINCT(String...)</code>
+                  </li>
+                </ul>
               </td>
               <td>开始或插入到
                 <code>SELECT</code>子句，
@@ -176,7 +190,14 @@ public String updatePersonSql() {
             </tr>
             <tr>
               <td>
-                <code>FROM(String)</code>
+                <ul>
+                  <li>
+                    <code>FROM(String)</code>
+                  </li>
+                  <li>
+                    <code>FROM(String...)</code>
+                  </li>
+                </ul>
               </td>
               <td>开始或插入到
                 <code>FROM</code>子句。
@@ -192,13 +213,25 @@ public String updatePersonSql() {
                     <code>JOIN(String)</code>
                   </li>
                   <li>
+                    <code>JOIN(String...)</code>
+                  </li>
+                  <li>
                     <code>INNER_JOIN(String)</code>
+                  </li>
+                  <li>
+                    <code>INNER_JOIN(String...)</code>
                   </li>
                   <li>
                     <code>LEFT_OUTER_JOIN(String)</code>
                   </li>
                   <li>
+                    <code>LEFT_OUTER_JOIN(String...)</code>
+                  </li>
+                  <li>
                     <code>RIGHT_OUTER_JOIN(String)</code>
+                  </li>
+                  <li>
+                    <code>RIGHT_OUTER_JOIN(String...)</code>
                   </li>
                 </ul>
               </td>
@@ -209,7 +242,14 @@ public String updatePersonSql() {
             </tr>
             <tr>
               <td>
-                <code>WHERE(String)</code>
+                <ul>
+                  <li>
+                    <code>WHERE(String)</code>
+                  </li>
+                  <li>
+                    <code>WHERE(String...)</code>
+                  </li>
+                </ul>
               </td>
               <td>插入新的
                 <code>WHERE</code>子句条件，
@@ -243,7 +283,14 @@ public String updatePersonSql() {
             </tr>
             <tr>
               <td>
-                <code>GROUP_BY(String)</code>
+                <ul>
+                  <li>
+                    <code>GROUP_BY(String)</code>
+                  </li>
+                  <li>
+                    <code>GROUP_BY(String...)</code>
+                  </li>
+                </ul>
               </td>
               <td>插入新的
                 <code>GROUP BY</code>子句元素，由逗号连接。
@@ -252,7 +299,14 @@ public String updatePersonSql() {
             </tr>
             <tr>
               <td>
-                <code>HAVING(String)</code>
+                <ul>
+                  <li>
+                    <code>HAVING(String)</code>
+                  </li>
+                  <li>
+                    <code>HAVING(String...)</code>
+                  </li>
+                </ul>
               </td>
               <td>插入新的
                 <code>HAVING</code>子句条件。
@@ -263,7 +317,14 @@ public String updatePersonSql() {
             </tr>
             <tr>
               <td>
-                <code>ORDER_BY(String)</code>
+                <ul>
+                  <li>
+                    <code>ORDER_BY(String)</code>
+                  </li>
+                  <li>
+                    <code>ORDER_BY(String...)</code>
+                  </li>
+                </ul>
               </td>
               <td>插入新的
                 <code>ORDER BY</code>子句元素，
@@ -286,7 +347,14 @@ public String updatePersonSql() {
             </tr>
             <tr>
               <td>
-                <code>SET(String)</code>
+                <ul>
+                  <li>
+                    <code>SET(String)</code>
+                  </li>
+                  <li>
+                    <code>SET(String...)</code>
+                  </li>
+                </ul>
               </td>
               <td>针对update语句，插入到"set"列表中</td>
             </tr>
