@@ -133,6 +133,8 @@
   <properties>
     <maven.compiler.testTarget>1.8</maven.compiler.testTarget>
     <maven.compiler.testSource>1.8</maven.compiler.testSource>
+    <maven.compiler.testCompilerArgument>-parameters</maven.compiler.testCompilerArgument>
+    <maven.surefire.excludeGroups><!-- None --></maven.surefire.excludeGroups>
     <clirr.comparisonVersion>3.3.0</clirr.comparisonVersion>
     <findbugs.onlyAnalyze>org.apache.ibatis.*</findbugs.onlyAnalyze>
     <osgi.export>org.apache.ibatis.*;version=${project.version};-noimport:=true</osgi.export>
@@ -252,13 +254,14 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
-          <testCompilerArgument>-parameters</testCompilerArgument>
+          <testCompilerArgument>${maven.compiler.testCompilerArgument}</testCompilerArgument>
         </configuration>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
+          <excludedGroups>${maven.surefire.excludeGroups}</excludedGroups>
           <argLine>${argLine} -Xmx1024m</argLine>
           <systemProperties>
             <property>
