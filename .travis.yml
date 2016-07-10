@@ -7,6 +7,9 @@ jdk:
   - openjdk7
   - openjdk6
 
+before_install:
+  - echo "MAVEN_OPTS='-Dlicense.skip=true'" > ~/.mavenrc
+
 install:
   # Compile non-test sources with Java 1.8
   - jdk_switcher use oraclejdk8
