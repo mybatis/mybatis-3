@@ -23,7 +23,7 @@ echo "Repo detected: ${mybatis_repo}"
 # Get Commit Message
 commit_message=$(git log --format=%B -n 1)
 echo "Current commit detected: ${commit_message}"
- 
+
 # Get the Java version.
 # Java 1.5 will give 15.
 # Java 1.6 will give 16.
@@ -35,7 +35,7 @@ echo "Java detected: ${VER}"
 # We build for several JDKs on Travis.
 # Some actions, like analyzing the code (Coveralls) and uploading
 # artifacts on a Maven repository, should only be made for one version.
- 
+
 # If the version is 1.6, then perform the following actions.
 # 1. Upload artifacts to Sonatype.
 # 2. Use -q option to only display Maven errors and warnings.
@@ -47,10 +47,9 @@ echo "Java detected: ${VER}"
 # 3. Use -q option to only display Maven errors and warnings.
 
 if [ "$mybatis_repo" == "https://github.com/mybatis/mybatis-3.git" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ] && [ "$TRAVIS_BRANCH" == "master" ] && [[ "$commit_message" != *"[maven-release-plugin]"* ]]; then
-  if [ $VER == "16" ]; then
-    mvn clean deploy -q --settings ./travis/settings.xml
+  if [ $VER == "18" ]; then
+    mvn clean deploy -Dmaven.test.skip=true -q --settings ./travis/settings.xml
     echo -e "Successfully deployed SNAPSHOT artifacts to Sonatype under Travis job ${TRAVIS_JOB_NUMBER}"
-  elif [ $VER == "18" ]; then
     mvn clean test jacoco:report coveralls:report -q
     echo -e "Successfully ran coveralls under Travis job ${TRAVIS_JOB_NUMBER}"
     # various issues exist currently in building this so comment for now

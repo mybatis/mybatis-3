@@ -134,7 +134,6 @@
     <maven.compiler.testTarget>1.8</maven.compiler.testTarget>
     <maven.compiler.testSource>1.8</maven.compiler.testSource>
     <maven.compiler.testCompilerArgument>-parameters</maven.compiler.testCompilerArgument>
-    <maven.surefire.excludeGroups><!-- None --></maven.surefire.excludeGroups>
     <clirr.comparisonVersion>3.3.0</clirr.comparisonVersion>
     <findbugs.onlyAnalyze>org.apache.ibatis.*</findbugs.onlyAnalyze>
     <osgi.export>org.apache.ibatis.*;version=${project.version};-noimport:=true</osgi.export>
@@ -366,8 +365,23 @@
         <maven.compiler.testTarget>1.6</maven.compiler.testTarget>
         <maven.compiler.testSource>1.6</maven.compiler.testSource>
         <maven.compiler.testCompilerArgument></maven.compiler.testCompilerArgument>
-        <maven.surefire.excludeGroups>org.apache.ibatis.lang.UsesJava8,org.apache.ibatis.lang.UsesJava7</maven.surefire.excludeGroups>
       </properties>
+      <build>
+        <pluginManagement>
+          <plugins>
+            <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-compiler-plugin</artifactId>
+              <configuration>
+                <testExcludes>
+                  <testExclude>**/usesjava7/**/*.java</testExclude>
+                  <testExclude>**/usesjava8/**/*.java</testExclude>
+                </testExcludes>
+              </configuration>
+            </plugin>
+          </plugins>
+        </pluginManagement>
+      </build>
     </profile>
     <profile>
       <id>java17</id>
@@ -378,8 +392,22 @@
         <maven.compiler.testTarget>1.7</maven.compiler.testTarget>
         <maven.compiler.testSource>1.7</maven.compiler.testSource>
         <maven.compiler.testCompilerArgument></maven.compiler.testCompilerArgument>
-        <maven.surefire.excludeGroups>org.apache.ibatis.lang.UsesJava8</maven.surefire.excludeGroups>
       </properties>
+      <build>
+        <pluginManagement>
+          <plugins>
+            <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-compiler-plugin</artifactId>
+              <configuration>
+                <testExcludes>
+                  <testExclude>**/usesjava8/**/*.java</testExclude>
+                </testExcludes>
+              </configuration>
+            </plugin>
+          </plugins>
+        </pluginManagement>
+      </build>
     </profile>
   </profiles>
 </project>

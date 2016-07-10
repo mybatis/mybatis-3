@@ -13,26 +13,22 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package org.apache.ibatis.submitted.use_actual_param_name;
+package org.apache.ibatis.submitted.usesjava8.use_actual_param_name;
 
-public class User {
+import java.util.List;
 
-  private Integer id;
-  private String name;
+import org.apache.ibatis.annotations.Select;
 
-  public Integer getId() {
-    return id;
-  }
+public interface Mapper {
 
-  public void setId(Integer id) {
-    this.id = id;
-  }
+  @Select("select * from users where id = #{foo}")
+  User getUserById(Integer id);
 
-  public String getName() {
-    return name;
-  }
+  @Select("select * from users where id = #{id} and name = #{name}")
+  User getUserByIdAndName(Integer id, String name);
 
-  public void setName(String name) {
-    this.name = name;
-  }
+  List<User> getUsersByIdList(List<Integer> ids);
+
+  List<User> getUsersByIdListAndName(List<Integer> ids, String name);
+
 }

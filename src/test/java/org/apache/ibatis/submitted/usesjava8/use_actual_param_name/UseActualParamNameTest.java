@@ -13,7 +13,7 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package org.apache.ibatis.submitted.use_actual_param_name;
+package org.apache.ibatis.submitted.usesjava8.use_actual_param_name;
 
 import static org.junit.Assert.*;
 
@@ -32,7 +32,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
-@Category(UsesJava8.class)
 public class UseActualParamNameTest {
 
   private static SqlSessionFactory sqlSessionFactory;
@@ -40,14 +39,16 @@ public class UseActualParamNameTest {
   @BeforeClass
   public static void setUp() throws Exception {
     // create an SqlSessionFactory
-    Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/use_actual_param_name/mybatis-config.xml");
+    Reader reader = Resources.getResourceAsReader(
+        "org/apache/ibatis/submitted/usesjava8/use_actual_param_name/mybatis-config.xml");
     sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
     reader.close();
 
     // populate in-memory database
     SqlSession session = sqlSessionFactory.openSession();
     Connection conn = session.getConnection();
-    reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/use_actual_param_name/CreateDB.sql");
+    reader = Resources.getResourceAsReader(
+        "org/apache/ibatis/submitted/usesjava8/use_actual_param_name/CreateDB.sql");
     ScriptRunner runner = new ScriptRunner(conn);
     runner.setLogWriter(null);
     runner.runScript(reader);
@@ -66,6 +67,7 @@ public class UseActualParamNameTest {
       sqlSession.close();
     }
   }
+
   @Test
   public void shouldMultipleParamsBeReferencedByActualNames() {
     SqlSession sqlSession = sqlSessionFactory.openSession();
@@ -83,7 +85,7 @@ public class UseActualParamNameTest {
     SqlSession sqlSession = sqlSessionFactory.openSession();
     try {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
-      List<User> users = mapper.getUsersByIdList(Arrays.asList(1,2));
+      List<User> users = mapper.getUsersByIdList(Arrays.asList(1, 2));
       assertEquals(2, users.size());
     } finally {
       sqlSession.close();
@@ -95,7 +97,7 @@ public class UseActualParamNameTest {
     SqlSession sqlSession = sqlSessionFactory.openSession();
     try {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
-      List<User> users = mapper.getUsersByIdListAndName(Arrays.asList(1,2), null);
+      List<User> users = mapper.getUsersByIdListAndName(Arrays.asList(1, 2), null);
       assertEquals(2, users.size());
     } finally {
       sqlSession.close();
