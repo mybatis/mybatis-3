@@ -19,7 +19,7 @@ if [ $TRAVIS_JDK_VERSION == "openjdk6" ]; then
   # Java 1.6
   export MAVEN_OPTS="-Dmaven.compiler.testTarget=1.6 -Dmaven.compiler.testSource=1.6 -Dmaven.compiler.testCompilerArgument= -Dmaven.surefire.excludeGroups=org.apache.ibatis.lang.UsesJava8,org.apache.ibatis.lang.UsesJava7"
   echo -e "Exported MAVEN_OPTS: ${MAVEN_OPTS}"
-elif [ $TRAVIS_JDK_VERSION != "oraclejdk8" ]; then
+elif [ $TRAVIS_JDK_VERSION == "oraclejdk7" ] || [ $TRAVIS_JDK_VERSION == "openjdk7" ]; then
   # Java 1.7
   export MAVEN_OPTS="-Dmaven.compiler.testTarget=1.7 -Dmaven.compiler.testSource=1.7 -Dmaven.compiler.testCompilerArgument= -Dmaven.surefire.excludeGroups=org.apache.ibatis.lang.UsesJava8"
   echo -e "Exported MAVEN_OPTS: ${MAVEN_OPTS}"
