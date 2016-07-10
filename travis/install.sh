@@ -15,9 +15,6 @@
 #    limitations under the License.
 #
 
-# Compile non-test sources with Java 1.8
-jdk_switcher use oraclejdk8
-
 if [ $TRAVIS_JDK_VERSION == "openjdk6" ]; then
   # Java 1.6
   mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V -Pjava16
@@ -28,6 +25,3 @@ else
   # Java 1.8
   mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
 fi
-
-# Switch back to the original JDK to compile/run the tests
-jdk_switcher use ${TRAVIS_JDK_VERSION}
