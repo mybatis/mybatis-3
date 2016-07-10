@@ -36,7 +36,7 @@
   </environments>
 
   <mappers>
-    <mapper class="org.apache.ibatis.submitted.use_actual_param_name.Mapper" />
+    <mapper class="org.apache.ibatis.submitted.usesjava8.use_actual_param_name.Mapper" />
   </mappers>
 
 </configuration>

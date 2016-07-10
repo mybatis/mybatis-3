@@ -20,9 +20,9 @@
     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="org.apache.ibatis.submitted.use_actual_param_name.Mapper">
+<mapper namespace="org.apache.ibatis.submitted.usesjava8.use_actual_param_name.Mapper">
 
-  <select id="getUsersByIdList" resultType="org.apache.ibatis.submitted.use_actual_param_name.User">
+  <select id="getUsersByIdList" resultType="org.apache.ibatis.submitted.usesjava8.use_actual_param_name.User">
     select * from users where id in
     <foreach item="id" collection="list" open="(" close=")"
       separator=",">
@@ -30,7 +30,7 @@
     </foreach>
   </select>
 
-  <select id="getUsersByIdListAndName" resultType="org.apache.ibatis.submitted.use_actual_param_name.User">
+  <select id="getUsersByIdListAndName" resultType="org.apache.ibatis.submitted.usesjava8.use_actual_param_name.User">
     select * from users where id in
     <foreach item="id" collection="param1" open="(" close=")"
       separator=",">
