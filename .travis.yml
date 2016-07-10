@@ -7,10 +7,6 @@ jdk:
   - openjdk7
   - openjdk6
 
-before_install:
-  - chmod -R 777 ./travis/before_install.sh
-  - ./travis/before_install.sh
-
 after_success:
   - chmod -R 777 ./travis/after_success.sh
   - ./travis/after_success.sh
