@@ -27,7 +27,7 @@ public interface Mapper {
   User getUserById(Integer id);
 
   @Select("select * from users where id = #{id} and name = #{name}")
-  User getUserByIdAndName(@Param("id") Integer id, @Param("name") String name);
+  User getUserByIdAndName(@Param("name") String name, @Param("id") Integer id);
 
   default User defaultGetUser(Object... args) {
     return getUserById((Integer) args[0]);
@@ -35,7 +35,7 @@ public interface Mapper {
 
   static interface SubMapper extends Mapper {
     default User defaultGetUser(Object... args) {
-      return getUserByIdAndName((Integer) args[0], (String) args[1]);
+      return getUserByIdAndName((String) args[0], (Integer) args[1]);
     }
   }
 

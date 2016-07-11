@@ -22,14 +22,12 @@ import java.sql.Connection;
 
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.jdbc.ScriptRunner;
-import org.apache.ibatis.lang.UsesJava8;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.apache.ibatis.submitted.usesjava8.default_method.Mapper.SubMapper;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.experimental.categories.Category;
 
 public class DefaultMethodTest {
 
@@ -72,7 +70,7 @@ public class DefaultMethodTest {
     SqlSession sqlSession = sqlSessionFactory.openSession();
     try {
       SubMapper mapper = sqlSession.getMapper(SubMapper.class);
-      User user = mapper.defaultGetUser(1, "User1");
+      User user = mapper.defaultGetUser("User1", 1);
       assertEquals("User1", user.getName());
     } finally {
       sqlSession.close();
