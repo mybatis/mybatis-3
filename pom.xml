@@ -261,7 +261,7 @@
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
           <excludedGroups>${maven.surefire.excludeGroups}</excludedGroups>
-          <argLine>${argLine} -Xmx1024m</argLine>
+          <argLine>${argLine} -Xmx2048m</argLine>
           <systemProperties>
             <property>
               <name>derby.stream.error.file</name>
