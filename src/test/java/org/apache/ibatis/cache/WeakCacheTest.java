@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2016 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -35,6 +35,10 @@ public class WeakCacheTest {
       if (cache.getSize() < i + 1) {
         //System.out.println("Cache exceeded with " + (i + 1) + " entries.");
         break;
+      }
+      if ((i + 1) % 100000 == 0) {
+        // Try performing GC.
+        System.gc();
       }
     }
     assertTrue(cache.getSize() < N);
