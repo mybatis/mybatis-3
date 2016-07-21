@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2016 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -404,6 +404,8 @@ public class PooledDataSource implements DataSource {
                 }  
               }
               conn = new PooledConnection(oldestActiveConnection.getRealConnection(), this);
+              conn.setCreatedTimestamp(oldestActiveConnection.getCreatedTimestamp());
+              conn.setLastUsedTimestamp(oldestActiveConnection.getLastUsedTimestamp());
               oldestActiveConnection.invalidate();
               if (log.isDebugEnabled()) {
                 log.debug("Claimed overdue connection " + conn.getRealHashCode() + ".");

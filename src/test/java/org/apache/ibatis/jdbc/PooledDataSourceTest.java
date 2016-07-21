@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2016 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,18 +15,22 @@
  */
 package org.apache.ibatis.jdbc;
 
-import org.apache.ibatis.BaseDataTest;
-import org.apache.ibatis.datasource.pooled.PooledDataSource;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
-import org.hsqldb.jdbc.JDBCConnection;
-import org.junit.Test;
+import static org.junit.Assert.*;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import java.util.concurrent.TimeUnit;
+
+import org.apache.ibatis.BaseDataTest;
+import org.apache.ibatis.datasource.pooled.PooledDataSource;
+import org.hsqldb.jdbc.JDBCConnection;
+import org.junit.Ignore;
+import org.junit.Test;
 
 public class PooledDataSourceTest extends BaseDataTest {
 
@@ -84,5 +88,59 @@ public class PooledDataSourceTest extends BaseDataTest {
     PooledDataSource ds = createPooledDataSource(JPETSTORE_PROPERTIES);
     Connection c = ds.getConnection();
     JDBCConnection realConnection = (JDBCConnection) PooledDataSource.unwrapConnection(c);
+  }
+
+  @Ignore("See the comments")
+  @Test
+  public void shouldReconnectWhenServerKilledLeakedConnection() throws Exception {
+    // See #748
+    // Requirements:
+    // 1. MySQL JDBC driver dependency.
+    // 2. MySQL server instance with the following.
+    //  - CREATE DATABASE `test`;
+    //  - SET GLOBAL wait_timeout=3;
+    // 3. Tweak the connection info below.
+    final String URL = "jdbc:mysql://localhost:3306/test";
+    final String USERNAME = "admin";
+    final String PASSWORD = "";
+
+    Connection con;
+    PooledDataSource ds = new PooledDataSource();
+    ds.setDriver("com.mysql.jdbc.Driver");
+    ds.setUrl(URL);
+    ds.setUsername(USERNAME);
+    ds.setPassword(PASSWORD);
+    ds.setPoolMaximumActiveConnections(1);
+    ds.setPoolMaximumIdleConnections(1);
+    ds.setPoolTimeToWait(1000);
+    ds.setPoolMaximumCheckoutTime(2000);
+    ds.setPoolPingEnabled(true);
+    ds.setPoolPingQuery("select 1");
+    ds.setDefaultAutoCommit(true);
+    // MySQL wait_timeout * 1000 or less. (unit:ms)
+    ds.setPoolPingConnectionsNotUsedFor(1000);
+
+    con = ds.getConnection();
+    exexuteQuery(con);
+    // Simulate connection leak by not closing.
+    // con.close();
+
+    // Wait for disconnected from mysql...
+    Thread.sleep(TimeUnit.SECONDS.toMillis(3));
+
+    // Should return usable connection.
+    con = ds.getConnection();
+    exexuteQuery(con);
+    con.close();
+  }
+
+  private void exexuteQuery(Connection con) throws SQLException {
+    PreparedStatement st = con.prepareStatement("select 1");
+    ResultSet rs = st.executeQuery();
+    while (rs.next()) {
+      assertEquals(1, rs.getInt(1));
+    }
+    rs.close();
+    st.close();
   }
 }
