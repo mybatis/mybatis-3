@@ -39,7 +39,7 @@
   </description>
   <url>http://www.mybatis.org/mybatis-3</url>
 
-<inceptionYear>2009</inceptionYear>
+  <inceptionYear>2009</inceptionYear>
 
   <contributors>
     <contributor>
@@ -51,7 +51,7 @@
       <email>selva.andre@gmail.com</email>
     </contributor>
     <contributor>
-      <name>Antonio Sánchez</name>
+      <name>Antonio S&#225;nchez</name>
       <email>juntandolineas@gmail.com</email>
     </contributor>
     <contributor>
@@ -103,7 +103,7 @@
       <email>riccardo.cossu@gmail.com</email>
     </contributor>
     <contributor>
-      <name>Tomáš Neuberg</name>
+      <name>Tom&#225;&#353; Neuberg</name>
       <email>neuberg@m-atelier.cz</email>
     </contributor>
   </contributors>
@@ -288,27 +288,27 @@
               <goal>shade</goal>
             </goals>
             <configuration>
-               <createDependencyReducedPom>false</createDependencyReducedPom>
-               <artifactSet>
-                 <includes>
-                   <include>org.mybatis:mybatis</include>
-                   <include>ognl:ognl</include>
-                   <include>org.javassist:javassist</include>
-                 </includes>
-               </artifactSet>
-               <relocations>
-                 <relocation>
-                   <pattern>ognl</pattern>
-                   <shadedPattern>org.apache.ibatis.ognl</shadedPattern>
-                 </relocation>
-                 <relocation>
-                   <pattern>javassist</pattern>
-                   <shadedPattern>org.apache.ibatis.javassist</shadedPattern>
-                 </relocation>
-               </relocations>
-             </configuration>
-           </execution>
-         </executions>
+              <createDependencyReducedPom>false</createDependencyReducedPom>
+              <artifactSet>
+                <includes>
+                  <include>org.mybatis:mybatis</include>
+                  <include>ognl:ognl</include>
+                  <include>org.javassist:javassist</include>
+                </includes>
+              </artifactSet>
+              <relocations>
+                <relocation>
+                  <pattern>ognl</pattern>
+                  <shadedPattern>org.apache.ibatis.ognl</shadedPattern>
+                </relocation>
+                <relocation>
+                  <pattern>javassist</pattern>
+                  <shadedPattern>org.apache.ibatis.javassist</shadedPattern>
+                </relocation>
+              </relocations>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
