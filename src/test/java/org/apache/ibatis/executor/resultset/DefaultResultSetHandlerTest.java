@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2016 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -16,8 +16,8 @@
 package org.apache.ibatis.executor.resultset;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyObject;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -110,7 +110,7 @@ public class DefaultResultSetHandlerTest {
     final ResultMapping resultMapping = mock(ResultMapping.class);
     final TypeHandler typeHandler = mock(TypeHandler.class);
     when(resultMapping.getTypeHandler()).thenReturn(typeHandler);
-    when(typeHandler.getResult(any(ResultSet.class), anyString())).thenThrow(new SQLException("exception"));
+    when(typeHandler.getResult(any(ResultSet.class), (String) anyObject())).thenThrow(new SQLException("exception"));
     List<ResultMapping> constructorMappings = Collections.singletonList(resultMapping);
 
     try {
