@@ -274,7 +274,7 @@ BLE)
 个方法会返回一个 Configuration 实例,在运行时你可以使用它来自检 MyBatis 的配置。
   </p>
   <p><span class="label important">注意</span> 如果你已经使用之前版本 MyBatis,你要回忆那些 session,transaction 和 batch
-都是分离的。现在和以往不同了,这些都包含在 session 的范围内了。你需要处理分开处理
+都是分离的。现在和以往不同了,这些都包含在 session 的作用域内了。你需要处理分开处理
 事务或批量操作来得到它们的效果。
   </p>
 
@@ -370,7 +370,7 @@ public interface ResultHandler<T> {
 
   <h5>事务控制方法</h5>
   <p>
-控制事务范围有四个方法。
+控制事务作用域有四个方法。
 当然,
 如果你已经选择了自动提交或你正在使用外部事务管
 理器,这就没有任何效果了。然而,如果你正在使用 JDBC 事务管理员,由 Connection 实
