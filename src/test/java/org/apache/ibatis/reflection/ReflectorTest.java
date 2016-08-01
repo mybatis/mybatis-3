@@ -15,13 +15,14 @@
  */
 package org.apache.ibatis.reflection;
 
-import static org.junit.Assert.*;
-
 import java.io.Serializable;
 import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class ReflectorTest {
 
@@ -159,5 +160,66 @@ public class ReflectorTest {
   }
 
   static class Child extends Parent<String> {
+  }
+
+
+  @Test
+  public void shouldResolveWriteOnlyProperty() throws Exception {
+    ReflectorFactory reflectorFactory = new DefaultReflectorFactory();
+    Reflector reflector = reflectorFactory.findForClass(Child2.class);
+    Assert.assertEquals(Long.class, reflector.getSetterType("id"));
+  }
+
+  static class Parent2<T extends Serializable> {
+    T id;
+
+    /**
+     * A setter for write-only property according to
+     * Java Beans Specification 1.01
+     * http://download.oracle.com/otn-pub/jcp/7224-javabeans-1.01-fr-spec-oth-JSpec/beans.101.pdf
+     * Section 8.3.1
+     */
+    public void setId(T id) {
+      this.id = id;
+    }
+  }
+
+  static class Child2 extends Parent2<Long> {
+    int counter;
+
+    public void setId(Long id) {
+      ++counter;
+      super.setId(id);
+    }
+  }
+
+  @Test
+  public void shouldHaveNoStaticGetters() throws Exception {
+    ReflectorFactory reflectorFactory = new DefaultReflectorFactory();
+    Reflector reflector = reflectorFactory.findForClass(Anxious.class);
+    Assert.assertFalse(reflector.hasGetter("thereAnybodyOutThere"));
+  }
+
+  static abstract class Anxious {
+    private static boolean any;
+
+    static boolean isThereAnybodyOutThere() {
+      return any;
+    }
+  }
+
+  @Test
+  public void shouldHaveNoStaticSetters() throws Exception {
+    ReflectorFactory reflectorFactory = new DefaultReflectorFactory();
+    Reflector reflector = reflectorFactory.findForClass(Happy.class);
+    Assert.assertFalse(reflector.hasSetter("upset"));
+  }
+
+  static abstract class Happy {
+    private static String focus;
+
+    static void setUpset(String reason) {
+      focus = reason;
+    }
   }
 }

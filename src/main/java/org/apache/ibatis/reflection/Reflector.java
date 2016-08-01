@@ -27,10 +27,12 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.ibatis.reflection.invoker.GetFieldInvoker;
 import org.apache.ibatis.reflection.invoker.Invoker;
@@ -38,15 +40,24 @@ import org.apache.ibatis.reflection.invoker.MethodInvoker;
 import org.apache.ibatis.reflection.invoker.SetFieldInvoker;
 import org.apache.ibatis.reflection.property.PropertyNamer;
 
+import static java.util.Arrays.asList;
+
 /**
  * This class represents a cached set of class definition information that
  * allows for easy mapping between property names and getter/setter methods.
  *
+ * Though the class was exposed in public API as a return value of {@link ReflectorFactory#findForClass(Class)},
+ * it is not intended to be public. This class is used in the most frequently changed part of MyBatis,
+ * so it should not be inheritable in application code.
+ *
  * @author Clinton Begin
  */
-public class Reflector {
+public final class Reflector {
 
   private static final String[] EMPTY_STRING_ARRAY = new String[0];
+  private static final Set<String> NON_ACCESSORS = new HashSet<String>(asList(
+      "toString", "hashCode", "clone", "notify", "notifyAll", "wait", "finalize", "serialVersionUID", "getClass", "equals", "wait"
+  ));
 
   private Class<?> type;
   private String[] readablePropertyNames = EMPTY_STRING_ARRAY;
@@ -97,18 +108,29 @@ public class Reflector {
     Map<String, List<Method>> conflictingGetters = new HashMap<String, List<Method>>();
     Method[] methods = getClassMethods(cls);
     for (Method method : methods) {
-      String name = method.getName();
-      if (name.startsWith("get") && name.length() > 3) {
-        if (method.getParameterTypes().length == 0) {
-          name = PropertyNamer.methodToProperty(name);
-          addMethodConflict(conflictingGetters, name, method);
-        }
-      } else if (name.startsWith("is") && name.length() > 2) {
-        if (method.getParameterTypes().length == 0) {
-          name = PropertyNamer.methodToProperty(name);
-          addMethodConflict(conflictingGetters, name, method);
-        }
+      if (method.getParameterTypes().length > 0) {
+        // method with any arguments is not a getter
+        continue;
       }
+
+      if (Modifier.isStatic(method.getModifiers())) {
+        // static method is not a getter
+        continue;
+      }
+
+      String name = method.getName();
+      if (NON_ACCESSORS.contains(name)) {
+        continue;
+      }
+
+      // remove prefix from property name if exists
+      if (name.startsWith("get") && name.length() > 3) {
+        name = PropertyNamer.methodToProperty(name);
+      } else if (name.startsWith("is") && name.length() > 2) {
+        name = PropertyNamer.methodToProperty(name);
+      }
+
+      addMethodConflict(conflictingGetters, name, method);
     }
     resolveGetterConflicts(conflictingGetters);
   }
@@ -158,13 +180,29 @@ public class Reflector {
     Map<String, List<Method>> conflictingSetters = new HashMap<String, List<Method>>();
     Method[] methods = getClassMethods(cls);
     for (Method method : methods) {
-      String name = method.getName();
-      if (name.startsWith("set") && name.length() > 3) {
-        if (method.getParameterTypes().length == 1) {
-          name = PropertyNamer.methodToProperty(name);
-          addMethodConflict(conflictingSetters, name, method);
-        }
+      if (method.getParameterTypes().length != 1) {
+        // Setter got single argument. The method is not a setter
+        continue;
       }
+
+      if (Modifier.isStatic(method.getModifiers())) {
+        // static method is not a setter
+        continue;
+      }
+
+      String name = method.getName();
+
+      if (NON_ACCESSORS.contains(name)) {
+        // method defined in java.lang.Object is not a setter
+        continue;
+      }
+
+      // remove prefix from property name if exists
+      if (name.startsWith("set") && name.length() > 3) {
+        name = PropertyNamer.methodToProperty(name);
+      }
+
+      addMethodConflict(conflictingSetters, name, method);
     }
     resolveSetterConflicts(conflictingSetters);
   }
@@ -181,35 +219,74 @@ public class Reflector {
   private void resolveSetterConflicts(Map<String, List<Method>> conflictingSetters) {
     for (String propName : conflictingSetters.keySet()) {
       List<Method> setters = conflictingSetters.get(propName);
-      Method firstMethod = setters.get(0);
       if (setters.size() == 1) {
+        // no conflict
+        Method firstMethod = setters.get(0);
         addSetMethod(propName, firstMethod);
-      } else {
-        Class<?> expectedType = getTypes.get(propName);
-        if (expectedType == null) {
-          throw new ReflectionException("Illegal overloaded setter method with ambiguous type for property "
-              + propName + " in class " + firstMethod.getDeclaringClass() + ".  This breaks the JavaBeans " +
-              "specification and can cause unpredicatble results.");
-        } else {
-          Iterator<Method> methods = setters.iterator();
-          Method setter = null;
-          while (methods.hasNext()) {
-            Method method = methods.next();
-            if (method.getParameterTypes().length == 1
-                && expectedType.equals(method.getParameterTypes()[0])) {
-              setter = method;
-              break;
-            }
-          }
-          if (setter == null) {
-            throw new ReflectionException("Illegal overloaded setter method with ambiguous type for property "
-                + propName + " in class " + firstMethod.getDeclaringClass() + ".  This breaks the JavaBeans " +
-                "specification and can cause unpredicatble results.");
-          }
-          addSetMethod(propName, setter);
+        continue; // next property
+      }
+
+      Class<?> getterType = getTypes.get(propName);
+      if (getterType != null) {
+        // try to resolve conflict using property getter first
+        Method matchingSetter = findSetterMatchingGetter(getterType, setters);
+        if (matchingSetter != null) {
+          addSetMethod(propName, matchingSetter);
+          continue; // next property
         }
       }
+      // assume that setter argument is elaborated from parent to child
+      Method narrowestSetter = findNarrowestSetter(propName, setters);
+      if (narrowestSetter != null) {
+        addSetMethod(propName, narrowestSetter);
+      }
+      // Unable to resolve conflict. Skip this property
     }
+  }
+
+  private Method findSetterMatchingGetter(Class<?> getterType, List<Method> setters) {
+    for (Method method : setters) {
+      if (method.getParameterTypes().length != 1) {
+        throw new IllegalStateException("setters are asserted to have only one argument: " + method);
+      }
+      Class<?> argType = method.getParameterTypes()[0];
+      if (getterType.equals(argType)) {
+        return method;
+      }
+    }
+    return null;
+  }
+
+  private Method findNarrowestSetter(String propName, List<Method> setters) {
+    Method narrowest = null;
+    Class<?> narrowestType = null;
+    for (Method method : setters) {
+      if (method.getParameterTypes().length != 1) {
+        throw new IllegalStateException("setters are asserted to have only one argument: " + method);
+      }
+      if (narrowest == null) {
+        narrowest = method;
+        narrowestType = method.getParameterTypes()[0];
+        continue; // next conflicting setter
+      }
+
+      Class<?> argType = method.getParameterTypes()[0];
+
+      if (argType.equals(narrowestType)) {
+        throw new ReflectionException("The property " + propName + " in class " + narrowest.getDeclaringClass()
+            + " is referenced twice with " + narrowestType + ". This case is not supported");
+      }
+
+      if (argType.isAssignableFrom(narrowestType)) {
+        // OK narrowest type is descendant
+      } else if (narrowestType.isAssignableFrom(argType)) {
+        narrowest = method;
+        narrowestType = argType;
+      } else {
+        return null;
+      }
+    }
+    return narrowest;
   }
 
   private void addSetMethod(String name, Method method) {
@@ -288,7 +365,7 @@ public class Reflector {
   }
 
   private boolean isValidPropertyName(String name) {
-    return !(name.startsWith("$") || "serialVersionUID".equals(name) || "class".equals(name));
+    return !(name.startsWith("$") || "serialVersionUID".equals(name));
   }
 
   /*
