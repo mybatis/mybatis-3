@@ -183,6 +183,7 @@ public class Reflector {
       List<Method> setters = conflictingSetters.get(propName);
       Class<?> getterType = getTypes.get(propName);
       Method match = null;
+      ReflectionException exception = null;
       for (Method setter : setters) {
         Class<?> paramType = setter.getParameterTypes()[0];
         if (paramType.equals(getterType)) {
@@ -190,9 +191,21 @@ public class Reflector {
           match = setter;
           break;
         }
-        match = pickBetterSetter(match, setter, propName);
+        if (exception == null) {
+          try {
+            match = pickBetterSetter(match, setter, propName);
+          } catch (ReflectionException e) {
+            // there could still be the 'best match'
+            match = null;
+            exception = e;
+          }
+        }
       }
-      addSetMethod(propName, match);
+      if (match == null) {
+        throw exception;
+      } else {
+        addSetMethod(propName, match);
+      }
     }
   }
 
