@@ -181,35 +181,35 @@ public class Reflector {
   private void resolveSetterConflicts(Map<String, List<Method>> conflictingSetters) {
     for (String propName : conflictingSetters.keySet()) {
       List<Method> setters = conflictingSetters.get(propName);
-      Method firstMethod = setters.get(0);
-      if (setters.size() == 1) {
-        addSetMethod(propName, firstMethod);
-      } else {
-        Class<?> expectedType = getTypes.get(propName);
-        if (expectedType == null) {
-          throw new ReflectionException("Illegal overloaded setter method with ambiguous type for property "
-              + propName + " in class " + firstMethod.getDeclaringClass() + ".  This breaks the JavaBeans " +
-              "specification and can cause unpredicatble results.");
-        } else {
-          Iterator<Method> methods = setters.iterator();
-          Method setter = null;
-          while (methods.hasNext()) {
-            Method method = methods.next();
-            if (method.getParameterTypes().length == 1
-                && expectedType.equals(method.getParameterTypes()[0])) {
-              setter = method;
-              break;
-            }
-          }
-          if (setter == null) {
-            throw new ReflectionException("Illegal overloaded setter method with ambiguous type for property "
-                + propName + " in class " + firstMethod.getDeclaringClass() + ".  This breaks the JavaBeans " +
-                "specification and can cause unpredicatble results.");
-          }
-          addSetMethod(propName, setter);
+      Class<?> getterType = getTypes.get(propName);
+      Method match = null;
+      for (Method setter : setters) {
+        Class<?> paramType = setter.getParameterTypes()[0];
+        if (paramType.equals(getterType)) {
+          // should be the best match
+          match = setter;
+          break;
         }
+        match = pickBetterSetter(match, setter, propName);
       }
+      addSetMethod(propName, match);
     }
+  }
+
+  private Method pickBetterSetter(Method setter1, Method setter2, String property) {
+    if (setter1 == null) {
+      return setter2;
+    }
+    Class<?> paramType1 = setter1.getParameterTypes()[0];
+    Class<?> paramType2 = setter2.getParameterTypes()[0];
+    if (paramType1.isAssignableFrom(paramType2)) {
+      return setter2;
+    } else if (paramType2.isAssignableFrom(paramType1)) {
+      return setter1;
+    }
+    throw new ReflectionException("Ambiguous setters defined for property '" + property + "' in class '"
+        + setter2.getDeclaringClass() + "' with types '" + paramType1.getName() + "' and '"
+        + paramType2.getName() + "'.");
   }
 
   private void addSetMethod(String name, Method method) {

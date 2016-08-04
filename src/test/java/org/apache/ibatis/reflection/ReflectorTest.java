@@ -15,15 +15,21 @@
  */
 package org.apache.ibatis.reflection;
 
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
 import java.io.Serializable;
 import java.util.List;
 
 import org.junit.Assert;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 public class ReflectorTest {
+
+  @Rule
+  public ExpectedException expectedException = ExpectedException.none();
 
   @Test
   public void testGetSetterType() throws Exception {
@@ -159,5 +165,37 @@ public class ReflectorTest {
   }
 
   static class Child extends Parent<String> {
+  }
+
+  @Test
+  public void shouldResoleveReadonlySetterWithOverload() throws Exception {
+    class BeanClass implements BeanInterface<String> {
+      public void setId(String id) {}
+    }
+    ReflectorFactory reflectorFactory = new DefaultReflectorFactory();
+    Reflector reflector = reflectorFactory.findForClass(BeanClass.class);
+    assertEquals(String.class, reflector.getSetterType("id"));
+  }
+
+  interface BeanInterface<T> {
+    void setId(T id);
+  }
+
+  @Test
+  public void shouldSettersWithUnrelatedArgTypesThrowException() throws Exception {
+    @SuppressWarnings("unused")
+    class BeanClass {
+      public void setTheProp(String arg) {}
+      public void setTheProp(Integer arg) {}
+    }
+    expectedException.expect(ReflectionException.class);
+    expectedException.expectMessage(allOf(
+        containsString("theProp"),
+        containsString("BeanClass"),
+        containsString("java.lang.String"),
+        containsString("java.lang.Integer")));
+    ReflectorFactory reflectorFactory = new DefaultReflectorFactory();
+    Reflector reflector = reflectorFactory.findForClass(BeanClass.class);
+    reflector.getSetterType("theProp");
   }
 }
