@@ -367,7 +367,7 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 타입별칭이나 패키지 경로를 포함한 클래스명
               </td>
               <td>
-                org.apache.ibatis.scripting.xmltags.XMLDynamicLanguageDriver
+                org.apache.ibatis.scripting.xmltags.XMLLanguageDriver
               </td>
             </tr>
             <tr>

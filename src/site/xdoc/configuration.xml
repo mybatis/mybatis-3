@@ -451,7 +451,7 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 A type alias or fully qualified class name.
               </td>
               <td>
-                org.apache.ibatis.scripting.xmltags.XMLDynamicLanguageDriver
+                org.apache.ibatis.scripting.xmltags.XMLLanguageDriver
               </td>
             </tr>
             <tr>
