@@ -1576,7 +1576,7 @@ public class User {
             <tr>
               <td><code>foreignColumn</code></td>
               <td>
-                Identifies the name of the columns that contains the foreing keys which values will be matched against the 
+                Identifies the name of the columns that contains the foreign keys which values will be matched against the 
                 values of the columns specified in the <code>column</code> attibute of the parent type. 
               </td>
             </tr>
