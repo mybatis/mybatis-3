@@ -328,7 +328,7 @@ ps.setInt(1,id);]]></source>
 </insert>]]></source>
 
         <p>
-          If your database also supports multi-row insert, you can pass a list or an array of <code>Author</code>s and retrieve the auto-generated keys.
+          如果你的数据库还支持多行插入, 你也可以传入一个<code>Author</code>s数组或集合，并返回自动生成的主键。
         </p>
 
         <source><![CDATA[<insert id="insertAuthor" useGeneratedKeys="true"
