@@ -17,7 +17,14 @@ package org.apache.ibatis.builder.xml.dynamic;
 
 import domain.blog.Author;
 import domain.blog.Section;
+
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicInteger;
+
 import org.apache.ibatis.scripting.xmltags.ExpressionEvaluator;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
@@ -72,6 +79,45 @@ public class ExpressionEvaluatorTest {
     for (Object o : iterable) {
       assertEquals(String.valueOf(++i), o);
     }
+  }
+
+  @Test
+  public void concurrentEval() throws InterruptedException {
+    final CountDownLatch start = new CountDownLatch(1);
+    final CountDownLatch count = new CountDownLatch(100);
+
+    final AtomicInteger errorCount = new AtomicInteger();
+
+    final List<String> list = new ArrayList<String>();
+    list.add("one");
+    list.add("two");
+
+    for (int i = 0; i < 100; i++) {
+      new Thread(new Runnable() {
+        @Override
+        public void run() {
+          try {
+            start.await();
+          } catch (Exception ignored) {
+          }
+
+          for (int j = 0; j < 100 ; j++) {
+            try {
+              evaluator.evaluateBoolean("size() > 0", Collections.unmodifiableList(list));
+            } catch (Exception e) {
+              errorCount.incrementAndGet();
+            }
+          }
+
+          count.countDown();
+        }
+      }).start();
+    }
+
+    start.countDown();
+    count.await();
+
+    assertEquals(0, errorCount.get());
   }
 
 
