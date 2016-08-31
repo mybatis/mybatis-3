@@ -455,7 +455,13 @@ public class DefaultResultSetHandler implements ResultSetHandler {
           if (typeHandlerRegistry.hasTypeHandler(propertyType)) {
             final TypeHandler<?> typeHandler = rsw.getTypeHandler(propertyType, columnName);
             autoMapping.add(new UnMappedColumAutoMapping(columnName, property, typeHandler, propertyType.isPrimitive()));
+          } else {
+            configuration.getAutoMappingUnknownColumnBehavior()
+                    .doAction(mappedStatement, columnName, property, propertyType);
           }
+        } else{
+          configuration.getAutoMappingUnknownColumnBehavior()
+                  .doAction(mappedStatement, columnName, (property != null) ? property : propertyName, null);
         }
       }
       autoMappingsCache.put(mapKey, autoMapping);
