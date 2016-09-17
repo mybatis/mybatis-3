@@ -250,7 +250,7 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 设置超时时间，它决定驱动等待数据库响应的秒数。
               </td>
               <td>
-                Any positive integer
+                任意正整数
               </td>
               <td>
                 Not Set (null)
@@ -261,11 +261,10 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 defaultFetchSize
               </td>
               <td>
-                Sets the driver a hint as to control fetching size for return results.
-                This parameter value can be override by a query setting.
+                为驱动的结果集获取数量（fetchSize）设置一个提示值。此参数只可以在查询设置中被覆盖。
               </td>
               <td>
-                Any positive integer
+                任意正整数
               </td>
               <td>
                 Not Set (null)
@@ -435,10 +434,10 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 vfsImpl
               </td>
               <td>
-                Specifies VFS implementations
+                指定VFS的实现
               </td>
               <td>
-                Fully qualified class names of custom VFS implementation separated by commas.
+                自定义VFS的实现的类全限定名，以逗号分隔。
               </td>
               <td>
                 Not set
@@ -449,8 +448,8 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 useActualParamName
               </td>
               <td>
-                Allow referencing statement parameters by their actual names declared in the method signature.
-                To use this feature, your project must be compiled in Java 8 with <code>-parameters</code> option. (Since: 3.4.1)
+                允许使用方法签名中的名称作为语句参数名称。
+		为了使用该特性，你的工程必须采用Java 8编译，并且加上<code>-parameters</code>选项。（从3.4.1开始）
               </td>
               <td>
                 true | false
@@ -745,8 +744,7 @@ public class Author {
           都会用类型处理器将获取的值以合适的方式转换成 Java 类型。下表描述了一些默认的类型处理器。</p>
         <p>
           <span class="label important">NOTE</span>
-          If you use classes provided by JSR-310(Date and Time API),
-          you can use the <a href="https://github.com/mybatis/typehandlers-jsr310">mybatis-typehandlers-jsr310</a>.
+          如果你使用JSR-310(Date和Time API)，你可以使用<a href="https://github.com/mybatis/typehandlers-jsr310">mybatis-typehandlers-jsr310</a>。
         </p>
         <table>
           <thead>
@@ -1106,15 +1104,11 @@ public class ExampleTypeHandler extends BaseTypeHandler<String> {
         </ul>
 
         <p>
-          When deciding which TypeHandler to use in a <code>ResultMap</code>, the Java type is known
-          (from the result type), but the JDBC type is unknown. MyBatis therefore uses the combination
-          <code>javaType=[TheJavaType], jdbcType=null</code> to choose a TypeHandler. This means that
-          using a <code>@MappedJdbcTypes</code> annotation <i>restricts</i> the scope of a TypeHandler
-          and makes it unavailable for use in <code>ResultMap</code>s unless explicity set. To make a
-          TypeHandler available for use in a <code>ResultMap</code>, set <code>includeNullJdbcType=true</code>
-          on the <code>@MappedJdbcTypes</code> annotation. Since Mybatis 3.4.0 however, if a <b>single</b>
-          TypeHandler is registered to handle a Java type, it will be used by default in <code>ResultMap</code>s
-          using this Java type (i.e. even without <code>includeNullJdbcType=true</code>). 
+          当决定在<code>ResultMap</code>中使用某一TypeHandler时，此时java类型是已知的（从结果类型中获得），但是JDBC类型是未知的。
+	  因此Mybatis使用<code>javaType=[TheJavaType], jdbcType=null</code>的组合来选择一个TypeHandler。
+	  这意味着使用<code>@MappedJdbcTypes</code>注解可以<i>限制</i>TypeHandler的范围，同时除非显示的设置，否则TypeHandler在<code>ResultMap</code>中将是无效的。
+	  如果希望在<code>ResultMap</code>中使用TypeHandler，那么设置<code>@MappedJdbcTypes</code>注解的<code>includeNullJdbcType=true</code>即可。
+	  然而从Mybatis 3.4.0开始，如果<b>只有一个</b>注册的TypeHandler来处理Java类型，那么它将是<code>ResultMap</code>使用Java类型时的默认值（即使没有<code>includeNullJdbcType=true</code>）。
         </p>
 
         <p>最后，可以让 MyBatis 为你查找类型处理器：</p>

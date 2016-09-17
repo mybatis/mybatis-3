@@ -788,11 +788,11 @@ resultMap 元素有很多子元素和一个值得讨论的结构。
         </ul>
 
         <table>
-          <caption>ResultMap Attributes</caption>
+          <caption>ResultMap属性</caption>
           <thead>
             <tr>
-              <th>Attribute</th>
-              <th>Description</th>
+              <th>属性</th>
+              <th>描述</th>
             </tr>
           </thead>
           <tbody>
@@ -1185,8 +1185,8 @@ prop1 和 prop2 以参数对象形式来设置给目标嵌套查询语句。
             <tr>
               <td><code>fetchType</code></td>
               <td>
-                Optional. Valid values are <code>lazy</code> and <code>eager</code>. If present, it supersedes
-                the global configuration parameter <code>lazyLoadingEnabled</code> for this mapping.
+                可选的。有效值为 <code>lazy</code>和<code>eager</code>。
+				如果使用了，它将取代全局配置参数<code>lazyLoadingEnabled</code>。
               </td>
             </tr>
           </tbody>
@@ -1269,25 +1269,25 @@ resultMap
             <tr>
               <td><code>columnPrefix</code></td>
               <td>
-                When joining multiple tables, you would have to use column alias to avoid duplicated
-                column names in the ResultSet. Specifying columnPrefix allows you to map such columns
-                to an external resultMap. Please see the example explained later in this section.
+				当连接多表时，你将不得不使用列别名来避免ResultSet中的重复列名。指定columnPrefix允许你映射列名到一个外部的结果集中。
+				请看后面的例子。
               </td>
             </tr>
             <tr>
               <td><code>notNullColumn</code></td>
               <td>
-                By default a child object is created only if at least one of the columns mapped to the child's properties 
-                is non null. With this attribute you can change this behaviour by specifiying which columns must have a value
-                so MyBatis will create a child object only if any of those columns is not null. Multiple column names can be 
-                specified using a comma as a separator. Default value: unset.
+				默认情况下，子对象仅在至少一个列映射到其属性非空时才创建。
+				通过对这个属性指定非空的列将改变默认行为，这样做之后Mybatis将仅在这些列非空时才创建一个子对象。
+				可以指定多个列名，使用逗号分隔。默认值：未设置(unset)。
               </td>
             </tr>            
             <tr>
               <td><code>autoMapping</code></td>
-              <td>If present, MyBatis will enable or disable auto-mapping when mapping the result to this property.
-                This attribute overrides the global autoMappingBehavior.
-                Note that it has no effect on an external resultMap, so it is pointless to use it with <code>select</code> or <code>resultMap</code> attribute. Default value: unset.
+              <td>
+				如果使用了，当映射结果到当前属性时，Mybatis将启用或者禁用自动映射。
+				该属性覆盖全局的自动映射行为。
+				注意它对外部结果集无影响，所以在<code>select</code> or <code>resultMap</code>属性中这个是毫无意义的。
+				默认值：未设置(unset)。
               </td>
             </tr>
           </tbody>
@@ -1363,8 +1363,8 @@ resultMap
 </resultMap>]]></source>
 
         <p>
-          What if the blog has a co-author?
-          The select statement would look like:
+          如果blog有一个co-author怎么办？
+		  select语句将看起来这个样子：
         </p>
 
         <source><![CDATA[<select id="selectBlog" resultMap="blogResult">
@@ -1388,7 +1388,7 @@ resultMap
 </select>]]></source>
 
         <p>
-          Recall that the resultMap for Author is defined as follows.
+          再次调用Author的resultMap将定义如下：
         </p>
 
         <source><![CDATA[<resultMap id="authorResult" type="Author">
@@ -1400,8 +1400,8 @@ resultMap
 </resultMap>]]></source>
 
         <p>
-          Because the column names in the results differ from the columns defined in the resultMap,
-          you need to specify <code>columnPrefix</code> to reuse the resultMap for mapping co-author results.
+          因为结果中的列名与resultMap中的列名不同。
+		  你需要指定<code>columnPrefix</code>去重用映射co-author结果的resultMap。
         </p>
 
         <source><![CDATA[<resultMap id="blogResult" type="Blog">
@@ -1700,25 +1700,23 @@ MyBatis 会从结果集中得到每条记录,
 </resultMap>]]></source>
 
         <p>
-          There are three auto-mapping levels:
+          有三种自动映射等级：
         </p>
         
         <ul>
           <li>
-            <code>NONE</code> - disables auto-mapping. Only manually mapped properties will be set.
+            <code>NONE</code> - 禁用自动映射。仅设置手动映射属性。
           </li>
           <li>
-            <code>PARTIAL</code> - will auto-map results except those that have nested result mappings defined inside (joins).
+            <code>PARTIAL</code> - 将自动映射结果除了那些有内部定义内嵌结果映射的(joins).
           </li>
           <li>
-            <code>FULL</code> - auto-maps everything.
+            <code>FULL</code> - 自动映射所有。
           </li>
         </ul>
 
         <p>
-          The default value is <code>PARTIAL</code>, and it is so for a reason. When <code>FULL</code> is used auto-mapping will
-          be performed when processing join results and joins retrieve data of several different entities in the same row 
-          hence this may result in undesired mappings. To understand the risk have a look at the following sample:
+          默认值是<code>PARTIAL</code>，这是有原因的。当使用<code>FULL</code>时，自动映射会在处理join结果时执行，并且join取得若干相同行的不同实体数据，因此这可能导致非预期的映射。下面的例子将展示这种风险：
         </p>
         
         <source><![CDATA[<select id="selectBlog" resultMap="blogResult">
@@ -1739,14 +1737,12 @@ MyBatis 会从结果集中得到每条记录,
 </resultMap>]]></source>
         
         <p>
-          With this result map both <i>Blog</i> and <i>Author</i> will be auto-mapped. But note that <i>Author</i> has an <i>id</i> 
-          property and there is a column named <i>id</i> in the ResultSet so Author's id will be filled with Blog's id, and that is not 
-          what you were expecting. So use the <code>FULL</code> option with caution.
+          在结果中<i>Blog</i>和<i>Author</i>均将自动映射。但是注意<i>Author</i>有一个<i>id</i>属性，在ResultSet中有一个列名为<i>id</i>，
+		  所以Author的id将被填充为Blog的id，这不是你所期待的。所以需要谨慎使用<code>FULL</code>。
         </p>
 
         <p>
-          Regardless of the auto-mapping level configured you can enable or disable the automapping for an specific ResultMap
-          by adding the attribute <code>autoMapping</code> to it:
+          通过添加<code>autoMapping</code>属性可以忽略自动映射等级配置，你可以启用或者禁用自动映射指定的ResultMap。
         </p>
 
         <source><![CDATA[<resultMap id="userResultMap" type="User" autoMapping="false">
