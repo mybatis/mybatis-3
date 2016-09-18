@@ -71,7 +71,7 @@ MyBatis 很大程度简化了你的代码而且保持简洁,很容易理解和�
   /web
     /WEB-INF
       /web.xml</pre>
-  <p>Remember, these are preferences, not requirements, but others will thank you for using a common directory structure.</p>
+  <p>当然这是推荐的目录结构，并非强制要求，但是使用一个通用的目录结构将更利于大家沟通。</p>
   <p>这部分内容剩余的示例将假设你使用了这种目录结构。</p>
   </subsection>  
 
@@ -85,7 +85,8 @@ SqlSessionFactoryBuilder 创建的,它可以从 XML 配置,注解或手动配置
 SqlSessionFactory。
   </p>
   <p>
-  <span class="label important">NOTE</span> When using MyBatis with a dependency injection framework like Spring or Guice, SqlSessions are created and injected by the DI framework so you don't need to use the SqlSessionFactoryBuilder or SqlSessionFactory and can go directly to the SqlSession section. Please refer to the MyBatis-Spring or MyBatis-Guice manuals for further info.
+  <span class="label important">注意</span>
+	当Mybatis与一些依赖注入框架（如Spring或者Guice）同时使用时，SqlSessions将被依赖注入框架所创建，所以你不需要使用SqlSessionFactoryBuilder或者SqlSessionFactory，可以直接看SqlSession这一节。请参考Mybatis-Spring或者Mybatis-Guice手册了解更多信息。
   </p>
   <h4>SqlSessionFactoryBuilder</h4>
   <p>
@@ -363,8 +364,8 @@ public interface ResultHandler<T> {
 尔返回值的 stop()方法来停止 MyBatis 加载更多的结果。
   </p>
 
-  <h5>Batch update statement Flush Method</h5>
-  <p>There is method for flushing(executing) batch update statements that stored in a JDBC driver class at any timing. This method can be used when you use the <code>ExecutorType.BATCH</code> as <code>ExecutorType</code>.</p>
+  <h5>批量立即更新方法(Flush Method)</h5>
+  <p>有一个方法可以刷新（执行）存储在JDBC驱动类中的批量更新语句。当你将<code>ExecutorType.BATCH</code>作为<code>ExecutorType</code>使用时可以采用此方法。</p>
   <source><![CDATA[List<BatchResult> flushStatements()]]></source>
 
 
@@ -391,8 +392,7 @@ void rollback(boolean force)</source>
 MyBatis 会替你完成。然而,如果你需要更多对多提交和回滚都可能的 session 的细粒度控
 制,你可以使用回滚选择来使它成为可能。
   </p>
-  <p><span class="label important">NOTE</span> MyBatis-Spring and MyBatis-Guice provide declarative transaction handling. So if you are using MyBatis with Spring or Guice please refer to their specific manuals.</p>
-
+  <p><span class="label important">注意</span>MyBatis-Spring和MyBatis-Guice提供了声明事务处理，所以如果你在使用Mybatis的同时使用了Spring或者Guice，那么请参考它们的手册以获取更多的内容。</p>
   <h5>清理 Session 级的缓存</h5>
   <source>void clearCache()</source>
   <p>
@@ -540,7 +540,7 @@ flushInterval,size 和 readWrite。
       </tr>
       <tr>
         <td><code>@ConstructorArgs</code></td>
-        <td><code>Method</code></td>
+        <td><code>方法</code></td>
         <td><code>&lt;constructor&gt;</code></td>
         <td>收集一组结果传递给一个劫夺对象的
 构造方法。属性:value,是形式参数
@@ -597,7 +597,7 @@ ResultMap 很相似,由下面的 Results
 结果映射的列表,
 包含了一个特别结果
 列如何被映射到属性或字段的详情。
-属 性:value, id。value 属性是 Result 注解的数组。 The id attribute is the name of the result mapping.
+属 性:value, id。value 属性是 Result 注解的数组。这个id的属性是结果映射的名称。
         </td>
       </tr>
       <tr>
@@ -632,19 +632,17 @@ select,已映射语句(也就是映射器方
 型的实例。注意:联合映射在注解 API
 中是不支持的。这是因为 Java 注解的
 限制,不允许循环引用。
-<code>fetchType</code>, which supersedes the global configuration parameter <code>lazyLoadingEnabled</code> for this mapping.
+<code>fetchType</code>会覆盖全局的配置参数<code>lazyLoadingEnabled</code>。
         </td>
       </tr>
       <tr>
         <td><code>@Many</code></td>
         <td><code>方法</code></td>
         <td><code>&lt;collection&gt;</code></td>
-        <td>A mapping to a collection property of a complex type. Attributes: <code>select</code>, which is the fully
-        qualified name of a mapped statement (i.e. mapper method) that can load a collection of instances of the appropriate
-        types,
-        <code>fetchType</code>, which supersedes the global configuration parameter <code>lazyLoadingEnabled</code> for this mapping. 
-        <span class="label important">NOTE</span> You will notice that join mapping is not supported via the
-        Annotations API. This is due to the limitation in Java Annotations that does not allow for circular references.</td>
+        <td>
+			映射到复杂类型的集合属性。属性：<code>select</code>，已映射语句(也就是映射器方法)的全限定名，
+			它可以加载合适类型的实例的集合，<code>fetchType</code>会覆盖全局的配置参数<code>lazyLoadingEnabled</code>。 
+        <span class="label important">注意</span>联合映射在注解 API中是不支持的。这是因为 Java 注解的限制,不允许循环引用</td>
       </tr>
       <tr>
         <td><code>@MapKey</code></td>
@@ -771,43 +769,46 @@ MyBatis
       </tr>
       <tr>
         <td><code>@SelectKey</code></td>
-        <td><code>Method</code></td>
+        <td><code>方法</code></td>
         <td><code>&lt;selectKey&gt;</code></td>
-        <td>This annotation duplicates the <code>&lt;selectKey&gt;</code> functionality for methods annotated with
-        <code>@Insert</code>, <code>@InsertProvider</code>, <code>@Update</code> or <code>@UpdateProvider</code>. It is ignored for other methods. If you specify a
-        <code>@SelectKey</code> annotation, then MyBatis will ignore any generated key properties set via the
-        <code>@Options</code> annotation, or configuration properties.
-        Attributes: statement an array of strings which is the SQL statement to execute, <code>keyProperty</code> which
-        is the property of the parameter object that will be updated with the new value, before which must be either
-        <code>true</code> or <code>false</code> to denote if the SQL statement should be executed before or after the insert,
-        <code>resultType</code> which is the Java type of the <code>keyProperty</code>, and <code>statementType=PREPARED</code>.</td>
+        <td>
+			该注解复制了<code>&lt;selectKey&gt;</code>的功能，用在注解了<code>@Insert</code>, <code>@InsertProvider</code>, <code>@Update</code> or <code>@UpdateProvider</code>的方法上。在其他方法上将被忽略。如果你指定了一个<code>@SelectKey</code>注解，然后Mybatis将忽略任何生成的key属性通过设置<code>@Options</code>，或者配置属性。
+			属性：
+			<code>statement</code>是要执行的sql语句的字符串数组，
+			<code>keyProperty</code>是需要更新为新值的参数对象属性，
+			<code>before</code>可以是<code>true</code>或者<code>false</code>分别代表sql语句应该在执行insert之前或者之后，
+			<code>resultType</code>是<code>keyProperty</code>的Java类型，
+			<code>statementType</code>是语句的类型，取<code>Statement</code>, <code>PreparedStatement</code>和<code>CallableStatement</code>对应的<code>STATEMENT</code>, <code>PREPARED</code>或者<code>CALLABLE</code>其中一个，默认是<code>PREPARED</code>。
+		</td>
       </tr>
       <tr>
         <td><code>@ResultMap</code></td>
-        <td><code>Method</code></td>
+        <td><code>方法</code></td>
         <td>N/A</td>
-        <td>This annotation is used to provide the id of a <code>&lt;resultMap&gt;</code> element in an XML mapper to a
-        <code>@Select</code> or <code>@SelectProvider</code> annotation. This allows annotated selects to reuse resultmaps
-        that are defined in XML. This annotation will override any <code>@Results</code> or <code>@ConstructorArgs</code>
-        annotation if both are specified on an annotated select.</td>
+        <td>
+			这个注解给<code>@Select</code>或者<code>@SelectProvider</code>提供在XML映射中的<code>&lt;resultMap&gt;</code>的id。
+			这使得注解的select可以复用那些定义在XML中的ResultMap。
+			如果同一select注解中还存在<code>@Results</code>或者<code>@ConstructorArgs</code>，那么这两个注解将被此注解覆盖。
       </tr>
       <tr>
         <td><code>@ResultType</code></td>
         <td><code>Method</code></td>
         <td>N/A</td>
-        <td>This annotation is used when using a result handler.  In that case, the return type is void
-        so MyBatis must have a way to determine the type of object to construct for each row.
-        If there is an XML result map, use the @ResultMap annotation.  If the result type is
-        specified in XML on the <code>&lt;select&gt;</code> element, then no other annotation is
-        necessary.  In other cases, use this annotation.  For example, if a @Select annotated method
-        will use a result handler, the return type must be void and this annotation (or @ResultMap)
-        is required.  This annotation is ignored unless the method return type is void.</td>
+        <td>
+			当使用结果处理器时启用此注解。这种情况下，返回类型为void，所以Mybatis必须有一种方式决定对象的类型，用于构造每行数据。
+			如果有XML的结果映射，使用<code>@ResultMap</code>注解。
+			如果结果类型在XML的<code>&lt;select&gt;</code>节点中指定了，就不需要其他的注解了。
+			其他情况下则使用此注解。比如，如果@Select注解在一个方法上将使用结果处理器，返回类型必须是void并且这个注解（或者@ResultMap）是必须的。
+			这个注解将被忽略除非返回类型是void。
+		</td>
       </tr>
       <tr>
         <td><code>@Flush</code></td>
-        <td><code>Method</code></td>
+        <td><code>方法</code></td>
         <td>N/A</td>
-        <td>If this annotation is used, it can be called the <code>SqlSession#flushStatements()</code> via method defined at a Mapper interface.(MyBatis 3.3 or above)</td>
+        <td>
+			如果这个注解使用了，它将调用定义在Mapper接口中的<code>SqlSession#flushStatements()</code>方法。（Mybatis 3.3或者以上）
+		</td>
       </tr>
     </tbody>
   </table>
@@ -823,11 +824,11 @@ MyBatis
 @SelectKey(statement="call identity()", keyProperty="nameId", before=<strong>false</strong>, resultType=<strong>int.class</strong>)
 <strong>int</strong> insertTable2(Name name);</source>
 
-  <p>This example shows using the <code>@Flush</code> annotation to call the <code>SqlSession#flushStatements()</code>:</p>
+  <p>这个例子展示了如何使用<code>@Flush</code>注解去调用<code>SqlSession#flushStatements()</code>:</p>
   <source><![CDATA[@Flush
 List<BatchResult> flush();]]></source>
 
-  <p>These examples show how to name a ResultMap by specifying id attribute of @Results annotation.</p>
+  <p>这些例子展示了如何通过指定@Result的id属性来命名结果集：</p>
   <source>@Results(id = "userResult", value = {
   @Result(property = "id", column = "uid", id = <strong>true</strong>),
   @Result(property = "firstName", column = "first_name"),
@@ -844,7 +845,7 @@ User getUserById(Integer id);
 @Select("select * from company where id = #{id}")
 Company getCompanyById(Integer id);</source>
 
-  <p>This example shows solo parameter using the Sql Provider annotation:</p>
+  <p>这个例子展示了单一参数使用@SqlProvider:</p>
   <source><![CDATA[@SelectProvider(type = UserSqlBuilder.class, method = "buildGetUsersByName")
 List<User> getUsersByName(String name);
 
@@ -861,7 +862,7 @@ class UserSqlBuilder {
   }
 }]]></source>
 
-  <p>This example shows multiple parameters using the Sql Provider annotation:</p>
+  <p>这个列子展示了多参数使用@SqlProvider:</p>
   <source><![CDATA[@SelectProvider(type = UserSqlBuilder.class, method = "buildGetUsersByName")
 List<User> getUsersByName(
     @Param("name") String name, @Param("orderByColumn") String orderByColumn);
