@@ -27,4 +27,7 @@
           (#{country.countryname},#{country.countrycode})
       </foreach>
   </insert>
+  <insert id="insertUndefineKeyProperty" parameterType="org.apache.ibatis.submitted.keygen.Country" useGeneratedKeys="true" keyProperty="country_id">
+      insert into country (countryname,countrycode) values (#{countryname},#{countrycode})
+  </insert>
 </mapper>
