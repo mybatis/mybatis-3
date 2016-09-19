@@ -22,13 +22,20 @@ import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.ibatis.exceptions.PersistenceException;
+import org.apache.ibatis.executor.ExecutorException;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.hamcrest.CoreMatchers;
 import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
+
+import static org.hamcrest.CoreMatchers.*;
 
 /**
  * @author liuzh
@@ -36,6 +43,9 @@ import org.junit.Test;
 public class Jdbc3KeyGeneratorTest {
 
   private static SqlSessionFactory sqlSessionFactory;
+
+  @Rule
+  public ExpectedException expectedException = ExpectedException.none();
 
   @BeforeClass
   public static void setUp() throws Exception {
@@ -68,6 +78,22 @@ public class Jdbc3KeyGeneratorTest {
       for (Country country : countries) {
         assertNotNull(country.getId());
       }
+    } finally {
+      sqlSession.rollback();
+      sqlSession.close();
+    }
+  }
+
+  @Test
+  public void shouldErrorUndefineProperty()  {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      CountryMapper mapper = sqlSession.getMapper(CountryMapper.class);
+
+      expectedException.expect(PersistenceException.class);
+      expectedException.expectMessage(containsString("### Error updating database.  Cause: org.apache.ibatis.executor.ExecutorException: Error getting generated key or setting result to parameter object. Cause: org.apache.ibatis.executor.ExecutorException: No setter found for the keyProperty 'country_id' in org.apache.ibatis.submitted.keygen.Country."));
+
+      mapper.insertUndefineKeyProperty(new Country("China", "CN"));
     } finally {
       sqlSession.rollback();
       sqlSession.close();
