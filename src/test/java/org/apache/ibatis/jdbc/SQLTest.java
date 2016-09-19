@@ -303,4 +303,15 @@ public class SQLTest {
             "SET a = #{a}, b = #{b}", sql);
   }
 
+  @Test
+  public void variableLengthArgumentOnIntoColumnsAndValues() {
+    final String sql = new SQL() {{
+      INSERT_INTO("TABLE_A").INTO_COLUMNS("a","b").INTO_VALUES("#{a}","#{b}");
+    }}.toString();
+
+    System.out.println(sql);
+
+    assertEquals("INSERT INTO TABLE_A\n (a, b)\nVALUES (#{a}, #{b})", sql);
+  }
+
 }

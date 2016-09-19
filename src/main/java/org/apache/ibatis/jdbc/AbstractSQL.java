@@ -66,6 +66,22 @@ public abstract class AbstractSQL<T> {
     return getSelf();
   }
 
+  /**
+   * @since 3.4.2
+   */
+  public T INTO_COLUMNS(String... columns) {
+    sql().columns.addAll(Arrays.asList(columns));
+    return getSelf();
+  }
+
+  /**
+   * @since 3.4.2
+   */
+  public T INTO_VALUES(String... values) {
+    sql().values.addAll(Arrays.asList(values));
+    return getSelf();
+  }
+
   public T SELECT(String columns) {
     sql().statementType = SQLStatement.StatementType.SELECT;
     sql().select.add(columns);
