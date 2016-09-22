@@ -193,6 +193,13 @@
       <version>3.2.4</version>
       <optional>true</optional>
     </dependency>
+    <!--intellij annotations-->
+    <dependency>
+      <groupId>com.intellij</groupId>
+      <artifactId>annotations</artifactId>
+      <version>9.0.4</version>
+      <optional>true</optional>
+    </dependency>
 
     <!-- Test dependencies -->
     <dependency>

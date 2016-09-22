@@ -15,6 +15,8 @@
  */
 package org.apache.ibatis.annotations;
 
+import org.intellij.lang.annotations.Language;
+
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -28,5 +30,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface Delete {
+  @Language("SQL")
   String[] value();
 }
