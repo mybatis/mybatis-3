@@ -99,6 +99,8 @@ public class XmlConfigBuilderTest {
     assertNull(config.getLogPrefix());
     assertNull(config.getLogImpl());
     assertNull(config.getConfigurationFactory());
+    assertThat(config.isUseActualParamName(), is(true));
+    assertThat(config.isUseVariablesOnBindParameter(), is(false));
   }
 
   enum MyEnum {
@@ -191,6 +193,8 @@ public class XmlConfigBuilderTest {
       assertThat(config.getLogImpl().getName(), is(Slf4jImpl.class.getName()));
       assertThat(config.getVfsImpl().getName(), is(JBoss6VFS.class.getName()));
       assertThat(config.getConfigurationFactory().getName(), is(String.class.getName()));
+      assertThat(config.isUseActualParamName(), is(false));
+      assertThat(config.isUseVariablesOnBindParameter(), is(true));
 
       assertTrue(config.getTypeAliasRegistry().getTypeAliases().get("blogauthor").equals(Author.class));
       assertTrue(config.getTypeAliasRegistry().getTypeAliases().get("blog").equals(Blog.class));

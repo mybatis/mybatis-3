@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2016 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ public class User {
 
   private Integer id;
   private String name;
+  private String status;
 
   public Integer getId() {
     return id;
@@ -34,5 +35,13 @@ public class User {
 
   public void setName(String name) {
     this.name = name;
+  }
+
+  public String getStatus() {
+    return status;
+  }
+
+  public void setStatus(String status) {
+    this.status = status;
   }
 }

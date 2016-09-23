@@ -52,6 +52,8 @@
     <setting name="logImpl" value="SLF4J"/>
     <setting name="vfsImpl" value="org.apache.ibatis.io.JBoss6VFS"/>
     <setting name="configurationFactory" value="java.lang.String"/>
+    <setting name="useActualParamName" value="false"/>
+    <setting name="useVariablesOnBindParameter" value="true"/>
   </settings>
 
   <typeAliases>

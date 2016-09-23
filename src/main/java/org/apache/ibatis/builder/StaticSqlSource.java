@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2016 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 package org.apache.ibatis.builder;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.ParameterMapping;
@@ -43,7 +44,13 @@ public class StaticSqlSource implements SqlSource {
 
   @Override
   public BoundSql getBoundSql(Object parameterObject) {
-    return new BoundSql(configuration, sql, parameterMappings, parameterObject);
+    BoundSql boundSql = new BoundSql(configuration, sql, parameterMappings, parameterObject);
+    if (configuration.isUseVariablesOnBindParameter()) {
+      for (Map.Entry<Object, Object> entry : configuration.getVariables().entrySet()) {
+        boundSql.setAdditionalParameter(String.valueOf(entry.getKey()), entry.getValue());
+      }
+    }
+    return boundSql;
   }
 
 }

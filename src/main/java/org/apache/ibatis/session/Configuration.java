@@ -107,6 +107,7 @@ public class Configuration {
   protected boolean cacheEnabled = true;
   protected boolean callSettersOnNulls = false;
   protected boolean useActualParamName = true;
+  protected boolean useVariablesOnBindParameter = false;
 
   protected String logPrefix;
   protected Class <? extends Log> logImpl;
@@ -247,6 +248,33 @@ public class Configuration {
 
   public void setUseActualParamName(boolean useActualParamName) {
     this.useActualParamName = useActualParamName;
+  }
+
+  /**
+   * @since 3.4.2
+   */
+  public boolean isUseVariablesOnBindParameter() {
+    return useVariablesOnBindParameter;
+  }
+
+  /**
+   * @since 3.4.2
+   */
+  public void setUseVariablesOnBindParameter(boolean useVariablesOnBindParameter) {
+    this.useVariablesOnBindParameter = useVariablesOnBindParameter;
+  }
+
+  /**
+   * Take over variables to a specified destination {@link Map}.
+   * @param destination a destination {@link Map}
+   * @since 3.4.2
+   */
+  public void takeOverVariables(Map<String, Object> destination) {
+    if (isUseVariablesOnBindParameter()) {
+      for (Map.Entry<Object, Object> entry : getVariables().entrySet()) {
+        destination.put(String.valueOf(entry.getKey()), entry.getValue());
+      }
+    }
   }
 
   public String getDatabaseId() {

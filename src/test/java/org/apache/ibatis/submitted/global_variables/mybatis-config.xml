@@ -24,7 +24,13 @@
 
 	<properties>
 		<property name="table" value="users"/>
+		<property name="userStatus.valid" value="1"/>
+		<property name="userStatus-invalid" value="0"/>
 	</properties>
+
+	<settings>
+		<setting name="useVariablesOnBindParameter" value="true"/>
+	</settings>
 
 	<environments default="development">
 		<environment id="development">
@@ -41,6 +47,7 @@
 
 	<mappers>
 		<mapper class="org.apache.ibatis.submitted.global_variables.Mapper" />
+		<mapper class="org.apache.ibatis.submitted.global_variables.BindParameterMapper" />
 	</mappers>
 
 </configuration>
