@@ -218,7 +218,7 @@ SqlSessionFactory factory = builder.build(configuration);</source>
   
   <h4>SqlSessionFactory</h4>
   <p>
-SqlSessionFactory 有六个方法可以用来创建 SqlSession 实例。通常来说,如何决定是你
+SqlSessionFactory 有8个方法可以用来创建 SqlSession 实例。通常来说,如何决定是你
 选择下面这些方法时:
   </p>
   <ul>
