@@ -807,6 +807,17 @@ public class Author {
             </tr>
             <tr>
               <td>
+              	<code>BigIntegerTypeHandler</code>
+              </td>
+              <td>
+              	<code>java.math.BigInteger</code>
+              </td>
+              <td>
+              	数据库兼容的<code>BIGINT</code>或<code> UNSIGNED</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
                 <code>LongTypeHandler</code>
               </td>
               <td>
