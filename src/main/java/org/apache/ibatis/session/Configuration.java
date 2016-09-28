@@ -505,7 +505,7 @@ public class Configuration {
     getLanguageRegistry().setDefaultDriverClass(driver);
   }
 
-  public LanguageDriver getDefaultScriptingLanuageInstance() {
+  public LanguageDriver getDefaultScriptingLanguageInstance() {
     return languageRegistry.getDefaultDriver();
   }
 

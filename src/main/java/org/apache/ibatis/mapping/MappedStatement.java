@@ -78,7 +78,7 @@ public final class MappedStatement {
         logId = configuration.getLogPrefix() + id;
       }
       mappedStatement.statementLog = LogFactory.getLog(logId);
-      mappedStatement.lang = configuration.getDefaultScriptingLanuageInstance();
+      mappedStatement.lang = configuration.getDefaultScriptingLanguageInstance();
     }
 
     public Builder resource(String resource) {
