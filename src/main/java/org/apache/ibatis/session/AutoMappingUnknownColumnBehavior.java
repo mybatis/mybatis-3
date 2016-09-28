@@ -42,9 +42,20 @@ public enum AutoMappingUnknownColumnBehavior {
    * Note: The log level of {@code 'org.apache.ibatis.session.AutoMappingUnknownColumnBehavior'} must be set to {@code WARN}.
    */
   WARNING {
+    private Log log = null;
     @Override
     public void doAction(MappedStatement mappedStatement, String columnName, String property, Class<?> propertyType) {
-      log.warn(buildMessage(mappedStatement, columnName, property, propertyType));
+      initializeLog();
+      this.log.warn(buildMessage(mappedStatement, columnName, property, propertyType));
+    }
+    private void initializeLog() {
+      if (this.log == null) {
+        synchronized (AutoMappingUnknownColumnBehavior.WARNING) {
+          if (this.log == null) {
+            this.log = LogFactory.getLog(AutoMappingUnknownColumnBehavior.class);
+          }
+        }
+      }
     }
   },
 
@@ -58,11 +69,6 @@ public enum AutoMappingUnknownColumnBehavior {
       throw new SqlSessionException(buildMessage(mappedStatement, columnName, property, propertyType));
     }
   };
-
-  /**
-   * Logger
-   */
-  private static final Log log = LogFactory.getLog(AutoMappingUnknownColumnBehavior.class);
 
   /**
    * Perform the action when detects an unknown column (or unknown property type) of automatic mapping target.
