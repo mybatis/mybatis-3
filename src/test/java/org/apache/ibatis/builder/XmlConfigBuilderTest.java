@@ -94,7 +94,7 @@ public class XmlConfigBuilderTest {
     assertThat(config.getJdbcTypeForNull(), is(JdbcType.OTHER));
     assertThat(config.getLazyLoadTriggerMethods(), is((Set<String>) new HashSet<String>(Arrays.asList("equals", "clone", "hashCode", "toString"))));
     assertThat(config.isSafeResultHandlerEnabled(), is(true));
-      assertThat(config.getDefaultScriptingLanuageInstance(), is(instanceOf(XMLLanguageDriver.class)));
+      assertThat(config.getDefaultScriptingLanguageInstance(), is(instanceOf(XMLLanguageDriver.class)));
     assertThat(config.isCallSettersOnNulls(), is(false));
     assertNull(config.getLogPrefix());
     assertNull(config.getLogImpl());
@@ -185,7 +185,7 @@ public class XmlConfigBuilderTest {
       assertThat(config.getJdbcTypeForNull(), is(JdbcType.NULL));
       assertThat(config.getLazyLoadTriggerMethods(), is((Set<String>) new HashSet<String>(Arrays.asList("equals", "clone", "hashCode", "toString", "xxx"))));
       assertThat(config.isSafeResultHandlerEnabled(), is(false));
-      assertThat(config.getDefaultScriptingLanuageInstance(), is(instanceOf(RawLanguageDriver.class)));
+      assertThat(config.getDefaultScriptingLanguageInstance(), is(instanceOf(RawLanguageDriver.class)));
       assertThat(config.isCallSettersOnNulls(), is(true));
       assertThat(config.getLogPrefix(), is("mybatis_"));
       assertThat(config.getLogImpl().getName(), is(Slf4jImpl.class.getName()));
