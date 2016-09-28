@@ -509,6 +509,12 @@ public class Configuration {
     return languageRegistry.getDefaultDriver();
   }
 
+  /** @deprecated Use {@link #getDefaultScriptingLanguageInstance()} */
+  @Deprecated
+  public LanguageDriver getDefaultScriptingLanuageInstance() {
+    return getDefaultScriptingLanguageInstance();
+  }
+
   public MetaObject newMetaObject(Object object) {
     return MetaObject.forObject(object, objectFactory, objectWrapperFactory, reflectorFactory);
   }

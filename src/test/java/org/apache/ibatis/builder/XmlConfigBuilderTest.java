@@ -94,7 +94,7 @@ public class XmlConfigBuilderTest {
     assertThat(config.getJdbcTypeForNull(), is(JdbcType.OTHER));
     assertThat(config.getLazyLoadTriggerMethods(), is((Set<String>) new HashSet<String>(Arrays.asList("equals", "clone", "hashCode", "toString"))));
     assertThat(config.isSafeResultHandlerEnabled(), is(true));
-      assertThat(config.getDefaultScriptingLanguageInstance(), is(instanceOf(XMLLanguageDriver.class)));
+    assertThat(config.getDefaultScriptingLanguageInstance(), is(instanceOf(XMLLanguageDriver.class)));
     assertThat(config.isCallSettersOnNulls(), is(false));
     assertNull(config.getLogPrefix());
     assertNull(config.getLogImpl());
