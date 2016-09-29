@@ -90,13 +90,13 @@ SqlSessionFactory。
   </p>
   <h4>SqlSessionFactoryBuilder</h4>
   <p>
-SqlSessionFactoryBuilder 有八个 build()方法,每一种都允许你从不同的资源中创建一个
+SqlSessionFactoryBuilder 有九个 build()方法,每一种都允许你从不同的资源中创建一个
 SqlSession 实例。
   </p>
   <source>SqlSessionFactory build(Reader reader)
 SqlSessionFactory build(Reader reader, String environment)
 SqlSessionFactory build(Reader reader, Properties properties)
-SqlSessionFactory build(Reader reader, String environment, Properties properties)
+SqlSessionFactory build(Reader reader, String environment, Properties properties)  
 SqlSessionFactory build(InputStream inputStream)
 SqlSessionFactory build(InputStream inputStream, String environment)
 SqlSessionFactory build(InputStream inputStream, Properties properties)
