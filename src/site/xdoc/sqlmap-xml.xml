@@ -1756,7 +1756,7 @@ SELECT * FROM AUTHOR WHERE ID = #{id}]]></source>
         <h4>Multiple ResultSets for Collection</h4>
         
         <p>
-          As we did for the association, we can call an stored procedure that executes two queries and returns two result sets, one with Blogs
+          As we did for the association, we can call a stored procedure that executes two queries and returns two result sets, one with Blogs
           and another with Posts:
         </p>
 
