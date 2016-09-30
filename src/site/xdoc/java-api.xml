@@ -146,7 +146,7 @@ SqlSessionFactory factory = builder.build(configuration);</source>
   <p>Now you have a SqlSessionFactory that can be used to create SqlSession instances.</p>
 
   <h4>SqlSessionFactory</h4>
-  <p>SqlSessionFactory has six methods that are used to create SqlSessionInstances. In general, the decisions you'll be making when selecting one of these methods are:</p>
+  <p>SqlSessionFactory has six methods that are used to create SqlSession instances. In general, the decisions you'll be making when selecting one of these methods are:</p>
   <ul>
     <li><strong>Transaction</strong>: Do you want to use a transaction scope for the session, or use auto-commit (usually means no transaction with most databases and/or JDBC drivers)?</li>
     <li><strong>Connection</strong>: Do you want MyBatis to acquire a Connection from the configured DataSource for you, or do you want to provide your own?</li>
