@@ -1534,7 +1534,7 @@ public class ExamplePlugin implements Interceptor {
         </p>
 
         <source><![CDATA[SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment);
-SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment,properties);]]></source>
+SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, properties);]]></source>
 
         <p>If the environment is omitted, then the default environment is
           loaded, as follows:
