@@ -287,9 +287,9 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
   <p>While the various insert, update, delete and select methods above are powerful, they are also very verbose, not type safe and not as helpful to your IDE or unit tests as they could be. We've already seen an example of using Mappers in the Getting Started section above.</p>
   <p>Therefore, a more common way to execute mapped statements is to use Mapper classes. A mapper class is simply an interface with method definitions that match up against the SqlSession methods. The following example class demonstrates some method signatures and how they map to the SqlSession.</p>
   <source><![CDATA[public interface AuthorMapper {
-  // (Author) selectOne("selectAuthor",5);
+  // (Author) selectOne("selectAuthor", 5);
   Author selectAuthor(int id); 
-  // (List<Author>) selectList(“selectAuthors”)
+  // (List<Author>) selectList("selectAuthors")
   List<Author> selectAuthors();
   // (Map<Integer,Author>) selectMap("selectAuthors", "id")
   @MapKey("id")
@@ -298,7 +298,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
   int insertAuthor(Author author);
   // updateAuthor("updateAuthor", author)
   int updateAuthor(Author author);
-  // delete("deleteAuthor",5)
+  // delete("deleteAuthor", 5)
   int deleteAuthor(int id);
 }]]></source>
   <p>In a nutshell, each Mapper method signature should match that of the SqlSession method that it's associated to, but without the String parameter ID. Instead, the method name must match the mapped statement ID.</p> 
@@ -574,7 +574,7 @@ User getUserById(Integer id);
 @Select("select * from company where id = #{id}")
 Company getCompanyById(Integer id);</source>
 
-  <p>This example shows solo parameter using the Sql Provider annotation:</p>
+  <p>This example shows solo parameter using the SelectProvider annotation:</p>
   <source><![CDATA[@SelectProvider(type = UserSqlBuilder.class, method = "buildGetUsersByName")
 List<User> getUsersByName(String name);
 
