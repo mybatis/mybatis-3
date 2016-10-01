@@ -85,7 +85,7 @@
           The select statement is one of the most popular elements that you'll use in MyBatis.
           Putting data in a database isn't terribly valuable until you get it back out, so most
           applications query far more than they modify the data. For every insert, update or delete,
-          there is probably many selects. This is one of the founding principles of MyBatis, and is the
+          there are probably many selects. This is one of the founding principles of MyBatis, and is the
           reason so much focus and effort was placed on querying and result mapping. The select element is
           quite simple for simple cases. For example:
         </p>
@@ -541,7 +541,7 @@ ps.setInt(1,id);]]></source>
         <p>
           In all of the past statements, you've seen examples of simple parameters. Parameters are very
           powerful elements in MyBatis. For simple situations, probably 90% of the cases, there's not much
-          too them, for example:
+          to them, for example:
         </p>
 
         <source><![CDATA[<select id="selectUsers" resultType="User">
@@ -552,7 +552,7 @@ ps.setInt(1,id);]]></source>
 
         <p>
           The example above demonstrates a very simple named parameter mapping. The parameterType is set to
-          <code>int</code>, so therefore the parameter could be named anything. Primitive or simply data types such as
+          <code>int</code>, so therefore the parameter could be named anything. Primitive or simple data types such as
           <code>Integer</code> and <code>String</code> have no relevant properties, and thus will replace the full value of the
           parameter entirely. However, if you pass in a complex object, then the behavior is a little
           different. For example:
@@ -643,8 +643,8 @@ ps.setInt(1,id);]]></source>
         <p>
           By default, using the <code>#{}</code> syntax will cause MyBatis to generate <code>PreparedStatement</code> properties and
           set the values safely against the <code>PreparedStatement</code> parameters (e.g. ?). While this is safer,
-          faster and almost always preferred, sometimes you just want to directly inject a string
-          unmodified into the SQL Statement. For example, for ORDER BY, you might use something like this:
+          faster and almost always preferred, sometimes you just want to directly inject an unmodified string
+          into the SQL Statement. For example, for ORDER BY, you might use something like this:
         </p>
 
         <source><![CDATA[ORDER BY ${columnName}]]></source>
@@ -731,7 +731,7 @@ public class User {
 </select>]]></source>
 
         <p>
-          And remember that TypeAliases are your friend. Use them so that you don't have to keep typing the
+          And remember that TypeAliases are your friends. Use them so that you don't have to keep typing the
           fully qualified path of your class out. For example:
         </p>
 
@@ -787,7 +787,7 @@ public class User {
 </select>]]></source>
 
         <p>
-          Now if only the world were always that simple.
+          Now if only the world was always that simple.
         </p>
 
 	    <h4>Advanced Result Maps</h4>
@@ -965,7 +965,7 @@ public class User {
 <result property="subject" column="post_subject"/>]]></source>
 
         <p>
-          These are the most basic of result mappings. Both <i>id</i>, and
+          These are the most basic of result mappings. Both <i>id</i> and
           <i>result</i> map a single column value to a
           single property or field of a simple data type (String, int, double, Date, etc.).
         </p>
@@ -1756,7 +1756,7 @@ SELECT * FROM AUTHOR WHERE ID = #{id}]]></source>
         <h4>Multiple ResultSets for Collection</h4>
         
         <p>
-          As we did for the association, we can call an stored procedure that executes two queries and returns two result sets, one with Blogs
+          As we did for the association, we can call a stored procedure that executes two queries and returns two result sets, one with Blogs
           and another with Posts:
         </p>
 

@@ -1534,14 +1534,14 @@ public class ExamplePlugin implements Interceptor {
         </p>
 
         <source><![CDATA[SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment);
-SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment,properties);]]></source>
+SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, properties);]]></source>
 
         <p>If the environment is omitted, then the default environment is
           loaded, as follows:
         </p>
 
         <source><![CDATA[SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader);
-SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader,properties);]]></source>
+SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, properties);]]></source>
 
         <p>The environments element defines how the environment is
           configured.
@@ -1841,8 +1841,8 @@ public class C3P0DataSourceFactory extends UnpooledDataSourceFactory {
           MyBatis is able to execute different statements depending on your database vendor.
           The multi-db vendor support is based on the mapped statements <code>databaseId</code> attribute.
           MyBatis will load all statements with no <code>databaseId</code> attribute
-          or with a <code>databaseId</code> that matches the current one. If case the same statement
-          if found with and without the <code>databaseId</code> the latter will be discarded.
+          or with a <code>databaseId</code> that matches the current one. In case the same statement
+          is found with and without the <code>databaseId</code> the latter will be discarded.
           To enable the multi vendor support add a <code>databaseIdProvider</code>
           to mybatis-config.xml file as follows:
         </p>
@@ -1888,7 +1888,7 @@ public class C3P0DataSourceFactory extends UnpooledDataSourceFactory {
           statements. But first, we need to tell MyBatis where to find them.
           Java doesn’t really provide any good means of auto-discovery in
           this regard, so the best way to do it is to simply tell MyBatis
-          where to find the mapping files. You can use class path relative
+          where to find the mapping files. You can use classpath relative
           resource references, fully qualified url references
           (including <code>file:///</code> URLs), class names or package names. 
           For example:
