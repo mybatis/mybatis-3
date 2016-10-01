@@ -789,6 +789,7 @@ MyBatis
 			这个注解给<code>@Select</code>或者<code>@SelectProvider</code>提供在XML映射中的<code>&lt;resultMap&gt;</code>的id。
 			这使得注解的select可以复用那些定义在XML中的ResultMap。
 			如果同一select注解中还存在<code>@Results</code>或者<code>@ConstructorArgs</code>，那么这两个注解将被此注解覆盖。
+        </td>
       </tr>
       <tr>
         <td><code>@ResultType</code></td>
