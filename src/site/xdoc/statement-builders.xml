@@ -52,7 +52,7 @@ String sql = "SELECT P.ID, P.USERNAME, P.PASSWORD, P.FULL_NAME, "
       </subsection>
       <subsection name="The Solution">
       <p>MyBatis 3 offers a convenient utility class to help with the problem.
-        With the SQL class, you simply create an instance lets you call methods against it to build a SQL statement
+        With the SQL class, you simply create an instance that lets you call methods against it to build a SQL statement
         one step at a time.  The example problem above would look like this when rewritten with the SQL class:
       </p>
 
