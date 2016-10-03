@@ -46,7 +46,7 @@ public class ByteObjectArrayTypeHandlerTest extends BaseTypeHandlerTest {
   @Override
   @Test
   public void shouldGetResultNullFromResultSetByName() throws Exception {
-    when(rs.getBlob("column")).thenReturn(null);
+    when(rs.getBytes("column")).thenReturn(null);
     when(rs.wasNull()).thenReturn(true);
     assertThat(TYPE_HANDLER.getResult(rs, "column"), nullValue());
   }
@@ -63,7 +63,7 @@ public class ByteObjectArrayTypeHandlerTest extends BaseTypeHandlerTest {
   @Override
   @Test
   public void shouldGetResultNullFromResultSetByPosition() throws Exception {
-    when(rs.getBlob(1)).thenReturn(null);
+    when(rs.getBytes(1)).thenReturn(null);
     when(rs.wasNull()).thenReturn(true);
     assertThat(TYPE_HANDLER.getResult(rs, 1), nullValue());
   }
@@ -80,7 +80,7 @@ public class ByteObjectArrayTypeHandlerTest extends BaseTypeHandlerTest {
   @Override
   @Test
   public void shouldGetResultNullFromCallableStatement() throws Exception {
-    when(cs.getBlob(1)).thenReturn(null);
+    when(cs.getBytes(1)).thenReturn(null);
     when(cs.wasNull()).thenReturn(true);
     assertThat(TYPE_HANDLER.getResult(cs, 1), nullValue());
   }

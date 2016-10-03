@@ -106,11 +106,13 @@ public class DefaultResultSetHandlerTest {
             null/*parameterHandler*/, null/*resultHandler*/, null/*boundSql*/, rowBounds);
 
     final ResultSetWrapper rsw = mock(ResultSetWrapper.class);
+    when(rsw.getResultSet()).thenReturn(mock(ResultSet.class));
 
     final ResultMapping resultMapping = mock(ResultMapping.class);
     final TypeHandler typeHandler = mock(TypeHandler.class);
+    when(resultMapping.getColumn()).thenReturn("column");
     when(resultMapping.getTypeHandler()).thenReturn(typeHandler);
-    when(typeHandler.getResult(any(ResultSet.class), (String) anyObject())).thenThrow(new SQLException("exception"));
+    when(typeHandler.getResult(any(ResultSet.class), any(String.class))).thenThrow(new SQLException("exception"));
     List<ResultMapping> constructorMappings = Collections.singletonList(resultMapping);
 
     try {
