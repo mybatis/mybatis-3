@@ -107,6 +107,7 @@ public class Configuration {
   protected boolean cacheEnabled = true;
   protected boolean callSettersOnNulls = false;
   protected boolean useActualParamName = true;
+  protected boolean returnInstanceForEmptyRow = false;
 
   protected String logPrefix;
   protected Class <? extends Log> logImpl;
@@ -247,6 +248,14 @@ public class Configuration {
 
   public void setUseActualParamName(boolean useActualParamName) {
     this.useActualParamName = useActualParamName;
+  }
+
+  public boolean isReturnInstanceForEmptyRow() {
+    return returnInstanceForEmptyRow;
+  }
+
+  public void setReturnInstanceForEmptyRow(boolean returnEmptyInstance) {
+    this.returnInstanceForEmptyRow = returnEmptyInstance;
   }
 
   public String getDatabaseId() {
