@@ -385,7 +385,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
       }
       foundValues = applyPropertyMappings(rsw, resultMap, metaObject, lazyLoader, null) || foundValues;
       foundValues = lazyLoader.size() > 0 || foundValues;
-      resultObject = foundValues ? resultObject : null;
+      resultObject = foundValues || configuration.isReturnInstanceForEmptyRow() ? resultObject : null;
       return resultObject;
     }
     return resultObject;
@@ -862,7 +862,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
         foundValues = applyNestedResultMappings(rsw, resultMap, metaObject, columnPrefix, combinedKey, true) || foundValues;
         ancestorObjects.remove(resultMapId);
         foundValues = lazyLoader.size() > 0 || foundValues;
-        resultObject = foundValues ? resultObject : null;
+        resultObject = foundValues || configuration.isReturnInstanceForEmptyRow() ? resultObject : null;
       }
       if (combinedKey != CacheKey.NULL_CACHE_KEY) {
         nestedResultObjects.put(combinedKey, resultObject);
@@ -1015,7 +1015,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
         // Issue #114
         if (column != null && mappedColumnNames.contains(column.toUpperCase(Locale.ENGLISH))) {
           final Object value = th.getResult(rsw.getResultSet(), column);
-          if (value != null) {
+          if (value != null || configuration.isReturnInstanceForEmptyRow()) {
             cacheKey.update(column);
             cacheKey.update(value);
           }
