@@ -409,6 +409,20 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
             </tr>
             <tr>
               <td>
+                returnInstanceForEmptyRow
+              </td>
+              <td>
+                取得した列が全て NULL だった場合、デフォルトの動作では <code>null</code> が返りますが、 returnInstanceForEmptyRow に true を設定すると空のインスタンスが返るようになります。この動作はネストされた結果をマッピングする際にも適用されます。導入されたバージョン: 3.4.2
+              </td>
+              <td>
+                true | false
+              </td>
+              <td>
+                false
+              </td>
+            </tr>
+            <tr>
+              <td>
                 logPrefix
               </td>
               <td>
