@@ -88,6 +88,7 @@ import org.apache.ibatis.type.UnknownTypeHandler;
 
 /**
  * @author Clinton Begin
+ * @author Kazuki Shimizu
  */
 public class MapperAnnotationBuilder {
 
@@ -421,6 +422,14 @@ public class MapperAnnotationBuilder {
               returnType = (Class<?>) ((ParameterizedType) returnTypeParameter).getRawType();
             }
           }
+      } else if ("java.util.Optional".equals(rawType.getName())) {
+        Type[] actualTypeArguments = parameterizedType.getActualTypeArguments();
+        if (actualTypeArguments != null && actualTypeArguments.length == 1) {
+          Type returnTypeParameter = actualTypeArguments[0];
+          if (returnTypeParameter instanceof Class<?>) {
+            returnType = (Class<?>) returnTypeParameter;
+          }
+        }
       }
     }
 

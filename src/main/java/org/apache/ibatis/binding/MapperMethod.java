@@ -18,6 +18,7 @@ package org.apache.ibatis.binding;
 import org.apache.ibatis.annotations.Flush;
 import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.cursor.Cursor;
+import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.SqlCommandType;
 import org.apache.ibatis.reflection.MetaObject;
@@ -28,18 +29,28 @@ import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
 
-import java.lang.reflect.Array;
-import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
+import java.lang.reflect.*;
 import java.util.*;
 
 /**
  * @author Clinton Begin
  * @author Eduardo Macarron
  * @author Lasse Voss
+ * @author Kazuki Shimizu
  */
 public class MapperMethod {
+
+  private static Method optionalFactoryMethod = null;
+
+  static {
+    try {
+      optionalFactoryMethod = Resources.classForName("java.util.Optional").getMethod("ofNullable", Object.class);
+    } catch (ClassNotFoundException e) {
+      // Ignore
+    } catch (NoSuchMethodException e) {
+      // Ignore
+    }
+  }
 
   private final SqlCommand command;
   private final MethodSignature method;
@@ -53,7 +64,7 @@ public class MapperMethod {
     Object result;
     switch (command.getType()) {
       case INSERT: {
-    	Object param = method.convertArgsToSqlCommandParam(args);
+        Object param = method.convertArgsToSqlCommandParam(args);
         result = rowCountResult(sqlSession.insert(command.getName(), param));
         break;
       }
@@ -80,6 +91,10 @@ public class MapperMethod {
         } else {
           Object param = method.convertArgsToSqlCommandParam(args);
           result = sqlSession.selectOne(command.getName(), param);
+          if (method.returnsOptional() &&
+                  (result == null || !method.getReturnType().equals(result.getClass()))) {
+            result = wrapWithOptional(result);
+          }
         }
         break;
       case FLUSH:
@@ -94,6 +109,20 @@ public class MapperMethod {
     }
     return result;
   }
+
+  private Object wrapWithOptional(Object result) {
+    if (optionalFactoryMethod == null) {
+      throw new BindingException("Can't use the java.util.Optional");
+    }
+    try {
+      return optionalFactoryMethod.invoke(null, result);
+    } catch (IllegalAccessException e) {
+      throw new BindingException("Can't create a java.util.Optional instance.", e);
+    } catch (InvocationTargetException e) {
+      throw new BindingException("Can't create a java.util.Optional instance.", e);
+    }
+  }
+
 
   private Object rowCountResult(int rowCount) {
     final Object result;
@@ -246,6 +275,7 @@ public class MapperMethod {
     private final boolean returnsMap;
     private final boolean returnsVoid;
     private final boolean returnsCursor;
+    private final boolean returnsOptional;
     private final Class<?> returnType;
     private final String mapKey;
     private final Integer resultHandlerIndex;
@@ -264,6 +294,7 @@ public class MapperMethod {
       this.returnsVoid = void.class.equals(this.returnType);
       this.returnsMany = (configuration.getObjectFactory().isCollection(this.returnType) || this.returnType.isArray());
       this.returnsCursor = Cursor.class.equals(this.returnType);
+      this.returnsOptional = "java.util.Optional".equals(this.returnType.getName());
       this.mapKey = getMapKey(method);
       this.returnsMap = (this.mapKey != null);
       this.rowBoundsIndex = getUniqueParamIndex(method, RowBounds.class);
@@ -313,6 +344,15 @@ public class MapperMethod {
 
     public boolean returnsCursor() {
       return returnsCursor;
+    }
+
+    /**
+     * return whether return type is {@code java.util.Optional}
+     * @return return {@code true}, if return type is {@code java.util.Optional}
+     * @since 3.4.2
+     */
+    public boolean returnsOptional() {
+      return returnsOptional;
     }
 
     private Integer getUniqueParamIndex(Method method, Class<?> paramType) {
