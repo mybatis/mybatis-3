@@ -15,6 +15,8 @@
  */
 package org.apache.ibatis.submitted.generic_type_detection;
 
+import static org.junit.Assert.*;
+
 import java.io.Reader;
 import java.sql.Connection;
 
@@ -59,13 +61,10 @@ public class GenericTypeDetectionTest {
       Parent par = new Parent();
       par.setUser("mandipat");
       par.setChild(child);
-      sqlSession.insert("insertUser",par);
+      sqlSession.insert("insertUser", par);
       int id = 3;
-      try {
-         Parent parent = (Parent) sqlSession.selectOne("getUser",id);
-      } catch(Exception e) {
-    	  
-      }
+      Parent parent = (Parent) sqlSession.selectOne("getUser", id);
+      assertEquals(Integer.valueOf(3), parent.getChild().getKey().getId());
     } finally {
       sqlSession.close();
     }
