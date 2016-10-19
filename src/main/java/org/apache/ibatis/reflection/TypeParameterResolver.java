@@ -148,7 +148,7 @@ public class TypeParameterResolver {
     if (clazz == declaringClass) {
       Type[] bounds = typeVar.getBounds();
       if(bounds.length > 0) {
-        return typeVar.getBounds()[0];
+        return bounds[0];
       }
       return Object.class;
     }
