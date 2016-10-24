@@ -131,6 +131,7 @@ public abstract class BaseExecutor implements Executor {
   @Override
   public <E> List<E> query(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler) throws SQLException {
     BoundSql boundSql = ms.getBoundSql(parameter);
+    // 设置缓存
     CacheKey key = createCacheKey(ms, parameter, rowBounds, boundSql);
     return query(ms, parameter, rowBounds, resultHandler, key, boundSql);
  }
@@ -148,6 +149,8 @@ public abstract class BaseExecutor implements Executor {
     List<E> list;
     try {
       queryStack++;
+      // 从缓存中查询，缓存是一个HashMap结构
+      // 缓存的key对象被包装成一个CacheKey，
       list = resultHandler == null ? (List<E>) localCache.getObject(key) : null;
       if (list != null) {
         handleLocallyCachedOutputParameters(ms, key, parameter, boundSql);
@@ -190,16 +193,24 @@ public abstract class BaseExecutor implements Executor {
     }
   }
 
+  /**
+   *  缓存key生成策略
+   * @param ms
+   * @param parameterObject
+   * @param rowBounds
+   * @param boundSql
+   * @return
+   */
   @Override
   public CacheKey createCacheKey(MappedStatement ms, Object parameterObject, RowBounds rowBounds, BoundSql boundSql) {
     if (closed) {
       throw new ExecutorException("Executor was closed.");
     }
     CacheKey cacheKey = new CacheKey();
-    cacheKey.update(ms.getId());
-    cacheKey.update(Integer.valueOf(rowBounds.getOffset()));
-    cacheKey.update(Integer.valueOf(rowBounds.getLimit()));
-    cacheKey.update(boundSql.getSql());
+    cacheKey.update(ms.getId()); // mapperStatement的id
+    cacheKey.update(Integer.valueOf(rowBounds.getOffset()));// 分页 offset
+    cacheKey.update(Integer.valueOf(rowBounds.getLimit())); // 分页 size
+    cacheKey.update(boundSql.getSql()); // sql语句
     List<ParameterMapping> parameterMappings = boundSql.getParameterMappings();
     TypeHandlerRegistry typeHandlerRegistry = ms.getConfiguration().getTypeHandlerRegistry();
     // mimic DefaultParameterHandler logic

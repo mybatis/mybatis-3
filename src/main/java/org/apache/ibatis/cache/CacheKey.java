@@ -66,6 +66,10 @@ public class CacheKey implements Cloneable, Serializable {
     }
   }
 
+  /**
+   * 把多个对象的hashcode合并成一个hashcode，这样可以在多个对象和多个对象之间进行快速比较
+   * @param object
+   */
   private void doUpdate(Object object) {
     int baseHashCode = object == null ? 1 : object.hashCode();
 
