@@ -19,6 +19,7 @@ import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
 import java.util.Deque;
 import java.util.LinkedList;
+import java.util.Properties;
 import java.util.concurrent.locks.ReadWriteLock;
 
 import org.apache.ibatis.cache.Cache;
@@ -26,7 +27,7 @@ import org.apache.ibatis.cache.Cache;
 /**
  * Weak Reference cache decorator.
  * Thanks to Dr. Heinz Kabutz for his guidance here.
- * 
+ *
  * @author Clinton Begin
  */
 public class WeakCache implements Cache {
@@ -45,6 +46,11 @@ public class WeakCache implements Cache {
   @Override
   public String getId() {
     return delegate.getId();
+  }
+
+  @Override
+  public void init(Properties configurationVariables) {
+    delegate.init(configurationVariables);
   }
 
   @Override

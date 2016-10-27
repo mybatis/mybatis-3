@@ -19,6 +19,7 @@ import java.lang.ref.ReferenceQueue;
 import java.lang.ref.SoftReference;
 import java.util.Deque;
 import java.util.LinkedList;
+import java.util.Properties;
 import java.util.concurrent.locks.ReadWriteLock;
 
 import org.apache.ibatis.cache.Cache;
@@ -48,6 +49,11 @@ public class SoftCache implements Cache {
   }
 
   @Override
+  public void init(Properties configurationVariables) {
+    delegate.init(configurationVariables);
+  }
+
+  @Override
   public int getSize() {
     removeGarbageCollectedItems();
     return delegate.getSize();
@@ -74,7 +80,7 @@ public class SoftCache implements Cache {
       if (result == null) {
         delegate.removeObject(key);
       } else {
-        // See #586 (and #335) modifications need more than a read lock 
+        // See #586 (and #335) modifications need more than a read lock
         synchronized (hardLinksToAvoidGarbageCollection) {
           hardLinksToAvoidGarbageCollection.addFirst(result);
           if (hardLinksToAvoidGarbageCollection.size() > numberOfHardLinks) {

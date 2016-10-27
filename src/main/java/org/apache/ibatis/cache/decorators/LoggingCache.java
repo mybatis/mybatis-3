@@ -15,6 +15,7 @@
  */
 package org.apache.ibatis.cache.decorators;
 
+import java.util.Properties;
 import java.util.concurrent.locks.ReadWriteLock;
 
 import org.apache.ibatis.cache.Cache;
@@ -26,7 +27,7 @@ import org.apache.ibatis.logging.LogFactory;
  */
 public class LoggingCache implements Cache {
 
-  private Log log;  
+  private Log log;
   private Cache delegate;
   protected int requests = 0;
   protected int hits = 0;
@@ -39,6 +40,11 @@ public class LoggingCache implements Cache {
   @Override
   public String getId() {
     return delegate.getId();
+  }
+
+  @Override
+  public void init(Properties configurationVariables) {
+    delegate.init(configurationVariables);
   }
 
   @Override
