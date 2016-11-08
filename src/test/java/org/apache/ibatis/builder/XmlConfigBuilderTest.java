@@ -81,7 +81,7 @@ public class XmlConfigBuilderTest {
     assertThat(config.isCacheEnabled(), is(true));
     assertThat(config.getProxyFactory(), is(instanceOf(JavassistProxyFactory.class)));
     assertThat(config.isLazyLoadingEnabled(), is(false));
-    assertThat(config.isAggressiveLazyLoading(), is(true));
+    assertThat(config.isAggressiveLazyLoading(), is(false));
     assertThat(config.isMultipleResultSetsEnabled(), is(true));
     assertThat(config.isUseColumnLabel(), is(true));
     assertThat(config.isUseGeneratedKeys(), is(false));
@@ -172,7 +172,7 @@ public class XmlConfigBuilderTest {
       assertThat(config.isCacheEnabled(), is(false));
       assertThat(config.getProxyFactory(), is(instanceOf(CglibProxyFactory.class)));
       assertThat(config.isLazyLoadingEnabled(), is(true));
-      assertThat(config.isAggressiveLazyLoading(), is(false));
+      assertThat(config.isAggressiveLazyLoading(), is(true));
       assertThat(config.isMultipleResultSetsEnabled(), is(false));
       assertThat(config.isUseColumnLabel(), is(false));
       assertThat(config.isUseGeneratedKeys(), is(true));

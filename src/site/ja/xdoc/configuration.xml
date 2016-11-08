@@ -158,7 +158,7 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 true | false
               </td>
               <td>
-                true
+                false （3.4.1 以下は true）
               </td>
             </tr>
             <tr>

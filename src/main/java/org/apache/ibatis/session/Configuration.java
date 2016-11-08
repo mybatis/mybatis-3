@@ -100,7 +100,7 @@ public class Configuration {
   protected boolean safeRowBoundsEnabled = false;
   protected boolean safeResultHandlerEnabled = true;
   protected boolean mapUnderscoreToCamelCase = false;
-  protected boolean aggressiveLazyLoading = true;
+  protected boolean aggressiveLazyLoading = false;
   protected boolean multipleResultSetsEnabled = true;
   protected boolean useGeneratedKeys = false;
   protected boolean useColumnLabel = true;
