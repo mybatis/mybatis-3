@@ -183,12 +183,7 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 aggressiveLazyLoading
               </td>
               <td>
-                When enabled, an object with lazy
-                loaded properties will be
-                loaded entirely upon a call to any of
-                the lazy properties.
-                Otherwise, each property is loaded on
-                demand.
+                When enabled, any method call will load all the lazy properties of the object. Otherwise, each property is loaded on demand (see also <code>lazyLoadTriggerMethods</code>).
               </td>
               <td>
                 true | false

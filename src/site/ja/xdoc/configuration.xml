@@ -151,8 +151,8 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 aggressiveLazyLoading
               </td>
               <td>
-                この設定が有効の場合、Lazy loading が指定されたプロパティが要求されると、そのプロパティを内包するオブジェクト全体が読み込まれます。
-                無効の場合は、各プロパティはそれぞれ要求時に読み込まれます。
+                この設定が有効の場合、オブジェクトのいずれかのメソッド呼び出しと同時にすべての Lazy loading が実行されます。
+                無効の場合は、各プロパティはそれぞれ要求時に読み込まれます（関連項目 <code>lazyLoadTriggerMethods</code> ）。
               </td>
               <td>
                 true | false

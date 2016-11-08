@@ -137,7 +137,8 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
               <td>
                 aggressiveLazyLoading
               </td>
-              <td>Cuando está habilitada, todos los atributos de un objeto con propiedades con carga diferida (lazy loaded) se cargarán cuando se solicite cualquiera de ellos. En caso contrario, cada propiedad es cargada cuando es solicitada.
+              <td>
+                When enabled, any method call will load all the lazy properties of the object. Otherwise, each property is loaded on demand (see also <code>lazyLoadTriggerMethods</code>).
               </td>
               <td>
                 true | false

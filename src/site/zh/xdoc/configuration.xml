@@ -137,7 +137,7 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 aggressiveLazyLoading
               </td>
               <td>
-                当启用时，对任意延迟属性的调用会使带有延迟加载属性的对象完整加载；反之，每种属性将会按需加载。
+                When enabled, any method call will load all the lazy properties of the object. Otherwise, each property is loaded on demand (see also <code>lazyLoadTriggerMethods</code>).
               </td>
               <td>
                 true | false

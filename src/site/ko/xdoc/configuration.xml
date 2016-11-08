@@ -128,8 +128,9 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
               <td>
                 aggressiveLazyLoading
               </td>
-              <td>활성화 상태로 두게 되면 지연로딩 프로퍼티를 가진 객체는 호출에 따라 로드될 것이다. 
-			  반면에 개별 프로퍼티는 요청할때 로드된다. </td>
+              <td>
+                When enabled, any method call will load all the lazy properties of the object. Otherwise, each property is loaded on demand (see also <code>lazyLoadTriggerMethods</code>).
+              </td>
               <td>
                 true | false
               </td>
