@@ -20,8 +20,11 @@ import static org.junit.Assert.*;
 import java.io.Reader;
 import java.sql.Connection;
 
+import org.apache.ibatis.executor.loader.cglib.CglibProxyFactory;
+import org.apache.ibatis.executor.loader.javassist.JavassistProxyFactory;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.jdbc.ScriptRunner;
+import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
@@ -35,14 +38,16 @@ public class LazyPropertiesTest {
   @BeforeClass
   public static void setUp() throws Exception {
     // create an SqlSessionFactory
-    Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/lazy_properties/mybatis-config.xml");
+    Reader reader = Resources
+        .getResourceAsReader("org/apache/ibatis/submitted/lazy_properties/mybatis-config.xml");
     sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
     reader.close();
 
     // populate in-memory database
     SqlSession session = sqlSessionFactory.openSession();
     Connection conn = session.getConnection();
-    reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/lazy_properties/CreateDB.sql");
+    reader = Resources
+        .getResourceAsReader("org/apache/ibatis/submitted/lazy_properties/CreateDB.sql");
     ScriptRunner runner = new ScriptRunner(conn);
     runner.setLogWriter(null);
     runner.runScript(reader);
@@ -75,6 +80,38 @@ public class LazyPropertiesTest {
       // Setter invocation by MyBatis triggers aggressive lazy-loading.
       assertEquals("Should load all lazy properties.", 3,
           user.lazyLoadCounter);
+    } finally {
+      sqlSession.close();
+    }
+  }
+
+  @Test
+  public void shouldInvokingSetterNotTriggerLazyLoading_Javassist() {
+    Configuration config = sqlSessionFactory.getConfiguration();
+    config.setProxyFactory(new JavassistProxyFactory());
+    config.setAggressiveLazyLoading(false);
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      User user = mapper.getUser(1);
+      user.setLazy1(new User());
+      assertNotNull(user.getLazy1().getId());
+    } finally {
+      sqlSession.close();
+    }
+  }
+
+  @Test
+  public void shouldInvokingSetterNotTriggerLazyLoading_Cglib() {
+    Configuration config = sqlSessionFactory.getConfiguration();
+    config.setProxyFactory(new CglibProxyFactory());
+    config.setAggressiveLazyLoading(false);
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      User user = mapper.getUser(1);
+      user.setLazy1(new User());
+      assertNotNull(user.getLazy1().getId());
     } finally {
       sqlSession.close();
     }
