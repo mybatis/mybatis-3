@@ -28,8 +28,8 @@ public class LoggingCache implements Cache {
 
   private Log log;  
   private Cache delegate;
-  protected int requests = 0;
-  protected int hits = 0;
+  protected volatile int requests = 0;
+  protected volatile int hits = 0;
 
   public LoggingCache(Cache delegate) {
     this.delegate = delegate;
@@ -89,8 +89,15 @@ public class LoggingCache implements Cache {
     return delegate.equals(obj);
   }
 
-  private double getHitRatio() {
+  public double getHitRatio() {
     return (double) hits / (double) requests;
   }
 
+  public int getRequests() {
+    return requests;
+  }
+
+  public int getHits() {
+    return hits;
+  }
 }
