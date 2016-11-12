@@ -1101,7 +1101,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     return typeHandlerRegistry.hasTypeHandler(resultType);
   }
 
-  private class ResultObject {
+  private static class ResultObject {
     private final Object value;
     private final boolean useConstructorMappings;
     private ResultObject(Object value, boolean useConstructorMappings) {
