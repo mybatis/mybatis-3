@@ -29,6 +29,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import org.apache.ibatis.reflection.ReflectionException;
+import org.apache.ibatis.type.SimpleTypeRegistry;
 
 /**
  * @author Clinton Begin
@@ -95,7 +96,7 @@ public class DefaultObjectFactory implements ObjectFactory, Serializable {
     Class<?> classToCreate;
     if (type == List.class || type == Collection.class || type == Iterable.class) {
       classToCreate = ArrayList.class;
-    } else if (type == Map.class) {
+    } else if (type == Map.class || SimpleTypeRegistry.isSimpleType(type)) {
       classToCreate = HashMap.class;
     } else if (type == SortedSet.class) { // issue #510 Collections Support
       classToCreate = TreeSet.class;
