@@ -582,8 +582,8 @@ public class DefaultResultSetHandler implements ResultSetHandler {
         }
       }
     }
-    final boolean useConstructorResultMappings = (resultObject != null && !constructorArgTypes.isEmpty());
-    return new ResultObject(resultObject, useConstructorResultMappings);
+    final boolean useConstructorMappings = (resultObject != null && !constructorArgTypes.isEmpty());
+    return new ResultObject(resultObject, useConstructorMappings);
   }
 
   private Object createResultObject(ResultSetWrapper rsw, ResultMap resultMap, List<Class<?>> constructorArgTypes, List<Object> constructorArgs, String columnPrefix)
