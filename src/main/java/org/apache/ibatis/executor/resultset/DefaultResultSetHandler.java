@@ -376,19 +376,19 @@ public class DefaultResultSetHandler implements ResultSetHandler {
 
   private Object getRowValue(ResultSetWrapper rsw, ResultMap resultMap) throws SQLException {
     final ResultLoaderMap lazyLoader = new ResultLoaderMap();
-    Object resultObject = createResultObject(rsw, resultMap, lazyLoader, null);
-    if (resultObject != null && !hasTypeHandlerForResultObject(rsw, resultMap.getType())) {
-      final MetaObject metaObject = configuration.newMetaObject(resultObject);
-      boolean foundValues = !resultMap.getConstructorResultMappings().isEmpty();
+    final ResultObject resultObject = createResultObject(rsw, resultMap, lazyLoader, null);
+    Object rowValue = resultObject.getValue();
+    if (rowValue != null && !hasTypeHandlerForResultObject(rsw, resultMap.getType())) {
+      final MetaObject metaObject = configuration.newMetaObject(rowValue);
+      boolean foundValues = resultObject.isUseConstructorMappings();
       if (shouldApplyAutomaticMappings(resultMap, false)) {
         foundValues = applyAutomaticMappings(rsw, resultMap, metaObject, null) || foundValues;
       }
       foundValues = applyPropertyMappings(rsw, resultMap, metaObject, lazyLoader, null) || foundValues;
       foundValues = lazyLoader.size() > 0 || foundValues;
-      resultObject = foundValues || configuration.isReturnInstanceForEmptyRow() ? resultObject : null;
-      return resultObject;
+      rowValue = (foundValues || configuration.isReturnInstanceForEmptyRow()) ? rowValue : null;
     }
-    return resultObject;
+    return rowValue;
   }
 
   private boolean shouldApplyAutomaticMappings(ResultMap resultMap, boolean isNested) {
@@ -568,20 +568,22 @@ public class DefaultResultSetHandler implements ResultSetHandler {
   // INSTANTIATION & CONSTRUCTOR MAPPING
   //
 
-  private Object createResultObject(ResultSetWrapper rsw, ResultMap resultMap, ResultLoaderMap lazyLoader, String columnPrefix) throws SQLException {
+  private ResultObject createResultObject(ResultSetWrapper rsw, ResultMap resultMap, ResultLoaderMap lazyLoader, String columnPrefix) throws SQLException {
     final List<Class<?>> constructorArgTypes = new ArrayList<Class<?>>();
     final List<Object> constructorArgs = new ArrayList<Object>();
-    final Object resultObject = createResultObject(rsw, resultMap, constructorArgTypes, constructorArgs, columnPrefix);
+    Object resultObject = createResultObject(rsw, resultMap, constructorArgTypes, constructorArgs, columnPrefix);
     if (resultObject != null && !hasTypeHandlerForResultObject(rsw, resultMap.getType())) {
       final List<ResultMapping> propertyMappings = resultMap.getPropertyResultMappings();
       for (ResultMapping propertyMapping : propertyMappings) {
         // issue gcode #109 && issue #149
         if (propertyMapping.getNestedQueryId() != null && propertyMapping.isLazy()) {
-          return configuration.getProxyFactory().createProxy(resultObject, lazyLoader, configuration, objectFactory, constructorArgTypes, constructorArgs);
+          resultObject = configuration.getProxyFactory().createProxy(resultObject, lazyLoader, configuration, objectFactory, constructorArgTypes, constructorArgs);
+          break;
         }
       }
     }
-    return resultObject;
+    final boolean useConstructorResultMappings = (resultObject != null && !constructorArgTypes.isEmpty());
+    return new ResultObject(resultObject, useConstructorResultMappings);
   }
 
   private Object createResultObject(ResultSetWrapper rsw, ResultMap resultMap, List<Class<?>> constructorArgTypes, List<Object> constructorArgs, String columnPrefix)
@@ -842,33 +844,34 @@ public class DefaultResultSetHandler implements ResultSetHandler {
 
   private Object getRowValue(ResultSetWrapper rsw, ResultMap resultMap, CacheKey combinedKey, String columnPrefix, Object partialObject) throws SQLException {
     final String resultMapId = resultMap.getId();
-    Object resultObject = partialObject;
-    if (resultObject != null) {
-      final MetaObject metaObject = configuration.newMetaObject(resultObject);
-      putAncestor(resultObject, resultMapId, columnPrefix);
+    Object rowValue = partialObject;
+    if (rowValue != null) {
+      final MetaObject metaObject = configuration.newMetaObject(rowValue);
+      putAncestor(rowValue, resultMapId, columnPrefix);
       applyNestedResultMappings(rsw, resultMap, metaObject, columnPrefix, combinedKey, false);
       ancestorObjects.remove(resultMapId);
     } else {
       final ResultLoaderMap lazyLoader = new ResultLoaderMap();
-      resultObject = createResultObject(rsw, resultMap, lazyLoader, columnPrefix);
-      if (resultObject != null && !hasTypeHandlerForResultObject(rsw, resultMap.getType())) {
-        final MetaObject metaObject = configuration.newMetaObject(resultObject);
-        boolean foundValues = !resultMap.getConstructorResultMappings().isEmpty();
+      final ResultObject resultObject = createResultObject(rsw, resultMap, lazyLoader, columnPrefix);
+      rowValue = resultObject.getValue();
+      if (rowValue != null && !hasTypeHandlerForResultObject(rsw, resultMap.getType())) {
+        final MetaObject metaObject = configuration.newMetaObject(rowValue);
+        boolean foundValues = resultObject.isUseConstructorMappings();
         if (shouldApplyAutomaticMappings(resultMap, true)) {
           foundValues = applyAutomaticMappings(rsw, resultMap, metaObject, columnPrefix) || foundValues;
         }
         foundValues = applyPropertyMappings(rsw, resultMap, metaObject, lazyLoader, columnPrefix) || foundValues;
-        putAncestor(resultObject, resultMapId, columnPrefix);
+        putAncestor(rowValue, resultMapId, columnPrefix);
         foundValues = applyNestedResultMappings(rsw, resultMap, metaObject, columnPrefix, combinedKey, true) || foundValues;
         ancestorObjects.remove(resultMapId);
         foundValues = lazyLoader.size() > 0 || foundValues;
-        resultObject = foundValues || configuration.isReturnInstanceForEmptyRow() ? resultObject : null;
+        rowValue = (foundValues || configuration.isReturnInstanceForEmptyRow()) ? rowValue : null;
       }
       if (combinedKey != CacheKey.NULL_CACHE_KEY) {
-        nestedResultObjects.put(combinedKey, resultObject);
+        nestedResultObjects.put(combinedKey, rowValue);
       }
     }
-    return resultObject;
+    return rowValue;
   }
 
   private void putAncestor(Object resultObject, String resultMapId, String columnPrefix) {
@@ -1096,6 +1099,21 @@ public class DefaultResultSetHandler implements ResultSetHandler {
       return typeHandlerRegistry.hasTypeHandler(resultType, rsw.getJdbcType(rsw.getColumnNames().get(0)));
     }
     return typeHandlerRegistry.hasTypeHandler(resultType);
-  }  
+  }
+
+  private class ResultObject {
+    private final Object value;
+    private final boolean useConstructorMappings;
+    private ResultObject(Object value, boolean useConstructorMappings) {
+      this.value = value;
+      this.useConstructorMappings = useConstructorMappings;
+    }
+    private Object getValue() {
+      return value;
+    }
+    private boolean isUseConstructorMappings() {
+      return useConstructorMappings;
+    }
+  }
 
 }
