@@ -73,8 +73,8 @@ public final class ImmutablePOJOTest {
       final ImmutablePOJOMapper mapper = session.getMapper(ImmutablePOJOMapper.class);
       final ImmutablePOJO pojo = mapper.getImmutablePOJO(POJO_ID);
 
-      assertEquals(POJO_ID, pojo.getId());
-      assertEquals(POJO_DESCRIPTION, pojo.getDescription());
+      assertEquals(POJO_ID, pojo.getImmutableId());
+      assertEquals(POJO_DESCRIPTION, pojo.getImmutableDescription());
     } finally {
       session.close();
     }
