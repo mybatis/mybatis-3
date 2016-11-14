@@ -167,10 +167,22 @@ public class MapperMethod {
   }
 
   @SuppressWarnings("unchecked")
-  private <E> E[] convertToArray(List<E> list) {
-    E[] array = (E[]) Array.newInstance(method.getReturnType().getComponentType(), list.size());
-    array = list.toArray(array);
-    return array;
+  private <E> Object convertToArray(List<E> list) {
+
+    Class<?> arrayComponentType = method.getReturnType().getComponentType();
+
+    Object array = Array.newInstance(arrayComponentType, list.size());
+    Object value;
+    if (arrayComponentType.isPrimitive()) {
+      for (int i = 0; i < list.size(); i++) {
+        Array.set(array, i, list.get(i));
+      }
+      value = array;
+    } else {
+      value = list.toArray((Object[])array);
+    }
+
+    return value;
   }
 
   private <K, V> Map<K, V> executeForMap(SqlSession sqlSession, Object[] args) {
