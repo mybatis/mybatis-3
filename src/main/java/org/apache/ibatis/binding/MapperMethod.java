@@ -168,21 +168,16 @@ public class MapperMethod {
 
   @SuppressWarnings("unchecked")
   private <E> Object convertToArray(List<E> list) {
-
     Class<?> arrayComponentType = method.getReturnType().getComponentType();
-
     Object array = Array.newInstance(arrayComponentType, list.size());
-    Object value;
     if (arrayComponentType.isPrimitive()) {
       for (int i = 0; i < list.size(); i++) {
         Array.set(array, i, list.get(i));
       }
-      value = array;
+      return array;
     } else {
-      value = list.toArray((Object[])array);
+      return list.toArray((E[])array);
     }
-
-    return value;
   }
 
   private <K, V> Map<K, V> executeForMap(SqlSession sqlSession, Object[] args) {
