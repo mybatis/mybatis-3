@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -19,31 +19,21 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.apache.ibatis.cache.Cache;
+import org.apache.ibatis.cache.CacheDecorator;
 
 /**
  * Lru (least recently used) cache decorator.
  *
  * @author Clinton Begin
  */
-public class LruCache implements Cache {
+public class LruCache extends CacheDecorator {
 
-  private final Cache delegate;
   private Map<Object, Object> keyMap;
   private Object eldestKey;
 
   public LruCache(Cache delegate) {
-    this.delegate = delegate;
+    super(delegate);
     setSize(1024);
-  }
-
-  @Override
-  public String getId() {
-    return delegate.getId();
-  }
-
-  @Override
-  public int getSize() {
-    return delegate.getSize();
   }
 
   public void setSize(final int size) {
@@ -63,32 +53,32 @@ public class LruCache implements Cache {
 
   @Override
   public void putObject(Object key, Object value) {
-    delegate.putObject(key, value);
+    super.putObject(key, value);
     cycleKeyList(key);
   }
 
   @Override
   public Object getObject(Object key) {
     keyMap.get(key); // touch
-    return delegate.getObject(key);
+    return super.getObject(key);
   }
 
   @Override
   public Object removeObject(Object key) {
     keyMap.remove(key);
-    return delegate.removeObject(key);
+    return super.removeObject(key);
   }
 
   @Override
   public void clear() {
-    delegate.clear();
+    super.clear();
     keyMap.clear();
   }
 
   private void cycleKeyList(Object key) {
     keyMap.put(key, key);
     if (eldestKey != null) {
-      delegate.removeObject(eldestKey);
+      super.removeObject(eldestKey);
       eldestKey = null;
     }
   }

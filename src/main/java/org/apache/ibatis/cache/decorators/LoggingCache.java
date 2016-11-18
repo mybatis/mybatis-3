@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -16,43 +16,28 @@
 package org.apache.ibatis.cache.decorators;
 
 import org.apache.ibatis.cache.Cache;
+import org.apache.ibatis.cache.CacheDecorator;
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
 
 /**
  * @author Clinton Begin
  */
-public class LoggingCache implements Cache {
+public class LoggingCache extends CacheDecorator {
 
   private final Log log;
-  private final Cache delegate;
   protected int requests;
   protected int hits;
 
   public LoggingCache(Cache delegate) {
-    this.delegate = delegate;
+    super(delegate);
     this.log = LogFactory.getLog(getId());
-  }
-
-  @Override
-  public String getId() {
-    return delegate.getId();
-  }
-
-  @Override
-  public int getSize() {
-    return delegate.getSize();
-  }
-
-  @Override
-  public void putObject(Object key, Object object) {
-    delegate.putObject(key, object);
   }
 
   @Override
   public Object getObject(Object key) {
     requests++;
-    final Object value = delegate.getObject(key);
+    final Object value = super.getObject(key);
     if (value != null) {
       hits++;
     }
@@ -63,23 +48,13 @@ public class LoggingCache implements Cache {
   }
 
   @Override
-  public Object removeObject(Object key) {
-    return delegate.removeObject(key);
-  }
-
-  @Override
-  public void clear() {
-    delegate.clear();
-  }
-
-  @Override
   public int hashCode() {
-    return delegate.hashCode();
+    return getDelegate().hashCode();
   }
 
   @Override
   public boolean equals(Object obj) {
-    return delegate.equals(obj);
+    return getDelegate().equals(obj);
   }
 
   private double getHitRatio() {
