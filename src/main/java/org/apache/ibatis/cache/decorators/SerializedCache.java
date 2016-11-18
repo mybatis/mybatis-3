@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2016 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -23,37 +23,25 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.ObjectStreamClass;
 import java.io.Serializable;
-import java.util.concurrent.locks.ReadWriteLock;
 
 import org.apache.ibatis.cache.Cache;
+import org.apache.ibatis.cache.CacheDecorator;
 import org.apache.ibatis.cache.CacheException;
 import org.apache.ibatis.io.Resources;
 
 /**
  * @author Clinton Begin
  */
-public class SerializedCache implements Cache {
-
-  private Cache delegate;
+public class SerializedCache extends CacheDecorator {
 
   public SerializedCache(Cache delegate) {
-    this.delegate = delegate;
-  }
-
-  @Override
-  public String getId() {
-    return delegate.getId();
-  }
-
-  @Override
-  public int getSize() {
-    return delegate.getSize();
+    super(delegate);
   }
 
   @Override
   public void putObject(Object key, Object object) {
     if (object == null || object instanceof Serializable) {
-      delegate.putObject(key, serialize((Serializable) object));
+      super.putObject(key, serialize((Serializable) object));
     } else {
       throw new CacheException("SharedCache failed to make a copy of a non-serializable object: " + object);
     }
@@ -61,33 +49,18 @@ public class SerializedCache implements Cache {
 
   @Override
   public Object getObject(Object key) {
-    Object object = delegate.getObject(key);
+    Object object = super.getObject(key);
     return object == null ? null : deserialize((byte[]) object);
   }
 
   @Override
-  public Object removeObject(Object key) {
-    return delegate.removeObject(key);
-  }
-
-  @Override
-  public void clear() {
-    delegate.clear();
-  }
-
-  @Override
-  public ReadWriteLock getReadWriteLock() {
-    return null;
-  }
-
-  @Override
   public int hashCode() {
-    return delegate.hashCode();
+    return getDelegate().hashCode();
   }
 
   @Override
   public boolean equals(Object obj) {
-    return delegate.equals(obj);
+    return getDelegate().equals(obj);
   }
 
   private byte[] serialize(Serializable value) {

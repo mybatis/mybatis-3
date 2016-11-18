@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2016 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -19,9 +19,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.locks.ReadWriteLock;
 
 import org.apache.ibatis.cache.Cache;
+import org.apache.ibatis.cache.CacheDecorator;
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
 
@@ -36,36 +36,25 @@ import org.apache.ibatis.logging.LogFactory;
  * @author Clinton Begin
  * @author Eduardo Macarron
  */
-public class TransactionalCache implements Cache {
+public class TransactionalCache extends CacheDecorator {
 
   private static final Log log = LogFactory.getLog(TransactionalCache.class);
 
-  private Cache delegate;
   private boolean clearOnCommit;
   private Map<Object, Object> entriesToAddOnCommit;
   private Set<Object> entriesMissedInCache;
 
   public TransactionalCache(Cache delegate) {
-    this.delegate = delegate;
+    super(delegate);
     this.clearOnCommit = false;
     this.entriesToAddOnCommit = new HashMap<Object, Object>();
     this.entriesMissedInCache = new HashSet<Object>();
   }
 
   @Override
-  public String getId() {
-    return delegate.getId();
-  }
-
-  @Override
-  public int getSize() {
-    return delegate.getSize();
-  }
-
-  @Override
   public Object getObject(Object key) {
     // issue #116
-    Object object = delegate.getObject(key);
+    Object object = super.getObject(key);
     if (object == null) {
       entriesMissedInCache.add(key);
     }
@@ -75,11 +64,6 @@ public class TransactionalCache implements Cache {
     } else {
       return object;
     }
-  }
-
-  @Override
-  public ReadWriteLock getReadWriteLock() {
-    return null;
   }
 
   @Override
@@ -100,7 +84,7 @@ public class TransactionalCache implements Cache {
 
   public void commit() {
     if (clearOnCommit) {
-      delegate.clear();
+      super.clear();
     }
     flushPendingEntries();
     reset();
@@ -119,11 +103,11 @@ public class TransactionalCache implements Cache {
 
   private void flushPendingEntries() {
     for (Map.Entry<Object, Object> entry : entriesToAddOnCommit.entrySet()) {
-      delegate.putObject(entry.getKey(), entry.getValue());
+      super.putObject(entry.getKey(), entry.getValue());
     }
     for (Object entry : entriesMissedInCache) {
       if (!entriesToAddOnCommit.containsKey(entry)) {
-        delegate.putObject(entry, null);
+        super.putObject(entry, null);
       }
     }
   }
@@ -131,7 +115,7 @@ public class TransactionalCache implements Cache {
   private void unlockMissedEntries() {
     for (Object entry : entriesMissedInCache) {
       try {
-        delegate.removeObject(entry);
+        super.removeObject(entry);
       } catch (Exception e) {
         log.warn("Unexpected exception while notifiying a rollback to the cache adapter."
             + "Consider upgrading your cache adapter to the latest version.  Cause: " + e);

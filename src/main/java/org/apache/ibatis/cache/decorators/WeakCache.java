@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2016 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -19,9 +19,9 @@ import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
 import java.util.Deque;
 import java.util.LinkedList;
-import java.util.concurrent.locks.ReadWriteLock;
 
 import org.apache.ibatis.cache.Cache;
+import org.apache.ibatis.cache.CacheDecorator;
 
 /**
  * Weak Reference cache decorator.
@@ -29,28 +29,22 @@ import org.apache.ibatis.cache.Cache;
  * 
  * @author Clinton Begin
  */
-public class WeakCache implements Cache {
+public class WeakCache extends CacheDecorator {
   private final Deque<Object> hardLinksToAvoidGarbageCollection;
   private final ReferenceQueue<Object> queueOfGarbageCollectedEntries;
-  private final Cache delegate;
   private int numberOfHardLinks;
 
   public WeakCache(Cache delegate) {
-    this.delegate = delegate;
+    super(delegate);
     this.numberOfHardLinks = 256;
     this.hardLinksToAvoidGarbageCollection = new LinkedList<Object>();
     this.queueOfGarbageCollectedEntries = new ReferenceQueue<Object>();
   }
 
   @Override
-  public String getId() {
-    return delegate.getId();
-  }
-
-  @Override
   public int getSize() {
     removeGarbageCollectedItems();
-    return delegate.getSize();
+    return super.getSize();
   }
 
   public void setSize(int size) {
@@ -60,18 +54,18 @@ public class WeakCache implements Cache {
   @Override
   public void putObject(Object key, Object value) {
     removeGarbageCollectedItems();
-    delegate.putObject(key, new WeakEntry(key, value, queueOfGarbageCollectedEntries));
+    super.putObject(key, new WeakEntry(key, value, queueOfGarbageCollectedEntries));
   }
 
   @Override
   public Object getObject(Object key) {
     Object result = null;
     @SuppressWarnings("unchecked") // assumed delegate cache is totally managed by this cache
-    WeakReference<Object> weakReference = (WeakReference<Object>) delegate.getObject(key);
+    WeakReference<Object> weakReference = (WeakReference<Object>) super.getObject(key);
     if (weakReference != null) {
       result = weakReference.get();
       if (result == null) {
-        delegate.removeObject(key);
+        super.removeObject(key);
       } else {
         hardLinksToAvoidGarbageCollection.addFirst(result);
         if (hardLinksToAvoidGarbageCollection.size() > numberOfHardLinks) {
@@ -85,25 +79,20 @@ public class WeakCache implements Cache {
   @Override
   public Object removeObject(Object key) {
     removeGarbageCollectedItems();
-    return delegate.removeObject(key);
+    return super.removeObject(key);
   }
 
   @Override
   public void clear() {
     hardLinksToAvoidGarbageCollection.clear();
     removeGarbageCollectedItems();
-    delegate.clear();
-  }
-
-  @Override
-  public ReadWriteLock getReadWriteLock() {
-    return null;
+    super.clear();
   }
 
   private void removeGarbageCollectedItems() {
     WeakEntry sv;
     while ((sv = (WeakEntry) queueOfGarbageCollectedEntries.poll()) != null) {
-      delegate.removeObject(sv.key);
+      super.removeObject(sv.key);
     }
   }
 
