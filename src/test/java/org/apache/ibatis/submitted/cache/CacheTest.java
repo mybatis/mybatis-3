@@ -23,6 +23,8 @@ import org.apache.ibatis.annotations.CacheNamespace;
 import org.apache.ibatis.annotations.Property;
 import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.cache.CacheException;
+import org.apache.ibatis.annotations.CacheNamespaceRef;
+import org.apache.ibatis.builder.BuilderException;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSession;
@@ -59,7 +61,7 @@ public class CacheTest {
     reader.close();
     session.close();
   }
-  
+
   /*
    * Test Plan: 
    *  1) SqlSession 1 executes "select * from A".
@@ -76,23 +78,21 @@ public class CacheTest {
     try {
       PersonMapper pm = sqlSession1.getMapper(PersonMapper.class);
       Assert.assertEquals(2, pm.findAll().size());
-    }
-    finally {
+    } finally {
       sqlSession1.close();
     }
-    
+
     SqlSession sqlSession2 = sqlSessionFactory.openSession(false);
     try {
       PersonMapper pm = sqlSession2.getMapper(PersonMapper.class);
       pm.delete(1);
       Assert.assertEquals(1, pm.findAll().size());
-    }
-    finally {
+    } finally {
       sqlSession2.commit();
       sqlSession2.close();
     }
   }
-  
+
   /*
    * Test Plan: 
    *  1) SqlSession 1 executes "select * from A".
@@ -111,31 +111,28 @@ public class CacheTest {
     try {
       PersonMapper pm = sqlSession1.getMapper(PersonMapper.class);
       Assert.assertEquals(2, pm.findAll().size());
-    }
-    finally {
+    } finally {
       sqlSession1.close();
     }
-    
+
     SqlSession sqlSession2 = sqlSessionFactory.openSession(false);
     try {
       PersonMapper pm = sqlSession2.getMapper(PersonMapper.class);
       pm.delete(1);
-    }
-    finally {
+    } finally {
       sqlSession2.rollback();
       sqlSession2.close();
     }
-    
+
     SqlSession sqlSession3 = sqlSessionFactory.openSession(false);
     try {
       PersonMapper pm = sqlSession3.getMapper(PersonMapper.class);
       Assert.assertEquals(2, pm.findAll().size());
-    }
-    finally {
+    } finally {
       sqlSession3.close();
     }
   }
-  
+
   /*
    * Test Plan with Autocommit on:
    *  1) SqlSession 1 executes "select * from A".
@@ -154,26 +151,23 @@ public class CacheTest {
     try {
       PersonMapper pm = sqlSession1.getMapper(PersonMapper.class);
       Assert.assertEquals(2, pm.findAll().size());
-    }
-    finally {
+    } finally {
       sqlSession1.close();
     }
-    
+
     SqlSession sqlSession2 = sqlSessionFactory.openSession(true);
     try {
       PersonMapper pm = sqlSession2.getMapper(PersonMapper.class);
       pm.delete(1);
-    }
-    finally {
+    } finally {
       sqlSession2.close();
     }
-    
+
     SqlSession sqlSession3 = sqlSessionFactory.openSession(true);
     try {
       PersonMapper pm = sqlSession3.getMapper(PersonMapper.class);
       Assert.assertEquals(1, pm.findAll().size());
-    }
-    finally {
+    } finally {
       sqlSession3.close();
     }
   }
@@ -307,6 +301,26 @@ public class CacheTest {
       try {
         PersonMapper pm = sqlSession.getMapper(PersonMapper.class);
         Assert.assertEquals(3, pm.findAll().size());
+        Person p = new Person(4, "foo", "bar");
+        pm.createWithoutFlushCache(p);
+      } finally {
+        sqlSession.close();
+      }
+    }
+    {
+      SqlSession sqlSession = sqlSessionFactory.openSession(true);
+      try {
+        SpecialPersonMapper pm = sqlSession.getMapper(SpecialPersonMapper.class);
+        Assert.assertEquals(4, pm.findWithFlushCache().size());
+      } finally {
+        sqlSession.close();
+      }
+    }
+    {
+      SqlSession sqlSession = sqlSessionFactory.openSession(true);
+      try {
+        PersonMapper pm = sqlSession.getMapper(PersonMapper.class);
+        Assert.assertEquals(4, pm.findAll().size());
       } finally {
         sqlSession.close();
       }
@@ -341,6 +355,24 @@ public class CacheTest {
     sqlSessionFactory.getConfiguration().addMapper(CustomCacheUnsupportedPropertyMapper.class);
   }
 
+  @Test
+  public void shouldErrorInvalidCacheNamespaceRefAttributesSpecifyBoth() {
+    expectedException.expect(BuilderException.class);
+    expectedException.expectMessage("Cannot use both value() and namespace() attribute in the @CacheNamespaceRef");
+
+    sqlSessionFactory.getConfiguration().getMapperRegistry()
+        .addMapper(InvalidCacheNamespaceRefBothMapper.class);
+  }
+
+  @Test
+  public void shouldErrorInvalidCacheNamespaceRefAttributesIsEmpty() {
+    expectedException.expect(BuilderException.class);
+    expectedException.expectMessage("Should be specified either value() and namespace() attribute in the @CacheNamespaceRef");
+
+    sqlSessionFactory.getConfiguration().getMapperRegistry()
+        .addMapper(InvalidCacheNamespaceRefEmptyMapper.class);
+  }
+
   private CustomCache unwrap(Cache cache){
     Field field;
     try {
@@ -362,6 +394,14 @@ public class CacheTest {
       @Property(name = "date", value = "2016/11/21")
   })
   private interface CustomCacheUnsupportedPropertyMapper {
+  }
+
+  @CacheNamespaceRef(value = PersonMapper.class, name = "org.apache.ibatis.submitted.cache.PersonMapper")
+  private interface InvalidCacheNamespaceRefBothMapper {
+  }
+
+  @CacheNamespaceRef
+  private interface InvalidCacheNamespaceRefEmptyMapper {
   }
 
 }
