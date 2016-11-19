@@ -15,8 +15,11 @@
  */
 package org.apache.ibatis.submitted.global_variables;
 
-public interface Mapper {
+import org.apache.ibatis.annotations.Select;
 
+public interface AnnotationMapper {
+
+  @Select("select * from ${table} where id = #{id}")
   User getUser(Integer id);
-  
+
 }
