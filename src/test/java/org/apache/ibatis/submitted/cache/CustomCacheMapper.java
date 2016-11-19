@@ -15,15 +15,13 @@
  */
 package org.apache.ibatis.submitted.cache;
 
-import org.apache.ibatis.annotations.*;
-import org.apache.ibatis.annotations.Options.FlushCachePolicy;
-
-import java.util.List;
+import org.apache.ibatis.annotations.CacheNamespace;
+import org.apache.ibatis.annotations.Property;
 
 @CacheNamespace(implementation = CustomCache.class, properties = {
-    @Property(name = "stringValue", value = "bar")
-    ,@Property(name = "integerValue", value = "99")
-    ,@Property(name = "longValue", value = "9999")
+    @Property(name = "stringValue", value = "bar"),
+    @Property(name = "integerValue", value = "99"),
+    @Property(name = "longValue", value = "9999")
 })
 public interface CustomCacheMapper {
 }
