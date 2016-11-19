@@ -13,20 +13,30 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package org.apache.ibatis.submitted.global_variables;
+package org.apache.ibatis.annotations;
 
-import org.apache.ibatis.annotations.CacheNamespace;
-import org.apache.ibatis.annotations.Property;
-import org.apache.ibatis.annotations.Select;
+import java.lang.annotation.Documented;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-@CacheNamespace(implementation = CustomCache.class, properties = {
-    @Property(name = "stringValue", value = "${stringProperty}")
-    ,@Property(name = "integerValue", value = "${integerProperty}")
-    ,@Property(name = "longValue", value = "${longProperty}")
-})
-public interface AnnotationMapper {
-
-  @Select("select * from ${table} where id = #{id}")
-  User getUser(Integer id);
-
+/**
+ * The annotation that inject a property value.
+ *
+ * @since 3.4.2
+ * @author Kazuki Shimizu
+ * @see CacheNamespace
+ */
+@Documented
+@Retention(RetentionPolicy.RUNTIME)
+@Target({})
+public @interface Property {
+  /**
+   * A target property name
+   */
+  String name();
+  /**
+   * A property value or placeholder
+   */
+  String value();
 }

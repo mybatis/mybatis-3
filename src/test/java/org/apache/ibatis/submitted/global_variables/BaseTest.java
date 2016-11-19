@@ -73,7 +73,11 @@ public class BaseTest {
     try {
       AnnotationMapper mapper = sqlSession.getMapper(AnnotationMapper.class);
       User user = mapper.getUser(1);
+      CustomCache customCache = unwrap(sqlSessionFactory.getConfiguration().getCache(Mapper.class.getName()));
       Assert.assertEquals("User1", user.getName());
+      Assert.assertEquals("foo", customCache.getStringValue());
+      Assert.assertEquals(10, customCache.getIntegerValue().intValue());
+      Assert.assertEquals(1000, customCache.getLongValue());
     } finally {
       sqlSession.close();
     }
