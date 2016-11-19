@@ -13,20 +13,17 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package org.apache.ibatis.submitted.global_variables;
+package org.apache.ibatis.submitted.cache;
 
-import org.apache.ibatis.annotations.CacheNamespace;
-import org.apache.ibatis.annotations.Property;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.annotations.Options.FlushCachePolicy;
+
+import java.util.List;
 
 @CacheNamespace(implementation = CustomCache.class, properties = {
-    @Property(name = "stringValue", value = "${stringProperty}")
-    ,@Property(name = "integerValue", value = "${integerProperty}")
-    ,@Property(name = "longValue", value = "${longProperty}")
+    @Property(name = "stringValue", value = "bar")
+    ,@Property(name = "integerValue", value = "99")
+    ,@Property(name = "longValue", value = "9999")
 })
-public interface AnnotationMapper {
-
-  @Select("select * from ${table} where id = #{id}")
-  User getUser(Integer id);
-
+public interface CustomCacheMapper {
 }

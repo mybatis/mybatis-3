@@ -16,8 +16,10 @@
 package org.apache.ibatis.submitted.cache;
 
 import java.io.Reader;
+import java.lang.reflect.Field;
 import java.sql.Connection;
 
+import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSession;
@@ -302,4 +304,30 @@ public class CacheTest {
       }
     }
   }
+
+  @Test
+  public void shouldApplyCustomCacheProperties() {
+    CustomCache customCache = unwrap(sqlSessionFactory.getConfiguration().getCache(CustomCacheMapper.class.getName()));
+    Assert.assertEquals("bar", customCache.getStringValue());
+    Assert.assertEquals(99, customCache.getIntegerValue().intValue());
+    Assert.assertEquals(9999, customCache.getLongValue());
+  }
+
+  private CustomCache unwrap(Cache cache){
+    Field field;
+    try {
+      field = cache.getClass().getDeclaredField("delegate");
+    } catch (NoSuchFieldException e) {
+      throw new IllegalStateException(e);
+    }
+    try {
+      field.setAccessible(true);
+      return (CustomCache)field.get(cache);
+    } catch (IllegalAccessException e) {
+      throw new IllegalStateException(e);
+    } finally {
+      field.setAccessible(false);
+    }
+  }
+
 }
