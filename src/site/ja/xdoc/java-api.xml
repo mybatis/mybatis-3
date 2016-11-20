@@ -321,7 +321,13 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
         <td><code>@CacheNamespace</code></td>
         <td><code>Class</code></td>
         <td><code>&lt;cache&gt;</code></td>
-        <td>アノテーションを付加したネームスペース（＝クラス）に対するキャッシュを設定します。属性: <code>implementation</code>, <code>eviction</code>, <code>flushInterval</code>, <code>size</code>, <code>readWrite</code></td>
+        <td>アノテーションを付加したネームスペース（＝クラス）に対するキャッシュを設定します。属性: <code>implementation</code>, <code>eviction</code>, <code>flushInterval</code>, <code>size</code>, <code>readWrite</code>, <code>blocking</code>, <code>properties</code></td>
+      </tr>
+      <tr>
+        <td><code>@Property</code></td>
+        <td>N/A</td>
+        <td><code>&lt;property&gt;</code></td>
+        <td>プロパティ値またはプレースホルダ(<code>mybatis-config.xml</code>で定義した構成プロパティで置き換えすることができる)を指定します。属性: <code>name</code>, <code>value</code>。 (MyBatis 3.4.2+で利用可能)</td>
       </tr>
       <tr>
         <td><code>@CacheNamespaceRef</code></td>

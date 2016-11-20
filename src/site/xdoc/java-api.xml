@@ -326,8 +326,17 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
         <td><code>@CacheNamespace</code></td>
         <td><code>Class</code></td>
         <td><code>&lt;cache&gt;</code></td>
-        <td>Configures the cache for the given namespace (i.e. class). Attributes: <code>implementation</code>,
-        <code>eviction</code>, <code>flushInterval</code>, <code>size</code>, <code>readWrite</code>.</td>
+        <td>
+          Configures the cache for the given namespace (i.e. class). Attributes: <code>implementation</code>,
+          <code>eviction</code>, <code>flushInterval</code>, <code>size</code>, <code>readWrite</code>,
+          <code>blocking</code>, <code>properties</code>.
+        </td>
+      </tr>
+      <tr>
+        <td><code>@Property</code></td>
+        <td>N/A</td>
+        <td><code>&lt;property&gt;</code></td>
+        <td>Specifies the property value or placeholder(can replace by configuration properties that defined at the <code>mybatis-config.xml</code>). Attributes: <code>name</code>, <code>value</code>. (Available on MyBatis 3.4.2+)</td>
       </tr>
       <tr>
         <td><code>@CacheNamespaceRef</code></td>

@@ -525,8 +525,14 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
 (比如类)
 配置缓存。
 属性:implemetation,eviction,
-flushInterval,size 和 readWrite。
+flushInterval,size,readWrite,blocking 和 properties。
         </td>
+      </tr>
+      <tr>
+        <td><code>@Property</code></td>
+        <td>N/A</td>
+        <td><code>&lt;property&gt;</code></td>
+        <td>Specifies the property value or placeholder(can replace by configuration properties that defined at the <code>mybatis-config.xml</code>). Attributes: <code>name</code>, <code>value</code>. (Available on MyBatis 3.4.2+)</td>
       </tr>
       <tr>
         <td><code>@CacheNamespaceRef</code></td>
