@@ -19,7 +19,10 @@ import java.io.Reader;
 import java.lang.reflect.Field;
 import java.sql.Connection;
 
+import org.apache.ibatis.annotations.CacheNamespace;
+import org.apache.ibatis.annotations.Property;
 import org.apache.ibatis.cache.Cache;
+import org.apache.ibatis.cache.CacheException;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSession;
@@ -27,12 +30,17 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 // issue #524
 public class CacheTest {
 
   private static SqlSessionFactory sqlSessionFactory;
+
+  @Rule
+  public ExpectedException expectedException = ExpectedException.none();
 
   @Before
   public void setUp() throws Exception {
@@ -309,8 +317,28 @@ public class CacheTest {
   public void shouldApplyCustomCacheProperties() {
     CustomCache customCache = unwrap(sqlSessionFactory.getConfiguration().getCache(CustomCacheMapper.class.getName()));
     Assert.assertEquals("bar", customCache.getStringValue());
-    Assert.assertEquals(99, customCache.getIntegerValue().intValue());
-    Assert.assertEquals(9999, customCache.getLongValue());
+    Assert.assertEquals(1, customCache.getIntegerValue().intValue());
+    Assert.assertEquals(2, customCache.getIntValue());
+    Assert.assertEquals(3, customCache.getLongWrapperValue().longValue());
+    Assert.assertEquals(4, customCache.getLongValue());
+    Assert.assertEquals(5, customCache.getShortWrapperValue().shortValue());
+    Assert.assertEquals(6, customCache.getShortValue());
+    Assert.assertEquals((float) 7.1, customCache.getFloatWrapperValue(), 0);
+    Assert.assertEquals((float)8.1, customCache.getFloatValue(), 0);
+    Assert.assertEquals(9.01, customCache.getDoubleWrapperValue(), 0);
+    Assert.assertEquals(10.01, customCache.getDoubleValue(), 0);
+    Assert.assertEquals((byte)11, customCache.getByteWrapperValue().byteValue());
+    Assert.assertEquals((byte)12, customCache.getByteValue());
+    Assert.assertEquals(true, customCache.getBooleanWrapperValue());
+    Assert.assertEquals(true, customCache.isBooleanValue());
+  }
+
+  @Test
+  public void shouldErrorUnsupportedProperties() {
+    expectedException.expect(CacheException.class);
+    expectedException.expectMessage("Unsupported property type for cache: 'date' of type class java.util.Date");
+
+    sqlSessionFactory.getConfiguration().addMapper(CustomCacheUnsupportedPropertyMapper.class);
   }
 
   private CustomCache unwrap(Cache cache){
@@ -328,6 +356,12 @@ public class CacheTest {
     } finally {
       field.setAccessible(false);
     }
+  }
+
+  @CacheNamespace(implementation = CustomCache.class, properties = {
+      @Property(name = "date", value = "2016/11/21")
+  })
+  private interface CustomCacheUnsupportedPropertyMapper {
   }
 
 }
