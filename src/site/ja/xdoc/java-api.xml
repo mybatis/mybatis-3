@@ -343,7 +343,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
       </tr>
       <tr>
         <td><code>@Arg</code></td>
-        <td><code>Method</code></td>
+        <td>N/A</td>
         <td>
           <ul>
             <li><code>&lt;arg&gt;</code></li>
@@ -363,7 +363,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
       </tr>
       <tr>
         <td><code>@Case</code></td>
-        <td><code>Method</code></td>
+        <td>N/A</td>
         <td><code>&lt;case&gt;</code></td>
         <td>値と対応するマッピングを含む個々の判定条件です。属性: <code>value</code>, <code>type</code>,
         <code>results</code>. results は Result の配列を値に取るので、この Case アノテーションは次に挙げる <code>Results</code> アノテーションによって定義される実際の resultMap に近いものです。</td>
@@ -376,7 +376,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
       </tr>
       <tr>
         <td><code>@Result</code></td>
-        <td><code>Method</code></td>
+        <td>N/A</td>
         <td>
           <ul>
             <li><code>&lt;result&gt;</code></li>
@@ -389,7 +389,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
       </tr>
       <tr>
         <td><code>@One</code></td>
-        <td><code>Method</code></td>
+        <td>N/A</td>
         <td><code>&lt;association&gt;</code></td>
         <td>複雑型のプロパティのマッピング情報を定義します。属性: <code>select</code>, <code>fetchType</code>. select は適切な型を読み込むことができるマップドステートメント（Mapper メソッド）の完全修飾名です。
         fetchType はグローバルな設定 <code>lazyLoadingEnabled</code> をオーバーライドする場合に指定します。
@@ -397,7 +397,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
       </tr>
       <tr>
         <td><code>@Many</code></td>
-        <td><code>Method</code></td>
+        <td>N/A</td>
         <td><code>&lt;collection&gt;</code></td>
         <td>複雑型のプロパティのマッピング情報を定義します。属性: <code>select</code>, <code>fetchType</code>. select は適切な型のコレクションを読み込むことができるマップドステートメント（Mapper メソッド）の完全修飾名です。
         fetchType はグローバルな設定 <code>lazyLoadingEnabled</code> をオーバーライドする場合に指定します。

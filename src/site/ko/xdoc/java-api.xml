@@ -434,7 +434,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
       </tr>
       <tr>
         <td><code>@Arg</code></td>
-        <td><code>Method</code></td>
+        <td>N/A</td>
         <td>
           <ul>
             <li><code>&lt;arg&gt;</code></li>
@@ -456,7 +456,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
       </tr>
       <tr>
         <td><code>@Case</code></td>
-        <td><code>Method</code></td>
+        <td>N/A</td>
         <td><code>&lt;case&gt;</code></td>
         <td>case 의 값과 매핑
 		사용가능한 속성들 : value, type, results. 
@@ -472,7 +472,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
       </tr>
       <tr>
         <td><code>@Result</code></td>
-        <td><code>Method</code></td>
+        <td>N/A</td>
         <td>
           <ul>
             <li><code>&lt;result&gt;</code></li>
@@ -488,7 +488,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
       </tr>
       <tr>
         <td><code>@One</code></td>
-        <td><code>Method</code></td>
+        <td>N/A</td>
         <td><code>&lt;association&gt;</code></td>
         <td>복잡한 타입의 한개의 프로퍼티를 위한 매핑이다.
 		사용가능한 속성들 : select(매핑 구문의 이름, 예를들어 매퍼 메소드)
@@ -497,7 +497,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
       </tr>
       <tr>
         <td><code>@Many</code></td>
-        <td><code>Method</code></td>
+        <td>N/A</td>
         <td><code>&lt;collection&gt;</code></td>
         <td>복잡한 타입의 collection 프로퍼티를 위한 매핑이다. 
 		사용가능한 속성들 : select(매핑 구문의 이름, 예를들어 매퍼 메소드)

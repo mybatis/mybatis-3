@@ -555,7 +555,7 @@ flushInterval,size,readWrite,blocking 和 properties。
       </tr>
       <tr>
         <td><code>@Arg</code></td>
-        <td><code>方法</code></td>
+        <td>N/A</td>
         <td>
           <ul>
             <li><code>&lt;arg&gt;</code></li>
@@ -586,7 +586,7 @@ typeHandler,cases。cases 属性就是实
       </tr>
       <tr>
         <td><code>@Case</code></td>
-        <td><code>方法</code></td>
+        <td>N/A</td>
         <td><code>&lt;case&gt;</code></td>
         <td>单独实例的值和它对应的映射。属性:
 value,type,results。Results 属性是结
@@ -608,7 +608,7 @@ ResultMap 很相似,由下面的 Results
       </tr>
       <tr>
         <td><code>@Result</code></td>
-        <td><code>方法</code></td>
+        <td>N/A</td>
         <td>
           <ul>
             <li><code>&lt;result&gt;</code></li>
@@ -630,7 +630,7 @@ many 属 性 是 对 集 合 而 言 的 , 和
       </tr>
       <tr>
         <td><code>@One</code></td>
-        <td><code>方法</code></td>
+        <td>N/A</td>
         <td><code>&lt;association&gt;</code></td>
         <td>复杂类型的单独属性值映射。属性:
 select,已映射语句(也就是映射器方
@@ -643,7 +643,7 @@ select,已映射语句(也就是映射器方
       </tr>
       <tr>
         <td><code>@Many</code></td>
-        <td><code>方法</code></td>
+        <td>N/A</td>
         <td><code>&lt;collection&gt;</code></td>
         <td>
 			映射到复杂类型的集合属性。属性：<code>select</code>，已映射语句(也就是映射器方法)的全限定名，
