@@ -203,10 +203,10 @@ public class MapperAnnotationBuilder {
       Class<?> refType = cacheDomainRef.value();
       String refName = cacheDomainRef.name();
       if (refType == void.class && refName.isEmpty()) {
-        throw new BuilderException("Should be specified either value() and namespace() attribute in the @CacheNamespaceRef");
+        throw new BuilderException("Should be specified either value() or name() attribute in the @CacheNamespaceRef");
       }
       if (refType != void.class && !refName.isEmpty()) {
-        throw new BuilderException("Cannot use both value() and namespace() attribute in the @CacheNamespaceRef");
+        throw new BuilderException("Cannot use both value() and name() attribute in the @CacheNamespaceRef");
       }
       String namespace = (refType != void.class) ? refType.getName() : refName;
       assistant.useCacheRef(namespace);

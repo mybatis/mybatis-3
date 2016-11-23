@@ -358,7 +358,7 @@ public class CacheTest {
   @Test
   public void shouldErrorInvalidCacheNamespaceRefAttributesSpecifyBoth() {
     expectedException.expect(BuilderException.class);
-    expectedException.expectMessage("Cannot use both value() and namespace() attribute in the @CacheNamespaceRef");
+    expectedException.expectMessage("Cannot use both value() and name() attribute in the @CacheNamespaceRef");
 
     sqlSessionFactory.getConfiguration().getMapperRegistry()
         .addMapper(InvalidCacheNamespaceRefBothMapper.class);
@@ -367,7 +367,7 @@ public class CacheTest {
   @Test
   public void shouldErrorInvalidCacheNamespaceRefAttributesIsEmpty() {
     expectedException.expect(BuilderException.class);
-    expectedException.expectMessage("Should be specified either value() and namespace() attribute in the @CacheNamespaceRef");
+    expectedException.expectMessage("Should be specified either value() or name() attribute in the @CacheNamespaceRef");
 
     sqlSessionFactory.getConfiguration().getMapperRegistry()
         .addMapper(InvalidCacheNamespaceRefEmptyMapper.class);
