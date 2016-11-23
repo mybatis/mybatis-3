@@ -422,8 +422,12 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
         <td><code>@CacheNamespaceRef</code></td>
         <td><code>Class</code></td>
         <td><code>&lt;cacheRef&gt;</code></td>
-        <td>다른 명명공간의 캐시에 대한 참조
-		사용가능한 속성들 : value(명명공간의 이름).</td>
+        <td>
+          다른 명명공간의 캐시에 대한 참조 사용가능한 속성들 : <code>value</code>, <code>name</code>.
+          If you use this annotation, you should be specified either <code>value</code> or <code>name</code> attribute.
+          For the <code>value</code> attribute specify a java type indicating the namespace(the namespace name become a FQCN of specified java type),
+          and for the <code>name</code> attribute(this attribute is available since 3.4.2) specify a name indicating the namespace.
+        </td>
       </tr>
       <tr>
         <td><code>@ConstructorArgs</code></td>

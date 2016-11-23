@@ -24,7 +24,7 @@ import java.lang.annotation.Target;
 /**
  * The annotation that reference a cache.
  * <p>
- * If you use this annotation, should be specified either {@link #value()} and {@link #name()} attribute.
+ * If you use this annotation, should be specified either {@link #value()} or {@link #name()} attribute.
  * </p>
  * @author Clinton Begin
  * @author Kazuki Shimizu
