@@ -1710,8 +1710,21 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
   <property name="cacheFile" value="/tmp/my-custom-cache.tmp"/>
 </cache>]]></source>
 
-        <p>Puedes utilizar propiedades JavaBean de cualquier tipo simple y MyBatis hará la conversión.</p>
-        
+        <p>
+          Puedes utilizar propiedades JavaBean de cualquier tipo simple y MyBatis hará la conversión.
+          And you can specify a placeholder(e.g. <code>${cache.file}</code>) to replace value defined at <a href="configuration.html#properties">configuration properties</a>.
+        </p>
+
+        <p>
+          Since 3.4.2, the MyBatis has been supported to call an initialization method after it's set all properties.
+          If you want to use this feature, please implements the <code>org.apache.ibatis.builder.InitializingObject</code>
+          interface on your custom cache class.
+        </p>
+
+        <source><![CDATA[public interface InitializingObject {
+  void initialize() throws Exception;
+}]]></source>
+
         <p><span class="label important">NOTE</span>
           Los parametros de configuración de la cache (eviction, read write..etc.) explicados anteriormente no aplican cuando se usa
           una caché personalizada.

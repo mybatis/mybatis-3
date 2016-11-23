@@ -1876,8 +1876,19 @@ org.mybatis.cache.Cache 接口。这个接口是 MyBatis 框架中很多复杂�
 </cache>]]></source>
 
         <p>
-你可以使用所有简单类型作为 JavaBeans 的属性,MyBatis 会进行转换。
+          你可以使用所有简单类型作为 JavaBeans 的属性,MyBatis 会进行转换。
+          And you can specify a placeholder(e.g. <code>${cache.file}</code>) to replace value defined at <a href="configuration.html#properties">configuration properties</a>.
         </p>
+
+        <p>
+          Since 3.4.2, the MyBatis has been supported to call an initialization method after it's set all properties.
+          If you want to use this feature, please implements the <code>org.apache.ibatis.builder.InitializingObject</code>
+          interface on your custom cache class.
+        </p>
+
+        <source><![CDATA[public interface InitializingObject {
+  void initialize() throws Exception;
+}]]></source>
 
         <p>
 记得缓存配置和缓存实例是绑定在 SQL 映射文件的命名空间是很重要的。因此,所有

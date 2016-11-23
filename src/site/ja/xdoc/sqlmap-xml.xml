@@ -1952,7 +1952,19 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
   <property name="cacheFile" value="/tmp/my-custom-cache.tmp"/>
 </cache>]]></source>
 
-        <p>設定対象のプロパティは、単純型であれば String 以外でも使用可能です。</p>
+        <p>
+          設定対象のプロパティは、単純型であれば String 以外でも使用可能です。
+          加えて、<a href="configuration.html#properties">コンフィギュレーション用のプロパティ</a>に定義した値で置き換えるために、プレースホルダ(例：<code>${cache.file}</code>)を指定することができます。
+        </p>
+
+        <p>
+          3.4.2以降では, MyBatisはすべてのプロパティを設定した後に初期化メソッドを呼び出す仕組みをサポートしています。
+          この機能の使用したい場合は、あなたが作成したキャッシュの実装クラスに<code>org.apache.ibatis.builder.InitializingObject</code>インタフェースを実装してください。
+        </p>
+
+        <source><![CDATA[public interface InitializingObject {
+  void initialize() throws Exception;
+}]]></source>
 
         <p>
           ここで重要なのは、キャッシュの設定とキャッシュのインスタンスは Mapper XML ファイルのネームスペースに関連付けられているということです。
