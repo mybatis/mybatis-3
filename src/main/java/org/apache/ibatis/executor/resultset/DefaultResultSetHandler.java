@@ -64,6 +64,7 @@ import org.apache.ibatis.type.TypeHandlerRegistry;
  * @author Clinton Begin
  * @author Eduardo Macarron
  * @author Iwao AVE!
+ * @author Kazuki Shimizu
  */
 public class DefaultResultSetHandler implements ResultSetHandler {
 
@@ -91,6 +92,9 @@ public class DefaultResultSetHandler implements ResultSetHandler {
 
   // Cached Automappings
   private final Map<String, List<UnMappedColumnAutoMapping>> autoMappingsCache = new HashMap<String, List<UnMappedColumnAutoMapping>>();
+
+  // temporary marking flag that indicate using constructor mapping (use field to reduce memory usage)
+  private boolean useConstructorMappings;
   
   private static class PendingRelation {
     public MetaObject metaObject;
@@ -376,11 +380,10 @@ public class DefaultResultSetHandler implements ResultSetHandler {
 
   private Object getRowValue(ResultSetWrapper rsw, ResultMap resultMap) throws SQLException {
     final ResultLoaderMap lazyLoader = new ResultLoaderMap();
-    final ResultObject resultObject = createResultObject(rsw, resultMap, lazyLoader, null);
-    Object rowValue = resultObject.getValue();
+    Object rowValue = createResultObject(rsw, resultMap, lazyLoader, null);
     if (rowValue != null && !hasTypeHandlerForResultObject(rsw, resultMap.getType())) {
       final MetaObject metaObject = configuration.newMetaObject(rowValue);
-      boolean foundValues = resultObject.isUseConstructorMappings();
+      boolean foundValues = this.useConstructorMappings;
       if (shouldApplyAutomaticMappings(resultMap, false)) {
         foundValues = applyAutomaticMappings(rsw, resultMap, metaObject, null) || foundValues;
       }
@@ -568,7 +571,8 @@ public class DefaultResultSetHandler implements ResultSetHandler {
   // INSTANTIATION & CONSTRUCTOR MAPPING
   //
 
-  private ResultObject createResultObject(ResultSetWrapper rsw, ResultMap resultMap, ResultLoaderMap lazyLoader, String columnPrefix) throws SQLException {
+  private Object createResultObject(ResultSetWrapper rsw, ResultMap resultMap, ResultLoaderMap lazyLoader, String columnPrefix) throws SQLException {
+    this.useConstructorMappings = false; // reset previous mapping result
     final List<Class<?>> constructorArgTypes = new ArrayList<Class<?>>();
     final List<Object> constructorArgs = new ArrayList<Object>();
     Object resultObject = createResultObject(rsw, resultMap, constructorArgTypes, constructorArgs, columnPrefix);
@@ -582,8 +586,8 @@ public class DefaultResultSetHandler implements ResultSetHandler {
         }
       }
     }
-    final boolean useConstructorMappings = (resultObject != null && !constructorArgTypes.isEmpty());
-    return new ResultObject(resultObject, useConstructorMappings);
+    this.useConstructorMappings = (resultObject != null && !constructorArgTypes.isEmpty()); // set current mapping result
+    return resultObject;
   }
 
   private Object createResultObject(ResultSetWrapper rsw, ResultMap resultMap, List<Class<?>> constructorArgTypes, List<Object> constructorArgs, String columnPrefix)
@@ -852,11 +856,10 @@ public class DefaultResultSetHandler implements ResultSetHandler {
       ancestorObjects.remove(resultMapId);
     } else {
       final ResultLoaderMap lazyLoader = new ResultLoaderMap();
-      final ResultObject resultObject = createResultObject(rsw, resultMap, lazyLoader, columnPrefix);
-      rowValue = resultObject.getValue();
+      rowValue = createResultObject(rsw, resultMap, lazyLoader, columnPrefix);
       if (rowValue != null && !hasTypeHandlerForResultObject(rsw, resultMap.getType())) {
         final MetaObject metaObject = configuration.newMetaObject(rowValue);
-        boolean foundValues = resultObject.isUseConstructorMappings();
+        boolean foundValues = this.useConstructorMappings;
         if (shouldApplyAutomaticMappings(resultMap, true)) {
           foundValues = applyAutomaticMappings(rsw, resultMap, metaObject, columnPrefix) || foundValues;
         }
@@ -1099,21 +1102,6 @@ public class DefaultResultSetHandler implements ResultSetHandler {
       return typeHandlerRegistry.hasTypeHandler(resultType, rsw.getJdbcType(rsw.getColumnNames().get(0)));
     }
     return typeHandlerRegistry.hasTypeHandler(resultType);
-  }
-
-  private static class ResultObject {
-    private final Object value;
-    private final boolean useConstructorMappings;
-    private ResultObject(Object value, boolean useConstructorMappings) {
-      this.value = value;
-      this.useConstructorMappings = useConstructorMappings;
-    }
-    private Object getValue() {
-      return value;
-    }
-    private boolean isUseConstructorMappings() {
-      return useConstructorMappings;
-    }
   }
 
 }
