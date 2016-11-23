@@ -1647,8 +1647,20 @@ public class User {
   <property name="cacheFile" value="/tmp/my-custom-cache.tmp"/>
 </cache>]]></source>
 
-        <p>모든 간단한 타입의 자바빈 프로퍼티를 사용할 수 있다. 
-		마이바티스는 변환할 것이다.</p>
+        <p>
+			모든 간단한 타입의 자바빈 프로퍼티를 사용할 수 있다. 마이바티스는 변환할 것이다.
+			And you can specify a placeholder(e.g. <code>${cache.file}</code>) to replace value defined at <a href="configuration.html#properties">configuration properties</a>.
+		</p>
+
+		<p>
+		  Since 3.4.2, the MyBatis has been supported to call an initialization method after it's set all properties.
+		  If you want to use this feature, please implements the <code>org.apache.ibatis.builder.InitializingObject</code>
+		  interface on your custom cache class.
+		</p>
+
+		<source><![CDATA[public interface InitializingObject {
+  void initialize() throws Exception;
+}]]></source>
 
         <p>캐시 설정과 캐시 인스턴스가 SQL Map 파일의 네임스페이스에 묶여지는(bound) 것을 기억하는게 중요하다. 
 		게다가 같은 네임스페이스내 모든 구문은 묶여진다. 
