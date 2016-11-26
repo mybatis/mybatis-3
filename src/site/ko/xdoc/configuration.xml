@@ -83,6 +83,44 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
           <li>마지막으로 메소드 파라미터로 전달된 속성을 읽는다. 앞서 로드된 값을 덮어쓴다.</li>
         </ul>
         <p>그래서 가장 우선순위가 높은 속성은 메소드의 파라미터로 전달된 값이고 그 다음은 자원및 url 속성이고 마지막은 properties 엘리먼트에 명시된 값이다.</p>
+
+        <p>
+          Since the MyBatis 3.4.2, your can specify a default value into placeholder as follow:
+        </p>
+        <source><![CDATA[
+<dataSource type="POOLED">
+  <!-- ... -->
+  <property name="username" value="${username:ut_user}"/> <!-- If 'username' property not present, username become 'ut_user' -->
+</dataSource>]]></source>
+
+        <p>
+          This feature is disabled by default. If you specify a default value into placeholder,
+          you should be enable this feature by adding a special property as follow:
+        </p>
+
+        <source><![CDATA[
+<properties resource="org/mybatis/example/config.properties">
+  <!-- ... -->
+  <property name="org.apache.ibatis.parsing.PropertyParser.enable-default-value" value="true"/> <!-- Enable this feature -->
+</properties>]]></source>
+
+        <p>
+          <span class="label important">NOTE</span> Also If you are used already the <code>":"</code> as property key(e.g. <code>db:username</code>)
+          or you are used already the ternary operator of OGNL expression(e.g. <code>${tableName != null ? tableName : 'global_constants'}</code>) on your sql definition,
+          you should be change the character that separate key and default value by adding a special property as follow:
+        </p>
+
+        <source><![CDATA[
+<properties resource="org/mybatis/example/config.properties">
+  <!-- ... -->
+  <property name="org.apache.ibatis.parsing.PropertyParser.default-value-separator" value="?:"/> <!-- Change default value of separator -->
+</properties>]]></source>
+        <source><![CDATA[
+<dataSource type="POOLED">
+  <!-- ... -->
+  <property name="username" value="${db:username?:ut_user}"/>
+</dataSource>]]></source>
+
       </subsection>
       <subsection name="settings">
         <p>런타임시 마이바티스의 행위를 조정하기 위한 중요한 값들이다. 다음표는 설정과 그 의미 그리고 디폴트 값을 설명한다.</p>
