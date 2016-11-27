@@ -78,13 +78,13 @@
           この例では username と password の値が properties 要素で指定した値に、そして driver と url の値が config.properties 内で定義されている値に置き換えられます。この仕組みによって柔軟な設定が実現可能です。
         </p>
         <p>
-          SqlSessionBuilder.build() メソッドに Properties を渡すこともできます。<br />例：
+          SqlSessionFactoryBuilder.build() メソッドに Properties を渡すこともできます。<br />例：
         </p>
-        <source><![CDATA[SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, props);
+        <source><![CDATA[SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, props);
 
 // ... or ...
 
-SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, props);
+SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environment, props);
 ]]></source>
         <p>
           あるプロパティが複数の箇所で指定されている場合、MyBatis は次の順番で値を読み込みます。
@@ -1383,7 +1383,7 @@ public class ExamplePlugin implements Interceptor {
         </p>
         <p>
           プラグインによって MyBatis の動作を変更する以外に、Configuration クラスをオーバーライドすることもできます。
-          方法は単純で、Configuration のサブクラスを作って任意のメソッドをオーバーライドし、sqlSessionFactoryBuilder.build(myConfig) のようにして呼び出すだけです。
+          方法は単純で、Configuration のサブクラスを作って任意のメソッドをオーバーライドし、SqlSessionFactoryBuilder.build(myConfig) のようにして呼び出すだけです。
           繰り返しになりますが、これは MyBatis の動作に重大な影響を与える可能性があるので注意してください。
         </p>
       </subsection>
@@ -1410,15 +1410,15 @@ public class ExamplePlugin implements Interceptor {
           envrionment を引数に取るシグネチャは下記の２つです。
         </p>
 
-        <source><![CDATA[SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment);
-SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment,properties);]]></source>
+        <source><![CDATA[SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environment);
+SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environment,properties);]]></source>
 
         <p>
           environment が省略された場合、デフォルトの environment がロードされます。
         </p>
 
-        <source><![CDATA[SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader);
-SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader,properties);]]></source>
+        <source><![CDATA[SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader);
+SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader,properties);]]></source>
 
         <p>
           environment の具体的な設定は、environments 要素で行います。

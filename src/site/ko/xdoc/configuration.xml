@@ -69,12 +69,12 @@
   <property name="password" value="${password}"/>
 </dataSource>]]></source>
         <p>이 예제에서 username과 password는 properties엘리먼트의 설정된 값으로 대체될 수 있다. driver와 url속성은 config.properties파일에 포함된 값으로 대체될 수도 있다. 이것은 설정에 대한 다양한 옵션을 제공하는 셈이다.</p>
-        <p>속성은 SqlSessionBuilder.build() 메소드에 전달될 수 있다. 예를들면:</p>
-        <source><![CDATA[SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, props);
+        <p>속성은 SqlSessionFactoryBuilder.build() 메소드에 전달될 수 있다. 예를들면:</p>
+        <source><![CDATA[SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, props);
 
 // ... or ...
 
-SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, props);
+SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environment, props);
 ]]></source>
         <p>속성이 한개 이상 존재한다면 마이바티스는 일정한 순서로 로드한다.:</p>
         <ul>
@@ -1298,7 +1298,7 @@ public class ExamplePlugin implements Interceptor {
           <strong>설정파일 오버라이드하기</strong>
         </p>
         <p>플러그인을 사용해서 마이바티스 핵심 행위를 변경하기 위해 Configuration클래스 전체를 오버라이드 할 수 있다. 
-		이 클래스를 확장하고 내부 메소드를 오버라이드하고 sqlSessionFactoryBuilder.build(myConfig)메소드에 그 객체를 넣어주면 된다. 
+		이 클래스를 확장하고 내부 메소드를 오버라이드하고 SqlSessionFactoryBuilder.build(myConfig)메소드에 그 객체를 넣어주면 된다.
 		다시 얘기하지만 이 작업은 마이바티스에 큰 영향을 줄수 있으니 주의해서 해야 한다.</p>
       </subsection>
       <subsection name="environments">
@@ -1320,13 +1320,13 @@ public class ExamplePlugin implements Interceptor {
         <p>환경을 명시하기 위해 SqlSessionFactoryBuilder에 옵션으로 추가 파라미터를 주면 된다. 
 		환경을 선택하는 두가지 시그니처는</p>
 
-        <source><![CDATA[SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment);
-SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment,properties);]]></source>
+        <source><![CDATA[SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environment);
+SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environment,properties);]]></source>
 
         <p>environment 파라미터가 없으면 디폴트 환경이 로드된다.</p>
 
-        <source><![CDATA[SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader);
-SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader,properties);]]></source>
+        <source><![CDATA[SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader);
+SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader,properties);]]></source>
 
         <p>environments 엘리먼트는 환경을 설정하는 방법을 정의한다.</p>
 
