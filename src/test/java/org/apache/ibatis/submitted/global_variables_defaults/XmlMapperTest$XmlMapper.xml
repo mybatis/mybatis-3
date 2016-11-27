@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+       Copyright 2009-2016 the original author or authors.
+
+       Licensed under the Apache License, Version 2.0 (the "License");
+       you may not use this file except in compliance with the License.
+       You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+       Unless required by applicable law or agreed to in writing, software
+       distributed under the License is distributed on an "AS IS" BASIS,
+       WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+       See the License for the specific language governing permissions and
+       limitations under the License.
+
+-->
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.apache.ibatis.submitted.global_variables_defaults.XmlMapperTest$XmlMapper">
+
+	<cache type="org.apache.ibatis.submitted.global_variables_defaults.SupportClasses$CustomCache">
+		<property name="name" value="${cache.name:default}"/>
+	</cache>
+
+	<select id="ping" flushCache="true" resultType="string">
+		${ping.sql:SELECT 'Hello' FROM INFORMATION_SCHEMA.SYSTEM_USERS}
+	</select>
+
+	<select id="selectOne" flushCache="true" resultType="string">
+		<include refid="select">
+			<property name="select.columns" value="'1'"/>
+		</include>
+	</select>
+
+	<select id="selectFromVariable" flushCache="true" resultType="string">
+		<include refid="select" />
+	</select>
+
+	<sql id="select">
+		SELECT ${select.columns:'9999'} FROM INFORMATION_SCHEMA.SYSTEM_USERS
+	</sql>
+
+</mapper>
