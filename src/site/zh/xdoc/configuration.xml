@@ -89,6 +89,44 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
           </li>
         </ul>
         <p>因此，通过方法参数传递的属性具有最高优先级，resource/url 属性中指定的配置文件次之，最低优先级的是 properties 属性中指定的属性。</p>
+
+        <p>
+          Since the MyBatis 3.4.2, your can specify a default value into placeholder as follow:
+        </p>
+        <source><![CDATA[
+<dataSource type="POOLED">
+  <!-- ... -->
+  <property name="username" value="${username:ut_user}"/> <!-- If 'username' property not present, username become 'ut_user' -->
+</dataSource>]]></source>
+
+        <p>
+          This feature is disabled by default. If you specify a default value into placeholder,
+          you should be enable this feature by adding a special property as follow:
+        </p>
+
+        <source><![CDATA[
+<properties resource="org/mybatis/example/config.properties">
+  <!-- ... -->
+  <property name="org.apache.ibatis.parsing.PropertyParser.enable-default-value" value="true"/> <!-- Enable this feature -->
+</properties>]]></source>
+
+        <p>
+          <span class="label important">NOTE</span> Also If you are used already the <code>":"</code> as property key(e.g. <code>db:username</code>)
+          or you are used already the ternary operator of OGNL expression(e.g. <code>${tableName != null ? tableName : 'global_constants'}</code>) on your sql definition,
+          you should be change the character that separate key and default value by adding a special property as follow:
+        </p>
+
+        <source><![CDATA[
+<properties resource="org/mybatis/example/config.properties">
+  <!-- ... -->
+  <property name="org.apache.ibatis.parsing.PropertyParser.default-value-separator" value="?:"/> <!-- Change default value of separator -->
+</properties>]]></source>
+        <source><![CDATA[
+<dataSource type="POOLED">
+  <!-- ... -->
+  <property name="username" value="${db:username?:ut_user}"/>
+</dataSource>]]></source>
+
       </subsection>
       <subsection name="settings" id="settings">
         <p>这是 MyBatis 中极为重要的调整设置，它们会改变 MyBatis 的运行时行为。下表描述了设置中各项的意图、默认值等。</p>

@@ -100,6 +100,43 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
         <p>
           従って、メソッド引数として渡されたプロパティが最も優先度が高く、次に resource/url 属性、最も優先度が低いのは properties 要素のボディで指定された値ということになります。
         </p>
+
+        <p>
+          MyBatis 3.4.2以降では、下記に示すようにプレースホルダの中にデフォルト値を指定することができます。
+        </p>
+        <source><![CDATA[
+<dataSource type="POOLED">
+  <!-- ... -->
+  <property name="username" value="${username:ut_user}"/> <!-- 'username'プロパティが存在しない場合は、 usernameは'ut_user'になる -->
+</dataSource>]]></source>
+
+        <p>
+          この機能はデフォルトでは無効になっています。もしプレースホルダの中にデフォルト値を指定したい場合は、下記に示すように特別なプロパティを追加して機能を有効化する必要があります。
+        </p>
+
+        <source><![CDATA[
+<properties resource="org/mybatis/example/config.properties">
+  <!-- ... -->
+  <property name="org.apache.ibatis.parsing.PropertyParser.enable-default-value" value="true"/> <!-- この機能を有効化 -->
+</properties>]]></source>
+
+        <p>
+          <span class="label important">NOTE</span> また、既にプロパティキーとして<code>":"</code>を使用(例: <code>db:username</code>)していたり、
+          SQL定義の中でOGNL式の三項演算子(例: <code>${tableName != null ? tableName : 'global_constants'}</code>)を使用している場合は、
+          下記に示すように特別なプロパティを追加してキーとデフォルト値を分割するための文字を変更する必要があります。
+        </p>
+
+        <source><![CDATA[
+<properties resource="org/mybatis/example/config.properties">
+  <!-- ... -->
+  <property name="org.apache.ibatis.parsing.PropertyParser.default-value-separator" value="?:"/> <!-- 分割文字を変更 -->
+</properties>]]></source>
+        <source><![CDATA[
+<dataSource type="POOLED">
+  <!-- ... -->
+  <property name="username" value="${db:username?:ut_user}"/>
+</dataSource>]]></source>
+
       </subsection>
       <subsection name="settings">
         <p>
