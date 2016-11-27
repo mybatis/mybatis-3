@@ -92,15 +92,15 @@
           configuration.
         </p>
         <p>
-          Properties can also be passed into the SqlSessionBuilder.build()
+          Properties can also be passed into the SqlSessionFactoryBuilder.build()
           methods. For
           example:
         </p>
-        <source><![CDATA[SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, props);
+        <source><![CDATA[SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, props);
 
 // ... or ...
 
-SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, props);
+SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environment, props);
 ]]></source>
         <p>
           If a property exists in more than one of these places, MyBatis
@@ -1502,7 +1502,7 @@ public class ExamplePlugin implements Interceptor {
           can
           also override the Configuration class entirely. Simply extend it
           and override any methods inside, and pass it into the call to the
-          sqlSessionFactoryBuilder.build(myConfig) method. Again though, this
+          SqlSessionFactoryBuilder.build(myConfig) method. Again though, this
           could have a severe impact on the behaviour of MyBatis, so use
           caution.
         </p>
@@ -1544,15 +1544,15 @@ public class ExamplePlugin implements Interceptor {
           signatures that accept the environment are:
         </p>
 
-        <source><![CDATA[SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment);
-SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, properties);]]></source>
+        <source><![CDATA[SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environment);
+SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environment, properties);]]></source>
 
         <p>If the environment is omitted, then the default environment is
           loaded, as follows:
         </p>
 
-        <source><![CDATA[SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader);
-SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, properties);]]></source>
+        <source><![CDATA[SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader);
+SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, properties);]]></source>
 
         <p>The environments element defines how the environment is
           configured.

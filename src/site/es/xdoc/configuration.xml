@@ -72,13 +72,13 @@
 </dataSource>]]></source>
         <p>El usuario y password de este ejemplo se reemplazarán por los valores de los elementos de tipo property. El driver y la url se reemplazarán por los valores contenidos en el fichero config.properties.  Esto aumenta mucho las posibilidades de configuración. 
         </p>
-        <p>Las propiedades también pueden pasarse como parámetro al método SqlSessionBuilder.build(). Por ejemplo:
+        <p>Las propiedades también pueden pasarse como parámetro al método SqlSessionFactoryBuilder.build(). Por ejemplo:
         </p>
-        <source><![CDATA[SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, props);
+        <source><![CDATA[SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, props);
 
 // ... or ...
 
-SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, props);
+SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environment, props);
 ]]></source>
         <p>Si una propiedad existe en más de un lugar, MyBatis la carga en este orden:
         </p>
@@ -1334,7 +1334,7 @@ public class ExamplePlugin implements Interceptor {
           <strong>Acerca de sobrescribir la clase Configuration
           </strong>
         </p>
-        <p>Además de modificar el comportamiento de MyBatis mediante los plugins, también es posible sobrescribir la clase Configuración por completo. Extiende la clase, sobrescribe sus métodos y pásala como parámetro en la llamada al método sqlSessionFactoryBuilder.build(myConfig). Nuevamente, ten cuenta que esto puede afectar seriamente al funcionamiento de MyBatis así que úsalo con cuidado.
+        <p>Además de modificar el comportamiento de MyBatis mediante los plugins, también es posible sobrescribir la clase Configuración por completo. Extiende la clase, sobrescribe sus métodos y pásala como parámetro en la llamada al método SqlSessionFactoryBuilder.build(myConfig). Nuevamente, ten cuenta que esto puede afectar seriamente al funcionamiento de MyBatis así que úsalo con cuidado.
         </p>
       </subsection>
       <subsection name="environments">
@@ -1352,13 +1352,13 @@ public class ExamplePlugin implements Interceptor {
         </ul>
         <p>Para indicar qué entorno debe utilizarse, debes informar el parámetro opcional correspondiente en la llamada al SqlSessionFactoryBuilder. Existen dos métodos que aceptan el entorno:</p>
 
-        <source><![CDATA[SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment);
-SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment,properties);]]></source>
+        <source><![CDATA[SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environment);
+SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environment,properties);]]></source>
 
         <p>Si se omite el entorno se usará el entorno por defecto:</p>
 
-        <source><![CDATA[SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader);
-SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader,properties);]]></source>
+        <source><![CDATA[SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader);
+SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader,properties);]]></source>
 
         <p>El elemento environments contiene la configuración del entorno:</p>
 
