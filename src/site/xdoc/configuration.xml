@@ -647,7 +647,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
           , if no annotation is found,
           will be registered as an alias
           using
-          uncapitalized non-qualified class name of the bean. Thas is
+          uncapitalized non-qualified class name of the bean. That is
           <code>domain.blog.Author</code>
           will be registered as
           <code>author</code>. If the
