@@ -977,7 +977,7 @@ public class User {
             <td>REAL</td>
             <td>VARCHAR</td>
             <td>BINARY</td>
-            <td>BLOG</td>
+            <td>BLOB</td>
             <td>NVARCHAR</td>
           </tr>
           <tr>

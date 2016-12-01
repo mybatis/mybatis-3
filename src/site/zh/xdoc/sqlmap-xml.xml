@@ -927,7 +927,7 @@ jdbcType
             <td><code>REAL</code></td>
             <td><code>VARCHAR</code></td>
             <td><code>BINARY</code></td>
-            <td><code>BLOG</code></td>
+            <td><code>BLOB</code></td>
             <td><code>NVARCHAR</code></td>
           </tr>
           <tr>
