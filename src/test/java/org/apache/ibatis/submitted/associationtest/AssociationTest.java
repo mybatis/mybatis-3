@@ -1,17 +1,15 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ * Copyright 2009-2015 the original author or authors.
  *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  */
 package org.apache.ibatis.submitted.associationtest;
 
@@ -73,10 +71,10 @@ public class AssociationTest {
     SqlSession sqlSession = sqlSessionFactory.openSession();
     try {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
-      List<Car> cars = mapper.getCars2();      
+      List<Car> cars = mapper.getCars2();
       Assert.assertEquals(1, cars.size());
       Assert.assertNotNull(cars.get(0).getEngine());
-      Assert.assertNotNull(cars.get(0).getBrakes());      
+      Assert.assertNotNull(cars.get(0).getBrakes());
     } finally {
       sqlSession.close();
     }
@@ -84,7 +82,8 @@ public class AssociationTest {
 
   @Test
   public void shouldGetAllCarsNonUnique() {
-    // this is a little weird - we might expect 4 objects back, but there are only
+    // this is a little weird - we might expect 4 objects back, but there
+    // are only
     // 1 distinct carid, so we get one back.
     SqlSession sqlSession = sqlSessionFactory.openSession();
     try {

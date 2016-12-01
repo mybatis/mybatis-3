@@ -1,17 +1,15 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ * Copyright 2009-2015 the original author or authors.
  *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  */
 package org.apache.ibatis.datasource.pooled;
 
@@ -151,7 +149,6 @@ public class PooledDataSource implements DataSource {
 
   /*
    * The maximum number of active connections
-   *
    * @param poolMaximumActiveConnections The maximum number of active connections
    */
   public void setPoolMaximumActiveConnections(int poolMaximumActiveConnections) {
@@ -161,7 +158,6 @@ public class PooledDataSource implements DataSource {
 
   /*
    * The maximum number of idle connections
-   *
    * @param poolMaximumIdleConnections The maximum number of idle connections
    */
   public void setPoolMaximumIdleConnections(int poolMaximumIdleConnections) {
@@ -170,9 +166,7 @@ public class PooledDataSource implements DataSource {
   }
 
   /*
-   * The maximum time a connection can be used before it *may* be
-   * given away again.
-   *
+   * The maximum time a connection can be used before it *may* be given away again.
    * @param poolMaximumCheckoutTime The maximum time
    */
   public void setPoolMaximumCheckoutTime(int poolMaximumCheckoutTime) {
@@ -182,7 +176,6 @@ public class PooledDataSource implements DataSource {
 
   /*
    * The time to wait before retrying to get a connection
-   *
    * @param poolTimeToWait The time to wait
    */
   public void setPoolTimeToWait(int poolTimeToWait) {
@@ -192,7 +185,6 @@ public class PooledDataSource implements DataSource {
 
   /*
    * The query to be used to check a connection
-   *
    * @param poolPingQuery The query
    */
   public void setPoolPingQuery(String poolPingQuery) {
@@ -202,7 +194,6 @@ public class PooledDataSource implements DataSource {
 
   /*
    * Determines if the ping query should be used.
-   *
    * @param poolPingEnabled True if we need to check a connection before using it
    */
   public void setPoolPingEnabled(boolean poolPingEnabled) {
@@ -211,9 +202,8 @@ public class PooledDataSource implements DataSource {
   }
 
   /*
-   * If a connection has not been used in this many milliseconds, ping the
-   * database to make sure the connection is still good.
-   *
+   * If a connection has not been used in this many milliseconds, ping the database to make sure the
+   * connection is still good.
    * @param milliseconds the number of milliseconds of inactivity that will trigger a ping
    */
   public void setPoolPingConnectionsNotUsedFor(int milliseconds) {
@@ -465,7 +455,6 @@ public class PooledDataSource implements DataSource {
 
   /*
    * Method to check to see if a connection is still usable
-   *
    * @param conn - the connection to check
    * @return True if the connection is still usable
    */
@@ -505,7 +494,7 @@ public class PooledDataSource implements DataSource {
             try {
               conn.getRealConnection().close();
             } catch (Exception e2) {
-              //ignore
+              // ignore
             }
             result = false;
             if (log.isDebugEnabled()) {
@@ -520,7 +509,6 @@ public class PooledDataSource implements DataSource {
 
   /*
    * Unwraps a pooled connection to get to the 'real' connection
-   *
    * @param conn - the pooled connection to unwrap
    * @return The 'real' connection
    */
@@ -548,7 +536,8 @@ public class PooledDataSource implements DataSource {
   }
 
   public Logger getParentLogger() {
-    return Logger.getLogger(Logger.GLOBAL_LOGGER_NAME); // requires JDK version 1.6
+    return Logger.getLogger(Logger.GLOBAL_LOGGER_NAME); // requires JDK
+    // version 1.6
   }
 
 }

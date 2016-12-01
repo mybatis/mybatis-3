@@ -1,17 +1,15 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ * Copyright 2009-2015 the original author or authors.
  *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  */
 package org.apache.ibatis.submitted.batch_test;
 
@@ -28,8 +26,7 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-public class BatchTest
-{
+public class BatchTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
@@ -53,19 +50,17 @@ public class BatchTest
 
   @Test
   public void shouldGetAUserNoException() {
-    SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH,false);
+    SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH, false);
     try {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
 
-      User user   = mapper.getUser(1);
+      User user = mapper.getUser(1);
 
       user.setId(2);
       user.setName("User2");
       mapper.insertUser(user);
       Assert.assertEquals("Dept1", mapper.getUser(2).getDept().getName());
-    }
-    catch (Exception e)
-    {
+    } catch (Exception e) {
       Assert.fail(e.getMessage());
 
     }
@@ -75,7 +70,5 @@ public class BatchTest
       sqlSession.close();
     }
   }
-
-
 
 }

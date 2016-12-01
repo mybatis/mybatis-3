@@ -1,17 +1,15 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ * Copyright 2009-2015 the original author or authors.
  *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  */
 package org.apache.ibatis.submitted.xml_external_ref;
 
@@ -59,7 +57,7 @@ public class XmlExternalRefTest {
     }
     configuration.getMappedStatementNames();
   }
-  
+
   @Test(expected = BuilderException.class)
   public void testFailFastOnBuildAllWithInsert() throws Exception {
     Configuration configuration = new Configuration();
@@ -74,16 +72,16 @@ public class XmlExternalRefTest {
 
   @Test
   public void testMappedStatementCache() throws Exception {
-    Reader configReader = Resources
-    .getResourceAsReader("org/apache/ibatis/submitted/xml_external_ref/MapperConfig.xml");
+    Reader configReader = Resources.getResourceAsReader("org/apache/ibatis/submitted/xml_external_ref/MapperConfig.xml");
     SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(configReader);
     configReader.close();
 
     Configuration configuration = sqlSessionFactory.getConfiguration();
     configuration.getMappedStatementNames();
-    
+
     MappedStatement selectPetStatement = configuration.getMappedStatement("org.apache.ibatis.submitted.xml_external_ref.PetMapper.select");
-    MappedStatement selectPersonStatement = configuration.getMappedStatement("org.apache.ibatis.submitted.xml_external_ref.PersonMapper.select");
+    MappedStatement selectPersonStatement = configuration
+        .getMappedStatement("org.apache.ibatis.submitted.xml_external_ref.PersonMapper.select");
     Cache cache = selectPetStatement.getCache();
     assertEquals("org.apache.ibatis.submitted.xml_external_ref.PetMapper", cache.getId());
     assertSame(cache, selectPersonStatement.getCache());
@@ -94,25 +92,24 @@ public class XmlExternalRefTest {
     try {
       PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
       Person person = personMapper.select(1);
-      assertEquals((Integer)1, person.getId());
+      assertEquals((Integer) 1, person.getId());
       assertEquals(2, person.getPets().size());
-      assertEquals((Integer)2, person.getPets().get(1).getId());
+      assertEquals((Integer) 2, person.getPets().get(1).getId());
 
       Pet pet = personMapper.selectPet(1);
       assertEquals(Integer.valueOf(1), pet.getId());
 
       PetMapper petMapper = sqlSession.getMapper(PetMapper.class);
       Pet pet2 = petMapper.select(3);
-      assertEquals((Integer)3, pet2.getId());
-      assertEquals((Integer)2, pet2.getOwner().getId());
+      assertEquals((Integer) 3, pet2.getId());
+      assertEquals((Integer) 2, pet2.getOwner().getId());
     } finally {
       sqlSession.close();
     }
   }
 
   private SqlSessionFactory getSqlSessionFactoryXmlConfig() throws Exception {
-    Reader configReader = Resources
-        .getResourceAsReader("org/apache/ibatis/submitted/xml_external_ref/MapperConfig.xml");
+    Reader configReader = Resources.getResourceAsReader("org/apache/ibatis/submitted/xml_external_ref/MapperConfig.xml");
     SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(configReader);
     configReader.close();
 
@@ -128,8 +125,8 @@ public class XmlExternalRefTest {
     initDb(c);
 
     Configuration configuration = new Configuration();
-    Environment environment = new Environment("development", new JdbcTransactionFactory(), new UnpooledDataSource(
-        "org.hsqldb.jdbcDriver", "jdbc:hsqldb:mem:xmlextref", null));
+    Environment environment = new Environment("development", new JdbcTransactionFactory(),
+        new UnpooledDataSource("org.hsqldb.jdbcDriver", "jdbc:hsqldb:mem:xmlextref", null));
     configuration.setEnvironment(environment);
 
     configuration.addMapper(PersonMapper.class);

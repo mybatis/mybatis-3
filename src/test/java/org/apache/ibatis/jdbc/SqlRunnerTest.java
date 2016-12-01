@@ -1,17 +1,15 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ * Copyright 2009-2015 the original author or authors.
  *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  */
 package org.apache.ibatis.jdbc;
 
@@ -60,8 +58,9 @@ public class SqlRunnerTest extends BaseDataTest {
     Connection connection = ds.getConnection();
     SqlRunner exec = new SqlRunner(connection);
     exec.setUseGeneratedKeySupport(true);
-    int id = exec.insert("INSERT INTO author (username, password, email, bio) VALUES (?,?,?,?)", "someone", "******", "someone@apache.org", Null.LONGVARCHAR);
-    Map<String,Object> row = exec.selectOne("SELECT * FROM author WHERE username = ?", "someone");
+    int id = exec.insert("INSERT INTO author (username, password, email, bio) VALUES (?,?,?,?)", "someone", "******", "someone@apache.org",
+        Null.LONGVARCHAR);
+    Map<String, Object> row = exec.selectOne("SELECT * FROM author WHERE username = ?", "someone");
     connection.rollback();
     connection.close();
     assertTrue(SqlRunner.NO_GENERATED_KEY != id);
@@ -76,7 +75,7 @@ public class SqlRunnerTest extends BaseDataTest {
     Connection connection = ds.getConnection();
     SqlRunner exec = new SqlRunner(connection);
     int count = exec.update("update product set category = ? where productid = ?", "DOGS", "FI-SW-01");
-    Map<String,Object> row = exec.selectOne("SELECT * FROM PRODUCT WHERE PRODUCTID = ?", "FI-SW-01");
+    Map<String, Object> row = exec.selectOne("SELECT * FROM PRODUCT WHERE PRODUCTID = ?", "FI-SW-01");
     connection.close();
     assertEquals("DOGS", row.get("CATEGORY"));
     assertEquals(1, count);
@@ -90,7 +89,7 @@ public class SqlRunnerTest extends BaseDataTest {
     Connection connection = ds.getConnection();
     SqlRunner exec = new SqlRunner(connection);
     int count = exec.delete("delete from item");
-    List<Map<String,Object>> rows = exec.selectAll("SELECT * FROM ITEM");
+    List<Map<String, Object>> rows = exec.selectAll("SELECT * FROM ITEM");
     connection.close();
     assertEquals(28, count);
     assertEquals(0, rows.size());
@@ -103,7 +102,7 @@ public class SqlRunnerTest extends BaseDataTest {
     SqlRunner exec = new SqlRunner(connection);
     exec.run("CREATE TABLE BLAH(ID INTEGER)");
     exec.run("insert into BLAH values (1)");
-    List<Map<String,Object>> rows = exec.selectAll("SELECT * FROM BLAH");
+    List<Map<String, Object>> rows = exec.selectAll("SELECT * FROM BLAH");
     exec.run("DROP TABLE BLAH");
     connection.close();
     assertEquals(1, rows.size());

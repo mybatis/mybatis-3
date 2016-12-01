@@ -1,17 +1,15 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ * Copyright 2009-2015 the original author or authors.
  *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  */
 package org.apache.ibatis.executor.loader;
 
@@ -42,7 +40,7 @@ public abstract class AbstractEnhancedDeserializationProxy {
   private boolean reloadingProperty;
 
   protected AbstractEnhancedDeserializationProxy(Class<?> type, Map<String, ResultLoaderMap.LoadPair> unloadedProperties,
-          ObjectFactory objectFactory, List<Class<?>> constructorArgTypes, List<Object> constructorArgs) {
+      ObjectFactory objectFactory, List<Class<?>> constructorArgTypes, List<Object> constructorArgs) {
     this.type = type;
     this.unloadedProperties = unloadedProperties;
     this.objectFactory = objectFactory;
@@ -80,10 +78,12 @@ public abstract class AbstractEnhancedDeserializationProxy {
                   reloadingProperty = false;
                 }
               } else {
-                /* I'm not sure if this case can really happen or is just in tests -
-                 * we have an unread property but no loadPair to load it. */
-                throw new ExecutorException("An attempt has been made to read a not loaded lazy property '"
-                        + property + "' of a disconnected object");
+                /*
+                 * I'm not sure if this case can really happen or is just in tests - we have an
+                 * unread property but no loadPair to load it.
+                 */
+                throw new ExecutorException(
+                    "An attempt has been made to read a not loaded lazy property '" + property + "' of a disconnected object");
               }
             }
           }
@@ -96,11 +96,8 @@ public abstract class AbstractEnhancedDeserializationProxy {
     }
   }
 
-  protected abstract AbstractSerialStateHolder newSerialStateHolder(
-          Object userBean,
-          Map<String, ResultLoaderMap.LoadPair> unloadedProperties,
-          ObjectFactory objectFactory,
-          List<Class<?>> constructorArgTypes,
-          List<Object> constructorArgs);
+  protected abstract AbstractSerialStateHolder newSerialStateHolder(Object userBean,
+      Map<String, ResultLoaderMap.LoadPair> unloadedProperties, ObjectFactory objectFactory, List<Class<?>> constructorArgTypes,
+      List<Object> constructorArgs);
 
 }

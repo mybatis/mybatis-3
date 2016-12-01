@@ -1,17 +1,15 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ * Copyright 2009-2015 the original author or authors.
  *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  */
 package org.apache.ibatis.submitted.nestedresulthandler_multiple_association;
 
@@ -43,8 +41,7 @@ public class NestedResultHandlerMultipleAssociationTest {
     // populate in-memory database
     SqlSession session = sqlSessionFactory.openSession();
     Connection conn = session.getConnection();
-    reader = Resources
-        .getResourceAsReader("org/apache/ibatis/submitted/nestedresulthandler_multiple_association/CreateDB.sql");
+    reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/nestedresulthandler_multiple_association/CreateDB.sql");
     ScriptRunner runner = new ScriptRunner(conn);
     runner.setLogWriter(null);
     runner.runScript(reader);
@@ -56,12 +53,14 @@ public class NestedResultHandlerMultipleAssociationTest {
   public void failure() throws Exception {
     SqlSession sqlSession = sqlSessionFactory.openSession();
 
-    // Parents have child going from somewhere to somewhere, they are stored in
+    // Parents have child going from somewhere to somewhere, they are stored
+    // in
     // a Binome object
     // In this test we have 2 parents:
     // Parent1 is going from Child1 to Child2
     // Parent2 is going from Child2 to Child3 and from Child1 to Child2
-    // You'll see a NULL entry in the list instead of the Binome Child1/Child2
+    // You'll see a NULL entry in the list instead of the Binome
+    // Child1/Child2
     List<ParentBean> list = sqlSession.selectList("selectParentBeans");
     for (ParentBean pb : list) {
       for (Binome<ChildBean, ChildBean> childs : pb.getChilds()) {

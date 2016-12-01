@@ -1,17 +1,15 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ * Copyright 2009-2015 the original author or authors.
  *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  */
 package org.apache.ibatis.reflection;
 
@@ -35,8 +33,8 @@ import org.apache.ibatis.reflection.invoker.SetFieldInvoker;
 import org.apache.ibatis.reflection.property.PropertyNamer;
 
 /*
- * This class represents a cached set of class definition information that
- * allows for easy mapping between property names and getter/setter methods.
+ * This class represents a cached set of class definition information that allows for easy mapping
+ * between property names and getter/setter methods.
  */
 /**
  * @author Clinton Begin
@@ -80,7 +78,8 @@ public class Reflector {
           try {
             constructor.setAccessible(true);
           } catch (Exception e) {
-            // Ignored. This is only a final precaution, nothing we can do.
+            // Ignored. This is only a final precaution, nothing we
+            // can do.
           }
         }
         if (constructor.isAccessible()) {
@@ -124,18 +123,16 @@ public class Reflector {
           Method method = iterator.next();
           Class<?> methodType = method.getReturnType();
           if (methodType.equals(getterType)) {
-            throw new ReflectionException("Illegal overloaded getter method with ambiguous type for property "
-                + propName + " in class " + firstMethod.getDeclaringClass()
-                + ".  This breaks the JavaBeans " + "specification and can cause unpredicatble results.");
+            throw new ReflectionException("Illegal overloaded getter method with ambiguous type for property " + propName + " in class "
+                + firstMethod.getDeclaringClass() + ".  This breaks the JavaBeans " + "specification and can cause unpredicatble results.");
           } else if (methodType.isAssignableFrom(getterType)) {
             // OK getter type is descendant
           } else if (getterType.isAssignableFrom(methodType)) {
             getter = method;
             getterType = methodType;
           } else {
-            throw new ReflectionException("Illegal overloaded getter method with ambiguous type for property "
-                + propName + " in class " + firstMethod.getDeclaringClass()
-                + ".  This breaks the JavaBeans " + "specification and can cause unpredicatble results.");
+            throw new ReflectionException("Illegal overloaded getter method with ambiguous type for property " + propName + " in class "
+                + firstMethod.getDeclaringClass() + ".  This breaks the JavaBeans " + "specification and can cause unpredicatble results.");
           }
         }
         addGetMethod(propName, getter);
@@ -183,24 +180,21 @@ public class Reflector {
       } else {
         Class<?> expectedType = getTypes.get(propName);
         if (expectedType == null) {
-          throw new ReflectionException("Illegal overloaded setter method with ambiguous type for property "
-              + propName + " in class " + firstMethod.getDeclaringClass() + ".  This breaks the JavaBeans " +
-              "specification and can cause unpredicatble results.");
+          throw new ReflectionException("Illegal overloaded setter method with ambiguous type for property " + propName + " in class "
+              + firstMethod.getDeclaringClass() + ".  This breaks the JavaBeans " + "specification and can cause unpredicatble results.");
         } else {
           Iterator<Method> methods = setters.iterator();
           Method setter = null;
           while (methods.hasNext()) {
             Method method = methods.next();
-            if (method.getParameterTypes().length == 1
-                && expectedType.equals(method.getParameterTypes()[0])) {
+            if (method.getParameterTypes().length == 1 && expectedType.equals(method.getParameterTypes()[0])) {
               setter = method;
               break;
             }
           }
           if (setter == null) {
-            throw new ReflectionException("Illegal overloaded setter method with ambiguous type for property "
-                + propName + " in class " + firstMethod.getDeclaringClass() + ".  This breaks the JavaBeans " +
-                "specification and can cause unpredicatble results.");
+            throw new ReflectionException("Illegal overloaded setter method with ambiguous type for property " + propName + " in class "
+                + firstMethod.getDeclaringClass() + ".  This breaks the JavaBeans " + "specification and can cause unpredicatble results.");
           }
           addSetMethod(propName, setter);
         }
@@ -222,13 +216,16 @@ public class Reflector {
         try {
           field.setAccessible(true);
         } catch (Exception e) {
-          // Ignored. This is only a final precaution, nothing we can do.
+          // Ignored. This is only a final precaution, nothing we can
+          // do.
         }
       }
       if (field.isAccessible()) {
         if (!setMethods.containsKey(field.getName())) {
-          // issue #379 - removed the check for final because JDK 1.5 allows
-          // modification of final fields through reflection (JSR-133). (JGB)
+          // issue #379 - removed the check for final because JDK 1.5
+          // allows
+          // modification of final fields through reflection
+          // (JSR-133). (JGB)
           // pr #16 - final static can only be set by the classloader
           int modifiers = field.getModifiers();
           if (!(Modifier.isFinal(modifiers) && Modifier.isStatic(modifiers))) {
@@ -264,11 +261,9 @@ public class Reflector {
   }
 
   /*
-   * This method returns an array containing all methods
-   * declared in this class and any superclass.
-   * We use this method, instead of the simpler Class.getMethods(),
-   * because we want to look for private methods as well.
-   *
+   * This method returns an array containing all methods declared in this class and any superclass.
+   * We use this method, instead of the simpler Class.getMethods(), because we want to look for
+   * private methods as well.
    * @param cls The class
    * @return An array containing all methods in this class
    */
@@ -305,7 +300,8 @@ public class Reflector {
             try {
               currentMethod.setAccessible(true);
             } catch (Exception e) {
-              // Ignored. This is only a final precaution, nothing we can do.
+              // Ignored. This is only a final precaution, nothing
+              // we can do.
             }
           }
 
@@ -348,7 +344,6 @@ public class Reflector {
 
   /*
    * Gets the name of the class the instance provides information for
-   *
    * @return The class name
    */
   public Class<?> getType() {
@@ -385,7 +380,6 @@ public class Reflector {
 
   /*
    * Gets the type for a property setter
-   *
    * @param propertyName - the name of the property
    * @return The Class of the propery setter
    */
@@ -399,7 +393,6 @@ public class Reflector {
 
   /*
    * Gets the type for a property getter
-   *
    * @param propertyName - the name of the property
    * @return The Class of the propery getter
    */
@@ -413,7 +406,6 @@ public class Reflector {
 
   /*
    * Gets an array of the readable properties for an object
-   *
    * @return The array
    */
   public String[] getGetablePropertyNames() {
@@ -422,7 +414,6 @@ public class Reflector {
 
   /*
    * Gets an array of the writeable properties for an object
-   *
    * @return The array
    */
   public String[] getSetablePropertyNames() {
@@ -431,7 +422,6 @@ public class Reflector {
 
   /*
    * Check to see if a class has a writeable property by name
-   *
    * @param propertyName - the name of the property to check
    * @return True if the object has a writeable property by the name
    */
@@ -441,7 +431,6 @@ public class Reflector {
 
   /*
    * Check to see if a class has a readable property by name
-   *
    * @param propertyName - the name of the property to check
    * @return True if the object has a readable property by the name
    */

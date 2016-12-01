@@ -1,17 +1,15 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ * Copyright 2009-2015 the original author or authors.
  *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  */
 package org.apache.ibatis.scripting.xmltags;
 
@@ -34,7 +32,7 @@ public class ExpressionEvaluator {
       return (Boolean) value;
     }
     if (value instanceof Number) {
-        return !new BigDecimal(String.valueOf(value)).equals(BigDecimal.ZERO);
+      return !new BigDecimal(String.valueOf(value)).equals(BigDecimal.ZERO);
     }
     return value != null;
   }
@@ -48,16 +46,16 @@ public class ExpressionEvaluator {
       return (Iterable<?>) value;
     }
     if (value.getClass().isArray()) {
-        // the array may be primitive, so Arrays.asList() may throw
-        // a ClassCastException (issue 209).  Do the work manually
-        // Curse primitives! :) (JGB)
-        int size = Array.getLength(value);
-        List<Object> answer = new ArrayList<Object>();
-        for (int i = 0; i < size; i++) {
-            Object o = Array.get(value, i);
-            answer.add(o);
-        }
-        return answer;
+      // the array may be primitive, so Arrays.asList() may throw
+      // a ClassCastException (issue 209). Do the work manually
+      // Curse primitives! :) (JGB)
+      int size = Array.getLength(value);
+      List<Object> answer = new ArrayList<Object>();
+      for (int i = 0; i < size; i++) {
+        Object o = Array.get(value, i);
+        answer.add(o);
+      }
+      return answer;
     }
     if (value instanceof Map) {
       return ((Map) value).entrySet();

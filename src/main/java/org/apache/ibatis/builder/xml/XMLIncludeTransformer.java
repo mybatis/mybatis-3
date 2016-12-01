@@ -1,17 +1,15 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ * Copyright 2009-2015 the original author or authors.
  *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  */
 package org.apache.ibatis.builder.xml;
 
@@ -50,12 +48,14 @@ public class XMLIncludeTransformer {
 
   /**
    * Recursively apply includes through all SQL fragments.
+   * 
    * @param source Include node in DOM tree
    * @param variablesContext Current context for static variables with values
    */
   private void applyIncludes(Node source, final Properties variablesContext) {
     if (source.getNodeName().equals("include")) {
-      // new full context for included SQL - contains inherited context and new variables from current include node
+      // new full context for included SQL - contains inherited context
+      // and new variables from current include node
       Properties fullContext;
 
       String refid = getStringAttribute(source, "refid");
@@ -83,7 +83,7 @@ public class XMLIncludeTransformer {
       toInclude.getParentNode().removeChild(toInclude);
     } else if (source.getNodeType() == Node.ELEMENT_NODE) {
       NodeList children = source.getChildNodes();
-      for (int i=0; i<children.getLength(); i++) {
+      for (int i = 0; i < children.getLength(); i++) {
         applyIncludes(children.item(i), variablesContext);
       }
     } else if (source.getNodeType() == Node.ATTRIBUTE_NODE && !variablesContext.isEmpty()) {
@@ -110,9 +110,11 @@ public class XMLIncludeTransformer {
   }
 
   /**
-   * Read placholders and their values from include node definition. 
+   * Read placholders and their values from include node definition.
+   * 
    * @param node Include node instance
-   * @param inheritedVariablesContext Current context used for replace variables in new variables values
+   * @param inheritedVariablesContext Current context used for replace variables in new variables
+   *          values
    * @return variables context from include instance (no inherited values)
    */
   private Properties getVariablesContext(Node node, Properties inheritedVariablesContext) {
@@ -134,5 +136,5 @@ public class XMLIncludeTransformer {
     }
     return variablesContext;
   }
-  
+
 }

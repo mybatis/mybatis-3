@@ -1,17 +1,15 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ * Copyright 2009-2015 the original author or authors.
  *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  */
 package org.apache.ibatis.executor.resultset;
 
@@ -64,7 +62,7 @@ public class DefaultResultSetHandlerTest {
   /**
    * Contrary to the spec, some drivers require case-sensitive column names when getting result.
    * 
-   * @see <a href="http://code.google.com/p/mybatis/issues/detail?id=557">Issue 557</a>
+   * @see <a href= "http://code.google.com/p/mybatis/issues/detail?id=557">Issue 557</a>
    */
   @Test
   public void shouldRetainColumnNameCase() throws Exception {
@@ -76,7 +74,8 @@ public class DefaultResultSetHandlerTest {
     final ResultHandler resultHandler = null;
     final BoundSql boundSql = null;
     final RowBounds rowBounds = new RowBounds(0, 100);
-    final DefaultResultSetHandler fastResultSetHandler = new DefaultResultSetHandler(executor, ms, parameterHandler, resultHandler, boundSql, rowBounds);
+    final DefaultResultSetHandler fastResultSetHandler = new DefaultResultSetHandler(executor, ms, parameterHandler, resultHandler,
+        boundSql, rowBounds);
 
     when(stmt.getResultSet()).thenReturn(rs);
     when(rs.getMetaData()).thenReturn(rsmd);
@@ -90,7 +89,8 @@ public class DefaultResultSetHandlerTest {
     when(rsmd.getColumnClassName(1)).thenReturn(Integer.class.getCanonicalName());
     when(stmt.getConnection()).thenReturn(conn);
     when(conn.getMetaData()).thenReturn(dbmd);
-    when(dbmd.supportsMultipleResultSets()).thenReturn(false); // for simplicity.
+    when(dbmd.supportsMultipleResultSets()).thenReturn(false); // for
+    // simplicity.
 
     final List<Object> results = fastResultSetHandler.handleResultSets(stmt);
     assertEquals(1, results.size());
@@ -102,8 +102,8 @@ public class DefaultResultSetHandlerTest {
     final MappedStatement ms = getMappedStatement();
     final RowBounds rowBounds = new RowBounds(0, 100);
 
-    final DefaultResultSetHandler defaultResultSetHandler = new DefaultResultSetHandler(null/*executor*/, ms,
-            null/*parameterHandler*/, null/*resultHandler*/, null/*boundSql*/, rowBounds);
+    final DefaultResultSetHandler defaultResultSetHandler = new DefaultResultSetHandler(null/* executor */, ms, null/* parameterHandler */,
+        null/* resultHandler */, null/* boundSql */, rowBounds);
 
     final ResultSetWrapper rsw = mock(ResultSetWrapper.class);
 
@@ -114,8 +114,8 @@ public class DefaultResultSetHandlerTest {
     List<ResultMapping> constructorMappings = Collections.singletonList(resultMapping);
 
     try {
-      defaultResultSetHandler.createParameterizedResultObject(rsw, null/*resultType*/, constructorMappings,
-              null/*constructorArgTypes*/, null/*constructorArgs*/, null/*columnPrefix*/);
+      defaultResultSetHandler.createParameterizedResultObject(rsw, null/* resultType */, constructorMappings, null/* constructorArgTypes */,
+          null/* constructorArgs */, null/* columnPrefix */);
       Assert.fail("Should have thrown ExecutorException");
     } catch (Exception e) {
       Assert.assertTrue("Expected ExecutorException", e instanceof ExecutorException);
@@ -126,8 +126,8 @@ public class DefaultResultSetHandlerTest {
   MappedStatement getMappedStatement() {
     final Configuration config = new Configuration();
     final TypeHandlerRegistry registry = config.getTypeHandlerRegistry();
-    return new MappedStatement.Builder(config, "testSelect", new StaticSqlSource(config, "some select statement"), SqlCommandType.SELECT).resultMaps(
-        new ArrayList<ResultMap>() {
+    return new MappedStatement.Builder(config, "testSelect", new StaticSqlSource(config, "some select statement"), SqlCommandType.SELECT)
+        .resultMaps(new ArrayList<ResultMap>() {
           {
             add(new ResultMap.Builder(config, "testMap", HashMap.class, new ArrayList<ResultMapping>() {
               {

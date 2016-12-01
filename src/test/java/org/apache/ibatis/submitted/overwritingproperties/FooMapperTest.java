@@ -1,17 +1,15 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ * Copyright 2009-2015 the original author or authors.
  *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  */
 package org.apache.ibatis.submitted.overwritingproperties;
 
@@ -62,14 +60,14 @@ public class FooMapperTest {
     mapper.insertFoo(inserted);
 
     final Foo selected = mapper.selectFoo();
-    
+
     // field1 is explicitly mapped properly
     // <result property="field1" column="field1" jdbcType="INTEGER"/>
     Assert.assertEquals(inserted.getField1(), selected.getField1());
 
     // field4 is not mapped in the result map
     // <result property="field4" column="field3" jdbcType="INTEGER"/>
-    Assert.assertEquals(inserted.getField3(), selected.getField4() );
+    Assert.assertEquals(inserted.getField3(), selected.getField4());
 
     // field4 is explicitly remapped to field3 in the resultmap
     // <result property="field3" column="field4" jdbcType="INTEGER"/>
@@ -78,7 +76,7 @@ public class FooMapperTest {
     // is automapped from the only column that matches... which is Field1
     // probably not the intention, but it's working correctly given the code
     // <association property="field2" javaType="Bar">
-    //  <result property="field1" column="bar_field1" jdbcType="INTEGER"/>
+    // <result property="field1" column="bar_field1" jdbcType="INTEGER"/>
     // </association>
     Assert.assertEquals(inserted.getField2().getField1(), selected.getField2().getField1());
   }

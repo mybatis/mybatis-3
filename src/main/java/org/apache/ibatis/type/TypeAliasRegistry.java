@@ -1,17 +1,15 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ * Copyright 2009-2015 the original author or authors.
  *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  */
 package org.apache.ibatis.type;
 
@@ -121,15 +119,15 @@ public class TypeAliasRegistry {
     }
   }
 
-  public void registerAliases(String packageName){
+  public void registerAliases(String packageName) {
     registerAliases(packageName, Object.class);
   }
 
-  public void registerAliases(String packageName, Class<?> superType){
+  public void registerAliases(String packageName, Class<?> superType) {
     ResolverUtil<Class<?>> resolverUtil = new ResolverUtil<Class<?>>();
     resolverUtil.find(new ResolverUtil.IsA(superType), packageName);
     Set<Class<? extends Class<?>>> typeSet = resolverUtil.getClasses();
-    for(Class<?> type : typeSet){
+    for (Class<?> type : typeSet) {
       // Ignore inner classes and interfaces (including package-info.java)
       // Skip also inner classes. See issue #6
       if (!type.isAnonymousClass() && !type.isInterface() && !type.isMemberClass()) {
@@ -143,7 +141,7 @@ public class TypeAliasRegistry {
     Alias aliasAnnotation = type.getAnnotation(Alias.class);
     if (aliasAnnotation != null) {
       alias = aliasAnnotation.value();
-    } 
+    }
     registerAlias(alias, type);
   }
 
@@ -163,10 +161,10 @@ public class TypeAliasRegistry {
     try {
       registerAlias(alias, Resources.classForName(value));
     } catch (ClassNotFoundException e) {
-      throw new TypeException("Error registering type alias "+alias+" for "+value+". Cause: " + e, e);
+      throw new TypeException("Error registering type alias " + alias + " for " + value + ". Cause: " + e, e);
     }
   }
-  
+
   /**
    * @since 3.2.2
    */
