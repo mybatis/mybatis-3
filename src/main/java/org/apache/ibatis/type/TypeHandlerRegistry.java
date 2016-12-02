@@ -193,6 +193,17 @@ public final class TypeHandlerRegistry {
   @SuppressWarnings("unchecked")
   private <T> TypeHandler<T> getTypeHandler(Type type, JdbcType jdbcType) {
     Map<JdbcType, TypeHandler<?>> jdbcHandlerMap = TYPE_HANDLER_MAP.get(type);
+    if (jdbcHandlerMap == null && type instanceof Class){
+      Class c = ((Class)type).getSuperclass();
+			while(c != null && c != Object.class){
+        jdbcHandlerMap = TYPE_HANDLER_MAP.get(c);
+        if (jdbcHandlerMap != null){
+          break;
+        }else{
+          c = c.getSuperclass();
+        }
+      }
+    }
     TypeHandler<?> handler = null;
     if (jdbcHandlerMap != null) {
       handler = jdbcHandlerMap.get(jdbcType);
