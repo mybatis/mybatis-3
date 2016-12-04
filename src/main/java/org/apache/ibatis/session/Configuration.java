@@ -44,6 +44,11 @@ import org.apache.ibatis.executor.CachingExecutor;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.executor.ReuseExecutor;
 import org.apache.ibatis.executor.SimpleExecutor;
+import org.apache.ibatis.executor.PagingExecutor;
+import org.apache.ibatis.executor.dialect.DerbyDialect;
+import org.apache.ibatis.executor.dialect.Dialect;
+import org.apache.ibatis.executor.dialect.HSQLDBDialect;
+import org.apache.ibatis.executor.dialect.MySQLDialect;
 import org.apache.ibatis.executor.keygen.KeyGenerator;
 import org.apache.ibatis.executor.loader.ProxyFactory;
 import org.apache.ibatis.executor.loader.cglib.CglibProxyFactory;
@@ -108,6 +113,8 @@ public class Configuration {
   protected boolean callSettersOnNulls = false;
   protected boolean useActualParamName = true;
   protected boolean returnInstanceForEmptyRow = false;
+  protected boolean usePagingExcutor = false;
+  protected Dialect dialect;
 
   protected String logPrefix;
   protected Class <? extends Log> logImpl;
@@ -200,6 +207,10 @@ public class Configuration {
     typeAliasRegistry.registerAlias("CGLIB", CglibProxyFactory.class);
     typeAliasRegistry.registerAlias("JAVASSIST", JavassistProxyFactory.class);
 
+    typeAliasRegistry.registerAlias("Derby", DerbyDialect.class);
+    typeAliasRegistry.registerAlias("HSQLDB", HSQLDBDialect.class);
+    typeAliasRegistry.registerAlias("MySQL", MySQLDialect.class);
+
     languageRegistry.setDefaultDriverClass(XMLLanguageDriver.class);
     languageRegistry.register(RawLanguageDriver.class);
   }
@@ -256,6 +267,22 @@ public class Configuration {
 
   public void setReturnInstanceForEmptyRow(boolean returnEmptyInstance) {
     this.returnInstanceForEmptyRow = returnEmptyInstance;
+  }
+
+  public boolean isUsePagingExcutor() {
+    return usePagingExcutor;
+  }
+
+  public void setUsePagingExcutor(boolean usePagingExcutor) {
+    this.usePagingExcutor = usePagingExcutor;
+  }
+
+  public Dialect getDialect() {
+    return dialect;
+  }
+
+  public void setDialect(Dialect dialect) {
+    this.dialect = dialect;
   }
 
   public String getDatabaseId() {
@@ -564,6 +591,9 @@ public class Configuration {
     }
     if (cacheEnabled) {
       executor = new CachingExecutor(executor);
+    }
+    if (usePagingExcutor) {
+      executor = new PagingExecutor(executor, dialect);
     }
     executor = (Executor) interceptorChain.pluginAll(executor);
     return executor;

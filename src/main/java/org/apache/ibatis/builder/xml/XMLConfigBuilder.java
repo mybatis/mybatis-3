@@ -24,6 +24,7 @@ import org.apache.ibatis.builder.BaseBuilder;
 import org.apache.ibatis.builder.BuilderException;
 import org.apache.ibatis.datasource.DataSourceFactory;
 import org.apache.ibatis.executor.ErrorContext;
+import org.apache.ibatis.executor.dialect.Dialect;
 import org.apache.ibatis.executor.loader.ProxyFactory;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.io.VFS;
@@ -257,11 +258,17 @@ public class XMLConfigBuilder extends BaseBuilder {
     configuration.setCallSettersOnNulls(booleanValueOf(props.getProperty("callSettersOnNulls"), false));
     configuration.setUseActualParamName(booleanValueOf(props.getProperty("useActualParamName"), true));
     configuration.setReturnInstanceForEmptyRow(booleanValueOf(props.getProperty("returnInstanceForEmptyRow"), false));
+    configuration.setUsePagingExcutor(booleanValueOf(props.getProperty("usePagingExcutor"), false));
     configuration.setLogPrefix(props.getProperty("logPrefix"));
     @SuppressWarnings("unchecked")
     Class<? extends Log> logImpl = (Class<? extends Log>)resolveClass(props.getProperty("logImpl"));
     configuration.setLogImpl(logImpl);
     configuration.setConfigurationFactory(resolveClass(props.getProperty("configurationFactory")));
+    if(configuration.isUsePagingExcutor()){
+      Class<? extends Dialect> dialectClass = (Class<? extends Dialect>)resolveClass(props.getProperty("dialect"));
+      Dialect dialect = dialectClass.newInstance();
+      configuration.setDialect(dialect);
+    }
   }
 
   private void environmentsElement(XNode context) throws Exception {
