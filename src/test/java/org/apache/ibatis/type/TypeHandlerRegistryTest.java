@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2016 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package org.apache.ibatis.type;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
@@ -25,14 +26,21 @@ import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.ibatis.domain.misc.RichType;
+import org.junit.Before;
 import org.junit.Test;
 
 public class TypeHandlerRegistryTest {
 
-  private TypeHandlerRegistry typeHandlerRegistry = new TypeHandlerRegistry();
+  private TypeHandlerRegistry typeHandlerRegistry;
+
+  @Before
+  public void setup() {
+    typeHandlerRegistry = new TypeHandlerRegistry();
+  }
 
   @Test
   public void shouldRegisterAndRetrieveTypeHandler() {
@@ -133,5 +141,23 @@ public class TypeHandlerRegistryTest {
     assertSame(IntegerTypeHandler.class, typeHandlerRegistry.getTypeHandler(Integer.class).getClass());
     typeHandlerRegistry.register(Integer.class, IntegerTypeHandler.class);
   }
-  
+
+  @Test
+  public void shouldReturnHandlerForSuperclassIfRegistered() {
+    class MyDate extends Date {
+      private static final long serialVersionUID = 1L;
+    }
+    assertEquals(DateTypeHandler.class, typeHandlerRegistry.getTypeHandler(MyDate.class).getClass());
+  }
+
+  @Test
+  public void shouldReturnHandlerForSuperSuperclassIfRegistered() {
+    class MyDate1 extends Date {
+      private static final long serialVersionUID = 1L;
+    }
+    class MyDate2 extends MyDate1 {
+      private static final long serialVersionUID = 1L;
+    }
+    assertEquals(DateTypeHandler.class, typeHandlerRegistry.getTypeHandler(MyDate2.class).getClass());
+  }
 }
