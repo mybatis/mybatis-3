@@ -207,22 +207,24 @@ public final class TypeHandlerRegistry {
         handler = pickSoleHandler(jdbcHandlerMap);
       }
     }
-    if (handler == null && type != null && type instanceof Class && Enum.class.isAssignableFrom((Class<?>) type)) {
-      handler = new EnumTypeHandler((Class<?>) type);
-    }
     // type drives generics here
     return (TypeHandler<T>) handler;
   }
 
+  @SuppressWarnings({ "rawtypes", "unchecked" })
   private Map<JdbcType, TypeHandler<?>> getJdbcHandlerMap(Type type) {
     Map<JdbcType, TypeHandler<?>> jdbcHandlerMap = TYPE_HANDLER_MAP.get(type);
     if (NULL_TYPE_HANDLER_MAP.equals(jdbcHandlerMap)) {
       return null;
     }
     if (jdbcHandlerMap == null && type instanceof Class) {
-      jdbcHandlerMap = getJdbcHandlerMapForSuperclass((Class<?>) type);
+      Class<?> clazz = (Class<?>) type;
+      jdbcHandlerMap = getJdbcHandlerMapForSuperclass(clazz);
       if (jdbcHandlerMap != null) {
         TYPE_HANDLER_MAP.put(type, jdbcHandlerMap);
+      } else if (clazz.isEnum()) {
+        register(clazz, new EnumTypeHandler(clazz));
+        return TYPE_HANDLER_MAP.get(clazz);
       }
     }
     if (jdbcHandlerMap == null) {
