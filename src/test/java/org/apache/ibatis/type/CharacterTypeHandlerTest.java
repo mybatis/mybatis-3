@@ -82,7 +82,7 @@ public class CharacterTypeHandlerTest extends BaseTypeHandlerTest {
   @Override
   @Test
   public void shouldGetResultNullFromCallableStatement() throws Exception {
-    when(cs.getString("column")).thenReturn(null);
+    when(cs.getString(1)).thenReturn(null);
     when(cs.wasNull()).thenReturn(true);
     assertNull(TYPE_HANDLER.getResult(cs, 1));
   }

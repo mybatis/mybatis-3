@@ -72,12 +72,12 @@
 </dataSource>]]></source>
         <p>这个例子中的 username 和 password 将会由 properties 元素中设置的相应值来替换。
           driver 和 url 属性将会由 config.properties 文件中对应的值来替换。这样就为配置提供了诸多灵活选择。</p>
-        <p>属性也可以被传递到 SqlSessionBuilder.build()方法中。例如：</p>
-        <source><![CDATA[SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, props);
+        <p>属性也可以被传递到 SqlSessionFactoryBuilder.build()方法中。例如：</p>
+        <source><![CDATA[SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, props);
 
 // ... or ...
 
-SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, props);
+SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environment, props);
 ]]></source>
         <p>如果属性在不只一个地方进行了配置，那么 MyBatis 将按照下面的顺序来加载：</p>
         <ul>
@@ -89,6 +89,44 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
           </li>
         </ul>
         <p>因此，通过方法参数传递的属性具有最高优先级，resource/url 属性中指定的配置文件次之，最低优先级的是 properties 属性中指定的属性。</p>
+
+        <p>
+          Since the MyBatis 3.4.2, your can specify a default value into placeholder as follow:
+        </p>
+        <source><![CDATA[
+<dataSource type="POOLED">
+  <!-- ... -->
+  <property name="username" value="${username:ut_user}"/> <!-- If 'username' property not present, username become 'ut_user' -->
+</dataSource>]]></source>
+
+        <p>
+          This feature is disabled by default. If you specify a default value into placeholder,
+          you should be enable this feature by adding a special property as follow:
+        </p>
+
+        <source><![CDATA[
+<properties resource="org/mybatis/example/config.properties">
+  <!-- ... -->
+  <property name="org.apache.ibatis.parsing.PropertyParser.enable-default-value" value="true"/> <!-- Enable this feature -->
+</properties>]]></source>
+
+        <p>
+          <span class="label important">NOTE</span> Also If you are used already the <code>":"</code> as property key(e.g. <code>db:username</code>)
+          or you are used already the ternary operator of OGNL expression(e.g. <code>${tableName != null ? tableName : 'global_constants'}</code>) on your sql definition,
+          you should be change the character that separate key and default value by adding a special property as follow:
+        </p>
+
+        <source><![CDATA[
+<properties resource="org/mybatis/example/config.properties">
+  <!-- ... -->
+  <property name="org.apache.ibatis.parsing.PropertyParser.default-value-separator" value="?:"/> <!-- Change default value of separator -->
+</properties>]]></source>
+        <source><![CDATA[
+<dataSource type="POOLED">
+  <!-- ... -->
+  <property name="username" value="${db:username?:ut_user}"/>
+</dataSource>]]></source>
+
       </subsection>
       <subsection name="settings" id="settings">
         <p>这是 MyBatis 中极为重要的调整设置，它们会改变 MyBatis 的运行时行为。下表描述了设置中各项的意图、默认值等。</p>
@@ -137,13 +175,13 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 aggressiveLazyLoading
               </td>
               <td>
-                当启用时，对任意延迟属性的调用会使带有延迟加载属性的对象完整加载；反之，每种属性将会按需加载。
+                When enabled, any method call will load all the lazy properties of the object. Otherwise, each property is loaded on demand (see also <code>lazyLoadTriggerMethods</code>).
               </td>
               <td>
                 true | false
               </td>
               <td>
-                true
+                false (true in ≤3.4.1)
               </td>
             </tr>
             <tr>
@@ -379,6 +417,22 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
               </td>
               <td>
                 指定当结果集中值为 null 的时候是否调用映射对象的 setter（map 对象时为 put）方法，这对于有 Map.keySet() 依赖或 null 值初始化的时候是有用的。注意基本类型（int、boolean等）是不能设置成 null 的。
+              </td>
+              <td>
+                true | false
+              </td>
+              <td>
+                false
+              </td>
+            </tr>
+            <tr>
+              <td>
+                returnInstanceForEmptyRow
+              </td>
+              <td>
+                MyBatis, by default, returns <code>null</code> when all the columns of a returned row are NULL.
+                When this setting is enabled, MyBatis returns an empty instance instead.
+                Note that it is also applied to nested results (i.e. collectioin and association). Since: 3.4.2
               </td>
               <td>
                 true | false
@@ -1288,7 +1342,7 @@ public class ExamplePlugin implements Interceptor {
         <p><span class="label important">NOTE</span>
           <strong>覆盖配置类</strong>
         </p>
-        <p>除了用插件来修改 MyBatis 核心行为之外，还可以通过完全覆盖配置类来达到目的。只需继承后覆盖其中的每个方法，再把它传递到 sqlSessionFactoryBuilder.build(myConfig) 方法即可。再次重申，这可能会严重影响 MyBatis 的行为，务请慎之又慎。</p>
+        <p>除了用插件来修改 MyBatis 核心行为之外，还可以通过完全覆盖配置类来达到目的。只需继承后覆盖其中的每个方法，再把它传递到 SqlSessionFactoryBuilder.build(myConfig) 方法即可。再次重申，这可能会严重影响 MyBatis 的行为，务请慎之又慎。</p>
       </subsection>
       <subsection name="配置环境（environments）" id="environments">
         <p>MyBatis 可以配置成适应多种环境，这种机制有助于将 SQL 映射应用于多种数据库之中，
@@ -1309,14 +1363,14 @@ public class ExamplePlugin implements Interceptor {
         <p>为了指定创建哪种环境，只要将它作为可选的参数传递给 SqlSessionFactoryBuilder 即可。可以接受环境配置的两个方法签名是：
         </p>
 
-        <source><![CDATA[SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment);
-SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment,properties);]]></source>
+        <source><![CDATA[SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environment);
+SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environment,properties);]]></source>
 
         <p>如果忽略了环境参数，那么默认环境将会被加载，如下所示：
         </p>
 
-        <source><![CDATA[SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader);
-SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader,properties);]]></source>
+        <source><![CDATA[SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader);
+SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader,properties);]]></source>
 
         <p>环境元素定义了如何配置环境。
         </p>

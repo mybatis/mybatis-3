@@ -31,6 +31,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 
 import org.apache.ibatis.annotations.Arg;
@@ -45,6 +46,8 @@ import org.apache.ibatis.annotations.InsertProvider;
 import org.apache.ibatis.annotations.Lang;
 import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.annotations.Options;
+import org.apache.ibatis.annotations.Options.FlushCachePolicy;
+import org.apache.ibatis.annotations.Property;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.ResultMap;
 import org.apache.ibatis.annotations.ResultType;
@@ -55,7 +58,6 @@ import org.apache.ibatis.annotations.SelectProvider;
 import org.apache.ibatis.annotations.TypeDiscriminator;
 import org.apache.ibatis.annotations.Update;
 import org.apache.ibatis.annotations.UpdateProvider;
-import org.apache.ibatis.annotations.Options.FlushCachePolicy;
 import org.apache.ibatis.binding.BindingException;
 import org.apache.ibatis.binding.MapperMethod.ParamMap;
 import org.apache.ibatis.builder.BuilderException;
@@ -77,6 +79,7 @@ import org.apache.ibatis.mapping.ResultSetType;
 import org.apache.ibatis.mapping.SqlCommandType;
 import org.apache.ibatis.mapping.SqlSource;
 import org.apache.ibatis.mapping.StatementType;
+import org.apache.ibatis.parsing.PropertyParser;
 import org.apache.ibatis.reflection.TypeParameterResolver;
 import org.apache.ibatis.scripting.LanguageDriver;
 import org.apache.ibatis.session.Configuration;
@@ -177,14 +180,36 @@ public class MapperAnnotationBuilder {
     if (cacheDomain != null) {
       Integer size = cacheDomain.size() == 0 ? null : cacheDomain.size();
       Long flushInterval = cacheDomain.flushInterval() == 0 ? null : cacheDomain.flushInterval();
-      assistant.useNewCache(cacheDomain.implementation(), cacheDomain.eviction(), flushInterval, size, cacheDomain.readWrite(), cacheDomain.blocking(), null);
+      Properties props = convertToProperties(cacheDomain.properties());
+      assistant.useNewCache(cacheDomain.implementation(), cacheDomain.eviction(), flushInterval, size, cacheDomain.readWrite(), cacheDomain.blocking(), props);
     }
+  }
+
+  private Properties convertToProperties(Property[] properties) {
+    if (properties.length == 0) {
+      return null;
+    }
+    Properties props = new Properties();
+    for (Property property : properties) {
+      props.setProperty(property.name(),
+          PropertyParser.parse(property.value(), configuration.getVariables()));
+    }
+    return props;
   }
 
   private void parseCacheRef() {
     CacheNamespaceRef cacheDomainRef = type.getAnnotation(CacheNamespaceRef.class);
     if (cacheDomainRef != null) {
-      assistant.useCacheRef(cacheDomainRef.value().getName());
+      Class<?> refType = cacheDomainRef.value();
+      String refName = cacheDomainRef.name();
+      if (refType == void.class && refName.isEmpty()) {
+        throw new BuilderException("Should be specified either value() or name() attribute in the @CacheNamespaceRef");
+      }
+      if (refType != void.class && !refName.isEmpty()) {
+        throw new BuilderException("Cannot use both value() and name() attribute in the @CacheNamespaceRef");
+      }
+      String namespace = (refType != void.class) ? refType.getName() : refName;
+      assistant.useCacheRef(namespace);
     }
   }
 

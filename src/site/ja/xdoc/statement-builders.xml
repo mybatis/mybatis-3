@@ -312,7 +312,7 @@ public String updatePersonSql() {
               <td>
                 <code>INSERT_INTO(String)</code>
               </td>
-              <td>対象となるテーブルを指定して insert ステートメントを開始します。通常、この後に一回以上 VALUES() メソッドの呼び出しが続きます。
+              <td>対象となるテーブルを指定して insert ステートメントを開始します。通常、この後に一回以上 VALUES() 又は INTO_COLUMNS() と INTO_VALUES() メソッドの呼び出しが続きます。
               </td>
             </tr>
             <tr>
@@ -342,8 +342,57 @@ public String updatePersonSql() {
               <td>insert ステートメントに values 句を追加します。第一引数は列のリストで、第二引数は値のリストです。
               </td>
             </tr>
+            <tr>
+              <td>
+                <code>INTO_COLUMNS(String...)</code>
+              </td>
+              <td>
+                insert ステートメントにカラムリスト追加します。
+                このメソッドは、INTO_VALUES() メソッドと一緒に呼び出します。
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>INTO_VALUES(String...)</code>
+              </td>
+              <td>
+                insert ステートメントに value 句を追加します。
+                このメソッドは、INTO_COLUMNS() メソッドと一緒に呼び出します。
+              </td>
+            </tr>
           </tbody>
         </table>
+
+
+        <p>バージョン3.4.2以降では、次のように可変長引数を使うことができます。</p>
+
+<source><![CDATA[
+public String selectPersonSql() {
+  return new SQL()
+    .SELECT("P.ID", "A.USERNAME", "A.PASSWORD", "P.FULL_NAME", "D.DEPARTMENT_NAME", "C.COMPANY_NAME")
+    .FROM("PERSON P", "ACCOUNT A")
+    .INNER_JOIN("DEPARTMENT D on D.ID = P.DEPARTMENT_ID", "COMPANY C on D.COMPANY_ID = C.ID")
+    .WHERE("P.ID = A.ID", "P.FULL_NAME like #{name}")
+    .ORDER_BY("P.ID", "P.FULL_NAME")
+    .toString();
+}
+
+public String insertPersonSql() {
+  return new SQL()
+    .INSERT_INTO("PERSON")
+    .INTO_COLUMNS("ID", "FULL_NAME")
+    .INTO_VALUES("#{id}", "#{fullName}")
+    .toString();
+}
+
+public String updatePersonSql() {
+  return new SQL()
+    .UPDATE("PERSON")
+    .SET("FULL_NAME = #{fullName}", "DATE_OF_BIRTH = #{dateOfBirth}")
+    .WHERE("ID = #{id}")
+    .toString();
+}
+]]></source>
 
       </subsection>
 

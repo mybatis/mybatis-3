@@ -44,5 +44,7 @@
 	<mappers>
 		<mapper class="org.apache.ibatis.submitted.cache.PersonMapper"/>
 		<mapper class="org.apache.ibatis.submitted.cache.ImportantPersonMapper"/>
+		<mapper class="org.apache.ibatis.submitted.cache.CustomCacheMapper"/>
+		<mapper class="org.apache.ibatis.submitted.cache.SpecialPersonMapper"/>
 	</mappers>
 </configuration> 

@@ -92,15 +92,15 @@
           configuration.
         </p>
         <p>
-          Properties can also be passed into the SqlSessionBuilder.build()
+          Properties can also be passed into the SqlSessionFactoryBuilder.build()
           methods. For
           example:
         </p>
-        <source><![CDATA[SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, props);
+        <source><![CDATA[SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, props);
 
 // ... or ...
 
-SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, props);
+SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environment, props);
 ]]></source>
         <p>
           If a property exists in more than one of these places, MyBatis
@@ -127,6 +127,44 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
           the
           properties specified in the body of the properties element.
         </p>
+
+        <p>
+          Since the MyBatis 3.4.2, your can specify a default value into placeholder as follow:
+        </p>
+        <source><![CDATA[
+<dataSource type="POOLED">
+  <!-- ... -->
+  <property name="username" value="${username:ut_user}"/> <!-- If 'username' property not present, username become 'ut_user' -->
+</dataSource>]]></source>
+
+        <p>
+          This feature is disabled by default. If you specify a default value into placeholder,
+          you should be enable this feature by adding a special property as follow:
+        </p>
+
+        <source><![CDATA[
+<properties resource="org/mybatis/example/config.properties">
+  <!-- ... -->
+  <property name="org.apache.ibatis.parsing.PropertyParser.enable-default-value" value="true"/> <!-- Enable this feature -->
+</properties>]]></source>
+
+        <p>
+          <span class="label important">NOTE</span> Also If you are used already the <code>":"</code> as property key(e.g. <code>db:username</code>)
+          or you are used already the ternary operator of OGNL expression(e.g. <code>${tableName != null ? tableName : 'global_constants'}</code>) on your sql definition,
+          you should be change the character that separate key and default value by adding a special property as follow:
+        </p>
+
+        <source><![CDATA[
+<properties resource="org/mybatis/example/config.properties">
+  <!-- ... -->
+  <property name="org.apache.ibatis.parsing.PropertyParser.default-value-separator" value="?:"/> <!-- Change default value of separator -->
+</properties>]]></source>
+        <source><![CDATA[
+<dataSource type="POOLED">
+  <!-- ... -->
+  <property name="username" value="${db:username?:ut_user}"/>
+</dataSource>]]></source>
+
       </subsection>
       <subsection name="settings">
         <p>
@@ -183,18 +221,13 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 aggressiveLazyLoading
               </td>
               <td>
-                When enabled, an object with lazy
-                loaded properties will be
-                loaded entirely upon a call to any of
-                the lazy properties.
-                Otherwise, each property is loaded on
-                demand.
+                When enabled, any method call will load all the lazy properties of the object. Otherwise, each property is loaded on demand (see also <code>lazyLoadTriggerMethods</code>).
               </td>
               <td>
                 true | false
               </td>
               <td>
-                true
+                false (true in ≤3.4.1)
               </td>
             </tr>
             <tr>
@@ -470,6 +503,22 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
             </tr>
             <tr>
               <td>
+                returnInstanceForEmptyRow
+              </td>
+              <td>
+                MyBatis, by default, returns <code>null</code> when all the columns of a returned row are NULL.
+                When this setting is enabled, MyBatis returns an empty instance instead.
+                Note that it is also applied to nested results (i.e. collectioin and association). Since: 3.4.2
+              </td>
+              <td>
+                true | false
+              </td>
+              <td>
+                false
+              </td>
+            </tr>
+            <tr>
+              <td>
                 logPrefix
               </td>
               <td>
@@ -598,7 +647,7 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
           , if no annotation is found,
           will be registered as an alias
           using
-          uncapitalized non-qualified class name of the bean. Thas is
+          uncapitalized non-qualified class name of the bean. That is
           <code>domain.blog.Author</code>
           will be registered as
           <code>author</code>. If the
@@ -1491,7 +1540,7 @@ public class ExamplePlugin implements Interceptor {
           can
           also override the Configuration class entirely. Simply extend it
           and override any methods inside, and pass it into the call to the
-          sqlSessionFactoryBuilder.build(myConfig) method. Again though, this
+          SqlSessionFactoryBuilder.build(myConfig) method. Again though, this
           could have a severe impact on the behaviour of MyBatis, so use
           caution.
         </p>
@@ -1533,15 +1582,15 @@ public class ExamplePlugin implements Interceptor {
           signatures that accept the environment are:
         </p>
 
-        <source><![CDATA[SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment);
-SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, properties);]]></source>
+        <source><![CDATA[SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environment);
+SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environment, properties);]]></source>
 
         <p>If the environment is omitted, then the default environment is
           loaded, as follows:
         </p>
 
-        <source><![CDATA[SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader);
-SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, properties);]]></source>
+        <source><![CDATA[SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader);
+SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, properties);]]></source>
 
         <p>The environments element defines how the environment is
           configured.

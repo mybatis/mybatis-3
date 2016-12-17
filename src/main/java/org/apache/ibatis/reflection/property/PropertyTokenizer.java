@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2016 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ import java.util.Iterator;
 /**
  * @author Clinton Begin
  */
-public class PropertyTokenizer implements Iterable<PropertyTokenizer>, Iterator<PropertyTokenizer> {
+public class PropertyTokenizer implements Iterator<PropertyTokenizer> {
   private String name;
   private String indexedName;
   private String index;
@@ -72,10 +72,5 @@ public class PropertyTokenizer implements Iterable<PropertyTokenizer>, Iterator<
   @Override
   public void remove() {
     throw new UnsupportedOperationException("Remove is not supported, as it has no meaning in the context of properties.");
-  }
-
-  @Override
-  public Iterator<PropertyTokenizer> iterator() {
-    return this;
   }
 }

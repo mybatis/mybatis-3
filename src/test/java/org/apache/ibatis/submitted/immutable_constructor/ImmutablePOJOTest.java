@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2016 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -73,8 +73,8 @@ public final class ImmutablePOJOTest {
       final ImmutablePOJOMapper mapper = session.getMapper(ImmutablePOJOMapper.class);
       final ImmutablePOJO pojo = mapper.getImmutablePOJO(POJO_ID);
 
-      assertEquals(POJO_ID, pojo.getId());
-      assertEquals(POJO_DESCRIPTION, pojo.getDescription());
+      assertEquals(POJO_ID, pojo.getImmutableId());
+      assertEquals(POJO_DESCRIPTION, pojo.getImmutableDescription());
     } finally {
       session.close();
     }

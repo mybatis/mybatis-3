@@ -29,6 +29,7 @@ import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.ibatis.io.ResolverUtil;
 import org.apache.ibatis.io.Resources;
@@ -39,9 +40,11 @@ import org.apache.ibatis.io.Resources;
 public final class TypeHandlerRegistry {
 
   private final Map<JdbcType, TypeHandler<?>> JDBC_TYPE_HANDLER_MAP = new EnumMap<JdbcType, TypeHandler<?>>(JdbcType.class);
-  private final Map<Type, Map<JdbcType, TypeHandler<?>>> TYPE_HANDLER_MAP = new HashMap<Type, Map<JdbcType, TypeHandler<?>>>();
+  private final Map<Type, Map<JdbcType, TypeHandler<?>>> TYPE_HANDLER_MAP = new ConcurrentHashMap<Type, Map<JdbcType, TypeHandler<?>>>();
   private final TypeHandler<Object> UNKNOWN_TYPE_HANDLER = new UnknownTypeHandler(this);
   private final Map<Class<?>, TypeHandler<?>> ALL_TYPE_HANDLERS_MAP = new HashMap<Class<?>, TypeHandler<?>>();
+
+  private static final Map<JdbcType, TypeHandler<?>> NULL_TYPE_HANDLER_MAP = new HashMap<JdbcType, TypeHandler<?>>();
 
   public TypeHandlerRegistry() {
     register(Boolean.class, new BooleanTypeHandler());
@@ -192,7 +195,7 @@ public final class TypeHandlerRegistry {
 
   @SuppressWarnings("unchecked")
   private <T> TypeHandler<T> getTypeHandler(Type type, JdbcType jdbcType) {
-    Map<JdbcType, TypeHandler<?>> jdbcHandlerMap = TYPE_HANDLER_MAP.get(type);
+    Map<JdbcType, TypeHandler<?>> jdbcHandlerMap = getJdbcHandlerMap(type);
     TypeHandler<?> handler = null;
     if (jdbcHandlerMap != null) {
       handler = jdbcHandlerMap.get(jdbcType);
@@ -204,11 +207,43 @@ public final class TypeHandlerRegistry {
         handler = pickSoleHandler(jdbcHandlerMap);
       }
     }
-    if (handler == null && type != null && type instanceof Class && Enum.class.isAssignableFrom((Class<?>) type)) {
-      handler = new EnumTypeHandler((Class<?>) type);
-    }
     // type drives generics here
     return (TypeHandler<T>) handler;
+  }
+
+  @SuppressWarnings({ "rawtypes", "unchecked" })
+  private Map<JdbcType, TypeHandler<?>> getJdbcHandlerMap(Type type) {
+    Map<JdbcType, TypeHandler<?>> jdbcHandlerMap = TYPE_HANDLER_MAP.get(type);
+    if (NULL_TYPE_HANDLER_MAP.equals(jdbcHandlerMap)) {
+      return null;
+    }
+    if (jdbcHandlerMap == null && type instanceof Class) {
+      Class<?> clazz = (Class<?>) type;
+      jdbcHandlerMap = getJdbcHandlerMapForSuperclass(clazz);
+      if (jdbcHandlerMap != null) {
+        TYPE_HANDLER_MAP.put(type, jdbcHandlerMap);
+      } else if (clazz.isEnum()) {
+        register(clazz, new EnumTypeHandler(clazz));
+        return TYPE_HANDLER_MAP.get(clazz);
+      }
+    }
+    if (jdbcHandlerMap == null) {
+      TYPE_HANDLER_MAP.put(type, NULL_TYPE_HANDLER_MAP);
+    }
+    return jdbcHandlerMap;
+  }
+
+  private Map<JdbcType, TypeHandler<?>> getJdbcHandlerMapForSuperclass(Class<?> clazz) {
+    Class<?> superclass =  clazz.getSuperclass();
+    if (superclass == null || Object.class.equals(superclass)) {
+      return null;
+    }
+    Map<JdbcType, TypeHandler<?>> jdbcHandlerMap = TYPE_HANDLER_MAP.get(superclass);
+    if (jdbcHandlerMap != null) {
+      return jdbcHandlerMap;
+    } else {
+      return getJdbcHandlerMapForSuperclass(superclass);
+    }
   }
 
   private TypeHandler<?> pickSoleHandler(Map<JdbcType, TypeHandler<?>> jdbcHandlerMap) {

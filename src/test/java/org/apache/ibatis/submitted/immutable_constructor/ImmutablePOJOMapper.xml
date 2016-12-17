@@ -24,17 +24,17 @@
 
     <select id="getImmutablePOJO" parameterType="int" resultType="ImmutablePOJO">
         SELECT
-            i.id            AS id,
-            i.description   AS description
+            i.immutable_id,
+            i.immutable_description
         FROM immutables AS i
-        WHERE i.id = #{pojoID}
+        WHERE i.immutable_id = #{pojoID}
     </select>
-    
+
     <select id="getImmutablePOJONoMatchingConstructor" parameterType="int" resultType="ImmutablePOJO">
         SELECT
-            i.id            AS id
+            i.immutable_id
         FROM immutables AS i
-        WHERE i.id = #{pojoID}
+        WHERE i.immutable_id = #{pojoID}
     </select>
         
 </mapper>

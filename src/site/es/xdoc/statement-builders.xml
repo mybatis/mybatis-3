@@ -295,7 +295,7 @@ public String updatePersonSql() {
     <td>
       <code>INSERT_INTO(String)</code>
     </td>
-    <td>Comienza una sentencia insert y especifica al tabla en la que insertar. Suele ir seguida de una o más llamadas a VALUES().
+    <td>Comienza una sentencia insert y especifica al tabla en la que insertar. Suele ir seguida de una o más llamadas a VALUES() o INTO_COLUMNS() y INTO_VALUES().
     </td>
   </tr>
   <tr>
@@ -323,8 +323,56 @@ public String updatePersonSql() {
     </td>
     <td>Añade a una sentencia insert. El primer parámetro es el nombre de columna y el Segundo el valor(es).</td>
   </tr>
+  <tr>
+    <td>
+      <code>INTO_COLUMNS(String...)</code>
+    </td>
+    <td>
+      Appends columns phrase to an insert statement.
+      This should be call INTO_VALUES() with together.
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <code>INTO_VALUES(String...)</code>
+    </td>
+    <td>
+      Appends values phrase to an insert statement.
+      This should be call INTO_COLUMNS() with together.
+    </td>
+  </tr>
           </tbody>
         </table>
+
+        <p>Since version 3.4.2, you can use variable-length arguments as follows:</p>
+
+<source><![CDATA[
+public String selectPersonSql() {
+  return new SQL()
+    .SELECT("P.ID", "A.USERNAME", "A.PASSWORD", "P.FULL_NAME", "D.DEPARTMENT_NAME", "C.COMPANY_NAME")
+    .FROM("PERSON P", "ACCOUNT A")
+    .INNER_JOIN("DEPARTMENT D on D.ID = P.DEPARTMENT_ID", "COMPANY C on D.COMPANY_ID = C.ID")
+    .WHERE("P.ID = A.ID", "P.FULL_NAME like #{name}")
+    .ORDER_BY("P.ID", "P.FULL_NAME")
+    .toString();
+}
+
+public String insertPersonSql() {
+  return new SQL()
+    .INSERT_INTO("PERSON")
+    .INTO_COLUMNS("ID", "FULL_NAME")
+    .INTO_VALUES("#{id}", "#{fullName}")
+    .toString();
+}
+
+public String updatePersonSql() {
+  return new SQL()
+    .UPDATE("PERSON")
+    .SET("FULL_NAME = #{fullName}", "DATE_OF_BIRTH = #{dateOfBirth}")
+    .WHERE("ID = #{id}")
+    .toString();
+}
+]]></source>
 
       </subsection>
 

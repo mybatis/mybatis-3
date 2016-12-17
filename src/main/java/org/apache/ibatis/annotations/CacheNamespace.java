@@ -26,6 +26,7 @@ import org.apache.ibatis.cache.impl.PerpetualCache;
 
 /**
  * @author Clinton Begin
+ * @author Kazuki Shimizu
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
@@ -42,5 +43,11 @@ public @interface CacheNamespace {
   boolean readWrite() default true;
   
   boolean blocking() default false;
+
+  /**
+   * Property values for a implementation object.
+   * @since 3.4.2
+   */
+  Property[] properties() default {};
   
 }
