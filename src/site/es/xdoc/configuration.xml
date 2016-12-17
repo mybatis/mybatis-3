@@ -472,6 +472,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
               </td>
               <td>
                 JAVASSIST (MyBatis 3.3 or above)
+<<<<<<< HEAD
               </td>
             </tr>
             <tr>
@@ -501,6 +502,8 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
               </td>
               <td>
                 true
+=======
+>>>>>>> mybatis/3.3.x
               </td>
             </tr>
           </tbody>

@@ -64,7 +64,10 @@ import org.apache.ibatis.type.TypeHandlerRegistry;
  * @author Clinton Begin
  * @author Eduardo Macarron
  * @author Iwao AVE!
+<<<<<<< HEAD
  * @author Kazuki Shimizu
+=======
+>>>>>>> mybatis/3.3.x
  */
 public class DefaultResultSetHandler implements ResultSetHandler {
 
@@ -84,29 +87,45 @@ public class DefaultResultSetHandler implements ResultSetHandler {
   // nested resultmaps
   private final Map<CacheKey, Object> nestedResultObjects = new HashMap<CacheKey, Object>();
   private final Map<String, Object> ancestorObjects = new HashMap<String, Object>();
+<<<<<<< HEAD
   private Object previousRowValue;
+=======
+  private final Map<String, String> ancestorColumnPrefix = new HashMap<String, String>();
+>>>>>>> mybatis/3.3.x
 
   // multiple resultsets
   private final Map<String, ResultMapping> nextResultMaps = new HashMap<String, ResultMapping>();
   private final Map<CacheKey, List<PendingRelation>> pendingRelations = new HashMap<CacheKey, List<PendingRelation>>();
 
   // Cached Automappings
+<<<<<<< HEAD
   private final Map<String, List<UnMappedColumnAutoMapping>> autoMappingsCache = new HashMap<String, List<UnMappedColumnAutoMapping>>();
 
   // temporary marking flag that indicate using constructor mapping (use field to reduce memory usage)
   private boolean useConstructorMappings;
+=======
+  private final Map<String, List<UnMappedColumAutoMapping>> autoMappingsCache = new HashMap<String, List<UnMappedColumAutoMapping>>();
+>>>>>>> mybatis/3.3.x
   
   private static class PendingRelation {
     public MetaObject metaObject;
     public ResultMapping propertyMapping;
   }
 
+<<<<<<< HEAD
   private static class UnMappedColumnAutoMapping {
+=======
+  private static class UnMappedColumAutoMapping {    
+>>>>>>> mybatis/3.3.x
     private final String column;   
     private final String property;    
     private final TypeHandler<?> typeHandler;
     private final boolean primitive;
+<<<<<<< HEAD
     public UnMappedColumnAutoMapping(String column, String property, TypeHandler<?> typeHandler, boolean primitive) {
+=======
+    public UnMappedColumAutoMapping(String column, String property, TypeHandler<?> typeHandler, boolean primitive) {
+>>>>>>> mybatis/3.3.x
       this.column = column;
       this.property = property;
       this.typeHandler = typeHandler;
@@ -433,7 +452,11 @@ public class DefaultResultSetHandler implements ResultSetHandler {
           foundValues = true;
           continue;
         }
+<<<<<<< HEAD
         if (value != null) {
+=======
+        if (property != null && (value != null || value == DEFERED)) {
+>>>>>>> mybatis/3.3.x
           foundValues = true;
         }
         if (value != null || (configuration.isCallSettersOnNulls() && !metaObject.getSetterType(property).isPrimitive())) {
@@ -459,11 +482,19 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     }
   }
 
+<<<<<<< HEAD
   private List<UnMappedColumnAutoMapping> createAutomaticMappings(ResultSetWrapper rsw, ResultMap resultMap, MetaObject metaObject, String columnPrefix) throws SQLException {
     final String mapKey = resultMap.getId() + ":" + columnPrefix;
     List<UnMappedColumnAutoMapping> autoMapping = autoMappingsCache.get(mapKey);
     if (autoMapping == null) {
       autoMapping = new ArrayList<UnMappedColumnAutoMapping>();
+=======
+  private List<UnMappedColumAutoMapping> createAutomaticMappings(ResultSetWrapper rsw, ResultMap resultMap, MetaObject metaObject, String columnPrefix) throws SQLException {
+    final String mapKey = resultMap.getId() + ":" + columnPrefix;
+    List<UnMappedColumAutoMapping> autoMapping = autoMappingsCache.get(mapKey);
+    if (autoMapping == null) {
+      autoMapping = new ArrayList<UnMappedColumAutoMapping>();
+>>>>>>> mybatis/3.3.x
       final List<String> unmappedColumnNames = rsw.getUnmappedColumnNames(resultMap, columnPrefix);
       for (String columnName : unmappedColumnNames) {
         String propertyName = columnName;
@@ -479,6 +510,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
         final String property = metaObject.findProperty(propertyName, configuration.isMapUnderscoreToCamelCase());
         if (property != null && metaObject.hasSetter(property)) {
           final Class<?> propertyType = metaObject.getSetterType(property);
+<<<<<<< HEAD
           if (typeHandlerRegistry.hasTypeHandler(propertyType, rsw.getJdbcType(columnName))) {
             final TypeHandler<?> typeHandler = rsw.getTypeHandler(propertyType, columnName);
             autoMapping.add(new UnMappedColumnAutoMapping(columnName, property, typeHandler, propertyType.isPrimitive()));
@@ -508,6 +540,31 @@ public class DefaultResultSetHandler implements ResultSetHandler {
         if (value != null || (configuration.isCallSettersOnNulls() && !mapping.primitive)) {
           // gcode issue #377, call setter on nulls (value is not 'found')
           metaObject.setValue(mapping.property, value);
+=======
+          if (typeHandlerRegistry.hasTypeHandler(propertyType)) {
+            final TypeHandler<?> typeHandler = rsw.getTypeHandler(propertyType, columnName);
+            autoMapping.add(new UnMappedColumAutoMapping(columnName, property, typeHandler, propertyType.isPrimitive()));
+          }
+        }
+      }
+      autoMappingsCache.put(mapKey, autoMapping);
+    }
+    return autoMapping;
+  }
+  
+  private boolean applyAutomaticMappings(ResultSetWrapper rsw, ResultMap resultMap, MetaObject metaObject, String columnPrefix) throws SQLException {
+    List<UnMappedColumAutoMapping> autoMapping = createAutomaticMappings(rsw, resultMap, metaObject, columnPrefix);
+    boolean foundValues = false;
+    if (autoMapping.size() > 0) {
+      for (UnMappedColumAutoMapping mapping : autoMapping) {
+        final Object value = mapping.typeHandler.getResult(rsw.getResultSet(), mapping.column);
+        // issue #377, call setter on nulls
+        if (value != null || configuration.isCallSettersOnNulls()) {
+          if (value != null || !mapping.primitive) {
+            metaObject.setValue(mapping.property, value);
+          }
+          foundValues = true;
+>>>>>>> mybatis/3.3.x
         }
       }
     }
@@ -848,10 +905,17 @@ public class DefaultResultSetHandler implements ResultSetHandler {
 
   private Object getRowValue(ResultSetWrapper rsw, ResultMap resultMap, CacheKey combinedKey, String columnPrefix, Object partialObject) throws SQLException {
     final String resultMapId = resultMap.getId();
+<<<<<<< HEAD
     Object rowValue = partialObject;
     if (rowValue != null) {
       final MetaObject metaObject = configuration.newMetaObject(rowValue);
       putAncestor(rowValue, resultMapId, columnPrefix);
+=======
+    Object resultObject = partialObject;
+    if (resultObject != null) {
+      final MetaObject metaObject = configuration.newMetaObject(resultObject);
+      putAncestor(resultObject, resultMapId, columnPrefix);
+>>>>>>> mybatis/3.3.x
       applyNestedResultMappings(rsw, resultMap, metaObject, columnPrefix, combinedKey, false);
       ancestorObjects.remove(resultMapId);
     } else {
@@ -864,7 +928,11 @@ public class DefaultResultSetHandler implements ResultSetHandler {
           foundValues = applyAutomaticMappings(rsw, resultMap, metaObject, columnPrefix) || foundValues;
         }
         foundValues = applyPropertyMappings(rsw, resultMap, metaObject, lazyLoader, columnPrefix) || foundValues;
+<<<<<<< HEAD
         putAncestor(rowValue, resultMapId, columnPrefix);
+=======
+        putAncestor(resultObject, resultMapId, columnPrefix);
+>>>>>>> mybatis/3.3.x
         foundValues = applyNestedResultMappings(rsw, resultMap, metaObject, columnPrefix, combinedKey, true) || foundValues;
         ancestorObjects.remove(resultMapId);
         foundValues = lazyLoader.size() > 0 || foundValues;
@@ -878,6 +946,12 @@ public class DefaultResultSetHandler implements ResultSetHandler {
   }
 
   private void putAncestor(Object resultObject, String resultMapId, String columnPrefix) {
+<<<<<<< HEAD
+=======
+    if (!ancestorColumnPrefix.containsKey(resultMapId)) {
+      ancestorColumnPrefix.put(resultMapId, columnPrefix);
+    }
+>>>>>>> mybatis/3.3.x
     ancestorObjects.put(resultMapId, resultObject);
   }
 
@@ -893,6 +967,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
         try {
           final String columnPrefix = getColumnPrefix(parentPrefix, resultMapping);
           final ResultMap nestedResultMap = getNestedResultMap(rsw.getResultSet(), nestedResultMapId, columnPrefix);
+<<<<<<< HEAD
           if (resultMapping.getColumnPrefix() == null) {
             // try to fill circular reference only when columnPrefix
             // is not specified for the nested result map (issue #215)
@@ -900,6 +975,24 @@ public class DefaultResultSetHandler implements ResultSetHandler {
             if (ancestorObject != null) {
               if (newObject) {
                 linkObjects(metaObject, resultMapping, ancestorObject); // issue #385
+=======
+          Object ancestorObject = ancestorObjects.get(nestedResultMapId);
+          if (ancestorObject != null) {
+            if (newObject) {
+              linkObjects(metaObject, resultMapping, ancestorObject); // issue #385
+            }
+          } else {
+            final CacheKey rowKey = createRowKey(nestedResultMap, rsw, columnPrefix);
+            final CacheKey combinedKey = combineKeys(rowKey, parentRowKey);
+            Object rowValue = nestedResultObjects.get(combinedKey);
+            boolean knownValue = (rowValue != null);
+            instantiateCollectionPropertyIfAppropriate(resultMapping, metaObject); // mandatory            
+            if (anyNotNullColumnHasValue(resultMapping, columnPrefix, rsw.getResultSet())) {
+              rowValue = getRowValue(rsw, nestedResultMap, combinedKey, columnPrefix, rowValue);
+              if (rowValue != null && !knownValue) {
+                linkObjects(metaObject, resultMapping, rowValue);
+                foundValues = true;
+>>>>>>> mybatis/3.3.x
               }
               continue;
             }
@@ -1095,6 +1188,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
       return propertyValue;
     }
     return null;
+<<<<<<< HEAD
   }
 
   private boolean hasTypeHandlerForResultObject(ResultSetWrapper rsw, Class<?> resultType) {
@@ -1104,4 +1198,8 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     return typeHandlerRegistry.hasTypeHandler(resultType);
   }
 
+=======
+  }  
+  
+>>>>>>> mybatis/3.3.x
 }

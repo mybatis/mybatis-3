@@ -100,12 +100,24 @@ public abstract class BaseStatementHandler implements StatementHandler {
 
   protected abstract Statement instantiateStatement(Connection connection) throws SQLException;
 
+<<<<<<< HEAD
   protected void setStatementTimeout(Statement stmt, Integer transactionTimeout) throws SQLException {
     Integer queryTimeout = null;
     if (mappedStatement.getTimeout() != null) {
       queryTimeout = mappedStatement.getTimeout();
     } else if (configuration.getDefaultStatementTimeout() != null) {
       queryTimeout = configuration.getDefaultStatementTimeout();
+=======
+  protected void setStatementTimeout(Statement stmt) throws SQLException {
+    Integer timeout = mappedStatement.getTimeout();
+    if (timeout != null) {
+      stmt.setQueryTimeout(timeout);
+      return;
+    }
+    Integer defaultTimeout = configuration.getDefaultStatementTimeout();
+    if (defaultTimeout != null) {
+      stmt.setQueryTimeout(defaultTimeout);
+>>>>>>> mybatis/3.3.x
     }
     if (queryTimeout != null) {
       stmt.setQueryTimeout(queryTimeout);

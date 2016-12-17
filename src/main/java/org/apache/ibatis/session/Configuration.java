@@ -227,9 +227,16 @@ public class Configuration {
     return this.vfsImpl;
   }
 
+<<<<<<< HEAD
   public void setVfsImpl(Class<? extends VFS> vfsImpl) {
     if (vfsImpl != null) {
       this.vfsImpl = vfsImpl;
+=======
+  @SuppressWarnings("unchecked")
+  public void setVfsImpl(Class<?> vfsImpl) {
+    if (vfsImpl != null) {
+      this.vfsImpl = (Class<? extends VFS>) vfsImpl;
+>>>>>>> mybatis/3.3.x
       VFS.addImplClass(this.vfsImpl);
     }
   }

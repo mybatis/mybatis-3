@@ -518,6 +518,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
   <p>次のコードは <code>@Flush</code> アノテーションを使って <code>SqlSession#flushStatements()</code>メソッドを呼び出す例です。</p>
   <source><![CDATA[@Flush
 List<BatchResult> flush();]]></source>
+<<<<<<< HEAD
 
   <p>次のコードは @Results アノテーションの id 属性で名前を指定する例です。</p>
   <source>@Results(id = "userResult", value = {
@@ -582,6 +583,8 @@ class UserSqlBuilder {
   }
 }]]></source>
 
+=======
+>>>>>>> mybatis/3.3.x
   </subsection>
 
   </section>

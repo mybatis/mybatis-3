@@ -308,6 +308,21 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
             </tr>
             <tr>
               <td>
+                defaultFetchSize
+              </td>
+              <td>
+                Sets the driver a hint as to control fetching size for return results.
+                This parameter value can be override by a query setting.
+              </td>
+              <td>
+                양수
+              </td>
+              <td>
+                셋팅되지 않음(null)
+              </td>
+            </tr>
+            <tr>
+              <td>
                 safeRowBoundsEnabled
               </td>
               <td>
@@ -481,6 +496,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 CGLIB | JAVASSIST
               </td>
               <td>
+<<<<<<< HEAD
                 JAVASSIST (마이바티스 3.3과 이상의 버전)
               </td>
             </tr>
@@ -508,6 +524,9 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
               </td>
               <td>
                 true
+=======
+                JAVASSIST (MyBatis 3.3 or above)
+>>>>>>> mybatis/3.3.x
               </td>
             </tr>
           </tbody>

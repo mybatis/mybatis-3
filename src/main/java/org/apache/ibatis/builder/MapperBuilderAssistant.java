@@ -286,7 +286,11 @@ public class MapperBuilderAssistant extends BaseBuilder {
         .databaseId(databaseId)
         .lang(lang)
         .resultOrdered(resultOrdered)
+<<<<<<< HEAD
         .resultSets(resultSets)
+=======
+        .resulSets(resultSets)
+>>>>>>> mybatis/3.3.x
         .resultMaps(getStatementResultMaps(resultMap, resultType, id))
         .resultSetType(resultSetType)
         .flushCacheRequired(valueOrDefault(flushCache, !isSelect))

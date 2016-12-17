@@ -62,8 +62,14 @@ public class BoundSql {
   }
 
   public boolean hasAdditionalParameter(String name) {
+<<<<<<< HEAD
     String paramName = new PropertyTokenizer(name).getName();
     return additionalParameters.containsKey(paramName);
+=======
+    PropertyTokenizer prop = new PropertyTokenizer(name);
+    String indexedName = prop.getIndexedName();
+    return additionalParameters.containsKey(indexedName);
+>>>>>>> mybatis/3.3.x
   }
 
   public void setAdditionalParameter(String name, Object value) {

@@ -293,6 +293,7 @@ public interface ResultHandler<T> {
 
   <p>ResultContext파라미터는 결과 객체에 접근할 수 있도록 해준다.</p>
 
+<<<<<<< HEAD
   <h5>배치 수정시 flush메소드</h5>
   <p>어떤 시점에 JDBC드라이버 클래스에 저장된 배치 수정구문을 지울(flushing(executing)) 방법이 있다. 
   이 방법은 <code>ExecutorType</code>을 <code>ExecutorType.BATCH</code>로 설정한 경우 사용가능하다. </p>
@@ -302,6 +303,16 @@ public interface ResultHandler<T> {
   <p>트랜잭션을 제어하기 위해 4개의 메소드가 있다. 
   물론 자동커밋을 선택하였거나 외부 트랜잭션 관리자를 사용하면 영향이 없다. 
   어쨌든 Connection인스턴스에 의해 관리되고 JDBC 트랜잭션 관리자를 사용하면 이 4개의 메소드를 사용할 수 있다.</p>
+=======
+  <h5>Batch update statement Flush Method</h5>
+  <p>There is method for flushing(executing) batch update statements that stored in a JDBC driver class at any timing. This method can be used when you use the <code>ExecutorType.BATCH</code> as <code>ExecutorType</code>.</p>
+  <source><![CDATA[List<BatchResult> flushStatements()]]></source>
+
+  <h5>트랙잭션 제어 메서드</h5>
+  <p>트랜잭션을 제어하기 위해 4 개의 메서드가 있다. 물론 자동커밋을 선택하였거나 외부 트랜잭션 관리자를 사용하면 영향이
+없다. 어쨌든, Connection 인스턴스에 의해 관리되고 JDBC 트랜잭션 관리자를 사용하면, 이 4 개의 메서드를 사용할 수
+있다.</p>
+>>>>>>> mybatis/3.3.x
   <source>void commit()
 void commit(boolean force)
 void rollback()
@@ -634,7 +645,11 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
         <td><code>@Flush</code></td>
         <td><code>Method</code></td>
         <td>N/A</td>
+<<<<<<< HEAD
         <td>이 애노테이션을 사용하면 매퍼 인터페이스에 정의한 메소드를 통해 <code>SqlSession#flushStatements()</code>를 호출한다.(마이바티스 3.3과 이상의 버전)</td>
+=======
+        <td>If this annotation is used, it can be called the <code>SqlSession#flushStatements()</code> via method defined at a Mapper interface.(MyBatis 3.3 or above)</td>
+>>>>>>> mybatis/3.3.x
       </tr>
     </tbody>
   </table>
@@ -650,6 +665,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
 @SelectKey(statement="call identity()", keyProperty="nameId", before=<strong>false</strong>, resultType=<strong>int.class</strong>)
 <strong>int</strong> insertTable2(Name name);</source>
 
+<<<<<<< HEAD
   <p>이 예제는 <code>SqlSession#flushStatements()</code>를 호출하기 위해 <code>@Flush</code>애노테이션을 사용했다. </p>
   <source><![CDATA[@Flush
 List<BatchResult> flush();]]></source>
@@ -717,6 +733,11 @@ class UserSqlBuilder {
   }
 }]]></source>
 
+=======
+  <p>This example shows using the <code>@Flush</code> annotation to call the <code>SqlSession#flushStatements()</code>:</p>
+  <source><![CDATA[@Flush
+List<BatchResult> flush();]]></source>
+>>>>>>> mybatis/3.3.x
   </subsection>
 
   </section>

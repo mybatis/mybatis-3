@@ -1,5 +1,9 @@
 /**
+<<<<<<< HEAD
  *    Copyright 2009-2016 the original author or authors.
+=======
+ *    Copyright 2009-2015 the original author or authors.
+>>>>>>> mybatis/3.3.x
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -22,13 +26,17 @@ import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 
+<<<<<<< HEAD
 import org.apache.ibatis.exceptions.PersistenceException;
 import org.apache.ibatis.executor.ExecutorException;
+=======
+>>>>>>> mybatis/3.3.x
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+<<<<<<< HEAD
 import org.hamcrest.CoreMatchers;
 import org.junit.BeforeClass;
 import org.junit.Rule;
@@ -36,6 +44,10 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import static org.hamcrest.CoreMatchers.*;
+=======
+import org.junit.BeforeClass;
+import org.junit.Test;
+>>>>>>> mybatis/3.3.x
 
 /**
  * @author liuzh
@@ -44,9 +56,12 @@ public class Jdbc3KeyGeneratorTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
+<<<<<<< HEAD
   @Rule
   public ExpectedException expectedException = ExpectedException.none();
 
+=======
+>>>>>>> mybatis/3.3.x
   @BeforeClass
   public static void setUp() throws Exception {
     // create an SqlSessionFactory
@@ -83,6 +98,7 @@ public class Jdbc3KeyGeneratorTest {
       sqlSession.close();
     }
   }
+<<<<<<< HEAD
 
   @Test
   public void shouldErrorUndefineProperty()  {
@@ -99,4 +115,6 @@ public class Jdbc3KeyGeneratorTest {
       sqlSession.close();
     }
   }
+=======
+>>>>>>> mybatis/3.3.x
 }

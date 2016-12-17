@@ -1,5 +1,9 @@
 /**
+<<<<<<< HEAD
  *    Copyright 2009-2016 the original author or authors.
+=======
+ *    Copyright 2009-2015 the original author or authors.
+>>>>>>> mybatis/3.3.x
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -40,9 +44,12 @@ public class BoundSqlTest {
     bean.id = 1;
     boundSql.setAdditionalParameter("person", bean);
 
+<<<<<<< HEAD
     String[] array = new String[] {"User1", "User2"};
     boundSql.setAdditionalParameter("array", array);
 
+=======
+>>>>>>> mybatis/3.3.x
     assertFalse(boundSql.hasAdditionalParameter("pet"));
     assertFalse(boundSql.hasAdditionalParameter("pet.name"));
 
@@ -53,9 +60,12 @@ public class BoundSqlTest {
     assertTrue(boundSql.hasAdditionalParameter("person"));
     assertTrue(boundSql.hasAdditionalParameter("person.id"));
     assertTrue("should return true even if the child property does not exists.", boundSql.hasAdditionalParameter("person.name"));
+<<<<<<< HEAD
 
     assertTrue(boundSql.hasAdditionalParameter("array[0]"));
     assertTrue("should return true even if the element does not exists.", boundSql.hasAdditionalParameter("array[99]"));
+=======
+>>>>>>> mybatis/3.3.x
   }
 
   public static class Person {

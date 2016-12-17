@@ -22,8 +22,12 @@
 
 <configuration>
 
+<<<<<<< HEAD
   <properties resource="org/apache/ibatis/builder/jdbc.properties">
     <property name="prop1" value="aaaa"/>
+=======
+  <properties>
+>>>>>>> mybatis/3.3.x
     <property name="jdbcTypeForNull" value="NULL" />
   </properties>
 

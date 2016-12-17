@@ -1,5 +1,9 @@
 /**
+<<<<<<< HEAD
  *    Copyright 2009-2016 the original author or authors.
+=======
+ *    Copyright 2009-2015 the original author or authors.
+>>>>>>> mybatis/3.3.x
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.

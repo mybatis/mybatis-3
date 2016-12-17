@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
+<<<<<<< HEAD
 
        Copyright 2009-2016 the original author or authors.
+=======
+       Copyright 2009-2012 the original author or authors.
+>>>>>>> mybatis/3.3.x
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -14,7 +18,10 @@
        WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
        See the License for the specific language governing permissions and
        limitations under the License.
+<<<<<<< HEAD
 
+=======
+>>>>>>> mybatis/3.3.x
 -->
 <!DOCTYPE configuration
         PUBLIC "-//mybatis.org//DTD Config 3.0//EN"

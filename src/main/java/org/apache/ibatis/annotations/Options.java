@@ -61,6 +61,10 @@ public @interface Options {
   String keyProperty() default "id";
 
   String keyColumn() default "";
+<<<<<<< HEAD
   
   String resultSets() default "";
+=======
+
+>>>>>>> mybatis/3.3.x
 }

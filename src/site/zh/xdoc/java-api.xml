@@ -364,8 +364,13 @@ public interface ResultHandler<T> {
 尔返回值的 stop()方法来停止 MyBatis 加载更多的结果。
   </p>
 
+<<<<<<< HEAD
   <h5>批量立即更新方法(Flush Method)</h5>
   <p>有一个方法可以刷新（执行）存储在JDBC驱动类中的批量更新语句。当你将<code>ExecutorType.BATCH</code>作为<code>ExecutorType</code>使用时可以采用此方法。</p>
+=======
+  <h5>Batch update statement Flush Method</h5>
+  <p>There is method for flushing(executing) batch update statements that stored in a JDBC driver class at any timing. This method can be used when you use the <code>ExecutorType.BATCH</code> as <code>ExecutorType</code>.</p>
+>>>>>>> mybatis/3.3.x
   <source><![CDATA[List<BatchResult> flushStatements()]]></source>
 
 
@@ -818,6 +823,12 @@ MyBatis
 			如果这个注解使用了，它将调用定义在Mapper接口中的<code>SqlSession#flushStatements()</code>方法。（Mybatis 3.3或者以上）
 		</td>
       </tr>
+      <tr>
+        <td><code>@Flush</code></td>
+        <td><code>Method</code></td>
+        <td>N/A</td>
+        <td>If this annotation is used, it can be called the <code>SqlSession#flushStatements()</code> via method defined at a Mapper interface.(MyBatis 3.3 or above)</td>
+      </tr>
     </tbody>
   </table>
 
@@ -832,6 +843,7 @@ MyBatis
 @SelectKey(statement="call identity()", keyProperty="nameId", before=<strong>false</strong>, resultType=<strong>int.class</strong>)
 <strong>int</strong> insertTable2(Name name);</source>
 
+<<<<<<< HEAD
   <p>这个例子展示了如何使用<code>@Flush</code>注解去调用<code>SqlSession#flushStatements()</code>:</p>
   <source><![CDATA[@Flush
 List<BatchResult> flush();]]></source>
@@ -899,6 +911,11 @@ class UserSqlBuilder {
   }
 }]]></source>
 
+=======
+  <p>This example shows using the <code>@Flush</code> annotation to call the <code>SqlSession#flushStatements()</code>:</p>
+  <source><![CDATA[@Flush
+List<BatchResult> flush();]]></source>
+>>>>>>> mybatis/3.3.x
   </subsection>
 
   </section>

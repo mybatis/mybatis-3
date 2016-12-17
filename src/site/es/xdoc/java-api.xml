@@ -500,6 +500,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
   <p>This example shows using the <code>@Flush</code> annotation to call the <code>SqlSession#flushStatements()</code>:</p>
   <source><![CDATA[@Flush
 List<BatchResult> flush();]]></source>
+<<<<<<< HEAD
 
   <p>These examples show how to name a ResultMap by specifying id attribute of @Results annotation.</p>
   <source>@Results(id = "userResult", value = {
@@ -564,6 +565,8 @@ class UserSqlBuilder {
   }
 }]]></source>
 
+=======
+>>>>>>> mybatis/3.3.x
   </subsection>
 
   </section>
