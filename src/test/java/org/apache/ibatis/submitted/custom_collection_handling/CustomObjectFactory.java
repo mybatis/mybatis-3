@@ -33,8 +33,6 @@ import org.apache.ibatis.reflection.factory.ObjectFactory;
 
 public class CustomObjectFactory implements ObjectFactory {
 
-    private static final long serialVersionUID = -8855120656940914948L;
-
     @Override
     public <T> T create(Class<T> type) {
         return create(type, null, null);
