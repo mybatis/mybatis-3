@@ -16,12 +16,8 @@
 package org.apache.ibatis.builder;
 
 import org.apache.ibatis.reflection.MetaObject;
-import org.apache.ibatis.reflection.factory.DefaultObjectFactory;
 import org.apache.ibatis.reflection.wrapper.ObjectWrapper;
 import org.apache.ibatis.reflection.wrapper.ObjectWrapperFactory;
-
-import java.util.List;
-import java.util.Properties;
 
 public class CustomObjectWrapperFactory implements ObjectWrapperFactory {
 

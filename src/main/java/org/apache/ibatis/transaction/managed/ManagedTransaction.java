@@ -17,8 +17,6 @@ package org.apache.ibatis.transaction.managed;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.sql.Statement;
-
 import javax.sql.DataSource;
 
 import org.apache.ibatis.logging.Log;
