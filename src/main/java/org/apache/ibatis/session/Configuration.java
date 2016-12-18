@@ -97,17 +97,17 @@ public class Configuration {
 
   protected Environment environment;
 
-  protected boolean safeRowBoundsEnabled = false;
+  protected boolean safeRowBoundsEnabled;
   protected boolean safeResultHandlerEnabled = true;
-  protected boolean mapUnderscoreToCamelCase = false;
-  protected boolean aggressiveLazyLoading = false;
+  protected boolean mapUnderscoreToCamelCase;
+  protected boolean aggressiveLazyLoading;
   protected boolean multipleResultSetsEnabled = true;
-  protected boolean useGeneratedKeys = false;
+  protected boolean useGeneratedKeys;
   protected boolean useColumnLabel = true;
   protected boolean cacheEnabled = true;
-  protected boolean callSettersOnNulls = false;
+  protected boolean callSettersOnNulls;
   protected boolean useActualParamName = true;
-  protected boolean returnInstanceForEmptyRow = false;
+  protected boolean returnInstanceForEmptyRow;
 
   protected String logPrefix;
   protected Class <? extends Log> logImpl;

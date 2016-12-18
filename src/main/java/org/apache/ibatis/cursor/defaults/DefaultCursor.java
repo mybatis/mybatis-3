@@ -45,7 +45,7 @@ public class DefaultCursor<T> implements Cursor<T> {
     private final ObjectWrapperResultHandler<T> objectWrapperResultHandler = new ObjectWrapperResultHandler<T>();
 
     private final CursorIterator cursorIterator = new CursorIterator();
-    private boolean iteratorRetrieved = false;
+    private boolean iteratorRetrieved;
 
     private CursorStatus status = CursorStatus.CREATED;
     private int indexWithRowBound = -1;

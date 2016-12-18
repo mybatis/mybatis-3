@@ -39,7 +39,7 @@ public final class ResultSetLogger extends BaseJdbcLogger implements InvocationH
 
   private static Set<Integer> BLOB_TYPES = new HashSet<Integer>();
   private boolean first = true;
-  private int rows = 0;
+  private int rows;
   private ResultSet rs;
   private Set<Integer> blobColumns = new HashSet<Integer>();
 

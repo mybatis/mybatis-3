@@ -48,7 +48,7 @@ public class ScriptRunner {
   private PrintWriter errorLogWriter = new PrintWriter(System.err);
 
   private String delimiter = DEFAULT_DELIMITER;
-  private boolean fullLineDelimiter = false;
+  private boolean fullLineDelimiter;
 
   public ScriptRunner(Connection connection) {
     this.connection = connection;

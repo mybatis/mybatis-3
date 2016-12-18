@@ -34,8 +34,8 @@ public class ParamNameResolver {
 
   private static final String GENERIC_NAME_PREFIX = "param";
   private static final String PARAMETER_CLASS = "java.lang.reflect.Parameter";
-  private static Method GET_NAME = null;
-  private static Method GET_PARAMS = null;
+  private static Method GET_NAME;
+  private static Method GET_PARAMS;
 
   static {
     try {
