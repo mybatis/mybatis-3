@@ -129,7 +129,7 @@ public class Reflector {
           if (methodType.equals(getterType)) {
             throw new ReflectionException("Illegal overloaded getter method with ambiguous type for property "
                 + propName + " in class " + firstMethod.getDeclaringClass()
-                + ".  This breaks the JavaBeans " + "specification and can cause unpredicatble results.");
+                + ".  This breaks the JavaBeans " + "specification and can cause unpredictable results.");
           } else if (methodType.isAssignableFrom(getterType)) {
             // OK getter type is descendant
           } else if (getterType.isAssignableFrom(methodType)) {
@@ -138,7 +138,7 @@ public class Reflector {
           } else {
             throw new ReflectionException("Illegal overloaded getter method with ambiguous type for property "
                 + propName + " in class " + firstMethod.getDeclaringClass()
-                + ".  This breaks the JavaBeans " + "specification and can cause unpredicatble results.");
+                + ".  This breaks the JavaBeans " + "specification and can cause unpredictable results.");
           }
         }
         addGetMethod(propName, getter);
