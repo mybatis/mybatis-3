@@ -317,6 +317,9 @@ public class XMLConfigBuilder extends BaseBuilder {
   private DataSourceFactory dataSourceElement(XNode context) throws Exception {
     if (context != null) {
       String type = context.getStringAttribute("type");
+      if (null == type || "".equals(type.trim())) {
+        throw new BuilderException("the element of dataSource requires a non-blank type attribute");
+      }
       Properties props = context.getChildrenAsProperties();
       DataSourceFactory factory = (DataSourceFactory) resolveClass(type).newInstance();
       factory.setProperties(props);
