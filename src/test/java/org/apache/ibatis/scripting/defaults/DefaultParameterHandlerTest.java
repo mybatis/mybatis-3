@@ -52,8 +52,8 @@ public class DefaultParameterHandlerTest {
     final Object parameterObject = null;
     final BoundSql boundSql = mock(BoundSql.class);
 
-    TypeHandler<String> typeHandler = mock(TypeHandler.class);
-    doThrow(new SQLException("foo")).when(typeHandler).setParameter(any(PreparedStatement.class), anyInt(), (String) anyObject(), any(JdbcType.class));
+    TypeHandler<Object> typeHandler = mock(TypeHandler.class);
+    doThrow(new SQLException("foo")).when(typeHandler).setParameter(any(PreparedStatement.class), anyInt(), any(), any(JdbcType.class));
     ParameterMapping parameterMapping = new ParameterMapping.Builder(mappedStatement.getConfiguration(), "prop", typeHandler).build();
     List<ParameterMapping> parameterMappings = Collections.singletonList(parameterMapping);
     when(boundSql.getParameterMappings()).thenReturn(parameterMappings);
