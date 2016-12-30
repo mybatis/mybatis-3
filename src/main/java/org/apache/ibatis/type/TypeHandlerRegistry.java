@@ -36,6 +36,7 @@ import org.apache.ibatis.io.Resources;
 
 /**
  * @author Clinton Begin
+ * @author Kazuki Shimizu
  */
 public final class TypeHandlerRegistry {
 
@@ -142,6 +143,7 @@ public final class TypeHandlerRegistry {
       register("java.time.Month", "org.apache.ibatis.type.MonthTypeHandler");
       register("java.time.Year", "org.apache.ibatis.type.YearTypeHandler");
       // since 1.0.2
+      register("java.time.YearMonth", "org.apache.ibatis.type.YearMonthTypeHandler");
       register("java.time.chrono.JapaneseDate", "org.apache.ibatis.type.JapaneseDateTypeHandler");
 
     } catch (ClassNotFoundException e) {
