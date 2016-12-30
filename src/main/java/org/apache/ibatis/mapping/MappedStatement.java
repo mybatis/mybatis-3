@@ -15,10 +15,6 @@
  */
 package org.apache.ibatis.mapping;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.executor.keygen.Jdbc3KeyGenerator;
 import org.apache.ibatis.executor.keygen.KeyGenerator;
@@ -27,6 +23,10 @@ import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
 import org.apache.ibatis.scripting.LanguageDriver;
 import org.apache.ibatis.session.Configuration;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author Clinton Begin
@@ -56,6 +56,7 @@ public final class MappedStatement {
   private Log statementLog;
   private LanguageDriver lang;
   private String[] resultSets;
+  private boolean disableBatch;
 
   MappedStatement() {
     // constructor disabled
@@ -179,7 +180,12 @@ public final class MappedStatement {
       mappedStatement.resultSets = delimitedStringToArray(resultSet);
       return this;
     }
-    
+
+    public Builder disableBatch(boolean disableCache){
+      mappedStatement.disableBatch = disableCache;
+      return this;
+    }
+
     public MappedStatement build() {
       assert mappedStatement.configuration != null;
       assert mappedStatement.id != null;
@@ -280,6 +286,10 @@ public final class MappedStatement {
 
   public String[] getResultSets() {
     return resultSets;
+  }
+
+  public boolean isDisableBatch(){
+    return disableBatch;
   }
 
   /** @deprecated Use {@link #getResultSets()} */

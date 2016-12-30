@@ -37,4 +37,24 @@
     <insert id="insertUser">
         insert into users values(#{id}, #{name},#{dept.id})
     </insert>
+
+    <sql id="updateUserSql">
+        update users
+        <set>
+            <if test="name != null">
+                name = #{name},
+            </if>
+        </set>
+        <where>
+            id = #{id}
+        </where>
+    </sql>
+
+    <update id="updateUser">
+        <include refid="updateUserSql"/>
+    </update>
+
+    <update id="updateUserIfDisableBatch" disableBatch="true">
+        <include refid="updateUserSql"/>
+    </update>
 </mapper>

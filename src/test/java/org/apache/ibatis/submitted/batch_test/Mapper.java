@@ -21,5 +21,9 @@ public interface Mapper {
 
   Dept  getDept(Integer id) ;
 
-  void insertUser(User user);
+  int insertUser(User user);
+
+  int updateUser(User user);
+
+  int updateUserIfDisableBatch(User user);
 }

@@ -15,6 +15,20 @@
  */
 package org.apache.ibatis.executor;
 
+import org.apache.ibatis.cursor.Cursor;
+import org.apache.ibatis.executor.keygen.Jdbc3KeyGenerator;
+import org.apache.ibatis.executor.keygen.KeyGenerator;
+import org.apache.ibatis.executor.keygen.NoKeyGenerator;
+import org.apache.ibatis.executor.statement.StatementHandler;
+import org.apache.ibatis.logging.Log;
+import org.apache.ibatis.logging.LogFactory;
+import org.apache.ibatis.mapping.BoundSql;
+import org.apache.ibatis.mapping.MappedStatement;
+import org.apache.ibatis.session.Configuration;
+import org.apache.ibatis.session.ResultHandler;
+import org.apache.ibatis.session.RowBounds;
+import org.apache.ibatis.transaction.Transaction;
+
 import java.sql.BatchUpdateException;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -23,24 +37,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.ibatis.cursor.Cursor;
-import org.apache.ibatis.executor.keygen.Jdbc3KeyGenerator;
-import org.apache.ibatis.executor.keygen.KeyGenerator;
-import org.apache.ibatis.executor.keygen.NoKeyGenerator;
-import org.apache.ibatis.executor.statement.StatementHandler;
-import org.apache.ibatis.mapping.BoundSql;
-import org.apache.ibatis.mapping.MappedStatement;
-import org.apache.ibatis.session.Configuration;
-import org.apache.ibatis.session.ResultHandler;
-import org.apache.ibatis.session.RowBounds;
-import org.apache.ibatis.transaction.Transaction;
-
 /**
  * @author Jeff Butler 
  */
 public class BatchExecutor extends BaseExecutor {
 
   public static final int BATCH_UPDATE_RETURN_VALUE = Integer.MIN_VALUE + 1002;
+
+  private static final Log log = LogFactory.getLog(BatchExecutor.class);
 
   private final List<Statement> statementList = new ArrayList<Statement>();
   private final List<BatchResult> batchResultList = new ArrayList<BatchResult>();
@@ -57,12 +61,40 @@ public class BatchExecutor extends BaseExecutor {
     final StatementHandler handler = configuration.newStatementHandler(this, ms, parameterObject, RowBounds.DEFAULT, null, null);
     final BoundSql boundSql = handler.getBoundSql();
     final String sql = boundSql.getSql();
+
+    if (ms.isDisableBatch()) {
+      return doSimpleUpdateIfDisableBatch(ms, handler);
+    }else {
+      return doBatchUpdate(ms, parameterObject, handler, sql);
+    }
+  }
+
+  private int doSimpleUpdateIfDisableBatch(MappedStatement ms, StatementHandler handler) throws SQLException {
+
+    if (log.isDebugEnabled()) {
+      log.debug("update [" + ms.getId() + "] in batch executor , but this mapped statement " +
+              "disable batch");
+    }
+
+    Statement stmt = null;
+    try {
+      flushStatements();
+      Connection connection = getConnection(ms.getStatementLog());
+      stmt = handler.prepare(connection, transaction.getTimeout());
+      handler.parameterize(stmt);
+      return handler.update(stmt);
+    } finally {
+      closeStatement(stmt);
+    }
+  }
+
+  private int doBatchUpdate(MappedStatement ms, Object parameterObject, StatementHandler handler, String sql) throws SQLException {
     final Statement stmt;
     if (sql.equals(currentSql) && ms.equals(currentStatement)) {
       int last = statementList.size() - 1;
       stmt = statementList.get(last);
       applyTransactionTimeout(stmt);
-     handler.parameterize(stmt);//fix Issues 322
+      handler.parameterize(stmt);//fix Issues 322
       BatchResult batchResult = batchResultList.get(last);
       batchResult.addParameterObject(parameterObject);
     } else {
@@ -74,7 +106,7 @@ public class BatchExecutor extends BaseExecutor {
       statementList.add(stmt);
       batchResultList.add(new BatchResult(ms, sql, parameterObject));
     }
-  // handler.parameterize(stmt);
+    // handler.parameterize(stmt);
     handler.batch(stmt);
     return BATCH_UPDATE_RETURN_VALUE;
   }

@@ -15,9 +15,6 @@
  */
 package org.apache.ibatis.builder;
 
-import java.io.InputStream;
-import java.util.regex.Pattern;
-
 import org.apache.ibatis.builder.xml.XMLMapperBuilder;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.mapping.MappedStatement;
@@ -29,8 +26,11 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import static org.junit.Assert.assertThat;
+import java.io.InputStream;
+import java.util.regex.Pattern;
+
 import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.assertThat;
 
 public class XmlMapperBuilderTest {
 
@@ -61,7 +61,20 @@ public class XmlMapperBuilderTest {
     assertThat(mappedStatement.getResultSetType(), is(ResultSetType.SCROLL_SENSITIVE));
     assertThat(mappedStatement.isFlushCacheRequired(), is(false));
     assertThat(mappedStatement.isUseCache(), is(false));
+  }
 
+  @Test
+  public void mappedUpdateableStatementWithOptions() throws Exception {
+    Configuration configuration = new Configuration();
+    String resource = "org/apache/ibatis/builder/AuthorMapper.xml";
+    InputStream inputStream = Resources.getResourceAsStream(resource);
+    XMLMapperBuilder builder = new XMLMapperBuilder(inputStream, configuration, resource, configuration.getSqlFragments());
+    builder.parse();
+
+    MappedStatement mappedStatement = configuration.getMappedStatement("updateAuthorIfNecessaryForDisableBatch");
+    assertThat(mappedStatement.isFlushCacheRequired(), is(true));
+    assertThat(mappedStatement.isUseCache(), is(false));
+    assertThat(mappedStatement.isDisableBatch(), is(true));
   }
 
   @Test

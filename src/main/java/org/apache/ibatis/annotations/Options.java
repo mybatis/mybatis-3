@@ -63,4 +63,6 @@ public @interface Options {
   String keyColumn() default "";
   
   String resultSets() default "";
+
+  boolean disableBatch() default false;
 }
