@@ -96,22 +96,20 @@
 <a class="jxr_linenumber" name="L88" href="#L88">88</a>      }
 <a class="jxr_linenumber" name="L89" href="#L89">89</a>    }
 <a class="jxr_linenumber" name="L90" href="#L90">90</a>  
-<a class="jxr_linenumber" name="L91" href="#L91">91</a>    @Test(expected = ClassCastException.<strong class="jxr_keyword">class</strong>)
+<a class="jxr_linenumber" name="L91" href="#L91">91</a>    @Test
 <a class="jxr_linenumber" name="L92" href="#L92">92</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldGetPrimitiveArray() {
 <a class="jxr_linenumber" name="L93" href="#L93">93</a>      SqlSession sqlSession = sqlSessionFactory.openSession();
 <a class="jxr_linenumber" name="L94" href="#L94">94</a>      <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L95" href="#L95">95</a>        <em class="jxr_comment">// Throwing an exception is the expected behavior</em>
-<a class="jxr_linenumber" name="L96" href="#L96">96</a>        <em class="jxr_comment">// until #555 is fixed</em>
-<a class="jxr_linenumber" name="L97" href="#L97">97</a>        <a href="../../../../../org/apache/ibatis/session/AutoMappingUnknownColumnBehaviorTest.html">Mapper</a> mapper = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L98" href="#L98">98</a>        <strong class="jxr_keyword">int</strong>[] ids = mapper.getUserIdsPrimitive();
-<a class="jxr_linenumber" name="L99" href="#L99">99</a>        assertEquals(1, ids[0]);
-<a class="jxr_linenumber" name="L100" href="#L100">100</a>     } <strong class="jxr_keyword">finally</strong> {
-<a class="jxr_linenumber" name="L101" href="#L101">101</a>       sqlSession.close();
-<a class="jxr_linenumber" name="L102" href="#L102">102</a>     }
-<a class="jxr_linenumber" name="L103" href="#L103">103</a>   }
-<a class="jxr_linenumber" name="L104" href="#L104">104</a> }
+<a class="jxr_linenumber" name="L95" href="#L95">95</a>        <a href="../../../../../org/apache/ibatis/session/AutoMappingUnknownColumnBehaviorTest.html">Mapper</a> mapper = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L96" href="#L96">96</a>        <strong class="jxr_keyword">int</strong>[] ids = mapper.getUserIdsPrimitive();
+<a class="jxr_linenumber" name="L97" href="#L97">97</a>        assertEquals(1, ids[0]);
+<a class="jxr_linenumber" name="L98" href="#L98">98</a>      } <strong class="jxr_keyword">finally</strong> {
+<a class="jxr_linenumber" name="L99" href="#L99">99</a>        sqlSession.close();
+<a class="jxr_linenumber" name="L100" href="#L100">100</a>     }
+<a class="jxr_linenumber" name="L101" href="#L101">101</a>   }
+<a class="jxr_linenumber" name="L102" href="#L102">102</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2016 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2009&#x2013;2017 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
 </body>
 </html>

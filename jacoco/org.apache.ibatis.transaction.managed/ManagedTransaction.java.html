@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>ManagedTransaction.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.transaction.managed</a> &gt; <span class="el_source">ManagedTransaction.java</span></div><h1>ManagedTransaction.java</h1><pre class="source lang-java linenums">/**
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ManagedTransaction.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.transaction.managed</a> &gt; <span class="el_source">ManagedTransaction.java</span></div><h1>ManagedTransaction.java</h1><pre class="source lang-java linenums">/**
  *    Copyright 2009-2016 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
@@ -17,8 +17,6 @@ package org.apache.ibatis.transaction.managed;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.sql.Statement;
-
 import javax.sql.DataSource;
 
 import org.apache.ibatis.logging.Log;
@@ -38,66 +36,66 @@ import org.apache.ibatis.transaction.Transaction;
  */
 public class ManagedTransaction implements Transaction {
 
-<span class="fc" id="L41">  private static final Log log = LogFactory.getLog(ManagedTransaction.class);</span>
+<span class="fc" id="L39">  private static final Log log = LogFactory.getLog(ManagedTransaction.class);</span>
 
   private DataSource dataSource;
   private TransactionIsolationLevel level;
   private Connection connection;
   private boolean closeConnection;
 
-<span class="fc" id="L48">  public ManagedTransaction(Connection connection, boolean closeConnection) {</span>
-<span class="fc" id="L49">    this.connection = connection;</span>
-<span class="fc" id="L50">    this.closeConnection = closeConnection;</span>
-<span class="fc" id="L51">  }</span>
+<span class="fc" id="L46">  public ManagedTransaction(Connection connection, boolean closeConnection) {</span>
+<span class="fc" id="L47">    this.connection = connection;</span>
+<span class="fc" id="L48">    this.closeConnection = closeConnection;</span>
+<span class="fc" id="L49">  }</span>
 
-<span class="nc" id="L53">  public ManagedTransaction(DataSource ds, TransactionIsolationLevel level, boolean closeConnection) {</span>
-<span class="nc" id="L54">    this.dataSource = ds;</span>
-<span class="nc" id="L55">    this.level = level;</span>
-<span class="nc" id="L56">    this.closeConnection = closeConnection;</span>
-<span class="nc" id="L57">  }</span>
+<span class="nc" id="L51">  public ManagedTransaction(DataSource ds, TransactionIsolationLevel level, boolean closeConnection) {</span>
+<span class="nc" id="L52">    this.dataSource = ds;</span>
+<span class="nc" id="L53">    this.level = level;</span>
+<span class="nc" id="L54">    this.closeConnection = closeConnection;</span>
+<span class="nc" id="L55">  }</span>
 
   @Override
   public Connection getConnection() throws SQLException {
-<span class="pc bpc" id="L61" title="1 of 2 branches missed.">    if (this.connection == null) {</span>
-<span class="nc" id="L62">      openConnection();</span>
+<span class="pc bpc" id="L59" title="1 of 2 branches missed.">    if (this.connection == null) {</span>
+<span class="nc" id="L60">      openConnection();</span>
     }
-<span class="fc" id="L64">    return this.connection;</span>
+<span class="fc" id="L62">    return this.connection;</span>
   }
 
   @Override
   public void commit() throws SQLException {
     // Does nothing
-<span class="fc" id="L70">  }</span>
+<span class="fc" id="L68">  }</span>
 
   @Override
   public void rollback() throws SQLException {
     // Does nothing
-<span class="fc" id="L75">  }</span>
+<span class="fc" id="L73">  }</span>
 
   @Override
   public void close() throws SQLException {
-<span class="pc bpc" id="L79" title="1 of 4 branches missed.">    if (this.closeConnection &amp;&amp; this.connection != null) {</span>
-<span class="pc bpc" id="L80" title="1 of 2 branches missed.">      if (log.isDebugEnabled()) {</span>
-<span class="nc" id="L81">        log.debug(&quot;Closing JDBC Connection [&quot; + this.connection + &quot;]&quot;);</span>
+<span class="pc bpc" id="L77" title="1 of 4 branches missed.">    if (this.closeConnection &amp;&amp; this.connection != null) {</span>
+<span class="pc bpc" id="L78" title="1 of 2 branches missed.">      if (log.isDebugEnabled()) {</span>
+<span class="nc" id="L79">        log.debug(&quot;Closing JDBC Connection [&quot; + this.connection + &quot;]&quot;);</span>
       }
-<span class="fc" id="L83">      this.connection.close();</span>
+<span class="fc" id="L81">      this.connection.close();</span>
     }
-<span class="fc" id="L85">  }</span>
+<span class="fc" id="L83">  }</span>
 
   protected void openConnection() throws SQLException {
-<span class="nc bnc" id="L88" title="All 2 branches missed.">    if (log.isDebugEnabled()) {</span>
-<span class="nc" id="L89">      log.debug(&quot;Opening JDBC Connection&quot;);</span>
+<span class="nc bnc" id="L86" title="All 2 branches missed.">    if (log.isDebugEnabled()) {</span>
+<span class="nc" id="L87">      log.debug(&quot;Opening JDBC Connection&quot;);</span>
     }
-<span class="nc" id="L91">    this.connection = this.dataSource.getConnection();</span>
-<span class="nc bnc" id="L92" title="All 2 branches missed.">    if (this.level != null) {</span>
-<span class="nc" id="L93">      this.connection.setTransactionIsolation(this.level.getLevel());</span>
+<span class="nc" id="L89">    this.connection = this.dataSource.getConnection();</span>
+<span class="nc bnc" id="L90" title="All 2 branches missed.">    if (this.level != null) {</span>
+<span class="nc" id="L91">      this.connection.setTransactionIsolation(this.level.getLevel());</span>
     }
-<span class="nc" id="L95">  }</span>
+<span class="nc" id="L93">  }</span>
 
   @Override
   public Integer getTimeout() throws SQLException {
-<span class="nc" id="L99">    return null;</span>
+<span class="nc" id="L97">    return null;</span>
   }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

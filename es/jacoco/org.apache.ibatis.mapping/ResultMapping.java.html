@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>ResultMapping.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.mapping</a> &gt; <span class="el_source">ResultMapping.java</span></div><h1>ResultMapping.java</h1><pre class="source lang-java linenums">/**
- *    Copyright 2009-2015 the original author or authors.
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ResultMapping.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.mapping</a> &gt; <span class="el_source">ResultMapping.java</span></div><h1>ResultMapping.java</h1><pre class="source lang-java linenums">/**
+ *    Copyright 2009-2016 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  *    you may not use this file except in compliance with the License.
@@ -155,15 +155,15 @@ public class ResultMapping {
 <span class="fc" id="L155">        throw new IllegalStateException(&quot;Mapping is missing column attribute for property &quot; + resultMapping.property);</span>
       }
 <span class="fc bfc" id="L157" title="All 2 branches covered.">      if (resultMapping.getResultSet() != null) {</span>
-<span class="fc" id="L158">        int numColums = 0;</span>
+<span class="fc" id="L158">        int numColumns = 0;</span>
 <span class="fc bfc" id="L159" title="All 2 branches covered.">        if (resultMapping.column != null) {</span>
-<span class="fc" id="L160">          numColums = resultMapping.column.split(&quot;,&quot;).length;</span>
+<span class="fc" id="L160">          numColumns = resultMapping.column.split(&quot;,&quot;).length;</span>
         }
 <span class="fc" id="L162">        int numForeignColumns = 0;</span>
 <span class="fc bfc" id="L163" title="All 2 branches covered.">        if (resultMapping.foreignColumn != null) {</span>
 <span class="fc" id="L164">          numForeignColumns = resultMapping.foreignColumn.split(&quot;,&quot;).length;</span>
         }
-<span class="pc bpc" id="L166" title="1 of 2 branches missed.">        if (numColums != numForeignColumns) {</span>
+<span class="pc bpc" id="L166" title="1 of 2 branches missed.">        if (numColumns != numForeignColumns) {</span>
 <span class="nc" id="L167">          throw new IllegalStateException(&quot;There should be the same number of columns and foreignColumns in property &quot; + resultMapping.property);</span>
         }
       }
@@ -303,4 +303,4 @@ public class ResultMapping {
   }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

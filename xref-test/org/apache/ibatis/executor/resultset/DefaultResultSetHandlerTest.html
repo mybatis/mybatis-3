@@ -7,7 +7,7 @@
 <body>
 <div id="overview"><a href="../../../../../../testapidocs/org/apache/ibatis/executor/resultset/DefaultResultSetHandlerTest.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2015 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2016 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_javadoccomment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_javadoccomment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_javadoccomment"> *    you may not use this file except in compliance with the License.</em>
@@ -24,131 +24,138 @@
 <a class="jxr_linenumber" name="L16" href="#L16">16</a>  <strong class="jxr_keyword">package</strong> org.apache.ibatis.executor.resultset;
 <a class="jxr_linenumber" name="L17" href="#L17">17</a>  
 <a class="jxr_linenumber" name="L18" href="#L18">18</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> org.junit.Assert.assertEquals;
-<a class="jxr_linenumber" name="L19" href="#L19">19</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> org.mockito.Matchers.any;
-<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> org.mockito.Matchers.anyString;
-<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> org.mockito.Mockito.mock;
-<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> org.mockito.Mockito.when;
-<a class="jxr_linenumber" name="L23" href="#L23">23</a>  
-<a class="jxr_linenumber" name="L24" href="#L24">24</a>  <strong class="jxr_keyword">import</strong> java.sql.*;
-<a class="jxr_linenumber" name="L25" href="#L25">25</a>  <strong class="jxr_keyword">import</strong> java.util.ArrayList;
-<a class="jxr_linenumber" name="L26" href="#L26">26</a>  <strong class="jxr_keyword">import</strong> java.util.Collections;
-<a class="jxr_linenumber" name="L27" href="#L27">27</a>  <strong class="jxr_keyword">import</strong> java.util.HashMap;
-<a class="jxr_linenumber" name="L28" href="#L28">28</a>  <strong class="jxr_keyword">import</strong> java.util.List;
-<a class="jxr_linenumber" name="L29" href="#L29">29</a>  
-<a class="jxr_linenumber" name="L30" href="#L30">30</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.builder.StaticSqlSource;
-<a class="jxr_linenumber" name="L31" href="#L31">31</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.executor.Executor;
-<a class="jxr_linenumber" name="L32" href="#L32">32</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.executor.ExecutorException;
-<a class="jxr_linenumber" name="L33" href="#L33">33</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.executor.parameter.ParameterHandler;
-<a class="jxr_linenumber" name="L34" href="#L34">34</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.mapping.BoundSql;
-<a class="jxr_linenumber" name="L35" href="#L35">35</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.mapping.MappedStatement;
-<a class="jxr_linenumber" name="L36" href="#L36">36</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.mapping.ResultMap;
-<a class="jxr_linenumber" name="L37" href="#L37">37</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.mapping.ResultMapping;
-<a class="jxr_linenumber" name="L38" href="#L38">38</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.mapping.SqlCommandType;
-<a class="jxr_linenumber" name="L39" href="#L39">39</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.session.Configuration;
-<a class="jxr_linenumber" name="L40" href="#L40">40</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.session.ResultHandler;
-<a class="jxr_linenumber" name="L41" href="#L41">41</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.session.RowBounds;
-<a class="jxr_linenumber" name="L42" href="#L42">42</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.type.TypeHandler;
-<a class="jxr_linenumber" name="L43" href="#L43">43</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.type.TypeHandlerRegistry;
-<a class="jxr_linenumber" name="L44" href="#L44">44</a>  <strong class="jxr_keyword">import</strong> org.junit.Assert;
-<a class="jxr_linenumber" name="L45" href="#L45">45</a>  <strong class="jxr_keyword">import</strong> org.junit.Test;
-<a class="jxr_linenumber" name="L46" href="#L46">46</a>  <strong class="jxr_keyword">import</strong> org.junit.runner.RunWith;
-<a class="jxr_linenumber" name="L47" href="#L47">47</a>  <strong class="jxr_keyword">import</strong> org.mockito.Mock;
-<a class="jxr_linenumber" name="L48" href="#L48">48</a>  <strong class="jxr_keyword">import</strong> org.mockito.runners.MockitoJUnitRunner;
-<a class="jxr_linenumber" name="L49" href="#L49">49</a>  
-<a class="jxr_linenumber" name="L50" href="#L50">50</a>  @RunWith(MockitoJUnitRunner.<strong class="jxr_keyword">class</strong>)
-<a class="jxr_linenumber" name="L51" href="#L51">51</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../../org/apache/ibatis/executor/resultset/DefaultResultSetHandlerTest.html">DefaultResultSetHandlerTest</a> {
-<a class="jxr_linenumber" name="L52" href="#L52">52</a>  
-<a class="jxr_linenumber" name="L53" href="#L53">53</a>    @Mock
-<a class="jxr_linenumber" name="L54" href="#L54">54</a>    <strong class="jxr_keyword">private</strong> Statement stmt;
-<a class="jxr_linenumber" name="L55" href="#L55">55</a>    @Mock
-<a class="jxr_linenumber" name="L56" href="#L56">56</a>    <strong class="jxr_keyword">private</strong> ResultSet rs;
-<a class="jxr_linenumber" name="L57" href="#L57">57</a>    @Mock
-<a class="jxr_linenumber" name="L58" href="#L58">58</a>    <strong class="jxr_keyword">private</strong> ResultSetMetaData rsmd;
-<a class="jxr_linenumber" name="L59" href="#L59">59</a>    @Mock
-<a class="jxr_linenumber" name="L60" href="#L60">60</a>    <strong class="jxr_keyword">private</strong> Connection conn;
-<a class="jxr_linenumber" name="L61" href="#L61">61</a>    @Mock
-<a class="jxr_linenumber" name="L62" href="#L62">62</a>    <strong class="jxr_keyword">private</strong> DatabaseMetaData dbmd;
-<a class="jxr_linenumber" name="L63" href="#L63">63</a>  
-<a class="jxr_linenumber" name="L64" href="#L64">64</a>    <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L65" href="#L65">65</a>  <em class="jxr_javadoccomment">   * Contrary to the spec, some drivers require case-sensitive column names when getting result.</em>
-<a class="jxr_linenumber" name="L66" href="#L66">66</a>  <em class="jxr_javadoccomment">   * </em>
-<a class="jxr_linenumber" name="L67" href="#L67">67</a>  <em class="jxr_javadoccomment">   * @see &lt;a href="<a href="http://code.google.com/p/mybatis/issues/detail?id=557" target="alexandria_uri">http://code.google.com/p/mybatis/issues/detail?id=557</a>"&gt;Issue 557&lt;/a&gt;</em>
-<a class="jxr_linenumber" name="L68" href="#L68">68</a>  <em class="jxr_javadoccomment">   */</em>
-<a class="jxr_linenumber" name="L69" href="#L69">69</a>    @Test
-<a class="jxr_linenumber" name="L70" href="#L70">70</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldRetainColumnNameCase() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L71" href="#L71">71</a>  
-<a class="jxr_linenumber" name="L72" href="#L72">72</a>      <strong class="jxr_keyword">final</strong> MappedStatement ms = getMappedStatement();
-<a class="jxr_linenumber" name="L73" href="#L73">73</a>  
-<a class="jxr_linenumber" name="L74" href="#L74">74</a>      <strong class="jxr_keyword">final</strong> Executor executor = <strong class="jxr_keyword">null</strong>;
-<a class="jxr_linenumber" name="L75" href="#L75">75</a>      <strong class="jxr_keyword">final</strong> ParameterHandler parameterHandler = <strong class="jxr_keyword">null</strong>;
-<a class="jxr_linenumber" name="L76" href="#L76">76</a>      <strong class="jxr_keyword">final</strong> ResultHandler resultHandler = <strong class="jxr_keyword">null</strong>;
-<a class="jxr_linenumber" name="L77" href="#L77">77</a>      <strong class="jxr_keyword">final</strong> BoundSql boundSql = <strong class="jxr_keyword">null</strong>;
-<a class="jxr_linenumber" name="L78" href="#L78">78</a>      <strong class="jxr_keyword">final</strong> RowBounds rowBounds = <strong class="jxr_keyword">new</strong> RowBounds(0, 100);
-<a class="jxr_linenumber" name="L79" href="#L79">79</a>      <strong class="jxr_keyword">final</strong> DefaultResultSetHandler fastResultSetHandler = <strong class="jxr_keyword">new</strong> DefaultResultSetHandler(executor, ms, parameterHandler, resultHandler, boundSql, rowBounds);
-<a class="jxr_linenumber" name="L80" href="#L80">80</a>  
-<a class="jxr_linenumber" name="L81" href="#L81">81</a>      when(stmt.getResultSet()).thenReturn(rs);
-<a class="jxr_linenumber" name="L82" href="#L82">82</a>      when(rs.getMetaData()).thenReturn(rsmd);
-<a class="jxr_linenumber" name="L83" href="#L83">83</a>      when(rs.getType()).thenReturn(ResultSet.TYPE_FORWARD_ONLY);
-<a class="jxr_linenumber" name="L84" href="#L84">84</a>      when(rs.next()).thenReturn(<strong class="jxr_keyword">true</strong>).thenReturn(false);
-<a class="jxr_linenumber" name="L85" href="#L85">85</a>      when(rs.getInt(<span class="jxr_string">"CoLuMn1"</span>)).thenReturn(100);
-<a class="jxr_linenumber" name="L86" href="#L86">86</a>      when(rs.wasNull()).thenReturn(false);
-<a class="jxr_linenumber" name="L87" href="#L87">87</a>      when(rsmd.getColumnCount()).thenReturn(1);
-<a class="jxr_linenumber" name="L88" href="#L88">88</a>      when(rsmd.getColumnLabel(1)).thenReturn(<span class="jxr_string">"CoLuMn1"</span>);
-<a class="jxr_linenumber" name="L89" href="#L89">89</a>      when(rsmd.getColumnType(1)).thenReturn(Types.INTEGER);
-<a class="jxr_linenumber" name="L90" href="#L90">90</a>      when(rsmd.getColumnClassName(1)).thenReturn(Integer.<strong class="jxr_keyword">class</strong>.getCanonicalName());
-<a class="jxr_linenumber" name="L91" href="#L91">91</a>      when(stmt.getConnection()).thenReturn(conn);
-<a class="jxr_linenumber" name="L92" href="#L92">92</a>      when(conn.getMetaData()).thenReturn(dbmd);
-<a class="jxr_linenumber" name="L93" href="#L93">93</a>      when(dbmd.supportsMultipleResultSets()).thenReturn(false); <em class="jxr_comment">// for simplicity.</em>
-<a class="jxr_linenumber" name="L94" href="#L94">94</a>  
-<a class="jxr_linenumber" name="L95" href="#L95">95</a>      <strong class="jxr_keyword">final</strong> List&lt;Object&gt; results = fastResultSetHandler.handleResultSets(stmt);
-<a class="jxr_linenumber" name="L96" href="#L96">96</a>      assertEquals(1, results.size());
-<a class="jxr_linenumber" name="L97" href="#L97">97</a>      assertEquals(Integer.valueOf(100), ((HashMap) results.get(0)).get(<span class="jxr_string">"cOlUmN1"</span>));
-<a class="jxr_linenumber" name="L98" href="#L98">98</a>    }
+<a class="jxr_linenumber" name="L19" href="#L19">19</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> org.mockito.ArgumentMatchers.any;
+<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> org.mockito.Mockito.mock;
+<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> org.mockito.Mockito.when;
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>  
+<a class="jxr_linenumber" name="L23" href="#L23">23</a>  <strong class="jxr_keyword">import</strong> java.sql.Connection;
+<a class="jxr_linenumber" name="L24" href="#L24">24</a>  <strong class="jxr_keyword">import</strong> java.sql.DatabaseMetaData;
+<a class="jxr_linenumber" name="L25" href="#L25">25</a>  <strong class="jxr_keyword">import</strong> java.sql.ResultSet;
+<a class="jxr_linenumber" name="L26" href="#L26">26</a>  <strong class="jxr_keyword">import</strong> java.sql.ResultSetMetaData;
+<a class="jxr_linenumber" name="L27" href="#L27">27</a>  <strong class="jxr_keyword">import</strong> java.sql.SQLException;
+<a class="jxr_linenumber" name="L28" href="#L28">28</a>  <strong class="jxr_keyword">import</strong> java.sql.Statement;
+<a class="jxr_linenumber" name="L29" href="#L29">29</a>  <strong class="jxr_keyword">import</strong> java.sql.Types;
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>  <strong class="jxr_keyword">import</strong> java.util.ArrayList;
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>  <strong class="jxr_keyword">import</strong> java.util.Collections;
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>  <strong class="jxr_keyword">import</strong> java.util.HashMap;
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>  <strong class="jxr_keyword">import</strong> java.util.List;
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>  
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.builder.StaticSqlSource;
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.executor.Executor;
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.executor.ExecutorException;
+<a class="jxr_linenumber" name="L38" href="#L38">38</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.executor.parameter.ParameterHandler;
+<a class="jxr_linenumber" name="L39" href="#L39">39</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.mapping.BoundSql;
+<a class="jxr_linenumber" name="L40" href="#L40">40</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.mapping.MappedStatement;
+<a class="jxr_linenumber" name="L41" href="#L41">41</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.mapping.ResultMap;
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.mapping.ResultMapping;
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.mapping.SqlCommandType;
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.session.Configuration;
+<a class="jxr_linenumber" name="L45" href="#L45">45</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.session.ResultHandler;
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.session.RowBounds;
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.type.TypeHandler;
+<a class="jxr_linenumber" name="L48" href="#L48">48</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.type.TypeHandlerRegistry;
+<a class="jxr_linenumber" name="L49" href="#L49">49</a>  <strong class="jxr_keyword">import</strong> org.junit.Assert;
+<a class="jxr_linenumber" name="L50" href="#L50">50</a>  <strong class="jxr_keyword">import</strong> org.junit.Test;
+<a class="jxr_linenumber" name="L51" href="#L51">51</a>  <strong class="jxr_keyword">import</strong> org.junit.runner.RunWith;
+<a class="jxr_linenumber" name="L52" href="#L52">52</a>  <strong class="jxr_keyword">import</strong> org.mockito.Mock;
+<a class="jxr_linenumber" name="L53" href="#L53">53</a>  <strong class="jxr_keyword">import</strong> org.mockito.junit.MockitoJUnitRunner;
+<a class="jxr_linenumber" name="L54" href="#L54">54</a>  
+<a class="jxr_linenumber" name="L55" href="#L55">55</a>  @RunWith(MockitoJUnitRunner.<strong class="jxr_keyword">class</strong>)
+<a class="jxr_linenumber" name="L56" href="#L56">56</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../../org/apache/ibatis/executor/resultset/DefaultResultSetHandlerTest.html">DefaultResultSetHandlerTest</a> {
+<a class="jxr_linenumber" name="L57" href="#L57">57</a>  
+<a class="jxr_linenumber" name="L58" href="#L58">58</a>    @Mock
+<a class="jxr_linenumber" name="L59" href="#L59">59</a>    <strong class="jxr_keyword">private</strong> Statement stmt;
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>    @Mock
+<a class="jxr_linenumber" name="L61" href="#L61">61</a>    <strong class="jxr_keyword">private</strong> ResultSet rs;
+<a class="jxr_linenumber" name="L62" href="#L62">62</a>    @Mock
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>    <strong class="jxr_keyword">private</strong> ResultSetMetaData rsmd;
+<a class="jxr_linenumber" name="L64" href="#L64">64</a>    @Mock
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>    <strong class="jxr_keyword">private</strong> Connection conn;
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>    @Mock
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>    <strong class="jxr_keyword">private</strong> DatabaseMetaData dbmd;
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>  
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>    <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>  <em class="jxr_javadoccomment">   * Contrary to the spec, some drivers require case-sensitive column names when getting result.</em>
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>  <em class="jxr_javadoccomment">   * </em>
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>  <em class="jxr_javadoccomment">   * @see &lt;a href="<a href="http://code.google.com/p/mybatis/issues/detail?id=557" target="alexandria_uri">http://code.google.com/p/mybatis/issues/detail?id=557</a>"&gt;Issue 557&lt;/a&gt;</em>
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>  <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>    @Test
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldRetainColumnNameCase() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>  
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>      <strong class="jxr_keyword">final</strong> MappedStatement ms = getMappedStatement();
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>  
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>      <strong class="jxr_keyword">final</strong> Executor executor = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>      <strong class="jxr_keyword">final</strong> ParameterHandler parameterHandler = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L81" href="#L81">81</a>      <strong class="jxr_keyword">final</strong> ResultHandler resultHandler = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L82" href="#L82">82</a>      <strong class="jxr_keyword">final</strong> BoundSql boundSql = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L83" href="#L83">83</a>      <strong class="jxr_keyword">final</strong> RowBounds rowBounds = <strong class="jxr_keyword">new</strong> RowBounds(0, 100);
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>      <strong class="jxr_keyword">final</strong> DefaultResultSetHandler fastResultSetHandler = <strong class="jxr_keyword">new</strong> DefaultResultSetHandler(executor, ms, parameterHandler, resultHandler, boundSql, rowBounds);
+<a class="jxr_linenumber" name="L85" href="#L85">85</a>  
+<a class="jxr_linenumber" name="L86" href="#L86">86</a>      when(stmt.getResultSet()).thenReturn(rs);
+<a class="jxr_linenumber" name="L87" href="#L87">87</a>      when(rs.getMetaData()).thenReturn(rsmd);
+<a class="jxr_linenumber" name="L88" href="#L88">88</a>      when(rs.getType()).thenReturn(ResultSet.TYPE_FORWARD_ONLY);
+<a class="jxr_linenumber" name="L89" href="#L89">89</a>      when(rs.next()).thenReturn(<strong class="jxr_keyword">true</strong>).thenReturn(false);
+<a class="jxr_linenumber" name="L90" href="#L90">90</a>      when(rs.getInt(<span class="jxr_string">"CoLuMn1"</span>)).thenReturn(100);
+<a class="jxr_linenumber" name="L91" href="#L91">91</a>      when(rs.wasNull()).thenReturn(false);
+<a class="jxr_linenumber" name="L92" href="#L92">92</a>      when(rsmd.getColumnCount()).thenReturn(1);
+<a class="jxr_linenumber" name="L93" href="#L93">93</a>      when(rsmd.getColumnLabel(1)).thenReturn(<span class="jxr_string">"CoLuMn1"</span>);
+<a class="jxr_linenumber" name="L94" href="#L94">94</a>      when(rsmd.getColumnType(1)).thenReturn(Types.INTEGER);
+<a class="jxr_linenumber" name="L95" href="#L95">95</a>      when(rsmd.getColumnClassName(1)).thenReturn(Integer.<strong class="jxr_keyword">class</strong>.getCanonicalName());
+<a class="jxr_linenumber" name="L96" href="#L96">96</a>      when(stmt.getConnection()).thenReturn(conn);
+<a class="jxr_linenumber" name="L97" href="#L97">97</a>      when(conn.getMetaData()).thenReturn(dbmd);
+<a class="jxr_linenumber" name="L98" href="#L98">98</a>      when(dbmd.supportsMultipleResultSets()).thenReturn(false); <em class="jxr_comment">// for simplicity.</em>
 <a class="jxr_linenumber" name="L99" href="#L99">99</a>  
-<a class="jxr_linenumber" name="L100" href="#L100">100</a>   @Test
-<a class="jxr_linenumber" name="L101" href="#L101">101</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldThrowExceptionWithColumnName() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L102" href="#L102">102</a>     <strong class="jxr_keyword">final</strong> MappedStatement ms = getMappedStatement();
-<a class="jxr_linenumber" name="L103" href="#L103">103</a>     <strong class="jxr_keyword">final</strong> RowBounds rowBounds = <strong class="jxr_keyword">new</strong> RowBounds(0, 100);
+<a class="jxr_linenumber" name="L100" href="#L100">100</a>     <strong class="jxr_keyword">final</strong> List&lt;Object&gt; results = fastResultSetHandler.handleResultSets(stmt);
+<a class="jxr_linenumber" name="L101" href="#L101">101</a>     assertEquals(1, results.size());
+<a class="jxr_linenumber" name="L102" href="#L102">102</a>     assertEquals(Integer.valueOf(100), ((HashMap) results.get(0)).get(<span class="jxr_string">"cOlUmN1"</span>));
+<a class="jxr_linenumber" name="L103" href="#L103">103</a>   }
 <a class="jxr_linenumber" name="L104" href="#L104">104</a> 
-<a class="jxr_linenumber" name="L105" href="#L105">105</a>     <strong class="jxr_keyword">final</strong> DefaultResultSetHandler defaultResultSetHandler = <strong class="jxr_keyword">new</strong> DefaultResultSetHandler(<strong class="jxr_keyword">null</strong><em class="jxr_comment">/*executor*/</em>, ms,
-<a class="jxr_linenumber" name="L106" href="#L106">106</a>             <strong class="jxr_keyword">null</strong><em class="jxr_comment">/*parameterHandler*/</em>, <strong class="jxr_keyword">null</strong><em class="jxr_comment">/*resultHandler*/</em>, <strong class="jxr_keyword">null</strong><em class="jxr_comment">/*boundSql*/</em>, rowBounds);
-<a class="jxr_linenumber" name="L107" href="#L107">107</a> 
-<a class="jxr_linenumber" name="L108" href="#L108">108</a>     <strong class="jxr_keyword">final</strong> ResultSetWrapper rsw = mock(ResultSetWrapper.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L105" href="#L105">105</a>   @Test
+<a class="jxr_linenumber" name="L106" href="#L106">106</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldThrowExceptionWithColumnName() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L107" href="#L107">107</a>     <strong class="jxr_keyword">final</strong> MappedStatement ms = getMappedStatement();
+<a class="jxr_linenumber" name="L108" href="#L108">108</a>     <strong class="jxr_keyword">final</strong> RowBounds rowBounds = <strong class="jxr_keyword">new</strong> RowBounds(0, 100);
 <a class="jxr_linenumber" name="L109" href="#L109">109</a> 
-<a class="jxr_linenumber" name="L110" href="#L110">110</a>     <strong class="jxr_keyword">final</strong> ResultMapping resultMapping = mock(ResultMapping.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L111" href="#L111">111</a>     <strong class="jxr_keyword">final</strong> TypeHandler typeHandler = mock(TypeHandler.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L112" href="#L112">112</a>     when(resultMapping.getTypeHandler()).thenReturn(typeHandler);
-<a class="jxr_linenumber" name="L113" href="#L113">113</a>     when(typeHandler.getResult(any(ResultSet.<strong class="jxr_keyword">class</strong>), anyString())).thenThrow(<strong class="jxr_keyword">new</strong> SQLException(<span class="jxr_string">"exception"</span>));
-<a class="jxr_linenumber" name="L114" href="#L114">114</a>     List&lt;ResultMapping&gt; constructorMappings = Collections.singletonList(resultMapping);
+<a class="jxr_linenumber" name="L110" href="#L110">110</a>     <strong class="jxr_keyword">final</strong> DefaultResultSetHandler defaultResultSetHandler = <strong class="jxr_keyword">new</strong> DefaultResultSetHandler(<strong class="jxr_keyword">null</strong><em class="jxr_comment">/*executor*/</em>, ms,
+<a class="jxr_linenumber" name="L111" href="#L111">111</a>             <strong class="jxr_keyword">null</strong><em class="jxr_comment">/*parameterHandler*/</em>, <strong class="jxr_keyword">null</strong><em class="jxr_comment">/*resultHandler*/</em>, <strong class="jxr_keyword">null</strong><em class="jxr_comment">/*boundSql*/</em>, rowBounds);
+<a class="jxr_linenumber" name="L112" href="#L112">112</a> 
+<a class="jxr_linenumber" name="L113" href="#L113">113</a>     <strong class="jxr_keyword">final</strong> ResultSetWrapper rsw = mock(ResultSetWrapper.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L114" href="#L114">114</a>     when(rsw.getResultSet()).thenReturn(mock(ResultSet.<strong class="jxr_keyword">class</strong>));
 <a class="jxr_linenumber" name="L115" href="#L115">115</a> 
-<a class="jxr_linenumber" name="L116" href="#L116">116</a>     <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L117" href="#L117">117</a>       defaultResultSetHandler.createParameterizedResultObject(rsw, <strong class="jxr_keyword">null</strong><em class="jxr_comment">/*resultType*/</em>, constructorMappings,
-<a class="jxr_linenumber" name="L118" href="#L118">118</a>               <strong class="jxr_keyword">null</strong><em class="jxr_comment">/*constructorArgTypes*/</em>, <strong class="jxr_keyword">null</strong><em class="jxr_comment">/*constructorArgs*/</em>, <strong class="jxr_keyword">null</strong><em class="jxr_comment">/*columnPrefix*/</em>);
-<a class="jxr_linenumber" name="L119" href="#L119">119</a>       Assert.fail(<span class="jxr_string">"Should have thrown ExecutorException"</span>);
-<a class="jxr_linenumber" name="L120" href="#L120">120</a>     } <strong class="jxr_keyword">catch</strong> (Exception e) {
-<a class="jxr_linenumber" name="L121" href="#L121">121</a>       Assert.assertTrue(<span class="jxr_string">"Expected ExecutorException"</span>, e instanceof ExecutorException);
-<a class="jxr_linenumber" name="L122" href="#L122">122</a>       Assert.assertTrue(<span class="jxr_string">""</span>, e.getMessage().contains(<span class="jxr_string">"mapping: "</span> + resultMapping.toString()));
-<a class="jxr_linenumber" name="L123" href="#L123">123</a>     }
-<a class="jxr_linenumber" name="L124" href="#L124">124</a>   }
-<a class="jxr_linenumber" name="L125" href="#L125">125</a> 
-<a class="jxr_linenumber" name="L126" href="#L126">126</a>   MappedStatement getMappedStatement() {
-<a class="jxr_linenumber" name="L127" href="#L127">127</a>     <strong class="jxr_keyword">final</strong> Configuration config = <strong class="jxr_keyword">new</strong> Configuration();
-<a class="jxr_linenumber" name="L128" href="#L128">128</a>     <strong class="jxr_keyword">final</strong> TypeHandlerRegistry registry = config.getTypeHandlerRegistry();
-<a class="jxr_linenumber" name="L129" href="#L129">129</a>     <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> MappedStatement.Builder(config, <span class="jxr_string">"testSelect"</span>, <strong class="jxr_keyword">new</strong> StaticSqlSource(config, <span class="jxr_string">"some select statement"</span>), SqlCommandType.SELECT).resultMaps(
-<a class="jxr_linenumber" name="L130" href="#L130">130</a>         <strong class="jxr_keyword">new</strong> ArrayList&lt;ResultMap&gt;() {
-<a class="jxr_linenumber" name="L131" href="#L131">131</a>           {
-<a class="jxr_linenumber" name="L132" href="#L132">132</a>             add(<strong class="jxr_keyword">new</strong> ResultMap.Builder(config, <span class="jxr_string">"testMap"</span>, HashMap.<strong class="jxr_keyword">class</strong>, <strong class="jxr_keyword">new</strong> ArrayList&lt;ResultMapping&gt;() {
-<a class="jxr_linenumber" name="L133" href="#L133">133</a>               {
-<a class="jxr_linenumber" name="L134" href="#L134">134</a>                 add(<strong class="jxr_keyword">new</strong> ResultMapping.Builder(config, <span class="jxr_string">"cOlUmN1"</span>, <span class="jxr_string">"CoLuMn1"</span>, registry.getTypeHandler(Integer.<strong class="jxr_keyword">class</strong>)).build());
-<a class="jxr_linenumber" name="L135" href="#L135">135</a>               }
-<a class="jxr_linenumber" name="L136" href="#L136">136</a>             }).build());
-<a class="jxr_linenumber" name="L137" href="#L137">137</a>           }
-<a class="jxr_linenumber" name="L138" href="#L138">138</a>         }).build();
-<a class="jxr_linenumber" name="L139" href="#L139">139</a>   }
-<a class="jxr_linenumber" name="L140" href="#L140">140</a> 
-<a class="jxr_linenumber" name="L141" href="#L141">141</a> }
+<a class="jxr_linenumber" name="L116" href="#L116">116</a>     <strong class="jxr_keyword">final</strong> ResultMapping resultMapping = mock(ResultMapping.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L117" href="#L117">117</a>     <strong class="jxr_keyword">final</strong> TypeHandler typeHandler = mock(TypeHandler.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L118" href="#L118">118</a>     when(resultMapping.getColumn()).thenReturn(<span class="jxr_string">"column"</span>);
+<a class="jxr_linenumber" name="L119" href="#L119">119</a>     when(resultMapping.getTypeHandler()).thenReturn(typeHandler);
+<a class="jxr_linenumber" name="L120" href="#L120">120</a>     when(typeHandler.getResult(any(ResultSet.<strong class="jxr_keyword">class</strong>), any(String.<strong class="jxr_keyword">class</strong>))).thenThrow(<strong class="jxr_keyword">new</strong> SQLException(<span class="jxr_string">"exception"</span>));
+<a class="jxr_linenumber" name="L121" href="#L121">121</a>     List&lt;ResultMapping&gt; constructorMappings = Collections.singletonList(resultMapping);
+<a class="jxr_linenumber" name="L122" href="#L122">122</a> 
+<a class="jxr_linenumber" name="L123" href="#L123">123</a>     <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L124" href="#L124">124</a>       defaultResultSetHandler.createParameterizedResultObject(rsw, <strong class="jxr_keyword">null</strong><em class="jxr_comment">/*resultType*/</em>, constructorMappings,
+<a class="jxr_linenumber" name="L125" href="#L125">125</a>               <strong class="jxr_keyword">null</strong><em class="jxr_comment">/*constructorArgTypes*/</em>, <strong class="jxr_keyword">null</strong><em class="jxr_comment">/*constructorArgs*/</em>, <strong class="jxr_keyword">null</strong><em class="jxr_comment">/*columnPrefix*/</em>);
+<a class="jxr_linenumber" name="L126" href="#L126">126</a>       Assert.fail(<span class="jxr_string">"Should have thrown ExecutorException"</span>);
+<a class="jxr_linenumber" name="L127" href="#L127">127</a>     } <strong class="jxr_keyword">catch</strong> (Exception e) {
+<a class="jxr_linenumber" name="L128" href="#L128">128</a>       Assert.assertTrue(<span class="jxr_string">"Expected ExecutorException"</span>, e instanceof ExecutorException);
+<a class="jxr_linenumber" name="L129" href="#L129">129</a>       Assert.assertTrue(<span class="jxr_string">""</span>, e.getMessage().contains(<span class="jxr_string">"mapping: "</span> + resultMapping.toString()));
+<a class="jxr_linenumber" name="L130" href="#L130">130</a>     }
+<a class="jxr_linenumber" name="L131" href="#L131">131</a>   }
+<a class="jxr_linenumber" name="L132" href="#L132">132</a> 
+<a class="jxr_linenumber" name="L133" href="#L133">133</a>   MappedStatement getMappedStatement() {
+<a class="jxr_linenumber" name="L134" href="#L134">134</a>     <strong class="jxr_keyword">final</strong> Configuration config = <strong class="jxr_keyword">new</strong> Configuration();
+<a class="jxr_linenumber" name="L135" href="#L135">135</a>     <strong class="jxr_keyword">final</strong> TypeHandlerRegistry registry = config.getTypeHandlerRegistry();
+<a class="jxr_linenumber" name="L136" href="#L136">136</a>     <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> MappedStatement.Builder(config, <span class="jxr_string">"testSelect"</span>, <strong class="jxr_keyword">new</strong> StaticSqlSource(config, <span class="jxr_string">"some select statement"</span>), SqlCommandType.SELECT).resultMaps(
+<a class="jxr_linenumber" name="L137" href="#L137">137</a>         <strong class="jxr_keyword">new</strong> ArrayList&lt;ResultMap&gt;() {
+<a class="jxr_linenumber" name="L138" href="#L138">138</a>           {
+<a class="jxr_linenumber" name="L139" href="#L139">139</a>             add(<strong class="jxr_keyword">new</strong> ResultMap.Builder(config, <span class="jxr_string">"testMap"</span>, HashMap.<strong class="jxr_keyword">class</strong>, <strong class="jxr_keyword">new</strong> ArrayList&lt;ResultMapping&gt;() {
+<a class="jxr_linenumber" name="L140" href="#L140">140</a>               {
+<a class="jxr_linenumber" name="L141" href="#L141">141</a>                 add(<strong class="jxr_keyword">new</strong> ResultMapping.Builder(config, <span class="jxr_string">"cOlUmN1"</span>, <span class="jxr_string">"CoLuMn1"</span>, registry.getTypeHandler(Integer.<strong class="jxr_keyword">class</strong>)).build());
+<a class="jxr_linenumber" name="L142" href="#L142">142</a>               }
+<a class="jxr_linenumber" name="L143" href="#L143">143</a>             }).build());
+<a class="jxr_linenumber" name="L144" href="#L144">144</a>           }
+<a class="jxr_linenumber" name="L145" href="#L145">145</a>         }).build();
+<a class="jxr_linenumber" name="L146" href="#L146">146</a>   }
+<a class="jxr_linenumber" name="L147" href="#L147">147</a> 
+<a class="jxr_linenumber" name="L148" href="#L148">148</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2016 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2009&#x2013;2017 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
 </body>
 </html>

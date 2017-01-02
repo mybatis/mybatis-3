@@ -7,7 +7,7 @@
 <body>
 <div id="overview"><a href="../../../../../../apidocs/org/apache/ibatis/builder/xml/XMLIncludeTransformer.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2015 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2016 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_javadoccomment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_javadoccomment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_javadoccomment"> *    you may not use this file except in compliance with the License.</em>
@@ -23,129 +23,121 @@
 <a class="jxr_linenumber" name="L15" href="#L15">15</a>  <em class="jxr_javadoccomment"> */</em>
 <a class="jxr_linenumber" name="L16" href="#L16">16</a>  <strong class="jxr_keyword">package</strong> org.apache.ibatis.builder.xml;
 <a class="jxr_linenumber" name="L17" href="#L17">17</a>  
-<a class="jxr_linenumber" name="L18" href="#L18">18</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.builder.BuilderException;
-<a class="jxr_linenumber" name="L19" href="#L19">19</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.builder.IncompleteElementException;
-<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.builder.MapperBuilderAssistant;
-<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.parsing.PropertyParser;
-<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.parsing.XNode;
-<a class="jxr_linenumber" name="L23" href="#L23">23</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.session.Configuration;
-<a class="jxr_linenumber" name="L24" href="#L24">24</a>  <strong class="jxr_keyword">import</strong> org.w3c.dom.Node;
-<a class="jxr_linenumber" name="L25" href="#L25">25</a>  <strong class="jxr_keyword">import</strong> org.w3c.dom.NodeList;
-<a class="jxr_linenumber" name="L26" href="#L26">26</a>  
-<a class="jxr_linenumber" name="L27" href="#L27">27</a>  <strong class="jxr_keyword">import</strong> java.util.Properties;
-<a class="jxr_linenumber" name="L28" href="#L28">28</a>  
-<a class="jxr_linenumber" name="L29" href="#L29">29</a>  <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L30" href="#L30">30</a>  <em class="jxr_javadoccomment"> * @author Frank D. Martinez [mnesarco]</em>
-<a class="jxr_linenumber" name="L31" href="#L31">31</a>  <em class="jxr_javadoccomment"> */</em>
-<a class="jxr_linenumber" name="L32" href="#L32">32</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../../org/apache/ibatis/builder/xml/XMLIncludeTransformer.html">XMLIncludeTransformer</a> {
-<a class="jxr_linenumber" name="L33" href="#L33">33</a>  
-<a class="jxr_linenumber" name="L34" href="#L34">34</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <a href="../../../../../org/apache/ibatis/session/Configuration.html">Configuration</a> configuration;
-<a class="jxr_linenumber" name="L35" href="#L35">35</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <a href="../../../../../org/apache/ibatis/builder/MapperBuilderAssistant.html">MapperBuilderAssistant</a> builderAssistant;
-<a class="jxr_linenumber" name="L36" href="#L36">36</a>  
-<a class="jxr_linenumber" name="L37" href="#L37">37</a>    <strong class="jxr_keyword">public</strong> <a href="../../../../../org/apache/ibatis/builder/xml/XMLIncludeTransformer.html">XMLIncludeTransformer</a>(<a href="../../../../../org/apache/ibatis/session/Configuration.html">Configuration</a> configuration, <a href="../../../../../org/apache/ibatis/builder/MapperBuilderAssistant.html">MapperBuilderAssistant</a> builderAssistant) {
-<a class="jxr_linenumber" name="L38" href="#L38">38</a>      <strong class="jxr_keyword">this</strong>.configuration = configuration;
-<a class="jxr_linenumber" name="L39" href="#L39">39</a>      <strong class="jxr_keyword">this</strong>.builderAssistant = builderAssistant;
-<a class="jxr_linenumber" name="L40" href="#L40">40</a>    }
-<a class="jxr_linenumber" name="L41" href="#L41">41</a>  
-<a class="jxr_linenumber" name="L42" href="#L42">42</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> applyIncludes(Node source) {
-<a class="jxr_linenumber" name="L43" href="#L43">43</a>      Properties variablesContext = <strong class="jxr_keyword">new</strong> Properties();
-<a class="jxr_linenumber" name="L44" href="#L44">44</a>      Properties configurationVariables = configuration.getVariables();
-<a class="jxr_linenumber" name="L45" href="#L45">45</a>      <strong class="jxr_keyword">if</strong> (configurationVariables != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L46" href="#L46">46</a>        variablesContext.putAll(configurationVariables);
-<a class="jxr_linenumber" name="L47" href="#L47">47</a>      }
-<a class="jxr_linenumber" name="L48" href="#L48">48</a>      applyIncludes(source, variablesContext);
-<a class="jxr_linenumber" name="L49" href="#L49">49</a>    }
-<a class="jxr_linenumber" name="L50" href="#L50">50</a>  
-<a class="jxr_linenumber" name="L51" href="#L51">51</a>    <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L52" href="#L52">52</a>  <em class="jxr_javadoccomment">   * Recursively apply includes through all SQL fragments.</em>
-<a class="jxr_linenumber" name="L53" href="#L53">53</a>  <em class="jxr_javadoccomment">   * @param source Include node in DOM tree</em>
-<a class="jxr_linenumber" name="L54" href="#L54">54</a>  <em class="jxr_javadoccomment">   * @param variablesContext Current context for static variables with values</em>
-<a class="jxr_linenumber" name="L55" href="#L55">55</a>  <em class="jxr_javadoccomment">   */</em>
-<a class="jxr_linenumber" name="L56" href="#L56">56</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> applyIncludes(Node source, <strong class="jxr_keyword">final</strong> Properties variablesContext) {
-<a class="jxr_linenumber" name="L57" href="#L57">57</a>      <strong class="jxr_keyword">if</strong> (source.getNodeName().equals(<span class="jxr_string">"include"</span>)) {
-<a class="jxr_linenumber" name="L58" href="#L58">58</a>        <em class="jxr_comment">// new full context for included SQL - contains inherited context and new variables from current include node</em>
-<a class="jxr_linenumber" name="L59" href="#L59">59</a>        Properties fullContext;
-<a class="jxr_linenumber" name="L60" href="#L60">60</a>  
-<a class="jxr_linenumber" name="L61" href="#L61">61</a>        String refid = getStringAttribute(source, <span class="jxr_string">"refid"</span>);
-<a class="jxr_linenumber" name="L62" href="#L62">62</a>        <em class="jxr_comment">// replace variables in include refid value</em>
-<a class="jxr_linenumber" name="L63" href="#L63">63</a>        refid = PropertyParser.parse(refid, variablesContext);
-<a class="jxr_linenumber" name="L64" href="#L64">64</a>        Node toInclude = findSqlFragment(refid);
-<a class="jxr_linenumber" name="L65" href="#L65">65</a>        Properties newVariablesContext = getVariablesContext(source, variablesContext);
-<a class="jxr_linenumber" name="L66" href="#L66">66</a>        <strong class="jxr_keyword">if</strong> (!newVariablesContext.isEmpty()) {
-<a class="jxr_linenumber" name="L67" href="#L67">67</a>          <em class="jxr_comment">// merge contexts</em>
-<a class="jxr_linenumber" name="L68" href="#L68">68</a>          fullContext = <strong class="jxr_keyword">new</strong> Properties();
-<a class="jxr_linenumber" name="L69" href="#L69">69</a>          fullContext.putAll(variablesContext);
-<a class="jxr_linenumber" name="L70" href="#L70">70</a>          fullContext.putAll(newVariablesContext);
-<a class="jxr_linenumber" name="L71" href="#L71">71</a>        } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="L72" href="#L72">72</a>          <em class="jxr_comment">// no new context - use inherited fully</em>
-<a class="jxr_linenumber" name="L73" href="#L73">73</a>          fullContext = variablesContext;
-<a class="jxr_linenumber" name="L74" href="#L74">74</a>        }
-<a class="jxr_linenumber" name="L75" href="#L75">75</a>        applyIncludes(toInclude, fullContext);
-<a class="jxr_linenumber" name="L76" href="#L76">76</a>        <strong class="jxr_keyword">if</strong> (toInclude.getOwnerDocument() != source.getOwnerDocument()) {
-<a class="jxr_linenumber" name="L77" href="#L77">77</a>          toInclude = source.getOwnerDocument().importNode(toInclude, <strong class="jxr_keyword">true</strong>);
-<a class="jxr_linenumber" name="L78" href="#L78">78</a>        }
-<a class="jxr_linenumber" name="L79" href="#L79">79</a>        source.getParentNode().replaceChild(toInclude, source);
-<a class="jxr_linenumber" name="L80" href="#L80">80</a>        <strong class="jxr_keyword">while</strong> (toInclude.hasChildNodes()) {
-<a class="jxr_linenumber" name="L81" href="#L81">81</a>          toInclude.getParentNode().insertBefore(toInclude.getFirstChild(), toInclude);
-<a class="jxr_linenumber" name="L82" href="#L82">82</a>        }
-<a class="jxr_linenumber" name="L83" href="#L83">83</a>        toInclude.getParentNode().removeChild(toInclude);
-<a class="jxr_linenumber" name="L84" href="#L84">84</a>      } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (source.getNodeType() == Node.ELEMENT_NODE) {
-<a class="jxr_linenumber" name="L85" href="#L85">85</a>        NodeList children = source.getChildNodes();
-<a class="jxr_linenumber" name="L86" href="#L86">86</a>        <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i=0; i&lt;children.getLength(); i++) {
-<a class="jxr_linenumber" name="L87" href="#L87">87</a>          applyIncludes(children.item(i), variablesContext);
-<a class="jxr_linenumber" name="L88" href="#L88">88</a>        }
-<a class="jxr_linenumber" name="L89" href="#L89">89</a>      } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (source.getNodeType() == Node.ATTRIBUTE_NODE &amp;&amp; !variablesContext.isEmpty()) {
-<a class="jxr_linenumber" name="L90" href="#L90">90</a>        <em class="jxr_comment">// replace variables in all attribute values</em>
-<a class="jxr_linenumber" name="L91" href="#L91">91</a>        source.setNodeValue(PropertyParser.parse(source.getNodeValue(), variablesContext));
-<a class="jxr_linenumber" name="L92" href="#L92">92</a>      } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (source.getNodeType() == Node.TEXT_NODE &amp;&amp; !variablesContext.isEmpty()) {
-<a class="jxr_linenumber" name="L93" href="#L93">93</a>        <em class="jxr_comment">// replace variables ins all text nodes</em>
-<a class="jxr_linenumber" name="L94" href="#L94">94</a>        source.setNodeValue(PropertyParser.parse(source.getNodeValue(), variablesContext));
-<a class="jxr_linenumber" name="L95" href="#L95">95</a>      }
+<a class="jxr_linenumber" name="L18" href="#L18">18</a>  <strong class="jxr_keyword">import</strong> java.util.HashMap;
+<a class="jxr_linenumber" name="L19" href="#L19">19</a>  <strong class="jxr_keyword">import</strong> java.util.Map;
+<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <strong class="jxr_keyword">import</strong> java.util.Properties;
+<a class="jxr_linenumber" name="L21" href="#L21">21</a>  
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.builder.BuilderException;
+<a class="jxr_linenumber" name="L23" href="#L23">23</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.builder.IncompleteElementException;
+<a class="jxr_linenumber" name="L24" href="#L24">24</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.builder.MapperBuilderAssistant;
+<a class="jxr_linenumber" name="L25" href="#L25">25</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.parsing.PropertyParser;
+<a class="jxr_linenumber" name="L26" href="#L26">26</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.parsing.XNode;
+<a class="jxr_linenumber" name="L27" href="#L27">27</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.session.Configuration;
+<a class="jxr_linenumber" name="L28" href="#L28">28</a>  <strong class="jxr_keyword">import</strong> org.w3c.dom.Node;
+<a class="jxr_linenumber" name="L29" href="#L29">29</a>  <strong class="jxr_keyword">import</strong> org.w3c.dom.NodeList;
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>  
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>  <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>  <em class="jxr_javadoccomment"> * @author Frank D. Martinez [mnesarco]</em>
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>  <em class="jxr_javadoccomment"> */</em>
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../../org/apache/ibatis/builder/xml/XMLIncludeTransformer.html">XMLIncludeTransformer</a> {
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>  
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <a href="../../../../../org/apache/ibatis/session/Configuration.html">Configuration</a> configuration;
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <a href="../../../../../org/apache/ibatis/builder/MapperBuilderAssistant.html">MapperBuilderAssistant</a> builderAssistant;
+<a class="jxr_linenumber" name="L38" href="#L38">38</a>  
+<a class="jxr_linenumber" name="L39" href="#L39">39</a>    <strong class="jxr_keyword">public</strong> <a href="../../../../../org/apache/ibatis/builder/xml/XMLIncludeTransformer.html">XMLIncludeTransformer</a>(<a href="../../../../../org/apache/ibatis/session/Configuration.html">Configuration</a> configuration, <a href="../../../../../org/apache/ibatis/builder/MapperBuilderAssistant.html">MapperBuilderAssistant</a> builderAssistant) {
+<a class="jxr_linenumber" name="L40" href="#L40">40</a>      <strong class="jxr_keyword">this</strong>.configuration = configuration;
+<a class="jxr_linenumber" name="L41" href="#L41">41</a>      <strong class="jxr_keyword">this</strong>.builderAssistant = builderAssistant;
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>    }
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>  
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> applyIncludes(Node source) {
+<a class="jxr_linenumber" name="L45" href="#L45">45</a>      Properties variablesContext = <strong class="jxr_keyword">new</strong> Properties();
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>      Properties configurationVariables = configuration.getVariables();
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>      <strong class="jxr_keyword">if</strong> (configurationVariables != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L48" href="#L48">48</a>        variablesContext.putAll(configurationVariables);
+<a class="jxr_linenumber" name="L49" href="#L49">49</a>      }
+<a class="jxr_linenumber" name="L50" href="#L50">50</a>      applyIncludes(source, variablesContext, false);
+<a class="jxr_linenumber" name="L51" href="#L51">51</a>    }
+<a class="jxr_linenumber" name="L52" href="#L52">52</a>  
+<a class="jxr_linenumber" name="L53" href="#L53">53</a>    <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L54" href="#L54">54</a>  <em class="jxr_javadoccomment">   * Recursively apply includes through all SQL fragments.</em>
+<a class="jxr_linenumber" name="L55" href="#L55">55</a>  <em class="jxr_javadoccomment">   * @param source Include node in DOM tree</em>
+<a class="jxr_linenumber" name="L56" href="#L56">56</a>  <em class="jxr_javadoccomment">   * @param variablesContext Current context for static variables with values</em>
+<a class="jxr_linenumber" name="L57" href="#L57">57</a>  <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L58" href="#L58">58</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> applyIncludes(Node source, <strong class="jxr_keyword">final</strong> Properties variablesContext, <strong class="jxr_keyword">boolean</strong> included) {
+<a class="jxr_linenumber" name="L59" href="#L59">59</a>      <strong class="jxr_keyword">if</strong> (source.getNodeName().equals(<span class="jxr_string">"include"</span>)) {
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>        Node toInclude = findSqlFragment(getStringAttribute(source, <span class="jxr_string">"refid"</span>), variablesContext);
+<a class="jxr_linenumber" name="L61" href="#L61">61</a>        Properties toIncludeContext = getVariablesContext(source, variablesContext);
+<a class="jxr_linenumber" name="L62" href="#L62">62</a>        applyIncludes(toInclude, toIncludeContext, <strong class="jxr_keyword">true</strong>);
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>        <strong class="jxr_keyword">if</strong> (toInclude.getOwnerDocument() != source.getOwnerDocument()) {
+<a class="jxr_linenumber" name="L64" href="#L64">64</a>          toInclude = source.getOwnerDocument().importNode(toInclude, <strong class="jxr_keyword">true</strong>);
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>        }
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>        source.getParentNode().replaceChild(toInclude, source);
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>        <strong class="jxr_keyword">while</strong> (toInclude.hasChildNodes()) {
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>          toInclude.getParentNode().insertBefore(toInclude.getFirstChild(), toInclude);
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>        }
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>        toInclude.getParentNode().removeChild(toInclude);
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>      } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (source.getNodeType() == Node.ELEMENT_NODE) {
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>        NodeList children = source.getChildNodes();
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>        <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; i &lt; children.getLength(); i++) {
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>          applyIncludes(children.item(i), variablesContext, included);
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>        }
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>      } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (included &amp;&amp; source.getNodeType() == Node.TEXT_NODE
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>          &amp;&amp; !variablesContext.isEmpty()) {
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>        <em class="jxr_comment">// replace variables ins all text nodes</em>
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>        source.setNodeValue(PropertyParser.parse(source.getNodeValue(), variablesContext));
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>      }
+<a class="jxr_linenumber" name="L81" href="#L81">81</a>    }
+<a class="jxr_linenumber" name="L82" href="#L82">82</a>  
+<a class="jxr_linenumber" name="L83" href="#L83">83</a>    <strong class="jxr_keyword">private</strong> Node findSqlFragment(String refid, Properties variables) {
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>      refid = PropertyParser.parse(refid, variables);
+<a class="jxr_linenumber" name="L85" href="#L85">85</a>      refid = builderAssistant.applyCurrentNamespace(refid, <strong class="jxr_keyword">true</strong>);
+<a class="jxr_linenumber" name="L86" href="#L86">86</a>      <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L87" href="#L87">87</a>        <a href="../../../../../org/apache/ibatis/parsing/XNode.html">XNode</a> nodeToInclude = configuration.getSqlFragments().get(refid);
+<a class="jxr_linenumber" name="L88" href="#L88">88</a>        <strong class="jxr_keyword">return</strong> nodeToInclude.getNode().cloneNode(<strong class="jxr_keyword">true</strong>);
+<a class="jxr_linenumber" name="L89" href="#L89">89</a>      } <strong class="jxr_keyword">catch</strong> (IllegalArgumentException e) {
+<a class="jxr_linenumber" name="L90" href="#L90">90</a>        <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/builder/IncompleteElementException.html">IncompleteElementException</a>(<span class="jxr_string">"Could not find SQL statement to include with refid '"</span> + refid + <span class="jxr_string">"'"</span>, e);
+<a class="jxr_linenumber" name="L91" href="#L91">91</a>      }
+<a class="jxr_linenumber" name="L92" href="#L92">92</a>    }
+<a class="jxr_linenumber" name="L93" href="#L93">93</a>  
+<a class="jxr_linenumber" name="L94" href="#L94">94</a>    <strong class="jxr_keyword">private</strong> String getStringAttribute(Node node, String name) {
+<a class="jxr_linenumber" name="L95" href="#L95">95</a>      <strong class="jxr_keyword">return</strong> node.getAttributes().getNamedItem(name).getNodeValue();
 <a class="jxr_linenumber" name="L96" href="#L96">96</a>    }
 <a class="jxr_linenumber" name="L97" href="#L97">97</a>  
-<a class="jxr_linenumber" name="L98" href="#L98">98</a>    <strong class="jxr_keyword">private</strong> Node findSqlFragment(String refid) {
-<a class="jxr_linenumber" name="L99" href="#L99">99</a>      refid = builderAssistant.applyCurrentNamespace(refid, <strong class="jxr_keyword">true</strong>);
-<a class="jxr_linenumber" name="L100" href="#L100">100</a>     <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L101" href="#L101">101</a>       <a href="../../../../../org/apache/ibatis/parsing/XNode.html">XNode</a> nodeToInclude = configuration.getSqlFragments().get(refid);
-<a class="jxr_linenumber" name="L102" href="#L102">102</a>       <strong class="jxr_keyword">return</strong> nodeToInclude.getNode().cloneNode(<strong class="jxr_keyword">true</strong>);
-<a class="jxr_linenumber" name="L103" href="#L103">103</a>     } <strong class="jxr_keyword">catch</strong> (IllegalArgumentException e) {
-<a class="jxr_linenumber" name="L104" href="#L104">104</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/builder/IncompleteElementException.html">IncompleteElementException</a>(<span class="jxr_string">"Could not find SQL statement to include with refid '"</span> + refid + <span class="jxr_string">"'"</span>, e);
-<a class="jxr_linenumber" name="L105" href="#L105">105</a>     }
-<a class="jxr_linenumber" name="L106" href="#L106">106</a>   }
-<a class="jxr_linenumber" name="L107" href="#L107">107</a> 
-<a class="jxr_linenumber" name="L108" href="#L108">108</a>   <strong class="jxr_keyword">private</strong> String getStringAttribute(Node node, String name) {
-<a class="jxr_linenumber" name="L109" href="#L109">109</a>     <strong class="jxr_keyword">return</strong> node.getAttributes().getNamedItem(name).getNodeValue();
-<a class="jxr_linenumber" name="L110" href="#L110">110</a>   }
-<a class="jxr_linenumber" name="L111" href="#L111">111</a> 
-<a class="jxr_linenumber" name="L112" href="#L112">112</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L113" href="#L113">113</a> <em class="jxr_javadoccomment">   * Read placholders and their values from include node definition. </em>
-<a class="jxr_linenumber" name="L114" href="#L114">114</a> <em class="jxr_javadoccomment">   * @param node Include node instance</em>
-<a class="jxr_linenumber" name="L115" href="#L115">115</a> <em class="jxr_javadoccomment">   * @param inheritedVariablesContext Current context used for replace variables in new variables values</em>
-<a class="jxr_linenumber" name="L116" href="#L116">116</a> <em class="jxr_javadoccomment">   * @return variables context from include instance (no inherited values)</em>
-<a class="jxr_linenumber" name="L117" href="#L117">117</a> <em class="jxr_javadoccomment">   */</em>
-<a class="jxr_linenumber" name="L118" href="#L118">118</a>   <strong class="jxr_keyword">private</strong> Properties getVariablesContext(Node node, Properties inheritedVariablesContext) {
-<a class="jxr_linenumber" name="L119" href="#L119">119</a>     Properties variablesContext = <strong class="jxr_keyword">new</strong> Properties();
-<a class="jxr_linenumber" name="L120" href="#L120">120</a>     NodeList children = node.getChildNodes();
-<a class="jxr_linenumber" name="L121" href="#L121">121</a>     <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; i &lt; children.getLength(); i++) {
-<a class="jxr_linenumber" name="L122" href="#L122">122</a>       Node n = children.item(i);
-<a class="jxr_linenumber" name="L123" href="#L123">123</a>       <strong class="jxr_keyword">if</strong> (n.getNodeType() == Node.ELEMENT_NODE) {
-<a class="jxr_linenumber" name="L124" href="#L124">124</a>         String name = getStringAttribute(n, <span class="jxr_string">"name"</span>);
-<a class="jxr_linenumber" name="L125" href="#L125">125</a>         String value = getStringAttribute(n, <span class="jxr_string">"value"</span>);
-<a class="jxr_linenumber" name="L126" href="#L126">126</a>         <em class="jxr_comment">// Replace variables inside</em>
-<a class="jxr_linenumber" name="L127" href="#L127">127</a>         value = PropertyParser.parse(value, inheritedVariablesContext);
-<a class="jxr_linenumber" name="L128" href="#L128">128</a>         <em class="jxr_comment">// Push new value</em>
-<a class="jxr_linenumber" name="L129" href="#L129">129</a>         Object originalValue = variablesContext.put(name, value);
-<a class="jxr_linenumber" name="L130" href="#L130">130</a>         <strong class="jxr_keyword">if</strong> (originalValue != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L131" href="#L131">131</a>           <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/builder/BuilderException.html">BuilderException</a>(<span class="jxr_string">"Variable "</span> + name + <span class="jxr_string">" defined twice in the same include definition"</span>);
-<a class="jxr_linenumber" name="L132" href="#L132">132</a>         }
-<a class="jxr_linenumber" name="L133" href="#L133">133</a>       }
-<a class="jxr_linenumber" name="L134" href="#L134">134</a>     }
-<a class="jxr_linenumber" name="L135" href="#L135">135</a>     <strong class="jxr_keyword">return</strong> variablesContext;
-<a class="jxr_linenumber" name="L136" href="#L136">136</a>   }
-<a class="jxr_linenumber" name="L137" href="#L137">137</a>   
-<a class="jxr_linenumber" name="L138" href="#L138">138</a> }
+<a class="jxr_linenumber" name="L98" href="#L98">98</a>    <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L99" href="#L99">99</a>  <em class="jxr_javadoccomment">   * Read placholders and their values from include node definition. </em>
+<a class="jxr_linenumber" name="L100" href="#L100">100</a> <em class="jxr_javadoccomment">   * @param node Include node instance</em>
+<a class="jxr_linenumber" name="L101" href="#L101">101</a> <em class="jxr_javadoccomment">   * @param inheritedVariablesContext Current context used for replace variables in new variables values</em>
+<a class="jxr_linenumber" name="L102" href="#L102">102</a> <em class="jxr_javadoccomment">   * @return variables context from include instance (no inherited values)</em>
+<a class="jxr_linenumber" name="L103" href="#L103">103</a> <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L104" href="#L104">104</a>   <strong class="jxr_keyword">private</strong> Properties getVariablesContext(Node node, Properties inheritedVariablesContext) {
+<a class="jxr_linenumber" name="L105" href="#L105">105</a>     Map&lt;String, String&gt; declaredProperties = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L106" href="#L106">106</a>     NodeList children = node.getChildNodes();
+<a class="jxr_linenumber" name="L107" href="#L107">107</a>     <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; i &lt; children.getLength(); i++) {
+<a class="jxr_linenumber" name="L108" href="#L108">108</a>       Node n = children.item(i);
+<a class="jxr_linenumber" name="L109" href="#L109">109</a>       <strong class="jxr_keyword">if</strong> (n.getNodeType() == Node.ELEMENT_NODE) {
+<a class="jxr_linenumber" name="L110" href="#L110">110</a>         String name = getStringAttribute(n, <span class="jxr_string">"name"</span>);
+<a class="jxr_linenumber" name="L111" href="#L111">111</a>         <em class="jxr_comment">// Replace variables inside</em>
+<a class="jxr_linenumber" name="L112" href="#L112">112</a>         String value = PropertyParser.parse(getStringAttribute(n, <span class="jxr_string">"value"</span>), inheritedVariablesContext);
+<a class="jxr_linenumber" name="L113" href="#L113">113</a>         <strong class="jxr_keyword">if</strong> (declaredProperties == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L114" href="#L114">114</a>           declaredProperties = <strong class="jxr_keyword">new</strong> HashMap&lt;String, String&gt;();
+<a class="jxr_linenumber" name="L115" href="#L115">115</a>         }
+<a class="jxr_linenumber" name="L116" href="#L116">116</a>         <strong class="jxr_keyword">if</strong> (declaredProperties.put(name, value) != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L117" href="#L117">117</a>           <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/builder/BuilderException.html">BuilderException</a>(<span class="jxr_string">"Variable "</span> + name + <span class="jxr_string">" defined twice in the same include definition"</span>);
+<a class="jxr_linenumber" name="L118" href="#L118">118</a>         }
+<a class="jxr_linenumber" name="L119" href="#L119">119</a>       }
+<a class="jxr_linenumber" name="L120" href="#L120">120</a>     }
+<a class="jxr_linenumber" name="L121" href="#L121">121</a>     <strong class="jxr_keyword">if</strong> (declaredProperties == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L122" href="#L122">122</a>       <strong class="jxr_keyword">return</strong> inheritedVariablesContext;
+<a class="jxr_linenumber" name="L123" href="#L123">123</a>     } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L124" href="#L124">124</a>       Properties newProperties = <strong class="jxr_keyword">new</strong> Properties();
+<a class="jxr_linenumber" name="L125" href="#L125">125</a>       newProperties.putAll(inheritedVariablesContext);
+<a class="jxr_linenumber" name="L126" href="#L126">126</a>       newProperties.putAll(declaredProperties);
+<a class="jxr_linenumber" name="L127" href="#L127">127</a>       <strong class="jxr_keyword">return</strong> newProperties;
+<a class="jxr_linenumber" name="L128" href="#L128">128</a>     }
+<a class="jxr_linenumber" name="L129" href="#L129">129</a>   }
+<a class="jxr_linenumber" name="L130" href="#L130">130</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2016 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2009&#x2013;2017 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
 </body>
 </html>

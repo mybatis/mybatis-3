@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ja"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>XNode.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.parsing</a> &gt; <span class="el_source">XNode.java</span></div><h1>XNode.java</h1><pre class="source lang-java linenums">/**
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ja"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>XNode.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.parsing</a> &gt; <span class="el_source">XNode.java</span></div><h1>XNode.java</h1><pre class="source lang-java linenums">/**
  *    Copyright 2009-2015 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
@@ -81,8 +81,8 @@ public class XNode {
 <span class="fc" id="L81">        builder.insert(0, &quot;_&quot;);</span>
       }
 <span class="fc" id="L83">      String value = current.getStringAttribute(&quot;id&quot;,</span>
-          current.getStringAttribute(&quot;value&quot;,
-              current.getStringAttribute(&quot;property&quot;, null)));
+<span class="fc" id="L84">          current.getStringAttribute(&quot;value&quot;,</span>
+<span class="fc" id="L85">              current.getStringAttribute(&quot;property&quot;, null)));</span>
 <span class="fc bfc" id="L86" title="All 2 branches covered.">      if (value != null) {</span>
 <span class="fc" id="L87">        value = value.replace('.', '_');</span>
 <span class="fc" id="L88">        builder.insert(0, &quot;]&quot;);</span>
@@ -241,10 +241,10 @@ public class XNode {
 
   public Integer getIntAttribute(String name, Integer def) {
 <span class="fc" id="L243">    String value = attributes.getProperty(name);</span>
-<span class="pc bpc" id="L244" title="1 of 2 branches missed.">    if (value == null) {</span>
+<span class="fc bfc" id="L244" title="All 2 branches covered.">    if (value == null) {</span>
 <span class="fc" id="L245">      return def;</span>
     } else {
-<span class="nc" id="L247">      return Integer.parseInt(value);</span>
+<span class="fc" id="L247">      return Integer.parseInt(value);</span>
     }
   }
 
@@ -376,8 +376,8 @@ public class XNode {
   }
 
   private String getBodyData(Node child) {
-<span class="fc bfc" id="L379" title="All 4 branches covered.">    if (child.getNodeType() == Node.CDATA_SECTION_NODE</span>
-        || child.getNodeType() == Node.TEXT_NODE) {
+<span class="fc bfc" id="L379" title="All 2 branches covered.">    if (child.getNodeType() == Node.CDATA_SECTION_NODE</span>
+<span class="fc bfc" id="L380" title="All 2 branches covered.">        || child.getNodeType() == Node.TEXT_NODE) {</span>
 <span class="fc" id="L381">      String data = ((CharacterData) child).getData();</span>
 <span class="fc" id="L382">      data = PropertyParser.parse(data, variables);</span>
 <span class="fc" id="L383">      return data;</span>
@@ -386,4 +386,4 @@ public class XNode {
   }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ja"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>ResultLoaderMap.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.executor.loader</a> &gt; <span class="el_source">ResultLoaderMap.java</span></div><h1>ResultLoaderMap.java</h1><pre class="source lang-java linenums">/**
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ja"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ResultLoaderMap.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.executor.loader</a> &gt; <span class="el_source">ResultLoaderMap.java</span></div><h1>ResultLoaderMap.java</h1><pre class="source lang-java linenums">/**
  *    Copyright 2009-2015 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
@@ -53,7 +53,7 @@ import org.apache.ibatis.session.RowBounds;
 <span class="fc" id="L53">    String upperFirst = getUppercaseFirstProperty(property);</span>
 <span class="pc bpc" id="L54" title="3 of 4 branches missed.">    if (!upperFirst.equalsIgnoreCase(property) &amp;&amp; loaderMap.containsKey(upperFirst)) {</span>
 <span class="nc" id="L55">      throw new ExecutorException(&quot;Nested lazy loaded result property '&quot; + property +</span>
-              &quot;' for query id '&quot; + resultLoader.mappedStatement.getId() +
+<span class="nc" id="L56">              &quot;' for query id '&quot; + resultLoader.mappedStatement.getId() +</span>
               &quot; already exists in the result map. The leftmost property of all lazy loaded properties must be unique within a result map.&quot;);
     }
 <span class="fc" id="L59">    loaderMap.put(upperFirst, new LoadPair(property, metaResultObject, resultLoader));</span>
@@ -159,7 +159,7 @@ import org.apache.ibatis.session.RowBounds;
 <span class="nc" id="L159">          Log log = this.getLogger();</span>
 <span class="nc bnc" id="L160" title="All 2 branches missed.">          if (log.isDebugEnabled()) {</span>
 <span class="nc" id="L161">            log.debug(&quot;Property [&quot; + this.property + &quot;] of [&quot;</span>
-                    + metaResultObject.getOriginalObject().getClass() + &quot;] cannot be loaded &quot;
+<span class="nc" id="L162">                    + metaResultObject.getOriginalObject().getClass() + &quot;] cannot be loaded &quot;</span>
                     + &quot;after deserialization. Make sure it's loaded before serializing &quot;
                     + &quot;forenamed object.&quot;);
           }
@@ -192,14 +192,14 @@ import org.apache.ibatis.session.RowBounds;
 <span class="fc" id="L192">        final MappedStatement ms = config.getMappedStatement(this.mappedStatement);</span>
 <span class="pc bpc" id="L193" title="1 of 2 branches missed.">        if (ms == null) {</span>
 <span class="nc" id="L194">          throw new ExecutorException(&quot;Cannot lazy load property [&quot; + this.property</span>
-                  + &quot;] of deserialized object [&quot; + userObject.getClass()
+<span class="nc" id="L195">                  + &quot;] of deserialized object [&quot; + userObject.getClass()</span>
                   + &quot;] because configuration does not contain statement [&quot;
                   + this.mappedStatement + &quot;]&quot;);
         }
 
 <span class="fc" id="L200">        this.metaResultObject = config.newMetaObject(userObject);</span>
 <span class="fc" id="L201">        this.resultLoader = new ResultLoader(config, new ClosedExecutor(), ms, this.mappedParameter,</span>
-                metaResultObject.getSetterType(this.property), null, null);
+<span class="fc" id="L202">                metaResultObject.getSetterType(this.property), null, null);</span>
       }
 
       /* We are using a new executor because we may be (and likely are) on a new thread
@@ -251,7 +251,7 @@ import org.apache.ibatis.session.RowBounds;
 <span class="nc" id="L251">      } catch (final PrivilegedActionException ex) {</span>
 <span class="nc" id="L252">        throw new ExecutorException(&quot;Cannot get Configuration as factory method [&quot;</span>
                 + this.configurationFactory + &quot;]#[&quot;
-                + FACTORY_METHOD + &quot;] threw an exception.&quot;, ex.getCause());
+<span class="nc" id="L254">                + FACTORY_METHOD + &quot;] threw an exception.&quot;, ex.getCause());</span>
 <span class="nc" id="L255">      } catch (final Exception ex) {</span>
 <span class="nc" id="L256">        throw new ExecutorException(&quot;Cannot get Configuration as factory method [&quot;</span>
                 + this.configurationFactory + &quot;]#[&quot;
@@ -262,7 +262,7 @@ import org.apache.ibatis.session.RowBounds;
 <span class="nc bnc" id="L262" title="All 2 branches missed.">        throw new ExecutorException(&quot;Cannot get Configuration as factory method [&quot;</span>
                 + this.configurationFactory + &quot;]#[&quot;
                 + FACTORY_METHOD + &quot;] didn't return [&quot; + Configuration.class + &quot;] but [&quot;
-                + (configurationObject == null ? &quot;null&quot; : configurationObject.getClass()) + &quot;].&quot;);
+<span class="nc" id="L265">                + (configurationObject == null ? &quot;null&quot; : configurationObject.getClass()) + &quot;].&quot;);</span>
       }
 
 <span class="fc" id="L268">      return Configuration.class.cast(configurationObject);</span>
@@ -276,7 +276,7 @@ import org.apache.ibatis.session.RowBounds;
     }
   }
 
-<span class="fc" id="L279">  private static final class ClosedExecutor extends BaseExecutor {</span>
+  private static final class ClosedExecutor extends BaseExecutor {
 
     public ClosedExecutor() {
 <span class="fc" id="L282">      super(null, null);</span>
@@ -308,4 +308,4 @@ import org.apache.ibatis.session.RowBounds;
     }
   }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

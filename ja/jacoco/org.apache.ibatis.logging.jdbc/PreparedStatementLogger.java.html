@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ja"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>PreparedStatementLogger.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.logging.jdbc</a> &gt; <span class="el_source">PreparedStatementLogger.java</span></div><h1>PreparedStatementLogger.java</h1><pre class="source lang-java linenums">/**
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ja"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PreparedStatementLogger.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.logging.jdbc</a> &gt; <span class="el_source">PreparedStatementLogger.java</span></div><h1>PreparedStatementLogger.java</h1><pre class="source lang-java linenums">/**
  *    Copyright 2009-2015 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
@@ -37,45 +37,45 @@ public final class PreparedStatementLogger extends BaseJdbcLogger implements Inv
   private PreparedStatement statement;
 
   private PreparedStatementLogger(PreparedStatement stmt, Log statementLog, int queryStack) {
-<span class="nc" id="L40">    super(statementLog, queryStack);</span>
-<span class="nc" id="L41">    this.statement = stmt;</span>
-<span class="nc" id="L42">  }</span>
+<span class="fc" id="L40">    super(statementLog, queryStack);</span>
+<span class="fc" id="L41">    this.statement = stmt;</span>
+<span class="fc" id="L42">  }</span>
 
   @Override
   public Object invoke(Object proxy, Method method, Object[] params) throws Throwable {
     try {
-<span class="nc bnc" id="L47" title="All 2 branches missed.">      if (Object.class.equals(method.getDeclaringClass())) {</span>
+<span class="pc bpc" id="L47" title="1 of 2 branches missed.">      if (Object.class.equals(method.getDeclaringClass())) {</span>
 <span class="nc" id="L48">        return method.invoke(this, params);</span>
       }          
-<span class="nc bnc" id="L50" title="All 2 branches missed.">      if (EXECUTE_METHODS.contains(method.getName())) {</span>
-<span class="nc bnc" id="L51" title="All 2 branches missed.">        if (isDebugEnabled()) {</span>
-<span class="nc" id="L52">          debug(&quot;Parameters: &quot; + getParameterValueString(), true);</span>
+<span class="fc bfc" id="L50" title="All 2 branches covered.">      if (EXECUTE_METHODS.contains(method.getName())) {</span>
+<span class="pc bpc" id="L51" title="1 of 2 branches missed.">        if (isDebugEnabled()) {</span>
+<span class="fc" id="L52">          debug(&quot;Parameters: &quot; + getParameterValueString(), true);</span>
         }
-<span class="nc" id="L54">        clearColumnInfo();</span>
-<span class="nc bnc" id="L55" title="All 2 branches missed.">        if (&quot;executeQuery&quot;.equals(method.getName())) {</span>
-<span class="nc" id="L56">          ResultSet rs = (ResultSet) method.invoke(statement, params);</span>
-<span class="nc bnc" id="L57" title="All 2 branches missed.">          return rs == null ? null : ResultSetLogger.newInstance(rs, statementLog, queryStack);</span>
+<span class="fc" id="L54">        clearColumnInfo();</span>
+<span class="fc bfc" id="L55" title="All 2 branches covered.">        if (&quot;executeQuery&quot;.equals(method.getName())) {</span>
+<span class="fc" id="L56">          ResultSet rs = (ResultSet) method.invoke(statement, params);</span>
+<span class="pc bpc" id="L57" title="1 of 2 branches missed.">          return rs == null ? null : ResultSetLogger.newInstance(rs, statementLog, queryStack);</span>
         } else {
-<span class="nc" id="L59">          return method.invoke(statement, params);</span>
+<span class="fc" id="L59">          return method.invoke(statement, params);</span>
         }
-<span class="nc bnc" id="L61" title="All 2 branches missed.">      } else if (SET_METHODS.contains(method.getName())) {</span>
-<span class="nc bnc" id="L62" title="All 2 branches missed.">        if (&quot;setNull&quot;.equals(method.getName())) {</span>
-<span class="nc" id="L63">          setColumn(params[0], null);</span>
+<span class="fc bfc" id="L61" title="All 2 branches covered.">      } else if (SET_METHODS.contains(method.getName())) {</span>
+<span class="fc bfc" id="L62" title="All 2 branches covered.">        if (&quot;setNull&quot;.equals(method.getName())) {</span>
+<span class="fc" id="L63">          setColumn(params[0], null);</span>
         } else {
-<span class="nc" id="L65">          setColumn(params[0], params[1]);</span>
+<span class="fc" id="L65">          setColumn(params[0], params[1]);</span>
         }
-<span class="nc" id="L67">        return method.invoke(statement, params);</span>
-<span class="nc bnc" id="L68" title="All 2 branches missed.">      } else if (&quot;getResultSet&quot;.equals(method.getName())) {</span>
-<span class="nc" id="L69">        ResultSet rs = (ResultSet) method.invoke(statement, params);</span>
-<span class="nc bnc" id="L70" title="All 2 branches missed.">        return rs == null ? null : ResultSetLogger.newInstance(rs, statementLog, queryStack);</span>
-<span class="nc bnc" id="L71" title="All 2 branches missed.">      } else if (&quot;getUpdateCount&quot;.equals(method.getName())) {</span>
-<span class="nc" id="L72">        int updateCount = (Integer) method.invoke(statement, params);</span>
-<span class="nc bnc" id="L73" title="All 2 branches missed.">        if (updateCount != -1) {</span>
-<span class="nc" id="L74">          debug(&quot;   Updates: &quot; + updateCount, false);</span>
+<span class="fc" id="L67">        return method.invoke(statement, params);</span>
+<span class="fc bfc" id="L68" title="All 2 branches covered.">      } else if (&quot;getResultSet&quot;.equals(method.getName())) {</span>
+<span class="fc" id="L69">        ResultSet rs = (ResultSet) method.invoke(statement, params);</span>
+<span class="pc bpc" id="L70" title="1 of 2 branches missed.">        return rs == null ? null : ResultSetLogger.newInstance(rs, statementLog, queryStack);</span>
+<span class="fc bfc" id="L71" title="All 2 branches covered.">      } else if (&quot;getUpdateCount&quot;.equals(method.getName())) {</span>
+<span class="fc" id="L72">        int updateCount = (Integer) method.invoke(statement, params);</span>
+<span class="pc bpc" id="L73" title="1 of 2 branches missed.">        if (updateCount != -1) {</span>
+<span class="fc" id="L74">          debug(&quot;   Updates: &quot; + updateCount, false);</span>
         }
-<span class="nc" id="L76">        return updateCount;</span>
+<span class="fc" id="L76">        return updateCount;</span>
       } else {
-<span class="nc" id="L78">        return method.invoke(statement, params);</span>
+<span class="fc" id="L78">        return method.invoke(statement, params);</span>
       }
 <span class="nc" id="L80">    } catch (Throwable t) {</span>
 <span class="nc" id="L81">      throw ExceptionUtil.unwrapThrowable(t);</span>
@@ -90,9 +90,9 @@ public final class PreparedStatementLogger extends BaseJdbcLogger implements Inv
    * @return - the proxy
    */
   public static PreparedStatement newInstance(PreparedStatement stmt, Log statementLog, int queryStack) {
-<span class="nc" id="L93">    InvocationHandler handler = new PreparedStatementLogger(stmt, statementLog, queryStack);</span>
-<span class="nc" id="L94">    ClassLoader cl = PreparedStatement.class.getClassLoader();</span>
-<span class="nc" id="L95">    return (PreparedStatement) Proxy.newProxyInstance(cl, new Class[]{PreparedStatement.class, CallableStatement.class}, handler);</span>
+<span class="fc" id="L93">    InvocationHandler handler = new PreparedStatementLogger(stmt, statementLog, queryStack);</span>
+<span class="fc" id="L94">    ClassLoader cl = PreparedStatement.class.getClassLoader();</span>
+<span class="fc" id="L95">    return (PreparedStatement) Proxy.newProxyInstance(cl, new Class[]{PreparedStatement.class, CallableStatement.class}, handler);</span>
   }
 
   /*
@@ -105,4 +105,4 @@ public final class PreparedStatementLogger extends BaseJdbcLogger implements Inv
   }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

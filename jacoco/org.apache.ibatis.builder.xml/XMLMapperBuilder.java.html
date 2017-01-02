@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>XMLMapperBuilder.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.builder.xml</a> &gt; <span class="el_source">XMLMapperBuilder.java</span></div><h1>XMLMapperBuilder.java</h1><pre class="source lang-java linenums">/**
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>XMLMapperBuilder.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.builder.xml</a> &gt; <span class="el_source">XMLMapperBuilder.java</span></div><h1>XMLMapperBuilder.java</h1><pre class="source lang-java linenums">/**
  *    Copyright 2009-2016 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
@@ -255,11 +255,11 @@ public class XMLMapperBuilder extends BaseBuilder {
   private ResultMap resultMapElement(XNode resultMapNode, List&lt;ResultMapping&gt; additionalResultMappings) throws Exception {
 <span class="fc" id="L256">    ErrorContext.instance().activity(&quot;processing &quot; + resultMapNode.getValueBasedIdentifier());</span>
 <span class="fc" id="L257">    String id = resultMapNode.getStringAttribute(&quot;id&quot;,</span>
-        resultMapNode.getValueBasedIdentifier());
+<span class="fc" id="L258">        resultMapNode.getValueBasedIdentifier());</span>
 <span class="fc" id="L259">    String type = resultMapNode.getStringAttribute(&quot;type&quot;,</span>
-        resultMapNode.getStringAttribute(&quot;ofType&quot;,
-            resultMapNode.getStringAttribute(&quot;resultType&quot;,
-                resultMapNode.getStringAttribute(&quot;javaType&quot;))));
+<span class="fc" id="L260">        resultMapNode.getStringAttribute(&quot;ofType&quot;,</span>
+<span class="fc" id="L261">            resultMapNode.getStringAttribute(&quot;resultType&quot;,</span>
+<span class="fc" id="L262">                resultMapNode.getStringAttribute(&quot;javaType&quot;))));</span>
 <span class="fc" id="L263">    String extend = resultMapNode.getStringAttribute(&quot;extends&quot;);</span>
 <span class="fc" id="L264">    Boolean autoMapping = resultMapNode.getBooleanAttribute(&quot;autoMapping&quot;);</span>
 <span class="fc" id="L265">    Class&lt;?&gt; typeClass = resolveClass(type);</span>
@@ -364,7 +364,7 @@ public class XMLMapperBuilder extends BaseBuilder {
 <span class="fc" id="L364">    String jdbcType = context.getStringAttribute(&quot;jdbcType&quot;);</span>
 <span class="fc" id="L365">    String nestedSelect = context.getStringAttribute(&quot;select&quot;);</span>
 <span class="fc" id="L366">    String nestedResultMap = context.getStringAttribute(&quot;resultMap&quot;,</span>
-        processNestedResultMappings(context, Collections.&lt;ResultMapping&gt; emptyList()));
+<span class="fc" id="L367">        processNestedResultMappings(context, Collections.&lt;ResultMapping&gt; emptyList()));</span>
 <span class="fc" id="L368">    String notNullColumn = context.getStringAttribute(&quot;notNullColumn&quot;);</span>
 <span class="fc" id="L369">    String columnPrefix = context.getStringAttribute(&quot;columnPrefix&quot;);</span>
 <span class="fc" id="L370">    String typeHandler = context.getStringAttribute(&quot;typeHandler&quot;);</span>
@@ -379,9 +379,9 @@ public class XMLMapperBuilder extends BaseBuilder {
   }
   
   private String processNestedResultMappings(XNode context, List&lt;ResultMapping&gt; resultMappings) throws Exception {
-<span class="fc bfc" id="L382" title="All 6 branches covered.">    if (&quot;association&quot;.equals(context.getName())</span>
-        || &quot;collection&quot;.equals(context.getName())
-        || &quot;case&quot;.equals(context.getName())) {
+<span class="fc bfc" id="L382" title="All 2 branches covered.">    if (&quot;association&quot;.equals(context.getName())</span>
+<span class="fc bfc" id="L383" title="All 2 branches covered.">        || &quot;collection&quot;.equals(context.getName())</span>
+<span class="fc bfc" id="L384" title="All 2 branches covered.">        || &quot;case&quot;.equals(context.getName())) {</span>
 <span class="fc bfc" id="L385" title="All 2 branches covered.">      if (context.getStringAttribute(&quot;select&quot;) == null) {</span>
 <span class="fc" id="L386">        ResultMap resultMap = resultMapElement(context, resultMappings);</span>
 <span class="fc" id="L387">        return resultMap.getId();</span>
@@ -412,4 +412,4 @@ public class XMLMapperBuilder extends BaseBuilder {
 <span class="fc" id="L412">  }</span>
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

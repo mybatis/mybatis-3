@@ -54,7 +54,7 @@
 <a class="jxr_linenumber" name="L46" href="#L46">46</a>    @Override
 <a class="jxr_linenumber" name="L47" href="#L47">47</a>    @Test
 <a class="jxr_linenumber" name="L48" href="#L48">48</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldGetResultNullFromResultSetByName() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L49" href="#L49">49</a>      when(rs.getBlob(<span class="jxr_string">"column"</span>)).thenReturn(<strong class="jxr_keyword">null</strong>);
+<a class="jxr_linenumber" name="L49" href="#L49">49</a>      when(rs.getBytes(<span class="jxr_string">"column"</span>)).thenReturn(<strong class="jxr_keyword">null</strong>);
 <a class="jxr_linenumber" name="L50" href="#L50">50</a>      when(rs.wasNull()).thenReturn(<strong class="jxr_keyword">true</strong>);
 <a class="jxr_linenumber" name="L51" href="#L51">51</a>      assertThat(TYPE_HANDLER.getResult(rs, <span class="jxr_string">"column"</span>), nullValue());
 <a class="jxr_linenumber" name="L52" href="#L52">52</a>    }
@@ -71,7 +71,7 @@
 <a class="jxr_linenumber" name="L63" href="#L63">63</a>    @Override
 <a class="jxr_linenumber" name="L64" href="#L64">64</a>    @Test
 <a class="jxr_linenumber" name="L65" href="#L65">65</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldGetResultNullFromResultSetByPosition() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L66" href="#L66">66</a>      when(rs.getBlob(1)).thenReturn(<strong class="jxr_keyword">null</strong>);
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>      when(rs.getBytes(1)).thenReturn(<strong class="jxr_keyword">null</strong>);
 <a class="jxr_linenumber" name="L67" href="#L67">67</a>      when(rs.wasNull()).thenReturn(<strong class="jxr_keyword">true</strong>);
 <a class="jxr_linenumber" name="L68" href="#L68">68</a>      assertThat(TYPE_HANDLER.getResult(rs, 1), nullValue());
 <a class="jxr_linenumber" name="L69" href="#L69">69</a>    }
@@ -88,7 +88,7 @@
 <a class="jxr_linenumber" name="L80" href="#L80">80</a>    @Override
 <a class="jxr_linenumber" name="L81" href="#L81">81</a>    @Test
 <a class="jxr_linenumber" name="L82" href="#L82">82</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldGetResultNullFromCallableStatement() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L83" href="#L83">83</a>      when(cs.getBlob(1)).thenReturn(<strong class="jxr_keyword">null</strong>);
+<a class="jxr_linenumber" name="L83" href="#L83">83</a>      when(cs.getBytes(1)).thenReturn(<strong class="jxr_keyword">null</strong>);
 <a class="jxr_linenumber" name="L84" href="#L84">84</a>      when(cs.wasNull()).thenReturn(<strong class="jxr_keyword">true</strong>);
 <a class="jxr_linenumber" name="L85" href="#L85">85</a>      assertThat(TYPE_HANDLER.getResult(cs, 1), nullValue());
 <a class="jxr_linenumber" name="L86" href="#L86">86</a>    }
@@ -96,6 +96,6 @@
 <a class="jxr_linenumber" name="L88" href="#L88">88</a>  }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2016 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2009&#x2013;2017 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
 </body>
 </html>

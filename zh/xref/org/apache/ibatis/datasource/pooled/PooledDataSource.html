@@ -7,7 +7,7 @@
 <body>
 <div id="overview"><a href="../../../../../../../apidocs/org/apache/ibatis/datasource/pooled/PooledDataSource.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2015 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2016 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_javadoccomment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_javadoccomment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_javadoccomment"> *    you may not use this file except in compliance with the License.</em>
@@ -59,8 +59,8 @@
 <a class="jxr_linenumber" name="L51" href="#L51">51</a>    <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">int</strong> poolMaximumCheckoutTime = 20000;
 <a class="jxr_linenumber" name="L52" href="#L52">52</a>    <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">int</strong> poolTimeToWait = 20000;
 <a class="jxr_linenumber" name="L53" href="#L53">53</a>    <strong class="jxr_keyword">protected</strong> String poolPingQuery = <span class="jxr_string">"NO PING QUERY SET"</span>;
-<a class="jxr_linenumber" name="L54" href="#L54">54</a>    <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">boolean</strong> poolPingEnabled = false;
-<a class="jxr_linenumber" name="L55" href="#L55">55</a>    <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">int</strong> poolPingConnectionsNotUsedFor = 0;
+<a class="jxr_linenumber" name="L54" href="#L54">54</a>    <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">boolean</strong> poolPingEnabled;
+<a class="jxr_linenumber" name="L55" href="#L55">55</a>    <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">int</strong> poolPingConnectionsNotUsedFor;
 <a class="jxr_linenumber" name="L56" href="#L56">56</a>  
 <a class="jxr_linenumber" name="L57" href="#L57">57</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">int</strong> expectedConnectionTypeCode;
 <a class="jxr_linenumber" name="L58" href="#L58">58</a>  
@@ -412,160 +412,162 @@
 <a class="jxr_linenumber" name="L404" href="#L404">404</a>                 }  
 <a class="jxr_linenumber" name="L405" href="#L405">405</a>               }
 <a class="jxr_linenumber" name="L406" href="#L406">406</a>               conn = <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/datasource/pooled/PooledConnection.html">PooledConnection</a>(oldestActiveConnection.getRealConnection(), <strong class="jxr_keyword">this</strong>);
-<a class="jxr_linenumber" name="L407" href="#L407">407</a>               oldestActiveConnection.invalidate();
-<a class="jxr_linenumber" name="L408" href="#L408">408</a>               <strong class="jxr_keyword">if</strong> (log.isDebugEnabled()) {
-<a class="jxr_linenumber" name="L409" href="#L409">409</a>                 log.debug(<span class="jxr_string">"Claimed overdue connection "</span> + conn.getRealHashCode() + <span class="jxr_string">"."</span>);
-<a class="jxr_linenumber" name="L410" href="#L410">410</a>               }
-<a class="jxr_linenumber" name="L411" href="#L411">411</a>             } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="L412" href="#L412">412</a>               <em class="jxr_comment">// Must wait</em>
-<a class="jxr_linenumber" name="L413" href="#L413">413</a>               <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L414" href="#L414">414</a>                 <strong class="jxr_keyword">if</strong> (!countedWait) {
-<a class="jxr_linenumber" name="L415" href="#L415">415</a>                   state.hadToWaitCount++;
-<a class="jxr_linenumber" name="L416" href="#L416">416</a>                   countedWait = <strong class="jxr_keyword">true</strong>;
-<a class="jxr_linenumber" name="L417" href="#L417">417</a>                 }
-<a class="jxr_linenumber" name="L418" href="#L418">418</a>                 <strong class="jxr_keyword">if</strong> (log.isDebugEnabled()) {
-<a class="jxr_linenumber" name="L419" href="#L419">419</a>                   log.debug(<span class="jxr_string">"Waiting as long as "</span> + poolTimeToWait + <span class="jxr_string">" milliseconds for connection."</span>);
-<a class="jxr_linenumber" name="L420" href="#L420">420</a>                 }
-<a class="jxr_linenumber" name="L421" href="#L421">421</a>                 <strong class="jxr_keyword">long</strong> wt = System.currentTimeMillis();
-<a class="jxr_linenumber" name="L422" href="#L422">422</a>                 state.wait(poolTimeToWait);
-<a class="jxr_linenumber" name="L423" href="#L423">423</a>                 state.accumulatedWaitTime += System.currentTimeMillis() - wt;
-<a class="jxr_linenumber" name="L424" href="#L424">424</a>               } <strong class="jxr_keyword">catch</strong> (InterruptedException e) {
-<a class="jxr_linenumber" name="L425" href="#L425">425</a>                 <strong class="jxr_keyword">break</strong>;
-<a class="jxr_linenumber" name="L426" href="#L426">426</a>               }
-<a class="jxr_linenumber" name="L427" href="#L427">427</a>             }
-<a class="jxr_linenumber" name="L428" href="#L428">428</a>           }
-<a class="jxr_linenumber" name="L429" href="#L429">429</a>         }
-<a class="jxr_linenumber" name="L430" href="#L430">430</a>         <strong class="jxr_keyword">if</strong> (conn != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L431" href="#L431">431</a>           <strong class="jxr_keyword">if</strong> (conn.isValid()) {
-<a class="jxr_linenumber" name="L432" href="#L432">432</a>             <strong class="jxr_keyword">if</strong> (!conn.getRealConnection().getAutoCommit()) {
-<a class="jxr_linenumber" name="L433" href="#L433">433</a>               conn.getRealConnection().rollback();
-<a class="jxr_linenumber" name="L434" href="#L434">434</a>             }
-<a class="jxr_linenumber" name="L435" href="#L435">435</a>             conn.setConnectionTypeCode(assembleConnectionTypeCode(dataSource.getUrl(), username, password));
-<a class="jxr_linenumber" name="L436" href="#L436">436</a>             conn.setCheckoutTimestamp(System.currentTimeMillis());
-<a class="jxr_linenumber" name="L437" href="#L437">437</a>             conn.setLastUsedTimestamp(System.currentTimeMillis());
-<a class="jxr_linenumber" name="L438" href="#L438">438</a>             state.activeConnections.add(conn);
-<a class="jxr_linenumber" name="L439" href="#L439">439</a>             state.requestCount++;
-<a class="jxr_linenumber" name="L440" href="#L440">440</a>             state.accumulatedRequestTime += System.currentTimeMillis() - t;
-<a class="jxr_linenumber" name="L441" href="#L441">441</a>           } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="L442" href="#L442">442</a>             <strong class="jxr_keyword">if</strong> (log.isDebugEnabled()) {
-<a class="jxr_linenumber" name="L443" href="#L443">443</a>               log.debug(<span class="jxr_string">"A bad connection ("</span> + conn.getRealHashCode() + <span class="jxr_string">") was returned from the pool, getting another connection."</span>);
-<a class="jxr_linenumber" name="L444" href="#L444">444</a>             }
-<a class="jxr_linenumber" name="L445" href="#L445">445</a>             state.badConnectionCount++;
-<a class="jxr_linenumber" name="L446" href="#L446">446</a>             localBadConnectionCount++;
-<a class="jxr_linenumber" name="L447" href="#L447">447</a>             conn = <strong class="jxr_keyword">null</strong>;
-<a class="jxr_linenumber" name="L448" href="#L448">448</a>             <strong class="jxr_keyword">if</strong> (localBadConnectionCount &gt; (poolMaximumIdleConnections + 3)) {
-<a class="jxr_linenumber" name="L449" href="#L449">449</a>               <strong class="jxr_keyword">if</strong> (log.isDebugEnabled()) {
-<a class="jxr_linenumber" name="L450" href="#L450">450</a>                 log.debug(<span class="jxr_string">"PooledDataSource: Could not get a good connection to the database."</span>);
-<a class="jxr_linenumber" name="L451" href="#L451">451</a>               }
-<a class="jxr_linenumber" name="L452" href="#L452">452</a>               <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> SQLException(<span class="jxr_string">"PooledDataSource: Could not get a good connection to the database."</span>);
-<a class="jxr_linenumber" name="L453" href="#L453">453</a>             }
-<a class="jxr_linenumber" name="L454" href="#L454">454</a>           }
-<a class="jxr_linenumber" name="L455" href="#L455">455</a>         }
-<a class="jxr_linenumber" name="L456" href="#L456">456</a>       }
-<a class="jxr_linenumber" name="L457" href="#L457">457</a> 
-<a class="jxr_linenumber" name="L458" href="#L458">458</a>     }
+<a class="jxr_linenumber" name="L407" href="#L407">407</a>               conn.setCreatedTimestamp(oldestActiveConnection.getCreatedTimestamp());
+<a class="jxr_linenumber" name="L408" href="#L408">408</a>               conn.setLastUsedTimestamp(oldestActiveConnection.getLastUsedTimestamp());
+<a class="jxr_linenumber" name="L409" href="#L409">409</a>               oldestActiveConnection.invalidate();
+<a class="jxr_linenumber" name="L410" href="#L410">410</a>               <strong class="jxr_keyword">if</strong> (log.isDebugEnabled()) {
+<a class="jxr_linenumber" name="L411" href="#L411">411</a>                 log.debug(<span class="jxr_string">"Claimed overdue connection "</span> + conn.getRealHashCode() + <span class="jxr_string">"."</span>);
+<a class="jxr_linenumber" name="L412" href="#L412">412</a>               }
+<a class="jxr_linenumber" name="L413" href="#L413">413</a>             } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L414" href="#L414">414</a>               <em class="jxr_comment">// Must wait</em>
+<a class="jxr_linenumber" name="L415" href="#L415">415</a>               <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L416" href="#L416">416</a>                 <strong class="jxr_keyword">if</strong> (!countedWait) {
+<a class="jxr_linenumber" name="L417" href="#L417">417</a>                   state.hadToWaitCount++;
+<a class="jxr_linenumber" name="L418" href="#L418">418</a>                   countedWait = <strong class="jxr_keyword">true</strong>;
+<a class="jxr_linenumber" name="L419" href="#L419">419</a>                 }
+<a class="jxr_linenumber" name="L420" href="#L420">420</a>                 <strong class="jxr_keyword">if</strong> (log.isDebugEnabled()) {
+<a class="jxr_linenumber" name="L421" href="#L421">421</a>                   log.debug(<span class="jxr_string">"Waiting as long as "</span> + poolTimeToWait + <span class="jxr_string">" milliseconds for connection."</span>);
+<a class="jxr_linenumber" name="L422" href="#L422">422</a>                 }
+<a class="jxr_linenumber" name="L423" href="#L423">423</a>                 <strong class="jxr_keyword">long</strong> wt = System.currentTimeMillis();
+<a class="jxr_linenumber" name="L424" href="#L424">424</a>                 state.wait(poolTimeToWait);
+<a class="jxr_linenumber" name="L425" href="#L425">425</a>                 state.accumulatedWaitTime += System.currentTimeMillis() - wt;
+<a class="jxr_linenumber" name="L426" href="#L426">426</a>               } <strong class="jxr_keyword">catch</strong> (InterruptedException e) {
+<a class="jxr_linenumber" name="L427" href="#L427">427</a>                 <strong class="jxr_keyword">break</strong>;
+<a class="jxr_linenumber" name="L428" href="#L428">428</a>               }
+<a class="jxr_linenumber" name="L429" href="#L429">429</a>             }
+<a class="jxr_linenumber" name="L430" href="#L430">430</a>           }
+<a class="jxr_linenumber" name="L431" href="#L431">431</a>         }
+<a class="jxr_linenumber" name="L432" href="#L432">432</a>         <strong class="jxr_keyword">if</strong> (conn != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L433" href="#L433">433</a>           <strong class="jxr_keyword">if</strong> (conn.isValid()) {
+<a class="jxr_linenumber" name="L434" href="#L434">434</a>             <strong class="jxr_keyword">if</strong> (!conn.getRealConnection().getAutoCommit()) {
+<a class="jxr_linenumber" name="L435" href="#L435">435</a>               conn.getRealConnection().rollback();
+<a class="jxr_linenumber" name="L436" href="#L436">436</a>             }
+<a class="jxr_linenumber" name="L437" href="#L437">437</a>             conn.setConnectionTypeCode(assembleConnectionTypeCode(dataSource.getUrl(), username, password));
+<a class="jxr_linenumber" name="L438" href="#L438">438</a>             conn.setCheckoutTimestamp(System.currentTimeMillis());
+<a class="jxr_linenumber" name="L439" href="#L439">439</a>             conn.setLastUsedTimestamp(System.currentTimeMillis());
+<a class="jxr_linenumber" name="L440" href="#L440">440</a>             state.activeConnections.add(conn);
+<a class="jxr_linenumber" name="L441" href="#L441">441</a>             state.requestCount++;
+<a class="jxr_linenumber" name="L442" href="#L442">442</a>             state.accumulatedRequestTime += System.currentTimeMillis() - t;
+<a class="jxr_linenumber" name="L443" href="#L443">443</a>           } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L444" href="#L444">444</a>             <strong class="jxr_keyword">if</strong> (log.isDebugEnabled()) {
+<a class="jxr_linenumber" name="L445" href="#L445">445</a>               log.debug(<span class="jxr_string">"A bad connection ("</span> + conn.getRealHashCode() + <span class="jxr_string">") was returned from the pool, getting another connection."</span>);
+<a class="jxr_linenumber" name="L446" href="#L446">446</a>             }
+<a class="jxr_linenumber" name="L447" href="#L447">447</a>             state.badConnectionCount++;
+<a class="jxr_linenumber" name="L448" href="#L448">448</a>             localBadConnectionCount++;
+<a class="jxr_linenumber" name="L449" href="#L449">449</a>             conn = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L450" href="#L450">450</a>             <strong class="jxr_keyword">if</strong> (localBadConnectionCount &gt; (poolMaximumIdleConnections + 3)) {
+<a class="jxr_linenumber" name="L451" href="#L451">451</a>               <strong class="jxr_keyword">if</strong> (log.isDebugEnabled()) {
+<a class="jxr_linenumber" name="L452" href="#L452">452</a>                 log.debug(<span class="jxr_string">"PooledDataSource: Could not get a good connection to the database."</span>);
+<a class="jxr_linenumber" name="L453" href="#L453">453</a>               }
+<a class="jxr_linenumber" name="L454" href="#L454">454</a>               <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> SQLException(<span class="jxr_string">"PooledDataSource: Could not get a good connection to the database."</span>);
+<a class="jxr_linenumber" name="L455" href="#L455">455</a>             }
+<a class="jxr_linenumber" name="L456" href="#L456">456</a>           }
+<a class="jxr_linenumber" name="L457" href="#L457">457</a>         }
+<a class="jxr_linenumber" name="L458" href="#L458">458</a>       }
 <a class="jxr_linenumber" name="L459" href="#L459">459</a> 
-<a class="jxr_linenumber" name="L460" href="#L460">460</a>     <strong class="jxr_keyword">if</strong> (conn == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L461" href="#L461">461</a>       <strong class="jxr_keyword">if</strong> (log.isDebugEnabled()) {
-<a class="jxr_linenumber" name="L462" href="#L462">462</a>         log.debug(<span class="jxr_string">"PooledDataSource: Unknown severe error condition.  The connection pool returned a null connection."</span>);
-<a class="jxr_linenumber" name="L463" href="#L463">463</a>       }
-<a class="jxr_linenumber" name="L464" href="#L464">464</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> SQLException(<span class="jxr_string">"PooledDataSource: Unknown severe error condition.  The connection pool returned a null connection."</span>);
-<a class="jxr_linenumber" name="L465" href="#L465">465</a>     }
-<a class="jxr_linenumber" name="L466" href="#L466">466</a> 
-<a class="jxr_linenumber" name="L467" href="#L467">467</a>     <strong class="jxr_keyword">return</strong> conn;
-<a class="jxr_linenumber" name="L468" href="#L468">468</a>   }
-<a class="jxr_linenumber" name="L469" href="#L469">469</a> 
-<a class="jxr_linenumber" name="L470" href="#L470">470</a>   <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="L471" href="#L471">471</a> <em class="jxr_comment">   * Method to check to see if a connection is still usable</em>
-<a class="jxr_linenumber" name="L472" href="#L472">472</a> <em class="jxr_comment">   *</em>
-<a class="jxr_linenumber" name="L473" href="#L473">473</a> <em class="jxr_comment">   * @param conn - the connection to check</em>
-<a class="jxr_linenumber" name="L474" href="#L474">474</a> <em class="jxr_comment">   * @return True if the connection is still usable</em>
-<a class="jxr_linenumber" name="L475" href="#L475">475</a> <em class="jxr_comment">   */</em>
-<a class="jxr_linenumber" name="L476" href="#L476">476</a>   <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">boolean</strong> pingConnection(<a href="../../../../../org/apache/ibatis/datasource/pooled/PooledConnection.html">PooledConnection</a> conn) {
-<a class="jxr_linenumber" name="L477" href="#L477">477</a>     <strong class="jxr_keyword">boolean</strong> result = <strong class="jxr_keyword">true</strong>;
-<a class="jxr_linenumber" name="L478" href="#L478">478</a> 
-<a class="jxr_linenumber" name="L479" href="#L479">479</a>     <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L480" href="#L480">480</a>       result = !conn.getRealConnection().isClosed();
-<a class="jxr_linenumber" name="L481" href="#L481">481</a>     } <strong class="jxr_keyword">catch</strong> (SQLException e) {
-<a class="jxr_linenumber" name="L482" href="#L482">482</a>       <strong class="jxr_keyword">if</strong> (log.isDebugEnabled()) {
-<a class="jxr_linenumber" name="L483" href="#L483">483</a>         log.debug(<span class="jxr_string">"Connection "</span> + conn.getRealHashCode() + <span class="jxr_string">" is BAD: "</span> + e.getMessage());
-<a class="jxr_linenumber" name="L484" href="#L484">484</a>       }
-<a class="jxr_linenumber" name="L485" href="#L485">485</a>       result = false;
-<a class="jxr_linenumber" name="L486" href="#L486">486</a>     }
-<a class="jxr_linenumber" name="L487" href="#L487">487</a> 
-<a class="jxr_linenumber" name="L488" href="#L488">488</a>     <strong class="jxr_keyword">if</strong> (result) {
-<a class="jxr_linenumber" name="L489" href="#L489">489</a>       <strong class="jxr_keyword">if</strong> (poolPingEnabled) {
-<a class="jxr_linenumber" name="L490" href="#L490">490</a>         <strong class="jxr_keyword">if</strong> (poolPingConnectionsNotUsedFor &gt;= 0 &amp;&amp; conn.getTimeElapsedSinceLastUse() &gt; poolPingConnectionsNotUsedFor) {
-<a class="jxr_linenumber" name="L491" href="#L491">491</a>           <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L492" href="#L492">492</a>             <strong class="jxr_keyword">if</strong> (log.isDebugEnabled()) {
-<a class="jxr_linenumber" name="L493" href="#L493">493</a>               log.debug(<span class="jxr_string">"Testing connection "</span> + conn.getRealHashCode() + <span class="jxr_string">" ..."</span>);
-<a class="jxr_linenumber" name="L494" href="#L494">494</a>             }
-<a class="jxr_linenumber" name="L495" href="#L495">495</a>             Connection realConn = conn.getRealConnection();
-<a class="jxr_linenumber" name="L496" href="#L496">496</a>             Statement statement = realConn.createStatement();
-<a class="jxr_linenumber" name="L497" href="#L497">497</a>             ResultSet rs = statement.executeQuery(poolPingQuery);
-<a class="jxr_linenumber" name="L498" href="#L498">498</a>             rs.close();
-<a class="jxr_linenumber" name="L499" href="#L499">499</a>             statement.close();
-<a class="jxr_linenumber" name="L500" href="#L500">500</a>             <strong class="jxr_keyword">if</strong> (!realConn.getAutoCommit()) {
-<a class="jxr_linenumber" name="L501" href="#L501">501</a>               realConn.rollback();
-<a class="jxr_linenumber" name="L502" href="#L502">502</a>             }
-<a class="jxr_linenumber" name="L503" href="#L503">503</a>             result = <strong class="jxr_keyword">true</strong>;
-<a class="jxr_linenumber" name="L504" href="#L504">504</a>             <strong class="jxr_keyword">if</strong> (log.isDebugEnabled()) {
-<a class="jxr_linenumber" name="L505" href="#L505">505</a>               log.debug(<span class="jxr_string">"Connection "</span> + conn.getRealHashCode() + <span class="jxr_string">" is GOOD!"</span>);
-<a class="jxr_linenumber" name="L506" href="#L506">506</a>             }
-<a class="jxr_linenumber" name="L507" href="#L507">507</a>           } <strong class="jxr_keyword">catch</strong> (Exception e) {
-<a class="jxr_linenumber" name="L508" href="#L508">508</a>             log.warn(<span class="jxr_string">"Execution of ping query '"</span> + poolPingQuery + <span class="jxr_string">"' failed: "</span> + e.getMessage());
-<a class="jxr_linenumber" name="L509" href="#L509">509</a>             <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L510" href="#L510">510</a>               conn.getRealConnection().close();
-<a class="jxr_linenumber" name="L511" href="#L511">511</a>             } <strong class="jxr_keyword">catch</strong> (Exception e2) {
-<a class="jxr_linenumber" name="L512" href="#L512">512</a>               <em class="jxr_comment">//ignore</em>
-<a class="jxr_linenumber" name="L513" href="#L513">513</a>             }
-<a class="jxr_linenumber" name="L514" href="#L514">514</a>             result = false;
-<a class="jxr_linenumber" name="L515" href="#L515">515</a>             <strong class="jxr_keyword">if</strong> (log.isDebugEnabled()) {
-<a class="jxr_linenumber" name="L516" href="#L516">516</a>               log.debug(<span class="jxr_string">"Connection "</span> + conn.getRealHashCode() + <span class="jxr_string">" is BAD: "</span> + e.getMessage());
-<a class="jxr_linenumber" name="L517" href="#L517">517</a>             }
-<a class="jxr_linenumber" name="L518" href="#L518">518</a>           }
-<a class="jxr_linenumber" name="L519" href="#L519">519</a>         }
-<a class="jxr_linenumber" name="L520" href="#L520">520</a>       }
-<a class="jxr_linenumber" name="L521" href="#L521">521</a>     }
-<a class="jxr_linenumber" name="L522" href="#L522">522</a>     <strong class="jxr_keyword">return</strong> result;
-<a class="jxr_linenumber" name="L523" href="#L523">523</a>   }
-<a class="jxr_linenumber" name="L524" href="#L524">524</a> 
-<a class="jxr_linenumber" name="L525" href="#L525">525</a>   <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="L526" href="#L526">526</a> <em class="jxr_comment">   * Unwraps a pooled connection to get to the 'real' connection</em>
-<a class="jxr_linenumber" name="L527" href="#L527">527</a> <em class="jxr_comment">   *</em>
-<a class="jxr_linenumber" name="L528" href="#L528">528</a> <em class="jxr_comment">   * @param conn - the pooled connection to unwrap</em>
-<a class="jxr_linenumber" name="L529" href="#L529">529</a> <em class="jxr_comment">   * @return The 'real' connection</em>
-<a class="jxr_linenumber" name="L530" href="#L530">530</a> <em class="jxr_comment">   */</em>
-<a class="jxr_linenumber" name="L531" href="#L531">531</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> Connection unwrapConnection(Connection conn) {
-<a class="jxr_linenumber" name="L532" href="#L532">532</a>     <strong class="jxr_keyword">if</strong> (Proxy.isProxyClass(conn.getClass())) {
-<a class="jxr_linenumber" name="L533" href="#L533">533</a>       InvocationHandler handler = Proxy.getInvocationHandler(conn);
-<a class="jxr_linenumber" name="L534" href="#L534">534</a>       <strong class="jxr_keyword">if</strong> (handler instanceof PooledConnection) {
-<a class="jxr_linenumber" name="L535" href="#L535">535</a>         <strong class="jxr_keyword">return</strong> ((PooledConnection) handler).getRealConnection();
-<a class="jxr_linenumber" name="L536" href="#L536">536</a>       }
-<a class="jxr_linenumber" name="L537" href="#L537">537</a>     }
-<a class="jxr_linenumber" name="L538" href="#L538">538</a>     <strong class="jxr_keyword">return</strong> conn;
-<a class="jxr_linenumber" name="L539" href="#L539">539</a>   }
-<a class="jxr_linenumber" name="L540" href="#L540">540</a> 
-<a class="jxr_linenumber" name="L541" href="#L541">541</a>   <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">void</strong> finalize() <strong class="jxr_keyword">throws</strong> Throwable {
-<a class="jxr_linenumber" name="L542" href="#L542">542</a>     forceCloseAll();
-<a class="jxr_linenumber" name="L543" href="#L543">543</a>     <strong class="jxr_keyword">super</strong>.finalize();
-<a class="jxr_linenumber" name="L544" href="#L544">544</a>   }
-<a class="jxr_linenumber" name="L545" href="#L545">545</a> 
-<a class="jxr_linenumber" name="L546" href="#L546">546</a>   <strong class="jxr_keyword">public</strong> &lt;T&gt; T unwrap(Class&lt;T&gt; iface) <strong class="jxr_keyword">throws</strong> SQLException {
-<a class="jxr_linenumber" name="L547" href="#L547">547</a>     <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> SQLException(getClass().getName() + <span class="jxr_string">" is not a wrapper."</span>);
-<a class="jxr_linenumber" name="L548" href="#L548">548</a>   }
-<a class="jxr_linenumber" name="L549" href="#L549">549</a> 
-<a class="jxr_linenumber" name="L550" href="#L550">550</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> isWrapperFor(Class&lt;?&gt; iface) <strong class="jxr_keyword">throws</strong> SQLException {
-<a class="jxr_linenumber" name="L551" href="#L551">551</a>     <strong class="jxr_keyword">return</strong> false;
-<a class="jxr_linenumber" name="L552" href="#L552">552</a>   }
-<a class="jxr_linenumber" name="L553" href="#L553">553</a> 
-<a class="jxr_linenumber" name="L554" href="#L554">554</a>   <strong class="jxr_keyword">public</strong> Logger getParentLogger() {
-<a class="jxr_linenumber" name="L555" href="#L555">555</a>     <strong class="jxr_keyword">return</strong> Logger.getLogger(Logger.GLOBAL_LOGGER_NAME); <em class="jxr_comment">// requires JDK version 1.6</em>
-<a class="jxr_linenumber" name="L556" href="#L556">556</a>   }
-<a class="jxr_linenumber" name="L557" href="#L557">557</a> 
-<a class="jxr_linenumber" name="L558" href="#L558">558</a> }
+<a class="jxr_linenumber" name="L460" href="#L460">460</a>     }
+<a class="jxr_linenumber" name="L461" href="#L461">461</a> 
+<a class="jxr_linenumber" name="L462" href="#L462">462</a>     <strong class="jxr_keyword">if</strong> (conn == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L463" href="#L463">463</a>       <strong class="jxr_keyword">if</strong> (log.isDebugEnabled()) {
+<a class="jxr_linenumber" name="L464" href="#L464">464</a>         log.debug(<span class="jxr_string">"PooledDataSource: Unknown severe error condition.  The connection pool returned a null connection."</span>);
+<a class="jxr_linenumber" name="L465" href="#L465">465</a>       }
+<a class="jxr_linenumber" name="L466" href="#L466">466</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> SQLException(<span class="jxr_string">"PooledDataSource: Unknown severe error condition.  The connection pool returned a null connection."</span>);
+<a class="jxr_linenumber" name="L467" href="#L467">467</a>     }
+<a class="jxr_linenumber" name="L468" href="#L468">468</a> 
+<a class="jxr_linenumber" name="L469" href="#L469">469</a>     <strong class="jxr_keyword">return</strong> conn;
+<a class="jxr_linenumber" name="L470" href="#L470">470</a>   }
+<a class="jxr_linenumber" name="L471" href="#L471">471</a> 
+<a class="jxr_linenumber" name="L472" href="#L472">472</a>   <em class="jxr_comment">/*</em>
+<a class="jxr_linenumber" name="L473" href="#L473">473</a> <em class="jxr_comment">   * Method to check to see if a connection is still usable</em>
+<a class="jxr_linenumber" name="L474" href="#L474">474</a> <em class="jxr_comment">   *</em>
+<a class="jxr_linenumber" name="L475" href="#L475">475</a> <em class="jxr_comment">   * @param conn - the connection to check</em>
+<a class="jxr_linenumber" name="L476" href="#L476">476</a> <em class="jxr_comment">   * @return True if the connection is still usable</em>
+<a class="jxr_linenumber" name="L477" href="#L477">477</a> <em class="jxr_comment">   */</em>
+<a class="jxr_linenumber" name="L478" href="#L478">478</a>   <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">boolean</strong> pingConnection(<a href="../../../../../org/apache/ibatis/datasource/pooled/PooledConnection.html">PooledConnection</a> conn) {
+<a class="jxr_linenumber" name="L479" href="#L479">479</a>     <strong class="jxr_keyword">boolean</strong> result = <strong class="jxr_keyword">true</strong>;
+<a class="jxr_linenumber" name="L480" href="#L480">480</a> 
+<a class="jxr_linenumber" name="L481" href="#L481">481</a>     <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L482" href="#L482">482</a>       result = !conn.getRealConnection().isClosed();
+<a class="jxr_linenumber" name="L483" href="#L483">483</a>     } <strong class="jxr_keyword">catch</strong> (SQLException e) {
+<a class="jxr_linenumber" name="L484" href="#L484">484</a>       <strong class="jxr_keyword">if</strong> (log.isDebugEnabled()) {
+<a class="jxr_linenumber" name="L485" href="#L485">485</a>         log.debug(<span class="jxr_string">"Connection "</span> + conn.getRealHashCode() + <span class="jxr_string">" is BAD: "</span> + e.getMessage());
+<a class="jxr_linenumber" name="L486" href="#L486">486</a>       }
+<a class="jxr_linenumber" name="L487" href="#L487">487</a>       result = false;
+<a class="jxr_linenumber" name="L488" href="#L488">488</a>     }
+<a class="jxr_linenumber" name="L489" href="#L489">489</a> 
+<a class="jxr_linenumber" name="L490" href="#L490">490</a>     <strong class="jxr_keyword">if</strong> (result) {
+<a class="jxr_linenumber" name="L491" href="#L491">491</a>       <strong class="jxr_keyword">if</strong> (poolPingEnabled) {
+<a class="jxr_linenumber" name="L492" href="#L492">492</a>         <strong class="jxr_keyword">if</strong> (poolPingConnectionsNotUsedFor &gt;= 0 &amp;&amp; conn.getTimeElapsedSinceLastUse() &gt; poolPingConnectionsNotUsedFor) {
+<a class="jxr_linenumber" name="L493" href="#L493">493</a>           <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L494" href="#L494">494</a>             <strong class="jxr_keyword">if</strong> (log.isDebugEnabled()) {
+<a class="jxr_linenumber" name="L495" href="#L495">495</a>               log.debug(<span class="jxr_string">"Testing connection "</span> + conn.getRealHashCode() + <span class="jxr_string">" ..."</span>);
+<a class="jxr_linenumber" name="L496" href="#L496">496</a>             }
+<a class="jxr_linenumber" name="L497" href="#L497">497</a>             Connection realConn = conn.getRealConnection();
+<a class="jxr_linenumber" name="L498" href="#L498">498</a>             Statement statement = realConn.createStatement();
+<a class="jxr_linenumber" name="L499" href="#L499">499</a>             ResultSet rs = statement.executeQuery(poolPingQuery);
+<a class="jxr_linenumber" name="L500" href="#L500">500</a>             rs.close();
+<a class="jxr_linenumber" name="L501" href="#L501">501</a>             statement.close();
+<a class="jxr_linenumber" name="L502" href="#L502">502</a>             <strong class="jxr_keyword">if</strong> (!realConn.getAutoCommit()) {
+<a class="jxr_linenumber" name="L503" href="#L503">503</a>               realConn.rollback();
+<a class="jxr_linenumber" name="L504" href="#L504">504</a>             }
+<a class="jxr_linenumber" name="L505" href="#L505">505</a>             result = <strong class="jxr_keyword">true</strong>;
+<a class="jxr_linenumber" name="L506" href="#L506">506</a>             <strong class="jxr_keyword">if</strong> (log.isDebugEnabled()) {
+<a class="jxr_linenumber" name="L507" href="#L507">507</a>               log.debug(<span class="jxr_string">"Connection "</span> + conn.getRealHashCode() + <span class="jxr_string">" is GOOD!"</span>);
+<a class="jxr_linenumber" name="L508" href="#L508">508</a>             }
+<a class="jxr_linenumber" name="L509" href="#L509">509</a>           } <strong class="jxr_keyword">catch</strong> (Exception e) {
+<a class="jxr_linenumber" name="L510" href="#L510">510</a>             log.warn(<span class="jxr_string">"Execution of ping query '"</span> + poolPingQuery + <span class="jxr_string">"' failed: "</span> + e.getMessage());
+<a class="jxr_linenumber" name="L511" href="#L511">511</a>             <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L512" href="#L512">512</a>               conn.getRealConnection().close();
+<a class="jxr_linenumber" name="L513" href="#L513">513</a>             } <strong class="jxr_keyword">catch</strong> (Exception e2) {
+<a class="jxr_linenumber" name="L514" href="#L514">514</a>               <em class="jxr_comment">//ignore</em>
+<a class="jxr_linenumber" name="L515" href="#L515">515</a>             }
+<a class="jxr_linenumber" name="L516" href="#L516">516</a>             result = false;
+<a class="jxr_linenumber" name="L517" href="#L517">517</a>             <strong class="jxr_keyword">if</strong> (log.isDebugEnabled()) {
+<a class="jxr_linenumber" name="L518" href="#L518">518</a>               log.debug(<span class="jxr_string">"Connection "</span> + conn.getRealHashCode() + <span class="jxr_string">" is BAD: "</span> + e.getMessage());
+<a class="jxr_linenumber" name="L519" href="#L519">519</a>             }
+<a class="jxr_linenumber" name="L520" href="#L520">520</a>           }
+<a class="jxr_linenumber" name="L521" href="#L521">521</a>         }
+<a class="jxr_linenumber" name="L522" href="#L522">522</a>       }
+<a class="jxr_linenumber" name="L523" href="#L523">523</a>     }
+<a class="jxr_linenumber" name="L524" href="#L524">524</a>     <strong class="jxr_keyword">return</strong> result;
+<a class="jxr_linenumber" name="L525" href="#L525">525</a>   }
+<a class="jxr_linenumber" name="L526" href="#L526">526</a> 
+<a class="jxr_linenumber" name="L527" href="#L527">527</a>   <em class="jxr_comment">/*</em>
+<a class="jxr_linenumber" name="L528" href="#L528">528</a> <em class="jxr_comment">   * Unwraps a pooled connection to get to the 'real' connection</em>
+<a class="jxr_linenumber" name="L529" href="#L529">529</a> <em class="jxr_comment">   *</em>
+<a class="jxr_linenumber" name="L530" href="#L530">530</a> <em class="jxr_comment">   * @param conn - the pooled connection to unwrap</em>
+<a class="jxr_linenumber" name="L531" href="#L531">531</a> <em class="jxr_comment">   * @return The 'real' connection</em>
+<a class="jxr_linenumber" name="L532" href="#L532">532</a> <em class="jxr_comment">   */</em>
+<a class="jxr_linenumber" name="L533" href="#L533">533</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> Connection unwrapConnection(Connection conn) {
+<a class="jxr_linenumber" name="L534" href="#L534">534</a>     <strong class="jxr_keyword">if</strong> (Proxy.isProxyClass(conn.getClass())) {
+<a class="jxr_linenumber" name="L535" href="#L535">535</a>       InvocationHandler handler = Proxy.getInvocationHandler(conn);
+<a class="jxr_linenumber" name="L536" href="#L536">536</a>       <strong class="jxr_keyword">if</strong> (handler instanceof PooledConnection) {
+<a class="jxr_linenumber" name="L537" href="#L537">537</a>         <strong class="jxr_keyword">return</strong> ((PooledConnection) handler).getRealConnection();
+<a class="jxr_linenumber" name="L538" href="#L538">538</a>       }
+<a class="jxr_linenumber" name="L539" href="#L539">539</a>     }
+<a class="jxr_linenumber" name="L540" href="#L540">540</a>     <strong class="jxr_keyword">return</strong> conn;
+<a class="jxr_linenumber" name="L541" href="#L541">541</a>   }
+<a class="jxr_linenumber" name="L542" href="#L542">542</a> 
+<a class="jxr_linenumber" name="L543" href="#L543">543</a>   <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">void</strong> finalize() <strong class="jxr_keyword">throws</strong> Throwable {
+<a class="jxr_linenumber" name="L544" href="#L544">544</a>     forceCloseAll();
+<a class="jxr_linenumber" name="L545" href="#L545">545</a>     <strong class="jxr_keyword">super</strong>.finalize();
+<a class="jxr_linenumber" name="L546" href="#L546">546</a>   }
+<a class="jxr_linenumber" name="L547" href="#L547">547</a> 
+<a class="jxr_linenumber" name="L548" href="#L548">548</a>   <strong class="jxr_keyword">public</strong> &lt;T&gt; T unwrap(Class&lt;T&gt; iface) <strong class="jxr_keyword">throws</strong> SQLException {
+<a class="jxr_linenumber" name="L549" href="#L549">549</a>     <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> SQLException(getClass().getName() + <span class="jxr_string">" is not a wrapper."</span>);
+<a class="jxr_linenumber" name="L550" href="#L550">550</a>   }
+<a class="jxr_linenumber" name="L551" href="#L551">551</a> 
+<a class="jxr_linenumber" name="L552" href="#L552">552</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> isWrapperFor(Class&lt;?&gt; iface) <strong class="jxr_keyword">throws</strong> SQLException {
+<a class="jxr_linenumber" name="L553" href="#L553">553</a>     <strong class="jxr_keyword">return</strong> false;
+<a class="jxr_linenumber" name="L554" href="#L554">554</a>   }
+<a class="jxr_linenumber" name="L555" href="#L555">555</a> 
+<a class="jxr_linenumber" name="L556" href="#L556">556</a>   <strong class="jxr_keyword">public</strong> Logger getParentLogger() {
+<a class="jxr_linenumber" name="L557" href="#L557">557</a>     <strong class="jxr_keyword">return</strong> Logger.getLogger(Logger.GLOBAL_LOGGER_NAME); <em class="jxr_comment">// requires JDK version 1.6</em>
+<a class="jxr_linenumber" name="L558" href="#L558">558</a>   }
+<a class="jxr_linenumber" name="L559" href="#L559">559</a> 
+<a class="jxr_linenumber" name="L560" href="#L560">560</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2016 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2009&#x2013;2017 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
 </body>
 </html>

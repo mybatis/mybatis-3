@@ -24,40 +24,39 @@
 <a class="jxr_linenumber" name="L16" href="#L16">16</a>  <strong class="jxr_keyword">package</strong> org.apache.ibatis.annotations;
 <a class="jxr_linenumber" name="L17" href="#L17">17</a>  
 <a class="jxr_linenumber" name="L18" href="#L18">18</a>  <strong class="jxr_keyword">import</strong> java.lang.annotation.Documented;
-<a class="jxr_linenumber" name="L19" href="#L19">19</a>  <strong class="jxr_keyword">import</strong> java.lang.annotation.ElementType;
-<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <strong class="jxr_keyword">import</strong> java.lang.annotation.Retention;
-<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <strong class="jxr_keyword">import</strong> java.lang.annotation.RetentionPolicy;
-<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <strong class="jxr_keyword">import</strong> java.lang.annotation.Target;
-<a class="jxr_linenumber" name="L23" href="#L23">23</a>  
-<a class="jxr_linenumber" name="L24" href="#L24">24</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.type.JdbcType;
-<a class="jxr_linenumber" name="L25" href="#L25">25</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.type.TypeHandler;
-<a class="jxr_linenumber" name="L26" href="#L26">26</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.type.UnknownTypeHandler;
-<a class="jxr_linenumber" name="L27" href="#L27">27</a>  
-<a class="jxr_linenumber" name="L28" href="#L28">28</a>  <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L29" href="#L29">29</a>  <em class="jxr_javadoccomment"> * @author Clinton Begin</em>
-<a class="jxr_linenumber" name="L30" href="#L30">30</a>  <em class="jxr_javadoccomment"> */</em>
-<a class="jxr_linenumber" name="L31" href="#L31">31</a>  @Documented
-<a class="jxr_linenumber" name="L32" href="#L32">32</a>  @Retention(RetentionPolicy.RUNTIME)
-<a class="jxr_linenumber" name="L33" href="#L33">33</a>  @Target(ElementType.METHOD)
-<a class="jxr_linenumber" name="L34" href="#L34">34</a>  <strong class="jxr_keyword">public</strong> @<strong class="jxr_keyword">interface</strong> <a href="../../../../org/apache/ibatis/annotations/Result.html">Result</a> {
-<a class="jxr_linenumber" name="L35" href="#L35">35</a>    <strong class="jxr_keyword">boolean</strong> id() <strong class="jxr_keyword">default</strong> false;
-<a class="jxr_linenumber" name="L36" href="#L36">36</a>  
-<a class="jxr_linenumber" name="L37" href="#L37">37</a>    String column() <strong class="jxr_keyword">default</strong> <span class="jxr_string">""</span>;
-<a class="jxr_linenumber" name="L38" href="#L38">38</a>  
-<a class="jxr_linenumber" name="L39" href="#L39">39</a>    String property() <strong class="jxr_keyword">default</strong> <span class="jxr_string">""</span>;
-<a class="jxr_linenumber" name="L40" href="#L40">40</a>  
-<a class="jxr_linenumber" name="L41" href="#L41">41</a>    Class&lt;?&gt; javaType() <strong class="jxr_keyword">default</strong> <strong class="jxr_keyword">void</strong>.<strong class="jxr_keyword">class</strong>;
-<a class="jxr_linenumber" name="L42" href="#L42">42</a>  
-<a class="jxr_linenumber" name="L43" href="#L43">43</a>    <a href="../../../../org/apache/ibatis/type/JdbcType.html">JdbcType</a> jdbcType() <strong class="jxr_keyword">default</strong> JdbcType.UNDEFINED;
-<a class="jxr_linenumber" name="L44" href="#L44">44</a>  
-<a class="jxr_linenumber" name="L45" href="#L45">45</a>    Class&lt;? <strong class="jxr_keyword">extends</strong> TypeHandler&gt; typeHandler() <strong class="jxr_keyword">default</strong> UnknownTypeHandler.<strong class="jxr_keyword">class</strong>;
-<a class="jxr_linenumber" name="L46" href="#L46">46</a>  
-<a class="jxr_linenumber" name="L47" href="#L47">47</a>    <a href="../../../../org/apache/ibatis/annotations/One.html">One</a> one() <strong class="jxr_keyword">default</strong> @One;
-<a class="jxr_linenumber" name="L48" href="#L48">48</a>  
-<a class="jxr_linenumber" name="L49" href="#L49">49</a>    <a href="../../../../org/apache/ibatis/annotations/Many.html">Many</a> many() <strong class="jxr_keyword">default</strong> @Many;
-<a class="jxr_linenumber" name="L50" href="#L50">50</a>  }
+<a class="jxr_linenumber" name="L19" href="#L19">19</a>  <strong class="jxr_keyword">import</strong> java.lang.annotation.Retention;
+<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <strong class="jxr_keyword">import</strong> java.lang.annotation.RetentionPolicy;
+<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <strong class="jxr_keyword">import</strong> java.lang.annotation.Target;
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>  
+<a class="jxr_linenumber" name="L23" href="#L23">23</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.type.JdbcType;
+<a class="jxr_linenumber" name="L24" href="#L24">24</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.type.TypeHandler;
+<a class="jxr_linenumber" name="L25" href="#L25">25</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.type.UnknownTypeHandler;
+<a class="jxr_linenumber" name="L26" href="#L26">26</a>  
+<a class="jxr_linenumber" name="L27" href="#L27">27</a>  <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L28" href="#L28">28</a>  <em class="jxr_javadoccomment"> * @author Clinton Begin</em>
+<a class="jxr_linenumber" name="L29" href="#L29">29</a>  <em class="jxr_javadoccomment"> */</em>
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>  @Documented
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>  @Retention(RetentionPolicy.RUNTIME)
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>  @Target({})
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>  <strong class="jxr_keyword">public</strong> @<strong class="jxr_keyword">interface</strong> <a href="../../../../org/apache/ibatis/annotations/Result.html">Result</a> {
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>    <strong class="jxr_keyword">boolean</strong> id() <strong class="jxr_keyword">default</strong> false;
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>  
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>    String column() <strong class="jxr_keyword">default</strong> <span class="jxr_string">""</span>;
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>  
+<a class="jxr_linenumber" name="L38" href="#L38">38</a>    String property() <strong class="jxr_keyword">default</strong> <span class="jxr_string">""</span>;
+<a class="jxr_linenumber" name="L39" href="#L39">39</a>  
+<a class="jxr_linenumber" name="L40" href="#L40">40</a>    Class&lt;?&gt; javaType() <strong class="jxr_keyword">default</strong> <strong class="jxr_keyword">void</strong>.<strong class="jxr_keyword">class</strong>;
+<a class="jxr_linenumber" name="L41" href="#L41">41</a>  
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>    <a href="../../../../org/apache/ibatis/type/JdbcType.html">JdbcType</a> jdbcType() <strong class="jxr_keyword">default</strong> JdbcType.UNDEFINED;
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>  
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>    Class&lt;? <strong class="jxr_keyword">extends</strong> TypeHandler&gt; typeHandler() <strong class="jxr_keyword">default</strong> UnknownTypeHandler.<strong class="jxr_keyword">class</strong>;
+<a class="jxr_linenumber" name="L45" href="#L45">45</a>  
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>    <a href="../../../../org/apache/ibatis/annotations/One.html">One</a> one() <strong class="jxr_keyword">default</strong> @One;
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>  
+<a class="jxr_linenumber" name="L48" href="#L48">48</a>    <a href="../../../../org/apache/ibatis/annotations/Many.html">Many</a> many() <strong class="jxr_keyword">default</strong> @Many;
+<a class="jxr_linenumber" name="L49" href="#L49">49</a>  }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2016 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2009&#x2013;2017 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
 </body>
 </html>

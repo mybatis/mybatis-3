@@ -30,16 +30,29 @@
 <a class="jxr_linenumber" name="L22" href="#L22">22</a>  <strong class="jxr_keyword">import</strong> java.lang.annotation.Target;
 <a class="jxr_linenumber" name="L23" href="#L23">23</a>  
 <a class="jxr_linenumber" name="L24" href="#L24">24</a>  <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L25" href="#L25">25</a>  <em class="jxr_javadoccomment"> * @author Clinton Begin</em>
-<a class="jxr_linenumber" name="L26" href="#L26">26</a>  <em class="jxr_javadoccomment"> */</em>
-<a class="jxr_linenumber" name="L27" href="#L27">27</a>  @Documented
-<a class="jxr_linenumber" name="L28" href="#L28">28</a>  @Retention(RetentionPolicy.RUNTIME)
-<a class="jxr_linenumber" name="L29" href="#L29">29</a>  @Target(ElementType.TYPE)
-<a class="jxr_linenumber" name="L30" href="#L30">30</a>  <strong class="jxr_keyword">public</strong> @<strong class="jxr_keyword">interface</strong> <a href="../../../../org/apache/ibatis/annotations/CacheNamespaceRef.html">CacheNamespaceRef</a> {
-<a class="jxr_linenumber" name="L31" href="#L31">31</a>    Class&lt;?&gt; value();
-<a class="jxr_linenumber" name="L32" href="#L32">32</a>  }
+<a class="jxr_linenumber" name="L25" href="#L25">25</a>  <em class="jxr_javadoccomment"> * The annotation that reference a cache.</em>
+<a class="jxr_linenumber" name="L26" href="#L26">26</a>  <em class="jxr_javadoccomment"> * &lt;p&gt;</em>
+<a class="jxr_linenumber" name="L27" href="#L27">27</a>  <em class="jxr_javadoccomment"> * If you use this annotation, should be specified either {@link #value()} or {@link #name()} attribute.</em>
+<a class="jxr_linenumber" name="L28" href="#L28">28</a>  <em class="jxr_javadoccomment"> * &lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L29" href="#L29">29</a>  <em class="jxr_javadoccomment"> * @author Clinton Begin</em>
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>  <em class="jxr_javadoccomment"> * @author Kazuki Shimizu</em>
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>  <em class="jxr_javadoccomment"> */</em>
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>  @Documented
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>  @Retention(RetentionPolicy.RUNTIME)
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>  @Target(ElementType.TYPE)
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>  <strong class="jxr_keyword">public</strong> @<strong class="jxr_keyword">interface</strong> <a href="../../../../org/apache/ibatis/annotations/CacheNamespaceRef.html">CacheNamespaceRef</a> {
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>    <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>  <em class="jxr_javadoccomment">   * A namespace type to reference a cache (the namespace name become a FQCN of specified type)</em>
+<a class="jxr_linenumber" name="L38" href="#L38">38</a>  <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L39" href="#L39">39</a>    Class&lt;?&gt; value() <strong class="jxr_keyword">default</strong> <strong class="jxr_keyword">void</strong>.<strong class="jxr_keyword">class</strong>;
+<a class="jxr_linenumber" name="L40" href="#L40">40</a>    <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L41" href="#L41">41</a>  <em class="jxr_javadoccomment">   * A namespace name to reference a cache</em>
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>  <em class="jxr_javadoccomment">   * @since 3.4.2</em>
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>  <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>    String name() <strong class="jxr_keyword">default</strong> <span class="jxr_string">""</span>;
+<a class="jxr_linenumber" name="L45" href="#L45">45</a>  }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2016 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2009&#x2013;2017 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
 </body>
 </html>

@@ -7,7 +7,7 @@
 <body>
 <div id="overview"><a href="../../../../../testapidocs/org/apache/ibatis/io/ExternalResourcesTest.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2015 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2016 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_javadoccomment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_javadoccomment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_javadoccomment"> *    you may not use this file except in compliance with the License.</em>
@@ -94,22 +94,23 @@
 <a class="jxr_linenumber" name="L86" href="#L86">86</a>        FileWriter fileWriter = <strong class="jxr_keyword">new</strong> FileWriter(tempFile);
 <a class="jxr_linenumber" name="L87" href="#L87">87</a>        fileWriter.append(<span class="jxr_string">"new_command.template=templates/col_new_template_migration.sql"</span>);
 <a class="jxr_linenumber" name="L88" href="#L88">88</a>        fileWriter.flush();
-<a class="jxr_linenumber" name="L89" href="#L89">89</a>        templateName = ExternalResources.getConfiguredTemplate(tempFile.getAbsolutePath(), <span class="jxr_string">"new_command.template"</span>);
-<a class="jxr_linenumber" name="L90" href="#L90">90</a>        assertEquals(<span class="jxr_string">"templates/col_new_template_migration.sql"</span>, templateName);
-<a class="jxr_linenumber" name="L91" href="#L91">91</a>      } <strong class="jxr_keyword">catch</strong> (Exception e) {
-<a class="jxr_linenumber" name="L92" href="#L92">92</a>        fail(<span class="jxr_string">"Test failed with execption: "</span> + e.getMessage());
-<a class="jxr_linenumber" name="L93" href="#L93">93</a>      }
-<a class="jxr_linenumber" name="L94" href="#L94">94</a>    }
-<a class="jxr_linenumber" name="L95" href="#L95">95</a>  
-<a class="jxr_linenumber" name="L96" href="#L96">96</a>    @After
-<a class="jxr_linenumber" name="L97" href="#L97">97</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> cleanUp() {
-<a class="jxr_linenumber" name="L98" href="#L98">98</a>      sourceFile.delete();
-<a class="jxr_linenumber" name="L99" href="#L99">99</a>      destFile.delete();
-<a class="jxr_linenumber" name="L100" href="#L100">100</a>     tempFile.delete();
-<a class="jxr_linenumber" name="L101" href="#L101">101</a>   }
-<a class="jxr_linenumber" name="L102" href="#L102">102</a> }
+<a class="jxr_linenumber" name="L89" href="#L89">89</a>        fileWriter.close();
+<a class="jxr_linenumber" name="L90" href="#L90">90</a>        templateName = ExternalResources.getConfiguredTemplate(tempFile.getAbsolutePath(), <span class="jxr_string">"new_command.template"</span>);
+<a class="jxr_linenumber" name="L91" href="#L91">91</a>        assertEquals(<span class="jxr_string">"templates/col_new_template_migration.sql"</span>, templateName);
+<a class="jxr_linenumber" name="L92" href="#L92">92</a>      } <strong class="jxr_keyword">catch</strong> (Exception e) {
+<a class="jxr_linenumber" name="L93" href="#L93">93</a>        fail(<span class="jxr_string">"Test failed with execption: "</span> + e.getMessage());
+<a class="jxr_linenumber" name="L94" href="#L94">94</a>      }
+<a class="jxr_linenumber" name="L95" href="#L95">95</a>    }
+<a class="jxr_linenumber" name="L96" href="#L96">96</a>  
+<a class="jxr_linenumber" name="L97" href="#L97">97</a>    @After
+<a class="jxr_linenumber" name="L98" href="#L98">98</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> cleanUp() {
+<a class="jxr_linenumber" name="L99" href="#L99">99</a>      sourceFile.delete();
+<a class="jxr_linenumber" name="L100" href="#L100">100</a>     destFile.delete();
+<a class="jxr_linenumber" name="L101" href="#L101">101</a>     tempFile.delete();
+<a class="jxr_linenumber" name="L102" href="#L102">102</a>   }
+<a class="jxr_linenumber" name="L103" href="#L103">103</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2016 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2009&#x2013;2017 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
 </body>
 </html>

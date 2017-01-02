@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>BaseJdbcLogger.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.logging.jdbc</a> &gt; <span class="el_source">BaseJdbcLogger.java</span></div><h1>BaseJdbcLogger.java</h1><pre class="source lang-java linenums">/**
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BaseJdbcLogger.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.logging.jdbc</a> &gt; <span class="el_source">BaseJdbcLogger.java</span></div><h1>BaseJdbcLogger.java</h1><pre class="source lang-java linenums">/**
  *    Copyright 2009-2016 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
@@ -15,6 +15,8 @@
  */
 package org.apache.ibatis.logging.jdbc;
 
+import java.sql.Array;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -34,13 +36,13 @@ import org.apache.ibatis.logging.Log;
  */
 public abstract class BaseJdbcLogger {
 
-<span class="fc" id="L37">  protected static final Set&lt;String&gt; SET_METHODS = new HashSet&lt;String&gt;();</span>
-<span class="fc" id="L38">  protected static final Set&lt;String&gt; EXECUTE_METHODS = new HashSet&lt;String&gt;();</span>
+<span class="fc" id="L39">  protected static final Set&lt;String&gt; SET_METHODS = new HashSet&lt;String&gt;();</span>
+<span class="fc" id="L40">  protected static final Set&lt;String&gt; EXECUTE_METHODS = new HashSet&lt;String&gt;();</span>
 
-<span class="fc" id="L40">  private Map&lt;Object, Object&gt; columnMap = new HashMap&lt;Object, Object&gt;();</span>
+<span class="fc" id="L42">  private Map&lt;Object, Object&gt; columnMap = new HashMap&lt;Object, Object&gt;();</span>
 
-<span class="fc" id="L42">  private List&lt;Object&gt; columnNames = new ArrayList&lt;Object&gt;();</span>
-<span class="fc" id="L43">  private List&lt;Object&gt; columnValues = new ArrayList&lt;Object&gt;();</span>
+<span class="fc" id="L44">  private List&lt;Object&gt; columnNames = new ArrayList&lt;Object&gt;();</span>
+<span class="fc" id="L45">  private List&lt;Object&gt; columnValues = new ArrayList&lt;Object&gt;();</span>
 
   protected Log statementLog;
   protected int queryStack;
@@ -48,121 +50,155 @@ public abstract class BaseJdbcLogger {
   /*
    * Default constructor
    */
-<span class="fc" id="L51">  public BaseJdbcLogger(Log log, int queryStack) {</span>
-<span class="fc" id="L52">    this.statementLog = log;</span>
-<span class="pc bpc" id="L53" title="1 of 2 branches missed.">    if (queryStack == 0) {</span>
-<span class="nc" id="L54">      this.queryStack = 1;</span>
+<span class="fc" id="L53">  public BaseJdbcLogger(Log log, int queryStack) {</span>
+<span class="fc" id="L54">    this.statementLog = log;</span>
+<span class="pc bpc" id="L55" title="1 of 2 branches missed.">    if (queryStack == 0) {</span>
+<span class="nc" id="L56">      this.queryStack = 1;</span>
     } else {
-<span class="fc" id="L56">      this.queryStack = queryStack;</span>
+<span class="fc" id="L58">      this.queryStack = queryStack;</span>
     }
-<span class="fc" id="L58">  }</span>
+<span class="fc" id="L60">  }</span>
 
   static {
-<span class="fc" id="L61">    SET_METHODS.add(&quot;setString&quot;);</span>
-<span class="fc" id="L62">    SET_METHODS.add(&quot;setNString&quot;);</span>
-<span class="fc" id="L63">    SET_METHODS.add(&quot;setInt&quot;);</span>
-<span class="fc" id="L64">    SET_METHODS.add(&quot;setByte&quot;);</span>
-<span class="fc" id="L65">    SET_METHODS.add(&quot;setShort&quot;);</span>
-<span class="fc" id="L66">    SET_METHODS.add(&quot;setLong&quot;);</span>
-<span class="fc" id="L67">    SET_METHODS.add(&quot;setDouble&quot;);</span>
-<span class="fc" id="L68">    SET_METHODS.add(&quot;setFloat&quot;);</span>
-<span class="fc" id="L69">    SET_METHODS.add(&quot;setTimestamp&quot;);</span>
-<span class="fc" id="L70">    SET_METHODS.add(&quot;setDate&quot;);</span>
-<span class="fc" id="L71">    SET_METHODS.add(&quot;setTime&quot;);</span>
-<span class="fc" id="L72">    SET_METHODS.add(&quot;setArray&quot;);</span>
-<span class="fc" id="L73">    SET_METHODS.add(&quot;setBigDecimal&quot;);</span>
-<span class="fc" id="L74">    SET_METHODS.add(&quot;setAsciiStream&quot;);</span>
-<span class="fc" id="L75">    SET_METHODS.add(&quot;setBinaryStream&quot;);</span>
-<span class="fc" id="L76">    SET_METHODS.add(&quot;setBlob&quot;);</span>
-<span class="fc" id="L77">    SET_METHODS.add(&quot;setBoolean&quot;);</span>
-<span class="fc" id="L78">    SET_METHODS.add(&quot;setBytes&quot;);</span>
-<span class="fc" id="L79">    SET_METHODS.add(&quot;setCharacterStream&quot;);</span>
-<span class="fc" id="L80">    SET_METHODS.add(&quot;setNCharacterStream&quot;);</span>
-<span class="fc" id="L81">    SET_METHODS.add(&quot;setClob&quot;);</span>
-<span class="fc" id="L82">    SET_METHODS.add(&quot;setNClob&quot;);</span>
-<span class="fc" id="L83">    SET_METHODS.add(&quot;setObject&quot;);</span>
-<span class="fc" id="L84">    SET_METHODS.add(&quot;setNull&quot;);</span>
+<span class="fc" id="L63">    SET_METHODS.add(&quot;setString&quot;);</span>
+<span class="fc" id="L64">    SET_METHODS.add(&quot;setNString&quot;);</span>
+<span class="fc" id="L65">    SET_METHODS.add(&quot;setInt&quot;);</span>
+<span class="fc" id="L66">    SET_METHODS.add(&quot;setByte&quot;);</span>
+<span class="fc" id="L67">    SET_METHODS.add(&quot;setShort&quot;);</span>
+<span class="fc" id="L68">    SET_METHODS.add(&quot;setLong&quot;);</span>
+<span class="fc" id="L69">    SET_METHODS.add(&quot;setDouble&quot;);</span>
+<span class="fc" id="L70">    SET_METHODS.add(&quot;setFloat&quot;);</span>
+<span class="fc" id="L71">    SET_METHODS.add(&quot;setTimestamp&quot;);</span>
+<span class="fc" id="L72">    SET_METHODS.add(&quot;setDate&quot;);</span>
+<span class="fc" id="L73">    SET_METHODS.add(&quot;setTime&quot;);</span>
+<span class="fc" id="L74">    SET_METHODS.add(&quot;setArray&quot;);</span>
+<span class="fc" id="L75">    SET_METHODS.add(&quot;setBigDecimal&quot;);</span>
+<span class="fc" id="L76">    SET_METHODS.add(&quot;setAsciiStream&quot;);</span>
+<span class="fc" id="L77">    SET_METHODS.add(&quot;setBinaryStream&quot;);</span>
+<span class="fc" id="L78">    SET_METHODS.add(&quot;setBlob&quot;);</span>
+<span class="fc" id="L79">    SET_METHODS.add(&quot;setBoolean&quot;);</span>
+<span class="fc" id="L80">    SET_METHODS.add(&quot;setBytes&quot;);</span>
+<span class="fc" id="L81">    SET_METHODS.add(&quot;setCharacterStream&quot;);</span>
+<span class="fc" id="L82">    SET_METHODS.add(&quot;setNCharacterStream&quot;);</span>
+<span class="fc" id="L83">    SET_METHODS.add(&quot;setClob&quot;);</span>
+<span class="fc" id="L84">    SET_METHODS.add(&quot;setNClob&quot;);</span>
+<span class="fc" id="L85">    SET_METHODS.add(&quot;setObject&quot;);</span>
+<span class="fc" id="L86">    SET_METHODS.add(&quot;setNull&quot;);</span>
 
-<span class="fc" id="L86">    EXECUTE_METHODS.add(&quot;execute&quot;);</span>
-<span class="fc" id="L87">    EXECUTE_METHODS.add(&quot;executeUpdate&quot;);</span>
-<span class="fc" id="L88">    EXECUTE_METHODS.add(&quot;executeQuery&quot;);</span>
-<span class="fc" id="L89">    EXECUTE_METHODS.add(&quot;addBatch&quot;);</span>
-<span class="fc" id="L90">  }</span>
+<span class="fc" id="L88">    EXECUTE_METHODS.add(&quot;execute&quot;);</span>
+<span class="fc" id="L89">    EXECUTE_METHODS.add(&quot;executeUpdate&quot;);</span>
+<span class="fc" id="L90">    EXECUTE_METHODS.add(&quot;executeQuery&quot;);</span>
+<span class="fc" id="L91">    EXECUTE_METHODS.add(&quot;addBatch&quot;);</span>
+<span class="fc" id="L92">  }</span>
 
   protected void setColumn(Object key, Object value) {
-<span class="nc" id="L93">    columnMap.put(key, value);</span>
-<span class="nc" id="L94">    columnNames.add(key);</span>
-<span class="nc" id="L95">    columnValues.add(value);</span>
-<span class="nc" id="L96">  }</span>
+<span class="fc" id="L95">    columnMap.put(key, value);</span>
+<span class="fc" id="L96">    columnNames.add(key);</span>
+<span class="fc" id="L97">    columnValues.add(value);</span>
+<span class="fc" id="L98">  }</span>
 
   protected Object getColumn(Object key) {
-<span class="nc" id="L99">    return columnMap.get(key);</span>
+<span class="nc" id="L101">    return columnMap.get(key);</span>
   }
 
   protected String getParameterValueString() {
-<span class="nc" id="L103">    List&lt;Object&gt; typeList = new ArrayList&lt;Object&gt;(columnValues.size());</span>
-<span class="nc bnc" id="L104" title="All 2 branches missed.">    for (Object value : columnValues) {</span>
-<span class="nc bnc" id="L105" title="All 2 branches missed.">      if (value == null) {</span>
-<span class="nc" id="L106">        typeList.add(&quot;null&quot;);</span>
+<span class="fc" id="L105">    List&lt;Object&gt; typeList = new ArrayList&lt;Object&gt;(columnValues.size());</span>
+<span class="fc bfc" id="L106" title="All 2 branches covered.">    for (Object value : columnValues) {</span>
+<span class="fc bfc" id="L107" title="All 2 branches covered.">      if (value == null) {</span>
+<span class="fc" id="L108">        typeList.add(&quot;null&quot;);</span>
       } else {
-<span class="nc" id="L108">        typeList.add(value + &quot;(&quot; + value.getClass().getSimpleName() + &quot;)&quot;);</span>
+<span class="fc" id="L110">        typeList.add(objectValueString(value) + &quot;(&quot; + value.getClass().getSimpleName() + &quot;)&quot;);</span>
       }
-<span class="nc" id="L110">    }</span>
-<span class="nc" id="L111">    final String parameters = typeList.toString();</span>
-<span class="nc" id="L112">    return parameters.substring(1, parameters.length() - 1);</span>
+<span class="fc" id="L112">    }</span>
+<span class="fc" id="L113">    final String parameters = typeList.toString();</span>
+<span class="fc" id="L114">    return parameters.substring(1, parameters.length() - 1);</span>
+  }
+
+  protected String objectValueString(Object value) {
+<span class="fc bfc" id="L118" title="All 2 branches covered.">    if (value instanceof Array) {</span>
+<span class="fc" id="L119">      return arrayValueString((Array) value);</span>
+    }
+<span class="fc" id="L121">    return value.toString();</span>
+  }
+
+  protected String arrayValueString(Array array) {
+    try {
+<span class="fc" id="L126">      Object value = array.getArray();</span>
+<span class="fc bfc" id="L127" title="All 2 branches covered.">      if (value instanceof Object[]) {</span>
+<span class="fc" id="L128">        return Arrays.toString((Object[]) value);</span>
+<span class="pc bpc" id="L129" title="1 of 2 branches missed.">      } else if (value instanceof long[]) {</span>
+<span class="nc" id="L130">        return Arrays.toString((long[]) value);</span>
+<span class="pc bpc" id="L131" title="1 of 2 branches missed.">      } else if (value instanceof int[]) {</span>
+<span class="fc" id="L132">        return Arrays.toString((int[]) value);</span>
+<span class="nc bnc" id="L133" title="All 2 branches missed.">      } else if (value instanceof short[]) {</span>
+<span class="nc" id="L134">        return Arrays.toString((short[]) value);</span>
+<span class="nc bnc" id="L135" title="All 2 branches missed.">      } else if (value instanceof char[]) {</span>
+<span class="nc" id="L136">        return Arrays.toString((char[]) value);</span>
+<span class="nc bnc" id="L137" title="All 2 branches missed.">      } else if (value instanceof byte[]) {</span>
+<span class="nc" id="L138">        return Arrays.toString((byte[]) value);</span>
+<span class="nc bnc" id="L139" title="All 2 branches missed.">      } else if (value instanceof boolean[]) {</span>
+<span class="nc" id="L140">        return Arrays.toString((boolean[]) value);</span>
+<span class="nc bnc" id="L141" title="All 2 branches missed.">      } else if (value instanceof float[]) {</span>
+<span class="nc" id="L142">        return Arrays.toString((float[]) value);</span>
+      } else {
+<span class="nc" id="L144">        return Arrays.toString((double[]) value);</span>
+      }
+<span class="nc" id="L146">    } catch (SQLException e) {</span>
+<span class="nc" id="L147">      return array.toString();</span>
+    }
   }
 
   protected String getColumnString() {
-<span class="nc" id="L116">    return columnNames.toString();</span>
+<span class="nc" id="L152">    return columnNames.toString();</span>
   }
 
   protected void clearColumnInfo() {
-<span class="fc" id="L120">    columnMap.clear();</span>
-<span class="fc" id="L121">    columnNames.clear();</span>
-<span class="fc" id="L122">    columnValues.clear();</span>
-<span class="fc" id="L123">  }</span>
+<span class="fc" id="L156">    columnMap.clear();</span>
+<span class="fc" id="L157">    columnNames.clear();</span>
+<span class="fc" id="L158">    columnValues.clear();</span>
+<span class="fc" id="L159">  }</span>
 
   protected String removeBreakingWhitespace(String original) {
-<span class="nc" id="L126">    StringTokenizer whitespaceStripper = new StringTokenizer(original);</span>
-<span class="nc" id="L127">    StringBuilder builder = new StringBuilder();</span>
-<span class="nc bnc" id="L128" title="All 2 branches missed.">    while (whitespaceStripper.hasMoreTokens()) {</span>
-<span class="nc" id="L129">      builder.append(whitespaceStripper.nextToken());</span>
-<span class="nc" id="L130">      builder.append(&quot; &quot;);</span>
+<span class="fc" id="L162">    StringTokenizer whitespaceStripper = new StringTokenizer(original);</span>
+<span class="fc" id="L163">    StringBuilder builder = new StringBuilder();</span>
+<span class="fc bfc" id="L164" title="All 2 branches covered.">    while (whitespaceStripper.hasMoreTokens()) {</span>
+<span class="fc" id="L165">      builder.append(whitespaceStripper.nextToken());</span>
+<span class="fc" id="L166">      builder.append(&quot; &quot;);</span>
     }
-<span class="nc" id="L132">    return builder.toString();</span>
+<span class="fc" id="L168">    return builder.toString();</span>
   }
 
   protected boolean isDebugEnabled() {
-<span class="nc" id="L136">    return statementLog.isDebugEnabled();</span>
+<span class="fc" id="L172">    return statementLog.isDebugEnabled();</span>
   }
 
   protected boolean isTraceEnabled() {
-<span class="fc" id="L140">    return statementLog.isTraceEnabled();</span>
+<span class="fc" id="L176">    return statementLog.isTraceEnabled();</span>
   }
 
   protected void debug(String text, boolean input) {
-<span class="nc bnc" id="L144" title="All 2 branches missed.">    if (statementLog.isDebugEnabled()) {</span>
-<span class="nc" id="L145">      statementLog.debug(prefix(input) + text);</span>
+<span class="pc bpc" id="L180" title="1 of 2 branches missed.">    if (statementLog.isDebugEnabled()) {</span>
+<span class="fc" id="L181">      statementLog.debug(prefix(input) + text);</span>
     }
-<span class="nc" id="L147">  }</span>
+<span class="fc" id="L183">  }</span>
 
   protected void trace(String text, boolean input) {
-<span class="pc bpc" id="L150" title="1 of 2 branches missed.">    if (statementLog.isTraceEnabled()) {</span>
-<span class="fc" id="L151">      statementLog.trace(prefix(input) + text);</span>
+<span class="pc bpc" id="L186" title="1 of 2 branches missed.">    if (statementLog.isTraceEnabled()) {</span>
+<span class="fc" id="L187">      statementLog.trace(prefix(input) + text);</span>
     }
-<span class="fc" id="L153">  }</span>
+<span class="fc" id="L189">  }</span>
 
   private String prefix(boolean isInput) {
-<span class="fc" id="L156">    char[] buffer = new char[queryStack * 2 + 2];</span>
-<span class="fc" id="L157">    Arrays.fill(buffer, '=');</span>
-<span class="fc" id="L158">    buffer[queryStack * 2 + 1] = ' ';</span>
-<span class="pc bpc" id="L159" title="1 of 2 branches missed.">    if (isInput) {</span>
-<span class="nc" id="L160">      buffer[queryStack * 2] = '&gt;';</span>
+<span class="fc" id="L192">    char[] buffer = new char[queryStack * 2 + 2];</span>
+<span class="fc" id="L193">    Arrays.fill(buffer, '=');</span>
+<span class="fc" id="L194">    buffer[queryStack * 2 + 1] = ' ';</span>
+<span class="fc bfc" id="L195" title="All 2 branches covered.">    if (isInput) {</span>
+<span class="fc" id="L196">      buffer[queryStack * 2] = '&gt;';</span>
     } else {
-<span class="fc" id="L162">      buffer[0] = '&lt;';</span>
+<span class="fc" id="L198">      buffer[0] = '&lt;';</span>
     }
-<span class="fc" id="L164">    return new String(buffer);</span>
+<span class="fc" id="L200">    return new String(buffer);</span>
   }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

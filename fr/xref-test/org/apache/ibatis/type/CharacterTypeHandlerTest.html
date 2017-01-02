@@ -90,7 +90,7 @@
 <a class="jxr_linenumber" name="L82" href="#L82">82</a>    @Override
 <a class="jxr_linenumber" name="L83" href="#L83">83</a>    @Test
 <a class="jxr_linenumber" name="L84" href="#L84">84</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldGetResultNullFromCallableStatement() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L85" href="#L85">85</a>      when(cs.getString(<span class="jxr_string">"column"</span>)).thenReturn(<strong class="jxr_keyword">null</strong>);
+<a class="jxr_linenumber" name="L85" href="#L85">85</a>      when(cs.getString(1)).thenReturn(<strong class="jxr_keyword">null</strong>);
 <a class="jxr_linenumber" name="L86" href="#L86">86</a>      when(cs.wasNull()).thenReturn(<strong class="jxr_keyword">true</strong>);
 <a class="jxr_linenumber" name="L87" href="#L87">87</a>      assertNull(TYPE_HANDLER.getResult(cs, 1));
 <a class="jxr_linenumber" name="L88" href="#L88">88</a>    }
@@ -98,6 +98,6 @@
 <a class="jxr_linenumber" name="L90" href="#L90">90</a>  }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2016 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2009&#x2013;2017 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
 </body>
 </html>

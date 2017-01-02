@@ -37,364 +37,403 @@
 <a class="jxr_linenumber" name="L29" href="#L29">29</a>  <strong class="jxr_keyword">import</strong> java.util.HashMap;
 <a class="jxr_linenumber" name="L30" href="#L30">30</a>  <strong class="jxr_keyword">import</strong> java.util.Map;
 <a class="jxr_linenumber" name="L31" href="#L31">31</a>  <strong class="jxr_keyword">import</strong> java.util.Set;
-<a class="jxr_linenumber" name="L32" href="#L32">32</a>  
-<a class="jxr_linenumber" name="L33" href="#L33">33</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.io.ResolverUtil;
-<a class="jxr_linenumber" name="L34" href="#L34">34</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.io.Resources;
-<a class="jxr_linenumber" name="L35" href="#L35">35</a>  
-<a class="jxr_linenumber" name="L36" href="#L36">36</a>  <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L37" href="#L37">37</a>  <em class="jxr_javadoccomment"> * @author Clinton Begin</em>
-<a class="jxr_linenumber" name="L38" href="#L38">38</a>  <em class="jxr_javadoccomment"> */</em>
-<a class="jxr_linenumber" name="L39" href="#L39">39</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../org/apache/ibatis/type/TypeHandlerRegistry.html">TypeHandlerRegistry</a> {
-<a class="jxr_linenumber" name="L40" href="#L40">40</a>  
-<a class="jxr_linenumber" name="L41" href="#L41">41</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> Map&lt;JdbcType, TypeHandler&lt;?&gt;&gt; JDBC_TYPE_HANDLER_MAP = <strong class="jxr_keyword">new</strong> EnumMap&lt;JdbcType, TypeHandler&lt;?&gt;&gt;(JdbcType.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L42" href="#L42">42</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> Map&lt;Type, Map&lt;JdbcType, TypeHandler&lt;?&gt;&gt;&gt; TYPE_HANDLER_MAP = <strong class="jxr_keyword">new</strong> HashMap&lt;Type, Map&lt;JdbcType, TypeHandler&lt;?&gt;&gt;&gt;();
-<a class="jxr_linenumber" name="L43" href="#L43">43</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> TypeHandler&lt;Object&gt; UNKNOWN_TYPE_HANDLER = <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/UnknownTypeHandler.html">UnknownTypeHandler</a>(<strong class="jxr_keyword">this</strong>);
-<a class="jxr_linenumber" name="L44" href="#L44">44</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> Map&lt;Class&lt;?&gt;, TypeHandler&lt;?&gt;&gt; ALL_TYPE_HANDLERS_MAP = <strong class="jxr_keyword">new</strong> HashMap&lt;Class&lt;?&gt;, TypeHandler&lt;?&gt;&gt;();
-<a class="jxr_linenumber" name="L45" href="#L45">45</a>  
-<a class="jxr_linenumber" name="L46" href="#L46">46</a>    <strong class="jxr_keyword">public</strong> <a href="../../../../org/apache/ibatis/type/TypeHandlerRegistry.html">TypeHandlerRegistry</a>() {
-<a class="jxr_linenumber" name="L47" href="#L47">47</a>      register(Boolean.<strong class="jxr_keyword">class</strong>, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/BooleanTypeHandler.html">BooleanTypeHandler</a>());
-<a class="jxr_linenumber" name="L48" href="#L48">48</a>      register(<strong class="jxr_keyword">boolean</strong>.<strong class="jxr_keyword">class</strong>, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/BooleanTypeHandler.html">BooleanTypeHandler</a>());
-<a class="jxr_linenumber" name="L49" href="#L49">49</a>      register(JdbcType.BOOLEAN, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/BooleanTypeHandler.html">BooleanTypeHandler</a>());
-<a class="jxr_linenumber" name="L50" href="#L50">50</a>      register(JdbcType.BIT, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/BooleanTypeHandler.html">BooleanTypeHandler</a>());
-<a class="jxr_linenumber" name="L51" href="#L51">51</a>  
-<a class="jxr_linenumber" name="L52" href="#L52">52</a>      register(Byte.<strong class="jxr_keyword">class</strong>, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/ByteTypeHandler.html">ByteTypeHandler</a>());
-<a class="jxr_linenumber" name="L53" href="#L53">53</a>      register(byte.<strong class="jxr_keyword">class</strong>, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/ByteTypeHandler.html">ByteTypeHandler</a>());
-<a class="jxr_linenumber" name="L54" href="#L54">54</a>      register(JdbcType.TINYINT, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/ByteTypeHandler.html">ByteTypeHandler</a>());
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>  <strong class="jxr_keyword">import</strong> java.util.concurrent.ConcurrentHashMap;
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>  
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.io.ResolverUtil;
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.io.Resources;
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>  
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>  <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L38" href="#L38">38</a>  <em class="jxr_javadoccomment"> * @author Clinton Begin</em>
+<a class="jxr_linenumber" name="L39" href="#L39">39</a>  <em class="jxr_javadoccomment"> * @author Kazuki Shimizu</em>
+<a class="jxr_linenumber" name="L40" href="#L40">40</a>  <em class="jxr_javadoccomment"> */</em>
+<a class="jxr_linenumber" name="L41" href="#L41">41</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../org/apache/ibatis/type/TypeHandlerRegistry.html">TypeHandlerRegistry</a> {
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>  
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> Map&lt;JdbcType, TypeHandler&lt;?&gt;&gt; JDBC_TYPE_HANDLER_MAP = <strong class="jxr_keyword">new</strong> EnumMap&lt;JdbcType, TypeHandler&lt;?&gt;&gt;(JdbcType.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> Map&lt;Type, Map&lt;JdbcType, TypeHandler&lt;?&gt;&gt;&gt; TYPE_HANDLER_MAP = <strong class="jxr_keyword">new</strong> ConcurrentHashMap&lt;Type, Map&lt;JdbcType, TypeHandler&lt;?&gt;&gt;&gt;();
+<a class="jxr_linenumber" name="L45" href="#L45">45</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> TypeHandler&lt;Object&gt; UNKNOWN_TYPE_HANDLER = <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/UnknownTypeHandler.html">UnknownTypeHandler</a>(<strong class="jxr_keyword">this</strong>);
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> Map&lt;Class&lt;?&gt;, TypeHandler&lt;?&gt;&gt; ALL_TYPE_HANDLERS_MAP = <strong class="jxr_keyword">new</strong> HashMap&lt;Class&lt;?&gt;, TypeHandler&lt;?&gt;&gt;();
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>  
+<a class="jxr_linenumber" name="L48" href="#L48">48</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> Map&lt;JdbcType, TypeHandler&lt;?&gt;&gt; NULL_TYPE_HANDLER_MAP = <strong class="jxr_keyword">new</strong> HashMap&lt;JdbcType, TypeHandler&lt;?&gt;&gt;();
+<a class="jxr_linenumber" name="L49" href="#L49">49</a>  
+<a class="jxr_linenumber" name="L50" href="#L50">50</a>    <strong class="jxr_keyword">public</strong> <a href="../../../../org/apache/ibatis/type/TypeHandlerRegistry.html">TypeHandlerRegistry</a>() {
+<a class="jxr_linenumber" name="L51" href="#L51">51</a>      register(Boolean.<strong class="jxr_keyword">class</strong>, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/BooleanTypeHandler.html">BooleanTypeHandler</a>());
+<a class="jxr_linenumber" name="L52" href="#L52">52</a>      register(<strong class="jxr_keyword">boolean</strong>.<strong class="jxr_keyword">class</strong>, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/BooleanTypeHandler.html">BooleanTypeHandler</a>());
+<a class="jxr_linenumber" name="L53" href="#L53">53</a>      register(JdbcType.BOOLEAN, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/BooleanTypeHandler.html">BooleanTypeHandler</a>());
+<a class="jxr_linenumber" name="L54" href="#L54">54</a>      register(JdbcType.BIT, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/BooleanTypeHandler.html">BooleanTypeHandler</a>());
 <a class="jxr_linenumber" name="L55" href="#L55">55</a>  
-<a class="jxr_linenumber" name="L56" href="#L56">56</a>      register(Short.<strong class="jxr_keyword">class</strong>, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/ShortTypeHandler.html">ShortTypeHandler</a>());
-<a class="jxr_linenumber" name="L57" href="#L57">57</a>      register(<strong class="jxr_keyword">short</strong>.<strong class="jxr_keyword">class</strong>, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/ShortTypeHandler.html">ShortTypeHandler</a>());
-<a class="jxr_linenumber" name="L58" href="#L58">58</a>      register(JdbcType.SMALLINT, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/ShortTypeHandler.html">ShortTypeHandler</a>());
+<a class="jxr_linenumber" name="L56" href="#L56">56</a>      register(Byte.<strong class="jxr_keyword">class</strong>, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/ByteTypeHandler.html">ByteTypeHandler</a>());
+<a class="jxr_linenumber" name="L57" href="#L57">57</a>      register(byte.<strong class="jxr_keyword">class</strong>, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/ByteTypeHandler.html">ByteTypeHandler</a>());
+<a class="jxr_linenumber" name="L58" href="#L58">58</a>      register(JdbcType.TINYINT, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/ByteTypeHandler.html">ByteTypeHandler</a>());
 <a class="jxr_linenumber" name="L59" href="#L59">59</a>  
-<a class="jxr_linenumber" name="L60" href="#L60">60</a>      register(Integer.<strong class="jxr_keyword">class</strong>, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/IntegerTypeHandler.html">IntegerTypeHandler</a>());
-<a class="jxr_linenumber" name="L61" href="#L61">61</a>      register(<strong class="jxr_keyword">int</strong>.<strong class="jxr_keyword">class</strong>, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/IntegerTypeHandler.html">IntegerTypeHandler</a>());
-<a class="jxr_linenumber" name="L62" href="#L62">62</a>      register(JdbcType.INTEGER, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/IntegerTypeHandler.html">IntegerTypeHandler</a>());
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>      register(Short.<strong class="jxr_keyword">class</strong>, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/ShortTypeHandler.html">ShortTypeHandler</a>());
+<a class="jxr_linenumber" name="L61" href="#L61">61</a>      register(<strong class="jxr_keyword">short</strong>.<strong class="jxr_keyword">class</strong>, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/ShortTypeHandler.html">ShortTypeHandler</a>());
+<a class="jxr_linenumber" name="L62" href="#L62">62</a>      register(JdbcType.SMALLINT, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/ShortTypeHandler.html">ShortTypeHandler</a>());
 <a class="jxr_linenumber" name="L63" href="#L63">63</a>  
-<a class="jxr_linenumber" name="L64" href="#L64">64</a>      register(Long.<strong class="jxr_keyword">class</strong>, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/LongTypeHandler.html">LongTypeHandler</a>());
-<a class="jxr_linenumber" name="L65" href="#L65">65</a>      register(<strong class="jxr_keyword">long</strong>.<strong class="jxr_keyword">class</strong>, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/LongTypeHandler.html">LongTypeHandler</a>());
-<a class="jxr_linenumber" name="L66" href="#L66">66</a>  
-<a class="jxr_linenumber" name="L67" href="#L67">67</a>      register(Float.<strong class="jxr_keyword">class</strong>, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/FloatTypeHandler.html">FloatTypeHandler</a>());
-<a class="jxr_linenumber" name="L68" href="#L68">68</a>      register(<strong class="jxr_keyword">float</strong>.<strong class="jxr_keyword">class</strong>, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/FloatTypeHandler.html">FloatTypeHandler</a>());
-<a class="jxr_linenumber" name="L69" href="#L69">69</a>      register(JdbcType.FLOAT, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/FloatTypeHandler.html">FloatTypeHandler</a>());
+<a class="jxr_linenumber" name="L64" href="#L64">64</a>      register(Integer.<strong class="jxr_keyword">class</strong>, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/IntegerTypeHandler.html">IntegerTypeHandler</a>());
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>      register(<strong class="jxr_keyword">int</strong>.<strong class="jxr_keyword">class</strong>, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/IntegerTypeHandler.html">IntegerTypeHandler</a>());
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>      register(JdbcType.INTEGER, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/IntegerTypeHandler.html">IntegerTypeHandler</a>());
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>  
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>      register(Long.<strong class="jxr_keyword">class</strong>, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/LongTypeHandler.html">LongTypeHandler</a>());
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>      register(<strong class="jxr_keyword">long</strong>.<strong class="jxr_keyword">class</strong>, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/LongTypeHandler.html">LongTypeHandler</a>());
 <a class="jxr_linenumber" name="L70" href="#L70">70</a>  
-<a class="jxr_linenumber" name="L71" href="#L71">71</a>      register(Double.<strong class="jxr_keyword">class</strong>, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/DoubleTypeHandler.html">DoubleTypeHandler</a>());
-<a class="jxr_linenumber" name="L72" href="#L72">72</a>      register(<strong class="jxr_keyword">double</strong>.<strong class="jxr_keyword">class</strong>, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/DoubleTypeHandler.html">DoubleTypeHandler</a>());
-<a class="jxr_linenumber" name="L73" href="#L73">73</a>      register(JdbcType.DOUBLE, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/DoubleTypeHandler.html">DoubleTypeHandler</a>());
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>      register(Float.<strong class="jxr_keyword">class</strong>, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/FloatTypeHandler.html">FloatTypeHandler</a>());
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>      register(<strong class="jxr_keyword">float</strong>.<strong class="jxr_keyword">class</strong>, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/FloatTypeHandler.html">FloatTypeHandler</a>());
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>      register(JdbcType.FLOAT, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/FloatTypeHandler.html">FloatTypeHandler</a>());
 <a class="jxr_linenumber" name="L74" href="#L74">74</a>  
-<a class="jxr_linenumber" name="L75" href="#L75">75</a>      register(Reader.<strong class="jxr_keyword">class</strong>, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/ClobReaderTypeHandler.html">ClobReaderTypeHandler</a>());
-<a class="jxr_linenumber" name="L76" href="#L76">76</a>      register(String.<strong class="jxr_keyword">class</strong>, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/StringTypeHandler.html">StringTypeHandler</a>());
-<a class="jxr_linenumber" name="L77" href="#L77">77</a>      register(String.<strong class="jxr_keyword">class</strong>, JdbcType.CHAR, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/StringTypeHandler.html">StringTypeHandler</a>());
-<a class="jxr_linenumber" name="L78" href="#L78">78</a>      register(String.<strong class="jxr_keyword">class</strong>, JdbcType.CLOB, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/ClobTypeHandler.html">ClobTypeHandler</a>());
-<a class="jxr_linenumber" name="L79" href="#L79">79</a>      register(String.<strong class="jxr_keyword">class</strong>, JdbcType.VARCHAR, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/StringTypeHandler.html">StringTypeHandler</a>());
-<a class="jxr_linenumber" name="L80" href="#L80">80</a>      register(String.<strong class="jxr_keyword">class</strong>, JdbcType.LONGVARCHAR, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/ClobTypeHandler.html">ClobTypeHandler</a>());
-<a class="jxr_linenumber" name="L81" href="#L81">81</a>      register(String.<strong class="jxr_keyword">class</strong>, JdbcType.NVARCHAR, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/NStringTypeHandler.html">NStringTypeHandler</a>());
-<a class="jxr_linenumber" name="L82" href="#L82">82</a>      register(String.<strong class="jxr_keyword">class</strong>, JdbcType.NCHAR, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/NStringTypeHandler.html">NStringTypeHandler</a>());
-<a class="jxr_linenumber" name="L83" href="#L83">83</a>      register(String.<strong class="jxr_keyword">class</strong>, JdbcType.NCLOB, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/NClobTypeHandler.html">NClobTypeHandler</a>());
-<a class="jxr_linenumber" name="L84" href="#L84">84</a>      register(JdbcType.CHAR, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/StringTypeHandler.html">StringTypeHandler</a>());
-<a class="jxr_linenumber" name="L85" href="#L85">85</a>      register(JdbcType.VARCHAR, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/StringTypeHandler.html">StringTypeHandler</a>());
-<a class="jxr_linenumber" name="L86" href="#L86">86</a>      register(JdbcType.CLOB, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/ClobTypeHandler.html">ClobTypeHandler</a>());
-<a class="jxr_linenumber" name="L87" href="#L87">87</a>      register(JdbcType.LONGVARCHAR, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/ClobTypeHandler.html">ClobTypeHandler</a>());
-<a class="jxr_linenumber" name="L88" href="#L88">88</a>      register(JdbcType.NVARCHAR, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/NStringTypeHandler.html">NStringTypeHandler</a>());
-<a class="jxr_linenumber" name="L89" href="#L89">89</a>      register(JdbcType.NCHAR, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/NStringTypeHandler.html">NStringTypeHandler</a>());
-<a class="jxr_linenumber" name="L90" href="#L90">90</a>      register(JdbcType.NCLOB, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/NClobTypeHandler.html">NClobTypeHandler</a>());
-<a class="jxr_linenumber" name="L91" href="#L91">91</a>  
-<a class="jxr_linenumber" name="L92" href="#L92">92</a>      register(Object.<strong class="jxr_keyword">class</strong>, JdbcType.ARRAY, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/ArrayTypeHandler.html">ArrayTypeHandler</a>());
-<a class="jxr_linenumber" name="L93" href="#L93">93</a>      register(JdbcType.ARRAY, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/ArrayTypeHandler.html">ArrayTypeHandler</a>());
-<a class="jxr_linenumber" name="L94" href="#L94">94</a>  
-<a class="jxr_linenumber" name="L95" href="#L95">95</a>      register(BigInteger.<strong class="jxr_keyword">class</strong>, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/BigIntegerTypeHandler.html">BigIntegerTypeHandler</a>());
-<a class="jxr_linenumber" name="L96" href="#L96">96</a>      register(JdbcType.BIGINT, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/LongTypeHandler.html">LongTypeHandler</a>());
-<a class="jxr_linenumber" name="L97" href="#L97">97</a>  
-<a class="jxr_linenumber" name="L98" href="#L98">98</a>      register(BigDecimal.<strong class="jxr_keyword">class</strong>, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/BigDecimalTypeHandler.html">BigDecimalTypeHandler</a>());
-<a class="jxr_linenumber" name="L99" href="#L99">99</a>      register(JdbcType.REAL, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/BigDecimalTypeHandler.html">BigDecimalTypeHandler</a>());
-<a class="jxr_linenumber" name="L100" href="#L100">100</a>     register(JdbcType.DECIMAL, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/BigDecimalTypeHandler.html">BigDecimalTypeHandler</a>());
-<a class="jxr_linenumber" name="L101" href="#L101">101</a>     register(JdbcType.NUMERIC, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/BigDecimalTypeHandler.html">BigDecimalTypeHandler</a>());
-<a class="jxr_linenumber" name="L102" href="#L102">102</a> 
-<a class="jxr_linenumber" name="L103" href="#L103">103</a>     register(InputStream.<strong class="jxr_keyword">class</strong>, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/BlobInputStreamTypeHandler.html">BlobInputStreamTypeHandler</a>());
-<a class="jxr_linenumber" name="L104" href="#L104">104</a>     register(Byte[].<strong class="jxr_keyword">class</strong>, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/ByteObjectArrayTypeHandler.html">ByteObjectArrayTypeHandler</a>());
-<a class="jxr_linenumber" name="L105" href="#L105">105</a>     register(Byte[].<strong class="jxr_keyword">class</strong>, JdbcType.BLOB, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/BlobByteObjectArrayTypeHandler.html">BlobByteObjectArrayTypeHandler</a>());
-<a class="jxr_linenumber" name="L106" href="#L106">106</a>     register(Byte[].<strong class="jxr_keyword">class</strong>, JdbcType.LONGVARBINARY, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/BlobByteObjectArrayTypeHandler.html">BlobByteObjectArrayTypeHandler</a>());
-<a class="jxr_linenumber" name="L107" href="#L107">107</a>     register(byte[].<strong class="jxr_keyword">class</strong>, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/ByteArrayTypeHandler.html">ByteArrayTypeHandler</a>());
-<a class="jxr_linenumber" name="L108" href="#L108">108</a>     register(byte[].<strong class="jxr_keyword">class</strong>, JdbcType.BLOB, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/BlobTypeHandler.html">BlobTypeHandler</a>());
-<a class="jxr_linenumber" name="L109" href="#L109">109</a>     register(byte[].<strong class="jxr_keyword">class</strong>, JdbcType.LONGVARBINARY, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/BlobTypeHandler.html">BlobTypeHandler</a>());
-<a class="jxr_linenumber" name="L110" href="#L110">110</a>     register(JdbcType.LONGVARBINARY, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/BlobTypeHandler.html">BlobTypeHandler</a>());
-<a class="jxr_linenumber" name="L111" href="#L111">111</a>     register(JdbcType.BLOB, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/BlobTypeHandler.html">BlobTypeHandler</a>());
-<a class="jxr_linenumber" name="L112" href="#L112">112</a> 
-<a class="jxr_linenumber" name="L113" href="#L113">113</a>     register(Object.<strong class="jxr_keyword">class</strong>, UNKNOWN_TYPE_HANDLER);
-<a class="jxr_linenumber" name="L114" href="#L114">114</a>     register(Object.<strong class="jxr_keyword">class</strong>, JdbcType.OTHER, UNKNOWN_TYPE_HANDLER);
-<a class="jxr_linenumber" name="L115" href="#L115">115</a>     register(JdbcType.OTHER, UNKNOWN_TYPE_HANDLER);
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>      register(Double.<strong class="jxr_keyword">class</strong>, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/DoubleTypeHandler.html">DoubleTypeHandler</a>());
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>      register(<strong class="jxr_keyword">double</strong>.<strong class="jxr_keyword">class</strong>, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/DoubleTypeHandler.html">DoubleTypeHandler</a>());
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>      register(JdbcType.DOUBLE, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/DoubleTypeHandler.html">DoubleTypeHandler</a>());
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>  
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>      register(Reader.<strong class="jxr_keyword">class</strong>, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/ClobReaderTypeHandler.html">ClobReaderTypeHandler</a>());
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>      register(String.<strong class="jxr_keyword">class</strong>, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/StringTypeHandler.html">StringTypeHandler</a>());
+<a class="jxr_linenumber" name="L81" href="#L81">81</a>      register(String.<strong class="jxr_keyword">class</strong>, JdbcType.CHAR, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/StringTypeHandler.html">StringTypeHandler</a>());
+<a class="jxr_linenumber" name="L82" href="#L82">82</a>      register(String.<strong class="jxr_keyword">class</strong>, JdbcType.CLOB, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/ClobTypeHandler.html">ClobTypeHandler</a>());
+<a class="jxr_linenumber" name="L83" href="#L83">83</a>      register(String.<strong class="jxr_keyword">class</strong>, JdbcType.VARCHAR, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/StringTypeHandler.html">StringTypeHandler</a>());
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>      register(String.<strong class="jxr_keyword">class</strong>, JdbcType.LONGVARCHAR, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/ClobTypeHandler.html">ClobTypeHandler</a>());
+<a class="jxr_linenumber" name="L85" href="#L85">85</a>      register(String.<strong class="jxr_keyword">class</strong>, JdbcType.NVARCHAR, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/NStringTypeHandler.html">NStringTypeHandler</a>());
+<a class="jxr_linenumber" name="L86" href="#L86">86</a>      register(String.<strong class="jxr_keyword">class</strong>, JdbcType.NCHAR, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/NStringTypeHandler.html">NStringTypeHandler</a>());
+<a class="jxr_linenumber" name="L87" href="#L87">87</a>      register(String.<strong class="jxr_keyword">class</strong>, JdbcType.NCLOB, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/NClobTypeHandler.html">NClobTypeHandler</a>());
+<a class="jxr_linenumber" name="L88" href="#L88">88</a>      register(JdbcType.CHAR, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/StringTypeHandler.html">StringTypeHandler</a>());
+<a class="jxr_linenumber" name="L89" href="#L89">89</a>      register(JdbcType.VARCHAR, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/StringTypeHandler.html">StringTypeHandler</a>());
+<a class="jxr_linenumber" name="L90" href="#L90">90</a>      register(JdbcType.CLOB, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/ClobTypeHandler.html">ClobTypeHandler</a>());
+<a class="jxr_linenumber" name="L91" href="#L91">91</a>      register(JdbcType.LONGVARCHAR, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/ClobTypeHandler.html">ClobTypeHandler</a>());
+<a class="jxr_linenumber" name="L92" href="#L92">92</a>      register(JdbcType.NVARCHAR, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/NStringTypeHandler.html">NStringTypeHandler</a>());
+<a class="jxr_linenumber" name="L93" href="#L93">93</a>      register(JdbcType.NCHAR, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/NStringTypeHandler.html">NStringTypeHandler</a>());
+<a class="jxr_linenumber" name="L94" href="#L94">94</a>      register(JdbcType.NCLOB, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/NClobTypeHandler.html">NClobTypeHandler</a>());
+<a class="jxr_linenumber" name="L95" href="#L95">95</a>  
+<a class="jxr_linenumber" name="L96" href="#L96">96</a>      register(Object.<strong class="jxr_keyword">class</strong>, JdbcType.ARRAY, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/ArrayTypeHandler.html">ArrayTypeHandler</a>());
+<a class="jxr_linenumber" name="L97" href="#L97">97</a>      register(JdbcType.ARRAY, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/ArrayTypeHandler.html">ArrayTypeHandler</a>());
+<a class="jxr_linenumber" name="L98" href="#L98">98</a>  
+<a class="jxr_linenumber" name="L99" href="#L99">99</a>      register(BigInteger.<strong class="jxr_keyword">class</strong>, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/BigIntegerTypeHandler.html">BigIntegerTypeHandler</a>());
+<a class="jxr_linenumber" name="L100" href="#L100">100</a>     register(JdbcType.BIGINT, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/LongTypeHandler.html">LongTypeHandler</a>());
+<a class="jxr_linenumber" name="L101" href="#L101">101</a> 
+<a class="jxr_linenumber" name="L102" href="#L102">102</a>     register(BigDecimal.<strong class="jxr_keyword">class</strong>, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/BigDecimalTypeHandler.html">BigDecimalTypeHandler</a>());
+<a class="jxr_linenumber" name="L103" href="#L103">103</a>     register(JdbcType.REAL, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/BigDecimalTypeHandler.html">BigDecimalTypeHandler</a>());
+<a class="jxr_linenumber" name="L104" href="#L104">104</a>     register(JdbcType.DECIMAL, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/BigDecimalTypeHandler.html">BigDecimalTypeHandler</a>());
+<a class="jxr_linenumber" name="L105" href="#L105">105</a>     register(JdbcType.NUMERIC, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/BigDecimalTypeHandler.html">BigDecimalTypeHandler</a>());
+<a class="jxr_linenumber" name="L106" href="#L106">106</a> 
+<a class="jxr_linenumber" name="L107" href="#L107">107</a>     register(InputStream.<strong class="jxr_keyword">class</strong>, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/BlobInputStreamTypeHandler.html">BlobInputStreamTypeHandler</a>());
+<a class="jxr_linenumber" name="L108" href="#L108">108</a>     register(Byte[].<strong class="jxr_keyword">class</strong>, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/ByteObjectArrayTypeHandler.html">ByteObjectArrayTypeHandler</a>());
+<a class="jxr_linenumber" name="L109" href="#L109">109</a>     register(Byte[].<strong class="jxr_keyword">class</strong>, JdbcType.BLOB, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/BlobByteObjectArrayTypeHandler.html">BlobByteObjectArrayTypeHandler</a>());
+<a class="jxr_linenumber" name="L110" href="#L110">110</a>     register(Byte[].<strong class="jxr_keyword">class</strong>, JdbcType.LONGVARBINARY, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/BlobByteObjectArrayTypeHandler.html">BlobByteObjectArrayTypeHandler</a>());
+<a class="jxr_linenumber" name="L111" href="#L111">111</a>     register(byte[].<strong class="jxr_keyword">class</strong>, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/ByteArrayTypeHandler.html">ByteArrayTypeHandler</a>());
+<a class="jxr_linenumber" name="L112" href="#L112">112</a>     register(byte[].<strong class="jxr_keyword">class</strong>, JdbcType.BLOB, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/BlobTypeHandler.html">BlobTypeHandler</a>());
+<a class="jxr_linenumber" name="L113" href="#L113">113</a>     register(byte[].<strong class="jxr_keyword">class</strong>, JdbcType.LONGVARBINARY, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/BlobTypeHandler.html">BlobTypeHandler</a>());
+<a class="jxr_linenumber" name="L114" href="#L114">114</a>     register(JdbcType.LONGVARBINARY, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/BlobTypeHandler.html">BlobTypeHandler</a>());
+<a class="jxr_linenumber" name="L115" href="#L115">115</a>     register(JdbcType.BLOB, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/BlobTypeHandler.html">BlobTypeHandler</a>());
 <a class="jxr_linenumber" name="L116" href="#L116">116</a> 
-<a class="jxr_linenumber" name="L117" href="#L117">117</a>     register(Date.<strong class="jxr_keyword">class</strong>, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/DateTypeHandler.html">DateTypeHandler</a>());
-<a class="jxr_linenumber" name="L118" href="#L118">118</a>     register(Date.<strong class="jxr_keyword">class</strong>, JdbcType.DATE, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/DateOnlyTypeHandler.html">DateOnlyTypeHandler</a>());
-<a class="jxr_linenumber" name="L119" href="#L119">119</a>     register(Date.<strong class="jxr_keyword">class</strong>, JdbcType.TIME, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/TimeOnlyTypeHandler.html">TimeOnlyTypeHandler</a>());
-<a class="jxr_linenumber" name="L120" href="#L120">120</a>     register(JdbcType.TIMESTAMP, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/DateTypeHandler.html">DateTypeHandler</a>());
-<a class="jxr_linenumber" name="L121" href="#L121">121</a>     register(JdbcType.DATE, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/DateOnlyTypeHandler.html">DateOnlyTypeHandler</a>());
-<a class="jxr_linenumber" name="L122" href="#L122">122</a>     register(JdbcType.TIME, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/TimeOnlyTypeHandler.html">TimeOnlyTypeHandler</a>());
-<a class="jxr_linenumber" name="L123" href="#L123">123</a> 
-<a class="jxr_linenumber" name="L124" href="#L124">124</a>     register(java.sql.Date.<strong class="jxr_keyword">class</strong>, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/SqlDateTypeHandler.html">SqlDateTypeHandler</a>());
-<a class="jxr_linenumber" name="L125" href="#L125">125</a>     register(java.sql.Time.<strong class="jxr_keyword">class</strong>, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/SqlTimeTypeHandler.html">SqlTimeTypeHandler</a>());
-<a class="jxr_linenumber" name="L126" href="#L126">126</a>     register(java.sql.Timestamp.<strong class="jxr_keyword">class</strong>, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/SqlTimestampTypeHandler.html">SqlTimestampTypeHandler</a>());
+<a class="jxr_linenumber" name="L117" href="#L117">117</a>     register(Object.<strong class="jxr_keyword">class</strong>, UNKNOWN_TYPE_HANDLER);
+<a class="jxr_linenumber" name="L118" href="#L118">118</a>     register(Object.<strong class="jxr_keyword">class</strong>, JdbcType.OTHER, UNKNOWN_TYPE_HANDLER);
+<a class="jxr_linenumber" name="L119" href="#L119">119</a>     register(JdbcType.OTHER, UNKNOWN_TYPE_HANDLER);
+<a class="jxr_linenumber" name="L120" href="#L120">120</a> 
+<a class="jxr_linenumber" name="L121" href="#L121">121</a>     register(Date.<strong class="jxr_keyword">class</strong>, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/DateTypeHandler.html">DateTypeHandler</a>());
+<a class="jxr_linenumber" name="L122" href="#L122">122</a>     register(Date.<strong class="jxr_keyword">class</strong>, JdbcType.DATE, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/DateOnlyTypeHandler.html">DateOnlyTypeHandler</a>());
+<a class="jxr_linenumber" name="L123" href="#L123">123</a>     register(Date.<strong class="jxr_keyword">class</strong>, JdbcType.TIME, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/TimeOnlyTypeHandler.html">TimeOnlyTypeHandler</a>());
+<a class="jxr_linenumber" name="L124" href="#L124">124</a>     register(JdbcType.TIMESTAMP, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/DateTypeHandler.html">DateTypeHandler</a>());
+<a class="jxr_linenumber" name="L125" href="#L125">125</a>     register(JdbcType.DATE, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/DateOnlyTypeHandler.html">DateOnlyTypeHandler</a>());
+<a class="jxr_linenumber" name="L126" href="#L126">126</a>     register(JdbcType.TIME, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/TimeOnlyTypeHandler.html">TimeOnlyTypeHandler</a>());
 <a class="jxr_linenumber" name="L127" href="#L127">127</a> 
-<a class="jxr_linenumber" name="L128" href="#L128">128</a>     <em class="jxr_comment">// mybatis-typehandlers-jsr310</em>
-<a class="jxr_linenumber" name="L129" href="#L129">129</a>     <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L130" href="#L130">130</a>       <em class="jxr_comment">// since 1.0.0</em>
-<a class="jxr_linenumber" name="L131" href="#L131">131</a>       register(<span class="jxr_string">"java.time.Instant"</span>, <span class="jxr_string">"org.apache.ibatis.type.InstantTypeHandler"</span>);
-<a class="jxr_linenumber" name="L132" href="#L132">132</a>       register(<span class="jxr_string">"java.time.LocalDateTime"</span>, <span class="jxr_string">"org.apache.ibatis.type.LocalDateTimeTypeHandler"</span>);
-<a class="jxr_linenumber" name="L133" href="#L133">133</a>       register(<span class="jxr_string">"java.time.LocalDate"</span>, <span class="jxr_string">"org.apache.ibatis.type.LocalDateTypeHandler"</span>);
-<a class="jxr_linenumber" name="L134" href="#L134">134</a>       register(<span class="jxr_string">"java.time.LocalTime"</span>, <span class="jxr_string">"org.apache.ibatis.type.LocalTimeTypeHandler"</span>);
-<a class="jxr_linenumber" name="L135" href="#L135">135</a>       register(<span class="jxr_string">"java.time.OffsetDateTime"</span>, <span class="jxr_string">"org.apache.ibatis.type.OffsetDateTimeTypeHandler"</span>);
-<a class="jxr_linenumber" name="L136" href="#L136">136</a>       register(<span class="jxr_string">"java.time.OffsetTime"</span>, <span class="jxr_string">"org.apache.ibatis.type.OffsetTimeTypeHandler"</span>);
-<a class="jxr_linenumber" name="L137" href="#L137">137</a>       register(<span class="jxr_string">"java.time.ZonedDateTime"</span>, <span class="jxr_string">"org.apache.ibatis.type.ZonedDateTimeTypeHandler"</span>);
-<a class="jxr_linenumber" name="L138" href="#L138">138</a>       <em class="jxr_comment">// since 1.0.1</em>
-<a class="jxr_linenumber" name="L139" href="#L139">139</a>       register(<span class="jxr_string">"java.time.Month"</span>, <span class="jxr_string">"org.apache.ibatis.type.MonthTypeHandler"</span>);
-<a class="jxr_linenumber" name="L140" href="#L140">140</a>       register(<span class="jxr_string">"java.time.Year"</span>, <span class="jxr_string">"org.apache.ibatis.type.YearTypeHandler"</span>);
-<a class="jxr_linenumber" name="L141" href="#L141">141</a> 
-<a class="jxr_linenumber" name="L142" href="#L142">142</a>     } <strong class="jxr_keyword">catch</strong> (ClassNotFoundException e) {
-<a class="jxr_linenumber" name="L143" href="#L143">143</a>       <em class="jxr_comment">// no JSR-310 handlers</em>
-<a class="jxr_linenumber" name="L144" href="#L144">144</a>     }
-<a class="jxr_linenumber" name="L145" href="#L145">145</a> 
-<a class="jxr_linenumber" name="L146" href="#L146">146</a>     <em class="jxr_comment">// issue #273</em>
-<a class="jxr_linenumber" name="L147" href="#L147">147</a>     register(Character.<strong class="jxr_keyword">class</strong>, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/CharacterTypeHandler.html">CharacterTypeHandler</a>());
-<a class="jxr_linenumber" name="L148" href="#L148">148</a>     register(<strong class="jxr_keyword">char</strong>.<strong class="jxr_keyword">class</strong>, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/CharacterTypeHandler.html">CharacterTypeHandler</a>());
-<a class="jxr_linenumber" name="L149" href="#L149">149</a>   }
-<a class="jxr_linenumber" name="L150" href="#L150">150</a> 
-<a class="jxr_linenumber" name="L151" href="#L151">151</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> hasTypeHandler(Class&lt;?&gt; javaType) {
-<a class="jxr_linenumber" name="L152" href="#L152">152</a>     <strong class="jxr_keyword">return</strong> hasTypeHandler(javaType, <strong class="jxr_keyword">null</strong>);
-<a class="jxr_linenumber" name="L153" href="#L153">153</a>   }
-<a class="jxr_linenumber" name="L154" href="#L154">154</a> 
-<a class="jxr_linenumber" name="L155" href="#L155">155</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> hasTypeHandler(TypeReference&lt;?&gt; javaTypeReference) {
-<a class="jxr_linenumber" name="L156" href="#L156">156</a>     <strong class="jxr_keyword">return</strong> hasTypeHandler(javaTypeReference, <strong class="jxr_keyword">null</strong>);
-<a class="jxr_linenumber" name="L157" href="#L157">157</a>   }
-<a class="jxr_linenumber" name="L158" href="#L158">158</a> 
-<a class="jxr_linenumber" name="L159" href="#L159">159</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> hasTypeHandler(Class&lt;?&gt; javaType, <a href="../../../../org/apache/ibatis/type/JdbcType.html">JdbcType</a> jdbcType) {
-<a class="jxr_linenumber" name="L160" href="#L160">160</a>     <strong class="jxr_keyword">return</strong> javaType != <strong class="jxr_keyword">null</strong> &amp;&amp; getTypeHandler((Type) javaType, jdbcType) != <strong class="jxr_keyword">null</strong>;
-<a class="jxr_linenumber" name="L161" href="#L161">161</a>   }
-<a class="jxr_linenumber" name="L162" href="#L162">162</a> 
-<a class="jxr_linenumber" name="L163" href="#L163">163</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> hasTypeHandler(TypeReference&lt;?&gt; javaTypeReference, <a href="../../../../org/apache/ibatis/type/JdbcType.html">JdbcType</a> jdbcType) {
-<a class="jxr_linenumber" name="L164" href="#L164">164</a>     <strong class="jxr_keyword">return</strong> javaTypeReference != <strong class="jxr_keyword">null</strong> &amp;&amp; getTypeHandler(javaTypeReference, jdbcType) != <strong class="jxr_keyword">null</strong>;
-<a class="jxr_linenumber" name="L165" href="#L165">165</a>   }
-<a class="jxr_linenumber" name="L166" href="#L166">166</a> 
-<a class="jxr_linenumber" name="L167" href="#L167">167</a>   <strong class="jxr_keyword">public</strong> TypeHandler&lt;?&gt; getMappingTypeHandler(Class&lt;? <strong class="jxr_keyword">extends</strong> TypeHandler&lt;?&gt;&gt; handlerType) {
-<a class="jxr_linenumber" name="L168" href="#L168">168</a>     <strong class="jxr_keyword">return</strong> ALL_TYPE_HANDLERS_MAP.get(handlerType);
-<a class="jxr_linenumber" name="L169" href="#L169">169</a>   }
-<a class="jxr_linenumber" name="L170" href="#L170">170</a> 
-<a class="jxr_linenumber" name="L171" href="#L171">171</a>   <strong class="jxr_keyword">public</strong> &lt;T&gt; TypeHandler&lt;T&gt; getTypeHandler(Class&lt;T&gt; type) {
-<a class="jxr_linenumber" name="L172" href="#L172">172</a>     <strong class="jxr_keyword">return</strong> getTypeHandler((Type) type, <strong class="jxr_keyword">null</strong>);
-<a class="jxr_linenumber" name="L173" href="#L173">173</a>   }
-<a class="jxr_linenumber" name="L174" href="#L174">174</a> 
-<a class="jxr_linenumber" name="L175" href="#L175">175</a>   <strong class="jxr_keyword">public</strong> &lt;T&gt; TypeHandler&lt;T&gt; getTypeHandler(TypeReference&lt;T&gt; javaTypeReference) {
-<a class="jxr_linenumber" name="L176" href="#L176">176</a>     <strong class="jxr_keyword">return</strong> getTypeHandler(javaTypeReference, <strong class="jxr_keyword">null</strong>);
-<a class="jxr_linenumber" name="L177" href="#L177">177</a>   }
-<a class="jxr_linenumber" name="L178" href="#L178">178</a> 
-<a class="jxr_linenumber" name="L179" href="#L179">179</a>   <strong class="jxr_keyword">public</strong> TypeHandler&lt;?&gt; getTypeHandler(<a href="../../../../org/apache/ibatis/type/JdbcType.html">JdbcType</a> jdbcType) {
-<a class="jxr_linenumber" name="L180" href="#L180">180</a>     <strong class="jxr_keyword">return</strong> JDBC_TYPE_HANDLER_MAP.get(jdbcType);
-<a class="jxr_linenumber" name="L181" href="#L181">181</a>   }
-<a class="jxr_linenumber" name="L182" href="#L182">182</a> 
-<a class="jxr_linenumber" name="L183" href="#L183">183</a>   <strong class="jxr_keyword">public</strong> &lt;T&gt; TypeHandler&lt;T&gt; getTypeHandler(Class&lt;T&gt; type, <a href="../../../../org/apache/ibatis/type/JdbcType.html">JdbcType</a> jdbcType) {
-<a class="jxr_linenumber" name="L184" href="#L184">184</a>     <strong class="jxr_keyword">return</strong> getTypeHandler((Type) type, jdbcType);
-<a class="jxr_linenumber" name="L185" href="#L185">185</a>   }
-<a class="jxr_linenumber" name="L186" href="#L186">186</a> 
-<a class="jxr_linenumber" name="L187" href="#L187">187</a>   <strong class="jxr_keyword">public</strong> &lt;T&gt; TypeHandler&lt;T&gt; getTypeHandler(TypeReference&lt;T&gt; javaTypeReference, <a href="../../../../org/apache/ibatis/type/JdbcType.html">JdbcType</a> jdbcType) {
-<a class="jxr_linenumber" name="L188" href="#L188">188</a>     <strong class="jxr_keyword">return</strong> getTypeHandler(javaTypeReference.getRawType(), jdbcType);
-<a class="jxr_linenumber" name="L189" href="#L189">189</a>   }
-<a class="jxr_linenumber" name="L190" href="#L190">190</a> 
-<a class="jxr_linenumber" name="L191" href="#L191">191</a>   @SuppressWarnings(<span class="jxr_string">"unchecked"</span>)
-<a class="jxr_linenumber" name="L192" href="#L192">192</a>   <strong class="jxr_keyword">private</strong> &lt;T&gt; TypeHandler&lt;T&gt; getTypeHandler(Type type, <a href="../../../../org/apache/ibatis/type/JdbcType.html">JdbcType</a> jdbcType) {
-<a class="jxr_linenumber" name="L193" href="#L193">193</a>     Map&lt;JdbcType, TypeHandler&lt;?&gt;&gt; jdbcHandlerMap = TYPE_HANDLER_MAP.get(type);
-<a class="jxr_linenumber" name="L194" href="#L194">194</a>     TypeHandler&lt;?&gt; handler = <strong class="jxr_keyword">null</strong>;
-<a class="jxr_linenumber" name="L195" href="#L195">195</a>     <strong class="jxr_keyword">if</strong> (jdbcHandlerMap != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L196" href="#L196">196</a>       handler = jdbcHandlerMap.get(jdbcType);
-<a class="jxr_linenumber" name="L197" href="#L197">197</a>       <strong class="jxr_keyword">if</strong> (handler == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L198" href="#L198">198</a>         handler = jdbcHandlerMap.get(<strong class="jxr_keyword">null</strong>);
-<a class="jxr_linenumber" name="L199" href="#L199">199</a>       }
-<a class="jxr_linenumber" name="L200" href="#L200">200</a>       <strong class="jxr_keyword">if</strong> (handler == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L201" href="#L201">201</a>         <em class="jxr_comment">// #591</em>
-<a class="jxr_linenumber" name="L202" href="#L202">202</a>         handler = pickSoleHandler(jdbcHandlerMap);
-<a class="jxr_linenumber" name="L203" href="#L203">203</a>       }
-<a class="jxr_linenumber" name="L204" href="#L204">204</a>     }
-<a class="jxr_linenumber" name="L205" href="#L205">205</a>     <strong class="jxr_keyword">if</strong> (handler == <strong class="jxr_keyword">null</strong> &amp;&amp; type != <strong class="jxr_keyword">null</strong> &amp;&amp; type instanceof Class &amp;&amp; Enum.<strong class="jxr_keyword">class</strong>.isAssignableFrom((Class&lt;?&gt;) type)) {
-<a class="jxr_linenumber" name="L206" href="#L206">206</a>       handler = <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/EnumTypeHandler.html">EnumTypeHandler</a>((Class&lt;?&gt;) type);
-<a class="jxr_linenumber" name="L207" href="#L207">207</a>     }
-<a class="jxr_linenumber" name="L208" href="#L208">208</a>     <em class="jxr_comment">// type drives generics here</em>
-<a class="jxr_linenumber" name="L209" href="#L209">209</a>     <strong class="jxr_keyword">return</strong> (TypeHandler&lt;T&gt;) handler;
-<a class="jxr_linenumber" name="L210" href="#L210">210</a>   }
-<a class="jxr_linenumber" name="L211" href="#L211">211</a> 
-<a class="jxr_linenumber" name="L212" href="#L212">212</a>   <strong class="jxr_keyword">private</strong> TypeHandler&lt;?&gt; pickSoleHandler(Map&lt;JdbcType, TypeHandler&lt;?&gt;&gt; jdbcHandlerMap) {
-<a class="jxr_linenumber" name="L213" href="#L213">213</a>     TypeHandler&lt;?&gt; soleHandler = <strong class="jxr_keyword">null</strong>;
-<a class="jxr_linenumber" name="L214" href="#L214">214</a>     <strong class="jxr_keyword">for</strong> (TypeHandler&lt;?&gt; handler : jdbcHandlerMap.values()) {
-<a class="jxr_linenumber" name="L215" href="#L215">215</a>       <strong class="jxr_keyword">if</strong> (soleHandler == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L216" href="#L216">216</a>         soleHandler = handler;
-<a class="jxr_linenumber" name="L217" href="#L217">217</a>       } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (!handler.getClass().equals(soleHandler.getClass())) {
-<a class="jxr_linenumber" name="L218" href="#L218">218</a>         <em class="jxr_comment">// More than one type handlers registered.</em>
-<a class="jxr_linenumber" name="L219" href="#L219">219</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">null</strong>;
-<a class="jxr_linenumber" name="L220" href="#L220">220</a>       }
+<a class="jxr_linenumber" name="L128" href="#L128">128</a>     register(java.sql.Date.<strong class="jxr_keyword">class</strong>, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/SqlDateTypeHandler.html">SqlDateTypeHandler</a>());
+<a class="jxr_linenumber" name="L129" href="#L129">129</a>     register(java.sql.Time.<strong class="jxr_keyword">class</strong>, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/SqlTimeTypeHandler.html">SqlTimeTypeHandler</a>());
+<a class="jxr_linenumber" name="L130" href="#L130">130</a>     register(java.sql.Timestamp.<strong class="jxr_keyword">class</strong>, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/SqlTimestampTypeHandler.html">SqlTimestampTypeHandler</a>());
+<a class="jxr_linenumber" name="L131" href="#L131">131</a> 
+<a class="jxr_linenumber" name="L132" href="#L132">132</a>     <em class="jxr_comment">// mybatis-typehandlers-jsr310</em>
+<a class="jxr_linenumber" name="L133" href="#L133">133</a>     <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L134" href="#L134">134</a>       <em class="jxr_comment">// since 1.0.0</em>
+<a class="jxr_linenumber" name="L135" href="#L135">135</a>       register(<span class="jxr_string">"java.time.Instant"</span>, <span class="jxr_string">"org.apache.ibatis.type.InstantTypeHandler"</span>);
+<a class="jxr_linenumber" name="L136" href="#L136">136</a>       register(<span class="jxr_string">"java.time.LocalDateTime"</span>, <span class="jxr_string">"org.apache.ibatis.type.LocalDateTimeTypeHandler"</span>);
+<a class="jxr_linenumber" name="L137" href="#L137">137</a>       register(<span class="jxr_string">"java.time.LocalDate"</span>, <span class="jxr_string">"org.apache.ibatis.type.LocalDateTypeHandler"</span>);
+<a class="jxr_linenumber" name="L138" href="#L138">138</a>       register(<span class="jxr_string">"java.time.LocalTime"</span>, <span class="jxr_string">"org.apache.ibatis.type.LocalTimeTypeHandler"</span>);
+<a class="jxr_linenumber" name="L139" href="#L139">139</a>       register(<span class="jxr_string">"java.time.OffsetDateTime"</span>, <span class="jxr_string">"org.apache.ibatis.type.OffsetDateTimeTypeHandler"</span>);
+<a class="jxr_linenumber" name="L140" href="#L140">140</a>       register(<span class="jxr_string">"java.time.OffsetTime"</span>, <span class="jxr_string">"org.apache.ibatis.type.OffsetTimeTypeHandler"</span>);
+<a class="jxr_linenumber" name="L141" href="#L141">141</a>       register(<span class="jxr_string">"java.time.ZonedDateTime"</span>, <span class="jxr_string">"org.apache.ibatis.type.ZonedDateTimeTypeHandler"</span>);
+<a class="jxr_linenumber" name="L142" href="#L142">142</a>       <em class="jxr_comment">// since 1.0.1</em>
+<a class="jxr_linenumber" name="L143" href="#L143">143</a>       register(<span class="jxr_string">"java.time.Month"</span>, <span class="jxr_string">"org.apache.ibatis.type.MonthTypeHandler"</span>);
+<a class="jxr_linenumber" name="L144" href="#L144">144</a>       register(<span class="jxr_string">"java.time.Year"</span>, <span class="jxr_string">"org.apache.ibatis.type.YearTypeHandler"</span>);
+<a class="jxr_linenumber" name="L145" href="#L145">145</a>       <em class="jxr_comment">// since 1.0.2</em>
+<a class="jxr_linenumber" name="L146" href="#L146">146</a>       register(<span class="jxr_string">"java.time.YearMonth"</span>, <span class="jxr_string">"org.apache.ibatis.type.YearMonthTypeHandler"</span>);
+<a class="jxr_linenumber" name="L147" href="#L147">147</a>       register(<span class="jxr_string">"java.time.chrono.JapaneseDate"</span>, <span class="jxr_string">"org.apache.ibatis.type.JapaneseDateTypeHandler"</span>);
+<a class="jxr_linenumber" name="L148" href="#L148">148</a> 
+<a class="jxr_linenumber" name="L149" href="#L149">149</a>     } <strong class="jxr_keyword">catch</strong> (ClassNotFoundException e) {
+<a class="jxr_linenumber" name="L150" href="#L150">150</a>       <em class="jxr_comment">// no JSR-310 handlers</em>
+<a class="jxr_linenumber" name="L151" href="#L151">151</a>     }
+<a class="jxr_linenumber" name="L152" href="#L152">152</a> 
+<a class="jxr_linenumber" name="L153" href="#L153">153</a>     <em class="jxr_comment">// issue #273</em>
+<a class="jxr_linenumber" name="L154" href="#L154">154</a>     register(Character.<strong class="jxr_keyword">class</strong>, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/CharacterTypeHandler.html">CharacterTypeHandler</a>());
+<a class="jxr_linenumber" name="L155" href="#L155">155</a>     register(<strong class="jxr_keyword">char</strong>.<strong class="jxr_keyword">class</strong>, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/CharacterTypeHandler.html">CharacterTypeHandler</a>());
+<a class="jxr_linenumber" name="L156" href="#L156">156</a>   }
+<a class="jxr_linenumber" name="L157" href="#L157">157</a> 
+<a class="jxr_linenumber" name="L158" href="#L158">158</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> hasTypeHandler(Class&lt;?&gt; javaType) {
+<a class="jxr_linenumber" name="L159" href="#L159">159</a>     <strong class="jxr_keyword">return</strong> hasTypeHandler(javaType, <strong class="jxr_keyword">null</strong>);
+<a class="jxr_linenumber" name="L160" href="#L160">160</a>   }
+<a class="jxr_linenumber" name="L161" href="#L161">161</a> 
+<a class="jxr_linenumber" name="L162" href="#L162">162</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> hasTypeHandler(TypeReference&lt;?&gt; javaTypeReference) {
+<a class="jxr_linenumber" name="L163" href="#L163">163</a>     <strong class="jxr_keyword">return</strong> hasTypeHandler(javaTypeReference, <strong class="jxr_keyword">null</strong>);
+<a class="jxr_linenumber" name="L164" href="#L164">164</a>   }
+<a class="jxr_linenumber" name="L165" href="#L165">165</a> 
+<a class="jxr_linenumber" name="L166" href="#L166">166</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> hasTypeHandler(Class&lt;?&gt; javaType, <a href="../../../../org/apache/ibatis/type/JdbcType.html">JdbcType</a> jdbcType) {
+<a class="jxr_linenumber" name="L167" href="#L167">167</a>     <strong class="jxr_keyword">return</strong> javaType != <strong class="jxr_keyword">null</strong> &amp;&amp; getTypeHandler((Type) javaType, jdbcType) != <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L168" href="#L168">168</a>   }
+<a class="jxr_linenumber" name="L169" href="#L169">169</a> 
+<a class="jxr_linenumber" name="L170" href="#L170">170</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> hasTypeHandler(TypeReference&lt;?&gt; javaTypeReference, <a href="../../../../org/apache/ibatis/type/JdbcType.html">JdbcType</a> jdbcType) {
+<a class="jxr_linenumber" name="L171" href="#L171">171</a>     <strong class="jxr_keyword">return</strong> javaTypeReference != <strong class="jxr_keyword">null</strong> &amp;&amp; getTypeHandler(javaTypeReference, jdbcType) != <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L172" href="#L172">172</a>   }
+<a class="jxr_linenumber" name="L173" href="#L173">173</a> 
+<a class="jxr_linenumber" name="L174" href="#L174">174</a>   <strong class="jxr_keyword">public</strong> TypeHandler&lt;?&gt; getMappingTypeHandler(Class&lt;? <strong class="jxr_keyword">extends</strong> TypeHandler&lt;?&gt;&gt; handlerType) {
+<a class="jxr_linenumber" name="L175" href="#L175">175</a>     <strong class="jxr_keyword">return</strong> ALL_TYPE_HANDLERS_MAP.get(handlerType);
+<a class="jxr_linenumber" name="L176" href="#L176">176</a>   }
+<a class="jxr_linenumber" name="L177" href="#L177">177</a> 
+<a class="jxr_linenumber" name="L178" href="#L178">178</a>   <strong class="jxr_keyword">public</strong> &lt;T&gt; TypeHandler&lt;T&gt; getTypeHandler(Class&lt;T&gt; type) {
+<a class="jxr_linenumber" name="L179" href="#L179">179</a>     <strong class="jxr_keyword">return</strong> getTypeHandler((Type) type, <strong class="jxr_keyword">null</strong>);
+<a class="jxr_linenumber" name="L180" href="#L180">180</a>   }
+<a class="jxr_linenumber" name="L181" href="#L181">181</a> 
+<a class="jxr_linenumber" name="L182" href="#L182">182</a>   <strong class="jxr_keyword">public</strong> &lt;T&gt; TypeHandler&lt;T&gt; getTypeHandler(TypeReference&lt;T&gt; javaTypeReference) {
+<a class="jxr_linenumber" name="L183" href="#L183">183</a>     <strong class="jxr_keyword">return</strong> getTypeHandler(javaTypeReference, <strong class="jxr_keyword">null</strong>);
+<a class="jxr_linenumber" name="L184" href="#L184">184</a>   }
+<a class="jxr_linenumber" name="L185" href="#L185">185</a> 
+<a class="jxr_linenumber" name="L186" href="#L186">186</a>   <strong class="jxr_keyword">public</strong> TypeHandler&lt;?&gt; getTypeHandler(<a href="../../../../org/apache/ibatis/type/JdbcType.html">JdbcType</a> jdbcType) {
+<a class="jxr_linenumber" name="L187" href="#L187">187</a>     <strong class="jxr_keyword">return</strong> JDBC_TYPE_HANDLER_MAP.get(jdbcType);
+<a class="jxr_linenumber" name="L188" href="#L188">188</a>   }
+<a class="jxr_linenumber" name="L189" href="#L189">189</a> 
+<a class="jxr_linenumber" name="L190" href="#L190">190</a>   <strong class="jxr_keyword">public</strong> &lt;T&gt; TypeHandler&lt;T&gt; getTypeHandler(Class&lt;T&gt; type, <a href="../../../../org/apache/ibatis/type/JdbcType.html">JdbcType</a> jdbcType) {
+<a class="jxr_linenumber" name="L191" href="#L191">191</a>     <strong class="jxr_keyword">return</strong> getTypeHandler((Type) type, jdbcType);
+<a class="jxr_linenumber" name="L192" href="#L192">192</a>   }
+<a class="jxr_linenumber" name="L193" href="#L193">193</a> 
+<a class="jxr_linenumber" name="L194" href="#L194">194</a>   <strong class="jxr_keyword">public</strong> &lt;T&gt; TypeHandler&lt;T&gt; getTypeHandler(TypeReference&lt;T&gt; javaTypeReference, <a href="../../../../org/apache/ibatis/type/JdbcType.html">JdbcType</a> jdbcType) {
+<a class="jxr_linenumber" name="L195" href="#L195">195</a>     <strong class="jxr_keyword">return</strong> getTypeHandler(javaTypeReference.getRawType(), jdbcType);
+<a class="jxr_linenumber" name="L196" href="#L196">196</a>   }
+<a class="jxr_linenumber" name="L197" href="#L197">197</a> 
+<a class="jxr_linenumber" name="L198" href="#L198">198</a>   @SuppressWarnings(<span class="jxr_string">"unchecked"</span>)
+<a class="jxr_linenumber" name="L199" href="#L199">199</a>   <strong class="jxr_keyword">private</strong> &lt;T&gt; TypeHandler&lt;T&gt; getTypeHandler(Type type, <a href="../../../../org/apache/ibatis/type/JdbcType.html">JdbcType</a> jdbcType) {
+<a class="jxr_linenumber" name="L200" href="#L200">200</a>     Map&lt;JdbcType, TypeHandler&lt;?&gt;&gt; jdbcHandlerMap = getJdbcHandlerMap(type);
+<a class="jxr_linenumber" name="L201" href="#L201">201</a>     TypeHandler&lt;?&gt; handler = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L202" href="#L202">202</a>     <strong class="jxr_keyword">if</strong> (jdbcHandlerMap != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L203" href="#L203">203</a>       handler = jdbcHandlerMap.get(jdbcType);
+<a class="jxr_linenumber" name="L204" href="#L204">204</a>       <strong class="jxr_keyword">if</strong> (handler == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L205" href="#L205">205</a>         handler = jdbcHandlerMap.get(<strong class="jxr_keyword">null</strong>);
+<a class="jxr_linenumber" name="L206" href="#L206">206</a>       }
+<a class="jxr_linenumber" name="L207" href="#L207">207</a>       <strong class="jxr_keyword">if</strong> (handler == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L208" href="#L208">208</a>         <em class="jxr_comment">// #591</em>
+<a class="jxr_linenumber" name="L209" href="#L209">209</a>         handler = pickSoleHandler(jdbcHandlerMap);
+<a class="jxr_linenumber" name="L210" href="#L210">210</a>       }
+<a class="jxr_linenumber" name="L211" href="#L211">211</a>     }
+<a class="jxr_linenumber" name="L212" href="#L212">212</a>     <em class="jxr_comment">// type drives generics here</em>
+<a class="jxr_linenumber" name="L213" href="#L213">213</a>     <strong class="jxr_keyword">return</strong> (TypeHandler&lt;T&gt;) handler;
+<a class="jxr_linenumber" name="L214" href="#L214">214</a>   }
+<a class="jxr_linenumber" name="L215" href="#L215">215</a> 
+<a class="jxr_linenumber" name="L216" href="#L216">216</a>   @SuppressWarnings({ <span class="jxr_string">"rawtypes"</span>, <span class="jxr_string">"unchecked"</span> })
+<a class="jxr_linenumber" name="L217" href="#L217">217</a>   <strong class="jxr_keyword">private</strong> Map&lt;JdbcType, TypeHandler&lt;?&gt;&gt; getJdbcHandlerMap(Type type) {
+<a class="jxr_linenumber" name="L218" href="#L218">218</a>     Map&lt;JdbcType, TypeHandler&lt;?&gt;&gt; jdbcHandlerMap = TYPE_HANDLER_MAP.get(type);
+<a class="jxr_linenumber" name="L219" href="#L219">219</a>     <strong class="jxr_keyword">if</strong> (NULL_TYPE_HANDLER_MAP.equals(jdbcHandlerMap)) {
+<a class="jxr_linenumber" name="L220" href="#L220">220</a>       <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L221" href="#L221">221</a>     }
-<a class="jxr_linenumber" name="L222" href="#L222">222</a>     <strong class="jxr_keyword">return</strong> soleHandler;
-<a class="jxr_linenumber" name="L223" href="#L223">223</a>   }
-<a class="jxr_linenumber" name="L224" href="#L224">224</a> 
-<a class="jxr_linenumber" name="L225" href="#L225">225</a>   <strong class="jxr_keyword">public</strong> TypeHandler&lt;Object&gt; getUnknownTypeHandler() {
-<a class="jxr_linenumber" name="L226" href="#L226">226</a>     <strong class="jxr_keyword">return</strong> UNKNOWN_TYPE_HANDLER;
-<a class="jxr_linenumber" name="L227" href="#L227">227</a>   }
-<a class="jxr_linenumber" name="L228" href="#L228">228</a> 
-<a class="jxr_linenumber" name="L229" href="#L229">229</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> register(<a href="../../../../org/apache/ibatis/type/JdbcType.html">JdbcType</a> jdbcType, TypeHandler&lt;?&gt; handler) {
-<a class="jxr_linenumber" name="L230" href="#L230">230</a>     JDBC_TYPE_HANDLER_MAP.put(jdbcType, handler);
-<a class="jxr_linenumber" name="L231" href="#L231">231</a>   }
-<a class="jxr_linenumber" name="L232" href="#L232">232</a> 
-<a class="jxr_linenumber" name="L233" href="#L233">233</a>   <em class="jxr_comment">//</em>
-<a class="jxr_linenumber" name="L234" href="#L234">234</a>   <em class="jxr_comment">// REGISTER INSTANCE</em>
-<a class="jxr_linenumber" name="L235" href="#L235">235</a>   <em class="jxr_comment">//</em>
-<a class="jxr_linenumber" name="L236" href="#L236">236</a> 
-<a class="jxr_linenumber" name="L237" href="#L237">237</a>   <em class="jxr_comment">// Only handler</em>
-<a class="jxr_linenumber" name="L238" href="#L238">238</a> 
-<a class="jxr_linenumber" name="L239" href="#L239">239</a>   @SuppressWarnings(<span class="jxr_string">"unchecked"</span>)
-<a class="jxr_linenumber" name="L240" href="#L240">240</a>   <strong class="jxr_keyword">public</strong> &lt;T&gt; <strong class="jxr_keyword">void</strong> register(TypeHandler&lt;T&gt; typeHandler) {
-<a class="jxr_linenumber" name="L241" href="#L241">241</a>     <strong class="jxr_keyword">boolean</strong> mappedTypeFound = false;
-<a class="jxr_linenumber" name="L242" href="#L242">242</a>     <a href="../../../../org/apache/ibatis/type/MappedTypes.html">MappedTypes</a> mappedTypes = typeHandler.getClass().getAnnotation(MappedTypes.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L243" href="#L243">243</a>     <strong class="jxr_keyword">if</strong> (mappedTypes != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L244" href="#L244">244</a>       <strong class="jxr_keyword">for</strong> (Class&lt;?&gt; handledType : mappedTypes.value()) {
-<a class="jxr_linenumber" name="L245" href="#L245">245</a>         register(handledType, typeHandler);
-<a class="jxr_linenumber" name="L246" href="#L246">246</a>         mappedTypeFound = <strong class="jxr_keyword">true</strong>;
-<a class="jxr_linenumber" name="L247" href="#L247">247</a>       }
+<a class="jxr_linenumber" name="L222" href="#L222">222</a>     <strong class="jxr_keyword">if</strong> (jdbcHandlerMap == <strong class="jxr_keyword">null</strong> &amp;&amp; type instanceof Class) {
+<a class="jxr_linenumber" name="L223" href="#L223">223</a>       Class&lt;?&gt; clazz = (Class&lt;?&gt;) type;
+<a class="jxr_linenumber" name="L224" href="#L224">224</a>       jdbcHandlerMap = getJdbcHandlerMapForSuperclass(clazz);
+<a class="jxr_linenumber" name="L225" href="#L225">225</a>       <strong class="jxr_keyword">if</strong> (jdbcHandlerMap != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L226" href="#L226">226</a>         TYPE_HANDLER_MAP.put(type, jdbcHandlerMap);
+<a class="jxr_linenumber" name="L227" href="#L227">227</a>       } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (clazz.isEnum()) {
+<a class="jxr_linenumber" name="L228" href="#L228">228</a>         register(clazz, <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/EnumTypeHandler.html">EnumTypeHandler</a>(clazz));
+<a class="jxr_linenumber" name="L229" href="#L229">229</a>         <strong class="jxr_keyword">return</strong> TYPE_HANDLER_MAP.get(clazz);
+<a class="jxr_linenumber" name="L230" href="#L230">230</a>       }
+<a class="jxr_linenumber" name="L231" href="#L231">231</a>     }
+<a class="jxr_linenumber" name="L232" href="#L232">232</a>     <strong class="jxr_keyword">if</strong> (jdbcHandlerMap == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L233" href="#L233">233</a>       TYPE_HANDLER_MAP.put(type, NULL_TYPE_HANDLER_MAP);
+<a class="jxr_linenumber" name="L234" href="#L234">234</a>     }
+<a class="jxr_linenumber" name="L235" href="#L235">235</a>     <strong class="jxr_keyword">return</strong> jdbcHandlerMap;
+<a class="jxr_linenumber" name="L236" href="#L236">236</a>   }
+<a class="jxr_linenumber" name="L237" href="#L237">237</a> 
+<a class="jxr_linenumber" name="L238" href="#L238">238</a>   <strong class="jxr_keyword">private</strong> Map&lt;JdbcType, TypeHandler&lt;?&gt;&gt; getJdbcHandlerMapForSuperclass(Class&lt;?&gt; clazz) {
+<a class="jxr_linenumber" name="L239" href="#L239">239</a>     Class&lt;?&gt; superclass =  clazz.getSuperclass();
+<a class="jxr_linenumber" name="L240" href="#L240">240</a>     <strong class="jxr_keyword">if</strong> (superclass == <strong class="jxr_keyword">null</strong> || Object.<strong class="jxr_keyword">class</strong>.equals(superclass)) {
+<a class="jxr_linenumber" name="L241" href="#L241">241</a>       <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L242" href="#L242">242</a>     }
+<a class="jxr_linenumber" name="L243" href="#L243">243</a>     Map&lt;JdbcType, TypeHandler&lt;?&gt;&gt; jdbcHandlerMap = TYPE_HANDLER_MAP.get(superclass);
+<a class="jxr_linenumber" name="L244" href="#L244">244</a>     <strong class="jxr_keyword">if</strong> (jdbcHandlerMap != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L245" href="#L245">245</a>       <strong class="jxr_keyword">return</strong> jdbcHandlerMap;
+<a class="jxr_linenumber" name="L246" href="#L246">246</a>     } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L247" href="#L247">247</a>       <strong class="jxr_keyword">return</strong> getJdbcHandlerMapForSuperclass(superclass);
 <a class="jxr_linenumber" name="L248" href="#L248">248</a>     }
-<a class="jxr_linenumber" name="L249" href="#L249">249</a>     <em class="jxr_comment">// @since 3.1.0 - try to auto-discover the mapped type</em>
-<a class="jxr_linenumber" name="L250" href="#L250">250</a>     <strong class="jxr_keyword">if</strong> (!mappedTypeFound &amp;&amp; typeHandler instanceof TypeReference) {
-<a class="jxr_linenumber" name="L251" href="#L251">251</a>       <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L252" href="#L252">252</a>         TypeReference&lt;T&gt; typeReference = (TypeReference&lt;T&gt;) typeHandler;
-<a class="jxr_linenumber" name="L253" href="#L253">253</a>         register(typeReference.getRawType(), typeHandler);
-<a class="jxr_linenumber" name="L254" href="#L254">254</a>         mappedTypeFound = <strong class="jxr_keyword">true</strong>;
-<a class="jxr_linenumber" name="L255" href="#L255">255</a>       } <strong class="jxr_keyword">catch</strong> (Throwable t) {
-<a class="jxr_linenumber" name="L256" href="#L256">256</a>         <em class="jxr_comment">// maybe users define the TypeReference with a different type and are not assignable, so just ignore it</em>
-<a class="jxr_linenumber" name="L257" href="#L257">257</a>       }
-<a class="jxr_linenumber" name="L258" href="#L258">258</a>     }
-<a class="jxr_linenumber" name="L259" href="#L259">259</a>     <strong class="jxr_keyword">if</strong> (!mappedTypeFound) {
-<a class="jxr_linenumber" name="L260" href="#L260">260</a>       register((Class&lt;T&gt;) <strong class="jxr_keyword">null</strong>, typeHandler);
-<a class="jxr_linenumber" name="L261" href="#L261">261</a>     }
+<a class="jxr_linenumber" name="L249" href="#L249">249</a>   }
+<a class="jxr_linenumber" name="L250" href="#L250">250</a> 
+<a class="jxr_linenumber" name="L251" href="#L251">251</a>   <strong class="jxr_keyword">private</strong> TypeHandler&lt;?&gt; pickSoleHandler(Map&lt;JdbcType, TypeHandler&lt;?&gt;&gt; jdbcHandlerMap) {
+<a class="jxr_linenumber" name="L252" href="#L252">252</a>     TypeHandler&lt;?&gt; soleHandler = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L253" href="#L253">253</a>     <strong class="jxr_keyword">for</strong> (TypeHandler&lt;?&gt; handler : jdbcHandlerMap.values()) {
+<a class="jxr_linenumber" name="L254" href="#L254">254</a>       <strong class="jxr_keyword">if</strong> (soleHandler == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L255" href="#L255">255</a>         soleHandler = handler;
+<a class="jxr_linenumber" name="L256" href="#L256">256</a>       } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (!handler.getClass().equals(soleHandler.getClass())) {
+<a class="jxr_linenumber" name="L257" href="#L257">257</a>         <em class="jxr_comment">// More than one type handlers registered.</em>
+<a class="jxr_linenumber" name="L258" href="#L258">258</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L259" href="#L259">259</a>       }
+<a class="jxr_linenumber" name="L260" href="#L260">260</a>     }
+<a class="jxr_linenumber" name="L261" href="#L261">261</a>     <strong class="jxr_keyword">return</strong> soleHandler;
 <a class="jxr_linenumber" name="L262" href="#L262">262</a>   }
 <a class="jxr_linenumber" name="L263" href="#L263">263</a> 
-<a class="jxr_linenumber" name="L264" href="#L264">264</a>   <em class="jxr_comment">// java type + handler</em>
-<a class="jxr_linenumber" name="L265" href="#L265">265</a> 
-<a class="jxr_linenumber" name="L266" href="#L266">266</a>   <strong class="jxr_keyword">public</strong> &lt;T&gt; <strong class="jxr_keyword">void</strong> register(Class&lt;T&gt; javaType, TypeHandler&lt;? <strong class="jxr_keyword">extends</strong> T&gt; typeHandler) {
-<a class="jxr_linenumber" name="L267" href="#L267">267</a>     register((Type) javaType, typeHandler);
-<a class="jxr_linenumber" name="L268" href="#L268">268</a>   }
-<a class="jxr_linenumber" name="L269" href="#L269">269</a> 
-<a class="jxr_linenumber" name="L270" href="#L270">270</a>   <strong class="jxr_keyword">private</strong> &lt;T&gt; <strong class="jxr_keyword">void</strong> register(Type javaType, TypeHandler&lt;? <strong class="jxr_keyword">extends</strong> T&gt; typeHandler) {
-<a class="jxr_linenumber" name="L271" href="#L271">271</a>     <a href="../../../../org/apache/ibatis/type/MappedJdbcTypes.html">MappedJdbcTypes</a> mappedJdbcTypes = typeHandler.getClass().getAnnotation(MappedJdbcTypes.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L272" href="#L272">272</a>     <strong class="jxr_keyword">if</strong> (mappedJdbcTypes != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L273" href="#L273">273</a>       <strong class="jxr_keyword">for</strong> (JdbcType handledJdbcType : mappedJdbcTypes.value()) {
-<a class="jxr_linenumber" name="L274" href="#L274">274</a>         register(javaType, handledJdbcType, typeHandler);
-<a class="jxr_linenumber" name="L275" href="#L275">275</a>       }
-<a class="jxr_linenumber" name="L276" href="#L276">276</a>       <strong class="jxr_keyword">if</strong> (mappedJdbcTypes.includeNullJdbcType()) {
-<a class="jxr_linenumber" name="L277" href="#L277">277</a>         register(javaType, <strong class="jxr_keyword">null</strong>, typeHandler);
-<a class="jxr_linenumber" name="L278" href="#L278">278</a>       }
-<a class="jxr_linenumber" name="L279" href="#L279">279</a>     } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="L280" href="#L280">280</a>       register(javaType, <strong class="jxr_keyword">null</strong>, typeHandler);
-<a class="jxr_linenumber" name="L281" href="#L281">281</a>     }
-<a class="jxr_linenumber" name="L282" href="#L282">282</a>   }
-<a class="jxr_linenumber" name="L283" href="#L283">283</a> 
-<a class="jxr_linenumber" name="L284" href="#L284">284</a>   <strong class="jxr_keyword">public</strong> &lt;T&gt; <strong class="jxr_keyword">void</strong> register(TypeReference&lt;T&gt; javaTypeReference, TypeHandler&lt;? <strong class="jxr_keyword">extends</strong> T&gt; handler) {
-<a class="jxr_linenumber" name="L285" href="#L285">285</a>     register(javaTypeReference.getRawType(), handler);
-<a class="jxr_linenumber" name="L286" href="#L286">286</a>   }
-<a class="jxr_linenumber" name="L287" href="#L287">287</a> 
-<a class="jxr_linenumber" name="L288" href="#L288">288</a>   <em class="jxr_comment">// java type + jdbc type + handler</em>
-<a class="jxr_linenumber" name="L289" href="#L289">289</a> 
-<a class="jxr_linenumber" name="L290" href="#L290">290</a>   <strong class="jxr_keyword">public</strong> &lt;T&gt; <strong class="jxr_keyword">void</strong> register(Class&lt;T&gt; type, <a href="../../../../org/apache/ibatis/type/JdbcType.html">JdbcType</a> jdbcType, TypeHandler&lt;? <strong class="jxr_keyword">extends</strong> T&gt; handler) {
-<a class="jxr_linenumber" name="L291" href="#L291">291</a>     register((Type) type, jdbcType, handler);
-<a class="jxr_linenumber" name="L292" href="#L292">292</a>   }
-<a class="jxr_linenumber" name="L293" href="#L293">293</a> 
-<a class="jxr_linenumber" name="L294" href="#L294">294</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> register(Type javaType, <a href="../../../../org/apache/ibatis/type/JdbcType.html">JdbcType</a> jdbcType, TypeHandler&lt;?&gt; handler) {
-<a class="jxr_linenumber" name="L295" href="#L295">295</a>     <strong class="jxr_keyword">if</strong> (javaType != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L296" href="#L296">296</a>       Map&lt;JdbcType, TypeHandler&lt;?&gt;&gt; map = TYPE_HANDLER_MAP.get(javaType);
-<a class="jxr_linenumber" name="L297" href="#L297">297</a>       <strong class="jxr_keyword">if</strong> (map == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L298" href="#L298">298</a>         map = <strong class="jxr_keyword">new</strong> HashMap&lt;JdbcType, TypeHandler&lt;?&gt;&gt;();
-<a class="jxr_linenumber" name="L299" href="#L299">299</a>         TYPE_HANDLER_MAP.put(javaType, map);
-<a class="jxr_linenumber" name="L300" href="#L300">300</a>       }
-<a class="jxr_linenumber" name="L301" href="#L301">301</a>       map.put(jdbcType, handler);
-<a class="jxr_linenumber" name="L302" href="#L302">302</a>     }
-<a class="jxr_linenumber" name="L303" href="#L303">303</a>     ALL_TYPE_HANDLERS_MAP.put(handler.getClass(), handler);
-<a class="jxr_linenumber" name="L304" href="#L304">304</a>   }
-<a class="jxr_linenumber" name="L305" href="#L305">305</a> 
-<a class="jxr_linenumber" name="L306" href="#L306">306</a>   <em class="jxr_comment">//</em>
-<a class="jxr_linenumber" name="L307" href="#L307">307</a>   <em class="jxr_comment">// REGISTER CLASS</em>
-<a class="jxr_linenumber" name="L308" href="#L308">308</a>   <em class="jxr_comment">//</em>
-<a class="jxr_linenumber" name="L309" href="#L309">309</a> 
-<a class="jxr_linenumber" name="L310" href="#L310">310</a>   <em class="jxr_comment">// Only handler type</em>
-<a class="jxr_linenumber" name="L311" href="#L311">311</a> 
-<a class="jxr_linenumber" name="L312" href="#L312">312</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> register(Class&lt;?&gt; typeHandlerClass) {
-<a class="jxr_linenumber" name="L313" href="#L313">313</a>     <strong class="jxr_keyword">boolean</strong> mappedTypeFound = false;
-<a class="jxr_linenumber" name="L314" href="#L314">314</a>     <a href="../../../../org/apache/ibatis/type/MappedTypes.html">MappedTypes</a> mappedTypes = typeHandlerClass.getAnnotation(MappedTypes.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L315" href="#L315">315</a>     <strong class="jxr_keyword">if</strong> (mappedTypes != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L316" href="#L316">316</a>       <strong class="jxr_keyword">for</strong> (Class&lt;?&gt; javaTypeClass : mappedTypes.value()) {
-<a class="jxr_linenumber" name="L317" href="#L317">317</a>         register(javaTypeClass, typeHandlerClass);
-<a class="jxr_linenumber" name="L318" href="#L318">318</a>         mappedTypeFound = <strong class="jxr_keyword">true</strong>;
-<a class="jxr_linenumber" name="L319" href="#L319">319</a>       }
+<a class="jxr_linenumber" name="L264" href="#L264">264</a>   <strong class="jxr_keyword">public</strong> TypeHandler&lt;Object&gt; getUnknownTypeHandler() {
+<a class="jxr_linenumber" name="L265" href="#L265">265</a>     <strong class="jxr_keyword">return</strong> UNKNOWN_TYPE_HANDLER;
+<a class="jxr_linenumber" name="L266" href="#L266">266</a>   }
+<a class="jxr_linenumber" name="L267" href="#L267">267</a> 
+<a class="jxr_linenumber" name="L268" href="#L268">268</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> register(<a href="../../../../org/apache/ibatis/type/JdbcType.html">JdbcType</a> jdbcType, TypeHandler&lt;?&gt; handler) {
+<a class="jxr_linenumber" name="L269" href="#L269">269</a>     JDBC_TYPE_HANDLER_MAP.put(jdbcType, handler);
+<a class="jxr_linenumber" name="L270" href="#L270">270</a>   }
+<a class="jxr_linenumber" name="L271" href="#L271">271</a> 
+<a class="jxr_linenumber" name="L272" href="#L272">272</a>   <em class="jxr_comment">//</em>
+<a class="jxr_linenumber" name="L273" href="#L273">273</a>   <em class="jxr_comment">// REGISTER INSTANCE</em>
+<a class="jxr_linenumber" name="L274" href="#L274">274</a>   <em class="jxr_comment">//</em>
+<a class="jxr_linenumber" name="L275" href="#L275">275</a> 
+<a class="jxr_linenumber" name="L276" href="#L276">276</a>   <em class="jxr_comment">// Only handler</em>
+<a class="jxr_linenumber" name="L277" href="#L277">277</a> 
+<a class="jxr_linenumber" name="L278" href="#L278">278</a>   @SuppressWarnings(<span class="jxr_string">"unchecked"</span>)
+<a class="jxr_linenumber" name="L279" href="#L279">279</a>   <strong class="jxr_keyword">public</strong> &lt;T&gt; <strong class="jxr_keyword">void</strong> register(TypeHandler&lt;T&gt; typeHandler) {
+<a class="jxr_linenumber" name="L280" href="#L280">280</a>     <strong class="jxr_keyword">boolean</strong> mappedTypeFound = false;
+<a class="jxr_linenumber" name="L281" href="#L281">281</a>     <a href="../../../../org/apache/ibatis/type/MappedTypes.html">MappedTypes</a> mappedTypes = typeHandler.getClass().getAnnotation(MappedTypes.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L282" href="#L282">282</a>     <strong class="jxr_keyword">if</strong> (mappedTypes != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L283" href="#L283">283</a>       <strong class="jxr_keyword">for</strong> (Class&lt;?&gt; handledType : mappedTypes.value()) {
+<a class="jxr_linenumber" name="L284" href="#L284">284</a>         register(handledType, typeHandler);
+<a class="jxr_linenumber" name="L285" href="#L285">285</a>         mappedTypeFound = <strong class="jxr_keyword">true</strong>;
+<a class="jxr_linenumber" name="L286" href="#L286">286</a>       }
+<a class="jxr_linenumber" name="L287" href="#L287">287</a>     }
+<a class="jxr_linenumber" name="L288" href="#L288">288</a>     <em class="jxr_comment">// @since 3.1.0 - try to auto-discover the mapped type</em>
+<a class="jxr_linenumber" name="L289" href="#L289">289</a>     <strong class="jxr_keyword">if</strong> (!mappedTypeFound &amp;&amp; typeHandler instanceof TypeReference) {
+<a class="jxr_linenumber" name="L290" href="#L290">290</a>       <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L291" href="#L291">291</a>         TypeReference&lt;T&gt; typeReference = (TypeReference&lt;T&gt;) typeHandler;
+<a class="jxr_linenumber" name="L292" href="#L292">292</a>         register(typeReference.getRawType(), typeHandler);
+<a class="jxr_linenumber" name="L293" href="#L293">293</a>         mappedTypeFound = <strong class="jxr_keyword">true</strong>;
+<a class="jxr_linenumber" name="L294" href="#L294">294</a>       } <strong class="jxr_keyword">catch</strong> (Throwable t) {
+<a class="jxr_linenumber" name="L295" href="#L295">295</a>         <em class="jxr_comment">// maybe users define the TypeReference with a different type and are not assignable, so just ignore it</em>
+<a class="jxr_linenumber" name="L296" href="#L296">296</a>       }
+<a class="jxr_linenumber" name="L297" href="#L297">297</a>     }
+<a class="jxr_linenumber" name="L298" href="#L298">298</a>     <strong class="jxr_keyword">if</strong> (!mappedTypeFound) {
+<a class="jxr_linenumber" name="L299" href="#L299">299</a>       register((Class&lt;T&gt;) <strong class="jxr_keyword">null</strong>, typeHandler);
+<a class="jxr_linenumber" name="L300" href="#L300">300</a>     }
+<a class="jxr_linenumber" name="L301" href="#L301">301</a>   }
+<a class="jxr_linenumber" name="L302" href="#L302">302</a> 
+<a class="jxr_linenumber" name="L303" href="#L303">303</a>   <em class="jxr_comment">// java type + handler</em>
+<a class="jxr_linenumber" name="L304" href="#L304">304</a> 
+<a class="jxr_linenumber" name="L305" href="#L305">305</a>   <strong class="jxr_keyword">public</strong> &lt;T&gt; <strong class="jxr_keyword">void</strong> register(Class&lt;T&gt; javaType, TypeHandler&lt;? <strong class="jxr_keyword">extends</strong> T&gt; typeHandler) {
+<a class="jxr_linenumber" name="L306" href="#L306">306</a>     register((Type) javaType, typeHandler);
+<a class="jxr_linenumber" name="L307" href="#L307">307</a>   }
+<a class="jxr_linenumber" name="L308" href="#L308">308</a> 
+<a class="jxr_linenumber" name="L309" href="#L309">309</a>   <strong class="jxr_keyword">private</strong> &lt;T&gt; <strong class="jxr_keyword">void</strong> register(Type javaType, TypeHandler&lt;? <strong class="jxr_keyword">extends</strong> T&gt; typeHandler) {
+<a class="jxr_linenumber" name="L310" href="#L310">310</a>     <a href="../../../../org/apache/ibatis/type/MappedJdbcTypes.html">MappedJdbcTypes</a> mappedJdbcTypes = typeHandler.getClass().getAnnotation(MappedJdbcTypes.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L311" href="#L311">311</a>     <strong class="jxr_keyword">if</strong> (mappedJdbcTypes != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L312" href="#L312">312</a>       <strong class="jxr_keyword">for</strong> (JdbcType handledJdbcType : mappedJdbcTypes.value()) {
+<a class="jxr_linenumber" name="L313" href="#L313">313</a>         register(javaType, handledJdbcType, typeHandler);
+<a class="jxr_linenumber" name="L314" href="#L314">314</a>       }
+<a class="jxr_linenumber" name="L315" href="#L315">315</a>       <strong class="jxr_keyword">if</strong> (mappedJdbcTypes.includeNullJdbcType()) {
+<a class="jxr_linenumber" name="L316" href="#L316">316</a>         register(javaType, <strong class="jxr_keyword">null</strong>, typeHandler);
+<a class="jxr_linenumber" name="L317" href="#L317">317</a>       }
+<a class="jxr_linenumber" name="L318" href="#L318">318</a>     } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L319" href="#L319">319</a>       register(javaType, <strong class="jxr_keyword">null</strong>, typeHandler);
 <a class="jxr_linenumber" name="L320" href="#L320">320</a>     }
-<a class="jxr_linenumber" name="L321" href="#L321">321</a>     <strong class="jxr_keyword">if</strong> (!mappedTypeFound) {
-<a class="jxr_linenumber" name="L322" href="#L322">322</a>       register(getInstance(<strong class="jxr_keyword">null</strong>, typeHandlerClass));
-<a class="jxr_linenumber" name="L323" href="#L323">323</a>     }
-<a class="jxr_linenumber" name="L324" href="#L324">324</a>   }
-<a class="jxr_linenumber" name="L325" href="#L325">325</a> 
-<a class="jxr_linenumber" name="L326" href="#L326">326</a>   <em class="jxr_comment">// java type + handler type</em>
-<a class="jxr_linenumber" name="L327" href="#L327">327</a> 
-<a class="jxr_linenumber" name="L328" href="#L328">328</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> register(String javaTypeClassName, String typeHandlerClassName) <strong class="jxr_keyword">throws</strong> ClassNotFoundException {
-<a class="jxr_linenumber" name="L329" href="#L329">329</a>     register(Resources.classForName(javaTypeClassName), Resources.classForName(typeHandlerClassName));
-<a class="jxr_linenumber" name="L330" href="#L330">330</a>   }
-<a class="jxr_linenumber" name="L331" href="#L331">331</a> 
-<a class="jxr_linenumber" name="L332" href="#L332">332</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> register(Class&lt;?&gt; javaTypeClass, Class&lt;?&gt; typeHandlerClass) {
-<a class="jxr_linenumber" name="L333" href="#L333">333</a>     register(javaTypeClass, getInstance(javaTypeClass, typeHandlerClass));
-<a class="jxr_linenumber" name="L334" href="#L334">334</a>   }
-<a class="jxr_linenumber" name="L335" href="#L335">335</a> 
-<a class="jxr_linenumber" name="L336" href="#L336">336</a>   <em class="jxr_comment">// java type + jdbc type + handler type</em>
-<a class="jxr_linenumber" name="L337" href="#L337">337</a> 
-<a class="jxr_linenumber" name="L338" href="#L338">338</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> register(Class&lt;?&gt; javaTypeClass, <a href="../../../../org/apache/ibatis/type/JdbcType.html">JdbcType</a> jdbcType, Class&lt;?&gt; typeHandlerClass) {
-<a class="jxr_linenumber" name="L339" href="#L339">339</a>     register(javaTypeClass, jdbcType, getInstance(javaTypeClass, typeHandlerClass));
-<a class="jxr_linenumber" name="L340" href="#L340">340</a>   }
-<a class="jxr_linenumber" name="L341" href="#L341">341</a> 
-<a class="jxr_linenumber" name="L342" href="#L342">342</a>   <em class="jxr_comment">// Construct a handler (used also from Builders)</em>
-<a class="jxr_linenumber" name="L343" href="#L343">343</a> 
-<a class="jxr_linenumber" name="L344" href="#L344">344</a>   @SuppressWarnings(<span class="jxr_string">"unchecked"</span>)
-<a class="jxr_linenumber" name="L345" href="#L345">345</a>   <strong class="jxr_keyword">public</strong> &lt;T&gt; TypeHandler&lt;T&gt; getInstance(Class&lt;?&gt; javaTypeClass, Class&lt;?&gt; typeHandlerClass) {
-<a class="jxr_linenumber" name="L346" href="#L346">346</a>     <strong class="jxr_keyword">if</strong> (javaTypeClass != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L347" href="#L347">347</a>       <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L348" href="#L348">348</a>         Constructor&lt;?&gt; c = typeHandlerClass.getConstructor(Class.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L349" href="#L349">349</a>         <strong class="jxr_keyword">return</strong> (TypeHandler&lt;T&gt;) c.newInstance(javaTypeClass);
-<a class="jxr_linenumber" name="L350" href="#L350">350</a>       } <strong class="jxr_keyword">catch</strong> (NoSuchMethodException ignored) {
-<a class="jxr_linenumber" name="L351" href="#L351">351</a>         <em class="jxr_comment">// ignored</em>
-<a class="jxr_linenumber" name="L352" href="#L352">352</a>       } <strong class="jxr_keyword">catch</strong> (Exception e) {
-<a class="jxr_linenumber" name="L353" href="#L353">353</a>         <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/TypeException.html">TypeException</a>(<span class="jxr_string">"Failed invoking constructor for handler "</span> + typeHandlerClass, e);
-<a class="jxr_linenumber" name="L354" href="#L354">354</a>       }
-<a class="jxr_linenumber" name="L355" href="#L355">355</a>     }
-<a class="jxr_linenumber" name="L356" href="#L356">356</a>     <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L357" href="#L357">357</a>       Constructor&lt;?&gt; c = typeHandlerClass.getConstructor();
-<a class="jxr_linenumber" name="L358" href="#L358">358</a>       <strong class="jxr_keyword">return</strong> (TypeHandler&lt;T&gt;) c.newInstance();
-<a class="jxr_linenumber" name="L359" href="#L359">359</a>     } <strong class="jxr_keyword">catch</strong> (Exception e) {
-<a class="jxr_linenumber" name="L360" href="#L360">360</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/TypeException.html">TypeException</a>(<span class="jxr_string">"Unable to find a usable constructor for "</span> + typeHandlerClass, e);
-<a class="jxr_linenumber" name="L361" href="#L361">361</a>     }
-<a class="jxr_linenumber" name="L362" href="#L362">362</a>   }
-<a class="jxr_linenumber" name="L363" href="#L363">363</a> 
-<a class="jxr_linenumber" name="L364" href="#L364">364</a>   <em class="jxr_comment">// scan</em>
-<a class="jxr_linenumber" name="L365" href="#L365">365</a> 
-<a class="jxr_linenumber" name="L366" href="#L366">366</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> register(String packageName) {
-<a class="jxr_linenumber" name="L367" href="#L367">367</a>     ResolverUtil&lt;Class&lt;?&gt;&gt; resolverUtil = <strong class="jxr_keyword">new</strong> ResolverUtil&lt;Class&lt;?&gt;&gt;();
-<a class="jxr_linenumber" name="L368" href="#L368">368</a>     resolverUtil.find(<strong class="jxr_keyword">new</strong> ResolverUtil.IsA(TypeHandler.<strong class="jxr_keyword">class</strong>), packageName);
-<a class="jxr_linenumber" name="L369" href="#L369">369</a>     Set&lt;Class&lt;? <strong class="jxr_keyword">extends</strong> Class&lt;?&gt;&gt;&gt; handlerSet = resolverUtil.getClasses();
-<a class="jxr_linenumber" name="L370" href="#L370">370</a>     <strong class="jxr_keyword">for</strong> (Class&lt;?&gt; type : handlerSet) {
-<a class="jxr_linenumber" name="L371" href="#L371">371</a>       <em class="jxr_comment">//Ignore inner classes and interfaces (including package-info.java) and abstract classes</em>
-<a class="jxr_linenumber" name="L372" href="#L372">372</a>       <strong class="jxr_keyword">if</strong> (!type.isAnonymousClass() &amp;&amp; !type.isInterface() &amp;&amp; !Modifier.isAbstract(type.getModifiers())) {
-<a class="jxr_linenumber" name="L373" href="#L373">373</a>         register(type);
-<a class="jxr_linenumber" name="L374" href="#L374">374</a>       }
-<a class="jxr_linenumber" name="L375" href="#L375">375</a>     }
-<a class="jxr_linenumber" name="L376" href="#L376">376</a>   }
-<a class="jxr_linenumber" name="L377" href="#L377">377</a>   
-<a class="jxr_linenumber" name="L378" href="#L378">378</a>   <em class="jxr_comment">// get information</em>
-<a class="jxr_linenumber" name="L379" href="#L379">379</a>   
-<a class="jxr_linenumber" name="L380" href="#L380">380</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L381" href="#L381">381</a> <em class="jxr_javadoccomment">   * @since 3.2.2</em>
-<a class="jxr_linenumber" name="L382" href="#L382">382</a> <em class="jxr_javadoccomment">   */</em>
-<a class="jxr_linenumber" name="L383" href="#L383">383</a>   <strong class="jxr_keyword">public</strong> Collection&lt;TypeHandler&lt;?&gt;&gt; getTypeHandlers() {
-<a class="jxr_linenumber" name="L384" href="#L384">384</a>     <strong class="jxr_keyword">return</strong> Collections.unmodifiableCollection(ALL_TYPE_HANDLERS_MAP.values());
-<a class="jxr_linenumber" name="L385" href="#L385">385</a>   }
-<a class="jxr_linenumber" name="L386" href="#L386">386</a>   
-<a class="jxr_linenumber" name="L387" href="#L387">387</a> }
+<a class="jxr_linenumber" name="L321" href="#L321">321</a>   }
+<a class="jxr_linenumber" name="L322" href="#L322">322</a> 
+<a class="jxr_linenumber" name="L323" href="#L323">323</a>   <strong class="jxr_keyword">public</strong> &lt;T&gt; <strong class="jxr_keyword">void</strong> register(TypeReference&lt;T&gt; javaTypeReference, TypeHandler&lt;? <strong class="jxr_keyword">extends</strong> T&gt; handler) {
+<a class="jxr_linenumber" name="L324" href="#L324">324</a>     register(javaTypeReference.getRawType(), handler);
+<a class="jxr_linenumber" name="L325" href="#L325">325</a>   }
+<a class="jxr_linenumber" name="L326" href="#L326">326</a> 
+<a class="jxr_linenumber" name="L327" href="#L327">327</a>   <em class="jxr_comment">// java type + jdbc type + handler</em>
+<a class="jxr_linenumber" name="L328" href="#L328">328</a> 
+<a class="jxr_linenumber" name="L329" href="#L329">329</a>   <strong class="jxr_keyword">public</strong> &lt;T&gt; <strong class="jxr_keyword">void</strong> register(Class&lt;T&gt; type, <a href="../../../../org/apache/ibatis/type/JdbcType.html">JdbcType</a> jdbcType, TypeHandler&lt;? <strong class="jxr_keyword">extends</strong> T&gt; handler) {
+<a class="jxr_linenumber" name="L330" href="#L330">330</a>     register((Type) type, jdbcType, handler);
+<a class="jxr_linenumber" name="L331" href="#L331">331</a>   }
+<a class="jxr_linenumber" name="L332" href="#L332">332</a> 
+<a class="jxr_linenumber" name="L333" href="#L333">333</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> register(Type javaType, <a href="../../../../org/apache/ibatis/type/JdbcType.html">JdbcType</a> jdbcType, TypeHandler&lt;?&gt; handler) {
+<a class="jxr_linenumber" name="L334" href="#L334">334</a>     <strong class="jxr_keyword">if</strong> (javaType != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L335" href="#L335">335</a>       Map&lt;JdbcType, TypeHandler&lt;?&gt;&gt; map = TYPE_HANDLER_MAP.get(javaType);
+<a class="jxr_linenumber" name="L336" href="#L336">336</a>       <strong class="jxr_keyword">if</strong> (map == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L337" href="#L337">337</a>         map = <strong class="jxr_keyword">new</strong> HashMap&lt;JdbcType, TypeHandler&lt;?&gt;&gt;();
+<a class="jxr_linenumber" name="L338" href="#L338">338</a>         TYPE_HANDLER_MAP.put(javaType, map);
+<a class="jxr_linenumber" name="L339" href="#L339">339</a>       }
+<a class="jxr_linenumber" name="L340" href="#L340">340</a>       map.put(jdbcType, handler);
+<a class="jxr_linenumber" name="L341" href="#L341">341</a>     }
+<a class="jxr_linenumber" name="L342" href="#L342">342</a>     ALL_TYPE_HANDLERS_MAP.put(handler.getClass(), handler);
+<a class="jxr_linenumber" name="L343" href="#L343">343</a>   }
+<a class="jxr_linenumber" name="L344" href="#L344">344</a> 
+<a class="jxr_linenumber" name="L345" href="#L345">345</a>   <em class="jxr_comment">//</em>
+<a class="jxr_linenumber" name="L346" href="#L346">346</a>   <em class="jxr_comment">// REGISTER CLASS</em>
+<a class="jxr_linenumber" name="L347" href="#L347">347</a>   <em class="jxr_comment">//</em>
+<a class="jxr_linenumber" name="L348" href="#L348">348</a> 
+<a class="jxr_linenumber" name="L349" href="#L349">349</a>   <em class="jxr_comment">// Only handler type</em>
+<a class="jxr_linenumber" name="L350" href="#L350">350</a> 
+<a class="jxr_linenumber" name="L351" href="#L351">351</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> register(Class&lt;?&gt; typeHandlerClass) {
+<a class="jxr_linenumber" name="L352" href="#L352">352</a>     <strong class="jxr_keyword">boolean</strong> mappedTypeFound = false;
+<a class="jxr_linenumber" name="L353" href="#L353">353</a>     <a href="../../../../org/apache/ibatis/type/MappedTypes.html">MappedTypes</a> mappedTypes = typeHandlerClass.getAnnotation(MappedTypes.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L354" href="#L354">354</a>     <strong class="jxr_keyword">if</strong> (mappedTypes != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L355" href="#L355">355</a>       <strong class="jxr_keyword">for</strong> (Class&lt;?&gt; javaTypeClass : mappedTypes.value()) {
+<a class="jxr_linenumber" name="L356" href="#L356">356</a>         register(javaTypeClass, typeHandlerClass);
+<a class="jxr_linenumber" name="L357" href="#L357">357</a>         mappedTypeFound = <strong class="jxr_keyword">true</strong>;
+<a class="jxr_linenumber" name="L358" href="#L358">358</a>       }
+<a class="jxr_linenumber" name="L359" href="#L359">359</a>     }
+<a class="jxr_linenumber" name="L360" href="#L360">360</a>     <strong class="jxr_keyword">if</strong> (!mappedTypeFound) {
+<a class="jxr_linenumber" name="L361" href="#L361">361</a>       register(getInstance(<strong class="jxr_keyword">null</strong>, typeHandlerClass));
+<a class="jxr_linenumber" name="L362" href="#L362">362</a>     }
+<a class="jxr_linenumber" name="L363" href="#L363">363</a>   }
+<a class="jxr_linenumber" name="L364" href="#L364">364</a> 
+<a class="jxr_linenumber" name="L365" href="#L365">365</a>   <em class="jxr_comment">// java type + handler type</em>
+<a class="jxr_linenumber" name="L366" href="#L366">366</a> 
+<a class="jxr_linenumber" name="L367" href="#L367">367</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> register(String javaTypeClassName, String typeHandlerClassName) <strong class="jxr_keyword">throws</strong> ClassNotFoundException {
+<a class="jxr_linenumber" name="L368" href="#L368">368</a>     register(Resources.classForName(javaTypeClassName), Resources.classForName(typeHandlerClassName));
+<a class="jxr_linenumber" name="L369" href="#L369">369</a>   }
+<a class="jxr_linenumber" name="L370" href="#L370">370</a> 
+<a class="jxr_linenumber" name="L371" href="#L371">371</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> register(Class&lt;?&gt; javaTypeClass, Class&lt;?&gt; typeHandlerClass) {
+<a class="jxr_linenumber" name="L372" href="#L372">372</a>     register(javaTypeClass, getInstance(javaTypeClass, typeHandlerClass));
+<a class="jxr_linenumber" name="L373" href="#L373">373</a>   }
+<a class="jxr_linenumber" name="L374" href="#L374">374</a> 
+<a class="jxr_linenumber" name="L375" href="#L375">375</a>   <em class="jxr_comment">// java type + jdbc type + handler type</em>
+<a class="jxr_linenumber" name="L376" href="#L376">376</a> 
+<a class="jxr_linenumber" name="L377" href="#L377">377</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> register(Class&lt;?&gt; javaTypeClass, <a href="../../../../org/apache/ibatis/type/JdbcType.html">JdbcType</a> jdbcType, Class&lt;?&gt; typeHandlerClass) {
+<a class="jxr_linenumber" name="L378" href="#L378">378</a>     register(javaTypeClass, jdbcType, getInstance(javaTypeClass, typeHandlerClass));
+<a class="jxr_linenumber" name="L379" href="#L379">379</a>   }
+<a class="jxr_linenumber" name="L380" href="#L380">380</a> 
+<a class="jxr_linenumber" name="L381" href="#L381">381</a>   <em class="jxr_comment">// Construct a handler (used also from Builders)</em>
+<a class="jxr_linenumber" name="L382" href="#L382">382</a> 
+<a class="jxr_linenumber" name="L383" href="#L383">383</a>   @SuppressWarnings(<span class="jxr_string">"unchecked"</span>)
+<a class="jxr_linenumber" name="L384" href="#L384">384</a>   <strong class="jxr_keyword">public</strong> &lt;T&gt; TypeHandler&lt;T&gt; getInstance(Class&lt;?&gt; javaTypeClass, Class&lt;?&gt; typeHandlerClass) {
+<a class="jxr_linenumber" name="L385" href="#L385">385</a>     <strong class="jxr_keyword">if</strong> (javaTypeClass != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L386" href="#L386">386</a>       <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L387" href="#L387">387</a>         Constructor&lt;?&gt; c = typeHandlerClass.getConstructor(Class.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L388" href="#L388">388</a>         <strong class="jxr_keyword">return</strong> (TypeHandler&lt;T&gt;) c.newInstance(javaTypeClass);
+<a class="jxr_linenumber" name="L389" href="#L389">389</a>       } <strong class="jxr_keyword">catch</strong> (NoSuchMethodException ignored) {
+<a class="jxr_linenumber" name="L390" href="#L390">390</a>         <em class="jxr_comment">// ignored</em>
+<a class="jxr_linenumber" name="L391" href="#L391">391</a>       } <strong class="jxr_keyword">catch</strong> (Exception e) {
+<a class="jxr_linenumber" name="L392" href="#L392">392</a>         <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/TypeException.html">TypeException</a>(<span class="jxr_string">"Failed invoking constructor for handler "</span> + typeHandlerClass, e);
+<a class="jxr_linenumber" name="L393" href="#L393">393</a>       }
+<a class="jxr_linenumber" name="L394" href="#L394">394</a>     }
+<a class="jxr_linenumber" name="L395" href="#L395">395</a>     <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L396" href="#L396">396</a>       Constructor&lt;?&gt; c = typeHandlerClass.getConstructor();
+<a class="jxr_linenumber" name="L397" href="#L397">397</a>       <strong class="jxr_keyword">return</strong> (TypeHandler&lt;T&gt;) c.newInstance();
+<a class="jxr_linenumber" name="L398" href="#L398">398</a>     } <strong class="jxr_keyword">catch</strong> (Exception e) {
+<a class="jxr_linenumber" name="L399" href="#L399">399</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/ibatis/type/TypeException.html">TypeException</a>(<span class="jxr_string">"Unable to find a usable constructor for "</span> + typeHandlerClass, e);
+<a class="jxr_linenumber" name="L400" href="#L400">400</a>     }
+<a class="jxr_linenumber" name="L401" href="#L401">401</a>   }
+<a class="jxr_linenumber" name="L402" href="#L402">402</a> 
+<a class="jxr_linenumber" name="L403" href="#L403">403</a>   <em class="jxr_comment">// scan</em>
+<a class="jxr_linenumber" name="L404" href="#L404">404</a> 
+<a class="jxr_linenumber" name="L405" href="#L405">405</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> register(String packageName) {
+<a class="jxr_linenumber" name="L406" href="#L406">406</a>     ResolverUtil&lt;Class&lt;?&gt;&gt; resolverUtil = <strong class="jxr_keyword">new</strong> ResolverUtil&lt;Class&lt;?&gt;&gt;();
+<a class="jxr_linenumber" name="L407" href="#L407">407</a>     resolverUtil.find(<strong class="jxr_keyword">new</strong> ResolverUtil.IsA(TypeHandler.<strong class="jxr_keyword">class</strong>), packageName);
+<a class="jxr_linenumber" name="L408" href="#L408">408</a>     Set&lt;Class&lt;? <strong class="jxr_keyword">extends</strong> Class&lt;?&gt;&gt;&gt; handlerSet = resolverUtil.getClasses();
+<a class="jxr_linenumber" name="L409" href="#L409">409</a>     <strong class="jxr_keyword">for</strong> (Class&lt;?&gt; type : handlerSet) {
+<a class="jxr_linenumber" name="L410" href="#L410">410</a>       <em class="jxr_comment">//Ignore inner classes and interfaces (including package-info.java) and abstract classes</em>
+<a class="jxr_linenumber" name="L411" href="#L411">411</a>       <strong class="jxr_keyword">if</strong> (!type.isAnonymousClass() &amp;&amp; !type.isInterface() &amp;&amp; !Modifier.isAbstract(type.getModifiers())) {
+<a class="jxr_linenumber" name="L412" href="#L412">412</a>         register(type);
+<a class="jxr_linenumber" name="L413" href="#L413">413</a>       }
+<a class="jxr_linenumber" name="L414" href="#L414">414</a>     }
+<a class="jxr_linenumber" name="L415" href="#L415">415</a>   }
+<a class="jxr_linenumber" name="L416" href="#L416">416</a>   
+<a class="jxr_linenumber" name="L417" href="#L417">417</a>   <em class="jxr_comment">// get information</em>
+<a class="jxr_linenumber" name="L418" href="#L418">418</a>   
+<a class="jxr_linenumber" name="L419" href="#L419">419</a>   <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L420" href="#L420">420</a> <em class="jxr_javadoccomment">   * @since 3.2.2</em>
+<a class="jxr_linenumber" name="L421" href="#L421">421</a> <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L422" href="#L422">422</a>   <strong class="jxr_keyword">public</strong> Collection&lt;TypeHandler&lt;?&gt;&gt; getTypeHandlers() {
+<a class="jxr_linenumber" name="L423" href="#L423">423</a>     <strong class="jxr_keyword">return</strong> Collections.unmodifiableCollection(ALL_TYPE_HANDLERS_MAP.values());
+<a class="jxr_linenumber" name="L424" href="#L424">424</a>   }
+<a class="jxr_linenumber" name="L425" href="#L425">425</a>   
+<a class="jxr_linenumber" name="L426" href="#L426">426</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2016 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2009&#x2013;2017 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
 </body>
 </html>

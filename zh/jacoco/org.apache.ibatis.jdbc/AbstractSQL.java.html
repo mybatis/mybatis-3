@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>AbstractSQL.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.jdbc</a> &gt; <span class="el_source">AbstractSQL.java</span></div><h1>AbstractSQL.java</h1><pre class="source lang-java linenums">/**
- *    Copyright 2009-2015 the original author or authors.
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AbstractSQL.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.jdbc</a> &gt; <span class="el_source">AbstractSQL.java</span></div><h1>AbstractSQL.java</h1><pre class="source lang-java linenums">/**
+ *    Copyright 2009-2016 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  *    you may not use this file except in compliance with the License.
@@ -17,290 +17,416 @@ package org.apache.ibatis.jdbc;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
  * @author Clinton Begin
  * @author Jeff Butler
  * @author Adam Gent
+ * @author Kazuki Shimizu
  */
-<span class="fc" id="L27">public abstract class AbstractSQL&lt;T&gt; {</span>
+<span class="fc" id="L29">public abstract class AbstractSQL&lt;T&gt; {</span>
 
   private static final String AND = &quot;) \nAND (&quot;;
   private static final String OR = &quot;) \nOR (&quot;;
 
-<span class="fc" id="L32">  private SQLStatement sql = new SQLStatement();</span>
+<span class="fc" id="L34">  private SQLStatement sql = new SQLStatement();</span>
 
   public abstract T getSelf();
 
   public T UPDATE(String table) {
-<span class="nc" id="L37">    sql().statementType = SQLStatement.StatementType.UPDATE;</span>
-<span class="nc" id="L38">    sql().tables.add(table);</span>
-<span class="nc" id="L39">    return getSelf();</span>
+<span class="fc" id="L39">    sql().statementType = SQLStatement.StatementType.UPDATE;</span>
+<span class="fc" id="L40">    sql().tables.add(table);</span>
+<span class="fc" id="L41">    return getSelf();</span>
   }
 
   public T SET(String sets) {
-<span class="nc" id="L43">    sql().sets.add(sets);</span>
-<span class="nc" id="L44">    return getSelf();</span>
+<span class="nc" id="L45">    sql().sets.add(sets);</span>
+<span class="nc" id="L46">    return getSelf();</span>
+  }
+
+  /**
+   * @since 3.4.2
+   */
+  public T SET(String... sets) {
+<span class="fc" id="L53">    sql().sets.addAll(Arrays.asList(sets));</span>
+<span class="fc" id="L54">    return getSelf();</span>
   }
 
   public T INSERT_INTO(String tableName) {
-<span class="nc" id="L48">    sql().statementType = SQLStatement.StatementType.INSERT;</span>
-<span class="nc" id="L49">    sql().tables.add(tableName);</span>
-<span class="nc" id="L50">    return getSelf();</span>
+<span class="fc" id="L58">    sql().statementType = SQLStatement.StatementType.INSERT;</span>
+<span class="fc" id="L59">    sql().tables.add(tableName);</span>
+<span class="fc" id="L60">    return getSelf();</span>
   }
 
   public T VALUES(String columns, String values) {
-<span class="nc" id="L54">    sql().columns.add(columns);</span>
-<span class="nc" id="L55">    sql().values.add(values);</span>
-<span class="nc" id="L56">    return getSelf();</span>
+<span class="nc" id="L64">    sql().columns.add(columns);</span>
+<span class="nc" id="L65">    sql().values.add(values);</span>
+<span class="nc" id="L66">    return getSelf();</span>
+  }
+
+  /**
+   * @since 3.4.2
+   */
+  public T INTO_COLUMNS(String... columns) {
+<span class="fc" id="L73">    sql().columns.addAll(Arrays.asList(columns));</span>
+<span class="fc" id="L74">    return getSelf();</span>
+  }
+
+  /**
+   * @since 3.4.2
+   */
+  public T INTO_VALUES(String... values) {
+<span class="fc" id="L81">    sql().values.addAll(Arrays.asList(values));</span>
+<span class="fc" id="L82">    return getSelf();</span>
   }
 
   public T SELECT(String columns) {
-<span class="fc" id="L60">    sql().statementType = SQLStatement.StatementType.SELECT;</span>
-<span class="fc" id="L61">    sql().select.add(columns);</span>
-<span class="fc" id="L62">    return getSelf();</span>
+<span class="fc" id="L86">    sql().statementType = SQLStatement.StatementType.SELECT;</span>
+<span class="fc" id="L87">    sql().select.add(columns);</span>
+<span class="fc" id="L88">    return getSelf();</span>
+  }
+
+  /**
+   * @since 3.4.2
+   */
+  public T SELECT(String... columns) {
+<span class="fc" id="L95">    sql().statementType = SQLStatement.StatementType.SELECT;</span>
+<span class="fc" id="L96">    sql().select.addAll(Arrays.asList(columns));</span>
+<span class="fc" id="L97">    return getSelf();</span>
   }
 
   public T SELECT_DISTINCT(String columns) {
-<span class="nc" id="L66">    sql().distinct = true;</span>
-<span class="nc" id="L67">    SELECT(columns);</span>
-<span class="nc" id="L68">    return getSelf();</span>
+<span class="nc" id="L101">    sql().distinct = true;</span>
+<span class="nc" id="L102">    SELECT(columns);</span>
+<span class="nc" id="L103">    return getSelf();</span>
+  }
+
+  /**
+   * @since 3.4.2
+   */
+  public T SELECT_DISTINCT(String... columns) {
+<span class="fc" id="L110">    sql().distinct = true;</span>
+<span class="fc" id="L111">    SELECT(columns);</span>
+<span class="fc" id="L112">    return getSelf();</span>
   }
 
   public T DELETE_FROM(String table) {
-<span class="nc" id="L72">    sql().statementType = SQLStatement.StatementType.DELETE;</span>
-<span class="nc" id="L73">    sql().tables.add(table);</span>
-<span class="nc" id="L74">    return getSelf();</span>
+<span class="nc" id="L116">    sql().statementType = SQLStatement.StatementType.DELETE;</span>
+<span class="nc" id="L117">    sql().tables.add(table);</span>
+<span class="nc" id="L118">    return getSelf();</span>
   }
 
   public T FROM(String table) {
-<span class="fc" id="L78">    sql().tables.add(table);</span>
-<span class="fc" id="L79">    return getSelf();</span>
+<span class="fc" id="L122">    sql().tables.add(table);</span>
+<span class="fc" id="L123">    return getSelf();</span>
   }
 
-  public T JOIN(String join) {
-<span class="nc" id="L83">    sql().join.add(join);</span>
-<span class="nc" id="L84">    return getSelf();</span>
-  }
-
-  public T INNER_JOIN(String join) {
-<span class="fc" id="L88">    sql().innerJoin.add(join);</span>
-<span class="fc" id="L89">    return getSelf();</span>
-  }
-
-  public T LEFT_OUTER_JOIN(String join) {
-<span class="nc" id="L93">    sql().leftOuterJoin.add(join);</span>
-<span class="nc" id="L94">    return getSelf();</span>
-  }
-
-  public T RIGHT_OUTER_JOIN(String join) {
-<span class="nc" id="L98">    sql().rightOuterJoin.add(join);</span>
-<span class="nc" id="L99">    return getSelf();</span>
-  }
-
-  public T OUTER_JOIN(String join) {
-<span class="nc" id="L103">    sql().outerJoin.add(join);</span>
-<span class="nc" id="L104">    return getSelf();</span>
-  }
-
-  public T WHERE(String conditions) {
-<span class="fc" id="L108">    sql().where.add(conditions);</span>
-<span class="fc" id="L109">    sql().lastList = sql().where;</span>
-<span class="fc" id="L110">    return getSelf();</span>
-  }
-
-  public T OR() {
-<span class="fc" id="L114">    sql().lastList.add(OR);</span>
-<span class="fc" id="L115">    return getSelf();</span>
-  }
-
-  public T AND() {
-<span class="nc" id="L119">    sql().lastList.add(AND);</span>
-<span class="nc" id="L120">    return getSelf();</span>
-  }
-
-  public T GROUP_BY(String columns) {
-<span class="fc" id="L124">    sql().groupBy.add(columns);</span>
-<span class="fc" id="L125">    return getSelf();</span>
-  }
-
-  public T HAVING(String conditions) {
-<span class="fc" id="L129">    sql().having.add(conditions);</span>
-<span class="fc" id="L130">    sql().lastList = sql().having;</span>
+  /**
+   * @since 3.4.2
+   */
+  public T FROM(String... tables) {
+<span class="fc" id="L130">    sql().tables.addAll(Arrays.asList(tables));</span>
 <span class="fc" id="L131">    return getSelf();</span>
   }
 
+  public T JOIN(String join) {
+<span class="nc" id="L135">    sql().join.add(join);</span>
+<span class="nc" id="L136">    return getSelf();</span>
+  }
+
+  /**
+   * @since 3.4.2
+   */
+  public T JOIN(String... joins) {
+<span class="fc" id="L143">    sql().join.addAll(Arrays.asList(joins));</span>
+<span class="fc" id="L144">    return getSelf();</span>
+  }
+
+  public T INNER_JOIN(String join) {
+<span class="fc" id="L148">    sql().innerJoin.add(join);</span>
+<span class="fc" id="L149">    return getSelf();</span>
+  }
+
+  /**
+   * @since 3.4.2
+   */
+  public T INNER_JOIN(String... joins) {
+<span class="fc" id="L156">    sql().innerJoin.addAll(Arrays.asList(joins));</span>
+<span class="fc" id="L157">    return getSelf();</span>
+  }
+
+  public T LEFT_OUTER_JOIN(String join) {
+<span class="nc" id="L161">    sql().leftOuterJoin.add(join);</span>
+<span class="nc" id="L162">    return getSelf();</span>
+  }
+
+  /**
+   * @since 3.4.2
+   */
+  public T LEFT_OUTER_JOIN(String... joins) {
+<span class="fc" id="L169">    sql().leftOuterJoin.addAll(Arrays.asList(joins));</span>
+<span class="fc" id="L170">    return getSelf();</span>
+  }
+
+  public T RIGHT_OUTER_JOIN(String join) {
+<span class="nc" id="L174">    sql().rightOuterJoin.add(join);</span>
+<span class="nc" id="L175">    return getSelf();</span>
+  }
+
+  /**
+   * @since 3.4.2
+   */
+  public T RIGHT_OUTER_JOIN(String... joins) {
+<span class="fc" id="L182">    sql().rightOuterJoin.addAll(Arrays.asList(joins));</span>
+<span class="fc" id="L183">    return getSelf();</span>
+  }
+
+  public T OUTER_JOIN(String join) {
+<span class="nc" id="L187">    sql().outerJoin.add(join);</span>
+<span class="nc" id="L188">    return getSelf();</span>
+  }
+
+  /**
+   * @since 3.4.2
+   */
+  public T OUTER_JOIN(String... joins) {
+<span class="fc" id="L195">    sql().outerJoin.addAll(Arrays.asList(joins));</span>
+<span class="fc" id="L196">    return getSelf();</span>
+  }
+
+  public T WHERE(String conditions) {
+<span class="fc" id="L200">    sql().where.add(conditions);</span>
+<span class="fc" id="L201">    sql().lastList = sql().where;</span>
+<span class="fc" id="L202">    return getSelf();</span>
+  }
+
+  /**
+   * @since 3.4.2
+   */
+  public T WHERE(String... conditions) {
+<span class="fc" id="L209">    sql().where.addAll(Arrays.asList(conditions));</span>
+<span class="fc" id="L210">    sql().lastList = sql().where;</span>
+<span class="fc" id="L211">    return getSelf();</span>
+  }
+
+  public T OR() {
+<span class="fc" id="L215">    sql().lastList.add(OR);</span>
+<span class="fc" id="L216">    return getSelf();</span>
+  }
+
+  public T AND() {
+<span class="nc" id="L220">    sql().lastList.add(AND);</span>
+<span class="nc" id="L221">    return getSelf();</span>
+  }
+
+  public T GROUP_BY(String columns) {
+<span class="fc" id="L225">    sql().groupBy.add(columns);</span>
+<span class="fc" id="L226">    return getSelf();</span>
+  }
+
+  /**
+   * @since 3.4.2
+   */
+  public T GROUP_BY(String... columns) {
+<span class="fc" id="L233">    sql().groupBy.addAll(Arrays.asList(columns));</span>
+<span class="fc" id="L234">    return getSelf();</span>
+  }
+
+  public T HAVING(String conditions) {
+<span class="fc" id="L238">    sql().having.add(conditions);</span>
+<span class="fc" id="L239">    sql().lastList = sql().having;</span>
+<span class="fc" id="L240">    return getSelf();</span>
+  }
+
+  /**
+   * @since 3.4.2
+   */
+  public T HAVING(String... conditions) {
+<span class="fc" id="L247">    sql().having.addAll(Arrays.asList(conditions));</span>
+<span class="fc" id="L248">    sql().lastList = sql().having;</span>
+<span class="fc" id="L249">    return getSelf();</span>
+  }
+
   public T ORDER_BY(String columns) {
-<span class="fc" id="L135">    sql().orderBy.add(columns);</span>
-<span class="fc" id="L136">    return getSelf();</span>
+<span class="fc" id="L253">    sql().orderBy.add(columns);</span>
+<span class="fc" id="L254">    return getSelf();</span>
+  }
+
+  /**
+   * @since 3.4.2
+   */
+  public T ORDER_BY(String... columns) {
+<span class="fc" id="L261">    sql().orderBy.addAll(Arrays.asList(columns));</span>
+<span class="fc" id="L262">    return getSelf();</span>
   }
 
   private SQLStatement sql() {
-<span class="fc" id="L140">    return sql;</span>
+<span class="fc" id="L266">    return sql;</span>
   }
 
   public &lt;A extends Appendable&gt; A usingAppender(A a) {
-<span class="fc" id="L144">    sql().sql(a);</span>
-<span class="fc" id="L145">    return a;</span>
+<span class="fc" id="L270">    sql().sql(a);</span>
+<span class="fc" id="L271">    return a;</span>
   }
 
   @Override
   public String toString() {
-<span class="fc" id="L150">    StringBuilder sb = new StringBuilder();</span>
-<span class="fc" id="L151">    sql().sql(sb);</span>
-<span class="fc" id="L152">    return sb.toString();</span>
+<span class="fc" id="L276">    StringBuilder sb = new StringBuilder();</span>
+<span class="fc" id="L277">    sql().sql(sb);</span>
+<span class="fc" id="L278">    return sb.toString();</span>
   }
 
   private static class SafeAppendable {
     private final Appendable a;
-<span class="fc" id="L157">    private boolean empty = true;</span>
+<span class="fc" id="L283">    private boolean empty = true;</span>
 
     public SafeAppendable(Appendable a) {
-<span class="fc" id="L160">      super();</span>
-<span class="fc" id="L161">      this.a = a;</span>
-<span class="fc" id="L162">    }</span>
+<span class="fc" id="L286">      super();</span>
+<span class="fc" id="L287">      this.a = a;</span>
+<span class="fc" id="L288">    }</span>
 
     public SafeAppendable append(CharSequence s) {
       try {
-<span class="pc bpc" id="L166" title="1 of 4 branches missed.">        if (empty &amp;&amp; s.length() &gt; 0) {</span>
-<span class="fc" id="L167">          empty = false;</span>
+<span class="pc bpc" id="L292" title="1 of 4 branches missed.">        if (empty &amp;&amp; s.length() &gt; 0) {</span>
+<span class="fc" id="L293">          empty = false;</span>
         }
-<span class="fc" id="L169">        a.append(s);</span>
-<span class="nc" id="L170">      } catch (IOException e) {</span>
-<span class="nc" id="L171">        throw new RuntimeException(e);</span>
-<span class="fc" id="L172">      }</span>
-<span class="fc" id="L173">      return this;</span>
+<span class="fc" id="L295">        a.append(s);</span>
+<span class="nc" id="L296">      } catch (IOException e) {</span>
+<span class="nc" id="L297">        throw new RuntimeException(e);</span>
+<span class="fc" id="L298">      }</span>
+<span class="fc" id="L299">      return this;</span>
     }
 
     public boolean isEmpty() {
-<span class="fc" id="L177">      return empty;</span>
+<span class="fc" id="L303">      return empty;</span>
     }
 
   }
 
-<span class="fc" id="L182">  private static class SQLStatement {</span>
+  private static class SQLStatement {
 
-<span class="pc" id="L184">    public enum StatementType {</span>
-<span class="fc" id="L185">      DELETE, INSERT, SELECT, UPDATE</span>
+<span class="pc" id="L310">    public enum StatementType {</span>
+<span class="fc" id="L311">      DELETE, INSERT, SELECT, UPDATE</span>
     }
 
     StatementType statementType;
-<span class="fc" id="L189">    List&lt;String&gt; sets = new ArrayList&lt;String&gt;();</span>
-<span class="fc" id="L190">    List&lt;String&gt; select = new ArrayList&lt;String&gt;();</span>
-<span class="fc" id="L191">    List&lt;String&gt; tables = new ArrayList&lt;String&gt;();</span>
-<span class="fc" id="L192">    List&lt;String&gt; join = new ArrayList&lt;String&gt;();</span>
-<span class="fc" id="L193">    List&lt;String&gt; innerJoin = new ArrayList&lt;String&gt;();</span>
-<span class="fc" id="L194">    List&lt;String&gt; outerJoin = new ArrayList&lt;String&gt;();</span>
-<span class="fc" id="L195">    List&lt;String&gt; leftOuterJoin = new ArrayList&lt;String&gt;();</span>
-<span class="fc" id="L196">    List&lt;String&gt; rightOuterJoin = new ArrayList&lt;String&gt;();</span>
-<span class="fc" id="L197">    List&lt;String&gt; where = new ArrayList&lt;String&gt;();</span>
-<span class="fc" id="L198">    List&lt;String&gt; having = new ArrayList&lt;String&gt;();</span>
-<span class="fc" id="L199">    List&lt;String&gt; groupBy = new ArrayList&lt;String&gt;();</span>
-<span class="fc" id="L200">    List&lt;String&gt; orderBy = new ArrayList&lt;String&gt;();</span>
-<span class="fc" id="L201">    List&lt;String&gt; lastList = new ArrayList&lt;String&gt;();</span>
-<span class="fc" id="L202">    List&lt;String&gt; columns = new ArrayList&lt;String&gt;();</span>
-<span class="fc" id="L203">    List&lt;String&gt; values = new ArrayList&lt;String&gt;();</span>
+<span class="fc" id="L315">    List&lt;String&gt; sets = new ArrayList&lt;String&gt;();</span>
+<span class="fc" id="L316">    List&lt;String&gt; select = new ArrayList&lt;String&gt;();</span>
+<span class="fc" id="L317">    List&lt;String&gt; tables = new ArrayList&lt;String&gt;();</span>
+<span class="fc" id="L318">    List&lt;String&gt; join = new ArrayList&lt;String&gt;();</span>
+<span class="fc" id="L319">    List&lt;String&gt; innerJoin = new ArrayList&lt;String&gt;();</span>
+<span class="fc" id="L320">    List&lt;String&gt; outerJoin = new ArrayList&lt;String&gt;();</span>
+<span class="fc" id="L321">    List&lt;String&gt; leftOuterJoin = new ArrayList&lt;String&gt;();</span>
+<span class="fc" id="L322">    List&lt;String&gt; rightOuterJoin = new ArrayList&lt;String&gt;();</span>
+<span class="fc" id="L323">    List&lt;String&gt; where = new ArrayList&lt;String&gt;();</span>
+<span class="fc" id="L324">    List&lt;String&gt; having = new ArrayList&lt;String&gt;();</span>
+<span class="fc" id="L325">    List&lt;String&gt; groupBy = new ArrayList&lt;String&gt;();</span>
+<span class="fc" id="L326">    List&lt;String&gt; orderBy = new ArrayList&lt;String&gt;();</span>
+<span class="fc" id="L327">    List&lt;String&gt; lastList = new ArrayList&lt;String&gt;();</span>
+<span class="fc" id="L328">    List&lt;String&gt; columns = new ArrayList&lt;String&gt;();</span>
+<span class="fc" id="L329">    List&lt;String&gt; values = new ArrayList&lt;String&gt;();</span>
     boolean distinct;
 
-<span class="fc" id="L206">    public SQLStatement() {</span>
+<span class="fc" id="L332">    public SQLStatement() {</span>
         // Prevent Synthetic Access
-<span class="fc" id="L208">    }</span>
+<span class="fc" id="L334">    }</span>
 
     private void sqlClause(SafeAppendable builder, String keyword, List&lt;String&gt; parts, String open, String close,
                            String conjunction) {
-<span class="fc bfc" id="L212" title="All 2 branches covered.">      if (!parts.isEmpty()) {</span>
-<span class="fc bfc" id="L213" title="All 2 branches covered.">        if (!builder.isEmpty()) {</span>
-<span class="fc" id="L214">          builder.append(&quot;\n&quot;);</span>
+<span class="fc bfc" id="L338" title="All 2 branches covered.">      if (!parts.isEmpty()) {</span>
+<span class="fc bfc" id="L339" title="All 2 branches covered.">        if (!builder.isEmpty()) {</span>
+<span class="fc" id="L340">          builder.append(&quot;\n&quot;);</span>
         }
-<span class="fc" id="L216">        builder.append(keyword);</span>
-<span class="fc" id="L217">        builder.append(&quot; &quot;);</span>
-<span class="fc" id="L218">        builder.append(open);</span>
-<span class="fc" id="L219">        String last = &quot;________&quot;;</span>
-<span class="fc bfc" id="L220" title="All 2 branches covered.">        for (int i = 0, n = parts.size(); i &lt; n; i++) {</span>
-<span class="fc" id="L221">          String part = parts.get(i);</span>
-<span class="pc bpc" id="L222" title="2 of 10 branches missed.">          if (i &gt; 0 &amp;&amp; !part.equals(AND) &amp;&amp; !part.equals(OR) &amp;&amp; !last.equals(AND) &amp;&amp; !last.equals(OR)) {</span>
-<span class="fc" id="L223">            builder.append(conjunction);</span>
+<span class="fc" id="L342">        builder.append(keyword);</span>
+<span class="fc" id="L343">        builder.append(&quot; &quot;);</span>
+<span class="fc" id="L344">        builder.append(open);</span>
+<span class="fc" id="L345">        String last = &quot;________&quot;;</span>
+<span class="fc bfc" id="L346" title="All 2 branches covered.">        for (int i = 0, n = parts.size(); i &lt; n; i++) {</span>
+<span class="fc" id="L347">          String part = parts.get(i);</span>
+<span class="pc bpc" id="L348" title="2 of 10 branches missed.">          if (i &gt; 0 &amp;&amp; !part.equals(AND) &amp;&amp; !part.equals(OR) &amp;&amp; !last.equals(AND) &amp;&amp; !last.equals(OR)) {</span>
+<span class="fc" id="L349">            builder.append(conjunction);</span>
           }
-<span class="fc" id="L225">          builder.append(part);</span>
-<span class="fc" id="L226">          last = part;</span>
+<span class="fc" id="L351">          builder.append(part);</span>
+<span class="fc" id="L352">          last = part;</span>
         }
-<span class="fc" id="L228">        builder.append(close);</span>
+<span class="fc" id="L354">        builder.append(close);</span>
       }
-<span class="fc" id="L230">    }</span>
+<span class="fc" id="L356">    }</span>
 
     private String selectSQL(SafeAppendable builder) {
-<span class="pc bpc" id="L233" title="1 of 2 branches missed.">      if (distinct) {</span>
-<span class="nc" id="L234">        sqlClause(builder, &quot;SELECT DISTINCT&quot;, select, &quot;&quot;, &quot;&quot;, &quot;, &quot;);</span>
+<span class="fc bfc" id="L359" title="All 2 branches covered.">      if (distinct) {</span>
+<span class="fc" id="L360">        sqlClause(builder, &quot;SELECT DISTINCT&quot;, select, &quot;&quot;, &quot;&quot;, &quot;, &quot;);</span>
       } else {
-<span class="fc" id="L236">        sqlClause(builder, &quot;SELECT&quot;, select, &quot;&quot;, &quot;&quot;, &quot;, &quot;);</span>
+<span class="fc" id="L362">        sqlClause(builder, &quot;SELECT&quot;, select, &quot;&quot;, &quot;&quot;, &quot;, &quot;);</span>
       }
 
-<span class="fc" id="L239">      sqlClause(builder, &quot;FROM&quot;, tables, &quot;&quot;, &quot;&quot;, &quot;, &quot;);</span>
-<span class="fc" id="L240">      sqlClause(builder, &quot;JOIN&quot;, join, &quot;&quot;, &quot;&quot;, &quot;\nJOIN &quot;);</span>
-<span class="fc" id="L241">      sqlClause(builder, &quot;INNER JOIN&quot;, innerJoin, &quot;&quot;, &quot;&quot;, &quot;\nINNER JOIN &quot;);</span>
-<span class="fc" id="L242">      sqlClause(builder, &quot;OUTER JOIN&quot;, outerJoin, &quot;&quot;, &quot;&quot;, &quot;\nOUTER JOIN &quot;);</span>
-<span class="fc" id="L243">      sqlClause(builder, &quot;LEFT OUTER JOIN&quot;, leftOuterJoin, &quot;&quot;, &quot;&quot;, &quot;\nLEFT OUTER JOIN &quot;);</span>
-<span class="fc" id="L244">      sqlClause(builder, &quot;RIGHT OUTER JOIN&quot;, rightOuterJoin, &quot;&quot;, &quot;&quot;, &quot;\nRIGHT OUTER JOIN &quot;);</span>
-<span class="fc" id="L245">      sqlClause(builder, &quot;WHERE&quot;, where, &quot;(&quot;, &quot;)&quot;, &quot; AND &quot;);</span>
-<span class="fc" id="L246">      sqlClause(builder, &quot;GROUP BY&quot;, groupBy, &quot;&quot;, &quot;&quot;, &quot;, &quot;);</span>
-<span class="fc" id="L247">      sqlClause(builder, &quot;HAVING&quot;, having, &quot;(&quot;, &quot;)&quot;, &quot; AND &quot;);</span>
-<span class="fc" id="L248">      sqlClause(builder, &quot;ORDER BY&quot;, orderBy, &quot;&quot;, &quot;&quot;, &quot;, &quot;);</span>
-<span class="fc" id="L249">      return builder.toString();</span>
+<span class="fc" id="L365">      sqlClause(builder, &quot;FROM&quot;, tables, &quot;&quot;, &quot;&quot;, &quot;, &quot;);</span>
+<span class="fc" id="L366">      sqlClause(builder, &quot;JOIN&quot;, join, &quot;&quot;, &quot;&quot;, &quot;\nJOIN &quot;);</span>
+<span class="fc" id="L367">      sqlClause(builder, &quot;INNER JOIN&quot;, innerJoin, &quot;&quot;, &quot;&quot;, &quot;\nINNER JOIN &quot;);</span>
+<span class="fc" id="L368">      sqlClause(builder, &quot;OUTER JOIN&quot;, outerJoin, &quot;&quot;, &quot;&quot;, &quot;\nOUTER JOIN &quot;);</span>
+<span class="fc" id="L369">      sqlClause(builder, &quot;LEFT OUTER JOIN&quot;, leftOuterJoin, &quot;&quot;, &quot;&quot;, &quot;\nLEFT OUTER JOIN &quot;);</span>
+<span class="fc" id="L370">      sqlClause(builder, &quot;RIGHT OUTER JOIN&quot;, rightOuterJoin, &quot;&quot;, &quot;&quot;, &quot;\nRIGHT OUTER JOIN &quot;);</span>
+<span class="fc" id="L371">      sqlClause(builder, &quot;WHERE&quot;, where, &quot;(&quot;, &quot;)&quot;, &quot; AND &quot;);</span>
+<span class="fc" id="L372">      sqlClause(builder, &quot;GROUP BY&quot;, groupBy, &quot;&quot;, &quot;&quot;, &quot;, &quot;);</span>
+<span class="fc" id="L373">      sqlClause(builder, &quot;HAVING&quot;, having, &quot;(&quot;, &quot;)&quot;, &quot; AND &quot;);</span>
+<span class="fc" id="L374">      sqlClause(builder, &quot;ORDER BY&quot;, orderBy, &quot;&quot;, &quot;&quot;, &quot;, &quot;);</span>
+<span class="fc" id="L375">      return builder.toString();</span>
     }
 
     private String insertSQL(SafeAppendable builder) {
-<span class="nc" id="L253">      sqlClause(builder, &quot;INSERT INTO&quot;, tables, &quot;&quot;, &quot;&quot;, &quot;&quot;);</span>
-<span class="nc" id="L254">      sqlClause(builder, &quot;&quot;, columns, &quot;(&quot;, &quot;)&quot;, &quot;, &quot;);</span>
-<span class="nc" id="L255">      sqlClause(builder, &quot;VALUES&quot;, values, &quot;(&quot;, &quot;)&quot;, &quot;, &quot;);</span>
-<span class="nc" id="L256">      return builder.toString();</span>
+<span class="fc" id="L379">      sqlClause(builder, &quot;INSERT INTO&quot;, tables, &quot;&quot;, &quot;&quot;, &quot;&quot;);</span>
+<span class="fc" id="L380">      sqlClause(builder, &quot;&quot;, columns, &quot;(&quot;, &quot;)&quot;, &quot;, &quot;);</span>
+<span class="fc" id="L381">      sqlClause(builder, &quot;VALUES&quot;, values, &quot;(&quot;, &quot;)&quot;, &quot;, &quot;);</span>
+<span class="fc" id="L382">      return builder.toString();</span>
     }
 
     private String deleteSQL(SafeAppendable builder) {
-<span class="nc" id="L260">      sqlClause(builder, &quot;DELETE FROM&quot;, tables, &quot;&quot;, &quot;&quot;, &quot;&quot;);</span>
-<span class="nc" id="L261">      sqlClause(builder, &quot;WHERE&quot;, where, &quot;(&quot;, &quot;)&quot;, &quot; AND &quot;);</span>
-<span class="nc" id="L262">      return builder.toString();</span>
+<span class="nc" id="L386">      sqlClause(builder, &quot;DELETE FROM&quot;, tables, &quot;&quot;, &quot;&quot;, &quot;&quot;);</span>
+<span class="nc" id="L387">      sqlClause(builder, &quot;WHERE&quot;, where, &quot;(&quot;, &quot;)&quot;, &quot; AND &quot;);</span>
+<span class="nc" id="L388">      return builder.toString();</span>
     }
 
     private String updateSQL(SafeAppendable builder) {
 
-<span class="nc" id="L267">      sqlClause(builder, &quot;UPDATE&quot;, tables, &quot;&quot;, &quot;&quot;, &quot;&quot;);</span>
-<span class="nc" id="L268">      sqlClause(builder, &quot;SET&quot;, sets, &quot;&quot;, &quot;&quot;, &quot;, &quot;);</span>
-<span class="nc" id="L269">      sqlClause(builder, &quot;WHERE&quot;, where, &quot;(&quot;, &quot;)&quot;, &quot; AND &quot;);</span>
-<span class="nc" id="L270">      return builder.toString();</span>
+<span class="fc" id="L393">      sqlClause(builder, &quot;UPDATE&quot;, tables, &quot;&quot;, &quot;&quot;, &quot;&quot;);</span>
+<span class="fc" id="L394">      sqlClause(builder, &quot;SET&quot;, sets, &quot;&quot;, &quot;&quot;, &quot;, &quot;);</span>
+<span class="fc" id="L395">      sqlClause(builder, &quot;WHERE&quot;, where, &quot;(&quot;, &quot;)&quot;, &quot; AND &quot;);</span>
+<span class="fc" id="L396">      return builder.toString();</span>
     }
 
     public String sql(Appendable a) {
-<span class="fc" id="L274">      SafeAppendable builder = new SafeAppendable(a);</span>
-<span class="pc bpc" id="L275" title="1 of 2 branches missed.">      if (statementType == null) {</span>
-<span class="nc" id="L276">        return null;</span>
+<span class="fc" id="L400">      SafeAppendable builder = new SafeAppendable(a);</span>
+<span class="pc bpc" id="L401" title="1 of 2 branches missed.">      if (statementType == null) {</span>
+<span class="nc" id="L402">        return null;</span>
       }
 
       String answer;
 
-<span class="pc bpc" id="L281" title="4 of 5 branches missed.">      switch (statementType) {</span>
+<span class="pc bpc" id="L407" title="2 of 5 branches missed.">      switch (statementType) {</span>
         case DELETE:
-<span class="nc" id="L283">          answer = deleteSQL(builder);</span>
-<span class="nc" id="L284">          break;</span>
+<span class="nc" id="L409">          answer = deleteSQL(builder);</span>
+<span class="nc" id="L410">          break;</span>
 
         case INSERT:
-<span class="nc" id="L287">          answer = insertSQL(builder);</span>
-<span class="nc" id="L288">          break;</span>
+<span class="fc" id="L413">          answer = insertSQL(builder);</span>
+<span class="fc" id="L414">          break;</span>
 
         case SELECT:
-<span class="fc" id="L291">          answer = selectSQL(builder);</span>
-<span class="fc" id="L292">          break;</span>
+<span class="fc" id="L417">          answer = selectSQL(builder);</span>
+<span class="fc" id="L418">          break;</span>
 
         case UPDATE:
-<span class="nc" id="L295">          answer = updateSQL(builder);</span>
-<span class="nc" id="L296">          break;</span>
+<span class="fc" id="L421">          answer = updateSQL(builder);</span>
+<span class="fc" id="L422">          break;</span>
 
         default:
-<span class="nc" id="L299">          answer = null;</span>
+<span class="nc" id="L425">          answer = null;</span>
       }
 
-<span class="fc" id="L302">      return answer;</span>
+<span class="fc" id="L428">      return answer;</span>
     }
   }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ParamNameResolver.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.reflection</a> &gt; <span class="el_source">ParamNameResolver.java</span></div><h1>ParamNameResolver.java</h1><pre class="source lang-java linenums">/**
+ *    Copyright 2009-2016 the original author or authors.
+ *
+ *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
+
+package org.apache.ibatis.reflection;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
+import java.util.Collections;
+import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
+
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.binding.MapperMethod.ParamMap;
+import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.session.Configuration;
+import org.apache.ibatis.session.ResultHandler;
+import org.apache.ibatis.session.RowBounds;
+
+public class ParamNameResolver {
+
+  private static final String GENERIC_NAME_PREFIX = &quot;param&quot;;
+  private static final String PARAMETER_CLASS = &quot;java.lang.reflect.Parameter&quot;;
+  private static Method GET_NAME;
+  private static Method GET_PARAMS;
+
+  static {
+    try {
+<span class="fc" id="L42">      Class&lt;?&gt; paramClass = Resources.classForName(PARAMETER_CLASS);</span>
+<span class="fc" id="L43">      GET_NAME = paramClass.getMethod(&quot;getName&quot;);</span>
+<span class="fc" id="L44">      GET_PARAMS = Method.class.getMethod(&quot;getParameters&quot;);</span>
+<span class="nc" id="L45">    } catch (Exception e) {</span>
+      // ignore
+<span class="fc" id="L47">    }</span>
+<span class="fc" id="L48">  }</span>
+
+  /**
+   * &lt;p&gt;
+   * The key is the index and the value is the name of the parameter.&lt;br /&gt;
+   * The name is obtained from {@link Param} if specified. When {@link Param} is not specified,
+   * the parameter index is used. Note that this index could be different from the actual index
+   * when the method has special parameters (i.e. {@link RowBounds} or {@link ResultHandler}).
+   * &lt;/p&gt;
+   * &lt;ul&gt;
+   * &lt;li&gt;aMethod(@Param(&quot;M&quot;) int a, @Param(&quot;N&quot;) int b) -&amp;gt; {{0, &quot;M&quot;}, {1, &quot;N&quot;}}&lt;/li&gt;
+   * &lt;li&gt;aMethod(int a, int b) -&amp;gt; {{0, &quot;0&quot;}, {1, &quot;1&quot;}}&lt;/li&gt;
+   * &lt;li&gt;aMethod(int a, RowBounds rb, int b) -&amp;gt; {{0, &quot;0&quot;}, {2, &quot;1&quot;}}&lt;/li&gt;
+   * &lt;/ul&gt;
+   */
+  private final SortedMap&lt;Integer, String&gt; names;
+
+  private boolean hasParamAnnotation;
+
+<span class="fc" id="L67">  public ParamNameResolver(Configuration config, Method method) {</span>
+<span class="fc" id="L68">    final Class&lt;?&gt;[] paramTypes = method.getParameterTypes();</span>
+<span class="fc" id="L69">    final Annotation[][] paramAnnotations = method.getParameterAnnotations();</span>
+<span class="fc" id="L70">    final SortedMap&lt;Integer, String&gt; map = new TreeMap&lt;Integer, String&gt;();</span>
+<span class="fc" id="L71">    int paramCount = paramAnnotations.length;</span>
+    // get names from @Param annotations
+<span class="fc bfc" id="L73" title="All 2 branches covered.">    for (int paramIndex = 0; paramIndex &lt; paramCount; paramIndex++) {</span>
+<span class="fc bfc" id="L74" title="All 2 branches covered.">      if (isSpecialParameter(paramTypes[paramIndex])) {</span>
+        // skip special parameters
+<span class="fc" id="L76">        continue;</span>
+      }
+<span class="fc" id="L78">      String name = null;</span>
+<span class="pc bfc" id="L79" title="All 2 branches covered.">      for (Annotation annotation : paramAnnotations[paramIndex]) {</span>
+<span class="pc bpc" id="L80" title="1 of 2 branches missed.">        if (annotation instanceof Param) {</span>
+<span class="fc" id="L81">          hasParamAnnotation = true;</span>
+<span class="fc" id="L82">          name = ((Param) annotation).value();</span>
+<span class="fc" id="L83">          break;</span>
+        }
+      }
+<span class="fc bfc" id="L86" title="All 2 branches covered.">      if (name == null) {</span>
+        // @Param was not specified.
+<span class="fc bfc" id="L88" title="All 2 branches covered.">        if (config.isUseActualParamName()) {</span>
+<span class="fc" id="L89">          name = getActualParamName(method, paramIndex);</span>
+        }
+<span class="fc bfc" id="L91" title="All 2 branches covered.">        if (name == null) {</span>
+          // use the parameter index as the name (&quot;0&quot;, &quot;1&quot;, ...)
+          // gcode issue #71
+<span class="fc" id="L94">          name = String.valueOf(map.size());</span>
+        }
+      }
+<span class="fc" id="L97">      map.put(paramIndex, name);</span>
+    }
+<span class="fc" id="L99">    names = Collections.unmodifiableSortedMap(map);</span>
+<span class="fc" id="L100">  }</span>
+
+  private String getActualParamName(Method method, int paramIndex) {
+<span class="pc bpc" id="L103" title="1 of 2 branches missed.">    if (GET_PARAMS == null) {</span>
+<span class="nc" id="L104">      return null;</span>
+    }
+    try {
+<span class="fc" id="L107">      Object[] params = (Object[]) GET_PARAMS.invoke(method);</span>
+<span class="fc" id="L108">      return (String) GET_NAME.invoke(params[paramIndex]);</span>
+<span class="nc" id="L109">    } catch (Exception e) {</span>
+<span class="nc" id="L110">      throw new ReflectionException(&quot;Error occurred when invoking Method#getParameters().&quot;, e);</span>
+    }
+  }
+
+  private static boolean isSpecialParameter(Class&lt;?&gt; clazz) {
+<span class="fc bfc" id="L115" title="All 4 branches covered.">    return RowBounds.class.isAssignableFrom(clazz) || ResultHandler.class.isAssignableFrom(clazz);</span>
+  }
+
+  /**
+   * Returns parameter names referenced by SQL providers.
+   */
+  public String[] getNames() {
+<span class="fc" id="L122">    return names.values().toArray(new String[0]);</span>
+  }
+
+  /**
+   * &lt;p&gt;
+   * A single non-special parameter is returned without a name.&lt;br /&gt;
+   * Multiple parameters are named using the naming rule.&lt;br /&gt;
+   * In addition to the default names, this method also adds the generic names (param1, param2,
+   * ...).
+   * &lt;/p&gt;
+   */
+  public Object getNamedParams(Object[] args) {
+<span class="fc" id="L134">    final int paramCount = names.size();</span>
+<span class="fc bfc" id="L135" title="All 4 branches covered.">    if (args == null || paramCount == 0) {</span>
+<span class="fc" id="L136">      return null;</span>
+<span class="fc bfc" id="L137" title="All 4 branches covered.">    } else if (!hasParamAnnotation &amp;&amp; paramCount == 1) {</span>
+<span class="fc" id="L138">      return args[names.firstKey()];</span>
+    } else {
+<span class="fc" id="L140">      final Map&lt;String, Object&gt; param = new ParamMap&lt;Object&gt;();</span>
+<span class="fc" id="L141">      int i = 0;</span>
+<span class="fc bfc" id="L142" title="All 2 branches covered.">      for (Map.Entry&lt;Integer, String&gt; entry : names.entrySet()) {</span>
+<span class="fc" id="L143">        param.put(entry.getValue(), args[entry.getKey()]);</span>
+        // add generic param names (param1, param2, ...)
+<span class="fc" id="L145">        final String genericParamName = GENERIC_NAME_PREFIX + String.valueOf(i + 1);</span>
+        // ensure not to overwrite parameter named with @Param
+<span class="pc bpc" id="L147" title="1 of 2 branches missed.">        if (!names.containsValue(genericParamName)) {</span>
+<span class="fc" id="L148">          param.put(genericParamName, args[entry.getKey()]);</span>
+        }
+<span class="fc" id="L150">        i++;</span>
+<span class="fc" id="L151">      }</span>
+<span class="fc" id="L152">      return param;</span>
+    }
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

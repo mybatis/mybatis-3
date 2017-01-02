@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>MapperBuilderAssistant.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.builder</a> &gt; <span class="el_source">MapperBuilderAssistant.java</span></div><h1>MapperBuilderAssistant.java</h1><pre class="source lang-java linenums">/**
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MapperBuilderAssistant.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.builder</a> &gt; <span class="el_source">MapperBuilderAssistant.java</span></div><h1>MapperBuilderAssistant.java</h1><pre class="source lang-java linenums">/**
  *    Copyright 2009-2016 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
@@ -70,8 +70,8 @@ public class MapperBuilderAssistant extends BaseBuilder {
   }
 
   public void setCurrentNamespace(String currentNamespace) {
-<span class="pc bpc" id="L73" title="1 of 2 branches missed.">    if (currentNamespace == null) {</span>
-<span class="nc" id="L74">      throw new BuilderException(&quot;The mapper element requires a namespace attribute to be specified.&quot;);</span>
+<span class="fc bfc" id="L73" title="All 2 branches covered.">    if (currentNamespace == null) {</span>
+<span class="fc" id="L74">      throw new BuilderException(&quot;The mapper element requires a namespace attribute to be specified.&quot;);</span>
     }
 
 <span class="fc bfc" id="L77" title="All 4 branches covered.">    if (this.currentNamespace != null &amp;&amp; !this.currentNamespace.equals(currentNamespace)) {</span>
@@ -104,8 +104,8 @@ public class MapperBuilderAssistant extends BaseBuilder {
   }
 
   public Cache useCacheRef(String namespace) {
-<span class="pc bpc" id="L107" title="1 of 2 branches missed.">    if (namespace == null) {</span>
-<span class="nc" id="L108">      throw new BuilderException(&quot;cache-ref element requires a namespace attribute.&quot;);</span>
+<span class="fc bfc" id="L107" title="All 2 branches covered.">    if (namespace == null) {</span>
+<span class="fc" id="L108">      throw new BuilderException(&quot;cache-ref element requires a namespace attribute.&quot;);</span>
     }
     try {
 <span class="fc" id="L111">      unresolvedCacheRef = true;</span>
@@ -129,14 +129,14 @@ public class MapperBuilderAssistant extends BaseBuilder {
       boolean blocking,
       Properties props) {
 <span class="fc" id="L131">    Cache cache = new CacheBuilder(currentNamespace)</span>
-        .implementation(valueOrDefault(typeClass, PerpetualCache.class))
-        .addDecorator(valueOrDefault(evictionClass, LruCache.class))
-        .clearInterval(flushInterval)
-        .size(size)
-        .readWrite(readWrite)
-        .blocking(blocking)
-        .properties(props)
-        .build();
+<span class="fc" id="L132">        .implementation(valueOrDefault(typeClass, PerpetualCache.class))</span>
+<span class="fc" id="L133">        .addDecorator(valueOrDefault(evictionClass, LruCache.class))</span>
+<span class="fc" id="L134">        .clearInterval(flushInterval)</span>
+<span class="fc" id="L135">        .size(size)</span>
+<span class="fc" id="L136">        .readWrite(readWrite)</span>
+<span class="fc" id="L137">        .blocking(blocking)</span>
+<span class="fc" id="L138">        .properties(props)</span>
+<span class="fc" id="L139">        .build();</span>
 <span class="fc" id="L140">    configuration.addCache(cache);</span>
 <span class="fc" id="L141">    currentCache = cache;</span>
 <span class="fc" id="L142">    return cache;</span>
@@ -165,12 +165,12 @@ public class MapperBuilderAssistant extends BaseBuilder {
 <span class="fc" id="L165">    TypeHandler&lt;?&gt; typeHandlerInstance = resolveTypeHandler(javaTypeClass, typeHandler);</span>
 
 <span class="fc" id="L167">    return new ParameterMapping.Builder(configuration, property, javaTypeClass)</span>
-        .jdbcType(jdbcType)
-        .resultMapId(resultMap)
-        .mode(parameterMode)
-        .numericScale(numericScale)
-        .typeHandler(typeHandlerInstance)
-        .build();
+<span class="fc" id="L168">        .jdbcType(jdbcType)</span>
+<span class="fc" id="L169">        .resultMapId(resultMap)</span>
+<span class="fc" id="L170">        .mode(parameterMode)</span>
+<span class="fc" id="L171">        .numericScale(numericScale)</span>
+<span class="fc" id="L172">        .typeHandler(typeHandlerInstance)</span>
+<span class="fc" id="L173">        .build();</span>
   }
 
   public ResultMap addResultMap(
@@ -209,8 +209,8 @@ public class MapperBuilderAssistant extends BaseBuilder {
 <span class="fc" id="L209">      resultMappings.addAll(extendedResultMappings);</span>
     }
 <span class="fc" id="L211">    ResultMap resultMap = new ResultMap.Builder(configuration, id, type, resultMappings, autoMapping)</span>
-        .discriminator(discriminator)
-        .build();
+<span class="fc" id="L212">        .discriminator(discriminator)</span>
+<span class="fc" id="L213">        .build();</span>
 <span class="fc" id="L214">    configuration.addResultMap(resultMap);</span>
 <span class="fc" id="L215">    return resultMap;</span>
   }
@@ -275,23 +275,23 @@ public class MapperBuilderAssistant extends BaseBuilder {
 <span class="fc" id="L275">    id = applyCurrentNamespace(id, false);</span>
 <span class="fc bfc" id="L276" title="All 2 branches covered.">    boolean isSelect = sqlCommandType == SqlCommandType.SELECT;</span>
 
-<span class="fc bfc" id="L278" title="All 2 branches covered.">    MappedStatement.Builder statementBuilder = new MappedStatement.Builder(configuration, id, sqlSource, sqlCommandType)</span>
-        .resource(resource)
-        .fetchSize(fetchSize)
-        .timeout(timeout)
-        .statementType(statementType)
-        .keyGenerator(keyGenerator)
-        .keyProperty(keyProperty)
-        .keyColumn(keyColumn)
-        .databaseId(databaseId)
-        .lang(lang)
-        .resultOrdered(resultOrdered)
-        .resultSets(resultSets)
-        .resultMaps(getStatementResultMaps(resultMap, resultType, id))
-        .resultSetType(resultSetType)
-        .flushCacheRequired(valueOrDefault(flushCache, !isSelect))
-        .useCache(valueOrDefault(useCache, isSelect))
-        .cache(currentCache);
+<span class="fc" id="L278">    MappedStatement.Builder statementBuilder = new MappedStatement.Builder(configuration, id, sqlSource, sqlCommandType)</span>
+<span class="fc" id="L279">        .resource(resource)</span>
+<span class="fc" id="L280">        .fetchSize(fetchSize)</span>
+<span class="fc" id="L281">        .timeout(timeout)</span>
+<span class="fc" id="L282">        .statementType(statementType)</span>
+<span class="fc" id="L283">        .keyGenerator(keyGenerator)</span>
+<span class="fc" id="L284">        .keyProperty(keyProperty)</span>
+<span class="fc" id="L285">        .keyColumn(keyColumn)</span>
+<span class="fc" id="L286">        .databaseId(databaseId)</span>
+<span class="fc" id="L287">        .lang(lang)</span>
+<span class="fc" id="L288">        .resultOrdered(resultOrdered)</span>
+<span class="fc" id="L289">        .resultSets(resultSets)</span>
+<span class="fc" id="L290">        .resultMaps(getStatementResultMaps(resultMap, resultType, id))</span>
+<span class="fc" id="L291">        .resultSetType(resultSetType)</span>
+<span class="fc bfc" id="L292" title="All 2 branches covered.">        .flushCacheRequired(valueOrDefault(flushCache, !isSelect))</span>
+<span class="fc" id="L293">        .useCache(valueOrDefault(useCache, isSelect))</span>
+<span class="fc" id="L294">        .cache(currentCache);</span>
 
 <span class="fc" id="L296">    ParameterMap statementParameterMap = getStatementParameterMap(parameterMap, parameterType, id);</span>
 <span class="fc bfc" id="L297" title="All 2 branches covered.">    if (statementParameterMap != null) {</span>
@@ -325,7 +325,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
           configuration,
           statementId + &quot;-Inline&quot;,
           parameterTypeClass,
-          parameterMappings).build();
+<span class="fc" id="L328">          parameterMappings).build();</span>
     }
 <span class="fc" id="L330">    return parameterMap;</span>
   }
@@ -352,7 +352,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
           statementId + &quot;-Inline&quot;,
           resultType,
           new ArrayList&lt;ResultMapping&gt;(),
-          null).build();
+<span class="fc" id="L355">          null).build();</span>
 <span class="fc" id="L356">      resultMaps.add(inlineResultMap);</span>
     }
 <span class="fc" id="L358">    return resultMaps;</span>
@@ -379,19 +379,19 @@ public class MapperBuilderAssistant extends BaseBuilder {
 <span class="fc bfc" id="L379" title="All 2 branches covered.">    if (composites.size() &gt; 0) {</span>
 <span class="fc" id="L380">      column = null;</span>
     }
-<span class="pc bpc" id="L382" title="1 of 2 branches missed.">    return new ResultMapping.Builder(configuration, property, column, javaTypeClass)</span>
-        .jdbcType(jdbcType)
-        .nestedQueryId(applyCurrentNamespace(nestedSelect, true))
-        .nestedResultMapId(applyCurrentNamespace(nestedResultMap, true))
-        .resultSet(resultSet)
-        .typeHandler(typeHandlerInstance)
-        .flags(flags == null ? new ArrayList&lt;ResultFlag&gt;() : flags)
-        .composites(composites)
-        .notNullColumns(parseMultipleColumnNames(notNullColumn))
-        .columnPrefix(columnPrefix)
-        .foreignColumn(foreignColumn)
-        .lazy(lazy)
-        .build();
+<span class="fc" id="L382">    return new ResultMapping.Builder(configuration, property, column, javaTypeClass)</span>
+<span class="fc" id="L383">        .jdbcType(jdbcType)</span>
+<span class="fc" id="L384">        .nestedQueryId(applyCurrentNamespace(nestedSelect, true))</span>
+<span class="fc" id="L385">        .nestedResultMapId(applyCurrentNamespace(nestedResultMap, true))</span>
+<span class="fc" id="L386">        .resultSet(resultSet)</span>
+<span class="pc bpc" id="L387" title="1 of 2 branches missed.">        .typeHandler(typeHandlerInstance)</span>
+<span class="fc" id="L388">        .flags(flags == null ? new ArrayList&lt;ResultFlag&gt;() : flags)</span>
+<span class="fc" id="L389">        .composites(composites)</span>
+<span class="fc" id="L390">        .notNullColumns(parseMultipleColumnNames(notNullColumn))</span>
+<span class="fc" id="L391">        .columnPrefix(columnPrefix)</span>
+<span class="fc" id="L392">        .foreignColumn(foreignColumn)</span>
+<span class="fc" id="L393">        .lazy(lazy)</span>
+<span class="fc" id="L394">        .build();</span>
   }
 
   private Set&lt;String&gt; parseMultipleColumnNames(String columnName) {
@@ -418,7 +418,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
 <span class="fc" id="L418">        String property = parser.nextToken();</span>
 <span class="fc" id="L419">        String column = parser.nextToken();</span>
 <span class="fc" id="L420">        ResultMapping complexResultMapping = new ResultMapping.Builder(</span>
-            configuration, property, column, configuration.getTypeHandlerRegistry().getUnknownTypeHandler()).build();
+<span class="fc" id="L421">            configuration, property, column, configuration.getTypeHandlerRegistry().getUnknownTypeHandler()).build();</span>
 <span class="fc" id="L422">        composites.add(complexResultMapping);</span>
 <span class="fc" id="L423">      }</span>
     }
@@ -472,7 +472,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
       List&lt;ResultFlag&gt; flags) {
 <span class="nc" id="L473">      return buildResultMapping(</span>
         resultType, property, column, javaType, jdbcType, nestedSelect,
-        nestedResultMap, notNullColumn, columnPrefix, typeHandler, flags, null, null, configuration.isLazyLoadingEnabled());
+<span class="nc" id="L475">        nestedResultMap, notNullColumn, columnPrefix, typeHandler, flags, null, null, configuration.isLazyLoadingEnabled());</span>
   }
 
   public LanguageDriver getLanguageDriver(Class&lt;?&gt; langClass) {
@@ -513,4 +513,4 @@ public class MapperBuilderAssistant extends BaseBuilder {
   }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

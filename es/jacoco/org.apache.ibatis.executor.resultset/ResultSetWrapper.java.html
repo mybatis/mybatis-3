@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>ResultSetWrapper.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.executor.resultset</a> &gt; <span class="el_source">ResultSetWrapper.java</span></div><h1>ResultSetWrapper.java</h1><pre class="source lang-java linenums">/**
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ResultSetWrapper.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.executor.resultset</a> &gt; <span class="el_source">ResultSetWrapper.java</span></div><h1>ResultSetWrapper.java</h1><pre class="source lang-java linenums">/**
  *    Copyright 2009-2016 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
@@ -127,61 +127,65 @@ public class ResultSetWrapper {
 
   private Class&lt;?&gt; resolveClass(String className) {
     try {
-<span class="fc" id="L130">      return Resources.classForName(className);</span>
-<span class="nc" id="L131">    } catch (ClassNotFoundException e) {</span>
-<span class="nc" id="L132">      return null;</span>
-    }
+      // #699 className could be null
+<span class="pc bpc" id="L131" title="1 of 2 branches missed.">      if (className != null) {</span>
+<span class="fc" id="L132">        return Resources.classForName(className);</span>
+      }
+<span class="nc" id="L134">    } catch (ClassNotFoundException e) {</span>
+      // ignore
+<span class="nc" id="L136">    }</span>
+<span class="nc" id="L137">    return null;</span>
   }
 
   private void loadMappedAndUnmappedColumnNames(ResultMap resultMap, String columnPrefix) throws SQLException {
-<span class="fc" id="L137">    List&lt;String&gt; mappedColumnNames = new ArrayList&lt;String&gt;();</span>
-<span class="fc" id="L138">    List&lt;String&gt; unmappedColumnNames = new ArrayList&lt;String&gt;();</span>
-<span class="fc bfc" id="L139" title="All 2 branches covered.">    final String upperColumnPrefix = columnPrefix == null ? null : columnPrefix.toUpperCase(Locale.ENGLISH);</span>
-<span class="fc" id="L140">    final Set&lt;String&gt; mappedColumns = prependPrefixes(resultMap.getMappedColumns(), upperColumnPrefix);</span>
-<span class="fc bfc" id="L141" title="All 2 branches covered.">    for (String columnName : columnNames) {</span>
-<span class="fc" id="L142">      final String upperColumnName = columnName.toUpperCase(Locale.ENGLISH);</span>
-<span class="fc bfc" id="L143" title="All 2 branches covered.">      if (mappedColumns.contains(upperColumnName)) {</span>
-<span class="fc" id="L144">        mappedColumnNames.add(upperColumnName);</span>
+<span class="fc" id="L141">    List&lt;String&gt; mappedColumnNames = new ArrayList&lt;String&gt;();</span>
+<span class="fc" id="L142">    List&lt;String&gt; unmappedColumnNames = new ArrayList&lt;String&gt;();</span>
+<span class="fc bfc" id="L143" title="All 2 branches covered.">    final String upperColumnPrefix = columnPrefix == null ? null : columnPrefix.toUpperCase(Locale.ENGLISH);</span>
+<span class="fc" id="L144">    final Set&lt;String&gt; mappedColumns = prependPrefixes(resultMap.getMappedColumns(), upperColumnPrefix);</span>
+<span class="fc bfc" id="L145" title="All 2 branches covered.">    for (String columnName : columnNames) {</span>
+<span class="fc" id="L146">      final String upperColumnName = columnName.toUpperCase(Locale.ENGLISH);</span>
+<span class="fc bfc" id="L147" title="All 2 branches covered.">      if (mappedColumns.contains(upperColumnName)) {</span>
+<span class="fc" id="L148">        mappedColumnNames.add(upperColumnName);</span>
       } else {
-<span class="fc" id="L146">        unmappedColumnNames.add(columnName);</span>
+<span class="fc" id="L150">        unmappedColumnNames.add(columnName);</span>
       }
-<span class="fc" id="L148">    }</span>
-<span class="fc" id="L149">    mappedColumnNamesMap.put(getMapKey(resultMap, columnPrefix), mappedColumnNames);</span>
-<span class="fc" id="L150">    unMappedColumnNamesMap.put(getMapKey(resultMap, columnPrefix), unmappedColumnNames);</span>
-<span class="fc" id="L151">  }</span>
+<span class="fc" id="L152">    }</span>
+<span class="fc" id="L153">    mappedColumnNamesMap.put(getMapKey(resultMap, columnPrefix), mappedColumnNames);</span>
+<span class="fc" id="L154">    unMappedColumnNamesMap.put(getMapKey(resultMap, columnPrefix), unmappedColumnNames);</span>
+<span class="fc" id="L155">  }</span>
 
   public List&lt;String&gt; getMappedColumnNames(ResultMap resultMap, String columnPrefix) throws SQLException {
-<span class="fc" id="L154">    List&lt;String&gt; mappedColumnNames = mappedColumnNamesMap.get(getMapKey(resultMap, columnPrefix));</span>
-<span class="fc bfc" id="L155" title="All 2 branches covered.">    if (mappedColumnNames == null) {</span>
-<span class="fc" id="L156">      loadMappedAndUnmappedColumnNames(resultMap, columnPrefix);</span>
-<span class="fc" id="L157">      mappedColumnNames = mappedColumnNamesMap.get(getMapKey(resultMap, columnPrefix));</span>
+<span class="fc" id="L158">    List&lt;String&gt; mappedColumnNames = mappedColumnNamesMap.get(getMapKey(resultMap, columnPrefix));</span>
+<span class="fc bfc" id="L159" title="All 2 branches covered.">    if (mappedColumnNames == null) {</span>
+<span class="fc" id="L160">      loadMappedAndUnmappedColumnNames(resultMap, columnPrefix);</span>
+<span class="fc" id="L161">      mappedColumnNames = mappedColumnNamesMap.get(getMapKey(resultMap, columnPrefix));</span>
     }
-<span class="fc" id="L159">    return mappedColumnNames;</span>
+<span class="fc" id="L163">    return mappedColumnNames;</span>
   }
 
   public List&lt;String&gt; getUnmappedColumnNames(ResultMap resultMap, String columnPrefix) throws SQLException {
-<span class="fc" id="L163">    List&lt;String&gt; unMappedColumnNames = unMappedColumnNamesMap.get(getMapKey(resultMap, columnPrefix));</span>
-<span class="fc bfc" id="L164" title="All 2 branches covered.">    if (unMappedColumnNames == null) {</span>
-<span class="fc" id="L165">      loadMappedAndUnmappedColumnNames(resultMap, columnPrefix);</span>
-<span class="fc" id="L166">      unMappedColumnNames = unMappedColumnNamesMap.get(getMapKey(resultMap, columnPrefix));</span>
+<span class="fc" id="L167">    List&lt;String&gt; unMappedColumnNames = unMappedColumnNamesMap.get(getMapKey(resultMap, columnPrefix));</span>
+<span class="fc bfc" id="L168" title="All 2 branches covered.">    if (unMappedColumnNames == null) {</span>
+<span class="fc" id="L169">      loadMappedAndUnmappedColumnNames(resultMap, columnPrefix);</span>
+<span class="fc" id="L170">      unMappedColumnNames = unMappedColumnNamesMap.get(getMapKey(resultMap, columnPrefix));</span>
     }
-<span class="fc" id="L168">    return unMappedColumnNames;</span>
+<span class="fc" id="L172">    return unMappedColumnNames;</span>
   }
 
   private String getMapKey(ResultMap resultMap, String columnPrefix) {
-<span class="fc" id="L172">    return resultMap.getId() + &quot;:&quot; + columnPrefix;</span>
+<span class="fc" id="L176">    return resultMap.getId() + &quot;:&quot; + columnPrefix;</span>
   }
 
   private Set&lt;String&gt; prependPrefixes(Set&lt;String&gt; columnNames, String prefix) {
-<span class="pc bpc" id="L176" title="2 of 8 branches missed.">    if (columnNames == null || columnNames.isEmpty() || prefix == null || prefix.length() == 0) {</span>
-<span class="fc" id="L177">      return columnNames;</span>
+<span class="pc bpc" id="L180" title="2 of 8 branches missed.">    if (columnNames == null || columnNames.isEmpty() || prefix == null || prefix.length() == 0) {</span>
+<span class="fc" id="L181">      return columnNames;</span>
     }
-<span class="fc" id="L179">    final Set&lt;String&gt; prefixed = new HashSet&lt;String&gt;();</span>
-<span class="fc bfc" id="L180" title="All 2 branches covered.">    for (String columnName : columnNames) {</span>
-<span class="fc" id="L181">      prefixed.add(prefix + columnName);</span>
-<span class="fc" id="L182">    }</span>
-<span class="fc" id="L183">    return prefixed;</span>
+<span class="fc" id="L183">    final Set&lt;String&gt; prefixed = new HashSet&lt;String&gt;();</span>
+<span class="fc bfc" id="L184" title="All 2 branches covered.">    for (String columnName : columnNames) {</span>
+<span class="fc" id="L185">      prefixed.add(prefix + columnName);</span>
+<span class="fc" id="L186">    }</span>
+<span class="fc" id="L187">    return prefixed;</span>
   }
   
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

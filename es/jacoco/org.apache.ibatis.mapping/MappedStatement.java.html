@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>MappedStatement.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.mapping</a> &gt; <span class="el_source">MappedStatement.java</span></div><h1>MappedStatement.java</h1><pre class="source lang-java linenums">/**
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MappedStatement.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.mapping</a> &gt; <span class="el_source">MappedStatement.java</span></div><h1>MappedStatement.java</h1><pre class="source lang-java linenums">/**
  *    Copyright 2009-2016 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
@@ -74,11 +74,11 @@ public final class MappedStatement {
 <span class="fc" id="L74">      mappedStatement.sqlCommandType = sqlCommandType;</span>
 <span class="fc bfc" id="L75" title="All 4 branches covered.">      mappedStatement.keyGenerator = configuration.isUseGeneratedKeys() &amp;&amp; SqlCommandType.INSERT.equals(sqlCommandType) ? new Jdbc3KeyGenerator() : new NoKeyGenerator();</span>
 <span class="fc" id="L76">      String logId = id;</span>
-<span class="pc bpc" id="L77" title="1 of 2 branches missed.">      if (configuration.getLogPrefix() != null) {</span>
-<span class="nc" id="L78">        logId = configuration.getLogPrefix() + id;</span>
+<span class="fc bfc" id="L77" title="All 2 branches covered.">      if (configuration.getLogPrefix() != null) {</span>
+<span class="fc" id="L78">        logId = configuration.getLogPrefix() + id;</span>
       }
 <span class="fc" id="L80">      mappedStatement.statementLog = LogFactory.getLog(logId);</span>
-<span class="fc" id="L81">      mappedStatement.lang = configuration.getDefaultScriptingLanuageInstance();</span>
+<span class="fc" id="L81">      mappedStatement.lang = configuration.getDefaultScriptingLanguageInstance();</span>
 <span class="fc" id="L82">    }</span>
 
     public Builder resource(String resource) {
@@ -149,12 +149,12 @@ public final class MappedStatement {
     }
 
     public Builder keyProperty(String keyProperty) {
-<span class="fc" id="L152">      mappedStatement.keyProperties = delimitedStringtoArray(keyProperty);</span>
+<span class="fc" id="L152">      mappedStatement.keyProperties = delimitedStringToArray(keyProperty);</span>
 <span class="fc" id="L153">      return this;</span>
     }
 
     public Builder keyColumn(String keyColumn) {
-<span class="fc" id="L157">      mappedStatement.keyColumns = delimitedStringtoArray(keyColumn);</span>
+<span class="fc" id="L157">      mappedStatement.keyColumns = delimitedStringToArray(keyColumn);</span>
 <span class="fc" id="L158">      return this;</span>
     }
 
@@ -169,14 +169,14 @@ public final class MappedStatement {
     }
 
     public Builder resultSets(String resultSet) {
-<span class="fc" id="L172">      mappedStatement.resultSets = delimitedStringtoArray(resultSet);</span>
+<span class="fc" id="L172">      mappedStatement.resultSets = delimitedStringToArray(resultSet);</span>
 <span class="fc" id="L173">      return this;</span>
     }
 
     /** @deprecated Use {@link #resultSets} */
     @Deprecated
     public Builder resulSets(String resultSet) {
-<span class="nc" id="L179">      mappedStatement.resultSets = delimitedStringtoArray(resultSet);</span>
+<span class="nc" id="L179">      mappedStatement.resultSets = delimitedStringToArray(resultSet);</span>
 <span class="nc" id="L180">      return this;</span>
     }
     
@@ -309,7 +309,7 @@ public final class MappedStatement {
 <span class="fc" id="L309">    return boundSql;</span>
   }
 
-  private static String[] delimitedStringtoArray(String in) {
+  private static String[] delimitedStringToArray(String in) {
 <span class="fc bfc" id="L313" title="All 4 branches covered.">    if (in == null || in.trim().length() == 0) {</span>
 <span class="fc" id="L314">      return null;</span>
     } else {
@@ -318,4 +318,4 @@ public final class MappedStatement {
   }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ja"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>Jdbc3KeyGenerator.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.executor.keygen</a> &gt; <span class="el_source">Jdbc3KeyGenerator.java</span></div><h1>Jdbc3KeyGenerator.java</h1><pre class="source lang-java linenums">/**
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ja"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Jdbc3KeyGenerator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.executor.keygen</a> &gt; <span class="el_source">Jdbc3KeyGenerator.java</span></div><h1>Jdbc3KeyGenerator.java</h1><pre class="source lang-java linenums">/**
  *    Copyright 2009-2016 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
@@ -67,12 +67,12 @@ import org.apache.ibatis.type.TypeHandlerRegistry;
 <span class="fc" id="L67">          populateKeys(rs, metaParam, keyProperties, typeHandlers);</span>
 <span class="fc" id="L68">        }</span>
       }
-<span class="nc" id="L70">    } catch (Exception e) {</span>
-<span class="nc" id="L71">      throw new ExecutorException(&quot;Error getting generated key or setting result to parameter object. Cause: &quot; + e, e);</span>
+<span class="fc" id="L70">    } catch (Exception e) {</span>
+<span class="fc" id="L71">      throw new ExecutorException(&quot;Error getting generated key or setting result to parameter object. Cause: &quot; + e, e);</span>
     } finally {
-<span class="pc bpc" id="L73" title="3 of 4 branches missed.">      if (rs != null) {</span>
+<span class="pc bpc" id="L73" title="2 of 4 branches missed.">      if (rs != null) {</span>
         try {
-<span class="pc" id="L75">          rs.close();</span>
+<span class="fc" id="L75">          rs.close();</span>
 <span class="nc" id="L76">        } catch (Exception e) {</span>
           // ignore
 <span class="pc" id="L78">        }</span>
@@ -104,7 +104,7 @@ import org.apache.ibatis.type.TypeHandlerRegistry;
   private TypeHandler&lt;?&gt;[] getTypeHandlers(TypeHandlerRegistry typeHandlerRegistry, MetaObject metaParam, String[] keyProperties, ResultSetMetaData rsmd) throws SQLException {
 <span class="fc" id="L105">    TypeHandler&lt;?&gt;[] typeHandlers = new TypeHandler&lt;?&gt;[keyProperties.length];</span>
 <span class="fc bfc" id="L106" title="All 2 branches covered.">    for (int i = 0; i &lt; keyProperties.length; i++) {</span>
-<span class="pc bpc" id="L107" title="1 of 2 branches missed.">      if (metaParam.hasSetter(keyProperties[i])) {</span>
+<span class="fc bfc" id="L107" title="All 2 branches covered.">      if (metaParam.hasSetter(keyProperties[i])) {</span>
 <span class="fc" id="L108">        Class&lt;?&gt; keyPropertyType = metaParam.getSetterType(keyProperties[i]);</span>
 <span class="fc" id="L109">        TypeHandler&lt;?&gt; th = typeHandlerRegistry.getTypeHandler(keyPropertyType, JdbcType.forCode(rsmd.getColumnType(i + 1)));</span>
 <span class="fc" id="L110">        typeHandlers[i] = th;</span>
@@ -115,13 +115,17 @@ import org.apache.ibatis.type.TypeHandlerRegistry;
 
   private void populateKeys(ResultSet rs, MetaObject metaParam, String[] keyProperties, TypeHandler&lt;?&gt;[] typeHandlers) throws SQLException {
 <span class="fc bfc" id="L117" title="All 2 branches covered.">    for (int i = 0; i &lt; keyProperties.length; i++) {</span>
-<span class="fc" id="L118">      TypeHandler&lt;?&gt; th = typeHandlers[i];</span>
-<span class="pc bpc" id="L119" title="1 of 2 branches missed.">      if (th != null) {</span>
-<span class="fc" id="L120">        Object value = th.getResult(rs, i + 1);</span>
-<span class="fc" id="L121">        metaParam.setValue(keyProperties[i], value);</span>
+<span class="fc" id="L118">      String property = keyProperties[i];</span>
+<span class="fc bfc" id="L119" title="All 2 branches covered.">      if (!metaParam.hasSetter(property)) {</span>
+<span class="fc" id="L120">        throw new ExecutorException(&quot;No setter found for the keyProperty '&quot; + property + &quot;' in &quot; + metaParam.getOriginalObject().getClass().getName() + &quot;.&quot;);</span>
+      }
+<span class="fc" id="L122">      TypeHandler&lt;?&gt; th = typeHandlers[i];</span>
+<span class="pc bpc" id="L123" title="1 of 2 branches missed.">      if (th != null) {</span>
+<span class="fc" id="L124">        Object value = th.getResult(rs, i + 1);</span>
+<span class="fc" id="L125">        metaParam.setValue(property, value);</span>
       }
     }
-<span class="fc" id="L124">  }</span>
+<span class="fc" id="L128">  }</span>
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

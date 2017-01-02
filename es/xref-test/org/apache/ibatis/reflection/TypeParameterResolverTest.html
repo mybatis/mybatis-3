@@ -379,9 +379,40 @@
 <a class="jxr_linenumber" name="L371" href="#L371">371</a>     Type result = TypeParameterResolver.resolveFieldType(field, clazz);
 <a class="jxr_linenumber" name="L372" href="#L372">372</a>     assertEquals(String.<strong class="jxr_keyword">class</strong>, result);
 <a class="jxr_linenumber" name="L373" href="#L373">373</a>   }
-<a class="jxr_linenumber" name="L374" href="#L374">374</a> }
+<a class="jxr_linenumber" name="L374" href="#L374">374</a> 
+<a class="jxr_linenumber" name="L375" href="#L375">375</a>   @Test
+<a class="jxr_linenumber" name="L376" href="#L376">376</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testReturnParam_WildcardWithUpperBounds() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L377" href="#L377">377</a>     <strong class="jxr_keyword">class</strong> <a href="../../../../org/apache/ibatis/reflection/TypeParameterResolverTest.html">Key</a> {}
+<a class="jxr_linenumber" name="L378" href="#L378">378</a>     @SuppressWarnings(<span class="jxr_string">"unused"</span>)
+<a class="jxr_linenumber" name="L379" href="#L379">379</a>     <strong class="jxr_keyword">class</strong> KeyBean&lt;S <strong class="jxr_keyword">extends</strong> <a href="../../../../org/apache/ibatis/reflection/TypeParameterResolverTest.html">Key</a> &amp; Cloneable, T <strong class="jxr_keyword">extends</strong> Key&gt; {
+<a class="jxr_linenumber" name="L380" href="#L380">380</a>       <strong class="jxr_keyword">private</strong> S key1;
+<a class="jxr_linenumber" name="L381" href="#L381">381</a>       <strong class="jxr_keyword">private</strong> T key2;
+<a class="jxr_linenumber" name="L382" href="#L382">382</a>       <strong class="jxr_keyword">public</strong> S getKey1() {
+<a class="jxr_linenumber" name="L383" href="#L383">383</a>         <strong class="jxr_keyword">return</strong> key1;
+<a class="jxr_linenumber" name="L384" href="#L384">384</a>       }
+<a class="jxr_linenumber" name="L385" href="#L385">385</a>       <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setKey1(S key1) {
+<a class="jxr_linenumber" name="L386" href="#L386">386</a>         <strong class="jxr_keyword">this</strong>.key1 = key1;
+<a class="jxr_linenumber" name="L387" href="#L387">387</a>       }
+<a class="jxr_linenumber" name="L388" href="#L388">388</a>       <strong class="jxr_keyword">public</strong> T getKey2() {
+<a class="jxr_linenumber" name="L389" href="#L389">389</a>         <strong class="jxr_keyword">return</strong> key2;
+<a class="jxr_linenumber" name="L390" href="#L390">390</a>       }
+<a class="jxr_linenumber" name="L391" href="#L391">391</a>       <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setKey2(T key2) {
+<a class="jxr_linenumber" name="L392" href="#L392">392</a>         <strong class="jxr_keyword">this</strong>.key2 = key2;
+<a class="jxr_linenumber" name="L393" href="#L393">393</a>       }
+<a class="jxr_linenumber" name="L394" href="#L394">394</a>     }
+<a class="jxr_linenumber" name="L395" href="#L395">395</a>     Class&lt;?&gt; clazz = KeyBean.<strong class="jxr_keyword">class</strong>;
+<a class="jxr_linenumber" name="L396" href="#L396">396</a>     Method getter1 = clazz.getMethod(<span class="jxr_string">"getKey1"</span>);
+<a class="jxr_linenumber" name="L397" href="#L397">397</a>     assertEquals(Key.<strong class="jxr_keyword">class</strong>, TypeParameterResolver.resolveReturnType(getter1, clazz));
+<a class="jxr_linenumber" name="L398" href="#L398">398</a>     Method setter1 = clazz.getMethod(<span class="jxr_string">"setKey1"</span>, Key.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L399" href="#L399">399</a>     assertEquals(Key.<strong class="jxr_keyword">class</strong>, TypeParameterResolver.resolveParamTypes(setter1, clazz)[0]);
+<a class="jxr_linenumber" name="L400" href="#L400">400</a>     Method getter2 = clazz.getMethod(<span class="jxr_string">"getKey2"</span>);
+<a class="jxr_linenumber" name="L401" href="#L401">401</a>     assertEquals(Key.<strong class="jxr_keyword">class</strong>, TypeParameterResolver.resolveReturnType(getter2, clazz));
+<a class="jxr_linenumber" name="L402" href="#L402">402</a>     Method setter2 = clazz.getMethod(<span class="jxr_string">"setKey2"</span>, Key.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L403" href="#L403">403</a>     assertEquals(Key.<strong class="jxr_keyword">class</strong>, TypeParameterResolver.resolveParamTypes(setter2, clazz)[0]);
+<a class="jxr_linenumber" name="L404" href="#L404">404</a>   }
+<a class="jxr_linenumber" name="L405" href="#L405">405</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2016 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2009&#x2013;2017 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
 </body>
 </html>

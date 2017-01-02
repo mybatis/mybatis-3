@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ko"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>DefaultResultSetHandler.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.executor.resultset</a> &gt; <span class="el_source">DefaultResultSetHandler.java</span></div><h1>DefaultResultSetHandler.java</h1><pre class="source lang-java linenums">/**
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ko"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DefaultResultSetHandler.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.executor.resultset</a> &gt; <span class="el_source">DefaultResultSetHandler.java</span></div><h1>DefaultResultSetHandler.java</h1><pre class="source lang-java linenums">/**
  *    Copyright 2009-2016 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
@@ -28,6 +28,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.ibatis.binding.MapperMethod.ParamMap;
 import org.apache.ibatis.cache.CacheKey;
 import org.apache.ibatis.cursor.Cursor;
 import org.apache.ibatis.cursor.defaults.DefaultCursor;
@@ -63,10 +64,11 @@ import org.apache.ibatis.type.TypeHandlerRegistry;
  * @author Clinton Begin
  * @author Eduardo Macarron
  * @author Iwao AVE!
+ * @author Kazuki Shimizu
  */
 public class DefaultResultSetHandler implements ResultSetHandler {
 
-<span class="fc" id="L69">  private static final Object DEFERED = new Object();</span>
+<span class="fc" id="L71">  private static final Object DEFERED = new Object();</span>
 
   private final Executor executor;
   private final Configuration configuration;
@@ -80,19 +82,21 @@ public class DefaultResultSetHandler implements ResultSetHandler {
   private final ReflectorFactory reflectorFactory;
 
   // nested resultmaps
-<span class="fc" id="L83">  private final Map&lt;CacheKey, Object&gt; nestedResultObjects = new HashMap&lt;CacheKey, Object&gt;();</span>
-<span class="fc" id="L84">  private final Map&lt;String, Object&gt; ancestorObjects = new HashMap&lt;String, Object&gt;();</span>
-<span class="fc" id="L85">  private final Map&lt;String, String&gt; ancestorColumnPrefix = new HashMap&lt;String, String&gt;();</span>
+<span class="fc" id="L85">  private final Map&lt;CacheKey, Object&gt; nestedResultObjects = new HashMap&lt;CacheKey, Object&gt;();</span>
+<span class="fc" id="L86">  private final Map&lt;String, Object&gt; ancestorObjects = new HashMap&lt;String, Object&gt;();</span>
   private Object previousRowValue;
 
   // multiple resultsets
-<span class="fc" id="L89">  private final Map&lt;String, ResultMapping&gt; nextResultMaps = new HashMap&lt;String, ResultMapping&gt;();</span>
-<span class="fc" id="L90">  private final Map&lt;CacheKey, List&lt;PendingRelation&gt;&gt; pendingRelations = new HashMap&lt;CacheKey, List&lt;PendingRelation&gt;&gt;();</span>
+<span class="fc" id="L90">  private final Map&lt;String, ResultMapping&gt; nextResultMaps = new HashMap&lt;String, ResultMapping&gt;();</span>
+<span class="fc" id="L91">  private final Map&lt;CacheKey, List&lt;PendingRelation&gt;&gt; pendingRelations = new HashMap&lt;CacheKey, List&lt;PendingRelation&gt;&gt;();</span>
 
   // Cached Automappings
-<span class="fc" id="L93">  private final Map&lt;String, List&lt;UnMappedColumnAutoMapping&gt;&gt; autoMappingsCache = new HashMap&lt;String, List&lt;UnMappedColumnAutoMapping&gt;&gt;();</span>
+<span class="fc" id="L94">  private final Map&lt;String, List&lt;UnMappedColumnAutoMapping&gt;&gt; autoMappingsCache = new HashMap&lt;String, List&lt;UnMappedColumnAutoMapping&gt;&gt;();</span>
+
+  // temporary marking flag that indicate using constructor mapping (use field to reduce memory usage)
+  private boolean useConstructorMappings;
   
-<span class="fc" id="L95">  private static class PendingRelation {</span>
+<span class="fc" id="L99">  private static class PendingRelation {</span>
     public MetaObject metaObject;
     public ResultMapping propertyMapping;
   }
@@ -102,27 +106,27 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     private final String property;    
     private final TypeHandler&lt;?&gt; typeHandler;
     private final boolean primitive;
-<span class="fc" id="L105">    public UnMappedColumnAutoMapping(String column, String property, TypeHandler&lt;?&gt; typeHandler, boolean primitive) {</span>
-<span class="fc" id="L106">      this.column = column;</span>
-<span class="fc" id="L107">      this.property = property;</span>
-<span class="fc" id="L108">      this.typeHandler = typeHandler;</span>
-<span class="fc" id="L109">      this.primitive = primitive;</span>
-<span class="fc" id="L110">    }</span>
+<span class="fc" id="L109">    public UnMappedColumnAutoMapping(String column, String property, TypeHandler&lt;?&gt; typeHandler, boolean primitive) {</span>
+<span class="fc" id="L110">      this.column = column;</span>
+<span class="fc" id="L111">      this.property = property;</span>
+<span class="fc" id="L112">      this.typeHandler = typeHandler;</span>
+<span class="fc" id="L113">      this.primitive = primitive;</span>
+<span class="fc" id="L114">    }</span>
   }  
   
   public DefaultResultSetHandler(Executor executor, MappedStatement mappedStatement, ParameterHandler parameterHandler, ResultHandler&lt;?&gt; resultHandler, BoundSql boundSql,
-<span class="fc" id="L114">      RowBounds rowBounds) {</span>
-<span class="fc" id="L115">    this.executor = executor;</span>
-<span class="fc" id="L116">    this.configuration = mappedStatement.getConfiguration();</span>
-<span class="fc" id="L117">    this.mappedStatement = mappedStatement;</span>
-<span class="fc" id="L118">    this.rowBounds = rowBounds;</span>
-<span class="fc" id="L119">    this.parameterHandler = parameterHandler;</span>
-<span class="fc" id="L120">    this.boundSql = boundSql;</span>
-<span class="fc" id="L121">    this.typeHandlerRegistry = configuration.getTypeHandlerRegistry();</span>
-<span class="fc" id="L122">    this.objectFactory = configuration.getObjectFactory();</span>
-<span class="fc" id="L123">    this.reflectorFactory = configuration.getReflectorFactory();</span>
-<span class="fc" id="L124">    this.resultHandler = resultHandler;</span>
-<span class="fc" id="L125">  }</span>
+<span class="fc" id="L118">      RowBounds rowBounds) {</span>
+<span class="fc" id="L119">    this.executor = executor;</span>
+<span class="fc" id="L120">    this.configuration = mappedStatement.getConfiguration();</span>
+<span class="fc" id="L121">    this.mappedStatement = mappedStatement;</span>
+<span class="fc" id="L122">    this.rowBounds = rowBounds;</span>
+<span class="fc" id="L123">    this.parameterHandler = parameterHandler;</span>
+<span class="fc" id="L124">    this.boundSql = boundSql;</span>
+<span class="fc" id="L125">    this.typeHandlerRegistry = configuration.getTypeHandlerRegistry();</span>
+<span class="fc" id="L126">    this.objectFactory = configuration.getObjectFactory();</span>
+<span class="fc" id="L127">    this.reflectorFactory = configuration.getReflectorFactory();</span>
+<span class="fc" id="L128">    this.resultHandler = resultHandler;</span>
+<span class="fc" id="L129">  }</span>
 
   //
   // HANDLE OUTPUT PARAMETER
@@ -130,175 +134,174 @@ public class DefaultResultSetHandler implements ResultSetHandler {
 
   @Override
   public void handleOutputParameters(CallableStatement cs) throws SQLException {
-<span class="fc" id="L133">    final Object parameterObject = parameterHandler.getParameterObject();</span>
-<span class="fc" id="L134">    final MetaObject metaParam = configuration.newMetaObject(parameterObject);</span>
-<span class="fc" id="L135">    final List&lt;ParameterMapping&gt; parameterMappings = boundSql.getParameterMappings();</span>
-<span class="fc bfc" id="L136" title="All 2 branches covered.">    for (int i = 0; i &lt; parameterMappings.size(); i++) {</span>
-<span class="fc" id="L137">      final ParameterMapping parameterMapping = parameterMappings.get(i);</span>
-<span class="pc bpc" id="L138" title="1 of 4 branches missed.">      if (parameterMapping.getMode() == ParameterMode.OUT || parameterMapping.getMode() == ParameterMode.INOUT) {</span>
-<span class="pc bpc" id="L139" title="1 of 2 branches missed.">        if (ResultSet.class.equals(parameterMapping.getJavaType())) {</span>
-<span class="nc" id="L140">          handleRefCursorOutputParameter((ResultSet) cs.getObject(i + 1), parameterMapping, metaParam);</span>
+<span class="fc" id="L137">    final Object parameterObject = parameterHandler.getParameterObject();</span>
+<span class="fc" id="L138">    final MetaObject metaParam = configuration.newMetaObject(parameterObject);</span>
+<span class="fc" id="L139">    final List&lt;ParameterMapping&gt; parameterMappings = boundSql.getParameterMappings();</span>
+<span class="fc bfc" id="L140" title="All 2 branches covered.">    for (int i = 0; i &lt; parameterMappings.size(); i++) {</span>
+<span class="fc" id="L141">      final ParameterMapping parameterMapping = parameterMappings.get(i);</span>
+<span class="pc bpc" id="L142" title="1 of 4 branches missed.">      if (parameterMapping.getMode() == ParameterMode.OUT || parameterMapping.getMode() == ParameterMode.INOUT) {</span>
+<span class="pc bpc" id="L143" title="1 of 2 branches missed.">        if (ResultSet.class.equals(parameterMapping.getJavaType())) {</span>
+<span class="nc" id="L144">          handleRefCursorOutputParameter((ResultSet) cs.getObject(i + 1), parameterMapping, metaParam);</span>
         } else {
-<span class="fc" id="L142">          final TypeHandler&lt;?&gt; typeHandler = parameterMapping.getTypeHandler();</span>
-<span class="fc" id="L143">          metaParam.setValue(parameterMapping.getProperty(), typeHandler.getResult(cs, i + 1));</span>
+<span class="fc" id="L146">          final TypeHandler&lt;?&gt; typeHandler = parameterMapping.getTypeHandler();</span>
+<span class="fc" id="L147">          metaParam.setValue(parameterMapping.getProperty(), typeHandler.getResult(cs, i + 1));</span>
         }
       }
     }
-<span class="fc" id="L147">  }</span>
+<span class="fc" id="L151">  }</span>
 
   private void handleRefCursorOutputParameter(ResultSet rs, ParameterMapping parameterMapping, MetaObject metaParam) throws SQLException {
-<span class="nc bnc" id="L150" title="All 2 branches missed.">    if (rs == null) {</span>
-<span class="nc" id="L151">      return;</span>
+<span class="nc bnc" id="L154" title="All 2 branches missed.">    if (rs == null) {</span>
+<span class="nc" id="L155">      return;</span>
     }
     try {
-<span class="nc" id="L154">      final String resultMapId = parameterMapping.getResultMapId();</span>
-<span class="nc" id="L155">      final ResultMap resultMap = configuration.getResultMap(resultMapId);</span>
-<span class="nc" id="L156">      final DefaultResultHandler resultHandler = new DefaultResultHandler(objectFactory);</span>
-<span class="nc" id="L157">      final ResultSetWrapper rsw = new ResultSetWrapper(rs, configuration);</span>
-<span class="nc" id="L158">      handleRowValues(rsw, resultMap, resultHandler, new RowBounds(), null);</span>
-<span class="nc" id="L159">      metaParam.setValue(parameterMapping.getProperty(), resultHandler.getResultList());</span>
+<span class="nc" id="L158">      final String resultMapId = parameterMapping.getResultMapId();</span>
+<span class="nc" id="L159">      final ResultMap resultMap = configuration.getResultMap(resultMapId);</span>
+<span class="nc" id="L160">      final DefaultResultHandler resultHandler = new DefaultResultHandler(objectFactory);</span>
+<span class="nc" id="L161">      final ResultSetWrapper rsw = new ResultSetWrapper(rs, configuration);</span>
+<span class="nc" id="L162">      handleRowValues(rsw, resultMap, resultHandler, new RowBounds(), null);</span>
+<span class="nc" id="L163">      metaParam.setValue(parameterMapping.getProperty(), resultHandler.getResultList());</span>
     } finally {
       // issue #228 (close resultsets)
-<span class="nc" id="L162">      closeResultSet(rs);</span>
-<span class="nc" id="L163">    }</span>
-<span class="nc" id="L164">  }</span>
+<span class="nc" id="L166">      closeResultSet(rs);</span>
+<span class="nc" id="L167">    }</span>
+<span class="nc" id="L168">  }</span>
 
   //
   // HANDLE RESULT SETS
   //
   @Override
   public List&lt;Object&gt; handleResultSets(Statement stmt) throws SQLException {
-<span class="fc" id="L171">    ErrorContext.instance().activity(&quot;handling results&quot;).object(mappedStatement.getId());</span>
+<span class="fc" id="L175">    ErrorContext.instance().activity(&quot;handling results&quot;).object(mappedStatement.getId());</span>
 
-<span class="fc" id="L173">    final List&lt;Object&gt; multipleResults = new ArrayList&lt;Object&gt;();</span>
+<span class="fc" id="L177">    final List&lt;Object&gt; multipleResults = new ArrayList&lt;Object&gt;();</span>
 
-<span class="fc" id="L175">    int resultSetCount = 0;</span>
-<span class="fc" id="L176">    ResultSetWrapper rsw = getFirstResultSet(stmt);</span>
+<span class="fc" id="L179">    int resultSetCount = 0;</span>
+<span class="fc" id="L180">    ResultSetWrapper rsw = getFirstResultSet(stmt);</span>
 
-<span class="fc" id="L178">    List&lt;ResultMap&gt; resultMaps = mappedStatement.getResultMaps();</span>
-<span class="fc" id="L179">    int resultMapCount = resultMaps.size();</span>
-<span class="fc" id="L180">    validateResultMapsCount(rsw, resultMapCount);</span>
-<span class="fc bfc" id="L181" title="All 4 branches covered.">    while (rsw != null &amp;&amp; resultMapCount &gt; resultSetCount) {</span>
-<span class="fc" id="L182">      ResultMap resultMap = resultMaps.get(resultSetCount);</span>
-<span class="fc" id="L183">      handleResultSet(rsw, resultMap, multipleResults, null);</span>
-<span class="fc" id="L184">      rsw = getNextResultSet(stmt);</span>
-<span class="fc" id="L185">      cleanUpAfterHandlingResultSet();</span>
-<span class="fc" id="L186">      resultSetCount++;</span>
-<span class="fc" id="L187">    }</span>
+<span class="fc" id="L182">    List&lt;ResultMap&gt; resultMaps = mappedStatement.getResultMaps();</span>
+<span class="fc" id="L183">    int resultMapCount = resultMaps.size();</span>
+<span class="fc" id="L184">    validateResultMapsCount(rsw, resultMapCount);</span>
+<span class="fc bfc" id="L185" title="All 4 branches covered.">    while (rsw != null &amp;&amp; resultMapCount &gt; resultSetCount) {</span>
+<span class="fc" id="L186">      ResultMap resultMap = resultMaps.get(resultSetCount);</span>
+<span class="fc" id="L187">      handleResultSet(rsw, resultMap, multipleResults, null);</span>
+<span class="fc" id="L188">      rsw = getNextResultSet(stmt);</span>
+<span class="fc" id="L189">      cleanUpAfterHandlingResultSet();</span>
+<span class="fc" id="L190">      resultSetCount++;</span>
+<span class="fc" id="L191">    }</span>
 
-<span class="fc" id="L189">    String[] resultSets = mappedStatement.getResultSets();</span>
-<span class="fc bfc" id="L190" title="All 2 branches covered.">    if (resultSets != null) {</span>
-<span class="pc bpc" id="L191" title="1 of 4 branches missed.">      while (rsw != null &amp;&amp; resultSetCount &lt; resultSets.length) {</span>
-<span class="fc" id="L192">        ResultMapping parentMapping = nextResultMaps.get(resultSets[resultSetCount]);</span>
-<span class="pc bpc" id="L193" title="1 of 2 branches missed.">        if (parentMapping != null) {</span>
-<span class="fc" id="L194">          String nestedResultMapId = parentMapping.getNestedResultMapId();</span>
-<span class="fc" id="L195">          ResultMap resultMap = configuration.getResultMap(nestedResultMapId);</span>
-<span class="fc" id="L196">          handleResultSet(rsw, resultMap, null, parentMapping);</span>
+<span class="fc" id="L193">    String[] resultSets = mappedStatement.getResultSets();</span>
+<span class="fc bfc" id="L194" title="All 2 branches covered.">    if (resultSets != null) {</span>
+<span class="pc bpc" id="L195" title="1 of 4 branches missed.">      while (rsw != null &amp;&amp; resultSetCount &lt; resultSets.length) {</span>
+<span class="fc" id="L196">        ResultMapping parentMapping = nextResultMaps.get(resultSets[resultSetCount]);</span>
+<span class="pc bpc" id="L197" title="1 of 2 branches missed.">        if (parentMapping != null) {</span>
+<span class="fc" id="L198">          String nestedResultMapId = parentMapping.getNestedResultMapId();</span>
+<span class="fc" id="L199">          ResultMap resultMap = configuration.getResultMap(nestedResultMapId);</span>
+<span class="fc" id="L200">          handleResultSet(rsw, resultMap, null, parentMapping);</span>
         }
-<span class="fc" id="L198">        rsw = getNextResultSet(stmt);</span>
-<span class="fc" id="L199">        cleanUpAfterHandlingResultSet();</span>
-<span class="fc" id="L200">        resultSetCount++;</span>
-<span class="fc" id="L201">      }</span>
+<span class="fc" id="L202">        rsw = getNextResultSet(stmt);</span>
+<span class="fc" id="L203">        cleanUpAfterHandlingResultSet();</span>
+<span class="fc" id="L204">        resultSetCount++;</span>
+<span class="fc" id="L205">      }</span>
     }
 
-<span class="fc" id="L204">    return collapseSingleResultList(multipleResults);</span>
+<span class="fc" id="L208">    return collapseSingleResultList(multipleResults);</span>
   }
 
   @Override
   public &lt;E&gt; Cursor&lt;E&gt; handleCursorResultSets(Statement stmt) throws SQLException {
-<span class="fc" id="L209">    ErrorContext.instance().activity(&quot;handling cursor results&quot;).object(mappedStatement.getId());</span>
+<span class="fc" id="L213">    ErrorContext.instance().activity(&quot;handling cursor results&quot;).object(mappedStatement.getId());</span>
 
-<span class="fc" id="L211">    ResultSetWrapper rsw = getFirstResultSet(stmt);</span>
+<span class="fc" id="L215">    ResultSetWrapper rsw = getFirstResultSet(stmt);</span>
 
-<span class="fc" id="L213">    List&lt;ResultMap&gt; resultMaps = mappedStatement.getResultMaps();</span>
+<span class="fc" id="L217">    List&lt;ResultMap&gt; resultMaps = mappedStatement.getResultMaps();</span>
 
-<span class="fc" id="L215">    int resultMapCount = resultMaps.size();</span>
-<span class="fc" id="L216">    validateResultMapsCount(rsw, resultMapCount);</span>
-<span class="pc bpc" id="L217" title="1 of 2 branches missed.">    if (resultMapCount != 1) {</span>
-<span class="nc" id="L218">      throw new ExecutorException(&quot;Cursor results cannot be mapped to multiple resultMaps&quot;);</span>
+<span class="fc" id="L219">    int resultMapCount = resultMaps.size();</span>
+<span class="fc" id="L220">    validateResultMapsCount(rsw, resultMapCount);</span>
+<span class="pc bpc" id="L221" title="1 of 2 branches missed.">    if (resultMapCount != 1) {</span>
+<span class="nc" id="L222">      throw new ExecutorException(&quot;Cursor results cannot be mapped to multiple resultMaps&quot;);</span>
     }
 
-<span class="fc" id="L221">    ResultMap resultMap = resultMaps.get(0);</span>
-<span class="fc" id="L222">    return new DefaultCursor&lt;E&gt;(this, resultMap, rsw, rowBounds);</span>
+<span class="fc" id="L225">    ResultMap resultMap = resultMaps.get(0);</span>
+<span class="fc" id="L226">    return new DefaultCursor&lt;E&gt;(this, resultMap, rsw, rowBounds);</span>
   }
 
   private ResultSetWrapper getFirstResultSet(Statement stmt) throws SQLException {
-<span class="fc" id="L226">    ResultSet rs = stmt.getResultSet();</span>
-<span class="fc bfc" id="L227" title="All 2 branches covered.">    while (rs == null) {</span>
+<span class="fc" id="L230">    ResultSet rs = stmt.getResultSet();</span>
+<span class="fc bfc" id="L231" title="All 2 branches covered.">    while (rs == null) {</span>
       // move forward to get the first resultset in case the driver
       // doesn't return the resultset as the first result (HSQLDB 2.1)
-<span class="fc bfc" id="L230" title="All 2 branches covered.">      if (stmt.getMoreResults()) {</span>
-<span class="fc" id="L231">        rs = stmt.getResultSet();</span>
+<span class="fc bfc" id="L234" title="All 2 branches covered.">      if (stmt.getMoreResults()) {</span>
+<span class="fc" id="L235">        rs = stmt.getResultSet();</span>
       } else {
-<span class="pc bpc" id="L233" title="1 of 2 branches missed.">        if (stmt.getUpdateCount() == -1) {</span>
+<span class="pc bpc" id="L237" title="1 of 2 branches missed.">        if (stmt.getUpdateCount() == -1) {</span>
           // no more results. Must be no resultset
-<span class="fc" id="L235">          break;</span>
+<span class="fc" id="L239">          break;</span>
         }
       }
     }
-<span class="fc bfc" id="L239" title="All 2 branches covered.">    return rs != null ? new ResultSetWrapper(rs, configuration) : null;</span>
+<span class="fc bfc" id="L243" title="All 2 branches covered.">    return rs != null ? new ResultSetWrapper(rs, configuration) : null;</span>
   }
 
   private ResultSetWrapper getNextResultSet(Statement stmt) throws SQLException {
     // Making this method tolerant of bad JDBC drivers
     try {
-<span class="fc bfc" id="L245" title="All 2 branches covered.">      if (stmt.getConnection().getMetaData().supportsMultipleResultSets()) {</span>
+<span class="fc bfc" id="L249" title="All 2 branches covered.">      if (stmt.getConnection().getMetaData().supportsMultipleResultSets()) {</span>
         // Crazy Standard JDBC way of determining if there are more results
-<span class="pc bpc" id="L247" title="1 of 4 branches missed.">        if (!((!stmt.getMoreResults()) &amp;&amp; (stmt.getUpdateCount() == -1))) {</span>
-<span class="fc" id="L248">          ResultSet rs = stmt.getResultSet();</span>
-<span class="pc bpc" id="L249" title="1 of 2 branches missed.">          return rs != null ? new ResultSetWrapper(rs, configuration) : null;</span>
+<span class="pc bpc" id="L251" title="1 of 4 branches missed.">        if (!((!stmt.getMoreResults()) &amp;&amp; (stmt.getUpdateCount() == -1))) {</span>
+<span class="fc" id="L252">          ResultSet rs = stmt.getResultSet();</span>
+<span class="pc bpc" id="L253" title="1 of 2 branches missed.">          return rs != null ? new ResultSetWrapper(rs, configuration) : null;</span>
         }
       }
-<span class="nc" id="L252">    } catch (Exception e) {</span>
+<span class="nc" id="L256">    } catch (Exception e) {</span>
       // Intentionally ignored.
-<span class="fc" id="L254">    }</span>
-<span class="fc" id="L255">    return null;</span>
+<span class="fc" id="L258">    }</span>
+<span class="fc" id="L259">    return null;</span>
   }
 
   private void closeResultSet(ResultSet rs) {
     try {
-<span class="pc bpc" id="L260" title="1 of 2 branches missed.">      if (rs != null) {</span>
-<span class="fc" id="L261">        rs.close();</span>
+<span class="pc bpc" id="L264" title="1 of 2 branches missed.">      if (rs != null) {</span>
+<span class="fc" id="L265">        rs.close();</span>
       }
-<span class="nc" id="L263">    } catch (SQLException e) {</span>
+<span class="nc" id="L267">    } catch (SQLException e) {</span>
       // ignore
-<span class="fc" id="L265">    }</span>
-<span class="fc" id="L266">  }</span>
+<span class="fc" id="L269">    }</span>
+<span class="fc" id="L270">  }</span>
 
   private void cleanUpAfterHandlingResultSet() {
-<span class="fc" id="L269">    nestedResultObjects.clear();</span>
-<span class="fc" id="L270">    ancestorColumnPrefix.clear();</span>
-<span class="fc" id="L271">  }</span>
+<span class="fc" id="L273">    nestedResultObjects.clear();</span>
+<span class="fc" id="L274">  }</span>
 
   private void validateResultMapsCount(ResultSetWrapper rsw, int resultMapCount) {
-<span class="pc bpc" id="L274" title="1 of 4 branches missed.">    if (rsw != null &amp;&amp; resultMapCount &lt; 1) {</span>
-<span class="nc" id="L275">      throw new ExecutorException(&quot;A query was run and no Result Maps were found for the Mapped Statement '&quot; + mappedStatement.getId()</span>
+<span class="pc bpc" id="L277" title="1 of 4 branches missed.">    if (rsw != null &amp;&amp; resultMapCount &lt; 1) {</span>
+<span class="nc" id="L278">      throw new ExecutorException(&quot;A query was run and no Result Maps were found for the Mapped Statement '&quot; + mappedStatement.getId()</span>
           + &quot;'.  It's likely that neither a Result Type nor a Result Map was specified.&quot;);
     }
-<span class="fc" id="L278">  }</span>
+<span class="fc" id="L281">  }</span>
 
   private void handleResultSet(ResultSetWrapper rsw, ResultMap resultMap, List&lt;Object&gt; multipleResults, ResultMapping parentMapping) throws SQLException {
     try {
-<span class="fc bfc" id="L282" title="All 2 branches covered.">      if (parentMapping != null) {</span>
-<span class="fc" id="L283">        handleRowValues(rsw, resultMap, null, RowBounds.DEFAULT, parentMapping);</span>
+<span class="fc bfc" id="L285" title="All 2 branches covered.">      if (parentMapping != null) {</span>
+<span class="fc" id="L286">        handleRowValues(rsw, resultMap, null, RowBounds.DEFAULT, parentMapping);</span>
       } else {
-<span class="fc bfc" id="L285" title="All 2 branches covered.">        if (resultHandler == null) {</span>
-<span class="fc" id="L286">          DefaultResultHandler defaultResultHandler = new DefaultResultHandler(objectFactory);</span>
-<span class="fc" id="L287">          handleRowValues(rsw, resultMap, defaultResultHandler, rowBounds, null);</span>
-<span class="fc" id="L288">          multipleResults.add(defaultResultHandler.getResultList());</span>
-<span class="fc" id="L289">        } else {</span>
-<span class="fc" id="L290">          handleRowValues(rsw, resultMap, resultHandler, rowBounds, null);</span>
+<span class="fc bfc" id="L288" title="All 2 branches covered.">        if (resultHandler == null) {</span>
+<span class="fc" id="L289">          DefaultResultHandler defaultResultHandler = new DefaultResultHandler(objectFactory);</span>
+<span class="fc" id="L290">          handleRowValues(rsw, resultMap, defaultResultHandler, rowBounds, null);</span>
+<span class="fc" id="L291">          multipleResults.add(defaultResultHandler.getResultList());</span>
+<span class="fc" id="L292">        } else {</span>
+<span class="fc" id="L293">          handleRowValues(rsw, resultMap, resultHandler, rowBounds, null);</span>
         }
       }
     } finally {
       // issue #228 (close resultsets)
-<span class="fc" id="L295">      closeResultSet(rsw.getResultSet());</span>
-<span class="fc" id="L296">    }</span>
-<span class="fc" id="L297">  }</span>
+<span class="fc" id="L298">      closeResultSet(rsw.getResultSet());</span>
+<span class="fc" id="L299">    }</span>
+<span class="fc" id="L300">  }</span>
 
   @SuppressWarnings(&quot;unchecked&quot;)
   private List&lt;Object&gt; collapseSingleResultList(List&lt;Object&gt; multipleResults) {
-<span class="fc bfc" id="L301" title="All 2 branches covered.">    return multipleResults.size() == 1 ? (List&lt;Object&gt;) multipleResults.get(0) : multipleResults;</span>
+<span class="fc bfc" id="L304" title="All 2 branches covered.">    return multipleResults.size() == 1 ? (List&lt;Object&gt;) multipleResults.get(0) : multipleResults;</span>
   }
 
   //
@@ -306,100 +309,99 @@ public class DefaultResultSetHandler implements ResultSetHandler {
   //
 
   public void handleRowValues(ResultSetWrapper rsw, ResultMap resultMap, ResultHandler&lt;?&gt; resultHandler, RowBounds rowBounds, ResultMapping parentMapping) throws SQLException {
-<span class="fc bfc" id="L309" title="All 2 branches covered.">    if (resultMap.hasNestedResultMaps()) {</span>
-<span class="fc" id="L310">      ensureNoRowBounds();</span>
-<span class="fc" id="L311">      checkResultHandler();</span>
-<span class="fc" id="L312">      handleRowValuesForNestedResultMap(rsw, resultMap, resultHandler, rowBounds, parentMapping);</span>
+<span class="fc bfc" id="L312" title="All 2 branches covered.">    if (resultMap.hasNestedResultMaps()) {</span>
+<span class="fc" id="L313">      ensureNoRowBounds();</span>
+<span class="fc" id="L314">      checkResultHandler();</span>
+<span class="fc" id="L315">      handleRowValuesForNestedResultMap(rsw, resultMap, resultHandler, rowBounds, parentMapping);</span>
     } else {
-<span class="fc" id="L314">      handleRowValuesForSimpleResultMap(rsw, resultMap, resultHandler, rowBounds, parentMapping);</span>
+<span class="fc" id="L317">      handleRowValuesForSimpleResultMap(rsw, resultMap, resultHandler, rowBounds, parentMapping);</span>
     }
-<span class="fc" id="L316">  }</span>
+<span class="fc" id="L319">  }</span>
 
   private void ensureNoRowBounds() {
-<span class="pc bpc" id="L319" title="7 of 8 branches missed.">    if (configuration.isSafeRowBoundsEnabled() &amp;&amp; rowBounds != null &amp;&amp; (rowBounds.getLimit() &lt; RowBounds.NO_ROW_LIMIT || rowBounds.getOffset() &gt; RowBounds.NO_ROW_OFFSET)) {</span>
-<span class="nc" id="L320">      throw new ExecutorException(&quot;Mapped Statements with nested result mappings cannot be safely constrained by RowBounds. &quot;</span>
+<span class="pc bpc" id="L322" title="7 of 8 branches missed.">    if (configuration.isSafeRowBoundsEnabled() &amp;&amp; rowBounds != null &amp;&amp; (rowBounds.getLimit() &lt; RowBounds.NO_ROW_LIMIT || rowBounds.getOffset() &gt; RowBounds.NO_ROW_OFFSET)) {</span>
+<span class="nc" id="L323">      throw new ExecutorException(&quot;Mapped Statements with nested result mappings cannot be safely constrained by RowBounds. &quot;</span>
           + &quot;Use safeRowBoundsEnabled=false setting to bypass this check.&quot;);
     }
-<span class="fc" id="L323">  }</span>
+<span class="fc" id="L326">  }</span>
 
   protected void checkResultHandler() {
-<span class="pc bpc" id="L326" title="1 of 6 branches missed.">    if (resultHandler != null &amp;&amp; configuration.isSafeResultHandlerEnabled() &amp;&amp; !mappedStatement.isResultOrdered()) {</span>
-<span class="fc" id="L327">      throw new ExecutorException(&quot;Mapped Statements with nested result mappings cannot be safely used with a custom ResultHandler. &quot;</span>
+<span class="pc bpc" id="L329" title="1 of 6 branches missed.">    if (resultHandler != null &amp;&amp; configuration.isSafeResultHandlerEnabled() &amp;&amp; !mappedStatement.isResultOrdered()) {</span>
+<span class="fc" id="L330">      throw new ExecutorException(&quot;Mapped Statements with nested result mappings cannot be safely used with a custom ResultHandler. &quot;</span>
           + &quot;Use safeResultHandlerEnabled=false setting to bypass this check &quot;
           + &quot;or ensure your statement returns ordered data and set resultOrdered=true on it.&quot;);
     }
-<span class="fc" id="L331">  }</span>
+<span class="fc" id="L334">  }</span>
 
   private void handleRowValuesForSimpleResultMap(ResultSetWrapper rsw, ResultMap resultMap, ResultHandler&lt;?&gt; resultHandler, RowBounds rowBounds, ResultMapping parentMapping)
       throws SQLException {
-<span class="fc" id="L335">    DefaultResultContext&lt;Object&gt; resultContext = new DefaultResultContext&lt;Object&gt;();</span>
-<span class="fc" id="L336">    skipRows(rsw.getResultSet(), rowBounds);</span>
-<span class="fc bfc" id="L337" title="All 4 branches covered.">    while (shouldProcessMoreRows(resultContext, rowBounds) &amp;&amp; rsw.getResultSet().next()) {</span>
-<span class="fc" id="L338">      ResultMap discriminatedResultMap = resolveDiscriminatedResultMap(rsw.getResultSet(), resultMap, null);</span>
-<span class="fc" id="L339">      Object rowValue = getRowValue(rsw, discriminatedResultMap);</span>
-<span class="fc" id="L340">      storeObject(resultHandler, resultContext, rowValue, parentMapping, rsw.getResultSet());</span>
-<span class="fc" id="L341">    }</span>
-<span class="fc" id="L342">  }</span>
+<span class="fc" id="L338">    DefaultResultContext&lt;Object&gt; resultContext = new DefaultResultContext&lt;Object&gt;();</span>
+<span class="fc" id="L339">    skipRows(rsw.getResultSet(), rowBounds);</span>
+<span class="fc bfc" id="L340" title="All 4 branches covered.">    while (shouldProcessMoreRows(resultContext, rowBounds) &amp;&amp; rsw.getResultSet().next()) {</span>
+<span class="fc" id="L341">      ResultMap discriminatedResultMap = resolveDiscriminatedResultMap(rsw.getResultSet(), resultMap, null);</span>
+<span class="fc" id="L342">      Object rowValue = getRowValue(rsw, discriminatedResultMap);</span>
+<span class="fc" id="L343">      storeObject(resultHandler, resultContext, rowValue, parentMapping, rsw.getResultSet());</span>
+<span class="fc" id="L344">    }</span>
+<span class="fc" id="L345">  }</span>
 
   private void storeObject(ResultHandler&lt;?&gt; resultHandler, DefaultResultContext&lt;Object&gt; resultContext, Object rowValue, ResultMapping parentMapping, ResultSet rs) throws SQLException {
-<span class="fc bfc" id="L345" title="All 2 branches covered.">    if (parentMapping != null) {</span>
-<span class="fc" id="L346">      linkToParents(rs, parentMapping, rowValue);</span>
+<span class="fc bfc" id="L348" title="All 2 branches covered.">    if (parentMapping != null) {</span>
+<span class="fc" id="L349">      linkToParents(rs, parentMapping, rowValue);</span>
     } else {
-<span class="fc" id="L348">      callResultHandler(resultHandler, resultContext, rowValue);</span>
+<span class="fc" id="L351">      callResultHandler(resultHandler, resultContext, rowValue);</span>
     }
-<span class="fc" id="L350">  }</span>
+<span class="fc" id="L353">  }</span>
 
   @SuppressWarnings(&quot;unchecked&quot; /* because ResultHandler&lt;?&gt; is always ResultHandler&lt;Object&gt;*/)
   private void callResultHandler(ResultHandler&lt;?&gt; resultHandler, DefaultResultContext&lt;Object&gt; resultContext, Object rowValue) {
-<span class="fc" id="L354">    resultContext.nextResultObject(rowValue);</span>
-<span class="fc" id="L355">    ((ResultHandler&lt;Object&gt;)resultHandler).handleResult(resultContext);</span>
-<span class="fc" id="L356">  }</span>
+<span class="fc" id="L357">    resultContext.nextResultObject(rowValue);</span>
+<span class="fc" id="L358">    ((ResultHandler&lt;Object&gt;)resultHandler).handleResult(resultContext);</span>
+<span class="fc" id="L359">  }</span>
 
   private boolean shouldProcessMoreRows(ResultContext&lt;?&gt; context, RowBounds rowBounds) throws SQLException {
-<span class="fc bfc" id="L359" title="All 4 branches covered.">    return !context.isStopped() &amp;&amp; context.getResultCount() &lt; rowBounds.getLimit();</span>
+<span class="fc bfc" id="L362" title="All 4 branches covered.">    return !context.isStopped() &amp;&amp; context.getResultCount() &lt; rowBounds.getLimit();</span>
   }
 
   private void skipRows(ResultSet rs, RowBounds rowBounds) throws SQLException {
-<span class="pc bpc" id="L363" title="1 of 2 branches missed.">    if (rs.getType() != ResultSet.TYPE_FORWARD_ONLY) {</span>
-<span class="nc bnc" id="L364" title="All 2 branches missed.">      if (rowBounds.getOffset() != RowBounds.NO_ROW_OFFSET) {</span>
-<span class="nc" id="L365">        rs.absolute(rowBounds.getOffset());</span>
+<span class="pc bpc" id="L366" title="1 of 2 branches missed.">    if (rs.getType() != ResultSet.TYPE_FORWARD_ONLY) {</span>
+<span class="nc bnc" id="L367" title="All 2 branches missed.">      if (rowBounds.getOffset() != RowBounds.NO_ROW_OFFSET) {</span>
+<span class="nc" id="L368">        rs.absolute(rowBounds.getOffset());</span>
       }
     } else {
-<span class="fc bfc" id="L368" title="All 2 branches covered.">      for (int i = 0; i &lt; rowBounds.getOffset(); i++) {</span>
-<span class="fc" id="L369">        rs.next();</span>
+<span class="fc bfc" id="L371" title="All 2 branches covered.">      for (int i = 0; i &lt; rowBounds.getOffset(); i++) {</span>
+<span class="fc" id="L372">        rs.next();</span>
       }
     }
-<span class="fc" id="L372">  }</span>
+<span class="fc" id="L375">  }</span>
 
   //
   // GET VALUE FROM ROW FOR SIMPLE RESULT MAP
   //
 
   private Object getRowValue(ResultSetWrapper rsw, ResultMap resultMap) throws SQLException {
-<span class="fc" id="L379">    final ResultLoaderMap lazyLoader = new ResultLoaderMap();</span>
-<span class="fc" id="L380">    Object resultObject = createResultObject(rsw, resultMap, lazyLoader, null);</span>
-<span class="pc bpc" id="L381" title="1 of 4 branches missed.">    if (resultObject != null &amp;&amp; !hasTypeHandlerForResultObject(rsw, resultMap.getType())) {</span>
-<span class="fc" id="L382">      final MetaObject metaObject = configuration.newMetaObject(resultObject);</span>
-<span class="fc bfc" id="L383" title="All 2 branches covered.">      boolean foundValues = !resultMap.getConstructorResultMappings().isEmpty();</span>
-<span class="fc bfc" id="L384" title="All 2 branches covered.">      if (shouldApplyAutomaticMappings(resultMap, false)) {</span>
-<span class="fc bfc" id="L385" title="All 4 branches covered.">        foundValues = applyAutomaticMappings(rsw, resultMap, metaObject, null) || foundValues;</span>
+<span class="fc" id="L382">    final ResultLoaderMap lazyLoader = new ResultLoaderMap();</span>
+<span class="fc" id="L383">    Object rowValue = createResultObject(rsw, resultMap, lazyLoader, null);</span>
+<span class="fc bfc" id="L384" title="All 4 branches covered.">    if (rowValue != null &amp;&amp; !hasTypeHandlerForResultObject(rsw, resultMap.getType())) {</span>
+<span class="fc" id="L385">      final MetaObject metaObject = configuration.newMetaObject(rowValue);</span>
+<span class="fc" id="L386">      boolean foundValues = this.useConstructorMappings;</span>
+<span class="fc bfc" id="L387" title="All 2 branches covered.">      if (shouldApplyAutomaticMappings(resultMap, false)) {</span>
+<span class="fc bfc" id="L388" title="All 4 branches covered.">        foundValues = applyAutomaticMappings(rsw, resultMap, metaObject, null) || foundValues;</span>
       }
-<span class="fc bfc" id="L387" title="All 4 branches covered.">      foundValues = applyPropertyMappings(rsw, resultMap, metaObject, lazyLoader, null) || foundValues;</span>
-<span class="fc bfc" id="L388" title="All 4 branches covered.">      foundValues = lazyLoader.size() &gt; 0 || foundValues;</span>
-<span class="fc bfc" id="L389" title="All 2 branches covered.">      resultObject = foundValues ? resultObject : null;</span>
-<span class="fc" id="L390">      return resultObject;</span>
+<span class="fc bfc" id="L390" title="All 4 branches covered.">      foundValues = applyPropertyMappings(rsw, resultMap, metaObject, lazyLoader, null) || foundValues;</span>
+<span class="fc bfc" id="L391" title="All 4 branches covered.">      foundValues = lazyLoader.size() &gt; 0 || foundValues;</span>
+<span class="fc bfc" id="L392" title="All 4 branches covered.">      rowValue = (foundValues || configuration.isReturnInstanceForEmptyRow()) ? rowValue : null;</span>
     }
-<span class="fc" id="L392">    return resultObject;</span>
+<span class="fc" id="L394">    return rowValue;</span>
   }
 
   private boolean shouldApplyAutomaticMappings(ResultMap resultMap, boolean isNested) {
-<span class="fc bfc" id="L396" title="All 2 branches covered.">    if (resultMap.getAutoMapping() != null) {</span>
-<span class="fc" id="L397">      return resultMap.getAutoMapping();</span>
+<span class="fc bfc" id="L398" title="All 2 branches covered.">    if (resultMap.getAutoMapping() != null) {</span>
+<span class="fc" id="L399">      return resultMap.getAutoMapping();</span>
     } else {
-<span class="fc bfc" id="L399" title="All 2 branches covered.">      if (isNested) {</span>
-<span class="fc bfc" id="L400" title="All 2 branches covered.">        return AutoMappingBehavior.FULL == configuration.getAutoMappingBehavior();</span>
+<span class="fc bfc" id="L401" title="All 2 branches covered.">      if (isNested) {</span>
+<span class="fc bfc" id="L402" title="All 2 branches covered.">        return AutoMappingBehavior.FULL == configuration.getAutoMappingBehavior();</span>
       } else {
-<span class="fc bfc" id="L402" title="All 2 branches covered.">        return AutoMappingBehavior.NONE != configuration.getAutoMappingBehavior();</span>
+<span class="fc bfc" id="L404" title="All 2 branches covered.">        return AutoMappingBehavior.NONE != configuration.getAutoMappingBehavior();</span>
       }
     }
   }
@@ -410,155 +412,159 @@ public class DefaultResultSetHandler implements ResultSetHandler {
 
   private boolean applyPropertyMappings(ResultSetWrapper rsw, ResultMap resultMap, MetaObject metaObject, ResultLoaderMap lazyLoader, String columnPrefix)
       throws SQLException {
-<span class="fc" id="L413">    final List&lt;String&gt; mappedColumnNames = rsw.getMappedColumnNames(resultMap, columnPrefix);</span>
-<span class="fc" id="L414">    boolean foundValues = false;</span>
-<span class="fc" id="L415">    final List&lt;ResultMapping&gt; propertyMappings = resultMap.getPropertyResultMappings();</span>
-<span class="fc bfc" id="L416" title="All 2 branches covered.">    for (ResultMapping propertyMapping : propertyMappings) {</span>
-<span class="fc" id="L417">      String column = prependPrefix(propertyMapping.getColumn(), columnPrefix);</span>
-<span class="fc bfc" id="L418" title="All 2 branches covered.">      if (propertyMapping.getNestedResultMapId() != null) {</span>
+<span class="fc" id="L415">    final List&lt;String&gt; mappedColumnNames = rsw.getMappedColumnNames(resultMap, columnPrefix);</span>
+<span class="fc" id="L416">    boolean foundValues = false;</span>
+<span class="fc" id="L417">    final List&lt;ResultMapping&gt; propertyMappings = resultMap.getPropertyResultMappings();</span>
+<span class="fc bfc" id="L418" title="All 2 branches covered.">    for (ResultMapping propertyMapping : propertyMappings) {</span>
+<span class="fc" id="L419">      String column = prependPrefix(propertyMapping.getColumn(), columnPrefix);</span>
+<span class="fc bfc" id="L420" title="All 2 branches covered.">      if (propertyMapping.getNestedResultMapId() != null) {</span>
         // the user added a column attribute to a nested result map, ignore it
-<span class="fc" id="L420">        column = null;</span>
+<span class="fc" id="L422">        column = null;</span>
       }
-<span class="fc bfc" id="L422" title="All 8 branches covered.">      if (propertyMapping.isCompositeResult()</span>
-          || (column != null &amp;&amp; mappedColumnNames.contains(column.toUpperCase(Locale.ENGLISH)))
-          || propertyMapping.getResultSet() != null) {
-<span class="fc" id="L425">        Object value = getPropertyMappingValue(rsw.getResultSet(), metaObject, propertyMapping, lazyLoader, columnPrefix);</span>
+<span class="fc bfc" id="L424" title="All 4 branches covered.">      if (propertyMapping.isCompositeResult()</span>
+<span class="fc bfc" id="L425" title="All 2 branches covered.">          || (column != null &amp;&amp; mappedColumnNames.contains(column.toUpperCase(Locale.ENGLISH)))</span>
+<span class="fc bfc" id="L426" title="All 2 branches covered.">          || propertyMapping.getResultSet() != null) {</span>
+<span class="fc" id="L427">        Object value = getPropertyMappingValue(rsw.getResultSet(), metaObject, propertyMapping, lazyLoader, columnPrefix);</span>
         // issue #541 make property optional
-<span class="fc" id="L427">        final String property = propertyMapping.getProperty();</span>
-        // issue #377, call setter on nulls
-<span class="pc bpc" id="L429" title="1 of 10 branches missed.">        if (value != DEFERED</span>
-            &amp;&amp; property != null
-            &amp;&amp; (value != null || (configuration.isCallSettersOnNulls() &amp;&amp; !metaObject.getSetterType(property).isPrimitive()))) {
-<span class="fc" id="L432">          metaObject.setValue(property, value);</span>
+<span class="fc" id="L429">        final String property = propertyMapping.getProperty();</span>
+<span class="fc bfc" id="L430" title="All 2 branches covered.">        if (property == null) {</span>
+<span class="fc" id="L431">          continue;</span>
+<span class="fc bfc" id="L432" title="All 2 branches covered.">        } else if (value == DEFERED) {</span>
+<span class="fc" id="L433">          foundValues = true;</span>
+<span class="fc" id="L434">          continue;</span>
         }
-<span class="pc bpc" id="L434" title="1 of 6 branches missed.">        if (property != null &amp;&amp; (value != null || value == DEFERED)) {</span>
-<span class="fc" id="L435">          foundValues = true;</span>
+<span class="fc bfc" id="L436" title="All 2 branches covered.">        if (value != null) {</span>
+<span class="fc" id="L437">          foundValues = true;</span>
+        }
+<span class="pc bpc" id="L439" title="1 of 6 branches missed.">        if (value != null || (configuration.isCallSettersOnNulls() &amp;&amp; !metaObject.getSetterType(property).isPrimitive())) {</span>
+          // gcode issue #377, call setter on nulls (value is not 'found')
+<span class="fc" id="L441">          metaObject.setValue(property, value);</span>
         }
       }
-<span class="fc" id="L438">    }</span>
-<span class="fc" id="L439">    return foundValues;</span>
+<span class="fc" id="L444">    }</span>
+<span class="fc" id="L445">    return foundValues;</span>
   }
 
   private Object getPropertyMappingValue(ResultSet rs, MetaObject metaResultObject, ResultMapping propertyMapping, ResultLoaderMap lazyLoader, String columnPrefix)
       throws SQLException {
-<span class="fc bfc" id="L444" title="All 2 branches covered.">    if (propertyMapping.getNestedQueryId() != null) {</span>
-<span class="fc" id="L445">      return getNestedQueryMappingValue(rs, metaResultObject, propertyMapping, lazyLoader, columnPrefix);</span>
-<span class="fc bfc" id="L446" title="All 2 branches covered.">    } else if (propertyMapping.getResultSet() != null) {</span>
-<span class="fc" id="L447">      addPendingChildRelation(rs, metaResultObject, propertyMapping);   // TODO is that OK?</span>
-<span class="fc" id="L448">      return DEFERED;</span>
+<span class="fc bfc" id="L450" title="All 2 branches covered.">    if (propertyMapping.getNestedQueryId() != null) {</span>
+<span class="fc" id="L451">      return getNestedQueryMappingValue(rs, metaResultObject, propertyMapping, lazyLoader, columnPrefix);</span>
+<span class="fc bfc" id="L452" title="All 2 branches covered.">    } else if (propertyMapping.getResultSet() != null) {</span>
+<span class="fc" id="L453">      addPendingChildRelation(rs, metaResultObject, propertyMapping);   // TODO is that OK?</span>
+<span class="fc" id="L454">      return DEFERED;</span>
     } else {
-<span class="fc" id="L450">      final TypeHandler&lt;?&gt; typeHandler = propertyMapping.getTypeHandler();</span>
-<span class="fc" id="L451">      final String column = prependPrefix(propertyMapping.getColumn(), columnPrefix);</span>
-<span class="fc" id="L452">      return typeHandler.getResult(rs, column);</span>
+<span class="fc" id="L456">      final TypeHandler&lt;?&gt; typeHandler = propertyMapping.getTypeHandler();</span>
+<span class="fc" id="L457">      final String column = prependPrefix(propertyMapping.getColumn(), columnPrefix);</span>
+<span class="fc" id="L458">      return typeHandler.getResult(rs, column);</span>
     }
   }
 
   private List&lt;UnMappedColumnAutoMapping&gt; createAutomaticMappings(ResultSetWrapper rsw, ResultMap resultMap, MetaObject metaObject, String columnPrefix) throws SQLException {
-<span class="fc" id="L457">    final String mapKey = resultMap.getId() + &quot;:&quot; + columnPrefix;</span>
-<span class="fc" id="L458">    List&lt;UnMappedColumnAutoMapping&gt; autoMapping = autoMappingsCache.get(mapKey);</span>
-<span class="fc bfc" id="L459" title="All 2 branches covered.">    if (autoMapping == null) {</span>
-<span class="fc" id="L460">      autoMapping = new ArrayList&lt;UnMappedColumnAutoMapping&gt;();</span>
-<span class="fc" id="L461">      final List&lt;String&gt; unmappedColumnNames = rsw.getUnmappedColumnNames(resultMap, columnPrefix);</span>
-<span class="fc bfc" id="L462" title="All 2 branches covered.">      for (String columnName : unmappedColumnNames) {</span>
-<span class="fc" id="L463">        String propertyName = columnName;</span>
-<span class="pc bpc" id="L464" title="1 of 4 branches missed.">        if (columnPrefix != null &amp;&amp; !columnPrefix.isEmpty()) {</span>
+<span class="fc" id="L463">    final String mapKey = resultMap.getId() + &quot;:&quot; + columnPrefix;</span>
+<span class="fc" id="L464">    List&lt;UnMappedColumnAutoMapping&gt; autoMapping = autoMappingsCache.get(mapKey);</span>
+<span class="fc bfc" id="L465" title="All 2 branches covered.">    if (autoMapping == null) {</span>
+<span class="fc" id="L466">      autoMapping = new ArrayList&lt;UnMappedColumnAutoMapping&gt;();</span>
+<span class="fc" id="L467">      final List&lt;String&gt; unmappedColumnNames = rsw.getUnmappedColumnNames(resultMap, columnPrefix);</span>
+<span class="fc bfc" id="L468" title="All 2 branches covered.">      for (String columnName : unmappedColumnNames) {</span>
+<span class="fc" id="L469">        String propertyName = columnName;</span>
+<span class="pc bpc" id="L470" title="1 of 4 branches missed.">        if (columnPrefix != null &amp;&amp; !columnPrefix.isEmpty()) {</span>
           // When columnPrefix is specified,
           // ignore columns without the prefix.
-<span class="fc bfc" id="L467" title="All 2 branches covered.">          if (columnName.toUpperCase(Locale.ENGLISH).startsWith(columnPrefix)) {</span>
-<span class="fc" id="L468">            propertyName = columnName.substring(columnPrefix.length());</span>
+<span class="fc bfc" id="L473" title="All 2 branches covered.">          if (columnName.toUpperCase(Locale.ENGLISH).startsWith(columnPrefix)) {</span>
+<span class="fc" id="L474">            propertyName = columnName.substring(columnPrefix.length());</span>
           } else {
             continue;
           }
         }
-<span class="fc" id="L473">        final String property = metaObject.findProperty(propertyName, configuration.isMapUnderscoreToCamelCase());</span>
-<span class="fc bfc" id="L474" title="All 4 branches covered.">        if (property != null &amp;&amp; metaObject.hasSetter(property)) {</span>
-<span class="fc" id="L475">          final Class&lt;?&gt; propertyType = metaObject.getSetterType(property);</span>
-<span class="fc bfc" id="L476" title="All 2 branches covered.">          if (typeHandlerRegistry.hasTypeHandler(propertyType, rsw.getJdbcType(columnName))) {</span>
-<span class="fc" id="L477">            final TypeHandler&lt;?&gt; typeHandler = rsw.getTypeHandler(propertyType, columnName);</span>
-<span class="fc" id="L478">            autoMapping.add(new UnMappedColumnAutoMapping(columnName, property, typeHandler, propertyType.isPrimitive()));</span>
-<span class="fc" id="L479">          } else {</span>
-<span class="fc" id="L480">            configuration.getAutoMappingUnknownColumnBehavior()</span>
-                    .doAction(mappedStatement, columnName, property, propertyType);
+<span class="fc" id="L479">        final String property = metaObject.findProperty(propertyName, configuration.isMapUnderscoreToCamelCase());</span>
+<span class="fc bfc" id="L480" title="All 4 branches covered.">        if (property != null &amp;&amp; metaObject.hasSetter(property)) {</span>
+<span class="fc" id="L481">          final Class&lt;?&gt; propertyType = metaObject.getSetterType(property);</span>
+<span class="fc bfc" id="L482" title="All 2 branches covered.">          if (typeHandlerRegistry.hasTypeHandler(propertyType, rsw.getJdbcType(columnName))) {</span>
+<span class="fc" id="L483">            final TypeHandler&lt;?&gt; typeHandler = rsw.getTypeHandler(propertyType, columnName);</span>
+<span class="fc" id="L484">            autoMapping.add(new UnMappedColumnAutoMapping(columnName, property, typeHandler, propertyType.isPrimitive()));</span>
+<span class="fc" id="L485">          } else {</span>
+<span class="fc" id="L486">            configuration.getAutoMappingUnknownColumnBehavior()</span>
+<span class="fc" id="L487">                    .doAction(mappedStatement, columnName, property, propertyType);</span>
           }
-<span class="fc" id="L483">        } else{</span>
-<span class="fc bfc" id="L484" title="All 2 branches covered.">          configuration.getAutoMappingUnknownColumnBehavior()</span>
-                  .doAction(mappedStatement, columnName, (property != null) ? property : propertyName, null);
+<span class="fc" id="L489">        } else{</span>
+<span class="fc bfc" id="L490" title="All 2 branches covered.">          configuration.getAutoMappingUnknownColumnBehavior()</span>
+<span class="fc" id="L491">                  .doAction(mappedStatement, columnName, (property != null) ? property : propertyName, null);</span>
         }
-<span class="fc" id="L487">      }</span>
-<span class="fc" id="L488">      autoMappingsCache.put(mapKey, autoMapping);</span>
+<span class="fc" id="L493">      }</span>
+<span class="fc" id="L494">      autoMappingsCache.put(mapKey, autoMapping);</span>
     }
-<span class="fc" id="L490">    return autoMapping;</span>
+<span class="fc" id="L496">    return autoMapping;</span>
   }
   
   private boolean applyAutomaticMappings(ResultSetWrapper rsw, ResultMap resultMap, MetaObject metaObject, String columnPrefix) throws SQLException {
-<span class="fc" id="L494">    List&lt;UnMappedColumnAutoMapping&gt; autoMapping = createAutomaticMappings(rsw, resultMap, metaObject, columnPrefix);</span>
-<span class="fc" id="L495">    boolean foundValues = false;</span>
-<span class="fc bfc" id="L496" title="All 2 branches covered.">    if (autoMapping.size() &gt; 0) {</span>
-<span class="fc bfc" id="L497" title="All 2 branches covered.">      for (UnMappedColumnAutoMapping mapping : autoMapping) {</span>
-<span class="fc" id="L498">        final Object value = mapping.typeHandler.getResult(rsw.getResultSet(), mapping.column);</span>
-        // issue #377, call setter on nulls
-<span class="fc bfc" id="L500" title="All 4 branches covered.">        if (value != null || configuration.isCallSettersOnNulls()) {</span>
-<span class="pc bpc" id="L501" title="1 of 4 branches missed.">          if (value != null || !mapping.primitive) {</span>
-<span class="fc" id="L502">            metaObject.setValue(mapping.property, value);</span>
-          }
-<span class="fc" id="L504">          foundValues = true;</span>
+<span class="fc" id="L500">    List&lt;UnMappedColumnAutoMapping&gt; autoMapping = createAutomaticMappings(rsw, resultMap, metaObject, columnPrefix);</span>
+<span class="fc" id="L501">    boolean foundValues = false;</span>
+<span class="fc bfc" id="L502" title="All 2 branches covered.">    if (autoMapping.size() &gt; 0) {</span>
+<span class="fc bfc" id="L503" title="All 2 branches covered.">      for (UnMappedColumnAutoMapping mapping : autoMapping) {</span>
+<span class="fc" id="L504">        final Object value = mapping.typeHandler.getResult(rsw.getResultSet(), mapping.column);</span>
+<span class="fc bfc" id="L505" title="All 2 branches covered.">        if (value != null) {</span>
+<span class="fc" id="L506">          foundValues = true;</span>
         }
-<span class="fc" id="L506">      }</span>
+<span class="pc bpc" id="L508" title="1 of 6 branches missed.">        if (value != null || (configuration.isCallSettersOnNulls() &amp;&amp; !mapping.primitive)) {</span>
+          // gcode issue #377, call setter on nulls (value is not 'found')
+<span class="fc" id="L510">          metaObject.setValue(mapping.property, value);</span>
+        }
+<span class="fc" id="L512">      }</span>
     }
-<span class="fc" id="L508">    return foundValues;</span>
+<span class="fc" id="L514">    return foundValues;</span>
   }
 
   // MULTIPLE RESULT SETS
 
   private void linkToParents(ResultSet rs, ResultMapping parentMapping, Object rowValue) throws SQLException {
-<span class="fc" id="L514">    CacheKey parentKey = createKeyForMultipleResults(rs, parentMapping, parentMapping.getColumn(), parentMapping.getForeignColumn());</span>
-<span class="fc" id="L515">    List&lt;PendingRelation&gt; parents = pendingRelations.get(parentKey);</span>
-<span class="fc bfc" id="L516" title="All 2 branches covered.">    if (parents != null) {</span>
-<span class="fc bfc" id="L517" title="All 2 branches covered.">      for (PendingRelation parent : parents) {</span>
-<span class="pc bpc" id="L518" title="2 of 4 branches missed.">        if (parent != null &amp;&amp; rowValue != null) {</span>
-<span class="fc" id="L519">            linkObjects(parent.metaObject, parent.propertyMapping, rowValue);</span>
+<span class="fc" id="L520">    CacheKey parentKey = createKeyForMultipleResults(rs, parentMapping, parentMapping.getColumn(), parentMapping.getForeignColumn());</span>
+<span class="fc" id="L521">    List&lt;PendingRelation&gt; parents = pendingRelations.get(parentKey);</span>
+<span class="fc bfc" id="L522" title="All 2 branches covered.">    if (parents != null) {</span>
+<span class="fc bfc" id="L523" title="All 2 branches covered.">      for (PendingRelation parent : parents) {</span>
+<span class="pc bpc" id="L524" title="2 of 4 branches missed.">        if (parent != null &amp;&amp; rowValue != null) {</span>
+<span class="fc" id="L525">            linkObjects(parent.metaObject, parent.propertyMapping, rowValue);</span>
         }
-<span class="fc" id="L521">      }</span>
+<span class="fc" id="L527">      }</span>
     }
-<span class="fc" id="L523">  }</span>
+<span class="fc" id="L529">  }</span>
 
   private void addPendingChildRelation(ResultSet rs, MetaObject metaResultObject, ResultMapping parentMapping) throws SQLException {
-<span class="fc" id="L526">    CacheKey cacheKey = createKeyForMultipleResults(rs, parentMapping, parentMapping.getColumn(), parentMapping.getColumn());</span>
-<span class="fc" id="L527">    PendingRelation deferLoad = new PendingRelation();</span>
-<span class="fc" id="L528">    deferLoad.metaObject = metaResultObject;</span>
-<span class="fc" id="L529">    deferLoad.propertyMapping = parentMapping;</span>
-<span class="fc" id="L530">    List&lt;PendingRelation&gt; relations = pendingRelations.get(cacheKey);</span>
+<span class="fc" id="L532">    CacheKey cacheKey = createKeyForMultipleResults(rs, parentMapping, parentMapping.getColumn(), parentMapping.getColumn());</span>
+<span class="fc" id="L533">    PendingRelation deferLoad = new PendingRelation();</span>
+<span class="fc" id="L534">    deferLoad.metaObject = metaResultObject;</span>
+<span class="fc" id="L535">    deferLoad.propertyMapping = parentMapping;</span>
+<span class="fc" id="L536">    List&lt;PendingRelation&gt; relations = pendingRelations.get(cacheKey);</span>
     // issue #255
-<span class="fc bfc" id="L532" title="All 2 branches covered.">    if (relations == null) {</span>
-<span class="fc" id="L533">      relations = new ArrayList&lt;DefaultResultSetHandler.PendingRelation&gt;();</span>
-<span class="fc" id="L534">      pendingRelations.put(cacheKey, relations);</span>
+<span class="fc bfc" id="L538" title="All 2 branches covered.">    if (relations == null) {</span>
+<span class="fc" id="L539">      relations = new ArrayList&lt;DefaultResultSetHandler.PendingRelation&gt;();</span>
+<span class="fc" id="L540">      pendingRelations.put(cacheKey, relations);</span>
     }
-<span class="fc" id="L536">    relations.add(deferLoad);</span>
-<span class="fc" id="L537">    ResultMapping previous = nextResultMaps.get(parentMapping.getResultSet());</span>
-<span class="fc bfc" id="L538" title="All 2 branches covered.">    if (previous == null) {</span>
-<span class="fc" id="L539">      nextResultMaps.put(parentMapping.getResultSet(), parentMapping);</span>
+<span class="fc" id="L542">    relations.add(deferLoad);</span>
+<span class="fc" id="L543">    ResultMapping previous = nextResultMaps.get(parentMapping.getResultSet());</span>
+<span class="fc bfc" id="L544" title="All 2 branches covered.">    if (previous == null) {</span>
+<span class="fc" id="L545">      nextResultMaps.put(parentMapping.getResultSet(), parentMapping);</span>
     } else {
-<span class="pc bpc" id="L541" title="1 of 2 branches missed.">      if (!previous.equals(parentMapping)) {</span>
-<span class="nc" id="L542">        throw new ExecutorException(&quot;Two different properties are mapped to the same resultSet&quot;);</span>
+<span class="pc bpc" id="L547" title="1 of 2 branches missed.">      if (!previous.equals(parentMapping)) {</span>
+<span class="nc" id="L548">        throw new ExecutorException(&quot;Two different properties are mapped to the same resultSet&quot;);</span>
       }
     }
-<span class="fc" id="L545">  }</span>
+<span class="fc" id="L551">  }</span>
 
   private CacheKey createKeyForMultipleResults(ResultSet rs, ResultMapping resultMapping, String names, String columns) throws SQLException {
-<span class="fc" id="L548">    CacheKey cacheKey = new CacheKey();</span>
-<span class="fc" id="L549">    cacheKey.update(resultMapping);</span>
-<span class="pc bpc" id="L550" title="1 of 4 branches missed.">    if (columns != null &amp;&amp; names != null) {</span>
-<span class="fc" id="L551">      String[] columnsArray = columns.split(&quot;,&quot;);</span>
-<span class="fc" id="L552">      String[] namesArray = names.split(&quot;,&quot;);</span>
-<span class="fc bfc" id="L553" title="All 2 branches covered.">      for (int i = 0 ; i &lt; columnsArray.length ; i++) {</span>
-<span class="fc" id="L554">        Object value = rs.getString(columnsArray[i]);</span>
-<span class="pc bpc" id="L555" title="1 of 2 branches missed.">        if (value != null) {</span>
-<span class="fc" id="L556">          cacheKey.update(namesArray[i]);</span>
-<span class="fc" id="L557">          cacheKey.update(value);</span>
+<span class="fc" id="L554">    CacheKey cacheKey = new CacheKey();</span>
+<span class="fc" id="L555">    cacheKey.update(resultMapping);</span>
+<span class="pc bpc" id="L556" title="1 of 4 branches missed.">    if (columns != null &amp;&amp; names != null) {</span>
+<span class="fc" id="L557">      String[] columnsArray = columns.split(&quot;,&quot;);</span>
+<span class="fc" id="L558">      String[] namesArray = names.split(&quot;,&quot;);</span>
+<span class="fc bfc" id="L559" title="All 2 branches covered.">      for (int i = 0 ; i &lt; columnsArray.length ; i++) {</span>
+<span class="fc" id="L560">        Object value = rs.getString(columnsArray[i]);</span>
+<span class="pc bpc" id="L561" title="1 of 2 branches missed.">        if (value != null) {</span>
+<span class="fc" id="L562">          cacheKey.update(namesArray[i]);</span>
+<span class="fc" id="L563">          cacheKey.update(value);</span>
         }
       }
     }
-<span class="fc" id="L561">    return cacheKey;</span>
+<span class="fc" id="L567">    return cacheKey;</span>
   }
 
   //
@@ -566,107 +572,110 @@ public class DefaultResultSetHandler implements ResultSetHandler {
   //
 
   private Object createResultObject(ResultSetWrapper rsw, ResultMap resultMap, ResultLoaderMap lazyLoader, String columnPrefix) throws SQLException {
-<span class="fc" id="L569">    final List&lt;Class&lt;?&gt;&gt; constructorArgTypes = new ArrayList&lt;Class&lt;?&gt;&gt;();</span>
-<span class="fc" id="L570">    final List&lt;Object&gt; constructorArgs = new ArrayList&lt;Object&gt;();</span>
-<span class="fc" id="L571">    final Object resultObject = createResultObject(rsw, resultMap, constructorArgTypes, constructorArgs, columnPrefix);</span>
-<span class="pc bpc" id="L572" title="1 of 4 branches missed.">    if (resultObject != null &amp;&amp; !hasTypeHandlerForResultObject(rsw, resultMap.getType())) {</span>
-<span class="fc" id="L573">      final List&lt;ResultMapping&gt; propertyMappings = resultMap.getPropertyResultMappings();</span>
-<span class="fc bfc" id="L574" title="All 2 branches covered.">      for (ResultMapping propertyMapping : propertyMappings) {</span>
+<span class="fc" id="L575">    this.useConstructorMappings = false; // reset previous mapping result</span>
+<span class="fc" id="L576">    final List&lt;Class&lt;?&gt;&gt; constructorArgTypes = new ArrayList&lt;Class&lt;?&gt;&gt;();</span>
+<span class="fc" id="L577">    final List&lt;Object&gt; constructorArgs = new ArrayList&lt;Object&gt;();</span>
+<span class="fc" id="L578">    Object resultObject = createResultObject(rsw, resultMap, constructorArgTypes, constructorArgs, columnPrefix);</span>
+<span class="fc bfc" id="L579" title="All 4 branches covered.">    if (resultObject != null &amp;&amp; !hasTypeHandlerForResultObject(rsw, resultMap.getType())) {</span>
+<span class="fc" id="L580">      final List&lt;ResultMapping&gt; propertyMappings = resultMap.getPropertyResultMappings();</span>
+<span class="fc bfc" id="L581" title="All 2 branches covered.">      for (ResultMapping propertyMapping : propertyMappings) {</span>
         // issue gcode #109 &amp;&amp; issue #149
-<span class="fc bfc" id="L576" title="All 4 branches covered.">        if (propertyMapping.getNestedQueryId() != null &amp;&amp; propertyMapping.isLazy()) {</span>
-<span class="fc" id="L577">          return configuration.getProxyFactory().createProxy(resultObject, lazyLoader, configuration, objectFactory, constructorArgTypes, constructorArgs);</span>
+<span class="fc bfc" id="L583" title="All 4 branches covered.">        if (propertyMapping.getNestedQueryId() != null &amp;&amp; propertyMapping.isLazy()) {</span>
+<span class="fc" id="L584">          resultObject = configuration.getProxyFactory().createProxy(resultObject, lazyLoader, configuration, objectFactory, constructorArgTypes, constructorArgs);</span>
+<span class="fc" id="L585">          break;</span>
         }
-<span class="fc" id="L579">      }</span>
+<span class="fc" id="L587">      }</span>
     }
-<span class="fc" id="L581">    return resultObject;</span>
+<span class="fc bfc" id="L589" title="All 4 branches covered.">    this.useConstructorMappings = (resultObject != null &amp;&amp; !constructorArgTypes.isEmpty()); // set current mapping result</span>
+<span class="fc" id="L590">    return resultObject;</span>
   }
 
   private Object createResultObject(ResultSetWrapper rsw, ResultMap resultMap, List&lt;Class&lt;?&gt;&gt; constructorArgTypes, List&lt;Object&gt; constructorArgs, String columnPrefix)
       throws SQLException {
-<span class="fc" id="L586">    final Class&lt;?&gt; resultType = resultMap.getType();</span>
-<span class="fc" id="L587">    final MetaClass metaType = MetaClass.forClass(resultType, reflectorFactory);</span>
-<span class="fc" id="L588">    final List&lt;ResultMapping&gt; constructorMappings = resultMap.getConstructorResultMappings();</span>
-<span class="fc bfc" id="L589" title="All 2 branches covered.">    if (hasTypeHandlerForResultObject(rsw, resultType)) {</span>
-<span class="fc" id="L590">      return createPrimitiveResultObject(rsw, resultMap, columnPrefix);</span>
-<span class="fc bfc" id="L591" title="All 2 branches covered.">    } else if (!constructorMappings.isEmpty()) {</span>
-<span class="fc" id="L592">      return createParameterizedResultObject(rsw, resultType, constructorMappings, constructorArgTypes, constructorArgs, columnPrefix);</span>
-<span class="fc bfc" id="L593" title="All 4 branches covered.">    } else if (resultType.isInterface() || metaType.hasDefaultConstructor()) {</span>
-<span class="fc" id="L594">      return objectFactory.create(resultType);</span>
-<span class="pc bpc" id="L595" title="1 of 2 branches missed.">    } else if (shouldApplyAutomaticMappings(resultMap, false)) {</span>
-<span class="fc" id="L596">      return createByConstructorSignature(rsw, resultType, constructorArgTypes, constructorArgs, columnPrefix);</span>
+<span class="fc" id="L595">    final Class&lt;?&gt; resultType = resultMap.getType();</span>
+<span class="fc" id="L596">    final MetaClass metaType = MetaClass.forClass(resultType, reflectorFactory);</span>
+<span class="fc" id="L597">    final List&lt;ResultMapping&gt; constructorMappings = resultMap.getConstructorResultMappings();</span>
+<span class="fc bfc" id="L598" title="All 2 branches covered.">    if (hasTypeHandlerForResultObject(rsw, resultType)) {</span>
+<span class="fc" id="L599">      return createPrimitiveResultObject(rsw, resultMap, columnPrefix);</span>
+<span class="fc bfc" id="L600" title="All 2 branches covered.">    } else if (!constructorMappings.isEmpty()) {</span>
+<span class="fc" id="L601">      return createParameterizedResultObject(rsw, resultType, constructorMappings, constructorArgTypes, constructorArgs, columnPrefix);</span>
+<span class="fc bfc" id="L602" title="All 4 branches covered.">    } else if (resultType.isInterface() || metaType.hasDefaultConstructor()) {</span>
+<span class="fc" id="L603">      return objectFactory.create(resultType);</span>
+<span class="pc bpc" id="L604" title="1 of 2 branches missed.">    } else if (shouldApplyAutomaticMappings(resultMap, false)) {</span>
+<span class="fc" id="L605">      return createByConstructorSignature(rsw, resultType, constructorArgTypes, constructorArgs, columnPrefix);</span>
     }
-<span class="nc" id="L598">    throw new ExecutorException(&quot;Do not know how to create an instance of &quot; + resultType);</span>
+<span class="nc" id="L607">    throw new ExecutorException(&quot;Do not know how to create an instance of &quot; + resultType);</span>
   }
 
   Object createParameterizedResultObject(ResultSetWrapper rsw, Class&lt;?&gt; resultType, List&lt;ResultMapping&gt; constructorMappings,
       List&lt;Class&lt;?&gt;&gt; constructorArgTypes, List&lt;Object&gt; constructorArgs, String columnPrefix) {
-<span class="fc" id="L603">    boolean foundValues = false;</span>
-<span class="fc bfc" id="L604" title="All 2 branches covered.">    for (ResultMapping constructorMapping : constructorMappings) {</span>
-<span class="fc" id="L605">      final Class&lt;?&gt; parameterType = constructorMapping.getJavaType();</span>
-<span class="fc" id="L606">      final String column = constructorMapping.getColumn();</span>
+<span class="fc" id="L612">    boolean foundValues = false;</span>
+<span class="fc bfc" id="L613" title="All 2 branches covered.">    for (ResultMapping constructorMapping : constructorMappings) {</span>
+<span class="fc" id="L614">      final Class&lt;?&gt; parameterType = constructorMapping.getJavaType();</span>
+<span class="fc" id="L615">      final String column = constructorMapping.getColumn();</span>
       final Object value;
       try {
-<span class="fc bfc" id="L609" title="All 2 branches covered.">        if (constructorMapping.getNestedQueryId() != null) {</span>
-<span class="fc" id="L610">          value = getNestedQueryConstructorValue(rsw.getResultSet(), constructorMapping, columnPrefix);</span>
-<span class="fc bfc" id="L611" title="All 2 branches covered.">        } else if (constructorMapping.getNestedResultMapId() != null) {</span>
-<span class="fc" id="L612">          final ResultMap resultMap = configuration.getResultMap(constructorMapping.getNestedResultMapId());</span>
-<span class="fc" id="L613">          value = getRowValue(rsw, resultMap);</span>
-<span class="fc" id="L614">        } else {</span>
-<span class="fc" id="L615">          final TypeHandler&lt;?&gt; typeHandler = constructorMapping.getTypeHandler();</span>
-<span class="fc" id="L616">          value = typeHandler.getResult(rsw.getResultSet(), prependPrefix(column, columnPrefix));</span>
+<span class="fc bfc" id="L618" title="All 2 branches covered.">        if (constructorMapping.getNestedQueryId() != null) {</span>
+<span class="fc" id="L619">          value = getNestedQueryConstructorValue(rsw.getResultSet(), constructorMapping, columnPrefix);</span>
+<span class="fc bfc" id="L620" title="All 2 branches covered.">        } else if (constructorMapping.getNestedResultMapId() != null) {</span>
+<span class="fc" id="L621">          final ResultMap resultMap = configuration.getResultMap(constructorMapping.getNestedResultMapId());</span>
+<span class="fc" id="L622">          value = getRowValue(rsw, resultMap);</span>
+<span class="fc" id="L623">        } else {</span>
+<span class="fc" id="L624">          final TypeHandler&lt;?&gt; typeHandler = constructorMapping.getTypeHandler();</span>
+<span class="fc" id="L625">          value = typeHandler.getResult(rsw.getResultSet(), prependPrefix(column, columnPrefix));</span>
         }
-<span class="nc" id="L618">      } catch (ResultMapException e) {</span>
-<span class="nc" id="L619">        throw new ExecutorException(&quot;Could not process result for mapping: &quot; + constructorMapping, e);</span>
-<span class="fc" id="L620">      } catch (SQLException e) {</span>
-<span class="fc" id="L621">        throw new ExecutorException(&quot;Could not process result for mapping: &quot; + constructorMapping, e);</span>
-<span class="fc" id="L622">      }</span>
-<span class="fc" id="L623">      constructorArgTypes.add(parameterType);</span>
-<span class="fc" id="L624">      constructorArgs.add(value);</span>
-<span class="pc bpc" id="L625" title="3 of 4 branches missed.">      foundValues = value != null || foundValues;</span>
-<span class="fc" id="L626">    }</span>
-<span class="pc bpc" id="L627" title="1 of 2 branches missed.">    return foundValues ? objectFactory.create(resultType, constructorArgTypes, constructorArgs) : null;</span>
+<span class="nc" id="L627">      } catch (ResultMapException e) {</span>
+<span class="nc" id="L628">        throw new ExecutorException(&quot;Could not process result for mapping: &quot; + constructorMapping, e);</span>
+<span class="fc" id="L629">      } catch (SQLException e) {</span>
+<span class="fc" id="L630">        throw new ExecutorException(&quot;Could not process result for mapping: &quot; + constructorMapping, e);</span>
+<span class="fc" id="L631">      }</span>
+<span class="fc" id="L632">      constructorArgTypes.add(parameterType);</span>
+<span class="fc" id="L633">      constructorArgs.add(value);</span>
+<span class="pc bpc" id="L634" title="3 of 4 branches missed.">      foundValues = value != null || foundValues;</span>
+<span class="fc" id="L635">    }</span>
+<span class="pc bpc" id="L636" title="1 of 2 branches missed.">    return foundValues ? objectFactory.create(resultType, constructorArgTypes, constructorArgs) : null;</span>
   }
 
   private Object createByConstructorSignature(ResultSetWrapper rsw, Class&lt;?&gt; resultType, List&lt;Class&lt;?&gt;&gt; constructorArgTypes, List&lt;Object&gt; constructorArgs,
       String columnPrefix) throws SQLException {
-<span class="fc bfc" id="L632" title="All 2 branches covered.">    for (Constructor&lt;?&gt; constructor : resultType.getDeclaredConstructors()) {</span>
-<span class="fc bfc" id="L633" title="All 2 branches covered.">      if (typeNames(constructor.getParameterTypes()).equals(rsw.getClassNames())) {</span>
-<span class="fc" id="L634">        boolean foundValues = false;</span>
-<span class="fc bfc" id="L635" title="All 2 branches covered.">        for (int i = 0; i &lt; constructor.getParameterTypes().length; i++) {</span>
-<span class="fc" id="L636">          Class&lt;?&gt; parameterType = constructor.getParameterTypes()[i];</span>
-<span class="fc" id="L637">          String columnName = rsw.getColumnNames().get(i);</span>
-<span class="fc" id="L638">          TypeHandler&lt;?&gt; typeHandler = rsw.getTypeHandler(parameterType, columnName);</span>
-<span class="fc" id="L639">          Object value = typeHandler.getResult(rsw.getResultSet(), prependPrefix(columnName, columnPrefix));</span>
-<span class="fc" id="L640">          constructorArgTypes.add(parameterType);</span>
-<span class="fc" id="L641">          constructorArgs.add(value);</span>
-<span class="pc bpc" id="L642" title="3 of 4 branches missed.">          foundValues = value != null || foundValues;</span>
+<span class="fc bfc" id="L641" title="All 2 branches covered.">    for (Constructor&lt;?&gt; constructor : resultType.getDeclaredConstructors()) {</span>
+<span class="fc bfc" id="L642" title="All 2 branches covered.">      if (typeNames(constructor.getParameterTypes()).equals(rsw.getClassNames())) {</span>
+<span class="fc" id="L643">        boolean foundValues = false;</span>
+<span class="fc bfc" id="L644" title="All 2 branches covered.">        for (int i = 0; i &lt; constructor.getParameterTypes().length; i++) {</span>
+<span class="fc" id="L645">          Class&lt;?&gt; parameterType = constructor.getParameterTypes()[i];</span>
+<span class="fc" id="L646">          String columnName = rsw.getColumnNames().get(i);</span>
+<span class="fc" id="L647">          TypeHandler&lt;?&gt; typeHandler = rsw.getTypeHandler(parameterType, columnName);</span>
+<span class="fc" id="L648">          Object value = typeHandler.getResult(rsw.getResultSet(), prependPrefix(columnName, columnPrefix));</span>
+<span class="fc" id="L649">          constructorArgTypes.add(parameterType);</span>
+<span class="fc" id="L650">          constructorArgs.add(value);</span>
+<span class="pc bpc" id="L651" title="3 of 4 branches missed.">          foundValues = value != null || foundValues;</span>
         }
-<span class="pc bpc" id="L644" title="1 of 2 branches missed.">        return foundValues ? objectFactory.create(resultType, constructorArgTypes, constructorArgs) : null;</span>
+<span class="pc bpc" id="L653" title="1 of 2 branches missed.">        return foundValues ? objectFactory.create(resultType, constructorArgTypes, constructorArgs) : null;</span>
       }
     }
-<span class="fc" id="L647">    throw new ExecutorException(&quot;No constructor found in &quot; + resultType.getName() + &quot; matching &quot; + rsw.getClassNames());</span>
+<span class="fc" id="L656">    throw new ExecutorException(&quot;No constructor found in &quot; + resultType.getName() + &quot; matching &quot; + rsw.getClassNames());</span>
   }
 
   private List&lt;String&gt; typeNames(Class&lt;?&gt;[] parameterTypes) {
-<span class="fc" id="L651">    List&lt;String&gt; names = new ArrayList&lt;String&gt;();</span>
-<span class="fc bfc" id="L652" title="All 2 branches covered.">    for (Class&lt;?&gt; type : parameterTypes) {</span>
-<span class="fc" id="L653">      names.add(type.getName());</span>
+<span class="fc" id="L660">    List&lt;String&gt; names = new ArrayList&lt;String&gt;();</span>
+<span class="fc bfc" id="L661" title="All 2 branches covered.">    for (Class&lt;?&gt; type : parameterTypes) {</span>
+<span class="fc" id="L662">      names.add(type.getName());</span>
     }
-<span class="fc" id="L655">    return names;</span>
+<span class="fc" id="L664">    return names;</span>
   }
 
   private Object createPrimitiveResultObject(ResultSetWrapper rsw, ResultMap resultMap, String columnPrefix) throws SQLException {
-<span class="fc" id="L659">    final Class&lt;?&gt; resultType = resultMap.getType();</span>
+<span class="fc" id="L668">    final Class&lt;?&gt; resultType = resultMap.getType();</span>
     final String columnName;
-<span class="fc bfc" id="L661" title="All 2 branches covered.">    if (!resultMap.getResultMappings().isEmpty()) {</span>
-<span class="fc" id="L662">      final List&lt;ResultMapping&gt; resultMappingList = resultMap.getResultMappings();</span>
-<span class="fc" id="L663">      final ResultMapping mapping = resultMappingList.get(0);</span>
-<span class="fc" id="L664">      columnName = prependPrefix(mapping.getColumn(), columnPrefix);</span>
-<span class="fc" id="L665">    } else {</span>
-<span class="fc" id="L666">      columnName = rsw.getColumnNames().get(0);</span>
+<span class="fc bfc" id="L670" title="All 2 branches covered.">    if (!resultMap.getResultMappings().isEmpty()) {</span>
+<span class="fc" id="L671">      final List&lt;ResultMapping&gt; resultMappingList = resultMap.getResultMappings();</span>
+<span class="fc" id="L672">      final ResultMapping mapping = resultMappingList.get(0);</span>
+<span class="fc" id="L673">      columnName = prependPrefix(mapping.getColumn(), columnPrefix);</span>
+<span class="fc" id="L674">    } else {</span>
+<span class="fc" id="L675">      columnName = rsw.getColumnNames().get(0);</span>
     }
-<span class="fc" id="L668">    final TypeHandler&lt;?&gt; typeHandler = rsw.getTypeHandler(resultType, columnName);</span>
-<span class="fc" id="L669">    return typeHandler.getResult(rsw.getResultSet(), columnName);</span>
+<span class="fc" id="L677">    final TypeHandler&lt;?&gt; typeHandler = rsw.getTypeHandler(resultType, columnName);</span>
+<span class="fc" id="L678">    return typeHandler.getResult(rsw.getResultSet(), columnName);</span>
   }
 
   //
@@ -674,89 +683,91 @@ public class DefaultResultSetHandler implements ResultSetHandler {
   //
 
   private Object getNestedQueryConstructorValue(ResultSet rs, ResultMapping constructorMapping, String columnPrefix) throws SQLException {
-<span class="fc" id="L677">    final String nestedQueryId = constructorMapping.getNestedQueryId();</span>
-<span class="fc" id="L678">    final MappedStatement nestedQuery = configuration.getMappedStatement(nestedQueryId);</span>
-<span class="fc" id="L679">    final Class&lt;?&gt; nestedQueryParameterType = nestedQuery.getParameterMap().getType();</span>
-<span class="fc" id="L680">    final Object nestedQueryParameterObject = prepareParameterForNestedQuery(rs, constructorMapping, nestedQueryParameterType, columnPrefix);</span>
-<span class="fc" id="L681">    Object value = null;</span>
-<span class="pc bpc" id="L682" title="1 of 2 branches missed.">    if (nestedQueryParameterObject != null) {</span>
-<span class="fc" id="L683">      final BoundSql nestedBoundSql = nestedQuery.getBoundSql(nestedQueryParameterObject);</span>
-<span class="fc" id="L684">      final CacheKey key = executor.createCacheKey(nestedQuery, nestedQueryParameterObject, RowBounds.DEFAULT, nestedBoundSql);</span>
-<span class="fc" id="L685">      final Class&lt;?&gt; targetType = constructorMapping.getJavaType();</span>
-<span class="fc" id="L686">      final ResultLoader resultLoader = new ResultLoader(configuration, executor, nestedQuery, nestedQueryParameterObject, targetType, key, nestedBoundSql);</span>
-<span class="fc" id="L687">      value = resultLoader.loadResult();</span>
+<span class="fc" id="L686">    final String nestedQueryId = constructorMapping.getNestedQueryId();</span>
+<span class="fc" id="L687">    final MappedStatement nestedQuery = configuration.getMappedStatement(nestedQueryId);</span>
+<span class="fc" id="L688">    final Class&lt;?&gt; nestedQueryParameterType = nestedQuery.getParameterMap().getType();</span>
+<span class="fc" id="L689">    final Object nestedQueryParameterObject = prepareParameterForNestedQuery(rs, constructorMapping, nestedQueryParameterType, columnPrefix);</span>
+<span class="fc" id="L690">    Object value = null;</span>
+<span class="pc bpc" id="L691" title="1 of 2 branches missed.">    if (nestedQueryParameterObject != null) {</span>
+<span class="fc" id="L692">      final BoundSql nestedBoundSql = nestedQuery.getBoundSql(nestedQueryParameterObject);</span>
+<span class="fc" id="L693">      final CacheKey key = executor.createCacheKey(nestedQuery, nestedQueryParameterObject, RowBounds.DEFAULT, nestedBoundSql);</span>
+<span class="fc" id="L694">      final Class&lt;?&gt; targetType = constructorMapping.getJavaType();</span>
+<span class="fc" id="L695">      final ResultLoader resultLoader = new ResultLoader(configuration, executor, nestedQuery, nestedQueryParameterObject, targetType, key, nestedBoundSql);</span>
+<span class="fc" id="L696">      value = resultLoader.loadResult();</span>
     }
-<span class="fc" id="L689">    return value;</span>
+<span class="fc" id="L698">    return value;</span>
   }
 
   private Object getNestedQueryMappingValue(ResultSet rs, MetaObject metaResultObject, ResultMapping propertyMapping, ResultLoaderMap lazyLoader, String columnPrefix)
       throws SQLException {
-<span class="fc" id="L694">    final String nestedQueryId = propertyMapping.getNestedQueryId();</span>
-<span class="fc" id="L695">    final String property = propertyMapping.getProperty();</span>
-<span class="fc" id="L696">    final MappedStatement nestedQuery = configuration.getMappedStatement(nestedQueryId);</span>
-<span class="fc" id="L697">    final Class&lt;?&gt; nestedQueryParameterType = nestedQuery.getParameterMap().getType();</span>
-<span class="fc" id="L698">    final Object nestedQueryParameterObject = prepareParameterForNestedQuery(rs, propertyMapping, nestedQueryParameterType, columnPrefix);</span>
-<span class="fc" id="L699">    Object value = null;</span>
-<span class="fc bfc" id="L700" title="All 2 branches covered.">    if (nestedQueryParameterObject != null) {</span>
-<span class="fc" id="L701">      final BoundSql nestedBoundSql = nestedQuery.getBoundSql(nestedQueryParameterObject);</span>
-<span class="fc" id="L702">      final CacheKey key = executor.createCacheKey(nestedQuery, nestedQueryParameterObject, RowBounds.DEFAULT, nestedBoundSql);</span>
-<span class="fc" id="L703">      final Class&lt;?&gt; targetType = propertyMapping.getJavaType();</span>
-<span class="fc bfc" id="L704" title="All 2 branches covered.">      if (executor.isCached(nestedQuery, key)) {</span>
-<span class="fc" id="L705">        executor.deferLoad(nestedQuery, metaResultObject, property, key, targetType);</span>
-<span class="fc" id="L706">        value = DEFERED;</span>
+<span class="fc" id="L703">    final String nestedQueryId = propertyMapping.getNestedQueryId();</span>
+<span class="fc" id="L704">    final String property = propertyMapping.getProperty();</span>
+<span class="fc" id="L705">    final MappedStatement nestedQuery = configuration.getMappedStatement(nestedQueryId);</span>
+<span class="fc" id="L706">    final Class&lt;?&gt; nestedQueryParameterType = nestedQuery.getParameterMap().getType();</span>
+<span class="fc" id="L707">    final Object nestedQueryParameterObject = prepareParameterForNestedQuery(rs, propertyMapping, nestedQueryParameterType, columnPrefix);</span>
+<span class="fc" id="L708">    Object value = null;</span>
+<span class="fc bfc" id="L709" title="All 2 branches covered.">    if (nestedQueryParameterObject != null) {</span>
+<span class="fc" id="L710">      final BoundSql nestedBoundSql = nestedQuery.getBoundSql(nestedQueryParameterObject);</span>
+<span class="fc" id="L711">      final CacheKey key = executor.createCacheKey(nestedQuery, nestedQueryParameterObject, RowBounds.DEFAULT, nestedBoundSql);</span>
+<span class="fc" id="L712">      final Class&lt;?&gt; targetType = propertyMapping.getJavaType();</span>
+<span class="fc bfc" id="L713" title="All 2 branches covered.">      if (executor.isCached(nestedQuery, key)) {</span>
+<span class="fc" id="L714">        executor.deferLoad(nestedQuery, metaResultObject, property, key, targetType);</span>
+<span class="fc" id="L715">        value = DEFERED;</span>
       } else {
-<span class="fc" id="L708">        final ResultLoader resultLoader = new ResultLoader(configuration, executor, nestedQuery, nestedQueryParameterObject, targetType, key, nestedBoundSql);</span>
-<span class="fc bfc" id="L709" title="All 2 branches covered.">        if (propertyMapping.isLazy()) {</span>
-<span class="fc" id="L710">          lazyLoader.addLoader(property, metaResultObject, resultLoader);</span>
-<span class="fc" id="L711">          value = DEFERED;</span>
+<span class="fc" id="L717">        final ResultLoader resultLoader = new ResultLoader(configuration, executor, nestedQuery, nestedQueryParameterObject, targetType, key, nestedBoundSql);</span>
+<span class="fc bfc" id="L718" title="All 2 branches covered.">        if (propertyMapping.isLazy()) {</span>
+<span class="fc" id="L719">          lazyLoader.addLoader(property, metaResultObject, resultLoader);</span>
+<span class="fc" id="L720">          value = DEFERED;</span>
         } else {
-<span class="fc" id="L713">          value = resultLoader.loadResult();</span>
+<span class="fc" id="L722">          value = resultLoader.loadResult();</span>
         }
       }
     }
-<span class="fc" id="L717">    return value;</span>
+<span class="fc" id="L726">    return value;</span>
   }
 
   private Object prepareParameterForNestedQuery(ResultSet rs, ResultMapping resultMapping, Class&lt;?&gt; parameterType, String columnPrefix) throws SQLException {
-<span class="fc bfc" id="L721" title="All 2 branches covered.">    if (resultMapping.isCompositeResult()) {</span>
-<span class="fc" id="L722">      return prepareCompositeKeyParameter(rs, resultMapping, parameterType, columnPrefix);</span>
+<span class="fc bfc" id="L730" title="All 2 branches covered.">    if (resultMapping.isCompositeResult()) {</span>
+<span class="fc" id="L731">      return prepareCompositeKeyParameter(rs, resultMapping, parameterType, columnPrefix);</span>
     } else {
-<span class="fc" id="L724">      return prepareSimpleKeyParameter(rs, resultMapping, parameterType, columnPrefix);</span>
+<span class="fc" id="L733">      return prepareSimpleKeyParameter(rs, resultMapping, parameterType, columnPrefix);</span>
     }
   }
 
   private Object prepareSimpleKeyParameter(ResultSet rs, ResultMapping resultMapping, Class&lt;?&gt; parameterType, String columnPrefix) throws SQLException {
     final TypeHandler&lt;?&gt; typeHandler;
-<span class="fc bfc" id="L730" title="All 2 branches covered.">    if (typeHandlerRegistry.hasTypeHandler(parameterType)) {</span>
-<span class="fc" id="L731">      typeHandler = typeHandlerRegistry.getTypeHandler(parameterType);</span>
+<span class="fc bfc" id="L739" title="All 2 branches covered.">    if (typeHandlerRegistry.hasTypeHandler(parameterType)) {</span>
+<span class="fc" id="L740">      typeHandler = typeHandlerRegistry.getTypeHandler(parameterType);</span>
     } else {
-<span class="fc" id="L733">      typeHandler = typeHandlerRegistry.getUnknownTypeHandler();</span>
+<span class="fc" id="L742">      typeHandler = typeHandlerRegistry.getUnknownTypeHandler();</span>
     }
-<span class="fc" id="L735">    return typeHandler.getResult(rs, prependPrefix(resultMapping.getColumn(), columnPrefix));</span>
+<span class="fc" id="L744">    return typeHandler.getResult(rs, prependPrefix(resultMapping.getColumn(), columnPrefix));</span>
   }
 
   private Object prepareCompositeKeyParameter(ResultSet rs, ResultMapping resultMapping, Class&lt;?&gt; parameterType, String columnPrefix) throws SQLException {
-<span class="fc" id="L739">    final Object parameterObject = instantiateParameterObject(parameterType);</span>
-<span class="fc" id="L740">    final MetaObject metaObject = configuration.newMetaObject(parameterObject);</span>
-<span class="fc" id="L741">    boolean foundValues = false;</span>
-<span class="fc bfc" id="L742" title="All 2 branches covered.">    for (ResultMapping innerResultMapping : resultMapping.getComposites()) {</span>
-<span class="fc" id="L743">      final Class&lt;?&gt; propType = metaObject.getSetterType(innerResultMapping.getProperty());</span>
-<span class="fc" id="L744">      final TypeHandler&lt;?&gt; typeHandler = typeHandlerRegistry.getTypeHandler(propType);</span>
-<span class="fc" id="L745">      final Object propValue = typeHandler.getResult(rs, prependPrefix(innerResultMapping.getColumn(), columnPrefix));</span>
+<span class="fc" id="L748">    final Object parameterObject = instantiateParameterObject(parameterType);</span>
+<span class="fc" id="L749">    final MetaObject metaObject = configuration.newMetaObject(parameterObject);</span>
+<span class="fc" id="L750">    boolean foundValues = false;</span>
+<span class="fc bfc" id="L751" title="All 2 branches covered.">    for (ResultMapping innerResultMapping : resultMapping.getComposites()) {</span>
+<span class="fc" id="L752">      final Class&lt;?&gt; propType = metaObject.getSetterType(innerResultMapping.getProperty());</span>
+<span class="fc" id="L753">      final TypeHandler&lt;?&gt; typeHandler = typeHandlerRegistry.getTypeHandler(propType);</span>
+<span class="fc" id="L754">      final Object propValue = typeHandler.getResult(rs, prependPrefix(innerResultMapping.getColumn(), columnPrefix));</span>
       // issue #353 &amp; #560 do not execute nested query if key is null
-<span class="fc bfc" id="L747" title="All 2 branches covered.">      if (propValue != null) {</span>
-<span class="fc" id="L748">        metaObject.setValue(innerResultMapping.getProperty(), propValue);</span>
-<span class="fc" id="L749">        foundValues = true;</span>
+<span class="fc bfc" id="L756" title="All 2 branches covered.">      if (propValue != null) {</span>
+<span class="fc" id="L757">        metaObject.setValue(innerResultMapping.getProperty(), propValue);</span>
+<span class="fc" id="L758">        foundValues = true;</span>
       }
-<span class="fc" id="L751">    }</span>
-<span class="fc bfc" id="L752" title="All 2 branches covered.">    return foundValues ? parameterObject : null;</span>
+<span class="fc" id="L760">    }</span>
+<span class="fc bfc" id="L761" title="All 2 branches covered.">    return foundValues ? parameterObject : null;</span>
   }
 
   private Object instantiateParameterObject(Class&lt;?&gt; parameterType) {
-<span class="fc bfc" id="L756" title="All 2 branches covered.">    if (parameterType == null) {</span>
-<span class="fc" id="L757">      return new HashMap&lt;Object, Object&gt;();</span>
+<span class="fc bfc" id="L765" title="All 2 branches covered.">    if (parameterType == null) {</span>
+<span class="fc" id="L766">      return new HashMap&lt;Object, Object&gt;();</span>
+<span class="fc bfc" id="L767" title="All 2 branches covered.">    } else if (ParamMap.class.equals(parameterType)) {</span>
+<span class="fc" id="L768">      return new HashMap&lt;Object, Object&gt;(); // issue #649</span>
     } else {
-<span class="fc" id="L759">      return objectFactory.create(parameterType);</span>
+<span class="fc" id="L770">      return objectFactory.create(parameterType);</span>
     }
   }
 
@@ -765,36 +776,36 @@ public class DefaultResultSetHandler implements ResultSetHandler {
   //
 
   public ResultMap resolveDiscriminatedResultMap(ResultSet rs, ResultMap resultMap, String columnPrefix) throws SQLException {
-<span class="fc" id="L768">    Set&lt;String&gt; pastDiscriminators = new HashSet&lt;String&gt;();</span>
-<span class="fc" id="L769">    Discriminator discriminator = resultMap.getDiscriminator();</span>
-<span class="fc bfc" id="L770" title="All 2 branches covered.">    while (discriminator != null) {</span>
-<span class="fc" id="L771">      final Object value = getDiscriminatorValue(rs, discriminator, columnPrefix);</span>
-<span class="fc" id="L772">      final String discriminatedMapId = discriminator.getMapIdFor(String.valueOf(value));</span>
-<span class="fc bfc" id="L773" title="All 2 branches covered.">      if (configuration.hasResultMap(discriminatedMapId)) {</span>
-<span class="fc" id="L774">        resultMap = configuration.getResultMap(discriminatedMapId);</span>
-<span class="fc" id="L775">        Discriminator lastDiscriminator = discriminator;</span>
-<span class="fc" id="L776">        discriminator = resultMap.getDiscriminator();</span>
-<span class="pc bpc" id="L777" title="1 of 4 branches missed.">        if (discriminator == lastDiscriminator || !pastDiscriminators.add(discriminatedMapId)) {</span>
-<span class="fc" id="L778">          break;</span>
+<span class="fc" id="L779">    Set&lt;String&gt; pastDiscriminators = new HashSet&lt;String&gt;();</span>
+<span class="fc" id="L780">    Discriminator discriminator = resultMap.getDiscriminator();</span>
+<span class="fc bfc" id="L781" title="All 2 branches covered.">    while (discriminator != null) {</span>
+<span class="fc" id="L782">      final Object value = getDiscriminatorValue(rs, discriminator, columnPrefix);</span>
+<span class="fc" id="L783">      final String discriminatedMapId = discriminator.getMapIdFor(String.valueOf(value));</span>
+<span class="fc bfc" id="L784" title="All 2 branches covered.">      if (configuration.hasResultMap(discriminatedMapId)) {</span>
+<span class="fc" id="L785">        resultMap = configuration.getResultMap(discriminatedMapId);</span>
+<span class="fc" id="L786">        Discriminator lastDiscriminator = discriminator;</span>
+<span class="fc" id="L787">        discriminator = resultMap.getDiscriminator();</span>
+<span class="pc bpc" id="L788" title="1 of 4 branches missed.">        if (discriminator == lastDiscriminator || !pastDiscriminators.add(discriminatedMapId)) {</span>
+<span class="fc" id="L789">          break;</span>
         }
       } else {
         break;
       }
-<span class="fc" id="L783">    }</span>
-<span class="fc" id="L784">    return resultMap;</span>
+<span class="fc" id="L794">    }</span>
+<span class="fc" id="L795">    return resultMap;</span>
   }
 
   private Object getDiscriminatorValue(ResultSet rs, Discriminator discriminator, String columnPrefix) throws SQLException {
-<span class="fc" id="L788">    final ResultMapping resultMapping = discriminator.getResultMapping();</span>
-<span class="fc" id="L789">    final TypeHandler&lt;?&gt; typeHandler = resultMapping.getTypeHandler();</span>
-<span class="fc" id="L790">    return typeHandler.getResult(rs, prependPrefix(resultMapping.getColumn(), columnPrefix));</span>
+<span class="fc" id="L799">    final ResultMapping resultMapping = discriminator.getResultMapping();</span>
+<span class="fc" id="L800">    final TypeHandler&lt;?&gt; typeHandler = resultMapping.getTypeHandler();</span>
+<span class="fc" id="L801">    return typeHandler.getResult(rs, prependPrefix(resultMapping.getColumn(), columnPrefix));</span>
   }
 
   private String prependPrefix(String columnName, String prefix) {
-<span class="pc bpc" id="L794" title="2 of 8 branches missed.">    if (columnName == null || columnName.length() == 0 || prefix == null || prefix.length() == 0) {</span>
-<span class="fc" id="L795">      return columnName;</span>
+<span class="pc bpc" id="L805" title="2 of 8 branches missed.">    if (columnName == null || columnName.length() == 0 || prefix == null || prefix.length() == 0) {</span>
+<span class="fc" id="L806">      return columnName;</span>
     }
-<span class="fc" id="L797">    return prefix + columnName;</span>
+<span class="fc" id="L808">    return prefix + columnName;</span>
   }
 
   //
@@ -802,146 +813,153 @@ public class DefaultResultSetHandler implements ResultSetHandler {
   //
 
   private void handleRowValuesForNestedResultMap(ResultSetWrapper rsw, ResultMap resultMap, ResultHandler&lt;?&gt; resultHandler, RowBounds rowBounds, ResultMapping parentMapping) throws SQLException {
-<span class="fc" id="L805">    final DefaultResultContext&lt;Object&gt; resultContext = new DefaultResultContext&lt;Object&gt;();</span>
-<span class="fc" id="L806">    skipRows(rsw.getResultSet(), rowBounds);</span>
-<span class="fc" id="L807">    Object rowValue = previousRowValue;</span>
-<span class="fc bfc" id="L808" title="All 4 branches covered.">    while (shouldProcessMoreRows(resultContext, rowBounds) &amp;&amp; rsw.getResultSet().next()) {</span>
-<span class="fc" id="L809">      final ResultMap discriminatedResultMap = resolveDiscriminatedResultMap(rsw.getResultSet(), resultMap, null);</span>
-<span class="fc" id="L810">      final CacheKey rowKey = createRowKey(discriminatedResultMap, rsw, null);</span>
-<span class="fc" id="L811">      Object partialObject = nestedResultObjects.get(rowKey);</span>
+<span class="fc" id="L816">    final DefaultResultContext&lt;Object&gt; resultContext = new DefaultResultContext&lt;Object&gt;();</span>
+<span class="fc" id="L817">    skipRows(rsw.getResultSet(), rowBounds);</span>
+<span class="fc" id="L818">    Object rowValue = previousRowValue;</span>
+<span class="fc bfc" id="L819" title="All 4 branches covered.">    while (shouldProcessMoreRows(resultContext, rowBounds) &amp;&amp; rsw.getResultSet().next()) {</span>
+<span class="fc" id="L820">      final ResultMap discriminatedResultMap = resolveDiscriminatedResultMap(rsw.getResultSet(), resultMap, null);</span>
+<span class="fc" id="L821">      final CacheKey rowKey = createRowKey(discriminatedResultMap, rsw, null);</span>
+<span class="fc" id="L822">      Object partialObject = nestedResultObjects.get(rowKey);</span>
       // issue #577 &amp;&amp; #542
-<span class="fc bfc" id="L813" title="All 2 branches covered.">      if (mappedStatement.isResultOrdered()) {</span>
-<span class="fc bfc" id="L814" title="All 4 branches covered.">        if (partialObject == null &amp;&amp; rowValue != null) {</span>
-<span class="fc" id="L815">          nestedResultObjects.clear();</span>
-<span class="fc" id="L816">          storeObject(resultHandler, resultContext, rowValue, parentMapping, rsw.getResultSet());</span>
+<span class="fc bfc" id="L824" title="All 2 branches covered.">      if (mappedStatement.isResultOrdered()) {</span>
+<span class="fc bfc" id="L825" title="All 4 branches covered.">        if (partialObject == null &amp;&amp; rowValue != null) {</span>
+<span class="fc" id="L826">          nestedResultObjects.clear();</span>
+<span class="fc" id="L827">          storeObject(resultHandler, resultContext, rowValue, parentMapping, rsw.getResultSet());</span>
         }
-<span class="fc" id="L818">        rowValue = getRowValue(rsw, discriminatedResultMap, rowKey, null, partialObject);</span>
+<span class="fc" id="L829">        rowValue = getRowValue(rsw, discriminatedResultMap, rowKey, null, partialObject);</span>
       } else {
-<span class="fc" id="L820">        rowValue = getRowValue(rsw, discriminatedResultMap, rowKey, null, partialObject);</span>
-<span class="fc bfc" id="L821" title="All 2 branches covered.">        if (partialObject == null) {</span>
-<span class="fc" id="L822">          storeObject(resultHandler, resultContext, rowValue, parentMapping, rsw.getResultSet());</span>
+<span class="fc" id="L831">        rowValue = getRowValue(rsw, discriminatedResultMap, rowKey, null, partialObject);</span>
+<span class="fc bfc" id="L832" title="All 2 branches covered.">        if (partialObject == null) {</span>
+<span class="fc" id="L833">          storeObject(resultHandler, resultContext, rowValue, parentMapping, rsw.getResultSet());</span>
         }
       }
-<span class="fc" id="L825">    }</span>
-<span class="fc bfc" id="L826" title="All 6 branches covered.">    if (rowValue != null &amp;&amp; mappedStatement.isResultOrdered() &amp;&amp; shouldProcessMoreRows(resultContext, rowBounds)) {</span>
-<span class="fc" id="L827">      storeObject(resultHandler, resultContext, rowValue, parentMapping, rsw.getResultSet());</span>
-<span class="fc" id="L828">      previousRowValue = null;</span>
-<span class="fc bfc" id="L829" title="All 2 branches covered.">    } else if (rowValue != null) {</span>
-<span class="fc" id="L830">      previousRowValue = rowValue;</span>
+<span class="fc" id="L836">    }</span>
+<span class="fc bfc" id="L837" title="All 6 branches covered.">    if (rowValue != null &amp;&amp; mappedStatement.isResultOrdered() &amp;&amp; shouldProcessMoreRows(resultContext, rowBounds)) {</span>
+<span class="fc" id="L838">      storeObject(resultHandler, resultContext, rowValue, parentMapping, rsw.getResultSet());</span>
+<span class="fc" id="L839">      previousRowValue = null;</span>
+<span class="fc bfc" id="L840" title="All 2 branches covered.">    } else if (rowValue != null) {</span>
+<span class="fc" id="L841">      previousRowValue = rowValue;</span>
     }
-<span class="fc" id="L832">  }</span>
+<span class="fc" id="L843">  }</span>
 
   //
   // GET VALUE FROM ROW FOR NESTED RESULT MAP
   //
 
   private Object getRowValue(ResultSetWrapper rsw, ResultMap resultMap, CacheKey combinedKey, String columnPrefix, Object partialObject) throws SQLException {
-<span class="fc" id="L839">    final String resultMapId = resultMap.getId();</span>
-<span class="fc" id="L840">    Object resultObject = partialObject;</span>
-<span class="fc bfc" id="L841" title="All 2 branches covered.">    if (resultObject != null) {</span>
-<span class="fc" id="L842">      final MetaObject metaObject = configuration.newMetaObject(resultObject);</span>
-<span class="fc" id="L843">      putAncestor(resultObject, resultMapId, columnPrefix);</span>
-<span class="fc" id="L844">      applyNestedResultMappings(rsw, resultMap, metaObject, columnPrefix, combinedKey, false);</span>
-<span class="fc" id="L845">      ancestorObjects.remove(resultMapId);</span>
-<span class="fc" id="L846">    } else {</span>
-<span class="fc" id="L847">      final ResultLoaderMap lazyLoader = new ResultLoaderMap();</span>
-<span class="fc" id="L848">      resultObject = createResultObject(rsw, resultMap, lazyLoader, columnPrefix);</span>
-<span class="pc bpc" id="L849" title="1 of 4 branches missed.">      if (resultObject != null &amp;&amp; !hasTypeHandlerForResultObject(rsw, resultMap.getType())) {</span>
-<span class="fc" id="L850">        final MetaObject metaObject = configuration.newMetaObject(resultObject);</span>
-<span class="fc bfc" id="L851" title="All 2 branches covered.">        boolean foundValues = !resultMap.getConstructorResultMappings().isEmpty();</span>
-<span class="fc bfc" id="L852" title="All 2 branches covered.">        if (shouldApplyAutomaticMappings(resultMap, true)) {</span>
-<span class="pc bpc" id="L853" title="1 of 4 branches missed.">          foundValues = applyAutomaticMappings(rsw, resultMap, metaObject, columnPrefix) || foundValues;</span>
+<span class="fc" id="L850">    final String resultMapId = resultMap.getId();</span>
+<span class="fc" id="L851">    Object rowValue = partialObject;</span>
+<span class="fc bfc" id="L852" title="All 2 branches covered.">    if (rowValue != null) {</span>
+<span class="fc" id="L853">      final MetaObject metaObject = configuration.newMetaObject(rowValue);</span>
+<span class="fc" id="L854">      putAncestor(rowValue, resultMapId, columnPrefix);</span>
+<span class="fc" id="L855">      applyNestedResultMappings(rsw, resultMap, metaObject, columnPrefix, combinedKey, false);</span>
+<span class="fc" id="L856">      ancestorObjects.remove(resultMapId);</span>
+<span class="fc" id="L857">    } else {</span>
+<span class="fc" id="L858">      final ResultLoaderMap lazyLoader = new ResultLoaderMap();</span>
+<span class="fc" id="L859">      rowValue = createResultObject(rsw, resultMap, lazyLoader, columnPrefix);</span>
+<span class="pc bpc" id="L860" title="1 of 4 branches missed.">      if (rowValue != null &amp;&amp; !hasTypeHandlerForResultObject(rsw, resultMap.getType())) {</span>
+<span class="fc" id="L861">        final MetaObject metaObject = configuration.newMetaObject(rowValue);</span>
+<span class="fc" id="L862">        boolean foundValues = this.useConstructorMappings;</span>
+<span class="fc bfc" id="L863" title="All 2 branches covered.">        if (shouldApplyAutomaticMappings(resultMap, true)) {</span>
+<span class="pc bpc" id="L864" title="1 of 4 branches missed.">          foundValues = applyAutomaticMappings(rsw, resultMap, metaObject, columnPrefix) || foundValues;</span>
         }
-<span class="fc bfc" id="L855" title="All 4 branches covered.">        foundValues = applyPropertyMappings(rsw, resultMap, metaObject, lazyLoader, columnPrefix) || foundValues;</span>
-<span class="fc" id="L856">        putAncestor(resultObject, resultMapId, columnPrefix);</span>
-<span class="fc bfc" id="L857" title="All 4 branches covered.">        foundValues = applyNestedResultMappings(rsw, resultMap, metaObject, columnPrefix, combinedKey, true) || foundValues;</span>
-<span class="fc" id="L858">        ancestorObjects.remove(resultMapId);</span>
-<span class="pc bpc" id="L859" title="1 of 4 branches missed.">        foundValues = lazyLoader.size() &gt; 0 || foundValues;</span>
-<span class="fc bfc" id="L860" title="All 2 branches covered.">        resultObject = foundValues ? resultObject : null;</span>
+<span class="fc bfc" id="L866" title="All 4 branches covered.">        foundValues = applyPropertyMappings(rsw, resultMap, metaObject, lazyLoader, columnPrefix) || foundValues;</span>
+<span class="fc" id="L867">        putAncestor(rowValue, resultMapId, columnPrefix);</span>
+<span class="fc bfc" id="L868" title="All 4 branches covered.">        foundValues = applyNestedResultMappings(rsw, resultMap, metaObject, columnPrefix, combinedKey, true) || foundValues;</span>
+<span class="fc" id="L869">        ancestorObjects.remove(resultMapId);</span>
+<span class="fc bfc" id="L870" title="All 4 branches covered.">        foundValues = lazyLoader.size() &gt; 0 || foundValues;</span>
+<span class="fc bfc" id="L871" title="All 4 branches covered.">        rowValue = (foundValues || configuration.isReturnInstanceForEmptyRow()) ? rowValue : null;</span>
       }
-<span class="fc bfc" id="L862" title="All 2 branches covered.">      if (combinedKey != CacheKey.NULL_CACHE_KEY) {</span>
-<span class="fc" id="L863">        nestedResultObjects.put(combinedKey, resultObject);</span>
+<span class="fc bfc" id="L873" title="All 2 branches covered.">      if (combinedKey != CacheKey.NULL_CACHE_KEY) {</span>
+<span class="fc" id="L874">        nestedResultObjects.put(combinedKey, rowValue);</span>
       }
     }
-<span class="fc" id="L866">    return resultObject;</span>
+<span class="fc" id="L877">    return rowValue;</span>
   }
 
   private void putAncestor(Object resultObject, String resultMapId, String columnPrefix) {
-<span class="fc bfc" id="L870" title="All 2 branches covered.">    if (!ancestorColumnPrefix.containsKey(resultMapId)) {</span>
-<span class="fc" id="L871">      ancestorColumnPrefix.put(resultMapId, columnPrefix);</span>
-    }
-<span class="fc" id="L873">    ancestorObjects.put(resultMapId, resultObject);</span>
-<span class="fc" id="L874">  }</span>
+<span class="fc" id="L881">    ancestorObjects.put(resultMapId, resultObject);</span>
+<span class="fc" id="L882">  }</span>
 
   //
   // NESTED RESULT MAP (JOIN MAPPING)
   //
 
   private boolean applyNestedResultMappings(ResultSetWrapper rsw, ResultMap resultMap, MetaObject metaObject, String parentPrefix, CacheKey parentRowKey, boolean newObject) {
-<span class="fc" id="L881">    boolean foundValues = false;</span>
-<span class="fc bfc" id="L882" title="All 2 branches covered.">    for (ResultMapping resultMapping : resultMap.getPropertyResultMappings()) {</span>
-<span class="fc" id="L883">      final String nestedResultMapId = resultMapping.getNestedResultMapId();</span>
-<span class="pc bpc" id="L884" title="1 of 4 branches missed.">      if (nestedResultMapId != null &amp;&amp; resultMapping.getResultSet() == null) {</span>
+<span class="fc" id="L889">    boolean foundValues = false;</span>
+<span class="fc bfc" id="L890" title="All 2 branches covered.">    for (ResultMapping resultMapping : resultMap.getPropertyResultMappings()) {</span>
+<span class="fc" id="L891">      final String nestedResultMapId = resultMapping.getNestedResultMapId();</span>
+<span class="pc bpc" id="L892" title="1 of 4 branches missed.">      if (nestedResultMapId != null &amp;&amp; resultMapping.getResultSet() == null) {</span>
         try {
-<span class="fc" id="L886">          final String columnPrefix = getColumnPrefix(parentPrefix, resultMapping);</span>
-<span class="fc" id="L887">          final ResultMap nestedResultMap = getNestedResultMap(rsw.getResultSet(), nestedResultMapId, columnPrefix);</span>
-<span class="fc" id="L888">          Object ancestorObject = ancestorObjects.get(nestedResultMapId);</span>
-<span class="fc bfc" id="L889" title="All 2 branches covered.">          if (ancestorObject != null) {</span>
-<span class="fc bfc" id="L890" title="All 2 branches covered.">            if (newObject) {</span>
-<span class="fc" id="L891">              linkObjects(metaObject, resultMapping, ancestorObject); // issue #385</span>
-            }
-          } else {
-<span class="fc" id="L894">            final CacheKey rowKey = createRowKey(nestedResultMap, rsw, columnPrefix);</span>
-<span class="fc" id="L895">            final CacheKey combinedKey = combineKeys(rowKey, parentRowKey);</span>
-<span class="fc" id="L896">            Object rowValue = nestedResultObjects.get(combinedKey);</span>
-<span class="fc bfc" id="L897" title="All 2 branches covered.">            boolean knownValue = (rowValue != null);</span>
-<span class="fc" id="L898">            instantiateCollectionPropertyIfAppropriate(resultMapping, metaObject); // mandatory            </span>
-<span class="fc bfc" id="L899" title="All 2 branches covered.">            if (anyNotNullColumnHasValue(resultMapping, columnPrefix, rsw.getResultSet())) {</span>
-<span class="fc" id="L900">              rowValue = getRowValue(rsw, nestedResultMap, combinedKey, columnPrefix, rowValue);</span>
-<span class="fc bfc" id="L901" title="All 4 branches covered.">              if (rowValue != null &amp;&amp; !knownValue) {</span>
-<span class="fc" id="L902">                linkObjects(metaObject, resultMapping, rowValue);</span>
-<span class="fc" id="L903">                foundValues = true;</span>
+<span class="fc" id="L894">          final String columnPrefix = getColumnPrefix(parentPrefix, resultMapping);</span>
+<span class="fc" id="L895">          final ResultMap nestedResultMap = getNestedResultMap(rsw.getResultSet(), nestedResultMapId, columnPrefix);</span>
+<span class="fc bfc" id="L896" title="All 2 branches covered.">          if (resultMapping.getColumnPrefix() == null) {</span>
+            // try to fill circular reference only when columnPrefix
+            // is not specified for the nested result map (issue #215)
+<span class="fc" id="L899">            Object ancestorObject = ancestorObjects.get(nestedResultMapId);</span>
+<span class="fc bfc" id="L900" title="All 2 branches covered.">            if (ancestorObject != null) {</span>
+<span class="fc bfc" id="L901" title="All 2 branches covered.">              if (newObject) {</span>
+<span class="fc" id="L902">                linkObjects(metaObject, resultMapping, ancestorObject); // issue #385</span>
               }
+<span class="fc" id="L904">              continue;</span>
+            }
+          } 
+<span class="fc" id="L907">          final CacheKey rowKey = createRowKey(nestedResultMap, rsw, columnPrefix);</span>
+<span class="fc" id="L908">          final CacheKey combinedKey = combineKeys(rowKey, parentRowKey);</span>
+<span class="fc" id="L909">          Object rowValue = nestedResultObjects.get(combinedKey);</span>
+<span class="fc bfc" id="L910" title="All 2 branches covered.">          boolean knownValue = (rowValue != null);</span>
+<span class="fc" id="L911">          instantiateCollectionPropertyIfAppropriate(resultMapping, metaObject); // mandatory</span>
+<span class="fc bfc" id="L912" title="All 2 branches covered.">          if (anyNotNullColumnHasValue(resultMapping, columnPrefix, rsw)) {</span>
+<span class="fc" id="L913">            rowValue = getRowValue(rsw, nestedResultMap, combinedKey, columnPrefix, rowValue);</span>
+<span class="fc bfc" id="L914" title="All 4 branches covered.">            if (rowValue != null &amp;&amp; !knownValue) {</span>
+<span class="fc" id="L915">              linkObjects(metaObject, resultMapping, rowValue);</span>
+<span class="fc" id="L916">              foundValues = true;</span>
             }
           }
-<span class="nc" id="L907">        } catch (SQLException e) {</span>
-<span class="nc" id="L908">          throw new ExecutorException(&quot;Error getting nested result map values for '&quot; + resultMapping.getProperty() + &quot;'.  Cause: &quot; + e, e);</span>
-<span class="fc" id="L909">        }</span>
+<span class="nc" id="L919">        } catch (SQLException e) {</span>
+<span class="nc" id="L920">          throw new ExecutorException(&quot;Error getting nested result map values for '&quot; + resultMapping.getProperty() + &quot;'.  Cause: &quot; + e, e);</span>
+<span class="fc" id="L921">        }</span>
       }
-<span class="fc" id="L911">    }</span>
-<span class="fc" id="L912">    return foundValues;</span>
+<span class="fc" id="L923">    }</span>
+<span class="fc" id="L924">    return foundValues;</span>
   }
 
   private String getColumnPrefix(String parentPrefix, ResultMapping resultMapping) {
-<span class="fc" id="L916">    final StringBuilder columnPrefixBuilder = new StringBuilder();</span>
-<span class="fc bfc" id="L917" title="All 2 branches covered.">    if (parentPrefix != null) {</span>
-<span class="fc" id="L918">      columnPrefixBuilder.append(parentPrefix);</span>
+<span class="fc" id="L928">    final StringBuilder columnPrefixBuilder = new StringBuilder();</span>
+<span class="fc bfc" id="L929" title="All 2 branches covered.">    if (parentPrefix != null) {</span>
+<span class="fc" id="L930">      columnPrefixBuilder.append(parentPrefix);</span>
     }
-<span class="fc bfc" id="L920" title="All 2 branches covered.">    if (resultMapping.getColumnPrefix() != null) {</span>
-<span class="fc" id="L921">      columnPrefixBuilder.append(resultMapping.getColumnPrefix());</span>
+<span class="fc bfc" id="L932" title="All 2 branches covered.">    if (resultMapping.getColumnPrefix() != null) {</span>
+<span class="fc" id="L933">      columnPrefixBuilder.append(resultMapping.getColumnPrefix());</span>
     }
-<span class="fc bfc" id="L923" title="All 2 branches covered.">    return columnPrefixBuilder.length() == 0 ? null : columnPrefixBuilder.toString().toUpperCase(Locale.ENGLISH);</span>
+<span class="fc bfc" id="L935" title="All 2 branches covered.">    return columnPrefixBuilder.length() == 0 ? null : columnPrefixBuilder.toString().toUpperCase(Locale.ENGLISH);</span>
   }
 
-  private boolean anyNotNullColumnHasValue(ResultMapping resultMapping, String columnPrefix, ResultSet rs) throws SQLException {
-<span class="fc" id="L927">    Set&lt;String&gt; notNullColumns = resultMapping.getNotNullColumns();</span>
-<span class="fc" id="L928">    boolean anyNotNullColumnHasValue = true;</span>
-<span class="fc bfc" id="L929" title="All 4 branches covered.">    if (notNullColumns != null &amp;&amp; !notNullColumns.isEmpty()) {</span>
-<span class="fc" id="L930">      anyNotNullColumnHasValue = false;</span>
-<span class="fc bfc" id="L931" title="All 2 branches covered.">      for (String column: notNullColumns) {</span>
-<span class="fc" id="L932">        rs.getObject(prependPrefix(column, columnPrefix));</span>
-<span class="fc bfc" id="L933" title="All 2 branches covered.">        if (!rs.wasNull()) {</span>
-<span class="fc" id="L934">          anyNotNullColumnHasValue = true;</span>
-<span class="fc" id="L935">          break;</span>
+  private boolean anyNotNullColumnHasValue(ResultMapping resultMapping, String columnPrefix, ResultSetWrapper rsw) throws SQLException {
+<span class="fc" id="L939">    Set&lt;String&gt; notNullColumns = resultMapping.getNotNullColumns();</span>
+<span class="fc bfc" id="L940" title="All 4 branches covered.">    if (notNullColumns != null &amp;&amp; !notNullColumns.isEmpty()) {</span>
+<span class="fc" id="L941">      ResultSet rs = rsw.getResultSet();</span>
+<span class="fc bfc" id="L942" title="All 2 branches covered.">      for (String column: notNullColumns) {</span>
+<span class="fc" id="L943">        rs.getObject(prependPrefix(column, columnPrefix));</span>
+<span class="fc bfc" id="L944" title="All 2 branches covered.">        if (!rs.wasNull()) {</span>
+<span class="fc" id="L945">          return true;</span>
         }
-<span class="fc" id="L937">      }</span>
+<span class="fc" id="L947">      }</span>
+<span class="fc" id="L948">      return false;</span>
+<span class="fc bfc" id="L949" title="All 2 branches covered.">    } else if (columnPrefix != null) {</span>
+<span class="fc bfc" id="L950" title="All 2 branches covered.">      for (String columnName : rsw.getColumnNames()) {</span>
+<span class="fc bfc" id="L951" title="All 2 branches covered.">        if (columnName.toUpperCase().startsWith(columnPrefix.toUpperCase())) {</span>
+<span class="fc" id="L952">          return true;</span>
+        }
+<span class="fc" id="L954">      }</span>
+<span class="fc" id="L955">      return false;</span>
     }
-<span class="fc" id="L939">    return anyNotNullColumnHasValue;</span>
+<span class="fc" id="L957">    return true;</span>
   }
 
   private ResultMap getNestedResultMap(ResultSet rs, String nestedResultMapId, String columnPrefix) throws SQLException {
-<span class="fc" id="L943">    ResultMap nestedResultMap = configuration.getResultMap(nestedResultMapId);</span>
-<span class="fc" id="L944">    return resolveDiscriminatedResultMap(rs, nestedResultMap, columnPrefix);</span>
+<span class="fc" id="L961">    ResultMap nestedResultMap = configuration.getResultMap(nestedResultMapId);</span>
+<span class="fc" id="L962">    return resolveDiscriminatedResultMap(rs, nestedResultMap, columnPrefix);</span>
   }
 
   //
@@ -949,142 +967,142 @@ public class DefaultResultSetHandler implements ResultSetHandler {
   //
 
   private CacheKey createRowKey(ResultMap resultMap, ResultSetWrapper rsw, String columnPrefix) throws SQLException {
-<span class="fc" id="L952">    final CacheKey cacheKey = new CacheKey();</span>
-<span class="fc" id="L953">    cacheKey.update(resultMap.getId());</span>
-<span class="fc" id="L954">    List&lt;ResultMapping&gt; resultMappings = getResultMappingsForRowKey(resultMap);</span>
-<span class="fc bfc" id="L955" title="All 2 branches covered.">    if (resultMappings.size() == 0) {</span>
-<span class="pc bpc" id="L956" title="1 of 2 branches missed.">      if (Map.class.isAssignableFrom(resultMap.getType())) {</span>
-<span class="nc" id="L957">        createRowKeyForMap(rsw, cacheKey);</span>
+<span class="fc" id="L970">    final CacheKey cacheKey = new CacheKey();</span>
+<span class="fc" id="L971">    cacheKey.update(resultMap.getId());</span>
+<span class="fc" id="L972">    List&lt;ResultMapping&gt; resultMappings = getResultMappingsForRowKey(resultMap);</span>
+<span class="fc bfc" id="L973" title="All 2 branches covered.">    if (resultMappings.size() == 0) {</span>
+<span class="pc bpc" id="L974" title="1 of 2 branches missed.">      if (Map.class.isAssignableFrom(resultMap.getType())) {</span>
+<span class="nc" id="L975">        createRowKeyForMap(rsw, cacheKey);</span>
       } else {
-<span class="fc" id="L959">        createRowKeyForUnmappedProperties(resultMap, rsw, cacheKey, columnPrefix);</span>
+<span class="fc" id="L977">        createRowKeyForUnmappedProperties(resultMap, rsw, cacheKey, columnPrefix);</span>
       }
     } else {
-<span class="fc" id="L962">      createRowKeyForMappedProperties(resultMap, rsw, cacheKey, resultMappings, columnPrefix);</span>
+<span class="fc" id="L980">      createRowKeyForMappedProperties(resultMap, rsw, cacheKey, resultMappings, columnPrefix);</span>
     }
-<span class="fc bfc" id="L964" title="All 2 branches covered.">    if (cacheKey.getUpdateCount() &lt; 2) {</span>
-<span class="fc" id="L965">      return CacheKey.NULL_CACHE_KEY;</span>
+<span class="fc bfc" id="L982" title="All 2 branches covered.">    if (cacheKey.getUpdateCount() &lt; 2) {</span>
+<span class="fc" id="L983">      return CacheKey.NULL_CACHE_KEY;</span>
     }    
-<span class="fc" id="L967">    return cacheKey;</span>
+<span class="fc" id="L985">    return cacheKey;</span>
   }
 
   private CacheKey combineKeys(CacheKey rowKey, CacheKey parentRowKey) {
-<span class="fc bfc" id="L971" title="All 4 branches covered.">    if (rowKey.getUpdateCount() &gt; 1 &amp;&amp; parentRowKey.getUpdateCount() &gt; 1) {</span>
+<span class="fc bfc" id="L989" title="All 4 branches covered.">    if (rowKey.getUpdateCount() &gt; 1 &amp;&amp; parentRowKey.getUpdateCount() &gt; 1) {</span>
       CacheKey combinedKey;
       try {
-<span class="fc" id="L974">        combinedKey = rowKey.clone();</span>
-<span class="nc" id="L975">      } catch (CloneNotSupportedException e) {</span>
-<span class="nc" id="L976">        throw new ExecutorException(&quot;Error cloning cache key.  Cause: &quot; + e, e);</span>
-<span class="fc" id="L977">      }</span>
-<span class="fc" id="L978">      combinedKey.update(parentRowKey);</span>
-<span class="fc" id="L979">      return combinedKey;</span>
+<span class="fc" id="L992">        combinedKey = rowKey.clone();</span>
+<span class="nc" id="L993">      } catch (CloneNotSupportedException e) {</span>
+<span class="nc" id="L994">        throw new ExecutorException(&quot;Error cloning cache key.  Cause: &quot; + e, e);</span>
+<span class="fc" id="L995">      }</span>
+<span class="fc" id="L996">      combinedKey.update(parentRowKey);</span>
+<span class="fc" id="L997">      return combinedKey;</span>
     }
-<span class="fc" id="L981">    return CacheKey.NULL_CACHE_KEY;</span>
+<span class="fc" id="L999">    return CacheKey.NULL_CACHE_KEY;</span>
   }
 
   private List&lt;ResultMapping&gt; getResultMappingsForRowKey(ResultMap resultMap) {
-<span class="fc" id="L985">    List&lt;ResultMapping&gt; resultMappings = resultMap.getIdResultMappings();</span>
-<span class="fc bfc" id="L986" title="All 2 branches covered.">    if (resultMappings.size() == 0) {</span>
-<span class="fc" id="L987">      resultMappings = resultMap.getPropertyResultMappings();</span>
+<span class="fc" id="L1003">    List&lt;ResultMapping&gt; resultMappings = resultMap.getIdResultMappings();</span>
+<span class="fc bfc" id="L1004" title="All 2 branches covered.">    if (resultMappings.size() == 0) {</span>
+<span class="fc" id="L1005">      resultMappings = resultMap.getPropertyResultMappings();</span>
     }
-<span class="fc" id="L989">    return resultMappings;</span>
+<span class="fc" id="L1007">    return resultMappings;</span>
   }
 
   private void createRowKeyForMappedProperties(ResultMap resultMap, ResultSetWrapper rsw, CacheKey cacheKey, List&lt;ResultMapping&gt; resultMappings, String columnPrefix) throws SQLException {
-<span class="fc bfc" id="L993" title="All 2 branches covered.">    for (ResultMapping resultMapping : resultMappings) {</span>
-<span class="pc bpc" id="L994" title="1 of 4 branches missed.">      if (resultMapping.getNestedResultMapId() != null &amp;&amp; resultMapping.getResultSet() == null) {</span>
+<span class="fc bfc" id="L1011" title="All 2 branches covered.">    for (ResultMapping resultMapping : resultMappings) {</span>
+<span class="pc bpc" id="L1012" title="1 of 4 branches missed.">      if (resultMapping.getNestedResultMapId() != null &amp;&amp; resultMapping.getResultSet() == null) {</span>
         // Issue #392
-<span class="fc" id="L996">        final ResultMap nestedResultMap = configuration.getResultMap(resultMapping.getNestedResultMapId());</span>
-<span class="fc" id="L997">        createRowKeyForMappedProperties(nestedResultMap, rsw, cacheKey, nestedResultMap.getConstructorResultMappings(),</span>
-            prependPrefix(resultMapping.getColumnPrefix(), columnPrefix));
-<span class="pc bpc" id="L999" title="1 of 2 branches missed.">      } else if (resultMapping.getNestedQueryId() == null) {</span>
-<span class="fc" id="L1000">        final String column = prependPrefix(resultMapping.getColumn(), columnPrefix);</span>
-<span class="fc" id="L1001">        final TypeHandler&lt;?&gt; th = resultMapping.getTypeHandler();</span>
-<span class="fc" id="L1002">        List&lt;String&gt; mappedColumnNames = rsw.getMappedColumnNames(resultMap, columnPrefix);</span>
+<span class="fc" id="L1014">        final ResultMap nestedResultMap = configuration.getResultMap(resultMapping.getNestedResultMapId());</span>
+<span class="fc" id="L1015">        createRowKeyForMappedProperties(nestedResultMap, rsw, cacheKey, nestedResultMap.getConstructorResultMappings(),</span>
+<span class="fc" id="L1016">            prependPrefix(resultMapping.getColumnPrefix(), columnPrefix));</span>
+<span class="pc bpc" id="L1017" title="1 of 2 branches missed.">      } else if (resultMapping.getNestedQueryId() == null) {</span>
+<span class="fc" id="L1018">        final String column = prependPrefix(resultMapping.getColumn(), columnPrefix);</span>
+<span class="fc" id="L1019">        final TypeHandler&lt;?&gt; th = resultMapping.getTypeHandler();</span>
+<span class="fc" id="L1020">        List&lt;String&gt; mappedColumnNames = rsw.getMappedColumnNames(resultMap, columnPrefix);</span>
         // Issue #114
-<span class="pc bpc" id="L1004" title="2 of 4 branches missed.">        if (column != null &amp;&amp; mappedColumnNames.contains(column.toUpperCase(Locale.ENGLISH))) {</span>
-<span class="fc" id="L1005">          final Object value = th.getResult(rsw.getResultSet(), column);</span>
-<span class="fc bfc" id="L1006" title="All 2 branches covered.">          if (value != null) {</span>
-<span class="fc" id="L1007">            cacheKey.update(column);</span>
-<span class="fc" id="L1008">            cacheKey.update(value);</span>
+<span class="pc bpc" id="L1022" title="1 of 4 branches missed.">        if (column != null &amp;&amp; mappedColumnNames.contains(column.toUpperCase(Locale.ENGLISH))) {</span>
+<span class="fc" id="L1023">          final Object value = th.getResult(rsw.getResultSet(), column);</span>
+<span class="fc bfc" id="L1024" title="All 4 branches covered.">          if (value != null || configuration.isReturnInstanceForEmptyRow()) {</span>
+<span class="fc" id="L1025">            cacheKey.update(column);</span>
+<span class="fc" id="L1026">            cacheKey.update(value);</span>
           }
         }
       }
-<span class="fc" id="L1012">    }</span>
-<span class="fc" id="L1013">  }</span>
+<span class="fc" id="L1030">    }</span>
+<span class="fc" id="L1031">  }</span>
 
   private void createRowKeyForUnmappedProperties(ResultMap resultMap, ResultSetWrapper rsw, CacheKey cacheKey, String columnPrefix) throws SQLException {
-<span class="fc" id="L1016">    final MetaClass metaType = MetaClass.forClass(resultMap.getType(), reflectorFactory);</span>
-<span class="fc" id="L1017">    List&lt;String&gt; unmappedColumnNames = rsw.getUnmappedColumnNames(resultMap, columnPrefix);</span>
-<span class="fc bfc" id="L1018" title="All 2 branches covered.">    for (String column : unmappedColumnNames) {</span>
-<span class="fc" id="L1019">      String property = column;</span>
-<span class="pc bpc" id="L1020" title="1 of 4 branches missed.">      if (columnPrefix != null &amp;&amp; !columnPrefix.isEmpty()) {</span>
+<span class="fc" id="L1034">    final MetaClass metaType = MetaClass.forClass(resultMap.getType(), reflectorFactory);</span>
+<span class="fc" id="L1035">    List&lt;String&gt; unmappedColumnNames = rsw.getUnmappedColumnNames(resultMap, columnPrefix);</span>
+<span class="fc bfc" id="L1036" title="All 2 branches covered.">    for (String column : unmappedColumnNames) {</span>
+<span class="fc" id="L1037">      String property = column;</span>
+<span class="pc bpc" id="L1038" title="1 of 4 branches missed.">      if (columnPrefix != null &amp;&amp; !columnPrefix.isEmpty()) {</span>
         // When columnPrefix is specified, ignore columns without the prefix.
-<span class="fc bfc" id="L1022" title="All 2 branches covered.">        if (column.toUpperCase(Locale.ENGLISH).startsWith(columnPrefix)) {</span>
-<span class="fc" id="L1023">          property = column.substring(columnPrefix.length());</span>
+<span class="fc bfc" id="L1040" title="All 2 branches covered.">        if (column.toUpperCase(Locale.ENGLISH).startsWith(columnPrefix)) {</span>
+<span class="fc" id="L1041">          property = column.substring(columnPrefix.length());</span>
         } else {
           continue;
         }
       }
-<span class="fc bfc" id="L1028" title="All 2 branches covered.">      if (metaType.findProperty(property, configuration.isMapUnderscoreToCamelCase()) != null) {</span>
-<span class="fc" id="L1029">        String value = rsw.getResultSet().getString(column);</span>
-<span class="fc bfc" id="L1030" title="All 2 branches covered.">        if (value != null) {</span>
-<span class="fc" id="L1031">          cacheKey.update(column);</span>
-<span class="fc" id="L1032">          cacheKey.update(value);</span>
+<span class="fc bfc" id="L1046" title="All 2 branches covered.">      if (metaType.findProperty(property, configuration.isMapUnderscoreToCamelCase()) != null) {</span>
+<span class="fc" id="L1047">        String value = rsw.getResultSet().getString(column);</span>
+<span class="fc bfc" id="L1048" title="All 2 branches covered.">        if (value != null) {</span>
+<span class="fc" id="L1049">          cacheKey.update(column);</span>
+<span class="fc" id="L1050">          cacheKey.update(value);</span>
         }
       }
-<span class="fc" id="L1035">    }</span>
-<span class="fc" id="L1036">  }</span>
+<span class="fc" id="L1053">    }</span>
+<span class="fc" id="L1054">  }</span>
 
   private void createRowKeyForMap(ResultSetWrapper rsw, CacheKey cacheKey) throws SQLException {
-<span class="nc" id="L1039">    List&lt;String&gt; columnNames = rsw.getColumnNames();</span>
-<span class="nc bnc" id="L1040" title="All 2 branches missed.">    for (String columnName : columnNames) {</span>
-<span class="nc" id="L1041">      final String value = rsw.getResultSet().getString(columnName);</span>
-<span class="nc bnc" id="L1042" title="All 2 branches missed.">      if (value != null) {</span>
-<span class="nc" id="L1043">        cacheKey.update(columnName);</span>
-<span class="nc" id="L1044">        cacheKey.update(value);</span>
+<span class="nc" id="L1057">    List&lt;String&gt; columnNames = rsw.getColumnNames();</span>
+<span class="nc bnc" id="L1058" title="All 2 branches missed.">    for (String columnName : columnNames) {</span>
+<span class="nc" id="L1059">      final String value = rsw.getResultSet().getString(columnName);</span>
+<span class="nc bnc" id="L1060" title="All 2 branches missed.">      if (value != null) {</span>
+<span class="nc" id="L1061">        cacheKey.update(columnName);</span>
+<span class="nc" id="L1062">        cacheKey.update(value);</span>
       }
-<span class="nc" id="L1046">    }</span>
-<span class="nc" id="L1047">  }</span>
+<span class="nc" id="L1064">    }</span>
+<span class="nc" id="L1065">  }</span>
 
   private void linkObjects(MetaObject metaObject, ResultMapping resultMapping, Object rowValue) {
-<span class="fc" id="L1050">    final Object collectionProperty = instantiateCollectionPropertyIfAppropriate(resultMapping, metaObject);</span>
-<span class="fc bfc" id="L1051" title="All 2 branches covered.">    if (collectionProperty != null) {</span>
-<span class="fc" id="L1052">      final MetaObject targetMetaObject = configuration.newMetaObject(collectionProperty);</span>
-<span class="fc" id="L1053">      targetMetaObject.add(rowValue);</span>
-<span class="fc" id="L1054">    } else {</span>
-<span class="fc" id="L1055">      metaObject.setValue(resultMapping.getProperty(), rowValue);</span>
+<span class="fc" id="L1068">    final Object collectionProperty = instantiateCollectionPropertyIfAppropriate(resultMapping, metaObject);</span>
+<span class="fc bfc" id="L1069" title="All 2 branches covered.">    if (collectionProperty != null) {</span>
+<span class="fc" id="L1070">      final MetaObject targetMetaObject = configuration.newMetaObject(collectionProperty);</span>
+<span class="fc" id="L1071">      targetMetaObject.add(rowValue);</span>
+<span class="fc" id="L1072">    } else {</span>
+<span class="fc" id="L1073">      metaObject.setValue(resultMapping.getProperty(), rowValue);</span>
     }
-<span class="fc" id="L1057">  }</span>
+<span class="fc" id="L1075">  }</span>
 
   private Object instantiateCollectionPropertyIfAppropriate(ResultMapping resultMapping, MetaObject metaObject) {
-<span class="fc" id="L1060">    final String propertyName = resultMapping.getProperty();</span>
-<span class="fc" id="L1061">    Object propertyValue = metaObject.getValue(propertyName);</span>
-<span class="fc bfc" id="L1062" title="All 2 branches covered.">    if (propertyValue == null) {</span>
-<span class="fc" id="L1063">      Class&lt;?&gt; type = resultMapping.getJavaType();</span>
-<span class="fc bfc" id="L1064" title="All 2 branches covered.">      if (type == null) {</span>
-<span class="fc" id="L1065">        type = metaObject.getSetterType(propertyName);</span>
+<span class="fc" id="L1078">    final String propertyName = resultMapping.getProperty();</span>
+<span class="fc" id="L1079">    Object propertyValue = metaObject.getValue(propertyName);</span>
+<span class="fc bfc" id="L1080" title="All 2 branches covered.">    if (propertyValue == null) {</span>
+<span class="fc" id="L1081">      Class&lt;?&gt; type = resultMapping.getJavaType();</span>
+<span class="fc bfc" id="L1082" title="All 2 branches covered.">      if (type == null) {</span>
+<span class="fc" id="L1083">        type = metaObject.getSetterType(propertyName);</span>
       }
       try {
-<span class="fc bfc" id="L1068" title="All 2 branches covered.">        if (objectFactory.isCollection(type)) {</span>
-<span class="fc" id="L1069">          propertyValue = objectFactory.create(type);</span>
-<span class="fc" id="L1070">          metaObject.setValue(propertyName, propertyValue);</span>
-<span class="fc" id="L1071">          return propertyValue;</span>
+<span class="fc bfc" id="L1086" title="All 2 branches covered.">        if (objectFactory.isCollection(type)) {</span>
+<span class="fc" id="L1087">          propertyValue = objectFactory.create(type);</span>
+<span class="fc" id="L1088">          metaObject.setValue(propertyName, propertyValue);</span>
+<span class="fc" id="L1089">          return propertyValue;</span>
         }
-<span class="nc" id="L1073">      } catch (Exception e) {</span>
-<span class="nc" id="L1074">        throw new ExecutorException(&quot;Error instantiating collection property for result '&quot; + resultMapping.getProperty() + &quot;'.  Cause: &quot; + e, e);</span>
-<span class="fc" id="L1075">      }</span>
-<span class="fc bfc" id="L1076" title="All 2 branches covered.">    } else if (objectFactory.isCollection(propertyValue.getClass())) {</span>
-<span class="fc" id="L1077">      return propertyValue;</span>
+<span class="nc" id="L1091">      } catch (Exception e) {</span>
+<span class="nc" id="L1092">        throw new ExecutorException(&quot;Error instantiating collection property for result '&quot; + resultMapping.getProperty() + &quot;'.  Cause: &quot; + e, e);</span>
+<span class="fc" id="L1093">      }</span>
+<span class="fc bfc" id="L1094" title="All 2 branches covered.">    } else if (objectFactory.isCollection(propertyValue.getClass())) {</span>
+<span class="fc" id="L1095">      return propertyValue;</span>
     }
-<span class="fc" id="L1079">    return null;</span>
+<span class="fc" id="L1097">    return null;</span>
   }
 
   private boolean hasTypeHandlerForResultObject(ResultSetWrapper rsw, Class&lt;?&gt; resultType) {
-<span class="fc bfc" id="L1083" title="All 2 branches covered.">    if (rsw.getColumnNames().size() == 1) {</span>
-<span class="fc" id="L1084">      return typeHandlerRegistry.hasTypeHandler(resultType, rsw.getJdbcType(rsw.getColumnNames().get(0)));</span>
+<span class="fc bfc" id="L1101" title="All 2 branches covered.">    if (rsw.getColumnNames().size() == 1) {</span>
+<span class="fc" id="L1102">      return typeHandlerRegistry.hasTypeHandler(resultType, rsw.getJdbcType(rsw.getColumnNames().get(0)));</span>
     }
-<span class="fc" id="L1086">    return typeHandlerRegistry.hasTypeHandler(resultType);</span>
-  }  
+<span class="fc" id="L1104">    return typeHandlerRegistry.hasTypeHandler(resultType);</span>
+  }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

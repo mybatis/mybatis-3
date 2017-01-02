@@ -7,7 +7,7 @@
 <body>
 <div id="overview"><a href="../../../../../../../testapidocs/org/apache/ibatis/submitted/immutable_constructor/ImmutablePOJOTest.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2015 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2016 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_javadoccomment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_javadoccomment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_javadoccomment"> *    you may not use this file except in compliance with the License.</em>
@@ -81,8 +81,8 @@
 <a class="jxr_linenumber" name="L73" href="#L73">73</a>        <strong class="jxr_keyword">final</strong> <a href="../../../../../org/apache/ibatis/submitted/immutable_constructor/ImmutablePOJOMapper.html">ImmutablePOJOMapper</a> mapper = session.getMapper(ImmutablePOJOMapper.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L74" href="#L74">74</a>        <strong class="jxr_keyword">final</strong> <a href="../../../../../org/apache/ibatis/submitted/immutable_constructor/ImmutablePOJO.html">ImmutablePOJO</a> pojo = mapper.getImmutablePOJO(POJO_ID);
 <a class="jxr_linenumber" name="L75" href="#L75">75</a>  
-<a class="jxr_linenumber" name="L76" href="#L76">76</a>        assertEquals(POJO_ID, pojo.getId());
-<a class="jxr_linenumber" name="L77" href="#L77">77</a>        assertEquals(POJO_DESCRIPTION, pojo.getDescription());
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>        assertEquals(POJO_ID, pojo.getImmutableId());
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>        assertEquals(POJO_DESCRIPTION, pojo.getImmutableDescription());
 <a class="jxr_linenumber" name="L78" href="#L78">78</a>      } <strong class="jxr_keyword">finally</strong> {
 <a class="jxr_linenumber" name="L79" href="#L79">79</a>        session.close();
 <a class="jxr_linenumber" name="L80" href="#L80">80</a>      }
@@ -103,6 +103,6 @@
 <a class="jxr_linenumber" name="L95" href="#L95">95</a>  }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2016 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2009&#x2013;2017 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
 </body>
 </html>

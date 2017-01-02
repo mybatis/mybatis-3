@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>ScriptRunner.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.jdbc</a> &gt; <span class="el_source">ScriptRunner.java</span></div><h1>ScriptRunner.java</h1><pre class="source lang-java linenums">/**
- *    Copyright 2009-2015 the original author or authors.
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ScriptRunner.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.jdbc</a> &gt; <span class="el_source">ScriptRunner.java</span></div><h1>ScriptRunner.java</h1><pre class="source lang-java linenums">/**
+ *    Copyright 2009-2016 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  *    you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.SQLWarning;
 import java.sql.Statement;
 
 /**
@@ -30,265 +31,278 @@ import java.sql.Statement;
  */
 public class ScriptRunner {
 
-<span class="fc" id="L33">  private static final String LINE_SEPARATOR = System.getProperty(&quot;line.separator&quot;, &quot;\n&quot;);</span>
+<span class="fc" id="L34">  private static final String LINE_SEPARATOR = System.getProperty(&quot;line.separator&quot;, &quot;\n&quot;);</span>
 
   private static final String DEFAULT_DELIMITER = &quot;;&quot;;
 
   private Connection connection;
 
   private boolean stopOnError;
+  private boolean throwWarning;
   private boolean autoCommit;
   private boolean sendFullScript;
   private boolean removeCRs;
-<span class="fc" id="L43">  private boolean escapeProcessing = true;</span>
+<span class="fc" id="L45">  private boolean escapeProcessing = true;</span>
 
-<span class="fc" id="L45">  private PrintWriter logWriter = new PrintWriter(System.out);</span>
-<span class="fc" id="L46">  private PrintWriter errorLogWriter = new PrintWriter(System.err);</span>
+<span class="fc" id="L47">  private PrintWriter logWriter = new PrintWriter(System.out);</span>
+<span class="fc" id="L48">  private PrintWriter errorLogWriter = new PrintWriter(System.err);</span>
 
-<span class="fc" id="L48">  private String delimiter = DEFAULT_DELIMITER;</span>
-<span class="fc" id="L49">  private boolean fullLineDelimiter = false;</span>
+<span class="fc" id="L50">  private String delimiter = DEFAULT_DELIMITER;</span>
+  private boolean fullLineDelimiter;
 
-<span class="fc" id="L51">  public ScriptRunner(Connection connection) {</span>
-<span class="fc" id="L52">    this.connection = connection;</span>
-<span class="fc" id="L53">  }</span>
+<span class="fc" id="L53">  public ScriptRunner(Connection connection) {</span>
+<span class="fc" id="L54">    this.connection = connection;</span>
+<span class="fc" id="L55">  }</span>
 
   public void setStopOnError(boolean stopOnError) {
-<span class="fc" id="L56">    this.stopOnError = stopOnError;</span>
-<span class="fc" id="L57">  }</span>
+<span class="fc" id="L58">    this.stopOnError = stopOnError;</span>
+<span class="fc" id="L59">  }</span>
+
+  public void setThrowWarning(boolean throwWarning) {
+<span class="nc" id="L62">    this.throwWarning = throwWarning;</span>
+<span class="nc" id="L63">  }</span>
 
   public void setAutoCommit(boolean autoCommit) {
-<span class="fc" id="L60">    this.autoCommit = autoCommit;</span>
-<span class="fc" id="L61">  }</span>
+<span class="fc" id="L66">    this.autoCommit = autoCommit;</span>
+<span class="fc" id="L67">  }</span>
 
   public void setSendFullScript(boolean sendFullScript) {
-<span class="fc" id="L64">    this.sendFullScript = sendFullScript;</span>
-<span class="fc" id="L65">  }</span>
+<span class="fc" id="L70">    this.sendFullScript = sendFullScript;</span>
+<span class="fc" id="L71">  }</span>
 
   public void setRemoveCRs(boolean removeCRs) {
-<span class="nc" id="L68">    this.removeCRs = removeCRs;</span>
-<span class="nc" id="L69">  }</span>
+<span class="nc" id="L74">    this.removeCRs = removeCRs;</span>
+<span class="nc" id="L75">  }</span>
 
   /**
    * @since 3.1.1
    */
   public void setEscapeProcessing(boolean escapeProcessing) {
-<span class="nc" id="L75">    this.escapeProcessing = escapeProcessing;</span>
-<span class="nc" id="L76">  }</span>
+<span class="nc" id="L81">    this.escapeProcessing = escapeProcessing;</span>
+<span class="nc" id="L82">  }</span>
 
   public void setLogWriter(PrintWriter logWriter) {
-<span class="fc" id="L79">    this.logWriter = logWriter;</span>
-<span class="fc" id="L80">  }</span>
+<span class="fc" id="L85">    this.logWriter = logWriter;</span>
+<span class="fc" id="L86">  }</span>
 
   public void setErrorLogWriter(PrintWriter errorLogWriter) {
-<span class="fc" id="L83">    this.errorLogWriter = errorLogWriter;</span>
-<span class="fc" id="L84">  }</span>
+<span class="fc" id="L89">    this.errorLogWriter = errorLogWriter;</span>
+<span class="fc" id="L90">  }</span>
 
   public void setDelimiter(String delimiter) {
-<span class="fc" id="L87">    this.delimiter = delimiter;</span>
-<span class="fc" id="L88">  }</span>
+<span class="fc" id="L93">    this.delimiter = delimiter;</span>
+<span class="fc" id="L94">  }</span>
 
   public void setFullLineDelimiter(boolean fullLineDelimiter) {
-<span class="nc" id="L91">    this.fullLineDelimiter = fullLineDelimiter;</span>
-<span class="nc" id="L92">  }</span>
+<span class="nc" id="L97">    this.fullLineDelimiter = fullLineDelimiter;</span>
+<span class="nc" id="L98">  }</span>
 
   public void runScript(Reader reader) {
-<span class="fc" id="L95">    setAutoCommit();</span>
+<span class="fc" id="L101">    setAutoCommit();</span>
 
     try {
-<span class="fc bfc" id="L98" title="All 2 branches covered.">      if (sendFullScript) {</span>
-<span class="fc" id="L99">        executeFullScript(reader);</span>
+<span class="fc bfc" id="L104" title="All 2 branches covered.">      if (sendFullScript) {</span>
+<span class="fc" id="L105">        executeFullScript(reader);</span>
       } else {
-<span class="fc" id="L101">        executeLineByLine(reader);</span>
+<span class="fc" id="L107">        executeLineByLine(reader);</span>
       }
     } finally {
-<span class="fc" id="L104">      rollbackConnection();</span>
-<span class="fc" id="L105">    }</span>
-<span class="fc" id="L106">  }</span>
+<span class="fc" id="L110">      rollbackConnection();</span>
+<span class="fc" id="L111">    }</span>
+<span class="fc" id="L112">  }</span>
 
   private void executeFullScript(Reader reader) {
-<span class="fc" id="L109">    StringBuilder script = new StringBuilder();</span>
+<span class="fc" id="L115">    StringBuilder script = new StringBuilder();</span>
     try {
-<span class="fc" id="L111">      BufferedReader lineReader = new BufferedReader(reader);</span>
+<span class="fc" id="L117">      BufferedReader lineReader = new BufferedReader(reader);</span>
       String line;
-<span class="fc bfc" id="L113" title="All 2 branches covered.">      while ((line = lineReader.readLine()) != null) {</span>
-<span class="fc" id="L114">        script.append(line);</span>
-<span class="fc" id="L115">        script.append(LINE_SEPARATOR);</span>
+<span class="fc bfc" id="L119" title="All 2 branches covered.">      while ((line = lineReader.readLine()) != null) {</span>
+<span class="fc" id="L120">        script.append(line);</span>
+<span class="fc" id="L121">        script.append(LINE_SEPARATOR);</span>
       }
-<span class="fc" id="L117">      String command = script.toString();</span>
-<span class="fc" id="L118">      println(command);</span>
-<span class="fc" id="L119">      executeStatement(command);</span>
-<span class="fc" id="L120">      commitConnection();</span>
-<span class="nc" id="L121">    } catch (Exception e) {</span>
-<span class="nc" id="L122">      String message = &quot;Error executing: &quot; + script + &quot;.  Cause: &quot; + e;</span>
-<span class="nc" id="L123">      printlnError(message);</span>
-<span class="nc" id="L124">      throw new RuntimeSqlException(message, e);</span>
-<span class="fc" id="L125">    }</span>
-<span class="fc" id="L126">  }</span>
+<span class="fc" id="L123">      String command = script.toString();</span>
+<span class="fc" id="L124">      println(command);</span>
+<span class="fc" id="L125">      executeStatement(command);</span>
+<span class="fc" id="L126">      commitConnection();</span>
+<span class="nc" id="L127">    } catch (Exception e) {</span>
+<span class="nc" id="L128">      String message = &quot;Error executing: &quot; + script + &quot;.  Cause: &quot; + e;</span>
+<span class="nc" id="L129">      printlnError(message);</span>
+<span class="nc" id="L130">      throw new RuntimeSqlException(message, e);</span>
+<span class="fc" id="L131">    }</span>
+<span class="fc" id="L132">  }</span>
 
   private void executeLineByLine(Reader reader) {
-<span class="fc" id="L129">    StringBuilder command = new StringBuilder();</span>
+<span class="fc" id="L135">    StringBuilder command = new StringBuilder();</span>
     try {
-<span class="fc" id="L131">      BufferedReader lineReader = new BufferedReader(reader);</span>
+<span class="fc" id="L137">      BufferedReader lineReader = new BufferedReader(reader);</span>
       String line;
-<span class="fc bfc" id="L133" title="All 2 branches covered.">      while ((line = lineReader.readLine()) != null) {</span>
-<span class="fc" id="L134">        command = handleLine(command, line);</span>
+<span class="fc bfc" id="L139" title="All 2 branches covered.">      while ((line = lineReader.readLine()) != null) {</span>
+<span class="fc" id="L140">        command = handleLine(command, line);</span>
       }
-<span class="fc" id="L136">      commitConnection();</span>
-<span class="fc" id="L137">      checkForMissingLineTerminator(command);</span>
-<span class="fc" id="L138">    } catch (Exception e) {</span>
-<span class="fc" id="L139">      String message = &quot;Error executing: &quot; + command + &quot;.  Cause: &quot; + e;</span>
-<span class="fc" id="L140">      printlnError(message);</span>
-<span class="fc" id="L141">      throw new RuntimeSqlException(message, e);</span>
-<span class="fc" id="L142">    }</span>
-<span class="fc" id="L143">  }</span>
+<span class="fc" id="L142">      commitConnection();</span>
+<span class="fc" id="L143">      checkForMissingLineTerminator(command);</span>
+<span class="fc" id="L144">    } catch (Exception e) {</span>
+<span class="fc" id="L145">      String message = &quot;Error executing: &quot; + command + &quot;.  Cause: &quot; + e;</span>
+<span class="fc" id="L146">      printlnError(message);</span>
+<span class="fc" id="L147">      throw new RuntimeSqlException(message, e);</span>
+<span class="fc" id="L148">    }</span>
+<span class="fc" id="L149">  }</span>
 
   public void closeConnection() {
     try {
-<span class="nc" id="L147">      connection.close();</span>
-<span class="nc" id="L148">    } catch (Exception e) {</span>
+<span class="nc" id="L153">      connection.close();</span>
+<span class="nc" id="L154">    } catch (Exception e) {</span>
       // ignore
-<span class="nc" id="L150">    }</span>
-<span class="nc" id="L151">  }</span>
+<span class="nc" id="L156">    }</span>
+<span class="nc" id="L157">  }</span>
 
   private void setAutoCommit() {
     try {
-<span class="fc bfc" id="L155" title="All 2 branches covered.">      if (autoCommit != connection.getAutoCommit()) {</span>
-<span class="fc" id="L156">        connection.setAutoCommit(autoCommit);</span>
+<span class="fc bfc" id="L161" title="All 2 branches covered.">      if (autoCommit != connection.getAutoCommit()) {</span>
+<span class="fc" id="L162">        connection.setAutoCommit(autoCommit);</span>
       }
-<span class="nc" id="L158">    } catch (Throwable t) {</span>
-<span class="nc" id="L159">      throw new RuntimeSqlException(&quot;Could not set AutoCommit to &quot; + autoCommit + &quot;. Cause: &quot; + t, t);</span>
-<span class="fc" id="L160">    }</span>
-<span class="fc" id="L161">  }</span>
+<span class="nc" id="L164">    } catch (Throwable t) {</span>
+<span class="nc" id="L165">      throw new RuntimeSqlException(&quot;Could not set AutoCommit to &quot; + autoCommit + &quot;. Cause: &quot; + t, t);</span>
+<span class="fc" id="L166">    }</span>
+<span class="fc" id="L167">  }</span>
 
   private void commitConnection() {
     try {
-<span class="fc bfc" id="L165" title="All 2 branches covered.">      if (!connection.getAutoCommit()) {</span>
-<span class="fc" id="L166">        connection.commit();</span>
+<span class="fc bfc" id="L171" title="All 2 branches covered.">      if (!connection.getAutoCommit()) {</span>
+<span class="fc" id="L172">        connection.commit();</span>
       }
-<span class="nc" id="L168">    } catch (Throwable t) {</span>
-<span class="nc" id="L169">      throw new RuntimeSqlException(&quot;Could not commit transaction. Cause: &quot; + t, t);</span>
-<span class="fc" id="L170">    }</span>
-<span class="fc" id="L171">  }</span>
+<span class="nc" id="L174">    } catch (Throwable t) {</span>
+<span class="nc" id="L175">      throw new RuntimeSqlException(&quot;Could not commit transaction. Cause: &quot; + t, t);</span>
+<span class="fc" id="L176">    }</span>
+<span class="fc" id="L177">  }</span>
 
   private void rollbackConnection() {
     try {
-<span class="fc bfc" id="L175" title="All 2 branches covered.">      if (!connection.getAutoCommit()) {</span>
-<span class="fc" id="L176">        connection.rollback();</span>
+<span class="fc bfc" id="L181" title="All 2 branches covered.">      if (!connection.getAutoCommit()) {</span>
+<span class="fc" id="L182">        connection.rollback();</span>
       }
-<span class="nc" id="L178">    } catch (Throwable t) {</span>
+<span class="nc" id="L184">    } catch (Throwable t) {</span>
       // ignore
-<span class="fc" id="L180">    }</span>
-<span class="fc" id="L181">  }</span>
-
-  private void checkForMissingLineTerminator(StringBuilder command) {
-<span class="pc bpc" id="L184" title="1 of 4 branches missed.">    if (command != null &amp;&amp; command.toString().trim().length() &gt; 0) {</span>
-<span class="fc" id="L185">      throw new RuntimeSqlException(&quot;Line missing end-of-line terminator (&quot; + delimiter + &quot;) =&gt; &quot; + command);</span>
-    }
+<span class="fc" id="L186">    }</span>
 <span class="fc" id="L187">  }</span>
 
-  private StringBuilder handleLine(StringBuilder command, String line) throws SQLException, UnsupportedEncodingException {
-<span class="fc" id="L190">    String trimmedLine = line.trim();</span>
-<span class="fc bfc" id="L191" title="All 2 branches covered.">    if (lineIsComment(trimmedLine)) {</span>
-<span class="fc" id="L192">        final String cleanedString = trimmedLine.substring(2).trim().replaceFirst(&quot;//&quot;, &quot;&quot;);</span>
-<span class="fc bfc" id="L193" title="All 2 branches covered.">        if(cleanedString.toUpperCase().startsWith(&quot;@DELIMITER&quot;)) {</span>
-<span class="fc" id="L194">            delimiter = cleanedString.substring(11,12);</span>
-<span class="fc" id="L195">            return command;</span>
-        }
-<span class="fc" id="L197">      println(trimmedLine);</span>
-<span class="fc bfc" id="L198" title="All 2 branches covered.">    } else if (commandReadyToExecute(trimmedLine)) {</span>
-<span class="fc" id="L199">      command.append(line.substring(0, line.lastIndexOf(delimiter)));</span>
-<span class="fc" id="L200">      command.append(LINE_SEPARATOR);</span>
-<span class="fc" id="L201">      println(command);</span>
-<span class="fc" id="L202">      executeStatement(command.toString());</span>
-<span class="fc" id="L203">      command.setLength(0);</span>
-<span class="fc bfc" id="L204" title="All 2 branches covered.">    } else if (trimmedLine.length() &gt; 0) {</span>
-<span class="fc" id="L205">      command.append(line);</span>
-<span class="fc" id="L206">      command.append(LINE_SEPARATOR);</span>
+  private void checkForMissingLineTerminator(StringBuilder command) {
+<span class="pc bpc" id="L190" title="1 of 4 branches missed.">    if (command != null &amp;&amp; command.toString().trim().length() &gt; 0) {</span>
+<span class="fc" id="L191">      throw new RuntimeSqlException(&quot;Line missing end-of-line terminator (&quot; + delimiter + &quot;) =&gt; &quot; + command);</span>
     }
-<span class="fc" id="L208">    return command;</span>
+<span class="fc" id="L193">  }</span>
+
+  private StringBuilder handleLine(StringBuilder command, String line) throws SQLException, UnsupportedEncodingException {
+<span class="fc" id="L196">    String trimmedLine = line.trim();</span>
+<span class="fc bfc" id="L197" title="All 2 branches covered.">    if (lineIsComment(trimmedLine)) {</span>
+<span class="fc" id="L198">        final String cleanedString = trimmedLine.substring(2).trim().replaceFirst(&quot;//&quot;, &quot;&quot;);</span>
+<span class="fc bfc" id="L199" title="All 2 branches covered.">        if(cleanedString.toUpperCase().startsWith(&quot;@DELIMITER&quot;)) {</span>
+<span class="fc" id="L200">            delimiter = cleanedString.substring(11,12);</span>
+<span class="fc" id="L201">            return command;</span>
+        }
+<span class="fc" id="L203">      println(trimmedLine);</span>
+<span class="fc bfc" id="L204" title="All 2 branches covered.">    } else if (commandReadyToExecute(trimmedLine)) {</span>
+<span class="fc" id="L205">      command.append(line.substring(0, line.lastIndexOf(delimiter)));</span>
+<span class="fc" id="L206">      command.append(LINE_SEPARATOR);</span>
+<span class="fc" id="L207">      println(command);</span>
+<span class="fc" id="L208">      executeStatement(command.toString());</span>
+<span class="fc" id="L209">      command.setLength(0);</span>
+<span class="fc bfc" id="L210" title="All 2 branches covered.">    } else if (trimmedLine.length() &gt; 0) {</span>
+<span class="fc" id="L211">      command.append(line);</span>
+<span class="fc" id="L212">      command.append(LINE_SEPARATOR);</span>
+    }
+<span class="fc" id="L214">    return command;</span>
   }
 
   private boolean lineIsComment(String trimmedLine) {
-<span class="pc bpc" id="L212" title="1 of 4 branches missed.">    return trimmedLine.startsWith(&quot;//&quot;) || trimmedLine.startsWith(&quot;--&quot;);</span>
+<span class="pc bpc" id="L218" title="1 of 4 branches missed.">    return trimmedLine.startsWith(&quot;//&quot;) || trimmedLine.startsWith(&quot;--&quot;);</span>
   }
 
   private boolean commandReadyToExecute(String trimmedLine) {
     // issue #561 remove anything after the delimiter
-<span class="pc bpc" id="L217" title="4 of 8 branches missed.">    return !fullLineDelimiter &amp;&amp; trimmedLine.contains(delimiter) || fullLineDelimiter &amp;&amp; trimmedLine.equals(delimiter);</span>
+<span class="pc bpc" id="L223" title="4 of 8 branches missed.">    return !fullLineDelimiter &amp;&amp; trimmedLine.contains(delimiter) || fullLineDelimiter &amp;&amp; trimmedLine.equals(delimiter);</span>
   }
 
   private void executeStatement(String command) throws SQLException {
-<span class="fc" id="L221">    boolean hasResults = false;</span>
-<span class="fc" id="L222">    Statement statement = connection.createStatement();</span>
-<span class="fc" id="L223">    statement.setEscapeProcessing(escapeProcessing);</span>
-<span class="fc" id="L224">    String sql = command;</span>
-<span class="pc bpc" id="L225" title="1 of 2 branches missed.">    if (removeCRs) {</span>
-<span class="nc" id="L226">      sql = sql.replaceAll(&quot;\r\n&quot;, &quot;\n&quot;);</span>
+<span class="fc" id="L227">    boolean hasResults = false;</span>
+<span class="fc" id="L228">    Statement statement = connection.createStatement();</span>
+<span class="fc" id="L229">    statement.setEscapeProcessing(escapeProcessing);</span>
+<span class="fc" id="L230">    String sql = command;</span>
+<span class="pc bpc" id="L231" title="1 of 2 branches missed.">    if (removeCRs) {</span>
+<span class="nc" id="L232">      sql = sql.replaceAll(&quot;\r\n&quot;, &quot;\n&quot;);</span>
     }
-<span class="fc bfc" id="L228" title="All 2 branches covered.">    if (stopOnError) {</span>
-<span class="fc" id="L229">      hasResults = statement.execute(sql);</span>
+<span class="fc bfc" id="L234" title="All 2 branches covered.">    if (stopOnError) {</span>
+<span class="fc" id="L235">      hasResults = statement.execute(sql);</span>
+<span class="pc bpc" id="L236" title="1 of 2 branches missed.">      if (throwWarning) {</span>
+        // In Oracle, CRATE PROCEDURE, FUNCTION, etc. returns warning
+        // instead of throwing exception if there is compilation error.
+<span class="nc" id="L239">        SQLWarning warning = statement.getWarnings();</span>
+<span class="nc bnc" id="L240" title="All 2 branches missed.">        if (warning != null) {</span>
+<span class="nc" id="L241">          throw warning;</span>
+        }
+<span class="nc" id="L243">      }</span>
     } else {
       try {
-<span class="fc" id="L232">        hasResults = statement.execute(sql);</span>
-<span class="fc" id="L233">      } catch (SQLException e) {</span>
-<span class="fc" id="L234">        String message = &quot;Error executing: &quot; + command + &quot;.  Cause: &quot; + e;</span>
-<span class="fc" id="L235">        printlnError(message);</span>
-<span class="fc" id="L236">      }</span>
+<span class="fc" id="L246">        hasResults = statement.execute(sql);</span>
+<span class="fc" id="L247">      } catch (SQLException e) {</span>
+<span class="fc" id="L248">        String message = &quot;Error executing: &quot; + command + &quot;.  Cause: &quot; + e;</span>
+<span class="fc" id="L249">        printlnError(message);</span>
+<span class="fc" id="L250">      }</span>
     }
-<span class="fc" id="L238">    printResults(statement, hasResults);</span>
+<span class="fc" id="L252">    printResults(statement, hasResults);</span>
     try {
-<span class="fc" id="L240">      statement.close();</span>
-<span class="nc" id="L241">    } catch (Exception e) {</span>
+<span class="fc" id="L254">      statement.close();</span>
+<span class="nc" id="L255">    } catch (Exception e) {</span>
       // Ignore to workaround a bug in some connection pools
-<span class="fc" id="L243">    }</span>
-<span class="fc" id="L244">  }</span>
+<span class="fc" id="L257">    }</span>
+<span class="fc" id="L258">  }</span>
 
   private void printResults(Statement statement, boolean hasResults) {
     try {
-<span class="fc bfc" id="L248" title="All 2 branches covered.">      if (hasResults) {</span>
-<span class="fc" id="L249">        ResultSet rs = statement.getResultSet();</span>
-<span class="pc bpc" id="L250" title="1 of 2 branches missed.">        if (rs != null) {</span>
-<span class="fc" id="L251">          ResultSetMetaData md = rs.getMetaData();</span>
-<span class="fc" id="L252">          int cols = md.getColumnCount();</span>
-<span class="fc bfc" id="L253" title="All 2 branches covered.">          for (int i = 0; i &lt; cols; i++) {</span>
-<span class="fc" id="L254">            String name = md.getColumnLabel(i + 1);</span>
-<span class="fc" id="L255">            print(name + &quot;\t&quot;);</span>
+<span class="fc bfc" id="L262" title="All 2 branches covered.">      if (hasResults) {</span>
+<span class="fc" id="L263">        ResultSet rs = statement.getResultSet();</span>
+<span class="pc bpc" id="L264" title="1 of 2 branches missed.">        if (rs != null) {</span>
+<span class="fc" id="L265">          ResultSetMetaData md = rs.getMetaData();</span>
+<span class="fc" id="L266">          int cols = md.getColumnCount();</span>
+<span class="fc bfc" id="L267" title="All 2 branches covered.">          for (int i = 0; i &lt; cols; i++) {</span>
+<span class="fc" id="L268">            String name = md.getColumnLabel(i + 1);</span>
+<span class="fc" id="L269">            print(name + &quot;\t&quot;);</span>
           }
-<span class="fc" id="L257">          println(&quot;&quot;);</span>
-<span class="fc bfc" id="L258" title="All 2 branches covered.">          while (rs.next()) {</span>
-<span class="fc bfc" id="L259" title="All 2 branches covered.">            for (int i = 0; i &lt; cols; i++) {</span>
-<span class="fc" id="L260">              String value = rs.getString(i + 1);</span>
-<span class="fc" id="L261">              print(value + &quot;\t&quot;);</span>
+<span class="fc" id="L271">          println(&quot;&quot;);</span>
+<span class="fc bfc" id="L272" title="All 2 branches covered.">          while (rs.next()) {</span>
+<span class="fc bfc" id="L273" title="All 2 branches covered.">            for (int i = 0; i &lt; cols; i++) {</span>
+<span class="fc" id="L274">              String value = rs.getString(i + 1);</span>
+<span class="fc" id="L275">              print(value + &quot;\t&quot;);</span>
             }
-<span class="fc" id="L263">            println(&quot;&quot;);</span>
+<span class="fc" id="L277">            println(&quot;&quot;);</span>
           }
         }
       }
-<span class="nc" id="L267">    } catch (SQLException e) {</span>
-<span class="nc" id="L268">      printlnError(&quot;Error printing results: &quot; + e.getMessage());</span>
-<span class="fc" id="L269">    }</span>
-<span class="fc" id="L270">  }</span>
-
-  private void print(Object o) {
-<span class="fc bfc" id="L273" title="All 2 branches covered.">    if (logWriter != null) {</span>
-<span class="fc" id="L274">      logWriter.print(o);</span>
-<span class="fc" id="L275">      logWriter.flush();</span>
-    }
-<span class="fc" id="L277">  }</span>
-
-  private void println(Object o) {
-<span class="fc bfc" id="L280" title="All 2 branches covered.">    if (logWriter != null) {</span>
-<span class="fc" id="L281">      logWriter.println(o);</span>
-<span class="fc" id="L282">      logWriter.flush();</span>
-    }
+<span class="nc" id="L281">    } catch (SQLException e) {</span>
+<span class="nc" id="L282">      printlnError(&quot;Error printing results: &quot; + e.getMessage());</span>
+<span class="fc" id="L283">    }</span>
 <span class="fc" id="L284">  }</span>
 
-  private void printlnError(Object o) {
-<span class="pc bpc" id="L287" title="1 of 2 branches missed.">    if (errorLogWriter != null) {</span>
-<span class="nc" id="L288">      errorLogWriter.println(o);</span>
-<span class="nc" id="L289">      errorLogWriter.flush();</span>
+  private void print(Object o) {
+<span class="fc bfc" id="L287" title="All 2 branches covered.">    if (logWriter != null) {</span>
+<span class="fc" id="L288">      logWriter.print(o);</span>
+<span class="fc" id="L289">      logWriter.flush();</span>
     }
 <span class="fc" id="L291">  }</span>
 
+  private void println(Object o) {
+<span class="fc bfc" id="L294" title="All 2 branches covered.">    if (logWriter != null) {</span>
+<span class="fc" id="L295">      logWriter.println(o);</span>
+<span class="fc" id="L296">      logWriter.flush();</span>
+    }
+<span class="fc" id="L298">  }</span>
+
+  private void printlnError(Object o) {
+<span class="pc bpc" id="L301" title="1 of 2 branches missed.">    if (errorLogWriter != null) {</span>
+<span class="nc" id="L302">      errorLogWriter.println(o);</span>
+<span class="nc" id="L303">      errorLogWriter.flush();</span>
+    }
+<span class="fc" id="L305">  }</span>
+
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

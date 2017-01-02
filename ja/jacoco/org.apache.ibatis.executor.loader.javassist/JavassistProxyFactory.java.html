@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ja"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>JavassistProxyFactory.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.executor.loader.javassist</a> &gt; <span class="el_source">JavassistProxyFactory.java</span></div><h1>JavassistProxyFactory.java</h1><pre class="source lang-java linenums">/**
- *    Copyright 2009-2015 the original author or authors.
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ja"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JavassistProxyFactory.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.executor.loader.javassist</a> &gt; <span class="el_source">JavassistProxyFactory.java</span></div><h1>JavassistProxyFactory.java</h1><pre class="source lang-java linenums">/**
+ *    Copyright 2009-2016 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  *    you may not use this file except in compliance with the License.
@@ -87,7 +87,7 @@ public class JavassistProxyFactory implements org.apache.ibatis.executor.loader.
       // nothing to do here
 <span class="fc" id="L88">    }</span>
 
-<span class="fc" id="L90">    Object enhanced = null;</span>
+    Object enhanced;
 <span class="fc" id="L91">    Class&lt;?&gt;[] typesArray = constructorArgTypes.toArray(new Class[constructorArgTypes.size()]);</span>
 <span class="fc" id="L92">    Object[] valuesArray = constructorArgs.toArray(new Object[constructorArgs.size()]);</span>
     try {
@@ -101,13 +101,13 @@ public class JavassistProxyFactory implements org.apache.ibatis.executor.loader.
 
   private static class EnhancedResultObjectProxyImpl implements MethodHandler {
 
-    private Class&lt;?&gt; type;
-    private ResultLoaderMap lazyLoader;
-    private boolean aggressive;
-    private Set&lt;String&gt; lazyLoadTriggerMethods;
-    private ObjectFactory objectFactory;
-    private List&lt;Class&lt;?&gt;&gt; constructorArgTypes;
-    private List&lt;Object&gt; constructorArgs;
+    private final Class&lt;?&gt; type;
+    private final ResultLoaderMap lazyLoader;
+    private final boolean aggressive;
+    private final Set&lt;String&gt; lazyLoadTriggerMethods;
+    private final ObjectFactory objectFactory;
+    private final List&lt;Class&lt;?&gt;&gt; constructorArgTypes;
+    private final List&lt;Object&gt; constructorArgs;
 
 <span class="fc" id="L112">    private EnhancedResultObjectProxyImpl(Class&lt;?&gt; type, ResultLoaderMap lazyLoader, Configuration configuration, ObjectFactory objectFactory, List&lt;Class&lt;?&gt;&gt; constructorArgTypes, List&lt;Object&gt; constructorArgs) {</span>
 <span class="fc" id="L113">      this.type = type;</span>
@@ -133,7 +133,7 @@ public class JavassistProxyFactory implements org.apache.ibatis.executor.loader.
       try {
 <span class="fc" id="L134">        synchronized (lazyLoader) {</span>
 <span class="fc bfc" id="L135" title="All 2 branches covered.">          if (WRITE_REPLACE_METHOD.equals(methodName)) {</span>
-<span class="fc" id="L136">            Object original = null;</span>
+            Object original;
 <span class="fc bfc" id="L137" title="All 2 branches covered.">            if (constructorArgTypes.isEmpty()) {</span>
 <span class="fc" id="L138">              original = objectFactory.create(type);</span>
             } else {
@@ -149,7 +149,7 @@ public class JavassistProxyFactory implements org.apache.ibatis.executor.loader.
 <span class="fc bfc" id="L149" title="All 4 branches covered.">            if (lazyLoader.size() &gt; 0 &amp;&amp; !FINALIZE_METHOD.equals(methodName)) {</span>
 <span class="fc bfc" id="L150" title="All 4 branches covered.">              if (aggressive || lazyLoadTriggerMethods.contains(methodName)) {</span>
 <span class="fc" id="L151">                lazyLoader.loadAll();</span>
-<span class="fc bfc" id="L152" title="All 2 branches covered.">              } else if (PropertyNamer.isProperty(methodName)) {</span>
+<span class="fc bfc" id="L152" title="All 2 branches covered.">              } else if (PropertyNamer.isGetter(methodName)) {</span>
 <span class="fc" id="L153">                final String property = PropertyNamer.methodToProperty(methodName);</span>
 <span class="fc bfc" id="L154" title="All 2 branches covered.">                if (lazyLoader.hasLoader(property)) {</span>
 <span class="fc" id="L155">                  lazyLoader.load(property);</span>
@@ -194,4 +194,4 @@ public class JavassistProxyFactory implements org.apache.ibatis.executor.loader.
     }
   }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
