@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2017 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@
   </parent>
 
   <artifactId>mybatis</artifactId>
-  <version>3.4.2-SNAPSHOT</version>
+  <version>3.4.2</version>
   <packaging>jar</packaging>
 
   <name>mybatis</name>
@@ -51,7 +51,7 @@
       <email>selva.andre@gmail.com</email>
     </contributor>
     <contributor>
-      <name>Antonio S&#225;nchez</name>
+      <name>Antonio Sánchez</name>
       <email>juntandolineas@gmail.com</email>
     </contributor>
     <contributor>
@@ -103,7 +103,7 @@
       <email>riccardo.cossu@gmail.com</email>
     </contributor>
     <contributor>
-      <name>Tom&#225;&#353; Neuberg</name>
+      <name>Tomáš Neuberg</name>
       <email>neuberg@m-atelier.cz</email>
     </contributor>
   </contributors>
@@ -112,7 +112,7 @@
     <url>http://github.com/mybatis/mybatis-3</url>
     <connection>scm:git:ssh://github.com/mybatis/mybatis-3.git</connection>
     <developerConnection>scm:git:ssh://git@github.com/mybatis/mybatis-3.git</developerConnection>
-    <tag>HEAD</tag>
+    <tag>mybatis-3.4.2</tag>
   </scm>
   <issueManagement>
     <system>GitHub Issue Management</system>
@@ -364,7 +364,7 @@
       <properties>
         <maven.compiler.testTarget>1.6</maven.compiler.testTarget>
         <maven.compiler.testSource>1.6</maven.compiler.testSource>
-        <maven.compiler.testCompilerArgument></maven.compiler.testCompilerArgument>
+        <maven.compiler.testCompilerArgument />
       </properties>
       <build>
         <pluginManagement>
@@ -391,7 +391,7 @@
       <properties>
         <maven.compiler.testTarget>1.7</maven.compiler.testTarget>
         <maven.compiler.testSource>1.7</maven.compiler.testSource>
-        <maven.compiler.testCompilerArgument></maven.compiler.testCompilerArgument>
+        <maven.compiler.testCompilerArgument />
       </properties>
       <build>
         <pluginManagement>
