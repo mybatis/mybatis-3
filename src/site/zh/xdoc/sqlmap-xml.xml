@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2017 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -233,7 +233,7 @@ ps.setInt(1,id);]]></source>
   timeout="20">]]></source>
 
         <table>
-          <caption>Insert, Update 和 Delete 的属性</caption>
+          <caption>Insert, Update, Delete 's Attributes</caption>
           <thead>
             <tr>
               <th>属性</th>
@@ -365,7 +365,7 @@ ps.setInt(1,id);]]></source>
   statementType="PREPARED">]]></source>
 
         <table>
-          <caption>selectKey 的属性</caption>
+          <caption>selectKey Attributes</caption>
           <thead>
             <tr>
               <th>属性</th>
@@ -788,7 +788,7 @@ resultMap 元素有很多子元素和一个值得讨论的结构。
         </ul>
 
         <table>
-          <caption>ResultMap属性</caption>
+          <caption>ResultMap Attributes</caption>
           <thead>
             <tr>
               <th>属性</th>
@@ -1458,7 +1458,7 @@ resultMap
   SELECT * FROM BLOG WHERE ID = #{id}
 </select>
 
-<select id="selectPostsForBlog" resultType="Blog">
+<select id="selectPostsForBlog" resultType="Post">
   SELECT * FROM POST WHERE BLOG_ID = #{id}
 </select>]]></source>
 
