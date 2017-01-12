@@ -15,11 +15,13 @@
  */
 package org.apache.ibatis.session;
 
+import java.io.Serializable;
+
 /**
  * @author Clinton Begin
  */
-public class RowBounds {
-
+public class RowBounds implements Serializable {
+  public static final long serialVersionUID = 1L;
   public static final int NO_ROW_OFFSET = 0;
   public static final int NO_ROW_LIMIT = Integer.MAX_VALUE;
   public static final RowBounds DEFAULT = new RowBounds();
