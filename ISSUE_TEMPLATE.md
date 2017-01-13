@@ -1,5 +1,6 @@
 <!--
 Thank you for your contribution!
+请将您的问题发送到邮件列表 https://groups.google.com/group/mybatis-user
 
 Question?
 ======================
