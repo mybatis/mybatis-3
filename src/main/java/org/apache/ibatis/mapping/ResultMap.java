@@ -35,6 +35,7 @@ public class ResultMap {
   private List<ResultMapping> constructorResultMappings;
   private List<ResultMapping> propertyResultMappings;
   private Set<String> mappedColumns;
+  private Set<String> mappedProperties;
   private Discriminator discriminator;
   private boolean hasNestedResultMaps;
   private boolean hasNestedQueries;
@@ -71,6 +72,7 @@ public class ResultMap {
         throw new IllegalArgumentException("ResultMaps must have an id");
       }
       resultMap.mappedColumns = new HashSet<String>();
+      resultMap.mappedProperties = new HashSet<String>();
       resultMap.idResultMappings = new ArrayList<ResultMapping>();
       resultMap.constructorResultMappings = new ArrayList<ResultMapping>();
       resultMap.propertyResultMappings = new ArrayList<ResultMapping>();
@@ -87,6 +89,10 @@ public class ResultMap {
               resultMap.mappedColumns.add(compositeColumn.toUpperCase(Locale.ENGLISH));
             }
           }
+        }
+        final String property = resultMapping.getProperty();
+        if(property != null) {
+          resultMap.mappedProperties.add(property);
         }
         if (resultMapping.getFlags().contains(ResultFlag.CONSTRUCTOR)) {
           resultMap.constructorResultMappings.add(resultMapping);
@@ -144,6 +150,10 @@ public class ResultMap {
 
   public Set<String> getMappedColumns() {
     return mappedColumns;
+  }
+
+  public Set<String> getMappedProperties() {
+    return mappedProperties;
   }
 
   public Discriminator getDiscriminator() {
