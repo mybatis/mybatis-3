@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -477,7 +477,10 @@ public class DefaultResultSetHandler implements ResultSetHandler {
           }
         }
         final String property = metaObject.findProperty(propertyName, configuration.isMapUnderscoreToCamelCase());
-        if (property != null && metaObject.hasSetter(property) && !resultMap.getMappedProperties().contains(property)) {
+        if (property != null && metaObject.hasSetter(property)) {
+          if (resultMap.getMappedProperties().contains(property)) {
+            continue;
+          }
           final Class<?> propertyType = metaObject.getSetterType(property);
           if (typeHandlerRegistry.hasTypeHandler(propertyType, rsw.getJdbcType(columnName))) {
             final TypeHandler<?> typeHandler = rsw.getTypeHandler(propertyType, columnName);
