@@ -65,6 +65,20 @@ public class AutomappingTest {
   }
 
   @Test
+  public void shouldGetAUserWhithPhoneNumber() {
+    sqlSessionFactory.getConfiguration().setAutoMappingBehavior(AutoMappingBehavior.NONE);
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      User user = mapper.getUserWithPhoneNumber(1);
+      Assert.assertEquals("User1", user.getName());
+      Assert.assertEquals(new Long(12345678901L), user.getPhone());
+    } finally {
+      sqlSession.close();
+    }
+  }
+
+  @Test
   public void shouldNotInheritAutoMappingInherited_InlineNestedResultMap() {
     sqlSessionFactory.getConfiguration().setAutoMappingBehavior(AutoMappingBehavior.NONE);
     SqlSession sqlSession = sqlSessionFactory.openSession();
