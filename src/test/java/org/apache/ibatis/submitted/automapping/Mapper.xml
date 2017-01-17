@@ -23,10 +23,18 @@
 <mapper namespace="org.apache.ibatis.submitted.automapping.Mapper">
 
 	<select id="getUser" resultMap="result">
-		select * from users where id = #{id}
+		select id, name from users where id = #{id}
 	</select>
 
 	<resultMap type="org.apache.ibatis.submitted.automapping.User" id="result" autoMapping="true">
+	</resultMap>
+
+	<select id="getUserWithPhoneNumber" resultMap="resultWithPhoneNumber">
+		select * from users where id = #{id}
+	</select>
+
+	<resultMap type="org.apache.ibatis.submitted.automapping.User" id="resultWithPhoneNumber" autoMapping="true">
+		<result property="phone" column="phone_number"/>
 	</resultMap>
 
 	<sql id="selectUserPetBreeder">

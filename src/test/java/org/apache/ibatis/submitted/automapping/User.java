@@ -21,6 +21,8 @@ public class User {
 
   private Integer id;
   private String name;
+  private Long phone; // phone number of Long type
+
   private List<Pet> pets;
 
   public Integer getId() {
@@ -37,6 +39,14 @@ public class User {
 
   public void setName(String name) {
     this.name = name;
+  }
+
+  public Long getPhone() {
+    return phone;
+  }
+
+  public void setPhone(Long phone) {
+    this.phone = phone;
   }
 
   public List<Pet> getPets() {
