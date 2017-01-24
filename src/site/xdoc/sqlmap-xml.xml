@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2017 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -1093,11 +1093,6 @@ public class User {
 
         <h4>constructor</h4>
 
-        <source><![CDATA[<constructor>
-   <idArg column="id" javaType="int"/>
-   <arg column="username" javaType="String"/>
-</constructor>]]></source>
-
         <p>
           While properties will work for most Data Transfer Object (DTO) type classes, and likely most of your
           domain model, there may be some cases where you want to use immutable classes. Often tables that
@@ -1115,24 +1110,38 @@ public class User {
 
         <source><![CDATA[public class User {
    //...
-   public User(int id, String username) {
+   public User(Integer id, String username, int age) {
      //...
   }
 //...
 }]]></source>
 
         <p>
-          In order to inject the results into the constructor, MyBatis needs to identify the constructor by
-          the type of its parameters. Java has no way to introspect (or reflect) on parameter names. So when
-          creating a constructor element, ensure that the arguments are in order, and that the data types are
-          specified.
+          In order to inject the results into the constructor, MyBatis needs to identify the constructor for somehow.
+          In the following example, MyBatis searches a constructor declared with three parameters: <code>java.lang.Integer</code>, <code>java.lang.String</code> and <code>int</code> in this order.
         </p>
-
 
         <source><![CDATA[<constructor>
    <idArg column="id" javaType="int"/>
    <arg column="username" javaType="String"/>
+   <arg column="age" javaType="_int"/>
 </constructor>]]></source>
+
+        <p>
+          When you are dealing with a constructor with many parameters, maintaining the order of arg elements is error-prone.<br />
+          Since 3.4.3, by specifying the name of each parameter, you can write arg elements in any order. To reference constructor parameters by their names, you can either add <code>@Param</code> annotation to them or compile the project with '-parameters' compiler option and enable <code>useActualParamName</code> (this option is enabled by default).
+          The following example is valid for the same constructor even though the order of the second and the third parameters does not match with the declared order.
+        </p>
+
+        <source><![CDATA[<constructor>
+   <idArg column="id" javaType="int" name="id" />
+   <arg column="age" javaType="_int" name="age" />
+   <arg column="username" javaType="String" name="username" />
+</constructor>]]></source>
+
+        <p>
+          <code>javaType</code> can be omitted if there is a property with the same name and type.
+        </p>
 
         <p>
           The rest of the attributes and rules are the same as for the regular id and result elements.
@@ -1198,6 +1207,12 @@ public class User {
                 decomposed and mapped properly to a nested object graph. To facilitate this, MyBatis
                 lets you "chain" result maps together, to deal with the nested results. See the
                 Association element below for more.
+              </td>
+            </tr>
+            <tr>
+              <td><code>name</code></td>
+              <td>
+                The name of the constructor parameter. Specifying name allows you to write arg elements in any order. See the above explanation. Since 3.4.3.
               </td>
             </tr>
           </tbody>
