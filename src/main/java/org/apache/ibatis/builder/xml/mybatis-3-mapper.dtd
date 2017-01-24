@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2017 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -89,6 +89,7 @@ jdbcType CDATA #IMPLIED
 typeHandler CDATA #IMPLIED
 select CDATA #IMPLIED
 resultMap CDATA #IMPLIED
+name CDATA #IMPLIED
 >
 
 <!ELEMENT arg EMPTY>
@@ -99,6 +100,7 @@ jdbcType CDATA #IMPLIED
 typeHandler CDATA #IMPLIED
 select CDATA #IMPLIED
 resultMap CDATA #IMPLIED
+name CDATA #IMPLIED
 >
 
 <!ELEMENT collection (constructor?,id*,result*,association*,collection*, discriminator?)>

@@ -592,7 +592,7 @@ public class MapperAnnotationBuilder {
               (arg.typeHandler() == UnknownTypeHandler.class ? null : arg.typeHandler());
       ResultMapping resultMapping = assistant.buildResultMapping(
           resultType,
-          null,
+          nullOrEmpty(arg.name()),
           nullOrEmpty(arg.column()),
           arg.javaType() == void.class ? null : arg.javaType(),
           arg.jdbcType() == JdbcType.UNDEFINED ? null : arg.jdbcType(),
