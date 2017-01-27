@@ -125,11 +125,20 @@ public class ResultMap {
         resultMap.idResultMappings.addAll(resultMap.resultMappings);
       }
       if (!constructorArgNames.isEmpty()) {
-        if (!sortConstructorResultMapping(constructorArgNames)) {
+        final List<String> actualArgNames = argNamesOfMatchingConstructor(constructorArgNames);
+        if (actualArgNames == null) {
           throw new BuilderException("Failed to find a constructor in '"
               + resultMap.getType().getName() + "' by arg names " + constructorArgNames
               + ". There might be more info in debug log.");
         }
+        Collections.sort(resultMap.constructorResultMappings, new Comparator<ResultMapping>() {
+          @Override
+          public int compare(ResultMapping o1, ResultMapping o2) {
+            int paramIdx1 = actualArgNames.indexOf(o1.getProperty());
+            int paramIdx2 = actualArgNames.indexOf(o2.getProperty());
+            return paramIdx1 - paramIdx2;
+          }
+        });
       }
       // lock down collections
       resultMap.resultMappings = Collections.unmodifiableList(resultMap.resultMappings);
@@ -140,31 +149,19 @@ public class ResultMap {
       return resultMap;
     }
 
-    private boolean sortConstructorResultMapping(final List<String> constructorArgNames) {
+    private List<String> argNamesOfMatchingConstructor(List<String> constructorArgNames) {
       Constructor<?>[] constructors = resultMap.type.getDeclaredConstructors();
-      // Search constructors by arg names and types.
       for (Constructor<?> constructor : constructors) {
         Class<?>[] paramTypes = constructor.getParameterTypes();
         if (constructorArgNames.size() == paramTypes.length) {
-          final List<String> paramNames = getArgNames(constructor);
-          if (constructorArgNames.containsAll(paramNames)) {
-            if (!argTypesMatch(constructorArgNames, paramTypes, paramNames)) {
-              continue;
-            }
-            // Found a matching constructor.
-            Collections.sort(resultMap.constructorResultMappings, new Comparator<ResultMapping>() {
-              @Override
-              public int compare(ResultMapping o1, ResultMapping o2) {
-                int paramIdx1 = paramNames.indexOf(o1.getProperty());
-                int paramIdx2 = paramNames.indexOf(o2.getProperty());
-                return paramIdx1 - paramIdx2;
-              }
-            });
-            return true;
+          List<String> paramNames = getArgNames(constructor);
+          if (constructorArgNames.containsAll(paramNames)
+              && argTypesMatch(constructorArgNames, paramTypes, paramNames)) {
+            return paramNames;
           }
         }
       }
-      return false;
+      return null;
     }
 
     private boolean argTypesMatch(final List<String> constructorArgNames,
