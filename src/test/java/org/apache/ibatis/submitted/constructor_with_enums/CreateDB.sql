@@ -18,8 +18,8 @@ drop table users if exists;
 
 create table users (
   id int,
-  name varchar(20)
+  name varchar(20),
+  status varchar(20)
 );
 
-insert into users (id, name) values
-(1, 'User1'), (2, 'User2'), (3, 'User3');
+insert into users (id, name, status) values(1, 'User1', 'ACTIVE');

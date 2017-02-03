@@ -20,22 +20,14 @@
     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="org.apache.ibatis.submitted.usesjava8.use_actual_param_name.Mapper">
+<mapper namespace="org.apache.ibatis.submitted.constructor_with_enums.Mapper">
 
-  <select id="getUsersByIdList" resultType="org.apache.ibatis.submitted.usesjava8.use_actual_param_name.User">
-    select * from users where id in
-    <foreach item="id" collection="list" open="(" close=")"
-      separator=",">
-      #{id}
-    </foreach>
-  </select>
+	<select id="getUser" resultType="org.apache.ibatis.submitted.constructor_with_enums.User">
+		select * from users where id = #{id}
+	</select>
 
-  <select id="getUsersByIdListAndName" resultType="org.apache.ibatis.submitted.usesjava8.use_actual_param_name.User">
-    select * from users where id in
-    <foreach item="id" collection="param1" open="(" close=")"
-      separator=",">
-      #{id}
-    </foreach>
-  </select>
+	<insert id="insertUser">
+		insert into users values(#{id}, #{name}, #{status})
+	</insert>
 
 </mapper>

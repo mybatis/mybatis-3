@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
 
-       Copyright 2009-2017 the original author or authors.
+       Copyright 2009-2016 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -29,16 +29,14 @@
 			</transactionManager>
 			<dataSource type="UNPOOLED">
 				<property name="driver" value="org.hsqldb.jdbcDriver" />
-				<property name="url" value="jdbc:hsqldb:mem:defaultmethod" />
+				<property name="url" value="jdbc:hsqldb:mem:constuctor_with_enums" />
 				<property name="username" value="sa" />
 			</dataSource>
 		</environment>
 	</environments>
 
 	<mappers>
-		<mapper class="org.apache.ibatis.submitted.usesjava8.default_method.Mapper" />
-		<mapper class="org.apache.ibatis.submitted.usesjava8.default_method.Mapper$SubMapper" />
-		<mapper class="org.apache.ibatis.submitted.usesjava8.default_method.PackageMapper" />
+		<mapper class="org.apache.ibatis.submitted.constructor_with_enums.Mapper" />
 	</mappers>
 
 </configuration>
