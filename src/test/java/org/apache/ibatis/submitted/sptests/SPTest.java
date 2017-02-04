@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -858,4 +858,20 @@ public class SPTest {
     }
   }
 
+  @Test
+  public void testMultipleForeignKeys() throws SQLException {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      SPMapper spMapper = sqlSession.getMapper(SPMapper.class);
+      List<Book> books = spMapper.getBookAndGenre();
+      assertEquals("Book1", books.get(0).getName());
+      assertEquals("Genre1", books.get(0).getGenre().getName());
+      assertEquals("Book2", books.get(1).getName());
+      assertEquals("Genre2", books.get(1).getGenre().getName());
+      assertEquals("Book3", books.get(2).getName());
+      assertEquals("Genre1", books.get(2).getGenre().getName());
+    } finally {
+      sqlSession.close();
+    }
+  }
 }

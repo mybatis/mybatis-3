@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2017 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -128,5 +128,21 @@
       #{output date,jdbcType=DATE,mode=OUT}
     )}
   </select>
-  
+
+  <resultMap type="org.apache.ibatis.submitted.sptests.Book" id="bookAndGenreRM">
+    <id column="ID" property="id" />
+    <result column="NAME" property="name" />
+    <association property="genre" column="genre1,genre2" foreignColumn="id1,id2" resultSet="genreRS" resultMap="genreRM" />
+  </resultMap>
+
+  <resultMap type="org.apache.ibatis.submitted.sptests.Genre" id="genreRM">
+    <id column="ID1" />
+    <id column="ID2" />
+    <result column="NAME" property="name" />
+  </resultMap>
+
+  <select id="getBookAndGenre" statementType="CALLABLE" resultSets="bookRS,genreRS" resultMap="bookAndGenreRM">
+    {call sptest.getbookandgenre()}
+  </select>
+
 </mapper>
