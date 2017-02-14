@@ -48,7 +48,7 @@ public class LanguageDriverRegistry {
     }
     LanguageDriver driver = LANGUAGE_DRIVER_MAP.get(instance.getClass());
     if (driver == null) {
-      LANGUAGE_DRIVER_MAP.put(instance.getClass(), driver);
+      LANGUAGE_DRIVER_MAP.put(instance.getClass(), instance);
     }
   }
   
