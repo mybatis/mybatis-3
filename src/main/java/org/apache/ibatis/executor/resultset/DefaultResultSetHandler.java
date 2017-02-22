@@ -15,19 +15,6 @@
  */
 package org.apache.ibatis.executor.resultset;
 
-import java.lang.reflect.Constructor;
-import java.sql.CallableStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-
 import org.apache.ibatis.binding.MapperMethod.ParamMap;
 import org.apache.ibatis.cache.CacheKey;
 import org.apache.ibatis.cursor.Cursor;
@@ -59,6 +46,19 @@ import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.TypeHandlerRegistry;
+
+import java.lang.reflect.Constructor;
+import java.sql.CallableStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author Clinton Begin
@@ -95,15 +95,17 @@ public class DefaultResultSetHandler implements ResultSetHandler {
 
   // temporary marking flag that indicate using constructor mapping (use field to reduce memory usage)
   private boolean useConstructorMappings;
-  
+
+  private final PrimitiveTypes primitiveTypes;
+
   private static class PendingRelation {
     public MetaObject metaObject;
     public ResultMapping propertyMapping;
   }
 
   private static class UnMappedColumnAutoMapping {
-    private final String column;   
-    private final String property;    
+    private final String column;
+    private final String property;
     private final TypeHandler<?> typeHandler;
     private final boolean primitive;
     public UnMappedColumnAutoMapping(String column, String property, TypeHandler<?> typeHandler, boolean primitive) {
@@ -112,8 +114,8 @@ public class DefaultResultSetHandler implements ResultSetHandler {
       this.typeHandler = typeHandler;
       this.primitive = primitive;
     }
-  }  
-  
+  }
+
   public DefaultResultSetHandler(Executor executor, MappedStatement mappedStatement, ParameterHandler parameterHandler, ResultHandler<?> resultHandler, BoundSql boundSql,
       RowBounds rowBounds) {
     this.executor = executor;
@@ -126,6 +128,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     this.objectFactory = configuration.getObjectFactory();
     this.reflectorFactory = configuration.getReflectorFactory();
     this.resultHandler = resultHandler;
+    this.primitiveTypes = new PrimitiveTypes();
   }
 
   //
@@ -498,7 +501,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     }
     return autoMapping;
   }
-  
+
   private boolean applyAutomaticMappings(ResultSetWrapper rsw, ResultMap resultMap, MetaObject metaObject, String columnPrefix) throws SQLException {
     List<UnMappedColumnAutoMapping> autoMapping = createAutomaticMappings(rsw, resultMap, metaObject, columnPrefix);
     boolean foundValues = false;
@@ -642,7 +645,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
   private Object createByConstructorSignature(ResultSetWrapper rsw, Class<?> resultType, List<Class<?>> constructorArgTypes, List<Object> constructorArgs,
       String columnPrefix) throws SQLException {
     for (Constructor<?> constructor : resultType.getDeclaredConstructors()) {
-      if (typeNames(constructor.getParameterTypes()).equals(rsw.getClassNames())) {
+      if (allowedConstructor(constructor.getParameterTypes(), rsw.getClassNames())) {
         boolean foundValues = false;
         for (int i = 0; i < constructor.getParameterTypes().length; i++) {
           Class<?> parameterType = constructor.getParameterTypes()[i];
@@ -657,6 +660,18 @@ public class DefaultResultSetHandler implements ResultSetHandler {
       }
     }
     throw new ExecutorException("No constructor found in " + resultType.getName() + " matching " + rsw.getClassNames());
+  }
+
+  private boolean allowedConstructor(final Class<?>[] parameterTypes, final List<String> classNames) {
+    if (typeNames(parameterTypes).equals(classNames)) return true;
+    if (parameterTypes.length != classNames.size()) return false;
+    for (int i = 0; i < parameterTypes.length; i++) {
+        final Class<?> parameterType = parameterTypes[i];
+        if(parameterType.isPrimitive() && !primitiveTypes.getWrapper(parameterType).getName().equals(classNames.get(i))) {
+            return false;
+        }
+    }
+    return true;
   }
 
   private List<String> typeNames(Class<?>[] parameterTypes) {
@@ -906,7 +921,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
               }
               continue;
             }
-          } 
+          }
           final CacheKey rowKey = createRowKey(nestedResultMap, rsw, columnPrefix);
           final CacheKey combinedKey = combineKeys(rowKey, parentRowKey);
           Object rowValue = nestedResultObjects.get(combinedKey);
@@ -984,7 +999,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     }
     if (cacheKey.getUpdateCount() < 2) {
       return CacheKey.NULL_CACHE_KEY;
-    }    
+    }
     return cacheKey;
   }
 
