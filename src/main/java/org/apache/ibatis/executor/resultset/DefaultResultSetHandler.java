@@ -644,25 +644,45 @@ public class DefaultResultSetHandler implements ResultSetHandler {
 
   private Object createByConstructorSignature(ResultSetWrapper rsw, Class<?> resultType, List<Class<?>> constructorArgTypes, List<Object> constructorArgs,
       String columnPrefix) throws SQLException {
-    for (Constructor<?> constructor : resultType.getDeclaredConstructors()) {
-      if (allowedConstructor(constructor.getParameterTypes(), rsw.getClassNames())) {
-        boolean foundValues = false;
-        for (int i = 0; i < constructor.getParameterTypes().length; i++) {
-          Class<?> parameterType = constructor.getParameterTypes()[i];
-          String columnName = rsw.getColumnNames().get(i);
-          TypeHandler<?> typeHandler = rsw.getTypeHandler(parameterType, columnName);
-          Object value = typeHandler.getResult(rsw.getResultSet(), prependPrefix(columnName, columnPrefix));
-          constructorArgTypes.add(parameterType);
-          constructorArgs.add(value);
-          foundValues = value != null || foundValues;
+    final Constructor<?>[] constructors = resultType.getDeclaredConstructors();
+    final Constructor<?> annotatedConstructor = findAnnotatedConstructor(constructors);
+    if(annotatedConstructor != null) {
+      return createUsingConstructor(rsw, resultType, constructorArgTypes, constructorArgs, columnPrefix, annotatedConstructor);
+    } else {
+      for (Constructor<?> constructor : constructors) {
+        if (allowedConstructor(constructor, rsw.getClassNames())) {
+          return createUsingConstructor(rsw, resultType, constructorArgTypes, constructorArgs, columnPrefix, constructor);
         }
-        return foundValues ? objectFactory.create(resultType, constructorArgTypes, constructorArgs) : null;
       }
     }
     throw new ExecutorException("No constructor found in " + resultType.getName() + " matching " + rsw.getClassNames());
   }
 
-  private boolean allowedConstructor(final Class<?>[] parameterTypes, final List<String> classNames) {
+  private Object createUsingConstructor(ResultSetWrapper rsw, Class<?> resultType, List<Class<?>> constructorArgTypes, List<Object> constructorArgs, String columnPrefix, Constructor<?> constructor) throws SQLException {
+    boolean foundValues = false;
+    for (int i = 0; i < constructor.getParameterTypes().length; i++) {
+      Class<?> parameterType = constructor.getParameterTypes()[i];
+      String columnName = rsw.getColumnNames().get(i);
+      TypeHandler<?> typeHandler = rsw.getTypeHandler(parameterType, columnName);
+      Object value = typeHandler.getResult(rsw.getResultSet(), prependPrefix(columnName, columnPrefix));
+      constructorArgTypes.add(parameterType);
+      constructorArgs.add(value);
+      foundValues = value != null || foundValues;
+    }
+    return foundValues ? objectFactory.create(resultType, constructorArgTypes, constructorArgs) : null;
+  }
+
+  private Constructor<?> findAnnotatedConstructor(final Constructor<?>[] constructors) {
+    for (final Constructor<?> constructor : constructors) {
+      if(constructor.isAnnotationPresent(org.apache.ibatis.annotations.Constructor.class)) {
+        return constructor;
+      }
+    }
+    return null;
+  }
+
+  private boolean allowedConstructor(final Constructor<?> constructor, final List<String> classNames) {
+    final Class<?>[] parameterTypes = constructor.getParameterTypes();
     if (typeNames(parameterTypes).equals(classNames)) return true;
     if (parameterTypes.length != classNames.size()) return false;
     for (int i = 0; i < parameterTypes.length; i++) {

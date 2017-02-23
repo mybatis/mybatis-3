@@ -15,18 +15,20 @@
  */
 package org.apache.ibatis.autoconstructor;
 
-public class WrapperSubject {
-  private final int id;
-  private final String name;
-  private final int age;
-  private final int height;
-  private final int weight;
+import org.apache.ibatis.annotations.Select;
 
-  public WrapperSubject(final int id, final String name, final int age, final Integer height, final Integer weight) {
-    this.id = id;
-    this.name = name;
-    this.age = age;
-    this.height = height == null ? 0 : height;
-    this.weight = weight == null ? 0 : weight;
-  }
+import java.util.List;
+
+public interface AutoConstructorMapper {
+  @Select("SELECT * FROM subject WHERE id = #{id}")
+  PrimitiveSubject getSubject(final int id);
+
+  @Select("SELECT * FROM subject")
+  List<PrimitiveSubject> getSubjects();
+
+  @Select("SELECT * FROM subject")
+  List<WrapperSubject> getWrapperSubjects();
+
+  @Select("SELECT * FROM subject")
+  List<AnnotatedSubject> getAnnotatedSubjects();
 }
