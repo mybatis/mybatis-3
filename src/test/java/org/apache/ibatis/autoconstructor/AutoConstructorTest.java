@@ -96,6 +96,17 @@ public class AutoConstructorTest {
     }
   }
 
+  @Test(expected = PersistenceException.class)
+  public void badSubject() {
+    final SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      final AutoConstructorMapper mapper = sqlSession.getMapper(AutoConstructorMapper.class);
+      mapper.getBadSubjects();
+    } finally {
+      sqlSession.close();
+    }
+  }
+
   private void verifySubjects(final List<?> subjects) {
     Assert.assertNotNull(subjects);
     Assert.assertThat(subjects.size(), CoreMatchers.equalTo(3));
