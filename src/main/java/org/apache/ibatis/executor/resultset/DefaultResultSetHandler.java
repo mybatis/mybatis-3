@@ -15,6 +15,7 @@
  */
 package org.apache.ibatis.executor.resultset;
 
+import org.apache.ibatis.annotations.AutomapConstructor;
 import org.apache.ibatis.binding.MapperMethod.ParamMap;
 import org.apache.ibatis.cache.CacheKey;
 import org.apache.ibatis.cursor.Cursor;
@@ -675,7 +676,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
 
   private Constructor<?> findAnnotatedConstructor(final Constructor<?>[] constructors) {
     for (final Constructor<?> constructor : constructors) {
-      if (constructor.isAnnotationPresent(org.apache.ibatis.annotations.Constructor.class)) {
+      if (constructor.isAnnotationPresent(AutomapConstructor.class)) {
         return constructor;
       }
     }

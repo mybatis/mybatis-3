@@ -15,7 +15,7 @@
  */
 package org.apache.ibatis.autoconstructor;
 
-import org.apache.ibatis.annotations.Constructor;
+import org.apache.ibatis.annotations.AutomapConstructor;
 
 public class AnnotatedSubject {
   private final int id;
@@ -32,7 +32,7 @@ public class AnnotatedSubject {
     this.weight = weight;
   }
 
-  @Constructor
+  @AutomapConstructor
   public AnnotatedSubject(final int id, final String name, final int age, final Integer height, final Integer weight) {
     this.id = id;
     this.name = name;
