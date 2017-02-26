@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -34,10 +34,10 @@ public class CacheKeyTest {
   }
 
   @Test
-  public void shouldTestCacheKeysNotEqualDueToDateDifference() throws Exception {
-    CacheKey key1 = new CacheKey(new Object[] { 1, "hello", null, new Date() });
-    Thread.sleep(1000);
-    CacheKey key2 = new CacheKey(new Object[] { 1, "hello", null, new Date() });
+  public void shouldTestCacheKeysNotEqualDueToDateDifference() {
+    long time = new Date().getTime();
+    CacheKey key1 = new CacheKey(new Object[] { 1, "hello", null, new Date(time) });
+    CacheKey key2 = new CacheKey(new Object[] { 1, "hello", null, new Date(time + 1L) });
     assertFalse(key1.equals(key2));
     assertFalse(key2.equals(key1));
     assertFalse(key1.hashCode() == key2.hashCode());
@@ -45,9 +45,8 @@ public class CacheKeyTest {
   }
 
   @Test
-  public void shouldTestCacheKeysNotEqualDueToOrder() throws Exception {
+  public void shouldTestCacheKeysNotEqualDueToOrder() {
     CacheKey key1 = new CacheKey(new Object[] { 1, "hello", null });
-    Thread.sleep(1000);
     CacheKey key2 = new CacheKey(new Object[] { 1, null, "hello" });
     assertFalse(key1.equals(key2));
     assertFalse(key2.equals(key1));
