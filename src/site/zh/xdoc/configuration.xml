@@ -91,7 +91,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
         <p>因此，通过方法参数传递的属性具有最高优先级，resource/url 属性中指定的配置文件次之，最低优先级的是 properties 属性中指定的属性。</p>
 
         <p>
-          Since the MyBatis 3.4.2, your can specify a default value into placeholder as follow:
+		  从MyBatis 3.4.2开始，你可以为占位符指定一个默认值。例如：
         </p>
         <source><![CDATA[
 <dataSource type="POOLED">
@@ -100,8 +100,8 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
 </dataSource>]]></source>
 
         <p>
-          This feature is disabled by default. If you specify a default value into placeholder,
-          you should be enable this feature by adding a special property as follow:
+		  这个特性默认是关闭的。如果你想为占位符指定一个默认值，
+		  你应该添加一个指定的属性来开启这个特性。例如：
         </p>
 
         <source><![CDATA[
@@ -111,9 +111,9 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
 </properties>]]></source>
 
         <p>
-          <span class="label important">NOTE</span> Also If you are used already the <code>":"</code> as property key(e.g. <code>db:username</code>)
-          or you are used already the ternary operator of OGNL expression(e.g. <code>${tableName != null ? tableName : 'global_constants'}</code>) on your sql definition,
-          you should be change the character that separate key and default value by adding a special property as follow:
+          <span class="label important">NOTE</span> 你可以使用 <code>":"</code> 作为属性键(e.g. <code>db:username</code>)
+          或者你也可以在sql定义中使用 OGNL 表达式的三元运算符(e.g. <code>${tableName != null ? tableName : 'global_constants'}</code>)，
+		  你应该通过增加一个指定的属性来改变分隔键和默认值的字符。例如：
         </p>
 
         <source><![CDATA[
@@ -175,7 +175,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 aggressiveLazyLoading
               </td>
               <td>
-                When enabled, any method call will load all the lazy properties of the object. Otherwise, each property is loaded on demand (see also <code>lazyLoadTriggerMethods</code>).
+                当开启时，任何方法的调用都会加载该对象的所有属性。否则，每个属性会按需加载（参考<code>lazyLoadTriggerMethods</code>).
               </td>
               <td>
                 true | false
@@ -249,11 +249,11 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 autoMappingUnknownColumnBehavior
               </td>
               <td>
-                Specify the behavior when detects an unknown column (or unknown property type) of automatic mapping target.
+			  指定发现自动映射目标未知列（或者未知属性类型）的行为。
                 <ul>
-                  <li><code>NONE</code>: Do nothing</li>
-                  <li><code>WARNING</code>: Output warning log (The log level of <code>'org.apache.ibatis.session.AutoMappingUnknownColumnBehavior'</code> must be set to <code>WARN</code>)</li>
-                  <li><code>FAILING</code>: Fail mapping (Throw <code>SqlSessionException</code>)</li>
+                  <li><code>NONE</code>: 不做任何反应</li>
+                  <li><code>WARNING</code>: 输出提醒日志 (<code>'org.apache.ibatis.session.AutoMappingUnknownColumnBehavior'</code> 的日志等级必须设置为 <code>WARN</code>)</li>
+                  <li><code>FAILING</code>: 映射失败 (抛出 <code>SqlSessionException</code>)</li>
                 </ul>
               </td>
               <td>
@@ -430,9 +430,9 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 returnInstanceForEmptyRow
               </td>
               <td>
-                MyBatis, by default, returns <code>null</code> when all the columns of a returned row are NULL.
-                When this setting is enabled, MyBatis returns an empty instance instead.
-                Note that it is also applied to nested results (i.e. collectioin and association). Since: 3.4.2
+				当返回行的所有列都是空时，MyBatis默认返回<code>null</code>。
+				当开启这个设置时，MyBatis会返回一个空实例。
+				请注意，它也适用于嵌套的结果集 (i.e. collectioin and association)。（从3.4.2开始）
               </td>
               <td>
                 true | false
