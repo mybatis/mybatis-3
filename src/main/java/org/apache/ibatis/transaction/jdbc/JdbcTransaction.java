@@ -42,12 +42,12 @@ public class JdbcTransaction implements Transaction {
   protected Connection connection;
   protected DataSource dataSource;
   protected TransactionIsolationLevel level;
-  protected boolean autoCommmit;
+  protected boolean autoCommit;
 
   public JdbcTransaction(DataSource ds, TransactionIsolationLevel desiredLevel, boolean desiredAutoCommit) {
     dataSource = ds;
     level = desiredLevel;
-    autoCommmit = desiredAutoCommit;
+    autoCommit = desiredAutoCommit;
   }
 
   public JdbcTransaction(Connection connection) {
@@ -139,7 +139,7 @@ public class JdbcTransaction implements Transaction {
     if (level != null) {
       connection.setTransactionIsolation(level.getLevel());
     }
-    setDesiredAutoCommit(autoCommmit);
+    setDesiredAutoCommit(autoCommit);
   }
 
   @Override
