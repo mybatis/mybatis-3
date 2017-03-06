@@ -127,7 +127,8 @@ public class ResultMap {
       if (!constructorArgNames.isEmpty()) {
         final List<String> actualArgNames = argNamesOfMatchingConstructor(constructorArgNames);
         if (actualArgNames == null) {
-          throw new BuilderException("Failed to find a constructor in '"
+          throw new BuilderException("Error in result map '" + resultMap.id
+              + "'. Failed to find a constructor in '"
               + resultMap.getType().getName() + "' by arg names " + constructorArgNames
               + ". There might be more info in debug log.");
         }
@@ -171,7 +172,8 @@ public class ResultMap {
         Class<?> specifiedType = resultMap.constructorResultMappings.get(i).getJavaType();
         if (!actualType.equals(specifiedType)) {
           if (log.isDebugEnabled()) {
-            log.debug("Found a constructor with arg names " + constructorArgNames
+            log.debug("While building result map '" + resultMap.id
+                + "', found a constructor with arg names " + constructorArgNames
                 + ", but the type of '" + constructorArgNames.get(i)
                 + "' did not match. Specified: [" + specifiedType.getName() + "] Declared: ["
                 + actualType.getName() + "]");

@@ -72,8 +72,11 @@ public class InvalidNamedConstructorArgsTest {
   @Test
   public void noMatchingConstructorArgName() {
     ex.expect(BuilderException.class);
-    ex.expectMessage(startsWith("Failed to find a constructor in "
-        + "'org.apache.ibatis.submitted.named_constructor_args.User' by arg names [noSuchConstructorArg]."));
+    ex.expectMessage(allOf(
+        containsString(
+            "'org.apache.ibatis.submitted.named_constructor_args.InvalidNamedConstructorArgsTest$NoMatchingConstructorMapper.select-void'"),
+        containsString("'org.apache.ibatis.submitted.named_constructor_args.User'"),
+        containsString("[noSuchConstructorArg]")));
 
     Configuration configuration = sqlSessionFactory.getConfiguration();
     configuration.addMapper(NoMatchingConstructorMapper.class);
@@ -92,9 +95,11 @@ public class InvalidNamedConstructorArgsTest {
   @Test
   public void wrongJavaType() {
     ex.expect(BuilderException.class);
-    ex.expectMessage(startsWith("Failed to find a constructor in "
-        + "'org.apache.ibatis.submitted.named_constructor_args.User' by arg names [id]."));
-
+    ex.expectMessage(allOf(
+        containsString(
+            "'org.apache.ibatis.submitted.named_constructor_args.InvalidNamedConstructorArgsTest$ConstructorWithWrongJavaType.select-void'"),
+        containsString("'org.apache.ibatis.submitted.named_constructor_args.User'"),
+        containsString("[id]")));
     Configuration configuration = sqlSessionFactory.getConfiguration();
     configuration.addMapper(ConstructorWithWrongJavaType.class);
   }
@@ -114,8 +119,11 @@ public class InvalidNamedConstructorArgsTest {
   @Test
   public void missingRequiredJavaType() {
     ex.expect(BuilderException.class);
-    ex.expectMessage(startsWith("Failed to find a constructor in "
-        + "'org.apache.ibatis.submitted.named_constructor_args.User' by arg names [id]."));
+    ex.expectMessage(allOf(
+        containsString(
+            "'org.apache.ibatis.submitted.named_constructor_args.InvalidNamedConstructorArgsTest$ConstructorMissingRequiresJavaType.select-void'"),
+        containsString("'org.apache.ibatis.submitted.named_constructor_args.User'"),
+        containsString("[id]")));
 
     Configuration configuration = sqlSessionFactory.getConfiguration();
     configuration.addMapper(ConstructorMissingRequiresJavaType.class);
