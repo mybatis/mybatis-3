@@ -15,23 +15,29 @@
  */
 package org.apache.ibatis.submitted.lazy_deserialize;
 
-import java.io.PrintWriter;
-import java.io.Reader;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.jdbc.ScriptRunner;
-import org.apache.ibatis.session.SqlSession;
-import org.apache.ibatis.session.SqlSessionFactory;
-import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import static org.hamcrest.core.Is.*;
+import static org.junit.Assert.*;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.PrintWriter;
+import java.io.Reader;
+import java.sql.Connection;
+import java.sql.DriverManager;
+
+import org.apache.ibatis.executor.ExecutorException;
+import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.Configuration;
-import static org.junit.Assert.*;
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 /**
  *
@@ -39,6 +45,9 @@ import static org.junit.Assert.*;
  * @author Franta Mejta
  */
 public final class LazyDeserializeTest {
+
+  @Rule
+  public ExpectedException expectedException = ExpectedException.none();
 
   private static final int FOO_ID = 1;
   private static final int BAR_ID = 10;
@@ -48,8 +57,8 @@ public final class LazyDeserializeTest {
     return factory.getConfiguration();
   }
 
-  @BeforeClass
-  public static void setupClass() throws Exception {
+  @Before
+  public void setupClass() throws Exception {
     Connection conn = null;
 
     try {
@@ -79,6 +88,7 @@ public final class LazyDeserializeTest {
 
   @Test
   public void testLoadLazyDeserialize() throws Exception {
+    factory.getConfiguration().setConfigurationFactory(this.getClass());
     final SqlSession session = factory.openSession();
     try {
       final Mapper mapper = session.getMapper(Mapper.class);
@@ -91,6 +101,24 @@ public final class LazyDeserializeTest {
       assertEquals(Integer.valueOf(FOO_ID), deserializedFoo.getId());
       assertNotNull(deserializedFoo.getLazyObjectBar());
       assertEquals(Integer.valueOf(BAR_ID), deserializedFoo.getLazyObjectBar().getId());
+    } finally {
+      session.close();
+    }
+  }
+
+  @Test
+  public void testLoadLazyDeserializeWithoutConfigurationFactory() throws Exception {
+    expectedException.expect(ExecutorException.class);
+    expectedException
+        .expectMessage(is("Cannot get Configuration as configuration factory was not set."));
+
+    final SqlSession session = factory.openSession();
+    try {
+      final Mapper mapper = session.getMapper(Mapper.class);
+      final LazyObjectFoo foo = mapper.loadFoo(FOO_ID);
+      final byte[] serializedFoo = this.serializeFoo(foo);
+      final LazyObjectFoo deserializedFoo = this.deserializeFoo(serializedFoo);
+      deserializedFoo.getLazyObjectBar();
     } finally {
       session.close();
     }

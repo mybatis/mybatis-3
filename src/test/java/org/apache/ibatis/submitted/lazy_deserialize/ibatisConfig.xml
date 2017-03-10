@@ -24,8 +24,6 @@
   <settings>
     <setting name="lazyLoadingEnabled" value="true" />
     <setting name="aggressiveLazyLoading" value="false" />
-    <setting name="configurationFactory"
-      value="org.apache.ibatis.submitted.lazy_deserialize.LazyDeserializeTest" />
   </settings>
 
   <typeAliases>
