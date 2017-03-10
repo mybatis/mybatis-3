@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -19,6 +19,8 @@ import static org.junit.Assert.*;
 
 import java.io.Reader;
 import java.sql.Connection;
+import java.util.Collections;
+import java.util.HashSet;
 
 import org.apache.ibatis.executor.loader.cglib.CglibProxyFactory;
 import org.apache.ibatis.executor.loader.javassist.JavassistProxyFactory;
@@ -28,15 +30,15 @@ import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
 
 public class LazyPropertiesTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
-  @BeforeClass
-  public static void setUp() throws Exception {
+  @Before
+  public void setUp() throws Exception {
     // create an SqlSessionFactory
     Reader reader = Resources
         .getResourceAsReader("org/apache/ibatis/submitted/lazy_properties/mybatis-config.xml");
@@ -80,6 +82,102 @@ public class LazyPropertiesTest {
       // Setter invocation by MyBatis triggers aggressive lazy-loading.
       assertEquals("Should load all lazy properties.", 3,
           user.lazyLoadCounter);
+    } finally {
+      sqlSession.close();
+    }
+  }
+
+  @Test
+  public void shouldToStringTriggerLazyLoading() {
+    sqlSessionFactory.getConfiguration().setAggressiveLazyLoading(false);
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      User user = mapper.getUser(1);
+      user.toString();
+      assertEquals(3, user.lazyLoadCounter);
+    } finally {
+      sqlSession.close();
+    }
+  }
+
+  @Test
+  public void shouldHashCodeTriggerLazyLoading() {
+    sqlSessionFactory.getConfiguration().setAggressiveLazyLoading(false);
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      User user = mapper.getUser(1);
+      user.hashCode();
+      assertEquals(3, user.lazyLoadCounter);
+    } finally {
+      sqlSession.close();
+    }
+  }
+
+  @Test
+  public void shouldEqualsTriggerLazyLoading() {
+    sqlSessionFactory.getConfiguration().setAggressiveLazyLoading(false);
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      User user = mapper.getUser(1);
+      user.equals(null);
+      assertEquals(3, user.lazyLoadCounter);
+    } finally {
+      sqlSession.close();
+    }
+  }
+
+  @Test
+  public void shouldCloneTriggerLazyLoading() {
+    sqlSessionFactory.getConfiguration().setAggressiveLazyLoading(false);
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      User user = mapper.getUser(1);
+      user.clone();
+      assertEquals(3, user.lazyLoadCounter);
+    } finally {
+      sqlSession.close();
+    }
+  }
+
+  @Test
+  public void verifyEmptyLazyLoadTriggerMethods() {
+    Configuration configuration = sqlSessionFactory.getConfiguration();
+    configuration.setAggressiveLazyLoading(false);
+    configuration.setLazyLoadTriggerMethods(new HashSet<String>());
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      User user = mapper.getUser(1);
+      user.toString();
+      user.hashCode();
+      user.equals(null);
+      user.clone();
+      assertEquals(0, user.lazyLoadCounter);
+    } finally {
+      sqlSession.close();
+    }
+  }
+
+  @Test
+  public void verifyCustomLazyLoadTriggerMethods() {
+    Configuration configuration = sqlSessionFactory.getConfiguration();
+    configuration.setAggressiveLazyLoading(false);
+    configuration.setLazyLoadTriggerMethods(new HashSet<String>(Collections.singleton("trigger")));
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      User user = mapper.getUser(1);
+      user.toString();
+      user.hashCode();
+      user.equals(null);
+      user.clone();
+      assertEquals(0, user.lazyLoadCounter);
+      user.trigger();
+      assertEquals(3, user.lazyLoadCounter);
     } finally {
       sqlSession.close();
     }
