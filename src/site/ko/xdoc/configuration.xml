@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2017 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -508,6 +508,22 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
               </td>
               <td>
                 true
+              </td>
+            </tr>
+            <tr>
+              <td>
+                configurationFactory
+              </td>
+              <td>
+                Specifies the class that provides an instance of <code>Configuration</code>.
+                The returned Configuration instance is used to load lazy properties of deserialized objects.
+                This class must have a method with a signature <code>static Configuration getConfiguration()</code>. (Since: 3.2.3)
+              </td>
+              <td>
+                A type alias or fully qualified class name.
+              </td>
+              <td>
+                Not set
               </td>
             </tr>
           </tbody>

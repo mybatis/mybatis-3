@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2017 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -527,6 +527,21 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
               </td>
               <td>
                 true
+              </td>
+            </tr>
+            <tr>
+              <td>
+                configurationFactory
+              </td>
+              <td>
+                デシリアライズされたオブジェクトの遅延読込（Lazy loading）を行う際に利用される <code>Configuration</code> のインスタンスを返すクラスを指定します。
+                このクラスには次のシグネチャを持つメソッドが定義されている必要があります。 <code>static Configuration getConfiguration()</code>. (導入されたバージョン: 3.2.3)
+              </td>
+              <td>
+                タイプエイリアスまたは完全修飾クラス名
+              </td>
+              <td>
+                未指定
               </td>
             </tr>
           </tbody>
