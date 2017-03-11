@@ -95,7 +95,7 @@ public class XMLMapperBuilder extends BaseBuilder {
     }
 
     parsePendingResultMaps();
-    parsePendingChacheRefs();
+    parsePendingCacheRefs();
     parsePendingStatements();
   }
 
@@ -154,7 +154,7 @@ public class XMLMapperBuilder extends BaseBuilder {
     }
   }
 
-  private void parsePendingChacheRefs() {
+  private void parsePendingCacheRefs() {
     Collection<CacheRefResolver> incompleteCacheRefs = configuration.getIncompleteCacheRefs();
     synchronized (incompleteCacheRefs) {
       Iterator<CacheRefResolver> iter = incompleteCacheRefs.iterator();
