@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.apache.ibatis.binding.issue35.CustomNameEntityMapper">
+
+    <select id="selectOlderThan" parameterType="java.lang.Integer" resultType="org.apache.ibatis.binding.issue35.NameEntity">
+
+        <![CDATA[
+        select id, name, age from table1 where age > #{age}
+        ]]>
+
+    </select>
+
+</mapper>
