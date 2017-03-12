@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,9 +15,12 @@
  */
 package org.apache.ibatis.submitted.mapper_extend;
 
+import static org.hamcrest.CoreMatchers.*;
+
 import java.io.Reader;
 import java.sql.Connection;
 
+import org.apache.ibatis.binding.BindingException;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSession;
@@ -25,9 +28,14 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.Assert;
 import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 public class MapperExtendTest {
+
+  @Rule
+  public ExpectedException expectedException = ExpectedException.none();
 
   private static SqlSessionFactory sqlSessionFactory;
 
@@ -97,5 +105,32 @@ public class MapperExtendTest {
       sqlSession.close();
     }
   }
-  
+
+  @Test
+  public void shouldFindStatementInSubInterfaceOfDeclaringClass() {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      ChildMapper mapper = sqlSession.getMapper(ChildMapper.class);
+      User user = mapper.getUserByName("User1");
+      Assert.assertNotNull(user);
+    } finally {
+      sqlSession.close();
+    }
+  }
+
+  @Test
+  public void shouldThrowExceptionIfNoMatchingStatementFound() {
+    expectedException.expect(BindingException.class);
+    expectedException.expectMessage(is("Invalid bound statement (not found): "
+        + Mapper.class.getName() + ".noMappedStatement"));
+
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      User user = mapper.noMappedStatement();
+      Assert.assertNotNull(user);
+    } finally {
+      sqlSession.close();
+    }
+  }
 }

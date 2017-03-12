@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -212,22 +212,17 @@ public class MapperMethod {
     private final SqlCommandType type;
 
     public SqlCommand(Configuration configuration, Class<?> mapperInterface, Method method) {
-      String statementName = mapperInterface.getName() + "." + method.getName();
-      MappedStatement ms = null;
-      if (configuration.hasStatement(statementName)) {
-        ms = configuration.getMappedStatement(statementName);
-      } else if (!mapperInterface.equals(method.getDeclaringClass())) { // issue #35
-        String parentStatementName = method.getDeclaringClass().getName() + "." + method.getName();
-        if (configuration.hasStatement(parentStatementName)) {
-          ms = configuration.getMappedStatement(parentStatementName);
-        }
-      }
+      final String methodName = method.getName();
+      final Class<?> declaringClass = method.getDeclaringClass();
+      MappedStatement ms = resolveMappedStatement(mapperInterface, methodName, declaringClass,
+          configuration);
       if (ms == null) {
-        if(method.getAnnotation(Flush.class) != null){
+        if (method.getAnnotation(Flush.class) != null) {
           name = null;
           type = SqlCommandType.FLUSH;
         } else {
-          throw new BindingException("Invalid bound statement (not found): " + statementName);
+          throw new BindingException("Invalid bound statement (not found): "
+              + mapperInterface.getName() + "." + methodName);
         }
       } else {
         name = ms.getId();
@@ -244,6 +239,26 @@ public class MapperMethod {
 
     public SqlCommandType getType() {
       return type;
+    }
+
+    private MappedStatement resolveMappedStatement(Class<?> mapperInterface, String methodName,
+        Class<?> declaringClass, Configuration configuration) {
+      String statementId = mapperInterface.getName() + "." + methodName;
+      if (configuration.hasStatement(statementId)) {
+        return configuration.getMappedStatement(statementId);
+      } else if (mapperInterface.equals(declaringClass)) {
+        return null;
+      }
+      for (Class<?> superInterface : mapperInterface.getInterfaces()) {
+        if (declaringClass.isAssignableFrom(superInterface)) {
+          MappedStatement ms = resolveMappedStatement(superInterface, methodName,
+              declaringClass, configuration);
+          if (ms != null) {
+            return ms;
+          }
+        }
+      }
+      return null;
     }
   }
 
