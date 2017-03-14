@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -95,27 +95,27 @@ public class XMLConfigBuilder extends BaseBuilder {
       throw new BuilderException("Each XMLConfigBuilder can only be used once.");
     }
     parsed = true;
-    parseConfiguration(parser.evalNode("/configuration"));
+    parseConfiguration(parser.evalNode("*[local-name()='configuration']"));
     return configuration;
   }
 
   private void parseConfiguration(XNode root) {
     try {
       //issue #117 read properties first
-      propertiesElement(root.evalNode("properties"));
-      Properties settings = settingsAsProperties(root.evalNode("settings"));
+      propertiesElement(root.evalNode("*[local-name()='properties']"));
+      Properties settings = settingsAsProperties(root.evalNode("*[local-name()='settings']"));
       loadCustomVfs(settings);
-      typeAliasesElement(root.evalNode("typeAliases"));
-      pluginElement(root.evalNode("plugins"));
-      objectFactoryElement(root.evalNode("objectFactory"));
-      objectWrapperFactoryElement(root.evalNode("objectWrapperFactory"));
-      reflectorFactoryElement(root.evalNode("reflectorFactory"));
+      typeAliasesElement(root.evalNode("*[local-name()='typeAliases']"));
+      pluginElement(root.evalNode("*[local-name()='plugins']"));
+      objectFactoryElement(root.evalNode("*[local-name()='objectFactory']"));
+      objectWrapperFactoryElement(root.evalNode("*[local-name()='objectWrapperFactory']"));
+      reflectorFactoryElement(root.evalNode("*[local-name()='reflectorFactory']"));
       settingsElement(settings);
       // read it after objectFactory and objectWrapperFactory issue #631
-      environmentsElement(root.evalNode("environments"));
-      databaseIdProviderElement(root.evalNode("databaseIdProvider"));
-      typeHandlerElement(root.evalNode("typeHandlers"));
-      mapperElement(root.evalNode("mappers"));
+      environmentsElement(root.evalNode("*[local-name()='environments']"));
+      databaseIdProviderElement(root.evalNode("*[local-name()='databaseIdProvider']"));
+      typeHandlerElement(root.evalNode("*[local-name()='typeHandlers']"));
+      mapperElement(root.evalNode("*[local-name()='mappers']"));
     } catch (Exception e) {
       throw new BuilderException("Error parsing SQL Mapper Configuration. Cause: " + e, e);
     }
@@ -272,8 +272,8 @@ public class XMLConfigBuilder extends BaseBuilder {
       for (XNode child : context.getChildren()) {
         String id = child.getStringAttribute("id");
         if (isSpecifiedEnvironment(id)) {
-          TransactionFactory txFactory = transactionManagerElement(child.evalNode("transactionManager"));
-          DataSourceFactory dsFactory = dataSourceElement(child.evalNode("dataSource"));
+          TransactionFactory txFactory = transactionManagerElement(child.evalNode("*[local-name()='transactionManager']"));
+          DataSourceFactory dsFactory = dataSourceElement(child.evalNode("*[local-name()='dataSource']"));
           DataSource dataSource = dsFactory.getDataSource();
           Environment.Builder environmentBuilder = new Environment.Builder(id)
               .transactionFactory(txFactory)
