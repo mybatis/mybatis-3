@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,10 +15,7 @@
  */
 package org.apache.ibatis.type;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.net.URI;
 import java.sql.CallableStatement;
@@ -158,5 +155,41 @@ public class TypeHandlerRegistryTest {
       private static final long serialVersionUID = 1L;
     }
     assertEquals(DateTypeHandler.class, typeHandlerRegistry.getTypeHandler(MyDate2.class).getClass());
+  }
+
+  interface SomeInterface {
+  }
+
+  enum SomeEnum implements SomeInterface {
+  }
+
+  class SomeClass implements SomeInterface {
+  }
+
+  @MappedTypes(SomeInterface.class)
+  public static class SomeInterfaceTypeHandler<E extends Enum<E> & SomeInterface> extends BaseTypeHandler<E> {
+    @Override
+    public void setNonNullParameter(PreparedStatement ps, int i, E parameter, JdbcType jdbcType)
+        throws SQLException {
+    }
+    @Override
+    public E getNullableResult(ResultSet rs, String columnName) throws SQLException {
+      return null;
+    }
+    @Override
+    public E getNullableResult(ResultSet rs, int columnIndex) throws SQLException {
+      return null;
+    }
+    @Override
+    public E getNullableResult(CallableStatement cs, int columnIndex) throws SQLException {
+      return null;
+    }
+  }
+
+  @Test
+  public void demoTypeHandlerForSuperInterface() {
+    typeHandlerRegistry.register(SomeInterfaceTypeHandler.class);
+    assertNull("Registering interface works only for enums.", typeHandlerRegistry.getTypeHandler(SomeClass.class));
+    assertSame(SomeInterfaceTypeHandler.class, typeHandlerRegistry.getTypeHandler(SomeEnum.class).getClass());
   }
 }

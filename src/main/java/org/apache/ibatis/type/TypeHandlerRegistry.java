@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -221,18 +221,30 @@ public final class TypeHandlerRegistry {
     }
     if (jdbcHandlerMap == null && type instanceof Class) {
       Class<?> clazz = (Class<?>) type;
-      jdbcHandlerMap = getJdbcHandlerMapForSuperclass(clazz);
-      if (jdbcHandlerMap != null) {
-        TYPE_HANDLER_MAP.put(type, jdbcHandlerMap);
-      } else if (clazz.isEnum()) {
-        register(clazz, new EnumTypeHandler(clazz));
-        return TYPE_HANDLER_MAP.get(clazz);
+      if (clazz.isEnum()) {
+        jdbcHandlerMap = getJdbcHandlerMapForEnumInterfaces(clazz);
+        if (jdbcHandlerMap == null) {
+          register(clazz, new EnumTypeHandler(clazz));
+          return TYPE_HANDLER_MAP.get(clazz);
+        }
+      } else {
+        jdbcHandlerMap = getJdbcHandlerMapForSuperclass(clazz);
       }
     }
-    if (jdbcHandlerMap == null) {
-      TYPE_HANDLER_MAP.put(type, NULL_TYPE_HANDLER_MAP);
-    }
+    TYPE_HANDLER_MAP.put(type, jdbcHandlerMap == null ? NULL_TYPE_HANDLER_MAP : jdbcHandlerMap);
     return jdbcHandlerMap;
+  }
+
+  private Map<JdbcType, TypeHandler<?>> getJdbcHandlerMapForEnumInterfaces(Class<?> clazz) {
+    for (Class<?> iface : clazz.getInterfaces()) {
+      Map<JdbcType, TypeHandler<?>> jdbcHandlerMap = TYPE_HANDLER_MAP.get(iface);
+      if (jdbcHandlerMap != null) {
+        return jdbcHandlerMap;
+      } else {
+        return getJdbcHandlerMapForEnumInterfaces(iface);
+      }
+    }
+    return null;
   }
 
   private Map<JdbcType, TypeHandler<?>> getJdbcHandlerMapForSuperclass(Class<?> clazz) {
