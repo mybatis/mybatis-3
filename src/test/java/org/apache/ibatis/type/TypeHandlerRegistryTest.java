@@ -159,8 +159,18 @@ public class TypeHandlerRegistryTest {
 
   interface SomeInterface {
   }
+  interface ExtendingSomeInterface extends SomeInterface {
+  }
+  interface NoTypeHandlerInterface {
+  }
 
   enum SomeEnum implements SomeInterface {
+  }
+  enum ExtendingSomeEnum implements ExtendingSomeInterface {
+  }
+  enum ImplementingMultiInterfaceSomeEnum implements NoTypeHandlerInterface, ExtendingSomeInterface {
+  }
+  enum NoTypeHandlerInterfaceEnum implements NoTypeHandlerInterface {
   }
 
   class SomeClass implements SomeInterface {
@@ -190,6 +200,10 @@ public class TypeHandlerRegistryTest {
   public void demoTypeHandlerForSuperInterface() {
     typeHandlerRegistry.register(SomeInterfaceTypeHandler.class);
     assertNull("Registering interface works only for enums.", typeHandlerRegistry.getTypeHandler(SomeClass.class));
+    assertSame("When type handler for interface is not exist, apply default enum type handler.",
+      EnumTypeHandler.class, typeHandlerRegistry.getTypeHandler(NoTypeHandlerInterfaceEnum.class).getClass());
     assertSame(SomeInterfaceTypeHandler.class, typeHandlerRegistry.getTypeHandler(SomeEnum.class).getClass());
+    assertSame(SomeInterfaceTypeHandler.class, typeHandlerRegistry.getTypeHandler(ExtendingSomeEnum.class).getClass());
+    assertSame(SomeInterfaceTypeHandler.class, typeHandlerRegistry.getTypeHandler(ImplementingMultiInterfaceSomeEnum.class).getClass());
   }
 }

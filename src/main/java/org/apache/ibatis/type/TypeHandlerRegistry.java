@@ -238,10 +238,11 @@ public final class TypeHandlerRegistry {
   private Map<JdbcType, TypeHandler<?>> getJdbcHandlerMapForEnumInterfaces(Class<?> clazz) {
     for (Class<?> iface : clazz.getInterfaces()) {
       Map<JdbcType, TypeHandler<?>> jdbcHandlerMap = TYPE_HANDLER_MAP.get(iface);
+      if (jdbcHandlerMap == null) {
+        jdbcHandlerMap = getJdbcHandlerMapForEnumInterfaces(iface);
+      }
       if (jdbcHandlerMap != null) {
         return jdbcHandlerMap;
-      } else {
-        return getJdbcHandlerMapForEnumInterfaces(iface);
       }
     }
     return null;
