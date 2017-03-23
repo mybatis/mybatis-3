@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import org.apache.ibatis.mapping.ParameterEditor;
 import org.apache.ibatis.mapping.ParameterMode;
 import org.apache.ibatis.mapping.ResultSetType;
 import org.apache.ibatis.session.Configuration;
@@ -148,4 +149,26 @@ public abstract class BaseBuilder {
   protected Class<?> resolveAlias(String alias) {
     return typeAliasRegistry.resolveAlias(alias);
   }
+
+  /**
+   * Resolve a editor for parameter value.
+   * @param alias alias for editor class
+   * @return a editor for parameter value
+   * @since 3.4.3
+   */
+  protected ParameterEditor<?> resolveParameterEditor(String alias) {
+    Class<?> type = resolveClass(alias);
+    if (type == null) {
+      return null;
+    }
+    if (!ParameterEditor.class.isAssignableFrom(type)) {
+      throw new BuilderException("Type " + type.getName() + " is not a valid ParameterEditor because it does not implement ParameterEditor interface");
+    }
+    try {
+      return (ParameterEditor<?>) type.newInstance();
+    } catch (Exception e) {
+      throw new BuilderException("Error creating instance. Cause: " + e, e);
+    }
+  }
+
 }
