@@ -45,6 +45,7 @@ import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.LocalCacheScope;
 import org.apache.ibatis.transaction.TransactionFactory;
 import org.apache.ibatis.type.JdbcType;
+import org.apache.ibatis.mapping.Dialect.Dialect;
 
 /**
  * @author Clinton Begin
@@ -262,6 +263,7 @@ public class XMLConfigBuilder extends BaseBuilder {
     Class<? extends Log> logImpl = (Class<? extends Log>)resolveClass(props.getProperty("logImpl"));
     configuration.setLogImpl(logImpl);
     configuration.setConfigurationFactory(resolveClass(props.getProperty("configurationFactory")));
+    configuration.setDialect(Dialect.of(props.getProperty("dialect")));
   }
 
   private void environmentsElement(XNode context) throws Exception {

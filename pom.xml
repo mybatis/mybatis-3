@@ -199,7 +199,6 @@
       <version>3.2.5</version>
       <optional>true</optional>
     </dependency>
-
     <!-- Test dependencies -->
     <dependency>
       <groupId>junit</groupId>
