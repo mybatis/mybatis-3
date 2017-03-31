@@ -24,7 +24,7 @@ import org.apache.ibatis.reflection.property.PropertyTokenizer;
 import org.apache.ibatis.session.Configuration;
 
 /**
- * An actual SQL String got form an {@link SqlSource} after having processed any dynamic content.
+ * An actual SQL String got from an {@link SqlSource} after having processed any dynamic content.
  * The SQL may have SQL placeholders "?" and an list (ordered) of an parameter mappings 
  * with the additional information for each parameter (at least the property name of the input object to read 
  * the value from). 
