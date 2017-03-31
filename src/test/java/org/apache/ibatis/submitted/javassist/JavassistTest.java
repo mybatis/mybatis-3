@@ -20,6 +20,8 @@ import static org.junit.Assert.assertTrue;
 import java.io.Reader;
 import java.sql.Connection;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import javassist.util.proxy.Proxy;
 
 import org.apache.ibatis.io.Resources;
@@ -62,6 +64,26 @@ public class JavassistTest {
       Assert.assertEquals("User1", user.getName());
       assertTrue(user instanceof Proxy);
       Assert.assertEquals(1, user.getGroups().size());
+    } finally {
+      sqlSession.close();
+    }
+  }
+
+  @Test
+  public void toJsonshouldNotException() {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      User user = mapper.getUser(1);
+      assertTrue(user instanceof Proxy);
+      ObjectMapper objectMapper = new ObjectMapper();
+      objectMapper.writeValueAsString(user);
+    } catch (JsonProcessingException e) {
+      e.printStackTrace();
+      /**
+       * TODO see issue #570. if EnhancedResultObjectProxyImpl add one getter method is ok.
+       * Exp: public void getType(){return type}
+       * */
     } finally {
       sqlSession.close();
     }
