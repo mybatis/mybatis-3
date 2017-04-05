@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package org.apache.ibatis.scripting.xmltags;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.ibatis.parsing.GenericTokenParser;
@@ -125,6 +126,7 @@ public class ForEachSqlNode implements SqlNode {
     private int index;
     private String itemIndex;
     private String item;
+    private Map<String, Object> localBindings = null;
 
     public FilteredDynamicContext(Configuration configuration,DynamicContext delegate, String itemIndex, String item, int i) {
       super(configuration, null);
@@ -132,16 +134,22 @@ public class ForEachSqlNode implements SqlNode {
       this.index = i;
       this.itemIndex = itemIndex;
       this.item = item;
+      
+      localBindings = new HashMap<String, Object>(delegate.getBindings());
     }
 
     @Override
     public Map<String, Object> getBindings() {
-      return delegate.getBindings();
+      return localBindings;
     }
-
+    
     @Override
     public void bind(String name, Object value) {
-      delegate.bind(name, value);
+      if (name.startsWith(ITEM_PREFIX)) {
+        delegate.bind(name, value);
+      } else {
+        localBindings.put(name, value);
+      }
     }
 
     @Override
@@ -177,12 +185,14 @@ public class ForEachSqlNode implements SqlNode {
     private DynamicContext delegate;
     private String prefix;
     private boolean prefixApplied;
+    private Map<String, Object> localBindings = null;
 
     public PrefixedContext(DynamicContext delegate, String prefix) {
       super(configuration, null);
       this.delegate = delegate;
       this.prefix = prefix;
       this.prefixApplied = false;
+      localBindings = new HashMap<String, Object>(delegate.getBindings());
     }
 
     public boolean isPrefixApplied() {
@@ -191,12 +201,16 @@ public class ForEachSqlNode implements SqlNode {
 
     @Override
     public Map<String, Object> getBindings() {
-      return delegate.getBindings();
+      return localBindings;
     }
 
     @Override
     public void bind(String name, Object value) {
-      delegate.bind(name, value);
+      if (name.startsWith(ITEM_PREFIX)) {
+        delegate.bind(name, value);
+      } else {
+        localBindings.put(name, value);
+      }
     }
 
     @Override
