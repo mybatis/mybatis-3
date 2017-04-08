@@ -7,7 +7,7 @@
 <body>
 <div id="overview"><a href="../../../../../apidocs/org/apache/ibatis/builder/MapperBuilderAssistant.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2016 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2017 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_javadoccomment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_javadoccomment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_javadoccomment"> *    you may not use this file except in compliance with the License.</em>
@@ -384,143 +384,140 @@
 <a class="jxr_linenumber" name="L376" href="#L376">376</a>     Class&lt;?&gt; javaTypeClass = resolveResultJavaType(resultType, property, javaType);
 <a class="jxr_linenumber" name="L377" href="#L377">377</a>     TypeHandler&lt;?&gt; typeHandlerInstance = resolveTypeHandler(javaTypeClass, typeHandler);
 <a class="jxr_linenumber" name="L378" href="#L378">378</a>     List&lt;ResultMapping&gt; composites = parseCompositeColumnName(column);
-<a class="jxr_linenumber" name="L379" href="#L379">379</a>     <strong class="jxr_keyword">if</strong> (composites.size() &gt; 0) {
-<a class="jxr_linenumber" name="L380" href="#L380">380</a>       column = <strong class="jxr_keyword">null</strong>;
-<a class="jxr_linenumber" name="L381" href="#L381">381</a>     }
-<a class="jxr_linenumber" name="L382" href="#L382">382</a>     <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> ResultMapping.Builder(configuration, property, column, javaTypeClass)
-<a class="jxr_linenumber" name="L383" href="#L383">383</a>         .jdbcType(jdbcType)
-<a class="jxr_linenumber" name="L384" href="#L384">384</a>         .nestedQueryId(applyCurrentNamespace(nestedSelect, <strong class="jxr_keyword">true</strong>))
-<a class="jxr_linenumber" name="L385" href="#L385">385</a>         .nestedResultMapId(applyCurrentNamespace(nestedResultMap, <strong class="jxr_keyword">true</strong>))
-<a class="jxr_linenumber" name="L386" href="#L386">386</a>         .resultSet(resultSet)
-<a class="jxr_linenumber" name="L387" href="#L387">387</a>         .typeHandler(typeHandlerInstance)
-<a class="jxr_linenumber" name="L388" href="#L388">388</a>         .flags(flags == <strong class="jxr_keyword">null</strong> ? <strong class="jxr_keyword">new</strong> ArrayList&lt;ResultFlag&gt;() : flags)
-<a class="jxr_linenumber" name="L389" href="#L389">389</a>         .composites(composites)
-<a class="jxr_linenumber" name="L390" href="#L390">390</a>         .notNullColumns(parseMultipleColumnNames(notNullColumn))
-<a class="jxr_linenumber" name="L391" href="#L391">391</a>         .columnPrefix(columnPrefix)
-<a class="jxr_linenumber" name="L392" href="#L392">392</a>         .foreignColumn(foreignColumn)
-<a class="jxr_linenumber" name="L393" href="#L393">393</a>         .lazy(lazy)
-<a class="jxr_linenumber" name="L394" href="#L394">394</a>         .build();
-<a class="jxr_linenumber" name="L395" href="#L395">395</a>   }
-<a class="jxr_linenumber" name="L396" href="#L396">396</a> 
-<a class="jxr_linenumber" name="L397" href="#L397">397</a>   <strong class="jxr_keyword">private</strong> Set&lt;String&gt; parseMultipleColumnNames(String columnName) {
-<a class="jxr_linenumber" name="L398" href="#L398">398</a>     Set&lt;String&gt; columns = <strong class="jxr_keyword">new</strong> HashSet&lt;String&gt;();
-<a class="jxr_linenumber" name="L399" href="#L399">399</a>     <strong class="jxr_keyword">if</strong> (columnName != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L400" href="#L400">400</a>       <strong class="jxr_keyword">if</strong> (columnName.indexOf(',') &gt; -1) {
-<a class="jxr_linenumber" name="L401" href="#L401">401</a>         StringTokenizer parser = <strong class="jxr_keyword">new</strong> StringTokenizer(columnName, <span class="jxr_string">"{}, "</span>, false);
-<a class="jxr_linenumber" name="L402" href="#L402">402</a>         <strong class="jxr_keyword">while</strong> (parser.hasMoreTokens()) {
-<a class="jxr_linenumber" name="L403" href="#L403">403</a>           String column = parser.nextToken();
-<a class="jxr_linenumber" name="L404" href="#L404">404</a>           columns.add(column);
-<a class="jxr_linenumber" name="L405" href="#L405">405</a>         }
-<a class="jxr_linenumber" name="L406" href="#L406">406</a>       } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="L407" href="#L407">407</a>         columns.add(columnName);
-<a class="jxr_linenumber" name="L408" href="#L408">408</a>       }
-<a class="jxr_linenumber" name="L409" href="#L409">409</a>     }
-<a class="jxr_linenumber" name="L410" href="#L410">410</a>     <strong class="jxr_keyword">return</strong> columns;
-<a class="jxr_linenumber" name="L411" href="#L411">411</a>   }
-<a class="jxr_linenumber" name="L412" href="#L412">412</a> 
-<a class="jxr_linenumber" name="L413" href="#L413">413</a>   <strong class="jxr_keyword">private</strong> List&lt;ResultMapping&gt; parseCompositeColumnName(String columnName) {
-<a class="jxr_linenumber" name="L414" href="#L414">414</a>     List&lt;ResultMapping&gt; composites = <strong class="jxr_keyword">new</strong> ArrayList&lt;ResultMapping&gt;();
-<a class="jxr_linenumber" name="L415" href="#L415">415</a>     <strong class="jxr_keyword">if</strong> (columnName != <strong class="jxr_keyword">null</strong> &amp;&amp; (columnName.indexOf('=') &gt; -1 || columnName.indexOf(',') &gt; -1)) {
-<a class="jxr_linenumber" name="L416" href="#L416">416</a>       StringTokenizer parser = <strong class="jxr_keyword">new</strong> StringTokenizer(columnName, <span class="jxr_string">"{}=, "</span>, false);
-<a class="jxr_linenumber" name="L417" href="#L417">417</a>       <strong class="jxr_keyword">while</strong> (parser.hasMoreTokens()) {
-<a class="jxr_linenumber" name="L418" href="#L418">418</a>         String property = parser.nextToken();
-<a class="jxr_linenumber" name="L419" href="#L419">419</a>         String column = parser.nextToken();
-<a class="jxr_linenumber" name="L420" href="#L420">420</a>         <a href="../../../../org/apache/ibatis/mapping/ResultMapping.html">ResultMapping</a> complexResultMapping = <strong class="jxr_keyword">new</strong> ResultMapping.Builder(
-<a class="jxr_linenumber" name="L421" href="#L421">421</a>             configuration, property, column, configuration.getTypeHandlerRegistry().getUnknownTypeHandler()).build();
-<a class="jxr_linenumber" name="L422" href="#L422">422</a>         composites.add(complexResultMapping);
-<a class="jxr_linenumber" name="L423" href="#L423">423</a>       }
-<a class="jxr_linenumber" name="L424" href="#L424">424</a>     }
-<a class="jxr_linenumber" name="L425" href="#L425">425</a>     <strong class="jxr_keyword">return</strong> composites;
-<a class="jxr_linenumber" name="L426" href="#L426">426</a>   }
-<a class="jxr_linenumber" name="L427" href="#L427">427</a> 
-<a class="jxr_linenumber" name="L428" href="#L428">428</a>   <strong class="jxr_keyword">private</strong> Class&lt;?&gt; resolveResultJavaType(Class&lt;?&gt; resultType, String property, Class&lt;?&gt; javaType) {
-<a class="jxr_linenumber" name="L429" href="#L429">429</a>     <strong class="jxr_keyword">if</strong> (javaType == <strong class="jxr_keyword">null</strong> &amp;&amp; property != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L430" href="#L430">430</a>       <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L431" href="#L431">431</a>         <a href="../../../../org/apache/ibatis/reflection/MetaClass.html">MetaClass</a> metaResultType = MetaClass.forClass(resultType, configuration.getReflectorFactory());
-<a class="jxr_linenumber" name="L432" href="#L432">432</a>         javaType = metaResultType.getSetterType(property);
-<a class="jxr_linenumber" name="L433" href="#L433">433</a>       } <strong class="jxr_keyword">catch</strong> (Exception e) {
-<a class="jxr_linenumber" name="L434" href="#L434">434</a>         <em class="jxr_comment">//ignore, following null check statement will deal with the situation</em>
-<a class="jxr_linenumber" name="L435" href="#L435">435</a>       }
+<a class="jxr_linenumber" name="L379" href="#L379">379</a>     <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> ResultMapping.Builder(configuration, property, column, javaTypeClass)
+<a class="jxr_linenumber" name="L380" href="#L380">380</a>         .jdbcType(jdbcType)
+<a class="jxr_linenumber" name="L381" href="#L381">381</a>         .nestedQueryId(applyCurrentNamespace(nestedSelect, <strong class="jxr_keyword">true</strong>))
+<a class="jxr_linenumber" name="L382" href="#L382">382</a>         .nestedResultMapId(applyCurrentNamespace(nestedResultMap, <strong class="jxr_keyword">true</strong>))
+<a class="jxr_linenumber" name="L383" href="#L383">383</a>         .resultSet(resultSet)
+<a class="jxr_linenumber" name="L384" href="#L384">384</a>         .typeHandler(typeHandlerInstance)
+<a class="jxr_linenumber" name="L385" href="#L385">385</a>         .flags(flags == <strong class="jxr_keyword">null</strong> ? <strong class="jxr_keyword">new</strong> ArrayList&lt;ResultFlag&gt;() : flags)
+<a class="jxr_linenumber" name="L386" href="#L386">386</a>         .composites(composites)
+<a class="jxr_linenumber" name="L387" href="#L387">387</a>         .notNullColumns(parseMultipleColumnNames(notNullColumn))
+<a class="jxr_linenumber" name="L388" href="#L388">388</a>         .columnPrefix(columnPrefix)
+<a class="jxr_linenumber" name="L389" href="#L389">389</a>         .foreignColumn(foreignColumn)
+<a class="jxr_linenumber" name="L390" href="#L390">390</a>         .lazy(lazy)
+<a class="jxr_linenumber" name="L391" href="#L391">391</a>         .build();
+<a class="jxr_linenumber" name="L392" href="#L392">392</a>   }
+<a class="jxr_linenumber" name="L393" href="#L393">393</a> 
+<a class="jxr_linenumber" name="L394" href="#L394">394</a>   <strong class="jxr_keyword">private</strong> Set&lt;String&gt; parseMultipleColumnNames(String columnName) {
+<a class="jxr_linenumber" name="L395" href="#L395">395</a>     Set&lt;String&gt; columns = <strong class="jxr_keyword">new</strong> HashSet&lt;String&gt;();
+<a class="jxr_linenumber" name="L396" href="#L396">396</a>     <strong class="jxr_keyword">if</strong> (columnName != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L397" href="#L397">397</a>       <strong class="jxr_keyword">if</strong> (columnName.indexOf(',') &gt; -1) {
+<a class="jxr_linenumber" name="L398" href="#L398">398</a>         StringTokenizer parser = <strong class="jxr_keyword">new</strong> StringTokenizer(columnName, <span class="jxr_string">"{}, "</span>, false);
+<a class="jxr_linenumber" name="L399" href="#L399">399</a>         <strong class="jxr_keyword">while</strong> (parser.hasMoreTokens()) {
+<a class="jxr_linenumber" name="L400" href="#L400">400</a>           String column = parser.nextToken();
+<a class="jxr_linenumber" name="L401" href="#L401">401</a>           columns.add(column);
+<a class="jxr_linenumber" name="L402" href="#L402">402</a>         }
+<a class="jxr_linenumber" name="L403" href="#L403">403</a>       } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L404" href="#L404">404</a>         columns.add(columnName);
+<a class="jxr_linenumber" name="L405" href="#L405">405</a>       }
+<a class="jxr_linenumber" name="L406" href="#L406">406</a>     }
+<a class="jxr_linenumber" name="L407" href="#L407">407</a>     <strong class="jxr_keyword">return</strong> columns;
+<a class="jxr_linenumber" name="L408" href="#L408">408</a>   }
+<a class="jxr_linenumber" name="L409" href="#L409">409</a> 
+<a class="jxr_linenumber" name="L410" href="#L410">410</a>   <strong class="jxr_keyword">private</strong> List&lt;ResultMapping&gt; parseCompositeColumnName(String columnName) {
+<a class="jxr_linenumber" name="L411" href="#L411">411</a>     List&lt;ResultMapping&gt; composites = <strong class="jxr_keyword">new</strong> ArrayList&lt;ResultMapping&gt;();
+<a class="jxr_linenumber" name="L412" href="#L412">412</a>     <strong class="jxr_keyword">if</strong> (columnName != <strong class="jxr_keyword">null</strong> &amp;&amp; (columnName.indexOf('=') &gt; -1 || columnName.indexOf(',') &gt; -1)) {
+<a class="jxr_linenumber" name="L413" href="#L413">413</a>       StringTokenizer parser = <strong class="jxr_keyword">new</strong> StringTokenizer(columnName, <span class="jxr_string">"{}=, "</span>, false);
+<a class="jxr_linenumber" name="L414" href="#L414">414</a>       <strong class="jxr_keyword">while</strong> (parser.hasMoreTokens()) {
+<a class="jxr_linenumber" name="L415" href="#L415">415</a>         String property = parser.nextToken();
+<a class="jxr_linenumber" name="L416" href="#L416">416</a>         String column = parser.nextToken();
+<a class="jxr_linenumber" name="L417" href="#L417">417</a>         <a href="../../../../org/apache/ibatis/mapping/ResultMapping.html">ResultMapping</a> complexResultMapping = <strong class="jxr_keyword">new</strong> ResultMapping.Builder(
+<a class="jxr_linenumber" name="L418" href="#L418">418</a>             configuration, property, column, configuration.getTypeHandlerRegistry().getUnknownTypeHandler()).build();
+<a class="jxr_linenumber" name="L419" href="#L419">419</a>         composites.add(complexResultMapping);
+<a class="jxr_linenumber" name="L420" href="#L420">420</a>       }
+<a class="jxr_linenumber" name="L421" href="#L421">421</a>     }
+<a class="jxr_linenumber" name="L422" href="#L422">422</a>     <strong class="jxr_keyword">return</strong> composites;
+<a class="jxr_linenumber" name="L423" href="#L423">423</a>   }
+<a class="jxr_linenumber" name="L424" href="#L424">424</a> 
+<a class="jxr_linenumber" name="L425" href="#L425">425</a>   <strong class="jxr_keyword">private</strong> Class&lt;?&gt; resolveResultJavaType(Class&lt;?&gt; resultType, String property, Class&lt;?&gt; javaType) {
+<a class="jxr_linenumber" name="L426" href="#L426">426</a>     <strong class="jxr_keyword">if</strong> (javaType == <strong class="jxr_keyword">null</strong> &amp;&amp; property != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L427" href="#L427">427</a>       <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L428" href="#L428">428</a>         <a href="../../../../org/apache/ibatis/reflection/MetaClass.html">MetaClass</a> metaResultType = MetaClass.forClass(resultType, configuration.getReflectorFactory());
+<a class="jxr_linenumber" name="L429" href="#L429">429</a>         javaType = metaResultType.getSetterType(property);
+<a class="jxr_linenumber" name="L430" href="#L430">430</a>       } <strong class="jxr_keyword">catch</strong> (Exception e) {
+<a class="jxr_linenumber" name="L431" href="#L431">431</a>         <em class="jxr_comment">//ignore, following null check statement will deal with the situation</em>
+<a class="jxr_linenumber" name="L432" href="#L432">432</a>       }
+<a class="jxr_linenumber" name="L433" href="#L433">433</a>     }
+<a class="jxr_linenumber" name="L434" href="#L434">434</a>     <strong class="jxr_keyword">if</strong> (javaType == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L435" href="#L435">435</a>       javaType = Object.<strong class="jxr_keyword">class</strong>;
 <a class="jxr_linenumber" name="L436" href="#L436">436</a>     }
-<a class="jxr_linenumber" name="L437" href="#L437">437</a>     <strong class="jxr_keyword">if</strong> (javaType == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L438" href="#L438">438</a>       javaType = Object.<strong class="jxr_keyword">class</strong>;
-<a class="jxr_linenumber" name="L439" href="#L439">439</a>     }
-<a class="jxr_linenumber" name="L440" href="#L440">440</a>     <strong class="jxr_keyword">return</strong> javaType;
-<a class="jxr_linenumber" name="L441" href="#L441">441</a>   }
-<a class="jxr_linenumber" name="L442" href="#L442">442</a> 
-<a class="jxr_linenumber" name="L443" href="#L443">443</a>   <strong class="jxr_keyword">private</strong> Class&lt;?&gt; resolveParameterJavaType(Class&lt;?&gt; resultType, String property, Class&lt;?&gt; javaType, <a href="../../../../org/apache/ibatis/type/JdbcType.html">JdbcType</a> jdbcType) {
-<a class="jxr_linenumber" name="L444" href="#L444">444</a>     <strong class="jxr_keyword">if</strong> (javaType == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L445" href="#L445">445</a>       <strong class="jxr_keyword">if</strong> (JdbcType.CURSOR.equals(jdbcType)) {
-<a class="jxr_linenumber" name="L446" href="#L446">446</a>         javaType = java.sql.ResultSet.<strong class="jxr_keyword">class</strong>;
-<a class="jxr_linenumber" name="L447" href="#L447">447</a>       } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (Map.<strong class="jxr_keyword">class</strong>.isAssignableFrom(resultType)) {
-<a class="jxr_linenumber" name="L448" href="#L448">448</a>         javaType = Object.<strong class="jxr_keyword">class</strong>;
-<a class="jxr_linenumber" name="L449" href="#L449">449</a>       } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="L450" href="#L450">450</a>         <a href="../../../../org/apache/ibatis/reflection/MetaClass.html">MetaClass</a> metaResultType = MetaClass.forClass(resultType, configuration.getReflectorFactory());
-<a class="jxr_linenumber" name="L451" href="#L451">451</a>         javaType = metaResultType.getGetterType(property);
-<a class="jxr_linenumber" name="L452" href="#L452">452</a>       }
+<a class="jxr_linenumber" name="L437" href="#L437">437</a>     <strong class="jxr_keyword">return</strong> javaType;
+<a class="jxr_linenumber" name="L438" href="#L438">438</a>   }
+<a class="jxr_linenumber" name="L439" href="#L439">439</a> 
+<a class="jxr_linenumber" name="L440" href="#L440">440</a>   <strong class="jxr_keyword">private</strong> Class&lt;?&gt; resolveParameterJavaType(Class&lt;?&gt; resultType, String property, Class&lt;?&gt; javaType, <a href="../../../../org/apache/ibatis/type/JdbcType.html">JdbcType</a> jdbcType) {
+<a class="jxr_linenumber" name="L441" href="#L441">441</a>     <strong class="jxr_keyword">if</strong> (javaType == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L442" href="#L442">442</a>       <strong class="jxr_keyword">if</strong> (JdbcType.CURSOR.equals(jdbcType)) {
+<a class="jxr_linenumber" name="L443" href="#L443">443</a>         javaType = java.sql.ResultSet.<strong class="jxr_keyword">class</strong>;
+<a class="jxr_linenumber" name="L444" href="#L444">444</a>       } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (Map.<strong class="jxr_keyword">class</strong>.isAssignableFrom(resultType)) {
+<a class="jxr_linenumber" name="L445" href="#L445">445</a>         javaType = Object.<strong class="jxr_keyword">class</strong>;
+<a class="jxr_linenumber" name="L446" href="#L446">446</a>       } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L447" href="#L447">447</a>         <a href="../../../../org/apache/ibatis/reflection/MetaClass.html">MetaClass</a> metaResultType = MetaClass.forClass(resultType, configuration.getReflectorFactory());
+<a class="jxr_linenumber" name="L448" href="#L448">448</a>         javaType = metaResultType.getGetterType(property);
+<a class="jxr_linenumber" name="L449" href="#L449">449</a>       }
+<a class="jxr_linenumber" name="L450" href="#L450">450</a>     }
+<a class="jxr_linenumber" name="L451" href="#L451">451</a>     <strong class="jxr_keyword">if</strong> (javaType == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L452" href="#L452">452</a>       javaType = Object.<strong class="jxr_keyword">class</strong>;
 <a class="jxr_linenumber" name="L453" href="#L453">453</a>     }
-<a class="jxr_linenumber" name="L454" href="#L454">454</a>     <strong class="jxr_keyword">if</strong> (javaType == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L455" href="#L455">455</a>       javaType = Object.<strong class="jxr_keyword">class</strong>;
-<a class="jxr_linenumber" name="L456" href="#L456">456</a>     }
-<a class="jxr_linenumber" name="L457" href="#L457">457</a>     <strong class="jxr_keyword">return</strong> javaType;
-<a class="jxr_linenumber" name="L458" href="#L458">458</a>   }
-<a class="jxr_linenumber" name="L459" href="#L459">459</a> 
-<a class="jxr_linenumber" name="L460" href="#L460">460</a>   <em class="jxr_javadoccomment">/** Backward compatibility signature */</em>
-<a class="jxr_linenumber" name="L461" href="#L461">461</a>   <strong class="jxr_keyword">public</strong> <a href="../../../../org/apache/ibatis/mapping/ResultMapping.html">ResultMapping</a> buildResultMapping(
-<a class="jxr_linenumber" name="L462" href="#L462">462</a>       Class&lt;?&gt; resultType,
-<a class="jxr_linenumber" name="L463" href="#L463">463</a>       String property,
-<a class="jxr_linenumber" name="L464" href="#L464">464</a>       String column,
-<a class="jxr_linenumber" name="L465" href="#L465">465</a>       Class&lt;?&gt; javaType,
-<a class="jxr_linenumber" name="L466" href="#L466">466</a>       <a href="../../../../org/apache/ibatis/type/JdbcType.html">JdbcType</a> jdbcType,
-<a class="jxr_linenumber" name="L467" href="#L467">467</a>       String nestedSelect,
-<a class="jxr_linenumber" name="L468" href="#L468">468</a>       String nestedResultMap,
-<a class="jxr_linenumber" name="L469" href="#L469">469</a>       String notNullColumn,
-<a class="jxr_linenumber" name="L470" href="#L470">470</a>       String columnPrefix,
-<a class="jxr_linenumber" name="L471" href="#L471">471</a>       Class&lt;? <strong class="jxr_keyword">extends</strong> TypeHandler&lt;?&gt;&gt; typeHandler,
-<a class="jxr_linenumber" name="L472" href="#L472">472</a>       List&lt;ResultFlag&gt; flags) {
-<a class="jxr_linenumber" name="L473" href="#L473">473</a>       <strong class="jxr_keyword">return</strong> buildResultMapping(
-<a class="jxr_linenumber" name="L474" href="#L474">474</a>         resultType, property, column, javaType, jdbcType, nestedSelect,
-<a class="jxr_linenumber" name="L475" href="#L475">475</a>         nestedResultMap, notNullColumn, columnPrefix, typeHandler, flags, <strong class="jxr_keyword">null</strong>, <strong class="jxr_keyword">null</strong>, configuration.isLazyLoadingEnabled());
-<a class="jxr_linenumber" name="L476" href="#L476">476</a>   }
-<a class="jxr_linenumber" name="L477" href="#L477">477</a> 
-<a class="jxr_linenumber" name="L478" href="#L478">478</a>   <strong class="jxr_keyword">public</strong> <a href="../../../../org/apache/ibatis/scripting/LanguageDriver.html">LanguageDriver</a> getLanguageDriver(Class&lt;?&gt; langClass) {
-<a class="jxr_linenumber" name="L479" href="#L479">479</a>     <strong class="jxr_keyword">if</strong> (langClass != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L480" href="#L480">480</a>       configuration.getLanguageRegistry().register(langClass);
-<a class="jxr_linenumber" name="L481" href="#L481">481</a>     } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="L482" href="#L482">482</a>       langClass = configuration.getLanguageRegistry().getDefaultDriverClass();
-<a class="jxr_linenumber" name="L483" href="#L483">483</a>     }
-<a class="jxr_linenumber" name="L484" href="#L484">484</a>     <strong class="jxr_keyword">return</strong> configuration.getLanguageRegistry().getDriver(langClass);
-<a class="jxr_linenumber" name="L485" href="#L485">485</a>   }
-<a class="jxr_linenumber" name="L486" href="#L486">486</a> 
-<a class="jxr_linenumber" name="L487" href="#L487">487</a>   <em class="jxr_javadoccomment">/** Backward compatibility signature */</em>
-<a class="jxr_linenumber" name="L488" href="#L488">488</a>   <strong class="jxr_keyword">public</strong> <a href="../../../../org/apache/ibatis/mapping/MappedStatement.html">MappedStatement</a> addMappedStatement(
-<a class="jxr_linenumber" name="L489" href="#L489">489</a>     String id,
-<a class="jxr_linenumber" name="L490" href="#L490">490</a>     <a href="../../../../org/apache/ibatis/mapping/SqlSource.html">SqlSource</a> sqlSource,
-<a class="jxr_linenumber" name="L491" href="#L491">491</a>     <a href="../../../../org/apache/ibatis/mapping/StatementType.html">StatementType</a> statementType,
-<a class="jxr_linenumber" name="L492" href="#L492">492</a>     <a href="../../../../org/apache/ibatis/mapping/SqlCommandType.html">SqlCommandType</a> sqlCommandType,
-<a class="jxr_linenumber" name="L493" href="#L493">493</a>     Integer fetchSize,
-<a class="jxr_linenumber" name="L494" href="#L494">494</a>     Integer timeout,
-<a class="jxr_linenumber" name="L495" href="#L495">495</a>     String parameterMap,
-<a class="jxr_linenumber" name="L496" href="#L496">496</a>     Class&lt;?&gt; parameterType,
-<a class="jxr_linenumber" name="L497" href="#L497">497</a>     String resultMap,
-<a class="jxr_linenumber" name="L498" href="#L498">498</a>     Class&lt;?&gt; resultType,
-<a class="jxr_linenumber" name="L499" href="#L499">499</a>     <a href="../../../../org/apache/ibatis/mapping/ResultSetType.html">ResultSetType</a> resultSetType,
-<a class="jxr_linenumber" name="L500" href="#L500">500</a>     <strong class="jxr_keyword">boolean</strong> flushCache,
-<a class="jxr_linenumber" name="L501" href="#L501">501</a>     <strong class="jxr_keyword">boolean</strong> useCache,
-<a class="jxr_linenumber" name="L502" href="#L502">502</a>     <strong class="jxr_keyword">boolean</strong> resultOrdered,
-<a class="jxr_linenumber" name="L503" href="#L503">503</a>     <a href="../../../../org/apache/ibatis/executor/keygen/KeyGenerator.html">KeyGenerator</a> keyGenerator,
-<a class="jxr_linenumber" name="L504" href="#L504">504</a>     String keyProperty,
-<a class="jxr_linenumber" name="L505" href="#L505">505</a>     String keyColumn,
-<a class="jxr_linenumber" name="L506" href="#L506">506</a>     String databaseId,
-<a class="jxr_linenumber" name="L507" href="#L507">507</a>     <a href="../../../../org/apache/ibatis/scripting/LanguageDriver.html">LanguageDriver</a> lang) {
-<a class="jxr_linenumber" name="L508" href="#L508">508</a>     <strong class="jxr_keyword">return</strong> addMappedStatement(
-<a class="jxr_linenumber" name="L509" href="#L509">509</a>       id, sqlSource, statementType, sqlCommandType, fetchSize, timeout,
-<a class="jxr_linenumber" name="L510" href="#L510">510</a>       parameterMap, parameterType, resultMap, resultType, resultSetType,
-<a class="jxr_linenumber" name="L511" href="#L511">511</a>       flushCache, useCache, resultOrdered, keyGenerator, keyProperty,
-<a class="jxr_linenumber" name="L512" href="#L512">512</a>       keyColumn, databaseId, lang, <strong class="jxr_keyword">null</strong>);
-<a class="jxr_linenumber" name="L513" href="#L513">513</a>   }
-<a class="jxr_linenumber" name="L514" href="#L514">514</a> 
-<a class="jxr_linenumber" name="L515" href="#L515">515</a> }
+<a class="jxr_linenumber" name="L454" href="#L454">454</a>     <strong class="jxr_keyword">return</strong> javaType;
+<a class="jxr_linenumber" name="L455" href="#L455">455</a>   }
+<a class="jxr_linenumber" name="L456" href="#L456">456</a> 
+<a class="jxr_linenumber" name="L457" href="#L457">457</a>   <em class="jxr_javadoccomment">/** Backward compatibility signature */</em>
+<a class="jxr_linenumber" name="L458" href="#L458">458</a>   <strong class="jxr_keyword">public</strong> <a href="../../../../org/apache/ibatis/mapping/ResultMapping.html">ResultMapping</a> buildResultMapping(
+<a class="jxr_linenumber" name="L459" href="#L459">459</a>       Class&lt;?&gt; resultType,
+<a class="jxr_linenumber" name="L460" href="#L460">460</a>       String property,
+<a class="jxr_linenumber" name="L461" href="#L461">461</a>       String column,
+<a class="jxr_linenumber" name="L462" href="#L462">462</a>       Class&lt;?&gt; javaType,
+<a class="jxr_linenumber" name="L463" href="#L463">463</a>       <a href="../../../../org/apache/ibatis/type/JdbcType.html">JdbcType</a> jdbcType,
+<a class="jxr_linenumber" name="L464" href="#L464">464</a>       String nestedSelect,
+<a class="jxr_linenumber" name="L465" href="#L465">465</a>       String nestedResultMap,
+<a class="jxr_linenumber" name="L466" href="#L466">466</a>       String notNullColumn,
+<a class="jxr_linenumber" name="L467" href="#L467">467</a>       String columnPrefix,
+<a class="jxr_linenumber" name="L468" href="#L468">468</a>       Class&lt;? <strong class="jxr_keyword">extends</strong> TypeHandler&lt;?&gt;&gt; typeHandler,
+<a class="jxr_linenumber" name="L469" href="#L469">469</a>       List&lt;ResultFlag&gt; flags) {
+<a class="jxr_linenumber" name="L470" href="#L470">470</a>       <strong class="jxr_keyword">return</strong> buildResultMapping(
+<a class="jxr_linenumber" name="L471" href="#L471">471</a>         resultType, property, column, javaType, jdbcType, nestedSelect,
+<a class="jxr_linenumber" name="L472" href="#L472">472</a>         nestedResultMap, notNullColumn, columnPrefix, typeHandler, flags, <strong class="jxr_keyword">null</strong>, <strong class="jxr_keyword">null</strong>, configuration.isLazyLoadingEnabled());
+<a class="jxr_linenumber" name="L473" href="#L473">473</a>   }
+<a class="jxr_linenumber" name="L474" href="#L474">474</a> 
+<a class="jxr_linenumber" name="L475" href="#L475">475</a>   <strong class="jxr_keyword">public</strong> <a href="../../../../org/apache/ibatis/scripting/LanguageDriver.html">LanguageDriver</a> getLanguageDriver(Class&lt;?&gt; langClass) {
+<a class="jxr_linenumber" name="L476" href="#L476">476</a>     <strong class="jxr_keyword">if</strong> (langClass != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L477" href="#L477">477</a>       configuration.getLanguageRegistry().register(langClass);
+<a class="jxr_linenumber" name="L478" href="#L478">478</a>     } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L479" href="#L479">479</a>       langClass = configuration.getLanguageRegistry().getDefaultDriverClass();
+<a class="jxr_linenumber" name="L480" href="#L480">480</a>     }
+<a class="jxr_linenumber" name="L481" href="#L481">481</a>     <strong class="jxr_keyword">return</strong> configuration.getLanguageRegistry().getDriver(langClass);
+<a class="jxr_linenumber" name="L482" href="#L482">482</a>   }
+<a class="jxr_linenumber" name="L483" href="#L483">483</a> 
+<a class="jxr_linenumber" name="L484" href="#L484">484</a>   <em class="jxr_javadoccomment">/** Backward compatibility signature */</em>
+<a class="jxr_linenumber" name="L485" href="#L485">485</a>   <strong class="jxr_keyword">public</strong> <a href="../../../../org/apache/ibatis/mapping/MappedStatement.html">MappedStatement</a> addMappedStatement(
+<a class="jxr_linenumber" name="L486" href="#L486">486</a>     String id,
+<a class="jxr_linenumber" name="L487" href="#L487">487</a>     <a href="../../../../org/apache/ibatis/mapping/SqlSource.html">SqlSource</a> sqlSource,
+<a class="jxr_linenumber" name="L488" href="#L488">488</a>     <a href="../../../../org/apache/ibatis/mapping/StatementType.html">StatementType</a> statementType,
+<a class="jxr_linenumber" name="L489" href="#L489">489</a>     <a href="../../../../org/apache/ibatis/mapping/SqlCommandType.html">SqlCommandType</a> sqlCommandType,
+<a class="jxr_linenumber" name="L490" href="#L490">490</a>     Integer fetchSize,
+<a class="jxr_linenumber" name="L491" href="#L491">491</a>     Integer timeout,
+<a class="jxr_linenumber" name="L492" href="#L492">492</a>     String parameterMap,
+<a class="jxr_linenumber" name="L493" href="#L493">493</a>     Class&lt;?&gt; parameterType,
+<a class="jxr_linenumber" name="L494" href="#L494">494</a>     String resultMap,
+<a class="jxr_linenumber" name="L495" href="#L495">495</a>     Class&lt;?&gt; resultType,
+<a class="jxr_linenumber" name="L496" href="#L496">496</a>     <a href="../../../../org/apache/ibatis/mapping/ResultSetType.html">ResultSetType</a> resultSetType,
+<a class="jxr_linenumber" name="L497" href="#L497">497</a>     <strong class="jxr_keyword">boolean</strong> flushCache,
+<a class="jxr_linenumber" name="L498" href="#L498">498</a>     <strong class="jxr_keyword">boolean</strong> useCache,
+<a class="jxr_linenumber" name="L499" href="#L499">499</a>     <strong class="jxr_keyword">boolean</strong> resultOrdered,
+<a class="jxr_linenumber" name="L500" href="#L500">500</a>     <a href="../../../../org/apache/ibatis/executor/keygen/KeyGenerator.html">KeyGenerator</a> keyGenerator,
+<a class="jxr_linenumber" name="L501" href="#L501">501</a>     String keyProperty,
+<a class="jxr_linenumber" name="L502" href="#L502">502</a>     String keyColumn,
+<a class="jxr_linenumber" name="L503" href="#L503">503</a>     String databaseId,
+<a class="jxr_linenumber" name="L504" href="#L504">504</a>     <a href="../../../../org/apache/ibatis/scripting/LanguageDriver.html">LanguageDriver</a> lang) {
+<a class="jxr_linenumber" name="L505" href="#L505">505</a>     <strong class="jxr_keyword">return</strong> addMappedStatement(
+<a class="jxr_linenumber" name="L506" href="#L506">506</a>       id, sqlSource, statementType, sqlCommandType, fetchSize, timeout,
+<a class="jxr_linenumber" name="L507" href="#L507">507</a>       parameterMap, parameterType, resultMap, resultType, resultSetType,
+<a class="jxr_linenumber" name="L508" href="#L508">508</a>       flushCache, useCache, resultOrdered, keyGenerator, keyProperty,
+<a class="jxr_linenumber" name="L509" href="#L509">509</a>       keyColumn, databaseId, lang, <strong class="jxr_keyword">null</strong>);
+<a class="jxr_linenumber" name="L510" href="#L510">510</a>   }
+<a class="jxr_linenumber" name="L511" href="#L511">511</a> 
+<a class="jxr_linenumber" name="L512" href="#L512">512</a> }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2009&#x2013;2017 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>

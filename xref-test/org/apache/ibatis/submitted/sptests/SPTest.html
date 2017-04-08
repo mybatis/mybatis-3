@@ -7,7 +7,7 @@
 <body>
 <div id="overview"><a href="../../../../../../testapidocs/org/apache/ibatis/submitted/sptests/SPTest.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2016 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2017 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_javadoccomment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_javadoccomment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_javadoccomment"> *    you may not use this file except in compliance with the License.</em>
@@ -866,7 +866,23 @@
 <a class="jxr_linenumber" name="L858" href="#L858">858</a>     }
 <a class="jxr_linenumber" name="L859" href="#L859">859</a>   }
 <a class="jxr_linenumber" name="L860" href="#L860">860</a> 
-<a class="jxr_linenumber" name="L861" href="#L861">861</a> }
+<a class="jxr_linenumber" name="L861" href="#L861">861</a>   @Test
+<a class="jxr_linenumber" name="L862" href="#L862">862</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testMultipleForeignKeys() <strong class="jxr_keyword">throws</strong> SQLException {
+<a class="jxr_linenumber" name="L863" href="#L863">863</a>     SqlSession sqlSession = sqlSessionFactory.openSession();
+<a class="jxr_linenumber" name="L864" href="#L864">864</a>     <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L865" href="#L865">865</a>       <a href="../../../../../org/apache/ibatis/submitted/sptests/SPMapper.html">SPMapper</a> spMapper = sqlSession.getMapper(SPMapper.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L866" href="#L866">866</a>       List&lt;Book&gt; books = spMapper.getBookAndGenre();
+<a class="jxr_linenumber" name="L867" href="#L867">867</a>       assertEquals(<span class="jxr_string">"Book1"</span>, books.get(0).getName());
+<a class="jxr_linenumber" name="L868" href="#L868">868</a>       assertEquals(<span class="jxr_string">"Genre1"</span>, books.get(0).getGenre().getName());
+<a class="jxr_linenumber" name="L869" href="#L869">869</a>       assertEquals(<span class="jxr_string">"Book2"</span>, books.get(1).getName());
+<a class="jxr_linenumber" name="L870" href="#L870">870</a>       assertEquals(<span class="jxr_string">"Genre2"</span>, books.get(1).getGenre().getName());
+<a class="jxr_linenumber" name="L871" href="#L871">871</a>       assertEquals(<span class="jxr_string">"Book3"</span>, books.get(2).getName());
+<a class="jxr_linenumber" name="L872" href="#L872">872</a>       assertEquals(<span class="jxr_string">"Genre1"</span>, books.get(2).getGenre().getName());
+<a class="jxr_linenumber" name="L873" href="#L873">873</a>     } <strong class="jxr_keyword">finally</strong> {
+<a class="jxr_linenumber" name="L874" href="#L874">874</a>       sqlSession.close();
+<a class="jxr_linenumber" name="L875" href="#L875">875</a>     }
+<a class="jxr_linenumber" name="L876" href="#L876">876</a>   }
+<a class="jxr_linenumber" name="L877" href="#L877">877</a> }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2009&#x2013;2017 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>

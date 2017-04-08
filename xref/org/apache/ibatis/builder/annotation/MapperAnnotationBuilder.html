@@ -7,7 +7,7 @@
 <body>
 <div id="overview"><a href="../../../../../../apidocs/org/apache/ibatis/builder/annotation/MapperAnnotationBuilder.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2016 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2017 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_javadoccomment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_javadoccomment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_javadoccomment"> *    you may not use this file except in compliance with the License.</em>
@@ -317,14 +317,14 @@
 <a class="jxr_linenumber" name="L309" href="#L309">309</a>           keyGenerator = handleSelectKeyAnnotation(selectKey, mappedStatementId, getParameterType(method), languageDriver);
 <a class="jxr_linenumber" name="L310" href="#L310">310</a>           keyProperty = selectKey.keyProperty();
 <a class="jxr_linenumber" name="L311" href="#L311">311</a>         } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (options == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L312" href="#L312">312</a>           keyGenerator = configuration.isUseGeneratedKeys() ? <strong class="jxr_keyword">new</strong> Jdbc3KeyGenerator() : <strong class="jxr_keyword">new</strong> NoKeyGenerator();
+<a class="jxr_linenumber" name="L312" href="#L312">312</a>           keyGenerator = configuration.isUseGeneratedKeys() ? Jdbc3KeyGenerator.INSTANCE : NoKeyGenerator.INSTANCE;
 <a class="jxr_linenumber" name="L313" href="#L313">313</a>         } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="L314" href="#L314">314</a>           keyGenerator = options.useGeneratedKeys() ? <strong class="jxr_keyword">new</strong> Jdbc3KeyGenerator() : <strong class="jxr_keyword">new</strong> NoKeyGenerator();
+<a class="jxr_linenumber" name="L314" href="#L314">314</a>           keyGenerator = options.useGeneratedKeys() ? Jdbc3KeyGenerator.INSTANCE : NoKeyGenerator.INSTANCE;
 <a class="jxr_linenumber" name="L315" href="#L315">315</a>           keyProperty = options.keyProperty();
 <a class="jxr_linenumber" name="L316" href="#L316">316</a>           keyColumn = options.keyColumn();
 <a class="jxr_linenumber" name="L317" href="#L317">317</a>         }
 <a class="jxr_linenumber" name="L318" href="#L318">318</a>       } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="L319" href="#L319">319</a>         keyGenerator = <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/executor/keygen/NoKeyGenerator.html">NoKeyGenerator</a>();
+<a class="jxr_linenumber" name="L319" href="#L319">319</a>         keyGenerator = NoKeyGenerator.INSTANCE;
 <a class="jxr_linenumber" name="L320" href="#L320">320</a>       }
 <a class="jxr_linenumber" name="L321" href="#L321">321</a> 
 <a class="jxr_linenumber" name="L322" href="#L322">322</a>       <strong class="jxr_keyword">if</strong> (options != <strong class="jxr_keyword">null</strong>) {
@@ -600,7 +600,7 @@
 <a class="jxr_linenumber" name="L592" href="#L592">592</a>               (arg.typeHandler() == UnknownTypeHandler.<strong class="jxr_keyword">class</strong> ? <strong class="jxr_keyword">null</strong> : arg.typeHandler());
 <a class="jxr_linenumber" name="L593" href="#L593">593</a>       <a href="../../../../../org/apache/ibatis/mapping/ResultMapping.html">ResultMapping</a> resultMapping = assistant.buildResultMapping(
 <a class="jxr_linenumber" name="L594" href="#L594">594</a>           resultType,
-<a class="jxr_linenumber" name="L595" href="#L595">595</a>           <strong class="jxr_keyword">null</strong>,
+<a class="jxr_linenumber" name="L595" href="#L595">595</a>           nullOrEmpty(arg.name()),
 <a class="jxr_linenumber" name="L596" href="#L596">596</a>           nullOrEmpty(arg.column()),
 <a class="jxr_linenumber" name="L597" href="#L597">597</a>           arg.javaType() == <strong class="jxr_keyword">void</strong>.<strong class="jxr_keyword">class</strong> ? <strong class="jxr_keyword">null</strong> : arg.javaType(),
 <a class="jxr_linenumber" name="L598" href="#L598">598</a>           arg.jdbcType() == JdbcType.UNDEFINED ? <strong class="jxr_keyword">null</strong> : arg.jdbcType(),
@@ -639,7 +639,7 @@
 <a class="jxr_linenumber" name="L631" href="#L631">631</a> 
 <a class="jxr_linenumber" name="L632" href="#L632">632</a>     <em class="jxr_comment">// defaults</em>
 <a class="jxr_linenumber" name="L633" href="#L633">633</a>     <strong class="jxr_keyword">boolean</strong> useCache = false;
-<a class="jxr_linenumber" name="L634" href="#L634">634</a>     <a href="../../../../../org/apache/ibatis/executor/keygen/KeyGenerator.html">KeyGenerator</a> keyGenerator = <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/executor/keygen/NoKeyGenerator.html">NoKeyGenerator</a>();
+<a class="jxr_linenumber" name="L634" href="#L634">634</a>     <a href="../../../../../org/apache/ibatis/executor/keygen/KeyGenerator.html">KeyGenerator</a> keyGenerator = NoKeyGenerator.INSTANCE;
 <a class="jxr_linenumber" name="L635" href="#L635">635</a>     Integer fetchSize = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L636" href="#L636">636</a>     Integer timeout = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L637" href="#L637">637</a>     <strong class="jxr_keyword">boolean</strong> flushCache = false;

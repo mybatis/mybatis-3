@@ -7,7 +7,7 @@
 <body>
 <div id="overview"><a href="../../../../../apidocs/org/apache/ibatis/mapping/MappedStatement.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2016 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2017 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_javadoccomment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_javadoccomment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_javadoccomment"> *    you may not use this file except in compliance with the License.</em>
@@ -80,7 +80,7 @@
 <a class="jxr_linenumber" name="L72" href="#L72">72</a>        mappedStatement.parameterMap = <strong class="jxr_keyword">new</strong> ParameterMap.Builder(configuration, <span class="jxr_string">"defaultParameterMap"</span>, <strong class="jxr_keyword">null</strong>, <strong class="jxr_keyword">new</strong> ArrayList&lt;ParameterMapping&gt;()).build();
 <a class="jxr_linenumber" name="L73" href="#L73">73</a>        mappedStatement.resultMaps = <strong class="jxr_keyword">new</strong> ArrayList&lt;ResultMap&gt;();
 <a class="jxr_linenumber" name="L74" href="#L74">74</a>        mappedStatement.sqlCommandType = sqlCommandType;
-<a class="jxr_linenumber" name="L75" href="#L75">75</a>        mappedStatement.keyGenerator = configuration.isUseGeneratedKeys() &amp;&amp; SqlCommandType.INSERT.equals(sqlCommandType) ? <strong class="jxr_keyword">new</strong> Jdbc3KeyGenerator() : <strong class="jxr_keyword">new</strong> NoKeyGenerator();
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>        mappedStatement.keyGenerator = configuration.isUseGeneratedKeys() &amp;&amp; SqlCommandType.INSERT.equals(sqlCommandType) ? Jdbc3KeyGenerator.INSTANCE : NoKeyGenerator.INSTANCE;
 <a class="jxr_linenumber" name="L76" href="#L76">76</a>        String logId = id;
 <a class="jxr_linenumber" name="L77" href="#L77">77</a>        <strong class="jxr_keyword">if</strong> (configuration.getLogPrefix() != <strong class="jxr_keyword">null</strong>) {
 <a class="jxr_linenumber" name="L78" href="#L78">78</a>          logId = configuration.getLogPrefix() + id;

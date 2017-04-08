@@ -7,7 +7,7 @@
 <body>
 <div id="overview"><a href="../../../../../../apidocs/org/apache/ibatis/executor/loader/ResultLoaderMap.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2015 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2017 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_javadoccomment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_javadoccomment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_javadoccomment"> *    you may not use this file except in compliance with the License.</em>
@@ -252,70 +252,72 @@
 <a class="jxr_linenumber" name="L244" href="#L244">244</a>         } <strong class="jxr_keyword">else</strong> {
 <a class="jxr_linenumber" name="L245" href="#L245">245</a>           configurationObject = factoryMethod.invoke(<strong class="jxr_keyword">null</strong>);
 <a class="jxr_linenumber" name="L246" href="#L246">246</a>         }
-<a class="jxr_linenumber" name="L247" href="#L247">247</a>       } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> NoSuchMethodException ex) {
-<a class="jxr_linenumber" name="L248" href="#L248">248</a>         <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/executor/ExecutorException.html">ExecutorException</a>(<span class="jxr_string">"Cannot get Configuration as factory class ["</span>
-<a class="jxr_linenumber" name="L249" href="#L249">249</a>                 + <strong class="jxr_keyword">this</strong>.configurationFactory + <span class="jxr_string">"] is missing factory method of name ["</span>
-<a class="jxr_linenumber" name="L250" href="#L250">250</a>                 + FACTORY_METHOD + <span class="jxr_string">"]."</span>, ex);
-<a class="jxr_linenumber" name="L251" href="#L251">251</a>       } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> PrivilegedActionException ex) {
-<a class="jxr_linenumber" name="L252" href="#L252">252</a>         <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/executor/ExecutorException.html">ExecutorException</a>(<span class="jxr_string">"Cannot get Configuration as factory method ["</span>
-<a class="jxr_linenumber" name="L253" href="#L253">253</a>                 + <strong class="jxr_keyword">this</strong>.configurationFactory + <span class="jxr_string">"]#["</span>
-<a class="jxr_linenumber" name="L254" href="#L254">254</a>                 + FACTORY_METHOD + <span class="jxr_string">"] threw an exception."</span>, ex.getCause());
-<a class="jxr_linenumber" name="L255" href="#L255">255</a>       } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> Exception ex) {
-<a class="jxr_linenumber" name="L256" href="#L256">256</a>         <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/executor/ExecutorException.html">ExecutorException</a>(<span class="jxr_string">"Cannot get Configuration as factory method ["</span>
-<a class="jxr_linenumber" name="L257" href="#L257">257</a>                 + <strong class="jxr_keyword">this</strong>.configurationFactory + <span class="jxr_string">"]#["</span>
-<a class="jxr_linenumber" name="L258" href="#L258">258</a>                 + FACTORY_METHOD + <span class="jxr_string">"] threw an exception."</span>, ex);
-<a class="jxr_linenumber" name="L259" href="#L259">259</a>       }
-<a class="jxr_linenumber" name="L260" href="#L260">260</a> 
-<a class="jxr_linenumber" name="L261" href="#L261">261</a>       <strong class="jxr_keyword">if</strong> (!(configurationObject instanceof Configuration)) {
-<a class="jxr_linenumber" name="L262" href="#L262">262</a>         <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/executor/ExecutorException.html">ExecutorException</a>(<span class="jxr_string">"Cannot get Configuration as factory method ["</span>
-<a class="jxr_linenumber" name="L263" href="#L263">263</a>                 + <strong class="jxr_keyword">this</strong>.configurationFactory + <span class="jxr_string">"]#["</span>
-<a class="jxr_linenumber" name="L264" href="#L264">264</a>                 + FACTORY_METHOD + <span class="jxr_string">"] didn't return ["</span> + Configuration.<strong class="jxr_keyword">class</strong> + <span class="jxr_string">"] but ["</span>
-<a class="jxr_linenumber" name="L265" href="#L265">265</a>                 + (configurationObject == <strong class="jxr_keyword">null</strong> ? <span class="jxr_string">"null"</span> : configurationObject.getClass()) + <span class="jxr_string">"]."</span>);
-<a class="jxr_linenumber" name="L266" href="#L266">266</a>       }
-<a class="jxr_linenumber" name="L267" href="#L267">267</a> 
-<a class="jxr_linenumber" name="L268" href="#L268">268</a>       <strong class="jxr_keyword">return</strong> Configuration.<strong class="jxr_keyword">class</strong>.<strong class="jxr_keyword">cast</strong>(configurationObject);
-<a class="jxr_linenumber" name="L269" href="#L269">269</a>     }
-<a class="jxr_linenumber" name="L270" href="#L270">270</a> 
-<a class="jxr_linenumber" name="L271" href="#L271">271</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../../org/apache/ibatis/logging/Log.html">Log</a> getLogger() {
-<a class="jxr_linenumber" name="L272" href="#L272">272</a>       <strong class="jxr_keyword">if</strong> (<strong class="jxr_keyword">this</strong>.log == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L273" href="#L273">273</a>         <strong class="jxr_keyword">this</strong>.log = LogFactory.getLog(<strong class="jxr_keyword">this</strong>.getClass());
-<a class="jxr_linenumber" name="L274" href="#L274">274</a>       }
-<a class="jxr_linenumber" name="L275" href="#L275">275</a>       <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>.log;
-<a class="jxr_linenumber" name="L276" href="#L276">276</a>     }
-<a class="jxr_linenumber" name="L277" href="#L277">277</a>   }
-<a class="jxr_linenumber" name="L278" href="#L278">278</a> 
-<a class="jxr_linenumber" name="L279" href="#L279">279</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../../org/apache/ibatis/executor/loader/ResultLoaderMap.html">ClosedExecutor</a> <strong class="jxr_keyword">extends</strong> <a href="../../../../../org/apache/ibatis/executor/BaseExecutor.html">BaseExecutor</a> {
+<a class="jxr_linenumber" name="L247" href="#L247">247</a>       } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> ExecutorException ex) {
+<a class="jxr_linenumber" name="L248" href="#L248">248</a>         <strong class="jxr_keyword">throw</strong> ex;
+<a class="jxr_linenumber" name="L249" href="#L249">249</a>       } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> NoSuchMethodException ex) {
+<a class="jxr_linenumber" name="L250" href="#L250">250</a>         <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/executor/ExecutorException.html">ExecutorException</a>(<span class="jxr_string">"Cannot get Configuration as factory class ["</span>
+<a class="jxr_linenumber" name="L251" href="#L251">251</a>                 + <strong class="jxr_keyword">this</strong>.configurationFactory + <span class="jxr_string">"] is missing factory method of name ["</span>
+<a class="jxr_linenumber" name="L252" href="#L252">252</a>                 + FACTORY_METHOD + <span class="jxr_string">"]."</span>, ex);
+<a class="jxr_linenumber" name="L253" href="#L253">253</a>       } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> PrivilegedActionException ex) {
+<a class="jxr_linenumber" name="L254" href="#L254">254</a>         <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/executor/ExecutorException.html">ExecutorException</a>(<span class="jxr_string">"Cannot get Configuration as factory method ["</span>
+<a class="jxr_linenumber" name="L255" href="#L255">255</a>                 + <strong class="jxr_keyword">this</strong>.configurationFactory + <span class="jxr_string">"]#["</span>
+<a class="jxr_linenumber" name="L256" href="#L256">256</a>                 + FACTORY_METHOD + <span class="jxr_string">"] threw an exception."</span>, ex.getCause());
+<a class="jxr_linenumber" name="L257" href="#L257">257</a>       } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> Exception ex) {
+<a class="jxr_linenumber" name="L258" href="#L258">258</a>         <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/executor/ExecutorException.html">ExecutorException</a>(<span class="jxr_string">"Cannot get Configuration as factory method ["</span>
+<a class="jxr_linenumber" name="L259" href="#L259">259</a>                 + <strong class="jxr_keyword">this</strong>.configurationFactory + <span class="jxr_string">"]#["</span>
+<a class="jxr_linenumber" name="L260" href="#L260">260</a>                 + FACTORY_METHOD + <span class="jxr_string">"] threw an exception."</span>, ex);
+<a class="jxr_linenumber" name="L261" href="#L261">261</a>       }
+<a class="jxr_linenumber" name="L262" href="#L262">262</a> 
+<a class="jxr_linenumber" name="L263" href="#L263">263</a>       <strong class="jxr_keyword">if</strong> (!(configurationObject instanceof Configuration)) {
+<a class="jxr_linenumber" name="L264" href="#L264">264</a>         <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/executor/ExecutorException.html">ExecutorException</a>(<span class="jxr_string">"Cannot get Configuration as factory method ["</span>
+<a class="jxr_linenumber" name="L265" href="#L265">265</a>                 + <strong class="jxr_keyword">this</strong>.configurationFactory + <span class="jxr_string">"]#["</span>
+<a class="jxr_linenumber" name="L266" href="#L266">266</a>                 + FACTORY_METHOD + <span class="jxr_string">"] didn't return ["</span> + Configuration.<strong class="jxr_keyword">class</strong> + <span class="jxr_string">"] but ["</span>
+<a class="jxr_linenumber" name="L267" href="#L267">267</a>                 + (configurationObject == <strong class="jxr_keyword">null</strong> ? <span class="jxr_string">"null"</span> : configurationObject.getClass()) + <span class="jxr_string">"]."</span>);
+<a class="jxr_linenumber" name="L268" href="#L268">268</a>       }
+<a class="jxr_linenumber" name="L269" href="#L269">269</a> 
+<a class="jxr_linenumber" name="L270" href="#L270">270</a>       <strong class="jxr_keyword">return</strong> Configuration.<strong class="jxr_keyword">class</strong>.<strong class="jxr_keyword">cast</strong>(configurationObject);
+<a class="jxr_linenumber" name="L271" href="#L271">271</a>     }
+<a class="jxr_linenumber" name="L272" href="#L272">272</a> 
+<a class="jxr_linenumber" name="L273" href="#L273">273</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../../org/apache/ibatis/logging/Log.html">Log</a> getLogger() {
+<a class="jxr_linenumber" name="L274" href="#L274">274</a>       <strong class="jxr_keyword">if</strong> (<strong class="jxr_keyword">this</strong>.log == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L275" href="#L275">275</a>         <strong class="jxr_keyword">this</strong>.log = LogFactory.getLog(<strong class="jxr_keyword">this</strong>.getClass());
+<a class="jxr_linenumber" name="L276" href="#L276">276</a>       }
+<a class="jxr_linenumber" name="L277" href="#L277">277</a>       <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>.log;
+<a class="jxr_linenumber" name="L278" href="#L278">278</a>     }
+<a class="jxr_linenumber" name="L279" href="#L279">279</a>   }
 <a class="jxr_linenumber" name="L280" href="#L280">280</a> 
-<a class="jxr_linenumber" name="L281" href="#L281">281</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../../org/apache/ibatis/executor/loader/ResultLoaderMap.html">ClosedExecutor</a>() {
-<a class="jxr_linenumber" name="L282" href="#L282">282</a>       <strong class="jxr_keyword">super</strong>(<strong class="jxr_keyword">null</strong>, <strong class="jxr_keyword">null</strong>);
-<a class="jxr_linenumber" name="L283" href="#L283">283</a>     }
-<a class="jxr_linenumber" name="L284" href="#L284">284</a> 
-<a class="jxr_linenumber" name="L285" href="#L285">285</a>     @Override
-<a class="jxr_linenumber" name="L286" href="#L286">286</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> isClosed() {
-<a class="jxr_linenumber" name="L287" href="#L287">287</a>       <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">true</strong>;
-<a class="jxr_linenumber" name="L288" href="#L288">288</a>     }
-<a class="jxr_linenumber" name="L289" href="#L289">289</a> 
-<a class="jxr_linenumber" name="L290" href="#L290">290</a>     @Override
-<a class="jxr_linenumber" name="L291" href="#L291">291</a>     <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">int</strong> doUpdate(<a href="../../../../../org/apache/ibatis/mapping/MappedStatement.html">MappedStatement</a> ms, Object parameter) <strong class="jxr_keyword">throws</strong> SQLException {
-<a class="jxr_linenumber" name="L292" href="#L292">292</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> UnsupportedOperationException(<span class="jxr_string">"Not supported."</span>);
-<a class="jxr_linenumber" name="L293" href="#L293">293</a>     }
-<a class="jxr_linenumber" name="L294" href="#L294">294</a> 
-<a class="jxr_linenumber" name="L295" href="#L295">295</a>     @Override
-<a class="jxr_linenumber" name="L296" href="#L296">296</a>     <strong class="jxr_keyword">protected</strong> List&lt;BatchResult&gt; doFlushStatements(<strong class="jxr_keyword">boolean</strong> isRollback) <strong class="jxr_keyword">throws</strong> SQLException {
-<a class="jxr_linenumber" name="L297" href="#L297">297</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> UnsupportedOperationException(<span class="jxr_string">"Not supported."</span>);
-<a class="jxr_linenumber" name="L298" href="#L298">298</a>     }
-<a class="jxr_linenumber" name="L299" href="#L299">299</a> 
-<a class="jxr_linenumber" name="L300" href="#L300">300</a>     @Override
-<a class="jxr_linenumber" name="L301" href="#L301">301</a>     <strong class="jxr_keyword">protected</strong> &lt;E&gt; List&lt;E&gt; doQuery(<a href="../../../../../org/apache/ibatis/mapping/MappedStatement.html">MappedStatement</a> ms, Object parameter, <a href="../../../../../org/apache/ibatis/session/RowBounds.html">RowBounds</a> rowBounds, <a href="../../../../../org/apache/ibatis/session/ResultHandler.html">ResultHandler</a> resultHandler, <a href="../../../../../org/apache/ibatis/mapping/BoundSql.html">BoundSql</a> boundSql) <strong class="jxr_keyword">throws</strong> SQLException {
-<a class="jxr_linenumber" name="L302" href="#L302">302</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> UnsupportedOperationException(<span class="jxr_string">"Not supported."</span>);
-<a class="jxr_linenumber" name="L303" href="#L303">303</a>     }
-<a class="jxr_linenumber" name="L304" href="#L304">304</a> 
-<a class="jxr_linenumber" name="L305" href="#L305">305</a>     @Override
-<a class="jxr_linenumber" name="L306" href="#L306">306</a>     <strong class="jxr_keyword">protected</strong> &lt;E&gt; Cursor&lt;E&gt; doQueryCursor(<a href="../../../../../org/apache/ibatis/mapping/MappedStatement.html">MappedStatement</a> ms, Object parameter, <a href="../../../../../org/apache/ibatis/session/RowBounds.html">RowBounds</a> rowBounds, <a href="../../../../../org/apache/ibatis/mapping/BoundSql.html">BoundSql</a> boundSql) <strong class="jxr_keyword">throws</strong> SQLException {
-<a class="jxr_linenumber" name="L307" href="#L307">307</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> UnsupportedOperationException(<span class="jxr_string">"Not supported."</span>);
-<a class="jxr_linenumber" name="L308" href="#L308">308</a>     }
-<a class="jxr_linenumber" name="L309" href="#L309">309</a>   }
-<a class="jxr_linenumber" name="L310" href="#L310">310</a> }
+<a class="jxr_linenumber" name="L281" href="#L281">281</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../../org/apache/ibatis/executor/loader/ResultLoaderMap.html">ClosedExecutor</a> <strong class="jxr_keyword">extends</strong> <a href="../../../../../org/apache/ibatis/executor/BaseExecutor.html">BaseExecutor</a> {
+<a class="jxr_linenumber" name="L282" href="#L282">282</a> 
+<a class="jxr_linenumber" name="L283" href="#L283">283</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../../org/apache/ibatis/executor/loader/ResultLoaderMap.html">ClosedExecutor</a>() {
+<a class="jxr_linenumber" name="L284" href="#L284">284</a>       <strong class="jxr_keyword">super</strong>(<strong class="jxr_keyword">null</strong>, <strong class="jxr_keyword">null</strong>);
+<a class="jxr_linenumber" name="L285" href="#L285">285</a>     }
+<a class="jxr_linenumber" name="L286" href="#L286">286</a> 
+<a class="jxr_linenumber" name="L287" href="#L287">287</a>     @Override
+<a class="jxr_linenumber" name="L288" href="#L288">288</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> isClosed() {
+<a class="jxr_linenumber" name="L289" href="#L289">289</a>       <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">true</strong>;
+<a class="jxr_linenumber" name="L290" href="#L290">290</a>     }
+<a class="jxr_linenumber" name="L291" href="#L291">291</a> 
+<a class="jxr_linenumber" name="L292" href="#L292">292</a>     @Override
+<a class="jxr_linenumber" name="L293" href="#L293">293</a>     <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">int</strong> doUpdate(<a href="../../../../../org/apache/ibatis/mapping/MappedStatement.html">MappedStatement</a> ms, Object parameter) <strong class="jxr_keyword">throws</strong> SQLException {
+<a class="jxr_linenumber" name="L294" href="#L294">294</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> UnsupportedOperationException(<span class="jxr_string">"Not supported."</span>);
+<a class="jxr_linenumber" name="L295" href="#L295">295</a>     }
+<a class="jxr_linenumber" name="L296" href="#L296">296</a> 
+<a class="jxr_linenumber" name="L297" href="#L297">297</a>     @Override
+<a class="jxr_linenumber" name="L298" href="#L298">298</a>     <strong class="jxr_keyword">protected</strong> List&lt;BatchResult&gt; doFlushStatements(<strong class="jxr_keyword">boolean</strong> isRollback) <strong class="jxr_keyword">throws</strong> SQLException {
+<a class="jxr_linenumber" name="L299" href="#L299">299</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> UnsupportedOperationException(<span class="jxr_string">"Not supported."</span>);
+<a class="jxr_linenumber" name="L300" href="#L300">300</a>     }
+<a class="jxr_linenumber" name="L301" href="#L301">301</a> 
+<a class="jxr_linenumber" name="L302" href="#L302">302</a>     @Override
+<a class="jxr_linenumber" name="L303" href="#L303">303</a>     <strong class="jxr_keyword">protected</strong> &lt;E&gt; List&lt;E&gt; doQuery(<a href="../../../../../org/apache/ibatis/mapping/MappedStatement.html">MappedStatement</a> ms, Object parameter, <a href="../../../../../org/apache/ibatis/session/RowBounds.html">RowBounds</a> rowBounds, <a href="../../../../../org/apache/ibatis/session/ResultHandler.html">ResultHandler</a> resultHandler, <a href="../../../../../org/apache/ibatis/mapping/BoundSql.html">BoundSql</a> boundSql) <strong class="jxr_keyword">throws</strong> SQLException {
+<a class="jxr_linenumber" name="L304" href="#L304">304</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> UnsupportedOperationException(<span class="jxr_string">"Not supported."</span>);
+<a class="jxr_linenumber" name="L305" href="#L305">305</a>     }
+<a class="jxr_linenumber" name="L306" href="#L306">306</a> 
+<a class="jxr_linenumber" name="L307" href="#L307">307</a>     @Override
+<a class="jxr_linenumber" name="L308" href="#L308">308</a>     <strong class="jxr_keyword">protected</strong> &lt;E&gt; Cursor&lt;E&gt; doQueryCursor(<a href="../../../../../org/apache/ibatis/mapping/MappedStatement.html">MappedStatement</a> ms, Object parameter, <a href="../../../../../org/apache/ibatis/session/RowBounds.html">RowBounds</a> rowBounds, <a href="../../../../../org/apache/ibatis/mapping/BoundSql.html">BoundSql</a> boundSql) <strong class="jxr_keyword">throws</strong> SQLException {
+<a class="jxr_linenumber" name="L309" href="#L309">309</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> UnsupportedOperationException(<span class="jxr_string">"Not supported."</span>);
+<a class="jxr_linenumber" name="L310" href="#L310">310</a>     }
+<a class="jxr_linenumber" name="L311" href="#L311">311</a>   }
+<a class="jxr_linenumber" name="L312" href="#L312">312</a> }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2009&#x2013;2017 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
