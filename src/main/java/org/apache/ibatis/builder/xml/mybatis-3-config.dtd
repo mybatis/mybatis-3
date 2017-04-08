@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2017 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -51,7 +51,7 @@ type CDATA #REQUIRED
 alias CDATA #IMPLIED
 >
 
-<!ELEMENT typeHandlers (typeHandler*,package*)>
+<!ELEMENT typeHandlers (typeHandler*,package*,registrar*)>
 
 <!ELEMENT typeHandler EMPTY>
 <!ATTLIST typeHandler
@@ -114,4 +114,9 @@ class CDATA #IMPLIED
 <!ELEMENT package EMPTY>
 <!ATTLIST package
 name CDATA #REQUIRED
+>
+
+<!ELEMENT registrar EMPTY>
+<!ATTLIST registrar
+type CDATA #REQUIRED
 >

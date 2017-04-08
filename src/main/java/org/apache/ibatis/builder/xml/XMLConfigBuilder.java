@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -45,6 +45,7 @@ import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.LocalCacheScope;
 import org.apache.ibatis.transaction.TransactionFactory;
 import org.apache.ibatis.type.JdbcType;
+import org.apache.ibatis.type.TypeHandlerRegistrar;
 
 /**
  * @author Clinton Begin
@@ -331,6 +332,10 @@ public class XMLConfigBuilder extends BaseBuilder {
         if ("package".equals(child.getName())) {
           String typeHandlerPackage = child.getStringAttribute("name");
           typeHandlerRegistry.register(typeHandlerPackage);
+        } else if ("registrar".equals(child.getName())) {
+          String type = child.getStringAttribute("type");
+          TypeHandlerRegistrar registrar = (TypeHandlerRegistrar) resolveClass(type).newInstance();
+          registrar.registerTypeHandlers(typeHandlerRegistry);
         } else {
           String javaTypeName = child.getStringAttribute("javaType");
           String jdbcTypeName = child.getStringAttribute("jdbcType");
