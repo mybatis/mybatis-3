@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package org.apache.ibatis.builder;
 
 import java.io.InputStream;
 import java.io.StringReader;
+import java.math.RoundingMode;
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -50,6 +51,8 @@ import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.LocalCacheScope;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
 import org.apache.ibatis.type.BaseTypeHandler;
+import org.apache.ibatis.type.EnumOrdinalTypeHandler;
+import org.apache.ibatis.type.EnumTypeHandler;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.TypeHandlerRegistry;
@@ -96,6 +99,7 @@ public class XmlConfigBuilderTest {
     assertNull(config.getLogPrefix());
     assertNull(config.getLogImpl());
     assertNull(config.getConfigurationFactory());
+    assertThat(config.getTypeHandlerRegistry().getTypeHandler(RoundingMode.class), is(instanceOf(EnumTypeHandler.class)));
   }
 
   enum MyEnum {
@@ -197,6 +201,7 @@ public class XmlConfigBuilderTest {
       assertThat(config.getTypeHandlerRegistry().getTypeHandler(Long.class), is(instanceOf(CustomLongTypeHandler.class)));
       assertThat(config.getTypeHandlerRegistry().getTypeHandler(String.class), is(instanceOf(CustomStringTypeHandler.class)));
       assertThat(config.getTypeHandlerRegistry().getTypeHandler(String.class, JdbcType.VARCHAR), is(instanceOf(CustomStringTypeHandler.class)));
+      assertThat(config.getTypeHandlerRegistry().getTypeHandler(RoundingMode.class), is(instanceOf(EnumOrdinalTypeHandler.class)));
 
       ExampleObjectFactory objectFactory = (ExampleObjectFactory)config.getObjectFactory();
       assertThat(objectFactory.getProperties().size(), is(1));

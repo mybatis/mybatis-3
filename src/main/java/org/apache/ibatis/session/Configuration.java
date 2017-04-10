@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -88,6 +88,7 @@ import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
 import org.apache.ibatis.transaction.managed.ManagedTransactionFactory;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeAliasRegistry;
+import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.TypeHandlerRegistry;
 
 /**
@@ -459,6 +460,18 @@ public class Configuration {
 
   public TypeHandlerRegistry getTypeHandlerRegistry() {
     return typeHandlerRegistry;
+  }
+
+  /**
+   * Set a default {@link TypeHandler} class for {@link Enum}.
+   * A default {@link TypeHandler} is {@link org.apache.ibatis.type.EnumTypeHandler}.
+   * @param typeHandler a type handler class for {@link Enum}
+   * @since 3.4.5
+   */
+  public void setDefaultEnumTypeHandler(Class<? extends TypeHandler> typeHandler) {
+    if (typeHandler != null) {
+      getTypeHandlerRegistry().setDefaultEnumTypeHandler(typeHandler);
+    }
   }
 
   public TypeAliasRegistry getTypeAliasRegistry() {

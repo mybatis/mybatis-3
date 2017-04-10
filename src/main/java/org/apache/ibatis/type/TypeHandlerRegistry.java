@@ -47,6 +47,8 @@ public final class TypeHandlerRegistry {
 
   private static final Map<JdbcType, TypeHandler<?>> NULL_TYPE_HANDLER_MAP = new HashMap<JdbcType, TypeHandler<?>>();
 
+  private Class<? extends TypeHandler> defaultEnumTypeHandler = EnumTypeHandler.class;
+
   public TypeHandlerRegistry() {
     register(Boolean.class, new BooleanTypeHandler());
     register(boolean.class, new BooleanTypeHandler());
@@ -155,6 +157,16 @@ public final class TypeHandlerRegistry {
     register(char.class, new CharacterTypeHandler());
   }
 
+  /**
+   * Set a default {@link TypeHandler} class for {@link Enum}.
+   * A default {@link TypeHandler} is {@link org.apache.ibatis.type.EnumTypeHandler}.
+   * @param typeHandler a type handler class for {@link Enum}
+   * @since 3.4.5
+   */
+  public void setDefaultEnumTypeHandler(Class<? extends TypeHandler> typeHandler) {
+    this.defaultEnumTypeHandler = typeHandler;
+  }
+
   public boolean hasTypeHandler(Class<?> javaType) {
     return hasTypeHandler(javaType, null);
   }
@@ -224,7 +236,7 @@ public final class TypeHandlerRegistry {
       if (clazz.isEnum()) {
         jdbcHandlerMap = getJdbcHandlerMapForEnumInterfaces(clazz);
         if (jdbcHandlerMap == null) {
-          register(clazz, new EnumTypeHandler(clazz));
+          register(clazz, getInstance(clazz, defaultEnumTypeHandler));
           return TYPE_HANDLER_MAP.get(clazz);
         }
       } else {
