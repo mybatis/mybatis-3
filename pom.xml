@@ -157,12 +157,6 @@
       <optional>true</optional>
     </dependency>
     <dependency>
-      <groupId>org.mybatis</groupId>
-      <artifactId>mybatis-typehandlers-jsr310</artifactId>
-      <version>1.0.2</version>
-      <optional>true</optional>
-    </dependency>
-    <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
       <version>1.7.25</version>
