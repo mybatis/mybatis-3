@@ -1,5 +1,5 @@
 /**
- *    Copyright 2016 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ import org.apache.ibatis.lang.UsesJava8;
  * {@link java.time.YearMonth#parse YearMonth.parse}. Therefore column values
  * are expected as strings. The format must be uuuu-MM. Example: "2016-08"
  *
- * @since 1.0.2
+ * @since 3.4.5
  * @author Björn Raupach
  */
 @UsesJava8

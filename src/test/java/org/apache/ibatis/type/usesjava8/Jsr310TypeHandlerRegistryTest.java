@@ -46,8 +46,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * Tests for auto-detect type handlers of mybatis-typehandlers-jsr310.
- *
  * @author Kazuki Shimizu
  */
 public class Jsr310TypeHandlerRegistryTest {
@@ -60,7 +58,7 @@ public class Jsr310TypeHandlerRegistryTest {
   }
 
   @Test
-  public void testFor_v1_0_0() throws ClassNotFoundException {
+  public void shouldRegisterJsr310TypeHandlers() throws ClassNotFoundException {
     assertThat(typeHandlerRegistry.getTypeHandler(Instant.class), instanceOf(InstantTypeHandler.class));
     assertThat(typeHandlerRegistry.getTypeHandler(LocalDateTime.class), instanceOf(LocalDateTimeTypeHandler.class));
     assertThat(typeHandlerRegistry.getTypeHandler(LocalDate.class), instanceOf(LocalDateTypeHandler.class));
@@ -68,16 +66,8 @@ public class Jsr310TypeHandlerRegistryTest {
     assertThat(typeHandlerRegistry.getTypeHandler(OffsetDateTime.class), instanceOf(OffsetDateTimeTypeHandler.class));
     assertThat(typeHandlerRegistry.getTypeHandler(OffsetTime.class), instanceOf(OffsetTimeTypeHandler.class));
     assertThat(typeHandlerRegistry.getTypeHandler(ZonedDateTime.class), instanceOf(ZonedDateTimeTypeHandler.class));
-  }
-
-  @Test
-  public void testFor_v1_0_1() throws ClassNotFoundException {
     assertThat(typeHandlerRegistry.getTypeHandler(Month.class), instanceOf(MonthTypeHandler.class));
     assertThat(typeHandlerRegistry.getTypeHandler(Year.class), instanceOf(YearTypeHandler.class));
-  }
-
-  @Test
-  public void testFor_v1_0_2() throws ClassNotFoundException {
     assertThat(typeHandlerRegistry.getTypeHandler(YearMonth.class), instanceOf(YearMonthTypeHandler.class));
     assertThat(typeHandlerRegistry.getTypeHandler(JapaneseDate.class), instanceOf(JapaneseDateTypeHandler.class));
   }

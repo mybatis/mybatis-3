@@ -30,11 +30,13 @@ import java.time.chrono.JapaneseDate;
 
 import org.apache.ibatis.lang.UsesJava8;
 
+/**
+ * @since 3.4.5
+ */
 @UsesJava8
 public abstract class Java8TypeHandlersRegistrar {
 
   public static void registerDateAndTimeHandlers(TypeHandlerRegistry registry) {
-    // since 1.0.0
     registry.register(Instant.class, InstantTypeHandler.class);
     registry.register(LocalDateTime.class, LocalDateTimeTypeHandler.class);
     registry.register(LocalDate.class, LocalDateTypeHandler.class);
@@ -42,10 +44,8 @@ public abstract class Java8TypeHandlersRegistrar {
     registry.register(OffsetDateTime.class, OffsetDateTimeTypeHandler.class);
     registry.register(OffsetTime.class, OffsetTimeTypeHandler.class);
     registry.register(ZonedDateTime.class, ZonedDateTimeTypeHandler.class);
-    // since 1.0.1
     registry.register(Month.class, MonthTypeHandler.class);
     registry.register(Year.class, YearTypeHandler.class);
-    // since 1.0.2
     registry.register(YearMonth.class, YearMonthTypeHandler.class);
     registry.register(JapaneseDate.class, JapaneseDateTypeHandler.class);
   }

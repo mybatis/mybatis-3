@@ -1,5 +1,5 @@
 /**
- *    Copyright 2016 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import java.time.Year;
 import org.apache.ibatis.lang.UsesJava8;
 
 /**
- * @since 1.0.1
+ * @since 3.4.5
  * @author Björn Raupach
  */
 @UsesJava8
