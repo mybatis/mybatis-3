@@ -15,6 +15,7 @@
  */
 package org.apache.ibatis.builder.typehandler;
 
+import oracle.jdbc.OraclePreparedStatement;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.MappedTypes;
 import org.apache.ibatis.type.TypeHandler;
@@ -26,6 +27,11 @@ import java.sql.SQLException;
 
 @MappedTypes(Integer.class)
 public class CustomIntegerTypeHandler implements TypeHandler<Integer> {
+
+  @Override
+  public void setParameter(OraclePreparedStatement ps, int i, Integer parameter, JdbcType jdbcType) throws SQLException {
+    ps.setInt(i, parameter);
+  }
 
   @Override
   public void setParameter(PreparedStatement ps, int i, Integer parameter, JdbcType jdbcType) throws SQLException {

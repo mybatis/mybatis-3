@@ -53,6 +53,21 @@ public class SqlRunnerTest extends BaseDataTest {
     assertEquals(16, rows.size());
   }
 
+  /**
+   * 测试Oracle数据库char类型空格查询
+   * @throws Exception
+   */
+  @Test
+  public void oracleShouldSelectList() throws Exception {
+    DataSource ds = createDruidDataSource(TEST_ORACLE_PROPERTIES);
+    Connection connection = ds.getConnection();
+    SqlRunner exec = new SqlRunner(connection);
+    List<Map<String, Object>> rows = exec.selectAll("select * from ZE_MEMBER where name = ?","zhangsan1");
+    connection.close();
+    System.out.println(rows);
+    assertEquals(1, rows.size());
+  }
+
   @Test
   public void shouldInsert() throws Exception {
     DataSource ds = createUnpooledDataSource(BLOG_PROPERTIES);

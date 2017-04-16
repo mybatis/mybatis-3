@@ -15,6 +15,7 @@
  */
 package org.apache.ibatis.builder;
 
+import oracle.jdbc.OraclePreparedStatement;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
 
@@ -24,6 +25,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class CustomStringTypeHandler implements TypeHandler<String> {
+
+  @Override
+  public void setParameter(OraclePreparedStatement ps, int i, String parameter, JdbcType jdbcType) throws SQLException {
+    ps.setFixedCHAR(i, parameter);
+  }
 
   @Override
   public void setParameter(PreparedStatement ps, int i, String parameter, JdbcType jdbcType) throws SQLException {

@@ -15,6 +15,7 @@
  */
 package org.apache.ibatis.builder;
 
+import oracle.jdbc.OraclePreparedStatement;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.MappedTypes;
 import org.apache.ibatis.type.TypeHandler;
@@ -26,6 +27,11 @@ import java.sql.SQLException;
 
 @MappedTypes(Long.class)
 public class CustomLongTypeHandler implements TypeHandler<Long> {
+
+  @Override
+  public void setParameter(OraclePreparedStatement ps, int i, Long parameter, JdbcType jdbcType) throws SQLException {
+    ps.setLong(i, parameter);
+  }
 
   @Override
   public void setParameter(PreparedStatement ps, int i, Long parameter, JdbcType jdbcType) throws SQLException {

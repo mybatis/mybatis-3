@@ -15,6 +15,8 @@
  */
 package org.apache.ibatis.type;
 
+import oracle.jdbc.OraclePreparedStatement;
+
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -24,6 +26,8 @@ import java.sql.SQLException;
  * @author Clinton Begin
  */
 public interface TypeHandler<T> {
+
+  void setParameter(OraclePreparedStatement ps, int i, T parameter, JdbcType jdbcType) throws SQLException;
 
   void setParameter(PreparedStatement ps, int i, T parameter, JdbcType jdbcType) throws SQLException;
 

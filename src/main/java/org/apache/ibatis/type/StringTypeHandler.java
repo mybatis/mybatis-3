@@ -15,6 +15,8 @@
  */
 package org.apache.ibatis.type;
 
+import oracle.jdbc.OraclePreparedStatement;
+
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -26,26 +28,36 @@ import java.sql.SQLException;
 public class StringTypeHandler extends BaseTypeHandler<String> {
 
   @Override
-  public void setNonNullParameter(PreparedStatement ps, int i, String parameter, JdbcType jdbcType)
+  public void setNonNullParameter(OraclePreparedStatement ps, int i, String parameter, JdbcType jdbcType)
       throws SQLException {
+    ps.setFixedCHAR(i, parameter);
+  }
+
+  @Override
+  public void setNonNullParameter(PreparedStatement ps, int i, String parameter, JdbcType jdbcType)
+          throws SQLException {
     ps.setString(i, parameter);
   }
 
   @Override
   public String getNullableResult(ResultSet rs, String columnName)
       throws SQLException {
-    return rs.getString(columnName);
+    String s = rs.getString(columnName);
+    return s!=null?s.trim():s;
   }
 
   @Override
   public String getNullableResult(ResultSet rs, int columnIndex)
       throws SQLException {
-    return rs.getString(columnIndex);
+    String s = rs.getString(columnIndex);
+    return s!=null?s.trim():s;
   }
 
   @Override
   public String getNullableResult(CallableStatement cs, int columnIndex)
       throws SQLException {
-    return cs.getString(columnIndex);
+    String s = cs.getString(columnIndex);
+    return s!=null?s.trim():s;
   }
+
 }

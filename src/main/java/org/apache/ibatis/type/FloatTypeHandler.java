@@ -15,6 +15,8 @@
  */
 package org.apache.ibatis.type;
 
+import oracle.jdbc.OraclePreparedStatement;
+
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -24,6 +26,12 @@ import java.sql.SQLException;
  * @author Clinton Begin
  */
 public class FloatTypeHandler extends BaseTypeHandler<Float> {
+
+  @Override
+  public void setNonNullParameter(OraclePreparedStatement ps, int i, Float parameter, JdbcType jdbcType)
+          throws SQLException {
+    ps.setFloat(i, parameter);
+  }
 
   @Override
   public void setNonNullParameter(PreparedStatement ps, int i, Float parameter, JdbcType jdbcType)

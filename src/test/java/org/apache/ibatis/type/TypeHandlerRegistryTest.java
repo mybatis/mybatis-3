@@ -25,6 +25,7 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 
+import oracle.jdbc.OraclePreparedStatement;
 import org.apache.ibatis.domain.misc.RichType;
 import org.junit.Before;
 import org.junit.Test;
@@ -55,7 +56,12 @@ public class TypeHandlerRegistryTest {
   public void shouldRegisterAndRetrieveComplexTypeHandler() {
     TypeHandler<List<URI>> fakeHandler = new TypeHandler<List<URI>>() {
 
-    @Override
+      @Override
+      public void setParameter(OraclePreparedStatement ps, int i, List<URI> parameter, JdbcType jdbcType) throws SQLException {
+
+      }
+
+      @Override
     public void setParameter( PreparedStatement ps, int i, List<URI> parameter, JdbcType jdbcType )
       throws SQLException {
       // do nothing, fake method
@@ -95,7 +101,7 @@ public class TypeHandlerRegistryTest {
     TypeHandler<List<URI>> fakeHandler = new BaseTypeHandler<List<URI>>() {
 
       @Override
-      public void setNonNullParameter( PreparedStatement ps, int i, List<URI> parameter, JdbcType jdbcType )
+      public void setNonNullParameter(PreparedStatement ps, int i, List<URI> parameter, JdbcType jdbcType )
         throws SQLException {
         // do nothing, fake method
       }

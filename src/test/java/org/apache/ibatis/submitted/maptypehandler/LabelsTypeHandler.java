@@ -21,12 +21,18 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Map;
 
+import oracle.jdbc.OraclePreparedStatement;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.MappedTypes;
 import org.apache.ibatis.type.TypeHandler;
 
 @MappedTypes(Map.class)
 public class LabelsTypeHandler implements TypeHandler<Map<String, Object>> {
+
+  @Override
+  public void setParameter(OraclePreparedStatement ps, int i, Map<String, Object> parameter, JdbcType jdbcType) throws SQLException {
+
+  }
 
   @Override
   public void setParameter(PreparedStatement ps, int i, Map<String, Object> parameter, JdbcType jdbcType) throws SQLException {

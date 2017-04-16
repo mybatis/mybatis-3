@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import oracle.jdbc.OraclePreparedStatement;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
 
@@ -53,6 +54,18 @@ public class UserStateTypeHandler<E> implements TypeHandler<Object> {
   @Override
   public Object getResult(CallableStatement cs, int arg) throws SQLException {
     return lookupValue(cs.getInt(arg));
+  }
+
+  @Override
+  public void setParameter(OraclePreparedStatement ps, int i, Object value, JdbcType jdbcType) throws SQLException {
+
+    String key = "";
+    for (Entry<String, String> entry : lookup.entrySet()) {
+      if (value.equals(entry.getValue())) {
+        key = entry.getKey();
+      }
+    }
+    ps.setInt(i, Integer.valueOf(key));
   }
 
   @Override

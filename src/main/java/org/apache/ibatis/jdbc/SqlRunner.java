@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import oracle.jdbc.driver.OraclePreparedStatement;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.TypeHandlerRegistry;
@@ -50,6 +51,15 @@ public class SqlRunner {
 
   public void setUseGeneratedKeySupport(boolean useGeneratedKeySupport) {
     this.useGeneratedKeySupport = useGeneratedKeySupport;
+  }
+
+    /**
+     * 判断是否是Oracle数据库
+     * @return
+     * @throws SQLException
+     */
+  private boolean isOracle() throws SQLException {
+      return connection.getMetaData().getDatabaseProductName().toLowerCase().indexOf("oracle")>-1;
   }
 
   /*
@@ -78,16 +88,30 @@ public class SqlRunner {
    */
   public List<Map<String, Object>> selectAll(String sql, Object... args) throws SQLException {
     PreparedStatement ps = connection.prepareStatement(sql);
+    ResultSet rs;
+    if(isOracle()){
+        OraclePreparedStatement ops = ps.unwrap(OraclePreparedStatement.class);
+        try {
+            setParameters(ops, args);
+            rs = ops.executeQuery();
+            return getResults(rs);
+        } finally {
+            try {
+                ps.close();
+                ops.close();
+            } catch (SQLException e) {
+            }
+        }
+    }
     try {
-      setParameters(ps, args);
-      ResultSet rs = ps.executeQuery();
-      return getResults(rs);
-    } finally {
-      try {
-        ps.close();
-      } catch (SQLException e) {
-        //ignore
-      }
+          setParameters(ps, args);
+          rs = ps.executeQuery();
+          return getResults(rs);
+      } finally {
+        try {
+            ps.close();
+        } catch (SQLException e) {
+        }
     }
   }
 
@@ -102,11 +126,44 @@ public class SqlRunner {
   public int insert(String sql, Object... args) throws SQLException {
     PreparedStatement ps;
     if (useGeneratedKeySupport) {
-      ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+        ps= connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
     } else {
-      ps = connection.prepareStatement(sql);
+        ps = connection.prepareStatement(sql);
     }
 
+    if(isOracle()){
+        OraclePreparedStatement ops = ps.unwrap(OraclePreparedStatement.class);
+        try {
+            setParameters(ops, args);
+            ops.executeUpdate();
+            if (useGeneratedKeySupport) {
+                List<Map<String, Object>> keys = getResults(ops.getGeneratedKeys());
+                if (keys.size() == 1) {
+                    Map<String, Object> key = keys.get(0);
+                    Iterator<Object> i = key.values().iterator();
+                    if (i.hasNext()) {
+                        Object genkey = i.next();
+                        if (genkey != null) {
+                            try {
+                                return Integer.parseInt(genkey.toString());
+                            } catch (NumberFormatException e) {
+                                //ignore, no numeric key suppot
+                            }
+                        }
+                    }
+                }
+            }
+            return NO_GENERATED_KEY;
+        } finally {
+            try {
+                ps.close();
+            } catch (SQLException e) {
+                //ignore
+            }
+        }
+    }
+
+    //原有代码保持不变
     try {
       setParameters(ps, args);
       ps.executeUpdate();
@@ -147,6 +204,22 @@ public class SqlRunner {
    */
   public int update(String sql, Object... args) throws SQLException {
     PreparedStatement ps = connection.prepareStatement(sql);
+
+      if(isOracle()) {
+          OraclePreparedStatement ops = ps.unwrap(OraclePreparedStatement.class);
+          try {
+              setParameters(ops, args);
+              return ops.executeUpdate();
+          } finally {
+              try {
+                  ops.close();
+              } catch (SQLException e) {
+                  //ignore
+              }
+          }
+      }
+
+    //保持原有代码
     try {
       setParameters(ps, args);
       return ps.executeUpdate();
@@ -199,7 +272,7 @@ public class SqlRunner {
     }
   }
 
-  private void setParameters(PreparedStatement ps, Object... args) throws SQLException {
+  private void setParameters(OraclePreparedStatement ps, Object... args) throws SQLException {
     for (int i = 0, n = args.length; i < n; i++) {
       if (args[i] == null) {
         throw new SQLException("SqlRunner requires an instance of Null to represent typed null values for JDBC compatibility");
@@ -215,6 +288,23 @@ public class SqlRunner {
       }
     }
   }
+
+    private void setParameters(PreparedStatement ps, Object... args) throws SQLException {
+        for (int i = 0, n = args.length; i < n; i++) {
+            if (args[i] == null) {
+                throw new SQLException("SqlRunner requires an instance of Null to represent typed null values for JDBC compatibility");
+            } else if (args[i] instanceof Null) {
+                ((Null) args[i]).getTypeHandler().setParameter(ps, i + 1, null, ((Null) args[i]).getJdbcType());
+            } else {
+                TypeHandler typeHandler = typeHandlerRegistry.getTypeHandler(args[i].getClass());
+                if (typeHandler == null) {
+                    throw new SQLException("SqlRunner could not find a TypeHandler instance for " + args[i].getClass());
+                } else {
+                    typeHandler.setParameter(ps, i + 1, args[i], null);
+                }
+            }
+        }
+    }
 
   private List<Map<String, Object>> getResults(ResultSet rs) throws SQLException {
     try {
