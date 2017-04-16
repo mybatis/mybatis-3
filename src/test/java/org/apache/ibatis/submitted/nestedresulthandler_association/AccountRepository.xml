@@ -42,7 +42,7 @@
           t_account_address aa
             ON aa.account_uuid = a.account_uuid
         WHERE
-          a.birth_date >= #{birthMonth} AND a.birth_date < ADD_MONTHS(#{birthMonth}, 1)
+          a.birth_date >= #{birthMonth} AND a.birth_date < DATE_ADD(#{birthMonth}, INTERVAL 1 MONTH)
         ORDER BY
           a.account_uuid
         ]]>
