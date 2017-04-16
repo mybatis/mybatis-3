@@ -40,6 +40,8 @@ public class SqlRunner {
 
   public static final int NO_GENERATED_KEY = Integer.MIN_VALUE + 1001;
 
+  public static final String ORACLE = "oracle";
+
   private Connection connection;
   private TypeHandlerRegistry typeHandlerRegistry;
   private boolean useGeneratedKeySupport;
@@ -59,7 +61,7 @@ public class SqlRunner {
      * @throws SQLException
      */
   private boolean isOracle() throws SQLException {
-      return connection.getMetaData().getDatabaseProductName().toLowerCase().indexOf("oracle")>-1;
+      return connection.getMetaData().getDatabaseProductName().toLowerCase().indexOf(ORACLE)>-1;
   }
 
   /*
