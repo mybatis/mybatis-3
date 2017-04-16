@@ -15,12 +15,6 @@
  */
 package org.apache.ibatis.executor;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.ibatis.builder.StaticSqlSource;
 import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.cache.decorators.LoggingCache;
@@ -28,30 +22,17 @@ import org.apache.ibatis.cache.decorators.ScheduledCache;
 import org.apache.ibatis.cache.decorators.SerializedCache;
 import org.apache.ibatis.cache.decorators.SynchronizedCache;
 import org.apache.ibatis.cache.impl.PerpetualCache;
-import org.apache.ibatis.domain.blog.Author;
-import org.apache.ibatis.domain.blog.Blog;
-import org.apache.ibatis.domain.blog.Comment;
-import org.apache.ibatis.domain.blog.Post;
-import org.apache.ibatis.domain.blog.Section;
-import org.apache.ibatis.domain.blog.Tag;
+import org.apache.ibatis.domain.blog.*;
 import org.apache.ibatis.executor.keygen.Jdbc3KeyGenerator;
 import org.apache.ibatis.executor.keygen.SelectKeyGenerator;
-import org.apache.ibatis.mapping.Discriminator;
-import org.apache.ibatis.mapping.MappedStatement;
-import org.apache.ibatis.mapping.ParameterMap;
-import org.apache.ibatis.mapping.ParameterMapping;
-import org.apache.ibatis.mapping.ParameterMode;
-import org.apache.ibatis.mapping.ResultFlag;
-import org.apache.ibatis.mapping.ResultMap;
-import org.apache.ibatis.mapping.ResultMapping;
-import org.apache.ibatis.mapping.SqlCommandType;
-import org.apache.ibatis.mapping.SqlSource;
-import org.apache.ibatis.mapping.StatementType;
+import org.apache.ibatis.mapping.*;
 import org.apache.ibatis.scripting.xmltags.DynamicSqlSource;
 import org.apache.ibatis.scripting.xmltags.TextSqlNode;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandlerRegistry;
+
+import java.util.*;
 
 public class ExecutorTestHelper {
 
@@ -138,6 +119,23 @@ public class ExecutorTestHelper {
             }).build())
         .cache(authorCache).build();
     return ms;
+  }
+
+  public static MappedStatement prepareDisableBatchUpdateAuthorMappedStatement(final Configuration config) {
+      final TypeHandlerRegistry registry = config.getTypeHandlerRegistry();
+      MappedStatement ms = new MappedStatement.Builder(config, "updateAuthor", new StaticSqlSource(config,"UPDATE author SET username = ?, password = ?, email = ?, bio = ? WHERE id = ?"), SqlCommandType.UPDATE)
+              .parameterMap(new ParameterMap.Builder(config, "defaultParameterMap", Author.class,
+                      new ArrayList<ParameterMapping>() {
+                          {
+                              add(new ParameterMapping.Builder(config, "username", registry.getTypeHandler(String.class)).build());
+                              add(new ParameterMapping.Builder(config, "password", registry.getTypeHandler(String.class)).build());
+                              add(new ParameterMapping.Builder(config, "email", registry.getTypeHandler(String.class)).build());
+                              add(new ParameterMapping.Builder(config, "bio", registry.getTypeHandler(String.class)).jdbcType(JdbcType.VARCHAR).build());
+                              add(new ParameterMapping.Builder(config, "id", registry.getTypeHandler(int.class)).build());
+                          }
+                      }).build())
+              .cache(authorCache).disableBatch(true).build();
+      return ms;
   }
 
   public static MappedStatement prepareDeleteAuthorMappedStatement(final Configuration config) {

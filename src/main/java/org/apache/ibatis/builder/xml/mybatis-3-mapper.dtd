@@ -197,6 +197,7 @@ useGeneratedKeys (true|false) #IMPLIED
 keyColumn CDATA #IMPLIED
 databaseId CDATA #IMPLIED
 lang CDATA #IMPLIED
+disableBatch (true|false) #IMPLIED
 >
 
 <!ELEMENT selectKey (#PCDATA | include | trim | where | set | foreach | choose | if | bind)*>
@@ -222,6 +223,7 @@ useGeneratedKeys (true|false) #IMPLIED
 keyColumn CDATA #IMPLIED
 databaseId CDATA #IMPLIED
 lang CDATA #IMPLIED
+disableBatch (true|false) #IMPLIED
 >
 
 <!ELEMENT delete (#PCDATA | include | trim | where | set | foreach | choose | if | bind)*>
@@ -234,6 +236,7 @@ flushCache (true|false) #IMPLIED
 statementType (STATEMENT|PREPARED|CALLABLE) #IMPLIED
 databaseId CDATA #IMPLIED
 lang CDATA #IMPLIED
+disableBatch (true|false) #IMPLIED
 >
 
 <!-- Dynamic -->
