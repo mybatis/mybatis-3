@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -51,6 +51,21 @@ public class SqlRunnerTest extends BaseDataTest {
     List<Map<String, Object>> rows = exec.selectAll("SELECT * FROM PRODUCT");
     connection.close();
     assertEquals(16, rows.size());
+  }
+
+  /**
+   * 测试Oracle数据库char类型空格查询
+   * @throws Exception
+   */
+  @Test
+  public void oracleShouldSelectList() throws Exception {
+    DataSource ds = createDruidDataSource(TEST_ORACLE_PROPERTIES);
+    Connection connection = ds.getConnection();
+    SqlRunner exec = new SqlRunner(connection);
+    List<Map<String, Object>> rows = exec.selectAll("select * from ZE_MEMBER where name = ?","zhangsan1");
+    connection.close();
+    System.out.println(rows);
+    assertEquals(1, rows.size());
   }
 
   @Test

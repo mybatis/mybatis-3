@@ -251,9 +251,25 @@
       <version>9.1-901-1.jdbc4</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>ojdbc14</groupId>
+      <artifactId>ojdbc14</artifactId>
+      <version>14</version>
+      <scope>system</scope>
+      <systemPath>${project.basedir}/lib/ojdbc14.jar</systemPath>
+    </dependency>
+    <dependency>
+      <groupId>com.alibaba</groupId>
+      <artifactId>druid</artifactId>
+      <version>1.0.11</version>
+      <scope>provided</scope>
+    </dependency>
+
   </dependencies>
 
   <build>
+    <finalName>mybatis-3.4.4-oracle</finalName>
+    <sourceDirectory>src/main/java</sourceDirectory>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -261,6 +277,10 @@
         <configuration>
           <testCompilerArgument>${maven.compiler.testCompilerArgument}</testCompilerArgument>
         </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -406,6 +426,8 @@
               <groupId>org.apache.maven.plugins</groupId>
               <artifactId>maven-compiler-plugin</artifactId>
               <configuration>
+                <source>1.7</source>
+                <target>1.7</target>
                 <testExcludes>
                   <testExclude>**/usesjava8/**/*.java</testExclude>
                 </testExcludes>
@@ -415,5 +437,31 @@
         </pluginManagement>
       </build>
     </profile>
+    <profile>
+      <id>java18</id>
+      <activation>
+        <jdk>1.8</jdk>
+      </activation>
+      <properties>
+        <maven.compiler.testTarget>1.8</maven.compiler.testTarget>
+        <maven.compiler.testSource>1.8</maven.compiler.testSource>
+        <maven.compiler.testCompilerArgument />
+      </properties>
+      <build>
+        <pluginManagement>
+          <plugins>
+            <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-compiler-plugin</artifactId>
+              <configuration>
+                <source>1.8</source>
+                <target>1.8</target>
+              </configuration>
+            </plugin>
+          </plugins>
+        </pluginManagement>
+      </build>
+    </profile>
+
   </profiles>
 </project>

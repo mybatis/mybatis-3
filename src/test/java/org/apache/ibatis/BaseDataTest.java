@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,6 +15,8 @@
  */
 package org.apache.ibatis;
 
+import com.alibaba.druid.pool.DruidDataSource;
+import oracle.jdbc.driver.OracleDriver;
 import org.apache.ibatis.datasource.pooled.PooledDataSource;
 import org.apache.ibatis.datasource.unpooled.UnpooledDataSource;
 import org.apache.ibatis.io.Resources;
@@ -24,6 +26,7 @@ import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.Reader;
 import java.sql.Connection;
+import java.sql.Driver;
 import java.sql.SQLException;
 import java.util.Properties;
 
@@ -33,9 +36,20 @@ public abstract class BaseDataTest {
   public static final String BLOG_DDL = "org/apache/ibatis/databases/blog/blog-derby-schema.sql";
   public static final String BLOG_DATA = "org/apache/ibatis/databases/blog/blog-derby-dataload.sql";
 
+  public static final String TEST_ORACLE_PROPERTIES = "org/apache/ibatis/databases/oracle/oracle-db.properties";
   public static final String JPETSTORE_PROPERTIES = "org/apache/ibatis/databases/jpetstore/jpetstore-hsqldb.properties";
   public static final String JPETSTORE_DDL = "org/apache/ibatis/databases/jpetstore/jpetstore-hsqldb-schema.sql";
   public static final String JPETSTORE_DATA = "org/apache/ibatis/databases/jpetstore/jpetstore-hsqldb-dataload.sql";
+
+  public static DruidDataSource createDruidDataSource(String resource) throws IOException {
+    Properties props = Resources.getResourceAsProperties(resource);
+    DruidDataSource ds = new DruidDataSource();
+    //ds.setDriver(props.getProperty("driver"));
+    ds.setUrl(props.getProperty("url"));
+    ds.setUsername(props.getProperty("username"));
+    ds.setPassword(props.getProperty("password"));
+    return ds;
+  }
 
   public static UnpooledDataSource createUnpooledDataSource(String resource) throws IOException {
     Properties props = Resources.getResourceAsProperties(resource);

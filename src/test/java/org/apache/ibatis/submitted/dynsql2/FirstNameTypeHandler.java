@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package org.apache.ibatis.submitted.dynsql2;
 
+import oracle.jdbc.OraclePreparedStatement;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
 
@@ -38,6 +39,16 @@ public class FirstNameTypeHandler implements TypeHandler {
   public Object getResult(ResultSet rs, int columnIndex)
       throws SQLException {
     return rs.getString(columnIndex);
+  }
+
+  @Override
+  public void setParameter(OraclePreparedStatement ps, int i, Object parameter, JdbcType jdbcType) throws SQLException {
+    if (parameter == null) {
+      ps.setNull(i, Types.VARCHAR);
+    } else {
+      Name name = (Name) parameter;
+      ps.setString(i, name.getFirstName());
+    }
   }
 
   @Override
