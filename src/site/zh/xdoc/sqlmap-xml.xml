@@ -1071,7 +1071,7 @@ jdbcType
             <tr>
               <td><code>name</code></td>
               <td>
-                The name of the constructor parameter. Specifying name allows you to write arg elements in any order. See the above explanation. Since 3.4.3.
+                构造方法形参的名字。指定具体的name允许你以任意顺序写入arg元素。具体参看上面的解释。从3.4.3版本起。
               </td>
             </tr>
           </tbody>
@@ -1898,9 +1898,7 @@ org.mybatis.cache.Cache 接口。这个接口是 MyBatis 框架中很多复杂�
         </p>
 
         <p>
-          Since 3.4.2, the MyBatis has been supported to call an initialization method after it's set all properties.
-          If you want to use this feature, please implements the <code>org.apache.ibatis.builder.InitializingObject</code>
-          interface on your custom cache class.
+          从3.4.2版本开始，MyBatis已经支持在所有属性设置完毕之后可以调用一个初始化方法。如果你想要使用这个特性，请在你的自定义缓存类中实现 <code>org.apache.ibatis.builder.InitializingObject</code> 接口。
         </p>
 
         <source><![CDATA[public interface InitializingObject {
