@@ -982,8 +982,8 @@ jdbcType
 }]]></source>
 
         <p>
-          In order to inject the results into the constructor, MyBatis needs to identify the constructor for somehow.
-          In the following example, MyBatis searches a constructor declared with three parameters: <code>java.lang.Integer</code>, <code>java.lang.String</code> and <code>int</code> in this order.
+为了将结果注入构造方法，MyBatis需要通过某种方式定位相应的构造方法。
+在下面的例子中，MyBatis搜索一个声明了三个形参的的构造方法，以 <code>java.lang.Integer</code>, <code>java.lang.String</code> and <code>int</code> 的顺序排列。
         </p>
 
         <source><![CDATA[<constructor>
