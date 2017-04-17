@@ -982,8 +982,8 @@ jdbcType
 }]]></source>
 
         <p>
-为了将得到的结果注入构造器，MyBatis需要通过某种方式定位相应的构造器。
-在下面的例子中，MyBatis搜索了一个声明有三个参数的构造器，按以下顺序排列：<code>java.lang.Integer</code>, <code>java.lang.String</code> and <code>int</code>
+为了将得到的结果注入构造方法，MyBatis需要通过某种方式定位相应的构造方法。
+在下面的例子中，MyBatis搜索一个声明有三个参数的构造发个方法，按以下顺序排列：<code>java.lang.Integer</code>, <code>java.lang.String</code> and <code>int</code>
         </p>
 
         <source><![CDATA[<constructor>
@@ -993,9 +993,9 @@ jdbcType
 </constructor>]]></source>
 
         <p>
-          When you are dealing with a constructor with many parameters, maintaining the order of arg elements is error-prone.<br />
-          Since 3.4.3, by specifying the name of each parameter, you can write arg elements in any order. To reference constructor parameters by their names, you can either add <code>@Param</code> annotation to them or compile the project with '-parameters' compiler option and enable <code>useActualParamName</code> (this option is enabled by default).
-          The following example is valid for the same constructor even though the order of the second and the third parameters does not match with the declared order.
+当你处理一个具有多个形参的构造方法时，在维护arg元素的顺序问题上是很容易出错的。
+从3.4.3版本开始，通过指定每个形参的name行书，你可以以任意顺序写入arg元素。为了利用构造方法形参名来对构造方法形参进行引用，你可以通过对构造方法参数添加 <code>@Param</code> 注解或者在编译工程时使用 '-parameters' 选项并且启用 <code>useActualParamName</code> （此选项默认开启）。
+下面的例子对同一个构造方法依然有效，尽管第二和第三个形参的顺序与构造方法中声明的顺序不匹配。
         </p>
 
         <source><![CDATA[<constructor>
@@ -1005,7 +1005,7 @@ jdbcType
 </constructor>]]></source>
 
         <p>
-          <code>javaType</code> can be omitted if there is a property with the same name and type.
+如果存在具有同名和相同类型的属性，则这个属性的 <code>javaType</code> 可以省略。
         </p>
 
         <p>
