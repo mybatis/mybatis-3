@@ -1005,7 +1005,7 @@ jdbcType
 </constructor>]]></source>
 
         <p>
-          <code>javaType</code> can be omitted if there is a property with the same name and type.
+如果存在具有同名和相同类型的属性，那么它的 <code>javaType</code> 可以省略。
         </p>
 
         <p>
