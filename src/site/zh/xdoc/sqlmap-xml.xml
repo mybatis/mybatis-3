@@ -1070,7 +1070,7 @@ jdbcType
             <tr>
               <td><code>name</code></td>
               <td>
-                The name of the constructor parameter. Specifying name allows you to write arg elements in any order. See the above explanation. Since 3.4.3.
+                构造方法形参的名字。通过指定具体的名字你可以以任意顺序写入arg元素。参看上面的解释。从3.4.3版本起。
               </td>
             </tr>
           </tbody>
