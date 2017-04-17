@@ -33,9 +33,7 @@ import javax.sql.DataSource;
 import java.io.*;
 import java.sql.Blob;
 
-import static org.hamcrest.core.Is.is;
-import static org.hamcrest.core.IsNull.nullValue;
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -80,7 +78,7 @@ public class BlobInputStreamTypeHandlerTest extends BaseTypeHandlerTest {
     when(rs.getBlob("column")).thenReturn(blob);
     when(rs.wasNull()).thenReturn(false);
     when(blob.getBinaryStream()).thenReturn(in);
-    assertThat(TYPE_HANDLER.getResult(rs, "column"), is(in));
+    assertThat(TYPE_HANDLER.getResult(rs, "column")).isEqualTo(in);
 
   }
 
@@ -89,7 +87,7 @@ public class BlobInputStreamTypeHandlerTest extends BaseTypeHandlerTest {
   public void shouldGetResultNullFromResultSetByName() throws Exception {
     when(rs.getBlob("column")).thenReturn(null);
     when(rs.wasNull()).thenReturn(true);
-    assertThat(TYPE_HANDLER.getResult(rs, "column"), nullValue());
+    assertThat(TYPE_HANDLER.getResult(rs, "column")).isNull();
   }
 
   @Override
@@ -99,7 +97,7 @@ public class BlobInputStreamTypeHandlerTest extends BaseTypeHandlerTest {
     when(rs.getBlob(1)).thenReturn(blob);
     when(rs.wasNull()).thenReturn(false);
     when(blob.getBinaryStream()).thenReturn(in);
-    assertThat(TYPE_HANDLER.getResult(rs, 1), is(in));
+    assertThat(TYPE_HANDLER.getResult(rs, 1)).isEqualTo(in);
   }
 
   @Override
@@ -107,7 +105,7 @@ public class BlobInputStreamTypeHandlerTest extends BaseTypeHandlerTest {
   public void shouldGetResultNullFromResultSetByPosition() throws Exception {
     when(rs.getBlob(1)).thenReturn(null);
     when(rs.wasNull()).thenReturn(true);
-    assertThat(TYPE_HANDLER.getResult(rs, 1), nullValue());
+    assertThat(TYPE_HANDLER.getResult(rs, 1)).isNull();
   }
 
   @Override
@@ -117,7 +115,7 @@ public class BlobInputStreamTypeHandlerTest extends BaseTypeHandlerTest {
     when(cs.getBlob(1)).thenReturn(blob);
     when(cs.wasNull()).thenReturn(false);
     when(blob.getBinaryStream()).thenReturn(in);
-    assertThat(TYPE_HANDLER.getResult(cs, 1), is(in));
+    assertThat(TYPE_HANDLER.getResult(cs, 1)).isEqualTo(in);
   }
 
   @Override
@@ -125,7 +123,7 @@ public class BlobInputStreamTypeHandlerTest extends BaseTypeHandlerTest {
   public void shouldGetResultNullFromCallableStatement() throws Exception {
     when(cs.getBlob(1)).thenReturn(null);
     when(cs.wasNull()).thenReturn(true);
-    assertThat(TYPE_HANDLER.getResult(cs, 1), nullValue());
+    assertThat(TYPE_HANDLER.getResult(cs, 1)).isNull();
   }
 
   @Test
@@ -145,7 +143,7 @@ public class BlobInputStreamTypeHandlerTest extends BaseTypeHandlerTest {
       // select (Blob -> InputStream)
       {
         BlobContent blobContent = mapper.findOne(1);
-        assertThat(new BufferedReader(new InputStreamReader(blobContent.getContent())).readLine(), is("Hello"));
+        assertThat(new BufferedReader(new InputStreamReader(blobContent.getContent())).readLine()).isEqualTo("Hello");
       }
     } finally {
       session.close();

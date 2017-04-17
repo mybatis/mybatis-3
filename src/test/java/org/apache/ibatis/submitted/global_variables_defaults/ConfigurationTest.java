@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -22,9 +22,7 @@ import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.apache.ibatis.type.JdbcType;
-import org.hamcrest.core.Is;
-import org.hamcrest.core.IsNull;
-import org.junit.Assert;
+import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -43,12 +41,12 @@ public class ConfigurationTest {
     SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, props);
     Configuration configuration = factory.getConfiguration();
 
-    Assert.assertThat(configuration.getJdbcTypeForNull(), Is.is(JdbcType.NULL));
-    Assert.assertThat(((UnpooledDataSource) configuration.getEnvironment().getDataSource()).getUrl(),
-        Is.is("jdbc:hsqldb:mem:global_variables_defaults"));
-    Assert.assertThat(configuration.getDatabaseId(), Is.is("hsql"));
-    Assert.assertThat(((SupportClasses.CustomObjectFactory) configuration.getObjectFactory()).getProperties().getProperty("name"),
-        Is.is("default"));
+    Assertions.assertThat(configuration.getJdbcTypeForNull()).isEqualTo(JdbcType.NULL);
+    Assertions.assertThat(((UnpooledDataSource) configuration.getEnvironment().getDataSource()).getUrl())
+            .isEqualTo("jdbc:hsqldb:mem:global_variables_defaults");
+    Assertions.assertThat(configuration.getDatabaseId()).isEqualTo("hsql");
+    Assertions.assertThat(((SupportClasses.CustomObjectFactory) configuration.getObjectFactory()).getProperties().getProperty("name"))
+            .isEqualTo("default");
 
   }
 
@@ -66,12 +64,12 @@ public class ConfigurationTest {
     SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, props);
     Configuration configuration = factory.getConfiguration();
 
-    Assert.assertThat(configuration.getJdbcTypeForNull(), Is.is(JdbcType.CHAR));
-    Assert.assertThat(((UnpooledDataSource) configuration.getEnvironment().getDataSource()).getUrl(),
-        Is.is("jdbc:hsqldb:mem:global_variables_defaults_custom"));
-    Assert.assertThat(configuration.getDatabaseId(), IsNull.nullValue());
-    Assert.assertThat(((SupportClasses.CustomObjectFactory) configuration.getObjectFactory()).getProperties().getProperty("name"),
-        Is.is("custom"));
+    Assertions.assertThat(configuration.getJdbcTypeForNull()).isEqualTo(JdbcType.CHAR);
+    Assertions.assertThat(((UnpooledDataSource) configuration.getEnvironment().getDataSource()).getUrl())
+            .isEqualTo("jdbc:hsqldb:mem:global_variables_defaults_custom");
+    Assertions.assertThat(configuration.getDatabaseId()).isNull();
+    Assertions.assertThat(((SupportClasses.CustomObjectFactory) configuration.getObjectFactory()).getProperties().getProperty("name"))
+            .isEqualTo("custom");
 
   }
 

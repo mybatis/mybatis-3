@@ -15,8 +15,6 @@
  */
 package org.apache.ibatis.submitted.named_constructor_args;
 
-import static org.hamcrest.CoreMatchers.*;
-
 import java.io.Reader;
 import java.sql.Connection;
 
@@ -31,13 +29,12 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.BeforeClass;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
+
+import static com.googlecode.catchexception.apis.BDDCatchException.*;
+import static org.assertj.core.api.BDDAssertions.then;
 
 public class InvalidNamedConstructorArgsTest {
-  @Rule
-  public ExpectedException ex = ExpectedException.none();
 
   private static SqlSessionFactory sqlSessionFactory;
 
@@ -71,15 +68,14 @@ public class InvalidNamedConstructorArgsTest {
 
   @Test
   public void noMatchingConstructorArgName() {
-    ex.expect(BuilderException.class);
-    ex.expectMessage(allOf(
-        containsString(
-            "'org.apache.ibatis.submitted.named_constructor_args.InvalidNamedConstructorArgsTest$NoMatchingConstructorMapper.select-void'"),
-        containsString("'org.apache.ibatis.submitted.named_constructor_args.User'"),
-        containsString("[noSuchConstructorArg]")));
-
     Configuration configuration = sqlSessionFactory.getConfiguration();
-    configuration.addMapper(NoMatchingConstructorMapper.class);
+    when(configuration).addMapper(NoMatchingConstructorMapper.class);
+
+    then(caughtException()).isInstanceOf(BuilderException.class)
+      .hasMessageContaining(
+          "'org.apache.ibatis.submitted.named_constructor_args.InvalidNamedConstructorArgsTest$NoMatchingConstructorMapper.select-void'")
+      .hasMessageContaining("'org.apache.ibatis.submitted.named_constructor_args.User'")
+      .hasMessageContaining("[noSuchConstructorArg]");
   }
 
   interface ConstructorWithWrongJavaType {
@@ -94,14 +90,13 @@ public class InvalidNamedConstructorArgsTest {
 
   @Test
   public void wrongJavaType() {
-    ex.expect(BuilderException.class);
-    ex.expectMessage(allOf(
-        containsString(
-            "'org.apache.ibatis.submitted.named_constructor_args.InvalidNamedConstructorArgsTest$ConstructorWithWrongJavaType.select-void'"),
-        containsString("'org.apache.ibatis.submitted.named_constructor_args.User'"),
-        containsString("[id]")));
     Configuration configuration = sqlSessionFactory.getConfiguration();
-    configuration.addMapper(ConstructorWithWrongJavaType.class);
+    when(configuration).addMapper(ConstructorWithWrongJavaType.class);
+    then(caughtException()).isInstanceOf(BuilderException.class)
+      .hasMessageContaining(
+          "'org.apache.ibatis.submitted.named_constructor_args.InvalidNamedConstructorArgsTest$ConstructorWithWrongJavaType.select-void'")
+      .hasMessageContaining("'org.apache.ibatis.submitted.named_constructor_args.User'")
+      .hasMessageContaining("[id]");
   }
 
   interface ConstructorMissingRequiresJavaType {
@@ -118,14 +113,12 @@ public class InvalidNamedConstructorArgsTest {
 
   @Test
   public void missingRequiredJavaType() {
-    ex.expect(BuilderException.class);
-    ex.expectMessage(allOf(
-        containsString(
-            "'org.apache.ibatis.submitted.named_constructor_args.InvalidNamedConstructorArgsTest$ConstructorMissingRequiresJavaType.select-void'"),
-        containsString("'org.apache.ibatis.submitted.named_constructor_args.User'"),
-        containsString("[id]")));
-
     Configuration configuration = sqlSessionFactory.getConfiguration();
-    configuration.addMapper(ConstructorMissingRequiresJavaType.class);
+    when(configuration).addMapper(ConstructorMissingRequiresJavaType.class);
+    then(caughtException()).isInstanceOf(BuilderException.class)
+      .hasMessageContaining(
+            "'org.apache.ibatis.submitted.named_constructor_args.InvalidNamedConstructorArgsTest$ConstructorMissingRequiresJavaType.select-void'")
+      .hasMessageContaining("'org.apache.ibatis.submitted.named_constructor_args.User'")
+      .hasMessageContaining("[id]");
   }
 }

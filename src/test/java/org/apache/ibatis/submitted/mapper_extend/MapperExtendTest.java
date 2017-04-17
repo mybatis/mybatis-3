@@ -15,8 +15,6 @@
  */
 package org.apache.ibatis.submitted.mapper_extend;
 
-import static org.hamcrest.CoreMatchers.*;
-
 import java.io.Reader;
 import java.sql.Connection;
 
@@ -28,14 +26,12 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.Assert;
 import org.junit.BeforeClass;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
+
+import static com.googlecode.catchexception.apis.BDDCatchException.*;
+import static org.assertj.core.api.BDDAssertions.then;
 
 public class MapperExtendTest {
-
-  @Rule
-  public ExpectedException expectedException = ExpectedException.none();
 
   private static SqlSessionFactory sqlSessionFactory;
 
@@ -120,15 +116,13 @@ public class MapperExtendTest {
 
   @Test
   public void shouldThrowExceptionIfNoMatchingStatementFound() {
-    expectedException.expect(BindingException.class);
-    expectedException.expectMessage(is("Invalid bound statement (not found): "
-        + Mapper.class.getName() + ".noMappedStatement"));
-
     SqlSession sqlSession = sqlSessionFactory.openSession();
     try {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
-      User user = mapper.noMappedStatement();
-      Assert.assertNotNull(user);
+      when(mapper).noMappedStatement();
+      then(caughtException()).isInstanceOf(BindingException.class)
+        .hasMessage("Invalid bound statement (not found): "
+          + Mapper.class.getName() + ".noMappedStatement");
     } finally {
       sqlSession.close();
     }

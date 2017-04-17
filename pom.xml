@@ -251,6 +251,18 @@
       <version>9.1-901-1.jdbc4</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>org.assertj</groupId>
+      <artifactId>assertj-core</artifactId>
+      <version>1.7.1</version> <!-- Stay on 1.7.1 to support Java 6 -->
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>eu.codearte.catch-exception</groupId>
+      <artifactId>catch-exception</artifactId>
+      <version>1.4.4</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>
