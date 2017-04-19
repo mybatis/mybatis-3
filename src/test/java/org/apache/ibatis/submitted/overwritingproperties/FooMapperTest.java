@@ -43,7 +43,7 @@ public class FooMapperTest {
       Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/overwritingproperties/create-schema-mysql.sql");
       runner.runScript(reader);
     } catch (Exception ex) {
-      ex.printStackTrace();
+      Assert.fail(ex.getMessage());
     }
   }
 
