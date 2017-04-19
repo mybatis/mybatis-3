@@ -33,6 +33,7 @@ import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -110,8 +111,9 @@ public final class LazyDeserializeTest {
       final LazyObjectFoo deserializedFoo = this.deserializeFoo(serializedFoo);
       try {
         deserializedFoo.getLazyObjectBar();
+        fail();
       } catch (ExecutorException e) {
-        e.getMessage().contains("Cannot get Configuration as configuration factory was not set.");
+        assertTrue(e.getMessage().contains("Cannot get Configuration as configuration factory was not set."));
       }
     } finally {
       session.close();

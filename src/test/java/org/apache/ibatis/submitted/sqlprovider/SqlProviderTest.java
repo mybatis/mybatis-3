@@ -18,6 +18,8 @@ package org.apache.ibatis.submitted.sqlprovider;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.Reader;
 import java.sql.Connection;
@@ -273,8 +275,9 @@ public class SqlProviderTest {
     try {
       new ProviderSqlSource(new Configuration(),
             ErrorMapper.class.getMethod("methodNotFound").getAnnotation(SelectProvider.class));
+      fail();
     } catch (BuilderException e) {
-      e.getMessage().contains("Error creating SqlSource for SqlProvider. Method 'methodNotFound' not found in SqlProvider 'org.apache.ibatis.submitted.sqlprovider.SqlProviderTest$ErrorSqlBuilder'.");
+      assertTrue(e.getMessage().contains("Error creating SqlSource for SqlProvider. Method 'methodNotFound' not found in SqlProvider 'org.apache.ibatis.submitted.sqlprovider.SqlProviderTest$ErrorSqlBuilder'."));
     }
   }
 
@@ -283,8 +286,9 @@ public class SqlProviderTest {
     try {
       new ProviderSqlSource(new Configuration(),
               ErrorMapper.class.getMethod("methodOverload", String.class).getAnnotation(SelectProvider.class));
+      fail();
     } catch (BuilderException e) {
-      e.getMessage().contains("Error creating SqlSource for SqlProvider. Method 'overload' is found multiple in SqlProvider 'org.apache.ibatis.submitted.sqlprovider.SqlProviderTest$ErrorSqlBuilder'. Sql provider method can not overload.");
+      assertTrue(e.getMessage().contains("Error creating SqlSource for SqlProvider. Method 'overload' is found multiple in SqlProvider 'org.apache.ibatis.submitted.sqlprovider.SqlProviderTest$ErrorSqlBuilder'. Sql provider method can not overload."));
     }
   }
 
@@ -292,8 +296,9 @@ public class SqlProviderTest {
   public void notSqlProvider() throws NoSuchMethodException {
     try {
       new ProviderSqlSource(new Configuration(), new Object());
+      fail();
     } catch (BuilderException e) {
-      e.getMessage().contains("Error creating SqlSource for SqlProvider.  Cause: java.lang.NoSuchMethodException: java.lang.Object.type()");
+      assertTrue(e.getMessage().contains("Error creating SqlSource for SqlProvider.  Cause: java.lang.NoSuchMethodException: java.lang.Object.type()"));
     }
   }
 
@@ -303,8 +308,9 @@ public class SqlProviderTest {
       new ProviderSqlSource(new Configuration(),
             Mapper.class.getMethod("getUsersByName", String.class, String.class).getAnnotation(SelectProvider.class))
               .getBoundSql(new Object());
+      fail();
     } catch (BuilderException e) {
-      e.getMessage().contains("Error invoking SqlProvider method (org.apache.ibatis.submitted.sqlprovider.OurSqlBuilder.buildGetUsersByNameQuery). Cannot invoke a method that holds multiple arguments using a specifying parameterObject. In this case, please specify a 'java.util.Map' object.");
+      assertTrue(e.getMessage().contains("Error invoking SqlProvider method (org.apache.ibatis.submitted.sqlprovider.OurSqlBuilder.buildGetUsersByNameQuery). Cannot invoke a method that holds multiple arguments using a specifying parameterObject. In this case, please specify a 'java.util.Map' object."));
     }
   }
 
@@ -314,8 +320,9 @@ public class SqlProviderTest {
       new ProviderSqlSource(new Configuration(),
             Mapper.class.getMethod("getUsersByNameWithParamName", String.class).getAnnotation(SelectProvider.class))
               .getBoundSql(new Object());
+      fail();
     } catch (BuilderException e) {
-      e.getMessage().contains("Error invoking SqlProvider method (org.apache.ibatis.submitted.sqlprovider.OurSqlBuilder.buildGetUsersByNameWithParamNameQuery). Cannot invoke a method that holds named argument(@Param) using a specifying parameterObject. In this case, please specify a 'java.util.Map' object.");
+      assertTrue(e.getMessage().contains("Error invoking SqlProvider method (org.apache.ibatis.submitted.sqlprovider.OurSqlBuilder.buildGetUsersByNameWithParamNameQuery). Cannot invoke a method that holds named argument(@Param) using a specifying parameterObject. In this case, please specify a 'java.util.Map' object."));
     }
   }
 
@@ -325,8 +332,9 @@ public class SqlProviderTest {
       new ProviderSqlSource(new Configuration(),
             ErrorMapper.class.getMethod("invokeError").getAnnotation(SelectProvider.class))
               .getBoundSql(new Object());
+      fail();
     } catch (BuilderException e) {
-      e.getMessage().contains("Error invoking SqlProvider method (org.apache.ibatis.submitted.sqlprovider.SqlProviderTest$ErrorSqlBuilder.invokeError).  Cause: java.lang.reflect.InvocationTargetException");
+      assertTrue(e.getMessage().contains("Error invoking SqlProvider method (org.apache.ibatis.submitted.sqlprovider.SqlProviderTest$ErrorSqlBuilder.invokeError).  Cause: java.lang.reflect.InvocationTargetException"));
     }
   }
 
