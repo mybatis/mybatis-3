@@ -128,8 +128,9 @@ public class ParameterExpressionTest {
   public void invalidOldJdbcTypeFormat() {
     try {
       new ParameterExpression("id:");
+      Assert.fail();
     } catch (BuilderException e) {
-      e.getMessage().contains("Parsing error in {id:} in position 3");
+      Assert.assertTrue(e.getMessage().contains("Parsing error in {id:} in position 3"));
     }
   }
 
@@ -137,8 +138,9 @@ public class ParameterExpressionTest {
   public void invalidJdbcTypeOptUsingExpression() {
     try {
       new ParameterExpression("(expression)+");
+      Assert.fail();
     } catch (BuilderException e) {
-      e.getMessage().contains("Parsing error in {(expression)+} in position 12");
+      Assert.assertTrue(e.getMessage().contains("Parsing error in {(expression)+} in position 12"));
     }
   }
 
