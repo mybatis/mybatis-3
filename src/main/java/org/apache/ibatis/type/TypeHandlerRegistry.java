@@ -382,6 +382,8 @@ public final class TypeHandlerRegistry {
 
   // java type + jdbc type + handler
 
+  // Cast is required here
+  @SuppressWarnings("cast")
   public <T> void register(Class<T> type, JdbcType jdbcType, TypeHandler<? extends T> handler) {
     register((Type) type, jdbcType, handler);
   }
