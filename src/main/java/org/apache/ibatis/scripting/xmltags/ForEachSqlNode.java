@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package org.apache.ibatis.scripting.xmltags;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.ibatis.parsing.GenericTokenParser;
@@ -122,6 +123,7 @@ public class ForEachSqlNode implements SqlNode {
 
   private static class FilteredDynamicContext extends DynamicContext {
     private DynamicContext delegate;
+    private HierarchyContextMap hierarchyContextMap;
     private int index;
     private String itemIndex;
     private String item;
@@ -129,6 +131,7 @@ public class ForEachSqlNode implements SqlNode {
     public FilteredDynamicContext(Configuration configuration,DynamicContext delegate, String itemIndex, String item, int i) {
       super(configuration, null);
       this.delegate = delegate;
+      this.hierarchyContextMap = new HierarchyContextMap(delegate);
       this.index = i;
       this.itemIndex = itemIndex;
       this.item = item;
@@ -136,12 +139,16 @@ public class ForEachSqlNode implements SqlNode {
 
     @Override
     public Map<String, Object> getBindings() {
-      return delegate.getBindings();
+      return hierarchyContextMap;
     }
 
     @Override
     public void bind(String name, Object value) {
-      delegate.bind(name, value);
+      if (name.startsWith(ITEM_PREFIX)) {
+        hierarchyContextMap.putGlobal(name, value);
+      } else {
+        hierarchyContextMap.putLocal(name, value);
+      }
     }
 
     @Override
@@ -175,12 +182,14 @@ public class ForEachSqlNode implements SqlNode {
 
   private class PrefixedContext extends DynamicContext {
     private DynamicContext delegate;
+    private HierarchyContextMap hierarchyContextMap;
     private String prefix;
     private boolean prefixApplied;
 
     public PrefixedContext(DynamicContext delegate, String prefix) {
       super(configuration, null);
       this.delegate = delegate;
+      this.hierarchyContextMap = new HierarchyContextMap(delegate);
       this.prefix = prefix;
       this.prefixApplied = false;
     }
@@ -191,12 +200,16 @@ public class ForEachSqlNode implements SqlNode {
 
     @Override
     public Map<String, Object> getBindings() {
-      return delegate.getBindings();
+      return hierarchyContextMap;
     }
 
     @Override
     public void bind(String name, Object value) {
-      delegate.bind(name, value);
+      if (name.startsWith(ITEM_PREFIX)) {
+        hierarchyContextMap.putGlobal(name, value);
+      } else {
+        hierarchyContextMap.putLocal(name, value);
+      }
     }
 
     @Override
@@ -218,5 +231,32 @@ public class ForEachSqlNode implements SqlNode {
       return delegate.getUniqueNumber();
     }
   }
+  
+  private static class HierarchyContextMap extends HashMap<String, Object> {
 
+    private static final long serialVersionUID = -787211846381882154L;
+    private Map<String, Object> localContextMap = new HashMap<String, Object>();
+    private DynamicContext delegate;
+
+    public HierarchyContextMap(DynamicContext delegate) {
+      this.delegate = delegate;
+    }
+    
+    public void putLocal(String name, Object value) {
+      localContextMap.put(name, value);
+    }
+    
+    public void putGlobal(String name, Object value) {
+      delegate.bind(name, value);
+    }
+    
+    @Override
+    public Object get(Object key) {
+      if (localContextMap.containsKey(key)) {
+    	  return localContextMap.get(key);
+      }
+      
+      return delegate.getBindings().get(key);
+    }
+  }
 }
