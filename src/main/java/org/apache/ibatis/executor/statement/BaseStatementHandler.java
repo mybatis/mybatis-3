@@ -90,11 +90,11 @@ public abstract class BaseStatementHandler implements StatementHandler {
       setFetchSize(statement);
       return statement;
     } catch (SQLException e) {
-      closeStatement(statement);
       throw e;
     } catch (Exception e) {
-      closeStatement(statement);
       throw new ExecutorException("Error preparing statement.  Cause: " + e, e);
+    }finally{
+       closeStatement(statement);
     }
   }
 
