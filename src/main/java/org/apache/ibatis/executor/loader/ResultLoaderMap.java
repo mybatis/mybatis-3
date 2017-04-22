@@ -84,6 +84,10 @@ public class ResultLoaderMap {
     return false;
   }
 
+  public void remove(String property) {
+    loaderMap.remove(property.toUpperCase(Locale.ENGLISH));
+  }
+
   public void loadAll() throws SQLException {
     final Set<String> methodNameSet = loaderMap.keySet();
     String[] methodNames = methodNameSet.toArray(new String[methodNameSet.size()]);
