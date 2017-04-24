@@ -37,7 +37,7 @@ public class CacheKey implements Cloneable, Serializable {
   private int hashcode;
   private long checksum;
   private int count;
-  private List<Object> updateList;
+  private transient List<Object> updateList;
 
   public CacheKey() {
     this.hashcode = DEFAULT_HASHCODE;
