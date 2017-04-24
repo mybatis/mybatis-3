@@ -507,7 +507,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
   private boolean applyAutomaticMappings(ResultSetWrapper rsw, ResultMap resultMap, MetaObject metaObject, String columnPrefix) throws SQLException {
     List<UnMappedColumnAutoMapping> autoMapping = createAutomaticMappings(rsw, resultMap, metaObject, columnPrefix);
     boolean foundValues = false;
-    if (autoMapping.size() > 0) {
+    if (!autoMapping.isEmpty()) {
       for (UnMappedColumnAutoMapping mapping : autoMapping) {
         final Object value = mapping.typeHandler.getResult(rsw.getResultSet(), mapping.column);
         if (value != null) {
@@ -1012,7 +1012,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     final CacheKey cacheKey = new CacheKey();
     cacheKey.update(resultMap.getId());
     List<ResultMapping> resultMappings = getResultMappingsForRowKey(resultMap);
-    if (resultMappings.size() == 0) {
+    if (resultMappings.isEmpty()) {
       if (Map.class.isAssignableFrom(resultMap.getType())) {
         createRowKeyForMap(rsw, cacheKey);
       } else {
@@ -1043,7 +1043,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
 
   private List<ResultMapping> getResultMappingsForRowKey(ResultMap resultMap) {
     List<ResultMapping> resultMappings = resultMap.getIdResultMappings();
-    if (resultMappings.size() == 0) {
+    if (resultMappings.isEmpty()) {
       resultMappings = resultMap.getPropertyResultMappings();
     }
     return resultMappings;
