@@ -26,8 +26,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import org.apache.commons.lang.StringUtils;
-
 import org.apache.ibatis.builder.BaseBuilder;
 import org.apache.ibatis.builder.BuilderException;
 import org.apache.ibatis.builder.CacheRefResolver;
@@ -275,7 +273,7 @@ public class XMLMapperBuilder extends BaseBuilder {
       if ("constructor".equals(resultChild.getName())) {
         processConstructorElement(resultChild, typeClass, resultMappings);
       } else if ("discriminator".equals(resultChild.getName())) {
-			if(StringUtils.isBlank(resultChild.getStringAttribute("resultType"))){
+			if(null == resultChild.getStringAttribute("resultType")){
 				typeClass = resolveClass(parentResultType);
 			}
         discriminator = processDiscriminatorElement(resultChild, typeClass, resultMappings);
