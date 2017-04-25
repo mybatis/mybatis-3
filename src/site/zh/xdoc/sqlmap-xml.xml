@@ -982,8 +982,8 @@ jdbcType
 }]]></source>
 
         <p>
-          In order to inject the results into the constructor, MyBatis needs to identify the constructor for somehow.
-          In the following example, MyBatis searches a constructor declared with three parameters: <code>java.lang.Integer</code>, <code>java.lang.String</code> and <code>int</code> in this order.
+为了将得到的结果注入构造方法，MyBatis需要通过某种方式定位相应的构造方法。
+在下面的例子中，MyBatis搜索一个声明有三个参数的构造发个方法，按以下顺序排列：<code>java.lang.Integer</code>, <code>java.lang.String</code> and <code>int</code>
         </p>
 
         <source><![CDATA[<constructor>
@@ -993,9 +993,9 @@ jdbcType
 </constructor>]]></source>
 
         <p>
-          When you are dealing with a constructor with many parameters, maintaining the order of arg elements is error-prone.<br />
-          Since 3.4.3, by specifying the name of each parameter, you can write arg elements in any order. To reference constructor parameters by their names, you can either add <code>@Param</code> annotation to them or compile the project with '-parameters' compiler option and enable <code>useActualParamName</code> (this option is enabled by default).
-          The following example is valid for the same constructor even though the order of the second and the third parameters does not match with the declared order.
+当你处理一个具有多个形参的构造方法时，在维护arg元素的顺序问题上是很容易出错的。
+从3.4.3版本开始，通过指定每个形参的name行书，你可以以任意顺序写入arg元素。为了利用构造方法形参名来对构造方法形参进行引用，你可以通过对构造方法参数添加 <code>@Param</code> 注解或者在编译工程时使用 '-parameters' 选项并且启用 <code>useActualParamName</code> （此选项默认开启）。
+下面的例子对同一个构造方法依然有效，尽管第二和第三个形参的顺序与构造方法中声明的顺序不匹配。
         </p>
 
         <source><![CDATA[<constructor>
@@ -1005,7 +1005,7 @@ jdbcType
 </constructor>]]></source>
 
         <p>
-          <code>javaType</code> can be omitted if there is a property with the same name and type.
+如果存在具有同名和相同类型的属性，则这个属性的 <code>javaType</code> 可以省略。
         </p>
 
         <p>
@@ -1071,7 +1071,7 @@ jdbcType
             <tr>
               <td><code>name</code></td>
               <td>
-                The name of the constructor parameter. Specifying name allows you to write arg elements in any order. See the above explanation. Since 3.4.3.
+                构造方法形参的名字。指定具体的name允许你以任意顺序写入arg元素。具体参看上面的解释。从3.4.3版本起。
               </td>
             </tr>
           </tbody>
@@ -1898,9 +1898,7 @@ org.mybatis.cache.Cache 接口。这个接口是 MyBatis 框架中很多复杂�
         </p>
 
         <p>
-          Since 3.4.2, the MyBatis has been supported to call an initialization method after it's set all properties.
-          If you want to use this feature, please implements the <code>org.apache.ibatis.builder.InitializingObject</code>
-          interface on your custom cache class.
+          从3.4.2版本开始，MyBatis已经支持在所有属性设置完毕之后可以调用一个初始化方法。如果你想要使用这个特性，请在你的自定义缓存类中实现 <code>org.apache.ibatis.builder.InitializingObject</code> 接口。
         </p>
 
         <source><![CDATA[public interface InitializingObject {
