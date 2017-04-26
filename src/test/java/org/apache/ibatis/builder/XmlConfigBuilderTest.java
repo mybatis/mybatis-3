@@ -276,6 +276,27 @@ public class XmlConfigBuilderTest {
   }
 
   @Test
+  public void nestedTypeAliasing() {
+	  final String MAPPER_CONFIG = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n"
+			  + "<!DOCTYPE configuration PUBLIC \"-//mybatis.org//DTD Config 3.0//EN\" \"http://mybatis.org/dtd/mybatis-3-config.dtd\">\n"
+			  + "<configuration>\n"
+			  + "  <settings>\n"
+			  + "    <setting name=\"typeAliasesPackageScanResultFilter\" value=\"org.apache.ibatis.builder.CustomTypeAliasesPackageScanResultFilter\"/>\n"
+			  + "    <setting name=\"typeAliasGenerator\" value=\"org.apache.ibatis.builder.CustomTypeAliasGenerator\"/>\n"
+			  + "  </settings>\n"
+              + "  <typeAliases>\n"
+              + "    <package name=\"org.apache.ibatis.domain.dummy\"/>\n"
+              + "  </typeAliases>\n"
+			  + "</configuration>\n";
+	  
+	  XMLConfigBuilder builder = new XMLConfigBuilder(new StringReader(MAPPER_CONFIG));
+	  Configuration config = builder.parse();
+	  
+	  assertThat(config.getTypeAliasRegistry().resolveAlias("foo$type")).isNotNull().isEqualTo(Foo.Type.class);
+	  assertThat(config.getTypeAliasRegistry().resolveAlias("bar$type")).isNotNull().isEqualTo(Bar.Type.class);
+  }
+
+  @Test
   public void unknownJavaTypeOnTypeHandler() {
     final String MAPPER_CONFIG = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n"
             + "<!DOCTYPE configuration PUBLIC \"-//mybatis.org//DTD Config 3.0//EN\" \"http://mybatis.org/dtd/mybatis-3-config.dtd\">\n"

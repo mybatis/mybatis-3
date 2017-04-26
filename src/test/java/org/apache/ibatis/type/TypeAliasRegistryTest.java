@@ -21,7 +21,6 @@ import static org.assertj.core.api.BDDAssertions.then;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
-import java.lang.reflect.Modifier;
 import java.math.BigDecimal;
 
 import org.apache.ibatis.builder.CustomTypeAliasGenerator;
