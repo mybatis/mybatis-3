@@ -35,6 +35,8 @@ import org.apache.ibatis.domain.blog.Author;
 import org.apache.ibatis.domain.blog.Blog;
 import org.apache.ibatis.domain.blog.mappers.BlogMapper;
 import org.apache.ibatis.domain.blog.mappers.NestedBlogMapper;
+import org.apache.ibatis.domain.dummy.Bar;
+import org.apache.ibatis.domain.dummy.Foo;
 import org.apache.ibatis.domain.jpetstore.Cart;
 import org.apache.ibatis.executor.loader.cglib.CglibProxyFactory;
 import org.apache.ibatis.executor.loader.javassist.JavassistProxyFactory;
@@ -197,6 +199,8 @@ public class XmlConfigBuilderTest {
       assertTrue(config.getTypeAliasRegistry().getTypeAliases().get("blogauthor").equals(Author.class));
       assertTrue(config.getTypeAliasRegistry().getTypeAliases().get("blog").equals(Blog.class));
       assertTrue(config.getTypeAliasRegistry().getTypeAliases().get("cart").equals(Cart.class));
+      assertTrue(config.getTypeAliasRegistry().getTypeAliases().get("foo$type").equals(Foo.Type.class));
+      assertTrue(config.getTypeAliasRegistry().getTypeAliases().get("bar$type").equals(Bar.Type.class));
 
       assertThat(config.getTypeHandlerRegistry().getTypeHandler(Integer.class)).isInstanceOf(CustomIntegerTypeHandler.class);
       assertThat(config.getTypeHandlerRegistry().getTypeHandler(Long.class)).isInstanceOf(CustomLongTypeHandler.class);

@@ -53,12 +53,16 @@
     <setting name="vfsImpl" value="org.apache.ibatis.io.JBoss6VFS"/>
     <setting name="configurationFactory" value="java.lang.String"/>
     <setting name="defaultEnumTypeHandler" value="org.apache.ibatis.type.EnumOrdinalTypeHandler"/>
+    <setting name="typeAliasesPackageScanResultFilter" value="org.apache.ibatis.builder.CustomTypeAliasesPackageScanResultFilter"/>
+    <setting name="typeAliasGenerator" value="org.apache.ibatis.builder.CustomTypeAliasGenerator"/>
   </settings>
 
   <typeAliases>
     <typeAlias alias="BlogAuthor" type="org.apache.ibatis.domain.blog.Author"/>
     <typeAlias type="org.apache.ibatis.domain.blog.Blog"/>
     <typeAlias type="org.apache.ibatis.domain.blog.Post"/>
+    <typeAlias type="org.apache.ibatis.domain.dummy.Foo$Type"/>
+    <typeAlias type="org.apache.ibatis.domain.dummy.Bar$Type"/>
     <package name="org.apache.ibatis.domain.jpetstore"/>
   </typeAliases>
 
