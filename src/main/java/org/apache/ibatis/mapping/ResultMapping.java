@@ -1,15 +1,17 @@
 /**
- * Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2016 the original author or authors.
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
- * in compliance with the License. You may obtain a copy of the License at
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *       http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software distributed under the License
- * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
- * or implied. See the License for the specific language governing permissions and limitations under
- * the License.
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
  */
 package org.apache.ibatis.mapping;
 
@@ -129,7 +131,7 @@ public class ResultMapping {
       resultMapping.lazy = lazy;
       return this;
     }
-
+    
     public ResultMapping build() {
       // lock down collections
       resultMapping.flags = Collections.unmodifiableList(resultMapping.flags);
@@ -140,8 +142,7 @@ public class ResultMapping {
     }
 
     private void validate() {
-      // Issue #697: cannot define both nestedQueryId and
-      // nestedResultMapId
+      // Issue #697: cannot define both nestedQueryId and nestedResultMapId
       if (resultMapping.nestedQueryId != null && resultMapping.nestedResultMapId != null) {
         throw new IllegalStateException("Cannot define both nestedQueryId and nestedResultMapId in property " + resultMapping.property);
       }
@@ -149,27 +150,25 @@ public class ResultMapping {
       if (resultMapping.nestedQueryId == null && resultMapping.nestedResultMapId == null && resultMapping.typeHandler == null) {
         throw new IllegalStateException("No typehandler found for property " + resultMapping.property);
       }
-      // Issue #4 and GH #39: column is optional only in nested resultmaps
-      // but not in the rest
+      // Issue #4 and GH #39: column is optional only in nested resultmaps but not in the rest
       if (resultMapping.nestedResultMapId == null && resultMapping.column == null && resultMapping.composites.isEmpty()) {
         throw new IllegalStateException("Mapping is missing column attribute for property " + resultMapping.property);
       }
       if (resultMapping.getResultSet() != null) {
-        int numColums = 0;
+        int numColumns = 0;
         if (resultMapping.column != null) {
-          numColums = resultMapping.column.split(",").length;
+          numColumns = resultMapping.column.split(",").length;
         }
         int numForeignColumns = 0;
         if (resultMapping.foreignColumn != null) {
           numForeignColumns = resultMapping.foreignColumn.split(",").length;
         }
-        if (numColums != numForeignColumns) {
-          throw new IllegalStateException(
-              "There should be the same number of columns and foreignColumns in property " + resultMapping.property);
+        if (numColumns != numForeignColumns) {
+          throw new IllegalStateException("There should be the same number of columns and foreignColumns in property " + resultMapping.property);
         }
       }
     }
-
+    
     private void resolveTypeHandler() {
       if (resultMapping.typeHandler == null && resultMapping.javaType != null) {
         Configuration configuration = resultMapping.configuration;
@@ -251,7 +250,7 @@ public class ResultMapping {
   public void setLazy(boolean lazy) {
     this.lazy = lazy;
   }
-
+  
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -284,14 +283,12 @@ public class ResultMapping {
   @Override
   public String toString() {
     final StringBuilder sb = new StringBuilder("ResultMapping{");
-    // sb.append("configuration=").append(configuration); // configuration
-    // doesn't have a useful .toString()
+    //sb.append("configuration=").append(configuration); // configuration doesn't have a useful .toString()
     sb.append("property='").append(property).append('\'');
     sb.append(", column='").append(column).append('\'');
     sb.append(", javaType=").append(javaType);
     sb.append(", jdbcType=").append(jdbcType);
-    // sb.append(", typeHandler=").append(typeHandler); // typeHandler also
-    // doesn't have a useful .toString()
+    //sb.append(", typeHandler=").append(typeHandler); // typeHandler also doesn't have a useful .toString()
     sb.append(", nestedResultMapId='").append(nestedResultMapId).append('\'');
     sb.append(", nestedQueryId='").append(nestedQueryId).append('\'');
     sb.append(", notNullColumns=").append(notNullColumns);

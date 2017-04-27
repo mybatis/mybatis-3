@@ -1,22 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Copyright 2010-2012 the original author or authors.
 
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
+       Copyright 2009-2017 the original author or authors.
 
-  http://www.apache.org/licenses/LICENSE-2.0
+       Licensed under the Apache License, Version 2.0 (the "License");
+       you may not use this file except in compliance with the License.
+       You may obtain a copy of the License at
 
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
+          http://www.apache.org/licenses/LICENSE-2.0
+
+       Unless required by applicable law or agreed to in writing, software
+       distributed under the License is distributed on an "AS IS" BASIS,
+       WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+       See the License for the specific language governing permissions and
+       limitations under the License.
+
 -->
-
-<!-- version: $Id$ -->
-
 <document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
 
@@ -234,7 +233,7 @@ ps.setInt(1,id);]]></source>
   timeout="20">]]></source>
 
         <table>
-          <caption>Insert, Update 和 Delete 的属性</caption>
+          <caption>Insert, Update, Delete 's Attributes</caption>
           <thead>
             <tr>
               <th>属性</th>
@@ -328,6 +327,18 @@ ps.setInt(1,id);]]></source>
   values (#{username},#{password},#{email},#{bio})
 </insert>]]></source>
 
+        <p>
+          如果你的数据库还支持多行插入, 你也可以传入一个<code>Author</code>s数组或集合，并返回自动生成的主键。
+        </p>
+
+        <source><![CDATA[<insert id="insertAuthor" useGeneratedKeys="true"
+    keyProperty="id">
+  insert into Author (username, password, email, bio) values
+  <foreach item="item" collection="list" separator=",">
+    (#{item.username}, #{item.password}, #{item.email}, #{item.bio})
+  </foreach>
+</insert>]]></source>
+
         <p>对于不支持自动生成类型的数据库或可能不支持自动生成主键 JDBC 驱动来说，MyBatis 有另外一种方法来生成主键。
         </p>
 
@@ -354,7 +365,7 @@ ps.setInt(1,id);]]></source>
   statementType="PREPARED">]]></source>
 
         <table>
-          <caption>selectKey 的属性</caption>
+          <caption>selectKey Attributes</caption>
           <thead>
             <tr>
               <th>属性</th>
@@ -780,24 +791,23 @@ resultMap 元素有很多子元素和一个值得讨论的结构。
           <caption>ResultMap Attributes</caption>
           <thead>
             <tr>
-              <th>Attribute</th>
-              <th>Description</th>
+              <th>属性</th>
+              <th>描述</th>
             </tr>
           </thead>
           <tbody>
             <tr>
               <td><code>id</code></td>
-              <td>A unique identifier in this namespace that can be used to reference this result map.</td>
+              <td>当前命名空间中的一个唯一标识，用于标识一个result map.</td>
             </tr>
             <tr>
               <td><code>type</code></td>
-              <td>A fully qualified Java class name, or a type alias (see the table above for the list of built-in type aliases). 
+              <td>类的全限定名, 或者一个类型别名 (内置的别名可以参考上面的表格). 
               </td>
             </tr>
             <tr>
               <td><code>autoMapping</code></td>
-              <td>If present, MyBatis will enable or disable the automapping for this ResultMap. 
-                This attribute overrides the global autoMappingBehavior. Default: unset. 
+              <td>如果设置这个属性，MyBatis将会为这个ResultMap开启或者关闭自动映射。这个属性会覆盖全局的属性autoMappingBehavior。默认值为：unset。 
               </td>
             </tr>
           </tbody>
@@ -917,7 +927,7 @@ jdbcType
             <td><code>REAL</code></td>
             <td><code>VARCHAR</code></td>
             <td><code>BINARY</code></td>
-            <td><code>BLOG</code></td>
+            <td><code>BLOB</code></td>
             <td><code>NVARCHAR</code></td>
           </tr>
           <tr>
@@ -948,11 +958,6 @@ jdbcType
 
         <h4>构造方法</h4>
 
-        <source><![CDATA[<constructor>
-   <idArg column="id" javaType="int"/>
-   <arg column="username" javaType="String"/>
-</constructor>]]></source>
-
         <p>
 对于大多数数据传输对象(Data Transfer Object,DTO)类型,属性可以起作用,而且像
 你绝大多数的领域模型,
@@ -970,22 +975,38 @@ jdbcType
 
         <source><![CDATA[public class User {
    //...
-   public User(int id, String username) {
+   public User(Integer id, String username, int age) {
      //...
   }
 //...
 }]]></source>
 
         <p>
-为了向这个构造方法中注入结果,MyBatis 需要通过它的参数的类型来标识构造方法。
-Java 没有自查(反射)参数名的方法。所以当创建一个构造方法元素时,保证参数是按顺序
-排列的,而且数据类型也是确定的。
+          In order to inject the results into the constructor, MyBatis needs to identify the constructor for somehow.
+          In the following example, MyBatis searches a constructor declared with three parameters: <code>java.lang.Integer</code>, <code>java.lang.String</code> and <code>int</code> in this order.
         </p>
 
         <source><![CDATA[<constructor>
    <idArg column="id" javaType="int"/>
    <arg column="username" javaType="String"/>
+   <arg column="age" javaType="_int"/>
 </constructor>]]></source>
+
+        <p>
+          When you are dealing with a constructor with many parameters, maintaining the order of arg elements is error-prone.<br />
+          Since 3.4.3, by specifying the name of each parameter, you can write arg elements in any order. To reference constructor parameters by their names, you can either add <code>@Param</code> annotation to them or compile the project with '-parameters' compiler option and enable <code>useActualParamName</code> (this option is enabled by default).
+          The following example is valid for the same constructor even though the order of the second and the third parameters does not match with the declared order.
+        </p>
+
+        <source><![CDATA[<constructor>
+   <idArg column="id" javaType="int" name="id" />
+   <arg column="age" javaType="_int" name="age" />
+   <arg column="username" javaType="String" name="username" />
+</constructor>]]></source>
+
+        <p>
+          <code>javaType</code> can be omitted if there is a property with the same name and type.
+        </p>
 
         <p>
 剩余的属性和规则和固定的 id 和 result 元素是相同的。
@@ -1038,22 +1059,19 @@ jdbcType
             <tr>
               <td><code>select</code></td>
               <td>
-                The ID of another mapped statement that will load the complex type required by this
-                property mapping. The values retrieved from columns specified in the column attribute
-                will be passed to the target select statement as parameters. See the Association element
-                for more.
+                用于加载复杂类型属性的映射语句的ID,从column中检索出来的数据，将作为此select语句的参数。具体请参考Association标签。
               </td>
             </tr>
             <tr>
               <td><code>resultMap</code></td>
               <td>
-                This is the ID of a ResultMap that can map the nested results of this argument into an
-                appropriate object graph. This is an alternative to using a call to another select
-                statement. It allows you to join multiple tables together into a single <code>ResultSet</code>. Such
-                a <code>ResultSet</code> will contain duplicated, repeating groups of data that needs to be
-                decomposed and mapped properly to a nested object graph. To facilitate this, MyBatis
-                lets you "chain" result maps together, to deal with the nested results. See the
-                Association element below for more.
+                ResultMap的ID，可以将嵌套的结果集映射到一个合适的对象树中，功能和select属性相似，它可以实现将多表连接操作的结果映射成一个单一的<code>ResultSet</code>。这样的<code>ResultSet</code>将会将包含重复或部分数据重复的结果集正确的映射到嵌套的对象树中。为了实现它, MyBatis允许你 “串联” ResultMap,以便解决嵌套结果集的问题。想了解更多内容，请参考下面的Association元素。
+              </td>
+            </tr>
+            <tr>
+              <td><code>name</code></td>
+              <td>
+                The name of the constructor parameter. Specifying name allows you to write arg elements in any order. See the above explanation. Since 3.4.3.
               </td>
             </tr>
           </tbody>
@@ -1184,8 +1202,8 @@ prop1 和 prop2 以参数对象形式来设置给目标嵌套查询语句。
             <tr>
               <td><code>fetchType</code></td>
               <td>
-                Optional. Valid values are <code>lazy</code> and <code>eager</code>. If present, it supersedes
-                the global configuration parameter <code>lazyLoadingEnabled</code> for this mapping.
+                可选的。有效值为 <code>lazy</code>和<code>eager</code>。
+				如果使用了，它将取代全局配置参数<code>lazyLoadingEnabled</code>。
               </td>
             </tr>
           </tbody>
@@ -1268,25 +1286,25 @@ resultMap
             <tr>
               <td><code>columnPrefix</code></td>
               <td>
-                When joining multiple tables, you would have to use column alias to avoid duplicated
-                column names in the ResultSet. Specifying columnPrefix allows you to map such columns
-                to an external resultMap. Please see the example explained later in this section.
+				当连接多表时，你将不得不使用列别名来避免ResultSet中的重复列名。指定columnPrefix允许你映射列名到一个外部的结果集中。
+				请看后面的例子。
               </td>
             </tr>
             <tr>
               <td><code>notNullColumn</code></td>
               <td>
-                By default a child object is created only if at least one of the columns mapped to the child's properties 
-                is non null. With this attribute you can change this behaviour by specifiying which columns must have a value
-                so MyBatis will create a child object only if any of those columns is not null. Multiple column names can be 
-                specified using a comma as a separator. Default value: unset.
+				默认情况下，子对象仅在至少一个列映射到其属性非空时才创建。
+				通过对这个属性指定非空的列将改变默认行为，这样做之后Mybatis将仅在这些列非空时才创建一个子对象。
+				可以指定多个列名，使用逗号分隔。默认值：未设置(unset)。
               </td>
             </tr>            
             <tr>
               <td><code>autoMapping</code></td>
-              <td>If present, MyBatis will enable or disable auto-mapping when mapping the result to this property.
-                This attribute overrides the global autoMappingBehavior.
-                Note that it has no effect on an external resultMap, so it is pointless to use it with <code>select</code> or <code>resultMap</code> attribute. Default value: unset.
+              <td>
+				如果使用了，当映射结果到当前属性时，Mybatis将启用或者禁用自动映射。
+				该属性覆盖全局的自动映射行为。
+				注意它对外部结果集无影响，所以在<code>select</code> or <code>resultMap</code>属性中这个是毫无意义的。
+				默认值：未设置(unset)。
               </td>
             </tr>
           </tbody>
@@ -1337,10 +1355,10 @@ resultMap
         </p>
 
         <p>
-          <span class="important">非常重要</span>: 在嵌套据诶过映射中 id 元素扮演了非常重要的角色。应应该通常指定一个
-或多个属性,它们可以用来唯一标识结果。实际上就是如果你离开她了,但是有一个严重的
-性能问题时 MyBatis 仍然可以工作。选择的属性越少越好,它们可以唯一地标识结果。主键
-就是一个显而易见的选择(尽管是联合主键)。
+          <span class="important">非常重要</span>: id元素在嵌套结果映射中扮演着非
+常重要的角色。你应该总是指定一个或多个可以唯一标识结果的属性。实际上如果你不指定它的话,
+MyBatis仍然可以工作,但是会有严重的性能问题。在可以唯一标识结果的情况下,
+尽可能少的选择属性。主键是一个显而易见的选择（即使是复合主键）。
         </p>
 
         <p>
@@ -1362,8 +1380,8 @@ resultMap
 </resultMap>]]></source>
 
         <p>
-          What if the blog has a co-author?
-          The select statement would look like:
+          如果blog有一个co-author怎么办？
+		  select语句将看起来这个样子：
         </p>
 
         <source><![CDATA[<select id="selectBlog" resultMap="blogResult">
@@ -1387,7 +1405,7 @@ resultMap
 </select>]]></source>
 
         <p>
-          Recall that the resultMap for Author is defined as follows.
+          再次调用Author的resultMap将定义如下：
         </p>
 
         <source><![CDATA[<resultMap id="authorResult" type="Author">
@@ -1399,8 +1417,8 @@ resultMap
 </resultMap>]]></source>
 
         <p>
-          Because the column names in the results differ from the columns defined in the resultMap,
-          you need to specify <code>columnPrefix</code> to reuse the resultMap for mapping co-author results.
+          因为结果中的列名与resultMap中的列名不同。
+		  你需要指定<code>columnPrefix</code>去重用映射co-author结果的resultMap。
         </p>
 
         <source><![CDATA[<resultMap id="blogResult" type="Blog">
@@ -1457,7 +1475,7 @@ resultMap
   SELECT * FROM BLOG WHERE ID = #{id}
 </select>
 
-<select id="selectPostsForBlog" resultType="Blog">
+<select id="selectPostsForBlog" resultType="Post">
   SELECT * FROM POST WHERE BLOG_ID = #{id}
 </select>]]></source>
 
@@ -1699,25 +1717,23 @@ MyBatis 会从结果集中得到每条记录,
 </resultMap>]]></source>
 
         <p>
-          There are three auto-mapping levels:
+          有三种自动映射等级：
         </p>
         
         <ul>
           <li>
-            <code>NONE</code> - disables auto-mapping. Only manually mapped properties will be set.
+            <code>NONE</code> - 禁用自动映射。仅设置手动映射属性。
           </li>
           <li>
-            <code>PARTIAL</code> - will auto-map results except those that have nested result mappings defined inside (joins).
+            <code>PARTIAL</code> - 将自动映射结果除了那些有内部定义内嵌结果映射的(joins).
           </li>
           <li>
-            <code>FULL</code> - auto-maps everything.
+            <code>FULL</code> - 自动映射所有。
           </li>
         </ul>
 
         <p>
-          The default value is <code>PARTIAL</code>, and it is so for a reason. When <code>FULL</code> is used auto-mapping will
-          be performed when processing join results and joins retrieve data of several different entities in the same row 
-          hence this may result in undesired mappings. To understand the risk have a look at the following sample:
+          默认值是<code>PARTIAL</code>，这是有原因的。当使用<code>FULL</code>时，自动映射会在处理join结果时执行，并且join取得若干相同行的不同实体数据，因此这可能导致非预期的映射。下面的例子将展示这种风险：
         </p>
         
         <source><![CDATA[<select id="selectBlog" resultMap="blogResult">
@@ -1738,14 +1754,12 @@ MyBatis 会从结果集中得到每条记录,
 </resultMap>]]></source>
         
         <p>
-          With this result map both <i>Blog</i> and <i>Author</i> will be auto-mapped. But note that <i>Author</i> has an <i>id</i> 
-          property and there is a column named <i>id</i> in the ResultSet so Author's id will be filled with Blog's id, and that is not 
-          what you were expecting. So use the <code>FULL</code> option with caution.
+          在结果中<i>Blog</i>和<i>Author</i>均将自动映射。但是注意<i>Author</i>有一个<i>id</i>属性，在ResultSet中有一个列名为<i>id</i>，
+		  所以Author的id将被填充为Blog的id，这不是你所期待的。所以需要谨慎使用<code>FULL</code>。
         </p>
 
         <p>
-          Regardless of the auto-mapping level configured you can enable or disable the automapping for an specific ResultMap
-          by adding the attribute <code>autoMapping</code> to it:
+          通过添加<code>autoMapping</code>属性可以忽略自动映射等级配置，你可以启用或者禁用自动映射指定的ResultMap。
         </p>
 
         <source><![CDATA[<resultMap id="userResultMap" type="User" autoMapping="false">
@@ -1879,8 +1893,19 @@ org.mybatis.cache.Cache 接口。这个接口是 MyBatis 框架中很多复杂�
 </cache>]]></source>
 
         <p>
-你可以使用所有简单类型作为 JavaBeans 的属性,MyBatis 会进行转换。
+          你可以使用所有简单类型作为 JavaBeans 的属性,MyBatis 会进行转换。
+          And you can specify a placeholder(e.g. <code>${cache.file}</code>) to replace value defined at <a href="configuration.html#properties">configuration properties</a>.
         </p>
+
+        <p>
+          Since 3.4.2, the MyBatis has been supported to call an initialization method after it's set all properties.
+          If you want to use this feature, please implements the <code>org.apache.ibatis.builder.InitializingObject</code>
+          interface on your custom cache class.
+        </p>
+
+        <source><![CDATA[public interface InitializingObject {
+  void initialize() throws Exception;
+}]]></source>
 
         <p>
 记得缓存配置和缓存实例是绑定在 SQL 映射文件的命名空间是很重要的。因此,所有

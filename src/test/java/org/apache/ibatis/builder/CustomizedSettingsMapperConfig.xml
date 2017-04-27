@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
 
-       Copyright 2009-2015 the original author or authors.
+       Copyright 2009-2017 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -16,19 +16,24 @@
        limitations under the License.
 
 -->
-
 <!DOCTYPE configuration
     PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
     "http://mybatis.org/dtd/mybatis-3-config.dtd">
 
 <configuration>
 
+  <properties resource="org/apache/ibatis/builder/jdbc.properties">
+    <property name="prop1" value="aaaa"/>
+    <property name="jdbcTypeForNull" value="NULL" />
+  </properties>
+
   <settings>
     <setting name="autoMappingBehavior" value="NONE"/>
+    <setting name="autoMappingUnknownColumnBehavior" value="WARNING"/>
     <setting name="cacheEnabled" value="false"/>
     <setting name="proxyFactory" value="CGLIB"/>
     <setting name="lazyLoadingEnabled" value="true"/>
-    <setting name="aggressiveLazyLoading" value="false"/>
+    <setting name="aggressiveLazyLoading" value="true"/>
     <setting name="multipleResultSetsEnabled" value="false"/>
     <setting name="useColumnLabel" value="false"/>
     <setting name="useGeneratedKeys" value="true"/>
@@ -38,7 +43,7 @@
     <setting name="mapUnderscoreToCamelCase" value="true"/>
     <setting name="safeRowBoundsEnabled" value="true"/>
     <setting name="localCacheScope" value="STATEMENT"/>
-    <setting name="jdbcTypeForNull" value="NULL"/>
+    <setting name="jdbcTypeForNull" value="${jdbcTypeForNull}"/>
     <setting name="lazyLoadTriggerMethods" value="equals,clone,hashCode,toString,xxx"/>
     <setting name="safeResultHandlerEnabled" value="false"/>
     <setting name="defaultScriptingLanguage" value="org.apache.ibatis.scripting.defaults.RawLanguageDriver"/>
@@ -47,6 +52,60 @@
     <setting name="logImpl" value="SLF4J"/>
     <setting name="vfsImpl" value="org.apache.ibatis.io.JBoss6VFS"/>
     <setting name="configurationFactory" value="java.lang.String"/>
+    <setting name="defaultEnumTypeHandler" value="org.apache.ibatis.type.EnumOrdinalTypeHandler"/>
   </settings>
+
+  <typeAliases>
+    <typeAlias alias="BlogAuthor" type="org.apache.ibatis.domain.blog.Author"/>
+    <typeAlias type="org.apache.ibatis.domain.blog.Blog"/>
+    <typeAlias type="org.apache.ibatis.domain.blog.Post"/>
+    <package name="org.apache.ibatis.domain.jpetstore"/>
+  </typeAliases>
+
+  <typeHandlers>
+    <typeHandler javaType="String" handler="org.apache.ibatis.builder.CustomStringTypeHandler"/>
+    <typeHandler javaType="String" jdbcType="VARCHAR" handler="org.apache.ibatis.builder.CustomStringTypeHandler"/>
+    <typeHandler handler="org.apache.ibatis.builder.CustomLongTypeHandler"/>
+    <package name="org.apache.ibatis.builder.typehandler"/>
+  </typeHandlers>
+
+  <objectFactory type="org.apache.ibatis.builder.ExampleObjectFactory">
+    <property name="objectFactoryProperty" value="100"/>
+  </objectFactory>
+
+  <objectWrapperFactory type="org.apache.ibatis.builder.CustomObjectWrapperFactory" />
+  
+  <reflectorFactory type="org.apache.ibatis.builder.CustomReflectorFactory"/>
+
+  <plugins>
+    <plugin interceptor="org.apache.ibatis.builder.ExamplePlugin">
+      <property name="pluginProperty" value="100"/>
+    </plugin>
+  </plugins>
+
+  <environments default="development">
+    <environment id="development">
+      <transactionManager type="JDBC">
+        <property name="" value=""/>
+      </transactionManager>
+      <dataSource type="UNPOOLED">
+        <property name="driver" value="${driver}"/>
+        <property name="url" value="${url}"/>
+        <property name="username" value="${username}"/>
+        <property name="password" value="${password}"/>
+      </dataSource>
+    </environment>
+  </environments>
+  
+  <databaseIdProvider type="DB_VENDOR">
+    <property name="Apache Derby" value="derby"/>
+  </databaseIdProvider>
+
+  <mappers>
+    <mapper resource="org/apache/ibatis/builder/BlogMapper.xml"/>
+    <mapper url="file:./src/test/java/org/apache/ibatis/builder/NestedBlogMapper.xml"/>
+    <mapper class="org.apache.ibatis.builder.CachedAuthorMapper"/>
+    <package name="org.apache.ibatis.builder.mapper"/>
+  </mappers>
 
 </configuration>

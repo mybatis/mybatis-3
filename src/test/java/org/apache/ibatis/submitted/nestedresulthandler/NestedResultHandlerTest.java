@@ -1,15 +1,17 @@
 /**
- * Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2015 the original author or authors.
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
- * in compliance with the License. You may obtain a copy of the License at
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *       http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software distributed under the License
- * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
- * or implied. See the License for the specific language governing permissions and limitations under
- * the License.
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
  */
 package org.apache.ibatis.submitted.nestedresulthandler;
 
@@ -97,7 +99,7 @@ public class NestedResultHandlerTest {
     }
   }
 
-  @Test(expected = PersistenceException.class)
+  @Test(expected=PersistenceException.class)
   public void testUnorderedGetPersonWithHandler() {
     SqlSession sqlSession = sqlSessionFactory.openSession();
     try {
@@ -115,8 +117,9 @@ public class NestedResultHandlerTest {
   }
 
   /**
-   * Fix bug caused by issue #542, see new issue #22 on github If we order by a nested result map
-   * attribute we can miss some records and end up with duplicates instead.
+   * Fix bug caused by issue #542, see new issue #22 on github If we order by a
+   * nested result map attribute we can miss some records and end up with
+   * duplicates instead.
    */
   @Test
   public void testGetPersonOrderedByItem() {
@@ -147,23 +150,22 @@ public class NestedResultHandlerTest {
     }
   }
 
-  @Test // reopen issue 39? (not a bug?)
-  public void testGetPersonItemPairs() {
+  @Test //reopen issue 39? (not a bug?)
+  public void testGetPersonItemPairs(){
     SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try{
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       List<PersonItemPair> pairs = mapper.getPersonItemPairs();
 
-      Assert.assertNotNull(pairs);
-      // System.out.println( new StringBuilder().append("selected pairs:
-      // ").append(pairs) );
+      Assert.assertNotNull( pairs );
+//      System.out.println( new StringBuilder().append("selected pairs: ").append(pairs) );
 
-      Assert.assertEquals(5, pairs.size());
+      Assert.assertEquals(5, pairs.size() );
       Assert.assertNotNull(pairs.get(0).getPerson());
       Assert.assertEquals(pairs.get(0).getPerson().getId(), Integer.valueOf(1));
       Assert.assertNotNull(pairs.get(0).getItem());
-      Assert.assertEquals(pairs.get(0).getItem().getId(), Integer.valueOf(1));
-    } finally {
+      Assert.assertEquals( pairs.get(0).getItem().getId(), Integer.valueOf(1));
+    } finally{
       sqlSession.close();
     }
   }

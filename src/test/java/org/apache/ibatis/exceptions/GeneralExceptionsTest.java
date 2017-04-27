@@ -1,15 +1,17 @@
 /**
- * Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2015 the original author or authors.
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
- * in compliance with the License. You may obtain a copy of the License at
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *       http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software distributed under the License
- * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
- * or implied. See the License for the specific language governing permissions and limitations under
- * the License.
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
  */
 package org.apache.ibatis.exceptions;
 
@@ -47,17 +49,29 @@ public class GeneralExceptionsTest {
 
   @Test
   public void shouldInstantiateAndThrowAllCustomExceptions() throws Exception {
-    Class<?>[] exceptionTypes = { BindingException.class, CacheException.class, DataSourceException.class, ExecutorException.class,
-        LogException.class, ParsingException.class, BuilderException.class, PluginException.class, ReflectionException.class,
-        PersistenceException.class, SqlSessionException.class, TransactionException.class, TypeException.class, ScriptingException.class };
+    Class<?>[] exceptionTypes = {
+        BindingException.class,
+        CacheException.class,
+        DataSourceException.class,
+        ExecutorException.class,
+        LogException.class,
+        ParsingException.class,
+        BuilderException.class,
+        PluginException.class,
+        ReflectionException.class,
+        PersistenceException.class,
+        SqlSessionException.class,
+        TransactionException.class,
+        TypeException.class, 
+        ScriptingException.class
+    };
     for (Class<?> exceptionType : exceptionTypes) {
       testExceptionConstructors(exceptionType);
     }
 
   }
 
-  private void testExceptionConstructors(Class<?> exceptionType)
-      throws InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
+  private void testExceptionConstructors(Class<?> exceptionType) throws InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
     Exception e = (Exception) exceptionType.newInstance();
     testThrowException(e);
     e = (Exception) exceptionType.getConstructor(String.class).newInstance(EXPECTED_MESSAGE);

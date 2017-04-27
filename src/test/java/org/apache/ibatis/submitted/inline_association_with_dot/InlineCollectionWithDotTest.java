@@ -1,15 +1,17 @@
 /**
- * Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2015 the original author or authors.
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
- * in compliance with the License. You may obtain a copy of the License at
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *       http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software distributed under the License
- * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
- * or implied. See the License for the specific language governing permissions and limitations under
- * the License.
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
  */
 package org.apache.ibatis.submitted.inline_association_with_dot;
 
@@ -38,7 +40,7 @@ public class InlineCollectionWithDotTest {
     SqlSessionFactory sqlSessionFactory;
     try {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(batisConfigReader);
-    } catch (Exception anException) {
+    } catch(Exception anException) {
       throw new RuntimeException("Mapper configuration failed, expected this to work: " + anException.getMessage(), anException);
     }
 
@@ -62,11 +64,12 @@ public class InlineCollectionWithDotTest {
   }
 
   /*
-   * Load an element with an element with and element with a value. Expect that this is possible bij
-   * using an inline 'association' map.
+   * Load an element with an element with and element with a value. Expect that this is
+   * possible bij using an inline 'association' map.
    */
   @Test
-  public void selectElementValueInContainerUsingInline() throws Exception {
+  public void selectElementValueInContainerUsingInline()
+  throws Exception {
     openSession("inline");
 
     Element myElement = sqlSession.getMapper(ElementMapperUsingInline.class).selectElement();
@@ -75,15 +78,15 @@ public class InlineCollectionWithDotTest {
   }
 
   /*
-   * Load an element with an element with and element with a value. Expect that this is possible bij
-   * using an sub-'association' map.
+   * Load an element with an element with and element with a value. Expect that this is
+   * possible bij using an sub-'association' map.
    */
   @Test
   public void selectElementValueInContainerUsingSubMap() throws Exception {
-    openSession("submap");
+   openSession("submap");
 
-    Element myElement = sqlSession.getMapper(ElementMapperUsingSubMap.class).selectElement();
+   Element myElement = sqlSession.getMapper(ElementMapperUsingSubMap.class).selectElement();
 
-    assertEquals("value", myElement.getElement().getElement().getValue());
+   assertEquals("value", myElement.getElement().getElement().getValue());
   }
 }

@@ -1,15 +1,17 @@
 /**
- * Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2016 the original author or authors.
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
- * in compliance with the License. You may obtain a copy of the License at
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *       http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software distributed under the License
- * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
- * or implied. See the License for the specific language governing permissions and limitations under
- * the License.
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
  */
 package org.apache.ibatis.executor;
 
@@ -24,6 +26,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import org.apache.ibatis.cache.CacheKey;
 import org.apache.ibatis.cache.impl.PerpetualCache;
 import org.apache.ibatis.cursor.Cursor;
+import org.apache.ibatis.executor.statement.StatementUtil;
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
 import org.apache.ibatis.logging.jdbc.ConnectionLogger;
@@ -56,7 +59,7 @@ public abstract class BaseExecutor implements Executor {
   protected PerpetualCache localOutputParameterCache;
   protected Configuration configuration;
 
-  protected int queryStack = 0;
+  protected int queryStack;
   private boolean closed;
 
   protected BaseExecutor(Configuration configuration, Transaction transaction) {
@@ -88,7 +91,7 @@ public abstract class BaseExecutor implements Executor {
         }
       }
     } catch (SQLException e) {
-      // Ignore. There's nothing that can be done at this point.
+      // Ignore.  There's nothing that can be done at this point.
       log.warn("Unexpected exception on closing transaction.  Cause: " + e);
     } finally {
       transaction = null;
@@ -131,12 +134,11 @@ public abstract class BaseExecutor implements Executor {
     BoundSql boundSql = ms.getBoundSql(parameter);
     CacheKey key = createCacheKey(ms, parameter, rowBounds, boundSql);
     return query(ms, parameter, rowBounds, resultHandler, key, boundSql);
-  }
+ }
 
   @SuppressWarnings("unchecked")
   @Override
-  public <E> List<E> query(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, CacheKey key,
-      BoundSql boundSql) throws SQLException {
+  public <E> List<E> query(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, CacheKey key, BoundSql boundSql) throws SQLException {
     ErrorContext.instance().resource(ms.getResource()).activity("executing a query").object(ms.getId());
     if (closed) {
       throw new ExecutorException("Executor was closed.");
@@ -196,14 +198,13 @@ public abstract class BaseExecutor implements Executor {
     }
     CacheKey cacheKey = new CacheKey();
     cacheKey.update(ms.getId());
-    cacheKey.update(Integer.valueOf(rowBounds.getOffset()));
-    cacheKey.update(Integer.valueOf(rowBounds.getLimit()));
+    cacheKey.update(rowBounds.getOffset());
+    cacheKey.update(rowBounds.getLimit());
     cacheKey.update(boundSql.getSql());
     List<ParameterMapping> parameterMappings = boundSql.getParameterMappings();
     TypeHandlerRegistry typeHandlerRegistry = ms.getConfiguration().getTypeHandlerRegistry();
     // mimic DefaultParameterHandler logic
-    for (int i = 0; i < parameterMappings.size(); i++) {
-      ParameterMapping parameterMapping = parameterMappings.get(i);
+    for (ParameterMapping parameterMapping : parameterMappings) {
       if (parameterMapping.getMode() != ParameterMode.OUT) {
         Object value;
         String propertyName = parameterMapping.getProperty();
@@ -266,12 +267,14 @@ public abstract class BaseExecutor implements Executor {
     }
   }
 
-  protected abstract int doUpdate(MappedStatement ms, Object parameter) throws SQLException;
+  protected abstract int doUpdate(MappedStatement ms, Object parameter)
+      throws SQLException;
 
-  protected abstract List<BatchResult> doFlushStatements(boolean isRollback) throws SQLException;
+  protected abstract List<BatchResult> doFlushStatements(boolean isRollback)
+      throws SQLException;
 
-  protected abstract <E> List<E> doQuery(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler,
-      BoundSql boundSql) throws SQLException;
+  protected abstract <E> List<E> doQuery(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql)
+      throws SQLException;
 
   protected abstract <E> Cursor<E> doQueryCursor(MappedStatement ms, Object parameter, RowBounds rowBounds, BoundSql boundSql)
       throws SQLException;
@@ -284,6 +287,17 @@ public abstract class BaseExecutor implements Executor {
         // ignore
       }
     }
+  }
+
+  /**
+   * Apply a transaction timeout.
+   * @param statement a current statement
+   * @throws SQLException if a database access error occurs, this method is called on a closed <code>Statement</code>
+   * @since 3.4.0
+   * @see StatementUtil#applyTransactionTimeout(Statement, Integer, Integer)
+   */
+  protected void applyTransactionTimeout(Statement statement) throws SQLException {
+    StatementUtil.applyTransactionTimeout(statement, statement.getQueryTimeout(), transaction.getTimeout());
   }
 
   private void handleLocallyCachedOutputParameters(MappedStatement ms, CacheKey key, Object parameter, BoundSql boundSql) {
@@ -303,8 +317,7 @@ public abstract class BaseExecutor implements Executor {
     }
   }
 
-  private <E> List<E> queryFromDatabase(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler,
-      CacheKey key, BoundSql boundSql) throws SQLException {
+  private <E> List<E> queryFromDatabase(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, CacheKey key, BoundSql boundSql) throws SQLException {
     List<E> list;
     localCache.putObject(key, EXECUTION_PLACEHOLDER);
     try {
@@ -332,7 +345,7 @@ public abstract class BaseExecutor implements Executor {
   public void setExecutorWrapper(Executor wrapper) {
     this.wrapper = wrapper;
   }
-
+  
   private static class DeferredLoad {
 
     private final MetaObject resultObject;
@@ -344,8 +357,12 @@ public abstract class BaseExecutor implements Executor {
     private final ResultExtractor resultExtractor;
 
     // issue #781
-    public DeferredLoad(MetaObject resultObject, String property, CacheKey key, PerpetualCache localCache, Configuration configuration,
-        Class<?> targetType) {
+    public DeferredLoad(MetaObject resultObject,
+                        String property,
+                        CacheKey key,
+                        PerpetualCache localCache,
+                        Configuration configuration,
+                        Class<?> targetType) {
       this.resultObject = resultObject;
       this.property = property;
       this.key = key;
@@ -360,7 +377,7 @@ public abstract class BaseExecutor implements Executor {
     }
 
     public void load() {
-      @SuppressWarnings("unchecked")
+      @SuppressWarnings( "unchecked" )
       // we suppose we get back a List
       List<Object> list = (List<Object>) localCache.getObject(key);
       Object value = resultExtractor.extractObjectFromList(list, targetType);

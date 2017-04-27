@@ -1,15 +1,17 @@
 /**
- * Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2015 the original author or authors.
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
- * in compliance with the License. You may obtain a copy of the License at
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *       http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software distributed under the License
- * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
- * or implied. See the License for the specific language governing permissions and limitations under
- * the License.
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
  */
 package org.apache.ibatis.scripting.xmltags;
 
@@ -35,8 +37,7 @@ public class ForEachSqlNode implements SqlNode {
   private String index;
   private Configuration configuration;
 
-  public ForEachSqlNode(Configuration configuration, SqlNode contents, String collectionExpression, String index, String item, String open,
-      String close, String separator) {
+  public ForEachSqlNode(Configuration configuration, SqlNode contents, String collectionExpression, String index, String item, String open, String close, String separator) {
     this.evaluator = new ExpressionEvaluator();
     this.collectionExpression = collectionExpression;
     this.contents = contents;
@@ -65,12 +66,12 @@ public class ForEachSqlNode implements SqlNode {
       } else if (separator != null) {
         context = new PrefixedContext(context, separator);
       } else {
-        context = new PrefixedContext(context, "");
+          context = new PrefixedContext(context, "");
       }
       int uniqueNumber = context.getUniqueNumber();
-      // Issue #709
+      // Issue #709 
       if (o instanceof Map.Entry) {
-        @SuppressWarnings("unchecked")
+        @SuppressWarnings("unchecked") 
         Map.Entry<Object, Object> mapEntry = (Map.Entry<Object, Object>) o;
         applyIndex(context, mapEntry.getKey(), uniqueNumber);
         applyItem(context, mapEntry.getValue(), uniqueNumber);
@@ -125,7 +126,7 @@ public class ForEachSqlNode implements SqlNode {
     private String itemIndex;
     private String item;
 
-    public FilteredDynamicContext(Configuration configuration, DynamicContext delegate, String itemIndex, String item, int i) {
+    public FilteredDynamicContext(Configuration configuration,DynamicContext delegate, String itemIndex, String item, int i) {
       super(configuration, null);
       this.delegate = delegate;
       this.index = i;
@@ -170,6 +171,7 @@ public class ForEachSqlNode implements SqlNode {
     }
 
   }
+
 
   private class PrefixedContext extends DynamicContext {
     private DynamicContext delegate;

@@ -1,15 +1,17 @@
 /**
- * Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2015 the original author or authors.
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
- * in compliance with the License. You may obtain a copy of the License at
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *       http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software distributed under the License
- * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
- * or implied. See the License for the specific language governing permissions and limitations under
- * the License.
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
  */
 package org.apache.ibatis.submitted.nestedresulthandler;
 
@@ -20,10 +22,18 @@ import java.util.List;
 public class Person {
   private Integer id;
   private String name;
-  private List<Item> items = new ArrayList<Item>();
+  private List<Item> items=new ArrayList<Item>();
 
-  public String toString() {
-    return new StringBuilder().append("Person(").append(id).append(", ").append(name).append(", ").append(items).append(" )").toString();
+  public String toString(){
+    return new StringBuilder()
+            .append("Person(")
+            .append(id)
+            .append(", ")
+            .append(name)
+            .append(", ")
+            .append(items)
+            .append(" )")
+            .toString();
   }
 
   public Integer getId() {
@@ -45,7 +55,7 @@ public class Person {
   public Collection<Item> getItems() {
     return items;
   }
-
+  
   public boolean owns(String name) {
     for (Item item : getItems()) {
       if (item.getName().equals(name))

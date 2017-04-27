@@ -1,17 +1,22 @@
 /**
- * Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2016 the original author or authors.
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
- * in compliance with the License. You may obtain a copy of the License at
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *       http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software distributed under the License
- * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
- * or implied. See the License for the specific language governing permissions and limitations under
- * the License.
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
  */
 package org.apache.ibatis.submitted.sqlprovider;
+
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.jdbc.SQL;
 
 import java.util.List;
 import java.util.Map;
@@ -37,9 +42,110 @@ public class OurSqlBuilder {
     return sb.toString();
   }
 
-  public String buildGetUserQuery(Integer parameter) {
+  public String buildGetUserQuery(Number parameter) {
     // parameter is not a single List or Array,
     // so it is passed as is from the mapper
     return "select * from users where id = #{value}";
   }
+  public String buildGetAllUsersQuery() {
+    return "select * from users order by id";
+  }
+
+  public String buildGetUsersByCriteriaQuery(final User criteria) {
+    return new SQL(){{
+      SELECT("*");
+      FROM("users");
+      if (criteria.getId() != null) {
+        WHERE("id = #{id}");
+      }
+      if (criteria.getName() != null) {
+        WHERE("name like #{name} || '%'");
+      }
+    }}.toString();
+  }
+
+  public String buildGetUsersByCriteriaMapQuery(final Map<String, Object> criteria) {
+    return new SQL(){{
+      SELECT("*");
+      FROM("users");
+      if (criteria.get("id") != null) {
+        WHERE("id = #{id}");
+      }
+      if (criteria.get("name") != null) {
+        WHERE("name like #{name} || '%'");
+      }
+    }}.toString();
+  }
+
+  public String buildGetUsersByNameQuery(final String name, final String orderByColumn) {
+    return new SQL(){{
+      SELECT("*");
+      FROM("users");
+      if (name != null) {
+        WHERE("name like #{param1} || '%'");
+      }
+      ORDER_BY(orderByColumn);
+    }}.toString();
+  }
+
+  public String buildGetUsersByNameUsingMap(Map<String, Object> params) {
+    final String name = String.class.cast(params.get("param1"));
+    final String orderByColumn = String.class.cast(params.get("param2"));
+    return new SQL(){{
+      SELECT("*");
+      FROM("users");
+      if (name != null) {
+        WHERE("name like #{param1} || '%'");
+      }
+      ORDER_BY(orderByColumn);
+    }}.toString();
+  }
+
+  public String buildGetUsersByNameWithParamNameAndOrderByQuery(@Param("orderByColumn") final String orderByColumn, @Param("name") final String name) {
+    return new SQL(){{
+      SELECT("*");
+      FROM("users");
+      if (name != null) {
+        WHERE("name like #{name} || '%'");
+      }
+      ORDER_BY(orderByColumn);
+    }}.toString();
+  }
+
+  public String buildGetUsersByNameWithParamNameQuery(@Param("name") final String name) {
+    return new SQL(){{
+      SELECT("*");
+      FROM("users");
+      if (name != null) {
+        WHERE("name like #{name} || '%'");
+      }
+      ORDER_BY("id DESC");
+    }}.toString();
+  }
+
+  public String buildGetUsersByNameWithParamNameQueryUsingMap(Map<String, Object> params) {
+    final String name = String.class.cast(params.get("name"));
+    final String orderByColumn = String.class.cast(params.get("orderByColumn"));
+    return new SQL(){{
+      SELECT("*");
+      FROM("users");
+      if (name != null) {
+        WHERE("name like #{param1} || '%'");
+      }
+      ORDER_BY(orderByColumn);
+    }}.toString();
+  }
+
+  public String buildInsert() {
+    return "insert into users (id, name) values (#{id}, #{name})";
+  }
+
+  public String buildUpdate() {
+    return "update users set name = #{name} where id = #{id}";
+  }
+
+  public String buildDelete() {
+    return "delete from users where id = #{id}";
+  }
+
 }

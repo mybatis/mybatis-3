@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
 
-       Copyright 2009-2012 the original author or authors.
+       Copyright 2009-2016 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -24,17 +24,17 @@
 
     <select id="getImmutablePOJO" parameterType="int" resultType="ImmutablePOJO">
         SELECT
-            i.id            AS id,
-            i.description   AS description
+            i.immutable_id,
+            i.immutable_description
         FROM immutables AS i
-        WHERE i.id = #{pojoID}
+        WHERE i.immutable_id = #{pojoID}
     </select>
-    
+
     <select id="getImmutablePOJONoMatchingConstructor" parameterType="int" resultType="ImmutablePOJO">
         SELECT
-            i.id            AS id
+            i.immutable_id
         FROM immutables AS i
-        WHERE i.id = #{pojoID}
+        WHERE i.immutable_id = #{pojoID}
     </select>
         
 </mapper>

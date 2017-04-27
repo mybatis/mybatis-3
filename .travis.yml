@@ -7,6 +7,17 @@ jdk:
   - openjdk7
   - openjdk6
 
+before_install:
+  - echo "MAVEN_OPTS='-Dlicense.skip=true'" > ~/.mavenrc
+
+install:
+  # Compile sources with Java 1.8
+  - jdk_switcher use oraclejdk8
+  - chmod -R 777 ./travis/install.sh
+  - ./travis/install.sh
+  # Switch back to the original JDK to run the tests
+  - jdk_switcher use ${TRAVIS_JDK_VERSION}
+
 after_success:
   - chmod -R 777 ./travis/after_success.sh
   - ./travis/after_success.sh

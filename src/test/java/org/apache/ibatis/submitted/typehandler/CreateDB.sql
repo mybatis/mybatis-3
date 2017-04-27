@@ -1,5 +1,5 @@
 --
---    Copyright 2009-2012 the original author or authors.
+--    Copyright 2009-2016 the original author or authors.
 --
 --    Licensed under the Apache License, Version 2.0 (the "License");
 --    you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
 --
 
 drop table users if exists;
+drop table product if exists;
 
 create table users (
   id int,
@@ -23,4 +24,13 @@ create table users (
   state char(20)
 );
 
+create table product (
+  id int identity,
+  name varchar(20)
+);
+
 insert into users (id, name, city, state) values(1, '   User1', '  Carmel  ', '  IN ');
+
+insert into product (id, name) values
+(1, 'iPod'),
+(2, 'iPad');

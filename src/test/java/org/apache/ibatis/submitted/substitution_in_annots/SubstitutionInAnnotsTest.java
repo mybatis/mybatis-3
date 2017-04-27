@@ -1,15 +1,17 @@
 /**
- * Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2015 the original author or authors.
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
- * in compliance with the License. You may obtain a copy of the License at
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *       http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software distributed under the License
- * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
- * or implied. See the License for the specific language governing permissions and limitations under
- * the License.
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
  */
 package org.apache.ibatis.submitted.substitution_in_annots;
 
@@ -31,6 +33,7 @@ import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+
 public class SubstitutionInAnnotsTest {
 
   protected static SqlSessionFactory sqlSessionFactory;
@@ -48,12 +51,11 @@ public class SubstitutionInAnnotsTest {
     reader.close();
 
     Configuration configuration = new Configuration();
-    Environment environment = new Environment("test", new JdbcTransactionFactory(),
-        new UnpooledDataSource("org.hsqldb.jdbcDriver", "jdbc:hsqldb:mem:annots", null));
+    Environment environment = new Environment("test", new JdbcTransactionFactory(), new UnpooledDataSource("org.hsqldb.jdbcDriver", "jdbc:hsqldb:mem:annots", null));
     configuration.setEnvironment(environment);
-
+    
     configuration.addMapper(SubstitutionInAnnotsMapper.class);
-
+    
     sqlSessionFactory = new SqlSessionFactoryBuilder().build(configuration);
   }
 
@@ -78,7 +80,7 @@ public class SubstitutionInAnnotsTest {
       sqlSession.close();
     }
   }
-
+  
   @Test
   public void testSubstitutionWithAnnotsParameter() {
     SqlSession sqlSession = sqlSessionFactory.openSession();

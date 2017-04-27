@@ -1,18 +1,20 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Copyright 2009-2015 the original author or authors.
 
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
+       Copyright 2009-2017 the original author or authors.
 
-    http://www.apache.org/licenses/LICENSE-2.0
+       Licensed under the Apache License, Version 2.0 (the "License");
+       you may not use this file except in compliance with the License.
+       You may obtain a copy of the License at
 
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
+          http://www.apache.org/licenses/LICENSE-2.0
+
+       Unless required by applicable law or agreed to in writing, software
+       distributed under the License is distributed on an "AS IS" BASIS,
+       WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+       See the License for the specific language governing permissions and
+       limitations under the License.
+
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
@@ -20,22 +22,24 @@
   <parent>
     <groupId>org.mybatis</groupId>
     <artifactId>mybatis-parent</artifactId>
-    <version>26</version>
+    <version>28</version>
     <relativePath />
   </parent>
 
   <artifactId>mybatis</artifactId>
-  <version>3.4.0-SNAPSHOT</version>
+  <version>3.4.5-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>mybatis</name>
   <description>
-    The MyBatis data mapper framework makes it easier to use a relational database with object-oriented
+    The MyBatis SQL mapper framework makes it easier to use a relational database with object-oriented
     applications. MyBatis couples objects with stored procedures or SQL statements using a XML descriptor or
     annotations. Simplicity is the biggest advantage of the MyBatis data mapper over object relational mapping
     tools.
   </description>
-  <url>http://www.mybatis.org/core/</url>
+  <url>http://www.mybatis.org/mybatis-3</url>
+
+  <inceptionYear>2009</inceptionYear>
 
   <contributors>
     <contributor>
@@ -127,7 +131,10 @@
   </distributionManagement>
 
   <properties>
-    <clirr.comparisonVersion>3.3.0</clirr.comparisonVersion>
+    <maven.compiler.testTarget>1.8</maven.compiler.testTarget>
+    <maven.compiler.testSource>1.8</maven.compiler.testSource>
+    <maven.compiler.testCompilerArgument>-parameters</maven.compiler.testCompilerArgument>
+    <clirr.comparisonVersion>3.3.1</clirr.comparisonVersion>
     <findbugs.onlyAnalyze>org.apache.ibatis.*</findbugs.onlyAnalyze>
     <osgi.export>org.apache.ibatis.*;version=${project.version};-noimport:=true</osgi.export>
     <osgi.import>*;resolution:=optional</osgi.import>
@@ -138,33 +145,33 @@
     <dependency>
       <groupId>ognl</groupId>
       <artifactId>ognl</artifactId>
-      <version>3.1.2</version>
+      <version>3.1.14</version>
       <scope>compile</scope>
       <optional>true</optional>
-      <exclusions>
-         <exclusion>
-            <groupId>javassist</groupId>
-            <artifactId>javassist</artifactId>
-         </exclusion>
-      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.javassist</groupId>
       <artifactId>javassist</artifactId>
-      <version>3.20.0-GA</version>
+      <version>3.22.0-CR1</version>
       <scope>compile</scope>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>org.mybatis</groupId>
+      <artifactId>mybatis-typehandlers-jsr310</artifactId>
+      <version>1.0.2</version>
       <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
-      <version>1.7.13</version>
+      <version>1.7.25</version>
       <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-log4j12</artifactId>
-      <version>1.7.13</version>
+      <version>1.7.25</version>
       <optional>true</optional>
     </dependency>
     <dependency>
@@ -189,7 +196,7 @@
     <dependency>
       <groupId>cglib</groupId>
       <artifactId>cglib</artifactId>
-      <version>3.2.0</version>
+      <version>3.2.5</version>
       <optional>true</optional>
     </dependency>
 
@@ -203,7 +210,7 @@
     <dependency>
       <groupId>org.hsqldb</groupId>
       <artifactId>hsqldb</artifactId>
-      <version>2.3.3</version>
+      <version>2.3.4</version> <!-- Version 2.4.0 required jdk8 -->
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -215,7 +222,7 @@
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-core</artifactId>
-      <version>1.10.19</version>
+      <version>2.7.22</version>
       <scope>test</scope>
     </dependency>
     <!-- Do not go to 2.x until we are on jdk7 -->
@@ -226,9 +233,9 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>javax.transaction</groupId>
-      <artifactId>transaction-api</artifactId>
-      <version>1.1</version>
+      <groupId>org.jboss.spec.javax.transaction</groupId>
+      <artifactId>jboss-transaction-api_1.2_spec</artifactId>
+      <version>1.0.1.Final</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -244,19 +251,43 @@
       <version>9.1-901-1.jdbc4</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>org.assertj</groupId>
+      <artifactId>assertj-core</artifactId>
+      <version>1.7.1</version> <!-- Stay on 1.7.1 to support Java 6 -->
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>eu.codearte.catch-exception</groupId>
+      <artifactId>catch-exception</artifactId>
+      <version>1.4.4</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <testCompilerArgument>${maven.compiler.testCompilerArgument}</testCompilerArgument>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
-          <argLine>${argLine} -Xmx1024m</argLine>
+          <excludedGroups>${maven.surefire.excludeGroups}</excludedGroups>
+          <argLine>${argLine} -Xmx2048m</argLine>
           <systemProperties>
             <property>
               <name>derby.stream.error.file</name>
-              <value>target/derby.log</value>
+              <value>${project.build.directory}/derby.log</value>
+            </property>
+            <property>
+              <name>derby.system.home</name>
+              <value>${project.build.directory}</value>
             </property>
           </systemProperties>
         </configuration>
@@ -275,27 +306,27 @@
               <goal>shade</goal>
             </goals>
             <configuration>
-               <createDependencyReducedPom>false</createDependencyReducedPom>
-               <artifactSet>
-                 <includes>
-                   <include>org.mybatis:mybatis</include>
-                   <include>ognl:ognl</include>
-                   <include>org.javassist:javassist</include>
-                 </includes>
-               </artifactSet>
-               <relocations>
-                 <relocation>
-                   <pattern>ognl</pattern>
-                   <shadedPattern>org.apache.ibatis.ognl</shadedPattern>
-                 </relocation>
-                 <relocation>
-                   <pattern>javassist</pattern>
-                   <shadedPattern>org.apache.ibatis.javassist</shadedPattern>
-                 </relocation>
-               </relocations>
-             </configuration>
-           </execution>
-         </executions>
+              <createDependencyReducedPom>false</createDependencyReducedPom>
+              <artifactSet>
+                <includes>
+                  <include>org.mybatis:mybatis</include>
+                  <include>ognl:ognl</include>
+                  <include>org.javassist:javassist</include>
+                </includes>
+              </artifactSet>
+              <relocations>
+                <relocation>
+                  <pattern>ognl</pattern>
+                  <shadedPattern>org.apache.ibatis.ognl</shadedPattern>
+                </relocation>
+                <relocation>
+                  <pattern>javassist</pattern>
+                  <shadedPattern>org.apache.ibatis.javassist</shadedPattern>
+                </relocation>
+              </relocations>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -342,4 +373,59 @@
     </testResources>
   </build>
 
+  <profiles>
+    <profile>
+      <id>java16</id>
+      <activation>
+        <jdk>1.6</jdk>
+      </activation>
+      <properties>
+        <maven.compiler.testTarget>1.6</maven.compiler.testTarget>
+        <maven.compiler.testSource>1.6</maven.compiler.testSource>
+        <maven.compiler.testCompilerArgument />
+      </properties>
+      <build>
+        <pluginManagement>
+          <plugins>
+            <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-compiler-plugin</artifactId>
+              <configuration>
+                <testExcludes>
+                  <testExclude>**/usesjava7/**/*.java</testExclude>
+                  <testExclude>**/usesjava8/**/*.java</testExclude>
+                </testExcludes>
+              </configuration>
+            </plugin>
+          </plugins>
+        </pluginManagement>
+      </build>
+    </profile>
+    <profile>
+      <id>java17</id>
+      <activation>
+        <jdk>1.7</jdk>
+      </activation>
+      <properties>
+        <maven.compiler.testTarget>1.7</maven.compiler.testTarget>
+        <maven.compiler.testSource>1.7</maven.compiler.testSource>
+        <maven.compiler.testCompilerArgument />
+      </properties>
+      <build>
+        <pluginManagement>
+          <plugins>
+            <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-compiler-plugin</artifactId>
+              <configuration>
+                <testExcludes>
+                  <testExclude>**/usesjava8/**/*.java</testExclude>
+                </testExcludes>
+              </configuration>
+            </plugin>
+          </plugins>
+        </pluginManagement>
+      </build>
+    </profile>
+  </profiles>
 </project>

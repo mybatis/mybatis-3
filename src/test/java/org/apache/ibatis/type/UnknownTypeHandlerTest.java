@@ -1,15 +1,17 @@
 /**
- * Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2016 the original author or authors.
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
- * in compliance with the License. You may obtain a copy of the License at
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *       http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software distributed under the License
- * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
- * or implied. See the License for the specific language governing permissions and limitations under
- * the License.
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
  */
 package org.apache.ibatis.type;
 
@@ -38,7 +40,7 @@ public class UnknownTypeHandlerTest extends BaseTypeHandlerTest {
 
   @Override
   @Test
-  public void shouldGetResultFromResultSet() throws Exception {
+  public void shouldGetResultFromResultSetByName() throws Exception {
     when(rs.getMetaData()).thenReturn(rsmd);
     when(rsmd.getColumnCount()).thenReturn(1);
     when(rsmd.getColumnName(1)).thenReturn("column");
@@ -50,11 +52,37 @@ public class UnknownTypeHandlerTest extends BaseTypeHandlerTest {
   }
 
   @Override
+  public void shouldGetResultNullFromResultSetByName() throws Exception {
+    // Unnecessary
+  }
+
+  @Override
+  @Test
+  public void shouldGetResultFromResultSetByPosition() throws Exception {
+    when(rs.getMetaData()).thenReturn(rsmd);
+    when(rsmd.getColumnClassName(1)).thenReturn(String.class.getName());
+    when(rsmd.getColumnType(1)).thenReturn(JdbcType.VARCHAR.TYPE_CODE);
+    when(rs.getString(1)).thenReturn("Hello");
+    when(rs.wasNull()).thenReturn(false);
+    assertEquals("Hello", TYPE_HANDLER.getResult(rs, 1));
+  }
+
+  @Override
+  public void shouldGetResultNullFromResultSetByPosition() throws Exception {
+    // Unnecessary
+  }
+
+  @Override
   @Test
   public void shouldGetResultFromCallableStatement() throws Exception {
     when(cs.getObject(1)).thenReturn("Hello");
     when(cs.wasNull()).thenReturn(false);
     assertEquals("Hello", TYPE_HANDLER.getResult(cs, 1));
+  }
+
+  @Override
+  public void shouldGetResultNullFromCallableStatement() throws Exception {
+    // Unnecessary
   }
 
   @Test
@@ -77,7 +105,7 @@ public class UnknownTypeHandlerTest extends BaseTypeHandlerTest {
 
   @Test
   public void setParameterWithNonNullParameterThrowsException() throws SQLException {
-    doThrow(new SQLException("invalid column")).when((UnknownTypeHandler) TYPE_HANDLER).setNonNullParameter(ps, 1, 99, JdbcType.INTEGER);
+    doThrow(new SQLException("invalid column")).when((UnknownTypeHandler)TYPE_HANDLER).setNonNullParameter(ps, 1, 99, JdbcType.INTEGER);
     try {
       TYPE_HANDLER.setParameter(ps, 1, 99, JdbcType.INTEGER);
       Assert.fail("Should have thrown a TypeException");
@@ -89,7 +117,7 @@ public class UnknownTypeHandlerTest extends BaseTypeHandlerTest {
 
   @Test
   public void getResultWithResultSetAndColumnNameThrowsException() throws SQLException {
-    doThrow(new SQLException("invalid column")).when((UnknownTypeHandler) TYPE_HANDLER).getNullableResult(rs, "foo");
+    doThrow(new SQLException("invalid column")).when((UnknownTypeHandler)TYPE_HANDLER).getNullableResult(rs, "foo");
     try {
       TYPE_HANDLER.getResult(rs, "foo");
       Assert.fail("Should have thrown a ResultMapException");
@@ -101,7 +129,7 @@ public class UnknownTypeHandlerTest extends BaseTypeHandlerTest {
 
   @Test
   public void getResultWithResultSetAndColumnIndexThrowsException() throws SQLException {
-    doThrow(new SQLException("invalid column")).when((UnknownTypeHandler) TYPE_HANDLER).getNullableResult(rs, 1);
+    doThrow(new SQLException("invalid column")).when((UnknownTypeHandler)TYPE_HANDLER).getNullableResult(rs, 1);
     try {
       TYPE_HANDLER.getResult(rs, 1);
       Assert.fail("Should have thrown a ResultMapException");
@@ -113,7 +141,7 @@ public class UnknownTypeHandlerTest extends BaseTypeHandlerTest {
 
   @Test
   public void getResultWithCallableStatementAndColumnIndexThrowsException() throws SQLException {
-    doThrow(new SQLException("invalid column")).when((UnknownTypeHandler) TYPE_HANDLER).getNullableResult(cs, 1);
+    doThrow(new SQLException("invalid column")).when((UnknownTypeHandler)TYPE_HANDLER).getNullableResult(cs, 1);
     try {
       TYPE_HANDLER.getResult(cs, 1);
       Assert.fail("Should have thrown a ResultMapException");

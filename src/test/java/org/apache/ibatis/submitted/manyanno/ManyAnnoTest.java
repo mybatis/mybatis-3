@@ -1,15 +1,17 @@
 /**
- * Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2015 the original author or authors.
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
- * in compliance with the License. You may obtain a copy of the License at
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *       http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software distributed under the License
- * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
- * or implied. See the License for the specific language governing permissions and limitations under
- * the License.
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
  */
 package org.apache.ibatis.submitted.manyanno;
 
@@ -35,14 +37,15 @@ public class ManyAnnoTest extends BaseDataTest {
     config.addMapper(PostMapper.class);
     final SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(config);
     final SqlSession session = factory.openSession();
-
+    
     PostMapper mapper = session.getMapper(PostMapper.class);
     List<AnnoPost> posts = mapper.getPosts(101);
 
-    assertEquals(3, posts.size());
-    assertEquals(3, posts.get(0).getTags().size());
-    assertEquals(1, posts.get(1).getTags().size());
-    assertEquals(0, posts.get(2).getTags().size());
+
+    assertEquals(3,posts.size());
+    assertEquals(3,posts.get(0).getTags().size());
+    assertEquals(1,posts.get(1).getTags().size());
+    assertEquals(0,posts.get(2).getTags().size());
 
     session.close();
 

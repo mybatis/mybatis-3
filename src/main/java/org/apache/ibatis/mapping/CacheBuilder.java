@@ -1,15 +1,17 @@
 /**
- * Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2016 the original author or authors.
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
- * in compliance with the License. You may obtain a copy of the License at
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *       http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software distributed under the License
- * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
- * or implied. See the License for the specific language governing permissions and limitations under
- * the License.
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
  */
 package org.apache.ibatis.mapping;
 
@@ -21,6 +23,7 @@ import java.util.Properties;
 
 import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.cache.CacheException;
+import org.apache.ibatis.builder.InitializingObject;
 import org.apache.ibatis.cache.decorators.BlockingCache;
 import org.apache.ibatis.cache.decorators.LoggingCache;
 import org.apache.ibatis.cache.decorators.LruCache;
@@ -80,7 +83,7 @@ public class CacheBuilder {
     this.blocking = blocking;
     return this;
   }
-
+  
   public CacheBuilder properties(Properties properties) {
     this.properties = properties;
     return this;
@@ -146,24 +149,39 @@ public class CacheBuilder {
           Class<?> type = metaCache.getSetterType(name);
           if (String.class == type) {
             metaCache.setValue(name, value);
-          } else if (int.class == type || Integer.class == type) {
+          } else if (int.class == type
+              || Integer.class == type) {
             metaCache.setValue(name, Integer.valueOf(value));
-          } else if (long.class == type || Long.class == type) {
+          } else if (long.class == type
+              || Long.class == type) {
             metaCache.setValue(name, Long.valueOf(value));
-          } else if (short.class == type || Short.class == type) {
+          } else if (short.class == type
+              || Short.class == type) {
             metaCache.setValue(name, Short.valueOf(value));
-          } else if (byte.class == type || Byte.class == type) {
+          } else if (byte.class == type
+              || Byte.class == type) {
             metaCache.setValue(name, Byte.valueOf(value));
-          } else if (float.class == type || Float.class == type) {
+          } else if (float.class == type
+              || Float.class == type) {
             metaCache.setValue(name, Float.valueOf(value));
-          } else if (boolean.class == type || Boolean.class == type) {
+          } else if (boolean.class == type
+              || Boolean.class == type) {
             metaCache.setValue(name, Boolean.valueOf(value));
-          } else if (double.class == type || Double.class == type) {
+          } else if (double.class == type
+              || Double.class == type) {
             metaCache.setValue(name, Double.valueOf(value));
           } else {
             throw new CacheException("Unsupported property type for cache: '" + name + "' of type " + type);
           }
         }
+      }
+    }
+    if (InitializingObject.class.isAssignableFrom(cache.getClass())){
+      try {
+        ((InitializingObject) cache).initialize();
+      } catch (Exception e) {
+        throw new CacheException("Failed cache initialization for '" +
+            cache.getId() + "' on '" + cache.getClass().getName() + "'", e);
       }
     }
   }
@@ -181,8 +199,8 @@ public class CacheBuilder {
     try {
       return cacheClass.getConstructor(String.class);
     } catch (Exception e) {
-      throw new CacheException("Invalid base cache implementation (" + cacheClass + ").  "
-          + "Base cache implementations must have a constructor that takes a String id as a parameter.  Cause: " + e, e);
+      throw new CacheException("Invalid base cache implementation (" + cacheClass + ").  " +
+          "Base cache implementations must have a constructor that takes a String id as a parameter.  Cause: " + e, e);
     }
   }
 
@@ -199,8 +217,8 @@ public class CacheBuilder {
     try {
       return cacheClass.getConstructor(Cache.class);
     } catch (Exception e) {
-      throw new CacheException("Invalid cache decorator (" + cacheClass + ").  "
-          + "Cache decorators must have a constructor that takes a Cache instance as a parameter.  Cause: " + e, e);
+      throw new CacheException("Invalid cache decorator (" + cacheClass + ").  " +
+          "Cache decorators must have a constructor that takes a Cache instance as a parameter.  Cause: " + e, e);
     }
   }
 }

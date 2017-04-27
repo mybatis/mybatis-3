@@ -1,18 +1,22 @@
 /**
- * Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
- * in compliance with the License. You may obtain a copy of the License at
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *       http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software distributed under the License
- * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
- * or implied. See the License for the specific language governing permissions and limitations under
- * the License.
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
  */
 package org.apache.ibatis.logging.jdbc;
 
+import java.sql.Array;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -23,6 +27,7 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 import org.apache.ibatis.logging.Log;
+import org.apache.ibatis.reflection.ArrayUtil;
 
 /**
  * Base class for proxies to do logging
@@ -57,6 +62,7 @@ public abstract class BaseJdbcLogger {
 
   static {
     SET_METHODS.add("setString");
+    SET_METHODS.add("setNString");
     SET_METHODS.add("setInt");
     SET_METHODS.add("setByte");
     SET_METHODS.add("setShort");
@@ -74,7 +80,9 @@ public abstract class BaseJdbcLogger {
     SET_METHODS.add("setBoolean");
     SET_METHODS.add("setBytes");
     SET_METHODS.add("setCharacterStream");
+    SET_METHODS.add("setNCharacterStream");
     SET_METHODS.add("setClob");
+    SET_METHODS.add("setNClob");
     SET_METHODS.add("setObject");
     SET_METHODS.add("setNull");
 
@@ -100,11 +108,22 @@ public abstract class BaseJdbcLogger {
       if (value == null) {
         typeList.add("null");
       } else {
-        typeList.add(value + "(" + value.getClass().getSimpleName() + ")");
+        typeList.add(objectValueString(value) + "(" + value.getClass().getSimpleName() + ")");
       }
     }
     final String parameters = typeList.toString();
     return parameters.substring(1, parameters.length() - 1);
+  }
+
+  protected String objectValueString(Object value) {
+    if (value instanceof Array) {
+      try {
+        return ArrayUtil.toString(((Array) value).getArray());
+      } catch (SQLException e) {
+        return value.toString();
+      }
+    }
+    return value.toString();
   }
 
   protected String getColumnString() {

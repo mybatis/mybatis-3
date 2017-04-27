@@ -1,5 +1,5 @@
 --
---    Copyright 2009-2012 The MyBatis Team
+--    Copyright 2009-2016 the original author or authors.
 --
 --    Licensed under the Apache License, Version 2.0 (the "License");
 --    you may not use this file except in compliance with the License.
@@ -25,3 +25,4 @@ insert into users values(1, 'User1');
 insert into users values(2, 'User2');
 insert into users values(3, 'User3');
 insert into users values(4, 'User4');
+insert into users values(5, 'User5');

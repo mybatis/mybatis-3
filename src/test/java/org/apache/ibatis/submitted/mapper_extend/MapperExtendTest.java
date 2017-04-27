@@ -1,21 +1,24 @@
 /**
- * Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
- * in compliance with the License. You may obtain a copy of the License at
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *       http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software distributed under the License
- * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
- * or implied. See the License for the specific language governing permissions and limitations under
- * the License.
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
  */
 package org.apache.ibatis.submitted.mapper_extend;
 
 import java.io.Reader;
 import java.sql.Connection;
 
+import org.apache.ibatis.binding.BindingException;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSession;
@@ -24,6 +27,9 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import static com.googlecode.catchexception.apis.BDDCatchException.*;
+import static org.assertj.core.api.BDDAssertions.then;
 
 public class MapperExtendTest {
 
@@ -58,6 +64,7 @@ public class MapperExtendTest {
       sqlSession.close();
     }
   }
+
 
   @Test
   public void shouldGetAUserWithAnExtendedAnnotatedMethod() {
@@ -95,4 +102,29 @@ public class MapperExtendTest {
     }
   }
 
+  @Test
+  public void shouldFindStatementInSubInterfaceOfDeclaringClass() {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      ChildMapper mapper = sqlSession.getMapper(ChildMapper.class);
+      User user = mapper.getUserByName("User1");
+      Assert.assertNotNull(user);
+    } finally {
+      sqlSession.close();
+    }
+  }
+
+  @Test
+  public void shouldThrowExceptionIfNoMatchingStatementFound() {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      when(mapper).noMappedStatement();
+      then(caughtException()).isInstanceOf(BindingException.class)
+        .hasMessage("Invalid bound statement (not found): "
+          + Mapper.class.getName() + ".noMappedStatement");
+    } finally {
+      sqlSession.close();
+    }
+  }
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
 
-       Copyright 2009-2012 the original author or authors.
+       Copyright 2009-2016 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -25,13 +25,6 @@
   <insert id="insert">
     <selectKey keyProperty="id" resultType="int" order="AFTER">
     select top 1 50 from INFORMATION_SCHEMA.SYSTEM_TABLES
-    </selectKey>
-  	insert into users values(#{id}, #{name})
-  </insert>
-
-  <insert id="insertDerby">
-    <selectKey keyProperty="id" resultType="int" order="AFTER">
-    select 50 from sysibm.sysdummy1
     </selectKey>
   	insert into users values(#{id}, #{name})
   </insert>

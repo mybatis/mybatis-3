@@ -1,15 +1,17 @@
 /**
- * Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2015 the original author or authors.
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
- * in compliance with the License. You may obtain a copy of the License at
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *       http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software distributed under the License
- * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
- * or implied. See the License for the specific language governing permissions and limitations under
- * the License.
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
  */
 package org.apache.ibatis.session;
 
@@ -39,7 +41,9 @@ public class SqlSessionManager implements SqlSessionFactory, SqlSession {
 
   private SqlSessionManager(SqlSessionFactory sqlSessionFactory) {
     this.sqlSessionFactory = sqlSessionFactory;
-    this.sqlSessionProxy = (SqlSession) Proxy.newProxyInstance(SqlSessionFactory.class.getClassLoader(), new Class[] { SqlSession.class },
+    this.sqlSessionProxy = (SqlSession) Proxy.newProxyInstance(
+        SqlSessionFactory.class.getClassLoader(),
+        new Class[]{SqlSession.class},
         new SqlSessionInterceptor());
   }
 
@@ -154,27 +158,27 @@ public class SqlSessionManager implements SqlSessionFactory, SqlSession {
 
   @Override
   public <T> T selectOne(String statement) {
-    return sqlSessionProxy.<T>selectOne(statement);
+    return sqlSessionProxy.<T> selectOne(statement);
   }
 
   @Override
   public <T> T selectOne(String statement, Object parameter) {
-    return sqlSessionProxy.<T>selectOne(statement, parameter);
+    return sqlSessionProxy.<T> selectOne(statement, parameter);
   }
 
   @Override
   public <K, V> Map<K, V> selectMap(String statement, String mapKey) {
-    return sqlSessionProxy.<K, V>selectMap(statement, mapKey);
+    return sqlSessionProxy.<K, V> selectMap(statement, mapKey);
   }
 
   @Override
   public <K, V> Map<K, V> selectMap(String statement, Object parameter, String mapKey) {
-    return sqlSessionProxy.<K, V>selectMap(statement, parameter, mapKey);
+    return sqlSessionProxy.<K, V> selectMap(statement, parameter, mapKey);
   }
 
   @Override
   public <K, V> Map<K, V> selectMap(String statement, Object parameter, String mapKey, RowBounds rowBounds) {
-    return sqlSessionProxy.<K, V>selectMap(statement, parameter, mapKey, rowBounds);
+    return sqlSessionProxy.<K, V> selectMap(statement, parameter, mapKey, rowBounds);
   }
 
   @Override
@@ -194,17 +198,17 @@ public class SqlSessionManager implements SqlSessionFactory, SqlSession {
 
   @Override
   public <E> List<E> selectList(String statement) {
-    return sqlSessionProxy.<E>selectList(statement);
+    return sqlSessionProxy.<E> selectList(statement);
   }
 
   @Override
   public <E> List<E> selectList(String statement, Object parameter) {
-    return sqlSessionProxy.<E>selectList(statement, parameter);
+    return sqlSessionProxy.<E> selectList(statement, parameter);
   }
 
   @Override
   public <E> List<E> selectList(String statement, Object parameter, RowBounds rowBounds) {
-    return sqlSessionProxy.<E>selectList(statement, parameter, rowBounds);
+    return sqlSessionProxy.<E> selectList(statement, parameter, rowBounds);
   }
 
   @Override
@@ -335,7 +339,7 @@ public class SqlSessionManager implements SqlSessionFactory, SqlSession {
 
   private class SqlSessionInterceptor implements InvocationHandler {
     public SqlSessionInterceptor() {
-      // Prevent Synthetic Access
+        // Prevent Synthetic Access
     }
 
     @Override

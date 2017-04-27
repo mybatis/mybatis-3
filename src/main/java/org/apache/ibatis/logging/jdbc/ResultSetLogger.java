@@ -1,15 +1,17 @@
 /**
- * Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2016 the original author or authors.
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
- * in compliance with the License. You may obtain a copy of the License at
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *       http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software distributed under the License
- * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
- * or implied. See the License for the specific language governing permissions and limitations under
- * the License.
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
  */
 package org.apache.ibatis.logging.jdbc;
 
@@ -37,7 +39,7 @@ public final class ResultSetLogger extends BaseJdbcLogger implements InvocationH
 
   private static Set<Integer> BLOB_TYPES = new HashSet<Integer>();
   private boolean first = true;
-  private int rows = 0;
+  private int rows;
   private ResultSet rs;
   private Set<Integer> blobColumns = new HashSet<Integer>();
 
@@ -51,7 +53,7 @@ public final class ResultSetLogger extends BaseJdbcLogger implements InvocationH
     BLOB_TYPES.add(Types.NCLOB);
     BLOB_TYPES.add(Types.VARBINARY);
   }
-
+  
   private ResultSetLogger(ResultSet rs, Log statementLog, int queryStack) {
     super(statementLog, queryStack);
     this.rs = rs;
@@ -62,7 +64,7 @@ public final class ResultSetLogger extends BaseJdbcLogger implements InvocationH
     try {
       if (Object.class.equals(method.getDeclaringClass())) {
         return method.invoke(this, params);
-      }
+      }    
       Object o = method.invoke(rs, params);
       if ("next".equals(method.getName())) {
         if (((Boolean) o)) {
@@ -128,17 +130,19 @@ public final class ResultSetLogger extends BaseJdbcLogger implements InvocationH
 
   /*
    * Creates a logging version of a ResultSet
+   *
    * @param rs - the ResultSet to proxy
    * @return - the ResultSet with logging
    */
   public static ResultSet newInstance(ResultSet rs, Log statementLog, int queryStack) {
     InvocationHandler handler = new ResultSetLogger(rs, statementLog, queryStack);
     ClassLoader cl = ResultSet.class.getClassLoader();
-    return (ResultSet) Proxy.newProxyInstance(cl, new Class[] { ResultSet.class }, handler);
+    return (ResultSet) Proxy.newProxyInstance(cl, new Class[]{ResultSet.class}, handler);
   }
 
   /*
    * Get the wrapped result set
+   *
    * @return the resultSet
    */
   public ResultSet getRs() {

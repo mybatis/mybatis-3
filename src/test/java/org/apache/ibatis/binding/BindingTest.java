@@ -1,15 +1,17 @@
 /**
- * Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2016 the original author or authors.
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
- * in compliance with the License. You may obtain a copy of the License at
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *       http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software distributed under the License
- * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
- * or implied. See the License for the specific language governing permissions and limitations under
- * the License.
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
  */
 package org.apache.ibatis.binding;
 
@@ -22,8 +24,10 @@ import static org.junit.Assert.assertTrue;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -34,6 +38,7 @@ import javax.sql.DataSource;
 import net.sf.cglib.proxy.Factory;
 
 import org.apache.ibatis.BaseDataTest;
+import org.apache.ibatis.cursor.Cursor;
 import org.apache.ibatis.domain.blog.Author;
 import org.apache.ibatis.domain.blog.Blog;
 import org.apache.ibatis.domain.blog.DraftPost;
@@ -64,6 +69,7 @@ public class BindingTest {
     Environment environment = new Environment("Production", transactionFactory, dataSource);
     Configuration configuration = new Configuration(environment);
     configuration.setLazyLoadingEnabled(true);
+    configuration.setUseActualParamName(false); // to test legacy style reference (#{0} #{1})
     configuration.getTypeAliasRegistry().registerAlias(Blog.class);
     configuration.getTypeAliasRegistry().registerAlias(Post.class);
     configuration.getTypeAliasRegistry().registerAlias(Author.class);
@@ -95,13 +101,11 @@ public class BindingTest {
     SqlSession session = sqlSessionFactory.openSession();
     try {
       BoundAuthorMapper mapper = session.getMapper(BoundAuthorMapper.class);
-      List<Post> posts = mapper.findPostsInList(new ArrayList<Integer>() {
-        {
-          add(1);
-          add(3);
-          add(5);
-        }
-      });
+      List<Post> posts = mapper.findPostsInList(new ArrayList<Integer>() {{
+        add(1);
+        add(3);
+        add(5);
+      }});
       assertEquals(3, posts.size());
       session.rollback();
     } finally {
@@ -114,7 +118,7 @@ public class BindingTest {
     SqlSession session = sqlSessionFactory.openSession();
     try {
       BoundAuthorMapper mapper = session.getMapper(BoundAuthorMapper.class);
-      Integer[] params = new Integer[] { 1, 3, 5 };
+      Integer[] params = new Integer[]{1, 3, 5};
       List<Post> posts = mapper.findPostsInArray(params);
       assertEquals(3, posts.size());
       session.rollback();
@@ -192,15 +196,15 @@ public class BindingTest {
       session.close();
     }
   }
-
+  
   @Test
   public void shouldExecuteBoundSelectMapOfBlogsById() {
     SqlSession session = sqlSessionFactory.openSession();
     try {
       BoundBlogMapper mapper = session.getMapper(BoundBlogMapper.class);
-      Map<Integer, Blog> blogs = mapper.selectBlogsAsMapById();
+      Map<Integer,Blog> blogs = mapper.selectBlogsAsMapById();
       assertEquals(2, blogs.size());
-      for (Map.Entry<Integer, Blog> blogEntry : blogs.entrySet()) {
+      for(Map.Entry<Integer,Blog> blogEntry : blogs.entrySet()) {
         assertEquals(blogEntry.getKey(), (Integer) blogEntry.getValue().getId());
       }
     } finally {
@@ -215,7 +219,7 @@ public class BindingTest {
       final DefaultResultHandler handler = new DefaultResultHandler();
       session.select("selectBlogsAsMapById", handler);
 
-      // new session
+      //new session
       session.close();
       session = sqlSessionFactory.openSession();
 
@@ -253,14 +257,14 @@ public class BindingTest {
     SqlSession session = sqlSessionFactory.openSession();
     try {
       BoundBlogMapper mapper = session.getMapper(BoundBlogMapper.class);
-      Map<Integer, Blog> blogs = mapper.selectBlogsAsMapById();
-      Map<Integer, Blog> moreBlogs = mapper.selectBlogsAsMapById();
+      Map<Integer,Blog> blogs = mapper.selectBlogsAsMapById();
+      Map<Integer,Blog> moreBlogs = mapper.selectBlogsAsMapById();
       assertEquals(2, blogs.size());
       assertEquals(2, moreBlogs.size());
-      for (Map.Entry<Integer, Blog> blogEntry : blogs.entrySet()) {
+      for(Map.Entry<Integer,Blog> blogEntry : blogs.entrySet()) {
         assertEquals(blogEntry.getKey(), (Integer) blogEntry.getValue().getId());
       }
-      for (Map.Entry<Integer, Blog> blogEntry : moreBlogs.entrySet()) {
+      for(Map.Entry<Integer,Blog> blogEntry : moreBlogs.entrySet()) {
         assertEquals(blogEntry.getKey(), (Integer) blogEntry.getValue().getId());
       }
     } finally {
@@ -273,19 +277,19 @@ public class BindingTest {
     SqlSession session = sqlSessionFactory.openSession();
     try {
       BoundBlogMapper mapper = session.getMapper(BoundBlogMapper.class);
-      Map<Integer, Blog> blogs = mapper.selectBlogsAsMapById();
+      Map<Integer,Blog> blogs = mapper.selectBlogsAsMapById();
       session.close();
 
-      // New Session
+      //New Session
       session = sqlSessionFactory.openSession();
       mapper = session.getMapper(BoundBlogMapper.class);
-      Map<Integer, Blog> moreBlogs = mapper.selectBlogsAsMapById();
+      Map<Integer,Blog> moreBlogs = mapper.selectBlogsAsMapById();
       assertEquals(2, blogs.size());
       assertEquals(2, moreBlogs.size());
-      for (Map.Entry<Integer, Blog> blogEntry : blogs.entrySet()) {
+      for(Map.Entry<Integer,Blog> blogEntry : blogs.entrySet()) {
         assertEquals(blogEntry.getKey(), (Integer) blogEntry.getValue().getId());
       }
-      for (Map.Entry<Integer, Blog> blogEntry : moreBlogs.entrySet()) {
+      for(Map.Entry<Integer,Blog> blogEntry : moreBlogs.entrySet()) {
         assertEquals(blogEntry.getKey(), (Integer) blogEntry.getValue().getId());
       }
     } finally {
@@ -322,7 +326,7 @@ public class BindingTest {
     SqlSession session = sqlSessionFactory.openSession();
     try {
       BoundBlogMapper mapper = session.getMapper(BoundBlogMapper.class);
-      List<Map<String, Object>> blogs = mapper.selectBlogsAsMaps();
+      List<Map<String,Object>> blogs = mapper.selectBlogsAsMaps();
       assertEquals(2, blogs.size());
     } finally {
       session.close();
@@ -334,7 +338,7 @@ public class BindingTest {
     SqlSession session = sqlSessionFactory.openSession();
     try {
       BoundBlogMapper mapper = session.getMapper(BoundBlogMapper.class);
-      List<Post> posts = mapper.selectPostsLike(new RowBounds(1, 1), "%a%");
+      List<Post> posts = mapper.selectPostsLike(new RowBounds(1,1),"%a%");
       assertEquals(1, posts.size());
     } finally {
       session.close();
@@ -346,7 +350,7 @@ public class BindingTest {
     SqlSession session = sqlSessionFactory.openSession();
     try {
       BoundBlogMapper mapper = session.getMapper(BoundBlogMapper.class);
-      List<Post> posts = mapper.selectPostsLikeSubjectAndBody(new RowBounds(1, 1), "%a%", "%a%");
+      List<Post> posts = mapper.selectPostsLikeSubjectAndBody(new RowBounds(1,1),"%a%","%a%");
       assertEquals(1, posts.size());
     } finally {
       session.close();
@@ -418,7 +422,7 @@ public class BindingTest {
       session.close();
     }
   }
-
+  
   @Ignore
   @Test // issue #480 and #101
   public void shouldExecuteBoundSelectBlogUsingConstructorWithResultMapCollection() {
@@ -435,7 +439,7 @@ public class BindingTest {
       session.close();
     }
   }
-
+  
   @Test
   public void shouldExecuteBoundSelectOneBlogStatementWithConstructorUsingXMLConfig() {
     SqlSession session = sqlSessionFactory.openSession();
@@ -457,7 +461,7 @@ public class BindingTest {
     SqlSession session = sqlSessionFactory.openSession();
     try {
       BoundBlogMapper mapper = session.getMapper(BoundBlogMapper.class);
-      Map<String, Object> blog = mapper.selectBlogAsMap(new HashMap<String, Object>() {
+      Map<String,Object> blog = mapper.selectBlogAsMap(new HashMap<String, Object>() {
         {
           put("id", 1);
         }
@@ -660,8 +664,7 @@ public class BindingTest {
     final SqlSession session = sqlSessionFactory.openSession();
     try {
 
-      // Create another mapper instance with a method cache we can test
-      // against:
+      // Create another mapper instance with a method cache we can test against:
       final MapperProxyFactory<BoundBlogMapper> mapperProxyFactory = new MapperProxyFactory<BoundBlogMapper>(BoundBlogMapper.class);
       assertEquals(BoundBlogMapper.class, mapperProxyFactory.getMapperInterface());
       final BoundBlogMapper mapper = mapperProxyFactory.newInstance(session);
@@ -684,8 +687,7 @@ public class BindingTest {
       assertEquals(1, mapperProxyFactory.getMethodCache().size());
       assertSame(cachedSelectBlog, mapperProxyFactory.getMethodCache().get(selectBlog));
 
-      // Call another mapper method and verify that it shows up in the
-      // cache as well:
+      // Call another mapper method and verify that it shows up in the cache as well:
       session.clearCache();
       mapper.selectBlogByIdUsingConstructor(1);
       assertEquals(2, mapperProxyFactory.getMethodCache().size());
@@ -708,7 +710,7 @@ public class BindingTest {
       assertEquals(101, blogs.get(0).getAuthor().getId());
       assertEquals(1, blogs.get(0).getPosts().size());
       assertEquals(1, blogs.get(0).getPosts().get(0).getId());
-      assertTrue(blogs.get(1) instanceof Proxy);
+      assertTrue(blogs.get(1) instanceof Proxy);      
       assertEquals(102, blogs.get(1).getAuthor().getId());
       assertEquals(1, blogs.get(1).getPosts().size());
       assertEquals(2, blogs.get(1).getPosts().get(0).getId());
@@ -728,13 +730,71 @@ public class BindingTest {
       assertEquals(101, blogs.get(0).getAuthor().getId());
       assertEquals(1, blogs.get(0).getPosts().size());
       assertEquals(1, blogs.get(0).getPosts().get(0).getId());
-      assertFalse(blogs.get(1) instanceof Factory);
+      assertFalse(blogs.get(1) instanceof Factory);      
       assertEquals(102, blogs.get(1).getAuthor().getId());
       assertEquals(1, blogs.get(1).getPosts().size());
       assertEquals(2, blogs.get(1).getPosts().get(0).getId());
     } finally {
       session.close();
     }
+  }
+
+  @Test
+  public void executeWithResultHandlerAndRowBounds() {
+    SqlSession session = sqlSessionFactory.openSession();
+    try {
+      BoundBlogMapper mapper = session.getMapper(BoundBlogMapper.class);
+      final DefaultResultHandler handler = new DefaultResultHandler();
+      mapper.collectRangeBlogs(handler, new RowBounds(1, 1));
+
+      assertEquals(1, handler.getResultList().size());
+      Blog blog = (Blog) handler.getResultList().get(0);
+      assertEquals(2, blog.getId());
+
+    } finally {
+      session.close();
+    }
+  }
+
+  @Test
+  public void executeWithMapKeyAndRowBounds() {
+    SqlSession session = sqlSessionFactory.openSession();
+    try {
+      BoundBlogMapper mapper = session.getMapper(BoundBlogMapper.class);
+      Map<Integer, Blog> blogs = mapper.selectRangeBlogsAsMapById(new RowBounds(1, 1));
+
+      assertEquals(1, blogs.size());
+      Blog blog = blogs.get(2);
+      assertEquals(2, blog.getId());
+
+    } finally {
+      session.close();
+    }
+  }
+
+  @Test
+  public void executeWithCursorAndRowBounds() {
+    SqlSession session = sqlSessionFactory.openSession();
+    try {
+      BoundBlogMapper mapper = session.getMapper(BoundBlogMapper.class);
+      Cursor<Blog> blogs = mapper.openRangeBlogs(new RowBounds(1, 1));
+
+      Iterator<Blog> blogIterator = blogs.iterator();
+      Blog blog = blogIterator.next();
+      assertEquals(2, blog.getId());
+      assertFalse(blogIterator.hasNext());
+
+    } finally {
+      session.close();
+    }
+  }
+
+  @Test
+  public void registeredMappers() {
+    Collection<Class<?>> mapperClasses = sqlSessionFactory.getConfiguration().getMapperRegistry().getMappers();
+    assertEquals(2, mapperClasses.size());
+    assertTrue(mapperClasses.contains(BoundBlogMapper.class));
+    assertTrue(mapperClasses.contains(BoundAuthorMapper.class));
   }
 
 }

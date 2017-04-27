@@ -1,15 +1,17 @@
 /**
- * Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2016 the original author or authors.
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
- * in compliance with the License. You may obtain a copy of the License at
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *       http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software distributed under the License
- * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
- * or implied. See the License for the specific language governing permissions and limitations under
- * the License.
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
  */
 package org.apache.ibatis.io;
 
@@ -36,9 +38,7 @@ public abstract class VFS {
   /** The built-in implementations. */
   public static final Class<?>[] IMPLEMENTATIONS = { JBoss6VFS.class, DefaultVFS.class };
 
-  /**
-   * The list to which implementations are added by {@link #addImplClass(Class)}.
-   */
+  /** The list to which implementations are added by {@link #addImplClass(Class)}. */
   public static final List<Class<? extends VFS>> USER_IMPLEMENTATIONS = new ArrayList<Class<? extends VFS>>();
 
   /** Singleton instance. */
@@ -67,7 +67,8 @@ public abstract class VFS {
         vfs = impl.newInstance();
         if (vfs == null || !vfs.isValid()) {
           if (log.isDebugEnabled()) {
-            log.debug("VFS implementation " + impl.getName() + " is not valid in this environment.");
+            log.debug("VFS implementation " + impl.getName() +
+              " is not valid in this environment.");
           }
         }
       } catch (InstantiationException e) {
@@ -102,7 +103,7 @@ public abstract class VFS {
   protected static Class<?> getClass(String className) {
     try {
       return Thread.currentThread().getContextClassLoader().loadClass(className);
-      // return ReflectUtil.findClass(className);
+//      return ReflectUtil.findClass(className);
     } catch (ClassNotFoundException e) {
       if (log.isDebugEnabled()) {
         log.debug("Class not found: " + className);
@@ -141,10 +142,11 @@ public abstract class VFS {
    * @param parameters The parameters to pass to the method.
    * @return Whatever the method returns.
    * @throws IOException If I/O errors occur
-   * @throws StripesRuntimeException If anything else goes wrong
+   * @throws RuntimeException If anything else goes wrong
    */
   @SuppressWarnings("unchecked")
-  protected static <T> T invoke(Method method, Object object, Object... parameters) throws IOException, RuntimeException {
+  protected static <T> T invoke(Method method, Object object, Object... parameters)
+      throws IOException, RuntimeException {
     try {
       return (T) method.invoke(object, parameters);
     } catch (IllegalArgumentException e) {
@@ -172,18 +174,16 @@ public abstract class VFS {
     return Collections.list(Thread.currentThread().getContextClassLoader().getResources(path));
   }
 
-  /**
-   * Return true if the {@link VFS} implementation is valid for the current environment.
-   */
+  /** Return true if the {@link VFS} implementation is valid for the current environment. */
   public abstract boolean isValid();
 
   /**
-   * Recursively list the full resource path of all the resources that are children of the resource
-   * identified by a URL.
+   * Recursively list the full resource path of all the resources that are children of the
+   * resource identified by a URL.
    * 
    * @param url The URL that identifies the resource to list.
    * @param forPath The path to the resource that is identified by the URL. Generally, this is the
-   *          value passed to {@link #getResources(String)} to get the resource URL.
+   *            value passed to {@link #getResources(String)} to get the resource URL.
    * @return A list containing the names of the child resources.
    * @throws IOException If I/O errors occur
    */
