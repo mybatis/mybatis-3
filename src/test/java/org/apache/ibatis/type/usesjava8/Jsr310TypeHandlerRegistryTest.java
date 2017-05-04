@@ -15,8 +15,7 @@
  */
 package org.apache.ibatis.type.usesjava8;
 
-import static org.hamcrest.core.IsInstanceOf.*;
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -59,16 +58,27 @@ public class Jsr310TypeHandlerRegistryTest {
 
   @Test
   public void shouldRegisterJsr310TypeHandlers() throws ClassNotFoundException {
-    assertThat(typeHandlerRegistry.getTypeHandler(Instant.class), instanceOf(InstantTypeHandler.class));
-    assertThat(typeHandlerRegistry.getTypeHandler(LocalDateTime.class), instanceOf(LocalDateTimeTypeHandler.class));
-    assertThat(typeHandlerRegistry.getTypeHandler(LocalDate.class), instanceOf(LocalDateTypeHandler.class));
-    assertThat(typeHandlerRegistry.getTypeHandler(LocalTime.class), instanceOf(LocalTimeTypeHandler.class));
-    assertThat(typeHandlerRegistry.getTypeHandler(OffsetDateTime.class), instanceOf(OffsetDateTimeTypeHandler.class));
-    assertThat(typeHandlerRegistry.getTypeHandler(OffsetTime.class), instanceOf(OffsetTimeTypeHandler.class));
-    assertThat(typeHandlerRegistry.getTypeHandler(ZonedDateTime.class), instanceOf(ZonedDateTimeTypeHandler.class));
-    assertThat(typeHandlerRegistry.getTypeHandler(Month.class), instanceOf(MonthTypeHandler.class));
-    assertThat(typeHandlerRegistry.getTypeHandler(Year.class), instanceOf(YearTypeHandler.class));
-    assertThat(typeHandlerRegistry.getTypeHandler(YearMonth.class), instanceOf(YearMonthTypeHandler.class));
-    assertThat(typeHandlerRegistry.getTypeHandler(JapaneseDate.class), instanceOf(JapaneseDateTypeHandler.class));
+    assertThat(typeHandlerRegistry.getTypeHandler(Instant.class))
+        .isInstanceOf(InstantTypeHandler.class);
+    assertThat(typeHandlerRegistry.getTypeHandler(LocalDateTime.class))
+        .isInstanceOf(LocalDateTimeTypeHandler.class);
+    assertThat(typeHandlerRegistry.getTypeHandler(LocalDate.class))
+        .isInstanceOf(LocalDateTypeHandler.class);
+    assertThat(typeHandlerRegistry.getTypeHandler(LocalTime.class))
+        .isInstanceOf(LocalTimeTypeHandler.class);
+    assertThat(typeHandlerRegistry.getTypeHandler(OffsetDateTime.class))
+        .isInstanceOf(OffsetDateTimeTypeHandler.class);
+    assertThat(typeHandlerRegistry.getTypeHandler(OffsetTime.class))
+        .isInstanceOf(OffsetTimeTypeHandler.class);
+    assertThat(typeHandlerRegistry.getTypeHandler(ZonedDateTime.class))
+        .isInstanceOf(ZonedDateTimeTypeHandler.class);
+    assertThat(typeHandlerRegistry.getTypeHandler(Month.class))
+        .isInstanceOf(MonthTypeHandler.class);
+    assertThat(typeHandlerRegistry.getTypeHandler(Year.class))
+        .isInstanceOf(YearTypeHandler.class);
+    assertThat(typeHandlerRegistry.getTypeHandler(YearMonth.class))
+        .isInstanceOf(YearMonthTypeHandler.class);
+    assertThat(typeHandlerRegistry.getTypeHandler(JapaneseDate.class))
+        .isInstanceOf(JapaneseDateTypeHandler.class);
   }
 }

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -24,8 +24,7 @@ import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.hamcrest.core.Is;
-import org.junit.Assert;
+import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -46,13 +45,13 @@ public class AnnotationMapperTest {
     configuration.addMapper(AnnotationMapper.class);
     SupportClasses.CustomCache cache = SupportClasses.Utils.unwrap(configuration.getCache(AnnotationMapper.class.getName()));
 
-    Assert.assertThat(cache.getName(), Is.is("default"));
+    Assertions.assertThat(cache.getName()).isEqualTo("default");
 
     SqlSession sqlSession = factory.openSession();
     try {
       AnnotationMapper mapper = sqlSession.getMapper(AnnotationMapper.class);
 
-      Assert.assertThat(mapper.ping(), Is.is("Hello"));
+      Assertions.assertThat(mapper.ping()).isEqualTo("Hello");
 
     } finally {
       sqlSession.close();
@@ -74,13 +73,13 @@ public class AnnotationMapperTest {
     configuration.addMapper(AnnotationMapper.class);
     SupportClasses.CustomCache cache = SupportClasses.Utils.unwrap(configuration.getCache(AnnotationMapper.class.getName()));
 
-    Assert.assertThat(cache.getName(), Is.is("custom"));
+    Assertions.assertThat(cache.getName()).isEqualTo("custom");
 
     SqlSession sqlSession = factory.openSession();
     try {
       AnnotationMapper mapper = sqlSession.getMapper(AnnotationMapper.class);
 
-      Assert.assertThat(mapper.ping(), Is.is("Hi"));
+      Assertions.assertThat(mapper.ping()).isEqualTo("Hi");
 
     } finally {
       sqlSession.close();

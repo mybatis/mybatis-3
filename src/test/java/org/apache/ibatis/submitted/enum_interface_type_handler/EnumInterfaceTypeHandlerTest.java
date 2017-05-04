@@ -13,38 +13,38 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package org.apache.ibatis.submitted.blocking_cache;
+package org.apache.ibatis.submitted.enum_interface_type_handler;
+
+import static org.junit.Assert.*;
 
 import java.io.Reader;
 import java.sql.Connection;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.Assert;
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
-// issue #524
-public class BlockingCacheTest {
+public class EnumInterfaceTypeHandlerTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
-  @Before
-  public void setUp() throws Exception {
-    // create a SqlSessionFactory
-    Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/blocking_cache/mybatis-config.xml");
+  @BeforeClass
+  public static void setUp() throws Exception {
+    // create an SqlSessionFactory
+    Reader reader = Resources.getResourceAsReader(
+        "org/apache/ibatis/submitted/enum_interface_type_handler/mybatis-config.xml");
     sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
     reader.close();
 
     // populate in-memory database
     SqlSession session = sqlSessionFactory.openSession();
     Connection conn = session.getConnection();
-    reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/blocking_cache/CreateDB.sql");
+    reader = Resources
+        .getResourceAsReader("org/apache/ibatis/submitted/enum_interface_type_handler/CreateDB.sql");
     ScriptRunner runner = new ScriptRunner(conn);
     runner.setLogWriter(null);
     runner.runScript(reader);
@@ -53,43 +53,30 @@ public class BlockingCacheTest {
   }
 
   @Test
-  public void testBlockingCache() {
-    ExecutorService defaultThreadPool = Executors.newFixedThreadPool(2);
-
-    long init = System.currentTimeMillis();
-
-    for (int i = 0; i < 2; i++) {
-      defaultThreadPool.execute(new Runnable() {
-
-        @Override
-        public void run() {
-          accessDB();
-        }
-      });
-    }
-
-    defaultThreadPool.shutdown();
-
-    while (!defaultThreadPool.isTerminated()) {
-    }
-
-    long totalTime = System.currentTimeMillis() - init;
-    Assert.assertTrue(totalTime > 1000);
-  }
-
-  private void accessDB() {
-    SqlSession sqlSession1 = sqlSessionFactory.openSession();
+  public void shouldGetAUser() {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
     try {
-      PersonMapper pm = sqlSession1.getMapper(PersonMapper.class);
-      pm.findAll();
-      try {
-        Thread.sleep(500);
-      } catch (InterruptedException e) {
-        Assert.fail(e.getMessage());
-      }
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      User user = mapper.getUser(1);
+      assertEquals(Color.RED, user.getColor());
     } finally {
-      sqlSession1.close();
+      sqlSession.close();
     }
   }
 
+  @Test
+  public void shouldInsertAUser() {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      User user = new User();
+      user.setId(2);
+      user.setColor(Color.BLUE);
+      mapper.insertUser(user);
+      User result = mapper.getUser(2);
+      assertEquals(Color.BLUE, result.getColor());
+    } finally {
+      sqlSession.close();
+    }
+  }
 }

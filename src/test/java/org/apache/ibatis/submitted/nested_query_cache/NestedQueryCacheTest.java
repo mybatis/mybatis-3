@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2016 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ import org.junit.Test;
 
 import java.io.Reader;
 
-import static org.hamcrest.CoreMatchers.sameInstance;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.*;
 
 public class NestedQueryCacheTest extends BaseDataTest {
@@ -53,7 +53,7 @@ public class NestedQueryCacheTest extends BaseDataTest {
       
       // ensure that author is cached
       final Author cachedAuthor = authorMapper.selectAuthor(101);
-      assertThat("cached author", author, sameInstance(cachedAuthor));
+      assertThat(author).isSameAs(cachedAuthor);
     } finally {
       sqlSession.close();
     }
@@ -64,8 +64,8 @@ public class NestedQueryCacheTest extends BaseDataTest {
       final BlogMapper blogMapper = sqlSession.getMapper(BlogMapper.class);
 
       // ensure that nested author within blog is cached
-      assertThat("blog author", blogMapper.selectBlog(1).getAuthor(), sameInstance(author));
-      assertThat("blog author", blogMapper.selectBlogUsingConstructor(1).getAuthor(), sameInstance(author));
+      assertThat(blogMapper.selectBlog(1).getAuthor()).isSameAs(author);
+      assertThat(blogMapper.selectBlogUsingConstructor(1).getAuthor()).isSameAs(author);
     } finally {
       sqlSession.close();
     }
@@ -93,7 +93,7 @@ public class NestedQueryCacheTest extends BaseDataTest {
       Author cachedAuthor = authorMapper.selectAuthor(101);
 
       // ensure that nested author within blog is cached
-      assertThat("blog author", cachedAuthor, sameInstance(author));
+      assertThat(cachedAuthor).isSameAs(author);
       
     } finally {
       sqlSession.close();

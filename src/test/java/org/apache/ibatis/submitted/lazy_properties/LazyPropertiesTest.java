@@ -22,6 +22,7 @@ import java.sql.Connection;
 import java.util.Collections;
 import java.util.HashSet;
 
+import org.apache.ibatis.executor.loader.ProxyFactory;
 import org.apache.ibatis.executor.loader.cglib.CglibProxyFactory;
 import org.apache.ibatis.executor.loader.javassist.JavassistProxyFactory;
 import org.apache.ibatis.io.Resources;
@@ -64,9 +65,9 @@ public class LazyPropertiesTest {
     try {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = mapper.getUser(1);
-      assertEquals(0, user.lazyLoadCounter);
+      assertEquals(0, user.setterCounter);
       assertNotNull(user.getLazy1());
-      assertEquals("Should NOT load other lazy properties.", 1, user.lazyLoadCounter);
+      assertEquals("Should NOT load other lazy properties.", 1, user.setterCounter);
     } finally {
       sqlSession.close();
     }
@@ -81,7 +82,7 @@ public class LazyPropertiesTest {
       User user = mapper.getUser(1);
       // Setter invocation by MyBatis triggers aggressive lazy-loading.
       assertEquals("Should load all lazy properties.", 3,
-          user.lazyLoadCounter);
+          user.setterCounter);
     } finally {
       sqlSession.close();
     }
@@ -95,7 +96,7 @@ public class LazyPropertiesTest {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = mapper.getUser(1);
       user.toString();
-      assertEquals(3, user.lazyLoadCounter);
+      assertEquals(3, user.setterCounter);
     } finally {
       sqlSession.close();
     }
@@ -109,7 +110,7 @@ public class LazyPropertiesTest {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = mapper.getUser(1);
       user.hashCode();
-      assertEquals(3, user.lazyLoadCounter);
+      assertEquals(3, user.setterCounter);
     } finally {
       sqlSession.close();
     }
@@ -123,7 +124,7 @@ public class LazyPropertiesTest {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = mapper.getUser(1);
       user.equals(null);
-      assertEquals(3, user.lazyLoadCounter);
+      assertEquals(3, user.setterCounter);
     } finally {
       sqlSession.close();
     }
@@ -137,7 +138,7 @@ public class LazyPropertiesTest {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = mapper.getUser(1);
       user.clone();
-      assertEquals(3, user.lazyLoadCounter);
+      assertEquals(3, user.setterCounter);
     } finally {
       sqlSession.close();
     }
@@ -156,7 +157,7 @@ public class LazyPropertiesTest {
       user.hashCode();
       user.equals(null);
       user.clone();
-      assertEquals(0, user.lazyLoadCounter);
+      assertEquals(0, user.setterCounter);
     } finally {
       sqlSession.close();
     }
@@ -166,7 +167,8 @@ public class LazyPropertiesTest {
   public void verifyCustomLazyLoadTriggerMethods() {
     Configuration configuration = sqlSessionFactory.getConfiguration();
     configuration.setAggressiveLazyLoading(false);
-    configuration.setLazyLoadTriggerMethods(new HashSet<String>(Collections.singleton("trigger")));
+    configuration
+        .setLazyLoadTriggerMethods(new HashSet<String>(Collections.singleton("trigger")));
     SqlSession sqlSession = sqlSessionFactory.openSession();
     try {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
@@ -175,41 +177,38 @@ public class LazyPropertiesTest {
       user.hashCode();
       user.equals(null);
       user.clone();
-      assertEquals(0, user.lazyLoadCounter);
+      assertEquals(0, user.setterCounter);
       user.trigger();
-      assertEquals(3, user.lazyLoadCounter);
+      assertEquals(3, user.setterCounter);
     } finally {
       sqlSession.close();
     }
   }
 
   @Test
-  public void shouldInvokingSetterNotTriggerLazyLoading_Javassist() {
-    Configuration config = sqlSessionFactory.getConfiguration();
-    config.setProxyFactory(new JavassistProxyFactory());
-    config.setAggressiveLazyLoading(false);
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
-      Mapper mapper = sqlSession.getMapper(Mapper.class);
-      User user = mapper.getUser(1);
-      user.setLazy1(new User());
-      assertNotNull(user.getLazy1().getId());
-    } finally {
-      sqlSession.close();
-    }
+  public void shouldInvokingSetterInvalidateLazyLoading_Javassist() {
+    shoulInvokingSetterInvalidateLazyLoading(new JavassistProxyFactory());
   }
 
   @Test
-  public void shouldInvokingSetterNotTriggerLazyLoading_Cglib() {
+  public void shouldInvokingSetterInvalidateLazyLoading_Cglib() {
+    shoulInvokingSetterInvalidateLazyLoading(new CglibProxyFactory());
+  }
+
+  private void shoulInvokingSetterInvalidateLazyLoading(ProxyFactory proxyFactory) {
     Configuration config = sqlSessionFactory.getConfiguration();
-    config.setProxyFactory(new CglibProxyFactory());
+    config.setProxyFactory(proxyFactory);
     config.setAggressiveLazyLoading(false);
     SqlSession sqlSession = sqlSessionFactory.openSession();
     try {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = mapper.getUser(1);
-      user.setLazy1(new User());
-      assertNotNull(user.getLazy1().getId());
+      User u2 = new User();
+      u2.setId(99);
+      user.setLazy1(u2);
+      assertEquals(1, user.setterCounter);
+      assertEquals(Integer.valueOf(99), user.getLazy1().getId());
+      assertEquals(1, user.setterCounter);
     } finally {
       sqlSession.close();
     }

@@ -411,6 +411,20 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
             </tr>
             <tr>
               <td>
+                defaultEnumTypeHandler
+              </td>
+              <td>
+                Specifies the <code>TypeHandler</code> used by default for Enum. (Since: 3.4.5)
+              </td>
+              <td>
+                A type alias or fully qualified class name.
+              </td>
+              <td>
+                org.apache.ibatis.type.EnumTypeHandler
+              </td>
+            </tr>
+            <tr>
+              <td>
                 callSettersOnNulls
               </td>
               <td>

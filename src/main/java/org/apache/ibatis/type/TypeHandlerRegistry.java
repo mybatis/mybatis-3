@@ -28,6 +28,7 @@ import java.util.Date;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -47,6 +48,8 @@ public final class TypeHandlerRegistry {
   private final Map<Class<?>, TypeHandler<?>> ALL_TYPE_HANDLERS_MAP = new HashMap<Class<?>, TypeHandler<?>>();
 
   private static final Map<JdbcType, TypeHandler<?>> NULL_TYPE_HANDLER_MAP = new HashMap<JdbcType, TypeHandler<?>>();
+
+  private Class<? extends TypeHandler> defaultEnumTypeHandler = EnumTypeHandler.class;
 
   public TypeHandlerRegistry() {
     register(Boolean.class, new BooleanTypeHandler());
@@ -140,6 +143,16 @@ public final class TypeHandlerRegistry {
     register(char.class, new CharacterTypeHandler());
   }
 
+  /**
+   * Set a default {@link TypeHandler} class for {@link Enum}.
+   * A default {@link TypeHandler} is {@link org.apache.ibatis.type.EnumTypeHandler}.
+   * @param typeHandler a type handler class for {@link Enum}
+   * @since 3.4.5
+   */
+  public void setDefaultEnumTypeHandler(Class<? extends TypeHandler> typeHandler) {
+    this.defaultEnumTypeHandler = typeHandler;
+  }
+
   public boolean hasTypeHandler(Class<?> javaType) {
     return hasTypeHandler(javaType, null);
   }
@@ -207,9 +220,9 @@ public final class TypeHandlerRegistry {
     if (jdbcHandlerMap == null && type instanceof Class) {
       Class<?> clazz = (Class<?>) type;
       if (clazz.isEnum()) {
-        jdbcHandlerMap = getJdbcHandlerMapForEnumInterfaces(clazz);
+        jdbcHandlerMap = getJdbcHandlerMapForEnumInterfaces(clazz, clazz);
         if (jdbcHandlerMap == null) {
-          register(clazz, new EnumTypeHandler(clazz));
+          register(clazz, getInstance(clazz, defaultEnumTypeHandler));
           return TYPE_HANDLER_MAP.get(clazz);
         }
       } else {
@@ -220,14 +233,20 @@ public final class TypeHandlerRegistry {
     return jdbcHandlerMap;
   }
 
-  private Map<JdbcType, TypeHandler<?>> getJdbcHandlerMapForEnumInterfaces(Class<?> clazz) {
+  private Map<JdbcType, TypeHandler<?>> getJdbcHandlerMapForEnumInterfaces(Class<?> clazz, Class<?> enumClazz) {
     for (Class<?> iface : clazz.getInterfaces()) {
       Map<JdbcType, TypeHandler<?>> jdbcHandlerMap = TYPE_HANDLER_MAP.get(iface);
       if (jdbcHandlerMap == null) {
-        jdbcHandlerMap = getJdbcHandlerMapForEnumInterfaces(iface);
+        jdbcHandlerMap = getJdbcHandlerMapForEnumInterfaces(iface, enumClazz);
       }
       if (jdbcHandlerMap != null) {
-        return jdbcHandlerMap;
+        // Found a type handler regsiterd to a super interface
+        HashMap<JdbcType, TypeHandler<?>> newMap = new HashMap<JdbcType, TypeHandler<?>>();
+        for (Entry<JdbcType, TypeHandler<?>> entry : jdbcHandlerMap.entrySet()) {
+          // Create a type handler instance with enum type as a constructor arg
+          newMap.put(entry.getKey(), getInstance(enumClazz, entry.getValue().getClass()));
+        }
+        return newMap;
       }
     }
     return null;

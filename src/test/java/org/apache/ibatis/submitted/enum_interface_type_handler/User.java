@@ -13,22 +13,26 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package org.apache.ibatis.submitted.results_id;
+package org.apache.ibatis.submitted.enum_interface_type_handler;
 
-import org.apache.ibatis.session.Configuration;
-import org.junit.Test;
+public class User {
 
-import static com.googlecode.catchexception.apis.BDDCatchException.*;
-import static org.assertj.core.api.BDDAssertions.then;
+  private Integer id;
+  private Color color;
 
-public class IdConflictTest {
-
-  @Test
-  public void shouldFailOnDuplicatedId() throws Exception {
-    Configuration configuration = new Configuration();
-    when(configuration).addMapper(IdConflictMapper.class);
-    then(caughtException()).isInstanceOf(RuntimeException.class)
-      .hasMessage("Result Maps collection already contains value for org.apache.ibatis.submitted.results_id.IdConflictMapper.userResult");
+  public Integer getId() {
+    return id;
   }
 
+  public void setId(Integer id) {
+    this.id = id;
+  }
+
+  public Color getColor() {
+    return color;
+  }
+
+  public void setColor(Color color) {
+    this.color = color;
+  }
 }
