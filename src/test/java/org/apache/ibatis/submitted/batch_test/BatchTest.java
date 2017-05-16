@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2016 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -52,7 +52,7 @@ public class BatchTest
   }
 
   @Test
-  public void shouldGetAUserNoException() {
+  public void testOnBatch() {
     SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH,false);
     try {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
@@ -63,19 +63,31 @@ public class BatchTest
       user.setName("User2");
       mapper.insertUser(user);
       Assert.assertEquals("Dept1", mapper.getUser(2).getDept().getName());
-    }
-    catch (Exception e)
-    {
-      Assert.fail(e.getMessage());
-
-    }
-
-    finally {
-      sqlSession.commit();
+    } finally {
+      sqlSession.rollback();
       sqlSession.close();
     }
   }
 
+
+  @Test
+  public void testOnMergingBatch() {
+    SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.MERGING_BATCH,false);
+    try {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+
+      User user = mapper.getUser(1);
+
+      user.setId(20);
+      user.setName("User20");
+      mapper.insertUser(user);
+
+      Assert.assertEquals("User20", mapper.getUser(20).getName());
+    } finally {
+      sqlSession.rollback();
+      sqlSession.close();
+    }
+  }
 
 
 }

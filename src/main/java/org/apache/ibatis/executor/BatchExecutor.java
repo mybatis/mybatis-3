@@ -20,6 +20,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -36,7 +37,8 @@ import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.transaction.Transaction;
 
 /**
- * @author Jeff Butler 
+ * @author Jeff Butler
+ * @author Kazuki Shimizu
  */
 public class BatchExecutor extends BaseExecutor {
 
@@ -110,51 +112,75 @@ public class BatchExecutor extends BaseExecutor {
   @Override
   public List<BatchResult> doFlushStatements(boolean isRollback) throws SQLException {
     try {
-      List<BatchResult> results = new ArrayList<BatchResult>();
       if (isRollback) {
         return Collections.emptyList();
       }
+      List<BatchResult> results = new ArrayList<BatchResult>();
       for (int i = 0, n = statementList.size(); i < n; i++) {
         Statement stmt = statementList.get(i);
         applyTransactionTimeout(stmt);
         BatchResult batchResult = batchResultList.get(i);
-        try {
-          batchResult.setUpdateCounts(stmt.executeBatch());
-          MappedStatement ms = batchResult.getMappedStatement();
-          List<Object> parameterObjects = batchResult.getParameterObjects();
-          KeyGenerator keyGenerator = ms.getKeyGenerator();
-          if (Jdbc3KeyGenerator.class.equals(keyGenerator.getClass())) {
-            Jdbc3KeyGenerator jdbc3KeyGenerator = (Jdbc3KeyGenerator) keyGenerator;
-            jdbc3KeyGenerator.processBatch(ms, stmt, parameterObjects);
-          } else if (!NoKeyGenerator.class.equals(keyGenerator.getClass())) { //issue #141
-            for (Object parameter : parameterObjects) {
-              keyGenerator.processAfter(this, ms, stmt, parameter);
-            }
-          }
-        } catch (BatchUpdateException e) {
-          StringBuilder message = new StringBuilder();
-          message.append(batchResult.getMappedStatement().getId())
-              .append(" (batch index #")
-              .append(i + 1)
-              .append(")")
-              .append(" failed.");
-          if (i > 0) {
-            message.append(" ")
-                .append(i)
-                .append(" prior sub executor(s) completed successfully, but will be rolled back.");
-          }
-          throw new BatchExecutorException(message.toString(), e, results, batchResult);
-        }
+        executeBatch(stmt, batchResult, i, results);
         results.add(batchResult);
       }
       return results;
     } finally {
-      for (Statement stmt : statementList) {
-        closeStatement(stmt);
-      }
+      closeStatements(statementList);
       currentSql = null;
       statementList.clear();
       batchResultList.clear();
+    }
+  }
+
+  /**
+   * Close specified statements.
+   *
+   * @param statements target statements
+   * @since 3.4.2
+   */
+  protected void closeStatements(Collection<Statement> statements) {
+    for (Statement stmt : statements) {
+      closeStatement(stmt);
+    }
+  }
+
+  /**
+   * Execute batch updating.
+   * @param stmt a target statement
+   * @param batchResult a target batch result
+   * @param i index of batch execution
+   * @param results executed batch result list
+   * @throws BatchExecutorException If occurred a {@link BatchUpdateException} on {@link Statement#executeBatch()}
+   * @throws SQLException If occurred error on {@link Statement#executeBatch()}
+   * @since 3.4.2
+   */
+  protected void executeBatch(Statement stmt, BatchResult batchResult, int i,List<BatchResult> results) throws SQLException {
+    try {
+      batchResult.setUpdateCounts(stmt.executeBatch());
+      MappedStatement ms = batchResult.getMappedStatement();
+      List<Object> parameterObjects = batchResult.getParameterObjects();
+      KeyGenerator keyGenerator = ms.getKeyGenerator();
+      if (Jdbc3KeyGenerator.class.equals(keyGenerator.getClass())) {
+        Jdbc3KeyGenerator jdbc3KeyGenerator = (Jdbc3KeyGenerator) keyGenerator;
+        jdbc3KeyGenerator.processBatch(ms, stmt, parameterObjects);
+      } else if (!NoKeyGenerator.class.equals(keyGenerator.getClass())) { //issue #141
+        for (Object parameter : parameterObjects) {
+          keyGenerator.processAfter(this, ms, stmt, parameter);
+        }
+      }
+    } catch (BatchUpdateException e) {
+      StringBuilder message = new StringBuilder();
+      message.append(batchResult.getMappedStatement().getId())
+          .append(" (batch index #")
+          .append(i + 1)
+          .append(")")
+          .append(" failed.");
+      if (i > 0) {
+        message.append(" ")
+            .append(i)
+            .append(" prior sub executor(s) completed successfully, but will be rolled back.");
+      }
+      throw new BatchExecutorException(message.toString(), e, results, batchResult);
     }
   }
 
