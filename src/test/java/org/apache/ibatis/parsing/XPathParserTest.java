@@ -41,6 +41,9 @@ public class XPathParserTest {
     XNode node = parser.evalNode("/employee/height");
     assertEquals("employee/height", node.getPath());
     assertEquals("employee[${id_var}]_height", node.getValueBasedIdentifier());
+    XNode nodeContext = parser.evalNode("/employee/birth_date");
+    assertEquals((Integer) 15, parser.evalInteger(nodeContext, "./day"));
+    assertEquals((Integer) 15, parser.evalInteger(nodeContext, "day"));
   }
 
 }

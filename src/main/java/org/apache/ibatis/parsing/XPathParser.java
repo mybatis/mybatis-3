@@ -219,6 +219,10 @@ public class XPathParser {
 
   private Object evaluate(String expression, Object root, QName returnType) {
     try {
+      // Support XNode type node context
+      if (root instanceof XNode) {
+        root = ((XNode) root).getNode();
+      }
       return xpath.evaluate(expression, root, returnType);
     } catch (Exception e) {
       throw new BuilderException("Error evaluating XPath.  Cause: " + e, e);
