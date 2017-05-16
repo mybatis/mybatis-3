@@ -24,6 +24,8 @@ import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.ParamNameResolver;
 import org.apache.ibatis.reflection.TypeParameterResolver;
 import org.apache.ibatis.session.Configuration;
+import org.apache.ibatis.session.PageBounds;
+import org.apache.ibatis.session.PageResult;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
@@ -77,7 +79,9 @@ public class MapperMethod {
           result = executeForMap(sqlSession, args);
         } else if (method.returnsCursor()) {
           result = executeForCursor(sqlSession, args);
-        } else {
+        } else if (method.returnsPageResult) {
+            result = executeForPageBound(sqlSession, args);
+        }else {
           Object param = method.convertArgsToSqlCommandParam(args);
           result = sqlSession.selectOne(command.getName(), param);
         }
@@ -192,6 +196,14 @@ public class MapperMethod {
     return result;
   }
 
+  private <E> Object executeForPageBound(SqlSession sqlSession, Object[] args) {
+	  PageResult<E> result;
+      Object param = method.convertArgsToSqlCommandParam(args);
+      PageBounds pageBounds = method.extractPageBounds(args);
+      result = sqlSession.<E>selectList(command.getName(), param, pageBounds);
+      return result;
+  }
+  
   public static class ParamMap<V> extends HashMap<String, V> {
 
     private static final long serialVersionUID = -2212268410512043556L;
@@ -273,6 +285,8 @@ public class MapperMethod {
     private final Integer resultHandlerIndex;
     private final Integer rowBoundsIndex;
     private final ParamNameResolver paramNameResolver;
+    private final boolean returnsPageResult;
+    private final Integer pageBoundsIndex;
 
     public MethodSignature(Configuration configuration, Class<?> mapperInterface, Method method) {
       Type resolvedReturnType = TypeParameterResolver.resolveReturnType(method, mapperInterface);
@@ -291,6 +305,8 @@ public class MapperMethod {
       this.rowBoundsIndex = getUniqueParamIndex(method, RowBounds.class);
       this.resultHandlerIndex = getUniqueParamIndex(method, ResultHandler.class);
       this.paramNameResolver = new ParamNameResolver(configuration, method);
+      this.returnsPageResult = PageResult.class.equals(this.returnType);
+      this.pageBoundsIndex = getUniqueParamIndex(method, PageBounds.class);
     }
 
     public Object convertArgsToSqlCommandParam(Object[] args) {
@@ -313,6 +329,14 @@ public class MapperMethod {
       return hasResultHandler() ? (ResultHandler) args[resultHandlerIndex] : null;
     }
 
+    public boolean hasPageBounds() {
+      return pageBoundsIndex != null;
+    }
+
+    public PageBounds extractPageBounds(Object[] args) {
+      return hasPageBounds() ? (PageBounds) args[pageBoundsIndex] : null;
+    }
+      
     public String getMapKey() {
       return mapKey;
     }

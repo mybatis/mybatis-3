@@ -30,6 +30,7 @@ import org.apache.ibatis.io.VFS;
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.mapping.DatabaseIdProvider;
 import org.apache.ibatis.mapping.Environment;
+import org.apache.ibatis.mapping.Dialect.Dialect;
 import org.apache.ibatis.parsing.XNode;
 import org.apache.ibatis.parsing.XPathParser;
 import org.apache.ibatis.plugin.Interceptor;
@@ -266,6 +267,7 @@ public class XMLConfigBuilder extends BaseBuilder {
     Class<? extends Log> logImpl = (Class<? extends Log>)resolveClass(props.getProperty("logImpl"));
     configuration.setLogImpl(logImpl);
     configuration.setConfigurationFactory(resolveClass(props.getProperty("configurationFactory")));
+    configuration.setDialect(Dialect.of(props.getProperty("dialect")));
   }
 
   private void environmentsElement(XNode context) throws Exception {
