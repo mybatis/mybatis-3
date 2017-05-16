@@ -1,0 +1,413 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns="http://mybatis.org"
+           targetNamespace="http://mybatis.org"
+           elementFormDefault="qualified">
+
+
+
+    <!-- Elements -->
+
+    <xs:element name='mapper' type="mapperType"/>
+    <xs:element name='cache-ref' type="cache-refType"/>
+    <xs:element name='cache' type="cacheType"/>
+    <xs:element name='parameterMap' type="parameterMapType"/>
+    <xs:element name='parameter' type="parameterType"/>
+    <xs:element name='foreach' type="forEachType"/>
+    <xs:element name='resultMap' type="resultMapType"/>
+    <xs:element name='constructor' type="constructorType"/>
+    <xs:element name='idArg' type="argType"/>
+    <xs:element name='arg' type="argType"/>
+    <xs:element name='property' type="propertyType"/>
+    <xs:element name='select' type="selectType"/>
+    <xs:element name='bind' type="bindType"/>
+    <xs:element name='id' type="id-resultType"/>
+    <xs:element name='choose' type="chooseType"/>
+    <xs:element name='result' type="resultType"/>
+    <xs:element name='collection' type="collectionType"/>
+    <xs:element name='insert' type="insertUpdateType"/>
+    <xs:element name='selectKey' type="selectKeyType"/>
+    <xs:element name='set' type="baseChoiceType"/>
+    <xs:element name='where' type="baseChoiceType"/>
+    <xs:element name='otherwise' type="baseChoiceType"/>
+    <xs:element name='when' type="baseChoiceTypeWithTestAttr"/>
+    <xs:element name='if' type="baseChoiceTypeWithTestAttr"/>
+    <xs:element name='trim' type="trimType"/>
+    <xs:element name='sql' type="sqlType"/>
+    <xs:element name='update' type="insertUpdateType"/>
+    <xs:element name='delete' type="deleteType"/>
+    <xs:element name='include' type="includeType"/>
+    <xs:element name='association' type="associationType"/>
+    <xs:element name='discriminator' type="discriminatorType"/>
+    <xs:element name='case' type="caseType"/>
+    <xs:element name='typeAlias' type="typeAliasType"/>
+
+
+
+    <!-- Enums -->
+
+    <xs:simpleType name="fetchTypeEnum">
+        <xs:restriction base='xs:string'>
+            <xs:enumeration value='lazy'/>
+            <xs:enumeration value='eager'/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="modeType">
+        <xs:restriction base='xs:string'>
+            <xs:enumeration value='IN'/>
+            <xs:enumeration value='OUT'/>
+            <xs:enumeration value='INOUT'/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="orderEnum">
+        <xs:restriction base='xs:string'>
+            <xs:enumeration value='BEFORE'/>
+            <xs:enumeration value='AFTER'/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="resultSetTypeEnum">
+        <xs:restriction base='xs:string'>
+            <xs:enumeration value='FORWARD_ONLY'/>
+            <xs:enumeration value='SCROLL_INSENSITIVE'/>
+            <xs:enumeration value='SCROLL_SENSITIVE'/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="statementTypeEnum">
+        <xs:restriction base='xs:string'>
+            <xs:enumeration value='STATEMENT'/>
+            <xs:enumeration value='PREPARED'/>
+            <xs:enumeration value='CALLABLE'/>
+        </xs:restriction>
+    </xs:simpleType>
+
+
+
+    <!-- Base Types -->
+
+    <xs:complexType name="baseChoiceType" mixed='true'>
+        <xs:choice minOccurs='0' maxOccurs='unbounded'>
+            <xs:element ref='include'/>
+            <xs:element ref='trim'/>
+            <xs:element ref='where'/>
+            <xs:element ref='set'/>
+            <xs:element ref='foreach'/>
+            <xs:element ref='choose'/>
+            <xs:element ref='if'/>
+            <xs:element ref='bind'/>
+        </xs:choice>
+    </xs:complexType>
+
+    <xs:complexType name="baseSequanceType">
+        <xs:sequence>
+            <xs:element ref='constructor' minOccurs='0' maxOccurs='1'/>
+            <xs:element ref='id' minOccurs='0' maxOccurs='unbounded'/>
+            <xs:element ref='result' minOccurs='0' maxOccurs='unbounded'/>
+            <xs:element ref='association' minOccurs='0' maxOccurs='unbounded'/>
+            <xs:element ref='collection' minOccurs='0' maxOccurs='unbounded'/>
+            <xs:element ref='discriminator' minOccurs='0' maxOccurs='1'/>
+        </xs:sequence>
+    </xs:complexType>
+
+
+
+    <!-- Extensible Types -->
+
+    <xs:complexType name="associationType">
+        <xs:complexContent>
+            <xs:extension base="baseSequanceType">
+                <xs:attribute name='property' type='xs:string' use='required'/>
+                <xs:attribute name='column' type='xs:string' use='optional'/>
+                <xs:attribute name='javaType' type='xs:string' use='optional'/>
+                <xs:attribute name='jdbcType' type='xs:string' use='optional'/>
+                <xs:attribute name='select' type='xs:string' use='optional'/>
+                <xs:attribute name='resultMap' type='xs:string' use='optional'/>
+                <xs:attribute name='typeHandler' type='xs:string' use='optional'/>
+                <xs:attribute name='notNullColumn' type='xs:string' use='optional'/>
+                <xs:attribute name='columnPrefix' type='xs:string' use='optional'/>
+                <xs:attribute name='resultSet' type='xs:string' use='optional'/>
+                <xs:attribute name='foreignColumn' type='xs:string' use='optional'/>
+                <xs:attribute name='autoMapping' type="xs:boolean" use='optional'/>
+                <xs:attribute name='fetchType' type="fetchTypeEnum" use='optional'/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="argType">
+        <xs:attribute name='javaType' type='xs:string' use='optional'/>
+        <xs:attribute name='column' type='xs:string' use='optional'/>
+        <xs:attribute name='jdbcType' type='xs:string' use='optional'/>
+        <xs:attribute name='typeHandler' type='xs:string' use='optional'/>
+        <xs:attribute name='select' type='xs:string' use='optional'/>
+        <xs:attribute name='resultMap' type='xs:string' use='optional'/>
+    </xs:complexType>
+
+    <xs:complexType name="baseChoiceTypeWithTestAttr">
+        <xs:complexContent>
+            <xs:extension base="baseChoiceType">
+                <xs:attribute name='test' type='xs:string' use='required'/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="bindType">
+        <xs:attribute name='name' type='xs:string' use='required'/>
+        <xs:attribute name='value' type='xs:string' use='required'/>
+    </xs:complexType>
+
+    <xs:complexType name="cache-refType">
+        <xs:attribute name='namespace' type='xs:string' use='required'/>
+    </xs:complexType>
+
+    <xs:complexType name="cacheType">
+        <xs:sequence>
+            <xs:element ref='property' minOccurs='0' maxOccurs='unbounded'/>
+        </xs:sequence>
+        <xs:attribute name='type' type='xs:string' use='optional'/>
+        <xs:attribute name='eviction' type='xs:string' use='optional'/>
+        <xs:attribute name='flushInterval' type='xs:string' use='optional'/>
+        <xs:attribute name='size' type='xs:string' use='optional'/>
+        <xs:attribute name='readOnly' type='xs:string' use='optional'/>
+        <xs:attribute name='blocking' type='xs:string' use='optional'/>
+    </xs:complexType>
+
+    <xs:complexType name="caseType">
+        <xs:complexContent>
+            <xs:extension base="baseSequanceType">
+                <xs:attribute name='value' type='xs:string' use='required'/>
+                <xs:attribute name='resultMap' type='xs:string' use='optional'/>
+                <xs:attribute name='resultType' type='xs:string' use='optional'/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="chooseType">
+        <xs:sequence>
+            <xs:element ref='when' minOccurs='0' maxOccurs='unbounded'/>
+            <xs:element ref='otherwise' minOccurs='0' maxOccurs='1'/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="collectionType">
+        <xs:complexContent>
+            <xs:extension base="baseSequanceType">
+                <xs:attribute name='property' type='xs:string' use='required'/>
+                <xs:attribute name='column' type='xs:string' use='optional'/>
+                <xs:attribute name='javaType' type='xs:string' use='optional'/>
+                <xs:attribute name='ofType' type='xs:string' use='optional'/>
+                <xs:attribute name='jdbcType' type='xs:string' use='optional'/>
+                <xs:attribute name='select' type='xs:string' use='optional'/>
+                <xs:attribute name='resultMap' type='xs:string' use='optional'/>
+                <xs:attribute name='typeHandler' type='xs:string' use='optional'/>
+                <xs:attribute name='notNullColumn' type='xs:string' use='optional'/>
+                <xs:attribute name='columnPrefix' type='xs:string' use='optional'/>
+                <xs:attribute name='resultSet' type='xs:string' use='optional'/>
+                <xs:attribute name='foreignColumn' type='xs:string' use='optional'/>
+                <xs:attribute name='autoMapping' type="xs:boolean" use='optional'/>
+                <xs:attribute name='fetchType' type="fetchTypeEnum" use='optional'/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="constructorType">
+        <xs:sequence>
+            <xs:element ref='idArg' minOccurs='0' maxOccurs='unbounded'/>
+            <xs:element ref='arg' minOccurs='0' maxOccurs='unbounded'/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="deleteType" mixed='true'>
+        <xs:complexContent>
+            <xs:extension base="baseChoiceType">
+                <xs:attribute name='id' type='xs:string' use='required'/>
+                <xs:attribute name='parameterMap' type='xs:string' use='optional'/>
+                <xs:attribute name='parameterType' type='xs:string' use='optional'/>
+                <xs:attribute name='timeout' type='xs:string' use='optional'/>
+                <xs:attribute name='flushCache' type="xs:boolean" use='optional'/>
+                <xs:attribute name='statementType' type="statementTypeEnum" use='optional'/>
+                <xs:attribute name='databaseId' type='xs:string' use='optional'/>
+                <xs:attribute name='lang' type='xs:string' use='optional'/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="discriminatorType">
+        <xs:sequence>
+            <xs:element ref='case' maxOccurs='unbounded'/>
+        </xs:sequence>
+        <xs:attribute name='column' type='xs:string' use='optional'/>
+        <xs:attribute name='javaType' type='xs:string' use='required'/>
+        <xs:attribute name='jdbcType' type='xs:string' use='optional'/>
+        <xs:attribute name='typeHandler' type='xs:string' use='optional'/>
+    </xs:complexType>
+
+    <xs:complexType name="forEachType" mixed='true'>
+        <xs:complexContent>
+            <xs:extension base="baseChoiceType">
+                <xs:attribute name='collection' type='xs:string' use='required'/>
+                <xs:attribute name='item' type='xs:string' use='optional'/>
+                <xs:attribute name='index' type='xs:string' use='optional'/>
+                <xs:attribute name='open' type='xs:string' use='optional'/>
+                <xs:attribute name='close' type='xs:string' use='optional'/>
+                <xs:attribute name='separator' type='xs:string' use='optional'/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="id-resultType">
+        <xs:attribute name='property' type='xs:string' use='optional'/>
+        <xs:attribute name='javaType' type='xs:string' use='optional'/>
+        <xs:attribute name='column' type='xs:string' use='optional'/>
+        <xs:attribute name='jdbcType' type='xs:string' use='optional'/>
+        <xs:attribute name='typeHandler' type='xs:string' use='optional'/>
+    </xs:complexType>
+
+    <xs:complexType name="includeType">
+        <xs:sequence minOccurs='0' maxOccurs='1'>
+            <xs:element ref='property' maxOccurs='unbounded'/>
+        </xs:sequence>
+        <xs:attribute name='refid' type='xs:string' use='required'/>
+    </xs:complexType>
+
+    <xs:complexType name="insertUpdateType" mixed='true'>
+        <xs:complexContent>
+            <xs:extension base="baseChoiceType">
+                <xs:attribute name='id' type='xs:string' use='required'/>
+                <xs:attribute name='parameterMap' type='xs:string' use='optional'/>
+                <xs:attribute name='parameterType' type='xs:string' use='optional'/>
+                <xs:attribute name='timeout' type='xs:string' use='optional'/>
+                <xs:attribute name='flushCache' type="xs:boolean" use='optional'/>
+                <xs:attribute name='statementType' type="statementTypeEnum" use='optional'/>
+                <xs:attribute name='keyProperty' type='xs:string' use='optional'/>
+                <xs:attribute name='useGeneratedKeys' type="xs:boolean" use='optional'/>
+                <xs:attribute name='keyColumn' type='xs:string' use='optional'/>
+                <xs:attribute name='databaseId' type='xs:string' use='optional'/>
+                <xs:attribute name='lang' type='xs:string' use='optional'/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="mapperType">
+        <xs:choice maxOccurs='unbounded'>
+            <xs:element ref='cache-ref'/>
+            <xs:element ref='cache'/>
+            <xs:element ref='resultMap'/>
+            <xs:element ref='parameterMap'/>
+            <xs:element ref='sql'/>
+            <xs:element ref='insert'/>
+            <xs:element ref='update'/>
+            <xs:element ref='delete'/>
+            <xs:element ref='select'/>
+        </xs:choice>
+        <xs:attribute name='xmlns' type='xs:string' use='optional'/>
+        <xs:attribute name='namespace' type='xs:string' use='optional'/>
+    </xs:complexType>
+
+    <xs:complexType name="parameterType">
+        <xs:attribute name='property' type='xs:string' use='required'/>
+        <xs:attribute name='javaType' type='xs:string' use='optional'/>
+        <xs:attribute name='jdbcType' type='xs:string' use='optional'/>
+        <xs:attribute name='mode' type="modeType" use='optional'/>
+        <xs:attribute name='resultMap' type='xs:string' use='optional'/>
+        <xs:attribute name='scale' type='xs:string' use='optional'/>
+        <xs:attribute name='typeHandler' type='xs:string' use='optional'/>
+    </xs:complexType>
+
+    <xs:complexType name="parameterMapType">
+        <xs:sequence minOccurs='0' maxOccurs='1'>
+            <xs:element ref='parameter' maxOccurs='unbounded'/>
+        </xs:sequence>
+        <xs:attribute name='id' type='xs:string' use='required'/>
+        <xs:attribute name='type' type='xs:string' use='required'/>
+    </xs:complexType>
+
+    <xs:complexType name="propertyType">
+        <xs:attribute name='name' type='xs:string' use='required'/>
+        <xs:attribute name='value' type='xs:string' use='required'/>
+    </xs:complexType>
+
+    <xs:complexType name="resultMapType">
+        <xs:complexContent>
+            <xs:extension base="baseSequanceType">
+                <xs:attribute name='id' type='xs:string' use='required'/>
+                <xs:attribute name='type' type='xs:string' use='required'/>
+                <xs:attribute name='extends' type='xs:string' use='optional'/>
+                <xs:attribute name='autoMapping' type="xs:boolean" use='optional'/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="resultType">
+        <xs:attribute name='property' type='xs:string' use='optional'/>
+        <xs:attribute name='javaType' type='xs:string' use='optional'/>
+        <xs:attribute name='column' type='xs:string' use='optional'/>
+        <xs:attribute name='jdbcType' type='xs:string' use='optional'/>
+        <xs:attribute name='typeHandler' type='xs:string' use='optional'/>
+    </xs:complexType>
+
+    <xs:complexType name="selectKeyType" mixed='true'>
+        <xs:complexContent>
+            <xs:extension base="baseChoiceType">
+                <xs:attribute name='resultType' type='xs:string' use='optional'/>
+                <xs:attribute name='statementType' type="statementTypeEnum" use='optional'/>
+                <xs:attribute name='keyProperty' type='xs:string' use='optional'/>
+                <xs:attribute name='keyColumn' type='xs:string' use='optional'/>
+                <xs:attribute name='order' type="orderEnum" use='optional'/>
+                <xs:attribute name='databaseId' type='xs:string' use='optional'/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="selectType" mixed='true'>
+        <xs:complexContent>
+            <xs:extension base="baseChoiceType">
+                <xs:attribute name='id' type='xs:string' use='required'/>
+                <xs:attribute name='parameterMap' type='xs:string' use='optional'/>
+                <xs:attribute name='parameterType' type='xs:string' use='optional'/>
+                <xs:attribute name='resultMap' type='xs:string' use='optional'/>
+                <xs:attribute name='resultType' type='xs:string' use='optional'/>
+                <xs:attribute name='resultSetType' type="resultSetTypeEnum" use='optional'/>
+                <xs:attribute name='statementType' type="statementTypeEnum" use='optional'/>
+                <xs:attribute name='fetchSize' type='xs:string' use='optional'/>
+                <xs:attribute name='timeout' type='xs:string' use='optional'/>
+                <xs:attribute name='flushCache' type="xs:boolean" use='optional'/>
+                <xs:attribute name='useCache' type="xs:boolean" use='optional'/>
+                <xs:attribute name='databaseId' type='xs:string' use='optional'/>
+                <xs:attribute name='lang' type='xs:string' use='optional'/>
+                <xs:attribute name='resultOrdered' type="xs:boolean" use='optional'/>
+                <xs:attribute name='resultSets' type='xs:string' use='optional'/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="sqlType">
+        <xs:complexContent>
+            <xs:extension base="baseChoiceType">
+                <xs:attribute name='id' type='xs:string' use='required'/>
+                <xs:attribute name='lang' type='xs:string' use='optional'/>
+                <xs:attribute name='databaseId' type='xs:string' use='optional'/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="trimType">
+        <xs:complexContent>
+            <xs:extension base="baseChoiceType">
+                <xs:attribute name='prefix' type='xs:string' use='optional'/>
+                <xs:attribute name='prefixOverrides' type='xs:string' use='optional'/>
+                <xs:attribute name='suffix' type='xs:string' use='optional'/>
+                <xs:attribute name='suffixOverrides' type='xs:string' use='optional'/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="typeAliasType">
+        <xs:attribute name='alias' type='xs:string' use='required'/>
+        <xs:attribute name='type' type='xs:string' use='required'/>
+    </xs:complexType>
+
+</xs:schema>
