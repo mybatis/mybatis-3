@@ -120,6 +120,8 @@ public class DefaultCursor<T> implements Cursor<T> {
             status = CursorStatus.CLOSED;
         } catch (SQLException e) {
             // ignore
+        } finally {
+            ErrorContext.instance().reset();
         }
     }
 
