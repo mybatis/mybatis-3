@@ -17,7 +17,6 @@ package org.apache.ibatis.type;
 
 import com.alibaba.fastjson.JSON;
 import org.apache.ibatis.executor.result.ResultMapException;
-import org.apache.ibatis.reflection.MetaObject;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
@@ -34,7 +33,7 @@ import java.util.NoSuchElementException;
  */
 public class FastJsonTypeHandler extends BaseJsonTypeHandler {
 
-    private final Map<String, Type> fieldClassCache = new HashMap<String, Type>();
+    private final Map<String, Type> fieldTypeCache = new HashMap<String, Type>();
 
     @Override
     public void setNonNullParameter(PreparedStatement ps, int i, Object parameter, JdbcType jdbcType)
@@ -48,13 +47,13 @@ public class FastJsonTypeHandler extends BaseJsonTypeHandler {
         try {
             String jsonStr = rs.getString(columnName);
             String key = targetObject.getClass().getName() + ":" + columnName;
-            if (fieldClassCache.containsKey(key)) {
-                Type type = fieldClassCache.get(key);
+            if (fieldTypeCache.containsKey(key)) {
+                Type type = fieldTypeCache.get(key);
                 return JSON.parseObject(jsonStr, type);
             }
             Field field = getField(targetObject.getClass(), property);
             Type type = field.getGenericType();
-            fieldClassCache.put(key, type);
+            fieldTypeCache.put(key, type);
             return JSON.parseObject(jsonStr, type);
         } catch (Exception e) {
             throw new ResultMapException("Error attempting to get column '" + columnName +

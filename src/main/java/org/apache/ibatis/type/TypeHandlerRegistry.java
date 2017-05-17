@@ -230,7 +230,7 @@ public final class TypeHandlerRegistry {
         handler = pickSoleHandler(jdbcHandlerMap);
       }
     }
-    // if handler is null and jdbcType is JSON or OTHER, use defaultJsonTypeHandler
+    // if handler is null and jdbcType is OTHER, use defaultJsonTypeHandler
     if (handler == null && jdbcType != null && JdbcType.OTHER.equals(jdbcType)){
       handler = defaultJsonTypeHandler;
     }

@@ -30,6 +30,4 @@ public interface JsonTypeHandler extends TypeHandler<Object> {
     Object getNullableResult(ResultSet rs, String columnName, String property, Object targetObject) throws SQLException;
 
     Object getNullableResult(ResultSet rs, String columnName, Type targetType) throws SQLException;
-
-    void setNonNullParameter(PreparedStatement ps, int i, Object parameter, JdbcType jdbcType) throws SQLException;
 }
