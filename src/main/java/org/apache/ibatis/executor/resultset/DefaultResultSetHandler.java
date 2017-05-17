@@ -45,6 +45,7 @@ import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.ResultContext;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
+import org.apache.ibatis.type.JsonTypeHandler;
 import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.TypeHandlerRegistry;
 
@@ -460,6 +461,12 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     } else {
       final TypeHandler<?> typeHandler = propertyMapping.getTypeHandler();
       final String column = prependPrefix(propertyMapping.getColumn(), columnPrefix);
+      // if typeHandler is JsonTypeHandler, call the json deserializer method
+      // @since 3.4.5
+      if (typeHandler instanceof JsonTypeHandler) {
+        JsonTypeHandler jsonTypeHandler = (JsonTypeHandler) typeHandler;
+        return jsonTypeHandler.getNullableResult(rs, column, propertyMapping.getProperty(), metaResultObject.getOriginalObject());
+      }
       return typeHandler.getResult(rs, column);
     }
   }
@@ -509,7 +516,15 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     boolean foundValues = false;
     if (!autoMapping.isEmpty()) {
       for (UnMappedColumnAutoMapping mapping : autoMapping) {
-        final Object value = mapping.typeHandler.getResult(rsw.getResultSet(), mapping.column);
+        final Object value;
+        // if typeHandler is JsonTypeHandler, call the json deserializer method
+        // @since 3.4.5
+        if (mapping.typeHandler instanceof JsonTypeHandler) {
+          JsonTypeHandler jsonTypeHandler = (JsonTypeHandler) mapping.typeHandler;
+          value = jsonTypeHandler.getNullableResult(rsw.getResultSet(), mapping.column, mapping.property, metaObject.getOriginalObject());
+        } else {
+          value = mapping.typeHandler.getResult(rsw.getResultSet(), mapping.column);
+        }
         if (value != null) {
           foundValues = true;
         }

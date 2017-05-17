@@ -263,6 +263,13 @@
       <version>1.4.4</version>
       <scope>test</scope>
     </dependency>
+    <!-- For json handler -->
+    <dependency>
+      <groupId>com.alibaba</groupId>
+      <artifactId>fastjson</artifactId>
+      <version>1.2.32</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>

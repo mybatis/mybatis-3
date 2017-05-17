@@ -86,10 +86,7 @@ import org.apache.ibatis.scripting.xmltags.XMLLanguageDriver;
 import org.apache.ibatis.transaction.Transaction;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
 import org.apache.ibatis.transaction.managed.ManagedTransactionFactory;
-import org.apache.ibatis.type.JdbcType;
-import org.apache.ibatis.type.TypeAliasRegistry;
-import org.apache.ibatis.type.TypeHandler;
-import org.apache.ibatis.type.TypeHandlerRegistry;
+import org.apache.ibatis.type.*;
 
 /**
  * @author Clinton Begin
@@ -131,6 +128,7 @@ public class Configuration {
   protected ProxyFactory proxyFactory = new JavassistProxyFactory(); // #224 Using internal Javassist instead of OGNL
 
   protected String databaseId;
+  protected String defaultJsonTypeHandler = "";
   /**
    * Configuration factory class.
    * Used to create Configuration for loading deserialized unread properties.
@@ -471,6 +469,42 @@ public class Configuration {
   public void setDefaultEnumTypeHandler(Class<? extends TypeHandler> typeHandler) {
     if (typeHandler != null) {
       getTypeHandlerRegistry().setDefaultEnumTypeHandler(typeHandler);
+    }
+  }
+
+  public String getDefaultJsonTypeHandler() {
+    return defaultJsonTypeHandler;
+  }
+
+  /**
+   * Set a default {@link JsonTypeHandler} class for Json type
+   * the default {@link JsonTypeHandler} is not set,
+   * user can extend the abstract class {@link BaseJsonTypeHandler} to implement it.
+   * @param jsonTypeHandler a JsonTypeHandler class for Json
+   * @since 3.4.5
+   */
+  public void setDefaultJsonTypeHandler(JsonTypeHandler jsonTypeHandler) {
+    if (jsonTypeHandler != null) {
+      this.defaultJsonTypeHandler = jsonTypeHandler.getClass().getName();
+      getTypeHandlerRegistry().setDefaultJsonTypeHandler(jsonTypeHandler);
+    }
+  }
+
+  /**
+   * Set a default {@link JsonTypeHandler} class for Json type
+   * the default {@link JsonTypeHandler} is not set,
+   * user can extend the abstract class {@link BaseJsonTypeHandler} to implement it.
+   * How to config defaultJsonTypeHandler ?
+   * 1. application.properties(Spring Boot Project): mybatis.configuration.defaultJsonTypeHandler=your_class_name
+   * 2. mybatis-config.xml(Spring Project): ?
+   * @param className a JsonTypeHandler implement class name.
+   * @since 3.4.5
+   */
+  public void setDefaultJsonTypeHandler(String className) throws ClassNotFoundException, IllegalAccessException, InstantiationException {
+    if (className!=null && className.length() > 0) {
+      JsonTypeHandler jsonTypeHandler = (JsonTypeHandler) Class.forName(className).newInstance();
+      this.defaultJsonTypeHandler = className;
+      getTypeHandlerRegistry().setDefaultJsonTypeHandler(jsonTypeHandler);
     }
   }
 
