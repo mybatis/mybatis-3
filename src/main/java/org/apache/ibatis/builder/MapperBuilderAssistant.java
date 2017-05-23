@@ -137,6 +137,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
         .blocking(blocking)
         .properties(props)
         .build();
+    cache.init(configuration.getVariables());
     configuration.addCache(cache);
     currentCache = cache;
     return cache;

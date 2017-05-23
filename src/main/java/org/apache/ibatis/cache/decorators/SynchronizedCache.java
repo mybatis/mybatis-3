@@ -15,6 +15,7 @@
  */
 package org.apache.ibatis.cache.decorators;
 
+import java.util.Properties;
 import java.util.concurrent.locks.ReadWriteLock;
 
 import org.apache.ibatis.cache.Cache;
@@ -25,7 +26,7 @@ import org.apache.ibatis.cache.Cache;
 public class SynchronizedCache implements Cache {
 
   private Cache delegate;
-  
+
   public SynchronizedCache(Cache delegate) {
     this.delegate = delegate;
   }
@@ -33,6 +34,11 @@ public class SynchronizedCache implements Cache {
   @Override
   public String getId() {
     return delegate.getId();
+  }
+
+  @Override
+  public void init(Properties configurationVariables) {
+    delegate.init(configurationVariables);
   }
 
   @Override

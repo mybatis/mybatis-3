@@ -17,6 +17,7 @@ package org.apache.ibatis.cache.decorators;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Properties;
 import java.util.concurrent.locks.ReadWriteLock;
 
 import org.apache.ibatis.cache.Cache;
@@ -40,6 +41,11 @@ public class LruCache implements Cache {
   @Override
   public String getId() {
     return delegate.getId();
+  }
+
+  @Override
+  public void init(Properties configurationVariables) {
+    delegate.init(configurationVariables);
   }
 
   @Override

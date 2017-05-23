@@ -17,6 +17,7 @@ package org.apache.ibatis.cache.impl;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 import java.util.concurrent.locks.ReadWriteLock;
 
 import org.apache.ibatis.cache.Cache;
@@ -38,6 +39,10 @@ public class PerpetualCache implements Cache {
   @Override
   public String getId() {
     return id;
+  }
+
+  @Override
+  public void init(Properties configurationVariables) {
   }
 
   @Override

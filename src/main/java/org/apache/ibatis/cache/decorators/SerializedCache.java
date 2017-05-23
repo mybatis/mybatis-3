@@ -23,6 +23,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.ObjectStreamClass;
 import java.io.Serializable;
+import java.util.Properties;
 import java.util.concurrent.locks.ReadWriteLock;
 
 import org.apache.ibatis.cache.Cache;
@@ -43,6 +44,11 @@ public class SerializedCache implements Cache {
   @Override
   public String getId() {
     return delegate.getId();
+  }
+
+  @Override
+  public void init(Properties configurationVariables) {
+    delegate.init(configurationVariables);
   }
 
   @Override
@@ -126,7 +132,7 @@ public class SerializedCache implements Cache {
     protected Class<?> resolveClass(ObjectStreamClass desc) throws IOException, ClassNotFoundException {
       return Resources.classForName(desc.getName());
     }
-    
+
   }
 
 }
