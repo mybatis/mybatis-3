@@ -88,6 +88,6 @@ public class FastJsonTypeHandler extends BaseJsonTypeHandler {
                 }
             }
         }
-        throw new NoSuchElementException("No Field '"+ name + "' for Class "+ cls.getName());
+        throw new NoSuchFieldException("No Field '"+ name + "' for Class "+ cls.getName());
     }
 }
