@@ -39,7 +39,7 @@ public class PrimitiveTypes {
 
   private void add(final Class<?> primitiveType, final Class<?> wrapperType) {
     primitiveToWrappers.put(primitiveType, wrapperType);
-    primitiveToWrappers.put(wrapperType, primitiveType);
+    wrappersToPrimitives.put(wrapperType, primitiveType);
   }
 
   public Class<?> getWrapper(final Class<?> primitiveType) {
