@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -46,6 +46,9 @@ public class FolderMapperTest {
     stmt.execute("insert into folder values(4, 'Folder 2_1', 3)");
     stmt.execute("insert into folder values(5, 'Folder 2_2', 3)");
 
+    stmt.close();
+    conn.close();
+
     /**
      * Root/
      *    Folder 1/
@@ -65,6 +68,7 @@ public class FolderMapperTest {
 
     Assert.assertEquals(3, folders.size());
 
+    inputStream.close();
     session.close();
   }
 

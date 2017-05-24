@@ -47,6 +47,7 @@ public class AutoConstructorTest {
     final ScriptRunner runner = new ScriptRunner(conn);
     runner.setLogWriter(null);
     runner.runScript(dbReader);
+    conn.close();
     dbReader.close();
     session.close();
   }
