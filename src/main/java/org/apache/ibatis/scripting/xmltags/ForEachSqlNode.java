@@ -61,12 +61,10 @@ public class ForEachSqlNode implements SqlNode {
     int i = 0;
     for (Object o : iterable) {
       DynamicContext oldContext = context;
-      if (first) {
+      if (first || separator == null) {
         context = new PrefixedContext(context, "");
-      } else if (separator != null) {
-        context = new PrefixedContext(context, separator);
       } else {
-          context = new PrefixedContext(context, "");
+        context = new PrefixedContext(context, separator);
       }
       int uniqueNumber = context.getUniqueNumber();
       // Issue #709 
