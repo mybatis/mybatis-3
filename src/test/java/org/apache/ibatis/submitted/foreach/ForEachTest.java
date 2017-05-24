@@ -143,4 +143,28 @@ public class ForEachTest {
     }
   }
 
+  @Test
+  public void shouldRemoveItemVariableInTheContext() {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      int result = mapper.itemVariableConflict(5, Arrays.asList(1, 2), Arrays.asList(3, 4));
+      Assert.assertEquals(5, result);
+    } finally {
+      sqlSession.close();
+    }
+  }
+
+  @Test
+  public void shouldRemoveIndexVariableInTheContext() {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      int result = mapper.indexVariableConflict(4, Arrays.asList(6, 7), Arrays.asList(8, 9));
+      Assert.assertEquals(4, result);
+    } finally {
+      sqlSession.close();
+    }
+  }
+
 }
