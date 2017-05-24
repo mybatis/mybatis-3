@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -41,8 +41,11 @@ public class InlineCollectionWithDotTest {
     try {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(batisConfigReader);
     } catch(Exception anException) {
+      batisConfigReader.close();
       throw new RuntimeException("Mapper configuration failed, expected this to work: " + anException.getMessage(), anException);
     }
+
+    batisConfigReader.close();
 
     SqlSession session = sqlSessionFactory.openSession();
 
@@ -52,6 +55,9 @@ public class InlineCollectionWithDotTest {
     runner.setErrorLogWriter(null);
     Reader createScriptReader = Resources.getResourceAsReader("org/apache/ibatis/submitted/inline_association_with_dot/create.sql");
     runner.runScript(createScriptReader);
+    createScriptReader.close();
+    conn.close();
+    session.close();
 
     sqlSession = sqlSessionFactory.openSession();
   }

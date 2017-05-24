@@ -32,6 +32,7 @@ import org.junit.Test;
 public class SimpleObjectTest {
   private SimpleChildObjectMapper simpleChildObjectMapper;
   private SqlSession sqlSession;
+  private Connection conn;
 
   @Before
   public void setUp() throws Exception {
@@ -40,7 +41,7 @@ public class SimpleObjectTest {
     reader.close();
 
     sqlSession = sqlSessionFactory.openSession();
-    Connection conn = sqlSession.getConnection();
+    conn = sqlSession.getConnection();
     ScriptRunner runner = new ScriptRunner(conn);
     runner.setLogWriter(null);
     runner.runScript(new StringReader("DROP TABLE IF EXISTS SimpleObject;"));
@@ -55,6 +56,7 @@ public class SimpleObjectTest {
 
   @After
   public void tearDown() throws Exception {
+    conn.close();
     sqlSession.close();
   }
 

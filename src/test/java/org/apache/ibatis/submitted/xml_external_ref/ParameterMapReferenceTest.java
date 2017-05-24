@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -68,6 +68,7 @@ public class ParameterMapReferenceTest {
 
     Connection conn = sqlSessionFactory.getConfiguration().getEnvironment().getDataSource().getConnection();
     initDb(conn);
+    conn.close();
 
     return sqlSessionFactory;
   }
@@ -84,6 +85,7 @@ public class ParameterMapReferenceTest {
 
     configuration.addMapper(ParameterMapReferencePersonMapper.class);
     configuration.addMapper(ParameterMapReferencePetMapper.class);
+    c.close();
 
     return new SqlSessionFactoryBuilder().build(configuration);
   }

@@ -24,23 +24,26 @@ import org.junit.*;
 
 import java.io.Reader;
 import java.sql.Connection;
+import java.sql.SQLException;
 
 public class FooMapperTest {
 
   private final static String SQL_MAP_CONFIG = "org/apache/ibatis/submitted/null_associations/sqlmap.xml";
   private static SqlSession session;
+  private static Connection conn;
 
   @BeforeClass
   public static void setUpBeforeClass() {
     try {
       final SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(Resources.getResourceAsReader(SQL_MAP_CONFIG));
       session = factory.openSession();
-      Connection conn = session.getConnection();
+      conn = session.getConnection();
       ScriptRunner runner = new ScriptRunner(conn);
       runner.setLogWriter(null);
       runner.setErrorLogWriter(null);
       Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/null_associations/create-schema-mysql.sql");
       runner.runScript(reader);
+      reader.close();
     } catch (Exception ex) {
       Assert.fail(ex.getMessage());
     }
@@ -82,7 +85,8 @@ public class FooMapperTest {
   }
 
   @AfterClass
-  public static void tearDownAfterClass() {
+  public static void tearDownAfterClass() throws SQLException {
+    conn.close();
     session.close();
   }
 

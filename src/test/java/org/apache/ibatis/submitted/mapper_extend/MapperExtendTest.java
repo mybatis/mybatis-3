@@ -49,6 +49,7 @@ public class MapperExtendTest {
     ScriptRunner runner = new ScriptRunner(conn);
     runner.setLogWriter(null);
     runner.runScript(reader);
+    conn.close();
     reader.close();
     session.close();
   }
