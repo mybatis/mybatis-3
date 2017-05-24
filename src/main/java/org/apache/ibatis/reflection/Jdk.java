@@ -39,6 +39,19 @@ public class Jdk {
     parameterExists = available;
   }
 
+  public static final boolean dateAndTimeApiExists;
+
+  static {
+    boolean available = false;
+    try {
+      Resources.classForName("java.time.Clock");
+      available = true;
+    } catch (ClassNotFoundException e) {
+      // ignore
+    }
+    dateAndTimeApiExists = available;
+  }
+
   private Jdk() {
     super();
   }
