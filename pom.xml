@@ -391,8 +391,20 @@
                 </testExcludes>
               </configuration>
             </plugin>
+            <plugin>
+              <groupId>org.apache.felix</groupId>
+              <artifactId>maven-bundle-plugin</artifactId>
+              <version>2.5.4</version> <!-- For java 6, remain at older version -->
+            </plugin>
           </plugins>
         </pluginManagement>
+        <plugins>
+            <plugin>
+              <groupId>org.apache.felix</groupId>
+              <artifactId>maven-bundle-plugin</artifactId>
+              <version>2.5.4</version> <!-- For java 6, remain at older version -->
+            </plugin>
+        </plugins>
       </build>
     </profile>
     <profile>
