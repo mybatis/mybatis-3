@@ -46,7 +46,7 @@ public class BatchExecutorException extends ExecutorException {
   /*
    * Returns the BatchUpdateException that caused the nested executor
    * to fail.  That exception contains an array of row counts
-   * that can be used to determine exactly which statemtn of the
+   * that can be used to determine exactly which statement of the
    * executor caused the failure (or failures).
    *
    * @return the root BatchUpdateException

@@ -121,7 +121,7 @@ public class SqlRunner {
               try {
                 return Integer.parseInt(genkey.toString());
               } catch (NumberFormatException e) {
-                //ignore, no numeric key suppot
+                //ignore, no numeric key support
               }
             }
           }

@@ -96,7 +96,7 @@ public class XMLIncludeTransformer {
   }
 
   /**
-   * Read placholders and their values from include node definition. 
+   * Read placeholders and their values from include node definition. 
    * @param node Include node instance
    * @param inheritedVariablesContext Current context used for replace variables in new variables values
    * @return variables context from include instance (no inherited values)
