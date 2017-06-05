@@ -166,6 +166,11 @@ public class MapperAnnotationBuilder {
       try {
         inputStream = Resources.getResourceAsStream(type.getClassLoader(), xmlResource);
       } catch (IOException e) {
+        // start from: 2017/01/03 5pm --hankChan
+        // in my case, it's may cause an error when the classLoader can not resolver the existed XML files.
+        // maybe it is benefit to handle the IOException to remind the coder.
+        e.printStackTrace();
+        // end
         // ignore, resource is not required
       }
       if (inputStream != null) {
