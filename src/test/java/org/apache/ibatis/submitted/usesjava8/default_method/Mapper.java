@@ -29,6 +29,7 @@ public interface Mapper {
   @Select("select * from users where id = #{id} and name = #{name}")
   User getUserByIdAndName(@Param("name") String name, @Param("id") Integer id);
 
+  /*
   default User defaultGetUser(Object... args) {
     return getUserById((Integer) args[0]);
   }
@@ -38,5 +39,5 @@ public interface Mapper {
       return getUserByIdAndName((String) args[0], (Integer) args[1]);
     }
   }
-
+  */
 }
