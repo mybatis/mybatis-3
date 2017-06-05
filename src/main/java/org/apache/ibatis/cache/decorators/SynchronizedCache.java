@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2016 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,64 +15,52 @@
  */
 package org.apache.ibatis.cache.decorators;
 
-import java.util.concurrent.locks.ReadWriteLock;
 
 import org.apache.ibatis.cache.Cache;
+import org.apache.ibatis.cache.CacheDecorator;
 
 /**
  * @author Clinton Begin
  */
-public class SynchronizedCache implements Cache {
+public class SynchronizedCache extends CacheDecorator {
 
-  private Cache delegate;
-  
   public SynchronizedCache(Cache delegate) {
-    this.delegate = delegate;
-  }
-
-  @Override
-  public String getId() {
-    return delegate.getId();
+    super(delegate);
   }
 
   @Override
   public synchronized int getSize() {
-    return delegate.getSize();
+    return super.getSize();
   }
 
   @Override
   public synchronized void putObject(Object key, Object object) {
-    delegate.putObject(key, object);
+    super.putObject(key, object);
   }
 
   @Override
   public synchronized Object getObject(Object key) {
-    return delegate.getObject(key);
+    return super.getObject(key);
   }
 
   @Override
   public synchronized Object removeObject(Object key) {
-    return delegate.removeObject(key);
+    return super.removeObject(key);
   }
 
   @Override
   public synchronized void clear() {
-    delegate.clear();
+    super.clear();
   }
 
   @Override
   public int hashCode() {
-    return delegate.hashCode();
+    return getDelegate().hashCode();
   }
 
   @Override
   public boolean equals(Object obj) {
-    return delegate.equals(obj);
-  }
-
-  @Override
-  public ReadWriteLock getReadWriteLock() {
-    return null;
+    return getDelegate().equals(obj);
   }
 
 }

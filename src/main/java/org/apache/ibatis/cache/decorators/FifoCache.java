@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2016 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -17,35 +17,24 @@ package org.apache.ibatis.cache.decorators;
 
 import java.util.Deque;
 import java.util.LinkedList;
-import java.util.concurrent.locks.ReadWriteLock;
 
 import org.apache.ibatis.cache.Cache;
+import org.apache.ibatis.cache.CacheDecorator;
 
 /**
  * FIFO (first in, first out) cache decorator
  *
  * @author Clinton Begin
  */
-public class FifoCache implements Cache {
+public class FifoCache extends CacheDecorator {
 
-  private final Cache delegate;
   private Deque<Object> keyList;
   private int size;
 
   public FifoCache(Cache delegate) {
-    this.delegate = delegate;
+    super(delegate);
     this.keyList = new LinkedList<Object>();
     this.size = 1024;
-  }
-
-  @Override
-  public String getId() {
-    return delegate.getId();
-  }
-
-  @Override
-  public int getSize() {
-    return delegate.getSize();
   }
 
   public void setSize(int size) {
@@ -55,35 +44,20 @@ public class FifoCache implements Cache {
   @Override
   public void putObject(Object key, Object value) {
     cycleKeyList(key);
-    delegate.putObject(key, value);
-  }
-
-  @Override
-  public Object getObject(Object key) {
-    return delegate.getObject(key);
-  }
-
-  @Override
-  public Object removeObject(Object key) {
-    return delegate.removeObject(key);
+    super.putObject(key, value);
   }
 
   @Override
   public void clear() {
-    delegate.clear();
+    super.clear();
     keyList.clear();
-  }
-
-  @Override
-  public ReadWriteLock getReadWriteLock() {
-    return null;
   }
 
   private void cycleKeyList(Object key) {
     keyList.addLast(key);
     if (keyList.size() > size) {
       Object oldestKey = keyList.removeFirst();
-      delegate.removeObject(oldestKey);
+      super.removeObject(oldestKey);
     }
   }
 
