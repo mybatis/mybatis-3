@@ -94,7 +94,7 @@ public class CacheBuilder {
     Cache cache = newBaseCacheInstance(implementation, id);
     setCacheProperties(cache);
     // issue #352, do not apply decorators to custom caches
-    if (PerpetualCache.class.equals(cache.getClass())) {
+    if (PerpetualCache.class.isAssignableFrom(cache.getClass())) {
       for (Class<? extends Cache> decorator : decorators) {
         cache = newCacheDecoratorInstance(decorator, cache);
         setCacheProperties(cache);
