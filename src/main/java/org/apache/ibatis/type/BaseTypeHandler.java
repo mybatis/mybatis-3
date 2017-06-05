@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -61,46 +61,28 @@ public abstract class BaseTypeHandler<T> extends TypeReference<T> implements Typ
 
   @Override
   public T getResult(ResultSet rs, String columnName) throws SQLException {
-    T result;
     try {
-      result = getNullableResult(rs, columnName);
+      return getNullableResult(rs, columnName);
     } catch (Exception e) {
       throw new ResultMapException("Error attempting to get column '" + columnName + "' from result set.  Cause: " + e, e);
-    }
-    if (rs.wasNull()) {
-      return null;
-    } else {
-      return result;
     }
   }
 
   @Override
   public T getResult(ResultSet rs, int columnIndex) throws SQLException {
-    T result;
     try {
-      result = getNullableResult(rs, columnIndex);
+      return getNullableResult(rs, columnIndex);
     } catch (Exception e) {
       throw new ResultMapException("Error attempting to get column #" + columnIndex+ " from result set.  Cause: " + e, e);
-    }
-    if (rs.wasNull()) {
-      return null;
-    } else {
-      return result;
     }
   }
 
   @Override
   public T getResult(CallableStatement cs, int columnIndex) throws SQLException {
-    T result;
     try {
-      result = getNullableResult(cs, columnIndex);
+      return getNullableResult(cs, columnIndex);
     } catch (Exception e) {
       throw new ResultMapException("Error attempting to get column #" + columnIndex+ " from callable statement.  Cause: " + e, e);
-    }
-    if (cs.wasNull()) {
-      return null;
-    } else {
-      return result;
     }
   }
 
