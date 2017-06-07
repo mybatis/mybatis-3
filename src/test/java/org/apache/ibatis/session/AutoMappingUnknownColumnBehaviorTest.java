@@ -19,6 +19,7 @@ import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.domain.blog.Author;
 import org.apache.ibatis.exceptions.PersistenceException;
+import org.apache.ibatis.logging.LogFactory;
 import org.apache.ibatis.mapping.Environment;
 import org.apache.ibatis.transaction.TransactionFactory;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
@@ -92,6 +93,7 @@ public class AutoMappingUnknownColumnBehaviorTest {
 
     @BeforeClass
     public static void setup() throws Exception {
+        LogFactory.useSlf4jLogging();
         DataSource dataSource = BaseDataTest.createBlogDataSource();
         TransactionFactory transactionFactory = new JdbcTransactionFactory();
         Environment environment = new Environment("Production", transactionFactory, dataSource);
