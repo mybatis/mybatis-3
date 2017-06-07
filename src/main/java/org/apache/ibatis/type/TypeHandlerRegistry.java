@@ -22,14 +22,8 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.ibatis.io.ResolverUtil;
@@ -50,6 +44,7 @@ public final class TypeHandlerRegistry {
   private static final Map<JdbcType, TypeHandler<?>> NULL_TYPE_HANDLER_MAP = new HashMap<JdbcType, TypeHandler<?>>();
 
   private Class<? extends TypeHandler> defaultEnumTypeHandler = EnumTypeHandler.class;
+  private JsonTypeHandler defaultJsonTypeHandler = null;
 
   public TypeHandlerRegistry() {
     register(Boolean.class, new BooleanTypeHandler());
@@ -153,6 +148,19 @@ public final class TypeHandlerRegistry {
     this.defaultEnumTypeHandler = typeHandler;
   }
 
+  /**
+   * Set a default {@link JsonTypeHandler} class for Json type
+   * the default {@link JsonTypeHandler} is not set,
+   * user can extend the abstract class {@link BaseJsonTypeHandler} to implement it.
+   * @param jsonTypeHandler a JsonTypeHandler class for Json
+   * @since 3.4.5
+   */
+  public void setDefaultJsonTypeHandler(JsonTypeHandler jsonTypeHandler) {
+    if (jsonTypeHandler != null) {
+      this.defaultJsonTypeHandler = jsonTypeHandler;
+    }
+  }
+
   public boolean hasTypeHandler(Class<?> javaType) {
     return hasTypeHandler(javaType, null);
   }
@@ -206,6 +214,10 @@ public final class TypeHandlerRegistry {
         // #591
         handler = pickSoleHandler(jdbcHandlerMap);
       }
+    }
+    // if handler is null and jdbcType is OTHER, use defaultJsonTypeHandler
+    if (handler == null && jdbcType != null && JdbcType.OTHER.equals(jdbcType)){
+      handler = defaultJsonTypeHandler;
     }
     // type drives generics here
     return (TypeHandler<T>) handler;
