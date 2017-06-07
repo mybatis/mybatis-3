@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -301,6 +301,20 @@ public class DynamicSqlSourceTest extends BaseDataTest {
   }
 
   @Test
+  public void shouldForeachNotWriteMiddleVariableToGlobalBindings() throws Exception {
+    final HashMap<String, Integer[]> parameterObject = new HashMap<String, Integer[]>() {{
+      put("array", new Integer[]{1,2,3,4,5});
+    }};
+    final String expected = "SELECT * FROM BLOG WHERE ID in (  ? , ? , ? , ? , ? )";
+    DynamicSqlSource source = createDynamicSqlSource(
+        new TextSqlNode("SELECT * FROM BLOG WHERE ID in"),
+        new ForEachSqlNode(new Configuration(),mixedContents(new TextSqlNode("#{id}")), "array", "index", "id", "(", ")", ","),
+        new IfSqlNode(new TextSqlNode("AND id = #{id}"), "id != null"));
+    BoundSql boundSql = source.getBoundSql(parameterObject);
+    assertEquals(expected, boundSql.getSql());
+  }
+
+  @Test
   public void shouldIterateOnceForEachItemInCollection() throws Exception {
     final HashMap<String, String[]> parameterObject = new HashMap<String, String[]>() {{
       put("array", new String[]{"one", "two", "three"});
@@ -316,7 +330,7 @@ public class DynamicSqlSourceTest extends BaseDataTest {
     assertEquals("__frch_item_1", boundSql.getParameterMappings().get(1).getProperty());
     assertEquals("__frch_item_2", boundSql.getParameterMappings().get(2).getProperty());
   }
-
+  
   @Test
   public void shouldHandleOgnlExpression() throws Exception {
     final HashMap<String, String> parameterObject = new HashMap<String, String>() {{
