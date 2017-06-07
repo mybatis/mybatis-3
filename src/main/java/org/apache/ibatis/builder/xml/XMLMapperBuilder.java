@@ -95,7 +95,7 @@ public class XMLMapperBuilder extends BaseBuilder {
     }
 
     parsePendingResultMaps();
-    parsePendingCacheRefs();
+    parsePendingChacheRefs();
     parsePendingStatements();
   }
 
@@ -154,7 +154,7 @@ public class XMLMapperBuilder extends BaseBuilder {
     }
   }
 
-  private void parsePendingCacheRefs() {
+  private void parsePendingChacheRefs() {
     Collection<CacheRefResolver> incompleteCacheRefs = configuration.getIncompleteCacheRefs();
     synchronized (incompleteCacheRefs) {
       Iterator<CacheRefResolver> iter = incompleteCacheRefs.iterator();
@@ -266,11 +266,16 @@ public class XMLMapperBuilder extends BaseBuilder {
     Discriminator discriminator = null;
     List<ResultMapping> resultMappings = new ArrayList<ResultMapping>();
     resultMappings.addAll(additionalResultMappings);
+	XNode resultParent = resultMapNode.getParent();
+	String parentResultType = resultParent.getStringAttribute("resultType");
     List<XNode> resultChildren = resultMapNode.getChildren();
     for (XNode resultChild : resultChildren) {
       if ("constructor".equals(resultChild.getName())) {
         processConstructorElement(resultChild, typeClass, resultMappings);
       } else if ("discriminator".equals(resultChild.getName())) {
+			if(null == resultChild.getStringAttribute("resultType")){
+				typeClass = resolveClass(parentResultType);
+			}
         discriminator = processDiscriminatorElement(resultChild, typeClass, resultMappings);
       } else {
         List<ResultFlag> flags = new ArrayList<ResultFlag>();
@@ -358,12 +363,7 @@ public class XMLMapperBuilder extends BaseBuilder {
   }
 
   private ResultMapping buildResultMappingFromContext(XNode context, Class<?> resultType, List<ResultFlag> flags) throws Exception {
-    String property;
-    if (flags.contains(ResultFlag.CONSTRUCTOR)) {
-      property = context.getStringAttribute("name");
-    } else {
-      property = context.getStringAttribute("property");
-    }
+    String property = context.getStringAttribute("property");
     String column = context.getStringAttribute("column");
     String javaType = context.getStringAttribute("javaType");
     String jdbcType = context.getStringAttribute("jdbcType");
