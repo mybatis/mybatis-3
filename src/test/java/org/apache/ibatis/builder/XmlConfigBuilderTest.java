@@ -35,6 +35,8 @@ import org.apache.ibatis.domain.blog.Author;
 import org.apache.ibatis.domain.blog.Blog;
 import org.apache.ibatis.domain.blog.mappers.BlogMapper;
 import org.apache.ibatis.domain.blog.mappers.NestedBlogMapper;
+import org.apache.ibatis.domain.dummy.Bar;
+import org.apache.ibatis.domain.dummy.Foo;
 import org.apache.ibatis.domain.jpetstore.Cart;
 import org.apache.ibatis.executor.loader.cglib.CglibProxyFactory;
 import org.apache.ibatis.executor.loader.javassist.JavassistProxyFactory;
@@ -197,6 +199,8 @@ public class XmlConfigBuilderTest {
       assertTrue(config.getTypeAliasRegistry().getTypeAliases().get("blogauthor").equals(Author.class));
       assertTrue(config.getTypeAliasRegistry().getTypeAliases().get("blog").equals(Blog.class));
       assertTrue(config.getTypeAliasRegistry().getTypeAliases().get("cart").equals(Cart.class));
+      assertTrue(config.getTypeAliasRegistry().getTypeAliases().get("foo$type").equals(Foo.Type.class));
+      assertTrue(config.getTypeAliasRegistry().getTypeAliases().get("bar$type").equals(Bar.Type.class));
 
       assertThat(config.getTypeHandlerRegistry().getTypeHandler(Integer.class)).isInstanceOf(CustomIntegerTypeHandler.class);
       assertThat(config.getTypeHandlerRegistry().getTypeHandler(Long.class)).isInstanceOf(CustomLongTypeHandler.class);
@@ -269,6 +273,27 @@ public class XmlConfigBuilderTest {
     when(builder).parse();
     then(caughtException()).isInstanceOf(BuilderException.class)
       .hasMessageContaining("The setting foo is not known.  Make sure you spelled it correctly (case sensitive).");
+  }
+
+  @Test
+  public void nestedTypeAliasing() {
+	  final String MAPPER_CONFIG = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n"
+			  + "<!DOCTYPE configuration PUBLIC \"-//mybatis.org//DTD Config 3.0//EN\" \"http://mybatis.org/dtd/mybatis-3-config.dtd\">\n"
+			  + "<configuration>\n"
+			  + "  <settings>\n"
+			  + "    <setting name=\"typeAliasesPackageScanResultFilter\" value=\"org.apache.ibatis.builder.CustomTypeAliasesPackageScanResultFilter\"/>\n"
+			  + "    <setting name=\"typeAliasGenerator\" value=\"org.apache.ibatis.builder.CustomTypeAliasGenerator\"/>\n"
+			  + "  </settings>\n"
+              + "  <typeAliases>\n"
+              + "    <package name=\"org.apache.ibatis.domain.dummy\"/>\n"
+              + "  </typeAliases>\n"
+			  + "</configuration>\n";
+	  
+	  XMLConfigBuilder builder = new XMLConfigBuilder(new StringReader(MAPPER_CONFIG));
+	  Configuration config = builder.parse();
+	  
+	  assertThat(config.getTypeAliasRegistry().resolveAlias("foo$type")).isNotNull().isEqualTo(Foo.Type.class);
+	  assertThat(config.getTypeAliasRegistry().resolveAlias("bar$type")).isNotNull().isEqualTo(Bar.Type.class);
   }
 
   @Test

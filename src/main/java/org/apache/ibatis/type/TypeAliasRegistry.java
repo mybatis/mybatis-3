@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -38,7 +38,9 @@ import org.apache.ibatis.io.Resources;
 public class TypeAliasRegistry {
 
   private final Map<String, Class<?>> TYPE_ALIASES = new HashMap<String, Class<?>>();
-
+  private TypeAliasesPackageScanResultFilter typeAliasesPackageScanResultFilter = new DefaultTypeAliasesPackageScanResultFilter();
+  private TypeAliasGenerator typeAliasGenerator = new DefaultTypeAliasGenerator();
+  
   public TypeAliasRegistry() {
     registerAlias("string", String.class);
 
@@ -130,20 +132,22 @@ public class TypeAliasRegistry {
     resolverUtil.find(new ResolverUtil.IsA(superType), packageName);
     Set<Class<? extends Class<?>>> typeSet = resolverUtil.getClasses();
     for(Class<?> type : typeSet){
-      // Ignore inner classes and interfaces (including package-info.java)
-      // Skip also inner classes. See issue #6
-      if (!type.isAnonymousClass() && !type.isInterface() && !type.isMemberClass()) {
+      // Ignore anonymous classes and interfaces (including package-info.java)
+      // Skip also inner classes (default behavior). See issue #6
+      if (!type.isAnonymousClass() && !type.isInterface() && typeAliasesPackageScanResultFilter.include(type)) {
         registerAlias(type);
       }
     }
   }
 
   public void registerAlias(Class<?> type) {
-    String alias = type.getSimpleName();
+    String alias = null;
     Alias aliasAnnotation = type.getAnnotation(Alias.class);
     if (aliasAnnotation != null) {
       alias = aliasAnnotation.value();
-    } 
+    } else {
+      alias = typeAliasGenerator.aliasFor(type);
+    }
     registerAlias(alias, type);
   }
 
@@ -166,6 +170,25 @@ public class TypeAliasRegistry {
       throw new TypeException("Error registering type alias "+alias+" for "+value+". Cause: " + e, e);
     }
   }
+
+  public final void setTypeAliasesPackageScanResultFilter(Class<? extends TypeAliasesPackageScanResultFilter> clazz) {
+	this.typeAliasesPackageScanResultFilter = instantiate(clazz);
+  }
+  
+  public final void setTypeAliasGenerator(Class<? extends TypeAliasGenerator> clazz) {
+    this.typeAliasGenerator = instantiate(clazz);
+  }
+  
+  private <T> T instantiate(Class<T> clazz) {
+    if (clazz == null) {
+      throw new IllegalArgumentException("argument cannot be null");
+    }
+    try {
+      return clazz.newInstance();
+    } catch (Exception e) {
+      throw new IllegalArgumentException("can't instantiate : " + clazz.getName());
+    }
+  }
   
   /**
    * @since 3.2.2
@@ -174,4 +197,41 @@ public class TypeAliasRegistry {
     return Collections.unmodifiableMap(TYPE_ALIASES);
   }
 
+  /**
+   * <p>Strategy for {@link TypeAliasRegistry#registerAliases(String, Class)}.
+   * <p>Determine given <code>type</code> should be aliased or not while package-wide scanning.
+   * <p><strong>Caution!!</strong> see issue #6
+   */
+  public interface TypeAliasesPackageScanResultFilter {
+    boolean include(Class<?> type);
+  }
+  
+  /**
+   * Default implementation of {@link TypeAliasesPackageScanResultFilter} ignoring member classes.
+   */
+  public static class DefaultTypeAliasesPackageScanResultFilter implements TypeAliasesPackageScanResultFilter {
+    @Override
+    public boolean include(Class<?> type) {
+      return !type.isMemberClass();
+    }
+  }
+  
+  /**
+   * <p>Strategy for {@link TypeAliasRegistry#registerAlias(Class)}.
+   * <p>Generate an alias for given <code>type</code>
+   * <strong>Caution!!</strong> see issue #6
+   */
+  public interface TypeAliasGenerator {
+    String aliasFor(Class<?> type);
+  }
+  
+  /**
+   * Default implementation of {@link TypeAliasGenerator} using {@link Class#getSimpleName()}.
+   */
+  public static class DefaultTypeAliasGenerator implements TypeAliasGenerator {
+    @Override
+    public String aliasFor(Class<?> type) {
+      return type != null ? type.getSimpleName() : null;
+    }
+  }
 }

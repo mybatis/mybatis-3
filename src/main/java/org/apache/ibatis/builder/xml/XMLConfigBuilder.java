@@ -45,6 +45,8 @@ import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.LocalCacheScope;
 import org.apache.ibatis.transaction.TransactionFactory;
 import org.apache.ibatis.type.JdbcType;
+import org.apache.ibatis.type.TypeAliasRegistry.TypeAliasGenerator;
+import org.apache.ibatis.type.TypeAliasRegistry.TypeAliasesPackageScanResultFilter;
 import org.apache.ibatis.type.TypeHandler;
 
 /**
@@ -106,6 +108,8 @@ public class XMLConfigBuilder extends BaseBuilder {
       propertiesElement(root.evalNode("properties"));
       Properties settings = settingsAsProperties(root.evalNode("settings"));
       loadCustomVfs(settings);
+      // before calling typeAliasesElement()
+      loadCustomTypeAliasingStrategy(settings);
       typeAliasesElement(root.evalNode("typeAliases"));
       pluginElement(root.evalNode("plugins"));
       objectFactoryElement(root.evalNode("objectFactory"));
@@ -148,6 +152,21 @@ public class XMLConfigBuilder extends BaseBuilder {
           configuration.setVfsImpl(vfsImpl);
         }
       }
+    }
+  }
+  
+  @SuppressWarnings("unchecked")
+  private void loadCustomTypeAliasingStrategy(Properties props) throws ClassNotFoundException {
+    String filterClassName = props.getProperty("typeAliasesPackageScanResultFilter");
+    if (filterClassName != null) {
+      typeAliasRegistry.setTypeAliasesPackageScanResultFilter(
+    		  (Class<? extends TypeAliasesPackageScanResultFilter>) Resources.classForName(filterClassName));
+    }
+    
+    String generatorClassName = props.getProperty("typeAliasGenerator");
+    if (generatorClassName != null) {
+      typeAliasRegistry.setTypeAliasGenerator(
+    		  (Class<? extends TypeAliasGenerator>) Resources.classForName(generatorClassName));
     }
   }
 

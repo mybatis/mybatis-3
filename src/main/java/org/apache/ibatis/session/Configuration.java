@@ -88,6 +88,8 @@ import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
 import org.apache.ibatis.transaction.managed.ManagedTransactionFactory;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeAliasRegistry;
+import org.apache.ibatis.type.TypeAliasRegistry.TypeAliasGenerator;
+import org.apache.ibatis.type.TypeAliasRegistry.TypeAliasesPackageScanResultFilter;
 import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.TypeHandlerRegistry;
 
@@ -477,7 +479,19 @@ public class Configuration {
   public TypeAliasRegistry getTypeAliasRegistry() {
     return typeAliasRegistry;
   }
-
+  
+  public void setTypeAliasesPackageScanResultFilter(Class<? extends TypeAliasesPackageScanResultFilter> clazz) {
+    if (clazz != null) {
+      getTypeAliasRegistry().setTypeAliasesPackageScanResultFilter(clazz);
+    }
+  }
+  
+  public void setTypeAliasGenerator(Class<? extends TypeAliasGenerator> clazz) {
+    if (clazz != null) {
+      getTypeAliasRegistry().setTypeAliasGenerator(clazz);
+    }
+  }
+  
   /**
    * @since 3.2.2
    */

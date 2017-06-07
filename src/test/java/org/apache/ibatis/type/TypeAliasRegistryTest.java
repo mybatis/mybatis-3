@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,12 +15,18 @@
  */
 package org.apache.ibatis.type;
 
+import static com.googlecode.catchexception.apis.BDDCatchException.caughtException;
+import static com.googlecode.catchexception.apis.BDDCatchException.when;
+import static org.assertj.core.api.BDDAssertions.then;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
-import org.junit.Test;
-
 import java.math.BigDecimal;
+
+import org.apache.ibatis.builder.CustomTypeAliasGenerator;
+import org.apache.ibatis.domain.dummy.Bar;
+import org.apache.ibatis.domain.dummy.Foo;
+import org.junit.Test;
 
 public class TypeAliasRegistryTest {
 
@@ -65,5 +71,40 @@ public class TypeAliasRegistryTest {
     typeAliasRegistry.registerAlias("foo", (Class<?>) null);
     typeAliasRegistry.registerAlias("foo", String.class);
   }
-
+  
+  @Test
+  public void shouldBeSimpleClassNameIfTypeAliasGeneratorIsNotSpecified() {
+    TypeAliasRegistry typeAliasRegistry = new TypeAliasRegistry();
+    
+    typeAliasRegistry.registerAlias(Foo.class);
+    typeAliasRegistry.registerAlias(Bar.class);
+    assertEquals(Foo.class, typeAliasRegistry.getTypeAliases().get("foo"));
+    assertEquals(Bar.class, typeAliasRegistry.getTypeAliases().get("bar"));
+    
+    typeAliasRegistry.registerAlias(Foo.Type.class);
+    assertEquals(Foo.Type.class, typeAliasRegistry.getTypeAliases().get("type"));
+    
+    when(typeAliasRegistry).registerAlias(Bar.Type.class);
+    
+    then(caughtException())
+    .isInstanceOf(TypeException.class)
+    .hasMessageContaining("The alias 'Type' is already mapped to the value");
+  }
+  
+  @Test
+  public void shouldBeAbleToRegisterDifferentNestedTypesHavingSameSimpleNameUsingCustomTypeAliasGenerator() {
+    TypeAliasRegistry typeAliasRegistry = new TypeAliasRegistry();
+    typeAliasRegistry.setTypeAliasGenerator(CustomTypeAliasGenerator.class);
+    
+    typeAliasRegistry.registerAlias(Foo.class);
+    typeAliasRegistry.registerAlias(Bar.class);
+    assertEquals(Foo.class, typeAliasRegistry.getTypeAliases().get("foo"));
+    assertEquals(Bar.class, typeAliasRegistry.getTypeAliases().get("bar"));
+    
+    typeAliasRegistry.registerAlias(Foo.Type.class);
+    typeAliasRegistry.registerAlias(Bar.Type.class);
+    assertNull(typeAliasRegistry.getTypeAliases().get("type"));
+    assertEquals(Foo.Type.class, typeAliasRegistry.getTypeAliases().get("foo$type"));
+    assertEquals(Bar.Type.class, typeAliasRegistry.getTypeAliases().get("bar$type"));
+  }
 }
