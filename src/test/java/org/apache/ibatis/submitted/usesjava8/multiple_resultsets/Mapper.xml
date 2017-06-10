@@ -20,14 +20,14 @@
     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="org.apache.ibatis.submitted.multiple_resultsets.Mapper">
+<mapper namespace="org.apache.ibatis.submitted.usesjava8.multiple_resultsets.Mapper">
 
 	<select id="getUsersAndGroups" resultMap="usersResult,groupsResult">
 		select * from mbtest.order_detail ; select * from mbtest.order_header
 	</select>
 
-	<resultMap type="org.apache.ibatis.submitted.multiple_resultsets.OrderDetail" id="usersResult" />
+	<resultMap type="org.apache.ibatis.submitted.usesjava8.multiple_resultsets.OrderDetail" id="usersResult" />
 	
-	<resultMap type="org.apache.ibatis.submitted.multiple_resultsets.OrderHeader" id="groupsResult" />
+	<resultMap type="org.apache.ibatis.submitted.usesjava8.multiple_resultsets.OrderHeader" id="groupsResult" />
 	
 </mapper>

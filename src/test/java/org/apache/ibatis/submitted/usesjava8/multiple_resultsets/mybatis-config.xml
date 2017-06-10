@@ -41,7 +41,7 @@
 	</environments>
 
 	<mappers>
-		<mapper resource="org/apache/ibatis/submitted/multiple_resultsets/Mapper.xml" />
+		<mapper resource="org/apache/ibatis/submitted/usesjava8/multiple_resultsets/Mapper.xml" />
 	</mappers>
 
 </configuration>

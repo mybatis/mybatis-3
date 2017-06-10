@@ -13,12 +13,14 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package org.apache.ibatis.submitted.multiple_resultsets;
+package org.apache.ibatis.submitted.usesjava8.multiple_resultsets;
 
-public class OrderHeader {
+public class OrderDetail {
 
   private int orderId;
-  private String custName;
+  private int lineNumber;
+  private int quantity;
+  private String itemDescription;
 
   public int getOrderId() {
     return orderId;
@@ -28,12 +30,27 @@ public class OrderHeader {
     this.orderId = orderId;
   }
 
-  public String getCustName() {
-    return custName;
+  public int getLineNumber() {
+    return lineNumber;
   }
 
-  public void setCustName(String custName) {
-    this.custName = custName;
+  public void setLineNumber(int lineNumber) {
+    this.lineNumber = lineNumber;
   }
 
+  public int getQuantity() {
+    return quantity;
+  }
+
+  public void setQuantity(int quantity) {
+    this.quantity = quantity;
+  }
+
+  public String getItemDescription() {
+    return itemDescription;
+  }
+
+  public void setItemDescription(String itemDescription) {
+    this.itemDescription = itemDescription;
+  }
 }

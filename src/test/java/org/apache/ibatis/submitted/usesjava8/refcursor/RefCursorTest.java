@@ -13,14 +13,19 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package org.apache.ibatis.submitted.multiple_resultsets;
+package org.apache.ibatis.submitted.usesjava8.refcursor;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Paths;
 import java.sql.Connection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.jdbc.ScriptRunner;
@@ -28,17 +33,15 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.AfterClass;
-import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import ru.yandex.qatools.embed.postgresql.EmbeddedPostgres;
 
-/*
- * This class contains tests for multiple results.  
- * It is based on Jeff's ref cursor tests.
+/**
+ * @author Jeff Butler
  */
-public class MultipleResultTest {
+public class RefCursorTest {
 
   private static final EmbeddedPostgres postgres = new EmbeddedPostgres();
 
@@ -47,15 +50,15 @@ public class MultipleResultTest {
   @BeforeClass
   public static void setUp() throws Exception {
     //  Launch PostgreSQL server. Download / unarchive if necessary.
-    postgres.start(EmbeddedPostgres.cachedRuntimeConfig(Paths.get("target/postgres")), "localhost", 5432, "multiple_resultsets", "postgres", "root", Collections.emptyList());
+    postgres.start(EmbeddedPostgres.cachedRuntimeConfig(Paths.get("target/postgres")), "localhost", 5432, "refcursor", "postgres", "root", Collections.emptyList());
 
-    Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/multiple_resultsets/mybatis-config.xml");
+    Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/usesjava8/refcursor/MapperConfig.xml");
     sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
     reader.close();
 
     SqlSession session = sqlSessionFactory.openSession();
     Connection conn = session.getConnection();
-    reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/multiple_resultsets/CreateDB.sql");
+    reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/usesjava8/refcursor/CreateDB.sql");
     ScriptRunner runner = new ScriptRunner(conn);
     runner.setLogWriter(null);
     runner.runScript(reader);
@@ -70,15 +73,42 @@ public class MultipleResultTest {
   }
 
   @Test
-  public void shouldGetMultipleResultSetsWithOneStatement() throws IOException {
+  public void testRefCursor1() throws IOException {
     SqlSession sqlSession = sqlSessionFactory.openSession();
     try {
-      Mapper mapper = sqlSession.getMapper(Mapper.class);
-      List<?> usersAndGroups = mapper.getUsersAndGroups();
-      Assert.assertEquals(2, usersAndGroups.size());
+      OrdersMapper mapper = sqlSession.getMapper(OrdersMapper.class);
+      Map<String, Object> parameter = new HashMap<String, Object>();
+      parameter.put("orderId", 1);
+      mapper.getOrder1(parameter);
+
+      assertNotNull(parameter.get("order"));
+      @SuppressWarnings("unchecked")
+      List<Order> orders = (List<Order>) parameter.get("order");
+      assertEquals(1, orders.size());
+      Order order = orders.get(0);
+      assertEquals(3, order.getDetailLines().size());
     } finally {
       sqlSession.close();
     }
   }
 
+  @Test
+  public void testRefCursor2() throws IOException {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      OrdersMapper mapper = sqlSession.getMapper(OrdersMapper.class);
+      Map<String, Object> parameter = new HashMap<String, Object>();
+      parameter.put("orderId", 1);
+      mapper.getOrder2(parameter);
+
+      assertNotNull(parameter.get("order"));
+      @SuppressWarnings("unchecked")
+      List<Order> orders = (List<Order>) parameter.get("order");
+      assertEquals(1, orders.size());
+      Order order = orders.get(0);
+      assertEquals(3, order.getDetailLines().size());
+    } finally {
+      sqlSession.close();
+    }
+  }
 }

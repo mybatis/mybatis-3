@@ -28,7 +28,7 @@
       </transactionManager>
       <dataSource type="UNPOOLED">
         <property name="driver" value="org.postgresql.Driver"/>
-        <property name="url" value="jdbc:postgresql:keycolumn"/>
+        <property name="url" value="jdbc:postgresql:refcursor"/>
         <property name="username" value="postgres"/>
         <property name="password" value="root"/>
       </dataSource>
@@ -36,6 +36,7 @@
   </environments>
 
   <mappers>
-    <mapper resource="org/apache/ibatis/submitted/keycolumn/InsertMapper.xml"/>
+    <mapper resource="org/apache/ibatis/submitted/usesjava8/refcursor/OrdersMapper.xml"/>
   </mappers>
+
 </configuration>
