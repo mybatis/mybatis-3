@@ -16,7 +16,10 @@
        limitations under the License.
 
 -->
-<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
 <mapper namespace="org.apache.ibatis.submitted.usesjava8.refcursor.OrdersMapper">
   <resultMap type="org.apache.ibatis.submitted.usesjava8.refcursor.Order" id="OrderResult">
     <id property="orderId" column="ORDER_ID"/>
