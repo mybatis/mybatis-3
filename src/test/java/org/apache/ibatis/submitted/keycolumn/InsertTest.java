@@ -19,34 +19,61 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import java.io.Reader;
+import java.nio.file.Paths;
+import java.sql.Connection;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.ibatis.executor.BatchResult;
 import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
-/*
- * This class contains tests for issue #84 - where the Jdbc3KeyGenerator
- * needs to know the key column name because it is not the first column
- * in the resultset returned from getGeneratedKeys().
- *
- * If PostgreSQL is setup as described in setupdb.txt, then remove
- * the @Ignore annotation to enable the tests.
+import ru.yandex.qatools.embed.postgresql.EmbeddedPostgres;
 
+/**
  * @author Jeff Butler
  */
-@Ignore("See setupdb.txt for instructions on how to run the tests in this class")
 public class InsertTest {
+
+  private static final EmbeddedPostgres postgres = new EmbeddedPostgres();
+
+  private static SqlSessionFactory sqlSessionFactory;
+
+  @BeforeClass
+  public static void setUp() throws Exception {
+    //  Launch PostgreSQL server. Download / unarchive if necessary.
+    postgres.start(EmbeddedPostgres.cachedRuntimeConfig(Paths.get("target/postgres")), "localhost", 5432, "keycolumn", "postgres", "root", Collections.emptyList());
+
+    Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/keycolumn/MapperConfig.xml");
+    sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+    reader.close();
+
+    SqlSession session = sqlSessionFactory.openSession();
+    Connection conn = session.getConnection();
+    reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/keycolumn/CreateDB.sql");
+    ScriptRunner runner = new ScriptRunner(conn);
+    runner.setLogWriter(null);
+    runner.runScript(reader);
+    conn.close();
+    reader.close();
+    session.close();
+  }
+
+  @AfterClass
+  public static void tearDown() {
+    postgres.stop();
+  }
 
   @Test
   public void testInsertAnnotated() throws Exception {
-    Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/keycolumn/MapperConfig.xml");
-    SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
     SqlSession sqlSession = sqlSessionFactory.openSession();
     try {
       InsertMapper mapper = sqlSession.getMapper(InsertMapper.class);
@@ -65,8 +92,6 @@ public class InsertTest {
 
   @Test
   public void testInsertMapped() throws Exception {
-    Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/keycolumn/MapperConfig.xml");
-    SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
     SqlSession sqlSession = sqlSessionFactory.openSession();
     try {
       InsertMapper mapper = sqlSession.getMapper(InsertMapper.class);
@@ -86,8 +111,6 @@ public class InsertTest {
   @Ignore // Not supported yet in PostgreSQL
   @Test
   public void testInsertMappedBatch() throws Exception {
-    Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/keycolumn/MapperConfig.xml");
-    SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
     SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH);
     try {
       InsertMapper mapper = sqlSession.getMapper(InsertMapper.class);

@@ -28,7 +28,7 @@
       </transactionManager>
       <dataSource type="UNPOOLED">
         <property name="driver" value="org.postgresql.Driver"/>
-        <property name="url" value="jdbc:postgresql:mbtest"/>
+        <property name="url" value="jdbc:postgresql:keycolumn"/>
         <property name="username" value="postgres"/>
         <property name="password" value="root"/>
       </dataSource>
