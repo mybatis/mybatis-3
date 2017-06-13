@@ -873,8 +873,7 @@ public class Author {
         </p>
         <p>
           <span class="label important">NOTE</span>
-          JSR-310(Date and Time API)から提供されているクラスを使用する場合は、
-          <a href="https://github.com/mybatis/typehandlers-jsr310">mybatis-typehandlers-jsr310</a>を使用することができます。
+          バージョン3.4.5より、JSR-310(Date and Time API)のクラスがデフォルトでサポートされました。
         </p>
         <table>
           <thead>
@@ -1157,13 +1156,134 @@ public class Author {
             </tr>
             <tr>
               <td>
-                <code>EnumOrdinalTypeHandler</code>
+                EnumOrdinalTypeHandler
               </td>
               <td>
                 Enumeration Type
               </td>
               <td>
                 コードではなく位置（ordinal）が保存されるので、NUMERIC または DOUBLE 互換の型
+              </td>
+            </tr>
+            <tr>
+              <td>
+                InstantTypeHandler
+              </td>
+              <td>
+                java.time.Instant
+              </td>
+              <td>
+                TIMESTAMP
+              </td>
+            </tr>
+            <tr>
+              <td>
+                LocalDateTimeTypeHandler
+              </td>
+              <td>
+                java.time.LocalDateTime
+              </td>
+              <td>
+                TIMESTAMP
+              </td>
+            </tr>
+            <tr>
+              <td>
+                LocalDateTypeHandler
+              </td>
+              <td>
+                java.time.LocalDate
+              </td>
+              <td>
+                DATE
+              </td>
+            </tr>
+            <tr>
+              <td>
+                LocalTimeTypeHandler
+              </td>
+              <td>
+                java.time.LocalTime
+              </td>
+              <td>
+                TIME
+              </td>
+            </tr>
+            <tr>
+              <td>
+                OffsetDateTimeTypeHandler
+              </td>
+              <td>
+                java.time.OffsetDateTime
+              </td>
+              <td>
+                TIMESTAMP
+              </td>
+            </tr>
+            <tr>
+              <td>
+                OffsetTimeTypeHandler
+              </td>
+              <td>
+                java.time.OffsetTime
+              </td>
+              <td>
+                TIME
+              </td>
+            </tr>
+            <tr>
+              <td>
+                ZonedDateTimeTypeHandler
+              </td>
+              <td>
+                java.time.ZonedDateTime
+              </td>
+              <td>
+                TIMESTAMP
+              </td>
+            </tr>
+            <tr>
+              <td>
+                YearTypeHandler
+              </td>
+              <td>
+                java.time.Year
+              </td>
+              <td>
+                INTEGER
+              </td>
+            </tr>
+            <tr>
+              <td>
+                MonthTypeHandler
+              </td>
+              <td>
+                java.time.Month
+              </td>
+              <td>
+                INTEGER
+              </td>
+            </tr>
+            <tr>
+              <td>
+                YearMonthTypeHandler
+              </td>
+              <td>
+                java.time.YearMonth
+              </td>
+              <td>
+                VARCHAR または LONGVARCHAR
+              </td>
+            </tr>
+            <tr>
+              <td>
+                JapaneseDateTypeHandler
+              </td>
+              <td>
+                java.time.chrono.JapaneseDate
+              </td>
+              <td>
+                DATE
               </td>
             </tr>
           </tbody>
