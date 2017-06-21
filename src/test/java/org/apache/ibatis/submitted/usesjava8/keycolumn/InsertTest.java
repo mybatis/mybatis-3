@@ -38,7 +38,6 @@ import org.apache.ibatis.test.EmbeddedPostgresqlTests;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
@@ -119,7 +118,6 @@ public class InsertTest {
     }
   }
 
-  @Ignore // Not supported yet in PostgreSQL
   @Test
   public void testInsertMappedBatch() throws Exception {
     SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH);
