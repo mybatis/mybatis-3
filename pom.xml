@@ -241,9 +241,9 @@
     </dependency>
     <!-- postgresql driver is required to run the refcursor tests -->
     <dependency>
-      <groupId>postgresql</groupId>
+      <groupId>org.postgresql</groupId>
       <artifactId>postgresql</artifactId>
-      <version>9.1-901-1.jdbc4</version>
+      <version>42.1.1.jre6</version>
       <scope>test</scope>
     </dependency>
     <dependency>
