@@ -17,11 +17,11 @@
 
 if [ $TRAVIS_JDK_VERSION == "openjdk6" ]; then
   # Java 1.6
-  mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V -Pjava16
+  mvn install -DskipTests=true -Dmaven.javadoc.skip=true -Dmaven.surefire.excludeGroups= -B -V -Pjava16
 elif [ $TRAVIS_JDK_VERSION == "oraclejdk7" ] || [ $TRAVIS_JDK_VERSION == "openjdk7" ]; then
   # Java 1.7
-  mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V -Pjava17
+  mvn install -DskipTests=true -Dmaven.javadoc.skip=true -Dmaven.surefire.excludeGroups= -B -V -Pjava17
 else
   # Java 1.8
-  mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+  mvn install -DskipTests=true -Dmaven.javadoc.skip=true -Dmaven.surefire.excludeGroups= -B -V
 fi
