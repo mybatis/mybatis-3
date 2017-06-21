@@ -255,7 +255,11 @@ public class DefaultResultSetHandler implements ResultSetHandler {
         // Crazy Standard JDBC way of determining if there are more results
         if (!((!stmt.getMoreResults()) && (stmt.getUpdateCount() == -1))) {
           ResultSet rs = stmt.getResultSet();
-          return rs != null ? new ResultSetWrapper(rs, configuration) : null;
+          if (rs == null) {
+            return getNextResultSet(stmt);
+          } else {
+            return new ResultSetWrapper(rs, configuration);
+          }
         }
       }
     } catch (Exception e) {
