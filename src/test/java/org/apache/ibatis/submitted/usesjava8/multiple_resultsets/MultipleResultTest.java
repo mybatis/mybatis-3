@@ -27,10 +27,12 @@ import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.apache.ibatis.test.EmbeddedPostgresqlTests;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 import ru.yandex.qatools.embed.postgresql.EmbeddedPostgres;
 
@@ -38,6 +40,7 @@ import ru.yandex.qatools.embed.postgresql.EmbeddedPostgres;
  * This class contains tests for multiple results.  
  * It is based on Jeff's ref cursor tests.
  */
+@Category(EmbeddedPostgresqlTests.class)
 public class MultipleResultTest {
 
   private static final EmbeddedPostgres postgres = new EmbeddedPostgres();

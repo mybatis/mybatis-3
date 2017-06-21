@@ -31,16 +31,19 @@ import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.apache.ibatis.test.EmbeddedPostgresqlTests;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 import ru.yandex.qatools.embed.postgresql.EmbeddedPostgres;
 
 /**
  * @author Jeff Butler
  */
+@Category(EmbeddedPostgresqlTests.class)
 public class InsertTest {
 
   private static final EmbeddedPostgres postgres = new EmbeddedPostgres();
