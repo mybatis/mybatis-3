@@ -22,12 +22,16 @@ import java.sql.Connection;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.ibatis.datasource.unpooled.UnpooledDataSource;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.jdbc.ScriptRunner;
+import org.apache.ibatis.mapping.Environment;
+import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.apache.ibatis.test.EmbeddedPostgresqlTests;
+import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -35,6 +39,7 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
 import ru.yandex.qatools.embed.postgresql.EmbeddedPostgres;
+import ru.yandex.qatools.embed.postgresql.util.SocketUtil;
 
 /*
  * This class contains tests for multiple results.  
@@ -50,15 +55,19 @@ public class MultipleResultTest {
   @BeforeClass
   public static void setUp() throws Exception {
     //  Launch PostgreSQL server. Download / unarchive if necessary.
-    postgres.start(EmbeddedPostgres.cachedRuntimeConfig(Paths.get("target/postgres")), "localhost", 5432, "multiple_resultsets", "postgres", "root", Collections.emptyList());
+    String url = postgres.start(EmbeddedPostgres.cachedRuntimeConfig(Paths.get("target/postgres")), "localhost", SocketUtil.findFreePort(), "multiple_resultsets", "postgres", "root", Collections.emptyList());
 
-    Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/usesjava8/multiple_resultsets/mybatis-config.xml");
-    sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-    reader.close();
+    Configuration configuration = new Configuration();
+    Environment environment = new Environment("development", new JdbcTransactionFactory(), new UnpooledDataSource(
+        "org.postgresql.Driver", url, null));
+    configuration.setEnvironment(environment);
+    configuration.setMapUnderscoreToCamelCase(true);
+    configuration.addMapper(Mapper.class);
+    sqlSessionFactory = new SqlSessionFactoryBuilder().build(configuration);
 
     SqlSession session = sqlSessionFactory.openSession();
     Connection conn = session.getConnection();
-    reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/usesjava8/multiple_resultsets/CreateDB.sql");
+    Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/usesjava8/multiple_resultsets/CreateDB.sql");
     ScriptRunner runner = new ScriptRunner(conn);
     runner.setLogWriter(null);
     runner.runScript(reader);

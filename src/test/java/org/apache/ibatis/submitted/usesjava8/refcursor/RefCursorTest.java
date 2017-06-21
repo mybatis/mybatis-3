@@ -27,18 +27,23 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.datasource.unpooled.UnpooledDataSource;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.jdbc.ScriptRunner;
+import org.apache.ibatis.mapping.Environment;
+import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.apache.ibatis.test.EmbeddedPostgresqlTests;
+import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
 import ru.yandex.qatools.embed.postgresql.EmbeddedPostgres;
+import ru.yandex.qatools.embed.postgresql.util.SocketUtil;
 
 /**
  * @author Jeff Butler
@@ -53,15 +58,18 @@ public class RefCursorTest {
   @BeforeClass
   public static void setUp() throws Exception {
     //  Launch PostgreSQL server. Download / unarchive if necessary.
-    postgres.start(EmbeddedPostgres.cachedRuntimeConfig(Paths.get("target/postgres")), "localhost", 5432, "refcursor", "postgres", "root", Collections.emptyList());
+    String url = postgres.start(EmbeddedPostgres.cachedRuntimeConfig(Paths.get("target/postgres")), "localhost", SocketUtil.findFreePort(), "refcursor", "postgres", "root", Collections.emptyList());
 
-    Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/usesjava8/refcursor/MapperConfig.xml");
-    sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-    reader.close();
+    Configuration configuration = new Configuration();
+    Environment environment = new Environment("development", new JdbcTransactionFactory(), new UnpooledDataSource(
+        "org.postgresql.Driver", url, null));
+    configuration.setEnvironment(environment);
+    configuration.addMapper(OrdersMapper.class);
+    sqlSessionFactory = new SqlSessionFactoryBuilder().build(configuration);
 
     SqlSession session = sqlSessionFactory.openSession();
     Connection conn = session.getConnection();
-    reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/usesjava8/refcursor/CreateDB.sql");
+    Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/usesjava8/refcursor/CreateDB.sql");
     ScriptRunner runner = new ScriptRunner(conn);
     runner.setLogWriter(null);
     runner.runScript(reader);
