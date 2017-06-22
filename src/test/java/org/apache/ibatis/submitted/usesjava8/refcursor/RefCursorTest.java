@@ -57,7 +57,7 @@ public class RefCursorTest {
 
   @BeforeClass
   public static void setUp() throws Exception {
-    //  Launch PostgreSQL server. Download / unarchive if necessary.
+    // Launch PostgreSQL server. Download / unarchive if necessary.
     String url = postgres.start(EmbeddedPostgres.cachedRuntimeConfig(Paths.get("target/postgres")), "localhost", SocketUtil.findFreePort(), "refcursor", "postgres", "root", Collections.emptyList());
 
     Configuration configuration = new Configuration();
@@ -67,15 +67,13 @@ public class RefCursorTest {
     configuration.addMapper(OrdersMapper.class);
     sqlSessionFactory = new SqlSessionFactoryBuilder().build(configuration);
 
-    SqlSession session = sqlSessionFactory.openSession();
-    Connection conn = session.getConnection();
-    Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/usesjava8/refcursor/CreateDB.sql");
-    ScriptRunner runner = new ScriptRunner(conn);
-    runner.setLogWriter(null);
-    runner.runScript(reader);
-    conn.close();
-    reader.close();
-    session.close();
+    try (SqlSession session = sqlSessionFactory.openSession();
+        Connection conn = session.getConnection();
+        Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/usesjava8/refcursor/CreateDB.sql")) {
+      ScriptRunner runner = new ScriptRunner(conn);
+      runner.setLogWriter(null);
+      runner.runScript(reader);
+    }
   }
 
   @AfterClass
@@ -85,8 +83,7 @@ public class RefCursorTest {
 
   @Test
   public void testRefCursor1() throws IOException {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       OrdersMapper mapper = sqlSession.getMapper(OrdersMapper.class);
       Map<String, Object> parameter = new HashMap<String, Object>();
       parameter.put("orderId", 1);
@@ -98,15 +95,12 @@ public class RefCursorTest {
       assertEquals(1, orders.size());
       Order order = orders.get(0);
       assertEquals(3, order.getDetailLines().size());
-    } finally {
-      sqlSession.close();
     }
   }
 
   @Test
   public void testRefCursor2() throws IOException {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       OrdersMapper mapper = sqlSession.getMapper(OrdersMapper.class);
       Map<String, Object> parameter = new HashMap<String, Object>();
       parameter.put("orderId", 1);
@@ -118,8 +112,6 @@ public class RefCursorTest {
       assertEquals(1, orders.size());
       Order order = orders.get(0);
       assertEquals(3, order.getDetailLines().size());
-    } finally {
-      sqlSession.close();
     }
   }
 }

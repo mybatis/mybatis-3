@@ -56,7 +56,7 @@ public class InsertTest {
 
   @BeforeClass
   public static void setUp() throws Exception {
-    //  Launch PostgreSQL server. Download / unarchive if necessary.
+    // Launch PostgreSQL server. Download / unarchive if necessary.
     String url = postgres.start(EmbeddedPostgres.cachedRuntimeConfig(Paths.get("target/postgres")), "localhost", SocketUtil.findFreePort(), "keycolumn", "postgres", "root", Collections.emptyList());
 
     Configuration configuration = new Configuration();
@@ -66,15 +66,13 @@ public class InsertTest {
     configuration.addMapper(InsertMapper.class);
     sqlSessionFactory = new SqlSessionFactoryBuilder().build(configuration);
 
-    SqlSession session = sqlSessionFactory.openSession();
-    Connection conn = session.getConnection();
-    Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/usesjava8/keycolumn/CreateDB.sql");
-    ScriptRunner runner = new ScriptRunner(conn);
-    runner.setLogWriter(null);
-    runner.runScript(reader);
-    conn.close();
-    reader.close();
-    session.close();
+    try (SqlSession session = sqlSessionFactory.openSession();
+        Connection conn = session.getConnection();
+        Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/usesjava8/keycolumn/CreateDB.sql")) {
+      ScriptRunner runner = new ScriptRunner(conn);
+      runner.setLogWriter(null);
+      runner.runScript(reader);
+    }
   }
 
   @AfterClass
@@ -84,8 +82,7 @@ public class InsertTest {
 
   @Test
   public void testInsertAnnotated() throws Exception {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       InsertMapper mapper = sqlSession.getMapper(InsertMapper.class);
       Name name = new Name();
       name.setFirstName("Fred");
@@ -95,15 +92,12 @@ public class InsertTest {
 
       assertNotNull(name.getId());
       assertEquals(1, rows);
-    } finally {
-      sqlSession.close();
     }
   }
 
   @Test
   public void testInsertMapped() throws Exception {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       InsertMapper mapper = sqlSession.getMapper(InsertMapper.class);
       Name name = new Name();
       name.setFirstName("Fred");
@@ -113,15 +107,12 @@ public class InsertTest {
 
       assertNotNull(name.getId());
       assertEquals(1, rows);
-    } finally {
-      sqlSession.close();
     }
   }
 
   @Test
   public void testInsertMappedBatch() throws Exception {
-    SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH);
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH)) {
       InsertMapper mapper = sqlSession.getMapper(InsertMapper.class);
       Name name = new Name();
       name.setFirstName("Fred");
@@ -135,8 +126,6 @@ public class InsertTest {
       assertNotNull(name.getId());
       assertNotNull(name2.getId());
       assertEquals(1, batchResults.size());
-    } finally {
-      sqlSession.close();
     }
   }
 

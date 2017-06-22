@@ -54,7 +54,7 @@ public class MultipleResultTest {
 
   @BeforeClass
   public static void setUp() throws Exception {
-    //  Launch PostgreSQL server. Download / unarchive if necessary.
+    // Launch PostgreSQL server. Download / unarchive if necessary.
     String url = postgres.start(EmbeddedPostgres.cachedRuntimeConfig(Paths.get("target/postgres")), "localhost", SocketUtil.findFreePort(), "multiple_resultsets", "postgres", "root", Collections.emptyList());
 
     Configuration configuration = new Configuration();
@@ -65,15 +65,13 @@ public class MultipleResultTest {
     configuration.addMapper(Mapper.class);
     sqlSessionFactory = new SqlSessionFactoryBuilder().build(configuration);
 
-    SqlSession session = sqlSessionFactory.openSession();
-    Connection conn = session.getConnection();
-    Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/usesjava8/multiple_resultsets/CreateDB.sql");
-    ScriptRunner runner = new ScriptRunner(conn);
-    runner.setLogWriter(null);
-    runner.runScript(reader);
-    conn.close();
-    reader.close();
-    session.close();
+    try (SqlSession session = sqlSessionFactory.openSession();
+        Connection conn = session.getConnection();
+        Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/usesjava8/multiple_resultsets/CreateDB.sql")) {
+      ScriptRunner runner = new ScriptRunner(conn);
+      runner.setLogWriter(null);
+      runner.runScript(reader);
+    }
   }
 
   @AfterClass
@@ -83,13 +81,10 @@ public class MultipleResultTest {
 
   @Test
   public void shouldGetMultipleResultSetsWithOneStatement() throws IOException {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       List<?> usersAndGroups = mapper.getUsersAndGroups();
       Assert.assertEquals(2, usersAndGroups.size());
-    } finally {
-      sqlSession.close();
     }
   }
 
