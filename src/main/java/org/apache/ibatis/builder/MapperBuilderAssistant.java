@@ -55,7 +55,7 @@ import org.apache.ibatis.type.TypeHandler;
 public class MapperBuilderAssistant extends BaseBuilder {
 
   private String currentNamespace;
-  private String resource;
+  private final String resource;
   private Cache currentCache;
   private boolean unresolvedCacheRef; // issue #676
 

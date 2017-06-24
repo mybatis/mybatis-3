@@ -40,10 +40,10 @@ public abstract class BaseJdbcLogger {
   protected static final Set<String> SET_METHODS = new HashSet<String>();
   protected static final Set<String> EXECUTE_METHODS = new HashSet<String>();
 
-  private Map<Object, Object> columnMap = new HashMap<Object, Object>();
+  private final Map<Object, Object> columnMap = new HashMap<Object, Object>();
 
-  private List<Object> columnNames = new ArrayList<Object>();
-  private List<Object> columnValues = new ArrayList<Object>();
+  private final List<Object> columnNames = new ArrayList<Object>();
+  private final List<Object> columnValues = new ArrayList<Object>();
 
   protected Log statementLog;
   protected int queryStack;

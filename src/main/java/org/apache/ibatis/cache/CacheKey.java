@@ -33,7 +33,7 @@ public class CacheKey implements Cloneable, Serializable {
   private static final int DEFAULT_MULTIPLYER = 37;
   private static final int DEFAULT_HASHCODE = 17;
 
-  private int multiplier;
+  private final int multiplier;
   private int hashcode;
   private long checksum;
   private int count;

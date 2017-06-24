@@ -52,10 +52,10 @@ import org.apache.ibatis.type.TypeHandler;
  */
 public class XMLMapperBuilder extends BaseBuilder {
 
-  private XPathParser parser;
-  private MapperBuilderAssistant builderAssistant;
-  private Map<String, XNode> sqlFragments;
-  private String resource;
+  private final XPathParser parser;
+  private final MapperBuilderAssistant builderAssistant;
+  private final Map<String, XNode> sqlFragments;
+  private final String resource;
 
   @Deprecated
   public XMLMapperBuilder(Reader reader, Configuration configuration, String resource, Map<String, XNode> sqlFragments, String namespace) {

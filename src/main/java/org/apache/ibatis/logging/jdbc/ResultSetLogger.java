@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -40,8 +40,8 @@ public final class ResultSetLogger extends BaseJdbcLogger implements InvocationH
   private static Set<Integer> BLOB_TYPES = new HashSet<Integer>();
   private boolean first = true;
   private int rows;
-  private ResultSet rs;
-  private Set<Integer> blobColumns = new HashSet<Integer>();
+  private final ResultSet rs;
+  private final Set<Integer> blobColumns = new HashSet<Integer>();
 
   static {
     BLOB_TYPES.add(Types.BINARY);

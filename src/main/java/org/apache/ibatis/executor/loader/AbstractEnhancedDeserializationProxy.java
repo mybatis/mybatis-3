@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -33,11 +33,11 @@ public abstract class AbstractEnhancedDeserializationProxy {
 
   protected static final String FINALIZE_METHOD = "finalize";
   protected static final String WRITE_REPLACE_METHOD = "writeReplace";
-  private Class<?> type;
-  private Map<String, ResultLoaderMap.LoadPair> unloadedProperties;
-  private ObjectFactory objectFactory;
-  private List<Class<?>> constructorArgTypes;
-  private List<Object> constructorArgs;
+  private final Class<?> type;
+  private final Map<String, ResultLoaderMap.LoadPair> unloadedProperties;
+  private final ObjectFactory objectFactory;
+  private final List<Class<?>> constructorArgTypes;
+  private final List<Object> constructorArgs;
   private final Object reloadingPropertyLock;
   private boolean reloadingProperty;
 

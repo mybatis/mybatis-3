@@ -35,11 +35,11 @@ import org.apache.ibatis.session.Configuration;
  */
 public class BoundSql {
 
-  private String sql;
-  private List<ParameterMapping> parameterMappings;
-  private Object parameterObject;
-  private Map<String, Object> additionalParameters;
-  private MetaObject metaParameters;
+  private final String sql;
+  private final List<ParameterMapping> parameterMappings;
+  private final Object parameterObject;
+  private final Map<String, Object> additionalParameters;
+  private final MetaObject metaParameters;
 
   public BoundSql(Configuration configuration, String sql, List<ParameterMapping> parameterMappings, Object parameterObject) {
     this.sql = sql;

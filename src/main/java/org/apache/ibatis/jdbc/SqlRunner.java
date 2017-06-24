@@ -39,8 +39,8 @@ public class SqlRunner {
 
   public static final int NO_GENERATED_KEY = Integer.MIN_VALUE + 1001;
 
-  private Connection connection;
-  private TypeHandlerRegistry typeHandlerRegistry;
+  private final Connection connection;
+  private final TypeHandlerRegistry typeHandlerRegistry;
   private boolean useGeneratedKeySupport;
 
   public SqlRunner(Connection connection) {

@@ -46,15 +46,13 @@ import org.apache.ibatis.reflection.property.PropertyNamer;
  */
 public class Reflector {
 
-  private static final String[] EMPTY_STRING_ARRAY = new String[0];
-
-  private Class<?> type;
-  private String[] readablePropertyNames = EMPTY_STRING_ARRAY;
-  private String[] writeablePropertyNames = EMPTY_STRING_ARRAY;
-  private Map<String, Invoker> setMethods = new HashMap<String, Invoker>();
-  private Map<String, Invoker> getMethods = new HashMap<String, Invoker>();
-  private Map<String, Class<?>> setTypes = new HashMap<String, Class<?>>();
-  private Map<String, Class<?>> getTypes = new HashMap<String, Class<?>>();
+  private final Class<?> type;
+  private final String[] readablePropertyNames;
+  private final String[] writeablePropertyNames;
+  private final Map<String, Invoker> setMethods = new HashMap<String, Invoker>();
+  private final Map<String, Invoker> getMethods = new HashMap<String, Invoker>();
+  private final Map<String, Class<?>> setTypes = new HashMap<String, Class<?>>();
+  private final Map<String, Class<?>> getTypes = new HashMap<String, Class<?>>();
   private Constructor<?> defaultConstructor;
 
   private Map<String, String> caseInsensitivePropertyMap = new HashMap<String, String>();

@@ -97,9 +97,9 @@ public class MapperAnnotationBuilder {
   private final Set<Class<? extends Annotation>> sqlAnnotationTypes = new HashSet<Class<? extends Annotation>>();
   private final Set<Class<? extends Annotation>> sqlProviderAnnotationTypes = new HashSet<Class<? extends Annotation>>();
 
-  private Configuration configuration;
-  private MapperBuilderAssistant assistant;
-  private Class<?> type;
+  private final Configuration configuration;
+  private final MapperBuilderAssistant assistant;
+  private final Class<?> type;
 
   public MapperAnnotationBuilder(Configuration configuration, Class<?> type) {
     String resource = type.getName().replace('.', '/') + ".java (best guess)";

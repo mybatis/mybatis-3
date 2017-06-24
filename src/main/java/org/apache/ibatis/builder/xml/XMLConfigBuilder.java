@@ -54,9 +54,9 @@ import org.apache.ibatis.type.TypeHandler;
 public class XMLConfigBuilder extends BaseBuilder {
 
   private boolean parsed;
-  private XPathParser parser;
+  private final XPathParser parser;
   private String environment;
-  private ReflectorFactory localReflectorFactory = new DefaultReflectorFactory();
+  private final ReflectorFactory localReflectorFactory = new DefaultReflectorFactory();
 
   public XMLConfigBuilder(Reader reader) {
     this(reader, null, null);
