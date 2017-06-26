@@ -21,4 +21,6 @@ public interface Mapper {
 
   List<?> getUsersAndGroups();
 
+  List<?> multiResultsWithUpdate();
+
 }

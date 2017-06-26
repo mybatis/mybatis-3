@@ -26,6 +26,13 @@
 		select * from mbtest.order_detail ; select * from mbtest.order_header
 	</select>
 
+  <select id="multiResultsWithUpdate" resultMap="usersResult,groupsResult">
+    select * from mbtest.order_detail ;
+    insert into mbtest.order_detail
+      (order_id, line_number, quantity, item_description) values (2, 4, 5, 'Eraser') ;
+    select * from mbtest.order_header
+  </select>
+
 	<resultMap type="org.apache.ibatis.submitted.usesjava8.multiple_resultsets.OrderDetail" id="usersResult" />
 	
 	<resultMap type="org.apache.ibatis.submitted.usesjava8.multiple_resultsets.OrderHeader" id="groupsResult" />
