@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2017 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -20,14 +20,14 @@
     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="org.apache.ibatis.submitted.multiple_resultsets.Mapper">
+<mapper namespace="org.apache.ibatis.submitted.usesjava8.multiple_resultsets.Mapper">
 
 	<select id="getUsersAndGroups" resultMap="usersResult,groupsResult">
 		select * from mbtest.order_detail ; select * from mbtest.order_header
 	</select>
 
-	<resultMap type="org.apache.ibatis.submitted.multiple_resultsets.OrderDetail" id="usersResult" />
+	<resultMap type="org.apache.ibatis.submitted.usesjava8.multiple_resultsets.OrderDetail" id="usersResult" />
 	
-	<resultMap type="org.apache.ibatis.submitted.multiple_resultsets.OrderHeader" id="groupsResult" />
+	<resultMap type="org.apache.ibatis.submitted.usesjava8.multiple_resultsets.OrderHeader" id="groupsResult" />
 	
 </mapper>

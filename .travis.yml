@@ -18,6 +18,8 @@ install:
   # Switch back to the original JDK to run the tests
   - jdk_switcher use ${TRAVIS_JDK_VERSION}
 
+script: ./mvnw test -Dmaven.surefire.excludeGroups= -B
+
 after_success:
   - chmod -R 777 ./travis/after_success.sh
   - ./travis/after_success.sh

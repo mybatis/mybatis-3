@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -13,20 +13,11 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package org.apache.ibatis.submitted.keycolumn;
+package org.apache.ibatis.submitted.usesjava8.refcursor;
 
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Options;
+import java.util.Map;
 
-public interface InsertMapper {
-
-    @Insert({
-        "insert into mbtest.test_identity",
-        "(first_name, last_name)",
-        "values(#{firstName,jdbcType=VARCHAR}, #{lastName,jdbcType=VARCHAR})"
-    })
-    @Options(keyProperty="id", useGeneratedKeys=true, keyColumn="name_id")
-    int insertNameAnnotated(Name name);
-
-    int insertNameMapped(Name name);
+public interface OrdersMapper {
+    void getOrder1(Map<String, Object> parameter);
+    void getOrder2(Map<String, Object> parameter);
 }
