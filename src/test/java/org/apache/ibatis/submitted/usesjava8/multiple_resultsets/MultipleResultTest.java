@@ -90,13 +90,10 @@ public class MultipleResultTest {
 
   @Test
   public void shouldSkipNullResultSet() {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       List<?> results = mapper.multiResultsWithUpdate();
       Assert.assertEquals(2, results.size());
-    } finally {
-      sqlSession.close();
     }
   }
 }
