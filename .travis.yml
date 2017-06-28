@@ -1,11 +1,16 @@
 language: java
 sudo: false
 
-jdk:
-  - oraclejdk8
-  - oraclejdk7
-  - openjdk7
-  - openjdk6
+matrix:
+  include:
+    - sudo: required
+      jdk: oraclejdk8
+      script:
+        - sudo apt-get install libaio1
+        - ./mvnw test -Dmaven.surefire.excludeGroups= -B
+    - jdk: oraclejdk7
+    - jdk: openjdk7
+    - jdk: openjdk6
 
 before_install:
   - echo "MAVEN_OPTS='-Dlicense.skip=true'" > ~/.mavenrc
@@ -18,7 +23,8 @@ install:
   # Switch back to the original JDK to run the tests
   - jdk_switcher use ${TRAVIS_JDK_VERSION}
 
-script: ./mvnw test -Dmaven.surefire.excludeGroups= -B
+script:
+  - ./mvnw test -Dmaven.surefire.excludeGroups= -B
 
 after_success:
   - chmod -R 777 ./travis/after_success.sh
