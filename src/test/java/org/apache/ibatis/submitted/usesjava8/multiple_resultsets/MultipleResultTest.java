@@ -83,17 +83,53 @@ public class MultipleResultTest {
   public void shouldGetMultipleResultSetsWithOneStatement() throws IOException {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
-      List<?> usersAndGroups = mapper.getUsersAndGroups();
-      Assert.assertEquals(2, usersAndGroups.size());
+      List<List<?>> results = mapper.getUsersAndGroups();
+      Assert.assertEquals(2, results.size());
+
+      Assert.assertEquals(6, results.get(0).size());
+      OrderDetail detail = (OrderDetail)results.get(0).get(0);
+      Assert.assertEquals(1, detail.getOrderId());
+      Assert.assertEquals(1, detail.getLineNumber());
+      Assert.assertEquals(1, detail.getQuantity());
+      Assert.assertEquals("Pen", detail.getItemDescription());
+
+      Assert.assertEquals(2, results.get(1).size());
+      OrderHeader header = (OrderHeader)results.get(1).get(0);
+      Assert.assertEquals(1, header.getOrderId());
+      Assert.assertEquals("Fred", header.getCustName());
     }
   }
 
   @Test
   public void shouldSkipNullResultSet() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-      Mapper mapper = sqlSession.getMapper(Mapper.class);
-      List<?> results = mapper.multiResultsWithUpdate();
-      Assert.assertEquals(2, results.size());
+      try {
+        Mapper mapper = sqlSession.getMapper(Mapper.class);
+        List<List<?>> results = mapper.multiResultsWithUpdate();
+        Assert.assertEquals(2, results.size());
+
+        Assert.assertEquals(6, results.get(0).size());
+        OrderDetail detail = (OrderDetail) results.get(0).get(0);
+        Assert.assertEquals(1, detail.getOrderId());
+        Assert.assertEquals(1, detail.getLineNumber());
+        Assert.assertEquals(1, detail.getQuantity());
+        Assert.assertEquals("Pen", detail.getItemDescription());
+
+        Assert.assertEquals(2, results.get(1).size());
+        OrderHeader header = (OrderHeader) results.get(1).get(0);
+        Assert.assertEquals(1, header.getOrderId());
+        Assert.assertEquals("Fred", header.getCustName());
+
+        results = mapper.getUsersAndGroups();
+        Assert.assertEquals(7, results.get(0).size());
+        detail = (OrderDetail) results.get(0).get(6);
+        Assert.assertEquals(2, detail.getOrderId());
+        Assert.assertEquals(4, detail.getLineNumber());
+        Assert.assertEquals(5, detail.getQuantity());
+        Assert.assertEquals("Eraser", detail.getItemDescription());
+      } finally {
+        sqlSession.rollback(true);
+      }
     }
   }
 }
