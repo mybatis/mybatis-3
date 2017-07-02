@@ -71,6 +71,9 @@ public class Jdbc3KeyGenerator implements KeyGenerator {
           if (!rs.next()) {
             break;
           }
+          if (parameter == null) {
+            continue;
+          }
           final MetaObject metaParam = configuration.newMetaObject(parameter);
           if (typeHandlers == null) {
             typeHandlers = getTypeHandlers(typeHandlerRegistry, metaParam, keyProperties, rsmd);
