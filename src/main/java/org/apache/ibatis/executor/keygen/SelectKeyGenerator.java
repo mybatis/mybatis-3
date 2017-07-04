@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -33,8 +33,8 @@ import org.apache.ibatis.session.RowBounds;
 public class SelectKeyGenerator implements KeyGenerator {
   
   public static final String SELECT_KEY_SUFFIX = "!selectKey";
-  private boolean executeBefore;
-  private MappedStatement keyStatement;
+  private final boolean executeBefore;
+  private final MappedStatement keyStatement;
 
   public SelectKeyGenerator(MappedStatement keyStatement, boolean executeBefore) {
     this.executeBefore = executeBefore;

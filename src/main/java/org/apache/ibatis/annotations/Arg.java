@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 package org.apache.ibatis.annotations;
 
 import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
@@ -30,7 +29,7 @@ import org.apache.ibatis.type.UnknownTypeHandler;
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.METHOD)
+@Target({})
 public @interface Arg {
   boolean id() default false;
 
@@ -45,4 +44,6 @@ public @interface Arg {
   String select() default "";
 
   String resultMap() default "";
+
+  String name() default "";
 }

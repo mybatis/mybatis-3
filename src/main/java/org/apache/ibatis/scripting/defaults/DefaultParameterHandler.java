@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -42,8 +42,8 @@ public class DefaultParameterHandler implements ParameterHandler {
 
   private final MappedStatement mappedStatement;
   private final Object parameterObject;
-  private BoundSql boundSql;
-  private Configuration configuration;
+  private final BoundSql boundSql;
+  private final Configuration configuration;
 
   public DefaultParameterHandler(MappedStatement mappedStatement, Object parameterObject, BoundSql boundSql) {
     this.mappedStatement = mappedStatement;

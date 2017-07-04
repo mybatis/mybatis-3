@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -23,23 +23,24 @@ import java.io.Serializable;
  */
 public class LazyObjectFoo implements Serializable {
 
-    private Integer id;
-    private LazyObjectBar lazyObjectBar;
+  private static final long serialVersionUID = 1L;
+  private Integer id;
+  private LazyObjectBar lazyObjectBar;
 
-    public Integer getId() {
-        return id;
-    }
+  public Integer getId() {
+    return id;
+  }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+  public void setId(Integer id) {
+    this.id = id;
+  }
 
-    public LazyObjectBar getLazyObjectBar() {
-        return this.lazyObjectBar;
-    }
+  public LazyObjectBar getLazyObjectBar() {
+    return this.lazyObjectBar;
+  }
 
-    public void setLazyObjectBar(final LazyObjectBar lazyObjectBar) {
-        this.lazyObjectBar = lazyObjectBar;
-    }
+  public void setLazyObjectBar(final LazyObjectBar lazyObjectBar) {
+    this.lazyObjectBar = lazyObjectBar;
+  }
 
 }

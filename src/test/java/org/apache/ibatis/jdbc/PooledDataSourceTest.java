@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -88,6 +88,7 @@ public class PooledDataSourceTest extends BaseDataTest {
     PooledDataSource ds = createPooledDataSource(JPETSTORE_PROPERTIES);
     Connection c = ds.getConnection();
     JDBCConnection realConnection = (JDBCConnection) PooledDataSource.unwrapConnection(c);
+    c.close();
   }
 
   @Ignore("See the comments")
@@ -104,7 +105,6 @@ public class PooledDataSourceTest extends BaseDataTest {
     final String USERNAME = "admin";
     final String PASSWORD = "";
 
-    Connection con;
     PooledDataSource ds = new PooledDataSource();
     ds.setDriver("com.mysql.jdbc.Driver");
     ds.setUrl(URL);
@@ -120,13 +120,15 @@ public class PooledDataSourceTest extends BaseDataTest {
     // MySQL wait_timeout * 1000 or less. (unit:ms)
     ds.setPoolPingConnectionsNotUsedFor(1000);
 
-    con = ds.getConnection();
+    Connection con = ds.getConnection();
     exexuteQuery(con);
     // Simulate connection leak by not closing.
     // con.close();
 
     // Wait for disconnected from mysql...
     Thread.sleep(TimeUnit.SECONDS.toMillis(3));
+
+    con.close();
 
     // Should return usable connection.
     con = ds.getConnection();

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ import org.apache.ibatis.reflection.ExceptionUtil;
  */
 public final class StatementLogger extends BaseJdbcLogger implements InvocationHandler {
 
-  private Statement statement;
+  private final Statement statement;
 
   private StatementLogger(Statement stmt, Log statementLog, int queryStack) {
     super(statementLog, queryStack);

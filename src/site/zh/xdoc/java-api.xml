@@ -525,17 +525,24 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
 (比如类)
 配置缓存。
 属性:implemetation,eviction,
-flushInterval,size 和 readWrite。
+flushInterval,size,readWrite,blocking 和 properties。
         </td>
+      </tr>
+      <tr>
+        <td><code>@Property</code></td>
+        <td>N/A</td>
+        <td><code>&lt;property&gt;</code></td>
+        <td>Specifies the property value or placeholder(can replace by configuration properties that defined at the <code>mybatis-config.xml</code>). Attributes: <code>name</code>, <code>value</code>. (Available on MyBatis 3.4.2+)</td>
       </tr>
       <tr>
         <td><code>@CacheNamespaceRef</code></td>
         <td><code>类</code></td>
         <td><code>&lt;cacheRef&gt;</code></td>
-        <td>参照另外一个命名空间的缓存来使用。
-属性:value,应该是一个名空间的字
-符串值(也就是类的完全限定名)
-。
+        <td>
+          参照另外一个命名空间的缓存来使用。属性:value, name。
+          If you use this annotation, you should be specified either <code>value</code> or <code>name</code> attribute.
+          For the <code>value</code> attribute specify a java type indicating the namespace(the namespace name become a FQCN of specified java type),
+          and for the <code>name</code> attribute(this attribute is available since 3.4.2) specify a name indicating the namespace.
         </td>
       </tr>
       <tr>
@@ -549,7 +556,7 @@ flushInterval,size 和 readWrite。
       </tr>
       <tr>
         <td><code>@Arg</code></td>
-        <td><code>方法</code></td>
+        <td>N/A</td>
         <td>
           <ul>
             <li><code>&lt;arg&gt;</code></li>
@@ -580,7 +587,7 @@ typeHandler,cases。cases 属性就是实
       </tr>
       <tr>
         <td><code>@Case</code></td>
-        <td><code>方法</code></td>
+        <td>N/A</td>
         <td><code>&lt;case&gt;</code></td>
         <td>单独实例的值和它对应的映射。属性:
 value,type,results。Results 属性是结
@@ -602,7 +609,7 @@ ResultMap 很相似,由下面的 Results
       </tr>
       <tr>
         <td><code>@Result</code></td>
-        <td><code>方法</code></td>
+        <td>N/A</td>
         <td>
           <ul>
             <li><code>&lt;result&gt;</code></li>
@@ -624,7 +631,7 @@ many 属 性 是 对 集 合 而 言 的 , 和
       </tr>
       <tr>
         <td><code>@One</code></td>
-        <td><code>方法</code></td>
+        <td>N/A</td>
         <td><code>&lt;association&gt;</code></td>
         <td>复杂类型的单独属性值映射。属性:
 select,已映射语句(也就是映射器方
@@ -637,7 +644,7 @@ select,已映射语句(也就是映射器方
       </tr>
       <tr>
         <td><code>@Many</code></td>
-        <td><code>方法</code></td>
+        <td>N/A</td>
         <td><code>&lt;collection&gt;</code></td>
         <td>
 			映射到复杂类型的集合属性。属性：<code>select</code>，已映射语句(也就是映射器方法)的全限定名，

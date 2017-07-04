@@ -326,14 +326,28 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
         <td><code>@CacheNamespace</code></td>
         <td><code>Class</code></td>
         <td><code>&lt;cache&gt;</code></td>
-        <td>Configures the cache for the given namespace (i.e. class). Attributes: <code>implementation</code>,
-        <code>eviction</code>, <code>flushInterval</code>, <code>size</code>, <code>readWrite</code>.</td>
+        <td>
+          Configures the cache for the given namespace (i.e. class). Attributes: <code>implementation</code>,
+          <code>eviction</code>, <code>flushInterval</code>, <code>size</code>, <code>readWrite</code>,
+          <code>blocking</code>, <code>properties</code>.
+        </td>
+      </tr>
+      <tr>
+        <td><code>@Property</code></td>
+        <td>N/A</td>
+        <td><code>&lt;property&gt;</code></td>
+        <td>Specifies the property value or placeholder(can replace by configuration properties that defined at the <code>mybatis-config.xml</code>). Attributes: <code>name</code>, <code>value</code>. (Available on MyBatis 3.4.2+)</td>
       </tr>
       <tr>
         <td><code>@CacheNamespaceRef</code></td>
         <td><code>Class</code></td>
         <td><code>&lt;cacheRef&gt;</code></td>
-        <td>References the cache of another namespace to use. Attributes: <code>value</code>, which should be the string value of a namespace (i.e. a fully qualified class name).</td>
+        <td>
+          References the cache of another namespace to use. Attributes: <code>value</code> and <code>name</code>.
+          If you use this annotation, you should be specified either <code>value</code> or <code>name</code> attribute.
+          For the <code>value</code> attribute specify a java type indicating the namespace(the namespace name become a FQCN of specified java type),
+          and for the <code>name</code> attribute(this attribute is available since 3.4.2) specify a name indicating the namespace.
+        </td>
       </tr>
       <tr>
         <td><code>@ConstructorArgs</code></td>
@@ -343,7 +357,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
       </tr>
       <tr>
         <td><code>@Arg</code></td>
-        <td><code>Method</code></td>
+        <td>N/A</td>
         <td>
           <ul>
             <li><code>&lt;arg&gt;</code></li>
@@ -364,7 +378,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
       </tr>
       <tr>
         <td><code>@Case</code></td>
-        <td><code>Method</code></td>
+        <td>N/A</td>
         <td><code>&lt;case&gt;</code></td>
         <td>A single case of a value and its corresponding mappings. Attributes: <code>value</code>, <code>type</code>,
         <code>results</code>. The results attribute is an array of Results, thus this <code>Case</code> Annotation is
@@ -379,7 +393,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
       </tr>
       <tr>
         <td><code>@Result</code></td>
-        <td><code>Method</code></td>
+        <td>N/A</td>
         <td>
           <ul>
             <li><code>&lt;result&gt;</code></li>
@@ -395,7 +409,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
       </tr>
       <tr>
         <td><code>@One</code></td>
-        <td><code>Method</code></td>
+        <td>N/A</td>
         <td><code>&lt;association&gt;</code></td>
         <td>A mapping to a single property value of a complex type. Attributes: <code>select</code>, which is the fully
         qualified name of a mapped statement (i.e. mapper method) that can load an instance of the appropriate type,
@@ -406,7 +420,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
       </tr>
       <tr>
         <td><code>@Many</code></td>
-        <td><code>Method</code></td>
+        <td>N/A</td>
         <td><code>&lt;collection&gt;</code></td>
         <td>A mapping to a collection property of a complex type. Attributes: <code>select</code>, which is the fully
         qualified name of a mapped statement (i.e. mapper method) that can load a collection of instances of the appropriate

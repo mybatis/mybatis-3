@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -39,8 +39,8 @@ public class SqlRunner {
 
   public static final int NO_GENERATED_KEY = Integer.MIN_VALUE + 1001;
 
-  private Connection connection;
-  private TypeHandlerRegistry typeHandlerRegistry;
+  private final Connection connection;
+  private final TypeHandlerRegistry typeHandlerRegistry;
   private boolean useGeneratedKeySupport;
 
   public SqlRunner(Connection connection) {
@@ -121,7 +121,7 @@ public class SqlRunner {
               try {
                 return Integer.parseInt(genkey.toString());
               } catch (NumberFormatException e) {
-                //ignore, no numeric key suppot
+                //ignore, no numeric key support
               }
             }
           }

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -31,12 +31,12 @@ import org.w3c.dom.NodeList;
  */
 public class XNode {
 
-  private Node node;
-  private String name;
-  private String body;
-  private Properties attributes;
-  private Properties variables;
-  private XPathParser xpathParser;
+  private final Node node;
+  private final String name;
+  private final String body;
+  private final Properties attributes;
+  private final Properties variables;
+  private final XPathParser xpathParser;
 
   public XNode(XPathParser xpathParser, Node node, Properties variables) {
     this.xpathParser = xpathParser;

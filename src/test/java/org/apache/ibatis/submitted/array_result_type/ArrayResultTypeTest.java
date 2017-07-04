@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -46,6 +46,7 @@ public class ArrayResultTypeTest {
     ScriptRunner runner = new ScriptRunner(conn);
     runner.setLogWriter(null);
     runner.runScript(reader);
+    conn.close();
     reader.close();
     session.close();
   }
@@ -88,12 +89,10 @@ public class ArrayResultTypeTest {
     }
   }
 
-  @Test(expected = ClassCastException.class)
+  @Test
   public void shouldGetPrimitiveArray() {
     SqlSession sqlSession = sqlSessionFactory.openSession();
     try {
-      // Throwing an exception is the expected behavior
-      // until #555 is fixed
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       int[] ids = mapper.getUserIdsPrimitive();
       assertEquals(1, ids[0]);

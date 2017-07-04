@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -17,16 +17,9 @@ package org.apache.ibatis.builder;
 
 import java.util.Map;
 import org.junit.Assert;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
-
-import static org.hamcrest.core.Is.is;
 
 public class ParameterExpressionTest {
-
-  @Rule
-  public ExpectedException expectedException = ExpectedException.none();
 
   @Test
   public void simpleProperty() {
@@ -133,16 +126,22 @@ public class ParameterExpressionTest {
 
   @Test
   public void invalidOldJdbcTypeFormat() {
-    expectedException.expect(BuilderException.class);
-    expectedException.expectMessage(is("Parsing error in {id:} in position 3"));
-    new ParameterExpression("id:");
+    try {
+      new ParameterExpression("id:");
+      Assert.fail();
+    } catch (BuilderException e) {
+      Assert.assertTrue(e.getMessage().contains("Parsing error in {id:} in position 3"));
+    }
   }
 
   @Test
   public void invalidJdbcTypeOptUsingExpression() {
-    expectedException.expect(BuilderException.class);
-    expectedException.expectMessage(is("Parsing error in {(expression)+} in position 12"));
-    new ParameterExpression("(expression)+");
+    try {
+      new ParameterExpression("(expression)+");
+      Assert.fail();
+    } catch (BuilderException e) {
+      Assert.assertTrue(e.getMessage().contains("Parsing error in {(expression)+} in position 12"));
+    }
   }
 
 }

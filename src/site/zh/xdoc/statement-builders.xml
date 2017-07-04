@@ -342,7 +342,7 @@ public String updatePersonSql() {
               <td>
                 <code>INSERT_INTO(String)</code>
               </td>
-              <td>开始一个insert语句并指定需要插入数据的表名。后面都会跟着一个或者多个VALUES()。
+              <td>开始一个insert语句并指定需要插入数据的表名。后面都会跟着一个或者多个VALUES() or INTO_COLUMNS() and INTO_VALUES()。
               </td>
             </tr>
             <tr>
@@ -372,8 +372,56 @@ public String updatePersonSql() {
               <td>插入到insert语句中。第一个参数是要插入的列名，第二个参数则是该列的值。
               </td>
             </tr>
+            <tr>
+              <td>
+                <code>INTO_COLUMNS(String...)</code>
+              </td>
+              <td>
+                Appends columns phrase to an insert statement.
+                This should be call INTO_VALUES() with together.
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>INTO_VALUES(String...)</code>
+              </td>
+              <td>
+                Appends values phrase to an insert statement.
+                This should be call INTO_COLUMNS() with together.
+              </td>
+            </tr>
           </tbody>
         </table>
+
+        <p>Since version 3.4.2, you can use variable-length arguments as follows:</p>
+
+<source><![CDATA[
+public String selectPersonSql() {
+  return new SQL()
+    .SELECT("P.ID", "A.USERNAME", "A.PASSWORD", "P.FULL_NAME", "D.DEPARTMENT_NAME", "C.COMPANY_NAME")
+    .FROM("PERSON P", "ACCOUNT A")
+    .INNER_JOIN("DEPARTMENT D on D.ID = P.DEPARTMENT_ID", "COMPANY C on D.COMPANY_ID = C.ID")
+    .WHERE("P.ID = A.ID", "P.FULL_NAME like #{name}")
+    .ORDER_BY("P.ID", "P.FULL_NAME")
+    .toString();
+}
+
+public String insertPersonSql() {
+  return new SQL()
+    .INSERT_INTO("PERSON")
+    .INTO_COLUMNS("ID", "FULL_NAME")
+    .INTO_VALUES("#{id}", "#{fullName}")
+    .toString();
+}
+
+public String updatePersonSql() {
+  return new SQL()
+    .UPDATE("PERSON")
+    .SET("FULL_NAME = #{fullName}", "DATE_OF_BIRTH = #{dateOfBirth}")
+    .WHERE("ID = #{id}")
+    .toString();
+}
+]]></source>
 
       </subsection>
 

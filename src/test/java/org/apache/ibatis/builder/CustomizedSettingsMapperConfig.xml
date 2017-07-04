@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2017 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@
     <setting name="cacheEnabled" value="false"/>
     <setting name="proxyFactory" value="CGLIB"/>
     <setting name="lazyLoadingEnabled" value="true"/>
-    <setting name="aggressiveLazyLoading" value="false"/>
+    <setting name="aggressiveLazyLoading" value="true"/>
     <setting name="multipleResultSetsEnabled" value="false"/>
     <setting name="useColumnLabel" value="false"/>
     <setting name="useGeneratedKeys" value="true"/>
@@ -52,6 +52,7 @@
     <setting name="logImpl" value="SLF4J"/>
     <setting name="vfsImpl" value="org.apache.ibatis.io.JBoss6VFS"/>
     <setting name="configurationFactory" value="java.lang.String"/>
+    <setting name="defaultEnumTypeHandler" value="org.apache.ibatis.type.EnumOrdinalTypeHandler"/>
   </settings>
 
   <typeAliases>

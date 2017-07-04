@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -17,10 +17,7 @@ package org.apache.ibatis.submitted.usesjava8.default_method;
 
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.lang.UsesJava8;
-import org.junit.experimental.categories.Category;
 
-@Category(UsesJava8.class)
 public interface Mapper {
 
   @Select("select * from users where id = #{id}")

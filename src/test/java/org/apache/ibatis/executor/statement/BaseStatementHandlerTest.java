@@ -18,12 +18,13 @@ package org.apache.ibatis.executor.statement;
 import org.apache.ibatis.builder.StaticSqlSource;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.session.Configuration;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Spy;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -44,6 +45,11 @@ public class BaseStatementHandlerTest {
     @Before
     public void setupMappedStatement() {
         this.mappedStatementBuilder = new MappedStatement.Builder(configuration, "id", new StaticSqlSource(configuration, "sql"), null);
+    }
+
+    @After
+    public void resetMocks() {
+        reset(configuration, statement);
     }
 
     @Test
@@ -101,6 +107,7 @@ public class BaseStatementHandlerTest {
         handler.setStatementTimeout(statement, null);
 
         verify(statement).setQueryTimeout(30); // apply a mapped statement timeout
+        verify(configuration, never()).getDefaultStatementTimeout();
     }
 
     @Test

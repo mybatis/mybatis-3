@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -29,16 +29,14 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.Assert;
 import org.junit.BeforeClass;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
+
+import static com.googlecode.catchexception.apis.BDDCatchException.*;
+import static org.assertj.core.api.BDDAssertions.then;
 
 public class ForEachTest {
 
   private static SqlSessionFactory sqlSessionFactory;
-
-  @Rule
-  public ExpectedException ex = ExpectedException.none();
 
   @BeforeClass
   public static void setUp() throws Exception {
@@ -54,6 +52,7 @@ public class ForEachTest {
     ScriptRunner runner = new ScriptRunner(conn);
     runner.setLogWriter(null);
     runner.runScript(reader);
+    conn.close();
     reader.close();
     session.close();
   }
@@ -133,13 +132,36 @@ public class ForEachTest {
 
   @Test
   public void shouldReportMissingPropertyName() {
-    ex.expect(PersistenceException.class);
-    ex.expectMessage("There is no getter for property named 'idd' in 'class org.apache.ibatis.submitted.foreach.User'");
-
     SqlSession sqlSession = sqlSessionFactory.openSession();
     try {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
-      mapper.typoInItemProperty(Arrays.asList(new User()));
+      when(mapper).typoInItemProperty(Arrays.asList(new User()));
+      then(caughtException()).isInstanceOf(PersistenceException.class)
+        .hasMessageContaining("There is no getter for property named 'idd' in 'class org.apache.ibatis.submitted.foreach.User'");
+    } finally {
+      sqlSession.close();
+    }
+  }
+
+  @Test
+  public void shouldRemoveItemVariableInTheContext() {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      int result = mapper.itemVariableConflict(5, Arrays.asList(1, 2), Arrays.asList(3, 4));
+      Assert.assertEquals(5, result);
+    } finally {
+      sqlSession.close();
+    }
+  }
+
+  @Test
+  public void shouldRemoveIndexVariableInTheContext() {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      int result = mapper.indexVariableConflict(4, Arrays.asList(6, 7), Arrays.asList(8, 9));
+      Assert.assertEquals(4, result);
     } finally {
       sqlSession.close();
     }

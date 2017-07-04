@@ -51,8 +51,8 @@ public class PooledDataSource implements DataSource {
   protected int poolMaximumCheckoutTime = 20000;
   protected int poolTimeToWait = 20000;
   protected String poolPingQuery = "NO PING QUERY SET";
-  protected boolean poolPingEnabled = false;
-  protected int poolPingConnectionsNotUsedFor = 0;
+  protected boolean poolPingEnabled;
+  protected int poolPingConnectionsNotUsedFor;
 
   private int expectedConnectionTypeCode;
 

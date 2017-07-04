@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -34,7 +34,6 @@ import org.junit.Test;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyObject;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -52,8 +51,8 @@ public class DefaultParameterHandlerTest {
     final Object parameterObject = null;
     final BoundSql boundSql = mock(BoundSql.class);
 
-    TypeHandler<String> typeHandler = mock(TypeHandler.class);
-    doThrow(new SQLException("foo")).when(typeHandler).setParameter(any(PreparedStatement.class), anyInt(), (String) anyObject(), any(JdbcType.class));
+    TypeHandler<Object> typeHandler = mock(TypeHandler.class);
+    doThrow(new SQLException("foo")).when(typeHandler).setParameter(any(PreparedStatement.class), anyInt(), any(), any(JdbcType.class));
     ParameterMapping parameterMapping = new ParameterMapping.Builder(mappedStatement.getConfiguration(), "prop", typeHandler).build();
     List<ParameterMapping> parameterMappings = Collections.singletonList(parameterMapping);
     when(boundSql.getParameterMappings()).thenReturn(parameterMappings);

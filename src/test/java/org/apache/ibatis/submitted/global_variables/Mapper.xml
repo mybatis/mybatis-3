@@ -22,6 +22,12 @@
 
 <mapper namespace="org.apache.ibatis.submitted.global_variables.Mapper">
 
+	<cache type="org.apache.ibatis.submitted.global_variables.CustomCache">
+		<property name="stringValue" value="${stringProperty}"/>
+		<property name="integerValue" value="${integerProperty}"/>
+		<property name="longValue" value="${longProperty}"/>
+	</cache>
+
 	<select id="getUser" resultType="org.apache.ibatis.submitted.global_variables.User">
 		select * from ${table} where id = #{id}
 	</select>

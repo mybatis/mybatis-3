@@ -371,4 +371,35 @@ public class TypeParameterResolverTest {
     Type result = TypeParameterResolver.resolveFieldType(field, clazz);
     assertEquals(String.class, result);
   }
+
+  @Test
+  public void testReturnParam_WildcardWithUpperBounds() throws Exception {
+    class Key {}
+    @SuppressWarnings("unused")
+    class KeyBean<S extends Key & Cloneable, T extends Key> {
+      private S key1;
+      private T key2;
+      public S getKey1() {
+        return key1;
+      }
+      public void setKey1(S key1) {
+        this.key1 = key1;
+      }
+      public T getKey2() {
+        return key2;
+      }
+      public void setKey2(T key2) {
+        this.key2 = key2;
+      }
+    }
+    Class<?> clazz = KeyBean.class;
+    Method getter1 = clazz.getMethod("getKey1");
+    assertEquals(Key.class, TypeParameterResolver.resolveReturnType(getter1, clazz));
+    Method setter1 = clazz.getMethod("setKey1", Key.class);
+    assertEquals(Key.class, TypeParameterResolver.resolveParamTypes(setter1, clazz)[0]);
+    Method getter2 = clazz.getMethod("getKey2");
+    assertEquals(Key.class, TypeParameterResolver.resolveReturnType(getter2, clazz));
+    Method setter2 = clazz.getMethod("setKey2", Key.class);
+    assertEquals(Key.class, TypeParameterResolver.resolveParamTypes(setter2, clazz)[0]);
+  }
 }

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -35,7 +35,7 @@ public class ScriptRunner {
 
   private static final String DEFAULT_DELIMITER = ";";
 
-  private Connection connection;
+  private final Connection connection;
 
   private boolean stopOnError;
   private boolean throwWarning;
@@ -48,7 +48,7 @@ public class ScriptRunner {
   private PrintWriter errorLogWriter = new PrintWriter(System.err);
 
   private String delimiter = DEFAULT_DELIMITER;
-  private boolean fullLineDelimiter = false;
+  private boolean fullLineDelimiter;
 
   public ScriptRunner(Connection connection) {
     this.connection = connection;

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -67,6 +67,7 @@ public class ResultMapReferenceTest {
 
     Connection conn = sqlSessionFactory.getConfiguration().getEnvironment().getDataSource().getConnection();
     initDb(conn);
+    conn.close();
 
     return sqlSessionFactory;
   }
@@ -83,6 +84,7 @@ public class ResultMapReferenceTest {
 
     configuration.addMapper(ResultMapReferencePersonMapper.class);
     configuration.addMapper(ResultMapReferencePetMapper.class);
+    c.close();
 
     return new SqlSessionFactoryBuilder().build(configuration);
   }

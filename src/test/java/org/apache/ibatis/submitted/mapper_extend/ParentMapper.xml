@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2017 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -21,6 +21,10 @@
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="org.apache.ibatis.submitted.mapper_extend.ParentMapper">
+
+  <select id="getUserByName" resultType="org.apache.ibatis.submitted.mapper_extend.User">
+    select * from users where name = #{name}
+  </select>
 
 	<select id="getUserXML" resultType="org.apache.ibatis.submitted.mapper_extend.User">
 		select * from users where id = 1

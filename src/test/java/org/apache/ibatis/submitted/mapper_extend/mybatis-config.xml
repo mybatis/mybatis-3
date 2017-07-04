@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2017 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -39,6 +39,7 @@
 		<mapper class="org.apache.ibatis.submitted.mapper_extend.ParentMapper" />
 		<mapper class="org.apache.ibatis.submitted.mapper_extend.Mapper" />
 		<mapper class="org.apache.ibatis.submitted.mapper_extend.MapperOverload" />
+		<mapper class="org.apache.ibatis.submitted.mapper_extend.ChildMapper" />
 	</mappers>
 
 </configuration>

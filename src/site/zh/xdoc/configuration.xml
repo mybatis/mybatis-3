@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2017 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@
           <ul>
             <li><a href="#properties">properties 属性</a></li>
             <li><a href="#settings">settings 设置</a></li>
-            <li><a href="#typeAliases">typeAliases 类型命名</a></li>
+            <li><a href="#typeAliases">typeAliases 类型别名</a></li>
             <li><a href="#typeHandlers">typeHandlers 类型处理器</a></li>
             <li><a href="#objectFactory">objectFactory 对象工厂</a></li>
             <li><a href="#plugins">plugins 插件</a></li>
@@ -72,12 +72,12 @@
 </dataSource>]]></source>
         <p>这个例子中的 username 和 password 将会由 properties 元素中设置的相应值来替换。
           driver 和 url 属性将会由 config.properties 文件中对应的值来替换。这样就为配置提供了诸多灵活选择。</p>
-        <p>属性也可以被传递到 SqlSessionBuilder.build()方法中。例如：</p>
-        <source><![CDATA[SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, props);
+        <p>属性也可以被传递到 SqlSessionFactoryBuilder.build()方法中。例如：</p>
+        <source><![CDATA[SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, props);
 
 // ... or ...
 
-SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, props);
+SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environment, props);
 ]]></source>
         <p>如果属性在不只一个地方进行了配置，那么 MyBatis 将按照下面的顺序来加载：</p>
         <ul>
@@ -89,6 +89,44 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
           </li>
         </ul>
         <p>因此，通过方法参数传递的属性具有最高优先级，resource/url 属性中指定的配置文件次之，最低优先级的是 properties 属性中指定的属性。</p>
+
+        <p>
+		  从MyBatis 3.4.2开始，你可以为占位符指定一个默认值。例如：
+        </p>
+        <source><![CDATA[
+<dataSource type="POOLED">
+  <!-- ... -->
+  <property name="username" value="${username:ut_user}"/> <!-- If 'username' property not present, username become 'ut_user' -->
+</dataSource>]]></source>
+
+        <p>
+		  这个特性默认是关闭的。如果你想为占位符指定一个默认值，
+		  你应该添加一个指定的属性来开启这个特性。例如：
+        </p>
+
+        <source><![CDATA[
+<properties resource="org/mybatis/example/config.properties">
+  <!-- ... -->
+  <property name="org.apache.ibatis.parsing.PropertyParser.enable-default-value" value="true"/> <!-- Enable this feature -->
+</properties>]]></source>
+
+        <p>
+          <span class="label important">NOTE</span> 你可以使用 <code>":"</code> 作为属性键(e.g. <code>db:username</code>)
+          或者你也可以在sql定义中使用 OGNL 表达式的三元运算符(e.g. <code>${tableName != null ? tableName : 'global_constants'}</code>)，
+		  你应该通过增加一个指定的属性来改变分隔键和默认值的字符。例如：
+        </p>
+
+        <source><![CDATA[
+<properties resource="org/mybatis/example/config.properties">
+  <!-- ... -->
+  <property name="org.apache.ibatis.parsing.PropertyParser.default-value-separator" value="?:"/> <!-- Change default value of separator -->
+</properties>]]></source>
+        <source><![CDATA[
+<dataSource type="POOLED">
+  <!-- ... -->
+  <property name="username" value="${db:username?:ut_user}"/>
+</dataSource>]]></source>
+
       </subsection>
       <subsection name="settings" id="settings">
         <p>这是 MyBatis 中极为重要的调整设置，它们会改变 MyBatis 的运行时行为。下表描述了设置中各项的意图、默认值等。</p>
@@ -137,13 +175,13 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 aggressiveLazyLoading
               </td>
               <td>
-                当启用时，对任意延迟属性的调用会使带有延迟加载属性的对象完整加载；反之，每种属性将会按需加载。
+                当开启时，任何方法的调用都会加载该对象的所有属性。否则，每个属性会按需加载（参考<code>lazyLoadTriggerMethods</code>).
               </td>
               <td>
                 true | false
               </td>
               <td>
-                true
+                false (true in ≤3.4.1)
               </td>
             </tr>
             <tr>
@@ -211,11 +249,11 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 autoMappingUnknownColumnBehavior
               </td>
               <td>
-                Specify the behavior when detects an unknown column (or unknown property type) of automatic mapping target.
+			  指定发现自动映射目标未知列（或者未知属性类型）的行为。
                 <ul>
-                  <li><code>NONE</code>: Do nothing</li>
-                  <li><code>WARNING</code>: Output warning log (The log level of <code>'org.apache.ibatis.session.AutoMappingUnknownColumnBehavior'</code> must be set to <code>WARN</code>)</li>
-                  <li><code>FAILING</code>: Fail mapping (Throw <code>SqlSessionException</code>)</li>
+                  <li><code>NONE</code>: 不做任何反应</li>
+                  <li><code>WARNING</code>: 输出提醒日志 (<code>'org.apache.ibatis.session.AutoMappingUnknownColumnBehavior'</code> 的日志等级必须设置为 <code>WARN</code>)</li>
+                  <li><code>FAILING</code>: 映射失败 (抛出 <code>SqlSessionException</code>)</li>
                 </ul>
               </td>
               <td>
@@ -375,10 +413,40 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
             </tr>
             <tr>
               <td>
+                defaultEnumTypeHandler
+              </td>
+              <td>
+                Specifies the <code>TypeHandler</code> used by default for Enum. (Since: 3.4.5)
+              </td>
+              <td>
+                A type alias or fully qualified class name.
+              </td>
+              <td>
+                org.apache.ibatis.type.EnumTypeHandler
+              </td>
+            </tr>
+            <tr>
+              <td>
                 callSettersOnNulls
               </td>
               <td>
                 指定当结果集中值为 null 的时候是否调用映射对象的 setter（map 对象时为 put）方法，这对于有 Map.keySet() 依赖或 null 值初始化的时候是有用的。注意基本类型（int、boolean等）是不能设置成 null 的。
+              </td>
+              <td>
+                true | false
+              </td>
+              <td>
+                false
+              </td>
+            </tr>
+            <tr>
+              <td>
+                returnInstanceForEmptyRow
+              </td>
+              <td>
+				当返回行的所有列都是空时，MyBatis默认返回<code>null</code>。
+				当开启这个设置时，MyBatis会返回一个空实例。
+				请注意，它也适用于嵌套的结果集 (i.e. collectioin and association)。（从3.4.2开始）
               </td>
               <td>
                 true | false
@@ -456,6 +524,22 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
               </td>
               <td>
                 true
+              </td>
+            </tr>
+            <tr>
+              <td>
+                configurationFactory
+              </td>
+              <td>
+                Specifies the class that provides an instance of <code>Configuration</code>.
+                The returned Configuration instance is used to load lazy properties of deserialized objects.
+                This class must have a method with a signature <code>static Configuration getConfiguration()</code>. (Since: 3.2.3)
+              </td>
+              <td>
+                A type alias or fully qualified class name.
+              </td>
+              <td>
+                Not set
               </td>
             </tr>
           </tbody>
@@ -744,7 +828,7 @@ public class Author {
           都会用类型处理器将获取的值以合适的方式转换成 Java 类型。下表描述了一些默认的类型处理器。</p>
         <p>
           <span class="label important">NOTE</span>
-          如果你使用JSR-310(Date和Time API)，你可以使用<a href="https://github.com/mybatis/typehandlers-jsr310">mybatis-typehandlers-jsr310</a>。
+          Since version 3.4.5, The MyBatis has been supported JSR-310(Date and Time API) by default.
         </p>
         <table>
           <thead>
@@ -1036,6 +1120,127 @@ public class Author {
                 任何兼容的 <code>NUMERIC</code> 或 <code>DOUBLE</code> 类型，存储枚举的索引（而不是名称）。
               </td>
             </tr>
+            <tr>
+              <td>
+                <code>InstantTypeHandler</code>
+              </td>
+              <td>
+                <code>java.time.Instant</code>
+              </td>
+              <td>
+                <code>TIMESTAMP</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>LocalDateTimeTypeHandler</code>
+              </td>
+              <td>
+                <code>java.time.LocalDateTime</code>
+              </td>
+              <td>
+                <code>TIMESTAMP</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>LocalDateTypeHandler</code>
+              </td>
+              <td>
+                <code>java.time.LocalDate</code>
+              </td>
+              <td>
+                <code>DATE</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>LocalTimeTypeHandler</code>
+              </td>
+              <td>
+                <code>java.time.LocalTime</code>
+              </td>
+              <td>
+                <code>TIME</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>OffsetDateTimeTypeHandler</code>
+              </td>
+              <td>
+                <code>java.time.OffsetDateTime</code>
+              </td>
+              <td>
+                <code>TIMESTAMP</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>OffsetTimeTypeHandler</code>
+              </td>
+              <td>
+                <code>java.time.OffsetTime</code>
+              </td>
+              <td>
+                <code>TIME</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>ZonedDateTimeTypeHandler</code>
+              </td>
+              <td>
+                <code>java.time.ZonedDateTime</code>
+              </td>
+              <td>
+                <code>TIMESTAMP</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>YearTypeHandler</code>
+              </td>
+              <td>
+                <code>java.time.Year</code>
+              </td>
+              <td>
+                <code>INTEGER</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>MonthTypeHandler</code>
+              </td>
+              <td>
+                <code>java.time.Month</code>
+              </td>
+              <td>
+                <code>INTEGER</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>YearMonthTypeHandler</code>
+              </td>
+              <td>
+                <code>java.time.YearMonth</code>
+              </td>
+              <td>
+                <code>VARCHAR</code> or <code>LONGVARCHAR</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>JapaneseDateTypeHandler</code>
+              </td>
+              <td>
+                <code>java.time.chrono.JapaneseDate</code>
+              </td>
+              <td>
+                <code>DATE</code>
+              </td>
+            </tr>
           </tbody>
         </table>
         <p>
@@ -1288,7 +1493,7 @@ public class ExamplePlugin implements Interceptor {
         <p><span class="label important">NOTE</span>
           <strong>覆盖配置类</strong>
         </p>
-        <p>除了用插件来修改 MyBatis 核心行为之外，还可以通过完全覆盖配置类来达到目的。只需继承后覆盖其中的每个方法，再把它传递到 sqlSessionFactoryBuilder.build(myConfig) 方法即可。再次重申，这可能会严重影响 MyBatis 的行为，务请慎之又慎。</p>
+        <p>除了用插件来修改 MyBatis 核心行为之外，还可以通过完全覆盖配置类来达到目的。只需继承后覆盖其中的每个方法，再把它传递到 SqlSessionFactoryBuilder.build(myConfig) 方法即可。再次重申，这可能会严重影响 MyBatis 的行为，务请慎之又慎。</p>
       </subsection>
       <subsection name="配置环境（environments）" id="environments">
         <p>MyBatis 可以配置成适应多种环境，这种机制有助于将 SQL 映射应用于多种数据库之中，
@@ -1309,14 +1514,14 @@ public class ExamplePlugin implements Interceptor {
         <p>为了指定创建哪种环境，只要将它作为可选的参数传递给 SqlSessionFactoryBuilder 即可。可以接受环境配置的两个方法签名是：
         </p>
 
-        <source><![CDATA[SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment);
-SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment,properties);]]></source>
+        <source><![CDATA[SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environment);
+SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environment,properties);]]></source>
 
         <p>如果忽略了环境参数，那么默认环境将会被加载，如下所示：
         </p>
 
-        <source><![CDATA[SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader);
-SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader,properties);]]></source>
+        <source><![CDATA[SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader);
+SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader,properties);]]></source>
 
         <p>环境元素定义了如何配置环境。
         </p>

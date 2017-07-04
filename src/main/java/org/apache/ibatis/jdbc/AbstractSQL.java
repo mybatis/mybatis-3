@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ public abstract class AbstractSQL<T> {
   private static final String AND = ") \nAND (";
   private static final String OR = ") \nOR (";
 
-  private SQLStatement sql = new SQLStatement();
+  private final SQLStatement sql = new SQLStatement();
 
   public abstract T getSelf();
 
@@ -363,16 +363,20 @@ public abstract class AbstractSQL<T> {
       }
 
       sqlClause(builder, "FROM", tables, "", "", ", ");
-      sqlClause(builder, "JOIN", join, "", "", "\nJOIN ");
-      sqlClause(builder, "INNER JOIN", innerJoin, "", "", "\nINNER JOIN ");
-      sqlClause(builder, "OUTER JOIN", outerJoin, "", "", "\nOUTER JOIN ");
-      sqlClause(builder, "LEFT OUTER JOIN", leftOuterJoin, "", "", "\nLEFT OUTER JOIN ");
-      sqlClause(builder, "RIGHT OUTER JOIN", rightOuterJoin, "", "", "\nRIGHT OUTER JOIN ");
+      joins(builder);
       sqlClause(builder, "WHERE", where, "(", ")", " AND ");
       sqlClause(builder, "GROUP BY", groupBy, "", "", ", ");
       sqlClause(builder, "HAVING", having, "(", ")", " AND ");
       sqlClause(builder, "ORDER BY", orderBy, "", "", ", ");
       return builder.toString();
+    }
+
+    private void joins(SafeAppendable builder) {
+      sqlClause(builder, "JOIN", join, "", "", "\nJOIN ");
+      sqlClause(builder, "INNER JOIN", innerJoin, "", "", "\nINNER JOIN ");
+      sqlClause(builder, "OUTER JOIN", outerJoin, "", "", "\nOUTER JOIN ");
+      sqlClause(builder, "LEFT OUTER JOIN", leftOuterJoin, "", "", "\nLEFT OUTER JOIN ");
+      sqlClause(builder, "RIGHT OUTER JOIN", rightOuterJoin, "", "", "\nRIGHT OUTER JOIN ");
     }
 
     private String insertSQL(SafeAppendable builder) {
@@ -389,8 +393,8 @@ public abstract class AbstractSQL<T> {
     }
 
     private String updateSQL(SafeAppendable builder) {
-
       sqlClause(builder, "UPDATE", tables, "", "", "");
+      joins(builder);
       sqlClause(builder, "SET", sets, "", "", ", ");
       sqlClause(builder, "WHERE", where, "(", ")", " AND ");
       return builder.toString();

@@ -1,5 +1,5 @@
 --
---    Copyright 2009-2016 the original author or authors.
+--    Copyright 2009-2017 the original author or authors.
 --
 --    Licensed under the Apache License, Version 2.0 (the "License");
 --    you may not use this file except in compliance with the License.
@@ -20,7 +20,9 @@ drop table books if exists;
 
 create table users (
   id int,
-  name varchar(20)
+  name varchar(20),
+  phone varchar(20),
+  phone_number bigint
 );
 
 create table books (
@@ -40,8 +42,9 @@ create table breeder (
   name varchar(20)
 );
 
-insert into users (id, name) values(1, 'User1');
-insert into users (id, name) values(2, 'User2');
+-- '+86 12345678901' can't be converted to a number
+insert into users (id, name, phone, phone_number) values(1, 'User1', '+86 12345678901', 12345678901);
+insert into users (id, name, phone, phone_number) values(2, 'User2', '+86 12345678902', 12345678902);
 
 insert into books (version, name) values(99, 'Learn Java');
 

@@ -1,5 +1,8 @@
 <!--
-Thank you for your contribution!
+❌ 不要在这里问问题❗️
+⭕️ 请将您的问题发送到邮件列表
+請用英文寫
+https://groups.google.com/group/mybatis-user
 
 Question?
 ======================

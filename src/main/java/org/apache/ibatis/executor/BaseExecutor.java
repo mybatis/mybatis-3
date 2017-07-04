@@ -59,7 +59,7 @@ public abstract class BaseExecutor implements Executor {
   protected PerpetualCache localOutputParameterCache;
   protected Configuration configuration;
 
-  protected int queryStack = 0;
+  protected int queryStack;
   private boolean closed;
 
   protected BaseExecutor(Configuration configuration, Transaction transaction) {

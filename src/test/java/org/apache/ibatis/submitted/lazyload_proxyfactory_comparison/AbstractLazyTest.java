@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -35,62 +35,63 @@ public abstract class AbstractLazyTest {
   private Mapper mapper;
 
   protected abstract String getConfiguration();
-  
+
   @Before
   public void before() throws Exception {
-        // create a SqlSessionFactory
-        Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/lazyload_proxyfactory_comparison/mybatis-config-" + getConfiguration() + ".xml");
-        sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-        reader.close();
+    // create a SqlSessionFactory
+    Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/lazyload_proxyfactory_comparison/mybatis-config-" + getConfiguration() + ".xml");
+    sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+    reader.close();
 
-        // populate in-memory database
-        SqlSession session = sqlSessionFactory.openSession();
-        Connection conn = session.getConnection();
-        reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/lazyload_proxyfactory_comparison/CreateDB.sql");
-        ScriptRunner runner = new ScriptRunner(conn);
-        runner.setLogWriter(null);
-        runner.runScript(reader);
-        reader.close();
-        session.close();
-        
-        sqlSession = sqlSessionFactory.openSession();
-        mapper = sqlSession.getMapper(Mapper.class);
+    // populate in-memory database
+    SqlSession session = sqlSessionFactory.openSession();
+    Connection conn = session.getConnection();
+    reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/lazyload_proxyfactory_comparison/CreateDB.sql");
+    ScriptRunner runner = new ScriptRunner(conn);
+    runner.setLogWriter(null);
+    runner.runScript(reader);
+    conn.close();
+    reader.close();
+    session.close();
+
+    sqlSession = sqlSessionFactory.openSession();
+    mapper = sqlSession.getMapper(Mapper.class);
   }
-  
+
   @After 
   public void after() {
-      if (sqlSession != null) {
-          sqlSession.close();
-      }
+    if (sqlSession != null) {
+      sqlSession.close();
+    }
   }
-  
+
   @Test
   public void lazyLoadUserWithGetObjectWithInterface() throws Exception {
-      Assert.assertNotNull(mapper.getUserWithGetObjectWithInterface(1).getOwner());
+    Assert.assertNotNull(mapper.getUserWithGetObjectWithInterface(1).getOwner());
   }
-  
+
   @Test
   public void lazyLoadUserWithGetObjectWithoutInterface() throws Exception {
-      Assert.assertNotNull(mapper.getUserWithGetObjectWithoutInterface(1).getOwner());
+    Assert.assertNotNull(mapper.getUserWithGetObjectWithoutInterface(1).getOwner());
   }
-  
+
   @Test
   public void lazyLoadUserWithGetXxxWithInterface() throws Exception {
-      Assert.assertNotNull(mapper.getUserWithGetXxxWithInterface(1).getOwner());
+    Assert.assertNotNull(mapper.getUserWithGetXxxWithInterface(1).getOwner());
   }
-  
+
   @Test
   public void lazyLoadUserWithGetXxxWithoutInterface() throws Exception {
-      Assert.assertNotNull(mapper.getUserWithGetXxxWithoutInterface(1).getOwner());
+    Assert.assertNotNull(mapper.getUserWithGetXxxWithoutInterface(1).getOwner());
   }
-  
+
   @Test
   public void lazyLoadUserWithNothingWithInterface() throws Exception {
-      Assert.assertNotNull(mapper.getUserWithNothingWithInterface(1).getOwner());
+    Assert.assertNotNull(mapper.getUserWithNothingWithInterface(1).getOwner());
   }
-  
+
   @Test
   public void lazyLoadUserWithNothingWithoutInterface() throws Exception {
-      Assert.assertNotNull(mapper.getUserWithNothingWithoutInterface(1).getOwner());
+    Assert.assertNotNull(mapper.getUserWithNothingWithoutInterface(1).getOwner());
   }
 }

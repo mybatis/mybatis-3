@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -38,9 +38,9 @@ import org.apache.ibatis.session.Configuration;
  */
 public class XMLStatementBuilder extends BaseBuilder {
 
-  private MapperBuilderAssistant builderAssistant;
-  private XNode context;
-  private String requiredDatabaseId;
+  private final MapperBuilderAssistant builderAssistant;
+  private final XNode context;
+  private final String requiredDatabaseId;
 
   public XMLStatementBuilder(Configuration configuration, MapperBuilderAssistant builderAssistant, XNode context) {
     this(configuration, builderAssistant, context, null);
@@ -103,7 +103,7 @@ public class XMLStatementBuilder extends BaseBuilder {
     } else {
       keyGenerator = context.getBooleanAttribute("useGeneratedKeys",
           configuration.isUseGeneratedKeys() && SqlCommandType.INSERT.equals(sqlCommandType))
-          ? new Jdbc3KeyGenerator() : new NoKeyGenerator();
+          ? Jdbc3KeyGenerator.INSTANCE : NoKeyGenerator.INSTANCE;
     }
 
     builderAssistant.addMappedStatement(id, sqlSource, statementType, sqlCommandType,
@@ -142,7 +142,7 @@ public class XMLStatementBuilder extends BaseBuilder {
     //defaults
     boolean useCache = false;
     boolean resultOrdered = false;
-    KeyGenerator keyGenerator = new NoKeyGenerator();
+    KeyGenerator keyGenerator = NoKeyGenerator.INSTANCE;
     Integer fetchSize = null;
     Integer timeout = null;
     boolean flushCache = false;

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -49,6 +49,7 @@ public class DefaultMethodTest {
     ScriptRunner runner = new ScriptRunner(conn);
     runner.setLogWriter(null);
     runner.runScript(reader);
+    conn.close();
     reader.close();
     session.close();
   }
@@ -71,6 +72,18 @@ public class DefaultMethodTest {
     try {
       SubMapper mapper = sqlSession.getMapper(SubMapper.class);
       User user = mapper.defaultGetUser("User1", 1);
+      assertEquals("User1", user.getName());
+    } finally {
+      sqlSession.close();
+    }
+  }
+
+  @Test
+  public void shouldInvokeDefaultMethodOfPackagePrivateMapper() {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      PackageMapper mapper = sqlSession.getMapper(PackageMapper.class);
+      User user = mapper.defaultGetUser(1);
       assertEquals("User1", user.getName());
     } finally {
       sqlSession.close();

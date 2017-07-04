@@ -313,13 +313,24 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
         <td><code>@CacheNamespace</code></td>
         <td><code>Class</code></td>
         <td><code>&lt;cache&gt;</code></td>
-        <td>Configura la cache para un namespace (una clase). Atributos: implementation, eviction, flushInterval, size and readWrite.</td>
+        <td>Configura la cache para un namespace (una clase). Atributos: implementation, eviction, flushInterval, size, readWrite, blocking and properties.</td>
+      </tr>
+      <tr>
+        <td><code>@Property</code></td>
+        <td>N/A</td>
+        <td><code>&lt;property&gt;</code></td>
+        <td>Specifies the property value or placeholder(can replace by configuration properties that defined at the <code>mybatis-config.xml</code>). Attributes: <code>name</code>, <code>value</code>. (Available on MyBatis 3.4.2+)</td>
       </tr>
       <tr>
         <td><code>@CacheNamespaceRef</code></td>
         <td><code>Class</code></td>
         <td><code>&lt;cacheRef&gt;</code></td>
-        <td>Referencia una cache de otro namespace. Atributos: value, que debe ser el nombre del namespace (ej. un nombre de clase completamente cualificado).</td>
+        <td>
+          Referencia una cache de otro namespace. Atributos: <code>value</code> and <code>name</code>.
+          If you use this annotation, you should be specified either <code>value</code> or <code>name</code> attribute.
+          For the <code>value</code> attribute specify a java type indicating the namespace(the namespace name become a FQCN of specified java type),
+          and for the <code>name</code> attribute(this attribute is available since 3.4.2) specify a name indicating the namespace.
+        </td>
       </tr>
       <tr>
         <td><code>@ConstructorArgs</code></td>
@@ -329,7 +340,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
       </tr>
       <tr>
         <td><code>@Arg</code></td>
-        <td><code>Method</code></td>
+        <td>N/A</td>
         <td>
           <ul>
             <li><code>&lt;arg&gt;</code></li>
@@ -346,7 +357,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
       </tr>
       <tr>
         <td><code>@Case</code></td>
-        <td><code>Method</code></td>
+        <td>N/A</td>
         <td><code>&lt;case&gt;</code></td>
         <td>Un caso concreto y su mapeo correspondiente. Atributos: value, type, results.  El atributo results es un array de Results, por tanto esta anotación Case es similar a un ResultMap, que se especifica mediante la anotación Results a continuación.</td>
       </tr>
@@ -358,7 +369,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
       </tr>
       <tr>
         <td><code>@Result</code></td>
-        <td><code>Method</code></td>
+        <td>N/A</td>
         <td>
           <ul>
             <li><code>&lt;result&gt;</code></li>
@@ -369,7 +380,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
       </tr>
       <tr>
         <td><code>@One</code></td>
-        <td><code>Method</code></td>
+        <td>N/A</td>
         <td><code>&lt;association&gt;</code></td>
         <td>
         Un mapeo a una propiedad que contiene un tipo complejo. Atributos: select, que contiene el nombre completamente cualificado de un mapped statement (o un método de mapper) que puede cargar la instancia del tipo indicado, 
@@ -378,7 +389,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
       </tr>
       <tr>
         <td><code>@Many</code></td>
-        <td><code>Method</code></td>
+        <td>N/A</td>
         <td><code>&lt;collection&gt;</code></td>
         <td>Un mapeo a una propiedad que contiene una colección de tipos complejos. Atributos: select, que contiene el nombre completamente cualificado de un mapped statement (o un método de mapper) que puede cargar la instancia del tipo indicado, 
         <code>fetchType</code>, que sobrescribe el parámetro global de configuración <code>lazyLoadingEnabled</code> para este mapeo. 
