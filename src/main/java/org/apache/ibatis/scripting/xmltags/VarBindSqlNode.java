@@ -13,12 +13,28 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package org.apache.ibatis.submitted.dynsql;
+package org.apache.ibatis.scripting.xmltags;
 
-import org.apache.ibatis.annotations.Param;
+/**
+ * @author Kazuki Shimizu
+ * @since 3.4.5
+ */
+public class VarBindSqlNode implements SqlNode {
 
-public interface DynSqlMapper {
-  String selectDescription(@Param("p") String p);
+  private final String name;
+  private final SqlNode contents;
 
-  String selectDescriptionById(@Param("id") Integer id);
+  public VarBindSqlNode(String name, SqlNode contents) {
+    this.name = name;
+    this.contents = contents;
+  }
+
+  @Override
+  public boolean apply(DynamicContext context) {
+    DynamicContext subContext = new DynamicContext(context);
+    contents.apply(subContext);
+    context.bind(name, subContext.getSql());
+    return true;
+  }
+
 }

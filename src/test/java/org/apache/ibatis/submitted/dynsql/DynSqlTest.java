@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,17 +15,23 @@
  */
 package org.apache.ibatis.submitted.dynsql;
 
+import static com.googlecode.catchexception.apis.BDDCatchException.*;
+import static org.assertj.core.api.BDDAssertions.then;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
 
+import org.apache.ibatis.exceptions.PersistenceException;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.jdbc.ScriptRunner;
+import org.apache.ibatis.scripting.ScriptingException;
+import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.io.Reader;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -168,6 +174,27 @@ public class DynSqlTest {
     } finally {
       sqlSession.close();
     }
+  }
+
+  @Test
+  public void testBindDynaSubNode() {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      DynSqlMapper mapper = sqlSession.getMapper(DynSqlMapper.class);
+      String description = mapper.selectDescriptionById(3);
+      assertEquals("Pebbles", description);
+    } finally {
+      sqlSession.close();
+    }
+  }
+
+  @Test
+  public void testInvalidBind() throws IOException {
+    Configuration configuration = new Configuration();
+    when(configuration).addMapper(InvalidBindSqlMapper.class);
+    then(caughtException()).isInstanceOf(PersistenceException.class)
+      .hasCauseInstanceOf(ScriptingException.class)
+      .hasMessageContaining("Not support to specify value attribute and body with together on bind element.");
   }
 
 }
