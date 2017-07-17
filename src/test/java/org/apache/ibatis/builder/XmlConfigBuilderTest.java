@@ -42,6 +42,7 @@ import org.apache.ibatis.io.JBoss6VFS;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.logging.slf4j.Slf4jImpl;
 import org.apache.ibatis.mapping.Environment;
+import org.apache.ibatis.mapping.ResultSetType;
 import org.apache.ibatis.scripting.defaults.RawLanguageDriver;
 import org.apache.ibatis.scripting.xmltags.XMLLanguageDriver;
 import org.apache.ibatis.session.AutoMappingBehavior;
@@ -88,6 +89,7 @@ public class XmlConfigBuilderTest {
     assertThat(config.getDefaultExecutorType()).isEqualTo(ExecutorType.SIMPLE);
     assertNull(config.getDefaultStatementTimeout());
     assertNull(config.getDefaultFetchSize());
+    assertNull(config.getDefaultResultSetType());
     assertThat(config.isMapUnderscoreToCamelCase()).isFalse();
     assertThat(config.isSafeRowBoundsEnabled()).isFalse();
     assertThat(config.getLocalCacheScope()).isEqualTo(LocalCacheScope.SESSION);
@@ -181,6 +183,7 @@ public class XmlConfigBuilderTest {
       assertThat(config.getDefaultExecutorType()).isEqualTo(ExecutorType.BATCH);
       assertThat(config.getDefaultStatementTimeout()).isEqualTo(10);
       assertThat(config.getDefaultFetchSize()).isEqualTo(100);
+      assertThat(config.getDefaultResultSetType()).isEqualTo(ResultSetType.SCROLL_INSENSITIVE);
       assertThat(config.isMapUnderscoreToCamelCase()).isTrue();
       assertThat(config.isSafeRowBoundsEnabled()).isTrue();
       assertThat(config.getLocalCacheScope()).isEqualTo(LocalCacheScope.STATEMENT);

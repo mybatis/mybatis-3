@@ -63,6 +63,20 @@ public class XmlMapperBuilderTest {
   }
 
   @Test
+  public void mappedStatementWithoutOptionsWhenSpecifyDefaultValue() throws Exception {
+    Configuration configuration = new Configuration();
+    configuration.setDefaultResultSetType(ResultSetType.SCROLL_INSENSITIVE);
+    String resource = "org/apache/ibatis/builder/AuthorMapper.xml";
+    InputStream inputStream = Resources.getResourceAsStream(resource);
+    XMLMapperBuilder builder = new XMLMapperBuilder(inputStream, configuration, resource, configuration.getSqlFragments());
+    builder.parse();
+    inputStream.close();
+
+    MappedStatement mappedStatement = configuration.getMappedStatement("selectAuthor");
+    assertThat(mappedStatement.getResultSetType()).isEqualTo(ResultSetType.SCROLL_INSENSITIVE);
+  }
+
+  @Test
   public void parseExpression() {
     BaseBuilder builder = new BaseBuilder(new Configuration()){{}};
     {

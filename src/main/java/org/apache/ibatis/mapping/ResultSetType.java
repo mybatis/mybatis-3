@@ -21,6 +21,11 @@ import java.sql.ResultSet;
  * @author Clinton Begin
  */
 public enum ResultSetType {
+  /**
+   * Special value that indicate to use default value.
+   * @since 3.4.5
+   */
+  DEFAULT(-1),
   FORWARD_ONLY(ResultSet.TYPE_FORWARD_ONLY),
   SCROLL_INSENSITIVE(ResultSet.TYPE_SCROLL_INSENSITIVE),
   SCROLL_SENSITIVE(ResultSet.TYPE_SCROLL_SENSITIVE);
