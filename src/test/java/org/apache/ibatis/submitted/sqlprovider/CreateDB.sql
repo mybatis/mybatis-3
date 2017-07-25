@@ -1,5 +1,5 @@
 --
---    Copyright 2009-2016 the original author or authors.
+--    Copyright 2009-2017 the original author or authors.
 --
 --    Licensed under the Apache License, Version 2.0 (the "License");
 --    you may not use this file except in compliance with the License.
@@ -18,11 +18,12 @@ drop table users if exists;
 
 create table users (
   id int,
-  name varchar(20)
+  name varchar(20),
+  logical_delete boolean default false
 );
 
 insert into users (id, name) values(1, 'User1');
 insert into users (id, name) values(2, 'User2');
 insert into users (id, name) values(3, 'User3');
-insert into users (id, name) values(4, 'User4');
+insert into users (id, name, logical_delete) values(4, 'User4', true);
 

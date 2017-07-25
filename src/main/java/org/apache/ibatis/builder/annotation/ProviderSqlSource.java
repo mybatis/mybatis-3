@@ -36,8 +36,22 @@ public class ProviderSqlSource implements SqlSource {
   private final Class<?> providerType;
   private Method providerMethod;
   private String[] providerMethodArgumentNames;
+  private Class<?>[] providerMethodParameterTypes;
+  private ProviderContext providerContext;
+  private Integer providerContextIndex;
 
+  /**
+   * @deprecated Please use the {@link #ProviderSqlSource(Configuration, Object, Class, Method)} instead of this.
+   */
+  @Deprecated
   public ProviderSqlSource(Configuration config, Object provider) {
+    this(config, provider, null, null);
+  }
+
+  /**
+   * @since 3.4.5
+   */
+  public ProviderSqlSource(Configuration config, Object provider, Class<?> mapperType, Method mapperMethod) {
     String providerMethodName;
     try {
       this.sqlSourceParser = new SqlSourceBuilder(config);
@@ -54,6 +68,7 @@ public class ProviderSqlSource implements SqlSource {
             }
             this.providerMethod = m;
             this.providerMethodArgumentNames = new ParamNameResolver(config, m).getNames();
+            this.providerMethodParameterTypes = m.getParameterTypes();
           }
         }
       }
@@ -66,6 +81,18 @@ public class ProviderSqlSource implements SqlSource {
       throw new BuilderException("Error creating SqlSource for SqlProvider. Method '"
           + providerMethodName + "' not found in SqlProvider '" + this.providerType.getName() + "'.");
     }
+    for (int i = 0; i< this.providerMethodParameterTypes.length; i++) {
+      Class<?> parameterType = this.providerMethodParameterTypes[i];
+      if (parameterType == ProviderContext.class) {
+        if (this.providerContext != null){
+          throw new BuilderException("Error creating SqlSource for SqlProvider. ProviderContext found multiple in SqlProvider method ("
+              + this.providerType.getName() + "." + providerMethod.getName()
+              + "). ProviderContext can not define multiple in SqlProvider method argument.");
+        }
+        this.providerContext = new ProviderContext(mapperType, mapperMethod);
+        this.providerContextIndex = i;
+      }
+    }
   }
 
   @Override
@@ -77,12 +104,15 @@ public class ProviderSqlSource implements SqlSource {
   private SqlSource createSqlSource(Object parameterObject) {
     try {
       Class<?>[] parameterTypes = providerMethod.getParameterTypes();
+      int bindParameterCount = parameterTypes.length - (providerContext == null ? 0 : 1);
       String sql;
       if (parameterTypes.length == 0) {
         sql = (String) providerMethod.invoke(providerType.newInstance());
-      } else if (parameterTypes.length == 1 &&
-              (parameterObject == null || parameterTypes[0].isAssignableFrom(parameterObject.getClass()))) {
-        sql = (String) providerMethod.invoke(providerType.newInstance(), parameterObject);
+      } else if (bindParameterCount == 0) {
+        sql = (String) providerMethod.invoke(providerType.newInstance(), providerContext);
+      } else if (bindParameterCount == 1 &&
+              (parameterObject == null || parameterTypes[(providerContextIndex == null || providerContextIndex == 1) ? 0 : 1].isAssignableFrom(parameterObject.getClass()))) {
+        sql = (String) providerMethod.invoke(providerType.newInstance(), extractProviderMethodArguments(parameterObject));
       } else if (parameterObject instanceof Map) {
         @SuppressWarnings("unchecked")
         Map<String, Object> params = (Map<String, Object>) parameterObject;
@@ -91,7 +121,7 @@ public class ProviderSqlSource implements SqlSource {
         throw new BuilderException("Error invoking SqlProvider method ("
                 + providerType.getName() + "." + providerMethod.getName()
                 + "). Cannot invoke a method that holds "
-                + (parameterTypes.length == 1 ? "named argument(@Param)": "multiple arguments")
+                + (bindParameterCount == 1 ? "named argument(@Param)": "multiple arguments")
                 + " using a specifying parameterObject. In this case, please specify a 'java.util.Map' object.");
       }
       Class<?> parameterType = parameterObject == null ? Object.class : parameterObject.getClass();
@@ -105,10 +135,25 @@ public class ProviderSqlSource implements SqlSource {
     }
   }
 
+  private Object[] extractProviderMethodArguments(Object parameterObject) {
+    if (providerContext != null) {
+      Object[] args = new Object[2];
+      args[providerContextIndex == 0 ? 1 : 0] = parameterObject;
+      args[providerContextIndex] = providerContext;
+      return args;
+    } else {
+      return new Object[] { parameterObject };
+    }
+  }
+
   private Object[] extractProviderMethodArguments(Map<String, Object> params, String[] argumentNames) {
     Object[] args = new Object[argumentNames.length];
     for (int i = 0; i < args.length; i++) {
-      args[i] = params.get(argumentNames[i]);
+      if (providerContextIndex != null && providerContextIndex == i) {
+        args[i] = providerContext;
+      } else {
+        args[i] = params.get(argumentNames[i]);
+      }
     }
     return args;
   }
