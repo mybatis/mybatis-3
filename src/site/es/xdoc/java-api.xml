@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2017 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -445,7 +445,8 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
             <li><code>&lt;select&gt;</code></li>
           </ul>
         </td>
-        <td>Estas anotaciones SQL alternativas te permiten especificar un nombre de clases y un método que devolverán la SQL que debe ejecutarse. Cuando se ejecute el método MyBatis instanciará la clase y ejecutará el método especificados en el provider. El método puede opcionalmente recibir el objeto parámetro.(In MyBatis 3.4 or later, it's allow multiple parameters) Atributos: type, method.  El atributo type es el nombre completamente cualificado de una clase. El method es el nombre un método de dicha clase. Nota: A continuación hay una sección sobre la clase, que puede ayudar a construir SQL dinámico de una forma más clara y sencilla de leer.</td>
+        <td>Estas anotaciones SQL alternativas te permiten especificar un nombre de clases y un método que devolverán la SQL que debe ejecutarse. Cuando se ejecute el método MyBatis instanciará la clase y ejecutará el método especificados en el provider. You can pass objects that passed to arguments of a mapper method, "Mapper interface type" and "Mapper method"
+          via the <code>ProviderContext</code>(available since MyBatis 3.4.5 or later) as method argument.(In MyBatis 3.4 or later, it's allow multiple parameters) Atributos: type, method.  El atributo type es el nombre completamente cualificado de una clase. El method es el nombre un método de dicha clase. Nota: A continuación hay una sección sobre la clase, que puede ayudar a construir SQL dinámico de una forma más clara y sencilla de leer.</td>
       </tr>
       <tr>
         <td><code>@Param</code></td>
