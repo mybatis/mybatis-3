@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2017 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -465,7 +465,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
           </ul>
         </td>
         <td>これらのアノテーションは動的 SQL を生成するためのものです。実行時に指定されたメソッドが呼び出され、メソッドから返された SQL ステートメントが実行されます。マップドステートメントを実行する際、プロバイダーによって指定したクラスのインスタンスが作成され、指定されたメソッドが実行されます。
-        メソッドに引数を渡すことができます。(MyBatis 3.4以降では、複数の引数を渡すことができます)
+        なお、メソッド引数にはMapperメソッドの引数に渡したオブジェクトに加え、<code>ProviderContext</code>(MyBatis 3.4.5以降で利用可能)を介して「Mapperインタフェースの型」と「Mapperメソッド」を渡すことができます。(MyBatis 3.4以降では、複数の引数を渡すことができます)
         キー: <code>type</code>, <code>method</code>. <code>type</code> にはクラスオブジェクト、<code>method</code> にはメソッド名を指定します。 <span class="label important">NOTE</span> 次の章で、クリーンで可読性の高いコードで動的 SQL を構築するためのクラスについて説明します。
 </td>
       </tr>
