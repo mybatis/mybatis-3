@@ -23,6 +23,7 @@ import org.apache.ibatis.builder.BuilderException;
 import org.apache.ibatis.builder.SqlSourceBuilder;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.SqlSource;
+import org.apache.ibatis.parsing.PropertyParser;
 import org.apache.ibatis.reflection.ParamNameResolver;
 import org.apache.ibatis.session.Configuration;
 
@@ -32,6 +33,7 @@ import org.apache.ibatis.session.Configuration;
  */
 public class ProviderSqlSource implements SqlSource {
 
+  private final Configuration configuration;
   private final SqlSourceBuilder sqlSourceParser;
   private final Class<?> providerType;
   private Method providerMethod;
@@ -44,17 +46,18 @@ public class ProviderSqlSource implements SqlSource {
    * @deprecated Please use the {@link #ProviderSqlSource(Configuration, Object, Class, Method)} instead of this.
    */
   @Deprecated
-  public ProviderSqlSource(Configuration config, Object provider) {
-    this(config, provider, null, null);
+  public ProviderSqlSource(Configuration configuration, Object provider) {
+    this(configuration, provider, null, null);
   }
 
   /**
    * @since 3.4.5
    */
-  public ProviderSqlSource(Configuration config, Object provider, Class<?> mapperType, Method mapperMethod) {
+  public ProviderSqlSource(Configuration configuration, Object provider, Class<?> mapperType, Method mapperMethod) {
     String providerMethodName;
     try {
-      this.sqlSourceParser = new SqlSourceBuilder(config);
+      this.configuration = configuration;
+      this.sqlSourceParser = new SqlSourceBuilder(configuration);
       this.providerType = (Class<?>) provider.getClass().getMethod("type").invoke(provider);
       providerMethodName = (String) provider.getClass().getMethod("method").invoke(provider);
 
@@ -67,7 +70,7 @@ public class ProviderSqlSource implements SqlSource {
                       + "'. Sql provider method can not overload.");
             }
             this.providerMethod = m;
-            this.providerMethodArgumentNames = new ParamNameResolver(config, m).getNames();
+            this.providerMethodArgumentNames = new ParamNameResolver(configuration, m).getNames();
             this.providerMethodParameterTypes = m.getParameterTypes();
           }
         }
@@ -125,7 +128,7 @@ public class ProviderSqlSource implements SqlSource {
                 + " using a specifying parameterObject. In this case, please specify a 'java.util.Map' object.");
       }
       Class<?> parameterType = parameterObject == null ? Object.class : parameterObject.getClass();
-      return sqlSourceParser.parse(sql, parameterType, new HashMap<String, Object>());
+      return sqlSourceParser.parse(replacePlaceholder(sql), parameterType, new HashMap<String, Object>());
     } catch (BuilderException e) {
       throw e;
     } catch (Exception e) {
@@ -156,6 +159,10 @@ public class ProviderSqlSource implements SqlSource {
       }
     }
     return args;
+  }
+
+  private String replacePlaceholder(String sql) {
+    return PropertyParser.parse(sql, configuration.getVariables());
   }
 
 }
