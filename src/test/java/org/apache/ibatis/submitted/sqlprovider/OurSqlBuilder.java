@@ -157,7 +157,7 @@ public class OurSqlBuilder {
       FROM(tableName);
       WHERE("id = #{id}");
       if (!containsLogicalDelete){
-        WHERE("logical_delete = false");
+        WHERE("logical_delete = ${Constants.LOGICAL_DELETE_OFF}");
       }
     }}.toString();
   }
@@ -172,7 +172,7 @@ public class OurSqlBuilder {
         WHERE("name like #{name} || '%'");
       }
       if (!containsLogicalDelete){
-        WHERE("logical_delete = false");
+        WHERE("logical_delete = ${LOGICAL_DELETE_OFF:0}");
       }
     }}.toString();
   }
