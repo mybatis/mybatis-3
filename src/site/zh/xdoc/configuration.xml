@@ -1642,7 +1642,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader,properti
           <li><code>poolMaximumLocalBadConnectionTolerance</code> – 这是一个关于坏连接容忍度的底层设置，
             作用于每一个尝试从缓存池获取连接的线程. 如果这个线程获取到的是一个坏的连接，那么这个数据源允许这
             个线程尝试重新获取一个新的连接，但是这个重新尝试的次数不应该超过 <code>poolMaximumIdleConnections</code>
-            与 <code>poolMaximumLocalBadConnectionTolerance</code> 之和。 默认值：3
+            与 <code>poolMaximumLocalBadConnectionTolerance</code> 之和。 默认值：3 (Since: 3.4.5)
           </li>
           <li><code>poolPingQuery</code> – 发送到数据库的侦测查询，用来检验连接是否处在正常工作秩序中并准备接受请求。默认是“NO PING QUERY SET”，这会导致多数数据库驱动失败时带有一个恰当的错误消息。
           </li>

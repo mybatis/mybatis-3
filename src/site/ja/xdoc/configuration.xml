@@ -1758,7 +1758,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader,properti
             retrying times should not more than the sum of <code>poolMaximumIdleConnections</code>
             and <code>poolMaximumLocalBadConnectionTolerance</code>.
             Default:
-            3
+            3 (Since: 3.4.5)
           </li>
           <li>poolPingQuery – プールされた接続が正常で、リクエストを受け付けられる状態にあるかどうか確認するためにデータベースに送信される ping クエリを設定します。
             デフォルトは "NO PING QUERY SET" で、一般的なドライバーであれば問い合わせは失敗し、適切なエラーメッセージが出力されるはずです。

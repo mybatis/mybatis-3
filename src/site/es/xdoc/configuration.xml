@@ -1656,7 +1656,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader,properti
             retrying times should not more than the sum of <code>poolMaximumIdleConnections</code>
             and <code>poolMaximumLocalBadConnectionTolerance</code>.
             Default:
-            3
+            3 (Since: 3.4.5)
           </li>
           <li><code>poolPingQuery</code> – La query de ping (sondeo) que se envía a la base de datos para verificar que la conexión funciona correctamente y que está lista para aceptar nuevas peticiones de conexión. El valor por defecto es "NO PING QUERY SET", que hará que la mayoría de los drivers de base de datos devuelvan un error con un mensaje de error decente.
           </li>

@@ -1953,7 +1953,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, propert
             retrying times should not more than the sum of <code>poolMaximumIdleConnections</code>
             and <code>poolMaximumLocalBadConnectionTolerance</code>.
             Default:
-            3
+            3 (Since: 3.4.5)
           </li>
           <li><code>poolPingQuery</code> – The Ping Query is sent to the database to
             validate that a connection is in good working order and is ready
