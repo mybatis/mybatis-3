@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2017 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -498,7 +498,9 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
         <td>Allows for creation of dynamic SQL. These alternative SQL annotations allow you to specify a class and
         a method name that will return the SQL to run at execution time. Upon executing the mapped statement, MyBatis will
         instantiate the class, and execute the method, as specified by the provider.
-        The method can optionally accept parameter objects.(In MyBatis 3.4 or later, it's allow multiple parameters)
+        You can pass objects that passed to arguments of a mapper method, "Mapper interface type" and "Mapper method"
+        via the <code>ProviderContext</code>(available since MyBatis 3.4.5 or later) as method argument.
+        (In MyBatis 3.4 or later, it's allow multiple parameters)
         Attributes: <code>type</code>, <code>method</code>. The <code>type</code> attribute is a class.
         The <code>method</code> is the name of the method on that class. <span class="label important">NOTE</span>
         Following this section is a discussion about the class, which can help build dynamic SQL in a cleaner, easier to read way.</td>

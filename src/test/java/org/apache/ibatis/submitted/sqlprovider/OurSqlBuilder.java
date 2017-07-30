@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 package org.apache.ibatis.submitted.sqlprovider;
 
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.builder.annotation.ProviderContext;
 import org.apache.ibatis.jdbc.SQL;
 
 import java.util.List;
@@ -146,6 +147,70 @@ public class OurSqlBuilder {
 
   public String buildDelete() {
     return "delete from users where id = #{id}";
+  }
+
+  public String buildSelectByIdProviderContextOnly(ProviderContext context) {
+    final boolean containsLogicalDelete = context.getMapperMethod().getAnnotation(BaseMapper.ContainsLogicalDelete.class) != null;
+    final String tableName = context.getMapperType().getAnnotation(BaseMapper.Meta.class).tableName();
+    return new SQL(){{
+      SELECT("*");
+      FROM(tableName);
+      WHERE("id = #{id}");
+      if (!containsLogicalDelete){
+        WHERE("logical_delete = ${Constants.LOGICAL_DELETE_OFF}");
+      }
+    }}.toString();
+  }
+
+  public String buildSelectByNameOneParamAndProviderContext(ProviderContext context, final String name) {
+    final boolean containsLogicalDelete = context.getMapperMethod().getAnnotation(BaseMapper.ContainsLogicalDelete.class) != null;
+    final String tableName = context.getMapperType().getAnnotation(BaseMapper.Meta.class).tableName();
+    return new SQL(){{
+      SELECT("*");
+      FROM(tableName);
+      if (name != null) {
+        WHERE("name like #{name} || '%'");
+      }
+      if (!containsLogicalDelete){
+        WHERE("logical_delete = ${LOGICAL_DELETE_OFF:0}");
+      }
+    }}.toString();
+  }
+
+  public String buildSelectByIdAndNameMultipleParamAndProviderContextWithAtParam(@Param("id") final Integer id, ProviderContext context, @Param("name") final String name) {
+    final boolean containsLogicalDelete = context.getMapperMethod().getAnnotation(BaseMapper.ContainsLogicalDelete.class) != null;
+    final String tableName = context.getMapperType().getAnnotation(BaseMapper.Meta.class).tableName();
+    return new SQL(){{
+      SELECT("*");
+      FROM(tableName);
+      if (id != null) {
+        WHERE("id = #{id}");
+      }
+      if (name != null) {
+        WHERE("name like #{name} || '%'");
+      }
+      if (!containsLogicalDelete){
+        WHERE("logical_delete = false");
+      }
+    }}.toString();
+  }
+
+  public String buildSelectByIdAndNameMultipleParamAndProviderContext(final Integer id, final String name, ProviderContext context) {
+    final boolean containsLogicalDelete = context.getMapperMethod().getAnnotation(BaseMapper.ContainsLogicalDelete.class) != null;
+    final String tableName = context.getMapperType().getAnnotation(BaseMapper.Meta.class).tableName();
+    return new SQL(){{
+      SELECT("*");
+      FROM(tableName);
+      if (id != null) {
+        WHERE("id = #{param1}");
+      }
+      if (name != null) {
+        WHERE("name like #{param2} || '%'");
+      }
+      if (!containsLogicalDelete){
+        WHERE("logical_delete = false");
+      }
+    }}.toString();
   }
 
 }

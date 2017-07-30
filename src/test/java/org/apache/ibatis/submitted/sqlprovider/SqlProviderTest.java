@@ -22,6 +22,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.Reader;
+import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,6 +31,7 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.SelectProvider;
 import org.apache.ibatis.builder.BuilderException;
+import org.apache.ibatis.builder.annotation.ProviderContext;
 import org.apache.ibatis.builder.annotation.ProviderSqlSource;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.jdbc.ScriptRunner;
@@ -274,8 +276,10 @@ public class SqlProviderTest {
   @Test
   public void methodNotFound() throws NoSuchMethodException {
     try {
+      Class<?> mapperType = ErrorMapper.class;
+      Method mapperMethod = mapperType.getMethod("methodNotFound");
       new ProviderSqlSource(new Configuration(),
-            ErrorMapper.class.getMethod("methodNotFound").getAnnotation(SelectProvider.class));
+            mapperMethod.getAnnotation(SelectProvider.class), mapperType, mapperMethod);
       fail();
     } catch (BuilderException e) {
       assertTrue(e.getMessage().contains("Error creating SqlSource for SqlProvider. Method 'methodNotFound' not found in SqlProvider 'org.apache.ibatis.submitted.sqlprovider.SqlProviderTest$ErrorSqlBuilder'."));
@@ -285,8 +289,10 @@ public class SqlProviderTest {
   @Test
   public void methodOverload() throws NoSuchMethodException {
     try {
+      Class<?> mapperType = ErrorMapper.class;
+      Method mapperMethod = mapperType.getMethod("methodOverload", String.class);
       new ProviderSqlSource(new Configuration(),
-              ErrorMapper.class.getMethod("methodOverload", String.class).getAnnotation(SelectProvider.class));
+              mapperMethod.getAnnotation(SelectProvider.class), mapperType, mapperMethod);
       fail();
     } catch (BuilderException e) {
       assertTrue(e.getMessage().contains("Error creating SqlSource for SqlProvider. Method 'overload' is found multiple in SqlProvider 'org.apache.ibatis.submitted.sqlprovider.SqlProviderTest$ErrorSqlBuilder'. Sql provider method can not overload."));
@@ -296,7 +302,7 @@ public class SqlProviderTest {
   @Test
   public void notSqlProvider() throws NoSuchMethodException {
     try {
-      new ProviderSqlSource(new Configuration(), new Object());
+      new ProviderSqlSource(new Configuration(), new Object(), null, null);
       fail();
     } catch (BuilderException e) {
       assertTrue(e.getMessage().contains("Error creating SqlSource for SqlProvider.  Cause: java.lang.NoSuchMethodException: java.lang.Object.type()"));
@@ -304,10 +310,25 @@ public class SqlProviderTest {
   }
 
   @Test
+  public void multipleProviderContext() throws NoSuchMethodException {
+    try {
+      Class<?> mapperType = ErrorMapper.class;
+      Method mapperMethod = mapperType.getMethod("multipleProviderContext");
+      new ProviderSqlSource(new Configuration(),
+            mapperMethod.getAnnotation(SelectProvider.class), mapperType, mapperMethod);
+      fail();
+    } catch (BuilderException e) {
+      assertTrue(e.getMessage().contains("Error creating SqlSource for SqlProvider. ProviderContext found multiple in SqlProvider method (org.apache.ibatis.submitted.sqlprovider.SqlProviderTest$ErrorSqlBuilder.multipleProviderContext). ProviderContext can not define multiple in SqlProvider method argument."));
+    }
+  }
+
+  @Test
   public void notSupportParameterObjectOnMultipleArguments() throws NoSuchMethodException {
     try {
+      Class<?> mapperType = Mapper.class;
+      Method mapperMethod = mapperType.getMethod("getUsersByName", String.class, String.class);
       new ProviderSqlSource(new Configuration(),
-            Mapper.class.getMethod("getUsersByName", String.class, String.class).getAnnotation(SelectProvider.class))
+            mapperMethod.getAnnotation(SelectProvider.class), mapperType, mapperMethod)
               .getBoundSql(new Object());
       fail();
     } catch (BuilderException e) {
@@ -318,8 +339,10 @@ public class SqlProviderTest {
   @Test
   public void notSupportParameterObjectOnNamedArgument() throws NoSuchMethodException {
     try {
+      Class<?> mapperType = Mapper.class;
+      Method mapperMethod = mapperType.getMethod("getUsersByNameWithParamName", String.class);
       new ProviderSqlSource(new Configuration(),
-            Mapper.class.getMethod("getUsersByNameWithParamName", String.class).getAnnotation(SelectProvider.class))
+            mapperMethod.getAnnotation(SelectProvider.class), mapperType, mapperMethod)
               .getBoundSql(new Object());
       fail();
     } catch (BuilderException e) {
@@ -330,8 +353,10 @@ public class SqlProviderTest {
   @Test
   public void invokeError() throws NoSuchMethodException {
     try {
+      Class<?> mapperType = ErrorMapper.class;
+      Method mapperMethod = mapperType.getMethod("invokeError");
       new ProviderSqlSource(new Configuration(),
-            ErrorMapper.class.getMethod("invokeError").getAnnotation(SelectProvider.class))
+            mapperMethod.getAnnotation(SelectProvider.class), mapperType, mapperMethod)
               .getBoundSql(new Object());
       fail();
     } catch (BuilderException e) {
@@ -399,6 +424,54 @@ public class SqlProviderTest {
     }
   }
 
+  @Test
+  public void mapperProviderContextOnly() {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      assertEquals("User4", mapper.selectById(4).getName());
+      assertNull(mapper.selectActiveById(4));
+    } finally {
+      sqlSession.close();
+    }
+  }
+
+  @Test
+  public void mapperOneParamAndProviderContext() {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      assertEquals(1, mapper.selectByName("User4").size());
+      assertEquals(0, mapper.selectActiveByName("User4").size());
+    } finally {
+      sqlSession.close();
+    }
+  }
+
+  @Test
+  public void mapperMultipleParamAndProviderContextWithAtParam() {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      assertEquals(1, mapper.selectByIdAndNameWithAtParam(4,"User4").size());
+      assertEquals(0, mapper.selectActiveByIdAndNameWithAtParam(4,"User4").size());
+    } finally {
+      sqlSession.close();
+    }
+  }
+
+  @Test
+  public void mapperMultipleParamAndProviderContext() {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      assertEquals(1, mapper.selectByIdAndName(4,"User4").size());
+      assertEquals(0, mapper.selectActiveByIdAndName(4,"User4").size());
+    } finally {
+      sqlSession.close();
+    }
+  }
+
   public interface ErrorMapper {
     @SelectProvider(type = ErrorSqlBuilder.class, method = "methodNotFound")
     void methodNotFound();
@@ -408,6 +481,9 @@ public class SqlProviderTest {
 
     @SelectProvider(type = ErrorSqlBuilder.class, method = "invokeError")
     void invokeError();
+
+    @SelectProvider(type = ErrorSqlBuilder.class, method = "multipleProviderContext")
+    void multipleProviderContext();
   }
 
   public static class ErrorSqlBuilder {
@@ -425,6 +501,10 @@ public class SqlProviderTest {
 
     public String invokeError() {
       throw new UnsupportedOperationException("invokeError");
+    }
+
+    public String multipleProviderContext(ProviderContext providerContext1, ProviderContext providerContext2) {
+      throw new UnsupportedOperationException("multipleProviderContext");
     }
   }
 
