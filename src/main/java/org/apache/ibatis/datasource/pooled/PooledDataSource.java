@@ -176,6 +176,8 @@ public class PooledDataSource implements DataSource {
    *
    * @param poolMaximumLocalBadConnectionTolerance
    * max tolerance for bad connection happens in one thread
+   *
+   * @since 3.4.5
    */
   public void setPoolMaximumLocalBadConnectionTolerance(
       int poolMaximumLocalBadConnectionTolerance) {
