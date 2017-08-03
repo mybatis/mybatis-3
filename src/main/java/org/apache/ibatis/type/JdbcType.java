@@ -43,6 +43,7 @@ public enum JdbcType {
   LONGVARCHAR(Types.LONGVARCHAR),
   DATE(Types.DATE),
   TIME(Types.TIME),
+  DATETIME(94),//such as date for oracle or datetime for mysql
   TIMESTAMP(Types.TIMESTAMP),
   BINARY(Types.BINARY),
   VARBINARY(Types.VARBINARY),
