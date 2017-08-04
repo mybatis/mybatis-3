@@ -1650,6 +1650,14 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader,properti
           </li>
           <li><code>poolTimeToWait</code> – Este es un parámetro de bajo nivel que permite escribir un log y reintentar la adquisición de una conexión en caso de que no se haya conseguido la conexión transcurrido un tiempo razonable (esto evita que se produzcan fallos constantes y silenciosos si el pool está mal configurado). Por defecto:  20000ms (20 segundos)
           </li>
+          <li><code>poolMaximumLocalBadConnectionTolerance</code> – This is a low level setting about
+            tolerance of bad connections got for any thread. If a thread got a bad connection, it may
+            still have another chance to re-attempt to get another connection which is valid. But the
+            retrying times should not more than the sum of <code>poolMaximumIdleConnections</code>
+            and <code>poolMaximumLocalBadConnectionTolerance</code>.
+            Default:
+            3 (Since: 3.4.5)
+          </li>
           <li><code>poolPingQuery</code> – La query de ping (sondeo) que se envía a la base de datos para verificar que la conexión funciona correctamente y que está lista para aceptar nuevas peticiones de conexión. El valor por defecto es "NO PING QUERY SET", que hará que la mayoría de los drivers de base de datos devuelvan un error con un mensaje de error decente.
           </li>
           <li><code>poolPingEnabled</code> – Habilita o inhabilita la query de ping. Si está habilitada deberías informar también la propiedad poolPingQuery con una sentencia SQL (preferentemente una rápida).  Por defecto:  false.

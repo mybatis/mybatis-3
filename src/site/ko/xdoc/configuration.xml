@@ -1614,6 +1614,14 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader,properti
 		  디폴트는 20000ms(20 초)</li>
           <li><code>poolTimeToWait</code> - 풀이 로그 상태를 출력하고 비정상적으로 긴 경우 커넥션을 다시 얻을려고 시도하는 로우 레벨 설정. 
 		  디폴트는 20000ms(20 초)</li>
+          <li><code>poolMaximumLocalBadConnectionTolerance</code> – This is a low level setting about
+            tolerance of bad connections got for any thread. If a thread got a bad connection, it may
+            still have another chance to re-attempt to get another connection which is valid. But the
+            retrying times should not more than the sum of <code>poolMaximumIdleConnections</code>
+            and <code>poolMaximumLocalBadConnectionTolerance</code>.
+            Default:
+            3 (Since: 3.4.5)
+          </li>
           <li><code>poolPingQuery</code> - 커넥션이 작업하기 좋은 상태이고 요청을 받아서 처리할 준비가 되었는지 체크하기 위해 데이터베이스에 던지는 핑쿼리(Ping Query). 
 		  디폴트는 “핑 쿼리가 없음” 이다. 
 		  이 설정은 대부분의 데이터베이스로 하여금 에러메시지를 보게 할수도 있다.</li>

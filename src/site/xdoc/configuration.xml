@@ -1947,6 +1947,14 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, propert
             Default:
             20000ms (i.e. 20 seconds)
           </li>
+          <li><code>poolMaximumLocalBadConnectionTolerance</code> – This is a low level setting about
+            tolerance of bad connections got for any thread. If a thread got a bad connection, it may
+            still have another chance to re-attempt to get another connection which is valid. But the
+            retrying times should not more than the sum of <code>poolMaximumIdleConnections</code>
+            and <code>poolMaximumLocalBadConnectionTolerance</code>.
+            Default:
+            3 (Since: 3.4.5)
+          </li>
           <li><code>poolPingQuery</code> – The Ping Query is sent to the database to
             validate that a connection is in good working order and is ready
             to
