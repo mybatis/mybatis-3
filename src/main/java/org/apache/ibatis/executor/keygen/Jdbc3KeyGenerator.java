@@ -25,6 +25,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.binding.BindingException;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.executor.ExecutorException;
 import org.apache.ibatis.mapping.MappedStatement;
@@ -116,8 +117,13 @@ public class Jdbc3KeyGenerator implements KeyGenerator {
     TypeHandler<?>[] typeHandlers = new TypeHandler<?>[keyProperties.length];
     for (int i = 0; i < keyProperties.length; i++) {
       if (metaParam.hasSetter(keyProperties[i])) {
-        Class<?> keyPropertyType = metaParam.getSetterType(keyProperties[i]);
-        TypeHandler<?> th = typeHandlerRegistry.getTypeHandler(keyPropertyType, JdbcType.forCode(rsmd.getColumnType(i + 1)));
+        TypeHandler<?> th;
+        try {
+          Class<?> keyPropertyType = metaParam.getSetterType(keyProperties[i]);
+          th = typeHandlerRegistry.getTypeHandler(keyPropertyType, JdbcType.forCode(rsmd.getColumnType(i + 1)));
+        } catch (BindingException e) {
+          th = null;
+        }
         typeHandlers[i] = th;
       }
     }
@@ -127,9 +133,6 @@ public class Jdbc3KeyGenerator implements KeyGenerator {
   private void populateKeys(ResultSet rs, MetaObject metaParam, String[] keyProperties, TypeHandler<?>[] typeHandlers) throws SQLException {
     for (int i = 0; i < keyProperties.length; i++) {
       String property = keyProperties[i];
-      if (!metaParam.hasSetter(property)) {
-        throw new ExecutorException("No setter found for the keyProperty '" + property + "' in " + metaParam.getOriginalObject().getClass().getName() + ".");
-      }
       TypeHandler<?> th = typeHandlers[i];
       if (th != null) {
         Object value = th.getResult(rs, i + 1);

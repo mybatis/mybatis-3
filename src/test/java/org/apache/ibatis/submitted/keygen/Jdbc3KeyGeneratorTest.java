@@ -29,6 +29,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static com.googlecode.catchexception.apis.BDDCatchException.*;
@@ -79,6 +80,7 @@ public class Jdbc3KeyGeneratorTest {
     }
   }
 
+  @Ignore("#782 was reverted. See #902.")
   @Test
   public void shouldErrorUndefineProperty()  {
     SqlSession sqlSession = sqlSessionFactory.openSession();
