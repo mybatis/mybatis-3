@@ -82,8 +82,9 @@ public class MapWrapper extends BaseWrapper {
         return metaValue.getSetterType(prop.getChildren());
       }
     } else {
-      if (map.get(name) != null) {
-        return map.get(name).getClass();
+      if (map.containsKey(name)) {
+        Object value = map.get(name);
+        return value != null ? value.getClass() : Object.class;
       } else {
         return Object.class;
       }
@@ -101,8 +102,9 @@ public class MapWrapper extends BaseWrapper {
         return metaValue.getGetterType(prop.getChildren());
       }
     } else {
-      if (map.get(name) != null) {
-        return map.get(name).getClass();
+      if (map.containsKey(name)) {
+        Object value = map.get(name);
+        return value != null ? value.getClass() : Object.class;
       } else {
         return Object.class;
       }
