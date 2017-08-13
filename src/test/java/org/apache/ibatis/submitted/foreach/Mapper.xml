@@ -92,4 +92,19 @@
     </foreach>
     or id = #{idx}
   </select>
+
+  <insert id="insertUsersUsingList">
+    insert into users (id, name) values
+    <foreach collection="list" item="element" index="i" separator=",">
+      (#{element[0]}, #{element[1]} || ' ' || #{i})
+    </foreach>
+  </insert>
+
+  <insert id="insertUsersUsingArray">
+    insert into users (id, name) values
+    <foreach collection="list" item="element" index="i" separator=",">
+      (#{element[0], jdbcType=NUMERIC}, #{element[1]} || ' ' || #{i})
+    </foreach>
+  </insert>
+
 </mapper>

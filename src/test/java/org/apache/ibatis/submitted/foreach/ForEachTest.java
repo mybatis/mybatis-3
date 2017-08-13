@@ -167,4 +167,64 @@ public class ForEachTest {
     }
   }
 
+  @Test
+  public void shouldInsertUsersUsingListElement() {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      List<List<Object>> records = new ArrayList<List<Object>>();
+      {
+        List<Object> record = new ArrayList<Object>();
+        record.add(100);
+        record.add("Ken");
+        records.add(record);
+      }
+      {
+        List<Object> record = new ArrayList<Object>();
+        record.add(101);
+        record.add("Jon");
+        records.add(record);
+      }
+
+      int insertCount = mapper.insertUsersUsingList(records);
+
+      Assert.assertEquals(2, insertCount);
+      {
+        User user = mapper.selectUser(100);
+        Assert.assertEquals("Ken 0", user.getName());
+      }
+      {
+        User user = mapper.selectUser(101);
+        Assert.assertEquals("Jon 1", user.getName());
+      }
+    } finally {
+      sqlSession.close();
+    }
+  }
+
+  @Test
+  public void shouldInsertUsersUsingArrayElement() {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      List<Object[]> records = new ArrayList<Object[]>();
+      records.add(new Object[] {100, "Ken"});
+      records.add(new Object[] {101, "Jon"});
+
+      int insertCount = mapper.insertUsersUsingArray(records);
+
+      Assert.assertEquals(2, insertCount);
+      {
+        User user = mapper.selectUser(100);
+        Assert.assertEquals("Ken 0", user.getName());
+      }
+      {
+        User user = mapper.selectUser(101);
+        Assert.assertEquals("Jon 1", user.getName());
+      }
+    } finally {
+      sqlSession.close();
+    }
+  }
+
 }

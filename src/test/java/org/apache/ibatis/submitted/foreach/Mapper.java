@@ -18,6 +18,7 @@ package org.apache.ibatis.submitted.foreach;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 
 public interface Mapper {
 
@@ -34,4 +35,12 @@ public interface Mapper {
   int itemVariableConflict(@Param("id") Integer id, @Param("ids") List<Integer> ids, @Param("ids2") List<Integer> ids2);
 
   int indexVariableConflict(@Param("idx") Integer id, @Param("idxs") List<Integer> ids, @Param("idxs2") List<Integer> ids2);
+
+  int insertUsersUsingList(List<List<Object>> records);
+
+  int insertUsersUsingArray(List<Object[]> records);
+
+  @Select("SELECT id, name FROM users WHERE id = #{id}")
+  User selectUser(int id);
+
 }

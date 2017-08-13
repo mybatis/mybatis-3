@@ -154,7 +154,7 @@ public class ForEachSqlNode implements SqlNode {
       GenericTokenParser parser = new GenericTokenParser("#{", "}", new TokenHandler() {
         @Override
         public String handleToken(String content) {
-          String newContent = content.replaceFirst("^\\s*" + item + "(?![^.,:\\s])", itemizeItem(item, index));
+          String newContent = content.replaceFirst("^\\s*" + item + "(?![^.\\[,:\\s])", itemizeItem(item, index));
           if (itemIndex != null && newContent.equals(content)) {
             newContent = content.replaceFirst("^\\s*" + itemIndex + "(?![^.,:\\s])", itemizeItem(itemIndex, index));
           }
