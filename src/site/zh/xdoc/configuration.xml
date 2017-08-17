@@ -533,7 +533,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
               <td>
                 指定一个提供<code>Configuration</code>实例的类.
 		这个被返回的Configuration实例是用来加载被反序列化对象的懒加载属性值.
-		这个类必须包含一个签名方法<code>static Configuration getConfiguration()</code>. (Since: 3.2.3)
+		这个类必须包含一个签名方法<code>static Configuration getConfiguration()</code>. (从 3.2.3 版本开始)
               </td>
               <td>
                 类型别名或者全类名.
