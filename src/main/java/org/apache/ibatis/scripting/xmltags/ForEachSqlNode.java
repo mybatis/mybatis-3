@@ -121,10 +121,10 @@ public class ForEachSqlNode implements SqlNode {
   }
 
   private static class FilteredDynamicContext extends DynamicContext {
-    private DynamicContext delegate;
-    private int index;
-    private String itemIndex;
-    private String item;
+    private final DynamicContext delegate;
+    private final int index;
+    private final String itemIndex;
+    private final String item;
 
     public FilteredDynamicContext(Configuration configuration,DynamicContext delegate, String itemIndex, String item, int i) {
       super(configuration, null);
@@ -174,8 +174,8 @@ public class ForEachSqlNode implements SqlNode {
 
 
   private class PrefixedContext extends DynamicContext {
-    private DynamicContext delegate;
-    private String prefix;
+    private final DynamicContext delegate;
+    private final String prefix;
     private boolean prefixApplied;
 
     public PrefixedContext(DynamicContext delegate, String prefix) {
