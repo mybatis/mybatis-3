@@ -7,7 +7,7 @@
 <body>
 <div id="overview"><a href="../../../../../../testapidocs/org/apache/ibatis/submitted/initialized_collection_property/AuthorDAOTest.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2015 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2017 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_javadoccomment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_javadoccomment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_javadoccomment"> *    you may not use this file except in compliance with the License.</em>
@@ -56,35 +56,36 @@
 <a class="jxr_linenumber" name="L48" href="#L48">48</a>      runner.setErrorLogWriter(<strong class="jxr_keyword">null</strong>);
 <a class="jxr_linenumber" name="L49" href="#L49">49</a>      reader = Resources.getResourceAsReader(<span class="jxr_string">"org/apache/ibatis/submitted/initialized_collection_property/create.sql"</span>);
 <a class="jxr_linenumber" name="L50" href="#L50">50</a>      runner.runScript(reader);
-<a class="jxr_linenumber" name="L51" href="#L51">51</a>      session.close();
-<a class="jxr_linenumber" name="L52" href="#L52">52</a>    }
-<a class="jxr_linenumber" name="L53" href="#L53">53</a>  
-<a class="jxr_linenumber" name="L54" href="#L54">54</a>    @Test
-<a class="jxr_linenumber" name="L55" href="#L55">55</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldNotOverwriteCollectionOnNestedResultMap() {
-<a class="jxr_linenumber" name="L56" href="#L56">56</a>      SqlSession session = factory.openSession();
-<a class="jxr_linenumber" name="L57" href="#L57">57</a>      <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L58" href="#L58">58</a>      List&lt;Author&gt; authors = session.selectList(<span class="jxr_string">"getAllAuthors"</span>);
-<a class="jxr_linenumber" name="L59" href="#L59">59</a>      assertEquals(1, authors.size());
-<a class="jxr_linenumber" name="L60" href="#L60">60</a>      assertEquals(4, authors.get(0).getPosts().size());
-<a class="jxr_linenumber" name="L61" href="#L61">61</a>      } <strong class="jxr_keyword">finally</strong> {
-<a class="jxr_linenumber" name="L62" href="#L62">62</a>        session.close();
-<a class="jxr_linenumber" name="L63" href="#L63">63</a>      }
-<a class="jxr_linenumber" name="L64" href="#L64">64</a>    }
-<a class="jxr_linenumber" name="L65" href="#L65">65</a>  
-<a class="jxr_linenumber" name="L66" href="#L66">66</a>    @Ignore <em class="jxr_comment">// issue #75 nested selects overwrite collections</em>
-<a class="jxr_linenumber" name="L67" href="#L67">67</a>    @Test
-<a class="jxr_linenumber" name="L68" href="#L68">68</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldNotOverwriteCollectionOnNestedQuery() {
-<a class="jxr_linenumber" name="L69" href="#L69">69</a>      SqlSession session = factory.openSession();
-<a class="jxr_linenumber" name="L70" href="#L70">70</a>      <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L71" href="#L71">71</a>      List&lt;Author&gt; authors = session.selectList(<span class="jxr_string">"getAllAuthorsNestedQuery"</span>);
-<a class="jxr_linenumber" name="L72" href="#L72">72</a>      assertEquals(1, authors.size());
-<a class="jxr_linenumber" name="L73" href="#L73">73</a>      assertEquals(4, authors.get(0).getPosts().size());
-<a class="jxr_linenumber" name="L74" href="#L74">74</a>      } <strong class="jxr_keyword">finally</strong> {
-<a class="jxr_linenumber" name="L75" href="#L75">75</a>        session.close();
-<a class="jxr_linenumber" name="L76" href="#L76">76</a>      }
-<a class="jxr_linenumber" name="L77" href="#L77">77</a>    }
-<a class="jxr_linenumber" name="L78" href="#L78">78</a>  
-<a class="jxr_linenumber" name="L79" href="#L79">79</a>  }
+<a class="jxr_linenumber" name="L51" href="#L51">51</a>      conn.close();
+<a class="jxr_linenumber" name="L52" href="#L52">52</a>      session.close();
+<a class="jxr_linenumber" name="L53" href="#L53">53</a>    }
+<a class="jxr_linenumber" name="L54" href="#L54">54</a>  
+<a class="jxr_linenumber" name="L55" href="#L55">55</a>    @Test
+<a class="jxr_linenumber" name="L56" href="#L56">56</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldNotOverwriteCollectionOnNestedResultMap() {
+<a class="jxr_linenumber" name="L57" href="#L57">57</a>      SqlSession session = factory.openSession();
+<a class="jxr_linenumber" name="L58" href="#L58">58</a>      <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L59" href="#L59">59</a>      List&lt;Author&gt; authors = session.selectList(<span class="jxr_string">"getAllAuthors"</span>);
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>      assertEquals(1, authors.size());
+<a class="jxr_linenumber" name="L61" href="#L61">61</a>      assertEquals(4, authors.get(0).getPosts().size());
+<a class="jxr_linenumber" name="L62" href="#L62">62</a>      } <strong class="jxr_keyword">finally</strong> {
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>        session.close();
+<a class="jxr_linenumber" name="L64" href="#L64">64</a>      }
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>    }
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>  
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>    @Ignore <em class="jxr_comment">// issue #75 nested selects overwrite collections</em>
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>    @Test
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldNotOverwriteCollectionOnNestedQuery() {
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>      SqlSession session = factory.openSession();
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>      <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>      List&lt;Author&gt; authors = session.selectList(<span class="jxr_string">"getAllAuthorsNestedQuery"</span>);
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>      assertEquals(1, authors.size());
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>      assertEquals(4, authors.get(0).getPosts().size());
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>      } <strong class="jxr_keyword">finally</strong> {
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>        session.close();
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>      }
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>    }
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>  
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>  }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2009&#x2013;2017 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>

@@ -7,7 +7,7 @@
 <body>
 <div id="overview"><a href="../../../../../../testapidocs/org/apache/ibatis/submitted/dml_return_types/DmlMapperReturnTypesTest.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2015 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2017 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_javadoccomment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_javadoccomment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_javadoccomment"> *    you may not use this file except in compliance with the License.</em>
@@ -67,67 +67,68 @@
 <a class="jxr_linenumber" name="L59" href="#L59">59</a>          ScriptRunner runner = <strong class="jxr_keyword">new</strong> ScriptRunner(conn);
 <a class="jxr_linenumber" name="L60" href="#L60">60</a>          runner.setLogWriter(<strong class="jxr_keyword">null</strong>);
 <a class="jxr_linenumber" name="L61" href="#L61">61</a>          runner.runScript(reader);
-<a class="jxr_linenumber" name="L62" href="#L62">62</a>        } <strong class="jxr_keyword">finally</strong> {
-<a class="jxr_linenumber" name="L63" href="#L63">63</a>          reader.close();
-<a class="jxr_linenumber" name="L64" href="#L64">64</a>        }
-<a class="jxr_linenumber" name="L65" href="#L65">65</a>      } <strong class="jxr_keyword">finally</strong> {
-<a class="jxr_linenumber" name="L66" href="#L66">66</a>        session.close();
-<a class="jxr_linenumber" name="L67" href="#L67">67</a>      }
-<a class="jxr_linenumber" name="L68" href="#L68">68</a>    }
-<a class="jxr_linenumber" name="L69" href="#L69">69</a>  
-<a class="jxr_linenumber" name="L70" href="#L70">70</a>    @Before
-<a class="jxr_linenumber" name="L71" href="#L71">71</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> openSession() {
-<a class="jxr_linenumber" name="L72" href="#L72">72</a>      sqlSession = sqlSessionFactory.openSession();
-<a class="jxr_linenumber" name="L73" href="#L73">73</a>      mapper = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L74" href="#L74">74</a>    }
-<a class="jxr_linenumber" name="L75" href="#L75">75</a>  
-<a class="jxr_linenumber" name="L76" href="#L76">76</a>    @After
-<a class="jxr_linenumber" name="L77" href="#L77">77</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> closeSession() {
-<a class="jxr_linenumber" name="L78" href="#L78">78</a>      sqlSession.close();
-<a class="jxr_linenumber" name="L79" href="#L79">79</a>    }
-<a class="jxr_linenumber" name="L80" href="#L80">80</a>  
-<a class="jxr_linenumber" name="L81" href="#L81">81</a>    @Test
-<a class="jxr_linenumber" name="L82" href="#L82">82</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> updateShouldReturnVoid() {
-<a class="jxr_linenumber" name="L83" href="#L83">83</a>        mapper.updateReturnsVoid(<strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/submitted/dml_return_types/User.html">User</a>(1, <span class="jxr_string">"updateShouldReturnVoid"</span>));
-<a class="jxr_linenumber" name="L84" href="#L84">84</a>    }
-<a class="jxr_linenumber" name="L85" href="#L85">85</a>  
-<a class="jxr_linenumber" name="L86" href="#L86">86</a>    @Test
-<a class="jxr_linenumber" name="L87" href="#L87">87</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldReturnPrimitiveInteger() {
-<a class="jxr_linenumber" name="L88" href="#L88">88</a>      <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> rows = mapper.updateReturnsPrimitiveInteger(<strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/submitted/dml_return_types/User.html">User</a>(1, <span class="jxr_string">"shouldReturnPrimitiveInteger"</span>));
-<a class="jxr_linenumber" name="L89" href="#L89">89</a>      assertEquals(1, rows);
-<a class="jxr_linenumber" name="L90" href="#L90">90</a>    }
-<a class="jxr_linenumber" name="L91" href="#L91">91</a>  
-<a class="jxr_linenumber" name="L92" href="#L92">92</a>    @Test
-<a class="jxr_linenumber" name="L93" href="#L93">93</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldReturnInteger() {
-<a class="jxr_linenumber" name="L94" href="#L94">94</a>      <strong class="jxr_keyword">final</strong> Integer rows = mapper.updateReturnsInteger(<strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/submitted/dml_return_types/User.html">User</a>(1, <span class="jxr_string">"shouldReturnInteger"</span>));
-<a class="jxr_linenumber" name="L95" href="#L95">95</a>      assertEquals(Integer.valueOf(1), rows);
-<a class="jxr_linenumber" name="L96" href="#L96">96</a>    }
-<a class="jxr_linenumber" name="L97" href="#L97">97</a>  
-<a class="jxr_linenumber" name="L98" href="#L98">98</a>    @Test
-<a class="jxr_linenumber" name="L99" href="#L99">99</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldReturnPrimitiveLong() {
-<a class="jxr_linenumber" name="L100" href="#L100">100</a>     <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">long</strong> rows = mapper.updateReturnsPrimitiveLong(<strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/submitted/dml_return_types/User.html">User</a>(1, <span class="jxr_string">"shouldReturnPrimitiveLong"</span>));
-<a class="jxr_linenumber" name="L101" href="#L101">101</a>     assertEquals(1L, rows);
-<a class="jxr_linenumber" name="L102" href="#L102">102</a>   }
-<a class="jxr_linenumber" name="L103" href="#L103">103</a> 
-<a class="jxr_linenumber" name="L104" href="#L104">104</a>   @Test
-<a class="jxr_linenumber" name="L105" href="#L105">105</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldReturnLong() {
-<a class="jxr_linenumber" name="L106" href="#L106">106</a>     <strong class="jxr_keyword">final</strong> Long rows = mapper.updateReturnsLong(<strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/submitted/dml_return_types/User.html">User</a>(1, <span class="jxr_string">"shouldReturnLong"</span>));
-<a class="jxr_linenumber" name="L107" href="#L107">107</a>     assertEquals(Long.valueOf(1), rows);
-<a class="jxr_linenumber" name="L108" href="#L108">108</a>   }
-<a class="jxr_linenumber" name="L109" href="#L109">109</a> 
-<a class="jxr_linenumber" name="L110" href="#L110">110</a>   @Test
-<a class="jxr_linenumber" name="L111" href="#L111">111</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldReturnPrimitiveBoolean() {
-<a class="jxr_linenumber" name="L112" href="#L112">112</a>     <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">boolean</strong> rows = mapper.updateReturnsPrimitiveBoolean(<strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/submitted/dml_return_types/User.html">User</a>(1, <span class="jxr_string">"shouldReturnPrimitiveBoolean"</span>));
-<a class="jxr_linenumber" name="L113" href="#L113">113</a>     assertEquals(<strong class="jxr_keyword">true</strong>, rows);
-<a class="jxr_linenumber" name="L114" href="#L114">114</a>   }
-<a class="jxr_linenumber" name="L115" href="#L115">115</a> 
-<a class="jxr_linenumber" name="L116" href="#L116">116</a>   @Test
-<a class="jxr_linenumber" name="L117" href="#L117">117</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldReturnBoolean() {
-<a class="jxr_linenumber" name="L118" href="#L118">118</a>     <strong class="jxr_keyword">final</strong> Boolean rows = mapper.updateReturnsBoolean(<strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/submitted/dml_return_types/User.html">User</a>(1, <span class="jxr_string">"shouldReturnBoolean"</span>));
-<a class="jxr_linenumber" name="L119" href="#L119">119</a>     assertEquals(Boolean.TRUE, rows);
-<a class="jxr_linenumber" name="L120" href="#L120">120</a>   }
-<a class="jxr_linenumber" name="L121" href="#L121">121</a> 
-<a class="jxr_linenumber" name="L122" href="#L122">122</a> }
+<a class="jxr_linenumber" name="L62" href="#L62">62</a>          conn.close();
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>        } <strong class="jxr_keyword">finally</strong> {
+<a class="jxr_linenumber" name="L64" href="#L64">64</a>          reader.close();
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>        }
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>      } <strong class="jxr_keyword">finally</strong> {
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>        session.close();
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>      }
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>    }
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>  
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>    @Before
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> openSession() {
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>      sqlSession = sqlSessionFactory.openSession();
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>      mapper = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>    }
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>  
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>    @After
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> closeSession() {
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>      sqlSession.close();
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>    }
+<a class="jxr_linenumber" name="L81" href="#L81">81</a>  
+<a class="jxr_linenumber" name="L82" href="#L82">82</a>    @Test
+<a class="jxr_linenumber" name="L83" href="#L83">83</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> updateShouldReturnVoid() {
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>        mapper.updateReturnsVoid(<strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/submitted/dml_return_types/User.html">User</a>(1, <span class="jxr_string">"updateShouldReturnVoid"</span>));
+<a class="jxr_linenumber" name="L85" href="#L85">85</a>    }
+<a class="jxr_linenumber" name="L86" href="#L86">86</a>  
+<a class="jxr_linenumber" name="L87" href="#L87">87</a>    @Test
+<a class="jxr_linenumber" name="L88" href="#L88">88</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldReturnPrimitiveInteger() {
+<a class="jxr_linenumber" name="L89" href="#L89">89</a>      <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> rows = mapper.updateReturnsPrimitiveInteger(<strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/submitted/dml_return_types/User.html">User</a>(1, <span class="jxr_string">"shouldReturnPrimitiveInteger"</span>));
+<a class="jxr_linenumber" name="L90" href="#L90">90</a>      assertEquals(1, rows);
+<a class="jxr_linenumber" name="L91" href="#L91">91</a>    }
+<a class="jxr_linenumber" name="L92" href="#L92">92</a>  
+<a class="jxr_linenumber" name="L93" href="#L93">93</a>    @Test
+<a class="jxr_linenumber" name="L94" href="#L94">94</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldReturnInteger() {
+<a class="jxr_linenumber" name="L95" href="#L95">95</a>      <strong class="jxr_keyword">final</strong> Integer rows = mapper.updateReturnsInteger(<strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/submitted/dml_return_types/User.html">User</a>(1, <span class="jxr_string">"shouldReturnInteger"</span>));
+<a class="jxr_linenumber" name="L96" href="#L96">96</a>      assertEquals(Integer.valueOf(1), rows);
+<a class="jxr_linenumber" name="L97" href="#L97">97</a>    }
+<a class="jxr_linenumber" name="L98" href="#L98">98</a>  
+<a class="jxr_linenumber" name="L99" href="#L99">99</a>    @Test
+<a class="jxr_linenumber" name="L100" href="#L100">100</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldReturnPrimitiveLong() {
+<a class="jxr_linenumber" name="L101" href="#L101">101</a>     <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">long</strong> rows = mapper.updateReturnsPrimitiveLong(<strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/submitted/dml_return_types/User.html">User</a>(1, <span class="jxr_string">"shouldReturnPrimitiveLong"</span>));
+<a class="jxr_linenumber" name="L102" href="#L102">102</a>     assertEquals(1L, rows);
+<a class="jxr_linenumber" name="L103" href="#L103">103</a>   }
+<a class="jxr_linenumber" name="L104" href="#L104">104</a> 
+<a class="jxr_linenumber" name="L105" href="#L105">105</a>   @Test
+<a class="jxr_linenumber" name="L106" href="#L106">106</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldReturnLong() {
+<a class="jxr_linenumber" name="L107" href="#L107">107</a>     <strong class="jxr_keyword">final</strong> Long rows = mapper.updateReturnsLong(<strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/submitted/dml_return_types/User.html">User</a>(1, <span class="jxr_string">"shouldReturnLong"</span>));
+<a class="jxr_linenumber" name="L108" href="#L108">108</a>     assertEquals(Long.valueOf(1), rows);
+<a class="jxr_linenumber" name="L109" href="#L109">109</a>   }
+<a class="jxr_linenumber" name="L110" href="#L110">110</a> 
+<a class="jxr_linenumber" name="L111" href="#L111">111</a>   @Test
+<a class="jxr_linenumber" name="L112" href="#L112">112</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldReturnPrimitiveBoolean() {
+<a class="jxr_linenumber" name="L113" href="#L113">113</a>     <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">boolean</strong> rows = mapper.updateReturnsPrimitiveBoolean(<strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/submitted/dml_return_types/User.html">User</a>(1, <span class="jxr_string">"shouldReturnPrimitiveBoolean"</span>));
+<a class="jxr_linenumber" name="L114" href="#L114">114</a>     assertEquals(<strong class="jxr_keyword">true</strong>, rows);
+<a class="jxr_linenumber" name="L115" href="#L115">115</a>   }
+<a class="jxr_linenumber" name="L116" href="#L116">116</a> 
+<a class="jxr_linenumber" name="L117" href="#L117">117</a>   @Test
+<a class="jxr_linenumber" name="L118" href="#L118">118</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldReturnBoolean() {
+<a class="jxr_linenumber" name="L119" href="#L119">119</a>     <strong class="jxr_keyword">final</strong> Boolean rows = mapper.updateReturnsBoolean(<strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/submitted/dml_return_types/User.html">User</a>(1, <span class="jxr_string">"shouldReturnBoolean"</span>));
+<a class="jxr_linenumber" name="L120" href="#L120">120</a>     assertEquals(Boolean.TRUE, rows);
+<a class="jxr_linenumber" name="L121" href="#L121">121</a>   }
+<a class="jxr_linenumber" name="L122" href="#L122">122</a> 
+<a class="jxr_linenumber" name="L123" href="#L123">123</a> }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2009&#x2013;2017 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>

@@ -7,7 +7,7 @@
 <body>
 <div id="overview"><a href="../../../../../../../testapidocs/org/apache/ibatis/submitted/complex_type/ComplexTypeTest.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2015 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2017 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_javadoccomment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_javadoccomment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_javadoccomment"> *    you may not use this file except in compliance with the License.</em>
@@ -54,34 +54,35 @@
 <a class="jxr_linenumber" name="L46" href="#L46">46</a>      ScriptRunner runner = <strong class="jxr_keyword">new</strong> ScriptRunner(conn);
 <a class="jxr_linenumber" name="L47" href="#L47">47</a>      runner.setLogWriter(<strong class="jxr_keyword">null</strong>);
 <a class="jxr_linenumber" name="L48" href="#L48">48</a>      runner.runScript(reader);
-<a class="jxr_linenumber" name="L49" href="#L49">49</a>      reader.close();
-<a class="jxr_linenumber" name="L50" href="#L50">50</a>      session.close();
-<a class="jxr_linenumber" name="L51" href="#L51">51</a>    }
-<a class="jxr_linenumber" name="L52" href="#L52">52</a>  
-<a class="jxr_linenumber" name="L53" href="#L53">53</a>    <em class="jxr_comment">// see https://issues.apache.org/jira/browse/IBATIS-653</em>
-<a class="jxr_linenumber" name="L54" href="#L54">54</a>    @Test
-<a class="jxr_linenumber" name="L55" href="#L55">55</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldUpdateProps() {
-<a class="jxr_linenumber" name="L56" href="#L56">56</a>      SqlSession sqlSession = sqlSessionFactory.openSession();
-<a class="jxr_linenumber" name="L57" href="#L57">57</a>      <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L58" href="#L58">58</a>        <a href="../../../../../org/apache/ibatis/submitted/complex_type/Item.html">Item</a> item = <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/submitted/complex_type/Item.html">Item</a>();
-<a class="jxr_linenumber" name="L59" href="#L59">59</a>        item.id = 10;
-<a class="jxr_linenumber" name="L60" href="#L60">60</a>        <a href="../../../../../org/apache/ibatis/submitted/complex_type/Property.html">Property</a> p1 = <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/submitted/complex_type/Property.html">Property</a>();
-<a class="jxr_linenumber" name="L61" href="#L61">61</a>        p1.id = 11;
-<a class="jxr_linenumber" name="L62" href="#L62">62</a>        p1.value = <span class="jxr_string">"value11"</span>;
-<a class="jxr_linenumber" name="L63" href="#L63">63</a>        <a href="../../../../../org/apache/ibatis/submitted/complex_type/Property.html">Property</a> p2 = <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/submitted/complex_type/Property.html">Property</a>();
-<a class="jxr_linenumber" name="L64" href="#L64">64</a>        p2.id = 12;
-<a class="jxr_linenumber" name="L65" href="#L65">65</a>        p2.value = <span class="jxr_string">"value12"</span>;
-<a class="jxr_linenumber" name="L66" href="#L66">66</a>        List&lt;Property&gt; list = <strong class="jxr_keyword">new</strong> ArrayList&lt;Property&gt;();
-<a class="jxr_linenumber" name="L67" href="#L67">67</a>        list.add(p1);
-<a class="jxr_linenumber" name="L68" href="#L68">68</a>        list.add(p2);
-<a class="jxr_linenumber" name="L69" href="#L69">69</a>        item.properties = list;
-<a class="jxr_linenumber" name="L70" href="#L70">70</a>        sqlSession.update(<span class="jxr_string">"updateProps"</span>, item);
-<a class="jxr_linenumber" name="L71" href="#L71">71</a>      } <strong class="jxr_keyword">finally</strong> {
-<a class="jxr_linenumber" name="L72" href="#L72">72</a>        sqlSession.close();
-<a class="jxr_linenumber" name="L73" href="#L73">73</a>      }
-<a class="jxr_linenumber" name="L74" href="#L74">74</a>    }
-<a class="jxr_linenumber" name="L75" href="#L75">75</a>  
-<a class="jxr_linenumber" name="L76" href="#L76">76</a>  }
+<a class="jxr_linenumber" name="L49" href="#L49">49</a>      conn.close();
+<a class="jxr_linenumber" name="L50" href="#L50">50</a>      reader.close();
+<a class="jxr_linenumber" name="L51" href="#L51">51</a>      session.close();
+<a class="jxr_linenumber" name="L52" href="#L52">52</a>    }
+<a class="jxr_linenumber" name="L53" href="#L53">53</a>  
+<a class="jxr_linenumber" name="L54" href="#L54">54</a>    <em class="jxr_comment">// see https://issues.apache.org/jira/browse/IBATIS-653</em>
+<a class="jxr_linenumber" name="L55" href="#L55">55</a>    @Test
+<a class="jxr_linenumber" name="L56" href="#L56">56</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldUpdateProps() {
+<a class="jxr_linenumber" name="L57" href="#L57">57</a>      SqlSession sqlSession = sqlSessionFactory.openSession();
+<a class="jxr_linenumber" name="L58" href="#L58">58</a>      <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L59" href="#L59">59</a>        <a href="../../../../../org/apache/ibatis/submitted/complex_type/Item.html">Item</a> item = <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/submitted/complex_type/Item.html">Item</a>();
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>        item.id = 10;
+<a class="jxr_linenumber" name="L61" href="#L61">61</a>        <a href="../../../../../org/apache/ibatis/submitted/complex_type/Property.html">Property</a> p1 = <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/submitted/complex_type/Property.html">Property</a>();
+<a class="jxr_linenumber" name="L62" href="#L62">62</a>        p1.id = 11;
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>        p1.value = <span class="jxr_string">"value11"</span>;
+<a class="jxr_linenumber" name="L64" href="#L64">64</a>        <a href="../../../../../org/apache/ibatis/submitted/complex_type/Property.html">Property</a> p2 = <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/submitted/complex_type/Property.html">Property</a>();
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>        p2.id = 12;
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>        p2.value = <span class="jxr_string">"value12"</span>;
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>        List&lt;Property&gt; list = <strong class="jxr_keyword">new</strong> ArrayList&lt;Property&gt;();
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>        list.add(p1);
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>        list.add(p2);
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>        item.properties = list;
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>        sqlSession.update(<span class="jxr_string">"updateProps"</span>, item);
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>      } <strong class="jxr_keyword">finally</strong> {
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>        sqlSession.close();
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>      }
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>    }
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>  
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>  }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2009&#x2013;2017 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>

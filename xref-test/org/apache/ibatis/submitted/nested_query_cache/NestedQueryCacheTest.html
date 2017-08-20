@@ -7,7 +7,7 @@
 <body>
 <div id="overview"><a href="../../../../../../testapidocs/org/apache/ibatis/submitted/nested_query_cache/NestedQueryCacheTest.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2015 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2016 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_javadoccomment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_javadoccomment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_javadoccomment"> *    you may not use this file except in compliance with the License.</em>
@@ -34,7 +34,7 @@
 <a class="jxr_linenumber" name="L26" href="#L26">26</a>  
 <a class="jxr_linenumber" name="L27" href="#L27">27</a>  <strong class="jxr_keyword">import</strong> java.io.Reader;
 <a class="jxr_linenumber" name="L28" href="#L28">28</a>  
-<a class="jxr_linenumber" name="L29" href="#L29">29</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> org.hamcrest.CoreMatchers.sameInstance;
+<a class="jxr_linenumber" name="L29" href="#L29">29</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> org.assertj.core.api.Assertions.assertThat;
 <a class="jxr_linenumber" name="L30" href="#L30">30</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> org.junit.Assert.*;
 <a class="jxr_linenumber" name="L31" href="#L31">31</a>  
 <a class="jxr_linenumber" name="L32" href="#L32">32</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../../org/apache/ibatis/submitted/nested_query_cache/NestedQueryCacheTest.html">NestedQueryCacheTest</a> <strong class="jxr_keyword">extends</strong> <a href="../../../../../org/apache/ibatis/BaseDataTest.html">BaseDataTest</a> {
@@ -61,7 +61,7 @@
 <a class="jxr_linenumber" name="L53" href="#L53">53</a>        
 <a class="jxr_linenumber" name="L54" href="#L54">54</a>        <em class="jxr_comment">// ensure that author is cached</em>
 <a class="jxr_linenumber" name="L55" href="#L55">55</a>        <strong class="jxr_keyword">final</strong> <a href="../../../../../org/apache/ibatis/domain/blog/Author.html">Author</a> cachedAuthor = authorMapper.selectAuthor(101);
-<a class="jxr_linenumber" name="L56" href="#L56">56</a>        assertThat(<span class="jxr_string">"cached author"</span>, author, sameInstance(cachedAuthor));
+<a class="jxr_linenumber" name="L56" href="#L56">56</a>        assertThat(author).isSameAs(cachedAuthor);
 <a class="jxr_linenumber" name="L57" href="#L57">57</a>      } <strong class="jxr_keyword">finally</strong> {
 <a class="jxr_linenumber" name="L58" href="#L58">58</a>        sqlSession.close();
 <a class="jxr_linenumber" name="L59" href="#L59">59</a>      }
@@ -72,8 +72,8 @@
 <a class="jxr_linenumber" name="L64" href="#L64">64</a>        <strong class="jxr_keyword">final</strong> <a href="../../../../../org/apache/ibatis/submitted/nested_query_cache/BlogMapper.html">BlogMapper</a> blogMapper = sqlSession.getMapper(BlogMapper.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L65" href="#L65">65</a>  
 <a class="jxr_linenumber" name="L66" href="#L66">66</a>        <em class="jxr_comment">// ensure that nested author within blog is cached</em>
-<a class="jxr_linenumber" name="L67" href="#L67">67</a>        assertThat(<span class="jxr_string">"blog author"</span>, blogMapper.selectBlog(1).getAuthor(), sameInstance(author));
-<a class="jxr_linenumber" name="L68" href="#L68">68</a>        assertThat(<span class="jxr_string">"blog author"</span>, blogMapper.selectBlogUsingConstructor(1).getAuthor(), sameInstance(author));
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>        assertThat(blogMapper.selectBlog(1).getAuthor()).isSameAs(author);
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>        assertThat(blogMapper.selectBlogUsingConstructor(1).getAuthor()).isSameAs(author);
 <a class="jxr_linenumber" name="L69" href="#L69">69</a>      } <strong class="jxr_keyword">finally</strong> {
 <a class="jxr_linenumber" name="L70" href="#L70">70</a>        sqlSession.close();
 <a class="jxr_linenumber" name="L71" href="#L71">71</a>      }
@@ -101,7 +101,7 @@
 <a class="jxr_linenumber" name="L93" href="#L93">93</a>        <a href="../../../../../org/apache/ibatis/domain/blog/Author.html">Author</a> cachedAuthor = authorMapper.selectAuthor(101);
 <a class="jxr_linenumber" name="L94" href="#L94">94</a>  
 <a class="jxr_linenumber" name="L95" href="#L95">95</a>        <em class="jxr_comment">// ensure that nested author within blog is cached</em>
-<a class="jxr_linenumber" name="L96" href="#L96">96</a>        assertThat(<span class="jxr_string">"blog author"</span>, cachedAuthor, sameInstance(author));
+<a class="jxr_linenumber" name="L96" href="#L96">96</a>        assertThat(cachedAuthor).isSameAs(author);
 <a class="jxr_linenumber" name="L97" href="#L97">97</a>        
 <a class="jxr_linenumber" name="L98" href="#L98">98</a>      } <strong class="jxr_keyword">finally</strong> {
 <a class="jxr_linenumber" name="L99" href="#L99">99</a>        sqlSession.close();

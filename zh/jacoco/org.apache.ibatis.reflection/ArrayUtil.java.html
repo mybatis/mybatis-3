@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ArrayUtil.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.reflection</a> &gt; <span class="el_source">ArrayUtil.java</span></div><h1>ArrayUtil.java</h1><pre class="source lang-java linenums">/**
+ *    Copyright 2009-2017 the original author or authors.
+ *
+ *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
+
+package org.apache.ibatis.reflection;
+
+import java.util.Arrays;
+
+/**
+ * Provides hashCode, equals and toString methods that can handle array.
+ */
+<span class="fc" id="L24">public class ArrayUtil {</span>
+
+  /**
+   * Returns a hash code for {@code obj}.
+   * 
+   * @param obj
+   *          The object to get a hash code for. May be an array or &lt;code&gt;null&lt;/code&gt;.
+   * @return A hash code of {@code obj} or 0 if {@code obj} is &lt;code&gt;null&lt;/code&gt;
+   */
+  public static int hashCode(Object obj) {
+<span class="fc bfc" id="L34" title="All 2 branches covered.">    if (obj == null) {</span>
+      // for consistency with Arrays#hashCode() and Objects#hashCode()
+<span class="fc" id="L36">      return 0;</span>
+    }
+<span class="fc" id="L38">    final Class&lt;?&gt; clazz = obj.getClass();</span>
+<span class="fc bfc" id="L39" title="All 2 branches covered.">    if (!clazz.isArray()) {</span>
+<span class="fc" id="L40">      return obj.hashCode();</span>
+    }
+<span class="fc" id="L42">    final Class&lt;?&gt; componentType = clazz.getComponentType();</span>
+<span class="fc bfc" id="L43" title="All 2 branches covered.">    if (long.class.equals(componentType)) {</span>
+<span class="fc" id="L44">      return Arrays.hashCode((long[]) obj);</span>
+<span class="fc bfc" id="L45" title="All 2 branches covered.">    } else if (int.class.equals(componentType)) {</span>
+<span class="fc" id="L46">      return Arrays.hashCode((int[]) obj);</span>
+<span class="fc bfc" id="L47" title="All 2 branches covered.">    } else if (short.class.equals(componentType)) {</span>
+<span class="fc" id="L48">      return Arrays.hashCode((short[]) obj);</span>
+<span class="fc bfc" id="L49" title="All 2 branches covered.">    } else if (char.class.equals(componentType)) {</span>
+<span class="fc" id="L50">      return Arrays.hashCode((char[]) obj);</span>
+<span class="fc bfc" id="L51" title="All 2 branches covered.">    } else if (byte.class.equals(componentType)) {</span>
+<span class="fc" id="L52">      return Arrays.hashCode((byte[]) obj);</span>
+<span class="fc bfc" id="L53" title="All 2 branches covered.">    } else if (boolean.class.equals(componentType)) {</span>
+<span class="fc" id="L54">      return Arrays.hashCode((boolean[]) obj);</span>
+<span class="fc bfc" id="L55" title="All 2 branches covered.">    } else if (float.class.equals(componentType)) {</span>
+<span class="fc" id="L56">      return Arrays.hashCode((float[]) obj);</span>
+<span class="fc bfc" id="L57" title="All 2 branches covered.">    } else if (double.class.equals(componentType)) {</span>
+<span class="fc" id="L58">      return Arrays.hashCode((double[]) obj);</span>
+    } else {
+<span class="fc" id="L60">      return Arrays.hashCode((Object[]) obj);</span>
+    }
+  }
+
+  /**
+   * Compares two objects. Returns &lt;code&gt;true&lt;/code&gt; if
+   * &lt;ul&gt;
+   * &lt;li&gt;{@code thisObj} and {@code thatObj} are both &lt;code&gt;null&lt;/code&gt;&lt;/li&gt;
+   * &lt;li&gt;{@code thisObj} and {@code thatObj} are instances of the same type and
+   * {@link Object#equals(Object)} returns &lt;code&gt;true&lt;/code&gt;&lt;/li&gt;
+   * &lt;li&gt;{@code thisObj} and {@code thatObj} are arrays with the same component type and
+   * equals() method of {@link Arrays} returns &lt;code&gt;true&lt;/code&gt; (not deepEquals())&lt;/li&gt;
+   * &lt;/ul&gt;
+   * 
+   * @param thisObj
+   *          The left hand object to compare. May be an array or &lt;code&gt;null&lt;/code&gt;
+   * @param thatObj
+   *          The right hand object to compare. May be an array or &lt;code&gt;null&lt;/code&gt;
+   * @return &lt;code&gt;true&lt;/code&gt; if two objects are equal; &lt;code&gt;false&lt;/code&gt; otherwise.
+   */
+  public static boolean equals(Object thisObj, Object thatObj) {
+<span class="fc bfc" id="L81" title="All 2 branches covered.">    if (thisObj == null) {</span>
+<span class="fc bfc" id="L82" title="All 2 branches covered.">      return thatObj == null;</span>
+<span class="fc bfc" id="L83" title="All 2 branches covered.">    } else if (thatObj == null) {</span>
+<span class="fc" id="L84">      return false;</span>
+    }
+<span class="fc" id="L86">    final Class&lt;?&gt; clazz = thisObj.getClass();</span>
+<span class="pc bpc" id="L87" title="1 of 2 branches missed.">    if (!clazz.equals(thatObj.getClass())) {</span>
+<span class="nc" id="L88">      return false;</span>
+    }
+<span class="fc bfc" id="L90" title="All 2 branches covered.">    if (!clazz.isArray()) {</span>
+<span class="fc" id="L91">      return thisObj.equals(thatObj);</span>
+    }
+<span class="fc" id="L93">    final Class&lt;?&gt; componentType = clazz.getComponentType();</span>
+<span class="fc bfc" id="L94" title="All 2 branches covered.">    if (long.class.equals(componentType)) {</span>
+<span class="fc" id="L95">      return Arrays.equals((long[]) thisObj, (long[]) thatObj);</span>
+<span class="fc bfc" id="L96" title="All 2 branches covered.">    } else if (int.class.equals(componentType)) {</span>
+<span class="fc" id="L97">      return Arrays.equals((int[]) thisObj, (int[]) thatObj);</span>
+<span class="fc bfc" id="L98" title="All 2 branches covered.">    } else if (short.class.equals(componentType)) {</span>
+<span class="fc" id="L99">      return Arrays.equals((short[]) thisObj, (short[]) thatObj);</span>
+<span class="fc bfc" id="L100" title="All 2 branches covered.">    } else if (char.class.equals(componentType)) {</span>
+<span class="fc" id="L101">      return Arrays.equals((char[]) thisObj, (char[]) thatObj);</span>
+<span class="fc bfc" id="L102" title="All 2 branches covered.">    } else if (byte.class.equals(componentType)) {</span>
+<span class="fc" id="L103">      return Arrays.equals((byte[]) thisObj, (byte[]) thatObj);</span>
+<span class="fc bfc" id="L104" title="All 2 branches covered.">    } else if (boolean.class.equals(componentType)) {</span>
+<span class="fc" id="L105">      return Arrays.equals((boolean[]) thisObj, (boolean[]) thatObj);</span>
+<span class="fc bfc" id="L106" title="All 2 branches covered.">    } else if (float.class.equals(componentType)) {</span>
+<span class="fc" id="L107">      return Arrays.equals((float[]) thisObj, (float[]) thatObj);</span>
+<span class="fc bfc" id="L108" title="All 2 branches covered.">    } else if (double.class.equals(componentType)) {</span>
+<span class="fc" id="L109">      return Arrays.equals((double[]) thisObj, (double[]) thatObj);</span>
+    } else {
+<span class="fc" id="L111">      return Arrays.equals((Object[]) thisObj, (Object[]) thatObj);</span>
+    }
+  }
+
+  /**
+   * If the {@code obj} is an array, toString() method of {@link Arrays} is called. Otherwise
+   * {@link Object#toString()} is called. Returns &quot;null&quot; if {@code obj} is &lt;code&gt;null&lt;/code&gt;.
+   * 
+   * @param obj
+   *          An object. May be an array or &lt;code&gt;null&lt;/code&gt;.
+   * @return String representation of the {@code obj}.
+   */
+  public static String toString(Object obj) {
+<span class="fc bfc" id="L124" title="All 2 branches covered.">    if (obj == null) {</span>
+<span class="fc" id="L125">      return &quot;null&quot;;</span>
+    }
+<span class="fc" id="L127">    final Class&lt;?&gt; clazz = obj.getClass();</span>
+<span class="fc bfc" id="L128" title="All 2 branches covered.">    if (!clazz.isArray()) {</span>
+<span class="fc" id="L129">      return obj.toString();</span>
+    }
+<span class="fc" id="L131">    final Class&lt;?&gt; componentType = obj.getClass().getComponentType();</span>
+<span class="fc bfc" id="L132" title="All 2 branches covered.">    if (long.class.equals(componentType)) {</span>
+<span class="fc" id="L133">      return Arrays.toString((long[]) obj);</span>
+<span class="fc bfc" id="L134" title="All 2 branches covered.">    } else if (int.class.equals(componentType)) {</span>
+<span class="fc" id="L135">      return Arrays.toString((int[]) obj);</span>
+<span class="fc bfc" id="L136" title="All 2 branches covered.">    } else if (short.class.equals(componentType)) {</span>
+<span class="fc" id="L137">      return Arrays.toString((short[]) obj);</span>
+<span class="fc bfc" id="L138" title="All 2 branches covered.">    } else if (char.class.equals(componentType)) {</span>
+<span class="fc" id="L139">      return Arrays.toString((char[]) obj);</span>
+<span class="fc bfc" id="L140" title="All 2 branches covered.">    } else if (byte.class.equals(componentType)) {</span>
+<span class="fc" id="L141">      return Arrays.toString((byte[]) obj);</span>
+<span class="fc bfc" id="L142" title="All 2 branches covered.">    } else if (boolean.class.equals(componentType)) {</span>
+<span class="fc" id="L143">      return Arrays.toString((boolean[]) obj);</span>
+<span class="fc bfc" id="L144" title="All 2 branches covered.">    } else if (float.class.equals(componentType)) {</span>
+<span class="fc" id="L145">      return Arrays.toString((float[]) obj);</span>
+<span class="fc bfc" id="L146" title="All 2 branches covered.">    } else if (double.class.equals(componentType)) {</span>
+<span class="fc" id="L147">      return Arrays.toString((double[]) obj);</span>
+    } else {
+<span class="fc" id="L149">      return Arrays.toString((Object[]) obj);</span>
+    }
+  }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

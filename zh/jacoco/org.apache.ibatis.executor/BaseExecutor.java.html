@@ -86,20 +86,20 @@ public abstract class BaseExecutor implements Executor {
       try {
 <span class="fc" id="L87">        rollback(forceRollback);</span>
       } finally {
-<span class="pc bpc" id="L89" title="2 of 4 branches missed.">        if (transaction != null) {</span>
-<span class="pc" id="L90">          transaction.close();</span>
+<span class="pc bpc" id="L89" title="1 of 4 branches missed.">        if (transaction != null) {</span>
+<span class="fc" id="L90">          transaction.close();</span>
         }
       }
-<span class="nc" id="L93">    } catch (SQLException e) {</span>
+<span class="fc" id="L93">    } catch (SQLException e) {</span>
       // Ignore.  There's nothing that can be done at this point.
-<span class="nc" id="L95">      log.warn(&quot;Unexpected exception on closing transaction.  Cause: &quot; + e);</span>
+<span class="fc" id="L95">      log.warn(&quot;Unexpected exception on closing transaction.  Cause: &quot; + e);</span>
     } finally {
 <span class="pc" id="L97">      transaction = null;</span>
 <span class="pc" id="L98">      deferredLoads = null;</span>
 <span class="pc" id="L99">      localCache = null;</span>
 <span class="pc" id="L100">      localOutputParameterCache = null;</span>
 <span class="pc" id="L101">      closed = true;</span>
-<span class="pc" id="L102">    }</span>
+<span class="fc" id="L102">    }</span>
 <span class="fc" id="L103">  }</span>
 
   @Override
@@ -387,4 +387,4 @@ public abstract class BaseExecutor implements Executor {
   }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

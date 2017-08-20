@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ResultMapResolver.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.builder</a> &gt; <span class="el_source">ResultMapResolver.java</span></div><h1>ResultMapResolver.java</h1><pre class="source lang-java linenums">/**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  *    you may not use this file except in compliance with the License.
@@ -26,12 +26,12 @@ import org.apache.ibatis.mapping.ResultMapping;
  */
 public class ResultMapResolver {
   private final MapperBuilderAssistant assistant;
-  private String id;
-  private Class&lt;?&gt; type;
-  private String extend;
-  private Discriminator discriminator;
-  private List&lt;ResultMapping&gt; resultMappings;
-  private Boolean autoMapping;
+  private final String id;
+  private final Class&lt;?&gt; type;
+  private final String extend;
+  private final Discriminator discriminator;
+  private final List&lt;ResultMapping&gt; resultMappings;
+  private final Boolean autoMapping;
 
 <span class="fc" id="L36">  public ResultMapResolver(MapperBuilderAssistant assistant, String id, Class&lt;?&gt; type, String extend, Discriminator discriminator, List&lt;ResultMapping&gt; resultMappings, Boolean autoMapping) {</span>
 <span class="fc" id="L37">    this.assistant = assistant;</span>
@@ -48,4 +48,4 @@ public class ResultMapResolver {
   }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

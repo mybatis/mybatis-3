@@ -51,14 +51,12 @@
 <a class="jxr_linenumber" name="L43" href="#L43">43</a>      <strong class="jxr_keyword">try</strong> {
 <a class="jxr_linenumber" name="L44" href="#L44">44</a>        <a href="../../../../../org/apache/ibatis/submitted/call_setters_on_nulls_again/ParentBean.html">ParentBean</a> parentBean = session.selectOne(<span class="jxr_string">"test"</span>);
 <a class="jxr_linenumber" name="L45" href="#L45">45</a>        Assert.assertEquals(<span class="jxr_string">"p1"</span>, parentBean.getName());
-<a class="jxr_linenumber" name="L46" href="#L46">46</a>  <em class="jxr_comment">//    Assert.assertThat(parentBean.toString(), CoreMatchers.is("ParentBean [name=p1, client=ChildBean [name=null, child=ChildBean [name=null, child=null, beans=null], beans=null]]"));      </em>
-<a class="jxr_linenumber" name="L47" href="#L47">47</a>        
-<a class="jxr_linenumber" name="L48" href="#L48">48</a>      } <strong class="jxr_keyword">finally</strong> {
-<a class="jxr_linenumber" name="L49" href="#L49">49</a>        session.close();
-<a class="jxr_linenumber" name="L50" href="#L50">50</a>      }
-<a class="jxr_linenumber" name="L51" href="#L51">51</a>    }
-<a class="jxr_linenumber" name="L52" href="#L52">52</a>  
-<a class="jxr_linenumber" name="L53" href="#L53">53</a>  }
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>      } <strong class="jxr_keyword">finally</strong> {
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>        session.close();
+<a class="jxr_linenumber" name="L48" href="#L48">48</a>      }
+<a class="jxr_linenumber" name="L49" href="#L49">49</a>    }
+<a class="jxr_linenumber" name="L50" href="#L50">50</a>  
+<a class="jxr_linenumber" name="L51" href="#L51">51</a>  }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2009&#x2013;2017 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>

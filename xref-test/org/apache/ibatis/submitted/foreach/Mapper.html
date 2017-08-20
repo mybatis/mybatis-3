@@ -7,7 +7,7 @@
 <body>
 <div id="overview"><a href="../../../../../../testapidocs/org/apache/ibatis/submitted/foreach/Mapper.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2015 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2017 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_javadoccomment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_javadoccomment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_javadoccomment"> *    you may not use this file except in compliance with the License.</em>
@@ -25,18 +25,24 @@
 <a class="jxr_linenumber" name="L17" href="#L17">17</a>  
 <a class="jxr_linenumber" name="L18" href="#L18">18</a>  <strong class="jxr_keyword">import</strong> java.util.List;
 <a class="jxr_linenumber" name="L19" href="#L19">19</a>  
-<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">interface</strong> <a href="../../../../../org/apache/ibatis/submitted/foreach/Mapper.html">Mapper</a> {
+<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <strong class="jxr_keyword">import</strong> org.apache.ibatis.annotations.Param;
 <a class="jxr_linenumber" name="L21" href="#L21">21</a>  
-<a class="jxr_linenumber" name="L22" href="#L22">22</a>    <a href="../../../../../org/apache/ibatis/submitted/foreach/User.html">User</a> getUser(<a href="../../../../../org/apache/ibatis/submitted/foreach/User.html">User</a> user);
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">interface</strong> <a href="../../../../../org/apache/ibatis/submitted/foreach/Mapper.html">Mapper</a> {
 <a class="jxr_linenumber" name="L23" href="#L23">23</a>  
-<a class="jxr_linenumber" name="L24" href="#L24">24</a>    <strong class="jxr_keyword">int</strong> countByUserList(List&lt;User&gt; users);
+<a class="jxr_linenumber" name="L24" href="#L24">24</a>    <a href="../../../../../org/apache/ibatis/submitted/foreach/User.html">User</a> getUser(<a href="../../../../../org/apache/ibatis/submitted/foreach/User.html">User</a> user);
 <a class="jxr_linenumber" name="L25" href="#L25">25</a>  
-<a class="jxr_linenumber" name="L26" href="#L26">26</a>    <strong class="jxr_keyword">int</strong> countByBestFriend(List&lt;User&gt; users);
+<a class="jxr_linenumber" name="L26" href="#L26">26</a>    <strong class="jxr_keyword">int</strong> countByUserList(List&lt;User&gt; users);
 <a class="jxr_linenumber" name="L27" href="#L27">27</a>  
-<a class="jxr_linenumber" name="L28" href="#L28">28</a>    String selectWithNullItemCheck(List&lt;User&gt; users);
+<a class="jxr_linenumber" name="L28" href="#L28">28</a>    <strong class="jxr_keyword">int</strong> countByBestFriend(List&lt;User&gt; users);
 <a class="jxr_linenumber" name="L29" href="#L29">29</a>  
-<a class="jxr_linenumber" name="L30" href="#L30">30</a>    <strong class="jxr_keyword">int</strong> typoInItemProperty(List&lt;User&gt; users);
-<a class="jxr_linenumber" name="L31" href="#L31">31</a>  }
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>    String selectWithNullItemCheck(List&lt;User&gt; users);
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>  
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>    <strong class="jxr_keyword">int</strong> typoInItemProperty(List&lt;User&gt; users);
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>  
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>    <strong class="jxr_keyword">int</strong> itemVariableConflict(@Param(<span class="jxr_string">"id"</span>) Integer id, @Param(<span class="jxr_string">"ids"</span>) List&lt;Integer&gt; ids, @Param(<span class="jxr_string">"ids2"</span>) List&lt;Integer&gt; ids2);
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>  
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>    <strong class="jxr_keyword">int</strong> indexVariableConflict(@Param(<span class="jxr_string">"idx"</span>) Integer id, @Param(<span class="jxr_string">"idxs"</span>) List&lt;Integer&gt; ids, @Param(<span class="jxr_string">"idxs2"</span>) List&lt;Integer&gt; ids2);
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>  }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2009&#x2013;2017 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>

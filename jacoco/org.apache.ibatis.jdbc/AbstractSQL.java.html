@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AbstractSQL.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.jdbc</a> &gt; <span class="el_source">AbstractSQL.java</span></div><h1>AbstractSQL.java</h1><pre class="source lang-java linenums">/**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  *    you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ import java.util.List;
   private static final String AND = &quot;) \nAND (&quot;;
   private static final String OR = &quot;) \nOR (&quot;;
 
-<span class="fc" id="L34">  private SQLStatement sql = new SQLStatement();</span>
+<span class="fc" id="L34">  private final SQLStatement sql = new SQLStatement();</span>
 
   public abstract T getSelf();
 
@@ -42,8 +42,8 @@ import java.util.List;
   }
 
   public T SET(String sets) {
-<span class="nc" id="L45">    sql().sets.add(sets);</span>
-<span class="nc" id="L46">    return getSelf();</span>
+<span class="fc" id="L45">    sql().sets.add(sets);</span>
+<span class="fc" id="L46">    return getSelf();</span>
   }
 
   /**
@@ -363,70 +363,74 @@ import java.util.List;
       }
 
 <span class="fc" id="L365">      sqlClause(builder, &quot;FROM&quot;, tables, &quot;&quot;, &quot;&quot;, &quot;, &quot;);</span>
-<span class="fc" id="L366">      sqlClause(builder, &quot;JOIN&quot;, join, &quot;&quot;, &quot;&quot;, &quot;\nJOIN &quot;);</span>
-<span class="fc" id="L367">      sqlClause(builder, &quot;INNER JOIN&quot;, innerJoin, &quot;&quot;, &quot;&quot;, &quot;\nINNER JOIN &quot;);</span>
-<span class="fc" id="L368">      sqlClause(builder, &quot;OUTER JOIN&quot;, outerJoin, &quot;&quot;, &quot;&quot;, &quot;\nOUTER JOIN &quot;);</span>
-<span class="fc" id="L369">      sqlClause(builder, &quot;LEFT OUTER JOIN&quot;, leftOuterJoin, &quot;&quot;, &quot;&quot;, &quot;\nLEFT OUTER JOIN &quot;);</span>
-<span class="fc" id="L370">      sqlClause(builder, &quot;RIGHT OUTER JOIN&quot;, rightOuterJoin, &quot;&quot;, &quot;&quot;, &quot;\nRIGHT OUTER JOIN &quot;);</span>
-<span class="fc" id="L371">      sqlClause(builder, &quot;WHERE&quot;, where, &quot;(&quot;, &quot;)&quot;, &quot; AND &quot;);</span>
-<span class="fc" id="L372">      sqlClause(builder, &quot;GROUP BY&quot;, groupBy, &quot;&quot;, &quot;&quot;, &quot;, &quot;);</span>
-<span class="fc" id="L373">      sqlClause(builder, &quot;HAVING&quot;, having, &quot;(&quot;, &quot;)&quot;, &quot; AND &quot;);</span>
-<span class="fc" id="L374">      sqlClause(builder, &quot;ORDER BY&quot;, orderBy, &quot;&quot;, &quot;&quot;, &quot;, &quot;);</span>
-<span class="fc" id="L375">      return builder.toString();</span>
+<span class="fc" id="L366">      joins(builder);</span>
+<span class="fc" id="L367">      sqlClause(builder, &quot;WHERE&quot;, where, &quot;(&quot;, &quot;)&quot;, &quot; AND &quot;);</span>
+<span class="fc" id="L368">      sqlClause(builder, &quot;GROUP BY&quot;, groupBy, &quot;&quot;, &quot;&quot;, &quot;, &quot;);</span>
+<span class="fc" id="L369">      sqlClause(builder, &quot;HAVING&quot;, having, &quot;(&quot;, &quot;)&quot;, &quot; AND &quot;);</span>
+<span class="fc" id="L370">      sqlClause(builder, &quot;ORDER BY&quot;, orderBy, &quot;&quot;, &quot;&quot;, &quot;, &quot;);</span>
+<span class="fc" id="L371">      return builder.toString();</span>
     }
 
+    private void joins(SafeAppendable builder) {
+<span class="fc" id="L375">      sqlClause(builder, &quot;JOIN&quot;, join, &quot;&quot;, &quot;&quot;, &quot;\nJOIN &quot;);</span>
+<span class="fc" id="L376">      sqlClause(builder, &quot;INNER JOIN&quot;, innerJoin, &quot;&quot;, &quot;&quot;, &quot;\nINNER JOIN &quot;);</span>
+<span class="fc" id="L377">      sqlClause(builder, &quot;OUTER JOIN&quot;, outerJoin, &quot;&quot;, &quot;&quot;, &quot;\nOUTER JOIN &quot;);</span>
+<span class="fc" id="L378">      sqlClause(builder, &quot;LEFT OUTER JOIN&quot;, leftOuterJoin, &quot;&quot;, &quot;&quot;, &quot;\nLEFT OUTER JOIN &quot;);</span>
+<span class="fc" id="L379">      sqlClause(builder, &quot;RIGHT OUTER JOIN&quot;, rightOuterJoin, &quot;&quot;, &quot;&quot;, &quot;\nRIGHT OUTER JOIN &quot;);</span>
+<span class="fc" id="L380">    }</span>
+
     private String insertSQL(SafeAppendable builder) {
-<span class="fc" id="L379">      sqlClause(builder, &quot;INSERT INTO&quot;, tables, &quot;&quot;, &quot;&quot;, &quot;&quot;);</span>
-<span class="fc" id="L380">      sqlClause(builder, &quot;&quot;, columns, &quot;(&quot;, &quot;)&quot;, &quot;, &quot;);</span>
-<span class="fc" id="L381">      sqlClause(builder, &quot;VALUES&quot;, values, &quot;(&quot;, &quot;)&quot;, &quot;, &quot;);</span>
-<span class="fc" id="L382">      return builder.toString();</span>
+<span class="fc" id="L383">      sqlClause(builder, &quot;INSERT INTO&quot;, tables, &quot;&quot;, &quot;&quot;, &quot;&quot;);</span>
+<span class="fc" id="L384">      sqlClause(builder, &quot;&quot;, columns, &quot;(&quot;, &quot;)&quot;, &quot;, &quot;);</span>
+<span class="fc" id="L385">      sqlClause(builder, &quot;VALUES&quot;, values, &quot;(&quot;, &quot;)&quot;, &quot;, &quot;);</span>
+<span class="fc" id="L386">      return builder.toString();</span>
     }
 
     private String deleteSQL(SafeAppendable builder) {
-<span class="nc" id="L386">      sqlClause(builder, &quot;DELETE FROM&quot;, tables, &quot;&quot;, &quot;&quot;, &quot;&quot;);</span>
-<span class="nc" id="L387">      sqlClause(builder, &quot;WHERE&quot;, where, &quot;(&quot;, &quot;)&quot;, &quot; AND &quot;);</span>
-<span class="nc" id="L388">      return builder.toString();</span>
+<span class="nc" id="L390">      sqlClause(builder, &quot;DELETE FROM&quot;, tables, &quot;&quot;, &quot;&quot;, &quot;&quot;);</span>
+<span class="nc" id="L391">      sqlClause(builder, &quot;WHERE&quot;, where, &quot;(&quot;, &quot;)&quot;, &quot; AND &quot;);</span>
+<span class="nc" id="L392">      return builder.toString();</span>
     }
 
     private String updateSQL(SafeAppendable builder) {
-
-<span class="fc" id="L393">      sqlClause(builder, &quot;UPDATE&quot;, tables, &quot;&quot;, &quot;&quot;, &quot;&quot;);</span>
-<span class="fc" id="L394">      sqlClause(builder, &quot;SET&quot;, sets, &quot;&quot;, &quot;&quot;, &quot;, &quot;);</span>
-<span class="fc" id="L395">      sqlClause(builder, &quot;WHERE&quot;, where, &quot;(&quot;, &quot;)&quot;, &quot; AND &quot;);</span>
-<span class="fc" id="L396">      return builder.toString();</span>
+<span class="fc" id="L396">      sqlClause(builder, &quot;UPDATE&quot;, tables, &quot;&quot;, &quot;&quot;, &quot;&quot;);</span>
+<span class="fc" id="L397">      joins(builder);</span>
+<span class="fc" id="L398">      sqlClause(builder, &quot;SET&quot;, sets, &quot;&quot;, &quot;&quot;, &quot;, &quot;);</span>
+<span class="fc" id="L399">      sqlClause(builder, &quot;WHERE&quot;, where, &quot;(&quot;, &quot;)&quot;, &quot; AND &quot;);</span>
+<span class="fc" id="L400">      return builder.toString();</span>
     }
 
     public String sql(Appendable a) {
-<span class="fc" id="L400">      SafeAppendable builder = new SafeAppendable(a);</span>
-<span class="pc bpc" id="L401" title="1 of 2 branches missed.">      if (statementType == null) {</span>
-<span class="nc" id="L402">        return null;</span>
+<span class="fc" id="L404">      SafeAppendable builder = new SafeAppendable(a);</span>
+<span class="pc bpc" id="L405" title="1 of 2 branches missed.">      if (statementType == null) {</span>
+<span class="nc" id="L406">        return null;</span>
       }
 
       String answer;
 
-<span class="pc bpc" id="L407" title="2 of 5 branches missed.">      switch (statementType) {</span>
+<span class="pc bpc" id="L411" title="2 of 5 branches missed.">      switch (statementType) {</span>
         case DELETE:
-<span class="nc" id="L409">          answer = deleteSQL(builder);</span>
-<span class="nc" id="L410">          break;</span>
+<span class="nc" id="L413">          answer = deleteSQL(builder);</span>
+<span class="nc" id="L414">          break;</span>
 
         case INSERT:
-<span class="fc" id="L413">          answer = insertSQL(builder);</span>
-<span class="fc" id="L414">          break;</span>
-
-        case SELECT:
-<span class="fc" id="L417">          answer = selectSQL(builder);</span>
+<span class="fc" id="L417">          answer = insertSQL(builder);</span>
 <span class="fc" id="L418">          break;</span>
 
-        case UPDATE:
-<span class="fc" id="L421">          answer = updateSQL(builder);</span>
+        case SELECT:
+<span class="fc" id="L421">          answer = selectSQL(builder);</span>
 <span class="fc" id="L422">          break;</span>
 
+        case UPDATE:
+<span class="fc" id="L425">          answer = updateSQL(builder);</span>
+<span class="fc" id="L426">          break;</span>
+
         default:
-<span class="nc" id="L425">          answer = null;</span>
+<span class="nc" id="L429">          answer = null;</span>
       }
 
-<span class="fc" id="L428">      return answer;</span>
+<span class="fc" id="L432">      return answer;</span>
     }
   }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

@@ -7,7 +7,7 @@
 <body>
 <div id="overview"><a href="../../../../../../testapidocs/org/apache/ibatis/submitted/multipleiterates/MultipleIteratesTest.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2015 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2017 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_javadoccomment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_javadoccomment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_javadoccomment"> *    you may not use this file except in compliance with the License.</em>
@@ -52,27 +52,28 @@
 <a class="jxr_linenumber" name="L44" href="#L44">44</a>      ScriptRunner runner = <strong class="jxr_keyword">new</strong> ScriptRunner(conn);
 <a class="jxr_linenumber" name="L45" href="#L45">45</a>      runner.setLogWriter(<strong class="jxr_keyword">null</strong>);
 <a class="jxr_linenumber" name="L46" href="#L46">46</a>      runner.runScript(reader);
-<a class="jxr_linenumber" name="L47" href="#L47">47</a>      reader.close();
-<a class="jxr_linenumber" name="L48" href="#L48">48</a>      session.close();
-<a class="jxr_linenumber" name="L49" href="#L49">49</a>    }
-<a class="jxr_linenumber" name="L50" href="#L50">50</a>  
-<a class="jxr_linenumber" name="L51" href="#L51">51</a>    @Test
-<a class="jxr_linenumber" name="L52" href="#L52">52</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldGetAUser() {
-<a class="jxr_linenumber" name="L53" href="#L53">53</a>      SqlSession sqlSession = sqlSessionFactory.openSession();
-<a class="jxr_linenumber" name="L54" href="#L54">54</a>      <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L55" href="#L55">55</a>        <a href="../../../../../org/apache/ibatis/session/AutoMappingUnknownColumnBehaviorTest.html">Mapper</a> mapper = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L56" href="#L56">56</a>        <a href="../../../../../org/apache/ibatis/submitted/multipleiterates/User.html">User</a> user = <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/submitted/multipleiterates/User.html">User</a>();
-<a class="jxr_linenumber" name="L57" href="#L57">57</a>        user.setId(1);
-<a class="jxr_linenumber" name="L58" href="#L58">58</a>        user.setName(<span class="jxr_string">"Justin"</span>);
-<a class="jxr_linenumber" name="L59" href="#L59">59</a>        user.setFirstAttr(<strong class="jxr_keyword">new</strong> String[] { <span class="jxr_string">"asd"</span>, <span class="jxr_string">"asd"</span> });
-<a class="jxr_linenumber" name="L60" href="#L60">60</a>        user.setSecondAttr(<strong class="jxr_keyword">new</strong> String[] { <span class="jxr_string">"fds"</span>, <span class="jxr_string">"fds"</span> });
-<a class="jxr_linenumber" name="L61" href="#L61">61</a>        mapper.insertUser(user);
-<a class="jxr_linenumber" name="L62" href="#L62">62</a>      } <strong class="jxr_keyword">finally</strong> {
-<a class="jxr_linenumber" name="L63" href="#L63">63</a>        sqlSession.close();
-<a class="jxr_linenumber" name="L64" href="#L64">64</a>      }
-<a class="jxr_linenumber" name="L65" href="#L65">65</a>    }
-<a class="jxr_linenumber" name="L66" href="#L66">66</a>  
-<a class="jxr_linenumber" name="L67" href="#L67">67</a>  }
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>      conn.close();
+<a class="jxr_linenumber" name="L48" href="#L48">48</a>      reader.close();
+<a class="jxr_linenumber" name="L49" href="#L49">49</a>      session.close();
+<a class="jxr_linenumber" name="L50" href="#L50">50</a>    }
+<a class="jxr_linenumber" name="L51" href="#L51">51</a>  
+<a class="jxr_linenumber" name="L52" href="#L52">52</a>    @Test
+<a class="jxr_linenumber" name="L53" href="#L53">53</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldGetAUser() {
+<a class="jxr_linenumber" name="L54" href="#L54">54</a>      SqlSession sqlSession = sqlSessionFactory.openSession();
+<a class="jxr_linenumber" name="L55" href="#L55">55</a>      <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L56" href="#L56">56</a>        <a href="../../../../../org/apache/ibatis/session/AutoMappingUnknownColumnBehaviorTest.html">Mapper</a> mapper = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L57" href="#L57">57</a>        <a href="../../../../../org/apache/ibatis/submitted/multipleiterates/User.html">User</a> user = <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/submitted/multipleiterates/User.html">User</a>();
+<a class="jxr_linenumber" name="L58" href="#L58">58</a>        user.setId(1);
+<a class="jxr_linenumber" name="L59" href="#L59">59</a>        user.setName(<span class="jxr_string">"Justin"</span>);
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>        user.setFirstAttr(<strong class="jxr_keyword">new</strong> String[] { <span class="jxr_string">"asd"</span>, <span class="jxr_string">"asd"</span> });
+<a class="jxr_linenumber" name="L61" href="#L61">61</a>        user.setSecondAttr(<strong class="jxr_keyword">new</strong> String[] { <span class="jxr_string">"fds"</span>, <span class="jxr_string">"fds"</span> });
+<a class="jxr_linenumber" name="L62" href="#L62">62</a>        mapper.insertUser(user);
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>      } <strong class="jxr_keyword">finally</strong> {
+<a class="jxr_linenumber" name="L64" href="#L64">64</a>        sqlSession.close();
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>      }
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>    }
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>  
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>  }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2009&#x2013;2017 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>

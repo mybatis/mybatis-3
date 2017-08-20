@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>XMLMapperBuilder.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.builder.xml</a> &gt; <span class="el_source">XMLMapperBuilder.java</span></div><h1>XMLMapperBuilder.java</h1><pre class="source lang-java linenums">/**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  *    you may not use this file except in compliance with the License.
@@ -52,10 +52,10 @@ import org.apache.ibatis.type.TypeHandler;
  */
 public class XMLMapperBuilder extends BaseBuilder {
 
-  private XPathParser parser;
-  private MapperBuilderAssistant builderAssistant;
-  private Map&lt;String, XNode&gt; sqlFragments;
-  private String resource;
+  private final XPathParser parser;
+  private final MapperBuilderAssistant builderAssistant;
+  private final Map&lt;String, XNode&gt; sqlFragments;
+  private final String resource;
 
   @Deprecated
   public XMLMapperBuilder(Reader reader, Configuration configuration, String resource, Map&lt;String, XNode&gt; sqlFragments, String namespace) {
@@ -95,7 +95,7 @@ public class XMLMapperBuilder extends BaseBuilder {
     }
 
 <span class="fc" id="L97">    parsePendingResultMaps();</span>
-<span class="fc" id="L98">    parsePendingChacheRefs();</span>
+<span class="fc" id="L98">    parsePendingCacheRefs();</span>
 <span class="fc" id="L99">    parsePendingStatements();</span>
 <span class="fc" id="L100">  }</span>
 
@@ -154,7 +154,7 @@ public class XMLMapperBuilder extends BaseBuilder {
 <span class="pc" id="L154">    }</span>
 <span class="fc" id="L155">  }</span>
 
-  private void parsePendingChacheRefs() {
+  private void parsePendingCacheRefs() {
 <span class="fc" id="L158">    Collection&lt;CacheRefResolver&gt; incompleteCacheRefs = configuration.getIncompleteCacheRefs();</span>
 <span class="fc" id="L159">    synchronized (incompleteCacheRefs) {</span>
 <span class="fc" id="L160">      Iterator&lt;CacheRefResolver&gt; iter = incompleteCacheRefs.iterator();</span>
@@ -358,58 +358,63 @@ public class XMLMapperBuilder extends BaseBuilder {
   }
 
   private ResultMapping buildResultMappingFromContext(XNode context, Class&lt;?&gt; resultType, List&lt;ResultFlag&gt; flags) throws Exception {
-<span class="fc" id="L361">    String property = context.getStringAttribute(&quot;property&quot;);</span>
-<span class="fc" id="L362">    String column = context.getStringAttribute(&quot;column&quot;);</span>
-<span class="fc" id="L363">    String javaType = context.getStringAttribute(&quot;javaType&quot;);</span>
-<span class="fc" id="L364">    String jdbcType = context.getStringAttribute(&quot;jdbcType&quot;);</span>
-<span class="fc" id="L365">    String nestedSelect = context.getStringAttribute(&quot;select&quot;);</span>
-<span class="fc" id="L366">    String nestedResultMap = context.getStringAttribute(&quot;resultMap&quot;,</span>
-<span class="fc" id="L367">        processNestedResultMappings(context, Collections.&lt;ResultMapping&gt; emptyList()));</span>
-<span class="fc" id="L368">    String notNullColumn = context.getStringAttribute(&quot;notNullColumn&quot;);</span>
-<span class="fc" id="L369">    String columnPrefix = context.getStringAttribute(&quot;columnPrefix&quot;);</span>
-<span class="fc" id="L370">    String typeHandler = context.getStringAttribute(&quot;typeHandler&quot;);</span>
-<span class="fc" id="L371">    String resultSet = context.getStringAttribute(&quot;resultSet&quot;);</span>
-<span class="fc" id="L372">    String foreignColumn = context.getStringAttribute(&quot;foreignColumn&quot;);</span>
-<span class="fc bfc" id="L373" title="All 2 branches covered.">    boolean lazy = &quot;lazy&quot;.equals(context.getStringAttribute(&quot;fetchType&quot;, configuration.isLazyLoadingEnabled() ? &quot;lazy&quot; : &quot;eager&quot;));</span>
-<span class="fc" id="L374">    Class&lt;?&gt; javaTypeClass = resolveClass(javaType);</span>
+    String property;
+<span class="fc bfc" id="L362" title="All 2 branches covered.">    if (flags.contains(ResultFlag.CONSTRUCTOR)) {</span>
+<span class="fc" id="L363">      property = context.getStringAttribute(&quot;name&quot;);</span>
+    } else {
+<span class="fc" id="L365">      property = context.getStringAttribute(&quot;property&quot;);</span>
+    }
+<span class="fc" id="L367">    String column = context.getStringAttribute(&quot;column&quot;);</span>
+<span class="fc" id="L368">    String javaType = context.getStringAttribute(&quot;javaType&quot;);</span>
+<span class="fc" id="L369">    String jdbcType = context.getStringAttribute(&quot;jdbcType&quot;);</span>
+<span class="fc" id="L370">    String nestedSelect = context.getStringAttribute(&quot;select&quot;);</span>
+<span class="fc" id="L371">    String nestedResultMap = context.getStringAttribute(&quot;resultMap&quot;,</span>
+<span class="fc" id="L372">        processNestedResultMappings(context, Collections.&lt;ResultMapping&gt; emptyList()));</span>
+<span class="fc" id="L373">    String notNullColumn = context.getStringAttribute(&quot;notNullColumn&quot;);</span>
+<span class="fc" id="L374">    String columnPrefix = context.getStringAttribute(&quot;columnPrefix&quot;);</span>
+<span class="fc" id="L375">    String typeHandler = context.getStringAttribute(&quot;typeHandler&quot;);</span>
+<span class="fc" id="L376">    String resultSet = context.getStringAttribute(&quot;resultSet&quot;);</span>
+<span class="fc" id="L377">    String foreignColumn = context.getStringAttribute(&quot;foreignColumn&quot;);</span>
+<span class="fc bfc" id="L378" title="All 2 branches covered.">    boolean lazy = &quot;lazy&quot;.equals(context.getStringAttribute(&quot;fetchType&quot;, configuration.isLazyLoadingEnabled() ? &quot;lazy&quot; : &quot;eager&quot;));</span>
+<span class="fc" id="L379">    Class&lt;?&gt; javaTypeClass = resolveClass(javaType);</span>
     @SuppressWarnings(&quot;unchecked&quot;)
-<span class="fc" id="L376">    Class&lt;? extends TypeHandler&lt;?&gt;&gt; typeHandlerClass = (Class&lt;? extends TypeHandler&lt;?&gt;&gt;) resolveClass(typeHandler);</span>
-<span class="fc" id="L377">    JdbcType jdbcTypeEnum = resolveJdbcType(jdbcType);</span>
-<span class="fc" id="L378">    return builderAssistant.buildResultMapping(resultType, property, column, javaTypeClass, jdbcTypeEnum, nestedSelect, nestedResultMap, notNullColumn, columnPrefix, typeHandlerClass, flags, resultSet, foreignColumn, lazy);</span>
+<span class="fc" id="L381">    Class&lt;? extends TypeHandler&lt;?&gt;&gt; typeHandlerClass = (Class&lt;? extends TypeHandler&lt;?&gt;&gt;) resolveClass(typeHandler);</span>
+<span class="fc" id="L382">    JdbcType jdbcTypeEnum = resolveJdbcType(jdbcType);</span>
+<span class="fc" id="L383">    return builderAssistant.buildResultMapping(resultType, property, column, javaTypeClass, jdbcTypeEnum, nestedSelect, nestedResultMap, notNullColumn, columnPrefix, typeHandlerClass, flags, resultSet, foreignColumn, lazy);</span>
   }
   
   private String processNestedResultMappings(XNode context, List&lt;ResultMapping&gt; resultMappings) throws Exception {
-<span class="fc bfc" id="L382" title="All 2 branches covered.">    if (&quot;association&quot;.equals(context.getName())</span>
-<span class="fc bfc" id="L383" title="All 2 branches covered.">        || &quot;collection&quot;.equals(context.getName())</span>
-<span class="fc bfc" id="L384" title="All 2 branches covered.">        || &quot;case&quot;.equals(context.getName())) {</span>
-<span class="fc bfc" id="L385" title="All 2 branches covered.">      if (context.getStringAttribute(&quot;select&quot;) == null) {</span>
-<span class="fc" id="L386">        ResultMap resultMap = resultMapElement(context, resultMappings);</span>
-<span class="fc" id="L387">        return resultMap.getId();</span>
+<span class="fc bfc" id="L387" title="All 2 branches covered.">    if (&quot;association&quot;.equals(context.getName())</span>
+<span class="fc bfc" id="L388" title="All 2 branches covered.">        || &quot;collection&quot;.equals(context.getName())</span>
+<span class="fc bfc" id="L389" title="All 2 branches covered.">        || &quot;case&quot;.equals(context.getName())) {</span>
+<span class="fc bfc" id="L390" title="All 2 branches covered.">      if (context.getStringAttribute(&quot;select&quot;) == null) {</span>
+<span class="fc" id="L391">        ResultMap resultMap = resultMapElement(context, resultMappings);</span>
+<span class="fc" id="L392">        return resultMap.getId();</span>
       }
     }
-<span class="fc" id="L390">    return null;</span>
+<span class="fc" id="L395">    return null;</span>
   }
 
   private void bindMapperForNamespace() {
-<span class="fc" id="L394">    String namespace = builderAssistant.getCurrentNamespace();</span>
-<span class="pc bpc" id="L395" title="1 of 2 branches missed.">    if (namespace != null) {</span>
-<span class="fc" id="L396">      Class&lt;?&gt; boundType = null;</span>
+<span class="fc" id="L399">    String namespace = builderAssistant.getCurrentNamespace();</span>
+<span class="pc bpc" id="L400" title="1 of 2 branches missed.">    if (namespace != null) {</span>
+<span class="fc" id="L401">      Class&lt;?&gt; boundType = null;</span>
       try {
-<span class="fc" id="L398">        boundType = Resources.classForName(namespace);</span>
-<span class="fc" id="L399">      } catch (ClassNotFoundException e) {</span>
+<span class="fc" id="L403">        boundType = Resources.classForName(namespace);</span>
+<span class="fc" id="L404">      } catch (ClassNotFoundException e) {</span>
         //ignore, bound type is not required
-<span class="fc" id="L401">      }</span>
-<span class="fc bfc" id="L402" title="All 2 branches covered.">      if (boundType != null) {</span>
-<span class="fc bfc" id="L403" title="All 2 branches covered.">        if (!configuration.hasMapper(boundType)) {</span>
+<span class="fc" id="L406">      }</span>
+<span class="fc bfc" id="L407" title="All 2 branches covered.">      if (boundType != null) {</span>
+<span class="fc bfc" id="L408" title="All 2 branches covered.">        if (!configuration.hasMapper(boundType)) {</span>
           // Spring may not know the real resource name so we set a flag
           // to prevent loading again this resource from the mapper interface
           // look at MapperAnnotationBuilder#loadXmlResource
-<span class="fc" id="L407">          configuration.addLoadedResource(&quot;namespace:&quot; + namespace);</span>
-<span class="fc" id="L408">          configuration.addMapper(boundType);</span>
+<span class="fc" id="L412">          configuration.addLoadedResource(&quot;namespace:&quot; + namespace);</span>
+<span class="fc" id="L413">          configuration.addMapper(boundType);</span>
         }
       }
     }
-<span class="fc" id="L412">  }</span>
+<span class="fc" id="L417">  }</span>
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

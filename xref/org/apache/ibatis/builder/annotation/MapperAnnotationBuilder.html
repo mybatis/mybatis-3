@@ -105,9 +105,9 @@
 <a class="jxr_linenumber" name="L97" href="#L97">97</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> Set&lt;Class&lt;? <strong class="jxr_keyword">extends</strong> Annotation&gt;&gt; sqlAnnotationTypes = <strong class="jxr_keyword">new</strong> HashSet&lt;Class&lt;? <strong class="jxr_keyword">extends</strong> Annotation&gt;&gt;();
 <a class="jxr_linenumber" name="L98" href="#L98">98</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> Set&lt;Class&lt;? <strong class="jxr_keyword">extends</strong> Annotation&gt;&gt; sqlProviderAnnotationTypes = <strong class="jxr_keyword">new</strong> HashSet&lt;Class&lt;? <strong class="jxr_keyword">extends</strong> Annotation&gt;&gt;();
 <a class="jxr_linenumber" name="L99" href="#L99">99</a>  
-<a class="jxr_linenumber" name="L100" href="#L100">100</a>   <strong class="jxr_keyword">private</strong> <a href="../../../../../org/apache/ibatis/session/Configuration.html">Configuration</a> configuration;
-<a class="jxr_linenumber" name="L101" href="#L101">101</a>   <strong class="jxr_keyword">private</strong> <a href="../../../../../org/apache/ibatis/builder/MapperBuilderAssistant.html">MapperBuilderAssistant</a> assistant;
-<a class="jxr_linenumber" name="L102" href="#L102">102</a>   <strong class="jxr_keyword">private</strong> Class&lt;?&gt; type;
+<a class="jxr_linenumber" name="L100" href="#L100">100</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <a href="../../../../../org/apache/ibatis/session/Configuration.html">Configuration</a> configuration;
+<a class="jxr_linenumber" name="L101" href="#L101">101</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <a href="../../../../../org/apache/ibatis/builder/MapperBuilderAssistant.html">MapperBuilderAssistant</a> assistant;
+<a class="jxr_linenumber" name="L102" href="#L102">102</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> Class&lt;?&gt; type;
 <a class="jxr_linenumber" name="L103" href="#L103">103</a> 
 <a class="jxr_linenumber" name="L104" href="#L104">104</a>   <strong class="jxr_keyword">public</strong> <a href="../../../../../org/apache/ibatis/builder/annotation/MapperAnnotationBuilder.html">MapperAnnotationBuilder</a>(<a href="../../../../../org/apache/ibatis/session/Configuration.html">Configuration</a> configuration, Class&lt;?&gt; type) {
 <a class="jxr_linenumber" name="L105" href="#L105">105</a>     String resource = type.getName().replace('.', '/') + <span class="jxr_string">".java (best guess)"</span>;
@@ -473,7 +473,7 @@
 <a class="jxr_linenumber" name="L465" href="#L465">465</a>         <strong class="jxr_keyword">return</strong> buildSqlSourceFromStrings(strings, parameterType, languageDriver);
 <a class="jxr_linenumber" name="L466" href="#L466">466</a>       } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (sqlProviderAnnotationType != <strong class="jxr_keyword">null</strong>) {
 <a class="jxr_linenumber" name="L467" href="#L467">467</a>         Annotation sqlProviderAnnotation = method.getAnnotation(sqlProviderAnnotationType);
-<a class="jxr_linenumber" name="L468" href="#L468">468</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/builder/annotation/ProviderSqlSource.html">ProviderSqlSource</a>(assistant.getConfiguration(), sqlProviderAnnotation);
+<a class="jxr_linenumber" name="L468" href="#L468">468</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/builder/annotation/ProviderSqlSource.html">ProviderSqlSource</a>(assistant.getConfiguration(), sqlProviderAnnotation, type, method);
 <a class="jxr_linenumber" name="L469" href="#L469">469</a>       }
 <a class="jxr_linenumber" name="L470" href="#L470">470</a>       <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L471" href="#L471">471</a>     } <strong class="jxr_keyword">catch</strong> (Exception e) {

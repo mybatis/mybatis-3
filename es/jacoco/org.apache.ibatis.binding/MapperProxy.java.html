@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MapperProxy.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.binding</a> &gt; <span class="el_source">MapperProxy.java</span></div><h1>MapperProxy.java</h1><pre class="source lang-java linenums">/**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  *    you may not use this file except in compliance with the License.
@@ -77,17 +77,20 @@ public class MapperProxy&lt;T&gt; implements InvocationHandler, Serializable {
 <span class="fc" id="L77">      constructor.setAccessible(true);</span>
     }
 <span class="fc" id="L79">    final Class&lt;?&gt; declaringClass = method.getDeclaringClass();</span>
-<span class="fc" id="L80">    return constructor.newInstance(declaringClass, MethodHandles.Lookup.PRIVATE)</span>
-<span class="fc" id="L81">        .unreflectSpecial(method, declaringClass).bindTo(proxy).invokeWithArguments(args);</span>
+<span class="fc" id="L80">    return constructor</span>
+<span class="fc" id="L81">        .newInstance(declaringClass,</span>
+<span class="fc" id="L82">            MethodHandles.Lookup.PRIVATE | MethodHandles.Lookup.PROTECTED</span>
+                | MethodHandles.Lookup.PACKAGE | MethodHandles.Lookup.PUBLIC)
+<span class="fc" id="L84">        .unreflectSpecial(method, declaringClass).bindTo(proxy).invokeWithArguments(args);</span>
   }
 
   /**
    * Backport of java.lang.reflect.Method#isDefault()
    */
   private boolean isDefaultMethod(Method method) {
-<span class="fc bfc" id="L88" title="All 2 branches covered.">    return ((method.getModifiers()</span>
+<span class="fc bfc" id="L91" title="All 2 branches covered.">    return ((method.getModifiers()</span>
         &amp; (Modifier.ABSTRACT | Modifier.PUBLIC | Modifier.STATIC)) == Modifier.PUBLIC)
-<span class="pc bpc" id="L90" title="1 of 2 branches missed.">        &amp;&amp; method.getDeclaringClass().isInterface();</span>
+<span class="pc bpc" id="L93" title="1 of 2 branches missed.">        &amp;&amp; method.getDeclaringClass().isInterface();</span>
   }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

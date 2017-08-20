@@ -7,7 +7,7 @@
 <body>
 <div id="overview"><a href="../../../../../../../testapidocs/org/apache/ibatis/submitted/column_forwarding/ColumnForwardingTest.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2015 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2017 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_javadoccomment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_javadoccomment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_javadoccomment"> *    you may not use this file except in compliance with the License.</em>
@@ -53,42 +53,43 @@
 <a class="jxr_linenumber" name="L45" href="#L45">45</a>      ScriptRunner runner = <strong class="jxr_keyword">new</strong> ScriptRunner(conn);
 <a class="jxr_linenumber" name="L46" href="#L46">46</a>      runner.setLogWriter(<strong class="jxr_keyword">null</strong>);
 <a class="jxr_linenumber" name="L47" href="#L47">47</a>      runner.runScript(reader);
-<a class="jxr_linenumber" name="L48" href="#L48">48</a>      reader.close();
-<a class="jxr_linenumber" name="L49" href="#L49">49</a>      session.close();
-<a class="jxr_linenumber" name="L50" href="#L50">50</a>    }
-<a class="jxr_linenumber" name="L51" href="#L51">51</a>  
-<a class="jxr_linenumber" name="L52" href="#L52">52</a>    @Test
-<a class="jxr_linenumber" name="L53" href="#L53">53</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldGetUserWithGroup() {
-<a class="jxr_linenumber" name="L54" href="#L54">54</a>      SqlSession sqlSession = sqlSessionFactory.openSession();
-<a class="jxr_linenumber" name="L55" href="#L55">55</a>      <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L56" href="#L56">56</a>        <a href="../../../../../org/apache/ibatis/session/AutoMappingUnknownColumnBehaviorTest.html">Mapper</a> mapper = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L57" href="#L57">57</a>        <a href="../../../../../org/apache/ibatis/submitted/column_forwarding/User.html">User</a> user = mapper.getUser(1);
-<a class="jxr_linenumber" name="L58" href="#L58">58</a>        Assert.assertNotNull(user);
-<a class="jxr_linenumber" name="L59" href="#L59">59</a>        Assert.assertNotNull(user.getId());
-<a class="jxr_linenumber" name="L60" href="#L60">60</a>        Assert.assertEquals(<span class="jxr_string">"active"</span>, user.getState());
-<a class="jxr_linenumber" name="L61" href="#L61">61</a>        Assert.assertNotNull(user.getGroup());
-<a class="jxr_linenumber" name="L62" href="#L62">62</a>        Assert.assertNotNull(user.getGroup().getId());
-<a class="jxr_linenumber" name="L63" href="#L63">63</a>        Assert.assertEquals(<span class="jxr_string">"active"</span>, user.getGroup().getState());
-<a class="jxr_linenumber" name="L64" href="#L64">64</a>      } <strong class="jxr_keyword">finally</strong> {
-<a class="jxr_linenumber" name="L65" href="#L65">65</a>        sqlSession.close();
-<a class="jxr_linenumber" name="L66" href="#L66">66</a>      }
-<a class="jxr_linenumber" name="L67" href="#L67">67</a>    }
-<a class="jxr_linenumber" name="L68" href="#L68">68</a>  
-<a class="jxr_linenumber" name="L69" href="#L69">69</a>    @Test
-<a class="jxr_linenumber" name="L70" href="#L70">70</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldGetUserWithoutGroup() {
-<a class="jxr_linenumber" name="L71" href="#L71">71</a>      SqlSession sqlSession = sqlSessionFactory.openSession();
-<a class="jxr_linenumber" name="L72" href="#L72">72</a>      <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L73" href="#L73">73</a>        <a href="../../../../../org/apache/ibatis/session/AutoMappingUnknownColumnBehaviorTest.html">Mapper</a> mapper = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L74" href="#L74">74</a>        <a href="../../../../../org/apache/ibatis/submitted/column_forwarding/User.html">User</a> user = mapper.getUser(2);
-<a class="jxr_linenumber" name="L75" href="#L75">75</a>        Assert.assertNotNull(user);
-<a class="jxr_linenumber" name="L76" href="#L76">76</a>        Assert.assertNotNull(user.getId());
-<a class="jxr_linenumber" name="L77" href="#L77">77</a>        Assert.assertNull(user.getState());
-<a class="jxr_linenumber" name="L78" href="#L78">78</a>        Assert.assertNull(user.getGroup());
-<a class="jxr_linenumber" name="L79" href="#L79">79</a>      } <strong class="jxr_keyword">finally</strong> {
-<a class="jxr_linenumber" name="L80" href="#L80">80</a>        sqlSession.close();
-<a class="jxr_linenumber" name="L81" href="#L81">81</a>      }
-<a class="jxr_linenumber" name="L82" href="#L82">82</a>    }
-<a class="jxr_linenumber" name="L83" href="#L83">83</a>  }
+<a class="jxr_linenumber" name="L48" href="#L48">48</a>      conn.close();
+<a class="jxr_linenumber" name="L49" href="#L49">49</a>      reader.close();
+<a class="jxr_linenumber" name="L50" href="#L50">50</a>      session.close();
+<a class="jxr_linenumber" name="L51" href="#L51">51</a>    }
+<a class="jxr_linenumber" name="L52" href="#L52">52</a>  
+<a class="jxr_linenumber" name="L53" href="#L53">53</a>    @Test
+<a class="jxr_linenumber" name="L54" href="#L54">54</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldGetUserWithGroup() {
+<a class="jxr_linenumber" name="L55" href="#L55">55</a>      SqlSession sqlSession = sqlSessionFactory.openSession();
+<a class="jxr_linenumber" name="L56" href="#L56">56</a>      <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L57" href="#L57">57</a>        <a href="../../../../../org/apache/ibatis/session/AutoMappingUnknownColumnBehaviorTest.html">Mapper</a> mapper = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L58" href="#L58">58</a>        <a href="../../../../../org/apache/ibatis/submitted/column_forwarding/User.html">User</a> user = mapper.getUser(1);
+<a class="jxr_linenumber" name="L59" href="#L59">59</a>        Assert.assertNotNull(user);
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>        Assert.assertNotNull(user.getId());
+<a class="jxr_linenumber" name="L61" href="#L61">61</a>        Assert.assertEquals(<span class="jxr_string">"active"</span>, user.getState());
+<a class="jxr_linenumber" name="L62" href="#L62">62</a>        Assert.assertNotNull(user.getGroup());
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>        Assert.assertNotNull(user.getGroup().getId());
+<a class="jxr_linenumber" name="L64" href="#L64">64</a>        Assert.assertEquals(<span class="jxr_string">"active"</span>, user.getGroup().getState());
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>      } <strong class="jxr_keyword">finally</strong> {
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>        sqlSession.close();
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>      }
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>    }
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>  
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>    @Test
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> shouldGetUserWithoutGroup() {
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>      SqlSession sqlSession = sqlSessionFactory.openSession();
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>      <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>        <a href="../../../../../org/apache/ibatis/session/AutoMappingUnknownColumnBehaviorTest.html">Mapper</a> mapper = sqlSession.getMapper(Mapper.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>        <a href="../../../../../org/apache/ibatis/submitted/column_forwarding/User.html">User</a> user = mapper.getUser(2);
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>        Assert.assertNotNull(user);
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>        Assert.assertNotNull(user.getId());
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>        Assert.assertNull(user.getState());
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>        Assert.assertNull(user.getGroup());
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>      } <strong class="jxr_keyword">finally</strong> {
+<a class="jxr_linenumber" name="L81" href="#L81">81</a>        sqlSession.close();
+<a class="jxr_linenumber" name="L82" href="#L82">82</a>      }
+<a class="jxr_linenumber" name="L83" href="#L83">83</a>    }
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>  }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2009&#x2013;2017 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>XMLStatementBuilder.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.builder.xml</a> &gt; <span class="el_source">XMLStatementBuilder.java</span></div><h1>XMLStatementBuilder.java</h1><pre class="source lang-java linenums">/**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  *    you may not use this file except in compliance with the License.
@@ -38,9 +38,9 @@ import org.apache.ibatis.session.Configuration;
  */
 public class XMLStatementBuilder extends BaseBuilder {
 
-  private MapperBuilderAssistant builderAssistant;
-  private XNode context;
-  private String requiredDatabaseId;
+  private final MapperBuilderAssistant builderAssistant;
+  private final XNode context;
+  private final String requiredDatabaseId;
 
   public XMLStatementBuilder(Configuration configuration, MapperBuilderAssistant builderAssistant, XNode context) {
 <span class="nc" id="L46">    this(configuration, builderAssistant, context, null);</span>
@@ -103,7 +103,7 @@ public class XMLStatementBuilder extends BaseBuilder {
     } else {
 <span class="fc bfc" id="L104" title="All 2 branches covered.">      keyGenerator = context.getBooleanAttribute(&quot;useGeneratedKeys&quot;,</span>
 <span class="fc bfc" id="L105" title="All 4 branches covered.">          configuration.isUseGeneratedKeys() &amp;&amp; SqlCommandType.INSERT.equals(sqlCommandType))</span>
-          ? new Jdbc3KeyGenerator() : new NoKeyGenerator();
+          ? Jdbc3KeyGenerator.INSTANCE : NoKeyGenerator.INSTANCE;
     }
 
 <span class="fc" id="L109">    builderAssistant.addMappedStatement(id, sqlSource, statementType, sqlCommandType,</span>
@@ -142,7 +142,7 @@ public class XMLStatementBuilder extends BaseBuilder {
     //defaults
 <span class="fc" id="L143">    boolean useCache = false;</span>
 <span class="fc" id="L144">    boolean resultOrdered = false;</span>
-<span class="fc" id="L145">    KeyGenerator keyGenerator = new NoKeyGenerator();</span>
+<span class="fc" id="L145">    KeyGenerator keyGenerator = NoKeyGenerator.INSTANCE;</span>
 <span class="fc" id="L146">    Integer fetchSize = null;</span>
 <span class="fc" id="L147">    Integer timeout = null;</span>
 <span class="fc" id="L148">    boolean flushCache = false;</span>
@@ -200,4 +200,4 @@ public class XMLStatementBuilder extends BaseBuilder {
   }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

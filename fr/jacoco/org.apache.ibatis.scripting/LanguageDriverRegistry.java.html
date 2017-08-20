@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>LanguageDriverRegistry.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.scripting</a> &gt; <span class="el_source">LanguageDriverRegistry.java</span></div><h1>LanguageDriverRegistry.java</h1><pre class="source lang-java linenums">/**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  *    you may not use this file except in compliance with the License.
@@ -28,46 +28,44 @@ import java.util.Map;
   private Class&lt;?&gt; defaultDriverClass;
 
   public void register(Class&lt;?&gt; cls) {
-<span class="pc bpc" id="L31" title="1 of 2 branches missed.">    if (cls == null) {</span>
-<span class="nc" id="L32">      throw new IllegalArgumentException(&quot;null is not a valid Language Driver&quot;);</span>
+<span class="fc bfc" id="L31" title="All 2 branches covered.">    if (cls == null) {</span>
+<span class="fc" id="L32">      throw new IllegalArgumentException(&quot;null is not a valid Language Driver&quot;);</span>
     }
-<span class="fc" id="L34">    LanguageDriver driver = LANGUAGE_DRIVER_MAP.get(cls);</span>
-<span class="fc bfc" id="L35" title="All 2 branches covered.">    if (driver == null) {</span>
+<span class="fc bfc" id="L34" title="All 2 branches covered.">    if (!LANGUAGE_DRIVER_MAP.containsKey(cls)) {</span>
       try {
-<span class="fc" id="L37">        driver = (LanguageDriver) cls.newInstance();</span>
-<span class="fc" id="L38">        LANGUAGE_DRIVER_MAP.put(cls, driver);</span>
-<span class="nc" id="L39">      } catch (Exception ex) {</span>
-<span class="nc" id="L40">        throw new ScriptingException(&quot;Failed to load language driver for &quot; + cls.getName(), ex);</span>
-<span class="fc" id="L41">      }</span>
+<span class="fc" id="L36">        LANGUAGE_DRIVER_MAP.put(cls, (LanguageDriver) cls.newInstance());</span>
+<span class="fc" id="L37">      } catch (Exception ex) {</span>
+<span class="fc" id="L38">        throw new ScriptingException(&quot;Failed to load language driver for &quot; + cls.getName(), ex);</span>
+<span class="fc" id="L39">      }</span>
     }
-<span class="fc" id="L43">  }</span>
+<span class="fc" id="L41">  }</span>
 
   public void register(LanguageDriver instance) {
-<span class="nc bnc" id="L46" title="All 2 branches missed.">    if (instance == null) {</span>
-<span class="nc" id="L47">      throw new IllegalArgumentException(&quot;null is not a valid Language Driver&quot;);</span>
+<span class="fc bfc" id="L44" title="All 2 branches covered.">    if (instance == null) {</span>
+<span class="fc" id="L45">      throw new IllegalArgumentException(&quot;null is not a valid Language Driver&quot;);</span>
     }
-<span class="nc" id="L49">    LanguageDriver driver = LANGUAGE_DRIVER_MAP.get(instance.getClass());</span>
-<span class="nc bnc" id="L50" title="All 2 branches missed.">    if (driver == null) {</span>
-<span class="nc" id="L51">      LANGUAGE_DRIVER_MAP.put(instance.getClass(), driver);</span>
+<span class="fc" id="L47">    Class&lt;?&gt; cls = instance.getClass();</span>
+<span class="fc bfc" id="L48" title="All 2 branches covered.">    if (!LANGUAGE_DRIVER_MAP.containsKey(cls)) {</span>
+<span class="fc" id="L49">      LANGUAGE_DRIVER_MAP.put(cls, instance);</span>
     }
-<span class="nc" id="L53">  }</span>
+<span class="fc" id="L51">  }</span>
   
   public LanguageDriver getDriver(Class&lt;?&gt; cls) {
-<span class="fc" id="L56">    return LANGUAGE_DRIVER_MAP.get(cls);</span>
+<span class="fc" id="L54">    return LANGUAGE_DRIVER_MAP.get(cls);</span>
   }
 
   public LanguageDriver getDefaultDriver() {
-<span class="fc" id="L60">    return getDriver(getDefaultDriverClass());</span>
+<span class="fc" id="L58">    return getDriver(getDefaultDriverClass());</span>
   }
 
   public Class&lt;?&gt; getDefaultDriverClass() {
-<span class="fc" id="L64">    return defaultDriverClass;</span>
+<span class="fc" id="L62">    return defaultDriverClass;</span>
   }
 
   public void setDefaultDriverClass(Class&lt;?&gt; defaultDriverClass) {
-<span class="fc" id="L68">    register(defaultDriverClass);</span>
-<span class="fc" id="L69">    this.defaultDriverClass = defaultDriverClass;</span>
-<span class="fc" id="L70">  }</span>
+<span class="fc" id="L66">    register(defaultDriverClass);</span>
+<span class="fc" id="L67">    this.defaultDriverClass = defaultDriverClass;</span>
+<span class="fc" id="L68">  }</span>
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

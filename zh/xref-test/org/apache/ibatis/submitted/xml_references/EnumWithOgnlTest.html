@@ -7,7 +7,7 @@
 <body>
 <div id="overview"><a href="../../../../../../../testapidocs/org/apache/ibatis/submitted/xml_references/EnumWithOgnlTest.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2015 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2017 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_javadoccomment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_javadoccomment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_javadoccomment"> *    you may not use this file except in compliance with the License.</em>
@@ -59,8 +59,9 @@
 <a class="jxr_linenumber" name="L51" href="#L51">51</a>        Reader reader = Resources.getResourceAsReader(<span class="jxr_string">"org/apache/ibatis/submitted/xml_references/ibatisConfig.xml"</span>);
 <a class="jxr_linenumber" name="L52" href="#L52">52</a>        SqlSessionFactory sqlSessionFactory = <strong class="jxr_keyword">new</strong> SqlSessionFactoryBuilder().build(reader);
 <a class="jxr_linenumber" name="L53" href="#L53">53</a>        sqlSessionFactory.getConfiguration().addMapper(PersonMapper2.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L54" href="#L54">54</a>      }
-<a class="jxr_linenumber" name="L55" href="#L55">55</a>  }
+<a class="jxr_linenumber" name="L54" href="#L54">54</a>        reader.close();
+<a class="jxr_linenumber" name="L55" href="#L55">55</a>      }
+<a class="jxr_linenumber" name="L56" href="#L56">56</a>  }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2009&#x2013;2017 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>

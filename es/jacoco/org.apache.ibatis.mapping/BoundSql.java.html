@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BoundSql.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.mapping</a> &gt; <span class="el_source">BoundSql.java</span></div><h1>BoundSql.java</h1><pre class="source lang-java linenums">/**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  *    you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import org.apache.ibatis.reflection.property.PropertyTokenizer;
 import org.apache.ibatis.session.Configuration;
 
 /**
- * An actual SQL String got form an {@link SqlSource} after having processed any dynamic content.
+ * An actual SQL String got from an {@link SqlSource} after having processed any dynamic content.
  * The SQL may have SQL placeholders &quot;?&quot; and an list (ordered) of an parameter mappings 
  * with the additional information for each parameter (at least the property name of the input object to read 
  * the value from). 
@@ -35,11 +35,11 @@ import org.apache.ibatis.session.Configuration;
  */
 public class BoundSql {
 
-  private String sql;
-  private List&lt;ParameterMapping&gt; parameterMappings;
-  private Object parameterObject;
-  private Map&lt;String, Object&gt; additionalParameters;
-  private MetaObject metaParameters;
+  private final String sql;
+  private final List&lt;ParameterMapping&gt; parameterMappings;
+  private final Object parameterObject;
+  private final Map&lt;String, Object&gt; additionalParameters;
+  private final MetaObject metaParameters;
 
 <span class="fc" id="L44">  public BoundSql(Configuration configuration, String sql, List&lt;ParameterMapping&gt; parameterMappings, Object parameterObject) {</span>
 <span class="fc" id="L45">    this.sql = sql;</span>
@@ -74,4 +74,4 @@ public class BoundSql {
 <span class="fc" id="L74">    return metaParameters.getValue(name);</span>
   }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

@@ -7,7 +7,7 @@
 <body>
 <div id="overview"><a href="../../../../../apidocs/org/apache/ibatis/jdbc/SqlRunner.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2015 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2017 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_javadoccomment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_javadoccomment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_javadoccomment"> *    you may not use this file except in compliance with the License.</em>
@@ -47,8 +47,8 @@
 <a class="jxr_linenumber" name="L39" href="#L39">39</a>  
 <a class="jxr_linenumber" name="L40" href="#L40">40</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> NO_GENERATED_KEY = Integer.MIN_VALUE + 1001;
 <a class="jxr_linenumber" name="L41" href="#L41">41</a>  
-<a class="jxr_linenumber" name="L42" href="#L42">42</a>    <strong class="jxr_keyword">private</strong> Connection connection;
-<a class="jxr_linenumber" name="L43" href="#L43">43</a>    <strong class="jxr_keyword">private</strong> <a href="../../../../org/apache/ibatis/type/TypeHandlerRegistry.html">TypeHandlerRegistry</a> typeHandlerRegistry;
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> Connection connection;
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <a href="../../../../org/apache/ibatis/type/TypeHandlerRegistry.html">TypeHandlerRegistry</a> typeHandlerRegistry;
 <a class="jxr_linenumber" name="L44" href="#L44">44</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">boolean</strong> useGeneratedKeySupport;
 <a class="jxr_linenumber" name="L45" href="#L45">45</a>  
 <a class="jxr_linenumber" name="L46" href="#L46">46</a>    <strong class="jxr_keyword">public</strong> <a href="../../../../org/apache/ibatis/jdbc/SqlRunner.html">SqlRunner</a>(Connection connection) {
@@ -129,7 +129,7 @@
 <a class="jxr_linenumber" name="L121" href="#L121">121</a>               <strong class="jxr_keyword">try</strong> {
 <a class="jxr_linenumber" name="L122" href="#L122">122</a>                 <strong class="jxr_keyword">return</strong> Integer.parseInt(genkey.toString());
 <a class="jxr_linenumber" name="L123" href="#L123">123</a>               } <strong class="jxr_keyword">catch</strong> (NumberFormatException e) {
-<a class="jxr_linenumber" name="L124" href="#L124">124</a>                 <em class="jxr_comment">//ignore, no numeric key suppot</em>
+<a class="jxr_linenumber" name="L124" href="#L124">124</a>                 <em class="jxr_comment">//ignore, no numeric key support</em>
 <a class="jxr_linenumber" name="L125" href="#L125">125</a>               }
 <a class="jxr_linenumber" name="L126" href="#L126">126</a>             }
 <a class="jxr_linenumber" name="L127" href="#L127">127</a>           }

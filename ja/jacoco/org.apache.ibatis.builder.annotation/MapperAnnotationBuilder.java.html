@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ja"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MapperAnnotationBuilder.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.builder.annotation</a> &gt; <span class="el_source">MapperAnnotationBuilder.java</span></div><h1>MapperAnnotationBuilder.java</h1><pre class="source lang-java linenums">/**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  *    you may not use this file except in compliance with the License.
@@ -97,9 +97,9 @@ public class MapperAnnotationBuilder {
 <span class="fc" id="L97">  private final Set&lt;Class&lt;? extends Annotation&gt;&gt; sqlAnnotationTypes = new HashSet&lt;Class&lt;? extends Annotation&gt;&gt;();</span>
 <span class="fc" id="L98">  private final Set&lt;Class&lt;? extends Annotation&gt;&gt; sqlProviderAnnotationTypes = new HashSet&lt;Class&lt;? extends Annotation&gt;&gt;();</span>
 
-  private Configuration configuration;
-  private MapperBuilderAssistant assistant;
-  private Class&lt;?&gt; type;
+  private final Configuration configuration;
+  private final MapperBuilderAssistant assistant;
+  private final Class&lt;?&gt; type;
 
 <span class="fc" id="L104">  public MapperAnnotationBuilder(Configuration configuration, Class&lt;?&gt; type) {</span>
 <span class="fc" id="L105">    String resource = type.getName().replace('.', '/') + &quot;.java (best guess)&quot;;</span>
@@ -309,14 +309,14 @@ public class MapperAnnotationBuilder {
 <span class="fc" id="L309">          keyGenerator = handleSelectKeyAnnotation(selectKey, mappedStatementId, getParameterType(method), languageDriver);</span>
 <span class="fc" id="L310">          keyProperty = selectKey.keyProperty();</span>
 <span class="fc bfc" id="L311" title="All 2 branches covered.">        } else if (options == null) {</span>
-<span class="fc bfc" id="L312" title="All 2 branches covered.">          keyGenerator = configuration.isUseGeneratedKeys() ? new Jdbc3KeyGenerator() : new NoKeyGenerator();</span>
+<span class="fc bfc" id="L312" title="All 2 branches covered.">          keyGenerator = configuration.isUseGeneratedKeys() ? Jdbc3KeyGenerator.INSTANCE : NoKeyGenerator.INSTANCE;</span>
         } else {
-<span class="fc bfc" id="L314" title="All 2 branches covered.">          keyGenerator = options.useGeneratedKeys() ? new Jdbc3KeyGenerator() : new NoKeyGenerator();</span>
+<span class="fc bfc" id="L314" title="All 2 branches covered.">          keyGenerator = options.useGeneratedKeys() ? Jdbc3KeyGenerator.INSTANCE : NoKeyGenerator.INSTANCE;</span>
 <span class="fc" id="L315">          keyProperty = options.keyProperty();</span>
 <span class="fc" id="L316">          keyColumn = options.keyColumn();</span>
         }
 <span class="fc" id="L318">      } else {</span>
-<span class="fc" id="L319">        keyGenerator = new NoKeyGenerator();</span>
+<span class="fc" id="L319">        keyGenerator = NoKeyGenerator.INSTANCE;</span>
       }
 
 <span class="fc bfc" id="L322" title="All 2 branches covered.">      if (options != null) {</span>
@@ -465,7 +465,7 @@ public class MapperAnnotationBuilder {
 <span class="fc" id="L465">        return buildSqlSourceFromStrings(strings, parameterType, languageDriver);</span>
 <span class="fc bfc" id="L466" title="All 2 branches covered.">      } else if (sqlProviderAnnotationType != null) {</span>
 <span class="fc" id="L467">        Annotation sqlProviderAnnotation = method.getAnnotation(sqlProviderAnnotationType);</span>
-<span class="fc" id="L468">        return new ProviderSqlSource(assistant.getConfiguration(), sqlProviderAnnotation);</span>
+<span class="fc" id="L468">        return new ProviderSqlSource(assistant.getConfiguration(), sqlProviderAnnotation, type, method);</span>
       }
 <span class="fc" id="L470">      return null;</span>
 <span class="nc" id="L471">    } catch (Exception e) {</span>
@@ -592,7 +592,7 @@ public class MapperAnnotationBuilder {
 <span class="fc bfc" id="L592" title="All 2 branches covered.">              (arg.typeHandler() == UnknownTypeHandler.class ? null : arg.typeHandler());</span>
 <span class="fc" id="L593">      ResultMapping resultMapping = assistant.buildResultMapping(</span>
           resultType,
-          null,
+<span class="fc" id="L595">          nullOrEmpty(arg.name()),</span>
 <span class="fc" id="L596">          nullOrEmpty(arg.column()),</span>
 <span class="fc bfc" id="L597" title="All 2 branches covered.">          arg.javaType() == void.class ? null : arg.javaType(),</span>
 <span class="fc bfc" id="L598" title="All 2 branches covered.">          arg.jdbcType() == JdbcType.UNDEFINED ? null : arg.jdbcType(),</span>
@@ -631,7 +631,7 @@ public class MapperAnnotationBuilder {
 
     // defaults
 <span class="fc" id="L633">    boolean useCache = false;</span>
-<span class="fc" id="L634">    KeyGenerator keyGenerator = new NoKeyGenerator();</span>
+<span class="fc" id="L634">    KeyGenerator keyGenerator = NoKeyGenerator.INSTANCE;</span>
 <span class="fc" id="L635">    Integer fetchSize = null;</span>
 <span class="fc" id="L636">    Integer timeout = null;</span>
 <span class="fc" id="L637">    boolean flushCache = false;</span>
@@ -655,4 +655,4 @@ public class MapperAnnotationBuilder {
   }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

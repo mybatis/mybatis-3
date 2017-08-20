@@ -7,7 +7,7 @@
 <body>
 <div id="overview"><a href="../../../../../../../apidocs/org/apache/ibatis/executor/loader/cglib/CglibProxyFactory.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2016 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2017 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_javadoccomment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_javadoccomment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_javadoccomment"> *    you may not use this file except in compliance with the License.</em>
@@ -155,51 +155,54 @@
 <a class="jxr_linenumber" name="L147" href="#L147">147</a>             <strong class="jxr_keyword">if</strong> (lazyLoader.size() &gt; 0 &amp;&amp; !FINALIZE_METHOD.equals(methodName)) {
 <a class="jxr_linenumber" name="L148" href="#L148">148</a>               <strong class="jxr_keyword">if</strong> (aggressive || lazyLoadTriggerMethods.contains(methodName)) {
 <a class="jxr_linenumber" name="L149" href="#L149">149</a>                 lazyLoader.loadAll();
-<a class="jxr_linenumber" name="L150" href="#L150">150</a>               } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (PropertyNamer.isGetter(methodName)) {
+<a class="jxr_linenumber" name="L150" href="#L150">150</a>               } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (PropertyNamer.isSetter(methodName)) {
 <a class="jxr_linenumber" name="L151" href="#L151">151</a>                 <strong class="jxr_keyword">final</strong> String property = PropertyNamer.methodToProperty(methodName);
-<a class="jxr_linenumber" name="L152" href="#L152">152</a>                 <strong class="jxr_keyword">if</strong> (lazyLoader.hasLoader(property)) {
-<a class="jxr_linenumber" name="L153" href="#L153">153</a>                   lazyLoader.load(property);
-<a class="jxr_linenumber" name="L154" href="#L154">154</a>                 }
-<a class="jxr_linenumber" name="L155" href="#L155">155</a>               }
-<a class="jxr_linenumber" name="L156" href="#L156">156</a>             }
-<a class="jxr_linenumber" name="L157" href="#L157">157</a>           }
-<a class="jxr_linenumber" name="L158" href="#L158">158</a>         }
-<a class="jxr_linenumber" name="L159" href="#L159">159</a>         <strong class="jxr_keyword">return</strong> methodProxy.invokeSuper(enhanced, args);
-<a class="jxr_linenumber" name="L160" href="#L160">160</a>       } <strong class="jxr_keyword">catch</strong> (Throwable t) {
-<a class="jxr_linenumber" name="L161" href="#L161">161</a>         <strong class="jxr_keyword">throw</strong> ExceptionUtil.unwrapThrowable(t);
-<a class="jxr_linenumber" name="L162" href="#L162">162</a>       }
-<a class="jxr_linenumber" name="L163" href="#L163">163</a>     }
-<a class="jxr_linenumber" name="L164" href="#L164">164</a>   }
-<a class="jxr_linenumber" name="L165" href="#L165">165</a> 
-<a class="jxr_linenumber" name="L166" href="#L166">166</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../../../org/apache/ibatis/executor/loader/cglib/CglibProxyFactory.html">EnhancedDeserializationProxyImpl</a> <strong class="jxr_keyword">extends</strong> <a href="../../../../../../org/apache/ibatis/executor/loader/AbstractEnhancedDeserializationProxy.html">AbstractEnhancedDeserializationProxy</a> <strong class="jxr_keyword">implements</strong> MethodInterceptor {
-<a class="jxr_linenumber" name="L167" href="#L167">167</a> 
-<a class="jxr_linenumber" name="L168" href="#L168">168</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../../../org/apache/ibatis/executor/loader/cglib/CglibProxyFactory.html">EnhancedDeserializationProxyImpl</a>(Class&lt;?&gt; type, Map&lt;String, ResultLoaderMap.LoadPair&gt; unloadedProperties, <a href="../../../../../../org/apache/ibatis/reflection/factory/ObjectFactory.html">ObjectFactory</a> objectFactory,
-<a class="jxr_linenumber" name="L169" href="#L169">169</a>             List&lt;Class&lt;?&gt;&gt; constructorArgTypes, List&lt;Object&gt; constructorArgs) {
-<a class="jxr_linenumber" name="L170" href="#L170">170</a>       <strong class="jxr_keyword">super</strong>(type, unloadedProperties, objectFactory, constructorArgTypes, constructorArgs);
-<a class="jxr_linenumber" name="L171" href="#L171">171</a>     }
-<a class="jxr_linenumber" name="L172" href="#L172">172</a> 
-<a class="jxr_linenumber" name="L173" href="#L173">173</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> Object createProxy(Object target, Map&lt;String, ResultLoaderMap.LoadPair&gt; unloadedProperties, <a href="../../../../../../org/apache/ibatis/reflection/factory/ObjectFactory.html">ObjectFactory</a> objectFactory,
-<a class="jxr_linenumber" name="L174" href="#L174">174</a>             List&lt;Class&lt;?&gt;&gt; constructorArgTypes, List&lt;Object&gt; constructorArgs) {
-<a class="jxr_linenumber" name="L175" href="#L175">175</a>       <strong class="jxr_keyword">final</strong> Class&lt;?&gt; type = target.getClass();
-<a class="jxr_linenumber" name="L176" href="#L176">176</a>       <a href="../../../../../../org/apache/ibatis/executor/loader/cglib/CglibProxyFactory.html">EnhancedDeserializationProxyImpl</a> callback = <strong class="jxr_keyword">new</strong> <a href="../../../../../../org/apache/ibatis/executor/loader/cglib/CglibProxyFactory.html">EnhancedDeserializationProxyImpl</a>(type, unloadedProperties, objectFactory, constructorArgTypes, constructorArgs);
-<a class="jxr_linenumber" name="L177" href="#L177">177</a>       Object enhanced = crateProxy(type, callback, constructorArgTypes, constructorArgs);
-<a class="jxr_linenumber" name="L178" href="#L178">178</a>       PropertyCopier.copyBeanProperties(type, target, enhanced);
-<a class="jxr_linenumber" name="L179" href="#L179">179</a>       <strong class="jxr_keyword">return</strong> enhanced;
-<a class="jxr_linenumber" name="L180" href="#L180">180</a>     }
-<a class="jxr_linenumber" name="L181" href="#L181">181</a> 
-<a class="jxr_linenumber" name="L182" href="#L182">182</a>     @Override
-<a class="jxr_linenumber" name="L183" href="#L183">183</a>     <strong class="jxr_keyword">public</strong> Object intercept(Object enhanced, Method method, Object[] args, MethodProxy methodProxy) <strong class="jxr_keyword">throws</strong> Throwable {
-<a class="jxr_linenumber" name="L184" href="#L184">184</a>       <strong class="jxr_keyword">final</strong> Object o = <strong class="jxr_keyword">super</strong>.invoke(enhanced, method, args);
-<a class="jxr_linenumber" name="L185" href="#L185">185</a>       <strong class="jxr_keyword">return</strong> (o instanceof AbstractSerialStateHolder) ? o : methodProxy.invokeSuper(o, args);
-<a class="jxr_linenumber" name="L186" href="#L186">186</a>     }
-<a class="jxr_linenumber" name="L187" href="#L187">187</a> 
-<a class="jxr_linenumber" name="L188" href="#L188">188</a>     @Override
-<a class="jxr_linenumber" name="L189" href="#L189">189</a>     <strong class="jxr_keyword">protected</strong> <a href="../../../../../../org/apache/ibatis/executor/loader/AbstractSerialStateHolder.html">AbstractSerialStateHolder</a> newSerialStateHolder(Object userBean, Map&lt;String, ResultLoaderMap.LoadPair&gt; unloadedProperties, <a href="../../../../../../org/apache/ibatis/reflection/factory/ObjectFactory.html">ObjectFactory</a> objectFactory,
-<a class="jxr_linenumber" name="L190" href="#L190">190</a>             List&lt;Class&lt;?&gt;&gt; constructorArgTypes, List&lt;Object&gt; constructorArgs) {
-<a class="jxr_linenumber" name="L191" href="#L191">191</a>       <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../../org/apache/ibatis/executor/loader/cglib/CglibSerialStateHolder.html">CglibSerialStateHolder</a>(userBean, unloadedProperties, objectFactory, constructorArgTypes, constructorArgs);
-<a class="jxr_linenumber" name="L192" href="#L192">192</a>     }
-<a class="jxr_linenumber" name="L193" href="#L193">193</a>   }
-<a class="jxr_linenumber" name="L194" href="#L194">194</a> }
+<a class="jxr_linenumber" name="L152" href="#L152">152</a>                 lazyLoader.remove(property);
+<a class="jxr_linenumber" name="L153" href="#L153">153</a>               } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (PropertyNamer.isGetter(methodName)) {
+<a class="jxr_linenumber" name="L154" href="#L154">154</a>                 <strong class="jxr_keyword">final</strong> String property = PropertyNamer.methodToProperty(methodName);
+<a class="jxr_linenumber" name="L155" href="#L155">155</a>                 <strong class="jxr_keyword">if</strong> (lazyLoader.hasLoader(property)) {
+<a class="jxr_linenumber" name="L156" href="#L156">156</a>                   lazyLoader.load(property);
+<a class="jxr_linenumber" name="L157" href="#L157">157</a>                 }
+<a class="jxr_linenumber" name="L158" href="#L158">158</a>               }
+<a class="jxr_linenumber" name="L159" href="#L159">159</a>             }
+<a class="jxr_linenumber" name="L160" href="#L160">160</a>           }
+<a class="jxr_linenumber" name="L161" href="#L161">161</a>         }
+<a class="jxr_linenumber" name="L162" href="#L162">162</a>         <strong class="jxr_keyword">return</strong> methodProxy.invokeSuper(enhanced, args);
+<a class="jxr_linenumber" name="L163" href="#L163">163</a>       } <strong class="jxr_keyword">catch</strong> (Throwable t) {
+<a class="jxr_linenumber" name="L164" href="#L164">164</a>         <strong class="jxr_keyword">throw</strong> ExceptionUtil.unwrapThrowable(t);
+<a class="jxr_linenumber" name="L165" href="#L165">165</a>       }
+<a class="jxr_linenumber" name="L166" href="#L166">166</a>     }
+<a class="jxr_linenumber" name="L167" href="#L167">167</a>   }
+<a class="jxr_linenumber" name="L168" href="#L168">168</a> 
+<a class="jxr_linenumber" name="L169" href="#L169">169</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../../../org/apache/ibatis/executor/loader/cglib/CglibProxyFactory.html">EnhancedDeserializationProxyImpl</a> <strong class="jxr_keyword">extends</strong> <a href="../../../../../../org/apache/ibatis/executor/loader/AbstractEnhancedDeserializationProxy.html">AbstractEnhancedDeserializationProxy</a> <strong class="jxr_keyword">implements</strong> MethodInterceptor {
+<a class="jxr_linenumber" name="L170" href="#L170">170</a> 
+<a class="jxr_linenumber" name="L171" href="#L171">171</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../../../org/apache/ibatis/executor/loader/cglib/CglibProxyFactory.html">EnhancedDeserializationProxyImpl</a>(Class&lt;?&gt; type, Map&lt;String, ResultLoaderMap.LoadPair&gt; unloadedProperties, <a href="../../../../../../org/apache/ibatis/reflection/factory/ObjectFactory.html">ObjectFactory</a> objectFactory,
+<a class="jxr_linenumber" name="L172" href="#L172">172</a>             List&lt;Class&lt;?&gt;&gt; constructorArgTypes, List&lt;Object&gt; constructorArgs) {
+<a class="jxr_linenumber" name="L173" href="#L173">173</a>       <strong class="jxr_keyword">super</strong>(type, unloadedProperties, objectFactory, constructorArgTypes, constructorArgs);
+<a class="jxr_linenumber" name="L174" href="#L174">174</a>     }
+<a class="jxr_linenumber" name="L175" href="#L175">175</a> 
+<a class="jxr_linenumber" name="L176" href="#L176">176</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> Object createProxy(Object target, Map&lt;String, ResultLoaderMap.LoadPair&gt; unloadedProperties, <a href="../../../../../../org/apache/ibatis/reflection/factory/ObjectFactory.html">ObjectFactory</a> objectFactory,
+<a class="jxr_linenumber" name="L177" href="#L177">177</a>             List&lt;Class&lt;?&gt;&gt; constructorArgTypes, List&lt;Object&gt; constructorArgs) {
+<a class="jxr_linenumber" name="L178" href="#L178">178</a>       <strong class="jxr_keyword">final</strong> Class&lt;?&gt; type = target.getClass();
+<a class="jxr_linenumber" name="L179" href="#L179">179</a>       <a href="../../../../../../org/apache/ibatis/executor/loader/cglib/CglibProxyFactory.html">EnhancedDeserializationProxyImpl</a> callback = <strong class="jxr_keyword">new</strong> <a href="../../../../../../org/apache/ibatis/executor/loader/cglib/CglibProxyFactory.html">EnhancedDeserializationProxyImpl</a>(type, unloadedProperties, objectFactory, constructorArgTypes, constructorArgs);
+<a class="jxr_linenumber" name="L180" href="#L180">180</a>       Object enhanced = crateProxy(type, callback, constructorArgTypes, constructorArgs);
+<a class="jxr_linenumber" name="L181" href="#L181">181</a>       PropertyCopier.copyBeanProperties(type, target, enhanced);
+<a class="jxr_linenumber" name="L182" href="#L182">182</a>       <strong class="jxr_keyword">return</strong> enhanced;
+<a class="jxr_linenumber" name="L183" href="#L183">183</a>     }
+<a class="jxr_linenumber" name="L184" href="#L184">184</a> 
+<a class="jxr_linenumber" name="L185" href="#L185">185</a>     @Override
+<a class="jxr_linenumber" name="L186" href="#L186">186</a>     <strong class="jxr_keyword">public</strong> Object intercept(Object enhanced, Method method, Object[] args, MethodProxy methodProxy) <strong class="jxr_keyword">throws</strong> Throwable {
+<a class="jxr_linenumber" name="L187" href="#L187">187</a>       <strong class="jxr_keyword">final</strong> Object o = <strong class="jxr_keyword">super</strong>.invoke(enhanced, method, args);
+<a class="jxr_linenumber" name="L188" href="#L188">188</a>       <strong class="jxr_keyword">return</strong> (o instanceof AbstractSerialStateHolder) ? o : methodProxy.invokeSuper(o, args);
+<a class="jxr_linenumber" name="L189" href="#L189">189</a>     }
+<a class="jxr_linenumber" name="L190" href="#L190">190</a> 
+<a class="jxr_linenumber" name="L191" href="#L191">191</a>     @Override
+<a class="jxr_linenumber" name="L192" href="#L192">192</a>     <strong class="jxr_keyword">protected</strong> <a href="../../../../../../org/apache/ibatis/executor/loader/AbstractSerialStateHolder.html">AbstractSerialStateHolder</a> newSerialStateHolder(Object userBean, Map&lt;String, ResultLoaderMap.LoadPair&gt; unloadedProperties, <a href="../../../../../../org/apache/ibatis/reflection/factory/ObjectFactory.html">ObjectFactory</a> objectFactory,
+<a class="jxr_linenumber" name="L193" href="#L193">193</a>             List&lt;Class&lt;?&gt;&gt; constructorArgTypes, List&lt;Object&gt; constructorArgs) {
+<a class="jxr_linenumber" name="L194" href="#L194">194</a>       <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../../org/apache/ibatis/executor/loader/cglib/CglibSerialStateHolder.html">CglibSerialStateHolder</a>(userBean, unloadedProperties, objectFactory, constructorArgTypes, constructorArgs);
+<a class="jxr_linenumber" name="L195" href="#L195">195</a>     }
+<a class="jxr_linenumber" name="L196" href="#L196">196</a>   }
+<a class="jxr_linenumber" name="L197" href="#L197">197</a> }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2009&#x2013;2017 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>

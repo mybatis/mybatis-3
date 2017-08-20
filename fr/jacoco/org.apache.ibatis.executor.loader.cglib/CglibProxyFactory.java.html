@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CglibProxyFactory.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis</a> &gt; <a href="index.source.html" class="el_package">org.apache.ibatis.executor.loader.cglib</a> &gt; <span class="el_source">CglibProxyFactory.java</span></div><h1>CglibProxyFactory.java</h1><pre class="source lang-java linenums">/**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  *    you may not use this file except in compliance with the License.
@@ -147,18 +147,21 @@ public class CglibProxyFactory implements ProxyFactory {
 <span class="pc bpc" id="L147" title="1 of 4 branches missed.">            if (lazyLoader.size() &gt; 0 &amp;&amp; !FINALIZE_METHOD.equals(methodName)) {</span>
 <span class="pc bpc" id="L148" title="2 of 4 branches missed.">              if (aggressive || lazyLoadTriggerMethods.contains(methodName)) {</span>
 <span class="nc" id="L149">                lazyLoader.loadAll();</span>
-<span class="fc bfc" id="L150" title="All 2 branches covered.">              } else if (PropertyNamer.isGetter(methodName)) {</span>
+<span class="fc bfc" id="L150" title="All 2 branches covered.">              } else if (PropertyNamer.isSetter(methodName)) {</span>
 <span class="fc" id="L151">                final String property = PropertyNamer.methodToProperty(methodName);</span>
-<span class="pc bpc" id="L152" title="1 of 2 branches missed.">                if (lazyLoader.hasLoader(property)) {</span>
-<span class="fc" id="L153">                  lazyLoader.load(property);</span>
+<span class="fc" id="L152">                lazyLoader.remove(property);</span>
+<span class="pc bpc" id="L153" title="1 of 2 branches missed.">              } else if (PropertyNamer.isGetter(methodName)) {</span>
+<span class="fc" id="L154">                final String property = PropertyNamer.methodToProperty(methodName);</span>
+<span class="fc bfc" id="L155" title="All 2 branches covered.">                if (lazyLoader.hasLoader(property)) {</span>
+<span class="fc" id="L156">                  lazyLoader.load(property);</span>
                 }
               }
             }
           }
-<span class="pc" id="L158">        }</span>
-<span class="fc" id="L159">        return methodProxy.invokeSuper(enhanced, args);</span>
-<span class="nc" id="L160">      } catch (Throwable t) {</span>
-<span class="nc" id="L161">        throw ExceptionUtil.unwrapThrowable(t);</span>
+<span class="pc" id="L161">        }</span>
+<span class="fc" id="L162">        return methodProxy.invokeSuper(enhanced, args);</span>
+<span class="nc" id="L163">      } catch (Throwable t) {</span>
+<span class="nc" id="L164">        throw ExceptionUtil.unwrapThrowable(t);</span>
       }
     }
   }
@@ -167,29 +170,29 @@ public class CglibProxyFactory implements ProxyFactory {
 
     private EnhancedDeserializationProxyImpl(Class&lt;?&gt; type, Map&lt;String, ResultLoaderMap.LoadPair&gt; unloadedProperties, ObjectFactory objectFactory,
             List&lt;Class&lt;?&gt;&gt; constructorArgTypes, List&lt;Object&gt; constructorArgs) {
-<span class="fc" id="L170">      super(type, unloadedProperties, objectFactory, constructorArgTypes, constructorArgs);</span>
-<span class="fc" id="L171">    }</span>
+<span class="fc" id="L173">      super(type, unloadedProperties, objectFactory, constructorArgTypes, constructorArgs);</span>
+<span class="fc" id="L174">    }</span>
 
     public static Object createProxy(Object target, Map&lt;String, ResultLoaderMap.LoadPair&gt; unloadedProperties, ObjectFactory objectFactory,
             List&lt;Class&lt;?&gt;&gt; constructorArgTypes, List&lt;Object&gt; constructorArgs) {
-<span class="fc" id="L175">      final Class&lt;?&gt; type = target.getClass();</span>
-<span class="fc" id="L176">      EnhancedDeserializationProxyImpl callback = new EnhancedDeserializationProxyImpl(type, unloadedProperties, objectFactory, constructorArgTypes, constructorArgs);</span>
-<span class="fc" id="L177">      Object enhanced = crateProxy(type, callback, constructorArgTypes, constructorArgs);</span>
-<span class="fc" id="L178">      PropertyCopier.copyBeanProperties(type, target, enhanced);</span>
-<span class="fc" id="L179">      return enhanced;</span>
+<span class="fc" id="L178">      final Class&lt;?&gt; type = target.getClass();</span>
+<span class="fc" id="L179">      EnhancedDeserializationProxyImpl callback = new EnhancedDeserializationProxyImpl(type, unloadedProperties, objectFactory, constructorArgTypes, constructorArgs);</span>
+<span class="fc" id="L180">      Object enhanced = crateProxy(type, callback, constructorArgTypes, constructorArgs);</span>
+<span class="fc" id="L181">      PropertyCopier.copyBeanProperties(type, target, enhanced);</span>
+<span class="fc" id="L182">      return enhanced;</span>
     }
 
     @Override
     public Object intercept(Object enhanced, Method method, Object[] args, MethodProxy methodProxy) throws Throwable {
-<span class="fc" id="L184">      final Object o = super.invoke(enhanced, method, args);</span>
-<span class="fc bfc" id="L185" title="All 2 branches covered.">      return (o instanceof AbstractSerialStateHolder) ? o : methodProxy.invokeSuper(o, args);</span>
+<span class="fc" id="L187">      final Object o = super.invoke(enhanced, method, args);</span>
+<span class="fc bfc" id="L188" title="All 2 branches covered.">      return (o instanceof AbstractSerialStateHolder) ? o : methodProxy.invokeSuper(o, args);</span>
     }
 
     @Override
     protected AbstractSerialStateHolder newSerialStateHolder(Object userBean, Map&lt;String, ResultLoaderMap.LoadPair&gt; unloadedProperties, ObjectFactory objectFactory,
             List&lt;Class&lt;?&gt;&gt; constructorArgTypes, List&lt;Object&gt; constructorArgs) {
-<span class="fc" id="L191">      return new CglibSerialStateHolder(userBean, unloadedProperties, objectFactory, constructorArgTypes, constructorArgs);</span>
+<span class="fc" id="L194">      return new CglibSerialStateHolder(userBean, unloadedProperties, objectFactory, constructorArgTypes, constructorArgs);</span>
     }
   }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

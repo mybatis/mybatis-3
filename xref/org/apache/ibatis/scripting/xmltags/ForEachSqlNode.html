@@ -7,7 +7,7 @@
 <body>
 <div id="overview"><a href="../../../../../../apidocs/org/apache/ibatis/scripting/xmltags/ForEachSqlNode.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2015 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2017 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_javadoccomment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_javadoccomment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_javadoccomment"> *    you may not use this file except in compliance with the License.</em>
@@ -35,15 +35,15 @@
 <a class="jxr_linenumber" name="L27" href="#L27">27</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../../org/apache/ibatis/scripting/xmltags/ForEachSqlNode.html">ForEachSqlNode</a> <strong class="jxr_keyword">implements</strong> <a href="../../../../../org/apache/ibatis/scripting/xmltags/SqlNode.html">SqlNode</a> {
 <a class="jxr_linenumber" name="L28" href="#L28">28</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String ITEM_PREFIX = <span class="jxr_string">"__frch_"</span>;
 <a class="jxr_linenumber" name="L29" href="#L29">29</a>  
-<a class="jxr_linenumber" name="L30" href="#L30">30</a>    <strong class="jxr_keyword">private</strong> <a href="../../../../../org/apache/ibatis/scripting/xmltags/ExpressionEvaluator.html">ExpressionEvaluator</a> evaluator;
-<a class="jxr_linenumber" name="L31" href="#L31">31</a>    <strong class="jxr_keyword">private</strong> String collectionExpression;
-<a class="jxr_linenumber" name="L32" href="#L32">32</a>    <strong class="jxr_keyword">private</strong> <a href="../../../../../org/apache/ibatis/scripting/xmltags/SqlNode.html">SqlNode</a> contents;
-<a class="jxr_linenumber" name="L33" href="#L33">33</a>    <strong class="jxr_keyword">private</strong> String open;
-<a class="jxr_linenumber" name="L34" href="#L34">34</a>    <strong class="jxr_keyword">private</strong> String close;
-<a class="jxr_linenumber" name="L35" href="#L35">35</a>    <strong class="jxr_keyword">private</strong> String separator;
-<a class="jxr_linenumber" name="L36" href="#L36">36</a>    <strong class="jxr_keyword">private</strong> String item;
-<a class="jxr_linenumber" name="L37" href="#L37">37</a>    <strong class="jxr_keyword">private</strong> String index;
-<a class="jxr_linenumber" name="L38" href="#L38">38</a>    <strong class="jxr_keyword">private</strong> <a href="../../../../../org/apache/ibatis/session/Configuration.html">Configuration</a> configuration;
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <a href="../../../../../org/apache/ibatis/scripting/xmltags/ExpressionEvaluator.html">ExpressionEvaluator</a> evaluator;
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> String collectionExpression;
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <a href="../../../../../org/apache/ibatis/scripting/xmltags/SqlNode.html">SqlNode</a> contents;
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> String open;
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> String close;
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> String separator;
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> String item;
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> String index;
+<a class="jxr_linenumber" name="L38" href="#L38">38</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <a href="../../../../../org/apache/ibatis/session/Configuration.html">Configuration</a> configuration;
 <a class="jxr_linenumber" name="L39" href="#L39">39</a>  
 <a class="jxr_linenumber" name="L40" href="#L40">40</a>    <strong class="jxr_keyword">public</strong> <a href="../../../../../org/apache/ibatis/scripting/xmltags/ForEachSqlNode.html">ForEachSqlNode</a>(<a href="../../../../../org/apache/ibatis/session/Configuration.html">Configuration</a> configuration, <a href="../../../../../org/apache/ibatis/scripting/xmltags/SqlNode.html">SqlNode</a> contents, String collectionExpression, String index, String item, String open, String close, String separator) {
 <a class="jxr_linenumber" name="L41" href="#L41">41</a>      <strong class="jxr_keyword">this</strong>.evaluator = <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/scripting/xmltags/ExpressionEvaluator.html">ExpressionEvaluator</a>();
@@ -69,32 +69,32 @@
 <a class="jxr_linenumber" name="L61" href="#L61">61</a>      <strong class="jxr_keyword">int</strong> i = 0;
 <a class="jxr_linenumber" name="L62" href="#L62">62</a>      <strong class="jxr_keyword">for</strong> (Object o : iterable) {
 <a class="jxr_linenumber" name="L63" href="#L63">63</a>        <a href="../../../../../org/apache/ibatis/scripting/xmltags/DynamicContext.html">DynamicContext</a> oldContext = context;
-<a class="jxr_linenumber" name="L64" href="#L64">64</a>        <strong class="jxr_keyword">if</strong> (first) {
+<a class="jxr_linenumber" name="L64" href="#L64">64</a>        <strong class="jxr_keyword">if</strong> (first || separator == <strong class="jxr_keyword">null</strong>) {
 <a class="jxr_linenumber" name="L65" href="#L65">65</a>          context = <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/scripting/xmltags/ForEachSqlNode.html">PrefixedContext</a>(context, <span class="jxr_string">""</span>);
-<a class="jxr_linenumber" name="L66" href="#L66">66</a>        } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (separator != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>        } <strong class="jxr_keyword">else</strong> {
 <a class="jxr_linenumber" name="L67" href="#L67">67</a>          context = <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/scripting/xmltags/ForEachSqlNode.html">PrefixedContext</a>(context, separator);
-<a class="jxr_linenumber" name="L68" href="#L68">68</a>        } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="L69" href="#L69">69</a>            context = <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/scripting/xmltags/ForEachSqlNode.html">PrefixedContext</a>(context, <span class="jxr_string">""</span>);
-<a class="jxr_linenumber" name="L70" href="#L70">70</a>        }
-<a class="jxr_linenumber" name="L71" href="#L71">71</a>        <strong class="jxr_keyword">int</strong> uniqueNumber = context.getUniqueNumber();
-<a class="jxr_linenumber" name="L72" href="#L72">72</a>        <em class="jxr_comment">// Issue #709 </em>
-<a class="jxr_linenumber" name="L73" href="#L73">73</a>        <strong class="jxr_keyword">if</strong> (o instanceof Map.Entry) {
-<a class="jxr_linenumber" name="L74" href="#L74">74</a>          @SuppressWarnings(<span class="jxr_string">"unchecked"</span>) 
-<a class="jxr_linenumber" name="L75" href="#L75">75</a>          Map.Entry&lt;Object, Object&gt; mapEntry = (Map.Entry&lt;Object, Object&gt;) o;
-<a class="jxr_linenumber" name="L76" href="#L76">76</a>          applyIndex(context, mapEntry.getKey(), uniqueNumber);
-<a class="jxr_linenumber" name="L77" href="#L77">77</a>          applyItem(context, mapEntry.getValue(), uniqueNumber);
-<a class="jxr_linenumber" name="L78" href="#L78">78</a>        } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="L79" href="#L79">79</a>          applyIndex(context, i, uniqueNumber);
-<a class="jxr_linenumber" name="L80" href="#L80">80</a>          applyItem(context, o, uniqueNumber);
-<a class="jxr_linenumber" name="L81" href="#L81">81</a>        }
-<a class="jxr_linenumber" name="L82" href="#L82">82</a>        contents.apply(<strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/scripting/xmltags/TrimSqlNode.html">FilteredDynamicContext</a>(configuration, context, index, item, uniqueNumber));
-<a class="jxr_linenumber" name="L83" href="#L83">83</a>        <strong class="jxr_keyword">if</strong> (first) {
-<a class="jxr_linenumber" name="L84" href="#L84">84</a>          first = !((PrefixedContext) context).isPrefixApplied();
-<a class="jxr_linenumber" name="L85" href="#L85">85</a>        }
-<a class="jxr_linenumber" name="L86" href="#L86">86</a>        context = oldContext;
-<a class="jxr_linenumber" name="L87" href="#L87">87</a>        i++;
-<a class="jxr_linenumber" name="L88" href="#L88">88</a>      }
-<a class="jxr_linenumber" name="L89" href="#L89">89</a>      applyClose(context);
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>        }
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>        <strong class="jxr_keyword">int</strong> uniqueNumber = context.getUniqueNumber();
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>        <em class="jxr_comment">// Issue #709 </em>
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>        <strong class="jxr_keyword">if</strong> (o instanceof Map.Entry) {
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>          @SuppressWarnings(<span class="jxr_string">"unchecked"</span>) 
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>          Map.Entry&lt;Object, Object&gt; mapEntry = (Map.Entry&lt;Object, Object&gt;) o;
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>          applyIndex(context, mapEntry.getKey(), uniqueNumber);
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>          applyItem(context, mapEntry.getValue(), uniqueNumber);
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>        } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>          applyIndex(context, i, uniqueNumber);
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>          applyItem(context, o, uniqueNumber);
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>        }
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>        contents.apply(<strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/ibatis/scripting/xmltags/TrimSqlNode.html">FilteredDynamicContext</a>(configuration, context, index, item, uniqueNumber));
+<a class="jxr_linenumber" name="L81" href="#L81">81</a>        <strong class="jxr_keyword">if</strong> (first) {
+<a class="jxr_linenumber" name="L82" href="#L82">82</a>          first = !((PrefixedContext) context).isPrefixApplied();
+<a class="jxr_linenumber" name="L83" href="#L83">83</a>        }
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>        context = oldContext;
+<a class="jxr_linenumber" name="L85" href="#L85">85</a>        i++;
+<a class="jxr_linenumber" name="L86" href="#L86">86</a>      }
+<a class="jxr_linenumber" name="L87" href="#L87">87</a>      applyClose(context);
+<a class="jxr_linenumber" name="L88" href="#L88">88</a>      context.getBindings().remove(item);
+<a class="jxr_linenumber" name="L89" href="#L89">89</a>      context.getBindings().remove(index);
 <a class="jxr_linenumber" name="L90" href="#L90">90</a>      <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">true</strong>;
 <a class="jxr_linenumber" name="L91" href="#L91">91</a>    }
 <a class="jxr_linenumber" name="L92" href="#L92">92</a>  
@@ -129,10 +129,10 @@
 <a class="jxr_linenumber" name="L121" href="#L121">121</a>   }
 <a class="jxr_linenumber" name="L122" href="#L122">122</a> 
 <a class="jxr_linenumber" name="L123" href="#L123">123</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../../org/apache/ibatis/scripting/xmltags/TrimSqlNode.html">FilteredDynamicContext</a> <strong class="jxr_keyword">extends</strong> <a href="../../../../../org/apache/ibatis/scripting/xmltags/DynamicContext.html">DynamicContext</a> {
-<a class="jxr_linenumber" name="L124" href="#L124">124</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../../org/apache/ibatis/scripting/xmltags/DynamicContext.html">DynamicContext</a> delegate;
-<a class="jxr_linenumber" name="L125" href="#L125">125</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">int</strong> index;
-<a class="jxr_linenumber" name="L126" href="#L126">126</a>     <strong class="jxr_keyword">private</strong> String itemIndex;
-<a class="jxr_linenumber" name="L127" href="#L127">127</a>     <strong class="jxr_keyword">private</strong> String item;
+<a class="jxr_linenumber" name="L124" href="#L124">124</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <a href="../../../../../org/apache/ibatis/scripting/xmltags/DynamicContext.html">DynamicContext</a> delegate;
+<a class="jxr_linenumber" name="L125" href="#L125">125</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> index;
+<a class="jxr_linenumber" name="L126" href="#L126">126</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> String itemIndex;
+<a class="jxr_linenumber" name="L127" href="#L127">127</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> String item;
 <a class="jxr_linenumber" name="L128" href="#L128">128</a> 
 <a class="jxr_linenumber" name="L129" href="#L129">129</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../../org/apache/ibatis/scripting/xmltags/TrimSqlNode.html">FilteredDynamicContext</a>(<a href="../../../../../org/apache/ibatis/session/Configuration.html">Configuration</a> configuration,DynamicContext delegate, String itemIndex, String item, <strong class="jxr_keyword">int</strong> i) {
 <a class="jxr_linenumber" name="L130" href="#L130">130</a>       <strong class="jxr_keyword">super</strong>(configuration, <strong class="jxr_keyword">null</strong>);
@@ -182,8 +182,8 @@
 <a class="jxr_linenumber" name="L174" href="#L174">174</a> 
 <a class="jxr_linenumber" name="L175" href="#L175">175</a> 
 <a class="jxr_linenumber" name="L176" href="#L176">176</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../../org/apache/ibatis/scripting/xmltags/ForEachSqlNode.html">PrefixedContext</a> <strong class="jxr_keyword">extends</strong> <a href="../../../../../org/apache/ibatis/scripting/xmltags/DynamicContext.html">DynamicContext</a> {
-<a class="jxr_linenumber" name="L177" href="#L177">177</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../../org/apache/ibatis/scripting/xmltags/DynamicContext.html">DynamicContext</a> delegate;
-<a class="jxr_linenumber" name="L178" href="#L178">178</a>     <strong class="jxr_keyword">private</strong> String prefix;
+<a class="jxr_linenumber" name="L177" href="#L177">177</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <a href="../../../../../org/apache/ibatis/scripting/xmltags/DynamicContext.html">DynamicContext</a> delegate;
+<a class="jxr_linenumber" name="L178" href="#L178">178</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> String prefix;
 <a class="jxr_linenumber" name="L179" href="#L179">179</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">boolean</strong> prefixApplied;
 <a class="jxr_linenumber" name="L180" href="#L180">180</a> 
 <a class="jxr_linenumber" name="L181" href="#L181">181</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../../org/apache/ibatis/scripting/xmltags/ForEachSqlNode.html">PrefixedContext</a>(<a href="../../../../../org/apache/ibatis/scripting/xmltags/DynamicContext.html">DynamicContext</a> delegate, String prefix) {
