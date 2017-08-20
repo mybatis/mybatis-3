@@ -28,7 +28,7 @@
 
   <body>
     <section name="XML 映射配置文件">
-      <p>MyBatis 的配置文件包含了影响 MyBatis 行为甚深的设置（settings）和属性（properties）信息。文档的顶层结构如下：</p>
+      <p>MyBatis 的配置文件包含了会深深影响 MyBatis 行为的设置（settings）和属性（properties）信息。文档的顶层结构如下：</p>
 
       <ul>
         <li>
@@ -313,8 +313,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 safeRowBoundsEnabled
               </td>
               <td>
-                允许在嵌套语句中使用分页（RowBounds）。
-                If allow, set the false.
+                允许在嵌套语句中使用分页（RowBounds）。如果允许使用则设置为false。
               </td>
               <td>
                 true | false
@@ -328,8 +327,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 safeResultHandlerEnabled
               </td>
               <td>
-                允许在嵌套语句中使用分页（ResultHandler）。
-                If allow, set the false.
+                允许在嵌套语句中使用分页（ResultHandler）。如果允许使用则设置为false。
               </td>
               <td>
                 true | false
