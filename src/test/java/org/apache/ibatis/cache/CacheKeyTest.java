@@ -16,8 +16,16 @@
 package org.apache.ibatis.cache;
 
 import static org.junit.Assert.*;
+
+import org.junit.Assert;
 import org.junit.Test;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.NotSerializableException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.Date;
 
 public class CacheKeyTest {
@@ -80,4 +88,31 @@ public class CacheKeyTest {
     assertTrue(key1.equals(key2));
   }
 
+  @Test (expected = NotSerializableException.class)
+  public void serializationExceptionTest() throws ClassNotFoundException, IOException {
+    CacheKey cacheKey = new CacheKey();
+    cacheKey.update(new Object());
+    canSerialize(cacheKey);
+  }
+
+  @Test
+  public void serializationTest() throws ClassNotFoundException, IOException {
+    CacheKey cacheKey = new CacheKey();
+    cacheKey.update("serializable");
+    canSerialize(cacheKey);
+  }
+
+  private void canSerialize(final CacheKey object) throws ClassNotFoundException, IOException {
+      FileOutputStream fout = new FileOutputStream("target/address.ser");
+      ObjectOutputStream output = new ObjectOutputStream(fout);
+      output.writeObject(object);
+      output.close();
+
+      FileInputStream fin = new FileInputStream("target/address.ser");
+      ObjectInputStream input = new ObjectInputStream(fin);
+      CacheKey cacheKey = (CacheKey) input.readObject();
+      input.close();
+
+      Assert.assertEquals(1, cacheKey.getUpdateCount());
+  }
 }
