@@ -20,6 +20,8 @@ import static org.junit.Assert.*;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -89,30 +91,25 @@ public class CacheKeyTest {
   }
 
   @Test (expected = NotSerializableException.class)
-  public void serializationExceptionTest() throws ClassNotFoundException, IOException {
+  public void serializationExceptionTest() throws Exception {
     CacheKey cacheKey = new CacheKey();
     cacheKey.update(new Object());
-    canSerialize(cacheKey);
+    serialize(cacheKey);
   }
 
   @Test
-  public void serializationTest() throws ClassNotFoundException, IOException {
+  public void serializationTest() throws Exception {
     CacheKey cacheKey = new CacheKey();
     cacheKey.update("serializable");
-    canSerialize(cacheKey);
+    Assert.assertEquals(cacheKey, serialize(cacheKey));
   }
 
-  private void canSerialize(final CacheKey object) throws ClassNotFoundException, IOException {
-      FileOutputStream fout = new FileOutputStream("target/address.ser");
-      ObjectOutputStream output = new ObjectOutputStream(fout);
-      output.writeObject(object);
-      output.close();
+  private static <T> T serialize(T object) throws Exception {
+      ByteArrayOutputStream baos = new ByteArrayOutputStream();
+      new ObjectOutputStream(baos).writeObject(object);
 
-      FileInputStream fin = new FileInputStream("target/address.ser");
-      ObjectInputStream input = new ObjectInputStream(fin);
-      CacheKey cacheKey = (CacheKey) input.readObject();
-      input.close();
-
-      Assert.assertEquals(1, cacheKey.getUpdateCount());
+      ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+      return (T) new ObjectInputStream(bais).readObject();
   }
+
 }
