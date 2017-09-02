@@ -31,8 +31,10 @@ public class VFSTest {
 
       procedures[i] = new InstanceGetterProcedure();
       threads[i] = new Thread(procedures[i], threadName);
+    }
 
-      threads[i].start();
+    for (Thread thread : threads) {
+      thread.start();
     }
 
     for (Thread thread :threads)

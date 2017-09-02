@@ -41,8 +41,45 @@ public abstract class VFS {
   /** The list to which implementations are added by {@link #addImplClass(Class)}. */
   public static final List<Class<? extends VFS>> USER_IMPLEMENTATIONS = new ArrayList<Class<? extends VFS>>();
 
-  /** Singleton instance. */
-  private static volatile VFS instance;
+  /** Singleton instance holder. */
+  private static class VFSHolder {
+    static final VFS INSTANCE = createVFS();
+
+    static VFS createVFS() {
+      // Try the user implementations first, then the built-ins
+      List<Class<? extends VFS>> impls = new ArrayList<Class<? extends VFS>>();
+      impls.addAll(USER_IMPLEMENTATIONS);
+      impls.addAll(Arrays.asList((Class<? extends VFS>[]) IMPLEMENTATIONS));
+
+      // Try each implementation class until a valid one is found
+      VFS vfs = null;
+      for (int i = 0; vfs == null || !vfs.isValid(); i++) {
+        Class<? extends VFS> impl = impls.get(i);
+        try {
+          vfs = impl.newInstance();
+          if (vfs == null || !vfs.isValid()) {
+            if (log.isDebugEnabled()) {
+              log.debug("VFS implementation " + impl.getName() +
+                  " is not valid in this environment.");
+            }
+          }
+        } catch (InstantiationException e) {
+          log.error("Failed to instantiate " + impl, e);
+          return null;
+        } catch (IllegalAccessException e) {
+          log.error("Failed to instantiate " + impl, e);
+          return null;
+        }
+      }
+
+      if (log.isDebugEnabled()) {
+        log.debug("Using VFS adapter " + vfs.getClass().getName());
+      }
+
+      return vfs;
+    }
+  }
+
 
   /**
    * Get the singleton {@link VFS} instance. If no {@link VFS} implementation can be found for the
@@ -50,50 +87,7 @@ public abstract class VFS {
    */
   @SuppressWarnings("unchecked")
   public static VFS getInstance() {
-
-    if (instance == null) {
-      synchronized (VFS.class){
-        if (instance == null){
-
-          // Try the user implementations first, then the built-ins
-          List<Class<? extends VFS>> impls = new ArrayList<Class<? extends VFS>>();
-          impls.addAll(USER_IMPLEMENTATIONS);
-          impls.addAll(Arrays.asList((Class<? extends VFS>[]) IMPLEMENTATIONS));
-
-          // Try each implementation class until a valid one is found
-          VFS vfs = null;
-          for (int i = 0; vfs == null || !vfs.isValid(); i++) {
-            Class<? extends VFS> impl = impls.get(i);
-            try {
-              vfs = impl.newInstance();
-              if (vfs == null || !vfs.isValid()) {
-                if (log.isDebugEnabled()) {
-                  log.debug("VFS implementation " + impl.getName() +
-                      " is not valid in this environment.");
-                }
-              }
-            } catch (InstantiationException e) {
-              log.error("Failed to instantiate " + impl, e);
-              return null;
-            } catch (IllegalAccessException e) {
-              log.error("Failed to instantiate " + impl, e);
-              return null;
-            }
-          }
-
-          if (log.isDebugEnabled()) {
-            log.debug("Using VFS adapter " + vfs.getClass().getName());
-          }
-          /*
-            Only one thread and one time to initialize
-            this singleton class.
-           */
-          VFS.instance = vfs;
-        }
-      }
-    }
-
-    return instance;
+    return VFSHolder.INSTANCE;
   }
 
   /**
