@@ -57,7 +57,7 @@ public class XMLIncludeTransformer {
    * @param variablesContext Current context for static variables with values
    */
   private void applyIncludes(Node source, final Properties variablesContext, boolean included) {
-    if (source.getNodeType() == Node.ELEMENT_NODE && source.getNodeName().equals("include")) {
+    if (source.getNodeName().equals("include")) {
       Node toInclude = findSqlFragment(getStringAttribute(source, "refid"), variablesContext);
       Properties toIncludeContext = getVariablesContext(source, variablesContext);
       applyIncludes(toInclude, toIncludeContext, true);
@@ -70,17 +70,21 @@ public class XMLIncludeTransformer {
       }
       toInclude.getParentNode().removeChild(toInclude);
     } else if (source.getNodeType() == Node.ELEMENT_NODE) {
-      final NamedNodeMap attributes = source.getAttributes();
-      for (int i = 0; i < attributes.getLength(); i++) {
-        applyIncludes(attributes.item(i), variablesContext, included);
+      if (included && !variablesContext.isEmpty()) {
+        // replace variables in attribute values
+        NamedNodeMap attributes = source.getAttributes();
+        for (int i = 0; i < attributes.getLength(); i++) {
+          Node attr = attributes.item(i);
+          attr.setNodeValue(PropertyParser.parse(attr.getNodeValue(), variablesContext));
+        }
       }
       NodeList children = source.getChildNodes();
       for (int i = 0; i < children.getLength(); i++) {
         applyIncludes(children.item(i), variablesContext, included);
       }
-    } else if (included && !variablesContext.isEmpty() &&
-            (source.getNodeType() == Node.TEXT_NODE || source.getNodeType() == Node.ATTRIBUTE_NODE)) {
-      // replace variables ins all text nodes
+    } else if (included && source.getNodeType() == Node.TEXT_NODE
+        && !variablesContext.isEmpty()) {
+      // replace variables in text node
       source.setNodeValue(PropertyParser.parse(source.getNodeValue(), variablesContext));
     }
   }
