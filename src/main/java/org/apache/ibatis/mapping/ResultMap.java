@@ -185,24 +185,29 @@ public class ResultMap {
     }
 
     private List<String> getArgNames(Constructor<?> constructor) {
-      if (resultMap.configuration.isUseActualParamName() && Jdk.parameterExists) {
-        return ParamNameUtil.getParamNames(constructor);
-      } else {
-        List<String> paramNames = new ArrayList<String>();
-        final Annotation[][] paramAnnotations = constructor.getParameterAnnotations();
-        int paramCount = paramAnnotations.length;
-        for (int paramIndex = 0; paramIndex < paramCount; paramIndex++) {
-          String name = null;
-          for (Annotation annotation : paramAnnotations[paramIndex]) {
-            if (annotation instanceof Param) {
-              name = ((Param) annotation).value();
-              break;
-            }
+      List<String> paramNames = new ArrayList<String>();
+      List<String> actualParamNames = null;
+      final Annotation[][] paramAnnotations = constructor.getParameterAnnotations();
+      int paramCount = paramAnnotations.length;
+      for (int paramIndex = 0; paramIndex < paramCount; paramIndex++) {
+        String name = null;
+        for (Annotation annotation : paramAnnotations[paramIndex]) {
+          if (annotation instanceof Param) {
+            name = ((Param) annotation).value();
+            break;
           }
-          paramNames.add(name != null ? name : "arg" + paramIndex);
         }
-        return paramNames;
+        if (name == null && resultMap.configuration.isUseActualParamName() && Jdk.parameterExists) {
+          if (actualParamNames == null) {
+            actualParamNames = ParamNameUtil.getParamNames(constructor);
+          }
+          if (actualParamNames.size() > paramIndex) {
+            name = actualParamNames.get(paramIndex);
+          }
+        }
+        paramNames.add(name != null ? name : "arg" + paramIndex);
       }
+      return paramNames;
     }
   }
 
