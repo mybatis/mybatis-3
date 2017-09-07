@@ -1,6 +1,11 @@
 language: java
 sudo: false
 
+addons:
+  hosts:
+    - mybatisci
+  hostname: mybatisci
+
 jdk:
   - oraclejdk8
   - oraclejdk7
