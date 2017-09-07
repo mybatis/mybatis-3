@@ -2,6 +2,11 @@ language: java
 sudo: false
 dist: precise
 
+addons:
+  hosts:
+    - mybatisci
+  hostname: mybatisci
+
 jdk:
   - oraclejdk8
   - oraclejdk7
