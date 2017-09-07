@@ -28,10 +28,10 @@ public class User {
     this.id = Integer.valueOf(id);
   }
 
-  public User(Integer userId, String name) {
+  public User(Integer userId, @Param("name") String userName) {
     super();
     this.id = userId;
-    this.name = name;
+    this.name = userName;
   }
 
   public User(@Param("id") int id, @Param("name") String name, @Param("team") String team) {
