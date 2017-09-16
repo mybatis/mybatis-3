@@ -42,6 +42,7 @@ import org.apache.ibatis.io.JBoss6VFS;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.logging.slf4j.Slf4jImpl;
 import org.apache.ibatis.mapping.Environment;
+import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.scripting.defaults.RawLanguageDriver;
 import org.apache.ibatis.scripting.xmltags.XMLLanguageDriver;
 import org.apache.ibatis.session.AutoMappingBehavior;
@@ -96,6 +97,7 @@ public class XmlConfigBuilderTest {
     assertThat(config.isSafeResultHandlerEnabled()).isTrue();
     assertThat(config.getDefaultScriptingLanuageInstance()).isInstanceOf(XMLLanguageDriver.class);
     assertThat(config.isCallSettersOnNulls()).isFalse();
+    assertNull(config.getMapperXmlLoadingBasePath());
     assertNull(config.getLogPrefix());
     assertNull(config.getLogImpl());
     assertNull(config.getConfigurationFactory());
@@ -189,6 +191,7 @@ public class XmlConfigBuilderTest {
       assertThat(config.isSafeResultHandlerEnabled()).isFalse();
       assertThat(config.getDefaultScriptingLanuageInstance()).isInstanceOf(RawLanguageDriver.class);
       assertThat(config.isCallSettersOnNulls()).isTrue();
+      assertThat(config.getMapperXmlLoadingBasePath()).isEqualTo("META-INF/mybatis");
       assertThat(config.getLogPrefix()).isEqualTo("mybatis_");
       assertThat(config.getLogImpl().getName()).isEqualTo(Slf4jImpl.class.getName());
       assertThat(config.getVfsImpl().getName()).isEqualTo(JBoss6VFS.class.getName());
@@ -253,6 +256,143 @@ public class XmlConfigBuilderTest {
     then(caughtException()).isInstanceOf(BuilderException.class)
       .hasMessage("Each XMLConfigBuilder can only be used once.");
     inputStream.close();
+  }
+
+  @Test
+  public void loadMapperWithMapperXmlLoadingBasePath() {
+    final String MAPPER_CONFIG = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n"
+      + "<!DOCTYPE configuration PUBLIC \"-//mybatis.org//DTD Config 3.0//EN\" \"http://mybatis.org/dtd/mybatis-3-config.dtd\">\n"
+      + "<configuration>\n"
+      + "  <properties resource=\"org/apache/ibatis/databases/blog/blog-derby.properties\"/>\n"
+      + "  <settings>\n"
+      + "    <setting name=\"mapperXmlLoadingBasePath\" value=\"resources/mappers\"/>\n"
+      + "  </settings>\n"
+      + "  <environments default=\"development\">\n"
+      + "    <environment id=\"development\">\n"
+      + "      <transactionManager type=\"JDBC\">\n"
+      + "        <property name=\"\" value=\"\"/>\n"
+      + "      </transactionManager>\n"
+      + "      <dataSource type=\"UNPOOLED\">\n"
+      + "        <property name=\"driver\" value=\"${driver}\"/>\n"
+      + "        <property name=\"url\" value=\"${url}\"/>\n"
+      + "        <property name=\"username\" value=\"${username}\"/>\n"
+      + "        <property name=\"password\" value=\"${password}\"/>\n"
+      + "      </dataSource>\n"
+      + "    </environment>\n"
+      + "  </environments>"
+      + "  <mappers>\n"
+      + "    <mapper class=\"org.apache.ibatis.builder.mapper.CustomMapper\"/>\n"
+      + "  </mappers>\n"
+      + "</configuration>\n";
+
+    XMLConfigBuilder builder = new XMLConfigBuilder(new StringReader(MAPPER_CONFIG));
+    Configuration configuration = builder.parse();
+
+    MappedStatement mappedStatement = configuration.getMappedStatement("org.apache.ibatis.builder.mapper.CustomMapper.selectCurrentTimestamp");
+    assertThat(mappedStatement.getSqlSource().getBoundSql(null).getSql()).isEqualTo("select current_timestamp");
+  }
+
+  @Test
+  public void loadMapperWithMapperXmlLoadingBasePathEndWithSlash() {
+    final String MAPPER_CONFIG = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n"
+      + "<!DOCTYPE configuration PUBLIC \"-//mybatis.org//DTD Config 3.0//EN\" \"http://mybatis.org/dtd/mybatis-3-config.dtd\">\n"
+      + "<configuration>\n"
+      + "  <properties resource=\"org/apache/ibatis/databases/blog/blog-derby.properties\"/>\n"
+      + "  <settings>\n"
+      + "    <setting name=\"mapperXmlLoadingBasePath\" value=\"resources/mappers/\"/>\n"
+      + "  </settings>\n"
+      + "  <environments default=\"development\">\n"
+      + "    <environment id=\"development\">\n"
+      + "      <transactionManager type=\"JDBC\">\n"
+      + "        <property name=\"\" value=\"\"/>\n"
+      + "      </transactionManager>\n"
+      + "      <dataSource type=\"UNPOOLED\">\n"
+      + "        <property name=\"driver\" value=\"${driver}\"/>\n"
+      + "        <property name=\"url\" value=\"${url}\"/>\n"
+      + "        <property name=\"username\" value=\"${username}\"/>\n"
+      + "        <property name=\"password\" value=\"${password}\"/>\n"
+      + "      </dataSource>\n"
+      + "    </environment>\n"
+      + "  </environments>"
+      + "  <mappers>\n"
+      + "    <package name=\"org.apache.ibatis.builder.mapper\"/>\n"
+      + "  </mappers>\n"
+      + "</configuration>\n";
+
+    XMLConfigBuilder builder = new XMLConfigBuilder(new StringReader(MAPPER_CONFIG));
+    Configuration configuration = builder.parse();
+
+    MappedStatement mappedStatement = configuration.getMappedStatement("org.apache.ibatis.builder.mapper.CustomMapper.selectCurrentTimestamp");
+    assertThat(mappedStatement.getSqlSource().getBoundSql(null).getSql()).isEqualTo("select current_timestamp");
+  }
+
+  @Test
+  public void loadMapperWithMapperXmlLoadingBasePathEmpty() {
+    final String MAPPER_CONFIG = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n"
+      + "<!DOCTYPE configuration PUBLIC \"-//mybatis.org//DTD Config 3.0//EN\" \"http://mybatis.org/dtd/mybatis-3-config.dtd\">\n"
+      + "<configuration>\n"
+      + "  <properties resource=\"org/apache/ibatis/databases/blog/blog-derby.properties\"/>\n"
+      + "  <settings>\n"
+      + "    <setting name=\"mapperXmlLoadingBasePath\" value=\"\"/>\n"
+      + "  </settings>\n"
+      + "  <environments default=\"development\">\n"
+      + "    <environment id=\"development\">\n"
+      + "      <transactionManager type=\"JDBC\">\n"
+      + "        <property name=\"\" value=\"\"/>\n"
+      + "      </transactionManager>\n"
+      + "      <dataSource type=\"UNPOOLED\">\n"
+      + "        <property name=\"driver\" value=\"${driver}\"/>\n"
+      + "        <property name=\"url\" value=\"${url}\"/>\n"
+      + "        <property name=\"username\" value=\"${username}\"/>\n"
+      + "        <property name=\"password\" value=\"${password}\"/>\n"
+      + "      </dataSource>\n"
+      + "    </environment>\n"
+      + "  </environments>"
+      + "  <mappers>\n"
+      + "    <mapper class=\"org.apache.ibatis.builder.CachedAuthorMapper\"/>\n"
+      + "  </mappers>\n"
+      + "</configuration>\n";
+
+    XMLConfigBuilder builder = new XMLConfigBuilder(new StringReader(MAPPER_CONFIG));
+    Configuration configuration = builder.parse();
+
+    MappedStatement mappedStatement = configuration.getMappedStatement("org.apache.ibatis.builder.CachedAuthorMapper.selectAllAuthors");
+    assertThat(mappedStatement.getSqlSource().getBoundSql(null).getSql()).isEqualTo("select * from author");
+  }
+
+  @Test
+  public void loadMapperWithMapperXmlLoadingBasePathPreventTwice() {
+    final String MAPPER_CONFIG = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n"
+      + "<!DOCTYPE configuration PUBLIC \"-//mybatis.org//DTD Config 3.0//EN\" \"http://mybatis.org/dtd/mybatis-3-config.dtd\">\n"
+      + "<configuration>\n"
+      + "  <properties resource=\"org/apache/ibatis/databases/blog/blog-derby.properties\"/>\n"
+      + "  <settings>\n"
+      + "    <setting name=\"mapperXmlLoadingBasePath\" value=\"mappers\"/>\n"
+      + "  </settings>\n"
+      + "  <environments default=\"development\">\n"
+      + "    <environment id=\"development\">\n"
+      + "      <transactionManager type=\"JDBC\">\n"
+      + "        <property name=\"\" value=\"\"/>\n"
+      + "      </transactionManager>\n"
+      + "      <dataSource type=\"UNPOOLED\">\n"
+      + "        <property name=\"driver\" value=\"${driver}\"/>\n"
+      + "        <property name=\"url\" value=\"${url}\"/>\n"
+      + "        <property name=\"username\" value=\"${username}\"/>\n"
+      + "        <property name=\"password\" value=\"${password}\"/>\n"
+      + "      </dataSource>\n"
+      + "    </environment>\n"
+      + "  </environments>"
+      + "  <mappers>\n"
+      + "    <mapper class=\"org.apache.ibatis.builder.mapper.CustomMapper\"/>\n"
+      + "    <mapper resource=\"resources/mappers/org/apache/ibatis/builder/mapper/CustomMapper.xml\"/>\n"
+      + "  </mappers>\n"
+      + "</configuration>\n";
+
+    XMLConfigBuilder builder = new XMLConfigBuilder(new StringReader(MAPPER_CONFIG));
+    Configuration configuration = builder.parse();
+
+    MappedStatement mappedStatement = configuration.getMappedStatement("org.apache.ibatis.builder.mapper.CustomMapper.selectCurrentTimestamp");
+    assertThat(mappedStatement.getSqlSource().getBoundSql(null).getSql()).isEqualTo("select current_timestamp");
   }
 
   @Test

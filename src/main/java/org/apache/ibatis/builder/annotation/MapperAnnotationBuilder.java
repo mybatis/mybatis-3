@@ -161,7 +161,13 @@ public class MapperAnnotationBuilder {
     // to prevent loading again a resource twice
     // this flag is set at XMLMapperBuilder#bindMapperForNamespace
     if (!configuration.isResourceLoaded("namespace:" + type.getName())) {
-      String xmlResource = type.getName().replace('.', '/') + ".xml";
+      String basePath = "";
+      String pathSeparator = "";
+      if (configuration.getMapperXmlLoadingBasePath() != null && !configuration.getMapperXmlLoadingBasePath().isEmpty()) {
+        basePath = configuration.getMapperXmlLoadingBasePath();
+        pathSeparator = configuration.getMapperXmlLoadingBasePath().endsWith("/") ? pathSeparator : "/";
+      }
+      String xmlResource = basePath + pathSeparator + type.getName().replace('.', '/') + ".xml";
       InputStream inputStream = null;
       try {
         inputStream = Resources.getResourceAsStream(type.getClassLoader(), xmlResource);

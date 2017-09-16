@@ -48,6 +48,7 @@
     <setting name="safeResultHandlerEnabled" value="false"/>
     <setting name="defaultScriptingLanguage" value="org.apache.ibatis.scripting.defaults.RawLanguageDriver"/>
     <setting name="callSettersOnNulls" value="true"/>
+    <setting name="mapperXmlLoadingBasePath" value="META-INF/mybatis"/>
     <setting name="logPrefix" value="mybatis_"/>
     <setting name="logImpl" value="SLF4J"/>
     <setting name="vfsImpl" value="org.apache.ibatis.io.JBoss6VFS"/>
