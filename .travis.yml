@@ -7,6 +7,11 @@ addons:
     - mybatisci
   hostname: mybatisci
 
+addons:
+  hosts:
+    - mybatisci
+  hostname: mybatisci
+
 jdk:
   - oraclejdk8
   - oraclejdk7

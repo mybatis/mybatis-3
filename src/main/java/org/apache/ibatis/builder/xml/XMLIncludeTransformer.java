@@ -25,6 +25,7 @@ import org.apache.ibatis.builder.MapperBuilderAssistant;
 import org.apache.ibatis.parsing.PropertyParser;
 import org.apache.ibatis.parsing.XNode;
 import org.apache.ibatis.session.Configuration;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -69,13 +70,21 @@ public class XMLIncludeTransformer {
       }
       toInclude.getParentNode().removeChild(toInclude);
     } else if (source.getNodeType() == Node.ELEMENT_NODE) {
+      if (included && !variablesContext.isEmpty()) {
+        // replace variables in attribute values
+        NamedNodeMap attributes = source.getAttributes();
+        for (int i = 0; i < attributes.getLength(); i++) {
+          Node attr = attributes.item(i);
+          attr.setNodeValue(PropertyParser.parse(attr.getNodeValue(), variablesContext));
+        }
+      }
       NodeList children = source.getChildNodes();
       for (int i = 0; i < children.getLength(); i++) {
         applyIncludes(children.item(i), variablesContext, included);
       }
     } else if (included && source.getNodeType() == Node.TEXT_NODE
         && !variablesContext.isEmpty()) {
-      // replace variables ins all text nodes
+      // replace variables in text node
       source.setNodeValue(PropertyParser.parse(source.getNodeValue(), variablesContext));
     }
   }

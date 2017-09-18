@@ -148,4 +148,18 @@ public class IncludePropertyTest {
       sqlSession.close();
     }
   }
+
+  @Test
+  public void testParametersInAttribute() throws Exception {
+    final SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      List<Map<String, String>> results = sqlSession.selectList("org.apache.ibatis.submitted.include_property.Mapper.selectPropertyInAttribute");
+      Map<String, String> map = results.get(0);
+      assertEquals(2, map.size());
+      assertEquals("col_a value", map.get("COL_1"));
+      assertEquals("col_b value", map.get("COL_2"));
+    } finally {
+      sqlSession.close();
+    }
+  }
 }
