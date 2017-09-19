@@ -29,6 +29,20 @@
 	<resultMap type="org.apache.ibatis.submitted.automapping.User" id="result" autoMapping="true">
 	</resultMap>
 
+	<select id="getUserPhoneNumberWithoutAs" resultMap="result2">
+		select id, name, phone_number from users where id = #{id}
+	</select>
+
+	<select id="getUserPhoneNumberWithAs" resultMap="result2">
+		select id, name, phone_number as phone from users where id = #{id}
+	</select>
+
+	<resultMap type="org.apache.ibatis.submitted.automapping.User" id="result2">
+		<id property="id" column="id"/>
+		<result property="name" column="name"/>
+		<result property="phone" column="phone_number"/>
+	</resultMap>
+
 	<select id="getUserWithPhoneNumber" resultMap="resultWithPhoneNumber">
 		select * from users where id = #{id}
 	</select>

@@ -21,6 +21,10 @@ public interface Mapper {
 
   User getUser(Integer id);
 
+  User getUserPhoneNumberWithoutAs(Integer id);
+
+  User getUserPhoneNumberWithAs(Integer id);
+
   User getUserWithPhoneNumber(Integer id);
 
   User getUserWithPets_Inline(Integer id);
