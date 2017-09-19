@@ -19,6 +19,7 @@ import java.io.Reader;
 import java.sql.Connection;
 import java.util.List;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.AutoMappingBehavior;
@@ -60,6 +61,36 @@ public class AutomappingTest {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = mapper.getUser(1);
       Assert.assertEquals("User1", user.getName());
+    } finally {
+      sqlSession.close();
+    }
+  }
+
+  @Test
+  public void shouldGetAUserWithoutAsAliases() {
+    sqlSessionFactory.getConfiguration().setAutoMappingBehavior(AutoMappingBehavior.NONE);
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      User user = mapper.getUserPhoneNumberWithoutAs(1);
+      Assert.assertEquals("User1", user.getName());
+      Assert.assertNotNull(user.getPhone());
+      Assert.assertTrue("Phone number is not equals to 12345678901", ObjectUtils.equals(12345678901L, user.getPhone()));
+    } finally {
+      sqlSession.close();
+    }
+  }
+
+  @Test
+  public void shouldGetAUserWithAsAliases() {
+    sqlSessionFactory.getConfiguration().setAutoMappingBehavior(AutoMappingBehavior.NONE);
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      User user = mapper.getUserPhoneNumberWithAs(1);
+      Assert.assertEquals("User1", user.getName());
+      Assert.assertNotNull(user.getPhone());
+      Assert.assertTrue("Phone number is not equals to 12345678901", ObjectUtils.equals(12345678901L, user.getPhone()));
     } finally {
       sqlSession.close();
     }
