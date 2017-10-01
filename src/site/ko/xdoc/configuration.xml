@@ -530,7 +530,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 configurationFactory
               </td>
               <td>
-                <code>Configuration> 인스턴스를 제공하는 클래스를 지정한다.
+                <code>Configuration</code> 인스턴스를 제공하는 클래스를 지정한다.
                 반환된 Configuration 인스턴스는 역직렬화 된 객체의 지연로딩 속성들을 불러오는데 사용된다.
                 이 클래스는 <code>static Configuration getConfiguration()</code> 메서드를 가져야 한다. (3.2.3 부터)
               </td>
