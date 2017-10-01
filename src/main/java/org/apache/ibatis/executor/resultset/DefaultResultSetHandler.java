@@ -253,7 +253,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     try {
       if (stmt.getConnection().getMetaData().supportsMultipleResultSets()) {
         // Crazy Standard JDBC way of determining if there are more results
-        if (!((!stmt.getMoreResults()) && (stmt.getUpdateCount() == -1))) {
+        if (!(!stmt.getMoreResults() && stmt.getUpdateCount() == -1)) {
           ResultSet rs = stmt.getResultSet();
           if (rs == null) {
             return getNextResultSet(stmt);
@@ -398,7 +398,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
       }
       foundValues = applyPropertyMappings(rsw, resultMap, metaObject, lazyLoader, null) || foundValues;
       foundValues = lazyLoader.size() > 0 || foundValues;
-      rowValue = (foundValues || configuration.isReturnInstanceForEmptyRow()) ? rowValue : null;
+      rowValue = foundValues || configuration.isReturnInstanceForEmptyRow() ? rowValue : null;
     }
     return rowValue;
   }
@@ -598,7 +598,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
         }
       }
     }
-    this.useConstructorMappings = (resultObject != null && !constructorArgTypes.isEmpty()); // set current mapping result
+    this.useConstructorMappings = resultObject != null && !constructorArgTypes.isEmpty(); // set current mapping result
     return resultObject;
   }
 
@@ -897,7 +897,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     Object rowValue = partialObject;
     if (rowValue != null) {
       final MetaObject metaObject = configuration.newMetaObject(rowValue);
-      putAncestor(rowValue, resultMapId, columnPrefix);
+      putAncestor(rowValue, resultMapId);
       applyNestedResultMappings(rsw, resultMap, metaObject, columnPrefix, combinedKey, false);
       ancestorObjects.remove(resultMapId);
     } else {
@@ -910,11 +910,11 @@ public class DefaultResultSetHandler implements ResultSetHandler {
           foundValues = applyAutomaticMappings(rsw, resultMap, metaObject, columnPrefix) || foundValues;
         }
         foundValues = applyPropertyMappings(rsw, resultMap, metaObject, lazyLoader, columnPrefix) || foundValues;
-        putAncestor(rowValue, resultMapId, columnPrefix);
+        putAncestor(rowValue, resultMapId);
         foundValues = applyNestedResultMappings(rsw, resultMap, metaObject, columnPrefix, combinedKey, true) || foundValues;
         ancestorObjects.remove(resultMapId);
         foundValues = lazyLoader.size() > 0 || foundValues;
-        rowValue = (foundValues || configuration.isReturnInstanceForEmptyRow()) ? rowValue : null;
+        rowValue = foundValues || configuration.isReturnInstanceForEmptyRow() ? rowValue : null;
       }
       if (combinedKey != CacheKey.NULL_CACHE_KEY) {
         nestedResultObjects.put(combinedKey, rowValue);
@@ -923,7 +923,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     return rowValue;
   }
 
-  private void putAncestor(Object resultObject, String resultMapId, String columnPrefix) {
+  private void putAncestor(Object resultObject, String resultMapId) {
     ancestorObjects.put(resultMapId, resultObject);
   }
 
@@ -953,7 +953,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
           final CacheKey rowKey = createRowKey(nestedResultMap, rsw, columnPrefix);
           final CacheKey combinedKey = combineKeys(rowKey, parentRowKey);
           Object rowValue = nestedResultObjects.get(combinedKey);
-          boolean knownValue = (rowValue != null);
+          boolean knownValue = rowValue != null;
           instantiateCollectionPropertyIfAppropriate(resultMapping, metaObject); // mandatory
           if (anyNotNullColumnHasValue(resultMapping, columnPrefix, rsw)) {
             rowValue = getRowValue(rsw, nestedResultMap, combinedKey, columnPrefix, rowValue);

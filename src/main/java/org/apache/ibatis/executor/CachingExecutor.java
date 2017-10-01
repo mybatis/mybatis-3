@@ -96,7 +96,7 @@ public class CachingExecutor implements Executor {
     if (cache != null) {
       flushCacheIfRequired(ms);
       if (ms.isUseCache() && resultHandler == null) {
-        ensureNoOutParams(ms, parameterObject, boundSql);
+        ensureNoOutParams(ms, boundSql);
         @SuppressWarnings("unchecked")
         List<E> list = (List<E>) tcm.getObject(cache, key);
         if (list == null) {
@@ -131,7 +131,7 @@ public class CachingExecutor implements Executor {
     }
   }
 
-  private void ensureNoOutParams(MappedStatement ms, Object parameter, BoundSql boundSql) {
+  private void ensureNoOutParams(MappedStatement ms, BoundSql boundSql) {
     if (ms.getStatementType() == StatementType.CALLABLE) {
       for (ParameterMapping parameterMapping : boundSql.getParameterMappings()) {
         if (parameterMapping.getMode() != ParameterMode.IN) {
