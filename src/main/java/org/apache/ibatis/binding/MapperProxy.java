@@ -88,8 +88,8 @@ public class MapperProxy<T> implements InvocationHandler, Serializable {
    * Backport of java.lang.reflect.Method#isDefault()
    */
   private boolean isDefaultMethod(Method method) {
-    return ((method.getModifiers()
-        & (Modifier.ABSTRACT | Modifier.PUBLIC | Modifier.STATIC)) == Modifier.PUBLIC)
+    return (method.getModifiers()
+        & (Modifier.ABSTRACT | Modifier.PUBLIC | Modifier.STATIC)) == Modifier.PUBLIC
         && method.getDeclaringClass().isInterface();
   }
 }
