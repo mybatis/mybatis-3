@@ -131,6 +131,7 @@ public class BatchExecutor extends BaseExecutor {
               keyGenerator.processAfter(this, ms, stmt, parameter);
             }
           }
+          closeStatement(stmt);
         } catch (BatchUpdateException e) {
           StringBuilder message = new StringBuilder();
           message.append(batchResult.getMappedStatement().getId())
@@ -149,9 +150,6 @@ public class BatchExecutor extends BaseExecutor {
       }
       return results;
     } finally {
-      for (Statement stmt : statementList) {
-        closeStatement(stmt);
-      }
       currentSql = null;
       statementList.clear();
       batchResultList.clear();
