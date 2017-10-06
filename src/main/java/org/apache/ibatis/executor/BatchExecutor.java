@@ -150,6 +150,9 @@ public class BatchExecutor extends BaseExecutor {
       }
       return results;
     } finally {
+      for (Statement stmt : statementList) {
+        closeStatement(stmt);
+      }
       currentSql = null;
       statementList.clear();
       batchResultList.clear();
