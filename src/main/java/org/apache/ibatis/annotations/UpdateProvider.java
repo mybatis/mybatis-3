@@ -31,4 +31,10 @@ public @interface UpdateProvider {
   Class<?> type();
 
   String method();
+
+  /**
+   * Cache the generated SqlSource, avoiding every rebuild.
+   * @since 3.4.6
+   */
+  boolean cacheSqlSource() default false;
 }

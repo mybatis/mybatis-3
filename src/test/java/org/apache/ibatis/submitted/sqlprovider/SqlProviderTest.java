@@ -508,4 +508,63 @@ public class SqlProviderTest {
     }
   }
 
+  @Test
+  public void shouldInsertUserSelective() {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      User user = new User();
+      user.setId(999);
+      mapper.insertSelective(user);
+
+      User loadedUser = mapper.getUser(999);
+      assertEquals(null, loadedUser.getName());
+
+    } finally {
+      sqlSession.close();
+    }
+  }
+
+
+  @Test
+  public void shouldUpdateUserSelective() {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      User user = new User();
+      user.setId(999);
+      user.setName("MyBatis");
+      mapper.insert(user);
+
+      user.setName(null);
+      mapper.updateSelective(user);
+
+      User loadedUser = mapper.getUser(999);
+      assertEquals("MyBatis", loadedUser.getName());
+
+    } finally {
+      sqlSession.close();
+    }
+  }
+
+  @Test
+  public void mapperGetByEntity() {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      User query = new User();
+      query.setName("User4");
+      assertEquals(1, mapper.getByEntity(query).size());
+      query = new User();
+      query.setId(1);
+      assertEquals(1, mapper.getByEntity(query).size());
+      query = new User();
+      query.setId(1);
+      query.setName("User4");
+      assertEquals(0, mapper.getByEntity(query).size());
+    } finally {
+      sqlSession.close();
+    }
+  }
+
 }
