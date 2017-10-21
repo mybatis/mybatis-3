@@ -15,7 +15,7 @@
  */
 package org.apache.ibatis.session;
 
-import java.util.Arrays;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -45,7 +45,6 @@ import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.executor.ReuseExecutor;
 import org.apache.ibatis.executor.SimpleExecutor;
 import org.apache.ibatis.executor.keygen.KeyGenerator;
-import org.apache.ibatis.executor.loader.ProxyFactory;
 import org.apache.ibatis.executor.loader.cglib.CglibProxyFactory;
 import org.apache.ibatis.executor.loader.javassist.JavassistProxyFactory;
 import org.apache.ibatis.executor.parameter.ParameterHandler;
@@ -53,9 +52,6 @@ import org.apache.ibatis.executor.resultset.DefaultResultSetHandler;
 import org.apache.ibatis.executor.resultset.ResultSetHandler;
 import org.apache.ibatis.executor.statement.RoutingStatementHandler;
 import org.apache.ibatis.executor.statement.StatementHandler;
-import org.apache.ibatis.io.VFS;
-import org.apache.ibatis.logging.Log;
-import org.apache.ibatis.logging.LogFactory;
 import org.apache.ibatis.logging.commons.JakartaCommonsLoggingImpl;
 import org.apache.ibatis.logging.jdk14.Jdk14LoggingImpl;
 import org.apache.ibatis.logging.log4j.Log4jImpl;
@@ -74,6 +70,7 @@ import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.plugin.InterceptorChain;
 import org.apache.ibatis.reflection.DefaultReflectorFactory;
 import org.apache.ibatis.reflection.MetaObject;
+import org.apache.ibatis.reflection.Reflector;
 import org.apache.ibatis.reflection.ReflectorFactory;
 import org.apache.ibatis.reflection.factory.DefaultObjectFactory;
 import org.apache.ibatis.reflection.factory.ObjectFactory;
@@ -86,7 +83,6 @@ import org.apache.ibatis.scripting.xmltags.XMLLanguageDriver;
 import org.apache.ibatis.transaction.Transaction;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
 import org.apache.ibatis.transaction.managed.ManagedTransactionFactory;
-import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeAliasRegistry;
 import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.TypeHandlerRegistry;
@@ -94,50 +90,17 @@ import org.apache.ibatis.type.TypeHandlerRegistry;
 /**
  * @author Clinton Begin
  */
-public class Configuration {
+public class Configuration extends Settings {
 
   protected Environment environment;
 
-  protected boolean safeRowBoundsEnabled;
-  protected boolean safeResultHandlerEnabled = true;
-  protected boolean mapUnderscoreToCamelCase;
-  protected boolean aggressiveLazyLoading;
-  protected boolean multipleResultSetsEnabled = true;
-  protected boolean useGeneratedKeys;
-  protected boolean useColumnLabel = true;
-  protected boolean cacheEnabled = true;
-  protected boolean callSettersOnNulls;
-  protected boolean useActualParamName = true;
-  protected boolean returnInstanceForEmptyRow;
-
-  protected String logPrefix;
-  protected Class <? extends Log> logImpl;
-  protected Class <? extends VFS> vfsImpl;
-  protected LocalCacheScope localCacheScope = LocalCacheScope.SESSION;
-  protected JdbcType jdbcTypeForNull = JdbcType.OTHER;
-  protected Set<String> lazyLoadTriggerMethods = new HashSet<String>(Arrays.asList(new String[] { "equals", "clone", "hashCode", "toString" }));
-  protected Integer defaultStatementTimeout;
-  protected Integer defaultFetchSize;
-  protected ExecutorType defaultExecutorType = ExecutorType.SIMPLE;
-  protected AutoMappingBehavior autoMappingBehavior = AutoMappingBehavior.PARTIAL;
-  protected AutoMappingUnknownColumnBehavior autoMappingUnknownColumnBehavior = AutoMappingUnknownColumnBehavior.NONE;
+  protected String databaseId;
 
   protected Properties variables = new Properties();
+
   protected ReflectorFactory reflectorFactory = new DefaultReflectorFactory();
   protected ObjectFactory objectFactory = new DefaultObjectFactory();
   protected ObjectWrapperFactory objectWrapperFactory = new DefaultObjectWrapperFactory();
-
-  protected boolean lazyLoadingEnabled = false;
-  protected ProxyFactory proxyFactory = new JavassistProxyFactory(); // #224 Using internal Javassist instead of OGNL
-
-  protected String databaseId;
-  /**
-   * Configuration factory class.
-   * Used to create Configuration for loading deserialized unread properties.
-   *
-   * @see <a href='https://code.google.com/p/mybatis/issues/detail?id=300'>Issue 300 (google code)</a>
-   */
-  protected Class<?> configurationFactory;
 
   protected final MapperRegistry mapperRegistry = new MapperRegistry(this);
   protected final InterceptorChain interceptorChain = new InterceptorChain();
@@ -205,58 +168,16 @@ public class Configuration {
     languageRegistry.register(RawLanguageDriver.class);
   }
 
-  public String getLogPrefix() {
-    return logPrefix;
+  @Override
+  public void setDefaultEnumTypeHandler(Class<? extends TypeHandler> typeHandler) {
+    super.setDefaultEnumTypeHandler(typeHandler);
+    getTypeHandlerRegistry().setDefaultEnumTypeHandler(defaultEnumTypeHandler);
   }
 
-  public void setLogPrefix(String logPrefix) {
-    this.logPrefix = logPrefix;
-  }
-
-  public Class<? extends Log> getLogImpl() {
-    return logImpl;
-  }
-
-  public void setLogImpl(Class<? extends Log> logImpl) {
-    if (logImpl != null) {
-      this.logImpl = logImpl;
-      LogFactory.useCustomLogging(this.logImpl);
-    }
-  }
-
-  public Class<? extends VFS> getVfsImpl() {
-    return this.vfsImpl;
-  }
-
-  public void setVfsImpl(Class<? extends VFS> vfsImpl) {
-    if (vfsImpl != null) {
-      this.vfsImpl = vfsImpl;
-      VFS.addImplClass(this.vfsImpl);
-    }
-  }
-
-  public boolean isCallSettersOnNulls() {
-    return callSettersOnNulls;
-  }
-
-  public void setCallSettersOnNulls(boolean callSettersOnNulls) {
-    this.callSettersOnNulls = callSettersOnNulls;
-  }
-
-  public boolean isUseActualParamName() {
-    return useActualParamName;
-  }
-
-  public void setUseActualParamName(boolean useActualParamName) {
-    this.useActualParamName = useActualParamName;
-  }
-
-  public boolean isReturnInstanceForEmptyRow() {
-    return returnInstanceForEmptyRow;
-  }
-
-  public void setReturnInstanceForEmptyRow(boolean returnEmptyInstance) {
-    this.returnInstanceForEmptyRow = returnEmptyInstance;
+  @Override
+  public void setDefaultScriptingLanguage(Class<?> driver) {
+    super.setDefaultScriptingLanguage(driver);
+    getLanguageRegistry().setDefaultDriverClass(defaultScriptingLanguage);
   }
 
   public String getDatabaseId() {
@@ -267,189 +188,6 @@ public class Configuration {
     this.databaseId = databaseId;
   }
 
-  public Class<?> getConfigurationFactory() {
-    return configurationFactory;
-  }
-
-  public void setConfigurationFactory(Class<?> configurationFactory) {
-    this.configurationFactory = configurationFactory;
-  }
-
-  public boolean isSafeResultHandlerEnabled() {
-    return safeResultHandlerEnabled;
-  }
-
-  public void setSafeResultHandlerEnabled(boolean safeResultHandlerEnabled) {
-    this.safeResultHandlerEnabled = safeResultHandlerEnabled;
-  }
-
-  public boolean isSafeRowBoundsEnabled() {
-    return safeRowBoundsEnabled;
-  }
-
-  public void setSafeRowBoundsEnabled(boolean safeRowBoundsEnabled) {
-    this.safeRowBoundsEnabled = safeRowBoundsEnabled;
-  }
-
-  public boolean isMapUnderscoreToCamelCase() {
-    return mapUnderscoreToCamelCase;
-  }
-
-  public void setMapUnderscoreToCamelCase(boolean mapUnderscoreToCamelCase) {
-    this.mapUnderscoreToCamelCase = mapUnderscoreToCamelCase;
-  }
-
-  public void addLoadedResource(String resource) {
-    loadedResources.add(resource);
-  }
-
-  public boolean isResourceLoaded(String resource) {
-    return loadedResources.contains(resource);
-  }
-
-  public Environment getEnvironment() {
-    return environment;
-  }
-
-  public void setEnvironment(Environment environment) {
-    this.environment = environment;
-  }
-
-  public AutoMappingBehavior getAutoMappingBehavior() {
-    return autoMappingBehavior;
-  }
-
-  public void setAutoMappingBehavior(AutoMappingBehavior autoMappingBehavior) {
-    this.autoMappingBehavior = autoMappingBehavior;
-  }
-
-  /**
-   * @since 3.4.0
-   */
-  public AutoMappingUnknownColumnBehavior getAutoMappingUnknownColumnBehavior() {
-    return autoMappingUnknownColumnBehavior;
-  }
-
-  /**
-   * @since 3.4.0
-   */
-  public void setAutoMappingUnknownColumnBehavior(AutoMappingUnknownColumnBehavior autoMappingUnknownColumnBehavior) {
-    this.autoMappingUnknownColumnBehavior = autoMappingUnknownColumnBehavior;
-  }
-
-  public boolean isLazyLoadingEnabled() {
-    return lazyLoadingEnabled;
-  }
-
-  public void setLazyLoadingEnabled(boolean lazyLoadingEnabled) {
-    this.lazyLoadingEnabled = lazyLoadingEnabled;
-  }
-
-  public ProxyFactory getProxyFactory() {
-    return proxyFactory;
-  }
-
-  public void setProxyFactory(ProxyFactory proxyFactory) {
-    if (proxyFactory == null) {
-      proxyFactory = new JavassistProxyFactory();
-    }
-    this.proxyFactory = proxyFactory;
-  }
-
-  public boolean isAggressiveLazyLoading() {
-    return aggressiveLazyLoading;
-  }
-
-  public void setAggressiveLazyLoading(boolean aggressiveLazyLoading) {
-    this.aggressiveLazyLoading = aggressiveLazyLoading;
-  }
-
-  public boolean isMultipleResultSetsEnabled() {
-    return multipleResultSetsEnabled;
-  }
-
-  public void setMultipleResultSetsEnabled(boolean multipleResultSetsEnabled) {
-    this.multipleResultSetsEnabled = multipleResultSetsEnabled;
-  }
-
-  public Set<String> getLazyLoadTriggerMethods() {
-    return lazyLoadTriggerMethods;
-  }
-
-  public void setLazyLoadTriggerMethods(Set<String> lazyLoadTriggerMethods) {
-    this.lazyLoadTriggerMethods = lazyLoadTriggerMethods;
-  }
-
-  public boolean isUseGeneratedKeys() {
-    return useGeneratedKeys;
-  }
-
-  public void setUseGeneratedKeys(boolean useGeneratedKeys) {
-    this.useGeneratedKeys = useGeneratedKeys;
-  }
-
-  public ExecutorType getDefaultExecutorType() {
-    return defaultExecutorType;
-  }
-
-  public void setDefaultExecutorType(ExecutorType defaultExecutorType) {
-    this.defaultExecutorType = defaultExecutorType;
-  }
-
-  public boolean isCacheEnabled() {
-    return cacheEnabled;
-  }
-
-  public void setCacheEnabled(boolean cacheEnabled) {
-    this.cacheEnabled = cacheEnabled;
-  }
-
-  public Integer getDefaultStatementTimeout() {
-    return defaultStatementTimeout;
-  }
-
-  public void setDefaultStatementTimeout(Integer defaultStatementTimeout) {
-    this.defaultStatementTimeout = defaultStatementTimeout;
-  }
-
-  /**
-   * @since 3.3.0
-   */
-  public Integer getDefaultFetchSize() {
-    return defaultFetchSize;
-  }
-
-  /**
-   * @since 3.3.0
-   */
-  public void setDefaultFetchSize(Integer defaultFetchSize) {
-    this.defaultFetchSize = defaultFetchSize;
-  }
-
-  public boolean isUseColumnLabel() {
-    return useColumnLabel;
-  }
-
-  public void setUseColumnLabel(boolean useColumnLabel) {
-    this.useColumnLabel = useColumnLabel;
-  }
-
-  public LocalCacheScope getLocalCacheScope() {
-    return localCacheScope;
-  }
-
-  public void setLocalCacheScope(LocalCacheScope localCacheScope) {
-    this.localCacheScope = localCacheScope;
-  }
-
-  public JdbcType getJdbcTypeForNull() {
-    return jdbcTypeForNull;
-  }
-
-  public void setJdbcTypeForNull(JdbcType jdbcTypeForNull) {
-    this.jdbcTypeForNull = jdbcTypeForNull;
-  }
-
   public Properties getVariables() {
     return variables;
   }
@@ -458,39 +196,12 @@ public class Configuration {
     this.variables = variables;
   }
 
-  public TypeHandlerRegistry getTypeHandlerRegistry() {
-    return typeHandlerRegistry;
-  }
-
-  /**
-   * Set a default {@link TypeHandler} class for {@link Enum}.
-   * A default {@link TypeHandler} is {@link org.apache.ibatis.type.EnumTypeHandler}.
-   * @param typeHandler a type handler class for {@link Enum}
-   * @since 3.4.5
-   */
-  public void setDefaultEnumTypeHandler(Class<? extends TypeHandler> typeHandler) {
-    if (typeHandler != null) {
-      getTypeHandlerRegistry().setDefaultEnumTypeHandler(typeHandler);
-    }
-  }
-
-  public TypeAliasRegistry getTypeAliasRegistry() {
-    return typeAliasRegistry;
-  }
-
-  /**
-   * @since 3.2.2
-   */
-  public MapperRegistry getMapperRegistry() {
-    return mapperRegistry;
-  }
-
   public ReflectorFactory getReflectorFactory() {
-	  return reflectorFactory;
+    return reflectorFactory;
   }
 
   public void setReflectorFactory(ReflectorFactory reflectorFactory) {
-	  this.reflectorFactory = reflectorFactory;
+    this.reflectorFactory = reflectorFactory;
   }
 
   public ObjectFactory getObjectFactory() {
@@ -509,6 +220,37 @@ public class Configuration {
     this.objectWrapperFactory = objectWrapperFactory;
   }
 
+  public void addLoadedResource(String resource) {
+    loadedResources.add(resource);
+  }
+
+  public boolean isResourceLoaded(String resource) {
+    return loadedResources.contains(resource);
+  }
+
+  public Environment getEnvironment() {
+    return environment;
+  }
+
+  public void setEnvironment(Environment environment) {
+    this.environment = environment;
+  }
+
+  public TypeHandlerRegistry getTypeHandlerRegistry() {
+    return typeHandlerRegistry;
+  }
+
+  public TypeAliasRegistry getTypeAliasRegistry() {
+    return typeAliasRegistry;
+  }
+
+  /**
+   * @since 3.2.2
+   */
+  public MapperRegistry getMapperRegistry() {
+    return mapperRegistry;
+  }
+
   /**
    * @since 3.2.2
    */
@@ -518,13 +260,6 @@ public class Configuration {
 
   public LanguageDriverRegistry getLanguageRegistry() {
     return languageRegistry;
-  }
-
-  public void setDefaultScriptingLanguage(Class<?> driver) {
-    if (driver == null) {
-      driver = XMLLanguageDriver.class;
-    }
-    getLanguageRegistry().setDefaultDriverClass(driver);
   }
 
   public LanguageDriver getDefaultScriptingLanguageInstance() {
@@ -910,6 +645,31 @@ public class Configuration {
         return subject;
       }
     }
+  }
+
+  /**
+   * Creates a {@code Configuration} from the specified {@link Settings}.
+   *
+   * @param settings a settings object
+   * @return a new {@code Configuration} that holds same values with the specified {@link Settings}.
+   * @since 3.4.6
+   */
+  public static Configuration from(Settings settings) {
+    ReflectorFactory reflectorFactory = new DefaultReflectorFactory();
+    Reflector settingsReflector = reflectorFactory.findForClass(Settings.class);
+    Reflector configurationReflector = reflectorFactory.findForClass(Configuration.class);
+    Configuration configuration = new Configuration();
+    try {
+      for (String propertyName : settingsReflector.getGetablePropertyNames()) {
+        Object value = settingsReflector.getGetInvoker(propertyName).invoke(settings, null);
+        configurationReflector.getSetInvoker(propertyName).invoke(configuration, new Object[] { value });
+      }
+    } catch (IllegalAccessException e) {
+      throw new IllegalStateException(e);
+    } catch (InvocationTargetException e) {
+      throw new IllegalStateException(e);
+    }
+    return configuration;
   }
 
 }
