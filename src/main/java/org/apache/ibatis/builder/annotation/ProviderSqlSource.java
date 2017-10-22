@@ -21,27 +21,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.ibatis.builder.BuilderException;
-import org.apache.ibatis.builder.SqlSourceBuilder;
-import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.SqlSource;
 import org.apache.ibatis.parsing.PropertyParser;
-import org.apache.ibatis.reflection.ParamNameResolver;
 import org.apache.ibatis.session.Configuration;
 
 /**
  * @author Clinton Begin
  * @author Kazuki Shimizu
+ * @author liuzh
  */
-public class ProviderSqlSource implements SqlSource {
-
-  private final Configuration configuration;
-  private final SqlSourceBuilder sqlSourceParser;
-  private final Class<?> providerType;
-  private Method providerMethod;
-  private String[] providerMethodArgumentNames;
-  private Class<?>[] providerMethodParameterTypes;
-  private ProviderContext providerContext;
-  private Integer providerContextIndex;
+public class ProviderSqlSource extends AbstractProviderSqlSource {
 
   /**
    * @deprecated Please use the {@link #ProviderSqlSource(Configuration, Object, Class, Method)} instead of this.
@@ -55,55 +44,11 @@ public class ProviderSqlSource implements SqlSource {
    * @since 3.4.5
    */
   public ProviderSqlSource(Configuration configuration, Object provider, Class<?> mapperType, Method mapperMethod) {
-    String providerMethodName;
-    try {
-      this.configuration = configuration;
-      this.sqlSourceParser = new SqlSourceBuilder(configuration);
-      this.providerType = (Class<?>) provider.getClass().getMethod("type").invoke(provider);
-      providerMethodName = (String) provider.getClass().getMethod("method").invoke(provider);
-
-      for (Method m : this.providerType.getMethods()) {
-        if (providerMethodName.equals(m.getName()) && CharSequence.class.isAssignableFrom(m.getReturnType())) {
-          if (providerMethod != null){
-            throw new BuilderException("Error creating SqlSource for SqlProvider. Method '"
-                    + providerMethodName + "' is found multiple in SqlProvider '" + this.providerType.getName()
-                    + "'. Sql provider method can not overload.");
-          }
-          this.providerMethod = m;
-          this.providerMethodArgumentNames = new ParamNameResolver(configuration, m).getNames();
-          this.providerMethodParameterTypes = m.getParameterTypes();
-        }
-      }
-    } catch (BuilderException e) {
-      throw e;
-    } catch (Exception e) {
-      throw new BuilderException("Error creating SqlSource for SqlProvider.  Cause: " + e, e);
-    }
-    if (this.providerMethod == null) {
-      throw new BuilderException("Error creating SqlSource for SqlProvider. Method '"
-          + providerMethodName + "' not found in SqlProvider '" + this.providerType.getName() + "'.");
-    }
-    for (int i = 0; i< this.providerMethodParameterTypes.length; i++) {
-      Class<?> parameterType = this.providerMethodParameterTypes[i];
-      if (parameterType == ProviderContext.class) {
-        if (this.providerContext != null){
-          throw new BuilderException("Error creating SqlSource for SqlProvider. ProviderContext found multiple in SqlProvider method ("
-              + this.providerType.getName() + "." + providerMethod.getName()
-              + "). ProviderContext can not define multiple in SqlProvider method argument.");
-        }
-        this.providerContext = new ProviderContext(mapperType, mapperMethod);
-        this.providerContextIndex = i;
-      }
-    }
+    super(configuration, provider, mapperType, mapperMethod);
   }
 
   @Override
-  public BoundSql getBoundSql(Object parameterObject) {
-    SqlSource sqlSource = createSqlSource(parameterObject);
-    return sqlSource.getBoundSql(parameterObject);
-  }
-
-  private SqlSource createSqlSource(Object parameterObject) {
+  public SqlSource createSqlSource(Object parameterObject) {
     try {
       int bindParameterCount = providerMethodParameterTypes.length - (providerContext == null ? 0 : 1);
       String sql;
@@ -126,7 +71,7 @@ public class ProviderSqlSource implements SqlSource {
                 + " using a specifying parameterObject. In this case, please specify a 'java.util.Map' object.");
       }
       Class<?> parameterType = parameterObject == null ? Object.class : parameterObject.getClass();
-      return sqlSourceParser.parse(replacePlaceholder(sql), parameterType, new HashMap<String, Object>());
+      return createSqlSource(sql, parameterType, new HashMap<String, Object>());
     } catch (BuilderException e) {
       throw e;
     } catch (Exception e) {
@@ -134,6 +79,13 @@ public class ProviderSqlSource implements SqlSource {
           + providerType.getName() + "." + providerMethod.getName()
           + ").  Cause: " + e, e);
     }
+  }
+
+  /**
+   * @since 3.4.6
+   */
+  protected SqlSource createSqlSource(String originalSql, Class<?> parameterType, Map<String, Object> additionalParameters){
+    return sqlSourceParser.parse(replacePlaceholder(originalSql), parameterType, additionalParameters);
   }
 
   private Object[] extractProviderMethodArguments(Object parameterObject) {
