@@ -16,7 +16,9 @@
 package org.apache.ibatis.submitted.sqlprovider;
 
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.InsertProvider;
 import org.apache.ibatis.annotations.SelectProvider;
+import org.apache.ibatis.annotations.UpdateProvider;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -54,6 +56,15 @@ public interface BaseMapper<T> {
   @SelectProvider(type= OurSqlBuilder.class, method= "buildSelectByIdAndNameMultipleParamAndProviderContext")
   List<T> selectActiveByIdAndName(Integer id, String name);
 
+  @InsertProvider(type = OurSqlBuilder.class, method = "buildInsertSelective", providerSqlSource = MyProviderSqlSource.class)
+  void insertSelective(T entity);
+
+  @UpdateProvider(type= OurSqlBuilder.class, method= "buildUpdateSelective", providerSqlSource = MyProviderSqlSource.class)
+  void updateSelective(T entity);
+
+  @SelectProvider(type = OurSqlBuilder.class, method = "buildGetByEntityQuery", providerSqlSource = MyProviderSqlSource.class)
+  List<T> getByEntity(T entity);
+
   @Retention(RetentionPolicy.RUNTIME)
   @Target(ElementType.METHOD)
   @interface ContainsLogicalDelete {
@@ -64,6 +75,12 @@ public interface BaseMapper<T> {
   @Target(ElementType.TYPE)
   @interface Meta {
     String tableName();
+  }
+
+  @Retention(RetentionPolicy.RUNTIME)
+  @Target(ElementType.FIELD)
+  @interface Column {
+    String value() default "";
   }
 
 }

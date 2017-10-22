@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Array;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
@@ -474,7 +475,11 @@ public class MapperAnnotationBuilder {
         return buildSqlSourceFromStrings(strings, parameterType, languageDriver);
       } else if (sqlProviderAnnotationType != null) {
         Annotation sqlProviderAnnotation = method.getAnnotation(sqlProviderAnnotationType);
-        return new ProviderSqlSource(assistant.getConfiguration(), sqlProviderAnnotation, type, method);
+        Class<? extends AbstractProviderSqlSource> providerSqlSourceType =
+          (Class<? extends AbstractProviderSqlSource>) sqlProviderAnnotation.getClass().getMethod("providerSqlSource").invoke(sqlProviderAnnotation);
+        Constructor<? extends AbstractProviderSqlSource> providerSqlSourceTypeConstructor =
+          providerSqlSourceType.getConstructor(Configuration.class, Object.class, Class.class, Method.class);
+        return providerSqlSourceTypeConstructor.newInstance(assistant.getConfiguration(), sqlProviderAnnotation, type, method);
       }
       return null;
     } catch (Exception e) {

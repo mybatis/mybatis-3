@@ -32,29 +32,22 @@ import org.apache.ibatis.session.Configuration;
  * @author Clinton Begin
  * @author Kazuki Shimizu
  */
-public class ProviderSqlSource implements SqlSource {
+public class ProviderSqlSource extends AbstractProviderSqlSource {
 
-  private final Configuration configuration;
-  private final SqlSourceBuilder sqlSourceParser;
-  private final Class<?> providerType;
-  private Method providerMethod;
-  private String[] providerMethodArgumentNames;
-  private Class<?>[] providerMethodParameterTypes;
-  private ProviderContext providerContext;
-  private Integer providerContextIndex;
-
-  /**
-   * @deprecated Please use the {@link #ProviderSqlSource(Configuration, Object, Class, Method)} instead of this.
-   */
-  @Deprecated
-  public ProviderSqlSource(Configuration configuration, Object provider) {
-    this(configuration, provider, null, null);
-  }
+  protected final Configuration configuration;
+  protected final SqlSourceBuilder sqlSourceParser;
+  protected final Class<?> providerType;
+  protected Method providerMethod;
+  protected String[] providerMethodArgumentNames;
+  protected Class<?>[] providerMethodParameterTypes;
+  protected ProviderContext providerContext;
+  protected Integer providerContextIndex;
 
   /**
    * @since 3.4.5
    */
   public ProviderSqlSource(Configuration configuration, Object provider, Class<?> mapperType, Method mapperMethod) {
+    super(configuration, provider, mapperType, mapperMethod);
     String providerMethodName;
     try {
       this.configuration = configuration;
@@ -103,7 +96,7 @@ public class ProviderSqlSource implements SqlSource {
     return sqlSource.getBoundSql(parameterObject);
   }
 
-  private SqlSource createSqlSource(Object parameterObject) {
+  protected SqlSource createSqlSource(Object parameterObject) {
     try {
       int bindParameterCount = providerMethodParameterTypes.length - (providerContext == null ? 0 : 1);
       String sql;
@@ -126,7 +119,7 @@ public class ProviderSqlSource implements SqlSource {
                 + " using a specifying parameterObject. In this case, please specify a 'java.util.Map' object.");
       }
       Class<?> parameterType = parameterObject == null ? Object.class : parameterObject.getClass();
-      return sqlSourceParser.parse(replacePlaceholder(sql), parameterType, new HashMap<String, Object>());
+      return createSqlSource(sql, parameterType, new HashMap<String, Object>());
     } catch (BuilderException e) {
       throw e;
     } catch (Exception e) {
@@ -134,6 +127,10 @@ public class ProviderSqlSource implements SqlSource {
           + providerType.getName() + "." + providerMethod.getName()
           + ").  Cause: " + e, e);
     }
+  }
+
+  protected SqlSource createSqlSource(String originalSql, Class<?> parameterType, Map<String, Object> additionalParameters) {
+    return sqlSourceParser.parse(replacePlaceholder(originalSql), parameterType, new HashMap<String, Object>());
   }
 
   private Object[] extractProviderMethodArguments(Object parameterObject) {

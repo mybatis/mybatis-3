@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -13,27 +13,24 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package org.apache.ibatis.submitted.sqlprovider;
+package org.apache.ibatis.builder.annotation;
 
-public class User {
-  @BaseMapper.Column
-  private Integer id;
-  @BaseMapper.Column
-  private String name;
+import org.apache.ibatis.mapping.SqlSource;
+import org.apache.ibatis.session.Configuration;
 
-  public Integer getId() {
-    return id;
+import java.lang.reflect.Method;
+
+/**
+ * @author liuzh
+ * @since 3.5.0
+ */
+public abstract class AbstractProviderSqlSource implements SqlSource {
+
+  /**
+   * @since 3.5.0
+   */
+  public AbstractProviderSqlSource(Configuration configuration, Object provider, Class<?> mapperType, Method mapperMethod) {
+
   }
 
-  public void setId(Integer id) {
-    this.id = id;
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
 }

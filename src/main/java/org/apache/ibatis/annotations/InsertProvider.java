@@ -15,6 +15,9 @@
  */
 package org.apache.ibatis.annotations;
 
+import org.apache.ibatis.builder.annotation.AbstractProviderSqlSource;
+import org.apache.ibatis.builder.annotation.ProviderSqlSource;
+
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -31,4 +34,10 @@ public @interface InsertProvider {
   Class<?> type();
 
   String method();
+
+  /**
+   * Specify your own implementation
+   * @since 3.5.0
+   */
+  Class<? extends AbstractProviderSqlSource> providerSqlSource() default ProviderSqlSource.class;
 }
