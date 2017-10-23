@@ -196,9 +196,10 @@ public class ScriptRunner {
     String trimmedLine = line.trim();
     if (lineIsComment(trimmedLine)) {
         final String cleanedString = trimmedLine.substring(2).trim().replaceFirst("//", "");
-        if(cleanedString.toUpperCase().startsWith("@DELIMITER")) {
-            delimiter = cleanedString.substring(11,12);
-            return command;
+      String[] parts = cleanedString.toUpperCase().split(" ");
+      if(parts.length > 1 && parts[0].equals("@DELIMITER")) {
+          delimiter = parts[1];
+          return command;
         }
       println(trimmedLine);
     } else if (commandReadyToExecute(trimmedLine)) {
