@@ -18,13 +18,14 @@ package org.apache.ibatis.jdbc;
 import java.io.BufferedReader;
 import java.io.PrintWriter;
 import java.io.Reader;
-import java.io.UnsupportedEncodingException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.SQLWarning;
 import java.sql.Statement;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author Clinton Begin
@@ -34,6 +35,8 @@ public class ScriptRunner {
   private static final String LINE_SEPARATOR = System.getProperty("line.separator", "\n");
 
   private static final String DEFAULT_DELIMITER = ";";
+
+  private static final Pattern DELIMITER_PATTERN = Pattern.compile("^\\s*((--)|(//))?\\s*(//)?\\s*@DELIMITER\\s+([^\\s]+)", Pattern.CASE_INSENSITIVE);
 
   private final Connection connection;
 
@@ -192,14 +195,14 @@ public class ScriptRunner {
     }
   }
 
-  private StringBuilder handleLine(StringBuilder command, String line) throws SQLException, UnsupportedEncodingException {
+  private StringBuilder handleLine(StringBuilder command, String line) throws SQLException {
     String trimmedLine = line.trim();
     if (lineIsComment(trimmedLine)) {
-        final String cleanedString = trimmedLine.substring(2).trim().replaceFirst("//", "");
-        if(cleanedString.toUpperCase().startsWith("@DELIMITER")) {
-            delimiter = cleanedString.substring(11,12);
-            return command;
-        }
+      Matcher matcher = DELIMITER_PATTERN.matcher(trimmedLine);
+      if (matcher.find()) {
+        delimiter = matcher.group(5);
+        return command;
+      }
       println(trimmedLine);
     } else if (commandReadyToExecute(trimmedLine)) {
       command.append(line.substring(0, line.lastIndexOf(delimiter)));
