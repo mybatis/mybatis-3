@@ -140,7 +140,7 @@ public class ScriptRunner {
       BufferedReader lineReader = new BufferedReader(reader);
       String line;
       while ((line = lineReader.readLine()) != null) {
-        command = handleLine(command, line);
+        handleLine(command, line);
       }
       commitConnection();
       checkForMissingLineTerminator(command);
@@ -195,13 +195,12 @@ public class ScriptRunner {
     }
   }
 
-  private StringBuilder handleLine(StringBuilder command, String line) throws SQLException {
+  private void handleLine(StringBuilder command, String line) throws SQLException {
     String trimmedLine = line.trim();
     if (lineIsComment(trimmedLine)) {
       Matcher matcher = DELIMITER_PATTERN.matcher(trimmedLine);
       if (matcher.find()) {
         delimiter = matcher.group(5);
-        return command;
       }
       println(trimmedLine);
     } else if (commandReadyToExecute(trimmedLine)) {
@@ -214,7 +213,6 @@ public class ScriptRunner {
       command.append(line);
       command.append(LINE_SEPARATOR);
     }
-    return command;
   }
 
   private boolean lineIsComment(String trimmedLine) {
