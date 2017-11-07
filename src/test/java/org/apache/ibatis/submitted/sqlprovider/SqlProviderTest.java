@@ -29,6 +29,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.SelectProvider;
 import org.apache.ibatis.builder.BuilderException;
 import org.apache.ibatis.builder.annotation.ProviderContext;
@@ -52,6 +53,7 @@ public class SqlProviderTest {
     Reader reader = Resources
         .getResourceAsReader("org/apache/ibatis/submitted/sqlprovider/mybatis-config.xml");
     sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+    sqlSessionFactory.getConfiguration().addMapper(StaticMethodSqlProviderMapper.class);
     reader.close();
 
     // populate in-memory database
@@ -472,6 +474,66 @@ public class SqlProviderTest {
     }
   }
 
+  @Test
+  public void staticMethodNoArgument() {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      StaticMethodSqlProviderMapper mapper =
+          sqlSession.getMapper(StaticMethodSqlProviderMapper.class);
+      assertEquals(1, mapper.noArgument());
+    } finally {
+      sqlSession.close();
+    }
+  }
+
+  @Test
+  public void staticMethodOneArgument() {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      StaticMethodSqlProviderMapper mapper =
+          sqlSession.getMapper(StaticMethodSqlProviderMapper.class);
+      assertEquals(10, mapper.oneArgument(10));
+    } finally {
+      sqlSession.close();
+    }
+  }
+
+  @Test
+  public void staticMethodMultipleArgument() {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      StaticMethodSqlProviderMapper mapper =
+          sqlSession.getMapper(StaticMethodSqlProviderMapper.class);
+      assertEquals(2, mapper.multipleArgument(1, 1));
+    } finally {
+      sqlSession.close();
+    }
+  }
+
+  @Test
+  public void staticMethodOnlyProviderContext() {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      StaticMethodSqlProviderMapper mapper =
+          sqlSession.getMapper(StaticMethodSqlProviderMapper.class);
+      assertEquals("onlyProviderContext", mapper.onlyProviderContext());
+    } finally {
+      sqlSession.close();
+    }
+  }
+
+  @Test
+  public void staticMethodOneArgumentAndProviderContext() {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      StaticMethodSqlProviderMapper mapper =
+          sqlSession.getMapper(StaticMethodSqlProviderMapper.class);
+      assertEquals("oneArgumentAndProviderContext 100", mapper.oneArgumentAndProviderContext(100));
+    } finally {
+      sqlSession.close();
+    }
+  }
+
   public interface ErrorMapper {
     @SelectProvider(type = ErrorSqlBuilder.class, method = "methodNotFound")
     void methodNotFound();
@@ -506,6 +568,50 @@ public class SqlProviderTest {
     public String multipleProviderContext(ProviderContext providerContext1, ProviderContext providerContext2) {
       throw new UnsupportedOperationException("multipleProviderContext");
     }
+  }
+
+  public interface StaticMethodSqlProviderMapper {
+    @SelectProvider(type = SqlProvider.class, method = "noArgument")
+    int noArgument();
+
+    @SelectProvider(type = SqlProvider.class, method = "oneArgument")
+    int oneArgument(Integer value);
+
+    @SelectProvider(type = SqlProvider.class, method = "multipleArgument")
+    int multipleArgument(@Param("value1") Integer value1, @Param("value2") Integer value2);
+
+    @SelectProvider(type = SqlProvider.class, method = "onlyProviderContext")
+    String onlyProviderContext();
+
+    @SelectProvider(type = SqlProvider.class, method = "oneArgumentAndProviderContext")
+    String oneArgumentAndProviderContext(Integer value);
+
+    class SqlProvider {
+      public static String noArgument() {
+        return "SELECT 1 FROM INFORMATION_SCHEMA.SYSTEM_USERS";
+      }
+
+      public static String oneArgument(Integer value) {
+        return "SELECT " + value + " FROM INFORMATION_SCHEMA.SYSTEM_USERS";
+      }
+
+      public static String multipleArgument(@Param("value1") Integer value1,
+          @Param("value2") Integer value2) {
+        return "SELECT " + (value1 + value2) + " FROM INFORMATION_SCHEMA.SYSTEM_USERS";
+      }
+
+      public static String onlyProviderContext(ProviderContext context) {
+        return "SELECT '" + context.getMapperMethod().getName()
+            + "' FROM INFORMATION_SCHEMA.SYSTEM_USERS";
+      }
+
+      public static String oneArgumentAndProviderContext(Integer value, ProviderContext context) {
+        return "SELECT '" + context.getMapperMethod().getName() + " " + value
+            + "' FROM INFORMATION_SCHEMA.SYSTEM_USERS";
+      }
+
+    }
+
   }
 
 }
