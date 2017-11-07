@@ -108,7 +108,9 @@ public class ProviderSqlSource implements SqlSource {
     try {
       int bindParameterCount = providerMethodParameterTypes.length - (providerContext == null ? 0 : 1);
       String sql;
-      if (providerMethodParameterTypes.length == 0) {
+      if (Modifier.isStatic(providerMethod.getModifiers())) {
+        sql = (String) providerMethod.invoke(null);
+      } else if (providerMethodParameterTypes.length == 0) {
         sql = (String) providerMethod.invoke(providerType.newInstance());
       } else if (bindParameterCount == 0) {
         sql = (String) providerMethod.invoke(providerType.newInstance(), providerContext);
