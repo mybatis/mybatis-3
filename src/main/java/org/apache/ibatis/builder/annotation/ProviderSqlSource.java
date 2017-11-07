@@ -16,6 +16,7 @@
 package org.apache.ibatis.builder.annotation;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.Map;
 
