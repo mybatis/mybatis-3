@@ -63,17 +63,15 @@ public class ProviderSqlSource implements SqlSource {
       providerMethodName = (String) provider.getClass().getMethod("method").invoke(provider);
 
       for (Method m : this.providerType.getMethods()) {
-        if (providerMethodName.equals(m.getName())) {
-          if (m.getReturnType() == String.class) {
-            if (providerMethod != null){
-              throw new BuilderException("Error creating SqlSource for SqlProvider. Method '"
-                      + providerMethodName + "' is found multiple in SqlProvider '" + this.providerType.getName()
-                      + "'. Sql provider method can not overload.");
-            }
-            this.providerMethod = m;
-            this.providerMethodArgumentNames = new ParamNameResolver(configuration, m).getNames();
-            this.providerMethodParameterTypes = m.getParameterTypes();
+        if (providerMethodName.equals(m.getName()) && CharSequence.class.isAssignableFrom(m.getReturnType())) {
+          if (providerMethod != null){
+            throw new BuilderException("Error creating SqlSource for SqlProvider. Method '"
+                    + providerMethodName + "' is found multiple in SqlProvider '" + this.providerType.getName()
+                    + "'. Sql provider method can not overload.");
           }
+          this.providerMethod = m;
+          this.providerMethodArgumentNames = new ParamNameResolver(configuration, m).getNames();
+          this.providerMethodParameterTypes = m.getParameterTypes();
         }
       }
     } catch (BuilderException e) {
@@ -166,7 +164,8 @@ public class ProviderSqlSource implements SqlSource {
     if (!Modifier.isStatic(providerMethod.getModifiers())) {
       targetObject = providerType.newInstance();
     }
-    return (String) providerMethod.invoke(targetObject, args);
+    CharSequence sql = (CharSequence) providerMethod.invoke(targetObject, args);
+    return sql != null ? sql.toString() : null;
   }
 
   private String replacePlaceholder(String sql) {

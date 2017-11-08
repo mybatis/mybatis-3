@@ -587,22 +587,24 @@ public class SqlProviderTest {
     String oneArgumentAndProviderContext(Integer value);
 
     class SqlProvider {
+
       public static String noArgument() {
         return "SELECT 1 FROM INFORMATION_SCHEMA.SYSTEM_USERS";
       }
 
-      public static String oneArgument(Integer value) {
-        return "SELECT " + value + " FROM INFORMATION_SCHEMA.SYSTEM_USERS";
+      public static StringBuilder oneArgument(Integer value) {
+        return new StringBuilder().append("SELECT ").append(value)
+            .append(" FROM INFORMATION_SCHEMA.SYSTEM_USERS");
       }
 
-      public static String multipleArgument(@Param("value1") Integer value1,
+      public static CharSequence multipleArgument(@Param("value1") Integer value1,
           @Param("value2") Integer value2) {
         return "SELECT " + (value1 + value2) + " FROM INFORMATION_SCHEMA.SYSTEM_USERS";
       }
 
-      public static String onlyProviderContext(ProviderContext context) {
-        return "SELECT '" + context.getMapperMethod().getName()
-            + "' FROM INFORMATION_SCHEMA.SYSTEM_USERS";
+      public static CharSequence onlyProviderContext(ProviderContext context) {
+        return new StringBuilder().append("SELECT '").append(context.getMapperMethod().getName())
+            .append("' FROM INFORMATION_SCHEMA.SYSTEM_USERS");
       }
 
       public static String oneArgumentAndProviderContext(Integer value, ProviderContext context) {
