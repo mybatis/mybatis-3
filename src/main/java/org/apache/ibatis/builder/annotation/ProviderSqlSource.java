@@ -15,7 +15,9 @@
  */
 package org.apache.ibatis.builder.annotation;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -109,16 +111,16 @@ public class ProviderSqlSource implements SqlSource {
       int bindParameterCount = providerMethodParameterTypes.length - (providerContext == null ? 0 : 1);
       String sql;
       if (providerMethodParameterTypes.length == 0) {
-        sql = (String) providerMethod.invoke(providerType.newInstance());
+        sql = invokeProviderMethod();
       } else if (bindParameterCount == 0) {
-        sql = (String) providerMethod.invoke(providerType.newInstance(), providerContext);
+        sql = invokeProviderMethod(providerContext);
       } else if (bindParameterCount == 1 &&
               (parameterObject == null || providerMethodParameterTypes[(providerContextIndex == null || providerContextIndex == 1) ? 0 : 1].isAssignableFrom(parameterObject.getClass()))) {
-        sql = (String) providerMethod.invoke(providerType.newInstance(), extractProviderMethodArguments(parameterObject));
+        sql = invokeProviderMethod(extractProviderMethodArguments(parameterObject));
       } else if (parameterObject instanceof Map) {
         @SuppressWarnings("unchecked")
         Map<String, Object> params = (Map<String, Object>) parameterObject;
-        sql = (String) providerMethod.invoke(providerType.newInstance(), extractProviderMethodArguments(params, providerMethodArgumentNames));
+        sql = invokeProviderMethod(extractProviderMethodArguments(params, providerMethodArgumentNames));
       } else {
         throw new BuilderException("Error invoking SqlProvider method ("
                 + providerType.getName() + "." + providerMethod.getName()
@@ -158,6 +160,14 @@ public class ProviderSqlSource implements SqlSource {
       }
     }
     return args;
+  }
+
+  private String invokeProviderMethod(Object... args) throws Exception {
+    Object targetObject = null;
+    if (!Modifier.isStatic(providerMethod.getModifiers())) {
+      targetObject = providerType.newInstance();
+    }
+    return (String) providerMethod.invoke(targetObject, args);
   }
 
   private String replacePlaceholder(String sql) {
