@@ -78,6 +78,20 @@ $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100 |
 
+
+CREATE OR REPLACE FUNCTION mbtest.get_order_out_params(
+  order_number integer,
+  detail_count out integer,
+  header_curs out refcursor
+) AS $BODY$
+BEGIN
+  open header_curs for select * from mbtest.order_header where order_id = ORDER_NUMBER;
+  select count(*) into detail_count from mbtest.order_detail where order_id = ORDER_NUMBER;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100 |
+
 -- @DELIMITER ;
 
 ALTER FUNCTION mbtest.get_order(integer) OWNER TO postgres;

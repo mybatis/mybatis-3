@@ -40,4 +40,18 @@
     { #{order,jdbcType=OTHER,mode=OUT,resultMap=org.apache.ibatis.submitted.usesjava8.refcursor.OrdersMapper.OrderResult,javaType=java.sql.ResultSet} = 
         call mbtest.get_order(#{orderId,jdbcType=INTEGER,mode=IN}) }
   </update>
+
+  <resultMap id="OrderHeaderResult" type="org.apache.ibatis.submitted.usesjava8.refcursor.Order">
+    <id property="orderId" column="ORDER_ID"/>
+    <result property="customerName" column="CUST_NAME" />
+  </resultMap>
+
+  <select id="getOrder3" statementType="CALLABLE">
+    { call mbtest.get_order_out_params(
+      #{orderId,jdbcType=INTEGER,mode=IN},
+      #{detailCount,jdbcType=INTEGER,mode=OUT,javaType=int},
+      #{order,jdbcType=OTHER,mode=OUT,resultMap=OrderHeaderResult,javaType=java.sql.ResultSet}
+    ) }
+  </select>
+
 </mapper>
