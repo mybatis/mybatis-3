@@ -747,7 +747,7 @@ resultSets=””。
 这些可选的 SQL 注解允许你指定一个
 类名和一个方法在执行时来返回运行
 允许创建动态 
-的 SQL。
+的 SQL (Since 3.4.6, you can specify the <code>CharSequence</code> instead of <code>String</code> as a method return type)。
 基于执行的映射语句, 
 MyBatis
 会实例化这个类,然后执行由 provider
@@ -860,7 +860,7 @@ Company getCompanyById(Integer id);</source>
 List<User> getUsersByName(String name);
 
 class UserSqlBuilder {
-  public String buildGetUsersByName(final String name) {
+  public static String buildGetUsersByName(final String name) {
     return new SQL(){{
       SELECT("*");
       FROM("users");
@@ -880,7 +880,7 @@ List<User> getUsersByName(
 class UserSqlBuilder {
 
   // If not use @Param, you should be define same arguments with mapper method
-  public String buildGetUsersByName(
+  public static String buildGetUsersByName(
       final String name, final String orderByColumn) {
     return new SQL(){{
       SELECT("*");
@@ -891,7 +891,7 @@ class UserSqlBuilder {
   }
 
   // If use @Param, you can define only arguments to be used
-  public String buildGetUsersByName(@Param("orderByColumn") final String orderByColumn) {
+  public static String buildGetUsersByName(@Param("orderByColumn") final String orderByColumn) {
     return new SQL(){{
       SELECT("*");
       FROM("users");

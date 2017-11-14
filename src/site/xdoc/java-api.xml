@@ -496,8 +496,9 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
           </ul>
         </td>
         <td>Allows for creation of dynamic SQL. These alternative SQL annotations allow you to specify a class and
-        a method name that will return the SQL to run at execution time. Upon executing the mapped statement, MyBatis will
-        instantiate the class, and execute the method, as specified by the provider.
+        a method name that will return the SQL to run at execution time
+        (Since 3.4.6, you can specify the <code>CharSequence</code> instead of <code>String</code> as a method return type).
+        Upon executing the mapped statement, MyBatis will instantiate the class, and execute the method, as specified by the provider.
         You can pass objects that passed to arguments of a mapper method, "Mapper interface type" and "Mapper method"
         via the <code>ProviderContext</code>(available since MyBatis 3.4.5 or later) as method argument.
         (In MyBatis 3.4 or later, it's allow multiple parameters)
@@ -595,7 +596,7 @@ Company getCompanyById(Integer id);</source>
 List<User> getUsersByName(String name);
 
 class UserSqlBuilder {
-  public String buildGetUsersByName(final String name) {
+  public static String buildGetUsersByName(final String name) {
     return new SQL(){{
       SELECT("*");
       FROM("users");
@@ -615,7 +616,7 @@ List<User> getUsersByName(
 class UserSqlBuilder {
 
   // If not use @Param, you should be define same arguments with mapper method
-  public String buildGetUsersByName(
+  public static String buildGetUsersByName(
       final String name, final String orderByColumn) {
     return new SQL(){{
       SELECT("*");
@@ -626,7 +627,7 @@ class UserSqlBuilder {
   }
 
   // If use @Param, you can define only arguments to be used
-  public String buildGetUsersByName(@Param("orderByColumn") final String orderByColumn) {
+  public static String buildGetUsersByName(@Param("orderByColumn") final String orderByColumn) {
     return new SQL(){{
       SELECT("*");
       FROM("users");
