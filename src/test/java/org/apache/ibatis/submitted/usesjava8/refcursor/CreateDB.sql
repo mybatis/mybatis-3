@@ -84,8 +84,13 @@ CREATE OR REPLACE FUNCTION mbtest.get_order_out_params(
   detail_count out integer,
   header_curs out refcursor
 ) AS $BODY$
+DECLARE
+  order_exists boolean;
 BEGIN
-  open header_curs for select * from mbtest.order_header where order_id = ORDER_NUMBER;
+  select order_id is not null into order_exists from mbtest.order_header where order_id = ORDER_NUMBER;
+  if order_exists then
+    open header_curs for select * from mbtest.order_header where order_id = ORDER_NUMBER;
+  end if;
   select count(*) into detail_count from mbtest.order_detail where order_id = ORDER_NUMBER;
 END;
 $BODY$

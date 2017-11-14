@@ -146,4 +146,20 @@ public class RefCursorTest {
       assertEquals("Anonymous", handler.getResult().get(0).getCustomerName());
     }
   }
+
+  @Test
+  public void shouldNullResultSetNotCauseNpe() throws IOException {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      OrdersMapper mapper = sqlSession.getMapper(OrdersMapper.class);
+      Map<String, Object> parameter = new HashMap<String, Object>();
+      parameter.put("orderId", 99);
+      mapper.getOrder3(parameter, new ResultHandler<Order>() {
+        @Override
+        public void handleResult(ResultContext<? extends Order> resultContext) {
+          // won't be used
+        }
+      });
+      assertEquals(Integer.valueOf(0), parameter.get("detailCount"));
+    }
+  }
 }
