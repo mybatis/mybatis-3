@@ -285,6 +285,7 @@ RowBounds rowBounds = new RowBounds(offset, limit);</source>
   <p>ResultHandler파라미터는 레코드별로 다룰수 있도록 해준다. 
   List에 추가할수도 있고 Map, Set을 만들수도 있으며 각각의 결과를 그냥 던질수도 있다. 
   ResultHandler로 많은 것을 할 수 있고 마이바티스는 결과셋을 다루기 위해 내부적으로 사용한다.</p>
+  <p>Since 3.4.6, ResultHandler passed to a CALLABLE statement is used on every REFCURSOR output parameter of the stored procedure if there is any.</p>
   <p>인터페이스는 매우 간단하다.</p>  
   <source><![CDATA[package org.apache.ibatis.session;
 public interface ResultHandler<T> {

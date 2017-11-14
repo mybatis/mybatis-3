@@ -216,6 +216,7 @@ RowBounds rowBounds = new RowBounds(offset, limit);</source>
 
   <p>ドライバーによって得られる効果は異なります。SCROLL_SENSITIVE または SCROLL_INSENSITIVE （つまり FORWARD_ONLY 以外）の結果セットタイプを使った時、最も良いパフォーマンスが得られます。</p>
   <p>ResultHandler を渡すと、各行を自由に処理することができます。List に追加したり、Map や Set を作成することもできますし、結果を捨てて合計値のみを返すこともできます。ResultHandler を使えば好きな処理を行うことも可能で、MyBatis 自身も内部的に結果リストを構築するために ResultHandler を利用しています。</p>
+  <p>3.4.6 以降では、CALLABLE ステートメントに渡された ResultHandler は、指定されたストアド・プロシージャで宣言されている REFCURSOR 型の OUT 引数全てに対して適用されます。</p>
   <p>ResultHandler インターフェイスは非常にシンプルです。</p>  
   <source><![CDATA[package org.mybatis.executor.result;
 public interface ResultHandler<T> {

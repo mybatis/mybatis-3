@@ -351,6 +351,7 @@ Set
 你可以使用 ResultHandler 做很多漂亮的事,
 那就是 MyBatis 内部创建结果集列表。
   </p>
+  <p>Since 3.4.6, ResultHandler passed to a CALLABLE statement is used on every REFCURSOR output parameter of the stored procedure if there is any.</p>
   <p>它的接口很简单。</p>  
   <source><![CDATA[package org.apache.ibatis.session;
 public interface ResultHandler<T> {
