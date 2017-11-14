@@ -364,6 +364,13 @@ public interface ResultHandler<T> {
 尔返回值的 stop()方法来停止 MyBatis 加载更多的结果。
   </p>
 
+  <p>Using a ResultHandler has two limitations that you should be aware of:</p>
+  
+  <ul>
+  <li>Data got from an method called with a ResultHandler will not be cached.</li>
+  <li>When using advanced resultmaps MyBatis will probably require several rows to build an object. If a ResultHandler is used you may be given an object whose associations or collections are not yet filled.</li>
+  </ul>
+
   <h5>批量立即更新方法(Flush Method)</h5>
   <p>有一个方法可以刷新（执行）存储在JDBC驱动类中的批量更新语句。当你将<code>ExecutorType.BATCH</code>作为<code>ExecutorType</code>使用时可以采用此方法。</p>
   <source><![CDATA[List<BatchResult> flushStatements()]]></source>

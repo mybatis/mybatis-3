@@ -293,6 +293,13 @@ public interface ResultHandler<T> {
 
   <p>ResultContext파라미터는 결과 객체에 접근할 수 있도록 해준다.</p>
 
+  <p>Using a ResultHandler has two limitations that you should be aware of:</p>
+  
+  <ul>
+  <li>Data got from an method called with a ResultHandler will not be cached.</li>
+  <li>When using advanced resultmaps MyBatis will probably require several rows to build an object. If a ResultHandler is used you may be given an object whose associations or collections are not yet filled.</li>
+  </ul>
+
   <h5>배치 수정시 flush메소드</h5>
   <p>어떤 시점에 JDBC드라이버 클래스에 저장된 배치 수정구문을 지울(flushing(executing)) 방법이 있다. 
   이 방법은 <code>ExecutorType</code>을 <code>ExecutorType.BATCH</code>로 설정한 경우 사용가능하다. </p>
