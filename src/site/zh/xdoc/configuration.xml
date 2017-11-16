@@ -62,7 +62,7 @@
   <property name="username" value="dev_user"/>
   <property name="password" value="F2Fa3!33TYyg"/>
 </properties>]]></source>
-        <p>其中的属性就可以在整个配置文件中使用来替换需要动态配置的属性值。比如:
+        <p>然后其中的属性就可以在整个配置文件中被用来替换需要动态配置的属性值。比如:
         </p>
         <source><![CDATA[<dataSource type="POOLED">
   <property name="driver" value="${driver}"/>
@@ -146,7 +146,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 cacheEnabled
               </td>
               <td>
-                该配置影响的所有映射器中配置的缓存的全局开关。
+                全局地开启或关闭配置文件中的所有映射器已经配置的任何缓存。
               </td>
               <td>
                 true | false
@@ -375,7 +375,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 某些驱动需要指定列的 JDBC 类型，多数情况直接用一般类型即可，比如 NULL、VARCHAR 或 OTHER。
               </td>
               <td>
-                JdbcType enumeration. Most common are: NULL, VARCHAR and OTHER
+                JdbcType 常量. 大多都为: NULL, VARCHAR and OTHER
               </td>
               <td>
                 OTHER
@@ -389,7 +389,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 指定哪个对象的方法触发一次延迟加载。
               </td>
               <td>
-                A method name list separated by commas
+                用逗号分隔的方法列表。
               </td>
               <td>
                 equals,clone,hashCode,toString
@@ -403,7 +403,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 指定动态 SQL 生成的默认语言。
               </td>
               <td>
-                A type alias or fully qualified class name.
+                一个类型别名或完全限定类名。
               </td>
               <td>
                 org.apache.ibatis.scripting.xmltags.XMLLanguageDriver
@@ -414,10 +414,10 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 defaultEnumTypeHandler
               </td>
               <td>
-                Specifies the <code>TypeHandler</code> used by default for Enum. (Since: 3.4.5)
+                指定 Enum 使用的默认 <code>TypeHandler</code> 。 (从3.4.5开始)
               </td>
               <td>
-                A type alias or fully qualified class name.
+                一个类型别名或完全限定类名。
               </td>
               <td>
                 org.apache.ibatis.type.EnumTypeHandler
@@ -461,7 +461,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 指定 MyBatis 增加到日志名称的前缀。
               </td>
               <td>
-                Any String
+                任何字符串
               </td>
               <td>
                 Not set
@@ -529,8 +529,8 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 configurationFactory
               </td>
               <td>
-                指定一个提供<code>Configuration</code>实例的类.
-		这个被返回的Configuration实例是用来加载被反序列化对象的懒加载属性值.
+                指定一个提供<code>Configuration</code>实例的类。
+		这个被返回的Configuration实例用来加载被反序列化对象的懒加载属性值。
 		这个类必须包含一个签名方法<code>static Configuration getConfiguration()</code>. (从 3.2.3 版本开始)
               </td>
               <td>
@@ -589,7 +589,7 @@ public class Author {
     ...
 }
 ]]></source>
-        <p>已经为许多常见的 Java 类型内建了相应的类型别名。它们都是大小写不敏感的，需要注意的是由基本类型名称重复导致的特殊处理。</p>
+        <p>这是一些为常见的 Java 类型内建的相应的类型别名。它们都是大小写不敏感的，需要注意的是由基本类型名称重复导致的特殊处理。</p>
         <table>
           <thead>
             <tr>
@@ -826,7 +826,7 @@ public class Author {
           都会用类型处理器将获取的值以合适的方式转换成 Java 类型。下表描述了一些默认的类型处理器。</p>
         <p>
           <span class="label important">NOTE</span>
-          Since version 3.4.5, The MyBatis has been supported JSR-310(Date and Time API) by default.
+         从 3.4.5 开始，MyBatis 默认支持 JSR-310(日期和时间 API) 。
         </p>
         <table>
           <thead>

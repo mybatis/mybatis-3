@@ -218,13 +218,12 @@ SqlSessionFactory factory = builder.build(configuration);</source>
   
   <h4>SqlSessionFactory</h4>
   <p>
-SqlSessionFactory 有六个方法可以用来创建 SqlSession 实例。通常来说,如何决定是你
-选择下面这些方法时:
+SqlSessionFactory 有六个方法可以用来创建 SqlSession 实例。通常来说,当你选择如下的一个方法时你将要作出决定:
   </p>
   <ul>
     <li><strong>Transaction (事务)</strong>: 你想为 session 使用事务或者使用自动提交(通常意味着很多
      数据库和/或 JDBC 驱动没有事务)?</li>
-    <li><strong>Connection (连接)</strong>: 你想 MyBatis 获得来自配置的数据源的连接还是提供你自己</li>
+    <li><strong>Connection (连接)</strong>: 你想 MyBatis 获得来自配置的数据源的连接还是提供你自己的</li>
     <li><strong>Execution (执行)</strong>: 你想 MyBatis 复用预处理语句和/或批量更新语句(包括插入和 删除)?</li>
   </ul>
   <p>
@@ -245,7 +244,7 @@ Configuration getConfiguration();</source>
   </p>
   <ul>
     <li>会开启一个事务(也就是不自动提交)</li>
-    <li>连接对象会从由活动环境配置的数据源实例中得到。</li>
+    <li>将从由当前使用的环境配置的 DataSource 实例（数据源实例）获取中获取 Connection 对象（连接对象）</li>
     <li>事务隔离级别将会使用驱动或数据源的默认设置。</li>
     <li>预处理语句不会被复用,也不会批量处理更新。</li>
   </ul>
@@ -290,8 +289,7 @@ BLE)
 
   <h5>语句执行方法</h5>
   <p>
-这些方法被用来执行定义在 SQL 映射的 XML 文件中的 SELECT,INSERT,UPDA E
-T
+这些方法被用来执行定义在 SQL 映射的 XML 文件中的 SELECT,INSERT,UPDATE
 和 DELETE 语句。它们都会自行解释,每一句都使用语句的 ID 属性和参数对象,参数可以
 是原生类型(自动装箱或包装类)
 ,JavaBean,POJO 或 Map。
@@ -304,11 +302,7 @@ int update(String statement, Object parameter)
 int delete(String statement, Object parameter)]]></source>
   <p>
 selectOne 和 selectList 的不同仅仅是 selectOne 必须返回一个对象。
-如果多余一个,
-或者
-没有返回
-(或返回了 null) 那么就会抛出异常。
-,
+如果多于一个,或者没有返回(或返回了 null) 那么就会抛出异常。
 如果你不知道需要多少对象,
 使用 selectList。
   </p>
@@ -342,7 +336,7 @@ int limit = 25;
 RowBounds rowBounds = new RowBounds(offset, limit);</source>
 
   <p>不同的驱动会实现这方面的不同级别的效率。对于最佳的表现,使用结果集类型的
-SCROLL_SENSITIVE 或 SCROLL_INSENSITIVE(或句话说:不是 FORWARD_ONLY)。
+SCROLL_SENSITIVE 或 SCROLL_INSENSITIVE(换句话说:不是 FORWARD_ONLY)。
   </p>
   <p>
 ResultHandler 参数允许你按你喜欢的方式处理每一行。你可以将它添加到 List 中,创
@@ -509,7 +503,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
 基础,也是新的基于注解配置的基础。注解提供了一种简单的方式来实现简单映射语句,而
 不会引入大量的开销。
   </p>
-  <p><span class="label important">注意</span> 不幸的是,Java 注解限制了它们的表现和灵活。尽管很多时间都花调查,设计和
+  <p><span class="label important">注意</span> 不幸的是,Java 注解限制了它们的表现和灵活。尽管很多时间都花在调查,设计和
 实验上,最强大的 MyBatis 映射不能用注解来构建,那并不可笑。C#属性(做示例)就没
 有这些限制,因此 MyBatis.NET 将会比 XML 有更丰富的选择。也就是说,基于 Java 注解
 的配置离不开它的特性。

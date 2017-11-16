@@ -339,7 +339,7 @@ ps.setInt(1,id);]]></source>
   </foreach>
 </insert>]]></source>
 
-        <p>对于不支持自动生成类型的数据库或可能不支持自动生成主键 JDBC 驱动来说，MyBatis 有另外一种方法来生成主键。
+        <p>对于不支持自动生成类型的数据库或可能不支持自动生成主键的 JDBC 驱动，MyBatis 有另外一种方法来生成主键。
         </p>
 
         <p>这里有一个简单（甚至很傻）的示例，它可以生成一个随机 ID（你最好不要这么做，但这里展示了 MyBatis 处理问题的灵活性及其所关心的广度）：
@@ -420,7 +420,7 @@ ps.setInt(1,id);]]></source>
 </select>]]></source>
 
         <p>
-          属性值可以用于包含的refid属性或者包含的字句里面的属性值，例如：
+          属性值也可以被用在 include 元素的 refid 属性里（<source><![CDATA[<include refid="${include_target}"/>]]></source>）或 include 内部语句中（<source><![CDATA[${prefix}Table]]></source>），例如：
         </p>
 
         <source><![CDATA[<sql id="sometable">
@@ -463,7 +463,7 @@ ps.setInt(1,id);]]></source>
         <p>如果 User 类型的参数对象传递到了语句中，id、username 和 password 属性将会被查找，然后将它们的值传入预处理语句的参数中。
         </p>
 
-        <p>这点对于向语句中传参是比较好的而且又简单，不过参数映射的功能远不止于此。
+        <p>这点相对于向语句中传参是比较好的，而且又简单，不过参数映射的功能远不止于此。
         </p>
 
         <p>首先，像 MyBatis 的其他部分一样，参数也可以指定一个特殊的数据类型。
@@ -471,10 +471,10 @@ ps.setInt(1,id);]]></source>
 
         <source><![CDATA[#{property,javaType=int,jdbcType=NUMERIC}]]></source>
 
-        <p>像 MyBatis 的剩余部分一样，javaType 通常可以从参数对象中来去确定，前提是只要对象不是一个 HashMap。那么 javaType 应该被确定来保证使用正确类型处理器。
+        <p>像 MyBatis 的剩余部分一样，javaType 通常可以由参数对象确定，除非该对象是一个 HashMap。这时所使用的 <code>TypeHandler</code> 应该明确指明 javaType。
         </p>
 
-        <p><span class="label important">NOTE</span> 如果 null 被当作值来传递，对于所有可能为空的列，JDBC Type 是需要的。你可以自己通过阅读预处理语句的 setNull() 方法的 JavaDocs 文档来研究这种情况。
+        <p><span class="label important">NOTE</span> 如果 null 被当作值来传递，对于所有可能为空的列，JDBC Type 是必需的。你可以通过自己阅读预处理语句的 setNull() 方法的 JavaDocs 文档来研究这种情况。
         </p>
 
         <p>为了以后定制类型处理方式，你也可以指定一个特殊的类型处理器类（或别名），比如：
@@ -500,7 +500,7 @@ ps.setInt(1,id);]]></source>
 
         <source><![CDATA[#{middleInitial, mode=OUT, jdbcType=STRUCT, jdbcTypeName=MY_TYPE, resultMap=departmentResultMap}]]></source>
 
-        <p>尽管所有这些强大的选项很多时候你只简单指定属性名，其他的事情 MyBatis 会自己去推断，最多你需要为可能为空的列名指定 <code>jdbcType</code>。
+        <p>尽管所有这些选项很强大，但大多时候你只须简单地指定属性名，其他的事情 MyBatis 会自己去推断，你最多需要为可能为空的列名指定 <code>jdbcType</code>。
         </p>
 
         <source><![CDATA[#{firstName}
@@ -526,10 +526,8 @@ ps.setInt(1,id);]]></source>
 
       <subsection name="Result Maps" id="Result_Maps">
         <p>
-resultMap 元素是 MyBatis 中最重要最强大的元素。它就是让你远离 90%的需要从结果
-集中取出数据的 JDBC 代码的那个东西,
-而且在一些情形下允许你做一些 JDBC 不支持的事
-情。
+resultMap 元素是 MyBatis 中最重要最强大的元素。它就是让你远离 90%的需要从结果集中取出数据的 JDBC 代码的那个东西,
+而且在一些情形下允许你做一些 JDBC 不支持的事情。
 事实上,
 编写相似于对复杂语句联合映射这些等同的代码,
 也许可以跨过上千行的代码。
@@ -548,10 +546,10 @@ ResultMap 的设计就是简单语句不需要明确的结果映射,而很多复
 </select>]]></source>
 
         <p>
-这样一个语句简单作用于所有列被自动映射到 HashMap 的键上,这由 resultType 属性
-指定。这在很多情况下是有用的,但是 HashMap 不能很好描述一个领域模型。那样你的应
-用程序将会使用 JavaBeans 或 POJOs(Plain Old Java Objects,普通 Java 对象)来作为领域
-模型。MyBatis 对两者都支持。看看下面这个 JavaBean:
+这样一个语句只是简单地将结果自动映射到 HashMap 的键上,这由 resultType 属性指定。
+这在很多情况下是有用的,但是 HashMap 不能很好描述一个领域模型。
+那样你的应用程序将会使用 JavaBeans 或 POJOs(Plain Old Java Objects,普通 Java 对象)来作为领域模型。
+MyBatis 对两者都支持。看看下面这个 JavaBean:
         </p>
         <source><![CDATA[package com.someapp.model;
 public class User {
@@ -624,11 +622,10 @@ JavaBean 的属性上。如果列名没有精确匹配,你可以在列名上使�
 </select>]]></source>
 
         <p>
-ResultMap 最优秀的地方你已经了解了很多了,但是你还没有真正的看到一个。这些简
-单的示例不需要比你看到的更多东西。
+ResultMap 最优秀的地方你已经了解了很多了,但是你还没有真正的看到一个。
+这些简单的示例不需要比你看到的更多东西。
 只是出于示例的原因,
-让我们来看看最后一个示例中
-外部的 resultMap 是什么样子的,这也是解决列名不匹配的另外一种方式。
+让我们来看看最后一个示例中外部的 resultMap 是什么样子的,这也是解决列名不匹配的另外一种方式。
         </p>
 
         <source><![CDATA[<resultMap id="userResultMap" type="User">
@@ -654,10 +651,10 @@ ResultMap 最优秀的地方你已经了解了很多了,但是你还没有真正
 	      <h4>高级结果映射</h4>
 
         <p>
-MyBatis 创建的一个想法:数据库不用永远是你想要的或需要它们是什么样的。而我们
-最喜欢的数据库最好是第三范式或 BCNF 模式,但它们有时不是。如果可能有一个单独的
-数据库映射,所有应用程序都可以使用它,这是非常好的,但有时也不是。结果映射就是
-MyBatis 提供处理这个问题的答案。
+MyBatis MyBatis 创建的一个想法:数据库不用永远是你所想或所需的。
+而我们最喜欢的数据库最好是第三范式或 BCNF 模式,但它们有时不是。
+如果可能有一个单独的数据库映射,所有应用程序都可以使用它,这是非常好的,但有时也不是。
+结果映射就是结果映射就是 MyBatis 提供处理这个问题的答案。
         </p>
 
         <p>
@@ -700,17 +697,12 @@ MyBatis 提供处理这个问题的答案。
 </select>]]></source>
 
         <p>
-你可能想把它映射到一个智能的对象模型,包含一个作者写的博客,有很多的博文,每
-篇博文有零条或多条的评论和标签。
+你可能想把它映射到一个智能的对象模型,包含一个作者写的博客,
+有很多的博文,每篇博文有零条或多条的评论和标签。
 下面是一个完整的复杂结果映射例子
-(假设作者,
-博客,
-博文,
-评论和标签都是类型的别名) 我们来看看,
-。
-但是不用紧张,
-我们会一步一步来说明。
-当天最初它看起来令人生畏,但实际上非常简单。
+(假设作者,博客,博文,评论和标签都是类型的别名) 我们来看看。
+但是不用紧张,我们会一步一步来说明。
+虽然它可能看起来令人望而生畏,但实际上非常简单。
         </p>
 
         <source><![CDATA[<!-- Very Complex Result Map -->
@@ -814,13 +806,11 @@ resultMap 元素有很多子元素和一个值得讨论的结构。
         </table>
 
         <p>
-          <span class="label important">最佳实践</span> 通常逐步建立结果映射。单元测试的真正帮助在这里。如果你尝试创建
-一次创建一个向上面示例那样的巨大的结果映射,
-那么可能会有错误而且很难去控制它
-来工作。开始简单一些,一步一步的发展。而且要进行单元测试!使用该框架的缺点是
-它们有时是黑盒(是否可见源代码)
-。你确定你实现想要的行为的最好选择是编写单元
-测试。它也可以你帮助得到提交时的错误。
+          <span class="label important">最佳实践</span> 
+通常逐步建立结果映射。单元测试的真正帮助在这里。如果你尝试一次创建一个像上面示例那样的巨大的结果映射,
+那么可能会有错误而且很难去控制它来工作。
+开始时简单一些,一步一步的发展。而且要进行单元测试!使用该框架的缺点是它们有时是黑盒(是否可见源代码)。
+你确定你实现想要的行为的最好选择是编写单元测试。它也可以你帮助得到提交时的错误。
         </p>
 
         <p>
@@ -839,15 +829,15 @@ resultMap 元素有很多子元素和一个值得讨论的结构。
 
         <p>
 这两者之间的唯一不同是 id 表示的结果将是当比较对象实例时用到的标识属性。这帮
-助来改进整体表现,特别是缓存和嵌入结果映射(也就是联合映射)
-。      </p>
+助来改进整体表现,特别是缓存和嵌入结果映射(也就是联合映射)。
+      </p>
 
         <p>
 每个都有一些属性:
         </p>
 
         <table>
-          <caption>Id and Result Attributes</caption>
+          <caption>Id 和 Result 的属性</caption>
           <thead>
             <tr>
               <th>属性</th>
@@ -858,11 +848,8 @@ resultMap 元素有很多子元素和一个值得讨论的结构。
             <tr>
               <td><code>property</code></td>
               <td>
-映射到列结果的字段或属性。如果匹配的是存在的,和给定名称相同
-的 JavaBeans 的属性,那么就会使用。否则 MyBatis 将会寻找给定名称
-property
-的字段。这两种情形你可以使用通常点式的复杂属性导航。比如,你
-可以这样映射一些东西:
+映射到列结果的字段或属性。如果用来匹配的 JavaBeans 存在给定名字的属性，那么它将会被使用。否则 MyBatis 将会寻找给定名称 property 的字段。
+这两种情形你可以使用通常点式的复杂属性导航。比如,你可以这样映射一些东西:
 “username”
 ,或者映射到一些复杂的东西:
 “address.street.number”
@@ -961,7 +948,7 @@ jdbcType
         <p>
 对于大多数数据传输对象(Data Transfer Object,DTO)类型,属性可以起作用,而且像
 你绝大多数的领域模型,
-指令也许是你想使不可变类的地方。
+可能有些情况下你想使用不可变类。
 通常包含引用或查询数
 据的表很少或基本不变的话对不可变类来说是合适的。
 构造方法注入允许你在初始化时
@@ -1022,7 +1009,7 @@ jdbcType
             <tr>
               <td><code>column</code></td>
               <td>
-来自数据库的类名,或重命名的列标签。这和通常传递给
+来自数据库的列名,或重命名的列标签。这和通常传递给
 resultSet.getString(columnName)方法的字符串是相同的。
               </td>
             </tr>
@@ -1041,7 +1028,6 @@ resultSet.getString(columnName)方法的字符串是相同的。
 在这个表格之前的所支持的 JDBC 类型列表中的类型。JDBC 类型是仅仅
 需要对插入,
 更新和删除操作可能为空的列进行处理。这是 JDBC 的需要,
-jdbcType
 而不是 MyBatis 的。如果你直接使用 JDBC 编程,你需要指定这个类型-但
 仅仅对可能为空的值。
               </td>
@@ -1120,11 +1106,8 @@ jdbcType
             <tr>
               <td><code>property</code></td>
               <td>
-映射到列结果的字段或属性。如果匹配的是存在的,和给定名称相同的
-property
-JavaBeans 的属性,
-那么就会使用。
-否则 MyBatis 将会寻找给定名称的字段。
+映射到列结果的字段或属性。如果用来匹配的 JavaBeans 存在给定名字的属性，那么它将会被使用。
+否则 MyBatis 将会寻找与给定名称相同的字段。
 这两种情形你可以使用通常点式的复杂属性导航。比如,你可以这样映射
 一 些 东 西 :“ username ”, 或 者 映 射 到 一 些 复 杂 的 东 西 :
 “address.street.number”
@@ -1178,7 +1161,7 @@ typeHandler
             <tr>
               <td><code>column</code></td>
               <td>
-来自数据库的类名,或重命名的列标签。这和通常传递给
+来自数据库的列名,或重命名的列标签。这和通常传递给
 resultSet.getString(columnName)方法的字符串是相同的。
 column
 注 意 : 要 处 理 复 合 主 键 , 你 可 以 指 定 多 个 列 名 通 过 column= ”
@@ -1505,7 +1488,7 @@ javaType 属性是不需要的,因为 MyBatis 在很多情况下会为你算出�
 用了一个“ofType”属性
         </p>
 
-        <p>First, let's look at the SQL:</p>
+        <p>首先, 让我们看看 SQL:</p>
 
         <source><![CDATA[<select id="selectBlog" resultMap="blogResult">
   select
