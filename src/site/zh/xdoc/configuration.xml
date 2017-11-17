@@ -1309,7 +1309,7 @@ public class ExampleTypeHandler extends BaseTypeHandler<String> {
         <p>
           当决定在<code>ResultMap</code>中使用某一TypeHandler时，此时java类型是已知的（从结果类型中获得），但是JDBC类型是未知的。
 	  因此Mybatis使用<code>javaType=[TheJavaType], jdbcType=null</code>的组合来选择一个TypeHandler。
-	  这意味着使用<code>@MappedJdbcTypes</code>注解可以<i>限制</i>TypeHandler的范围，同时除非显示的设置，否则TypeHandler在<code>ResultMap</code>中将是无效的。
+	  这意味着使用<code>@MappedJdbcTypes</code>注解可以<i>限制</i>TypeHandler的范围，同时除非显式的设置，否则TypeHandler在<code>ResultMap</code>中将是无效的。
 	  如果希望在<code>ResultMap</code>中使用TypeHandler，那么设置<code>@MappedJdbcTypes</code>注解的<code>includeNullJdbcType=true</code>即可。
 	  然而从Mybatis 3.4.0开始，如果<b>只有一个</b>注册的TypeHandler来处理Java类型，那么它将是<code>ResultMap</code>使用Java类型时的默认值（即使没有<code>includeNullJdbcType=true</code>）。
         </p>
