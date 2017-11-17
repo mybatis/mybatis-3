@@ -111,7 +111,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
 </properties>]]></source>
 
         <p>
-          <span class="label important">NOTE</span> 你可以使用 <code>":"</code> 作为属性键(e.g. <code>db:username</code>)
+          <span class="label important">提示</span> 你可以使用 <code>":"</code> 作为属性键(e.g. <code>db:username</code>)
           或者你也可以在sql定义中使用 OGNL 表达式的三元运算符(e.g. <code>${tableName != null ? tableName : 'global_constants'}</code>)，
 		  你应该通过增加一个指定的属性来改变分隔键和默认值的字符。例如：
         </p>
@@ -825,7 +825,7 @@ public class Author {
         <p>无论是 MyBatis 在预处理语句（PreparedStatement）中设置一个参数时，还是从结果集中取出一个值时，
           都会用类型处理器将获取的值以合适的方式转换成 Java 类型。下表描述了一些默认的类型处理器。</p>
         <p>
-          <span class="label important">NOTE</span>
+          <span class="label important">提示</span>
          从 3.4.5 开始，MyBatis 默认支持 JSR-310(日期和时间 API) 。
         </p>
         <table>
@@ -1488,7 +1488,7 @@ public class ExamplePlugin implements Interceptor {
 </plugins>]]></source>
         <p>上面的插件将会拦截在 Executor 实例中所有的 “update” 方法调用，
           这里的 Executor 是负责执行低层映射语句的内部对象。</p>
-        <p><span class="label important">NOTE</span>
+        <p><span class="label important">提示</span>
           <strong>覆盖配置类</strong>
         </p>
         <p>除了用插件来修改 MyBatis 核心行为之外，还可以通过完全覆盖配置类来达到目的。只需继承后覆盖其中的每个方法，再把它传递到 SqlSessionFactoryBuilder.build(myConfig) 方法即可。再次重申，这可能会严重影响 MyBatis 的行为，务请慎之又慎。</p>
@@ -1571,7 +1571,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, propert
           </li>
         </ul>
         <p>
-          <span class="label important">NOTE</span>如果你正在使用 Spring + MyBatis，则没有必要配置事务管理器，
+          <span class="label important">提示</span>如果你正在使用 Spring + MyBatis，则没有必要配置事务管理器，
           因为 Spring 模块会使用自带的管理器来覆盖前面的配置。
         </p>
         <p>
