@@ -352,7 +352,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     skipRows(rsw.getResultSet(), rowBounds);
     while (shouldProcessMoreRows(resultContext, rowBounds) && rsw.getResultSet().next()) {
       ResultMap discriminatedResultMap = resolveDiscriminatedResultMap(rsw.getResultSet(), resultMap, null);
-      Object rowValue = getRowValue(rsw, discriminatedResultMap);
+      Object rowValue = getRowValue(rsw, discriminatedResultMap, false);
       storeObject(resultHandler, resultContext, rowValue, parentMapping, rsw.getResultSet());
     }
   }
@@ -391,13 +391,13 @@ public class DefaultResultSetHandler implements ResultSetHandler {
   // GET VALUE FROM ROW FOR SIMPLE RESULT MAP
   //
 
-  private Object getRowValue(ResultSetWrapper rsw, ResultMap resultMap) throws SQLException {
+  private Object getRowValue(ResultSetWrapper rsw, ResultMap resultMap, final boolean isNested) throws SQLException {
     final ResultLoaderMap lazyLoader = new ResultLoaderMap();
     Object rowValue = createResultObject(rsw, resultMap, lazyLoader, null);
     if (rowValue != null && !hasTypeHandlerForResultObject(rsw, resultMap.getType())) {
       final MetaObject metaObject = configuration.newMetaObject(rowValue);
       boolean foundValues = this.useConstructorMappings;
-      if (shouldApplyAutomaticMappings(resultMap, false)) {
+      if (shouldApplyAutomaticMappings(resultMap, isNested)) {
         foundValues = applyAutomaticMappings(rsw, resultMap, metaObject, null) || foundValues;
       }
       foundValues = applyPropertyMappings(rsw, resultMap, metaObject, lazyLoader, null) || foundValues;
@@ -635,7 +635,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
           value = getNestedQueryConstructorValue(rsw.getResultSet(), constructorMapping, columnPrefix);
         } else if (constructorMapping.getNestedResultMapId() != null) {
           final ResultMap resultMap = configuration.getResultMap(constructorMapping.getNestedResultMapId());
-          value = getRowValue(rsw, resultMap);
+          value = getRowValue(rsw, resultMap, true);
         } else {
           final TypeHandler<?> typeHandler = constructorMapping.getTypeHandler();
           value = typeHandler.getResult(rsw.getResultSet(), prependPrefix(column, columnPrefix));
