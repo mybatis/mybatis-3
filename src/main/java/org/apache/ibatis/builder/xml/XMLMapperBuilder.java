@@ -110,15 +110,58 @@ public class XMLMapperBuilder extends BaseBuilder {
         throw new BuilderException("Mapper's namespace cannot be empty");
       }
       builderAssistant.setCurrentNamespace(namespace);
-      cacheRefElement(context.evalNode("cache-ref"));
-      cacheElement(context.evalNode("cache"));
-      parameterMapElement(context.evalNodes("/mapper/parameterMap"));
-      resultMapElements(context.evalNodes("/mapper/resultMap"));
-      sqlElement(context.evalNodes("/mapper/sql"));
-      buildStatementFromContext(context.evalNodes("select|insert|update|delete"));
+
+      extendsElement(context);
+      mapperChildElement(context);
     } catch (Exception e) {
       throw new BuilderException("Error parsing Mapper XML. Cause: " + e, e);
     }
+  }
+
+  private void extendsElement(XNode context) throws Exception
+  {
+    String extend = context.getStringAttribute("extends");
+    if(extend==null)
+      return;
+    String[] xmlResources=extend.replace('.', '/').split(",");
+    for(String xmlResource:xmlResources) {
+      fileElements(xmlResource);
+    }
+  }
+
+  private void importElement(List<XNode> list) throws Exception
+  {
+    for(XNode node:list)
+    {
+      String src = node.getStringAttribute("src");
+      if(src==null)
+        return;
+      String[] xmlResources=src.replace('.', '/').split(",");
+      for(String xmlResource:xmlResources)
+        fileElements(xmlResource);
+    }
+  }
+
+  private void fileElements(String xmlResource) throws Exception
+  {
+    xmlResource = xmlResource+ ".xml";
+    InputStream inputStream = Resources.getResourceAsStream(Thread.currentThread().getContextClassLoader(),xmlResource);
+    XPathParser xpathParser=new XPathParser(inputStream, true, configuration.getVariables(), new XMLMapperEntityResolver());
+    XNode extendsContext=xpathParser.evalNode("/mapper");
+    extendsElement(extendsContext);
+    mapperChildElement(extendsContext);
+  }
+
+
+  private void mapperChildElement(XNode context) throws Exception
+  {
+    importElement(context.evalNodes("/mapper/import"));
+    cacheRefElement(context.evalNode("cache-ref"));
+    cacheElement(context.evalNode("cache"));
+    parameterMapElement(context.evalNodes("/mapper/parameterMap"));
+    resultMapElements(context.evalNodes("/mapper/resultMap"));
+    sqlElement(context.evalNodes("/mapper/sql"));
+    buildStatementFromContext(context.evalNodes("select|insert|update|delete"));
   }
 
   private void buildStatementFromContext(List<XNode> list) {
