@@ -37,6 +37,7 @@ public class XMLScriptBuilder extends BaseBuilder {
   private final XNode context;
   private boolean isDynamic;
   private final Class<?> parameterType;
+  private final Map<String, NodeHandler> nodeHandlerMap = new HashMap<String, NodeHandler>();
 
   public XMLScriptBuilder(Configuration configuration, XNode context) {
     this(configuration, context, null);
@@ -46,6 +47,19 @@ public class XMLScriptBuilder extends BaseBuilder {
     super(configuration);
     this.context = context;
     this.parameterType = parameterType;
+  }
+
+
+  private void initNodeHandlerMap(){
+      nodeHandlerMap.put("trim", new TrimHandler());
+      nodeHandlerMap.put("where", new WhereHandler());
+      nodeHandlerMap.put("set", new SetHandler());
+      nodeHandlerMap.put("foreach", new ForEachHandler());
+      nodeHandlerMap.put("if", new IfHandler());
+      nodeHandlerMap.put("choose", new ChooseHandler());
+      nodeHandlerMap.put("when", new IfHandler());
+      nodeHandlerMap.put("otherwise", new OtherwiseHandler());
+      nodeHandlerMap.put("bind", new BindHandler());
   }
 
   public SqlSource parseScriptNode() {
@@ -88,17 +102,7 @@ public class XMLScriptBuilder extends BaseBuilder {
   }
 
   NodeHandler nodeHandlers(String nodeName) {
-    Map<String, NodeHandler> map = new HashMap<String, NodeHandler>();
-    map.put("trim", new TrimHandler());
-    map.put("where", new WhereHandler());
-    map.put("set", new SetHandler());
-    map.put("foreach", new ForEachHandler());
-    map.put("if", new IfHandler());
-    map.put("choose", new ChooseHandler());
-    map.put("when", new IfHandler());
-    map.put("otherwise", new OtherwiseHandler());
-    map.put("bind", new BindHandler());
-    return map.get(nodeName);
+    return nodeHandlerMap.get(nodeName);
   }
 
   private interface NodeHandler {
