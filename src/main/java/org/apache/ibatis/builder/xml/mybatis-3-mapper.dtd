@@ -16,9 +16,15 @@
        limitations under the License.
 
 -->
-<!ELEMENT mapper (cache-ref | cache | resultMap* | parameterMap* | sql* | insert* | update* | delete* | select* )+>
+<!ELEMENT mapper (cache-ref | cache | import* | resultMap* | parameterMap* | sql* | insert* | update* | delete* | select* )+>
 <!ATTLIST mapper
 namespace CDATA #IMPLIED
+extends CDATA #IMPLIED
+>
+
+<!ELEMENT import EMPTY>
+<!ATTLIST import
+src CDATA #REQUIRED
 >
 
 <!ELEMENT cache-ref EMPTY>
