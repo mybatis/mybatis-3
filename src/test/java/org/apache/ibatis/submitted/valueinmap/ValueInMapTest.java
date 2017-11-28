@@ -70,13 +70,13 @@ public class ValueInMapTest {
     }
   }
 
-  @Test(expected=PersistenceException.class)
+  @Test(expected = PersistenceException.class)
   public void shouldWorkWithAList() {
     SqlSession sqlSession = sqlSessionFactory.openSession();
     try {
       List<String> list = new ArrayList<String>();
       list.add("users");
-      Integer count = sqlSession.selectOne("count2",list);
+      Integer count = sqlSession.selectOne("count2", list);
       Assert.assertEquals(new Integer(1), count);
     } finally {
       sqlSession.close();

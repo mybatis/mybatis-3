@@ -38,7 +38,8 @@ public class CollectionParametersTest {
   @BeforeClass
   public static void setUp() throws Exception {
     // create an SqlSessionFactory
-    Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/collectionparameters/mybatis-config.xml");
+    Reader reader = Resources
+        .getResourceAsReader("org/apache/ibatis/submitted/collectionparameters/mybatis-config.xml");
     sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
     reader.close();
 
@@ -75,8 +76,8 @@ public class CollectionParametersTest {
     try {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       Integer[] list = new Integer[2];
-      list[0]=1;
-      list[1]=2;
+      list[0] = 1;
+      list[1] = 2;
       List<User> users = mapper.getUsersFromArray(list);
       Assert.assertEquals(2, users.size());
     } finally {
@@ -99,5 +100,4 @@ public class CollectionParametersTest {
     }
   }
 
-  
 }

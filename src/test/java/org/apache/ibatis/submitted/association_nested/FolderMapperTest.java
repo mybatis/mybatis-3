@@ -39,7 +39,6 @@ public class FolderMapperTest {
     Statement stmt = conn.createStatement();
     stmt.execute("create table folder (id int, name varchar(100), parent_id int)");
 
-
     stmt.execute("insert into folder (id, name) values(1, 'Root')");
     stmt.execute("insert into folder values(2, 'Folder 1', 1)");
     stmt.execute("insert into folder values(3, 'Folder 2', 1)");

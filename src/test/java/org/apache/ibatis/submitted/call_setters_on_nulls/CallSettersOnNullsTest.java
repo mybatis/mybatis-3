@@ -44,8 +44,7 @@ public class CallSettersOnNullsTest {
     // populate in-memory database
     SqlSession session = sqlSessionFactory.openSession();
     Connection conn = session.getConnection();
-    reader = Resources
-        .getResourceAsReader("org/apache/ibatis/submitted/call_setters_on_nulls/CreateDB.sql");
+    reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/call_setters_on_nulls/CreateDB.sql");
     ScriptRunner runner = new ScriptRunner(conn);
     runner.setLogWriter(null);
     runner.runScript(reader);
@@ -111,7 +110,7 @@ public class CallSettersOnNullsTest {
     try {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       List<Map<String, Object>> oneColumns = mapper.getNameOnlyMapped();
-//      Assert.assertNotNull(oneColumns.get(1));
+      //      Assert.assertNotNull(oneColumns.get(1));
       // TEST changed after fix for #307
       // When callSetterOnNull is true, setters are called with null values
       // but if all the values for an object are null
@@ -121,5 +120,5 @@ public class CallSettersOnNullsTest {
       sqlSession.close();
     }
   }
-  
+
 }

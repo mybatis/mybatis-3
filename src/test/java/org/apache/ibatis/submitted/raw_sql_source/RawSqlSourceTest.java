@@ -71,7 +71,8 @@ public class RawSqlSourceTest {
   private void test(String statement, Class<? extends SqlSource> sqlSource) {
     SqlSession sqlSession = sqlSessionFactory.openSession();
     try {
-      Assert.assertEquals(sqlSource, sqlSession.getConfiguration().getMappedStatement(statement).getSqlSource().getClass());
+      Assert.assertEquals(sqlSource,
+          sqlSession.getConfiguration().getMappedStatement(statement).getSqlSource().getClass());
       String sql = sqlSession.getConfiguration().getMappedStatement(statement).getSqlSource().getBoundSql('?').getSql();
       Assert.assertEquals("select * from users where id = ?", sql);
       User user = sqlSession.selectOne(statement, 1);

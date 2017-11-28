@@ -37,7 +37,8 @@ public class ForEachSqlNode implements SqlNode {
   private final String index;
   private final Configuration configuration;
 
-  public ForEachSqlNode(Configuration configuration, SqlNode contents, String collectionExpression, String index, String item, String open, String close, String separator) {
+  public ForEachSqlNode(Configuration configuration, SqlNode contents, String collectionExpression, String index,
+      String item, String open, String close, String separator) {
     this.evaluator = new ExpressionEvaluator();
     this.collectionExpression = collectionExpression;
     this.contents = contents;
@@ -69,7 +70,7 @@ public class ForEachSqlNode implements SqlNode {
       int uniqueNumber = context.getUniqueNumber();
       // Issue #709 
       if (o instanceof Map.Entry) {
-        @SuppressWarnings("unchecked") 
+        @SuppressWarnings("unchecked")
         Map.Entry<Object, Object> mapEntry = (Map.Entry<Object, Object>) o;
         applyIndex(context, mapEntry.getKey(), uniqueNumber);
         applyItem(context, mapEntry.getValue(), uniqueNumber);
@@ -126,7 +127,8 @@ public class ForEachSqlNode implements SqlNode {
     private final String itemIndex;
     private final String item;
 
-    public FilteredDynamicContext(Configuration configuration,DynamicContext delegate, String itemIndex, String item, int i) {
+    public FilteredDynamicContext(Configuration configuration, DynamicContext delegate, String itemIndex, String item,
+        int i) {
       super(configuration, null);
       this.delegate = delegate;
       this.index = i;
@@ -171,7 +173,6 @@ public class ForEachSqlNode implements SqlNode {
     }
 
   }
-
 
   private class PrefixedContext extends DynamicContext {
     private final DynamicContext delegate;

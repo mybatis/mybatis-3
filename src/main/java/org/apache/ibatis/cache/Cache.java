@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -76,7 +76,7 @@ public interface Cache {
 
   /**
    * Clears this cache instance
-   */  
+   */
   void clear();
 
   /**
@@ -85,7 +85,7 @@ public interface Cache {
    * @return The number of elements stored in the cache (not its capacity).
    */
   int getSize();
-  
+
   /** 
    * Optional. As of 3.2.6 this method is no longer called by the core.
    *  

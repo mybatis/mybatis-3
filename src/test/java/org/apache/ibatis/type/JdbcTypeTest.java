@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -22,14 +22,10 @@ import java.sql.Types;
 import org.junit.Test;
 
 public class JdbcTypeTest {
-  private static final String[] requiredStandardTypeNames = {
-    "ARRAY", "BIGINT", "BINARY", "BIT", "BLOB", "BOOLEAN", "CHAR", "CLOB",
-    "DATALINK", "DATE", "DECIMAL", "DISTINCT", "DOUBLE", "FLOAT", "INTEGER",
-    "JAVA_OBJECT", "LONGNVARCHAR", "LONGVARBINARY", "LONGVARCHAR", "NCHAR",
-    "NCLOB", "NULL", "NUMERIC","NVARCHAR", "OTHER", "REAL", "REF", "ROWID",
-    "SMALLINT", "SQLXML", "STRUCT", "TIME", "TIMESTAMP", "TINYINT",
-    "VARBINARY", "VARCHAR"
-  };
+  private static final String[] requiredStandardTypeNames = { "ARRAY", "BIGINT", "BINARY", "BIT", "BLOB", "BOOLEAN",
+      "CHAR", "CLOB", "DATALINK", "DATE", "DECIMAL", "DISTINCT", "DOUBLE", "FLOAT", "INTEGER", "JAVA_OBJECT",
+      "LONGNVARCHAR", "LONGVARBINARY", "LONGVARCHAR", "NCHAR", "NCLOB", "NULL", "NUMERIC", "NVARCHAR", "OTHER", "REAL",
+      "REF", "ROWID", "SMALLINT", "SQLXML", "STRUCT", "TIME", "TIMESTAMP", "TINYINT", "VARBINARY", "VARCHAR" };
 
   @Test
   public void shouldHaveRequiredStandardConstants() throws Exception {

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -71,21 +71,18 @@ public enum AutoMappingUnknownColumnBehavior {
    * @param propertyName property name for mapping target
    * @param propertyType property type for mapping target (If this argument is not null, {@link org.apache.ibatis.type.TypeHandler} for property type is not registered)
      */
-  public abstract void doAction(MappedStatement mappedStatement, String columnName, String propertyName, Class<?> propertyType);
+  public abstract void doAction(MappedStatement mappedStatement, String columnName, String propertyName,
+      Class<?> propertyType);
 
   /**
    * build error message.
    */
-  private static String buildMessage(MappedStatement mappedStatement, String columnName, String property, Class<?> propertyType) {
-    return new StringBuilder("Unknown column is detected on '")
-      .append(mappedStatement.getId())
-      .append("' auto-mapping. Mapping parameters are ")
-      .append("[")
-      .append("columnName=").append(columnName)
-      .append(",").append("propertyName=").append(property)
-      .append(",").append("propertyType=").append(propertyType != null ? propertyType.getName() : null)
-      .append("]")
-      .toString();
+  private static String buildMessage(MappedStatement mappedStatement, String columnName, String property,
+      Class<?> propertyType) {
+    return new StringBuilder("Unknown column is detected on '").append(mappedStatement.getId())
+        .append("' auto-mapping. Mapping parameters are ").append("[").append("columnName=").append(columnName)
+        .append(",").append("propertyName=").append(property).append(",").append("propertyType=")
+        .append(propertyType != null ? propertyType.getName() : null).append("]").toString();
   }
 
 }

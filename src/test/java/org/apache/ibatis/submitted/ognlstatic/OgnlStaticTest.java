@@ -81,5 +81,5 @@ public class OgnlStaticTest {
       sqlSession.close();
     }
   }
-  
+
 }

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -82,7 +82,7 @@ public class JndiDataSourceFactoryTest extends BaseDataTest {
   }
 
   public static class MockContext extends InitialContext {
-    private static Map<String,Object> bindings = new HashMap<String,Object>();
+    private static Map<String, Object> bindings = new HashMap<String, Object>();
 
     public MockContext(boolean lazy) throws NamingException {
       super(lazy);
@@ -98,6 +98,5 @@ public class JndiDataSourceFactoryTest extends BaseDataTest {
       bindings.put(name, obj);
     }
   }
-
 
 }

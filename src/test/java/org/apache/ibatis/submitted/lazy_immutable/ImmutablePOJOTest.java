@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -33,49 +33,49 @@ import static org.junit.Assert.*;
 
 public final class ImmutablePOJOTest {
 
-    private static final Integer POJO_ID = 1;
-    private static SqlSessionFactory factory;
+  private static final Integer POJO_ID = 1;
+  private static SqlSessionFactory factory;
 
-    @BeforeClass
-    public static void setupClass() throws Exception {
-        Connection conn = null;
+  @BeforeClass
+  public static void setupClass() throws Exception {
+    Connection conn = null;
 
-        try {
-            Class.forName("org.hsqldb.jdbcDriver");
-            conn = DriverManager.getConnection("jdbc:hsqldb:mem:lazy_immutable", "sa", "");
+    try {
+      Class.forName("org.hsqldb.jdbcDriver");
+      conn = DriverManager.getConnection("jdbc:hsqldb:mem:lazy_immutable", "sa", "");
 
-            Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/lazy_immutable/CreateDB.sql");
+      Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/lazy_immutable/CreateDB.sql");
 
-            ScriptRunner runner = new ScriptRunner(conn);
-            runner.setLogWriter(null);
-            runner.setErrorLogWriter(new PrintWriter(System.err));
-            runner.runScript(reader);
-            conn.commit();
-            reader.close();
+      ScriptRunner runner = new ScriptRunner(conn);
+      runner.setLogWriter(null);
+      runner.setErrorLogWriter(new PrintWriter(System.err));
+      runner.runScript(reader);
+      conn.commit();
+      reader.close();
 
-            reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/lazy_immutable/ibatisConfig.xml");
-            factory = new SqlSessionFactoryBuilder().build(reader);
-            reader.close();
-        } finally {
-            if (conn != null) {
-                conn.close();
-            }
-        }
+      reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/lazy_immutable/ibatisConfig.xml");
+      factory = new SqlSessionFactoryBuilder().build(reader);
+      reader.close();
+    } finally {
+      if (conn != null) {
+        conn.close();
+      }
     }
+  }
 
-    @Test
-    public void testLoadLazyImmutablePOJO() {
-        final SqlSession session = factory.openSession();
-        try {
-            final ImmutablePOJOMapper mapper = session.getMapper(ImmutablePOJOMapper.class);
-            final ImmutablePOJO pojo = mapper.getImmutablePOJO(POJO_ID);
+  @Test
+  public void testLoadLazyImmutablePOJO() {
+    final SqlSession session = factory.openSession();
+    try {
+      final ImmutablePOJOMapper mapper = session.getMapper(ImmutablePOJOMapper.class);
+      final ImmutablePOJO pojo = mapper.getImmutablePOJO(POJO_ID);
 
-            assertEquals(POJO_ID, pojo.getId());
-            assertNotNull("Description should not be null.", pojo.getDescription());
-            assertFalse("Description should not be empty.", pojo.getDescription().length() == 0);
-        } finally {
-            session.close();
-        }
+      assertEquals(POJO_ID, pojo.getId());
+      assertNotNull("Description should not be null.", pojo.getDescription());
+      assertFalse("Description should not be empty.", pojo.getDescription().length() == 0);
+    } finally {
+      session.close();
     }
+  }
 
 }

@@ -41,16 +41,14 @@ public class LazyPropertiesTest {
   @Before
   public void setUp() throws Exception {
     // create an SqlSessionFactory
-    Reader reader = Resources
-        .getResourceAsReader("org/apache/ibatis/submitted/lazy_properties/mybatis-config.xml");
+    Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/lazy_properties/mybatis-config.xml");
     sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
     reader.close();
 
     // populate in-memory database
     SqlSession session = sqlSessionFactory.openSession();
     Connection conn = session.getConnection();
-    reader = Resources
-        .getResourceAsReader("org/apache/ibatis/submitted/lazy_properties/CreateDB.sql");
+    reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/lazy_properties/CreateDB.sql");
     ScriptRunner runner = new ScriptRunner(conn);
     runner.setLogWriter(null);
     runner.runScript(reader);
@@ -82,8 +80,7 @@ public class LazyPropertiesTest {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = mapper.getUser(1);
       // Setter invocation by MyBatis triggers aggressive lazy-loading.
-      assertEquals("Should load all lazy properties.", 3,
-          user.setterCounter);
+      assertEquals("Should load all lazy properties.", 3, user.setterCounter);
     } finally {
       sqlSession.close();
     }
@@ -168,8 +165,7 @@ public class LazyPropertiesTest {
   public void verifyCustomLazyLoadTriggerMethods() {
     Configuration configuration = sqlSessionFactory.getConfiguration();
     configuration.setAggressiveLazyLoading(false);
-    configuration
-        .setLazyLoadTriggerMethods(new HashSet<String>(Collections.singleton("trigger")));
+    configuration.setLazyLoadTriggerMethods(new HashSet<String>(Collections.singleton("trigger")));
     SqlSession sqlSession = sqlSessionFactory.openSession();
     try {
       Mapper mapper = sqlSession.getMapper(Mapper.class);

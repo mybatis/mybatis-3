@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -64,11 +64,11 @@ public class PermissionsTest {
       final Resource firstResource = resources.get(0);
       final List<Principal> principalPermissions = firstResource.getPrincipals();
       Assert.assertEquals(1, principalPermissions.size());
-      
+
       final Principal firstPrincipal = principalPermissions.get(0);
       final List<Permission> permissions = firstPrincipal.getPermissions();
       Assert.assertEquals(2, permissions.size());
-      
+
       final Permission firstPermission = firstPrincipal.getPermissions().get(0);
       Assert.assertSame(firstResource, firstPermission.getResource());
       final Permission secondPermission = firstPrincipal.getPermissions().get(1);
@@ -90,7 +90,7 @@ public class PermissionsTest {
       final Resource firstResource = resources.get(0);
       final List<Principal> principalPermissions = firstResource.getPrincipals();
       Assert.assertEquals(1, principalPermissions.size());
-      
+
       final Principal firstPrincipal = principalPermissions.get(0);
       final List<Permission> permissions = firstPrincipal.getPermissions();
       Assert.assertEquals(4, permissions.size());
@@ -102,7 +102,7 @@ public class PermissionsTest {
           readFound = true;
         }
       }
-      
+
       if (!readFound) {
         Assert.fail();
       }
@@ -111,5 +111,5 @@ public class PermissionsTest {
       sqlSession.close();
     }
   }
-  
+
 }

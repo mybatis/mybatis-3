@@ -24,11 +24,11 @@ import org.apache.ibatis.reflection.property.PropertyTokenizer;
 public class CustomObjectWrapper implements org.apache.ibatis.reflection.wrapper.ObjectWrapper {
 
   private CustomCollection collection;
-  
-  public CustomObjectWrapper(CustomCollection collection){
+
+  public CustomObjectWrapper(CustomCollection collection) {
     this.collection = collection;
   }
-  
+
   @Override
   public Object get(PropertyTokenizer prop) {
     // Not Implemented

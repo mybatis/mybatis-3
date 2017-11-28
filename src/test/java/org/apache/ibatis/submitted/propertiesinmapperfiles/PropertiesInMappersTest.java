@@ -34,13 +34,14 @@ public class PropertiesInMappersTest {
 
   @BeforeClass
   public static void setUp() throws Exception {
-    
+
     // this property value should be replaced on all mapper files
     Properties p = new Properties();
     p.put("property", "id");
-    
+
     // create a SqlSessionFactory
-    Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/propertiesinmapperfiles/mybatis-config.xml");
+    Reader reader = Resources
+        .getResourceAsReader("org/apache/ibatis/submitted/propertiesinmapperfiles/mybatis-config.xml");
     sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader, p);
     reader.close();
 

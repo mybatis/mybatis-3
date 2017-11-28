@@ -25,7 +25,7 @@ import org.apache.ibatis.cache.Cache;
 public class SynchronizedCache implements Cache {
 
   private final Cache delegate;
-  
+
   public SynchronizedCache(Cache delegate) {
     this.delegate = delegate;
   }

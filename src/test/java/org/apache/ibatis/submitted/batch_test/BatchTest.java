@@ -28,8 +28,7 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-public class BatchTest
-{
+public class BatchTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
@@ -54,19 +53,17 @@ public class BatchTest
 
   @Test
   public void shouldGetAUserNoException() {
-    SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH,false);
+    SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH, false);
     try {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
 
-      User user   = mapper.getUser(1);
+      User user = mapper.getUser(1);
 
       user.setId(2);
       user.setName("User2");
       mapper.insertUser(user);
       Assert.assertEquals("Dept1", mapper.getUser(2).getDept().getName());
-    }
-    catch (Exception e)
-    {
+    } catch (Exception e) {
       Assert.fail(e.getMessage());
 
     }
@@ -76,7 +73,5 @@ public class BatchTest
       sqlSession.close();
     }
   }
-
-
 
 }

@@ -136,8 +136,8 @@ public class ForEachTest {
     try {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       when(mapper).typoInItemProperty(Arrays.asList(new User()));
-      then(caughtException()).isInstanceOf(PersistenceException.class)
-        .hasMessageContaining("There is no getter for property named 'idd' in 'class org.apache.ibatis.submitted.foreach.User'");
+      then(caughtException()).isInstanceOf(PersistenceException.class).hasMessageContaining(
+          "There is no getter for property named 'idd' in 'class org.apache.ibatis.submitted.foreach.User'");
     } finally {
       sqlSession.close();
     }

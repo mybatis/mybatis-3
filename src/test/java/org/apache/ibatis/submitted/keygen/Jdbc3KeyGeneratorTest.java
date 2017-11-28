@@ -82,7 +82,7 @@ public class Jdbc3KeyGeneratorTest {
 
   @Ignore("#782 was reverted. See #902.")
   @Test
-  public void shouldErrorUndefineProperty()  {
+  public void shouldErrorUndefineProperty() {
     SqlSession sqlSession = sqlSessionFactory.openSession();
     try {
       CountryMapper mapper = sqlSession.getMapper(CountryMapper.class);

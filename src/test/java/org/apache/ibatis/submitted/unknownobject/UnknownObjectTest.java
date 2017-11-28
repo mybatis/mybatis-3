@@ -30,7 +30,7 @@ public class UnknownObjectTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
-  @Test(expected=PersistenceException.class)
+  @Test(expected = PersistenceException.class)
   public void shouldFailBecauseThereIsAPropertyWithoutTypeHandler() throws Exception {
     // create a SqlSessionFactory
     Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/unknownobject/mybatis-config.xml");

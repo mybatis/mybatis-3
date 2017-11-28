@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -41,8 +41,7 @@ public class CriterionTest {
 
     try {
       Class.forName("org.hsqldb.jdbcDriver");
-      conn = DriverManager.getConnection("jdbc:hsqldb:mem:aname", "sa",
-          "");
+      conn = DriverManager.getConnection("jdbc:hsqldb:mem:aname", "sa", "");
 
       Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/criterion/CreateDB.sql");
 
@@ -73,8 +72,8 @@ public class CriterionTest {
       Parameter parameter = new Parameter();
       parameter.setCriterion(criterion);
 
-      List<Map<String, Object>> answer =
-          sqlSession.selectList("org.apache.ibatis.submitted.criterion.simpleSelect", parameter);
+      List<Map<String, Object>> answer = sqlSession.selectList("org.apache.ibatis.submitted.criterion.simpleSelect",
+          parameter);
 
       assertEquals(1, answer.size());
     } finally {

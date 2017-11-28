@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -70,7 +70,7 @@ public class BlockingCache implements Cache {
     Object value = delegate.getObject(key);
     if (value != null) {
       releaseLock(key);
-    }        
+    }
     return value;
   }
 
@@ -90,20 +90,21 @@ public class BlockingCache implements Cache {
   public ReadWriteLock getReadWriteLock() {
     return null;
   }
-  
+
   private ReentrantLock getLockForKey(Object key) {
     ReentrantLock lock = new ReentrantLock();
     ReentrantLock previous = locks.putIfAbsent(key, lock);
     return previous == null ? lock : previous;
   }
-  
+
   private void acquireLock(Object key) {
     Lock lock = getLockForKey(key);
     if (timeout > 0) {
       try {
         boolean acquired = lock.tryLock(timeout, TimeUnit.MILLISECONDS);
         if (!acquired) {
-          throw new CacheException("Couldn't get a lock in " + timeout + " for the key " +  key + " at the cache " + delegate.getId());  
+          throw new CacheException(
+              "Couldn't get a lock in " + timeout + " for the key " + key + " at the cache " + delegate.getId());
         }
       } catch (InterruptedException e) {
         throw new CacheException("Got interrupted while trying to acquire lock for key " + key, e);
@@ -112,7 +113,7 @@ public class BlockingCache implements Cache {
       lock.lock();
     }
   }
-  
+
   private void releaseLock(Object key) {
     ReentrantLock lock = locks.get(key);
     if (lock.isHeldByCurrentThread()) {
@@ -126,5 +127,5 @@ public class BlockingCache implements Cache {
 
   public void setTimeout(long timeout) {
     this.timeout = timeout;
-  }  
+  }
 }

@@ -58,7 +58,7 @@ public class DaoTest {
     final List<TodoLists> actual = dao.selectWithEmptyList();
     Assert.assertEquals(1, actual.size());
     final List<TodoItem> todoItems = actual.get(0).getTodoItems();
-    Assert.assertEquals("expect " + todoItems + " to be empty", 0, todoItems.size());        
+    Assert.assertEquals("expect " + todoItems + " to be empty", 0, todoItems.size());
   }
 
   @Test
@@ -75,7 +75,7 @@ public class DaoTest {
   }
 
   private void checkNonEmptyList(final List<TodoLists> actual) {
-//  Assert.assertEquals("[List(1)=[a description(1), a 2nd description(2)], List(2)=[a description(1)]]", actual.toString());
+    //  Assert.assertEquals("[List(1)=[a description(1), a 2nd description(2)], List(2)=[a description(1)]]", actual.toString());
     Assert.assertEquals(2, actual.size());
 
     Assert.assertEquals(2, actual.get(0).getTodoItems().size());

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -53,7 +53,7 @@ public class HeavyInitialLoadTest {
   }
 
   private static final int THREAD_COUNT = 5;
-  
+
   /**
    * Test to demonstrate the effect of the 
    * https://issues.apache.org/jira/browse/OGNL-121 issue in ognl on mybatis.
@@ -79,7 +79,7 @@ public class HeavyInitialLoadTest {
         public void run() {
           try {
             selectThing();
-          } catch(Exception exception) {
+          } catch (Exception exception) {
             throwables.add(exception);
           }
         }

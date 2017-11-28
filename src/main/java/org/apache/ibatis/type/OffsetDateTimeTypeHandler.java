@@ -34,7 +34,7 @@ public class OffsetDateTimeTypeHandler extends BaseTypeHandler<OffsetDateTime> {
 
   @Override
   public void setNonNullParameter(PreparedStatement ps, int i, OffsetDateTime parameter, JdbcType jdbcType)
-          throws SQLException {
+      throws SQLException {
     ps.setTimestamp(i, Timestamp.from(parameter.toInstant()));
   }
 

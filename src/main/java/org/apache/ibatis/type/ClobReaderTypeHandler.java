@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -40,8 +40,7 @@ public class ClobReaderTypeHandler extends BaseTypeHandler<Reader> {
    * @see ResultSet#getClob(String)
    */
   @Override
-  public Reader getNullableResult(ResultSet rs, String columnName)
-      throws SQLException {
+  public Reader getNullableResult(ResultSet rs, String columnName) throws SQLException {
     return toReader(rs.getClob(columnName));
   }
 
@@ -50,8 +49,7 @@ public class ClobReaderTypeHandler extends BaseTypeHandler<Reader> {
    * @see ResultSet#getClob(int)
    */
   @Override
-  public Reader getNullableResult(ResultSet rs, int columnIndex)
-      throws SQLException {
+  public Reader getNullableResult(ResultSet rs, int columnIndex) throws SQLException {
     return toReader(rs.getClob(columnIndex));
   }
 
@@ -60,8 +58,7 @@ public class ClobReaderTypeHandler extends BaseTypeHandler<Reader> {
    * @see CallableStatement#getClob(int)
    */
   @Override
-  public Reader getNullableResult(CallableStatement cs, int columnIndex)
-      throws SQLException {
+  public Reader getNullableResult(CallableStatement cs, int columnIndex) throws SQLException {
     return toReader(cs.getClob(columnIndex));
   }
 

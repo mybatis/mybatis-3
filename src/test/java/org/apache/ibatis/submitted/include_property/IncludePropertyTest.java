@@ -71,7 +71,8 @@ public class IncludePropertyTest {
   public void testPropertyContext() throws Exception {
     final SqlSession sqlSession = sqlSessionFactory.openSession();
     try {
-      List<Map<String, String>> results = sqlSession.selectList("org.apache.ibatis.submitted.include_property.Mapper.selectPropertyContext");
+      List<Map<String, String>> results = sqlSession
+          .selectList("org.apache.ibatis.submitted.include_property.Mapper.selectPropertyContext");
       Map<String, String> map = results.get(0);
       assertEquals(2, map.size());
       assertEquals("col_a value", map.get("COL_A"));
@@ -85,7 +86,8 @@ public class IncludePropertyTest {
   public void testNestedDynamicValue() throws Exception {
     final SqlSession sqlSession = sqlSessionFactory.openSession();
     try {
-      List<String> results = sqlSession.selectList("org.apache.ibatis.submitted.include_property.Mapper.selectNestedDynamicValue");
+      List<String> results = sqlSession
+          .selectList("org.apache.ibatis.submitted.include_property.Mapper.selectNestedDynamicValue");
       assertEquals("col_a value", results.get(0));
     } finally {
       sqlSession.close();
@@ -96,7 +98,8 @@ public class IncludePropertyTest {
   public void testEmptyString() throws Exception {
     final SqlSession sqlSession = sqlSessionFactory.openSession();
     try {
-      List<String> results = sqlSession.selectList("org.apache.ibatis.submitted.include_property.Mapper.selectEmptyProperty");
+      List<String> results = sqlSession
+          .selectList("org.apache.ibatis.submitted.include_property.Mapper.selectEmptyProperty");
       assertEquals("a value", results.get(0));
     } finally {
       sqlSession.close();
@@ -107,7 +110,8 @@ public class IncludePropertyTest {
   public void testPropertyInRefid() throws Exception {
     final SqlSession sqlSession = sqlSessionFactory.openSession();
     try {
-      List<String> results = sqlSession.selectList("org.apache.ibatis.submitted.include_property.Mapper.selectPropertyInRefid");
+      List<String> results = sqlSession
+          .selectList("org.apache.ibatis.submitted.include_property.Mapper.selectPropertyInRefid");
       assertEquals("col_a value", results.get(0));
     } finally {
       sqlSession.close();
@@ -118,7 +122,8 @@ public class IncludePropertyTest {
   public void testConfigVar() throws Exception {
     final SqlSession sqlSession = sqlSessionFactory.openSession();
     try {
-      List<String> results = sqlSession.selectList("org.apache.ibatis.submitted.include_property.Mapper.selectConfigVar");
+      List<String> results = sqlSession
+          .selectList("org.apache.ibatis.submitted.include_property.Mapper.selectConfigVar");
       assertEquals("Property defined in the config file should be used.", "col_c value", results.get(0));
     } finally {
       sqlSession.close();
@@ -131,7 +136,8 @@ public class IncludePropertyTest {
     try {
       Map<String, String> params = new HashMap<String, String>();
       params.put("suffix", "b");
-      List<String> results = sqlSession.selectList("org.apache.ibatis.submitted.include_property.Mapper.selectRuntimeVar", params);
+      List<String> results = sqlSession
+          .selectList("org.apache.ibatis.submitted.include_property.Mapper.selectRuntimeVar", params);
       assertEquals("col_b value", results.get(0));
     } finally {
       sqlSession.close();
@@ -142,7 +148,8 @@ public class IncludePropertyTest {
   public void testNestedInclude() throws Exception {
     final SqlSession sqlSession = sqlSessionFactory.openSession();
     try {
-      List<String> results = sqlSession.selectList("org.apache.ibatis.submitted.include_property.Mapper.selectNestedInclude");
+      List<String> results = sqlSession
+          .selectList("org.apache.ibatis.submitted.include_property.Mapper.selectNestedInclude");
       assertEquals("a value", results.get(0));
     } finally {
       sqlSession.close();
@@ -153,7 +160,8 @@ public class IncludePropertyTest {
   public void testParametersInAttribute() throws Exception {
     final SqlSession sqlSession = sqlSessionFactory.openSession();
     try {
-      List<Map<String, String>> results = sqlSession.selectList("org.apache.ibatis.submitted.include_property.Mapper.selectPropertyInAttribute");
+      List<Map<String, String>> results = sqlSession
+          .selectList("org.apache.ibatis.submitted.include_property.Mapper.selectPropertyInAttribute");
       Map<String, String> map = results.get(0);
       assertEquals(2, map.size());
       assertEquals("col_a value", map.get("COL_1"));

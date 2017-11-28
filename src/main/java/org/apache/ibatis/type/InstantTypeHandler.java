@@ -32,7 +32,8 @@ import org.apache.ibatis.lang.UsesJava8;
 public class InstantTypeHandler extends BaseTypeHandler<Instant> {
 
   @Override
-  public void setNonNullParameter(PreparedStatement ps, int i, Instant parameter, JdbcType jdbcType) throws SQLException {
+  public void setNonNullParameter(PreparedStatement ps, int i, Instant parameter, JdbcType jdbcType)
+      throws SQLException {
     ps.setTimestamp(i, Timestamp.from(parameter));
   }
 

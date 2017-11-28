@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -40,25 +40,7 @@ public final class LogFactory {
     tryImplementation(new Runnable() {
       @Override
       public void run() {
-        useCommonsLogging();
-      }
-    });
-    tryImplementation(new Runnable() {
-      @Override
-      public void run() {
         useLog4J2Logging();
-      }
-    });
-    tryImplementation(new Runnable() {
-      @Override
-      public void run() {
-        useLog4JLogging();
-      }
-    });
-    tryImplementation(new Runnable() {
-      @Override
-      public void run() {
-        useJdkLogging();
       }
     });
     tryImplementation(new Runnable() {
@@ -93,20 +75,8 @@ public final class LogFactory {
     setImplementation(org.apache.ibatis.logging.slf4j.Slf4jImpl.class);
   }
 
-  public static synchronized void useCommonsLogging() {
-    setImplementation(org.apache.ibatis.logging.commons.JakartaCommonsLoggingImpl.class);
-  }
-
-  public static synchronized void useLog4JLogging() {
-    setImplementation(org.apache.ibatis.logging.log4j.Log4jImpl.class);
-  }
-
   public static synchronized void useLog4J2Logging() {
     setImplementation(org.apache.ibatis.logging.log4j2.Log4j2Impl.class);
-  }
-
-  public static synchronized void useJdkLogging() {
-    setImplementation(org.apache.ibatis.logging.jdk14.Jdk14LoggingImpl.class);
   }
 
   public static synchronized void useStdOutLogging() {

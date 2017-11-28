@@ -36,21 +36,22 @@ public class DuplicateStatementsTest {
 
   @Before
   public void setupDb() throws Exception {
-      // create a SqlSessionFactory
-      Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/duplicate_statements/mybatis-config.xml");
-      sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-      reader.close();
-      
-      // populate in-memory database
-      SqlSession session = sqlSessionFactory.openSession();
-      Connection conn = session.getConnection();
-      reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/duplicate_statements/CreateDB.sql");
-      ScriptRunner runner = new ScriptRunner(conn);
-      runner.setLogWriter(null);
-      runner.runScript(reader);
-      conn.close();
-      reader.close();
-      session.close();
+    // create a SqlSessionFactory
+    Reader reader = Resources
+        .getResourceAsReader("org/apache/ibatis/submitted/duplicate_statements/mybatis-config.xml");
+    sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+    reader.close();
+
+    // populate in-memory database
+    SqlSession session = sqlSessionFactory.openSession();
+    Connection conn = session.getConnection();
+    reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/duplicate_statements/CreateDB.sql");
+    ScriptRunner runner = new ScriptRunner(conn);
+    runner.setLogWriter(null);
+    runner.runScript(reader);
+    conn.close();
+    reader.close();
+    session.close();
   }
 
   @Test
@@ -105,7 +106,7 @@ public class DuplicateStatementsTest {
     }
   }
 
-  @Test(expected=IllegalArgumentException.class)
+  @Test(expected = IllegalArgumentException.class)
   public void shouldFailForDuplicateMethod() {
     sqlSessionFactory.getConfiguration().addMapper(AnnotatedMapperExtended.class);
   }

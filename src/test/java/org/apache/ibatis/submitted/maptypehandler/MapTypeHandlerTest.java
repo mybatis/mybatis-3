@@ -69,7 +69,7 @@ public class MapTypeHandlerTest {
     }
   }
 
-  @Test(expected=PersistenceException.class)
+  @Test(expected = PersistenceException.class)
   public void shouldGetAUserFromXML() {
     SqlSession sqlSession = sqlSessionFactory.openSession();
     try {
@@ -83,5 +83,5 @@ public class MapTypeHandlerTest {
       sqlSession.close();
     }
   }
-  
+
 }

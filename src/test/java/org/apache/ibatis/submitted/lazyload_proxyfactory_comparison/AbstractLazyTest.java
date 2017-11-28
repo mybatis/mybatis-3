@@ -31,7 +31,7 @@ import org.junit.Test;
 public abstract class AbstractLazyTest {
 
   private SqlSessionFactory sqlSessionFactory;
-  private SqlSession sqlSession; 
+  private SqlSession sqlSession;
   private Mapper mapper;
 
   protected abstract String getConfiguration();
@@ -39,7 +39,8 @@ public abstract class AbstractLazyTest {
   @Before
   public void before() throws Exception {
     // create a SqlSessionFactory
-    Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/lazyload_proxyfactory_comparison/mybatis-config-" + getConfiguration() + ".xml");
+    Reader reader = Resources.getResourceAsReader(
+        "org/apache/ibatis/submitted/lazyload_proxyfactory_comparison/mybatis-config-" + getConfiguration() + ".xml");
     sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
     reader.close();
 
@@ -58,7 +59,7 @@ public abstract class AbstractLazyTest {
     mapper = sqlSession.getMapper(Mapper.class);
   }
 
-  @After 
+  @After
   public void after() {
     if (sqlSession != null) {
       sqlSession.close();

@@ -36,7 +36,7 @@ public class JapaneseDateTypeHandler extends BaseTypeHandler<JapaneseDate> {
 
   @Override
   public void setNonNullParameter(PreparedStatement ps, int i, JapaneseDate parameter, JdbcType jdbcType)
-          throws SQLException {
+      throws SQLException {
     ps.setDate(i, Date.valueOf(LocalDate.ofEpochDay(parameter.toEpochDay())));
   }
 

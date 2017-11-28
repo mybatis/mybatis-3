@@ -55,36 +55,34 @@ public class TypeHandlerRegistryTest {
   public void shouldRegisterAndRetrieveComplexTypeHandler() {
     TypeHandler<List<URI>> fakeHandler = new TypeHandler<List<URI>>() {
 
-    @Override
-    public void setParameter( PreparedStatement ps, int i, List<URI> parameter, JdbcType jdbcType )
-      throws SQLException {
-      // do nothing, fake method
-    }
+      @Override
+      public void setParameter(PreparedStatement ps, int i, List<URI> parameter, JdbcType jdbcType)
+          throws SQLException {
+        // do nothing, fake method
+      }
 
-    @Override
-    public List<URI> getResult( CallableStatement cs, int columnIndex )
-      throws SQLException {
-      // do nothing, fake method
-      return null;
-    }
+      @Override
+      public List<URI> getResult(CallableStatement cs, int columnIndex) throws SQLException {
+        // do nothing, fake method
+        return null;
+      }
 
-    @Override
-    public List<URI> getResult( ResultSet rs, int columnIndex )
-      throws SQLException {
-      // do nothing, fake method
-      return null;
-    }
+      @Override
+      public List<URI> getResult(ResultSet rs, int columnIndex) throws SQLException {
+        // do nothing, fake method
+        return null;
+      }
 
-    @Override
-    public List<URI> getResult( ResultSet rs, String columnName )
-      throws SQLException {
-      // do nothing, fake method
-      return null;
-    }
+      @Override
+      public List<URI> getResult(ResultSet rs, String columnName) throws SQLException {
+        // do nothing, fake method
+        return null;
+      }
 
     };
 
-    TypeReference<List<URI>> type = new TypeReference<List<URI>>(){};
+    TypeReference<List<URI>> type = new TypeReference<List<URI>>() {
+    };
 
     typeHandlerRegistry.register(type, fakeHandler);
     assertSame(fakeHandler, typeHandlerRegistry.getTypeHandler(type));
@@ -95,28 +93,25 @@ public class TypeHandlerRegistryTest {
     TypeHandler<List<URI>> fakeHandler = new BaseTypeHandler<List<URI>>() {
 
       @Override
-      public void setNonNullParameter( PreparedStatement ps, int i, List<URI> parameter, JdbcType jdbcType )
-        throws SQLException {
+      public void setNonNullParameter(PreparedStatement ps, int i, List<URI> parameter, JdbcType jdbcType)
+          throws SQLException {
         // do nothing, fake method
       }
 
       @Override
-      public List<URI> getNullableResult( ResultSet rs, String columnName )
-        throws SQLException {
-        // do nothing, fake method
-        return null;
-      }
-
-      @Override
-      public List<URI> getNullableResult( ResultSet rs, int columnIndex )
-        throws SQLException {
+      public List<URI> getNullableResult(ResultSet rs, String columnName) throws SQLException {
         // do nothing, fake method
         return null;
       }
 
       @Override
-      public List<URI> getNullableResult( CallableStatement cs, int columnIndex )
-        throws SQLException {
+      public List<URI> getNullableResult(ResultSet rs, int columnIndex) throws SQLException {
+        // do nothing, fake method
+        return null;
+      }
+
+      @Override
+      public List<URI> getNullableResult(CallableStatement cs, int columnIndex) throws SQLException {
         // do nothing, fake method
         return null;
       }
@@ -125,7 +120,8 @@ public class TypeHandlerRegistryTest {
 
     typeHandlerRegistry.register(fakeHandler);
 
-    assertSame(fakeHandler, typeHandlerRegistry.getTypeHandler(new TypeReference<List<URI>>(){}));
+    assertSame(fakeHandler, typeHandlerRegistry.getTypeHandler(new TypeReference<List<URI>>() {
+    }));
   }
 
   @Test
@@ -159,17 +155,22 @@ public class TypeHandlerRegistryTest {
 
   interface SomeInterface {
   }
+
   interface ExtendingSomeInterface extends SomeInterface {
   }
+
   interface NoTypeHandlerInterface {
   }
 
   enum SomeEnum implements SomeInterface {
   }
+
   enum ExtendingSomeEnum implements ExtendingSomeInterface {
   }
+
   enum ImplementingMultiInterfaceSomeEnum implements NoTypeHandlerInterface, ExtendingSomeInterface {
   }
+
   enum NoTypeHandlerInterfaceEnum implements NoTypeHandlerInterface {
   }
 
@@ -179,17 +180,19 @@ public class TypeHandlerRegistryTest {
   @MappedTypes(SomeInterface.class)
   public static class SomeInterfaceTypeHandler<E extends Enum<E> & SomeInterface> extends BaseTypeHandler<E> {
     @Override
-    public void setNonNullParameter(PreparedStatement ps, int i, E parameter, JdbcType jdbcType)
-        throws SQLException {
+    public void setNonNullParameter(PreparedStatement ps, int i, E parameter, JdbcType jdbcType) throws SQLException {
     }
+
     @Override
     public E getNullableResult(ResultSet rs, String columnName) throws SQLException {
       return null;
     }
+
     @Override
     public E getNullableResult(ResultSet rs, int columnIndex) throws SQLException {
       return null;
     }
+
     @Override
     public E getNullableResult(CallableStatement cs, int columnIndex) throws SQLException {
       return null;
@@ -200,10 +203,11 @@ public class TypeHandlerRegistryTest {
   public void demoTypeHandlerForSuperInterface() {
     typeHandlerRegistry.register(SomeInterfaceTypeHandler.class);
     assertNull("Registering interface works only for enums.", typeHandlerRegistry.getTypeHandler(SomeClass.class));
-    assertSame("When type handler for interface is not exist, apply default enum type handler.",
-      EnumTypeHandler.class, typeHandlerRegistry.getTypeHandler(NoTypeHandlerInterfaceEnum.class).getClass());
+    assertSame("When type handler for interface is not exist, apply default enum type handler.", EnumTypeHandler.class,
+        typeHandlerRegistry.getTypeHandler(NoTypeHandlerInterfaceEnum.class).getClass());
     assertSame(SomeInterfaceTypeHandler.class, typeHandlerRegistry.getTypeHandler(SomeEnum.class).getClass());
     assertSame(SomeInterfaceTypeHandler.class, typeHandlerRegistry.getTypeHandler(ExtendingSomeEnum.class).getClass());
-    assertSame(SomeInterfaceTypeHandler.class, typeHandlerRegistry.getTypeHandler(ImplementingMultiInterfaceSomeEnum.class).getClass());
+    assertSame(SomeInterfaceTypeHandler.class,
+        typeHandlerRegistry.getTypeHandler(ImplementingMultiInterfaceSomeEnum.class).getClass());
   }
 }

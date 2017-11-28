@@ -60,8 +60,7 @@ public final class LazyDeserializeTest {
       Class.forName("org.hsqldb.jdbcDriver");
       conn = DriverManager.getConnection("jdbc:hsqldb:mem:lazy_deserialize", "sa", "");
 
-      Reader reader = Resources
-          .getResourceAsReader("org/apache/ibatis/submitted/lazy_deserialize/CreateDB.sql");
+      Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/lazy_deserialize/CreateDB.sql");
 
       ScriptRunner runner = new ScriptRunner(conn);
       runner.setLogWriter(null);
@@ -70,8 +69,7 @@ public final class LazyDeserializeTest {
       conn.commit();
       reader.close();
 
-      reader = Resources
-          .getResourceAsReader("org/apache/ibatis/submitted/lazy_deserialize/ibatisConfig.xml");
+      reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/lazy_deserialize/ibatisConfig.xml");
       factory = new SqlSessionFactoryBuilder().build(reader);
       reader.close();
     } finally {

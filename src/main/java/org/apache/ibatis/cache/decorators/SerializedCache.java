@@ -126,7 +126,7 @@ public class SerializedCache implements Cache {
     protected Class<?> resolveClass(ObjectStreamClass desc) throws IOException, ClassNotFoundException {
       return Resources.classForName(desc.getName());
     }
-    
+
   }
 
 }

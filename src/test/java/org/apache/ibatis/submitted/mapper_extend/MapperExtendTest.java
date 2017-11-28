@@ -66,7 +66,6 @@ public class MapperExtendTest {
     }
   }
 
-
   @Test
   public void shouldGetAUserWithAnExtendedAnnotatedMethod() {
     SqlSession sqlSession = sqlSessionFactory.openSession();
@@ -122,8 +121,7 @@ public class MapperExtendTest {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       when(mapper).noMappedStatement();
       then(caughtException()).isInstanceOf(BindingException.class)
-        .hasMessage("Invalid bound statement (not found): "
-          + Mapper.class.getName() + ".noMappedStatement");
+          .hasMessage("Invalid bound statement (not found): " + Mapper.class.getName() + ".noMappedStatement");
     } finally {
       sqlSession.close();
     }

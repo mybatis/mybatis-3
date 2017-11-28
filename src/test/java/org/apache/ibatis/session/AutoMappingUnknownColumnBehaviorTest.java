@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -22,8 +22,6 @@ import org.apache.ibatis.exceptions.PersistenceException;
 import org.apache.ibatis.mapping.Environment;
 import org.apache.ibatis.transaction.TransactionFactory;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
-import org.apache.log4j.spi.LoggingEvent;
-import org.apache.log4j.varia.NullAppender;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -40,116 +38,101 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class AutoMappingUnknownColumnBehaviorTest {
 
-    interface Mapper {
-        @Select({
-                "SELECT ",
-                "  ID,",
-                "  USERNAME as USERNAMEEEE,", // unknown column
-                "  PASSWORD,",
-                "  EMAIL,",
-                "  BIO",
-                "FROM AUTHOR WHERE ID = #{id}"})
-        Author selectAuthor(int id);
+  interface Mapper {
+    @Select({ "SELECT ", "  ID,", "  USERNAME as USERNAMEEEE,", // unknown column
+        "  PASSWORD,", "  EMAIL,", "  BIO", "FROM AUTHOR WHERE ID = #{id}" })
+    Author selectAuthor(int id);
 
-        @Select({
-                "SELECT ",
-                "  ID,", // unknown property type
-                "  USERNAME",
-                "FROM AUTHOR WHERE ID = #{id}"})
-        SimpleAuthor selectSimpleAuthor(int id);
+    @Select({ "SELECT ", "  ID,", // unknown property type
+        "  USERNAME", "FROM AUTHOR WHERE ID = #{id}" })
+    SimpleAuthor selectSimpleAuthor(int id);
+  }
+
+  static class SimpleAuthor {
+    private AtomicInteger id; // unknown property type
+    private String username;
+
+    public AtomicInteger getId() {
+      return id;
     }
 
-    static class SimpleAuthor {
-        private AtomicInteger id; // unknown property type
-        private String username;
-
-        public AtomicInteger getId() {
-            return id;
-        }
-
-        public void setId(AtomicInteger id) {
-            this.id = id;
-        }
-
-        public String getUsername() {
-            return username;
-        }
-
-        public void setUsername(String username) {
-            this.username = username;
-        }
+    public void setId(AtomicInteger id) {
+      this.id = id;
     }
 
-    public static class LastEventSavedAppender extends NullAppender {
-        private static LoggingEvent event;
-
-        public void doAppend(LoggingEvent event) {
-            LastEventSavedAppender.event = event;
-        }
+    public String getUsername() {
+      return username;
     }
 
-    private static SqlSessionFactory sqlSessionFactory;
+    public void setUsername(String username) {
+      this.username = username;
+    }
+  }
 
-    @BeforeClass
-    public static void setup() throws Exception {
-        DataSource dataSource = BaseDataTest.createBlogDataSource();
-        TransactionFactory transactionFactory = new JdbcTransactionFactory();
-        Environment environment = new Environment("Production", transactionFactory, dataSource);
-        Configuration configuration = new Configuration(environment);
-        configuration.addMapper(Mapper.class);
-        sqlSessionFactory = new SqlSessionFactoryBuilder().build(configuration);
+  private static SqlSessionFactory sqlSessionFactory;
+
+  @BeforeClass
+  public static void setup() throws Exception {
+    DataSource dataSource = BaseDataTest.createBlogDataSource();
+    TransactionFactory transactionFactory = new JdbcTransactionFactory();
+    Environment environment = new Environment("Production", transactionFactory, dataSource);
+    Configuration configuration = new Configuration(environment);
+    configuration.addMapper(Mapper.class);
+    sqlSessionFactory = new SqlSessionFactoryBuilder().build(configuration);
+  }
+
+  @Test
+  public void none() {
+    sqlSessionFactory.getConfiguration().setAutoMappingUnknownColumnBehavior(AutoMappingUnknownColumnBehavior.NONE);
+    SqlSession session = sqlSessionFactory.openSession();
+    try {
+      Mapper mapper = session.getMapper(Mapper.class);
+      Author author = mapper.selectAuthor(101);
+      assertThat(author.getId()).isEqualTo(101);
+      assertThat(author.getUsername()).isNull();
+    } finally {
+      session.close();
     }
 
-    @Test
-    public void none() {
-        sqlSessionFactory.getConfiguration().setAutoMappingUnknownColumnBehavior(AutoMappingUnknownColumnBehavior.NONE);
-        SqlSession session = sqlSessionFactory.openSession();
-        try {
-            Mapper mapper = session.getMapper(Mapper.class);
-            Author author = mapper.selectAuthor(101);
-            assertThat(author.getId()).isEqualTo(101);
-            assertThat(author.getUsername()).isNull();
-        } finally {
-            session.close();
-        }
+  }
 
+  @Test
+  public void warningCauseByUnknownPropertyType() {
+    sqlSessionFactory.getConfiguration().setAutoMappingUnknownColumnBehavior(AutoMappingUnknownColumnBehavior.WARNING);
+
+    SqlSession session = sqlSessionFactory.openSession();
+
+    try {
+      Mapper mapper = session.getMapper(Mapper.class);
+      SimpleAuthor author = mapper.selectSimpleAuthor(101);
+      assertThat(author.getId()).isNull();
+      assertThat(author.getUsername()).isEqualTo("jim");
+      //      assertThat(LastEventSavedAppender.event.getMessage().toString()).isEqualTo(
+      //          "Unknown column is detected on 'org.apache.ibatis.session.AutoMappingUnknownColumnBehaviorTest$Mapper.selectSimpleAuthor' auto-mapping. Mapping parameters are [columnName=ID,propertyName=id,propertyType=java.util.concurrent.atomic.AtomicInteger]");
+
+    } finally {
+      session.close();
     }
 
-    @Test
-    public void warningCauseByUnknownPropertyType() {
-        sqlSessionFactory.getConfiguration().setAutoMappingUnknownColumnBehavior(AutoMappingUnknownColumnBehavior.WARNING);
+  }
 
-        SqlSession session = sqlSessionFactory.openSession();
+  @Test
+  public void failingCauseByUnknownColumn() {
+    sqlSessionFactory.getConfiguration().setAutoMappingUnknownColumnBehavior(AutoMappingUnknownColumnBehavior.FAILING);
 
-        try {
-            Mapper mapper = session.getMapper(Mapper.class);
-            SimpleAuthor author = mapper.selectSimpleAuthor(101);
-            assertThat(author.getId()).isNull();
-            assertThat(author.getUsername()).isEqualTo("jim");
-            assertThat(LastEventSavedAppender.event.getMessage().toString()).isEqualTo("Unknown column is detected on 'org.apache.ibatis.session.AutoMappingUnknownColumnBehaviorTest$Mapper.selectSimpleAuthor' auto-mapping. Mapping parameters are [columnName=ID,propertyName=id,propertyType=java.util.concurrent.atomic.AtomicInteger]");
+    SqlSession session = sqlSessionFactory.openSession();
 
-        } finally {
-            session.close();
-        }
-
+    try {
+      Mapper mapper = session.getMapper(Mapper.class);
+      mapper.selectAuthor(101);
+    } catch (PersistenceException e) {
+      assertThat(e.getCause()).isInstanceOf(SqlSessionException.class);
+      assertThat(e.getCause().getMessage()).isEqualTo(
+          "Unknown column is detected on 'org.apache.ibatis.session.AutoMappingUnknownColumnBehaviorTest$Mapper.selectAuthor' auto-mapping. Mapping parameters are [columnName=USERNAMEEEE,propertyName=USERNAMEEEE,propertyType=null]");
+    } finally {
+      session.close();
     }
 
-    @Test
-    public void failingCauseByUnknownColumn() {
-        sqlSessionFactory.getConfiguration().setAutoMappingUnknownColumnBehavior(AutoMappingUnknownColumnBehavior.FAILING);
-
-        SqlSession session = sqlSessionFactory.openSession();
-
-        try {
-            Mapper mapper = session.getMapper(Mapper.class);
-            mapper.selectAuthor(101);
-        } catch (PersistenceException e) {
-            assertThat(e.getCause()).isInstanceOf(SqlSessionException.class);
-            assertThat(e.getCause().getMessage()).isEqualTo("Unknown column is detected on 'org.apache.ibatis.session.AutoMappingUnknownColumnBehaviorTest$Mapper.selectAuthor' auto-mapping. Mapping parameters are [columnName=USERNAMEEEE,propertyName=USERNAMEEEE,propertyType=null]");
-        } finally {
-            session.close();
-        }
-
-    }
+  }
 
 }

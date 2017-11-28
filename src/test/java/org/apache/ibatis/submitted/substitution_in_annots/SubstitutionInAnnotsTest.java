@@ -33,7 +33,6 @@ import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-
 public class SubstitutionInAnnotsTest {
 
   protected static SqlSessionFactory sqlSessionFactory;
@@ -51,7 +50,8 @@ public class SubstitutionInAnnotsTest {
     reader.close();
 
     Configuration configuration = new Configuration();
-    Environment environment = new Environment("test", new JdbcTransactionFactory(), new UnpooledDataSource("org.hsqldb.jdbcDriver", "jdbc:hsqldb:mem:annots", null));
+    Environment environment = new Environment("test", new JdbcTransactionFactory(),
+        new UnpooledDataSource("org.hsqldb.jdbcDriver", "jdbc:hsqldb:mem:annots", null));
     configuration.setEnvironment(environment);
 
     configuration.addMapper(SubstitutionInAnnotsMapper.class);
@@ -81,7 +81,7 @@ public class SubstitutionInAnnotsTest {
       sqlSession.close();
     }
   }
-  
+
   @Test
   public void testSubstitutionWithAnnotsParameter() {
     SqlSession sqlSession = sqlSessionFactory.openSession();

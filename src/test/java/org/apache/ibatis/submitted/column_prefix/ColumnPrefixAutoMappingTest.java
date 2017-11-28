@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -45,7 +45,8 @@ public class ColumnPrefixAutoMappingTest extends ColumnPrefixTest {
   public void testCaseInsensitivity() throws Exception {
     SqlSession sqlSession = sqlSessionFactory.openSession();
     try {
-      Brand brand = sqlSession.selectOne("org.apache.ibatis.submitted.column_prefix.MapperAutoMapping.selectBrandWithProducts", 1);
+      Brand brand = sqlSession
+          .selectOne("org.apache.ibatis.submitted.column_prefix.MapperAutoMapping.selectBrandWithProducts", 1);
       assertEquals(Integer.valueOf(1), brand.getId());
       assertEquals(2, brand.getProducts().size());
       assertEquals(Integer.valueOf(10), brand.getProducts().get(0).getId());

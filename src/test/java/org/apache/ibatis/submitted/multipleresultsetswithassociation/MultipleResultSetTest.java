@@ -30,9 +30,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 /*
- * This class contains tests for multiple result sets with an association mapping.
- * This test is based on the org.apache.ibatis.submitted.multiple_resultsets test.
- * 
+ * This class contains tests for multiple result sets with an association mapping. This test is based on the
+ * org.apache.ibatis.submitted.multiple_resultsets test.
  */
 public class MultipleResultSetTest {
 
@@ -40,28 +39,32 @@ public class MultipleResultSetTest {
 
   @BeforeClass
   public static void setUp() throws Exception {
-    Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/multipleresultsetswithassociation/mybatis-config.xml");
+    Reader reader = Resources
+        .getResourceAsReader("org/apache/ibatis/submitted/multipleresultsetswithassociation/mybatis-config.xml");
     sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
     reader.close();
-    
+
     // populate in-memory database
     // Could not get the table creation, procedure creation, and data population to work from the same script.
     // Once it was in three scripts, all seemed well.
     SqlSession session = sqlSessionFactory.openSession();
     Connection conn = session.getConnection();
-    reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/multipleresultsetswithassociation/CreateDB1.sql");
+    reader = Resources
+        .getResourceAsReader("org/apache/ibatis/submitted/multipleresultsetswithassociation/CreateDB1.sql");
     runReaderScript(conn, session, reader);
     reader.close();
-    reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/multipleresultsetswithassociation/CreateDB2.sql");
+    reader = Resources
+        .getResourceAsReader("org/apache/ibatis/submitted/multipleresultsetswithassociation/CreateDB2.sql");
     runReaderScript(conn, session, reader);
     reader.close();
-    reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/multipleresultsetswithassociation/CreateDB3.sql");
+    reader = Resources
+        .getResourceAsReader("org/apache/ibatis/submitted/multipleresultsetswithassociation/CreateDB3.sql");
     runReaderScript(conn, session, reader);
     reader.close();
     conn.close();
     session.close();
   }
-  
+
   private static void runReaderScript(Connection conn, SqlSession session, Reader reader) throws Exception {
     ScriptRunner runner = new ScriptRunner(conn);
     runner.setLogWriter(null);
@@ -77,17 +80,17 @@ public class MultipleResultSetTest {
     try {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       List<OrderDetail> orderDetails = mapper.getOrderDetailsWithHeaders();
-      
+
       // There are six order detail records in the database
       // As long as the data does not change this should be successful
       Assert.assertEquals(6, orderDetails.size());
-      
+
       // Each order detail should have a corresponding OrderHeader
       // Only 2 of 6 orderDetails have orderHeaders
-      for(OrderDetail orderDetail : orderDetails){
-          Assert.assertNotNull(orderDetail.getOrderHeader());
+      for (OrderDetail orderDetail : orderDetails) {
+        Assert.assertNotNull(orderDetail.getOrderHeader());
       }
-      
+
     } finally {
       sqlSession.close();
     }
@@ -106,8 +109,8 @@ public class MultipleResultSetTest {
 
       // Each order detail should have a corresponding OrderHeader
       // Only 2 of 6 orderDetails have orderHeaders
-      for(OrderDetail orderDetail : orderDetails){
-          Assert.assertNotNull(orderDetail.getOrderHeader());
+      for (OrderDetail orderDetail : orderDetails) {
+        Assert.assertNotNull(orderDetail.getOrderHeader());
       }
 
     } finally {

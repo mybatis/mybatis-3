@@ -35,7 +35,8 @@ public class GenericTypeResolutionTest {
   @BeforeClass
   public static void setUp() throws Exception {
     // create an SqlSessionFactory
-    Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/generictyperesolution/mybatis-config.xml");
+    Reader reader = Resources
+        .getResourceAsReader("org/apache/ibatis/submitted/generictyperesolution/mybatis-config.xml");
     sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
     reader.close();
 
@@ -73,7 +74,7 @@ public class GenericTypeResolutionTest {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = new User();
       user.setName("User2");
-      user.fld2 =56;
+      user.fld2 = 56;
       mapper.insertUser(user);
       User result = mapper.getUserByName("User2");
       assertNotNull(result);

@@ -90,7 +90,7 @@ public class CacheKeyTest {
     assertTrue(key1.equals(key2));
   }
 
-  @Test (expected = NotSerializableException.class)
+  @Test(expected = NotSerializableException.class)
   public void serializationExceptionTest() throws Exception {
     CacheKey cacheKey = new CacheKey();
     cacheKey.update(new Object());
@@ -105,11 +105,11 @@ public class CacheKeyTest {
   }
 
   private static <T> T serialize(T object) throws Exception {
-      ByteArrayOutputStream baos = new ByteArrayOutputStream();
-      new ObjectOutputStream(baos).writeObject(object);
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    new ObjectOutputStream(baos).writeObject(object);
 
-      ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
-      return (T) new ObjectInputStream(bais).readObject();
+    ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+    return (T) new ObjectInputStream(bais).readObject();
   }
 
 }

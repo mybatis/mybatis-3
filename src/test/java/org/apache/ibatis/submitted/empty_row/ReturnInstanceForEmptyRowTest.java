@@ -37,16 +37,14 @@ public class ReturnInstanceForEmptyRowTest {
   @BeforeClass
   public static void setUp() throws Exception {
     // create an SqlSessionFactory
-    Reader reader = Resources
-        .getResourceAsReader("org/apache/ibatis/submitted/empty_row/mybatis-config.xml");
+    Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/empty_row/mybatis-config.xml");
     sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
     reader.close();
 
     // populate in-memory database
     SqlSession session = sqlSessionFactory.openSession();
     Connection conn = session.getConnection();
-    reader = Resources
-        .getResourceAsReader("org/apache/ibatis/submitted/empty_row/CreateDB.sql");
+    reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/empty_row/CreateDB.sql");
     ScriptRunner runner = new ScriptRunner(conn);
     runner.setLogWriter(null);
     runner.runScript(reader);

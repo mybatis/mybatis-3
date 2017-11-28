@@ -94,7 +94,7 @@ public class AutomappingTest {
       sqlSession.close();
     }
   }
-  
+
   @Test
   public void shouldNotInheritAutoMappingInherited_ExternalNestedResultMap() {
     sqlSessionFactory.getConfiguration().setAutoMappingBehavior(AutoMappingBehavior.NONE);

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -29,92 +29,93 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class FlushStatementNpeTest {
-    
-    private static SqlSessionFactory sqlSessionFactory;
-    
-    @BeforeClass
-    public static void initDatabase() throws Exception {
-        Connection conn = null;
 
-        try {
-            Class.forName("org.hsqldb.jdbcDriver");
-            conn = DriverManager.getConnection("jdbc:hsqldb:mem:flush_statement_npe", "sa",
-                    "");
+  private static SqlSessionFactory sqlSessionFactory;
 
-            Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/flush_statement_npe/CreateDB.sql");
+  @BeforeClass
+  public static void initDatabase() throws Exception {
+    Connection conn = null;
 
-            ScriptRunner runner = new ScriptRunner(conn);
-            runner.setLogWriter(null);
-            runner.setErrorLogWriter(null);
-            runner.runScript(reader);
-            conn.commit();
-            reader.close();
+    try {
+      Class.forName("org.hsqldb.jdbcDriver");
+      conn = DriverManager.getConnection("jdbc:hsqldb:mem:flush_statement_npe", "sa", "");
 
-            reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/flush_statement_npe/ibatisConfig.xml");
-            sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-            reader.close();
-        } finally {
-            if (conn != null) {
-                conn.close();
-            }
-        }
+      Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/flush_statement_npe/CreateDB.sql");
+
+      ScriptRunner runner = new ScriptRunner(conn);
+      runner.setLogWriter(null);
+      runner.setErrorLogWriter(null);
+      runner.runScript(reader);
+      conn.commit();
+      reader.close();
+
+      reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/flush_statement_npe/ibatisConfig.xml");
+      sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+      reader.close();
+    } finally {
+      if (conn != null) {
+        conn.close();
+      }
     }
-    
-    @Test
-    public void testSameUpdateAfterCommitSimple() {
-        SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.SIMPLE);
-        try {
-            PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
-            Person person = personMapper.selectById(1);
-            person.setFirstName("Simone");
-            
-            // Execute first update then commit.
-            personMapper.update(person);
-            sqlSession.commit();
-            
-            // Execute same update a second time. This used to raise an NPE.
-            personMapper.update(person);
-            sqlSession.commit();
-        } finally {
-            sqlSession.close();
-        }
+  }
+
+  @Test
+  public void testSameUpdateAfterCommitSimple() {
+    SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.SIMPLE);
+    try {
+      PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
+      Person person = personMapper.selectById(1);
+      person.setFirstName("Simone");
+
+      // Execute first update then commit.
+      personMapper.update(person);
+      sqlSession.commit();
+
+      // Execute same update a second time. This used to raise an NPE.
+      personMapper.update(person);
+      sqlSession.commit();
+    } finally {
+      sqlSession.close();
     }
-    @Test
-    public void testSameUpdateAfterCommitReuse() {
-        SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.REUSE);
-        try {
-            PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
-            Person person = personMapper.selectById(1);
-            person.setFirstName("Simone");
-            
-            // Execute first update then commit.
-            personMapper.update(person);
-            sqlSession.commit();
-            
-            // Execute same update a second time. This used to raise an NPE.
-            personMapper.update(person);
-            sqlSession.commit();
-        } finally {
-            sqlSession.close();
-        }
+  }
+
+  @Test
+  public void testSameUpdateAfterCommitReuse() {
+    SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.REUSE);
+    try {
+      PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
+      Person person = personMapper.selectById(1);
+      person.setFirstName("Simone");
+
+      // Execute first update then commit.
+      personMapper.update(person);
+      sqlSession.commit();
+
+      // Execute same update a second time. This used to raise an NPE.
+      personMapper.update(person);
+      sqlSession.commit();
+    } finally {
+      sqlSession.close();
     }
-    @Test
-    public void testSameUpdateAfterCommitBatch() {
-        SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH);
-        try {
-            PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
-            Person person = personMapper.selectById(1);
-            person.setFirstName("Simone");
-            
-            // Execute first update then commit.
-            personMapper.update(person);
-            sqlSession.commit();
-            
-            // Execute same update a second time. This used to raise an NPE.
-            personMapper.update(person);
-            sqlSession.commit();
-        } finally {
-            sqlSession.close();
-        }
+  }
+
+  @Test
+  public void testSameUpdateAfterCommitBatch() {
+    SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH);
+    try {
+      PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
+      Person person = personMapper.selectById(1);
+      person.setFirstName("Simone");
+
+      // Execute first update then commit.
+      personMapper.update(person);
+      sqlSession.commit();
+
+      // Execute same update a second time. This used to raise an NPE.
+      personMapper.update(person);
+      sqlSession.commit();
+    } finally {
+      sqlSession.close();
     }
+  }
 }

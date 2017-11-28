@@ -57,9 +57,10 @@ public class PrimitiveResultTypeTest {
       assertTrue(bcode instanceof BigDecimal);
     }
   }
+
   @Test
-  public void noErrorThrowOut(){
-      List<Product> products=ProductDAO.selectAllProducts();
-      assertTrue("should return 4 results", 4==products.size());
+  public void noErrorThrowOut() {
+    List<Product> products = ProductDAO.selectAllProducts();
+    assertTrue("should return 4 results", 4 == products.size());
   }
 }

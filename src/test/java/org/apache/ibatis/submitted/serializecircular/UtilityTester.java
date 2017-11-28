@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -22,8 +22,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 public class UtilityTester {
-  
-  public static void serializeAndDeserializeObject(Object myObject){
+
+  public static void serializeAndDeserializeObject(Object myObject) {
 
     try {
       deserialzeObject(serializeObject(myObject));
@@ -37,7 +37,7 @@ public class UtilityTester {
       ByteArrayOutputStream myByteArrayOutputStream = new ByteArrayOutputStream();
 
       // Serialize to a byte array
-      ObjectOutputStream myObjectOutputStream = new ObjectOutputStream(myByteArrayOutputStream) ;
+      ObjectOutputStream myObjectOutputStream = new ObjectOutputStream(myByteArrayOutputStream);
       myObjectOutputStream.writeObject(myObject);
       myObjectOutputStream.close();
 

@@ -50,6 +50,7 @@ public class ReflectorTest {
 
   static interface Entity<T> {
     T getId();
+
     void setId(T id);
   }
 
@@ -137,24 +138,31 @@ public class ReflectorTest {
     protected T[] array;
     private T fld;
     public T pubFld;
+
     public T getId() {
       return id;
     }
+
     public void setId(T id) {
       this.id = id;
     }
+
     public List<T> getList() {
       return list;
     }
+
     public void setList(List<T> list) {
       this.list = list;
     }
+
     public T[] getArray() {
       return array;
     }
+
     public void setArray(T[] array) {
       this.array = array;
     }
+
     public T getFld() {
       return fld;
     }
@@ -184,17 +192,18 @@ public class ReflectorTest {
   public void shouldSettersWithUnrelatedArgTypesThrowException() throws Exception {
     @SuppressWarnings("unused")
     class BeanClass {
-      public void setTheProp(String arg) {}
-      public void setTheProp(Integer arg) {}
+      public void setTheProp(String arg) {
+      }
+
+      public void setTheProp(Integer arg) {
+      }
     }
 
     ReflectorFactory reflectorFactory = new DefaultReflectorFactory();
     when(reflectorFactory).findForClass(BeanClass.class);
-    then(caughtException()).isInstanceOf(ReflectionException.class)
-      .hasMessageContaining("theProp")
-      .hasMessageContaining("BeanClass")
-      .hasMessageContaining("java.lang.String")
-      .hasMessageContaining("java.lang.Integer");
+    then(caughtException()).isInstanceOf(ReflectionException.class).hasMessageContaining("theProp")
+        .hasMessageContaining("BeanClass").hasMessageContaining("java.lang.String")
+        .hasMessageContaining("java.lang.Integer");
   }
 
   @Test
@@ -202,12 +211,19 @@ public class ReflectorTest {
     @SuppressWarnings("unused")
     class Bean {
       // JavaBean Spec allows this (see #906)
-      public boolean isBool() {return true;}
-      public boolean getBool() {return false;}
-      public void setBool(boolean bool) {}
+      public boolean isBool() {
+        return true;
+      }
+
+      public boolean getBool() {
+        return false;
+      }
+
+      public void setBool(boolean bool) {
+      }
     }
     ReflectorFactory reflectorFactory = new DefaultReflectorFactory();
     Reflector reflector = reflectorFactory.findForClass(Bean.class);
-    assertTrue((Boolean)reflector.getGetInvoker("bool").invoke(new Bean(), new Byte[0]));
+    assertTrue((Boolean) reflector.getGetInvoker("bool").invoke(new Bean(), new Byte[0]));
   }
 }

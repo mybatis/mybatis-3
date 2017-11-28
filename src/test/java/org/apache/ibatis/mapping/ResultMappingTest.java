@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -29,18 +29,14 @@ public class ResultMappingTest {
   // Issue 697: Association with both a resultMap and a select attribute should throw exception
   @Test(expected = IllegalStateException.class)
   public void shouldThrowErrorWhenBothResultMapAndNestedSelectAreSet() {
-    new ResultMapping.Builder(configuration, "prop")
-        .nestedQueryId("nested query ID")
-        .nestedResultMapId("nested resultMap")
-        .build();
+    new ResultMapping.Builder(configuration, "prop").nestedQueryId("nested query ID")
+        .nestedResultMapId("nested resultMap").build();
   }
-  
+
   //Issue 4: column is mandatory on nested queries
-  @Test(expected=IllegalStateException.class)
+  @Test(expected = IllegalStateException.class)
   public void shouldFailWithAMissingColumnInNetstedSelect() throws Exception {
-    new ResultMapping.Builder(configuration, "prop")
-    .nestedQueryId("nested query ID")
-    .build();
+    new ResultMapping.Builder(configuration, "prop").nestedQueryId("nested query ID").build();
   }
 
 }

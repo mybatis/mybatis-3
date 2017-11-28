@@ -42,8 +42,7 @@ import ru.yandex.qatools.embed.postgresql.EmbeddedPostgres;
 import ru.yandex.qatools.embed.postgresql.util.SocketUtil;
 
 /*
- * This class contains tests for multiple results.  
- * It is based on Jeff's ref cursor tests.
+ * This class contains tests for multiple results. It is based on Jeff's ref cursor tests.
  */
 @Category(EmbeddedPostgresqlTests.class)
 public class MultipleResultTest {
@@ -55,11 +54,13 @@ public class MultipleResultTest {
   @BeforeClass
   public static void setUp() throws Exception {
     // Launch PostgreSQL server. Download / unarchive if necessary.
-    String url = postgres.start(EmbeddedPostgres.cachedRuntimeConfig(Paths.get(System.getProperty("java.io.tmpdir"), "pgembed")), "localhost", SocketUtil.findFreePort(), "multiple_resultsets", "postgres", "root", Collections.emptyList());
+    String url = postgres.start(
+        EmbeddedPostgres.cachedRuntimeConfig(Paths.get(System.getProperty("java.io.tmpdir"), "pgembed")), "localhost",
+        SocketUtil.findFreePort(), "multiple_resultsets", "postgres", "root", Collections.emptyList());
 
     Configuration configuration = new Configuration();
-    Environment environment = new Environment("development", new JdbcTransactionFactory(), new UnpooledDataSource(
-        "org.postgresql.Driver", url, null));
+    Environment environment = new Environment("development", new JdbcTransactionFactory(),
+        new UnpooledDataSource("org.postgresql.Driver", url, null));
     configuration.setEnvironment(environment);
     configuration.setMapUnderscoreToCamelCase(true);
     configuration.addMapper(Mapper.class);
@@ -67,7 +68,8 @@ public class MultipleResultTest {
 
     try (SqlSession session = sqlSessionFactory.openSession();
         Connection conn = session.getConnection();
-        Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/usesjava8/multiple_resultsets/CreateDB.sql")) {
+        Reader reader = Resources
+            .getResourceAsReader("org/apache/ibatis/submitted/usesjava8/multiple_resultsets/CreateDB.sql")) {
       ScriptRunner runner = new ScriptRunner(conn);
       runner.setLogWriter(null);
       runner.runScript(reader);
@@ -87,14 +89,14 @@ public class MultipleResultTest {
       Assert.assertEquals(2, results.size());
 
       Assert.assertEquals(6, results.get(0).size());
-      OrderDetail detail = (OrderDetail)results.get(0).get(0);
+      OrderDetail detail = (OrderDetail) results.get(0).get(0);
       Assert.assertEquals(1, detail.getOrderId());
       Assert.assertEquals(1, detail.getLineNumber());
       Assert.assertEquals(1, detail.getQuantity());
       Assert.assertEquals("Pen", detail.getItemDescription());
 
       Assert.assertEquals(2, results.get(1).size());
-      OrderHeader header = (OrderHeader)results.get(1).get(0);
+      OrderHeader header = (OrderHeader) results.get(1).get(0);
       Assert.assertEquals(1, header.getOrderId());
       Assert.assertEquals("Fred", header.getCustName());
     }

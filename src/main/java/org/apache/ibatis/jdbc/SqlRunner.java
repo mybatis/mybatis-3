@@ -202,7 +202,8 @@ public class SqlRunner {
   private void setParameters(PreparedStatement ps, Object... args) throws SQLException {
     for (int i = 0, n = args.length; i < n; i++) {
       if (args[i] == null) {
-        throw new SQLException("SqlRunner requires an instance of Null to represent typed null values for JDBC compatibility");
+        throw new SQLException(
+            "SqlRunner requires an instance of Null to represent typed null values for JDBC compatibility");
       } else if (args[i] instanceof Null) {
         ((Null) args[i]).getTypeHandler().setParameter(ps, i + 1, null, ((Null) args[i]).getJdbcType());
       } else {
@@ -248,7 +249,7 @@ public class SqlRunner {
     } finally {
       if (rs != null) {
         try {
-            rs.close();
+          rs.close();
         } catch (Exception e) {
           // ignore
         }

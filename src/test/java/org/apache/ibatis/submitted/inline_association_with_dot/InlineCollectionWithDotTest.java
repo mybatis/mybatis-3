@@ -40,9 +40,10 @@ public class InlineCollectionWithDotTest {
     SqlSessionFactory sqlSessionFactory;
     try {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(batisConfigReader);
-    } catch(Exception anException) {
+    } catch (Exception anException) {
       batisConfigReader.close();
-      throw new RuntimeException("Mapper configuration failed, expected this to work: " + anException.getMessage(), anException);
+      throw new RuntimeException("Mapper configuration failed, expected this to work: " + anException.getMessage(),
+          anException);
     }
 
     batisConfigReader.close();
@@ -53,7 +54,8 @@ public class InlineCollectionWithDotTest {
     ScriptRunner runner = new ScriptRunner(conn);
     runner.setLogWriter(null);
     runner.setErrorLogWriter(null);
-    Reader createScriptReader = Resources.getResourceAsReader("org/apache/ibatis/submitted/inline_association_with_dot/create.sql");
+    Reader createScriptReader = Resources
+        .getResourceAsReader("org/apache/ibatis/submitted/inline_association_with_dot/create.sql");
     runner.runScript(createScriptReader);
     createScriptReader.close();
     conn.close();
@@ -74,8 +76,7 @@ public class InlineCollectionWithDotTest {
    * possible bij using an inline 'association' map.
    */
   @Test
-  public void selectElementValueInContainerUsingInline()
-  throws Exception {
+  public void selectElementValueInContainerUsingInline() throws Exception {
     openSession("inline");
 
     Element myElement = sqlSession.getMapper(ElementMapperUsingInline.class).selectElement();
@@ -89,10 +90,10 @@ public class InlineCollectionWithDotTest {
    */
   @Test
   public void selectElementValueInContainerUsingSubMap() throws Exception {
-   openSession("submap");
+    openSession("submap");
 
-   Element myElement = sqlSession.getMapper(ElementMapperUsingSubMap.class).selectElement();
+    Element myElement = sqlSession.getMapper(ElementMapperUsingSubMap.class).selectElement();
 
-   assertEquals("value", myElement.getElement().getElement().getValue());
+    assertEquals("value", myElement.getElement().getElement().getValue());
   }
 }

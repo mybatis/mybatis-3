@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -32,20 +32,17 @@ public class BooleanTypeHandler extends BaseTypeHandler<Boolean> {
   }
 
   @Override
-  public Boolean getNullableResult(ResultSet rs, String columnName)
-      throws SQLException {
+  public Boolean getNullableResult(ResultSet rs, String columnName) throws SQLException {
     return rs.getBoolean(columnName);
   }
 
   @Override
-  public Boolean getNullableResult(ResultSet rs, int columnIndex)
-      throws SQLException {
+  public Boolean getNullableResult(ResultSet rs, int columnIndex) throws SQLException {
     return rs.getBoolean(columnIndex);
   }
 
   @Override
-  public Boolean getNullableResult(CallableStatement cs, int columnIndex)
-      throws SQLException {
+  public Boolean getNullableResult(CallableStatement cs, int columnIndex) throws SQLException {
     return cs.getBoolean(columnIndex);
   }
 }

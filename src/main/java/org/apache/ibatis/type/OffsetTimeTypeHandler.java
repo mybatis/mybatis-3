@@ -33,7 +33,7 @@ public class OffsetTimeTypeHandler extends BaseTypeHandler<OffsetTime> {
 
   @Override
   public void setNonNullParameter(PreparedStatement ps, int i, OffsetTime parameter, JdbcType jdbcType)
-          throws SQLException {
+      throws SQLException {
     ps.setTime(i, Time.valueOf(parameter.toLocalTime()));
   }
 

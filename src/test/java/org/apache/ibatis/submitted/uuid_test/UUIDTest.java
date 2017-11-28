@@ -52,7 +52,7 @@ public class UUIDTest {
     session.close();
   }
 
-  @Test(expected=PersistenceException.class)
+  @Test(expected = PersistenceException.class)
   public void shouldGetAUser() {
     SqlSession sqlSession = sqlSessionFactory.openSession();
     try {

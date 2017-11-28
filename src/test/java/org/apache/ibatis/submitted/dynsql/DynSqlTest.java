@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -96,7 +96,8 @@ public class DynSqlTest {
       parameter.setSchema("ibtest");
       parameter.setIds(ids);
 
-      List<Map<String, Object>> answer = sqlSession.selectList("org.apache.ibatis.submitted.dynsql.select_simple", parameter);
+      List<Map<String, Object>> answer = sqlSession.selectList("org.apache.ibatis.submitted.dynsql.select_simple",
+          parameter);
 
       assertTrue(answer.size() == 3);
     } finally {
@@ -149,7 +150,8 @@ public class DynSqlTest {
   public void testOgnlStaticMethodCall() {
     SqlSession sqlSession = sqlSessionFactory.openSession();
     try {
-      List<Map<String, Object>> answer = sqlSession.selectList("org.apache.ibatis.submitted.dynsql.ognlStaticMethodCall", "Rock 'n Roll");
+      List<Map<String, Object>> answer = sqlSession
+          .selectList("org.apache.ibatis.submitted.dynsql.ognlStaticMethodCall", "Rock 'n Roll");
       assertTrue(answer.size() == 1);
       assertEquals(new Integer(7), answer.get(0).get("ID"));
 

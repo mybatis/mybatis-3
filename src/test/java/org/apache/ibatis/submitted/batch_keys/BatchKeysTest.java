@@ -71,7 +71,8 @@ public class BatchKeysTest {
 
   public void testJdbc3Support() throws Exception {
     Connection conn = sqlSessionFactory.getConfiguration().getEnvironment().getDataSource().getConnection();
-    PreparedStatement stmt = conn.prepareStatement("insert into users2 values(null, 'Pocoyo')", Statement.RETURN_GENERATED_KEYS);
+    PreparedStatement stmt = conn.prepareStatement("insert into users2 values(null, 'Pocoyo')",
+        Statement.RETURN_GENERATED_KEYS);
     stmt.addBatch();
     stmt.executeBatch();
     ResultSet rs = stmt.getGeneratedKeys();
@@ -114,7 +115,6 @@ public class BatchKeysTest {
       sqlSession.close();
     }
   }
-
 
   @Test
   public void testInsertJdbc3() throws Exception {
@@ -214,5 +214,5 @@ public class BatchKeysTest {
       sqlSession.close();
     }
   }
-  
+
 }

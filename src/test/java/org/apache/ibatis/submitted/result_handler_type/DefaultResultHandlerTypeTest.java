@@ -54,8 +54,8 @@ public class DefaultResultHandlerTypeTest {
     SqlSessionFactory sqlSessionFactory = getSqlSessionFactoryXmlConfig(xmlConfig);
     SqlSession sqlSession = sqlSessionFactory.openSession();
     try {
-      Map<Integer, Person> map = sqlSession.selectMap(
-          "org.apache.ibatis.submitted.result_handler_type.PersonMapper.doSelect", "id");
+      Map<Integer, Person> map = sqlSession
+          .selectMap("org.apache.ibatis.submitted.result_handler_type.PersonMapper.doSelect", "id");
       assertEquals(map.size(), 2);
       assertEquals("java.util.LinkedHashMap", map.getClass().getCanonicalName());
     } finally {

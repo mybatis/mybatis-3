@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -32,88 +32,88 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class EnumWithOgnlTest {
-    
-    private static SqlSessionFactory sqlSessionFactory;
-    
-    @BeforeClass
-    public static void initDatabase() throws Exception {
-        Connection conn = null;
 
-        try {
-            Class.forName("org.hsqldb.jdbcDriver");
-            conn = DriverManager.getConnection("jdbc:hsqldb:mem:ognl_enum", "sa",
-                    "");
+  private static SqlSessionFactory sqlSessionFactory;
 
-            Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/ognl_enum/CreateDB.sql");
+  @BeforeClass
+  public static void initDatabase() throws Exception {
+    Connection conn = null;
 
-            ScriptRunner runner = new ScriptRunner(conn);
-            runner.setLogWriter(null);
-            runner.setErrorLogWriter(null);
-            runner.runScript(reader);
-            conn.commit();
-            reader.close();
+    try {
+      Class.forName("org.hsqldb.jdbcDriver");
+      conn = DriverManager.getConnection("jdbc:hsqldb:mem:ognl_enum", "sa", "");
 
-            reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/ognl_enum/ibatisConfig.xml");
-            sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-            reader.close();
-        } finally {
-            if (conn != null) {
-                conn.close();
-            }
-        }
+      Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/ognl_enum/CreateDB.sql");
+
+      ScriptRunner runner = new ScriptRunner(conn);
+      runner.setLogWriter(null);
+      runner.setErrorLogWriter(null);
+      runner.runScript(reader);
+      conn.commit();
+      reader.close();
+
+      reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/ognl_enum/ibatisConfig.xml");
+      sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+      reader.close();
+    } finally {
+      if (conn != null) {
+        conn.close();
+      }
     }
-    
-    @Test
-    public void testEnumWithOgnl() {
-        SqlSession sqlSession = sqlSessionFactory.openSession();
-        PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
-        List<Person> persons = personMapper.selectAllByType(null);
-        Assert.assertEquals("Persons must contain 3 persons", 3, persons.size());
-      sqlSession.close();
-    }
+  }
 
   @Test
-    public void testEnumWithOgnlDirector() {
-        SqlSession sqlSession = sqlSessionFactory.openSession();
-        PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
-        List<Person> persons = personMapper.selectAllByType(Person.Type.DIRECTOR);
-        Assert.assertEquals("Persons must contain 1 persons", 1, persons.size());
+  public void testEnumWithOgnl() {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
+    List<Person> persons = personMapper.selectAllByType(null);
+    Assert.assertEquals("Persons must contain 3 persons", 3, persons.size());
     sqlSession.close();
-    }
-
-    @Test
-    public void testEnumWithOgnlDirectorNameAttribute() {
-        SqlSession sqlSession = sqlSessionFactory.openSession();
-        PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
-        List<Person> persons = personMapper.selectAllByTypeNameAttribute(Person.Type.DIRECTOR);
-        Assert.assertEquals("Persons must contain 1 persons", 1, persons.size());
-      sqlSession.close();
-    }
+  }
 
   @Test
-    public void testEnumWithOgnlDirectorWithInterface() {
-        SqlSession sqlSession = sqlSessionFactory.openSession();
-        PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
-        List<Person> persons = personMapper.selectAllByTypeWithInterface(new PersonType() {
-            @Override
-            public Type getType() {
-                return Person.Type.DIRECTOR;
-            }
-        });
-        Assert.assertEquals("Persons must contain 1 persons", 1, persons.size());
+  public void testEnumWithOgnlDirector() {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
+    List<Person> persons = personMapper.selectAllByType(Person.Type.DIRECTOR);
+    Assert.assertEquals("Persons must contain 1 persons", 1, persons.size());
     sqlSession.close();
-    }
-    @Test
-    public void testEnumWithOgnlDirectorNameAttributeWithInterface() {
-        SqlSession sqlSession = sqlSessionFactory.openSession();
-        PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
-        List<Person> persons = personMapper.selectAllByTypeNameAttributeWithInterface(new PersonType() {
-            @Override
-            public Type getType() {
-                return Person.Type.DIRECTOR;
-            }
-        });
-        Assert.assertEquals("Persons must contain 1 persons", 1, persons.size());
-      sqlSession.close();
-    }
+  }
+
+  @Test
+  public void testEnumWithOgnlDirectorNameAttribute() {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
+    List<Person> persons = personMapper.selectAllByTypeNameAttribute(Person.Type.DIRECTOR);
+    Assert.assertEquals("Persons must contain 1 persons", 1, persons.size());
+    sqlSession.close();
+  }
+
+  @Test
+  public void testEnumWithOgnlDirectorWithInterface() {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
+    List<Person> persons = personMapper.selectAllByTypeWithInterface(new PersonType() {
+      @Override
+      public Type getType() {
+        return Person.Type.DIRECTOR;
+      }
+    });
+    Assert.assertEquals("Persons must contain 1 persons", 1, persons.size());
+    sqlSession.close();
+  }
+
+  @Test
+  public void testEnumWithOgnlDirectorNameAttributeWithInterface() {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
+    List<Person> persons = personMapper.selectAllByTypeNameAttributeWithInterface(new PersonType() {
+      @Override
+      public Type getType() {
+        return Person.Type.DIRECTOR;
+      }
+    });
+    Assert.assertEquals("Persons must contain 1 persons", 1, persons.size());
+    sqlSession.close();
+  }
 }

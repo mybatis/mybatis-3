@@ -59,8 +59,8 @@ public class AssociationTypeTest {
     try {
       List<Map> results = sqlSession.selectList("getUser");
       for (Map r : results) {
-          Assert.assertEquals(String.class, r.get("a1").getClass());
-          Assert.assertEquals(String.class, r.get("a2").getClass());
+        Assert.assertEquals(String.class, r.get("a1").getClass());
+        Assert.assertEquals(String.class, r.get("a2").getClass());
       }
     } finally {
       sqlSession.close();

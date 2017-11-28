@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -33,7 +33,6 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-
 public class DynSqlTest {
 
   protected static SqlSessionFactory sqlSessionFactory;
@@ -44,8 +43,7 @@ public class DynSqlTest {
 
     try {
       Class.forName("org.hsqldb.jdbcDriver");
-      conn = DriverManager.getConnection("jdbc:hsqldb:mem:bname", "sa",
-          "");
+      conn = DriverManager.getConnection("jdbc:hsqldb:mem:bname", "sa", "");
 
       Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/dynsql2/CreateDB.sql");
 
@@ -85,7 +83,8 @@ public class DynSqlTest {
       Parameter parameter = new Parameter();
       parameter.setNames(names);
 
-      List<Map<String, Object>> answer = sqlSession.selectList("org.apache.ibatis.submitted.dynsql2.dynamicSelectWithTypeHandler", parameter);
+      List<Map<String, Object>> answer = sqlSession
+          .selectList("org.apache.ibatis.submitted.dynsql2.dynamicSelectWithTypeHandler", parameter);
 
       assertTrue(answer.size() == 2);
     } finally {
@@ -98,7 +97,8 @@ public class DynSqlTest {
   public void testSimpleSelect() {
     SqlSession sqlSession = sqlSessionFactory.openSession();
     try {
-      Map<String, Object> answer = (Map<String, Object>) sqlSession.selectOne("org.apache.ibatis.submitted.dynsql2.simpleSelect", 1);
+      Map<String, Object> answer = (Map<String, Object>) sqlSession
+          .selectOne("org.apache.ibatis.submitted.dynsql2.simpleSelect", 1);
 
       assertEquals(answer.get("ID"), 1);
       assertEquals(answer.get("FIRSTNAME"), "Fred");

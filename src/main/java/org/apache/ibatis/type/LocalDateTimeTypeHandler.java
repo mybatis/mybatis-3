@@ -33,7 +33,7 @@ public class LocalDateTimeTypeHandler extends BaseTypeHandler<LocalDateTime> {
 
   @Override
   public void setNonNullParameter(PreparedStatement ps, int i, LocalDateTime parameter, JdbcType jdbcType)
-          throws SQLException {
+      throws SQLException {
     ps.setTimestamp(i, Timestamp.valueOf(parameter));
   }
 

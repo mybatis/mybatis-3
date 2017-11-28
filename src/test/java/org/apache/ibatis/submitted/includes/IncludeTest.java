@@ -62,7 +62,7 @@ public class IncludeTest {
       sqlSession.close();
     }
   }
-  
+
   @Test
   public void testParametrizedIncludes() throws Exception {
     final SqlSession sqlSession = sqlSessionFactory.openSession();
@@ -73,5 +73,5 @@ public class IncludeTest {
       sqlSession.close();
     }
   }
-  
+
 }

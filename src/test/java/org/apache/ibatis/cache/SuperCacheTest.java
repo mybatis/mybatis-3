@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ public class SuperCacheTest {
     cache = new WeakCache(cache);
     cache = new ScheduledCache(cache);
     cache = new SerializedCache(cache);
-//    cache = new LoggingCache(cache);
+    //    cache = new LoggingCache(cache);
     cache = new SynchronizedCache(cache);
     cache = new TransactionalCache(cache);
     for (int i = 0; i < N; i++) {
@@ -43,6 +43,5 @@ public class SuperCacheTest {
     }
     assertTrue(cache.getSize() < N);
   }
-
 
 }

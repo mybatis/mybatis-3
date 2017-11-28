@@ -41,7 +41,8 @@ public class BoundSql {
   private final Map<String, Object> additionalParameters;
   private final MetaObject metaParameters;
 
-  public BoundSql(Configuration configuration, String sql, List<ParameterMapping> parameterMappings, Object parameterObject) {
+  public BoundSql(Configuration configuration, String sql, List<ParameterMapping> parameterMappings,
+      Object parameterObject) {
     this.sql = sql;
     this.parameterMappings = parameterMappings;
     this.parameterObject = parameterObject;

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -374,20 +374,25 @@ public class TypeParameterResolverTest {
 
   @Test
   public void testReturnParam_WildcardWithUpperBounds() throws Exception {
-    class Key {}
+    class Key {
+    }
     @SuppressWarnings("unused")
     class KeyBean<S extends Key & Cloneable, T extends Key> {
       private S key1;
       private T key2;
+
       public S getKey1() {
         return key1;
       }
+
       public void setKey1(S key1) {
         this.key1 = key1;
       }
+
       public T getKey2() {
         return key2;
       }
+
       public void setKey2(T key2) {
         this.key2 = key2;
       }

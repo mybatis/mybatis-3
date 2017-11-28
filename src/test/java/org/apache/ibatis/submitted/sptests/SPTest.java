@@ -196,13 +196,13 @@ public class SPTest {
       SPMapper spMapper = sqlSession.getMapper(SPMapper.class);
       spMapper.echoDate(parameter);
 
-      java.sql.Date outDate = new java.sql.Date(now.getTime());      
+      java.sql.Date outDate = new java.sql.Date(now.getTime());
       assertEquals(outDate.toString(), parameter.get("output date").toString());
     } finally {
       sqlSession.close();
     }
   }
-  
+
   /*
    * This test shows the use of a declared parameter map. We generally prefer
    * inline parameters, because the syntax is more intuitive (no pesky question
@@ -826,7 +826,7 @@ public class SPTest {
       sqlSession.close();
     }
   }
-  
+
   @Test
   public void testGetNamesAndItemsLinked() throws SQLException {
     SqlSession sqlSession = sqlSessionFactory.openSession();

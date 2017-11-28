@@ -56,9 +56,9 @@ public class AuthorDAOTest {
   public void shouldNotOverwriteCollectionOnNestedResultMap() {
     SqlSession session = factory.openSession();
     try {
-    List<Author> authors = session.selectList("getAllAuthors");
-    assertEquals(1, authors.size());
-    assertEquals(4, authors.get(0).getPosts().size());
+      List<Author> authors = session.selectList("getAllAuthors");
+      assertEquals(1, authors.size());
+      assertEquals(4, authors.get(0).getPosts().size());
     } finally {
       session.close();
     }
@@ -69,9 +69,9 @@ public class AuthorDAOTest {
   public void shouldNotOverwriteCollectionOnNestedQuery() {
     SqlSession session = factory.openSession();
     try {
-    List<Author> authors = session.selectList("getAllAuthorsNestedQuery");
-    assertEquals(1, authors.size());
-    assertEquals(4, authors.get(0).getPosts().size());
+      List<Author> authors = session.selectList("getAllAuthorsNestedQuery");
+      assertEquals(1, authors.size());
+      assertEquals(4, authors.get(0).getPosts().size());
     } finally {
       session.close();
     }

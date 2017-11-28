@@ -337,11 +337,11 @@ public class CacheTest {
     Assert.assertEquals(5, customCache.getShortWrapperValue().shortValue());
     Assert.assertEquals(6, customCache.getShortValue());
     Assert.assertEquals((float) 7.1, customCache.getFloatWrapperValue(), 0);
-    Assert.assertEquals((float)8.1, customCache.getFloatValue(), 0);
+    Assert.assertEquals((float) 8.1, customCache.getFloatValue(), 0);
     Assert.assertEquals(9.01, customCache.getDoubleWrapperValue(), 0);
     Assert.assertEquals(10.01, customCache.getDoubleValue(), 0);
-    Assert.assertEquals((byte)11, customCache.getByteWrapperValue().byteValue());
-    Assert.assertEquals((byte)12, customCache.getByteValue());
+    Assert.assertEquals((byte) 11, customCache.getByteWrapperValue().byteValue());
+    Assert.assertEquals((byte) 12, customCache.getByteValue());
     Assert.assertEquals(true, customCache.getBooleanWrapperValue());
     Assert.assertEquals(true, customCache.isBooleanValue());
   }
@@ -350,26 +350,24 @@ public class CacheTest {
   public void shouldErrorUnsupportedProperties() {
     when(sqlSessionFactory.getConfiguration()).addMapper(CustomCacheUnsupportedPropertyMapper.class);
     then(caughtException()).isInstanceOf(CacheException.class)
-      .hasMessage("Unsupported property type for cache: 'date' of type class java.util.Date");
+        .hasMessage("Unsupported property type for cache: 'date' of type class java.util.Date");
   }
 
   @Test
   public void shouldErrorInvalidCacheNamespaceRefAttributesSpecifyBoth() {
-    when(sqlSessionFactory.getConfiguration().getMapperRegistry())
-      .addMapper(InvalidCacheNamespaceRefBothMapper.class);
+    when(sqlSessionFactory.getConfiguration().getMapperRegistry()).addMapper(InvalidCacheNamespaceRefBothMapper.class);
     then(caughtException()).isInstanceOf(BuilderException.class)
-      .hasMessage("Cannot use both value() and name() attribute in the @CacheNamespaceRef");
+        .hasMessage("Cannot use both value() and name() attribute in the @CacheNamespaceRef");
   }
 
   @Test
   public void shouldErrorInvalidCacheNamespaceRefAttributesIsEmpty() {
-    when(sqlSessionFactory.getConfiguration().getMapperRegistry())
-      .addMapper(InvalidCacheNamespaceRefEmptyMapper.class);
+    when(sqlSessionFactory.getConfiguration().getMapperRegistry()).addMapper(InvalidCacheNamespaceRefEmptyMapper.class);
     then(caughtException()).isInstanceOf(BuilderException.class)
-      .hasMessage("Should be specified either value() or name() attribute in the @CacheNamespaceRef");
+        .hasMessage("Should be specified either value() or name() attribute in the @CacheNamespaceRef");
   }
 
-  private CustomCache unwrap(Cache cache){
+  private CustomCache unwrap(Cache cache) {
     Field field;
     try {
       field = cache.getClass().getDeclaredField("delegate");
@@ -378,7 +376,7 @@ public class CacheTest {
     }
     try {
       field.setAccessible(true);
-      return (CustomCache)field.get(cache);
+      return (CustomCache) field.get(cache);
     } catch (IllegalAccessException e) {
       throw new IllegalStateException(e);
     } finally {
@@ -386,9 +384,7 @@ public class CacheTest {
     }
   }
 
-  @CacheNamespace(implementation = CustomCache.class, properties = {
-      @Property(name = "date", value = "2016/11/21")
-  })
+  @CacheNamespace(implementation = CustomCache.class, properties = { @Property(name = "date", value = "2016/11/21") })
   private interface CustomCacheUnsupportedPropertyMapper {
   }
 

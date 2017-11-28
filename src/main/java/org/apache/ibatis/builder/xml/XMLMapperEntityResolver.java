@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -56,7 +56,8 @@ public class XMLMapperEntityResolver implements EntityResolver {
         String lowerCaseSystemId = systemId.toLowerCase(Locale.ENGLISH);
         if (lowerCaseSystemId.contains(MYBATIS_CONFIG_SYSTEM) || lowerCaseSystemId.contains(IBATIS_CONFIG_SYSTEM)) {
           return getInputSource(MYBATIS_CONFIG_DTD, publicId, systemId);
-        } else if (lowerCaseSystemId.contains(MYBATIS_MAPPER_SYSTEM) || lowerCaseSystemId.contains(IBATIS_MAPPER_SYSTEM)) {
+        } else if (lowerCaseSystemId.contains(MYBATIS_MAPPER_SYSTEM)
+            || lowerCaseSystemId.contains(IBATIS_MAPPER_SYSTEM)) {
           return getInputSource(MYBATIS_MAPPER_DTD, publicId, systemId);
         }
       }
@@ -73,7 +74,7 @@ public class XMLMapperEntityResolver implements EntityResolver {
         InputStream in = Resources.getResourceAsStream(path);
         source = new InputSource(in);
         source.setPublicId(publicId);
-        source.setSystemId(systemId);        
+        source.setSystemId(systemId);
       } catch (IOException e) {
         // ignore, null is ok
       }

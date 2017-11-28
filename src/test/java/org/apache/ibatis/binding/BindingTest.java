@@ -103,11 +103,13 @@ public class BindingTest {
     SqlSession session = sqlSessionFactory.openSession();
     try {
       BoundAuthorMapper mapper = session.getMapper(BoundAuthorMapper.class);
-      List<Post> posts = mapper.findPostsInList(new ArrayList<Integer>() {{
-        add(1);
-        add(3);
-        add(5);
-      }});
+      List<Post> posts = mapper.findPostsInList(new ArrayList<Integer>() {
+        {
+          add(1);
+          add(3);
+          add(5);
+        }
+      });
       assertEquals(3, posts.size());
       session.rollback();
     } finally {
@@ -120,7 +122,7 @@ public class BindingTest {
     SqlSession session = sqlSessionFactory.openSession();
     try {
       BoundAuthorMapper mapper = session.getMapper(BoundAuthorMapper.class);
-      Integer[] params = new Integer[]{1, 3, 5};
+      Integer[] params = new Integer[] { 1, 3, 5 };
       List<Post> posts = mapper.findPostsInArray(params);
       assertEquals(3, posts.size());
       session.rollback();
@@ -198,15 +200,15 @@ public class BindingTest {
       session.close();
     }
   }
-  
+
   @Test
   public void shouldExecuteBoundSelectMapOfBlogsById() {
     SqlSession session = sqlSessionFactory.openSession();
     try {
       BoundBlogMapper mapper = session.getMapper(BoundBlogMapper.class);
-      Map<Integer,Blog> blogs = mapper.selectBlogsAsMapById();
+      Map<Integer, Blog> blogs = mapper.selectBlogsAsMapById();
       assertEquals(2, blogs.size());
-      for(Map.Entry<Integer,Blog> blogEntry : blogs.entrySet()) {
+      for (Map.Entry<Integer, Blog> blogEntry : blogs.entrySet()) {
         assertEquals(blogEntry.getKey(), (Integer) blogEntry.getValue().getId());
       }
     } finally {
@@ -259,14 +261,14 @@ public class BindingTest {
     SqlSession session = sqlSessionFactory.openSession();
     try {
       BoundBlogMapper mapper = session.getMapper(BoundBlogMapper.class);
-      Map<Integer,Blog> blogs = mapper.selectBlogsAsMapById();
-      Map<Integer,Blog> moreBlogs = mapper.selectBlogsAsMapById();
+      Map<Integer, Blog> blogs = mapper.selectBlogsAsMapById();
+      Map<Integer, Blog> moreBlogs = mapper.selectBlogsAsMapById();
       assertEquals(2, blogs.size());
       assertEquals(2, moreBlogs.size());
-      for(Map.Entry<Integer,Blog> blogEntry : blogs.entrySet()) {
+      for (Map.Entry<Integer, Blog> blogEntry : blogs.entrySet()) {
         assertEquals(blogEntry.getKey(), (Integer) blogEntry.getValue().getId());
       }
-      for(Map.Entry<Integer,Blog> blogEntry : moreBlogs.entrySet()) {
+      for (Map.Entry<Integer, Blog> blogEntry : moreBlogs.entrySet()) {
         assertEquals(blogEntry.getKey(), (Integer) blogEntry.getValue().getId());
       }
     } finally {
@@ -279,19 +281,19 @@ public class BindingTest {
     SqlSession session = sqlSessionFactory.openSession();
     try {
       BoundBlogMapper mapper = session.getMapper(BoundBlogMapper.class);
-      Map<Integer,Blog> blogs = mapper.selectBlogsAsMapById();
+      Map<Integer, Blog> blogs = mapper.selectBlogsAsMapById();
       session.close();
 
       //New Session
       session = sqlSessionFactory.openSession();
       mapper = session.getMapper(BoundBlogMapper.class);
-      Map<Integer,Blog> moreBlogs = mapper.selectBlogsAsMapById();
+      Map<Integer, Blog> moreBlogs = mapper.selectBlogsAsMapById();
       assertEquals(2, blogs.size());
       assertEquals(2, moreBlogs.size());
-      for(Map.Entry<Integer,Blog> blogEntry : blogs.entrySet()) {
+      for (Map.Entry<Integer, Blog> blogEntry : blogs.entrySet()) {
         assertEquals(blogEntry.getKey(), (Integer) blogEntry.getValue().getId());
       }
-      for(Map.Entry<Integer,Blog> blogEntry : moreBlogs.entrySet()) {
+      for (Map.Entry<Integer, Blog> blogEntry : moreBlogs.entrySet()) {
         assertEquals(blogEntry.getKey(), (Integer) blogEntry.getValue().getId());
       }
     } finally {
@@ -328,7 +330,7 @@ public class BindingTest {
     SqlSession session = sqlSessionFactory.openSession();
     try {
       BoundBlogMapper mapper = session.getMapper(BoundBlogMapper.class);
-      List<Map<String,Object>> blogs = mapper.selectBlogsAsMaps();
+      List<Map<String, Object>> blogs = mapper.selectBlogsAsMaps();
       assertEquals(2, blogs.size());
     } finally {
       session.close();
@@ -340,7 +342,7 @@ public class BindingTest {
     SqlSession session = sqlSessionFactory.openSession();
     try {
       BoundBlogMapper mapper = session.getMapper(BoundBlogMapper.class);
-      List<Post> posts = mapper.selectPostsLike(new RowBounds(1,1),"%a%");
+      List<Post> posts = mapper.selectPostsLike(new RowBounds(1, 1), "%a%");
       assertEquals(1, posts.size());
     } finally {
       session.close();
@@ -352,7 +354,7 @@ public class BindingTest {
     SqlSession session = sqlSessionFactory.openSession();
     try {
       BoundBlogMapper mapper = session.getMapper(BoundBlogMapper.class);
-      List<Post> posts = mapper.selectPostsLikeSubjectAndBody(new RowBounds(1,1),"%a%","%a%");
+      List<Post> posts = mapper.selectPostsLikeSubjectAndBody(new RowBounds(1, 1), "%a%", "%a%");
       assertEquals(1, posts.size());
     } finally {
       session.close();
@@ -424,7 +426,7 @@ public class BindingTest {
       session.close();
     }
   }
-  
+
   @Ignore
   @Test // issue #480 and #101
   public void shouldExecuteBoundSelectBlogUsingConstructorWithResultMapCollection() {
@@ -441,7 +443,7 @@ public class BindingTest {
       session.close();
     }
   }
-  
+
   @Test
   public void shouldExecuteBoundSelectOneBlogStatementWithConstructorUsingXMLConfig() {
     SqlSession session = sqlSessionFactory.openSession();
@@ -463,7 +465,7 @@ public class BindingTest {
     SqlSession session = sqlSessionFactory.openSession();
     try {
       BoundBlogMapper mapper = session.getMapper(BoundBlogMapper.class);
-      Map<String,Object> blog = mapper.selectBlogAsMap(new HashMap<String, Object>() {
+      Map<String, Object> blog = mapper.selectBlogAsMap(new HashMap<String, Object>() {
         {
           put("id", 1);
         }
@@ -619,7 +621,7 @@ public class BindingTest {
     SqlSession session = sqlSessionFactory.openSession();
     try {
       BoundBlogMapper mapper = session.getMapper(BoundBlogMapper.class);
-      mapper.selectBlogByNonExistentNestedParam(1, Collections.<String, Object>emptyMap());
+      mapper.selectBlogByNonExistentNestedParam(1, Collections.<String, Object> emptyMap());
     } finally {
       session.close();
     }
@@ -667,7 +669,8 @@ public class BindingTest {
     try {
 
       // Create another mapper instance with a method cache we can test against:
-      final MapperProxyFactory<BoundBlogMapper> mapperProxyFactory = new MapperProxyFactory<BoundBlogMapper>(BoundBlogMapper.class);
+      final MapperProxyFactory<BoundBlogMapper> mapperProxyFactory = new MapperProxyFactory<BoundBlogMapper>(
+          BoundBlogMapper.class);
       assertEquals(BoundBlogMapper.class, mapperProxyFactory.getMapperInterface());
       final BoundBlogMapper mapper = mapperProxyFactory.newInstance(session);
       assertNotSame(mapper, mapperProxyFactory.newInstance(session));
@@ -675,7 +678,8 @@ public class BindingTest {
 
       // Mapper methods we will call later:
       final Method selectBlog = BoundBlogMapper.class.getMethod("selectBlog", Integer.TYPE);
-      final Method selectBlogByIdUsingConstructor = BoundBlogMapper.class.getMethod("selectBlogByIdUsingConstructor", Integer.TYPE);
+      final Method selectBlogByIdUsingConstructor = BoundBlogMapper.class.getMethod("selectBlogByIdUsingConstructor",
+          Integer.TYPE);
 
       // Call mapper method and verify it is cached:
       mapper.selectBlog(1);
@@ -712,7 +716,7 @@ public class BindingTest {
       assertEquals(101, blogs.get(0).getAuthor().getId());
       assertEquals(1, blogs.get(0).getPosts().size());
       assertEquals(1, blogs.get(0).getPosts().get(0).getId());
-      assertTrue(blogs.get(1) instanceof Proxy);      
+      assertTrue(blogs.get(1) instanceof Proxy);
       assertEquals(102, blogs.get(1).getAuthor().getId());
       assertEquals(1, blogs.get(1).getPosts().size());
       assertEquals(2, blogs.get(1).getPosts().get(0).getId());
@@ -732,7 +736,7 @@ public class BindingTest {
       assertEquals(101, blogs.get(0).getAuthor().getId());
       assertEquals(1, blogs.get(0).getPosts().size());
       assertEquals(1, blogs.get(0).getPosts().get(0).getId());
-      assertFalse(blogs.get(1) instanceof Factory);      
+      assertFalse(blogs.get(1) instanceof Factory);
       assertEquals(102, blogs.get(1).getAuthor().getId());
       assertEquals(1, blogs.get(1).getPosts().size());
       assertEquals(2, blogs.get(1).getPosts().get(0).getId());

@@ -113,7 +113,8 @@ public class Jdbc3KeyGenerator implements KeyGenerator {
     return parameters;
   }
 
-  private TypeHandler<?>[] getTypeHandlers(TypeHandlerRegistry typeHandlerRegistry, MetaObject metaParam, String[] keyProperties, ResultSetMetaData rsmd) throws SQLException {
+  private TypeHandler<?>[] getTypeHandlers(TypeHandlerRegistry typeHandlerRegistry, MetaObject metaParam,
+      String[] keyProperties, ResultSetMetaData rsmd) throws SQLException {
     TypeHandler<?>[] typeHandlers = new TypeHandler<?>[keyProperties.length];
     for (int i = 0; i < keyProperties.length; i++) {
       if (metaParam.hasSetter(keyProperties[i])) {
@@ -130,7 +131,8 @@ public class Jdbc3KeyGenerator implements KeyGenerator {
     return typeHandlers;
   }
 
-  private void populateKeys(ResultSet rs, MetaObject metaParam, String[] keyProperties, TypeHandler<?>[] typeHandlers) throws SQLException {
+  private void populateKeys(ResultSet rs, MetaObject metaParam, String[] keyProperties, TypeHandler<?>[] typeHandlers)
+      throws SQLException {
     for (int i = 0; i < keyProperties.length; i++) {
       String property = keyProperties[i];
       TypeHandler<?> th = typeHandlers[i];

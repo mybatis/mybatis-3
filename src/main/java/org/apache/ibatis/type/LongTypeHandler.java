@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -26,26 +26,22 @@ import java.sql.SQLException;
 public class LongTypeHandler extends BaseTypeHandler<Long> {
 
   @Override
-  public void setNonNullParameter(PreparedStatement ps, int i, Long parameter, JdbcType jdbcType)
-      throws SQLException {
+  public void setNonNullParameter(PreparedStatement ps, int i, Long parameter, JdbcType jdbcType) throws SQLException {
     ps.setLong(i, parameter);
   }
 
   @Override
-  public Long getNullableResult(ResultSet rs, String columnName)
-      throws SQLException {
+  public Long getNullableResult(ResultSet rs, String columnName) throws SQLException {
     return rs.getLong(columnName);
   }
 
   @Override
-  public Long getNullableResult(ResultSet rs, int columnIndex)
-      throws SQLException {
+  public Long getNullableResult(ResultSet rs, int columnIndex) throws SQLException {
     return rs.getLong(columnIndex);
   }
 
   @Override
-  public Long getNullableResult(CallableStatement cs, int columnIndex)
-      throws SQLException {
+  public Long getNullableResult(CallableStatement cs, int columnIndex) throws SQLException {
     return cs.getLong(columnIndex);
   }
 }

@@ -36,13 +36,15 @@ public class FooMapperTest {
   @BeforeClass
   public static void setUpBeforeClass() {
     try {
-      final SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(Resources.getResourceAsReader(SQL_MAP_CONFIG));
+      final SqlSessionFactory factory = new SqlSessionFactoryBuilder()
+          .build(Resources.getResourceAsReader(SQL_MAP_CONFIG));
       session = factory.openSession();
       conn = session.getConnection();
       ScriptRunner runner = new ScriptRunner(conn);
       runner.setLogWriter(null);
       runner.setErrorLogWriter(null);
-      Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/overwritingproperties/create-schema-mysql.sql");
+      Reader reader = Resources
+          .getResourceAsReader("org/apache/ibatis/submitted/overwritingproperties/create-schema-mysql.sql");
       runner.runScript(reader);
       reader.close();
     } catch (Exception ex) {
@@ -65,14 +67,14 @@ public class FooMapperTest {
     mapper.insertFoo(inserted);
 
     final Foo selected = mapper.selectFoo();
-    
+
     // field1 is explicitly mapped properly
     // <result property="field1" column="field1" jdbcType="INTEGER"/>
     Assert.assertEquals(inserted.getField1(), selected.getField1());
 
     // field4 is not mapped in the result map
     // <result property="field4" column="field3" jdbcType="INTEGER"/>
-    Assert.assertEquals(inserted.getField3(), selected.getField4() );
+    Assert.assertEquals(inserted.getField3(), selected.getField4());
 
     // field4 is explicitly remapped to field3 in the resultmap
     // <result property="field3" column="field4" jdbcType="INTEGER"/>

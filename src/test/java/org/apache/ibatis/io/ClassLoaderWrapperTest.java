@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -28,7 +28,6 @@ public class ClassLoaderWrapperTest extends BaseDataTest {
   private final String RESOURCE_NOT_FOUND = "some_resource_that_does_not_exist.properties";
   private final String CLASS_NOT_FOUND = "some.random.class.that.does.not.Exist";
   private final String CLASS_FOUND = "java.lang.Object";
-
 
   @Before
   public void beforeClassLoaderWrapperTest() {

@@ -74,10 +74,10 @@ public class AssociationTest {
     SqlSession sqlSession = sqlSessionFactory.openSession();
     try {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
-      List<Car> cars = mapper.getCars2();      
+      List<Car> cars = mapper.getCars2();
       Assert.assertEquals(1, cars.size());
       Assert.assertNotNull(cars.get(0).getEngine());
-      Assert.assertNotNull(cars.get(0).getBrakes());      
+      Assert.assertNotNull(cars.get(0).getBrakes());
     } finally {
       sqlSession.close();
     }

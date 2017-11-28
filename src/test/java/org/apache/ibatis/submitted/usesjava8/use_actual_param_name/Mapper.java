@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package org.apache.ibatis.submitted.usesjava8.use_actual_param_name;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 public interface Mapper {
@@ -25,7 +26,7 @@ public interface Mapper {
   User getUserById(Integer id);
 
   @Select("select * from users where id = #{id} and name = #{name}")
-  User getUserByIdAndName(Integer id, String name);
+  User getUserByIdAndName(@Param("id") Integer id, @Param("name") String name);
 
   List<User> getUsersByIdList(List<Integer> ids);
 

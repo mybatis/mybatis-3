@@ -31,7 +31,7 @@ public interface Mapper extends BaseMapper<User> {
 
   @SelectProvider(type = OurSqlBuilder.class, method = "buildGetUserQuery")
   User getUser(Integer userId);
- 
+
   @SelectProvider(type = OurSqlBuilder.class, method = "buildGetAllUsersQuery")
   List<User> getAllUsers();
 
@@ -48,7 +48,8 @@ public interface Mapper extends BaseMapper<User> {
   List<User> getUsersByNameUsingMap(String name, String orderByColumn);
 
   @SelectProvider(type = OurSqlBuilder.class, method = "buildGetUsersByNameWithParamNameAndOrderByQuery")
-  List<User> getUsersByNameWithParamNameAndOrderBy(@Param("name") String name, @Param("orderByColumn") String orderByColumn);
+  List<User> getUsersByNameWithParamNameAndOrderBy(@Param("name") String name,
+      @Param("orderByColumn") String orderByColumn);
 
   @SelectProvider(type = OurSqlBuilder.class, method = "buildGetUsersByNameWithParamNameQuery")
   List<User> getUsersByNameWithParamName(@Param("name") String name);
@@ -56,10 +57,10 @@ public interface Mapper extends BaseMapper<User> {
   @InsertProvider(type = OurSqlBuilder.class, method = "buildInsert")
   void insert(User user);
 
-  @UpdateProvider(type= OurSqlBuilder.class, method= "buildUpdate")
+  @UpdateProvider(type = OurSqlBuilder.class, method = "buildUpdate")
   void update(User user);
 
-  @DeleteProvider(type= OurSqlBuilder.class, method= "buildDelete")
+  @DeleteProvider(type = OurSqlBuilder.class, method = "buildDelete")
   void delete(Integer id);
 
 }

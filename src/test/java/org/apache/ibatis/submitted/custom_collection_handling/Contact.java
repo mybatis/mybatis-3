@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -16,33 +16,33 @@
 package org.apache.ibatis.submitted.custom_collection_handling;
 
 public class Contact {
-    
-    private Integer id;
-    private String address;
-    private String phone;
 
-    public String getAddress() {
-        return address;
-    }
+  private Integer id;
+  private String address;
+  private String phone;
 
-    public void setAddress(String address) {
-        this.address = address;
-    }
+  public String getAddress() {
+    return address;
+  }
 
-    public Integer getId() {
-        return id;
-    }
+  public void setAddress(String address) {
+    this.address = address;
+  }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+  public Integer getId() {
+    return id;
+  }
 
-    public String getPhone() {
-        return phone;
-    }
+  public void setId(Integer id) {
+    this.id = id;
+  }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }    
-    
+  public String getPhone() {
+    return phone;
+  }
+
+  public void setPhone(String phone) {
+    this.phone = phone;
+  }
+
 }

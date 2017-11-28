@@ -45,7 +45,7 @@ public final class StatementLogger extends BaseJdbcLogger implements InvocationH
     try {
       if (Object.class.equals(method.getDeclaringClass())) {
         return method.invoke(this, params);
-      }    
+      }
       if (EXECUTE_METHODS.contains(method.getName())) {
         if (isDebugEnabled()) {
           debug(" Executing: " + removeBreakingWhitespace((String) params[0]), true);
@@ -76,7 +76,7 @@ public final class StatementLogger extends BaseJdbcLogger implements InvocationH
   public static Statement newInstance(Statement stmt, Log statementLog, int queryStack) {
     InvocationHandler handler = new StatementLogger(stmt, statementLog, queryStack);
     ClassLoader cl = Statement.class.getClassLoader();
-    return (Statement) Proxy.newProxyInstance(cl, new Class[]{Statement.class}, handler);
+    return (Statement) Proxy.newProxyInstance(cl, new Class[] { Statement.class }, handler);
   }
 
   /*

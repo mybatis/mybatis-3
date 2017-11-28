@@ -29,7 +29,7 @@ public class XPathParserTest {
     String resource = "resources/nodelet_test.xml";
     InputStream inputStream = Resources.getResourceAsStream(resource);
     XPathParser parser = new XPathParser(inputStream, false, null, null);
-    assertEquals((Long)1970l, parser.evalLong("/employee/birth_date/year"));
+    assertEquals((Long) 1970l, parser.evalLong("/employee/birth_date/year"));
     assertEquals((short) 6, (short) parser.evalShort("/employee/birth_date/month"));
     assertEquals((Integer) 15, parser.evalInteger("/employee/birth_date/day"));
     assertEquals((Float) 5.8f, parser.evalFloat("/employee/height"));

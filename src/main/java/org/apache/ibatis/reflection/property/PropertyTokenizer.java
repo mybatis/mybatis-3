@@ -71,6 +71,7 @@ public class PropertyTokenizer implements Iterator<PropertyTokenizer> {
 
   @Override
   public void remove() {
-    throw new UnsupportedOperationException("Remove is not supported, as it has no meaning in the context of properties.");
+    throw new UnsupportedOperationException(
+        "Remove is not supported, as it has no meaning in the context of properties.");
   }
 }

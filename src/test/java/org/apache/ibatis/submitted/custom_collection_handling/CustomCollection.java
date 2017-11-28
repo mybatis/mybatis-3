@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -18,110 +18,111 @@ package org.apache.ibatis.submitted.custom_collection_handling;
 import java.util.*;
 
 public class CustomCollection<T> {
-    
-    private List<T> data = new ArrayList<T>();
 
-    public <K> K[] toArray(K[] a) {
-        return data.toArray(a);
-    }
+  private List<T> data = new ArrayList<T>();
 
-    public Object[] toArray() {
-        return data.toArray();
-    }
+  public <K> K[] toArray(K[] a) {
+    return data.toArray(a);
+  }
 
-    public List<T> subList(int fromIndex, int toIndex) {
-        return data.subList(fromIndex, toIndex);
-    }
+  public Object[] toArray() {
+    return data.toArray();
+  }
 
-    public int size() {
-        return data.size();
-    }
+  public List<T> subList(int fromIndex, int toIndex) {
+    return data.subList(fromIndex, toIndex);
+  }
 
-    public T set(int index, T element) {
-        return data.set(index, element);
-    }
+  public int size() {
+    return data.size();
+  }
 
-    public boolean retainAll(Collection<?> c) {
-        return data.retainAll(c);
-    }
+  public T set(int index, T element) {
+    return data.set(index, element);
+  }
 
-    public boolean removeAll(Collection<?> c) {
-        return data.removeAll(c);
-    }
+  public boolean retainAll(Collection<?> c) {
+    return data.retainAll(c);
+  }
 
-    public T remove(int index) {
-        return data.remove(index);
-    }
+  public boolean removeAll(Collection<?> c) {
+    return data.removeAll(c);
+  }
 
-    public boolean remove(Object o) {
-        return data.remove(o);
-    }
+  public T remove(int index) {
+    return data.remove(index);
+  }
 
-    public ListIterator<T> listIterator(int index) {
-        return data.listIterator(index);
-    }
+  public boolean remove(Object o) {
+    return data.remove(o);
+  }
 
-    public ListIterator<T> listIterator() {
-        return data.listIterator();
-    }
+  public ListIterator<T> listIterator(int index) {
+    return data.listIterator(index);
+  }
 
-    public int lastIndexOf(Object o) {
-        return data.lastIndexOf(o);
-    }
+  public ListIterator<T> listIterator() {
+    return data.listIterator();
+  }
 
-    public Iterator<T> iterator() {
-        return data.iterator();
-    }
+  public int lastIndexOf(Object o) {
+    return data.lastIndexOf(o);
+  }
 
-    public boolean isEmpty() {
-        return data.isEmpty();
-    }
+  public Iterator<T> iterator() {
+    return data.iterator();
+  }
 
-    public int indexOf(Object o) {
-        return data.indexOf(o);
-    }
+  public boolean isEmpty() {
+    return data.isEmpty();
+  }
 
-    @Override
-    public int hashCode() {
-        return data.hashCode();
-    }
+  public int indexOf(Object o) {
+    return data.indexOf(o);
+  }
 
-    public T get(int index) {
-        return data.get(index);
-    }
+  @Override
+  public int hashCode() {
+    return data.hashCode();
+  }
 
-    @Override
-    public boolean equals(Object o) {
-        if (!(o instanceof CustomCollection)) return false;
-        return data.equals(((CustomCollection)o).data);
-    }
+  public T get(int index) {
+    return data.get(index);
+  }
 
-    public boolean containsAll(Collection<?> c) {
-        return data.containsAll(c);
-    }
+  @Override
+  public boolean equals(Object o) {
+    if (!(o instanceof CustomCollection))
+      return false;
+    return data.equals(((CustomCollection) o).data);
+  }
 
-    public boolean contains(Object o) {
-        return data.contains(o);
-    }
+  public boolean containsAll(Collection<?> c) {
+    return data.containsAll(c);
+  }
 
-    public void clear() {
-        data.clear();
-    }
+  public boolean contains(Object o) {
+    return data.contains(o);
+  }
 
-    public boolean addAll(int index, Collection<? extends T> c) {
-        return data.addAll(index, c);
-    }
+  public void clear() {
+    data.clear();
+  }
 
-    public boolean addAll(Collection<? extends T> c) {
-        return data.addAll(c);
-    }
+  public boolean addAll(int index, Collection<? extends T> c) {
+    return data.addAll(index, c);
+  }
 
-    public void add(int index, T element) {
-        data.add(index, element);
-    }
+  public boolean addAll(Collection<? extends T> c) {
+    return data.addAll(c);
+  }
 
-    public boolean add(T e) {
-        return data.add(e);
-    }
-    
+  public void add(int index, T element) {
+    data.add(index, element);
+  }
+
+  public boolean add(T e) {
+    return data.add(e);
+  }
+
 }

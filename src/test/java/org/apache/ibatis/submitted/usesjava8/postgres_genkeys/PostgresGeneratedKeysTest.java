@@ -48,11 +48,13 @@ public class PostgresGeneratedKeysTest {
   @BeforeClass
   public static void setUp() throws Exception {
     //  Launch PostgreSQL server. Download / unarchive if necessary.
-    String url = postgres.start(EmbeddedPostgres.cachedRuntimeConfig(Paths.get(System.getProperty("java.io.tmpdir"), "pgembed")), "localhost", SocketUtil.findFreePort(), "postgres_genkeys", "postgres", "root", Collections.emptyList());
+    String url = postgres.start(
+        EmbeddedPostgres.cachedRuntimeConfig(Paths.get(System.getProperty("java.io.tmpdir"), "pgembed")), "localhost",
+        SocketUtil.findFreePort(), "postgres_genkeys", "postgres", "root", Collections.emptyList());
 
     Configuration configuration = new Configuration();
-    Environment environment = new Environment("development", new JdbcTransactionFactory(), new UnpooledDataSource(
-        "org.postgresql.Driver", url, null));
+    Environment environment = new Environment("development", new JdbcTransactionFactory(),
+        new UnpooledDataSource("org.postgresql.Driver", url, null));
     configuration.setEnvironment(environment);
     configuration.setUseGeneratedKeys(true);
     configuration.addMapper(Mapper.class);
@@ -60,7 +62,8 @@ public class PostgresGeneratedKeysTest {
 
     try (SqlSession session = sqlSessionFactory.openSession();
         Connection conn = session.getConnection();
-        Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/usesjava8/postgres_genkeys/CreateDB.sql")) {
+        Reader reader = Resources
+            .getResourceAsReader("org/apache/ibatis/submitted/usesjava8/postgres_genkeys/CreateDB.sql")) {
       ScriptRunner runner = new ScriptRunner(conn);
       runner.setLogWriter(null);
       runner.runScript(reader);

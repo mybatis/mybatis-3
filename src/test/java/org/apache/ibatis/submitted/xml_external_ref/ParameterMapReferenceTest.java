@@ -53,7 +53,7 @@ public class ParameterMapReferenceTest {
       Person parameter = new Person();
       parameter.setId(1);
       Person person = personMapper.select(parameter);
-      assertEquals((Integer)1, person.getId());
+      assertEquals((Integer) 1, person.getId());
 
     } finally {
       sqlSession.close();
@@ -79,8 +79,8 @@ public class ParameterMapReferenceTest {
     initDb(c);
 
     Configuration configuration = new Configuration();
-    Environment environment = new Environment("development", new JdbcTransactionFactory(), new UnpooledDataSource(
-        "org.hsqldb.jdbcDriver", "jdbc:hsqldb:mem:xmlextref", null));
+    Environment environment = new Environment("development", new JdbcTransactionFactory(),
+        new UnpooledDataSource("org.hsqldb.jdbcDriver", "jdbc:hsqldb:mem:xmlextref", null));
     configuration.setEnvironment(environment);
 
     configuration.addMapper(ParameterMapReferencePersonMapper.class);

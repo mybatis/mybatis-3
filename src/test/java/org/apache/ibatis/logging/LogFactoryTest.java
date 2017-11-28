@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -20,9 +20,6 @@ import static org.junit.Assert.assertEquals;
 import java.io.Reader;
 
 import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.logging.commons.JakartaCommonsLoggingImpl;
-import org.apache.ibatis.logging.jdk14.Jdk14LoggingImpl;
-import org.apache.ibatis.logging.log4j.Log4jImpl;
 import org.apache.ibatis.logging.log4j2.Log4j2Impl;
 import org.apache.ibatis.logging.nologging.NoLoggingImpl;
 import org.apache.ibatis.logging.slf4j.Slf4jImpl;
@@ -33,35 +30,11 @@ import org.junit.Test;
 public class LogFactoryTest {
 
   @Test
-  public void shouldUseCommonsLogging() {
-    LogFactory.useCommonsLogging();
-    Log log = LogFactory.getLog(Object.class);
-    logSomething(log);
-    assertEquals(log.getClass().getName(), JakartaCommonsLoggingImpl.class.getName());
-  }
-
-  @Test
-  public void shouldUseLog4J() {
-    LogFactory.useLog4JLogging();
-    Log log = LogFactory.getLog(Object.class);
-    logSomething(log);
-    assertEquals(log.getClass().getName(), Log4jImpl.class.getName());
-  }
-
-  @Test
   public void shouldUseLog4J2() {
     LogFactory.useLog4J2Logging();
     Log log = LogFactory.getLog(Object.class);
     logSomething(log);
     assertEquals(log.getClass().getName(), Log4j2Impl.class.getName());
-  }
-  
-  @Test
-  public void shouldUseJdKLogging() {
-    LogFactory.useJdkLogging();
-    Log log = LogFactory.getLog(Object.class);
-    logSomething(log);
-    assertEquals(log.getClass().getName(), Jdk14LoggingImpl.class.getName());
   }
 
   @Test
@@ -93,7 +66,7 @@ public class LogFactoryTest {
     Reader reader = Resources.getResourceAsReader("org/apache/ibatis/logging/mybatis-config.xml");
     new SqlSessionFactoryBuilder().build(reader);
     reader.close();
-    
+
     Log log = LogFactory.getLog(Object.class);
     log.debug("Debug message.");
     assertEquals(log.getClass().getName(), NoLoggingImpl.class.getName());

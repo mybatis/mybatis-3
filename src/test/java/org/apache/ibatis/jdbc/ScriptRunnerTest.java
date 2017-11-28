@@ -74,11 +74,8 @@ public class ScriptRunnerTest extends BaseDataTest {
   @Test
   public void shouldRunScriptsUsingProperties() throws Exception {
     Properties props = Resources.getResourceAsProperties(JPETSTORE_PROPERTIES);
-    DataSource dataSource = new UnpooledDataSource(
-        props.getProperty("driver"),
-        props.getProperty("url"),
-        props.getProperty("username"),
-        props.getProperty("password"));
+    DataSource dataSource = new UnpooledDataSource(props.getProperty("driver"), props.getProperty("url"),
+        props.getProperty("username"), props.getProperty("password"));
     ScriptRunner runner = new ScriptRunner(dataSource.getConnection());
     runner.setAutoCommit(true);
     runner.setStopOnError(false);
@@ -197,10 +194,9 @@ public class ScriptRunnerTest extends BaseDataTest {
     runner.runScript(reader);
     conn.close();
 
-    assertEquals(
-            "select userid from account where userid = 'j2ee'" + System.getProperty("line.separator")
-                    + System.getProperty("line.separator") + "USERID\t" + System.getProperty("line.separator")
-                    + "j2ee\t" + System.getProperty("line.separator"), sw.toString());
+    assertEquals("select userid from account where userid = 'j2ee'" + System.getProperty("line.separator")
+        + System.getProperty("line.separator") + "USERID\t" + System.getProperty("line.separator") + "j2ee\t"
+        + System.getProperty("line.separator"), sw.toString());
   }
 
   @Test
@@ -220,10 +216,9 @@ public class ScriptRunnerTest extends BaseDataTest {
     runner.runScript(reader);
     conn.close();
 
-    assertEquals(
-            "select userid from account where userid = 'j2ee';" + System.getProperty("line.separator")
-                    + System.getProperty("line.separator") + "USERID\t" + System.getProperty("line.separator")
-                    + "j2ee\t" + System.getProperty("line.separator"), sw.toString());
+    assertEquals("select userid from account where userid = 'j2ee';" + System.getProperty("line.separator")
+        + System.getProperty("line.separator") + "USERID\t" + System.getProperty("line.separator") + "j2ee\t"
+        + System.getProperty("line.separator"), sw.toString());
   }
 
   private void runJPetStoreScripts(ScriptRunner runner) throws IOException, SQLException {
@@ -251,16 +246,8 @@ public class ScriptRunnerTest extends BaseDataTest {
     when(conn.createStatement()).thenReturn(stmt);
     ScriptRunner runner = new ScriptRunner(conn);
 
-    String sql = "-- @DELIMITER | \n"
-        + "line 1;\n"
-        + "line 2;\n"
-        + "|\n"
-        + "//  @DELIMITER  ;\n"
-        + "line 3; \n"
-        + "-- //@deLimiTer $  blah\n"
-        + "line 4$\n"
-        + "// //@DELIMITER %\n"
-        + "line 5%\n";
+    String sql = "-- @DELIMITER | \n" + "line 1;\n" + "line 2;\n" + "|\n" + "//  @DELIMITER  ;\n" + "line 3; \n"
+        + "-- //@deLimiTer $  blah\n" + "line 4$\n" + "// //@DELIMITER %\n" + "line 5%\n";
     Reader reader = new StringReader(sql);
     runner.runScript(reader);
 
@@ -289,12 +276,7 @@ public class ScriptRunnerTest extends BaseDataTest {
     when(conn.createStatement()).thenReturn(stmt);
     ScriptRunner runner = new ScriptRunner(conn);
 
-    String sql = "-- @DELIMITER || \n"
-        + "line 1;\n"
-        + "line 2;\n"
-        + "||\n"
-        + "//  @DELIMITER  ;\n"
-        + "line 3; \n";
+    String sql = "-- @DELIMITER || \n" + "line 1;\n" + "line 2;\n" + "||\n" + "//  @DELIMITER  ;\n" + "line 3; \n";
     Reader reader = new StringReader(sql);
     runner.runScript(reader);
 

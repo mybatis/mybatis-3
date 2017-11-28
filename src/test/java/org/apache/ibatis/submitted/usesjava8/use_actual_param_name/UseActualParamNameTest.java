@@ -37,16 +37,15 @@ public class UseActualParamNameTest {
   @BeforeClass
   public static void setUp() throws Exception {
     // create an SqlSessionFactory
-    Reader reader = Resources.getResourceAsReader(
-        "org/apache/ibatis/submitted/usesjava8/use_actual_param_name/mybatis-config.xml");
+    Reader reader = Resources
+        .getResourceAsReader("org/apache/ibatis/submitted/usesjava8/use_actual_param_name/mybatis-config.xml");
     sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
     reader.close();
 
     // populate in-memory database
     SqlSession session = sqlSessionFactory.openSession();
     Connection conn = session.getConnection();
-    reader = Resources.getResourceAsReader(
-        "org/apache/ibatis/submitted/usesjava8/use_actual_param_name/CreateDB.sql");
+    reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/usesjava8/use_actual_param_name/CreateDB.sql");
     ScriptRunner runner = new ScriptRunner(conn);
     runner.setLogWriter(null);
     runner.runScript(reader);

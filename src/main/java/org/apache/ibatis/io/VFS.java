@@ -60,8 +60,7 @@ public abstract class VFS {
           vfs = impl.newInstance();
           if (vfs == null || !vfs.isValid()) {
             if (log.isDebugEnabled()) {
-              log.debug("VFS implementation " + impl.getName() +
-                  " is not valid in this environment.");
+              log.debug("VFS implementation " + impl.getName() + " is not valid in this environment.");
             }
           }
         } catch (InstantiationException e) {
@@ -105,7 +104,7 @@ public abstract class VFS {
   protected static Class<?> getClass(String className) {
     try {
       return Thread.currentThread().getContextClassLoader().loadClass(className);
-//      return ReflectUtil.findClass(className);
+      //      return ReflectUtil.findClass(className);
     } catch (ClassNotFoundException e) {
       if (log.isDebugEnabled()) {
         log.debug("Class not found: " + className);

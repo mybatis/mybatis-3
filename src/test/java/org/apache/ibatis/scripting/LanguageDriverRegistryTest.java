@@ -58,14 +58,14 @@ public class LanguageDriverRegistryTest {
   public void registerByTypeNull() {
     when(registry).register((Class<?>) null);
     then(caughtException()).isInstanceOf(IllegalArgumentException.class)
-      .hasMessage("null is not a valid Language Driver");
+        .hasMessage("null is not a valid Language Driver");
   }
 
   @Test
   public void registerByTypeDoesNotCreateNewInstance() {
     when(registry).register(PrivateLanguageDriver.class);
-    then(caughtException()).isInstanceOf(ScriptingException.class)
-      .hasMessage("Failed to load language driver for org.apache.ibatis.scripting.LanguageDriverRegistryTest$PrivateLanguageDriver");
+    then(caughtException()).isInstanceOf(ScriptingException.class).hasMessage(
+        "Failed to load language driver for org.apache.ibatis.scripting.LanguageDriverRegistryTest$PrivateLanguageDriver");
   }
 
   @Test
@@ -90,7 +90,7 @@ public class LanguageDriverRegistryTest {
   public void registerByInstanceNull() {
     when(registry).register((LanguageDriver) null);
     then(caughtException()).isInstanceOf(IllegalArgumentException.class)
-      .hasMessage("null is not a valid Language Driver");
+        .hasMessage("null is not a valid Language Driver");
   }
 
   @Test
@@ -103,7 +103,8 @@ public class LanguageDriverRegistryTest {
   static private class PrivateLanguageDriver implements LanguageDriver {
 
     @Override
-    public ParameterHandler createParameterHandler(MappedStatement mappedStatement, Object parameterObject, BoundSql boundSql) {
+    public ParameterHandler createParameterHandler(MappedStatement mappedStatement, Object parameterObject,
+        BoundSql boundSql) {
       return null;
     }
 

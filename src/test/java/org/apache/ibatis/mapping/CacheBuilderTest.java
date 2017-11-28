@@ -39,12 +39,12 @@ public class CacheBuilderTest {
   @Test
   public void testInitializingFailure() throws Exception {
     when(new CacheBuilder("test").implementation(InitializingFailureCache.class)).build();
-    then(caughtException()).isInstanceOf(CacheException.class)
-      .hasMessage("Failed cache initialization for 'test' on 'org.apache.ibatis.mapping.CacheBuilderTest$InitializingFailureCache'");
+    then(caughtException()).isInstanceOf(CacheException.class).hasMessage(
+        "Failed cache initialization for 'test' on 'org.apache.ibatis.mapping.CacheBuilderTest$InitializingFailureCache'");
   }
 
   @SuppressWarnings("unchecked")
-  private <T> T unwrap(Cache cache){
+  private <T> T unwrap(Cache cache) {
     Field field;
     try {
       field = cache.getClass().getDeclaredField("delegate");
@@ -53,14 +53,13 @@ public class CacheBuilderTest {
     }
     try {
       field.setAccessible(true);
-      return (T)field.get(cache);
+      return (T) field.get(cache);
     } catch (IllegalAccessException e) {
       throw new IllegalStateException(e);
     } finally {
       field.setAccessible(false);
     }
   }
-
 
   private static class InitializingCache extends PerpetualCache implements InitializingObject {
 

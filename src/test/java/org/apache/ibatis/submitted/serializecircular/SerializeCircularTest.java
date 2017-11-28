@@ -27,53 +27,49 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.Test;
 
-//@Ignore("see issue #614")
+// @Ignore("see issue #614")
 public class SerializeCircularTest {
 
   @Test
-  public void serializeAndDeserializeObjectsWithAggressiveLazyLoadingWithoutPreloadingAttribute() 
-  throws Exception {
+  public void serializeAndDeserializeObjectsWithAggressiveLazyLoadingWithoutPreloadingAttribute() throws Exception {
     SqlSession sqlSession = createSessionWithAggressiveLazyLoading();
     try {
       testSerializeWithoutPreloadingAttribute(sqlSession);
-      } finally {
-        sqlSession.close();
-      }
+    } finally {
+      sqlSession.close();
+    }
   }
-  
+
   @Test
-  public void serializeAndDeserializeObjectsWithAggressiveLazyLoadingWithPreloadingAttribute() 
-  throws Exception {
+  public void serializeAndDeserializeObjectsWithAggressiveLazyLoadingWithPreloadingAttribute() throws Exception {
     SqlSession sqlSession = createSessionWithAggressiveLazyLoading();
     try {
       testSerializeWithPreloadingAttribute(sqlSession);
-      } finally {
-        sqlSession.close();
-      }
+    } finally {
+      sqlSession.close();
+    }
   }
 
-//  @Ignore("See http://code.google.com/p/mybatis/issues/detail?id=614")
+  //  @Ignore("See http://code.google.com/p/mybatis/issues/detail?id=614")
   @Test
-  public void serializeAndDeserializeObjectsWithoutAggressiveLazyLoadingWithoutPreloadingAttribute() 
-  throws Exception {
+  public void serializeAndDeserializeObjectsWithoutAggressiveLazyLoadingWithoutPreloadingAttribute() throws Exception {
     SqlSession sqlSession = createSessionWithoutAggressiveLazyLoading();
     try {
-        //expected problem with deserializing
+      //expected problem with deserializing
       testSerializeWithoutPreloadingAttribute(sqlSession);
-      } finally {
-        sqlSession.close();
-      }
+    } finally {
+      sqlSession.close();
+    }
   }
 
   @Test
-  public void serializeAndDeserializeObjectsWithoutAggressiveLazyLoadingWithPreloadingAttribute() 
-  throws Exception {
+  public void serializeAndDeserializeObjectsWithoutAggressiveLazyLoadingWithPreloadingAttribute() throws Exception {
     SqlSession sqlSession = createSessionWithoutAggressiveLazyLoading();
     try {
       testSerializeWithPreloadingAttribute(sqlSession);
-      } finally {
-        sqlSession.close();
-      }
+    } finally {
+      sqlSession.close();
+    }
   }
 
   private SqlSession createSessionWithoutAggressiveLazyLoading() throws Exception {
@@ -85,11 +81,11 @@ public class SerializeCircularTest {
   }
 
   private SqlSession createSession(boolean anAggressiveLazyLoading) throws Exception {
-    String xmlConfig = anAggressiveLazyLoading ?
-        "org/apache/ibatis/submitted/serializecircular/MapperConfigWithAggressiveLazyLoading.xml":
-        "org/apache/ibatis/submitted/serializecircular/MapperConfigWithoutAggressiveLazyLoading.xml";
-      SqlSessionFactory sqlSessionFactory = getSqlSessionFactoryXmlConfig(xmlConfig);
-      SqlSession sqlSession = sqlSessionFactory.openSession();
+    String xmlConfig = anAggressiveLazyLoading
+        ? "org/apache/ibatis/submitted/serializecircular/MapperConfigWithAggressiveLazyLoading.xml"
+        : "org/apache/ibatis/submitted/serializecircular/MapperConfigWithoutAggressiveLazyLoading.xml";
+    SqlSessionFactory sqlSessionFactory = getSqlSessionFactoryXmlConfig(xmlConfig);
+    SqlSession sqlSession = sqlSessionFactory.openSession();
     return sqlSession;
   }
 
@@ -133,8 +129,7 @@ public class SerializeCircularTest {
 
   private static void initDb(Connection conn) throws IOException, SQLException {
     try {
-      Reader scriptReader = Resources
-          .getResourceAsReader("org/apache/ibatis/submitted/serializecircular/CreateDB.sql");
+      Reader scriptReader = Resources.getResourceAsReader("org/apache/ibatis/submitted/serializecircular/CreateDB.sql");
       ScriptRunner runner = new ScriptRunner(conn);
       runner.setLogWriter(null);
       runner.setErrorLogWriter(null);

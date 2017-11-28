@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -30,37 +30,43 @@ public class ExpressionEvaluatorTest {
 
   @Test
   public void shouldCompareStringsReturnTrue() {
-    boolean value = evaluator.evaluateBoolean("username == 'cbegin'", new Author(1, "cbegin", "******", "cbegin@apache.org", "N/A", Section.NEWS));
+    boolean value = evaluator.evaluateBoolean("username == 'cbegin'",
+        new Author(1, "cbegin", "******", "cbegin@apache.org", "N/A", Section.NEWS));
     assertEquals(true, value);
   }
 
   @Test
   public void shouldCompareStringsReturnFalse() {
-    boolean value = evaluator.evaluateBoolean("username == 'norm'", new Author(1, "cbegin", "******", "cbegin@apache.org", "N/A", Section.NEWS));
+    boolean value = evaluator.evaluateBoolean("username == 'norm'",
+        new Author(1, "cbegin", "******", "cbegin@apache.org", "N/A", Section.NEWS));
     assertEquals(false, value);
   }
 
   @Test
   public void shouldReturnTrueIfNotNull() {
-    boolean value = evaluator.evaluateBoolean("username", new Author(1, "cbegin", "******", "cbegin@apache.org", "N/A", Section.NEWS));
+    boolean value = evaluator.evaluateBoolean("username",
+        new Author(1, "cbegin", "******", "cbegin@apache.org", "N/A", Section.NEWS));
     assertEquals(true, value);
   }
 
   @Test
   public void shouldReturnFalseIfNull() {
-    boolean value = evaluator.evaluateBoolean("password", new Author(1, "cbegin", null, "cbegin@apache.org", "N/A", Section.NEWS));
+    boolean value = evaluator.evaluateBoolean("password",
+        new Author(1, "cbegin", null, "cbegin@apache.org", "N/A", Section.NEWS));
     assertEquals(false, value);
   }
 
   @Test
   public void shouldReturnTrueIfNotZero() {
-    boolean value = evaluator.evaluateBoolean("id", new Author(1, "cbegin", null, "cbegin@apache.org", "N/A", Section.NEWS));
+    boolean value = evaluator.evaluateBoolean("id",
+        new Author(1, "cbegin", null, "cbegin@apache.org", "N/A", Section.NEWS));
     assertEquals(true, value);
   }
 
   @Test
   public void shouldReturnFalseIfZero() {
-    boolean value = evaluator.evaluateBoolean("id", new Author(0, "cbegin", null, "cbegin@apache.org", "N/A", Section.NEWS));
+    boolean value = evaluator.evaluateBoolean("id",
+        new Author(0, "cbegin", null, "cbegin@apache.org", "N/A", Section.NEWS));
     assertEquals(false, value);
   }
 
@@ -75,15 +81,16 @@ public class ExpressionEvaluatorTest {
 
   @Test
   public void shouldIterateOverIterable() {
-    final HashMap<String, String[]> parameterObject = new HashMap<String, String[]>() {{
-      put("array", new String[]{"1", "2", "3"});
-    }};
+    final HashMap<String, String[]> parameterObject = new HashMap<String, String[]>() {
+      {
+        put("array", new String[] { "1", "2", "3" });
+      }
+    };
     final Iterable<?> iterable = evaluator.evaluateIterable("array", parameterObject);
     int i = 0;
     for (Object o : iterable) {
       assertEquals(String.valueOf(++i), o);
     }
   }
-
 
 }
