@@ -15,15 +15,17 @@
  */
 package org.apache.ibatis.type.usesjava8;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
-
-import java.time.Month;
-
 import org.apache.ibatis.type.BaseTypeHandlerTest;
 import org.apache.ibatis.type.MonthTypeHandler;
 import org.apache.ibatis.type.TypeHandler;
 import org.junit.Test;
+
+import java.time.Month;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * 

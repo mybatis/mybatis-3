@@ -15,16 +15,9 @@
  */
 package org.apache.ibatis.executor.loader.javassist;
 
-import java.lang.reflect.Method;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-
 import javassist.util.proxy.MethodHandler;
 import javassist.util.proxy.Proxy;
 import javassist.util.proxy.ProxyFactory;
-
 import org.apache.ibatis.executor.ExecutorException;
 import org.apache.ibatis.executor.loader.AbstractEnhancedDeserializationProxy;
 import org.apache.ibatis.executor.loader.AbstractSerialStateHolder;
@@ -38,6 +31,12 @@ import org.apache.ibatis.reflection.factory.ObjectFactory;
 import org.apache.ibatis.reflection.property.PropertyCopier;
 import org.apache.ibatis.reflection.property.PropertyNamer;
 import org.apache.ibatis.session.Configuration;
+
+import java.lang.reflect.Method;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
 
 /**
  * @author Eduardo Macarron

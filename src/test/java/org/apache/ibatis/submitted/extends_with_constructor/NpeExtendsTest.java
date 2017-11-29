@@ -15,13 +15,6 @@
  */
 package org.apache.ibatis.submitted.extends_with_constructor;
 
-import static org.junit.Assert.*;
-
-import java.io.Reader;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.util.Properties;
-
 import org.apache.ibatis.datasource.unpooled.UnpooledDataSourceFactory;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.jdbc.ScriptRunner;
@@ -34,6 +27,13 @@ import org.apache.ibatis.session.defaults.DefaultSqlSessionFactory;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.io.Reader;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.util.Properties;
+
+import static org.junit.Assert.*;
 
 /*
  * Test for NPE when using extends.

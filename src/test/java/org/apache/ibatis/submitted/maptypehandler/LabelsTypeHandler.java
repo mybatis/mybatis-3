@@ -15,15 +15,15 @@
  */
 package org.apache.ibatis.submitted.maptypehandler;
 
+import org.apache.ibatis.type.JdbcType;
+import org.apache.ibatis.type.MappedTypes;
+import org.apache.ibatis.type.TypeHandler;
+
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Map;
-
-import org.apache.ibatis.type.JdbcType;
-import org.apache.ibatis.type.MappedTypes;
-import org.apache.ibatis.type.TypeHandler;
 
 @MappedTypes(Map.class)
 public class LabelsTypeHandler implements TypeHandler<Map<String, Object>> {

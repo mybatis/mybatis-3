@@ -15,10 +15,6 @@
  */
 package org.apache.ibatis.logging;
 
-import static org.junit.Assert.assertEquals;
-
-import java.io.Reader;
-
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.logging.log4j2.Log4j2Impl;
 import org.apache.ibatis.logging.nologging.NoLoggingImpl;
@@ -26,6 +22,10 @@ import org.apache.ibatis.logging.slf4j.Slf4jImpl;
 import org.apache.ibatis.logging.stdout.StdOutImpl;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.Test;
+
+import java.io.Reader;
+
+import static org.junit.Assert.assertEquals;
 
 public class LogFactoryTest {
 

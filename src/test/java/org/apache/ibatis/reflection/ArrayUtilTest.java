@@ -15,11 +15,11 @@
  */
 package org.apache.ibatis.reflection;
 
-import static org.junit.Assert.*;
+import org.junit.Test;
 
 import java.util.Arrays;
 
-import org.junit.Test;
+import static org.junit.Assert.*;
 
 public class ArrayUtilTest extends ArrayUtil {
 

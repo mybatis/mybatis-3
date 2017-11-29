@@ -15,10 +15,6 @@
  */
 package org.apache.ibatis.submitted.flush_statement_npe;
 
-import java.io.Reader;
-import java.sql.Connection;
-import java.sql.DriverManager;
-
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.ExecutorType;
@@ -27,6 +23,10 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.io.Reader;
+import java.sql.Connection;
+import java.sql.DriverManager;
 
 public class FlushStatementNpeTest {
 

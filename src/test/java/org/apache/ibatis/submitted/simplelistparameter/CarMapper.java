@@ -15,9 +15,9 @@
  */
 package org.apache.ibatis.submitted.simplelistparameter;
 
-import java.util.List;
-
 import org.apache.ibatis.annotations.Select;
+
+import java.util.List;
 
 public interface CarMapper {
 

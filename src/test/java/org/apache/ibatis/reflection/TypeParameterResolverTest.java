@@ -15,18 +15,6 @@
  */
 package org.apache.ibatis.reflection;
 
-import static org.junit.Assert.*;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.GenericArrayType;
-import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.lang.reflect.WildcardType;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.ibatis.reflection.typeparam.Calculator;
 import org.apache.ibatis.reflection.typeparam.Calculator.SubCalculator;
 import org.apache.ibatis.reflection.typeparam.Level0Mapper;
@@ -34,6 +22,14 @@ import org.apache.ibatis.reflection.typeparam.Level0Mapper.Level0InnerMapper;
 import org.apache.ibatis.reflection.typeparam.Level1Mapper;
 import org.apache.ibatis.reflection.typeparam.Level2Mapper;
 import org.junit.Test;
+
+import java.lang.reflect.*;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class TypeParameterResolverTest {
   @Test

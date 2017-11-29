@@ -15,7 +15,12 @@
  */
 package org.apache.ibatis.submitted.custom_collection_handling;
 
-import static org.junit.Assert.*;
+import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.jdbc.ScriptRunner;
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -23,12 +28,8 @@ import java.io.Reader;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
-import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.jdbc.ScriptRunner;
-import org.apache.ibatis.session.SqlSession;
-import org.apache.ibatis.session.SqlSessionFactory;
-import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 public class CustomCollectionHandlingTest {
 

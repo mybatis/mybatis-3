@@ -15,17 +15,16 @@
  */
 package org.apache.ibatis.jdbc;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import org.apache.ibatis.BaseDataTest;
+import org.junit.Test;
 
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.util.List;
 import java.util.Map;
 
-import javax.sql.DataSource;
-
-import org.apache.ibatis.BaseDataTest;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class SqlRunnerTest extends BaseDataTest {
 

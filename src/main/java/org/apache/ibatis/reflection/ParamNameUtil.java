@@ -15,14 +15,14 @@
  */
 package org.apache.ibatis.reflection;
 
+import org.apache.ibatis.lang.UsesJava8;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Executable;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.apache.ibatis.lang.UsesJava8;
 
 @UsesJava8
 public class ParamNameUtil {

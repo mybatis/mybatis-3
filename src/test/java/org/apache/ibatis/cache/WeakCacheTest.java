@@ -15,14 +15,12 @@
  */
 package org.apache.ibatis.cache;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
 import org.apache.ibatis.cache.decorators.SerializedCache;
 import org.apache.ibatis.cache.decorators.WeakCache;
 import org.apache.ibatis.cache.impl.PerpetualCache;
 import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 public class WeakCacheTest {
 

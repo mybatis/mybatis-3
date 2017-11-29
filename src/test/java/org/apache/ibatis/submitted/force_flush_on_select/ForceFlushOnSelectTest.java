@@ -15,7 +15,11 @@
  */
 package org.apache.ibatis.submitted.force_flush_on_select;
 
-import static org.junit.Assert.*;
+import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.jdbc.ScriptRunner;
+import org.apache.ibatis.session.*;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.Reader;
 import java.sql.Connection;
@@ -24,15 +28,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 
-import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.jdbc.ScriptRunner;
-import org.apache.ibatis.session.ExecutorType;
-import org.apache.ibatis.session.LocalCacheScope;
-import org.apache.ibatis.session.SqlSession;
-import org.apache.ibatis.session.SqlSessionFactory;
-import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotSame;
 
 public class ForceFlushOnSelectTest {
 

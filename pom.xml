@@ -189,7 +189,7 @@
         <dependency>
             <groupId>org.hsqldb</groupId>
             <artifactId>hsqldb</artifactId>
-            <version>2.3.5</version> <!-- Version 2.4.0 required jdk8 -->
+            <version>2.4.0</version> <!-- Version 2.4.0 required jdk8 -->
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -233,13 +233,13 @@
         <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
-            <version>1.7.1</version> <!-- Stay on 1.7.1 to support Java 6 -->
+            <version>3.8.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>eu.codearte.catch-exception</groupId>
             <artifactId>catch-exception</artifactId>
-            <version>1.4.4</version>
+            <version>1.4.6</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -363,7 +363,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
-                <version>1.4.1</version>
+                <version>1.4.2.jenkins-1</version>
                 <executions>
                     <execution>
                         <id>enforce-java</id>

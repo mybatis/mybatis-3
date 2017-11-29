@@ -15,12 +15,12 @@
  */
 package org.apache.ibatis.submitted.refid_resolution;
 
-import java.io.Reader;
-
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.Test;
+
+import java.io.Reader;
 
 /**
  * @see http://code.google.com/p/mybatis/issues/detail?id=291

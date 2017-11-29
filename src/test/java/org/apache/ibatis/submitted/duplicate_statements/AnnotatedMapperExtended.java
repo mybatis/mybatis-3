@@ -15,9 +15,9 @@
  */
 package org.apache.ibatis.submitted.duplicate_statements;
 
-import java.util.List;
-
 import org.apache.ibatis.annotations.Select;
+
+import java.util.List;
 
 /**
  * This interface should fail when added to the configuration.  It has

@@ -15,13 +15,9 @@
  */
 package org.apache.ibatis.submitted.selectkey;
 
-import java.util.Map;
+import org.apache.ibatis.annotations.*;
 
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.InsertProvider;
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.SelectKey;
-import org.apache.ibatis.annotations.Update;
+import java.util.Map;
 
 public interface AnnotatedMapper {
 

@@ -15,9 +15,9 @@
  */
 package org.apache.ibatis.submitted.enumtypehandler_on_map;
 
-import java.util.List;
-
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface PersonMapper {
 

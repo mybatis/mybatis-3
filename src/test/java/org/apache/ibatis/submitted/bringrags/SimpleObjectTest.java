@@ -15,10 +15,6 @@
  */
 package org.apache.ibatis.submitted.bringrags;
 
-import java.io.Reader;
-import java.io.StringReader;
-import java.sql.Connection;
-
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSession;
@@ -28,6 +24,10 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.io.Reader;
+import java.io.StringReader;
+import java.sql.Connection;
 
 public class SimpleObjectTest {
   private SimpleChildObjectMapper simpleChildObjectMapper;

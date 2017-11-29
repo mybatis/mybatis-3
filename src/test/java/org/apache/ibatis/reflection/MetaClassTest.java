@@ -15,17 +15,15 @@
  */
 package org.apache.ibatis.reflection;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import org.apache.ibatis.domain.misc.RichType;
+import org.apache.ibatis.domain.misc.generics.GenericConcrete;
+import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.ibatis.domain.misc.RichType;
-import org.apache.ibatis.domain.misc.generics.GenericConcrete;
-import org.junit.Test;
+import static org.junit.Assert.*;
 
 public class MetaClassTest {
 

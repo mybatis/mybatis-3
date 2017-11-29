@@ -16,10 +16,11 @@
 package org.apache.ibatis.io;
 
 import org.apache.ibatis.BaseDataTest;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 public class ClassLoaderWrapperTest extends BaseDataTest {
 

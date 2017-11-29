@@ -15,10 +15,10 @@
  */
 package org.apache.ibatis.submitted.lazy_properties;
 
-import java.util.List;
-
 import org.apache.ibatis.annotations.ResultMap;
 import org.apache.ibatis.annotations.Select;
+
+import java.util.List;
 
 public interface Mapper {
   User getUser(Integer id);

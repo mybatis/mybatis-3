@@ -15,12 +15,12 @@
  */
 package org.apache.ibatis.submitted.language;
 
-import java.util.List;
-
 import org.apache.ibatis.annotations.Lang;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.scripting.defaults.RawLanguageDriver;
 import org.apache.ibatis.scripting.xmltags.XMLLanguageDriver;
+
+import java.util.List;
 
 public interface Mapper {
 

@@ -15,19 +15,7 @@
  */
 package org.apache.ibatis.executor;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import javassist.util.proxy.Proxy;
-
-import javax.sql.DataSource;
-
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.domain.blog.Author;
 import org.apache.ibatis.domain.blog.Blog;
@@ -40,6 +28,13 @@ import org.apache.ibatis.transaction.Transaction;
 import org.apache.ibatis.transaction.jdbc.JdbcTransaction;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import javax.sql.DataSource;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static org.junit.Assert.*;
 
 public class BaseExecutorTest extends BaseDataTest {
   protected final Configuration config;

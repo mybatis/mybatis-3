@@ -15,10 +15,10 @@
  */
 package org.apache.ibatis.executor;
 
+import org.apache.ibatis.mapping.MappedStatement;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import org.apache.ibatis.mapping.MappedStatement;
 
 /**
  * @author Jeff Butler

@@ -15,22 +15,19 @@
  */
 package org.apache.ibatis.executor.loader;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-
 import javassist.util.proxy.Proxy;
-
 import org.apache.ibatis.domain.blog.Author;
 import org.apache.ibatis.executor.ExecutorException;
 import org.apache.ibatis.executor.loader.javassist.JavassistProxyFactory;
 import org.apache.ibatis.reflection.factory.DefaultObjectFactory;
 import org.apache.ibatis.session.Configuration;
 import org.junit.Test;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import static org.junit.Assert.*;
 
 public class JavassistProxyTest extends SerializableProxyTest {
 

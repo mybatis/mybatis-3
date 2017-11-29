@@ -15,12 +15,11 @@
  */
 package org.apache.ibatis.scripting.xmltags;
 
+import ognl.ClassResolver;
+import org.apache.ibatis.io.Resources;
+
 import java.util.HashMap;
 import java.util.Map;
-
-import ognl.ClassResolver;
-
-import org.apache.ibatis.io.Resources;
 
 /**
  * Custom ognl {@code ClassResolver} which behaves same like ognl's

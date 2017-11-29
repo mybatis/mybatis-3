@@ -15,11 +15,11 @@
  */
 package org.apache.ibatis.executor.loader;
 
-import java.util.List;
-import java.util.Properties;
-
 import org.apache.ibatis.reflection.factory.ObjectFactory;
 import org.apache.ibatis.session.Configuration;
+
+import java.util.List;
+import java.util.Properties;
 
 /**
  * @author Eduardo Macarron

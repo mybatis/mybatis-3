@@ -15,17 +15,17 @@
  */
 package org.apache.ibatis.type;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 
 import java.io.Reader;
 import java.sql.Clob;
 
-import org.junit.Test;
-import org.mockito.Mock;
-import org.mockito.Mockito;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class ClobTypeHandlerTest extends BaseTypeHandlerTest {
 

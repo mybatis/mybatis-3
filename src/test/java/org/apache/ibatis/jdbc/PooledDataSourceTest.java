@@ -15,7 +15,11 @@
  */
 package org.apache.ibatis.jdbc;
 
-import static org.junit.Assert.*;
+import org.apache.ibatis.BaseDataTest;
+import org.apache.ibatis.datasource.pooled.PooledDataSource;
+import org.hsqldb.jdbc.JDBCConnection;
+import org.junit.Ignore;
+import org.junit.Test;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -26,11 +30,8 @@ import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.ibatis.BaseDataTest;
-import org.apache.ibatis.datasource.pooled.PooledDataSource;
-import org.hsqldb.jdbc.JDBCConnection;
-import org.junit.Ignore;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class PooledDataSourceTest extends BaseDataTest {
 

@@ -15,13 +15,13 @@
  */
 package org.apache.ibatis.type;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import org.apache.ibatis.domain.misc.RichType;
+import org.junit.Test;
 
 import java.util.HashMap;
 
-import org.apache.ibatis.domain.misc.RichType;
-import org.junit.Test;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class SimpleTypeRegistryTest {
 

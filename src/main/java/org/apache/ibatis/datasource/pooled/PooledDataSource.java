@@ -15,22 +15,17 @@
  */
 package org.apache.ibatis.datasource.pooled;
 
-import java.io.PrintWriter;
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Proxy;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.Properties;
-import java.util.logging.Logger;
-
-import javax.sql.DataSource;
-
 import org.apache.ibatis.datasource.unpooled.UnpooledDataSource;
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
+
+import javax.sql.DataSource;
+import java.io.PrintWriter;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Proxy;
+import java.sql.*;
+import java.util.Properties;
+import java.util.logging.Logger;
 
 /**
  * This is a simple, synchronous, thread-safe database connection pool.

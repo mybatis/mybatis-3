@@ -15,9 +15,9 @@
  */
 package org.apache.ibatis.reflection.property;
 
-import java.util.Locale;
-
 import org.apache.ibatis.reflection.ReflectionException;
+
+import java.util.Locale;
 
 /**
  * @author Clinton Begin

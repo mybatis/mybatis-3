@@ -15,14 +15,6 @@
  */
 package org.apache.ibatis.submitted.mapper_type_parameter;
 
-import static org.junit.Assert.*;
-
-import java.io.Reader;
-import java.sql.Connection;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSession;
@@ -30,6 +22,15 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.io.Reader;
+import java.sql.Connection;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class MapperTypeParameterTest {
   private static SqlSessionFactory sqlSessionFactory;

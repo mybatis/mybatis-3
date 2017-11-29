@@ -15,11 +15,10 @@
  */
 package org.apache.ibatis.submitted.multidb;
 
-import java.util.Properties;
+import org.apache.ibatis.mapping.DatabaseIdProvider;
 
 import javax.sql.DataSource;
-
-import org.apache.ibatis.mapping.DatabaseIdProvider;
+import java.util.Properties;
 
 public class DummyDatabaseIdProvider implements DatabaseIdProvider {
 

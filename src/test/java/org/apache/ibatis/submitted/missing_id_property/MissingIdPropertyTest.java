@@ -15,9 +15,6 @@
  */
 package org.apache.ibatis.submitted.missing_id_property;
 
-import java.io.Reader;
-import java.sql.Connection;
-
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSession;
@@ -26,6 +23,9 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.io.Reader;
+import java.sql.Connection;
 
 public class MissingIdPropertyTest {
 

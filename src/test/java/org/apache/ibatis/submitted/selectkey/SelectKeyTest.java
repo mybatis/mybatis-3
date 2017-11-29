@@ -21,9 +21,6 @@ import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-
-import static org.junit.Assert.*;
-
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -33,6 +30,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.HashMap;
 import java.util.Map;
+
+import static org.junit.Assert.*;
 
 public class SelectKeyTest {
 

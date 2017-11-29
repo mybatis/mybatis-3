@@ -17,7 +17,9 @@ package org.apache.ibatis.submitted.overwritingproperties;
 
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.jdbc.ScriptRunner;
-import org.apache.ibatis.session.*;
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.*;
 
 import java.io.Reader;

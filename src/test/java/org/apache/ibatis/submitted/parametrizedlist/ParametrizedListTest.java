@@ -15,22 +15,21 @@
  */
 package org.apache.ibatis.submitted.parametrizedlist;
 
+import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.jdbc.ScriptRunner;
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.List;
 import java.util.Map;
-
-import org.junit.Assert;
-
-import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.jdbc.ScriptRunner;
-import org.apache.ibatis.session.SqlSession;
-import org.apache.ibatis.session.SqlSessionFactory;
-import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.Before;
-import org.junit.Test;
 
 public class ParametrizedListTest {
 

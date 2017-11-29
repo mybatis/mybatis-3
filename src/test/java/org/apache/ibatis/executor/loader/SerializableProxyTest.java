@@ -15,24 +15,18 @@
  */
 package org.apache.ibatis.executor.loader;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.fail;
-
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.ObjectStreamException;
-import java.io.Serializable;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
 import org.apache.ibatis.domain.blog.Author;
 import org.apache.ibatis.domain.blog.Section;
 import org.apache.ibatis.executor.ExecutorException;
 import org.apache.ibatis.reflection.factory.DefaultObjectFactory;
 import org.apache.ibatis.session.Configuration;
 import org.junit.Test;
+
+import java.io.*;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+
+import static org.junit.Assert.*;
 
 public abstract class SerializableProxyTest {
 

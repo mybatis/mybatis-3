@@ -15,16 +15,15 @@
  */
 package org.apache.ibatis.mapping;
 
+import org.apache.ibatis.logging.Log;
+import org.apache.ibatis.logging.LogFactory;
+
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Map;
 import java.util.Properties;
-
-import javax.sql.DataSource;
-
-import org.apache.ibatis.logging.Log;
-import org.apache.ibatis.logging.LogFactory;
 
 /**
  * Vendor DatabaseId provider

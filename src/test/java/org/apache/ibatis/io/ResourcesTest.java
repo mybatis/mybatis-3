@@ -15,9 +15,8 @@
  */
 package org.apache.ibatis.io;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import org.apache.ibatis.BaseDataTest;
+import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,8 +26,7 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.Properties;
 
-import org.apache.ibatis.BaseDataTest;
-import org.junit.Test;
+import static org.junit.Assert.*;
 
 public class ResourcesTest extends BaseDataTest {
 

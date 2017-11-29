@@ -15,10 +15,10 @@
  */
 package org.apache.ibatis.submitted.maptypehandler;
 
-import java.util.Map;
-
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+
+import java.util.Map;
 
 public interface Mapper {
 

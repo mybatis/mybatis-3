@@ -15,8 +15,6 @@
  */
 package org.apache.ibatis.scripting;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import org.apache.ibatis.executor.parameter.ParameterHandler;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
@@ -26,7 +24,9 @@ import org.apache.ibatis.scripting.defaults.RawLanguageDriver;
 import org.apache.ibatis.session.Configuration;
 import org.junit.Test;
 
-import static com.googlecode.catchexception.apis.BDDCatchException.*;
+import static com.googlecode.catchexception.apis.BDDCatchException.caughtException;
+import static com.googlecode.catchexception.apis.BDDCatchException.when;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.BDDAssertions.then;
 
 /**

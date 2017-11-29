@@ -15,17 +15,17 @@
  */
 package org.apache.ibatis.submitted.serializecircular;
 
-import java.io.IOException;
-import java.io.Reader;
-import java.sql.Connection;
-import java.sql.SQLException;
-
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.Test;
+
+import java.io.IOException;
+import java.io.Reader;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 // @Ignore("see issue #614")
 public class SerializeCircularTest {

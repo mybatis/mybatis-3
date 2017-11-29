@@ -15,12 +15,12 @@
  */
 package org.apache.ibatis.reflection.factory;
 
-import java.util.Arrays;
-import java.util.Collections;
-
 import org.apache.ibatis.reflection.ReflectionException;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.util.Arrays;
+import java.util.Collections;
 
 /**
  * DefaultObjectFactoryTest

@@ -15,15 +15,11 @@
  */
 package org.apache.ibatis.type;
 
-import java.sql.CallableStatement;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
+import org.apache.ibatis.io.Resources;
+
+import java.sql.*;
 import java.util.HashMap;
 import java.util.Map;
-
-import org.apache.ibatis.io.Resources;
 
 /**
  * @author Clinton Begin

@@ -15,12 +15,6 @@
  */
 package org.apache.ibatis.submitted.empty_row;
 
-import static org.junit.Assert.*;
-
-import java.io.Reader;
-import java.sql.Connection;
-import java.util.Map;
-
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSession;
@@ -29,6 +23,12 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.io.Reader;
+import java.sql.Connection;
+import java.util.Map;
+
+import static org.junit.Assert.*;
 
 public class ReturnInstanceForEmptyRowTest {
 

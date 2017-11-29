@@ -15,15 +15,11 @@
  */
 package org.apache.ibatis.domain.blog.mappers;
 
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-import java.util.Vector;
-
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.domain.blog.Author;
 import org.apache.ibatis.session.ResultHandler;
+
+import java.util.*;
 
 public interface AuthorMapper {
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2017 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@
 
 <mapper namespace="org.apache.ibatis.submitted.overwritingproperties.FooMapper">
 
-  <resultMap type="Foo" id="fooResult">
+  <resultMap type="org.apache.ibatis.submitted.overwritingproperties.Foo" id="fooResult">
     <result property="field1" column="field1" jdbcType="INTEGER"/>
     <result property="field4" column="field3" jdbcType="INTEGER"/>
     <result property="field3" column="field4" jdbcType="INTEGER"/>
@@ -31,7 +31,7 @@
     </association>
   </resultMap>
 
-  <insert id="insertFoo" parameterType="Foo">
+  <insert id="insertFoo" parameterType="org.apache.ibatis.submitted.overwritingproperties.Foo">
     insert into FOO
     (
     field1,

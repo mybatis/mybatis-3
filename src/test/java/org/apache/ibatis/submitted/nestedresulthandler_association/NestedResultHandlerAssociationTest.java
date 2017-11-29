@@ -15,7 +15,11 @@
  */
 package org.apache.ibatis.submitted.nestedresulthandler_association;
 
-import static org.junit.Assert.*;
+import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.jdbc.ScriptRunner;
+import org.apache.ibatis.session.*;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 import java.io.Reader;
 import java.sql.Connection;
@@ -24,16 +28,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.jdbc.ScriptRunner;
-import org.apache.ibatis.session.ResultContext;
-import org.apache.ibatis.session.ResultHandler;
-import org.apache.ibatis.session.RowBounds;
-import org.apache.ibatis.session.SqlSession;
-import org.apache.ibatis.session.SqlSessionFactory;
-import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 public class NestedResultHandlerAssociationTest {
 

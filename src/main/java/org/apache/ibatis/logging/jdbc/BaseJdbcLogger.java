@@ -15,19 +15,12 @@
  */
 package org.apache.ibatis.logging.jdbc;
 
-import java.sql.Array;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.StringTokenizer;
-
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.reflection.ArrayUtil;
+
+import java.sql.Array;
+import java.sql.SQLException;
+import java.util.*;
 
 /**
  * Base class for proxies to do logging
@@ -37,18 +30,18 @@ import org.apache.ibatis.reflection.ArrayUtil;
  */
 public abstract class BaseJdbcLogger {
 
-  protected static final Set<String> SET_METHODS = new HashSet<String>();
-  protected static final Set<String> EXECUTE_METHODS = new HashSet<String>();
+  protected static final Set<String> SET_METHODS = new HashSet<>();
+  protected static final Set<String> EXECUTE_METHODS = new HashSet<>();
 
-  private final Map<Object, Object> columnMap = new HashMap<Object, Object>();
+  private final Map<Object, Object> columnMap = new HashMap<>();
 
-  private final List<Object> columnNames = new ArrayList<Object>();
-  private final List<Object> columnValues = new ArrayList<Object>();
+  private final List<Object> columnNames = new ArrayList<>();
+  private final List<Object> columnValues = new ArrayList<>();
 
   protected Log statementLog;
   protected int queryStack;
 
-  /*
+  /**
    * Default constructor
    */
   public BaseJdbcLogger(Log log, int queryStack) {

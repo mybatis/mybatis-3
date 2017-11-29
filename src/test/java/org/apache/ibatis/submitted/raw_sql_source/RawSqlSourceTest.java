@@ -15,9 +15,6 @@
  */
 package org.apache.ibatis.submitted.raw_sql_source;
 
-import java.io.Reader;
-import java.sql.Connection;
-
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.mapping.SqlSource;
@@ -29,6 +26,9 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.io.Reader;
+import java.sql.Connection;
 
 public class RawSqlSourceTest {
 

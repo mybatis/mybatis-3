@@ -15,15 +15,15 @@
  */
 package org.apache.ibatis.logging.jdbc;
 
+import org.apache.ibatis.logging.Log;
+import org.apache.ibatis.reflection.ExceptionUtil;
+
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-
-import org.apache.ibatis.logging.Log;
-import org.apache.ibatis.reflection.ExceptionUtil;
 
 /**
  * PreparedStatement proxy to add logging

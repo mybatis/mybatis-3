@@ -15,13 +15,6 @@
  */
 package org.apache.ibatis.transaction.managed;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-
-import java.sql.Connection;
-import java.util.Properties;
-
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.transaction.Transaction;
 import org.apache.ibatis.transaction.TransactionFactory;
@@ -29,6 +22,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+
+import java.sql.Connection;
+import java.util.Properties;
+
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ManagedTransactionFactoryTest extends BaseDataTest {

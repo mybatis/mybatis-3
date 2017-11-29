@@ -18,7 +18,8 @@ package org.apache.ibatis.submitted.results_id;
 import org.apache.ibatis.session.Configuration;
 import org.junit.Test;
 
-import static com.googlecode.catchexception.apis.BDDCatchException.*;
+import static com.googlecode.catchexception.apis.BDDCatchException.caughtException;
+import static com.googlecode.catchexception.apis.BDDCatchException.when;
 import static org.assertj.core.api.BDDAssertions.then;
 
 public class IdConflictTest {

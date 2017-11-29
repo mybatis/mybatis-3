@@ -15,7 +15,8 @@
  */
 package org.apache.ibatis.datasource.unpooled;
 
-import static org.junit.Assert.*;
+import org.junit.Ignore;
+import org.junit.Test;
 
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -23,8 +24,7 @@ import java.sql.Driver;
 import java.sql.DriverManager;
 import java.util.Enumeration;
 
-import org.junit.Ignore;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 public class UnpooledDataSourceTest {
 

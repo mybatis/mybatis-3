@@ -15,10 +15,10 @@
  */
 package org.apache.ibatis.submitted.results_id;
 
-import java.util.List;
-
 import org.apache.ibatis.annotations.ResultMap;
 import org.apache.ibatis.annotations.Select;
+
+import java.util.List;
 
 public interface AnotherMapper {
 

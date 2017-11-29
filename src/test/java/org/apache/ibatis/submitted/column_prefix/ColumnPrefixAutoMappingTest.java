@@ -15,12 +15,12 @@
  */
 package org.apache.ibatis.submitted.column_prefix;
 
-import static org.junit.Assert.*;
+import org.apache.ibatis.session.SqlSession;
+import org.junit.Test;
 
 import java.util.List;
 
-import org.apache.ibatis.session.SqlSession;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 public class ColumnPrefixAutoMappingTest extends ColumnPrefixTest {
   @Override

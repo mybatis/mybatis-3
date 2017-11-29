@@ -15,16 +15,15 @@
  */
 package org.apache.ibatis.datasource.jndi;
 
-import java.util.Map.Entry;
-import java.util.Properties;
+import org.apache.ibatis.datasource.DataSourceException;
+import org.apache.ibatis.datasource.DataSourceFactory;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
-
-import org.apache.ibatis.datasource.DataSourceException;
-import org.apache.ibatis.datasource.DataSourceFactory;
+import java.util.Map.Entry;
+import java.util.Properties;
 
 /**
  * @author Clinton Begin

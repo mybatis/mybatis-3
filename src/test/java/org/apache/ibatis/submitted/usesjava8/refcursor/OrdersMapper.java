@@ -15,9 +15,9 @@
  */
 package org.apache.ibatis.submitted.usesjava8.refcursor;
 
-import java.util.Map;
-
 import org.apache.ibatis.session.ResultHandler;
+
+import java.util.Map;
 
 public interface OrdersMapper {
   void getOrder1(Map<String, Object> parameter);

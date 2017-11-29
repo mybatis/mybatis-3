@@ -15,11 +15,7 @@
  */
 package org.apache.ibatis.type;
 
-import java.sql.CallableStatement;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
+import java.sql.*;
 
 /**
  * @author Clinton Begin

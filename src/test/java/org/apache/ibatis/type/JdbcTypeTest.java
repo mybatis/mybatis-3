@@ -15,11 +15,11 @@
  */
 package org.apache.ibatis.type;
 
-import static org.junit.Assert.assertEquals;
+import org.junit.Test;
 
 import java.sql.Types;
 
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 public class JdbcTypeTest {
   private static final String[] requiredStandardTypeNames = { "ARRAY", "BIGINT", "BINARY", "BIT", "BLOB", "BOOLEAN",

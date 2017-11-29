@@ -15,9 +15,6 @@
  */
 package org.apache.ibatis.builder;
 
-import java.io.InputStream;
-import java.util.regex.Pattern;
-
 import org.apache.ibatis.builder.xml.XMLMapperBuilder;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.mapping.MappedStatement;
@@ -27,10 +24,13 @@ import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.type.TypeHandler;
 import org.junit.Test;
 
-import static com.googlecode.catchexception.apis.BDDCatchException.*;
-import static org.assertj.core.api.BDDAssertions.then;
+import java.io.InputStream;
+import java.util.regex.Pattern;
 
+import static com.googlecode.catchexception.apis.BDDCatchException.caughtException;
+import static com.googlecode.catchexception.apis.BDDCatchException.when;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.BDDAssertions.then;
 
 public class XmlMapperBuilderTest {
 

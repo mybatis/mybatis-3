@@ -15,12 +15,12 @@
  */
 package org.apache.ibatis.scripting.xmltags;
 
-import java.util.Map;
-
 import org.apache.ibatis.builder.SqlSourceBuilder;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.SqlSource;
 import org.apache.ibatis.session.Configuration;
+
+import java.util.Map;
 
 /**
  * @author Clinton Begin

@@ -15,7 +15,10 @@
  */
 package org.apache.ibatis.submitted.named_constructor_args.usesjava8;
 
-import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.annotations.Arg;
+import org.apache.ibatis.annotations.ConstructorArgs;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.submitted.named_constructor_args.User;
 
 public interface Mapper {

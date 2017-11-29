@@ -15,16 +15,12 @@
  */
 package org.apache.ibatis.submitted.cache;
 
-import java.io.Reader;
-import java.lang.reflect.Field;
-import java.sql.Connection;
-
 import org.apache.ibatis.annotations.CacheNamespace;
+import org.apache.ibatis.annotations.CacheNamespaceRef;
 import org.apache.ibatis.annotations.Property;
+import org.apache.ibatis.builder.BuilderException;
 import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.cache.CacheException;
-import org.apache.ibatis.annotations.CacheNamespaceRef;
-import org.apache.ibatis.builder.BuilderException;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSession;
@@ -34,7 +30,12 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import static com.googlecode.catchexception.apis.BDDCatchException.*;
+import java.io.Reader;
+import java.lang.reflect.Field;
+import java.sql.Connection;
+
+import static com.googlecode.catchexception.apis.BDDCatchException.caughtException;
+import static com.googlecode.catchexception.apis.BDDCatchException.when;
 import static org.assertj.core.api.BDDAssertions.then;
 
 // issue #524

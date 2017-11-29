@@ -15,12 +15,12 @@
  */
 package org.apache.ibatis.parsing;
 
-import static org.junit.Assert.assertEquals;
+import org.apache.ibatis.io.Resources;
+import org.junit.Test;
 
 import java.io.InputStream;
 
-import org.apache.ibatis.io.Resources;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 public class XPathParserTest {
 

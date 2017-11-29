@@ -15,12 +15,12 @@
  */
 package org.apache.ibatis.executor.loader.javassist;
 
-import java.util.List;
-import java.util.Map;
-
 import org.apache.ibatis.executor.loader.AbstractSerialStateHolder;
 import org.apache.ibatis.executor.loader.ResultLoaderMap;
 import org.apache.ibatis.reflection.factory.ObjectFactory;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Eduardo Macarron

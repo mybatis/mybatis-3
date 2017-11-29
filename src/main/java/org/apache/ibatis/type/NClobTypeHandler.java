@@ -16,11 +16,7 @@
 package org.apache.ibatis.type;
 
 import java.io.StringReader;
-import java.sql.CallableStatement;
-import java.sql.Clob;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
 /**
  * @author Clinton Begin

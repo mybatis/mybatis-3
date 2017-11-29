@@ -15,14 +15,14 @@
  */
 package org.apache.ibatis.io;
 
+import org.apache.ibatis.logging.Log;
+import org.apache.ibatis.logging.LogFactory;
+
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import org.apache.ibatis.logging.Log;
-import org.apache.ibatis.logging.LogFactory;
 
 /**
  * <p>ResolverUtil is used to locate classes that are available in the/a class path and meet

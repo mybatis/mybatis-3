@@ -15,10 +15,10 @@
  */
 package org.apache.ibatis.scripting.xmltags;
 
+import org.apache.ibatis.session.Configuration;
+
 import java.util.Arrays;
 import java.util.List;
-
-import org.apache.ibatis.session.Configuration;
 
 /**
  * @author Clinton Begin

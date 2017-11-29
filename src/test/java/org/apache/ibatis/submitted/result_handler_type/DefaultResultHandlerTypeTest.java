@@ -15,7 +15,12 @@
  */
 package org.apache.ibatis.submitted.result_handler_type;
 
-import static org.junit.Assert.*;
+import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.jdbc.ScriptRunner;
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -24,12 +29,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.jdbc.ScriptRunner;
-import org.apache.ibatis.session.SqlSession;
-import org.apache.ibatis.session.SqlSessionFactory;
-import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 public class DefaultResultHandlerTypeTest {
 

@@ -15,23 +15,13 @@
  */
 package org.apache.ibatis.executor.loader;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.Externalizable;
-import java.io.IOException;
-import java.io.InvalidClassException;
-import java.io.ObjectInput;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutput;
-import java.io.ObjectOutputStream;
-import java.io.ObjectStreamException;
-import java.io.StreamCorruptedException;
+import org.apache.ibatis.reflection.factory.ObjectFactory;
+
+import java.io.*;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.ibatis.reflection.factory.ObjectFactory;
 
 /**
  * @author Eduardo Macarron

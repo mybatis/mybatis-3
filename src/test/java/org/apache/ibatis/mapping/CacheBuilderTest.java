@@ -24,7 +24,8 @@ import org.junit.Test;
 
 import java.lang.reflect.Field;
 
-import static com.googlecode.catchexception.apis.BDDCatchException.*;
+import static com.googlecode.catchexception.apis.BDDCatchException.caughtException;
+import static com.googlecode.catchexception.apis.BDDCatchException.when;
 import static org.assertj.core.api.BDDAssertions.then;
 
 public class CacheBuilderTest {

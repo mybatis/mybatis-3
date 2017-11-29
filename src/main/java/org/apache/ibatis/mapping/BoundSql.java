@@ -15,13 +15,13 @@
  */
 package org.apache.ibatis.mapping;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.property.PropertyTokenizer;
 import org.apache.ibatis.session.Configuration;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * An actual SQL String got from an {@link SqlSource} after having processed any dynamic content.

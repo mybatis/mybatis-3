@@ -15,13 +15,6 @@
  */
 package org.apache.ibatis.submitted.column_prefix;
 
-import static org.junit.Assert.*;
-
-import java.io.Reader;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.util.List;
-
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSession;
@@ -29,6 +22,14 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.io.Reader;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class ColumnPrefixTest {
 

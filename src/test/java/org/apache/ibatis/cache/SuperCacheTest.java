@@ -17,8 +17,9 @@ package org.apache.ibatis.cache;
 
 import org.apache.ibatis.cache.decorators.*;
 import org.apache.ibatis.cache.impl.PerpetualCache;
-import static org.junit.Assert.assertTrue;
 import org.junit.Test;
+
+import static org.junit.Assert.assertTrue;
 
 public class SuperCacheTest {
 

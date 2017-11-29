@@ -15,13 +15,6 @@
  */
 package org.apache.ibatis.submitted.usesjava8.postgres_genkeys;
 
-import static org.junit.Assert.*;
-
-import java.io.Reader;
-import java.nio.file.Paths;
-import java.sql.Connection;
-import java.util.Collections;
-
 import org.apache.ibatis.datasource.unpooled.UnpooledDataSource;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.jdbc.ScriptRunner;
@@ -30,14 +23,19 @@ import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.apache.ibatis.submitted.usesjava8.keycolumn.InsertMapper;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
 import ru.yandex.qatools.embed.postgresql.EmbeddedPostgres;
 import ru.yandex.qatools.embed.postgresql.util.SocketUtil;
+
+import java.io.Reader;
+import java.nio.file.Paths;
+import java.sql.Connection;
+import java.util.Collections;
+
+import static org.junit.Assert.assertEquals;
 
 public class PostgresGeneratedKeysTest {
 

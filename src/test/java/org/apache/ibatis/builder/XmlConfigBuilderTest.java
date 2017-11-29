@@ -15,18 +15,6 @@
  */
 package org.apache.ibatis.builder;
 
-import java.io.InputStream;
-import java.io.StringReader;
-import java.math.RoundingMode;
-import java.sql.CallableStatement;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Properties;
-import java.util.Set;
-
 import org.apache.ibatis.builder.mapper.CustomMapper;
 import org.apache.ibatis.builder.typehandler.CustomIntegerTypeHandler;
 import org.apache.ibatis.builder.xml.XMLConfigBuilder;
@@ -44,27 +32,28 @@ import org.apache.ibatis.logging.slf4j.Slf4jImpl;
 import org.apache.ibatis.mapping.Environment;
 import org.apache.ibatis.scripting.defaults.RawLanguageDriver;
 import org.apache.ibatis.scripting.xmltags.XMLLanguageDriver;
-import org.apache.ibatis.session.AutoMappingBehavior;
-import org.apache.ibatis.session.AutoMappingUnknownColumnBehavior;
-import org.apache.ibatis.session.Configuration;
-import org.apache.ibatis.session.ExecutorType;
-import org.apache.ibatis.session.LocalCacheScope;
+import org.apache.ibatis.session.*;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
-import org.apache.ibatis.type.BaseTypeHandler;
-import org.apache.ibatis.type.EnumOrdinalTypeHandler;
-import org.apache.ibatis.type.EnumTypeHandler;
-import org.apache.ibatis.type.JdbcType;
-import org.apache.ibatis.type.TypeHandler;
-import org.apache.ibatis.type.TypeHandlerRegistry;
+import org.apache.ibatis.type.*;
 import org.junit.Test;
 
-import static com.googlecode.catchexception.apis.BDDCatchException.*;
-import static org.assertj.core.api.BDDAssertions.then;
+import java.io.InputStream;
+import java.io.StringReader;
+import java.math.RoundingMode;
+import java.sql.CallableStatement;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Properties;
+import java.util.Set;
+
+import static com.googlecode.catchexception.apis.BDDCatchException.caughtException;
+import static com.googlecode.catchexception.apis.BDDCatchException.when;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertArrayEquals;
+import static org.assertj.core.api.BDDAssertions.then;
+import static org.junit.Assert.*;
 
 public class XmlConfigBuilderTest {
 
@@ -92,7 +81,7 @@ public class XmlConfigBuilderTest {
     assertThat(config.getLocalCacheScope()).isEqualTo(LocalCacheScope.SESSION);
     assertThat(config.getJdbcTypeForNull()).isEqualTo(JdbcType.OTHER);
     assertThat(config.getLazyLoadTriggerMethods())
-        .isEqualTo((Set<String>) new HashSet<String>(Arrays.asList("equals", "clone", "hashCode", "toString")));
+        .isEqualTo((Set<String>) new HashSet<>(Arrays.asList("equals", "clone", "hashCode", "toString")));
     assertThat(config.isSafeResultHandlerEnabled()).isTrue();
     assertThat(config.getDefaultScriptingLanuageInstance()).isInstanceOf(XMLLanguageDriver.class);
     assertThat(config.isCallSettersOnNulls()).isFalse();

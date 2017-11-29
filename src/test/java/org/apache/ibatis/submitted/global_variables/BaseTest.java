@@ -15,10 +15,6 @@
  */
 package org.apache.ibatis.submitted.global_variables;
 
-import java.io.Reader;
-import java.lang.reflect.Field;
-import java.sql.Connection;
-
 import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.jdbc.ScriptRunner;
@@ -28,6 +24,10 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.io.Reader;
+import java.lang.reflect.Field;
+import java.sql.Connection;
 
 public class BaseTest {
 

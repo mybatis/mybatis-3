@@ -15,34 +15,22 @@
  */
 package org.apache.ibatis.builder.xml.dynamic;
 
-import static org.junit.Assert.assertEquals;
-
-import java.io.IOException;
-import java.io.Reader;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.mapping.BoundSql;
-import org.apache.ibatis.scripting.xmltags.ChooseSqlNode;
-import org.apache.ibatis.scripting.xmltags.DynamicSqlSource;
-import org.apache.ibatis.scripting.xmltags.ForEachSqlNode;
-import org.apache.ibatis.scripting.xmltags.IfSqlNode;
-import org.apache.ibatis.scripting.xmltags.MixedSqlNode;
-import org.apache.ibatis.scripting.xmltags.SetSqlNode;
-import org.apache.ibatis.scripting.xmltags.SqlNode;
-import org.apache.ibatis.scripting.xmltags.TextSqlNode;
-import org.apache.ibatis.scripting.xmltags.WhereSqlNode;
+import org.apache.ibatis.scripting.xmltags.*;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.io.IOException;
+import java.io.Reader;
+import java.sql.SQLException;
+import java.util.*;
+
+import static org.junit.Assert.assertEquals;
 
 public class DynamicSqlSourceTest extends BaseDataTest {
 

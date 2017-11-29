@@ -15,6 +15,9 @@
  */
 package org.apache.ibatis.logging.jdbc;
 
+import org.apache.ibatis.logging.Log;
+import org.apache.ibatis.reflection.ExceptionUtil;
+
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
@@ -24,9 +27,6 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.util.HashSet;
 import java.util.Set;
-
-import org.apache.ibatis.logging.Log;
-import org.apache.ibatis.reflection.ExceptionUtil;
 
 /**
  * ResultSet proxy to add logging

@@ -15,10 +15,10 @@
  */
 package org.apache.ibatis.submitted.blocking_cache;
 
-import java.util.List;
-
 import org.apache.ibatis.annotations.CacheNamespace;
 import org.apache.ibatis.annotations.Select;
+
+import java.util.List;
 
 @CacheNamespace(blocking = true)
 public interface PersonMapper {

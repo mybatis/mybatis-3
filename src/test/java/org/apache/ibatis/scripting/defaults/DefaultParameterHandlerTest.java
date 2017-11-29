@@ -15,13 +15,6 @@
  */
 package org.apache.ibatis.scripting.defaults;
 
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-
 import org.apache.ibatis.builder.StaticSqlSource;
 import org.apache.ibatis.mapping.*;
 import org.apache.ibatis.session.Configuration;
@@ -32,11 +25,16 @@ import org.apache.ibatis.type.TypeHandlerRegistry;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * DefaultParameterHandlerTest

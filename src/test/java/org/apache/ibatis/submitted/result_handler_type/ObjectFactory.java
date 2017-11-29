@@ -15,13 +15,9 @@
  */
 package org.apache.ibatis.submitted.result_handler_type;
 
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.ibatis.reflection.factory.DefaultObjectFactory;
+
+import java.util.*;
 
 public class ObjectFactory extends DefaultObjectFactory {
 

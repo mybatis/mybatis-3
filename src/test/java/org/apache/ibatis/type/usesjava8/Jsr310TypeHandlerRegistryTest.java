@@ -15,34 +15,14 @@
  */
 package org.apache.ibatis.type.usesjava8;
 
-import static org.assertj.core.api.Assertions.*;
-
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.Month;
-import java.time.OffsetDateTime;
-import java.time.OffsetTime;
-import java.time.Year;
-import java.time.YearMonth;
-import java.time.ZonedDateTime;
-import java.time.chrono.JapaneseDate;
-
-import org.apache.ibatis.type.InstantTypeHandler;
-import org.apache.ibatis.type.JapaneseDateTypeHandler;
-import org.apache.ibatis.type.LocalDateTimeTypeHandler;
-import org.apache.ibatis.type.LocalDateTypeHandler;
-import org.apache.ibatis.type.LocalTimeTypeHandler;
-import org.apache.ibatis.type.MonthTypeHandler;
-import org.apache.ibatis.type.OffsetDateTimeTypeHandler;
-import org.apache.ibatis.type.OffsetTimeTypeHandler;
-import org.apache.ibatis.type.TypeHandlerRegistry;
-import org.apache.ibatis.type.YearMonthTypeHandler;
-import org.apache.ibatis.type.YearTypeHandler;
-import org.apache.ibatis.type.ZonedDateTimeTypeHandler;
+import org.apache.ibatis.type.*;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.time.*;
+import java.time.chrono.JapaneseDate;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author Kazuki Shimizu

@@ -15,9 +15,6 @@
  */
 package org.apache.ibatis.submitted.inheritance;
 
-import java.io.Reader;
-import java.sql.Connection;
-
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSession;
@@ -26,6 +23,9 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.io.Reader;
+import java.sql.Connection;
 
 // see issue #289
 public class InheritanceTest {

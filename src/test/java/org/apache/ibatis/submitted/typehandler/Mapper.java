@@ -15,13 +15,7 @@
  */
 package org.apache.ibatis.submitted.typehandler;
 
-import org.apache.ibatis.annotations.Arg;
-import org.apache.ibatis.annotations.ConstructorArgs;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Result;
-import org.apache.ibatis.annotations.Results;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.submitted.typehandler.Product.ProductId;
 import org.apache.ibatis.type.JdbcType;
 

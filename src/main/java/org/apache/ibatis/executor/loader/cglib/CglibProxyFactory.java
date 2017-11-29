@@ -15,22 +15,11 @@
  */
 package org.apache.ibatis.executor.loader.cglib;
 
-import java.lang.reflect.Method;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-
 import net.sf.cglib.proxy.Callback;
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;
-
-import org.apache.ibatis.executor.loader.AbstractEnhancedDeserializationProxy;
-import org.apache.ibatis.executor.loader.AbstractSerialStateHolder;
-import org.apache.ibatis.executor.loader.ProxyFactory;
-import org.apache.ibatis.executor.loader.ResultLoaderMap;
-import org.apache.ibatis.executor.loader.WriteReplaceInterface;
+import org.apache.ibatis.executor.loader.*;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
@@ -39,6 +28,12 @@ import org.apache.ibatis.reflection.factory.ObjectFactory;
 import org.apache.ibatis.reflection.property.PropertyCopier;
 import org.apache.ibatis.reflection.property.PropertyNamer;
 import org.apache.ibatis.session.Configuration;
+
+import java.lang.reflect.Method;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
 
 /**
  * @author Clinton Begin

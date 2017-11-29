@@ -15,20 +15,19 @@
  */
 package org.apache.ibatis.logging.jdbc;
 
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import org.apache.ibatis.logging.Log;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Types;
 
-import org.apache.ibatis.logging.Log;
-import org.apache.ibatis.logging.jdbc.ResultSetLogger;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ResultSetLoggerTest {

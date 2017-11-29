@@ -15,10 +15,10 @@
  */
 package org.apache.ibatis.submitted.hashmaptypehandler;
 
-import java.util.HashMap;
-
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+
+import java.util.HashMap;
 
 public interface Mapper {
 

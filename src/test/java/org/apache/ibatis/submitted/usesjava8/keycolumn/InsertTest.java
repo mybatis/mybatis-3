@@ -15,8 +15,20 @@
  */
 package org.apache.ibatis.submitted.usesjava8.keycolumn;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import org.apache.ibatis.datasource.unpooled.UnpooledDataSource;
+import org.apache.ibatis.executor.BatchResult;
+import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.jdbc.ScriptRunner;
+import org.apache.ibatis.mapping.Environment;
+import org.apache.ibatis.session.*;
+import org.apache.ibatis.test.EmbeddedPostgresqlTests;
+import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.junit.experimental.categories.Category;
+import ru.yandex.qatools.embed.postgresql.EmbeddedPostgres;
+import ru.yandex.qatools.embed.postgresql.util.SocketUtil;
 
 import java.io.Reader;
 import java.nio.file.Paths;
@@ -24,25 +36,8 @@ import java.sql.Connection;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.ibatis.datasource.unpooled.UnpooledDataSource;
-import org.apache.ibatis.executor.BatchResult;
-import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.jdbc.ScriptRunner;
-import org.apache.ibatis.mapping.Environment;
-import org.apache.ibatis.session.Configuration;
-import org.apache.ibatis.session.ExecutorType;
-import org.apache.ibatis.session.SqlSession;
-import org.apache.ibatis.session.SqlSessionFactory;
-import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.apache.ibatis.test.EmbeddedPostgresqlTests;
-import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
-
-import ru.yandex.qatools.embed.postgresql.EmbeddedPostgres;
-import ru.yandex.qatools.embed.postgresql.util.SocketUtil;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * @author Jeff Butler

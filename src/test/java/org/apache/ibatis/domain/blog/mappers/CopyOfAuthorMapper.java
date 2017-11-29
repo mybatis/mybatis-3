@@ -15,10 +15,10 @@
  */
 package org.apache.ibatis.domain.blog.mappers;
 
-import java.util.List;
-
 import org.apache.ibatis.domain.blog.Author;
 import org.apache.ibatis.session.ResultHandler;
+
+import java.util.List;
 
 public interface CopyOfAuthorMapper {
 

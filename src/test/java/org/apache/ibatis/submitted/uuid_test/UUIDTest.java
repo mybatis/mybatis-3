@@ -15,10 +15,6 @@
  */
 package org.apache.ibatis.submitted.uuid_test;
 
-import java.io.Reader;
-import java.sql.Connection;
-import java.util.UUID;
-
 import org.apache.ibatis.exceptions.PersistenceException;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.jdbc.ScriptRunner;
@@ -28,6 +24,10 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.io.Reader;
+import java.sql.Connection;
+import java.util.UUID;
 
 public class UUIDTest {
 

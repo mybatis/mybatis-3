@@ -15,13 +15,6 @@
  */
 package org.apache.ibatis.session;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
-import java.io.Reader;
-
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.domain.blog.Author;
 import org.apache.ibatis.domain.blog.mappers.AuthorMapper;
@@ -29,6 +22,10 @@ import org.apache.ibatis.exceptions.PersistenceException;
 import org.apache.ibatis.io.Resources;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.io.Reader;
+
+import static org.junit.Assert.*;
 
 public class SqlSessionManagerTest extends BaseDataTest {
 

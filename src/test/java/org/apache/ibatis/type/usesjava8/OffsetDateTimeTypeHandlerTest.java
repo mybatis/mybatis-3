@@ -15,16 +15,18 @@
  */
 package org.apache.ibatis.type.usesjava8;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
-
-import java.sql.Timestamp;
-import java.time.OffsetDateTime;
-
 import org.apache.ibatis.type.BaseTypeHandlerTest;
 import org.apache.ibatis.type.OffsetDateTimeTypeHandler;
 import org.apache.ibatis.type.TypeHandler;
 import org.junit.Test;
+
+import java.sql.Timestamp;
+import java.time.OffsetDateTime;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class OffsetDateTimeTypeHandlerTest extends BaseTypeHandlerTest {
 

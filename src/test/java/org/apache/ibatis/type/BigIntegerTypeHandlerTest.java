@@ -15,15 +15,15 @@
  */
 package org.apache.ibatis.type;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import org.junit.Test;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class BigIntegerTypeHandlerTest extends BaseTypeHandlerTest {
 

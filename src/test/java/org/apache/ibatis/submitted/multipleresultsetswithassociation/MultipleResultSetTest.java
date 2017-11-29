@@ -15,11 +15,6 @@
  */
 package org.apache.ibatis.submitted.multipleresultsetswithassociation;
 
-import java.io.IOException;
-import java.io.Reader;
-import java.sql.Connection;
-import java.util.List;
-
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSession;
@@ -28,6 +23,11 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.io.IOException;
+import java.io.Reader;
+import java.sql.Connection;
+import java.util.List;
 
 /*
  * This class contains tests for multiple result sets with an association mapping. This test is based on the

@@ -15,15 +15,15 @@
  */
 package org.apache.ibatis.submitted.autodiscover.handlers;
 
+import org.apache.ibatis.type.JdbcType;
+import org.apache.ibatis.type.MappedTypes;
+import org.apache.ibatis.type.TypeHandler;
+
 import java.math.BigInteger;
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
-import org.apache.ibatis.type.JdbcType;
-import org.apache.ibatis.type.MappedTypes;
-import org.apache.ibatis.type.TypeHandler;
 
 @MappedTypes(BigInteger.class)
 public class DummyTypeHandler implements TypeHandler<Object> {

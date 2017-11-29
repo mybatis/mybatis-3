@@ -15,14 +15,10 @@
  */
 package org.apache.ibatis.submitted.cache;
 
-import java.util.List;
-
-import org.apache.ibatis.annotations.CacheNamespace;
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Options;
+import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.annotations.Options.FlushCachePolicy;
-import org.apache.ibatis.annotations.Select;
+
+import java.util.List;
 
 @CacheNamespace
 public interface PersonMapper {

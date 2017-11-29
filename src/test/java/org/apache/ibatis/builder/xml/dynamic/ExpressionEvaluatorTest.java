@@ -15,14 +15,15 @@
  */
 package org.apache.ibatis.builder.xml.dynamic;
 
-import static org.junit.Assert.*;
-
-import java.util.HashMap;
-
 import org.apache.ibatis.domain.blog.Author;
 import org.apache.ibatis.domain.blog.Section;
 import org.apache.ibatis.scripting.xmltags.ExpressionEvaluator;
 import org.junit.Test;
+
+import java.util.HashMap;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 public class ExpressionEvaluatorTest {
 

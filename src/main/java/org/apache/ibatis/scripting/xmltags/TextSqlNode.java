@@ -15,12 +15,12 @@
  */
 package org.apache.ibatis.scripting.xmltags;
 
-import java.util.regex.Pattern;
-
 import org.apache.ibatis.parsing.GenericTokenParser;
 import org.apache.ibatis.parsing.TokenHandler;
 import org.apache.ibatis.scripting.ScriptingException;
 import org.apache.ibatis.type.SimpleTypeRegistry;
+
+import java.util.regex.Pattern;
 
 /**
  * @author Clinton Begin

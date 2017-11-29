@@ -15,37 +15,27 @@
  */
 package org.apache.ibatis.submitted.usesjava8.refcursor;
 
-import static org.junit.Assert.*;
-
-import java.io.IOException;
-import java.io.Reader;
-import java.nio.file.Paths;
-import java.sql.Connection;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.ibatis.datasource.unpooled.UnpooledDataSource;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.mapping.Environment;
-import org.apache.ibatis.session.Configuration;
-import org.apache.ibatis.session.ResultContext;
-import org.apache.ibatis.session.ResultHandler;
-import org.apache.ibatis.session.SqlSession;
-import org.apache.ibatis.session.SqlSessionFactory;
-import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.apache.ibatis.session.*;
 import org.apache.ibatis.test.EmbeddedPostgresqlTests;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
-
 import ru.yandex.qatools.embed.postgresql.EmbeddedPostgres;
 import ru.yandex.qatools.embed.postgresql.util.SocketUtil;
+
+import java.io.IOException;
+import java.io.Reader;
+import java.nio.file.Paths;
+import java.sql.Connection;
+import java.util.*;
+
+import static org.junit.Assert.*;
 
 /**
  * @author Jeff Butler

@@ -15,28 +15,22 @@
  */
 package org.apache.ibatis.submitted.batch_keys;
 
-import static org.junit.Assert.assertEquals;
-
-import java.io.PrintWriter;
-import java.io.Reader;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.Statement;
-import java.util.List;
-
-import org.junit.Assert;
-
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.io.PrintWriter;
+import java.io.Reader;
+import java.sql.*;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
 
 public class BatchKeysTest {
 

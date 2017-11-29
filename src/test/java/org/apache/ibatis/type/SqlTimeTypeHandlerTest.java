@@ -15,13 +15,13 @@
  */
 package org.apache.ibatis.type;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import org.junit.Test;
 
 import java.util.Date;
 
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class SqlTimeTypeHandlerTest extends BaseTypeHandlerTest {
 

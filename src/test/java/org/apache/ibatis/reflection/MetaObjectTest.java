@@ -15,24 +15,16 @@
  */
 package org.apache.ibatis.reflection;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.ibatis.domain.blog.Author;
 import org.apache.ibatis.domain.blog.Section;
 import org.apache.ibatis.domain.misc.CustomBeanWrapper;
 import org.apache.ibatis.domain.misc.CustomBeanWrapperFactory;
 import org.apache.ibatis.domain.misc.RichType;
 import org.junit.Test;
+
+import java.util.*;
+
+import static org.junit.Assert.*;
 
 public class MetaObjectTest {
 

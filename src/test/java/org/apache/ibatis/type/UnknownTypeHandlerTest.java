@@ -15,17 +15,14 @@
  */
 package org.apache.ibatis.type;
 
-import java.sql.SQLException;
-
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.spy;
-
 import org.apache.ibatis.executor.result.ResultMapException;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.sql.SQLException;
+
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.*;
 
 public class UnknownTypeHandlerTest extends BaseTypeHandlerTest {
 

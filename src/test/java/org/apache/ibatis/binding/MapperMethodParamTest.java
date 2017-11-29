@@ -29,10 +29,10 @@ import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import javax.sql.DataSource;
 import java.util.HashMap;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class MapperMethodParamTest {
 

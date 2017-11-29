@@ -17,17 +17,16 @@ package org.apache.ibatis.submitted.lazy_immutable;
 
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.jdbc.ScriptRunner;
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.sql.Connection;
 import java.sql.DriverManager;
-
-import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.apache.ibatis.session.SqlSession;
-import org.apache.ibatis.session.SqlSessionFactory;
-import org.junit.BeforeClass;
-import org.junit.Test;
 
 import static org.junit.Assert.*;
 
