@@ -34,7 +34,7 @@ public class JndiDataSourceFactory implements DataSourceFactory {
   public static final String INITIAL_CONTEXT = "initial_context";
   public static final String DATA_SOURCE = "data_source";
   public static final String ENV_PREFIX = "env.";
-
+  private static final String PREFIX = ENV_PREFIX;
   private DataSource dataSource;
 
   @Override
@@ -66,7 +66,7 @@ public class JndiDataSourceFactory implements DataSourceFactory {
   }
 
   private static Properties getEnvProperties(Properties allProps) {
-    final String PREFIX = ENV_PREFIX;
+
     Properties contextProperties = null;
     for (Entry<Object, Object> entry : allProps.entrySet()) {
       String key = (String) entry.getKey();

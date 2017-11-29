@@ -15,16 +15,13 @@
  */
 package org.apache.ibatis.submitted.named_constructor_args.usesjava8;
 
-import org.apache.ibatis.annotations.Arg;
-import org.apache.ibatis.annotations.ConstructorArgs;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.submitted.named_constructor_args.User;
 
 public interface Mapper {
 
-  @ConstructorArgs({ @Arg(column = "name", name = "name"),
-      @Arg(id = true, column = "id", name = "userId", javaType = Integer.class) })
+  @ConstructorArgs({ @Arg(column = "name", name = "name", javaType = String.class),
+      @Arg(id = true, column = "id", name = "id", javaType = Integer.class) })
   @Select("select * from users where id = #{id}")
   User mapConstructorWithoutParamAnnos(@Param("id")Integer id);
 

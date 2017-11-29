@@ -21,19 +21,18 @@
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="org.apache.ibatis.submitted.named_constructor_args.usesjava8.Mapper">
-
   <resultMap type="org.apache.ibatis.submitted.named_constructor_args.User"
     id="twoArgsConstructorRM">
     <constructor>
       <!-- As the arg name is different from the property name,  -->
       <!-- javaType must be specified.  -->
-      <idArg column="id" name="userId" javaType="int" />
-      <arg column="name" name="name" />
+      <idArg column="id" name="id" javaType="int" />
+      <arg column="name" name="name" javaType="String" />
     </constructor>
   </resultMap>
 
-  <!--<select id="mapConstructorWithoutParamAnnosXml" resultMap="twoArgsConstructorRM">-->
-    <!--select * from users where id = #{id}-->
-  <!--</select>-->
+  <select id="mapConstructorWithoutParamAnnosXml" resultMap="twoArgsConstructorRM">
+    select * from users where id = #{id}
+  </select>
 
 </mapper>

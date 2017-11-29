@@ -197,7 +197,7 @@ public class ResultMap {
             break;
           }
         }
-        if (name == null && resultMap.configuration.isUseActualParamName() && Jdk.parameterExists) {
+        if (name == null && resultMap.configuration.isUseActualParamName() && Jdk.PARAMETER_EXISTS) {
           if (actualParamNames == null) {
             actualParamNames = ParamNameUtil.getParamNames(constructor);
           }

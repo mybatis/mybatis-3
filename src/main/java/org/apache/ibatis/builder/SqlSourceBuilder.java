@@ -33,7 +33,7 @@ import org.apache.ibatis.type.JdbcType;
  */
 public class SqlSourceBuilder extends BaseBuilder {
 
-  private static final String parameterProperties = "javaType,jdbcType,mode,numericScale,resultMap,typeHandler,jdbcTypeName";
+  private static final String PARAMETER_PROPERTIES = "javaType,jdbcType,mode,numericScale,resultMap,typeHandler,jdbcTypeName";
 
   public SqlSourceBuilder(Configuration configuration) {
     super(configuration);
@@ -117,7 +117,7 @@ public class SqlSourceBuilder extends BaseBuilder {
           throw new BuilderException("Expression based parameters are not supported yet");
         } else {
           throw new BuilderException("An invalid property '" + name + "' was found in mapping #{" + content
-              + "}.  Valid properties are " + parameterProperties);
+              + "}.  Valid properties are " + PARAMETER_PROPERTIES);
         }
       }
       if (typeHandlerAlias != null) {

@@ -69,13 +69,13 @@ public class BatchExecutor extends BaseExecutor {
     } else {
       Connection connection = getConnection(ms.getStatementLog());
       stmt = handler.prepare(connection, transaction.getTimeout());
-      handler.parameterize(stmt);    //fix Issues 322
+      //fix Issues 322
+      handler.parameterize(stmt);
       currentSql = sql;
       currentStatement = ms;
       statementList.add(stmt);
       batchResultList.add(new BatchResult(ms, sql, parameterObject));
     }
-    // handler.parameterize(stmt);
     handler.batch(stmt);
     return BATCH_UPDATE_RETURN_VALUE;
   }

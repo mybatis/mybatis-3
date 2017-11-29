@@ -104,7 +104,7 @@ public abstract class VFS {
   protected static Class<?> getClass(String className) {
     try {
       return Thread.currentThread().getContextClassLoader().loadClass(className);
-      //      return ReflectUtil.findClass(className);
+
     } catch (ClassNotFoundException e) {
       if (log.isDebugEnabled()) {
         log.debug("Class not found: " + className);

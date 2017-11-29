@@ -130,6 +130,8 @@
     <properties>
         <maven.compiler.testTarget>1.8</maven.compiler.testTarget>
         <maven.compiler.testSource>1.8</maven.compiler.testSource>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
         <maven.compiler.testCompilerArgument>-parameters</maven.compiler.testCompilerArgument>
         <clirr.comparisonVersion>3.3.1</clirr.comparisonVersion>
         <findbugs.onlyAnalyze>org.apache.ibatis.*</findbugs.onlyAnalyze>
@@ -356,6 +358,56 @@
                         <exclude>org.apache.ibatis.ognl.*</exclude>
                         <exclude>org.apache.ibatis.javassist.*</exclude>
                     </excludes>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>1.4.1</version>
+                <executions>
+                    <execution>
+                        <id>enforce-java</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <requireJavaVersion>
+                                    <version>[1.8,)</version>
+                                </requireJavaVersion>
+                                <requireMavenVersion>
+                                    <version>[3.2.5,)</version>
+                                </requireMavenVersion>
+                                <requirePluginVersions>
+                                    <message>[ERROR] Best Practice is to always define plugin versions!</message>
+                                    <banLatest>true</banLatest>
+                                    <banRelease>true</banRelease>
+                                    <banSnapshots>true</banSnapshots>
+                                    <phases>clean,deploy,site</phases>
+                                </requirePluginVersions>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.0.2</version>
+                <configuration>
+                    <archive>
+                        <manifestFile>${project.build.directory}/osgi/MANIFEST.MF</manifestFile>
+                        <manifest>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                            <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+                        </manifest>
+                        <manifestEntries>
+                            <Implementation-Build-Date>${maven.build.timestamp}</Implementation-Build-Date>
+                            <X-Compile-Source-JDK>${maven.compiler.source}</X-Compile-Source-JDK>
+                            <X-Compile-Target-JDK>${maven.compiler.target}</X-Compile-Target-JDK>
+                        </manifestEntries>
+                    </archive>
                 </configuration>
             </plugin>
         </plugins>

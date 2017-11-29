@@ -40,7 +40,7 @@ import org.apache.ibatis.reflection.factory.ObjectFactory;
 public abstract class AbstractSerialStateHolder implements Externalizable {
 
   private static final long serialVersionUID = 8940388717901644661L;
-  private static final ThreadLocal<ObjectOutputStream> stream = new ThreadLocal<ObjectOutputStream>();
+  private static final ThreadLocal<ObjectOutputStream> STREAM = new ThreadLocal<ObjectOutputStream>();
   private byte[] userBeanBytes = new byte[0];
   private Object userBean;
   private Map<String, ResultLoaderMap.LoadPair> unloadedProperties;
@@ -65,11 +65,11 @@ public abstract class AbstractSerialStateHolder implements Externalizable {
   public final void writeExternal(final ObjectOutput out) throws IOException {
     boolean firstRound = false;
     final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    ObjectOutputStream os = stream.get();
+    ObjectOutputStream os = STREAM.get();
     if (os == null) {
       os = new ObjectOutputStream(baos);
       firstRound = true;
-      stream.set(os);
+      STREAM.set(os);
     }
 
     os.writeObject(this.userBean);
@@ -82,7 +82,7 @@ public abstract class AbstractSerialStateHolder implements Externalizable {
     out.writeObject(bytes);
 
     if (firstRound) {
-      stream.remove();
+      STREAM.remove();
     }
   }
 

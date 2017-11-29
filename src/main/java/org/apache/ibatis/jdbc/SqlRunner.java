@@ -237,7 +237,7 @@ public class SqlRunner {
         }
       }
       while (rs.next()) {
-        Map<String, Object> row = new HashMap<String, Object>();
+        Map<String, Object> row = new HashMap<>();
         for (int i = 0, n = columns.size(); i < n; i++) {
           String name = columns.get(i);
           TypeHandler<?> handler = typeHandlers.get(i);

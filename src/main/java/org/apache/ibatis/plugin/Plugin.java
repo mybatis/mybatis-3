@@ -71,7 +71,7 @@ public class Plugin implements InvocationHandler {
           "No @Intercepts annotation was found in interceptor " + interceptor.getClass().getName());
     }
     Signature[] sigs = interceptsAnnotation.value();
-    Map<Class<?>, Set<Method>> signatureMap = new HashMap<Class<?>, Set<Method>>();
+    Map<Class<?>, Set<Method>> signatureMap = new HashMap<>();
     for (Signature sig : sigs) {
       Set<Method> methods = signatureMap.get(sig.type());
       if (methods == null) {

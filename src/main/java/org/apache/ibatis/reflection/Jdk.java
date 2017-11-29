@@ -25,7 +25,7 @@ public class Jdk {
   /**
    * <code>true</code> if <code>java.lang.reflect.Parameter</code> is available.
    */
-  public static final boolean parameterExists;
+  public static final boolean PARAMETER_EXISTS;
 
   static {
     boolean available = false;
@@ -35,10 +35,10 @@ public class Jdk {
     } catch (ClassNotFoundException e) {
       // ignore
     }
-    parameterExists = available;
+    PARAMETER_EXISTS = available;
   }
 
-  public static final boolean dateAndTimeApiExists;
+  public static final boolean DATE_AND_TIME_API_EXISTS;
 
   static {
     boolean available = false;
@@ -48,7 +48,7 @@ public class Jdk {
     } catch (ClassNotFoundException e) {
       // ignore
     }
-    dateAndTimeApiExists = available;
+    DATE_AND_TIME_API_EXISTS = available;
   }
 
   private Jdk() {

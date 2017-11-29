@@ -274,7 +274,7 @@ public class MapperAnnotationBuilder {
       Class<? extends TypeHandler<?>> typeHandler = (Class<? extends TypeHandler<?>>) (discriminator
           .typeHandler() == UnknownTypeHandler.class ? null : discriminator.typeHandler());
       Case[] cases = discriminator.cases();
-      Map<String, String> discriminatorMap = new HashMap<String, String>();
+      Map<String, String> discriminatorMap = new HashMap<>();
       for (Case c : cases) {
         String value = c.value();
         String caseResultMapId = resultMapId + "-" + value;

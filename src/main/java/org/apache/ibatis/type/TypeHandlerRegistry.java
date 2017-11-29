@@ -136,7 +136,7 @@ public final class TypeHandlerRegistry {
     register(java.sql.Timestamp.class, new SqlTimestampTypeHandler());
 
     // mybatis-typehandlers-jsr310
-    if (Jdk.dateAndTimeApiExists) {
+    if (Jdk.DATE_AND_TIME_API_EXISTS) {
       Java8TypeHandlersRegistrar.registerDateAndTimeHandlers(this);
     }
 

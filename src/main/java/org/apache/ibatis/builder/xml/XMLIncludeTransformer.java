@@ -57,7 +57,8 @@ public class XMLIncludeTransformer {
    * @param variablesContext Current context for static variables with values
    */
   private void applyIncludes(Node source, final Properties variablesContext, boolean included) {
-    if (source.getNodeName().equals("include")) {
+    String include = "include";
+    if (include.equals(source.getNodeName())) {
       Node toInclude = findSqlFragment(getStringAttribute(source, "refid"), variablesContext);
       Properties toIncludeContext = getVariablesContext(source, variablesContext);
       applyIncludes(toInclude, toIncludeContext, true);

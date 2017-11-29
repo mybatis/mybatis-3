@@ -116,14 +116,14 @@ public class MetaClass {
     try {
       Invoker invoker = reflector.getGetInvoker(propertyName);
       if (invoker instanceof MethodInvoker) {
-        Field _method = MethodInvoker.class.getDeclaredField("method");
-        _method.setAccessible(true);
-        Method method = (Method) _method.get(invoker);
+        Field field = MethodInvoker.class.getDeclaredField("method");
+        field.setAccessible(true);
+        Method method = (Method) field.get(invoker);
         return TypeParameterResolver.resolveReturnType(method, reflector.getType());
       } else if (invoker instanceof GetFieldInvoker) {
-        Field _field = GetFieldInvoker.class.getDeclaredField("field");
-        _field.setAccessible(true);
-        Field field = (Field) _field.get(invoker);
+        Field field1 = GetFieldInvoker.class.getDeclaredField("field");
+        field1.setAccessible(true);
+        Field field = (Field) field1.get(invoker);
         return TypeParameterResolver.resolveFieldType(field, reflector.getType());
       }
     } catch (NoSuchFieldException e) {
