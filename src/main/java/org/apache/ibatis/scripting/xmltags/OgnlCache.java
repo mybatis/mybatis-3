@@ -15,9 +15,11 @@
  */
 package org.apache.ibatis.scripting.xmltags;
 
+import ognl.MemberAccess;
 import ognl.Ognl;
 import ognl.OgnlException;
 import org.apache.ibatis.builder.BuilderException;
+import org.apache.ibatis.scripting.defaults.DefaultMemberAccess;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -31,15 +33,16 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public final class OgnlCache {
 
-  private static final Map<String, Object> expressionCache = new ConcurrentHashMap<String, Object>();
+  private static final Map<String, Object> expressionCache = new ConcurrentHashMap<>();
 
   private OgnlCache() {
     // Prevent Instantiation of Static Class
   }
 
+  @SuppressWarnings("unchecked")
   public static Object getValue(String expression, Object root) {
     try {
-      Map<Object, OgnlClassResolver> context = Ognl.createDefaultContext(root, new OgnlClassResolver());
+      Map<Object, OgnlClassResolver> context = Ognl.createDefaultContext(root, new DefaultMemberAccess(true), new OgnlClassResolver(), null);
       return Ognl.getValue(parseExpression(expression), context, root);
     } catch (OgnlException e) {
       throw new BuilderException("Error evaluating expression '" + expression + "'. Cause: " + e, e);

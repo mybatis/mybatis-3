@@ -32,7 +32,7 @@
         )
 	</select>
 
-  <select id="countByUserList" resultType="_int" parameterType="list">
+  <select id="countByUserList" resultType="int" parameterType="list">
     select count(*) from users
       <where>
         id in
@@ -42,7 +42,7 @@
       </where>
   </select>
 
-  <select id="countByBestFriend" resultType="_int" parameterType="list">
+  <select id="countByBestFriend" resultType="int" parameterType="list">
     select count(*) from users
       <where>
         id in
@@ -71,7 +71,7 @@
     </foreach>
   </insert>
 
-  <select id="itemVariableConflict" resultType="_int">
+  <select id="itemVariableConflict" resultType="int">
     select count(*) from users where id in
     <foreach collection="ids" item="id" open="(" close=")" separator=",">
       <foreach collection="ids2" item="id">
@@ -82,7 +82,7 @@
     or id = #{id}
   </select>
 
-  <select id="indexVariableConflict" resultType="_int">
+  <select id="indexVariableConflict" resultType="int">
     select count(*) from users where id in
     <foreach collection="idxs" index="idx" open="(" close=")" separator=",">
       <foreach collection="idxs2" index="idx">
