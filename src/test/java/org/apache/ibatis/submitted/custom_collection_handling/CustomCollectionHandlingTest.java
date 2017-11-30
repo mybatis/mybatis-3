@@ -36,7 +36,7 @@ public class CustomCollectionHandlingTest {
   /**
    * Custom collections with nested resultMap.
    *
-   * @throws Exception
+   * @throws Exception exception in test
    */
   @Test
   public void testSelectListWithNestedResultMap() throws Exception {
@@ -58,7 +58,7 @@ public class CustomCollectionHandlingTest {
   /**
    * Custom collections with nested select.
    *
-   * @throws Exception
+   * @throws Exception exception in test
    */
   @Test
   public void testSelectListWithNestedSelect() throws Exception {

@@ -29,31 +29,31 @@ public interface Transaction {
   /**
    * Retrieve inner database connection
    * @return DataBase connection
-   * @throws SQLException
+   * @throws SQLException SQLException
    */
   Connection getConnection() throws SQLException;
 
   /**
    * Commit inner database connection.
-   * @throws SQLException
+   * @throws SQLException SQLException
    */
   void commit() throws SQLException;
 
   /**
    * Rollback inner database connection.
-   * @throws SQLException
+   * @throws SQLException SQLException
    */
   void rollback() throws SQLException;
 
   /**
    * Close inner database connection.
-   * @throws SQLException
+   * @throws SQLException SQLException
    */
   void close() throws SQLException;
 
   /**
    * Get transaction timeout if set
-   * @throws SQLException
+   * @throws SQLException SQLException
    */
   Integer getTimeout() throws SQLException;
 
