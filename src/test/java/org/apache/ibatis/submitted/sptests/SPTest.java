@@ -331,7 +331,7 @@ public class SPTest {
   /*
    * This test shows how to use the ARRAY JDBC type with MyBatis.
    * 
-   * @throws SQLException
+   * @throws SQLException SQLException
    */
   @Test
   public void testGetNamesWithArray() throws SQLException {
@@ -356,7 +356,7 @@ public class SPTest {
   /*
    * This test shows how to call procedures that return multiple result sets
    * 
-   * @throws SQLException
+   * @throws SQLException SQLException
    */
   @Test
   public void testGetNamesAndItems() throws SQLException {
@@ -737,7 +737,7 @@ public class SPTest {
    * 
    * This test shows using annotations for stored procedures
    * 
-   * @throws SQLException
+   * @throws SQLException SQLException
    */
   @Test
   public void testGetNamesWithArray_a1() throws SQLException {
@@ -765,7 +765,7 @@ public class SPTest {
    * This test shows using annotations for stored procedures and using a
    * resultMap in XML
    * 
-   * @throws SQLException
+   * @throws SQLException SQLException
    */
   @Test
   public void testGetNamesWithArray_a2() throws SQLException {
@@ -793,7 +793,7 @@ public class SPTest {
    * This test shows using annotations for stored procedures and referring to
    * multiple resultMaps in XML
    * 
-   * @throws SQLException
+   * @throws SQLException SQLException
    */
   @Test
   public void testGetNamesAndItems_a2() throws SQLException {

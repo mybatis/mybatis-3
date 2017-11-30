@@ -31,7 +31,7 @@ public interface LanguageDriver {
    * @param mappedStatement The mapped statement that is being executed
    * @param parameterObject The input parameter object (can be null) 
    * @param boundSql The resulting SQL once the dynamic language has been executed.
-   * @return
+   * @return parameter handler
    * @author Frank D. Martinez [mnesarco]
    * @see DefaultParameterHandler
    */
@@ -44,7 +44,7 @@ public interface LanguageDriver {
    * @param configuration The MyBatis configuration
    * @param script XNode parsed from a XML file
    * @param parameterType input parameter type got from a mapper method or specified in the parameterType xml attribute. Can be null.
-   * @return
+   * @return sqlSource
    */
   SqlSource createSqlSource(Configuration configuration, XNode script, Class<?> parameterType);
 
@@ -55,7 +55,7 @@ public interface LanguageDriver {
    * @param configuration The MyBatis configuration
    * @param script The content of the annotation
    * @param parameterType input parameter type got from a mapper method or specified in the parameterType xml attribute. Can be null.
-   * @return 
+   * @return  sqlSource
    */
   SqlSource createSqlSource(Configuration configuration, String script, Class<?> parameterType);
 

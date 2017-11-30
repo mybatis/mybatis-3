@@ -34,7 +34,7 @@ public class ParamNameResolver {
 
   /**
    * <p>
-   * The key is the index and the value is the name of the parameter.<br />
+   * The key is the index and the value is the name of the parameter.
    * The name is obtained from {@link Param} if specified. When {@link Param} is not specified,
    * the parameter index is used. Note that this index could be different from the actual index
    * when the method has special parameters (i.e. {@link RowBounds} or {@link ResultHandler}).
@@ -104,8 +104,8 @@ public class ParamNameResolver {
 
   /**
    * <p>
-   * A single non-special parameter is returned without a name.<br />
-   * Multiple parameters are named using the naming rule.<br />
+   * A single non-special parameter is returned without a name.
+   * Multiple parameters are named using the naming rule.
    * In addition to the default names, this method also adds the generic names (param1, param2,
    * ...).
    * </p>

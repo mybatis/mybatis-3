@@ -28,7 +28,13 @@ public class User {
     this.id = Integer.valueOf(id);
   }
 
-  public User(Integer userId, @Param("name") String userName) {
+
+  public User( @Param("name") String userName, @Param("id") Integer userId) {
+    super();
+    this.id = userId;
+    this.name = userName;
+  }
+  public User(@Param("userId") Integer userId, @Param("userName") String userName) {
     super();
     this.id = userId;
     this.name = userName;

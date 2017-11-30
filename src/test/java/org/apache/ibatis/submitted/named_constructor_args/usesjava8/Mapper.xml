@@ -26,8 +26,8 @@
     <constructor>
       <!-- As the arg name is different from the property name,  -->
       <!-- javaType must be specified.  -->
-      <idArg column="id" name="id" javaType="int" />
-      <arg column="name" name="name" javaType="String" />
+      <idArg column="id" name="userId" javaType="int" />
+      <arg column="name" name="userName" javaType="String" />
     </constructor>
   </resultMap>
 

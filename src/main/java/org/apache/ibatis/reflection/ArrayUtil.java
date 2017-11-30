@@ -25,8 +25,7 @@ public class ArrayUtil {
   /**
    * Returns a hash code for {@code obj}.
    * 
-   * @param obj
-   *          The object to get a hash code for. May be an array or <code>null</code>.
+   * @param obj The object to get a hash code for. May be an array or <code>null</code>.
    * @return A hash code of {@code obj} or 0 if {@code obj} is <code>null</code>
    */
   public static int hashCode(Object obj) {
@@ -70,10 +69,8 @@ public class ArrayUtil {
    * equals() method of {@link Arrays} returns <code>true</code> (not deepEquals())</li>
    * </ul>
    * 
-   * @param thisObj
-   *          The left hand object to compare. May be an array or <code>null</code>
-   * @param thatObj
-   *          The right hand object to compare. May be an array or <code>null</code>
+   * @param thisObj The left hand object to compare. May be an array or <code>null</code>
+   * @param thatObj The right hand object to compare. May be an array or <code>null</code>
    * @return <code>true</code> if two objects are equal; <code>false</code> otherwise.
    */
   public static boolean equals(Object thisObj, Object thatObj) {
@@ -115,8 +112,7 @@ public class ArrayUtil {
    * If the {@code obj} is an array, toString() method of {@link Arrays} is called. Otherwise
    * {@link Object#toString()} is called. Returns "null" if {@code obj} is <code>null</code>.
    * 
-   * @param obj
-   *          An object. May be an array or <code>null</code>.
+   * @param obj An object. May be an array or <code>null</code>.
    * @return String representation of the {@code obj}.
    */
   public static String toString(Object obj) {

@@ -782,7 +782,7 @@ public class Configuration {
   /*
    * Extracts namespace from fully qualified statement id.
    *
-   * @param statementId
+   * @param statementId statement id
    * @return namespace or null when id does not contain period.
    */
   protected String extractNamespace(String statementId) {

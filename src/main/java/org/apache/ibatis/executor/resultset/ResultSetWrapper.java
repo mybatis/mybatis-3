@@ -80,7 +80,7 @@ public class ResultSetWrapper {
    * 
    * @param propertyType
    * @param columnName
-   * @return
+   * @return TypeHandler For result set
    */
   public TypeHandler<?> getTypeHandler(Class<?> propertyType, String columnName) {
     TypeHandler<?> handler = null;

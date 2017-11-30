@@ -30,7 +30,7 @@ public interface TransactionFactory {
 
   /**
    * Sets transaction factory custom properties.
-   * @param props
+   * @param props properties
    */
   void setProperties(Properties props);
 

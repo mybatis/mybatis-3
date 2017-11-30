@@ -206,7 +206,7 @@ public class DefaultVFS extends VFS {
    * 
    * @param url The URL of the JAR entry.
    * @return The URL of the JAR file, if one is found. Null if not.
-   * @throws MalformedURLException
+   * @throws MalformedURLException if not a JAR entry
    */
   protected URL findJarForResource(URL url) throws MalformedURLException {
     if (log.isDebugEnabled()) {
@@ -287,6 +287,7 @@ public class DefaultVFS extends VFS {
    * {@link ClassLoader#getResources(String)}.
    * 
    * @param packageName The Java package name to convert to a path
+   * @return package real path
    */
   protected String getPackagePath(String packageName) {
     return packageName == null ? null : packageName.replace('.', '/');
@@ -296,6 +297,7 @@ public class DefaultVFS extends VFS {
    * Returns true if the resource located at the given URL is a JAR file.
    * 
    * @param url The URL of the resource to test.
+   * @return if is jar return true else return false
    */
   protected boolean isJar(URL url) {
     return isJar(url, new byte[JAR_MAGIC.length]);
@@ -308,6 +310,7 @@ public class DefaultVFS extends VFS {
    * @param buffer A buffer into which the first few bytes of the resource are read. The buffer
    *            must be at least the size of {@link #JAR_MAGIC}. (The same buffer may be reused
    *            for multiple calls as an optimization.)
+   * @return if is jar return true else return false
    */
   protected boolean isJar(URL url, byte[] buffer) {
     InputStream is = null;

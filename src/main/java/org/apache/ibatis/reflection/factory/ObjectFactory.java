@@ -34,7 +34,7 @@ public interface ObjectFactory {
   /**
    * Creates a new object with default constructor. 
    * @param type Object type
-   * @return
+   * @return object type of T
    */
   <T> T create(Class<T> type);
 
@@ -43,7 +43,7 @@ public interface ObjectFactory {
    * @param type Object type
    * @param constructorArgTypes Constructor argument types
    * @param constructorArgs Constructor argument values
-   * @return
+   * @return object type of T
    */
   <T> T create(Class<T> type, List<Class<?>> constructorArgTypes, List<Object> constructorArgs);
 
