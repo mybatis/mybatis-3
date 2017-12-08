@@ -61,12 +61,13 @@ public class XMLScriptBuilder extends BaseBuilder {
   }
 
   List<SqlNode> parseDynamicTags(XNode node) {
+    final boolean compactedSQL = configuration.isCompactedSQL();
     List<SqlNode> contents = new ArrayList<SqlNode>();
     NodeList children = node.getNode().getChildNodes();
     for (int i = 0; i < children.getLength(); i++) {
       XNode child = node.newXNode(children.item(i));
       if (child.getNode().getNodeType() == Node.CDATA_SECTION_NODE || child.getNode().getNodeType() == Node.TEXT_NODE) {
-        String data = child.getStringBody("");
+        String data = child.getStringBody("", compactedSQL);
         TextSqlNode textSqlNode = new TextSqlNode(data);
         if (textSqlNode.isDynamic()) {
           contents.add(textSqlNode);

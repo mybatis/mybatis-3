@@ -136,6 +136,18 @@ public class XNode {
     }
   }
 
+  public String getStringBody(String def, boolean removeBlankLines){
+    if(body == null){
+      return def;
+    } else {
+      if (removeBlankLines) {
+        return body.replaceAll("(\\n|\\r\\n)", "   ").replaceAll("\\t"," ");
+      } else {
+        return body;
+      }
+    }
+  }
+
   public Boolean getBooleanBody() {
     return getBooleanBody(null);
   }

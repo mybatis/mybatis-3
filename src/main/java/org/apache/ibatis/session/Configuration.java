@@ -109,6 +109,7 @@ public class Configuration {
   protected boolean callSettersOnNulls;
   protected boolean useActualParamName = true;
   protected boolean returnInstanceForEmptyRow;
+  protected boolean compactedSQL = false;
 
   protected String logPrefix;
   protected Class <? extends Log> logImpl;
@@ -257,6 +258,14 @@ public class Configuration {
 
   public void setReturnInstanceForEmptyRow(boolean returnEmptyInstance) {
     this.returnInstanceForEmptyRow = returnEmptyInstance;
+  }
+
+  public boolean isCompactedSQL() {
+    return compactedSQL;
+  }
+
+  public void setCompactedSQL(boolean compactedSQL) {
+    this.compactedSQL = compactedSQL;
   }
 
   public String getDatabaseId() {
