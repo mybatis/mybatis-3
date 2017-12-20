@@ -756,7 +756,7 @@ ResultMap 就是 MyBatis 对这个问题的答案。
           <li>
             <code>collection</code> – 一个复杂类型的集合
             <ul>
-              <li>嵌套结果映射 – 集合可以指定为一个 <code>resultMap</code> 元素，或者引用一个
+              <li>嵌套结果映射 – 集合可以指定为一个 <code>resultMap</code> 元素，或者引用一个</li>
             </ul>
           </li>
           <li>
