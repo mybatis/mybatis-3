@@ -1770,6 +1770,13 @@ MyBatis 包含一个非常强大的查询缓存特性,它可以非常方便地�
         </ul>
 
         <p>
+          <span class="label important">NOTE</span> The cache will only apply to statements declared in the mapping file
+          where the cache tag is located. If you are using the Java API in conjunction with the XML mapping files, then
+          statements declared in the companion interface will not be cached by default. You will need to refer to the
+          cache region using the @CacheNamespaceRef annotation.
+        </p>
+
+        <p>
 所有的这些属性都可以通过缓存元素的属性来修改。比如:
         </p>
 

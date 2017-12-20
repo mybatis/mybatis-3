@@ -335,7 +335,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
         <td><code>Class</code></td>
         <td><code>&lt;cacheRef&gt;</code></td>
         <td>
-          別のネームスペースに対して定義されているキャッシュの設定を参照します。 属性: <code>value</code>, <code>name</code>
+          別のネームスペースに対して定義されているキャッシュの設定を参照します。XML マッパーで宣言されているキャッシュは、namespace に同一 FQCN が指定されていても独立したキャッシュとして扱われます。属性: <code>value</code>, <code>name</code>
           このアノテーションを使用する場合は、<code>value</code>または<code>name</code>属性のどちらかを指定する必要があります。
           <code>value</code>属性にはネームスペースを示すJava型(ネームスペース名は指定したJava型のFQCNになる)を、
           <code>name</code>属性(この属性は3.4.2以降で利用可能)にはネームスペースを示す名前を指定します。
