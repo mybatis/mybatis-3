@@ -51,16 +51,16 @@ public class XMLScriptBuilder extends BaseBuilder {
   }
 
 
-  private void initNodeHandlerMap(){
-      nodeHandlerMap.put("trim", new TrimHandler());
-      nodeHandlerMap.put("where", new WhereHandler());
-      nodeHandlerMap.put("set", new SetHandler());
-      nodeHandlerMap.put("foreach", new ForEachHandler());
-      nodeHandlerMap.put("if", new IfHandler());
-      nodeHandlerMap.put("choose", new ChooseHandler());
-      nodeHandlerMap.put("when", new IfHandler());
-      nodeHandlerMap.put("otherwise", new OtherwiseHandler());
-      nodeHandlerMap.put("bind", new BindHandler());
+  private void initNodeHandlerMap() {
+    nodeHandlerMap.put("trim", new TrimHandler());
+    nodeHandlerMap.put("where", new WhereHandler());
+    nodeHandlerMap.put("set", new SetHandler());
+    nodeHandlerMap.put("foreach", new ForEachHandler());
+    nodeHandlerMap.put("if", new IfHandler());
+    nodeHandlerMap.put("choose", new ChooseHandler());
+    nodeHandlerMap.put("when", new IfHandler());
+    nodeHandlerMap.put("otherwise", new OtherwiseHandler());
+    nodeHandlerMap.put("bind", new BindHandler());
   }
 
   public SqlSource parseScriptNode() {
@@ -91,7 +91,7 @@ public class XMLScriptBuilder extends BaseBuilder {
         }
       } else if (child.getNode().getNodeType() == Node.ELEMENT_NODE) { // issue #628
         String nodeName = child.getNode().getNodeName();
-        NodeHandler handler = nodeHandlers(nodeName);
+        NodeHandler handler = nodeHandlerMap.get(nodeName);
         if (handler == null) {
           throw new BuilderException("Unknown element <" + nodeName + "> in SQL statement.");
         }
@@ -100,10 +100,6 @@ public class XMLScriptBuilder extends BaseBuilder {
       }
     }
     return contents;
-  }
-
-  NodeHandler nodeHandlers(String nodeName) {
-    return nodeHandlerMap.get(nodeName);
   }
 
   private interface NodeHandler {
@@ -237,7 +233,7 @@ public class XMLScriptBuilder extends BaseBuilder {
       List<XNode> children = chooseSqlNode.getChildren();
       for (XNode child : children) {
         String nodeName = child.getNode().getNodeName();
-        NodeHandler handler = nodeHandlers(nodeName);
+        NodeHandler handler = nodeHandlerMap.get(nodeName);
         if (handler instanceof IfHandler) {
           handler.handleNode(child, ifSqlNodes);
         } else if (handler instanceof OtherwiseHandler) {

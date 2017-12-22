@@ -541,7 +541,7 @@ flushInterval,size,readWrite,blocking 和 properties。
         <td><code>类</code></td>
         <td><code>&lt;cacheRef&gt;</code></td>
         <td>
-          参照另外一个命名空间的缓存来使用。属性:value, name。
+          参照另外一个命名空间的缓存来使用。Note that caches declared in an XML mapper file are considered a separate namespace, even if they share the same FQCN. 属性:value, name。
           If you use this annotation, you should be specified either <code>value</code> or <code>name</code> attribute.
           For the <code>value</code> attribute specify a java type indicating the namespace(the namespace name become a FQCN of specified java type),
           and for the <code>name</code> attribute(this attribute is available since 3.4.2) specify a name indicating the namespace.
