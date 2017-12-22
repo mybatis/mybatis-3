@@ -1600,6 +1600,13 @@ public class User {
           <li>캐시는 읽기/쓰기 캐시처럼 처리될 것이다. 이것은 가져올 객체는 공유되지 않고 호출자에 의해 안전하게 변경된다는 것을 의미한다.</li>
         </ul>
 
+        <p>
+          <span class="label important">NOTE</span> The cache will only apply to statements declared in the mapping file
+          where the cache tag is located. If you are using the Java API in conjunction with the XML mapping files, then
+          statements declared in the companion interface will not be cached by default. You will need to refer to the
+          cache region using the @CacheNamespaceRef annotation.
+        </p>
+
         <p>모든 프로퍼티는 cache 엘리먼트의 속성을 통해 변경가능하다. 
 		예를들면</p>
 

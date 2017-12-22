@@ -34,7 +34,7 @@ public class ExpressionEvaluator {
       return (Boolean) value;
     }
     if (value instanceof Number) {
-        return !new BigDecimal(String.valueOf(value)).equals(BigDecimal.ZERO);
+      return new BigDecimal(String.valueOf(value)).compareTo(BigDecimal.ZERO) != 0;
     }
     return value != null;
   }

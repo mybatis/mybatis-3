@@ -334,7 +334,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
         <td><code>Class</code></td>
         <td><code>&lt;cacheRef&gt;</code></td>
         <td>
-          Referencia una cache de otro namespace. Atributos: <code>value</code> and <code>name</code>.
+          Referencia una cache de otro namespace. Note that caches declared in an XML mapper file are considered a separate namespace, even if they share the same FQCN. Atributos: <code>value</code> and <code>name</code>.
           If you use this annotation, you should be specified either <code>value</code> or <code>name</code> attribute.
           For the <code>value</code> attribute specify a java type indicating the namespace(the namespace name become a FQCN of specified java type),
           and for the <code>name</code> attribute(this attribute is available since 3.4.2) specify a name indicating the namespace.

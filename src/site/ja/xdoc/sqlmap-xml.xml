@@ -1877,6 +1877,10 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
         </ul>
 
         <p>
+          <span class="label important">重要</span> 対応する Java マッパーのステートメントをキャッシュの適用対象に含めるためには <code>@CacheNamespaceRef</code> アノテーションで XML マッパーのネームスペースを指定する必要があります。
+        </p>
+
+        <p>
           これらのプロパティは cache 要素の属性で変更することができます。
         </p>
 
