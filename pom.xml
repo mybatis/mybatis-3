@@ -197,9 +197,9 @@
 
     <!-- Test dependencies -->
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.12</version>
+      <groupId>org.junit.vintage</groupId>
+      <artifactId>junit-vintage-engine</artifactId>
+      <version>4.12.2</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -345,6 +345,12 @@
             <exclude>org.apache.ibatis.javassist.*</exclude>
           </excludes>
         </configuration>
+      </plugin>
+      <!-- Patch until mybatis-parent 30 (jdk9 build support) -->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>animal-sniffer-maven-plugin</artifactId>
+        <version>1.16</version>
       </plugin>
     </plugins>
 
