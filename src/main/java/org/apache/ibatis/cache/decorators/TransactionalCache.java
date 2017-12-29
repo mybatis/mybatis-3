@@ -1,5 +1,5 @@
-/*
- *    Copyright 2009-2014 the original author or authors.
+/**
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -22,6 +22,8 @@ import java.util.Set;
 import java.util.concurrent.locks.ReadWriteLock;
 
 import org.apache.ibatis.cache.Cache;
+import org.apache.ibatis.logging.Log;
+import org.apache.ibatis.logging.LogFactory;
 
 /**
  * The 2nd level cache transactional buffer.
@@ -36,10 +38,12 @@ import org.apache.ibatis.cache.Cache;
  */
 public class TransactionalCache implements Cache {
 
-  private Cache delegate;
+  private static final Log log = LogFactory.getLog(TransactionalCache.class);
+
+  private final Cache delegate;
   private boolean clearOnCommit;
-  private Map<Object, Object> entriesToAddOnCommit;
-  private Set<Object> entriesMissedInCache;
+  private final Map<Object, Object> entriesToAddOnCommit;
+  private final Set<Object> entriesMissedInCache;
 
   public TransactionalCache(Cache delegate) {
     this.delegate = delegate;
@@ -126,7 +130,12 @@ public class TransactionalCache implements Cache {
 
   private void unlockMissedEntries() {
     for (Object entry : entriesMissedInCache) {
-      delegate.putObject(entry, null);
+      try {
+        delegate.removeObject(entry);
+      } catch (Exception e) {
+        log.warn("Unexpected exception while notifiying a rollback to the cache adapter."
+            + "Consider upgrading your cache adapter to the latest version.  Cause: " + e);
+      }
     }
   }
 

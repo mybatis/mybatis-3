@@ -1,5 +1,5 @@
-/*
- *    Copyright 2009-2012 the original author or authors.
+/**
+ *    Copyright 2009-2016 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -22,8 +22,8 @@ import java.lang.reflect.Type;
  * References a generic type.
  *
  * @param <T> the referenced type
- * @author Simone Tripodi
  * @since 3.1.0
+ * @author Simone Tripodi
  */
 public abstract class TypeReference<T> {
 

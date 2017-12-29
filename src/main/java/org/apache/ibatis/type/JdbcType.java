@@ -1,5 +1,5 @@
-/*
- *    Copyright 2009-2012 the original author or authors.
+/**
+ *    Copyright 2009-2015 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -57,7 +57,15 @@ public enum JdbcType {
   NVARCHAR(Types.NVARCHAR), // JDK6
   NCHAR(Types.NCHAR), // JDK6
   NCLOB(Types.NCLOB), // JDK6
-  STRUCT(Types.STRUCT);
+  STRUCT(Types.STRUCT),
+  JAVA_OBJECT(Types.JAVA_OBJECT),
+  DISTINCT(Types.DISTINCT),
+  REF(Types.REF),
+  DATALINK(Types.DATALINK),
+  ROWID(Types.ROWID), // JDK6
+  LONGNVARCHAR(Types.LONGNVARCHAR), // JDK6
+  SQLXML(Types.SQLXML), // JDK6
+  DATETIMEOFFSET(-155); // SQL Server 2008
 
   public final int TYPE_CODE;
   private static Map<Integer,JdbcType> codeLookup = new HashMap<Integer,JdbcType>();

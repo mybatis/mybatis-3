@@ -1,5 +1,5 @@
-/*
- *    Copyright 2009-2012 the original author or authors.
+/**
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -47,6 +47,7 @@ public class SimpleListParameterTest {
     ScriptRunner runner = new ScriptRunner(conn);
     runner.setLogWriter(null);
     runner.runScript(reader);
+    conn.close();
     reader.close();
     session.close();
   }
@@ -65,4 +66,31 @@ public class SimpleListParameterTest {
     }
   }
 
+  @Test
+  public void shouldResolveGenericFieldGetterType() throws Exception {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      CarMapper carMapper = sqlSession.getMapper(CarMapper.class);
+      Rv rv = new Rv();
+      rv.doors1 = Arrays.asList(new String[] {"2", "4"});
+      List<Rv> rvs = carMapper.getRv1(rv);
+      Assert.assertNotNull(rvs);
+    } finally {
+      sqlSession.close();
+    }
+  }
+
+  @Test
+  public void shouldResolveGenericMethodGetterType() throws Exception {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      CarMapper carMapper = sqlSession.getMapper(CarMapper.class);
+      Rv rv = new Rv();
+      rv.setDoors2(Arrays.asList(new String[] {"2", "4"}));
+      List<Rv> rvs = carMapper.getRv2(rv);
+      Assert.assertNotNull(rvs);
+    } finally {
+      sqlSession.close();
+    }
+  }
 }

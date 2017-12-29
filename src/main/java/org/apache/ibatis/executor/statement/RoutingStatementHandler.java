@@ -1,5 +1,5 @@
-/*
- *    Copyright 2009-2012 the original author or authors.
+/**
+ *    Copyright 2009-2016 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 
+import org.apache.ibatis.cursor.Cursor;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.executor.ExecutorException;
 import org.apache.ibatis.executor.parameter.ParameterHandler;
@@ -54,8 +55,8 @@ public class RoutingStatementHandler implements StatementHandler {
   }
 
   @Override
-  public Statement prepare(Connection connection) throws SQLException {
-    return delegate.prepare(connection);
+  public Statement prepare(Connection connection, Integer transactionTimeout) throws SQLException {
+    return delegate.prepare(connection, transactionTimeout);
   }
 
   @Override
@@ -76,6 +77,11 @@ public class RoutingStatementHandler implements StatementHandler {
   @Override
   public <E> List<E> query(Statement statement, ResultHandler resultHandler) throws SQLException {
     return delegate.<E>query(statement, resultHandler);
+  }
+
+  @Override
+  public <E> Cursor<E> queryCursor(Statement statement) throws SQLException {
+    return delegate.queryCursor(statement);
   }
 
   @Override

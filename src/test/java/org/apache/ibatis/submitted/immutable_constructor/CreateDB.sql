@@ -1,5 +1,5 @@
 --
---    Copyright 2009-2012 the original author or authors.
+--    Copyright 2009-2016 the original author or authors.
 --
 --    Licensed under the Apache License, Version 2.0 (the "License");
 --    you may not use this file except in compliance with the License.
@@ -15,9 +15,9 @@
 --
 
 CREATE TABLE immutables (
-    id          INTEGER PRIMARY KEY,
-    description VARCHAR (30) NOT NULL
+    immutable_id          INTEGER PRIMARY KEY,
+    immutable_description VARCHAR (30) NOT NULL
 );
 
-INSERT INTO immutables (id, description) VALUES (1, 'Description of immutable');
-INSERT INTO immutables (id, description) VALUES (2, 'Another immutable');
+INSERT INTO immutables (immutable_id, immutable_description) VALUES (1, 'Description of immutable');
+INSERT INTO immutables (immutable_id, immutable_description) VALUES (2, 'Another immutable');

@@ -1,6 +1,5 @@
-package org.apache.ibatis.cache.decorators;
-/*
- *    Copyright 2009-2014 the original author or authors.
+/**
+ *    Copyright 2009-2015 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -14,6 +13,7 @@ package org.apache.ibatis.cache.decorators;
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
+package org.apache.ibatis.cache.decorators;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
@@ -27,7 +27,7 @@ import org.apache.ibatis.cache.CacheException;
 /**
  * Simple blocking decorator 
  * 
- * Sipmle and inefficient version of EhCache's BlockingCache decorator.
+ * Simple and inefficient version of EhCache's BlockingCache decorator.
  * It sets a lock over a cache key when the element is not found in cache.
  * This way, other threads will wait until this element is filled instead of hitting the database.
  * 
@@ -76,7 +76,9 @@ public class BlockingCache implements Cache {
 
   @Override
   public Object removeObject(Object key) {
-    return delegate.removeObject(key);
+    // despite of its name, this method is called only to release locks
+    releaseLock(key);
+    return null;
   }
 
   @Override

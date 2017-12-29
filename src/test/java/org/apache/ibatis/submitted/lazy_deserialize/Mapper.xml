@@ -1,32 +1,50 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+
+       Copyright 2009-2017 the original author or authors.
+
+       Licensed under the Apache License, Version 2.0 (the "License");
+       you may not use this file except in compliance with the License.
+       You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+       Unless required by applicable law or agreed to in writing, software
+       distributed under the License is distributed on an "AS IS" BASIS,
+       WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+       See the License for the specific language governing permissions and
+       limitations under the License.
+
+-->
 <!DOCTYPE mapper
     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="org.apache.ibatis.submitted.lazy_deserialize.Mapper">
 
-    <resultMap id="resultFoo" type="LazyFoo">
-        <id     property="id" column="id" />
-        <association property="lazyObjectBar" column="id_bar" select="loadBar" />
-    </resultMap>
+  <resultMap id="resultFoo" type="LazyFoo">
+    <id property="id" column="id" />
+    <association property="lazyObjectBar" column="id_bar"
+      select="loadBar" />
+  </resultMap>
 
-    <resultMap id="resultBar" type="LazyBar">
-        <id     property="id" column="id" />
-    </resultMap>
+  <resultMap id="resultBar" type="LazyBar">
+    <id property="id" column="id" />
+  </resultMap>
 
-    <select id="loadFoo" parameterType="int" resultMap="resultFoo">
-        SELECT
-            f.id            AS  id,
-            f.id_bar        AS  id_bar
-        FROM table_foo AS f
-        WHERE f.id = #{fooId}
-    </select>
+  <select id="loadFoo" parameterType="int" resultMap="resultFoo">
+    SELECT
+    f.id AS id,
+    f.id_bar AS id_bar
+    FROM table_foo AS f
+    WHERE f.id = #{fooId}
+  </select>
 
-    <select id="loadBar" parameterType="int" resultMap="resultBar">
-        SELECT
-            b.id            AS  id
-        FROM table_bar AS b
-        WHERE b.id = #{barId}
-    </select>
+  <select id="loadBar" parameterType="int" resultMap="resultBar">
+    SELECT
+    b.id AS id
+    FROM table_bar AS b
+    WHERE b.id = #{barId}
+  </select>
 
 </mapper>

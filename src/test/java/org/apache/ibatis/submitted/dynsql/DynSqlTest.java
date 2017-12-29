@@ -1,5 +1,5 @@
-/*
- *    Copyright 2009-2012 the original author or authors.
+/**
+ *    Copyright 2009-2015 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -153,6 +153,18 @@ public class DynSqlTest {
       assertTrue(answer.size() == 1);
       assertEquals(new Integer(7), answer.get(0).get("ID"));
 
+    } finally {
+      sqlSession.close();
+    }
+  }
+
+  @Test
+  public void testBindNull() {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      DynSqlMapper mapper = sqlSession.getMapper(DynSqlMapper.class);
+      String description = mapper.selectDescription(null);
+      assertEquals("Pebbles", description);
     } finally {
       sqlSession.close();
     }

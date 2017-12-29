@@ -1,5 +1,5 @@
-/*
- *    Copyright 2009-2014 the original author or authors.
+/**
+ *    Copyright 2009-2016 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-
 package org.apache.ibatis.scripting.xmltags;
 
 import java.util.Map;
@@ -26,10 +25,10 @@ import org.apache.ibatis.builder.BuilderException;
 
 /**
  * Caches OGNL parsed expressions.
- *  
- * @see http://code.google.com/p/mybatis/issues/detail?id=342
  *
  * @author Eduardo Macarron
+ *
+ * @see <a href='http://code.google.com/p/mybatis/issues/detail?id=342'>Issue 342</a>
  */
 public final class OgnlCache {
 

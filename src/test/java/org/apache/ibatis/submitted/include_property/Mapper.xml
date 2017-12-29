@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+       Copyright 2009-2017 the original author or authors.
+
+       Licensed under the Apache License, Version 2.0 (the "License");
+       you may not use this file except in compliance with the License.
+       You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+       Unless required by applicable law or agreed to in writing, software
+       distributed under the License is distributed on an "AS IS" BASIS,
+       WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+       See the License for the specific language governing permissions and
+       limitations under the License.
+
+-->
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.apache.ibatis.submitted.include_property.Mapper">
+
+  <sql id="colsStatic">
+    col_c
+  </sql>
+
+  <sql id="colsSuffix">
+    col_${suffix}
+  </sql>
+
+  <sql id="colsPrefix">
+    ${prefix}a
+  </sql>
+
+  <sql id="nested">
+    <include refid="${sqlToInclude}" />
+  </sql>
+
+  <sql id="nestedWithProperty">
+    <include refid="${sqlToInclude}">
+      <property name="prefix" value="" />
+    </include>
+  </sql>
+
+  <sql id="nestedDynamicValue">
+    <include refid="colsPrefix">
+      <property name="prefix" value="${var}" />
+    </include>
+  </sql>
+
+  <sql id="nestedPropertyContext">
+    <include refid="colsSuffix">
+      <property name="suffix" value="a" />
+    </include>
+    , col_${suffix}
+  </sql>
+
+  <sql id="colsIfAttribute">
+    <if test="'${value}' == 'x'">
+      col_a COL_1
+    </if>
+    <if test="'${value}' == 'y'">
+      col_b COL_2
+    </if>
+  </sql>
+
+  <select id="selectSimpleA" resultType="string">
+    select
+    <include refid="colsSuffix">
+      <property name="suffix" value="a" />
+    </include>
+    from table1
+  </select>
+
+  <select id="selectSimpleB" resultType="string">
+    select
+    <include refid="colsSuffix">
+      <property name="suffix" value="b" />
+    </include>
+    from table1
+  </select>
+
+  <select id="selectNestedDynamicValue" resultType="string">
+    select
+    <include refid="nestedDynamicValue">
+      <property name="var" value="col_" />
+    </include>
+    from table1
+  </select>
+
+  <select id="selectPropertyContext" resultType="map">
+    select
+    <include refid="nestedPropertyContext">
+      <property name="suffix" value="b" />
+    </include>
+    from table1
+  </select>
+
+  <select id="selectEmptyProperty" resultType="string">
+    select
+    <include refid="colsPrefix">
+      <property name="prefix" value="" />
+    </include>
+    from table1
+  </select>
+
+  <select id="selectConfigVar" resultType="string">
+    select
+    <include refid="nested" />
+    from table1
+  </select>
+
+  <select id="selectPropertyInRefid" resultType="string">
+    select
+    <include refid="nested">
+      <property name="sqlToInclude" value="colsPrefix" />
+      <property name="prefix" value="col_" />
+    </include>
+    from table1
+  </select>
+
+  <select id="selectRuntimeVar" resultType="string">
+    select
+    <include refid="nested">
+      <property name="sqlToInclude" value="colsSuffix" />
+    </include>
+    from table1
+  </select>
+
+  <select id="selectNestedInclude" resultType="string">
+    select
+    <include refid="nestedWithProperty">
+      <property name="sqlToInclude" value="colsPrefix" />
+      <property name="prefix" value="col_" />
+    </include>
+    from table1
+  </select>
+
+  <select id="selectPropertyInAttribute" resultType="map">
+    select
+    <include refid="colsIfAttribute">
+      <property name="value" value="x" />
+    </include>,
+    <include refid="colsIfAttribute">
+      <property name="value" value="y" />
+    </include>
+    from table1
+  </select>
+
+</mapper>

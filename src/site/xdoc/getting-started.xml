@@ -1,22 +1,21 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Copyright 2010-2012 the original author or authors.
 
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
+       Copyright 2009-2016 the original author or authors.
 
-    http://www.apache.org/licenses/LICENSE-2.0
+       Licensed under the Apache License, Version 2.0 (the "License");
+       you may not use this file except in compliance with the License.
+       You may obtain a copy of the License at
 
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
+          http://www.apache.org/licenses/LICENSE-2.0
+
+       Unless required by applicable law or agreed to in writing, software
+       distributed under the License is distributed on an "AS IS" BASIS,
+       WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+       See the License for the specific language governing permissions and
+       limitations under the License.
+
 -->
-
-<!-- version: $Id$ -->
-
 <document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
 
@@ -31,9 +30,7 @@
     <subsection name="Installation">
       <p>
         To use MyBatis you just need to include the
-        <code>
-          mybatis-x.x.x.jar
-        </code>
+          <a href="https://github.com/mybatis/mybatis-3/releases">mybatis-x.x.x.jar</a>
         file in the classpath.
       </p>
       <p>
@@ -58,22 +55,17 @@
       <p>
         Building a SqlSessionFactory instance from an XML file is very
         simple. It is recommended that you use a classpath resource for
-        this
-        configuration, but you could use any InputStream instance, including
-        one
-        created from a literal file path or a file:// URL. MyBatis
-        includes
-        a utility class, called Resources, that contains a number
-        of
-        methods
-        that make it simpler to load resources from the classpath
-        and other
-        locations.
+        this configuration, but you could use any InputStream instance,
+        including one created from a literal file path or a file:// URL.
+        MyBatis includes a utility class, called Resources, that contains
+        a number of methods that make it simpler to load resources from
+        the classpath and other locations.
       </p>
       <source><![CDATA[
 String resource = "org/mybatis/example/mybatis-config.xml";
 InputStream inputStream = Resources.getResourceAsStream(resource);
-SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);]]></source>
+SqlSessionFactory sqlSessionFactory =
+  new SqlSessionFactoryBuilder().build(inputStream);]]></source>
       <p>
         The configuration XML file contains settings for the core of the
         MyBatis system, including a DataSource for acquiring database
@@ -104,38 +96,31 @@ SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(input
 </configuration>]]></source>
       <p>
         While there is a lot more to the XML configuration file, the
-        above
-        example points out the most critical
-        parts. Notice the XML
-        header, required to validate the XML document. The
-        body of the
-        environment
-        element contains the environment configuration for
-        transaction management
-        and connection pooling.
-        The mappers element
-        contains a list of mappers – the XML files 
-        and/or annotated Java interface classes that
-        contain the SQL code
-        and mapping
-        definitions.
+        above example points out the most critical parts. Notice the
+        XML header, required to validate the XML document. The body
+        of the environment element contains the environment
+        configuration for transaction management and connection
+        pooling. The mappers element contains a list of mappers –
+        the XML files and/or annotated Java interface classes that
+        contain the SQL code and mapping definitions.
       </p>
     </subsection>
     <subsection name="Building SqlSessionFactory without XML">
       <p>
         If you prefer to directly build the configuration from Java, rather
-        than XML, or create your own
-        configuration builder, MyBatis provides
-        a complete Configuration class that
-        provides all of the same
+        than XML, or create your own configuration builder, MyBatis provides
+        a complete Configuration class that provides all of the same
         configuration options as the XML file.
       </p>
       <source><![CDATA[DataSource dataSource = BlogDataSourceFactory.getBlogDataSource();
-TransactionFactory transactionFactory = new JdbcTransactionFactory();
-Environment environment = new Environment("development", transactionFactory, dataSource);
+TransactionFactory transactionFactory =
+  new JdbcTransactionFactory();
+Environment environment =
+  new Environment("development", transactionFactory, dataSource);
 Configuration configuration = new Configuration(environment);
 configuration.addMapper(BlogMapper.class);
-SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(configuration);]]></source>
+SqlSessionFactory sqlSessionFactory =
+  new SqlSessionFactoryBuilder().build(configuration);]]></source>
       <p>
         Notice in this case the configuration is adding a mapper class.
         Mapper classes are Java classes that
@@ -166,7 +151,8 @@ SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(confi
       </p>
       <source><![CDATA[SqlSession session = sqlSessionFactory.openSession();
 try {
-  Blog blog = session.selectOne("org.mybatis.example.BlogMapper.selectBlog", 101);
+  Blog blog = session.selectOne(
+    "org.mybatis.example.BlogMapper.selectBlog", 101);
 } finally {
   session.close();
 }]]></source>
@@ -232,7 +218,8 @@ try {
         name of “org.mybatis.example.BlogMapper.selectBlog”, as we did above
         in the following example:
       </p>
-      <source><![CDATA[Blog blog = session.selectOne("org.mybatis.example.BlogMapper.selectBlog", 101);]]></source>
+      <source><![CDATA[Blog blog = session.selectOne(
+  "org.mybatis.example.BlogMapper.selectBlog", 101);]]></source>
       <p>
         Notice how similar this is to calling a method on a fully qualified Java
         class, and there's a reason for that. This name can be directly

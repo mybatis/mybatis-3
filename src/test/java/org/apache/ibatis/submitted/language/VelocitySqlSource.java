@@ -1,17 +1,17 @@
-/*
- * Copyright 2012 MyBatis.org.
+/**
+ *    Copyright 2009-2016 the original author or authors.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *       http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
  */
 package org.apache.ibatis.submitted.language;
 
@@ -42,6 +42,7 @@ public class VelocitySqlSource implements SqlSource {
   private final Template script;
 
   static {
+    Velocity.setProperty("runtime.log", "target/velocity.log");
     Velocity.init();
   }
 
@@ -60,6 +61,7 @@ public class VelocitySqlSource implements SqlSource {
     }
   }
 
+  @Override
   public BoundSql getBoundSql(Object parameterObject) {
     Map<String, Object> bindings = createBindings(parameterObject, configuration);
     VelocityContext context = new VelocityContext(bindings);

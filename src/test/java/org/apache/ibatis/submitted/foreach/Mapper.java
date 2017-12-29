@@ -1,5 +1,5 @@
-/*
- *    Copyright 2009-2012 the original author or authors.
+/**
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -17,6 +17,8 @@ package org.apache.ibatis.submitted.foreach;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 public interface Mapper {
 
   User getUser(User user);
@@ -25,4 +27,11 @@ public interface Mapper {
 
   int countByBestFriend(List<User> users);
 
+  String selectWithNullItemCheck(List<User> users);
+
+  int typoInItemProperty(List<User> users);
+
+  int itemVariableConflict(@Param("id") Integer id, @Param("ids") List<Integer> ids, @Param("ids2") List<Integer> ids2);
+
+  int indexVariableConflict(@Param("idx") Integer id, @Param("idxs") List<Integer> ids, @Param("idxs2") List<Integer> ids2);
 }

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-       Copyright 2009-2012 the original author or authors.
+
+       Copyright 2009-2016 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -13,6 +14,7 @@
        WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
        See the License for the specific language governing permissions and
        limitations under the License.
+
 -->
 <!DOCTYPE mapper
     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
@@ -40,4 +42,23 @@
 		where p.id = i.owner
 		order by i.name
 	</select>
+
+	<select id="getPersonItemPairs" resultMap="personItemPairResult">
+		select p.id as person_id, p.name as person_name, i.id as item_id, i.name as item_name
+		from persons p, items i
+		where p.id = i.owner
+		order by p.id, i.id
+	</select>
+
+	<resultMap id="personItemPairResult" type="org.apache.ibatis.submitted.nestedresulthandler.PersonItemPair">
+		<association property="person" javaType="org.apache.ibatis.submitted.nestedresulthandler.Person">
+			<id property="id" column="person_id" />
+			<result property="name" column="person_name"/>
+		</association>
+		<association property="item" javaType="org.apache.ibatis.submitted.nestedresulthandler.Item">
+			<id property="id" column="item_id"/>
+			<result property="name" column="item_name"/>
+		</association>
+	</resultMap>
+
 </mapper>

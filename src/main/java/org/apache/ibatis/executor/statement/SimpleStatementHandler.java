@@ -1,5 +1,5 @@
-/*
- *    Copyright 2009-2012 the original author or authors.
+/**
+ *    Copyright 2009-2015 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 
+import org.apache.ibatis.cursor.Cursor;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.executor.keygen.Jdbc3KeyGenerator;
 import org.apache.ibatis.executor.keygen.KeyGenerator;
@@ -71,6 +72,13 @@ public class SimpleStatementHandler extends BaseStatementHandler {
     String sql = boundSql.getSql();
     statement.execute(sql);
     return resultSetHandler.<E>handleResultSets(statement);
+  }
+
+  @Override
+  public <E> Cursor<E> queryCursor(Statement statement) throws SQLException {
+    String sql = boundSql.getSql();
+    statement.execute(sql);
+    return resultSetHandler.<E>handleCursorResultSets(statement);
   }
 
   @Override

@@ -1,5 +1,5 @@
-/*
- *    Copyright 2009-2012 the original author or authors.
+/**
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -18,12 +18,14 @@ package org.apache.ibatis.jdbc;
 import java.io.BufferedReader;
 import java.io.PrintWriter;
 import java.io.Reader;
-import java.io.UnsupportedEncodingException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.SQLWarning;
 import java.sql.Statement;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author Clinton Begin
@@ -34,9 +36,12 @@ public class ScriptRunner {
 
   private static final String DEFAULT_DELIMITER = ";";
 
-  private Connection connection;
+  private static final Pattern DELIMITER_PATTERN = Pattern.compile("^\\s*((--)|(//))?\\s*(//)?\\s*@DELIMITER\\s+([^\\s]+)", Pattern.CASE_INSENSITIVE);
+
+  private final Connection connection;
 
   private boolean stopOnError;
+  private boolean throwWarning;
   private boolean autoCommit;
   private boolean sendFullScript;
   private boolean removeCRs;
@@ -46,7 +51,7 @@ public class ScriptRunner {
   private PrintWriter errorLogWriter = new PrintWriter(System.err);
 
   private String delimiter = DEFAULT_DELIMITER;
-  private boolean fullLineDelimiter = false;
+  private boolean fullLineDelimiter;
 
   public ScriptRunner(Connection connection) {
     this.connection = connection;
@@ -54,6 +59,10 @@ public class ScriptRunner {
 
   public void setStopOnError(boolean stopOnError) {
     this.stopOnError = stopOnError;
+  }
+
+  public void setThrowWarning(boolean throwWarning) {
+    this.throwWarning = throwWarning;
   }
 
   public void setAutoCommit(boolean autoCommit) {
@@ -114,7 +123,9 @@ public class ScriptRunner {
         script.append(line);
         script.append(LINE_SEPARATOR);
       }
-      executeStatement(script.toString());
+      String command = script.toString();
+      println(command);
+      executeStatement(command);
       commitConnection();
     } catch (Exception e) {
       String message = "Error executing: " + script + ".  Cause: " + e;
@@ -129,7 +140,7 @@ public class ScriptRunner {
       BufferedReader lineReader = new BufferedReader(reader);
       String line;
       while ((line = lineReader.readLine()) != null) {
-        command = handleLine(command, line);
+        handleLine(command, line);
       }
       commitConnection();
       checkForMissingLineTerminator(command);
@@ -184,9 +195,13 @@ public class ScriptRunner {
     }
   }
 
-  private StringBuilder handleLine(StringBuilder command, String line) throws SQLException, UnsupportedEncodingException {
+  private void handleLine(StringBuilder command, String line) throws SQLException {
     String trimmedLine = line.trim();
     if (lineIsComment(trimmedLine)) {
+      Matcher matcher = DELIMITER_PATTERN.matcher(trimmedLine);
+      if (matcher.find()) {
+        delimiter = matcher.group(5);
+      }
       println(trimmedLine);
     } else if (commandReadyToExecute(trimmedLine)) {
       command.append(line.substring(0, line.lastIndexOf(delimiter)));
@@ -198,7 +213,6 @@ public class ScriptRunner {
       command.append(line);
       command.append(LINE_SEPARATOR);
     }
-    return command;
   }
 
   private boolean lineIsComment(String trimmedLine) {
@@ -220,6 +234,14 @@ public class ScriptRunner {
     }
     if (stopOnError) {
       hasResults = statement.execute(sql);
+      if (throwWarning) {
+        // In Oracle, CRATE PROCEDURE, FUNCTION, etc. returns warning
+        // instead of throwing exception if there is compilation error.
+        SQLWarning warning = statement.getWarnings();
+        if (warning != null) {
+          throw warning;
+        }
+      }
     } else {
       try {
         hasResults = statement.execute(sql);

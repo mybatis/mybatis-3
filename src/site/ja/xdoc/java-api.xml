@@ -1,22 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Copyright 2010-2012 the original author or authors.
 
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
+       Copyright 2009-2017 the original author or authors.
 
-    http://www.apache.org/licenses/LICENSE-2.0
+       Licensed under the Apache License, Version 2.0 (the "License");
+       you may not use this file except in compliance with the License.
+       You may obtain a copy of the License at
 
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
+          http://www.apache.org/licenses/LICENSE-2.0
+
+       Unless required by applicable law or agreed to in writing, software
+       distributed under the License is distributed on an "AS IS" BASIS,
+       WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+       See the License for the specific language governing permissions and
+       limitations under the License.
+
 -->
-
-<!-- version: $Id$ -->
-
 <document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
 
@@ -207,8 +206,8 @@ int delete(String statement)]]></source>
   <p>最後に、高度な処理を行うための select メソッドがあります。これらは主に非常に大きなデータセットを扱う場合に、返される行の範囲を限定したり、カスタムの ResultHandler を使って独自に結果処理を行うことができるようになっています。</p>
   <source><![CDATA[<E> List<E> selectList (String statement, Object parameter, RowBounds rowBounds)
 <K,V> Map<K,V> selectMap(String statement, Object parameter, String mapKey, RowBounds rowbounds)
-void select (String statement, Object parameter, ResultHandler handler)
-void select (String statement, Object parameter, RowBounds rowBounds, ResultHandler handler)]]></source>
+void select (String statement, Object parameter, ResultHandler<T> handler)
+void select (String statement, Object parameter, RowBounds rowBounds, ResultHandler<T> handler)]]></source>
 
   <p>RowBounds 引数を渡すことによって、指定された数のレコードをスキップし、結果として返される行の数を制限することができます。RowBounds クラスはイミュータブルで、コンストラクタ引数として offset と limit を取ります。</p>
   <source>int offset = 100;
@@ -217,11 +216,12 @@ RowBounds rowBounds = new RowBounds(offset, limit);</source>
 
   <p>ドライバーによって得られる効果は異なります。SCROLL_SENSITIVE または SCROLL_INSENSITIVE （つまり FORWARD_ONLY 以外）の結果セットタイプを使った時、最も良いパフォーマンスが得られます。</p>
   <p>ResultHandler を渡すと、各行を自由に処理することができます。List に追加したり、Map や Set を作成することもできますし、結果を捨てて合計値のみを返すこともできます。ResultHandler を使えば好きな処理を行うことも可能で、MyBatis 自身も内部的に結果リストを構築するために ResultHandler を利用しています。</p>
+  <p>3.4.6 以降では、CALLABLE ステートメントに渡された ResultHandler は、指定されたストアド・プロシージャで宣言されている REFCURSOR 型の OUT 引数全てに対して適用されます。</p>
   <p>ResultHandler インターフェイスは非常にシンプルです。</p>  
-  <source>package org.mybatis.executor.result;
-public interface ResultHandler {
-  void handleResult(ResultContext context);
-}</source>
+  <source><![CDATA[package org.mybatis.executor.result;
+public interface ResultHandler<T> {
+  void handleResult(ResultContext<? extends T> context);
+}]]></source>
 
   <p>引数 ResultContext を介して結果オブジェクトにアクセスすることができます。ResultContext#getResultCount() メソッドは作成された結果オブジェクトの数を返します。ResultContext#stop() メソッドを呼び出すと、それ以上結果を読み込まないよう MyBatis に指示します。</p>
   
@@ -231,6 +231,10 @@ public interface ResultHandler {
   <li>ResultHandler を引数に取るメソッドから返されるデータはキャッシュされません。</li>
   <li>複雑な ResultMap では複数行のデータがひとつのオブジェクトにマッピングされることもあります。こうした ResultMap を ResultHandler と併用する際、association や collection のデータがマッピングされる前の状態のオブジェクトが渡される場合があります。</li>
   </ul>
+
+  <h5>バッチ更新ステートメントをフラッシュするメソッド</h5>
+  <p>バッチ更新用に JDBC ドライバ内に蓄積されたステートメントを任意のタイミングでデータベースへフラッシュ(実行)するメソッドがあります。このメソッドは、 <code>ExecutorType</code> として <code>ExecutorType.BATCH</code> を使用している場合に使用することができます。</p>
+  <source><![CDATA[List<BatchResult> flushStatements()]]></source>
 
   <h5>トランザクションを制御するメソッド</h5>
   <p>トランザクションのスコープを制御するメソッドは４つあります。当然ですが、auto-commit を使用する場合や、外部のトランザクションマネージャーを使っている場合、これらのメソッドは効果がありません。しかし、Connection のインスタンスによって管理されている JDBC トランザクションマネージャーを利用している場合は便利なメソッドです。</p>
@@ -318,13 +322,24 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
         <td><code>@CacheNamespace</code></td>
         <td><code>Class</code></td>
         <td><code>&lt;cache&gt;</code></td>
-        <td>アノテーションを付加したネームスペース（＝クラス）に対するキャッシュを設定します。属性: <code>implementation</code>, <code>eviction</code>, <code>flushInterval</code>, <code>size</code>, <code>readWrite</code></td>
+        <td>アノテーションを付加したネームスペース（＝クラス）に対するキャッシュを設定します。属性: <code>implementation</code>, <code>eviction</code>, <code>flushInterval</code>, <code>size</code>, <code>readWrite</code>, <code>blocking</code>, <code>properties</code></td>
+      </tr>
+      <tr>
+        <td><code>@Property</code></td>
+        <td>N/A</td>
+        <td><code>&lt;property&gt;</code></td>
+        <td>プロパティ値またはプレースホルダ(<code>mybatis-config.xml</code>で定義した構成プロパティで置き換えすることができる)を指定します。属性: <code>name</code>, <code>value</code>。 (MyBatis 3.4.2+で利用可能)</td>
       </tr>
       <tr>
         <td><code>@CacheNamespaceRef</code></td>
         <td><code>Class</code></td>
         <td><code>&lt;cacheRef&gt;</code></td>
-        <td>別のネームスペースに対して定義されているキャッシュの設定を参照します。 単一値 <code>value</code> として参照先のキャッシュが定義されているネームスペース（完全修飾クラス名）を指定します。</td>
+        <td>
+          別のネームスペースに対して定義されているキャッシュの設定を参照します。XML マッパーで宣言されているキャッシュは、namespace に同一 FQCN が指定されていても独立したキャッシュとして扱われます。属性: <code>value</code>, <code>name</code>
+          このアノテーションを使用する場合は、<code>value</code>または<code>name</code>属性のどちらかを指定する必要があります。
+          <code>value</code>属性にはネームスペースを示すJava型(ネームスペース名は指定したJava型のFQCNになる)を、
+          <code>name</code>属性(この属性は3.4.2以降で利用可能)にはネームスペースを示す名前を指定します。
+        </td>
       </tr>
       <tr>
         <td><code>@ConstructorArgs</code></td>
@@ -334,7 +349,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
       </tr>
       <tr>
         <td><code>@Arg</code></td>
-        <td><code>Method</code></td>
+        <td>N/A</td>
         <td>
           <ul>
             <li><code>&lt;arg&gt;</code></li>
@@ -354,7 +369,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
       </tr>
       <tr>
         <td><code>@Case</code></td>
-        <td><code>Method</code></td>
+        <td>N/A</td>
         <td><code>&lt;case&gt;</code></td>
         <td>値と対応するマッピングを含む個々の判定条件です。属性: <code>value</code>, <code>type</code>,
         <code>results</code>. results は Result の配列を値に取るので、この Case アノテーションは次に挙げる <code>Results</code> アノテーションによって定義される実際の resultMap に近いものです。</td>
@@ -363,11 +378,11 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
         <td><code>@Results</code></td>
         <td><code>Method</code></td>
         <td><code>&lt;resultMap&gt;</code></td>
-        <td>ある結果列とプロパティまたはフィールドのマッピング情報を定義する Results のリストです。単一値である <code>value</code> は <code>Result</code> アノテーションの配列です。</td>
+        <td>ある結果列とプロパティまたはフィールドのマッピング情報を定義する Results のリストです。属性: <code>value</code>, <code>id</code>. value 属性は <code>Result</code> アノテーションの配列です。 id 属性でマッピング情報の名前を指定することができます。</td>
       </tr>
       <tr>
         <td><code>@Result</code></td>
-        <td><code>Method</code></td>
+        <td>N/A</td>
         <td>
           <ul>
             <li><code>&lt;result&gt;</code></li>
@@ -380,7 +395,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
       </tr>
       <tr>
         <td><code>@One</code></td>
-        <td><code>Method</code></td>
+        <td>N/A</td>
         <td><code>&lt;association&gt;</code></td>
         <td>複雑型のプロパティのマッピング情報を定義します。属性: <code>select</code>, <code>fetchType</code>. select は適切な型を読み込むことができるマップドステートメント（Mapper メソッド）の完全修飾名です。
         fetchType はグローバルな設定 <code>lazyLoadingEnabled</code> をオーバーライドする場合に指定します。
@@ -388,7 +403,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
       </tr>
       <tr>
         <td><code>@Many</code></td>
-        <td><code>Method</code></td>
+        <td>N/A</td>
         <td><code>&lt;collection&gt;</code></td>
         <td>複雑型のプロパティのマッピング情報を定義します。属性: <code>select</code>, <code>fetchType</code>. select は適切な型のコレクションを読み込むことができるマップドステートメント（Mapper メソッド）の完全修飾名です。
         fetchType はグローバルな設定 <code>lazyLoadingEnabled</code> をオーバーライドする場合に指定します。
@@ -405,9 +420,9 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
         <td><code>Method</code></td>
         <td>マップドステートメントの属性</td>
         <td>このアノテーションを使うと、通常マップドステートメントの属性として指定される多様なスイッチや設定オプションにアクセスすることができます。<code>Options</code> アノテーションによって、各ステートメントのアノテーションを複雑化することなく、一貫したクリーンな方法で設定にアクセスできるよう工夫されています。キー: Attributes:
-        <code>useCache=true</code>, <code>flushCache=false</code>, <code>resultSetType=FORWARD_ONLY</code>,
+        <code>useCache=true</code>, <code>flushCache=FlushCachePolicy.DEFAULT</code>, <code>resultSetType=FORWARD_ONLY</code>,
         <code>statementType=PREPARED</code>, <code>fetchSize=-1</code>, <code>timeout=-1</code>,
-        <code>useGeneratedKeys=false</code>, <code>keyProperty="id"</code>, <code>keyColumn=""</code>.
+        <code>useGeneratedKeys=false</code>, <code>keyProperty="id"</code>, <code>keyColumn=""</code>, <code>resultSets=""</code>.
         Java アノテーションを使う場合、値として <code>null</code> を指定することはできないという制限があります。これはどういうことかというと、<code>Options</code> アノテーションを付加したステートメントにはデフォルトのオプションが適用されるということです。予期しない動作を防ぐため、各オプションのデフォルト値を把握しておくようにしてください。<br/><br/>
         <code>keyColumn</code> は特定のデータベース（Oracle や PostgreSQL など）でのみ必須となります。
         <code>keyColumn</code> と <code>keyProperty</code> に対して指定可能な値については、上で出てきた insert ステートメントについての説明を参照してください。</td>
@@ -450,9 +465,10 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
             <li><code>&lt;select&gt;</code></li>
           </ul>
         </td>
-        <td>これらのアノテーションは動的 SQL を生成するためのものです。実行時に指定されたメソッドが呼び出され、メソッドから返された SQL ステートメントが実行されます。マップドステートメントを実行する際、プロバイダーによって指定したクラスのインスタンスが作成され、指定されたメソッドが実行されます。
-        <u>メソッドに引数オブジェクトを渡すこともできますが、指定できる引数は一つだけです（または引数なし）。</u>
-        キー: <code>type</code>, <code>method</code>. type は完全修飾クラス名、method はそのクラスのメソッド名です。 <span class="label important">NOTE</span> 次の章で、クリーンで可読性の高いコードで動的 SQL を構築するための SelectBuilder クラスについて説明します。
+        <td>これらのアノテーションは動的 SQL を生成するためのものです。実行時に指定されたメソッドが呼び出され、メソッドから返された SQL ステートメントが実行されます (MyBatis 3.4.6以降では、メソッドの返り値として <code>String</code> ではなく <code>CharSequence</code> を指定することができます)。
+        マップドステートメントを実行する際、プロバイダーによって指定したクラスのインスタンスが作成され、指定されたメソッドが実行されます。
+        なお、メソッド引数にはMapperメソッドの引数に渡したオブジェクトに加え、<code>ProviderContext</code>(MyBatis 3.4.5以降で利用可能)を介して「Mapperインタフェースの型」と「Mapperメソッド」を渡すことができます。(MyBatis 3.4以降では、複数の引数を渡すことができます)
+        キー: <code>type</code>, <code>method</code>. <code>type</code> にはクラスオブジェクト、<code>method</code> にはメソッド名を指定します。 <span class="label important">NOTE</span> 次の章で、クリーンで可読性の高いコードで動的 SQL を構築するためのクラスについて説明します。
 </td>
       </tr>
       <tr>
@@ -481,6 +497,12 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
         <td>N/A</td>
         <td>ResultHandler を使うメソッドでは戻り値の型が void となるので、このアノテーションを使って各行のデータをどのクラスにマップするかを指定します。XMLの ResultMap が存在する場合は @ResultMap アノテーションで指定することができます。XML の <code>&lt;select&gt;</code> 要素で resultType が指定されている場合はアノテーションによる指定は不要です。それ以外の場合、例えば @Select アノテーションが付加された引数に ResultHandler を含むメソッドの場合は戻り値の型は void である必要があるので、このアノテーション（あるいは @ResultMap）を使って型を指定する必要があります。メソッドの戻り値の型が void 以外の場合、このアノテーションは無視されます。</td>
       </tr>
+      <tr>
+        <td><code>@Flush</code></td>
+        <td><code>Method</code></td>
+        <td>N/A</td>
+        <td>このアノテーションを使用すると、<code>SqlSession#flushStatements()</code>メソッドを Mapper インタフェースに定義したメソッド経由で呼び出すことができます。(MyBatis 3.3以上)</td>
+      </tr>
     </tbody>
   </table>
 
@@ -494,6 +516,74 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
   <source>@Insert("insert into table2 (name) values(#{name})")
 @SelectKey(statement="call identity()", keyProperty="nameId", before=<strong>false</strong>, resultType=<strong>int.class</strong>)
 <strong>int</strong> insertTable2(Name name);</source>
+
+  <p>次のコードは <code>@Flush</code> アノテーションを使って <code>SqlSession#flushStatements()</code>メソッドを呼び出す例です。</p>
+  <source><![CDATA[@Flush
+List<BatchResult> flush();]]></source>
+
+  <p>次のコードは @Results アノテーションの id 属性で名前を指定する例です。</p>
+  <source>@Results(id = "userResult", value = {
+  @Result(property = "id", column = "uid", id = <strong>true</strong>),
+  @Result(property = "firstName", column = "first_name"),
+  @Result(property = "lastName", column = "last_name")
+})
+@Select("select * from users where id = #{id}")
+User getUserById(Integer id);
+
+@Results(id = "companyResults")
+@ConstructorArgs({
+  @Arg(property = "id", column = "cid", id = <strong>true</strong>),
+  @Arg(property = "name", column = "name")
+})
+@Select("select * from company where id = #{id}")
+Company getCompanyById(Integer id);</source>
+
+  <p>次のコードは SQLプロバイダー用のアノテーションを使用して、パラメータをひとつ受け取る例です。</p>
+  <source><![CDATA[@SelectProvider(type = UserSqlBuilder.class, method = "buildGetUsersByName")
+List<User> getUsersByName(String name);
+
+class UserSqlBuilder {
+  public static String buildGetUsersByName(final String name) {
+    return new SQL(){{
+      SELECT("*");
+      FROM("users");
+      if (name != null) {
+        WHERE("name like #{value} || '%'");
+      }
+      ORDER_BY("id");
+    }}.toString();
+  }
+}]]></source>
+
+  <p>次のコードは SQLプロバイダー用のアノテーションを使用して、複数パラメータをひとつ受け取る例です。</p>
+  <source><![CDATA[@SelectProvider(type = UserSqlBuilder.class, method = "buildGetUsersByName")
+List<User> getUsersByName(
+    @Param("name") String name, @Param("orderByColumn") String orderByColumn);
+
+class UserSqlBuilder {
+
+  // @Paramを使わない場合は, Mapperメソッドと同じ引数で定義する必要があります。
+  public static String buildGetUsersByName(
+      final String name, final String orderByColumn) {
+    return new SQL(){{
+      SELECT("*");
+      FROM("users");
+      WHERE("name like #{name} || '%'");
+      ORDER_BY(orderByColumn);
+    }}.toString();
+  }
+
+  // @Paramを使う場合は, 必要な引数のみ定義することができます。
+  public static String buildGetUsersByName(@Param("orderByColumn") final String orderByColumn) {
+    return new SQL(){{
+      SELECT("*");
+      FROM("users");
+      WHERE("name like #{name} || '%'");
+      ORDER_BY(orderByColumn);
+    }}.toString();
+  }
+}]]></source>
+
   </subsection>
 
   </section>

@@ -1,5 +1,5 @@
-/*
- *    Copyright 2009-2012 the original author or authors.
+/**
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,20 +15,22 @@
  */
 package org.apache.ibatis.reflection;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.ReflectPermission;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
+import java.util.Map.Entry;
 
 import org.apache.ibatis.reflection.invoker.GetFieldInvoker;
 import org.apache.ibatis.reflection.invoker.Invoker;
@@ -36,31 +38,26 @@ import org.apache.ibatis.reflection.invoker.MethodInvoker;
 import org.apache.ibatis.reflection.invoker.SetFieldInvoker;
 import org.apache.ibatis.reflection.property.PropertyNamer;
 
-/*
+/**
  * This class represents a cached set of class definition information that
  * allows for easy mapping between property names and getter/setter methods.
- */
-/**
+ *
  * @author Clinton Begin
  */
 public class Reflector {
 
-  private static boolean classCacheEnabled = true;
-  private static final String[] EMPTY_STRING_ARRAY = new String[0];
-  private static final ConcurrentMap<Class<?>, Reflector> REFLECTOR_MAP = new ConcurrentHashMap<Class<?>, Reflector>();
-
-  private Class<?> type;
-  private String[] readablePropertyNames = EMPTY_STRING_ARRAY;
-  private String[] writeablePropertyNames = EMPTY_STRING_ARRAY;
-  private Map<String, Invoker> setMethods = new HashMap<String, Invoker>();
-  private Map<String, Invoker> getMethods = new HashMap<String, Invoker>();
-  private Map<String, Class<?>> setTypes = new HashMap<String, Class<?>>();
-  private Map<String, Class<?>> getTypes = new HashMap<String, Class<?>>();
+  private final Class<?> type;
+  private final String[] readablePropertyNames;
+  private final String[] writeablePropertyNames;
+  private final Map<String, Invoker> setMethods = new HashMap<String, Invoker>();
+  private final Map<String, Invoker> getMethods = new HashMap<String, Invoker>();
+  private final Map<String, Class<?>> setTypes = new HashMap<String, Class<?>>();
+  private final Map<String, Class<?>> getTypes = new HashMap<String, Class<?>>();
   private Constructor<?> defaultConstructor;
 
   private Map<String, String> caseInsensitivePropertyMap = new HashMap<String, String>();
 
-  private Reflector(Class<?> clazz) {
+  public Reflector(Class<?> clazz) {
     type = clazz;
     addDefaultConstructor(clazz);
     addGetMethods(clazz);
@@ -98,59 +95,59 @@ public class Reflector {
     Map<String, List<Method>> conflictingGetters = new HashMap<String, List<Method>>();
     Method[] methods = getClassMethods(cls);
     for (Method method : methods) {
+      if (method.getParameterTypes().length > 0) {
+        continue;
+      }
       String name = method.getName();
-      if (name.startsWith("get") && name.length() > 3) {
-        if (method.getParameterTypes().length == 0) {
-          name = PropertyNamer.methodToProperty(name);
-          addMethodConflict(conflictingGetters, name, method);
-        }
-      } else if (name.startsWith("is") && name.length() > 2) {
-        if (method.getParameterTypes().length == 0) {
-          name = PropertyNamer.methodToProperty(name);
-          addMethodConflict(conflictingGetters, name, method);
-        }
+      if ((name.startsWith("get") && name.length() > 3)
+          || (name.startsWith("is") && name.length() > 2)) {
+        name = PropertyNamer.methodToProperty(name);
+        addMethodConflict(conflictingGetters, name, method);
       }
     }
     resolveGetterConflicts(conflictingGetters);
   }
 
   private void resolveGetterConflicts(Map<String, List<Method>> conflictingGetters) {
-    for (String propName : conflictingGetters.keySet()) {
-      List<Method> getters = conflictingGetters.get(propName);
-      Iterator<Method> iterator = getters.iterator();
-      Method firstMethod = iterator.next();
-      if (getters.size() == 1) {
-        addGetMethod(propName, firstMethod);
-      } else {
-        Method getter = firstMethod;
-        Class<?> getterType = firstMethod.getReturnType();
-        while (iterator.hasNext()) {
-          Method method = iterator.next();
-          Class<?> methodType = method.getReturnType();
-          if (methodType.equals(getterType)) {
-            throw new ReflectionException("Illegal overloaded getter method with ambiguous type for property " 
-                + propName + " in class " + firstMethod.getDeclaringClass()
-                + ".  This breaks the JavaBeans " + "specification and can cause unpredicatble results.");
-          } else if (methodType.isAssignableFrom(getterType)) {
-            // OK getter type is descendant
-          } else if (getterType.isAssignableFrom(methodType)) {
-            getter = method;
-            getterType = methodType;
-          } else {
-            throw new ReflectionException("Illegal overloaded getter method with ambiguous type for property " 
-                + propName + " in class " + firstMethod.getDeclaringClass()
-                + ".  This breaks the JavaBeans " + "specification and can cause unpredicatble results.");
-          }
+    for (Entry<String, List<Method>> entry : conflictingGetters.entrySet()) {
+      Method winner = null;
+      String propName = entry.getKey();
+      for (Method candidate : entry.getValue()) {
+        if (winner == null) {
+          winner = candidate;
+          continue;
         }
-        addGetMethod(propName, getter);
+        Class<?> winnerType = winner.getReturnType();
+        Class<?> candidateType = candidate.getReturnType();
+        if (candidateType.equals(winnerType)) {
+          if (!boolean.class.equals(candidateType)) {
+            throw new ReflectionException(
+                "Illegal overloaded getter method with ambiguous type for property "
+                    + propName + " in class " + winner.getDeclaringClass()
+                    + ". This breaks the JavaBeans specification and can cause unpredictable results.");
+          } else if (candidate.getName().startsWith("is")) {
+            winner = candidate;
+          }
+        } else if (candidateType.isAssignableFrom(winnerType)) {
+          // OK getter type is descendant
+        } else if (winnerType.isAssignableFrom(candidateType)) {
+          winner = candidate;
+        } else {
+          throw new ReflectionException(
+              "Illegal overloaded getter method with ambiguous type for property "
+                  + propName + " in class " + winner.getDeclaringClass()
+                  + ". This breaks the JavaBeans specification and can cause unpredictable results.");
+        }
       }
+      addGetMethod(propName, winner);
     }
   }
 
   private void addGetMethod(String name, Method method) {
     if (isValidPropertyName(name)) {
       getMethods.put(name, new MethodInvoker(method));
-      getTypes.put(name, method.getReturnType());
+      Type returnType = TypeParameterResolver.resolveReturnType(method, type);
+      getTypes.put(name, typeToClass(returnType));
     }
   }
 
@@ -181,42 +178,77 @@ public class Reflector {
   private void resolveSetterConflicts(Map<String, List<Method>> conflictingSetters) {
     for (String propName : conflictingSetters.keySet()) {
       List<Method> setters = conflictingSetters.get(propName);
-      Method firstMethod = setters.get(0);
-      if (setters.size() == 1) {
-        addSetMethod(propName, firstMethod);
-      } else {
-        Class<?> expectedType = getTypes.get(propName);
-        if (expectedType == null) {
-          throw new ReflectionException("Illegal overloaded setter method with ambiguous type for property "
-              + propName + " in class " + firstMethod.getDeclaringClass() + ".  This breaks the JavaBeans " +
-              "specification and can cause unpredicatble results.");
-        } else {
-          Iterator<Method> methods = setters.iterator();
-          Method setter = null;
-          while (methods.hasNext()) {
-            Method method = methods.next();
-            if (method.getParameterTypes().length == 1
-                && expectedType.equals(method.getParameterTypes()[0])) {
-              setter = method;
-              break;
-            }
+      Class<?> getterType = getTypes.get(propName);
+      Method match = null;
+      ReflectionException exception = null;
+      for (Method setter : setters) {
+        Class<?> paramType = setter.getParameterTypes()[0];
+        if (paramType.equals(getterType)) {
+          // should be the best match
+          match = setter;
+          break;
+        }
+        if (exception == null) {
+          try {
+            match = pickBetterSetter(match, setter, propName);
+          } catch (ReflectionException e) {
+            // there could still be the 'best match'
+            match = null;
+            exception = e;
           }
-          if (setter == null) {
-            throw new ReflectionException("Illegal overloaded setter method with ambiguous type for property "
-                + propName + " in class " + firstMethod.getDeclaringClass() + ".  This breaks the JavaBeans " +
-                "specification and can cause unpredicatble results.");
-          }
-          addSetMethod(propName, setter);
         }
       }
+      if (match == null) {
+        throw exception;
+      } else {
+        addSetMethod(propName, match);
+      }
     }
+  }
+
+  private Method pickBetterSetter(Method setter1, Method setter2, String property) {
+    if (setter1 == null) {
+      return setter2;
+    }
+    Class<?> paramType1 = setter1.getParameterTypes()[0];
+    Class<?> paramType2 = setter2.getParameterTypes()[0];
+    if (paramType1.isAssignableFrom(paramType2)) {
+      return setter2;
+    } else if (paramType2.isAssignableFrom(paramType1)) {
+      return setter1;
+    }
+    throw new ReflectionException("Ambiguous setters defined for property '" + property + "' in class '"
+        + setter2.getDeclaringClass() + "' with types '" + paramType1.getName() + "' and '"
+        + paramType2.getName() + "'.");
   }
 
   private void addSetMethod(String name, Method method) {
     if (isValidPropertyName(name)) {
       setMethods.put(name, new MethodInvoker(method));
-      setTypes.put(name, method.getParameterTypes()[0]);
+      Type[] paramTypes = TypeParameterResolver.resolveParamTypes(method, type);
+      setTypes.put(name, typeToClass(paramTypes[0]));
     }
+  }
+
+  private Class<?> typeToClass(Type src) {
+    Class<?> result = null;
+    if (src instanceof Class) {
+      result = (Class<?>) src;
+    } else if (src instanceof ParameterizedType) {
+      result = (Class<?>) ((ParameterizedType) src).getRawType();
+    } else if (src instanceof GenericArrayType) {
+      Type componentType = ((GenericArrayType) src).getGenericComponentType();
+      if (componentType instanceof Class) {
+        result = Array.newInstance((Class<?>) componentType, 0).getClass();
+      } else {
+        Class<?> componentClass = typeToClass(componentType);
+        result = Array.newInstance((Class<?>) componentClass, 0).getClass();
+      }
+    }
+    if (result == null) {
+      result = Object.class;
+    }
+    return result;
   }
 
   private void addFields(Class<?> clazz) {
@@ -252,14 +284,16 @@ public class Reflector {
   private void addSetField(Field field) {
     if (isValidPropertyName(field.getName())) {
       setMethods.put(field.getName(), new SetFieldInvoker(field));
-      setTypes.put(field.getName(), field.getType());
+      Type fieldType = TypeParameterResolver.resolveFieldType(field, type);
+      setTypes.put(field.getName(), typeToClass(fieldType));
     }
   }
 
   private void addGetField(Field field) {
     if (isValidPropertyName(field.getName())) {
       getMethods.put(field.getName(), new GetFieldInvoker(field));
-      getTypes.put(field.getName(), field.getType());
+      Type fieldType = TypeParameterResolver.resolveFieldType(field, type);
+      getTypes.put(field.getName(), typeToClass(fieldType));
     }
   }
 
@@ -282,7 +316,7 @@ public class Reflector {
     while (currentClass != null) {
       addUniqueMethods(uniqueMethods, currentClass.getDeclaredMethods());
 
-      // we also need to look for interface methods - 
+      // we also need to look for interface methods -
       // because the class may be abstract
       Class<?>[] interfaces = currentClass.getInterfaces();
       for (Class<?> anInterface : interfaces) {
@@ -455,33 +489,5 @@ public class Reflector {
 
   public String findPropertyName(String name) {
     return caseInsensitivePropertyMap.get(name.toUpperCase(Locale.ENGLISH));
-  }
-
-  /*
-   * Gets an instance of ClassInfo for the specified class.
-   *
-   * @param clazz The class for which to lookup the method cache.
-   * @return The method cache for the class
-   */
-  public static Reflector forClass(Class<?> clazz) {
-    if (classCacheEnabled) {
-      // synchronized (clazz) removed see issue #461
-      Reflector cached = REFLECTOR_MAP.get(clazz);
-      if (cached == null) {
-        cached = new Reflector(clazz);
-        REFLECTOR_MAP.put(clazz, cached);
-      }
-      return cached;
-    } else {
-      return new Reflector(clazz);
-    }
-  }
-
-  public static void setClassCacheEnabled(boolean classCacheEnabled) {
-    Reflector.classCacheEnabled = classCacheEnabled;
-  }
-
-  public static boolean isClassCacheEnabled() {
-    return classCacheEnabled;
   }
 }

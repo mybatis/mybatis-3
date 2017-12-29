@@ -1,5 +1,5 @@
-/*
- *    Copyright 2009-2012 the original author or authors.
+/**
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -28,6 +28,7 @@ import org.apache.ibatis.mapping.ParameterMode;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.type.JdbcType;
+import org.apache.ibatis.type.TypeException;
 import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.TypeHandlerRegistry;
 
@@ -41,8 +42,8 @@ public class DefaultParameterHandler implements ParameterHandler {
 
   private final MappedStatement mappedStatement;
   private final Object parameterObject;
-  private BoundSql boundSql;
-  private Configuration configuration;
+  private final BoundSql boundSql;
+  private final Configuration configuration;
 
   public DefaultParameterHandler(MappedStatement mappedStatement, Object parameterObject, BoundSql boundSql) {
     this.mappedStatement = mappedStatement;
@@ -58,7 +59,7 @@ public class DefaultParameterHandler implements ParameterHandler {
   }
 
   @Override
-  public void setParameters(PreparedStatement ps) throws SQLException {
+  public void setParameters(PreparedStatement ps) {
     ErrorContext.instance().activity("setting parameters").object(mappedStatement.getParameterMap().getId());
     List<ParameterMapping> parameterMappings = boundSql.getParameterMappings();
     if (parameterMappings != null) {
@@ -82,7 +83,13 @@ public class DefaultParameterHandler implements ParameterHandler {
           if (value == null && jdbcType == null) {
             jdbcType = configuration.getJdbcTypeForNull();
           }
-          typeHandler.setParameter(ps, i + 1, value, jdbcType);
+          try {
+            typeHandler.setParameter(ps, i + 1, value, jdbcType);
+          } catch (TypeException e) {
+            throw new TypeException("Could not set parameters for mapping: " + parameterMapping + ". Cause: " + e, e);
+          } catch (SQLException e) {
+            throw new TypeException("Could not set parameters for mapping: " + parameterMapping + ". Cause: " + e, e);
+          }
         }
       }
     }

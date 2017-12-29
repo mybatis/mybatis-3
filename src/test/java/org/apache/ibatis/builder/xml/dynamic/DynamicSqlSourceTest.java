@@ -1,5 +1,5 @@
-/*
- *    Copyright 2009-2011 the original author or authors.
+/**
+ *    Copyright 2009-2015 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -315,6 +315,17 @@ public class DynamicSqlSourceTest extends BaseDataTest {
     assertEquals("__frch_item_0", boundSql.getParameterMappings().get(0).getProperty());
     assertEquals("__frch_item_1", boundSql.getParameterMappings().get(1).getProperty());
     assertEquals("__frch_item_2", boundSql.getParameterMappings().get(2).getProperty());
+  }
+
+  @Test
+  public void shouldHandleOgnlExpression() throws Exception {
+    final HashMap<String, String> parameterObject = new HashMap<String, String>() {{
+      put("name", "Steve");
+    }};
+    final String expected = "Expression test: 3 / yes.";
+    DynamicSqlSource source = createDynamicSqlSource(new TextSqlNode("Expression test: ${name.indexOf('v')} / ${name in {'Bob', 'Steve'\\} ? 'yes' : 'no'}."));
+    BoundSql boundSql = source.getBoundSql(parameterObject);
+    assertEquals(expected, boundSql.getSql());
   }
 
   @Test

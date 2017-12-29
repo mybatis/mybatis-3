@@ -1,5 +1,5 @@
-/*
- *    Copyright 2009-2012 the original author or authors.
+/**
+ *    Copyright 2009-2016 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -51,9 +51,9 @@ public interface ObjectFactory {
    * Returns true if this object can have a set of other objects.
    * It's main purpose is to support non-java.util.Collection objects like Scala collections.
    * 
-   * @since 3.1.0
    * @param type Object type
    * @return whether it is a collection or not
+   * @since 3.1.0
    */
   <T> boolean isCollection(Class<T> type);
 

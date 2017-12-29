@@ -1,5 +1,5 @@
-/*
- *    Copyright 2009-2012 the original author or authors.
+/**
+ *    Copyright 2009-2016 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -25,24 +25,50 @@ public class DoubleTypeHandlerTest extends BaseTypeHandlerTest {
 
   private static final TypeHandler<Double> TYPE_HANDLER = new DoubleTypeHandler();
 
+  @Override
   @Test
   public void shouldSetParameter() throws Exception {
     TYPE_HANDLER.setParameter(ps, 1, 100d, null);
     verify(ps).setDouble(1, 100d);
   }
 
+  @Override
   @Test
-  public void shouldGetResultFromResultSet() throws Exception {
+  public void shouldGetResultFromResultSetByName() throws Exception {
     when(rs.getDouble("column")).thenReturn(100d);
     when(rs.wasNull()).thenReturn(false);
     assertEquals(new Double(100d), TYPE_HANDLER.getResult(rs, "column"));
   }
 
+  @Override
+  public void shouldGetResultNullFromResultSetByName() throws Exception {
+    // Unnecessary
+  }
+
+  @Override
+  @Test
+  public void shouldGetResultFromResultSetByPosition() throws Exception {
+    when(rs.getDouble(1)).thenReturn(100d);
+    when(rs.wasNull()).thenReturn(false);
+    assertEquals(new Double(100d), TYPE_HANDLER.getResult(rs, 1));
+  }
+
+  @Override
+  public void shouldGetResultNullFromResultSetByPosition() throws Exception {
+    // Unnecessary
+  }
+
+  @Override
   @Test
   public void shouldGetResultFromCallableStatement() throws Exception {
     when(cs.getDouble(1)).thenReturn(100d);
     when(cs.wasNull()).thenReturn(false);
     assertEquals(new Double(100d), TYPE_HANDLER.getResult(cs, 1));
+  }
+
+  @Override
+  public void shouldGetResultNullFromCallableStatement() throws Exception {
+    // Unnecessary
   }
 
 }

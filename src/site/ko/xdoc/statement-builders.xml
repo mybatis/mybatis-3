@@ -1,60 +1,494 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Copyright 2010-2012 the original author or authors.
 
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
+       Copyright 2009-2017 the original author or authors.
 
-    http://www.apache.org/licenses/LICENSE-2.0
+       Licensed under the Apache License, Version 2.0 (the "License");
+       you may not use this file except in compliance with the License.
+       You may obtain a copy of the License at
 
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
+          http://www.apache.org/licenses/LICENSE-2.0
+
+       Unless required by applicable law or agreed to in writing, software
+       distributed under the License is distributed on an "AS IS" BASIS,
+       WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+       See the License for the specific language governing permissions and
+       limitations under the License.
+
 -->
-
-<!-- version: $Id$ -->
-
 <document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+          xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
 
   <properties>
-    <title>MyBatis 3 | 구문 빌더</title>
+    <title>마이바티스 3 | SQL BUilder 클래스</title>
     <author email="clinton.begin@gmail.com">Clinton Begin</author>
-    <author email="fromm0@gmail.com">이동국(한국어 번역)</author>
+	<author email="fromm0@gmail.com">이동국(한국어 번역)</author>
   </properties>
 
   <body>
-   
-  <section name="구문 빌더">
-  <subsection name="Request For Translation">
-  <p>This section is outdated in the Korean version. Please refer to the English manual. Any help with the Korean translation will be really welcome.</p>
-  </subsection>
+    <section name="SQL Builder 클래스">
+      <subsection name="문제점">
+        <p>자바코드에서 SQL을 작성하는 작업은 자바 개발자를 가장 힘들게 하는 것중 하나이다. 
+		대개는 동적 SQL을 작성해야 하지만 종종 파일이나 저장프로시저에 작성해야 할수도 있다. 
+		이미 본것처럼 마이바티스는 XML매핑 기능으로 동적 SQL을 처리하는 강력한 기능을 제공한다. 
+		하지만 종종 자바 코드를 사용해서 SQL구문을 만들어야 할수도 있다. 
+		마이바티스는 이런 경우를 위한 기능도 제공한다. 
+		더하기 기호나 따옴표, 개행처리, 포매팅 그리고 콤마나 문자열을 합치는 등의 다양한 조건을 처리하지 않아도 되도록 해준다. 
+		정말 자바코드에서 SQL을 동적으로 만드는 것은 악몽과 같다. 
+		예를들어보자. 
+        </p>
 
-  <subsection name="SelectBuilder">
-  <p>자바 개발자에게 가장 끔찍한 일중 하나는 자바 코드에서 내장 SQL 을 처리하는 것이다. SQL 은 항상 동적으로 생성되기
-때문에 그렇다. 반면에 파일이나 저장 프로시저를 외부에 둘수도 있다. 이미 그렇게 하고 있다면, MyBatis 는 XML 매핑에서
-동적으로 SQL 을 생성하기 위한 강력한 대답이 될 것이다. 어쨌든 때때로 자바코드에서 SQL 구문을 문자열을 만들어야 할
-필요가 종종 있다. 이 경우, MyBatis 는 좀더 쉽게 만들도록 해준다. 이 기능은 + 기호, 따옴표, 개행문자 그리고 콤마와
-AND 등의 포맷팅에 관련된 작업을 줄여준다. 자바 코드에서 SQL 코드를 동적으로 생성하는 것은 정말 끔찍하다.</p>
-  <p>MyBatis 3 은 이 문제는 다루기 위해 다른 컨셉을 소개한다. 단계별로 SQL 구문을 만들도록 메서드를 호출하는 클래스의
-인스턴스를 생성 할 수 있다. 하지만 그 후 SQL 은 SQL 이라기 보다는 자바에 가까운 형태로 끝나게 된다. 대신 조금 다른
-것을 시도할 것이다.</p>
-  <p><strong>SelectBuilder 의 비밀</strong></p>
-  <p>SelectBuilder 클래스는 마법스럽지는 않다. 어떻게 작동하는지 모른다면 좋은 선택이라고 보기에도 어렵다. 그래서 바로
-살펴보자. SelectBuilder 는 깔끔한 문법이 가능하도록 Static Import 와 ThreadLocal 변수의 조합을 사용한다. 생성하는
-메서드는 다음과 같다.</p>
-<source><![CDATA[public String selectBlogsSql() {
-  BEGIN(); // Clears ThreadLocal variable
+        <source><![CDATA[
+String sql = "SELECT P.ID, P.USERNAME, P.PASSWORD, P.FULL_NAME, "
+"P.LAST_NAME,P.CREATED_ON, P.UPDATED_ON " +
+"FROM PERSON P, ACCOUNT A " +
+"INNER JOIN DEPARTMENT D on D.ID = P.DEPARTMENT_ID " +
+"INNER JOIN COMPANY C on D.COMPANY_ID = C.ID " +
+"WHERE (P.ID = A.ID AND P.FIRST_NAME like ?) " +
+"OR (P.LAST_NAME like ?) " +
+"GROUP BY P.ID " +
+"HAVING (P.LAST_NAME like ?) " +
+"OR (P.FIRST_NAME like ?) " +
+"ORDER BY P.ID, P.FULL_NAME";
+]]></source>
+      </subsection>
+      <subsection name="해결방법">
+      <p>마이바티스 3은 이런 문제를 해결하기 위해 편리한 클래스를 제공한다. 
+	  SQL클래스를 사용해서 인스턴스를 만들고 SQL구문을 만드는 메소드를 호출하자. 
+	  위 문제가 되는 예제를 SQL클래스를 사용해서 재작성하면 다음과 같다. 
+      </p>
+
+      <source><![CDATA[
+private String selectPersonSql() {
+  return new SQL() {{
+    SELECT("P.ID, P.USERNAME, P.PASSWORD, P.FULL_NAME");
+    SELECT("P.LAST_NAME, P.CREATED_ON, P.UPDATED_ON");
+    FROM("PERSON P");
+    FROM("ACCOUNT A");
+    INNER_JOIN("DEPARTMENT D on D.ID = P.DEPARTMENT_ID");
+    INNER_JOIN("COMPANY C on D.COMPANY_ID = C.ID");
+    WHERE("P.ID = A.ID");
+    WHERE("P.FIRST_NAME like ?");
+    OR();
+    WHERE("P.LAST_NAME like ?");
+    GROUP_BY("P.ID");
+    HAVING("P.LAST_NAME like ?");
+    OR();
+    HAVING("P.FIRST_NAME like ?");
+    ORDER_BY("P.ID");
+    ORDER_BY("P.FULL_NAME");
+  }}.toString();
+}
+]]></source>
+
+      <p>이 예제가 특별한게 뭘까? 자 조금더 자세히 보자. 
+	  "AND" 키워드가 중복으로 나오는 것이나 "WHERE"과 "AND"를 선택하는데 걱정할 필요가 없다. 
+	  SQL클래스는 "WHERE"가 필요한 위치를 이해하고 처리한다. 
+	  그리고 "AND"를 사용하고 문자열을 합쳐야 하는 부분에 대해서도 알고 처리한다. 
+        </p>
+
+      </subsection>
+
+      <subsection name="SQL 클래스">
+
+        <p>여기에 몇가지 예제가 있다. </p>
+
+        <source><![CDATA[
+// 익명 내부 클래스
+public String deletePersonSql() {
+  return new SQL() {{
+    DELETE_FROM("PERSON");
+    WHERE("ID = #{id}");
+  }}.toString();
+}
+
+// 빌더 / 깔끔한 형태
+public String insertPersonSql() {
+  String sql = new SQL()
+    .INSERT_INTO("PERSON");
+    .VALUES("ID, FIRST_NAME", "#{id}, #{firstName}");
+    .VALUES("LAST_NAME", "#{lastName}")
+    .toString();
+  return sql;
+}
+
+// 분기처리를 포함한 형태 (final 파라미터, 파라미터에 접근하는 익명 내부 클래스가 필요함)
+public String selectPersonLike(final String id, final String firstName, final String lastName) {
+  return new SQL() {{
+    SELECT("P.ID, P.USERNAME, P.PASSWORD, P.FIRST_NAME, P.LAST_NAME");
+    FROM("PERSON P");
+    if (id != null) {
+      WHERE("P.ID like #{id}");
+    }
+    if (firstName != null) {
+      WHERE("P.FIRST_NAME like #{firstName}");
+    }
+    if (lastName != null) {
+      WHERE("P.LAST_NAME like #{lastName}");
+    }
+    ORDER_BY("P.LAST_NAME");
+  }}.toString();
+}
+
+public String deletePersonSql() {
+  return new SQL() {{
+    DELETE_FROM("PERSON");
+    WHERE("ID = #{id}");
+  }}.toString();
+}
+
+public String insertPersonSql() {
+  return new SQL() {{
+    INSERT_INTO("PERSON");
+    VALUES("ID, FIRST_NAME", "#{id}, #{firstName}");
+    VALUES("LAST_NAME", "#{lastName}");
+  }}.toString();
+}
+
+public String updatePersonSql() {
+  return new SQL() {{
+    UPDATE("PERSON");
+    SET("FIRST_NAME = #{firstName}");
+    WHERE("ID = #{id}");
+  }}.toString();
+}
+]]></source>
+
+        <table>
+          <thead>
+            <tr>
+              <th>메소드</th>
+              <th>설명</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <ul>
+                  <li>
+                    <code>SELECT(String)</code>
+                  </li>
+                  <li>
+                    <code>SELECT(String...)</code>
+                  </li>
+                </ul>
+              </td>
+              <td><code>SELECT</code>절로 시작하거나 덧붙이기.
+			  한번 이상 호출할 수 있고 파라미터는 <code>SELECT</code>절에 덧붙일것이다.
+			  파라미터는 칼럼과 별칭의 목록을 콤마를 구분자로 나열하지만 드라이버에 따라 처리가 안될수도 있다. 
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <ul>
+                  <li>
+                    <code>SELECT_DISTINCT(String)</code>
+                  </li>
+                  <li>
+                    <code>SELECT_DISTINCT(String...)</code>
+                  </li>
+                </ul>
+              </td>
+              <td><code>SELECT</code>절로 시작하거나 덧붙이기.
+			  생성된 쿼리에 <code>DISTINCT</code>를 추가한다. 
+			  한번 이상 호출할 수 있고 파라미터는 <code>SELECT</code>절에 덧붙일것이다.
+			  파라미터는 칼럼과 별칭의 목록을 콤마를 구분자로 나열하지만 드라이버에 따라 처리가 안될수도 있다. 
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <ul>
+                  <li>
+                    <code>FROM(String)</code>
+                  </li>
+                  <li>
+                    <code>FROM(String...)</code>
+                  </li>
+                </ul>
+              </td>
+              <td><code>FROM</code>절로 시작하거나 덧붙이기.
+			  한번 이상 호출할 수 있고 파라미터는 <code>FROM</code>절에 덧붙일것이다.
+			  파라미터는 테이블명과 별칭이지만 드라이버에 따라 처리가 안될수도 있다. 
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <ul>
+                  <li>
+                    <code>JOIN(String)</code>
+                  </li>
+                  <li>
+                    <code>JOIN(String...)</code>
+                  </li>
+                  <li>
+                    <code>INNER_JOIN(String)</code>
+                  </li>
+                  <li>
+                    <code>INNER_JOIN(String...)</code>
+                  </li>
+                  <li>
+                    <code>LEFT_OUTER_JOIN(String)</code>
+                  </li>
+                  <li>
+                    <code>LEFT_OUTER_JOIN(String...)</code>
+                  </li>
+                  <li>
+                    <code>RIGHT_OUTER_JOIN(String)</code>
+                  </li>
+                  <li>
+                    <code>RIGHT_OUTER_JOIN(String...)</code>
+                  </li>
+                </ul>
+              </td>
+              <td>새로운 적절한 타입의 <code>JOIN</code>절을 추가.
+			  타입은 호출하는 메소드에 따라 다르다. 
+			  파라미터는 조인을 구성하는 칼럼과 조건이다. 
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <ul>
+                  <li>
+                    <code>WHERE(String)</code>
+                  </li>
+                  <li>
+                    <code>WHERE(String...)</code>
+                  </li>
+                </ul>
+              </td>
+              <td>새로운 <code>WHERE</code>절과 <code>AND</code>로 합친 조건을 덧붙인다. 
+			  여러번 호출할 수 있고 <code>AND</code>를 사용할때마다 새로운 조건을 합친다. 
+			  <code>OR</code>로 분리하려면 <code>OR()</code>를 사용하자. 
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>OR()</code>
+              </td>
+              <td><code>OR</code>를 사용해서 <code>WHERE</code>조건절을 분리한다. 
+			  여러번 호출할 수 있지만 한개의 로우에 여러번 호출할 경우 에러를 가진 <code>SQL</code>을 만들수도 있다. 
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>AND()</code>
+              </td>
+              <td><code>AND</code>를 가진 <code>WHERE</code>절을 분리한다. 
+			  여러번 호출할 수 있지만 여러번 호출할 경우 에러를 가진 <code>SQL</code>을 만들수도 있다. 
+			  <code>WHERE</code>와 <code>HAVING</code> 두가지는 <code>AND</code>를 자동으로 붙이기 때문에 
+			  흔하게 사용하지 않고 필요할때만 사용한다. 
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <ul>
+                  <li>
+                    <code>GROUP_BY(String)</code>
+                  </li>
+                  <li>
+                    <code>GROUP_BY(String...)</code>
+                  </li>
+                </ul>
+              </td>
+              <td>새로운 <code>GROUP BY</code>절을 콤마를 더해서 덧붙인다. 
+			  여러번 호출할 수 있고 개별 조건을 콤마를 붙여서 합칠 수 있다. 
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <ul>
+                  <li>
+                    <code>HAVING(String)</code>
+                  </li>
+                  <li>
+                    <code>HAVING(String...)</code>
+                  </li>
+                </ul>
+              </td>
+              <td>새로운 <code>HAVING</code>절을 AND를 더해서 덧붙인다. 
+			  여러번 호출할 수 있고 개별 조건을 <code>AND</code>를 붙여서 합칠 수 있다. 
+			  <code>OR</code>로 분리하기 위해서는 <code>OR</code>를 사용하자. 
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <ul>
+                  <li>
+                    <code>ORDER_BY(String)</code>
+                  </li>
+                  <li>
+                    <code>ORDER_BY(String...)</code>
+                  </li>
+                </ul>
+              </td>
+              <td>새로운 <code>ORDER BY</code>절을 콤마를 더해서 덧붙인다. 
+			  여러번 호출할 수 있고 개별조건을 콤마를 붙여서 합칠수 있다. 
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>DELETE_FROM(String)</code>
+              </td>
+              <td>delete구문을 시작하고 삭제할 테이블을 명시한다. 
+			  대개는 WHERE구문이 뒤에 붙여서 삭제한 대상 조건을 명시한다. 
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>INSERT_INTO(String)</code>
+              </td>
+              <td>insert구문을 시작하고 입력한 테이블을 명시한다. 
+			  VALUES() or INTO_COLUMNS() and INTO_VALUES() 메소드 호출은 여러번 해서 입력한 칼럼과 값을 명시한다.
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <ul>
+                  <li>
+                    <code>SET(String)</code>
+                  </li>
+                  <li>
+                    <code>SET(String...)</code>
+                  </li>
+                </ul>
+              </td>
+              <td>update구문에서 "set" 대상 목록을 덧붙인다. </td>
+            </tr>
+            <tr>
+              <td>
+                <code>UPDATE(String)</code>
+              </td>
+              <td>update구문을 시작하고 update수정할 테이블을 명시한다. 
+			  수정할 칼럼과 값을 명시하기 위해 SET()메소드 호출을 여러번 할수 있고 대개 수정할 대상 데이터를 한정하기 위해 WHERE()메소드도 호출한다. 
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>VALUES(String, String)</code>
+              </td>
+              <td>insert구문에 덧붙인다. 
+			  첫번째 파라미터는 입력한 칼럼이고 두번째 파라미터는 입력할 값이다. 
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>INTO_COLUMNS(String...)</code>
+              </td>
+              <td>
+                insert 구문에 columns 절을 추가한다.
+                반드시 INTO_VALUES()와 함께 호출되어야 한다.
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>INTO_VALUES(String...)</code>
+              </td>
+              <td>
+                insert 구문에 values 절을 추가한다.
+                반드시 INTO_COLUMNS()와 함께 호출되어야 한다.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p>3.4.2 버전부터, variable-length 매개변수를 아래와 같이 사용할 수 있습니다.</p>
+
+<source><![CDATA[
+public String selectPersonSql() {
+  return new SQL()
+    .SELECT("P.ID", "A.USERNAME", "A.PASSWORD", "P.FULL_NAME", "D.DEPARTMENT_NAME", "C.COMPANY_NAME")
+    .FROM("PERSON P", "ACCOUNT A")
+    .INNER_JOIN("DEPARTMENT D on D.ID = P.DEPARTMENT_ID", "COMPANY C on D.COMPANY_ID = C.ID")
+    .WHERE("P.ID = A.ID", "P.FULL_NAME like #{name}")
+    .ORDER_BY("P.ID", "P.FULL_NAME")
+    .toString();
+}
+
+public String insertPersonSql() {
+  return new SQL()
+    .INSERT_INTO("PERSON")
+    .INTO_COLUMNS("ID", "FULL_NAME")
+    .INTO_VALUES("#{id}", "#{fullName}")
+    .toString();
+}
+
+public String updatePersonSql() {
+  return new SQL()
+    .UPDATE("PERSON")
+    .SET("FULL_NAME = #{fullName}", "DATE_OF_BIRTH = #{dateOfBirth}")
+    .WHERE("ID = #{id}")
+    .toString();
+}
+]]></source>
+
+      </subsection>
+
+      <subsection name="SqlBuilder 와 SelectBuilder (향후 제거예정)">
+        <p>3.2버전 이전에는 다른 방법을 사용했다. 
+		자바 DSL을 다루기 힘든 언어의 제한점을 가리기 위해 ThreadLocal변수를 사용했다. 
+		하지만 이 방법은 이제 사용하지 않길 바란다. 
+		최근에는 빌더 타입의 패턴과 익명 내부 클래스를 사용하는 추세이다. 
+		그러므로 SelectBuilder 와 SqlBuilder는 향후 제거할 예정이다. 
+        </p>
+        <p>
+        다음에 나열된 메소드는 SqlBuilder 와 SelectBuilder클래스에서만 사용할 수 있다. 
+        </p>
+        <table>
+        <thead>
+          <tr>
+            <th>메소드</th>
+            <th>설명</th>
+          </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td>
+            <code>BEGIN()</code>
+            /
+            <code>RESET()</code>
+          </td>
+          <td>이 메소드는 SelectBuilder클래스의 ThreadLocal상태를 지우고 새로운 구문을 만들 준비를 한다. 
+		  <code>BEGIN()</code>은 새로운 구문을 시작할때 사용하는게 좋다. 
+		  <code>RESET()</code>은 처리중인 구문의 상태를 몇가지 사유로 지워야 할때 사용하는게 좋다. 
+		  (아마도 몇가지 사유로 완전히 다른 구문을 실행해야 할때 사용할것이다.)
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <code>SQL()</code>
+          </td>
+          <td>생성된 <code>SQL()</code>를 리턴하고 <code>SelectBuilder</code>상태를 재설정(마치 <code>BEGIN()</code>이나 <code>RESET()</code>을 호출한것처럼)한다. 
+		  이 메소드는 한번만 호출할 수 있다. 
+          </td>
+        </tr>
+        </tbody>
+        </table>
+
+        <p>
+		SelectBuilder와 SqlBuilder클래스가 신기하지는 않지만 이 클래스가 동작하는 방식을 아는게 중요하다. 
+		SelectBuilder와 SqlBuilder는 문법을 명확히 처리하기 위해 Static Imports와 ThreadLocal변수의 조합을 사용한다. 
+		이 두가지 클래스를 사용하기 위해 다음처럼 정적인 방법으로 import할 필요가 있다. 
+        </p>
+
+        <source>import static org.apache.ibatis.jdbc.SelectBuilder.*;</source>
+        <source>import static org.apache.ibatis.jdbc.SqlBuilder.*;</source>
+
+        <p>다음처럼 메소드를 생성하도록 해준다. </p>
+
+        <source><![CDATA[
+/* 향후 제거예정 */
+public String selectBlogsSql() {
+  BEGIN(); // ThreadLocal 변수 제거
   SELECT("*");
   FROM("BLOG");
   return SQL();
-}]]></source>  
-    <p>정적으로 빌드하는 매우 간단한 예제이다. 그래서 좀더 복잡한 예제를 보자.</p>
-<source><![CDATA[private String selectPersonSql() {
-  BEGIN(); // Clears ThreadLocal variable
+}
+        ]]></source>
+
+        <source><![CDATA[
+/* 향후 제거예정 */
+private String selectPersonSql() {
+  BEGIN(); // ThreadLocal 변수 제거
   SELECT("P.ID, P.USERNAME, P.PASSWORD, P.FULL_NAME");
   SELECT("P.LAST_NAME, P.CREATED_ON, P.UPDATED_ON");
   FROM("PERSON P");
@@ -72,229 +506,13 @@ AND 등의 포맷팅에 관련된 작업을 줄여준다. 자바 코드에서 SQ
   ORDER_BY("P.ID");
   ORDER_BY("P.FULL_NAME");
   return SQL();
-}]]></source>  
-    <p>위 SQL 이 빌드되면 다음의 문자열과 거의 같을 것이다. 예를 들면</p>
-<source><![CDATA["SELECT P.ID, P.USERNAME, P.PASSWORD, P.FULL_NAME, "
-"P.LAST_NAME,P.CREATED_ON, P.UPDATED_ON " +
-"FROM PERSON P, ACCOUNT A " +
-"INNER JOIN DEPARTMENT D on D.ID = P.DEPARTMENT_ID " +
-"INNER JOIN COMPANY C on D.COMPANY_ID = C.ID " +
-"WHERE (P.ID = A.ID AND P.FIRST_NAME like ?) " +
-"OR (P.LAST_NAME like ?) " +
-"GROUP BY P.ID " +
-"HAVING (P.LAST_NAME like ?) " +
-"OR (P.FIRST_NAME like ?) " +
-"ORDER BY P.ID, P.FULL_NAME";]]></source>  
-    <p>이러한 문법을 선호한다면, 이 기능을 사용해도 좋다. 아마도 다소 에러를 야기할 수도 있다. 각 라인마다 끝에 공백을
-추가하는 것을 잊지 말아야 한다. 지금부터 이 문법을 선호한다면, 다음 예제는 자바 문자열 처리보다 좀더 간단할 것이다.</p>
-<source><![CDATA[private String selectPersonLike(Person p){
-  BEGIN(); // Clears ThreadLocal variable
-  SELECT("P.ID, P.USERNAME, P.PASSWORD, P.FIRST_NAME, P.LAST_NAME");
-  FROM("PERSON P");
-  if (p.id != null) {
-  WHERE("P.ID like #{id}");
-  }
-  if (p.firstName != null) {
-  WHERE("P.FIRST_NAME like #{firstName}");
-  }
-  if (p.lastName != null) {
-  WHERE("P.LAST_NAME like #{lastName}");
-  }
-  ORDER_BY("P.LAST_NAME");
-  return SQL();
-}]]></source>  
-    <p>이 예제에서 다소 특별한건 무엇인가? 자 좀더 자세히 보자. “AND” 키워드가 중복되는 것에 대해서는 그다지 걱정하지
-않아도 된다. “WHERE” 와 “AND” 간의 선택하는 것도 그렇다. 예를 들어 위 구문은 PERSON 의 모든 레코드를 리턴하는
-쿼리를 생성할 것이다. 파라미터로 ID 또는 firstName, lastName 등 3 개의 조합을 가진다. SelectBuilder 는 “WHEN” 가
-어디서 필요한지 “AND”가 어디서 사용되는지 이해하는데 주의해야 한다. 무엇보다도 이러한 메서드의 호출 순서에 영향을
-받지 않는다.(단 OR() 메서드는 예외)</p>
-    <p>아마도 두개의 메서드가 먼저 보일 것이다. 두개의 메서드는 BEGIN() 과 SQL()이다. 먼저 SelectBuilder 의 모든 메서드는
-BEGIN()을 호출해서 시작하고 SQL()을 호출해서 끝난다. 물론 로직 중간에 생성될 SQL 을 추출하는 메서드를 호출할 수도
-있으나 SQL 을 생성하는 대부분의 상황에서는 BEGIN()으로 시작하고 SQL()로 끝난다. BEGIN() 메서드는 ThreadLocal
-변수를 초기화하고 SQL()메서드는 BEGIN() 이후 호출에 따라 SQL 구문을 만든다. BEGIN()은 RESET()과 동의어이다.</p>
-    <p>위 예제처럼 SelectBuilder 를 사용하기 위해, static import 할 필요가 있다.</p>
-<source>import static org.apache.ibatis.jdbc.SelectBuilder.*;</source>
-    <p>한번 import 하고나면, SelectBuilder 메서드 모두 사용할 수 있다. 실제 사용가능한 모든 메서드들이다.</p>
-    <table>
-    <thead>
-    <tr><th><p>방법</p></th><th><p>설명</p></th></tr></thead>
-    <tbody>
-  <tr>
-    <td>
-      <code>BEGIN()</code> / <code>RESET()</code>
-    </td>
-    <td>이 메서드들은 SelectBuilder 클래스의 ThreadLocal 상태를 초기화하고 새로운 구문을
-추가하기 위해 준비한다. BEGIN() 메서드는 새로운 구문을 추가할때 호출하는 것이 가장
-좋다. RESET() 메서드는 어떠한 이유로 인해 실행중간에 구문을 초기화할때 호출하면
-된다.
-</td>
-  </tr>
-  <tr>
-    <td>
-      <code>SELECT(String)</code>
-    </td>
-    <td>SELECT 절을 시작하거나 추가한다. 한번 이상 호출될 수 있고,파라미터는 SELECT 절에
-추가될 것이다. 파라미터들은 칼럼과 별칭의 목록이고 각각의 값은 콤마로 구분된다.</td>
-  </tr>
-  <tr>
-    <td>
-      <code>SELECT_DISTINCT(String)</code>
-    </td>
-    <td>SELECT 절을 시작하거나 추가한다. 생성된 쿼리에 “DISTINCT”키워드 만을 추가한다.
-한번 이상 호출될 수 있고, 파라미터들은 SELECT 절에 추가될 것이다. 파라미터들은
-칼럼과 별칭의 목록이고 각각의 값은 콤마로 구분된다.</td>
-  </tr>
-  <tr>
-    <td>
-      <code>FROM(String)</code>
-    </td>
-    <td>FROM 절을 시작하거나 추가한다. 한번 이상 호출될 수 있고, 파라미터는 FROM 절에
-추가될 것이다. 파라미터는 테이블 명과 별칭이다.</td>
-  </tr>
-  <tr>
-    <td>
-      <ul>
-        <li><code>JOIN(String)</code></li>
-        <li><code>INNER_JOIN(String)</code></li>
-        <li><code>LEFT_OUTER_JOIN(String)</code></li>
-        <li><code>RIGHT_OUTER_JOIN(String)</code></li>
-      </ul>
-    </td>
-    <td>메서드를 호출할때 적절한 타입으로 JOIN 절을 추가한다. 파라미터는 칼럼과 조인하고자
-하는 조건으로 구성된 표준 조인을 포함할 수 있다.</td>
-  </tr>
-  <tr>
-    <td>
-      <code>WHERE(String)</code>
-    </td>
-    <td>WHERE 절의 조건을 추가한다. AND 를 자동으로 추가하고 여러번 호출될 수 있다.
-여러차례 AND 로 새로운 조건을 만든다. OR 로 분기하고자 한다면 OR()메서드를
-사용하면 된다.</td>
-  </tr>
-  <tr>
-    <td>
-      <code>OR()</code>
-    </td>
-    <td>WHERE 절의 조건을 OR 로 분리한다. 한번 이상 호출될 수 있으나 잘못 호출하면
-SQL 에 에러가 발생할 수 있다.
-</td>
-  </tr>
-  <tr>
-    <td>
-      <code>AND()</code>
-    </td>
-    <td>WHERE 절의 조건을 AND 로 분리한다. 한번 이상 호출될 수 있으나 잘못 호출하면
-SQL 에 에러가 발생할 수 있다. WHERE 과 HAVING 모두 조건에 AND 를 자동으로
-붙여준다. 흔히 사용되지는 않을 것이며,반드시 필요한 경우에 추가로 사용하면 된다..</td>
-  </tr>
-  <tr>
-    <td>
-      <code>GROUP_BY(String)</code>
-    </td>
-    <td>GROUP BY 절을 추가한다. 콤마를 자동으로 추가하고 여러차례 호출될수 있다. 매번
-콤마를 추가해서 새로운 조건을 만든다.</td>
-  </tr>
-  <tr>
-    <td>
-      <code>HAVING(String)</code>
-    </td>
-    <td>HAVING 절의 조건을 추가한다. AND 를 자동으로 추가하고 여러차례 호출될 수 있다.
-매번 AND 를 추가해서 새로운 조건을 추가한다. OR 로 분기하고자 한다면
-OR()메서드를 사용하면 된다.</td>
-  </tr>
-  <tr>
-    <td>
-      <code>ORDER_BY(String)</code>
-    </td>
-    <td>ORDER BY 절을 추가한다. 콤마를 자동으로 추가하고 여러차례 호출될 수 있다. 매번
-콤마를 추가해서 새로운 조건을 만든다.</td>
-  </tr>
-  <tr>
-    <td>
-      <code>SQL()</code>
-    </td>
-    <td>생성되는 SQL 을 리턴하고 SelectBuilder 상태를 리셋(BEGIN()이나 RESET()가 호출된
-것처럼)한다. 게다가 이 메서드는 한번만 호출될 수 있다.</td>
-  </tr>
-    </tbody></table>
-    </subsection>
-
-    <subsection name="SqlBuilder">
-    <p>SelectBuilder 와 유사하게, MyBatis 는 일반적인 SqlBuilder 를 가지고 있다. SelectBuilder 가 가진 모든 메서드를 포함할
-뿐 아니라, insert, update 그리고 delete 를 만드는 메서드도 가지고 있다. 이 클래스는 SelectProvider , DeleteProvider,
-InsertProvider, 또는 UpdateProvider 에서 SQL 문자열을 만들 때 유용하다.
-위 예제에서 SqlBuilder 를 사용하기 위해, 다음처럼 static 으로 import 할 필요가</p>
-    <p>위 예제에서 SqlBuilder 를 사용하기 위해, 다음처럼 static 으로 import 할 필요가 있다.</p>
-    <source>import static org.apache.ibatis.jdbc.SqlBuilder.*;</source>
-    <p>SqlBuilder 는 SelectBuilder 의 모든 메서드를 가지고 있으며 몇가지 추가로 메서드를 더 가지고 있다.</p>
-      <table>
-      <thead>
-      <tr><th>방법</th><th>설명</th></tr>
-      </thead>
-      <tbody>
-      <tr>
-  <td>
-    <code>DELETE_FROM(String)</code>
-  </td>
-  <td>delete 구문을 시작하고 실제 삭제하고자 하는 테이블을 명시한다. 대개는 WHERE
-구문이 뒤에 붙는다.</td>
-</tr>
-  <tr>
-    <td>
-      <code>INSERT_INTO(String)</code>
-    </td>
-    <td>insert 구문을 시작하고 실제 입력하고자 하는 테이블을 명시한다. 대개는 하나 이상의
-VALUES() 호출을 뒤따른다.</td>
-  </tr>
-  <tr>
-    <td>
-      <code>SET(String)</code>
-    </td>
-    <td>update 구문에서 “set” 에 관련된 목록을 추가한다.</td>
-  </tr>
-  <tr>
-    <td>
-      <code>UPDATE(String)</code>
-    </td>
-    <td>update 구문을 시작하고 실제 수정하고자 하는 테이블을 명시한다. 하나 이상의 SET()
-호출이 뛰따르고 대개는 WHERE() 호출도 사용한다.</td>
-  </tr>
-  <tr>
-    <td>
-      <code>VALUES(String, String)</code>
-    </td>
-    <td>insert 구문에 추가된다. 첫번째 파라미터는 칼럼(column(s))이고 두번째 파라미터는
-값(value(s))이다.</td>
-  </tr>
-      </tbody>
-    </table>
-
-    <p>이건 몇가지 예제이다.</p>
-
-<source><![CDATA[public String deletePersonSql() {
-  BEGIN(); // Clears ThreadLocal variable
-  DELETE_FROM("PERSON");
-  WHERE("ID = ${id}");
-  return SQL();
 }
+        ]]></source>
 
-public String insertPersonSql() {
-  BEGIN(); // Clears ThreadLocal variable
-  INSERT_INTO("PERSON");
-  VALUES("ID, FIRST_NAME", "${id}, ${firstName}");
-  VALUES("LAST_NAME", "${lastName}");
-  return SQL();
-}
+      </subsection>
 
-public String updatePersonSql() {
-  BEGIN(); // Clears ThreadLocal variable
-  UPDATE("PERSON");
-  SET("FIRST_NAME = ${firstName}");
-  WHERE("ID = ${id}");
-  return SQL();
-}]]></source>  
-  </subsection>
-  </section>
+
+    </section>
   </body>
 
 </document>

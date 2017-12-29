@@ -1,5 +1,5 @@
-/*
- *    Copyright 2009-2011 the original author or authors.
+/**
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -31,27 +31,21 @@ import org.apache.ibatis.reflection.property.PropertyTokenizer;
  */
 public class MetaClass {
 
-  private Reflector reflector;
+  private final ReflectorFactory reflectorFactory;
+  private final Reflector reflector;
 
-  private MetaClass(Class<?> type) {
-    this.reflector = Reflector.forClass(type);
+  private MetaClass(Class<?> type, ReflectorFactory reflectorFactory) {
+    this.reflectorFactory = reflectorFactory;
+    this.reflector = reflectorFactory.findForClass(type);
   }
 
-  public static MetaClass forClass(Class<?> type) {
-    return new MetaClass(type);
-  }
-
-  public static boolean isClassCacheEnabled() {
-    return Reflector.isClassCacheEnabled();
-  }
-
-  public static void setClassCacheEnabled(boolean classCacheEnabled) {
-    Reflector.setClassCacheEnabled(classCacheEnabled);
+  public static MetaClass forClass(Class<?> type, ReflectorFactory reflectorFactory) {
+    return new MetaClass(type, reflectorFactory);
   }
 
   public MetaClass metaClassForProperty(String name) {
     Class<?> propType = reflector.getGetterType(name);
-    return MetaClass.forClass(propType);
+    return MetaClass.forClass(propType, reflectorFactory);
   }
 
   public String findProperty(String name) {
@@ -96,7 +90,7 @@ public class MetaClass {
 
   private MetaClass metaClassForProperty(PropertyTokenizer prop) {
     Class<?> propType = getGetterType(prop);
-    return MetaClass.forClass(propType);
+    return MetaClass.forClass(propType, reflectorFactory);
   }
 
   private Class<?> getGetterType(PropertyTokenizer prop) {
@@ -125,12 +119,12 @@ public class MetaClass {
         Field _method = MethodInvoker.class.getDeclaredField("method");
         _method.setAccessible(true);
         Method method = (Method) _method.get(invoker);
-        return method.getGenericReturnType();
+        return TypeParameterResolver.resolveReturnType(method, reflector.getType());
       } else if (invoker instanceof GetFieldInvoker) {
         Field _field = GetFieldInvoker.class.getDeclaredField("field");
         _field.setAccessible(true);
         Field field = (Field) _field.get(invoker);
-        return field.getGenericType();
+        return TypeParameterResolver.resolveFieldType(field, reflector.getType());
       }
     } catch (NoSuchFieldException e) {
     } catch (IllegalAccessException e) {

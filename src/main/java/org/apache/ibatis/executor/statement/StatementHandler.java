@@ -1,5 +1,5 @@
-/*
- *    Copyright 2009-2012 the original author or authors.
+/**
+ *    Copyright 2009-2016 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 
+import org.apache.ibatis.cursor.Cursor;
 import org.apache.ibatis.executor.parameter.ParameterHandler;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.session.ResultHandler;
@@ -29,7 +30,7 @@ import org.apache.ibatis.session.ResultHandler;
  */
 public interface StatementHandler {
 
-  Statement prepare(Connection connection)
+  Statement prepare(Connection connection, Integer transactionTimeout)
       throws SQLException;
 
   void parameterize(Statement statement)
@@ -42,6 +43,9 @@ public interface StatementHandler {
       throws SQLException;
 
   <E> List<E> query(Statement statement, ResultHandler resultHandler)
+      throws SQLException;
+
+  <E> Cursor<E> queryCursor(Statement statement)
       throws SQLException;
 
   BoundSql getBoundSql();

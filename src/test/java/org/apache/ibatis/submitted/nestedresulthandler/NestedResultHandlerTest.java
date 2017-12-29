@@ -1,5 +1,5 @@
-/*
- *    Copyright 2009-2012 the original author or authors.
+/**
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -48,6 +48,7 @@ public class NestedResultHandlerTest {
     ScriptRunner runner = new ScriptRunner(conn);
     runner.setLogWriter(null);
     runner.runScript(reader);
+    conn.close();
     reader.close();
     session.close();
   }
@@ -146,6 +147,26 @@ public class NestedResultHandlerTest {
       Assert.assertTrue(person.owns("shoes"));
       Assert.assertEquals(2, person.getItems().size());
     } finally {
+      sqlSession.close();
+    }
+  }
+
+  @Test //reopen issue 39? (not a bug?)
+  public void testGetPersonItemPairs(){
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try{
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      List<PersonItemPair> pairs = mapper.getPersonItemPairs();
+
+      Assert.assertNotNull( pairs );
+//      System.out.println( new StringBuilder().append("selected pairs: ").append(pairs) );
+
+      Assert.assertEquals(5, pairs.size() );
+      Assert.assertNotNull(pairs.get(0).getPerson());
+      Assert.assertEquals(pairs.get(0).getPerson().getId(), Integer.valueOf(1));
+      Assert.assertNotNull(pairs.get(0).getItem());
+      Assert.assertEquals( pairs.get(0).getItem().getId(), Integer.valueOf(1));
+    } finally{
       sqlSession.close();
     }
   }

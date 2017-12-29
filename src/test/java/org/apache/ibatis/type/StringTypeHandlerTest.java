@@ -1,5 +1,5 @@
-/*
- *    Copyright 2009-2012 the original author or authors.
+/**
+ *    Copyright 2009-2016 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -25,26 +25,40 @@ public class StringTypeHandlerTest extends BaseTypeHandlerTest {
 
   private static final TypeHandler<String> TYPE_HANDLER = new StringTypeHandler();
 
+  @Override
   @Test
   public void shouldSetParameter() throws Exception {
     TYPE_HANDLER.setParameter(ps, 1, "Hello", null);
     verify(ps).setString(1, "Hello");
   }
 
+  @Override
   @Test
-  public void shouldGetResultFromResultSet() throws Exception {
+  public void shouldGetResultFromResultSetByName() throws Exception {
     when(rs.getString("column")).thenReturn("Hello");
     when(rs.wasNull()).thenReturn(false);
     assertEquals("Hello", TYPE_HANDLER.getResult(rs, "column"));
   }
 
-  @Test
-  public void shouldGetNullResultFromResultSet() throws Exception {
-    when(cs.getString(1)).thenReturn(null);
-    when(cs.wasNull()).thenReturn(true);
-    assertEquals(null, TYPE_HANDLER.getResult(cs, 1));
+  @Override
+  public void shouldGetResultNullFromResultSetByName() throws Exception {
+    // Unnecessary
   }
 
+  @Override
+  @Test
+  public void shouldGetResultFromResultSetByPosition() throws Exception {
+    when(rs.getString(1)).thenReturn("Hello");
+    when(rs.wasNull()).thenReturn(false);
+    assertEquals("Hello", TYPE_HANDLER.getResult(rs, 1));
+  }
+
+  @Override
+  public void shouldGetResultNullFromResultSetByPosition() throws Exception {
+    // Unnecessary
+  }
+
+  @Override
   @Test
   public void shouldGetResultFromCallableStatement() throws Exception {
     when(cs.getString(1)).thenReturn("Hello");
@@ -52,11 +66,9 @@ public class StringTypeHandlerTest extends BaseTypeHandlerTest {
     assertEquals("Hello", TYPE_HANDLER.getResult(cs, 1));
   }
 
-  @Test
-  public void shouldGetNullResultFromCallableStatement() throws Exception {
-    when(cs.getString(1)).thenReturn(null);
-    when(cs.wasNull()).thenReturn(true);
-    assertEquals(null, TYPE_HANDLER.getResult(cs, 1));
+  @Override
+  public void shouldGetResultNullFromCallableStatement() throws Exception {
+    // Unnecessary
   }
 
 }
