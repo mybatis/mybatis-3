@@ -20,14 +20,30 @@ import java.io.InputStream;
 import org.apache.ibatis.builder.xml.XMLMapperBuilder;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.Configuration;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 public class XmlMapperBuilderTest {
+
+  @Rule
+  public ExpectedException expectedEx = ExpectedException.none();
 
   @Test
   public void shouldSuccessfullyLoadXMLMapperFile() throws Exception {
     Configuration configuration = new Configuration();
     String resource = "org/apache/ibatis/builder/AuthorMapper.xml";
+    InputStream inputStream = Resources.getResourceAsStream(resource);
+    XMLMapperBuilder builder = new XMLMapperBuilder(inputStream, configuration, resource, configuration.getSqlFragments());
+    builder.parse();
+  }
+
+  @Test
+  public void shouldFailedLoadXMLMapperFile() throws Exception {
+    expectedEx.expect(BuilderException.class);
+    expectedEx.expectMessage("The error may exist in org/apache/ibatis/builder/ProblemMapper.xml");
+    Configuration configuration = new Configuration();
+    String resource = "org/apache/ibatis/builder/ProblemMapper.xml";
     InputStream inputStream = Resources.getResourceAsStream(resource);
     XMLMapperBuilder builder = new XMLMapperBuilder(inputStream, configuration, resource, configuration.getSqlFragments());
     builder.parse();
