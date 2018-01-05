@@ -175,7 +175,7 @@ public class XmlMapperBuilderTest {
   @Test
   public void shouldFailedLoadXMLMapperFile() throws Exception {
     expectedEx.expect(BuilderException.class);
-    expectedEx.expectMessage("The error may exist in org/apache/ibatis/builder/ProblemMapper.xml");
+    expectedEx.expectMessage("Error parsing Mapper XML.The XML location is org/apache/ibatis/builder/ProblemMapper.xml");
     Configuration configuration = new Configuration();
     String resource = "org/apache/ibatis/builder/ProblemMapper.xml";
     InputStream inputStream = Resources.getResourceAsStream(resource);
