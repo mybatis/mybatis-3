@@ -65,7 +65,7 @@ handler CDATA #REQUIRED
 type CDATA #REQUIRED
 >
 
-<!ELEMENT objectWrapperFactory (property*)>
+<!ELEMENT objectWrapperFactory EMPTY>
 <!ATTLIST objectWrapperFactory
 type CDATA #REQUIRED
 >

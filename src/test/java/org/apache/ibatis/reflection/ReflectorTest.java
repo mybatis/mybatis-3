@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,21 +15,17 @@
  */
 package org.apache.ibatis.reflection;
 
-import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
 import java.io.Serializable;
 import java.util.List;
 
 import org.junit.Assert;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import static com.googlecode.catchexception.apis.BDDCatchException.*;
+import static org.assertj.core.api.BDDAssertions.then;
 
 public class ReflectorTest {
-
-  @Rule
-  public ExpectedException expectedException = ExpectedException.none();
 
   @Test
   public void testGetSetterType() throws Exception {
@@ -170,7 +166,10 @@ public class ReflectorTest {
   @Test
   public void shouldResoleveReadonlySetterWithOverload() throws Exception {
     class BeanClass implements BeanInterface<String> {
-      public void setId(String id) {}
+      @Override
+      public void setId(String id) {
+        // Do nothing
+      }
     }
     ReflectorFactory reflectorFactory = new DefaultReflectorFactory();
     Reflector reflector = reflectorFactory.findForClass(BeanClass.class);
@@ -188,14 +187,27 @@ public class ReflectorTest {
       public void setTheProp(String arg) {}
       public void setTheProp(Integer arg) {}
     }
-    expectedException.expect(ReflectionException.class);
-    expectedException.expectMessage(allOf(
-        containsString("theProp"),
-        containsString("BeanClass"),
-        containsString("java.lang.String"),
-        containsString("java.lang.Integer")));
+
     ReflectorFactory reflectorFactory = new DefaultReflectorFactory();
-    Reflector reflector = reflectorFactory.findForClass(BeanClass.class);
-    reflector.getSetterType("theProp");
+    when(reflectorFactory).findForClass(BeanClass.class);
+    then(caughtException()).isInstanceOf(ReflectionException.class)
+      .hasMessageContaining("theProp")
+      .hasMessageContaining("BeanClass")
+      .hasMessageContaining("java.lang.String")
+      .hasMessageContaining("java.lang.Integer");
+  }
+
+  @Test
+  public void shouldAllowTwoBooleanGetters() throws Exception {
+    @SuppressWarnings("unused")
+    class Bean {
+      // JavaBean Spec allows this (see #906)
+      public boolean isBool() {return true;}
+      public boolean getBool() {return false;}
+      public void setBool(boolean bool) {}
+    }
+    ReflectorFactory reflectorFactory = new DefaultReflectorFactory();
+    Reflector reflector = reflectorFactory.findForClass(Bean.class);
+    assertTrue((Boolean)reflector.getGetInvoker("bool").invoke(new Bean(), new Byte[0]));
   }
 }

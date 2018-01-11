@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -49,6 +49,7 @@ public class IncludePropertyTest {
     ScriptRunner runner = new ScriptRunner(conn);
     runner.setLogWriter(null);
     runner.runScript(reader);
+    conn.close();
     reader.close();
     session.close();
   }
@@ -143,6 +144,20 @@ public class IncludePropertyTest {
     try {
       List<String> results = sqlSession.selectList("org.apache.ibatis.submitted.include_property.Mapper.selectNestedInclude");
       assertEquals("a value", results.get(0));
+    } finally {
+      sqlSession.close();
+    }
+  }
+
+  @Test
+  public void testParametersInAttribute() throws Exception {
+    final SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      List<Map<String, String>> results = sqlSession.selectList("org.apache.ibatis.submitted.include_property.Mapper.selectPropertyInAttribute");
+      Map<String, String> map = results.get(0);
+      assertEquals(2, map.size());
+      assertEquals("col_a value", map.get("COL_1"));
+      assertEquals("col_b value", map.get("COL_2"));
     } finally {
       sqlSession.close();
     }

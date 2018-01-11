@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -28,20 +28,29 @@ import java.util.Date;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
+import org.apache.ibatis.binding.MapperMethod.ParamMap;
 import org.apache.ibatis.io.ResolverUtil;
 import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.reflection.Jdk;
 
 /**
  * @author Clinton Begin
+ * @author Kazuki Shimizu
  */
 public final class TypeHandlerRegistry {
 
   private final Map<JdbcType, TypeHandler<?>> JDBC_TYPE_HANDLER_MAP = new EnumMap<JdbcType, TypeHandler<?>>(JdbcType.class);
-  private final Map<Type, Map<JdbcType, TypeHandler<?>>> TYPE_HANDLER_MAP = new HashMap<Type, Map<JdbcType, TypeHandler<?>>>();
+  private final Map<Type, Map<JdbcType, TypeHandler<?>>> TYPE_HANDLER_MAP = new ConcurrentHashMap<Type, Map<JdbcType, TypeHandler<?>>>();
   private final TypeHandler<Object> UNKNOWN_TYPE_HANDLER = new UnknownTypeHandler(this);
   private final Map<Class<?>, TypeHandler<?>> ALL_TYPE_HANDLERS_MAP = new HashMap<Class<?>, TypeHandler<?>>();
+
+  private static final Map<JdbcType, TypeHandler<?>> NULL_TYPE_HANDLER_MAP = new HashMap<JdbcType, TypeHandler<?>>();
+
+  private Class<? extends TypeHandler> defaultEnumTypeHandler = EnumTypeHandler.class;
 
   public TypeHandlerRegistry() {
     register(Boolean.class, new BooleanTypeHandler());
@@ -126,28 +135,23 @@ public final class TypeHandlerRegistry {
     register(java.sql.Timestamp.class, new SqlTimestampTypeHandler());
 
     // mybatis-typehandlers-jsr310
-    try {
-      // since 1.0.0
-      register("java.time.Instant", "org.apache.ibatis.type.InstantTypeHandler");
-      register("java.time.LocalDateTime", "org.apache.ibatis.type.LocalDateTimeTypeHandler");
-      register("java.time.LocalDate", "org.apache.ibatis.type.LocalDateTypeHandler");
-      register("java.time.LocalTime", "org.apache.ibatis.type.LocalTimeTypeHandler");
-      register("java.time.OffsetDateTime", "org.apache.ibatis.type.OffsetDateTimeTypeHandler");
-      register("java.time.OffsetTime", "org.apache.ibatis.type.OffsetTimeTypeHandler");
-      register("java.time.ZonedDateTime", "org.apache.ibatis.type.ZonedDateTimeTypeHandler");
-      // since 1.0.1
-      register("java.time.Month", "org.apache.ibatis.type.MonthTypeHandler");
-      register("java.time.Year", "org.apache.ibatis.type.YearTypeHandler");
-      // since 1.0.2
-      register("java.time.chrono.JapaneseDate", "org.apache.ibatis.type.JapaneseDateTypeHandler");
-
-    } catch (ClassNotFoundException e) {
-      // no JSR-310 handlers
+    if (Jdk.dateAndTimeApiExists) {
+      Java8TypeHandlersRegistrar.registerDateAndTimeHandlers(this);
     }
 
     // issue #273
     register(Character.class, new CharacterTypeHandler());
     register(char.class, new CharacterTypeHandler());
+  }
+
+  /**
+   * Set a default {@link TypeHandler} class for {@link Enum}.
+   * A default {@link TypeHandler} is {@link org.apache.ibatis.type.EnumTypeHandler}.
+   * @param typeHandler a type handler class for {@link Enum}
+   * @since 3.4.5
+   */
+  public void setDefaultEnumTypeHandler(Class<? extends TypeHandler> typeHandler) {
+    this.defaultEnumTypeHandler = typeHandler;
   }
 
   public boolean hasTypeHandler(Class<?> javaType) {
@@ -192,7 +196,10 @@ public final class TypeHandlerRegistry {
 
   @SuppressWarnings("unchecked")
   private <T> TypeHandler<T> getTypeHandler(Type type, JdbcType jdbcType) {
-    Map<JdbcType, TypeHandler<?>> jdbcHandlerMap = TYPE_HANDLER_MAP.get(type);
+    if (ParamMap.class.equals(type)) {
+      return null;
+    }
+    Map<JdbcType, TypeHandler<?>> jdbcHandlerMap = getJdbcHandlerMap(type);
     TypeHandler<?> handler = null;
     if (jdbcHandlerMap != null) {
       handler = jdbcHandlerMap.get(jdbcType);
@@ -204,11 +211,62 @@ public final class TypeHandlerRegistry {
         handler = pickSoleHandler(jdbcHandlerMap);
       }
     }
-    if (handler == null && type != null && type instanceof Class && Enum.class.isAssignableFrom((Class<?>) type)) {
-      handler = new EnumTypeHandler((Class<?>) type);
-    }
     // type drives generics here
     return (TypeHandler<T>) handler;
+  }
+
+  @SuppressWarnings({ "rawtypes", "unchecked" })
+  private Map<JdbcType, TypeHandler<?>> getJdbcHandlerMap(Type type) {
+    Map<JdbcType, TypeHandler<?>> jdbcHandlerMap = TYPE_HANDLER_MAP.get(type);
+    if (NULL_TYPE_HANDLER_MAP.equals(jdbcHandlerMap)) {
+      return null;
+    }
+    if (jdbcHandlerMap == null && type instanceof Class) {
+      Class<?> clazz = (Class<?>) type;
+      if (clazz.isEnum()) {
+        jdbcHandlerMap = getJdbcHandlerMapForEnumInterfaces(clazz, clazz);
+        if (jdbcHandlerMap == null) {
+          register(clazz, getInstance(clazz, defaultEnumTypeHandler));
+          return TYPE_HANDLER_MAP.get(clazz);
+        }
+      } else {
+        jdbcHandlerMap = getJdbcHandlerMapForSuperclass(clazz);
+      }
+    }
+    TYPE_HANDLER_MAP.put(type, jdbcHandlerMap == null ? NULL_TYPE_HANDLER_MAP : jdbcHandlerMap);
+    return jdbcHandlerMap;
+  }
+
+  private Map<JdbcType, TypeHandler<?>> getJdbcHandlerMapForEnumInterfaces(Class<?> clazz, Class<?> enumClazz) {
+    for (Class<?> iface : clazz.getInterfaces()) {
+      Map<JdbcType, TypeHandler<?>> jdbcHandlerMap = TYPE_HANDLER_MAP.get(iface);
+      if (jdbcHandlerMap == null) {
+        jdbcHandlerMap = getJdbcHandlerMapForEnumInterfaces(iface, enumClazz);
+      }
+      if (jdbcHandlerMap != null) {
+        // Found a type handler regsiterd to a super interface
+        HashMap<JdbcType, TypeHandler<?>> newMap = new HashMap<JdbcType, TypeHandler<?>>();
+        for (Entry<JdbcType, TypeHandler<?>> entry : jdbcHandlerMap.entrySet()) {
+          // Create a type handler instance with enum type as a constructor arg
+          newMap.put(entry.getKey(), getInstance(enumClazz, entry.getValue().getClass()));
+        }
+        return newMap;
+      }
+    }
+    return null;
+  }
+
+  private Map<JdbcType, TypeHandler<?>> getJdbcHandlerMapForSuperclass(Class<?> clazz) {
+    Class<?> superclass =  clazz.getSuperclass();
+    if (superclass == null || Object.class.equals(superclass)) {
+      return null;
+    }
+    Map<JdbcType, TypeHandler<?>> jdbcHandlerMap = TYPE_HANDLER_MAP.get(superclass);
+    if (jdbcHandlerMap != null) {
+      return jdbcHandlerMap;
+    } else {
+      return getJdbcHandlerMapForSuperclass(superclass);
+    }
   }
 
   private TypeHandler<?> pickSoleHandler(Map<JdbcType, TypeHandler<?>> jdbcHandlerMap) {

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -31,10 +31,10 @@ class PooledConnection implements InvocationHandler {
   private static final String CLOSE = "close";
   private static final Class<?>[] IFACES = new Class<?>[] { Connection.class };
 
-  private int hashCode = 0;
-  private PooledDataSource dataSource;
-  private Connection realConnection;
-  private Connection proxyConnection;
+  private final int hashCode;
+  private final PooledDataSource dataSource;
+  private final Connection realConnection;
+  private final Connection proxyConnection;
   private long checkoutTimestamp;
   private long createdTimestamp;
   private long lastUsedTimestamp;
@@ -213,7 +213,7 @@ class PooledConnection implements InvocationHandler {
   @Override
   public boolean equals(Object obj) {
     if (obj instanceof PooledConnection) {
-      return realConnection.hashCode() == (((PooledConnection) obj).realConnection.hashCode());
+      return realConnection.hashCode() == ((PooledConnection) obj).realConnection.hashCode();
     } else if (obj instanceof Connection) {
       return hashCode == obj.hashCode();
     } else {

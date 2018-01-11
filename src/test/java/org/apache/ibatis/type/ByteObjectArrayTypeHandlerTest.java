@@ -17,9 +17,7 @@ package org.apache.ibatis.type;
 
 import org.junit.Test;
 
-import static org.hamcrest.core.Is.is;
-import static org.hamcrest.core.IsNull.nullValue;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -40,15 +38,15 @@ public class ByteObjectArrayTypeHandlerTest extends BaseTypeHandlerTest {
     byte[] byteArray = new byte[]{1, 2};
     when(rs.getBytes("column")).thenReturn(byteArray);
     when(rs.wasNull()).thenReturn(false);
-    assertThat(TYPE_HANDLER.getResult(rs, "column"), is(new Byte[]{1, 2}));
+    assertThat(TYPE_HANDLER.getResult(rs, "column")).isEqualTo(new Byte[]{1, 2});
   }
 
   @Override
   @Test
   public void shouldGetResultNullFromResultSetByName() throws Exception {
-    when(rs.getBlob("column")).thenReturn(null);
+    when(rs.getBytes("column")).thenReturn(null);
     when(rs.wasNull()).thenReturn(true);
-    assertThat(TYPE_HANDLER.getResult(rs, "column"), nullValue());
+    assertThat(TYPE_HANDLER.getResult(rs, "column")).isNull();
   }
 
   @Override
@@ -57,15 +55,15 @@ public class ByteObjectArrayTypeHandlerTest extends BaseTypeHandlerTest {
     byte[] byteArray = new byte[]{1, 2};
     when(rs.getBytes(1)).thenReturn(byteArray);
     when(rs.wasNull()).thenReturn(false);
-    assertThat(TYPE_HANDLER.getResult(rs, 1), is(new Byte[]{1, 2}));
+    assertThat(TYPE_HANDLER.getResult(rs, 1)).isEqualTo(new Byte[]{1, 2});
   }
 
   @Override
   @Test
   public void shouldGetResultNullFromResultSetByPosition() throws Exception {
-    when(rs.getBlob(1)).thenReturn(null);
+    when(rs.getBytes(1)).thenReturn(null);
     when(rs.wasNull()).thenReturn(true);
-    assertThat(TYPE_HANDLER.getResult(rs, 1), nullValue());
+    assertThat(TYPE_HANDLER.getResult(rs, 1)).isNull();
   }
 
   @Override
@@ -74,15 +72,15 @@ public class ByteObjectArrayTypeHandlerTest extends BaseTypeHandlerTest {
     byte[] byteArray = new byte[]{1, 2};
     when(cs.getBytes(1)).thenReturn(byteArray);
     when(cs.wasNull()).thenReturn(false);
-    assertThat(TYPE_HANDLER.getResult(cs, 1), is(new Byte[]{1, 2}));
+    assertThat(TYPE_HANDLER.getResult(cs, 1)).isEqualTo(new Byte[]{1, 2});
   }
 
   @Override
   @Test
   public void shouldGetResultNullFromCallableStatement() throws Exception {
-    when(cs.getBlob(1)).thenReturn(null);
+    when(cs.getBytes(1)).thenReturn(null);
     when(cs.wasNull()).thenReturn(true);
-    assertThat(TYPE_HANDLER.getResult(cs, 1), nullValue());
+    assertThat(TYPE_HANDLER.getResult(cs, 1)).isNull();
   }
 
 }

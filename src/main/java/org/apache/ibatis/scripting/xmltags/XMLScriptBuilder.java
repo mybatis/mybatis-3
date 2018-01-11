@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -34,9 +34,10 @@ import org.w3c.dom.NodeList;
  */
 public class XMLScriptBuilder extends BaseBuilder {
 
-  private XNode context;
+  private final XNode context;
   private boolean isDynamic;
-  private Class<?> parameterType;
+  private final Class<?> parameterType;
+  private final Map<String, NodeHandler> nodeHandlerMap = new HashMap<String, NodeHandler>();
 
   public XMLScriptBuilder(Configuration configuration, XNode context) {
     this(configuration, context, null);
@@ -46,11 +47,24 @@ public class XMLScriptBuilder extends BaseBuilder {
     super(configuration);
     this.context = context;
     this.parameterType = parameterType;
+    initNodeHandlerMap();
+  }
+
+
+  private void initNodeHandlerMap() {
+    nodeHandlerMap.put("trim", new TrimHandler());
+    nodeHandlerMap.put("where", new WhereHandler());
+    nodeHandlerMap.put("set", new SetHandler());
+    nodeHandlerMap.put("foreach", new ForEachHandler());
+    nodeHandlerMap.put("if", new IfHandler());
+    nodeHandlerMap.put("choose", new ChooseHandler());
+    nodeHandlerMap.put("when", new IfHandler());
+    nodeHandlerMap.put("otherwise", new OtherwiseHandler());
+    nodeHandlerMap.put("bind", new BindHandler());
   }
 
   public SqlSource parseScriptNode() {
-    List<SqlNode> contents = parseDynamicTags(context);
-    MixedSqlNode rootSqlNode = new MixedSqlNode(contents);
+    MixedSqlNode rootSqlNode = parseDynamicTags(context);
     SqlSource sqlSource = null;
     if (isDynamic) {
       sqlSource = new DynamicSqlSource(configuration, rootSqlNode);
@@ -60,7 +74,7 @@ public class XMLScriptBuilder extends BaseBuilder {
     return sqlSource;
   }
 
-  List<SqlNode> parseDynamicTags(XNode node) {
+  protected MixedSqlNode parseDynamicTags(XNode node) {
     List<SqlNode> contents = new ArrayList<SqlNode>();
     NodeList children = node.getNode().getChildNodes();
     for (int i = 0; i < children.getLength(); i++) {
@@ -76,7 +90,7 @@ public class XMLScriptBuilder extends BaseBuilder {
         }
       } else if (child.getNode().getNodeType() == Node.ELEMENT_NODE) { // issue #628
         String nodeName = child.getNode().getNodeName();
-        NodeHandler handler = nodeHandlers(nodeName);
+        NodeHandler handler = nodeHandlerMap.get(nodeName);
         if (handler == null) {
           throw new BuilderException("Unknown element <" + nodeName + "> in SQL statement.");
         }
@@ -84,21 +98,7 @@ public class XMLScriptBuilder extends BaseBuilder {
         isDynamic = true;
       }
     }
-    return contents;
-  }
-
-  NodeHandler nodeHandlers(String nodeName) {
-    Map<String, NodeHandler> map = new HashMap<String, NodeHandler>();
-    map.put("trim", new TrimHandler());
-    map.put("where", new WhereHandler());
-    map.put("set", new SetHandler());
-    map.put("foreach", new ForEachHandler());
-    map.put("if", new IfHandler());
-    map.put("choose", new ChooseHandler());
-    map.put("when", new IfHandler());
-    map.put("otherwise", new OtherwiseHandler());
-    map.put("bind", new BindHandler());
-    return map.get(nodeName);
+    return new MixedSqlNode(contents);
   }
 
   private interface NodeHandler {
@@ -126,8 +126,7 @@ public class XMLScriptBuilder extends BaseBuilder {
 
     @Override
     public void handleNode(XNode nodeToHandle, List<SqlNode> targetContents) {
-      List<SqlNode> contents = parseDynamicTags(nodeToHandle);
-      MixedSqlNode mixedSqlNode = new MixedSqlNode(contents);
+      MixedSqlNode mixedSqlNode = parseDynamicTags(nodeToHandle);
       String prefix = nodeToHandle.getStringAttribute("prefix");
       String prefixOverrides = nodeToHandle.getStringAttribute("prefixOverrides");
       String suffix = nodeToHandle.getStringAttribute("suffix");
@@ -144,8 +143,7 @@ public class XMLScriptBuilder extends BaseBuilder {
 
     @Override
     public void handleNode(XNode nodeToHandle, List<SqlNode> targetContents) {
-      List<SqlNode> contents = parseDynamicTags(nodeToHandle);
-      MixedSqlNode mixedSqlNode = new MixedSqlNode(contents);
+      MixedSqlNode mixedSqlNode = parseDynamicTags(nodeToHandle);
       WhereSqlNode where = new WhereSqlNode(configuration, mixedSqlNode);
       targetContents.add(where);
     }
@@ -158,8 +156,7 @@ public class XMLScriptBuilder extends BaseBuilder {
 
     @Override
     public void handleNode(XNode nodeToHandle, List<SqlNode> targetContents) {
-      List<SqlNode> contents = parseDynamicTags(nodeToHandle);
-      MixedSqlNode mixedSqlNode = new MixedSqlNode(contents);
+      MixedSqlNode mixedSqlNode = parseDynamicTags(nodeToHandle);
       SetSqlNode set = new SetSqlNode(configuration, mixedSqlNode);
       targetContents.add(set);
     }
@@ -172,8 +169,7 @@ public class XMLScriptBuilder extends BaseBuilder {
 
     @Override
     public void handleNode(XNode nodeToHandle, List<SqlNode> targetContents) {
-      List<SqlNode> contents = parseDynamicTags(nodeToHandle);
-      MixedSqlNode mixedSqlNode = new MixedSqlNode(contents);
+      MixedSqlNode mixedSqlNode = parseDynamicTags(nodeToHandle);
       String collection = nodeToHandle.getStringAttribute("collection");
       String item = nodeToHandle.getStringAttribute("item");
       String index = nodeToHandle.getStringAttribute("index");
@@ -192,8 +188,7 @@ public class XMLScriptBuilder extends BaseBuilder {
 
     @Override
     public void handleNode(XNode nodeToHandle, List<SqlNode> targetContents) {
-      List<SqlNode> contents = parseDynamicTags(nodeToHandle);
-      MixedSqlNode mixedSqlNode = new MixedSqlNode(contents);
+      MixedSqlNode mixedSqlNode = parseDynamicTags(nodeToHandle);
       String test = nodeToHandle.getStringAttribute("test");
       IfSqlNode ifSqlNode = new IfSqlNode(mixedSqlNode, test);
       targetContents.add(ifSqlNode);
@@ -207,8 +202,7 @@ public class XMLScriptBuilder extends BaseBuilder {
 
     @Override
     public void handleNode(XNode nodeToHandle, List<SqlNode> targetContents) {
-      List<SqlNode> contents = parseDynamicTags(nodeToHandle);
-      MixedSqlNode mixedSqlNode = new MixedSqlNode(contents);
+      MixedSqlNode mixedSqlNode = parseDynamicTags(nodeToHandle);
       targetContents.add(mixedSqlNode);
     }
   }
@@ -232,7 +226,7 @@ public class XMLScriptBuilder extends BaseBuilder {
       List<XNode> children = chooseSqlNode.getChildren();
       for (XNode child : children) {
         String nodeName = child.getNode().getNodeName();
-        NodeHandler handler = nodeHandlers(nodeName);
+        NodeHandler handler = nodeHandlerMap.get(nodeName);
         if (handler instanceof IfHandler) {
           handler.handleNode(child, ifSqlNodes);
         } else if (handler instanceof OtherwiseHandler) {

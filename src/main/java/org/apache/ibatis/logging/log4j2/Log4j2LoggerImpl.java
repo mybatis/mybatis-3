@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -26,9 +26,9 @@ import org.apache.logging.log4j.MarkerManager;
  */
 public class Log4j2LoggerImpl implements Log {
   
-  private static Marker MARKER = MarkerManager.getMarker(LogFactory.MARKER);
+  private static final Marker MARKER = MarkerManager.getMarker(LogFactory.MARKER);
 
-  private Logger log;
+  private final Logger log;
 
   public Log4j2LoggerImpl(Logger logger) {
     log = logger;

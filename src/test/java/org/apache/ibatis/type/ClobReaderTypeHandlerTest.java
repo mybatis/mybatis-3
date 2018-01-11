@@ -33,10 +33,9 @@ import javax.sql.DataSource;
 import java.io.*;
 import java.sql.Clob;
 
-import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -144,7 +143,7 @@ public class ClobReaderTypeHandlerTest extends BaseTypeHandlerTest {
       // select (Clob -> Reader)
       {
         ClobContent clobContent = mapper.findOne(1);
-        assertThat(new BufferedReader(clobContent.getContent()).readLine(), is("Hello"));
+        assertThat(new BufferedReader(clobContent.getContent()).readLine()).isEqualTo("Hello");
       }
     } finally {
       session.close();

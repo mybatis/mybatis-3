@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -77,7 +77,10 @@ public class MapperProxy<T> implements InvocationHandler, Serializable {
       constructor.setAccessible(true);
     }
     final Class<?> declaringClass = method.getDeclaringClass();
-    return constructor.newInstance(declaringClass, MethodHandles.Lookup.PRIVATE)
+    return constructor
+        .newInstance(declaringClass,
+            MethodHandles.Lookup.PRIVATE | MethodHandles.Lookup.PROTECTED
+                | MethodHandles.Lookup.PACKAGE | MethodHandles.Lookup.PUBLIC)
         .unreflectSpecial(method, declaringClass).bindTo(proxy).invokeWithArguments(args);
   }
 
@@ -85,8 +88,8 @@ public class MapperProxy<T> implements InvocationHandler, Serializable {
    * Backport of java.lang.reflect.Method#isDefault()
    */
   private boolean isDefaultMethod(Method method) {
-    return ((method.getModifiers()
-        & (Modifier.ABSTRACT | Modifier.PUBLIC | Modifier.STATIC)) == Modifier.PUBLIC)
+    return (method.getModifiers()
+        & (Modifier.ABSTRACT | Modifier.PUBLIC | Modifier.STATIC)) == Modifier.PUBLIC
         && method.getDeclaringClass().isInterface();
   }
 }

@@ -1,9 +1,15 @@
 language: java
 sudo: false
 
+addons:
+  apt:
+    packages:
+      - openjdk-6-jdk
+
 jdk:
+  - oraclejdk9
   - oraclejdk8
-  - oraclejdk7
+  - openjdk8
   - openjdk7
   - openjdk6
 
@@ -17,6 +23,8 @@ install:
   - ./travis/install.sh
   # Switch back to the original JDK to run the tests
   - jdk_switcher use ${TRAVIS_JDK_VERSION}
+
+script: ./mvnw test -Dmaven.surefire.excludeGroups= -B
 
 after_success:
   - chmod -R 777 ./travis/after_success.sh

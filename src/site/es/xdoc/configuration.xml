@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2017 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -72,13 +72,13 @@
 </dataSource>]]></source>
         <p>El usuario y password de este ejemplo se reemplazarán por los valores de los elementos de tipo property. El driver y la url se reemplazarán por los valores contenidos en el fichero config.properties.  Esto aumenta mucho las posibilidades de configuración. 
         </p>
-        <p>Las propiedades también pueden pasarse como parámetro al método SqlSessionBuilder.build(). Por ejemplo:
+        <p>Las propiedades también pueden pasarse como parámetro al método SqlSessionFactoryBuilder.build(). Por ejemplo:
         </p>
-        <source><![CDATA[SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, props);
+        <source><![CDATA[SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, props);
 
 // ... or ...
 
-SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, props);
+SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environment, props);
 ]]></source>
         <p>Si una propiedad existe en más de un lugar, MyBatis la carga en este orden:
         </p>
@@ -92,6 +92,44 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
         </ul>
         <p>Por tanto las properties más prioritarias son las pasadas como parámetro, seguidas de los atributos tipo classpath/url y finalmente las propiedades especificadas en el elemento properties..
         </p>
+
+        <p>
+          Since the MyBatis 3.4.2, your can specify a default value into placeholder as follow:
+        </p>
+        <source><![CDATA[
+<dataSource type="POOLED">
+  <!-- ... -->
+  <property name="username" value="${username:ut_user}"/> <!-- If 'username' property not present, username become 'ut_user' -->
+</dataSource>]]></source>
+
+        <p>
+          This feature is disabled by default. If you specify a default value into placeholder,
+          you should be enable this feature by adding a special property as follow:
+        </p>
+
+        <source><![CDATA[
+<properties resource="org/mybatis/example/config.properties">
+  <!-- ... -->
+  <property name="org.apache.ibatis.parsing.PropertyParser.enable-default-value" value="true"/> <!-- Enable this feature -->
+</properties>]]></source>
+
+        <p>
+          <span class="label important">NOTE</span> Also If you are used already the <code>":"</code> as property key(e.g. <code>db:username</code>)
+          or you are used already the ternary operator of OGNL expression(e.g. <code>${tableName != null ? tableName : 'global_constants'}</code>) on your sql definition,
+          you should be change the character that separate key and default value by adding a special property as follow:
+        </p>
+
+        <source><![CDATA[
+<properties resource="org/mybatis/example/config.properties">
+  <!-- ... -->
+  <property name="org.apache.ibatis.parsing.PropertyParser.default-value-separator" value="?:"/> <!-- Change default value of separator -->
+</properties>]]></source>
+        <source><![CDATA[
+<dataSource type="POOLED">
+  <!-- ... -->
+  <property name="username" value="${db:username?:ut_user}"/>
+</dataSource>]]></source>
+
       </subsection>
       <subsection name="settings">
         <p>Son muy importantes para definir cómo se comporta MyBatis en ejecución. La siguiente tabla describe las configuraciones (settings), sus significados y sus valores por defecto.</p>
@@ -137,13 +175,14 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
               <td>
                 aggressiveLazyLoading
               </td>
-              <td>Cuando está habilitada, todos los atributos de un objeto con propiedades con carga diferida (lazy loaded) se cargarán cuando se solicite cualquiera de ellos. En caso contrario, cada propiedad es cargada cuando es solicitada.
+              <td>
+                When enabled, any method call will load all the lazy properties of the object. Otherwise, each property is loaded on demand (see also <code>lazyLoadTriggerMethods</code>).
               </td>
               <td>
                 true | false
               </td>
               <td>
-                true
+                false (true in ≤3.4.1)
               </td>
             </tr>
             <tr>
@@ -364,11 +403,41 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
             </tr>
             <tr>
               <td>
+                defaultEnumTypeHandler
+              </td>
+              <td>
+                Specifies the <code>TypeHandler</code> used by default for Enum. (Since: 3.4.5)
+              </td>
+              <td>
+                A type alias or fully qualified class name.
+              </td>
+              <td>
+                org.apache.ibatis.type.EnumTypeHandler
+              </td>
+            </tr>
+            <tr>
+              <td>
                 callSettersOnNulls
               </td>
               <td>
                 Permite especificar si se invocarán a los setters y a los métodos put de los mapas si el valor obtenido es null.
                 Te en cuenta que si se activa las propiedades que puedan ser informadas con nulos no pueden ser de tipos primitivos.
+              </td>
+              <td>
+                true | false
+              </td>
+              <td>
+                false
+              </td>
+            </tr>
+            <tr>
+              <td>
+                returnInstanceForEmptyRow
+              </td>
+              <td>
+                MyBatis, by default, returns <code>null</code> when all the columns of a returned row are NULL.
+                When this setting is enabled, MyBatis returns an empty instance instead.
+                Note that it is also applied to nested results (i.e. collectioin and association). Since: 3.4.2
               </td>
               <td>
                 true | false
@@ -446,6 +515,22 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
               </td>
               <td>
                 true
+              </td>
+            </tr>
+            <tr>
+              <td>
+                configurationFactory
+              </td>
+              <td>
+                Specifies the class that provides an instance of <code>Configuration</code>.
+                The returned Configuration instance is used to load lazy properties of deserialized objects.
+                This class must have a method with a signature <code>static Configuration getConfiguration()</code>. (Since: 3.2.3)
+              </td>
+              <td>
+                A type alias or fully qualified class name.
+              </td>
+              <td>
+                Not set
               </td>
             </tr>
           </tbody>
@@ -743,8 +828,7 @@ public class Author {
         </p>
         <p>
           <span class="label important">NOTE</span>
-          If you use classes provided by JSR-310(Date and Time API),
-          you can use the <a href="https://github.com/mybatis/typehandlers-jsr310">mybatis-typehandlers-jsr310</a>.
+          Since version 3.4.5, The MyBatis has been supported JSR-310(Date and Time API) by default.
         </p>
         <table>
           <thead>
@@ -1036,6 +1120,127 @@ public class Author {
                 Cualquiera compatible con <code>NUMERIC</code> o <code>DOUBLE</code> por que se guarda la posición (no el código).
               </td>
             </tr>
+            <tr>
+              <td>
+                <code>InstantTypeHandler</code>
+              </td>
+              <td>
+                <code>java.time.Instant</code>
+              </td>
+              <td>
+                <code>TIMESTAMP</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>LocalDateTimeTypeHandler</code>
+              </td>
+              <td>
+                <code>java.time.LocalDateTime</code>
+              </td>
+              <td>
+                <code>TIMESTAMP</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>LocalDateTypeHandler</code>
+              </td>
+              <td>
+                <code>java.time.LocalDate</code>
+              </td>
+              <td>
+                <code>DATE</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>LocalTimeTypeHandler</code>
+              </td>
+              <td>
+                <code>java.time.LocalTime</code>
+              </td>
+              <td>
+                <code>TIME</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>OffsetDateTimeTypeHandler</code>
+              </td>
+              <td>
+                <code>java.time.OffsetDateTime</code>
+              </td>
+              <td>
+                <code>TIMESTAMP</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>OffsetTimeTypeHandler</code>
+              </td>
+              <td>
+                <code>java.time.OffsetTime</code>
+              </td>
+              <td>
+                <code>TIME</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>ZonedDateTimeTypeHandler</code>
+              </td>
+              <td>
+                <code>java.time.ZonedDateTime</code>
+              </td>
+              <td>
+                <code>TIMESTAMP</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>YearTypeHandler</code>
+              </td>
+              <td>
+                <code>java.time.Year</code>
+              </td>
+              <td>
+                <code>INTEGER</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>MonthTypeHandler</code>
+              </td>
+              <td>
+                <code>java.time.Month</code>
+              </td>
+              <td>
+                <code>INTEGER</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>YearMonthTypeHandler</code>
+              </td>
+              <td>
+                <code>java.time.YearMonth</code>
+              </td>
+              <td>
+                <code>VARCHAR</code> or <code>LONGVARCHAR</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>JapaneseDateTypeHandler</code>
+              </td>
+              <td>
+                <code>java.time.chrono.JapaneseDate</code>
+              </td>
+              <td>
+                <code>DATE</code>
+              </td>
+            </tr>
           </tbody>
         </table>
         <p>
@@ -1190,10 +1395,6 @@ public class GenericTypeHandler<E extends MyObject> extends BaseTypeHandler<E> {
     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<!DOCTYPE mapper
-    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-
 <mapper namespace="org.apache.ibatis.submitted.rounding.Mapper">
 	<resultMap type="org.apache.ibatis.submitted.rounding.User" id="usermap">
 		<id column="id" property="id"/>
@@ -1317,7 +1518,7 @@ public class ExamplePlugin implements Interceptor {
           <strong>Acerca de sobrescribir la clase Configuration
           </strong>
         </p>
-        <p>Además de modificar el comportamiento de MyBatis mediante los plugins, también es posible sobrescribir la clase Configuración por completo. Extiende la clase, sobrescribe sus métodos y pásala como parámetro en la llamada al método sqlSessionFactoryBuilder.build(myConfig). Nuevamente, ten cuenta que esto puede afectar seriamente al funcionamiento de MyBatis así que úsalo con cuidado.
+        <p>Además de modificar el comportamiento de MyBatis mediante los plugins, también es posible sobrescribir la clase Configuración por completo. Extiende la clase, sobrescribe sus métodos y pásala como parámetro en la llamada al método SqlSessionFactoryBuilder.build(myConfig). Nuevamente, ten cuenta que esto puede afectar seriamente al funcionamiento de MyBatis así que úsalo con cuidado.
         </p>
       </subsection>
       <subsection name="environments">
@@ -1335,13 +1536,13 @@ public class ExamplePlugin implements Interceptor {
         </ul>
         <p>Para indicar qué entorno debe utilizarse, debes informar el parámetro opcional correspondiente en la llamada al SqlSessionFactoryBuilder. Existen dos métodos que aceptan el entorno:</p>
 
-        <source><![CDATA[SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment);
-SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment,properties);]]></source>
+        <source><![CDATA[SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environment);
+SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environment,properties);]]></source>
 
         <p>Si se omite el entorno se usará el entorno por defecto:</p>
 
-        <source><![CDATA[SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader);
-SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader,properties);]]></source>
+        <source><![CDATA[SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader);
+SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader,properties);]]></source>
 
         <p>El elemento environments contiene la configuración del entorno:</p>
 
@@ -1448,6 +1649,14 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader,properties);]]
           <li><code>poolMaximumCheckoutTime</code> – Tiempo máximo que puede permanecer una conexión fuera del pool antes de que sea forzosamente devuelta. Por defecto: 20000ms (20 segundos)
           </li>
           <li><code>poolTimeToWait</code> – Este es un parámetro de bajo nivel que permite escribir un log y reintentar la adquisición de una conexión en caso de que no se haya conseguido la conexión transcurrido un tiempo razonable (esto evita que se produzcan fallos constantes y silenciosos si el pool está mal configurado). Por defecto:  20000ms (20 segundos)
+          </li>
+          <li><code>poolMaximumLocalBadConnectionTolerance</code> – This is a low level setting about
+            tolerance of bad connections got for any thread. If a thread got a bad connection, it may
+            still have another chance to re-attempt to get another connection which is valid. But the
+            retrying times should not more than the sum of <code>poolMaximumIdleConnections</code>
+            and <code>poolMaximumLocalBadConnectionTolerance</code>.
+            Default:
+            3 (Since: 3.4.5)
           </li>
           <li><code>poolPingQuery</code> – La query de ping (sondeo) que se envía a la base de datos para verificar que la conexión funciona correctamente y que está lista para aceptar nuevas peticiones de conexión. El valor por defecto es "NO PING QUERY SET", que hará que la mayoría de los drivers de base de datos devuelvan un error con un mensaje de error decente.
           </li>

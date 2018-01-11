@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -147,7 +147,10 @@ public class CglibProxyFactory implements ProxyFactory {
             if (lazyLoader.size() > 0 && !FINALIZE_METHOD.equals(methodName)) {
               if (aggressive || lazyLoadTriggerMethods.contains(methodName)) {
                 lazyLoader.loadAll();
-              } else if (PropertyNamer.isProperty(methodName)) {
+              } else if (PropertyNamer.isSetter(methodName)) {
+                final String property = PropertyNamer.methodToProperty(methodName);
+                lazyLoader.remove(property);
+              } else if (PropertyNamer.isGetter(methodName)) {
                 final String property = PropertyNamer.methodToProperty(methodName);
                 if (lazyLoader.hasLoader(property)) {
                   lazyLoader.load(property);
@@ -182,7 +185,7 @@ public class CglibProxyFactory implements ProxyFactory {
     @Override
     public Object intercept(Object enhanced, Method method, Object[] args, MethodProxy methodProxy) throws Throwable {
       final Object o = super.invoke(enhanced, method, args);
-      return (o instanceof AbstractSerialStateHolder) ? o : methodProxy.invokeSuper(o, args);
+      return o instanceof AbstractSerialStateHolder ? o : methodProxy.invokeSuper(o, args);
     }
 
     @Override

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,23 +15,27 @@
  */
 package org.apache.ibatis.submitted.lazy_deserialize;
 
-import java.io.PrintWriter;
-import java.io.Reader;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.jdbc.ScriptRunner;
-import org.apache.ibatis.session.SqlSession;
-import org.apache.ibatis.session.SqlSessionFactory;
-import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import static org.junit.Assert.*;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.PrintWriter;
+import java.io.Reader;
+import java.sql.Connection;
+import java.sql.DriverManager;
+
+import org.apache.ibatis.executor.ExecutorException;
+import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.Configuration;
-import static org.junit.Assert.*;
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  *
@@ -40,75 +44,97 @@ import static org.junit.Assert.*;
  */
 public final class LazyDeserializeTest {
 
-    private static final int FOO_ID = 1;
-    private static final int BAR_ID = 10;
-    private static SqlSessionFactory factory;
+  private static final int FOO_ID = 1;
+  private static final int BAR_ID = 10;
+  private static SqlSessionFactory factory;
 
-    public static Configuration getConfiguration() {
-        return factory.getConfiguration();
+  public static Configuration getConfiguration() {
+    return factory.getConfiguration();
+  }
+
+  @Before
+  public void setupClass() throws Exception {
+    Connection conn = null;
+
+    try {
+      Class.forName("org.hsqldb.jdbcDriver");
+      conn = DriverManager.getConnection("jdbc:hsqldb:mem:lazy_deserialize", "sa", "");
+
+      Reader reader = Resources
+          .getResourceAsReader("org/apache/ibatis/submitted/lazy_deserialize/CreateDB.sql");
+
+      ScriptRunner runner = new ScriptRunner(conn);
+      runner.setLogWriter(null);
+      runner.setErrorLogWriter(new PrintWriter(System.err));
+      runner.runScript(reader);
+      conn.commit();
+      reader.close();
+
+      reader = Resources
+          .getResourceAsReader("org/apache/ibatis/submitted/lazy_deserialize/ibatisConfig.xml");
+      factory = new SqlSessionFactoryBuilder().build(reader);
+      reader.close();
+    } finally {
+      if (conn != null) {
+        conn.close();
+      }
     }
+  }
 
-    @BeforeClass
-    public static void setupClass() throws Exception {
-        Connection conn = null;
+  @Test
+  public void testLoadLazyDeserialize() throws Exception {
+    factory.getConfiguration().setConfigurationFactory(this.getClass());
+    final SqlSession session = factory.openSession();
+    try {
+      final Mapper mapper = session.getMapper(Mapper.class);
+      final LazyObjectFoo foo = mapper.loadFoo(FOO_ID);
 
-        try {
-            Class.forName("org.hsqldb.jdbcDriver");
-            conn = DriverManager.getConnection("jdbc:hsqldb:mem:lazy_deserialize", "sa", "");
+      final byte[] serializedFoo = this.serializeFoo(foo);
+      final LazyObjectFoo deserializedFoo = this.deserializeFoo(serializedFoo);
 
-            Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/lazy_deserialize/CreateDB.sql");
-
-            ScriptRunner runner = new ScriptRunner(conn);
-            runner.setLogWriter(null);
-            runner.setErrorLogWriter(new PrintWriter(System.err));
-            runner.runScript(reader);
-            conn.commit();
-            reader.close();
-
-            reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/lazy_deserialize/ibatisConfig.xml");
-            factory = new SqlSessionFactoryBuilder().build(reader);
-            reader.close();
-        } finally {
-            if (conn != null) {
-                conn.close();
-            }
-        }
+      assertNotNull(deserializedFoo);
+      assertEquals(Integer.valueOf(FOO_ID), deserializedFoo.getId());
+      assertNotNull(deserializedFoo.getLazyObjectBar());
+      assertEquals(Integer.valueOf(BAR_ID), deserializedFoo.getLazyObjectBar().getId());
+    } finally {
+      session.close();
     }
+  }
 
-    @Test
-    public void testLoadLazyDeserialize() throws Exception {
-        final SqlSession session = factory.openSession();
-        try {
-            final Mapper mapper = session.getMapper(Mapper.class);
-            final LazyObjectFoo foo = mapper.loadFoo(FOO_ID);
-
-            final byte[] serializedFoo = this.serializeFoo(foo);
-            final LazyObjectFoo deserializedFoo = this.deserializeFoo(serializedFoo);
-
-            assertNotNull(deserializedFoo);
-            assertEquals(Integer.valueOf(FOO_ID), deserializedFoo.getId());
-            assertNotNull(deserializedFoo.getLazyObjectBar());
-            assertEquals(Integer.valueOf(BAR_ID), deserializedFoo.getLazyObjectBar().getId());
-        } finally {
-            session.close();
-        }
+  @Test
+  public void testLoadLazyDeserializeWithoutConfigurationFactory() throws Exception {
+    final SqlSession session = factory.openSession();
+    try {
+      final Mapper mapper = session.getMapper(Mapper.class);
+      final LazyObjectFoo foo = mapper.loadFoo(FOO_ID);
+      final byte[] serializedFoo = this.serializeFoo(foo);
+      final LazyObjectFoo deserializedFoo = this.deserializeFoo(serializedFoo);
+      try {
+        deserializedFoo.getLazyObjectBar();
+        fail();
+      } catch (ExecutorException e) {
+        assertTrue(e.getMessage().contains("Cannot get Configuration as configuration factory was not set."));
+      }
+    } finally {
+      session.close();
     }
+  }
 
-    private byte[] serializeFoo(final LazyObjectFoo foo) throws Exception {
-        final ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        final ObjectOutputStream oos = new ObjectOutputStream(bos);
-        oos.writeObject(foo);
-        oos.close();
+  private byte[] serializeFoo(final LazyObjectFoo foo) throws Exception {
+    final ByteArrayOutputStream bos = new ByteArrayOutputStream();
+    final ObjectOutputStream oos = new ObjectOutputStream(bos);
+    oos.writeObject(foo);
+    oos.close();
 
-        return bos.toByteArray();
-    }
+    return bos.toByteArray();
+  }
 
-    private LazyObjectFoo deserializeFoo(final byte[] serializedFoo) throws Exception {
-        final ByteArrayInputStream bis = new ByteArrayInputStream(serializedFoo);
-        final ObjectInputStream ios = new ObjectInputStream(bis);
-        final LazyObjectFoo foo = LazyObjectFoo.class.cast(ios.readObject());
-        ios.close();
-        return foo;
-    }
+  private LazyObjectFoo deserializeFoo(final byte[] serializedFoo) throws Exception {
+    final ByteArrayInputStream bis = new ByteArrayInputStream(serializedFoo);
+    final ObjectInputStream ios = new ObjectInputStream(bis);
+    final LazyObjectFoo foo = LazyObjectFoo.class.cast(ios.readObject());
+    ios.close();
+    return foo;
+  }
 
 }

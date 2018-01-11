@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -81,7 +81,7 @@ public class XmlExternalRefTest {
 
     Configuration configuration = sqlSessionFactory.getConfiguration();
     configuration.getMappedStatementNames();
-    
+
     MappedStatement selectPetStatement = configuration.getMappedStatement("org.apache.ibatis.submitted.xml_external_ref.PetMapper.select");
     MappedStatement selectPersonStatement = configuration.getMappedStatement("org.apache.ibatis.submitted.xml_external_ref.PersonMapper.select");
     Cache cache = selectPetStatement.getCache();
@@ -118,6 +118,7 @@ public class XmlExternalRefTest {
 
     Connection conn = sqlSessionFactory.getConfiguration().getEnvironment().getDataSource().getConnection();
     initDb(conn);
+    conn.close();
 
     return sqlSessionFactory;
   }
@@ -134,6 +135,7 @@ public class XmlExternalRefTest {
 
     configuration.addMapper(PersonMapper.class);
     configuration.addMapper(PetMapper.class);
+    c.close();
 
     return new SqlSessionFactoryBuilder().build(configuration);
   }

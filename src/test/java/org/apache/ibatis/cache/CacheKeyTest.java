@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -16,8 +16,18 @@
 package org.apache.ibatis.cache;
 
 import static org.junit.Assert.*;
+
+import org.junit.Assert;
 import org.junit.Test;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.NotSerializableException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.Date;
 
 public class CacheKeyTest {
@@ -78,6 +88,28 @@ public class CacheKeyTest {
     CacheKey key1 = new CacheKey(new Object[] { array1 });
     CacheKey key2 = new CacheKey(new Object[] { array2 });
     assertTrue(key1.equals(key2));
+  }
+
+  @Test (expected = NotSerializableException.class)
+  public void serializationExceptionTest() throws Exception {
+    CacheKey cacheKey = new CacheKey();
+    cacheKey.update(new Object());
+    serialize(cacheKey);
+  }
+
+  @Test
+  public void serializationTest() throws Exception {
+    CacheKey cacheKey = new CacheKey();
+    cacheKey.update("serializable");
+    Assert.assertEquals(cacheKey, serialize(cacheKey));
+  }
+
+  private static <T> T serialize(T object) throws Exception {
+      ByteArrayOutputStream baos = new ByteArrayOutputStream();
+      new ObjectOutputStream(baos).writeObject(object);
+
+      ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+      return (T) new ObjectInputStream(bais).readObject();
   }
 
 }

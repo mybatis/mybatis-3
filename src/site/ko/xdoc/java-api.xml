@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2017 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -285,6 +285,7 @@ RowBounds rowBounds = new RowBounds(offset, limit);</source>
   <p>ResultHandler파라미터는 레코드별로 다룰수 있도록 해준다. 
   List에 추가할수도 있고 Map, Set을 만들수도 있으며 각각의 결과를 그냥 던질수도 있다. 
   ResultHandler로 많은 것을 할 수 있고 마이바티스는 결과셋을 다루기 위해 내부적으로 사용한다.</p>
+  <p>Since 3.4.6, ResultHandler passed to a CALLABLE statement is used on every REFCURSOR output parameter of the stored procedure if there is any.</p>
   <p>인터페이스는 매우 간단하다.</p>  
   <source><![CDATA[package org.apache.ibatis.session;
 public interface ResultHandler<T> {
@@ -292,6 +293,13 @@ public interface ResultHandler<T> {
 }]]></source>
 
   <p>ResultContext파라미터는 결과 객체에 접근할 수 있도록 해준다.</p>
+
+  <p>Using a ResultHandler has two limitations that you should be aware of:</p>
+  
+  <ul>
+  <li>Data got from an method called with a ResultHandler will not be cached.</li>
+  <li>When using advanced resultmaps MyBatis will probably require several rows to build an object. If a ResultHandler is used you may be given an object whose associations or collections are not yet filled.</li>
+  </ul>
 
   <h5>배치 수정시 flush메소드</h5>
   <p>어떤 시점에 JDBC드라이버 클래스에 저장된 배치 수정구문을 지울(flushing(executing)) 방법이 있다. 
@@ -409,15 +417,25 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
         <td><code>Class</code></td>
         <td><code>&lt;cache&gt;</code></td>
         <td>명명공간을 위한 캐시 설정
-		사용가능한 속성들 : implementation, eviction, flushInterval, size 그리고 readWrite.
+		사용가능한 속성들 : implementation, eviction, flushInterval, size, readWrite, blocking 그리고 properties.
         </td>
+      </tr>
+      <tr>
+        <td><code>@Property</code></td>
+        <td>N/A</td>
+        <td><code>&lt;property&gt;</code></td>
+        <td>property 값 또는 placeholder(<code>mybatis-config.xml</code> 에 정의된 configuration properties 로 대체 할 수 있음) 를 지정한다. 사용가능한 속성들: <code>name</code>, <code>value</code>. (MyBatis 3.4.2 이상에서 사용 가능)</td>
       </tr>
       <tr>
         <td><code>@CacheNamespaceRef</code></td>
         <td><code>Class</code></td>
         <td><code>&lt;cacheRef&gt;</code></td>
-        <td>다른 명명공간의 캐시에 대한 참조
-		사용가능한 속성들 : value(명명공간의 이름).</td>
+        <td>
+          다른 명명공간의 캐시에 대한 참조 Note that caches declared in an XML mapper file are considered a separate namespace, even if they share the same FQCN. 사용가능한 속성들 : <code>value</code>, <code>name</code>.
+          이 annotation 을 사용하려면 <code>value</code> 또는 <code>name</code> 속성을 지정해야 한다.
+          <code>value</code> 속성은 namespace(namespace 이름은 지정된 java type 의 FQCN 이 된다) 를 나타내는 java type 을 지정한다,
+          그리고 <code>name</code> 속성(이 속성은 3.4.2 부터 사용가능하다) 은 namespace 를 나타내는 이름을 지정한다.
+        </td>
       </tr>
       <tr>
         <td><code>@ConstructorArgs</code></td>
@@ -428,7 +446,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
       </tr>
       <tr>
         <td><code>@Arg</code></td>
-        <td><code>Method</code></td>
+        <td>N/A</td>
         <td>
           <ul>
             <li><code>&lt;arg&gt;</code></li>
@@ -450,7 +468,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
       </tr>
       <tr>
         <td><code>@Case</code></td>
-        <td><code>Method</code></td>
+        <td>N/A</td>
         <td><code>&lt;case&gt;</code></td>
         <td>case 의 값과 매핑
 		사용가능한 속성들 : value, type, results. 
@@ -466,7 +484,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
       </tr>
       <tr>
         <td><code>@Result</code></td>
-        <td><code>Method</code></td>
+        <td>N/A</td>
         <td>
           <ul>
             <li><code>&lt;result&gt;</code></li>
@@ -482,7 +500,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
       </tr>
       <tr>
         <td><code>@One</code></td>
-        <td><code>Method</code></td>
+        <td>N/A</td>
         <td><code>&lt;association&gt;</code></td>
         <td>복잡한 타입의 한개의 프로퍼티를 위한 매핑이다.
 		사용가능한 속성들 : select(매핑 구문의 이름, 예를들어 매퍼 메소드)
@@ -491,7 +509,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
       </tr>
       <tr>
         <td><code>@Many</code></td>
-        <td><code>Method</code></td>
+        <td>N/A</td>
         <td><code>&lt;collection&gt;</code></td>
         <td>복잡한 타입의 collection 프로퍼티를 위한 매핑이다. 
 		사용가능한 속성들 : select(매핑 구문의 이름, 예를들어 매퍼 메소드)
@@ -569,9 +587,9 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
             <li><code>&lt;select&gt;</code></li>
           </ul>
         </td>
-        <td>실행시 SQL 을 리턴할 클래스 과 메소드명을 명시하도록 해주는 대체수단의 애노테이션이다.
-		매핑된 구문을 실행할 때 마이바티스는 클래스의 인스턴스를 만들고 메소드를 실행한다. 
-		메소드는 파라미터 객체를 받을 수도 있다.(마이바티스 3.4이상에서는 복수 파라미터를 허용한다.)
+        <td>실행시 SQL 을 리턴할 클래스 과 메소드명을 명시하도록 해주는 대체수단의 애노테이션이다 (Since 3.4.6, you can specify the <code>CharSequence</code> instead of <code>String</code> as a method return type).
+		매핑된 구문을 실행할 때 마이바티스는 클래스의 인스턴스를 만들고 메소드를 실행한다.
+    Mapper 메서드의 인수인 "Mapper interface type" 과 <code>ProviderContext</code>(Mybatis 3.4.5 부터) 를 이용한 "Mapper method" 로 전달 된 객체를 메서드 매개변수로 전달할 수 있다.(마이바티스 3.4이상에서는 복수 파라미터를 허용한다.)
 		사용가능한 속성들 : type, method. 
 		type 속성은 클래스.
 		method 속성은 메소드명이다.
@@ -666,7 +684,7 @@ Company getCompanyById(Integer id);</source>
 List<User> getUsersByName(String name);
 
 class UserSqlBuilder {
-  public String buildGetUsersByName(final String name) {
+  public static String buildGetUsersByName(final String name) {
     return new SQL(){{
       SELECT("*");
       FROM("users");
@@ -686,7 +704,7 @@ List<User> getUsersByName(
 class UserSqlBuilder {
 
   // @Param애노테이션을 사용하지 않으면 매퍼 메소드와 동일한 인자를 정의해야만 한다. 
-  public String buildGetUsersByName(
+  public static String buildGetUsersByName(
       final String name, final String orderByColumn) {
     return new SQL(){{
       SELECT("*");
@@ -697,7 +715,7 @@ class UserSqlBuilder {
   }
 
   // @Param애노테이션을 사용한다면, 오직 사용할 인자만 정의할 수 있다. 
-  public String buildGetUsersByName(@Param("orderByColumn") final String orderByColumn) {
+  public static String buildGetUsersByName(@Param("orderByColumn") final String orderByColumn) {
     return new SQL(){{
       SELECT("*");
       FROM("users");

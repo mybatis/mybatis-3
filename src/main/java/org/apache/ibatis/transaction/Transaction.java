@@ -17,7 +17,6 @@ package org.apache.ibatis.transaction;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 /**
  * Wraps a database connection.

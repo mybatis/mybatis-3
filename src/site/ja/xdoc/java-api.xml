@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2017 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -216,6 +216,7 @@ RowBounds rowBounds = new RowBounds(offset, limit);</source>
 
   <p>ドライバーによって得られる効果は異なります。SCROLL_SENSITIVE または SCROLL_INSENSITIVE （つまり FORWARD_ONLY 以外）の結果セットタイプを使った時、最も良いパフォーマンスが得られます。</p>
   <p>ResultHandler を渡すと、各行を自由に処理することができます。List に追加したり、Map や Set を作成することもできますし、結果を捨てて合計値のみを返すこともできます。ResultHandler を使えば好きな処理を行うことも可能で、MyBatis 自身も内部的に結果リストを構築するために ResultHandler を利用しています。</p>
+  <p>3.4.6 以降では、CALLABLE ステートメントに渡された ResultHandler は、指定されたストアド・プロシージャで宣言されている REFCURSOR 型の OUT 引数全てに対して適用されます。</p>
   <p>ResultHandler インターフェイスは非常にシンプルです。</p>  
   <source><![CDATA[package org.mybatis.executor.result;
 public interface ResultHandler<T> {
@@ -321,13 +322,24 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
         <td><code>@CacheNamespace</code></td>
         <td><code>Class</code></td>
         <td><code>&lt;cache&gt;</code></td>
-        <td>アノテーションを付加したネームスペース（＝クラス）に対するキャッシュを設定します。属性: <code>implementation</code>, <code>eviction</code>, <code>flushInterval</code>, <code>size</code>, <code>readWrite</code></td>
+        <td>アノテーションを付加したネームスペース（＝クラス）に対するキャッシュを設定します。属性: <code>implementation</code>, <code>eviction</code>, <code>flushInterval</code>, <code>size</code>, <code>readWrite</code>, <code>blocking</code>, <code>properties</code></td>
+      </tr>
+      <tr>
+        <td><code>@Property</code></td>
+        <td>N/A</td>
+        <td><code>&lt;property&gt;</code></td>
+        <td>プロパティ値またはプレースホルダ(<code>mybatis-config.xml</code>で定義した構成プロパティで置き換えすることができる)を指定します。属性: <code>name</code>, <code>value</code>。 (MyBatis 3.4.2+で利用可能)</td>
       </tr>
       <tr>
         <td><code>@CacheNamespaceRef</code></td>
         <td><code>Class</code></td>
         <td><code>&lt;cacheRef&gt;</code></td>
-        <td>別のネームスペースに対して定義されているキャッシュの設定を参照します。 単一値 <code>value</code> として参照先のキャッシュが定義されているネームスペース（完全修飾クラス名）を指定します。</td>
+        <td>
+          別のネームスペースに対して定義されているキャッシュの設定を参照します。XML マッパーで宣言されているキャッシュは、namespace に同一 FQCN が指定されていても独立したキャッシュとして扱われます。属性: <code>value</code>, <code>name</code>
+          このアノテーションを使用する場合は、<code>value</code>または<code>name</code>属性のどちらかを指定する必要があります。
+          <code>value</code>属性にはネームスペースを示すJava型(ネームスペース名は指定したJava型のFQCNになる)を、
+          <code>name</code>属性(この属性は3.4.2以降で利用可能)にはネームスペースを示す名前を指定します。
+        </td>
       </tr>
       <tr>
         <td><code>@ConstructorArgs</code></td>
@@ -337,7 +349,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
       </tr>
       <tr>
         <td><code>@Arg</code></td>
-        <td><code>Method</code></td>
+        <td>N/A</td>
         <td>
           <ul>
             <li><code>&lt;arg&gt;</code></li>
@@ -357,7 +369,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
       </tr>
       <tr>
         <td><code>@Case</code></td>
-        <td><code>Method</code></td>
+        <td>N/A</td>
         <td><code>&lt;case&gt;</code></td>
         <td>値と対応するマッピングを含む個々の判定条件です。属性: <code>value</code>, <code>type</code>,
         <code>results</code>. results は Result の配列を値に取るので、この Case アノテーションは次に挙げる <code>Results</code> アノテーションによって定義される実際の resultMap に近いものです。</td>
@@ -370,7 +382,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
       </tr>
       <tr>
         <td><code>@Result</code></td>
-        <td><code>Method</code></td>
+        <td>N/A</td>
         <td>
           <ul>
             <li><code>&lt;result&gt;</code></li>
@@ -383,7 +395,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
       </tr>
       <tr>
         <td><code>@One</code></td>
-        <td><code>Method</code></td>
+        <td>N/A</td>
         <td><code>&lt;association&gt;</code></td>
         <td>複雑型のプロパティのマッピング情報を定義します。属性: <code>select</code>, <code>fetchType</code>. select は適切な型を読み込むことができるマップドステートメント（Mapper メソッド）の完全修飾名です。
         fetchType はグローバルな設定 <code>lazyLoadingEnabled</code> をオーバーライドする場合に指定します。
@@ -391,7 +403,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
       </tr>
       <tr>
         <td><code>@Many</code></td>
-        <td><code>Method</code></td>
+        <td>N/A</td>
         <td><code>&lt;collection&gt;</code></td>
         <td>複雑型のプロパティのマッピング情報を定義します。属性: <code>select</code>, <code>fetchType</code>. select は適切な型のコレクションを読み込むことができるマップドステートメント（Mapper メソッド）の完全修飾名です。
         fetchType はグローバルな設定 <code>lazyLoadingEnabled</code> をオーバーライドする場合に指定します。
@@ -453,8 +465,9 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
             <li><code>&lt;select&gt;</code></li>
           </ul>
         </td>
-        <td>これらのアノテーションは動的 SQL を生成するためのものです。実行時に指定されたメソッドが呼び出され、メソッドから返された SQL ステートメントが実行されます。マップドステートメントを実行する際、プロバイダーによって指定したクラスのインスタンスが作成され、指定されたメソッドが実行されます。
-        メソッドに引数を渡すことができます。(MyBatis 3.4以降では、複数の引数を渡すことができます)
+        <td>これらのアノテーションは動的 SQL を生成するためのものです。実行時に指定されたメソッドが呼び出され、メソッドから返された SQL ステートメントが実行されます (MyBatis 3.4.6以降では、メソッドの返り値として <code>String</code> ではなく <code>CharSequence</code> を指定することができます)。
+        マップドステートメントを実行する際、プロバイダーによって指定したクラスのインスタンスが作成され、指定されたメソッドが実行されます。
+        なお、メソッド引数にはMapperメソッドの引数に渡したオブジェクトに加え、<code>ProviderContext</code>(MyBatis 3.4.5以降で利用可能)を介して「Mapperインタフェースの型」と「Mapperメソッド」を渡すことができます。(MyBatis 3.4以降では、複数の引数を渡すことができます)
         キー: <code>type</code>, <code>method</code>. <code>type</code> にはクラスオブジェクト、<code>method</code> にはメソッド名を指定します。 <span class="label important">NOTE</span> 次の章で、クリーンで可読性の高いコードで動的 SQL を構築するためのクラスについて説明します。
 </td>
       </tr>
@@ -530,7 +543,7 @@ Company getCompanyById(Integer id);</source>
 List<User> getUsersByName(String name);
 
 class UserSqlBuilder {
-  public String buildGetUsersByName(final String name) {
+  public static String buildGetUsersByName(final String name) {
     return new SQL(){{
       SELECT("*");
       FROM("users");
@@ -550,7 +563,7 @@ List<User> getUsersByName(
 class UserSqlBuilder {
 
   // @Paramを使わない場合は, Mapperメソッドと同じ引数で定義する必要があります。
-  public String buildGetUsersByName(
+  public static String buildGetUsersByName(
       final String name, final String orderByColumn) {
     return new SQL(){{
       SELECT("*");
@@ -561,7 +574,7 @@ class UserSqlBuilder {
   }
 
   // @Paramを使う場合は, 必要な引数のみ定義することができます。
-  public String buildGetUsersByName(@Param("orderByColumn") final String orderByColumn) {
+  public static String buildGetUsersByName(@Param("orderByColumn") final String orderByColumn) {
     return new SQL(){{
       SELECT("*");
       FROM("users");

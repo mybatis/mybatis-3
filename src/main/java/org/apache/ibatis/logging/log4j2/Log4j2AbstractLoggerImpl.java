@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -29,11 +29,11 @@ import org.apache.logging.log4j.spi.ExtendedLoggerWrapper;
  */
 public class Log4j2AbstractLoggerImpl implements Log {
 
-  private static Marker MARKER = MarkerManager.getMarker(LogFactory.MARKER);
+  private static final Marker MARKER = MarkerManager.getMarker(LogFactory.MARKER);
 
   private static final String FQCN = Log4j2Impl.class.getName();
 
-  private ExtendedLoggerWrapper log;
+  private final ExtendedLoggerWrapper log;
 
   public Log4j2AbstractLoggerImpl(AbstractLogger abstractLogger) {
     log = new ExtendedLoggerWrapper(abstractLogger, abstractLogger.getName(), abstractLogger.getMessageFactory());

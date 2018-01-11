@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2017 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -22,12 +22,12 @@
   <parent>
     <groupId>org.mybatis</groupId>
     <artifactId>mybatis-parent</artifactId>
-    <version>28-SNAPSHOT</version>
+    <version>29</version>
     <relativePath />
   </parent>
 
   <artifactId>mybatis</artifactId>
-  <version>3.4.2-SNAPSHOT</version>
+  <version>3.4.6-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>mybatis</name>
@@ -51,7 +51,7 @@
       <email>selva.andre@gmail.com</email>
     </contributor>
     <contributor>
-      <name>Antonio S&#225;nchez</name>
+      <name>Antonio Sánchez</name>
       <email>juntandolineas@gmail.com</email>
     </contributor>
     <contributor>
@@ -103,7 +103,7 @@
       <email>riccardo.cossu@gmail.com</email>
     </contributor>
     <contributor>
-      <name>Tom&#225;&#353; Neuberg</name>
+      <name>Tomáš Neuberg</name>
       <email>neuberg@m-atelier.cz</email>
     </contributor>
   </contributors>
@@ -134,38 +134,39 @@
     <maven.compiler.testTarget>1.8</maven.compiler.testTarget>
     <maven.compiler.testSource>1.8</maven.compiler.testSource>
     <maven.compiler.testCompilerArgument>-parameters</maven.compiler.testCompilerArgument>
-    <clirr.comparisonVersion>3.3.0</clirr.comparisonVersion>
+    <clirr.comparisonVersion>3.3.1</clirr.comparisonVersion>
     <findbugs.onlyAnalyze>org.apache.ibatis.*</findbugs.onlyAnalyze>
     <osgi.export>org.apache.ibatis.*;version=${project.version};-noimport:=true</osgi.export>
     <osgi.import>*;resolution:=optional</osgi.import>
     <osgi.dynamicImport>*</osgi.dynamicImport>
+    <maven.surefire.excludeGroups>org.apache.ibatis.test.SlowTests</maven.surefire.excludeGroups>
   </properties>
 
   <dependencies>
     <dependency>
       <groupId>ognl</groupId>
       <artifactId>ognl</artifactId>
-      <version>3.1.10</version>
+      <version>3.1.16</version>
       <scope>compile</scope>
       <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>org.javassist</groupId>
       <artifactId>javassist</artifactId>
-      <version>3.20.0-GA</version>
+      <version>3.22.0-GA</version>
       <scope>compile</scope>
       <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
-      <version>1.7.21</version>
+      <version>1.7.25</version>
       <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-log4j12</artifactId>
-      <version>1.7.21</version>
+      <version>1.7.25</version>
       <optional>true</optional>
     </dependency>
     <dependency>
@@ -190,21 +191,21 @@
     <dependency>
       <groupId>cglib</groupId>
       <artifactId>cglib</artifactId>
-      <version>3.2.4</version>
+      <version>3.2.5</version>
       <optional>true</optional>
     </dependency>
 
     <!-- Test dependencies -->
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.12</version>
+      <groupId>org.junit.vintage</groupId>
+      <artifactId>junit-vintage-engine</artifactId>
+      <version>4.12.2</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.hsqldb</groupId>
       <artifactId>hsqldb</artifactId>
-      <version>2.3.4</version>
+      <version>2.3.5</version> <!-- Version 2.4.0 required jdk8 -->
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -216,7 +217,7 @@
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-core</artifactId>
-      <version>2.0.87-beta</version>
+      <version>2.12.0</version>
       <scope>test</scope>
     </dependency>
     <!-- Do not go to 2.x until we are on jdk7 -->
@@ -240,9 +241,27 @@
     </dependency>
     <!-- postgresql driver is required to run the refcursor tests -->
     <dependency>
-      <groupId>postgresql</groupId>
+      <groupId>org.postgresql</groupId>
       <artifactId>postgresql</artifactId>
-      <version>9.1-901-1.jdbc4</version>
+      <version>42.1.4.jre6</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.assertj</groupId>
+      <artifactId>assertj-core</artifactId>
+      <version>1.7.1</version> <!-- Stay on 1.7.1 to support Java 6 -->
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>eu.codearte.catch-exception</groupId>
+      <artifactId>catch-exception</artifactId>
+      <version>1.4.4</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>ru.yandex.qatools.embed</groupId>
+      <artifactId>postgresql-embedded</artifactId>
+      <version>2.5</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
@@ -327,6 +346,12 @@
           </excludes>
         </configuration>
       </plugin>
+      <!-- Patch until mybatis-parent 30 (jdk9 build support) -->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>animal-sniffer-maven-plugin</artifactId>
+        <version>1.16</version>
+      </plugin>
     </plugins>
 
     <resources>
@@ -364,7 +389,7 @@
       <properties>
         <maven.compiler.testTarget>1.6</maven.compiler.testTarget>
         <maven.compiler.testSource>1.6</maven.compiler.testSource>
-        <maven.compiler.testCompilerArgument></maven.compiler.testCompilerArgument>
+        <maven.compiler.testCompilerArgument />
       </properties>
       <build>
         <pluginManagement>
@@ -379,8 +404,20 @@
                 </testExcludes>
               </configuration>
             </plugin>
+            <plugin>
+              <groupId>org.apache.felix</groupId>
+              <artifactId>maven-bundle-plugin</artifactId>
+              <version>2.5.4</version> <!-- For java 6, remain at older version -->
+            </plugin>
           </plugins>
         </pluginManagement>
+        <plugins>
+            <plugin>
+              <groupId>org.apache.felix</groupId>
+              <artifactId>maven-bundle-plugin</artifactId>
+              <version>2.5.4</version> <!-- For java 6, remain at older version -->
+            </plugin>
+        </plugins>
       </build>
     </profile>
     <profile>
@@ -391,7 +428,7 @@
       <properties>
         <maven.compiler.testTarget>1.7</maven.compiler.testTarget>
         <maven.compiler.testSource>1.7</maven.compiler.testSource>
-        <maven.compiler.testCompilerArgument></maven.compiler.testCompilerArgument>
+        <maven.compiler.testCompilerArgument />
       </properties>
       <build>
         <pluginManagement>

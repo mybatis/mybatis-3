@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -25,17 +25,15 @@ public class LanguageDriverRegistry {
 
   private final Map<Class<?>, LanguageDriver> LANGUAGE_DRIVER_MAP = new HashMap<Class<?>, LanguageDriver>();
 
-  private Class<?> defaultDriverClass = null;
+  private Class<?> defaultDriverClass;
 
   public void register(Class<?> cls) {
     if (cls == null) {
       throw new IllegalArgumentException("null is not a valid Language Driver");
     }
-    LanguageDriver driver = LANGUAGE_DRIVER_MAP.get(cls);
-    if (driver == null) {
+    if (!LANGUAGE_DRIVER_MAP.containsKey(cls)) {
       try {
-        driver = (LanguageDriver) cls.newInstance();
-        LANGUAGE_DRIVER_MAP.put(cls, driver);
+        LANGUAGE_DRIVER_MAP.put(cls, (LanguageDriver) cls.newInstance());
       } catch (Exception ex) {
         throw new ScriptingException("Failed to load language driver for " + cls.getName(), ex);
       }
@@ -46,9 +44,9 @@ public class LanguageDriverRegistry {
     if (instance == null) {
       throw new IllegalArgumentException("null is not a valid Language Driver");
     }
-    LanguageDriver driver = LANGUAGE_DRIVER_MAP.get(instance.getClass());
-    if (driver == null) {
-      LANGUAGE_DRIVER_MAP.put(instance.getClass(), driver);
+    Class<?> cls = instance.getClass();
+    if (!LANGUAGE_DRIVER_MAP.containsKey(cls)) {
+      LANGUAGE_DRIVER_MAP.put(cls, instance);
     }
   }
   

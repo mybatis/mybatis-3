@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2017 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -92,15 +92,17 @@
           configuration.
         </p>
         <p>
-          Properties can also be passed into the SqlSessionBuilder.build()
+          Properties can also be passed into the SqlSessionFactoryBuilder.build()
           methods. For
           example:
         </p>
-        <source><![CDATA[SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, props);
+        <source><![CDATA[SqlSessionFactory factory =
+  sqlSessionFactoryBuilder.build(reader, props);
 
 // ... or ...
 
-SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, props);
+SqlSessionFactory factory =
+  new SqlSessionFactoryBuilder.build(reader, environment, props);
 ]]></source>
         <p>
           If a property exists in more than one of these places, MyBatis
@@ -127,6 +129,44 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
           the
           properties specified in the body of the properties element.
         </p>
+
+        <p>
+          Since the MyBatis 3.4.2, your can specify a default value into placeholder as follow:
+        </p>
+        <source><![CDATA[
+<dataSource type="POOLED">
+  <!-- ... -->
+  <property name="username" value="${username:ut_user}"/> <!-- If 'username' property not present, username become 'ut_user' -->
+</dataSource>]]></source>
+
+        <p>
+          This feature is disabled by default. If you specify a default value into placeholder,
+          you should be enable this feature by adding a special property as follow:
+        </p>
+
+        <source><![CDATA[
+<properties resource="org/mybatis/example/config.properties">
+  <!-- ... -->
+  <property name="org.apache.ibatis.parsing.PropertyParser.enable-default-value" value="true"/> <!-- Enable this feature -->
+</properties>]]></source>
+
+        <p>
+          <span class="label important">NOTE</span> Also If you are used already the <code>":"</code> as property key(e.g. <code>db:username</code>)
+          or you are used already the ternary operator of OGNL expression(e.g. <code>${tableName != null ? tableName : 'global_constants'}</code>) on your sql definition,
+          you should be change the character that separate key and default value by adding a special property as follow:
+        </p>
+
+        <source><![CDATA[
+<properties resource="org/mybatis/example/config.properties">
+  <!-- ... -->
+  <property name="org.apache.ibatis.parsing.PropertyParser.default-value-separator" value="?:"/> <!-- Change default value of separator -->
+</properties>]]></source>
+        <source><![CDATA[
+<dataSource type="POOLED">
+  <!-- ... -->
+  <property name="username" value="${db:username?:ut_user}"/>
+</dataSource>]]></source>
+
       </subsection>
       <subsection name="settings">
         <p>
@@ -183,18 +223,13 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 aggressiveLazyLoading
               </td>
               <td>
-                When enabled, an object with lazy
-                loaded properties will be
-                loaded entirely upon a call to any of
-                the lazy properties.
-                Otherwise, each property is loaded on
-                demand.
+                When enabled, any method call will load all the lazy properties of the object. Otherwise, each property is loaded on demand (see also <code>lazyLoadTriggerMethods</code>).
               </td>
               <td>
                 true | false
               </td>
               <td>
-                true
+                false (true in ≤3.4.1)
               </td>
             </tr>
             <tr>
@@ -456,10 +491,40 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
             </tr>
             <tr>
               <td>
+                defaultEnumTypeHandler
+              </td>
+              <td>
+                Specifies the <code>TypeHandler</code> used by default for Enum. (Since: 3.4.5)
+              </td>
+              <td>
+                A type alias or fully qualified class name.
+              </td>
+              <td>
+                org.apache.ibatis.type.EnumTypeHandler
+              </td>
+            </tr>
+            <tr>
+              <td>
                 callSettersOnNulls
               </td>
               <td>
                 Specifies if setters or map's put method will be called when a retrieved value is null. It is useful when you rely on Map.keySet() or null value initialization. Note primitives such as (int,boolean,etc.) will not be set to null. 
+              </td>
+              <td>
+                true | false
+              </td>
+              <td>
+                false
+              </td>
+            </tr>
+            <tr>
+              <td>
+                returnInstanceForEmptyRow
+              </td>
+              <td>
+                MyBatis, by default, returns <code>null</code> when all the columns of a returned row are NULL.
+                When this setting is enabled, MyBatis returns an empty instance instead.
+                Note that it is also applied to nested results (i.e. collectioin and association). Since: 3.4.2
               </td>
               <td>
                 true | false
@@ -539,6 +604,22 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 true
               </td>
             </tr>
+            <tr>
+              <td>
+                configurationFactory
+              </td>
+              <td>
+                Specifies the class that provides an instance of <code>Configuration</code>.
+                The returned Configuration instance is used to load lazy properties of deserialized objects.
+                This class must have a method with a signature <code>static Configuration getConfiguration()</code>. (Since: 3.2.3)
+              </td>
+              <td>
+                A type alias or fully qualified class name.
+              </td>
+              <td>
+                Not set
+              </td>
+            </tr>
           </tbody>
         </table>
         <p>
@@ -559,7 +640,8 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
   <setting name="mapUnderscoreToCamelCase" value="false"/>
   <setting name="localCacheScope" value="SESSION"/>
   <setting name="jdbcTypeForNull" value="OTHER"/>
-  <setting name="lazyLoadTriggerMethods" value="equals,clone,hashCode,toString"/>
+  <setting name="lazyLoadTriggerMethods"
+    value="equals,clone,hashCode,toString"/>
 </settings>]]></source>
 
       </subsection>
@@ -598,7 +680,7 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
           , if no annotation is found,
           will be registered as an alias
           using
-          uncapitalized non-qualified class name of the bean. Thas is
+          uncapitalized non-qualified class name of the bean. That is
           <code>domain.blog.Author</code>
           will be registered as
           <code>author</code>. If the
@@ -861,8 +943,7 @@ public class Author {
         </p>
         <p>
           <span class="label important">NOTE</span>
-          If you use classes provided by JSR-310(Date and Time API),
-          you can use the <a href="https://github.com/mybatis/typehandlers-jsr310">mybatis-typehandlers-jsr310</a>.
+          Since version 3.4.5, The MyBatis has been supported JSR-310(Date and Time API) by default.
         </p>
         <table>
           <thead>
@@ -1155,6 +1236,127 @@ public class Author {
                 (not the code itself).
               </td>
             </tr>
+            <tr>
+              <td>
+                <code>InstantTypeHandler</code>
+              </td>
+              <td>
+                <code>java.time.Instant</code>
+              </td>
+              <td>
+                <code>TIMESTAMP</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>LocalDateTimeTypeHandler</code>
+              </td>
+              <td>
+                <code>java.time.LocalDateTime</code>
+              </td>
+              <td>
+                <code>TIMESTAMP</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>LocalDateTypeHandler</code>
+              </td>
+              <td>
+                <code>java.time.LocalDate</code>
+              </td>
+              <td>
+                <code>DATE</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>LocalTimeTypeHandler</code>
+              </td>
+              <td>
+                <code>java.time.LocalTime</code>
+              </td>
+              <td>
+                <code>TIME</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>OffsetDateTimeTypeHandler</code>
+              </td>
+              <td>
+                <code>java.time.OffsetDateTime</code>
+              </td>
+              <td>
+                <code>TIMESTAMP</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>OffsetTimeTypeHandler</code>
+              </td>
+              <td>
+                <code>java.time.OffsetTime</code>
+              </td>
+              <td>
+                <code>TIME</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>ZonedDateTimeTypeHandler</code>
+              </td>
+              <td>
+                <code>java.time.ZonedDateTime</code>
+              </td>
+              <td>
+                <code>TIMESTAMP</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>YearTypeHandler</code>
+              </td>
+              <td>
+                <code>java.time.Year</code>
+              </td>
+              <td>
+                <code>INTEGER</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>MonthTypeHandler</code>
+              </td>
+              <td>
+                <code>java.time.Month</code>
+              </td>
+              <td>
+                <code>INTEGER</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>YearMonthTypeHandler</code>
+              </td>
+              <td>
+                <code>java.time.YearMonth</code>
+              </td>
+              <td>
+                <code>VARCHAR</code> or <code>LONGVARCHAR</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>JapaneseDateTypeHandler</code>
+              </td>
+              <td>
+                <code>java.time.chrono.JapaneseDate</code>
+              </td>
+              <td>
+                <code>DATE</code>
+              </td>
+            </tr>
           </tbody>
         </table>
         <p>
@@ -1169,22 +1371,26 @@ public class Author {
 public class ExampleTypeHandler extends BaseTypeHandler<String> {
 
   @Override
-  public void setNonNullParameter(PreparedStatement ps, int i, String parameter, JdbcType jdbcType) throws SQLException {
+  public void setNonNullParameter(PreparedStatement ps, int i,
+    String parameter, JdbcType jdbcType) throws SQLException {
     ps.setString(i, parameter);
   }
 
   @Override
-  public String getNullableResult(ResultSet rs, String columnName) throws SQLException {
+  public String getNullableResult(ResultSet rs, String columnName)
+    throws SQLException {
     return rs.getString(columnName);
   }
 
   @Override
-  public String getNullableResult(ResultSet rs, int columnIndex) throws SQLException {
+  public String getNullableResult(ResultSet rs, int columnIndex)
+    throws SQLException {
     return rs.getString(columnIndex);
   }
 
   @Override
-  public String getNullableResult(CallableStatement cs, int columnIndex) throws SQLException {
+  public String getNullableResult(CallableStatement cs, int columnIndex)
+    throws SQLException {
     return cs.getString(columnIndex);
   }
 }
@@ -1272,98 +1478,96 @@ public class GenericTypeHandler<E extends MyObject> extends BaseTypeHandler<E> {
   ...
 ]]></source>
 
-		<p><code>EnumTypeHandler</code> and <code>EnumOrdinalTypeHandler</code> are generic TypeHandlers. We will learn 
-		about them in the following section. 
-		</p>
+        <p><code>EnumTypeHandler</code> and <code>EnumOrdinalTypeHandler</code> are generic TypeHandlers. We will learn 
+        about them in the following section. 
+        </p>
 
       </subsection>
       
       <subsection name="Handling Enums">
-      	<p>
-      	  If you want to map an <code>Enum</code>, you'll need to use either
-      	  <code>EnumTypeHandler</code> or <code>EnumOrdinalTypeHandler</code>. 
-      	</p>
-      	
-      	<p>For example, let's say that we need to store the rounding mode that 
-      	should be used with some number if it needs to be rounded. By default, MyBatis
-      	uses <code>EnumTypeHandler</code> to convert the <code>Enum</code>
-      	values to their names.
-      	</p>
-      	
-      	<b>Note <code>EnumTypeHandler</code> is special in the sense that unlike other handlers, 
-      	it does not handle just one specific class, but any class that extends <code>Enum</code></b>
+          <p>
+            If you want to map an <code>Enum</code>, you'll need to use either
+            <code>EnumTypeHandler</code> or <code>EnumOrdinalTypeHandler</code>. 
+          </p>
+          
+          <p>For example, let's say that we need to store the rounding mode that 
+          should be used with some number if it needs to be rounded. By default, MyBatis
+          uses <code>EnumTypeHandler</code> to convert the <code>Enum</code>
+          values to their names.
+          </p>
+          
+          <b>Note <code>EnumTypeHandler</code> is special in the sense that unlike other handlers, 
+          it does not handle just one specific class, but any class that extends <code>Enum</code></b>
 
-      	<p>However, we may not want to store names. Our DBA may insist on an 
-      	integer code instead. That's just as easy: add <code>EnumOrdinalTypeHandler</code>
-      	to the <code>typeHandlers</code> in your config file, and now each
-      	<code>RoundingMode</code> will be mapped to an integer using its ordinal value.     	
-      	</p>
+          <p>However, we may not want to store names. Our DBA may insist on an 
+          integer code instead. That's just as easy: add <code>EnumOrdinalTypeHandler</code>
+          to the <code>typeHandlers</code> in your config file, and now each
+          <code>RoundingMode</code> will be mapped to an integer using its ordinal value.         
+          </p>
        <source><![CDATA[<!-- mybatis-config.xml -->
 <typeHandlers>
-  <typeHandler handler="org.apache.ibatis.type.EnumOrdinalTypeHandler" javaType="java.math.RoundingMode"/>
+  <typeHandler handler="org.apache.ibatis.type.EnumOrdinalTypeHandler"
+    javaType="java.math.RoundingMode"/>
 </typeHandlers>
 ]]></source>
-		<p>
-		  But what if you want to map the same <code>Enum</code> to a 
-		  string in one place and to integer in another? 
-		</p>
-      	<p>
-      	  The auto-mapper will automatically use <code>EnumOrdinalTypeHandler</code>, 
-      	  so if we want to go back to using plain old ordinary
-      	  <code>EnumTypeHandler</code>, we have to tell it, by explicitly setting 
-      	  the type handler to use for those SQL statements. 
-      	</p>
-      	<p>
-      	  (Mapper files aren't covered until the next section, so if this is your first
-      	  time reading through the documentation, you may want to skip this for now
-      	  and come back to it later.)
-      	</p>
-      	<source><![CDATA[<!DOCTYPE mapper
-    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-
-<!DOCTYPE mapper
+        <p>
+          But what if you want to map the same <code>Enum</code> to a 
+          string in one place and to integer in another? 
+        </p>
+          <p>
+            The auto-mapper will automatically use <code>EnumOrdinalTypeHandler</code>, 
+            so if we want to go back to using plain old ordinary
+            <code>EnumTypeHandler</code>, we have to tell it, by explicitly setting 
+            the type handler to use for those SQL statements. 
+          </p>
+          <p>
+            (Mapper files aren't covered until the next section, so if this is your first
+            time reading through the documentation, you may want to skip this for now
+            and come back to it later.)
+          </p>
+          <source><![CDATA[<!DOCTYPE mapper
     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="org.apache.ibatis.submitted.rounding.Mapper">
-	<resultMap type="org.apache.ibatis.submitted.rounding.User" id="usermap">
-		<id column="id" property="id"/>
-		<result column="name" property="name"/>
-		<result column="funkyNumber" property="funkyNumber"/>
-		<result column="roundingMode" property="roundingMode"/>
-	</resultMap>
+    <resultMap type="org.apache.ibatis.submitted.rounding.User" id="usermap">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="funkyNumber" property="funkyNumber"/>
+        <result column="roundingMode" property="roundingMode"/>
+    </resultMap>
 
-	<select id="getUser" resultMap="usermap">
-		select * from users
-	</select>
-	<insert id="insert">
-	    insert into users (id, name, funkyNumber, roundingMode) values (
-	    	#{id}, #{name}, #{funkyNumber}, #{roundingMode}
-	    )
-	</insert>
-	
-	<resultMap type="org.apache.ibatis.submitted.rounding.User" id="usermap2">
-		<id column="id" property="id"/>
-		<result column="name" property="name"/>
-		<result column="funkyNumber" property="funkyNumber"/>
-		<result column="roundingMode" property="roundingMode" typeHandler="org.apache.ibatis.type.EnumTypeHandler"/>
-	</resultMap>
-	<select id="getUser2" resultMap="usermap2">
-		select * from users2
-	</select>
-	<insert id="insert2">
-	    insert into users2 (id, name, funkyNumber, roundingMode) values (
-	    	#{id}, #{name}, #{funkyNumber}, #{roundingMode, typeHandler=org.apache.ibatis.type.EnumTypeHandler}
-	    )
-	</insert>
+    <select id="getUser" resultMap="usermap">
+        select * from users
+    </select>
+    <insert id="insert">
+        insert into users (id, name, funkyNumber, roundingMode) values (
+            #{id}, #{name}, #{funkyNumber}, #{roundingMode}
+        )
+    </insert>
+    
+    <resultMap type="org.apache.ibatis.submitted.rounding.User" id="usermap2">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="funkyNumber" property="funkyNumber"/>
+        <result column="roundingMode" property="roundingMode"
+         typeHandler="org.apache.ibatis.type.EnumTypeHandler"/>
+    </resultMap>
+    <select id="getUser2" resultMap="usermap2">
+        select * from users2
+    </select>
+    <insert id="insert2">
+        insert into users2 (id, name, funkyNumber, roundingMode) values (
+            #{id}, #{name}, #{funkyNumber}, #{roundingMode, typeHandler=org.apache.ibatis.type.EnumTypeHandler}
+        )
+    </insert>
 
 </mapper>
 ]]></source>
-		<p>
-		  Note that this forces us to use a <code>resultMap</code> 
-		  instead of a <code>resultType</code> in our select statements.
-		</p>
+        <p>
+          Note that this forces us to use a <code>resultMap</code> 
+          instead of a <code>resultType</code> in our select statements.
+        </p>
       </subsection>
 
       <subsection name="objectFactory">
@@ -1491,7 +1695,7 @@ public class ExamplePlugin implements Interceptor {
           can
           also override the Configuration class entirely. Simply extend it
           and override any methods inside, and pass it into the call to the
-          sqlSessionFactoryBuilder.build(myConfig) method. Again though, this
+          SqlSessionFactoryBuilder.build(myConfig) method. Again though, this
           could have a severe impact on the behaviour of MyBatis, so use
           caution.
         </p>
@@ -1533,15 +1737,15 @@ public class ExamplePlugin implements Interceptor {
           signatures that accept the environment are:
         </p>
 
-        <source><![CDATA[SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment);
-SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, properties);]]></source>
+        <source><![CDATA[SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environment);
+SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environment, properties);]]></source>
 
         <p>If the environment is omitted, then the default environment is
           loaded, as follows:
         </p>
 
-        <source><![CDATA[SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader);
-SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, properties);]]></source>
+        <source><![CDATA[SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader);
+SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, properties);]]></source>
 
         <p>The environments element defines how the environment is
           configured.
@@ -1743,6 +1947,14 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, properties);]
             Default:
             20000ms (i.e. 20 seconds)
           </li>
+          <li><code>poolMaximumLocalBadConnectionTolerance</code> – This is a low level setting about
+            tolerance of bad connections got for any thread. If a thread got a bad connection, it may
+            still have another chance to re-attempt to get another connection which is valid. But the
+            retrying times should not more than the sum of <code>poolMaximumIdleConnections</code>
+            and <code>poolMaximumLocalBadConnectionTolerance</code>.
+            Default:
+            3 (Since: 3.4.5)
+          </li>
           <li><code>poolPingQuery</code> – The Ping Query is sent to the database to
             validate that a connection is in good working order and is ready
             to
@@ -1799,9 +2011,9 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, properties);]
           constructor of the InitialContext upon instantiation.
         </p>
         
-		<p>
-		  You can plug any 3rd party DataSource by implementing the interface <code>org.apache.ibatis.datasource.DataSourceFactory</code>:
-		</p>
+        <p>
+          You can plug any 3rd party DataSource by implementing the interface <code>org.apache.ibatis.datasource.DataSourceFactory</code>:
+        </p>
 
         <source><![CDATA[public interface DataSourceFactory {
   void setProperties(Properties props);
@@ -1809,9 +2021,9 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, properties);]
 }]]></source>
 
         <p>
-		  <code>org.apache.ibatis.datasource.unpooled.UnpooledDataSourceFactory</code> can be used as super class
-		  to build new datasource adapters. For example this is the code needed to plug C3P0:
-		</p>
+          <code>org.apache.ibatis.datasource.unpooled.UnpooledDataSourceFactory</code> can be used as super class
+          to build new datasource adapters. For example this is the code needed to plug C3P0:
+        </p>
 
         <source><![CDATA[import org.apache.ibatis.datasource.unpooled.UnpooledDataSourceFactory;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
@@ -1850,12 +2062,12 @@ public class C3P0DataSourceFactory extends UnpooledDataSourceFactory {
         <source><![CDATA[<databaseIdProvider type="DB_VENDOR" />
 ]]></source>
 
-		<p>
-		  The DB_VENDOR implementation databaseIdProvider sets as databaseId the String returned by
-		  <code>DatabaseMetaData#getDatabaseProductName()</code>.
-		  Given that usually that string is too long and that different versions of the same product may return different values,
-		  you may want to convert it to a shorter one by adding properties like follows:
-		</p>
+        <p>
+          The DB_VENDOR implementation databaseIdProvider sets as databaseId the String returned by
+          <code>DatabaseMetaData#getDatabaseProductName()</code>.
+          Given that usually that string is too long and that different versions of the same product may return different values,
+          you may want to convert it to a shorter one by adding properties like follows:
+        </p>
 
         <source><![CDATA[<databaseIdProvider type="DB_VENDOR">
   <property name="SQL Server" value="sqlserver"/>
@@ -1863,16 +2075,16 @@ public class C3P0DataSourceFactory extends UnpooledDataSourceFactory {
   <property name="Oracle" value="oracle" />
 </databaseIdProvider>]]></source>
 
-		<p>
-		  When properties are provided, the DB_VENDOR databaseIdProvider will search the property value corresponding to the
-		  first key found in the returned database product name or "null" if there is not a matching property.
-		  In this case, if <code>getDatabaseProductName()</code> returns "Oracle (DataDirect)" the databaseId will be set to "oracle".
-		</p>
+        <p>
+          When properties are provided, the DB_VENDOR databaseIdProvider will search the property value corresponding to the
+          first key found in the returned database product name or "null" if there is not a matching property.
+          In this case, if <code>getDatabaseProductName()</code> returns "Oracle (DataDirect)" the databaseId will be set to "oracle".
+        </p>
 
-		<p>
-		  You can build your own DatabaseIdProvider by implementing the interface <code>org.apache.ibatis.mapping.DatabaseIdProvider</code>
-		  and registering it in mybatis-config.xml:
-		</p>
+        <p>
+          You can build your own DatabaseIdProvider by implementing the interface <code>org.apache.ibatis.mapping.DatabaseIdProvider</code>
+          and registering it in mybatis-config.xml:
+        </p>
 
         <source><![CDATA[public interface DatabaseIdProvider {
   void setProperties(Properties p);

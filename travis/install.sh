@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-#    Copyright 2009-2016 the original author or authors.
+#    Copyright 2009-2017 the original author or authors.
 #
 #    Licensed under the Apache License, Version 2.0 (the "License");
 #    you may not use this file except in compliance with the License.
@@ -17,11 +17,11 @@
 
 if [ $TRAVIS_JDK_VERSION == "openjdk6" ]; then
   # Java 1.6
-  mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V -Pjava16
-elif [ $TRAVIS_JDK_VERSION == "oraclejdk7" ] || [ $TRAVIS_JDK_VERSION == "openjdk7" ]; then
+  ./mvnw install -DskipTests=true -Dmaven.javadoc.skip=true -B -V -Pjava16 --settings ./travis/settings.xml
+elif [ $TRAVIS_JDK_VERSION == "openjdk7" ]; then
   # Java 1.7
-  mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V -Pjava17
+  ./mvnw install -DskipTests=true -Dmaven.javadoc.skip=true -B -V -Pjava17 --settings ./travis/settings.xml
 else
-  # Java 1.8
-  mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+  # Java 1.8 and 9
+  ./mvnw install -DskipTests=true -Dmaven.javadoc.skip=true -B -V --settings ./travis/settings.xml
 fi

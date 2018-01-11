@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2017 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -338,7 +338,7 @@ public String updatePersonSql() {
                 <code>INSERT_INTO(String)</code>
               </td>
               <td>insert구문을 시작하고 입력한 테이블을 명시한다. 
-			  VALUES() 메소드 호출은 여러번 해서 입력한 칼럼과 값을 명시한다. 
+			  VALUES() or INTO_COLUMNS() and INTO_VALUES() 메소드 호출은 여러번 해서 입력한 칼럼과 값을 명시한다.
               </td>
             </tr>
             <tr>
@@ -370,8 +370,56 @@ public String updatePersonSql() {
 			  첫번째 파라미터는 입력한 칼럼이고 두번째 파라미터는 입력할 값이다. 
               </td>
             </tr>
+            <tr>
+              <td>
+                <code>INTO_COLUMNS(String...)</code>
+              </td>
+              <td>
+                insert 구문에 columns 절을 추가한다.
+                반드시 INTO_VALUES()와 함께 호출되어야 한다.
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>INTO_VALUES(String...)</code>
+              </td>
+              <td>
+                insert 구문에 values 절을 추가한다.
+                반드시 INTO_COLUMNS()와 함께 호출되어야 한다.
+              </td>
+            </tr>
           </tbody>
         </table>
+
+        <p>3.4.2 버전부터, variable-length 매개변수를 아래와 같이 사용할 수 있습니다.</p>
+
+<source><![CDATA[
+public String selectPersonSql() {
+  return new SQL()
+    .SELECT("P.ID", "A.USERNAME", "A.PASSWORD", "P.FULL_NAME", "D.DEPARTMENT_NAME", "C.COMPANY_NAME")
+    .FROM("PERSON P", "ACCOUNT A")
+    .INNER_JOIN("DEPARTMENT D on D.ID = P.DEPARTMENT_ID", "COMPANY C on D.COMPANY_ID = C.ID")
+    .WHERE("P.ID = A.ID", "P.FULL_NAME like #{name}")
+    .ORDER_BY("P.ID", "P.FULL_NAME")
+    .toString();
+}
+
+public String insertPersonSql() {
+  return new SQL()
+    .INSERT_INTO("PERSON")
+    .INTO_COLUMNS("ID", "FULL_NAME")
+    .INTO_VALUES("#{id}", "#{fullName}")
+    .toString();
+}
+
+public String updatePersonSql() {
+  return new SQL()
+    .UPDATE("PERSON")
+    .SET("FULL_NAME = #{fullName}", "DATE_OF_BIRTH = #{dateOfBirth}")
+    .WHERE("ID = #{id}")
+    .toString();
+}
+]]></source>
 
       </subsection>
 

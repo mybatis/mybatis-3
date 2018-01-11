@@ -60,8 +60,6 @@ public class UnknownTypeHandlerTest extends BaseTypeHandlerTest {
   @Test
   public void shouldGetResultFromResultSetByPosition() throws Exception {
     when(rs.getMetaData()).thenReturn(rsmd);
-    when(rsmd.getColumnCount()).thenReturn(1);
-    when(rsmd.getColumnName(1)).thenReturn("column");
     when(rsmd.getColumnClassName(1)).thenReturn(String.class.getName());
     when(rsmd.getColumnType(1)).thenReturn(JdbcType.VARCHAR.TYPE_CODE);
     when(rs.getString(1)).thenReturn("Hello");

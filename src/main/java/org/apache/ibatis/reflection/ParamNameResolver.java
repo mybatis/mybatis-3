@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -25,7 +25,6 @@ import java.util.TreeMap;
 
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.binding.MapperMethod.ParamMap;
-import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
@@ -33,19 +32,6 @@ import org.apache.ibatis.session.RowBounds;
 public class ParamNameResolver {
 
   private static final String GENERIC_NAME_PREFIX = "param";
-  private static final String PARAMETER_CLASS = "java.lang.reflect.Parameter";
-  private static Method GET_NAME = null;
-  private static Method GET_PARAMS = null;
-
-  static {
-    try {
-      Class<?> paramClass = Resources.classForName(PARAMETER_CLASS);
-      GET_NAME = paramClass.getMethod("getName");
-      GET_PARAMS = Method.class.getMethod("getParameters");
-    } catch (Exception e) {
-      // ignore
-    }
-  }
 
   /**
    * <p>
@@ -100,15 +86,10 @@ public class ParamNameResolver {
   }
 
   private String getActualParamName(Method method, int paramIndex) {
-    if (GET_PARAMS == null) {
-      return null;
+    if (Jdk.parameterExists) {
+      return ParamNameUtil.getParamNames(method).get(paramIndex);
     }
-    try {
-      Object[] params = (Object[]) GET_PARAMS.invoke(method);
-      return (String) GET_NAME.invoke(params[paramIndex]);
-    } catch (Exception e) {
-      throw new ReflectionException("Error occurred when invoking Method#getParameters().", e);
-    }
+    return null;
   }
 
   private static boolean isSpecialParameter(Class<?> clazz) {

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -46,8 +46,8 @@ public class ResultSetWrapper {
   private final List<String> classNames = new ArrayList<String>();
   private final List<JdbcType> jdbcTypes = new ArrayList<JdbcType>();
   private final Map<String, Map<Class<?>, TypeHandler<?>>> typeHandlerMap = new HashMap<String, Map<Class<?>, TypeHandler<?>>>();
-  private Map<String, List<String>> mappedColumnNamesMap = new HashMap<String, List<String>>();
-  private Map<String, List<String>> unMappedColumnNamesMap = new HashMap<String, List<String>>();
+  private final Map<String, List<String>> mappedColumnNamesMap = new HashMap<String, List<String>>();
+  private final Map<String, List<String>> unMappedColumnNamesMap = new HashMap<String, List<String>>();
 
   public ResultSetWrapper(ResultSet rs, Configuration configuration) throws SQLException {
     super();

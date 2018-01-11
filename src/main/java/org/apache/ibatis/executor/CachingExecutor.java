@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -38,8 +38,8 @@ import org.apache.ibatis.transaction.Transaction;
  */
 public class CachingExecutor implements Executor {
 
-  private Executor delegate;
-  private TransactionalCacheManager tcm = new TransactionalCacheManager();
+  private final Executor delegate;
+  private final TransactionalCacheManager tcm = new TransactionalCacheManager();
 
   public CachingExecutor(Executor delegate) {
     this.delegate = delegate;
@@ -96,7 +96,7 @@ public class CachingExecutor implements Executor {
     if (cache != null) {
       flushCacheIfRequired(ms);
       if (ms.isUseCache() && resultHandler == null) {
-        ensureNoOutParams(ms, parameterObject, boundSql);
+        ensureNoOutParams(ms, boundSql);
         @SuppressWarnings("unchecked")
         List<E> list = (List<E>) tcm.getObject(cache, key);
         if (list == null) {
@@ -131,7 +131,7 @@ public class CachingExecutor implements Executor {
     }
   }
 
-  private void ensureNoOutParams(MappedStatement ms, Object parameter, BoundSql boundSql) {
+  private void ensureNoOutParams(MappedStatement ms, BoundSql boundSql) {
     if (ms.getStatementType() == StatementType.CALLABLE) {
       for (ParameterMapping parameterMapping : boundSql.getParameterMappings()) {
         if (parameterMapping.getMode() != ParameterMode.IN) {

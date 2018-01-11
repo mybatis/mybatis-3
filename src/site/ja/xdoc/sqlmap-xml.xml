@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2017 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -977,7 +977,7 @@ public class User {
             <td>REAL</td>
             <td>VARCHAR</td>
             <td>BINARY</td>
-            <td>BLOG</td>
+            <td>BLOB</td>
             <td>NVARCHAR</td>
           </tr>
           <tr>
@@ -1008,11 +1008,6 @@ public class User {
 
         <h4>constructor</h4>
 
-        <source><![CDATA[<constructor>
-   <idArg column="id" javaType="int"/>
-   <arg column="username" javaType="String"/>
-</constructor>]]></source>
-
         <p>
           ほとんどの DTO (Data Transfer Object) やドメインモデルではプロパティを使って値を設定することができますが、時にはイミュータブルなクラスを使いたい場合もあるかも知れません。
           通常更新されることのない参照用データを含むテーブルなどはイミュータブルクラスに向いています。
@@ -1027,22 +1022,36 @@ public class User {
 
         <source><![CDATA[public class User {
    //...
-   public User(int id, String username) {
+   public User(Integer id, String username, int age) {
   //...
   }
 //...
 }]]></source>
 
-        <p>
-          このコンストラクタに結果をインジェクトするためには、パラメーターの型によってコンストラクタを識別する必要があります。
-          Java では引数の名前を取得する方法がありませんので、constructor 要素を定義する場合は引数を正しい順番に並べ、適切なデータ型を指定するようにしてください。
-        </p>
-
+        <p>コンストラクタ経由で値をマップするためには、指定された引数にマッチするコンストラクタを特定する必要があります。
+          下記の例では、MyBatis は３つの引数 <code>java.lang.Integer</code>, <code>java.lang.String</code>, <code>int</code> をこの順番で持つコンストラクタを探します。</p>
 
         <source><![CDATA[<constructor>
    <idArg column="id" javaType="int"/>
    <arg column="username" javaType="String"/>
+   <arg column="arg" javaType="_int"/>
 </constructor>]]></source>
+
+        <p>
+          上記の指定方法では引数の型を順番通りに並べる必要がありますが、引数の多いコンストラクタを扱うのには向いていません。<br />
+          3.4.3 以降では、引数名を指定することによって arg 要素を順不同で記述できるようになりました。引数を名前で指定するためには、各引数に <code>@Param</code> アノテーションを追加するか、プロジェクトを '-parameters' オプション付きでコンパイルし、<code>useActualParamName</code> に true （デフォルト値です）を設定します。
+          下記の指定では２番めと３番目の引数の順番がコンストラクタの宣言と異なりますが、引数名が指定されているので正しく動作します。
+        </p>
+
+        <source><![CDATA[<constructor>
+   <idArg column="id" javaType="int" name="id" />
+   <arg column="age" javaType="_int" name="age" />
+   <arg column="username" javaType="String" name="username" />
+</constructor>]]></source>
+
+        <p>
+          引数と同じ名前、同じ型を持つプロパティが存在する場合 <code>javaType</code> は省略可能です。
+        </p>
 
         <p>
           それ以外の属性とルールについては通常の id, result 要素と同じです。
@@ -1103,6 +1112,13 @@ public class User {
                 この方法は、別の select 文を実行する方法の代わりに使うことができ、複数のテーブルを結合して取得した ResultSet をマップすることができます。
                 このような ResultSet には重複や繰り返しが含まれているため、正しく分解してからネストされたオブジェクトグラフにマップしてやる必要がありますが、MyBatis ではこの処理を実現するため Result Map を連結できるようになっています。<br />
                 詳細は association 要素の説明を参照してください。
+              </td>
+            </tr>
+            <tr>
+              <td><code>name</code></td>
+              <td>
+                コンストラクタ引数の名前を指定します。引数名を指定することで arg 要素を順不同で記述できるようになります。詳細は上記の説明を参照してください。
+                導入されたバージョン: 3.4.3
               </td>
             </tr>
           </tbody>
@@ -1524,7 +1540,7 @@ SELECT * FROM AUTHOR WHERE ID = #{id}]]></source>
   SELECT * FROM BLOG WHERE ID = #{id}
 </select>
 
-<select id="selectPostsForBlog" resultType="Blog">
+<select id="selectPostsForBlog" resultType="Post">
   SELECT * FROM POST WHERE BLOG_ID = #{id}
 </select>]]></source>
 
@@ -1861,6 +1877,10 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
         </ul>
 
         <p>
+          <span class="label important">重要</span> 対応する Java マッパーのステートメントをキャッシュの適用対象に含めるためには <code>@CacheNamespaceRef</code> アノテーションで XML マッパーのネームスペースを指定する必要があります。
+        </p>
+
+        <p>
           これらのプロパティは cache 要素の属性で変更することができます。
         </p>
 
@@ -1952,7 +1972,19 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
   <property name="cacheFile" value="/tmp/my-custom-cache.tmp"/>
 </cache>]]></source>
 
-        <p>設定対象のプロパティは、単純型であれば String 以外でも使用可能です。</p>
+        <p>
+          設定対象のプロパティは、単純型であれば String 以外でも使用可能です。
+          加えて、<a href="configuration.html#properties">コンフィギュレーション用のプロパティ</a>に定義した値で置き換えるために、プレースホルダ(例：<code>${cache.file}</code>)を指定することができます。
+        </p>
+
+        <p>
+          3.4.2以降では, MyBatisはすべてのプロパティを設定した後に初期化メソッドを呼び出す仕組みをサポートしています。
+          この機能の使用したい場合は、あなたが作成したキャッシュの実装クラスに<code>org.apache.ibatis.builder.InitializingObject</code>インタフェースを実装してください。
+        </p>
+
+        <source><![CDATA[public interface InitializingObject {
+  void initialize() throws Exception;
+}]]></source>
 
         <p>
           ここで重要なのは、キャッシュの設定とキャッシュのインスタンスは Mapper XML ファイルのネームスペースに関連付けられているということです。

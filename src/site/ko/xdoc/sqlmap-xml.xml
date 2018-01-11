@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2017 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -858,7 +858,7 @@ public class User {
             <td><code>REAL</code></td>
             <td><code>VARCHAR</code></td>
             <td><code>BINARY</code></td>
-            <td><code>BLOG</code></td>
+            <td><code>BLOB</code></td>
             <td><code>NVARCHAR</code></td>
           </tr>
           <tr>
@@ -889,11 +889,6 @@ public class User {
 
         <h4>constructor</h4>
 
-        <source><![CDATA[<constructor>
-   <idArg column="id" javaType="int"/>
-   <arg column="username" javaType="String"/>
-</constructor>]]></source>
-
         <p>프로퍼티가 데이터 전송 객체(DTO) 타입 클래스로 작동한다. 
 		변하지 않는 클래스를 사용하고자 하는 경우가 있다. 
 		거의 변하지 않는 데이터를 가진 테이블은 종종 이 변하지 않는 클래스에 적합하다. 
@@ -905,20 +900,38 @@ public class User {
 
         <source><![CDATA[public class User {
    //...
-   public User(int id, String username) {
+   public User(Integer id, String username, int age) {
      //...
   }
 //...
 }]]></source>
 
-        <p>결과를 생성자에 주입하기 위해 마이바티스는 파라미터 타입에 일치하는 생성자를 찾을 필요가 있다. 
-		자바는 파라미터 이름에서 타입을 체크할 방법이 없다. 
-		그래서 constructor엘리먼트를 생성할 때 인자의 순서에 주의하고 데이터 타입을 명시해야 한다.</p>
+        <p>
+          결과를 생성자에 주입하려면 MyBatis 가 어떻게든 생성자를 식별해야 한다.
+          다음 예제에서 MyBatis는 <code>java.lang.Integer</code>, <code>java.lang.String</code> and <code>int</code> 의 순서로 세 개의 매개 변수로 선언 된 생성자를 검색한다.
+        </p>
 
         <source><![CDATA[<constructor>
    <idArg column="id" javaType="int"/>
    <arg column="username" javaType="String"/>
+   <arg column="age" javaType="_int"/>
 </constructor>]]></source>
+
+        <p>
+          많은 매개 변수를 가진 생성자를 다루는 경우, arg 엘리먼트의 순서를 유지하는 것은 오류가 발생하기 쉽다. <br />
+          3.4.3 부터, 각 매개 변수의 이름을 지정하여 임의의 순서로 arg 엘리먼트를 작성할 수 있다. 이름으로 생성자 매개변수를 참조하려면, <code>@Param</code> annotation 을 추가하거나 '-parameters' 컴파일러 옵션을 통해 프로젝트를 컴파일하고 <code>useActualParamName</code> 을 활성화 할 수 있다. (이 옵션은 기본적으로 활성화 되어있다).
+          다음 예제는 2번째 및 3번째 매개변수의 순서가 선언 된 순서와 일치하지 않더라도 동일한 생성자에 대해 유효하다.
+        </p>
+
+        <source><![CDATA[<constructor>
+   <idArg column="id" javaType="int" name="id" />
+   <arg column="age" javaType="_int" name="age" />
+   <arg column="username" javaType="String" name="username" />
+</constructor>]]></source>
+
+        <p>
+          같은 이름과 형태의 property 가 있는 경우는 <code>javaType</code> 를 생략 할 수 있다.
+        </p>
 
         <p>나머지 속성과 규칙은 id와 result엘리먼트와 동일하다.</p>
 
@@ -968,6 +981,12 @@ public class User {
 			  ResultSet 은 사본을 포함할 수 있고 데이터를 반복할 수도 있다. 
 			  가능하게 하기 위해서 내포된 결과를 다루도록 결과맵을 “연결”하자. 
 			  자세히 알기 위해서는 association엘리먼트를 보라.</td>
+            </tr>
+            <tr>
+              <td><code>name</code></td>
+              <td>
+                생성자 매개변수의 이름. name 을 지정함으로써 순서에 상관없이 arg 엘리먼트를 작성할 수 있다. 위의 설명을 보아라. 3.4.3 부터 가능하다.
+              </td>
             </tr>
           </tbody>
         </table>
@@ -1298,7 +1317,7 @@ public class User {
   SELECT * FROM BLOG WHERE ID = #{id}
 </select>
 
-<select id="selectPostsForBlog" resultType="Blog">
+<select id="selectPostsForBlog" resultType="Post">
   SELECT * FROM POST WHERE BLOG_ID = #{id}
 </select>]]></source>
 
@@ -1581,6 +1600,13 @@ public class User {
           <li>캐시는 읽기/쓰기 캐시처럼 처리될 것이다. 이것은 가져올 객체는 공유되지 않고 호출자에 의해 안전하게 변경된다는 것을 의미한다.</li>
         </ul>
 
+        <p>
+          <span class="label important">NOTE</span> The cache will only apply to statements declared in the mapping file
+          where the cache tag is located. If you are using the Java API in conjunction with the XML mapping files, then
+          statements declared in the companion interface will not be cached by default. You will need to refer to the
+          cache region using the @CacheNamespaceRef annotation.
+        </p>
+
         <p>모든 프로퍼티는 cache 엘리먼트의 속성을 통해 변경가능하다. 
 		예를들면</p>
 
@@ -1647,8 +1673,19 @@ public class User {
   <property name="cacheFile" value="/tmp/my-custom-cache.tmp"/>
 </cache>]]></source>
 
-        <p>모든 간단한 타입의 자바빈 프로퍼티를 사용할 수 있다. 
-		마이바티스는 변환할 것이다.</p>
+        <p>
+			모든 간단한 타입의 자바빈 프로퍼티를 사용할 수 있다. 마이바티스는 변환할 것이다.
+      <a href="configuration.html#properties">configuration properties</a> 에 정의된 값을 대체할 placeholder(예: <code>${cache.file}</code>) 를 지정할 수 있다.
+		</p>
+
+		<p>
+      3.4.2 부터, MyBatis 는 모든 properties 를 설정한 후 초기화 메서드를 호출하도록 지원한다.
+      이 기능을 사용하려면, custom 캐시 클래스에서 <code>org.apache.ibatis.builder.InitializingObject</code> interface 를 구현해야 한다.
+		</p>
+
+		<source><![CDATA[public interface InitializingObject {
+  void initialize() throws Exception;
+}]]></source>
 
         <p>캐시 설정과 캐시 인스턴스가 SQL Map 파일의 네임스페이스에 묶여지는(bound) 것을 기억하는게 중요하다. 
 		게다가 같은 네임스페이스내 모든 구문은 묶여진다. 

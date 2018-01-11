@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -52,10 +52,10 @@ import org.apache.ibatis.type.TypeHandler;
  */
 public class XMLMapperBuilder extends BaseBuilder {
 
-  private XPathParser parser;
-  private MapperBuilderAssistant builderAssistant;
-  private Map<String, XNode> sqlFragments;
-  private String resource;
+  private final XPathParser parser;
+  private final MapperBuilderAssistant builderAssistant;
+  private final Map<String, XNode> sqlFragments;
+  private final String resource;
 
   @Deprecated
   public XMLMapperBuilder(Reader reader, Configuration configuration, String resource, Map<String, XNode> sqlFragments, String namespace) {
@@ -95,7 +95,7 @@ public class XMLMapperBuilder extends BaseBuilder {
     }
 
     parsePendingResultMaps();
-    parsePendingChacheRefs();
+    parsePendingCacheRefs();
     parsePendingStatements();
   }
 
@@ -117,7 +117,7 @@ public class XMLMapperBuilder extends BaseBuilder {
       sqlElement(context.evalNodes("/mapper/sql"));
       buildStatementFromContext(context.evalNodes("select|insert|update|delete"));
     } catch (Exception e) {
-      throw new BuilderException("Error parsing Mapper XML. Cause: " + e, e);
+      throw new BuilderException("Error parsing Mapper XML. The XML location is '" + resource + "'. Cause: " + e, e);
     }
   }
 
@@ -154,7 +154,7 @@ public class XMLMapperBuilder extends BaseBuilder {
     }
   }
 
-  private void parsePendingChacheRefs() {
+  private void parsePendingCacheRefs() {
     Collection<CacheRefResolver> incompleteCacheRefs = configuration.getIncompleteCacheRefs();
     synchronized (incompleteCacheRefs) {
       Iterator<CacheRefResolver> iter = incompleteCacheRefs.iterator();
@@ -358,7 +358,12 @@ public class XMLMapperBuilder extends BaseBuilder {
   }
 
   private ResultMapping buildResultMappingFromContext(XNode context, Class<?> resultType, List<ResultFlag> flags) throws Exception {
-    String property = context.getStringAttribute("property");
+    String property;
+    if (flags.contains(ResultFlag.CONSTRUCTOR)) {
+      property = context.getStringAttribute("name");
+    } else {
+      property = context.getStringAttribute("property");
+    }
     String column = context.getStringAttribute("column");
     String javaType = context.getStringAttribute("javaType");
     String jdbcType = context.getStringAttribute("jdbcType");

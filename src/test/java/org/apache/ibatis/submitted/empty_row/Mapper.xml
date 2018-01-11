@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+       Copyright 2009-2016 the original author or authors.
+
+       Licensed under the Apache License, Version 2.0 (the "License");
+       you may not use this file except in compliance with the License.
+       You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+       Unless required by applicable law or agreed to in writing, software
+       distributed under the License is distributed on an "AS IS" BASIS,
+       WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+       See the License for the specific language governing permissions and
+       limitations under the License.
+
+-->
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.apache.ibatis.submitted.empty_row.Mapper">
+
+  <resultMap type="org.apache.ibatis.submitted.empty_row.Parent"
+    id="parentRM">
+    <result property="col1" column="col1" />
+    <result property="col2" column="col2" />
+  </resultMap>
+
+  <resultMap type="org.apache.ibatis.submitted.empty_row.Parent"
+    id="associationRM">
+    <id property="id" column="id" />
+    <association property="child"
+      javaType="org.apache.ibatis.submitted.empty_row.Child">
+      <result property="name" column="child_name" />
+    </association>
+  </resultMap>
+
+  <resultMap type="org.apache.ibatis.submitted.empty_row.Parent"
+    id="associationWithNotNullColumnRM" extends="parentRM">
+    <association property="child"
+      javaType="org.apache.ibatis.submitted.empty_row.Child"
+      notNullColumn="child_id">
+      <result column="child_id" />
+      <result property="name" column="child_name" />
+    </association>
+  </resultMap>
+
+  <resultMap type="org.apache.ibatis.submitted.empty_row.Parent"
+    id="nestedAssociationRM" extends="parentRM">
+    <association property="child"
+      javaType="org.apache.ibatis.submitted.empty_row.Child">
+      <result property="name" column="child_name" />
+      <association property="grandchild"
+        javaType="org.apache.ibatis.submitted.empty_row.Child">
+        <result property="name" column="grandchild_name" />
+      </association>
+    </association>
+  </resultMap>
+
+  <resultMap type="org.apache.ibatis.submitted.empty_row.Parent"
+    id="collectionRM">
+    <id property="id" column="id" />
+    <collection property="children"
+      ofType="org.apache.ibatis.submitted.empty_row.Child">
+      <result property="name" column="child_name" />
+    </collection>
+  </resultMap>
+
+  <resultMap type="org.apache.ibatis.submitted.empty_row.Parent"
+    id="twoCollectionsRM">
+    <id property="id" column="id" />
+    <collection property="children"
+      ofType="org.apache.ibatis.submitted.empty_row.Child">
+      <result property="name" column="child_name" />
+    </collection>
+    <collection property="pets"
+      ofType="org.apache.ibatis.submitted.empty_row.Pet">
+      <result property="name" column="pet_name" />
+    </collection>
+  </resultMap>
+
+</mapper>

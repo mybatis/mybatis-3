@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -27,6 +27,7 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 import org.apache.ibatis.logging.Log;
+import org.apache.ibatis.reflection.ArrayUtil;
 
 /**
  * Base class for proxies to do logging
@@ -39,10 +40,10 @@ public abstract class BaseJdbcLogger {
   protected static final Set<String> SET_METHODS = new HashSet<String>();
   protected static final Set<String> EXECUTE_METHODS = new HashSet<String>();
 
-  private Map<Object, Object> columnMap = new HashMap<Object, Object>();
+  private final Map<Object, Object> columnMap = new HashMap<Object, Object>();
 
-  private List<Object> columnNames = new ArrayList<Object>();
-  private List<Object> columnValues = new ArrayList<Object>();
+  private final List<Object> columnNames = new ArrayList<Object>();
+  private final List<Object> columnValues = new ArrayList<Object>();
 
   protected Log statementLog;
   protected int queryStack;
@@ -116,36 +117,13 @@ public abstract class BaseJdbcLogger {
 
   protected String objectValueString(Object value) {
     if (value instanceof Array) {
-      return arrayValueString((Array) value);
+      try {
+        return ArrayUtil.toString(((Array) value).getArray());
+      } catch (SQLException e) {
+        return value.toString();
+      }
     }
     return value.toString();
-  }
-
-  protected String arrayValueString(Array array) {
-    try {
-      Object value = array.getArray();
-      if (value instanceof Object[]) {
-        return Arrays.toString((Object[]) value);
-      } else if (value instanceof long[]) {
-        return Arrays.toString((long[]) value);
-      } else if (value instanceof int[]) {
-        return Arrays.toString((int[]) value);
-      } else if (value instanceof short[]) {
-        return Arrays.toString((short[]) value);
-      } else if (value instanceof char[]) {
-        return Arrays.toString((char[]) value);
-      } else if (value instanceof byte[]) {
-        return Arrays.toString((byte[]) value);
-      } else if (value instanceof boolean[]) {
-        return Arrays.toString((boolean[]) value);
-      } else if (value instanceof float[]) {
-        return Arrays.toString((float[]) value);
-      } else {
-        return Arrays.toString((double[]) value);
-      }
-    } catch (SQLException e) {
-      return array.toString();
-    }
   }
 
   protected String getColumnString() {

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -23,19 +23,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.ibatis.exceptions.PersistenceException;
-import org.apache.ibatis.executor.ExecutorException;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.hamcrest.CoreMatchers;
 import org.junit.BeforeClass;
-import org.junit.Rule;
+import org.junit.Ignore;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
-import static org.hamcrest.CoreMatchers.*;
+import static com.googlecode.catchexception.apis.BDDCatchException.*;
+import static org.assertj.core.api.BDDAssertions.then;
 
 /**
  * @author liuzh
@@ -43,9 +41,6 @@ import static org.hamcrest.CoreMatchers.*;
 public class Jdbc3KeyGeneratorTest {
 
   private static SqlSessionFactory sqlSessionFactory;
-
-  @Rule
-  public ExpectedException expectedException = ExpectedException.none();
 
   @BeforeClass
   public static void setUp() throws Exception {
@@ -61,6 +56,7 @@ public class Jdbc3KeyGeneratorTest {
     ScriptRunner runner = new ScriptRunner(conn);
     runner.setLogWriter(null);
     runner.runScript(reader);
+    conn.close();
     reader.close();
     session.close();
   }
@@ -84,16 +80,16 @@ public class Jdbc3KeyGeneratorTest {
     }
   }
 
+  @Ignore("#782 was reverted. See #902.")
   @Test
   public void shouldErrorUndefineProperty()  {
     SqlSession sqlSession = sqlSessionFactory.openSession();
     try {
       CountryMapper mapper = sqlSession.getMapper(CountryMapper.class);
 
-      expectedException.expect(PersistenceException.class);
-      expectedException.expectMessage(containsString("### Error updating database.  Cause: org.apache.ibatis.executor.ExecutorException: Error getting generated key or setting result to parameter object. Cause: org.apache.ibatis.executor.ExecutorException: No setter found for the keyProperty 'country_id' in org.apache.ibatis.submitted.keygen.Country."));
-
-      mapper.insertUndefineKeyProperty(new Country("China", "CN"));
+      when(mapper).insertUndefineKeyProperty(new Country("China", "CN"));
+      then(caughtException()).isInstanceOf(PersistenceException.class).hasMessageContaining(
+          "### Error updating database.  Cause: org.apache.ibatis.executor.ExecutorException: Error getting generated key or setting result to parameter object. Cause: org.apache.ibatis.executor.ExecutorException: No setter found for the keyProperty 'country_id' in org.apache.ibatis.submitted.keygen.Country.");
     } finally {
       sqlSession.rollback();
       sqlSession.close();

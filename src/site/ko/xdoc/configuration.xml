@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2017 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -69,12 +69,12 @@
   <property name="password" value="${password}"/>
 </dataSource>]]></source>
         <p>이 예제에서 username과 password는 properties엘리먼트의 설정된 값으로 대체될 수 있다. driver와 url속성은 config.properties파일에 포함된 값으로 대체될 수도 있다. 이것은 설정에 대한 다양한 옵션을 제공하는 셈이다.</p>
-        <p>속성은 SqlSessionBuilder.build() 메소드에 전달될 수 있다. 예를들면:</p>
-        <source><![CDATA[SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, props);
+        <p>속성은 SqlSessionFactoryBuilder.build() 메소드에 전달될 수 있다. 예를들면:</p>
+        <source><![CDATA[SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, props);
 
 // ... or ...
 
-SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, props);
+SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environment, props);
 ]]></source>
         <p>속성이 한개 이상 존재한다면 마이바티스는 일정한 순서로 로드한다.:</p>
         <ul>
@@ -83,6 +83,45 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
           <li>마지막으로 메소드 파라미터로 전달된 속성을 읽는다. 앞서 로드된 값을 덮어쓴다.</li>
         </ul>
         <p>그래서 가장 우선순위가 높은 속성은 메소드의 파라미터로 전달된 값이고 그 다음은 자원및 url 속성이고 마지막은 properties 엘리먼트에 명시된 값이다.</p>
+
+        <p>
+          Mybatis 3.4.2 부터, placeholder 에 기본값을 아래처럼 지정할 수 있다.
+        </p>
+        <source><![CDATA[
+<dataSource type="POOLED">
+  <!-- ... -->
+  <property name="username" value="${username:ut_user}"/> <!-- 만약 'username' 속성이 없다면, username 은 'ut_user' 가 된다. -->
+</dataSource>]]></source>
+
+        <p>
+          이 기능은 기본적으로 비활성화되어 있다. placeholder 에 기본값을 지정한다면, 
+          이 기능을 활성화하려면 다음과 같이 특별한 속성을 추가해주어야 한다.
+        </p>
+
+        <source><![CDATA[
+<properties resource="org/mybatis/example/config.properties">
+  <!-- ... -->
+  <property name="org.apache.ibatis.parsing.PropertyParser.enable-default-value" value="true"/> <!-- 이 기능을 활성화한다. -->
+</properties>]]></source>
+
+        <p>
+          <span class="label important">NOTE</span> 
+          또한 이미 property key (예 : <code>db : username</code>)로 <code>":"</code>를 사용하거나 
+          SQL 정의에서 OGNL 표현식의 삼항 연산자 (예 : <code>${tableName != null ? tableName : 'global_constants'}</code>)를 사용하는 경우 
+          다음과 같이 특별한 속성을 추가하여 키와 기본값을 구분하는 문자를 변경해야한다.
+        </p>
+
+        <source><![CDATA[
+<properties resource="org/mybatis/example/config.properties">
+  <!-- ... -->
+  <property name="org.apache.ibatis.parsing.PropertyParser.default-value-separator" value="?:"/> <!-- separator 의 기본값을 변경한다. -->
+</properties>]]></source>
+        <source><![CDATA[
+<dataSource type="POOLED">
+  <!-- ... -->
+  <property name="username" value="${db:username?:ut_user}"/>
+</dataSource>]]></source>
+
       </subsection>
       <subsection name="settings">
         <p>런타임시 마이바티스의 행위를 조정하기 위한 중요한 값들이다. 다음표는 설정과 그 의미 그리고 디폴트 값을 설명한다.</p>
@@ -128,13 +167,14 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
               <td>
                 aggressiveLazyLoading
               </td>
-              <td>활성화 상태로 두게 되면 지연로딩 프로퍼티를 가진 객체는 호출에 따라 로드될 것이다. 
-			  반면에 개별 프로퍼티는 요청할때 로드된다. </td>
+              <td>
+                활성화되면 모든 메서드 호출은 객체의 모든 lazy properties 을 로드한다. 그렇지 않으면 각 property 가 필요에 따라 로드된다. (<code>lazyLoadTriggerMethods</code> 참조).
+              </td>
               <td>
                 true | false
               </td>
               <td>
-                true
+                false (3.4.1 부터 true)
               </td>
             </tr>
             <tr>
@@ -372,12 +412,42 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
             </tr>
             <tr>
               <td>
+                defaultEnumTypeHandler
+              </td>
+              <td>
+                Enum에 기본적으로 사용되는 <code>TypeHandler</code> 를 지정합니다. (3.4.5 부터)
+              </td>
+              <td>
+                타입별칭이나 패키지 경로를 포함한 클래스명
+              </td>
+              <td>
+                org.apache.ibatis.type.EnumTypeHandler
+              </td>
+            </tr>
+            <tr>
+              <td>
                 callSettersOnNulls
               </td>
               <td>
                 가져온 값이 null일때 setter나 맵의 put 메소드를 호출할지를 명시
                 Map.keySet() 이나 null값을 초기화할때 유용하다. 
                 int, boolean 등과 같은 원시타입은 null을 설정할 수 없다는 점은 알아두면 좋다.  
+              </td>
+              <td>
+                true | false
+              </td>
+              <td>
+                false
+              </td>
+            </tr>
+            <tr>
+              <td>
+                returnInstanceForEmptyRow
+              </td>
+              <td>
+                MyBatis 는 기본적으로 모든 열들의 행이 NULL 이 반환되었을 때 <code>null</code>을 반환한다.
+                이 설정을 사용하면 MyBatis가 대신 empty 인스턴스를 반환한다.
+                nested results(collection 또는 association) 에도 적용된다. 3.4.2 부터
               </td>
               <td>
                 true | false
@@ -453,6 +523,22 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
               </td>
               <td>
                 true
+              </td>
+            </tr>
+            <tr>
+              <td>
+                configurationFactory
+              </td>
+              <td>
+                <code>Configuration</code> 인스턴스를 제공하는 클래스를 지정한다.
+                반환된 Configuration 인스턴스는 역직렬화 된 객체의 지연로딩 속성들을 불러오는데 사용된다.
+                이 클래스는 <code>static Configuration getConfiguration()</code> 메서드를 가져야 한다. (3.2.3 부터)
+              </td>
+              <td>
+                타입별칭이나 패키지 경로를 포함한 클래스명
+              </td>
+              <td>
+                설정하지 않음
               </td>
             </tr>
           </tbody>
@@ -747,7 +833,7 @@ public class Author {
         다음의 표는 디폴트 TypeHandlers를 설명한다.</p>
         <p>
           <span class="label important">NOTE</span>
-          JSR-310(Date 와 Time API)이 제공하는 클래스를 사용한다면 <a href="https://github.com/mybatis/typehandlers-jsr310">mybatis-typehandlers-jsr310</a>를 사용할 수 있다. 
+          3.4.5 버전부터, MyBatis는 JSR-310(Date 와 Time API) 를 기본적으로 지원한다.
         </p>
         <table>
           <thead>
@@ -1013,6 +1099,127 @@ public class Author {
                 코드자체가 아니라 위치를 저장할수 있는 <code>NUMERIC</code> 또는 <code>DOUBLE</code>와 호환가능한 타입
               </td>
             </tr>
+            <tr>
+              <td>
+                <code>InstantTypeHandler</code>
+              </td>
+              <td>
+                <code>java.time.Instant</code>
+              </td>
+              <td>
+                <code>TIMESTAMP</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>LocalDateTimeTypeHandler</code>
+              </td>
+              <td>
+                <code>java.time.LocalDateTime</code>
+              </td>
+              <td>
+                <code>TIMESTAMP</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>LocalDateTypeHandler</code>
+              </td>
+              <td>
+                <code>java.time.LocalDate</code>
+              </td>
+              <td>
+                <code>DATE</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>LocalTimeTypeHandler</code>
+              </td>
+              <td>
+                <code>java.time.LocalTime</code>
+              </td>
+              <td>
+                <code>TIME</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>OffsetDateTimeTypeHandler</code>
+              </td>
+              <td>
+                <code>java.time.OffsetDateTime</code>
+              </td>
+              <td>
+                <code>TIMESTAMP</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>OffsetTimeTypeHandler</code>
+              </td>
+              <td>
+                <code>java.time.OffsetTime</code>
+              </td>
+              <td>
+                <code>TIME</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>ZonedDateTimeTypeHandler</code>
+              </td>
+              <td>
+                <code>java.time.ZonedDateTime</code>
+              </td>
+              <td>
+                <code>TIMESTAMP</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>YearTypeHandler</code>
+              </td>
+              <td>
+                <code>java.time.Year</code>
+              </td>
+              <td>
+                <code>INTEGER</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>MonthTypeHandler</code>
+              </td>
+              <td>
+                <code>java.time.Month</code>
+              </td>
+              <td>
+                <code>INTEGER</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>YearMonthTypeHandler</code>
+              </td>
+              <td>
+                <code>java.time.YearMonth</code>
+              </td>
+              <td>
+                <code>VARCHAR</code> or <code>LONGVARCHAR</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>JapaneseDateTypeHandler</code>
+              </td>
+              <td>
+                <code>java.time.chrono.JapaneseDate</code>
+              </td>
+              <td>
+                <code>DATE</code>
+              </td>
+            </tr>
           </tbody>
         </table>
         <p>지원하지 않거나 비표준인 타입에 대해서는 당신 스스로 만들어서 타입핸들러를 오버라이드할 수 있다. 
@@ -1150,10 +1357,6 @@ public class GenericTypeHandler<E extends MyObject> extends BaseTypeHandler<E> {
     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<!DOCTYPE mapper
-    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-
 <mapper namespace="org.apache.ibatis.submitted.rounding.Mapper">
 	<resultMap type="org.apache.ibatis.submitted.rounding.User" id="usermap">
 		<id column="id" property="id"/>
@@ -1281,7 +1484,7 @@ public class ExamplePlugin implements Interceptor {
           <strong>설정파일 오버라이드하기</strong>
         </p>
         <p>플러그인을 사용해서 마이바티스 핵심 행위를 변경하기 위해 Configuration클래스 전체를 오버라이드 할 수 있다. 
-		이 클래스를 확장하고 내부 메소드를 오버라이드하고 sqlSessionFactoryBuilder.build(myConfig)메소드에 그 객체를 넣어주면 된다. 
+		이 클래스를 확장하고 내부 메소드를 오버라이드하고 SqlSessionFactoryBuilder.build(myConfig)메소드에 그 객체를 넣어주면 된다.
 		다시 얘기하지만 이 작업은 마이바티스에 큰 영향을 줄수 있으니 주의해서 해야 한다.</p>
       </subsection>
       <subsection name="environments">
@@ -1303,13 +1506,13 @@ public class ExamplePlugin implements Interceptor {
         <p>환경을 명시하기 위해 SqlSessionFactoryBuilder에 옵션으로 추가 파라미터를 주면 된다. 
 		환경을 선택하는 두가지 시그니처는</p>
 
-        <source><![CDATA[SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment);
-SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment,properties);]]></source>
+        <source><![CDATA[SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environment);
+SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environment,properties);]]></source>
 
         <p>environment 파라미터가 없으면 디폴트 환경이 로드된다.</p>
 
-        <source><![CDATA[SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader);
-SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader,properties);]]></source>
+        <source><![CDATA[SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader);
+SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader,properties);]]></source>
 
         <p>environments 엘리먼트는 환경을 설정하는 방법을 정의한다.</p>
 
@@ -1412,6 +1615,11 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader,properties);]]
 		  디폴트는 20000ms(20 초)</li>
           <li><code>poolTimeToWait</code> - 풀이 로그 상태를 출력하고 비정상적으로 긴 경우 커넥션을 다시 얻을려고 시도하는 로우 레벨 설정. 
 		  디폴트는 20000ms(20 초)</li>
+          <li><code>poolMaximumLocalBadConnectionTolerance</code> – 이것은 모든 쓰레드에 대해 bad Connection이 허용되는 정도에 대한 낮은 수준의 설정입니다.
+            만약 쓰레드가 bad connection 을 얻게 되어도 유효한 또 다른 connection 을 다시 받을 수 있습니다.
+            하지만 재시도 횟수는 <code>poolMaximumIdleConnections</code> 과 <code>poolMaximumLocalBadConnectionTolerance</code> 의 합보다 많아야 합니다.
+            디폴트는 3이다. (3.4.5 부터)
+          </li>
           <li><code>poolPingQuery</code> - 커넥션이 작업하기 좋은 상태이고 요청을 받아서 처리할 준비가 되었는지 체크하기 위해 데이터베이스에 던지는 핑쿼리(Ping Query). 
 		  디폴트는 “핑 쿼리가 없음” 이다. 
 		  이 설정은 대부분의 데이터베이스로 하여금 에러메시지를 보게 할수도 있다.</li>

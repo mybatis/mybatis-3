@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -50,9 +50,10 @@ public class PooledDataSource implements DataSource {
   protected int poolMaximumIdleConnections = 5;
   protected int poolMaximumCheckoutTime = 20000;
   protected int poolTimeToWait = 20000;
+  protected int poolMaximumLocalBadConnectionTolerance = 3;
   protected String poolPingQuery = "NO PING QUERY SET";
-  protected boolean poolPingEnabled = false;
-  protected int poolPingConnectionsNotUsedFor = 0;
+  protected boolean poolPingEnabled;
+  protected int poolPingConnectionsNotUsedFor;
 
   private int expectedConnectionTypeCode;
 
@@ -170,6 +171,20 @@ public class PooledDataSource implements DataSource {
   }
 
   /*
+   * The maximum number of tolerance for bad connection happens in one thread
+    * which are applying for new {@link PooledConnection}
+   *
+   * @param poolMaximumLocalBadConnectionTolerance
+   * max tolerance for bad connection happens in one thread
+   *
+   * @since 3.4.5
+   */
+  public void setPoolMaximumLocalBadConnectionTolerance(
+      int poolMaximumLocalBadConnectionTolerance) {
+    this.poolMaximumLocalBadConnectionTolerance = poolMaximumLocalBadConnectionTolerance;
+  }
+
+  /*
    * The maximum time a connection can be used before it *may* be
    * given away again.
    *
@@ -255,6 +270,10 @@ public class PooledDataSource implements DataSource {
 
   public int getPoolMaximumIdleConnections() {
     return poolMaximumIdleConnections;
+  }
+
+  public int getPoolMaximumLocalBadConnectionTolerance() {
+    return poolMaximumLocalBadConnectionTolerance;
   }
 
   public int getPoolMaximumCheckoutTime() {
@@ -400,6 +419,14 @@ public class PooledDataSource implements DataSource {
                 try {
                   oldestActiveConnection.getRealConnection().rollback();
                 } catch (SQLException e) {
+                  /*
+                     Just log a message for debug and continue to execute the following
+                     statement like nothing happend.
+                     Wrap the bad connection with a new PooledConnection, this will help
+                     to not intterupt current executing thread and give current thread a
+                     chance to join the next competion for another valid/good database
+                     connection. At the end of this loop, bad {@link @conn} will be set as null.
+                   */
                   log.debug("Bad connection. Could not roll back");
                 }  
               }
@@ -430,6 +457,7 @@ public class PooledDataSource implements DataSource {
           }
         }
         if (conn != null) {
+          // ping to server and check the connection is valid or not
           if (conn.isValid()) {
             if (!conn.getRealConnection().getAutoCommit()) {
               conn.getRealConnection().rollback();
@@ -447,7 +475,7 @@ public class PooledDataSource implements DataSource {
             state.badConnectionCount++;
             localBadConnectionCount++;
             conn = null;
-            if (localBadConnectionCount > (poolMaximumIdleConnections + 3)) {
+            if (localBadConnectionCount > (poolMaximumIdleConnections + poolMaximumLocalBadConnectionTolerance)) {
               if (log.isDebugEnabled()) {
                 log.debug("PooledDataSource: Could not get a good connection to the database.");
               }

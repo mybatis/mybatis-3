@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -31,6 +31,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 
 import org.apache.ibatis.annotations.Arg;
@@ -45,6 +46,8 @@ import org.apache.ibatis.annotations.InsertProvider;
 import org.apache.ibatis.annotations.Lang;
 import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.annotations.Options;
+import org.apache.ibatis.annotations.Options.FlushCachePolicy;
+import org.apache.ibatis.annotations.Property;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.ResultMap;
 import org.apache.ibatis.annotations.ResultType;
@@ -55,7 +58,6 @@ import org.apache.ibatis.annotations.SelectProvider;
 import org.apache.ibatis.annotations.TypeDiscriminator;
 import org.apache.ibatis.annotations.Update;
 import org.apache.ibatis.annotations.UpdateProvider;
-import org.apache.ibatis.annotations.Options.FlushCachePolicy;
 import org.apache.ibatis.binding.BindingException;
 import org.apache.ibatis.binding.MapperMethod.ParamMap;
 import org.apache.ibatis.builder.BuilderException;
@@ -77,6 +79,7 @@ import org.apache.ibatis.mapping.ResultSetType;
 import org.apache.ibatis.mapping.SqlCommandType;
 import org.apache.ibatis.mapping.SqlSource;
 import org.apache.ibatis.mapping.StatementType;
+import org.apache.ibatis.parsing.PropertyParser;
 import org.apache.ibatis.reflection.TypeParameterResolver;
 import org.apache.ibatis.scripting.LanguageDriver;
 import org.apache.ibatis.session.Configuration;
@@ -95,9 +98,9 @@ public class MapperAnnotationBuilder {
   private final Set<Class<? extends Annotation>> sqlAnnotationTypes = new HashSet<Class<? extends Annotation>>();
   private final Set<Class<? extends Annotation>> sqlProviderAnnotationTypes = new HashSet<Class<? extends Annotation>>();
 
-  private Configuration configuration;
-  private MapperBuilderAssistant assistant;
-  private Class<?> type;
+  private final Configuration configuration;
+  private final MapperBuilderAssistant assistant;
+  private final Class<?> type;
 
   public MapperAnnotationBuilder(Configuration configuration, Class<?> type) {
     String resource = type.getName().replace('.', '/') + ".java (best guess)";
@@ -178,14 +181,36 @@ public class MapperAnnotationBuilder {
     if (cacheDomain != null) {
       Integer size = cacheDomain.size() == 0 ? null : cacheDomain.size();
       Long flushInterval = cacheDomain.flushInterval() == 0 ? null : cacheDomain.flushInterval();
-      assistant.useNewCache(cacheDomain.implementation(), cacheDomain.eviction(), flushInterval, size, cacheDomain.readWrite(), cacheDomain.blocking(), null);
+      Properties props = convertToProperties(cacheDomain.properties());
+      assistant.useNewCache(cacheDomain.implementation(), cacheDomain.eviction(), flushInterval, size, cacheDomain.readWrite(), cacheDomain.blocking(), props);
     }
+  }
+
+  private Properties convertToProperties(Property[] properties) {
+    if (properties.length == 0) {
+      return null;
+    }
+    Properties props = new Properties();
+    for (Property property : properties) {
+      props.setProperty(property.name(),
+          PropertyParser.parse(property.value(), configuration.getVariables()));
+    }
+    return props;
   }
 
   private void parseCacheRef() {
     CacheNamespaceRef cacheDomainRef = type.getAnnotation(CacheNamespaceRef.class);
     if (cacheDomainRef != null) {
-      assistant.useCacheRef(cacheDomainRef.value().getName());
+      Class<?> refType = cacheDomainRef.value();
+      String refName = cacheDomainRef.name();
+      if (refType == void.class && refName.isEmpty()) {
+        throw new BuilderException("Should be specified either value() or name() attribute in the @CacheNamespaceRef");
+      }
+      if (refType != void.class && !refName.isEmpty()) {
+        throw new BuilderException("Cannot use both value() and name() attribute in the @CacheNamespaceRef");
+      }
+      String namespace = (refType != void.class) ? refType.getName() : refName;
+      assistant.useCacheRef(namespace);
     }
   }
 
@@ -285,14 +310,14 @@ public class MapperAnnotationBuilder {
           keyGenerator = handleSelectKeyAnnotation(selectKey, mappedStatementId, getParameterType(method), languageDriver);
           keyProperty = selectKey.keyProperty();
         } else if (options == null) {
-          keyGenerator = configuration.isUseGeneratedKeys() ? new Jdbc3KeyGenerator() : new NoKeyGenerator();
+          keyGenerator = configuration.isUseGeneratedKeys() ? Jdbc3KeyGenerator.INSTANCE : NoKeyGenerator.INSTANCE;
         } else {
-          keyGenerator = options.useGeneratedKeys() ? new Jdbc3KeyGenerator() : new NoKeyGenerator();
+          keyGenerator = options.useGeneratedKeys() ? Jdbc3KeyGenerator.INSTANCE : NoKeyGenerator.INSTANCE;
           keyProperty = options.keyProperty();
           keyColumn = options.keyColumn();
         }
       } else {
-        keyGenerator = new NoKeyGenerator();
+        keyGenerator = NoKeyGenerator.INSTANCE;
       }
 
       if (options != null) {
@@ -449,7 +474,7 @@ public class MapperAnnotationBuilder {
         return buildSqlSourceFromStrings(strings, parameterType, languageDriver);
       } else if (sqlProviderAnnotationType != null) {
         Annotation sqlProviderAnnotation = method.getAnnotation(sqlProviderAnnotationType);
-        return new ProviderSqlSource(assistant.getConfiguration(), sqlProviderAnnotation);
+        return new ProviderSqlSource(assistant.getConfiguration(), sqlProviderAnnotation, type, method);
       }
       return null;
     } catch (Exception e) {
@@ -550,9 +575,9 @@ public class MapperAnnotationBuilder {
   private boolean isLazy(Result result) {
     boolean isLazy = configuration.isLazyLoadingEnabled();
     if (result.one().select().length() > 0 && FetchType.DEFAULT != result.one().fetchType()) {
-      isLazy = (result.one().fetchType() == FetchType.LAZY);
+      isLazy = result.one().fetchType() == FetchType.LAZY;
     } else if (result.many().select().length() > 0 && FetchType.DEFAULT != result.many().fetchType()) {
-      isLazy = (result.many().fetchType() == FetchType.LAZY);
+      isLazy = result.many().fetchType() == FetchType.LAZY;
     }
     return isLazy;
   }
@@ -576,7 +601,7 @@ public class MapperAnnotationBuilder {
               (arg.typeHandler() == UnknownTypeHandler.class ? null : arg.typeHandler());
       ResultMapping resultMapping = assistant.buildResultMapping(
           resultType,
-          null,
+          nullOrEmpty(arg.name()),
           nullOrEmpty(arg.column()),
           arg.javaType() == void.class ? null : arg.javaType(),
           arg.jdbcType() == JdbcType.UNDEFINED ? null : arg.jdbcType(),
@@ -615,7 +640,7 @@ public class MapperAnnotationBuilder {
 
     // defaults
     boolean useCache = false;
-    KeyGenerator keyGenerator = new NoKeyGenerator();
+    KeyGenerator keyGenerator = NoKeyGenerator.INSTANCE;
     Integer fetchSize = null;
     Integer timeout = null;
     boolean flushCache = false;
