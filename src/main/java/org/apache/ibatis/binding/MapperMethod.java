@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -18,11 +18,12 @@ package org.apache.ibatis.binding;
 import org.apache.ibatis.annotations.Flush;
 import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.cursor.Cursor;
-import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.SqlCommandType;
 import org.apache.ibatis.mapping.StatementType;
+import org.apache.ibatis.reflection.Jdk;
 import org.apache.ibatis.reflection.MetaObject;
+import org.apache.ibatis.reflection.OptionalUtil;
 import org.apache.ibatis.reflection.ParamNameResolver;
 import org.apache.ibatis.reflection.TypeParameterResolver;
 import org.apache.ibatis.session.Configuration;
@@ -43,18 +44,6 @@ import java.util.*;
  * @author Kazuki Shimizu
  */
 public class MapperMethod {
-
-  private static Method optionalFactoryMethod = null;
-
-  static {
-    try {
-      optionalFactoryMethod = Resources.classForName("java.util.Optional").getMethod("ofNullable", Object.class);
-    } catch (ClassNotFoundException e) {
-      // Ignore
-    } catch (NoSuchMethodException e) {
-      // Ignore
-    }
-  }
 
   private final SqlCommand command;
   private final MethodSignature method;
@@ -95,9 +84,8 @@ public class MapperMethod {
         } else {
           Object param = method.convertArgsToSqlCommandParam(args);
           result = sqlSession.selectOne(command.getName(), param);
-          if (method.returnsOptional() &&
-                  (result == null || !method.getReturnType().equals(result.getClass()))) {
-            result = wrapWithOptional(result);
+          if (method.returnsOptional()) {
+            result = OptionalUtil.ofNullable(result);
           }
         }
         break;
@@ -113,20 +101,6 @@ public class MapperMethod {
     }
     return result;
   }
-
-  private Object wrapWithOptional(Object result) {
-    if (optionalFactoryMethod == null) {
-      throw new BindingException("Can't use the java.util.Optional");
-    }
-    try {
-      return optionalFactoryMethod.invoke(null, result);
-    } catch (IllegalAccessException e) {
-      throw new BindingException("Can't create a java.util.Optional instance.", e);
-    } catch (InvocationTargetException e) {
-      throw new BindingException("Can't create a java.util.Optional instance.", e);
-    }
-  }
-
 
   private Object rowCountResult(int rowCount) {
     final Object result;
@@ -321,7 +295,7 @@ public class MapperMethod {
       this.returnsVoid = void.class.equals(this.returnType);
       this.returnsMany = configuration.getObjectFactory().isCollection(this.returnType) || this.returnType.isArray();
       this.returnsCursor = Cursor.class.equals(this.returnType);
-      this.returnsOptional = "java.util.Optional".equals(this.returnType.getName());
+      this.returnsOptional = Jdk.optionalExists && Optional.class.equals(this.returnType);
       this.mapKey = getMapKey(method);
       this.returnsMap = this.mapKey != null;
       this.rowBoundsIndex = getUniqueParamIndex(method, RowBounds.class);
