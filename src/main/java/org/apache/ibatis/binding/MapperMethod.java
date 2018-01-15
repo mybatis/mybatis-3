@@ -85,7 +85,7 @@ public class MapperMethod {
           Object param = method.convertArgsToSqlCommandParam(args);
           result = sqlSession.selectOne(command.getName(), param);
           if (method.returnsOptional() &&
-              (result == null || !method.getReturnType().equals(result.getClass()))) {
+              (result == null || !Optional.class.equals(result.getClass()))) {
             result = OptionalUtil.ofNullable(result);
           }
         }
