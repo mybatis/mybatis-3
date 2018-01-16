@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -31,6 +31,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
 
@@ -80,6 +81,7 @@ import org.apache.ibatis.mapping.SqlCommandType;
 import org.apache.ibatis.mapping.SqlSource;
 import org.apache.ibatis.mapping.StatementType;
 import org.apache.ibatis.parsing.PropertyParser;
+import org.apache.ibatis.reflection.Jdk;
 import org.apache.ibatis.reflection.TypeParameterResolver;
 import org.apache.ibatis.scripting.LanguageDriver;
 import org.apache.ibatis.session.Configuration;
@@ -447,13 +449,11 @@ public class MapperAnnotationBuilder {
               returnType = (Class<?>) ((ParameterizedType) returnTypeParameter).getRawType();
             }
           }
-      } else if ("java.util.Optional".equals(rawType.getName())) {
+      } else if (Jdk.optionalExists && Optional.class.equals(rawType)) {
         Type[] actualTypeArguments = parameterizedType.getActualTypeArguments();
-        if (actualTypeArguments != null && actualTypeArguments.length == 1) {
-          Type returnTypeParameter = actualTypeArguments[0];
-          if (returnTypeParameter instanceof Class<?>) {
-            returnType = (Class<?>) returnTypeParameter;
-          }
+        Type returnTypeParameter = actualTypeArguments[0];
+        if (returnTypeParameter instanceof Class<?>) {
+          returnType = (Class<?>) returnTypeParameter;
         }
       }
     }
