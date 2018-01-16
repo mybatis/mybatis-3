@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,6 +15,9 @@
  */
 package org.apache.ibatis.jdbc;
 
+import org.apache.ibatis.parsing.sql.SqlParser;
+import org.apache.ibatis.parsing.sql.SqlParserFactory;
+
 import java.io.BufferedReader;
 import java.io.PrintWriter;
 import java.io.Reader;
@@ -24,8 +27,8 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.SQLWarning;
 import java.sql.Statement;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Clinton Begin
@@ -35,8 +38,6 @@ public class ScriptRunner {
   private static final String LINE_SEPARATOR = System.getProperty("line.separator", "\n");
 
   private static final String DEFAULT_DELIMITER = ";";
-
-  private static final Pattern DELIMITER_PATTERN = Pattern.compile("^\\s*((--)|(//))?\\s*(//)?\\s*@DELIMITER\\s+([^\\s]+)", Pattern.CASE_INSENSITIVE);
 
   private final Connection connection;
 
@@ -107,7 +108,7 @@ public class ScriptRunner {
       if (sendFullScript) {
         executeFullScript(reader);
       } else {
-        executeLineByLine(reader);
+        executeStatementByStatement(reader);
       }
     } finally {
       rollbackConnection();
@@ -134,21 +135,23 @@ public class ScriptRunner {
     }
   }
 
-  private void executeLineByLine(Reader reader) {
-    StringBuilder command = new StringBuilder();
-    try {
-      BufferedReader lineReader = new BufferedReader(reader);
-      String line;
-      while ((line = lineReader.readLine()) != null) {
-        handleLine(command, line);
+  private void executeStatementByStatement(Reader reader) {
+    Map<Object, Object> properties = new HashMap<Object, Object>();
+    properties.put(SqlParserFactory.DELIMITER_PROP, delimiter);
+    properties.put(SqlParserFactory.FULLLINE_DELIMITER_PROP, fullLineDelimiter);
+    SqlParser parser = SqlParserFactory.getInstance(connection, properties);
+    parser.setSqlReader(reader);
+    for (String statement : parser) {
+      try {
+        println(statement);
+        executeStatement(statement);
+      } catch (Exception e) {
+        String message = "Error executing: " + statement + ".  Cause: " + e;
+        printlnError(message);
+        throw new RuntimeSqlException(message, e);
       }
-      commitConnection();
-      checkForMissingLineTerminator(command);
-    } catch (Exception e) {
-      String message = "Error executing: " + command + ".  Cause: " + e;
-      printlnError(message);
-      throw new RuntimeSqlException(message, e);
     }
+    commitConnection();
   }
 
   public void closeConnection() {
@@ -187,41 +190,6 @@ public class ScriptRunner {
     } catch (Throwable t) {
       // ignore
     }
-  }
-
-  private void checkForMissingLineTerminator(StringBuilder command) {
-    if (command != null && command.toString().trim().length() > 0) {
-      throw new RuntimeSqlException("Line missing end-of-line terminator (" + delimiter + ") => " + command);
-    }
-  }
-
-  private void handleLine(StringBuilder command, String line) throws SQLException {
-    String trimmedLine = line.trim();
-    if (lineIsComment(trimmedLine)) {
-      Matcher matcher = DELIMITER_PATTERN.matcher(trimmedLine);
-      if (matcher.find()) {
-        delimiter = matcher.group(5);
-      }
-      println(trimmedLine);
-    } else if (commandReadyToExecute(trimmedLine)) {
-      command.append(line.substring(0, line.lastIndexOf(delimiter)));
-      command.append(LINE_SEPARATOR);
-      println(command);
-      executeStatement(command.toString());
-      command.setLength(0);
-    } else if (trimmedLine.length() > 0) {
-      command.append(line);
-      command.append(LINE_SEPARATOR);
-    }
-  }
-
-  private boolean lineIsComment(String trimmedLine) {
-    return trimmedLine.startsWith("//") || trimmedLine.startsWith("--");
-  }
-
-  private boolean commandReadyToExecute(String trimmedLine) {
-    // issue #561 remove anything after the delimiter
-    return !fullLineDelimiter && trimmedLine.contains(delimiter) || fullLineDelimiter && trimmedLine.equals(delimiter);
   }
 
   private void executeStatement(String command) throws SQLException {

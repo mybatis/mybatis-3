@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -33,6 +33,7 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
@@ -248,7 +249,10 @@ public class ScriptRunnerTest extends BaseDataTest {
   public void shouldAcceptDelimiterVariations() throws Exception {
     Connection conn = mock(Connection.class);
     Statement stmt = mock(Statement.class);
+    DatabaseMetaData metadata = mock(DatabaseMetaData.class);
     when(conn.createStatement()).thenReturn(stmt);
+    when(conn.getMetaData()).thenReturn(metadata);
+    when(metadata.getDatabaseProductName()).thenReturn("SomeDB2.0");
     ScriptRunner runner = new ScriptRunner(conn);
 
     String sql = "-- @DELIMITER | \n"
@@ -286,7 +290,10 @@ public class ScriptRunnerTest extends BaseDataTest {
   public void shouldAcceptMultiCharDelimiter() throws Exception {
     Connection conn = mock(Connection.class);
     Statement stmt = mock(Statement.class);
+    DatabaseMetaData metadata = mock(DatabaseMetaData.class);
     when(conn.createStatement()).thenReturn(stmt);
+    when(conn.getMetaData()).thenReturn(metadata);
+    when(metadata.getDatabaseProductName()).thenReturn("SomeDB2.0");
     ScriptRunner runner = new ScriptRunner(conn);
 
     String sql = "-- @DELIMITER || \n"

@@ -1,0 +1,2 @@
+org.apache.ibatis.parsing.sql.mysql.MySQLSqlParser
+org.apache.ibatis.parsing.sql.MybatisGenericSqlParser
