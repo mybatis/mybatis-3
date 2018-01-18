@@ -215,7 +215,6 @@ public final class TypeHandlerRegistry {
     return (TypeHandler<T>) handler;
   }
 
-  @SuppressWarnings({ "rawtypes", "unchecked" })
   private Map<JdbcType, TypeHandler<?>> getJdbcHandlerMap(Type type) {
     Map<JdbcType, TypeHandler<?>> jdbcHandlerMap = TYPE_HANDLER_MAP.get(type);
     if (NULL_TYPE_HANDLER_MAP.equals(jdbcHandlerMap)) {
