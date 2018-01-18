@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -205,5 +205,13 @@ public class TypeHandlerRegistryTest {
     assertSame(SomeInterfaceTypeHandler.class, typeHandlerRegistry.getTypeHandler(SomeEnum.class).getClass());
     assertSame(SomeInterfaceTypeHandler.class, typeHandlerRegistry.getTypeHandler(ExtendingSomeEnum.class).getClass());
     assertSame(SomeInterfaceTypeHandler.class, typeHandlerRegistry.getTypeHandler(ImplementingMultiInterfaceSomeEnum.class).getClass());
+  }
+
+  @Test
+  public void shouldRegisterReplaceNullMap() {
+    class Address {}
+    assertFalse(typeHandlerRegistry.hasTypeHandler(Address.class));
+    typeHandlerRegistry.register(Address.class, StringTypeHandler.class);
+    assertTrue(typeHandlerRegistry.hasTypeHandler(Address.class));
   }
 }
