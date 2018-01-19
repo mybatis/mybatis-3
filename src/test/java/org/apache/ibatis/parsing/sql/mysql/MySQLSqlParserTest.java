@@ -19,6 +19,7 @@ import org.junit.Test;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -35,7 +36,10 @@ public class MySQLSqlParserTest {
     MySQLSqlParser parser = new MySQLSqlParser();
     parser.setSqlReader(new InputStreamReader(sql));
 
-    List<String> statements = StreamSupport.stream(parser.spliterator(), false).collect(Collectors.toList());
+    List<String> statements = new ArrayList<String>();
+    for (String statement : parser) {
+      statements.add(statement);
+    }
 
     assertEquals(5, statements.size());
     assertEquals("/*!50003 SET sql_mode              = @saved_sql_mode */ ", statements.get(4));
