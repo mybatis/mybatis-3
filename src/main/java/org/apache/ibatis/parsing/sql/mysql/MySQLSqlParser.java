@@ -112,8 +112,8 @@ public class MySQLSqlParser extends SqlParser {
   }
 
   private Delimiter extractNewDelimiterFromLine(String line) {
-    if (line != null && line.toUpperCase().startsWith(DELIMITER_KEYWORD)) {
-      return delimiter.withDelimiter(line.substring(DELIMITER_KEYWORD.length()).trim());
+    if (line != null && line.trim().toUpperCase().startsWith(DELIMITER_KEYWORD)) {
+      return delimiter.withDelimiter(line.trim().substring(DELIMITER_KEYWORD.length()).trim());
     }
 
     return null;
