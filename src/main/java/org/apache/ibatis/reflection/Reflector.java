@@ -313,7 +313,6 @@ public class Reflector {
   private Method[] getClassMethods(Class<?> cls) {
     Map<String, Method> uniqueMethods = new HashMap<String, Method>();
     Class<?> currentClass = cls;
-    //there's no point of looking thought method of Object class and it causes illegal reflection access on Java 9
     while (currentClass != null && currentClass != Object.class) {
       addUniqueMethods(uniqueMethods, currentClass.getDeclaredMethods());
 
