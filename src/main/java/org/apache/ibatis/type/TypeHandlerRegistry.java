@@ -22,6 +22,17 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.Month;
+import java.time.OffsetDateTime;
+import java.time.OffsetTime;
+import java.time.Year;
+import java.time.YearMonth;
+import java.time.ZonedDateTime;
+import java.time.chrono.JapaneseDate;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -136,7 +147,17 @@ public final class TypeHandlerRegistry {
 
     // mybatis-typehandlers-jsr310
     if (Jdk.dateAndTimeApiExists) {
-      Java8TypeHandlersRegistrar.registerDateAndTimeHandlers(this);
+      this.register(Instant.class, InstantTypeHandler.class);
+      this.register(LocalDateTime.class, LocalDateTimeTypeHandler.class);
+      this.register(LocalDate.class, LocalDateTypeHandler.class);
+      this.register(LocalTime.class, LocalTimeTypeHandler.class);
+      this.register(OffsetDateTime.class, OffsetDateTimeTypeHandler.class);
+      this.register(OffsetTime.class, OffsetTimeTypeHandler.class);
+      this.register(ZonedDateTime.class, ZonedDateTimeTypeHandler.class);
+      this.register(Month.class, MonthTypeHandler.class);
+      this.register(Year.class, YearTypeHandler.class);
+      this.register(YearMonth.class, YearMonthTypeHandler.class);
+      this.register(JapaneseDate.class, JapaneseDateTypeHandler.class);
     }
 
     // issue #273
