@@ -393,7 +393,7 @@ public class Configuration {
   }
 
   public void setDefaultExecutorType(ExecutorType defaultExecutorType) {
-    this.defaultExecutorType = defaultExecutorType;
+    this.defaultExecutorType = defaultExecutorType == null ? ExecutorType.SIMPLE : defaultExecutorType;
   }
 
   public boolean isCacheEnabled() {
@@ -566,7 +566,6 @@ public class Configuration {
 
   public Executor newExecutor(Transaction transaction, ExecutorType executorType) {
     executorType = executorType == null ? defaultExecutorType : executorType;
-    executorType = executorType == null ? ExecutorType.SIMPLE : executorType;
     Executor executor;
     if (ExecutorType.BATCH == executorType) {
       executor = new BatchExecutor(this, transaction);
