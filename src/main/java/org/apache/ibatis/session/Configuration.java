@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.ibatis.binding.MapperRegistry;
 import org.apache.ibatis.binding.handler.MapperHandler;
@@ -89,6 +90,9 @@ import org.apache.ibatis.scripting.LanguageDriver;
 import org.apache.ibatis.scripting.LanguageDriverRegistry;
 import org.apache.ibatis.scripting.defaults.RawLanguageDriver;
 import org.apache.ibatis.scripting.xmltags.XMLLanguageDriver;
+import org.apache.ibatis.scripting.xmltags.sqlconfigfunction.SqlConfigFunction;
+import org.apache.ibatis.scripting.xmltags.sqlconfigfunction.SqlConfigFunctionFactory;
+import org.apache.ibatis.scripting.xmltags.sqlconfigfunction.impl.BaseSqlConfigFunctionFactory;
 import org.apache.ibatis.transaction.Transaction;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
 import org.apache.ibatis.transaction.managed.ManagedTransactionFactory;
@@ -178,6 +182,10 @@ public class Configuration {
      * @since 3.4.6
      */
     protected final List<MapperHandler> mapperHandlers = new LinkedList<MapperHandler>();
+    /**
+     * @since 3.4.6
+     */
+    protected final Map<String, SqlConfigFunction> sqlConfigFunctions = new ConcurrentHashMap<String, SqlConfigFunction>();
 
     /*
      * A map holds cache-ref relationship. The key is the namespace that references a cache bound to
@@ -229,6 +237,7 @@ public class Configuration {
         mapperHandlers.add(new UpdateMapperHandler());
         mapperHandlers.add(new SelectMapperHandler());
         mapperHandlers.add(new FlushMapperHandler());
+        registerSqlConfigFunctionFactory(new BaseSqlConfigFunctionFactory());
     }
 
     public String getLogPrefix() {
@@ -775,7 +784,6 @@ public class Configuration {
     }
 
     /**
-     * @author Felix Lin
      * @since 3.4.6
      */
     public void setMapperHandlers(List<MapperHandler> mapperHandlers) {
@@ -789,6 +797,40 @@ public class Configuration {
                     return (i1 < i2) ? -1 : (i1 > i2) ? 1 : 0;
                 }
             });
+        }
+    }
+
+    /**
+     * @since 3.4.6
+     */
+    public Map<String, SqlConfigFunction> getSqlConfigFunctions() {
+        return sqlConfigFunctions;
+    }
+
+    /**
+     * @since 3.4.6
+     */
+    public void registerSqlConfigFunction(SqlConfigFunction... sqlConfigFunctions) {
+        for (SqlConfigFunction sqlConfigFunction : sqlConfigFunctions) {
+            String name = sqlConfigFunction.getName().toUpperCase();
+            SqlConfigFunction old = this.sqlConfigFunctions.get(name);
+            if (null == old || sqlConfigFunction.getOrder() < old.getOrder()) {
+                this.sqlConfigFunctions.put(name, sqlConfigFunction);
+            }
+        }
+    }
+
+    /**
+     * @since 3.4.6
+     */
+    public void registerSqlConfigFunctionFactory(SqlConfigFunctionFactory... sqlConfigFunctionFactorys) {
+        for (SqlConfigFunctionFactory sqlConfigFunctionFactory : sqlConfigFunctionFactorys) {
+            Collection<SqlConfigFunction> sqlConfigFunctions = sqlConfigFunctionFactory.getSqlConfigFunctions();
+            if (null != sqlConfigFunctions) {
+                for (SqlConfigFunction sqlConfigFunction : sqlConfigFunctions) {
+                    registerSqlConfigFunction(sqlConfigFunction);
+                }
+            }
         }
     }
 
