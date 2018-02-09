@@ -61,14 +61,8 @@ public class DefaultMapperHandlerContext implements MapperHandlerContext {
             synchronized (method) {
                 if (!mappedStatementInitMonitor) {
                     try {
-                        String statement = method.getDeclaringClass().getName() + ".";
                         SqlRef sqlRef = method.getAnnotation(SqlRef.class);
-                        if (null != sqlRef && sqlRef.value().length() >= 1) {
-                            statement += sqlRef.value().length();
-                        } else {
-                            statement += method.getName();
-                        }
-                        this.mappedStatement = configuration.getMappedStatement(statement);
+                        this.mappedStatement = this.resolveMappedStatement(mapperInterface, method.getName(), method.getDeclaringClass(), configuration, sqlRef);
                     } catch (Exception e) {
                         this.mappedStatement = null;
                     } finally {
@@ -78,6 +72,35 @@ public class DefaultMapperHandlerContext implements MapperHandlerContext {
             }
         }
         return mappedStatement;
+    }
+
+    private MappedStatement resolveMappedStatement(Class<?> mapperInterface, String methodName,
+            Class<?> declaringClass, Configuration configuration, SqlRef sqlRef) {
+        String statementId = mapperInterface.getName() + "." + methodName;
+        if (configuration.hasStatement(statementId)) {
+            return configuration.getMappedStatement(statementId);
+        } else {
+            if (null != sqlRef && null != sqlRef.value()) {
+                statementId = mapperInterface.getName() + "." + sqlRef.value();
+                if (configuration.hasStatement(statementId)) {
+                    return configuration.getMappedStatement(statementId);
+                }
+            }
+
+            if (mapperInterface.equals(declaringClass)) {
+                return null;
+            }
+        }
+        for (Class<?> superInterface : mapperInterface.getInterfaces()) {
+            if (declaringClass.isAssignableFrom(superInterface)) {
+                MappedStatement ms = resolveMappedStatement(superInterface, methodName,
+                        declaringClass, configuration, sqlRef);
+                if (ms != null) {
+                    return ms;
+                }
+            }
+        }
+        return null;
     }
 
     @Override

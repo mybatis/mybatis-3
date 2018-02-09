@@ -169,7 +169,7 @@ public class Configuration {
     /**
      * @since 3.4.6
      */
-    protected boolean enableMapperHandler = false;
+    protected boolean enableMapperHandler = true;
     /**
      * @since 3.4.6
      */
