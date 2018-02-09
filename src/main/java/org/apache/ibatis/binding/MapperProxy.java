@@ -70,7 +70,7 @@ public class MapperProxy<T> implements InvocationHandler, Serializable {
             throw ExceptionUtil.unwrapThrowable(t);
         }
 
-        if (null != mapperHandlerContextCache && sqlSession.getConfiguration().isEnableMapperHandler()) {
+        if (null != mapperHandlerContextCache && sqlSession.getConfiguration().getHandlerRegistry().isEnableMapperHandler()) {
             cachedMapperMethod(method);// for pass the test class org.apache.ibatis.binding.BindingTest
             final MapperHandlerContext mapperHandlerContext = cachedMapperHandlerContext(method);
             MapperHandler mapperHandler = this.getMapperHandler(mapperHandlerContext, method);
@@ -83,7 +83,7 @@ public class MapperProxy<T> implements InvocationHandler, Serializable {
     }
 
     private MapperHandler getMapperHandler(MapperHandlerContext mapperHandlerContext, Method method) {
-        List<MapperHandler> mapperHandlers = sqlSession.getConfiguration().getMapperHandlers();
+        List<MapperHandler> mapperHandlers = sqlSession.getConfiguration().getHandlerRegistry().getMapperHandlers();
         if (null != mapperHandlers) {
             for (MapperHandler mapperHandler : mapperHandlers) {
                 if (mapperHandler.supports(mapperHandlerContext)) {

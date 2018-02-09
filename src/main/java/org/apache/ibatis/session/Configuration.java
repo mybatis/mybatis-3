@@ -15,8 +15,6 @@ package org.apache.ibatis.session;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -24,15 +22,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.ibatis.binding.MapperRegistry;
-import org.apache.ibatis.binding.handler.MapperHandler;
-import org.apache.ibatis.binding.handler.ParamResolverFactory;
-import org.apache.ibatis.binding.handler.impl.DefaultParamResolverFactory;
-import org.apache.ibatis.binding.handler.impl.FlushMapperHandler;
-import org.apache.ibatis.binding.handler.impl.SelectMapperHandler;
-import org.apache.ibatis.binding.handler.impl.UpdateMapperHandler;
 import org.apache.ibatis.builder.CacheRefResolver;
 import org.apache.ibatis.builder.ResultMapResolver;
 import org.apache.ibatis.builder.annotation.MethodResolver;
@@ -90,9 +81,6 @@ import org.apache.ibatis.scripting.LanguageDriver;
 import org.apache.ibatis.scripting.LanguageDriverRegistry;
 import org.apache.ibatis.scripting.defaults.RawLanguageDriver;
 import org.apache.ibatis.scripting.xmltags.XMLLanguageDriver;
-import org.apache.ibatis.scripting.xmltags.sqlconfigfunction.SqlConfigFunction;
-import org.apache.ibatis.scripting.xmltags.sqlconfigfunction.SqlConfigFunctionFactory;
-import org.apache.ibatis.scripting.xmltags.sqlconfigfunction.impl.BaseSqlConfigFunctionFactory;
 import org.apache.ibatis.transaction.Transaction;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
 import org.apache.ibatis.transaction.managed.ManagedTransactionFactory;
@@ -150,6 +138,7 @@ public class Configuration {
      */
     protected Class<?> configurationFactory;
 
+    protected HandlerRegistry handlerRegistry = new HandlerRegistry();
     protected final MapperRegistry mapperRegistry = new MapperRegistry(this);
     protected final InterceptorChain interceptorChain = new InterceptorChain();
     protected final TypeHandlerRegistry typeHandlerRegistry = new TypeHandlerRegistry();
@@ -169,23 +158,6 @@ public class Configuration {
     protected final Collection<CacheRefResolver> incompleteCacheRefs = new LinkedList<CacheRefResolver>();
     protected final Collection<ResultMapResolver> incompleteResultMaps = new LinkedList<ResultMapResolver>();
     protected final Collection<MethodResolver> incompleteMethods = new LinkedList<MethodResolver>();
-
-    /**
-     * @since 3.4.6
-     */
-    protected boolean enableMapperHandler = true;
-    /**
-     * @since 3.4.6
-     */
-    protected ParamResolverFactory paramResolverFactory = new DefaultParamResolverFactory();
-    /**
-     * @since 3.4.6
-     */
-    protected final List<MapperHandler> mapperHandlers = new LinkedList<MapperHandler>();
-    /**
-     * @since 3.4.6
-     */
-    protected final Map<String, SqlConfigFunction> sqlConfigFunctions = new ConcurrentHashMap<String, SqlConfigFunction>();
 
     /*
      * A map holds cache-ref relationship. The key is the namespace that references a cache bound to
@@ -230,14 +202,6 @@ public class Configuration {
 
         languageRegistry.setDefaultDriverClass(XMLLanguageDriver.class);
         languageRegistry.register(RawLanguageDriver.class);
-
-        /**
-         * @since 3.4.6
-         */
-        mapperHandlers.add(new UpdateMapperHandler());
-        mapperHandlers.add(new SelectMapperHandler());
-        mapperHandlers.add(new FlushMapperHandler());
-        registerSqlConfigFunctionFactory(new BaseSqlConfigFunctionFactory());
     }
 
     public String getLogPrefix() {
@@ -521,6 +485,22 @@ public class Configuration {
         return mapperRegistry;
     }
 
+    /**
+     * @since 3.4.6
+     */
+    public HandlerRegistry getHandlerRegistry() {
+        return handlerRegistry;
+    }
+
+    /**
+     * @since 3.4.6
+     */
+    public void setHandlerRegistry(HandlerRegistry handlerRegistry) {
+        if (null != handlerRegistry) {
+            this.handlerRegistry = handlerRegistry;
+        }
+    }
+
     public ReflectorFactory getReflectorFactory() {
         return reflectorFactory;
     }
@@ -744,94 +724,6 @@ public class Configuration {
 
     public Collection<MethodResolver> getIncompleteMethods() {
         return incompleteMethods;
-    }
-
-    /**
-     * @since 3.4.6
-     */
-    public boolean isEnableMapperHandler() {
-        return enableMapperHandler;
-    }
-
-    /**
-     * @since 3.4.6
-     */
-    public void setEnableMapperHandler(boolean enableMapperHandler) {
-        this.enableMapperHandler = enableMapperHandler;
-    }
-
-    /**
-     * @since 3.4.6
-     */
-    public ParamResolverFactory getParamResolverFactory() {
-        return paramResolverFactory;
-    }
-
-    /**
-     * @since 3.4.6
-     */
-    public void setParamResolverFactory(ParamResolverFactory paramResolverFactory) {
-        if (null != paramResolverFactory) {
-            this.paramResolverFactory = paramResolverFactory;
-        }
-    }
-
-    /**
-     * @since 3.4.6
-     */
-    public List<MapperHandler> getMapperHandlers() {
-        return mapperHandlers;
-    }
-
-    /**
-     * @since 3.4.6
-     */
-    public void setMapperHandlers(List<MapperHandler> mapperHandlers) {
-        if (null != mapperHandlers && !mapperHandlers.isEmpty()) {
-            this.mapperHandlers.addAll(mapperHandlers);
-            Collections.sort(this.mapperHandlers, new Comparator<MapperHandler>() {
-                @Override
-                public int compare(MapperHandler o1, MapperHandler o2) {
-                    int i1 = o1.getOrder();
-                    int i2 = o2.getOrder();
-                    return (i1 < i2) ? -1 : (i1 > i2) ? 1 : 0;
-                }
-            });
-        }
-    }
-
-    /**
-     * @since 3.4.6
-     */
-    public Map<String, SqlConfigFunction> getSqlConfigFunctions() {
-        return sqlConfigFunctions;
-    }
-
-    /**
-     * @since 3.4.6
-     */
-    public void registerSqlConfigFunction(SqlConfigFunction... sqlConfigFunctions) {
-        for (SqlConfigFunction sqlConfigFunction : sqlConfigFunctions) {
-            String name = sqlConfigFunction.getName().toUpperCase();
-            SqlConfigFunction old = this.sqlConfigFunctions.get(name);
-            if (null == old || sqlConfigFunction.getOrder() < old.getOrder()) {
-                this.sqlConfigFunctions.put(name, sqlConfigFunction);
-            }
-        }
-    }
-
-    /**
-     * @since 3.4.6
-     */
-    public void registerSqlConfigFunctionFactory(SqlConfigFunctionFactory... sqlConfigFunctionFactorys) {
-        for (SqlConfigFunctionFactory sqlConfigFunctionFactory : sqlConfigFunctionFactorys) {
-            Collection<SqlConfigFunction> sqlConfigFunctions = sqlConfigFunctionFactory.getSqlConfigFunctions();
-            if (null != sqlConfigFunctions) {
-                for (SqlConfigFunction sqlConfigFunction : sqlConfigFunctions) {
-                    registerSqlConfigFunction(sqlConfigFunction);
-                }
-            }
-        }
     }
 
     public MappedStatement getMappedStatement(String id) {

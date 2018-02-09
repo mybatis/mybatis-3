@@ -129,7 +129,7 @@ public class DefaultMapperHandlerContext implements MapperHandlerContext {
         if (null == paramResolver) {
             synchronized (method) {
                 if (null == paramResolver) {
-                    this.paramResolver = configuration.getParamResolverFactory().newParamResolver(configuration, method);
+                    this.paramResolver = configuration.getHandlerRegistry().getParamResolverFactory().newParamResolver(configuration, method);
                 }
             }
         }
