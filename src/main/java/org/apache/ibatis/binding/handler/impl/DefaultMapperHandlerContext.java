@@ -99,20 +99,18 @@ public class DefaultMapperHandlerContext implements MapperHandlerContext {
 
     private MappedStatement resolveMappedStatement(Class<?> mapperInterface, String methodName,
             Class<?> declaringClass, Configuration configuration, SqlRef sqlRef) {
+        if (null != sqlRef && null != sqlRef.value()) {
+            String statementId = mapperInterface.getName() + "." + sqlRef.value();
+            if (configuration.hasStatement(statementId)) {
+                return configuration.getMappedStatement(statementId);
+            }
+        }
+
         String statementId = mapperInterface.getName() + "." + methodName;
         if (configuration.hasStatement(statementId)) {
             return configuration.getMappedStatement(statementId);
-        } else {
-            if (null != sqlRef && null != sqlRef.value()) {
-                statementId = mapperInterface.getName() + "." + sqlRef.value();
-                if (configuration.hasStatement(statementId)) {
-                    return configuration.getMappedStatement(statementId);
-                }
-            }
-
-            if (mapperInterface.equals(declaringClass)) {
-                return null;
-            }
+        } else if (mapperInterface.equals(declaringClass)) {
+            return null;
         }
         for (Class<?> superInterface : mapperInterface.getInterfaces()) {
             if (declaringClass.isAssignableFrom(superInterface)) {
