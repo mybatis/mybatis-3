@@ -49,7 +49,7 @@ public class SelectMapperHandler extends AbstractMapperHandler {
     @Override
     public Object execute(SqlSession sqlSession, Object[] args, MapperHandlerContext context) {
         Object result = null;
-        Class<?> returnType = context.getMethod().getReturnType();
+        Class<?> returnType = context.getReturnType();
         String sqlId = context.getMappedStatement().getId();
         Object param = context.getParamResolver().getNamedParams(args);
         ResultHandler<?> resultHandler = extractParam(args, ResultHandler.class);
@@ -59,7 +59,7 @@ public class SelectMapperHandler extends AbstractMapperHandler {
             result = this.executeResultHandler(sqlSession, sqlId, param, rowBounds, resultHandler);
         } else if ((context.getConfiguration().getObjectFactory().isCollection(returnType) || returnType.isArray())) {
             result = this.executeMany(sqlSession, sqlId, param, rowBounds, returnType);
-        } else if (Map.class.isAssignableFrom(returnType) && context.getMethod().isAnnotationPresent(MapKey.class)) {
+        } else if (Map.class.isAssignableFrom(context.getMethod().getReturnType()) && context.getMethod().isAnnotationPresent(MapKey.class)) {
             result = this.executeMap(sqlSession, sqlId, param, rowBounds, context);
         } else if (Cursor.class.isAssignableFrom(returnType)) {
             result = this.executeCursor(sqlSession, sqlId, param, rowBounds);

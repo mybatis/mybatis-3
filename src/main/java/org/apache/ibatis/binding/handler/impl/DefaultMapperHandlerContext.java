@@ -14,11 +14,14 @@
 package org.apache.ibatis.binding.handler.impl;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 
 import org.apache.ibatis.annotations.SqlRef;
 import org.apache.ibatis.binding.handler.MapperHandlerContext;
 import org.apache.ibatis.binding.handler.ParamResolver;
 import org.apache.ibatis.mapping.MappedStatement;
+import org.apache.ibatis.reflection.TypeParameterResolver;
 import org.apache.ibatis.session.Configuration;
 
 /**
@@ -30,6 +33,7 @@ public class DefaultMapperHandlerContext implements MapperHandlerContext {
     final Class<?> mapperInterface;
     final Method method;
     final Configuration configuration;
+    final Class<?> returnType;
     ParamResolver paramResolver;
     MappedStatement mappedStatement;
     boolean mappedStatementInitMonitor = false;
@@ -38,6 +42,20 @@ public class DefaultMapperHandlerContext implements MapperHandlerContext {
         this.mapperInterface = mapperInterface;
         this.method = method;
         this.configuration = configuration;
+        this.returnType = resolveReturnType(mapperInterface, method, configuration);
+    }
+
+    private static Class<?> resolveReturnType(Class<?> mapperInterface, Method method, Configuration configuration) {
+        Class<?> returnType = null;
+        Type resolvedReturnType = TypeParameterResolver.resolveReturnType(method, mapperInterface);
+        if (resolvedReturnType instanceof Class<?>) {
+            returnType = (Class<?>) resolvedReturnType;
+        } else if (resolvedReturnType instanceof ParameterizedType) {
+            returnType = (Class<?>) ((ParameterizedType) resolvedReturnType).getRawType();
+        } else {
+            returnType = method.getReturnType();
+        }
+        return returnType;
     }
 
     @Override
@@ -53,6 +71,11 @@ public class DefaultMapperHandlerContext implements MapperHandlerContext {
     @Override
     public Configuration getConfiguration() {
         return configuration;
+    }
+
+    @Override
+    public Class<?> getReturnType() {
+        return returnType;
     }
 
     @Override

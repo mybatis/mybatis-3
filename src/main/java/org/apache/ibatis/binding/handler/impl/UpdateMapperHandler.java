@@ -42,21 +42,21 @@ public class UpdateMapperHandler extends AbstractMapperHandler {
         MappedStatement statement = context.getMappedStatement();
         Object param = context.getParamResolver().getNamedParams(args);
         int count = sqlSession.update(statement.getId(), param);
-        return rowCountResult(context.getMethod(), count);
+        return rowCountResult(context.getMethod(), context.getReturnType(), count);
     }
 
-    private Object rowCountResult(Method method, int rowCount) {
+    private Object rowCountResult(Method method, Class<?> returnType, int rowCount) {
         final Object result;
-        if (void.class.equals(method.getReturnType())) {
+        if (void.class.equals(returnType)) {
             result = null;
-        } else if (Integer.class.equals(method.getReturnType()) || Integer.TYPE.equals(method.getReturnType())) {
+        } else if (Integer.class.equals(returnType) || Integer.TYPE.equals(returnType)) {
             result = rowCount;
-        } else if (Long.class.equals(method.getReturnType()) || Long.TYPE.equals(method.getReturnType())) {
+        } else if (Long.class.equals(returnType) || Long.TYPE.equals(returnType)) {
             result = (long) rowCount;
-        } else if (Boolean.class.equals(method.getReturnType()) || Boolean.TYPE.equals(method.getReturnType())) {
+        } else if (Boolean.class.equals(returnType) || Boolean.TYPE.equals(returnType)) {
             result = rowCount > 0;
         } else {
-            throw new BindingException("Mapper method '" + method + "' has an unsupported return type: " + method.getReturnType());
+            throw new BindingException("Mapper method '" + method + "' has an unsupported return type: " + returnType);
         }
         return result;
     }

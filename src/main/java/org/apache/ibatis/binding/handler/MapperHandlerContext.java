@@ -30,6 +30,8 @@ public interface MapperHandlerContext {
 
     Configuration getConfiguration();
 
+    Class<?> getReturnType();
+
     /**
      * lazy init
      */
