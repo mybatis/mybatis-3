@@ -70,7 +70,8 @@ public class MapperProxy<T> implements InvocationHandler, Serializable {
             throw ExceptionUtil.unwrapThrowable(t);
         }
 
-        if (null != mapperHandlerContextCache) {
+        if (null != mapperHandlerContextCache && sqlSession.getConfiguration().isEnableMapperHandler()) {
+            cachedMapperMethod(method);// for pass the test class org.apache.ibatis.binding.BindingTest
             final MapperHandlerContext mapperHandlerContext = cachedMapperHandlerContext(method);
             MapperHandler mapperHandler = this.getMapperHandler(mapperHandlerContext, method);
             if (null != mapperHandler) {

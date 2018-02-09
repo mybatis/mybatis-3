@@ -18,10 +18,12 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.MapKey;
+import org.apache.ibatis.binding.BindingException;
 import org.apache.ibatis.binding.handler.MapperHandlerContext;
 import org.apache.ibatis.cursor.Cursor;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.SqlCommandType;
+import org.apache.ibatis.mapping.StatementType;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.ResultHandler;
@@ -97,6 +99,14 @@ public class SelectMapperHandler extends AbstractMapperHandler {
     }
 
     private Object executeResultHandler(SqlSession sqlSession, String sqlId, Object param, RowBounds rowBounds, ResultHandler<?> resultHandler) {
+        MappedStatement ms = sqlSession.getConfiguration().getMappedStatement(sqlId);
+        if (!StatementType.CALLABLE.equals(ms.getStatementType())
+                && void.class.equals(ms.getResultMaps().get(0).getType())) {
+            throw new BindingException("method " + sqlId
+                    + " needs either a @ResultMap annotation, a @ResultType annotation,"
+                    + " or a resultType attribute in XML so a ResultHandler can be used as a parameter.");
+        }
+
         if (null != rowBounds) {
             sqlSession.select(sqlId, param, rowBounds, resultHandler);
         } else {

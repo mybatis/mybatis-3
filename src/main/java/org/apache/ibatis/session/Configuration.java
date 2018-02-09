@@ -169,6 +169,10 @@ public class Configuration {
     /**
      * @since 3.4.6
      */
+    protected boolean enableMapperHandler = false;
+    /**
+     * @since 3.4.6
+     */
     protected ParamResolverFactory paramResolverFactory = new DefaultParamResolverFactory();
     /**
      * @since 3.4.6
@@ -734,7 +738,20 @@ public class Configuration {
     }
 
     /**
-     * @author Felix Lin
+     * @since 3.4.6
+     */
+    public boolean isEnableMapperHandler() {
+        return enableMapperHandler;
+    }
+
+    /**
+     * @since 3.4.6
+     */
+    public void setEnableMapperHandler(boolean enableMapperHandler) {
+        this.enableMapperHandler = enableMapperHandler;
+    }
+
+    /**
      * @since 3.4.6
      */
     public ParamResolverFactory getParamResolverFactory() {
@@ -742,7 +759,6 @@ public class Configuration {
     }
 
     /**
-     * @author Felix Lin
      * @since 3.4.6
      */
     public void setParamResolverFactory(ParamResolverFactory paramResolverFactory) {
@@ -752,7 +768,6 @@ public class Configuration {
     }
 
     /**
-     * @author Felix Lin
      * @since 3.4.6
      */
     public List<MapperHandler> getMapperHandlers() {
