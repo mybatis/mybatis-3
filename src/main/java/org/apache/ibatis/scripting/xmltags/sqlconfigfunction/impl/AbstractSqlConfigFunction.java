@@ -21,9 +21,15 @@ import org.apache.ibatis.scripting.xmltags.sqlconfigfunction.SqlConfigFunction;
  */
 public abstract class AbstractSqlConfigFunction implements SqlConfigFunction {
 
+    private int order;
+
     @Override
     public int getOrder() {
-        return 0;
+        return order;
+    }
+
+    public void setOrder(int order) {
+        this.order = order;
     }
 
     protected String join(String[] arr, String separator) {

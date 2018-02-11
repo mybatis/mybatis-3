@@ -21,8 +21,14 @@ import org.apache.ibatis.binding.handler.MapperHandler;
  */
 public abstract class AbstractMapperHandler implements MapperHandler {
 
+    private int order;
+
     @Override
     public int getOrder() {
-        return 0;
+        return order;
+    }
+
+    public void setOrder(int order) {
+        this.order = order;
     }
 }

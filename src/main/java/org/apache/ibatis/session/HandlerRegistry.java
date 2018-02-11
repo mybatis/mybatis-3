@@ -88,8 +88,11 @@ public class HandlerRegistry {
         }
     }
 
-    public Map<String, SqlConfigFunction> getSqlConfigFunctions() {
-        return sqlConfigFunctions;
+    public SqlConfigFunction getSqlConfigFunction(String name) {
+        if (null != name) {
+            return sqlConfigFunctions.get(name.toUpperCase());
+        }
+        return null;
     }
 
     public void registerSqlConfigFunction(SqlConfigFunction... sqlConfigFunctions) {

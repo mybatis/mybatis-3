@@ -163,7 +163,7 @@ public class SqlConfigFunctionParser {
     }
 
     private static String resolveSqlConfigFunction(Configuration configuration, String name, String[] args) {
-        SqlConfigFunction fn = configuration.getHandlerRegistry().getSqlConfigFunctions().get(name);
+        SqlConfigFunction fn = configuration.getHandlerRegistry().getSqlConfigFunction(name);
         if (null == fn) {
             throw new RuntimeException("not found the sql-config-function [" + name + "]");
         }
