@@ -248,20 +248,7 @@ Configuration getConfiguration();</source>
     <li>事务隔离级别将会使用驱动或数据源的默认设置。</li>
     <li>预处理语句不会被复用,也不会批量处理更新。</li>
   </ul>
-  <p>这些方法大都可以自我解释的。
-开启自动提交, “true”
-传递
-给可选的 autoCommit 参数。
-提供自定义的连接,传递一个 Connection 实例给 connection 参数。注意没有覆盖同时设置
-Connection 和 autoCommit 两者的方法,因为 MyBatis 会使用当前 connection 对象提供的设
-置。
-MyBatis 为事务隔离级别调用使用一个 Java 枚举包装器,
-称为 TransactionIsolationLevel,
-否则它们按预期的方式来工作,并有 JDBC 支持的 5 级
-( NONE,READ_UNCOMMITTED,READ_COMMITTED,REPEA
-TABLE_READ,SERIALIZA
-BLE)
-  </p>
+  <p>这些方法大都是可读性强的。向<code>autoCommit</code>可选参数传递<code>true</code>值即可开启自动提交功能。若要使用自己的<code>Connection<code>实例，传递一个<code>Connection<code>实例给<code>connection<code>参数即可。注意并未覆写同时设置<code>Connection<code>和<code>autoCommit</code>两者的方法，因为 MyBatis 会使用正在使用中的、设置了Connection的环境。MyBatis 为事务隔离级别调用使用了一个Java枚举包装器，称为<code>TransactionIsolationLevel</code>，若不使用它，将使用JDBC所支持五个隔离级(NONE, READ_UNCOMMITTED, READ_COMMITTED, REPEATABLE_READ, SERIALIZABLE)，并按它们预期的方式来工作。</p>
   <p>
 还有一个可能对你来说是新见到的参数,就是 ExecutorType。这个枚举类型定义了 3 个 值:
   </p>
@@ -273,9 +260,7 @@ BLE)
   <p><span class="label important">注意</span> 在 SqlSessionFactory 中还有一个方法我们没有提及,就是 getConfiguration()。这
 个方法会返回一个 Configuration 实例,在运行时你可以使用它来自检 MyBatis 的配置。
   </p>
-  <p><span class="label important">注意</span> 如果你已经使用之前版本 MyBatis,你要回忆那些 session,transaction 和 batch
-都是分离的。现在和以往不同了,这些都包含在 session 的作用域内了。你需要处理分开处理
-事务或批量操作来得到它们的效果。
+  <p><span class="label important">注意</span> 如果你使用的是 MyBatis 之前的版本，你要重新调用 openSession，因为旧版本的 session、事务和批量操作是分离开来的。如果使用的是新版本，那么就不必这么做了，因为它们现在都包含在 session 的作用域内了。你不必再单独处理事务或批量操作就能得到想要的全部效果。
   </p>
 
   <h4>SqlSession</h4>
@@ -289,10 +274,7 @@ BLE)
 
   <h5>语句执行方法</h5>
   <p>
-这些方法被用来执行定义在 SQL 映射的 XML 文件中的 SELECT,INSERT,UPDATE
-和 DELETE 语句。它们都会自行解释,每一句都使用语句的 ID 属性和参数对象,参数可以
-是原生类型(自动装箱或包装类)
-,JavaBean,POJO 或 Map。
+这些方法被用来执行定义在 SQL 映射的 XML 文件中的 SELECT, INSERT, UPDATE 和 DELETE 语句。它们都会自行解释,每一句都使用语句的 ID 属性和参数对象,参数可以是原生类型(自动装箱或包装类),JavaBean,POJO 或 Map。
   </p>
   <source><![CDATA[<T> T selectOne(String statement, Object parameter)
 <E> List<E> selectList(String statement, Object parameter)
@@ -301,16 +283,9 @@ int insert(String statement, Object parameter)
 int update(String statement, Object parameter)
 int delete(String statement, Object parameter)]]></source>
   <p>
-selectOne 和 selectList 的不同仅仅是 selectOne 必须返回一个对象。
-如果多于一个,或者没有返回(或返回了 null) 那么就会抛出异常。
-如果你不知道需要多少对象,
-使用 selectList。
-  </p>
-  <p>
-如果你想检查一个对象是否存在,那么最好返回统计数(0 或 1)
-。因为并不是所有语句都需
-要参数,这些方法都是有不同重载版本的,它们可以不需要参数对象。
-  </p>
+selectOne 和 selectList 的不同仅仅是 selectOne 必须返回一个对象或 null 值。如果返回值多于一个，那么就会抛出异常。如果你不知道返回对象的数量,
+请使用 selectList。如果需要查看返回对象是否存在，可行的方案是返回一个值即可（0 或 1）。selectMap 稍微特殊一点，因为它会将返回的对象的其中一个属性作为 key 值，将对象作为 value 值，从而将多结果集转为 Map 类型值。因为并不是所有语句都需要参数，所以这些方法都重载成不需要参数的形式。
+  </p>
   <source><![CDATA[<T> T selectOne(String statement)
 <E> List<E> selectList(String statement)
 <K,V> Map<K,V> selectMap(String statement, String mapKey)
@@ -319,8 +294,7 @@ int update(String statement)
 int delete(String statement)]]></source>
 
   <p>
-最后,还有查询方法的三个高级版本,它们允许你限制返回行数的范围,或者提供自定
-义结果控制逻辑,这通常用于大量的数据集合。
+最后,还有 select 方法的三个高级版本,它们允许你限制返回行数的范围,或者提供自定义结果控制逻辑,这通常在数据集合庞大的情形下使用。
   </p>
   <source><![CDATA[<E> List<E> selectList (String statement, Object parameter, RowBounds rowBounds)
 <K,V> Map<K,V> selectMap(String statement, Object parameter, String mapKey, RowBounds rowbounds)
@@ -328,22 +302,16 @@ void select (String statement, Object parameter, ResultHandler<T> handler)
 void select (String statement, Object parameter, RowBounds rowBounds, ResultHandler<T> handler)]]></source>
 
   <p>
-RowBounds 参数会告诉 MyBatis 略过指定数量的记录,还有限制返回结果的数量。
-RowBounds 类有一个构造方法来接收 offset 和 limit,否则是不可改变的。
+RowBounds 参数会告诉 MyBatis 略过指定数量的记录,还有限制返回结果的数量。RowBounds 类有一个构造方法来接收 offset 和 limit，另外，它们是不可二次赋值的。
   </p> 
   <source>int offset = 100;
 int limit = 25;
 RowBounds rowBounds = new RowBounds(offset, limit);</source>
 
-  <p>不同的驱动会实现这方面的不同级别的效率。对于最佳的表现,使用结果集类型的
-SCROLL_SENSITIVE 或 SCROLL_INSENSITIVE(换句话说:不是 FORWARD_ONLY)。
+  <p>所以在这方面，不同的驱动能够取得不同级别的高效率。为了取得最佳的表现，请使用结果集的 SCROLL_SENSITIVE 或 SCROLL_INSENSITIVE 的类型(换句话说：不用 FORWARD_ONLY)。
   </p>
   <p>
-ResultHandler 参数允许你按你喜欢的方式处理每一行。你可以将它添加到 List 中,创
-建 Map, 或抛出每个结果而不是只保留总计。
-Set
-你可以使用 ResultHandler 做很多漂亮的事,
-那就是 MyBatis 内部创建结果集列表。
+ResultHandler 参数允许你按你喜欢的方式处理每一行。你可以将它添加到 List 中、创建 Map 和 Set，或者丢弃每个返回值都可以，它取代了仅保留执行语句过后的总结果列表的死板。你可以使用 ResultHandler 做很多事，并且这是 MyBatis 自身内部会使用的方法，以创建结果集列表。
   </p>
   <p>Since 3.4.6, ResultHandler passed to a CALLABLE statement is used on every REFCURSOR output parameter of the stored procedure if there is any.</p>
   <p>它的接口很简单。</p>  
@@ -353,17 +321,14 @@ public interface ResultHandler<T> {
 }]]></source>
 
   <p>
- ResultContext 参数给你访问结果对象本身的方法,
-大量结果对象被创建,
-你可以使用布
-尔返回值的 stop()方法来停止 MyBatis 加载更多的结果。
+ ResultContext 参数允许你访问结果对象本身、被创建的对象数目、以及返回值为 Boolean 的 stop 方法，你可以使用此 stop 方法来停止 MyBatis 加载更多的结果。
   </p>
 
-  <p>Using a ResultHandler has two limitations that you should be aware of:</p>
+  <p>使用 ResultHandler 的时候需要注意以下两种限制：</p>
   
   <ul>
-  <li>Data got from an method called with a ResultHandler will not be cached.</li>
-  <li>When using advanced resultmaps MyBatis will probably require several rows to build an object. If a ResultHandler is used you may be given an object whose associations or collections are not yet filled.</li>
+  <li>从被 ResultHandler 调用的方法返回的数据不会被缓存。</li>
+  <li>当使用结果映射集（resultMap）时，MyBatis 大多数情况下需要数行结果来构造外键对象。如果你正在使用 ResultHandler，你可以给出外键（association）或者集合（collection）尚未赋值的对象。</li>
   </ul>
 
   <h5>批量立即更新方法(Flush Method)</h5>
@@ -373,36 +338,28 @@ public interface ResultHandler<T> {
 
   <h5>事务控制方法</h5>
   <p>
-控制事务作用域有四个方法。
-当然,
-如果你已经选择了自动提交或你正在使用外部事务管
-理器,这就没有任何效果了。然而,如果你正在使用 JDBC 事务管理员,由 Connection 实
-例来控制,那么这四个方法就会派上用场:
-  </p>
+控制事务作用域有四个方法。当然，如果你已经设置了自动提交或你正在使用外部事务管理器，这就没有任何效果了。然而，如果你正在使用 JDBC 事务管理器，由Connection 实例来控制，那么这四个方法就会派上用场：
+  </p>
   <source>void commit()
 void commit(boolean force)
 void rollback()
 void rollback(boolean force)</source>
   <p>
-默认情况下 MyBatis 不会自动提交事务,
-除非它侦测到有插入,
-更新或删除操作改变了
-数据库。如果你已经做出了一些改变而没有使用这些方法,那么你可以传递 true 到 commit
-和 rollback 方法来保证它会被提交(注意,你不能在自动提交模式下强制 session,或者使用
-了外部事务管理器时)
-。很多时候你不用调用 rollback(),因为如果你没有调用 commit 时
-MyBatis 会替你完成。然而,如果你需要更多对多提交和回滚都可能的 session 的细粒度控
-制,你可以使用回滚选择来使它成为可能。
+默认情况下 MyBatis 不会自动提交事务，除非它侦测到有插入、更新或删除操作改变了数据库。如果你已经做出了一些改变而没有使用这些方法，那么你可以传递 true 值到 commit 和 rollback 方法来保证事务被正常处理（注意，在自动提交模式或者使用了外部事务管理器的情况下设置 force 值对 session 无效）。很多时候你不用调用 rollback()，因为 MyBatis 会在你没有调用 commit 时替你完成回滚操作。然而，如果你需要在支持多提交和回滚的 session 中获得更多细粒度控制，你可以使用回滚操作来达到目的。
   </p>
-  <p><span class="label important">注意</span>MyBatis-Spring和MyBatis-Guice提供了声明事务处理，所以如果你在使用Mybatis的同时使用了Spring或者Guice，那么请参考它们的手册以获取更多的内容。</p>
-  <h5>清理 Session 级的缓存</h5>
-  <source>void clearCache()</source>
-  <p>
-SqlSession 实例有一个本地缓存在执行 update,commit,rollback 和 close 时被清理。要
-明确地关闭它(获取打算做更多的工作)
-,你可以调用 clearCache()。
-  </p>
-
+  <p><span class="label important">注意</span> MyBatis-Spring 和 MyBatis-Guice 提供了声明事务处理，所以如果你在使用 Mybatis 的同时使用了Spring 或者 Guice，那么请参考它们的手册以获取更多的内容。</p>
+  <h5>本地缓存</h5>
+	<p>Mybatis 使用到了两种缓存：本地缓存（local cache）和二级缓存（second level cache）。
+	</p>
+	<p>每当一个新 session 被创建，MyBatis 就会创建一个与之相关联的本地缓存。任何在 session 执行过的查询语句本身都会被保存在本地缓存中，那么，相同的查询语句和相同的参数所产生的更改就不会二度影响数据库了。本地缓存会被增删改、提交事务、关闭事务以及关闭 session 所清空。
+	</p>
+	<p>默认情况下，本地缓存数据可在整个 session 的周期内使用，这一缓存需要被用来解决循环引用错误和加快重复嵌套查询的速度，所以它可以不被禁用掉，但是你可以设置 localCacheScope=STATEMENT 表示缓存仅在语句执行时有效。
+	</p>
+	<p>注意，如果 localCacheScope 被设置为 SESSION，那么 MyBatis 所返回的引用将传递给保存在本地缓存里的相同对象。对返回的对象（例如 list）做出任何更新将会影响本地缓存的内容，进而影响存活在 session 生命周期中的缓存所返回的值。因此，不要对 MyBatis 所返回的对象作出更改，以防后患。
+	</p>
+	<p>你可以随时调用以下方法来清空本地缓存：
+	</p>
+  <source>void clearCache()</source>
   <h5>确保 SqlSession 被关闭</h5>
   <source>void close()</source>
   <p>你必须保证的最重要的事情是你要关闭所打开的任何 session。保证做到这点的最佳方
@@ -427,24 +384,17 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
     session.delete(...);
     session.commit();
 }</source>
-  <p><span class="label important">注意</span> 就像 SqlSessionFactory,你可以通过调用 getConfiguration()方法获得 SqlSession
-使用的 Configuration 实例
-  </p>
+  <p><span class="label important">注意</span> 就像 SqlSessionFactory，你可以通过调用当前使用中的 SqlSession 的 getConfiguration 方法来获得 Configuration 实例。
+  </p>
   <source>Configuration getConfiguration()</source>
 
   <h5>使用映射器</h5>
   <source><![CDATA[<T> T getMapper(Class<T> type)]]></source>  
   <p>
-上述的各个 insert,update,delete 和 select 方法都很强大,但也有些繁琐,没有类型安
-全,对于你的 IDE 也没有帮助,还有可能的单元测试。在上面的入门章节中我们已经看到
-了一个使用映射器的示例。
+上述的各个 insert、update、delete 和 select 方法都很强大，但也有些繁琐，可能会产生类型安全问题并且对于你的 IDE 和单元测试也没有实质性的帮助。在上面的入门章节中我们已经看到了一个使用映射器的示例。
   </p>
   <p>
-因此,
-一个更通用的方式来执行映射语句是使用映射器类。
-一个映射器类就是一个简单
-的接口,其中的方法定义匹配于 SqlSession 方法。下面的示例展示了一些方法签名和它们是
-如何映射到 SqlSession 的。
+因此，一个更通用的方式来执行映射语句是使用映射器类。一个映射器类就是一个仅需声明与 SqlSession 方法相匹配的方法的接口类。下面的示例展示了一些方法签名以及它们是如何映射到 SqlSession 上的。
   </p>
   <source><![CDATA[public interface AuthorMapper {
   // (Author) selectOne("selectAuthor",5);
@@ -462,58 +412,31 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
   int deleteAuthor(int id);
 }]]></source>
   <p>
-总之,
-每个映射器方法签名应该匹配相关联的 SqlSession 方法,
-而没有字符串参数 ID。
-相反,方法名必须匹配映射语句的 ID。
+总之，每个映射器方法签名应该匹配相关联的 SqlSession 方法，而字符串参数 ID 无需匹配。相反，方法名必须匹配映射语句的 ID。
   </p>
   <p>
-此外,返回类型必须匹配期望的结果类型。所有常用的类型都是支持的,包括:原生类
-型,Map,POJO 和 JavaBean。
+此外，返回类型必须匹配期望的结果类型，单返回值时为所指定类的值，多返回值时为数组或集合。所有常用的类型都是支持的，包括：原生类
+型、Map、POJO 和 JavaBean。
   </p>
-  <p>
-映射器接口不需要去实现任何接口或扩展任何类。
-只要方法前面可以被用来唯一标识对
-应的映射语句就可以了。  
+  <p><span class="label important">注意</span> 映射器接口不需要去实现任何接口或继承自任何类。只要方法可以被唯一标识对应的映射语句就可以了。</p>
+  <p><span class="label important">注意</span> 映射器接口可以继承自其他接口。当使用 XML 来构建映射器接口时要保证语句被包含在合适的命名空间中。而且，唯一的限制就是你不能在两个继承关系的接口中拥有相同的方法签名（潜在的危险做法不可取）。
   </p>
-  <p>
-映射器接口可以扩展其他接口。当使用 XML 来构建映射器接口时要保证在合适的命名
-空间中有语句。
-而且,
-唯一的限制就是你不能在两个继承关系的接口中有相同的方法签名
-(这
-也是不好的想法)。
+  <p>你可以传递多个参数给一个映射器方法。如果你这样做了，默认情况下它们将会以 "param" 字符串紧跟着它们在参数列表中的位置来命名，比如：#{param1}、#{param2}等。如果你想改变参数的名称（只在多参数情况下），那么你可以在参数上使用 @Param("paramName") 注解。
   </p>
-  <p>
-你可以传递多个参数给一个映射器方法。
-如果你这样做了,
-默认情况下它们将会以它们
-在参数列表中的位置来命名,比如:#{param1},#{param2}等。如果你想改变参数的名称(只在多参数
-情况下)
-,那么你可以在参数上使用@Param(“paramName”)注解。
-  </p>
-  <p>
-  你也可以给方法传递一个 RowBounds 实例来限制查询结果。
+  <p>你也可以给方法传递一个 RowBounds 实例来限制查询结果。
   </p>
 
   <h5>映射器注解</h5>
-  <p>因为最初设计时,MyBatis 是一个 XML 驱动的框架。配置信息是基于 XML 的,而且
-映射语句也是定义在 XML 中的。而到了 MyBatis 3,有新的可用的选择了。MyBatis 3 构建
-在基于全面而且强大的 Java 配置 API 之上。这个配置 API 是基于 XML 的 MyBatis 配置的
-基础,也是新的基于注解配置的基础。注解提供了一种简单的方式来实现简单映射语句,而
-不会引入大量的开销。
+  <p>因为最初设计时，MyBatis 是一个 XML 驱动的框架。配置信息是基于 XML 的，而且映射语句也是定义在 XML 中的。而到了 MyBatis 3，就有新选择了。MyBatis 3 构建在全面且强大的基于 Java 语言的配置 API 之上。这个配置 API 是基于 XML 的 MyBatis 配置的基础，也是新的基于注解配置的基础。注解提供了一种简单的方式来实现简单映射语句，而不会引入大量的开销。
   </p>
-  <p><span class="label important">注意</span> 不幸的是,Java 注解限制了它们的表现和灵活。尽管很多时间都花在调查,设计和
-实验上,最强大的 MyBatis 映射不能用注解来构建,那并不可笑。C#属性(做示例)就没
-有这些限制,因此 MyBatis.NET 将会比 XML 有更丰富的选择。也就是说,基于 Java 注解
-的配置离不开它的特性。
+  <p><span class="label important">注意</span> 不幸的是，Java 注解的的表达力和灵活性十分有限。尽管很多时间都花在调查、设计和试验上，最强大的 MyBatis 映射并不能用注解来构建——并不是在开玩笑，的确是这样。比方说，C#属性就没有这些限制，因此 MyBatis.NET 将会比 XML 有更丰富的选择。也就是说，基于 Java 注解的配置离不开它的特性。
   </p>
-  <p><strong>注解有下面这些:</strong></p>
+  <p><strong>注解如下表所示：</strong></p>
   <table>
     <thead>
       <tr>
         <th>注解</th>
-        <th>目标</th>
+        <th>使用对象</th>
         <th>相对应的 XML</th>
         <th>描述</th>
       </tr>
@@ -526,34 +449,28 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
         <td>为给定的命名空间
 (比如类)
 配置缓存。
-属性:implemetation,eviction,
-flushInterval,size,readWrite,blocking 和 properties。
+属性有：<code>implemetation</code>, <code>eviction</code>, <code>flushInterval</code>, <code>size</code>, <code>readWrite</code>, <code>blocking</code> 和<code>properties</code>。
         </td>
       </tr>
       <tr>
         <td><code>@Property</code></td>
         <td>N/A</td>
         <td><code>&lt;property&gt;</code></td>
-        <td>Specifies the property value or placeholder(can replace by configuration properties that defined at the <code>mybatis-config.xml</code>). Attributes: <code>name</code>, <code>value</code>. (Available on MyBatis 3.4.2+)</td>
+        <td>指定参数值或占位值（placeholder）（能被 <code>mybatis-config.xml</code>内的配置属性覆盖）。属性有：<code>name</code>, <code>value</code>。（仅在MyBatis 3.4.2以上版本生效）</td>
       </tr>
       <tr>
         <td><code>@CacheNamespaceRef</code></td>
         <td><code>类</code></td>
         <td><code>&lt;cacheRef&gt;</code></td>
         <td>
-          参照另外一个命名空间的缓存来使用。Note that caches declared in an XML mapper file are considered a separate namespace, even if they share the same FQCN. 属性:value, name。
-          If you use this annotation, you should be specified either <code>value</code> or <code>name</code> attribute.
-          For the <code>value</code> attribute specify a java type indicating the namespace(the namespace name become a FQCN of specified java type),
-          and for the <code>name</code> attribute(this attribute is available since 3.4.2) specify a name indicating the namespace.
+          参照另外一个命名空间的缓存来使用。属性有：<code>value</code>, <code>name</code>。如果你使用了这个注解，你应设置 <code>value</code> 或者 <code>name</code> 属性的其中一个。<code>value</code> 属性用于指定 Java 类型而指定命名空间（命名空间名就是指定的 Java 类型的全限定名）， <code>name</code> 属性（这个属性仅在MyBatis 3.4.2以上版本生效）直接指定了命名空间的名字。
         </td>
       </tr>
       <tr>
         <td><code>@ConstructorArgs</code></td>
         <td><code>方法</code></td>
         <td><code>&lt;constructor&gt;</code></td>
-        <td>收集一组结果传递给一个劫夺对象的
-构造方法。属性:value,是形式参数
-的数组。
+        <td>收集一组结果传递给一个结果对象的构造方法。属性有：<code>value</code>，它是形式参数数组。
         </td>
       </tr>
       <tr>
@@ -565,37 +482,21 @@ flushInterval,size,readWrite,blocking 和 properties。
             <li><code>&lt;idArg&gt;</code></li>
           </ul>
         </td>
-        <td>单 独 的 构 造 方 法 参 数 , 是
-ConstructorArgs 集合的一部分。属性:
-id,column,javaType,typeHandler。
-id 属性是布尔值,
-来标识用于比较的属
-性,和&lt;idArg&gt;XML 元素相似。
+        <td>单参数构造方法，是 ConstructorArgs 集合的一部分。属性有：<code>id</code>, <code>column</code>, <code>javaType</code>, <code>jdbcType</code>, <code>typeHandler</code>, <code>select</code> 和 <code>resultMap</code>。id 属性是布尔值，来标识用于比较的属性，和<code>&lt;idArg&gt;</code> XML 元素相似。
         </td>
       </tr>
       <tr>
         <td><code>@TypeDiscriminator</code></td>
         <td><code>方法</code></td>
         <td><code>&lt;discriminator&gt;</code></td>
-        <td>一组实例值被用来决定结果映射的表
-现。
-属性:
-column,
-javaType,
-jdbcType,
-typeHandler,cases。cases 属性就是实
-例的数组。
+        <td>一组实例值被用来决定结果映射的表现。属性有：<code>column</code>, <code>javaType</code>, <code>jdbcType</code>, <code>typeHandler</code> 和 <code>cases</code>。cases 属性是实例数组。
         </td>
       </tr>
       <tr>
         <td><code>@Case</code></td>
         <td>N/A</td>
         <td><code>&lt;case&gt;</code></td>
-        <td>单独实例的值和它对应的映射。属性:
-value,type,results。Results 属性是结
-果数组,因此这个注解和实际的
-ResultMap 很相似,由下面的 Results
-注解指定。
+        <td>单独实例的值和它对应的映射。属性有：<code>value</code>, <code>type</code>, <code>results</code>。results 属性是结果数组，因此这个注解和实际的 <code>ResultMap</code> 很相似，由下面的 <code>Results</code> 注解指定。
         </td>
       </tr>
       <tr>
@@ -603,10 +504,7 @@ ResultMap 很相似,由下面的 Results
         <td><code>方法</code></td>
         <td><code>&lt;resultMap&gt;</code></td>
         <td>
-结果映射的列表,
-包含了一个特别结果
-列如何被映射到属性或字段的详情。
-属 性:value, id。value 属性是 Result 注解的数组。这个id的属性是结果映射的名称。
+结果映射的列表，包含了一个特别结果列如何被映射到属性或字段的详情。属性有：<code>value</code>, <code>id</code>。value 属性是 <code>Result</code> 注解的数组。这个 id 的属性是结果映射的名称。
         </td>
       </tr>
       <tr>
@@ -618,30 +516,14 @@ ResultMap 很相似,由下面的 Results
             <li><code>&lt;id&gt;</code></li>
           </ul>
         </td>
-        <td>在列和属性或字段之间的单独结果映
-射。属 性:id,column, property,
-javaType ,jdbcType ,type Handler,
-one,many。id 属性是一个布尔值,表
-示了应该被用于比较(和在 XML 映射
-中的&lt;id&gt;相似)的属性。one 属性是单
-独 的 联 系, 和 &lt;association&gt; 相 似 , 而
-many 属 性 是 对 集 合 而 言 的 , 和
-&lt;collection&gt;相似。
-它们这样命名是为了
-避免名称冲突。
+        <td>在列和属性或字段之间的单独结果映射。属性有：<code>id</code>, <code>column</code>, <code>javaType</code>, <code>jdbcType</code>, <code>typeHandler</code>, <code>one</code>, <code>many</code>。id 属性是一个布尔值，来标识应该被用于比较（和在 XML 映射中的<code>&lt;id&gt;</code>相似）的属性。one 属性是单独的联系，和 <code>&lt;association&gt;</code> 相似，而 many 属性是对集合而言的，和<code>&lt;collection&gt;</code>相似。它们这样命名是为了避免名称冲突。
         </td>
       </tr>
       <tr>
         <td><code>@One</code></td>
         <td>N/A</td>
         <td><code>&lt;association&gt;</code></td>
-        <td>复杂类型的单独属性值映射。属性:
-select,已映射语句(也就是映射器方
-法)的完全限定名,它可以加载合适类
-型的实例。注意:联合映射在注解 API
-中是不支持的。这是因为 Java 注解的
-限制,不允许循环引用。
-<code>fetchType</code>会覆盖全局的配置参数<code>lazyLoadingEnabled</code>。
+        <td>复杂类型的单独属性值映射。属性有：<code>select</code>，已映射语句（也就是映射器方法）的全限定名，它可以加载合适类型的实例。<code>fetchType</code>会覆盖全局的配置参数 <code>lazyLoadingEnabled</code>。<span class="label important">注意</span> 联合映射在注解 API中是不支持的。这是因为 Java 注解的限制,不允许循环引用。
         </td>
       </tr>
       <tr>
@@ -649,9 +531,7 @@ select,已映射语句(也就是映射器方
         <td>N/A</td>
         <td><code>&lt;collection&gt;</code></td>
         <td>
-			映射到复杂类型的集合属性。属性：<code>select</code>，已映射语句(也就是映射器方法)的全限定名，
-			它可以加载合适类型的实例的集合，<code>fetchType</code>会覆盖全局的配置参数<code>lazyLoadingEnabled</code>。 
-        <span class="label important">注意</span>联合映射在注解 API中是不支持的。这是因为 Java 注解的限制,不允许循环引用</td>
+			映射到复杂类型的集合属性。属性：<code>select</code>，已映射语句（也就是映射器方法）的全限定名，它可以加载合适类型的实例的集合，<code>fetchType</code> 会覆盖全局的配置参数 <code>lazyLoadingEnabled</code>。<span class="label important">注意</span>联合映射在注解 API中是不支持的。这是因为 Java 注解的限制,不允许循环引用</td>
       </tr>
       <tr>
         <td><code>@MapKey</code></td>
