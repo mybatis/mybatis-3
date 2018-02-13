@@ -530,49 +530,21 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
         <td><code>@Many</code></td>
         <td>N/A</td>
         <td><code>&lt;collection&gt;</code></td>
-        <td>
-			映射到复杂类型的集合属性。属性：<code>select</code>，已映射语句（也就是映射器方法）的全限定名，它可以加载合适类型的实例的集合，<code>fetchType</code> 会覆盖全局的配置参数 <code>lazyLoadingEnabled</code>。<span class="label important">注意</span>联合映射在注解 API中是不支持的。这是因为 Java 注解的限制,不允许循环引用</td>
+        <td>映射到复杂类型的集合属性。属性有：<code>select</code>，已映射语句（也就是映射器方法）的全限定名，它可以加载合适类型的实例的集合，<code>fetchType</code> 会覆盖全局的配置参数 <code>lazyLoadingEnabled</code>。<span class="label important">注意</span> 联合映射在注解 API中是不支持的。这是因为 Java 注解的限制，不允许循环引用</td>
       </tr>
       <tr>
         <td><code>@MapKey</code></td>
         <td><code>方法</code></td>
-        <td> </td>
-        <td>复 杂 类 型 的 集合 属 性 映射 。 属 性 :
-select,是映射语句(也就是映射器方
-法)的完全限定名,它可以加载合适类
-型的一组实例。注意:联合映射在 Java
-注解中是不支持的。这是因为 Java 注
-解的限制,不允许循环引用。
+        <td></td>
+				<td>这是一个用在返回值为 Map 的方法上的注解。它能够将存放对象的 List 转化为 key 值为对象的某一属性的 Map。属性有： <code>value</code>，填入的是对象的属性名，作为 Map 的 key 值。
         </td>
       </tr>
       <tr>
         <td><code>@Options</code></td>
         <td><code>方法</code></td>
         <td>映射语句的属性</td>
-        <td>这个注解提供访问交换和配置选项的
-宽广范围,
-它们通常在映射语句上作为
-属性出现。
-而不是将每条语句注解变复
-杂,Options 注解提供连贯清晰的方式
-来访问它们。属性:useCache=true ,
-flushCache=FlushCachePolicy.DEFAULT
-,
-resultSetType=FORWARD_ONLY ,
-statementType=PREPARED ,
-fetchSize=-1 ,
-, 
-  timeout=-1 
-useGeneratedKeys=false ,
-keyProperty=”id” ,
-keyColumn=”” ,
-resultSets=””。
-理解 Java 注解是很
-重要的,因为没有办法来指定“null”
-作为值。因此,一旦你使用了 Options
-注解,语句就受所有默认值的支配。要
-注意什么样的默认值来避免不期望的
-行为。
+        <td>这个注解提供访问大范围的交换和配置选项的入口，它们通常在映射语句上作为属性出现。<code>Options</code> 注解提供了通俗易懂的方式来访问它们，而不是让每条语句注解变复杂。属性有：<code>useCache=true</code>, <code>flushCache=FlushCachePolicy.DEFAULT</code>, <code>resultSetType=FORWARD_ONLY</code>, <code>statementType=PREPARED</code>, <code>fetchSize=-1</code>, <code>timeout=-1</code>, <code>useGeneratedKeys=false</code>, <code>keyProperty="id"</code>, <code>keyColumn=""</code>, <code>resultSets=""</code>。值得一提的是， Java 注解无法指定 <code>null</code> 值。因此，一旦你使用了 <code>Options</code> 注解，你的语句就会被上述属性的默认值所影响。要注意避免默认值带来的预期以外的行为。<br/><br/>
+        注意： <code>keyColumn</code> 属性只在某些数据库中有效（如 Oracle、PostgreSQL等）。请在插入语句一节查看更多关于 <code>keyColumn</code> 和 <code>keyProperty</code> 两者的有效值详情。
 </td>
       </tr>
       <tr>
@@ -593,18 +565,7 @@ resultSets=””。
             <li><code>&lt;select&gt;</code></li>
           </ul>
         </td>
-        <td>
-这些注解中的每一个代表了执行的真
-实 SQL。
-它们每一个都使用字符串数组
-(或单独的字符串)。如果传递的是字
-符串数组,
-它们由每个分隔它们的单独
-空间串联起来。这就当用 Java 代码构
-建 SQL 时避免了“丢失空间”的问题。
-然而,如果你喜欢,也欢迎你串联单独
-的字符串。属性:value,这是字符串
-数组用来组成单独的 SQL 语句。
+        <td>这四个注解分别代表将会被执行的 SQL 语句。它们用字符串数组（或单个字符串）作为参数。如果传递的是字符串数组，字符串之间先会被填充一个空格再连接成单个完整的字符串。这有效避免了以 Java 代码构建 SQL 语句时的“丢失空格”的问题。然而，你也可以提前手动连接好字符串。属性有：<code>value</code>，填入的值是用来组成单个 SQL 语句的字符串数组。
 </td>
       </tr>
       <tr>
@@ -625,51 +586,21 @@ resultSets=””。
             <li><code>&lt;select&gt;</code></li>
           </ul>
         </td>
-        <td>
-这些可选的 SQL 注解允许你指定一个
-类名和一个方法在执行时来返回运行
-允许创建动态 
-的 SQL (Since 3.4.6, you can specify the <code>CharSequence</code> instead of <code>String</code> as a method return type)。
-基于执行的映射语句, 
-MyBatis
-会实例化这个类,然后执行由 provider
-指定的方法.
-You can pass objects that passed to arguments of a mapper method, "Mapper interface type" and "Mapper method"
-via the <code>ProviderContext</code>(available since MyBatis 3.4.5 or later) as method argument.
-(In MyBatis 3.4 or later, it's allow multiple parameters)
-属性: type,method。type 属性是类。method 属性是方法名。
-注意:
-这节之后是对 类的
-讨论,它可以帮助你以干净,容于阅读
-的方式来构建动态 SQL。
+        <td>允许构建动态 SQL。这些备选的 SQL 注解允许你指定类名和返回在运行时执行的 SQL 语句的方法。（自从MyBatis 3.4.6开始，你可以用 <code>CharSequence</code> 代替 <code>String</code> 来返回类型返回值了。）当执行映射语句的时候，MyBatis 会实例化类并执行方法，类和方法就是填入了注解的值。你可以把已经传递给映射方法了的对象作为参数，"Mapper interface type" 和 "Mapper method" 会经过 <code>ProviderContext</code> （仅在MyBatis 3.4.5及以上支持）作为参数值。（MyBatis 3.4及以上的版本，支持多参数传入）属性有： <code>type</code>, <code>method</code>。<code>type</code> 属性需填入类。<code>method</code> 需填入该类定义了的方法名。<span class="label important">注意</span> 接下来的小节将会讨论类，能帮助你更轻松地构建动态 SQL。
 </td>
       </tr>
       <tr>
         <td><code>@Param</code></td>
-        <td><code>Parameter</code></td>
+        <td><code>参数</code></td>
         <td>N/A</td>
-        <td>如果你的映射器的方法需要多个参数,
-这个注解可以被应用于映射器的方法
-参数来给每个参数一个名字。否则,多
-参数将会以它们的顺序位置来被命名
-(不包括任何 RowBounds 参数) 比如。
-#{param1} , #{param2} 等 , 这 是 默 认 的 。 使 用
-@Param(“person”),参数应该被命名为
-#{person}。
+        <td>如果你的映射方法的形参有多个，这个注解使用在映射方法的参数上就能为它们取自定义名字。若不给出自定义名字，多参数（不包括 <code>RowBounds</code> 参数）则先以 "param" 作前缀，再加上它们的参数位置作为参数别名。例如 <code>#{param1}</code>, <code>#{param2}</code>，这个是默认值。如果注解是 <code>@Param("person")</code>，那么参数就会被命名为 <code>#{person}</code>。
 </td>
       </tr>
       <tr>
         <td><code>@SelectKey</code></td>
         <td><code>方法</code></td>
         <td><code>&lt;selectKey&gt;</code></td>
-        <td>
-			该注解复制了<code>&lt;selectKey&gt;</code>的功能，用在注解了<code>@Insert</code>, <code>@InsertProvider</code>, <code>@Update</code> or <code>@UpdateProvider</code>的方法上。在其他方法上将被忽略。如果你指定了一个<code>@SelectKey</code>注解，然后Mybatis将忽略任何生成的key属性通过设置<code>@Options</code>，或者配置属性。
-			属性：
-			<code>statement</code>是要执行的sql语句的字符串数组，
-			<code>keyProperty</code>是需要更新为新值的参数对象属性，
-			<code>before</code>可以是<code>true</code>或者<code>false</code>分别代表sql语句应该在执行insert之前或者之后，
-			<code>resultType</code>是<code>keyProperty</code>的Java类型，
-			<code>statementType</code>是语句的类型，取<code>Statement</code>, <code>PreparedStatement</code>和<code>CallableStatement</code>对应的<code>STATEMENT</code>, <code>PREPARED</code>或者<code>CALLABLE</code>其中一个，默认是<code>PREPARED</code>。
+        <td>这个注解的功能与 <code>&lt;selectKey&gt;</code> 标签完全一致，用在已经被 <code>@Insert</code> 或 <code>@InsertProvider</code> 或 <code>@Update</code> 或 <code>@UpdateProvider</code> 注解了的方法上。若在未被上述四个注解的方法上作 <code>@SelectKey</code> 注解则视为无效。如果你指定了 <code>@SelectKey</code> 注解，那么 MyBatis 就会忽略掉由 <code>@Options</code> 注解所设置的生成主键或设置（configuration）属性。属性有：<code>statement</code> 填入将会被执行的 SQL 字符串数组，<code>keyProperty</code> 填入将会被更新的参数对象的属性的值，<code>before</code> 填入 <code>true</code> 或 <code>false</code> 以指明 SQL 语句应被在插入语句的之前还是之后执行。<code>resultType</code> 填入 <code>keyProperty</code> 的 Java 类型和用 <code>Statement</code>、 <code>PreparedStatement</code> 和 <code>CallableStatement</code> 中的 <code>STATEMENT</code>、 <code>PREPARED</code> 或 <code>CALLABLE</code> 中任一值填入 <code>statementType</code>。默认值是 <code>PREPARED</code>。
 		</td>
       </tr>
       <tr>
