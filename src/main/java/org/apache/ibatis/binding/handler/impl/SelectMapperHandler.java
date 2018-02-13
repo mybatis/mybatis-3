@@ -80,7 +80,7 @@ public class SelectMapperHandler extends AbstractMapperHandler {
         return null;
     }
 
-    private Object executeMany(SqlSession sqlSession, String sqlId, Object param, RowBounds rowBounds, Class<?> returnType) {
+    protected Object executeMany(SqlSession sqlSession, String sqlId, Object param, RowBounds rowBounds, Class<?> returnType) {
         List<?> result;
         if (null != rowBounds) {
             result = sqlSession.selectList(sqlId, param, rowBounds);
@@ -98,7 +98,7 @@ public class SelectMapperHandler extends AbstractMapperHandler {
         return result;
     }
 
-    private Object executeResultHandler(SqlSession sqlSession, String sqlId, Object param, RowBounds rowBounds, ResultHandler<?> resultHandler) {
+    protected Object executeResultHandler(SqlSession sqlSession, String sqlId, Object param, RowBounds rowBounds, ResultHandler<?> resultHandler) {
         MappedStatement ms = sqlSession.getConfiguration().getMappedStatement(sqlId);
         if (!StatementType.CALLABLE.equals(ms.getStatementType())
                 && void.class.equals(ms.getResultMaps().get(0).getType())) {
@@ -115,7 +115,7 @@ public class SelectMapperHandler extends AbstractMapperHandler {
         return null;
     }
 
-    private Object executeMap(SqlSession sqlSession, String sqlId, Object param, RowBounds rowBounds, MapperHandlerContext context) {
+    protected Object executeMap(SqlSession sqlSession, String sqlId, Object param, RowBounds rowBounds, MapperHandlerContext context) {
         Object result;
         String mapKey = context.getMethod().getAnnotation(MapKey.class).value();
         if (null != rowBounds) {
@@ -126,7 +126,7 @@ public class SelectMapperHandler extends AbstractMapperHandler {
         return result;
     }
 
-    private Object executeCursor(SqlSession sqlSession, String sqlId, Object param, RowBounds rowBounds) {
+    protected Object executeCursor(SqlSession sqlSession, String sqlId, Object param, RowBounds rowBounds) {
         Object result;
         if (null != rowBounds) {
             result = sqlSession.selectCursor(sqlId, param, rowBounds);

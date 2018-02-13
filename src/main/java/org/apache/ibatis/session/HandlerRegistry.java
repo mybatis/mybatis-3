@@ -25,6 +25,7 @@ import org.apache.ibatis.binding.handler.MapperHandler;
 import org.apache.ibatis.binding.handler.ParamResolverFactory;
 import org.apache.ibatis.binding.handler.impl.DefaultParamResolverFactory;
 import org.apache.ibatis.binding.handler.impl.FlushMapperHandler;
+import org.apache.ibatis.binding.handler.impl.OptionalMapperHandler;
 import org.apache.ibatis.binding.handler.impl.SelectMapperHandler;
 import org.apache.ibatis.binding.handler.impl.UpdateMapperHandler;
 import org.apache.ibatis.scripting.xmltags.sqlconfigfunction.SqlConfigFunction;
@@ -36,16 +37,29 @@ import org.apache.ibatis.scripting.xmltags.sqlconfigfunction.impl.BaseSqlConfigF
  */
 public class HandlerRegistry {
 
+    private static boolean optionalClassExists = false;
     protected boolean enableMapperHandler = true;
     protected ParamResolverFactory paramResolverFactory = new DefaultParamResolverFactory();
     protected final List<MapperHandler> mapperHandlers = new LinkedList<MapperHandler>();
     protected final Map<String, SqlConfigFunction> sqlConfigFunctions = new ConcurrentHashMap<String, SqlConfigFunction>();
+
+    static {
+        try {
+            Class.forName("java.lang.Optional");
+            optionalClassExists = true;
+        } catch (Exception e) {
+            // ignore
+        }
+    }
 
     public HandlerRegistry() {
         this.init();
     }
 
     protected void init() {
+        if (optionalClassExists) {
+            mapperHandlers.add(new OptionalMapperHandler());
+        }
         mapperHandlers.add(new UpdateMapperHandler());
         mapperHandlers.add(new SelectMapperHandler());
         mapperHandlers.add(new FlushMapperHandler());
