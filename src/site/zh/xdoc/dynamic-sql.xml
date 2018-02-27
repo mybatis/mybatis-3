@@ -24,13 +24,14 @@
     <author email="clinton.begin@gmail.com">Clinton Begin</author>
     <author email="nanlei1987@gmail.com">Nan Lei</author>
     <author email="echowdx@gmail.com">Dongxu Wang</author>
-  </properties>
+    <author email="lu_picc@outlook.com">ZeShen Lu</author>
+  </properties>
 
   <body>
     <section name="动态 SQL">
-      <p>MyBatis 的强大特性之一便是它的动态 SQL。如果你有使用 JDBC 或其他类似框架的经验，你就能体会到根据不同条件拼接 SQL 语句有多么痛苦。拼接的时候要确保不能忘了必要的空格，还要注意省掉列名列表最后的逗号。利用动态 SQL 这一特性可以彻底摆脱这种痛苦。</p>
-      <p>通常使用动态 SQL 不可能是独立的一部分,MyBatis 当然使用一种强大的动态 SQL 语言来改进这种情形,这种语言可以被用在任意的 SQL 映射语句中。</p>
-      <p>动态 SQL 元素和使用 JSTL 或其他类似基于 XML 的文本处理器相似。在 MyBatis 之前的版本中,有很多的元素需要来了解。MyBatis 3 大大提升了它们,现在用不到原先一半的元素就可以了。MyBatis 采用功能强大的基于 OGNL 的表达式来消除其他元素。</p>
+      <p>MyBatis 的强大特性之一便是它的动态 SQL。如果你有使用 JDBC 或其它类似框架的经验，你就能体会到根据不同条件拼接 SQL 语句的痛苦。例如拼接时要确保不能忘记添加必要的空格，还要注意去掉列表最后一个列名的逗号。利用动态 SQL 这一特性可以彻底摆脱这种痛苦。</p>
+      <p>虽然在以前使用动态 SQL 并非一件易事，但正是 MyBatis 提供了可以被用在任意 SQL 映射语句中的强大的动态 SQL 语言得以改进这种情形。</p>
+      <p>动态 SQL 元素和 JSTL 或基于类似 XML 的文本处理器相似。在 MyBatis 之前的版本中，有很多元素需要花时间了解。MyBatis 3 大大精简了元素种类，现在只需学习原来一半的元素便可。MyBatis 采用功能强大的基于 OGNL 的表达式来淘汰其它大部分元素。</p>
       <ul>
         <li>if</li>
         <li>choose (when, otherwise)</li>
@@ -38,7 +39,7 @@
         <li>foreach</li>
       </ul>
       <subsection name="if" id="if">
-        <p>动态 SQL 通常要做的事情是有条件地包含 where 子句的一部分。比如:</p>
+        <p>动态 SQL 通常要做的事情是根据条件包含 where 子句的一部分。比如：</p>
         <source><![CDATA[<select id="findActiveBlogWithTitleLike"
      resultType="Blog">
   SELECT * FROM BLOG 
@@ -47,8 +48,8 @@
     AND title like #{title}
   </if>
 </select>]]></source>
-        <p>这条语句提供了一个可选的文本查找类型的功能。如果没有传入“title”，那么所有处于“ACTIVE”状态的BLOG都会返回；反之若传入了“title”，那么就会把模糊查找“title”内容的BLOG结果返回（就这个例子而言，细心的读者会发现其中的参数值是可以包含一些掩码或通配符的）。</p>
-        <p>如果想可选地通过“title”和“author”两个条件搜索该怎么办呢？首先，改变语句的名称让它更具实际意义；然后只要加入另一个条件即可。</p>
+        <p>这条语句提供了一种可选的查找文本功能。如果没有传入“title”，那么所有处于“ACTIVE”状态的BLOG都会返回；反之若传入了“title”，那么就会对“title”一列进行模糊查找并返回 BLOG 结果（细心的读者可能会发现，“title”参数值是可以包含一些掩码或通配符的）。</p>
+        <p>如果希望通过“title”和“author”两个参数进行可选搜索该怎么办呢？首先，改变语句的名称让它更具实际意义；然后只要加入另一个条件即可。</p>
         <source><![CDATA[<select id="findActiveBlogLike"
      resultType="Blog">
   SELECT * FROM BLOG WHERE state = ‘ACTIVE’ 
@@ -61,8 +62,8 @@
 </select>]]></source>
       </subsection>
       <subsection name="choose, when, otherwise" id="chooseWhenOtherwise">
-        <p>有些时候，我们不想用到所有的条件语句，而只想从中择其一二。针对这种情况，MyBatis 提供了 choose 元素，它有点像 Java 中的 switch 语句。</p>
-        <p>还是上面的例子，但是这次变为提供了“title”就按“title”查找，提供了“author”就按“author”查找，若两者都没有提供，就返回所有符合条件的BLOG（实际情况可能是由管理员按一定策略选出BLOG列表，而不是返回大量无意义的随机结果）。</p>
+        <p>有时我们不想应用到所有的条件语句，而只想从中择其一项。针对这种情况，MyBatis 提供了 choose 元素，它有点像 Java 中的 switch 语句。</p>
+        <p>还是上面的例子，但是这次变为提供了“title”就按“title”查找，提供了“author”就按“author”查找的情形，若两者都没有提供，就返回所有符合条件的 BLOG（实际情况可能是由管理员按一定策略选出 BLOG 列表，而不是返回大量无意义的随机结果）。</p>
         <source><![CDATA[<select id="findActiveBlogLike"
      resultType="Blog">
   SELECT * FROM BLOG WHERE state = ‘ACTIVE’
@@ -80,7 +81,7 @@
 </select>]]></source>
       </subsection>
       <subsection name="trim, where, set" id="trimWhereSet">
-        <p>前面几个例子已经合宜地解决了一个臭名昭著的动态 SQL 问题。现在考虑回到“if”示例，这次我们将“ACTIVE = 1”也设置成动态的条件，看看会发生什么。</p>
+        <p>前面几个例子已经合宜地解决了一个臭名昭著的动态 SQL 问题。现在回到“if”示例，这次我们将“ACTIVE = 1”也设置成动态的条件，看看会发生什么。</p>
         <source><![CDATA[<select id="findActiveBlogLike"
      resultType="Blog">
   SELECT * FROM BLOG 
@@ -95,7 +96,7 @@
     AND author_name like #{author.name}
   </if>
 </select>]]></source>
-        <p>如果这些条件没有一个能匹配上将会怎样？最终这条 SQL 会变成这样：</p>
+        <p>如果这些条件没有一个能匹配上会发生什么？最终这条 SQL 会变成这样：</p>
         <source><![CDATA[SELECT * FROM BLOG
 WHERE]]></source>
         <p>这会导致查询失败。如果仅仅第二个条件匹配又会怎样？这条 SQL 最终会是这样:
@@ -103,8 +104,8 @@ WHERE]]></source>
         <source><![CDATA[SELECT * FROM BLOG
 WHERE 
 AND title like ‘someTitle’]]></source>
-        <p>这个查询也会失败。这个问题不能简单的用条件句式来解决，如果你也曾经被迫这样写过，那么你很可能从此以后都不想再这样去写了。</p>
-        <p>MyBatis 有一个简单的处理，这在90%的情况下都会有用。而在不能使用的地方，你可以自定义处理方式来令其正常工作。一处简单的修改就能得到想要的效果：</p>
+        <p>这个查询也会失败。这个问题不能简单地用条件句式来解决，如果你也曾经被迫这样写过，那么你很可能从此以后都不会再写出这种语句了。</p>
+        <p>MyBatis 有一个简单的处理，这在 90% 的情况下都会有用。而在不能使用的地方，你可以自定义处理方式来令其正常工作。一处简单的修改就能达到目的：</p>
         <source><![CDATA[<select id="findActiveBlogLike"
      resultType="Blog">
   SELECT * FROM BLOG 
@@ -120,13 +121,13 @@ AND title like ‘someTitle’]]></source>
     </if>
   </where>
 </select>]]></source>
-        <p>where 元素知道只有在一个以上的if条件有值的情况下才去插入“WHERE”子句。而且，若最后的内容是“AND”或“OR”开头的，where 元素也知道如何将他们去除。</p>
-        <p>如果 where 元素没有按正常套路出牌，我们还是可以通过自定义 trim 元素来定制我们想要的功能。比如，和 where 元素等价的自定义 trim 元素为：</p>
+        <p><em>where</em> 元素只会在至少有一个子元素的条件返回 SQL 子句的情况下才去插入“WHERE”子句。而且，若语句的开头为“AND”或“OR”，<em>where</em> 元素也会将它们去除。</p>
+        <p>如果 <em>where</em> 元素没有按正常套路出牌，我们可以通过自定义 trim 元素来定制 <em>where</em> 元素的功能。比如，和 <em>where</em> 元素等价的自定义 trim 元素为：</p>
         <source><![CDATA[<trim prefix="WHERE" prefixOverrides="AND |OR ">
   ... 
 </trim>]]></source>
-        <p>prefixOverrides 属性会忽略通过管道分隔的文本序列（注意此例中的空格也是必要的）。它带来的结果就是所有在 prefixOverrides 属性中指定的内容将被移除，并且插入 prefix 属性中指定的内容。</p>
-        <p>类似的用于动态更新语句的解决方案叫做 set。set 元素可以被用于动态包含需要更新的列，而舍去其他的。比如：</p>
+        <p><em>prefixOverrides</em> 属性会忽略通过管道分隔的文本序列（注意此例中的空格也是必要的）。它的作用是移除所有指定在 <em>prefixOverrides</em> 属性中的内容，并且插入 <em>prefix</em> 属性中指定的内容。</p>
+        <p>类似的用于动态更新语句的解决方案叫做 <em>set</em>。<em>set</em> 元素可以用于动态包含需要更新的列，而舍去其它的。比如：</p>
         <source><![CDATA[<update id="updateAuthorIfNecessary">
   update Author
     <set>
@@ -137,12 +138,12 @@ AND title like ‘someTitle’]]></source>
     </set>
   where id=#{id}
 </update>]]></source>
-        <p>这里，set 元素会动态前置 SET 关键字，同时也会消除无关的逗号，因为用了条件语句之后很可能就会在生成的赋值语句的后面留下这些逗号。</p>
-        <p>若你对等价的自定义 trim 元素的样子感兴趣，那这就应该是它的真面目：</p>
+        <p>这里，<em>set</em> 元素会动态前置 SET 关键字，同时也会删掉无关的逗号，因为用了条件语句之后很可能就会在生成的 SQL 语句的后面留下这些逗号。（译者注：因为用的是“if”元素，若最后一个“if”没有匹配上而前面的匹配上，SQL 语句的最后就会有一个逗号遗留）</p>
+        <p>若你对 <em>set</em> 元素等价的自定义 trim 元素的代码感兴趣，那这就是它的真面目：</p>
         <source><![CDATA[<trim prefix="SET" suffixOverrides=",">
   ...
 </trim>]]></source>
-        <p>注意这里我们忽略的是后缀中的值，而又一次附加了前缀中的值。</p>
+        <p>注意这里我们删去的是后缀值，同时填加了前缀值。</p>
       </subsection>
       <subsection name="foreach">
         <p>动态 SQL 的另外一个常用的必要操作是需要对一个集合进行遍历，通常是在构建 IN 条件语句的时候。比如：</p>
