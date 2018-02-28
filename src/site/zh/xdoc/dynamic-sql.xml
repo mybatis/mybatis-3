@@ -143,10 +143,10 @@ AND title like ‘someTitle’]]></source>
         <source><![CDATA[<trim prefix="SET" suffixOverrides=",">
   ...
 </trim>]]></source>
-        <p>注意这里我们删去的是后缀值，同时填加了前缀值。</p>
+        <p>注意这里我们删去的是后缀值，同时添加了前缀值。</p>
       </subsection>
       <subsection name="foreach">
-        <p>动态 SQL 的另外一个常用的必要操作是需要对一个集合进行遍历，通常是在构建 IN 条件语句的时候。比如：</p>
+        <p>动态 SQL 的另外一个常用的操作需求是对一个集合进行遍历，通常是在构建 IN 条件语句的时候。比如：</p>
         <source><![CDATA[<select id="selectPostIn" resultType="domain.blog.Post">
   SELECT *
   FROM POST P
@@ -156,9 +156,9 @@ AND title like ‘someTitle’]]></source>
         #{item}
   </foreach>
 </select>]]></source>
-        <p>foreach 元素的功能是非常强大的，它允许你指定一个集合，声明可以用在元素体内的集合项和索引变量。它也允许你指定开闭匹配的字符串以及在迭代中间放置分隔符。这个元素是很智能的，因此它不会偶然地附加多余的分隔符。</p>
-        <p><span class="label important">注意</span> 你可以将任何可迭代对象（如列表、集合等）和任何的字典或者数组对象传递给foreach作为集合参数。当使用可迭代对象或者数组时，index是当前迭代的次数，item的值是本次迭代获取的元素。当使用字典（或者Map.Entry对象的集合）时，index是键，item是值。</p>
-        <p>到此我们已经完成了涉及 XML 配置文件和 XML 映射文件的讨论。下一部分将详细探讨 Java API，这样才能从已创建的映射中获取最大利益。</p>
+        <p><em>foreach</em> 元素的功能非常强大，它允许你指定一个集合，声明可以在元素体内使用的集合项（item）和索引（index）变量。它也允许你指定开头与结尾的字符串以及在迭代结果之间放置分隔符。这个元素是很智能的，因此它不会偶然地附加多余的分隔符。</p>
+        <p><span class="label important">注意</span> 你可以将任何可迭代对象（如 List、Set 等）、Map 对象或者数组对象传递给 <em>foreach</em> 作为集合参数。当使用可迭代对象或者数组时，index 是当前迭代的次数，item 的值是本次迭代获取的元素。当使用 Map 对象（或者 Map.Entry 对象的集合）时，index 是键，item 是值。</p>
+        <p>到此我们已经完成了涉及 XML 配置文件和 XML 映射文件的讨论。下一章将详细探讨 Java API，这样就能提高已创建的映射文件的利用效率。</p>
       </subsection>
       <subsection name="bind">
         <p><code>bind</code> 元素可以从 OGNL 表达式中创建一个变量并将其绑定到上下文。比如：</p>
@@ -169,8 +169,8 @@ AND title like ‘someTitle’]]></source>
   WHERE title LIKE #{pattern}
 </select>]]></source>
       </subsection>
-      <subsection name="Multi-db vendor support">
-        <p>一个配置了“_databaseId”变量的 databaseIdProvider 对于动态代码来说是可用的，这样就可以根据不同的数据库厂商构建特定的语句。比如下面的例子：</p>
+      <subsection name="多数据库支持">
+        <p>一个配置了“_databaseId”变量的 databaseIdProvider 可用于动态代码中，这样就可以根据不同的数据库厂商构建特定的语句。比如下面的例子：</p>
         <source><![CDATA[<insert id="insert">
   <selectKey keyProperty="id" resultType="int" order="BEFORE">
     <if test="_databaseId == 'oracle'">
@@ -184,15 +184,15 @@ AND title like ‘someTitle’]]></source>
 </insert>
 ]]></source>
       </subsection>
-      <subsection name="动态 SQL 中可插拔的脚本语言">
-        <p>MyBatis 从 3.2 开始支持可插拔的脚本语言，因此你可以在插入一种语言的驱动（language driver）之后来写基于这种语言的动态 SQL 查询。</p>
-        <p>可以通过实现下面接口的方式来插入一种语言：</p>
+      <subsection name="动态 SQL 中的可插拔脚本语言">
+        <p>MyBatis 从 3.2 开始支持可插拔脚本语言，这允许你插入一种脚本语言驱动，并基于这种语言来编写动态 SQL 查询语句。</p>
+        <p>可以通过实现以下接口来插入一种语言：</p>
         <source><![CDATA[public interface LanguageDriver {
   ParameterHandler createParameterHandler(MappedStatement mappedStatement, Object parameterObject, BoundSql boundSql);
   SqlSource createSqlSource(Configuration configuration, XNode script, Class<?> parameterType);
   SqlSource createSqlSource(Configuration configuration, String script, Class<?> parameterType);
 }]]></source>
-        <p>一旦有了自定义的语言驱动，你就可以在 mybatis-config.xml 文件中将它设置为默认语言：</p>
+        <p>一旦设定了自定义语言驱动，你就可以在 mybatis-config.xml 文件中将它设置为默认语言：</p>
         <source><![CDATA[<typeAliases>
   <typeAlias type="org.sample.MyLanguageDriver" alias="myLanguage"/>
 </typeAliases>
@@ -200,12 +200,12 @@ AND title like ‘someTitle’]]></source>
   <setting name="defaultScriptingLanguage" value="myLanguage"/>
 </settings>
 ]]></source>
-        <p>除了设置默认语言，你也可以针对特殊的语句指定特定语言，这可以通过如下的 <code>lang</code> 属性来完成：
+        <p>除了设置默认语言，你也可以针对特殊的语句指定特定语言，可以通过如下的 <code>lang</code> 属性来完成：
         </p>
         <source><![CDATA[<select id="selectBlog" lang="myLanguage">
   SELECT * FROM BLOG
 </select>]]></source>
-        <p>或者在你正在使用的映射中加上注解 <code>@Lang</code> 来完成：</p>
+        <p>或者，如果你使用的是映射器接口类，在抽象方法上加上 <code>@Lang</code> 注解即可：</p>
         <source><![CDATA[public interface Mapper {
   @Lang(MyLanguageDriver.class)
   @Select("SELECT * FROM BLOG")
@@ -214,7 +214,7 @@ AND title like ‘someTitle’]]></source>
 
         <p><span class="label important">注意</span> 可以将 Apache Velocity 作为动态语言来使用，更多细节请参考 MyBatis-Velocity 项目。</p>
 
-        <p>你前面看到的所有 xml 标签都是默认 MyBatis 语言提供的，它是由别名为 <code>xml</code> 语言驱动器 <code>org.apache.ibatis.scripting.xmltags.XmlLanguageDriver</code> 驱动的。</p>
+        <p>你前面看到的所有 xml 标签都是由默认 MyBatis 语言提供的，而它由别名为 <code>xml</code> 的语言驱动器 <code>org.apache.ibatis.scripting.xmltags.XmlLanguageDriver</code> 所提供。</p>
       </subsection>
     </section>
   </body>
