@@ -320,9 +320,13 @@ ps.setInt(1,id);]]></source>
   values (#{username},#{password},#{email},#{bio})
 </insert>]]></source>
 
-        <p>사용하는 데이터베이스가 다중레코드 입력을 지원한다면, <code>Author</code>의 목록이나 배열을 전달할수 있고 자동생성키를 가져올 수 있다. </p>
+        <p>사용하는 데이터베이스가 다중레코드 입력을 지원한다면, <code>Author</code>의 목록이나 배열을 전달할수 있고 자동생성키를 가져올 수 있다.
+            <b>메모: 대량 산입 데이터 고 복귀 자동 생성 기본 키 목록 때，<code>@Param("list")</code>과<code>collection="list"</code>중 key 반드시 약속 문자열<code>list</code>。이 디자인 적 으로 해결 얼마나 개 집합 형식 매개 변수 때 모르는 자동 생성 곁쇠 이 되 묻음 까지 어느 인자 문제.</b>
+        </p>
 
-        <source><![CDATA[<insert id="insertAuthor" useGeneratedKeys="true"
+          <source><![CDATA[List<Long> insert(@Param("list") List<Author> authors);
+
+        <insert id="insertAuthor" useGeneratedKeys="true"
     keyProperty="id">
   insert into Author (username, password, email, bio) values
   <foreach item="item" collection="list" separator=",">
