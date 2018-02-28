@@ -58,7 +58,7 @@ public @interface Options {
 
   boolean useGeneratedKeys() default false;
 
-  String keyProperty() default "id";
+  String keyProperty() default "";
 
   String keyColumn() default "";
   

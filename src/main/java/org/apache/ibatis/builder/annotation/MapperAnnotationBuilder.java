@@ -300,7 +300,7 @@ public class MapperAnnotationBuilder {
       boolean useCache = isSelect;
 
       KeyGenerator keyGenerator;
-      String keyProperty = "id";
+      String keyProperty = null;
       String keyColumn = null;
       if (SqlCommandType.INSERT.equals(sqlCommandType) || SqlCommandType.UPDATE.equals(sqlCommandType)) {
         // first check for SelectKey annotation - that overrides everything else
