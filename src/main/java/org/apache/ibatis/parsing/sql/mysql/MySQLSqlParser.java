@@ -93,7 +93,14 @@ public class MySQLSqlParser extends SqlParser {
         sqlStatementBuilder = new MySQLSqlStatementBuilder(delimiter);
       }
     }
-    return sqlStatementBuilder.isEmpty() ? null : sqlStatementBuilder.getSqlStatement();
+    String retVal = null;
+    if(!sqlStatementBuilder.isEmpty()){
+      retVal = sqlStatementBuilder.getSqlStatement();
+      if(retVal.trim().isEmpty()){
+        retVal = readNextStatement();
+      }
+    }
+    return retVal;
   }
 
   private boolean isPreStatement(SqlStatementBuilder sqlStatementBuilder, String thisLine) {
