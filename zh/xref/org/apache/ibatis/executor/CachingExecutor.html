@@ -104,7 +104,7 @@
 <a class="jxr_linenumber" name="L96" href="#L96">96</a>      <strong class="jxr_keyword">if</strong> (cache != <strong class="jxr_keyword">null</strong>) {
 <a class="jxr_linenumber" name="L97" href="#L97">97</a>        flushCacheIfRequired(ms);
 <a class="jxr_linenumber" name="L98" href="#L98">98</a>        <strong class="jxr_keyword">if</strong> (ms.isUseCache() &amp;&amp; resultHandler == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L99" href="#L99">99</a>          ensureNoOutParams(ms, parameterObject, boundSql);
+<a class="jxr_linenumber" name="L99" href="#L99">99</a>          ensureNoOutParams(ms, boundSql);
 <a class="jxr_linenumber" name="L100" href="#L100">100</a>         @SuppressWarnings(<span class="jxr_string">"unchecked"</span>)
 <a class="jxr_linenumber" name="L101" href="#L101">101</a>         List&lt;E&gt; list = (List&lt;E&gt;) tcm.getObject(cache, key);
 <a class="jxr_linenumber" name="L102" href="#L102">102</a>         <strong class="jxr_keyword">if</strong> (list == <strong class="jxr_keyword">null</strong>) {
@@ -139,7 +139,7 @@
 <a class="jxr_linenumber" name="L131" href="#L131">131</a>     }
 <a class="jxr_linenumber" name="L132" href="#L132">132</a>   }
 <a class="jxr_linenumber" name="L133" href="#L133">133</a> 
-<a class="jxr_linenumber" name="L134" href="#L134">134</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> ensureNoOutParams(<a href="../../../../org/apache/ibatis/mapping/MappedStatement.html">MappedStatement</a> ms, Object parameter, <a href="../../../../org/apache/ibatis/mapping/BoundSql.html">BoundSql</a> boundSql) {
+<a class="jxr_linenumber" name="L134" href="#L134">134</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> ensureNoOutParams(<a href="../../../../org/apache/ibatis/mapping/MappedStatement.html">MappedStatement</a> ms, <a href="../../../../org/apache/ibatis/mapping/BoundSql.html">BoundSql</a> boundSql) {
 <a class="jxr_linenumber" name="L135" href="#L135">135</a>     <strong class="jxr_keyword">if</strong> (ms.getStatementType() == StatementType.CALLABLE) {
 <a class="jxr_linenumber" name="L136" href="#L136">136</a>       <strong class="jxr_keyword">for</strong> (ParameterMapping parameterMapping : boundSql.getParameterMappings()) {
 <a class="jxr_linenumber" name="L137" href="#L137">137</a>         <strong class="jxr_keyword">if</strong> (parameterMapping.getMode() != ParameterMode.IN) {
@@ -184,6 +184,6 @@
 <a class="jxr_linenumber" name="L176" href="#L176">176</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2017 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2009&#x2013;2018 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
 </body>
 </html>

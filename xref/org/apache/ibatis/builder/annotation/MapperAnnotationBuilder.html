@@ -574,9 +574,9 @@
 <a class="jxr_linenumber" name="L566" href="#L566">566</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">boolean</strong> isLazy(<a href="../../../../../org/apache/ibatis/annotations/Result.html">Result</a> result) {
 <a class="jxr_linenumber" name="L567" href="#L567">567</a>     <strong class="jxr_keyword">boolean</strong> isLazy = configuration.isLazyLoadingEnabled();
 <a class="jxr_linenumber" name="L568" href="#L568">568</a>     <strong class="jxr_keyword">if</strong> (result.one().select().length() &gt; 0 &amp;&amp; FetchType.DEFAULT != result.one().fetchType()) {
-<a class="jxr_linenumber" name="L569" href="#L569">569</a>       isLazy = (result.one().fetchType() == FetchType.LAZY);
+<a class="jxr_linenumber" name="L569" href="#L569">569</a>       isLazy = result.one().fetchType() == FetchType.LAZY;
 <a class="jxr_linenumber" name="L570" href="#L570">570</a>     } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (result.many().select().length() &gt; 0 &amp;&amp; FetchType.DEFAULT != result.many().fetchType()) {
-<a class="jxr_linenumber" name="L571" href="#L571">571</a>       isLazy = (result.many().fetchType() == FetchType.LAZY);
+<a class="jxr_linenumber" name="L571" href="#L571">571</a>       isLazy = result.many().fetchType() == FetchType.LAZY;
 <a class="jxr_linenumber" name="L572" href="#L572">572</a>     }
 <a class="jxr_linenumber" name="L573" href="#L573">573</a>     <strong class="jxr_keyword">return</strong> isLazy;
 <a class="jxr_linenumber" name="L574" href="#L574">574</a>   }
@@ -665,6 +665,6 @@
 <a class="jxr_linenumber" name="L657" href="#L657">657</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2017 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2009&#x2013;2018 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
 </body>
 </html>

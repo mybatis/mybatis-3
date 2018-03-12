@@ -221,7 +221,7 @@
 <a class="jxr_linenumber" name="L213" href="#L213">213</a>   @Override
 <a class="jxr_linenumber" name="L214" href="#L214">214</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> equals(Object obj) {
 <a class="jxr_linenumber" name="L215" href="#L215">215</a>     <strong class="jxr_keyword">if</strong> (obj instanceof PooledConnection) {
-<a class="jxr_linenumber" name="L216" href="#L216">216</a>       <strong class="jxr_keyword">return</strong> realConnection.hashCode() == (((PooledConnection) obj).realConnection.hashCode());
+<a class="jxr_linenumber" name="L216" href="#L216">216</a>       <strong class="jxr_keyword">return</strong> realConnection.hashCode() == ((PooledConnection) obj).realConnection.hashCode();
 <a class="jxr_linenumber" name="L217" href="#L217">217</a>     } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (obj instanceof Connection) {
 <a class="jxr_linenumber" name="L218" href="#L218">218</a>       <strong class="jxr_keyword">return</strong> hashCode == obj.hashCode();
 <a class="jxr_linenumber" name="L219" href="#L219">219</a>     } <strong class="jxr_keyword">else</strong> {
@@ -266,6 +266,6 @@
 <a class="jxr_linenumber" name="L258" href="#L258">258</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2017 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2009&#x2013;2018 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
 </body>
 </html>

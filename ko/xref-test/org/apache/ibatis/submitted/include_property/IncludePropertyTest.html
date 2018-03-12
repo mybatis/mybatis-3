@@ -156,9 +156,23 @@
 <a class="jxr_linenumber" name="L148" href="#L148">148</a>       sqlSession.close();
 <a class="jxr_linenumber" name="L149" href="#L149">149</a>     }
 <a class="jxr_linenumber" name="L150" href="#L150">150</a>   }
-<a class="jxr_linenumber" name="L151" href="#L151">151</a> }
+<a class="jxr_linenumber" name="L151" href="#L151">151</a> 
+<a class="jxr_linenumber" name="L152" href="#L152">152</a>   @Test
+<a class="jxr_linenumber" name="L153" href="#L153">153</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testParametersInAttribute() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L154" href="#L154">154</a>     <strong class="jxr_keyword">final</strong> SqlSession sqlSession = sqlSessionFactory.openSession();
+<a class="jxr_linenumber" name="L155" href="#L155">155</a>     <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L156" href="#L156">156</a>       List&lt;Map&lt;String, String&gt;&gt; results = sqlSession.selectList(<span class="jxr_string">"org.apache.ibatis.submitted.include_property.Mapper.selectPropertyInAttribute"</span>);
+<a class="jxr_linenumber" name="L157" href="#L157">157</a>       Map&lt;String, String&gt; map = results.get(0);
+<a class="jxr_linenumber" name="L158" href="#L158">158</a>       assertEquals(2, map.size());
+<a class="jxr_linenumber" name="L159" href="#L159">159</a>       assertEquals(<span class="jxr_string">"col_a value"</span>, map.get(<span class="jxr_string">"COL_1"</span>));
+<a class="jxr_linenumber" name="L160" href="#L160">160</a>       assertEquals(<span class="jxr_string">"col_b value"</span>, map.get(<span class="jxr_string">"COL_2"</span>));
+<a class="jxr_linenumber" name="L161" href="#L161">161</a>     } <strong class="jxr_keyword">finally</strong> {
+<a class="jxr_linenumber" name="L162" href="#L162">162</a>       sqlSession.close();
+<a class="jxr_linenumber" name="L163" href="#L163">163</a>     }
+<a class="jxr_linenumber" name="L164" href="#L164">164</a>   }
+<a class="jxr_linenumber" name="L165" href="#L165">165</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2017 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2009&#x2013;2018 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
 </body>
 </html>

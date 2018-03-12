@@ -7,7 +7,7 @@
 <body>
 <div id="overview"><a href="../../../../../../apidocs/org/apache/ibatis/reflection/Reflector.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2017 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> *    Copyright 2009-2018 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_javadoccomment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_javadoccomment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_javadoccomment"> *    you may not use this file except in compliance with the License.</em>
@@ -321,7 +321,7 @@
 <a class="jxr_linenumber" name="L313" href="#L313">313</a>   <strong class="jxr_keyword">private</strong> Method[] getClassMethods(Class&lt;?&gt; cls) {
 <a class="jxr_linenumber" name="L314" href="#L314">314</a>     Map&lt;String, Method&gt; uniqueMethods = <strong class="jxr_keyword">new</strong> HashMap&lt;String, Method&gt;();
 <a class="jxr_linenumber" name="L315" href="#L315">315</a>     Class&lt;?&gt; currentClass = cls;
-<a class="jxr_linenumber" name="L316" href="#L316">316</a>     <strong class="jxr_keyword">while</strong> (currentClass != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L316" href="#L316">316</a>     <strong class="jxr_keyword">while</strong> (currentClass != <strong class="jxr_keyword">null</strong> &amp;&amp; currentClass != Object.<strong class="jxr_keyword">class</strong>) {
 <a class="jxr_linenumber" name="L317" href="#L317">317</a>       addUniqueMethods(uniqueMethods, currentClass.getDeclaredMethods());
 <a class="jxr_linenumber" name="L318" href="#L318">318</a> 
 <a class="jxr_linenumber" name="L319" href="#L319">319</a>       <em class="jxr_comment">// we also need to look for interface methods -</em>
@@ -501,6 +501,6 @@
 <a class="jxr_linenumber" name="L493" href="#L493">493</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2017 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2009&#x2013;2018 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
 </body>
 </html>

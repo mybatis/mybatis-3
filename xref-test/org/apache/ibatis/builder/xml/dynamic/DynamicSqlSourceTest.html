@@ -356,7 +356,7 @@
 <a class="jxr_linenumber" name="L348" href="#L348">348</a>     <strong class="jxr_keyword">final</strong> Map&lt;String, String&gt; uuu = <strong class="jxr_keyword">new</strong> HashMap&lt;String, String&gt;();
 <a class="jxr_linenumber" name="L349" href="#L349">349</a>     uuu.put(<span class="jxr_string">"u"</span>, <span class="jxr_string">"xyz"</span>);
 <a class="jxr_linenumber" name="L350" href="#L350">350</a>     List&lt;Bean&gt; uuuu = <strong class="jxr_keyword">new</strong> ArrayList&lt;Bean&gt;();
-<a class="jxr_linenumber" name="L351" href="#L351">351</a>     uuuu.add(<strong class="jxr_keyword">new</strong> <a href="../../../../../../org/apache/ibatis/builder/xml/dynamic/DynamicSqlSourceTest.html">Bean</a>(<span class="jxr_string">"bean id"</span>));
+<a class="jxr_linenumber" name="L351" href="#L351">351</a>     uuuu.add(<strong class="jxr_keyword">new</strong> <a href="../../../../../../org/apache/ibatis/builder/xml/dynamic/ExpressionEvaluatorTest.html">Bean</a>(<span class="jxr_string">"bean id"</span>));
 <a class="jxr_linenumber" name="L352" href="#L352">352</a>     param.put(<span class="jxr_string">"uuu"</span>, uuu);
 <a class="jxr_linenumber" name="L353" href="#L353">353</a>     param.put(<span class="jxr_string">"uuuu"</span>, uuuu);
 <a class="jxr_linenumber" name="L354" href="#L354">354</a>     DynamicSqlSource source = createDynamicSqlSource(
@@ -391,13 +391,13 @@
 <a class="jxr_linenumber" name="L383" href="#L383">383</a>     <strong class="jxr_keyword">final</strong> String expected = <span class="jxr_string">"id=${id}"</span>;
 <a class="jxr_linenumber" name="L384" href="#L384">384</a>     <strong class="jxr_keyword">final</strong> MixedSqlNode sqlNode = mixedContents(<strong class="jxr_keyword">new</strong> TextSqlNode(expected));
 <a class="jxr_linenumber" name="L385" href="#L385">385</a>     <strong class="jxr_keyword">final</strong> DynamicSqlSource source = <strong class="jxr_keyword">new</strong> DynamicSqlSource(<strong class="jxr_keyword">new</strong> Configuration(), sqlNode);
-<a class="jxr_linenumber" name="L386" href="#L386">386</a>     String sql = source.getBoundSql(<strong class="jxr_keyword">new</strong> <a href="../../../../../../org/apache/ibatis/builder/xml/dynamic/DynamicSqlSourceTest.html">Bean</a>(<strong class="jxr_keyword">null</strong>)).getSql();
+<a class="jxr_linenumber" name="L386" href="#L386">386</a>     String sql = source.getBoundSql(<strong class="jxr_keyword">new</strong> <a href="../../../../../../org/apache/ibatis/builder/xml/dynamic/ExpressionEvaluatorTest.html">Bean</a>(<strong class="jxr_keyword">null</strong>)).getSql();
 <a class="jxr_linenumber" name="L387" href="#L387">387</a>     Assert.assertEquals(<span class="jxr_string">"id="</span>, sql);
 <a class="jxr_linenumber" name="L388" href="#L388">388</a>   }
 <a class="jxr_linenumber" name="L389" href="#L389">389</a> 
-<a class="jxr_linenumber" name="L390" href="#L390">390</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../../../org/apache/ibatis/builder/xml/dynamic/DynamicSqlSourceTest.html">Bean</a> {
+<a class="jxr_linenumber" name="L390" href="#L390">390</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../../../org/apache/ibatis/builder/xml/dynamic/ExpressionEvaluatorTest.html">Bean</a> {
 <a class="jxr_linenumber" name="L391" href="#L391">391</a>     <strong class="jxr_keyword">public</strong> String id;
-<a class="jxr_linenumber" name="L392" href="#L392">392</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../../../org/apache/ibatis/builder/xml/dynamic/DynamicSqlSourceTest.html">Bean</a>(String property) {
+<a class="jxr_linenumber" name="L392" href="#L392">392</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../../../org/apache/ibatis/builder/xml/dynamic/ExpressionEvaluatorTest.html">Bean</a>(String property) {
 <a class="jxr_linenumber" name="L393" href="#L393">393</a>       <strong class="jxr_keyword">this</strong>.id = property;
 <a class="jxr_linenumber" name="L394" href="#L394">394</a>     }
 <a class="jxr_linenumber" name="L395" href="#L395">395</a>     <strong class="jxr_keyword">public</strong> String getId() {
@@ -411,6 +411,6 @@
 <a class="jxr_linenumber" name="L403" href="#L403">403</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2017 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2009&#x2013;2018 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
 </body>
 </html>

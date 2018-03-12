@@ -65,7 +65,7 @@
 <a class="jxr_linenumber" name="L57" href="#L57">57</a>    @BeforeClass
 <a class="jxr_linenumber" name="L58" href="#L58">58</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> setUp() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L59" href="#L59">59</a>      <em class="jxr_comment">// Launch PostgreSQL server. Download / unarchive if necessary.</em>
-<a class="jxr_linenumber" name="L60" href="#L60">60</a>      String url = postgres.start(EmbeddedPostgres.cachedRuntimeConfig(Paths.get(<span class="jxr_string">"target/postgres"</span>)), <span class="jxr_string">"localhost"</span>, SocketUtil.findFreePort(), <span class="jxr_string">"keycolumn"</span>, <span class="jxr_string">"postgres"</span>, <span class="jxr_string">"root"</span>, Collections.emptyList());
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>      String url = postgres.start(EmbeddedPostgres.cachedRuntimeConfig(Paths.get(System.getProperty(<span class="jxr_string">"java.io.tmpdir"</span>), <span class="jxr_string">"pgembed"</span>)), <span class="jxr_string">"localhost"</span>, SocketUtil.findFreePort(), <span class="jxr_string">"keycolumn"</span>, <span class="jxr_string">"postgres"</span>, <span class="jxr_string">"root"</span>, Collections.emptyList());
 <a class="jxr_linenumber" name="L61" href="#L61">61</a>  
 <a class="jxr_linenumber" name="L62" href="#L62">62</a>      Configuration configuration = <strong class="jxr_keyword">new</strong> Configuration();
 <a class="jxr_linenumber" name="L63" href="#L63">63</a>      Environment environment = <strong class="jxr_keyword">new</strong> Environment(<span class="jxr_string">"development"</span>, <strong class="jxr_keyword">new</strong> JdbcTransactionFactory(), <strong class="jxr_keyword">new</strong> UnpooledDataSource(
@@ -140,6 +140,6 @@
 <a class="jxr_linenumber" name="L132" href="#L132">132</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2017 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2009&#x2013;2018 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
 </body>
 </html>

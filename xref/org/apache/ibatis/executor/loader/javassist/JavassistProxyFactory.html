@@ -195,7 +195,7 @@
 <a class="jxr_linenumber" name="L187" href="#L187">187</a>     @Override
 <a class="jxr_linenumber" name="L188" href="#L188">188</a>     <strong class="jxr_keyword">public</strong> Object invoke(Object enhanced, Method method, Method methodProxy, Object[] args) <strong class="jxr_keyword">throws</strong> Throwable {
 <a class="jxr_linenumber" name="L189" href="#L189">189</a>       <strong class="jxr_keyword">final</strong> Object o = <strong class="jxr_keyword">super</strong>.invoke(enhanced, method, args);
-<a class="jxr_linenumber" name="L190" href="#L190">190</a>       <strong class="jxr_keyword">return</strong> (o instanceof AbstractSerialStateHolder) ? o : methodProxy.invoke(o, args);
+<a class="jxr_linenumber" name="L190" href="#L190">190</a>       <strong class="jxr_keyword">return</strong> o instanceof <a href="../../../../../../org/apache/ibatis/executor/loader/AbstractSerialStateHolder.html">AbstractSerialStateHolder</a> ? o : methodProxy.invoke(o, args);
 <a class="jxr_linenumber" name="L191" href="#L191">191</a>     }
 <a class="jxr_linenumber" name="L192" href="#L192">192</a> 
 <a class="jxr_linenumber" name="L193" href="#L193">193</a>     @Override
@@ -207,6 +207,6 @@
 <a class="jxr_linenumber" name="L199" href="#L199">199</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2017 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2009&#x2013;2018 <a href="http://www.mybatis.org/">MyBatis.org</a>. All rights reserved.</div>
 </body>
 </html>
