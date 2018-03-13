@@ -175,7 +175,7 @@ Configuration getConfiguration();</source>
     <li>事务隔离级别将会使用驱动或数据源的默认设置。</li>
     <li>预处理语句不会被复用，也不会批量处理更新。</li>
   </ul>
-  <p>这些方法大都是可读性强的。向 <code>autoCommit</code> 可选参数传递 <code>true</code> 值即可开启自动提交功能。若要使用自己的 <code>Connection<code> 实例，传递一个 <code>Connection<code> 实例给 <code>connection<code> 参数即可。注意并未覆写同时设置 <code>Connection<code> 和 <code>autoCommit</code> 两者的方法，因为 MyBatis 会使用正在使用中的、设置了 Connection 的环境。MyBatis 为事务隔离级别调用使用了一个 Java 枚举包装器，称为 <code>TransactionIsolationLevel</code>，若不使用它，将使用 JDBC 所支持五个隔离级（<code>NONE</code>、<code>READ_UNCOMMITTED</code>、<code>READ_COMMITTED</code>、<code>REPEATABLE_READ</code> 和 <code>SERIALIZABLE</code>），并按它们预期的方式来工作。</p>
+  <p>这些方法大都是可读性强的。向 <code>autoCommit</code> 可选参数传递 <code>true</code> 值即可开启自动提交功能。若要使用自己的 <code>Connection</code> 实例，传递一个 <code>Connection</code> 实例给 <code>connection</code> 参数即可。注意并未覆写同时设置 <code>Connection</code> 和 <code>autoCommit</code> 两者的方法，因为 MyBatis 会使用正在使用中的、设置了 Connection 的环境。MyBatis 为事务隔离级别调用使用了一个 Java 枚举包装器，称为 <code>TransactionIsolationLevel</code>，若不使用它，将使用 JDBC 所支持五个隔离级（<code>NONE</code>、<code>READ_UNCOMMITTED</code>、<code>READ_COMMITTED</code>、<code>REPEATABLE_READ</code> 和 <code>SERIALIZABLE</code>），并按它们预期的方式来工作。</p>
   <p>还有一个可能对你来说是新见到的参数，就是 <code>ExecutorType</code>。这个枚举类型定义了三个值:
   </p>
   <ul>
