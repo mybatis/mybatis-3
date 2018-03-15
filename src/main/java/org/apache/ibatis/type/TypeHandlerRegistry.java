@@ -47,6 +47,7 @@ import org.apache.ibatis.binding.MapperMethod.ParamMap;
 import org.apache.ibatis.io.ResolverUtil;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.reflection.Jdk;
+import org.apache.ibatis.session.Configuration;
 
 /**
  * @author Clinton Begin
@@ -63,7 +64,18 @@ public final class TypeHandlerRegistry {
 
   private Class<? extends TypeHandler> defaultEnumTypeHandler = EnumTypeHandler.class;
 
+  private final Configuration configuration;
+
+
   public TypeHandlerRegistry() {
+    this(null);
+  }
+
+  /**
+   * @since 3.5.0
+   */
+  public TypeHandlerRegistry(Configuration configuration) {
+    this.configuration = configuration;
     register(Boolean.class, new BooleanTypeHandler());
     register(boolean.class, new BooleanTypeHandler());
     register(JdbcType.BOOLEAN, new BooleanTypeHandler());
@@ -372,6 +384,9 @@ public final class TypeHandlerRegistry {
   }
 
   private void register(Type javaType, JdbcType jdbcType, TypeHandler<?> handler) {
+    if (configuration != null && handler instanceof BaseTypeHandler) {
+      BaseTypeHandler.class.cast(handler).setConfiguration(configuration);
+    }
     if (javaType != null) {
       Map<JdbcType, TypeHandler<?>> map = TYPE_HANDLER_MAP.get(javaType);
       if (map == null || map == NULL_TYPE_HANDLER_MAP) {

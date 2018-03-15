@@ -26,6 +26,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.ibatis.domain.misc.RichType;
+import org.apache.ibatis.session.Configuration;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -214,4 +215,31 @@ public class TypeHandlerRegistryTest {
     typeHandlerRegistry.register(Address.class, StringTypeHandler.class);
     assertTrue(typeHandlerRegistry.hasTypeHandler(Address.class));
   }
+
+  @Test
+  public void shouldSetConfigurationWhenTypeHandlerImplementsBaseTypeHandler() {
+    class MyTypeHandler extends BaseTypeHandler<String> {
+      @Override
+      public void setNonNullParameter(PreparedStatement ps, int i, String parameter, JdbcType jdbcType) {
+      }
+      @Override
+      public String getNullableResult(ResultSet rs, String columnName) {
+        return null;
+      }
+      @Override
+      public String getNullableResult(ResultSet rs, int columnIndex) {
+        return null;
+      }
+      @Override
+      public String getNullableResult(CallableStatement cs, int columnIndex) {
+        return null;
+      }
+    }
+
+    Configuration configuration = new Configuration();
+    configuration.getTypeHandlerRegistry().register(new MyTypeHandler());
+    MyTypeHandler typeHandler = MyTypeHandler.class.cast(configuration.getTypeHandlerRegistry().getTypeHandler(String.class));
+    assertSame(configuration, typeHandler.configuration);
+  }
+
 }
