@@ -15,10 +15,7 @@
 #    limitations under the License.
 #
 
-if [ $TRAVIS_JDK_VERSION == "openjdk6" ]; then
-  # Java 1.6
-  ./mvnw install -DskipTests=true -Dmaven.javadoc.skip=true -B -V -Pjava16 --settings ./travis/settings.xml
-elif [ $TRAVIS_JDK_VERSION == "openjdk7" ]; then
+if [ $TRAVIS_JDK_VERSION == "openjdk7" ]; then
   # Java 1.7
   ./mvnw install -DskipTests=true -Dmaven.javadoc.skip=true -B -V -Pjava17 --settings ./travis/settings.xml
 else
