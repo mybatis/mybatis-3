@@ -351,7 +351,7 @@ public class MapperMethod {
     /**
      * return whether return type is {@code java.util.Optional}
      * @return return {@code true}, if return type is {@code java.util.Optional}
-     * @since 3.4.2
+     * @since 3.5.0
      */
     public boolean returnsOptional() {
       return returnsOptional;
