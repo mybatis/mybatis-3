@@ -131,8 +131,8 @@
   </distributionManagement>
 
   <properties>
-    <maven.compiler.source>1.7</maven.compiler.source>
-    <maven.compiler.target>1.7</maven.compiler.target>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
     <maven.compiler.testTarget>1.8</maven.compiler.testTarget>
     <maven.compiler.testSource>1.8</maven.compiler.testSource>
     <maven.compiler.testCompilerArgument>-parameters</maven.compiler.testCompilerArgument>
@@ -144,7 +144,7 @@
     <maven.surefire.excludeGroups>org.apache.ibatis.test.SlowTests</maven.surefire.excludeGroups>
 
     <!-- Override: Animal Sniffer Signature -->
-    <signature.artifact>java17</signature.artifact>
+    <signature.artifact>java18</signature.artifact>
     <signature.version>1.0</signature.version>
   </properties>
 
