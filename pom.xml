@@ -382,45 +382,6 @@
 
   <profiles>
     <profile>
-      <id>java16</id>
-      <activation>
-        <jdk>1.6</jdk>
-      </activation>
-      <properties>
-        <maven.compiler.testTarget>1.6</maven.compiler.testTarget>
-        <maven.compiler.testSource>1.6</maven.compiler.testSource>
-        <maven.compiler.testCompilerArgument />
-      </properties>
-      <build>
-        <pluginManagement>
-          <plugins>
-            <plugin>
-              <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-compiler-plugin</artifactId>
-              <configuration>
-                <testExcludes>
-                  <testExclude>**/usesjava7/**/*.java</testExclude>
-                  <testExclude>**/usesjava8/**/*.java</testExclude>
-                </testExcludes>
-              </configuration>
-            </plugin>
-            <plugin>
-              <groupId>org.apache.felix</groupId>
-              <artifactId>maven-bundle-plugin</artifactId>
-              <version>2.5.4</version> <!-- For java 6, remain at older version -->
-            </plugin>
-          </plugins>
-        </pluginManagement>
-        <plugins>
-            <plugin>
-              <groupId>org.apache.felix</groupId>
-              <artifactId>maven-bundle-plugin</artifactId>
-              <version>2.5.4</version> <!-- For java 6, remain at older version -->
-            </plugin>
-        </plugins>
-      </build>
-    </profile>
-    <profile>
       <id>java17</id>
       <activation>
         <jdk>1.7</jdk>
