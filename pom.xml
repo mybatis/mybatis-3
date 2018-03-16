@@ -380,32 +380,4 @@
     </testResources>
   </build>
 
-  <profiles>
-    <profile>
-      <id>java17</id>
-      <activation>
-        <jdk>1.7</jdk>
-      </activation>
-      <properties>
-        <maven.compiler.testTarget>1.7</maven.compiler.testTarget>
-        <maven.compiler.testSource>1.7</maven.compiler.testSource>
-        <maven.compiler.testCompilerArgument />
-      </properties>
-      <build>
-        <pluginManagement>
-          <plugins>
-            <plugin>
-              <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-compiler-plugin</artifactId>
-              <configuration>
-                <testExcludes>
-                  <testExclude>**/usesjava8/**/*.java</testExclude>
-                </testExcludes>
-              </configuration>
-            </plugin>
-          </plugins>
-        </pluginManagement>
-      </build>
-    </profile>
-  </profiles>
 </project>
