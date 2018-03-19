@@ -184,7 +184,7 @@
     <dependency>
       <groupId>org.apache.logging.log4j</groupId>
       <artifactId>log4j-core</artifactId>
-      <version>2.5</version> <!-- 2.6+ occurred a compile error on Log4j2AbstractLoggerImpl (This compile error will resolve on other issue)  -->
+      <version>2.11.0</version>
       <optional>true</optional>
     </dependency>
     <dependency>
