@@ -22,7 +22,7 @@
   <parent>
     <groupId>org.mybatis</groupId>
     <artifactId>mybatis-parent</artifactId>
-    <version>30</version>
+    <version>31-SNAPSHOT</version>
     <relativePath />
   </parent>
 
@@ -377,5 +377,14 @@
       </testResource>
     </testResources>
   </build>
+
+  <repositories>
+    <!-- Adding for mybatis-parent 31-SNAPSHOT -->
+    <repository>
+      <id>sonatype-oss-snapshots</id>
+      <name>Sonatype OSS Snapshots Repository</name>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+    </repository>
+  </repositories>
 
 </project>
