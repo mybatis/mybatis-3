@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,14 +15,24 @@
  */
 package org.apache.ibatis.type;
 
+import static com.googlecode.catchexception.apis.BDDCatchException.caughtException;
+import static org.assertj.core.api.BDDAssertions.then;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.Reader;
+import java.io.StringReader;
 import java.sql.Clob;
+import java.sql.SQLException;
+import java.util.Arrays;
 
+import com.googlecode.catchexception.apis.BDDCatchException;
+import org.apache.ibatis.executor.result.ResultMapException;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -38,17 +48,18 @@ public class ClobTypeHandlerTest extends BaseTypeHandlerTest {
   @Test
   public void shouldSetParameter() throws Exception {
     TYPE_HANDLER.setParameter(ps, 1, "Hello", null);
-    verify(ps).setCharacterStream(Mockito.eq(1), Mockito.any(Reader.class), Mockito.eq(5));
+    verify(ps).setClob(Mockito.eq(1), Mockito.any(StringReader.class));
   }
 
   @Override
   @Test
   public void shouldGetResultFromResultSetByName() throws Exception {
+    char[] target = new char[5000];
+    Arrays.fill(target, 'a');
     when(rs.getClob("column")).thenReturn(clob);
     when(rs.wasNull()).thenReturn(false);
-    when(clob.length()).thenReturn(3l);
-    when(clob.getSubString(1, 3)).thenReturn("Hello");
-    assertEquals("Hello", TYPE_HANDLER.getResult(rs, "column"));
+    when(clob.getCharacterStream()).thenReturn(new StringReader(new String(target)));
+    assertEquals(new String(target), TYPE_HANDLER.getResult(rs, "column"));
   }
 
   @Override
@@ -64,8 +75,7 @@ public class ClobTypeHandlerTest extends BaseTypeHandlerTest {
   public void shouldGetResultFromResultSetByPosition() throws Exception {
     when(rs.getClob(1)).thenReturn(clob);
     when(rs.wasNull()).thenReturn(false);
-    when(clob.length()).thenReturn(3l);
-    when(clob.getSubString(1, 3)).thenReturn("Hello");
+    when(clob.getCharacterStream()).thenReturn(new StringReader("Hello"));
     assertEquals("Hello", TYPE_HANDLER.getResult(rs, 1));
   }
 
@@ -82,8 +92,7 @@ public class ClobTypeHandlerTest extends BaseTypeHandlerTest {
   public void shouldGetResultFromCallableStatement() throws Exception {
     when(cs.getClob(1)).thenReturn(clob);
     when(cs.wasNull()).thenReturn(false);
-    when(clob.length()).thenReturn(3l);
-    when(clob.getSubString(1, 3)).thenReturn("Hello");
+    when(clob.getCharacterStream()).thenReturn(new StringReader("Hello"));
     assertEquals("Hello", TYPE_HANDLER.getResult(cs, 1));
   }
 
@@ -93,6 +102,28 @@ public class ClobTypeHandlerTest extends BaseTypeHandlerTest {
     when(cs.getClob(1)).thenReturn(null);
     when(cs.wasNull()).thenReturn(true);
     assertNull(TYPE_HANDLER.getResult(cs, 1));
+  }
+
+  @Test
+  public void shouldThrowSQLExceptionWhenReadError() throws Exception {
+    when(cs.getClob(1)).thenReturn(clob);
+    Reader reader = mock(Reader.class);
+    when(reader.read(any(char[].class))).thenThrow(new IOException("io error"));
+    when(clob.getCharacterStream()).thenReturn(reader);
+    BDDCatchException.when(TYPE_HANDLER).getResult(cs, 1);
+    then(caughtException()).isInstanceOf(ResultMapException.class)
+        .hasCauseInstanceOf(SQLException.class)
+        .hasRootCauseInstanceOf(IOException.class);
+  }
+
+  @Test
+  public void shouldIgnoreIOExceptionWhenClose() throws Exception {
+    when(rs.getClob(1)).thenReturn(clob);
+    when(rs.wasNull()).thenReturn(false);
+    Reader reader = spy(new InputStreamReader(new ByteArrayInputStream("Hello".getBytes())));
+    doThrow(IOException.class).when(reader).close();
+    when(clob.getCharacterStream()).thenReturn(reader);
+    assertEquals("Hello", TYPE_HANDLER.getResult(rs, 1));
   }
 
 }
