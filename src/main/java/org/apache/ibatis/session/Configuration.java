@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.function.BiFunction;
 
 import org.apache.ibatis.binding.MapperRegistry;
 import org.apache.ibatis.builder.CacheRefResolver;
@@ -145,7 +146,9 @@ public class Configuration {
   protected final TypeAliasRegistry typeAliasRegistry = new TypeAliasRegistry();
   protected final LanguageDriverRegistry languageRegistry = new LanguageDriverRegistry();
 
-  protected final Map<String, MappedStatement> mappedStatements = new StrictMap<MappedStatement>("Mapped Statements collection");
+  protected final Map<String, MappedStatement> mappedStatements = new StrictMap<MappedStatement>("Mapped Statements collection")
+      .additionalErrorMessageForDuplication((savedValue, currentValue) ->
+          ". please check " + savedValue.getResource() + " and " + currentValue.getResource());
   protected final Map<String, Cache> caches = new StrictMap<Cache>("Caches collection");
   protected final Map<String, ResultMap> resultMaps = new StrictMap<ResultMap>("Result Maps collection");
   protected final Map<String, ParameterMap> parameterMaps = new StrictMap<ParameterMap>("Parameter Maps collection");
@@ -845,6 +848,7 @@ public class Configuration {
 
     private static final long serialVersionUID = -4950446264854982944L;
     private final String name;
+    private BiFunction<V, V, String> additionalErrorMessageForDuplication;
 
     public StrictMap(String name, int initialCapacity, float loadFactor) {
       super(initialCapacity, loadFactor);
@@ -866,10 +870,24 @@ public class Configuration {
       this.name = name;
     }
 
+    /**
+     * Assign a function for providing an additional error message when contains value with the same key.
+     * <p>
+     * function arguments are 1st is saved value and 2nd is current value.
+     * @param additionalErrorMessage A function for providing an additional error message
+     * @return an additional error message
+     * @since 3.5.0
+     */
+    public StrictMap<V> additionalErrorMessageForDuplication(BiFunction<V, V, String> additionalErrorMessage) {
+      this.additionalErrorMessageForDuplication = additionalErrorMessage;
+      return this;
+    }
+
     @SuppressWarnings("unchecked")
     public V put(String key, V value) {
       if (containsKey(key)) {
-        throw new IllegalArgumentException(name + " already contains value for " + key);
+        throw new IllegalArgumentException(name + " already contains value for " + key
+            + (additionalErrorMessageForDuplication == null ? "" : additionalErrorMessageForDuplication.apply(super.get(key), value)));
       }
       if (key.contains(".")) {
         final String shortKey = getShortName(key);
