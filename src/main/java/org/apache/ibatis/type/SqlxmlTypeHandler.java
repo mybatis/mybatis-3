@@ -22,15 +22,24 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLXML;
 
+/**
+ * Convert <code>String</code> to/from <code>SQLXML</code>.
+ * 
+ * @since 3.4.5
+ * @author Iwao AVE!
+ */
 public class SqlxmlTypeHandler extends BaseTypeHandler<String> {
 
   @Override
   public void setNonNullParameter(PreparedStatement ps, int i, String parameter, JdbcType jdbcType)
       throws SQLException {
     SQLXML sqlxml = ps.getConnection().createSQLXML();
-    sqlxml.setString(parameter);
-    ps.setSQLXML(i, sqlxml);
-    sqlxml.free();
+    try {
+      sqlxml.setString(parameter);
+      ps.setSQLXML(i, sqlxml);
+    } finally {
+      sqlxml.free();
+    }
   }
 
   @Override
@@ -49,9 +58,15 @@ public class SqlxmlTypeHandler extends BaseTypeHandler<String> {
   }
 
   protected String sqlxmlToString(SQLXML sqlxml) throws SQLException {
-    String result = sqlxml.getString();
-    sqlxml.free();
-    return result;
+    if (sqlxml == null) {
+      return null;
+    }
+    try {
+      String result = sqlxml.getString();
+      return result;
+    } finally {
+      sqlxml.free();
+    }
   }
 
 }

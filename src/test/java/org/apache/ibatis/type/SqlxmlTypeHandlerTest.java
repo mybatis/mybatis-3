@@ -24,7 +24,6 @@ import java.sql.Connection;
 import java.util.Collections;
 
 import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.datasource.unpooled.UnpooledDataSource;
 import org.apache.ibatis.io.Resources;
@@ -81,20 +80,32 @@ public class SqlxmlTypeHandlerTest {
   }
 
   @Test
-  public void shouldRetrieveXml() throws Exception {
+  public void shouldReturnXmlAsString() throws Exception {
     SqlSession session = sqlSessionFactory.openSession();
     try {
       Mapper mapper = session.getMapper(Mapper.class);
-      String content = mapper.select(1);
+      XmlBean bean = mapper.select(1);
       assertEquals("<title>XML data</title>",
-          content);
+          bean.getContent());
     } finally {
       session.close();
     }
   }
 
   @Test
-  public void shouldInsertXml() throws Exception {
+  public void shouldReturnNull() throws Exception {
+    SqlSession session = sqlSessionFactory.openSession();
+    try {
+      Mapper mapper = session.getMapper(Mapper.class);
+      XmlBean bean = mapper.select(2);
+      assertNull(bean.getContent());
+    } finally {
+      session.close();
+    }
+  }
+
+  @Test
+  public void shouldInsertXmlString() throws Exception {
     final Integer id = 100;
     final String content = "<books><book><title>Save XML</title></book><book><title>Get XML</title></book></books>";
     // Insert
@@ -102,7 +113,10 @@ public class SqlxmlTypeHandlerTest {
       SqlSession session = sqlSessionFactory.openSession();
       try {
         Mapper mapper = session.getMapper(Mapper.class);
-        mapper.insert(id, content);
+        XmlBean bean = new XmlBean();
+        bean.setId(id);
+        bean.setContent(content);
+        mapper.insert(bean);
         session.commit();
       } finally {
         session.close();
@@ -113,8 +127,8 @@ public class SqlxmlTypeHandlerTest {
       SqlSession session = sqlSessionFactory.openSession();
       try {
         Mapper mapper = session.getMapper(Mapper.class);
-        String result = mapper.select(id);
-        assertEquals(content, result);
+        XmlBean bean = mapper.select(id);
+        assertEquals(content, bean.getContent());
       } finally {
         session.close();
       }
@@ -122,10 +136,32 @@ public class SqlxmlTypeHandlerTest {
   }
 
   interface Mapper {
-    @Select("select content from mbtest.test_sqlxml where id = #{id}")
-    String select(Integer id);
+    @Select("select id, content from mbtest.test_sqlxml where id = #{id}")
+    XmlBean select(Integer id);
 
     @Insert("insert into mbtest.test_sqlxml (id, content) values (#{id}, #{content,jdbcType=SQLXML})")
-    void insert(@Param("id") Integer id, @Param("content") String content);
+    void insert(XmlBean bean);
+  }
+
+  public static class XmlBean {
+    private Integer id;
+
+    private String content;
+
+    public Integer getId() {
+      return id;
+    }
+
+    public void setId(Integer id) {
+      this.id = id;
+    }
+
+    public String getContent() {
+      return content;
+    }
+
+    public void setContent(String content) {
+      this.content = content;
+    }
   }
 }
