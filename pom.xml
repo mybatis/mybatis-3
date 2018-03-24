@@ -137,7 +137,7 @@
     <maven.compiler.testSource>1.8</maven.compiler.testSource>
     <maven.compiler.testCompilerArgument>-parameters</maven.compiler.testCompilerArgument>
     <clirr.comparisonVersion>3.3.1</clirr.comparisonVersion>
-    <findbugs.onlyAnalyze>org.apache.ibatis.*</findbugs.onlyAnalyze>
+    <spotbugs.onlyAnalyze>org.apache.ibatis.*</spotbugs.onlyAnalyze>
     <osgi.export>org.apache.ibatis.*;version=${project.version};-noimport:=true</osgi.export>
     <osgi.import>*;resolution:=optional</osgi.import>
     <osgi.dynamicImport>*</osgi.dynamicImport>
