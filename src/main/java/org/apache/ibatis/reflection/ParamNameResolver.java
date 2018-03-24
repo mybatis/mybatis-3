@@ -105,8 +105,8 @@ public class ParamNameResolver {
 
   /**
    * <p>
-   * A single non-special parameter is returned without a name.<br />
-   * Multiple parameters are named using the naming rule.<br />
+   * A single non-special parameter is returned without a name.
+   * Multiple parameters are named using the naming rule.
    * In addition to the default names, this method also adds the generic names (param1, param2,
    * ...).
    * </p>
