@@ -376,15 +376,6 @@
     </testResources>
   </build>
 
-  <repositories>
-    <!-- Adding for mybatis-parent 31-SNAPSHOT -->
-    <repository>
-      <id>sonatype-oss-snapshots</id>
-      <name>Sonatype OSS Snapshots Repository</name>
-      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-    </repository>
-  </repositories>
-
   <profiles>
     <profile>
       <!-- Run slow tests only on travis ci, to force run otherwise use -D"env.TRAVIS" -->
