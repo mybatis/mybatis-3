@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -40,6 +40,8 @@ import java.util.Map;
 import java.util.Properties;
 
 public class ScriptRunnerTest extends BaseDataTest {
+
+  private static final String LINE_SEPARATOR = System.getProperty("line.separator", "\n");
 
   @Test
   @Ignore("This fails with HSQLDB 2.0 due to the create index statements in the schema script")
@@ -198,9 +200,9 @@ public class ScriptRunnerTest extends BaseDataTest {
     conn.close();
 
     assertEquals(
-            "select userid from account where userid = 'j2ee'" + System.getProperty("line.separator")
-                    + System.getProperty("line.separator") + "USERID\t" + System.getProperty("line.separator")
-                    + "j2ee\t" + System.getProperty("line.separator"), sw.toString());
+            "select userid from account where userid = 'j2ee'" + LINE_SEPARATOR
+                    + LINE_SEPARATOR + "USERID\t" + LINE_SEPARATOR
+                    + "j2ee\t" + LINE_SEPARATOR, sw.toString());
   }
 
   @Test
@@ -221,9 +223,9 @@ public class ScriptRunnerTest extends BaseDataTest {
     conn.close();
 
     assertEquals(
-            "select userid from account where userid = 'j2ee';" + System.getProperty("line.separator")
-                    + System.getProperty("line.separator") + "USERID\t" + System.getProperty("line.separator")
-                    + "j2ee\t" + System.getProperty("line.separator"), sw.toString());
+            "select userid from account where userid = 'j2ee';" + LINE_SEPARATOR
+                    + LINE_SEPARATOR + "USERID\t" + LINE_SEPARATOR
+                    + "j2ee\t" + LINE_SEPARATOR, sw.toString());
   }
 
   private void runJPetStoreScripts(ScriptRunner runner) throws IOException, SQLException {
@@ -264,10 +266,10 @@ public class ScriptRunnerTest extends BaseDataTest {
     Reader reader = new StringReader(sql);
     runner.runScript(reader);
 
-    verify(stmt, Mockito.times(1)).execute(eq("line 1;\n" + "line 2;\n\n"));
-    verify(stmt, Mockito.times(1)).execute(eq("line 3\n"));
-    verify(stmt, Mockito.times(1)).execute(eq("line 4\n"));
-    verify(stmt, Mockito.times(1)).execute(eq("line 5\n"));
+    verify(stmt, Mockito.times(1)).execute(eq("line 1;" + LINE_SEPARATOR + "line 2;" + LINE_SEPARATOR + LINE_SEPARATOR));
+    verify(stmt, Mockito.times(1)).execute(eq("line 3" + LINE_SEPARATOR));
+    verify(stmt, Mockito.times(1)).execute(eq("line 4" + LINE_SEPARATOR));
+    verify(stmt, Mockito.times(1)).execute(eq("line 5" + LINE_SEPARATOR));
   }
 
   @Test
@@ -298,7 +300,7 @@ public class ScriptRunnerTest extends BaseDataTest {
     Reader reader = new StringReader(sql);
     runner.runScript(reader);
 
-    verify(stmt, Mockito.times(1)).execute(eq("line 1;\n" + "line 2;\n\n"));
-    verify(stmt, Mockito.times(1)).execute(eq("line 3\n"));
+    verify(stmt, Mockito.times(1)).execute(eq("line 1;" + LINE_SEPARATOR + "line 2;" + LINE_SEPARATOR + LINE_SEPARATOR));
+    verify(stmt, Mockito.times(1)).execute(eq("line 3" + LINE_SEPARATOR));
   }
 }
