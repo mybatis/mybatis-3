@@ -55,7 +55,7 @@ public class LogFactoryTest {
     logSomething(log);
     assertEquals(log.getClass().getName(), Log4j2Impl.class.getName());
   }
-  
+
   @Test
   public void shouldUseJdKLogging() {
     LogFactory.useJdkLogging();

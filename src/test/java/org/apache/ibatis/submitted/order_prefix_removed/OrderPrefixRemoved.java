@@ -50,7 +50,7 @@ public class OrderPrefixRemoved {
       Person person = personMapper.select(new String("slow"));
 
       assertNotNull(person);
-      
+
       sqlSession.commit();
     }
   }

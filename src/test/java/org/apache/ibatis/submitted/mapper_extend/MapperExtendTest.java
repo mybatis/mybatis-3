@@ -55,7 +55,6 @@ public class MapperExtendTest {
     }
   }
 
-
   @Test
   public void shouldGetAUserWithAnExtendedAnnotatedMethod() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {

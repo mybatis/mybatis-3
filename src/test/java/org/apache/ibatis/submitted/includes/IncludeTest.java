@@ -51,13 +51,13 @@ public class IncludeTest {
       Assertions.assertEquals(Integer.valueOf(1), result);
     }
   }
-  
+
   @Test
   public void testParametrizedIncludes() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       final Map<String, Object> result = sqlSession.selectOne("org.apache.ibatis.submitted.includes.mapper.select");
-      //Assertions.assertEquals(Integer.valueOf(1), result);
+      // Assertions.assertEquals(Integer.valueOf(1), result);
     }
   }
-  
+
 }

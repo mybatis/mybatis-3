@@ -31,7 +31,6 @@ public class ClassLoaderWrapperTest extends BaseDataTest {
   private final String CLASS_NOT_FOUND = "some.random.class.that.does.not.Exist";
   private final String CLASS_FOUND = "java.lang.Object";
 
-
   @BeforeEach
   public void beforeClassLoaderWrapperTest() {
     wrapper = new ClassLoaderWrapper();

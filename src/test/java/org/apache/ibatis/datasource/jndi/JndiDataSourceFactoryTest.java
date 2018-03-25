@@ -99,5 +99,4 @@ public class JndiDataSourceFactoryTest extends BaseDataTest {
     }
   }
 
-
 }

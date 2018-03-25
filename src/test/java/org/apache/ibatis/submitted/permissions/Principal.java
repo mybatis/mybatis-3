@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -22,16 +22,19 @@ public class Principal {
 
   private String principalName;
   private List<Permission> permissions = new ArrayList<Permission>();
-  
+
   public String getPrincipalName() {
     return principalName;
   }
+
   public void setPrincipalName(String principalName) {
     this.principalName = principalName;
   }
+
   public List<Permission> getPermissions() {
     return permissions;
   }
+
   public void setPermissions(List<Permission> permissions) {
     this.permissions = permissions;
   }

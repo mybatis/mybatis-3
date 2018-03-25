@@ -235,7 +235,7 @@ public class SqlProviderTest {
       }
     }
   }
-  
+
   @Test
   public void methodNotFound() throws NoSuchMethodException {
     try {

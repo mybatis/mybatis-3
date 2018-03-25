@@ -58,7 +58,6 @@ public final class ImmutablePOJOTest {
     }
   }
 
-
   @Test
   public void shouldFailLoadingImmutablePOJO() {
     try (SqlSession session = factory.openSession()) {
@@ -68,5 +67,5 @@ public final class ImmutablePOJOTest {
       });
     }
   }
-  
+
 }

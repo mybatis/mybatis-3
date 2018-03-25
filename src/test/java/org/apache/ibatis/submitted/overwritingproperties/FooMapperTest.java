@@ -63,7 +63,7 @@ public class FooMapperTest {
     mapper.insertFoo(inserted);
 
     final Foo selected = mapper.selectFoo();
-    
+
     // field1 is explicitly mapped properly
     // <result property="field1" column="field1" jdbcType="INTEGER"/>
     Assertions.assertEquals(inserted.getField1(), selected.getField1());
@@ -79,7 +79,7 @@ public class FooMapperTest {
     // is automapped from the only column that matches... which is Field1
     // probably not the intention, but it's working correctly given the code
     // <association property="field2" javaType="Bar">
-    //  <result property="field1" column="bar_field1" jdbcType="INTEGER"/>
+    // <result property="field1" column="bar_field1" jdbcType="INTEGER"/>
     // </association>
     Assertions.assertEquals(inserted.getField2().getField1(), selected.getField2().getField1());
   }

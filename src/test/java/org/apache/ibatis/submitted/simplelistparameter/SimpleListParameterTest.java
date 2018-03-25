@@ -49,7 +49,7 @@ public class SimpleListParameterTest {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       CarMapper carMapper = sqlSession.getMapper(CarMapper.class);
       Car car = new Car();
-      car.setDoors(Arrays.asList(new String[] {"2", "4"}));
+      car.setDoors(Arrays.asList(new String[] { "2", "4" }));
       List<Car> cars = carMapper.getCar(car);
       Assertions.assertNotNull(cars);
     }
@@ -60,7 +60,7 @@ public class SimpleListParameterTest {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       CarMapper carMapper = sqlSession.getMapper(CarMapper.class);
       Rv rv = new Rv();
-      rv.doors1 = Arrays.asList(new String[] {"2", "4"});
+      rv.doors1 = Arrays.asList(new String[] { "2", "4" });
       List<Rv> rvs = carMapper.getRv1(rv);
       Assertions.assertNotNull(rvs);
     }
@@ -71,7 +71,7 @@ public class SimpleListParameterTest {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       CarMapper carMapper = sqlSession.getMapper(CarMapper.class);
       Rv rv = new Rv();
-      rv.setDoors2(Arrays.asList(new String[] {"2", "4"}));
+      rv.setDoors2(Arrays.asList(new String[] { "2", "4" }));
       List<Rv> rvs = carMapper.getRv2(rv);
       Assertions.assertNotNull(rvs);
     }

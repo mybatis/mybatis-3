@@ -28,7 +28,6 @@ import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-
 public class SubstitutionInAnnotsTest {
 
   protected static SqlSessionFactory sqlSessionFactory;
@@ -60,7 +59,7 @@ public class SubstitutionInAnnotsTest {
       assertEquals("Barney", mapper.getPersonNameByIdWithAnnotsValue(4));
     }
   }
-  
+
   @Test
   public void testSubstitutionWithAnnotsParameter() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {

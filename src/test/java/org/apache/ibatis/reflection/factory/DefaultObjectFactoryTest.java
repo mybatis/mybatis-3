@@ -81,14 +81,12 @@ public class DefaultObjectFactoryTest {
     Assertions.assertTrue(iterable instanceof ArrayList, " iterable should be ArrayList");
   }
 
-
   @Test
   public void createTreeSet() throws Exception {
     DefaultObjectFactory defaultObjectFactory = new DefaultObjectFactory();
     SortedSet sortedSet = defaultObjectFactory.create(SortedSet.class);
     Assertions.assertTrue(sortedSet instanceof TreeSet, " sortedSet should be TreeSet");
   }
-
 
   @Test
   public void createHashSet() throws Exception {

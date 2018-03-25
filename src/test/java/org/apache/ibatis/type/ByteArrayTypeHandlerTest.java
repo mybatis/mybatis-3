@@ -70,6 +70,6 @@ public class ByteArrayTypeHandlerTest extends BaseTypeHandlerTest {
   @Override
   public void shouldGetResultNullFromCallableStatement() throws Exception {
     // Unnecessary
- }
+  }
 
 }

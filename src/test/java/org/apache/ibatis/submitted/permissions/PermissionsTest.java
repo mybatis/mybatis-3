@@ -58,7 +58,7 @@ public class PermissionsTest {
       final Principal firstPrincipal = principalPermissions.get(0);
       final List<Permission> permissions = firstPrincipal.getPermissions();
       Assertions.assertEquals(2, permissions.size());
-      
+
       final Permission firstPermission = firstPrincipal.getPermissions().get(0);
       Assertions.assertSame(firstResource, firstPermission.getResource());
       final Permission secondPermission = firstPrincipal.getPermissions().get(1);
@@ -89,11 +89,11 @@ public class PermissionsTest {
           readFound = true;
         }
       }
-      
+
       if (!readFound) {
         Assertions.fail();
       }
     }
   }
-  
+
 }

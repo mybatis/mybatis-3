@@ -62,10 +62,10 @@ public class AssociationTest {
   public void shouldGetOneCarWithOneEngineAndBrakes() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
-      List<Car> cars = mapper.getCars2();      
+      List<Car> cars = mapper.getCars2();
       Assertions.assertEquals(1, cars.size());
       Assertions.assertNotNull(cars.get(0).getEngine());
-      Assertions.assertNotNull(cars.get(0).getBrakes());      
+      Assertions.assertNotNull(cars.get(0).getBrakes());
     }
   }
 

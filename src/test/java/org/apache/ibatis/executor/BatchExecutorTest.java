@@ -26,6 +26,6 @@ public class BatchExecutorTest extends BaseExecutorTest {
 
   @Override
   protected Executor createExecutor(Transaction transaction) {
-    return new BatchExecutor(config,transaction);
+    return new BatchExecutor(config, transaction);
   }
 }

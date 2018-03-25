@@ -90,7 +90,6 @@ public class BatchKeysTest {
     }
   }
 
-
   @Test
   public void testInsertJdbc3() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH)) {
@@ -165,5 +164,5 @@ public class BatchKeysTest {
       Assertions.assertTrue(users.size() == 1);
     }
   }
-  
+
 }

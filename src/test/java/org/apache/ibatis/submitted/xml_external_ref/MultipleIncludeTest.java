@@ -49,7 +49,7 @@ public class MultipleIncludeTest {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       MultipleIncludePersonMapper personMapper = sqlSession.getMapper(MultipleIncludePersonMapper.class);
       Person person = personMapper.select(1);
-      assertEquals((Integer)1, person.getId());
+      assertEquals((Integer) 1, person.getId());
       assertEquals("John", person.getName());
     }
   }

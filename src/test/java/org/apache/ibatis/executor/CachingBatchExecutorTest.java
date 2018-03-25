@@ -26,7 +26,7 @@ public class CachingBatchExecutorTest extends BaseExecutorTest {
 
   @Override
   protected Executor createExecutor(Transaction transaction) {
-    return new CachingExecutor(new BatchExecutor(config,transaction));
+    return new CachingExecutor(new BatchExecutor(config, transaction));
   }
 
 }

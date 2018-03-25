@@ -77,7 +77,7 @@ public class AutomappingTest {
       Assertions.assertEquals("John", user.getPets().get(0).getBreeder().getBreederName());
     }
   }
-  
+
   @Test
   public void shouldNotInheritAutoMappingInherited_ExternalNestedResultMap() {
     sqlSessionFactory.getConfiguration().setAutoMappingBehavior(AutoMappingBehavior.NONE);

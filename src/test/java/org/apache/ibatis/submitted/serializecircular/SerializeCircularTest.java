@@ -34,7 +34,7 @@ public class SerializeCircularTest {
       testSerializeWithoutPreloadingAttribute(sqlSession);
     }
   }
-  
+
   @Test
   public void serializeAndDeserializeObjectsWithAggressiveLazyLoadingWithPreloadingAttribute() 
   throws Exception {

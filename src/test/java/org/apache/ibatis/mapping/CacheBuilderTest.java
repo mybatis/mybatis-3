@@ -44,7 +44,7 @@ public class CacheBuilderTest {
   }
 
   @SuppressWarnings("unchecked")
-  private <T> T unwrap(Cache cache){
+  private <T> T unwrap(Cache cache) {
     Field field;
     try {
       field = cache.getClass().getDeclaredField("delegate");
@@ -53,14 +53,13 @@ public class CacheBuilderTest {
     }
     try {
       field.setAccessible(true);
-      return (T)field.get(cache);
+      return (T) field.get(cache);
     } catch (IllegalAccessException e) {
       throw new IllegalStateException(e);
     } finally {
       field.setAccessible(false);
     }
   }
-
 
   private static class InitializingCache extends PerpetualCache implements InitializingObject {
 

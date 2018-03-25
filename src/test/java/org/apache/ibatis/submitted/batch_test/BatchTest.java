@@ -27,8 +27,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-public class BatchTest
-{
+public class BatchTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
@@ -59,14 +58,9 @@ public class BatchTest
       } finally {
         sqlSession.commit();
       }
-    }
-    catch (Exception e)
-    {
+    } catch (Exception e) {
       Assertions.fail(e.getMessage());
-
     }
   }
-
-
 
 }

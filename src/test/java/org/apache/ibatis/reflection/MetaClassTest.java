@@ -30,7 +30,7 @@ import org.junit.jupiter.api.Test;
 public class MetaClassTest {
 
   private RichType rich = new RichType();
-  Map<String,RichType> map = new HashMap<String,RichType>() {
+  Map<String, RichType> map = new HashMap<String, RichType>() {
     {
       put("richType", rich);
     }

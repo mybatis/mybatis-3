@@ -95,9 +95,9 @@ public class XmlExternalRefTest {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
       Person person = personMapper.select(1);
-      assertEquals((Integer)1, person.getId());
+      assertEquals((Integer) 1, person.getId());
       assertEquals(2, person.getPets().size());
-      assertEquals((Integer)2, person.getPets().get(1).getId());
+      assertEquals((Integer) 2, person.getPets().get(1).getId());
 
       Pet pet = personMapper.selectPet(1);
       assertEquals(Integer.valueOf(1), pet.getId());

@@ -63,8 +63,8 @@ public class CollectionParametersTest {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       Integer[] list = new Integer[2];
-      list[0]=1;
-      list[1]=2;
+      list[0] = 1;
+      list[1] = 2;
       List<User> users = mapper.getUsersFromArray(list);
       Assertions.assertEquals(2, users.size());
     }
@@ -82,5 +82,4 @@ public class CollectionParametersTest {
     }
   }
 
-  
 }

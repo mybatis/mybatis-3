@@ -90,7 +90,7 @@ public class ForEachMapTest {
     Assertions.assertEquals(new NestedBeanMapEntry(12345, true, 54321, false), entries.get(0));
     Assertions.assertEquals(new NestedBeanMapEntry(67890, true, 9876, false), entries.get(1));
   }
-  
+
   @Test
   public void shouldSubstituteIndexWithKey() throws Exception {
     MapParam mapParam = new MapParam();

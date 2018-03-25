@@ -40,7 +40,6 @@ public class SoftCacheTest {
     assertTrue(cache.getSize() < N);
   }
 
-
   @Test
   public void shouldDemonstrateCopiesAreEqual() {
     Cache cache = new SoftCache(new PerpetualCache("default"));

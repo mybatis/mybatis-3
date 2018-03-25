@@ -121,7 +121,6 @@ public class ClobReaderTypeHandlerTest extends BaseTypeHandlerTest {
     assertNull(TYPE_HANDLER.getResult(cs, 1));
   }
 
-
   @Test
   public void integrationTest() throws IOException {
     try (SqlSession session = sqlSessionFactory.openSession()) {

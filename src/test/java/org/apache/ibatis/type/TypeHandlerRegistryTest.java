@@ -159,17 +159,22 @@ public class TypeHandlerRegistryTest {
 
   interface SomeInterface {
   }
+
   interface ExtendingSomeInterface extends SomeInterface {
   }
+
   interface NoTypeHandlerInterface {
   }
 
   enum SomeEnum implements SomeInterface {
   }
+
   enum ExtendingSomeEnum implements ExtendingSomeInterface {
   }
+
   enum ImplementingMultiInterfaceSomeEnum implements NoTypeHandlerInterface, ExtendingSomeInterface {
   }
+
   enum NoTypeHandlerInterfaceEnum implements NoTypeHandlerInterface {
   }
 
@@ -182,14 +187,17 @@ public class TypeHandlerRegistryTest {
     public void setNonNullParameter(PreparedStatement ps, int i, E parameter, JdbcType jdbcType)
         throws SQLException {
     }
+
     @Override
     public E getNullableResult(ResultSet rs, String columnName) throws SQLException {
       return null;
     }
+
     @Override
     public E getNullableResult(ResultSet rs, int columnIndex) throws SQLException {
       return null;
     }
+
     @Override
     public E getNullableResult(CallableStatement cs, int columnIndex) throws SQLException {
       return null;
@@ -209,7 +217,8 @@ public class TypeHandlerRegistryTest {
 
   @Test
   public void shouldRegisterReplaceNullMap() {
-    class Address {}
+    class Address {
+    }
     assertFalse(typeHandlerRegistry.hasTypeHandler(Address.class));
     typeHandlerRegistry.register(Address.class, StringTypeHandler.class);
     assertTrue(typeHandlerRegistry.hasTypeHandler(Address.class));

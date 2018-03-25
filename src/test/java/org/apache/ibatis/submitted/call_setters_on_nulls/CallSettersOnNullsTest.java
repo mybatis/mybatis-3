@@ -89,7 +89,7 @@ public class CallSettersOnNullsTest {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       List<Map<String, Object>> oneColumns = mapper.getNameOnlyMapped();
-//      Assertions.assertNotNull(oneColumns.get(1));
+      // Assertions.assertNotNull(oneColumns.get(1));
       // TEST changed after fix for #307
       // When callSetterOnNull is true, setters are called with null values
       // but if all the values for an object are null
@@ -97,5 +97,5 @@ public class CallSettersOnNullsTest {
       Assertions.assertNull(oneColumns.get(1));
     }
   }
-  
+
 }

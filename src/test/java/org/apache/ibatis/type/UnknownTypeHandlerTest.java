@@ -115,7 +115,7 @@ public class UnknownTypeHandlerTest extends BaseTypeHandlerTest {
 
   @Test
   public void getResultWithResultSetAndColumnNameThrowsException() throws SQLException {
-    doThrow(new SQLException("invalid column")).when((UnknownTypeHandler)TYPE_HANDLER).getNullableResult(rs, "foo");
+    doThrow(new SQLException("invalid column")).when((UnknownTypeHandler) TYPE_HANDLER).getNullableResult(rs, "foo");
     try {
       TYPE_HANDLER.getResult(rs, "foo");
       Assertions.fail("Should have thrown a ResultMapException");
@@ -127,7 +127,7 @@ public class UnknownTypeHandlerTest extends BaseTypeHandlerTest {
 
   @Test
   public void getResultWithResultSetAndColumnIndexThrowsException() throws SQLException {
-    doThrow(new SQLException("invalid column")).when((UnknownTypeHandler)TYPE_HANDLER).getNullableResult(rs, 1);
+    doThrow(new SQLException("invalid column")).when((UnknownTypeHandler) TYPE_HANDLER).getNullableResult(rs, 1);
     try {
       TYPE_HANDLER.getResult(rs, 1);
       Assertions.fail("Should have thrown a ResultMapException");
@@ -139,7 +139,7 @@ public class UnknownTypeHandlerTest extends BaseTypeHandlerTest {
 
   @Test
   public void getResultWithCallableStatementAndColumnIndexThrowsException() throws SQLException {
-    doThrow(new SQLException("invalid column")).when((UnknownTypeHandler)TYPE_HANDLER).getNullableResult(cs, 1);
+    doThrow(new SQLException("invalid column")).when((UnknownTypeHandler) TYPE_HANDLER).getNullableResult(cs, 1);
     try {
       TYPE_HANDLER.getResult(cs, 1);
       Assertions.fail("Should have thrown a ResultMapException");

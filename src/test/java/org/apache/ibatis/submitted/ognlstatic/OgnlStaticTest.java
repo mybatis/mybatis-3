@@ -67,5 +67,5 @@ public class OgnlStaticTest {
       Assertions.assertEquals("User1", user.getName());
     }
   }
-  
+
 }

@@ -139,6 +139,7 @@ public class LanguageTest {
       }
     }
   }
+
   @Test
   public void testLangRawWithIncludeAndCData() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
@@ -150,7 +151,7 @@ public class LanguageTest {
       }
     }
   }
-  
+
   @Test
   public void testLangXmlTags() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {

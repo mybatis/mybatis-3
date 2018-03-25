@@ -169,7 +169,7 @@ public class SqlSessionTest extends BaseDataTest {
       });
     }
   }
-  
+
   @Test
   public void shouldSelectAllAuthorsAsMap() {
     try (SqlSession session = sqlMapper.openSession(TransactionIsolationLevel.SERIALIZABLE)) {
