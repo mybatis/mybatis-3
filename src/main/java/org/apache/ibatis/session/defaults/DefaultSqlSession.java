@@ -339,10 +339,12 @@ public class DefaultSqlSession implements SqlSession {
 
     @Override
     public V get(Object key) {
-      if (!super.containsKey(key)) {
+
+      V v= super.get(key);
+      if (v == null) {
         throw new BindingException("Parameter '" + key + "' not found. Available parameters are " + this.keySet());
       }
-      return super.get(key);
+      return v;
     }
 
   }
