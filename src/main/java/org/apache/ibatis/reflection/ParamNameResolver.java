@@ -27,6 +27,7 @@ import org.apache.ibatis.binding.MapperMethod.ParamMap;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
+import org.apache.ibatis.session.defaults.DefaultSqlSession;
 
 public class ParamNameResolver {
 
@@ -48,6 +49,7 @@ public class ParamNameResolver {
   private final SortedMap<Integer, String> names;
 
   private boolean hasParamAnnotation;
+  private boolean useActualParamName;
 
   public ParamNameResolver(Configuration config, Method method) {
     final Class<?>[] paramTypes = method.getParameterTypes();
@@ -77,6 +79,8 @@ public class ParamNameResolver {
           // use the parameter index as the name ("0", "1", ...)
           // gcode issue #71
           name = String.valueOf(map.size());
+        } else {
+          useActualParamName = true;
         }
       }
       map.put(paramIndex, name);
@@ -115,7 +119,12 @@ public class ParamNameResolver {
     if (args == null || paramCount == 0) {
       return null;
     } else if (!hasParamAnnotation && paramCount == 1) {
-      return args[names.firstKey()];
+      Object value = args[names.firstKey()];
+      if (useActualParamName) {
+        return DefaultSqlSession.wrapCollection(value, map -> map.put(names.get(0), value));
+      } else {
+        return value;
+      }
     } else {
       final Map<String, Object> param = new ParamMap<Object>();
       int i = 0;

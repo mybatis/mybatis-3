@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2016 the original author or authors.
+       Copyright 2009-2018 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -17,19 +17,19 @@
 
 -->
 <!DOCTYPE mapper
-        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="org.apache.ibatis.submitted.param_name_resolve.Mapper">
-    <!-- when compiled with -parameters and useActualParamName enabled, -->
-    <!-- the first parameter should be accessed by its name 'ids',      -->
-    <!-- in addition with default name 'list' and 'collection'.         -->
-    <select id="getUserCount" resultType="Long">
-        select count(*)
-        from users u
-        where u.id in
-        <foreach item='item' index='index' collection='ids' open='(' separator=',' close=')'>
-            #{item}
-        </foreach>
-    </select>
+<mapper namespace="org.apache.ibatis.submitted.param_name_resolve.ParamNameResolveTest$Mapper">
+  <!-- when compiled with -parameters and useActualParamName enabled, -->
+  <!-- the first parameter should be accessed by its name 'ids',      -->
+  <!-- in addition with default name 'list' and 'collection'.         -->
+  <select id="getUserCount" resultType="Long">
+    select count(*)
+    from users u
+    where u.id in
+    <foreach item='item' index='index' collection='ids' open='(' separator=',' close=')'>
+      #{item}
+    </foreach>
+  </select>
 </mapper>

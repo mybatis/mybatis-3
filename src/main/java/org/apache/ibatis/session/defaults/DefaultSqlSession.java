@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 import org.apache.ibatis.binding.BindingException;
 import org.apache.ibatis.cursor.Cursor;
@@ -318,8 +319,25 @@ public class DefaultSqlSession implements SqlSession {
   }
 
   private Object wrapCollection(final Object object) {
+    return wrapCollection(object, null);
+  }
+
+  /**
+   * Wrap a collection and array into {@link Map}.
+   *
+   * @param object a target parameter object
+   * @param mapConsumer consumer function for a map that wrapped collection and array. If
+   *        {@code object} is collection or array, this function will be called.
+   * @return If {@code object} is collection or array, return a map that wrapped collection and
+   *         array. Otherwise return a argument object.
+   * @since 3.5.0
+   */
+  public static Object wrapCollection(final Object object, final Consumer<Map<String, Object>> mapConsumer) {
     if (object instanceof Collection) {
       StrictMap<Object> map = new StrictMap<Object>();
+      if (mapConsumer != null) {
+        mapConsumer.accept(map);
+      }
       map.put("collection", object);
       if (object instanceof List) {
         map.put("list", object);
@@ -327,6 +345,9 @@ public class DefaultSqlSession implements SqlSession {
       return map;
     } else if (object != null && object.getClass().isArray()) {
       StrictMap<Object> map = new StrictMap<Object>();
+      if (mapConsumer != null) {
+        mapConsumer.accept(map);
+      }
       map.put("array", object);
       return map;
     }
