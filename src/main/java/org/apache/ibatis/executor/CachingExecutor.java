@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -39,11 +39,12 @@ import org.apache.ibatis.transaction.Transaction;
 public class CachingExecutor implements Executor {
 
   private final Executor delegate;
+  protected Executor wrapper;
   private final TransactionalCacheManager tcm = new TransactionalCacheManager();
 
   public CachingExecutor(Executor delegate) {
     this.delegate = delegate;
-    delegate.setExecutorWrapper(this);
+    this.setExecutorWrapper(this);
   }
 
   @Override
@@ -79,8 +80,8 @@ public class CachingExecutor implements Executor {
   @Override
   public <E> List<E> query(MappedStatement ms, Object parameterObject, RowBounds rowBounds, ResultHandler resultHandler) throws SQLException {
     BoundSql boundSql = ms.getBoundSql(parameterObject);
-    CacheKey key = createCacheKey(ms, parameterObject, rowBounds, boundSql);
-    return query(ms, parameterObject, rowBounds, resultHandler, key, boundSql);
+    CacheKey key = wrapper.createCacheKey(ms, parameterObject, rowBounds, boundSql);
+    return wrapper.query(ms, parameterObject, rowBounds, resultHandler, key, boundSql);
   }
 
   @Override
@@ -169,8 +170,9 @@ public class CachingExecutor implements Executor {
   }
 
   @Override
-  public void setExecutorWrapper(Executor executor) {
-    throw new UnsupportedOperationException("This method should not be called");
+  public void setExecutorWrapper(Executor wrapper) {
+    this.wrapper = wrapper;
+    this.delegate.setExecutorWrapper(wrapper);
   }
 
 }

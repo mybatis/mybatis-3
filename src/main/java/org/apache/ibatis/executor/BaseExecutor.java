@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -84,7 +84,7 @@ public abstract class BaseExecutor implements Executor {
   public void close(boolean forceRollback) {
     try {
       try {
-        rollback(forceRollback);
+        wrapper.rollback(forceRollback);
       } finally {
         if (transaction != null) {
           transaction.close();
@@ -113,7 +113,7 @@ public abstract class BaseExecutor implements Executor {
     if (closed) {
       throw new ExecutorException("Executor was closed.");
     }
-    clearLocalCache();
+    wrapper.clearLocalCache();
     return doUpdate(ms, parameter);
   }
 
@@ -132,8 +132,8 @@ public abstract class BaseExecutor implements Executor {
   @Override
   public <E> List<E> query(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler) throws SQLException {
     BoundSql boundSql = ms.getBoundSql(parameter);
-    CacheKey key = createCacheKey(ms, parameter, rowBounds, boundSql);
-    return query(ms, parameter, rowBounds, resultHandler, key, boundSql);
+    CacheKey key = wrapper.createCacheKey(ms, parameter, rowBounds, boundSql);
+    return wrapper.query(ms, parameter, rowBounds, resultHandler, key, boundSql);
  }
 
   @SuppressWarnings("unchecked")
@@ -144,7 +144,7 @@ public abstract class BaseExecutor implements Executor {
       throw new ExecutorException("Executor was closed.");
     }
     if (queryStack == 0 && ms.isFlushCacheRequired()) {
-      clearLocalCache();
+      wrapper.clearLocalCache();
     }
     List<E> list;
     try {
@@ -166,7 +166,7 @@ public abstract class BaseExecutor implements Executor {
       deferredLoads.clear();
       if (configuration.getLocalCacheScope() == LocalCacheScope.STATEMENT) {
         // issue #482
-        clearLocalCache();
+        wrapper.clearLocalCache();
       }
     }
     return list;
@@ -238,8 +238,8 @@ public abstract class BaseExecutor implements Executor {
     if (closed) {
       throw new ExecutorException("Cannot commit, transaction is already closed");
     }
-    clearLocalCache();
-    flushStatements();
+    wrapper.clearLocalCache();
+    wrapper.flushStatements();
     if (required) {
       transaction.commit();
     }
@@ -249,7 +249,7 @@ public abstract class BaseExecutor implements Executor {
   public void rollback(boolean required) throws SQLException {
     if (!closed) {
       try {
-        clearLocalCache();
+        wrapper.clearLocalCache();
         flushStatements(true);
       } finally {
         if (required) {
