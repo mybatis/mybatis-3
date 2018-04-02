@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -44,6 +44,18 @@ public class PrimitiveTypes {
 
   public Class<?> getWrapper(final Class<?> primitiveType) {
     return primitiveToWrappers.get(primitiveType);
+  }
+
+  /**
+   * Whether or not a specifying type matches with the wrapper type corresponding a primitive type.
+   *
+   * @param primitiveType a primitive type
+   * @param targetType type of validating target
+   * @return if return {@code true}, a wrapper type is matched.
+   * @since 3.5.0
+   */
+  public boolean matchesWithWrapperType(final Class<?> primitiveType, final Class<?> targetType) {
+    return targetType == getWrapper(primitiveType);
   }
 
   public Class<?> getPrimitive(final Class<?> wrapperType) {

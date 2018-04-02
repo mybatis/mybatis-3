@@ -698,10 +698,11 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     if (parameterTypes.length != classNames.size()) return false;
     for (int i = 0; i < parameterTypes.length; i++) {
       final Class<?> parameterType = parameterTypes[i];
-      final String className = classNames.get(i);
-      if (parameterType.isPrimitive() && !primitiveTypes.getWrapper(parameterType).getName().equals(className)) {
-        return false;
-      } else if (!parameterType.isPrimitive() && !parameterType.isAssignableFrom(toClassForName(className))) {
+      final Class<?> resultSetType = toClassForName(classNames.get(i));
+      boolean matches = parameterType.isPrimitive()
+          ? primitiveTypes.matchesWithWrapperType(parameterType, resultSetType)
+          : parameterType.isAssignableFrom(resultSetType);
+      if (!matches) {
         return false;
       }
     }

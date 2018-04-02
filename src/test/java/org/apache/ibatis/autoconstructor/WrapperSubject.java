@@ -25,6 +25,10 @@ public class WrapperSubject {
   private final int weight;
   private final Timestamp dt;
 
+  public WrapperSubject(final int id, final String name, final int age, final Short height, final Short weight, Timestamp dt) {
+    throw new IllegalStateException("This constructor must not be called because type mismatch.");
+  }
+
   public WrapperSubject(final int id, final String name, final int age, final Integer height, final Integer weight, Timestamp dt) {
     this.id = id;
     this.name = name;
