@@ -23,6 +23,7 @@ import java.sql.ResultSet;
  * if the value is SQL <code>NULL</code>).
  * <p>
  * Nullable JDBC APIs are follows on {@link ResultSet} or {@link CallableStatement}:
+ * </p>
  * <ul>
  * <li><code>getAsciiStream()</code></li>
  * <li><code>getBigDecimal()</code></li>
@@ -39,7 +40,6 @@ import java.sql.ResultSet;
  * <li><code>getUnicodeStream()</code></li>
  * <li><code>getURL()</code></li>
  * </ul>
- * </p>
  * <p>
  * If you create a custom {@link TypeHandler} using above APIs, we propose to use this class instead
  * of the {@link BaseTypeHandler}. This class is efficient than the {@link BaseTypeHandler} because
