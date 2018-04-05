@@ -24,8 +24,11 @@ import org.apache.ibatis.executor.result.ResultMapException;
 import org.apache.ibatis.session.Configuration;
 
 /**
+ * The base {@link TypeHandler} for references a generic type.
+ *
  * @author Clinton Begin
  * @author Simone Tripodi
+ * @author Kzuki Shimizu
  */
 public abstract class BaseTypeHandler<T> extends TypeReference<T> implements TypeHandler<T> {
 
@@ -75,11 +78,7 @@ public abstract class BaseTypeHandler<T> extends TypeReference<T> implements Typ
     } catch (Exception e) {
       throw new ResultMapException("Error attempting to get column '" + columnName + "' from result set.  Cause: " + e, e);
     }
-    if (rs.wasNull()) {
-      return null;
-    } else {
-      return result;
-    }
+    return handleResult(rs, result);
   }
 
   @Override
@@ -90,11 +89,7 @@ public abstract class BaseTypeHandler<T> extends TypeReference<T> implements Typ
     } catch (Exception e) {
       throw new ResultMapException("Error attempting to get column #" + columnIndex+ " from result set.  Cause: " + e, e);
     }
-    if (rs.wasNull()) {
-      return null;
-    } else {
-      return result;
-    }
+    return handleResult(rs, result);
   }
 
   @Override
@@ -105,6 +100,40 @@ public abstract class BaseTypeHandler<T> extends TypeReference<T> implements Typ
     } catch (Exception e) {
       throw new ResultMapException("Error attempting to get column #" + columnIndex+ " from callable statement.  Cause: " + e, e);
     }
+    return handleResult(cs, result);
+  }
+
+  /**
+   * Handle a fetched result value from {@link ResultSet}.
+   * 
+   * @param rs a {@link ResultSet}
+   * @param result a fetched value
+   * @return If {@link ResultSet#wasNull()} return {@code true}, it return {@code null}. Otherwise
+   *         return a fetched result value.
+   * @exception SQLException if a database access error occurs or this method is
+   *            called on a closed result set
+   * @since 3.5.0
+   */
+  protected T handleResult(ResultSet rs, T result) throws SQLException {
+    if (rs.wasNull()) {
+      return null;
+    } else {
+      return result;
+    }
+  }
+
+  /**
+   * Handle a fetched result value
+   *
+   * @param cs a {@link CallableStatement}
+   * @param result a fetched value
+   * @return If {@link ResultSet#wasNull()} return {@code true}, it return {@code null}. Otherwise
+   *         return a fetched result value.
+   * @exception SQLException if a database access error occurs or this method is
+   *            called on a closed result set
+   * @since 3.5.0
+   */
+  protected T handleResult(CallableStatement cs, T result) throws SQLException {
     if (cs.wasNull()) {
       return null;
     } else {
