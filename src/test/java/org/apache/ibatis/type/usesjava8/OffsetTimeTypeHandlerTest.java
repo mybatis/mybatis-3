@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -45,14 +45,15 @@ public class OffsetTimeTypeHandlerTest extends BaseTypeHandlerTest {
   public void shouldGetResultFromResultSetByName() throws Exception {
     when(rs.getTime("column")).thenReturn(TIME);
     assertEquals(OFFSET_TIME, TYPE_HANDLER.getResult(rs, "column"));
+    verify(rs, never()).wasNull();
   }
 
   @Override
   @Test
   public void shouldGetResultNullFromResultSetByName() throws Exception {
     when(rs.getTime("column")).thenReturn(null);
-    when(rs.wasNull()).thenReturn(true);
     assertNull(TYPE_HANDLER.getResult(rs, "column"));
+    verify(rs, never()).wasNull();
   }
 
   @Override
@@ -60,14 +61,15 @@ public class OffsetTimeTypeHandlerTest extends BaseTypeHandlerTest {
   public void shouldGetResultFromResultSetByPosition() throws Exception {
     when(rs.getTime(1)).thenReturn(TIME);
     assertEquals(OFFSET_TIME, TYPE_HANDLER.getResult(rs, 1));
+    verify(rs, never()).wasNull();
   }
 
   @Override
   @Test
   public void shouldGetResultNullFromResultSetByPosition() throws Exception {
     when(rs.getTime(1)).thenReturn(null);
-    when(rs.wasNull()).thenReturn(true);
     assertNull(TYPE_HANDLER.getResult(rs, 1));
+    verify(rs, never()).wasNull();
   }
 
   @Override
@@ -75,13 +77,14 @@ public class OffsetTimeTypeHandlerTest extends BaseTypeHandlerTest {
   public void shouldGetResultFromCallableStatement() throws Exception {
     when(cs.getTime(1)).thenReturn(TIME);
     assertEquals(OFFSET_TIME, TYPE_HANDLER.getResult(cs, 1));
+    verify(cs, never()).wasNull();
   }
 
   @Override
   @Test
   public void shouldGetResultNullFromCallableStatement() throws Exception {
     when(cs.getTime(1)).thenReturn(null);
-    when(cs.wasNull()).thenReturn(true);
     assertNull(TYPE_HANDLER.getResult(cs, 1));
+    verify(cs, never()).wasNull();
   }
 }
