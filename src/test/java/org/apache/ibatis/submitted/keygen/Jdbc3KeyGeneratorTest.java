@@ -252,60 +252,6 @@ public class Jdbc3KeyGeneratorTest {
   }
 
   @Test
-  public void shouldAssignKeysToList_MultiParams() throws Exception {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
-      CountryMapper mapper = sqlSession.getMapper(CountryMapper.class);
-      List<Country> countries = new ArrayList<Country>();
-      countries.add(new Country("China", "CN"));
-      countries.add(new Country("United Kiongdom", "GB"));
-      mapper.insertListAndSomeId(countries, Integer.valueOf(1));
-      for (Country country : countries) {
-        assertNotNull(country.getId());
-      }
-    } finally {
-      sqlSession.rollback();
-      sqlSession.close();
-    }
-  }
-
-  @Test
-  public void shouldAssignKeysToCollection_MultiParams() throws Exception {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
-      CountryMapper mapper = sqlSession.getMapper(CountryMapper.class);
-      Set<Country> countries = new HashSet<Country>();
-      countries.add(new Country("China", "CN"));
-      countries.add(new Country("United Kiongdom", "GB"));
-      mapper.insertSetAndSomeId(countries, Integer.valueOf(1));
-      for (Country country : countries) {
-        assertNotNull(country.getId());
-      }
-    } finally {
-      sqlSession.rollback();
-      sqlSession.close();
-    }
-  }
-
-  @Test
-  public void shouldAssignKeysToArray_MultiParams() throws Exception {
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    try {
-      CountryMapper mapper = sqlSession.getMapper(CountryMapper.class);
-      Country[] countries = new Country[2];
-      countries[0] = new Country("China", "CN");
-      countries[1] = new Country("United Kiongdom", "GB");
-      mapper.insertArrayAndSomeId(countries, Integer.valueOf(1));
-      for (Country country : countries) {
-        assertNotNull(country.getId());
-      }
-    } finally {
-      sqlSession.rollback();
-      sqlSession.close();
-    }
-  }
-
-  @Test
   public void shouldAssignKeysToNamedList_MultiParams() throws Exception {
     SqlSession sqlSession = sqlSessionFactory.openSession();
     try {

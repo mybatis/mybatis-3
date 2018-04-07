@@ -21,7 +21,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.binding.BindingException;
@@ -92,26 +91,6 @@ public class Jdbc3KeyGenerator implements KeyGenerator {
 
   protected void assignKeysToOneOfParams(final Configuration configuration, ResultSet rs, final String[] keyProperties,
       Map<?, ?> paramMap) throws SQLException {
-    // For backward compatibility, search parameter with special name first.
-    if (paramMap.containsKey("collection")) {
-      Object param = paramMap.get("collection");
-      if (param instanceof Collection) {
-        assignKeysToParam(configuration, rs, keyProperties, param);
-        return;
-      }
-    } else if (paramMap.containsKey("list")) {
-      Object param = paramMap.get("list");
-      if (param instanceof List) {
-        assignKeysToParam(configuration, rs, keyProperties, param);
-        return;
-      }
-    } else if (paramMap.containsKey("array")) {
-      Object param = paramMap.get("array");
-      if (param instanceof Object[]) {
-        assignKeysToParam(configuration, rs, keyProperties, param);
-        return;
-      }
-    }
     // Assuming 'keyProperty' includes the parameter name. e.g. 'param.id'.
     int firstDot = keyProperties[0].indexOf('.');
     if (firstDot == -1) {
