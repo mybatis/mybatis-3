@@ -97,28 +97,30 @@ import org.apache.ibatis.type.UnknownTypeHandler;
  */
 public class MapperAnnotationBuilder {
 
-  private final Set<Class<? extends Annotation>> sqlAnnotationTypes = new HashSet<Class<? extends Annotation>>();
-  private final Set<Class<? extends Annotation>> sqlProviderAnnotationTypes = new HashSet<Class<? extends Annotation>>();
+  private static final Set<Class<? extends Annotation>> SQL_ANNOTATION_TYPES = new HashSet<>();
+  private static final Set<Class<? extends Annotation>> SQL_PROVIDER_ANNOTATION_TYPES = new HashSet<>();
 
   private final Configuration configuration;
   private final MapperBuilderAssistant assistant;
   private final Class<?> type;
+
+  static {
+    SQL_ANNOTATION_TYPES.add(Select.class);
+    SQL_ANNOTATION_TYPES.add(Insert.class);
+    SQL_ANNOTATION_TYPES.add(Update.class);
+    SQL_ANNOTATION_TYPES.add(Delete.class);
+
+    SQL_PROVIDER_ANNOTATION_TYPES.add(SelectProvider.class);
+    SQL_PROVIDER_ANNOTATION_TYPES.add(InsertProvider.class);
+    SQL_PROVIDER_ANNOTATION_TYPES.add(UpdateProvider.class);
+    SQL_PROVIDER_ANNOTATION_TYPES.add(DeleteProvider.class);
+  }
 
   public MapperAnnotationBuilder(Configuration configuration, Class<?> type) {
     String resource = type.getName().replace('.', '/') + ".java (best guess)";
     this.assistant = new MapperBuilderAssistant(configuration, resource);
     this.configuration = configuration;
     this.type = type;
-
-    sqlAnnotationTypes.add(Select.class);
-    sqlAnnotationTypes.add(Insert.class);
-    sqlAnnotationTypes.add(Update.class);
-    sqlAnnotationTypes.add(Delete.class);
-
-    sqlProviderAnnotationTypes.add(SelectProvider.class);
-    sqlProviderAnnotationTypes.add(InsertProvider.class);
-    sqlProviderAnnotationTypes.add(UpdateProvider.class);
-    sqlProviderAnnotationTypes.add(DeleteProvider.class);
   }
 
   public void parse() {
@@ -516,11 +518,11 @@ public class MapperAnnotationBuilder {
   }
 
   private Class<? extends Annotation> getSqlAnnotationType(Method method) {
-    return chooseAnnotationType(method, sqlAnnotationTypes);
+    return chooseAnnotationType(method, SQL_ANNOTATION_TYPES);
   }
 
   private Class<? extends Annotation> getSqlProviderAnnotationType(Method method) {
-    return chooseAnnotationType(method, sqlProviderAnnotationTypes);
+    return chooseAnnotationType(method, SQL_PROVIDER_ANNOTATION_TYPES);
   }
 
   private Class<? extends Annotation> chooseAnnotationType(Method method, Set<Class<? extends Annotation>> types) {
