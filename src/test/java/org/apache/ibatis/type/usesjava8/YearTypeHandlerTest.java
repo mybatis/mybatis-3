@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -46,6 +46,9 @@ public class YearTypeHandlerTest extends BaseTypeHandlerTest {
   public void shouldGetResultFromResultSetByName() throws Exception {
     when(rs.getInt("column")).thenReturn(INSTANT.getValue());
     assertEquals(INSTANT, TYPE_HANDLER.getResult(rs, "column"));
+
+    when(rs.getInt("column")).thenReturn(0);
+    assertEquals(Year.of(0), TYPE_HANDLER.getResult(rs, "column"));
   }
 
   @Override
@@ -61,6 +64,9 @@ public class YearTypeHandlerTest extends BaseTypeHandlerTest {
   public void shouldGetResultFromResultSetByPosition() throws Exception {
     when(rs.getInt(1)).thenReturn(INSTANT.getValue());
     assertEquals(INSTANT, TYPE_HANDLER.getResult(rs, 1));
+
+    when(rs.getInt(1)).thenReturn(0);
+    assertEquals(Year.of(0), TYPE_HANDLER.getResult(rs, 1));
   }
 
   @Override
@@ -76,6 +82,9 @@ public class YearTypeHandlerTest extends BaseTypeHandlerTest {
   public void shouldGetResultFromCallableStatement() throws Exception {
     when(cs.getInt(1)).thenReturn(INSTANT.getValue());
     assertEquals(INSTANT, TYPE_HANDLER.getResult(cs, 1));
+
+    when(cs.getInt(1)).thenReturn(0);
+    assertEquals(Year.of(0), TYPE_HANDLER.getResult(cs, 1));
   }
 
   @Override

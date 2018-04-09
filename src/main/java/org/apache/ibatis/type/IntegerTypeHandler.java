@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -34,18 +34,21 @@ public class IntegerTypeHandler extends BaseTypeHandler<Integer> {
   @Override
   public Integer getNullableResult(ResultSet rs, String columnName)
       throws SQLException {
-    return rs.getInt(columnName);
+    int result = rs.getInt(columnName);
+    return (result == 0 && rs.wasNull()) ? null : result;
   }
 
   @Override
   public Integer getNullableResult(ResultSet rs, int columnIndex)
       throws SQLException {
-    return rs.getInt(columnIndex);
+    int result = rs.getInt(columnIndex);
+    return (result == 0 && rs.wasNull()) ? null : result;
   }
 
   @Override
   public Integer getNullableResult(CallableStatement cs, int columnIndex)
       throws SQLException {
-    return cs.getInt(columnIndex);
+    int result = cs.getInt(columnIndex);
+    return (result == 0 && cs.wasNull()) ? null : result;
   }
 }
