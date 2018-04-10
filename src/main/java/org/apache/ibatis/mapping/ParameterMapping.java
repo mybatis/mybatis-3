@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -38,6 +38,7 @@ public class ParameterMapping {
   private String resultMapId;
   private String jdbcTypeName;
   private String expression;
+  private ParameterEditor<?> editor;
 
   private ParameterMapping() {
   }
@@ -96,6 +97,17 @@ public class ParameterMapping {
 
     public Builder expression(String expression) {
       parameterMapping.expression = expression;
+      return this;
+    }
+
+    /**
+     * Set a editor for parameter value.
+     * @param editor a editor for parameter value
+     * @return self
+     * @since 3.4.3
+     */
+    public Builder editor(ParameterEditor<?> editor) {
+      parameterMapping.editor = editor;
       return this;
     }
 
@@ -197,6 +209,15 @@ public class ParameterMapping {
    */
   public String getExpression() {
     return expression;
+  }
+
+  /**
+   * Used when edit a parameter value
+   * @return a {@link ParameterEditor} instance. (If it not specify, return null)
+   * @since 3.4.3
+   */
+  public ParameterEditor<?> getEditor() {
+    return editor;
   }
 
   @Override
