@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -28,6 +28,7 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.io.Reader;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -438,4 +439,90 @@ public class SelectKeyTest {
       sqlSession.close();
     }
   }
+
+  @Test
+  public void testUsingGeneratedKeysPolicyIsUse() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      Name name = new Name();
+      name.setName("barney");
+      AnnotatedMapper mapper = sqlSession.getMapper(AnnotatedMapper.class);
+      int rows = mapper.insertUsingGeneratedKeysPolicyIsUse(name);
+      assertEquals(1, rows);
+      assertNotEquals(0, name.getNameId());
+      assertEquals("barney_fred", name.getGeneratedName());
+    }
+  }
+
+  @Test
+  public void testUsingGeneratedKeysPolicyIsNotUse() throws IOException {
+    SqlSessionFactory factory;
+    try (Reader reader =
+             Resources.getResourceAsReader("org/apache/ibatis/submitted/selectkey/MapperConfig.xml")) {
+      factory = new SqlSessionFactoryBuilder().build(reader);
+    }
+    factory.getConfiguration().setUseGeneratedKeys(true);
+    factory.getConfiguration().addMapper(AnnotatedMapper.class);
+
+    try (SqlSession sqlSession = factory.openSession()) {
+      Name name = new Name();
+      name.setName("barney");
+      AnnotatedMapper mapper = sqlSession.getMapper(AnnotatedMapper.class);
+      int rows = mapper.insertUsingGeneratedKeysPolicyIsNotUse(name);
+      assertEquals(1, rows);
+      assertEquals(0, name.getNameId());
+      assertNull(name.getGeneratedName());
+    }
+  }
+
+  @Test
+  public void testUsingGeneratedKeysPolicyIsDefault() throws IOException {
+    // test for default is false(=not use)
+    {
+      try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+        Name name = new Name();
+        name.setName("barney");
+        AnnotatedMapper mapper = sqlSession.getMapper(AnnotatedMapper.class);
+        int rows = mapper.insertUsingGeneratedKeysPolicyIsDefault(name);
+        assertEquals(1, rows);
+        assertEquals(0, name.getNameId());
+        assertNull(name.getGeneratedName());
+      }
+    }
+
+    // test for default is true(=use)
+    {
+      SqlSessionFactory factory;
+      try (Reader reader =
+               Resources.getResourceAsReader("org/apache/ibatis/submitted/selectkey/MapperConfig.xml")) {
+        factory = new SqlSessionFactoryBuilder().build(reader);
+      }
+      factory.getConfiguration().setUseGeneratedKeys(true);
+      factory.getConfiguration().addMapper(AnnotatedMapper.class);
+
+      try (SqlSession sqlSession = factory.openSession()) {
+        Name name = new Name();
+        name.setName("barney");
+        AnnotatedMapper mapper = sqlSession.getMapper(AnnotatedMapper.class);
+        int rows = mapper.insertUsingGeneratedKeysPolicyIsDefault(name);
+        assertEquals(1, rows);
+        assertNotEquals(0, name.getNameId());
+        assertEquals("barney_fred", name.getGeneratedName());
+      }
+    }
+  }
+
+  @Test
+  public void testSpecifyUseGeneratedKeysPolicyAndGeneratedKeysPolicy() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      Name name = new Name();
+      name.setName("barney");
+      AnnotatedMapper mapper = sqlSession.getMapper(AnnotatedMapper.class);
+      int rows = mapper.insertSpecifyUseGeneratedKeysAndGeneratedKeysPolicy(name);
+      assertEquals(1, rows);
+      // ignore useGeneratedKeys option
+      assertEquals(0, name.getNameId());
+      assertNull(name.getGeneratedName());
+    }
+  }
+
 }

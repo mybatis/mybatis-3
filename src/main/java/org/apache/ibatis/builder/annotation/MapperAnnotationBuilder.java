@@ -48,6 +48,7 @@ import org.apache.ibatis.annotations.Lang;
 import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Options.FlushCachePolicy;
+import org.apache.ibatis.annotations.Options.GeneratedKeysPolicy;
 import org.apache.ibatis.annotations.Property;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.ResultMap;
@@ -316,7 +317,9 @@ public class MapperAnnotationBuilder {
         } else if (options == null) {
           keyGenerator = configuration.isUseGeneratedKeys() ? Jdbc3KeyGenerator.INSTANCE : NoKeyGenerator.INSTANCE;
         } else {
-          keyGenerator = options.useGeneratedKeys() ? Jdbc3KeyGenerator.INSTANCE : NoKeyGenerator.INSTANCE;
+          boolean isUseGeneratedKeys = (options.generatedKeys() == GeneratedKeysPolicy.DEFAULT && options.useGeneratedKeys())
+                  || options.generatedKeys().isUseGeneratedKeys(configuration.isUseGeneratedKeys() && SqlCommandType.INSERT.equals(sqlCommandType));
+          keyGenerator = isUseGeneratedKeys ? Jdbc3KeyGenerator.INSTANCE : NoKeyGenerator.INSTANCE;
           keyProperty = options.keyProperty();
           keyColumn = options.keyColumn();
         }

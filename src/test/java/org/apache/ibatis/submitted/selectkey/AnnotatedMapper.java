@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.InsertProvider;
 import org.apache.ibatis.annotations.Options;
+import org.apache.ibatis.annotations.Options.GeneratedKeysPolicy;
 import org.apache.ibatis.annotations.SelectKey;
 import org.apache.ibatis.annotations.Update;
 
@@ -72,4 +73,21 @@ public interface AnnotatedMapper {
     int updateTable2WithSelectKeyWithKeyObject(Name name);
 
     int updateTable2WithSelectKeyWithKeyObjectXml(Name name);
+
+    @Insert("insert into table2 (name) values(#{name})")
+    @Options(generatedKeys = GeneratedKeysPolicy.USE, keyProperty="nameId,generatedName", keyColumn="ID,NAME_FRED")
+    int insertUsingGeneratedKeysPolicyIsUse(Name name);
+
+    @Insert("insert into table2 (name) values(#{name})")
+    @Options(generatedKeys = GeneratedKeysPolicy.NOT_USE, keyProperty="nameId,generatedName", keyColumn="ID,NAME_FRED")
+    int insertUsingGeneratedKeysPolicyIsNotUse(Name name);
+
+    @Insert("insert into table2 (name) values(#{name})")
+    @Options(keyProperty="nameId,generatedName", keyColumn="ID,NAME_FRED")
+    int insertUsingGeneratedKeysPolicyIsDefault(Name name);
+
+    @Insert("insert into table2 (name) values(#{name})")
+    @Options(useGeneratedKeys = true, generatedKeys = GeneratedKeysPolicy.NOT_USE, keyProperty="nameId,generatedName", keyColumn="ID,NAME_FRED")
+    int insertSpecifyUseGeneratedKeysAndGeneratedKeysPolicy(Name name);
+
 }

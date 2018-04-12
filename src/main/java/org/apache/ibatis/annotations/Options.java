@@ -23,6 +23,7 @@ import java.lang.annotation.Target;
 
 import org.apache.ibatis.mapping.ResultSetType;
 import org.apache.ibatis.mapping.StatementType;
+import org.apache.ibatis.session.Configuration;
 
 /**
  * @author Clinton Begin
@@ -44,6 +45,46 @@ public @interface Options {
     FALSE
   }
 
+  /**
+   * The options for the {@link Options#generatedKeys()}.
+   * 
+   * @author Kazuki Shimizu
+   * @since 3.5.0
+   */
+  enum GeneratedKeysPolicy {
+    /**
+     * Follow global configuration (See {@link Configuration#isUseGeneratedKeys()})
+     */
+    DEFAULT(null),
+    /**
+     * Use the JDBC standard generated keys
+     */
+    USE(Boolean.TRUE),
+    /**
+     * Not use the JDBC standard generated keys
+     */
+    NOT_USE(Boolean.FALSE);
+
+    private final Boolean useGeneratedKeys;
+
+    GeneratedKeysPolicy(Boolean useGeneratedKeys) {
+      this.useGeneratedKeys = useGeneratedKeys;
+    }
+
+    /**
+     * Return whether use the JDBC standard generated keys.
+     * @param defaultValue a value when policy is {@link #DEFAULT}.
+     * @return If use the JDBC standard generated keys, return {@code true}.
+     */
+    public boolean isUseGeneratedKeys(boolean defaultValue) {
+      if (this.useGeneratedKeys == null) {
+        return defaultValue;
+      }
+      return this.useGeneratedKeys;
+    }
+
+  }
+
   boolean useCache() default true;
 
   FlushCachePolicy flushCache() default FlushCachePolicy.DEFAULT;
@@ -56,11 +97,27 @@ public @interface Options {
 
   int timeout() default -1;
 
+  /**
+   * If set to {@code true}, mark to use the JDBC standard generated keys. Otherwise, depends on
+   * {@link #generatedKeys()}.
+   *
+   * @deprecated Since 3.5.0, Please change to use the {@link #generatedKeys()} instead of this.
+   *             This attribute will remove at future.
+   */
+  @Deprecated
   boolean useGeneratedKeys() default false;
+
+  /**
+   * @return A usage policy for the JDBC standard generated keys
+   * @see GeneratedKeysPolicy
+   * @since 3.5.0
+   */
+  GeneratedKeysPolicy generatedKeys() default GeneratedKeysPolicy.DEFAULT;
 
   String keyProperty() default "";
 
   String keyColumn() default "";
   
   String resultSets() default "";
+
 }
