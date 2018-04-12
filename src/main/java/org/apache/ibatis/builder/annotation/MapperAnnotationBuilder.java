@@ -383,7 +383,7 @@ public class MapperAnnotationBuilder {
   
   private LanguageDriver getLanguageDriver(Method method) {
     Lang lang = method.getAnnotation(Lang.class);
-    Class<?> langClass = null;
+    Class<? extends LanguageDriver> langClass = null;
     if (lang != null) {
       langClass = lang.value();
     }
