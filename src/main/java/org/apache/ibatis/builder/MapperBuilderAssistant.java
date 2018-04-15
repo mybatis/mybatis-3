@@ -172,7 +172,18 @@ public class MapperBuilderAssistant extends BaseBuilder {
         .typeHandler(typeHandlerInstance)
         .build();
   }
-
+  
+  /**
+   * 添加ResultMap
+   * 
+   * @param id
+   * @param type
+   * @param extend
+   * @param discriminator
+   * @param resultMappings
+   * @param autoMapping
+   * @return
+   */
   public ResultMap addResultMap(
       String id,
       Class<?> type,
@@ -208,9 +219,11 @@ public class MapperBuilderAssistant extends BaseBuilder {
       }
       resultMappings.addAll(extendedResultMappings);
     }
+    // 构造ResultMapper
     ResultMap resultMap = new ResultMap.Builder(configuration, id, type, resultMappings, autoMapping)
         .discriminator(discriminator)
         .build();
+    // 往configuration里面添加结果隐射
     configuration.addResultMap(resultMap);
     return resultMap;
   }

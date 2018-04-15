@@ -27,7 +27,9 @@ import org.apache.ibatis.session.defaults.DefaultSqlSessionFactory;
 
 /**
  * Builds {@link SqlSession} instances.
- *
+ * 
+ * 创建SqlSession的入口类
+ * 
  * @author Clinton Begin
  */
 public class SqlSessionFactoryBuilder {
@@ -43,7 +45,11 @@ public class SqlSessionFactoryBuilder {
   public SqlSessionFactory build(Reader reader, Properties properties) {
     return build(reader, null, properties);
   }
-
+  
+  /**
+   * 根据FileReader读取Mapper-config.xml 的配置信息，主要是environment节点的数据库连接信息
+   * 注意这个reader不建议使用，文件路径绝对地址
+   */
   public SqlSessionFactory build(Reader reader, String environment, Properties properties) {
     try {
       XMLConfigBuilder parser = new XMLConfigBuilder(reader, environment, properties);
@@ -72,6 +78,10 @@ public class SqlSessionFactoryBuilder {
     return build(inputStream, null, properties);
   }
 
+  /**
+   * 推荐使用方式
+   * 采用InputStream流读取mybatis-config.xml数据
+   */
   public SqlSessionFactory build(InputStream inputStream, String environment, Properties properties) {
     try {
       XMLConfigBuilder parser = new XMLConfigBuilder(inputStream, environment, properties);
@@ -87,7 +97,12 @@ public class SqlSessionFactoryBuilder {
       }
     }
   }
-    
+  
+  /**
+   * 核心入口，根据Configuration创建的DefaultSqlSessionFactory
+   * @param config
+   * @return
+   */
   public SqlSessionFactory build(Configuration config) {
     return new DefaultSqlSessionFactory(config);
   }

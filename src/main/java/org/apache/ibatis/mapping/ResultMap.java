@@ -80,7 +80,12 @@ public class ResultMap {
     public Class<?> type() {
       return resultMap.type;
     }
-
+    
+    /**
+     *  建造者模式，创建ResultMap
+     *  
+     * @return
+     */
     public ResultMap build() {
       if (resultMap.id == null) {
         throw new IllegalArgumentException("ResultMaps must have an id");
