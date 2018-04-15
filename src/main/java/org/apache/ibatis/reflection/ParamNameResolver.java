@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-
 package org.apache.ibatis.reflection;
 
 import java.lang.annotation.Annotation;
@@ -105,8 +104,8 @@ public class ParamNameResolver {
 
   /**
    * <p>
-   * A single non-special parameter is returned without a name.<br />
-   * Multiple parameters are named using the naming rule.<br />
+   * A single non-special parameter is returned without a name.
+   * Multiple parameters are named using the naming rule.
    * In addition to the default names, this method also adds the generic names (param1, param2,
    * ...).
    * </p>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2017 the original author or authors.
+       Copyright 2009-2018 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -422,7 +422,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
         <td>このアノテーションを使うと、通常マップドステートメントの属性として指定される多様なスイッチや設定オプションにアクセスすることができます。<code>Options</code> アノテーションによって、各ステートメントのアノテーションを複雑化することなく、一貫したクリーンな方法で設定にアクセスできるよう工夫されています。キー: Attributes:
         <code>useCache=true</code>, <code>flushCache=FlushCachePolicy.DEFAULT</code>, <code>resultSetType=FORWARD_ONLY</code>,
         <code>statementType=PREPARED</code>, <code>fetchSize=-1</code>, <code>timeout=-1</code>,
-        <code>useGeneratedKeys=false</code>, <code>keyProperty="id"</code>, <code>keyColumn=""</code>, <code>resultSets=""</code>.
+        <code>useGeneratedKeys=false</code>, <code>keyProperty=""</code>, <code>keyColumn=""</code>, <code>resultSets=""</code>.
         Java アノテーションを使う場合、値として <code>null</code> を指定することはできないという制限があります。これはどういうことかというと、<code>Options</code> アノテーションを付加したステートメントにはデフォルトのオプションが適用されるということです。予期しない動作を防ぐため、各オプションのデフォルト値を把握しておくようにしてください。<br/><br/>
         <code>keyColumn</code> は特定のデータベース（Oracle や PostgreSQL など）でのみ必須となります。
         <code>keyColumn</code> と <code>keyProperty</code> に対して指定可能な値については、上で出てきた insert ステートメントについての説明を参照してください。</td>

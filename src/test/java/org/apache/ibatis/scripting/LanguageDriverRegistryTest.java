@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -56,7 +56,7 @@ public class LanguageDriverRegistryTest {
 
   @Test
   public void registerByTypeNull() {
-    when(registry).register((Class<?>) null);
+    when(registry).register((Class<? extends LanguageDriver>) null);
     then(caughtException()).isInstanceOf(IllegalArgumentException.class)
       .hasMessage("null is not a valid Language Driver");
   }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2017 the original author or authors.
+       Copyright 2009-2018 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -413,7 +413,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
         <td><code>@Options</code></td>
         <td><code>Method</code></td>
         <td>Attributes of mapped statements.</td>
-        <td>Esta anotación proporciona acceso a un gran conjunto de opciones de configuración que normalmente aparecen como atributos en los mapped statements. En lugar de complicar cada anotación existente la anotación Options proporciona una forma sencilla y concisa de acceder a estas opciones. Atributos: useCache=true, flushCache=FlushCachePolicy.DEFAULT, resultSetType=FORWARD_ONLY, statementType=PREPARED, fetchSize=-1, timeout=-1, useGeneratedKeys=false, keyProperty=“id”, keyColumn=“”, resultSets=“”.  Es importante comprender que las anotaciones en Java no permiten indicar un valor nulo. Por lo tanto, cuando usas la anotación Options el statement usará todos los valores por defecto. Presta atención a estos valores pro defecto para evitar comportamientos inesperados. La keyColumn solo se requiere para algunas bases de datos (como PostgreSQL) cuando la columna no es la primera columna de la tabla.</td>
+        <td>Esta anotación proporciona acceso a un gran conjunto de opciones de configuración que normalmente aparecen como atributos en los mapped statements. En lugar de complicar cada anotación existente la anotación Options proporciona una forma sencilla y concisa de acceder a estas opciones. Atributos: useCache=true, flushCache=FlushCachePolicy.DEFAULT, resultSetType=FORWARD_ONLY, statementType=PREPARED, fetchSize=-1, timeout=-1, useGeneratedKeys=false, keyProperty=“”, keyColumn=“”, resultSets=“”.  Es importante comprender que las anotaciones en Java no permiten indicar un valor nulo. Por lo tanto, cuando usas la anotación Options el statement usará todos los valores por defecto. Presta atención a estos valores pro defecto para evitar comportamientos inesperados. La keyColumn solo se requiere para algunas bases de datos (como PostgreSQL) cuando la columna no es la primera columna de la tabla.</td>
       </tr>
       <tr>
         <td>
