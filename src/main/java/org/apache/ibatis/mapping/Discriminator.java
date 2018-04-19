@@ -21,6 +21,10 @@ import java.util.Map;
 import org.apache.ibatis.session.Configuration;
 
 /**
+ * Mybatis 鉴别器。
+ * 定义鉴别器指定了 column 和 javaType 属性。 列是 MyBatis 查找比较值的地方
+ * 它的表现很像 Java 语言中的 switch 语句。
+ * 
  * @author Clinton Begin
  */
 public class Discriminator {
@@ -30,7 +34,10 @@ public class Discriminator {
 
   Discriminator() {
   }
-
+  
+  /**
+   * 建造者模式
+   */
   public static class Builder {
     private Discriminator discriminator = new Discriminator();
 

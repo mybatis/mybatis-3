@@ -48,6 +48,8 @@ import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
 
 /**
+ * Mybatis的Mapper.xml建造者
+ * 
  * @author Clinton Begin
  */
 public class XMLMapperBuilder extends BaseBuilder {
@@ -238,7 +240,13 @@ public class XMLMapperBuilder extends BaseBuilder {
       builderAssistant.useNewCache(typeClass, evictionClass, flushInterval, size, readWrite, blocking, props);
     }
   }
-
+  
+  /**
+   * 解析Config.xml配置的Mapper节点配置信息
+   * 
+   * @param list
+   * @throws Exception
+   */
   private void parameterMapElement(List<XNode> list) throws Exception {
     for (XNode parameterMapNode : list) {
       String id = parameterMapNode.getStringAttribute("id");
@@ -262,6 +270,7 @@ public class XMLMapperBuilder extends BaseBuilder {
         ParameterMapping parameterMapping = builderAssistant.buildParameterMapping(parameterClass, property, javaTypeClass, jdbcTypeEnum, resultMap, modeEnum, typeHandlerClass, numericScale);
         parameterMappings.add(parameterMapping);
       }
+      // 组装
       builderAssistant.addParameterMap(id, parameterClass, parameterMappings);
     }
   }

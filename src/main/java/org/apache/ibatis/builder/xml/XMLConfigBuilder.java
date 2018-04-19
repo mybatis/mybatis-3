@@ -116,7 +116,7 @@ public class XMLConfigBuilder extends BaseBuilder {
     return configuration;
   }
   
-  // 读取xml配置，给Configuration赋值
+  // 解析xml配置，给Configuration赋值
   private void parseConfiguration(XNode root) {
     try {
       // 读取properties节点信息   	
@@ -143,7 +143,7 @@ public class XMLConfigBuilder extends BaseBuilder {
       databaseIdProviderElement(root.evalNode("databaseIdProvider"));
       // 自定义的typeHandlers
       typeHandlerElement(root.evalNode("typeHandlers"));
-      // 非常重要****
+      // 非常重要,读取Mapper节点配置
       mapperElement(root.evalNode("mappers"));
     } catch (Exception e) {
       throw new BuilderException("Error parsing SQL Mapper Configuration. Cause: " + e, e);

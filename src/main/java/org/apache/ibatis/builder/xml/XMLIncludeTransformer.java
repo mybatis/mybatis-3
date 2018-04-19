@@ -30,6 +30,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 /**
+ * Mapper的include标签解析
+ * 
  * @author Frank D. Martinez [mnesarco]
  */
 public class XMLIncludeTransformer {
@@ -41,7 +43,12 @@ public class XMLIncludeTransformer {
     this.configuration = configuration;
     this.builderAssistant = builderAssistant;
   }
-
+  
+  /**
+   * 解析include标签
+   * 
+   * @param source
+   */
   public void applyIncludes(Node source) {
     Properties variablesContext = new Properties();
     Properties configurationVariables = configuration.getVariables();
@@ -52,6 +59,8 @@ public class XMLIncludeTransformer {
   }
 
   /**
+   * 采用递归方式解析include标签
+   * 
    * Recursively apply includes through all SQL fragments.
    * @param source Include node in DOM tree
    * @param variablesContext Current context for static variables with values
@@ -99,7 +108,14 @@ public class XMLIncludeTransformer {
       throw new IncompleteElementException("Could not find SQL statement to include with refid '" + refid + "'", e);
     }
   }
-
+  
+  /**
+   * 获取节点属性值
+   * 
+   * @param node
+   * @param name
+   * @return
+   */
   private String getStringAttribute(Node node, String name) {
     return node.getAttributes().getNamedItem(name).getNodeValue();
   }

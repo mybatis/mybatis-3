@@ -27,6 +27,8 @@ import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.RowBounds;
 
 /**
+ * key生成策略，keyProperty用于insert和update
+ * 
  * @author Clinton Begin
  * @author Jeff Butler
  */
@@ -54,7 +56,14 @@ public class SelectKeyGenerator implements KeyGenerator {
       processGeneratedKeys(executor, ms, parameter);
     }
   }
-
+  
+  /**
+   * 处理生成的Key
+   * 
+   * @param executor
+   * @param ms
+   * @param parameter
+   */
   private void processGeneratedKeys(Executor executor, MappedStatement ms, Object parameter) {
     try {
       if (parameter != null && keyStatement != null && keyStatement.getKeyProperties() != null) {
@@ -65,6 +74,7 @@ public class SelectKeyGenerator implements KeyGenerator {
           // Do not close keyExecutor.
           // The transaction will be closed by parent executor.
           Executor keyExecutor = configuration.newExecutor(executor.getTransaction(), ExecutorType.SIMPLE);
+          // 执行器查询出结果
           List<Object> values = keyExecutor.query(keyStatement, parameter, RowBounds.DEFAULT, Executor.NO_RESULT_HANDLER);
           if (values.size() == 0) {
             throw new ExecutorException("SelectKey returned no data.");            
@@ -72,6 +82,7 @@ public class SelectKeyGenerator implements KeyGenerator {
             throw new ExecutorException("SelectKey returned more than one value.");
           } else {
             MetaObject metaResult = configuration.newMetaObject(values.get(0));
+            // 判断如果是单个keyProperties属性
             if (keyProperties.length == 1) {
               if (metaResult.hasGetter(keyProperties[0])) {
                 setValue(metaParam, keyProperties[0], metaResult.getValue(keyProperties[0]));
@@ -92,7 +103,14 @@ public class SelectKeyGenerator implements KeyGenerator {
       throw new ExecutorException("Error selecting key or setting result to parameter object. Cause: " + e, e);
     }
   }
-
+  
+  /**
+   * 处理多个keyProperties
+   * 
+   * @param keyProperties
+   * @param metaParam
+   * @param metaResult
+   */
   private void handleMultipleProperties(String[] keyProperties,
       MetaObject metaParam, MetaObject metaResult) {
     String[] keyColumns = keyStatement.getKeyColumns();
@@ -111,7 +129,14 @@ public class SelectKeyGenerator implements KeyGenerator {
       }
     }
   }
-
+  
+  /**
+   * 赋值
+   * 
+   * @param metaParam
+   * @param property
+   * @param value
+   */
   private void setValue(MetaObject metaParam, String property, Object value) {
     if (metaParam.hasSetter(property)) {
       metaParam.setValue(property, value);
