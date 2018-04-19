@@ -91,7 +91,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
         <p>因此，通过方法参数传递的属性具有最高优先级，resource/url 属性中指定的配置文件次之，最低优先级的是 properties 属性中指定的属性。</p>
 
         <p>
-		  从MyBatis 3.4.2开始，你可以为占位符指定一个默认值。例如：
+		  从 MyBatis 3.4.2 开始，你可以为占位符指定一个默认值。例如：
         </p>
         <source><![CDATA[
 <dataSource type="POOLED">
@@ -159,7 +159,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
               </td>
               <td>
                 延迟加载的全局开关。当开启时，所有关联对象都会延迟加载。
-                特定关联关系中可通过设置<code>fetchType</code>属性来覆盖该项的开关状态。
+                特定关联关系中可通过设置 <code>fetchType</code> 属性来覆盖该项的开关状态。
               </td>
               <td>
                 true | false
@@ -173,13 +173,13 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 aggressiveLazyLoading
               </td>
               <td>
-                当开启时，任何方法的调用都会加载该对象的所有属性。否则，每个属性会按需加载（参考<code>lazyLoadTriggerMethods</code>).
+                当开启时，任何方法的调用都会加载该对象的所有属性。否则，每个属性会按需加载（参考 <code>lazyLoadTriggerMethods</code>)。
               </td>
               <td>
                 true | false
               </td>
               <td>
-                false (true in ≤3.4.1)
+                false （在 3.4.1 及之前的版本默认值为 true）
               </td>
             </tr>
             <tr>
@@ -440,7 +440,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 returnInstanceForEmptyRow
               </td>
               <td>
-				当返回行的所有列都是空时，MyBatis默认返回<code>null</code>。
+				当返回行的所有列都是空时，MyBatis默认返回 <code>null</code>。
 				当开启这个设置时，MyBatis会返回一个空实例。
 				请注意，它也适用于嵌套的结果集 （如集合或关联）。（新增于 3.4.2）
               </td>
@@ -513,7 +513,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
               </td>
               <td>
                 允许使用方法签名中的名称作为语句参数名称。
-		为了使用该特性，你的工程必须采用 Java 8 编译，并且加上<code>-parameters</code>选项。（新增于 3.4.1）
+		为了使用该特性，你的工程必须采用 Java 8 编译，并且加上 <code>-parameters</code> 选项。（新增于 3.4.1）
               </td>
               <td>
                 true | false
@@ -527,9 +527,9 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 configurationFactory
               </td>
               <td>
-                指定一个提供<code>Configuration</code>实例的类。
+                指定一个提供 <code>Configuration</code> 实例的类。
 		这个被返回的 Configuration 实例用来加载被反序列化对象的延迟加载属性值。
-		这个类必须包含一个签名为<code>static Configuration getConfiguration()</code>的方法。 （新增于 3.2.3）
+		这个类必须包含一个签名为 <code>static Configuration getConfiguration()</code> 的方法。 （新增于 3.2.3）
               </td>
               <td>
                 类型别名或者全类名.
@@ -1308,7 +1308,7 @@ public class ExampleTypeHandler extends BaseTypeHandler<String> {
 	  因此 Mybatis 使用 <code>javaType=[Java 类型], jdbcType=null</code> 的组合来选择一个类型处理器。
 	  这意味着使用 <code>@MappedJdbcTypes</code> 注解可以<i>限制</i>类型处理器的范围，同时除非显式的设置，否则类型处理器在 <code>ResultMap</code> 中将是无效的。
 	  如果希望在 <code>ResultMap</code> 中使用类型处理器，那么设置 <code>@MappedJdbcTypes</code> 注解的 <code>includeNullJdbcType=true</code> 即可。
-	  然而从 Mybatis 3.4.0 开始，如果<b>只有一个</b>注册的类型处理器来处理 Java 类型，那么它将是 <code>ResultMap</code>使用 Java 类型时的默认值（即使没有 <code>includeNullJdbcType=true</code>）。
+	  然而从 Mybatis 3.4.0 开始，如果<b>只有一个</b>注册的类型处理器来处理 Java 类型，那么它将是 <code>ResultMap</code> 使用 Java 类型时的默认值（即使没有 <code>includeNullJdbcType=true</code>）。
         </p>
 
         <p>最后，可以让 MyBatis 为你查找类型处理器：</p>
