@@ -412,7 +412,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 defaultEnumTypeHandler
               </td>
               <td>
-                指定 Enum 使用的默认 <code>TypeHandler</code> 。 （从 3.4.5 开始）
+                指定 Enum 使用的默认 <code>TypeHandler</code> 。 （新增于 3.4.5）
               </td>
               <td>
                 一个类型别名或完全限定类名。
@@ -442,7 +442,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
               <td>
 				当返回行的所有列都是空时，MyBatis默认返回<code>null</code>。
 				当开启这个设置时，MyBatis会返回一个空实例。
-				请注意，它也适用于嵌套的结果集 （如集合或关联）。（从 3.4.2 开始）
+				请注意，它也适用于嵌套的结果集 （如集合或关联）。（新增于 3.4.2）
               </td>
               <td>
                 true | false
@@ -513,7 +513,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
               </td>
               <td>
                 允许使用方法签名中的名称作为语句参数名称。
-		为了使用该特性，你的工程必须采用 Java 8 编译，并且加上<code>-parameters</code>选项。（从 3.4.1 开始）
+		为了使用该特性，你的工程必须采用 Java 8 编译，并且加上<code>-parameters</code>选项。（新增于 3.4.1）
               </td>
               <td>
                 true | false
@@ -529,7 +529,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
               <td>
                 指定一个提供<code>Configuration</code>实例的类。
 		这个被返回的 Configuration 实例用来加载被反序列化对象的延迟加载属性值。
-		这个类必须包含一个签名为<code>static Configuration getConfiguration()</code>的方法。 （从 3.2.3 开始）
+		这个类必须包含一个签名为<code>static Configuration getConfiguration()</code>的方法。 （新增于 3.2.3）
               </td>
               <td>
                 类型别名或者全类名.
