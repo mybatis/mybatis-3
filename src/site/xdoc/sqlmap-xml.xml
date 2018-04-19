@@ -2013,7 +2013,7 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
         </p>
 
         <p>          
-          By default, just local sessión caching is enabled that is used solely to cache data for the duration of a sessión.
+          By default, just local session caching is enabled that is used solely to cache data for the duration of a session.
           To enable a global second level of caching you simply need to add one line to your SQL Mapping file:
         </p>
 
@@ -2036,6 +2036,13 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
             other callers or threads.
           </li>
         </ul>
+
+        <p>
+          <span class="label important">NOTE</span> The cache will only apply to statements declared in the mapping file
+          where the cache tag is located. If you are using the Java API in conjunction with the XML mapping files, then
+          statements declared in the companion interface will not be cached by default. You will need to refer to the
+          cache region using the @CacheNamespaceRef annotation.
+        </p>
 
         <p>
           All of these properties are modifiable through the attributes of the cache element. For example:

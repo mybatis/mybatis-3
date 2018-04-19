@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -42,13 +42,12 @@ public class JdbcTransaction implements Transaction {
   protected Connection connection;
   protected DataSource dataSource;
   protected TransactionIsolationLevel level;
-  // MEMO: We are aware of the typo. See #941
-  protected boolean autoCommmit;
+  protected boolean autoCommit;
 
   public JdbcTransaction(DataSource ds, TransactionIsolationLevel desiredLevel, boolean desiredAutoCommit) {
     dataSource = ds;
     level = desiredLevel;
-    autoCommmit = desiredAutoCommit;
+    autoCommit = desiredAutoCommit;
   }
 
   public JdbcTransaction(Connection connection) {
@@ -140,7 +139,7 @@ public class JdbcTransaction implements Transaction {
     if (level != null) {
       connection.setTransactionIsolation(level.getLevel());
     }
-    setDesiredAutoCommit(autoCommmit);
+    setDesiredAutoCommit(autoCommit);
   }
 
   @Override

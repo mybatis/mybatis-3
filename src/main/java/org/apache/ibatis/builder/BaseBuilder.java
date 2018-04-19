@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -108,7 +108,7 @@ public abstract class BaseBuilder {
     }
   }
 
-  protected Class<?> resolveClass(String alias) {
+  protected <T> Class<? extends T> resolveClass(String alias) {
     if (alias == null) {
       return null;
     }
@@ -145,7 +145,7 @@ public abstract class BaseBuilder {
     return handler;
   }
 
-  protected Class<?> resolveAlias(String alias) {
+  protected <T> Class<? extends T> resolveAlias(String alias) {
     return typeAliasRegistry.resolveAlias(alias);
   }
 }

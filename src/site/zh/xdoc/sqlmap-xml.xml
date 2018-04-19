@@ -756,7 +756,7 @@ ResultMap 就是 MyBatis 对这个问题的答案。
           <li>
             <code>collection</code> – 一个复杂类型的集合
             <ul>
-              <li>嵌套结果映射 – 集合可以指定为一个 <code>resultMap</code> 元素，或者引用一个
+              <li>嵌套结果映射 – 集合可以指定为一个 <code>resultMap</code> 元素，或者引用一个</li>
             </ul>
           </li>
           <li>
@@ -1768,6 +1768,13 @@ MyBatis 包含一个非常强大的查询缓存特性,它可以非常方便地�
 且可以安全地被调用者修改,而不干扰其他调用者或线程所做的潜在修改。
           </li>
         </ul>
+
+        <p>
+          <span class="label important">NOTE</span> The cache will only apply to statements declared in the mapping file
+          where the cache tag is located. If you are using the Java API in conjunction with the XML mapping files, then
+          statements declared in the companion interface will not be cached by default. You will need to refer to the
+          cache region using the @CacheNamespaceRef annotation.
+        </p>
 
         <p>
 所有的这些属性都可以通过缓存元素的属性来修改。比如:

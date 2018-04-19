@@ -13,22 +13,21 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package org.apache.ibatis.annotations;
 
-import org.apache.ibatis.scripting.LanguageDriver;
+package org.apache.ibatis.reflection;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.util.Optional;
 
-/**
- * @author Clinton Begin
- */
-@Documented
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.METHOD)
-public @interface Lang {
-  Class<? extends LanguageDriver> value();
+import org.apache.ibatis.lang.UsesJava8;
+
+public abstract class OptionalUtil {
+
+  @UsesJava8
+  public static Object ofNullable(Object value) {
+    return Optional.ofNullable(value);
+  }
+
+  private OptionalUtil() {
+    super();
+  }
 }

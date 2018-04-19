@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -29,7 +29,6 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import static com.googlecode.catchexception.apis.BDDCatchException.*;
@@ -80,7 +79,6 @@ public class Jdbc3KeyGeneratorTest {
     }
   }
 
-  @Ignore("#782 was reverted. See #902.")
   @Test
   public void shouldErrorUndefineProperty()  {
     SqlSession sqlSession = sqlSessionFactory.openSession();
@@ -89,7 +87,7 @@ public class Jdbc3KeyGeneratorTest {
 
       when(mapper).insertUndefineKeyProperty(new Country("China", "CN"));
       then(caughtException()).isInstanceOf(PersistenceException.class).hasMessageContaining(
-          "### Error updating database.  Cause: org.apache.ibatis.executor.ExecutorException: Error getting generated key or setting result to parameter object. Cause: org.apache.ibatis.executor.ExecutorException: No setter found for the keyProperty 'country_id' in org.apache.ibatis.submitted.keygen.Country.");
+          "### Error updating database.  Cause: org.apache.ibatis.executor.ExecutorException: Error getting generated key or setting result to parameter object. Cause: org.apache.ibatis.executor.ExecutorException: No setter found for the keyProperty 'country_id' in 'org.apache.ibatis.submitted.keygen.Country'.");
     } finally {
       sqlSession.rollback();
       sqlSession.close();
