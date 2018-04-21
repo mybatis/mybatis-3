@@ -258,7 +258,7 @@ public class TypeParameterResolver {
 
     private Type[] upperBounds;
 
-    private WildcardTypeImpl(Type[] lowerBounds, Type[] upperBounds) {
+    WildcardTypeImpl(Type[] lowerBounds, Type[] upperBounds) {
       super();
       this.lowerBounds = lowerBounds;
       this.upperBounds = upperBounds;
@@ -278,7 +278,7 @@ public class TypeParameterResolver {
   static class GenericArrayTypeImpl implements GenericArrayType {
     private Type genericComponentType;
 
-    private GenericArrayTypeImpl(Type genericComponentType) {
+    GenericArrayTypeImpl(Type genericComponentType) {
       super();
       this.genericComponentType = genericComponentType;
     }
