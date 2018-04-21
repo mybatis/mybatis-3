@@ -167,6 +167,20 @@ public class SqlSessionTest extends BaseDataTest {
       session.close();
     }
   }
+
+  @Test
+  public void shouldFailWithTooManyResultsExceptionWithStatementInfo() throws Exception {
+    SqlSession session = sqlMapper.openSession(TransactionIsolationLevel.SERIALIZABLE);
+    String statement = "org.apache.ibatis.domain.blog.mappers.AuthorMapper.selectAllAuthors";
+    try {
+      session.selectOne(statement);
+    } catch (TooManyResultsException e) {
+      assertTrue(null != e.getMessage());
+      assertTrue(e.getMessage().contains(statement));
+    } finally {
+      session.close();
+    }
+  }
   
   @Test
   public void shouldSelectAllAuthorsAsMap() throws Exception {

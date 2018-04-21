@@ -78,7 +78,7 @@ public class DefaultSqlSession implements SqlSession {
     if (list.size() == 1) {
       return list.get(0);
     } else if (list.size() > 1) {
-      throw new TooManyResultsException("Expected one result (or null) to be returned by selectOne(), but found: " + list.size());
+      throw new TooManyResultsException("Statement:" + statement + " Expected one result (or null) to be returned by selectOne(), but found: " + list.size());
     } else {
       return null;
     }
