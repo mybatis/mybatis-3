@@ -16,10 +16,10 @@
 package org.apache.ibatis.scripting.xmltags;
 
 import ognl.MemberAccess;
+import org.apache.ibatis.reflection.Reflector;
 
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Member;
-import java.lang.reflect.Modifier;
 import java.util.Map;
 
 /**
@@ -34,6 +34,12 @@ import java.util.Map;
  * @see <a href='https://github.com/jkuhnert/ognl/issues/47'>#47 of ognl</a>
  */
 class OgnlMemberAccess implements MemberAccess {
+
+  private final boolean canControlMemberAccessible;
+
+  OgnlMemberAccess() {
+    this.canControlMemberAccessible = Reflector.canControlMemberAccessible();
+  }
 
   @Override
   public Object setup(Map context, Object target, Member member, String propertyName) {
@@ -58,7 +64,7 @@ class OgnlMemberAccess implements MemberAccess {
 
   @Override
   public boolean isAccessible(Map context, Object target, Member member, String propertyName) {
-    return Modifier.isPublic(member.getModifiers());
+    return canControlMemberAccessible;
   }
 
 }

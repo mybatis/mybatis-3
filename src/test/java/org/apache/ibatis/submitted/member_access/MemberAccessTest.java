@@ -16,7 +16,6 @@
 package org.apache.ibatis.submitted.member_access;
 
 import java.io.Reader;
-import java.sql.Connection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,7 +25,6 @@ import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
@@ -48,14 +46,6 @@ public class MemberAccessTest {
         .getResourceAsReader("org/apache/ibatis/submitted/member_access/mybatis-config.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
       sqlSessionFactory.getConfiguration().addMapper(Mapper.class);
-    }
-    try (SqlSession session = sqlSessionFactory.openSession();
-        Connection conn = session.getConnection();
-        Reader reader = Resources
-            .getResourceAsReader("org/apache/ibatis/submitted/member_access/CreateDB.sql")) {
-      ScriptRunner runner = new ScriptRunner(conn);
-      runner.setLogWriter(null);
-      runner.runScript(reader);
     }
   }
 
@@ -87,15 +77,15 @@ public class MemberAccessTest {
       Params params = new Params();
       Bean bean = mapper.resultAutoMappingUsingOgnl(params);
 
-      assertEquals(params.privateField, bean.privateField);
-      assertEquals(params.packagePrivateField, bean.packagePrivateField);
-      assertEquals(params.protectedField, bean.protectedField);
-      assertEquals(params.publicField, bean.publicField);
-      assertEquals(params.getPrivateProperty(), bean.properties.get("privateProperty"));
-      assertEquals(params.getPackagePrivateProperty(),
+      assertEquals(params.privateField + "%", bean.privateField);
+      assertEquals(params.packagePrivateField + "%", bean.packagePrivateField);
+      assertEquals(params.protectedField + "%", bean.protectedField);
+      assertEquals(params.publicField + "%", bean.publicField);
+      assertEquals(params.getPrivateProperty() + "%", bean.properties.get("privateProperty"));
+      assertEquals(params.getPackagePrivateProperty() + "%",
           bean.properties.get("packagePrivateProperty"));
-      assertEquals(params.getProtectedProperty(), bean.properties.get("protectedProperty"));
-      assertEquals(params.getPublicProperty(), bean.properties.get("publicProperty"));
+      assertEquals(params.getProtectedProperty() + "%", bean.properties.get("protectedProperty"));
+      assertEquals(params.getPublicProperty() + "%", bean.properties.get("publicProperty"));
     }
   }
 
@@ -217,17 +207,23 @@ public class MemberAccessTest {
         // @formatter:off
         "<script>"
 
-          ,"<bind name=\"publicFieldValue\" value=\"_parameter.publicField\" />"
-          ,"<bind name=\"publicPropertyValue\" value=\"_parameter.publicProperty\" />"
+          ,"<bind name=\"privateFieldValue\" value=\"_parameter.privateField + '%'\" />"
+          ,"<bind name=\"packagePrivateFieldValue\" value=\"_parameter.packagePrivateField + '%'\" />"
+          ,"<bind name=\"protectedFieldValue\" value=\"_parameter.protectedField + '%'\" />"
+          ,"<bind name=\"publicFieldValue\" value=\"_parameter.publicField + '%'\" />"
+          ,"<bind name=\"privatePropertyValue\" value=\"_parameter.privateProperty + '%'\" />"
+          ,"<bind name=\"packagePrivatePropertyValue\" value=\"_parameter.packagePrivateProperty + '%'\" />"
+          ,"<bind name=\"protectedPropertyValue\" value=\"_parameter.getProtectedProperty() + '%'\" />"
+          ,"<bind name=\"publicPropertyValue\" value=\"_parameter.publicProperty + '%'\" />"
 
           ,"SELECT"
-          ,"#{privateField} as privateField"
-          ,",#{packagePrivateField} as packagePrivateField"
-          ,",#{protectedField} as protectedField"
+          ,"#{privateFieldValue} as privateField"
+          ,",#{packagePrivateFieldValue} as packagePrivateField"
+          ,",#{protectedFieldValue} as protectedField"
           ,",#{publicFieldValue} as publicField"
-          ,",#{privateProperty} as privateProperty"
-          ,",#{packagePrivateProperty} as packagePrivateProperty"
-          ,",#{protectedProperty} as protectedProperty"
+          ,",#{privatePropertyValue} as privateProperty"
+          ,",#{packagePrivatePropertyValue} as packagePrivateProperty"
+          ,",#{protectedPropertyValue} as protectedProperty"
           ,",#{publicPropertyValue} as publicProperty"
 
           ,"FROM"
