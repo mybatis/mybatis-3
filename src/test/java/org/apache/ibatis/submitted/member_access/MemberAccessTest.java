@@ -334,6 +334,7 @@ public class MemberAccessTest {
     }
   }
 
+  @SuppressWarnings("unused")
   static class Bean {
     private String privateField;
     String packagePrivateField;
@@ -358,6 +359,7 @@ public class MemberAccessTest {
     }
   }
 
+  @SuppressWarnings("unused")
   static class Immutable {
     private Map<String, String> properties = new HashMap<>();
 
