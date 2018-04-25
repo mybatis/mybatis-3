@@ -251,6 +251,7 @@ public class ScriptRunnerTest extends BaseDataTest {
     Connection conn = mock(Connection.class);
     Statement stmt = mock(Statement.class);
     when(conn.createStatement()).thenReturn(stmt);
+    when(stmt.getUpdateCount()).thenReturn(-1);
     ScriptRunner runner = new ScriptRunner(conn);
 
     String sql = "-- @DELIMITER | \n"
@@ -289,6 +290,7 @@ public class ScriptRunnerTest extends BaseDataTest {
     Connection conn = mock(Connection.class);
     Statement stmt = mock(Statement.class);
     when(conn.createStatement()).thenReturn(stmt);
+    when(stmt.getUpdateCount()).thenReturn(-1);
     ScriptRunner runner = new ScriptRunner(conn);
 
     String sql = "-- @DELIMITER || \n"
