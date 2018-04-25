@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -45,13 +45,14 @@ public class YearMonthTypeHandlerTest extends BaseTypeHandlerTest {
   public void shouldGetResultFromResultSetByName() throws Exception {
     when(rs.getString("column")).thenReturn(INSTANT.toString());
     assertEquals(INSTANT, TYPE_HANDLER.getResult(rs, "column"));
+    verify(rs, never()).wasNull();
   }
 
   @Override
   @Test
   public void shouldGetResultNullFromResultSetByName() throws Exception {
-    when(rs.wasNull()).thenReturn(true);
     assertNull(TYPE_HANDLER.getResult(rs, "column"));
+    verify(rs, never()).wasNull();
   }
 
   @Override
@@ -59,13 +60,14 @@ public class YearMonthTypeHandlerTest extends BaseTypeHandlerTest {
   public void shouldGetResultFromResultSetByPosition() throws Exception {
     when(rs.getString(1)).thenReturn(INSTANT.toString());
     assertEquals(INSTANT, TYPE_HANDLER.getResult(rs, 1));
+    verify(rs, never()).wasNull();
   }
 
   @Override
   @Test
   public void shouldGetResultNullFromResultSetByPosition() throws Exception {
-    when(rs.wasNull()).thenReturn(true);
     assertNull(TYPE_HANDLER.getResult(rs, 1));
+    verify(rs, never()).wasNull();
   }
 
   @Override
@@ -73,13 +75,14 @@ public class YearMonthTypeHandlerTest extends BaseTypeHandlerTest {
   public void shouldGetResultFromCallableStatement() throws Exception {
     when(cs.getString(1)).thenReturn(INSTANT.toString());
     assertEquals(INSTANT, TYPE_HANDLER.getResult(cs, 1));
+    verify(cs, never()).wasNull();
   }
 
   @Override
   @Test
   public void shouldGetResultNullFromCallableStatement() throws Exception {
-    when(cs.wasNull()).thenReturn(true);
     assertNull(TYPE_HANDLER.getResult(cs, 1));
+    verify(cs, never()).wasNull();
   }
 
 }

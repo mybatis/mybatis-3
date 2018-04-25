@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -76,7 +76,6 @@ public class BlobInputStreamTypeHandlerTest extends BaseTypeHandlerTest {
   public void shouldGetResultFromResultSetByName() throws Exception {
     InputStream in = new ByteArrayInputStream("Hello".getBytes());
     when(rs.getBlob("column")).thenReturn(blob);
-    when(rs.wasNull()).thenReturn(false);
     when(blob.getBinaryStream()).thenReturn(in);
     assertThat(TYPE_HANDLER.getResult(rs, "column")).isEqualTo(in);
 
@@ -86,7 +85,6 @@ public class BlobInputStreamTypeHandlerTest extends BaseTypeHandlerTest {
   @Test
   public void shouldGetResultNullFromResultSetByName() throws Exception {
     when(rs.getBlob("column")).thenReturn(null);
-    when(rs.wasNull()).thenReturn(true);
     assertThat(TYPE_HANDLER.getResult(rs, "column")).isNull();
   }
 
@@ -95,7 +93,6 @@ public class BlobInputStreamTypeHandlerTest extends BaseTypeHandlerTest {
   public void shouldGetResultFromResultSetByPosition() throws Exception {
     InputStream in = new ByteArrayInputStream("Hello".getBytes());
     when(rs.getBlob(1)).thenReturn(blob);
-    when(rs.wasNull()).thenReturn(false);
     when(blob.getBinaryStream()).thenReturn(in);
     assertThat(TYPE_HANDLER.getResult(rs, 1)).isEqualTo(in);
   }
@@ -104,7 +101,6 @@ public class BlobInputStreamTypeHandlerTest extends BaseTypeHandlerTest {
   @Test
   public void shouldGetResultNullFromResultSetByPosition() throws Exception {
     when(rs.getBlob(1)).thenReturn(null);
-    when(rs.wasNull()).thenReturn(true);
     assertThat(TYPE_HANDLER.getResult(rs, 1)).isNull();
   }
 
@@ -113,7 +109,6 @@ public class BlobInputStreamTypeHandlerTest extends BaseTypeHandlerTest {
   public void shouldGetResultFromCallableStatement() throws Exception {
     InputStream in = new ByteArrayInputStream("Hello".getBytes());
     when(cs.getBlob(1)).thenReturn(blob);
-    when(cs.wasNull()).thenReturn(false);
     when(blob.getBinaryStream()).thenReturn(in);
     assertThat(TYPE_HANDLER.getResult(cs, 1)).isEqualTo(in);
   }
@@ -122,7 +117,6 @@ public class BlobInputStreamTypeHandlerTest extends BaseTypeHandlerTest {
   @Test
   public void shouldGetResultNullFromCallableStatement() throws Exception {
     when(cs.getBlob(1)).thenReturn(null);
-    when(cs.wasNull()).thenReturn(true);
     assertThat(TYPE_HANDLER.getResult(cs, 1)).isNull();
   }
 
