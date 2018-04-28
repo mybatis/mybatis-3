@@ -131,10 +131,6 @@
   </distributionManagement>
 
   <properties>
-    <maven.compiler.source>1.8</maven.compiler.source>
-    <maven.compiler.target>1.8</maven.compiler.target>
-    <maven.compiler.testTarget>1.8</maven.compiler.testTarget>
-    <maven.compiler.testSource>1.8</maven.compiler.testSource>
     <maven.compiler.testCompilerArgument>-parameters</maven.compiler.testCompilerArgument>
     <clirr.comparisonVersion>3.3.1</clirr.comparisonVersion>
     <spotbugs.onlyAnalyze>org.apache.ibatis.*</spotbugs.onlyAnalyze>
@@ -142,10 +138,6 @@
     <osgi.import>*;resolution:=optional</osgi.import>
     <osgi.dynamicImport>*</osgi.dynamicImport>
     <maven.surefire.excludeGroups>org.apache.ibatis.test.SlowTests</maven.surefire.excludeGroups>
-
-    <!-- Override: Animal Sniffer Signature -->
-    <signature.artifact>java18</signature.artifact>
-    <signature.version>1.0</signature.version>
   </properties>
 
   <dependencies>
@@ -204,7 +196,7 @@
     <dependency>
       <groupId>org.junit.vintage</groupId>
       <artifactId>junit-vintage-engine</artifactId>
-      <version>5.1.0</version>
+      <version>${junit-engine.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
