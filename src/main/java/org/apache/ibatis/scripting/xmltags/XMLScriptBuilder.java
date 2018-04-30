@@ -24,6 +24,7 @@ import org.apache.ibatis.builder.BaseBuilder;
 import org.apache.ibatis.builder.BuilderException;
 import org.apache.ibatis.mapping.SqlSource;
 import org.apache.ibatis.parsing.XNode;
+import org.apache.ibatis.scripting.ScriptingException;
 import org.apache.ibatis.scripting.defaults.RawSqlSource;
 import org.apache.ibatis.session.Configuration;
 import org.w3c.dom.Node;
@@ -114,7 +115,17 @@ public class XMLScriptBuilder extends BaseBuilder {
     public void handleNode(XNode nodeToHandle, List<SqlNode> targetContents) {
       final String name = nodeToHandle.getStringAttribute("name");
       final String expression = nodeToHandle.getStringAttribute("value");
-      final VarDeclSqlNode node = new VarDeclSqlNode(name, expression);
+      if (expression != null && nodeToHandle.getNode().getChildNodes().getLength() > 0) {
+        throw new ScriptingException("Not support to specify value attribute and body with together on bind element.");
+      }
+      final SqlNode node;
+      if (expression != null) {
+        node = new VarDeclSqlNode(name, expression);
+      } else {
+        final List<SqlNode> contents = parseDynamicTags(nodeToHandle);
+        final MixedSqlNode mixedSqlNode = new MixedSqlNode(contents);
+        node = new VarBindSqlNode(name, mixedSqlNode);
+      }
       targetContents.add(node);
     }
   }

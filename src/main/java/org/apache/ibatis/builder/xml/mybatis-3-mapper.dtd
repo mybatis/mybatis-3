@@ -243,10 +243,10 @@ lang CDATA #IMPLIED
 refid CDATA #REQUIRED
 >
 
-<!ELEMENT bind EMPTY>
+<!ELEMENT bind (#PCDATA | include | trim | where | set | foreach | choose | if | bind)*>
 <!ATTLIST bind
  name CDATA #REQUIRED
- value CDATA #REQUIRED
+ value CDATA #IMPLIED
 >
 
 <!ELEMENT sql (#PCDATA | include | trim | where | set | foreach | choose | if | bind)*>

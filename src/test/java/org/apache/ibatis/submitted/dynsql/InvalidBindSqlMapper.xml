@@ -21,34 +21,10 @@
     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="org.apache.ibatis.submitted.dynsql.DynSqlMapper">
-  <select id="selectDescription" resultType="string">
-    <bind name="condition" value="p" />
-    SELECT description
-    FROM ibtest.names
-    <if test="condition == null">
-      WHERE id = 3
-    </if>
-  </select>
-  <select id="selectDescriptionById" resultType="string">
-    <bind name="conditions">
+<mapper namespace="org.apache.ibatis.submitted.dynsql.InvalidBindSqlMapper">
+  <select id="invalidBind">
+    <bind name="conditions" value="'WHERE 2 = 2'">
       WHERE 1 = 1
-      <if test="id != null">
-        AND id = #{id}
-      </if>
-      <bind name="zero" value="0"/>
-      <bind name="innerCondition">
-        AND id > #{zero}
-      </bind>
-      ${innerCondition}
     </bind>
-    <include refid="selectDescriptionByConditions">
-      <property name="where" value="${conditions}"/>
-    </include>
   </select>
-  <sql id="selectDescriptionByConditions">
-    SELECT description
-    FROM ibtest.names
-    ${where}
-  </sql>
 </mapper>
