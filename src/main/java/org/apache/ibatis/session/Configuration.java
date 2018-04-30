@@ -110,6 +110,11 @@ public class Configuration {
   protected boolean useActualParamName = true;
   protected boolean returnInstanceForEmptyRow;
 
+  /**
+   * The base path for loading mapper XML associated mapper interface.
+   * (default: NONE, this means is indicated the base path is just under classpath)
+   */
+  protected String mapperXmlLoadingBasePath;
   protected String logPrefix;
   protected Class <? extends Log> logImpl;
   protected Class <? extends VFS> vfsImpl;
@@ -203,6 +208,25 @@ public class Configuration {
 
     languageRegistry.setDefaultDriverClass(XMLLanguageDriver.class);
     languageRegistry.register(RawLanguageDriver.class);
+  }
+
+  /**
+   * Return the base path for loading mapper XML associated mapper interface.
+   * @return the base path for loading mapper XML associated mapper interface
+   * @since 3.4.6
+   */
+  public String getMapperXmlLoadingBasePath() {
+    return this.mapperXmlLoadingBasePath;
+  }
+
+  /**
+   * Set the base path for loading mapper XML associated mapper interface.
+   * (default: NONE, this means is indicated the base path is just under classpath)
+   * @param mapperXmlLoadingBasePath the base path for loading mapper XML associated mapper interface
+   * @since 3.4.6
+   */
+  public void setMapperXmlLoadingBasePath(String mapperXmlLoadingBasePath) {
+      this.mapperXmlLoadingBasePath = mapperXmlLoadingBasePath;
   }
 
   public String getLogPrefix() {

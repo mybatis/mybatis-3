@@ -261,6 +261,7 @@ public class XMLConfigBuilder extends BaseBuilder {
     configuration.setCallSettersOnNulls(booleanValueOf(props.getProperty("callSettersOnNulls"), false));
     configuration.setUseActualParamName(booleanValueOf(props.getProperty("useActualParamName"), true));
     configuration.setReturnInstanceForEmptyRow(booleanValueOf(props.getProperty("returnInstanceForEmptyRow"), false));
+    configuration.setMapperXmlLoadingBasePath(props.getProperty("mapperXmlLoadingBasePath"));
     configuration.setLogPrefix(props.getProperty("logPrefix"));
     @SuppressWarnings("unchecked")
     Class<? extends Log> logImpl = (Class<? extends Log>)resolveClass(props.getProperty("logImpl"));
