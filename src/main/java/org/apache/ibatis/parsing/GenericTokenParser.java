@@ -52,7 +52,7 @@ public class GenericTokenParser {
         StringBuilder expression = null;
         while (start > -1) {
             if (start > 0 && src[start - 1] == '\\') {
-                // 遇到转义的开始标记，则直接将前面的字符串以及字符串开始标记追加到builder中
+                // 遇到转义的开始标记，则直接将前面的字符串以及字符串开始标记追加到builder中,即直接去掉了转义符
                 // this open token is escaped. remove the backslash and continue.
                 builder.append(src, offset, start - offset - 1).append(openToken);
                 offset = start + openToken.length();
