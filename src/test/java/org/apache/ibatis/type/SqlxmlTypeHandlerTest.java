@@ -17,10 +17,13 @@
 package org.apache.ibatis.type;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.io.Reader;
 import java.nio.file.Paths;
 import java.sql.Connection;
+import java.sql.SQLXML;
 import java.util.Collections;
 
 import org.apache.ibatis.annotations.Insert;
@@ -40,14 +43,22 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
+import org.mockito.Mock;
 import ru.yandex.qatools.embed.postgresql.EmbeddedPostgres;
 import ru.yandex.qatools.embed.postgresql.util.SocketUtil;
 
 @Category(EmbeddedPostgresqlTests.class)
-public class SqlxmlTypeHandlerTest {
+public class SqlxmlTypeHandlerTest extends BaseTypeHandlerTest {
+  private static final TypeHandler<String> TYPE_HANDLER = new SqlxmlTypeHandler();
   private static final EmbeddedPostgres postgres = new EmbeddedPostgres();
 
   private static SqlSessionFactory sqlSessionFactory;
+
+  @Mock
+  private SQLXML sqlxml;
+
+  @Mock
+  private Connection connection;
 
   @BeforeClass
   public static void setUp() throws Exception {
@@ -77,6 +88,69 @@ public class SqlxmlTypeHandlerTest {
   @AfterClass
   public static void tearDown() {
     postgres.stop();
+  }
+
+  @Override
+  @Test
+  public void shouldSetParameter() throws Exception {
+    when(connection.createSQLXML()).thenReturn(sqlxml);
+    when(ps.getConnection()).thenReturn(connection);
+    String xml = "<message>test</message>";
+    TYPE_HANDLER.setParameter(ps, 1, xml, null);
+    verify(ps).setSQLXML(1, sqlxml);
+    verify(sqlxml).setString(xml);
+    verify(sqlxml).free();
+  }
+
+  @Override
+  @Test
+  public void shouldGetResultFromResultSetByName() throws Exception {
+    String xml = "<message>test</message>";
+    when(sqlxml.getString()).thenReturn(xml);
+    when(rs.getSQLXML("column")).thenReturn(sqlxml);
+    assertEquals(xml, TYPE_HANDLER.getResult(rs, "column"));
+    verify(sqlxml).free();
+  }
+
+  @Override
+  @Test
+  public void shouldGetResultNullFromResultSetByName() throws Exception {
+    when(rs.getSQLXML("column")).thenReturn(null);
+    assertNull(TYPE_HANDLER.getResult(rs, "column"));
+  }
+
+  @Override
+  @Test
+  public void shouldGetResultFromResultSetByPosition() throws Exception {
+    String xml = "<message>test</message>";
+    when(sqlxml.getString()).thenReturn(xml);
+    when(rs.getSQLXML(1)).thenReturn(sqlxml);
+    assertEquals(xml, TYPE_HANDLER.getResult(rs, 1));
+    verify(sqlxml).free();
+  }
+
+  @Override
+  @Test
+  public void shouldGetResultNullFromResultSetByPosition() throws Exception {
+    when(rs.getSQLXML(1)).thenReturn(null);
+    assertNull(TYPE_HANDLER.getResult(rs, 1));
+  }
+
+  @Override
+  @Test
+  public void shouldGetResultFromCallableStatement() throws Exception {
+    String xml = "<message>test</message>";
+    when(sqlxml.getString()).thenReturn(xml);
+    when(cs.getSQLXML(1)).thenReturn(sqlxml);
+    assertEquals(xml, TYPE_HANDLER.getResult(cs, 1));
+    verify(sqlxml).free();
+  }
+
+  @Override
+  @Test
+  public void shouldGetResultNullFromCallableStatement() throws Exception {
+    when(cs.getSQLXML(1)).thenReturn(null);
+    assertNull(TYPE_HANDLER.getResult(cs, 1));
   }
 
   @Test
