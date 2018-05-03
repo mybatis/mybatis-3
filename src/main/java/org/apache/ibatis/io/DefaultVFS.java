@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -73,17 +73,17 @@ public class DefaultVFS extends VFS {
             // Some versions of JBoss VFS might give a JAR stream even if the resource
             // referenced by the URL isn't actually a JAR
             is = url.openStream();
-            JarInputStream jarInput = new JarInputStream(is);
-            if (log.isDebugEnabled()) {
-              log.debug("Listing " + url);
-            }
-            for (JarEntry entry; (entry = jarInput.getNextJarEntry()) != null;) {
+            try (JarInputStream jarInput = new JarInputStream(is)) {
               if (log.isDebugEnabled()) {
-                log.debug("Jar entry: " + entry.getName());
+                log.debug("Listing " + url);
               }
-              children.add(entry.getName());
+              for (JarEntry entry; (entry = jarInput.getNextJarEntry()) != null; ) {
+                if (log.isDebugEnabled()) {
+                  log.debug("Jar entry: " + entry.getName());
+                }
+                children.add(entry.getName());
+              }
             }
-            jarInput.close();
           }
           else {
             /*
